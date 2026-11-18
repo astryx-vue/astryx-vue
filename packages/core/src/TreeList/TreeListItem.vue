@@ -206,7 +206,10 @@ const rowPress = computed(() => {
             <span :id="labelId" class="astryx-tree-list__label">{{ item.label }}</span>
             <span v-if="item.description" :id="descriptionId" class="astryx-tree-list__description">{{ item.description }}</span>
           </span>
-          <span v-if="item.badge || item.endIcon" class="astryx-tree-list__end">
+          <span v-if="item.endContent" class="astryx-tree-list__end">
+            <component :is="item.endContent" />
+          </span>
+          <span v-else-if="item.badge || item.endIcon" class="astryx-tree-list__end">
             <Badge v-if="item.badge">{{ item.badge }}</Badge>
             <Icon v-else-if="item.endIcon && isIconGlyph(item.endIcon)" :icon="item.endIcon" size="sm" />
             <span v-else-if="item.endIcon" class="astryx-tree-list__icon">

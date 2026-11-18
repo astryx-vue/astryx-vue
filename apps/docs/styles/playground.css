@@ -981,6 +981,8 @@ html[data-playground-frame] #playground-mount {
 }
 
 html[data-playground-frame] #playground-mount[data-preview-layout='center'] {
+  /* 居中模式按内容长高：定高会让内容溢出时少算末端内边距，文档比原版矮 16px。 */
+  height: auto;
   display: flex;
   /* safe：内容比预览宽或高时从起点排、向后溢出，和原版一样，不往左上越界。 */
   align-items: safe center;

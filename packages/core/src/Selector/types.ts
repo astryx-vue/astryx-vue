@@ -2,6 +2,7 @@ import type { Component, VNode, VNodeChild } from 'vue'
 import type { FieldPartStylingProps } from '../Field/fieldParts.js'
 import type { FieldStatusInput } from '../Field/types.js'
 import type { ExtendedIconName } from '../Icon/types.js'
+import type { LayerPlacement } from '../layer/position.js'
 import type { OptionActionNode } from '../selectors/optionAction.js'
 
 /**
@@ -130,6 +131,11 @@ export interface SelectorProps extends FieldPartStylingProps {
    * @default 'end'
    */
   indicatorPosition?: SelectorIndicatorPosition
+  /**
+   * 列表相对触发器的位置。不写时用默认的「选中项盖在触发器上」；
+   * 写了就走普通的浮层定位，比如固定在底部的工具栏用 `above`。
+   */
+  placement?: LayerPlacement
 }
 
 export interface SelectorEmits {

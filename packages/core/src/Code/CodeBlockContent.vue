@@ -209,7 +209,7 @@ onBeforeUnmount(() => removeRanges?.())
                 <template v-else>{{ part.text }}</template>
               </template>
             </span>
-            <template v-else>{{ line || '\u200B' }}</template>
+            <span v-else class="astryx-code-block__line-content" dir="auto">{{ line || '\u200B' }}</span>
           </div>
         </div>
       </code>

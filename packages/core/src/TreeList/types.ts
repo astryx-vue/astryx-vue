@@ -14,6 +14,11 @@ export interface TreeListItemData {
    * 给了它就不再画 `icon`。
    */
   startContent?: Component | (() => VNodeChild)
+  /**
+   * 标签后面的任意内容，同上游 `endContent`，比如行内操作按钮。
+   * 给了它就不再画 `badge` 和 `endIcon`。
+   */
+  endContent?: Component | (() => VNodeChild)
   /** Trailing glyph or CSS icon class. */
   endIcon?: string
   /** Compact trailing badge, for counts. */

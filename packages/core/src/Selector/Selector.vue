@@ -159,7 +159,7 @@ const { position, teleportTarget } = usePositionedLayer({
   anchor: fieldRef,
   layer: listboxRef,
   isOpen: popoverOpen,
-  placement: computed(() => 'below'),
+  placement: computed(() => props.placement ?? 'below'),
   alignment: computed(() => 'start'),
   gap: 4,
 })
@@ -315,7 +315,7 @@ function syncAnchorWidth(): void {
  * 列表上移，使选中项的顶边和字段顶边对齐；还没选值时贴着字段下沿、不留空隙。
  * 只在朝下展开时生效；空间不够翻到上方时按普通位置走。
  */
-const overlaySelected = computed(() => !props.searchable && !isSheet.value)
+const overlaySelected = computed(() => !props.searchable && !isSheet.value && props.placement == null)
 const overlayTop = ref<number | null>(null)
 
 function syncOverlay(): void {
@@ -469,7 +469,7 @@ onMounted(syncAnchorWidth)
         ref="listboxRef"
         :role="gridMode ? 'grid' : 'listbox'"
         class="astryx-selector-listbox astryx-layer"
-        :class="{ 'is-sheet': isSheet, 'is-input': triggerVariant === 'input' }"
+        :class="[{ 'is-sheet': isSheet, 'is-input': triggerVariant === 'input' }, `size-${size}`]"
         :data-placement="isSheet ? undefined : position.placement"
         :style="listboxStyle"
         tabindex="-1"

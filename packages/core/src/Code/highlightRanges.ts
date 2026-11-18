@@ -87,6 +87,12 @@ function findLineTextNode(line: Element): Text | null {
   for (const node of line.childNodes) {
     if (node.nodeType === Node.TEXT_NODE && (node as Text).length > 0)
       return node as Text
+    // 文本包在一个内容元素里（同上游的 dir="auto" 内容 span）。
+    if (node.nodeType === Node.ELEMENT_NODE && (node as Element).classList.contains('astryx-code-block__line-content')) {
+      const inner = findLineTextNode(node as Element)
+      if (inner != null)
+        return inner
+    }
   }
 
   return null

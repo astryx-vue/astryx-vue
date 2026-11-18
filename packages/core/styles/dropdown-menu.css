@@ -141,16 +141,17 @@
   }
 
   /* Step for step with a list item's density, so the three sizes are
-     distinguishable and every menu behaves the same. */
-  .astryx-dropdown-menu .astryx-item.astryx-dropdown-menu-item[data-menu-size='sm'] {
+     distinguishable and every menu behaves the same. 勾选行和单选行不跟菜单尺寸，
+     上游里它们用 Item 默认的 balanced 内边距。 */
+  .astryx-dropdown-menu .astryx-item.astryx-dropdown-menu-item:not([role='menuitemcheckbox'], [role='menuitemradio'])[data-menu-size='sm'] {
     padding-block: var(--astryx-spacing-1, 4px);
   }
 
-  .astryx-dropdown-menu .astryx-item.astryx-dropdown-menu-item[data-menu-size='md'] {
+  .astryx-dropdown-menu .astryx-item.astryx-dropdown-menu-item:not([role='menuitemcheckbox'], [role='menuitemradio'])[data-menu-size='md'] {
     padding-block: var(--astryx-spacing-1-5, 6px);
   }
 
-  .astryx-dropdown-menu .astryx-item.astryx-dropdown-menu-item[data-menu-size='lg'] {
+  .astryx-dropdown-menu .astryx-item.astryx-dropdown-menu-item:not([role='menuitemcheckbox'], [role='menuitemradio'])[data-menu-size='lg'] {
     padding-block: var(--astryx-spacing-2, 8px);
   }
 

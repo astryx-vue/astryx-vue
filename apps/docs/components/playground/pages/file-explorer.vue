@@ -15,8 +15,8 @@ import {
   SegmentedControlItem,
   Text,
   Toolbar,
-  VisuallyHidden,
   useToast,
+  VisuallyHidden,
   VStack,
 } from '@astryx-vue/core'
 import { computed, ref } from 'vue'
@@ -393,7 +393,9 @@ function goBack(): void {
     </template>
 
     <LayoutContent role="main" :padding="0" :is-scrollable="false">
-      <VisuallyHidden as="h1">Files</VisuallyHidden>
+      <VisuallyHidden as="h1">
+        Files
+      </VisuallyHidden>
       <HStack class="column-row" height="100%">
         <Section
           v-for="(col, colIndex) in columns"
@@ -435,9 +437,9 @@ function goBack(): void {
           variant="transparent"
           class="scrollable detail-column"
         >
-          <VStack :gap="4" hAlign="center">
+          <VStack :gap="4" h-align="center">
             <Avatar :name="selectedFile.name" :size="96" />
-            <VStack :gap="1" hAlign="center">
+            <VStack :gap="1" h-align="center">
               <Text type="label">
                 {{ selectedFile.name }}
               </Text>

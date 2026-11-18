@@ -32,7 +32,8 @@ export function useMenuSelectableRow(options: UseMenuSelectableRowOptions): Menu
 
   const menuSize = computed<DropdownMenuSize>(() => contextMenu?.menuSize.value ?? dropdown?.menuSize.value ?? 'md')
   const controlSize = computed<'sm' | 'md'>(() => menuSize.value === 'sm' ? 'sm' : 'md')
-  const density = computed<'compact' | 'balanced'>(() => menuSize.value === 'sm' ? 'compact' : 'balanced')
+  // 上游的勾选行和单选行不给 Item 传 density，小号菜单里也是默认的 balanced，只有控件缩成 sm。
+  const density = computed<'compact' | 'balanced'>(() => 'balanced')
   const inContextMenu = computed(() => contextMenu != null)
 
   function closeHost(): void {

@@ -45,8 +45,9 @@ describe('codeBlock hydration', () => {
     await nextTick()
 
     expect(problems).toEqual([])
-    // 挂载后换成 Highlight API：行内不再有 token span，文本保持原样。
-    expect(container.querySelectorAll('.astryx-code-block__line-content')).toHaveLength(0)
+    // 挂载后换成 Highlight API：每行只剩一个内容 span（同上游），里面没有 token span，文本保持原样。
+    expect(container.querySelectorAll('.astryx-code-block__line-content')).toHaveLength(3)
+    expect(container.querySelectorAll('.astryx-code-block__line-content > span')).toHaveLength(0)
     expect(container.querySelector('[data-line="2"]')?.textContent).toBe('  return name.trim()')
     app.unmount()
   })

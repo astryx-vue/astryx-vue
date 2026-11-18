@@ -110,6 +110,7 @@
   .astryx-selector-field.is-ghost {
     border-color: transparent;
     background: transparent;
+    font-weight: var(--astryx-font-weight-medium, 500);
   }
 
   @media (hover: hover) {
@@ -400,7 +401,9 @@
     outline: none;
   }
 
-  .astryx-selector.size-sm .astryx-selector-option {
+  /* 选项面板挂在 body 上，不在 .astryx-selector 里面，所以尺寸类要落在面板自己身上。 */
+  .astryx-selector.size-sm .astryx-selector-option,
+  .astryx-selector-listbox.size-sm .astryx-selector-option {
     padding-block: var(--astryx-spacing-1, 4px);
   }
 

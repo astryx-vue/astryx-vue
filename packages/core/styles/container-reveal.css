@@ -64,7 +64,8 @@
     opacity: var(--_reveal-opacity, 1);
   }
 
-  .astryx-reveal__content {
+  /* 保留布局的版本只淡入淡出，不脱离文档流；两个类名同时在元素上，所以这里排除。 */
+  .astryx-reveal__content:not(.astryx-reveal__content--preserve) {
     position: var(--_reveal-position, static);
   }
 
