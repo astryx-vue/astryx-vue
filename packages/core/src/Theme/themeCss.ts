@@ -4,6 +4,7 @@ import type { MediaSurface } from './componentStyles.js'
 import type { ComponentStyleMap } from './types.js'
 import { syntaxThemeStyle } from '../Code/syntaxTheme.js'
 import { compileComponentRules, tokenRule } from './componentStyles.js'
+import { readerTextSizeTokens } from './dynamicType.js'
 import { propGuardRules, touchesGuardedTargets } from './propGuards.js'
 import { bridgeComponentTokens } from './themeStyle.js'
 
@@ -40,12 +41,13 @@ function rootTokens(source: ThemeCssSource): Record<string, string> {
   const tokens = { ...bridgeComponentTokens(source.tokens), ...source.localTokens }
   if (source.syntax)
     Object.assign(tokens, syntaxThemeStyle(source.syntax))
-  return tokens
+  // Font sizes follow the reader's text size (see dynamicType.ts).
+  return readerTextSizeTokens(tokens)
 }
 
 /** Token values one adaptation rule rewrites. */
 function adaptedTokens(rule: ResolvedThemeAdaptationRule): Record<string, string> {
-  return { ...bridgeComponentTokens(rule.tokens), ...rule.localTokens }
+  return readerTextSizeTokens({ ...bridgeComponentTokens(rule.tokens), ...rule.localTokens })
 }
 
 function rootRules(source: ThemeCssSource): string[] {

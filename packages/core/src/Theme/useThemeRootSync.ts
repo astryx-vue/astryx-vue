@@ -1,5 +1,6 @@
 import type { ThemeMode } from './types.js'
 import { onBeforeUnmount, onMounted, watch } from 'vue'
+import { syncReaderTextSize } from './textSizeSync.js'
 
 interface RootEntry {
   name: () => string
@@ -61,8 +62,11 @@ export function useThemeRootSync(
     return
 
   const entry: RootEntry = { name: themeName, mode }
+  let stopTextSizeSync: (() => void) | undefined
 
   onMounted(() => {
+    // The root Theme keeps the page's text-size scales current (see dynamicType.ts).
+    stopTextSizeSync = syncReaderTextSize(document)
     if (entries.length === 0)
       baseSnapshot = capture()
     entries.push(entry)
@@ -75,6 +79,7 @@ export function useThemeRootSync(
   })
 
   onBeforeUnmount(() => {
+    stopTextSizeSync?.()
     const index = entries.lastIndexOf(entry)
     if (index >= 0)
       entries.splice(index, 1)

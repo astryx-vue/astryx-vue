@@ -1,0 +1,294 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.overrides {
+  /*
+   * 自带填充的部件（卡片、浮层、输入框、菜单……）把主题自己的文字色和链接色重新设一遍，
+   * 放在分类色卡片里时不会继承卡片的深色文字。对应原版主题的 OWN_FILL_RULES。
+   */
+  [data-astryx-theme='butter'] .astryx-file-input {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-card[data-variant='muted'] {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-card[data-variant='default'] {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-section[data-variant='section'] {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-section[data-variant='muted'] {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-text-input {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+    padding-block: var(--astryx-spacing-2);
+    padding-inline: var(--astryx-spacing-3);
+    border-color: var(--astryx-color-border);
+  }
+
+  [data-astryx-theme='butter'] .astryx-text-area {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+    padding-block: var(--astryx-spacing-2);
+    border-color: var(--astryx-color-border);
+    --_textarea-inline-padding: var(--astryx-spacing-3);
+  }
+
+  [data-astryx-theme='butter'] .astryx-number-input {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+    border-color: var(--astryx-color-border);
+    --astryx-number-input-padding-inline: var(--astryx-spacing-3);
+    --astryx-number-input-padding-block-start: var(--astryx-spacing-2);
+    --astryx-number-input-padding-block-end: var(--astryx-spacing-2);
+  }
+
+  [data-astryx-theme='butter'] .astryx-date-input {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+    padding-block: var(--astryx-spacing-2);
+    padding-inline: var(--astryx-spacing-3);
+    border-color: var(--astryx-color-border);
+  }
+
+  [data-astryx-theme='butter'] .astryx-time-input {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+    padding-block: var(--astryx-spacing-2);
+    padding-inline: var(--astryx-spacing-3);
+    border-color: var(--astryx-color-border);
+  }
+
+  [data-astryx-theme='butter'] .astryx-selector[data-variant='input'] {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-multi-selector[data-variant='input'] {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-typeahead {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+    padding-block: var(--astryx-spacing-2);
+    padding-inline: var(--astryx-spacing-3);
+    border-color: var(--astryx-color-border);
+  }
+
+  [data-astryx-theme='butter'] .astryx-tokenizer {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+    padding-block: var(--astryx-spacing-2);
+    padding-inline: var(--astryx-spacing-3);
+    border-color: var(--astryx-color-border);
+  }
+
+  [data-astryx-theme='butter'] .astryx-clickable-card[data-variant='default'] {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-clickable-card[data-variant='muted'] {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-selectable-card[data-variant='default'] {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-selectable-card[data-variant='muted'] {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-app-shell[data-variant='surface'] {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-app-shell[data-variant='section'] {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-app-shell__header[data-variant='surface'] {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-app-shell__sidenav[data-variant='surface'] {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-layout-panel {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-layout-content {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-code {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-avatar {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-avatar-group-overflow {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-segmented-control-item[data-selected='true'] {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-step-indicator[data-progress='not-started'] {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-table[data-striped='true'] tbody tr:nth-child(even of :not([data-expansion-panel], [data-group-header])) {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+    color: var(--astryx-color-text-primary);
+  }
+
+  [data-astryx-theme='butter'] .astryx-banner-content {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-input-group-text {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-date-range-input {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-selector-listbox {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-multi-selector-listbox {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-dropdown-menu {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-dropdown-menu-radio {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-context-menu {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-popover {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-hover-card {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-dialog {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-drawer {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-bottom-sheet {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+
+  [data-astryx-theme='butter'] .astryx-chat-drawer {
+    --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
+    --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
+    --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
+  }
+}

@@ -198,7 +198,7 @@ describe('theme touch type pin', () => {
     for (const theme of withPin) {
       const css = readFileSync(join(root, 'packages/themes', theme, 'mobile-type.css'), 'utf8')
       expect(css, theme).toContain('@media (width < 1024px) and (pointer: coarse)')
-      expect(css, theme).toContain('--astryx-font-size-base: 1rem;')
+      expect(css, theme).toContain('calc(1rem * var(--_dynamic-type-body, 1))')
     }
   })
 })

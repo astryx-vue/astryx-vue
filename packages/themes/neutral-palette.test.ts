@@ -135,8 +135,8 @@ describe('neutral touch type pin', () => {
   it('floors body to 16px below the lg breakpoint and keeps display-1 sized', () => {
     const css = read('mobile-type.css')
     expect(css).toContain('@media (width < 1024px) and (pointer: coarse)')
-    expect(css).toContain('--astryx-font-size-base: 1rem;')
-    expect(css).toContain('--astryx-font-size-lg: 1.1875rem;')
+    expect(css).toContain('calc(1rem * var(--_dynamic-type-body, 1))')
+    expect(css).toContain('calc(1.1875rem * var(--_dynamic-type-title3, 1))')
     expect(css).not.toContain('--astryx-font-size-5xl')
     expect(declared.get('--astryx-font-size-5xl')).toBe('2.625rem')
   })

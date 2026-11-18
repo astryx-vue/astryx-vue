@@ -134,8 +134,8 @@
     --_button-border-style: var(--astryx-button-destructive-border-style, var(--astryx-button-border-style, solid));
     --_button-border-color: var(--astryx-button-destructive-border-color, var(--astryx-button-border-color, transparent));
 
-    color: var(--astryx-button-destructive-foreground, #a50c25);
-    background-color: var(--astryx-button-destructive-background, #facecb);
+    color: var(--astryx-button-destructive-foreground, var(--astryx-color-on-error, light-dark(#ffffff, #0a1317)));
+    background-color: var(--astryx-button-destructive-background, var(--astryx-color-error, light-dark(#e3193b, #f5394f)));
   }
 
   @media (hover: hover) {
@@ -173,7 +173,7 @@
   }
 
   .astryx-button[data-variant='destructive']:focus-visible {
-    outline-color: var(--astryx-button-destructive-foreground, #a50c25);
+    outline-color: var(--astryx-color-error, light-dark(#e3193b, #f5394f));
   }
 
   .astryx-button:disabled,

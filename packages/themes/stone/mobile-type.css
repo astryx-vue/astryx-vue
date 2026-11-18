@@ -11,17 +11,28 @@
 @layer astryx.tokens {
   @media (width < 1024px) and (pointer: coarse) {
     [data-astryx-theme='stone'] {
-      --astryx-font-size-4xs: 0.375rem;
-      --astryx-font-size-3xs: 0.4375rem;
-      --astryx-font-size-2xs: 0.5625rem;
-      --astryx-font-size-xs: 0.6875rem;
-      --astryx-font-size-sm: 0.8125rem;
-      --astryx-font-size-base: 1rem;
-      --astryx-font-size-lg: 1.25rem;
-      --astryx-font-size-xl: 1.5rem;
-      --astryx-font-size-2xl: 1.8125rem;
-      --astryx-font-size-3xl: 2.25rem;
-      --astryx-font-size-4xl: 2.75rem;
+      --_scaled-font-size-4xs: min(calc(0.375rem * var(--_dynamic-type-caption2, 1)), var(--_scaled-font-size-3xs));
+      --astryx-font-size-4xs: var(--_scaled-font-size-4xs);
+      --_scaled-font-size-3xs: min(calc(0.4375rem * var(--_dynamic-type-caption2, 1)), var(--_scaled-font-size-2xs));
+      --astryx-font-size-3xs: var(--_scaled-font-size-3xs);
+      --_scaled-font-size-2xs: min(calc(0.5625rem * var(--_dynamic-type-caption2, 1)), var(--_scaled-font-size-xs));
+      --astryx-font-size-2xs: var(--_scaled-font-size-2xs);
+      --_scaled-font-size-xs: min(calc(0.6875rem * var(--_dynamic-type-caption1, 1)), var(--_scaled-font-size-sm));
+      --astryx-font-size-xs: var(--_scaled-font-size-xs);
+      --_scaled-font-size-sm: min(calc(0.8125rem * var(--_dynamic-type-footnote, 1)), var(--_scaled-font-size-base));
+      --astryx-font-size-sm: var(--_scaled-font-size-sm);
+      --_scaled-font-size-base: min(calc(1rem * var(--_dynamic-type-body, 1)), var(--_scaled-font-size-lg));
+      --astryx-font-size-base: var(--_scaled-font-size-base);
+      --_scaled-font-size-lg: min(calc(1.25rem * var(--_dynamic-type-title3, 1)), var(--_scaled-font-size-xl));
+      --astryx-font-size-lg: var(--_scaled-font-size-lg);
+      --_scaled-font-size-xl: min(calc(1.5rem * var(--_dynamic-type-title2, 1)), var(--_scaled-font-size-2xl));
+      --astryx-font-size-xl: var(--_scaled-font-size-xl);
+      --_scaled-font-size-2xl: min(calc(1.8125rem * var(--_dynamic-type-title1, 1)), var(--_scaled-font-size-3xl));
+      --astryx-font-size-2xl: var(--_scaled-font-size-2xl);
+      --_scaled-font-size-3xl: min(calc(2.25rem * var(--_dynamic-type-title1, 1)), var(--_scaled-font-size-4xl));
+      --astryx-font-size-3xl: var(--_scaled-font-size-3xl);
+      --_scaled-font-size-4xl: min(calc(2.75rem * var(--_dynamic-type-large-title, 1)), var(--_scaled-font-size-5xl));
+      --astryx-font-size-4xl: var(--_scaled-font-size-4xl);
 
       --astryx-text-heading-1-size: var(--astryx-font-size-2xl);
       --astryx-text-heading-1-leading: 1.3793;
