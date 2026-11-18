@@ -1,4 +1,5 @@
 import type { Camera, NumericDomain3D, ProjectedPoint, ThreeDContext } from './types.js'
+import { roundForMarkup } from '../utils.js'
 
 export function computeDomain3D(data: Record<string, unknown>[], key: string): NumericDomain3D {
   let min = Number.POSITIVE_INFINITY
@@ -52,8 +53,13 @@ export function createProjection3D(
     const rotatedX = x * cosAz + z * sinAz
     const rotatedZ = -x * sinAz + z * cosAz
     const rotatedY = y * cosEl - rotatedZ * sinEl
-    const depth = y * sinEl + rotatedZ * cosEl
-    return { px: centerX + rotatedX * scale, py: centerY - rotatedY * scale, depth }
+    // 坐标写进 SVG 属性，深度决定点的大小和透明度，都要舍掉引擎间最后一位的差异，
+    // 服务端渲染和 hydration 才算得一样。深度多留几位，排序时少出并列。
+    return {
+      px: roundForMarkup(centerX + rotatedX * scale),
+      py: roundForMarkup(centerY - rotatedY * scale),
+      depth: roundForMarkup(y * sinEl + rotatedZ * cosEl, 6),
+    }
   }
 }
 

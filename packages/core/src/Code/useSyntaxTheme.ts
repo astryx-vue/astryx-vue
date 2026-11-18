@@ -1,9 +1,9 @@
 import type { ComputedRef } from 'vue'
 import type { SyntaxThemeTokens, SyntaxTokenKey } from './syntaxTheme.js'
 import { computed, inject } from 'vue'
-import { useMediaQuery } from '../composables/useMediaQuery.js'
-import { readColorMode, resolveLightDark } from '../Theme/colorMode.js'
+import { resolveLightDark } from '../Theme/colorMode.js'
 import { themeContextKey } from '../Theme/context.js'
+import { useResolvedColorMode } from '../Theme/useResolvedColorMode.js'
 import { syntaxThemeKey } from './syntaxContext.js'
 import { SYNTAX_TOKEN_KEYS } from './syntaxTheme.js'
 
@@ -25,16 +25,10 @@ export interface UseSyntaxThemeReturn {
 export function useSyntaxTheme(): UseSyntaxThemeReturn | null {
   const injected = inject(syntaxThemeKey, null)
   const theme = inject(themeContextKey, null)
-  const prefersDark = useMediaQuery('(prefers-color-scheme: dark)')
+  const mode = useResolvedColorMode(() => theme?.value.mode)
   if (!injected)
     return null
 
-  const mode = computed(() => {
-    const requested = theme?.value.mode
-    if (requested === 'light' || requested === 'dark')
-      return requested
-    return readColorMode(prefersDark.value)
-  })
   const name = computed(() => injected.value?.name ?? '')
   const tokens = computed<SyntaxThemeTokens | null>(() => {
     const theme = injected.value

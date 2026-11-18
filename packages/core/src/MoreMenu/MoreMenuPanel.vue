@@ -6,6 +6,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, useId, us
 import { useOverflow } from '../composables/useOverflow.js'
 import Divider from '../Divider/Divider.vue'
 import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
+import LayerPortal from '../layer/LayerPortal.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { moreMenuLevelKey, useMoreMenuLevel, useMoreMenuSize } from './context.js'
@@ -313,7 +314,7 @@ defineExpose({
 </script>
 
 <template>
-  <Teleport :disabled="isInline" :to="teleportTarget">
+  <LayerPortal :inline="isInline" :to="teleportTarget">
     <Transition appear name="astryx-more-menu" @after-leave="emit('settled')">
       <div
         v-if="isOpen"
@@ -396,5 +397,5 @@ defineExpose({
         </Teleport>
       </div>
     </Transition>
-  </Teleport>
+  </LayerPortal>
 </template>

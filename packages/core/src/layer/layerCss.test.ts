@@ -43,15 +43,15 @@ function layerClassNames(): string[] {
   return [...group.matchAll(/\.([\w-]+)/g)].map(match => match[1]!)
 }
 
-/** 每个 `<Teleport>` 里第一个元素的开始标签（含 class 和 :class）。 */
+/** 每个 `<Teleport>` 或 `<LayerPortal>`（不内联时就是 Teleport）里第一个元素的开始标签（含 class 和 :class）。 */
 function teleportRoots(code: string): string[] {
-  return [...code.matchAll(/<Teleport\b[^>]*>\s*(?:<!--[\s\S]*?-->\s*)*(?:<Transition\b[^>]*>\s*(?:<!--[\s\S]*?-->\s*)*)?(<[a-z][^>]*>)/g)]
+  return [...code.matchAll(/<(?:Teleport|LayerPortal)\b[^>]*>\s*(?:<!--[\s\S]*?-->\s*)*(?:<Transition\b[^>]*>\s*(?:<!--[\s\S]*?-->\s*)*)?(<[a-z][^>]*>)/g)]
     .map(match => match[1]!)
 }
 
 const teleporters = vueFiles(SRC)
   .map(file => ({ name: relative(SRC, file), code: readFileSync(file, 'utf8') }))
-  .filter(({ code }) => code.includes('<Teleport'))
+  .filter(({ code }) => code.includes('<Teleport') || code.includes('<LayerPortal'))
   .filter(({ name }) => !(name in NOT_A_LAYER_ROOT))
 
 describe('浮层的文字重置', () => {

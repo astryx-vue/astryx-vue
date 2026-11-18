@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { RadialAxisProps } from './types.js'
 import { computed, ref, watchPostEffect } from 'vue'
+import { polarPoint } from './arc.js'
 import { useRadial } from './context.js'
 
 defineOptions({ name: 'AstryxRadialAxis' })
@@ -21,8 +22,7 @@ const labels = computed(() => {
     const cosine = Math.cos(angle)
     return [{
       key,
-      x: cx + cosine * (radius + props.labelOffset),
-      y: cy + Math.sin(angle) * (radius + props.labelOffset),
+      ...polarPoint(cx, cy, angle, radius + props.labelOffset),
       anchor: cosine > 0.1 ? 'start' : cosine < -0.1 ? 'end' : 'middle',
     }]
   })
