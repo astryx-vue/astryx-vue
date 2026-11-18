@@ -1,6 +1,6 @@
 import type { ComputedRef } from 'vue'
 import type { VolumeAnalyser } from './volumeAnalyser.js'
-import { computed, onScopeDispose, ref, shallowRef } from 'vue'
+import { computed, getCurrentInstance, onMounted, onScopeDispose, ref, shallowRef } from 'vue'
 import { useAstryxLocale, useAstryxMessages } from '../locale/index.js'
 import { createVolumeAnalyser, getSharedAudioContext } from './volumeAnalyser.js'
 
@@ -100,7 +100,17 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}):
   const interimResults = options.interimResults ?? true
   const trackVolume = options.trackVolume ?? true
 
-  const isSupported = computed(() => speechRecognitionCtor() != null)
+  // 组件里挂载后才检测：服务端没有 SpeechRecognition，setup 里就读的话，Chromium
+  // 的 hydration 会多渲染出听写按钮，和服务端 HTML 对不上。组件外直接检测。
+  const hasRecognition = ref(false)
+  function detectSupport(): void {
+    hasRecognition.value = speechRecognitionCtor() != null
+  }
+  if (getCurrentInstance() == null)
+    detectSupport()
+  else
+    onMounted(detectSupport)
+  const isSupported = computed(() => hasRecognition.value)
   const isListening = ref(false)
   const isSpeaking = ref(false)
   const volume = ref(0)
