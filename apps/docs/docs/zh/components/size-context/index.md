@@ -15,7 +15,7 @@ import { sizeContextOverview } from '../../../../components/demos/size-context'
 `SizeProvider` 用来给一整块子树统一定一个默认尺寸（`sm`、`md`、`lg`）。里面的交互组件没写 `size` 时，就用这一档；写了 `size` 的组件不受影响。它不渲染任何多余的元素，只把默认插槽原样透传。
 
 ```ts
-import { SizeProvider, useSize, provideSize } from '@astryx-vue/core/SizeContext'
+import { provideSize, SizeProvider, useSize } from '@astryx-vue/core/SizeContext'
 ```
 
 尺寸按下面的顺序决定，靠前的优先：

@@ -68,7 +68,7 @@ describe('size cascading containers', () => {
   })
 
   it('buttonGroup cascades its size to its buttons', () => {
-    const wrapper = mount(() => h(ButtonGroup, { size: 'lg' }, () => [h(Button, { label: 'A' }), h(Button, { label: 'B', size: 'sm' })]))
+    const wrapper = mount(() => h(ButtonGroup, { label: 'Actions', size: 'lg' }, () => [h(Button, { label: 'A' }), h(Button, { label: 'B', size: 'sm' })]))
     const sizes = wrapper.findAll('button').map(b => b.attributes('data-size'))
     expect(sizes).toEqual(['lg', 'sm'])
   })

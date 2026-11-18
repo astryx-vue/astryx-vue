@@ -15,7 +15,7 @@ import { sizeContextOverview } from '../../../../components/demos/size-context'
 `SizeProvider` sets a default size (`sm`, `md`, or `lg`) for a whole subtree. Interactive components inside use it when they have no `size` of their own; a component with an explicit `size` is unaffected. It renders no extra element and passes its default slot through.
 
 ```ts
-import { SizeProvider, useSize, provideSize } from '@astryx-vue/core/SizeContext'
+import { provideSize, SizeProvider, useSize } from '@astryx-vue/core/SizeContext'
 ```
 
 Size resolves in this order, first match wins:

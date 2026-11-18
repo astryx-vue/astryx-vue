@@ -1256,7 +1256,7 @@ const rowActivationPlugin: TablePlugin<ServiceJob> = {
       },
     }
   },
-  cellPatch({ column, row, kind }) {
+  cellPatch({ row, kind }) {
     if (kind !== 'body' || row == null || isTableGroupHeader(row) || row.id !== activeJobId.value)
       return null
     return { style: { backgroundColor: 'var(--astryx-color-accent-muted)' } }

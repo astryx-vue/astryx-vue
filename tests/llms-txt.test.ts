@@ -281,8 +281,14 @@ describe('paths', () => {
   it('folds a directory index into a sibling file', () => {
     expect(markdownPathFor('en/components/button/index.md')).toBe('en/components/button.md')
     expect(markdownPathFor('zh/components/button/index.md')).toBe('components/button.md')
-    expect(markdownPathFor('en/themes/index.md')).toBe('en/themes.md')
     expect(markdownPathFor('index.md')).toBe('index.md')
+  })
+
+  it('follows the theme page rewrites', () => {
+    expect(markdownPathFor('en/themes-gallery.md')).toBe('en/themes.md')
+    expect(markdownPathFor('zh/themes-gallery.md')).toBe('themes.md')
+    expect(markdownPathFor('en/themes/index.md')).toBe('en/guide/theming.md')
+    expect(markdownPathFor('zh/themes/matcha.md')).toBe('guide/themes/matcha.md')
   })
 
   it('merges the component tabs into the overview file', () => {

@@ -28,7 +28,7 @@ function renderArea(props: Partial<TextAreaProps> = {}, attrs: Record<string, un
 
 describe('textArea', () => {
   it('rows 默认 3，高度由行数决定', () => {
-    const wrapper = mount(TextArea, { props: { label: 'Notes' } })
+    const wrapper = mount(TextArea, { props: { label: 'Notes', modelValue: '' } })
     expect(wrapper.find('textarea').attributes('rows')).toBe('3')
   })
 

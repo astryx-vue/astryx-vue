@@ -3,6 +3,7 @@
  * 页面 `<head>` 里的链接和写出的 Markdown 都按这里的规则算，两边不会走偏。
  */
 import type { DocsLocale } from '../../components/demo-infra/docs-i18n.ts'
+import { themeRewrites } from '../../site/themeRoutes.ts'
 
 /** 组件页的分页文件名。这些文件会并进总览那一篇。 */
 export const COMPONENT_TABS = ['props', 'accessibility'] as const
@@ -24,11 +25,16 @@ export interface LlmsPage {
   tab?: ComponentTab
 }
 
+const THEME_REWRITES = themeRewrites()
+
 /**
- * 中文页面没有语言前缀，英文页面有 `en/`。
+ * 中文页面没有语言前缀，英文页面有 `en/`。主题相关页面改写到 `/guide/` 下、画廊页占 `/themes/`。
  * 这里和 `kawapress.config.ts` 里的 `rewrites` 是同一套规则。
  */
 export function localizeSourcePath(sourcePath: string): string {
+  const rewritten = THEME_REWRITES[sourcePath]
+  if (rewritten)
+    return rewritten
   return sourcePath.startsWith('zh/') ? sourcePath.slice('zh/'.length) : sourcePath
 }
 
