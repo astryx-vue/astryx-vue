@@ -2,9 +2,7 @@
 import type { VNode } from 'vue'
 import type { TooltipProps } from './types.js'
 import { computed, getCurrentInstance, nextTick, onMounted, onUpdated, ref, Teleport, useAttrs, watch } from 'vue'
-import { useResolvedLayerTeleport } from '../composables/useLayerMountTarget.js'
-import { useMergedRefs } from '../composables/useMergedRefs.js'
-import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
+import TooltipSurface from './TooltipSurface.vue'
 import { useTooltip } from './useTooltip.js'
 import '../../styles/tooltip.css'
 
@@ -43,21 +41,9 @@ const tooltip = useTooltip({
   onHide: () => emit('openChange', false),
 })
 
-const {
-  triggerRef,
-  contentRef,
-  isOpen,
-  contentStyle: bubbleStyle,
-  resolvedPlacement,
-  contentProps,
-} = tooltip
-
-// 浮层元素挂进 hook 的内容 ref，定位与鼠标桥接都靠它。
-const setContentRef = useMergedRefs<HTMLElement>([contentRef])
+const { triggerRef } = tooltip
 
 const wrapperRef = ref<HTMLElement | null>(null)
-// Dialog 里挂进对话框；触发器在段落或链接里时挂到安全的父级；其余挂到 body。
-const teleportTarget = useResolvedLayerTeleport(computed(() => props.anchor ?? wrapperRef.value))
 // 触发器是插槽内容，这里只负责从包裹元素里把它找出来，再交给 hook 挂事件。
 const isTextTrigger = ref(false)
 const showIndication = computed(() => props.hasHoverIndication === true || (props.hasHoverIndication === 'auto' && isTextTrigger.value))
@@ -128,21 +114,9 @@ onUpdated(syncTrigger)
     <slot />
   </span>
   <slot v-else />
-  <Teleport :to="teleportTarget">
-    <!-- eslint-disable-next-line vue-a11y/mouse-events-have-key-events, vue-a11y/no-static-element-interactions -- 气泡上的鼠标事件仅用于指针移入气泡时保持显示；键盘焦点由触发元素的 focusin / focusout 处理。 -->
-    <div
-      v-show="isOpen"
-      :ref="setContentRef"
-      class="astryx-tooltip"
-      :data-placement="resolvedPlacement"
-      :style="bubbleStyle"
-      v-bind="contentProps"
-    >
-      <LayerContentBoundary>
-        <slot name="content">
-          {{ content }}
-        </slot>
-      </LayerContentBoundary>
-    </div>
-  </Teleport>
+  <TooltipSurface :tooltip="tooltip" :anchor="props.anchor ?? wrapperRef" :content="content">
+    <slot name="content">
+      {{ content }}
+    </slot>
+  </TooltipSurface>
 </template>

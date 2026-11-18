@@ -62337,16 +62337,58 @@
       "importPath": "@astryx-vue/core/InfoTip",
       "exportName": "InfoTip",
       "summary": {
-        "en": "`InfoTip` is a small \"i\" button that previews help text on hover or keyboard focus. Put it next to labels, values, and metrics.",
-        "zh": "`InfoTip` 是一个小「i」按钮，悬停或键盘聚焦时预览帮助文字。适合放在标签、数值和指标旁边。"
+        "en": "`InfoTip` is a small \"i\" button that reveals help. Hover and keyboard focus preview the help. A click, tap, Enter, or Space pins it open until Escape, a second press, a press outside, or focus leaving. Put it next to labels, values, and metrics for permission notes, metric definitions, and field help.",
+        "zh": "`InfoTip` 是一个会展开帮助文字的小「i」按钮。悬停和键盘聚焦预览帮助，点击、轻点、回车或空格把它钉住，直到按下 Escape、再按一次、点到外面或焦点离开。适合放在标签、数值和指标旁边，用来写权限说明、指标定义和字段帮助。"
       },
       "usage": {
-        "en": "`InfoTip` is a small \"i\" button that previews help text on hover or keyboard focus. Put it next to labels, values, and metrics.\n\n```vue\n<script setup lang=\"ts\">\nimport { InfoTip } from '@astryx-vue/core/InfoTip'\n</script>\n\n<template>\n  <InfoTip content=\"30-day rolling average.\" label=\"About this metric\" />\n</template>\n```",
-        "zh": "`InfoTip` 是一个小「i」按钮，悬停或键盘聚焦时预览帮助文字。适合放在标签、数值和指标旁边。\n\n```vue\n<script setup lang=\"ts\">\nimport { InfoTip } from '@astryx-vue/core/InfoTip'\n</script>\n\n<template>\n  <InfoTip content=\"近 30 天滚动平均值。\" label=\"关于这个指标\" />\n</template>\n```"
+        "en": "`InfoTip` is a small \"i\" button that reveals help. Hover and keyboard focus preview the help. A click, tap, Enter, or Space pins it open until Escape, a second press, a press outside, or focus leaving. Put it next to labels, values, and metrics for permission notes, metric definitions, and field help.\n\n```vue\n<script setup lang=\"ts\">\nimport { InfoTip } from '@astryx-vue/core/InfoTip'\n</script>\n\n<template>\n  <InfoTip content=\"Editors can change this field; viewers cannot.\" />\n  <InfoTip content=\"30-day rolling average.\" label=\"About this metric\" />\n</template>\n```\n\nThe button is a `useTooltip` toggle: it calls the hook's `show()` and `hide()`, and the hook previews, holds, announces, and closes the help. The info icon is the built-in `info` glyph, so a theme can replace it. Host `data-*` attributes and `class` reach the button; its name and disclosure attributes stay component-owned.",
+        "zh": "`InfoTip` 是一个会展开帮助文字的小「i」按钮。悬停和键盘聚焦预览帮助，点击、轻点、回车或空格把它钉住，直到按下 Escape、再按一次、点到外面或焦点离开。适合放在标签、数值和指标旁边，用来写权限说明、指标定义和字段帮助。\n\n```vue\n<script setup lang=\"ts\">\nimport { InfoTip } from '@astryx-vue/core/InfoTip'\n</script>\n\n<template>\n  <InfoTip content=\"编辑者可以修改这个字段，查看者不能。\" />\n  <InfoTip content=\"近 30 天滚动平均值。\" label=\"关于这个指标\" />\n</template>\n```\n\n按钮是 `useTooltip` 的开关：它调用 hook 的 `show()` 和 `hide()`，由 hook 负责预览、保持、播报和关闭。信息图标是内置的 `info` 图形，主题可以替换。宿主上的 `data-*` 属性和 `class` 会落到按钮上，名称和展开状态相关的属性由组件自己管。"
       },
       "practices": {
-        "en": [],
-        "zh": []
+        "en": [
+          {
+            "guidance": "Do",
+            "text": "Keep the content concise, plain, and non-interactive; use Popover or HoverCard for links and buttons."
+          },
+          {
+            "guidance": "Do",
+            "text": "Override `label` when \"More information\" is too generic, for example \"About this metric\"."
+          },
+          {
+            "guidance": "Do",
+            "text": "Rely on InfoTip rather than a hand-rolled info button on touch: it pins its help on a press, so a tap pins the help though the trigger is a button, and a tap outside closes it."
+          },
+          {
+            "guidance": "Don't",
+            "text": "Hand-compose an `Icon` inside `Tooltip` for an info affordance; the bare icon is `aria-hidden` and unfocusable, so keyboard and screen-reader users never reach it."
+          },
+          {
+            "guidance": "Don't",
+            "text": "Use InfoTip for information users must see to complete a task; put that text inline instead."
+          }
+        ],
+        "zh": [
+          {
+            "guidance": "推荐",
+            "text": "推荐"
+          },
+          {
+            "guidance": "推荐",
+            "text": "推荐"
+          },
+          {
+            "guidance": "推荐",
+            "text": "推荐"
+          },
+          {
+            "guidance": "不推荐",
+            "text": "不推荐"
+          },
+          {
+            "guidance": "不推荐",
+            "text": "不推荐"
+          }
+        ]
       },
       "props": {
         "en": [
@@ -62412,17 +62454,40 @@
         "en": [
           {
             "heading": "Accessibility",
-            "text": "The button is named by `label` (default \"More information\") and is described by the tooltip bubble through `aria-describedby`."
+            "text": "- The trigger is one real `<button type=\"button\">`, reachable with Tab, named by `label` (default \"More information\").\n- It follows the toggletip pattern: `aria-expanded=\"true\"` while the help is pinned, `aria-controls` points at the bubble while it shows, and `aria-describedby` keeps the bubble as its description.\n- A screen reader hears the help once when it pins. A hover or focus preview is already the button's description, so it is not announced again.\n- Escape closes the help through the shared dismissal stack: one press never closes both the help and an enclosing Dialog.\n- A press stops at the button, so a clickable row, card, or label around it does nothing.\n- On touch, the button has an invisible hit band that grows the tap target."
           }
         ],
         "zh": [
           {
             "heading": "无障碍",
-            "text": "按钮的名称来自 `label`（默认 “More information”），并通过 `aria-describedby` 关联提示气泡。"
+            "text": "- 触发器是一个真实的 `<button type=\"button\">`，可以用 Tab 到达，名称来自 `label`（默认 “More information”）。\n- 遵循 toggletip 模式：帮助被钉住时 `aria-expanded=\"true\"`，气泡显示时 `aria-controls` 指向它，`aria-describedby` 始终把气泡作为按钮的描述。\n- 帮助被钉住时读屏会念一次。悬停或聚焦的预览本来就是按钮的描述，不会再播报。\n- Escape 通过共用的关闭栈处理：一次按键不会同时关掉帮助和外层 Dialog。\n- 按下的事件停在按钮上，外面可点击的行、卡片或标签不会响应。\n- 触屏上按钮周围有一圈看不见的点击带，放大点按目标。"
           }
         ]
       },
-      "examples": [],
+      "examples": [
+        {
+          "title": {
+            "en": "Sizes",
+            "zh": "尺寸"
+          },
+          "description": {
+            "en": "xsm, sm (default), md, and lg map one to one to the Icon sizes: 12, 16, 20, and 24px.",
+            "zh": "xsm、sm（默认）、md、lg 与 Icon 的 12、16、20、24px 一一对应。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { InfoTip } from '@astryx-vue/core/InfoTip'\nimport { HStack } from '@astryx-vue/core/Stack'\nimport { Text } from '@astryx-vue/core/Text'\n</script>\n\n<template>\n  <div class=\"input-preview-grid\">\n    <HStack :gap=\"4\" align=\"center\">\n      <HStack v-for=\"size in (['xsm', 'sm', 'md', 'lg'] as const)\" :key=\"size\" :gap=\"1\" align=\"center\">\n        <Text type=\"label\">\n          {{ size }}\n        </Text>\n        <InfoTip :size=\"size\" :label=\"`About ${size}`\" content=\"Editors can change this field; viewers cannot.\" />\n      </HStack>\n    </HStack>\n  </div>\n</template>"
+        },
+        {
+          "title": {
+            "en": "Field label",
+            "zh": "字段标签"
+          },
+          "description": {
+            "en": "`labelTooltip` on any field draws an InfoTip beside the label, named “About Workspace name”.",
+            "zh": "任何字段的 `labelTooltip` 都会在标签旁画一个 InfoTip，名称是“About Workspace name”。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { ref } from 'vue'\nimport { TextInput } from '@astryx-vue/core/TextInput'\n\nconst name = ref('')\n</script>\n\n<template>\n  <div class=\"input-preview-grid\">\n    <TextInput v-model=\"name\" label=\"Workspace name\" label-tooltip=\"Shown to everyone in the workspace.\" />\n  </div>\n</template>"
+        }
+      ],
       "anatomy": {
         "en": [],
         "zh": []

@@ -9,9 +9,6 @@
     --astryx-chat-foreground-secondary: var(--astryx-color-text-secondary);
     --astryx-chat-foreground-muted: var(--astryx-color-text-disabled);
     --astryx-chat-bubble-background: var(--astryx-color-neutral);
-    /* 上游 neutral 的 --color-text-error / --color-text-success 取 45 档。 */
-    --astryx-chat-error: light-dark(#c0262c, #ffaea7);
-    --astryx-chat-success: light-dark(#2f7d33, #90ca90);
     --astryx-chat-accent: var(--astryx-color-accent);
     --astryx-chat-unread-color: var(--astryx-color-border-red);
     --astryx-chat-scroll-background: var(--astryx-color-background-popover);

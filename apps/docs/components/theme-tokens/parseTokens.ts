@@ -91,7 +91,7 @@ export function colorBucket(name: string): ColorBucket {
     return hue
   if (name.includes('inverted'))
     return 'core'
-  if (name.includes('success') || name.includes('error') || name.includes('warning'))
+  if (name.includes('success') || name.includes('error') || name.includes('warning') || name.includes('info'))
     return 'status'
   if (
     name.includes('border')

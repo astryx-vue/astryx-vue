@@ -55,6 +55,27 @@
     --astryx-color-on-error: #101314;
     --astryx-color-warning: #d3c490;
     --astryx-color-warning-muted: #d3c490;
+
+    /* Status roles: info 填充、状态文字、图标、边框和浅底上的文字（上游 INV11 / INV17）。 */
+    --astryx-color-info: #8aa1d8;
+    --astryx-color-info-muted: #a3b5d6;
+    --astryx-color-on-info: #101314;
+    --astryx-color-text-info: #a3b5d6;
+    --astryx-color-text-success: #b3c79a;
+    --astryx-color-text-warning: #d3c490;
+    --astryx-color-text-error: #c6a6a2;
+    --astryx-color-icon-info: var(--astryx-color-text-info);
+    --astryx-color-icon-success: var(--astryx-color-text-success);
+    --astryx-color-icon-warning: var(--astryx-color-text-warning);
+    --astryx-color-icon-error: var(--astryx-color-text-error);
+    --astryx-color-border-info: var(--astryx-color-text-info);
+    --astryx-color-border-success: var(--astryx-color-text-success);
+    --astryx-color-border-warning: var(--astryx-color-text-warning);
+    --astryx-color-border-error: var(--astryx-color-text-error);
+    --astryx-color-on-info-muted: #1f2c54;
+    --astryx-color-on-success-muted: #244023;
+    --astryx-color-on-warning-muted: #573f0b;
+    --astryx-color-on-error-muted: #4a2520;
     --astryx-color-on-warning: #101314;
 
     --astryx-color-border: #E8F1F61A;
@@ -168,8 +189,12 @@
     --astryx-duration-slow-min: 600ms;
     --astryx-duration-slow: 800ms;
     --astryx-duration-slow-max: 1065ms;
+    --astryx-duration-exit: var(--astryx-duration-fast);
 
     --astryx-ease-standard: cubic-bezier(0.24, 1, 0.4, 1);
+    --astryx-ease-entrance: cubic-bezier(0.24, 1, 0.4, 1);
+    --astryx-ease-move: cubic-bezier(0.24, 1, 0.4, 1);
+    --astryx-ease-exit: cubic-bezier(0.3, 0, 0.6, 0.6);
 
     --astryx-font-family-body: Fustat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     --astryx-font-family-code: 'JetBrains Mono', 'SF Mono', Monaco, Consolas, monospace;

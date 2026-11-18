@@ -23,6 +23,7 @@ import type { DropdownMenuMessages } from './messages/dropdown-menu.js'
 import type { EmojiPickerMessages } from './messages/emoji-picker.js'
 import type { FieldMessages } from './messages/field.js'
 import type { FileInputMessages } from './messages/file-input.js'
+import type { InfoTipMessages } from './messages/info-tip.js'
 import type { InputMessages } from './messages/input.js'
 import type { KeyboardHintMessages } from './messages/keyboard-hint.js'
 import type { LayoutMessages } from './messages/layout.js'
@@ -81,6 +82,7 @@ import { dropdownMenuMessages } from './messages/dropdown-menu.js'
 import { emojiPickerMessages } from './messages/emoji-picker.js'
 import { fieldMessages } from './messages/field.js'
 import { fileInputMessages } from './messages/file-input.js'
+import { infoTipMessages } from './messages/info-tip.js'
 import { inputMessages } from './messages/input.js'
 import { keyboardHintMessages } from './messages/keyboard-hint.js'
 import { layoutMessages } from './messages/layout.js'
@@ -140,6 +142,7 @@ export interface AstryxMessages {
   emojiPicker: EmojiPickerMessages
   field: FieldMessages
   fileInput: FileInputMessages
+  infoTip: InfoTipMessages
   input: InputMessages
   keyboardHint: KeyboardHintMessages
   layout: LayoutMessages
@@ -201,6 +204,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     emojiPicker: emojiPickerMessages.en,
     field: fieldMessages.en,
     fileInput: fileInputMessages.en,
+    infoTip: infoTipMessages.en,
     input: inputMessages.en,
     keyboardHint: keyboardHintMessages.en,
     layout: layoutMessages.en,
@@ -260,6 +264,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     emojiPicker: emojiPickerMessages['zh-CN'],
     field: fieldMessages['zh-CN'],
     fileInput: fileInputMessages['zh-CN'],
+    infoTip: infoTipMessages['zh-CN'],
     input: inputMessages['zh-CN'],
     keyboardHint: keyboardHintMessages['zh-CN'],
     layout: layoutMessages['zh-CN'],

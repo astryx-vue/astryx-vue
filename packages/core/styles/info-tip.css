@@ -17,14 +17,29 @@
     transition: color var(--astryx-duration-fast, 100ms) var(--astryx-ease-standard, ease);
   }
 
+  .astryx-info-tip:is(:disabled, [aria-disabled='true']) {
+    cursor: default;
+  }
+
   @media (hover: hover) {
-    .astryx-info-tip:hover {
+    .astryx-info-tip:hover:where(:not(:disabled, [aria-disabled='true'])) {
       color: var(--astryx-color-icon-primary);
     }
   }
 
   .astryx-info-tip:focus-visible {
-    outline: 2px solid var(--astryx-color-focus-ring, currentcolor);
-    outline-offset: 2px;
+    outline-width: var(--astryx-focus-outline-width, 2px);
+    outline-style: var(--astryx-focus-outline-style, solid);
+    outline-color: var(--astryx-focus-outline-color, currentcolor);
+    outline-offset: var(--astryx-focus-outline-offset, 3px);
+  }
+
+  /* 触屏下按钮周围一圈看不见的点击带，把点击目标撑到 44px。 */
+  @media (pointer: coarse) {
+    .astryx-info-tip::after {
+      position: absolute;
+      inset: -12px;
+      content: '';
+    }
   }
 }

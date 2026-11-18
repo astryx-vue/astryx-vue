@@ -3,7 +3,8 @@ import type { FieldLabelProps, FieldLabelSlots } from './types.js'
 import { computed, toRaw, useTemplateRef } from 'vue'
 import { showsOptionalIndicator, showsRequiredIndicator, useFormLayout } from '../FormLayout/context.js'
 import Icon from '../Icon/Icon.vue'
-import FieldInfoTip from './FieldInfoTip.vue'
+import InfoTip from '../InfoTip/InfoTip.vue'
+import { useAstryxMessages } from '../locale/context.js'
 import '../../styles/field.css'
 
 defineOptions({ name: 'AstryxFieldLabel' })
@@ -12,6 +13,7 @@ const props = withDefaults(defineProps<FieldLabelProps>(), {
   requiredLabel: 'Required',
 })
 defineSlots<FieldLabelSlots>()
+const messages = useAstryxMessages()
 const element = useTemplateRef<HTMLElement>('label')
 defineExpose({ element })
 const labelId = computed(() => props.labelId ?? `${props.inputId}-label`)
@@ -53,7 +55,7 @@ function focusFromDescription(event: MouseEvent): void {
         {{ label }}
         <span v-if="showOptional || showRequired" class="astryx-field-optionality"><span aria-hidden="true"> ∙ </span>{{ showOptional ? optionalLabel : requiredLabel }}</span>
       </component>
-      <FieldInfoTip v-if="labelTooltip" :text="labelTooltip" />
+      <InfoTip v-if="labelTooltip" class="astryx-field-label-info-tip" :content="labelTooltip" :label="messages.field.labelTooltip(label)" />
     </div>
     <span v-if="description" :id="descriptionId" class="astryx-field-description" role="presentation" @click="focusFromDescription">{{ description }}</span>
   </div>

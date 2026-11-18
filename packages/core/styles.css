@@ -44,6 +44,7 @@
 @import './styles/hover-card.css';
 @import './styles/icon.css';
 @import './styles/indicator-focus-ring.css';
+@import './styles/info-tip.css';
 @import './styles/kbd.css';
 @import './styles/keyboard-hint.css';
 @import './styles/layer.css';
@@ -80,6 +81,7 @@
 @import './styles/stack.css';
 @import './styles/status-dot.css';
 @import './styles/stepper.css';
+@import './styles/stepper-track.css';
 @import './styles/switch.css';
 @import './styles/tab-list.css';
 @import './styles/tab-menu.css';

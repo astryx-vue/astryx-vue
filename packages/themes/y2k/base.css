@@ -55,6 +55,27 @@
     --astryx-color-on-error: light-dark(#8b1d24, #5c0008);
     --astryx-color-warning: light-dark(#FFE08A, #FFE08A);
     --astryx-color-warning-muted: light-dark(#FFE08A, #FFE08A);
+
+    /* Status roles: info 填充、状态文字、图标、边框和浅底上的文字（上游 INV11 / INV17）。 */
+    --astryx-color-info: light-dark(#00649b, #70c1ff);
+    --astryx-color-info-muted: var(--astryx-color-background-blue);
+    --astryx-color-on-info: light-dark(#FFFFFF, #2D241B);
+    --astryx-color-text-info: light-dark(#003454, #70c1ff);
+    --astryx-color-text-success: light-dark(#3f4e00, #b5d263);
+    --astryx-color-text-warning: light-dark(#584400, #f3d172);
+    --astryx-color-text-error: light-dark(#880023, #ff969a);
+    --astryx-color-icon-info: var(--astryx-color-text-info);
+    --astryx-color-icon-success: var(--astryx-color-text-success);
+    --astryx-color-icon-warning: var(--astryx-color-text-warning);
+    --astryx-color-icon-error: var(--astryx-color-text-error);
+    --astryx-color-border-info: var(--astryx-color-text-info);
+    --astryx-color-border-success: var(--astryx-color-text-success);
+    --astryx-color-border-warning: var(--astryx-color-text-warning);
+    --astryx-color-border-error: var(--astryx-color-text-error);
+    --astryx-color-on-info-muted: var(--astryx-color-text-blue);
+    --astryx-color-on-success-muted: var(--astryx-color-text-green);
+    --astryx-color-on-warning-muted: var(--astryx-color-text-yellow);
+    --astryx-color-on-error-muted: var(--astryx-color-text-red);
     --astryx-color-on-warning: light-dark(#614400, #3f2600);
 
     --astryx-color-border: light-dark(#2F292E, #EDEFFC1A);
@@ -168,8 +189,12 @@
     --astryx-duration-slow-min: 480ms;
     --astryx-duration-slow: 600ms;
     --astryx-duration-slow-max: 750ms;
+    --astryx-duration-exit: var(--astryx-duration-fast);
 
     --astryx-ease-standard: cubic-bezier(0.24, 1, 0.4, 1);
+    --astryx-ease-entrance: cubic-bezier(0.24, 1, 0.4, 1);
+    --astryx-ease-move: cubic-bezier(0.24, 1, 0.4, 1);
+    --astryx-ease-exit: cubic-bezier(0.3, 0, 0.6, 0.6);
 
     --astryx-font-family-body: Poppins, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     --astryx-font-family-code: 'JetBrains Mono', 'SF Mono', Monaco, Consolas, monospace;

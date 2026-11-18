@@ -466,7 +466,7 @@
   }
 
   .astryx-chat-metadata__status[data-status='error'] {
-    color: var(--astryx-chat-error, var(--astryx-color-error));
+    color: var(--astryx-chat-error, var(--astryx-color-text-error));
   }
 
   .astryx-chat-metadata__status[data-status='sending'] {
@@ -612,11 +612,11 @@
   }
 
   .astryx-chat-tool-calls__additions {
-    color: var(--astryx-chat-success, var(--astryx-color-success));
+    color: var(--astryx-chat-success, var(--astryx-color-text-success));
   }
 
   .astryx-chat-tool-calls__deletions {
-    color: var(--astryx-chat-error, var(--astryx-color-error));
+    color: var(--astryx-chat-error, var(--astryx-color-text-error));
   }
 
   .astryx-chat-tool-calls__count {
@@ -742,7 +742,7 @@
     justify-content: center;
     width: 16px;
     height: 16px;
-    color: var(--astryx-chat-success, var(--astryx-color-success));
+    color: var(--astryx-chat-success, var(--astryx-color-icon-success));
   }
 
   .astryx-chat-status[data-status='pending'] {
@@ -754,7 +754,7 @@
   }
 
   .astryx-chat-status[data-status='error'] {
-    color: var(--astryx-chat-error, var(--astryx-color-error));
+    color: var(--astryx-chat-error, var(--astryx-color-icon-error));
   }
 
   .astryx-chat-typing {

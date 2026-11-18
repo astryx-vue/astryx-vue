@@ -636,7 +636,7 @@ describe('numberInput', () => {
       },
     })
 
-    expect(wrapper.find('.astryx-field-info-tip').exists()).toBe(true)
+    expect(wrapper.find('.astryx-field-label-info-tip').exists()).toBe(true)
   })
 
   it('renders the label icon slot', () => {

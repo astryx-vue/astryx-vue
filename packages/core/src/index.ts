@@ -588,6 +588,7 @@ export type {
   IndicatorState,
 } from './Indicator/index.js'
 export { InfoTip } from './InfoTip/index.js'
+export type { InfoTipProps, InfoTipSize } from './InfoTip/index.js'
 export { InputGroup, InputGroupText } from './InputGroup/index.js'
 export type {
   InputGroupContext,
@@ -1061,6 +1062,8 @@ export type {
   SwitchChangeAction,
   SwitchChangeEvent,
   SwitchEmits,
+  SwitchLabelPosition,
+  SwitchLabelSpacing,
   SwitchProps,
   SwitchSize,
   SwitchSlots,

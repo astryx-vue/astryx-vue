@@ -8,8 +8,6 @@
     --astryx-chat-foreground-secondary: var(--astryx-color-text-secondary);
     --astryx-chat-foreground-muted: var(--astryx-color-text-disabled);
     --astryx-chat-bubble-background: var(--astryx-color-neutral);
-    --astryx-chat-error: var(--astryx-color-error);
-    --astryx-chat-success: var(--astryx-color-success);
     --astryx-chat-accent: var(--astryx-color-accent);
     --astryx-chat-unread-color: var(--astryx-color-border-red);
     --astryx-chat-scroll-background: var(--astryx-color-background-popover);

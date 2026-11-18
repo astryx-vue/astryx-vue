@@ -87,6 +87,7 @@ const a11yAttrs = computed(() => {
   <span
     v-bind="a11yAttrs"
     class="astryx-icon"
+    :data-kind="glyphSlug ? undefined : 'graphic'"
     :data-color="color"
     :data-size="resolvedSize"
   >

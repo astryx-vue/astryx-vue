@@ -62,9 +62,11 @@ describe('file input', () => {
 
   it('shows the labelTooltip from the field label', () => {
     const wrapper = mount(FileInput, {
+      attachTo: document.body,
       props: { label: 'Resume', modelValue: null, labelTooltip: 'PDF under 2 MB' },
     })
-    expect(wrapper.html()).toContain('PDF under 2 MB')
+    // 气泡挂在 body 上，不在字段里面。
+    expect(document.body.innerHTML).toContain('PDF under 2 MB')
     wrapper.unmount()
   })
 
