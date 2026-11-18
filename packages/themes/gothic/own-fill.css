@@ -131,7 +131,7 @@
     --astryx-color-text-accent: #e8f1f6;
   }
 
-  [data-astryx-theme='gothic'] .astryx-table[data-striped='true'] tbody tr:nth-child(even of :not([data-expansion-panel], [data-group-header])) {
+  [data-astryx-theme='gothic'] .astryx-table tbody tr:nth-child(even of :not([data-expansion-panel])) {
     --astryx-color-text-primary: #e8f1f6;
     --astryx-color-text-secondary: #96a0ab;
     --astryx-color-text-accent: #e8f1f6;
