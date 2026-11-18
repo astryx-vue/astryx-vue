@@ -41,6 +41,7 @@ export async function waitForStablePreview(page, { timeoutMs = LOAD_TIMEOUT_MS }
   const deadline = Date.now() + timeoutMs
   let lastElements = -1
   let lastTexts = 0
+  let steady = 0
   let frame = null
   while (Date.now() < deadline) {
     frame = previewFrame(page) ?? frame
@@ -52,7 +53,11 @@ export async function waitForStablePreview(page, { timeoutMs = LOAD_TIMEOUT_MS }
         // 编辑器里的模板源码也可能出现「Building」（contact-form 的「Community Building」），所以要连省略号一起匹配。
         // eslint-disable-next-line unicorn/prefer-dom-node-text-content -- 要的正是只含渲染文字的 innerText
         const building = await page.evaluate(() => /Building…|构建中…/.test(document.body.innerText)).catch(() => true)
-        if (!building && info.texts >= 3 && info.elements === lastElements && info.texts === lastTexts)
+        const same = info.elements === lastElements && info.texts === lastTexts
+        steady = same ? steady + 1 : 0
+        // 一般页面文字够多，连续两次一样就算渲染完；空白页、图片画廊这种几乎没字的，
+        // 要连续多次（约 4 秒）不变才算，免得把还没挂上的空壳当成结果。
+        if (!building && info.elements > 0 && ((info.texts >= 3 && same) || steady >= 6))
           return frame
         lastElements = info.elements
         lastTexts = info.texts
