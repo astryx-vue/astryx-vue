@@ -35,7 +35,7 @@
     font-family: inherit;
     font-size: var(--astryx-text-label-size, 14px);
     font-weight: var(--astryx-font-weight-medium, 500);
-    line-height: 1.4286;
+    line-height: var(--astryx-text-label-leading, 1.4286);
     cursor: pointer;
   }
 
@@ -48,11 +48,9 @@
     line-height: var(--astryx-text-supporting-leading, 1.6667);
   }
 
-  .astryx-field-label-group[data-disabled='true'] {
-    opacity: 0.5;
-  }
-
+  /* 同上游 labelDisabled：只把标签改成禁用色并取消手型光标，不整体变淡 */
   .astryx-field-label-group[data-disabled='true'] .astryx-field-label {
+    color: var(--astryx-color-text-disabled);
     cursor: default;
   }
 

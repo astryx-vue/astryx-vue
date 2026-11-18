@@ -34,7 +34,13 @@ export function useScrollbars(
     ([element, enabled]) => {
       release()
       if (enabled && element instanceof HTMLElement) {
+        // 挂载自绘滚动条会重排容器，浏览器因此把滚动位置清零；记下来再还原，聊天记录等已贴底的容器才不会被拉回顶部。
+        const { scrollTop, scrollLeft } = element
         handle = ctx.mount(element, ctx.options.value)
+        if (element.scrollTop !== scrollTop)
+          element.scrollTop = scrollTop
+        if (element.scrollLeft !== scrollLeft)
+          element.scrollLeft = scrollLeft
         active.value = true
       }
     },

@@ -76,10 +76,6 @@ function select(id: ThemeId) {
     url.searchParams.set('theme', id)
   window.history.replaceState(window.history.state, '', url)
 }
-
-function pickerMode(id: ThemeId): 'light' | 'dark' {
-  return id === 'gothic' ? 'dark' : 'light'
-}
 </script>
 
 <template>
@@ -152,7 +148,7 @@ function pickerMode(id: ThemeId): 'light' | 'dark' {
               <div
                 class="themes-page__swatch"
                 :data-astryx-theme="item.id"
-                :data-astryx-color-mode="pickerMode(item.id)"
+                data-astryx-color-mode="light"
                 :style="item.picker ? { backgroundImage: `url(${item.picker})` } : undefined"
               >
                 <Text type="display-3" class="themes-page__swatch-label">
@@ -165,7 +161,7 @@ function pickerMode(id: ThemeId): 'light' | 'dark' {
       </Card>
     </aside>
     <div class="themes-page__main">
-      <ThemeShowcase :theme="current" :color-mode="current === 'gothic' || previewDark ? 'dark' : 'light'" />
+      <ThemeShowcase :theme="current" :color-mode="previewDark ? 'dark' : 'light'" />
     </div>
   </div>
 </template>

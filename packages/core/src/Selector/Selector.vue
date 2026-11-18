@@ -395,7 +395,7 @@ onMounted(syncAnchorWidth)
         :message="fieldStatus?.message"
         :tooltip="effectiveStatusVariant === 'tooltip'"
       />
-      <Icon v-else-if="control.canActivate.value" class="astryx-selector-icon" icon="chevronDown" size="sm" />
+      <Icon v-else-if="!control.isReadOnly.value" class="astryx-selector-icon" icon="chevronDown" size="sm" />
       <span v-if="control.isReadOnly.value" :id="readOnlyId" class="astryx-visually-hidden">{{ messages.selector.readOnly }}</span>
     </div>
     <VisuallyHidden v-if="showsDisabledMessage" :id="disabledMessageId">

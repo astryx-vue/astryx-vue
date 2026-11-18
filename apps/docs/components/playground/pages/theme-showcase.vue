@@ -44,12 +44,14 @@ import {
   TopNavHeading,
   TopNavItem,
   useAppShellMobile,
+  useChatNewMessages,
+  useChatStreamScroll,
   useImperativeAlertDialog,
   useImperativeDialog,
   useToast,
   VStack,
 } from '@astryx-vue/core'
-import { computed, defineComponent, h, reactive, ref } from 'vue'
+import { computed, defineComponent, h, onMounted, reactive, ref } from 'vue'
 
 type ShowcaseBadgeVariant = 'blue' | 'cyan' | 'green' | 'orange' | 'pink' | 'purple' | 'red' | 'teal' | 'yellow'
 
@@ -207,10 +209,23 @@ const showPaymentPreview = ref(false)
 // 聊天卡
 const draft = ref('')
 const sentMessages = ref<Array<{ id: number, text: string }>>([])
+// 对话区默认贴着底部：首次可滚动时跳到底，内容增长时继续跟随（对应原版 ChatCard 的 useChatStreamScroll）。
+const chatContent = ref<{ element?: HTMLElement | null } | null>(null)
+const chatScrollEl = computed(() => chatContent.value?.element ?? null)
+const { lock, isLocked, scrollIfLocked, scrollToBottom } = useChatStreamScroll({ scrollRef: chatScrollEl })
+const { contentRef } = useChatNewMessages({ isLocked, onResize: scrollIfLocked })
+onMounted(() => {
+  contentRef(chatScrollEl.value?.querySelector<HTMLElement>('.astryx-chat-message-list') ?? null)
+  // 字体和主题内容加载期间容器会被重排，浏览器把滚动位置清零；贴底要在这几次重排之后再补几次。
+  for (const delay of [0, 300, 800])
+    setTimeout(() => scrollToBottom({ behavior: 'instant' }), delay)
+  document.fonts?.ready.then(() => scrollToBottom({ behavior: 'instant' }))
+})
 function submitMessage() {
   const message = draft.value.trim()
   if (!message)
     return
+  lock()
   sentMessages.value.push({ id: (sentMessages.value.at(-1)?.id ?? 0) + 1, text: message })
   draft.value = ''
 }
@@ -360,10 +375,9 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
               <VStack :gap="10" width="100%" :max-width="880">
                 <Center>
                   <VStack :gap="4" h-align="center" :max-width="560">
-                    <!-- 原版每行用 <Text type="inherit" display="block">，core 的 Text 还没有 inherit 类型，先用块级 span 继承标题字号。 -->
                     <Heading :level="1" :accessibility-level="embedded ? 2 : 1" type="display-2" color="accent" justify="center">
-                      <span class="heading-line">Little joys,</span>
-                      <span class="heading-line">everywhere you go</span>
+                      <Text type="inherit" display="block">Little joys,</Text>
+                      <Text type="inherit" display="block">everywhere you go</Text>
                     </Heading>
                     <Text type="body" color="secondary" justify="center">
                       We believe the smallest details are the ones that matter most.
@@ -502,7 +516,7 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
                           </HStack>
                         </LayoutHeader>
                       </template>
-                      <LayoutContent class="chat-viewport" :padding="0" label="Studio AI conversation">
+                      <LayoutContent ref="chatContent" class="chat-viewport" :padding="0" label="Studio AI conversation">
                         <ChatMessageList>
                           <ChatSystemMessage>Today</ChatSystemMessage>
                           <ChatMessage sender="user">
@@ -591,7 +605,7 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
                           <HStack :gap="2" vAlign="center">
                             <TextInput v-model="query" label="Search inventory" is-label-hidden placeholder="Type and hit enter…" :start-icon="SearchIcon" :width="240" />
                             <HStack :gap="2" wrap="wrap" vAlign="center">
-                              <Selector v-model="category" label="Categories" is-label-hidden placeholder="Categories" size="sm" :start-icon="FolderIcon" has-clear :options="categories" :is-disabled="categories.length === 0" />
+                              <Selector v-model="category" label="Categories" is-label-hidden placeholder="Categories" size="sm" :start-icon="FolderIcon" has-clear :options="categories" :disabled="categories.length === 0" />
                               <Selector v-model="location" label="Locations" is-label-hidden placeholder="Locations" size="sm" :start-icon="MapPinIcon" has-clear :options="locations" />
                               <Selector v-model="tag" label="Tags" is-label-hidden placeholder="Tags" size="sm" :start-icon="TagIcon" has-clear :options="tagOptions" />
                             </HStack>
@@ -674,6 +688,5 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
 .chat-column { flex: 2 1 520px; }
 /* LayoutContent 没有高度上限，消息区限制在 720px 内。 */
 .chat-viewport { max-height: 720px; }
-.heading-line { display: block; }
 .icon-18 { width: 16px; height: 18px; max-height: none; }
 </style>

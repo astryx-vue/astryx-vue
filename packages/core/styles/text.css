@@ -61,7 +61,7 @@
     line-height: var(--astryx-text-display-2-leading, 1.15);
   }
 
-  /* 同上游 type="inherit"：字号、行高、字重跟随父元素。上游 Text 本来就不设字体，这里也一并继承 */
+  /* 同上游 type="inherit"：字体、字号、行高、字重都跟随父元素。 */
   .astryx-text--type-inherit {
     font-family: inherit;
     font-size: inherit;

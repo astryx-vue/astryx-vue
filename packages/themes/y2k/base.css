@@ -17,7 +17,6 @@
     color: var(--astryx-color-text-primary);
     font-family: var(--astryx-font-family-body);
     font-size: var(--astryx-text-body-size);
-    line-height: var(--astryx-text-body-leading);
 
     --astryx-color-accent: light-dark(#2d241b, #EDEFFC);
     --astryx-color-accent-muted: light-dark(#2d241b14, #EDEFFC20);

@@ -81,13 +81,13 @@
     border-color: var(--astryx-color-border);
   }
 
-  [data-astryx-theme='butter'] .astryx-selector[data-variant='input'] {
+  [data-astryx-theme='butter'] .astryx-selector-field[data-variant='input'] {
     --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
     --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
     --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
   }
 
-  [data-astryx-theme='butter'] .astryx-multi-selector[data-variant='input'] {
+  [data-astryx-theme='butter'] .astryx-multi-selector-control[data-variant='input'] {
     --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
     --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
     --astryx-color-text-accent: light-dark(#225bff, #fdee8c);

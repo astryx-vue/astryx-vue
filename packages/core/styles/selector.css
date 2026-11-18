@@ -40,15 +40,19 @@
     gap: var(--astryx-spacing-2, 8px);
     width: 100%;
     min-width: 0;
-    height: var(--astryx-input-height-md, 32px);
-    padding: var(--astryx-spacing-2, 8px) var(--astryx-spacing-3, 12px);
+    /* 同上游 sizeStyles：行高随尺寸 token 取值并封顶，上下内边距补齐到最小高度 */
+    --_selector-size: var(--astryx-size-element-md, 32px);
+    --_selector-line: max(min(var(--astryx-spacing-5, 20px), max(var(--_selector-size) - 2 * var(--astryx-border-width, 1px), 1.5em)), 20px, 1rem);
+    min-height: var(--_selector-size);
+    padding-block: calc((var(--_selector-size) - var(--_selector-line) - 2 * var(--astryx-border-width, 1px)) / 2);
+    padding-inline: var(--astryx-spacing-3, 12px);
     border: var(--astryx-border-width, 1px) solid var(--astryx-input-status-color, var(--astryx-input-border, #d4d4d4));
     border-radius: var(--astryx-radius-element, 0.625rem);
     background: var(--astryx-input-background, #fff);
     color: var(--astryx-color-text-primary, light-dark(#171717, #fafafa));
     font-family: var(--astryx-font-family-body, Figtree, sans-serif);
-    font-size: var(--astryx-text-body-size, 0.875rem);
-    line-height: var(--astryx-text-body-leading, 1.4286);
+    font-size: var(--astryx-text-label-size, 0.875rem);
+    line-height: var(--_selector-line);
     text-align: start;
     transition:
       border-color var(--astryx-duration-fast-max, 165ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1)),
@@ -74,11 +78,11 @@
   }
 
   .astryx-selector.size-sm .astryx-selector-field {
-    height: var(--astryx-input-height-sm, 28px);
+    --_selector-size: var(--astryx-size-element-sm, 28px);
   }
 
   .astryx-selector.size-lg .astryx-selector-field {
-    height: var(--astryx-input-height-lg, 36px);
+    --_selector-size: var(--astryx-size-element-lg, 36px);
   }
 
   @media (hover: hover) {

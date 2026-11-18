@@ -22,10 +22,7 @@
 
   [data-astryx-theme='butter'] .astryx-text--type-display-1,
   [data-astryx-theme='butter'] .astryx-text--type-display-2,
-  [data-astryx-theme='butter'] .astryx-text--type-display-3,
-  [data-astryx-theme='butter'] .astryx-heading--type-display-1,
-  [data-astryx-theme='butter'] .astryx-heading--type-display-2,
-  [data-astryx-theme='butter'] .astryx-heading--type-display-3 {
+  [data-astryx-theme='butter'] .astryx-text--type-display-3 {
     font-family: Sarina, 'Brush Script MT', 'Snell Roundhand', cursive;
   }
 }

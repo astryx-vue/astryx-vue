@@ -5,13 +5,13 @@
    * 自带填充的部件（卡片、浮层、输入框、菜单……）把主题自己的文字色和链接色重新设一遍，
    * 放在分类色卡片里时不会继承卡片的深色文字。对应原版主题的 OWN_FILL_RULES。
    */
-  [data-astryx-theme='gothic'] .astryx-selector[data-variant='input'] {
+  [data-astryx-theme='gothic'] .astryx-selector-field[data-variant='input'] {
     --astryx-color-text-primary: #e8f1f6;
     --astryx-color-text-secondary: #96a0ab;
     --astryx-color-text-accent: #e8f1f6;
   }
 
-  [data-astryx-theme='gothic'] .astryx-multi-selector[data-variant='input'] {
+  [data-astryx-theme='gothic'] .astryx-multi-selector-control[data-variant='input'] {
     --astryx-color-text-primary: #e8f1f6;
     --astryx-color-text-secondary: #96a0ab;
     --astryx-color-text-accent: #e8f1f6;

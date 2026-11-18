@@ -80,7 +80,7 @@
   .astryx-radio-label {
     color: var(--astryx-color-text-primary, #171717);
     font-size: var(--astryx-text-body-size, 14px);
-    line-height: 1.4286;
+    line-height: var(--astryx-text-body-leading, 1.4286);
   }
 
   .astryx-radio-description {
@@ -105,7 +105,7 @@
     margin-inline-start: auto;
     color: var(--astryx-color-text-secondary, #525252);
     font-size: var(--astryx-text-body-size, 14px);
-    line-height: 1.4286;
+    line-height: var(--astryx-text-body-leading, 1.4286);
   }
 
   @media (forced-colors: active) {

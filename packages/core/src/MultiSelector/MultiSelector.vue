@@ -377,7 +377,7 @@ defineExpose({
         :message="fieldStatus?.message"
         :tooltip="effectiveStatusVariant === 'tooltip'"
       />
-      <Icon v-else-if="control.canActivate.value" class="astryx-multi-selector-chevron" :class="{ 'is-open': combobox.isOpen.value }" icon="chevronDown" size="sm" />
+      <Icon v-else-if="!control.isReadOnly.value" class="astryx-multi-selector-chevron" :class="{ 'is-open': combobox.isOpen.value }" icon="chevronDown" size="sm" />
       <span v-if="control.isReadOnly.value" :id="readOnlyId" class="astryx-visually-hidden">{{ messages.multiSelector.readOnly }}</span>
       <span v-if="props.triggerDisplay === 'badges'" :ref="overflow.measureRef" class="astryx-multi-selector-measure" aria-hidden="true">
         <Token

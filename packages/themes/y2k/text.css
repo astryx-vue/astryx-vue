@@ -22,10 +22,7 @@
 
   [data-astryx-theme='y2k'] .astryx-text--type-display-1,
   [data-astryx-theme='y2k'] .astryx-text--type-display-2,
-  [data-astryx-theme='y2k'] .astryx-text--type-display-3,
-  [data-astryx-theme='y2k'] .astryx-heading--type-display-1,
-  [data-astryx-theme='y2k'] .astryx-heading--type-display-2,
-  [data-astryx-theme='y2k'] .astryx-heading--type-display-3 {
+  [data-astryx-theme='y2k'] .astryx-text--type-display-3 {
     font-family: 'Crimson Text', Georgia, 'Times New Roman', Times, serif;
   }
 }
