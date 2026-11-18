@@ -135,6 +135,7 @@ export const ssrFixtures: Record<string, SsrFixture> = {
   SideNavHeading: { props: { heading: 'Section' } },
   SideNavItem: { props: { label: 'Home' } },
   SideNavSection: { props: { title: 'Section' }, slots: { default: text('Items') } },
+  SizeProvider: { props: { value: 'sm' }, slots: { default: text('Content') } },
   Slider: { props: { label: 'Volume', modelValue: 50 } },
   StatusDot: { props: { label: 'Online' } },
   Step: { props: { step: 0, label: 'Cart' }, wrap: inStepper },

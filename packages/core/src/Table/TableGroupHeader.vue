@@ -31,8 +31,8 @@ const messages = useAstryxMessages()
     </button>
     <slot>
       <span class="astryx-table__group-label">
-        {{ groupKey }}
-        <span class="astryx-table__group-count">({{ count }})</span>
+        <!-- 标签和后面的空格分成两个文本节点，和原版 `{header.groupKey}{' '}` 的 DOM 一致。 -->
+        <template v-if="groupKey != null">{{ groupKey }}</template>{{ ' ' }}<span class="astryx-table__group-count">({{ count }})</span>
       </span>
     </slot>
   </span>

@@ -234,8 +234,9 @@
     font-size: 20px;
   }
 
-  .astryx-button__icon > *,
-  .astryx-button__end > * {
+  /* 带显式 size 的 Icon 保持自己的盒子（可比 16px 槽位大，居中溢出），和原版一致。 */
+  .astryx-button__icon > *:not([data-size]),
+  .astryx-button__end > *:not([data-size]) {
     display: block;
     width: 100%;
     height: 100%;

@@ -13,6 +13,7 @@ import { useFieldControlState } from '../composables/useFieldControlState.js'
 import { useOverflow } from '../composables/useOverflow.js'
 import Field from '../Field/Field.vue'
 import { useFieldPartStyling } from '../Field/fieldParts.js'
+import InputClearButton from '../Field/InputClearButton.vue'
 import StatusGlyph from '../Field/StatusGlyph.vue'
 import { fieldStatusPlacement } from '../Field/statusPlacement.js'
 import Icon from '../Icon/Icon.vue'
@@ -364,15 +365,12 @@ defineExpose({
         </span>
       </button>
       <Spinner v-if="control.isLoading.value" class="astryx-multi-selector-spinner" size="sm" :aria-label="messages.multiSelector.loading" />
-      <button
+      <InputClearButton
         v-if="hasClear && selectedValues.length > 0 && control.canActivate.value"
-        type="button"
         class="astryx-multi-selector-clear"
-        :aria-label="messages.multiSelector.clearAll(props.label)"
+        :label="messages.multiSelector.clearAll(props.label)"
         @click.stop="menu.commit([])"
-      >
-        <Icon icon="close" size="sm" />
-      </button>
+      />
       <StatusGlyph
         v-if="statusGlyph"
         :type="statusGlyph"

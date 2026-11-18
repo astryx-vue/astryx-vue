@@ -67,7 +67,7 @@ export const templateIcons = [
   'heroicons:eye',
   'heroicons:folder',
   'heroicons:folder-arrow-down',
-  'heroicons:grip-vertical',
+  'lucide:grip-vertical',
   'heroicons:light-bulb',
   'heroicons:lock-closed',
   'heroicons:magnifying-glass',

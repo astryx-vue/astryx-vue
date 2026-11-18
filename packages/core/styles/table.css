@@ -96,12 +96,22 @@
     padding-block: calc(var(--_cell-block, var(--astryx-spacing-2, 8px)) + 1px);
   }
 
+  /* 左右也一样：`<td>` 的 1px 加上触发层的内边距，每格两侧各多 1px。 */
+  .astryx-table td[data-row-menu]:not(.astryx-table__expansion) {
+    padding-inline: calc(var(--_cell-inline, var(--astryx-spacing-3, 12px)) + 1px);
+  }
+
   .astryx-table :is(th, td):where(:not(.astryx-table__group, .astryx-table__panel)):first-child {
     padding-inline-start: max(var(--container-padding-inline-start, var(--_cell-inline, var(--astryx-spacing-3, 12px))), var(--astryx-spacing-2, 8px));
   }
 
   .astryx-table :is(th, td):where(:not(.astryx-table__group, .astryx-table__panel)):last-child {
     padding-inline-end: max(var(--container-padding-inline-end, var(--_cell-inline, var(--astryx-spacing-3, 12px))), var(--astryx-spacing-2, 8px));
+  }
+
+  /* 最后一格：`<td>` 自己带容器边距，触发层再带一份格子内边距，两份叠加。 */
+  .astryx-table td[data-row-menu]:not(.astryx-table__expansion):last-child {
+    padding-inline-end: calc(max(var(--container-padding-inline-end, var(--_cell-inline, var(--astryx-spacing-3, 12px))), var(--astryx-spacing-2, 8px)) + var(--_cell-inline, var(--astryx-spacing-3, 12px)));
   }
 
   /* 原版 TableCell 给普通数据格带正文字号；分组头、展开面板、空态这些

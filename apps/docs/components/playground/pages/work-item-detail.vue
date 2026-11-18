@@ -41,16 +41,16 @@ import {
 // ── 可编辑字段 ────────────────────────────────────────────────────────────────
 
 const STATUS_OPTIONS = [
-  { value: 'todo', label: 'To Do', icon: () => h(StatusDot, { variant: 'neutral', label: 'To Do' }) },
-  { value: 'in_progress', label: 'In Progress', icon: () => h(StatusDot, { variant: 'accent', label: 'In Progress' }) },
-  { value: 'in_review', label: 'In Review', icon: () => h(StatusDot, { variant: 'warning', label: 'In Review' }) },
-  { value: 'done', label: 'Done', icon: () => h(StatusDot, { variant: 'success', label: 'Done' }) },
+  { value: 'todo', label: 'To Do', icon: h(StatusDot, { variant: 'neutral', label: 'To Do' }) },
+  { value: 'in_progress', label: 'In Progress', icon: h(StatusDot, { variant: 'accent', label: 'In Progress' }) },
+  { value: 'in_review', label: 'In Review', icon: h(StatusDot, { variant: 'warning', label: 'In Review' }) },
+  { value: 'done', label: 'Done', icon: h(StatusDot, { variant: 'success', label: 'Done' }) },
 ]
 
 const ASSIGNEE_OPTIONS = [
-  { value: 'priya-shah', label: 'Priya Shah', icon: () => h(Avatar, { name: 'Priya Shah', size: 'xsm' }) },
-  { value: 'marcus-chen', label: 'Marcus Chen', icon: () => h(Avatar, { name: 'Marcus Chen', size: 'xsm' }) },
-  { value: 'sofia-alvarez', label: 'Sofia Alvarez', icon: () => h(Avatar, { name: 'Sofia Alvarez', size: 'xsm' }) },
+  { value: 'priya-shah', label: 'Priya Shah', icon: h(Avatar, { name: 'Priya Shah', size: 'xsm' }) },
+  { value: 'marcus-chen', label: 'Marcus Chen', icon: h(Avatar, { name: 'Marcus Chen', size: 'xsm' }) },
+  { value: 'sofia-alvarez', label: 'Sofia Alvarez', icon: h(Avatar, { name: 'Sofia Alvarez', size: 'xsm' }) },
 ]
 
 interface PriorityOption {
@@ -192,7 +192,7 @@ const DetailsPanel = defineComponent({
         h(VStack, { gap: 4 }, () => [
           sectionHeading('Details'),
           h(MetadataList, null, () => [
-            item('Status', () => h(HStack, { gap: 2, vAlign: 'center' }, () => [statusOption.icon(), h(Text, { type: 'body' }, () => statusOption.label)])),
+            item('Status', () => h(HStack, { gap: 2, vAlign: 'center' }, () => [statusOption.icon, h(Text, { type: 'body' }, () => statusOption.label)])),
             item('Priority', () => h(Badge, { variant: priorityOption.badge, label: priorityOption.label })),
             item('Assignee', () => personRow(assigneeOption.label)),
             item('Reporter', () => personRow('Sofia Alvarez')),
@@ -309,7 +309,7 @@ function setSubtaskDone(id: number, isDone: boolean) {
               :debounce-ms="0"
             >
               <template #token="{ item, remove }">
-                <Token :label="item.label" :color="item.color" @remove="remove" />
+                <Token :label="item.label" :color="item.color" removable @remove="remove" />
               </template>
             </Tokenizer>
           </HStack>

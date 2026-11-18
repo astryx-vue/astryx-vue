@@ -14,6 +14,7 @@ import {
   ChatMessageBubble,
   ChatMessageList,
   ChatSystemMessage,
+  DialogHeader,
   Divider,
   Grid,
   Heading,
@@ -44,6 +45,7 @@ import {
   TopNavItem,
   useAppShellMobile,
   useImperativeAlertDialog,
+  useImperativeDialog,
   useToast,
   VStack,
 } from '@astryx-vue/core'
@@ -159,6 +161,32 @@ function confirmDelete() {
       demo('Demo: the item would be deleted here', 'row-delete')
     },
   })
+}
+
+// 登录：打开真的对话框，主题的页头、关闭按钮、输入框和页脚按钮能一起检查。
+// 每次打开换一个 key，表单重新挂载，重开后是空的。
+const signIn = useImperativeDialog({ purpose: 'form', width: 400 })
+const SignInHost = signIn.Host
+let signInOpens = 0
+const SignInForm = defineComponent({
+  setup() {
+    const signInEmail = ref('')
+    const signInPassword = ref('')
+    return () => h(Layout, null, {
+      header: () => h(DialogHeader, { title: 'Sign in', onOpenChange: () => signIn.hide() }),
+      default: () => h(LayoutContent, null, () => h(VStack, { gap: 4 }, () => [
+        h(TextInput, { 'label': 'Email', 'placeholder': 'you@studio.com', 'modelValue': signInEmail.value, 'onUpdate:modelValue': (v: string) => { signInEmail.value = v } }),
+        h(TextInput, { 'label': 'Password', 'type': 'password', 'modelValue': signInPassword.value, 'onUpdate:modelValue': (v: string) => { signInPassword.value = v } }),
+      ])),
+      footer: () => h(LayoutFooter, null, () => h(HStack, { gap: 2, hAlign: 'end' }, () => [
+        h(Button, { label: 'Cancel', variant: 'secondary', onClick: () => signIn.hide() }),
+        h(Button, { label: 'Sign in', variant: 'primary', onClick: () => signIn.hide() }),
+      ])),
+    })
+  },
+})
+function openSignIn() {
+  signIn.show(() => h(SignInForm, { key: ++signInOpens }), { 'aria-label': 'Sign in' } as never)
 }
 
 // 商品卡：每张卡各自记数量和「已加入」状态。
@@ -316,7 +344,8 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
                 <template #icon><Icon name="heroicons:shopping-bag" size="md" /></template>
               </Button>
             </HStack>
-            <Button label="Sign in" variant="primary" />
+            <Button label="Sign in" variant="primary" @click="openSignIn" />
+            <SignInHost />
           </HStack>
         </template>
       </TopNav>
@@ -568,7 +597,7 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
                             </HStack>
                           </HStack>
                           <HStack :gap="1" vAlign="center">
-                            <!-- 原版直接放 18px 的 lucide 图标，不经过 Icon 的尺寸档。 -->
+                            <!-- 原版直接放 size=18 的 lucide 图标：高 18px，但在 16px 的图标槽里被 flex 压成 16px 宽。 -->
                             <Button variant="ghost" size="sm" is-icon-only label="List view" tooltip="List view" @click="demo('Demo: the list view would show here', 'list-view')">
                               <template #icon><Icon name="heroicons:list-bullet" class="icon-18" /></template>
                             </Button>
@@ -646,5 +675,5 @@ const inventoryColumns = computed((): TableColumn<InventoryRow>[] => [
 /* LayoutContent 没有高度上限，消息区限制在 720px 内。 */
 .chat-viewport { max-height: 720px; }
 .heading-line { display: block; }
-.icon-18 { font-size: 18px; }
+.icon-18 { width: 16px; height: 18px; max-height: none; }
 </style>

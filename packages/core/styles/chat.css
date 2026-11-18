@@ -421,10 +421,18 @@
     align-items: center;
     height: var(--astryx-spacing-5, 20px);
     margin-block-end: calc(-1 * var(--astryx-spacing-1-5, 6px));
-    color: var(--astryx-chat-foreground-secondary, var(--astryx-color-text-secondary));
-    font-size: var(--astryx-text-supporting-size, 0.75rem);
-    font-weight: var(--astryx-chat-font-weight-semibold, var(--astryx-font-weight-semibold));
-    line-height: var(--astryx-text-supporting-leading, 1.6667);
+    /* 同上游：名字行不单独设字号、字重、颜色，沿用正文（名字要变样式由调用方传节点）。 */
+  }
+
+  /* 上游里名字行和元信息行是列容器的直接子项，按内容收窄并跟着发送方靠边。 */
+  .astryx-chat-message-bubble__name,
+  .astryx-chat-message-bubble__meta {
+    align-self: flex-start;
+  }
+
+  .astryx-chat-message-bubble__name[data-sender='user'],
+  .astryx-chat-message-bubble__meta[data-sender='user'] {
+    align-self: flex-end;
   }
 
   .astryx-chat-message-bubble__meta {

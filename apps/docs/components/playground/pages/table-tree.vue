@@ -756,44 +756,44 @@ const READMES: Record<string, string> = {
       <VStack v-else :ref="setBody" :gap="6">
         <!-- 原版整条用 SizeProvider value="sm" 包着：Button、TextInput 读上下文，IconButton 和 DropdownMenu 不读，仍要自己写 sm。 -->
         <SizeProvider value="sm">
-        <HStack :gap="2" align="center" wrap="wrap">
-          <DropdownMenu has-chevron :items="branchItems" :button="{ label: 'main', size: 'sm', icon: BranchIcon }" />
-          <HStack :gap="1" align="center">
-            <template v-for="ref in REF_COUNTS" :key="ref.label">
-              <IconButton v-if="isNarrowBody" :label="ref.label" variant="ghost" size="sm">
-                <Icon :name="ref.icon" size="sm" />
-              </IconButton>
-              <Button v-else :label="ref.label" variant="ghost" size="sm" />
-            </template>
-          </HStack>
-          <StackItem size="fill">
-            <HStack :gap="2" h-align="end" align="center">
-              <Text v-if="isSearching && matchCount > 0" type="supporting" color="secondary">
-                {{ matchCount }} {{ matchCount === 1 ? 'result' : 'results' }}
-              </Text>
-              <IconButton v-if="isNarrowBody && !isSearchOpen" variant="ghost" size="sm" label="Go to file" @click="openSearch">
-                <Icon name="heroicons:magnifying-glass" size="sm" />
-              </IconButton>
-              <TextInput
-                v-else
-                ref="searchInput"
-                v-model="query"
-                label="Go to file"
-                is-label-hidden
-                placeholder="Go to file"
-                has-clear
-                :start-icon="SearchIcon"
-              />
-              <DropdownMenu has-chevron :items="addFileItems" :button="{ label: 'Add file', size: 'sm' }" />
-              <Button label="Code" variant="primary">
-                <template #icon>
-                  <Icon name="heroicons:code-bracket" size="sm" />
-                </template>
-              </Button>
+          <HStack :gap="2" align="center" wrap="wrap">
+            <DropdownMenu has-chevron :items="branchItems" :button="{ label: 'main', size: 'sm', icon: BranchIcon }" />
+            <HStack :gap="1" align="center">
+              <template v-for="ref in REF_COUNTS" :key="ref.label">
+                <IconButton v-if="isNarrowBody" :label="ref.label" variant="ghost" size="sm">
+                  <Icon :name="ref.icon" size="sm" />
+                </IconButton>
+                <Button v-else :label="ref.label" variant="ghost" size="sm" />
+              </template>
             </HStack>
+            <StackItem size="fill">
+              <HStack :gap="2" h-align="end" align="center">
+                <Text v-if="isSearching && matchCount > 0" type="supporting" color="secondary">
+                  {{ matchCount }} {{ matchCount === 1 ? 'result' : 'results' }}
+                </Text>
+                <IconButton v-if="isNarrowBody && !isSearchOpen" variant="ghost" size="sm" label="Go to file" @click="openSearch">
+                  <Icon name="heroicons:magnifying-glass" size="sm" />
+                </IconButton>
+                <TextInput
+                  v-else
+                  ref="searchInput"
+                  v-model="query"
+                  label="Go to file"
+                  is-label-hidden
+                  placeholder="Go to file"
+                  has-clear
+                  :start-icon="SearchIcon"
+                />
+                <DropdownMenu has-chevron :items="addFileItems" :button="{ label: 'Add file', size: 'sm' }" />
+                <Button label="Code" variant="primary">
+                  <template #icon>
+                    <Icon name="heroicons:code-bracket" size="sm" />
+                  </template>
+                </Button>
+              </HStack>
+            </StackItem>
+          </HStack>
         </SizeProvider>
-          </StackItem>
-        </HStack>
 
         <Card :padding="0" class="tt-fixed-layout">
           <Table

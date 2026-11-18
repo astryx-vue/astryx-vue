@@ -39,8 +39,8 @@
     gap: var(--astryx-spacing-2, 8px);
     width: 100%;
     min-width: 0;
-    min-height: var(--astryx-input-height-md, 32px);
-    padding: var(--astryx-input-padding-block, var(--astryx-spacing-1, 4px)) var(--astryx-input-padding-inline, var(--astryx-spacing-2, 8px));
+    height: var(--astryx-input-height-md, 32px);
+    padding: var(--astryx-spacing-2, 8px) var(--astryx-spacing-3, 12px);
     border: var(--astryx-border-width, 1px) solid var(--astryx-input-status-color, var(--astryx-input-border, #d4d4d4));
     border-radius: var(--astryx-radius-element, 0.625rem);
     background: var(--astryx-input-background, #fff);
@@ -55,11 +55,11 @@
   }
 
   .astryx-multi-selector.size-sm .astryx-multi-selector-control {
-    min-height: var(--astryx-input-height-sm, 28px);
+    height: var(--astryx-input-height-sm, 28px);
   }
 
   .astryx-multi-selector.size-lg .astryx-multi-selector-control {
-    min-height: var(--astryx-input-height-lg, 36px);
+    height: var(--astryx-input-height-lg, 36px);
   }
 
   .astryx-multi-selector-control.is-ghost {
