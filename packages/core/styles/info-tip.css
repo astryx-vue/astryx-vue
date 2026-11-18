@@ -1,0 +1,30 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-info-tip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    padding: var(--astryx-spacing-0-5, 2px);
+    margin: 0;
+    border: 0;
+    border-radius: var(--astryx-radius-full, 9999px);
+    background: transparent;
+    color: var(--astryx-color-icon-secondary);
+    cursor: pointer;
+    transition: color var(--astryx-duration-fast, 100ms) var(--astryx-ease-standard, ease);
+  }
+
+  @media (hover: hover) {
+    .astryx-info-tip:hover {
+      color: var(--astryx-color-icon-primary);
+    }
+  }
+
+  .astryx-info-tip:focus-visible {
+    outline: 2px solid var(--astryx-color-focus-ring, currentcolor);
+    outline-offset: 2px;
+  }
+}

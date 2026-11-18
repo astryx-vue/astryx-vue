@@ -412,6 +412,15 @@
     min-width: 0;
   }
 
+  /* 原版把动作放在整行内边距里：行尾内缩 8px，主按钮与动作之间 8px。 */
+  .astryx-side-nav-item__main:has(> .astryx-side-nav-item__actions) {
+    padding-inline-end: var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-side-nav-item__main:has(> .astryx-side-nav-item__actions) > .astryx-nav-item {
+    padding-inline-end: var(--astryx-spacing-1, 4px);
+  }
+
   .astryx-side-nav-item__actions {
     display: inline-flex;
     flex: none;

@@ -25,6 +25,7 @@ export const COMPONENT_FAMILIES = {
   'Field': { en: 'Field', zh: '表单字段' },
   'Hover Card': { en: 'Hover Card', zh: '悬浮卡片' },
   'Indicator': { en: 'Indicator', zh: '指示器' },
+  'InfoTip': { en: 'InfoTip', zh: '信息提示' },
   'Layout': { en: 'Layout', zh: '布局' },
   'List': { en: 'List', zh: '列表' },
   'Metadata List': { en: 'Metadata List', zh: '元数据列表' },

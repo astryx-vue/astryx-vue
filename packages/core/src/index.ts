@@ -587,6 +587,7 @@ export type {
   IndicatorSize,
   IndicatorState,
 } from './Indicator/index.js'
+export { InfoTip } from './InfoTip/index.js'
 export { InputGroup, InputGroupText } from './InputGroup/index.js'
 export type {
   InputGroupContext,

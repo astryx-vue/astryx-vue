@@ -146,6 +146,9 @@
       "@astryx-vue/core/Indicator": [
         "../../packages/core/src/Indicator/index.ts"
       ],
+      "@astryx-vue/core/InfoTip": [
+        "../../packages/core/src/InfoTip/index.ts"
+      ],
       "@astryx-vue/core/InputGroup": [
         "../../packages/core/src/InputGroup/index.ts"
       ],

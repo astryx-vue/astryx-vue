@@ -9,6 +9,7 @@ import {
   HStack,
   Icon,
   IconButton,
+  InfoTip,
   Layout,
   LayoutContent,
   LayoutHeader,
@@ -18,7 +19,6 @@ import {
   StatusDot,
   Text,
   Toolbar,
-  Tooltip,
   useToast,
   VStack,
 } from '@astryx-vue/core'
@@ -428,9 +428,7 @@ onBeforeUnmount(() => {
                       <Heading :level="4" :accessibility-level="2">
                         {{ meta.title }}
                       </Heading>
-                      <Tooltip :content="meta.tooltip">
-                        <Icon name="heroicons:information-circle" size="sm" color="secondary" />
-                      </Tooltip>
+                      <InfoTip :content="meta.tooltip" :label="`About ${meta.title}`" />
                     </HStack>
                     <Text type="supporting" color="secondary" has-tabular-numbers>
                       {{ itemsByColumn[meta.id].length }}

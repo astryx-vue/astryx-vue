@@ -105,7 +105,6 @@ export const PLAYGROUND_LISTED_TEMPLATE_SLUGS: readonly PlaygroundTemplateSlug[]
   'settings-dialog',
   'settings',
   'settings-sidebar',
-  'blank',
   'shell-nav',
   'shell-side-nav',
   'shell-top-nav',
@@ -121,6 +120,14 @@ export const PLAYGROUND_LISTED_TEMPLATE_SLUGS: readonly PlaygroundTemplateSlug[]
   'ide',
   'kanban-board',
   'editor',
+]
+
+/**
+ * 原版生成模板注册表时跳过的脚手架（`scaffold: true`）。`?template=<slug>` 在原版找不到它们，
+ * 会落到默认的欢迎页，这里保持一致。
+ */
+export const PLAYGROUND_SCAFFOLD_TEMPLATE_SLUGS: readonly PlaygroundTemplateSlug[] = [
+  'blank',
 ]
 
 export interface PlaygroundTemplateMeta {

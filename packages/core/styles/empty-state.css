@@ -25,6 +25,14 @@
     justify-content: center;
   }
 
+  /*
+   * 原版图标容器是块级 div，加载圈按行内元素（inline-grid、vertical-align: middle）排，
+   * 行盒比圈本身高 1.5px；Icon 则正好占满自己的盒子，所以只有加载圈走块级。
+   */
+  .astryx-empty-state-icon:has(> .astryx-spinner) {
+    display: block;
+  }
+
   .astryx-empty-state-text {
     display: flex;
     flex-direction: column;
