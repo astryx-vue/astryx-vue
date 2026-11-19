@@ -5,4 +5,4 @@ import overviewDemo from './overview.vue'
 import overviewSource from './overview.vue?raw&highlighted'
 
 export const radioListItemBasic = defineDemo(basicDemo, basicSource)
-export const radioListItemOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const radioListItemOverview = defineDemo(overviewDemo, overviewSource)

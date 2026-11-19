@@ -5,7 +5,7 @@ import { Text } from '@astryx-vue/core/Text'
 </script>
 
 <template>
-  <Grid :columns="4" :gap="3" width="100%">
+  <Grid :columns="4" :gap="3" :width="400">
     <GridSpan :columns="3">
       <Card :height="80">
         <Text type="body" color="secondary">

@@ -7,4 +7,4 @@ import overviewSource from './overview.vue?raw&highlighted'
 const options = { className: 'context-menu-preview-host' }
 
 export const contextMenuItemBasic = defineDemo(basicDemo, basicSource, options)
-export const contextMenuItemOverview = defineDemo(overviewDemo, overviewSource, options)
+export const contextMenuItemOverview = defineDemo(overviewDemo, overviewSource)

@@ -5,23 +5,23 @@ import { Text } from '@astryx-vue/core/Text'
 </script>
 
 <template>
-  <HStack :gap="3">
+  <HStack align="center" :gap="3" width="100%" class="stack-item-overview">
     <StackItem size="static">
-      <Card>
+      <Card :padding="3">
         <Text type="supporting" color="secondary">
           Static Width
         </Text>
       </Card>
     </StackItem>
     <StackItem size="fill">
-      <Card>
+      <Card :padding="3">
         <Text type="supporting" color="secondary">
           Fills remaining space
         </Text>
       </Card>
     </StackItem>
     <StackItem size="static">
-      <Card>
+      <Card :padding="3">
         <Text type="supporting" color="secondary">
           Static Width
         </Text>
@@ -29,3 +29,10 @@ import { Text } from '@astryx-vue/core/Text'
     </StackItem>
   </HStack>
 </template>
+
+<style scoped>
+.stack-item-overview {
+  max-width: 500px;
+  margin-inline: auto;
+}
+</style>

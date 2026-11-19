@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { BreadcrumbItem, Breadcrumbs } from '@astryx-vue/core/Breadcrumbs'
+import { Icon } from '@astryx-vue/core/Icon'
 import { Stack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
 </script>
@@ -10,10 +11,10 @@ import { Text } from '@astryx-vue/core/Text'
       <Text type="supporting" color="secondary">
         With start icon
       </Text>
-      <Breadcrumbs>
+      <Breadcrumbs label="Breadcrumb with a start icon">
         <BreadcrumbItem href="#home">
           <template #startIcon>
-            <span class="css-icon css-icon--sm i-carbon-home" />
+            <Icon icon="i-heroicons-home" size="sm" />
           </template>
           Home
         </BreadcrumbItem>
@@ -29,7 +30,7 @@ import { Text } from '@astryx-vue/core/Text'
       <Text type="supporting" color="secondary">
         As current page (non-link)
       </Text>
-      <Breadcrumbs>
+      <Breadcrumbs label="Breadcrumb ending on the current page">
         <BreadcrumbItem href="#home">
           Home
         </BreadcrumbItem>
@@ -45,7 +46,7 @@ import { Text } from '@astryx-vue/core/Text'
       <Text type="supporting" color="secondary">
         Supporting variant
       </Text>
-      <Breadcrumbs variant="supporting">
+      <Breadcrumbs label="Supporting breadcrumb" variant="supporting">
         <BreadcrumbItem href="#home">
           Home
         </BreadcrumbItem>
@@ -64,7 +65,7 @@ import { Text } from '@astryx-vue/core/Text'
       <Text type="supporting" color="secondary">
         With onClick handler (no href)
       </Text>
-      <Breadcrumbs>
+      <Breadcrumbs label="Breadcrumb with click handlers">
         <BreadcrumbItem @click="() => {}">
           Dashboard
         </BreadcrumbItem>

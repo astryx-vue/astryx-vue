@@ -11,4 +11,4 @@ import overviewSource from './overview.vue?raw&highlighted'
 export const listItemBasic = defineDemo(basicDemo, basicSource)
 export const listItemMedia = defineDemo(mediaDemo, mediaSource)
 export const listItemMetadata = defineDemo(metadataDemo, metadataSource)
-export const listItemOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const listItemOverview = defineDemo(overviewDemo, overviewSource)

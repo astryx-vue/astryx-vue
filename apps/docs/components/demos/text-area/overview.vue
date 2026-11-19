@@ -2,9 +2,18 @@
 import { TextArea } from '@astryx-vue/core/TextArea'
 import { shallowRef } from 'vue'
 
-const bio = shallowRef('A short introduction.')
+const value = shallowRef('')
 </script>
 
 <template>
-  <TextArea v-model="bio" label="Bio" description="Shown on your profile." />
+  <div class="text-area-overview">
+    <TextArea v-model="value" label="Description" placeholder="Enter a description..." />
+  </div>
 </template>
+
+<style scoped>
+.text-area-overview {
+  width: 400px;
+  max-width: 100%;
+}
+</style>

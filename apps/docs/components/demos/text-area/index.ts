@@ -16,4 +16,4 @@ export const textAreaStates = defineDemo(statesDemo, statesSource, options)
 export const textAreaValidation = defineDemo(validationDemo, validationSource, options)
 export const textAreaIcon = defineDemo(iconDemo, iconSource, options)
 
-export const textAreaOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const textAreaOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-hug' })

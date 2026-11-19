@@ -29,7 +29,7 @@
   .astryx-tab-list__strip--scroll {
     --_tab-strip-bleed: 0px;
     --_tab-strip-edge-inset: calc(var(--_tab-strip-bleed) + var(--astryx-spacing-8, 32px));
-    --_tab-strip-block-end-bleed: max(var(--_tab-strip-bleed), calc(-1 * var(--_tab-indicator-bottom, 0px)));
+    --_tab-strip-block-end-bleed: max(var(--_tab-strip-bleed), calc(-1 * var(--_tab-indicator-bottom, -1px)));
     align-self: flex-start;
     overflow-x: auto;
     overflow-y: hidden;
@@ -226,12 +226,13 @@
   .astryx-tab--selected::after {
     content: '';
     position: absolute;
-    bottom: 0;
-    left: var(--astryx-spacing-1, 4px);
-    right: var(--astryx-spacing-1, 4px);
+    /* 同原版：默认压在 tab 底边外 1px；滚动条按同一个值往下留出空间，不会裁掉。 */
+    bottom: var(--_tab-indicator-bottom, -1px);
+    /* 同原版：下划线两端缩到和 tab 左右内边距对齐。 */
+    inset-inline: var(--astryx-spacing-3, 12px);
     height: 2px;
-    border-radius: 1px;
-    background-color: currentColor;
+    border-radius: var(--astryx-radius-full, 9999px);
+    background-color: var(--astryx-color-accent, currentColor);
   }
 
   .astryx-tab-list--has-divider .astryx-tab--selected::after {

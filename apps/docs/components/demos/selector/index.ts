@@ -30,4 +30,4 @@ export const selectorSections = defineDemo(sectionsDemo, sectionsSource)
 export const selectorStatus = defineDemo(statusDemo, statusSource)
 export const selectorStates = defineDemo(statesDemo, statesSource)
 
-export const selectorOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const selectorOverview = defineDemo(overviewDemo, overviewSource)

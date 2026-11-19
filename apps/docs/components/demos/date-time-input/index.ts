@@ -8,4 +8,4 @@ import validationSource from './validation.vue?raw&highlighted'
 
 export const dateTimeInputValidation = defineDemo(validationDemo, validationSource, { className: 'date-preview-host' })
 export const dateTimeInputSheet = defineDemo(sheetDemo, sheetSource, { className: 'date-preview-host' })
-export const dateTimeInputOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const dateTimeInputOverview = defineDemo(overviewDemo, overviewSource)

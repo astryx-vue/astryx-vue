@@ -2,13 +2,17 @@
 import { Step, Stepper } from '@astryx-vue/core/Stepper'
 import { ref } from 'vue'
 
-const active = ref(1)
+const active = ref(2)
 </script>
 
 <template>
-  <Stepper :active-step="active" @step-click="active = $event">
-    <Step label="Cart" :step="0" />
-    <Step label="Shipping" :step="1" />
-    <Step label="Payment" :step="2" />
-  </Stepper>
+  <div style="width: 100%; max-width: 640px">
+    <Stepper :active-step="active" orientation="horizontal" @step-click="active = $event">
+      <Step :step="0" label="Cart" />
+      <Step :step="1" label="Shipping" />
+      <Step :step="2" label="Payment" />
+      <Step :step="3" label="Review" />
+      <Step :step="4" label="Confirm" />
+    </Stepper>
+  </div>
 </template>

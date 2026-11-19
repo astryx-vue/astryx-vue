@@ -13,4 +13,4 @@ const options = { className: 'clickable-card-preview' }
 export const clickableCardNavigation = defineDemo(navigationDemo, navigationSource, options)
 export const clickableCardNested = defineDemo(nestedDemo, nestedSource, options)
 export const clickableCardElevated = defineDemo(elevatedDemo, elevatedSource, options)
-export const clickableCardOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const clickableCardOverview = defineDemo(overviewDemo, overviewSource)

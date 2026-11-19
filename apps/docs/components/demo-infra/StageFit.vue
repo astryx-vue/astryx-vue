@@ -2,7 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 
 const props = withDefaults(defineProps<{
-  /** 内容自然高度超过它时，整体等比缩小到它；不传就取外层画布 min-height 减去上下内边距。 */
+  /** 内容自然高度超过它时，整体等比缩小到它；不传就取外层画布高度减去上下内边距。 */
   maxHeight?: number
   /** 缩得再小就看不清了，到这个比例为止。 */
   minScale?: number
@@ -27,8 +27,11 @@ const frameStyle = computed(() => (scale.value === 1 ? undefined : { height: `${
 const innerStyle = computed(() => (scale.value === 1 ? undefined : { transform: `scale(${scale.value})` }))
 
 let observer: ResizeObserver | undefined
+let narrow: MediaQueryList | undefined
 function content(): HTMLElement | null {
-  return inner.value?.firstElementChild as HTMLElement | null
+  // 桌面上 .astryx-demo 外壳撑满画布，量它等于量画布；要量的是外壳里的 demo 根节点。
+  const host = inner.value?.firstElementChild as HTMLElement | null
+  return (host?.firstElementChild as HTMLElement | null) ?? host
 }
 function measure(): void {
   const el = content()
@@ -36,21 +39,31 @@ function measure(): void {
     return
   naturalHeight.value = el.offsetHeight
   const stage = el.closest<HTMLElement>('.component-detail__stage')
+  // 原版窄屏不缩放：画布跟着内容长高，太宽就横向滚动。
+  if (narrow?.matches) {
+    limit.value = 0
+    return
+  }
   if (stage != null) {
     const style = getComputedStyle(stage)
-    // 画布的 min-height 是设计高度；clientHeight 会被内容撑大，不能当上限。
-    limit.value = Number.parseFloat(style.minHeight) - Number.parseFloat(style.paddingTop) - Number.parseFloat(style.paddingBottom)
+    // 桌面画布按 16:9 定高、超出部分裁掉，clientHeight 不会被内容撑大，可以直接当上限。
+    limit.value = stage.clientHeight - Number.parseFloat(style.paddingTop) - Number.parseFloat(style.paddingBottom)
   }
 }
 onMounted(() => {
   const el = content()
   if (el == null)
     return
+  narrow = window.matchMedia('(max-width: 768px)')
+  narrow.addEventListener('change', measure)
   measure()
   observer = new ResizeObserver(measure)
   observer.observe(el)
 })
-onBeforeUnmount(() => observer?.disconnect())
+onBeforeUnmount(() => {
+  observer?.disconnect()
+  narrow?.removeEventListener('change', measure)
+})
 </script>
 
 <template>

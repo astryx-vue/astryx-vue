@@ -8,10 +8,10 @@ import { SideNav, SideNavCollapseButton, SideNavHeading, SideNavItem, SideNavSec
       <SideNavHeading heading="Workspace" />
     </template>
     <SideNavSection title="Main">
-      <SideNavItem href="#home" icon-class="i-carbon-home" is-selected label="Home" />
-      <SideNavItem href="#projects" icon-class="i-carbon-folder" label="Projects" />
+      <SideNavItem href="#" icon-class="i-heroicons-home" is-selected label="Home" />
+      <SideNavItem href="#" icon-class="i-heroicons-folder" label="Projects" />
     </SideNavSection>
-    <template #footer>
+    <template #footer-icons>
       <SideNavCollapseButton />
     </template>
   </SideNav>

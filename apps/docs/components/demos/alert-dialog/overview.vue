@@ -1,16 +1,20 @@
 <script setup lang="ts">
-import { AlertDialog } from '@astryx-vue/core/AlertDialog'
+import { AlertDialog, useImperativeAlertDialog } from '@astryx-vue/core/AlertDialog'
+
+const alert = useImperativeAlertDialog()
+const alertProps = {
+  title: 'Delete item?',
+  description: 'This action cannot be undone. The item and all its data will be permanently removed.',
+  actionLabel: 'Delete',
+} as const
 </script>
 
 <template>
-  <div class="alert-dialog-preview">
-    <AlertDialog
-      is-inline
-      is-open
-      width="100%"
-      title="Delete project?"
-      description="This cannot be undone. The project, its deployments, and every dashboard built on it are removed permanently."
-      action-label="Delete project"
-    />
-  </div>
+  <AlertDialog
+    is-open
+    is-inline
+    v-bind="alertProps"
+    @action="alert.show({ ...alertProps, onAction: () => alert.hide() })"
+  />
+  <component :is="alert.Host" />
 </template>

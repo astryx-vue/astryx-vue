@@ -13,4 +13,4 @@ const options = { className: 'hover-card-preview' }
 export const hoverCardDefinition = defineDemo(definitionDemo, definitionSource, options)
 export const hoverCardLinkPreview = defineDemo(linkPreviewDemo, linkPreviewSource, options)
 export const hoverCardProfile = defineDemo(profileDemo, profileSource, options)
-export const hoverCardOverview = defineDemo(overviewDemo, overviewSource, options)
+export const hoverCardOverview = defineDemo(overviewDemo, overviewSource)

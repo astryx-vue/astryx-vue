@@ -16,4 +16,4 @@ export const formLayoutHorizontal = defineDemo(horizontalDemo, horizontalSource,
 export const formLayoutHorizontalLabels = defineDemo(horizontalLabelsDemo, horizontalLabelsSource, options)
 export const formLayoutMixed = defineDemo(mixedDemo, mixedSource, options)
 export const formLayoutNested = defineDemo(nestedDemo, nestedSource, options)
-export const formLayoutOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const formLayoutOverview = defineDemo(overviewDemo, overviewSource)

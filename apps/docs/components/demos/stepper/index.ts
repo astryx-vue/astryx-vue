@@ -25,4 +25,4 @@ export const stepperIndicators = defineDemo(indicatorsDemo, indicatorsSource, op
 export const stepperHorizontal = defineDemo(horizontalDemo, horizontalSource, options)
 export const stepperOnTrack = defineDemo(onTrackDemo, onTrackSource, options)
 export const stepperStatus = defineDemo(statusDemo, statusSource, options)
-export const stepperOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const stepperOverview = defineDemo(overviewDemo, overviewSource)

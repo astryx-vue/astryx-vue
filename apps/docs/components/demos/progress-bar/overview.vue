@@ -3,8 +3,5 @@ import { ProgressBar } from '@astryx-vue/core/ProgressBar'
 </script>
 
 <template>
-  <div class="overview-fill">
-    <ProgressBar :value="60" label="Upload" show-value />
-    <ProgressBar :value="40" label="Review" variant="success" />
-  </div>
+  <ProgressBar :value="60" label="Progress" style="width: 300px" />
 </template>

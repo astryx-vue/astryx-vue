@@ -16,4 +16,4 @@ export const numberInputRange = defineDemo(rangeDemo, rangeSource, options)
 export const numberInputStatus = defineDemo(statusDemo, statusSource, options)
 export const numberInputUnits = defineDemo(unitsDemo, unitsSource, options)
 
-export const numberInputOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const numberInputOverview = defineDemo(overviewDemo, overviewSource)

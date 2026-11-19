@@ -1,28 +1,40 @@
 <script setup lang="ts">
-import { createStaticSource } from '@astryx-vue/core'
+import type { SearchableItem, SearchSource } from '@astryx-vue/core'
 import { Tokenizer } from '@astryx-vue/core/Tokenizer'
+import { ref } from 'vue'
 
-const source = createStaticSource([
-  { id: 'alice', label: 'Alice Johnson' },
-  { id: 'bob', label: 'Bob Smith' },
-  { id: 'charlie', label: 'Charlie Brown' },
-])
+const tags: SearchableItem[] = [
+  { id: '1', label: 'Design' },
+  { id: '2', label: 'Engineering' },
+  { id: '3', label: 'Marketing' },
+  { id: '4', label: 'Product' },
+  { id: '5', label: 'Research' },
+  { id: '6', label: 'Sales' },
+]
+
+const source: SearchSource = {
+  search: (query: string) =>
+    tags.filter(tag => tag.label.toLowerCase().includes(query.toLowerCase())),
+  bootstrap: () => tags,
+}
+
+const value = ref<SearchableItem[]>([tags[0]!, tags[1]!])
 </script>
 
 <template>
-  <div class="overview-field">
+  <div class="tokenizer-overview">
     <Tokenizer
-      label="Team Members"
-      placeholder="Search people..."
+      v-model="value"
+      label="Tags"
+      placeholder="Search..."
       :search-source="source"
-      :debounce-ms="0"
     />
   </div>
 </template>
 
 <style scoped>
-.overview-field {
-  width: 20rem;
-  max-width: 100%;
+.tokenizer-overview {
+  display: grid;
+  grid-template-columns: minmax(0, 400px);
 }
 </style>

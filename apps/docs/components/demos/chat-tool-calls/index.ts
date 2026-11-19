@@ -10,7 +10,7 @@ import statusesSource from './statuses.vue?raw&highlighted'
 
 const column = { className: 'chat-preview' }
 
-export const chatToolCallsOverview = defineDemo(overviewDemo, overviewSource, column)
+export const chatToolCallsOverview = defineDemo(overviewDemo, overviewSource)
 export const chatToolCallsExpandable = defineDemo(expandableDemo, expandableSource, column)
 export const chatToolCallsSimple = defineDemo(simpleDemo, simpleSource, column)
 export const chatToolCallsStatuses = defineDemo(statusesDemo, statusesSource, column)

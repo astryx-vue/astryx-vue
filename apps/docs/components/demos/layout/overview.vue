@@ -1,31 +1,53 @@
 <script setup lang="ts">
-import { Card } from '@astryx-vue/core/Card'
-import { Layout, LayoutContent, LayoutFooter, LayoutHeader } from '@astryx-vue/core/Layout'
+import { Badge } from '@astryx-vue/core/Badge'
+import { Button } from '@astryx-vue/core/Button'
+import { Heading } from '@astryx-vue/core/Heading'
+import { Layout, LayoutContent, LayoutFooter, LayoutHeader, LayoutPanel } from '@astryx-vue/core/Layout'
+import { List, ListItem } from '@astryx-vue/core/List'
+import { Section } from '@astryx-vue/core/Section'
+import { HStack, VStack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
 </script>
 
 <template>
-  <Card :height="180" width="100%">
-    <Layout>
+  <Section :padding="4">
+    <Layout height="fill">
       <template #header>
         <LayoutHeader has-divider>
-          <Text type="label" weight="semibold">
-            Title
-          </Text>
+          <HStack align="center" :gap="2">
+            <Heading :level="4">
+              Projects
+            </Heading>
+            <Badge variant="info" label="3 active" />
+          </HStack>
         </LayoutHeader>
       </template>
+      <template #start>
+        <LayoutPanel has-divider :width="140">
+          <List>
+            <ListItem label="Dashboard" is-selected />
+            <ListItem label="Analytics" />
+            <ListItem label="Settings" />
+          </List>
+        </LayoutPanel>
+      </template>
       <LayoutContent>
-        <Text type="supporting">
-          Content
-        </Text>
+        <VStack :gap="2">
+          <Heading :level="5">
+            Welcome back
+          </Heading>
+          <Text type="body" color="secondary">
+            You have 3 active projects and 2 pending reviews.
+          </Text>
+        </VStack>
       </LayoutContent>
       <template #footer>
         <LayoutFooter has-divider>
-          <Text type="supporting">
-            Footer
-          </Text>
+          <HStack :gap="2" h-align="end">
+            <Button label="New Project" variant="primary" />
+          </HStack>
         </LayoutFooter>
       </template>
     </Layout>
-  </Card>
+  </Section>
 </template>

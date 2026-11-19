@@ -5,12 +5,12 @@ import { SideNav, SideNavItem, SideNavSection } from '@astryx-vue/core/SideNav'
 <template>
   <SideNav>
     <SideNavSection title="Overview">
-      <SideNavItem href="#dashboard" icon-class="i-carbon-dashboard" is-selected label="Dashboard" />
-      <SideNavItem href="#analytics" icon-class="i-carbon-chart-line" label="Analytics" />
+      <SideNavItem href="#" icon-class="i-heroicons-home" is-selected label="Dashboard" />
+      <SideNavItem href="#" icon-class="i-heroicons-chart-bar" label="Analytics" />
     </SideNavSection>
     <SideNavSection title="Account">
-      <SideNavItem href="#profile" icon-class="i-carbon-user" label="Profile" />
-      <SideNavItem href="#settings" icon-class="i-carbon-settings" label="Settings" />
+      <SideNavItem href="#" icon-class="i-heroicons-user" label="Profile" />
+      <SideNavItem href="#" icon-class="i-heroicons-cog-6-tooth" label="Settings" />
     </SideNavSection>
   </SideNav>
 </template>

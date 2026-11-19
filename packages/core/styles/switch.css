@@ -3,6 +3,10 @@
 @layer astryx.components {
   .astryx-switch {
     box-sizing: border-box;
+    /* 同原版：竖排的 flex 容器，开关行下面不留行盒的下沉空隙。 */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     min-width: 0;
   }
 

@@ -23,4 +23,4 @@ export const emptyStateContainer = defineDemo(containerDemo, containerSource, op
 export const emptyStateIllustration = defineDemo(illustrationDemo, illustrationSource, options)
 export const emptyStateNarrow = defineDemo(narrowDemo, narrowSource, options)
 
-export const emptyStateOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const emptyStateOverview = defineDemo(overviewDemo, overviewSource)

@@ -23,18 +23,18 @@ describe('locale', () => {
     expect(formatCalendarMonth(2024, 3, 'en')).toBe('March 2024')
     expect(formatCalendarMonth(2024, 3, 'zh-CN')).toBe('2024年3月')
     expect(weekdayNames('en', 'narrow')).toEqual(['S', 'M', 'T', 'W', 'T', 'F', 'S'])
-    expect(standaloneShortWeekdayNames('en')).toEqual(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'])
+    expect(standaloneShortWeekdayNames('en')).toEqual(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'])
     expect(standaloneShortWeekdayNames('zh-CN')[0]).toBe('周日')
     expect(weekdayNames('zh-CN', 'narrow')[0]).toBe('日')
   })
 
-  it('reads CLDR stand-alone weekday headers for every vendored locale, then the base language, then English', () => {
-    expect(standaloneShortWeekdayNames('fr-FR')).toEqual(['di', 'lu', 'ma', 'me', 'je', 've', 'sa'])
+  it('reads CLDR weekday headers for every vendored locale, then the base language, then English', () => {
+    expect(standaloneShortWeekdayNames('fr-FR')).toEqual(['dim.', 'lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.'])
     expect(standaloneShortWeekdayNames('ja-JP')[1]).toBe('月')
-    expect(standaloneShortWeekdayNames('zh-TW')).toEqual(['日', '一', '二', '三', '四', '五', '六'])
+    expect(standaloneShortWeekdayNames('zh-TW')).toEqual(['週日', '週一', '週二', '週三', '週四', '週五', '週六'])
     expect(standaloneShortWeekdayNames('pt-PT')[6]).toBe('sáb.')
-    expect(standaloneShortWeekdayNames('en-GB')).toEqual(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'])
-    expect(standaloneShortWeekdayNames('xx')).toEqual(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'])
+    expect(standaloneShortWeekdayNames('en-GB')).toEqual(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'])
+    expect(standaloneShortWeekdayNames('xx')).toEqual(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'])
   })
 
   it('keeps a regional English tag and still reads the English copy', () => {

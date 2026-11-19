@@ -1,16 +1,12 @@
 <script setup lang="ts">
 import { Slider } from '@astryx-vue/core/Slider'
-import { shallowRef } from 'vue'
+import { ref } from 'vue'
 
-const volume = shallowRef(40)
-
-function formatPercent(value: number): string {
-  return `${value}%`
-}
+const value = ref(50)
 </script>
 
 <template>
   <div style="width: 300px; max-width: 100%">
-    <Slider v-model="volume" label="Volume" value-display="text" :format-value="formatPercent" />
+    <Slider v-model="value" label="Volume" />
   </div>
 </template>

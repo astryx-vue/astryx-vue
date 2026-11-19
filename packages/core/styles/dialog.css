@@ -21,7 +21,8 @@
     inset: 0;
     margin: auto;
     width: 400px;
-    max-width: 90vw;
+    /* 同原版：不超过容器，也不超过视口宽度减去两侧各 16px。 */
+    max-width: min(100%, calc(100dvw - 2 * var(--astryx-spacing-4, 1rem)));
     max-height: 75vh;
     height: fit-content;
     padding: 0;
@@ -56,7 +57,6 @@
     inset: auto;
     margin: 0;
     display: flex;
-    max-width: 100%;
   }
 
   .astryx-dialog--fullscreen {

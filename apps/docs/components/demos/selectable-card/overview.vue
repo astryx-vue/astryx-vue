@@ -1,47 +1,40 @@
 <script setup lang="ts">
 import { Heading } from '@astryx-vue/core/Heading'
 import { SelectableCard } from '@astryx-vue/core/SelectableCard'
-import { HStack, VStack } from '@astryx-vue/core/Stack'
+import { Stack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
 import { ref } from 'vue'
 
-const selected = ref('pro')
+const plans = [
+  { id: 'basic', name: 'Basic', price: '$9/mo', desc: 'For individuals' },
+  { id: 'pro', name: 'Pro', price: '$29/mo', desc: 'For small teams' },
+  { id: 'enterprise', name: 'Enterprise', price: '$99/mo', desc: 'For organizations' },
+]
 
-function choose(id: string, next: boolean) {
-  if (next)
-    selected.value = id
-}
+const selected = ref<string | null>('pro')
 </script>
 
 <template>
-  <HStack :gap="2">
+  <Stack direction="horizontal" :gap="3">
     <SelectableCard
-      :is-selected="selected === 'basic'"
-      label="Basic"
-      @update:is-selected="choose('basic', $event)"
+      v-for="plan in plans"
+      :key="plan.id"
+      :label="plan.name"
+      :is-selected="selected === plan.id"
+      :width="180"
+      @change="selected = plan.id"
     >
-      <VStack :gap="1">
+      <Stack direction="vertical" :gap="1">
         <Heading :level="4">
-          Basic
+          {{ plan.name }}
         </Heading>
-        <Text type="supporting" weight="bold">
-          $9/mo
+        <Text type="large" weight="bold">
+          {{ plan.price }}
         </Text>
-      </VStack>
-    </SelectableCard>
-    <SelectableCard
-      :is-selected="selected === 'pro'"
-      label="Pro"
-      @update:is-selected="choose('pro', $event)"
-    >
-      <VStack :gap="1">
-        <Heading :level="4">
-          Pro
-        </Heading>
-        <Text type="supporting" weight="bold">
-          $29/mo
+        <Text type="supporting" color="secondary">
+          {{ plan.desc }}
         </Text>
-      </VStack>
+      </Stack>
     </SelectableCard>
-  </HStack>
+  </Stack>
 </template>

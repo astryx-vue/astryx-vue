@@ -17,4 +17,4 @@ export const gridColumns = defineDemo(columnsDemo, columnsSource, options)
 export const gridSpan = defineDemo(spanDemo, spanSource, options)
 export const gridAlignment = defineDemo(alignmentDemo, alignmentSource, options)
 
-export const gridOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const gridOverview = defineDemo(overviewDemo, overviewSource)

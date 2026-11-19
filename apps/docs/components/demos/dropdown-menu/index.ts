@@ -32,4 +32,4 @@ export const dropdownMenuSelection = defineDemo(selectionDemo, selectionSource, 
 export const dropdownMenuRegions = defineDemo(regionsDemo, regionsSource, options)
 export const dropdownMenuDrill = defineDemo(drillDemo, drillSource, options)
 
-export const dropdownMenuOverview = defineDemo(overviewDemo, overviewSource, options)
+export const dropdownMenuOverview = defineDemo(overviewDemo, overviewSource)

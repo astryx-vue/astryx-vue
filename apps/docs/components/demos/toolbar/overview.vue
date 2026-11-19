@@ -1,27 +1,57 @@
 <script setup lang="ts">
 import { Button } from '@astryx-vue/core/Button'
+import { Card } from '@astryx-vue/core/Card'
 import { Heading } from '@astryx-vue/core/Heading'
+import { Icon } from '@astryx-vue/core/Icon'
+import { Section } from '@astryx-vue/core/Section'
+import { ToastViewport, useToast } from '@astryx-vue/core/Toast'
 import { Toolbar } from '@astryx-vue/core/Toolbar'
+
+const showToast = useToast()
 </script>
 
 <template>
-  <div class="nav-overview">
-    <Toolbar label="Document">
+  <Card class="toolbar-overview">
+    <Toolbar label="Document toolbar" :dividers="['bottom']">
       <template #start>
-        <Button is-icon-only label="Back" size="sm" variant="ghost">
+        <Button label="Back" variant="ghost" is-icon-only>
           <template #icon>
-            <span class="i-carbon-arrow-left" />
+            <Icon icon="i-heroicons-arrow-left" class="toolbar-overview__back" />
           </template>
         </Button>
       </template>
       <template #center>
-        <Heading :level="4" display="inline" type="label">
+        <Heading :level="4">
           Title
         </Heading>
       </template>
       <template #end>
-        <Button label="Save" size="sm" variant="primary" />
+        <Button
+          label="Discard"
+          variant="secondary"
+          @click="showToast({ body: 'Demo: your changes would be discarded here' })"
+        />
+        <Button
+          label="Save"
+          variant="primary"
+          @click="showToast({ body: 'Demo: your changes would be saved here' })"
+        />
       </template>
     </Toolbar>
-  </div>
+    <Section />
+  </Card>
+  <ToastViewport />
 </template>
+
+<style scoped>
+.toolbar-overview {
+  width: 600px;
+  max-width: 100%;
+  height: 100%;
+  margin-top: 260px;
+}
+
+.toolbar-overview__back:dir(rtl) {
+  transform: scaleX(-1);
+}
+</style>

@@ -14,7 +14,7 @@ import slashCommandsSource from './slash-commands.vue?raw&highlighted'
 
 const shell = { className: 'chat-preview-composer' }
 
-export const chatComposerInputOverview = defineDemo(overviewDemo, overviewSource, shell)
+export const chatComposerInputOverview = defineDemo(overviewDemo, overviewSource)
 export const chatComposerInputControlled = defineDemo(controlledDemo, controlledSource, shell)
 export const chatComposerInputDisabled = defineDemo(disabledDemo, disabledSource, shell)
 export const chatComposerInputMentions = defineDemo(mentionsDemo, mentionsSource, shell)

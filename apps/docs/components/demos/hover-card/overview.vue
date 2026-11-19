@@ -1,42 +1,32 @@
 <script setup lang="ts">
 import { Avatar } from '@astryx-vue/core/Avatar'
+import { Button } from '@astryx-vue/core/Button'
+import { Heading } from '@astryx-vue/core/Heading'
 import { HoverCard } from '@astryx-vue/core/HoverCard'
-import { HStack, VStack } from '@astryx-vue/core/Stack'
+import { Stack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
 </script>
 
 <template>
-  <div class="hover-card-preview">
-    <div class="astryx-hover-card hover-card-preview__surface">
-      <div class="astryx-hover-card__content">
-        <HStack align="start" :gap="3">
-          <Avatar name="Dana Whitfield" />
-          <VStack :gap="1">
-            <Text weight="medium">
-              Dana Whitfield
-            </Text>
+  <HoverCard placement="above">
+    <Button label="@janedoe" variant="ghost" />
+    <template #content>
+      <Stack direction="vertical" :gap="2" style="width: 240px">
+        <Stack align="center" direction="horizontal" :gap="2">
+          <Avatar name="Jane Doe" size="lg" />
+          <Stack direction="vertical" :gap="0">
+            <Heading :level="5">
+              Jane Doe
+            </Heading>
             <Text type="supporting" color="secondary">
-              Design systems engineer
+              Software Engineer
             </Text>
-          </VStack>
-        </HStack>
-      </div>
-    </div>
-    <HoverCard :delay="150" label="Dana Whitfield">
-      Dana Whitfield
-      <template #content>
-        <HStack align="start" :gap="3">
-          <Avatar name="Dana Whitfield" />
-          <VStack :gap="1">
-            <Text weight="medium">
-              Dana Whitfield
-            </Text>
-            <Text type="supporting" color="secondary">
-              Design systems engineer
-            </Text>
-          </VStack>
-        </HStack>
-      </template>
-    </HoverCard>
-  </div>
+          </Stack>
+        </Stack>
+        <Text type="body" color="secondary">
+          Building great products with great people.
+        </Text>
+      </Stack>
+    </template>
+  </HoverCard>
 </template>

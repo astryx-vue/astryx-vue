@@ -6,5 +6,5 @@ import overviewSource from './overview.vue?raw&highlighted'
 
 const options = { className: 'alert-dialog-preview' }
 
-export const alertDialogOverview = defineDemo(overviewDemo, overviewSource, options)
+export const alertDialogOverview = defineDemo(overviewDemo, overviewSource)
 export const alertDialogLoading = defineDemo(loadingDemo, loadingSource, options)

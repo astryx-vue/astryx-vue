@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { richtextToolbar as demo } from './index'
+import { richtextOverview as demo } from './index'
 
 export const meta = {
   slug: 'rich-text-editor',

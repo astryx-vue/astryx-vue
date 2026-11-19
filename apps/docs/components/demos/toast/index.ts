@@ -14,7 +14,7 @@ import typesSource from './types.vue?raw&highlighted'
 
 const options = { className: 'toast-preview' }
 
-export const toastOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const toastOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-hug' })
 export const toastAction = defineDemo(actionDemo, actionSource, options)
 export const toastDedup = defineDemo(dedupDemo, dedupSource, options)
 export const toastDismiss = defineDemo(dismissDemo, dismissSource, options)

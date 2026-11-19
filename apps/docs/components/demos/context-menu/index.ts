@@ -14,7 +14,7 @@ import submenuSource from './submenu.vue?raw&highlighted'
 
 const options = { className: 'context-menu-preview' }
 
-export const contextMenuOverview = defineDemo(overviewDemo, overviewSource, options)
+export const contextMenuOverview = defineDemo(overviewDemo, overviewSource)
 export const contextMenuBasic = defineDemo(basicDemo, basicSource, options)
 export const contextMenuBottomSheet = defineDemo(bottomSheetDemo, bottomSheetSource, options)
 export const contextMenuCompound = defineDemo(compoundDemo, compoundSource, options)
