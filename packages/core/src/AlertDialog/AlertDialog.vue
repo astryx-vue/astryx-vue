@@ -2,7 +2,7 @@
 import type { ComponentPublicInstance } from 'vue'
 import type { ButtonVariant } from '../Button/types.js'
 import type { AlertDialogEmits, AlertDialogProps, AlertDialogSlots } from './types.js'
-import { computed, provide, useId, useTemplateRef } from 'vue'
+import { computed, onMounted, provide, shallowRef, useId, useTemplateRef } from 'vue'
 import Button from '../Button/Button.vue'
 import { useMediaQuery } from '../composables/useMediaQuery.js'
 import Dialog from '../Dialog/Dialog.vue'
@@ -20,7 +20,7 @@ const props = withDefaults(defineProps<AlertDialogProps>(), {
   cancelLabel: 'Cancel',
   isActionLoading: false,
   isInline: false,
-  width: 400,
+  width: undefined,
 })
 
 const emit = defineEmits<AlertDialogEmits>()
@@ -33,6 +33,15 @@ const descriptionId = `astryx-alert-dialog-description-${useId()}`
 // screen, keeping visual and tab order aligned without reacting to pointer or
 // hover capability.
 const isSmallScreen = useMediaQuery('(max-width: 640px)')
+
+// 同原版：手机上（粗指针且视口窄或矮）默认宽 320，和 iOS 系统弹窗一样；其他情况 400。显式传 width 时以它为准。
+// 挂载后才算：服务端渲染出的是 400，水合时不会修正 style，首帧在客户端直接读媒体查询会和服务端对不上。
+const compactTouchQuery = useMediaQuery('(pointer: coarse) and (width < 768px), (pointer: coarse) and (height < 500px)')
+const isMounted = shallowRef(false)
+onMounted(() => {
+  isMounted.value = true
+})
+const width = computed(() => props.width ?? (isMounted.value && compactTouchQuery.value ? 320 : 400))
 
 provide(ALERT_DIALOG_CONTEXT_KEY, { descriptionId, isSmallScreen, titleId })
 

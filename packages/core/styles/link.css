@@ -98,8 +98,8 @@
   }
 
   .astryx-link.astryx-link--standalone {
-    font-size: var(--astryx-font-size-body, var(--text-body-size, 1rem));
-    line-height: var(--astryx-line-height-body, var(--text-body-leading, 1.5));
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
   }
 
   /* 修饰类与基础规则同特异性，排在后面所以生效：基础里的 `font: inherit` 不会盖掉它们。 */

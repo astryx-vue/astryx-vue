@@ -2,7 +2,7 @@
 @layer astryx.tokens {
   :root,
   [data-astryx-theme='neutral'] {
-    --astryx-slider-track: var(--astryx-color-background-muted);
+    --astryx-slider-track: var(--astryx-color-track);
     --astryx-slider-accent: var(--astryx-color-accent);
     --astryx-slider-focus: var(--astryx-color-accent);
     --astryx-slider-height: 160px;
