@@ -31,10 +31,12 @@
     display: inline-flex;
     align-items: center;
     gap: var(--astryx-spacing-1, 4px);
-    color: var(--astryx-color-text-secondary, #525252);
+    /* 标签给控件命名，用主文字色；说明和可选标记仍是次要文字色。 */
+    color: var(--astryx-color-text-primary, #171717);
     font-family: inherit;
     font-size: var(--astryx-text-label-size, 14px);
-    font-weight: var(--astryx-font-weight-medium, 500);
+    /* 不少系统字体没有 500 字重，会退回常规体；用半粗保证标签总比说明重。 */
+    font-weight: var(--astryx-font-weight-semibold, 600);
     line-height: var(--astryx-text-label-leading, 1.4286);
     cursor: pointer;
   }
