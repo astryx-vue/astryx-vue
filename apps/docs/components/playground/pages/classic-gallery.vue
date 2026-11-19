@@ -72,7 +72,7 @@ const filteredImages = computed(() =>
 
 <template>
   <Layout height="fill">
-    <LayoutContent :padding="0">
+    <LayoutContent role="main" :padding="0">
       <Center axis="horizontal">
         <VStack :gap="8" :style="outer">
           <Center axis="horizontal">

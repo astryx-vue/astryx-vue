@@ -43,7 +43,7 @@
     border: 0;
     border-radius: var(--astryx-radius-element, 0.625rem);
     background: transparent;
-    color: var(--astryx-color-text-secondary, #525252);
+    color: var(--astryx-color-text-primary, light-dark(#171717, #fafafa));
     cursor: pointer;
   }
 
@@ -78,6 +78,8 @@
   }
 
   .astryx-calendar-weekday {
+    /* 同原版：星期表头行比日期行高 4px。 */
+    height: calc(var(--astryx-input-height-md, 32px) + 4px);
     color: var(--astryx-color-text-secondary, #525252);
     font-size: var(--astryx-text-supporting-size, 0.75rem);
     font-weight: 400;

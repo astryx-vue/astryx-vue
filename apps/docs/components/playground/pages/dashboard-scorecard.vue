@@ -19,9 +19,12 @@ import {
   Text,
   Timestamp,
   useMediaQuery,
+  useToast,
   VStack,
 } from '@astryx-vue/core'
 import { computed, onBeforeUnmount, ref } from 'vue'
+
+const showToast = useToast()
 
 type Period = 'WoW' | 'MoM' | 'QoQ'
 type Rag = 'green' | 'amber' | 'red'
@@ -225,39 +228,9 @@ function niceTicks(max: number): number[] {
   return [0, 1, 2, 3, 4].map(i => Math.round(i * step * 100) / 100)
 }
 
-/** 单调三次样条（等价于 recharts 的 monotone 曲线），返回 SVG 路径。 */
-function monotonePath(pts: { x: number, y: number }[]): string {
-  const n = pts.length
-  const dx: number[] = []
-  const slope: number[] = []
-  for (let i = 0; i < n - 1; i++) {
-    dx.push(pts[i + 1].x - pts[i].x)
-    slope.push((pts[i + 1].y - pts[i].y) / dx[i])
-  }
-  const m: number[] = [slope[0]]
-  for (let i = 1; i < n - 1; i++)
-    m.push(slope[i - 1] * slope[i] <= 0 ? 0 : (slope[i - 1] + slope[i]) / 2)
-  m.push(slope[n - 2])
-  for (let i = 0; i < n - 1; i++) {
-    if (slope[i] === 0) {
-      m[i] = 0
-      m[i + 1] = 0
-      continue
-    }
-    const a = m[i] / slope[i]
-    const b = m[i + 1] / slope[i]
-    const h = Math.hypot(a, b)
-    if (h > 3) {
-      m[i] = (3 * a / h) * slope[i]
-      m[i + 1] = (3 * b / h) * slope[i]
-    }
-  }
-  let d = `M${pts[0].x.toFixed(1)},${pts[0].y.toFixed(1)}`
-  for (let i = 0; i < n - 1; i++) {
-    const w = dx[i] / 3
-    d += `C${(pts[i].x + w).toFixed(1)},${(pts[i].y + m[i] * w).toFixed(1)},${(pts[i + 1].x - w).toFixed(1)},${(pts[i + 1].y - m[i + 1] * w).toFixed(1)},${pts[i + 1].x.toFixed(1)},${pts[i + 1].y.toFixed(1)}`
-  }
-  return d
+/** 折线：相邻点直接连线（和原版 recharts 的 linear 曲线一致），返回 SVG 路径。 */
+function linearPath(pts: { x: number, y: number }[]): string {
+  return pts.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join('')
 }
 
 /** 一张趋势卡的几何：网格刻度、x 轴标签、当前期曲线（含面积）和上期虚线。 */
@@ -267,7 +240,7 @@ function trendGeometry(trend: TrendSeries) {
   const top = ticks[ticks.length - 1]
   const x = (i: number) => CHART.padLeft + (i / 11) * chartInnerW.value
   const y = (v: number) => CHART.padTop + CHART_INNER_H - (v / top) * CHART_INNER_H
-  const curve = (key: 'current' | 'prior') => monotonePath(trend.data.map((row, i) => ({ x: x(i), y: y(row[key]) })))
+  const curve = (key: 'current' | 'prior') => linearPath(trend.data.map((row, i) => ({ x: x(i), y: y(row[key]) })))
   const current = curve('current')
   const baseline = CHART.padTop + CHART_INNER_H
   return {
@@ -306,7 +279,8 @@ function trendGeometry(trend: TrendSeries) {
               <SegmentedControlItem label="MoM" value="MoM" />
               <SegmentedControlItem label="QoQ" value="QoQ" />
             </SegmentedControl>
-            <Button label="Export" variant="secondary">
+            <!-- 演示：换成真正执行导出的调用 -->
+            <Button label="Export" variant="secondary" @click="showToast({ body: 'Demo: this review would export here', uniqueID: 'export-review' })">
               <template #icon>
                 <Icon name="heroicons:arrow-down-tray" size="sm" />
               </template>
@@ -316,7 +290,7 @@ function trendGeometry(trend: TrendSeries) {
       </LayoutHeader>
     </template>
 
-    <LayoutContent :padding="6" class="page-content">
+    <LayoutContent role="main" :padding="6" class="page-content">
       <VStack :gap="10">
         <VStack v-if="isNarrow" :gap="6">
           <HStack :gap="3" align="center" h-align="between">
@@ -338,7 +312,7 @@ function trendGeometry(trend: TrendSeries) {
                 />
                 <StackItem size="fill">
                   <VStack :gap="1">
-                    <Heading :level="4">
+                    <Heading :level="4" :accessibility-level="3">
                       {{ callout.title }}
                     </Heading>
                     <Text type="body" color="secondary">
@@ -367,7 +341,7 @@ function trendGeometry(trend: TrendSeries) {
                   {{ kpi.label }}
                 </Text>
                 <HStack :gap="4" align="center">
-                  <Heading :level="2">
+                  <Heading :level="2" :accessibility-level="3">
                     {{ kpi.value }}
                   </Heading>
                   <HStack :gap="2" align="center">
@@ -402,7 +376,7 @@ function trendGeometry(trend: TrendSeries) {
                 <VStack :gap="2">
                   <HStack h-align="between" align="center" :gap="3">
                     <StackItem size="fill">
-                      <Heading :level="4">
+                      <Heading :level="4" :accessibility-level="3">
                         {{ okr.objective }}
                       </Heading>
                     </StackItem>
@@ -490,13 +464,13 @@ function trendGeometry(trend: TrendSeries) {
                 </svg>
                 <HStack :gap="5" align="center">
                   <HStack :gap="2" align="center">
-                    <span class="legend-swatch" :style="{ backgroundColor: trend.color }" aria-hidden="true" />
+                    <Icon name="stop" size="xsm" color="inherit" :style="{ color: trend.color }" />
                     <Text type="supporting" color="secondary">
                       Current
                     </Text>
                   </HStack>
                   <HStack :gap="2" align="center">
-                    <span class="legend-swatch" :style="{ backgroundColor: COLORS.prior }" aria-hidden="true" />
+                    <Icon name="stop" size="xsm" color="inherit" :style="{ color: COLORS.prior }" />
                     <Text type="supporting" color="secondary">
                       Prior
                     </Text>
@@ -531,7 +505,7 @@ function trendGeometry(trend: TrendSeries) {
                 />
                 <StackItem size="fill">
                   <VStack :gap="1">
-                    <Heading :level="4">
+                    <Heading :level="4" :accessibility-level="3">
                       {{ callout.title }}
                     </Heading>
                     <Text type="body" color="secondary">
@@ -549,12 +523,6 @@ function trendGeometry(trend: TrendSeries) {
 </template>
 
 <style scoped>
-.legend-swatch {
-  flex-shrink: 0;
-  width: 8px;
-  height: 8px;
-  border-radius: 2px;
-}
 
 /* 指标卡按视口宽度分三档：1 列、2 列（768–1199）、3 列（≥1200），档位互不重叠。 */
 .scorecard-grid {

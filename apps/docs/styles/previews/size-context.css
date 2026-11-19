@@ -1,0 +1,13 @@
+.size-context-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-sizing: border-box;
+  width: min(100%, 360px);
+}
+
+.size-context-preview__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}

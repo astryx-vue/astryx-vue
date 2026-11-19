@@ -492,6 +492,35 @@ describe('selector', () => {
     expect(renderFn.find('.astryx-selector-value-icon .render-icon').exists()).toBe(true)
   })
 
+  it('draws a VNode option icon as is, without the 16px icon box', () => {
+    const wrapper = mount(Selector, {
+      props: {
+        modelValue: 'doing',
+        label: 'Status',
+        options: [{ value: 'doing', label: 'In Progress', icon: h('span', { class: 'dot' }) }],
+      },
+    })
+    const dot = wrapper.get('.astryx-selector-value > .dot')
+    expect(dot.classes()).toContain('astryx-selector-value-icon')
+    expect(wrapper.find('.astryx-selector-value .astryx-icon').exists()).toBe(false)
+  })
+
+  it('draws startIcon before the trigger and drops the selected option icon', () => {
+    const wrapper = mount(Selector, {
+      props: {
+        modelValue: 'private',
+        label: 'Visibility',
+        startIcon: () => h('span', { class: 'start-icon' }),
+        options: [{ value: 'private', label: 'Private', icon: 'lock-icon' }],
+      },
+    })
+    const start = wrapper.get('.astryx-selector-field > .astryx-selector-start-icon')
+    expect(start.find('.start-icon').exists()).toBe(true)
+    expect(start.element.nextElementSibling?.classList.contains('astryx-selector-trigger')).toBe(true)
+    expect(wrapper.find('.astryx-selector-value-icon').exists()).toBe(false)
+    expect(wrapper.get('.astryx-selector-value').text()).toBe('Private')
+  })
+
   it('puts an option icon beside the label and the check at the end', async () => {
     const wrapper = mount(Selector, {
       props: {

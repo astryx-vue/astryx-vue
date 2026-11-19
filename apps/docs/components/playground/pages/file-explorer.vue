@@ -15,6 +15,8 @@ import {
   SegmentedControlItem,
   Text,
   Toolbar,
+  useToast,
+  VisuallyHidden,
   VStack,
 } from '@astryx-vue/core'
 import { computed, ref } from 'vue'
@@ -245,7 +247,14 @@ const FILESYSTEM: FileSystemItem[] = [
   },
 ]
 
-const viewMode = ref('column')
+const showToast = useToast()
+// Demo only: 这一页只展示分栏视图，切换视图和工具栏动作都只弹提示。
+function demo(body: string, uniqueID: string) {
+  showToast({ body, uniqueID })
+}
+function onViewChange(view: string) {
+  demo(`Demo: the ${view} view would show here`, `view-${view}`)
+}
 const selectedPath = ref<string[]>(['applications', 'chrome-apps', 'component-lab'])
 
 function findItem(items: FileSystemItem[], id: string): FileSystemItem | null {
@@ -330,60 +339,63 @@ function goBack(): void {
             :is-disabled="selectedPath.length === 0"
             @click="goBack"
           >
-            <Icon icon="i-heroicons-chevron-left" size="sm" />
+            <Icon name="heroicons:chevron-left" size="sm" />
           </IconButton>
           <IconButton variant="ghost" size="sm" label="Go forward" is-disabled>
-            <Icon icon="i-heroicons-chevron-right" size="sm" />
+            <Icon name="heroicons:chevron-right" size="sm" />
           </IconButton>
           <Text type="label">
             {{ currentFolderName }}
           </Text>
         </template>
         <template #center>
-          <SegmentedControl v-model="viewMode" label="View mode">
+          <SegmentedControl model-value="column" label="View mode" @change="onViewChange">
             <SegmentedControlItem value="grid" label="Grid" is-label-hidden>
               <template #icon>
-                <Icon icon="i-heroicons-squares-2x2" size="sm" />
+                <Icon name="heroicons:squares-2x2" size="sm" />
               </template>
             </SegmentedControlItem>
             <SegmentedControlItem value="list" label="List" is-label-hidden>
               <template #icon>
-                <Icon icon="i-heroicons-bars-4" size="sm" />
+                <Icon name="heroicons:bars-4" size="sm" />
               </template>
             </SegmentedControlItem>
             <SegmentedControlItem value="column" label="Column" is-label-hidden>
               <template #icon>
-                <Icon icon="i-heroicons-view-columns" size="sm" />
+                <Icon name="heroicons:view-columns" size="sm" />
               </template>
             </SegmentedControlItem>
             <SegmentedControlItem value="gallery" label="Gallery" is-label-hidden>
               <template #icon>
-                <Icon icon="i-heroicons-table-cells" size="sm" />
+                <Icon name="heroicons:table-cells" size="sm" />
               </template>
             </SegmentedControlItem>
           </SegmentedControl>
         </template>
         <template #end>
-          <IconButton variant="ghost" size="sm" label="Group">
-            <Icon icon="i-heroicons-adjustments-horizontal" size="sm" />
+          <IconButton variant="ghost" size="sm" label="Group" @click="demo('Demo: grouping options would open here', 'group')">
+            <Icon name="heroicons:adjustments-horizontal" size="sm" />
           </IconButton>
-          <IconButton variant="ghost" size="sm" label="Share">
-            <Icon icon="i-heroicons-share" size="sm" />
+          <IconButton variant="ghost" size="sm" label="Share" @click="demo('Demo: sharing would start here', 'share')">
+            <Icon name="heroicons:share" size="sm" />
           </IconButton>
-          <IconButton variant="ghost" size="sm" label="Tags">
-            <Icon icon="i-heroicons-tag" size="sm" />
+          <IconButton variant="ghost" size="sm" label="Tags" @click="demo('Demo: tags for the selection would open here', 'tags')">
+            <Icon name="heroicons:tag" size="sm" />
           </IconButton>
-          <IconButton variant="ghost" size="sm" label="More">
-            <Icon icon="i-heroicons-ellipsis-horizontal" size="sm" />
+          <IconButton variant="ghost" size="sm" label="More" @click="demo('Demo: more actions would open here', 'more')">
+            <Icon name="heroicons:ellipsis-horizontal" size="sm" />
           </IconButton>
-          <IconButton variant="ghost" size="sm" label="Search">
-            <Icon icon="i-heroicons-magnifying-glass" size="sm" />
+          <IconButton variant="ghost" size="sm" label="Search" @click="demo('Demo: search in this folder would open here', 'search')">
+            <Icon name="heroicons:magnifying-glass" size="sm" />
           </IconButton>
         </template>
       </Toolbar>
     </template>
 
-    <LayoutContent :padding="0" :is-scrollable="false">
+    <LayoutContent role="main" :padding="0" :is-scrollable="false">
+      <VisuallyHidden as="h1">
+        Files
+      </VisuallyHidden>
       <HStack class="column-row" height="100%">
         <Section
           v-for="(col, colIndex) in columns"
@@ -404,7 +416,7 @@ function goBack(): void {
             >
               <template #startContent>
                 <Icon
-                  :icon="item.type === 'folder' ? 'i-heroicons-folder-solid' : 'i-heroicons-document'"
+                  :name="item.type === 'folder' ? 'heroicons:folder-solid' : 'heroicons:document'"
                   :color="item.type === 'folder' ? 'accent' : 'secondary'"
                   size="sm"
                 />
@@ -413,7 +425,7 @@ function goBack(): void {
                 v-if="item.type === 'folder' && item.children != null && item.children.length > 0"
                 #endContent
               >
-                <Icon icon="i-heroicons-chevron-right" size="xsm" color="secondary" />
+                <Icon name="heroicons:chevron-right" size="xsm" color="secondary" />
               </template>
             </ListItem>
           </List>
@@ -425,9 +437,9 @@ function goBack(): void {
           variant="transparent"
           class="scrollable detail-column"
         >
-          <VStack :gap="4" hAlign="center">
+          <VStack :gap="4" h-align="center">
             <Avatar :name="selectedFile.name" :size="96" />
-            <VStack :gap="1" hAlign="center">
+            <VStack :gap="1" h-align="center">
               <Text type="label">
                 {{ selectedFile.name }}
               </Text>

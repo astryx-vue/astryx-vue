@@ -22,6 +22,16 @@ describe('banner', () => {
     expect(wrapper.get('.astryx-banner-icon').attributes('aria-hidden')).toBe('true')
   })
 
+  it('marks only the built-in toggle and dismiss controls as status-foreground controls', () => {
+    const wrapper = mount(Banner, {
+      props: { status: 'success', title: 'Saved', isDismissable: true },
+      slots: { end: '<button class="mine">Undo</button>', default: 'Details' },
+    })
+    const controls = wrapper.findAll('.astryx-banner-control')
+    expect(controls).toHaveLength(2)
+    expect(wrapper.get('.mine').classes()).not.toContain('astryx-banner-control')
+  })
+
   it('keeps an explicit role the caller asked for', () => {
     const wrapper = mount(Banner, { props: { status: 'error', title: 'Failed' }, attrs: { role: 'alert' } })
     expect(wrapper.attributes('role')).toBe('alert')

@@ -214,7 +214,7 @@ describe('json envelopes', () => {
     expect(detail).toMatchObject({ id: 'theme/tokens', title: 'Design tokens', locale: 'en' })
     expect(detail.body).toContain('design token')
     expect(detail.body.startsWith('---')).toBe(false)
-    expect(detail.docsUrl).toBe('https://astryx-vue.pages.dev/en/themes/tokens')
+    expect(detail.docsUrl).toBe('https://astryx-vue.pages.dev/en/guide/tokens')
 
     const bare = await run(['docs', 'dark-mode', '--json'])
     expect(assertResponse(bare.stdout, 'docs.detail').data).toMatchObject({ id: 'guide/dark-mode' })
@@ -568,7 +568,7 @@ describe('catalog source', () => {
 
   it('marks composables and stores topic bodies without frontmatter', async () => {
     expect(catalog.components.filter(component => component.kind === 'composable')).toHaveLength(57)
-    expect(catalog.components.filter(component => component.kind === 'component')).toHaveLength(191)
+    expect(catalog.components.filter(component => component.kind === 'component')).toHaveLength(193)
     const clipboard = catalog.components.find(component => component.slug === 'use-clipboard')
     expect(clipboard?.kind).toBe('composable')
     expect(clipboard?.name).toBe('UseClipboard')

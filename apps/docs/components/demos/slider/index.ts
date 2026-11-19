@@ -16,4 +16,4 @@ export const sliderRange = defineDemo(rangeDemo, rangeSource, options)
 export const sliderMarks = defineDemo(marksDemo, marksSource, options)
 export const sliderStatus = defineDemo(statusDemo, statusSource, options)
 
-export const sliderOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const sliderOverview = defineDemo(overviewDemo, overviewSource)

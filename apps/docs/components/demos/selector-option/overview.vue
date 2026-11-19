@@ -13,5 +13,11 @@ const roles = [
 </script>
 
 <template>
-  <Selector v-model="value" label="Role" :options="roles" :width="300" />
+  <Selector
+    v-model="value"
+    :width="300"
+    label="Role"
+    :options="roles"
+    placeholder="Assign a role..."
+  />
 </template>

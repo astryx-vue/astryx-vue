@@ -6,17 +6,23 @@ title: 安装
 
 astryx-vue 拆分为核心包与主题包两个部分，通常建议一起安装：
 
-```sh
+::: code-group
+```sh [pnpm]
 pnpm add @astryx-vue/core @astryx-vue/themes
 ```
 
-```sh
+```sh [npm]
 npm install @astryx-vue/core @astryx-vue/themes
 ```
 
-```sh
+```sh [yarn]
 yarn add @astryx-vue/core @astryx-vue/themes
 ```
+
+```sh [bun]
+bun add @astryx-vue/core @astryx-vue/themes
+```
+:::
 
 `@astryx-vue/core` 的 peer 依赖是 `vue: ^3.5.0`。主题包附带了 `@fontsource/figtree` 与 `@fontsource/jetbrains-mono`，用来提供正文与等宽代码字体。两个包均采用纯 ESM 格式发布。
 

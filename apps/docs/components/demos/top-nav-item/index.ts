@@ -7,4 +7,4 @@ import overviewSource from './overview.vue?raw&highlighted'
 const options = { className: 'top-nav-item-preview' }
 
 export const topNavItemBasic = defineDemo(basicDemo, basicSource, options)
-export const topNavItemOverview = defineDemo(overviewDemo, overviewSource, options)
+export const topNavItemOverview = defineDemo(overviewDemo, overviewSource)

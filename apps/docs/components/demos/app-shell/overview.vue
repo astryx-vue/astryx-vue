@@ -1,37 +1,46 @@
 <script setup lang="ts">
 import { AppShell } from '@astryx-vue/core/AppShell'
-import { SideNav, SideNavItem } from '@astryx-vue/core/SideNav'
+import { Heading } from '@astryx-vue/core/Heading'
+import { NavIcon } from '@astryx-vue/core/NavItem'
+import { SideNav, SideNavHeading, SideNavItem, SideNavSection } from '@astryx-vue/core/SideNav'
+import { VStack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
-import { TopNav, TopNavHeading, TopNavItem } from '@astryx-vue/core/TopNav'
 </script>
 
 <template>
-  <div class="app-shell-overview">
-    <AppShell :content-padding="3" style="height: 100%; min-height: 0">
-      <template #topNav>
-        <TopNav label="Main navigation">
-          <template #heading>
-            <TopNavHeading heading="App">
-              <template #icon>
-                <span class="i-carbon-cube nav-mark" />
-              </template>
-            </TopNavHeading>
-          </template>
-          <template #start>
-            <TopNavItem href="#" is-selected label="Home" />
-            <TopNavItem href="#" label="Docs" />
-          </template>
-        </TopNav>
-      </template>
-      <template #sideNav>
-        <SideNav>
-          <SideNavItem href="#" icon-class="i-carbon-home" is-selected label="Dashboard" />
-          <SideNavItem href="#" icon-class="i-carbon-settings" label="Settings" />
-        </SideNav>
-      </template>
-      <Text type="supporting">
-        Content
+  <AppShell :content-padding="6" class="app-shell-showcase">
+    <template #sideNav>
+      <SideNav>
+        <template #header>
+          <SideNavHeading heading="App Shell" heading-href="#">
+            <template #icon>
+              <NavIcon icon-class="i-heroicons-cube" />
+            </template>
+          </SideNavHeading>
+        </template>
+        <SideNavSection title="Main" is-header-hidden>
+          <SideNavItem label="Home" icon-class="i-heroicons-home-solid" is-selected href="#" />
+          <SideNavItem label="Reports" icon-class="i-heroicons-chart-bar" href="#" />
+          <SideNavItem label="Documents" icon-class="i-heroicons-document-text" href="#" />
+          <SideNavItem label="Team" icon-class="i-heroicons-users" href="#" />
+        </SideNavSection>
+      </SideNav>
+    </template>
+    <VStack :gap="4">
+      <Heading :level="3">
+        Page Content
+      </Heading>
+      <Text type="body">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
       </Text>
-    </AppShell>
-  </div>
+    </VStack>
+  </AppShell>
 </template>
+
+<style scoped>
+.app-shell-showcase {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+</style>

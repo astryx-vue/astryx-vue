@@ -144,6 +144,19 @@
     flex-shrink: 0;
     align-items: center;
     justify-content: center;
+    width: 16px;
+    height: 16px;
+  }
+
+  /* 图标槽跟着分段尺寸走：sm 14px、md 16px、lg 18px，和原版一致。 */
+  .astryx-segmented-control-item[data-size='sm'] > .astryx-segmented-control-item__icon {
+    width: 14px;
+    height: 14px;
+  }
+
+  .astryx-segmented-control-item[data-size='lg'] > .astryx-segmented-control-item__icon {
+    width: 18px;
+    height: 18px;
   }
 
   .astryx-segmented-control-item__label {

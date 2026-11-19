@@ -7,7 +7,6 @@ import {
   Dialog,
   Divider,
   EmptyState,
-  Grid,
   Heading,
   HStack,
   Icon,
@@ -28,8 +27,11 @@ import {
   Text,
   TextArea,
   TextInput,
+  proportional,
   Toolbar,
   useMediaQuery,
+  useToast,
+  VisuallyHidden,
   VStack,
 } from '@astryx-vue/core'
 import { computed, h, ref } from 'vue'
@@ -55,21 +57,21 @@ type Transaction = {
 }
 
 const BLOCK_META: Record<BlockType, { label: string, icon: string }> = {
-  hero: { label: 'Hero', icon: 'i-carbon-grid' },
-  text: { label: 'Text', icon: 'i-carbon-document' },
-  image: { label: 'Image', icon: 'i-carbon-image' },
-  button: { label: 'Button', icon: 'i-carbon-cursor-1' },
-  cards: { label: 'Cards', icon: 'i-carbon-column' },
-  features: { label: 'Features', icon: 'i-carbon-star' },
-  cta: { label: 'CTA', icon: 'i-carbon-megaphone' },
+  hero: { label: 'Hero', icon: 'heroicons:squares-2x2' },
+  text: { label: 'Text', icon: 'heroicons:document-text' },
+  image: { label: 'Image', icon: 'heroicons:photo' },
+  button: { label: 'Button', icon: 'heroicons:cursor-arrow-rays' },
+  cards: { label: 'Cards', icon: 'heroicons:view-columns' },
+  features: { label: 'Features', icon: 'heroicons:sparkles' },
+  cta: { label: 'CTA', icon: 'heroicons:megaphone' },
 }
 
 const CATEGORY_ICONS: Record<string, string> = {
-  'Food & Drink': 'i-carbon-shopping-bag',
-  'Groceries': 'i-carbon-shopping-cart',
-  'Income': 'i-carbon-money',
-  'Transport': 'i-carbon-chat',
-  'Entertainment': 'i-carbon-play',
+  'Food & Drink': 'heroicons:shopping-bag',
+  'Groceries': 'heroicons:shopping-cart',
+  'Income': 'heroicons:banknotes',
+  'Transport': 'heroicons:chat-bubble-left',
+  'Entertainment': 'heroicons:play-circle',
 }
 
 const VIEWPORT_MAX: Record<ViewportSize, number> = {
@@ -188,8 +190,10 @@ const transactionColumns: TableColumn<Transaction>[] = [
   {
     key: 'name',
     header: 'Transaction',
-    renderCell: item => h(HStack, { gap: 3, align: 'center' }, () => [
-      h(Icon, { icon: CATEGORY_ICONS[item.category] ?? 'i-carbon-star' }),
+    // 一格里放图标加名字，默认 60px 下限在手机上只剩一两个字母一行；各列份额等于下限，加起来是表格的最小宽度 480px。
+    width: proportional(3, { minWidth: 180 }),
+    renderCell: item => h(HStack, { gap: 3, vAlign: 'center' }, () => [
+      h(Icon, { name: CATEGORY_ICONS[item.category] ?? 'heroicons:sparkles', size: 'md' }),
       h(VStack, { gap: 0 }, () => [
         h(Text, { type: 'label', weight: 'semibold' }, () => item.name),
         h(Text, { type: 'supporting', color: 'secondary' }, () => item.category),
@@ -199,17 +203,20 @@ const transactionColumns: TableColumn<Transaction>[] = [
   {
     key: 'date',
     header: 'Date',
+    width: proportional(2, { minWidth: 120 }),
     renderCell: item => h(Text, { type: 'body', color: 'secondary' }, () => item.date),
   },
   {
     key: 'amount',
     header: 'Amount',
+    width: proportional(2, { minWidth: 120 }),
     renderCell: item => h(Text, { type: 'label', weight: 'semibold', hasTabularNumbers: true }, () => item.amount),
   },
   {
     key: 'actions',
-    header: '',
-    renderCell: () => h(Button, { label: 'More', variant: 'ghost', size: 'sm', isIconOnly: true }, () => h(Icon, { icon: 'i-carbon-overflow-menu-horizontal', size: 'sm' })),
+    header: () => h(VisuallyHidden, null, () => 'Actions'),
+    width: proportional(1, { minWidth: 60 }),
+    renderCell: () => h(Button, { label: 'More', variant: 'ghost', size: 'sm', isIconOnly: true }, { icon: () => h(Icon, { name: 'heroicons:ellipsis-horizontal', size: 'sm' }) }),
   },
 ]
 
@@ -269,6 +276,22 @@ function deleteBlock(id: string) {
   if (selectedId.value === id)
     selectedId.value = blocks.value[0]?.id ?? null
 }
+
+/** 原版每种块的卡片内边距：文字块（无标题）、图片、卡片列表用 Card 默认值，其余 6。 */
+function blockPadding(block: Block): 6 | undefined {
+  if (block.type === 'image' || block.type === 'cards' || (block.type === 'text' && !block.props.heading))
+    return undefined
+  return 6
+}
+
+const showToast = useToast()
+// 演示用：真实项目里换成发布页面、打开预览的调用。
+function publish() {
+  showToast({ body: `Demo: ${pageTitle.value} would be published here`, uniqueID: 'publish' })
+}
+function preview() {
+  showToast({ body: 'Demo: a preview of the page would open here', uniqueID: 'preview' })
+}
 </script>
 
 <template>
@@ -277,16 +300,16 @@ function deleteBlock(id: string) {
       <LayoutPanel :has-divider="false" :padding="0" class="mobile-sidebar">
         <Section variant="transparent" :padding="4">
           <HStack :gap="3" align="center" justify="between">
-            <Heading :level="2">
+            <Heading :level="2" :accessibility-level="1">
               {{ pageTitle }}
             </Heading>
             <HStack :gap="2" align="center">
               <Button label="Edit" variant="ghost" is-icon-only @click="isCustomizeOpen = true">
                 <template #icon>
-                  <Icon icon="i-carbon-settings-adjust" size="sm" />
+                  <Icon name="heroicons:adjustments-horizontal" size="sm" />
                 </template>
               </Button>
-              <Button label="Publish" variant="primary" />
+              <Button label="Publish" variant="primary" @click="publish" />
             </HStack>
           </HStack>
         </Section>
@@ -307,7 +330,7 @@ function deleteBlock(id: string) {
                 @blur="isEditingTitle = false"
                 @keydown.enter="isEditingTitle = false"
               />
-              <Heading v-else :level="2" class="clickable" @click="isEditingTitle = true">
+              <Heading v-else :level="2" :accessibility-level="1" class="clickable" @click="isEditingTitle = true">
                 {{ pageTitle }}
               </Heading>
               <Toolbar label="Viewport and actions">
@@ -315,29 +338,29 @@ function deleteBlock(id: string) {
                   <SegmentedControl v-model="viewport" label="Viewport size">
                     <SegmentedControlItem value="desktop" label="Desktop" is-label-hidden>
                       <template #icon>
-                        <Icon icon="i-carbon-laptop" size="sm" />
+                        <Icon name="heroicons:computer-desktop" size="sm" />
                       </template>
                     </SegmentedControlItem>
                     <SegmentedControlItem value="tablet" label="Tablet" is-label-hidden>
                       <template #icon>
-                        <Icon icon="i-carbon-tablet" size="sm" />
+                        <Icon name="heroicons:device-tablet" size="sm" />
                       </template>
                     </SegmentedControlItem>
                     <SegmentedControlItem value="phone" label="Phone" is-label-hidden>
                       <template #icon>
-                        <Icon icon="i-carbon-mobile" size="sm" />
+                        <Icon name="heroicons:device-phone-mobile" size="sm" />
                       </template>
                     </SegmentedControlItem>
                   </SegmentedControl>
                 </template>
                 <template #end>
                   <HStack :gap="2">
-                    <Button label="Preview" variant="ghost" is-icon-only>
+                    <Button label="Preview" variant="ghost" is-icon-only @click="preview">
                       <template #icon>
-                        <Icon icon="i-carbon-view" size="sm" />
+                        <Icon name="heroicons:eye" size="sm" />
                       </template>
                     </Button>
-                    <Button label="Publish" variant="primary" />
+                    <Button label="Publish" variant="primary" @click="publish" />
                   </HStack>
                 </template>
               </Toolbar>
@@ -353,12 +376,12 @@ function deleteBlock(id: string) {
           </VStack>
 
           <Section variant="transparent" :padding="4">
-            <VStack v-if="sidebarTab === 'blocks'" :gap="4">
+            <VStack v-if="sidebarTab === 'blocks'" :gap="2">
               <VStack :gap="1">
-                <Heading :level="4">
+                <Heading :level="4" :accessibility-level="2">
                   Add Block
                 </Heading>
-                <List density="balanced">
+                <List density="balanced" :has-dividers="false">
                   <ListItem
                     v-for="(meta, type) in BLOCK_META"
                     :key="type"
@@ -366,17 +389,17 @@ function deleteBlock(id: string) {
                     @click="addBlock(String(type))"
                   >
                     <template #startContent>
-                      <Icon :icon="meta.icon" color="secondary" />
+                      <Icon :name="meta.icon" size="md" color="secondary" />
                     </template>
                   </ListItem>
                 </List>
               </VStack>
 
               <VStack :gap="1">
-                <Heading :level="4">
+                <Heading :level="4" :accessibility-level="2">
                   Layers
                 </Heading>
-                <List density="balanced">
+                <List density="balanced" :has-dividers="false">
                   <ListItem
                     v-for="block in blocks"
                     :key="block.id"
@@ -385,23 +408,23 @@ function deleteBlock(id: string) {
                     @click="selectBlock(block.id)"
                   >
                     <template #startContent>
-                      <Icon :icon="BLOCK_META[block.type].icon" color="secondary" />
+                      <Icon :name="BLOCK_META[block.type].icon" size="md" color="secondary" />
                     </template>
                     <template #endContent>
                       <HStack :gap="1">
                         <Button label="Move up" variant="ghost" size="sm" is-icon-only @click="moveBlock(block.id, -1)">
                           <template #icon>
-                            <Icon icon="i-carbon-chevron-up" size="sm" />
+                            <Icon name="heroicons:chevron-up" size="sm" />
                           </template>
                         </Button>
                         <Button label="Move down" variant="ghost" size="sm" is-icon-only @click="moveBlock(block.id, 1)">
                           <template #icon>
-                            <Icon icon="i-carbon-chevron-down" size="sm" />
+                            <Icon name="heroicons:chevron-down" size="sm" />
                           </template>
                         </Button>
                         <Button label="Delete" variant="ghost" size="sm" is-icon-only @click="deleteBlock(block.id)">
                           <template #icon>
-                            <Icon icon="i-carbon-trash-can" size="sm" />
+                            <Icon name="heroicons:trash" size="sm" />
                           </template>
                         </Button>
                       </HStack>
@@ -498,7 +521,7 @@ function deleteBlock(id: string) {
       </LayoutPanel>
     </template>
 
-    <LayoutContent :padding="8">
+    <LayoutContent role="main" :padding="8">
       <VStack :gap="4" :style="canvasStyle">
         <template v-if="blocks.length > 0">
           <Card
@@ -506,7 +529,7 @@ function deleteBlock(id: string) {
             :key="block.id"
             class="clickable"
             :class="{ 'selected-card': block.id === selectedId }"
-            :padding="block.type === 'image' ? 0 : 6"
+            :padding="blockPadding(block)"
             @click="selectBlock(block.id)"
           >
             <VStack v-if="block.type === 'hero'" :gap="4">
@@ -544,11 +567,11 @@ function deleteBlock(id: string) {
               is-compact
             >
               <template #icon>
-                <Icon icon="i-carbon-image" />
+                <Icon name="heroicons:photo" />
               </template>
             </EmptyState>
 
-            <Center v-else-if="block.type === 'button'" :padding="4">
+            <Center v-else-if="block.type === 'button'">
               <Button
                 :label="String(block.props.label ?? 'Button')"
                 :variant="buttonVariantOf(block)"
@@ -556,26 +579,23 @@ function deleteBlock(id: string) {
               />
             </Center>
 
-            <Grid v-else-if="block.type === 'cards'" :columns="2" :gap="4">
-              <Card v-for="card in cardsOf(block)" :key="card.title" :padding="4">
-                <VStack :gap="1">
-                  <Text type="label" weight="semibold">
-                    {{ card.title }}
-                  </Text>
-                  <Text type="supporting" color="secondary">
-                    {{ card.description }}
-                  </Text>
-                </VStack>
-              </Card>
-            </Grid>
+            <VStack v-else-if="block.type === 'cards'" :gap="4">
+              <Heading :level="3" :accessibility-level="2">
+                Cards
+              </Heading>
+              <Divider />
+              <List density="balanced" :has-dividers="false">
+                <ListItem v-for="(card, i) in cardsOf(block)" :key="i" :label="card.title" :description="card.description" />
+              </List>
+            </VStack>
 
-            <VStack v-else-if="block.type === 'features'" :gap="3">
-              <HStack :gap="3" align="center" justify="between">
+            <template v-else-if="block.type === 'features'">
+              <HStack :gap="3" vAlign="start" h-align="between" :padding-block-end="4">
                 <VStack :gap="1">
-                  <Heading :level="3">
-                    {{ block.props.heading }}
+                  <Heading :level="3" :accessibility-level="2">
+                    {{ String(block.props.heading || 'Features') }}
                   </Heading>
-                  <Text type="supporting" color="secondary">
+                  <Text v-if="block.props.description" type="supporting" color="secondary">
                     {{ block.props.description }}
                   </Text>
                 </VStack>
@@ -585,20 +605,20 @@ function deleteBlock(id: string) {
                 :data="itemsOf(block)"
                 :columns="transactionColumns"
                 id-key="id"
-                dividers="rows"
+                has-hover
               />
-            </VStack>
+            </template>
 
-            <HStack v-else-if="block.type === 'cta'" :gap="4" align="start">
-              <Center class="icon-circle" :width="48" :height="48">
-                <Icon icon="i-carbon-locked" size="sm" />
+            <HStack v-else-if="block.type === 'cta'" :gap="4" vAlign="start">
+              <Center class="icon-circle" :width="40" :height="40">
+                <Icon name="heroicons:lock-closed" size="md" color="secondary" />
               </Center>
-              <VStack :gap="2">
-                <Heading :level="4">
-                  {{ block.props.heading }}
-                </Heading>
+              <VStack :gap="1">
+                <Text type="label" weight="semibold">
+                  {{ String(block.props.heading || 'Notice') }}
+                </Text>
                 <Text type="supporting" color="secondary">
-                  {{ block.props.description }}
+                  {{ String(block.props.description || 'Description text') }}
                 </Text>
               </VStack>
             </HStack>
@@ -610,7 +630,7 @@ function deleteBlock(id: string) {
           description="Add blocks from the sidebar to start building your page"
         >
           <template #icon>
-            <Icon icon="i-carbon-add-alt" />
+            <Icon name="heroicons:plus-circle" />
           </template>
         </EmptyState>
       </VStack>
@@ -633,7 +653,7 @@ function deleteBlock(id: string) {
             </Heading>
             <Button label="Close" variant="ghost" is-icon-only @click="isCustomizeOpen = false">
               <template #icon>
-                <Icon icon="i-carbon-close" size="sm" />
+                <Icon name="heroicons:x-mark" size="sm" />
               </template>
             </Button>
           </HStack>

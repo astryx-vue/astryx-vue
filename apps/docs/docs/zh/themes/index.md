@@ -39,13 +39,11 @@ import '@astryx-vue/themes/neutral.css'
 
 ## 主题画廊
 
-你可以点击下方画廊直观感受每套主题的视觉风格：
-
-<ThemeGallery />
+打开[主题画廊](/themes/)，同一个商店页面会按你选的主题重新渲染，可以直观对比每套主题的风格。
 
 ## 深入了解更多
 
-- **查看各套主题详细信息：** [Neutral](/themes/neutral)、[Butter](/themes/butter)、[Chocolate](/themes/chocolate)、[Gothic](/themes/gothic)、[Matcha](/themes/matcha)、[Stone](/themes/stone)、[Y2K](/themes/y2k)。
-- **底层原理与变量规范：** 想知道所有可用的样式变量名，看 [CSS 变量](/themes/css-variables)；想了解变量与原始设计规范的映射关系，看 [Design token](/themes/tokens)。
-- **各维度配置详解：** 查看 [颜色](/themes/color)、[排版与字体](/themes/typography)、[动画刻度](/themes/motion) 以及 [间距、圆角与阴影](/themes/scale)。
-- **自定义微调：** 如果只想改某几个数值或品牌色，可以参考 [扩展主题](/themes/extending)；若需要在 Vue 模板里动态给局部子组件树套用计算后的主题对象，推荐使用 [Theme 主题容器](/components/theme)、[MediaTheme 媒体主题](/components/media-theme) 和 [SyntaxTheme 语法高亮主题](/components/syntax-theme)。
+- **查看各套主题详细信息：** [Neutral](/guide/themes/neutral)、[Butter](/guide/themes/butter)、[Chocolate](/guide/themes/chocolate)、[Gothic](/guide/themes/gothic)、[Matcha](/guide/themes/matcha)、[Stone](/guide/themes/stone)、[Y2K](/guide/themes/y2k)。
+- **底层原理与变量规范：** 想知道所有可用的样式变量名，看 [CSS 变量](/guide/css-variables)；想了解变量与原始设计规范的映射关系，看 [Design token](/guide/tokens)。
+- **各维度配置详解：** 查看 [颜色](/guide/color)、[排版与字体](/guide/typography)、[动画刻度](/guide/motion) 以及 [间距、圆角与阴影](/guide/scale)。
+- **自定义微调：** 如果只想改某几个数值或品牌色，可以参考 [扩展主题](/guide/extending-themes)；若需要在 Vue 模板里动态给局部子组件树套用计算后的主题对象，推荐使用 [Theme 主题容器](/components/theme)、[MediaTheme 媒体主题](/components/media-theme) 和 [SyntaxTheme 语法高亮主题](/components/syntax-theme)。

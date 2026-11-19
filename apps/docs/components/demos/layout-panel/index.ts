@@ -4,7 +4,5 @@ import navigationSource from './navigation.vue?raw&highlighted'
 import overviewDemo from './overview.vue'
 import overviewSource from './overview.vue?raw&highlighted'
 
-const options = { className: 'layout-panel-preview' }
-
-export const layoutPanelNavigation = defineDemo(navigationDemo, navigationSource, options)
-export const layoutPanelOverview = defineDemo(overviewDemo, overviewSource, options)
+export const layoutPanelNavigation = defineDemo(navigationDemo, navigationSource, { className: 'layout-panel-preview' })
+export const layoutPanelOverview = defineDemo(overviewDemo, overviewSource)

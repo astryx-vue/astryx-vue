@@ -1,0 +1,27 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.overrides {
+  /* 选中的行、树节点和单选项底下有一层选中填充，次要文字退一档才够 4.5:1。 */
+  :where(:root) .astryx-item[data-selected='true']:not(:where([data-astryx-theme]:not([data-astryx-theme='neutral']) *)),
+  [data-astryx-theme='neutral'] .astryx-item[data-selected='true'],
+  :where(:root) .astryx-tree-list__content[data-selected='true']:not(:where([data-astryx-theme]:not([data-astryx-theme='neutral']) *)),
+  [data-astryx-theme='neutral'] .astryx-tree-list__content[data-selected='true'],
+  :where(:root) .astryx-radio:has(.astryx-radio-native:checked):not(:where([data-astryx-theme]:not([data-astryx-theme='neutral']) *)),
+  [data-astryx-theme='neutral'] .astryx-radio:has(.astryx-radio-native:checked),
+  :where(:root) .astryx-file-input[data-mode='dropzone']:not(:where([data-astryx-theme]:not([data-astryx-theme='neutral']) *)),
+  [data-astryx-theme='neutral'] .astryx-file-input[data-mode='dropzone'] {
+    --astryx-color-text-secondary: light-dark(#474747, #c6c6c6);
+  }
+
+  /* 数字角标是同一层填充上的小药丸。 */
+  :where(:root) .astryx-citation[data-variant='number']:not(:where([data-astryx-theme]:not([data-astryx-theme='neutral']) *)),
+  [data-astryx-theme='neutral'] .astryx-citation[data-variant='number'] {
+    --astryx-citation-foreground: light-dark(#474747, #c6c6c6);
+  }
+
+  /* 未选中的分段标签落在半透明轨道上，暗色下次要文字退一档。 */
+  :where(:root) .astryx-segmented-control-item:not(:where([data-astryx-theme]:not([data-astryx-theme='neutral']) *)),
+  [data-astryx-theme='neutral'] .astryx-segmented-control-item {
+    --astryx-segmented-control-item-foreground: light-dark(#474747, #c6c6c6);
+  }
+}

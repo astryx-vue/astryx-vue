@@ -5,15 +5,19 @@ export interface FieldMessages {
   optional: string
   /** 字段标签后面的「必填」标记。 */
   required: string
+  /** 标签后面小「i」按钮的无障碍名称，例如「About Auto-save」。 */
+  labelTooltip: (label: string) => string
 }
 
 export const fieldMessages: Record<AstryxLocale, FieldMessages> = {
   'en': {
     optional: 'Optional',
     required: 'Required',
+    labelTooltip: label => `About ${label}`,
   },
   'zh-CN': {
     optional: '可选',
     required: '必填',
+    labelTooltip: label => `关于${label}`,
   },
 }

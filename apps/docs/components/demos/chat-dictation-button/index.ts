@@ -6,5 +6,5 @@ import overviewSource from './overview.vue?raw&highlighted'
 
 const shell = { className: 'chat-preview-composer' }
 
-export const chatDictationButtonOverview = defineDemo(overviewDemo, overviewSource, shell)
+export const chatDictationButtonOverview = defineDemo(overviewDemo, overviewSource)
 export const chatDictationButtonBasic = defineDemo(basicDemo, basicSource, shell)

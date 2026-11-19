@@ -13,4 +13,4 @@ export const fieldRequired = defineDemo(requiredDemo, requiredSource, options)
 export const fieldValidation = defineDemo(validationDemo, validationSource, options)
 export const fieldDescription = defineDemo(descriptionDemo, descriptionSource, options)
 
-export const fieldOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const fieldOverview = defineDemo(overviewDemo, overviewSource)

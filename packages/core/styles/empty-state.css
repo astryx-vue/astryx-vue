@@ -19,10 +19,6 @@
     padding-inline: var(--astryx-spacing-4, 16px);
   }
 
-  .astryx-empty-state-icon {
-    flex-shrink: 0;
-  }
-
   .astryx-empty-state-text {
     display: flex;
     flex-direction: column;

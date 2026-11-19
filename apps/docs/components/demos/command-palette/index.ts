@@ -22,4 +22,4 @@ export const commandPaletteFooter = defineDemo(footerDemo, footerSource, options
 export const commandPaletteAsync = defineDemo(asyncDemo, asyncSource, options)
 export const commandPaletteRich = defineDemo(richDemo, richSource, options)
 export const commandPaletteGrouped = defineDemo(groupedDemo, groupedSource, options)
-export const commandPaletteOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const commandPaletteOverview = defineDemo(overviewDemo, overviewSource)

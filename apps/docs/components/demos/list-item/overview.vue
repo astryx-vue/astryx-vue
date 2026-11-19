@@ -7,10 +7,10 @@ function onSelect(): void {}
 </script>
 
 <template>
-  <List header="Settings">
+  <List header="Settings" has-dividers>
     <ListItem label="Notifications" description="Push, email, and SMS alerts" @click="onSelect">
       <template #startContent>
-        <Icon icon="info" size="md" />
+        <Icon icon="info" />
       </template>
       <template #endContent>
         <Badge label="3 new" variant="blue" />
@@ -18,17 +18,17 @@ function onSelect(): void {}
     </ListItem>
     <ListItem label="Privacy" description="Manage data sharing preferences" @click="onSelect">
       <template #startContent>
-        <Icon icon="eyeSlash" size="md" />
+        <Icon icon="eyeSlash" />
       </template>
     </ListItem>
     <ListItem label="Appearance" description="Theme, font size, and display" @click="onSelect">
       <template #startContent>
-        <Icon icon="wrench" size="md" />
+        <Icon icon="wrench" />
       </template>
     </ListItem>
     <ListItem label="Billing" description="Plans and payment methods" @click="onSelect">
       <template #startContent>
-        <Icon icon="copy" size="md" />
+        <Icon icon="copy" />
       </template>
       <template #endContent>
         <Badge label="Pro" variant="purple" />

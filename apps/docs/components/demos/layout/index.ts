@@ -23,4 +23,4 @@ export const layoutContentWidth = defineDemo(contentWidthDemo, contentWidthSourc
 export const layoutDualPanel = defineDemo(dualPanelDemo, dualPanelSource, panelOptions)
 export const layoutFullBleed = defineDemo(fullBleedDemo, fullBleedSource, options)
 export const layoutSidebar = defineDemo(sidebarDemo, sidebarSource, panelOptions)
-export const layoutOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const layoutOverview = defineDemo(overviewDemo, overviewSource)

@@ -1,18 +1,28 @@
 <script setup lang="ts">
-import { NavItem } from '@astryx-vue/core/NavItem'
+import { Button } from '@astryx-vue/core/Button'
+import { Icon } from '@astryx-vue/core/Icon'
+import { MobileNav } from '@astryx-vue/core/MobileNav'
+import { SideNavItem, SideNavSection } from '@astryx-vue/core/SideNav'
+import { ref } from 'vue'
+
+const isOpen = ref(false)
 </script>
 
 <template>
-  <div class="mobile-nav-static">
-    <div class="astryx-mobile-nav__drawer">
-      <div class="astryx-mobile-nav__header">
-        <span class="astryx-mobile-nav__title">Menu</span>
-      </div>
-      <div class="astryx-mobile-nav__body">
-        <NavItem block href="#home" icon-class="i-carbon-home" is-selected label="Home" />
-        <NavItem block href="#files" icon-class="i-carbon-folder" label="Files" />
-        <NavItem block href="#settings" icon-class="i-carbon-settings" label="Settings" />
-      </div>
-    </div>
-  </div>
+  <Button label="Open Navigation" variant="ghost" is-icon-only @click="isOpen = true">
+    <template #icon>
+      <Icon icon="menu" color="inherit" />
+    </template>
+  </Button>
+  <MobileNav v-model:is-open="isOpen" header="Navigation">
+    <SideNavSection title="Main">
+      <SideNavItem label="Dashboard" is-selected href="/dashboard" />
+      <SideNavItem label="Projects" href="/projects" />
+      <SideNavItem label="Analytics" href="/analytics" />
+    </SideNavSection>
+    <SideNavSection title="Settings">
+      <SideNavItem label="General" href="/settings" />
+      <SideNavItem label="Team" href="/team" />
+    </SideNavSection>
+  </MobileNav>
 </template>

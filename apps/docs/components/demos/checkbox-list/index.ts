@@ -11,4 +11,4 @@ import statesSource from './states.vue?raw&highlighted'
 export const checkboxListSelectAll = defineDemo(selectAllDemo, selectAllSource)
 export const checkboxListStates = defineDemo(statesDemo, statesSource)
 export const checkboxListEndContent = defineDemo(endContentDemo, endContentSource)
-export const checkboxListOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const checkboxListOverview = defineDemo(overviewDemo, overviewSource)

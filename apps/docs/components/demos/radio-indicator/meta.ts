@@ -8,5 +8,6 @@ export const meta = {
   order: 3,
   en: 'Radio Indicator',
   zh: '单选指示器',
-  demo,
+  // 原版这个组件页没有顶部预览，只在总览卡片里用。
+  cardDemo: demo,
 } satisfies DemoMeta

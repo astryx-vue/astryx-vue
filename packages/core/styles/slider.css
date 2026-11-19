@@ -11,7 +11,7 @@
     position: relative;
     flex: 1;
     min-width: 20px;
-    height: 24px;
+    height: 20px;
     touch-action: none;
     user-select: none;
     isolation: isolate;
@@ -89,7 +89,7 @@
   }
   .astryx-slider-mark-label:dir(rtl) { transform: translateX(50%); }
   .astryx-slider[data-mark-labels='true'][data-orientation='horizontal'] .astryx-slider-row { margin-bottom: 24px; }
-  .astryx-slider[data-orientation='vertical'] .astryx-slider-control { flex: none; width: 24px; height: var(--astryx-slider-height, 160px); }
+  .astryx-slider[data-orientation='vertical'] .astryx-slider-control { flex: none; width: 20px; height: var(--astryx-slider-height, 160px); }
   .astryx-slider[data-orientation='vertical'] :is(.astryx-slider-track, .astryx-slider-fill) { top: auto; left: 50%; width: 4px; height: auto; transform: translateX(-50%); }
   .astryx-slider[data-orientation='vertical'] .astryx-slider-track { top: 0; bottom: 0; inset-inline-end: auto; }
   .astryx-slider[data-orientation='vertical'] .astryx-slider-thumb { top: auto; left: 50%; transform: translate(-50%, 50%); }
@@ -98,6 +98,9 @@
   .astryx-slider[data-mark-labels='true'][data-orientation='vertical'] .astryx-slider-control { margin-inline-end: 4rem; }
   @media (pointer: coarse) {
     .astryx-slider-thumb::before { content: ''; position: absolute; inset: -2px; }
+    /* 控件和滑块一样高（20px），手指点按时把可点区域撑到 WCAG 2.5.8 的 24px，轨道和滑块都居中不动。 */
+    .astryx-slider-control { min-height: 24px; }
+    .astryx-slider[data-orientation='vertical'] .astryx-slider-control { min-width: 24px; }
   }
   @media (prefers-reduced-motion: reduce) {
     .astryx-slider-thumb { transition: none; }

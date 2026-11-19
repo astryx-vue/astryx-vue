@@ -7,4 +7,4 @@ import overviewSource from './overview.vue?raw&highlighted'
 const options = { className: 'collapsible-group-preview' }
 
 export const collapsibleGroupDensity = defineDemo(densityDemo, densitySource, options)
-export const collapsibleGroupOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const collapsibleGroupOverview = defineDemo(overviewDemo, overviewSource)

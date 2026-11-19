@@ -10,6 +10,7 @@ import {
   Link,
   Text,
   TextInput,
+  useToast,
   VStack,
 } from '@astryx-vue/core'
 import { ref } from 'vue'
@@ -17,6 +18,8 @@ import { ref } from 'vue'
 const pageStyle: CSSProperties = {
   backgroundColor: 'var(--astryx-color-background-body)',
 }
+
+const showToast = useToast()
 
 const email = ref('')
 const password = ref('')
@@ -43,7 +46,7 @@ function onPasswordChange(value: string) {
 </script>
 
 <template>
-  <Center axis="both" :padding="6" min-height="100%" :style="pageStyle">
+  <Center role="main" axis="both" :padding="6" min-height="100%" :style="pageStyle">
     <VStack :gap="4" h-align="center" width="100%" :max-width="400">
       <VStack :gap="2" h-align="center">
         <Icon name="heroicons:cube" size="lg" />
@@ -54,7 +57,7 @@ function onPasswordChange(value: string) {
       <Card :padding="8" width="100%">
         <VStack :gap="4" h-align="stretch">
           <VStack :gap="1" h-align="center">
-            <Heading :level="2">
+            <Heading :level="2" :accessibility-level="1">
               Welcome back
             </Heading>
             <Text type="body" color="secondary" size="sm">
@@ -82,7 +85,7 @@ function onPasswordChange(value: string) {
                 @update:model-value="onPasswordChange"
               />
               <VStack v-if="loginFailed" h-align="end">
-                <Link href="#" size="sm" color="secondary">
+                <Link href="#" type="supporting" color="secondary">
                   Forgot password?
                 </Link>
               </VStack>
@@ -97,14 +100,14 @@ function onPasswordChange(value: string) {
           />
           <Divider label="Or continue with" />
           <VStack :gap="3" h-align="stretch">
-            <Button label="Login with Apple" variant="secondary" size="lg">
+            <Button label="Login with Apple" variant="secondary" size="lg" @click="showToast({ body: 'Demo: Apple sign-in would start here', uniqueID: 'sign-in-apple' })">
               <template #icon>
                 <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" style="width: 16px; height: 16px" aria-hidden="true">
                   <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z" />
                 </svg>
               </template>
             </Button>
-            <Button label="Login with Google" variant="secondary" size="lg">
+            <Button label="Login with Google" variant="secondary" size="lg" @click="showToast({ body: 'Demo: Google sign-in would start here', uniqueID: 'sign-in-google' })">
               <template #icon>
                 <svg viewBox="0 0 24 24" width="16" height="16" style="width: 16px; height: 16px" aria-hidden="true">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
@@ -118,7 +121,7 @@ function onPasswordChange(value: string) {
           <VStack h-align="center">
             <Text type="supporting" color="secondary">
               Don't have an account?
-              <Link href="#" size="sm">
+              <Link href="#" type="supporting">
                 Sign up
               </Link>
             </Text>
@@ -128,11 +131,11 @@ function onPasswordChange(value: string) {
       <VStack h-align="center" width="100%">
         <Text type="supporting" color="secondary" justify="center">
           By clicking continue, you agree to our
-          <Link href="#" size="sm">
+          <Link href="#" type="supporting">
             Terms of Service
           </Link>
           and
-          <Link href="#" size="sm">
+          <Link href="#" type="supporting">
             Privacy Policy
           </Link>.
         </Text>

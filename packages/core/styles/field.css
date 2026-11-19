@@ -31,11 +31,13 @@
     display: inline-flex;
     align-items: center;
     gap: var(--astryx-spacing-1, 4px);
-    color: var(--astryx-color-text-secondary, #525252);
+    /* 标签给控件命名，用主文字色；说明和可选标记仍是次要文字色。 */
+    color: var(--astryx-color-text-primary, #171717);
     font-family: inherit;
     font-size: var(--astryx-text-label-size, 14px);
-    font-weight: var(--astryx-font-weight-medium, 500);
-    line-height: 1.4286;
+    /* 不少系统字体没有 500 字重，会退回常规体；用半粗保证标签总比说明重。 */
+    font-weight: var(--astryx-font-weight-semibold, 600);
+    line-height: var(--astryx-text-label-leading, 1.4286);
     cursor: pointer;
   }
 
@@ -48,25 +50,51 @@
     line-height: var(--astryx-text-supporting-leading, 1.6667);
   }
 
-  .astryx-field-label-group[data-disabled='true'] {
-    opacity: 0.5;
-  }
-
+  /* 同上游 labelDisabled：只把标签改成禁用色并取消手型光标，不整体变淡 */
   .astryx-field-label-group[data-disabled='true'] .astryx-field-label {
+    color: var(--astryx-color-text-disabled);
     cursor: default;
   }
 
+  /*
+   * 与原版一致：隐藏标签组不占布局位置（display: contents），
+   * 标签与描述各自用 sr-only 定位（inset 0、clip rect）。
+   */
   .astryx-field-label-group[data-hidden='true'],
+  .astryx-field-label-group[data-hidden='true'] > .astryx-field-label-row {
+    display: contents;
+  }
+
+  .astryx-field-label-group[data-hidden='true'] .astryx-field-label,
+  .astryx-field-label-group[data-hidden='true'] .astryx-field-description,
   .astryx-field-status[data-hidden='true'] {
     position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
     width: 1px;
     height: 1px;
     margin: -1px;
     padding: 0;
     overflow: hidden;
-    border: 0;
-    clip-path: inset(50%);
+    border-style: none;
+    clip: rect(0, 0, 0, 0);
     white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .astryx-field-label-group[data-hidden='true'] .astryx-field-label-info-tip {
+    position: absolute;
+    align-self: flex-start;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+
+  .astryx-field-label-group[data-hidden='true'] .astryx-field-label-info-tip:focus-visible {
+    position: relative;
+    overflow: visible;
+    clip: auto;
   }
 
   .astryx-field:has(> .astryx-field-label-group[data-hidden='true']) {
@@ -198,17 +226,6 @@
     padding: 0;
     border-radius: var(--astryx-radius-inner, 0.375rem);
     color: var(--astryx-input-status-color, var(--astryx-color-text-secondary, #525252));
-  }
-
-  /* 标签旁的提示图标和上游一样是 16px 方块，独立的 FieldLabel 里也一样。 */
-  .astryx-field-label-row .astryx-field-info-tip {
-    flex: none;
-    width: 16px;
-    height: 16px;
-    min-height: 0;
-    padding: 0;
-    border-radius: var(--astryx-radius-inner, 0.375rem);
-    color: var(--astryx-color-text-secondary, #525252);
   }
 
   .astryx-field-info-tip:focus-visible,

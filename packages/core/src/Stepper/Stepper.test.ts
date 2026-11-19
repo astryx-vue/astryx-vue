@@ -27,12 +27,28 @@ describe('stepper', () => {
     expect(items[0].attributes('data-progress')).toBe('completed')
     expect(items[1].attributes('aria-current')).toBe('step')
     expect(items[2].attributes('data-progress')).toBe('not-started')
-    expect(wrapper.findAll('button.astryx-step-control')).toHaveLength(2)
+    // 和原版一致：禁用步骤也保留按钮（aria-disabled），只是点了没反应。
+    const buttons = wrapper.findAll('button.astryx-step-control')
+    expect(buttons).toHaveLength(3)
+    expect(buttons[2].attributes('aria-disabled')).toBe('true')
+    await buttons[2].trigger('click')
+    expect(wrapper.vm.active).toBe(1)
 
     await wrapper.findAll('button.astryx-step-control')[0].trigger('keydown', { key: 'Enter' })
     await wrapper.findAll('button.astryx-step-control')[0].trigger('click')
     expect(wrapper.vm.active).toBe(0)
     expect(items[0].attributes('aria-current')).toBe('step')
+  })
+
+  it('renders the optional marker as separate bullet and text nodes', () => {
+    const wrapper = mount(Stepper, {
+      props: { activeStep: 0 },
+      slots: { default: '<Step :step="0" label="Team" is-optional />' },
+      global: { components: { Step } },
+    })
+    const optional = wrapper.findAll('.astryx-step-optional').map(node => node.text())
+    expect(optional).toHaveLength(2)
+    expect(optional[0]).toBe('•')
   })
 
   it('stays static without a step click handler', () => {

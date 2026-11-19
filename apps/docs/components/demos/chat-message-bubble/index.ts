@@ -15,7 +15,7 @@ import variantsSource from './variants.vue?raw&highlighted'
 const column = { className: 'chat-preview' }
 const wide = { className: 'chat-preview-wide' }
 
-export const chatMessageBubbleOverview = defineDemo(overviewDemo, overviewSource, column)
+export const chatMessageBubbleOverview = defineDemo(overviewDemo, overviewSource)
 export const chatMessageBubbleCustomContent = defineDemo(customContentDemo, customContentSource, column)
 export const chatMessageBubbleDensity = defineDemo(densityDemo, densitySource, wide)
 export const chatMessageBubbleGrouping = defineDemo(groupingDemo, groupingSource, column)

@@ -58,12 +58,24 @@
     justify-content: center;
     width: 100%;
     height: 100%;
-    color: var(--astryx-avatar-fallback-foreground, #525252);
+    color: var(--astryx-avatar-fallback-foreground, var(--astryx-color-text-primary, #000));
     font-family: var(--astryx-font-family-body, Figtree, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif);
     font-weight: var(--astryx-font-weight-medium, 500);
-    line-height: 1;
+    /* 原版首字母行高跟正文行高比例走（8px 字 → 11.43px），影响行内基线对齐。 */
+    line-height: var(--astryx-text-body-leading, 1.4286);
     text-transform: uppercase;
     user-select: none;
+  }
+
+  /* Initials are painted via generated content (as upstream): part of the picture, not text. */
+  .astryx-avatar__fallback--initials::before {
+    content: attr(data-initials);
+  }
+
+  @supports (content: "a" / "") {
+    .astryx-avatar__fallback--initials::before {
+      content: attr(data-initials) / "";
+    }
   }
 
   .astryx-avatar__fallback svg {

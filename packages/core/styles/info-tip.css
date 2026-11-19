@@ -1,0 +1,45 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-info-tip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    padding: var(--astryx-spacing-0-5, 2px);
+    margin: 0;
+    border: 0;
+    border-radius: var(--astryx-radius-full, 9999px);
+    background: transparent;
+    color: var(--astryx-color-icon-secondary);
+    cursor: pointer;
+    transition: color var(--astryx-duration-fast, 100ms) var(--astryx-ease-standard, ease);
+  }
+
+  .astryx-info-tip:is(:disabled, [aria-disabled='true']) {
+    cursor: default;
+  }
+
+  @media (hover: hover) {
+    .astryx-info-tip:hover:where(:not(:disabled, [aria-disabled='true'])) {
+      color: var(--astryx-color-icon-primary);
+    }
+  }
+
+  .astryx-info-tip:focus-visible {
+    outline-width: var(--astryx-focus-outline-width, 2px);
+    outline-style: var(--astryx-focus-outline-style, solid);
+    outline-color: var(--astryx-focus-outline-color, currentcolor);
+    outline-offset: var(--astryx-focus-outline-offset, 3px);
+  }
+
+  /* 触屏下按钮周围一圈看不见的点击带，把点击目标撑到 44px。 */
+  @media (pointer: coarse) {
+    .astryx-info-tip::after {
+      position: absolute;
+      inset: -12px;
+      content: '';
+    }
+  }
+}

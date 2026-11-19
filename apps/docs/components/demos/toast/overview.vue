@@ -1,10 +1,20 @@
 <script setup lang="ts">
-import { Toast } from '@astryx-vue/core/Toast'
+import { Button } from '@astryx-vue/core/Button'
+import { Toast, ToastViewport, useToast } from '@astryx-vue/core/Toast'
+
+const toast = useToast()
 </script>
 
 <template>
-  <div class="overview-fill">
-    <Toast body="Changes saved." type="success" :is-auto-hide="false" />
-    <Toast body="Failed to upload file." type="error" :is-auto-hide="false" />
-  </div>
+  <Toast type="info" body="Document saved successfully" :is-auto-hide="false" :auto-hide-duration="5000">
+    <template #end>
+      <Button
+        label="Show toast"
+        variant="ghost"
+        size="sm"
+        @click="toast({ body: 'Document saved successfully' })"
+      />
+    </template>
+  </Toast>
+  <ToastViewport />
 </template>

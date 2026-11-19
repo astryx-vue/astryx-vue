@@ -56,7 +56,9 @@ import '@astryx-vue/themes/neutral.css'
       renderer ??= createMarkdownRenderer({ languages: vueLanguage })
       const markdown = await renderer
       const fence = fenceFor(source)
-      const html = await markdown.renderAsync(`${fence}vue\n${source}\n${fence}`)
+      // 示例卡片里的代码和原版一样铺在卡片底色上，去掉 Shiki 写在 <pre> 上的内联底色。
+      const html = (await markdown.renderAsync(`${fence}vue\n${source}\n${fence}`))
+        .replace(/background-color:light-dark\([^)]*\);?/, '')
       return `export default ${JSON.stringify({ source, html })}`
     },
   }

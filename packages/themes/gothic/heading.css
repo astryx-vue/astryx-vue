@@ -26,10 +26,7 @@
 
   [data-astryx-theme='gothic'] .astryx-text--type-display-1,
   [data-astryx-theme='gothic'] .astryx-text--type-display-2,
-  [data-astryx-theme='gothic'] .astryx-text--type-display-3,
-  [data-astryx-theme='gothic'] .astryx-heading--type-display-1,
-  [data-astryx-theme='gothic'] .astryx-heading--type-display-2,
-  [data-astryx-theme='gothic'] .astryx-heading--type-display-3 {
+  [data-astryx-theme='gothic'] .astryx-text--type-display-3 {
     font-family: 'Manufacturing Consent', 'UnifrakturMaguntia', 'Old English Text MT', serif;
   }
 }

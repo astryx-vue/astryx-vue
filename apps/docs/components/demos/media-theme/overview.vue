@@ -2,6 +2,7 @@
 import type { CSSProperties } from 'vue'
 import { Badge } from '@astryx-vue/core/Badge'
 import { Button } from '@astryx-vue/core/Button'
+import { Icon } from '@astryx-vue/core/Icon'
 import { Stack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
 import { MediaTheme } from '@astryx-vue/core/Theme'
@@ -26,11 +27,11 @@ const stage: CSSProperties = {
     <MediaTheme mode="dark">
       <Stack direction="vertical" :gap="3">
         <Stack direction="horizontal" :gap="2" align="center">
-          <span aria-hidden="true" class="i-carbon-information" style="width: 1.25rem; height: 1.25rem" />
+          <Icon icon="info" size="md" />
           <Text type="body" weight="bold">
             Media overlay
           </Text>
-          <Badge>Live</Badge>
+          <Badge label="Live" />
         </Stack>
         <Text type="supporting" color="secondary">
           Text, icons, badges, and button variants inherit legible colors on top of the dark image treatment.

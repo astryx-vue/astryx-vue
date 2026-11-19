@@ -20,7 +20,8 @@ html:has(.playground-route) {
   --pg-handle: rgb(23 23 23 / 18%);
   --pg-stage-bg: #fff;
   --pg-stage-line: rgb(5 54 89 / 9.8%);
-  --pg-rail: 64px;
+  /* 原版 1440 宽时：侧轨 57、编辑栏 440、分隔线 1、预览 942。 */
+  --pg-rail: 57px;
 }
 
 .nagi.playground-route {
@@ -159,7 +160,7 @@ html.dark:has(.playground-route) body {
 .playground__surface {
   display: grid;
   flex: 1 1 auto;
-  grid-template-columns: var(--editor-size, 432px) 10px minmax(0, 1fr);
+  grid-template-columns: var(--editor-size, 440px) 1px minmax(0, 1fr);
   grid-template-rows: minmax(0, 1fr);
   min-width: 0;
   min-height: 0;
@@ -295,6 +296,9 @@ html.dark:has(.playground-route) body {
 
 .playground__divider {
   position: relative;
+  z-index: 1;
+  /* 轨道只占 1px，和原版一样；左右各借 4px 当拖动热区。 */
+  margin-inline: -4px;
   padding: 0;
   border: 0;
   cursor: col-resize;
@@ -952,25 +956,13 @@ html[data-playground-frame] {
 }
 
 /*
- * 待 core 修复后去掉：Layout 的内容区是滚动容器却不是定位参照，里面绝对定位的隐藏控件
- * （单选、开关的原生 input、读屏提示）找不到最近的定位祖先，会落到预览根上撑高整个文档
- * （payment-form 页面高 1509 对 806）。原版内容区是定位参照。
+ * 原版预览框里 AppShell 的主区域会多出 48px 顶部内边距：原版文档站的样式
+ * `body:not(:has([data-playground-page])) #astryx-app-shell-main` 漏进了预览 iframe。
+ * 为了和线上逐像素一致，这里照样写（scroll-padding 同源）。
  */
-html[data-playground-frame] .astryx-layout-content {
-  position: relative;
-}
-
-/*
- * 待 core 修复后去掉：Link 没有 `type` 属性（原版 `type="supporting"` 同时给 12px 字号和 20px 行高），
- * 模板里用 `size="sm"` 取字号，行高在这里补成 supporting 的行高。
- */
-html[data-playground-frame] .astryx-link--size-sm {
-  line-height: var(--astryx-text-supporting-leading, 1.6667);
-}
-
-/* 待 core 修复后去掉：Collapsible 触发行原版高 17（行高 25.5 的文字溢出出去），我们撑成 24。 */
-html[data-playground-frame] .astryx-collapsible-trigger {
-  height: 17px;
+html[data-playground-frame] #astryx-app-shell-main {
+  padding-top: var(--astryx-spacing-12, 48px);
+  scroll-padding-top: var(--astryx-spacing-12, 48px);
 }
 
 html[data-playground-frame] #app,
@@ -989,15 +981,29 @@ html[data-playground-frame] #playground-mount {
 }
 
 html[data-playground-frame] #playground-mount[data-preview-layout='center'] {
+  /* 居中模式按内容长高：定高会让内容溢出时少算末端内边距，文档比原版矮 16px。 */
+  height: auto;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  /* safe：内容比预览宽或高时从起点排、向后溢出，和原版一样，不往左上越界。 */
+  align-items: safe center;
+  justify-content: safe center;
   padding: var(--astryx-spacing-4, 16px);
 }
 
 html[data-playground-frame] .playground-preview__content {
+  /* 原版预览包在 Theme 里，没写字号的文字继承主题正文字号（默认 14px），不是浏览器的 16px。 */
+  font-size: var(--astryx-text-body-size, 14px);
+  /* 文档站统一用 Fira Code，但演练场要和原版逐像素对齐：原版用系统等宽字体，行内代码会把行撑高 1px。 */
+  --astryx-font-family-code: ui-monospace, 'SF Mono', Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --nagi-font-family-mono: var(--astryx-font-family-code);
+  --docs-font-family-mono: var(--astryx-font-family-code);
   width: 100%;
   height: 100%;
+}
+
+/* 主题站的 code 规则会把字体写死成站点等宽字体，预览里改回组件自己的代码字体。 */
+html[data-playground-frame] .playground-preview__content :is(.astryx-markdown code.astryx-code, .astryx-code-block code) {
+  font-family: var(--astryx-font-family-code);
 }
 
 html[data-playground-frame] .playground-preview__content:has(> .astryx-layout[data-height='auto'], > .astryx-center[data-axis='horizontal']) {

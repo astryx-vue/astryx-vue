@@ -587,6 +587,8 @@ export type {
   IndicatorSize,
   IndicatorState,
 } from './Indicator/index.js'
+export { InfoTip } from './InfoTip/index.js'
+export type { InfoTipProps, InfoTipSize } from './InfoTip/index.js'
 export { InputGroup, InputGroupText } from './InputGroup/index.js'
 export type {
   InputGroupContext,
@@ -645,7 +647,7 @@ export type {
   UseLightboxOptions,
 } from './Lightbox/index.js'
 export { Link } from './Link/index.js'
-export type { LinkColor, LinkProps, LinkRoot, LinkSize, LinkWeight } from './Link/index.js'
+export type { LinkColor, LinkProps, LinkRoot, LinkSize, LinkType, LinkWeight } from './Link/index.js'
 export { LinkProvider, useLinkComponent } from './LinkProvider/index.js'
 export type { LinkComponentType, LinkProviderProps, LinkProviderSlots } from './LinkProvider/index.js'
 export { Item, List, ListItem, useItemDescriptionId, useListContext } from './List/index.js'
@@ -1006,6 +1008,8 @@ export type {
   SideNavResizable,
   SideNavSectionProps,
 } from './SideNav/index.js'
+export { provideSize, SizeContext, SizeProvider, useSize } from './SizeContext/index.js'
+export type { ElementSize } from './SizeContext/index.js'
 export { Skeleton } from './Skeleton/index.js'
 export { Slider } from './Slider/index.js'
 export type {
@@ -1058,6 +1062,8 @@ export type {
   SwitchChangeAction,
   SwitchChangeEvent,
   SwitchEmits,
+  SwitchLabelPosition,
+  SwitchLabelSpacing,
   SwitchProps,
   SwitchSize,
   SwitchSlots,

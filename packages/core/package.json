@@ -289,6 +289,11 @@
       "types": "./dist/Timestamp/index.d.ts",
       "import": "./dist/Timestamp/index.js"
     },
+    "./InfoTip": {
+      "source": "./src/InfoTip/index.ts",
+      "types": "./dist/InfoTip/index.d.ts",
+      "import": "./dist/InfoTip/index.js"
+    },
     "./Tooltip": {
       "source": "./src/Tooltip/index.ts",
       "types": "./dist/Tooltip/index.d.ts",
@@ -303,6 +308,11 @@
       "source": "./src/Dialog/index.ts",
       "types": "./dist/Dialog/index.d.ts",
       "import": "./dist/Dialog/index.js"
+    },
+    "./SizeContext": {
+      "source": "./src/SizeContext/index.ts",
+      "types": "./dist/SizeContext/index.d.ts",
+      "import": "./dist/SizeContext/index.js"
     },
     "./Skeleton": {
       "source": "./src/Skeleton/index.ts",
@@ -834,6 +844,10 @@
         "types": "./dist/Timestamp/index.d.ts",
         "import": "./dist/Timestamp/index.js"
       },
+      "./InfoTip": {
+        "types": "./dist/InfoTip/index.d.ts",
+        "import": "./dist/InfoTip/index.js"
+      },
       "./Tooltip": {
         "types": "./dist/Tooltip/index.d.ts",
         "import": "./dist/Tooltip/index.js"
@@ -845,6 +859,10 @@
       "./Dialog": {
         "types": "./dist/Dialog/index.d.ts",
         "import": "./dist/Dialog/index.js"
+      },
+      "./SizeContext": {
+        "types": "./dist/SizeContext/index.d.ts",
+        "import": "./dist/SizeContext/index.js"
       },
       "./Skeleton": {
         "types": "./dist/Skeleton/index.d.ts",

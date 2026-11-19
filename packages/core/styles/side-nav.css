@@ -68,24 +68,54 @@
     padding: var(--astryx-spacing-2, 8px);
   }
 
+  /* 同上游 stickyTop：顶部区域 sticky，也是内部绝对定位元素（如隐藏标签）的包含块。 */
+  .astryx-side-nav__top {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 1;
+    background-color: inherit;
+  }
+
   .astryx-side-nav--collapsed .astryx-side-nav__top,
   .astryx-side-nav--collapsed .astryx-side-nav__bottom,
   .astryx-side-nav--collapsed .astryx-side-nav__body {
     align-items: center;
   }
 
+  /* 同上游 stickyBottom：底部区域 sticky，同时是内部隐藏标签的包含块。 */
   .astryx-side-nav__bottom {
+    position: sticky;
+    inset-block-end: 0;
+    margin-block-start: auto;
     padding-block-start: var(--astryx-spacing-1, 4px);
+    background-color: inherit;
   }
 
   .astryx-side-nav__body {
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
-    gap: var(--astryx-spacing-1, 4px);
     min-height: 0;
     padding: var(--astryx-spacing-1, 4px) var(--astryx-spacing-2, 8px);
     overflow: auto;
+  }
+
+  .astryx-side-nav__body--no-top {
+    padding-block-start: var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-side-nav__body--no-bottom {
+    padding-block-end: var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-side-nav__footer-row {
+    display: flex;
+    align-items: center;
+    gap: var(--astryx-spacing-1, 4px);
+  }
+
+  .astryx-side-nav--collapsed .astryx-side-nav__footer-row {
+    flex-direction: column-reverse;
   }
 
   .astryx-side-nav__heading-row,
@@ -122,7 +152,6 @@
   .astryx-side-nav-section {
     display: flex;
     flex-direction: column;
-    gap: var(--astryx-spacing-0-5, 2px);
     width: 100%;
     padding-block: var(--astryx-spacing-1, 4px);
   }
@@ -143,6 +172,11 @@
 
   .astryx-side-nav-section__header {
     padding: var(--astryx-spacing-1, 4px) var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-side-nav-section__header.astryx-visually-hidden {
+    display: block;
+    padding: 0;
   }
 
   .astryx-side-nav-section__title,
@@ -176,6 +210,10 @@
     padding-inline: var(--astryx-spacing-2, 8px);
     color: var(--astryx-color-text-primary);
     text-decoration: none;
+  }
+
+  .astryx-side-nav-heading:has(.astryx-nav-icon) {
+    padding-inline-start: 0;
   }
 
   .astryx-side-nav-heading--collapsed {
@@ -316,8 +354,34 @@
     transition: transform var(--astryx-duration-fast-max) var(--astryx-ease-standard);
   }
 
+  /* 字形盒子在按钮图标槽里居中，不吃图标自带的 -0.125em 基线偏移。 */
+  .astryx-side-nav-collapse__chevron {
+    vertical-align: baseline;
+  }
+
   [dir='rtl'] .astryx-side-nav-collapse__mirror {
     transform: scaleX(-1);
+  }
+
+  /*
+   * 原版的行内展开箭头：24px 宽的盒子，字形按行内字号走（14px 的 1em），不用 sm 的 16px。
+   * 独立的展开按钮里同一个箭头高 24px。
+   */
+  .astryx-side-nav-item .astryx-icon.astryx-side-nav-item__chevron {
+    flex: none;
+    width: var(--astryx-spacing-6, 24px);
+    height: auto;
+    font-size: inherit;
+  }
+
+  .astryx-side-nav-item__toggle .astryx-icon.astryx-side-nav-item__chevron {
+    height: var(--astryx-spacing-6, 24px);
+  }
+
+  .astryx-side-nav-item__chevron .astryx-icon__glyph {
+    flex: none;
+    width: 1em;
+    height: 1em;
   }
 
   .astryx-side-nav-item { width: 100%; }
@@ -346,6 +410,15 @@
   .astryx-side-nav-item__main > .astryx-side-nav-item {
     flex: 1 1 auto;
     min-width: 0;
+  }
+
+  /* 原版把动作放在整行内边距里：行尾内缩 8px，主按钮与动作之间 8px。 */
+  .astryx-side-nav-item__main:has(> .astryx-side-nav-item__actions) {
+    padding-inline-end: var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-side-nav-item__main:has(> .astryx-side-nav-item__actions) > .astryx-nav-item {
+    padding-inline-end: var(--astryx-spacing-1, 4px);
   }
 
   .astryx-side-nav-item__actions {

@@ -28,4 +28,4 @@ export const dateInputSheet = defineDemo(sheetDemo, sheetSource, options)
 export const dateInputDescription = defineDemo(descriptionDemo, descriptionSource, options)
 export const dateInputValidation = defineDemo(validationDemo, validationSource, options)
 
-export const dateInputOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const dateInputOverview = defineDemo(overviewDemo, overviewSource)

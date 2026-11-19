@@ -6,6 +6,6 @@ import overviewSource from './overview.vue?raw&highlighted'
 import snapDemo from './snap.vue'
 import snapSource from './snap.vue?raw&highlighted'
 
-export const carouselOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const carouselOverview = defineDemo(overviewDemo, overviewSource)
 export const carouselCards = defineDemo(cardsDemo, cardsSource)
 export const carouselSnap = defineDemo(snapDemo, snapSource)

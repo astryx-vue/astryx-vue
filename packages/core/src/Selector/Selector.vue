@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { FieldStatusInput } from '../Field/types.js'
 import type { SelectorEmits, SelectorOption, SelectorProps, SelectorSlots } from './types.js'
 import { computed, nextTick, onMounted, ref, useAttrs, useId, useSlots, useTemplateRef, watch } from 'vue'
 import BottomSheet from '../BottomSheet/BottomSheet.vue'
@@ -20,13 +19,17 @@ import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { useAstryxMessages } from '../locale/index.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { normalizeTriggerVariant } from '../selectors/triggerVariant.js'
+import { useSize } from '../SizeContext/SizeContext.js'
 import Spinner from '../Spinner/Spinner.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { searchResultMessage } from './searchResultMessage.js'
 import { bindListboxEscape, dismissSelectorEscape, focusSelectorTrigger, onSelectorListboxEscape } from './selectorEscape.js'
+import SelectorIcon from './SelectorIcon.js'
 import { buildSelectorRows, flattenSelectorOptions, normalizeSelectorEntries } from './selectorOptions.js'
 import SelectorPanel from './SelectorPanel.vue'
+import { selectorFieldStatus, selectorStatusGlyph, selectorStatusType } from './selectorStatusRoles.js'
 import { createTriggerActivation } from './triggerActivation.js'
+import { useListboxOverlay } from './useListboxOverlay.js'
 import { useSelectorPopup } from './useSelectorPopup.js'
 import '../../styles/button.css'
 import '../../styles/layer.css'
@@ -39,7 +42,6 @@ const props = withDefaults(defineProps<SelectorProps>(), {
   modelValue: null,
   disabled: false,
   status: 'default',
-  size: 'md',
   searchable: false,
   clearable: false,
   presentation: 'popover',
@@ -54,7 +56,12 @@ const props = withDefaults(defineProps<SelectorProps>(), {
 })
 
 const emit = defineEmits<SelectorEmits>()
+
 defineSlots<SelectorSlots>()
+
+// 显式 size > 外层 SizeContext（Toolbar、InputGroup 等）> 'md'。
+const size = useSize(() => props.size, 'md')
+
 const slots = useSlots()
 const attrs = useAttrs()
 const SelectionMark = useIndicator('check')
@@ -153,7 +160,7 @@ const { position, teleportTarget } = usePositionedLayer({
   anchor: fieldRef,
   layer: listboxRef,
   isOpen: popoverOpen,
-  placement: computed(() => 'below'),
+  placement: computed(() => props.placement ?? 'below'),
   alignment: computed(() => 'start'),
   gap: 4,
 })
@@ -188,31 +195,11 @@ const selectedOption = computed(() => {
 
 const fieldLabel = computed(() => props.label || resolvedPlaceholder.value)
 const hideLabel = computed(() => props.isLabelHidden || !props.label)
-const statusType = computed(() => {
-  const status = props.status
-  if (status == null || status === 'default')
-    return 'default'
-  if (typeof status === 'string')
-    return status
-  return status.type
-})
-
-const fieldStatus = computed<FieldStatusInput | undefined>(() => {
-  const status = props.status
-  if (status && typeof status === 'object')
-    return status
-  if (!props.statusMessage || statusType.value === 'default')
-    return undefined
-  return { type: statusType.value, message: props.statusMessage }
-})
+const statusType = computed(() => selectorStatusType(props.status))
+const fieldStatus = computed(() => selectorFieldStatus(props.status, props.statusMessage))
 
 const effectiveStatusVariant = computed(() => fieldStatusPlacement(props.variant, props.statusVariant))
-const statusGlyph = computed(() => {
-  const type = statusType.value
-  if ((type !== 'error' && type !== 'warning' && type !== 'success') || effectiveStatusVariant.value === 'detached')
-    return undefined
-  return type
-})
+const statusGlyph = computed(() => selectorStatusGlyph(statusType.value, effectiveStatusVariant.value))
 
 const displayRows = computed(() => buildSelectorRows(normalizedEntries.value, combobox.filteredOptions.value))
 
@@ -304,10 +291,19 @@ function syncAnchorWidth(): void {
   anchorWidth.value = fieldRef.value?.getBoundingClientRect().width ?? 0
 }
 
+const { overlayTop } = useListboxOverlay({
+  fieldRef,
+  listboxRef,
+  isOpen: combobox.isOpen,
+  position,
+  value: () => props.modelValue,
+  isEnabled: () => !props.searchable && !isSheet.value && props.placement == null,
+})
+
 const listboxStyle = computed(() => isSheet.value
   ? undefined
   : {
-      top: `${position.value.top}px`,
+      top: `${overlayTop.value ?? position.value.top}px`,
       left: `${position.value.left}px`,
       minWidth: anchorWidth.value > 0 ? `${anchorWidth.value}px` : undefined,
     })
@@ -323,7 +319,7 @@ onMounted(syncAnchorWidth)
 <template>
   <Field
     class="astryx-selector"
-    :class="[parts.containerClass.value, `size-${props.size}`, `status-${statusType}`, `variant-${triggerVariant}`]"
+    :class="[parts.containerClass.value, `size-${size}`, `status-${statusType}`, `variant-${triggerVariant}`]"
     :style="parts.containerStyle.value"
     :label="fieldLabel"
     :input-id="selectorId"
@@ -351,6 +347,7 @@ onMounted(syncAnchorWidth)
       @pointerenter="disabledTooltip.onPointerEnter"
       @pointerleave="disabledTooltip.onPointerLeave"
     >
+      <SelectorIcon v-if="props.startIcon" class="astryx-selector-start-icon" :icon="props.startIcon" color="secondary" />
       <button
         v-bind="parts.forwardedAttrs()"
         :id="selectorId"
@@ -377,7 +374,7 @@ onMounted(syncAnchorWidth)
         <span class="astryx-selector-value" :class="{ 'is-placeholder': !selectedOption, 'is-rich': slots.selected, 'is-grouped': inGroup }">
           <slot v-if="slots.selected" name="selected" :option="selectedOption" />
           <template v-else>
-            <Icon v-if="selectedOption?.icon" class="astryx-selector-value-icon" :icon="selectedOption.icon" size="sm" />
+            <SelectorIcon v-if="!props.startIcon && selectedOption?.icon" class="astryx-selector-value-icon" :icon="selectedOption.icon" />
             <span class="astryx-selector-value-label">{{ displayText }}</span>
           </template>
         </span>
@@ -398,7 +395,7 @@ onMounted(syncAnchorWidth)
         :message="fieldStatus?.message"
         :tooltip="effectiveStatusVariant === 'tooltip'"
       />
-      <Icon v-else-if="control.canActivate.value" class="astryx-selector-icon" icon="chevronDown" size="sm" />
+      <Icon v-else-if="!control.isReadOnly.value" class="astryx-selector-icon" icon="chevronDown" size="sm" />
       <span v-if="control.isReadOnly.value" :id="readOnlyId" class="astryx-visually-hidden">{{ messages.selector.readOnly }}</span>
     </div>
     <VisuallyHidden v-if="showsDisabledMessage" :id="disabledMessageId">
@@ -434,7 +431,7 @@ onMounted(syncAnchorWidth)
         ref="listboxRef"
         :role="gridMode ? 'grid' : 'listbox'"
         class="astryx-selector-listbox astryx-layer"
-        :class="{ 'is-sheet': isSheet }"
+        :class="[{ 'is-sheet': isSheet, 'is-input': triggerVariant === 'input' }, `size-${size}`]"
         :data-placement="isSheet ? undefined : position.placement"
         :style="listboxStyle"
         tabindex="-1"

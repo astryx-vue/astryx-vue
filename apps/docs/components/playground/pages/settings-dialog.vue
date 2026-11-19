@@ -27,9 +27,13 @@ import {
   Text,
   TextInput,
   Token,
+  Tooltip,
   useMediaQuery,
+  useImperativeAlertDialog,
+  useToast,
   VStack,
 } from '@astryx-vue/core'
+import type { Component } from 'vue'
 import { computed, defineComponent, h, ref, watch } from 'vue'
 
 /** Below this the dialog swaps its rail for a strip of tabs. */
@@ -104,6 +108,7 @@ const ICONS = {
   pencilSquare: 'heroicons:pencil-square',
   arrowDownOnSquare: 'heroicons:arrow-down-on-square',
   cog: 'heroicons:cog-6-tooth',
+  arrowUturnLeft: 'heroicons:arrow-uturn-left',
   puzzlePiece: 'heroicons:puzzle-piece',
   bell: 'heroicons:bell',
   sun: 'heroicons:sun',
@@ -203,6 +208,26 @@ const weekStart = computed({
 
 const activePanel = ref<PanelId>('profile')
 const titleId = 'settings-dialog-title'
+const showToast = useToast()
+const confirm = useImperativeAlertDialog()
+const ConfirmHost = confirm.Host
+
+/** 仅演示：真实页面在这里调用对应的操作。 */
+function demo(body: string, uniqueID: string) {
+  showToast({ body, uniqueID })
+}
+
+function confirmDeleteAccount() {
+  confirm.show({
+    title: 'Delete your account?',
+    description: 'This demo won\'t delete anything. In your app, this would permanently delete your account and the workspace with it.',
+    actionLabel: 'Delete account',
+    onAction: () => {
+      confirm.hide()
+      demo('Demo: your account would be deleted here', 'delete-account')
+    },
+  })
+}
 const isNarrow = useMediaQuery(NARROW_VIEWPORT)
 const searchQuery = ref('')
 const searchActiveIndex = ref(0)
@@ -335,19 +360,130 @@ const TIMEZONE_OPTIONS = [
   { value: 'UTC', label: 'UTC (GMT+00:00)' },
 ]
 
-const SHORTCUTS = [
-  { id: 'search', label: 'Search everything', keys: 'mod+k', icon: ICONS.magnifyingGlass },
-  { id: 'new', label: 'New item', keys: 'mod+n', icon: ICONS.pencilSquare },
-  { id: 'save', label: 'Save', keys: 'mod+s', icon: ICONS.arrowDownOnSquare },
-  { id: 'settings', label: 'Open settings', keys: 'mod+,', icon: ICONS.cog },
+/** 演练场图标白名单里没有的 heroicons，按原版路径内联。 */
+function strokeIcon(d: string): Component {
+  return defineComponent({
+    render: () => h('svg', {
+      'viewBox': '0 0 24 24',
+      'fill': 'none',
+      'stroke': 'currentColor',
+      'stroke-width': 1.5,
+      'stroke-linecap': 'round',
+      'stroke-linejoin': 'round',
+      'aria-hidden': 'true',
+      'style': 'width:100%;height:100%',
+    }, [h('path', { d })]),
+  })
+}
+const Bars3BottomLeftIcon = strokeIcon('M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12')
+const QuestionMarkCircleIcon = strokeIcon('M9.879 7.519c1.172-1.025 3.071-1.025 4.243 0c1.171 1.025 1.171 2.687 0 3.712q-.308.268-.67.442c-.746.361-1.452.999-1.452 1.827v.75M21 12a9 9 0 1 1-18 0a9 9 0 0 1 18 0m-9 5.25h.008v.008H12z')
+
+interface Chord {
+  mod?: boolean
+  shift?: boolean
+  alt?: boolean
+  key: string
+}
+
+interface ShortcutDef {
+  id: string
+  label: string
+  icon: string | Component
+  binding: Chord
+}
+
+const SHORTCUTS: ShortcutDef[] = [
+  { id: 'search', label: 'Search everything', icon: ICONS.magnifyingGlass, binding: { mod: true, key: 'k' } },
+  { id: 'new', label: 'New item', icon: ICONS.pencilSquare, binding: { mod: true, key: 'n' } },
+  { id: 'save', label: 'Save', icon: ICONS.arrowDownOnSquare, binding: { mod: true, key: 's' } },
+  { id: 'settings', label: 'Open settings', icon: ICONS.cog, binding: { mod: true, key: ',' } },
+  { id: 'sidebar', label: 'Toggle the sidebar', icon: Bars3BottomLeftIcon, binding: { mod: true, shift: true, key: 'b' } },
+  { id: 'help', label: 'Shortcut cheat sheet', icon: QuestionMarkCircleIcon, binding: { shift: true, key: '?' } },
 ]
 
-const shortcutEnabled = ref<Record<string, boolean>>({
-  search: true,
-  new: true,
-  save: true,
-  settings: true,
-})
+/** Kbd 自己不认识的 KeyboardEvent.key 名；「+」是 Kbd 的分隔符，必须转成 plus。 */
+const KBD_KEY_NAMES: Record<string, string> = {
+  'ArrowUp': 'up',
+  'ArrowDown': 'down',
+  'ArrowLeft': 'left',
+  'ArrowRight': 'right',
+  '+': 'plus',
+  ' ': 'space',
+}
+
+/** 组合键写成 Kbd 的 keys 字符串，mod 原样交给 Kbd 去按平台解析。 */
+function chordKeys(chord: Chord): string {
+  const parts: string[] = []
+  if (chord.mod)
+    parts.push('mod')
+  if (chord.shift)
+    parts.push('shift')
+  if (chord.alt)
+    parts.push('alt')
+  parts.push(KBD_KEY_NAMES[chord.key] ?? chord.key)
+  return parts.join('+')
+}
+
+/** 组合键的文字说法，作为键帽背后的可访问名称。 */
+function chordLabel(chord: Chord): string {
+  const parts: string[] = []
+  if (chord.mod)
+    parts.push('Mod')
+  if (chord.shift)
+    parts.push('Shift')
+  if (chord.alt)
+    parts.push('Alt')
+  parts.push(chord.key === ' ' ? 'Space' : chord.key.toUpperCase())
+  return parts.join(' + ')
+}
+
+/** 放得下 ⌘⇧F 这样的组合键，录入时这一行不跳。 */
+const RECORDER_WIDTH = 96
+
+// 覆盖项用稀疏表存：有这个键就是自定义过，false 表示关掉
+const shortcutOverrides = ref<Record<string, Chord | false>>({})
+const recordingShortcut = ref<string | null>(null)
+const hasShortcutOverrides = computed(() => Object.keys(shortcutOverrides.value).length > 0)
+
+function resolveShortcut(def: ShortcutDef): Chord | false {
+  return shortcutOverrides.value[def.id] ?? def.binding
+}
+
+function setShortcutOverride(id: string, value: Chord | false) {
+  shortcutOverrides.value = { ...shortcutOverrides.value, [id]: value }
+}
+
+function clearShortcutOverride(id: string) {
+  const next = { ...shortcutOverrides.value }
+  Reflect.deleteProperty(next, id)
+  shortcutOverrides.value = next
+}
+
+function toggleShortcut(def: ShortcutDef) {
+  if (resolveShortcut(def) !== false)
+    setShortcutOverride(def.id, false)
+  else
+    clearShortcutOverride(def.id)
+}
+
+/** 录入框吞掉每次按键，只报告组合键；Escape 取消，单独的修饰键继续等。 */
+function onRecorderKeydown(def: ShortcutDef, event: KeyboardEvent) {
+  event.preventDefault()
+  event.stopPropagation()
+  if (event.key === 'Escape') {
+    recordingShortcut.value = null
+    return
+  }
+  if (['Control', 'Meta', 'Alt', 'Shift'].includes(event.key))
+    return
+  setShortcutOverride(def.id, {
+    mod: event.metaKey || event.ctrlKey,
+    shift: event.shiftKey,
+    alt: event.altKey,
+    key: event.key,
+  })
+  recordingShortcut.value = null
+}
 
 const SearchIcon = defineComponent({
   render: () => h(Icon, { name: ICONS.magnifyingGlass }),
@@ -355,7 +491,7 @@ const SearchIcon = defineComponent({
 </script>
 
 <template>
-  <Center height="100dvh">
+  <Center role="main" height="100dvh">
     <Dialog
       is-open
       is-inline
@@ -373,7 +509,7 @@ const SearchIcon = defineComponent({
             <SideNav aria-label="Settings sections" class="settings-side-nav">
               <template #header>
                 <HStack :gap="2" align="center" :padding-inline="2" :min-height="32" width="100%">
-                  <Heading :id="titleId" :level="4">
+                  <Heading :id="titleId" :level="4" :accessibility-level="1">
                     Settings
                   </Heading>
                 </HStack>
@@ -445,7 +581,7 @@ const SearchIcon = defineComponent({
             <VStack v-if="isNarrow" :gap="2" class="settings-narrow-header">
               <HStack :gap="2" align="center">
                 <StackItem size="fill">
-                  <Text :id="titleId" type="label">
+                  <Text :id="titleId" type="label" as="h1">
                     Settings
                   </Text>
                 </StackItem>
@@ -706,7 +842,7 @@ const SearchIcon = defineComponent({
                           </div>
                         </div>
                         <div class="settings-row-control">
-                          <Button label="Change" variant="secondary" size="sm" />
+                          <Button label="Change" variant="secondary" size="sm" @click="demo('Demo: changing the password would start here', 'change-password')" />
                         </div>
                       </div>
                       <Divider variant="subtle" role="presentation" />
@@ -748,7 +884,7 @@ const SearchIcon = defineComponent({
                           </div>
                         </div>
                         <div class="settings-row-control">
-                          <Button label="Add passkey" variant="secondary" size="sm" />
+                          <Button label="Add passkey" variant="secondary" size="sm" @click="demo('Demo: adding a passkey would start here', 'add-passkey')" />
                         </div>
                       </div>
                     </div>
@@ -791,7 +927,7 @@ const SearchIcon = defineComponent({
                           </div>
                         </div>
                         <div class="settings-row-control">
-                          <Button label="Sign out" variant="ghost" size="sm" />
+                          <Button label="Sign out" variant="ghost" size="sm" @click="demo('Demo: iPhone 15 · Safari would be signed out here', 'sign-out-iphone')" />
                         </div>
                       </div>
                       <Divider variant="subtle" role="presentation" />
@@ -808,7 +944,7 @@ const SearchIcon = defineComponent({
                           </div>
                         </div>
                         <div class="settings-row-control">
-                          <Button label="Sign out" variant="ghost" size="sm" />
+                          <Button label="Sign out" variant="ghost" size="sm" @click="demo('Demo: Windows · Edge would be signed out here', 'sign-out-windows')" />
                         </div>
                       </div>
                     </div>
@@ -839,7 +975,7 @@ const SearchIcon = defineComponent({
                           </div>
                         </div>
                         <div class="settings-row-control">
-                          <Button label="Upgrade" variant="primary" size="sm" />
+                          <Button label="Upgrade" variant="primary" size="sm" @click="demo('Demo: the plan upgrade would start here', 'upgrade')" />
                         </div>
                       </div>
                       <Divider variant="subtle" role="presentation" />
@@ -856,7 +992,7 @@ const SearchIcon = defineComponent({
                           </div>
                         </div>
                         <div class="settings-row-control">
-                          <Button label="Manage seats" variant="secondary" size="sm" />
+                          <Button label="Manage seats" variant="secondary" size="sm" @click="demo('Demo: seat management would open here', 'manage-seats')" />
                         </div>
                       </div>
                     </div>
@@ -929,7 +1065,7 @@ const SearchIcon = defineComponent({
                           </div>
                         </div>
                         <div class="settings-row-control">
-                          <Button label="Update" variant="secondary" size="sm" />
+                          <Button label="Update" variant="secondary" size="sm" @click="demo('Demo: updating the payment method would start here', 'update-payment')" />
                         </div>
                       </div>
                     </div>
@@ -1037,14 +1173,16 @@ const SearchIcon = defineComponent({
                           />
                         </div>
                         <div class="settings-row-detail">
-                          <div class="font-preview" :style="fontPreviewStyle">
-                            <Text type="body">
-                              The quick brown fox jumps over the lazy dog.
-                            </Text>
-                            <Text type="supporting" color="secondary">
-                              Settings inherit this face wherever the theme allows.
-                            </Text>
-                          </div>
+                          <Card :padding="3" width="100%">
+                            <VStack :gap="1" :style="fontPreviewStyle">
+                              <Text type="label">
+                                Weekly digest
+                              </Text>
+                              <Text type="supporting" color="secondary">
+                                Eight threads moved while you were away, and three are waiting on you.
+                              </Text>
+                            </VStack>
+                          </Card>
                         </div>
                       </div>
                     </div>
@@ -1265,31 +1403,76 @@ const SearchIcon = defineComponent({
                 </Text>
                 <Card variant="muted" :padding="0" width="100%">
                   <div role="list">
-                    <template v-for="(shortcut, index) in SHORTCUTS" :key="shortcut.id">
+                    <template v-for="(def, index) in SHORTCUTS" :key="def.id">
                       <Divider v-if="index > 0" variant="subtle" role="presentation" />
                       <div class="settings-row" role="listitem">
                         <div class="settings-row-main">
-                          <span class="settings-row-icon"><Icon :name="shortcut.icon" size="sm" color="secondary" /></span>
+                          <span class="settings-row-icon"><Icon :icon="def.icon" size="sm" color="secondary" /></span>
                           <div class="settings-row-text">
                             <Text type="label">
-                              {{ shortcut.label }}
+                              {{ def.label }}
                             </Text>
                           </div>
                         </div>
                         <div class="settings-row-control">
                           <HStack :gap="2" align="center">
-                            <Button variant="ghost" size="sm" :label="shortcut.keys">
-                              <Kbd :keys="shortcut.keys" />
-                            </Button>
-                            <Switch
-                              :model-value="shortcutEnabled[shortcut.id]"
-                              :label="`${shortcut.label} shortcut`"
-                              is-label-hidden
+                            <IconButton
+                              v-if="shortcutOverrides[def.id] != null && shortcutOverrides[def.id] !== false"
+                              :label="`Reset ${def.label} to its default`"
+                              variant="ghost"
                               size="sm"
-                              @update:model-value="v => { shortcutEnabled[shortcut.id] = v }"
+                              @click="clearShortcutOverride(def.id)"
+                            >
+                              <Icon :name="ICONS.arrowUturnLeft" size="sm" />
+                            </IconButton>
+                            <TextInput
+                              v-if="recordingShortcut === def.id"
+                              label="Type a shortcut"
+                              is-label-hidden
+                              placeholder="Type it"
+                              size="sm"
+                              :width="RECORDER_WIDTH"
+                              model-value=""
+                              has-auto-focus
+                              @keydown="onRecorderKeydown(def, $event)"
+                              @focusout="recordingShortcut = null"
                             />
+                            <!-- Kbd 作为子节点，label 保持文字：有子节点时 label 变成 aria-label -->
+                            <Button
+                              v-else
+                              :label="resolveShortcut(def) !== false ? chordLabel(resolveShortcut(def) as Chord) : 'No shortcut'"
+                              variant="ghost"
+                              size="sm"
+                              :is-disabled="resolveShortcut(def) === false"
+                              :tooltip="resolveShortcut(def) !== false ? 'Click to change' : 'Switch it on to rebind it'"
+                              @click="recordingShortcut = def.id"
+                            >
+                              <Kbd v-if="resolveShortcut(def) !== false" :keys="chordKeys(resolveShortcut(def) as Chord)" />
+                            </Button>
+                            <Tooltip :content="resolveShortcut(def) !== false ? 'Disable' : 'Enable'">
+                              <Switch
+                                :model-value="resolveShortcut(def) !== false"
+                                :label="`${def.label} shortcut`"
+                                is-label-hidden
+                                size="sm"
+                                @update:model-value="toggleShortcut(def)"
+                              />
+                            </Tooltip>
                           </HStack>
                         </div>
+                      </div>
+                    </template>
+                    <template v-if="hasShortcutOverrides">
+                      <Divider variant="subtle" role="presentation" />
+                      <!-- 整组的操作单独占一行，跟其他行一样带分隔线 -->
+                      <div class="settings-row" role="listitem">
+                        <HStack>
+                          <Button label="Reset all to defaults" variant="ghost" size="sm" @click="shortcutOverrides = {}">
+                            <template #icon>
+                              <Icon :name="ICONS.arrowUturnLeft" size="sm" />
+                            </template>
+                          </Button>
+                        </HStack>
                       </div>
                     </template>
                   </div>
@@ -1518,12 +1701,30 @@ const SearchIcon = defineComponent({
                           </div>
                         </div>
                         <div class="settings-row-control">
-                          <Button label="Request export" variant="secondary" size="sm" />
+                          <Button label="Request export" variant="secondary" size="sm" @click="demo('Demo: a data export request would be sent here', 'request-export')" />
+                        </div>
+                      </div>
+                      <Divider variant="subtle" role="presentation" />
+                      <div class="settings-row" role="listitem">
+                        <div class="settings-row-main">
+                          <span class="settings-row-icon"><Icon :name="ICONS.trash" size="sm" color="secondary" /></span>
+                          <div class="settings-row-text">
+                            <Text type="label">
+                              Delete my account
+                            </Text>
+                            <Text type="supporting" color="secondary">
+                              Permanent, and it takes the workspace with it.
+                            </Text>
+                          </div>
+                        </div>
+                        <div class="settings-row-control">
+                          <Button label="Delete" variant="destructive" size="sm" @click="confirmDeleteAccount" />
                         </div>
                       </div>
                     </div>
                   </Card>
                 </VStack>
+                <ConfirmHost />
               </VStack>
 
               <VStack v-else-if="activePanel === 'integrations'" :gap="1.5" class="settings-cards">
@@ -1545,7 +1746,7 @@ const SearchIcon = defineComponent({
                         </div>
                       </div>
                       <div class="settings-row-control">
-                        <Button label="Disconnect" variant="ghost" size="sm" />
+                        <Button label="Disconnect" variant="ghost" size="sm" @click="demo('Demo: Calendar would be disconnected here', 'disconnect-calendar')" />
                       </div>
                     </div>
                     <Divider variant="subtle" role="presentation" />
@@ -1562,7 +1763,7 @@ const SearchIcon = defineComponent({
                         </div>
                       </div>
                       <div class="settings-row-control">
-                        <Button label="Connect" variant="secondary" size="sm" />
+                        <Button label="Connect" variant="secondary" size="sm" @click="demo('Demo: File storage would be connected here', 'connect-file-storage')" />
                       </div>
                     </div>
                     <Divider variant="subtle" role="presentation" />
@@ -1579,7 +1780,7 @@ const SearchIcon = defineComponent({
                         </div>
                       </div>
                       <div class="settings-row-control">
-                        <Button label="Connect" variant="secondary" size="sm" />
+                        <Button label="Connect" variant="secondary" size="sm" @click="demo('Demo: Chat would be connected here', 'connect-chat')" />
                       </div>
                     </div>
                   </div>
@@ -1759,7 +1960,8 @@ const SearchIcon = defineComponent({
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: var(--astryx-spacing-3);
+  column-gap: var(--astryx-spacing-3);
+  row-gap: var(--astryx-spacing-2);
   padding: var(--astryx-spacing-4);
 }
 .settings-row-main {
@@ -1786,14 +1988,6 @@ const SearchIcon = defineComponent({
 }
 .settings-row-detail {
   grid-column: 1 / -1;
-}
-.font-preview {
-  display: flex;
-  flex-direction: column;
-  gap: var(--astryx-spacing-1);
-  padding: var(--astryx-spacing-3);
-  background-color: var(--astryx-color-background-surface);
-  border-radius: var(--astryx-radius-element);
 }
 @container settings-panel (max-width: 480px) {
   .settings-row {

@@ -7,6 +7,7 @@ import { computed, onMounted, reactive, ref } from 'vue'
 import { DEFAULT_PLAYGROUND_CODE } from './defaultCode'
 import { playgroundCopy } from './messages'
 import { decodeShare, encodeShare, shareHash } from './share'
+import { PLAYGROUND_SCAFFOLD_TEMPLATE_SLUGS } from './templateManifest'
 import { playgroundTemplates } from './templates'
 import { applyDensity, applyTheme, cloneTheme, createNeutralTheme, setThemeColor, themesEqual } from './theme'
 
@@ -63,7 +64,10 @@ export function usePlayground(
         // before paint. Seed the preview once from that. The toolbar owns it afterwards.
         theme.dark = document.documentElement.classList.contains('dark')
         const fromQuery = new URLSearchParams(window.location.search).get('template')
-        const match = fromQuery ? templates.find(item => item.id === fromQuery) : undefined
+        // 脚手架（blank）在原版注册表里不存在，`?template=blank` 落到默认欢迎页。
+        const match = fromQuery
+          ? templates.find(item => item.id === fromQuery && !(PLAYGROUND_SCAFFOLD_TEMPLATE_SLUGS as readonly string[]).includes(item.id))
+          : undefined
         if (match) {
           code.value = match.source
           templateId.value = match.id

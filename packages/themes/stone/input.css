@@ -5,9 +5,9 @@
     --astryx-input-background: var(--astryx-color-background-surface);
     --astryx-input-border: var(--astryx-color-border-emphasized);
     --astryx-input-focus: var(--astryx-color-accent);
-    --astryx-input-height-sm: 28px;
-    --astryx-input-height-md: 32px;
-    --astryx-input-height-lg: 36px;
+    --astryx-input-height-sm: var(--astryx-size-element-sm);
+    --astryx-input-height-md: var(--astryx-size-element-md);
+    --astryx-input-height-lg: var(--astryx-size-element-lg);
     /* 状态描边和状态图标用柔和的 T60/T70，和上方状态提示底色同族。 */
     --astryx-input-error: light-dark(#a58b86, #c0a5a1);
     --astryx-input-error-foreground: var(--astryx-color-text-red);

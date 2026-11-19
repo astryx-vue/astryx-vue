@@ -12,18 +12,18 @@
     --astryx-code-block-background: light-dark(#FFFCF7, #1c1610);
     --astryx-code-block-border: var(--astryx-color-border);
     --astryx-code-block-focus: var(--astryx-color-accent);
-    --astryx-code-block-highlight-background: color-mix(in srgb, var(--astryx-color-accent) 20%, transparent);
+    --astryx-code-block-highlight-background: var(--astryx-color-accent-muted);
 
     /* Syntax colors from the original CodeBlock theme: keyword and type share
        the same purple, strings stay green. */
     --astryx-code-syntax-keyword: light-dark(#8C5927, #d4a06a);
     --astryx-code-syntax-string: light-dark(#2e6b4a, #7bc49e);
-    --astryx-code-syntax-comment: light-dark(#B88859, #B88859);
+    --astryx-code-syntax-comment: light-dark(#955c26, #B88859);
     --astryx-code-syntax-number: light-dark(#a06018, #d4b870);
     --astryx-code-syntax-function: light-dark(#3a5e8c, #7ba8d4);
     --astryx-code-syntax-type: light-dark(#6b4a8c, #b08ed4);
     --astryx-code-syntax-variable: light-dark(#4a3520, #EDE4D4);
-    --astryx-code-syntax-operator: light-dark(#B88859, #c4a882);
+    --astryx-code-syntax-operator: light-dark(#955c26, #c4a882);
     --astryx-code-syntax-constant: light-dark(#a06018, #d4b870);
     --astryx-code-syntax-tag: light-dark(#8c3a3a, #d47a7a);
     --astryx-code-syntax-attribute: light-dark(#8C5927, #d4a06a);
@@ -32,8 +32,8 @@
 
     --astryx-code-syntax-added: color-mix(in srgb, var(--astryx-color-success-muted) 25%, transparent);
     --astryx-code-syntax-removed: color-mix(in srgb, var(--astryx-color-error-muted) 25%, transparent);
-    --astryx-code-syntax-diff-header: var(--astryx-color-background-muted);
-    --astryx-code-syntax-added-marker: var(--astryx-color-text-green);
-    --astryx-code-syntax-removed-marker: var(--astryx-color-text-red);
+    --astryx-code-syntax-diff-header: transparent;
+    --astryx-code-syntax-added-marker: var(--astryx-code-syntax-punctuation);
+    --astryx-code-syntax-removed-marker: var(--astryx-code-syntax-punctuation);
   }
 }

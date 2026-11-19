@@ -11,7 +11,7 @@ import statesSource from './states.vue?raw&highlighted'
 const row = { className: 'chat-preview-stack chat-preview-stack--center' }
 const composer = { className: 'chat-preview-composer' }
 
-export const chatSendButtonOverview = defineDemo(overviewDemo, overviewSource, row)
+export const chatSendButtonOverview = defineDemo(overviewDemo, overviewSource)
 export const chatSendButtonCustomIcon = defineDemo(customIconDemo, customIconSource, row)
 export const chatSendButtonInComposer = defineDemo(inComposerDemo, inComposerSource, composer)
 export const chatSendButtonStates = defineDemo(statesDemo, statesSource, row)

@@ -17,7 +17,7 @@
     justify-content: space-between;
     gap: var(--astryx-spacing-2, 8px);
     width: 100%;
-    min-height: var(--astryx-input-height-md, 32px);
+    height: var(--astryx-input-height-md, 32px);
     margin: 0;
     padding-block: var(--astryx-spacing-2, 8px);
     padding-inline: var(--astryx-spacing-3, 12px);
@@ -41,11 +41,11 @@
   }
 
   .astryx-complex-selector[data-size='sm'] {
-    min-height: var(--astryx-input-height-sm, 28px);
+    height: var(--astryx-input-height-sm, 28px);
   }
 
   .astryx-complex-selector[data-size='lg'] {
-    min-height: var(--astryx-input-height-lg, 36px);
+    height: var(--astryx-input-height-lg, 36px);
   }
 
   .astryx-complex-selector[data-variant='ghost'] {

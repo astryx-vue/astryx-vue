@@ -1,7 +1,7 @@
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 
 /*
- * 顶部导航用品牌蓝：标题和选中项是正蓝，未选中项是浅一档的蓝。深色模式下
+ * 顶部导航用品牌蓝：标题和未选中项是正蓝，选中项深一档。深色模式下
  * 换成黄油黄。标题的文字在内部元素上读 --astryx-color-text-primary，所以
  * 要连这个 token 一起重指，只改 color 只能染到容器。
  */
@@ -12,12 +12,12 @@
   }
 
   [data-astryx-theme='butter'] .astryx-top-nav-item {
-    color: light-dark(#6e92ff, #fdee8ccc);
+    color: light-dark(#225bff, #fdee8ccc);
   }
 
   /* 选中项不用底色，靠字重和颜色区别；悬停和按压只叠中性层。 */
   [data-astryx-theme='butter'] .astryx-top-nav-item.astryx-nav-item--selected {
-    color: light-dark(#225bff, #fdee8c);
+    color: light-dark(#194ce8, #fdee8c);
     background: transparent;
   }
 

@@ -100,4 +100,4 @@ If the project uses no layers at all, write specific selectors. Avoid bare eleme
 
 These styles do not require UnoCSS. The docs site uses UnoCSS only so example classes such as `i-carbon-*` can draw icons. That is the icon approach, not a styling dependency. See [Icons](/en/guide/icons).
 
-Variable names, `light-dark()`, and what the theme covers today are in [CSS variables](/en/themes/css-variables) and [Neutral](/en/themes/neutral).
+Variable names, `light-dark()`, and what the theme covers today are in [CSS variables](/en/guide/css-variables) and [Neutral](/en/guide/themes/neutral).

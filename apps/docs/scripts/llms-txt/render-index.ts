@@ -5,7 +5,7 @@
 import type { CatalogEntry } from '../../components/demo-infra/demoMeta.ts'
 import type { DocsLocale } from '../../components/demo-infra/docs-i18n.ts'
 import type { LlmsPageEntry } from './render-page.ts'
-import { guideSidebar, themeSidebar } from '../../site/sidebar.ts'
+import { guideSidebar, themeGuideSidebar } from '../../site/sidebar.ts'
 import { markdownPathForUrl } from './paths.ts'
 
 /** 线上站点地址。`llms.txt` 里的链接用绝对网址，方便别的机器直接抓。 */
@@ -57,9 +57,12 @@ export function collectSections(
     return { title: entry[locale], markdownPath, description: byPath.get(markdownPath)?.description ?? '' }
   })
 
+  // 主题文档在站点上并进了文档侧栏，llms.txt 里仍单独成节。
+  const themes = flattenSidebar(themeGuideSidebar(english))
+  const themeLinks = new Set(themes.map(item => item.link))
   return [
-    { title: 'Guide', entries: flattenSidebar(guideSidebar(english)).map(item => pick(item.title, item.link)) },
-    { title: 'Themes', entries: flattenSidebar(themeSidebar(english)).map(item => pick(item.title, item.link)) },
+    { title: 'Guide', entries: flattenSidebar(guideSidebar(english)).filter(item => !themeLinks.has(item.link)).map(item => pick(item.title, item.link)) },
+    { title: 'Themes', entries: themes.map(item => pick(item.title, item.link)) },
     { title: 'Components', entries: components },
   ]
 }

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { PowerSearchFilter } from '@astryx-vue/core'
 import {
+  BottomSheet,
   Button,
   Divider,
   EmptyState,
@@ -27,9 +28,11 @@ import {
   useMediaQuery,
   usePowerSearchConfig,
   useResizable,
+  useToast,
   VStack,
 } from '@astryx-vue/core'
-import { computed, ref } from 'vue'
+import { computed, defineComponent, ref, shallowRef, watch } from 'vue'
+import type { Slot } from 'vue'
 
 type Severity = 'sev1' | 'sev2' | 'sev3'
 type Status = 'investigating' | 'mitigated' | 'resolved'
@@ -162,6 +165,19 @@ const STATUS_LABEL: Record<Status, string> = {
   resolved: 'Resolved',
 }
 
+/** 详情里「下一步」按钮把事故推进到的状态。 */
+const NEXT_STATUS: Record<Status, Status> = {
+  investigating: 'mitigated',
+  mitigated: 'resolved',
+  resolved: 'investigating',
+}
+
+const NEXT_ACTION_LABEL: Record<Status, string> = {
+  investigating: 'Mark mitigated',
+  mitigated: 'Resolve',
+  resolved: 'Reopen',
+}
+
 const STATUS_TOKEN_COLOR: Record<Status, 'red' | 'yellow' | 'green'> = {
   investigating: 'red',
   mitigated: 'yellow',
@@ -197,18 +213,21 @@ const FIELD_DEFINITIONS = [
   { key: 'commander', type: 'string', label: 'Commander' },
 ] as const
 
+const incidents = ref<Incident[]>(INCIDENTS.map(incident => ({ ...incident })))
 const statusFilter = ref('all')
+const isSheetOpen = ref(false)
+const showToast = useToast()
 const filters = ref<PowerSearchFilter[]>([])
 const selectedId = ref<string | null>(INCIDENTS[0].id)
 const { config, applyFilters } = usePowerSearchConfig(FIELD_DEFINITIONS, 'Incidents')
 
-// 窄屏藏掉右侧详情，让密集的行保持满宽。
+// 窄屏藏掉右侧详情，让密集的行保持满宽；点一行就在底部抽屉里看详情。
 const isNarrow = useMediaQuery('(max-width: 1024px)')
 
-const inspector = useResizable({ defaultSize: 380, minSize: 320, maxSize: 480 })
+const inspectorPanel = useResizable({ defaultSize: 380, minSize: 320, maxSize: 480 })
 
 const visible = computed(() => {
-  const searched = applyFilters(filters.value, INCIDENTS)
+  const searched = applyFilters(filters.value, incidents.value)
   return statusFilter.value === 'all'
     ? searched
     : searched.filter(incident => incident.status === statusFilter.value)
@@ -218,21 +237,61 @@ const groups = computed(() => STATUS_ORDER
   .map(status => ({ status, items: visible.value.filter(incident => incident.status === status) }))
   .filter(group => group.items.length > 0))
 
-const selected = computed(() => visible.value.find(incident => incident.id === selectedId.value) ?? null)
-const openCount = computed(() => INCIDENTS.filter(incident => incident.status === 'investigating').length)
+// 选中项从完整列表里取：事故被推进出当前筛选后，详情也不会读到一半消失。
+const selected = computed(() => incidents.value.find(incident => incident.id === selectedId.value) ?? null)
+const openCount = computed(() => incidents.value.filter(incident => incident.status === 'investigating').length)
 
-function nextAction(status: Status): string {
-  if (status === 'investigating')
-    return 'Mark mitigated'
-  return status === 'mitigated' ? 'Resolve' : 'Reopen'
+// 抽屉只在窄屏存在；变宽时关掉，之后再变窄也不会自己弹出来。
+watch(isNarrow, (narrow) => {
+  if (!narrow)
+    isSheetOpen.value = false
+})
+
+function advance(id: string) {
+  incidents.value = incidents.value.map(incident =>
+    incident.id === id ? { ...incident, status: NEXT_STATUS[incident.status] } : incident,
+  )
 }
+
+function escalate(incident: Incident) {
+  // 演示：换成真正执行升级的调用
+  showToast({
+    body: `Demo: escalating ${incident.id} to the next on-call tier would start here`,
+    uniqueID: `escalate-${incident.id}`,
+  })
+}
+
+function selectIncident(id: string) {
+  selectedId.value = id
+  if (isNarrow.value)
+    isSheetOpen.value = true
+}
+
+/**
+ * 详情只写一份，在右侧面板和底部抽屉两处复用：
+ * DefineInspector 记下自己的默认插槽，ReuseInspector 在别处把它渲染出来。
+ */
+const inspectorSlot = shallowRef<Slot>()
+const DefineInspector = defineComponent({
+  setup(_, { slots }) {
+    return () => {
+      inspectorSlot.value = slots.default
+      return null
+    }
+  },
+})
+const ReuseInspector = defineComponent({
+  setup() {
+    return () => inspectorSlot.value?.()
+  },
+})
 </script>
 
 <template>
   <Layout height="fill">
     <template #header>
       <LayoutHeader has-divider>
-        <HStack :gap="3" align="center">
+        <HStack :gap="3" align="center" wrap="wrap">
           <StackItem size="fill">
             <HStack :gap="2" align="center">
               <Heading :level="1">
@@ -249,16 +308,17 @@ function nextAction(status: Status): string {
             <SegmentedControlItem label="Mitigated" value="mitigated" />
             <SegmentedControlItem label="Resolved" value="resolved" />
           </SegmentedControl>
-          <Button label="Declare incident" size="sm">
+          <!-- 演示：换成真正打开「宣布事故」表单的调用 -->
+          <Button label="Declare incident" size="sm" @click="showToast({ body: 'Demo: declaring an incident would open here', uniqueID: 'declare-incident' })">
             <template #icon>
-              <Icon :icon="'i-heroicons-plus'" size="sm" />
+              <Icon name="heroicons:plus" size="sm" />
             </template>
           </Button>
         </HStack>
       </LayoutHeader>
     </template>
 
-    <LayoutContent :padding="0">
+    <LayoutContent role="main" :padding="0">
       <VStack class="incident-content" :gap="0">
         <HStack class="incident-search">
           <StackItem size="fill">
@@ -278,7 +338,7 @@ function nextAction(status: Status): string {
             description="Adjust the status filter or clear search filters."
           >
             <template #icon>
-              <Icon :icon="'i-heroicons-bell-alert'" size="lg" />
+              <Icon name="heroicons:bell-alert" size="lg" />
             </template>
           </EmptyState>
           <template v-for="group in groups" :key="group.status">
@@ -296,8 +356,8 @@ function nextAction(status: Status): string {
                 :key="incident.id"
                 :label="incident.title"
                 :description="`${incident.id} · ${incident.service} · ${incident.impact}`"
-                :is-selected="incident.id === selected?.id"
-                @click="selectedId = incident.id"
+                :is-selected="incident.id === (isNarrow && !isSheetOpen ? null : selected?.id)"
+                @click="selectIncident(incident.id)"
               >
                 <template #startContent>
                   <StatusDot
@@ -308,12 +368,14 @@ function nextAction(status: Status): string {
                 </template>
                 <template #endContent>
                   <HStack :gap="3" align="center">
+                    <!-- 分组标题已经写了状态，窄屏把状态标签的宽度让给标题。 -->
                     <Token
+                      v-if="!isNarrow"
                       size="sm"
                       :color="STATUS_TOKEN_COLOR[incident.status]"
                       :label="STATUS_LABEL[incident.status]"
                     />
-                    <Timestamp :value="incident.startedAt" format="relative" color="secondary" />
+                    <Timestamp :value="incident.startedAt" format="date_time" color="secondary" />
                   </HStack>
                 </template>
               </ListItem>
@@ -321,18 +383,8 @@ function nextAction(status: Status): string {
           </template>
         </VStack>
       </VStack>
-    </LayoutContent>
-
-    <template v-if="!isNarrow" #end>
-      <ResizeHandle
-        direction="horizontal"
-        has-divider
-        :is-always-visible="false"
-        :resizable="inspector.props"
-        label="Resize inspector"
-      />
-      <LayoutPanel :width="inspector.size" :padding="0" label="Incident details">
-        <VStack v-if="selected" :gap="4" class="incident-inspector">
+      <DefineInspector>
+        <VStack v-if="selected" :gap="4" :class="{ 'incident-inspector': !isNarrow }">
           <VStack :gap="2">
             <HStack :gap="2" align="center">
               <StatusDot :variant="SEVERITY_DOT[selected.severity]" :label="selected.severity.toUpperCase()" />
@@ -351,8 +403,8 @@ function nextAction(status: Status): string {
           </VStack>
 
           <HStack :gap="2">
-            <Button :label="nextAction(selected.status)" size="sm" />
-            <Button label="Escalate" variant="secondary" size="sm" />
+            <Button :label="NEXT_ACTION_LABEL[selected.status]" size="sm" @click="advance(selected.id)" />
+            <Button label="Escalate" variant="secondary" size="sm" @click="escalate(selected)" />
           </HStack>
 
           <Divider />
@@ -403,6 +455,27 @@ function nextAction(status: Status): string {
             </List>
           </VStack>
         </VStack>
+      </DefineInspector>
+      <BottomSheet
+        v-if="isNarrow && selected"
+        v-model:is-open="isSheetOpen"
+        :label="selected.title"
+        :padding="4"
+      >
+        <ReuseInspector />
+      </BottomSheet>
+    </LayoutContent>
+
+    <template v-if="!isNarrow" #end>
+      <ResizeHandle
+        direction="horizontal"
+        has-divider
+        :is-always-visible="false"
+        :resizable="inspectorPanel.props"
+        label="Resize inspector"
+      />
+      <LayoutPanel :width="inspectorPanel.size" :padding="0" role="complementary" label="Incident details">
+        <ReuseInspector v-if="selected" />
         <EmptyState
           v-else
           title="No incident selected"
@@ -410,7 +483,7 @@ function nextAction(status: Status): string {
           is-compact
         >
           <template #icon>
-            <Icon :icon="'i-heroicons-bell-alert'" size="lg" />
+            <Icon name="heroicons:bell-alert" size="lg" />
           </template>
         </EmptyState>
       </LayoutPanel>
@@ -437,5 +510,6 @@ function nextAction(status: Status): string {
 .incident-inspector {
   height: 100%;
   padding: var(--astryx-spacing-4);
+  overflow-y: auto;
 }
 </style>

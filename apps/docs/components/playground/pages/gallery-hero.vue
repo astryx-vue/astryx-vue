@@ -32,7 +32,7 @@ const galleryImageClip: CSSProperties = {
 
 <template>
   <Layout>
-    <LayoutContent :padding="6">
+    <LayoutContent role="main" :padding="6">
       <VStack :gap="10">
         <VStack :gap="6" h-align="center">
           <VStack :gap="3" h-align="center">
@@ -44,12 +44,12 @@ const galleryImageClip: CSSProperties = {
             </Text>
           </VStack>
           <HStack :gap="3">
-            <Button label="Get started" variant="primary">
+            <Button label="Get started" variant="primary" href="#">
               <template #end>
-                <Icon icon="chevronRight" size="sm" color="inherit" />
+                <Icon name="heroicons:arrow-right-20-solid" size="sm" color="inherit" />
               </template>
             </Button>
-            <Button label="Learn more" variant="secondary" />
+            <Button label="Learn more" variant="secondary" href="#" />
           </HStack>
         </VStack>
         <Grid :columns="{ minWidth: 200, repeat: 'fit' }" :gap="4">

@@ -35,9 +35,23 @@ import {
 
 ## Install
 
-```bash
+::: code-group
+```sh [pnpm]
 pnpm add @astryx-vue/charts
 ```
+
+```sh [npm]
+npm install @astryx-vue/charts
+```
+
+```sh [yarn]
+yarn add @astryx-vue/charts
+```
+
+```sh [bun]
+bun add @astryx-vue/charts
+```
+:::
 
 `@astryx-vue/charts` depends on `@astryx-vue/core` and `vue`. Make sure both are installed in your project.
 

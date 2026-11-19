@@ -7,9 +7,11 @@ import {
   Grid,
   Heading,
   HStack,
+  Icon,
   Layout,
   LayoutContent,
   LayoutHeader,
+  OverflowList,
   Section,
   StackItem,
   Text,
@@ -49,7 +51,7 @@ const ITEMS: LibraryItem[] = [
   { id: '15', name: 'SideNav', description: 'Vertical sidebar navigation with collapsible groups and active states.', category: 'Navigation', type: 'Pattern', imageUrl: '/template-assets/moody-lifestyle-horizontal-1.png' },
   { id: '16', name: 'Breadcrumbs', description: 'Path trail navigation with separator and truncation support.', category: 'Navigation', type: 'Component', imageUrl: '/template-assets/colorful-home-horizontal-2.png' },
   { id: '17', name: 'Pagination', description: 'Page navigation with prev/next controls and page count display.', category: 'Navigation', type: 'Component', imageUrl: '/template-assets/colorful-working-horizontal-1.png' },
-  { id: '18', name: 'MobileNav', description: 'Bottom tab bar for mobile viewports with icon and label slots.', category: 'Navigation', type: 'Pattern', imageUrl: '/template-assets/light-working-horizontal-3.png' },
+  { id: '18', name: 'MobileNav', description: 'Slide-out navigation drawer for mobile viewports.', category: 'Navigation', type: 'Pattern', imageUrl: '/template-assets/light-working-horizontal-3.png' },
   { id: '19', name: 'Badge', description: 'Compact label for status, count, or category with semantic color variants.', category: 'Feedback', type: 'Component', imageUrl: '/template-assets/moody-working-horizontal-2.png' },
   { id: '20', name: 'Banner', description: 'Full-width alert bar for info, success, warning, and error messages.', category: 'Feedback', type: 'Component', imageUrl: '/template-assets/illustrative-horizontal-2.png' },
   { id: '21', name: 'Spinner', description: 'Animated loading indicator with size and color variants.', category: 'Feedback', type: 'Component', imageUrl: '/template-assets/colorful-lifestyle-horizontal-1.png' },
@@ -65,8 +67,11 @@ const ITEMS: LibraryItem[] = [
 ]
 
 const SearchIcon = defineComponent({
-  render: () => h('span', { class: 'i-carbon-search', 'aria-hidden': 'true' }),
+  render: () => h(Icon, { name: 'heroicons:magnifying-glass' }),
 })
+
+/** OverflowList 按条目收起放不下的分类，条目 id 就是分类名。 */
+const CATEGORY_ITEMS = CATEGORIES.map(cat => ({ id: cat, label: cat }))
 
 const activeTab = ref('All')
 const search = ref('')
@@ -121,7 +126,7 @@ const displaySections = computed(() =>
       </LayoutHeader>
     </template>
 
-    <LayoutContent :padding="6">
+    <LayoutContent role="main" :padding="6">
       <VStack :gap="6">
         <VStack :gap="4">
           <TextInput
@@ -132,23 +137,27 @@ const displaySections = computed(() =>
             :start-icon="SearchIcon"
             size="lg"
           />
-          <HStack :align="'center'" :gap="4">
+          <HStack vAlign="center" :gap="4">
             <StackItem size="fill">
-              <ToggleButtonGroup
-                v-model="activeTab"
-                label="Filter by category"
-                size="lg"
-              >
-                <HStack :gap="1" wrap="wrap">
-                  <ToggleButton
-                    v-for="cat in CATEGORIES"
-                    :key="cat"
-                    :label="cat"
-                    :value="cat"
-                    size="lg"
-                  />
-                </HStack>
-              </ToggleButtonGroup>
+              <VStack>
+                <ToggleButtonGroup
+                  :value="activeTab"
+                  @update:value="activeTab = String($event ?? 'All')"
+                  label="Filter by category"
+                >
+                  <OverflowList :items="CATEGORY_ITEMS" :gap="1" behavior="observeParent">
+                    <template #item="{ item }">
+                      <ToggleButton :label="item.label" :value="item.label" size="lg" />
+                    </template>
+                    <template #overflow="{ items }">
+                      <DropdownMenu
+                        :button="{ label: `+${items.length}`, variant: 'ghost', size: 'lg' }"
+                        :items="items.map(entry => ({ label: entry.label, onClick: () => { activeTab = entry.label } }))"
+                      />
+                    </template>
+                  </OverflowList>
+                </ToggleButtonGroup>
+              </VStack>
             </StackItem>
             <DropdownMenu
               :button="{ label: sortOrder, size: 'lg' }"

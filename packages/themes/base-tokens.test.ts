@@ -10,8 +10,6 @@
  *   progressbar, card, section) and the generated heading-weight overrides.
  *   Those belong to the later theme migration.
  * - neutralIconRegistry. It is not a CSS variable.
- * - The BottomSheet exit curve cubic-bezier(0.3, 0, 0.6, 0.6). Upstream
- *   hardcodes it on the component; easeDefaults only defines --ease-standard.
  *
  * Touch-device type sizes live in neutral/mobile-type.css, so this file stays
  * one declaration per token.
@@ -58,6 +56,9 @@ const upstreamTokens = [
   '--color-background-popover',
   '--color-background-inverted',
   '--color-background-error-inverted',
+  '--color-info',
+  '--color-info-muted',
+  '--color-on-info',
   '--color-success',
   '--color-success-muted',
   '--color-on-success',
@@ -67,6 +68,22 @@ const upstreamTokens = [
   '--color-warning',
   '--color-warning-muted',
   '--color-on-warning',
+  '--color-text-info',
+  '--color-text-success',
+  '--color-text-warning',
+  '--color-text-error',
+  '--color-icon-info',
+  '--color-icon-success',
+  '--color-icon-warning',
+  '--color-icon-error',
+  '--color-border-info',
+  '--color-border-success',
+  '--color-border-warning',
+  '--color-border-error',
+  '--color-on-info-muted',
+  '--color-on-success-muted',
+  '--color-on-warning-muted',
+  '--color-on-error-muted',
   '--color-border',
   '--color-border-emphasized',
   '--color-skeleton',
@@ -160,7 +177,11 @@ const upstreamTokens = [
   '--duration-slow-min',
   '--duration-slow',
   '--duration-slow-max',
+  '--duration-exit',
   '--ease-standard',
+  '--ease-entrance',
+  '--ease-move',
+  '--ease-exit',
   '--font-family-body',
   '--font-family-code',
   '--font-family-heading',
@@ -271,8 +292,8 @@ describe('neutral base.css semantic tokens', () => {
       '--astryx-font-weight-regular',
     ])
     expect(new Set(declared.keys())).toEqual(expected)
-    expect(upstreamTokens.filter(token => token.startsWith('--color-'))).toHaveLength(79)
-    expect(upstreamTokens.filter(token => token.startsWith('--duration-'))).toHaveLength(9)
+    expect(upstreamTokens.filter(token => token.startsWith('--color-'))).toHaveLength(98)
+    expect(upstreamTokens.filter(token => token.startsWith('--duration-'))).toHaveLength(10)
     expect(upstreamTokens.filter(token => token.startsWith('--shadow-'))).toHaveLength(8)
   })
 
@@ -313,6 +334,20 @@ describe('neutral base.css semantic tokens', () => {
     expect(declared.get('--astryx-font-size-base')).toBe('0.875rem')
   })
 
+  it('keeps the upstream status roles: neutral values, and icon and border following the text role', () => {
+    expect(declared.get('--astryx-color-info')).toBe('light-dark(#0074e2, #6d9cfe)')
+    expect(declared.get('--astryx-color-on-info')).toBe('light-dark(#ffffff, #111111)')
+    expect(declared.get('--astryx-color-text-success')).toBe('light-dark(#2f7d33, #90ca90)')
+    expect(declared.get('--astryx-color-text-error')).toBe('light-dark(#c0262c, #ffaea7)')
+    expect(declared.get('--astryx-color-on-success-muted')).toBe('light-dark(#00490b, #90ca90)')
+    for (const status of ['info', 'success', 'warning', 'error']) {
+      expect(declared.get(`--astryx-color-icon-${status}`)).toBe(`var(--astryx-color-text-${status})`)
+      expect(declared.get(`--astryx-color-border-${status}`)).toBe(`var(--astryx-color-text-${status})`)
+    }
+    expect(declared.get('--astryx-duration-exit')).toBe('var(--astryx-duration-fast)')
+    expect(declared.get('--astryx-ease-exit')).toBe('cubic-bezier(0.3, 0, 0.6, 0.6)')
+  })
+
   it('uses the neutral motion scale for the rest of the duration ramp', () => {
     expect(declared.get('--astryx-duration-fast-min')).toBe('95ms')
     expect(declared.get('--astryx-duration-fast')).toBe('125ms')
@@ -335,13 +370,18 @@ describe('neutral base.css semantic tokens', () => {
     }
 
     expect([...referenced].sort()).toEqual([
+      '--astryx-duration-exit',
       '--astryx-duration-fast',
       '--astryx-duration-fast-max',
       '--astryx-duration-fast-min',
       '--astryx-duration-medium',
       '--astryx-duration-medium-max',
+      '--astryx-duration-medium-min',
       '--astryx-duration-slow-max',
       '--astryx-duration-slow-min',
+      '--astryx-ease-entrance',
+      '--astryx-ease-exit',
+      '--astryx-ease-move',
       '--astryx-ease-standard',
     ])
 

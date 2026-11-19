@@ -31,6 +31,9 @@
     --container-padding-block-end: var(--_section-block-end, var(--_section-pad));
     --layout-padding-outer-x: var(--container-padding-inline-start);
     --layout-padding-outer-y: var(--container-padding-block-start);
+    /* 区域之间的内侧间距也跟着 Section 的内边距走，同上游 sectionDefaultPaddingStyles。 */
+    --layout-padding-inner-x: var(--container-padding-inline-start);
+    --layout-padding-inner-y: var(--container-padding-block-start);
     background-color: var(--astryx-color-background-surface, #fff);
   }
 

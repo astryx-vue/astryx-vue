@@ -3,6 +3,10 @@
 @layer astryx.components {
   .astryx-switch {
     box-sizing: border-box;
+    /* 同原版：竖排的 flex 容器，开关行下面不留行盒的下沉空隙。 */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     min-width: 0;
   }
 
@@ -12,26 +16,33 @@
     gap: var(--astryx-spacing-2, 8px);
   }
 
+  .astryx-switch[data-label-spacing='spread'] > .astryx-switch-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .astryx-switch[data-label-position='start'] > .astryx-switch-row > .astryx-switch-control {
+    order: 1;
+  }
+
   .astryx-switch-row:has(> .astryx-switch-label .astryx-field-label-group[data-hidden='true']) {
     gap: 0;
   }
 
-  /* The label line is 20px and the track is taller. A wrapper at least as tall
-     as the track, centered, keeps the text on the track's midline. */
+  /* 标签列比轨道矮时，行本身用 align-items: center 把文字放在轨道中线上。 */
   .astryx-switch-label {
     display: flex;
     flex-direction: column;
     justify-content: center;
     min-width: 0;
-    min-height: var(--astryx-switch-track-height, 24px);
   }
 
-  .astryx-switch[data-size='sm'] .astryx-switch-label {
-    min-height: var(--astryx-switch-track-height-sm, 20px);
-  }
-
-  .astryx-switch[data-size='lg'] .astryx-switch-label {
-    min-height: var(--astryx-switch-track-height-lg, 28px);
+  /* 隐藏标签是 1px 的 sr-only 盒子：不要再撑最小高度、居中，否则文字会被推到盒外。 */
+  .astryx-field-label-group[data-hidden='true'] .astryx-field-label.astryx-switch-label {
+    flex-direction: row;
+    justify-content: flex-start;
+    min-height: 0;
   }
 
   .astryx-switch-control {
@@ -96,7 +107,7 @@
     border-radius: var(--astryx-switch-track-radius, 999px);
     color: var(--astryx-color-text-primary, #171717);
     background: var(--astryx-switch-track-off, #e2e2e2);
-    transition: background-color 130ms cubic-bezier(0.24, 1, 0.4, 1), border-color 130ms cubic-bezier(0.24, 1, 0.4, 1);
+    transition: background-color var(--astryx-duration-exit, 175ms) var(--astryx-ease-exit, cubic-bezier(0.3, 0, 0.6, 0.6)), border-color var(--astryx-duration-exit, 175ms) var(--astryx-ease-exit, cubic-bezier(0.3, 0, 0.6, 0.6));
   }
 
   .astryx-switch[data-size='sm'] .astryx-switch-track {
@@ -123,7 +134,7 @@
     border-radius: var(--astryx-switch-thumb-radius, 999px);
     background: var(--astryx-switch-thumb, #fff);
     transform: translateX(0);
-    transition: transform 130ms cubic-bezier(0.24, 1, 0.4, 1), background-color 130ms cubic-bezier(0.24, 1, 0.4, 1), width 130ms cubic-bezier(0.24, 1, 0.4, 1), height 130ms cubic-bezier(0.24, 1, 0.4, 1);
+    transition: transform 130ms cubic-bezier(0.24, 1, 0.4, 1), background-color var(--astryx-duration-exit, 175ms) var(--astryx-ease-exit, cubic-bezier(0.3, 0, 0.6, 0.6)), width var(--astryx-duration-exit, 175ms) var(--astryx-ease-exit, cubic-bezier(0.3, 0, 0.6, 0.6)), height var(--astryx-duration-exit, 175ms) var(--astryx-ease-exit, cubic-bezier(0.3, 0, 0.6, 0.6));
   }
 
   .astryx-switch[data-size='sm'] .astryx-switch-thumb {

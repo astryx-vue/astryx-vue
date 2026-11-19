@@ -33,6 +33,7 @@ export function guideSidebar(english: boolean): Sidebar {
         item(english ? 'Responsive layout' : '响应式布局', `${prefix}/guide/responsive`),
       ],
     },
+    ...themeGuideSidebar(english),
     {
       text: english ? 'Behavior' : '行为',
       items: [
@@ -53,32 +54,36 @@ export function guideSidebar(english: boolean): Sidebar {
   ]
 }
 
-export function themeSidebar(english: boolean): Sidebar {
+/**
+ * 主题相关的文档组。原版的「主题」导航只有画廊页，主题怎么用、各套主题和 Foundations
+ * 都在文档侧栏里，所以这几组并进 guideSidebar；llms.txt 仍单独列成 Themes 一节。
+ */
+export function themeGuideSidebar(english: boolean): Sidebar {
   const prefix = english ? '/en' : ''
   return [
     {
-      text: english ? 'Choose' : '选用',
+      text: english ? 'Themes' : '主题',
       items: [
-        item(english ? 'Overview' : '概览', `${prefix}/themes/`),
-        item('Neutral', `${prefix}/themes/neutral`),
-        item('Butter', `${prefix}/themes/butter`),
-        item('Chocolate', `${prefix}/themes/chocolate`),
-        item('Gothic', `${prefix}/themes/gothic`),
-        item('Matcha', `${prefix}/themes/matcha`),
-        item('Stone', `${prefix}/themes/stone`),
-        item('Y2K', `${prefix}/themes/y2k`),
-        item(english ? 'Extend a theme' : '扩展主题', `${prefix}/themes/extending`),
+        item(english ? 'Theming' : '主题用法', `${prefix}/guide/theming`),
+        item(english ? 'Extend a theme' : '扩展主题', `${prefix}/guide/extending-themes`),
+        item('Neutral', `${prefix}/guide/themes/neutral`),
+        item('Butter', `${prefix}/guide/themes/butter`),
+        item('Chocolate', `${prefix}/guide/themes/chocolate`),
+        item('Gothic', `${prefix}/guide/themes/gothic`),
+        item('Matcha', `${prefix}/guide/themes/matcha`),
+        item('Stone', `${prefix}/guide/themes/stone`),
+        item('Y2K', `${prefix}/guide/themes/y2k`),
       ],
     },
     {
       text: english ? 'Foundations' : '基础',
       items: [
-        item(english ? 'Design tokens' : 'Design token', `${prefix}/themes/tokens`),
-        item(english ? 'CSS variables' : 'CSS 变量', `${prefix}/themes/css-variables`),
-        item(english ? 'Color' : '颜色', `${prefix}/themes/color`),
-        item(english ? 'Typography' : '排版与字体', `${prefix}/themes/typography`),
-        item(english ? 'Motion' : '动画', `${prefix}/themes/motion`),
-        item(english ? 'Space, radius, shadow' : '间距、圆角与阴影', `${prefix}/themes/scale`),
+        item(english ? 'Design tokens' : 'Design token', `${prefix}/guide/tokens`),
+        item(english ? 'CSS variables' : 'CSS 变量', `${prefix}/guide/css-variables`),
+        item(english ? 'Color' : '颜色', `${prefix}/guide/color`),
+        item(english ? 'Typography' : '排版与字体', `${prefix}/guide/typography`),
+        item(english ? 'Motion' : '动画', `${prefix}/guide/motion`),
+        item(english ? 'Space, radius, shadow' : '间距、圆角与阴影', `${prefix}/guide/scale`),
       ],
     },
   ]

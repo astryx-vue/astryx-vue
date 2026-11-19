@@ -1,18 +1,38 @@
 <script setup lang="ts">
-import { TopNav, TopNavHeading, TopNavMenu } from '@astryx-vue/core/TopNav'
+import { Button } from '@astryx-vue/core/Button'
+import { Icon } from '@astryx-vue/core/Icon'
+import { TopNav, TopNavHeading, TopNavItem, TopNavMenu } from '@astryx-vue/core/TopNav'
 </script>
 
 <template>
-  <TopNav label="Main navigation">
-    <template #heading>
-      <TopNavHeading heading="Platform" />
-    </template>
-    <TopNavMenu
-      label="Tools"
-      :items="[
-        { description: 'View traffic and engagement metrics', href: '#analytics', iconClass: 'i-carbon-analytics', label: 'Analytics' },
-        { description: 'Configure your workspace', href: '#settings', iconClass: 'i-carbon-settings', label: 'Settings' },
-      ]"
-    />
-  </TopNav>
+  <div class="top-nav-menu-overview">
+    <TopNav label="Menu demo">
+      <template #heading>
+        <TopNavHeading heading="Platform" />
+      </template>
+      <TopNavItem label="Home" href="#" is-selected />
+      <TopNavMenu
+        label="Tools"
+        :items="[
+          { label: 'Analytics', description: 'View traffic and engagement metrics', iconClass: 'i-heroicons-chart-bar', href: '#analytics' },
+          { label: 'Team Members', description: 'Manage your team and permissions', iconClass: 'i-heroicons-users', href: '#team' },
+          { label: 'Settings', description: 'Configure your workspace', iconClass: 'i-heroicons-cog-6-tooth', href: '#settings' },
+        ]"
+      />
+      <template #end>
+        <Button label="Search" variant="ghost" is-icon-only>
+          <template #icon>
+            <Icon icon="i-heroicons-magnifying-glass" />
+          </template>
+        </Button>
+      </template>
+    </TopNav>
+  </div>
 </template>
+
+<style scoped>
+.top-nav-menu-overview {
+  width: 600px;
+  max-width: 100%;
+}
+</style>

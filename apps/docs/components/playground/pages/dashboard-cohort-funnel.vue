@@ -18,6 +18,7 @@ import {
   Table,
   Text,
   Token,
+  useToast,
   VStack,
   pixel,
 } from '@astryx-vue/core'
@@ -29,6 +30,8 @@ import {
 
 type Segment = 'all' | 'web' | 'ios' | 'android'
 type FunnelWindow = '7d' | '30d' | '90d'
+
+const showToast = useToast()
 
 const COLORS = {
   blue: 'var(--astryx-color-data-categorical-blue, #0171E3)',
@@ -255,7 +258,7 @@ const segmentLabel = computed(() => SEGMENT_OPTIONS.find(o => o.value === segmen
               {{ nf(topOfFunnel) }} visitors · {{ overallConversion }}% end-to-end conversion
             </Text>
           </VStack>
-          <HStack :gap="2">
+          <HStack :gap="2" wrap="wrap">
             <SegmentedControl v-model="funnelWindow" label="Funnel window">
               <SegmentedControlItem label="7d" value="7d" />
               <SegmentedControlItem label="30d" value="30d" />
@@ -267,9 +270,10 @@ const segmentLabel = computed(() => SEGMENT_OPTIONS.find(o => o.value === segmen
               is-label-hidden
               :options="SEGMENT_OPTIONS"
             />
-            <Button label="Export" variant="secondary">
+            <!-- 演示：换成真正执行导出的调用 -->
+            <Button label="Export" variant="secondary" @click="showToast({ body: 'Demo: this funnel and cohort report would export here', uniqueID: 'export-funnel' })">
               <template #icon>
-                <Icon icon="i-heroicons-arrow-down-tray" size="sm" />
+                <Icon name="heroicons:arrow-down-tray" size="sm" />
               </template>
             </Button>
           </HStack>
@@ -277,7 +281,7 @@ const segmentLabel = computed(() => SEGMENT_OPTIONS.find(o => o.value === segmen
       </LayoutHeader>
     </template>
     <template #default>
-      <LayoutContent>
+      <LayoutContent role="main">
         <VStack :gap="10">
           <VStack :gap="4">
             <Grid :columns="{ minWidth: 240, repeat: 'fit' }" :gap="3">
@@ -287,7 +291,7 @@ const segmentLabel = computed(() => SEGMENT_OPTIONS.find(o => o.value === segmen
                     {{ kpi.label }}
                   </Text>
                   <HStack :gap="3">
-                    <Heading :level="1">
+                    <Heading :level="1" :accessibility-level="2">
                       {{ kpi.value }}
                     </Heading>
                     <HStack :gap="1" align="center">
@@ -325,7 +329,7 @@ const segmentLabel = computed(() => SEGMENT_OPTIONS.find(o => o.value === segmen
                       {{ step.label }}
                     </Text>
                     <HStack :gap="2" align="center">
-                      <Heading :level="2">
+                      <Heading :level="2" :accessibility-level="3">
                         {{ step.conv.toFixed(1) }}%
                       </Heading>
                       <Token
@@ -334,7 +338,7 @@ const segmentLabel = computed(() => SEGMENT_OPTIONS.find(o => o.value === segmen
                         :label="`-${step.drop.toFixed(0)}%`"
                       >
                         <template #icon>
-                          <Icon icon="i-heroicons-arrow-trending-down" size="xsm" color="inherit" />
+                          <Icon name="heroicons:arrow-trending-down" size="xsm" color="inherit" />
                         </template>
                       </Token>
                     </HStack>
@@ -369,7 +373,7 @@ const segmentLabel = computed(() => SEGMENT_OPTIONS.find(o => o.value === segmen
                   </PlaygroundResponsive>
                   <HStack :gap="5" align="center" wrap="wrap">
                     <HStack v-for="series in TREND_SERIES" :key="series.key" :gap="2" align="center">
-                      <span class="legend-dot" :style="{ background: series.color }" />
+                      <Icon name="stop" size="xsm" color="inherit" :style="{ color: series.color }" />
                       <Text type="supporting" color="secondary">
                         {{ series.name }}
                       </Text>
@@ -392,21 +396,19 @@ const segmentLabel = computed(() => SEGMENT_OPTIONS.find(o => o.value === segmen
               </Text>
             </VStack>
             <Card :padding="6">
-              <VStack :gap="8">
-                <div class="fixed-table"><Table :data="cohortRows" :columns="cohortColumns" id-key="id" density="balanced" dividers="rows" /></div>
-                <HStack :gap="4" align="center" wrap="wrap">
-                  <Text type="supporting" color="secondary">
-                    Retention:
-                  </Text>
-                  <HStack :gap="2" align="center">
-                    <Token size="sm" color="red" label="< 32%" />
-                    <Token size="sm" color="orange" label="32–40%" />
-                    <Token size="sm" color="yellow" label="40–50%" />
-                    <Token size="sm" color="teal" label="50–70%" />
-                    <Token size="sm" color="green" label="≥ 70%" />
-                  </HStack>
+              <Table :data="cohortRows" :columns="cohortColumns" id-key="id" density="balanced" dividers="rows" />
+              <HStack :gap="4" align="center" wrap="wrap" :padding-block-start="8">
+                <Text type="supporting" color="secondary">
+                  Retention:
+                </Text>
+                <HStack :gap="2" align="center">
+                  <Token size="sm" color="red" label="< 32%" />
+                  <Token size="sm" color="orange" label="32–40%" />
+                  <Token size="sm" color="yellow" label="40–50%" />
+                  <Token size="sm" color="teal" label="50–70%" />
+                  <Token size="sm" color="green" label="≥ 70%" />
                 </HStack>
-              </VStack>
+              </HStack>
             </Card>
           </VStack>
         </VStack>
@@ -417,10 +419,6 @@ const segmentLabel = computed(() => SEGMENT_OPTIONS.find(o => o.value === segmen
 
 <style scoped>
 /* 原版 Table 的数据模式默认 `table-layout: fixed`，列宽严格按声明的比例分；core 目前是 auto，列宽按内容算、行高有 0.5px 的小数。 */
-.fixed-table :deep(.astryx-table) {
-  table-layout: fixed;
-}
-
 .step-grid {
   overflow-x: clip;
 }
@@ -430,11 +428,5 @@ const segmentLabel = computed(() => SEGMENT_OPTIONS.find(o => o.value === segmen
   border-inline-start-color: var(--astryx-color-border, rgba(5, 54, 89, 0.1));
   margin-inline-start: calc(var(--astryx-spacing-3, 12px) / -2);
   padding-inline-start: calc(var(--astryx-spacing-3, 12px) / 2);
-}
-.legend-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 0;
-  flex-shrink: 0;
 }
 </style>

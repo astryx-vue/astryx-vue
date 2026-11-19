@@ -28,4 +28,4 @@ import '@astryx-vue/themes/stone.css'
 
 ## 视觉预览
 
-<ThemeStage theme="stone" />
+可以在[主题画廊](/themes/?theme=stone)里看实际效果。

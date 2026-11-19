@@ -125,8 +125,7 @@
     display: flex;
     flex-direction: column;
     flex: none;
-    /* Wider than the corner radius, so the sm chevron is not clipped. */
-    width: max(1.75rem, calc(var(--astryx-radius-element, 0.625rem) + 1.125rem));
+    width: var(--astryx-spacing-4, 16px);
     border-inline-start: var(--astryx-border-width, 1px) solid var(--astryx-color-border-emphasized, #d4d4d4);
   }
 

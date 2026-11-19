@@ -43,7 +43,10 @@ onScopeDispose(() => {
 <template>
   <div v-if="message" v-bind="$attrs" ref="message" class="astryx-field-status" :data-type="type" :data-variant="variant" :data-hidden="isVisuallyHidden || undefined">
     <FieldIcon v-if="variant === 'detached'" :type="type" />
-    <span>{{ message }}</span>
+    <span v-if="variant === 'detached'">{{ message }}</span>
+    <template v-else>
+      {{ message }}
+    </template>
   </div>
   <VisuallyHidden aria-live="assertive" aria-atomic="true">
     {{ assertive }}

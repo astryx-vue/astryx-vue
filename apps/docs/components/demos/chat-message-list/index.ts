@@ -9,6 +9,6 @@ import overviewSource from './overview.vue?raw&highlighted'
 const column = { className: 'chat-preview' }
 const wide = { className: 'chat-preview-wide' }
 
-export const chatMessageListOverview = defineDemo(overviewDemo, overviewSource, column)
+export const chatMessageListOverview = defineDemo(overviewDemo, overviewSource)
 export const chatMessageListDensity = defineDemo(densityDemo, densitySource, wide)
 export const chatMessageListFullFeatured = defineDemo(fullFeaturedDemo, fullFeaturedSource, column)

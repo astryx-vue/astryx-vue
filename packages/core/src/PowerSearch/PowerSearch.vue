@@ -16,11 +16,13 @@ import { useFieldPartStyling } from '../Field/fieldParts.js'
 import Icon from '../Icon/Icon.vue'
 import { useAstryxLocale, useAstryxMessages } from '../locale/context.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
+import { useSize } from '../SizeContext/SizeContext.js'
 import Tooltip from '../Tooltip/Tooltip.vue'
 import { scrollOptionIntoView, useAnchoredListbox } from '../Typeahead/useAnchoredListbox.js'
 import { useTypeaheadMenu } from '../Typeahead/useTypeaheadMenu.js'
 import { createPowerSearchLookup } from './config.js'
 import { powerSearchGroupLabel, powerSearchItemIcon } from './menuPresentation.js'
+import { menuStyleWithWidth, resultCountText } from './menuStyle.js'
 import PowerSearchToken from './PowerSearchToken.vue'
 import { searchPowerSearchFields } from './source.js'
 import { usePowerSearchActions } from './usePowerSearchActions.js'
@@ -42,11 +44,15 @@ const props = withDefaults(defineProps<PowerSearchProps>(), {
   maxTokenLength: 40,
   maxSearchResults: 10,
   overflow: 'none',
-  size: 'md',
 })
 
 const emit = defineEmits<PowerSearchEmits>()
+
 const slots = defineSlots<PowerSearchSlots>()
+
+// 显式 size > 外层 SizeContext（Toolbar、InputGroup 等）> 'md'。
+const size = useSize(() => props.size, 'md')
+
 const attrs = useAttrs()
 const parts = useFieldPartStyling({
   component: 'PowerSearch',
@@ -210,18 +216,9 @@ watch(() => props.resultCount, (value) => {
     liveText.value = value
 }, { immediate: true })
 const visibleFilters = computed(() => filters.value.slice(0, visibleCount.value))
-const displayCount = computed(() => {
-  if (props.resultCount == null)
-    return ''
-  return typeof props.resultCount === 'number' ? text.value.resultCount(props.resultCount) : props.resultCount
-})
-const menuStyle = computed(() => {
-  const base = anchored.style.value
-  if (props.menuWidth == null)
-    return base
-  const width = `min(${props.menuWidth}px, var(--astryx-layer-max-inline-size, calc(100vw - 32px)))`
-  return { ...base, width, minWidth: width, maxWidth: width }
-})
+const hasClearButton = computed(() => showsClear.value && filters.value.length > 0 && !props.disabled && !props.readOnly)
+const displayCount = computed(() => resultCountText(props.resultCount, text.value.resultCount))
+const menuStyle = computed(() => menuStyleWithWidth(anchored.style.value, props.menuWidth))
 
 function onInputFocus(event: FocusEvent): void {
   emit('focus', event)
@@ -395,18 +392,21 @@ defineExpose({
           @focus="onInputFocus"
           @blur="emit('blur', $event)"
         >
-        <slot v-if="slots.endContent" name="endContent" />
-        <slot v-else name="end" />
-        <span v-if="displayCount" class="astryx-power-search-count">{{ displayCount }}</span>
-        <button
-          v-if="showsClear && filters.length > 0 && !disabled && !readOnly"
-          type="button"
-          class="astryx-power-search-clear"
-          :aria-label="text.clear"
-          @click="clearAll"
-        >
-          <Icon icon="close" size="sm" />
-        </button>
+        <!-- 同上游 Tokenizer 的 endSection：计数、endContent、清除按钮并成一组，距边框 8px、间距 8px。 -->
+        <span v-if="displayCount || slots.endContent || slots.end || hasClearButton" class="astryx-power-search-end">
+          <span v-if="displayCount" class="astryx-power-search-count">{{ displayCount }}</span>
+          <slot v-if="slots.endContent" name="endContent" />
+          <slot v-else name="end" />
+          <button
+            v-if="hasClearButton"
+            type="button"
+            class="astryx-power-search-clear"
+            :aria-label="text.clear"
+            @click="clearAll"
+          >
+            <Icon icon="close" size="sm" />
+          </button>
+        </span>
         <span v-if="focusableDisabled" :id="disabledId" class="astryx-visually-hidden">{{ disabledMessage }}</span>
       </div>
     </Tooltip>

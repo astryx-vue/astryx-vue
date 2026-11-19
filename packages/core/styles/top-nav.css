@@ -40,14 +40,18 @@
     gap: var(--astryx-spacing-2, 8px);
     box-sizing: border-box;
     min-width: 0;
-    min-height: 32px;
+    min-height: var(--astryx-spacing-8, 2rem);
     padding-inline: var(--astryx-spacing-2, 8px);
     border-radius: var(--astryx-radius-element, 0.625rem);
     color: var(--astryx-color-text-primary);
-    font-size: var(--astryx-font-size-lg, 1.0625rem);
+    font-size: var(--astryx-text-large-size, 1.0625rem);
     font-weight: var(--astryx-font-weight-semibold, 600);
-    line-height: 1.4118;
+    line-height: var(--astryx-text-large-leading, 1.4118);
     text-decoration: none;
+  }
+
+  .astryx-top-nav-heading:has(.astryx-nav-icon) {
+    padding-inline-start: 0;
   }
 
   .astryx-top-nav-heading--link:hover,
@@ -95,9 +99,9 @@
 
   .astryx-top-nav-heading__title {
     overflow: hidden;
-    font-size: var(--astryx-font-size-lg, 1.0625rem);
+    font-size: var(--astryx-text-large-size, 1.0625rem);
     font-weight: var(--astryx-font-weight-semibold, 600);
-    line-height: 1.4118;
+    line-height: var(--astryx-text-large-leading, 1.4118);
     text-overflow: ellipsis;
     white-space: nowrap;
   }
@@ -160,7 +164,9 @@
     padding-block: var(--astryx-spacing-1-5, 6px);
     padding-inline: var(--astryx-spacing-3, 12px);
     color: var(--astryx-color-text-secondary, #525252);
+    font-size: var(--astryx-text-label-size, 0.875rem);
     font-weight: var(--astryx-font-weight-medium, 500);
+    line-height: var(--astryx-text-label-leading, 1.4286);
     text-decoration: none;
   }
 
@@ -174,7 +180,7 @@
   .astryx-top-nav-menu__trigger {
     display: inline-flex;
     align-items: center;
-    gap: var(--astryx-spacing-1, 4px);
+    gap: var(--astryx-spacing-2, 8px);
     height: 32px;
     padding-inline: var(--astryx-spacing-3, 12px);
     border: 0;
@@ -197,6 +203,13 @@
   .astryx-top-nav-menu__drawer-trigger:focus-visible {
     outline: var(--astryx-focus-outline-width) var(--astryx-focus-outline-style) var(--astryx-focus-outline-color);
     outline-offset: var(--astryx-focus-outline-offset);
+  }
+
+  /* 原版把下拉箭头钉在 1em（跟随标签字号），不用 sm 的 16px 盒子。 */
+  .astryx-top-nav-menu__trigger .astryx-icon.astryx-top-nav-menu__chevron {
+    width: 1em;
+    height: 1em;
+    font-size: inherit;
   }
 
   .astryx-top-nav-menu__chevron {

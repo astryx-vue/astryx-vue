@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Button } from '@astryx-vue/core/Button'
-import { NavDisclosure, NavMenu, NavMenuItem } from '@astryx-vue/core/NavMenu'
 import { OverflowList } from '@astryx-vue/core/OverflowList'
 
 const items = [
@@ -13,30 +12,22 @@ const items = [
 </script>
 
 <template>
-  <div class="nav-overview">
-    <OverflowList :items="items" :max-visible-items="3">
+  <div class="overflow-list-overview">
+    <OverflowList :items="items" :gap="2">
       <template #item="{ item }">
         <Button :label="item.label" size="sm" />
       </template>
       <template #overflow="{ items: hidden }">
-        <NavDisclosure label="More">
-          <template #trigger="{ isOpen, panelId }">
-            <Button
-              :label="`+${hidden.length} more`"
-              size="sm"
-              variant="ghost"
-              :aria-controls="panelId"
-              :aria-expanded="isOpen ? 'true' : 'false'"
-              aria-haspopup="menu"
-            />
-          </template>
-          <template #default="{ close, focusRequest }">
-            <NavMenu label="More" :focus-request="focusRequest" @close="close">
-              <NavMenuItem v-for="item in hidden" :key="item.id" :label="item.label" />
-            </NavMenu>
-          </template>
-        </NavDisclosure>
+        <Button :label="`+${hidden.length} more`" variant="ghost" size="sm" />
       </template>
     </OverflowList>
   </div>
 </template>
+
+<style scoped>
+.overflow-list-overview {
+  max-width: 400px;
+  border: 1px dashed var(--astryx-color-border);
+  padding: 8px;
+}
+</style>

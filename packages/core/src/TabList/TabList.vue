@@ -4,12 +4,12 @@ import { computed, provide, reactive, ref } from 'vue'
 
 import Icon from '../Icon/Icon.vue'
 import { useAstryxMessages } from '../locale/index.js'
+import { useSize } from '../SizeContext/SizeContext.js'
 import { tabListContextKey } from './context.js'
 import { useTabListScroll } from './useTabListScroll.js'
 import '../../styles/tab-list.css'
 
 const props = withDefaults(defineProps<TabListProps>(), {
-  size: 'md',
   layout: 'hug',
   hasDivider: false,
   isFullBleed: false,
@@ -24,6 +24,9 @@ const emit = defineEmits<{
 defineSlots<{
   default: () => unknown
 }>()
+
+// 显式 size > 外层 SizeContext（Toolbar、InputGroup 等）> 'md'。
+const size = useSize(() => props.size, 'md')
 
 const bleedsInline = computed(() =>
   props.edgeCompensation === 'inline' || (props.edgeCompensation == null && props.isFullBleed),
@@ -113,7 +116,7 @@ function unregisterTab(value: string) {
 
 provide(tabListContextKey, {
   value: computed(() => props.value),
-  size: computed(() => props.size),
+  size,
   layout: computed(() => props.layout),
   hasDivider: computed(() => props.hasDivider),
   isTabsPattern,

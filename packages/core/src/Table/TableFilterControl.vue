@@ -51,6 +51,10 @@ function listValue(value: TableFilterValue | null): string[] {
   return Array.isArray(value) ? value : []
 }
 
+/** 漏斗按钮和弹层的名称：「筛选 + 列标题」，和原版一致。 */
+const triggerLabel = computed(() =>
+  props.filter.header != null ? messages.value.table.filterByColumn(props.filter.header) : props.filter.field.label,
+)
 const options = computed(() => props.filter.field.options ?? [])
 const step = computed(() => props.filter.field.step ?? (props.filter.field.isIntegerOnly ? 1 : null))
 
@@ -143,11 +147,11 @@ function onMultiSelect(value: (string | number)[]) {
         @update:model-value="onSingleSelect"
       />
     </template>
-    <Popover v-else :label="filter.field.label" :has-close-button="false" :width="240">
+    <Popover v-else :label="triggerLabel" :has-close-button="false" :width="240">
       <button
         type="button"
         class="astryx-table__filter-trigger"
-        :aria-label="filter.field.label"
+        :aria-label="triggerLabel"
         :data-active="hasValue || undefined"
       >
         <Icon icon="funnel" size="xsm" :color="hasValue ? 'accent' : 'secondary'" />

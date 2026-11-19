@@ -18,7 +18,7 @@ describe('theme catalog', () => {
       expect(theme.summary.zh.length).toBeGreaterThan(5)
       expect(theme.body.en).not.toContain('---')
       expect(theme.body.en).not.toContain('<ThemeStage')
-      expect(theme.docsUrl.en).toContain(`/en/themes/${theme.slug}`)
+      expect(theme.docsUrl.en).toContain(`/en/guide/themes/${theme.slug}`)
     }
   })
 })

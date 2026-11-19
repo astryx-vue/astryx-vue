@@ -18,6 +18,8 @@ import {
   LayoutHeader,
   LayoutPanel,
   Link,
+  Item,
+  List,
   MetadataList,
   MetadataListItem,
   MultiSelector,
@@ -41,6 +43,7 @@ import {
   TextInput,
   Token,
   ToggleButton,
+  useAnnounce,
   usePowerSearchConfig,
   useResizable,
   useTableGroupedRows,
@@ -48,7 +51,9 @@ import {
   useTableSelectionState,
   useTableSortable,
   useTableSortableState,
+  VisuallyHidden,
   useTableStickyColumns,
+  useToast,
   VStack,
 } from '@astryx-vue/core'
 import type { PowerSearchFilter, TableColumn, TablePlugin } from '@astryx-vue/core'
@@ -871,6 +876,77 @@ function columnRowRef(key: string) {
 }
 
 let reorderSession: { key: string, pointerId: number, fromIndex: number } | null = null
+/** 拖动落位之后紧跟一个 click，不能被当成键盘「拿起」。 */
+let suppressGripClick = false
+
+/** 键盘拿起：被拿起的那一列，以及拿起时的顺序（Escape 用它放回去）。 */
+const pickedKey = ref<string | null>(null)
+let pickedOriginalKeys: string[] = []
+const announce = useAnnounce()
+
+function commitColumnOrder(nextKeys: readonly string[]): void {
+  updateView(current => ({ ...current, columnKeys: [...nextKeys] }))
+}
+
+function moveColumn(key: string, requestedIndex: number): boolean {
+  const keys = view.value.columnKeys
+  const from = keys.indexOf(key)
+  const to = Math.max(0, Math.min(keys.length - 1, requestedIndex))
+  if (from < 0 || to === from)
+    return false
+  const next = [...keys]
+  next.splice(from, 1)
+  next.splice(to, 0, key)
+  commitColumnOrder(next)
+  return true
+}
+
+/** 没有拖动的点击：第一次拿起，第二次放下，和读屏被告知的两步一致。 */
+function onGripClick(key: string): void {
+  if (suppressGripClick) {
+    suppressGripClick = false
+    return
+  }
+  const keys = view.value.columnKeys
+  const index = keys.indexOf(key)
+  if (pickedKey.value === key) {
+    pickedKey.value = null
+    announce(`${COLUMN_LABELS[key]} dropped at position ${index + 1} of ${keys.length}.`)
+    return
+  }
+  pickedKey.value = key
+  pickedOriginalKeys = [...keys]
+  announce(`${COLUMN_LABELS[key]} picked up, position ${index + 1} of ${keys.length}. Use the arrow keys to move it, Space or Enter to drop, or Escape to cancel.`)
+}
+
+function onGripKeydown(event: KeyboardEvent, key: string): void {
+  const keys = view.value.columnKeys
+  if (event.key === 'Escape' && pickedKey.value === key) {
+    // Escape 同时是弹层的关闭键，取消必须在这里截住，否则面板会在放回原位时消失。
+    event.preventDefault()
+    event.stopPropagation()
+    // 只有真的动过才写回：updateView 会离开当前保存的视图。
+    if (pickedOriginalKeys.join() !== keys.join() && keys.includes(key))
+      commitColumnOrder(pickedOriginalKeys)
+    pickedKey.value = null
+    announce(`${COLUMN_LABELS[key]} move cancelled.`)
+    return
+  }
+  const index = keys.indexOf(key)
+  const targets: Record<string, number> = {
+    ArrowUp: index - 1,
+    ArrowDown: index + 1,
+    Home: 0,
+    End: keys.length - 1,
+  }
+  const target = targets[event.key]
+  if (target == null)
+    return
+  // 方向键不要求先拿起：拿起是给读屏的流程，不是快捷键的前提。
+  event.preventDefault()
+  if (moveColumn(key, target))
+    announce(`${COLUMN_LABELS[key]}, position ${Math.max(0, Math.min(keys.length - 1, target)) + 1} of ${keys.length}.`)
+}
 
 function onGripPointerDown(event: PointerEvent, key: string): void {
   const fromIndex = view.value.columnKeys.indexOf(key)
@@ -899,6 +975,10 @@ function onGripPointerUp(): void {
   reorderDropKey.value = null
   if (toKey == null || toKey === key)
     return
+  suppressGripClick = true
+  setTimeout(() => {
+    suppressGripClick = false
+  }, 0)
   const toIndex = view.value.columnKeys.indexOf(toKey)
   if (toIndex < 0)
     return
@@ -1161,6 +1241,8 @@ const INTERACTIVE_WITHIN_ROW = 'button, input, a, label, [role="checkbox"], [rol
 const SELECTION_COLUMN_WIDTH = 48
 
 const rowActivationPlugin: TablePlugin<ServiceJob> = {
+  // 选择列默认 36px，勾选框离表格边 6px；原版模板把它加宽到 48px，让勾选框落在 16px 的内容边距上。
+  widthFor: column => (column.key === '__select' ? SELECTION_COLUMN_WIDTH : undefined),
   rowPatch(item) {
     if (isTableGroupHeader(item))
       return null
@@ -1174,13 +1256,7 @@ const rowActivationPlugin: TablePlugin<ServiceJob> = {
       },
     }
   },
-  cellPatch({ column, row, kind }) {
-    // 选择列默认 36px，勾选框离表格边 6px；原版模板把它加宽到 48px，让勾选框落在 16px 的内容边距上。
-    // core 里选择列的 36px 写在 CSS 类上，行内样式才压得过。
-    if (column.key === '__select') {
-      const width = `${SELECTION_COLUMN_WIDTH}px`
-      return { style: { width, minWidth: width, maxWidth: width } }
-    }
+  cellPatch({ row, kind }) {
     if (kind !== 'body' || row == null || isTableGroupHeader(row) || row.id !== activeJobId.value)
       return null
     return { style: { backgroundColor: 'var(--astryx-color-accent-muted)' } }
@@ -1348,20 +1424,18 @@ function labelOf(options: { value: string, label: string }[], value: string): st
 
 // ============= 批量操作 =============
 
-const BULK_EDIT_ACTIONS: { key: string, label: string, icon: string }[] = [
-  { key: 'assign', label: 'Assign', icon: 'heroicons:user-plus' },
-  { key: 'reschedule', label: 'Reschedule', icon: 'heroicons:calendar-days' },
-  { key: 'cancel', label: 'Cancel', icon: 'heroicons:no-symbol' },
+const BULK_EDIT_ACTIONS: { key: string, label: string, icon: string, demoBody: (jobIds: string) => string }[] = [
+  { key: 'assign', label: 'Assign', icon: 'heroicons:user-plus', demoBody: ids => `Demo: a technician would be assigned to ${ids} here` },
+  { key: 'reschedule', label: 'Reschedule', icon: 'heroicons:calendar-days', demoBody: ids => `Demo: ${ids} would be rescheduled here` },
+  { key: 'cancel', label: 'Cancel', icon: 'heroicons:no-symbol', demoBody: ids => `Demo: ${ids} would be canceled here` },
 ]
 
-function runBulkAction(key: string): void {
+// 演示用：按钮点了只弹提示，换成真正执行动作的调用即可。
+const showToast = useToast()
+
+function runBulkAction(action: (typeof BULK_EDIT_ACTIONS)[number]): void {
   const ids = selectedJobs.value.map(job => job.id).join(', ')
-  if (key === 'assign')
-    alert(`Assign technician: ${ids}`)
-  else if (key === 'reschedule')
-    alert(`Reschedule: ${ids}`)
-  else
-    alert(`Cancel: ${ids}`)
+  showToast({ body: action.demoBody(ids), uniqueID: `bulk-${action.key}` })
 }
 
 // ============= 骨架行 =============
@@ -1463,8 +1537,8 @@ function SearchIcon() {
               </HStack>
 
               <HStack :gap="2">
-                <Button :label="NEXT_ACTION[activeJob.status]" size="sm" width="100%" />
-                <Button label="Edit job" variant="secondary" size="sm" width="100%" />
+                <Button :label="NEXT_ACTION[activeJob.status]" size="sm" width="100%" @click="showToast({ body: `Demo: “${NEXT_ACTION[activeJob.status]}” would start for ${activeJob.id} here`, uniqueID: `next-${activeJob.id}` })" />
+                <Button label="Edit job" variant="secondary" size="sm" width="100%" @click="showToast({ body: `Demo: editing ${activeJob.id} would open here`, uniqueID: `edit-${activeJob.id}` })" />
               </HStack>
             </VStack>
           </Section>
@@ -1565,7 +1639,7 @@ function SearchIcon() {
                     Service jobs
                   </Heading>
                 </StackItem>
-                <Button label="New job" variant="primary" />
+                <Button label="New job" variant="primary" @click="showToast({ body: 'Demo: a new job form would open here', uniqueID: 'new-job' })" />
               </HStack>
 
               <Section v-if="selectedCount > 0" variant="muted" :padding-inline="3" :padding-block="1.5" class="tf-bulk">
@@ -1578,7 +1652,7 @@ function SearchIcon() {
                         :label="action.label"
                         variant="ghost"
                         size="sm"
-                        @click="runBulkAction(action.key)"
+                        @click="runBulkAction(action)"
                       >
                         <template #icon>
                           <Icon :name="action.icon" size="sm" />
@@ -1831,11 +1905,10 @@ function SearchIcon() {
                           <Text type="supporting" color="secondary">
                             •
                           </Text>
-                          <Text type="supporting">
-                            <Link color="primary" @click="clearAll">
-                              Clear all
-                            </Link>
-                          </Text>
+                          <!-- 不带 href，Link 渲染成 <button>：清空筛选，不跳转。 -->
+                          <Link type="supporting" @click="clearAll">
+                            Clear all
+                          </Link>
                         </template>
                       </HStack>
                     </StackItem>
@@ -1861,6 +1934,7 @@ function SearchIcon() {
                     placement="below"
                     alignment="end"
                     :width="660"
+                    :padding="0"
                     label="View options"
                   >
                     <template #content>
@@ -1890,9 +1964,13 @@ function SearchIcon() {
                           </VStack>
 
                           <!-- Columns：两栏穿梭列表，拖动把手排序。 -->
-                          <VStack v-if="viewSection === 'columns'" :gap="0" class="tf-transfer">
-                            <HStack :gap="0" class="tf-transfer-panels">
-                              <VStack :gap="0" class="tf-transfer-panel">
+                          <VStack v-if="viewSection === 'columns'" :gap="0" :min-height="0" class="tf-transfer">
+                            <VisuallyHidden id="tf-columns-reorder-hint">
+                              Press Space or Enter to pick up a column. Use the arrow keys to move it, Space or Enter to drop, or Escape to cancel.
+                            </VisuallyHidden>
+
+                            <HStack :gap="0" :min-height="0" class="tf-transfer-panels">
+                              <VStack :gap="0" role="group" aria-labelledby="tf-columns-displayed" class="tf-transfer-panel">
                                 <HStack
                                   :gap="2"
                                   align="center"
@@ -1900,7 +1978,7 @@ function SearchIcon() {
                                   :padding-block="2"
                                   class="tf-transfer-head tf-transfer-pad-start"
                                 >
-                                  <Text type="label" color="secondary">
+                                  <Text id="tf-columns-displayed" type="label" color="secondary">
                                     Displayed columns
                                   </Text>
                                   <Button
@@ -1917,6 +1995,7 @@ function SearchIcon() {
                                     :gap="0"
                                     align="center"
                                     h-align="center"
+                                    min-height="100%"
                                     :padding-block="4"
                                     class="tf-transfer-empty tf-transfer-pad-start"
                                   >
@@ -1924,48 +2003,57 @@ function SearchIcon() {
                                       No columns are displayed.
                                     </Text>
                                   </VStack>
-                                  <template v-else>
-                                    <div
+                                  <List v-else density="compact">
+                                    <template #header>
+                                      <VisuallyHidden>Displayed columns</VisuallyHidden>
+                                    </template>
+                                    <Item
                                       v-for="key in displayedColumns"
                                       :key="key"
                                       :ref="columnRowRef(key)"
-                                      class="tf-transfer-row tf-transfer-pad-start"
-                                      :class="{ 'tf-transfer-row--drop': reorderDropKey === key }"
+                                      as="li"
+                                      density="compact"
+                                      :label="COLUMN_LABELS[key]"
+                                      class="tf-transfer-item tf-transfer-pad-start"
+                                      :class="{ 'tf-transfer-row--drop': reorderDropKey === key, 'tf-transfer-row--picked': pickedKey === key }"
                                     >
-                                      <IconButton
-                                        :label="`Reorder ${COLUMN_LABELS[key]}`"
-                                        variant="ghost"
-                                        size="sm"
-                                        class="tf-transfer-grip"
-                                        @pointerdown="onGripPointerDown($event, key)"
-                                        @pointermove="onGripPointerMove"
-                                        @pointerup="onGripPointerUp"
-                                        @pointercancel="onGripPointerUp"
-                                      >
-                                        <Icon name="heroicons:grip-vertical" size="sm" />
-                                      </IconButton>
-                                      <StackItem size="fill">
-                                        <Text type="body">
-                                          {{ COLUMN_LABELS[key] }}
-                                        </Text>
-                                      </StackItem>
-                                      <IconButton
-                                        :label="`Remove ${COLUMN_LABELS[key]}`"
-                                        :tooltip="key === LOCKED_COLUMN_KEY ? LOCKED_COLUMN_MESSAGE : undefined"
-                                        variant="ghost"
-                                        size="sm"
-                                        :is-disabled="key === LOCKED_COLUMN_KEY"
-                                        class="tf-transfer-end-action"
-                                        @click="updateView(v => ({ ...v, columnKeys: v.columnKeys.filter(k => k !== key) }))"
-                                      >
-                                        <Icon name="heroicons:x-mark" size="sm" />
-                                      </IconButton>
-                                    </div>
-                                  </template>
+                                      <template #startContent>
+                                        <IconButton
+                                          :label="`Reorder ${COLUMN_LABELS[key]}`"
+                                          aria-describedby="tf-columns-reorder-hint"
+                                          :aria-pressed="pickedKey === key"
+                                          variant="ghost"
+                                          size="sm"
+                                          class="tf-transfer-grip"
+                                          @click="onGripClick(key)"
+                                          @keydown="onGripKeydown($event, key)"
+                                          @pointerdown="onGripPointerDown($event, key)"
+                                          @pointermove="onGripPointerMove"
+                                          @pointerup="onGripPointerUp"
+                                          @pointercancel="onGripPointerUp"
+                                        >
+                                          <Icon name="lucide:grip-vertical" size="sm" />
+                                        </IconButton>
+                                      </template>
+                                      <template #endContent>
+                                        <IconButton
+                                          :label="`Remove ${COLUMN_LABELS[key]}`"
+                                          :tooltip="key === LOCKED_COLUMN_KEY ? LOCKED_COLUMN_MESSAGE : undefined"
+                                          variant="ghost"
+                                          size="sm"
+                                          :is-disabled="key === LOCKED_COLUMN_KEY"
+                                          class="tf-transfer-end-action"
+                                          @click="updateView(v => ({ ...v, columnKeys: v.columnKeys.filter(k => k !== key) }))"
+                                        >
+                                          <Icon name="heroicons:x-mark" size="sm" />
+                                        </IconButton>
+                                      </template>
+                                    </Item>
+                                  </List>
                                 </VStack>
                               </VStack>
 
-                              <VStack :gap="0" class="tf-transfer-panel tf-transfer-panel--divider">
+                              <VStack :gap="0" role="group" aria-labelledby="tf-columns-available" class="tf-transfer-panel tf-transfer-panel--divider">
                                 <HStack
                                   :gap="2"
                                   align="center"
@@ -1973,7 +2061,7 @@ function SearchIcon() {
                                   :padding-block="2"
                                   class="tf-transfer-head tf-transfer-pad-end"
                                 >
-                                  <Text type="label" color="secondary">
+                                  <Text id="tf-columns-available" type="label" color="secondary">
                                     Available columns
                                   </Text>
                                   <Button
@@ -1991,6 +2079,7 @@ function SearchIcon() {
                                     :gap="0"
                                     align="center"
                                     h-align="center"
+                                    min-height="100%"
                                     :padding-block="4"
                                     class="tf-transfer-empty tf-transfer-pad-end"
                                   >
@@ -1998,26 +2087,31 @@ function SearchIcon() {
                                       All columns are displayed.
                                     </Text>
                                   </VStack>
-                                  <div
-                                    v-for="key in availableColumns"
-                                    :key="key"
-                                    class="tf-transfer-row tf-transfer-pad-end"
-                                  >
-                                    <StackItem size="fill">
-                                      <Text type="body">
-                                        {{ COLUMN_LABELS[key] }}
-                                      </Text>
-                                    </StackItem>
-                                    <IconButton
-                                      :label="`Add ${COLUMN_LABELS[key]}`"
-                                      variant="ghost"
-                                      size="sm"
-                                      class="tf-transfer-end-action"
-                                      @click="updateView(v => ({ ...v, columnKeys: [...v.columnKeys, key] }))"
+                                  <List v-else density="compact">
+                                    <template #header>
+                                      <VisuallyHidden>Available columns</VisuallyHidden>
+                                    </template>
+                                    <Item
+                                      v-for="key in availableColumns"
+                                      :key="key"
+                                      as="li"
+                                      density="compact"
+                                      :label="COLUMN_LABELS[key]"
+                                      class="tf-transfer-item tf-transfer-pad-end"
                                     >
-                                      <Icon name="heroicons:plus" size="sm" />
-                                    </IconButton>
-                                  </div>
+                                      <template #endContent>
+                                        <IconButton
+                                          :label="`Add ${COLUMN_LABELS[key]}`"
+                                          variant="ghost"
+                                          size="sm"
+                                          class="tf-transfer-end-action"
+                                          @click="updateView(v => ({ ...v, columnKeys: [...v.columnKeys, key] }))"
+                                        >
+                                          <Icon name="heroicons:plus" size="sm" />
+                                        </IconButton>
+                                      </template>
+                                    </Item>
+                                  </List>
                                 </VStack>
                               </VStack>
                             </HStack>
@@ -2108,7 +2202,7 @@ function SearchIcon() {
       </LayoutHeader>
     </template>
 
-    <LayoutContent :padding="4" label="Service jobs">
+    <LayoutContent role="main" :padding="4" label="Service jobs">
       <EmptyState
         v-if="results.length === 0"
         title="No jobs match these filters"
@@ -2418,17 +2512,18 @@ function SearchIcon() {
   overflow-x: auto;
 }
 
-/* 视图选项弹层：左侧栏 + 右侧面板。 */
+/* 视图选项弹层：左侧栏 + 右侧面板。高度固定，四个分区不随内容跳动。 */
 .tf-view-popover {
-  min-height: 280px;
+  height: 448px;
 }
 
 .tf-view-rail {
   flex-shrink: 0;
+  width: 184px;
 }
 
 .tf-rail-item {
-  justify-content: start;
+  justify-content: flex-start;
   width: 100%;
 }
 
@@ -2437,16 +2532,23 @@ function SearchIcon() {
 }
 
 .tf-transfer {
+  flex-grow: 1;
   min-height: 0;
+  min-width: 0;
 }
 
 .tf-transfer-panels {
+  flex-grow: 1;
   min-height: 0;
+  min-width: 0;
 }
 
 .tf-transfer-panel {
-  flex: 1 1 0;
+  flex-basis: 0;
+  flex-grow: 1;
+  min-height: 0;
   min-width: 0;
+  overflow: hidden;
 }
 
 .tf-transfer-panel--divider {
@@ -2454,30 +2556,60 @@ function SearchIcon() {
 }
 
 .tf-transfer-head {
-  padding-inline: 16px;
+  border-block-end: var(--astryx-border-width) solid var(--astryx-color-border);
+}
+
+/* 外侧 16px 对齐标题，贴分隔线的一侧只要躲开 1px 线。 */
+.tf-transfer-pad-start {
+  padding-inline-end: var(--astryx-spacing-3);
+  padding-inline-start: var(--astryx-spacing-4);
 }
 
 .tf-transfer-pad-end {
-  padding-inline: 16px;
+  padding-inline-end: var(--astryx-spacing-4);
+  padding-inline-start: var(--astryx-spacing-3);
 }
 
+/* 表头上的批量操作剥成文字链接，不和下面的列表抢视觉。 */
 .tf-transfer-head-action {
   flex-shrink: 0;
+  height: auto;
+  min-height: 0;
+  padding: 0;
+  border-radius: 0;
+  background-image: none;
+  color: var(--astryx-color-text-accent);
+  font-size: var(--astryx-text-body-size);
+  font-weight: var(--astryx-text-body-weight);
+  line-height: var(--astryx-text-body-leading);
+  text-decoration: none;
+}
+
+.tf-transfer-head-action:hover:not(:disabled, [aria-disabled='true']) {
+  background-image: none;
+  text-decoration: underline;
 }
 
 .tf-transfer-body {
-  min-height: 120px;
+  flex-grow: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
 }
 
 .tf-transfer-empty {
-  flex: 1;
+  text-align: center;
 }
 
-.tf-transfer-row {
-  display: flex;
-  gap: var(--astryx-spacing-1);
-  align-items: center;
-  min-height: 32px;
+/* 行的内边距由 pad 类给，悬停底色才能铺满整行；把手和末端按钮再往回收一个按钮内缩，让图标对齐边线。 */
+.tf-transfer-item {
+  min-width: 0;
+  transition: background-color var(--astryx-duration-fast) var(--astryx-ease-standard), opacity var(--astryx-duration-fast) var(--astryx-ease-standard);
+}
+
+.tf-transfer-row--picked {
+  background-color: var(--astryx-color-accent-muted);
 }
 
 .tf-transfer-row--drop {
@@ -2485,12 +2617,14 @@ function SearchIcon() {
 }
 
 .tf-transfer-grip {
+  margin-inline-start: calc(-1 * var(--astryx-spacing-1-5));
   cursor: grab;
   touch-action: none;
 }
 
 .tf-transfer-end-action {
   flex-shrink: 0;
+  margin-inline-end: calc(-1 * var(--astryx-spacing-1-5));
 }
 
 /* 详情面板：分区自带 16px  gutter，分隔线拉满宽。 */

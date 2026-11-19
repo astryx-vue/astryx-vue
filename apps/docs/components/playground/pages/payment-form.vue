@@ -27,6 +27,8 @@ import {
   TextInput,
   Thumbnail,
   useMediaQuery,
+  useImperativeAlertDialog,
+  useToast,
   VStack,
 } from '@astryx-vue/core'
 import { computed, ref } from 'vue'
@@ -221,33 +223,58 @@ const submitted = ref(false)
 const shippingCost = computed(() => deliveryMethod.value === 'expedited' ? 9.95 : 4.95)
 const orderTotal = computed(() => SUBTOTAL + shippingCost.value + TAX)
 
-const errors = computed(() => submitted.value
-  ? {
-      firstName: !firstName.value.trim() ? 'Required' : undefined,
-      lastName: !lastName.value.trim() ? 'Required' : undefined,
-      address: !address.value.trim() ? 'Required' : undefined,
-      city: !city.value.trim() ? 'Required' : undefined,
-      zip: !zip.value.trim() ? 'Required' : undefined,
-      state: !state.value ? 'Required' : undefined,
-      email: !email.value.trim() ? 'Required' : undefined,
-      phone: !phone.value.trim() ? 'Required' : undefined,
-      expiry: !expiry.value ? 'Required' : undefined,
-      expYear: !expYear.value ? 'Required' : undefined,
-      cvc: !cvc.value.trim() ? 'Required' : undefined,
-      cardNumber: paymentMethod.value === 'card' && !cardNumber.value.trim() ? 'Required' : undefined,
-      cardName: paymentMethod.value === 'card' && !cardName.value.trim() ? 'Required' : undefined,
-      billingAddress: !billingMatchesShipping.value && !billingAddress.value.trim() ? 'Required' : undefined,
-      billingCity: !billingMatchesShipping.value && !billingCity.value.trim() ? 'Required' : undefined,
-      billingZip: !billingMatchesShipping.value && !billingZip.value.trim() ? 'Required' : undefined,
-      billingState: !billingMatchesShipping.value && !billingState.value ? 'Required' : undefined,
-    }
-  : {})
+const showToast = useToast()
+const confirm = useImperativeAlertDialog()
+const ConfirmHost = confirm.Host
+
+// 每次渲染都算出缺什么；只有点过 Place Order 之后才显示
+const problems = computed(() => ({
+  firstName: !firstName.value.trim() ? 'Required' : undefined,
+  lastName: !lastName.value.trim() ? 'Required' : undefined,
+  address: !address.value.trim() ? 'Required' : undefined,
+  city: !city.value.trim() ? 'Required' : undefined,
+  zip: !zip.value.trim() ? 'Required' : undefined,
+  state: !state.value ? 'Required' : undefined,
+  email: !email.value.trim() ? 'Required' : undefined,
+  phone: !phone.value.trim() ? 'Required' : undefined,
+  expiry: !expiry.value ? 'Required' : undefined,
+  expYear: !expYear.value ? 'Required' : undefined,
+  cvc: !cvc.value.trim() ? 'Required' : undefined,
+  cardNumber: paymentMethod.value === 'card' && !cardNumber.value.trim() ? 'Required' : undefined,
+  cardName: paymentMethod.value === 'card' && !cardName.value.trim() ? 'Required' : undefined,
+  billingAddress: !billingMatchesShipping.value && !billingAddress.value.trim() ? 'Required' : undefined,
+  billingCity: !billingMatchesShipping.value && !billingCity.value.trim() ? 'Required' : undefined,
+  billingZip: !billingMatchesShipping.value && !billingZip.value.trim() ? 'Required' : undefined,
+  billingState: !billingMatchesShipping.value && !billingState.value ? 'Required' : undefined,
+}))
+const errors = computed<Partial<typeof problems.value>>(() => submitted.value ? problems.value : {})
+
+function placeOrder() {
+  submitted.value = true
+  if (Object.values(problems.value).some(Boolean))
+    return
+  // 仅演示：真实页面在这里调用下单接口
+  showToast({ body: 'Demo: your order would be placed here', uniqueID: 'place-order' })
+}
+
+function confirmRemove(name: string) {
+  confirm.show({
+    title: `Remove ${name} from your cart?`,
+    description: 'This demo won\'t change your cart.',
+    actionLabel: 'Remove',
+    onAction: () => {
+      confirm.hide()
+      // 仅演示：真实页面在这里调用移除接口
+      showToast({ body: `Demo: ${name} would be removed from your cart here`, uniqueID: 'remove-item' })
+    },
+  })
+}
 </script>
 
 <template>
   <Layout height="fill">
     <template #default>
-      <LayoutContent :padding="0">
+      <LayoutContent role="main" :padding="0">
         <Center axis="horizontal">
           <Section variant="transparent" :max-width="1100" width="100%" :padding="6">
             <VStack :gap="5">
@@ -270,7 +297,7 @@ const errors = computed(() => submitted.value
                         <Text type="large" weight="bold">
                           Sign in to check out
                         </Text>
-                        <Button label="Sign In" variant="secondary" size="sm" />
+                        <Button label="Sign In" variant="secondary" size="sm" @click="showToast({ body: 'Demo: sign-in would start here', uniqueID: 'sign-in' })" />
                       </HStack>
                       <Text type="supporting" color="secondary">
                         Sign in to track your order and save your information for faster checkout.
@@ -297,7 +324,7 @@ const errors = computed(() => submitted.value
                         <TextInput v-model="zip" size="lg" label="ZIP Code" placeholder="10001" :status="errors.zip ? { type: 'error', message: errors.zip } : undefined" />
                       </Grid>
                       <Selector v-model="state" size="lg" label="State" placeholder="Select state" :options="US_STATES" :status="errors.state ? { type: 'error', message: errors.state } : undefined" />
-                      <TextInput v-model="phone" size="lg" label="Phone Number" placeholder="+1 (555) 123-4567" label-tooltip="We use your phone number to provide shipping updates and contact you about your order if needed." :status="errors.phone ? { type: 'error', message: errors.phone } : undefined" />
+                      <TextInput v-model="phone" size="lg" label="Phone Number" placeholder="+1 (555) 123-4567" label-tooltip="We use your phone number to provide shipping updates and contact you about your delivery if needed." :status="errors.phone ? { type: 'error', message: errors.phone } : undefined" />
                       <CheckboxInput v-model="saveInfo" label="Save my information for a faster checkout" />
                     </VStack>
                     <VStack :gap="3">
@@ -336,10 +363,10 @@ const errors = computed(() => submitted.value
                         </Text>
                       </VStack>
                       <Grid :columns="2" :gap="3">
-                        <Button label="PayPal" variant="primary" size="lg" :style="{ backgroundColor: '#FFC439', borderColor: '#FFC439' }">
+                        <Button label="PayPal" variant="primary" size="lg" :style="{ backgroundColor: '#FFC439', borderColor: '#FFC439' }" @click="showToast({ body: 'Demo: PayPal checkout would start here', uniqueID: 'paypal' })">
                           <img src="https://www.paypalobjects.com/webstatic/mktg/Logo/pp-logo-100px.png" alt="PayPal" :style="brandLogo">
                         </Button>
-                        <Button label="Google Pay" variant="primary" size="lg" :style="{ backgroundColor: 'white', borderColor: 'white' }">
+                        <Button label="Google Pay" variant="primary" size="lg" :style="{ backgroundColor: 'white', borderColor: 'white' }" @click="showToast({ body: 'Demo: Google Pay checkout would start here', uniqueID: 'google-pay' })">
                           <img src="https://pay.google.com/about/static_kcs/images/logos/google-pay-logo.svg" alt="Google Pay" :style="brandLogo">
                         </Button>
                       </Grid>
@@ -382,7 +409,7 @@ const errors = computed(() => submitted.value
                         <StackItem size="fill">
                           <TextInput v-model="promo" size="lg" label="Promo code" is-label-hidden placeholder="Enter promo code" :style="fullWidth" />
                         </StackItem>
-                        <Button label="Apply" variant="secondary" size="lg" />
+                        <Button label="Apply" variant="secondary" size="lg" @click="showToast({ body: 'Demo: the promo code would be applied here', uniqueID: 'apply-promo' })" />
                       </HStack>
                     </VStack>
                     <VStack :gap="3">
@@ -420,12 +447,12 @@ const errors = computed(() => submitted.value
                         </HStack>
                       </HStack>
                       <VStack :gap="2">
-                        <Button label="Place Order" variant="primary" size="lg" :style="fullWidth" @click="submitted = true" />
-                        <Button label="Continue Shopping" variant="secondary" size="lg" :style="fullWidth" />
+                        <Button label="Place Order" variant="primary" size="lg" :style="fullWidth" @click="placeOrder" />
+                        <Button label="Continue Shopping" variant="secondary" size="lg" :style="fullWidth" @click="showToast({ body: 'Demo: the store would open here', uniqueID: 'continue-shopping' })" />
                       </VStack>
                       <Divider />
                       <HStack :gap="4" align="center" wrap="wrap">
-                        <Link v-for="policy in POLICIES" :key="policy" href="#" size="sm">
+                        <Link v-for="policy in POLICIES" :key="policy" href="#" type="supporting">
                           {{ policy }}
                         </Link>
                       </HStack>
@@ -459,10 +486,10 @@ const errors = computed(() => submitted.value
                                   <span class="quantity-field">
                                     <NumberInput v-model="quantities[item.id]" label="Qty" is-label-hidden :min="1" :max="10" is-integer-only />
                                   </span>
-                                  <Link size="sm" href="#" @click.prevent="quantities[item.id] = 0">
+                                  <Link type="supporting" @click="confirmRemove(item.name)">
                                     Remove
                                   </Link>
-                                  <Link size="sm" href="#">
+                                  <Link type="supporting" @click="showToast({ body: 'Demo: this item would be saved for later here', uniqueID: 'save-for-later' })">
                                     Save
                                   </Link>
                                 </HStack>
@@ -471,6 +498,7 @@ const errors = computed(() => submitted.value
                           </HStack>
                           <Divider />
                         </VStack>
+                        <ConfirmHost />
                         <VStack :gap="3">
                           <Text type="large" weight="bold">
                             Order Total

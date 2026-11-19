@@ -24,6 +24,7 @@ import {
   Table,
   Text,
   Timestamp,
+  useToast,
   VStack,
   proportional,
 } from '@astryx-vue/core'
@@ -33,6 +34,8 @@ import {
   PlaygroundLineChart,
   PlaygroundResponsive,
 } from '@astryx-vue/playground-charts'
+
+const showToast = useToast()
 
 type Rag = 'onTrack' | 'atRisk' | 'blocked'
 type Phase = 'all' | 'build' | 'beta' | 'ga'
@@ -218,16 +221,17 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
               </Badge>
             </HStack>
           </VStack>
-          <HStack :gap="2">
+          <HStack :gap="2" wrap="wrap">
             <SegmentedControl v-model="phase" label="Release phase">
               <SegmentedControlItem label="All" value="all" />
               <SegmentedControlItem label="Build" value="build" />
               <SegmentedControlItem label="Beta" value="beta" />
               <SegmentedControlItem label="GA" value="ga" />
             </SegmentedControl>
-            <Button label="Export status" variant="secondary">
+            <!-- 演示：换成真正执行导出的调用 -->
+            <Button label="Export status" variant="secondary" @click="showToast({ body: 'Demo: the program status would export here', uniqueID: 'export-status' })">
               <template #icon>
-                <Icon icon="i-heroicons-arrow-down-tray" size="sm" />
+                <Icon name="heroicons:arrow-down-tray" size="sm" />
               </template>
             </Button>
           </HStack>
@@ -235,7 +239,7 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
       </LayoutHeader>
     </template>
     <template #default>
-      <LayoutContent :padding="0" class="content-bottom-pad">
+      <LayoutContent role="main" :padding="0" class="content-bottom-pad">
         <Section :padding="6" :dividers="['bottom']">
           <VStack :gap="6" class="content-column">
             <HStack :gap="3" h-align="between" align="center">
@@ -263,7 +267,7 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
                 />
                 <HStack :gap="4" align="center" wrap="wrap">
                   <HStack v-for="status in RAG_ORDER" :key="status" :gap="2" align="center">
-                    <span class="legend-swatch" :style="{ backgroundColor: RAG_FILL[status] }" aria-hidden="true" />
+                    <Icon name="stop" size="xsm" color="inherit" :style="{ color: RAG_FILL[status] }" />
                     <Text type="supporting" color="secondary">
                       {{ RAG_LABEL[status] }}
                     </Text>
@@ -290,7 +294,7 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
                     <PlaygroundDonutChart :segments="donutSegments" :gap-angle="2.3" />
                     <VStack :gap="2">
                       <HStack v-for="s in TASK_STATUS" :key="s.key" :gap="2" align="center">
-                        <span class="legend-swatch" :style="{ backgroundColor: s.color }" aria-hidden="true" />
+                        <Icon name="stop" size="xsm" color="inherit" :style="{ color: s.color }" />
                         <Text type="supporting" color="secondary">
                           {{ s.label }}
                         </Text>
@@ -326,12 +330,11 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
                       :x-tick-format="(v: number) => BURNDOWN[v]?.label ?? ''"
                       :pad="{ top: 16, right: 4, bottom: 34, left: 44 }"
                       center-ticks
-                      monotone
                     />
                   </PlaygroundResponsive>
                   <HStack :gap="4" align="center" wrap="wrap">
                     <HStack v-for="item in [{ label: 'Actual remaining', color: ACTUAL_COLOR }, { label: 'Ideal burndown', color: IDEAL_COLOR }]" :key="item.label" :gap="2" align="center">
-                      <span class="legend-swatch" :style="{ backgroundColor: item.color }" aria-hidden="true" />
+                      <Icon name="stop" size="xsm" color="inherit" :style="{ color: item.color }" />
                       <Text type="supporting" color="secondary">
                         {{ item.label }}
                       </Text>
@@ -376,14 +379,18 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
                   <EmptyState
                     v-else
                     title="No open blockers or risks"
-                    description="Nothing flagged for the selected phase."
+                    description="Nothing flagged for the selected phase. Keep it up."
                     is-compact
-                  />
+                  >
+                    <template #icon>
+                      <Icon name="heroicons:check-circle" size="lg" color="success" />
+                    </template>
+                  </EmptyState>
                 </VStack>
               </Card>
             </Grid>
             <Card :padding="6">
-              <VStack :gap="4">
+              <VStack :padding-block-end="4">
                 <HStack :gap="3" h-align="between" align="center" wrap="wrap">
                   <Heading :level="3" :accessibility-level="2">
                     Workstreams
@@ -392,17 +399,17 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
                     {{ workstreams.length }} of {{ WORKSTREAMS.length }}
                   </Text>
                 </HStack>
-                <Table
-                  v-if="workstreams.length"
-                  :data="workstreams"
-                  :columns="WORKSTREAM_COLUMNS"
-                  id-key="id"
-                  density="balanced"
-                  dividers="rows"
-                  has-hover
-                />
-                <EmptyState v-else title="No workstreams in this phase" description="Switch phases to see other workstreams." is-compact />
               </VStack>
+              <Table
+                v-if="workstreams.length"
+                :data="workstreams"
+                :columns="WORKSTREAM_COLUMNS"
+                id-key="id"
+                density="balanced"
+                dividers="rows"
+                has-hover
+              />
+              <EmptyState v-else title="No workstreams in this phase" description="Switch phases to see other workstreams." is-compact />
             </Card>
           </VStack>
         </Section>
@@ -412,12 +419,6 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
 </template>
 
 <style scoped>
-.legend-swatch {
-  flex-shrink: 0;
-  width: 8px;
-  height: 8px;
-  border-radius: 2px;
-}
 
 .content-column {
   width: 100%;

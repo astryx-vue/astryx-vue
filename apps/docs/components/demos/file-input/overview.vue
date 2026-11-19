@@ -6,5 +6,7 @@ const value = shallowRef<File | File[] | null>(null)
 </script>
 
 <template>
-  <FileInput v-model="value" label="Upload file" placeholder="Drag files here or click to browse" />
+  <div style="width: 350px">
+    <FileInput v-model="value" label="Upload file" placeholder="Drag files here or click to browse" />
+  </div>
 </template>

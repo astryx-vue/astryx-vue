@@ -1,6 +1,8 @@
 import { defineDemo } from '../../demo-infra/defineDemo'
 import autoLinkDemo from './autolink.vue'
 import autoLinkSource from './autolink.vue?raw&highlighted'
+import overviewDemo from './overview.vue'
+import overviewSource from './overview.vue?raw&highlighted'
 import viewDemo from './view.vue'
 import viewSource from './view.vue?raw&highlighted'
 import toolbarDemo from './with-toolbar.vue'
@@ -11,3 +13,4 @@ const className = 'richtext-demo'
 export const richtextToolbar = defineDemo(toolbarDemo, toolbarSource, { className })
 export const richtextAutoLink = defineDemo(autoLinkDemo, autoLinkSource, { className })
 export const richtextView = defineDemo(viewDemo, viewSource, { className })
+export const richtextOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-hug' })

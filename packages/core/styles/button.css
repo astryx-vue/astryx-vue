@@ -69,9 +69,9 @@
     background-image: none;
     box-shadow: none;
     font-family: inherit;
-    font-size: 14px;
+    font-size: var(--astryx-text-label-size, 14px);
     font-weight: var(--astryx-font-weight-medium, 500);
-    line-height: 1.4286;
+    line-height: var(--astryx-text-label-leading, 1.4286);
     text-decoration: none;
     vertical-align: middle;
     white-space: nowrap;
@@ -87,16 +87,29 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  /* 同上游 sizeStyles：高度跟尺寸 token，文字变大时按行高撑开；纯图标按钮高度固定 */
   .astryx-button[data-size='sm'] {
-    height: 28px;
+    height: max(var(--astryx-size-element-sm, 28px), 1lh);
   }
 
   .astryx-button[data-size='md'] {
-    height: 32px;
+    height: max(var(--astryx-size-element-md, 32px), 1lh);
   }
 
   .astryx-button[data-size='lg'] {
-    height: 36px;
+    height: max(var(--astryx-size-element-lg, 36px), 1lh);
+  }
+
+  .astryx-button[data-icon-only='true'][data-size='sm'] {
+    height: var(--astryx-size-element-sm, 28px);
+  }
+
+  .astryx-button[data-icon-only='true'][data-size='md'] {
+    height: var(--astryx-size-element-md, 32px);
+  }
+
+  .astryx-button[data-icon-only='true'][data-size='lg'] {
+    height: var(--astryx-size-element-lg, 36px);
   }
 
   .astryx-button[data-variant='primary'] {
@@ -134,8 +147,8 @@
     --_button-border-style: var(--astryx-button-destructive-border-style, var(--astryx-button-border-style, solid));
     --_button-border-color: var(--astryx-button-destructive-border-color, var(--astryx-button-border-color, transparent));
 
-    color: var(--astryx-button-destructive-foreground, #a50c25);
-    background-color: var(--astryx-button-destructive-background, #facecb);
+    color: var(--astryx-button-destructive-foreground, var(--astryx-color-on-error, light-dark(#ffffff, #0a1317)));
+    background-color: var(--astryx-button-destructive-background, var(--astryx-color-error, light-dark(#e3193b, #f5394f)));
   }
 
   @media (hover: hover) {
@@ -173,7 +186,7 @@
   }
 
   .astryx-button[data-variant='destructive']:focus-visible {
-    outline-color: var(--astryx-button-destructive-foreground, #a50c25);
+    outline-color: var(--astryx-color-error, light-dark(#e3193b, #f5394f));
   }
 
   .astryx-button:disabled,
@@ -222,20 +235,21 @@
   }
 
   /* The end slot has no fixed box of its own. A named icon still matches the leading slot. */
-  .astryx-button__end > .astryx-icon {
+  .astryx-button__end > .astryx-icon:not([data-size]) {
     width: 16px;
     height: 16px;
     font-size: 16px;
   }
 
-  .astryx-button[data-size='lg'] .astryx-button__end > .astryx-icon {
+  .astryx-button[data-size='lg'] .astryx-button__end > .astryx-icon:not([data-size]) {
     width: 20px;
     height: 20px;
     font-size: 20px;
   }
 
-  .astryx-button__icon > *,
-  .astryx-button__end > * {
+  /* 带显式 size 的 Icon 保持自己的盒子（可比 16px 槽位大，居中溢出），和原版一致。 */
+  .astryx-button__icon > *:not([data-size]),
+  .astryx-button__end > *:not([data-size]) {
     display: block;
     width: 100%;
     height: 100%;

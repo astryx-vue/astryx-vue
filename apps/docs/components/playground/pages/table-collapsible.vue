@@ -350,7 +350,7 @@ function toggleAll(): void {
       </LayoutHeader>
     </template>
 
-    <LayoutContent :padding="4">
+    <LayoutContent role="main" :padding="4">
       <VStack :gap="4">
         <Card :padding="2">
           <Collapsible v-model:is-open="bankOpen">

@@ -18,7 +18,7 @@ export function usePaneResize(
   editorPane: Ref<HTMLElement | null>,
   body: Ref<HTMLElement | null>,
 ): PaneResize {
-  const editorSize = ref('432px')
+  const editorSize = ref('440px')
 
   function onDividerDown(event: PointerEvent): void {
     if (event.button !== 0)

@@ -4,19 +4,24 @@ import type { SegmentedControlEmits, SegmentedControlProps, SegmentedControlSlot
 import { computed, onBeforeUnmount, onMounted, onScopeDispose, onUpdated, provide, shallowRef, useAttrs, useId, useTemplateRef } from 'vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { invokeNativeEventHandler } from '../Button/eventHandlers.js'
+import { useSize } from '../SizeContext/SizeContext.js'
 import { segmentedControlContextKey } from './context.js'
 import '../../styles/segmented-control.css'
 
 defineOptions({ name: 'AstryxSegmentedControl', inheritAttrs: false })
 
 const props = withDefaults(defineProps<Omit<SegmentedControlProps, 'modelValue'>>(), {
-  size: 'md',
   layout: 'hug',
   isDisabled: false,
 })
 
 const emit = defineEmits<SegmentedControlEmits>()
+
 defineSlots<SegmentedControlSlots>()
+
+// 显式 size > 外层 SizeContext（Toolbar、InputGroup 等）> 'md'。
+const size = useSize(() => props.size, 'md')
+
 const model = defineModel<string>({ required: true })
 
 const attrs = useAttrs()
@@ -42,7 +47,7 @@ function select(value: string): void {
 
 provide(segmentedControlContextKey, {
   value: computed(() => model.value),
-  size: computed(() => props.size),
+  size,
   layout: computed(() => props.layout),
   isDisabled: computed(() => props.isDisabled),
   hasDisabledMessage: showsDisabledMessage,

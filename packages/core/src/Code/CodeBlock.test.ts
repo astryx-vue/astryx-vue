@@ -151,7 +151,7 @@ describe('codeBlock', () => {
     expect(root.attributes('data-container')).toBe('section')
 
     await wrapper.setProps({ width: 'fit-content' })
-    expect(root.attributes('style')).toContain('min-width: min(100%, 400px);')
+    expect(root.attributes('style')).toContain('min-width: min(100%, var(--astryx-code-block-min-width, 400px));')
     expect(root.attributes('style')).toContain('max-width: 100%;')
   })
 

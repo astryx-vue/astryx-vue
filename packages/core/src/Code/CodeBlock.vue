@@ -241,7 +241,7 @@ const rootStyle = computed<StyleValue>(() => {
   const style: CSSProperties = { width: props.width }
 
   if (props.width === 'fit-content') {
-    style.minWidth = 'min(100%, 400px)'
+    style.minWidth = 'min(100%, var(--astryx-code-block-min-width, 400px))'
     style.maxWidth = '100%'
   }
 

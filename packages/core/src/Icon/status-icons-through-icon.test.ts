@@ -12,13 +12,14 @@ describe('status icons go through Icon', () => {
     const wrapper = mount(Banner, { props: { status: 'warning', title: 'T' } })
     const icon = wrapper.get('.astryx-banner-icon .astryx-icon')
     expect(icon.attributes('data-size')).toBe('md')
-    expect(icon.attributes('data-color')).toBe('warning')
+    // 上游的状态图标颜色是 inherit：跟着状态条的 on-muted 前景走。
+    expect(icon.attributes('data-color')).not.toBe('warning')
     expect(icon.get('.astryx-icon__glyph').classes()).toContain('astryx-icon--warning')
   })
 
-  it('banner uses accent colour for info', () => {
+  it('banner icon inherits the status foreground for info', () => {
     const wrapper = mount(Banner, { props: { status: 'info', title: 'T' } })
-    expect(wrapper.get('.astryx-banner-icon .astryx-icon').attributes('data-color')).toBe('accent')
+    expect(wrapper.get('.astryx-banner-icon .astryx-icon').attributes('data-color')).not.toBe('accent')
   })
 
   it('banner draws the registered lucide drawing when the table is there', () => {

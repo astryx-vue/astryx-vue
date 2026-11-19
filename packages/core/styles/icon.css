@@ -11,12 +11,17 @@
     height: 1em;
     line-height: 1;
     color: currentcolor;
-    /*
-     * A 1em box with vertical-align: middle sits on the descender, so the
-     * drawing looks low next to the letters. -0.125em is the Iconify offset
-     * that puts the box on the text baseline.
-     */
-    vertical-align: -0.125em;
+  }
+
+  /*
+   * Upstream renders a component or SVG icon as a bare <svg>, which its reset
+   * makes block-level. Only the built-in registry glyphs get the inline-flex
+   * span. Our box stands in for that svg, so it is block-level too: a block
+   * wrapper around it (EmptyState's icon) is exactly the icon's height, with
+   * no line box and descender gap around it.
+   */
+  .astryx-icon[data-kind='graphic'] {
+    display: flex;
   }
 
   /*

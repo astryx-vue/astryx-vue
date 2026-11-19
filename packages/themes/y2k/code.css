@@ -9,32 +9,32 @@
 
     /* CodeBlock card: white surface and a hairline border, matching the
        original block. Inline code keeps the muted chip above. */
-    --astryx-code-block-background: light-dark(#FFF6ED, #190f00);
+    --astryx-code-block-background: light-dark(#fff6ed, #0e0f1a);
     --astryx-code-block-border: var(--astryx-color-border);
     --astryx-code-block-focus: var(--astryx-color-accent);
-    --astryx-code-block-highlight-background: color-mix(in srgb, var(--astryx-color-accent) 20%, transparent);
+    --astryx-code-block-highlight-background: var(--astryx-color-accent-muted);
 
     /* Syntax colors from the original CodeBlock theme: keyword and type share
        the same purple, strings stay green. */
-    --astryx-code-syntax-keyword: light-dark(#615a7a, #aea6ca);
-    --astryx-code-syntax-string: light-dark(#586242, #a5af8b);
-    --astryx-code-syntax-comment: light-dark(#5e5e5e, #ababab);
-    --astryx-code-syntax-number: light-dark(#775843, #c8a48c);
-    --astryx-code-syntax-function: light-dark(#39637d, #87b0cd);
-    --astryx-code-syntax-type: light-dark(#615a7a, #aea6ca);
-    --astryx-code-syntax-variable: light-dark(#5e5e5e, #ababab);
-    --astryx-code-syntax-operator: light-dark(#5e5e5e, #ababab);
-    --astryx-code-syntax-constant: light-dark(#775843, #c8a48c);
-    --astryx-code-syntax-tag: light-dark(#7f5351, #d19f9d);
-    --astryx-code-syntax-attribute: light-dark(#6c5c3e, #bca987);
-    --astryx-code-syntax-property: light-dark(#3c6755, #87b5a1);
-    --astryx-code-syntax-punctuation: light-dark(#5e5e5e, #ababab);
+    --astryx-code-syntax-keyword: light-dark(#663ebd, #bbaaff);
+    --astryx-code-syntax-string: light-dark(#495b00, #95b041);
+    --astryx-code-syntax-comment: light-dark(#5a5146, #a6acd6);
+    --astryx-code-syntax-number: light-dark(#803e00, #ffb477);
+    --astryx-code-syntax-function: light-dark(#005788, #70c1ff);
+    --astryx-code-syntax-type: light-dark(#663ebd, #bbaaff);
+    --astryx-code-syntax-variable: light-dark(#5a5146, #a6acd6);
+    --astryx-code-syntax-operator: light-dark(#5a5146, #a6acd6);
+    --astryx-code-syntax-constant: light-dark(#803e00, #ffb477);
+    --astryx-code-syntax-tag: light-dark(#9d002a, #ff969a);
+    --astryx-code-syntax-attribute: light-dark(#664f00, #d0a601);
+    --astryx-code-syntax-property: light-dark(#006246, #5bc29a);
+    --astryx-code-syntax-punctuation: light-dark(#5a5146, #a6acd6);
 
     /* 差异行是带透明度的淡绿、淡红，压住亮度让行内语法保持 4.5:1 以上。 */
     --astryx-code-syntax-added: light-dark(#c5e17a40, #c5e17a33);
-    --astryx-code-syntax-removed: light-dark(#ffc5c340, #ffc5c333);
-    --astryx-code-syntax-diff-header: var(--astryx-color-background-muted);
-    --astryx-code-syntax-added-marker: light-dark(#3a5500, #a5af8b);
-    --astryx-code-syntax-removed-marker: light-dark(#8b1d24, #d19f9d);
+    --astryx-code-syntax-removed: light-dark(#ffc3c340, #ffc3c333);
+    --astryx-code-syntax-diff-header: transparent;
+    --astryx-code-syntax-added-marker: light-dark(#3f4e00, #95b041);
+    --astryx-code-syntax-removed-marker: light-dark(#880023, #ff969a);
   }
 }

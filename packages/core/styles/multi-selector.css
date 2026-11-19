@@ -39,15 +39,15 @@
     gap: var(--astryx-spacing-2, 8px);
     width: 100%;
     min-width: 0;
-    min-height: var(--astryx-input-height-md, 32px);
-    padding: var(--astryx-input-padding-block, var(--astryx-spacing-1, 4px)) var(--astryx-input-padding-inline, var(--astryx-spacing-2, 8px));
+    height: var(--astryx-input-height-md, 32px);
+    padding: var(--astryx-spacing-2, 8px) var(--astryx-spacing-3, 12px);
     border: var(--astryx-border-width, 1px) solid var(--astryx-input-status-color, var(--astryx-input-border, #d4d4d4));
     border-radius: var(--astryx-radius-element, 0.625rem);
     background: var(--astryx-input-background, #fff);
     color: var(--astryx-color-text-primary, light-dark(#171717, #fafafa));
     font-family: var(--astryx-font-family-body, Figtree, sans-serif);
-    font-size: var(--astryx-text-body-size, 0.875rem);
-    line-height: var(--astryx-text-body-leading, 1.4286);
+    font-size: var(--astryx-text-label-size, 0.875rem);
+    line-height: var(--astryx-text-label-leading, 1.4286);
     transition:
       border-color var(--astryx-duration-fast-max, 165ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1)),
       box-shadow var(--astryx-duration-fast-max, 165ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1)),
@@ -55,11 +55,11 @@
   }
 
   .astryx-multi-selector.size-sm .astryx-multi-selector-control {
-    min-height: var(--astryx-input-height-sm, 28px);
+    height: var(--astryx-input-height-sm, 28px);
   }
 
   .astryx-multi-selector.size-lg .astryx-multi-selector-control {
-    min-height: var(--astryx-input-height-lg, 36px);
+    height: var(--astryx-input-height-lg, 36px);
   }
 
   .astryx-multi-selector-control.is-ghost {

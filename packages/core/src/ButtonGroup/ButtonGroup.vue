@@ -6,6 +6,7 @@ import { computed, provide, useAttrs } from 'vue'
 import { buttonGroupContextKey } from '../Button/context.js'
 import { invokeNativeEventHandler } from '../Button/eventHandlers.js'
 import { useListFocus } from '../composables/useListFocus.js'
+import { provideSize, useSize } from '../SizeContext/SizeContext.js'
 import '../../styles/button-group.css'
 
 defineOptions({
@@ -17,7 +18,6 @@ const props = withDefaults(defineProps<ButtonGroupProps>(), {
   elevation: 'none',
   isDisabled: false,
   orientation: 'horizontal',
-  size: 'md',
 })
 
 defineSlots<ButtonGroupSlots>()
@@ -32,7 +32,8 @@ const { listRef: element, handleKeyDown, handleFocus } = useListFocus({
   hasRovingTabIndex: true,
 })
 const isDisabled = computed(() => props.isDisabled)
-const size = computed(() => props.size)
+const size = useSize(() => props.size, 'md')
+provideSize(size)
 
 provide(buttonGroupContextKey, {
   isDisabled,

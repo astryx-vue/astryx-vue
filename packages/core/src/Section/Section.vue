@@ -2,7 +2,7 @@
 import type { CSSProperties, StyleValue } from 'vue'
 import type { SectionProps, SectionSlots } from './types.js'
 import { computed, useAttrs, useTemplateRef } from 'vue'
-import { formatSize, spacingEdgeVars } from '../Layout/size.js'
+import { sizingStyle, spacingEdgeVars } from '../Layout/size.js'
 import '../../styles/section.css'
 
 defineOptions({
@@ -29,12 +29,7 @@ const rootClass = computed(() => ['astryx-section', attrs.class])
 
 const rootStyle = computed<StyleValue>(() => [
   attrs.style as StyleValue,
-  {
-    width: formatSize(props.width),
-    height: formatSize(props.height),
-    maxWidth: formatSize(props.maxWidth),
-    minHeight: formatSize(props.minHeight),
-  } satisfies CSSProperties,
+  sizingStyle(props),
 ])
 
 const innerStyle = computed<CSSProperties>(() => spacingEdgeVars('--_section', props))

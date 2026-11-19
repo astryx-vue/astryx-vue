@@ -146,6 +146,9 @@
       "@astryx-vue/core/Indicator": [
         "../../packages/core/src/Indicator/index.ts"
       ],
+      "@astryx-vue/core/InfoTip": [
+        "../../packages/core/src/InfoTip/index.ts"
+      ],
       "@astryx-vue/core/InputGroup": [
         "../../packages/core/src/InputGroup/index.ts"
       ],
@@ -259,6 +262,9 @@
       ],
       "@astryx-vue/core/SideNav": [
         "../../packages/core/src/SideNav/index.ts"
+      ],
+      "@astryx-vue/core/SizeContext": [
+        "../../packages/core/src/SizeContext/index.ts"
       ],
       "@astryx-vue/core/Skeleton": [
         "../../packages/core/src/Skeleton/index.ts"

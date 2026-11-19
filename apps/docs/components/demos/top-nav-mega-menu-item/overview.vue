@@ -1,32 +1,49 @@
 <script setup lang="ts">
+import { Grid } from '@astryx-vue/core/Grid'
 import { TopNavMegaMenuItem } from '@astryx-vue/core/TopNav'
+
+const items = [
+  {
+    title: 'Edge Functions',
+    description: 'Run serverless code at the network edge',
+    href: '#edge',
+    path: 'm3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z',
+  },
+  {
+    title: 'Storage',
+    description: 'Object and file storage for your application',
+    href: '#storage',
+    path: 'm21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9',
+  },
+  {
+    title: 'CDN',
+    description: 'Global content delivery with instant purging',
+    href: '#cdn',
+    path: 'M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5a17.92 17.92 0 0 1-8.716-2.247m0 0A8.966 8.966 0 0 1 3 12c0-1.264.26-2.466.732-3.558',
+  },
+  {
+    title: 'Build Tools',
+    description: 'Optimized bundling and compilation pipeline',
+    href: '#build',
+    path: 'M11.42 15.17 17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 1 1-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 0 0 4.486-6.336l-3.276 3.277a3.004 3.004 0 0 1-2.25-2.25l3.276-3.276a4.5 4.5 0 0 0-6.336 4.486c.049.58.025 1.192-.14 1.743',
+  },
+]
 </script>
 
 <template>
-  <div class="top-nav-mega-menu-item-preview__grid">
+  <Grid :columns="2" :gap="2">
     <TopNavMegaMenuItem
-      description="Run serverless code at the network edge"
-      href="#edge"
-      icon-class="i-carbon-flash"
-      title="Edge Functions"
-    />
-    <TopNavMegaMenuItem
-      description="Object and file storage for your application"
-      href="#storage"
-      icon-class="i-carbon-data-base"
-      title="Storage"
-    />
-    <TopNavMegaMenuItem
-      description="Global content delivery with instant purging"
-      href="#cdn"
-      icon-class="i-carbon-cloud"
-      title="CDN"
-    />
-    <TopNavMegaMenuItem
-      description="Optimized bundling and compilation pipeline"
-      href="#build-tools"
-      icon-class="i-carbon-tools"
-      title="Build Tools"
-    />
-  </div>
+      v-for="item in items"
+      :key="item.href"
+      :title="item.title"
+      :description="item.description"
+      :href="item.href"
+    >
+      <template #icon>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" :d="item.path" />
+        </svg>
+      </template>
+    </TopNavMegaMenuItem>
+  </Grid>
 </template>

@@ -9,6 +9,7 @@ import {
   HStack,
   Icon,
   IconButton,
+  InfoTip,
   Layout,
   LayoutContent,
   LayoutHeader,
@@ -18,10 +19,12 @@ import {
   StatusDot,
   Text,
   Toolbar,
-  Tooltip,
+  useToast,
   VStack,
 } from '@astryx-vue/core'
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
+
+const showToast = useToast()
 
 type ColumnId = 'todo' | 'in-progress' | 'in-review' | 'done'
 type Priority = 'high' | 'medium' | 'low'
@@ -71,7 +74,7 @@ const COLUMNS: ColumnMeta[] = [
     tooltip: 'Items assigned to this sprint, waiting to be picked up.',
     emptyTitle: 'To-do is empty',
     emptyDescription: 'Items pulled into this sprint appear here.',
-    emptyIcon: 'i-heroicons-inbox',
+    emptyIcon: 'heroicons:inbox',
   },
   {
     id: 'in-progress',
@@ -80,7 +83,7 @@ const COLUMNS: ColumnMeta[] = [
     tooltip: 'Items currently in progress.',
     emptyTitle: 'Nothing in progress',
     emptyDescription: 'Items being worked on appear here.',
-    emptyIcon: 'i-heroicons-arrow-path',
+    emptyIcon: 'heroicons:arrow-path',
   },
   {
     id: 'in-review',
@@ -89,7 +92,7 @@ const COLUMNS: ColumnMeta[] = [
     tooltip: 'Items waiting for your review.',
     emptyTitle: 'Nothing in review',
     emptyDescription: 'Items awaiting your review appear here.',
-    emptyIcon: 'i-heroicons-clipboard-document-check',
+    emptyIcon: 'heroicons:clipboard-document-check',
   },
   {
     id: 'done',
@@ -98,7 +101,7 @@ const COLUMNS: ColumnMeta[] = [
     tooltip: 'Items that have been handled.',
     emptyTitle: 'Nothing done yet',
     emptyDescription: 'Completed items appear here.',
-    emptyIcon: 'i-heroicons-check-circle',
+    emptyIcon: 'heroicons:check-circle',
   },
 ]
 
@@ -271,8 +274,9 @@ function menuItemsFor(item: WorkItem) {
       onClick: () => moveItem(item.id, c.id),
     }))
   return [
-    { label: 'Open', onClick: () => {} },
-    { label: 'Assign to me', onClick: () => {} },
+    // 演示：换成真正执行操作的调用
+    { label: 'Open', onClick: () => showToast({ body: `Demo: ${item.ref} would open here`, uniqueID: `open-${item.ref}` }) },
+    { label: 'Assign to me', onClick: () => showToast({ body: `Demo: ${item.ref} would be assigned to you here`, uniqueID: `assign-${item.id}` }) },
     { type: 'divider' as const },
     ...moveTargets,
   ]
@@ -364,13 +368,13 @@ onBeforeUnmount(() => {
         <LayoutHeader has-divider :padding="4">
           <Toolbar label="Board actions" :gap="2">
             <template #start>
-              <Heading :level="3">
+              <Heading :level="3" :accessibility-level="1">
                 Sprint Board
               </Heading>
               <Badge :label="String(items.length)" variant="neutral" />
             </template>
             <template #end>
-              <HStack :gap="2">
+              <HStack :gap="2" wrap="wrap">
                 <Selector
                   v-model="sprint"
                   label="Sprint"
@@ -384,19 +388,20 @@ onBeforeUnmount(() => {
                 />
                 <Divider variant="strong" orientation="vertical" class="toolbar-divider" />
                 <HStack :gap="1" align="center">
-                  <IconButton label="Sort">
-                    <Icon icon="i-heroicons-arrows-up-down" size="sm" />
+                  <!-- 演示：换成真正执行操作的调用 -->
+                  <IconButton label="Sort" @click="showToast({ body: 'Demo: sort options would open here', uniqueID: 'sort' })">
+                    <Icon name="heroicons:arrows-up-down" size="sm" />
                   </IconButton>
-                  <IconButton label="Filter">
-                    <Icon icon="i-heroicons-funnel" size="sm" />
+                  <IconButton label="Filter" @click="showToast({ body: 'Demo: filters would open here', uniqueID: 'filter' })">
+                    <Icon name="heroicons:funnel" size="sm" />
                   </IconButton>
-                  <IconButton label="Search">
-                    <Icon icon="i-heroicons-magnifying-glass" size="sm" />
+                  <IconButton label="Search" @click="showToast({ body: 'Demo: search across the board would open here', uniqueID: 'search' })">
+                    <Icon name="heroicons:magnifying-glass" size="sm" />
                   </IconButton>
                 </HStack>
-                <Button label="Add task" variant="primary">
+                <Button label="Add task" variant="primary" @click="showToast({ body: 'Demo: a new task form would open here', uniqueID: 'add-task' })">
                   <template #icon>
-                    <Icon icon="i-heroicons-plus" size="sm" />
+                    <Icon name="heroicons:plus" size="sm" />
                   </template>
                 </Button>
               </HStack>
@@ -405,7 +410,7 @@ onBeforeUnmount(() => {
         </LayoutHeader>
       </template>
 
-      <LayoutContent :padding="0">
+      <LayoutContent role="main" :padding="0">
         <HStack class="board-columns" :gap="4">
           <Card
             v-for="meta in COLUMNS"
@@ -420,12 +425,10 @@ onBeforeUnmount(() => {
                   <HStack justify="between" align="center">
                     <HStack :gap="2" align="center">
                       <StatusDot :variant="meta.variant" :label="`${meta.title} status`" />
-                      <Heading :level="4">
+                      <Heading :level="4" :accessibility-level="2">
                         {{ meta.title }}
                       </Heading>
-                      <Tooltip :content="meta.tooltip">
-                        <Icon icon="i-heroicons-information-circle" size="sm" color="secondary" />
-                      </Tooltip>
+                      <InfoTip :content="meta.tooltip" :label="`About ${meta.title}`" />
                     </HStack>
                     <Text type="supporting" color="secondary" has-tabular-numbers>
                       {{ itemsByColumn[meta.id].length }}
@@ -445,7 +448,7 @@ onBeforeUnmount(() => {
                     :description="meta.emptyDescription"
                   >
                     <template #icon>
-                      <Icon :icon="meta.emptyIcon" size="lg" color="secondary" />
+                      <Icon :name="meta.emptyIcon" size="lg" color="secondary" />
                     </template>
                   </EmptyState>
                 </template>
@@ -474,7 +477,7 @@ onBeforeUnmount(() => {
                           <MoreMenu label="Work item actions" size="sm" :items="menuItemsFor(item)" />
                         </HStack>
                         <VStack :gap="1">
-                          <Heading :level="4">
+                          <Heading :level="4" :accessibility-level="3">
                             {{ item.title }}
                           </Heading>
                           <Text type="supporting" color="secondary" :max-lines="2">

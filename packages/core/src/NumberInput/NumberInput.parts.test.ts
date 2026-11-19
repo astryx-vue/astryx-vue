@@ -57,15 +57,19 @@ describe('numberInput 样式分层', () => {
     expect(onFocus).toHaveBeenCalled()
   })
 
-  it('没有标签外壳时 container* 不生效并警告', () => {
+  it('标签藏起来也渲染 Field，container* 和 width 照样生效', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
     const wrapper = mount(NumberInput, {
-      props: { modelValue: 1, isLabelHidden: true, containerClass: 'box-a', controlClass: 'ctl-a' },
+      props: { modelValue: 1, label: 'Quantity', isLabelHidden: true, width: 72, containerClass: 'box-a', controlClass: 'ctl-a' },
     })
-    expect(wrapper.find('.astryx-field').exists()).toBe(false)
-    expect(wrapper.find('.box-a').exists()).toBe(false)
+    const field = wrapper.get('.astryx-field')
+    expect(field.classes()).toContain('box-a')
+    expect(field.attributes('style')).toContain('--astryx-field-width: 72px')
+    const label = wrapper.get('label')
+    expect(label.text()).toBe('Quantity')
+    expect(label.attributes('for')).toBe(wrapper.get('input[type="text"]').attributes('id'))
     expect(wrapper.get('.astryx-number-input').classes()).toContain('ctl-a')
-    expect(warn.mock.calls.some(call => String(call[0]).includes('no Field box renders'))).toBe(true)
+    expect(warn).not.toHaveBeenCalled()
   })
 
   it('在 InputGroup 里 container* 不生效并警告', () => {

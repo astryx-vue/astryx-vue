@@ -20,4 +20,4 @@ export const kbdBasic = defineDemo(basicDemo, basicSource, options)
 export const kbdModifiers = defineDemo(modifiersDemo, modifiersSource, options)
 export const kbdKeyNames = defineDemo(keyNamesDemo, keyNamesSource, options)
 
-export const kbdOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const kbdOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-hug' })

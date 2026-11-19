@@ -16,6 +16,7 @@ import {
   FormLayout,
   Heading,
   HStack,
+  Icon,
   Layout,
   LayoutContent,
   LayoutFooter,
@@ -42,8 +43,10 @@ import {
   TextArea,
   TextInput,
   useMediaQuery,
+  useToast,
   VStack,
 } from '@astryx-vue/core'
+import type { CSSProperties } from 'vue'
 import { computed, ref } from 'vue'
 
 // ── 数据 ──────────────────────────────────────────────────────────────────────
@@ -114,6 +117,22 @@ const FIELD_HELP: Record<string, string[]> = {
     'Matched against reader searches exactly as typed.',
     'Leave series and volume out — they have their own fields.',
   ],
+  subtitle: [
+    'Optional, and set in smaller type beneath the title.',
+    'Good for a hook, poor for a second title.',
+  ],
+  edition: [
+    'Only needed if an earlier edition is already in the store.',
+    'Editions are listed together rather than competing.',
+  ],
+  series: [
+    'Books sharing a name are grouped and recommended in order.',
+    'The name has to match earlier books exactly.',
+  ],
+  seriesNumber: [
+    'Sets the reading order within the series.',
+    'Readers of an earlier book are offered the next number.',
+  ],
   blurb: [
     'Readers see the first two lines before a "more" link.',
     'The hook has to land early.',
@@ -182,6 +201,15 @@ const AGREEMENTS = [
 ]
 
 const COVER_SRC = '/template-assets/illustrative-vertical-1.png'
+
+const COVER_WIDTH = 140
+const COVER_HEIGHT = COVER_WIDTH * 1.5 // 下方 2:3 竖版封面
+const CONTROL_ROW = 28 // 一行 size="sm" 按钮
+const COLUMN_GAP = 12 // 列内 gap=3
+// 缩略图旁边的拖放列：flexBasis 0 让它能比自身内容更窄，不把整行撑出表单宽度
+const coverColumn: CSSProperties = { flexBasis: 0 }
+// 拖放区填满按钮行以外的高度，让这一列与封面底边对齐
+const dropzoneFill: CSSProperties = { height: `${COVER_HEIGHT - CONTROL_ROW - COLUMN_GAP}px` }
 
 const CHAPTERS = [
   { title: 'Prologue — The Last Train', duration: '11:04' },
@@ -304,10 +332,25 @@ function markAttempted(index: number) {
   attempted.value = new Set(attempted.value).add(index)
 }
 
+const showToast = useToast()
+
 function goNext() {
   markAttempted(step.value)
-  if (Object.keys(errorsByStep.value[step.value]).length === 0 && !isLastStep.value)
-    step.value += 1
+  if (Object.keys(errorsByStep.value[step.value]).length > 0)
+    return
+  if (isLastStep.value) {
+    // 跳着走过来的话，前面的步骤可能还有问题：先把人带到第一处，不直接完成
+    const firstBroken = errorsByStep.value.findIndex(errors => Object.keys(errors).length > 0)
+    if (firstBroken !== -1) {
+      markAttempted(firstBroken)
+      step.value = firstBroken
+      return
+    }
+    // 仅演示：真实页面在这里调用实际的提交操作
+    showToast({ body: 'Demo: your audiobook would be submitted for review here', uniqueID: 'submit-review' })
+    return
+  }
+  step.value += 1
 }
 
 function goTo(index: number) {
@@ -335,8 +378,8 @@ function setCover(file: unknown) {
                 Publish audiobook
               </Text>
             </StackItem>
-            <Button label="Cancel" variant="ghost" />
-            <Button label="Save & exit" variant="secondary" />
+            <Button label="Cancel" variant="ghost" @click="showToast({ body: 'Demo: leaving the audiobook flow would return you to the app here', uniqueID: 'cancel-audiobook' })" />
+            <Button label="Save & exit" variant="secondary" @click="showToast({ body: 'Demo: the draft would be saved here', uniqueID: 'save-exit' })" />
           </HStack>
           <Stepper
             v-if="!hasRail"
@@ -351,8 +394,12 @@ function setCover(file: unknown) {
               :step="i"
               :label="s.label"
               :status="Object.keys(shownErrors(i)).length ? 'error' : undefined"
-              :indicator="Object.keys(shownErrors(i)).length ? 'none' : 'number'"
-            />
+              indicator="number"
+            >
+              <template v-if="Object.keys(shownErrors(i)).length" #icon>
+                <Icon name="heroicons:exclamation-triangle" size="sm" />
+              </template>
+            </Step>
           </Stepper>
         </VStack>
       </LayoutHeader>
@@ -374,7 +421,11 @@ function setCover(file: unknown) {
             :description="s.description"
             :status="Object.keys(shownErrors(i)).length ? 'error' : undefined"
             indicator="number"
-          />
+          >
+            <template v-if="Object.keys(shownErrors(i)).length" #icon>
+              <Icon name="heroicons:exclamation-triangle" size="sm" />
+            </template>
+          </Step>
         </Stepper>
       </LayoutPanel>
     </template>
@@ -398,7 +449,7 @@ function setCover(file: unknown) {
       </LayoutPanel>
     </template>
 
-    <LayoutContent>
+    <LayoutContent role="main">
       <Center axis="horizontal">
         <VStack :gap="6" width="100%" :max-width="MEASURE">
           <VStack :gap="1">
@@ -465,17 +516,18 @@ function setCover(file: unknown) {
               :status="currentErrors.cover ? { type: 'error', message: currentErrors.cover } : undefined"
             >
               <HStack :gap="4" align="start" wrap="wrap">
-                <Card v-if="hasCover" :width="140" :padding="0">
+                <Card v-if="hasCover" :width="COVER_WIDTH" :padding="0">
                   <AspectRatio :ratio="2 / 3" fit="cover">
                     <img :src="COVER_SRC" :alt="`Current cover art for ${title.trim() || 'this book'}`">
                   </AspectRatio>
                 </Card>
-                <StackItem size="fill">
+                <StackItem size="fill" :style="coverColumn">
                   <VStack :gap="3">
                     <FileInput
                       :model-value="coverFile"
                       label="Cover image"
                       is-label-hidden
+                      :control-style="hasCover ? dropzoneFill : undefined"
                       mode="dropzone"
                       accept="image/png,image/jpeg"
                       :max-size="5 * 1024 * 1024"
@@ -483,8 +535,8 @@ function setCover(file: unknown) {
                       @update:model-value="setCover($event)"
                     />
                     <HStack :gap="2" wrap="wrap">
-                      <Button label="Crop image" variant="secondary" size="sm" :is-disabled="!hasCover" />
-                      <Button label="Preview on device" variant="ghost" size="sm" :is-disabled="!hasCover" />
+                      <Button label="Crop image" variant="secondary" size="sm" :is-disabled="!hasCover" @click="showToast({ body: 'Demo: the cover crop would open here', uniqueID: 'crop-cover' })" />
+                      <Button label="Preview on device" variant="ghost" size="sm" :is-disabled="!hasCover" @click="showToast({ body: 'Demo: the device preview would open here', uniqueID: 'preview-device' })" />
                       <Button
                         v-if="hasCover"
                         label="Remove cover"
@@ -502,9 +554,10 @@ function setCover(file: unknown) {
               v-model="subtitle"
               label="Subtitle"
               description="A short line that complements the title."
+              @focusin="helpKey = 'subtitle'"
             />
             <FormLayout :direction="isNarrow ? 'vertical' : 'horizontal'" default-optionality="optional">
-              <TextInput v-model="edition" label="Edition" placeholder="Second edition" />
+              <TextInput v-model="edition" label="Edition" placeholder="Second edition" @focusin="helpKey = 'edition'" />
               <Selector
                 v-model="language"
                 label="Language"
@@ -517,6 +570,7 @@ function setCover(file: unknown) {
                 v-model="series"
                 label="Series"
                 description="We create the series if it does not exist yet."
+                @focusin="helpKey = 'series'"
               />
               <NumberInput
                 v-model="seriesNumber"
@@ -528,6 +582,7 @@ function setCover(file: unknown) {
                 description="Where this book falls in the reading order."
                 disabled-message="Name a series first."
                 :status="currentErrors.seriesNumber ? { type: 'error', message: currentErrors.seriesNumber } : undefined"
+                @focusin="helpKey = 'seriesNumber'"
               />
             </FormLayout>
             <TextArea

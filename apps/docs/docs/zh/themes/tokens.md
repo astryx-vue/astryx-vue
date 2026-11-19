@@ -33,10 +33,10 @@ astryx-vue 的 token 严格对齐原版 Astryx（原版在 `tokens.stylex.ts` �
 
 | 类别文档 | 变量前缀与说明 |
 | --- | --- |
-| [颜色](/themes/color) | `--astryx-color-*`：包含文字、表面背景、状态提示色，以及图表用的 `--astryx-color-data-*` |
-| [排版与字体](/themes/typography) | `--astryx-font-*`、`--astryx-text-*`：包含字体族、字号尺寸、字重和行高梯级 |
-| [动画刻度](/themes/motion) | `--astryx-duration-*`、`--astryx-ease-*`：包含持续时间、缓动曲线与共享关键帧 |
-| [间距、圆角与阴影](/themes/scale) | `--astryx-spacing-*`、`--astryx-size-*`、`--astryx-radius-*`、`--astryx-shadow-*` 等通用尺寸标尺 |
+| [颜色](/guide/color) | `--astryx-color-*`：包含文字、表面背景、状态提示色，以及图表用的 `--astryx-color-data-*` |
+| [排版与字体](/guide/typography) | `--astryx-font-*`、`--astryx-text-*`：包含字体族、字号尺寸、字重和行高梯级 |
+| [动画刻度](/guide/motion) | `--astryx-duration-*`、`--astryx-ease-*`：包含持续时间、缓动曲线与共享关键帧 |
+| [间距、圆角与阴影](/guide/scale) | `--astryx-spacing-*`、`--astryx-size-*`、`--astryx-radius-*`、`--astryx-shadow-*` 等通用尺寸标尺 |
 
 ## 在组件外部使用
 
@@ -55,4 +55,4 @@ astryx-vue 的 token 严格对齐原版 Astryx（原版在 `tokens.stylex.ts` �
 }
 ```
 
-更多关于 CSS 分层和覆盖层级的规则，请阅读 [CSS 变量](/themes/css-variables)。
+更多关于 CSS 分层和覆盖层级的规则，请阅读 [CSS 变量](/guide/css-variables)。

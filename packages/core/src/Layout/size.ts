@@ -40,6 +40,28 @@ export function formatSize(value: SizeValue | null | undefined): string | undefi
   return typeof value === 'number' ? `${value}px` : value
 }
 
+export interface SizingProps {
+  width?: SizeValue | null
+  height?: SizeValue | null
+  maxWidth?: SizeValue | null
+  minHeight?: SizeValue | null
+}
+
+/**
+ * 布局组件的尺寸属性转成内联样式，只放传了值的项。
+ * Vue 合并 style 数组时按键覆盖，写成 undefined 会把使用方 `style` 里同名的
+ * width / maxWidth 抹掉；原版同样只展开有值的项。
+ */
+export function sizingStyle(props: SizingProps): Partial<Record<keyof SizingProps, string>> {
+  const style: Partial<Record<keyof SizingProps, string>> = {}
+  for (const key of ['width', 'height', 'maxWidth', 'minHeight'] as const) {
+    const value = formatSize(props[key])
+    if (value !== undefined)
+      style[key] = value
+  }
+  return style
+}
+
 export function spacingVariable(step: SpacingStep | null | undefined): string | undefined {
   return step == null ? undefined : SPACING_VARIABLES[step]
 }

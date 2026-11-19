@@ -104,4 +104,4 @@ UnoCSS 默认把工具类输出成不分层的普通规则。未分层的规则�
 
 这套样式不要求 UnoCSS。文档站用 UnoCSS 只为了给示例里的 `i-carbon-*` 类提供图标，那是图标方案，不是组件样式的依赖。见 [图标](/guide/icons)。
 
-更深入的变量命名规则、`light-dark()` 机制与主题支持范围，可继续阅读 [CSS 变量](/themes/css-variables) 和 [Neutral 主题](/themes/neutral)。
+更深入的变量命名规则、`light-dark()` 机制与主题支持范围，可继续阅读 [CSS 变量](/guide/css-variables) 和 [Neutral 主题](/guide/themes/neutral)。

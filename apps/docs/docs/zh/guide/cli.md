@@ -8,9 +8,23 @@ title: 命令行
 
 建议在项目中作为开发依赖安装：
 
-```sh
+::: code-group
+```sh [pnpm]
 pnpm add -D @astryx-vue/cli
 ```
+
+```sh [npm]
+npm install -D @astryx-vue/cli
+```
+
+```sh [yarn]
+yarn add -D @astryx-vue/cli
+```
+
+```sh [bun]
+bun add -d @astryx-vue/cli
+```
+:::
 
 包里声明了 `bin`，装完命令就在 `node_modules/.bin` 里，直接就能用：
 

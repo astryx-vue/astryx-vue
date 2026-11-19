@@ -15,4 +15,4 @@ import '@astryx-vue/themes/stone.css'
 <div data-astryx-theme="stone">
 ```
 
-<ThemeStage theme="stone" />
+See it in the [theme gallery](/en/themes/?theme=stone).

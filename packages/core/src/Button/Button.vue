@@ -8,6 +8,7 @@ import Icon from '../Icon/Icon.vue'
 import { readLayerScoped } from '../layer/scopedProvide.js'
 import { isSafeUrl } from '../Link/safeUrl.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
+import { useSize } from '../SizeContext/SizeContext.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import ButtonSpinner from './ButtonSpinner.vue'
 import ButtonTooltip from './ButtonTooltip.vue'
@@ -44,7 +45,8 @@ const renderedRoot = useTemplateRef<ComponentPublicInstance | HTMLElement>('root
 const tooltipId = `astryx-button-tooltip-${useId()}`
 
 const press = usePressFeedback({ hasOverlay: false })
-const effectiveSize = computed(() => props.size ?? group?.size.value ?? 'md')
+// 显式 size > 按钮组 > 外层 SizeContext（Toolbar 等）> 'md'。
+const effectiveSize = useSize(() => props.size ?? group?.size.value)
 /** 小、中按钮里的图标是 16px，大按钮是 20px。插槽里没写尺寸的图标跟着走。 */
 provideIconSize(computed(() => effectiveSize.value === 'lg' ? 'md' : 'sm'))
 const isGroupDisabled = computed(() => group?.isDisabled.value ?? false)
@@ -217,6 +219,7 @@ defineExpose({
     :aria-label="ariaLabel"
     :class="rootClass"
     :data-astryx-edge-comp="variant === 'ghost' ? '' : undefined"
+    :data-astryx-has-layer="hasTooltip || undefined"
     :data-delay-spinner="isLoadingState && delaySpinner || undefined"
     :data-elevation="group == null ? elevation : 'none'"
     :data-icon-only="isIconOnly || undefined"

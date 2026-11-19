@@ -13,4 +13,4 @@ const options = { className: 'section-preview' }
 export const sectionWash = defineDemo(washDemo, washSource, options)
 export const sectionDividers = defineDemo(dividersDemo, dividersSource, options)
 export const sectionVariants = defineDemo(variantsDemo, variantsSource, options)
-export const sectionOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const sectionOverview = defineDemo(overviewDemo, overviewSource)

@@ -82,7 +82,7 @@ function toggleReason(reason: string) {
 </script>
 
 <template>
-  <Center min-height="100%">
+  <Center role="main" min-height="100%">
     <Section :max-width="1100" width="100%" :padding="10" variant="transparent">
       <VStack :gap="10">
         <Grid :columns="{ minWidth: 320 }" align="center" :gap="10">
@@ -183,7 +183,7 @@ function toggleReason(reason: string) {
 
         <VStack :gap="6">
           <Divider />
-          <Grid :columns="{ minWidth: 200 }" :gap="6">
+          <Grid :columns="{ minWidth: 200, repeat: 'fit' }" :gap="6">
             <VStack v-for="col in CONTACT_COLUMNS" :key="col.label" :gap="1" h-align="center">
               <Text type="supporting" color="secondary">
                 {{ col.label }}

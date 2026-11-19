@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Component } from 'vue'
 import type { TreeListItemData } from '@astryx-vue/core'
-import { defineComponent, h, onBeforeUnmount, onMounted, ref } from 'vue'
+import { defineComponent, h, ref } from 'vue'
 import {
   AppShell,
   Button,
@@ -23,6 +23,8 @@ import {
   TextInput,
   TopNav,
   TreeList,
+  useHotkeys,
+  useToast,
   VStack,
 } from '@astryx-vue/core'
 
@@ -36,51 +38,54 @@ function iconComponent(className: string): Component {
   })
 }
 
+const folderIcon = () => h(Icon, { name: 'heroicons:folder', size: 'xsm' })
+const fileIcon = () => h(Icon, { name: 'heroicons:document-text', size: 'xsm' })
+
 const FILE_TREE: TreeListItemData[] = [
   {
     id: 'src',
     label: 'src',
-    icon: 'i-heroicons-folder',
+    startContent: folderIcon,
     isExpanded: true,
     children: [
       {
         id: 'components',
         label: 'components',
-        icon: 'i-heroicons-folder',
+        startContent: folderIcon,
         isExpanded: true,
         children: [
-          { id: 'AppShell.tsx', label: 'AppShell.tsx', icon: 'i-heroicons-document', isSelected: true },
-          { id: 'TopNav.tsx', label: 'TopNav.tsx', icon: 'i-heroicons-document' },
-          { id: 'SideNav.tsx', label: 'SideNav.tsx', icon: 'i-heroicons-document' },
+          { id: 'AppShell.tsx', label: 'AppShell.tsx', startContent: fileIcon, isSelected: true },
+          { id: 'TopNav.tsx', label: 'TopNav.tsx', startContent: fileIcon },
+          { id: 'SideNav.tsx', label: 'SideNav.tsx', startContent: fileIcon },
         ],
       },
       {
         id: 'hooks',
         label: 'hooks',
-        icon: 'i-heroicons-folder',
+        startContent: folderIcon,
         isExpanded: true,
         children: [
-          { id: 'useTheme.ts', label: 'useTheme.ts', icon: 'i-heroicons-document' },
-          { id: 'useResizable.ts', label: 'useResizable.ts', icon: 'i-heroicons-document' },
+          { id: 'useTheme.ts', label: 'useTheme.ts', startContent: fileIcon },
+          { id: 'useResizable.ts', label: 'useResizable.ts', startContent: fileIcon },
         ],
       },
-      { id: 'index.tsx', label: 'index.tsx', icon: 'i-heroicons-document' },
-      { id: 'App.tsx', label: 'App.tsx', icon: 'i-heroicons-document' },
+      { id: 'index.tsx', label: 'index.tsx', startContent: fileIcon },
+      { id: 'App.tsx', label: 'App.tsx', startContent: fileIcon },
     ],
   },
   {
     id: 'public',
     label: 'public',
-    icon: 'i-heroicons-folder',
+    startContent: folderIcon,
     isExpanded: false,
     children: [
-      { id: 'favicon.ico', label: 'favicon.ico', icon: 'i-heroicons-document' },
-      { id: 'robots.txt', label: 'robots.txt', icon: 'i-heroicons-document' },
+      { id: 'favicon.ico', label: 'favicon.ico', startContent: fileIcon },
+      { id: 'robots.txt', label: 'robots.txt', startContent: fileIcon },
     ],
   },
-  { id: 'package.json', label: 'package.json', icon: 'i-heroicons-document' },
-  { id: 'tsconfig.json', label: 'tsconfig.json', icon: 'i-heroicons-document' },
-  { id: 'README.md', label: 'README.md', icon: 'i-heroicons-document' },
+  { id: 'package.json', label: 'package.json', startContent: fileIcon },
+  { id: 'tsconfig.json', label: 'tsconfig.json', startContent: fileIcon },
+  { id: 'README.md', label: 'README.md', startContent: fileIcon },
 ]
 
 type MenuEntry = [label: string, shortcut: string]
@@ -156,15 +161,16 @@ const COMMANDS = [
 const isPaletteOpen = ref(false)
 const searchSource = createStaticSource(COMMANDS)
 
-function onKeyDown(e: KeyboardEvent) {
-  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
-    e.preventDefault()
-    isPaletteOpen.value = true
-  }
-}
+const showToast = useToast()
 
-onMounted(() => window.addEventListener('keydown', onKeyDown))
-onBeforeUnmount(() => window.removeEventListener('keydown', onKeyDown))
+// 两个平台的组合键都认，和这个页面一直以来的行为一致。
+function openPalette() {
+  isPaletteOpen.value = true
+}
+useHotkeys([
+  { keys: 'meta+k', onPress: openPalette, allowInInputs: true },
+  { keys: 'ctrl+k', onPress: openPalette, allowInInputs: true },
+])
 </script>
 
 <template>
@@ -187,7 +193,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeyDown))
                 :label="label"
                 @click="noop"
               >
-                <template v-if="shortcut" #end>
+                <template v-if="shortcut" #endContent>
                   <Kbd :keys="shortcut" />
                 </template>
               </DropdownMenuItem>
@@ -206,21 +212,21 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeyDown))
               placeholder="Search files and commands…"
             />
           </Stack>
+          <!-- 演示：换成真正执行操作的调用 -->
           <IconButton
             label="Run project"
             tooltip="Run"
             variant="ghost"
+            @click="showToast({ body: 'Demo: the project would run here', uniqueID: 'run' })"
           >
-            <template #icon>
-              <Icon icon="i-heroicons-play" size="sm" />
-            </template>
+            <Icon name="heroicons:play" size="sm" />
           </IconButton>
-          <Button label="Share" variant="secondary" />
+          <Button label="Share" variant="secondary" @click="showToast({ body: 'Demo: sharing would start here', uniqueID: 'share' })" />
         </template>
       </TopNav>
     </template>
     <template #sideNav>
-      <SideNav>
+      <SideNav :resizable="{ defaultWidth: 240, minWidth: 180, maxWidth: 400 }">
         <TreeList :items="FILE_TREE" density="compact" />
       </SideNav>
     </template>

@@ -1,12 +1,17 @@
 <script setup lang="ts">
 import { ChatSendButton } from '@astryx-vue/core/Chat'
-import { HStack } from '@astryx-vue/core/Stack'
+import { Icon } from '@astryx-vue/core/Icon'
+import { Stack } from '@astryx-vue/core/Stack'
 </script>
 
 <template>
-  <HStack align="center" :gap="3">
-    <ChatSendButton is-disabled />
-    <ChatSendButton />
+  <Stack direction="horizontal" :gap="3" align="center">
+    <ChatSendButton :is-disabled="false" />
+    <ChatSendButton :is-disabled="false">
+      <template #sendIcon>
+        <Icon icon="i-heroicons-sparkles-solid" size="sm" />
+      </template>
+    </ChatSendButton>
     <ChatSendButton is-stop-shown />
-  </HStack>
+  </Stack>
 </template>

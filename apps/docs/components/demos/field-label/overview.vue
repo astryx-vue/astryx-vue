@@ -4,7 +4,7 @@ import { VStack } from '@astryx-vue/core/Stack'
 </script>
 
 <template>
-  <VStack :gap="4" style="width: min(100%, 20rem)">
+  <VStack :gap="4">
     <FieldLabel label="Email address" input-id="email-input" is-required />
     <FieldLabel
       label="Phone number"

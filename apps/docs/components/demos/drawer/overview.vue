@@ -1,17 +1,25 @@
 <script setup lang="ts">
 import { Button } from '@astryx-vue/core/Button'
 import { Drawer, DrawerHeader } from '@astryx-vue/core/Drawer'
-import { ref } from 'vue'
+import { Layout, LayoutContent } from '@astryx-vue/core/Layout'
+import { Text } from '@astryx-vue/core/Text'
+import { shallowRef } from 'vue'
 
-const isOpen = ref(false)
+const isOpen = shallowRef(false)
 </script>
 
 <template>
-  <div>
-    <Button label="Open filters" @click="isOpen = true" />
-    <Drawer :is-open="isOpen" label="Filters" @open-change="isOpen = $event">
-      <DrawerHeader title="Filters" subtitle="Narrow the list" @open-change="isOpen = false" />
-      <p>Category, price range and availability would go here.</p>
-    </Drawer>
-  </div>
+  <Button label="Open drawer" @click="isOpen = true" />
+  <Drawer :is-open="isOpen" label="Details" :width="360" @open-change="isOpen = $event">
+    <Layout>
+      <template #header>
+        <DrawerHeader title="Details" has-close-button @open-change="isOpen = $event" />
+      </template>
+      <LayoutContent>
+        <Text type="body">
+          Close with Escape, the scrim, or the close button.
+        </Text>
+      </LayoutContent>
+    </Layout>
+  </Drawer>
 </template>

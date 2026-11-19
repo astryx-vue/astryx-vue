@@ -1,24 +1,21 @@
 <script setup lang="ts">
 import type { ComponentPublicInstance } from 'vue'
-import type { ChatComposerInputHandle, ChatComposerToken, ChatComposerTrigger, ChatToolCallItem } from '@astryx-vue/core'
+import type { ChatComposerToken } from '@astryx-vue/core'
 import {
   Avatar,
   Card,
   ChatComposer,
-  ChatComposerDrawer,
   ChatComposerInput,
   ChatLayout,
   ChatMessage,
   ChatMessageBubble,
   ChatMessageList,
   ChatMessageMetadata,
-  ChatReasoning,
   ChatSystemMessage,
   ChatTokenizedText,
   ChatToolCalls,
   ClickableCard,
   CodeBlock,
-  createStaticSource,
   Dialog,
   DialogHeader,
   DropdownMenu,
@@ -38,12 +35,19 @@ import {
   Token,
   Toolbar,
   useResizable,
-  useStreamingText,
+  useToast,
+  VisuallyHidden,
   VStack,
 } from '@astryx-vue/core'
-import { computed, onBeforeUnmount, reactive, ref, useTemplateRef } from 'vue'
+import { ref, useTemplateRef } from 'vue'
 
+// 窄于此宽度时分栏收成单列。CSS 容器查询和 openArtifact 里的判断共用这一个值。
 const MOBILE_MAX_WIDTH = 767
+
+const MENTION_TOKENS: ChatComposerToken[] = [
+  { value: '@agent', label: '@Agent', variant: 'blue' },
+]
+
 const ARTIFACT_TITLE = 'JWT Token Refresh: Design & Rollout'
 const ARTIFACT_SUBTITLE = 'Document · Updated just now'
 
@@ -75,10 +79,10 @@ The refresh path is covered end to end:
 
 | Scenario | Expected |
 |----------|----------|
-| Valid token passes through | 200 |
-| Expired token, valid refresh | 200 + new access token |
-| Expired token, invalid refresh | 401 |
-| Malformed token | 401 |
+| Valid token passes through | \`200\` |
+| Expired token, valid refresh | \`200\` + new access token |
+| Expired token, invalid refresh | \`401\` |
+| Malformed token | \`401\` |
 
 ## Rollout & Monitoring
 
@@ -120,10 +124,10 @@ const TEST_RESULTS = `Added a test for the refresh flow. All **4 tests** pass:
 
 | Test | Status |
 |------|--------|
-| Valid token passes through | Pass |
-| Expired token triggers refresh | Pass |
-| Expired token with invalid refresh returns 401 | Pass |
-| Malformed token returns 401 immediately | Pass |`
+| Valid token passes through | ✅ |
+| Expired token triggers refresh | ✅ |
+| Expired token with invalid refresh returns 401 | ✅ |
+| Malformed token returns 401 immediately | ✅ |`
 
 const TEST_CODE = `describe('authMiddleware', () => {
   it('refreshes an expired token silently', async () => {
@@ -143,100 +147,34 @@ const TEST_CODE = `describe('authMiddleware', () => {
   });
 });`
 
-const DESIGN_INTRO = `I've drafted a design doc covering the problem, the fix, and the test matrix — pulling straight from the changes we just made.
-
-Open the document below to review it. Want me to expand any section?`
+const DESIGN_INTRO = `I've drafted a design doc covering the problem, the fix, and the test matrix — pulling straight from the changes we just made.\n\nOpen the document below to review it. Want me to expand any section?`
 
 const ROLLOUT_REPLY = `On it — adding a **Rollout & Monitoring** section with a staged flag ramp and the alert thresholds. Updating the document now.`
 
-const SOURCES = {
-  jwt: { title: 'RFC 7519', url: 'https://datatracker.ietf.org/doc/html/rfc7519' },
-}
-
-const MENTION_ITEMS = [
-  { id: 'agent', label: 'Agent', description: 'Assistant' },
-  { id: 'cindy', label: 'Cindy Zhang', description: 'Design Systems' },
-  { id: 'alex', label: 'Alex Johnson', description: 'Frontend' },
-  { id: 'sam', label: 'Sam Rivera', description: 'Backend' },
-]
-
-const MESSAGE_TOKENS: ChatComposerToken[] = [
-  { value: '@agent', label: '@Agent', variant: 'blue' },
-  ...MENTION_ITEMS.filter(item => item.id !== 'agent').map(item => ({
-    value: `@${item.id}`,
-    label: item.label,
-    variant: 'blue' as const,
-  })),
-]
-
-const composerTriggers: ChatComposerTrigger[] = [
-  {
-    character: '@',
-    menuLabel: 'People',
-    searchSource: createStaticSource(MENTION_ITEMS),
-    onSelect: item => ({
-      value: `@${item.id}`,
-      label: item.id === 'agent' ? '@Agent' : item.label,
-      variant: 'blue' as const,
-    }),
-  },
-]
-
-const REASONING = 'The refresh check never runs because validateToken throws first. A silent refresh belongs in that catch, and the token shape is the one in RFC 7519.'
-const LIVE_ANSWER = 'The expiry path now refreshes before it rejects. The sequence and the alert thresholds are in the draft, with the token format from [jwt].\n\nOpen the document when you want the rollout section beside the thread.'
-
-interface LiveUser {
-  kind: 'user'
-  id: number
-  text: string
-  files: string[]
-  at: string
-}
-
-interface LiveAssistant {
-  kind: 'assistant'
-  id: number
-  at: string
-  reasoning: string
-  reasoningStreaming: boolean
-  reasoningDuration?: string
-  tools: ChatToolCallItem[]
-  answer: string
-  answerStreaming: boolean
-  showArtifact: boolean
-  stopped: boolean
-}
-
-type LiveTurn = LiveUser | LiveAssistant
-
 const composerMode = ref<'ask' | 'edit'>('ask')
-const attachments = ref<string[]>([])
+// 手机上文档用全屏对话框，桌面用侧边栏。
 const isArtifactDialogOpen = ref(false)
 const isArtifactOpen = ref(true)
-const isStreaming = ref(false)
-const liveTurns = ref<LiveTurn[]>([])
-const activeAssistantId = ref<number | null>(null)
-const reasoningSource = ref('')
-const reasoningLive = ref(false)
-const answerSource = ref('')
-const answerLive = ref(false)
-const reasoningText = useStreamingText(reasoningSource, reasoningLive)
-const answerText = useStreamingText(answerSource, answerLive)
 const rootRef = useTemplateRef<ComponentPublicInstance>('root')
-const composerInputRef = useTemplateRef<ChatComposerInputHandle>('composerInput')
-const fileInputRef = useTemplateRef<HTMLInputElement>('fileInput')
-
 const artifactResize = useResizable({
   defaultSize: 640,
   minSize: 480,
   maxSize: 960,
   autoSaveId: 'ai-chat-artifact-panel',
 })
+const showToast = useToast()
 
-const placeholder = computed(() => composerMode.value === 'ask' ? 'Ask anything...' : 'Describe your edit...')
+// 演示用：真实项目里换成执行对应操作的调用。
+function demo(body: string, uniqueID: string) {
+  showToast({ body, uniqueID })
+}
 
-let nextId = 1
-let timers: number[] = []
+function copyDocument() {
+  void navigator.clipboard?.writeText(ARTIFACT_CONTENT).then(
+    () => showToast({ body: 'Copied', uniqueID: 'copy' }),
+    () => showToast({ body: 'Could not copy the document', uniqueID: 'copy' }),
+  )
+}
 
 function rootWidth(): number {
   // ref 落在 VStack 组件上，量宽度要拿组件根元素。
@@ -244,6 +182,7 @@ function rootWidth(): number {
   return element instanceof HTMLElement ? element.offsetWidth : Number.POSITIVE_INFINITY
 }
 
+// 用测量根元素宽度对齐容器查询的断点，不看视口。
 function openArtifact() {
   if (rootWidth() <= MOBILE_MAX_WIDTH)
     isArtifactDialogOpen.value = true
@@ -251,179 +190,32 @@ function openArtifact() {
     isArtifactOpen.value = true
 }
 
-function addFiles(files: File[]) {
-  if (files.length === 0)
-    return
-  attachments.value = [...attachments.value, ...files.map(file => file.name)]
-}
-
-function onPickFiles(event: Event) {
-  const input = event.target
-  if (!(input instanceof HTMLInputElement))
-    return
-  addFiles(Array.from(input.files ?? []))
-  input.value = ''
-}
-
-function removeAttachment(name: string) {
-  attachments.value = attachments.value.filter(item => item !== name)
-}
-
-function mention() {
-  const input = composerInputRef.value
-  if (!input)
-    return
-  input.focus()
-  input.insertText('@')
-}
-
-function copyArtifact() {
-  const text = `${ARTIFACT_TITLE}\n\n${ARTIFACT_CONTENT}`
-  void navigator.clipboard?.writeText(text)
-}
-
-function clearTimers() {
-  for (const id of timers)
-    window.clearTimeout(id)
-  timers = []
-}
-
-function displayedReasoning(turn: LiveAssistant): string {
-  if (turn.id === activeAssistantId.value && reasoningLive.value)
-    return reasoningText.value
-  return turn.reasoning
-}
-
-function displayedAnswer(turn: LiveAssistant): string {
-  if (turn.id === activeAssistantId.value && answerLive.value)
-    return answerText.value
-  return turn.answer
-}
-
-function stop() {
-  clearTimers()
-  const turn = liveTurns.value.find(item => item.kind === 'assistant' && item.id === activeAssistantId.value)
-  if (turn && turn.kind === 'assistant') {
-    if (reasoningLive.value)
-      reasoningSource.value = reasoningText.value
-    if (answerLive.value)
-      answerSource.value = answerText.value
-    reasoningLive.value = false
-    answerLive.value = false
-    turn.reasoning = reasoningSource.value
-    turn.answer = answerSource.value
-    turn.reasoningStreaming = false
-    turn.answerStreaming = false
-    turn.stopped = true
-    turn.tools = turn.tools.map(tool => tool.status === 'running' || tool.status === 'pending'
-      ? { ...tool, status: 'error', errorMessage: 'Stopped' }
-      : tool)
-  }
-  reasoningLive.value = false
-  answerLive.value = false
-  isStreaming.value = false
-}
-
-function beginAssistant() {
-  const turn = reactive<LiveAssistant>({
-    kind: 'assistant',
-    id: nextId,
-    at: new Date().toISOString(),
-    reasoning: '',
-    reasoningStreaming: true,
-    tools: [],
-    answer: '',
-    answerStreaming: false,
-    showArtifact: false,
-    stopped: false,
-  })
-  nextId += 1
-  activeAssistantId.value = turn.id
-  liveTurns.value = [...liveTurns.value, turn]
-  isStreaming.value = true
-  reasoningSource.value = REASONING
-  reasoningLive.value = true
-
-  timers.push(window.setTimeout(() => {
-    if (!isStreaming.value)
-      return
-    reasoningLive.value = false
-    turn.reasoning = REASONING
-    turn.reasoningStreaming = false
-    turn.reasoningDuration = '1.2s'
-    turn.tools = [{ name: 'read', target: 'middleware.ts', status: 'running', node: 'cli:remote-server' }]
-  }, 700))
-
-  timers.push(window.setTimeout(() => {
-    if (!isStreaming.value)
-      return
-    turn.tools = [{ name: 'read', target: 'middleware.ts', status: 'complete', duration: '38ms', node: 'cli:remote-server' }]
-    answerSource.value = LIVE_ANSWER
-    answerLive.value = true
-    turn.answerStreaming = true
-  }, 1400))
-
-  timers.push(window.setTimeout(() => {
-    if (!isStreaming.value)
-      return
-    answerLive.value = false
-    turn.answer = LIVE_ANSWER
-    turn.answerStreaming = false
-    turn.showArtifact = true
-    isStreaming.value = false
-  }, 2400))
-}
-
-function onSubmit(value: string) {
-  if (isStreaming.value)
-    return
-  const files = attachments.value
-  attachments.value = []
-  liveTurns.value = [...liveTurns.value, {
-    kind: 'user',
-    id: nextId,
-    text: value,
-    files,
-    at: new Date().toISOString(),
-  }]
-  nextId += 1
-  beginAssistant()
-}
-
-onBeforeUnmount(clearTimers)
+const versionItems = [
+  { label: 'v2 (current)', onClick: () => demo('Demo: version 2 is already shown', 'v2') },
+  { label: 'v1', onClick: () => demo('Demo: version 1 would open here', 'v1') },
+]
 
 const mobileActions = [
   {
     type: 'section' as const,
     title: 'Version',
-    items: [
-      { label: 'v2 (current)' },
-      { label: 'v1' },
-    ],
+    items: versionItems,
   },
   { type: 'divider' as const },
-  { label: 'Copy', icon: 'copy', onClick: copyArtifact },
-  { label: 'Share', icon: 'i-heroicons-share' },
+  { label: 'Copy', icon: 'copy', onClick: copyDocument },
+  { label: 'Share', icon: 'i-heroicons-share', onClick: () => demo('Demo: sharing would start here', 'share') },
 ]
 </script>
 
 <template>
   <VStack ref="root" class="ai-chat-root">
-    <input
-      ref="fileInput"
-      class="file-input"
-      type="file"
-      multiple
-      tabindex="-1"
-      aria-hidden="true"
-      @change="onPickFiles"
-    >
     <Layout height="fill">
-      <LayoutContent :padding="0">
+      <LayoutContent role="main" :padding="0">
+        <VisuallyHidden as="h1">Chat</VisuallyHidden>
         <HStack height="100%">
-          <VStack class="chat-column">
+          <VStack class="chat-column" :class="{ 'ai-chat-column-beside-handle': isArtifactOpen }">
             <ChatLayout density="spacious" class="chat-layout">
-              <ChatMessageList :is-streaming="isStreaming">
+              <ChatMessageList>
                 <ChatSystemMessage variant="divider">
                   Today
                 </ChatSystemMessage>
@@ -434,7 +226,9 @@ const mobileActions = [
                     <Token label="middleware.ts" />
                   </HStack>
                   <ChatMessageBubble>
-                    <ChatTokenizedText text="@agent Can you review these auth files? The JWT refresh logic seems broken — tokens expire but the middleware doesn't catch it." :tokens="MESSAGE_TOKENS" />
+                    <ChatTokenizedText :tokens="MENTION_TOKENS">
+                      @agent Can you review these auth files? The JWT refresh logic seems broken — tokens expire but the middleware doesn't catch it.
+                    </ChatTokenizedText>
                     <template #metadata>
                       <ChatMessageMetadata>
                         <template #timestamp>
@@ -602,109 +396,26 @@ const mobileActions = [
                   </ChatMessageMetadata>
                 </ChatMessage>
 
-                <template v-for="turn in liveTurns" :key="turn.id">
-                  <ChatMessage v-if="turn.kind === 'user'" sender="user">
-                    <HStack v-if="turn.files.length" :gap="1" wrap="wrap">
-                      <Token v-for="name in turn.files" :key="name" :label="name" />
-                    </HStack>
-                    <ChatMessageBubble>
-                      <ChatTokenizedText :text="turn.text" :tokens="MESSAGE_TOKENS" />
-                      <template #metadata>
-                        <ChatMessageMetadata status="delivered">
-                          <template #timestamp>
-                            <Timestamp :value="turn.at" format="time" />
-                          </template>
-                        </ChatMessageMetadata>
-                      </template>
-                    </ChatMessageBubble>
-                  </ChatMessage>
-                  <ChatMessage v-else sender="assistant">
-                    <template #avatar>
-                      <Avatar name="Agent" size="md" />
-                    </template>
-                    <ChatReasoning
-                      v-if="turn.reasoningStreaming || displayedReasoning(turn)"
-                      :is-streaming="turn.reasoningStreaming"
-                      :duration="turn.reasoningDuration"
-                      :default-is-expanded="true"
-                    >
-                      {{ displayedReasoning(turn) }}
-                    </ChatReasoning>
-                    <ChatToolCalls v-if="turn.tools.length" :calls="turn.tools" />
-                    <ChatMessageBubble v-if="displayedAnswer(turn) || turn.stopped" variant="ghost">
-                      <Markdown
-                        v-if="displayedAnswer(turn)"
-                        density="compact"
-                        :content="displayedAnswer(turn)"
-                        :is-streaming="turn.answerStreaming"
-                        :sources="SOURCES"
-                      />
-                      <Text v-else-if="turn.stopped" type="body" color="secondary">
-                        Stopped before a reply was ready.
-                      </Text>
-                    </ChatMessageBubble>
-                    <ChatMessageBubble v-if="turn.showArtifact" variant="ghost" width="100%">
-                      <ClickableCard :label="`Open ${ARTIFACT_TITLE}`" variant="muted" :padding="3" :max-width="360" @click="openArtifact">
-                        <HStack :gap="3" align="center" width="100%">
-                          <Icon name="heroicons:document-text" size="md" color="secondary" />
-                          <StackItem size="fill">
-                            <VStack :gap="0">
-                              <Text type="label" weight="semibold">
-                                {{ ARTIFACT_TITLE }}
-                              </Text>
-                              <Text type="supporting" color="secondary">
-                                Document
-                              </Text>
-                            </VStack>
-                          </StackItem>
-                          <Icon name="heroicons:chevron-right" size="sm" color="secondary" />
-                        </HStack>
-                      </ClickableCard>
-                    </ChatMessageBubble>
-                    <ChatMessageMetadata>
-                      <template #timestamp>
-                        <Timestamp :value="turn.at" format="time" />
-                      </template>
-                    </ChatMessageMetadata>
-                  </ChatMessage>
-                </template>
               </ChatMessageList>
               <template #composer>
                 <ChatComposer
-                  :is-disabled="isStreaming"
-                  :is-stop-shown="isStreaming"
-                  :placeholder="placeholder"
-                  @submit="onSubmit"
-                  @stop="stop"
+                  :placeholder="composerMode === 'ask' ? 'Ask anything...' : 'Describe your edit...'"
+                  @submit="demo('Demo: your message would send here', 'send')"
                 >
                   <template #input>
-                    <ChatComposerInput
-                      ref="composerInput"
-                      :triggers="composerTriggers"
-                      @files="addFiles"
-                    />
-                  </template>
-                  <template v-if="attachments.length" #drawer>
-                    <ChatComposerDrawer :count="attachments.length" label="Attachments">
-                      <Token
-                        v-for="name in attachments"
-                        :key="name"
-                        :label="name"
-                        @remove="removeAttachment(name)"
-                      />
-                    </ChatComposerDrawer>
+                    <ChatComposerInput />
                   </template>
                   <template #headerActions>
-                    <IconButton label="Mention" variant="ghost" size="sm" :is-disabled="isStreaming" @click="mention">
+                    <IconButton label="Mention" variant="ghost" size="sm" @click="demo('Demo: a list of people to mention would open here', 'mention')">
                       <Icon name="heroicons:at-symbol" />
                     </IconButton>
-                    <IconButton label="Attach" variant="ghost" size="sm" :is-disabled="isStreaming" @click="fileInputRef?.click()">
+                    <IconButton label="Attach" variant="ghost" size="sm" @click="demo('Demo: a file picker would open here', 'attach')">
                       <Icon name="heroicons:paper-clip" />
                     </IconButton>
                   </template>
                   <template #footerActions>
                     <DropdownMenu
-                      :button="{ label: composerMode === 'ask' ? 'Ask' : 'Edit', variant: 'ghost', size: 'sm', isDisabled: isStreaming }"
+                      :button="{ label: composerMode === 'ask' ? 'Ask' : 'Edit', variant: 'ghost', size: 'sm' }"
                       :items="[
                         { label: 'Ask', onClick: () => { composerMode = 'ask' } },
                         { label: 'Edit', onClick: () => { composerMode = 'edit' } },
@@ -749,12 +460,12 @@ const mobileActions = [
                 <template #end>
                   <DropdownMenu
                     :button="{ label: 'v2', variant: 'ghost', size: 'sm' }"
-                    :items="[{ label: 'v2 (current)' }, { label: 'v1' }]"
+                    :items="versionItems"
                   />
-                  <IconButton label="Copy" variant="ghost" size="sm" @click="copyArtifact">
+                  <IconButton label="Copy" variant="ghost" size="sm" @click="copyDocument">
                     <Icon name="heroicons:clipboard-document" />
                   </IconButton>
-                  <IconButton label="Share" variant="ghost" size="sm">
+                  <IconButton label="Share" variant="ghost" size="sm" @click="demo('Demo: sharing would start here', 'share')">
                     <Icon name="heroicons:share" />
                   </IconButton>
                   <IconButton label="Close document" variant="ghost" size="sm" @click="isArtifactOpen = false">
@@ -764,7 +475,7 @@ const mobileActions = [
               </Toolbar>
               <Section variant="transparent" class="artifact-scroll">
                 <VStack :gap="2" class="article-body">
-                  <Heading :level="1">
+                  <Heading :level="1" :accessibility-level="2">
                     {{ ARTIFACT_TITLE }}
                   </Heading>
                   <Markdown :content="ARTIFACT_CONTENT" />
@@ -795,6 +506,9 @@ const mobileActions = [
         <LayoutContent :padding="0">
           <Section variant="transparent" class="artifact-scroll">
             <VStack :gap="2" class="article-body">
+              <Heading :level="1" :accessibility-level="2">
+                {{ ARTIFACT_TITLE }}
+              </Heading>
               <Markdown :content="ARTIFACT_CONTENT" />
             </VStack>
           </Section>
@@ -817,6 +531,7 @@ const mobileActions = [
 .artifact-scroll { flex: 1; overflow-y: auto; }
 .article-body { max-width: 720px; margin-inline: auto; }
 .ai-chat-resize-handle { display: flex; }
+.ai-chat-column-beside-handle { padding-inline-end: var(--astryx-spacing-2); }
 .ai-chat-artifact-panel {
   overflow: hidden;
   display: flex;
@@ -824,19 +539,9 @@ const mobileActions = [
   width: var(--artifact-panel-width);
   flex-shrink: 0;
 }
-.file-input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
 @container artifact (max-width: 767px) {
   .ai-chat-resize-handle { display: none; }
+  .ai-chat-column-beside-handle { padding-inline-end: 0; }
   .ai-chat-artifact-panel { display: none; width: 100%; flex-shrink: 1; }
 }
 </style>

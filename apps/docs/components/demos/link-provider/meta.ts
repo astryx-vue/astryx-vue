@@ -8,5 +8,6 @@ export const meta = {
   order: 2,
   en: 'Link Provider',
   zh: '链接 Provider',
-  demo,
+  // 原版这个组件页没有顶部预览，只在总览卡片里用。
+  cardDemo: demo,
 } satisfies DemoMeta

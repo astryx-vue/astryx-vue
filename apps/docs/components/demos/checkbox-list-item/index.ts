@@ -5,4 +5,4 @@ import overviewDemo from './overview.vue'
 import overviewSource from './overview.vue?raw&highlighted'
 
 export const checkboxListItemBasic = defineDemo(basicDemo, basicSource)
-export const checkboxListItemOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const checkboxListItemOverview = defineDemo(overviewDemo, overviewSource)

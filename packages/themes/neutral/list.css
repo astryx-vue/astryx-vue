@@ -5,8 +5,8 @@
   [data-astryx-theme='neutral'] {
     --astryx-list-item-hover-background: var(--astryx-color-overlay-hover);
     --astryx-list-item-pressed-background: var(--astryx-color-overlay-pressed);
-    --astryx-list-item-selected-background: light-dark(#0082fb33, #0082fb3f);
-    --astryx-list-item-focus: light-dark(#0064e0, #2694fe);
+    --astryx-list-item-selected-background: var(--astryx-color-accent-muted);
+    --astryx-list-item-focus: var(--astryx-color-accent);
     --astryx-list-divider-color: var(--astryx-color-border);
     --astryx-list-marker-foreground: var(--astryx-color-text-primary);
   }

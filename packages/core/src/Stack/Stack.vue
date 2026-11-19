@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { CSSProperties, StyleValue } from 'vue'
-import type { SpacingStep, StackCrossAlignment, StackMainAlignment, StackProps, StackSizeValue } from './types.js'
+import type { SpacingStep, StackCrossAlignment, StackMainAlignment, StackProps } from './types.js'
 import { computed, useAttrs, useTemplateRef } from 'vue'
+import { sizingStyle } from '../Layout/size.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import '../../styles/stack.css'
 
@@ -48,12 +49,6 @@ interface StackStyle extends CSSProperties {
   '--astryx-stack-padding-inline-end'?: string
   '--astryx-stack-padding-inline-start'?: string
 }
-function formatSize(value: StackSizeValue | undefined): string | undefined {
-  if (value == null)
-    return undefined
-
-  return typeof value === 'number' ? `${value}px` : value
-}
 
 const resolvedHAlign = computed(() =>
   props.hAlign ?? (props.direction === 'horizontal' ? props.justify : props.align),
@@ -92,12 +87,7 @@ function spacingValue(step: SpacingStep | undefined): string | undefined {
 const UNSET_SPACING = 'initial'
 
 const rootStyle = computed<StyleValue>(() => {
-  const stackStyle: StackStyle = {
-    height: formatSize(props.height),
-    maxWidth: formatSize(props.maxWidth),
-    minHeight: formatSize(props.minHeight),
-    width: formatSize(props.width),
-  }
+  const stackStyle: StackStyle = { ...sizingStyle(props) }
 
   stackStyle['--astryx-stack-gap'] = spacingValue(props.gap) ?? UNSET_SPACING
   stackStyle['--astryx-stack-padding-block'] = spacingValue(props.paddingBlock ?? props.padding) ?? UNSET_SPACING

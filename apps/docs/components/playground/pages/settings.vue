@@ -22,6 +22,7 @@ import {
   TextInput,
   Typeahead,
   useMediaQuery,
+  useToast,
   VStack,
 } from '@astryx-vue/core'
 import { defineComponent, h, ref } from 'vue'
@@ -45,6 +46,7 @@ const MagnifyingGlassIcon = defineComponent({
   render: () => h(Icon, { name: 'heroicons:magnifying-glass' }),
 })
 
+const showToast = useToast()
 const isNarrow = useMediaQuery('(max-width: 768px)')
 const activeNav = ref('Profile')
 const username = ref('nicol43')
@@ -96,7 +98,7 @@ const searchValue = ref<SearchableItem | null>(null)
         </List>
       </LayoutPanel>
     </template>
-    <LayoutContent :padding="4">
+    <LayoutContent role="main" :padding="4">
       <VStack :gap="4">
         <VStack v-if="isNarrow" h-align="center">
           <TabList v-model:value="activeNav">
@@ -105,7 +107,7 @@ const searchValue = ref<SearchableItem | null>(null)
         </VStack>
         <Grid :columns="{ minWidth: 320 }" :gap="10">
           <VStack :gap="1">
-            <Heading :level="3">
+            <Heading :level="3" :accessibility-level="2">
               Basic information
             </Heading>
             <Text type="supporting" color="secondary">
@@ -118,14 +120,14 @@ const searchValue = ref<SearchableItem | null>(null)
             <TextInput v-model="lastName" label="Last name" />
             <TextInput v-model="email" label="Email address" />
             <HStack>
-              <Button label="Save" variant="primary" />
+              <Button label="Save" variant="primary" @click="showToast({ body: 'Demo: your basic information would be saved here', uniqueID: 'save-basic' })" />
             </HStack>
           </VStack>
         </Grid>
         <Divider />
         <Grid :columns="{ minWidth: 320 }" :gap="10">
           <VStack :gap="1">
-            <Heading :level="3">
+            <Heading :level="3" :accessibility-level="2">
               Change password
             </Heading>
             <Text type="supporting" color="secondary">
@@ -137,14 +139,14 @@ const searchValue = ref<SearchableItem | null>(null)
             <TextInput v-model="newPw" label="New password" type="password" />
             <TextInput v-model="confirmPw" label="Confirm password" type="password" />
             <HStack>
-              <Button label="Save" variant="primary" />
+              <Button label="Save" variant="primary" @click="showToast({ body: 'Demo: your new password would be saved here', uniqueID: 'save-password' })" />
             </HStack>
           </VStack>
         </Grid>
         <Divider />
         <Grid :columns="{ minWidth: 320 }" :gap="10">
           <VStack :gap="1">
-            <Heading :level="3">
+            <Heading :level="3" :accessibility-level="2">
               Advanced settings
             </Heading>
             <Text type="supporting" color="secondary">
@@ -168,7 +170,7 @@ const searchValue = ref<SearchableItem | null>(null)
               description="Require 2FA for added account security."
             />
             <HStack>
-              <Button label="Save" variant="primary" />
+              <Button label="Save" variant="primary" @click="showToast({ body: 'Demo: your advanced settings would be saved here', uniqueID: 'save-advanced' })" />
             </HStack>
           </VStack>
         </Grid>

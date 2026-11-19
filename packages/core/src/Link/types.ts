@@ -1,9 +1,10 @@
 import type { Component } from 'vue'
-import type { TextSize, TextWeight } from '../Text/types.js'
+import type { TextSize, TextType, TextWeight } from '../Text/types.js'
 
 export type LinkColor = 'primary' | 'secondary' | 'accent' | 'inherit'
 export type LinkSize = TextSize
 export type LinkWeight = TextWeight
+export type LinkType = TextType
 
 /** Custom root used instead of `<a>` when `href` is set. Pass `RouterLink` or another component that accepts `href` and `to`. */
 export type LinkRoot = string | Component
@@ -73,6 +74,12 @@ export interface LinkProps {
    * @default false
    */
   isStandalone?: boolean
+  /**
+   * 文字的语义类型，同 Text 的 `type`，决定字号、行高和字重。
+   * 嵌在已有文字里的链接用 `type="inherit"`，跟随外面的字体。
+   * @default 'body'
+   */
+  type?: LinkType
   /**
    * Font size. Uses the same steps as Text.
    */

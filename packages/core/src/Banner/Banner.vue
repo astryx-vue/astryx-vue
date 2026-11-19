@@ -98,7 +98,7 @@ watch(expanded, (value) => {
       <span class="astryx-banner-icon" :data-status="visualStatus" aria-hidden="true">
         <slot name="icon">
           <component :is="icon" v-if="icon" />
-          <FieldIcon v-else-if="visualStatus" :type="visualStatus" size="md" :color="visualStatus === 'info' ? 'accent' : visualStatus" />
+          <FieldIcon v-else-if="visualStatus" :type="visualStatus" size="md" color="inherit" />
         </slot>
       </span>
       <div class="astryx-banner-message" :data-has-actions="hasEnd || undefined">
@@ -118,6 +118,7 @@ watch(expanded, (value) => {
         <IconButton
           v-if="hasContent() && collapsible"
           ref="toggleButton"
+          class="astryx-banner-control"
           variant="ghost"
           size="sm"
           :label="expanded ? collapseText : expandText"
@@ -130,6 +131,7 @@ watch(expanded, (value) => {
         </IconButton>
         <IconButton
           v-if="isDismissable"
+          class="astryx-banner-control"
           variant="ghost"
           size="sm"
           :label="dismissName"

@@ -45,6 +45,20 @@ export async function collectPlaygroundFrame() {
   function hidden(el) {
     const style = getComputedStyle(el)
     return style.display === 'none' || style.visibility === 'hidden' || Number.parseFloat(style.opacity) === 0
+      || screenReaderOnly(el)
+  }
+
+  /**
+   * 只给读屏用的节点（1px 裁剪框）看不见，两边的实现放的位置也不同，不参与视觉比对。
+   * 往上看三层：常见写法是外层裁剪、里面放文字。
+   */
+  function screenReaderOnly(el) {
+    for (let node = el, depth = 0; node && depth < 3; node = node.parentElement, depth++) {
+      const rect = node.getBoundingClientRect()
+      if (rect.width <= 1 && rect.height <= 1 && getComputedStyle(node).overflow === 'hidden')
+        return true
+    }
+    return false
   }
 
   /** 直系文本节点的外包矩形（视口坐标），量不到时返回 null。 */
@@ -63,12 +77,27 @@ export async function collectPlaygroundFrame() {
   }
 
   /** 把视口坐标换成「所有祖先滚动都还原到 0」的绝对坐标。 */
+  function floating(node) {
+    if (getComputedStyle(node).position === 'fixed')
+      return true
+    try {
+      return node.matches(':popover-open, dialog[open]:modal')
+    }
+    catch {
+      return false
+    }
+  }
+
   function absolute(el, rect) {
     let x = rect.left
     let y = rect.top
-    for (let parent = el.parentElement; parent; parent = parent.parentElement) {
-      x += parent.scrollLeft
-      y += parent.scrollTop
+    // 浮层（fixed 定位或顶层 popover）不随外面的滚动区走：原版的菜单是滚动区的 DOM 后代，
+    // 我们的传送到 body，两边都只该按视口坐标算，不能把滚动区的 scrollTop 加进去。
+    for (let node = el; node.parentElement; node = node.parentElement) {
+      if (floating(node))
+        break
+      x += node.parentElement.scrollLeft
+      y += node.parentElement.scrollTop
     }
     return { x: round(x), y: round(y), w: round(rect.width), h: round(rect.height) }
   }
@@ -144,6 +173,33 @@ export async function collectPlaygroundFrame() {
     return Boolean(named)
   }
 
+  /**
+   * 叠在同一处的几层 `<svg>` 画的是同一个图标（原版 Spinner 是底圈和外面包了一层 span、
+   * 转动的弧两层，我们画在一个 svg 里），只按第一层算，不然层数不同会报成「缺失」。
+   * 往上看两层，只认中心几乎重合的前一个 svg：按钮两侧各有图标的情况不受影响。
+   */
+  const LAYER_CENTER_TOLERANCE = 4
+  function layeredOnSibling(svg) {
+    const rect = svg.getBoundingClientRect()
+    const cx = rect.left + rect.width / 2
+    const cy = rect.top + rect.height / 2
+    let node = svg.parentElement
+    for (let depth = 0; node && depth < 2; node = node.parentElement, depth++) {
+      for (const other of node.querySelectorAll('svg')) {
+        if (other === svg)
+          break
+        if (other.contains(svg))
+          continue
+        const box = other.getBoundingClientRect()
+        if (Math.abs(box.left + box.width / 2 - cx) <= LAYER_CENTER_TOLERANCE
+          && Math.abs(box.top + box.height / 2 - cy) <= LAYER_CENTER_TOLERANCE) {
+          return true
+        }
+      }
+    }
+    return false
+  }
+
   function scan() {
     let added = 0
     for (const el of document.body.querySelectorAll('*')) {
@@ -162,12 +218,27 @@ export async function collectPlaygroundFrame() {
         added += 1
     }
     for (const svg of document.body.querySelectorAll('svg')) {
-      if (hidden(svg) || !isIcon(svg))
+      if (hidden(svg) || !isIcon(svg) || layeredOnSibling(svg))
         continue
       const box = absolute(svg, svg.getBoundingClientRect())
       if (offStage(box))
         continue
       if (record(svg, { kind: 'icon', text: iconLabel(svg), box, style: {} }))
+        added += 1
+    }
+    // 我们的语义图标（折叠箭头、更多菜单、复制等）是 CSS 遮罩画的空元素，原版是 `<svg>`。
+    // 两边画出来一样，按图标一起收，不然每个都会报成「缺失」。
+    for (const el of document.body.querySelectorAll('span, i')) {
+      if (el.childElementCount > 0 || hidden(el))
+        continue
+      const style = getComputedStyle(el)
+      const mask = style.maskImage || style.webkitMaskImage
+      if (!mask || mask === 'none' || !isIcon(el))
+        continue
+      const box = absolute(el, el.getBoundingClientRect())
+      if (offStage(box))
+        continue
+      if (record(el, { kind: 'icon', text: iconLabel(el), box, style: {} }))
         added += 1
     }
     return added

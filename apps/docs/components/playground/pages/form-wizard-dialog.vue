@@ -35,6 +35,7 @@ import {
   TextInput,
   TimeInput,
   useToast,
+  VisuallyHidden,
   VStack,
 } from '@astryx-vue/core'
 
@@ -180,18 +181,21 @@ function goNext() {
 </script>
 
 <template>
-  <Center height="100dvh">
+  <Center role="main" height="100dvh">
+    <VisuallyHidden as="h1">
+      Report scheduler
+    </VisuallyHidden>
     <Dialog
       is-open
       is-inline
       :width="620"
       class="form-wizard-dialog"
       purpose="form"
-      @update:open="handleOpenChange"
+      @open-change="handleOpenChange"
     >
       <Layout height="fill" :padding="4" default-has-dividers>
         <template #header>
-          <DialogHeader title="Schedule a report" @update:open="handleOpenChange" :has-divider="false" />
+          <DialogHeader title="Schedule a report" @open-change="handleOpenChange" :has-divider="false" />
           <LayoutHeader :has-divider="false">
             <Stepper
               :active-step="step"
@@ -210,7 +214,7 @@ function goNext() {
           </LayoutHeader>
         </template>
         <template #default>
-          <LayoutContent :padding="4">
+          <LayoutContent>
             <VStack :gap="5">
               <FormLayout v-if="step === 0" default-optionality="optional">
                 <TextInput
@@ -370,6 +374,6 @@ function goNext() {
 .form-wizard-dialog .astryx-layout__inner {
   height: auto;
   min-height: 0;
-  max-height: calc(75vh - 32px);
+  max-height: 75vh;
 }
 </style>

@@ -6,6 +6,7 @@ import { useResolvedLayerTeleport } from '../composables/useLayerMountTarget.js'
 import { useMergedRefs } from '../composables/useMergedRefs.js'
 import { clampInlineSize, LAYER_MAX_INLINE_SIZE } from '../layer/inlineSize.js'
 import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
+import { useAstryxMessages } from '../locale/index.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { usePopover } from './usePopover.js'
 import '../../styles/popover.css'
@@ -22,13 +23,16 @@ const props = withDefaults(defineProps<PopoverProps>(), {
   role: 'dialog',
   isModal: true,
   hasCloseButton: true,
-  closeButtonLabel: 'Close',
+  closeButtonLabel: undefined,
   hasAutoFocus: true,
   hasLightDismiss: true,
   hasEscapeDismiss: true,
   anchor: undefined,
 })
 const emit = defineEmits<{ openChange: [isOpen: boolean] }>()
+
+const messages = useAstryxMessages()
+const closeLabel = computed(() => props.closeButtonLabel ?? messages.value.popover.close)
 
 const DEFAULT_MAX_WIDTH = 320
 const popover = usePopover({
@@ -138,7 +142,7 @@ onUpdated(syncTrigger)
         </LayerContentBoundary>
       </div>
       <div v-if="hasCloseButton" class="astryx-popover__close">
-        <Button variant="secondary" :label="closeButtonLabel" @click="popover.hide()" />
+        <Button variant="secondary" :label="closeLabel" @click="popover.hide()" />
       </div>
     </div>
   </Teleport>

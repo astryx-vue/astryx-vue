@@ -1,18 +1,24 @@
 <script setup lang="ts">
+import { Center } from '@astryx-vue/core/Center'
 import { Markdown } from '@astryx-vue/core/Markdown'
 
 const content = [
-  '## Markdown',
+  '# Markdown Demo',
   '',
-  '**粗体**、*斜体* 和 `代码`。',
+  'Renders **markdown** with *design-system-consistent* styling.',
   '',
-  '- 标题、列表按设计规范排版',
-  '- 链接自动识别外链',
+  '## Features',
   '',
-  '> 引用也会缩进显示',
+  '- Headings mapped to the Astryx type scale',
+  '- **Bold**, *italic*, and ~~strikethrough~~ text',
+  '- [Links](https://example.com) with external detection',
+  '',
+  '> Block quote indented text',
 ].join('\n')
 </script>
 
 <template>
-  <Markdown :content="content" />
+  <Center :width="400">
+    <Markdown :content="content" />
+  </Center>
 </template>

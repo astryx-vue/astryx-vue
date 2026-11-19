@@ -7,4 +7,4 @@ import overviewSource from './overview.vue?raw&highlighted'
 const options = { className: 'overview-frame' }
 
 export const fieldLabelBasic = defineDemo(basicDemo, basicSource, options)
-export const fieldLabelOverview = defineDemo(overviewDemo, overviewSource, options)
+export const fieldLabelOverview = defineDemo(overviewDemo, overviewSource)

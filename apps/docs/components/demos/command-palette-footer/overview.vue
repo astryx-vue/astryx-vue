@@ -14,7 +14,7 @@ const source = createStaticSource([
   <CommandPalette is-inline is-open :search-source="source">
     <template #footer>
       <CommandPaletteFooter>
-        <Text type="supporting">
+        <Text type="supporting" color="secondary">
           Tip: Press ⌘K anywhere to open the command palette
         </Text>
       </CommandPaletteFooter>

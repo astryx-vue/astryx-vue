@@ -4,7 +4,5 @@ import basicSource from './basic.vue?raw&highlighted'
 import overviewDemo from './overview.vue'
 import overviewSource from './overview.vue?raw&highlighted'
 
-const options = { className: 'layout-content-preview' }
-
-export const layoutContentBasic = defineDemo(basicDemo, basicSource, options)
-export const layoutContentOverview = defineDemo(overviewDemo, overviewSource, options)
+export const layoutContentBasic = defineDemo(basicDemo, basicSource, { className: 'layout-content-preview' })
+export const layoutContentOverview = defineDemo(overviewDemo, overviewSource)

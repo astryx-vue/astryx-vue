@@ -48,14 +48,15 @@ describe('avatar', () => {
 
     const fallback = wrapper.find('.astryx-avatar__fallback--initials')
     expect(fallback.exists()).toBe(true)
-    expect(fallback.text()).toBe('JD')
+    expect(fallback.attributes('data-initials')).toBe('JD')
+    expect(fallback.text()).toBe('')
   })
 
   it('builds initials from letters, digits and emoji, skipping punctuation', () => {
-    expect(mount(Avatar, { props: { name: 'Northwind Workbench (automation)' } }).find('.astryx-avatar__fallback--initials').text()).toBe('NA')
-    expect(mount(Avatar, { props: { name: '- Alice' } }).find('.astryx-avatar__fallback--initials').text()).toBe('A')
-    expect(mount(Avatar, { props: { name: 'A1 9' } }).find('.astryx-avatar__fallback--initials').text()).toBe('A9')
-    expect(mount(Avatar, { props: { name: '🎉 Party' } }).find('.astryx-avatar__fallback--initials').text()).toBe('🎉P')
+    expect(mount(Avatar, { props: { name: 'Northwind Workbench (automation)' } }).find('.astryx-avatar__fallback--initials').attributes('data-initials')).toBe('NA')
+    expect(mount(Avatar, { props: { name: '- Alice' } }).find('.astryx-avatar__fallback--initials').attributes('data-initials')).toBe('A')
+    expect(mount(Avatar, { props: { name: 'A1 9' } }).find('.astryx-avatar__fallback--initials').attributes('data-initials')).toBe('A9')
+    expect(mount(Avatar, { props: { name: '🎉 Party' } }).find('.astryx-avatar__fallback--initials').attributes('data-initials')).toBe('🎉P')
     expect(mount(Avatar, { props: { name: '()' } }).find('.astryx-avatar__fallback--icon').exists()).toBe(true)
   })
 
@@ -66,7 +67,7 @@ describe('avatar', () => {
       },
     })
 
-    expect(wrapper.find('.astryx-avatar__fallback--initials').text()).toBe('A')
+    expect(wrapper.find('.astryx-avatar__fallback--initials').attributes('data-initials')).toBe('A')
   })
 
   it('renders default icon when no name and no src are provided', () => {
@@ -101,7 +102,7 @@ describe('avatar', () => {
     await img.trigger('error')
 
     expect(wrapper.find('.astryx-avatar__image').exists()).toBe(false)
-    expect(wrapper.find('.astryx-avatar__fallback--initials').text()).toBe('JD')
+    expect(wrapper.find('.astryx-avatar__fallback--initials').attributes('data-initials')).toBe('JD')
   })
 
   it('uses fallbackSrc when primary src fails', async () => {

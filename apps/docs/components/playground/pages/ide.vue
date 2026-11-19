@@ -4,6 +4,7 @@ import {
   Button,
   CodeBlock,
   Heading,
+  Icon,
   Layout,
   LayoutContent,
   LayoutPanel,
@@ -23,26 +24,46 @@ import {
   TreeList,
   useMediaQuery,
   useResizable,
+  VisuallyHidden,
   VStack,
 } from '@astryx-vue/core'
-import { computed, ref } from 'vue'
+import { computed, h, ref } from 'vue'
 
+// 和原版逐行一致，代码行数决定编辑区的高度。
 const EDITOR_CODE = [
   'import {useState, useCallback} from \'react\';',
   'import {Button} from \'@astryxdesign/core/Button\';',
   'import {Text} from \'@astryxdesign/core/Text\';',
   '',
-  'const containerStyle = { display: \'flex\', flexDirection: \'column\', gap: 8, padding: 16 };',
-  'const counterStyle = { fontSize: 48, fontWeight: 700, fontVariantNumeric: \'tabular-nums\' };',
+  'const containerStyle = {',
+  '  display: \'flex\',',
+  '  flexDirection: \'column\',',
+  '  gap: 8,',
+  '  padding: 16,',
+  '};',
+  'const counterStyle = {',
+  '  fontSize: 48,',
+  '  fontWeight: 700,',
+  '  fontVariantNumeric: \'tabular-nums\',',
+  '};',
   '',
   'export default function Counter() {',
   '  const [count, setCount] = useState(0);',
-  '  const increment = useCallback(() => setCount(prev => prev + 1), []);',
-  '  const reset = useCallback(() => setCount(0), []);',
+  '',
+  '  const increment = useCallback(() => {',
+  '    setCount(prev => prev + 1);',
+  '  }, []);',
+  '',
+  '  const reset = useCallback(() => {',
+  '    setCount(0);',
+  '  }, []);',
+  '',
   '  return (',
   '    <div style={containerStyle}>',
   '      <Text type="label">Counter</Text>',
-  '      <span style={counterStyle}>{count}</span>',
+  '      <span style={counterStyle}>',
+  '        {count}',
+  '      </span>',
   '      <Button label="Increment" onClick={increment} />',
   '      <Button label="Reset" variant="secondary" onClick={reset} />',
   '    </div>',
@@ -116,20 +137,20 @@ function buildFileTree(onFileClick: (name: string) => void): TreeListItemData[] 
   const file = (id: string): TreeListItemData => ({
     id,
     label: id,
-    icon: 'i-heroicons-document',
+    startContent: () => h(Icon, { name: 'heroicons:document-text', size: 'xsm' }),
     onClick: () => onFileClick(id),
   })
   return [
     {
       id: 'src',
       label: 'src',
-      icon: 'i-heroicons-folder',
+      startContent: () => h(Icon, { name: 'heroicons:folder', size: 'xsm' }),
       isExpanded: true,
       children: [
         {
           id: 'components',
           label: 'components',
-          icon: 'i-heroicons-folder',
+          startContent: () => h(Icon, { name: 'heroicons:folder', size: 'xsm' }),
           isExpanded: true,
           children: [
             file('Counter.tsx'),
@@ -140,14 +161,14 @@ function buildFileTree(onFileClick: (name: string) => void): TreeListItemData[] 
         {
           id: 'pages',
           label: 'pages',
-          icon: 'i-heroicons-folder',
+          startContent: () => h(Icon, { name: 'heroicons:folder', size: 'xsm' }),
           isExpanded: true,
           children: [file('index.tsx'), file('about.tsx')],
         },
         {
           id: 'styles',
           label: 'styles',
-          icon: 'i-heroicons-folder',
+          startContent: () => h(Icon, { name: 'heroicons:folder', size: 'xsm' }),
           isExpanded: true,
           children: [file('tokens.ts'), file('theme.ts')],
         },
@@ -166,7 +187,8 @@ const fileTree = computed(() => buildFileTree((name) => {
 
 <template>
   <Layout height="fill">
-    <LayoutContent :padding="0">
+    <LayoutContent role="main" :padding="0">
+      <VisuallyHidden as="h1">Code editor</VisuallyHidden>
       <Layout height="fill">
         <template v-if="!isMobile" #start>
           <template v-if="!startPanel.isCollapsed">
@@ -196,7 +218,7 @@ const fileTree = computed(() => buildFileTree((name) => {
           <Layout height="fill">
             <LayoutContent :padding="0">
               <Stack direction="vertical" class="content-fill">
-                <StackItem size="fill" class="editor-area">
+                <StackItem size="fill" :class="['editor-area', { 'beside-end-handle': !isMobile }]">
                   <CodeBlock
                     :code="EDITOR_CODE"
                     language="typescript"
@@ -236,7 +258,7 @@ const fileTree = computed(() => buildFileTree((name) => {
                     <Tab label="Output" value="output" />
                     <Tab label="Debug" value="debug" />
                   </TabList>
-                  <StackItem size="fill" class="terminal-wrapper">
+                  <StackItem size="fill" :class="['terminal-wrapper', { 'beside-end-handle': !isMobile }]">
                     <CodeBlock
                       :code="TERMINAL_OUTPUT"
                       language="bash"
@@ -279,7 +301,7 @@ const fileTree = computed(() => buildFileTree((name) => {
                   <template v-if="activePropertiesTab === 'properties'">
                     <VStack class="properties-content" :gap="3">
                       <VStack :gap="1">
-                        <Heading :level="3" :max-lines="1">
+                        <Heading :level="3" :accessibility-level="2" :max-lines="1">
                           {{ activeFile }}
                         </Heading>
                         <Text color="secondary" type="supporting" :max-lines="1">
@@ -361,6 +383,11 @@ const fileTree = computed(() => buildFileTree((name) => {
 .editor-area {
   overflow: auto;
   min-height: 0;
+}
+
+/* 桌面端右侧还有一条调整宽度的把手，编辑区和终端在行尾让出一格。 */
+.beside-end-handle {
+  padding-inline-end: var(--astryx-spacing-2);
 }
 
 .file-explorer {

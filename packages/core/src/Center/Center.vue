@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { CSSProperties, StyleValue } from 'vue'
 import type { SpacingStep } from '../Stack/types.js'
-import type { CenterProps, CenterSizeValue } from './types.js'
+import type { CenterProps } from './types.js'
 import { computed, useAttrs, useTemplateRef } from 'vue'
+import { sizingStyle } from '../Layout/size.js'
 
 import '../../styles/center.css'
 
@@ -46,13 +47,6 @@ const spacingVariables: Record<SpacingStep, string> = {
   10: 'var(--astryx-spacing-10, 40px)',
 }
 
-function formatSize(value: CenterSizeValue | undefined): string | undefined {
-  if (value == null)
-    return undefined
-
-  return typeof value === 'number' ? `${value}px` : value
-}
-
 function formatSpacing(value: SpacingStep | undefined): string | undefined {
   return value == null ? undefined : spacingVariables[value]
 }
@@ -73,12 +67,7 @@ const rootClass = computed(() => [
 ])
 
 const rootStyle = computed<StyleValue>(() => {
-  const centerStyle: CenterStyle = {
-    height: formatSize(props.height),
-    maxWidth: formatSize(props.maxWidth),
-    minHeight: formatSize(props.minHeight),
-    width: formatSize(props.width),
-  }
+  const centerStyle: CenterStyle = { ...sizingStyle(props) }
 
   centerStyle['--astryx-center-padding-block-start'] = formatSpacing(paddingBlockStart.value)
   centerStyle['--astryx-center-padding-block-end'] = formatSpacing(paddingBlockEnd.value)

@@ -25,17 +25,17 @@
  * sides, so the padding change above does not make the control taller.
  */
 @layer astryx.overrides {
-  :root .astryx-segmented-control-item[data-size='sm'],
+  :where(:root) .astryx-segmented-control-item[data-size='sm']:not(:where([data-astryx-theme]:not([data-astryx-theme='neutral']) *)),
   [data-astryx-theme='neutral'] .astryx-segmented-control-item[data-size='sm'] {
     height: calc(var(--astryx-size-element-sm) - 8px);
   }
 
-  :root .astryx-segmented-control-item[data-size='md'],
+  :where(:root) .astryx-segmented-control-item[data-size='md']:not(:where([data-astryx-theme]:not([data-astryx-theme='neutral']) *)),
   [data-astryx-theme='neutral'] .astryx-segmented-control-item[data-size='md'] {
     height: calc(var(--astryx-size-element-md) - 8px);
   }
 
-  :root .astryx-segmented-control-item[data-size='lg'],
+  :where(:root) .astryx-segmented-control-item[data-size='lg']:not(:where([data-astryx-theme]:not([data-astryx-theme='neutral']) *)),
   [data-astryx-theme='neutral'] .astryx-segmented-control-item[data-size='lg'] {
     height: calc(var(--astryx-size-element-lg) - 8px);
   }

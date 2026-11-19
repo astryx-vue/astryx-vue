@@ -251,7 +251,8 @@ describe('typeahead aliases and additions', () => {
   it('shows labelTooltip next to the label', async () => {
     const wrapper = mountTypeahead({ labelTooltip: 'Where this fruit goes' })
     expect(wrapper.get('.astryx-field-label-row').text()).toContain('Fruit')
-    expect(wrapper.get('.astryx-field-label-row').html()).toContain('Where this fruit goes')
+    expect(wrapper.get('.astryx-field-label-row').find('.astryx-field-label-info-tip').attributes('aria-label')).toBe('About Fruit')
+    expect(document.body.innerHTML).toContain('Where this fruit goes')
     wrapper.unmount()
   })
 

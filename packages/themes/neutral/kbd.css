@@ -4,7 +4,7 @@
   :root,
   [data-astryx-theme='neutral'] {
     --astryx-kbd-background: var(--astryx-color-neutral);
-    --astryx-kbd-foreground: var(--astryx-color-text-secondary);
+    --astryx-kbd-foreground: var(--astryx-color-text-primary);
     --astryx-kbd-border-color: var(--astryx-color-border-emphasized);
   }
 }

@@ -1,11 +1,15 @@
-import type { Component, VNodeChild } from 'vue'
+import type { Component, VNode, VNodeChild } from 'vue'
 import type { FieldPartStylingProps } from '../Field/fieldParts.js'
 import type { FieldStatusInput } from '../Field/types.js'
 import type { ExtendedIconName } from '../Icon/types.js'
+import type { LayerPlacement } from '../layer/position.js'
 import type { OptionActionNode } from '../selectors/optionAction.js'
 
-/** 选项前面的图标：语义图标名（同 `<Icon icon>`）、CSS 图标类，或任意组件 / 渲染函数。 */
-export type SelectorOptionIcon = ExtendedIconName | Component | (() => VNodeChild)
+/**
+ * 选项前面的图标：语义图标名（同 `<Icon icon>`）、CSS 图标类、任意组件 / 渲染函数，
+ * 或现成的 VNode。前几种套进 16px 的 Icon 盒子，VNode 按自己的尺寸原样画（同上游传 ReactNode）。
+ */
+export type SelectorOptionIcon = ExtendedIconName | Component | (() => VNodeChild) | VNode
 
 export interface SelectorOption {
   value: string | number
@@ -103,6 +107,11 @@ export interface SelectorProps extends FieldPartStylingProps {
   description?: string
   /** 控件宽度。数字按像素，字符串原样使用。 */
   width?: number | string
+  /**
+   * 触发器最前面的图标，同上游 `startIcon`。设了它，选中项自己的 `icon` 就不再画在触发器里，
+   * 免得出现两个图标。
+   */
+  startIcon?: SelectorOptionIcon
   /** 名称（用于表单提交） */
   name?: string
   /**
@@ -122,6 +131,11 @@ export interface SelectorProps extends FieldPartStylingProps {
    * @default 'end'
    */
   indicatorPosition?: SelectorIndicatorPosition
+  /**
+   * 列表相对触发器的位置。不写时用默认的「选中项盖在触发器上」；
+   * 写了就走普通的浮层定位，比如固定在底部的工具栏用 `above`。
+   */
+  placement?: LayerPlacement
 }
 
 export interface SelectorEmits {

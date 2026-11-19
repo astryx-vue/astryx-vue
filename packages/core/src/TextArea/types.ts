@@ -40,6 +40,8 @@ export interface TextAreaProps extends Omit<FieldLabelProps, 'inputId' | 'labelI
    * 可以继续输入，超出后计数变红并播报，不会用原生 maxlength 截断。
    */
   maxlength?: number | string
+  /** 同 `maxlength`，原版的写法（`max-length`）；两个都给时以它为准 */
+  maxLength?: number | string
   wrap?: TextAreaWrap
   resize?: TextAreaResize
   hasClear?: boolean

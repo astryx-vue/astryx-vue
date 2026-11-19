@@ -49,8 +49,8 @@ export interface AlertDialogProps {
   isActionLoading?: boolean
   /**
    * Preferred width. Numbers are pixels, strings are used as-is. Dialog clamps
-   * it to the container and the dynamic viewport.
-   * @default 400
+   * it to the container and the dynamic viewport. Defaults to 320 on a
+   * compact touch screen (like the iOS system alert) and 400 elsewhere.
    */
   width?: number | string
 }

@@ -3,7 +3,8 @@
 @layer astryx.components {
   .astryx-field.astryx-tokenizer {
     position: relative;
-    width: var(--astryx-field-width, 100%);
+    /* 原版 Field 没传 width 就不设宽度：块级容器里自然撑满，横排里按内容收缩。 */
+    width: var(--astryx-field-width, auto);
     max-width: 100%;
     min-width: 0;
   }
@@ -116,6 +117,12 @@
     visibility: hidden;
     pointer-events: none;
     white-space: nowrap;
+  }
+
+  /* 有标签时内边距收到 3px，让标签圆角和外框同心（原版 TOKEN_ROW_INSET）。 */
+  .astryx-tokenizer-control.has-tokens {
+    padding: calc(var(--astryx-spacing-1, 4px) - 1px);
+    row-gap: calc(var(--astryx-spacing-1, 4px) - 1px);
   }
 
   .astryx-tokenizer-tokens {

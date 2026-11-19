@@ -17,7 +17,6 @@
     color: var(--astryx-color-text-primary);
     font-family: var(--astryx-font-family-body);
     font-size: var(--astryx-text-body-size);
-    line-height: var(--astryx-text-body-leading);
 
     --astryx-color-accent: light-dark(#2d241b, #EDEFFC);
     --astryx-color-accent-muted: light-dark(#2d241b14, #EDEFFC20);
@@ -25,13 +24,13 @@
     --astryx-color-neutral: light-dark(#2d241b10, #EDEFFC1A);
     --astryx-color-background-surface: light-dark(#FFFFFF, #16182b);
     --astryx-color-background-body: light-dark(#CCCFFA, #0e0f1a);
-    --astryx-color-overlay: light-dark(#2d241b80, #0a0b14CC);
+    --astryx-color-overlay: light-dark(#2d241b80, #0e0f1aCC);
     --astryx-color-overlay-hover: light-dark(#2d241b0D, #EDEFFC0D);
     --astryx-color-overlay-pressed: light-dark(#2d241b1A, #EDEFFC1A);
-    --astryx-color-background-muted: light-dark(#ede0d4, #1f2238);
+    --astryx-color-background-muted: light-dark(#f1e6db, #1f2238);
 
     --astryx-color-text-primary: light-dark(#2d241b, #EDEFFC);
-    --astryx-color-text-secondary: light-dark(#675d52, #a6acd6);
+    --astryx-color-text-secondary: light-dark(#5a5146, #a6acd6);
     --astryx-color-text-disabled: light-dark(#d1c5b8, #4a4f6b);
     --astryx-color-text-accent: light-dark(#2d241b, #EDEFFC);
     --astryx-color-on-dark: #FFFFFF;
@@ -49,71 +48,92 @@
 
     --astryx-color-success: light-dark(#C5E17A, #C5E17A);
     --astryx-color-success-muted: light-dark(#C5E17A, #C5E17A);
-    --astryx-color-on-success: light-dark(#3a5500, #1e3200);
-    --astryx-color-error: light-dark(#FFC5C3, #FFC5C3);
-    --astryx-color-error-muted: light-dark(#FFC5C3, #FFC5C3);
-    --astryx-color-on-error: light-dark(#8b1d24, #5c0008);
-    --astryx-color-warning: light-dark(#FFE08A, #FFE08A);
-    --astryx-color-warning-muted: light-dark(#FFE08A, #FFE08A);
-    --astryx-color-on-warning: light-dark(#614400, #3f2600);
+    --astryx-color-on-success: light-dark(#3f4e00, #2a3600);
+    --astryx-color-error: light-dark(#ffc3c3, #ffc3c3);
+    --astryx-color-error-muted: light-dark(#ffc3c3, #ffc3c3);
+    --astryx-color-on-error: light-dark(#880023, #610016);
+    --astryx-color-warning: light-dark(#ffe08a, #fde08f);
+    --astryx-color-warning-muted: light-dark(#ffe08a, #fde08f);
 
-    --astryx-color-border: light-dark(#2F292E, #EDEFFC1A);
-    --astryx-color-border-emphasized: light-dark(#2F292E, #3a3f5e);
+    /* Status roles: info 填充、状态文字、图标、边框和浅底上的文字（上游 INV11 / INV17）。 */
+    --astryx-color-info: light-dark(#00649b, #70c1ff);
+    --astryx-color-info-muted: var(--astryx-color-background-blue);
+    --astryx-color-on-info: light-dark(#FFFFFF, #2D241B);
+    --astryx-color-text-info: light-dark(#003454, #70c1ff);
+    --astryx-color-text-success: light-dark(#3f4e00, #b5d263);
+    --astryx-color-text-warning: light-dark(#584400, #f3d172);
+    --astryx-color-text-error: light-dark(#880023, #ff969a);
+    --astryx-color-icon-info: var(--astryx-color-text-info);
+    --astryx-color-icon-success: var(--astryx-color-text-success);
+    --astryx-color-icon-warning: var(--astryx-color-text-warning);
+    --astryx-color-icon-error: var(--astryx-color-text-error);
+    --astryx-color-border-info: var(--astryx-color-text-info);
+    --astryx-color-border-success: var(--astryx-color-text-success);
+    --astryx-color-border-warning: var(--astryx-color-text-warning);
+    --astryx-color-border-error: var(--astryx-color-text-error);
+    --astryx-color-on-info-muted: var(--astryx-color-text-blue);
+    --astryx-color-on-success-muted: var(--astryx-color-text-green);
+    --astryx-color-on-warning-muted: var(--astryx-color-text-yellow);
+    --astryx-color-on-error-muted: var(--astryx-color-text-red);
+    --astryx-color-on-warning: light-dark(#584400, #3d2e00);
 
-    --astryx-color-skeleton: light-dark(#d1c5b8, #2a2e47);
+    --astryx-color-border: light-dark(#382e24, #edeffc1A);
+    --astryx-color-border-emphasized: light-dark(#382e24, #636889);
+
+    --astryx-color-skeleton: light-dark(#c4b8a9, #2c3048);
     --astryx-color-track: light-dark(#ccd3db, #5a5e66);
     --astryx-color-shadow: light-dark(#2d241b1A, #0000004D);
     --astryx-color-tint-hover: light-dark(#2d241b, #EDEFFC);
 
-    --astryx-color-background-blue: light-dark(#B8E0FF, #B8E0FF);
-    --astryx-color-border-blue: light-dark(#8ECFFF, #8ECFFF);
-    --astryx-color-icon-blue: light-dark(#004e74, #002c4d);
-    --astryx-color-text-blue: light-dark(#004e74, #002c4d);
+    --astryx-color-background-blue: light-dark(#addbff, #addbff);
+    --astryx-color-border-blue: light-dark(#70c1ff, #70c1ff);
+    --astryx-color-icon-blue: light-dark(#003454, #003454);
+    --astryx-color-text-blue: light-dark(#003454, #003454);
 
-    --astryx-color-background-cyan: light-dark(#A8F0E2, #A8F0E2);
-    --astryx-color-border-cyan: light-dark(#70E8D0, #70E8D0);
-    --astryx-color-icon-cyan: light-dark(#005548, #003028);
-    --astryx-color-text-cyan: light-dark(#005548, #003028);
+    --astryx-color-background-cyan: light-dark(#b2f0ed, #baeeec);
+    --astryx-color-border-cyan: light-dark(#73dbd7, #84d8d4);
+    --astryx-color-icon-cyan: light-dark(#005250, #002d2c);
+    --astryx-color-text-cyan: light-dark(#005250, #002d2c);
 
-    --astryx-color-background-gray: light-dark(#ede0d4, #ede0d4);
-    --astryx-color-border-gray: light-dark(#dfd2c6, #dfd2c6);
-    --astryx-color-icon-gray: light-dark(#4f453b, #2d241b);
-    --astryx-color-text-gray: light-dark(#4f453b, #2d241b);
+    --astryx-color-background-gray: light-dark(#f1e6db, #dfe2f3);
+    --astryx-color-border-gray: light-dark(#dfd5c9, #d0d4eb);
+    --astryx-color-icon-gray: light-dark(#4f453b, #16182b);
+    --astryx-color-text-gray: light-dark(#4f453b, #16182b);
 
     --astryx-color-background-green: light-dark(#C5E17A, #C5E17A);
-    --astryx-color-border-green: light-dark(#B5D16A, #B5D16A);
-    --astryx-color-icon-green: light-dark(#3a5500, #1e3200);
-    --astryx-color-text-green: light-dark(#3a5500, #1e3200);
+    --astryx-color-border-green: light-dark(#b5d360, #b5d263);
+    --astryx-color-icon-green: light-dark(#3f4e00, #2a3600);
+    --astryx-color-text-green: light-dark(#3f4e00, #2a3600);
 
-    --astryx-color-background-orange: light-dark(#FFCCA0, #FFCCA0);
-    --astryx-color-border-orange: light-dark(#FFAA66, #FFAA66);
-    --astryx-color-icon-orange: light-dark(#703500, #4a1800);
-    --astryx-color-text-orange: light-dark(#703500, #4a1800);
+    --astryx-color-background-orange: light-dark(#ffc89d, #ffc89d);
+    --astryx-color-border-orange: light-dark(#ffb477, #ffb477);
+    --astryx-color-icon-orange: light-dark(#703400, #411800);
+    --astryx-color-text-orange: light-dark(#703400, #411800);
 
-    --astryx-color-background-pink: light-dark(#FFC8E0, #FFC8E0);
-    --astryx-color-border-pink: light-dark(#FFA0C8, #FFA0C8);
-    --astryx-color-icon-pink: light-dark(#822050, #580030);
-    --astryx-color-text-pink: light-dark(#822050, #580030);
+    --astryx-color-background-pink: light-dark(#ffbfd9, #ffbfd9);
+    --astryx-color-border-pink: light-dark(#ffa8cd, #ffa8cd);
+    --astryx-color-icon-pink: light-dark(#82004f, #5d0037);
+    --astryx-color-text-pink: light-dark(#82004f, #5d0037);
 
-    --astryx-color-background-purple: light-dark(#DDD0FF, #DDD0FF);
-    --astryx-color-border-purple: light-dark(#C0AAFF, #C0AAFF);
-    --astryx-color-icon-purple: light-dark(#453080, #201058);
-    --astryx-color-text-purple: light-dark(#453080, #201058);
+    --astryx-color-background-purple: light-dark(#d5cdff, #d5cdff);
+    --astryx-color-border-purple: light-dark(#bbaaff, #bbaaff);
+    --astryx-color-icon-purple: light-dark(#431a88, #2a1159);
+    --astryx-color-text-purple: light-dark(#431a88, #2a1159);
 
-    --astryx-color-background-red: light-dark(#FFC5C3, #FFC5C3);
-    --astryx-color-border-red: light-dark(#FF9E9A, #FF9E9A);
-    --astryx-color-icon-red: light-dark(#8b1d24, #5c0008);
-    --astryx-color-text-red: light-dark(#8b1d24, #5c0008);
+    --astryx-color-background-red: light-dark(#ffc3c3, #ffc3c3);
+    --astryx-color-border-red: light-dark(#ff969a, #ff969a);
+    --astryx-color-icon-red: light-dark(#880023, #610016);
+    --astryx-color-text-red: light-dark(#880023, #610016);
 
-    --astryx-color-background-teal: light-dark(#A8EED0, #A8EED0);
-    --astryx-color-border-teal: light-dark(#78E0B0, #78E0B0);
-    --astryx-color-icon-teal: light-dark(#005530, #003018);
-    --astryx-color-text-teal: light-dark(#005530, #003018);
+    --astryx-color-background-teal: light-dark(#b6f2d7, #a6e5c9);
+    --astryx-color-border-teal: light-dark(#81dcb6, #8ed9b9);
+    --astryx-color-icon-teal: light-dark(#00553b, #002f1e);
+    --astryx-color-text-teal: light-dark(#00553b, #002f1e);
 
-    --astryx-color-background-yellow: light-dark(#FFE08A, #FFE08A);
-    --astryx-color-border-yellow: light-dark(#FFCC55, #FFCC55);
-    --astryx-color-icon-yellow: light-dark(#614400, #3f2600);
-    --astryx-color-text-yellow: light-dark(#614400, #3f2600);
+    --astryx-color-background-yellow: light-dark(#ffe08a, #fde08f);
+    --astryx-color-border-yellow: light-dark(#f9d059, #f3d172);
+    --astryx-color-icon-yellow: light-dark(#584400, #3d2e00);
+    --astryx-color-text-yellow: light-dark(#584400, #3d2e00);
 
     --astryx-spacing-0: 0rem;
     --astryx-spacing-0-5: 0.1875rem;
@@ -155,9 +175,9 @@
     --astryx-shadow-high: 0 4px 6px #2d241b1A, 0 12px 24px #2d241b26;
     --astryx-shadow-inset-hover: inset 0px 0px 0px 2px #2d241b30;
     --astryx-shadow-inset-selected: inset 0px 0px 0px 2px #2d241b50;
-    --astryx-shadow-inset-success: inset 0px 0px 0px 2px #3a550050;
-    --astryx-shadow-inset-warning: inset 0px 0px 0px 2px #61440050;
-    --astryx-shadow-inset-error: inset 0px 0px 0px 2px #8b1d2450;
+    --astryx-shadow-inset-success: inset 0px 0px 0px 2px #3f4e0050;
+    --astryx-shadow-inset-warning: inset 0px 0px 0px 2px #58440050;
+    --astryx-shadow-inset-error: inset 0px 0px 0px 2px #88002350;
 
     --astryx-duration-fast-min: 80ms;
     --astryx-duration-fast: 100ms;
@@ -168,25 +188,41 @@
     --astryx-duration-slow-min: 480ms;
     --astryx-duration-slow: 600ms;
     --astryx-duration-slow-max: 750ms;
+    --astryx-duration-exit: var(--astryx-duration-fast);
 
     --astryx-ease-standard: cubic-bezier(0.24, 1, 0.4, 1);
+    --astryx-ease-entrance: cubic-bezier(0.24, 1, 0.4, 1);
+    --astryx-ease-move: cubic-bezier(0.24, 1, 0.4, 1);
+    --astryx-ease-exit: cubic-bezier(0.3, 0, 0.6, 0.6);
 
     --astryx-font-family-body: Poppins, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     --astryx-font-family-code: 'JetBrains Mono', 'SF Mono', Monaco, Consolas, monospace;
     --astryx-font-family-heading: Poppins, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 
-    --astryx-font-size-4xs: 0.3125rem;
-    --astryx-font-size-3xs: 0.4375rem;
-    --astryx-font-size-2xs: 0.5rem;
-    --astryx-font-size-xs: 0.625rem;
-    --astryx-font-size-sm: 0.8125rem;
-    --astryx-font-size-base: 1rem;
-    --astryx-font-size-lg: 1.25rem;
-    --astryx-font-size-xl: 1.5625rem;
-    --astryx-font-size-2xl: 1.9375rem;
-    --astryx-font-size-3xl: 2.4375rem;
-    --astryx-font-size-4xl: 3.0625rem;
-    --astryx-font-size-5xl: 3.8125rem;
+    --_scaled-font-size-4xs: min(calc(0.3125rem * var(--_dynamic-type-caption2, 1)), var(--_scaled-font-size-3xs));
+    --astryx-font-size-4xs: var(--_scaled-font-size-4xs);
+    --_scaled-font-size-3xs: min(calc(0.4375rem * var(--_dynamic-type-caption2, 1)), var(--_scaled-font-size-2xs));
+    --astryx-font-size-3xs: var(--_scaled-font-size-3xs);
+    --_scaled-font-size-2xs: min(calc(0.5rem * var(--_dynamic-type-caption2, 1)), var(--_scaled-font-size-xs));
+    --astryx-font-size-2xs: var(--_scaled-font-size-2xs);
+    --_scaled-font-size-xs: min(calc(0.625rem * var(--_dynamic-type-caption1, 1)), var(--_scaled-font-size-sm));
+    --astryx-font-size-xs: var(--_scaled-font-size-xs);
+    --_scaled-font-size-sm: min(calc(0.8125rem * var(--_dynamic-type-footnote, 1)), var(--_scaled-font-size-base));
+    --astryx-font-size-sm: var(--_scaled-font-size-sm);
+    --_scaled-font-size-base: min(calc(1rem * var(--_dynamic-type-body, 1)), var(--_scaled-font-size-lg));
+    --astryx-font-size-base: var(--_scaled-font-size-base);
+    --_scaled-font-size-lg: min(calc(1.25rem * var(--_dynamic-type-title3, 1)), var(--_scaled-font-size-xl));
+    --astryx-font-size-lg: var(--_scaled-font-size-lg);
+    --_scaled-font-size-xl: min(calc(1.5625rem * var(--_dynamic-type-title2, 1)), var(--_scaled-font-size-2xl));
+    --astryx-font-size-xl: var(--_scaled-font-size-xl);
+    --_scaled-font-size-2xl: min(calc(1.9375rem * var(--_dynamic-type-title1, 1)), var(--_scaled-font-size-3xl));
+    --astryx-font-size-2xl: var(--_scaled-font-size-2xl);
+    --_scaled-font-size-3xl: min(calc(2.4375rem * var(--_dynamic-type-title1, 1)), var(--_scaled-font-size-4xl));
+    --astryx-font-size-3xl: var(--_scaled-font-size-3xl);
+    --_scaled-font-size-4xl: min(calc(3.0625rem * var(--_dynamic-type-large-title, 1)), var(--_scaled-font-size-5xl));
+    --astryx-font-size-4xl: var(--_scaled-font-size-4xl);
+    --_scaled-font-size-5xl: calc(3.8125rem * var(--_dynamic-type-large-title, 1));
+    --astryx-font-size-5xl: var(--_scaled-font-size-5xl);
 
     --astryx-font-weight-normal: 400;
     --astryx-font-weight-regular: var(--astryx-font-weight-normal);
@@ -225,7 +261,7 @@
     --astryx-text-code-size: var(--astryx-font-size-base);
     --astryx-text-code-weight: var(--astryx-font-weight-normal);
     --astryx-text-code-leading: 1.5;
-    --astryx-text-supporting-size: 12px;
+    --astryx-text-supporting-size: calc(0.75rem * var(--_dynamic-type-footnote, 1));
     --astryx-text-supporting-weight: var(--astryx-font-weight-normal);
     --astryx-text-supporting-leading: 1.5385;
 

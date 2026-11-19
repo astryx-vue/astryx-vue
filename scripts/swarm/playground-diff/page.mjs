@@ -41,14 +41,23 @@ export async function waitForStablePreview(page, { timeoutMs = LOAD_TIMEOUT_MS }
   const deadline = Date.now() + timeoutMs
   let lastElements = -1
   let lastTexts = 0
+  let steady = 0
   let frame = null
   while (Date.now() < deadline) {
     frame = previewFrame(page) ?? frame
     if (frame) {
       const info = await frame.evaluate(COUNT_TEXT_ELEMENTS).catch(() => null)
       if (info) {
-        const building = await page.evaluate(() => document.body.textContent.includes('Building')).catch(() => true)
-        if (!building && info.texts >= 3 && info.elements === lastElements && info.texts === lastTexts)
+        // 只看渲染出来的状态文字「Building…」/「构建中…」（带省略号）：
+        // 原版 Next.js 页面的内联 <script> 里一直有「Building」，textContent 会误判；
+        // 编辑器里的模板源码也可能出现「Building」（contact-form 的「Community Building」），所以要连省略号一起匹配。
+        // eslint-disable-next-line unicorn/prefer-dom-node-text-content -- 要的正是只含渲染文字的 innerText
+        const building = await page.evaluate(() => /Building…|构建中…/.test(document.body.innerText)).catch(() => true)
+        const same = info.elements === lastElements && info.texts === lastTexts
+        steady = same ? steady + 1 : 0
+        // 一般页面文字够多，连续两次一样就算渲染完；空白页、图片画廊这种几乎没字的，
+        // 要连续多次（约 4 秒）不变才算，免得把还没挂上的空壳当成结果。
+        if (!building && info.elements > 0 && ((info.texts >= 3 && same) || steady >= 6))
           return frame
         lastElements = info.elements
         lastTexts = info.texts
@@ -67,8 +76,8 @@ export async function waitForStablePreview(page, { timeoutMs = LOAD_TIMEOUT_MS }
  *
  * 原版站点偶尔会卡在加载上（网络或编译排队），所以打不开时再试一次，不要直接挂。
  */
-export async function openSide(browser, url, { scheme, local, settleMs = 1200, attempts = 2 }) {
-  const context = await browser.newContext({ viewport: VIEWPORT, colorScheme: scheme })
+export async function openSide(browser, url, { scheme, local, viewport = VIEWPORT, settleMs = 1200, attempts = 2 }) {
+  const context = await browser.newContext({ viewport, colorScheme: scheme })
   if (local)
     await context.addInitScript(mode => localStorage.setItem('kawapress:appearance', mode), scheme)
   const page = await context.newPage()

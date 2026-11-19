@@ -4,6 +4,7 @@ import type { LinkProps } from './types.js'
 import { computed, toRaw, useAttrs } from 'vue'
 
 import { usePressFeedback } from '../composables/usePressFeedback.js'
+import Icon from '../Icon/Icon.vue'
 import { useLinkComponent } from '../LinkProvider/context.js'
 import { useAstryxMessages } from '../locale/index.js'
 import Tooltip from '../Tooltip/Tooltip.vue'
@@ -17,6 +18,7 @@ const props = withDefaults(defineProps<LinkProps>(), {
   isExternalLink: false,
   hasUnderline: false,
   color: 'accent',
+  type: 'body',
   isDisabled: false,
   isStandalone: false,
   maxLines: 0,
@@ -90,6 +92,7 @@ const weightClass = computed(() => {
 const classes = computed(() => [
   'astryx-link',
   `astryx-link--color-${props.color}`,
+  props.type !== 'inherit' && `astryx-link--type-${props.type}`,
   props.hasUnderline && 'astryx-link--underlined',
   props.isDisabled && 'astryx-link--disabled',
   props.isExternalLink && 'astryx-link--external',
@@ -182,7 +185,7 @@ function handleKeydown(event: KeyboardEvent) {
       <span :class="labelClass" :style="labelStyle">
         <slot />
       </span>
-      <span v-if="showNewTab" class="astryx-link__external" aria-hidden="true">↗</span>
+      <Icon v-if="showNewTab" class="astryx-link__external" icon="externalLink" size="xsm" color="inherit" aria-hidden="true" />
       <VisuallyHidden v-if="showNewTab">
         {{ newTabText }}
       </VisuallyHidden>
@@ -211,7 +214,7 @@ function handleKeydown(event: KeyboardEvent) {
     <span :class="labelClass" :style="labelStyle">
       <slot />
     </span>
-    <span v-if="showNewTab" class="astryx-link__external" aria-hidden="true">↗</span>
+    <Icon v-if="showNewTab" class="astryx-link__external" icon="externalLink" size="xsm" color="inherit" aria-hidden="true" />
     <VisuallyHidden v-if="showNewTab">
       {{ newTabText }}
     </VisuallyHidden>

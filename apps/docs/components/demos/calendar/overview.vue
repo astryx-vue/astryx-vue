@@ -6,5 +6,5 @@ const selected = ref(new Date(2026, 3, 15))
 </script>
 
 <template>
-  <Calendar v-model="selected" label="Calendar" />
+  <Calendar v-model="selected" mode="single" label="Calendar" />
 </template>

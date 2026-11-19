@@ -12,7 +12,7 @@ import withProgressSource from './with-progress.vue?raw&highlighted'
 
 const shell = { className: 'chat-preview-composer' }
 
-export const chatComposerDrawerOverview = defineDemo(overviewDemo, overviewSource, shell)
+export const chatComposerDrawerOverview = defineDemo(overviewDemo, overviewSource)
 export const chatComposerDrawerAttachments = defineDemo(attachmentsDemo, attachmentsSource, shell)
 export const chatComposerDrawerCollapsible = defineDemo(collapsibleDemo, collapsibleSource, shell)
 export const chatComposerDrawerFeedback = defineDemo(feedbackDemo, feedbackSource, shell)

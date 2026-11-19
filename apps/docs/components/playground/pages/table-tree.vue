@@ -21,6 +21,7 @@ import {
   pixel,
   proportional,
   Section,
+  SizeProvider,
   StackItem,
   Tab,
   TabList,
@@ -34,6 +35,7 @@ import {
   useTableSortable,
   useTableSortableState,
   useTableTreeState,
+  VisuallyHidden,
   VStack,
 } from '@astryx-vue/core'
 import type { TableColumn } from '@astryx-vue/core'
@@ -305,6 +307,7 @@ const relativeFormat = new Intl.RelativeTimeFormat('en-US', { numeric: 'auto' })
 const AGE_UNITS: ReadonlyArray<readonly [Intl.RelativeTimeFormatUnit, number]> = [
   ['year', 365 * 86_400_000],
   ['month', 30 * 86_400_000],
+  ['week', 7 * 86_400_000],
   ['day', 86_400_000],
   ['hour', 3_600_000],
   ['minute', 60_000],
@@ -313,7 +316,7 @@ const AGE_UNITS: ReadonlyArray<readonly [Intl.RelativeTimeFormatUnit, number]> =
 function commitAge(epochMs: number): string {
   const elapsed = NOW - epochMs
   for (const [unit, size] of AGE_UNITS) {
-    if (elapsed >= size || unit === 'minute')
+    if (elapsed >= size)
       return relativeFormat.format(-Math.floor(elapsed / size), unit)
   }
   return 'just now'
@@ -454,7 +457,7 @@ const AboutPanel = defineComponent({
       ])
     return () => h(VStack, { gap: 6 }, () => [
       h(VStack, { gap: 3 }, () => [
-        h(Heading, { level: 3 }, () => 'About'),
+        h(Heading, { level: 3, accessibilityLevel: 2 }, () => 'About'),
         h(Text, { color: 'secondary' }, () => REPO_DESCRIPTION),
         h(Link, { href: '#', isExternalLink: true }, () => 'canvas-editor.dev'),
         h(HStack, { gap: 1, wrap: 'wrap' }, () => TOPICS.map(topic => h(Token, { key: topic, size: 'sm', label: topic, onClick: () => {} }))),
@@ -463,7 +466,7 @@ const AboutPanel = defineComponent({
       ]),
       h(Divider),
       h(VStack, { gap: 3 }, () => [
-        h(Heading, { level: 3 }, () => 'Releases'),
+        h(Heading, { level: 3, accessibilityLevel: 2 }, () => 'Releases'),
         h(HStack, { gap: 2, vAlign: 'center' }, () => [
           h(Icon, { name: 'heroicons:tag', size: 'sm', color: 'success' }),
           h(Text, { weight: 'bold' }, () => 'v2.4.0'),
@@ -473,7 +476,7 @@ const AboutPanel = defineComponent({
       ]),
       h(Divider),
       h(VStack, { gap: 3 }, () => [
-        h(Heading, { level: 3 }, () => 'Contributors'),
+        h(Heading, { level: 3, accessibilityLevel: 2 }, () => 'Contributors'),
         h(HStack, { gap: 1, wrap: 'wrap' }, () => CONTRIBUTORS.map(name => h(Avatar, { key: name, name, size: 32 }))),
         h(Link, { href: '#' }, () => '+ 61 contributors'),
       ]),
@@ -695,12 +698,14 @@ const READMES: Record<string, string> = {
 <template>
   <Layout height="auto" :content-width="1440">
     <template #header>
-      <Toolbar :ref="setHeader" label="Repository" size="sm" :dividers="['bottom']">
+      <Toolbar :ref="setHeader" label="Repository" size="sm" :dividers="['bottom']" :style="{ paddingInline: '4px' }">
         <template #start>
           <HStack :gap="2" align="center">
-            <Heading :level="1" class="repo-visually-hidden">
-              {{ ROOT_NAME }}
-            </Heading>
+            <VisuallyHidden>
+              <Heading :level="1">
+                {{ ROOT_NAME }}
+              </Heading>
+            </VisuallyHidden>
             <Breadcrumbs label="Folder path">
               <BreadcrumbItem
                 v-for="(crumb, index) in crumbs"
@@ -720,7 +725,7 @@ const READMES: Record<string, string> = {
               v-if="isNarrowHeader"
               variant="secondary"
               size="sm"
-              :label="`${STAT_ACTION[stat.label]}: ${stat.value}`"
+              :label="`${stat.label}: ${stat.value}`"
             >
               <Icon :name="stat.icon" size="sm" />
             </IconButton>
@@ -737,7 +742,7 @@ const READMES: Record<string, string> = {
       </Toolbar>
     </template>
 
-    <LayoutContent :padding="4">
+    <LayoutContent role="main" :padding="4">
       <EmptyState
         v-if="data.length === 0"
         title="No matching files"
@@ -749,43 +754,46 @@ const READMES: Record<string, string> = {
       </EmptyState>
 
       <VStack v-else :ref="setBody" :gap="6">
-        <HStack :gap="2" align="center" wrap="wrap">
-          <DropdownMenu has-chevron size="sm" :items="branchItems" :button="{ label: 'main', size: 'sm', icon: BranchIcon }" />
-          <HStack :gap="1" align="center">
-            <template v-for="ref in REF_COUNTS" :key="ref.label">
-              <IconButton v-if="isNarrowBody" :label="ref.label" variant="ghost" size="sm">
-                <Icon :name="ref.icon" size="sm" />
-              </IconButton>
-              <Button v-else :label="ref.label" variant="ghost" size="sm" />
-            </template>
-          </HStack>
-          <StackItem size="fill">
-            <HStack :gap="2" h-align="end" align="center">
-              <Text v-if="isSearching && matchCount > 0" type="supporting" color="secondary">
-                {{ matchCount }} {{ matchCount === 1 ? 'result' : 'results' }}
-              </Text>
-              <IconButton v-if="isNarrowBody && !isSearchOpen" variant="ghost" size="sm" label="Go to file" @click="openSearch">
-                <Icon name="heroicons:magnifying-glass" size="sm" />
-              </IconButton>
-              <TextInput
-                v-else
-                ref="searchInput"
-                v-model="query"
-                label="Go to file"
-                is-label-hidden
-                placeholder="Go to file"
-                has-clear
-                :start-icon="SearchIcon"
-              />
-              <DropdownMenu has-chevron size="sm" :items="addFileItems" :button="{ label: 'Add file', size: 'sm' }" />
-              <Button label="Code" variant="primary" size="sm">
-                <template #icon>
-                  <Icon name="heroicons:code-bracket" size="sm" />
-                </template>
-              </Button>
+        <!-- 原版整条用 SizeProvider value="sm" 包着：Button、TextInput 读上下文，IconButton 和 DropdownMenu 不读，仍要自己写 sm。 -->
+        <SizeProvider value="sm">
+          <HStack :gap="2" align="center" wrap="wrap">
+            <DropdownMenu has-chevron :items="branchItems" :button="{ label: 'main', size: 'sm', icon: BranchIcon }" />
+            <HStack :gap="1" align="center">
+              <template v-for="ref in REF_COUNTS" :key="ref.label">
+                <IconButton v-if="isNarrowBody" :label="ref.label" variant="ghost" size="sm">
+                  <Icon :name="ref.icon" size="sm" />
+                </IconButton>
+                <Button v-else :label="ref.label" variant="ghost" size="sm" />
+              </template>
             </HStack>
-          </StackItem>
-        </HStack>
+            <StackItem size="fill">
+              <HStack :gap="2" h-align="end" align="center">
+                <Text v-if="isSearching && matchCount > 0" type="supporting" color="secondary">
+                  {{ matchCount }} {{ matchCount === 1 ? 'result' : 'results' }}
+                </Text>
+                <IconButton v-if="isNarrowBody && !isSearchOpen" variant="ghost" size="sm" label="Go to file" @click="openSearch">
+                  <Icon name="heroicons:magnifying-glass" size="sm" />
+                </IconButton>
+                <TextInput
+                  v-else
+                  ref="searchInput"
+                  v-model="query"
+                  label="Go to file"
+                  is-label-hidden
+                  placeholder="Go to file"
+                  has-clear
+                  :start-icon="SearchIcon"
+                />
+                <DropdownMenu has-chevron :items="addFileItems" :button="{ label: 'Add file', size: 'sm' }" />
+                <Button label="Code" variant="primary">
+                  <template #icon>
+                    <Icon name="heroicons:code-bracket" size="sm" />
+                  </template>
+                </Button>
+              </HStack>
+            </StackItem>
+          </HStack>
+        </SizeProvider>
 
         <Card :padding="0" class="tt-fixed-layout">
           <Table
@@ -802,7 +810,7 @@ const READMES: Record<string, string> = {
 
         <Card v-if="readme != null" :padding="0">
           <Section variant="transparent" :padding="0" :padding-block-start="1">
-            <TabList v-model:value="readmeTab" size="sm" has-divider>
+            <TabList v-model:value="readmeTab" size="sm" has-divider style="padding-inline: 4px">
               <Tab value="readme" label="Readme" />
               <template v-if="hasRepoTabs">
                 <Tab value="conduct" label="Code of conduct" />
@@ -847,15 +855,3 @@ const READMES: Record<string, string> = {
 }
 </style>
 
-<style>
-.repo-visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
-}
-</style>

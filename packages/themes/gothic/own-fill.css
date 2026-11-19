@@ -1,0 +1,272 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.overrides {
+  /*
+   * 自带填充的部件（卡片、浮层、输入框、菜单……）把主题自己的文字色和链接色重新设一遍，
+   * 放在分类色卡片里时不会继承卡片的深色文字。对应原版主题的 OWN_FILL_RULES。
+   */
+  [data-astryx-theme='gothic'] .astryx-selector-field[data-variant='input'] {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-multi-selector-control[data-variant='input'] {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-card[data-variant='default'] {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #a7b1bb;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-card[data-variant='muted'] {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #a7b1bb;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-section[data-variant='section'] {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-section[data-variant='muted'] {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-clickable-card[data-variant='default'] {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-clickable-card[data-variant='muted'] {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-selectable-card[data-variant='default'] {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-selectable-card[data-variant='muted'] {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-app-shell[data-variant='surface'] {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-app-shell[data-variant='section'] {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-app-shell__header[data-variant='surface'] {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-app-shell__sidenav[data-variant='surface'] {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-layout-panel {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-layout-content {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-code {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-avatar {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-avatar-group-overflow {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-segmented-control-item[data-selected='true'] {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-step-indicator[data-progress='not-started'] {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-table tbody tr:nth-child(even of :not([data-expansion-panel])) {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+    color: var(--astryx-color-text-primary);
+  }
+
+  [data-astryx-theme='gothic'] .astryx-banner-content {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-input-group-text {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-text-input {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-text-area {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-number-input {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-date-input {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-date-range-input {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-time-input {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-file-input {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-typeahead {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-tokenizer {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-selector-listbox {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-multi-selector-listbox {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-dropdown-menu {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-dropdown-menu-radio {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-context-menu {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-popover {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-hover-card {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-dialog {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-drawer {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-bottom-sheet {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+
+  [data-astryx-theme='gothic'] .astryx-chat-drawer {
+    --astryx-color-text-primary: #e8f1f6;
+    --astryx-color-text-secondary: #96a0ab;
+    --astryx-color-text-accent: #e8f1f6;
+  }
+}

@@ -28,9 +28,23 @@ The name is `collection:icon`, the same id Iconify uses. `carbon-settings` is ac
 
 Nothing in `@astryx-vue/core` bundles those drawings. Install the collection you actually use, then let the Vite plugin pull in only the icons your source names:
 
-```bash
+::: code-group
+```sh [pnpm]
 pnpm add -D @iconify-json/carbon
 ```
+
+```sh [npm]
+npm install -D @iconify-json/carbon
+```
+
+```sh [yarn]
+yarn add -D @iconify-json/carbon
+```
+
+```sh [bun]
+bun add -d @iconify-json/carbon
+```
+:::
 
 ```ts
 import { astryxIcons } from '@astryx-vue/core/icons'

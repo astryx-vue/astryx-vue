@@ -28,9 +28,23 @@ import { Icon } from '@astryx-vue/core/Icon'
 
 `@astryx-vue/core` 不打包这些图形。装你要用的集合，再用 Vite 插件只把源码里写到的图标打进去：
 
-```bash
+::: code-group
+```sh [pnpm]
 pnpm add -D @iconify-json/carbon
 ```
+
+```sh [npm]
+npm install -D @iconify-json/carbon
+```
+
+```sh [yarn]
+yarn add -D @iconify-json/carbon
+```
+
+```sh [bun]
+bun add -d @iconify-json/carbon
+```
+:::
 
 ```ts
 import { astryxIcons } from '@astryx-vue/core/icons'

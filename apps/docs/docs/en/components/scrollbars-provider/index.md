@@ -162,7 +162,7 @@ To change it site-wide, put the values in the `astryx.overrides` layer:
 }
 ```
 
-You can set these variables on any ancestor, so to change just one area, set them in that area's selector. You can also put them in the variables of a [`Theme`](/en/components/theme) so they switch with it. More on variables in [CSS variables](/en/themes/css-variables).
+You can set these variables on any ancestor, so to change just one area, set them in that area's selector. You can also put them in the variables of a [`Theme`](/en/components/theme) so they switch with it. More on variables in [CSS variables](/en/guide/css-variables).
 
 ### Changing behavior with options
 

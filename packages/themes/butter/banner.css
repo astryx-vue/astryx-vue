@@ -1,44 +1,26 @@
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
-@layer astryx.tokens {
-  [data-astryx-theme='butter'] {
-    --astryx-banner-info-background: #4883fd;
-    --astryx-banner-info-foreground: #ffffff;
-    --astryx-banner-error-background: #fc473b;
-    --astryx-banner-error-foreground: #ffffff;
-    --astryx-banner-warning-background: #ffc502;
-    --astryx-banner-warning-foreground: #1d1c11;
-    --astryx-banner-success-background: #91D143;
-    --astryx-banner-success-foreground: #1d1c11;
-    --astryx-banner-content-background: var(--astryx-color-background-surface);
-    --astryx-banner-border: var(--astryx-color-border);
-  }
-}
 
 /*
- * 醒目底色上，状态条把共享的文字和色相 token 重指到浅色或深色文字。
+ * 状态条在各状态上重指浅底和浅底上的文字，与上游 banner 的 `status:*` 覆盖一致。
  */
 @layer astryx.overrides {
   [data-astryx-theme='butter'] .astryx-banner[data-status='info'] {
-    --astryx-color-text-primary: #ffffff;
-    --astryx-color-text-secondary: #ffffff;
-    --astryx-color-accent: #ffffff;
+    --astryx-color-info-muted: #4d82ff;
+    --astryx-color-on-info-muted: #1d1c11;
   }
 
   [data-astryx-theme='butter'] .astryx-banner[data-status='success'] {
-    --astryx-color-text-primary: #1d1c11;
-    --astryx-color-text-secondary: #1d1c11;
-    --astryx-color-success: #1d1c11;
+    --astryx-color-success-muted: #7bbf7a;
+    --astryx-color-on-success-muted: #1d1c11;
   }
 
   [data-astryx-theme='butter'] .astryx-banner[data-status='warning'] {
-    --astryx-color-text-primary: #1d1c11;
-    --astryx-color-text-secondary: #1d1c11;
-    --astryx-color-warning: #1d1c11;
+    --astryx-color-warning-muted: #dfcf5b;
+    --astryx-color-on-warning-muted: #1d1c11;
   }
 
   [data-astryx-theme='butter'] .astryx-banner[data-status='error'] {
-    --astryx-color-text-primary: #ffffff;
-    --astryx-color-text-secondary: #ffffff;
-    --astryx-color-error: #ffffff;
+    --astryx-color-error-muted: #e56241;
+    --astryx-color-on-error-muted: #1d1c11;
   }
 }

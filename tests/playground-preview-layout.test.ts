@@ -15,4 +15,8 @@ describe('preview layout', () => {
     expect(previewLayoutMode(800, 600, 420, 600)).toBe('fill')
     expect(previewLayoutMode(800, 600, 420, 598)).toBe('fill')
   })
+
+  it('centers a root that does not bleed past the host padding, whatever its size', () => {
+    expect(previewLayoutMode(800, 600, 800, 600, false)).toBe('center')
+  })
 })

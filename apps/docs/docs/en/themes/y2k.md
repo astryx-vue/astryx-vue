@@ -15,4 +15,4 @@ import '@astryx-vue/themes/y2k.css'
 <div data-astryx-theme="y2k">
 ```
 
-<ThemeStage theme="y2k" />
+See it in the [theme gallery](/en/themes/?theme=y2k).

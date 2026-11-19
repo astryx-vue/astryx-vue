@@ -5,4 +5,4 @@ import overviewDemo from './overview.vue'
 import overviewSource from './overview.vue?raw&highlighted'
 
 export const fieldStatusBasic = defineDemo(basicDemo, basicSource)
-export const fieldStatusOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const fieldStatusOverview = defineDemo(overviewDemo, overviewSource)

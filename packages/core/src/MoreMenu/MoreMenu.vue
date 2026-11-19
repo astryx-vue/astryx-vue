@@ -4,6 +4,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, provide, shallowRef, us
 import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
 import { useAstryxMessages } from '../locale/index.js'
+import { useSize } from '../SizeContext/SizeContext.js'
 import { moreMenuContextKey } from './context.js'
 import MoreMenuPanel from './MoreMenuPanel.vue'
 import MoreMenuSheet from './MoreMenuSheet.vue'
@@ -17,7 +18,6 @@ const props = withDefaults(defineProps<Omit<MoreMenuProps, 'isMenuOpen'>>(), {
   isInline: false,
   placement: 'below',
   presentation: 'popover',
-  size: 'md',
   variant: 'ghost',
 })
 
@@ -26,6 +26,7 @@ defineSlots<MoreMenuSlots>()
 
 const openModel = defineModel<boolean | undefined>('isMenuOpen', { default: undefined })
 const messages = useAstryxMessages()
+const size = useSize(() => props.size, 'md')
 const menuLabel = computed(() => props.label ?? messages.value.moreMenu.label)
 
 const ADAPTIVE_QUERY = '(max-width: 768px) and (pointer: coarse)'
@@ -231,7 +232,7 @@ watch(openModel, (open, previous) => {
 
 provide(moreMenuContextKey, {
   closeMenu,
-  menuSize: computed(() => props.size),
+  menuSize: size,
 })
 
 let query: MediaQueryList | null = null

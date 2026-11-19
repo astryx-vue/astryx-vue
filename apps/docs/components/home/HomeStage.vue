@@ -270,7 +270,7 @@ html:has(.home-stage) .home-stage :where(a, button, input, textarea, select, sum
   }
 
   .home-mark {
-    margin-bottom: 0;
+    margin-bottom: clamp(1rem, 3vh, 2rem);
   }
 
   .home-mark__logo {

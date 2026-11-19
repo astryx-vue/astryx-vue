@@ -13,6 +13,7 @@ import { useFieldControlState } from '../composables/useFieldControlState.js'
 import { useOverflow } from '../composables/useOverflow.js'
 import Field from '../Field/Field.vue'
 import { useFieldPartStyling } from '../Field/fieldParts.js'
+import InputClearButton from '../Field/InputClearButton.vue'
 import StatusGlyph from '../Field/StatusGlyph.vue'
 import { fieldStatusPlacement } from '../Field/statusPlacement.js'
 import Icon from '../Icon/Icon.vue'
@@ -22,6 +23,7 @@ import { focusElement } from '../layer/focus.js'
 import { useAstryxMessages } from '../locale/index.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { normalizeTriggerVariant } from '../selectors/triggerVariant.js'
+import { useSize } from '../SizeContext/SizeContext.js'
 import Spinner from '../Spinner/Spinner.vue'
 import Token from '../Token/Token.vue'
 import { useAnchoredListbox } from '../Typeahead/useAnchoredListbox.js'
@@ -41,7 +43,6 @@ const props = withDefaults(defineProps<MultiSelectorProps>(), {
   disabled: false,
   status: 'default',
   statusVariant: 'attached',
-  size: 'md',
   variant: 'input',
   presentation: 'popover',
   clearable: false,
@@ -58,7 +59,12 @@ const props = withDefaults(defineProps<MultiSelectorProps>(), {
 })
 
 const emit = defineEmits<MultiSelectorEmits>()
+
 const slots = defineSlots<MultiSelectorSlots>()
+
+// 显式 size > 外层 SizeContext（Toolbar、InputGroup 等）> 'md'。
+const size = useSize(() => props.size, 'md')
+
 const attrs = useAttrs()
 const parts = useFieldPartStyling({
   component: 'MultiSelector',
@@ -291,7 +297,7 @@ defineExpose({
   <Field
     v-else
     class="astryx-multi-selector"
-    :class="[parts.containerClass.value, `size-${props.size}`, `variant-${triggerVariant}`]"
+    :class="[parts.containerClass.value, `size-${size}`, `variant-${triggerVariant}`]"
     :style="parts.containerStyle.value"
     :label="props.label"
     :input-id="props.searchable && combobox.isOpen.value ? searchId : triggerId"
@@ -351,7 +357,7 @@ defineExpose({
             v-for="option in selectedOptions.slice(0, visibleBadgeCount)"
             :key="option.value"
             :label="option.label"
-            :size="props.size === 'lg' ? 'md' : 'sm'"
+            :size="size === 'lg' ? 'md' : 'sm'"
           />
           <span v-if="hiddenBadgeCount > 0" class="astryx-multi-selector-more">
             {{ messages.multiSelector.more(hiddenBadgeCount) }}
@@ -359,29 +365,26 @@ defineExpose({
         </span>
       </button>
       <Spinner v-if="control.isLoading.value" class="astryx-multi-selector-spinner" size="sm" :aria-label="messages.multiSelector.loading" />
-      <button
+      <InputClearButton
         v-if="hasClear && selectedValues.length > 0 && control.canActivate.value"
-        type="button"
         class="astryx-multi-selector-clear"
-        :aria-label="messages.multiSelector.clearAll(props.label)"
+        :label="messages.multiSelector.clearAll(props.label)"
         @click.stop="menu.commit([])"
-      >
-        <Icon icon="close" size="sm" />
-      </button>
+      />
       <StatusGlyph
         v-if="statusGlyph"
         :type="statusGlyph"
         :message="fieldStatus?.message"
         :tooltip="effectiveStatusVariant === 'tooltip'"
       />
-      <Icon v-else-if="control.canActivate.value" class="astryx-multi-selector-chevron" :class="{ 'is-open': combobox.isOpen.value }" icon="chevronDown" size="sm" />
+      <Icon v-else-if="!control.isReadOnly.value" class="astryx-multi-selector-chevron" :class="{ 'is-open': combobox.isOpen.value }" icon="chevronDown" size="sm" />
       <span v-if="control.isReadOnly.value" :id="readOnlyId" class="astryx-visually-hidden">{{ messages.multiSelector.readOnly }}</span>
       <span v-if="props.triggerDisplay === 'badges'" :ref="overflow.measureRef" class="astryx-multi-selector-measure" aria-hidden="true">
         <Token
           v-for="option in selectedOptions"
           :key="option.value"
           :label="option.label"
-          :size="props.size === 'lg' ? 'md' : 'sm'"
+          :size="size === 'lg' ? 'md' : 'sm'"
         />
         <span class="astryx-multi-selector-more" data-overflow-indicator>{{ measureMoreLabel }}</span>
       </span>
@@ -434,7 +437,7 @@ defineExpose({
         :select-all-label="menu.selectAllLabel.value"
         :select-all-state="menu.selectAllState.value"
         :checkbox-position="props.checkboxPosition"
-        :size="props.size"
+        :size="size"
         :loading="control.isLoading.value"
         :real-match-count="menu.realMatchCount.value"
         :rows="menu.rows.value"

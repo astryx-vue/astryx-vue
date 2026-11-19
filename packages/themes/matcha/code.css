@@ -9,31 +9,31 @@
 
     /* CodeBlock card: white surface and a hairline border, matching the
        original block. Inline code keeps the muted chip above. */
-    --astryx-code-block-background: light-dark(#F0F0E0, #1a1c14);
+    --astryx-code-block-background: light-dark(#f0f0e0, #1a1c14);
     --astryx-code-block-border: var(--astryx-color-border);
     --astryx-code-block-focus: var(--astryx-color-accent);
-    --astryx-code-block-highlight-background: color-mix(in srgb, var(--astryx-color-accent) 20%, transparent);
+    --astryx-code-block-highlight-background: var(--astryx-color-accent-muted);
 
     /* Syntax colors from the original CodeBlock theme: keyword and type share
        the same purple, strings stay green. */
     --astryx-code-syntax-keyword: light-dark(#5a6b2a, #a8bf6a);
-    --astryx-code-syntax-string: light-dark(#2e6b4a, #7bc49e);
-    --astryx-code-syntax-comment: light-dark(#707E46, #707E46);
-    --astryx-code-syntax-number: light-dark(#8c6b30, #d4b870);
+    --astryx-code-syntax-string: light-dark(#2e6b5a, #6ccaaa);
+    --astryx-code-syntax-comment: light-dark(#5a6b2a, #7a894f);
+    --astryx-code-syntax-number: light-dark(#836700, #e0b318);
     --astryx-code-syntax-function: light-dark(#3a5e8c, #7ba8d4);
     --astryx-code-syntax-type: light-dark(#6b4a8c, #b08ed4);
     --astryx-code-syntax-variable: light-dark(#3E481D, #C0CBA9);
-    --astryx-code-syntax-operator: light-dark(#707E46, #94a468);
-    --astryx-code-syntax-constant: light-dark(#8c6b30, #d4b870);
+    --astryx-code-syntax-operator: light-dark(#5a6b2a, #94a468);
+    --astryx-code-syntax-constant: light-dark(#836700, #e0b318);
     --astryx-code-syntax-tag: light-dark(#8c3a3a, #d47a7a);
-    --astryx-code-syntax-attribute: light-dark(#7c5e3a, #c4a882);
-    --astryx-code-syntax-property: light-dark(#3a7c6b, #70c4b0);
-    --astryx-code-syntax-punctuation: light-dark(#566a39, #92af6a);
+    --astryx-code-syntax-attribute: light-dark(#7c5e3a, #d1a500);
+    --astryx-code-syntax-property: light-dark(#2e6b5a, #6ccaaa);
+    --astryx-code-syntax-punctuation: light-dark(#5a6b2a, #92af6a);
 
     --astryx-code-syntax-added: color-mix(in srgb, var(--astryx-color-success-muted) 25%, transparent);
     --astryx-code-syntax-removed: color-mix(in srgb, var(--astryx-color-error-muted) 25%, transparent);
-    --astryx-code-syntax-diff-header: var(--astryx-color-background-muted);
-    --astryx-code-syntax-added-marker: var(--astryx-color-text-green);
-    --astryx-code-syntax-removed-marker: var(--astryx-color-text-red);
+    --astryx-code-syntax-diff-header: transparent;
+    --astryx-code-syntax-added-marker: var(--astryx-code-syntax-punctuation);
+    --astryx-code-syntax-removed-marker: var(--astryx-code-syntax-punctuation);
   }
 }

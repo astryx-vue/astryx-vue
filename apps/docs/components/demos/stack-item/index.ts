@@ -7,4 +7,4 @@ import overviewSource from './overview.vue?raw&highlighted'
 const options = { className: 'stack-item-preview' }
 
 export const stackItemFill = defineDemo(fillDemo, fillSource, options)
-export const stackItemOverview = defineDemo(overviewDemo, overviewSource, options)
+export const stackItemOverview = defineDemo(overviewDemo, overviewSource)

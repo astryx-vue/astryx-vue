@@ -188,7 +188,7 @@
 
   .astryx-item[data-interactive='true'] {
     cursor: pointer;
-    transition: background-color var(--astryx-duration-fast-max, 165ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+    transition: background-color var(--astryx-duration-exit, 175ms) var(--astryx-ease-exit, cubic-bezier(0.3, 0, 0.6, 0.6));
   }
 
   .astryx-item[data-inert='true'] {

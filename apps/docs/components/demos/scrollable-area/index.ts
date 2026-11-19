@@ -19,4 +19,4 @@ export const scrollableAreaOverscroll = defineDemo(overscrollDemo, overscrollSou
 export const scrollableAreaStickyHeaders = defineDemo(stickyHeadersDemo, stickyHeadersSource, options)
 export const scrollableAreaStickyPassthrough = defineDemo(stickyPassthroughDemo, stickyPassthroughSource, options)
 export const scrollableAreaTwoAxis = defineDemo(twoAxisDemo, twoAxisSource, options)
-export const scrollableAreaOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const scrollableAreaOverview = defineDemo(overviewDemo, overviewSource)

@@ -13,9 +13,23 @@ AI 写组件代码时最容易犯两个错：一是猜 props，二是把原版 R
 
 ## 第一步：装命令行
 
-```sh
+::: code-group
+```sh [pnpm]
 pnpm add -D @astryx-vue/cli
 ```
+
+```sh [npm]
+npm install -D @astryx-vue/cli
+```
+
+```sh [yarn]
+yarn add -D @astryx-vue/cli
+```
+
+```sh [bun]
+bun add -d @astryx-vue/cli
+```
+:::
 
 装完命令就在 `node_modules/.bin` 里，名字是 `astryx-vue`。没装也能临时用 `npx @astryx-vue/cli …`，scope 不能省。
 

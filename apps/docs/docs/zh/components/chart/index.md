@@ -35,9 +35,23 @@ import {
 
 ## 安装
 
-```bash
+::: code-group
+```sh [pnpm]
 pnpm add @astryx-vue/charts
 ```
+
+```sh [npm]
+npm install @astryx-vue/charts
+```
+
+```sh [yarn]
+yarn add @astryx-vue/charts
+```
+
+```sh [bun]
+bun add @astryx-vue/charts
+```
+:::
 
 `@astryx-vue/charts` 依赖同级的 `@astryx-vue/core` 和 `vue`，请确保项目中已经安装了它们。
 

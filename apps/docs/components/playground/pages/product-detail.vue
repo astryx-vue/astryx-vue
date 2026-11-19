@@ -10,6 +10,7 @@ import {
   Grid,
   Heading,
   HStack,
+  Icon,
   Layout,
   LayoutContent,
   NumberInput,
@@ -17,6 +18,7 @@ import {
   SegmentedControlItem,
   SelectableCard,
   Text,
+  useToast,
   VStack,
 } from '@astryx-vue/core'
 import type { Component } from 'vue'
@@ -94,12 +96,22 @@ function increment() {
   quantity.value = Math.min(10, (quantity.value ?? 1) + 1)
 }
 
-const filledStars = computed(() => Math.round(4.3))
+const filledStars = Math.round(4.3)
+const glaze = computed(() => COLORS.find(c => c.value === color.value)?.label ?? color.value)
+
+const showToast = useToast()
+// 演示用：真实项目里换成加入购物车、发起结账的调用。
+function addToCart() {
+  showToast({ body: `Demo: ${quantity.value ?? 1} × ${PRODUCT.name} (${glaze.value}) would be added to the cart here`, uniqueID: 'add-to-cart' })
+}
+function buyNow() {
+  showToast({ body: `Demo: checkout for ${PRODUCT.name} would start here`, uniqueID: 'buy-now' })
+}
 </script>
 
 <template>
   <Layout height="fill" :content-width="1200">
-    <LayoutContent :padding="6">
+    <LayoutContent role="main" :padding="6">
       <Grid :columns="{ minWidth: 320, repeat: 'fit' }" :gap="5">
         <VStack :gap="3">
           <AspectRatio :ratio="4 / 5">
@@ -125,27 +137,17 @@ const filledStars = computed(() => Math.round(4.3))
         <VStack :gap="0" class="sticky-info">
           <VStack :gap="5">
             <VStack :gap="2">
-              <Heading :level="1" type="display-2">
+              <Text type="display-2" as="h1">
                 {{ PRODUCT.name }}
-              </Heading>
-              <HStack :gap="1" :align="'center'">
-                <span
-                  v-for="n in filledStars"
-                  :key="`full-${n}`"
-                  class="star star--filled"
-                  aria-hidden="true"
-                >★</span>
-                <span
-                  v-for="n in (5 - filledStars)"
-                  :key="`empty-${n}`"
-                  class="star"
-                  aria-hidden="true"
-                >☆</span>
+              </Text>
+              <HStack :gap="1" vAlign="center">
+                <Icon v-for="n in filledStars" :key="`full-${n}`" name="heroicons:star-solid" size="sm" />
+                <Icon v-for="n in (5 - filledStars)" :key="`empty-${n}`" name="heroicons:star" size="sm" />
                 <Text type="body" color="secondary">
                   4.3 (128)
                 </Text>
               </HStack>
-              <HStack :gap="2" :align="'center'">
+              <HStack :gap="2" vAlign="center">
                 <Text type="large" weight="bold">
                   {{ fmt(PRODUCT.price) }}
                 </Text>
@@ -155,7 +157,7 @@ const filledStars = computed(() => Math.round(4.3))
                 <Badge variant="error" label="Sale" />
               </HStack>
             </VStack>
-            <Text type="large">
+            <Text type="large" weight="normal">
               {{ PRODUCT.description }}
             </Text>
             <VStack :gap="2">
@@ -192,7 +194,7 @@ const filledStars = computed(() => Math.round(4.3))
               <Text type="label">
                 Quantity
               </Text>
-              <HStack :gap="1" :align="'center'">
+              <HStack :gap="1" vAlign="center">
                 <Button
                   label="Decrease quantity"
                   variant="ghost"
@@ -228,14 +230,14 @@ const filledStars = computed(() => Math.round(4.3))
               </HStack>
             </VStack>
             <VStack :gap="2">
-              <Button label="Add to Cart" variant="primary" size="lg" />
-              <Button label="Buy it now" size="lg" />
+              <Button label="Add to Cart" variant="primary" size="lg" @click="addToCart" />
+              <Button label="Buy it now" size="lg" @click="buyNow" />
             </VStack>
             <CollapsibleGroup type="multiple" :default-value="['composition']">
               <Divider />
               <Collapsible value="composition">
                 <template #trigger>
-                  <Heading :level="3">
+                  <Heading :level="3" :accessibility-level="2">
                     Composition
                   </Heading>
                 </template>
@@ -246,7 +248,7 @@ const filledStars = computed(() => Math.round(4.3))
               <Divider />
               <Collapsible value="delivery" :default-is-open="false">
                 <template #trigger>
-                  <Heading :level="3">
+                  <Heading :level="3" :accessibility-level="2">
                     Delivery &amp; Returns
                   </Heading>
                 </template>
@@ -257,7 +259,7 @@ const filledStars = computed(() => Math.round(4.3))
               <Divider />
               <Collapsible value="dimensions" :default-is-open="false">
                 <template #trigger>
-                  <Heading :level="3">
+                  <Heading :level="3" :accessibility-level="2">
                     Dimensions
                   </Heading>
                 </template>
@@ -293,14 +295,5 @@ const filledStars = computed(() => Math.round(4.3))
   height: 100%;
   object-fit: cover;
   display: block;
-}
-
-.star {
-  color: var(--astryx-color-text-secondary);
-  font-size: var(--astryx-font-size-sm);
-}
-
-.star--filled {
-  color: var(--astryx-color-text-primary);
 }
 </style>

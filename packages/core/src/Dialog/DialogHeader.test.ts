@@ -24,6 +24,16 @@ describe('dialogHeader', () => {
     expect(title.attributes('data-dialog-default-focus')).toBe('')
   })
 
+  it('renders the close button when an openChange listener is given, like the original onOpenChange', async () => {
+    const without = mount(DialogHeader, { props: { title: 'Title' } })
+    expect(without.find('.astryx-dialog-header__close').exists()).toBe(false)
+
+    const calls: boolean[] = []
+    const wrapper = mount(DialogHeader, { props: { title: 'Title', onOpenChange: (open: boolean) => calls.push(open) } })
+    await wrapper.get('.astryx-dialog-header__close').trigger('click')
+    expect(calls).toEqual([false])
+  })
+
   it('renders the subtitle only when it is not empty', () => {
     const withSubtitle = mount(DialogHeader, { props: { title: 'Title', subtitle: 'Details' } })
     expect(withSubtitle.find('.astryx-dialog-header__subtitle').text()).toBe('Details')

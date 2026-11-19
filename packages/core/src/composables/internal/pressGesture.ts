@@ -19,8 +19,11 @@ export const PRESS_SLOP_PX = 10
 /** 太快的轻点：抬手时补亮，满强度保持这么久再淡出。不然最常见的操作一点反馈都没有。 */
 export const PRESS_FLASH_MS = 100
 
-/** 抬手后淡出的时长。样式表里的淡出动画用同一个数，见 `styles/pressable.css`。 */
-export const PRESS_FADE_MS = 200
+/**
+ * 主题没设 `--astryx-duration-exit` 时，抬手后淡出的时长：这个 token 的默认值（核心的 fast 档，175ms）。
+ * 释放动画播主题的退出 token，控制器在抬手时读元素上的 token（见 `pressFeedback.ts` 的 `pressFadeMs`），读不到才用它。
+ */
+export const PRESS_FADE_MS = 175
 
 /** 滚动刚停不久就落下的手指是在「刹车」，不是按压。这个窗口内不亮。 */
 export const PRESS_SCROLL_BRAKE_MS = 150

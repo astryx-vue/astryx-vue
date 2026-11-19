@@ -12,6 +12,7 @@ import FieldIcon from '../Field/FieldIcon.vue'
 import { useFieldPartStyling } from '../Field/fieldParts.js'
 import IconButton from '../IconButton/IconButton.vue'
 import { useAstryxMessages } from '../locale/index.js'
+import { useSize } from '../SizeContext/SizeContext.js'
 import Spinner from '../Spinner/Spinner.vue'
 import TimeField from '../TimeInput/TimeField.vue'
 import { effectivePickerPresentation, resolvePickerPresentation } from '../utils/inputPresentation.js'
@@ -23,7 +24,6 @@ defineOptions({ name: 'AstryxDateTimeInput', inheritAttrs: false })
 const props = withDefaults(defineProps<Omit<DateTimeInputProps, 'modelValue'>>(), {
   modelValue: null,
   hourFormat: '12h',
-  size: 'md',
   hasClear: false,
   hasSeconds: false,
   timeIncrement: 1,
@@ -32,6 +32,10 @@ const props = withDefaults(defineProps<Omit<DateTimeInputProps, 'modelValue'>>()
 })
 
 const emit = defineEmits<DateTimeInputEmits>()
+
+// 显式 size > 外层 SizeContext（Toolbar、InputGroup 等）> 'md'。
+const size = useSize(() => props.size, 'md')
+
 const model = defineModel<string | null>({ default: null })
 const attrs = useAttrs()
 const parts = useFieldPartStyling({

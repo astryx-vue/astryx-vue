@@ -3,19 +3,17 @@ import { SideNav, SideNavHeading, SideNavItem, SideNavSection } from '@astryx-vu
 </script>
 
 <template>
-  <div class="nav-overview nav-overview--side">
-    <SideNav>
-      <template #header>
-        <SideNavHeading heading="My App" heading-href="#home" />
-      </template>
-      <SideNavSection title="Main">
-        <SideNavItem href="#dashboard" icon-class="i-carbon-home" is-selected label="Dashboard" />
-        <SideNavItem href="#projects" icon-class="i-carbon-folder" label="Projects" />
-        <SideNavItem href="#analytics" icon-class="i-carbon-analytics" label="Analytics" />
-      </SideNavSection>
-      <SideNavSection title="Documents">
-        <SideNavItem href="#documents" icon-class="i-carbon-document" label="All Documents" />
-      </SideNavSection>
-    </SideNav>
-  </div>
+  <SideNav>
+    <template #header>
+      <SideNavHeading heading="My App" heading-href="#home" />
+    </template>
+    <SideNavSection title="Main">
+      <SideNavItem href="#dashboard" icon-class="i-heroicons-home" is-selected label="Dashboard" />
+      <SideNavItem href="#projects" icon-class="i-heroicons-folder" label="Projects" />
+      <SideNavItem href="#analytics" icon-class="i-heroicons-chart-bar" label="Analytics" />
+    </SideNavSection>
+    <SideNavSection title="Documents">
+      <SideNavItem href="#documents" icon-class="i-heroicons-document-text" label="All Documents" />
+    </SideNavSection>
+  </SideNav>
 </template>

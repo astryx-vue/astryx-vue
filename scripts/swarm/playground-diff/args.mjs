@@ -9,6 +9,8 @@ export const USAGE = `用法：node scripts/swarm/playground-diff.mjs <模板 sl
   颜色模式      light 或 dark
   本地端口      本地 docs preview 的端口，站点要事先 docs:build
   --json 路径   把完整结果写成 JSON
+  --viewport 宽x高  两边浏览器窗口的尺寸（默认 1440x900），用来测窄屏下才出现的内容
+  --click 步骤  采集前先依次点击（可重复）：角色:名字（tab:Billing、button:Next）或可见文字
 
 必须包在 browser-lock 里跑：
   node scripts/swarm/browser-lock.mjs run --purpose "演练场对比 table" -- \\
@@ -26,10 +28,28 @@ export class UsageError extends Error {}
 export function parseDiffArgs(argv) {
   const positionals = []
   let jsonPath = null
+  const clicks = []
+  let viewport = null
   for (let index = 0; index < argv.length; index++) {
     const arg = argv[index]
     if (arg === '--help' || arg === '-h')
       return { help: true }
+    if (arg === '--viewport') {
+      const match = /^(\d+)x(\d+)$/.exec(argv[index + 1] ?? '')
+      if (!match)
+        throw new UsageError('--viewport 后面要跟 宽x高，比如 1200x900')
+      viewport = { width: Number(match[1]), height: Number(match[2]) }
+      index += 1
+      continue
+    }
+    if (arg === '--click') {
+      const value = argv[index + 1]
+      if (!value)
+        throw new UsageError('--click 后面要跟要点的东西，比如 tab:Billing')
+      clicks.push(parseClick(value))
+      index += 1
+      continue
+    }
     if (arg === '--json') {
       const value = argv[index + 1]
       if (!value || value.startsWith('--'))
@@ -63,7 +83,16 @@ export function parseDiffArgs(argv) {
   if (rest.length)
     throw new UsageError(`多余的参数：${rest.join(' ')}`)
 
-  return { slug, scheme, port: Number(port), jsonPath }
+  return { slug, scheme, port: Number(port), jsonPath, clicks, viewport }
+}
+
+/**
+ * 一步点击：`角色:名字`（按无障碍角色和名字找，如 tab:Billing、button:Next）或者直接写文字（按可见文字找）。
+ * 两边按同样的步骤点，点完再采集，用来比对 tab、向导下一步、展开行这类交互后的画面。
+ */
+export function parseClick(value) {
+  const match = /^([a-z]+):(.+)$/.exec(value)
+  return match ? { role: match[1], name: match[2] } : { text: value }
 }
 
 /** 两个要打开的地址。原版只能走代理，本地走 127.0.0.1。 */

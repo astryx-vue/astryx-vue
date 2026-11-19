@@ -53,7 +53,7 @@ const sizeClass = computed(() => `astryx-tab--size-${context.size.value}`)
 const { position, teleportTarget, detach } = usePositionedLayer({
   alignment,
   anchor: anchorRef,
-  gap: 4,
+  gap: 0,
   isOpen,
   layer: surfaceRef,
   placement,

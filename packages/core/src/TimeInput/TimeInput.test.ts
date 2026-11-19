@@ -68,9 +68,11 @@ describe('time input', () => {
 
   it('shows the labelTooltip through the field label', () => {
     const wrapper = mount(TimeInput, {
+      attachTo: document.body,
       props: { label: 'Start time', modelValue: null, labelTooltip: 'Local time zone' },
     })
-    expect(wrapper.html()).toContain('Local time zone')
+    // 气泡挂在 body 上，不在字段里面。
+    expect(document.body.innerHTML).toContain('Local time zone')
     wrapper.unmount()
   })
 

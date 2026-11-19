@@ -15,4 +15,4 @@ import '@astryx-vue/themes/butter.css'
 <div data-astryx-theme="butter">
 ```
 
-<ThemeStage theme="butter" />
+See it in the [theme gallery](/en/themes/?theme=butter).

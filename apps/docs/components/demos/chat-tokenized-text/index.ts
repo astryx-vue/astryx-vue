@@ -8,6 +8,6 @@ import overviewSource from './overview.vue?raw&highlighted'
 
 const column = { className: 'chat-preview' }
 
-export const chatTokenizedTextOverview = defineDemo(overviewDemo, overviewSource, column)
+export const chatTokenizedTextOverview = defineDemo(overviewDemo, overviewSource)
 export const chatTokenizedTextBasic = defineDemo(basicDemo, basicSource, column)
 export const chatTokenizedTextColors = defineDemo(colorsDemo, colorsSource, column)

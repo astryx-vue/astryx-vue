@@ -12,8 +12,8 @@
     --astryx-button-secondary-border-color: var(--astryx-color-border-emphasized);
     --astryx-button-ghost-background: transparent;
     --astryx-button-ghost-foreground: var(--astryx-color-text-primary);
-    --astryx-button-destructive-background: var(--astryx-color-error-muted);
-    --astryx-button-destructive-foreground: var(--astryx-color-error);
+    --astryx-button-destructive-background: var(--astryx-color-error);
+    --astryx-button-destructive-foreground: var(--astryx-color-on-error);
     --astryx-button-hover-overlay: var(--astryx-color-overlay-hover);
     --astryx-button-pressed-overlay: var(--astryx-color-overlay-pressed);
     --astryx-button-focus: var(--astryx-color-accent);

@@ -20,6 +20,7 @@ import {
   ListItem,
   Table,
   Text,
+  useToast,
   VStack,
   proportional,
 } from '@astryx-vue/core'
@@ -320,13 +321,14 @@ const trendingColumns: TableColumn<StockRow>[] = [
   { key: 'spark', header: '24h Trend', width: proportional(1), renderCell: row => h(PlaygroundSparkline, { data: row.spark, color: row.dailyPct >= 0 ? 'var(--astryx-color-data-categorical-green, #0B991F)' : 'var(--astryx-color-data-categorical-red, #F5394F)', height: 24, strokeWidth: 1, isMeasured: true, padTop: 2, padBottom: 2 }) },
 ]
 
+const showToast = useToast()
 const timeRange = ref('1 year')
 </script>
 
 <template>
   <Layout height="fill">
     <template #default>
-      <LayoutContent :padding="6">
+      <LayoutContent role="main" :padding="6">
         <VStack :gap="6">
           <HStack justify="between" align="center">
             <Heading :level="1">My Portfolio</Heading>
@@ -366,7 +368,7 @@ const timeRange = ref('1 year')
               <Card>
                 <VStack :gap="4">
                   <HStack justify="between" align="center">
-                    <Heading :level="3">Portfolio Value</Heading>
+                    <Heading :level="3" :accessibility-level="2">Portfolio Value</Heading>
                     <Link href="#">View details</Link>
                   </HStack>
                   <PlaygroundResponsive :height="340">
@@ -393,7 +395,7 @@ const timeRange = ref('1 year')
               <Card>
                 <VStack :gap="4">
                   <HStack justify="between" align="center">
-                    <Heading :level="3">Top Assets</Heading>
+                    <Heading :level="3" :accessibility-level="2">Top Assets</Heading>
                     <Link href="#">View all</Link>
                   </HStack>
                   <List density="spacious">
@@ -429,10 +431,11 @@ const timeRange = ref('1 year')
 
           <HStack justify="between" align="start">
             <VStack :gap="1">
-              <Heading :level="1">Market Today</Heading>
+              <Heading :level="1" :accessibility-level="2">Market Today</Heading>
               <Text type="body" color="secondary">Past 24 hours</Text>
             </VStack>
-            <Button label="View more" variant="secondary" size="lg" />
+            <!-- 演示：换成真正打开市场总览的调用 -->
+            <Button label="View more" variant="secondary" size="lg" @click="showToast({ body: 'Demo: the full market overview would open here', uniqueID: 'more-market' })" />
           </HStack>
 
           <Grid :columns="{ minWidth: 320, repeat: 'fit' }" :gap="4">
@@ -455,10 +458,10 @@ const timeRange = ref('1 year')
           </Grid>
 
           <Card>
-            <VStack :gap="4">
+            <VStack :padding-block-end="4">
               <Heading :level="3">Trending Stocks</Heading>
-              <Table :data="trendingStocks" :columns="trendingColumns" id-key="id" has-hover dividers="rows" />
             </VStack>
+            <Table :data="trendingStocks" :columns="trendingColumns" id-key="id" has-hover dividers="rows" />
           </Card>
         </VStack>
       </LayoutContent>

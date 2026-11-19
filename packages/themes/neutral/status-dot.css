@@ -4,9 +4,10 @@
   :root,
   [data-astryx-theme='neutral'] {
     --astryx-status-dot-neutral-background: var(--astryx-color-icon-secondary);
-    --astryx-status-dot-info-background: var(--astryx-theme-neutral-color-status-fill-accent);
-    --astryx-status-dot-success-background: var(--astryx-theme-neutral-color-status-fill-success);
-    --astryx-status-dot-warning-background: #ffce2f;
-    --astryx-status-dot-error-background: var(--astryx-theme-neutral-color-status-fill-error);
+    --astryx-status-dot-info-background: var(--astryx-color-info);
+    /* 同原版 StatusDot：状态点用图标色，比底色深一档，在浅色底上也看得清。 */
+    --astryx-status-dot-success-background: var(--astryx-color-icon-success);
+    --astryx-status-dot-warning-background: var(--astryx-color-icon-warning);
+    --astryx-status-dot-error-background: var(--astryx-color-icon-error);
   }
 }

@@ -183,38 +183,28 @@
     display: contents;
   }
 
+  .astryx-toast__inner {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+    gap: var(--astryx-spacing-3, 12px);
+    width: 100%;
+  }
+
   .astryx-toast__body {
     flex: 1;
     min-width: 0;
     overflow-wrap: anywhere;
   }
 
+  /* 高度固定成一行正文，28px 的关闭按钮居中溢出，卡片不被它撑高。 */
   .astryx-toast__end {
     display: flex;
     flex-shrink: 0;
     align-items: center;
     gap: var(--astryx-spacing-2, 8px);
-  }
-
-  .astryx-toast__close {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    width: 24px;
-    height: 24px;
-    padding: 0;
-    border: 0;
-    border-radius: var(--astryx-radius-full, 999px);
-    background: transparent;
-    color: inherit;
-    font-size: 1.125rem;
-    line-height: 1;
-    cursor: pointer;
-  }
-
-  .astryx-toast__close:hover {
-    background: color-mix(in srgb, currentColor 12%, transparent);
+    block-size: calc(var(--astryx-text-body-size, 0.875rem) * var(--astryx-text-body-leading, 1.4286));
+    margin-inline-end: calc(var(--astryx-spacing-1, 4px) * -1);
   }
 
   @media (prefers-reduced-motion: reduce) {

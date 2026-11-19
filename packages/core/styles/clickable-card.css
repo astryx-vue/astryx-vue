@@ -15,7 +15,7 @@
     border-radius: inherit;
     pointer-events: none;
     background-color: transparent;
-    transition: background-color var(--astryx-duration-fast, 130ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+    transition: background-color var(--astryx-duration-exit, 175ms) var(--astryx-ease-exit, cubic-bezier(0.3, 0, 0.6, 0.6));
   }
 
   @media not all and (pointer: coarse) {
@@ -57,8 +57,8 @@
 
   .astryx-selectable-card {
     transition:
-      box-shadow var(--astryx-duration-fast, 130ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1)),
-      border-color var(--astryx-duration-fast, 130ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+      box-shadow var(--astryx-duration-exit, 175ms) var(--astryx-ease-exit, cubic-bezier(0.3, 0, 0.6, 0.6)),
+      border-color var(--astryx-duration-exit, 175ms) var(--astryx-ease-exit, cubic-bezier(0.3, 0, 0.6, 0.6));
   }
 
   .astryx-selectable-card[data-selected='true'] {

@@ -78,7 +78,7 @@
     border-radius: inherit;
     background-color: transparent;
     pointer-events: none;
-    transition: background-color var(--astryx-duration-fast, 125ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+    transition: background-color var(--astryx-duration-exit, 175ms) var(--astryx-ease-exit, cubic-bezier(0.3, 0, 0.6, 0.6));
   }
 
   @media (hover: hover) {

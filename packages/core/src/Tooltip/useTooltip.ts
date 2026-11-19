@@ -2,9 +2,12 @@ import type { ComputedRef, CSSProperties, MaybeRefOrGetter, Ref } from 'vue'
 import type { LayerPlacement } from '../layer/position.js'
 import type { TooltipAlignment, TooltipFocusTrigger, TooltipPlacement, TooltipTouchTrigger } from './types.js'
 import { computed, onMounted, onScopeDispose, ref, shallowRef, toValue, watch } from 'vue'
+import { useAnnounce } from '../composables/useAnnounce.js'
 import { useLayer } from '../composables/useLayer.js'
 import { isFocusable } from '../layer/focus.js'
 import { useHoverLayerDismiss } from '../layer/useHoverLayerDismiss.js'
+import { listenOutside, listenPressEnd } from './documentListeners.js'
+import { renderedText } from './renderedText.js'
 
 export interface UseTooltipOptions {
   /**
@@ -76,6 +79,16 @@ export interface UseTooltipReturn {
   resolvedPlacement: ComputedRef<LayerPlacement>
   /** 直接摊到气泡元素上的属性：ID、`role="tooltip"`，以及保持显示的指针事件。 */
   contentProps: ComputedRef<Record<string, unknown>>
+  /**
+   * 立刻打开气泡并一直保持，直到 `hide()`、Escape、点到外面、滚动外面，或焦点离开触发器和气泡。
+   * 文字会被读屏播报一次。受控的 `isOpen` 下只调用 `onShow`，不改 `isOpen`。`isEnabled` 为 false 时什么都不做。
+   *
+   * 用 `show()` 和 `hide()` 做开关式触发器：自己的按钮调用它们，把 `aria-describedby`、
+   * `aria-controls` 设为 `describedBy`，`aria-expanded` 在显示时为 true，并保留自己的无障碍名称。
+   */
+  show: () => void
+  /** 立刻关闭气泡并结束保持。受控的 `isOpen` 下只调用 `onHide`，不改 `isOpen`。 */
+  hide: () => void
 }
 
 const GAP = 4
@@ -104,6 +117,8 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
   const triggerRef = shallowRef<HTMLElement | null>(null)
   const isControlled = computed(() => toValue(options.isOpen) !== undefined)
   const isTouchPointer = ref(false)
+  let bound: HTMLElement | null = null
+  const announce = useAnnounce()
 
   const layer = useLayer({
     mode: 'context',
@@ -139,6 +154,26 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
     hideTimer = undefined
   }
 
+  // 应用调用 show() 后气泡被「保持」：悬停离开、触发器失焦都不关，
+  // 直到 hide()、Escape、点击或滚动到外面，或焦点离开触发器和气泡。
+  const isHeld = shallowRef(false)
+  // 这次保持是不是在触发器被按住时开始的。这样的保持随按压结束：
+  // 按压在触发器外结束、没有点击时，保持随之结束，交给悬停规则决定。
+  let isHoldFromPress = false
+  // show() 是否发生在这一轮任务里，用来识别「先于本 hook 的 pointerdown 监听」的调用。
+  let isHoldInThisTask = false
+  let isTriggerPressed = false
+  let stopPressTracking: (() => void) | null = null
+  let stopOutsideDismiss: (() => void) | null = null
+
+  function isHeldOpen(): boolean {
+    return isHeld.value && layer.isOpen.value && toValue(options.isOpen) !== false
+  }
+
+  function isInsideTooltip(node: Node | null): boolean {
+    return node != null && (bound?.contains(node) === true || layer.contentRef.value?.contains(node) === true)
+  }
+
   function showNow(): void {
     clearTimers()
     if (!isEnabled() || isControlled.value)
@@ -161,7 +196,7 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
   }
 
   function scheduleHide(): void {
-    if (isControlled.value)
+    if (toValue(options.isOpen) === true || isHeldOpen())
       return
     clearTimers()
     const wait = toValue(options.hideDelay) ?? 0
@@ -206,7 +241,39 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
       showNow()
   }
 
+  function trackTriggerPress(): void {
+    stopPressTracking?.()
+    const trigger = bound
+    if (trigger == null)
+      return
+    isTriggerPressed = true
+    stopPressTracking = listenPressEnd((event) => {
+      isTriggerPressed = false
+      stopPressTracking = null
+      if (event.type !== 'pointerup')
+        return
+      // 在触发器上结束的按压保留保持，就像点击一样。
+      if (event.target instanceof Node && trigger.contains(event.target)) {
+        isHoldFromPress = false
+      }
+      else if (isHoldFromPress && isHeld.value) {
+        // 按压在触发器外结束、也没有点击：保持结束，悬停规则接手。
+        // 落在气泡上就让气泡的鼠标事件管；落在别处，没人悬停了，排上隐藏。
+        setHeld(false)
+        if (!(event.target instanceof Node && isInsideTooltip(event.target)))
+          scheduleHide()
+      }
+    })
+  }
+
   function onPointerDown(event: PointerEvent): void {
+    trackTriggerPress()
+    // 应用的 hide() 才关保持中的气泡：按压既不关它，也不等触摸的判断。
+    if (isHeld.value) {
+      if (isHoldInThisTask)
+        isHoldFromPress = true
+      return
+    }
     if (event.pointerType === 'touch') {
       onTouchTap()
       return
@@ -228,12 +295,89 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
     scheduleHide()
   }
 
+  // 焦点离开触发器和气泡就结束保持，不管 focusTrigger 是什么。
+  // 焦点去了「没有元素」时由按压决定。
+  function onHeldFocusOut(event: FocusEvent): void {
+    if (!isHeldOpen())
+      return
+    const next = event.relatedTarget
+    if (!(next instanceof Node) || isInsideTooltip(next))
+      return
+    releaseHold()
+  }
+
+  function armOutsideDismiss(): void {
+    stopOutsideDismiss?.()
+    if (typeof document === 'undefined')
+      return
+    // 点击或滚动发生在气泡和触发器之外，就结束保持并关闭气泡。
+    stopOutsideDismiss = listenOutside((target) => {
+      if (isHeldOpen() && !(target != null && isInsideTooltip(target)))
+        releaseHold()
+    })
+  }
+
+  function setHeld(next: boolean): void {
+    isHeld.value = next
+    if (!next) {
+      stopOutsideDismiss?.()
+      isHoldFromPress = false
+    }
+  }
+
+  function dropHold(): void {
+    if (isHeld.value)
+      setHeld(false)
+  }
+
+  function releaseHold(): void {
+    setHeld(false)
+    if (toValue(options.isOpen) !== undefined) {
+      options.onHide?.()
+      return
+    }
+    hideNow()
+  }
+
+  function show(): void {
+    clearTimers()
+    if (!isEnabled())
+      return
+    setHeld(true)
+    armOutsideDismiss()
+    isHoldFromPress = isTriggerPressed
+    isHoldInThisTask = true
+    setTimeout(() => {
+      isHoldInThisTask = false
+    }, 0)
+    if (isControlled.value) {
+      options.onShow?.()
+      return
+    }
+    layer.show()
+  }
+
+  function hide(): void {
+    clearTimers()
+    releaseHold()
+  }
+
+  // 只有保持才播报文字：预览本来就是触发器的描述。
+  watch(() => isHeld.value && isOpen.value, (shown) => {
+    if (!shown)
+      return
+    const text = layer.contentRef.value == null ? '' : renderedText(layer.contentRef.value)
+    if (text !== '')
+      announce(text)
+  }, { flush: 'post' })
+
   // 整段生命周期都留在关闭栈里，并带上外层传下来的嵌套深度。
   useHoverLayerDismiss({
     isPresent: () => isOpen.value,
     getContainer: () => layer.contentRef.value,
     onDismiss() {
       clearTimers()
+      dropHold()
       if (isControlled.value) {
         options.onHide?.()
         return
@@ -246,7 +390,6 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
     return focusTriggerMode() === 'always' || (focusTriggerMode() === 'auto' && isFocusable(element))
   }
 
-  let bound: HTMLElement | null = null
   let describedByBefore: string | null = null
 
   function bind(element: HTMLElement): void {
@@ -258,6 +401,7 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
     element.addEventListener('mouseenter', onMouseEnter)
     element.addEventListener('mouseleave', onMouseLeave)
     element.addEventListener('pointerdown', onPointerDown as EventListener)
+    element.addEventListener('focusout', onHeldFocusOut as EventListener)
     if (shouldListenFocus(element)) {
       element.addEventListener('focusin', onFocusIn as EventListener)
       element.addEventListener('focusout', onFocusOut)
@@ -273,6 +417,8 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
     bound.removeEventListener('mouseenter', onMouseEnter)
     bound.removeEventListener('mouseleave', onMouseLeave)
     bound.removeEventListener('pointerdown', onPointerDown as EventListener)
+    bound.removeEventListener('focusout', onHeldFocusOut as EventListener)
+    stopPressTracking?.()
     bound.removeEventListener('focusin', onFocusIn as EventListener)
     bound.removeEventListener('focusout', onFocusOut)
     if (describedByBefore)
@@ -308,6 +454,9 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
     clearTimers()
     if (open === undefined)
       return
+    // 使用方关闭气泡时保持随之结束。
+    if (!open)
+      dropHold()
     syncControlled(open)
   })
 
@@ -323,6 +472,7 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
 
   onScopeDispose(() => {
     clearTimers()
+    stopOutsideDismiss?.()
     unbind()
   })
 
@@ -343,5 +493,7 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
     contentStyle: layer.contentStyle,
     resolvedPlacement: layer.resolvedPlacement,
     contentProps,
+    show,
+    hide,
   }
 }

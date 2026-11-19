@@ -7,16 +7,13 @@ const value = ref('settings')
 
 <template>
   <TabList v-model:value="value">
-    <Tab value="overview">
-      Overview
-    </Tab>
-    <Tab value="activity">
-      Activity
-    </Tab>
+    <Tab value="overview" label="Overview" />
+    <Tab value="activity" label="Activity" />
     <TabMenu
       label="More"
       :options="[
         { value: 'settings', label: 'Settings' },
+        { value: 'integrations', label: 'Integrations' },
         { value: 'billing', label: 'Billing' },
       ]"
     />

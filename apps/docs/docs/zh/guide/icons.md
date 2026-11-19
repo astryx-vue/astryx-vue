@@ -22,9 +22,23 @@ import { Icon } from '@astryx-vue/core/Icon'
 
 为了不给你的项目增加体积，`@astryx-vue/core` 核心包自身不内置全量图标库。你只需安装自己喜欢的图标包，并配置一个 Vite 插件：
 
-```bash
+::: code-group
+```sh [pnpm]
 pnpm add -D @iconify-json/carbon
 ```
+
+```sh [npm]
+npm install -D @iconify-json/carbon
+```
+
+```sh [yarn]
+yarn add -D @iconify-json/carbon
+```
+
+```sh [bun]
+bun add -d @iconify-json/carbon
+```
+:::
 
 在 `vite.config.ts` 中配置插件：
 

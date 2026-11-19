@@ -28,4 +28,4 @@ import '@astryx-vue/themes/matcha.css'
 
 ## 视觉预览
 
-<ThemeStage theme="matcha" />
+可以在[主题画廊](/themes/?theme=matcha)里看实际效果。

@@ -12,6 +12,18 @@ const RouterLink = defineComponent({
 })
 
 describe('link', () => {
+  it('defaults to the body type and accent color, and lets type pick the text style', () => {
+    const body = mount(Link, { props: { href: '/a' }, slots: { default: 'Docs' } })
+    expect(body.classes()).toEqual(expect.arrayContaining(['astryx-link--type-body', 'astryx-link--color-accent']))
+
+    const supporting = mount(Link, { props: { href: '/a', type: 'supporting' }, slots: { default: 'Clear all' } })
+    expect(supporting.classes()).toContain('astryx-link--type-supporting')
+    expect(supporting.classes()).not.toContain('astryx-link--type-body')
+
+    const inherit = mount(Link, { props: { href: '/a', type: 'inherit' }, slots: { default: 'terms' } })
+    expect(inherit.classes().some(name => name.startsWith('astryx-link--type-'))).toBe(false)
+  })
+
   it('renders an anchor with href', () => {
     const wrapper = mount(Link, {
       props: {

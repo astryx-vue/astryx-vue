@@ -46,6 +46,7 @@
 @import './previews/h-stack.css';
 @import './previews/internationalization-provider.css';
 @import './previews/layer-provider.css';
+@import './previews/size-context.css';
 @import './previews/layout-content.css';
 @import './previews/layout-footer.css';
 @import './previews/layout-header.css';
@@ -127,7 +128,7 @@ body {
 
 pre,
 code,
-kbd,
+kbd:not(.astryx-kbd__key),
 samp {
   font-family: var(--docs-font-family-mono);
 }
@@ -542,8 +543,8 @@ html.dark .component-card__frame {
   width: min(100%, 960px);
   min-width: 0;
   margin-inline: auto;
-  /* 标题在固定导航下面。72px 在属性页看起来仍贴着导航，再留出一档。 */
-  padding: 112px clamp(28px, 4vw, 64px) 80px;
+  /* 原版 1440 宽：960 宽的 Section 左右各 24px，内容 912；标题顶在 y=120（导航 72 + 48）。 */
+  padding: 48px 24px 80px;
 }
 
 .component-detail__header {
@@ -610,19 +611,32 @@ html.dark .component-card__frame {
   /* 和总览卡片一样：列宽必须受容器约束，否则宽内容会顶出画布。 */
   grid-template-columns: minmax(0, 1fr);
   place-items: center;
-  /* 原版这块画布高 513px，组件在中间展示。 */
-  min-height: 513px;
+  /* 原版这块画布是 16:9（912 宽时高 513px），组件在中间展示。高度确定，里面写 height: 100% 的组件能撑满。 */
+  aspect-ratio: 16 / 9;
   /* 原版 tab 条到画布隔 16px。 */
   margin-top: 16px;
-  padding: 32px;
+  /* 原版画布本身没有内边距，只在左右各留 16px 的空隙，组件上下贴着画布居中。 */
+  padding: 0 16px;
   overflow: hidden;
   isolation: isolate;
-  border-radius: 16px;
-  background: #f5f5f5;
+  font-size: var(--astryx-text-body-size, 14px);
+  line-height: 1.5;
+  /* 原版画布是 padding=0 的 Card，里面的 Layout 按最近的容器取内边距，所以各区域内边距都是 0。 */
+  --container-padding-inline-start: 0px;
+  --container-padding-inline-end: 0px;
+  --container-padding-block-start: 0px;
+  --container-padding-block-end: 0px;
+  --layout-padding-outer-x: 0px;
+  --layout-padding-outer-y: 0px;
+  --layout-padding-inner-x: 0px;
+  --layout-padding-inner-y: 0px;
+  /* 原版画布：圆角 12，浅色 #f1f1f1，深色 #1b1b1b（Neutral 的 muted Card）。 */
+  border-radius: 12px;
+  background: #f1f1f1;
 }
 
 html.dark .component-detail__stage {
-  background: #17181a;
+  background: #1b1b1b;
 }
 
 /* StageFit 的两层外壳是 display: contents，demo 根节点仍要受这条限制。 */
@@ -632,16 +646,71 @@ html.dark .component-detail__stage {
   min-width: 0;
 }
 
+/*
+ * 桌面照原版：展示内容是画布 flex 容器的直接子项，width: 100% 按画布宽度算。
+ * 我们多一层 .astryx-demo 外壳，让它占满画布、自己再用 flex 把内容居中，
+ * 内容里的百分比宽度才有确定的参照，不会退化成 min-width。
+ */
+.component-detail__stage .astryx-demo {
+  display: flex;
+  align-items: center;
+  justify-content: safe center;
+}
+
+/*
+ * 宽高用零优先级写：外壳的 className 自己给了尺寸时以它为准，仍由画布居中。
+ * 撑满画布后，内容里的 width/height: 100% 都按画布算，和原版内容直接放在画布里一样。
+ */
+.component-detail__stage :where(.astryx-demo) {
+  width: 100%;
+  height: 100%;
+}
+
 .component-detail__stage .overview-frame {
   box-sizing: border-box;
   width: min(100%, 40rem);
   max-width: 100%;
 }
 
+/*
+ * 窄屏照原版 ShowcasePreview 的小屏分支：画布至少 160px 高，随内容长高，不缩放；
+ * 左右两条 16px 的空隙在内容放不下时先让出位置，内容比画布还宽就横向滚动，
+ * 放得下时居中（safe center 保证溢出时从左边开始，不会把开头裁掉）。
+ */
 @media (max-width: 768px) {
   .component-detail__stage {
-    min-height: 320px;
-    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: safe center;
+    aspect-ratio: auto;
+    min-height: 160px;
+    padding: 0;
+    overflow: auto;
+  }
+
+  .component-detail__stage::before,
+  .component-detail__stage::after {
+    content: '';
+    flex: 0 0.5 16px;
+    min-width: 0;
+  }
+
+  /* 内容外壳最多缩到最小内容宽度，并且比两侧空隙先缩。 */
+  .component-detail__stage > *,
+  .component-detail__stage > .stage-fit > .stage-fit__inner > * {
+    flex-shrink: 1000;
+    min-width: min-content;
+    max-width: none;
+  }
+
+  /* 窄屏原版外壳是普通块，内容按自身宽度排，不撑满画布。 */
+  .component-detail__stage .astryx-demo {
+    display: block;
+  }
+
+  .component-detail__stage :where(.astryx-demo) {
+    width: auto;
+    height: auto;
   }
 }
 
@@ -723,125 +792,183 @@ html:not(.dark) .component-detail__body :not(pre) > code:not(.astryx-code-block_
   overflow-x: auto;
 }
 
+/*
+ * 示例卡片照原版 0.7.16 组件页：一张 1px 边框、圆角 12 的卡片，内边距 12，
+ * 先是 14px/500 的「组件名 — 示例名」，隔 12px 是至少 200 高的展示区；
+ * 下面整宽一条 4px 内边距的工具条（28 高的小 tab 加「在演练场中打开」），再下面是 16px 内边距的说明或代码。
+ * 颜色取 Neutral：浅色白底、黑 8% 描边，深色 #1b1b1b、白 10% 描边。
+ */
 .component-example {
-  margin-top: 24px;
+  --example-border: light-dark(rgb(0 0 0 / 8%), rgb(255 255 255 / 10%));
+  --example-text: light-dark(#111, #fff);
+  --example-muted: light-dark(#5e5e5e, #9e9e9e);
+  --example-hover: light-dark(rgb(0 0 0 / 5%), rgb(255 255 255 / 8%));
+
+  margin-top: 40px;
   overflow: hidden;
-  border: 1px solid var(--astryx-line);
+  border: 1px solid var(--example-border);
+  /* 原版示例包在 Theme 里，没写字号的内容继承正文 14px/21px。 */
+  font-size: var(--astryx-text-body-size, 14px);
+  line-height: 1.5;
   border-radius: 12px;
-  background: #fff;
+  background: light-dark(#fff, #1b1b1b);
+  color: var(--example-text);
+  color-scheme: light;
 }
 
 html.dark .component-example {
-  background: #11131d;
+  color-scheme: dark;
 }
 
-.component-example > h3 {
+.component-example__body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 11px 11px 0;
+}
+
+.component-example .component-example__title {
   margin: 0;
-  padding: 14px 20px;
-  border-bottom: 1px solid var(--astryx-line);
-  color: var(--astryx-text);
-  font-size: 16px;
-  font-weight: 600;
+  padding: 0;
+  border: 0;
+  color: var(--example-text);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: normal;
 }
 
 .component-example__preview {
   display: grid;
-  min-height: 220px;
-  padding: 32px 24px;
-  background: #fff;
+  box-sizing: border-box;
+  min-height: 200px;
+  margin: -5px -5px 0;
+  padding: 5px;
   place-items: center;
 }
 
-html.dark .component-example__preview {
-  background: #11131d;
-}
-
-.component-example__details {
-  border-top: 1px solid var(--astryx-line);
-  background: #f7f7f8;
-}
-
-html.dark .component-example__details {
-  background: #181b27;
+.component-example__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  padding: 4px;
+  border-top: 1px solid var(--example-border);
 }
 
 .component-example__tabs {
   display: flex;
-  gap: 24px;
-  min-height: 44px;
-  padding-inline: 20px;
+  gap: 2px;
 }
 
-.component-example__tabs button {
+.component-example__tabs button,
+.component-example__open {
   position: relative;
-  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: 28px;
+  padding: 0 12px;
   border: 0;
-  color: var(--astryx-text-muted);
+  border-radius: 10px;
+  color: var(--example-muted);
   background: transparent;
+  font: inherit;
   font-size: 14px;
+  line-height: 20px;
+  text-decoration: none;
   cursor: pointer;
 }
 
-.component-example__tabs button::after {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 2px;
-  background: transparent;
-  content: '';
+.component-example__tabs button:hover,
+.component-example__open:hover {
+  background: var(--example-hover);
 }
 
-.component-example__tabs button:hover,
 .component-example__tabs button[aria-selected='true'] {
-  color: var(--astryx-text);
+  color: var(--example-text);
+}
+
+/* 字重写在里面的文字上：文档站不许在顶层给 button 定字重（会盖过组件自己的字重）。 */
+.component-example__tabs [aria-selected='true'] > span {
+  font-weight: 600;
 }
 
 .component-example__tabs button[aria-selected='true']::after {
-  background: var(--astryx-text);
+  position: absolute;
+  right: 12px;
+  bottom: -1px;
+  left: 12px;
+  height: 2px;
+  border-radius: 9999px;
+  background: light-dark(#111, #f1f1f1);
+  content: '';
 }
 
-.component-example__panel {
-  border-top: 1px solid var(--astryx-line);
+.component-example__open {
+  color: var(--example-text);
+  font-weight: 500;
 }
 
 .component-example__panel p {
   width: 100%;
   margin: 0;
-  padding: 16px 20px 18px;
-  color: var(--astryx-text-muted);
-  line-height: 1.65;
+  padding: 16px;
+  color: var(--example-text);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.component-example__code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  height: 44px;
+  padding: 8px 16px;
+}
+
+.component-example__code-lang {
+  color: var(--example-muted);
+  font-family: var(--astryx-font-family-code, ui-monospace, monospace);
+  font-size: 12px;
+  line-height: 20px;
+}
+
+.component-example__copy {
+  display: inline-grid;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  color: var(--example-muted);
+  background: transparent;
+  cursor: pointer;
+  place-items: center;
+}
+
+.component-example__copy:hover {
+  background: var(--example-hover);
+}
+
+.component-example__copy > span {
+  width: 16px;
+  height: 16px;
 }
 
 .component-example__panel .component-example__codeblock pre.shiki {
-  max-height: 360px;
   margin: 0;
-  padding: 20px;
+  padding: 12px 16px;
   overflow: auto;
   border-radius: 0;
-  background: #f1f2f4;
-  font-size: 13px;
-  line-height: 1.65;
-}
-
-html.dark .component-example__panel .component-example__codeblock pre.shiki {
-  background: #0d0f18;
-}
-
-.component-example__panel .component-example__codeblock > .language-vue {
-  margin: 0;
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
+  font-size: 14px;
+  line-height: 20px;
 }
 
 .component-example__panel .component-example__codeblock .shiki :where(code) {
   padding: 0;
   font-size: inherit;
-}
-
-.component-example__codeblock .copy {
-  display: none;
 }
 
 /* Demos bring their own icons, the way a consumer would: a sized box with an
@@ -1327,6 +1454,45 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   background: transparent;
 }
 
+/*
+ * 组件页里的表格（结构、最佳实践、无障碍）照原版放在卡片里：1px 描边、圆角 16，
+ * 表头 14px/600 次要色，单元格内边距 12px 16px，正文 16px/24px。
+ */
+.component-detail__body .component-api-table,
+.component-detail__body > table {
+  box-sizing: border-box;
+  border: 1px solid light-dark(rgb(5 54 89 / 9.8%), rgb(242 244 246 / 9.8%));
+  border-radius: 16px;
+  background: light-dark(#fff, #1f1f22);
+}
+
+.component-detail__body > table {
+  overflow: auto;
+}
+
+.component-detail__body .component-api-table :is(th, td),
+.component-detail__body > table :is(th, td) {
+  padding: 12px 16px;
+}
+
+.component-detail__body .component-api-table th,
+.component-detail__body > table th {
+  border-bottom-color: light-dark(rgb(5 54 89 / 9.8%), rgb(242 244 246 / 9.8%));
+  font-size: 14px;
+  line-height: 21px;
+}
+
+.component-detail__body .component-api-table td,
+.component-detail__body > table td {
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.component-detail__body .component-api-table tbody tr:not(:last-child) > td,
+.component-detail__body > table tbody tr:not(:last-child) > td {
+  border-bottom-color: light-dark(rgb(5 54 89 / 9.8%), rgb(242 244 246 / 9.8%));
+}
+
 @media (width <= 1100px) {
   .component-overview__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1462,7 +1628,8 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
   }
 
   .component-detail__content {
-    padding: 72px 18px 64px;
+    /* 原版窄屏正文左右各 24px，390 宽时预览卡片是 342。 */
+    padding: 72px 24px 64px;
   }
 
   .component-detail__body div[class*='language-'] {
@@ -1471,18 +1638,6 @@ html.dark .component-example__panel .component-example__codeblock pre.shiki {
 
   .component-detail__tabs {
     gap: 20px;
-  }
-
-  .component-example__preview {
-    min-height: 190px;
-    padding: 24px 16px;
-  }
-
-  .component-example > h3,
-  .component-example__tabs,
-  .component-example__panel p,
-  .component-example__panel pre {
-    padding-inline: 16px;
   }
 
   .badge-preview__group {
@@ -2886,4 +3041,17 @@ html:has(.home-stage) .nagi-nav-bar {
   :root {
     --docs-nav-height: 64px;
   }
+}
+
+/*
+ * KawaPress 的代码块给顶部的语言标签（Shell）留了 2.875rem。放进 code-group 后标签藏起来了，
+ * 留白还在，命令上方空一大块。组内改成和底部一样的内边距，复制按钮跟着垂直居中。
+ */
+.kawa-code-group .kawa-code-block pre {
+  padding-top: 1.25rem;
+}
+
+.kawa-code-group .kawa-code-block__copy {
+  top: 50%;
+  transform: translateY(-50%);
 }

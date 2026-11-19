@@ -7,4 +7,4 @@ import overviewSource from './overview.vue?raw&highlighted'
 const options = { className: 'h-stack-preview' }
 
 export const hStackBasic = defineDemo(basicDemo, basicSource, options)
-export const hStackOverview = defineDemo(overviewDemo, overviewSource, options)
+export const hStackOverview = defineDemo(overviewDemo, overviewSource)
