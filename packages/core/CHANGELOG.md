@@ -1,5 +1,88 @@
 # @astryx-vue/core
 
+## 0.7.22
+
+### Patch Changes
+
+- [#490](https://github.com/astryx-vue/astryx-vue/pull/490) [`20c48f1`](https://github.com/astryx-vue/astryx-vue/commit/20c48f17c0b62e80c233ca7d67e0b63e25b073f5) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 对齐原版的若干细节：Button 里带显式 `size` 的 Icon 保持自己的盒子；Tokenizer 默认按内容收缩、有标签时内边距为 3px；Avatar 首字母行高跟正文行高比例走；SideNavSection 标题和条目之间不再多 2px；ChatMessageBubble 的名字行沿用正文样式并按内容收窄靠边；AppShell 自动高度时页头钉在顶部；Selector 下拉列表（无搜索框）把选中项盖在触发器上，选项之间不留空隙；浮层 start 对齐右边放不下时翻成 end 对齐；MoreMenu 行高 md 为 32px；Dialog 里 DialogHeader 无分隔线时内容不再多 16px 顶部内边距。
+
+- [#490](https://github.com/astryx-vue/astryx-vue/pull/490) [`5b9dce9`](https://github.com/astryx-vue/astryx-vue/commit/5b9dce93dd38ed2363e396eb120712edb176f005) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 对齐上游对话类组件的渲染：对话气泡最大宽度回到 `max(80%, 280px)`（窄列里可以超出列宽，和上游一致）；ChatToolCalls 的目标文字可收缩并显示省略号，分组箭头占 14px，单条调用的行不再撑破容器；ChatLayout 滚动按钮隐藏时同时 `visibility: hidden`，图标按 md 尺寸画满；ChatDictationButton 的麦克风图标跟随按钮尺寸；ChatComposerDrawer 的标签在 Layout 悬停时也变深；CodeBlock 标题不再截断、不换行；Markdown 的紧凑密度首尾块去掉外边距，列表恢复两侧 8px 的外扩宽度，表格宽度改为 100%（内容放不下时列内换行）；Text 新增 `size="xsm"`；neutral 主题的 `--astryx-chat-success` / `--astryx-chat-error` 改用 45 档颜色。
+
+- [#490](https://github.com/astryx-vue/astryx-vue/pull/490) [`2a38dd0`](https://github.com/astryx-vue/astryx-vue/commit/2a38dd02da165ade1427f88e839596f29a075699) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 对齐上游 containerReveal：补上粗指针（触摸）下内容始终可见、仅 `hover: hover` 且未禁用时才响应悬停、悬停停留延迟、焦点进入立即显示、`forceState` 的 active / inactive 变体、减少动效下的延迟、保留布局与反向（conceal）变体，以及 `forceVisibility` 的 hidden 在元素自身获得焦点时露出。
+
+- [#490](https://github.com/astryx-vue/astryx-vue/pull/490) [`fe5496f`](https://github.com/astryx-vue/astryx-vue/commit/fe5496f0425150f91799da27d1ad1b585e07aaf9) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 对齐原版的若干细节：Toast 关闭按钮改用 ghost 小号 IconButton，卡片内分成正文和尾部两栏、高度不再被按钮撑高；SegmentedControl 图标槽跟分段尺寸走（sm 14px、md 16px、lg 18px）；TreeListItemData 新增 `endContent`，行尾可放行内操作；useContainerReveal 的 `isLayoutPreserved` 只淡入淡出、不再脱离文档流；Section 把自己的内边距也发布成 Layout 区域之间的内侧间距，里面的 LayoutFooter 顶部不再多 16px；Selector 新增 `placement`，下拉面板的尺寸类落在面板自己身上（ghost 触发器字重 500），固定在底部的工具栏可以朝上展开；DropdownMenu 勾选行和单选行不再跟菜单尺寸收紧内边距；CodeBlock 高亮行用主题的 accent-muted 底色，行文本包进内容 span。
+
+- [#490](https://github.com/astryx-vue/astryx-vue/pull/490) [`cfb4c25`](https://github.com/astryx-vue/astryx-vue/commit/cfb4c256039f483e4dd0860a2ac245114a20453d) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - InfoTip 按上游完整移植：悬停和键盘聚焦预览，点击、轻点、回车或空格钉住，Escape、再按一次、点到外面、滚动外面或焦点离开时关闭；按钮带 `aria-expanded` 和 `aria-controls`，钉住时读屏播报一次帮助文字，按下事件停在按钮上。`useTooltip` 新增 `show()` / `hide()`，Tooltip 的气泡抽成 `TooltipSurface` 与 InfoTip 共用。字段的 `labelTooltip` 改用 InfoTip，名称为 “About 标签”（中文为“关于标签”），隐藏标签时的信息按钮定位照上游。`InfoTipProps`、`InfoTipSize` 从 core 导出，`@astryx-vue/lab` 的 InfoTip 改为已弃用的 core 再导出。EmptyState 的图标容器回到上游的普通块级 div：Icon 按组件或 Iconify 名字画的图标和上游的 `<svg>` 一样是块级（`data-kind='graphic'`），内置图形仍是行内 flex 的 span 且不再带 `vertical-align: -0.125em`，去掉了加载圈的特例。主题补齐上游新增的 token：`--color-info`、`--color-info-muted`、`--color-on-info`，`--color-text-/icon-/border-` 的 info、success、warning、error，`--color-on-*-muted`，`--duration-exit`，`--ease-entrance`、`--ease-move`、`--ease-exit`，七个主题都按上游主题源码的值写入；Chat 的成功、失败颜色改读 `--astryx-color-text-success`、`--astryx-color-text-error` 与 `--astryx-color-icon-*`，去掉各主题 `chat.css` 里的 `--astryx-chat-success` / `--astryx-chat-error` 补丁（变量仍可覆盖）。
+
+- [#490](https://github.com/astryx-vue/astryx-vue/pull/490) [`b9c31f8`](https://github.com/astryx-vue/astryx-vue/commit/b9c31f8af30e04abb0c5f280a8af552f0932deff) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 对齐上游渲染：CodeBlock 标题改用独立的 `--astryx-code-block-title-foreground`（默认 [#525252](https://github.com/astryx-vue/astryx-vue/issues/525252)）；Avatar 的首字母改由 `::before` 生成内容绘制（文字放在 `data-initials` 上，不再是文本节点）；`isLabelHidden` 的隐藏标签组改为 `display: contents`，标签与描述各自按 sr-only（inset 0、clip rect）定位；行内 Dialog 不再是定位祖先，Selector 根节点去掉多余的 `position: relative`，SideNav 顶部区域改为 sticky，Switch 隐藏标签不再撑最小高度。
+
+- [#490](https://github.com/astryx-vue/astryx-vue/pull/490) [`5b9dce9`](https://github.com/astryx-vue/astryx-vue/commit/5b9dce93dd38ed2363e396eb120712edb176f005) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 继续对齐原版的交互状态：Popover 的关闭按钮默认文字走本地化词条（英文 "Close popover"）；EmptyState 的图标容器按原版改为块级居中，不再被图标的基线偏移撑高；竖向轨道模式的 Stepper（`indicator-position="on-track"`）把指示点画在轨道列里，和连接线同一列；Step 的指示点和标签的状态样式只认自己的进度和状态，嵌套的步骤条不再吃到外层步骤的样式；Step 标签行撑满一行，结尾内容靠右。
+
+- [#490](https://github.com/astryx-vue/astryx-vue/pull/490) [`09a2429`](https://github.com/astryx-vue/astryx-vue/commit/09a2429529e3f7e71efc0e2241e9df54780221a1) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 对齐原版的交互状态：Switch 支持 `labelPosition` 和 `labelSpacing`（标签在开关之前、两端分开）；TextArea 的状态消息默认贴在输入框下方（`attached`），消息文字直接放在状态框里；Switch 标签不再撑出 24px 最小高度；TabMenu 的下拉紧贴触发器、宽度随内容；DropdownMenu 条目的上下内边距按原版取 4/6/8px；Button 末尾图标显式指定的尺寸不再被按钮尺寸覆盖；Kbd 在 Neutral 主题下文字用主色。
+
+- [#490](https://github.com/astryx-vue/astryx-vue/pull/490) [`6378227`](https://github.com/astryx-vue/astryx-vue/commit/6378227b35868057dd6b0503da763d241319e0ea) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 对齐原版的几处细节：`SideNav` 内置的折叠按钮改放在底部行、与 `footerIcons` 同一行（折叠后列方向反排），底部图标行和 `SideNavItem` 的 `actions` 槽都通过 `SizeContext` 统一成 `sm`；带 tooltip 的幽灵按钮不再参与 `Toolbar` 末端的边缘补偿，和原版里按钮后面紧跟 popover 层的行为一致；`PowerSearch` 的结果数、`endContent` 与清除按钮合成一组，距字段内缘 8px、间距 8px，结果数排在 `endContent` 之前。
+
+- [#490](https://github.com/astryx-vue/astryx-vue/pull/490) [`b9c31f8`](https://github.com/astryx-vue/astryx-vue/commit/b9c31f8af30e04abb0c5f280a8af552f0932deff) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 对齐上游的导航与文本域布局：TopNav / SideNav 标题带 `NavIcon` 时去掉起始内边距，标志贴齐左边；SideNav 滚动区不再有子项间距、没有顶部或底部区域时补成 8px，底部区域改为 sticky，隐藏的分区标题随底部区域定位；可折叠 SideNavItem 的无障碍标签改用 `hidden`，不再产生可见文字节点；SideNavSection 隐藏标题时不再继承 flex 居中；TextArea 的 `rows` 默认 3，高度由行数决定，去掉最小高度并把上下内边距收成 4px（`lg` 为 8px）。
+
+- [#490](https://github.com/astryx-vue/astryx-vue/pull/490) [`f63ed1e`](https://github.com/astryx-vue/astryx-vue/commit/f63ed1e87583564a278f4d43fc54fe7e6c09dfc4) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 修复回归并对齐原版：SideNavItem 的动作区在行内缩进，EmptyState 里的加载圈按行内元素排版，新增 InfoTip（悬停或聚焦时显示帮助文字的信息按钮）。
+
+- [#490](https://github.com/astryx-vue/astryx-vue/pull/490) [`5b9dce9`](https://github.com/astryx-vue/astryx-vue/commit/5b9dce93dd38ed2363e396eb120712edb176f005) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增 `SizeContext`（`SizeProvider`、`useSize`、`provideSize`、`ElementSize`，同时提供 `@astryx-vue/core/SizeContext` 子路径），对齐原版的尺寸级联：容器把默认尺寸往下传，子组件显式写了 `size` 就以自己的为准。`Toolbar`、`ButtonGroup`、`InputGroup` 会向下提供尺寸；`Button`、`MoreMenu`（含菜单行密度）、`TextInput`、`TextArea`、`Selector`、`MultiSelector`、`NumberInput`、`DateInput`、`DateRangeInput`、`DateTimeInput`、`TimeInput`、`SegmentedControl`、`TabList`、`PowerSearch`、`Tokenizer` 读取它。同时对齐原版的浮层视口空隙：空隙只留在远离锚点、可能越界的那一侧，start 对齐的菜单可以和靠近视口边的触发器同起点，不再被推到 16px。
+
+- [#490](https://github.com/astryx-vue/astryx-vue/pull/490) [`41cea82`](https://github.com/astryx-vue/astryx-vue/commit/41cea82675601a1396e4ed5c402421f96c92a36d) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 修复 Stack、Center、Section、ScrollableArea 没传尺寸属性时会抹掉使用方 `style` 里的 width / maxWidth / height / minHeight；Slider 控件高度改成和原版一样的 20px，只在触屏（粗指针）时撑到 24px。
+
+- [#490](https://github.com/astryx-vue/astryx-vue/pull/490) [`b9c31f8`](https://github.com/astryx-vue/astryx-vue/commit/b9c31f8af30e04abb0c5f280a8af552f0932deff) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 对齐一批小的位置偏差：DialogHeader 监听 `openChange` 时渲染关闭按钮；TextArea 接受原版写法 `maxLength`，计数区行高和底部留白对齐；RadioList 描述不再多出 2px 间距；NumberInput 步进列宽 16px；Table 排序图标缩到 xsm 并随表头居中，筛选按钮的名称改为「筛选 + 列标题」；TopNav 下拉触发器间距 8px、箭头 1em；FileInput 拖放区图标用 md；TreeList 展开箭头去掉多余外边距；SideNavItem 行内展开箭头为 24px 宽盒子。
+
+- [#490](https://github.com/astryx-vue/astryx-vue/pull/490) [`b9c31f8`](https://github.com/astryx-vue/astryx-vue/commit/b9c31f8af30e04abb0c5f280a8af552f0932deff) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 对齐原版的 Stepper、CheckboxList 和 Dialog 渲染：横向轨道模式把连接线和指示点画进控件内，整块步骤是一个点击目标；「Optional」拆成 `•` 与文字两个节点；步骤标签单行省略，未开始步骤的标签用次要色，数字指示点文字直接放在徽标里，禁用步骤的指示点用禁用色；分离模式下指示点和标签放进同一行容器、控件左右内边距固定为 8px，竖向步骤间距为 4px；传了 `onStepClick` 时禁用步骤也保留按钮（`aria-disabled`），插槽为空时不渲染内容区。紧凑密度的 CheckboxListItem 用可见标签命名复选框。Dialog 内层向 Layout 公布内边距，使 Layout 撑到对话框边缘、各区域自带内边距；放在 Layout 页头槽里的 DialogHeader 自带页头内边距。
+
+- [#490](https://github.com/astryx-vue/astryx-vue/pull/490) [`20c48f1`](https://github.com/astryx-vue/astryx-vue/commit/20c48f17c0b62e80c233ca7d67e0b63e25b073f5) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 对齐原版的表格与相关组件细节：带右键菜单的单元格（可展开行）左右内边距各多 1px，最后一格再叠一份边距；表格分组标题的标签和空格分成两个文本节点。`MultiSelector` 清除按钮改用 `InputClearButton`（20px 的幽灵图标按钮），`MultiSelector`、`Selector`、`ComplexSelector` 的触发框改成固定高度（sm 28 / md 32 / lg 36）和 8px / 12px 的内边距。`Link` 的外链图标换成语义图标 `externalLink`。`Markdown` 的代码块按最长行收缩并以 `contentWidth` 为下限、居中时块自己居中，引用块始终贴左且文字用次要色、首尾子块不再带外边距，列表在居中时按外扩 8px 的宽度居中。`CodeBlock` 的收缩下限可用 `--astryx-code-block-min-width` 调整。
+
+- [#490](https://github.com/astryx-vue/astryx-vue/pull/490) [`b9c31f8`](https://github.com/astryx-vue/astryx-vue/commit/b9c31f8af30e04abb0c5f280a8af552f0932deff) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 对齐上游 origin/main 的几处渲染差异：
+  
+  - `NumberInput` 标签隐藏时也渲染 Field：保留读屏用的隐藏 `<label>`，`width` 也能落到外层。
+  - `ChatMessageBubble` 按内容收窄，去掉 280px 的最小宽度，例如「Where's my order?」宽 148px，发出的消息靠右。
+  - `Selector` 新增 `startIcon`，画在触发器最前面，设了它就不再画选中项自己的图标；触发器外壳的间距改为 8px；选项 `icon` 可以直接传 VNode，按它自己的尺寸画，不再套 16px 的盒子。
+  - `Text` 支持 `type="inherit"`：字号、行高、字重和颜色都跟随父元素。
+  - `Collapsible` 的文字触发行裁掉行高留白，箭头盒子改为 17px（`--text-large-size`），高度和上游一致；自定义的高内容照常撑高触发行。
+  - `Table` 只有作为容器的直接首个或末个子元素时，才在上下方向贴到容器边缘，同上游 [#12068](https://github.com/astryx-vue/astryx-vue/issues/12068)。
+  - `TreeList` 的条目支持 `startContent`。
+  - `TextArea` 计数器改成「164/2,000」的格式。
+  - `Token` 默认颜色的文字改用 `--color-text-primary`。
+  - `Text` 的每种 `type` 都写明默认字重（同上游 defaultWeightByTypeStyles），不再继承父元素的字重。之前放在粗体容器里的 supporting 文字会跟着变粗、宽出约 2.8%。
+  - display 型 `Heading` 的字重跟随自己的层级（h1 是 600），字号和行高仍取 display 档，和上游实际渲染一致。
+  - `Link` 新增 `type`（默认 `body`），决定字号、行高和字重，用法同 Text；嵌在文字里的链接用 `type="inherit"`。
+
+- [#490](https://github.com/astryx-vue/astryx-vue/pull/490) [`b9c31f8`](https://github.com/astryx-vue/astryx-vue/commit/b9c31f8af30e04abb0c5f280a8af552f0932deff) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `Theme` 里没写字号、只继承字号的文字改用主题的正文字号（`--astryx-text-body-size`，默认 14px），不再是浏览器的 16px，同上游 dda98593dc。Card、Stack 里的纯文本和 `Text type="inherit"` 都随主题字号走。
+
+- [#491](https://github.com/astryx-vue/astryx-vue/pull/491) [`a02b3c5`](https://github.com/astryx-vue/astryx-vue/commit/a02b3c5080e714a55e89b71cd89dfe7f15db7571) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 对照原版组件页顶部预览，修正组件和主题与原版不一致的地方：
+  
+  - Dialog 的最大宽度照原版改成「不超过容器，也不超过视口宽度减去两侧各 16px」，行内对话框同样适用，窄屏下不再溢出。
+  - AlertDialog 不传 `width` 时，在手机上（粗指针且视口窄或矮）默认宽 320，和 iOS 系统弹窗一致，其他情况仍是 400。
+  - Calendar 星期表头改用原版当前的 CLDR 写法（英语 Sun / Mon，法语 dim. / lun. 等），表头行高 36px，月份切换箭头用主文字色。
+  - TabList 选中下划线两端缩到和 tab 左右内边距对齐，默认压在 tab 底边外 1px，颜色取 `--astryx-color-accent`；可滚动的标签条按同一个值往下留空，不会把下划线裁掉。
+  - Switch 根节点改成竖排 flex，开关行下面不再多出 4px 行盒空隙。
+  - Link 的 `isStandalone` 字号和行高改读 `--astryx-text-body-size` / `--astryx-text-body-leading`，原来读的两个变量不存在，会退到 16px。
+  - Icon 用语义名字（如 `icon="search"`）解析到主题图标时，和内置图形一样是行内 flex，落在行框里，不再当作块级图形。
+  - 字段标签（FieldLabel，Switch、CheckboxInput、各类输入框的标签都用它）照原版改成半粗、主文字色；说明文字和可选标记仍是次要文字色。原版的理由：Arial、Segoe UI 等字体没有 500 字重会退回常规体，半粗能保证标签总比说明重。
+  - Avatar 首字母默认用主文字色；Neutral 主题同样改为 `--astryx-color-text-primary`。
+  - Neutral 主题：Slider 未填充轨道改用 `--astryx-color-track`（原来和画布底色相同，看不见）；StatusDot 的成功、警告、错误点改用 `--astryx-color-icon-*`。
+  - 组件目录（catalog）随文档演示源码更新。
+
+- [#490](https://github.com/astryx-vue/astryx-vue/pull/490) [`93a2bd6`](https://github.com/astryx-vue/astryx-vue/commit/93a2bd610b7da4be7f8a9bdaf60a998ff3dc87ef) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 主题补齐上游剩下的规则。Butter、Gothic、Y2K 新增 `own-fill.css`，对应上游的 `OWN_FILL_RULES`：卡片、浮层、菜单、输入框、分段控件选中项、条纹表格行等自带填充的部件，把主题自己的主文字、次要文字和强调色重新设一遍，放进分类色卡片时不再继承卡片的深色文字；Butter、Y2K 的 `selected-text.css` 补上分类色卡片里（含嵌套一层）选中行、树节点、数字角标的次要文字色。Button 的 destructive 变体在没有主题时回到上游的实心填充（`--astryx-color-error` 配 `--astryx-color-on-error`），焦点环也改用 `--astryx-color-error`；各主题自己的 destructive 取值不变。字体大小接入上游的动态字号：新增 `dynamicType`、`textSizeSync` 和 UIKit 字号表，七个主题的 `--astryx-font-size-*` 与 `mobile-type.css` 写成 `calc(自身大小 * var(--_dynamic-type-*, 1))` 并以下一档为上限，Butter、Stone、Y2K 的 `--astryx-text-supporting-size` 为 `0.75rem` 乘 Footnote 的比例；根 `Theme` 挂载时读取 iOS 的文字大小（或 `env(preferred-text-scale)`）给整页设置比例，运行时 `defineTheme` 生成的样式表同样按此写字号。默认字号下计算值不变。
+
+- [#490](https://github.com/astryx-vue/astryx-vue/pull/490) [`6d652d0`](https://github.com/astryx-vue/astryx-vue/commit/6d652d0daa9a479fc3c3d2a647133b50b25d07a8) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 聊天发送按钮停用时和原版一致：保留主色，只按按钮的停用样式降到 50% 不透明度，不再改成灰底。Neutral 里带 `:root` 前缀的选中文字和分段控件规则不再作用到嵌在其他主题里的元素，同一页面加载多套主题时每套主题和单独加载时渲染一致；Butter 顶部导航的未选中项和选中项颜色改回原版的两档蓝。
+
+- [#490](https://github.com/astryx-vue/astryx-vue/pull/490) [`996f0de`](https://github.com/astryx-vue/astryx-vue/commit/996f0debe329d945925dfb633b9e05cc45b6a7fa) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 主题页的展示区和原版逐项对齐：Button、Field 标签、TopNav 条目、RadioList 的字号与行高改读主题的文字 token（label / body / large），不再写死 14px 和 1.4286，所以 stone、gothic、matcha、y2k、butter 下按钮是 16px 或各自的字号；Selector 的触发器改用 `size-element-*` 尺寸 token 和上游同款的行高公式，MultiSelector 控件的字号行高改用 label token；各主题根元素不再设行高，行高继承宿主页面，和原版一致；gothic、y2k、butter 的「自带底色区域文字色」规则改挂到 `.astryx-selector-field` / `.astryx-multi-selector-control`（带 `data-variant='input'` 的那一层），标签不再被误染成浅色。
+
+- [#490](https://github.com/astryx-vue/astryx-vue/pull/490) [`ea63146`](https://github.com/astryx-vue/astryx-vue/commit/ea6314652240068183179c7edbfdfa1917830857) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 主题 token 按上游重新逐项对齐：把上游七套主题源码连同调色板引用打包，用上游的 `deriveStatusRoleTokens` 生成，再逐个核对 211 个 token 的亮、暗两档，修掉 `--color-success` / `--color-error` / `--color-warning` 的旧值（如 neutral 的 `[#198100](https://github.com/astryx-vue/astryx-vue/issues/198100)`、`#64af4c`）、`--color-accent-muted`、`--color-skeleton`、各主题的状态 muted 与文字色、色板上的 `--color-*-green/red/yellow` 等。Neutral 不再保留上游已经去掉的主题本地状态 token（只留已弃用的 `--astryx-theme-neutral-color-status-fill-accent`），Badge、StatusDot、Avatar、ProgressBar 的状态色直接读 `--astryx-color-info/success/warning/error`，破坏性按钮用 `--astryx-color-error-muted` 和 `--astryx-color-on-error-muted`；Chocolate、Matcha 的破坏性按钮和 info 徽章、Butter 的状态徽章与破坏性按钮、中性徽章也照上游改了。
+  
+  Banner 照上游按状态取 `--astryx-color-<status>-muted` 和 `--astryx-color-on-<status>-muted`：标题、说明和状态图标继承这个前景色，终端内容回到普通文字色，只有内置的展开、关闭按钮跟随状态前景。Gothic、Butter、Stone、Y2K 主题改为在 `.astryx-banner[data-status]` 上重指这两个 token（与上游 `status:*` 覆盖一致），Neutral、Chocolate、Matcha 不再覆盖。`--astryx-banner-*-background/foreground` 仍可作为覆盖。
+  
+  动效 token 接入组件：`--astryx-duration-exit`、`--astryx-ease-exit` 用于触屏按压释放（淡出时长也由控制器抬手时读取，默认 175ms）、Switch、ClickableCard、SelectableCard、Thumbnail、列表行和树列表行的释放过渡，以及 BottomSheet 的指针退出曲线；`--astryx-ease-entrance` 用于 Dialog 与 Popover 的进入（Popover 时长改为 `--astryx-duration-medium-min`）；`--astryx-ease-move` 用于树列表和表格的展开箭头。
+  
+  PowerSearch、Selector、Tokenizer 抽出纯函数和组合式函数（`menuStyle`、`selectorStatus`、`useSelectedOverlay`、`inputAttrs`），行为不变，回到单文件 500 行以内。
+  
+  同一批里还对齐了：代码块的语法色（comment、operator、punctuation、diff 标记等）和代码块背景、高亮底色（高亮改读 `--astryx-color-accent-muted`），Neutral 选中行底色与聚焦环改读 `--astryx-color-accent-muted`、`--astryx-color-accent`，步骤条未开始的数字底改读 `--astryx-color-background-muted`；Neutral、Butter、Y2K 选中行、树节点、单选项、文件拖放区、角标的次要文字按上游退一档（新增各主题的 `selected-text.css`）；演练场主题编辑器生成的深色文字改为 `[#111111](https://github.com/astryx-vue/astryx-vue/issues/111111)`；`@astryx-vue/lab` 的样式入口去掉已不存在的 `info-tip.css`。
+
 ## 0.7.21
 
 ### Patch Changes

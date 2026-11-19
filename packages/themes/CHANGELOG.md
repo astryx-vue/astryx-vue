@@ -1,5 +1,56 @@
 # @astryx-vue/themes
 
+## 0.7.22
+
+### Patch Changes
+
+- [#490](https://github.com/astryx-vue/astryx-vue/pull/490) [`cfb4c25`](https://github.com/astryx-vue/astryx-vue/commit/cfb4c256039f483e4dd0860a2ac245114a20453d) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - InfoTip 按上游完整移植：悬停和键盘聚焦预览，点击、轻点、回车或空格钉住，Escape、再按一次、点到外面、滚动外面或焦点离开时关闭；按钮带 `aria-expanded` 和 `aria-controls`，钉住时读屏播报一次帮助文字，按下事件停在按钮上。`useTooltip` 新增 `show()` / `hide()`，Tooltip 的气泡抽成 `TooltipSurface` 与 InfoTip 共用。字段的 `labelTooltip` 改用 InfoTip，名称为 “About 标签”（中文为“关于标签”），隐藏标签时的信息按钮定位照上游。`InfoTipProps`、`InfoTipSize` 从 core 导出，`@astryx-vue/lab` 的 InfoTip 改为已弃用的 core 再导出。EmptyState 的图标容器回到上游的普通块级 div：Icon 按组件或 Iconify 名字画的图标和上游的 `<svg>` 一样是块级（`data-kind='graphic'`），内置图形仍是行内 flex 的 span 且不再带 `vertical-align: -0.125em`，去掉了加载圈的特例。主题补齐上游新增的 token：`--color-info`、`--color-info-muted`、`--color-on-info`，`--color-text-/icon-/border-` 的 info、success、warning、error，`--color-on-*-muted`，`--duration-exit`，`--ease-entrance`、`--ease-move`、`--ease-exit`，七个主题都按上游主题源码的值写入；Chat 的成功、失败颜色改读 `--astryx-color-text-success`、`--astryx-color-text-error` 与 `--astryx-color-icon-*`，去掉各主题 `chat.css` 里的 `--astryx-chat-success` / `--astryx-chat-error` 补丁（变量仍可覆盖）。
+
+- [#490](https://github.com/astryx-vue/astryx-vue/pull/490) [`b9c31f8`](https://github.com/astryx-vue/astryx-vue/commit/b9c31f8af30e04abb0c5f280a8af552f0932deff) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 对齐上游 origin/main 的几处渲染差异：
+  
+  - `NumberInput` 标签隐藏时也渲染 Field：保留读屏用的隐藏 `<label>`，`width` 也能落到外层。
+  - `ChatMessageBubble` 按内容收窄，去掉 280px 的最小宽度，例如「Where's my order?」宽 148px，发出的消息靠右。
+  - `Selector` 新增 `startIcon`，画在触发器最前面，设了它就不再画选中项自己的图标；触发器外壳的间距改为 8px；选项 `icon` 可以直接传 VNode，按它自己的尺寸画，不再套 16px 的盒子。
+  - `Text` 支持 `type="inherit"`：字号、行高、字重和颜色都跟随父元素。
+  - `Collapsible` 的文字触发行裁掉行高留白，箭头盒子改为 17px（`--text-large-size`），高度和上游一致；自定义的高内容照常撑高触发行。
+  - `Table` 只有作为容器的直接首个或末个子元素时，才在上下方向贴到容器边缘，同上游 [#12068](https://github.com/astryx-vue/astryx-vue/issues/12068)。
+  - `TreeList` 的条目支持 `startContent`。
+  - `TextArea` 计数器改成「164/2,000」的格式。
+  - `Token` 默认颜色的文字改用 `--color-text-primary`。
+  - `Text` 的每种 `type` 都写明默认字重（同上游 defaultWeightByTypeStyles），不再继承父元素的字重。之前放在粗体容器里的 supporting 文字会跟着变粗、宽出约 2.8%。
+  - display 型 `Heading` 的字重跟随自己的层级（h1 是 600），字号和行高仍取 display 档，和上游实际渲染一致。
+  - `Link` 新增 `type`（默认 `body`），决定字号、行高和字重，用法同 Text；嵌在文字里的链接用 `type="inherit"`。
+
+- [#491](https://github.com/astryx-vue/astryx-vue/pull/491) [`a02b3c5`](https://github.com/astryx-vue/astryx-vue/commit/a02b3c5080e714a55e89b71cd89dfe7f15db7571) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 对照原版组件页顶部预览，修正组件和主题与原版不一致的地方：
+  
+  - Dialog 的最大宽度照原版改成「不超过容器，也不超过视口宽度减去两侧各 16px」，行内对话框同样适用，窄屏下不再溢出。
+  - AlertDialog 不传 `width` 时，在手机上（粗指针且视口窄或矮）默认宽 320，和 iOS 系统弹窗一致，其他情况仍是 400。
+  - Calendar 星期表头改用原版当前的 CLDR 写法（英语 Sun / Mon，法语 dim. / lun. 等），表头行高 36px，月份切换箭头用主文字色。
+  - TabList 选中下划线两端缩到和 tab 左右内边距对齐，默认压在 tab 底边外 1px，颜色取 `--astryx-color-accent`；可滚动的标签条按同一个值往下留空，不会把下划线裁掉。
+  - Switch 根节点改成竖排 flex，开关行下面不再多出 4px 行盒空隙。
+  - Link 的 `isStandalone` 字号和行高改读 `--astryx-text-body-size` / `--astryx-text-body-leading`，原来读的两个变量不存在，会退到 16px。
+  - Icon 用语义名字（如 `icon="search"`）解析到主题图标时，和内置图形一样是行内 flex，落在行框里，不再当作块级图形。
+  - 字段标签（FieldLabel，Switch、CheckboxInput、各类输入框的标签都用它）照原版改成半粗、主文字色；说明文字和可选标记仍是次要文字色。原版的理由：Arial、Segoe UI 等字体没有 500 字重会退回常规体，半粗能保证标签总比说明重。
+  - Avatar 首字母默认用主文字色；Neutral 主题同样改为 `--astryx-color-text-primary`。
+  - Neutral 主题：Slider 未填充轨道改用 `--astryx-color-track`（原来和画布底色相同，看不见）；StatusDot 的成功、警告、错误点改用 `--astryx-color-icon-*`。
+  - 组件目录（catalog）随文档演示源码更新。
+
+- [#490](https://github.com/astryx-vue/astryx-vue/pull/490) [`93a2bd6`](https://github.com/astryx-vue/astryx-vue/commit/93a2bd610b7da4be7f8a9bdaf60a998ff3dc87ef) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 主题补齐上游剩下的规则。Butter、Gothic、Y2K 新增 `own-fill.css`，对应上游的 `OWN_FILL_RULES`：卡片、浮层、菜单、输入框、分段控件选中项、条纹表格行等自带填充的部件，把主题自己的主文字、次要文字和强调色重新设一遍，放进分类色卡片时不再继承卡片的深色文字；Butter、Y2K 的 `selected-text.css` 补上分类色卡片里（含嵌套一层）选中行、树节点、数字角标的次要文字色。Button 的 destructive 变体在没有主题时回到上游的实心填充（`--astryx-color-error` 配 `--astryx-color-on-error`），焦点环也改用 `--astryx-color-error`；各主题自己的 destructive 取值不变。字体大小接入上游的动态字号：新增 `dynamicType`、`textSizeSync` 和 UIKit 字号表，七个主题的 `--astryx-font-size-*` 与 `mobile-type.css` 写成 `calc(自身大小 * var(--_dynamic-type-*, 1))` 并以下一档为上限，Butter、Stone、Y2K 的 `--astryx-text-supporting-size` 为 `0.75rem` 乘 Footnote 的比例；根 `Theme` 挂载时读取 iOS 的文字大小（或 `env(preferred-text-scale)`）给整页设置比例，运行时 `defineTheme` 生成的样式表同样按此写字号。默认字号下计算值不变。
+
+- [#490](https://github.com/astryx-vue/astryx-vue/pull/490) [`6d652d0`](https://github.com/astryx-vue/astryx-vue/commit/6d652d0daa9a479fc3c3d2a647133b50b25d07a8) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 聊天发送按钮停用时和原版一致：保留主色，只按按钮的停用样式降到 50% 不透明度，不再改成灰底。Neutral 里带 `:root` 前缀的选中文字和分段控件规则不再作用到嵌在其他主题里的元素，同一页面加载多套主题时每套主题和单独加载时渲染一致；Butter 顶部导航的未选中项和选中项颜色改回原版的两档蓝。
+
+- [#490](https://github.com/astryx-vue/astryx-vue/pull/490) [`996f0de`](https://github.com/astryx-vue/astryx-vue/commit/996f0debe329d945925dfb633b9e05cc45b6a7fa) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 主题页的展示区和原版逐项对齐：Button、Field 标签、TopNav 条目、RadioList 的字号与行高改读主题的文字 token（label / body / large），不再写死 14px 和 1.4286，所以 stone、gothic、matcha、y2k、butter 下按钮是 16px 或各自的字号；Selector 的触发器改用 `size-element-*` 尺寸 token 和上游同款的行高公式，MultiSelector 控件的字号行高改用 label token；各主题根元素不再设行高，行高继承宿主页面，和原版一致；gothic、y2k、butter 的「自带底色区域文字色」规则改挂到 `.astryx-selector-field` / `.astryx-multi-selector-control`（带 `data-variant='input'` 的那一层），标签不再被误染成浅色。
+
+- [#490](https://github.com/astryx-vue/astryx-vue/pull/490) [`ea63146`](https://github.com/astryx-vue/astryx-vue/commit/ea6314652240068183179c7edbfdfa1917830857) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 主题 token 按上游重新逐项对齐：把上游七套主题源码连同调色板引用打包，用上游的 `deriveStatusRoleTokens` 生成，再逐个核对 211 个 token 的亮、暗两档，修掉 `--color-success` / `--color-error` / `--color-warning` 的旧值（如 neutral 的 `[#198100](https://github.com/astryx-vue/astryx-vue/issues/198100)`、`#64af4c`）、`--color-accent-muted`、`--color-skeleton`、各主题的状态 muted 与文字色、色板上的 `--color-*-green/red/yellow` 等。Neutral 不再保留上游已经去掉的主题本地状态 token（只留已弃用的 `--astryx-theme-neutral-color-status-fill-accent`），Badge、StatusDot、Avatar、ProgressBar 的状态色直接读 `--astryx-color-info/success/warning/error`，破坏性按钮用 `--astryx-color-error-muted` 和 `--astryx-color-on-error-muted`；Chocolate、Matcha 的破坏性按钮和 info 徽章、Butter 的状态徽章与破坏性按钮、中性徽章也照上游改了。
+  
+  Banner 照上游按状态取 `--astryx-color-<status>-muted` 和 `--astryx-color-on-<status>-muted`：标题、说明和状态图标继承这个前景色，终端内容回到普通文字色，只有内置的展开、关闭按钮跟随状态前景。Gothic、Butter、Stone、Y2K 主题改为在 `.astryx-banner[data-status]` 上重指这两个 token（与上游 `status:*` 覆盖一致），Neutral、Chocolate、Matcha 不再覆盖。`--astryx-banner-*-background/foreground` 仍可作为覆盖。
+  
+  动效 token 接入组件：`--astryx-duration-exit`、`--astryx-ease-exit` 用于触屏按压释放（淡出时长也由控制器抬手时读取，默认 175ms）、Switch、ClickableCard、SelectableCard、Thumbnail、列表行和树列表行的释放过渡，以及 BottomSheet 的指针退出曲线；`--astryx-ease-entrance` 用于 Dialog 与 Popover 的进入（Popover 时长改为 `--astryx-duration-medium-min`）；`--astryx-ease-move` 用于树列表和表格的展开箭头。
+  
+  PowerSearch、Selector、Tokenizer 抽出纯函数和组合式函数（`menuStyle`、`selectorStatus`、`useSelectedOverlay`、`inputAttrs`），行为不变，回到单文件 500 行以内。
+  
+  同一批里还对齐了：代码块的语法色（comment、operator、punctuation、diff 标记等）和代码块背景、高亮底色（高亮改读 `--astryx-color-accent-muted`），Neutral 选中行底色与聚焦环改读 `--astryx-color-accent-muted`、`--astryx-color-accent`，步骤条未开始的数字底改读 `--astryx-color-background-muted`；Neutral、Butter、Y2K 选中行、树节点、单选项、文件拖放区、角标的次要文字按上游退一档（新增各主题的 `selected-text.css`）；演练场主题编辑器生成的深色文字改为 `[#111111](https://github.com/astryx-vue/astryx-vue/issues/111111)`；`@astryx-vue/lab` 的样式入口去掉已不存在的 `info-tip.css`。
+
 ## 0.7.21
 
 No changes in this release.

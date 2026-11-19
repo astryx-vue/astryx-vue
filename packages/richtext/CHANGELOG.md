@@ -1,5 +1,12 @@
 # @astryx-vue/richtext
 
+## 0.7.22
+
+### Patch Changes
+
+- Updated dependencies [[`20c48f1`](https://github.com/astryx-vue/astryx-vue/commit/20c48f17c0b62e80c233ca7d67e0b63e25b073f5), [`5b9dce9`](https://github.com/astryx-vue/astryx-vue/commit/5b9dce93dd38ed2363e396eb120712edb176f005), [`2a38dd0`](https://github.com/astryx-vue/astryx-vue/commit/2a38dd02da165ade1427f88e839596f29a075699), [`fe5496f`](https://github.com/astryx-vue/astryx-vue/commit/fe5496f0425150f91799da27d1ad1b585e07aaf9), [`cfb4c25`](https://github.com/astryx-vue/astryx-vue/commit/cfb4c256039f483e4dd0860a2ac245114a20453d), [`b9c31f8`](https://github.com/astryx-vue/astryx-vue/commit/b9c31f8af30e04abb0c5f280a8af552f0932deff), [`5b9dce9`](https://github.com/astryx-vue/astryx-vue/commit/5b9dce93dd38ed2363e396eb120712edb176f005), [`09a2429`](https://github.com/astryx-vue/astryx-vue/commit/09a2429529e3f7e71efc0e2241e9df54780221a1), [`6378227`](https://github.com/astryx-vue/astryx-vue/commit/6378227b35868057dd6b0503da763d241319e0ea), [`b9c31f8`](https://github.com/astryx-vue/astryx-vue/commit/b9c31f8af30e04abb0c5f280a8af552f0932deff), [`f63ed1e`](https://github.com/astryx-vue/astryx-vue/commit/f63ed1e87583564a278f4d43fc54fe7e6c09dfc4), [`5b9dce9`](https://github.com/astryx-vue/astryx-vue/commit/5b9dce93dd38ed2363e396eb120712edb176f005), [`41cea82`](https://github.com/astryx-vue/astryx-vue/commit/41cea82675601a1396e4ed5c402421f96c92a36d), [`b9c31f8`](https://github.com/astryx-vue/astryx-vue/commit/b9c31f8af30e04abb0c5f280a8af552f0932deff), [`b9c31f8`](https://github.com/astryx-vue/astryx-vue/commit/b9c31f8af30e04abb0c5f280a8af552f0932deff), [`20c48f1`](https://github.com/astryx-vue/astryx-vue/commit/20c48f17c0b62e80c233ca7d67e0b63e25b073f5), [`b9c31f8`](https://github.com/astryx-vue/astryx-vue/commit/b9c31f8af30e04abb0c5f280a8af552f0932deff), [`b9c31f8`](https://github.com/astryx-vue/astryx-vue/commit/b9c31f8af30e04abb0c5f280a8af552f0932deff), [`a02b3c5`](https://github.com/astryx-vue/astryx-vue/commit/a02b3c5080e714a55e89b71cd89dfe7f15db7571), [`93a2bd6`](https://github.com/astryx-vue/astryx-vue/commit/93a2bd610b7da4be7f8a9bdaf60a998ff3dc87ef), [`6d652d0`](https://github.com/astryx-vue/astryx-vue/commit/6d652d0daa9a479fc3c3d2a647133b50b25d07a8), [`996f0de`](https://github.com/astryx-vue/astryx-vue/commit/996f0debe329d945925dfb633b9e05cc45b6a7fa), [`ea63146`](https://github.com/astryx-vue/astryx-vue/commit/ea6314652240068183179c7edbfdfa1917830857)]:
+  - @astryx-vue/core@0.7.22
+
 ## 0.7.21
 
 ### Patch Changes
