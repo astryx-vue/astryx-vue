@@ -4,7 +4,7 @@ import { Token } from '@astryx-vue/core/Token'
 </script>
 
 <template>
-  <HStack :gap="10" h-align="center">
+  <HStack :gap="10" h-align="center" wrap="wrap">
     <HStack align="center" :gap="2">
       <Token label="Horizontal" />
       <Token label="Horizontal" />
