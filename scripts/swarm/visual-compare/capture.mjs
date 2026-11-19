@@ -147,7 +147,11 @@ export async function capturePage(context, { site: siteKey, url, scheme, section
       }, selector)
       if (box.width < 1 || box.height < 1)
         throw new Error(`${site.label} 预览区尺寸为 0（${selector}）：${url}`)
-      buffer = await page.screenshot({ fullPage: true, clip: box, animations: 'disabled', caret: 'hide' })
+      // 预览区整块在首屏里时只截视口：整页截图会把视口临时拉到整页高度，
+      // 上游的触屏字号规则会因此失效（窄屏按钮从 16px 变回 14px），截到的不是用户实际看到的样子。
+      const viewport = page.viewportSize()
+      const fitsViewport = viewport != null && box.y + box.height <= viewport.height
+      buffer = await page.screenshot({ fullPage: !fitsViewport, clip: box, animations: 'disabled', caret: 'hide' })
     }
     else {
       buffer = await page.screenshot({ fullPage: true, animations: 'disabled', caret: 'hide' })

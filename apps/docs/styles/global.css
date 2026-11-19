@@ -615,7 +615,8 @@ html.dark .component-card__frame {
   min-height: 513px;
   /* 原版 tab 条到画布隔 16px。 */
   margin-top: 16px;
-  padding: 32px;
+  /* 原版画布本身没有内边距，只在左右各留 16px 的空隙，组件上下贴着画布居中。 */
+  padding: 0 16px;
   overflow: hidden;
   isolation: isolate;
   font-size: var(--astryx-text-body-size, 14px);
@@ -642,10 +643,34 @@ html.dark .component-detail__stage {
   max-width: 100%;
 }
 
+/*
+ * 窄屏照原版 ShowcasePreview 的小屏分支：画布至少 160px 高，随内容长高，不缩放；
+ * 左右两条 16px 的空隙在内容放不下时先让出位置，内容比画布还宽就横向滚动，
+ * 放得下时居中（safe center 保证溢出时从左边开始，不会把开头裁掉）。
+ */
 @media (max-width: 768px) {
   .component-detail__stage {
-    min-height: 320px;
-    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: safe center;
+    min-height: 160px;
+    padding: 0;
+    overflow: auto;
+  }
+
+  .component-detail__stage::before,
+  .component-detail__stage::after {
+    content: '';
+    flex: 0 0.5 16px;
+    min-width: 0;
+  }
+
+  /* 内容外壳最多缩到最小内容宽度，并且比两侧空隙先缩。 */
+  .component-detail__stage > *,
+  .component-detail__stage > .stage-fit > .stage-fit__inner > * {
+    flex-shrink: 1000;
+    min-width: min-content;
+    max-width: none;
   }
 }
 
@@ -1563,7 +1588,8 @@ html.dark .component-example {
   }
 
   .component-detail__content {
-    padding: 72px 18px 64px;
+    /* 原版窄屏正文左右各 24px，390 宽时预览卡片是 342。 */
+    padding: 72px 24px 64px;
   }
 
   .component-detail__body div[class*='language-'] {

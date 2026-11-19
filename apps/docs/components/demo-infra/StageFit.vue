@@ -27,6 +27,7 @@ const frameStyle = computed(() => (scale.value === 1 ? undefined : { height: `${
 const innerStyle = computed(() => (scale.value === 1 ? undefined : { transform: `scale(${scale.value})` }))
 
 let observer: ResizeObserver | undefined
+let narrow: MediaQueryList | undefined
 function content(): HTMLElement | null {
   return inner.value?.firstElementChild as HTMLElement | null
 }
@@ -36,6 +37,11 @@ function measure(): void {
     return
   naturalHeight.value = el.offsetHeight
   const stage = el.closest<HTMLElement>('.component-detail__stage')
+  // 原版窄屏不缩放：画布跟着内容长高，太宽就横向滚动。
+  if (narrow?.matches) {
+    limit.value = 0
+    return
+  }
   if (stage != null) {
     const style = getComputedStyle(stage)
     // 画布的 min-height 是设计高度；clientHeight 会被内容撑大，不能当上限。
@@ -46,11 +52,16 @@ onMounted(() => {
   const el = content()
   if (el == null)
     return
+  narrow = window.matchMedia('(max-width: 768px)')
+  narrow.addEventListener('change', measure)
   measure()
   observer = new ResizeObserver(measure)
   observer.observe(el)
 })
-onBeforeUnmount(() => observer?.disconnect())
+onBeforeUnmount(() => {
+  observer?.disconnect()
+  narrow?.removeEventListener('change', measure)
+})
 </script>
 
 <template>
