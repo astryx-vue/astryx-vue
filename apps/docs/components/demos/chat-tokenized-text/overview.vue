@@ -3,9 +3,9 @@ import type { ChatComposerToken } from '@astryx-vue/core/Chat'
 import { ChatMessage, ChatMessageBubble, ChatMessageList, ChatTokenizedText } from '@astryx-vue/core/Chat'
 
 const tokens: ChatComposerToken[] = [
-  { value: '@Cindy', label: '@Cindy', variant: 'blue' },
+  { value: '@cindy', label: '@Cindy', variant: 'blue' },
   { value: '#bug', label: '#bug', variant: 'red' },
-  { value: '#feature', label: '#feature', variant: 'green' },
+  { value: '#feat', label: '#feature', variant: 'green' },
 ]
 </script>
 
@@ -13,7 +13,7 @@ const tokens: ChatComposerToken[] = [
   <ChatMessageList>
     <ChatMessage sender="system">
       <ChatMessageBubble>
-        <ChatTokenizedText text="@Cindy filed #bug and #feature for the sprint" :tokens="tokens" />
+        <ChatTokenizedText text="@cindy filed #bug and #feat for the sprint" :tokens="tokens" />
       </ChatMessageBubble>
     </ChatMessage>
   </ChatMessageList>

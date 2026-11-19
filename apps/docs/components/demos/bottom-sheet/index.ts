@@ -22,7 +22,7 @@ import switcherSource from './switcher.vue?raw&highlighted'
 
 const options = { className: 'bottom-sheet-preview' }
 
-export const bottomSheetOverview = defineDemo(overviewDemo, overviewSource, options)
+export const bottomSheetOverview = defineDemo(overviewDemo, overviewSource)
 export const bottomSheetHeights = defineDemo(heightsDemo, heightsSource, options)
 export const bottomSheetKeyboard = defineDemo(keyboardDemo, keyboardSource, options)
 export const bottomSheetNoScrim = defineDemo(noScrimDemo, noScrimSource, options)

@@ -11,7 +11,7 @@ const groups = [
 </script>
 
 <template>
-  <HStack :gap="10">
+  <HStack :gap="10" h-align="center">
     <VStack v-for="group in groups" :key="group.label" :gap="2">
       <Text type="supporting" color="secondary">
         {{ group.label }}

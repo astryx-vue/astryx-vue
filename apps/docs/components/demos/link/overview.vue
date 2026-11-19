@@ -3,7 +3,7 @@ import { Link } from '@astryx-vue/core/Link'
 </script>
 
 <template>
-  <Link href="#">
+  <Link href="#" is-standalone>
     Documentation
   </Link>
 </template>

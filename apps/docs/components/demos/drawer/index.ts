@@ -5,4 +5,4 @@ import overviewDemo from './overview.vue'
 import overviewSource from './overview.vue?raw&highlighted'
 
 export const drawerCard = defineDemo(cardDemo, cardSource, { className: 'overview-frame' })
-export const drawerOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const drawerOverview = defineDemo(overviewDemo, overviewSource)

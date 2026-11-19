@@ -35,4 +35,4 @@ export const listMarkers = defineDemo(markersDemo, markersSource, options)
 export const listInteractive = defineDemo(interactiveDemo, interactiveSource, options)
 export const listSwipe = defineDemo(swipeDemo, swipeSource, options)
 
-export const listOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const listOverview = defineDemo(overviewDemo, overviewSource)

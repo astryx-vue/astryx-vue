@@ -23,4 +23,4 @@ export const codeSizes = defineDemo(sizesDemo, sizesSource, options)
 export const codeLineNumbers = defineDemo(lineNumbersDemo, lineNumbersSource, options)
 export const codeCollapsible = defineDemo(collapsibleDemo, collapsibleSource, options)
 
-export const codeOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const codeOverview = defineDemo(overviewDemo, overviewSource)

@@ -13,4 +13,4 @@ export const blockquoteCite = defineDemo(citeDemo, citeSource, {
   className: 'blockquote-preview',
 })
 
-export const blockquoteOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const blockquoteOverview = defineDemo(overviewDemo, overviewSource)

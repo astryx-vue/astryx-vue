@@ -10,7 +10,7 @@ import overviewSource from './overview.vue?raw&highlighted'
 
 const column = { className: 'chat-preview' }
 
-export const chatMessageOverview = defineDemo(overviewDemo, overviewSource, column)
+export const chatMessageOverview = defineDemo(overviewDemo, overviewSource)
 export const chatMessageAvatar = defineDemo(avatarDemo, avatarSource, column)
 export const chatMessageGhost = defineDemo(ghostDemo, ghostSource, column)
 export const chatMessageMultiBubble = defineDemo(multiBubbleDemo, multiBubbleSource, column)

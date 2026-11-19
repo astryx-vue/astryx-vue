@@ -8,6 +8,6 @@ import sourcesSource from './sources.vue?raw&highlighted'
 
 const options = { className: 'citation-preview' }
 
-export const citationOverview = defineDemo(overviewDemo, overviewSource, { className: 'citation-overview' })
+export const citationOverview = defineDemo(overviewDemo, overviewSource)
 export const citationInline = defineDemo(inlineDemo, inlineSource, options)
 export const citationSources = defineDemo(sourcesDemo, sourcesSource, options)

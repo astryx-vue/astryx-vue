@@ -6,7 +6,7 @@ const value = shallowRef(['updates', 'security'])
 </script>
 
 <template>
-  <CheckboxList v-model="value" label="Email preferences">
+  <CheckboxList v-model="value" label="Email preferences" has-dividers>
     <CheckboxListItem label="Product updates" value="updates" description="New features and improvements" />
     <CheckboxListItem label="Security alerts" value="security" description="Important account security notifications" />
     <CheckboxListItem label="Marketing" value="marketing" description="Tips, offers, and promotions" />

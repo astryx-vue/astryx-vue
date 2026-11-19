@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { TableColumn } from '@astryx-vue/core/Table'
+import { Card } from '@astryx-vue/core/Card'
 import { pixel, proportional, Table } from '@astryx-vue/core/Table'
 
 interface User extends Record<string, unknown> {
@@ -25,5 +26,7 @@ const columns: TableColumn<User>[] = [
 </script>
 
 <template>
-  <Table :data="users" :columns="columns" id-key="id" has-hover />
+  <Card :width="600" max-width="100%">
+    <Table :data="users" :columns="columns" id-key="id" has-hover />
+  </Card>
 </template>

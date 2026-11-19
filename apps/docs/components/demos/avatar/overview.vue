@@ -4,7 +4,7 @@ import { Stack } from '@astryx-vue/core/Stack'
 </script>
 
 <template>
-  <Stack direction="horizontal" :gap="4" v-align="center">
+  <Stack direction="horizontal" :gap="4" align="center">
     <Avatar src="/template-assets/DATA-Ana-Thomas.png" name="Ana Thomas" size="xl">
       <template #status>
         <AvatarStatusDot variant="success" label="Online" />

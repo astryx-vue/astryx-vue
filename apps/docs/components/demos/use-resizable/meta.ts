@@ -1,4 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
+import { useResizableOverview as demo } from './index'
 
 export const meta = {
   slug: 'use-resizable',
@@ -7,4 +8,5 @@ export const meta = {
   order: 131,
   en: 'useResizable',
   zh: 'useResizable',
+  demo,
 } satisfies DemoMeta

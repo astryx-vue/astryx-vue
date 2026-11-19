@@ -9,4 +9,4 @@ import validationSource from './validation.vue?raw&highlighted'
 const options = { className: 'date-preview-host' }
 export const dateRangeInputPresets = defineDemo(presetsDemo, presetsSource, options)
 export const dateRangeInputValidation = defineDemo(validationDemo, validationSource, options)
-export const dateRangeInputOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const dateRangeInputOverview = defineDemo(overviewDemo, overviewSource)

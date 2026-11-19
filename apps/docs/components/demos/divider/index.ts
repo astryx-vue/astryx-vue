@@ -13,4 +13,4 @@ const options = { className: 'input-preview-host' }
 export const dividerFullBleed = defineDemo(fullBleedDemo, fullBleedSource, options)
 export const dividerVariants = defineDemo(variantsDemo, variantsSource, options)
 export const dividerVertical = defineDemo(verticalDemo, verticalSource, options)
-export const dividerOverview = defineDemo(overviewDemo, overviewSource, options)
+export const dividerOverview = defineDemo(overviewDemo, overviewSource)

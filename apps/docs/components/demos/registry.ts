@@ -17,6 +17,9 @@ export const componentDemos: Record<string, DemoModule> = Object.fromEntries(
 /** 总览卡片优先用专用静态构图，其他组件仍复用详情页 demo。 */
 export const componentCardDemos: Record<string, DemoModule> = Object.fromEntries(
   Object.values(metaModules).flatMap((meta) => {
+    // 原版总览页不放 hook 的卡片；hook 页顶部借用组件 showcase 只用在详情页。
+    if (meta.slug.startsWith('use-'))
+      return []
     const demo = meta.cardDemo ?? meta.demo
     return demo ? [[meta.slug, demo] as const] : []
   }),

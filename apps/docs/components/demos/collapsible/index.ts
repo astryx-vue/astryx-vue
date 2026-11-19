@@ -29,4 +29,4 @@ export const collapsibleSingle = defineDemo(singleDemo, singleSource, options)
 export const collapsibleChevronPosition = defineDemo(chevronPositionDemo, chevronPositionSource, options)
 export const collapsibleDisabled = defineDemo(disabledDemo, disabledSource, options)
 
-export const collapsibleOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const collapsibleOverview = defineDemo(overviewDemo, overviewSource)

@@ -18,7 +18,7 @@ import validationSource from './validation.vue?raw&highlighted'
 
 const shell = { className: 'chat-preview-composer' }
 
-export const chatComposerOverview = defineDemo(overviewDemo, overviewSource, shell)
+export const chatComposerOverview = defineDemo(overviewDemo, overviewSource)
 export const chatComposerAttachments = defineDemo(attachmentsDemo, attachmentsSource, shell)
 export const chatComposerFlat = defineDemo(flatDemo, flatSource, shell)
 export const chatComposerFooterActions = defineDemo(footerActionsDemo, footerActionsSource, shell)

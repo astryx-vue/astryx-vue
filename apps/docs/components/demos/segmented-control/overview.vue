@@ -2,13 +2,13 @@
 import { SegmentedControl, SegmentedControlItem } from '@astryx-vue/core/SegmentedControl'
 import { ref } from 'vue'
 
-const view = ref('overview')
+const value = ref('grid')
 </script>
 
 <template>
-  <SegmentedControl v-model="view" label="Workspace view">
-    <SegmentedControlItem label="Overview" value="overview" />
-    <SegmentedControlItem label="Activity" value="activity" />
-    <SegmentedControlItem label="Members" value="members" />
+  <SegmentedControl v-model="value" label="View mode">
+    <SegmentedControlItem value="grid" label="Grid" />
+    <SegmentedControlItem value="list" label="List" />
+    <SegmentedControlItem value="table" label="Table" />
   </SegmentedControl>
 </template>

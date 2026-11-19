@@ -16,7 +16,7 @@ import triggersSource from './triggers.vue?raw&highlighted'
 
 const options = { className: 'more-menu-preview' }
 
-export const moreMenuOverview = defineDemo(overviewDemo, overviewSource, options)
+export const moreMenuOverview = defineDemo(overviewDemo, overviewSource)
 export const moreMenuBottomSheet = defineDemo(bottomSheetDemo, bottomSheetSource, options)
 export const moreMenuBasic = defineDemo(basicDemo, basicSource, options)
 export const moreMenuDividers = defineDemo(dividersDemo, dividersSource, options)

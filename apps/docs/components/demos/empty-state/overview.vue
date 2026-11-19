@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { Button } from '@astryx-vue/core/Button'
 import { EmptyState } from '@astryx-vue/core/EmptyState'
+import { Icon } from '@astryx-vue/core/Icon'
 </script>
 
 <template>
-  <EmptyState title="No results" description="Try a different search.">
+  <EmptyState title="No results found" description="Try adjusting your search or filters to find what you need.">
     <template #icon>
-      <span class="css-icon css-icon--lg i-carbon-search" />
+      <Icon icon="i-heroicons-magnifying-glass" size="lg" />
     </template>
     <template #actions>
       <Button label="Clear filters" variant="secondary" />

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { DateRange } from '@astryx-vue/core/DateRangeInput'
 import { DateRangeInput } from '@astryx-vue/core/DateRangeInput'
+import { Stack } from '@astryx-vue/core/Stack'
 import { shallowRef } from 'vue'
 
 function isoDaysAgo(days: number): string {
@@ -19,5 +20,7 @@ const presets = [
 </script>
 
 <template>
-  <DateRangeInput v-model="range" label="Date range" :presets="presets" />
+  <Stack direction="vertical" width="100%" :max-width="400">
+    <DateRangeInput v-model="range" label="Date range" :presets="presets" />
+  </Stack>
 </template>

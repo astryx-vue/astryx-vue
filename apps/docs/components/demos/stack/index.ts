@@ -42,4 +42,4 @@ export const stackItem = defineDemo(stackItemDemo, stackItemSource, {
   dataKind: 'stack-item',
 })
 
-export const stackOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-hug stack-preview-host', dataKind: 'h-stack' })
+export const stackOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-hug' })

@@ -8,5 +8,6 @@ export const meta = {
   order: 18,
   en: 'Dropdown Menu Radio Group',
   zh: '下拉菜单单选组',
-  demo,
+  // 原版这个组件页没有顶部预览，只在总览卡片里用。
+  cardDemo: demo,
 } satisfies DemoMeta

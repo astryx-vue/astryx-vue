@@ -13,4 +13,4 @@ export const checkboxInputStates = defineDemo(statesDemo, statesSource, options)
 export const checkboxInputIndeterminate = defineDemo(indeterminateDemo, indeterminateSource, options)
 export const checkboxInputStatus = defineDemo(statusDemo, statusSource, options)
 
-export const checkboxInputOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const checkboxInputOverview = defineDemo(overviewDemo, overviewSource)

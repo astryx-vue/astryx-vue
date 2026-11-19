@@ -5,14 +5,12 @@ import { SideNav, SideNavItem } from '@astryx-vue/core/SideNav'
 
 <template>
   <SideNav>
-    <SideNavItem href="#inbox" icon-class="i-carbon-email" is-selected label="Inbox">
+    <SideNavItem href="#" icon-class="i-heroicons-inbox" is-selected label="Inbox">
       <template #end>
-        <Badge variant="neutral">
-          12
-        </Badge>
+        <Badge label="12" />
       </template>
     </SideNavItem>
-    <SideNavItem href="#documents" icon-class="i-carbon-document" label="Documents" />
-    <SideNavItem icon-class="i-carbon-settings" is-disabled label="Settings" />
+    <SideNavItem href="#" icon-class="i-heroicons-document" label="Documents" />
+    <SideNavItem href="#" icon-class="i-heroicons-cog-6-tooth" is-disabled label="Settings" />
   </SideNav>
 </template>

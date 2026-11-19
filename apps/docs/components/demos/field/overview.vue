@@ -1,21 +1,33 @@
 <script setup lang="ts">
+import type { FieldStatusInput } from '@astryx-vue/core/Field'
 import { Field } from '@astryx-vue/core/Field'
-import { shallowRef, useId } from 'vue'
+import { Stack } from '@astryx-vue/core/Stack'
+import { TextInput } from '@astryx-vue/core/TextInput'
+import { computed, shallowRef } from 'vue'
 
-const name = shallowRef('Ada')
-const inputId = `name-${useId()}`
+const email = shallowRef('')
+const status = computed<FieldStatusInput | undefined>(() =>
+  email.value.length > 0 && !email.value.includes('@')
+    ? { type: 'error', message: 'Enter a valid email address.' }
+    : undefined,
+)
 </script>
 
 <template>
-  <Field :input-id="inputId" label="Name" description="How we should address you.">
-    <template #default="field">
-      <input
-        :id="field.inputId"
-        v-model="name"
-        class="input-preview-native"
-        :aria-labelledby="field.labelId"
-        :aria-describedby="field.describedBy"
-      >
-    </template>
-  </Field>
+  <Stack direction="vertical" :gap="3" :width="320">
+    <Field
+      label="Email"
+      input-id="field-email"
+      description="We will never share your email."
+      is-required
+      :status="status"
+    >
+      <TextInput
+        v-model="email"
+        label="Email"
+        is-label-hidden
+        placeholder="you@example.com"
+      />
+    </Field>
+  </Stack>
 </template>

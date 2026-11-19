@@ -19,4 +19,4 @@ export const progressBarIndeterminate = defineDemo(indeterminateDemo, indetermin
 export const progressBarMarks = defineDemo(marksDemo, marksSource, options)
 export const progressBarSemantic = defineDemo(semanticDemo, semanticSource, options)
 export const progressBarValueLabel = defineDemo(valueLabelDemo, valueLabelSource, options)
-export const progressBarOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const progressBarOverview = defineDemo(overviewDemo, overviewSource)

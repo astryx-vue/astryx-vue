@@ -5,7 +5,7 @@ import { Text } from '@astryx-vue/core/Text'
 </script>
 
 <template>
-  <VStack :gap="6">
+  <VStack :gap="6" width="100%" :max-width="400">
     <VStack :gap="2">
       <Text type="supporting" color="secondary">
         HAlign: start

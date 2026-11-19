@@ -22,4 +22,4 @@ export const textInputStates = defineDemo(statesDemo, statesSource, options)
 export const textInputVariant = defineDemo(variantDemo, variantSource, options)
 export const textInputTypes = defineDemo(typesDemo, typesSource, options)
 
-export const textInputOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const textInputOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-hug' })

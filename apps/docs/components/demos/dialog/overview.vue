@@ -1,16 +1,22 @@
 <script setup lang="ts">
-import { Button } from '@astryx-vue/core/Button'
 import { Dialog, DialogHeader } from '@astryx-vue/core/Dialog'
-import { VStack } from '@astryx-vue/core/Stack'
+import { Layout, LayoutContent } from '@astryx-vue/core/Layout'
+import { Text } from '@astryx-vue/core/Text'
+
+// 正式使用时去掉 is-inline：对话框应该是模态的。
 </script>
 
 <template>
-  <div class="input-preview-grid">
-    <Dialog is-inline is-open width="100%">
-      <VStack :gap="3">
-        <DialogHeader title="Share project" subtitle="Anyone with the link can view." />
-        <Button label="Done" variant="primary" />
-      </VStack>
-    </Dialog>
-  </div>
+  <Dialog is-open is-inline>
+    <Layout>
+      <template #header>
+        <DialogHeader title="Modal Title" has-close-button />
+      </template>
+      <LayoutContent>
+        <Text type="body">
+          Dialog content goes here.
+        </Text>
+      </LayoutContent>
+    </Layout>
+  </Dialog>
 </template>

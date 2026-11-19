@@ -1,4 +1,5 @@
-body:not(:has([data-playground-page])) #astryx-app-shell-main {
+/* 页面顶部预览照原版 showcase，内容区只留 contentPadding，不再额外让出 48px。 */
+body:not(:has([data-playground-page])) #astryx-app-shell-main:not(.component-detail__stage *) {
   padding-top: var(--astryx-spacing-12, 48px);
 }
 

@@ -1,24 +1,17 @@
 <script setup lang="ts">
 import { MultiSelector } from '@astryx-vue/core/MultiSelector'
+import { ref } from 'vue'
 
-const options = ['Name', 'Email', 'Role', 'Status', 'Created']
-const selected = ['Role', 'Created']
+const value = ref<string[]>([])
 </script>
 
 <template>
-  <div class="overview-field">
+  <div style="width: 300px">
     <MultiSelector
-      :model-value="selected"
-      :options="options"
+      v-model="value"
       label="Columns"
+      :options="['Name', 'Email', 'Role', 'Status', 'Created']"
       placeholder="Select columns..."
     />
   </div>
 </template>
-
-<style scoped>
-.overview-field {
-  width: 20rem;
-  max-width: 100%;
-}
-</style>

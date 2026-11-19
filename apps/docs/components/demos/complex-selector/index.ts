@@ -10,4 +10,4 @@ const options = { className: 'complex-selector-preview' }
 
 export const complexSelectorDeadline = defineDemo(deadlineDemo, deadlineSource, options)
 export const complexSelectorTree = defineDemo(treeDemo, treeSource, options)
-export const complexSelectorOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const complexSelectorOverview = defineDemo(overviewDemo, overviewSource)

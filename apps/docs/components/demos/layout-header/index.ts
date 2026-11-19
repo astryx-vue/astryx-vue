@@ -4,7 +4,5 @@ import overviewSource from './overview.vue?raw&highlighted'
 import withActionsDemo from './with-actions.vue'
 import withActionsSource from './with-actions.vue?raw&highlighted'
 
-const options = { className: 'layout-header-preview' }
-
-export const layoutHeaderWithActions = defineDemo(withActionsDemo, withActionsSource, options)
-export const layoutHeaderOverview = defineDemo(overviewDemo, overviewSource, options)
+export const layoutHeaderWithActions = defineDemo(withActionsDemo, withActionsSource, { className: 'layout-header-preview' })
+export const layoutHeaderOverview = defineDemo(overviewDemo, overviewSource)

@@ -10,4 +10,4 @@ const options = { className: 'overlay-preview' }
 
 export const overlayBottomStrip = defineDemo(bottomStripDemo, bottomStripSource, options)
 export const overlayHoverReveal = defineDemo(hoverRevealDemo, hoverRevealSource, options)
-export const overlayOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const overlayOverview = defineDemo(overviewDemo, overviewSource)

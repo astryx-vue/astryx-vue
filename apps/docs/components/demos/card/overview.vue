@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import { Card } from '@astryx-vue/core/Card'
 import { Heading } from '@astryx-vue/core/Heading'
-import { VStack } from '@astryx-vue/core/Stack'
+import { Stack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
 </script>
 
 <template>
-  <Card width="100%">
-    <VStack :gap="2">
-      <Heading :level="3">
-        Weekly report
+  <Card :width="320">
+    <Stack direction="vertical" :gap="2">
+      <Heading :level="4">
+        Card title
       </Heading>
-      <Text color="secondary">
-        Your team closed 24 issues this week.
+      <Text type="body" color="secondary">
+        Cards group related content with a border and background. Use them for profiles, settings panels, or data summaries.
       </Text>
-    </VStack>
+    </Stack>
   </Card>
 </template>

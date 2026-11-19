@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import { InfoTip } from '@astryx-vue/core/InfoTip'
-import { HStack } from '@astryx-vue/core/Stack'
+import { HStack, VStack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
 </script>
 
 <template>
-  <div class="input-preview-grid">
-    <HStack :gap="2" align="center">
-      <Text type="label">
-        Active users
+  <VStack :gap="1">
+    <HStack :gap="1" align="center">
+      <Text type="label" color="secondary">
+        Rolling average
       </Text>
-      <InfoTip content="30-day rolling average." label="About active users" />
+      <InfoTip content="30-day rolling average, recomputed nightly." label="About this metric" />
     </HStack>
-  </div>
+    <Text type="display-3">
+      1,284
+    </Text>
+  </VStack>
 </template>

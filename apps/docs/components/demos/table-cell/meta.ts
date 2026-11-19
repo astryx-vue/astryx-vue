@@ -8,5 +8,6 @@ export const meta = {
   order: 7,
   en: 'Table Cell',
   zh: '表格单元格',
-  demo,
+  // 原版这个组件页没有顶部预览，只在总览卡片里用。
+  cardDemo: demo,
 } satisfies DemoMeta

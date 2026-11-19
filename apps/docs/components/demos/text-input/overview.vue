@@ -2,9 +2,17 @@
 import { TextInput } from '@astryx-vue/core/TextInput'
 import { shallowRef } from 'vue'
 
-const name = shallowRef('Ada Lovelace')
+const value = shallowRef('')
 </script>
 
 <template>
-  <TextInput v-model="name" label="Name" description="How we should address you." />
+  <div class="text-input-overview">
+    <TextInput v-model="value" label="Name" placeholder="Enter your name" />
+  </div>
 </template>
+
+<style scoped>
+.text-input-overview {
+  width: 300px;
+}
+</style>

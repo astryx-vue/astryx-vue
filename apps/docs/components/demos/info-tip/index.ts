@@ -8,6 +8,6 @@ import sizesSource from './sizes.vue?raw&highlighted'
 
 const options = { className: 'input-preview-host' }
 
-export const infoTipOverview = defineDemo(overviewDemo, overviewSource, options)
+export const infoTipOverview = defineDemo(overviewDemo, overviewSource)
 export const infoTipSizes = defineDemo(sizesDemo, sizesSource, options)
 export const infoTipFieldLabel = defineDemo(fieldLabelDemo, fieldLabelSource, options)

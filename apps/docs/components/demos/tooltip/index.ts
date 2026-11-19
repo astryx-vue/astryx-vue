@@ -13,4 +13,4 @@ const options = { className: 'input-preview-host' }
 export const tooltipActionBar = defineDemo(actionBarDemo, actionBarSource, options)
 export const tooltipHook = defineDemo(hookDemo, hookSource, options)
 export const tooltipInline = defineDemo(inlineDemo, inlineSource, options)
-export const tooltipOverview = defineDemo(overviewDemo, overviewSource, options)
+export const tooltipOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-hug' })

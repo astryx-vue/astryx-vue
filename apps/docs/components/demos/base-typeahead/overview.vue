@@ -1,69 +1,70 @@
 <script setup lang="ts">
+import type { SearchableItem } from '@astryx-vue/core'
 import { createStaticSource } from '@astryx-vue/core'
+import { Icon } from '@astryx-vue/core/Icon'
+import { VStack } from '@astryx-vue/core/Stack'
+import { Text } from '@astryx-vue/core/Text'
 import { BaseTypeahead } from '@astryx-vue/core/Typeahead'
 import { ref } from 'vue'
 
-const frame = ref<HTMLElement | null>(null)
-const value = ref<{ id: string, label: string } | null>(null)
-const source = createStaticSource([
+const frameworks: SearchableItem[] = [
   { id: 'react', label: 'React' },
+  { id: 'vue', label: 'Vue' },
+  { id: 'angular', label: 'Angular' },
+  { id: 'svelte', label: 'Svelte' },
+  { id: 'solid', label: 'SolidJS' },
   { id: 'remix', label: 'Remix' },
   { id: 'next', label: 'Next.js' },
-])
+  { id: 'nuxt', label: 'Nuxt' },
+]
+
+const source = createStaticSource(frameworks)
+const value = ref<SearchableItem | null>(null)
+const wrapper = ref<HTMLElement | null>(null)
 </script>
 
 <template>
-  <div class="base-typeahead-stage">
-    <div ref="frame" class="base-typeahead-stage__frame">
-      <span class="i-carbon-search base-typeahead-stage__icon" aria-hidden="true" />
+  <VStack :gap="3" class="base-typeahead-showcase">
+    <div ref="wrapper" class="base-typeahead-showcase__field">
+      <Icon icon="i-heroicons-magnifying-glass" size="sm" color="secondary" />
       <BaseTypeahead
         v-model="value"
-        :anchor-ref="frame"
-        :search-source="source"
         label="Search frameworks"
+        :search-source="source"
+        :anchor-ref="wrapper"
         placeholder="Search frameworks…"
+        has-entries-on-focus
         :debounce-ms="0"
       />
     </div>
-    <span class="base-typeahead-stage__note">{{ value ? value.label : 'No selection' }}</span>
-  </div>
+    <Text type="supporting" color="secondary">
+      {{ value != null ? `Selected: ${value.label}` : 'No selection' }}
+    </Text>
+  </VStack>
 </template>
 
 <style scoped>
-.base-typeahead-stage {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  box-sizing: border-box;
-  width: 360px;
-  max-width: 100%;
+.base-typeahead-showcase {
+  width: 100%;
+  max-width: 360px;
 }
 
-.base-typeahead-stage__frame {
+/* 原版用 HStack gap=2 vAlign=center 加 StyleX 画的输入框外壳。 */
+.base-typeahead-showcase__field {
   display: flex;
   align-items: center;
   gap: 8px;
-  box-sizing: border-box;
-  padding: 6px 8px;
-  border: 1px solid var(--astryx-color-border-subtle, light-dark(#0000001a, #ffffff1a));
-  border-radius: var(--astryx-radius-element, 0.625rem);
-  background: var(--astryx-input-background, light-dark(#fff, #262626));
+  padding-block: 6px;
+  padding-inline: 8px;
+  border: var(--astryx-border-width) solid var(--astryx-color-border);
+  border-radius: var(--astryx-radius-element);
+  background-color: var(--astryx-color-background-surface);
+  outline: 0 solid transparent;
+  outline-offset: var(--astryx-focus-outline-offset);
 }
 
-.base-typeahead-stage__frame:focus-within {
-  border-color: var(--astryx-input-focus, light-dark(#262626, #fafafa));
-}
-
-.base-typeahead-stage__icon {
-  flex: none;
-  display: block;
-  width: 16px;
-  height: 16px;
-  color: var(--astryx-color-text-secondary, #525252);
-}
-
-.base-typeahead-stage__note {
-  color: var(--astryx-color-text-secondary, #525252);
-  font-size: 0.875rem;
+.base-typeahead-showcase__field:has(input:focus-visible) {
+  outline-color: var(--astryx-focus-outline-color);
+  outline-width: var(--astryx-focus-outline-width);
 }
 </style>

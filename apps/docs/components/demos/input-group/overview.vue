@@ -9,7 +9,7 @@ const domain = ref('')
 </script>
 
 <template>
-  <VStack :gap="4" style="width: min(100%, 360px)">
+  <VStack :gap="4" width="100%" style="max-width: 400px">
     <InputGroup label="Price">
       <template #before>
         <InputGroupText>$</InputGroupText>

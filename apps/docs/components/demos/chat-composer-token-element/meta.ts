@@ -8,5 +8,6 @@ export const meta = {
   order: 15,
   en: 'Chat Composer Token Element',
   zh: '对话标签元素',
-  demo,
+  // 原版这个组件页没有顶部预览，只在总览卡片里用。
+  cardDemo: demo,
 } satisfies DemoMeta

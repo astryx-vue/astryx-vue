@@ -13,4 +13,4 @@ const options = { className: 'selectable-card-preview' }
 export const selectableCardPlans = defineDemo(plansDemo, plansSource, options)
 export const selectableCardColors = defineDemo(colorsDemo, colorsSource, options)
 export const selectableCardElevated = defineDemo(elevatedDemo, elevatedSource, options)
-export const selectableCardOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-hug' })
+export const selectableCardOverview = defineDemo(overviewDemo, overviewSource)

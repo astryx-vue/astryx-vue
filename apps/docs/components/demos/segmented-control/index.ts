@@ -26,4 +26,4 @@ export const segmentedControlIconOnly = defineDemo(iconOnlyDemo, iconOnlySource,
 export const segmentedControlIcons = defineDemo(iconsDemo, iconsSource, options)
 export const segmentedControlStates = defineDemo(statesDemo, statesSource, options)
 
-export const segmentedControlOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-hug' })
+export const segmentedControlOverview = defineDemo(overviewDemo, overviewSource)

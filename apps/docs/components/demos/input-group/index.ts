@@ -14,4 +14,4 @@ export const inputGroupWebsite = defineDemo(websiteDemo, websiteSource, { classN
 
 export const inputGroupStatus = defineDemo(statusDemo, statusSource, { className: 'input-preview-host' })
 
-export const inputGroupOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-frame' })
+export const inputGroupOverview = defineDemo(overviewDemo, overviewSource)

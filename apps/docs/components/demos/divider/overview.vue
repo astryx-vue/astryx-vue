@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import { Divider } from '@astryx-vue/core/Divider'
-import { VStack } from '@astryx-vue/core/Stack'
+import { Stack } from '@astryx-vue/core/Stack'
 </script>
 
 <template>
-  <div class="input-preview-grid">
-    <VStack :gap="3" style="width: 240px;">
-      <span>Account settings</span>
-      <Divider />
-      <span>Notifications</span>
-    </VStack>
-  </div>
+  <Stack direction="vertical" :gap="4" :width="500" max-width="100%">
+    <Divider variant="subtle" />
+    <Divider variant="strong" />
+    <Divider label="or" />
+  </Stack>
 </template>

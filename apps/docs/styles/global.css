@@ -611,8 +611,8 @@ html.dark .component-card__frame {
   /* 和总览卡片一样：列宽必须受容器约束，否则宽内容会顶出画布。 */
   grid-template-columns: minmax(0, 1fr);
   place-items: center;
-  /* 原版这块画布高 513px，组件在中间展示。 */
-  min-height: 513px;
+  /* 原版这块画布是 16:9（912 宽时高 513px），组件在中间展示。高度确定，里面写 height: 100% 的组件能撑满。 */
+  aspect-ratio: 16 / 9;
   /* 原版 tab 条到画布隔 16px。 */
   margin-top: 16px;
   /* 原版画布本身没有内边距，只在左右各留 16px 的空隙，组件上下贴着画布居中。 */
@@ -621,6 +621,15 @@ html.dark .component-card__frame {
   isolation: isolate;
   font-size: var(--astryx-text-body-size, 14px);
   line-height: 1.5;
+  /* 原版画布是 padding=0 的 Card，里面的 Layout 按最近的容器取内边距，所以各区域内边距都是 0。 */
+  --container-padding-inline-start: 0px;
+  --container-padding-inline-end: 0px;
+  --container-padding-block-start: 0px;
+  --container-padding-block-end: 0px;
+  --layout-padding-outer-x: 0px;
+  --layout-padding-outer-y: 0px;
+  --layout-padding-inner-x: 0px;
+  --layout-padding-inner-y: 0px;
   /* 原版画布：圆角 12，浅色 #f1f1f1，深色 #1b1b1b（Neutral 的 muted Card）。 */
   border-radius: 12px;
   background: #f1f1f1;
@@ -635,6 +644,26 @@ html.dark .component-detail__stage {
 .component-detail__stage > .stage-fit > .stage-fit__inner > * {
   max-width: 100%;
   min-width: 0;
+}
+
+/*
+ * 桌面照原版：展示内容是画布 flex 容器的直接子项，width: 100% 按画布宽度算。
+ * 我们多一层 .astryx-demo 外壳，让它占满画布、自己再用 flex 把内容居中，
+ * 内容里的百分比宽度才有确定的参照，不会退化成 min-width。
+ */
+.component-detail__stage .astryx-demo {
+  display: flex;
+  align-items: center;
+  justify-content: safe center;
+}
+
+/*
+ * 宽高用零优先级写：外壳的 className 自己给了尺寸时以它为准，仍由画布居中。
+ * 撑满画布后，内容里的 width/height: 100% 都按画布算，和原版内容直接放在画布里一样。
+ */
+.component-detail__stage :where(.astryx-demo) {
+  width: 100%;
+  height: 100%;
 }
 
 .component-detail__stage .overview-frame {
@@ -653,6 +682,7 @@ html.dark .component-detail__stage {
     display: flex;
     align-items: center;
     justify-content: safe center;
+    aspect-ratio: auto;
     min-height: 160px;
     padding: 0;
     overflow: auto;
@@ -671,6 +701,16 @@ html.dark .component-detail__stage {
     flex-shrink: 1000;
     min-width: min-content;
     max-width: none;
+  }
+
+  /* 窄屏原版外壳是普通块，内容按自身宽度排，不撑满画布。 */
+  .component-detail__stage .astryx-demo {
+    display: block;
+  }
+
+  .component-detail__stage :where(.astryx-demo) {
+    width: auto;
+    height: auto;
   }
 }
 
