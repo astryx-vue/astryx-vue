@@ -37,8 +37,8 @@ function fakeGh(items: ProjectItem[] = [], openPrs: { number: number, url: strin
       return JSON.stringify(openPrs)
     if (command === 'pr' && subcommand === 'create')
       return 'https://github.com/astryx-vue/astryx-vue/pull/9\n'
-    if (command === 'pr' && subcommand === 'edit')
-      return ''
+    if (command === 'api')
+      return '{}'
     throw new Error(`意外的 gh 调用：${args.join(' ')}`)
   }
   return { calls, run }
@@ -119,6 +119,6 @@ describe('汇总 PR', () => {
 
     expect(pr).toEqual({ ...existing, created: false })
     expect(gh.calls.some(args => args[1] === 'create')).toBe(false)
-    expect(gh.calls.find(args => args[1] === 'edit')).toEqual(['pr', 'edit', '5', '--repo', 'astryx-vue/astryx-vue', '--title', input.title, '--body', '正文'])
+    expect(gh.calls.find(args => args[0] === 'api')).toEqual(['api', '--method', 'PATCH', 'repos/astryx-vue/astryx-vue/pulls/5', '-f', `title=${input.title}`, '-f', 'body=正文'])
   })
 })

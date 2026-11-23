@@ -49,7 +49,8 @@ export class UpstreamSyncGitHub {
   /** 已有 PR 就更新标题和正文，没有就新开一个。分支要先推上去。 */
   ensurePullRequest({ branch, base, title, body, labels }, existing = this.findOpenPullRequest(branch)) {
     if (existing) {
-      this.run(['pr', 'edit', String(existing.number), '--repo', this.repo, '--title', title, '--body', body])
+      // 不用 gh pr edit：它会顺带查询已下线的经典 Projects 字段，直接报错。
+      this.run(['api', '--method', 'PATCH', `repos/${this.repo}/pulls/${existing.number}`, '-f', `title=${title}`, '-f', `body=${body}`])
       return { ...existing, created: false }
     }
     const args = ['pr', 'create', '--repo', this.repo, '--base', base, '--head', branch, '--title', title, '--body', body]
