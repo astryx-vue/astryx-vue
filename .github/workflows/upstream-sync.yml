@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       apply:
-        description: 创建缺失的 issue 并加入路线图；关闭时只 dry-run
+        description: 更新汇总 PR（分支 upstream-sync/pending）并加入路线图；关闭时只 dry-run
         required: true
         default: false
         type: boolean
@@ -16,7 +16,8 @@ on:
         type: string
 
 permissions:
-  contents: read
+  contents: write
+  pull-requests: write
   issues: write
 
 jobs:
@@ -33,15 +34,16 @@ jobs:
           path: .upstream-sync/upstream
           fetch-depth: 0
 
-      - name: Create component-family issues
+      - name: Update pending sync pull request
         env:
           GH_TOKEN: ${{ secrets.PROJECTS_TOKEN || secrets.GITHUB_TOKEN }}
           APPLY: ${{ github.event_name == 'schedule' || inputs.apply }}
           UPSTREAM_TO: ${{ inputs.to }}
           PROJECT_NUMBER: ${{ secrets.PROJECTS_TOKEN && '1' || '0' }}
+          BASE_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
           set -euo pipefail
-          args=(--upstream .upstream-sync/upstream --project "${PROJECT_NUMBER}")
+          args=(--upstream .upstream-sync/upstream --project "${PROJECT_NUMBER}" --base "${BASE_BRANCH}")
           if [[ "${APPLY}" == "true" ]]; then
             args+=(--apply)
           else

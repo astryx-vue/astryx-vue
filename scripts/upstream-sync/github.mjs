@@ -26,39 +26,37 @@ export class UpstreamSyncGitHub {
     this.owner = owner
     this.projectNumber = String(project)
     this.run = run
-    this.issues = null
     this.project = null
   }
 
-  listIssues() {
-    if (!this.issues) {
-      this.issues = JSON.parse(this.run([
-        'issue',
-        'list',
-        '--repo',
-        this.repo,
-        '--state',
-        'all',
-        '--limit',
-        '1000',
-        '--json',
-        'number,title,url',
-      ]))
-    }
-    return this.issues
+  /** 汇总 PR 所在分支上已经开着的 PR；没有就返回 null。 */
+  findOpenPullRequest(branch) {
+    const prs = JSON.parse(this.run([
+      'pr',
+      'list',
+      '--repo',
+      this.repo,
+      '--head',
+      branch,
+      '--state',
+      'open',
+      '--json',
+      'number,url',
+    ]))
+    return prs[0] ?? null
   }
 
-  ensureIssue(input) {
-    const existing = this.listIssues().find(issue => issue.title === input.title)
-    if (existing)
+  /** 已有 PR 就更新标题和正文，没有就新开一个。分支要先推上去。 */
+  ensurePullRequest({ branch, base, title, body, labels }, existing = this.findOpenPullRequest(branch)) {
+    if (existing) {
+      this.run(['pr', 'edit', String(existing.number), '--repo', this.repo, '--title', title, '--body', body])
       return { ...existing, created: false }
-    const args = ['issue', 'create', '--repo', this.repo, '--title', input.title, '--body', input.body]
-    for (const label of input.labels)
+    }
+    const args = ['pr', 'create', '--repo', this.repo, '--base', base, '--head', branch, '--title', title, '--body', body]
+    for (const label of labels)
       args.push('--label', label)
     const url = this.run(args).trim()
-    const issue = { url, title: input.title, created: true }
-    this.issues.push(issue)
-    return issue
+    return { url, number: Number(url.split('/').at(-1)), created: true }
   }
 
   loadProject() {
