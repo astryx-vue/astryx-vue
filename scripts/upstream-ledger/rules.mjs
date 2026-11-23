@@ -107,14 +107,31 @@ export const CORE_DIR_NODES = invert({
 
 /** ROADMAP 没有列出、由本表就近归类的 core 目录。 */
 export const CORE_DIR_EXTRA_NODES = invert({
+  B1: ['palette'],
+  B3: ['animator', 'keyboard', 'Swipe', 'SnapPaging', 'dragToSnapPoints', 'reorderable'],
+  C7: ['InfoTip'],
+  C12: ['virtualization'],
   C14: ['HStack', 'VStack', 'VisuallyHidden'],
+})
+
+/** packages/core/src/internal/ 下按文件归类的内部模块。key 是去掉 .test 和扩展名后的文件名。 */
+export const CORE_INTERNAL_NODES = invert({
+  B3: ['reorder', 'indicatorPress'],
+  B7: ['clipboard-copy', 'committed-ref', 'scroll-anchoring', 'shared-context'],
+  C5: ['calendar-system'],
+  C7: ['dialog-context'],
+  C10: ['page-scroller'],
+  C12: ['virtualization'],
+  C14: ['selectable-card'],
+  C15: ['spinner-rotor'],
+  C16: ['line-clamp'],
 })
 
 /** packages/lab/src/<目录>/ 到节点。按 ROADMAP 里 F3a–F3e 的组件列表。 */
 export const LAB_DIR_NODES = invert({
-  F3a: ['ListInput', 'MobileTokenizer', 'TransferList', 'MobilePowerSearch'],
-  F3b: ['Stat', 'CircularProgress', 'InfoTip', 'SVGIcon', 'LogStream', 'Schedule'],
-  F3c: ['Drawer', 'Tour'],
+  F3a: ['ListInput', 'MobileTokenizer', 'TransferList', 'MobilePowerSearch', 'SelectableCardGroup'],
+  F3b: ['Stat', 'CircularProgress', 'InfoTip', 'SVGIcon', 'LogStream', 'Schedule', 'MediaPlayer', 'TabBar', 'TabBarMoreList', 'CircleCheckIndicator', 'LineClamp', 'PageControl', 'RefreshControl', 'NavigationStack'],
+  F3c: ['Drawer', 'Tour', 'DialogHeroHeader'],
   F3d: ['Chart', 'Radial', 'Sankey', 'ThreeD', 'CodeEditor', 'DiffViewer'],
   F3e: ['Chat', 'ChatReasoning', 'CommentPin', 'Comments', 'EmojiPicker'],
 })
@@ -125,29 +142,51 @@ export const LAB_PROMOTED_DIR_NODES = invert({
   C15: ['Stepper'],
 })
 
+/** docs/specs/components/<组件>/ 下、上面几张目录表查不到的组件规范。 */
+export const COMPONENT_SPEC_EXTRA_NODES = {
+  Icon: ['B5', 'C16'],
+  ChartAxis: ['F2b'],
+  ChartGrid: ['F2b'],
+  ChartLegend: ['F2b'],
+  ChartSwatch: ['F2b'],
+  ChartTooltip: ['F2b'],
+  RichTextEditorToolbar: ['F1b'],
+}
+
+/** 组件规范按目录名查节点：先查 core，再查 lab 孵化转正，最后查 lab，都查不到再看补充表。 */
+function componentSpecNodes(match) {
+  const name = match[1]
+  const node = CORE_DIR_NODES[name] ?? CORE_DIR_EXTRA_NODES[name] ?? LAB_PROMOTED_DIR_NODES[name] ?? LAB_DIR_NODES[name]
+  return node ? [node] : (COMPONENT_SPEC_EXTRA_NODES[name] ?? null)
+}
+
 /** docs/specs/AST-xxx 规范记录到节点。按每份记录的标题判断主题。 */
 export const SPEC_NODES = invert({
   B1: ['AST-006', 'AST-008', 'AST-012', 'AST-022', 'AST-066', 'AST-102', 'AST-108'],
   B3: ['AST-081', 'AST-085', 'AST-090', 'AST-094', 'AST-099', 'AST-105', 'AST-107'],
   B4: ['AST-003', 'AST-027', 'AST-038', 'AST-059'],
   B5: ['AST-032', 'AST-084', 'AST-086', 'AST-087'],
-  B6: ['AST-002', 'AST-056', 'AST-071'],
+  B6: ['AST-002', 'AST-056', 'AST-071', 'AST-089'],
   B7: ['AST-005', 'AST-067'],
   C3: ['AST-001', 'AST-004', 'AST-011', 'AST-055', 'AST-058', 'AST-075', 'AST-079', 'AST-109'],
   C4: ['AST-083', 'AST-092'],
-  C5: ['AST-037', 'AST-043'],
+  C1: ['AST-117', 'AST-118'],
+  C5: ['AST-037', 'AST-043', 'AST-111'],
+  C7: ['AST-116'],
   C9: ['AST-036', 'AST-061'],
   C12: ['AST-057'],
   C14: ['AST-010', 'AST-025'],
   C16: ['AST-024'],
   D1: ['AST-018'],
-  D4: ['AST-031', 'AST-034', 'AST-035', 'AST-039', 'AST-040', 'AST-041', 'AST-042', 'AST-046', 'AST-047', 'AST-048', 'AST-050', 'AST-051', 'AST-053'],
+  D4: ['AST-031', 'AST-034', 'AST-035', 'AST-039', 'AST-040', 'AST-041', 'AST-042', 'AST-046', 'AST-047', 'AST-048', 'AST-050', 'AST-051', 'AST-053', 'AST-110', 'AST-114', 'AST-121'],
   D5: ['AST-028'],
   D7: ['AST-013'],
   E3: ['AST-009', 'AST-020', 'AST-021'],
   F0: ['AST-080'],
-  F1a: ['AST-062', 'AST-064'],
+  F1a: ['AST-062', 'AST-064', 'AST-106'],
+  F2a: ['AST-115'],
   F3a: ['AST-103'],
+  F3c: ['AST-119'],
   G1: ['AST-017'],
 })
 
@@ -162,17 +201,21 @@ export const SPEC_UNRELATED = {
   'AST-091': '原生平台模板规范，Vue 版不适用',
   'AST-093': '原生组件指南，Vue 版不适用',
   'AST-100': '上游发布节奏流程规范',
+  'AST-112': 'React Native 基础规范，Vue 版不适用',
+  'AST-140': 'React Native 平台代码规范，Vue 版不适用',
+  'AST-142': 'React Native 命令行命令规范，Vue 版不适用',
 }
 
 /** docs/architecture、docs/design、docs/families 下的 Markdown 到节点。key 是不带 .md 的文件名。 */
 export const KNOWLEDGE_DOC_NODES = {
   architecture: invert({
     B1: ['component-theming-surface', 'theme-application', 'theme-authoring-contract', 'theme-compilation', 'theme-tokens'],
-    B3: ['interaction-modality'],
+    B3: ['interaction-modality', 'press-feedback'],
     B4: ['layer-runtime'],
     B5: ['icon-resolution-and-component-slots', 'internationalization', 'rtl-audit-evidence'],
-    B6: ['component-size-cascade', 'component-style-authoring', 'public-component-api'],
+    B6: ['component-size-cascade', 'component-style-authoring', 'public-component-api', 'component-import-boundaries'],
     C8: ['container-padding'],
+    C12: ['list-windowing'],
     D4: ['cli-surface'],
     D5: ['template-authoring'],
   }),
@@ -251,15 +294,19 @@ export const RULES = [
   unrelated('changeset', /^\.changeset\//, '上游的 changeset 变更记录，我们有自己的 changeset'),
   unrelated('release-state', /^\.release\//, '上游发布流程的状态文件'),
   unrelated('github', /^\.github\//, '上游 CI 工作流、视觉回归基线截图和仓库治理文件'),
-  unrelated('local-tooling', /^\.(?:husky|claude)\//, '上游开发者本地钩子与 AI 助手配置'),
+  unrelated('local-tooling', /^\.(?:husky|claude|agents|claude-plugin)\//, '上游开发者本地钩子与 AI 助手配置'),
+  unrelated('agent-plugins', /^plugins\//, '上游给 Claude Code、Codex 等 AI 助手发布的插件与技能'),
 
   // 仓库根目录文件
   to('root-readme', /^README\.md$/, ['G1'], '根 README 的改动归 G1，由它在发布时更新我们的主说明'),
   to('ime-guard-design', /^IME_GUARD_DESIGN\.md$/, ['B7']),
   unrelated('root-agent-docs', /^(?:AGENTS|CLAUDE|CONTRIBUTING)\.md$/, '上游贡献者与 AI 代理的工作说明'),
-  unrelated('root-config', /^(?:package\.json|pnpm-lock\.yaml|pnpm-workspace\.yaml|\.gitignore|\.gitattributes|\.npmrc|\.nvmrc|crowdin\.yml|tsconfig[^/]*\.json|[^/]+\.config\.(?:ts|js|mjs|cjs|mts)|vitest\.[^/]+\.mjs)$/, '上游 monorepo 根配置与锁文件'),
+  unrelated('root-config', /^(?:package\.json|pnpm-lock\.yaml|pnpm-workspace\.yaml|\.gitignore|\.gitattributes|\.npmrc|\.prettierignore|\.nvmrc|crowdin\.yml|tsconfig[^/]*\.json|[^/]+\.config\.(?:ts|js|mjs|cjs|mts)|vitest\.[^/]+\.mjs)$/, '上游 monorepo 根配置与锁文件'),
 
   // 各包通用的无关文件
+  unrelated('packages-readme', /^packages\/README\.md$/, '上游 packages 目录说明'),
+  to('themes-readme', /^packages\/themes\/README\.md$/, ['G1'], '主题包总说明的改动归 G1'),
+  to('template-icons', /^packages\/template-icons\//, ['D5'], 'CLI 内置模板专用的图标占位包，跟模板一起归 D5'),
   unrelated('native', /^packages\/native\//, '上游 Apple 原生平台与桥接代码，Vue 版不适用'),
   unrelated('package-manifest', /^packages\/(?:themes\/)?[^/]+\/package\.json$/, '上游包清单（版本号、依赖、导出表）；我们的包清单独立维护，导出表由 pnpm sync 生成，实质改动随同提交的源码进入各节点'),
   unrelated('package-build-config', /^packages\/.+\/(?:babel\.config\.(?:js|json|cjs)|tsup\.config\.ts|tsconfig[^/]*\.json)$/, '上游 Babel、tsup、TypeScript 构建配置；Vue 版用自己的 tsdown 与 tsconfig'),
@@ -273,7 +320,9 @@ export const RULES = [
   // packages/core/src 根文件
   to('core-base-props', /^packages\/core\/src\/(?:BaseProps\.ts|naming(?:\.test)?\.ts)$/, ['B6']),
   to('core-reset', /^packages\/core\/src\/(?:reset[^/]*|inputFontFloor[^/]*)$/, ['B2']),
+  unrelated('core-api-report', /^packages\/core\/api-report\.md$/, '上游 API Extractor 自动生成的公开 API 报告；API 的实质改动随同提交的源码进入各节点'),
   to('core-tailwind-bridge', /^packages\/core\/src\/tailwind-theme[^/]*$/, ['B1'], 'Tailwind 主题桥（把 token 暴露给 Tailwind）归 B1，Vue 版是否提供由 B1 决定'),
+  to('core-text-role-leading', /^packages\/core\/src\/textRoleLeading[^/]*$/, ['B1'], '各文字角色的行高契约测试，归 B1 的排版变量'),
   to('core-unicode-utils', /^packages\/core\/src\/unicodePropertyEscapes[^/]*$/, ['B7']),
   unrelated('core-index', /^packages\/core\/src\/index\.ts$/, '核心包入口导出；我们的 index.ts 由 pnpm sync 生成，新增导出随对应组件节点处理'),
   unrelated('core-ambient-types', /^packages\/core\/src\/(?:astryx\.css\.d\.ts|raw-import\.d\.ts|doc-mjs\.d\.ts)$/, '上游 TypeScript 环境声明，服务 React 构建'),
@@ -292,8 +341,11 @@ export const RULES = [
   to('core-utils-press', /^packages\/core\/src\/utils\/(?:press|interactionModality|interactionOverlay|focusReturn)[^/]*$/, ['B3'], '按压模型、交互模态、焦点归还虽在 utils/，但 ROADMAP 把它们划给 B3'),
   to('core-utils-theme-props', /^packages\/core\/src\/utils\/themeProps[^/]*$/, ['B1'], 'themeProps 生成 theme target 类名，归 B1 的换肤机制'),
   to('core-theme-syntax', /^packages\/core\/src\/theme\/syntax\//, ['B1', 'C9'], '代码高亮的语法主题同时属于主题系统（B1）和代码高亮（C9）'),
+  to('core-private-attributes', /^packages\/core\/src\/privateAttributes\//, ['B6'], '组件之间约定的私有 data 属性（图层根、开关触感、分段禁用），归 B6 的属性规则'),
   to('core-icon', /^packages\/core\/src\/Icon\//, ['B5', 'C16'], 'Icon 目录统一归 B5（图标注册表），同时标 C16（Icon 组件外观）'),
   to('core-internal-tokenizer', /^packages\/core\/src\/internal\/tokenizer-presentation[^/]*$/, ['C3']),
+  to('core-internal-sheet', /^packages\/core\/src\/internal\/(?:SheetConfirmation|sheetDraft|useDismissSearchOnTouchDrag)[^/]*$/, ['C3', 'C4'], 'Tokenizer、PowerSearch 触摸底部面板形态共用的草稿、确认与拖动收起逻辑（由 lab 的 MobileTokenizer、MobilePowerSearch 并入），同时标 C3 和 C4'),
+  to('core-internal', /^packages\/core\/src\/internal\/([^/.]+)(?:\.test|\.stylex)?\.[^/]+$/, lookup(CORE_INTERNAL_NODES), 'core 内部模块按用途就近归类，见 rules.mjs 的 CORE_INTERNAL_NODES'),
   to('core-internal-touch', /^packages\/core\/src\/internal\/touch[^/]*$/, ['B3']),
   to('core-dir', /^packages\/core\/src\/([^/]+)\//, lookup(CORE_DIR_NODES)),
   to('core-dir-extra', /^packages\/core\/src\/([^/]+)\//, lookup(CORE_DIR_EXTRA_NODES), 'ROADMAP 没有列出的 core 目录（HStack、VStack、VisuallyHidden），就近归 C14'),
@@ -323,9 +375,12 @@ export const RULES = [
   to('charts-logic', /^packages\/charts\//, ['F2a']),
 
   // packages/lab
+  to('lab-weighted-icons', /^packages\/lab\/scripts\/(?:build-weighted-icons|generate-weight)[^/]*$/, ['F3b'], '随字重变化的 SVG 图标生成脚本，跟 SVGIcon 一起归 F3b'),
+  to('lab-status-announcement', /^packages\/lab\/src\/(?:LoadingMessage|useStatusAnnouncement)[^/]*$/, ['C15'], 'lab 里的加载播报通道（Spinner 独立加载时用），归 C15'),
   to('lab-emoji-script', /^packages\/lab\/scripts\/generate-emoji-data\.mjs$/, ['F3e']),
   to('lab-drawer-blocks', /^packages\/lab\/blocks\/Drawer/, ['F3c']),
   to('lab-package', /^packages\/lab\/(?:blocks\/|README\.md$|astryx\.integration\.mjs$|src\/index\.ts$|src\/__tests__\/)/, ['F3f'], 'lab 包级文件（入口、README、示例块、集成描述、包级测试）归 F3f'),
+  to('lab-internal', /^packages\/lab\/src\/internal\//, ['F3a'], 'lab 内部共享的移动端底部确认、触摸拖动收起搜索，就近归 F3a（MobilePowerSearch、MobileTokenizer）'),
   to('lab-reorder-styles', /^packages\/lab\/src\/reorderStyles\.ts$/, ['F3a'], 'lab 内部共享的拖拽排序样式，就近归 F3a（ListInput、TransferList）'),
   to('lab-promoted', /^packages\/lab\/src\/([^/]+)\//, lookup(LAB_PROMOTED_DIR_NODES), 'BottomSheet、Stepper 在 lab 孵化期的改动，归 core 对应节点 C8、C15'),
   to('lab-dir', /^packages\/lab\/src\/([^/]+)\//, lookup(LAB_DIR_NODES)),
@@ -344,6 +399,8 @@ export const RULES = [
   unrelated('apps-readme', /^apps\/README\.md$/, '上游 apps 目录说明'),
 
   // docs
+  unrelated('component-spec-native', /^docs\/specs\/components\/.+\.swift\.spec\.md$/, '原生平台（Swift）的组件规范，Vue 版不适用'),
+  to('component-spec', /^docs\/specs\/components\/([^/]+)\//, componentSpecNodes, 'docs/specs/components 下的组件规范按组件目录归类，和源码目录用同一套表，查不到的见 COMPONENT_SPEC_EXTRA_NODES'),
   to('spec', /^docs\/specs\/(AST-\d+)(?:-[^/]*)?\//, lookup(SPEC_NODES), 'docs/specs 下的 AST 规范记录按记录标题就近归类，见 rules.mjs 的 SPEC_NODES'),
   { id: 'spec-unrelated', pattern: /^docs\/specs\/(AST-\d+)(?:-[^/]*)?\//, unrelated: match => SPEC_UNRELATED[match[1]] ?? null },
   unrelated('spec-readme', /^docs\/specs\/README\.md$/, '规范记录目录索引'),
@@ -385,7 +442,13 @@ export function validateRules(rules = RULES) {
     if (!(node in NODES))
       problems.push(`按提交追加的归属用到了未登记的节点 ${node}`)
   }
-  const tables = [CORE_DIR_NODES, CORE_DIR_EXTRA_NODES, LAB_DIR_NODES, LAB_PROMOTED_DIR_NODES, SPEC_NODES, ROOT_SCRIPT_NODES, ...Object.values(KNOWLEDGE_DOC_NODES)]
+  for (const [key, nodes] of Object.entries(COMPONENT_SPEC_EXTRA_NODES)) {
+    for (const node of nodes) {
+      if (!(node in NODES))
+        problems.push(`组件规范 ${key} 映射到了未登记的节点 ${node}`)
+    }
+  }
+  const tables = [CORE_DIR_NODES, CORE_DIR_EXTRA_NODES, CORE_INTERNAL_NODES, LAB_DIR_NODES, LAB_PROMOTED_DIR_NODES, SPEC_NODES, ROOT_SCRIPT_NODES, ...Object.values(KNOWLEDGE_DOC_NODES)]
   for (const table of tables) {
     for (const [key, node] of Object.entries(table)) {
       if (!(node in NODES))

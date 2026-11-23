@@ -15,7 +15,7 @@ const FIELDS = [
 ]
 
 /** 假的 gh：只回放项目查询，记录每次调用的参数，不碰网络。 */
-function fakeGh(items: ProjectItem[] = []) {
+function fakeGh(items: ProjectItem[] = [], openPrs: { number: number, url: string }[] = []) {
   const calls: string[][] = []
   function run(args: string[]) {
     calls.push(args)
@@ -33,6 +33,12 @@ function fakeGh(items: ProjectItem[] = []) {
     }
     if (command === 'project' && subcommand === 'item-edit')
       return ''
+    if (command === 'pr' && subcommand === 'list')
+      return JSON.stringify(openPrs)
+    if (command === 'pr' && subcommand === 'create')
+      return 'https://github.com/astryx-vue/astryx-vue/pull/9\n'
+    if (command === 'api')
+      return '{}'
     throw new Error(`意外的 gh 调用：${args.join(' ')}`)
   }
   return { calls, run }
@@ -87,5 +93,32 @@ describe('同步 issue 进路线图', () => {
     expect(edits(gh.calls, 'field-area').map(args => args.at(-1))).toEqual(['option-core'])
     expect(gh.calls.flat()).not.toContain('option-todo')
     expect(gh.calls.flat()).not.toContain('option-done')
+  })
+})
+
+describe('汇总 PR', () => {
+  const input = { branch: 'upstream-sync/pending', base: 'main', title: '上游同步：v0.7.1 → v0.7.17', body: '正文', labels: ['upstream-sync'] }
+
+  it('没有开着的 PR 时新开一个，并带上标签', () => {
+    const gh = fakeGh()
+    const github = new UpstreamSyncGitHub({ repo: 'astryx-vue/astryx-vue', owner: 'astryx-vue', project: '0', run: gh.run })
+
+    const pr = github.ensurePullRequest(input)
+
+    expect(pr).toEqual({ url: 'https://github.com/astryx-vue/astryx-vue/pull/9', number: 9, created: true })
+    expect(gh.calls.find(args => args[1] === 'list')).toEqual(['pr', 'list', '--repo', 'astryx-vue/astryx-vue', '--head', 'upstream-sync/pending', '--state', 'open', '--json', 'number,url'])
+    expect(gh.calls.find(args => args[1] === 'create')).toEqual(['pr', 'create', '--repo', 'astryx-vue/astryx-vue', '--base', 'main', '--head', 'upstream-sync/pending', '--title', input.title, '--body', '正文', '--label', 'upstream-sync'])
+  })
+
+  it('已有开着的 PR 时只更新标题和正文，不再新开', () => {
+    const existing = { number: 5, url: 'https://github.com/astryx-vue/astryx-vue/pull/5' }
+    const gh = fakeGh([], [existing])
+    const github = new UpstreamSyncGitHub({ repo: 'astryx-vue/astryx-vue', owner: 'astryx-vue', project: '0', run: gh.run })
+
+    const pr = github.ensurePullRequest(input)
+
+    expect(pr).toEqual({ ...existing, created: false })
+    expect(gh.calls.some(args => args[1] === 'create')).toBe(false)
+    expect(gh.calls.find(args => args[0] === 'api')).toEqual(['api', '--method', 'PATCH', 'repos/astryx-vue/astryx-vue/pulls/5', '-f', `title=${input.title}`, '-f', 'body=正文'])
   })
 })

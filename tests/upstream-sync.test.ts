@@ -4,9 +4,10 @@ import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { parseArgs } from '../scripts/upstream-sync.mjs'
+import { updatePendingBranch } from '../scripts/upstream-sync/branch.mjs'
 import { validateFamilies } from '../scripts/upstream-sync/families.mjs'
 import { buildSyncPlan, latestVersionTag } from '../scripts/upstream-sync/plan.mjs'
-import { renderIssue, renderReleaseIssue } from '../scripts/upstream-sync/render.mjs'
+import { readProgress, renderPendingChecklist, renderPendingPullRequest } from '../scripts/upstream-sync/render.mjs'
 
 describe('上游持续同步', () => {
   let repo: string
@@ -70,34 +71,130 @@ describe('上游持续同步', () => {
     expect(buildSyncPlan({ upstream: repo, from: 'v1.2.0' })).toEqual([])
   })
 
-  it('issue 含稳定去重标题、勾选清单和上游链接', () => {
-    const release = buildSyncPlan({ upstream: repo, from: 'v1.0.0', to: 'v1.1.0' })[0]
-    const issue = renderIssue(release, release.families[0])
-    expect(issue.title).toBe('上游 v1.1.0：选择器家族')
-    expect(issue.labels).toEqual(['upstream-sync', 'area:core'])
-    expect(issue.body).toContain('<!-- upstream-sync:v1.1.0:selectors -->')
-    expect(issue.body).toContain('- [ ] `')
-    expect(issue.body).toContain('https://github.com/meta/astryx/commit/')
+  it('所有版本收进一份按组件族分组的清单，带勾选框和上游链接', () => {
+    const plan = buildSyncPlan({ upstream: repo, from: 'v1.0.0' })
+    const checklist = renderPendingChecklist(plan, { from: 'v1.0.0', to: 'v1.2.0' })
+
+    expect(checklist).toContain('上游范围：`v1.0.0..v1.2.0`，2 个组件族，2 个提交。')
+    expect(checklist).toContain('## 选择器家族（area:core）')
+    expect(checklist).toContain('## 富文本编辑器（area:richtext）')
+    expect(checklist).toContain('### v1.1.0')
+    expect(checklist).toMatch(/- \[ \] \[`[0-9a-f]{9}`\]\(https:\/\/github\.com\/meta\/astryx\/commit\/[0-9a-f]{9}\) fix\(Selector\): keep focus \(#1\)/)
   })
 
-  it('每个上游版本只开一个 issue，组件族收在小节里', () => {
-    const release = buildSyncPlan({ upstream: repo, from: 'v1.0.0', to: 'v1.1.0' })[0]
-    const issue = renderReleaseIssue(release)
+  it('重新生成清单时保留已勾选的条目和条目下的备注', () => {
+    const plan = buildSyncPlan({ upstream: repo, from: 'v1.0.0' })
+    const range = { from: 'v1.0.0', to: 'v1.2.0' }
+    const first = renderPendingChecklist(plan, range)
+    const hash = /\[`([0-9a-f]{9})`\]/.exec(first)![1]
+    const edited = first.replace(`- [ ] [\`${hash}\``, `- [x] [\`${hash}\``)
+      .replace(/(fix\(Selector\): keep focus \(#1\))/, '$1\n  - 不适用：Vue 版没有这段逻辑')
 
-    expect(issue.title).toBe('上游 v1.1.0：同步清单')
-    expect(issue.body).toContain('<!-- upstream-sync:v1.1.0:all -->')
-    for (const family of release.families)
-      expect(issue.body).toContain(family.title)
-    // 每族收在一个可折叠小节里，整版清单才不会超过 GitHub 的正文长度上限。
-    expect(issue.body).toContain('<details>')
-    expect(issue.body).toContain('<summary>')
-    expect(issue.labels).toContain('upstream-sync')
+    const second = renderPendingChecklist(plan, range, edited)
+    expect(second).toBe(edited)
+    expect(readProgress(second).get(hash)).toEqual({ checked: true, notes: ['  - 不适用：Vue 版没有这段逻辑'] })
+  })
+
+  it('汇总 PR 正文只放统计和收尾说明，进度从清单里数', () => {
+    const plan = buildSyncPlan({ upstream: repo, from: 'v1.0.0' })
+    const range = { from: 'v1.0.0', to: 'v1.2.0' }
+    const checklist = renderPendingChecklist(plan, range).replace('- [ ] ', '- [x] ')
+    const pr = renderPendingPullRequest(plan, range, checklist)
+
+    expect(pr.title).toBe('上游同步：v1.0.0 → v1.2.0')
+    expect(pr.labels).toEqual(['upstream-sync'])
+    expect(pr.body).toContain('共 2 个提交，已核对 1 个')
+    expect(pr.body).toContain('| 选择器家族 | core | 1 | — |')
+    expect(pr.body).toContain('| v1.2.0 | 1 | 1 |')
+    expect(pr.body).toContain('`upstream.syncedTo` 改成 `v1.2.0`')
+    expect(pr.body).not.toContain('- [ ]')
   })
 
   it('默认只 dry-run，只有 --apply 才写 GitHub', () => {
     expect(parseArgs([])).toMatchObject({ apply: false, from: 'v0.7.1' })
     expect(parseArgs(['--apply', '--to', 'v0.7.5'])).toMatchObject({ apply: true, to: 'v0.7.5' })
     expect(() => parseArgs(['--to'])).toThrow('无法识别的参数')
+  })
+})
+
+describe('汇总 PR 的清单分支', () => {
+  let origin: string
+  let work: string
+  const branch = 'upstream-sync/pending'
+  const file = 'docs/upstream-sync/pending.md'
+
+  function git(cwd: string, ...args: string[]) {
+    return execFileSync('git', ['-c', 'user.name=test', '-c', 'user.email=test@example.com', ...args], { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] })
+  }
+
+  function update(resume: boolean, render: (previous: string) => string) {
+    return updatePendingBranch({ repoDir: work, branch, base: 'main', file, resume, message: 'chore: update', render })
+  }
+
+  function remoteFile() {
+    return git(work, 'show', `origin/${branch}:${file}`)
+  }
+
+  beforeAll(() => {
+    origin = mkdtempSync(join(tmpdir(), 'upstream-sync-origin-'))
+    work = mkdtempSync(join(tmpdir(), 'upstream-sync-work-'))
+    git(origin, 'init', '-q', '--bare', '-b', 'main')
+    git(work, 'init', '-q', '-b', 'main')
+    writeFileSync(join(work, 'README.md'), 'readme\n')
+    git(work, 'add', '-A')
+    git(work, 'commit', '-q', '-m', 'init')
+    git(work, 'remote', 'add', 'origin', origin)
+    git(work, 'push', '-q', 'origin', 'main')
+  })
+
+  afterAll(() => {
+    rmSync(origin, { recursive: true, force: true })
+    rmSync(work, { recursive: true, force: true })
+  })
+
+  it('没有开着的 PR 时从 base 新开分支，不动当前工作区', () => {
+    const result = update(false, previous => `${previous}first\n`)
+    git(work, 'fetch', '-q', 'origin')
+
+    expect(result.changed).toBe(true)
+    expect(remoteFile()).toBe('first\n')
+    expect(git(work, 'rev-parse', '--abbrev-ref', 'HEAD').trim()).toBe('main')
+    expect(git(work, 'status', '--porcelain')).toBe('')
+  })
+
+  it('汇总 PR 开着时接着远端分支提交，保留 PR 里别人的改动', () => {
+    const other = mkdtempSync(join(tmpdir(), 'upstream-sync-other-'))
+    git(other, 'clone', '-q', '-b', branch, origin, '.')
+    writeFileSync(join(other, 'package.json'), '{"upstream":{"syncedTo":"v1.2.0"}}\n')
+    git(other, 'add', '-A')
+    git(other, 'commit', '-q', '-m', 'bump syncedTo')
+    git(other, 'push', '-q', 'origin', branch)
+    rmSync(other, { recursive: true, force: true })
+
+    const result = update(true, previous => `${previous}second\n`)
+    git(work, 'fetch', '-q', 'origin')
+
+    expect(result.changed).toBe(true)
+    expect(remoteFile()).toBe('first\nsecond\n')
+    expect(git(work, 'show', `origin/${branch}:package.json`)).toContain('v1.2.0')
+  })
+
+  it('清单没变时不提交也不推送', () => {
+    const before = git(work, 'rev-parse', `origin/${branch}`)
+    const result = update(true, previous => previous)
+    git(work, 'fetch', '-q', 'origin')
+
+    expect(result.changed).toBe(false)
+    expect(git(work, 'rev-parse', `origin/${branch}`)).toBe(before)
+  })
+
+  it('上一轮 PR 合并后从 base 重开，旧分支被覆盖', () => {
+    const result = update(false, () => 'fresh\n')
+    git(work, 'fetch', '-q', 'origin')
+
+    expect(result.changed).toBe(true)
+    expect(remoteFile()).toBe('fresh\n')
+    expect(git(work, 'rev-list', '--count', `origin/main..origin/${branch}`).trim()).toBe('1')
   })
 })
 
