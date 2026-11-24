@@ -209,8 +209,22 @@
     box-shadow: var(--astryx-button-shadow-high);
   }
 
+  /*
+   * 同上游 #10256：用真实的盒子而不是 display: contents。macOS 15 之前的 WebKit
+   * 会丢掉经过 display: contents 元素算出的可访问名称，VoiceOver 把带标签的按钮读成无名按钮。
+   * 它是按钮里唯一的常规流子元素（spinner 叠层绝对定位，live region 视觉隐藏，提示层传送走），
+   * 所以直接继承按钮自己的弹性布局，内容位置不变；min-width: 0 让窄行里的标签照样能截断。
+   */
   .astryx-button__content {
-    display: contents;
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: inherit;
+    flex-wrap: inherit;
+    align-items: inherit;
+    align-self: stretch;
+    justify-content: inherit;
+    gap: inherit;
+    min-width: 0;
   }
 
   .astryx-button__icon,
@@ -369,6 +383,12 @@
       color: ButtonText;
       background: ButtonFace;
       forced-color-adjust: auto;
+    }
+
+    /* 同上游 #7677：实心变体靠底色和页面分开，强制配色丢掉底色后要补一圈边；ghost 本来就是扁平的，不加。 */
+    /* 不能用透明边框：强制配色会把它换成系统色照样画出来。 */
+    .astryx-button[data-variant='ghost'] {
+      border: 0;
     }
 
     .astryx-button:focus-visible {

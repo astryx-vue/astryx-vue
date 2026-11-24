@@ -1,5 +1,6 @@
-import { flushPromises, mount } from '@vue/test-utils'
+import type { ButtonProps } from './types.js'
 
+import { flushPromises, mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { defineComponent, h, nextTick } from 'vue'
 import Icon from '../Icon/Icon.vue'
@@ -462,6 +463,86 @@ describe('button', () => {
     expect(wrapper.attributes('disabled')).toBe('')
     expect(wrapper.attributes('aria-describedby')).toBeUndefined()
     expect(wrapper.attributes('aria-disabled')).toBeUndefined()
+  })
+
+  it('adds no description when the tooltip repeats the accessible name', () => {
+    const iconOnly = mount(Button, {
+      attachTo: document.body,
+      props: { isIconOnly: true, label: 'Settings', tooltip: ' Settings ' },
+    })
+    const labelled = mount(Button, {
+      attachTo: document.body,
+      attrs: { 'aria-describedby': 'existing-description' },
+      props: { label: 'Save', tooltip: 'Save' },
+    })
+    const callerName = mount(Button, {
+      attachTo: document.body,
+      attrs: { 'aria-label': 'Close dialog' },
+      props: { label: 'Close', tooltip: 'Close dialog' },
+    })
+
+    expect(iconOnly.attributes('aria-label')).toBe('Settings')
+    expect(iconOnly.attributes('aria-describedby')).toBeUndefined()
+    // 调用方自己的描述照样保留，只是不再挂提示。
+    expect(labelled.attributes('aria-describedby')).toBe('existing-description')
+    expect(callerName.attributes('aria-describedby')).toBeUndefined()
+
+    iconOnly.unmount()
+    labelled.unmount()
+    callerName.unmount()
+  })
+
+  it('still describes the button when aria-labelledby names it from elsewhere', () => {
+    const wrapper = mount(Button, {
+      attrs: { 'aria-labelledby': 'external-name' },
+      props: { label: 'Save', tooltip: 'Save' },
+    })
+
+    expect(wrapper.attributes('aria-describedby')).toContain('astryx-button-tooltip-')
+  })
+
+  it('renders a disabled submit or reset button as a plain button until it mounts', async () => {
+    const { renderToString } = await import('@vue/server-renderer')
+    const { createSSRApp } = await import('vue')
+    const render = (props: ButtonProps) => renderToString(createSSRApp(() => h(Button, props)))
+
+    // 带提示的禁用按钮和忙碌按钮用 aria-disabled，没有原生 disabled 挡住表单提交。
+    const tooltipSubmit = await render({ isDisabled: true, label: 'Send', tooltip: 'Fill in the form first', type: 'submit' })
+    const busyReset = await render({ isLoading: true, label: 'Reset', type: 'reset' })
+    const enabledSubmit = await render({ label: 'Send', type: 'submit' })
+
+    expect(tooltipSubmit).toContain('type="button"')
+    expect(tooltipSubmit).toContain('aria-disabled="true"')
+    expect(busyReset).toContain('type="button"')
+    expect(enabledSubmit).toContain('type="submit"')
+
+    const mounted = mount(Button, {
+      props: { isDisabled: true, label: 'Send', tooltip: 'Fill in the form first', type: 'submit' },
+    })
+    await nextTick()
+    expect(mounted.attributes('type')).toBe('submit')
+  })
+
+  it('hydrates a busy submit button without a mismatch, then restores its type', async () => {
+    const { renderToString } = await import('@vue/server-renderer')
+    const { createSSRApp } = await import('vue')
+    const Host = defineComponent({
+      render: () => h(Button, { isLoading: true, label: 'Send', type: 'submit' }),
+    })
+    const html = await renderToString(createSSRApp(Host))
+    expect(html).toContain('type="button"')
+    document.body.innerHTML = `<div id="app">${html}</div>`
+
+    const problems: unknown[] = []
+    const app = createSSRApp(Host)
+    app.config.warnHandler = message => problems.push(message)
+    app.config.errorHandler = error => problems.push(error)
+    app.mount('#app')
+    await nextTick()
+
+    expect(problems).toEqual([])
+    expect(document.querySelector('button')?.getAttribute('type')).toBe('submit')
+    app.unmount()
   })
 
   it('renders href as a native anchor with link attributes', () => {
