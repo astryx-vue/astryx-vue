@@ -10,7 +10,8 @@
 
 ### v0.7.2
 
-- [ ] [`efdc11077`](https://github.com/meta/astryx/commit/efdc11077) fix(Button): use aria-disabled instead of native disabled while busy-only (#4885)
+- [x] [`efdc11077`](https://github.com/meta/astryx/commit/efdc11077) fix(Button): use aria-disabled instead of native disabled while busy-only (#4885)
+  - Vue 版已有：忙碌但未禁用时用 aria-disabled（Button.vue isBusyOnlyDisabled）
 - [ ] [`374b53a9e`](https://github.com/meta/astryx/commit/374b53a9e) fix(Text): truncation tooltip follows changed content, not only resizes (#7611)
 - [ ] [`ab795478a`](https://github.com/meta/astryx/commit/ab795478a) docs(buttons): a caller onClick on a standalone ToggleButton runs first and can cancel the toggle (#7638)
 - [ ] [`ba8046148`](https://github.com/meta/astryx/commit/ba8046148) docs(Avatar): list supported numeric sizes (#6283)
@@ -25,7 +26,8 @@
 - [ ] [`7b6691327`](https://github.com/meta/astryx/commit/7b6691327) spec(AST-085): disabled controls stay focusable (#7793)
 - [ ] [`29ead9885`](https://github.com/meta/astryx/commit/29ead9885) fix(core): disabled links, tokens and cards stay focusable (#7842)
 - [ ] [`05bfcc507`](https://github.com/meta/astryx/commit/05bfcc507) spec(Carousel): edge focus moves to the scroll area (#7917)
-- [ ] [`0fd4f9eb4`](https://github.com/meta/astryx/commit/0fd4f9eb4) fix(Button): mount the loading live region empty when a Button first renders loading (#7870)
+- [x] [`0fd4f9eb4`](https://github.com/meta/astryx/commit/0fd4f9eb4) fix(Button): mount the loading live region empty when a Button first renders loading (#7870)
+  - Vue 版已有：live region 先空挂载、下一帧写入（Button.vue isLiveRegionReady，有测试）
 - [ ] [`3317fb2a0`](https://github.com/meta/astryx/commit/3317fb2a0) test(a11y): align disabled card and checkbox oracles with focus contract (#7921)
 
 ### v0.7.4
@@ -72,7 +74,8 @@
 
 - [ ] [`13669e9ed`](https://github.com/meta/astryx/commit/13669e9ed) perf(Text): truncation measures once after the commit, in a microtask, not inside it (#9013)
 - [ ] [`9e07422c7`](https://github.com/meta/astryx/commit/9e07422c7) test(a11y): the coverage checks of 17 binding specs run as one serial part per state (#9071)
-- [ ] [`f277e2580`](https://github.com/meta/astryx/commit/f277e2580) fix(core): a single esbuild bundle renders Core: lazily imported modules import Core directly, not through barrels (#9055)
+- [x] [`f277e2580`](https://github.com/meta/astryx/commit/f277e2580) fix(core): a single esbuild bundle renders Core: lazily imported modules import Core directly, not through barrels (#9055)
+  - 不适用：React 版 esbuild 打包入口的问题
 - [ ] [`9e7c02cdd`](https://github.com/meta/astryx/commit/9e7c02cdd) fix(Avatar): in forced colors the initials take the color around them (#8819)
 - [ ] [`04e0e5225`](https://github.com/meta/astryx/commit/04e0e5225) fix(Badge): a badge grows with its text (#8236)
 - [ ] [`fa3f76030`](https://github.com/meta/astryx/commit/fa3f76030) docs(spec): Kbd records its shipped contract as current (#9096)
@@ -100,7 +103,8 @@
 - [ ] [`322c0d6e6`](https://github.com/meta/astryx/commit/322c0d6e6) fix(Button, Tab, Tokenizer and more): slots follow isRenderable; no truthy-guard baseline (#9501)
 - [ ] [`13acdeb7d`](https://github.com/meta/astryx/commit/13acdeb7d) fix(Token): a removable token cut by its width keeps its remove button at full size (#9621)
 - [ ] [`e68774f5b`](https://github.com/meta/astryx/commit/e68774f5b) fix(PowerSearch): name a filter token by its visible text and expose its editor (#9687)
-- [ ] [`bec12a3b2`](https://github.com/meta/astryx/commit/bec12a3b2) fix(Button): a tooltip that repeats the accessible name adds no description (#9681)
+- [x] [`bec12a3b2`](https://github.com/meta/astryx/commit/bec12a3b2) fix(Button): a tooltip that repeats the accessible name adds no description (#9681)
+  - 已移植：[#494](https://github.com/astryx-vue/astryx-vue/pull/494)
 - [ ] [`3615956e2`](https://github.com/meta/astryx/commit/3615956e2) fix(gestures): pens and pointer-read fingers get the blur refusal and the pinch rule of the Touch Events path (#8309)
 
 ### v0.7.8
@@ -149,8 +153,10 @@
 - [ ] [`6d0940f22`](https://github.com/meta/astryx/commit/6d0940f22) [Component Audit] Kbd: key badges grow with larger text (#10267)
 - [ ] [`28dda9399`](https://github.com/meta/astryx/commit/28dda9399) chore(Carousel): the wheel listener's comment says when it reads layout (#10281)
 - [ ] [`20f7d2d3b`](https://github.com/meta/astryx/commit/20f7d2d3b) fix(core): Avatar initials paint in primary text on the neutral tint (#10205)
-- [ ] [`c48bb2334`](https://github.com/meta/astryx/commit/c48bb2334) fix(core): a labelled Button keeps its name in macOS 14 WebKit (#10256)
+- [x] [`c48bb2334`](https://github.com/meta/astryx/commit/c48bb2334) fix(core): a labelled Button keeps its name in macOS 14 WebKit (#10256)
+  - 已移植：[#494](https://github.com/astryx-vue/astryx-vue/pull/494)
 - [ ] [`e10347c4e`](https://github.com/meta/astryx/commit/e10347c4e) fix(Button): under a finger, a Button's target grows toward 44 px through the shared touch band (#10216)
+  - 待做：依赖共享的触摸热区设施（B3）
 
 ### v0.7.12
 
@@ -162,18 +168,22 @@
 - [ ] [`9b7ebc461`](https://github.com/meta/astryx/commit/9b7ebc461) test(interaction-harness): a hold sent from the test names the motion it judges (#10438)
 - [ ] [`78df0c20b`](https://github.com/meta/astryx/commit/78df0c20b) fix(Carousel): under snap paging, scroll calls move through the paging (#10384)
 - [ ] [`4e6e67df6`](https://github.com/meta/astryx/commit/4e6e67df6) fix(core): make disabled Button focusable via aria-disabled per AST-085 (#7906)
+  - 待做（下一批）：上游 Button 完全不用原生 disabled，Vue 版没提示时还在用；连带 Toolbar、useListFocus、Carousel、ListInput
 - [ ] [`ed862ea90`](https://github.com/meta/astryx/commit/ed862ea90) test(Button): the press-release storyboard arms its hold first (#10479)
-- [ ] [`422440a64`](https://github.com/meta/astryx/commit/422440a64) fix(core): two copies of Core's modules share one React context (#10233)
+- [x] [`422440a64`](https://github.com/meta/astryx/commit/422440a64) fix(core): two copies of Core's modules share one React context (#10233)
+  - 不适用：React context 多副本问题
 - [ ] [`c8b4cba38`](https://github.com/meta/astryx/commit/c8b4cba38) test(Button, gestures): arm press holds and blocks before the gesture (#10521)
 - [ ] [`209e06765`](https://github.com/meta/astryx/commit/209e06765) fix(Carousel): an edge button changes in the frame the held row leaves (#10523)
 - [ ] [`62bc7a2fe`](https://github.com/meta/astryx/commit/62bc7a2fe) fix(core): a swizzled copy shares the animated-layout, code-language and snap-paging brands (#10576)
 - [ ] [`fac363ee8`](https://github.com/meta/astryx/commit/fac363ee8) fix(Kbd): ctrl, alt, shift and meta show text off Apple platforms (#10524)
 - [ ] [`9218a4598`](https://github.com/meta/astryx/commit/9218a4598) fix(SnapPaging): a stop within half a step of the end is the end page (#10591)
-- [ ] [`7bc8230f8`](https://github.com/meta/astryx/commit/7bc8230f8) fix(Button): a labelled button grows with its label (#10588)
+- [x] [`7bc8230f8`](https://github.com/meta/astryx/commit/7bc8230f8) fix(Button): a labelled button grows with its label (#10588)
+  - Vue 版已有：button.css 的 height: max(尺寸, 1lh)，纯图标按钮固定高度
 - [ ] [`611382ee1`](https://github.com/meta/astryx/commit/611382ee1) feat(lab): add LineClamp — clamp arbitrary content to N lines (#4259)
 - [ ] [`8e526d661`](https://github.com/meta/astryx/commit/8e526d661) fix(Kbd): meta shows ⌘ on Apple platforms (#10528)
 - [ ] [`f75f0f2d3`](https://github.com/meta/astryx/commit/f75f0f2d3) feat(ToggleButtonGroup): a finger's slide toggles the one it lifts on (#8660)
-- [ ] [`544442239`](https://github.com/meta/astryx/commit/544442239) fix(Button): at the default text size a labelled button renders exactly as before (#10678)
+- [x] [`544442239`](https://github.com/meta/astryx/commit/544442239) fix(Button): at the default text size a labelled button renders exactly as before (#10678)
+  - Vue 版已有：同上，默认字号下渲染不变
 - [ ] [`8f8b3db65`](https://github.com/meta/astryx/commit/8f8b3db65) perf(Text): take a new text's first truncation measurement from the shared observer (#10668)
 - [ ] [`c5cc8f4c4`](https://github.com/meta/astryx/commit/c5cc8f4c4) docs(useLinkify): add hook docs and a comment-thread example block (#9969)
 - [ ] [`97e46f151`](https://github.com/meta/astryx/commit/97e46f151) test(Button): judge the release end on the page's clock (#10853)
@@ -191,10 +201,12 @@
 - [ ] [`ba460c003`](https://github.com/meta/astryx/commit/ba460c003) test(Button): time a touch release from its animation's late start (#10975)
 - [ ] [`7c8a2e23b`](https://github.com/meta/astryx/commit/7c8a2e23b) docs(useTruncation): add hook docs and a live table cell truncation example block (#10555)
 - [ ] [`f810d1ad6`](https://github.com/meta/astryx/commit/f810d1ad6) [Component Audit] LinkProvider: router setup docs name the to prop its component receives (#11065)
-- [ ] [`108f354ae`](https://github.com/meta/astryx/commit/108f354ae) fix(core): drop 'use client' from the package root and the component barrels (#11106)
+- [x] [`108f354ae`](https://github.com/meta/astryx/commit/108f354ae) fix(core): drop 'use client' from the package root and the component barrels (#11106)
+  - 不适用：React Server Components 的 'use client' 指令
 - [ ] [`fc9fb8ccc`](https://github.com/meta/astryx/commit/fc9fb8ccc) fix(core): registered icons reach swizzled copies; icon and theme registries are one per React (AST-110 FR3) (#11096)
 - [ ] [`7eab4d5ab`](https://github.com/meta/astryx/commit/7eab4d5ab) docs(Link): a caller tabIndex keeps the enabled focus order (AST-085 FR1); name the disabled-focus gap (#11125)
-- [ ] [`05da5aab6`](https://github.com/meta/astryx/commit/05da5aab6) fix(Button): a disabled submit or reset Button cannot act on its form before hydration (#11107)
+- [x] [`05da5aab6`](https://github.com/meta/astryx/commit/05da5aab6) fix(Button): a disabled submit or reset Button cannot act on its form before hydration (#11107)
+  - 已移植：[#494](https://github.com/astryx-vue/astryx-vue/pull/494)，挂载前渲染成 type="button"
 - [ ] [`179767d1c`](https://github.com/meta/astryx/commit/179767d1c) docs(buttons): a disabled Button renders aria-disabled, never native disabled (#11147)
 - [ ] [`b9551ab78`](https://github.com/meta/astryx/commit/b9551ab78) docs(ButtonGroup): the Tab stop stays on a disabled member when every member is disabled (#11158)
 - [ ] [`c2f12feab`](https://github.com/meta/astryx/commit/c2f12feab) fix(Carousel): the scroll buttons sit inside the scroller's focus ring (#10726)
@@ -214,6 +226,7 @@
 - [ ] [`b300313cb`](https://github.com/meta/astryx/commit/b300313cb) feat(Lightbox): a gallery's caption sits in a two-line band (#9810)
 - [ ] [`36ed7cc4b`](https://github.com/meta/astryx/commit/36ed7cc4b) fix(useContainerReveal): a touchscreen laptop used with a mouse reveals on hover (#11218)
 - [ ] [`9bdbcb16f`](https://github.com/meta/astryx/commit/9bdbcb16f) fix(Button, Popover, Dialog): keep an edge in forced-colors mode (#7677)
+  - 部分移植：[#494](https://github.com/astryx-vue/astryx-vue/pull/494) 里 ghost 不加边；按钮组在强制配色下的分隔线还没逐条对照
 
 ### v0.7.17
 
@@ -226,6 +239,7 @@
 - [ ] [`5b8aa79fc`](https://github.com/meta/astryx/commit/5b8aa79fc) fix(Badge): a badge is as wide as its label, and never stretches in a Grid cell or a VStack (#12053)
 - [ ] [`cb315c6ae`](https://github.com/meta/astryx/commit/cb315c6ae) docs(architecture): press feedback has one engine and three recipes (#12115)
 - [ ] [`08c8f842c`](https://github.com/meta/astryx/commit/08c8f842c) feat(core): a Button shows its full label in a tooltip when the label is cut short (#12169)
+  - 待做：依赖 Text 的 TruncationTooltip，跟 Text 那批一起
 - [ ] [`ab67aa1eb`](https://github.com/meta/astryx/commit/ab67aa1eb) feat(core): a table header cell shows its full heading in a tooltip on keyboard focus when the heading is cut short (#12175)
 - [ ] [`93047f8b2`](https://github.com/meta/astryx/commit/93047f8b2) perf(Text): a truncation measurement that finds the same result sets no state (#11911)
 - [ ] [`f7ebe6734`](https://github.com/meta/astryx/commit/f7ebe6734) fix(Thumbnail): focusing Open shows one ring, not two (#11613)
