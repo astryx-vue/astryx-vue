@@ -92,12 +92,23 @@ const isCustomLink = computed(() => renderAsLink.value && safeHref.value != null
 const nativeDisabled = computed(() =>
   !renderAsLink.value && !useAriaDisabled.value && isButtonDisabled.value,
 )
+// 同上游 #11107：服务端输出的按钮在 hydration 之前没有点击守卫，而用 aria-disabled 的
+// submit / reset 按钮没有原生 disabled，会直接提交或重置表单。挂载前先渲染成普通按钮，
+// 服务端和 hydration 的首次渲染一致，挂载后再换回真正的 type。
+const isMounted = ref(false)
+const renderedType = computed(() =>
+  isButtonDisabled.value && !isMounted.value && (props.type === 'submit' || props.type === 'reset')
+    ? 'button'
+    : props.type,
+)
 // 首次渲染就处于 loading 时，live region 必须先以空内容挂载，再在下一帧写入文案：
 // 许多读屏器会跳过与文字同时出现的 live region，忙碌开始就播报不出来。
 const isLiveRegionReady = ref(!isLoadingState.value)
 let liveRegionFrame: number | undefined
 
 onMounted(() => {
+  isMounted.value = true
+
   if (isLiveRegionReady.value)
     return
 
@@ -155,11 +166,30 @@ const ariaLabel = computed(() => {
   return attrs['aria-label'] as string | undefined
 })
 
+/**
+ * 由 props 就能确定的可访问名称：派生的 aria-label，否则调用方的 aria-label，否则标签文字本身。
+ * 调用方用 aria-labelledby 从别处取名时这里不知道名称。图标和 end 插槽都包在 aria-hidden 里，
+ * 不会往名称里加字。
+ */
+const accessibleName = computed(() => {
+  if (attrs['aria-labelledby'] != null)
+    return undefined
+
+  return ariaLabel.value ?? props.label
+})
+
+// 同上游 #9681：提示文字和名称一样时，再挂成描述只会让读屏器把同一句话读两遍。
+const isTooltipName = computed(() =>
+  hasTooltip.value
+  && accessibleName.value != null
+  && (props.tooltip ?? '').trim() === accessibleName.value.trim(),
+)
+
 const ariaDescribedBy = computed(() => {
   const consumerDescription = attrs['aria-describedby']
   const descriptions = [
     typeof consumerDescription === 'string' ? consumerDescription : undefined,
-    hasTooltip.value ? tooltipId : undefined,
+    hasTooltip.value && !isTooltipName.value ? tooltipId : undefined,
   ].filter(Boolean)
 
   return descriptions.length > 0 ? descriptions.join(' ') : undefined
@@ -233,7 +263,7 @@ defineExpose({
     :style="rootStyle"
     :target="renderAsLink ? target : undefined"
     :to="isCustomLink ? safeHref : undefined"
-    :type="renderAsLink ? undefined : type"
+    :type="renderAsLink ? undefined : renderedType"
     :value="renderAsLink ? undefined : value"
     @blur="buttonTooltip.onBlur"
     @click="handleRootClick"
