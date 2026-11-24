@@ -1,5 +1,16 @@
 # @astryx-vue/core
 
+## 0.7.23
+
+### Patch Changes
+
+- [#494](https://github.com/astryx-vue/astryx-vue/pull/494) [`1d5a19c`](https://github.com/astryx-vue/astryx-vue/commit/1d5a19c11fec40d598457896067445b64a344720) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Button 跟进上游 v0.7.2–v0.7.17 的几处修复：
+  
+  - 提示文字和按钮的可访问名称相同时，不再把提示挂成 `aria-describedby`，读屏器不会把同一句话读两遍（上游 [#9681](https://github.com/astryx-vue/astryx-vue/issues/9681)）。
+  - 按钮的内容容器改成真实的弹性盒子，不再用 `display: contents`，macOS 15 之前的 Safari 里 VoiceOver 能读出带标签按钮的名称；布局不变（上游 [#10256](https://github.com/astryx-vue/astryx-vue/issues/10256)）。
+  - 服务端渲染时，用 `aria-disabled` 的 submit / reset 按钮在挂载前先渲染成普通按钮，hydration 之前点它不会提交或重置表单（上游 [#11107](https://github.com/astryx-vue/astryx-vue/issues/11107)）。
+  - 强制配色模式下 ghost 按钮不再加边框（上游 [#7677](https://github.com/astryx-vue/astryx-vue/issues/7677) 的一部分）。
+
 ## 0.7.22
 
 ### Patch Changes
