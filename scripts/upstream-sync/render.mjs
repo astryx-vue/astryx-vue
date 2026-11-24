@@ -22,18 +22,30 @@ export function groupByFamily(plan) {
   return [...families.values()]
 }
 
+function familyHeading(family) {
+  return `## ${family.title}${family.area ? `（area:${family.area}）` : ''}`
+}
+
+/** 进度按「组件族 + 提交」记：同一个提交可能落在几个组件族里，各族要做的事不一样。 */
+function progressKey(heading, hash) {
+  return `${heading}\n${hash}`
+}
+
 /**
  * 从上一版清单里读出已勾选的提交和挂在提交下面的备注。
  * 清单每周整份重写，不读回来的话，大家勾掉的条目和写的「不适用」理由都会被冲掉。
  */
 export function readProgress(markdown = '') {
   const progress = new Map()
+  let heading = ''
   let current = null
   for (const line of markdown.split('\n')) {
+    if (line.startsWith('## '))
+      heading = line
     const match = ITEM.exec(line)
     if (match) {
       current = { checked: match[1] !== ' ', notes: [] }
-      progress.set(match[2], current)
+      progress.set(progressKey(heading, match[2]), current)
     }
     else if (current && line.startsWith('  ') && line.trim()) {
       current.notes.push(line)
@@ -45,9 +57,9 @@ export function readProgress(markdown = '') {
   return progress
 }
 
-function renderCommit(commit, progress) {
+function renderCommit(commit, heading, progress) {
   const hash = commit.hash.slice(0, 9)
-  const previous = progress.get(hash)
+  const previous = progress.get(progressKey(heading, hash))
   const box = previous?.checked ? 'x' : ' '
   const breaking = commit.breaking ? '**[破坏性]** ' : ''
   return [`- [${box}] [\`${hash}\`](${COMMIT_URL}${hash}) ${breaking}${commit.subject}`, ...(previous?.notes ?? [])]
@@ -69,11 +81,12 @@ export function renderPendingChecklist(plan, { from, to }, previous = '') {
     '',
   ]
   for (const family of families) {
-    lines.push(`## ${family.title}${family.area ? `（area:${family.area}）` : ''}`, '')
+    const heading = familyHeading(family)
+    lines.push(heading, '')
     for (const release of family.releases) {
       lines.push(`### ${release.to}`, '')
       for (const commit of release.commits)
-        lines.push(...renderCommit(commit, progress))
+        lines.push(...renderCommit(commit, heading, progress))
       lines.push('')
     }
   }
