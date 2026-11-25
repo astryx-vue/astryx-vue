@@ -369,43 +369,41 @@ function trendGeometry(trend: TrendSeries) {
               {{ okrSummary }}
             </Text>
           </HStack>
-          <Card :padding="6">
-            <VStack :gap="6">
-              <template v-for="(okr, i) in OKRS" :key="okr.objective">
-                <Divider v-if="i > 0" />
-                <VStack :gap="2">
-                  <HStack h-align="between" align="center" :gap="3">
-                    <StackItem size="fill">
-                      <Heading :level="4" :accessibility-level="3">
-                        {{ okr.objective }}
-                      </Heading>
-                    </StackItem>
+          <VStack :gap="6">
+            <template v-for="(okr, i) in OKRS" :key="okr.objective">
+              <Divider v-if="i > 0" />
+              <VStack :gap="2">
+                <HStack h-align="between" align="center" :gap="3">
+                  <StackItem size="fill">
+                    <Heading :level="4" :accessibility-level="3">
+                      {{ okr.objective }}
+                    </Heading>
+                  </StackItem>
+                  <Text type="supporting" color="secondary">
+                    {{ okrPercent(okr) }}%
+                  </Text>
+                </HStack>
+                <ProgressBar
+                  :value="okr.actual"
+                  :max="okr.target"
+                  :variant="RAG_PROGRESS[okrRag(okrPercent(okr))]"
+                  :label="okr.objective"
+                  is-label-hidden
+                />
+                <HStack h-align="between" align="center" :gap="4">
+                  <HStack :gap="2" align="center">
+                    <Avatar size="sm" :name="ownerName(okr.owner)" />
                     <Text type="supporting" color="secondary">
-                      {{ okrPercent(okr) }}%
+                      {{ okr.owner }}
                     </Text>
                   </HStack>
-                  <ProgressBar
-                    :value="okr.actual"
-                    :max="okr.target"
-                    :variant="RAG_PROGRESS[okrRag(okrPercent(okr))]"
-                    :label="okr.objective"
-                    is-label-hidden
-                  />
-                  <HStack h-align="between" align="center" :gap="4">
-                    <HStack :gap="2" align="center">
-                      <Avatar size="sm" :name="ownerName(okr.owner)" />
-                      <Text type="supporting" color="secondary">
-                        {{ okr.owner }}
-                      </Text>
-                    </HStack>
-                    <Text type="supporting" color="secondary">
-                      {{ okr.actual }}{{ okr.unit }} / {{ okr.target }}{{ okr.unit }} target
-                    </Text>
-                  </HStack>
-                </VStack>
-              </template>
-            </VStack>
-          </Card>
+                  <Text type="supporting" color="secondary">
+                    {{ okr.actual }}{{ okr.unit }} / {{ okr.target }}{{ okr.unit }} target
+                  </Text>
+                </HStack>
+              </VStack>
+            </template>
+          </VStack>
         </VStack>
 
         <VStack :gap="6">

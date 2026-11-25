@@ -62,6 +62,7 @@
   .astryx-slider-value {
     color: var(--astryx-color-text-primary, #171717);
     font-size: var(--astryx-text-label-size, 14px);
+    line-height: var(--astryx-text-label-leading, 1.4286);
     font-variant-numeric: tabular-nums;
     overflow-wrap: anywhere;
     /* Text 和 Heading 在里面也按 anywhere 换行。 */

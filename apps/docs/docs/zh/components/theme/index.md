@@ -42,6 +42,8 @@ const ocean = defineTheme({
 
 `neutralTheme` 是不覆盖 token 的主题。颜色仍然来自 `@astryx-vue/themes/neutral.css`。七套现成主题也仍是手写 CSS，不会改成下面这套生成结果。
 
+`Theme` 里没有自己设字号和行高的文字，取主题的正文字号和正文行高（`--text-body-leading`），所以 Card、Stack 里的普通文字会跟着主题变。想保留别的行高，就在自己的容器上设一个。
+
 ## 从几个数生成
 
 `color`、`typography`、`radius`、`motion` 会算出一批 token，写进主题对象。同名的 `tokens` 优先。`var(--color-accent)` 这种引用会改成带 `--astryx-` 前缀的名字。
