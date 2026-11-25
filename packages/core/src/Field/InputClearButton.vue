@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { useAttrs } from 'vue'
+import { provide, useAttrs } from 'vue'
+import { buttonHitAreaContextKey } from '../Button/context.js'
 import IconButton from '../IconButton/IconButton.vue'
 import { useComponentMessages } from '../locale/context.js'
 import { inputMessages } from '../locale/messages/input.js'
@@ -17,6 +18,9 @@ const emit = defineEmits<{
 }>()
 
 const attrs = useAttrs()
+// 清除按钮用输入框自己的那一小圈触控范围（field.css），不画按钮的热区：
+// 它旁边的箭头、状态图标不是可点元素，按钮的热区挡不住，会盖过去。
+provide(buttonHitAreaContextKey, false)
 
 const messages = useComponentMessages({ input: inputMessages })
 

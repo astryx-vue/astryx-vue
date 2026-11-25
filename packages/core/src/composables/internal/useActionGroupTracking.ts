@@ -1,6 +1,6 @@
 import type { MaybeRefOrGetter, Ref } from 'vue'
 import { getCurrentScope, onScopeDispose, toValue, watch } from 'vue'
-import { createActionGroupTracker, GROUP_PRESS_POINTERS, isTrackedByGroup, PRESS_GROUP_ITEM_ATTRIBUTE } from './actionGroupTracker.js'
+import { createActionGroupTracker, GROUP_PRESS_POINTERS, isTrackedByGroup, PRESS_GROUP_ITEM_ATTRIBUTE, resolveGroupTouch } from './actionGroupTracker.js'
 import { msSinceInput } from './inputAge.js'
 import { PRESS_ONSET_MS, PRESS_SLOP_PX } from './pressGesture.js'
 import { isInsideScrollView } from './scrollView.js'
@@ -10,6 +10,11 @@ export { GROUP_PRESS_POINTERS, PRESS_GROUP_ITEM_ATTRIBUTE, pressGroupItemProps }
 export interface ActionGroupTrackingOptions {
   /** 只在为真时跟踪。组件一般传「主要指针是粗指针」并且组没禁用。 */
   isEnabled: MaybeRefOrGetter<boolean>
+  /**
+   * 组画了触控热区（`useTouchHitArea` 加 `GROUP_HIT_AREA`）时为真：手指按在组自己或热区上，
+   * 落在某个动作朝 44px 长出的范围里，就算那个动作；滑动时同样。
+   */
+  growsTargets?: MaybeRefOrGetter<boolean>
 }
 
 const DISABLED = ':disabled, [aria-disabled="true"]'
@@ -64,7 +69,7 @@ export function useActionGroupTracking(rootRef: Readonly<Ref<HTMLElement | null>
   }
 
   function begin(root: HTMLElement, x: number, y: number, target: Node): void {
-    beganOn = tracker.begin(root, pointerType, x, y, target)
+    beganOn = tracker.begin(root, pointerType, x, y, target, pointerType === 'touch' && toValue(options.growsTargets) === true)
   }
 
   function onMove(event: PointerEvent): void {
@@ -119,7 +124,10 @@ export function useActionGroupTracking(rootRef: Readonly<Ref<HTMLElement | null>
     const target = event.target
     if (!(target instanceof Element))
       return
-    const member = target.closest<HTMLElement>(`[${PRESS_GROUP_ITEM_ATTRIBUTE}]`)
+    const member = target === root && event.pointerType === 'touch' && toValue(options.growsTargets) === true
+      // 按在组的热区上：归最近的、长出范围盖住这一点的动作。
+      ? resolveGroupTouch(root, event.pointerType, event.clientX, event.clientY)
+      : target.closest<HTMLElement>(`[${PRESS_GROUP_ITEM_ATTRIBUTE}]`)
     // 只接按在组跟踪的可用动作上的按压。别的（菜单触发器、禁用的成员）保留自己的点击。
     if (member == null || !root.contains(member) || member.matches(DISABLED) || !isTrackedByGroup(member, event.pointerType))
       return
