@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import type { Component } from 'vue'
 import type { IconProps, IconSize, IconSlots } from './types.js'
-import { computed, useId } from 'vue'
+import { computed, inject, onMounted, onUpdated, shallowRef, useId } from 'vue'
+import { themeContextKey } from '../Theme/context.js'
 import { useIconDefaultSize } from './context.js'
 import { iconGlyphSlug, isIconGlyph } from './glyphs.js'
 import { getIcon, warnMissingIcon } from './registry.js'
+import { resolveSemanticIcon } from './semantic.js'
 import { renderIconMarkup } from './svg.js'
-import { useSemanticIcon } from './useSemanticIcon.js'
+import { resolveThemeIcon } from './themeIcons.js'
 import '../../styles/icon.css'
 
 defineOptions({ name: 'AstryxIcon' })
@@ -18,17 +20,13 @@ const props = withDefaults(defineProps<IconProps>(), {
 defineSlots<IconSlots>()
 
 const inheritedSize = useIconDefaultSize()
+const themeContext = inject(themeContextKey, null)
 const idPrefix = `i${useId().replace(/\W/g, '')}-`
 
 const directName = computed(() => props.name != null && props.name !== '' ? props.name : undefined)
-const semanticId = useSemanticIcon(() => typeof props.icon === 'string' ? props.icon : undefined)
-
-const registeredSemanticId = computed(() => {
-  const id = semanticId.value
-  if (!id || directName.value != null)
-    return undefined
-  return getIcon(id) ? id : undefined
-})
+const semanticName = computed(() => typeof props.icon === 'string' && props.icon !== '' && directName.value == null
+  ? props.icon
+  : undefined)
 
 const resolvedSize = computed<IconSize | undefined>(() => {
   if (props.size != null)
@@ -39,6 +37,32 @@ const resolvedSize = computed<IconSize | undefined>(() => {
   if (directName.value != null)
     return undefined
   return 'md'
+})
+
+/**
+ * The nearest theme's answer for the semantic name at the size this icon
+ * renders: an id, `null` when its function entry answered nothing (final),
+ * or `undefined` when the theme does not map the name.
+ */
+const themedId = computed(() => {
+  const name = semanticName.value
+  if (name == null)
+    return undefined
+  return resolveThemeIcon(name, themeContext?.value.theme, {
+    size: resolvedSize.value ?? 'md',
+    variant: props.variant,
+  })
+})
+const isHidden = computed(() => themedId.value === null)
+const semanticId = computed(() => themedId.value === undefined
+  ? resolveSemanticIcon(semanticName.value)
+  : themedId.value ?? undefined)
+
+const registeredSemanticId = computed(() => {
+  const id = semanticId.value
+  if (!id || directName.value != null)
+    return undefined
+  return getIcon(id) ? id : undefined
 })
 
 const iconMarkup = computed(() => {
@@ -74,6 +98,24 @@ const iconComponent = computed<Component | undefined>(() => props.icon != null &
   ? props.icon
   : undefined)
 
+const root = shallowRef<HTMLSpanElement | null>(null)
+const svg = shallowRef<SVGSVGElement | null>(null)
+
+// The glyph inside the box can change while the box stays, so read the svg
+// again after every render. A glyph drawn without an svg leaves it null.
+function syncSvg(): void {
+  svg.value = root.value?.querySelector('svg') ?? null
+}
+onMounted(syncSvg)
+onUpdated(syncSvg)
+
+defineExpose({
+  /** The icon's root box. */
+  element: root,
+  /** The rendered `<svg>`, or `null` when the glyph has none. */
+  svg,
+})
+
 const a11yAttrs = computed(() => {
   const label = props.label
 
@@ -85,6 +127,8 @@ const a11yAttrs = computed(() => {
 
 <template>
   <span
+    v-if="!isHidden"
+    ref="root"
     v-bind="a11yAttrs"
     class="astryx-icon"
     :data-kind="glyphSlug || registeredSemanticId ? undefined : 'graphic'"
