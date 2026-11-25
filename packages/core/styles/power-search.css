@@ -67,15 +67,15 @@
   }
 
   .astryx-power-search-control.status-error {
-    --astryx-input-status-color: var(--astryx-input-error, #e33f4a);
+    --astryx-input-status-color: var(--astryx-input-error, var(--astryx-color-border-error, #e33f4a));
   }
 
   .astryx-power-search-control.status-warning {
-    --astryx-input-status-color: var(--astryx-input-warning, #a67a00);
+    --astryx-input-status-color: var(--astryx-input-warning, var(--astryx-color-border-warning, #a67a00));
   }
 
   .astryx-power-search-control.status-success {
-    --astryx-input-status-color: var(--astryx-input-success, #198100);
+    --astryx-input-status-color: var(--astryx-input-success, var(--astryx-color-border-success, #198100));
   }
 
   .astryx-power-search-icon,

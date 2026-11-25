@@ -17,6 +17,7 @@ export { expandMotionScale } from './expandMotionScale.js'
 export { expandRadiusScale } from './expandRadiusScale.js'
 export { expandTypeScale } from './expandTypeScale.js'
 export { default as MediaTheme } from './MediaTheme.vue'
+export { STATUS_COLOR_DEFAULTS } from './statusColorDefaults.js'
 export { default as Theme } from './Theme.vue'
 export type {
   ColorScaleConfig,

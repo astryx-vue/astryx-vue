@@ -62,11 +62,11 @@
   }
 
   .astryx-stat__delta[data-sentiment='positive'] {
-    color: var(--astryx-color-success, light-dark(#00490b, #a4d6a3));
+    color: var(--astryx-color-text-success, light-dark(#00490b, #a4d6a3));
   }
 
   .astryx-stat__delta[data-sentiment='negative'] {
-    color: var(--astryx-color-error, light-dark(#76000c, #ffc4be));
+    color: var(--astryx-color-text-error, light-dark(#76000c, #ffc4be));
   }
 
   .astryx-stat__delta[data-sentiment='neutral'] {

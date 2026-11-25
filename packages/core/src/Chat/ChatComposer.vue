@@ -132,7 +132,7 @@ defineExpose({ element: root })
       data-place="top"
       :data-type="status.type"
     >
-      <Icon :icon="status.type === 'error' ? 'error' : 'warning'" size="md" :color="status.type === 'error' ? 'error' : 'warning'" />
+      <Icon :icon="status.type === 'error' ? 'error' : 'warning'" size="md" color="inherit" />
       <span>{{ status.message }}</span>
     </div>
 
@@ -188,7 +188,7 @@ defineExpose({ element: root })
       data-place="bottom"
       :data-type="status.type"
     >
-      <Icon :icon="status.type === 'error' ? 'error' : 'warning'" size="md" :color="status.type === 'error' ? 'error' : 'warning'" />
+      <Icon :icon="status.type === 'error' ? 'error' : 'warning'" size="md" color="inherit" />
       <span>{{ status.message }}</span>
     </div>
   </div>

@@ -27,18 +27,18 @@
   }
 
   .astryx-number-input[data-status='error'] {
-    --astryx-input-status-color: var(--astryx-input-error, #e33f4a);
-    border-color: var(--astryx-input-error, #e33f4a);
+    --astryx-input-status-color: var(--astryx-input-error, var(--astryx-color-border-error, #e33f4a));
+    border-color: var(--astryx-input-error, var(--astryx-color-border-error, #e33f4a));
   }
 
   .astryx-number-input[data-status='warning'] {
-    --astryx-input-status-color: var(--astryx-input-warning, #a67a00);
-    border-color: var(--astryx-input-warning, #a67a00);
+    --astryx-input-status-color: var(--astryx-input-warning, var(--astryx-color-border-warning, #a67a00));
+    border-color: var(--astryx-input-warning, var(--astryx-color-border-warning, #a67a00));
   }
 
   .astryx-number-input[data-status='success'] {
-    --astryx-input-status-color: var(--astryx-input-success, #198100);
-    border-color: var(--astryx-input-success, #198100);
+    --astryx-input-status-color: var(--astryx-input-success, var(--astryx-color-border-success, #198100));
+    border-color: var(--astryx-input-success, var(--astryx-color-border-success, #198100));
   }
 
   /* The icon before the input text. */

@@ -6,9 +6,10 @@
     --astryx-icon-secondary-foreground: var(--astryx-color-text-secondary);
     --astryx-icon-disabled-foreground: var(--astryx-color-text-disabled);
     --astryx-icon-accent-foreground: var(--astryx-color-on-accent);
-    --astryx-icon-success-foreground: var(--astryx-color-text-green);
-    --astryx-icon-error-foreground: var(--astryx-color-text-red);
-    --astryx-icon-warning-foreground: var(--astryx-color-text-yellow);
+    --astryx-icon-info-foreground: var(--astryx-color-icon-info);
+    --astryx-icon-success-foreground: var(--astryx-color-icon-success);
+    --astryx-icon-error-foreground: var(--astryx-color-icon-error);
+    --astryx-icon-warning-foreground: var(--astryx-color-icon-warning);
     --astryx-icon-blue-foreground: var(--astryx-color-icon-blue);
     --astryx-icon-cyan-foreground: var(--astryx-color-icon-cyan);
     --astryx-icon-green-foreground: var(--astryx-color-icon-green);

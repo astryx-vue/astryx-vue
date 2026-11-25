@@ -1259,6 +1259,7 @@ export {
   MediaTheme,
   neutralTheme,
   normalizeTokenName,
+  STATUS_COLOR_DEFAULTS,
   Theme,
   useMediaTheme,
   useTheme,

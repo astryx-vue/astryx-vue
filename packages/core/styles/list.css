@@ -405,4 +405,11 @@
       transition: none;
     }
   }
+
+  /* 强制配色会把危险操作的底色换成 ButtonFace，补一圈边让按钮的形状还看得见。 */
+  @media (forced-colors: active) {
+    .astryx-item__swipe-action[data-variant='destructive'] {
+      border: 1px solid CanvasText;
+    }
+  }
 }

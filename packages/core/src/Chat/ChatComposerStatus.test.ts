@@ -28,6 +28,13 @@ describe('chatComposer 状态播报', () => {
     expect(message.attributes('aria-live')).toBeUndefined()
   })
 
+  it('状态图标坐在浅色状态底上，跟随整条的浅底内容色', () => {
+    for (const type of ['error', 'warning'] as const) {
+      const wrapper = renderStatus({ type, message: 'Status' })
+      expect(wrapper.get('.astryx-chat-composer__status .astryx-icon').attributes('data-color')).toBe('inherit')
+    }
+  })
+
   it('error 走 assertive，warning 走 polite', async () => {
     const wrapper = renderStatus()
     expect(announce).not.toHaveBeenCalled()

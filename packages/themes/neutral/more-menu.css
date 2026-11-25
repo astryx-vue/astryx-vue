@@ -7,7 +7,7 @@
     --astryx-more-menu-foreground: var(--astryx-color-text-primary);
     --astryx-more-menu-description-foreground: var(--astryx-color-text-secondary);
     --astryx-more-menu-heading-foreground: var(--astryx-color-text-secondary);
-    --astryx-more-menu-destructive-foreground: var(--astryx-color-error);
+    --astryx-more-menu-destructive-foreground: var(--astryx-color-text-error);
     --astryx-more-menu-item-hover-background: var(--astryx-color-overlay-hover);
     --astryx-more-menu-item-pressed-background: var(--astryx-color-overlay-pressed);
     --astryx-more-menu-scrim: var(--astryx-color-overlay);

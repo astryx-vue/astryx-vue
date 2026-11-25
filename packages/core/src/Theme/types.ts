@@ -200,6 +200,11 @@ export interface ThemeDefinition<IconVariant extends string = string> {
   name: string
   /** Token values already written as CSS, with the `--astryx-` prefix. */
   tokens: Readonly<Record<string, string>>
+  /**
+   * Names in `tokens` that were computed rather than written: status roles the
+   * theme left unset. A theme that extends this one computes them again.
+   */
+  derivedTokens?: readonly string[]
   /** Theme-local values by exact name. Absent when the theme family declares none. */
   localTokens?: Readonly<Record<string, string>>
   /** Extra tokens applied by MediaTheme when the surface is dark. */
