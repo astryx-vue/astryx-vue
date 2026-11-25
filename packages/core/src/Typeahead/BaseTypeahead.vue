@@ -72,6 +72,13 @@ const externalDescribedBy = computed(() => props.ariaDescribedBy ?? attrString('
 const labelledBy = computed(() => props.ariaLabelledBy ?? attrString('aria-labelledby'))
 const ariaLabel = computed(() => props.label ?? attrString('aria-label'))
 
+const tokenValueId = computed(() => `${inputId.value}-value`)
+/**
+ * 有值时，值 Token 的按钮就是这个字段的 Tab 停点。它和输入框一样用字段标签
+ * （再加上调用方的 aria-labelledby）命名，后面跟着值；说明也和输入框一样。
+ */
+const tokenLabelledBy = computed(() => [props.labelId, labelledBy.value, tokenValueId.value].filter(Boolean).join(' '))
+
 const describedBy = computed(() => {
   return [props.describedBy, externalDescribedBy.value, focusableDisabled.value ? disabledId.value : undefined]
     .filter(Boolean)
@@ -300,12 +307,15 @@ defineExpose({
       <span v-if="$slots.icon" class="astryx-typeahead-icon" aria-hidden="true">
         <slot name="icon" />
       </span>
+      <span v-if="showToken && selected" :id="tokenValueId" hidden>{{ selected.label }}</span>
       <Token
         v-if="showToken && selected"
         class="astryx-typeahead-value"
         :label="selected.label"
         :size="props.size"
         :disabled="props.disabled"
+        :aria-labelledby="tokenLabelledBy"
+        :aria-describedby="describedBy"
         @click="startEdit"
       />
       <input

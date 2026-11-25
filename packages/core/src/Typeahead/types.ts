@@ -18,6 +18,8 @@ export interface BaseTypeaheadProps<T extends SearchableItem = SearchableItem> {
   inputId?: string
   /** 外面已经算好的说明和状态 id。 */
   describedBy?: string
+  /** 字段标签的 id。有值时，值 Token 的按钮用它加上值本身命名。 */
+  labelId?: string
   /** `aria-describedby` 的专用别名。给了就盖过原生属性。 */
   ariaDescribedBy?: string
   /** `aria-labelledby` 的专用别名。给了就盖过原生属性。 */

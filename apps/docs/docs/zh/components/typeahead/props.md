@@ -108,6 +108,7 @@ const items = [
       <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>输入框的无障碍名。</td></tr>
       <tr><td><code>inputId</code></td><td><code>string</code></td><td>自动生成</td><td>输入框的 id，好让外面的标签用 <code>for</code> 对上。</td></tr>
       <tr><td><code>describedBy</code></td><td><code>string</code></td><td>—</td><td>外面已经算好的说明和状态 id。</td></tr>
+      <tr><td><code>labelId</code></td><td><code>string</code></td><td>—</td><td>字段标签的 id。有值时值 Token 就是 Tab 停点，它的名称由这个标签加上值组成。</td></tr>
       <tr><td><code>ariaDescribedBy</code></td><td><code>string</code></td><td>—</td><td>输入框专用的 <code>aria-describedby</code> 别名，给了就盖过原生属性。</td></tr>
       <tr><td><code>ariaLabelledBy</code></td><td><code>string</code></td><td>—</td><td>输入框专用的 <code>aria-labelledby</code> 别名，给了就盖过原生属性。</td></tr>
       <tr><td><code>anchorRef</code></td><td><code>HTMLElement | null</code></td><td>—</td><td>下拉挂靠并据此量宽度的元素。不传就用输入框所在的外框。</td></tr>
