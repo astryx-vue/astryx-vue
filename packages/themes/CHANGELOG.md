@@ -1,5 +1,9 @@
 # @astryx-vue/themes
 
+## 0.8.0
+
+No changes in this release.
+
 ## 0.7.29
 
 ### Patch Changes
