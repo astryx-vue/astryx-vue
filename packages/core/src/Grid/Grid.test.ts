@@ -44,7 +44,7 @@ describe('grid', () => {
   it('builds responsive tracks from a minimum width, defaulting to fill', () => {
     const wrapper = mount(Grid, { props: { columns: { minWidth: 280 } } })
 
-    expect(templateColumns(wrapper.element as HTMLElement)).toBe('repeat(auto-fill, minmax(280px, 1fr))')
+    expect(templateColumns(wrapper.element as HTMLElement)).toBe('repeat(auto-fill, minmax(min(100%, 280px), 1fr))')
   })
 
   it('uses auto-fit when repeat is fit', () => {
@@ -52,7 +52,7 @@ describe('grid', () => {
       props: { columns: { minWidth: 280, repeat: 'fit' } },
     })
 
-    expect(templateColumns(wrapper.element as HTMLElement)).toBe('repeat(auto-fit, minmax(280px, 1fr))')
+    expect(templateColumns(wrapper.element as HTMLElement)).toBe('repeat(auto-fit, minmax(min(100%, 280px), 1fr))')
   })
 
   it('caps the column count on the track minimum so present columns still fill', () => {
@@ -218,7 +218,7 @@ describe('grid', () => {
     columns.value = { minWidth: 120 }
     await nextTick()
 
-    expect(templateColumns(wrapper.element as HTMLElement)).toBe('repeat(auto-fill, minmax(120px, 1fr))')
+    expect(templateColumns(wrapper.element as HTMLElement)).toBe('repeat(auto-fill, minmax(min(100%, 120px), 1fr))')
   })
 })
 

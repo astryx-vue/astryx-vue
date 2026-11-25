@@ -108,4 +108,31 @@ describe('toolbar', () => {
     expect(document.activeElement?.textContent).toBe('Outer')
     wrapper.unmount()
   })
+
+  it.each([
+    ['start and end lanes', { start: true, end: true }, {}, true],
+    ['a start lane only', { start: true }, {}, false],
+    ['a center lane', { start: true, center: true, end: true }, {}, false],
+    ['a vertical toolbar', { start: true, end: true }, { orientation: 'vertical' as const }, false],
+  ])('lets %s wrap the end lane onto the next line: %#', (_name, lanes, props, wraps) => {
+    const slots = Object.fromEntries(
+      Object.keys(lanes).map(lane => [lane, () => h('button', { type: 'button' }, lane)]),
+    )
+    const wrapper = mount(Toolbar, { props: { label: 'Board', ...props }, slots })
+
+    expect(wrapper.get('.astryx-toolbar').classes('astryx-toolbar--two-lane')).toBe(wraps)
+  })
+
+  it('wraps two lanes as a row and keeps each lane on one line while it fits', () => {
+    const css = readFileSync(resolve(process.cwd(), 'packages/core/styles/toolbar.css'), 'utf8')
+    const rule = (selector: string): string => {
+      const at = css.lastIndexOf(`${selector} {`)
+      expect(at, selector).toBeGreaterThan(-1)
+      return css.slice(at, css.indexOf('}', at))
+    }
+
+    expect(rule('.astryx-toolbar--two-lane')).toContain('flex-wrap: wrap')
+    expect(rule('.astryx-toolbar--two-lane > .astryx-toolbar__slot--end')).toContain('flex-grow: 1')
+    expect(css).toMatch(/\.astryx-toolbar--two-lane > \.astryx-toolbar__slot--start,\s*\.astryx-toolbar--two-lane > \.astryx-toolbar__slot--end \{[^}]*min-width: fit-content/)
+  })
 })

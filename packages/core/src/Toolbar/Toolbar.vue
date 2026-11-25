@@ -56,7 +56,10 @@ const toolbarStyle = computed(() => ({
       :class="[
         `astryx-toolbar--${size}`,
         `astryx-toolbar--${orientation}`,
-        { 'astryx-toolbar--centered': $slots.center },
+        {
+          'astryx-toolbar--centered': $slots.center,
+          'astryx-toolbar--two-lane': $slots.start && $slots.end && !$slots.center && orientation !== 'vertical',
+        },
       ]"
       role="toolbar"
       :aria-label="label"

@@ -2,6 +2,7 @@
 import type { CSSProperties, StyleValue } from 'vue'
 import type { CodeBlockEmits, CodeBlockProps, TokenLine } from './types.js'
 import { computed, onBeforeUnmount, onMounted, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
+import { devPropError, isDevBuild } from '../composables/internal/devBuild.js'
 import { useClipboard } from '../composables/useClipboard.js'
 import ComponentIcon from '../Icon/ComponentIcon.vue'
 import Icon from '../Icon/Icon.vue'
@@ -34,6 +35,14 @@ const props = withDefaults(defineProps<CodeBlockProps>(), {
 })
 
 const emit = defineEmits<CodeBlockEmits>()
+
+if (isDevBuild() && typeof props.code !== 'string') {
+  throw devPropError(
+    'CodeBlock',
+    'code',
+    'must be a string, for example <CodeBlock code="const a = 1;" language="ts" />. CodeBlock does not read its default slot.',
+  )
+}
 
 const attrs = useAttrs()
 const root = useTemplateRef<HTMLPreElement>('root')

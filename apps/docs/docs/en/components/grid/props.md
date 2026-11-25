@@ -93,6 +93,8 @@ interface GridResponsiveColumns {
 }
 ```
 
+In a container narrower than `minWidth`, the single column shrinks to the container width instead of overflowing it.
+
 `SpacingStep` accepts these values:
 
 ```ts

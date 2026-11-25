@@ -78,6 +78,8 @@
   }
 
   .astryx-calendar-weekday {
+    /* 最小宽度而不是固定宽度：星期名变大时撑宽自己这一列。 */
+    min-width: var(--astryx-input-height-md, 32px);
     /* 同原版：星期表头行比日期行高 4px。 */
     height: calc(var(--astryx-input-height-md, 32px) + 4px);
     color: var(--astryx-color-text-secondary, #525252);
@@ -139,6 +141,38 @@
   .astryx-calendar-grid[data-week-numbers] .astryx-calendar-weekdays,
   .astryx-calendar-grid[data-week-numbers] .astryx-calendar-row {
     grid-template-columns: var(--astryx-spacing-6, 24px) repeat(7, var(--astryx-input-height-md, 32px));
+  }
+
+  /*
+   * 支持 subgrid 时，星期行和各个日期行共用月份网格的同一套列。列不会比它最宽的
+   * 格子窄，星期名也算在内：主题调大文字或调小元素尺寸时，星期名把整列撑宽，
+   * 不会挤进隔壁那一列。
+   */
+  @supports (grid-template-columns: subgrid) {
+    .astryx-calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(min-content, 1fr));
+    }
+
+    /* 带周数时日期列不拉伸：网格按内容取宽、居中，七列一样宽，宽度取最宽的那一格。 */
+    .astryx-calendar-grid[data-week-numbers] {
+      grid-template-columns: var(--astryx-spacing-6, 24px) repeat(7, minmax(min-content, 1fr));
+      width: fit-content;
+      margin-inline: auto;
+    }
+
+    .astryx-calendar-grid[data-week-numbers] .astryx-calendar-weekday:first-child {
+      min-width: 0;
+    }
+
+    /* 写在带周数的固定列规则之后，同等权重下 subgrid 生效。 */
+    .astryx-calendar-grid .astryx-calendar-weekdays,
+    .astryx-calendar-grid .astryx-calendar-row,
+    .astryx-calendar-grid[data-week-numbers] .astryx-calendar-weekdays,
+    .astryx-calendar-grid[data-week-numbers] .astryx-calendar-row {
+      grid-column: 1 / -1;
+      grid-template-columns: subgrid;
+    }
   }
 
   .astryx-calendar-week-number {

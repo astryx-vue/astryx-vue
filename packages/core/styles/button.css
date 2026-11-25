@@ -127,8 +127,12 @@
     --_button-border-style: var(--astryx-button-primary-border-style, var(--astryx-button-border-style, solid));
     --_button-border-color: var(--astryx-button-primary-border-color, var(--astryx-button-border-color, transparent));
 
-    color: var(--astryx-button-primary-foreground, #fff);
-    background-color: var(--astryx-button-primary-background, #262626);
+    /* 底色和文字这一对传给按钮内容：里面的中性 Badge 反过来用，对比度就够。 */
+    --_button-fill: var(--astryx-button-primary-background, #262626);
+    --_button-on-fill: var(--astryx-button-primary-foreground, #fff);
+
+    color: var(--_button-on-fill);
+    background-color: var(--_button-fill);
   }
 
   /* 主题的次要按钮可以带描边、带自己的悬停叠层；次要样式的选择器类组件复用这几条。 */
@@ -157,8 +161,11 @@
     --_button-border-style: var(--astryx-button-destructive-border-style, var(--astryx-button-border-style, solid));
     --_button-border-color: var(--astryx-button-destructive-border-color, var(--astryx-button-border-color, transparent));
 
-    color: var(--astryx-button-destructive-foreground, var(--astryx-color-on-error, light-dark(#ffffff, #0a1317)));
-    background-color: var(--astryx-button-destructive-background, var(--astryx-color-error, light-dark(#e3193b, #f5394f)));
+    --_button-fill: var(--astryx-button-destructive-background, var(--astryx-color-error, light-dark(#e3193b, #f5394f)));
+    --_button-on-fill: var(--astryx-button-destructive-foreground, var(--astryx-color-on-error, light-dark(#ffffff, #0a1317)));
+
+    color: var(--_button-on-fill);
+    background-color: var(--_button-fill);
   }
 
   @media (hover: hover) {
