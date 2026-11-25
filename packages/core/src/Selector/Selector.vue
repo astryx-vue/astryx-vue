@@ -14,7 +14,7 @@ import StatusGlyph from '../Field/StatusGlyph.vue'
 import { fieldStatusPlacement } from '../Field/statusPlacement.js'
 import Icon from '../Icon/Icon.vue'
 import { useIndicator } from '../Indicator/useIndicator.js'
-import { useInputGroupContext } from '../InputGroup/context.js'
+import { useInputGroupContext, useInputGroupDisabled } from '../InputGroup/context.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { useAstryxMessages } from '../locale/index.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
@@ -86,8 +86,9 @@ const resolvedEmptyText = computed(() => props.emptyText ?? messages.value.selec
 const resolvedEmptySearchText = computed(() => props.emptySearchText ?? messages.value.selector.emptySearch)
 const inputGroup = useInputGroupContext()
 const inGroup = computed(() => inputGroup != null)
+const groupDisabled = useInputGroupDisabled(() => props.disabled)
 const control = useFieldControlState({
-  disabled: () => props.disabled || (inputGroup?.disabled.value ?? false),
+  disabled: () => groupDisabled.value,
   readOnly: () => props.isReadOnly,
   loading: () => props.isLoading,
 })

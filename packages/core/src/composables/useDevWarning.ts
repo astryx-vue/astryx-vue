@@ -1,10 +1,6 @@
 import type { MaybeRefOrGetter } from 'vue'
 import { toValue, watch } from 'vue'
-
-/** 生产构建里 `import.meta.env.DEV` 是 false，这两个函数整段会被摇掉。 */
-function isDevBuild(): boolean {
-  return (import.meta as ImportMeta & { env?: { DEV?: boolean } }).env?.DEV === true
-}
+import { isDevBuild } from './internal/devBuild.js'
 
 /**
  * 对应原版 Astryx 的 `devWarn`。

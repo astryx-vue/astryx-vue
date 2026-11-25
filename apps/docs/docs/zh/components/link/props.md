@@ -77,7 +77,7 @@ footer: false
         <td><code>isDisabled</code></td>
         <td><code>boolean</code></td>
         <td><code>false</code></td>
-        <td>是否禁用。</td>
+        <td>是否禁用。禁用后不能跳转，也不触发 <code>click</code>；它保留 Tab 焦点位置，读屏会读出「已禁用」。调用方传的 <code>role</code> 或 <code>aria-disabled</code> 不会替换掉这一点，调用方传的 <code>tabindex</code> 照常生效。</td>
       </tr>
       <tr>
         <td><code>target</code></td>
@@ -149,6 +149,6 @@ footer: false
 
 - HTML 属性。
 - `aria-*` 属性。
-- `data-*` 属性。
+- `data-*` 属性。`data-color` 始终反映 `color`，调用方传的同名值不会替换它。
 - `class`。
 - `style`。

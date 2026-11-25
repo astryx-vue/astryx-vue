@@ -43,7 +43,12 @@
     border-end-start-radius: var(--astryx-radius-element, 0.625rem);
   }
 
-  .astryx-button-group[data-orientation='horizontal'] > .astryx-button:last-child {
+  /*
+   * 末尾成员：最后一个不是弹出层、<template> 或 <dialog> 的兄弟。调用方放在组里的
+   * 弹出层不算成员，末尾按钮照样圆角。用 :nth-last-child(1 of S) 而不是
+   * 「后面没有成员兄弟」这类相对兄弟的 :has() 写法：后者在 WebKit 里每插入一个子元素都要回头重算前面所有兄弟。
+   */
+  .astryx-button-group[data-orientation='horizontal'] > .astryx-button:nth-last-child(1 of :not([popover], template, dialog)) {
     border-start-end-radius: var(--astryx-radius-element, 0.625rem);
     border-end-end-radius: var(--astryx-radius-element, 0.625rem);
   }
@@ -57,7 +62,7 @@
     border-start-end-radius: var(--astryx-radius-element, 0.625rem);
   }
 
-  .astryx-button-group[data-orientation='vertical'] > .astryx-button:last-child {
+  .astryx-button-group[data-orientation='vertical'] > .astryx-button:nth-last-child(1 of :not([popover], template, dialog)) {
     border-end-start-radius: var(--astryx-radius-element, 0.625rem);
     border-end-end-radius: var(--astryx-radius-element, 0.625rem);
   }
@@ -85,5 +90,19 @@
 
   .astryx-button-group[data-orientation='vertical'][data-press-tracking] {
     touch-action: pan-x pinch-zoom;
+  }
+
+  @media (forced-colors: active) {
+    /*
+     * 强制配色下实心按钮各自画一圈边。相邻两个按钮的边会叠成双线，所以末尾成员以外
+     * 都不画结束边，接缝只留下一个按钮的起始边（即组的分隔线）。组的外沿仍然完整。
+     */
+    .astryx-button-group[data-orientation='horizontal'] > .astryx-button:not(:nth-last-child(1 of :not([popover], template, dialog))) {
+      border-inline-end-width: 0;
+    }
+
+    .astryx-button-group[data-orientation='vertical'] > .astryx-button:not(:nth-last-child(1 of :not([popover], template, dialog))) {
+      border-block-end-width: 0;
+    }
   }
 }

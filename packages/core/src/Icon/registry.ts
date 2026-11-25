@@ -48,10 +48,38 @@ interface IconQueueHost {
   [ASTRYX_ICON_QUEUE]?: Array<[string, IconifyIcon]>
 }
 
-const icons = new Map<string, IconifyIcon>()
-const collections = new Map<string, IconifyCollection>()
-const prefixes = new Set<string>()
-const missingWarnings = new Set<string>()
+interface IconRegistryState {
+  icons: Map<string, IconifyIcon>
+  collections: Map<string, IconifyCollection>
+  prefixes: Set<string>
+  missingWarnings: Set<string>
+}
+
+const REGISTRY_KEY = Symbol.for('@astryx-vue/core/icon-registry/v1')
+
+type RegistryHost = typeof globalThis & { [REGISTRY_KEY]?: IconRegistryState }
+
+/**
+ * One registry per page. Every copy of this package loaded on the page, such
+ * as a copied component that imports its own `Icon`, reads the icons another
+ * copy registered.
+ */
+function sharedRegistry(): IconRegistryState {
+  const host = globalThis as RegistryHost
+  const existing = host[REGISTRY_KEY]
+  if (existing != null)
+    return existing
+  const state: IconRegistryState = {
+    icons: new Map(),
+    collections: new Map(),
+    prefixes: new Set(),
+    missingWarnings: new Set(),
+  }
+  Object.defineProperty(host, REGISTRY_KEY, { value: state, configurable: true })
+  return state
+}
+
+const { icons, collections, prefixes, missingWarnings } = sharedRegistry()
 
 export function knownPrefixes(): string[] {
   return [...prefixes]

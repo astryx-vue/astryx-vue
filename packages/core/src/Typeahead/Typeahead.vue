@@ -6,6 +6,7 @@ import { computed, provide, useAttrs, useId, useTemplateRef } from 'vue'
 import { useResolvedLabelHidden } from '../composables/useResolvedLabelHidden.js'
 import Field from '../Field/Field.vue'
 import { useFieldPartStyling } from '../Field/fieldParts.js'
+import { useInputGroupDisabled } from '../InputGroup/context.js'
 import BaseTypeahead from './BaseTypeahead.vue'
 import { typeaheadChromeKey } from './context.js'
 import '../../styles/typeahead.css'
@@ -49,6 +50,7 @@ const disabledMessage = computed(() => {
   return message?.trim() ? message : undefined
 })
 /** 两个名字都是真才画清除按钮，任一个关掉就关掉。 */
+const isDisabled = useInputGroupDisabled(() => props.disabled)
 const showsClear = computed(() => props.hasClear && props.clearable)
 /** 两个名字任一为真就在聚焦时先展开。 */
 const showsEntriesOnFocus = computed(() => props.hasEntriesOnFocus || props.showOnFocus)
@@ -78,7 +80,7 @@ defineExpose({
     :description="props.description"
     :label-tooltip="props.labelTooltip"
     :is-label-hidden="hideLabel"
-    :is-disabled="props.disabled"
+    :is-disabled="isDisabled"
     :is-required="props.required"
     :is-optional="props.optional"
     :status="fieldStatus"
@@ -95,7 +97,7 @@ defineExpose({
         :input-id="field.inputId"
         :described-by="field.describedBy"
         :placeholder="props.placeholder"
-        :disabled="props.disabled"
+        :disabled="isDisabled"
         :disabled-reason="disabledMessage"
         :status="props.status"
         :size="props.size"

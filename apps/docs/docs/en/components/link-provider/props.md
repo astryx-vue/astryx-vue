@@ -17,7 +17,7 @@ footer: false
 
 <div class="component-api-table" role="region" aria-label="LinkProvider slots" tabindex="0">
 <table><thead><tr><th>Slot</th><th>Description</th></tr></thead><tbody>
-<tr><td><code>default</code></td><td>Content rendered with the link provider.</td></tr>
+<tr><td><code>default</code></td><td>The subtree. Links in it use <code>component</code> unless a link sets its own <code>as</code> or a nearer <code>LinkProvider</code> sets another component. A disabled <code>Link</code> does not use it.</td></tr>
 </tbody></table>
 </div>
 

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { CitationProps } from './types.js'
 import { computed, useTemplateRef } from 'vue'
+import { devPropError, isDevBuild } from '../composables/internal/devBuild.js'
 import Icon from '../Icon/Icon.vue'
 import { isSafeUrl } from '../Link/safeUrl.js'
 import { useAstryxMessages } from '../locale/index.js'
@@ -11,6 +12,14 @@ defineOptions({ name: 'AstryxCitation', inheritAttrs: false })
 const props = withDefaults(defineProps<CitationProps>(), {
   variant: 'label',
 })
+
+if (isDevBuild() && props.source == null) {
+  throw devPropError(
+    'Citation',
+    'source',
+    'is required, for example :source="{ title: \'Annual report\', url: \'https://example.com/report\' }". Citation does not read slot content.',
+  )
+}
 
 const messages = useAstryxMessages()
 const root = useTemplateRef<HTMLElement>('root')

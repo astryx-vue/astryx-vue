@@ -114,8 +114,37 @@ describe('kbd', () => {
       keys: 'ctrl+alt+shift+enter+backspace+tab+up+down+left+right',
     })
 
-    expect(badgeTexts(wrapper)).toEqual(['\u2303', '\u2325', '\u21E7', '\u21B5', '\u232B', '\u21E5', '\u2191', '\u2193', '\u2190', '\u2192'])
+    expect(badgeTexts(wrapper)).toEqual(['Ctrl', 'Alt', 'Shift', '\u21B5', '\u232B', '\u21E5', '\u2191', '\u2193', '\u2190', '\u2192'])
     expect(accessibleName(wrapper)).toBe('Control + Alt + Shift + Enter + Backspace + Tab + Up arrow + Down arrow + Left arrow + Right arrow')
+  })
+
+  it('shows ctrl, alt, shift and meta as text off Apple platforms', async () => {
+    const wrapper = await mountKbd({ keys: 'ctrl+alt+shift+meta' })
+
+    expect(badgeTexts(wrapper)).toEqual(['Ctrl', 'Alt', 'Shift', 'Win'])
+    expect(accessibleName(wrapper)).toBe('Control + Alt + Shift + META')
+  })
+
+  it('shows Apple modifier symbols, with meta as the Command key, on Apple platforms', async () => {
+    setPlatform('MacIntel')
+    const wrapper = await mountKbd({ keys: 'ctrl+alt+shift+meta' })
+
+    expect(badgeTexts(wrapper)).toEqual(['\u2303', '\u2325', '\u21E7', '\u2318'])
+    expect(accessibleName(wrapper)).toBe('Control + Alt + Shift + META')
+  })
+
+  it('paints the modifier text before the platform is read, even on a Mac', () => {
+    setPlatform('MacIntel')
+    const wrapper = mount(Kbd, { props: { keys: 'mod+shift+meta' } })
+
+    expect(badgeTexts(wrapper)).toEqual(['Ctrl', 'Shift', 'Win'])
+  })
+
+  it('names the prop and the fix in development when keys is not a string', () => {
+    for (const keys of [undefined, ['mod', 'k']]) {
+      expect(() => mount(Kbd, { props: { keys } as unknown as KbdProps, slots: { default: '\u2318K' } }))
+        .toThrow('Kbd: `keys` must be a string of keys joined by "+", for example <Kbd keys="mod+k" />. Kbd does not read slot content.')
+    }
   })
 
   it('renders escape as a word, because the glyph is not legible', async () => {
@@ -158,7 +187,7 @@ describe('kbd', () => {
   it('renders plus as a literal key', async () => {
     const wrapper = await mountKbd({ keys: 'shift+plus' })
 
-    expect(badgeTexts(wrapper)).toEqual(['\u21E7', '+'])
+    expect(badgeTexts(wrapper)).toEqual(['Shift', '+'])
     expect(accessibleName(wrapper)).toBe('Shift + Plus')
   })
 
@@ -209,7 +238,7 @@ describe('kbd', () => {
     keys.value = 'mod+shift+p'
     await nextTick()
 
-    expect(badgeTexts(wrapper)).toEqual(['Ctrl', '\u21E7', 'P'])
+    expect(badgeTexts(wrapper)).toEqual(['Ctrl', 'Shift', 'P'])
     expect(accessibleName(wrapper)).toBe('Control + Shift + P')
   })
 

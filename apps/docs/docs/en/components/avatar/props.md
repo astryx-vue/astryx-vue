@@ -41,7 +41,7 @@ footer: false
         <td><code>size</code></td>
         <td><code>AvatarSize</code></td>
         <td><code>'md'</code></td>
-        <td>Avatar size. Named size or numeric pixel value. See the table below for named sizes.</td>
+        <td>Avatar size: a named size or one of the numeric pixel values listed below. Inside an <code>AvatarGroup</code> the group's size always wins, including the group's default.</td>
       </tr>
       <tr>
         <td><code>shape</code></td>
@@ -89,11 +89,11 @@ footer: false
 
 ### Numeric sizes
 
-The `AvatarSize` type lists common pixel values for type hints and autocompletion:
+A numeric `size` must be one of the pixel values the `AvatarSize` type lists:
 
 `16 | 20 | 24 | 32 | 36 | 40 | 48 | 60 | 64 | 72 | 96 | 128 | 144 | 180`
 
-The component does not restrict you to these values. Passing any number will still render the avatar at that pixel size.
+Any other number is a type error.
 
 ## Avatar Slots
 

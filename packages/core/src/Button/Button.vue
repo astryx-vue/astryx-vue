@@ -6,6 +6,7 @@ import { pressGroupItemProps } from '../composables/internal/useActionGroupTrack
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { provideIconSize } from '../Icon/context.js'
 import Icon from '../Icon/Icon.vue'
+import { useInputGroupDisabled } from '../InputGroup/context.js'
 import { readLayerScoped } from '../layer/scopedProvide.js'
 import { isSafeUrl } from '../Link/safeUrl.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
@@ -59,7 +60,8 @@ const effectiveSize = useSize(() => props.size ?? group?.size.value)
 /** 小、中按钮里的图标是 16px，大按钮是 20px。插槽里没写尺寸的图标跟着走。 */
 provideIconSize(computed(() => effectiveSize.value === 'lg' ? 'md' : 'sm'))
 const isGroupDisabled = computed(() => group?.isDisabled.value ?? false)
-const isLocallyDisabled = computed(() => props.isDisabled || isGroupDisabled.value)
+// InputGroup 里的附加按钮跟着组一起禁用。
+const isLocallyDisabled = useInputGroupDisabled(() => props.isDisabled || isGroupDisabled.value)
 const isInterruptible = computed(() => props.isInterruptible)
 const explicitLoading = computed(() => props.isLoading)
 

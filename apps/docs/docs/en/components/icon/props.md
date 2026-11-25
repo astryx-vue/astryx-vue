@@ -12,7 +12,8 @@ footer: false
 <tr><td><code>name</code></td><td><code>string</code></td><td>—</td><td>Iconify id, <code>collection:icon</code>. <code>carbon-settings</code> is the same as <code>carbon:settings</code> after the carbon collection is registered. Hyphenated collection names should keep the colon.</td></tr>
 <tr><td><code>icon</code></td><td><code>string | Component</code></td><td>—</td><td>A semantic name, a CSS icon class, or your own component. A semantic name resolves to an Iconify id from the nearest theme, and falls back to the built-in glyph until that icon is registered. Ignored when <code>name</code> is set.</td></tr>
 <tr><td><code>color</code></td><td><code>'inherit' | 'primary' | 'secondary' | 'tertiary' | 'disabled' | 'accent' | 'success' | 'error' | 'warning' | 'blue' | 'cyan' | 'green' | 'gray' | 'orange' | 'pink' | 'purple' | 'red' | 'teal' | 'yellow'</code></td><td><code>'inherit'</code></td><td>Sets the color the icon's <code>currentColor</code> resolves to. <code>inherit</code> keeps the surrounding text color.</td></tr>
-<tr><td><code>size</code></td><td><code>'xsm' | 'sm' | 'md' | 'lg'</code></td><td>—</td><td>12px, 16px, 20px, or 24px at a 16px root. When omitted, a <code>name</code> icon is <code>1em</code>. Any other icon falls back to <code>md</code> unless a parent provides a size.</td></tr>
+<tr><td><code>size</code></td><td><code>'xsm' | 'sm' | 'md' | 'lg'</code></td><td>—</td><td>12px, 16px, 20px, or 24px at a 16px root. When omitted, a <code>name</code> icon is <code>1em</code>. Any other icon falls back to <code>md</code> unless a parent provides a size. A theme sets a size's dimension with <code>width</code> and <code>height</code>, in px or rem, on <code>components.icon['size:sm']</code> and the other sizes.</td></tr>
+<tr><td><code>variant</code></td><td><code>IconVariant</code></td><td>—</td><td>Asks the nearest theme for alternate artwork of a semantic name, such as <code>filled</code>. The theme's function entry receives it only when the theme lists it in <code>iconVariants</code>; otherwise the normal artwork draws. Never written to the DOM.</td></tr>
 <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>Accessible name for a meaningful icon. Sets <code>role="img"</code> and <code>aria-label</code>. Omit it for decoration (<code>aria-hidden="true"</code>). An empty string stays decorative.</td></tr>
 </tbody></table>
 </div>
@@ -84,6 +85,48 @@ A theme overrides it through the same `icons` map: `defineTheme({ icons: { 'numb
 
 `useSemanticIcon(name)` comes from `@astryx-vue/core/Icon` and from the package root. An unknown string with no theme entry returns empty, so the caller can still treat it as a CSS class.
 
+### Entries that depend on the size
+
+An entry in `icons` can be a function of `{ size, variant }` that returns an Iconify id. `Icon` calls it with the size it renders at, so a theme can draw a bolder glyph at `sm`. The function's answer is final: `null` draws nothing instead of falling back to the default id. `theme.icons` and `useSemanticIcon` read a function at `md`.
+
+```ts
+const brand = defineTheme({
+  name: 'brand',
+  iconVariants: ['outline', 'filled'],
+  icons: {
+    info: ({ size, variant }) => variant === 'filled'
+      ? 'mdi:information'
+      : size === 'sm' ? 'carbon:information-filled' : 'carbon:information',
+  },
+})
+```
+
+`iconVariants` lists the variant names the whole theme supports. A child theme inherits the list unless it sets its own, which replaces it. An inherited function receives only the variants its own theme listed. Declare the names an application uses by augmenting `IconVariantMap` from `@astryx-vue/core/Icon`.
+
+### Component icon slots
+
+A slot names why an icon appears in one component. `defineTheme({ componentIcons })` maps a slot to a shared name without changing that name's artwork everywhere else. A value is a shared name, `null` to hide the glyph, a partial `{ icon, variant, size }` request, or a pure function of the slot's state that returns one. A field the request leaves out keeps the component's own value, and a malformed field is ignored with one development warning.
+
+<div class="component-api-table" role="region" aria-label="Component icon slots" tabindex="0">
+<table><thead><tr><th>Slot</th><th>State</th><th>Fallback</th><th>With <code>null</code></th></tr></thead><tbody>
+<tr><td><code>code-block-copy</code></td><td><code>{ copied }</code></td><td><code>copy</code>, then <code>check</code> while copied</td><td>The copy button keeps its name, tooltip, and action.</td></tr>
+<tr><td><code>timestamp-copy</code></td><td><code>{ copied }</code></td><td><code>copy</code>, then <code>check</code> while copied</td><td>The hover card's copy button keeps its name and action.</td></tr>
+<tr><td><code>table-sort-indicator</code></td><td><code>{ direction }</code>: <code>ascending</code>, <code>descending</code>, or <code>none</code></td><td><code>arrowDown</code> descending, otherwise <code>arrowUp</code></td><td>The sort control keeps its label and sorting, the header keeps <code>aria-sort</code>, and no gap is left beside the label.</td></tr>
+<tr><td><code>table-row-expand</code></td><td><code>{ expanded }</code></td><td><code>chevronRight</code>, turned while expanded</td><td>The toggle keeps its size, name, and <code>aria-expanded</code>. A larger glyph keeps the row height.</td></tr>
+</tbody></table>
+</div>
+
+```ts
+defineTheme({
+  name: 'brand',
+  componentIcons: {
+    'code-block-copy': ({ copied }) => ({ icon: copied ? 'checkDouble' : 'copy' }),
+  },
+})
+```
+
+`theme.componentIcons` reads back the names, `null` values, and static requests, and leaves out the slots a function resolves.
+
 ## Theme
 
 Color follows the icon tokens. A theme replaces one by setting the variable on the theme root.
@@ -108,3 +151,5 @@ Color follows the icon tokens. A theme replaces one by setting the variable on t
 The root is a `<span>`. Without `label` it is `aria-hidden="true"`. With a non-empty `label` it is `role="img"` and that string is the accessible name. The SVG inside is always `aria-hidden`.
 
 `class` and `style` fall through to the root. `name` does not: it selects the icon.
+
+A template ref on `Icon` exposes `element`, the root box, and `svg`, the rendered `<svg>`. `svg` is `null` while the glyph has no `<svg>`, such as a built-in glyph, and follows the glyph when it changes.

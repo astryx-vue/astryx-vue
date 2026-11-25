@@ -16,7 +16,9 @@ import { carouselCards, carouselSnap } from '../../../../components/demos/carous
 
 `gap` is a spacing step (`0`, `0.5`, `1`, `1.5`, `2`, `3`, or `4`). `padding` uses the same scale and also sets scroll-padding, so a snap point lines up with the content edge. `hasSnap` snaps each child to the start edge. `hasEdgeFade` masks the edge that still has overflow.
 
-`hasButtons` shows previous and next controls when there is something to scroll. A button that cannot move is hidden and disabled. If that button had focus, focus moves to the other one. `hasLoop` wraps from the last item to the first, and the buttons stay available at both ends while the row overflows. Shift plus the wheel scrolls sideways.
+`hasButtons` shows previous and next controls when there is something to scroll. A button that cannot move is hidden and leaves the Tab order. If that button had focus, focus moves to the scroll area without scrolling it. `hasLoop` wraps from the last item to the first, and the buttons stay available at both ends while the row overflows. Shift plus one wheel notch scrolls the row sideways, once.
+
+The scroll area is a group named like the carousel. It is a Tab stop only while its content overflows, and the arrow keys scroll it. Its focus ring is drawn by the carousel, above the edge fade, and the buttons sit just inside it.
 
 The component exposes `scrollNext`, `scrollPrev`, `scrollTo`, `canScrollNext`, and `canScrollPrev` on the template ref.
 

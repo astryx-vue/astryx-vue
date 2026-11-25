@@ -22,7 +22,7 @@ export interface AvatarProps {
    */
   name?: string
   /**
-   * The size of the avatar. Can be a named size or a pixel value.
+   * The size of the avatar: a named size or one of the listed pixel values.
    * @default 'md'
    */
   size?: AvatarSize

@@ -1,5 +1,5 @@
 import type { Ref } from 'vue'
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 export interface CarouselOverflow {
   hasOverflow: boolean
@@ -43,6 +43,44 @@ export function readOverflow(element: HTMLElement): CarouselOverflow {
   }
 }
 
+/**
+ * 除了滚动，还有这些会改变一行是否溢出：滚动区自己的尺寸、每张卡片的尺寸、
+ * 卡片的增删、滚动区的 class 或 style（换了间距或内边距）。返回停止观察的函数。
+ */
+function observeContent(element: HTMLElement, onChange: () => void): () => void {
+  const resize = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(onChange)
+  const observed = new Set<Element>()
+  function followChildren(): void {
+    const children = new Set(element.children)
+    for (const child of observed) {
+      if (!children.has(child)) {
+        resize?.unobserve(child)
+        observed.delete(child)
+      }
+    }
+    for (const child of children) {
+      if (!observed.has(child)) {
+        resize?.observe(child)
+        observed.add(child)
+      }
+    }
+  }
+  resize?.observe(element)
+  followChildren()
+  const mutations = typeof MutationObserver === 'undefined'
+    ? null
+    : new MutationObserver(() => {
+        followChildren()
+        onChange()
+      })
+  mutations?.observe(element, { childList: true, attributes: true, attributeFilter: ['class', 'style'] })
+  return () => {
+    mutations?.disconnect()
+    resize?.disconnect()
+    observed.clear()
+  }
+}
+
 export function useCarouselScroller(scroller: Ref<HTMLElement | null>): {
   measure: () => void
   onKeyDown: (event: KeyboardEvent, hasLoop: boolean) => void
@@ -52,7 +90,7 @@ export function useCarouselScroller(scroller: Ref<HTMLElement | null>): {
 } {
   const overflow = ref<CarouselOverflow>({ hasOverflow: false, overflowStart: false, overflowEnd: false })
   let frame = 0
-  let observer: ResizeObserver | null = null
+  let stopObservingContent: (() => void) | null = null
 
   function measure(): void {
     const element = scroller.value
@@ -111,15 +149,28 @@ export function useCarouselScroller(scroller: Ref<HTMLElement | null>): {
     element.scrollBy({ left: delta, behavior })
   }
 
+  // 鼠标滚轮只给 deltaY，按住 Shift 滚轮是横向滚动的惯例；触控板自带 deltaX，交给浏览器。
+  // 这里用原生的非被动监听，才能拦下浏览器自己的那一下，让一格滚轮只滚一次。
+  // 只在内容溢出时挂监听，所以放得下的一行不会让页面滚动等脚本；监听里也不读样式和布局。
   function onWheel(event: WheelEvent): void {
-    if (!event.shiftKey || event.deltaY === 0 || event.deltaX !== 0)
-      return
-    const element = scroller.value
-    if (element == null || element.scrollWidth <= element.clientWidth)
+    if (event.defaultPrevented || !event.shiftKey || event.deltaY === 0 || event.deltaX !== 0)
       return
     event.preventDefault()
-    element.scrollBy({ left: event.deltaY, behavior: 'auto' })
+    scroller.value?.scrollBy({ left: event.deltaY, behavior: 'auto' })
   }
+
+  let wheelTarget: HTMLElement | null = null
+
+  function syncWheelListener(): void {
+    const next = overflow.value.hasOverflow ? scroller.value : null
+    if (next === wheelTarget)
+      return
+    wheelTarget?.removeEventListener('wheel', onWheel)
+    next?.addEventListener('wheel', onWheel, { passive: false })
+    wheelTarget = next
+  }
+
+  watch(() => overflow.value.hasOverflow, syncWheelListener)
 
   function onKeyDown(event: KeyboardEvent, hasLoop: boolean): void {
     if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight')
@@ -138,19 +189,16 @@ export function useCarouselScroller(scroller: Ref<HTMLElement | null>): {
     if (element == null)
       return
     measure()
+    syncWheelListener()
     element.addEventListener('scroll', schedule, { passive: true })
-    element.addEventListener('wheel', onWheel, { passive: false })
-    observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(schedule)
-    observer?.observe(element)
-    for (const child of element.children)
-      observer?.observe(child)
+    stopObservingContent = observeContent(element, schedule)
   })
 
   onBeforeUnmount(() => {
-    const element = scroller.value
-    element?.removeEventListener('scroll', schedule)
-    element?.removeEventListener('wheel', onWheel)
-    observer?.disconnect()
+    scroller.value?.removeEventListener('scroll', schedule)
+    wheelTarget?.removeEventListener('wheel', onWheel)
+    wheelTarget = null
+    stopObservingContent?.()
     if (frame !== 0 && typeof cancelAnimationFrame === 'function')
       cancelAnimationFrame(frame)
   })
