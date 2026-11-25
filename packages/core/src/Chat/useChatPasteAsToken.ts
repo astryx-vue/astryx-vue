@@ -1,5 +1,7 @@
 import type { Ref } from 'vue'
 import type { ChatComposerInputHandle, ChatComposerToken } from './types.js'
+import { useAstryxMessages } from '../locale/context.js'
+import { chatMessages } from '../locale/messages/chat.js'
 
 export const PASTE_TOKEN_THRESHOLD = 200
 
@@ -20,23 +22,24 @@ export interface UseChatPasteAsTokenReturn {
   onPaste: (text: string) => boolean
 }
 
-export function pastedTextLabel(text: string): string {
-  const lines = text.split('\n').length
-  const chars = text.length
-  return lines > 1 ? `${lines} lines, ${chars} chars` : `${chars} chars`
-}
+/** 粘贴文本的行数和字符数写成一句计数。 */
+export type PastedTextLabelFormat = (lines: number, chars: number) => string
 
-function defaultToToken(text: string): ChatComposerToken {
-  return {
-    value: text,
-    label: pastedTextLabel(text),
-    variant: 'neutral',
-  }
+/**
+ * 粘贴文本小块上的计数。`format` 决定怎么写，组件传当前语言的文案；不传时用英文。
+ */
+export function pastedTextLabel(text: string, format: PastedTextLabelFormat = chatMessages.en.pastedTextLabel): string {
+  return format(text.split('\n').length, text.length)
 }
 
 export function useChatPasteAsToken(options: UseChatPasteAsTokenOptions): UseChatPasteAsTokenReturn {
   const threshold = options.threshold ?? PASTE_TOKEN_THRESHOLD
-  const toToken = options.toToken ?? defaultToToken
+  const messages = useAstryxMessages()
+  const toToken = options.toToken ?? ((text: string): ChatComposerToken => ({
+    value: text,
+    label: pastedTextLabel(text, messages.value.chat.pastedTextLabel),
+    variant: 'neutral',
+  }))
 
   function onPaste(text: string): boolean {
     if (text.length <= threshold)

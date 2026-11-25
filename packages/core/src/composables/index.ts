@@ -86,7 +86,7 @@ export { useFieldControlState } from './useFieldControlState.js'
 export type { FieldControlState, FieldControlStateInput } from './useFieldControlState.js'
 
 export { formatFileSize, selectFiles } from './useFileSelection.js'
-export type { FileRejection, FileSelectionOptions, FileSelectionResult } from './useFileSelection.js'
+export type { FileRejection, FileSelectionOptions, FileSelectionResult, FileSizeUnits } from './useFileSelection.js'
 
 export { useFocusTrap } from './useFocusTrap.js'
 export type { FocusTrap, UseFocusTrapOptions } from './useFocusTrap.js'

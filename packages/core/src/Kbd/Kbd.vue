@@ -2,7 +2,8 @@
 import type { CSSProperties } from 'vue'
 import type { KbdProps } from './types.js'
 import { computed, useAttrs } from 'vue'
-import { parseShortcut } from './keys.js'
+import { useAstryxMessages } from '../locale/context.js'
+import { parseShortcut, shortcutLabel } from './keys.js'
 import { useIsApplePlatform } from './platform.js'
 import '../../styles/kbd.css'
 
@@ -12,10 +13,11 @@ const props = defineProps<KbdProps>()
 
 const attrs = useAttrs()
 const isApple = useIsApplePlatform()
+const messages = useAstryxMessages()
 
-const keys = computed(() => parseShortcut(props.keys, isApple.value))
+const keys = computed(() => parseShortcut(props.keys, isApple.value, messages.value.kbd))
 
-const accessibleName = computed(() => keys.value.map(key => key.label).join(' + '))
+const accessibleName = computed(() => shortcutLabel(keys.value, messages.value.kbd))
 
 const controlledAttrs = new Set(['class', 'style', 'role', 'aria-label'])
 
