@@ -15,7 +15,7 @@ import { toggleButtonGroupSelection, toggleButtonGroupVertical } from '../../../
 
 `type="single"` keeps one button pressed. Pressing it again clears the selection, and the value is `null`. `type="multiple"` presses buttons independently, and the value is a list. `orientation` is `horizontal` or `vertical`. `label` is the group's accessible name.
 
-On a touch-first device such as a phone or tablet, a finger or a pen can press a toggle and slide across the others; only the toggle under it at the lift changes, and lifting outside the group changes nothing. A mouse press acts as a native toggle's. A toggle without a `value` keeps its own press.
+On a touch-first device such as a phone or tablet, a finger or a pen can press a toggle and slide across the others; only the toggle under it at the lift changes, and lifting outside the group changes nothing. A mouse press acts as a native toggle's. A toggle without a `value` keeps its own press. The group grows its toggles' tap targets toward 44 px, stopping halfway to the nearest interactive neighbor outside the group; a tap in that band goes to the nearest toggle.
 
 ```vue
 <script setup lang="ts">
