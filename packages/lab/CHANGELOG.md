@@ -1,5 +1,11 @@
 # @astryx-vue/lab
 
+## 0.6.4
+
+### Patch Changes
+
+- [#522](https://github.com/astryx-vue/astryx-vue/pull/522) [`37d0df4`](https://github.com/astryx-vue/astryx-vue/commit/37d0df4b4e16b31b14bf47cc52f3be2ac44d8586) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - lab 的组件打包时只带自己用到的文案；ListInput 在第一条或最后一条上继续按方向键时，读屏会念出“已经在最前/最后”的提示，不再念出文案键名。
+
 ## 0.6.3
 
 ### Patch Changes
