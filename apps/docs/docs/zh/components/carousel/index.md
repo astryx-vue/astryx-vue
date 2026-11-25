@@ -16,7 +16,9 @@ import { carouselCards, carouselSnap } from '../../../../components/demos/carous
 
 `gap` 是间距档（`0`、`0.5`、`1`、`1.5`、`2`、`3`、`4`）。`padding` 用同一套档位，并同时设置 scroll-padding，吸附点会和内容边缘对齐。`hasSnap` 让每一项贴到起始边。`hasEdgeFade` 在仍有溢出的那一侧加上渐隐。
 
-`hasButtons` 在还能滚动时显示上一张和下一张。不能再滚的那一侧按钮会隐藏并禁用。如果焦点正在这个按钮上，会移到另一侧。`hasLoop` 从最后一项回到第一项，内容溢出时两端按钮都保持可用。按住 Shift 滚动滚轮会改成横向滚动。
+`hasButtons` 在还能滚动时显示上一张和下一张。不能再滚的那一侧按钮会隐藏，也不再是 Tab 停靠点。如果焦点正在这个按钮上，会移到滚动区，滚动位置不变。`hasLoop` 从最后一项回到第一项，内容溢出时两端按钮都保持可用。按住 Shift 拨一格滚轮，这一行横向滚一次。
+
+滚动区是一个和轮播同名的分组。只有内容溢出时它才是 Tab 停靠点，聚焦后用左右方向键滚动。它的焦点环由轮播画在边缘渐隐之上，两侧按钮收在焦点环以内。
 
 模板 ref 上可以调用 `scrollNext`、`scrollPrev`、`scrollTo`、`canScrollNext`、`canScrollPrev`。
 

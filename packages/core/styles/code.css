@@ -180,6 +180,12 @@
     overflow: auto;
   }
 
+  /* 外层为了圆角会裁切溢出，所以代码视口的键盘焦点环向内收一个环宽，完整画在自己框内。 */
+  .astryx-code-block__scroll:focus-visible {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, var(--astryx-color-accent, #0074e2));
+    outline-offset: calc(-1 * var(--astryx-focus-outline-width, 2px));
+  }
+
   .astryx-code-block__wrap {
     display: flex;
     min-width: fit-content;
