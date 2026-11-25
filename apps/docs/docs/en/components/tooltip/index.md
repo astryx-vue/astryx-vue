@@ -59,4 +59,6 @@ The tooltip bubble is a separate layer, and the component links it to the trigge
 
 The hint appears on mouse hover or keyboard focus. While it is showing, pressing Escape closes an uncontrolled tooltip; a controlled tooltip instead emits `openChange(false)`, and the parent decides whether to close it.
 
+A press inside the open bubble stays in the bubble: a clickable card, list row, or tree row around the trigger does not activate. Page-level listeners still receive the press.
+
 Because the hint appears only on hover or focus and disappears again, users can easily miss it, and touch devices do not always trigger it. Keep essential information that users must see to complete a task out of tooltips.

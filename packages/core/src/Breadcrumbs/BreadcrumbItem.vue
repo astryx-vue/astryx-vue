@@ -2,6 +2,7 @@
 import type { DropdownMenuSize } from '../DropdownMenu/types.js'
 import type { BreadcrumbItemProps } from './types.js'
 import { computed, onMounted, onScopeDispose, toRaw, useId, useTemplateRef, watch } from 'vue'
+import { hasSlotContent } from '../composables/internal/slotContent.js'
 import { useDevWarning } from '../composables/useDevWarning.js'
 import DropdownMenu from '../DropdownMenu/DropdownMenu.vue'
 import Icon from '../Icon/Icon.vue'
@@ -99,7 +100,7 @@ function handleClick(event: MouseEvent) {
           v-bind="triggerProps"
           :aria-current="showsCurrent ? 'page' : undefined"
         >
-          <span v-if="$slots.startIcon" class="astryx-breadcrumb-item__icon">
+          <span v-if="hasSlotContent($slots.startIcon)" class="astryx-breadcrumb-item__icon">
             <slot name="startIcon" />
           </span>
           <slot />
@@ -116,7 +117,7 @@ function handleClick(event: MouseEvent) {
       :aria-current="showsCurrent ? 'page' : undefined"
       @click="handleClick"
     >
-      <span v-if="$slots.startIcon" class="astryx-breadcrumb-item__icon">
+      <span v-if="hasSlotContent($slots.startIcon)" class="astryx-breadcrumb-item__icon">
         <slot name="startIcon" />
       </span>
       <slot />
@@ -128,7 +129,7 @@ function handleClick(event: MouseEvent) {
       :aria-current="showsCurrent ? 'page' : undefined"
       @click="handleClick"
     >
-      <span v-if="$slots.startIcon" class="astryx-breadcrumb-item__icon">
+      <span v-if="hasSlotContent($slots.startIcon)" class="astryx-breadcrumb-item__icon">
         <slot name="startIcon" />
       </span>
       <slot />
@@ -138,7 +139,7 @@ function handleClick(event: MouseEvent) {
       :class="contentClasses"
       aria-current="page"
     >
-      <span v-if="$slots.startIcon" class="astryx-breadcrumb-item__icon">
+      <span v-if="hasSlotContent($slots.startIcon)" class="astryx-breadcrumb-item__icon">
         <slot name="startIcon" />
       </span>
       <slot />

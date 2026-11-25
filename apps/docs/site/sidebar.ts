@@ -108,6 +108,7 @@ export function labSidebar(english: boolean): Sidebar {
         item('CircularProgress', `${prefix}/lab/circular-progress`),
         item('DiffViewer', `${prefix}/lab/diff-viewer`),
         item('InfoTip', `${prefix}/lab/info-tip`),
+        item('LineClamp', `${prefix}/lab/line-clamp`),
         item('LogStream', `${prefix}/lab/log-stream`),
         item('Stat', `${prefix}/lab/stat`),
         item('SVGIcon', `${prefix}/lab/svg-icon`),

@@ -7,6 +7,7 @@
 @import './styles/transfer-list.css';
 @import './styles/transfer-list-selector.css';
 @import './styles/list-input.css';
+@import './styles/line-clamp.css';
 @import './styles/diff-viewer.css';
 @import './styles/tour.css';
 @import './styles/code-editor.css';

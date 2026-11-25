@@ -108,6 +108,7 @@ No field label, description, or validation message. Use it where the surrounding
       <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>Accessible name of the input.</td></tr>
       <tr><td><code>inputId</code></td><td><code>string</code></td><td>Generated</td><td>Id of the input, so an outside label can point at it.</td></tr>
       <tr><td><code>describedBy</code></td><td><code>string</code></td><td>—</td><td>Ids of the description and status the caller already computed.</td></tr>
+      <tr><td><code>labelId</code></td><td><code>string</code></td><td>—</td><td>Id of the field label. The selected value's token, the tab stop while a value shows, is named by this label and the value.</td></tr>
       <tr><td><code>ariaDescribedBy</code></td><td><code>string</code></td><td>—</td><td>Input-specific alias for <code>aria-describedby</code>. Takes precedence over the native attribute.</td></tr>
       <tr><td><code>ariaLabelledBy</code></td><td><code>string</code></td><td>—</td><td>Input-specific alias for <code>aria-labelledby</code>. Takes precedence over the native attribute.</td></tr>
       <tr><td><code>anchorRef</code></td><td><code>HTMLElement | null</code></td><td>—</td><td>Element the dropdown hangs from and measures itself against. Defaults to the input's own wrapper.</td></tr>

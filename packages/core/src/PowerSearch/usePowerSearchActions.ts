@@ -13,6 +13,7 @@ import type {
   PowerSearchProps,
 } from './types.js'
 import { computed, nextTick, ref } from 'vue'
+import { useTokenRemoveTap } from '../composables/internal/useTokenRemoveTap.js'
 import { useLayerGutter } from '../LayerProvider/context.js'
 import { resolveEditorPlacement } from './placement.js'
 import PowerSearchEditor from './PowerSearchEditor.vue'
@@ -39,6 +40,7 @@ export interface PowerSearchMenuBridge {
  */
 interface PowerSearchActions {
   activate: (index: number) => void
+  canEdit: (filter: PowerSearchFilter) => boolean
   canRemove: (filter: PowerSearchFilter) => boolean
   clearAll: (event?: Event) => void
   closeEditor: (restore: boolean) => void
@@ -76,6 +78,7 @@ export function usePowerSearchActions(options: {
   visibleCount: () => number
 }): PowerSearchActions {
   const { props, emit, menu, lookup, text, announce } = options
+  const removeTap = useTokenRemoveTap({ root: options.anchorRef, input: options.inputRef, tokenSelector: '.astryx-power-search-token' })
   const gutter = useLayerGutter()
   const internal = ref<PowerSearchFilter[]>([])
   const filters = computed(() => props.filters ?? internal.value)
@@ -255,7 +258,8 @@ export function usePowerSearchActions(options: {
     const next = filters.value.filter((_, itemIndex) => itemIndex !== index)
     commit(next, 'remove', index)
     announce(text.value.removeFilter(fieldFor(filter)?.label ?? filter.field))
-    focusInput()
+    if (removeTap.shouldFocusInputAfterRemove())
+      focusInput()
   }
 
   function clearAll(event?: Event): void {
@@ -352,6 +356,7 @@ export function usePowerSearchActions(options: {
 
   return {
     activate,
+    canEdit,
     canRemove,
     clearAll,
     closeEditor,

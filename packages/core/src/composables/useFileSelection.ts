@@ -34,14 +34,31 @@ function matchesAccept(file: File, accept: string | undefined): boolean {
   })
 }
 
-export function formatFileSize(bytes: number): string {
+/** 文件大小的三种单位写法。数值已经换算好，只负责带上本地化的单位。 */
+export interface FileSizeUnits {
+  fileSizeBytes: (size: number) => string
+  fileSizeKilobytes: (size: number) => string
+  fileSizeMegabytes: (size: number) => string
+}
+
+const ENGLISH_UNITS: FileSizeUnits = {
+  fileSizeBytes: size => `${size} B`,
+  fileSizeKilobytes: size => `${size} KB`,
+  fileSizeMegabytes: size => `${size} MB`,
+}
+
+/**
+ * 把字节数写成给人看的大小。`units` 决定单位怎么写，FileInput 传当前语言的文案；
+ * 不传时用英文的 B、KB、MB。
+ */
+export function formatFileSize(bytes: number, units: FileSizeUnits = ENGLISH_UNITS): string {
   if (bytes < 1024)
-    return `${bytes} B`
+    return units.fileSizeBytes(bytes)
   if (bytes < 1024 * 1024)
-    return `${Math.max(1, Math.round(bytes / 1024))} KB`
+    return units.fileSizeKilobytes(Math.max(1, Math.round(bytes / 1024)))
   const megabytes = bytes / (1024 * 1024)
   const rounded = megabytes >= 10 ? Math.round(megabytes) : Math.round(megabytes * 10) / 10
-  return `${rounded} MB`
+  return units.fileSizeMegabytes(rounded)
 }
 
 export function selectFiles(list: FileList | File[] | null | undefined, options: FileSelectionOptions): FileSelectionResult {

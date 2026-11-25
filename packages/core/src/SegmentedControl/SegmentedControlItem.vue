@@ -2,6 +2,7 @@
 import type { SegmentedControlItemProps, SegmentedControlItemSlots, SegmentedControlSize } from './types.js'
 import { computed, useAttrs, useTemplateRef } from 'vue'
 import { invokeNativeEventHandler } from '../Button/eventHandlers.js'
+import { hasSlotContent } from '../composables/internal/slotContent.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { readLayerScoped } from '../layer/scopedProvide.js'
 import { segmentedControlContextKey } from './context.js'
@@ -87,7 +88,7 @@ const rootClass = computed(() => ['astryx-segmented-control-item', attrs.class])
     @click="handleClick"
   >
     <span
-      v-if="$slots.icon"
+      v-if="hasSlotContent($slots.icon)"
       class="astryx-segmented-control-item__icon"
       aria-hidden="true"
     >

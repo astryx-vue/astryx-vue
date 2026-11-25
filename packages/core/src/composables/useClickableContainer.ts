@@ -1,4 +1,5 @@
 import type { Ref } from 'vue'
+import { isLayerSurface } from '../layer/layerSurfacePress.js'
 
 /**
  * 对应原版 Astryx 的 `hooks/useClickableContainer`。
@@ -54,6 +55,9 @@ export function hasInteractiveAncestor(element: Element, root: Element): boolean
   let current: Element | null = element
   while (current != null && current !== root && current !== document.body) {
     if (current.matches(INTERACTIVE_SELECTORS) && !current.matches(NON_INTERACTIVE_SELECTORS))
+      return true
+    // 打开着的 Tooltip、HoverCard 里的按下属于气泡自己。
+    if (isLayerSurface(current))
       return true
     current = current.parentElement
   }

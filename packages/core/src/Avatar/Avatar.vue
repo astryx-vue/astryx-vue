@@ -4,6 +4,7 @@ import type { AvatarProps } from './types.js'
 import { computed, provide, ref, toRaw, useAttrs } from 'vue'
 
 import { AvatarGroupContext } from '../AvatarGroup/context.js'
+import { hasSlotContent } from '../composables/internal/slotContent.js'
 import { useDevWarning } from '../composables/useDevWarning.js'
 import { readLayerScoped } from '../layer/scopedProvide.js'
 import { isSafeUrl } from '../Link/safeUrl.js'
@@ -236,7 +237,7 @@ function handleFallbackError() {
         </span>
       </span>
       <span
-        v-if="$slots.status"
+        v-if="hasSlotContent($slots.status)"
         class="astryx-avatar__status"
       >
         <slot name="status" />
@@ -291,7 +292,7 @@ function handleFallbackError() {
       </span>
     </span>
     <span
-      v-if="$slots.status"
+      v-if="hasSlotContent($slots.status)"
       class="astryx-avatar__status"
     >
       <slot name="status" />

@@ -59,3 +59,7 @@ footer: false
     </tbody>
   </table>
 </div>
+
+## 主题
+
+这一排控件里的第一个和最后一个，在 `pagination-button` 目标上带 `data-first="first"` 和 `data-last="last"`。主题把控件连成一条时，可以只给这两头加外侧圆角：`components: { 'pagination-button': { 'first:first': { borderStartStartRadius: '8px' } } }`。

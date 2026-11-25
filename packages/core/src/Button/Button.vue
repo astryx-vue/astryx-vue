@@ -2,6 +2,7 @@
 import type { ComponentPublicInstance, CSSProperties, StyleValue } from 'vue'
 import type { ButtonEmits, ButtonLinkElement, ButtonProps, ButtonRootElement, ButtonSlots } from './types.js'
 import { computed, onBeforeUnmount, onMounted, ref, toRaw, useAttrs, useId, useSlots, useTemplateRef } from 'vue'
+import { hasSlotContent } from '../composables/internal/slotContent.js'
 import { pressGroupItemProps } from '../composables/internal/useActionGroupTracking.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { provideIconSize } from '../Icon/context.js'
@@ -226,6 +227,15 @@ const controlledAttrs = new Set([
   'style',
 ])
 
+/**
+ * 调用方自己传的忙碌、禁用状态保留下来。把触发器属性交给 Button 的组件
+ * （比如 ComplexSelector 的自定义触发器）靠它让读屏听到选择器的状态。
+ */
+function callerAria(name: 'aria-busy' | 'aria-disabled'): unknown {
+  const value = attrs[name]
+  return value === false || value == null || value === '' ? undefined : value
+}
+
 function getForwardedAttrs(): Record<string, unknown> {
   return {
     ...Object.fromEntries(
@@ -264,9 +274,9 @@ defineExpose({
     :is="rootComponent"
     ref="root"
     v-bind="getForwardedAttrs()"
-    :aria-busy="isLoadingState || undefined"
+    :aria-busy="isLoadingState || callerAria('aria-busy')"
     :aria-describedby="ariaDescribedBy"
-    :aria-disabled="isButtonDisabled || undefined"
+    :aria-disabled="isButtonDisabled || callerAria('aria-disabled')"
     :aria-label="ariaLabel"
     :class="rootClass"
     :data-astryx-edge-comp="variant === 'ghost' ? '' : undefined"
@@ -309,7 +319,7 @@ defineExpose({
       :aria-hidden="isLoadingState || undefined"
     >
       <span
-        v-if="$slots.icon || icon"
+        v-if="hasSlotContent($slots.icon) || icon"
         class="astryx-button__icon"
         aria-hidden="true"
       >
@@ -324,7 +334,7 @@ defineExpose({
       </span>
 
       <span
-        v-if="!isIconOnly && $slots.end"
+        v-if="!isIconOnly && hasSlotContent($slots.end)"
         class="astryx-button__end"
         aria-hidden="true"
       >

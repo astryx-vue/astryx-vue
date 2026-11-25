@@ -18,6 +18,10 @@ export interface FileInputMessages {
   errorType: (fileName: string) => string
   errorSize: (fileName: string, maxSize: string) => string
   errorCount: (maxFiles: number) => string
+  /** 校验提示里的大小上限，单位分别是字节、KB 和 MB。数值已经按单位换算好。 */
+  fileSizeBytes: (size: number) => string
+  fileSizeKilobytes: (size: number) => string
+  fileSizeMegabytes: (size: number) => string
 }
 
 export const fileInputMessages: Record<AstryxLocale, FileInputMessages> = {
@@ -34,6 +38,9 @@ export const fileInputMessages: Record<AstryxLocale, FileInputMessages> = {
     errorType: fileName => `"${fileName}" is not an accepted file type`,
     errorSize: (fileName, maxSize) => `"${fileName}" exceeds ${maxSize} limit`,
     errorCount: maxFiles => `Maximum ${maxFiles} files allowed`,
+    fileSizeBytes: size => `${size} B`,
+    fileSizeKilobytes: size => `${size} KB`,
+    fileSizeMegabytes: size => `${size} MB`,
   },
   'zh-CN': {
     placeholder: '选择文件',
@@ -48,5 +55,8 @@ export const fileInputMessages: Record<AstryxLocale, FileInputMessages> = {
     errorType: fileName => `不支持“${fileName}”的文件类型`,
     errorSize: (fileName, maxSize) => `“${fileName}”超过了 ${maxSize} 的大小限制`,
     errorCount: maxFiles => `最多只能选择 ${maxFiles} 个文件`,
+    fileSizeBytes: size => `${size} 字节`,
+    fileSizeKilobytes: size => `${size} KB`,
+    fileSizeMegabytes: size => `${size} MB`,
   },
 }

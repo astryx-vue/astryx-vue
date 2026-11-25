@@ -91,8 +91,8 @@ function prefixIds(body: string, idPrefix: string): string {
   if (idPrefix === '' || !body.includes('id='))
     return body
   return body
-    .replace(/\bid=(["'])([^"']+)\1/g, (_, quote, id) => `id=${quote}${idPrefix}${id}${quote}`)
-    .replace(/(\b(?:href|xlink:href)=)(["'])#([^"']+)\2/g, (_, attr, quote, id) => `${attr}${quote}#${idPrefix}${id}${quote}`)
+    .replace(/(?<=\s)id=(["'])([^"']+)\1/g, (_, quote, id) => `id=${quote}${idPrefix}${id}${quote}`)
+    .replace(/(?<=\s)((?:href|xlink:href)=)(["'])#([^"']+)\2/g, (_, attr, quote, id) => `${attr}${quote}#${idPrefix}${id}${quote}`)
     .replace(/url\(#([^)]+)\)/g, (_, id) => `url(#${idPrefix}${id})`)
 }
 

@@ -25,6 +25,7 @@ import type { FieldMessages } from './messages/field.js'
 import type { FileInputMessages } from './messages/file-input.js'
 import type { InfoTipMessages } from './messages/info-tip.js'
 import type { InputMessages } from './messages/input.js'
+import type { KbdMessages } from './messages/kbd.js'
 import type { KeyboardHintMessages } from './messages/keyboard-hint.js'
 import type { LayoutMessages } from './messages/layout.js'
 import type { LightboxMessages } from './messages/lightbox.js'
@@ -84,6 +85,7 @@ import { fieldMessages } from './messages/field.js'
 import { fileInputMessages } from './messages/file-input.js'
 import { infoTipMessages } from './messages/info-tip.js'
 import { inputMessages } from './messages/input.js'
+import { kbdMessages } from './messages/kbd.js'
 import { keyboardHintMessages } from './messages/keyboard-hint.js'
 import { layoutMessages } from './messages/layout.js'
 import { lightboxMessages } from './messages/lightbox.js'
@@ -144,6 +146,7 @@ export interface AstryxMessages {
   fileInput: FileInputMessages
   infoTip: InfoTipMessages
   input: InputMessages
+  kbd: KbdMessages
   keyboardHint: KeyboardHintMessages
   layout: LayoutMessages
   lightbox: LightboxMessages
@@ -206,6 +209,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     fileInput: fileInputMessages.en,
     infoTip: infoTipMessages.en,
     input: inputMessages.en,
+    kbd: kbdMessages.en,
     keyboardHint: keyboardHintMessages.en,
     layout: layoutMessages.en,
     lightbox: lightboxMessages.en,
@@ -266,6 +270,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     fileInput: fileInputMessages['zh-CN'],
     infoTip: infoTipMessages['zh-CN'],
     input: inputMessages['zh-CN'],
+    kbd: kbdMessages['zh-CN'],
     keyboardHint: keyboardHintMessages['zh-CN'],
     layout: layoutMessages['zh-CN'],
     lightbox: lightboxMessages['zh-CN'],

@@ -231,6 +231,7 @@ function onDotClick(event: MouseEvent): void {
         v-if="showFirstLast"
         type="button"
         class="astryx-pagination-button astryx-pagination-first"
+        data-first="first"
         :disabled="disabledControl || !pagination.canPrevious.value"
         :aria-label="messages.pagination.first"
         @click="pagination.first"
@@ -243,6 +244,7 @@ function onDotClick(event: MouseEvent): void {
       <button
         type="button"
         class="astryx-pagination-button astryx-pagination-prev"
+        :data-first="showFirstLast ? undefined : 'first'"
         :disabled="disabledControl || !pagination.canPrevious.value"
         :aria-label="resolvedPrevLabel"
         @click="pagination.previous"
@@ -333,6 +335,7 @@ function onDotClick(event: MouseEvent): void {
       <button
         type="button"
         class="astryx-pagination-button astryx-pagination-next"
+        :data-last="showFirstLast ? undefined : 'last'"
         :disabled="disabledControl || !pagination.canNext.value"
         :aria-label="resolvedNextLabel"
         @click="pagination.next"
@@ -347,6 +350,7 @@ function onDotClick(event: MouseEvent): void {
         v-if="showFirstLast"
         type="button"
         class="astryx-pagination-button astryx-pagination-last"
+        data-last="last"
         :disabled="disabledControl || !pagination.canNext.value"
         :aria-label="messages.pagination.last"
         @click="pagination.last"

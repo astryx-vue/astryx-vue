@@ -12,7 +12,8 @@
   .astryx-checkbox-row {
     display: flex;
     align-items: center;
-    gap: var(--astryx-spacing-2, 8px);
+    /* 主题在 checkbox-input 目标上写的 gap 落在这里，见 theme/derivedVars.ts。 */
+    gap: var(--_checkbox-input-gap, var(--astryx-spacing-2, 8px));
   }
 
   .astryx-checkbox-row > .astryx-field-label-group {

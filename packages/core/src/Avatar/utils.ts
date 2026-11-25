@@ -1,6 +1,7 @@
 import type { AvatarSize, AvatarStatusDotVariant, AvatarStatusDotVariantName } from './types.js'
+import { unicodeRegExp } from '../utils/unicodeRegExp.js'
 
-const INITIAL_CHARACTER = /[\p{L}\p{N}\p{Extended_Pictographic}\p{Regional_Indicator}]/u
+const INITIAL_CHARACTER = unicodeRegExp('[\\p{L}\\p{N}\\p{Extended_Pictographic}\\p{Regional_Indicator}]')
 
 const characterSegmenter = typeof Intl !== 'undefined' && typeof Intl.Segmenter === 'function'
   ? new Intl.Segmenter(undefined, { granularity: 'grapheme' })

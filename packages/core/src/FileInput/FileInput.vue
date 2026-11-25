@@ -114,7 +114,7 @@ function applyFiles(list: FileList | File[] | null | undefined): void {
   if (first?.code === 'type' && first.fileName)
     validationError.value = messages.value.fileInput.errorType(first.fileName)
   else if (first?.code === 'size' && first.fileName)
-    validationError.value = messages.value.fileInput.errorSize(first.fileName, formatFileSize(first.maxSize ?? 0))
+    validationError.value = messages.value.fileInput.errorSize(first.fileName, formatFileSize(first.maxSize ?? 0, messages.value.fileInput))
   else if (first?.code === 'count')
     validationError.value = messages.value.fileInput.errorCount(first.maxFiles ?? 0)
   else
