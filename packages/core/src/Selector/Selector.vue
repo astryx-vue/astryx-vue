@@ -15,6 +15,7 @@ import { fieldStatusPlacement } from '../Field/statusPlacement.js'
 import Icon from '../Icon/Icon.vue'
 import { useIndicator } from '../Indicator/useIndicator.js'
 import { useInputGroupContext } from '../InputGroup/context.js'
+import { clampInlineSize } from '../layer/inlineSize.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { useAstryxMessages } from '../locale/index.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
@@ -305,7 +306,8 @@ const listboxStyle = computed(() => isSheet.value
   : {
       top: `${overlayTop.value ?? position.value.top}px`,
       left: `${position.value.left}px`,
-      minWidth: anchorWidth.value > 0 ? `${anchorWidth.value}px` : undefined,
+      // 不窄于触发器，但压在视口上限之内：最小宽度优先于最大宽度，不压会撑出屏幕。
+      minWidth: anchorWidth.value > 0 ? clampInlineSize(`${anchorWidth.value}px`) : undefined,
     })
 
 watch(combobox.isOpen, (open) => {

@@ -83,7 +83,8 @@ const surfaceStyle = computed(() => {
     style.width = typeof props.width === 'number' ? `${props.width}px` : props.width
   }
   else {
-    style.minWidth = `min(${anchorWidth.value}px, ${DEFAULT_MAX_WIDTH}px)`
+    // 不窄于触发器，也压在视口上限之内：最小宽度优先于最大宽度，不压会撑出屏幕。
+    style.minWidth = clampInlineSize(`min(${anchorWidth.value}px, ${DEFAULT_MAX_WIDTH}px)`)
   }
   return style
 })

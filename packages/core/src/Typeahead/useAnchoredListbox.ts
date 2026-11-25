@@ -2,6 +2,7 @@ import type { CSSProperties, MaybeRefOrGetter, Ref } from 'vue'
 import type { LayerPosition } from '../layer/position.js'
 import { computed, onMounted, ref, toValue, watch } from 'vue'
 import { useDismiss } from '../composables/useDismiss.js'
+import { clampInlineSize } from '../layer/inlineSize.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 
 export interface AnchoredListbox {
@@ -61,8 +62,9 @@ export function useAnchoredListbox(options: {
   const style = computed<CSSProperties>(() => ({
     top: `${position.value.top}px`,
     left: `${position.value.left}px`,
-    // 不窄于锚点，宽的时候再按 menuWidth 来，太宽交给视口裁。
-    minWidth: anchorWidth.value > 0 ? `${anchorWidth.value}px` : undefined,
+    // 不窄于锚点，宽的时候再按 menuWidth 来。锚点宽度也压在视口上限之内：
+    // CSS 里最小宽度优先于最大宽度，不压的话比视口还宽的触发器会把列表撑出屏幕。
+    minWidth: anchorWidth.value > 0 ? clampInlineSize(`${anchorWidth.value}px`) : undefined,
     width: requestedMenuWidth(toValue(options.menuWidth)),
   }))
 
