@@ -1,5 +1,27 @@
 # @astryx-vue/lab
 
+## 0.6.0
+
+### Minor Changes
+
+- [#511](https://github.com/astryx-vue/astryx-vue/pull/511) [`45613e7`](https://github.com/astryx-vue/astryx-vue/commit/45613e74ed0302b63bfb56e5e2172a4bafbf94bb) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增 LineClamp：把任意内容（混合的行内内容、嵌套元素）截成固定行数，结尾带省略号，自己不加字体和颜色。截断时第一次悬停、轻点或键盘聚焦才挂提示，用提示显示全文，截断的根元素是 Tab 停靠点；被裁掉那几行里的链接等可聚焦元素会标成 `inert`，重新露出来时还原，不改写你自己的 `tabindex`、`aria-hidden` 和 `inert`。
+
+### Patch Changes
+
+- [#505](https://github.com/astryx-vue/astryx-vue/pull/505) [`6fc4715`](https://github.com/astryx-vue/astryx-vue/commit/6fc471578ecb89aa5cdd4c0c5c6751273bbb02cf) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Text、Heading 的截断测量和截断提示跟进上游。
+  
+  - 截断的 Text / Heading 不再随文字挂一个关着的提示层，等第一次悬停、轻点或键盘聚焦才挂；挂上后照常回应那次交互（悬停等延迟、轻点立刻打开）。之前每个截断元素都带着 `aria-describedby` 和一个隐藏的提示层，现在交互前都没有。
+  - 截断测量改用全页共用的 ResizeObserver，第一次测量在浏览器排版之后进行，挂载一长串截断文字时不再逐个强制排版。
+  - 新增从 `@astryx-vue/core/Text` 导出的 `useTruncation`，自己的组件也能「截断时才显示全文提示」。
+  - 不截断的 Text / Heading 里，比一行还长的串（URL、ID）会换行，不再撑出横向滚动；用 `overflow-wrap: anywhere` 换行的内置容器（Banner、Toast、FieldStatus 等）里的文字跟着用 anywhere，浮层里回到 break-word。
+  - Heading 没写 `level`、或不是 1–6 时按 2 级渲染并在开发时警告，不再渲染出无效的标签；调用方自己写的 `aria-level` 优先于 `accessibilityLevel`。
+  - Tooltip 轻点触发器里的文本框时只让它获得焦点，不开也不关提示。
+  - Button 的标签被行宽截短时，键盘聚焦就在提示里显示完整标签；表头单元格的标题被截短时，键盘聚焦到单元格里的排序按钮也一样。这两种提示不加描述，读屏只读一遍名称。
+  
+  CLI 内置的组件文档跟着更新了 Text、Heading、Button 的说明。
+- Updated dependencies [[`cc73651`](https://github.com/astryx-vue/astryx-vue/commit/cc73651813d0dc905150a67a8d4377f8f5f882d8), [`90a7127`](https://github.com/astryx-vue/astryx-vue/commit/90a7127a47057e379ff9255cf00c7fe4cee09a79), [`45b95b5`](https://github.com/astryx-vue/astryx-vue/commit/45b95b5ffc4b0c6d3faf8bdf7de1b9f59cfa5f51), [`ce2bfa4`](https://github.com/astryx-vue/astryx-vue/commit/ce2bfa4602747acbafa5e91108be1b755003e041), [`ca023d0`](https://github.com/astryx-vue/astryx-vue/commit/ca023d06a64172f5a17a4f6fc0ecdf233c9b352f), [`d94de78`](https://github.com/astryx-vue/astryx-vue/commit/d94de78d16484142ef7642d410b060e59deec27c), [`6fc4715`](https://github.com/astryx-vue/astryx-vue/commit/6fc471578ecb89aa5cdd4c0c5c6751273bbb02cf), [`473ae5a`](https://github.com/astryx-vue/astryx-vue/commit/473ae5a6c8b9471ac1bcd267760058ad38c89338), [`4e7767f`](https://github.com/astryx-vue/astryx-vue/commit/4e7767f0707c19e4208b003e5f4e767ede363848)]:
+  - @astryx-vue/core@0.7.26
+
 ## 0.5.4
 
 ### Patch Changes
