@@ -63,6 +63,7 @@
     font-size: var(--astryx-text-body-size, 0.875rem);
     line-height: var(--astryx-text-body-leading, 1.4286);
     white-space: nowrap;
+    unicode-bidi: isolate;
   }
 
   .astryx-input-group-addon {

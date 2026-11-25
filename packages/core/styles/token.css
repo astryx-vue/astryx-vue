@@ -87,10 +87,12 @@
     align-items: center;
   }
 
+  /* 标签和两侧内容互相隔离，混排方向时不会把旁边的字符拉进来重排。 */
   .astryx-token-label {
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
+    unicode-bidi: isolate;
   }
 
   .astryx-token-label.is-hidden {
@@ -150,11 +152,6 @@
     }
   }
 
-  .astryx-token.is-interactive:focus-within {
-    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, var(--astryx-color-accent));
-    outline-offset: 1px;
-  }
-
   .astryx-token.is-disabled {
     cursor: default;
     opacity: 0.5;
@@ -172,15 +169,23 @@
   }
 }
 
-/* 不分层：文档页的 :focus-visible 会盖过分层里的 outline。 */
+/*
+ * 不分层：文档页的 :focus-visible 会盖过分层里的 outline。
+ * 焦点环只画一个：token 自己的按钮或链接获得焦点时整颗 token 画环，删除按钮自己画环。
+ */
 .astryx-token-action:focus,
 .astryx-token-action:focus-visible,
-.astryx-token-remove:focus,
-.astryx-token-remove:focus-visible {
+.astryx-token-remove:focus {
   outline: none;
 }
 
-.astryx-token.is-interactive:focus-within {
+.astryx-token.is-interactive:focus-visible,
+.astryx-token.is-interactive:has(> .astryx-token-action:focus-visible) {
   outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, var(--astryx-color-accent));
   outline-offset: 1px;
+}
+
+.astryx-token-remove:focus-visible {
+  outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, var(--astryx-color-accent));
+  outline-offset: 0;
 }

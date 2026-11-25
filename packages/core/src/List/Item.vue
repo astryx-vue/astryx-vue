@@ -292,7 +292,7 @@ const rootClick = computed(() => {
   return isInteractive.value ? handleContainerClick : undefined
 })
 
-const rootClass = computed(() => ['astryx-item', swipeEnabled.value && 'astryx-item--swipe', attrs.class])
+const rootClass = computed(() => ['astryx-item', swipeEnabled.value && 'astryx-item--swipe', isDelegate.value && 'astryx-item--delegate', attrs.class])
 
 const forwardedAttrs = computed(() => Object.fromEntries(
   Object.entries(attrs).filter(([key]) => !CONTROLLED_ATTRS.has(key)),

@@ -18,7 +18,9 @@ Typeahead, Multi Selector, and Tokenizer use `Token` internally, and a chat comp
 
 `removable` shows a focusable remove button. Click, `Backspace`, and `Delete` all emit `remove`. `disabled` ignores that action. `#icon` sits before the text and is the place for a type icon.
 
-`href` renders a link. When a remove button is also present, the link and the button are siblings, so the button is not nested inside the link.
+`href` renders a link. When a remove button is also present, the link and the button are siblings, so the button is not nested inside the link. A `@click` listener still runs when the link is clicked. A disabled link token stays a focusable link that is announced as disabled and goes nowhere.
+
+On a clickable token, `aria-labelledby`, `aria-describedby`, `aria-haspopup`, `aria-expanded`, and `aria-pressed` land on its inner button, the element that owns the action. A filter chip can pass `aria-pressed` to read as a toggle.
 
 ```vue
 <script setup lang="ts">
@@ -42,6 +44,7 @@ The remove button’s accessible name defaults to `Remove Design review`. `provi
 | --- | --- |
 | <Badge variant="success">Do</Badge> | Turn on `removable` when the person can dismiss the chip, and update your list in `remove`. |
 | <Badge variant="success">Do</Badge> | Use `#icon` for the type. Keep the icon out of `label`. |
+| <Badge variant="success">Do</Badge> | Labels keep their character order under right-to-left, so `@alice`, `C++`, and `example.com` read as written; a right-to-left label still reads right to left. |
 | <Badge variant="error">Don't</Badge> | Use Token for success or warning status. Use `Badge` for that. |
 
 

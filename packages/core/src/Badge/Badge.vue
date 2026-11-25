@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { BadgeProps } from './types.js'
 import { computed } from 'vue'
+import { textDirection } from '../utils/textDirection.js'
 import '../../styles/badge.css'
 
 defineOptions({
@@ -33,7 +34,7 @@ const labelTitle = computed(() => {
     :title="labelTitle"
   >
     <slot name="icon" />
-    <span class="astryx-badge__label">
+    <span class="astryx-badge__label" :dir="$slots.default ? undefined : textDirection(label)">
       <slot>{{ label }}</slot>
     </span>
   </span>

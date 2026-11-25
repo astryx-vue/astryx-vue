@@ -176,3 +176,18 @@ describe('inputGroup', () => {
     expect(wrapper.find('.astryx-input-group').classes()).not.toContain('is-disabled')
   })
 })
+
+describe('inputGroupText direction', () => {
+  it('puts plain text direction on an inner span, not on the bordered cell', () => {
+    const wrapper = mount(InputGroupText, { slots: { default: 'https://' } })
+    expect(wrapper.attributes('dir')).toBeUndefined()
+    const inner = wrapper.get('[dir]')
+    expect(inner.attributes('dir')).toBe('ltr')
+    expect(inner.text()).toBe('https://')
+  })
+
+  it('leaves right-to-left and rich text in the cell unwrapped', () => {
+    expect(mount(InputGroupText, { slots: { default: '\u0631\u064A\u0627\u0644' } }).find('[dir]').exists()).toBe(false)
+    expect(mount(InputGroupText, { slots: { default: '<span>$</span>' } }).find('[dir]').exists()).toBe(false)
+  })
+})
