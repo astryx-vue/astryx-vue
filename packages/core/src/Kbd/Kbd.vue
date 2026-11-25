@@ -2,6 +2,7 @@
 import type { CSSProperties } from 'vue'
 import type { KbdProps } from './types.js'
 import { computed, useAttrs } from 'vue'
+import { devPropError, isDevBuild } from '../composables/internal/devBuild.js'
 import { parseShortcut } from './keys.js'
 import { useIsApplePlatform } from './platform.js'
 import '../../styles/kbd.css'
@@ -9,6 +10,14 @@ import '../../styles/kbd.css'
 defineOptions({ name: 'AstryxKbd', inheritAttrs: false })
 
 const props = defineProps<KbdProps>()
+
+if (isDevBuild() && typeof props.keys !== 'string') {
+  throw devPropError(
+    'Kbd',
+    'keys',
+    'must be a string of keys joined by "+", for example <Kbd keys="mod+k" />. Kbd does not read slot content.',
+  )
+}
 
 const attrs = useAttrs()
 const isApple = useIsApplePlatform()
