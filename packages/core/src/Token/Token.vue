@@ -29,7 +29,8 @@ const messages = useAstryxMessages()
 /** 正名 isLabelHidden，旧名 labelHidden 任一为真就藏起文字。 */
 const hideLabel = useResolvedLabelHidden(() => props.isLabelHidden, () => props.labelHidden)
 const linkComponent = useLinkComponent()
-const press = usePressFeedback()
+/** 删除按钮、尾部插槽里的控件被手指按下时，Token 自己的动作不执行，所以 Token 不亮。 */
+const press = usePressFeedback({ isContainer: true })
 /** 有链接时用的根组件，没有 provider 时还是 `<a>`。危险协议退回普通锚点。 */
 const safeHref = computed(() => {
   const href = props.href
@@ -113,6 +114,7 @@ function onKeydown(event: KeyboardEvent): void {
       :is="actionIsLink ? linkRoot : 'a'"
       v-if="actionIsLink"
       class="astryx-token-action"
+      v-bind="press.pressActionProps"
       :href="props.disabled ? undefined : safeHref"
       :to="props.disabled || linkRoot === 'a' ? undefined : safeHref"
       :aria-disabled="props.disabled || undefined"
@@ -125,7 +127,7 @@ function onKeydown(event: KeyboardEvent): void {
       type="button"
       class="astryx-token-action"
       :aria-disabled="props.disabled || undefined"
-      v-bind="disabledInteraction"
+      v-bind="{ ...disabledInteraction, ...press.pressActionProps }"
       @click="runClick"
     >
       <span class="astryx-token-label" :class="{ 'is-hidden': hideLabel }">{{ props.label }}</span>

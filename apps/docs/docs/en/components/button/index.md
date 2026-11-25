@@ -71,6 +71,7 @@ A CSS icon class still works in the slot if you already generate one. UnoCSS is 
 | <Badge variant="error">Don't</Badge> | Place more than one primary button in the same view; this dilutes the visual hierarchy. |
 | <Badge variant="error">Don't</Badge> | Use the destructive variant without a confirmation step for irreversible actions like deleting data. |
 | <Badge variant="error">Don't</Badge> | Use a button for navigation. If it only takes the user to another page, use a link instead. Buttons are for actions like saving, deleting, or submitting. |
+| <Badge variant="error">Don't</Badge> | Restyle Button's `::before` and expect it to hold through a touch press: under a coarse primary pointer, while a press is on or fading, Button paints the press on that pseudo-element (`z-index: -1`, its opacity animated), so your styles merge into the press layer for that moment. At rest Button adds nothing there. Style a child element instead. |
 
 ## Examples
 
