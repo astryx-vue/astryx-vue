@@ -100,8 +100,8 @@
 @import './styles/tokenizer.css';
 @import './styles/toolbar.css';
 @import './styles/tooltip.css';
-@import './styles/touch-hit-area.css';
 @import './styles/top-nav.css';
+@import './styles/touch-hit-area.css';
 @import './styles/tree-list.css';
 @import './styles/typeahead.css';
 @import './styles/visually-hidden.css';
