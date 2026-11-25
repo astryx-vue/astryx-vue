@@ -43358,7 +43358,7 @@
         "en": [
           {
             "heading": "Grid Props",
-            "text": "`GridResponsiveColumns` has this shape:\n\n```ts\ninterface GridResponsiveColumns {\n  minWidth: number\n  max?: number\n  repeat?: 'fill' | 'fit'\n}\n```\n\n`SpacingStep` accepts these values:\n\n```ts\ntype SpacingStep = 0 | 0.5 | 1 | 1.5 | 2 | 3 | 4 | 5 | 6 | 8 | 10\n```"
+            "text": "`GridResponsiveColumns` has this shape:\n\n```ts\ninterface GridResponsiveColumns {\n  minWidth: number\n  max?: number\n  repeat?: 'fill' | 'fit'\n}\n```\n\nIn a container narrower than `minWidth`, the single column shrinks to the container width instead of overflowing it.\n\n`SpacingStep` accepts these values:\n\n```ts\ntype SpacingStep = 0 | 0.5 | 1 | 1.5 | 2 | 3 | 4 | 5 | 6 | 8 | 10\n```"
           },
           {
             "heading": "Slots",
@@ -43376,7 +43376,7 @@
         "zh": [
           {
             "heading": "Grid Props",
-            "text": "`GridResponsiveColumns` 的形状如下：\n\n```ts\ninterface GridResponsiveColumns {\n  minWidth: number\n  max?: number\n  repeat?: 'fill' | 'fit'\n}\n```\n\n`SpacingStep` 支持以下值：\n\n```ts\ntype SpacingStep = 0 | 0.5 | 1 | 1.5 | 2 | 3 | 4 | 5 | 6 | 8 | 10\n```"
+            "text": "`GridResponsiveColumns` 的形状如下：\n\n```ts\ninterface GridResponsiveColumns {\n  minWidth: number\n  max?: number\n  repeat?: 'fill' | 'fit'\n}\n```\n\n容器比 `minWidth` 还窄时，唯一的那一列缩到容器宽度，不会撑出容器。\n\n`SpacingStep` 支持以下值：\n\n```ts\ntype SpacingStep = 0 | 0.5 | 1 | 1.5 | 2 | 3 | 4 | 5 | 6 | 8 | 10\n```"
           },
           {
             "heading": "插槽",

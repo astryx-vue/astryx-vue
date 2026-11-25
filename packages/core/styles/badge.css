@@ -30,9 +30,13 @@
     text-overflow: ellipsis;
   }
 
+  /*
+   * 放在主要或危险按钮里时，中性底色叠在按钮底色上对比度不够。
+   * 这时把按钮的底色和文字反过来用：按钮文字色做徽标底色，按钮底色做徽标文字。
+   */
   .astryx-badge[data-variant='neutral'] {
-    color: var(--astryx-badge-neutral-foreground);
-    background-color: var(--astryx-badge-neutral-background);
+    color: var(--_button-fill, var(--astryx-badge-neutral-foreground));
+    background-color: var(--_button-on-fill, var(--astryx-badge-neutral-background));
   }
 
   .astryx-badge[data-variant='info'] {

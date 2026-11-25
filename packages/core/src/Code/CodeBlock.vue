@@ -3,6 +3,7 @@ import type { CSSProperties, StyleValue } from 'vue'
 import type { CodeBlockEmits, CodeBlockProps, TokenLine } from './types.js'
 import { computed, onBeforeUnmount, onMounted, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
 import { useClipboard } from '../composables/useClipboard.js'
+import { assertDevProp } from '../composables/useDevWarning.js'
 import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
@@ -31,6 +32,13 @@ const props = withDefaults(defineProps<CodeBlockProps>(), {
   size: 'md',
   width: 'fit-content',
 })
+
+assertDevProp(
+  typeof props.code === 'string',
+  'CodeBlock',
+  'code',
+  'must be a string, for example <CodeBlock code="const a = 1;" language="ts" />. CodeBlock does not read its default slot.',
+)
 
 const emit = defineEmits<CodeBlockEmits>()
 

@@ -83,7 +83,8 @@ const templateColumns = computed<string>(() => {
     if (columns.max != null && columns.max > 0)
       return buildCappedTemplate(columns.minWidth, columns.max, repeatMode, props.gap, props.columnGap)
 
-    return `repeat(${repeatMode}, minmax(${columns.minWidth}px, 1fr))`
+    // min(100%, …)：容器比 minWidth 还窄时，单独一列缩到容器宽度，不再撑出横向滚动。
+    return `repeat(${repeatMode}, minmax(min(100%, ${columns.minWidth}px), 1fr))`
   }
 
   if (typeof columns === 'number' && columns > 0)

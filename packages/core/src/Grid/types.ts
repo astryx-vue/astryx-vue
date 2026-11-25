@@ -30,7 +30,10 @@ export type GridSizeValue = number | string
  * created, each at least `minWidth` wide.
  */
 export interface GridResponsiveColumns {
-  /** Minimum width of every column track, in pixels. */
+  /**
+   * Minimum width of every column track, in pixels. In a container narrower
+   * than `minWidth`, the single track shrinks to the container width.
+   */
   minWidth: number
   /**
    * Caps the number of columns.

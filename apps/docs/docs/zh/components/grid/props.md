@@ -93,6 +93,8 @@ interface GridResponsiveColumns {
 }
 ```
 
+容器比 `minWidth` 还窄时，唯一的那一列缩到容器宽度，不会撑出容器。
+
 `SpacingStep` 支持以下值：
 
 ```ts
