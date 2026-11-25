@@ -16,6 +16,8 @@ import { tokenizerClear, tokenizerCreatable, tokenizerEnd, tokenizerIcon, tokeni
 
 `hasCreate` turns the current text into a new token. `hasClear` removes every token. When the input is empty, `Backspace` removes the last token. Arrow keys move focus between tokens, and `Backspace` or `Delete` removes the focused one.
 
+On a touch screen, a finger tap on a token's remove button while the input is unfocused removes the token and leaves focus where it was, so the on-screen keyboard stays down. A mouse click, a pen tap, a key press, or a tap made while typing still moves focus to the input.
+
 `overflow` controls what happens when the tokens do not fit:
 
 | Value | Behavior |

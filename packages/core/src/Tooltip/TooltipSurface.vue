@@ -4,6 +4,7 @@ import type { UseTooltipReturn } from './useTooltip.js'
 import { computed } from 'vue'
 import { useResolvedLayerTeleport } from '../composables/useLayerMountTarget.js'
 import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
+import { registerLayerSurface } from '../layer/layerSurfacePress.js'
 import '../../styles/tooltip.css'
 
 defineOptions({ name: 'AstryxTooltipSurface' })
@@ -27,6 +28,8 @@ const target = useResolvedLayerTeleport(computed(() => props.anchor))
 const { contentRef } = props.tooltip
 function setContentRef(value: Element | ComponentPublicInstance | null): void {
   contentRef.value = value as HTMLElement | null
+  // 在气泡里按下只作用于气泡，外面包着触发元素的可点容器不响应。
+  registerLayerSurface(value as HTMLElement | null)
 }
 </script>
 

@@ -337,6 +337,45 @@ describe('power search filter removal', () => {
     wrapper.unmount()
   })
 
+  it.each([
+    ['touch', false],
+    ['mouse', true],
+  ])('after a %s tap on a remove button, focuses the input: %s', async (pointerType, focusesInput) => {
+    const { wrapper } = mountFilters([nameFilter, activeFilter])
+    const remove = wrapper.get('.astryx-power-search-tokens .astryx-token-remove').element
+    remove.dispatchEvent(new PointerEvent('pointerdown', { pointerType, bubbles: true }))
+    const mousedown = new MouseEvent('mousedown', { bubbles: true, cancelable: true })
+    remove.dispatchEvent(mousedown)
+    remove.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }))
+    await flushPromises()
+
+    expect(mousedown.defaultPrevented).toBe(!focusesInput)
+    expect(document.activeElement === wrapper.get('input').element).toBe(focusesInput)
+    wrapper.unmount()
+  })
+
+  it('names a filter token by all its visible text and exposes its editor as a named dialog', async () => {
+    const { wrapper } = mountFilters([nameFilter, activeFilter])
+    const [nameToken, activeToken] = wrapper.findAll('.astryx-power-search-tokens .astryx-power-search-token')
+    const visible = `${nameToken!.get('.astryx-token-label').text()} ${nameToken!.get('.astryx-power-search-token-value').text()}`
+    const button = nameToken!.get('button.astryx-token-action')
+    expect(button.attributes('aria-label')).toBe(visible)
+    expect(nameToken!.get('.astryx-token-remove').attributes('aria-label')).toBe(`Remove ${visible}`)
+    expect(button.attributes('aria-haspopup')).toBe('dialog')
+    expect(button.attributes('aria-expanded')).toBe('false')
+    // 空运算符点一下就提交，不打开编辑器，所以不声明弹层。
+    expect(activeToken!.get('button.astryx-token-action').attributes('aria-haspopup')).toBeUndefined()
+
+    await button.trigger('click')
+    await flushPromises()
+    expect(button.attributes('aria-expanded')).toBe('true')
+    const editor = document.body.querySelector('.astryx-power-search-editor')
+    expect(editor?.getAttribute('role')).toBe('dialog')
+    const nameId = editor?.getAttribute('aria-labelledby') ?? ''
+    expect(document.getElementById(nameId)?.textContent).toBe(visible)
+    wrapper.unmount()
+  })
+
   it('removes only the last filter with backspace on an empty input', async () => {
     const { filters, wrapper } = mountFilters([nameFilter, activeFilter])
     const input = wrapper.get('input')

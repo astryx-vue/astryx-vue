@@ -96,6 +96,7 @@ defineExpose({
         :search-source="props.searchSource"
         :input-id="field.inputId"
         :described-by="field.describedBy"
+        :label-id="field.labelId"
         :placeholder="props.placeholder"
         :disabled="isDisabled"
         :disabled-reason="disabledMessage"

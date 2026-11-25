@@ -4,6 +4,7 @@ import type { ItemProps, ItemSlots } from './types.js'
 import { computed, provide, toRaw, toValue, useAttrs, useId, useSlots, useTemplateRef, watchEffect } from 'vue'
 import { useInteractiveRole } from '../composables/useInteractiveRole.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
+import { isInLayerSurface, isLayerSurface } from '../layer/layerSurfacePress.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
 import { isSafeUrl } from '../utils/safeUrl.js'
 import { itemDescriptionContextKey } from './context.js'
@@ -210,7 +211,7 @@ function hasInteractiveAncestor(target: Element, container: HTMLElement): boolea
   let current: Element | null = target
 
   while (current != null && current !== container && current !== container.ownerDocument.body) {
-    if (isInteractiveElement(current))
+    if (isInteractiveElement(current) || isLayerSurface(current))
       return true
 
     current = current.parentElement
@@ -226,6 +227,10 @@ function handleContainerClick(event: MouseEvent): void {
   const target = event.target
 
   if (target instanceof HTMLElement && target.closest(NATIVE_CONTROL_SELECTOR) != null)
+    return
+
+  // 打开着的 Tooltip、HoverCard 里的按下属于气泡自己。
+  if (target instanceof Element && isInLayerSurface(target, event.currentTarget as Element))
     return
 
   props.onClick?.(event)

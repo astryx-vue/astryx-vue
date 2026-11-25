@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TokenEmits, TokenProps, TokenSlots } from './types.js'
-import { computed, toRaw, useAttrs } from 'vue'
+import { computed, inject, toRaw, useAttrs } from 'vue'
 import { useInteractiveRole } from '../composables/useInteractiveRole.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { useResolvedLabelHidden } from '../composables/useResolvedLabelHidden.js'
@@ -9,6 +9,7 @@ import { useLinkComponent } from '../LinkProvider/context.js'
 import { useAstryxMessages } from '../locale/index.js'
 import { disabledInteractionProps } from '../utils/disabledInteraction.js'
 import { textDirection } from '../utils/textDirection.js'
+import { tokenNamingKey } from './namingContext.js'
 import '../../styles/token.css'
 import '../../styles/visually-hidden-utility.css'
 
@@ -42,7 +43,8 @@ const linkRoot = computed(() => {
     return 'a'
   return toRaw(linkComponent.value)
 })
-const removeLabel = computed(() => messages.value.token.remove(props.label))
+const naming = inject(tokenNamingKey, null)
+const removeLabel = computed(() => messages.value.token.remove(naming?.value.removeName ?? props.label))
 const clickable = computed(() => attrs.onClick != null)
 const linked = computed(() => safeHref.value != null)
 const interactive = computed(() => clickable.value || linked.value || props.removable)
@@ -69,9 +71,13 @@ function ariaName(key: string): string {
   return /^aria[A-Z]/.test(key) ? key.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`) : key
 }
 
-const actionAria = computed(() => actionIsButton.value
-  ? Object.fromEntries(Object.entries(attrs).filter(([key]) => ACTION_ARIA.has(ariaName(key))))
-  : {})
+const actionAria = computed(() => {
+  if (!actionIsButton.value)
+    return {}
+  const own = Object.fromEntries(Object.entries(attrs).filter(([key]) => ACTION_ARIA.has(ariaName(key))))
+  const actionName = naming?.value.actionName
+  return own['aria-labelledby'] == null && own.ariaLabelledby == null && actionName ? { 'aria-label': actionName, ...own } : own
+})
 
 function callListener(listener: unknown, event: Event): void {
   if (typeof listener === 'function')

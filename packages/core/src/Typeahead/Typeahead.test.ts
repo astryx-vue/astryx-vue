@@ -38,6 +38,28 @@ function mountTypeahead(props: Record<string, unknown> = {}) {
   })
 }
 
+/** 按 aria-labelledby / aria-describedby 引用的 id 拼出文字，模拟读屏算出的名称。 */
+function textOfIds(ids: string | undefined): string {
+  return (ids ?? '').split(/\s+/).filter(Boolean).map(id => document.getElementById(id)?.textContent?.trim() ?? '').join(' ')
+}
+
+describe('typeahead value token naming', () => {
+  it('names the token button, the tab stop while a value shows, by the field label and the value', () => {
+    const wrapper = mountTypeahead({
+      modelValue: fruits[0],
+      description: 'Pick your favorite fruit',
+      status: 'error',
+      statusMessage: 'Pick a ripe one',
+    })
+    const button = wrapper.get('.astryx-token button')
+    expect(textOfIds(button.attributes('aria-labelledby'))).toBe('Fruit Apple')
+    const description = textOfIds(button.attributes('aria-describedby'))
+    expect(description).toContain('Pick your favorite fruit')
+    expect(description).toContain('Pick a ripe one')
+    wrapper.unmount()
+  })
+})
+
 describe('typeahead', () => {
   it('opens a listbox and selects with the keyboard', async () => {
     const wrapper = mountTypeahead()
