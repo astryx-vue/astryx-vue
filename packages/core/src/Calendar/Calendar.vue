@@ -225,6 +225,11 @@ interface DayView {
   disabled: boolean
   selected: boolean
   inRange: boolean
+  /** The range band belongs to a hover preview, not a committed range. */
+  preview: boolean
+  /** First or last day of the range band in this week. */
+  bandStart: boolean
+  bandEnd: boolean
   rangeStart: boolean
   rangeEnd: boolean
   today: boolean
@@ -269,6 +274,9 @@ function paint(week: { days: { date: CalendarDate, iso: string, outside: boolean
       disabled,
       selected,
       inRange: continues && !isStart && !isEnd,
+      preview: preview.value != null,
+      bandStart: continues && !isStart && !isEnd && (!previousContinues || (!!start && sameCalendarDay(previous!.date, start))),
+      bandEnd: continues && !isStart && !isEnd && (!nextContinues || (!!end && sameCalendarDay(next!.date, end))),
       rangeStart: isStart,
       rangeEnd: isEnd,
       today: !outside && sameCalendarDay(day.date, todayDate),
@@ -443,6 +451,8 @@ function onKeyDown(event: KeyboardEvent): void {
                 type="button"
                 class="astryx-calendar-cell"
                 :class="{
+                  'astryx-calendar-range': day.inRange && !day.preview,
+                  'astryx-calendar-range-preview': day.inRange && day.preview,
                   'is-selected': day.selected,
                   'is-range-start': day.rangeStart,
                   'is-range-end': day.rangeEnd,
@@ -454,6 +464,8 @@ function onKeyDown(event: KeyboardEvent): void {
                   'is-other-month': day.outside,
                 }"
                 :data-date="day.iso"
+                :data-start="day.bandStart ? 'start' : undefined"
+                :data-end="day.bandEnd ? 'end' : undefined"
                 :tabindex="day.tab ? 0 : -1"
                 :aria-disabled="day.disabled || undefined"
                 :aria-current="day.today ? 'date' : undefined"
