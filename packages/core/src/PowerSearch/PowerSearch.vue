@@ -25,6 +25,7 @@ import { powerSearchGroupLabel, powerSearchItemIcon } from './menuPresentation.j
 import { menuStyleWithWidth, resultCountText } from './menuStyle.js'
 import PowerSearchToken from './PowerSearchToken.vue'
 import { searchPowerSearchFields } from './source.js'
+import { useFilterTokenNaming } from './useFilterTokenNaming.js'
 import { usePowerSearchActions } from './usePowerSearchActions.js'
 import '../../styles/power-search.css'
 import '../../styles/typeahead.css'
@@ -138,6 +139,7 @@ const anchored = useAnchoredListbox({
 
 const {
   activate,
+  canEdit,
   canRemove,
   clearAll,
   closeEditor,
@@ -176,6 +178,8 @@ const {
   announce,
   visibleCount: () => visibleCountOf.current(),
 })
+
+const naming = useFilterTokenNaming({ idPrefix: () => inputId.value, session, filters, opensEditor: canEdit, isBuiltIn: filter => !slots.token && !tokenComponent(filter) })
 
 bridge.pick = pick
 bridge.sessionOpen = () => session.value != null
@@ -343,6 +347,7 @@ defineExpose({
                 :size="size"
                 :disabled="disabled"
                 :removable="canRemove(filter)"
+                v-bind="naming.tokenProps(filter, index)"
                 @activate="activate(index)"
                 @remove="removeAt(index)"
               />
@@ -459,6 +464,7 @@ defineExpose({
     <div
       v-if="session"
       ref="editorRef"
+      v-bind="naming.editorAttrs.value"
       class="astryx-power-search-editor astryx-layer"
       :data-ready="session.ready ? 'true' : 'false'"
       :style="editorStyle"

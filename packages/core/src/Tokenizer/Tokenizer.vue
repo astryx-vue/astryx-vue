@@ -5,6 +5,7 @@ import type { TokenizerChange, TokenizerEmits, TokenizerProps, TokenizerSlots } 
 import { computed, nextTick, onMounted, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
+import { useTokenRemoveTap } from '../composables/internal/useTokenRemoveTap.js'
 import { useAnnounce } from '../composables/useAnnounce.js'
 import { useOverflow } from '../composables/useOverflow.js'
 import { useResolvedLabelHidden } from '../composables/useResolvedLabelHidden.js'
@@ -143,6 +144,7 @@ onMounted(() => {
     inputRef.value?.focus()
 })
 
+const removeTap = useTokenRemoveTap({ root: anchorRef, input: inputRef, tokenSelector: '.astryx-tokenizer-token' })
 const tokenCount = computed(() => values.value.length)
 const overflow = useOverflow(tokenCount, { gap: 4 })
 const visibleCount = computed(() => collapsed.value ? overflow.visibleCount.value : tokenCount.value)
@@ -187,7 +189,8 @@ function remove(item: T): void {
   const next = values.value.filter(entry => entry.id !== item.id)
   commit(next, { type: 'remove', item })
   announce(messages.value.tokenizer.removed(item.label))
-  void nextTick(() => inputRef.value?.focus())
+  if (removeTap.shouldFocusInputAfterRemove())
+    void nextTick(() => inputRef.value?.focus())
 }
 
 function clearAll(event?: Event): void {

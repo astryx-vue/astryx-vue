@@ -16,6 +16,8 @@ import { tokenizerClear, tokenizerCreatable, tokenizerEnd, tokenizerIcon, tokeni
 
 `hasCreate` 允许把当前输入收成一条新标签。`hasClear` 一次清空。输入框为空时，`Backspace` 删掉最后一条。方向键可以在标签之间移动焦点，`Backspace` 或 `Delete` 删除当前标签。
 
+触屏上，输入框没有焦点时用手指点标签的删除按钮，标签删掉后焦点留在原处，屏幕键盘不会弹起来。鼠标点击、笔、按键删除，或者正在输入时的点按，仍然把焦点交回输入框。
+
 `overflow` 控制放不下时的表现：
 
 | 值 | 行为 |
