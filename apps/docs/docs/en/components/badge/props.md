@@ -19,6 +19,12 @@ footer: false
         <td><code>'neutral'</code></td>
         <td>Sets the visual variant of the badge. Optional: neutral, info, success, warning, error, blue, cyan, green, orange, pink, purple, red, teal, yellow.</td>
       </tr>
+      <tr>
+        <td><code>label</code></td>
+        <td><code>string | number</code></td>
+        <td>-</td>
+        <td>Badge text. Give the text here or through the default slot; the slot wins when both are set. A badge is one line and at least as tall as that line, so it grows with a larger text size. It is as wide as its label, so it does not stretch to fill a grid cell or a stack; a label wider than the space available ends in an ellipsis, and a string or number label is also set as the title.</td>
+      </tr>
     </tbody>
   </table>
 </div>
