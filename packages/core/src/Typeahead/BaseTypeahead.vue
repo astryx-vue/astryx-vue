@@ -369,7 +369,7 @@ defineExpose({
       v-show="menu.combobox.isOpen.value"
       :id="listboxId"
       ref="listboxRef"
-      class="astryx-typeahead-listbox astryx-layer"
+      class="astryx-typeahead-listbox astryx-typeahead-popup astryx-layer"
       :role="optionGrid.gridMode.value ? 'grid' : 'listbox'"
       :aria-label="messages.typeahead.results"
       :data-placement="anchored.position.value.placement"

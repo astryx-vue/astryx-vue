@@ -5,6 +5,7 @@ import { computed, onMounted, onUpdated, useTemplateRef, watch } from 'vue'
 import { attachScrollKeyboardDelegation } from '../composables/internal/scrollKeyboardDelegation.js'
 import { provideLayerDepth } from '../layer/layerDepth.js'
 import { resetLayerScopedContext } from '../layer/scopedProvide.js'
+import { provideLayoutContainer } from '../Layout/context.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { waitForTransition } from './sheetTransition.js'
 import { resolveSnapPoints } from './snapOffsets.js'
@@ -40,6 +41,7 @@ defineSlots<{ default?: () => VNode[] }>()
 // 嵌套深度加一，里面再开的浮层会排在面板上面。
 resetLayerScopedContext()
 provideLayerDepth()
+provideLayoutContainer('bottom-sheet')
 
 const HEIGHT_BUDGETS: Record<BottomSheetHeight, string> = {
   hug: '92dvh',
@@ -154,7 +156,7 @@ defineExpose({
     tabindex="-1"
   >
     <div
-      class="astryx-bottom-sheet__handle"
+      class="astryx-bottom-sheet__handle astryx-bottom-sheet-handle"
       aria-hidden="true"
       @pointerdown="gestures.onHandlePointerDown"
     >

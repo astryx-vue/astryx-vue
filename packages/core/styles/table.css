@@ -234,7 +234,7 @@
   }
 
   .astryx-table__sort-rank {
-    color: var(--astryx-color-accent, light-dark(#262626, #ebebeb));
+    color: var(--astryx-color-text-accent, light-dark(#262626, #ebebeb));
     font-size: 10px;
     line-height: 1;
   }

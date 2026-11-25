@@ -5,6 +5,7 @@ import { useFocusTrap, useRestoreFocus, useScrollLock } from '../composables/ind
 import { addModalOutlet, removeModalOutlet } from '../layer/modalOutlet.js'
 import { provideLayerMountTarget } from '../layer/mount.js'
 import { resetLayerScopedContext } from '../layer/scopedProvide.js'
+import { provideLayoutContainer } from '../Layout/context.js'
 import { DIALOG_CONTEXT_KEY } from './context.js'
 import { formatDialogSize, resolveDialogPositionOffsets } from './position.js'
 import '../../styles/dialog.css'
@@ -24,6 +25,7 @@ const attrs = useAttrs()
 
 // 对话框内容是这一层的成员边界：外面组里的尺寸、禁用、选中值都不再算数。
 resetLayerScopedContext()
+provideLayoutContainer('dialog')
 
 const titleId = `astryx-dialog-title-${useId()}`
 const hasTitle = ref(false)

@@ -48,7 +48,7 @@
     padding: var(--astryx-spacing-2, 8px) 0;
     border: 0;
     background: transparent;
-    color: var(--astryx-color-accent, light-dark(#262626, #ebebeb));
+    color: var(--astryx-color-text-accent, light-dark(#262626, #ebebeb));
     font-family: inherit;
     font-size: var(--astryx-text-body-size, 1rem);
     font-weight: var(--astryx-font-weight-medium, 500);
