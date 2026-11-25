@@ -90,7 +90,9 @@ function onLinkClick(event: MouseEvent) {
   consumeWhileDisabled(event, props.item.isDisabled === true)
 }
 
-const press = usePressFeedback()
+const press = usePressFeedback({ isContainer: true })
+/** 整行点下去是展开收起（没有自己的点击）：这时箭头按钮做的是同一件事，按它也算按这一行。 */
+const chevronPress = computed(() => (props.item.onClick == null ? press.pressActionProps : {}))
 const rowPress = computed(() => {
   const interactive = props.item.onClick != null || safeHref.value != null || hasChildren.value
   return interactive && props.item.isDisabled !== true ? press.pressableProps : {}
@@ -156,6 +158,7 @@ const rowPress = computed(() => {
             :aria-label="messages.treeList.toggleChildren"
             :aria-disabled="item.isDisabled || undefined"
             tabindex="-1"
+            v-bind="chevronPress"
             @click="onToggle"
             @keydown="consumeWhileDisabled($event, item.isDisabled === true)"
           >
@@ -174,6 +177,7 @@ const rowPress = computed(() => {
             :is="linkRoot"
             v-if="safeHref"
             class="astryx-tree-list__action"
+            v-bind="press.pressActionProps"
             :href="safeHref"
             :to="linkRoot === 'a' ? undefined : safeHref"
             :target="item.target"
@@ -192,6 +196,7 @@ const rowPress = computed(() => {
             v-else-if="item.onClick"
             type="button"
             class="astryx-tree-list__action"
+            v-bind="press.pressActionProps"
             :aria-labelledby="labelId"
             :aria-describedby="item.description ? descriptionId : undefined"
             :aria-disabled="item.isDisabled || undefined"

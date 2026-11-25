@@ -75,6 +75,7 @@ import { Icon } from '@astryx-vue/core/Icon'
 | <Badge variant="error">避免</Badge> | 避免在同一视图中放置多个 primary 按钮，多个主按钮会互相争抢注意力，反而削弱视觉层级。 |
 | <Badge variant="error">避免</Badge> | 避免让 destructive 按钮直接执行删除数据这类不可撤销的操作。应先提供确认步骤，给使用者一次反悔的机会。 |
 | <Badge variant="error">避免</Badge> | 避免用按钮做纯粹的页面跳转：跳转请使用链接，按钮留给保存、删除、提交这类会改变状态的操作。 |
+| <Badge variant="error">避免</Badge> | 避免给按钮的 `::before` 加自己的样式：在手机、平板这类以触屏为主的设备上，按下和松手淡出的那一刻，按钮把按压色画在 `::before` 上（`z-index: -1`，淡出时改它的透明度），你的样式会混进这一层。平时按钮不在那里放任何东西。要装饰就放一个子元素。 |
 
 ## 示例
 

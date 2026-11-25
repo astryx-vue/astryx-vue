@@ -11,7 +11,7 @@ import { Badge } from '@astryx-vue/core/Badge'
 
 ## Usage
 
-The touch press model every Astryx pressable uses, for a local component that paints its own press. Under a finger, CSS `:active` paints on the touch itself and can outlive the start of a scroll; the press model instead waits 150 ms before believing a press, cancels it the moment the finger travels 10 px or a scroll claims the gesture, never brings it back inside that gesture, answers a quick tap at the lift, and fades the release over 200 ms — the clocks a native list uses. One document-level controller does this for every marked element (installed by the first pressable to mount, removed by the last to unmount), so calling the hook adds no listener or state to your element. Under a mouse nothing changes: keep your `:active` rule, and drop it under `@media (pointer: coarse)` the way the built-in components do.
+The touch press model every Astryx pressable uses, for a local component that paints its own press. Under a finger, CSS `:active` paints on the touch itself and can outlive the start of a scroll; the press model instead tracks the touch the way a native control does: outside a scroll view it highlights in the frame the finger lands; inside one it waits 150 ms, counted from the touch itself so a busy page does not delay it further, so a flick paints nothing. It cancels the moment the finger travels 10 px or a scroll claims the gesture, never brings it back inside that gesture, answers a quick tap at the lift, and fades the release on the theme's exit duration (`--astryx-duration-exit`), at most 200 ms under reduced motion. One document-level controller does this for every marked element (installed by the first pressable to mount, removed by the last to unmount), so calling the hook adds no listener or state to your element. Under a mouse nothing changes: keep your `:active` rule, and drop it under `@media (pointer: coarse)` the way the built-in components do.
 
 ```ts
 import { usePressFeedback } from '@astryx-vue/core'
@@ -32,6 +32,8 @@ const { pressableProps } = usePressFeedback()
 ```
 
 The hook brings `styles/pressable.css` along. The default `astryx-pressable` class paints the pressed token on a `::after` layer, keeps `:active` for a mouse, and under a finger reads the `data-astryx-press` attribute the controller writes (`on` while held, `fading` for the release). The press's strength is the registered `--astryx-press-alpha`; the release animates it from 1 to 0. A component that paints its own press passes `{ hasOverlay: false }` and paints both `[data-astryx-press]` states from `var(--_press-paint-image)` in its own styles.
+
+A container that holds other buttons or inputs, such as a list row or a card, passes `{ isContainer: true }`: a finger pressing one of those controls does not run the container's own action, so the container shows no press. Spread the returned `pressActionProps` on the container's own action element (such as a row's invisible link) so a press on it still presses the container.
 
 ## Best practices
 

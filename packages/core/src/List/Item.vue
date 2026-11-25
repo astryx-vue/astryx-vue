@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Component, ComponentPublicInstance, CSSProperties, StyleValue } from 'vue'
 import type { ItemProps, ItemSlots } from './types.js'
-import { computed, provide, toRaw, toValue, useAttrs, useId, useSlots, useTemplateRef } from 'vue'
+import { computed, provide, toRaw, toValue, useAttrs, useId, useSlots, useTemplateRef, watchEffect } from 'vue'
 import { useInteractiveRole } from '../composables/useInteractiveRole.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
@@ -107,8 +107,13 @@ const isInteractive = computed(() => props.onClick != null || safeHref.value != 
 /** 链接内容用的根组件：`as` 写了组件就用它，否则用 LinkProvider 给的默认值。 */
 const customLink = computed(() => (typeof props.as === 'string' ? linkComponent.value : props.as))
 const isLinkContent = computed(() => safeHref.value != null && customLink.value != null)
-usePressFeedback({ hasOverlay: false })
+const { pressActionProps } = usePressFeedback({ hasOverlay: false, isContainer: true })
 const pressable = computed(() => isInteractive.value && !props.isDisabled)
+/**
+ * 行自己有动作（点击、链接、或把点击转给嵌套控件）时，它是可按容器：
+ * 手指按在行里别的控件上，那一下不执行行的动作，行就不亮。带父级角色的行（选项、菜单项）整行就是动作。
+ */
+const isPressContainer = computed(() => pressable.value && (isDelegate.value || !hasParentRole.value))
 
 const resolvedTarget = computed(() => props.target)
 const resolvedRel = computed(() => {
@@ -174,6 +179,7 @@ const contentAttrs = computed<Record<string, unknown>>(() => {
       'target': resolvedTarget.value,
       'aria-disabled': props.isDisabled || undefined,
       'tabindex': props.isDisabled ? -1 : undefined,
+      ...pressActionProps,
     }
   }
 
@@ -182,6 +188,7 @@ const contentAttrs = computed<Record<string, unknown>>(() => {
       type: 'button',
       disabled: props.isDisabled,
       onClick: handleContentClick,
+      ...pressActionProps,
     }
   }
 
@@ -257,6 +264,19 @@ function handleDelegatedClick(event: MouseEvent): void {
   event.stopPropagation()
 }
 
+// 转发点击的行：被转发的那个控件就是行自己的动作，按它照样是按这一行。
+watchEffect((onCleanup) => {
+  const control = isDelegate.value ? toValue(props.interactiveRef) : null
+  if (control == null)
+    return
+  for (const [name, value] of Object.entries(pressActionProps))
+    control.setAttribute(name, value)
+  onCleanup(() => {
+    for (const name of Object.keys(pressActionProps))
+      control.removeAttribute(name)
+  })
+})
+
 const SWIPE_BLOCKED_ROLES = new Set(['option', 'menuitem', 'menuitemcheckbox', 'menuitemradio'])
 const swipeBehavior = computed(() => props.swipeBehavior ?? 'reveal')
 const leadingActions = computed(() => {
@@ -330,6 +350,7 @@ defineExpose({ element, focus, blur })
     :data-interactive="isInteractive || undefined"
     :data-selected="isSelected || undefined"
     :data-astryx-pressable="pressable ? '' : undefined"
+    :data-astryx-press-container="isPressContainer ? '' : undefined"
     :data-swipe="swipeEnabled ? swipe.phase.value : undefined"
     :role="role"
     :style="attrs.style as StyleValue"
