@@ -7,7 +7,8 @@ import { isIconGlyph } from '../Icon/glyphs.js'
 import Icon from '../Icon/Icon.vue'
 import { isInLayerSurface } from '../layer/layerSurfacePress.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
-import { useAstryxMessages } from '../locale/context.js'
+import { useComponentMessages } from '../locale/context.js'
+import { treeListMessages } from '../locale/messages/tree-list.js'
 import { consumeWhileDisabled } from '../utils/disabledInteraction.js'
 import { isSafeUrl } from '../utils/safeUrl.js'
 import '../../styles/tree-list.css'
@@ -29,7 +30,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{ toggle: [id: string] }>()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ treeList: treeListMessages })
 const linkComponent = useLinkComponent()
 const labelId = useId()
 const descriptionId = useId()

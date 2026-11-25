@@ -1,6 +1,7 @@
 import type { AstryxUpstreamCatalog, AstryxUpstreamMessage } from '../locale/loadCatalog.js'
 import type { AstryxMessages } from '../locale/messages.js'
-import { builtInMessages, normalizeLocale } from '../locale/context.js'
+import { normalizeLocale } from '../locale/context.js'
+import { builtInMessages } from '../locale/fullMessages.js'
 import { formatIcu, icuPlaceholderNames } from '../locale/icu.js'
 import { loadAstryxCatalog } from '../locale/loadCatalog.js'
 import { upstreamMessageMap } from '../locale/upstreamMap.js'

@@ -3,14 +3,15 @@ import type { ChatLayoutScrollButtonEmits, ChatLayoutScrollButtonProps } from '.
 import { computed } from 'vue'
 import Button from '../Button/Button.vue'
 import Icon from '../Icon/Icon.vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { chatMessages } from '../locale/messages/chat.js'
 import '../../styles/chat.css'
 
 defineOptions({ name: 'AstryxChatLayoutScrollButton', inheritAttrs: false })
 
 const props = defineProps<ChatLayoutScrollButtonProps>()
 const emit = defineEmits<ChatLayoutScrollButtonEmits>()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ chat: chatMessages })
 
 const accessibleLabel = computed(() => props.label ?? messages.value.chat.scrollToBottom)
 </script>

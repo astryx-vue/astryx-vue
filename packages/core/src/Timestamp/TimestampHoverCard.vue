@@ -4,7 +4,8 @@ import { computed, ref } from 'vue'
 import HoverCard from '../HoverCard/HoverCard.vue'
 import ComponentIcon from '../Icon/ComponentIcon.vue'
 import IconButton from '../IconButton/IconButton.vue'
-import { useAstryxMessages } from '../locale/context.js'
+import { useComponentMessages } from '../locale/context.js'
+import { timestampMessages } from '../locale/messages/timestamp.js'
 import '../../styles/timestamp.css'
 
 const props = defineProps<{
@@ -12,7 +13,7 @@ const props = defineProps<{
   label: string
 }>()
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ timestamp: timestampMessages })
 const copiedKey = ref<string>()
 let resetTimer: ReturnType<typeof setTimeout> | undefined
 

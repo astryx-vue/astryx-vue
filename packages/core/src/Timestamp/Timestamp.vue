@@ -3,7 +3,8 @@ import type { TextColor } from '../Text/types.js'
 import type { TimestampTooltipLine } from './tooltipEntries.js'
 import type { TimestampFormat, TimestampProps } from './types.js'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { useAstryxLocale, useAstryxMessages } from '../locale/context.js'
+import { useAstryxLocale, useComponentMessages } from '../locale/context.js'
+import { timestampMessages } from '../locale/messages/timestamp.js'
 import Text from '../Text/Text.vue'
 import { formatInstant } from './formatInstant.js'
 import { formatRelativeTime } from './formatRelativeTime.js'
@@ -24,7 +25,7 @@ const props = withDefaults(defineProps<TimestampProps>(), {
 })
 
 const locale = useAstryxLocale()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ timestamp: timestampMessages })
 // 服务端渲染（含静态预渲染）和 hydration 这一趟都不能读当前时间，否则同一份值
 // 会写出依赖渲染时刻和时区的 HTML。依赖时钟的格式先渲染完整的 UTC 日期时间，
 // 客户端挂载后再换成正常输出；绝对格式自始至终不读时钟。

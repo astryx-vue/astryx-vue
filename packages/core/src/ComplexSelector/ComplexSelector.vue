@@ -7,7 +7,8 @@ import Field from '../Field/Field.vue'
 import { useFieldPartStyling } from '../Field/fieldParts.js'
 import { fieldStatusPlacement } from '../Field/statusPlacement.js'
 import Icon from '../Icon/Icon.vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { selectorMessages } from '../locale/messages/selector.js'
 import Popover from '../Popover/Popover.vue'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { normalizeTriggerVariant } from '../selectors/triggerVariant.js'
@@ -49,7 +50,7 @@ const triggerVariant = computed(() => normalizeTriggerVariant(props.variant))
 const effectiveStatusVariant = computed(() => fieldStatusPlacement(props.variant, props.statusVariant))
 
 const model = defineModel<Value>({ required: true })
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ selector: selectorMessages })
 const isOpen = ref(false)
 const isPending = ref(false)
 const contentEl = useTemplateRef<HTMLElement>('contentEl')

@@ -20,7 +20,8 @@ import Icon from '../Icon/Icon.vue'
 import { useIndicator } from '../Indicator/useIndicator.js'
 import { useInputGroupContext, useInputGroupDisabled } from '../InputGroup/context.js'
 import { focusElement } from '../layer/focus.js'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { multiSelectorMessages } from '../locale/messages/multi-selector.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { normalizeTriggerVariant } from '../selectors/triggerVariant.js'
 import { useSize } from '../SizeContext/SizeContext.js'
@@ -76,7 +77,7 @@ const triggerVariant = computed(() => normalizeTriggerVariant(props.variant))
 
 const CheckboxMark = useIndicator('checkbox')
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ multiSelector: multiSelectorMessages })
 const announce = useAnnounce()
 const inputGroup = useInputGroupContext()
 const inGroup = computed(() => inputGroup != null)

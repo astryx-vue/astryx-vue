@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { ChatToolCallStatus } from './types.js'
 import { computed } from 'vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { chatMessages } from '../locale/messages/chat.js'
 import Spinner from '../Spinner/Spinner.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import ChatIcon from './ChatIcon.vue'
@@ -12,7 +13,7 @@ const props = defineProps<{
   errorMessage?: string
 }>()
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ chat: chatMessages })
 const label = computed(() => {
   const chat = messages.value.chat
   if (props.status === 'pending')

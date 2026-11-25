@@ -4,7 +4,8 @@ import type { NavMenuFocusRequest } from './context.js'
 import { computed, useSlots } from 'vue'
 import Icon from '../Icon/Icon.vue'
 import { useLinkComponent } from '../LinkProvider/context.js'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { navMessages } from '../locale/messages/nav.js'
 import { resolveNavRoot, safeNavHref } from '../NavItem/link.js'
 import NavDisclosure from './NavDisclosure.vue'
 import { resolveNavHeadingMode } from './navHeadingMode.js'
@@ -32,7 +33,7 @@ defineSlots<{
 }>()
 
 const slots = useSlots()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ nav: navMessages })
 const linkComponent = useLinkComponent()
 /** 自己的 `as` 优先，其次是 LinkProvider 给的默认链接组件。 */
 const customLink = computed(() => props.as ?? linkComponent.value)

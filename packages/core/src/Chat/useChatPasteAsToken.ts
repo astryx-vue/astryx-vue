@@ -1,6 +1,6 @@
 import type { Ref } from 'vue'
 import type { ChatComposerInputHandle, ChatComposerToken } from './types.js'
-import { useAstryxMessages } from '../locale/context.js'
+import { useComponentMessages } from '../locale/context.js'
 import { chatMessages } from '../locale/messages/chat.js'
 
 export const PASTE_TOKEN_THRESHOLD = 200
@@ -34,7 +34,7 @@ export function pastedTextLabel(text: string, format: PastedTextLabelFormat = ch
 
 export function useChatPasteAsToken(options: UseChatPasteAsTokenOptions): UseChatPasteAsTokenReturn {
   const threshold = options.threshold ?? PASTE_TOKEN_THRESHOLD
-  const messages = useAstryxMessages()
+  const messages = useComponentMessages({ chat: chatMessages })
   const toToken = options.toToken ?? ((text: string): ChatComposerToken => ({
     value: text,
     label: pastedTextLabel(text, messages.value.chat.pastedTextLabel),

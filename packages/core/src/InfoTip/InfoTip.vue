@@ -2,7 +2,8 @@
 import type { InfoTipProps } from './types.js'
 import { computed, onMounted, onUpdated, ref, shallowRef, useAttrs, useTemplateRef } from 'vue'
 import Icon from '../Icon/Icon.vue'
-import { useAstryxMessages } from '../locale/context.js'
+import { useComponentMessages } from '../locale/context.js'
+import { infoTipMessages } from '../locale/messages/info-tip.js'
 import TooltipSurface from '../Tooltip/TooltipSurface.vue'
 import { useTooltip } from '../Tooltip/useTooltip.js'
 import '../../styles/info-tip.css'
@@ -26,7 +27,7 @@ defineSlots<{
   content?: () => unknown
 }>()
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ infoTip: infoTipMessages })
 const attrs = useAttrs()
 const button = useTemplateRef<HTMLButtonElement>('button')
 const element = computed(() => button.value ?? null)

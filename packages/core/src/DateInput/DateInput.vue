@@ -18,7 +18,8 @@ import { useFieldPartStyling } from '../Field/fieldParts.js'
 import { useAriaRequired } from '../FormLayout/context.js'
 import Icon from '../Icon/Icon.vue'
 import { useInputGroupDisabled } from '../InputGroup/context.js'
-import { useAstryxLocale, useAstryxMessages } from '../locale/index.js'
+import { useAstryxLocale, useComponentMessages } from '../locale/context.js'
+import { dateInputMessages } from '../locale/messages/date-input.js'
 import Popover from '../Popover/Popover.vue'
 import { useSize } from '../SizeContext/SizeContext.js'
 import Spinner from '../Spinner/Spinner.vue'
@@ -70,7 +71,7 @@ const PassThrough = defineComponent({
 const generatedId = `astryx-date-input-${useId()}`
 const inputId = computed(() => props.id ?? generatedId)
 const popupId = computed(() => `${inputId.value}-popup`)
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ dateInput: dateInputMessages })
 const locale = useAstryxLocale()
 const isCoarsePointer = useMediaQuery(TOUCH_POINTER_QUERY)
 const resolvedPlaceholder = computed(() => props.placeholder ?? messages.value.dateInput.placeholder)

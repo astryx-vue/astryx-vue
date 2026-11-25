@@ -7,7 +7,8 @@ import { usePressFeedback } from '../composables/usePressFeedback.js'
 import Icon from '../Icon/Icon.vue'
 import { readLayerScoped } from '../layer/scopedProvide.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { navMessages } from '../locale/messages/nav.js'
 import { TextClampContext } from '../Text/textClampContext.js'
 import Tooltip from '../Tooltip/Tooltip.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
@@ -35,7 +36,7 @@ defineSlots<{
 }>()
 
 const attrs = useAttrs()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ nav: navMessages })
 const linkComponent = useLinkComponent()
 const press = usePressFeedback()
 const textClamp = readLayerScoped(TextClampContext)

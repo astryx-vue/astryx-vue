@@ -1,7 +1,8 @@
 import type { MaybeRefOrGetter, VNodeChild } from 'vue'
 import type { TablePlugin, TableRowPatch } from '../types.js'
 import { h, toValue } from 'vue'
-import { useAstryxMessages } from '../../locale/context.js'
+import { useComponentMessages } from '../../locale/context.js'
+import { tableMessages } from '../../locale/messages/table.js'
 import { pixel } from '../columnUtils.js'
 import TableExpansionChevron from '../TableExpansionChevron.vue'
 import { isInteractiveRowClick } from './interaction.js'
@@ -22,7 +23,7 @@ export interface UseTableRowExpansionConfig<T extends Record<string, unknown>> {
 export function useTableRowExpansion<T extends Record<string, unknown>>(
   config: MaybeRefOrGetter<UseTableRowExpansionConfig<T>>,
 ): TablePlugin<T> {
-  const messages = useAstryxMessages()
+  const messages = useComponentMessages({ table: tableMessages })
   return {
     transformColumns(columns) {
       return [{

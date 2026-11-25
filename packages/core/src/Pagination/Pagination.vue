@@ -6,7 +6,8 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useListFocus } from '../composables/useListFocus.js'
 import { paginationDensityForWidth, siblingCountForDensity, usePagination } from '../composables/usePagination.js'
 import { usePendingChange } from '../composables/usePendingChange.js'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { paginationMessages } from '../locale/messages/pagination.js'
 import Selector from '../Selector/Selector.vue'
 import { consumeWhileDisabled } from '../utils/disabledInteraction.js'
 import '../../styles/pagination.css'
@@ -31,7 +32,7 @@ const props = withDefaults(defineProps<PaginationProps>(), {
 const emit = defineEmits<PaginationEmits>()
 defineSlots<PaginationSlots>()
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ pagination: paginationMessages })
 const disabledControl = computed(() => props.isDisabled || props.disabled)
 const regionLabel = computed(() => props.label ?? messages.value.pagination.nav)
 const stride = computed(() => Number.isInteger(props.step) && props.step >= 1 ? props.step : 1)

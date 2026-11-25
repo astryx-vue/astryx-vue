@@ -9,7 +9,8 @@ import { usePressFeedback } from '../composables/usePressFeedback.js'
 import FieldLabel from '../Field/FieldLabel.vue'
 import FieldStatus from '../Field/FieldStatus.vue'
 import { useAriaRequired } from '../FormLayout/context.js'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { switchMessages } from '../locale/messages/switch.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { useSwitchAction } from './useSwitchAction.js'
 import '../../styles/switch.css'
@@ -24,7 +25,7 @@ const props = withDefaults(defineProps<Omit<SwitchProps, 'modelValue'>>(), {
 const emit = defineEmits<SwitchEmits>()
 defineSlots<SwitchSlots>()
 const ariaRequired = useAriaRequired(props)
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ switch: switchMessages })
 const announce = useAnnounce()
 const press = usePressFeedback({ hasOverlay: false })
 const model = defineModel<boolean>({ required: true })

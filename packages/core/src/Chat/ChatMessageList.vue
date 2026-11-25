@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { ChatMessageListProps, ChatMessageListSlots } from './types.js'
 import { computed, provide, ref, useTemplateRef, watch } from 'vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { chatMessages } from '../locale/messages/chat.js'
 import Spinner from '../Spinner/Spinner.vue'
 import { chatListContextKey, useChatLayoutContext } from './context.js'
 import '../../styles/chat.css'
@@ -15,7 +16,7 @@ const props = withDefaults(defineProps<ChatMessageListProps>(), {
 })
 defineSlots<ChatMessageListSlots>()
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ chat: chatMessages })
 const layout = useChatLayoutContext()
 const inner = useTemplateRef<HTMLDivElement>('inner')
 const sentinel = useTemplateRef<HTMLDivElement>('sentinel')

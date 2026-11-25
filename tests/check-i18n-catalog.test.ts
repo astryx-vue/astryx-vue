@@ -6,6 +6,7 @@ import { formatIcu, icuArgumentKinds } from '../packages/core/src/locale/icu.ts'
 import {
   checkBuiltInParity,
   checkBuiltInPlaceholders,
+  checkComponentMessageImports,
   checkCoverage,
   checkEnglishText,
   checkLocaleContracts,
@@ -151,6 +152,29 @@ describe('checkSourceRefs', () => {
     const result = checkSourceRefs(files, map)
     expect(result.count).toBe(2)
     expect(result.problems).toEqual(['Demo.vue:2  @astryx.demo.typo 不在 upstreamMap 里'])
+  })
+})
+
+describe('checkComponentMessageImports', () => {
+  it('reports a component that imports the whole built-in catalog', () => {
+    const files = [
+      { path: 'packages/core/src/Demo/Demo.vue', text: 'import { useComponentMessages } from \'../locale/context.js\'\nimport { useAstryxMessages } from \'../locale/index.js\'' },
+      { path: 'packages/core/src/Demo/useDemo.ts', text: 'import { useTranslator } from \'../locale/useTranslator.js\'' },
+      { path: 'packages/core/src/Demo/types.ts', text: 'import type { AstryxMessages } from \'../locale/messages.js\'' },
+    ]
+    expect(checkComponentMessageImports(files)).toEqual([
+      'packages/core/src/Demo/Demo.vue:2  引入了整份内置文案，改用 useComponentMessages',
+      'packages/core/src/Demo/useDemo.ts:1  引入了整份内置文案，改用 useComponentMessages',
+    ])
+  })
+
+  it('allows the locale module, the provider and the package entry', () => {
+    const files = [
+      { path: 'packages/core/src/locale/useTranslator.ts', text: 'import { useAstryxMessages } from \'./fullMessages.js\'' },
+      { path: 'packages/core/src/InternationalizationProvider/catalog.ts', text: 'import { builtInMessages } from \'../locale/fullMessages.js\'' },
+      { path: 'packages/core/src/index.ts', text: 'import { useTranslator } from \'./locale/index.js\'' },
+    ]
+    expect(checkComponentMessageImports(files)).toEqual([])
   })
 })
 

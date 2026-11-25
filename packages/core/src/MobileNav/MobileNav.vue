@@ -6,7 +6,8 @@ import { useFocusTrap } from '../composables/useFocusTrap.js'
 import { useRestoreFocus } from '../composables/useRestoreFocus.js'
 import { provideLayerDepth } from '../layer/layerDepth.js'
 import { resetLayerScopedContext } from '../layer/scopedProvide.js'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { navMessages } from '../locale/messages/nav.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { mobileNavKey } from './context.js'
 import { useMobileNavLayer } from './useMobileNavLayer.js'
@@ -22,7 +23,7 @@ const props = withDefaults(defineProps<Omit<MobileNavProps, 'isOpen'>>(), {
 const emit = defineEmits<Omit<MobileNavEmits, 'update:isOpen'>>()
 defineSlots<MobileNavSlots>()
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ nav: navMessages })
 
 // 抽屉内容是这一层的成员边界：外面组里的尺寸、禁用、选中值都不再算数。
 resetLayerScopedContext()

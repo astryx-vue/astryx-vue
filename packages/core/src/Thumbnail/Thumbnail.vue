@@ -5,7 +5,9 @@ import { useAnnounce } from '../composables/useAnnounce.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
-import { useAstryxMessages } from '../locale/context.js'
+import { useComponentMessages } from '../locale/context.js'
+import { spinnerMessages } from '../locale/messages/spinner.js'
+import { thumbnailMessages } from '../locale/messages/thumbnail.js'
 import Skeleton from '../Skeleton/Skeleton.vue'
 import Spinner from '../Spinner/Spinner.vue'
 import Tooltip from '../Tooltip/Tooltip.vue'
@@ -20,7 +22,7 @@ const props = withDefaults(defineProps<ThumbnailProps>(), {
 })
 
 const emit = defineEmits<ThumbnailEmits>()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ spinner: spinnerMessages, thumbnail: thumbnailMessages })
 const failedSrc = ref<string>()
 const instance = getCurrentInstance()
 const press = usePressFeedback({ hasOverlay: false })

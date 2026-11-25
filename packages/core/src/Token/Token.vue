@@ -6,7 +6,8 @@ import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { useResolvedLabelHidden } from '../composables/useResolvedLabelHidden.js'
 import { isSafeUrl } from '../Link/safeUrl.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { tokenMessages } from '../locale/messages/token.js'
 import { disabledInteractionProps } from '../utils/disabledInteraction.js'
 import { textDirection } from '../utils/textDirection.js'
 import { tokenNamingKey } from './namingContext.js'
@@ -27,7 +28,7 @@ const emit = defineEmits<TokenEmits>()
 defineSlots<TokenSlots>()
 
 const attrs = useAttrs()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ token: tokenMessages })
 /** 正名 isLabelHidden，旧名 labelHidden 任一为真就藏起文字。 */
 const hideLabel = useResolvedLabelHidden(() => props.isLabelHidden, () => props.labelHidden)
 const linkComponent = useLinkComponent()

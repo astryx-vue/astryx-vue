@@ -2,7 +2,8 @@
 import type { CSSProperties } from 'vue'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import Kbd from '../Kbd/Kbd.vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { keyboardHintMessages } from '../locale/messages/keyboard-hint.js'
 import '../../styles/keyboard-hint.css'
 
 const props = defineProps<{
@@ -11,7 +12,7 @@ const props = defineProps<{
   orientation: 'horizontal' | 'vertical' | 'both'
 }>()
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ keyboardHint: keyboardHintMessages })
 const hint = ref<HTMLElement | null>(null)
 const position = ref({ top: 0, left: 0 })
 

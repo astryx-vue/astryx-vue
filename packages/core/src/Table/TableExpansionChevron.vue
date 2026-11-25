@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import ComponentIcon from '../Icon/ComponentIcon.vue'
-import { useAstryxMessages } from '../locale/context.js'
+import { useComponentMessages } from '../locale/context.js'
+import { tableMessages } from '../locale/messages/table.js'
 
 defineOptions({ name: 'AstryxTableExpansionChevron' })
 
 defineProps<{ expanded: boolean }>()
 const emit = defineEmits<{ toggle: [] }>()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ table: tableMessages })
 </script>
 
 <template>

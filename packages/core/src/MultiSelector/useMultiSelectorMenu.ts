@@ -22,7 +22,7 @@ export interface MultiSelectorMenuHost {
   emitOpenChange: (isOpen: boolean) => void
   canActivate: ComputedRef<boolean>
   isLoading: ComputedRef<boolean>
-  messages: ComputedRef<AstryxMessages>
+  messages: ComputedRef<Pick<AstryxMessages, 'multiSelector'>>
   announce: (message: string) => void
   listboxRef: Readonly<ShallowRef<HTMLElement | null>>
   getSearchInput: () => HTMLInputElement | null

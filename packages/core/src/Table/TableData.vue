@@ -11,7 +11,8 @@ import type {
 import { computed, h, onBeforeUnmount, ref, useAttrs } from 'vue'
 import CheckboxInput from '../CheckboxInput/CheckboxInput.vue'
 import ComponentIcon from '../Icon/ComponentIcon.vue'
-import { useAstryxMessages } from '../locale/context.js'
+import { useComponentMessages } from '../locale/context.js'
+import { tableMessages } from '../locale/messages/table.js'
 import CutTextTooltip from '../Text/CutTextTooltip.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { pixel, resolveColumnWidths, resolveTableMinWidth, splitStyleMinWidth } from './columnUtils.js'
@@ -48,7 +49,7 @@ defineSlots<{ empty?: () => VNodeChild }>()
 const headerCutText = useHeaderCutText()
 
 const attrs = useAttrs()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ table: tableMessages })
 const scrollRoot = ref<HTMLElement | null>(null)
 const menu = ref<{ x: number, y: number, items: readonly TableRowMenuItem[] } | null>(null)
 const scrollStyle = computed(() => splitStyleMinWidth(attrs.style).style)

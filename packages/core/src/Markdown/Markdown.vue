@@ -6,7 +6,9 @@ import type { MarkdownPlugin } from './plugins.js'
 import type { MarkdownProps } from './types.js'
 import { computed, defineComponent, h, ref } from 'vue'
 import { useIndicator } from '../Indicator/useIndicator.js'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { citationMessages } from '../locale/messages/citation.js'
+import { markdownMessages } from '../locale/messages/markdown.js'
 import { createIncrementalMarkdownState, parseMarkdown, parseMarkdownIncremental } from './parse.js'
 import { collectProtocolRenderers, isMarkdownPluginEntry, isMarkdownSourceLinesPlugin } from './plugin-protocol/protocol.js'
 import { applyProtocolTransforms } from './plugin-protocol/run.js'
@@ -58,7 +60,7 @@ export default defineComponent({
     const root = ref<HTMLElement | null>(null)
     expose({ element: computed(() => root.value) })
 
-    const messages = useAstryxMessages()
+    const messages = useComponentMessages({ citation: citationMessages, markdown: markdownMessages })
     const checkboxIndicator = useIndicator('checkbox')
     const slotSource = ref('')
     const source = computed(() => props.content ?? slotSource.value)

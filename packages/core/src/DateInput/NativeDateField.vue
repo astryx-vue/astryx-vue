@@ -11,7 +11,8 @@ import Field from '../Field/Field.vue'
 import FieldIcon from '../Field/FieldIcon.vue'
 import { useAriaRequired } from '../FormLayout/context.js'
 import Icon from '../Icon/Icon.vue'
-import { useAstryxLocale, useAstryxMessages } from '../locale/index.js'
+import { useAstryxLocale, useComponentMessages } from '../locale/context.js'
+import { dateInputMessages } from '../locale/messages/date-input.js'
 import Spinner from '../Spinner/Spinner.vue'
 import { formatInstant } from '../Timestamp/formatInstant.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
@@ -45,7 +46,7 @@ const emit = defineEmits<{
 
 const attrs = useAttrs()
 const ariaRequired = useAriaRequired(props)
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ dateInput: dateInputMessages })
 const locale = useAstryxLocale()
 const inputRef = useTemplateRef<HTMLInputElement>('input')
 const containerRef = useTemplateRef<HTMLDivElement>('container')

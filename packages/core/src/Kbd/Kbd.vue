@@ -3,7 +3,8 @@ import type { CSSProperties } from 'vue'
 import type { KbdProps } from './types.js'
 import { computed, useAttrs } from 'vue'
 import { devPropError, isDevBuild } from '../composables/internal/devBuild.js'
-import { useAstryxMessages } from '../locale/context.js'
+import { useComponentMessages } from '../locale/context.js'
+import { kbdMessages } from '../locale/messages/kbd.js'
 import { parseShortcut, shortcutLabel } from './keys.js'
 import { useIsApplePlatform } from './platform.js'
 import '../../styles/kbd.css'
@@ -22,7 +23,7 @@ if (isDevBuild() && typeof props.keys !== 'string') {
 
 const attrs = useAttrs()
 const isApple = useIsApplePlatform()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ kbd: kbdMessages })
 
 const keys = computed(() => parseShortcut(props.keys, isApple.value, messages.value.kbd))
 

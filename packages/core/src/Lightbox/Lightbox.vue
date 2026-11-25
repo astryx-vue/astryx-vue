@@ -6,7 +6,8 @@ import { useScrollLock } from '../composables/useScrollLock.js'
 import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
 import { resetLayerScopedContext } from '../layer/scopedProvide.js'
-import { useAstryxMessages } from '../locale/context.js'
+import { useComponentMessages } from '../locale/context.js'
+import { lightboxMessages } from '../locale/messages/lightbox.js'
 import LightboxCaption from './LightboxCaption.vue'
 import '../../styles/lightbox.css'
 
@@ -19,7 +20,7 @@ const props = withDefaults(defineProps<LightboxProps>(), {
 })
 const emit = defineEmits<LightboxEmits>()
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ lightbox: lightboxMessages })
 const announce = useAnnounce()
 
 // 灯箱内容是这一层的成员边界：外面组里的尺寸、禁用、选中值都不再算数。

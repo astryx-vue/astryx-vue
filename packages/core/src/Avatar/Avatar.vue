@@ -9,7 +9,8 @@ import { useDevWarning } from '../composables/useDevWarning.js'
 import { readLayerScoped } from '../layer/scopedProvide.js'
 import { isSafeUrl } from '../Link/safeUrl.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
-import { useAstryxMessages } from '../locale/context.js'
+import { useComponentMessages } from '../locale/context.js'
+import { navMessages } from '../locale/messages/nav.js'
 import Tooltip from '../Tooltip/Tooltip.vue'
 import { AvatarSizeContext, AvatarStatusLabelContext } from './context.js'
 import { composeAccessibleName, cssString, getInitials, resolveSize } from './utils.js'
@@ -88,7 +89,7 @@ const initialsStyle = computed<CSSProperties>(() => ({
 const showInitials = computed(() => !showImage.value && !showFallbackImage.value && initials.value !== '')
 const showIcon = computed(() => !showImage.value && !showFallbackImage.value && initials.value === '')
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ nav: navMessages })
 const accessibleName = computed(() => {
   const label = statusLabel.value
   const status = typeof label === 'string' && label.trim() !== '' ? label.trim() : undefined

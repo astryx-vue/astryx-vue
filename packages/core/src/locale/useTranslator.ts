@@ -1,5 +1,5 @@
 import type { AstryxMessages } from './messages.js'
-import { useAstryxMessages } from './context.js'
+import { useAstryxMessages } from './fullMessages.js'
 import { upstreamMessageMap } from './upstreamMap.js'
 
 /** 填进消息占位符的值。数字用来算复数和千分位。 */

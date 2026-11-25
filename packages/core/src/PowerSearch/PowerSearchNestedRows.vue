@@ -4,7 +4,8 @@ import type { PowerSearchConfig } from './types.js'
 import { computed } from 'vue'
 import Button from '../Button/Button.vue'
 import Icon from '../Icon/Icon.vue'
-import { useAstryxMessages } from '../locale/context.js'
+import { useComponentMessages } from '../locale/context.js'
+import { powerSearchMessages } from '../locale/messages/power-search.js'
 import Selector from '../Selector/Selector.vue'
 import { createPowerSearchLookup } from './config.js'
 import { resolveOperatorLabel } from './operators.js'
@@ -24,7 +25,7 @@ const emit = defineEmits<{
   'update:modelValue': [rows: EditableFilter[]]
 }>()
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ powerSearch: powerSearchMessages })
 const lookup = computed(() => createPowerSearchLookup(props.config))
 const text = computed(() => messages.value.powerSearch)
 

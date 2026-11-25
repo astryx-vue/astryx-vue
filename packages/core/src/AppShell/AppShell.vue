@@ -7,7 +7,9 @@ import Layout from '../Layout/Layout.vue'
 import LayoutContent from '../Layout/LayoutContent.vue'
 import LayoutHeader from '../Layout/LayoutHeader.vue'
 import LayoutPanel from '../Layout/LayoutPanel.vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { layoutMessages } from '../locale/messages/layout.js'
+import { navMessages } from '../locale/messages/nav.js'
 import MobileNav from '../MobileNav/MobileNav.vue'
 import MobileNavToggle from '../MobileNav/MobileNavToggle.vue'
 import SideNavRenderMode from '../SideNav/SideNavRenderMode.vue'
@@ -29,7 +31,7 @@ defineSlots<AppShellSlots>()
 
 const attrs = useAttrs()
 const slots = useSlots()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ layout: layoutMessages, nav: navMessages })
 const root = useTemplateRef<HTMLDivElement>('root')
 const mainId = 'astryx-app-shell-main'
 const mobileNavId = `astryx-app-shell-${useId()}`

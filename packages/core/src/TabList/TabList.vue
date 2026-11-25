@@ -3,7 +3,8 @@ import type { TabListProps, TabListTab } from './types.js'
 import { computed, provide, reactive, ref } from 'vue'
 
 import Icon from '../Icon/Icon.vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { tabListMessages } from '../locale/messages/tab-list.js'
 import { useSize } from '../SizeContext/SizeContext.js'
 import { tabListContextKey } from './context.js'
 import { useTabListScroll } from './useTabListScroll.js'
@@ -47,7 +48,7 @@ const {
 const isTabsPattern = computed(() => props.role === 'tablist')
 const rootTag = computed(() => (props.role == null ? 'nav' : 'div'))
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ tabList: tabListMessages })
 /** 导航模式的标签条是个 landmark，没有名字读屏没法区分；调用方用 `aria-label` 覆盖。 */
 const defaultLabel = computed(() => props.role == null ? messages.value.tabList.label : undefined)
 

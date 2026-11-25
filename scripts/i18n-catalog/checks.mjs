@@ -315,3 +315,32 @@ export function checkSourceRefs(files, map) {
   }
   return { problems, count }
 }
+
+// 读整份内置文案的模块。组件引入它们，打包时就会把全部命名空间的文案一起带进去。
+const FULL_CATALOG_MODULES = ['messages', 'fullMessages', 'loadCatalog', 'useTranslator', 'upstreamMap']
+const FULL_CATALOG_IMPORT = new RegExp(`^import \\{[^}]*\\} from '[./]*locale/(?:${FULL_CATALOG_MODULES.join('|')})\\.js'`, 'gm')
+const FULL_CATALOG_NAMES = /^import \{([^}]*)\} from '[./]*locale\/index\.js'/gm
+const FULL_CATALOG_EXPORTS = new Set(['useAstryxMessages', 'useTranslator', 'loadAstryxCatalog', 'upstreamMessageMap'])
+// 本来就要整份文案的地方：locale 自身、provider（要把原版目录映射成整棵树）、包的总入口。
+const FULL_CATALOG_OWNERS = /^packages\/core\/src\/(?:locale\/|InternationalizationProvider\/|index\.ts$)/
+
+/**
+ * 组件只能通过 `useComponentMessages` 按命名空间读内置文案。
+ * 引入读整份文案的模块（或从 `locale/index.js` 拿这些导出）都算问题。
+ */
+export function checkComponentMessageImports(files) {
+  const problems = []
+  for (const { path, text } of files) {
+    if (FULL_CATALOG_OWNERS.test(path))
+      continue
+    const lineOf = index => text.slice(0, index).split('\n').length
+    for (const match of text.matchAll(FULL_CATALOG_IMPORT))
+      problems.push(`${path}:${lineOf(match.index)}  引入了整份内置文案，改用 useComponentMessages`)
+    for (const match of text.matchAll(FULL_CATALOG_NAMES)) {
+      const names = match[1].split(',').map(name => name.trim())
+      if (names.some(name => FULL_CATALOG_EXPORTS.has(name)))
+        problems.push(`${path}:${lineOf(match.index)}  引入了整份内置文案，改用 useComponentMessages`)
+    }
+  }
+  return problems
+}

@@ -5,7 +5,8 @@ import { invokeNativeEventHandler } from '../Button/eventHandlers.js'
 import { isKeyboardModality, trackInteractionModality } from '../composables/internal/interactionModality.js'
 import { DIALOG_CONTEXT_KEY } from '../Dialog/context.js'
 import Icon from '../Icon/Icon.vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { commandPaletteMessages } from '../locale/messages/command-palette.js'
 import Spinner from '../Spinner/Spinner.vue'
 import { commandPaletteKey } from './context.js'
 import '../../styles/command-palette.css'
@@ -27,7 +28,7 @@ defineSlots<{
 const palette = inject(commandPaletteKey, null)
 const dialog = inject(DIALOG_CONTEXT_KEY, null)
 const attrs = useAttrs()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ commandPalette: commandPaletteMessages })
 const inputRef = useTemplateRef<HTMLInputElement>('input')
 const keyboardFocus = ref(false)
 trackInteractionModality()

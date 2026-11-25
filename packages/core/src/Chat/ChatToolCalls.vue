@@ -3,7 +3,8 @@ import type { ChatToolCallItem, ChatToolCallsEmits, ChatToolCallsProps, ChatTool
 import { computed, ref, useId, useSlots, useTemplateRef } from 'vue'
 import { devPropError, isDevBuild } from '../composables/internal/devBuild.js'
 import Icon from '../Icon/Icon.vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { chatMessages } from '../locale/messages/chat.js'
 import ChatIcon from './ChatIcon.vue'
 import ChatStatusMark from './ChatStatusMark.vue'
 import ChatToolCallRow from './ChatToolCallRow.vue'
@@ -24,7 +25,7 @@ if (isDevBuild() && !Array.isArray(props.calls)) {
   )
 }
 const slots = useSlots()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ chat: chatMessages })
 const model = defineModel<boolean | undefined>('isExpanded', { default: undefined })
 const internalExpanded = ref(props.defaultIsExpanded)
 const isExpanded = computed(() => model.value ?? internalExpanded.value)

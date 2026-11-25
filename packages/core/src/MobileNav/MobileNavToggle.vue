@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import type { MobileNavToggleProps } from './types.js'
 import { computed } from 'vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { navMessages } from '../locale/messages/nav.js'
 import '../../styles/mobile-nav.css'
 
 defineOptions({ name: 'AstryxMobileNavToggle' })
 
 const props = defineProps<Omit<MobileNavToggleProps, 'isOpen'>>()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ nav: navMessages })
 const isOpen = defineModel<boolean>('isOpen', { default: false })
 const label = computed(() => props.label || (isOpen.value ? messages.value.nav.close : messages.value.nav.openMenu))
 

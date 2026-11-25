@@ -15,7 +15,9 @@ import { useAriaRequired } from '../FormLayout/context.js'
 import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { dateInputMessages } from '../locale/messages/date-input.js'
+import { timeInputMessages } from '../locale/messages/time-input.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import Spinner from '../Spinner/Spinner.vue'
 import { isImeKeyEvent } from '../utils/ime.js'
@@ -69,7 +71,7 @@ const props = withDefaults(defineProps<{
 const model = defineModel<string | null>({ default: null })
 const attrs = useAttrs()
 const ariaRequired = useAriaRequired(props)
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ dateInput: dateInputMessages, timeInput: timeInputMessages })
 const sheetOpen = shallowRef(false)
 const coarse = useMediaQuery('(pointer: coarse)')
 const focused = shallowRef(false)

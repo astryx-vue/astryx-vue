@@ -5,7 +5,8 @@ import { computed, getCurrentInstance, mergeProps, useAttrs } from 'vue'
 import { resolveSize } from '../Avatar/utils.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { readLayerScoped } from '../layer/scopedProvide.js'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { navMessages } from '../locale/messages/nav.js'
 import { AvatarGroupContext } from './context.js'
 import '../../styles/avatar-group.css'
 
@@ -17,7 +18,7 @@ defineSlots<AvatarGroupOverflowSlots>()
 
 const instance = getCurrentInstance()
 const attrs = useAttrs()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ nav: navMessages })
 const press = usePressFeedback()
 
 const avatarGroup = readLayerScoped(AvatarGroupContext)
