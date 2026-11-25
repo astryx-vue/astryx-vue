@@ -59,3 +59,7 @@ footer: false
     </tbody>
   </table>
 </div>
+
+## Theme
+
+The first and last controls in the row carry `data-first="first"` and `data-last="last"` on their `pagination-button` target. A theme that joins the controls into one strip can round the outer corners on those two: `components: { 'pagination-button': { 'first:first': { borderStartStartRadius: '8px' } } }`.
