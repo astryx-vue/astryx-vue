@@ -322,4 +322,11 @@
       transition: none;
     }
   }
+
+  @media (forced-colors: active) {
+    /* 强制配色会去掉阴影，阴影是这块浮层唯一的边，这里补一圈系统色边框。 */
+    .astryx-context-menu {
+      border: 1px solid CanvasText;
+    }
+  }
 }
