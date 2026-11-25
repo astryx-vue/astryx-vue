@@ -165,6 +165,7 @@
     flex: none;
     color: var(--astryx-color-text-secondary, #525252);
     font-size: var(--astryx-text-supporting-size, 0.75rem);
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
     font-weight: var(--astryx-font-weight-medium, 500);
   }
 

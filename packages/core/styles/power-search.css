@@ -174,6 +174,7 @@
     padding: var(--astryx-spacing-1, 4px) var(--astryx-spacing-2, 8px);
     color: var(--astryx-color-text-secondary, #525252);
     font-size: var(--astryx-text-supporting-size, 0.75rem);
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
     font-weight: var(--astryx-font-weight-semibold, 600);
   }
 
@@ -240,6 +241,7 @@
   .astryx-power-search-editor-group {
     color: var(--astryx-color-text-secondary, #525252);
     font-size: var(--astryx-text-supporting-size, 0.75rem);
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
     font-weight: var(--astryx-font-weight-semibold, 600);
   }
 

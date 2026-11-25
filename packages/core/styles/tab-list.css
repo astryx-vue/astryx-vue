@@ -191,16 +191,19 @@
   .astryx-tab--size-sm {
     min-height: 28px;
     font-size: var(--astryx-text-label-size, 0.875rem);
+    line-height: var(--astryx-text-label-leading, 1.4286);
   }
 
   .astryx-tab--size-md {
     min-height: 32px;
     font-size: var(--astryx-text-label-size, 0.875rem);
+    line-height: var(--astryx-text-label-leading, 1.4286);
   }
 
   .astryx-tab--size-lg {
     min-height: 36px;
     font-size: var(--astryx-text-label-size, 0.875rem);
+    line-height: var(--astryx-text-label-leading, 1.4286);
   }
 
   .astryx-tab:hover:not(:disabled, [aria-disabled='true']) {

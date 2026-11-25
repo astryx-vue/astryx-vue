@@ -204,6 +204,7 @@
     color: var(--astryx-code-syntax-variable, #111111);
     font-family: var(--astryx-font-family-code, monospace);
     font-size: var(--astryx-text-code-size, 0.875rem);
+    line-height: var(--astryx-text-code-leading, 1.4286);
     tab-size: 2;
     white-space: pre;
     word-break: normal;
@@ -212,6 +213,7 @@
 
   .astryx-code-block__code[data-size='sm'] {
     font-size: var(--astryx-text-supporting-size, 0.75rem);
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
   }
 
   .astryx-code-block__code[data-wrapped] {
@@ -239,8 +241,9 @@
     pointer-events: none;
   }
 
+  /* 每行跟着代码区的字号角色取行高：默认是代码行高，sm 是辅助文字行高。 */
   .astryx-code-block__line {
-    line-height: var(--astryx-text-code-leading, 1.4286);
+    line-height: inherit;
   }
 
   /*

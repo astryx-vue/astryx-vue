@@ -218,6 +218,7 @@
   .astryx-more-menu__item-hint {
     color: var(--astryx-more-menu-description-foreground, var(--astryx-color-text-secondary, light-dark(#525252, #a3a3a3)));
     font-size: var(--astryx-text-supporting-size, 0.75rem);
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
   }
 
   /* A submenu caret points into the flyout, so it mirrors under RTL. */

@@ -370,6 +370,7 @@
   .astryx-step-optional {
     color: var(--astryx-color-text-secondary, #525252);
     font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
   }
 
   .astryx-step-description {

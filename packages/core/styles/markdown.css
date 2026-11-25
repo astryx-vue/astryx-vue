@@ -493,6 +493,7 @@
     border-block-start: var(--astryx-border-width, 1px) solid var(--astryx-color-border-emphasized, #d4d4d4);
     color: var(--astryx-color-text-secondary, #525252);
     font-size: var(--astryx-text-supporting-size, 0.75rem);
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
   }
 
   .astryx-markdown__fade {

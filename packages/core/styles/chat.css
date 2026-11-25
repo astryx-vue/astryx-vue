@@ -1261,6 +1261,7 @@
 
   .astryx-chat-paste__meta {
     font-size: var(--astryx-text-supporting-size);
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
     color: var(--astryx-color-text-secondary);
   }
 
@@ -1326,6 +1327,7 @@
     padding: var(--astryx-spacing-3, 12px);
     color: var(--astryx-color-text-secondary);
     font-size: var(--astryx-text-supporting-size);
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
     text-align: center;
   }
 
