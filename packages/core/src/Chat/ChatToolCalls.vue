@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { ChatToolCallItem, ChatToolCallsEmits, ChatToolCallsProps, ChatToolCallsSlots } from './types.js'
 import { computed, ref, useId, useSlots, useTemplateRef } from 'vue'
+import { assertDevProp } from '../composables/useDevWarning.js'
 import Icon from '../Icon/Icon.vue'
 import { useAstryxMessages } from '../locale/index.js'
 import ChatIcon from './ChatIcon.vue'
@@ -15,6 +16,7 @@ const props = withDefaults(defineProps<Omit<ChatToolCallsProps, 'isExpanded'>>()
 })
 const emit = defineEmits<ChatToolCallsEmits>()
 defineSlots<ChatToolCallsSlots>()
+assertDevProp(Array.isArray(props.calls), 'ChatToolCalls', 'calls', 'must be an array of tool calls, for example :calls="[{ name: \'search\', status: \'complete\' }]".')
 const slots = useSlots()
 const messages = useAstryxMessages()
 const model = defineModel<boolean | undefined>('isExpanded', { default: undefined })
