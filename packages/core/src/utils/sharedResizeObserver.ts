@@ -31,6 +31,11 @@ function getObserver(): ResizeObserver | null {
   return observer
 }
 
+/** Whether the shared observer already watches `element`. Internal. */
+export function isResizeObserved(element: Element): boolean {
+  return callbacks.has(element)
+}
+
 /**
  * Observe an element's size via a shared ResizeObserver singleton.
  *

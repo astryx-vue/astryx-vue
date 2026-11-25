@@ -24,7 +24,7 @@ footer: false
       <tr><td><code>isInterruptible</code></td><td><code>boolean</code></td><td><code>false</code></td><td>加载期间是否允许再次触发 clickAction。</td></tr>
       <tr><td><code>clickAction</code></td><td><code>(event: MouseEvent) =&gt; void | Promise&lt;void&gt;</code></td><td>—</td><td>点击时执行的动作。返回 Promise 时，组件自动进入并退出加载状态。</td></tr>
       <tr><td><code>isIconOnly</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否只显示 icon 插槽的内容，操作名称仍由 label 提供给辅助技术。</td></tr>
-      <tr><td><code>width</code></td><td><code>number | string</code></td><td>—</td><td>按钮宽度。数字按像素处理，CSS 字符串按原样使用。</td></tr>
+      <tr><td><code>width</code></td><td><code>number | string</code></td><td>—</td><td>按钮宽度。数字按像素处理，CSS 字符串按原样使用。行宽不够时标签以省略号截断，键盘聚焦时在提示里显示完整标签。</td></tr>
       <tr><td><code>loadingLabel</code></td><td><code>string</code></td><td><code>'Loading'</code></td><td>加载文字，用于加载图标与实时区域，建议按应用语言本地化。</td></tr>
       <tr><td><code>tooltip</code></td><td><code>string</code></td><td>—</td><td>补充提示，悬停或键盘聚焦时显示。</td></tr>
       <tr><td><code>href</code></td><td><code>string</code></td><td>—</td><td>存在且未禁用时，根元素渲染为链接。</td></tr>

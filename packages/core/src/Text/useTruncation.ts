@@ -1,6 +1,7 @@
-import type { Ref } from 'vue'
-import { onBeforeUnmount, ref, watch } from 'vue'
+import type { MaybeRefOrGetter, Ref } from 'vue'
+import { onScopeDispose, ref, toValue, watch } from 'vue'
 import { observeContent } from '../utils/sharedMutationObserver.js'
+import { isResizeObserved, observeResize } from '../utils/sharedResizeObserver.js'
 
 export type TruncateTooltip = boolean | 'above' | 'below' | 'start' | 'end'
 
@@ -13,70 +14,108 @@ export function truncatePlacement(value: TruncateTooltip | undefined): 'above' |
   return value
 }
 
-/**
- * 量文字有没有被截断。单行比宽度，多行用 Range 量真实高度，
- * 避免 line-clamp 把 scrollHeight 也夹成容器高度。
- */
 export interface Truncation {
+  /** 绑到被测量的文字元素上（`:ref="truncation.bind"`）。换成别的元素时，旧元素的观察自动解除。 */
   bind: (value: Element | null) => void
+  /** 文字此刻是否被截断。只在它为 true 时再去渲染显示全文的提示。 */
   isTruncated: Ref<boolean>
+  /** 元素当前的全部文字，每次测量时更新；尺寸不变、只换了文字时也会跟上。 */
   fullText: Ref<string>
 }
 
-export function useTruncation(maxLines: Ref<number>): Truncation {
+/**
+ * 量文字有没有被截断：`maxLines` 为 1 比宽度，大于 1 用 Range 量真实高度
+ * （`-webkit-line-clamp` 会把 scrollHeight 也夹成容器高度），0 不测量。
+ *
+ * 尺寸和内容的变化都走全页共用的 ResizeObserver / MutationObserver，
+ * 一页几百个表格单元格也只有各一个观察者。新元素的第一次测量交给共用
+ * ResizeObserver 的第一次通知，那是浏览器自己排版之后发的，挂载时不额外强制排版；
+ * 元素已被别人观察、不会再有第一次通知时，改在渲染提交后的微任务里量。
+ */
+export function useTruncation(maxLines: MaybeRefOrGetter<number>): Truncation {
   const isTruncated = ref(false)
   const fullText = ref('')
-  let observer: ResizeObserver | undefined
-  let unobserveContent: (() => void) | undefined
+  let release: (() => void) | undefined
   let node: HTMLElement | null = null
 
-  function measure(): void {
-    if (!node || maxLines.value <= 0) {
+  function measure(element: HTMLElement): void {
+    const lines = toValue(maxLines)
+    if (lines <= 0) {
       isTruncated.value = false
       fullText.value = ''
       return
     }
-    fullText.value = node.textContent ?? ''
-    if (maxLines.value === 1) {
-      isTruncated.value = node.scrollWidth > node.clientWidth + 1
+    fullText.value = element.textContent ?? ''
+    if (lines === 1) {
+      isTruncated.value = element.scrollWidth > element.clientWidth + 1
       return
     }
-    let contentHeight = node.scrollHeight
+    let contentHeight = element.scrollHeight
     try {
-      const range = node.ownerDocument.createRange()
-      range.selectNodeContents(node)
+      const range = element.ownerDocument.createRange()
+      range.selectNodeContents(element)
       contentHeight = range.getBoundingClientRect().height
       range.detach()
     }
     catch {
       // Range 不可用时退回 scrollHeight。
     }
-    isTruncated.value = contentHeight > node.clientHeight + 1
+    isTruncated.value = contentHeight > element.clientHeight + 1
+  }
+
+  function observe(element: HTMLElement): () => void {
+    let isActive = true
+    // 尺寸不变、只换了文字时没有 resize，靠内容观察跟上新文字和截断状态。
+    const unobserveContent = observeContent(element, () => measure(element))
+    let unobserveResize: (() => void) | undefined
+    if (typeof ResizeObserver === 'undefined') {
+      measure(element)
+    }
+    else {
+      let isRegistered = false
+      const wasObserved = isResizeObserved(element)
+      unobserveResize = observeResize(element, () => {
+        if (isRegistered)
+          measure(element)
+      })
+      isRegistered = true
+      if (wasObserved) {
+        queueMicrotask(() => {
+          if (isActive)
+            measure(element)
+        })
+      }
+    }
+    return () => {
+      isActive = false
+      unobserveContent()
+      unobserveResize?.()
+    }
   }
 
   function bind(value: Element | null): void {
-    observer?.disconnect()
-    observer = undefined
-    unobserveContent?.()
-    unobserveContent = undefined
-    node = value instanceof HTMLElement ? value : null
-    if (node && maxLines.value > 0) {
-      if (typeof ResizeObserver !== 'undefined') {
-        observer = new ResizeObserver(() => measure())
-        observer.observe(node)
-      }
-      // Fixed-width text can change without a resize; both the tooltip text
-      // and the overflow state still need to follow that new content.
-      unobserveContent = observeContent(node, measure)
+    const next = value instanceof HTMLElement ? value : null
+    if (next === node && release != null)
+      return
+    release?.()
+    release = undefined
+    node = next
+    if (node && toValue(maxLines) > 0) {
+      release = observe(node)
+      return
     }
-    measure()
+    isTruncated.value = false
+    fullText.value = ''
   }
 
-  watch(maxLines, () => bind(node))
-  onBeforeUnmount(() => {
-    observer?.disconnect()
-    unobserveContent?.()
+  watch(() => toValue(maxLines), () => {
+    const current = node
+    release?.()
+    release = undefined
+    node = null
+    bind(current)
   })
+  onScopeDispose(() => release?.())
 
   return { bind, isTruncated, fullText }
 }

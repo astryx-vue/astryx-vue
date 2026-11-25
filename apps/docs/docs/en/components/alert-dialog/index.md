@@ -16,6 +16,8 @@ import { alertDialogLoading } from '../../../../components/demos/alert-dialog'
 
 It implements the WAI-ARIA Alert Dialog pattern. The root element uses `role="alertdialog"`, the title names the dialog through `aria-labelledby`, and the consequence description is announced with it through `aria-describedby`. Focus moves into the dialog on open and lands on Cancel, then returns to the element that opened it on close. The dialog cannot be dismissed by clicking the backdrop, and Escape is the same as canceling.
 
+On a touch-first device such as a phone or tablet, the two actions track a finger or a pen the way a system alert does: the pressed action highlights at once, the highlight follows the pointer to the other action, and the lift runs the action under it. Lifting outside both runs nothing. A mouse press acts as a native button's.
+
 ```vue
 <script setup lang="ts">
 import { AlertDialog } from '@astryx-vue/core/AlertDialog'

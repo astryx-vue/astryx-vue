@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
 import type { HeadingProps } from './types.js'
-import { computed, useAttrs } from 'vue'
-import { truncatePlacement, useTruncation } from '../Text/useTruncation.js'
-import Tooltip from '../Tooltip/Tooltip.vue'
+import { computed, useAttrs, watch } from 'vue'
+import { devWarn } from '../composables/useDevWarning.js'
+import TruncationTooltip from '../Text/TruncationTooltip.vue'
+import { useTruncationTooltip } from '../Text/useTruncationTooltip.js'
+import { describeLevel, resolveHeadingLevel } from './level.js'
 
 import '../../styles/heading.css'
 
@@ -18,16 +20,23 @@ const props = withDefaults(defineProps<HeadingProps>(), {
   hasCapsize: false,
 })
 
-const tag = computed(() => `h${props.level}` as const)
-const placement = computed(() => props.maxLines > 0 ? truncatePlacement(props.hasTruncateTooltip) : null)
+// 没写 level、或不是 1–6 时按 2 级渲染，并在开发时说明怎么改。
+const level = computed(() => resolveHeadingLevel(props.level))
+watch(() => props.level, (requested) => {
+  if (requested !== level.value)
+    devWarn('Heading', `level must be 1, 2, 3, 4, 5 or 6, but it is ${describeLevel(requested)}. The heading renders as level ${level.value}. Pass the outline level, for example <Heading :level="2">.`)
+}, { immediate: true })
+const tag = computed(() => `h${level.value}` as const)
 const wordBreak = computed(() => props.wordBreak ?? (props.maxLines === 1 ? 'break-all' : props.maxLines > 1 ? 'break-word' : undefined))
-const truncation = useTruncation(computed(() => props.maxLines))
-const ariaLevel = computed(() => props.accessibilityLevel != null && props.accessibilityLevel !== props.level ? props.accessibilityLevel : undefined)
+const tooltip = useTruncationTooltip(() => props.maxLines, () => props.hasTruncateTooltip)
+const { interest } = tooltip
+// 模板里 aria-level 写在 v-bind="attrs" 前面，调用方自己写的 aria-level 优先。
+const ariaLevel = computed(() => props.accessibilityLevel != null && props.accessibilityLevel !== level.value ? props.accessibilityLevel : undefined)
 const attrs = useAttrs()
 
 const classes = computed(() => [
   'astryx-heading',
-  `astryx-heading--level-${props.level}`,
+  `astryx-heading--level-${level.value}`,
   props.type && `astryx-heading--type-${props.type}`,
   `astryx-heading--color-${props.color}`,
   props.weight && `astryx-heading--weight-${props.weight}`,
@@ -49,35 +58,27 @@ const style = computed<CSSProperties>(() => {
 </script>
 
 <template>
-  <Tooltip
-    v-if="placement"
-    anchors-on-self
-    :has-hover-indication="false"
-    :content="truncation.fullText.value"
-    :is-enabled="truncation.isTruncated.value"
-    :placement="placement"
-  >
-    <component
-      :is="tag"
-      :ref="truncation.bind"
-      v-bind="attrs"
-      class="astryx-heading"
-      :class="classes"
-      :style="style"
-      :aria-level="ariaLevel"
-    >
-      <slot />
-    </component>
-  </Tooltip>
   <component
     :is="tag"
-    v-else
+    :ref="tooltip.bind"
+    :aria-level="ariaLevel"
     v-bind="attrs"
     class="astryx-heading"
     :class="classes"
     :style="style"
-    :aria-level="ariaLevel"
+    @pointerenter="interest.onPointerenter"
+    @pointerleave="interest.onPointerleave"
+    @pointerdown="interest.onPointerdown"
+    @focusin="interest.onFocusin"
+    @focusout="interest.onFocusout"
   >
     <slot />
+    <TruncationTooltip
+      v-if="tooltip.isMounted.value"
+      :anchor="tooltip.element.value"
+      :content="tooltip.truncation.fullText.value"
+      :placement="tooltip.placement.value!"
+      :interest="interest.state"
+    />
   </component>
 </template>

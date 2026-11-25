@@ -23,6 +23,8 @@ import { alertDialogLoading } from '../../../../components/demos/alert-dialog'
 
 它实现了 WAI-ARIA 规范中的 Alert Dialog 模式。根元素带有 `role="alertdialog"`，标题通过 `aria-labelledby` 作为弹窗名称，后果描述通过 `aria-describedby` 连同标题一起被读屏工具念出。打开时焦点会自动落在最为安全的「取消」按钮上，关闭后再把焦点还给触发它的元素。为了防止误触，点击背景遮罩不会关闭它，按键盘上的 Escape 键则等同于点击取消。
 
+在手机、平板这类以触屏为主的设备上，两个按钮像系统弹窗一样跟踪手指和笔：按下的那个立刻高亮，滑到另一个上高亮跟过去，松手时执行手指下的那个；在按钮外松手什么都不执行。鼠标按下和原生按钮一样。
+
 ```vue
 <script setup lang="ts">
 import { AlertDialog } from '@astryx-vue/core/AlertDialog'

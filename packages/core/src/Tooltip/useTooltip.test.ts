@@ -250,6 +250,37 @@ describe('useTooltip', () => {
     expect(tooltip.isOpen.value).toBe(true)
   })
 
+  it('轻点触发器里的文本框只让它获得焦点，不开也不关提示', async () => {
+    const { tooltip } = setupTooltip({ delay: 0 })
+    const trigger = document.createElement('div')
+    trigger.innerHTML = '<span>Name</span><input type="text"><input type="text" disabled>'
+    document.body.append(trigger)
+    tooltip.triggerRef.value = trigger
+    const [label, field, disabledField] = [...trigger.children] as HTMLElement[]
+    const tap = (target: HTMLElement): void => {
+      const event = new Event('pointerdown', { bubbles: true })
+      Object.defineProperty(event, 'pointerType', { value: 'touch' })
+      target.dispatchEvent(event)
+    }
+
+    tap(field!)
+    await nextTick()
+    expect(tooltip.isOpen.value).toBe(false)
+
+    tap(label!)
+    await nextTick()
+    expect(tooltip.isOpen.value).toBe(true)
+
+    tap(field!)
+    await nextTick()
+    expect(tooltip.isOpen.value).toBe(true)
+
+    // 禁用的输入框不能输入，轻点照常交给触发器。
+    tap(disabledField!)
+    await nextTick()
+    expect(tooltip.isOpen.value).toBe(false)
+  })
+
   it('isDefaultOpen 挂载即显示并上报', async () => {
     const onShow = vi.fn()
     const { tooltip } = setupTooltip({ isDefaultOpen: true, onShow })

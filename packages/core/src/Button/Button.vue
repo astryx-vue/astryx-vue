@@ -3,6 +3,7 @@ import type { ComponentPublicInstance, CSSProperties, StyleValue } from 'vue'
 import type { ButtonEmits, ButtonLinkElement, ButtonProps, ButtonRootElement, ButtonSlots } from './types.js'
 import { computed, onBeforeUnmount, onMounted, ref, toRaw, useAttrs, useId, useSlots, useTemplateRef } from 'vue'
 import { hasSlotContent } from '../composables/internal/slotContent.js'
+import { pressGroupItemProps } from '../composables/internal/useActionGroupTracking.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { provideIconSize } from '../Icon/context.js'
 import Icon from '../Icon/Icon.vue'
@@ -11,6 +12,9 @@ import { readLayerScoped } from '../layer/scopedProvide.js'
 import { isSafeUrl } from '../Link/safeUrl.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
 import { useSize } from '../SizeContext/SizeContext.js'
+import { hasCallerTooltip } from '../Text/cutText.js'
+import CutTextTooltip from '../Text/CutTextTooltip.vue'
+import { useCutTextOnKeyboardFocus } from '../Text/useCutTextOnKeyboardFocus.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import ButtonSpinner from './ButtonSpinner.vue'
 import ButtonTooltip from './ButtonTooltip.vue'
@@ -47,6 +51,14 @@ const renderedRoot = useTemplateRef<ComponentPublicInstance | HTMLElement>('root
 const tooltipId = `astryx-button-tooltip-${useId()}`
 
 const press = usePressFeedback({ hasOverlay: false })
+/** 菜单、列表框这类触发器保留自己的按压和打开方式，组不跟踪它。 */
+const MENU_POPUPS = new Set(['true', 'menu', 'listbox'])
+/** 跟踪滑动的按钮组里，这个按钮的手指、笔按压由组来画、松手由组来执行。 */
+const groupItemProps = computed(() =>
+  group?.tracksPress?.value === true && !MENU_POPUPS.has(String(attrs['aria-haspopup']))
+    ? pressGroupItemProps()
+    : undefined,
+)
 // 显式 size > 按钮组 > 外层 SizeContext（Toolbar 等）> 'md'。
 const effectiveSize = useSize(() => props.size ?? group?.size.value)
 /** 小、中按钮里的图标是 16px，大按钮是 20px。插槽里没写尺寸的图标跟着走。 */
@@ -140,6 +152,14 @@ const element = computed<ButtonRootElement | null>(() => {
 })
 
 const buttonTooltip = useButtonTooltip(hasTooltip)
+// 标签被行宽截短时，键盘焦点到达就在提示里显示完整标签；调用方自己的提示优先。
+const labelElement = useTemplateRef<HTMLElement>('labelText')
+const cutLabel = useCutTextOnKeyboardFocus({
+  anchor: () => element.value,
+  measure: () => labelElement.value,
+  isEnabled: () => !props.isIconOnly && !hasTooltip.value,
+  isSuppressed: hasCallerTooltip,
+})
 
 const rootClass = computed(() => ['astryx-button', attrs.class])
 
@@ -222,6 +242,7 @@ function getForwardedAttrs(): Record<string, unknown> {
       Object.entries(attrs).filter(([key]) => !controlledAttrs.has(key)),
     ),
     ...press.pressableProps,
+    ...groupItemProps.value,
   }
 }
 
@@ -230,8 +251,10 @@ function handleRootClick(event: MouseEvent): Promise<void> | void {
 }
 
 function handleRootKeydown(event: KeyboardEvent): void {
-  if (event.key === 'Escape')
+  if (event.key === 'Escape') {
     buttonTooltip.hideImmediately()
+    cutLabel.hide()
+  }
 
   if (isButtonDisabled.value && (event.key === 'Enter' || event.key === ' ')) {
     event.preventDefault()
@@ -275,6 +298,9 @@ defineExpose({
     @blur="buttonTooltip.onBlur"
     @click="handleRootClick"
     @focus="buttonTooltip.onFocus"
+    @focusin="cutLabel.onFocusin"
+    @focusout="cutLabel.onFocusout"
+    @pointerdown.capture="cutLabel.onPointerdown"
     @keydown="handleRootKeydown"
     @pointerdown="buttonTooltip.onPointerDown"
     @pointerenter="buttonTooltip.onPointerEnter"
@@ -303,7 +329,7 @@ defineExpose({
         </slot>
       </span>
 
-      <span v-if="!isIconOnly" class="astryx-button__label">
+      <span v-if="!isIconOnly" ref="labelText" class="astryx-button__label">
         <slot>{{ label }}</slot>
       </span>
 
@@ -328,6 +354,12 @@ defineExpose({
       :text="tooltip ?? ''"
       @pointer-enter="buttonTooltip.onTooltipPointerEnter"
       @pointer-leave="buttonTooltip.onTooltipPointerLeave"
+    />
+
+    <CutTextTooltip
+      v-if="cutLabel.cutText.value != null"
+      :anchor="element"
+      :text="cutLabel.cutText.value"
     />
   </component>
 </template>

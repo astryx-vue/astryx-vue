@@ -64,6 +64,8 @@
     font-size: var(--astryx-text-label-size, 14px);
     font-variant-numeric: tabular-nums;
     overflow-wrap: anywhere;
+    /* Text 和 Heading 在里面也按 anywhere 换行。 */
+    --_astryx-text-overflow-wrap: anywhere;
     max-width: 50%;
   }
   .astryx-slider-mark {

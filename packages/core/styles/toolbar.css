@@ -71,5 +71,24 @@
     min-width: 0;
   }
   .astryx-toolbar__slot--end { justify-content: flex-end; margin-inline-start: auto; }
+
+  /*
+   * 只有首尾两条道时，每条道的控件尽量排在一行里，宽度以工具栏为上限。
+   * 两条道挤不下就整行换行，尾部那条挪到下一行，而不是把首部挤到标题折行、徽标被截。
+   * 尾部那条撑满它所在的行，换到下一行后控件仍然靠行尾。
+   */
+  .astryx-toolbar--two-lane {
+    flex-wrap: wrap;
+  }
+
+  .astryx-toolbar--two-lane > .astryx-toolbar__slot--start,
+  .astryx-toolbar--two-lane > .astryx-toolbar__slot--end {
+    flex-wrap: wrap;
+    min-width: fit-content;
+  }
+
+  .astryx-toolbar--two-lane > .astryx-toolbar__slot--end {
+    flex-grow: 1;
+  }
   .astryx-toolbar--centered .astryx-toolbar__slot--end { margin-inline-start: 0; }
 }

@@ -18,6 +18,8 @@ export interface ToggleButtonGroupContextValue {
   size: ComputedRef<ButtonSize>
   /** Whether the group disables every member. */
   isDisabled: ComputedRef<boolean>
+  /** 组在跟踪手指和笔的滑动。只有带 value 的成员归组跟踪，没 value 的保留自己的按压。 */
+  tracksPress?: ComputedRef<boolean>
 }
 
 export const toggleButtonGroupContextKey = defineLayerScopedKey<ToggleButtonGroupContextValue | null>(

@@ -1207,7 +1207,7 @@ export type {
   TabProps,
   TabSlots,
 } from './TabList/index.js'
-export { Text } from './Text/index.js'
+export { Text, useTruncation } from './Text/index.js'
 export type {
   TextAs,
   TextColor,
@@ -1220,6 +1220,7 @@ export type {
   TextWeight,
   TextWordBreak,
   TextWrap,
+  Truncation,
 } from './Text/index.js'
 export { TextArea } from './TextArea/index.js'
 export type {

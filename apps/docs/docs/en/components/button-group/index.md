@@ -34,6 +34,8 @@ import { ButtonGroup } from '@astryx-vue/core/ButtonGroup'
 
 
 
+On a touch-first device such as a phone or tablet, a press tracks like a menu for a finger or a pen: press a button and slide across the others, and the highlight follows. The button you lift on runs, and lifting outside the group runs nothing. A mouse press acts as a native button's. A menu trigger in the group (with `aria-haspopup`) keeps its own opening.
+
 <ComponentAnatomy />
 
 ## Best practices

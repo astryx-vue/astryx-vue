@@ -21,6 +21,15 @@ export const PRESS_CONTAINER_ATTRIBUTE = 'data-astryx-press-container'
 /** 可按容器自己的动作元素：按它就是按容器。 */
 export const PRESS_ACTION_ATTRIBUTE = 'data-astryx-press-action'
 
+/** 按钮组、提示对话框跟踪滑动的动作带这个标记，值是组跟踪的指针类型，比如 `touch pen`。 */
+export const PRESS_GROUP_ITEM_ATTRIBUTE = 'data-astryx-press-group-item'
+
+/** 这个元素（或它外面）是不是由组来画 `pointerType` 这种指针的按压。 */
+export function isTrackedByGroup(element: Element, pointerType: string): boolean {
+  const marked = element.closest(`[${PRESS_GROUP_ITEM_ATTRIBUTE}]`)
+  return marked != null && (marked.getAttribute(PRESS_GROUP_ITEM_ATTRIBUTE) ?? '').split(' ').includes(pointerType)
+}
+
 /** 不可用的元素怎么按都不画。 */
 const DISABLED = ':disabled, [aria-disabled="true"]'
 

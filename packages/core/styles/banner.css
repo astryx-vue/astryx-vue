@@ -72,6 +72,8 @@
     font-weight: var(--astryx-font-weight-semibold, 600);
     line-height: var(--astryx-text-label-leading, 1.4286);
     overflow-wrap: anywhere;
+    /* Text 和 Heading 在里面也按 anywhere 换行。 */
+    --_astryx-text-overflow-wrap: anywhere;
   }
 
   .astryx-banner[data-status] .astryx-banner-title,
@@ -85,6 +87,8 @@
     font-weight: var(--astryx-font-weight-regular, 400);
     line-height: var(--astryx-text-supporting-leading, 1.6667);
     overflow-wrap: anywhere;
+    /* Text 和 Heading 在里面也按 anywhere 换行。 */
+    --_astryx-text-overflow-wrap: anywhere;
   }
 
   .astryx-banner-icon {
@@ -146,6 +150,8 @@
     font-size: var(--astryx-text-label-size, 14px);
     line-height: 1.5;
     overflow-wrap: anywhere;
+    /* Text 和 Heading 在里面也按 anywhere 换行。 */
+    --_astryx-text-overflow-wrap: anywhere;
   }
 
   .astryx-banner-frame[data-expanded] .astryx-banner-header {

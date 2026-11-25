@@ -6,6 +6,8 @@
     color: var(--astryx-heading-foreground, var(--astryx-color-text-primary, light-dark(#171717, #fafafa)));
     font-family: var(--astryx-font-family-body, Figtree, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif);
     line-height: var(--astryx-heading-leading, 1.25);
+    /* 和 Text 一样：过长的串换行，用 anywhere 换行的容器里跟着用 anywhere。 */
+    overflow-wrap: var(--_astryx-text-overflow-wrap, break-word);
   }
 
   h1.astryx-heading,
@@ -157,6 +159,8 @@
 
   .astryx-heading--word-break-word {
     overflow-wrap: anywhere;
+    /* Text 和 Heading 在里面也按 anywhere 换行。 */
+    --_astryx-text-overflow-wrap: anywhere;
     word-break: break-word;
   }
 
