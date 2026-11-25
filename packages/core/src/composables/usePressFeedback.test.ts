@@ -29,10 +29,19 @@ function pressable(tag = 'div'): HTMLElement {
   return element
 }
 
+/** 让一个元素成为滚动视图：纵向可滚，内容比自己高。 */
+function makeScrollView(element: HTMLElement): HTMLElement {
+  element.style.overflowY = 'auto'
+  Object.defineProperty(element, 'scrollHeight', { configurable: true, value: 1000 })
+  Object.defineProperty(element, 'clientHeight', { configurable: true, value: 200 })
+  return element
+}
+
 beforeEach(() => {
   vi.useFakeTimers()
   document.body.innerHTML = ''
-  scroller = document.createElement('div')
+  // 这些行放在一个能滚的列表里：滚动视图里的触摸要先等 150ms。
+  scroller = makeScrollView(document.createElement('div'))
   rows = []
   for (let index = 0; index < 4; index += 1) {
     const row = pressable()

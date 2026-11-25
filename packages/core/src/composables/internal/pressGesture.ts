@@ -1,7 +1,8 @@
 /**
  * 触屏按压模型的纯状态机：输入「刚发生了什么」，输出「现在该画什么」。
  *
- * 系统原生列表（UIKit）对手指的处理：按下先等 0.15 秒才认；滚动一接管手势就立刻取消，
+ * 系统原生控件（UIKit）对手指的处理：滚动视图外，手指落下的那一帧就亮；
+ * 滚动视图里按下先等 0.15 秒才认，因为这次触摸可能变成滚动。滚动一接管手势就立刻取消，
  * 这次手势里不再亮回来；抬手后淡出。iOS Safari 的 CSS `:active` 一样都不做：
  * 手指一碰就亮，滚动开始 1.6 秒后还亮着。所以粗指针下的按压状态由这里管，
  * `:active` 只留给鼠标。
@@ -10,7 +11,10 @@
  * DOM 那一半在 `pressFeedback.ts`。
  */
 
-/** 手指停多久才算真按。UIKit 的 `delaysContentTouches` 就是 0.15 秒。快速划一下在这之前就被滚动接管了，所以什么都不亮。 */
+/**
+ * 滚动视图里，手指停多久才算真按。UIKit 的 `delaysContentTouches` 就是 0.15 秒。
+ * 快速划一下在这之前就被滚动接管了，所以什么都不亮。从触摸本身的时间戳算起。
+ */
 export const PRESS_ONSET_MS = 150
 
 /** 手指最多能挪多远还算按压，单位 CSS 像素。iOS 的滚动大约在这个距离接管手势。 */
@@ -47,17 +51,23 @@ export interface PressGesture {
 }
 
 export type PressEvent
-  = | { kind: 'down', x: number, y: number }
-    | { kind: 'move', x: number, y: number }
-    | { kind: 'up' }
+  = | {
+    kind: 'down'
+    x: number
+    y: number
+    /** 这次触摸要不要先等 {@link PRESS_ONSET_MS}：落在滚动视图里才等。默认等。 */
+    delayed?: boolean
+  }
+  | { kind: 'move', x: number, y: number }
+  | { kind: 'up' }
   /** 平台把手势拿走了：pointercancel、touchcancel、滚动、拖拽。 */
-    | { kind: 'cancel' }
+  | { kind: 'cancel' }
   /** 手指按满了 {@link PRESS_ONSET_MS}。 */
-    | { kind: 'onset' }
+  | { kind: 'onset' }
   /** 轻点的满强度保持结束。 */
-    | { kind: 'flashEnd' }
+  | { kind: 'flashEnd' }
   /** 淡出结束。 */
-    | { kind: 'fadeEnd' }
+  | { kind: 'fadeEnd' }
 
 export type PressTimer = 'onset' | 'flash' | 'fade'
 
@@ -122,6 +132,9 @@ function stepPressed(gesture: PressGesture, event: PressEvent): PressStep {
  */
 export function pressGestureStep(gesture: PressGesture, event: PressEvent): PressStep {
   if (event.kind === 'down') {
+    // 上面没有滚动容器：没有东西能把这次触摸变成滚动，落下那一帧就亮，和原生控件一样。
+    if (event.delayed === false)
+      return { gesture: { originX: event.x, originY: event.y, phase: 'pressed' }, paint: 'on', timer: null }
     // 新的一次触摸总是从 armed、什么都不画开始，不管上一次是怎么结束的。离开 dead 只有这一条路。
     return { gesture: { originX: event.x, originY: event.y, phase: 'armed' }, paint: 'none', timer: 'onset' }
   }
