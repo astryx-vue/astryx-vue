@@ -1,6 +1,7 @@
 ---
 '@astryx-vue/core': patch
 '@astryx-vue/lab': patch
+'@astryx-vue/cli': patch
 ---
 
 Button 跟进上游 #7906（spec:AST-085）：禁用的按钮不再渲染原生 `disabled`。
@@ -12,3 +13,5 @@ Button 跟进上游 #7906（spec:AST-085）：禁用的按钮不再渲染原生 
 - lab 的 ListInput 禁用或加载中时，重排手柄虽然能聚焦，方向键和拖拽都不再重排。
 
 测试里断言 Button 带 `disabled` 属性的，改成断言 `aria-disabled="true"`。
+
+CLI 内置的组件文档跟着更新了 Button、IconButton、ToggleButton、ButtonGroup 的禁用说明。
