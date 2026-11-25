@@ -7,12 +7,14 @@
  *   装调用方文字的元素上，和 `unicode-bidi: isolate` 搭配使用
  */
 
+import { unicodeRegExp } from './unicodeRegExp.js'
+
 /**
  * Unicode 双向算法里的强右到左字符（Bidi_Class `R` 和 `AL`）。在用的文字按名字列出
  * （阿拉伯字母标记 U+061C 属于阿拉伯文），再加上右到左标记 U+200F；
  * 两段码位范围覆盖辅助平面里的古代右到左文字和 Adlam。
  */
-const STRONG_RTL = /[\p{Script=Arabic}\p{Script=Hebrew}\p{Script=Mandaic}\p{Script=Nko}\p{Script=Samaritan}\p{Script=Syriac}\p{Script=Thaana}\u200F\u{10800}-\u{10FFF}\u{1E800}-\u{1EFFF}]/u
+const STRONG_RTL = unicodeRegExp('[\\p{Script=Arabic}\\p{Script=Hebrew}\\p{Script=Mandaic}\\p{Script=Nko}\\p{Script=Samaritan}\\p{Script=Syriac}\\p{Script=Thaana}\\u200F\\u{10800}-\\u{10FFF}\\u{1E800}-\\u{1EFFF}]')
 
 /** 文字里有没有任何一个强右到左字符。 */
 export function hasStrongRightToLeft(text: string): boolean {

@@ -21,6 +21,12 @@ export interface DerivedVarEntry {
   vars?: readonly string[]
   /** `container` expands padding into the published container variables. */
   expand?: 'container'
+  /**
+   * The variables replace the property: the root does not get it. Used when
+   * the target is an outer field whose own value of the property means
+   * something else, such as the room above a status message.
+   */
+  replaces?: true
 }
 
 export const DERIVED_VARS: Readonly<Record<string, readonly DerivedVarEntry[]>> = {
@@ -29,6 +35,9 @@ export const DERIVED_VARS: Readonly<Record<string, readonly DerivedVarEntry[]>> 
     { property: 'borderRadius', vars: ['--_card-radius'] },
     { property: 'padding', expand: 'container' },
   ],
+  // The room between the box and its label. The target is the outer field,
+  // whose own gap is the room above the status message.
+  'checkbox-input': [{ property: 'gap', vars: ['--_checkbox-input-gap'], replaces: true }],
   'chat': [
     { property: 'borderRadius', vars: ['--_chat-composer-radius'] },
     { property: 'padding', vars: ['--_chat-composer-padding'] },
@@ -57,6 +66,8 @@ export const DERIVED_VARS: Readonly<Record<string, readonly DerivedVarEntry[]>> 
     { property: 'borderRadius', vars: ['--_segmented-control-radius'] },
     { property: 'padding', vars: ['--_segmented-control-padding'] },
   ],
+  // The room between the track and its label, as on `checkbox-input`.
+  'switch': [{ property: 'gap', vars: ['--_switch-gap'], replaces: true }],
 }
 
 const PADDING_PROPS = new Set([
@@ -165,8 +176,9 @@ function entriesFor(component: string, property: string): readonly DerivedVarEnt
  * Lower one rule's declarations through the component's derived variables.
  *
  * Input and output are `[camelCase or custom property, value]` pairs. A
- * container-expanded padding replaces the padding properties; every other
- * derived variable is written next to the property it mirrors.
+ * container-expanded padding, or an entry marked `replaces`, takes the place
+ * of the property; every other derived variable is written next to the
+ * property it mirrors.
  */
 export function applyDerivedVars(
   component: string,
@@ -174,21 +186,21 @@ export function applyDerivedVars(
 ): [string, string][] {
   const derived: [string, string][] = []
   const padding: (readonly [string, string])[] = []
+  const replaced = new Set<string>()
   for (const [property, value] of declarations) {
     for (const entry of entriesFor(component, property)) {
       if (entry.expand === 'container')
         padding.push([property, value])
+      if (entry.replaces || entry.expand === 'container')
+        replaced.add(property)
       for (const name of entry.vars ?? [])
         derived.push([name, value])
     }
   }
+  const kept = declarations
+    .filter(([property]) => !replaced.has(property))
+    .map(([p, v]) => [p, v] as [string, string])
   if (padding.length === 0)
-    return [...declarations.map(([p, v]) => [p, v] as [string, string]), ...derived]
-
-  const expanded = new Set(padding.map(([property]) => property))
-  return [
-    ...declarations.filter(([property]) => !expanded.has(property)).map(([p, v]) => [p, v] as [string, string]),
-    ...containerPadding(component, parsePadding(padding)),
-    ...derived,
-  ]
+    return [...kept, ...derived]
+  return [...kept, ...containerPadding(component, parsePadding(padding)), ...derived]
 }

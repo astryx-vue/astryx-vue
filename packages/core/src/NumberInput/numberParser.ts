@@ -7,6 +7,8 @@
  * 空格和撇号没有语言拿来当小数点，出现一次就够，en-US 的 `1 234` 是 1234。
  */
 
+import { unicodeRegExp } from '../utils/unicodeRegExp.js'
+
 interface LocaleNumberSymbols {
   group: string
   decimal: string
@@ -48,8 +50,8 @@ function getLocaleNumberSymbols(locale: string | undefined): LocaleNumberSymbols
   return symbols
 }
 
-const DECIMAL_DIGIT = /\p{Nd}/u
-const CURRENCY = /\p{Sc}/u
+const DECIMAL_DIGIT = unicodeRegExp('\\p{Nd}')
+const CURRENCY = unicodeRegExp('\\p{Sc}')
 const INVISIBLES = /[\u200B-\u200D\u200E\u200F\u061C\u2066-\u2069\uFEFF]/g
 // 连字符放最后，否则在字符类开头会被当成范围。
 const MINUS_SIGNS = '\u2212\u2012\u2013-'

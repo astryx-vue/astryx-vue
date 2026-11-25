@@ -41,6 +41,8 @@ export interface ChatMessages {
   inputLabel: string
   noSpeechDetected: string
   expandPastedText: string
+  /** 粘贴文本小块上的计数：只有一行时只写字符数。 */
+  pastedTextLabel: (lines: number, chars: number) => string
   drawerExpand: (label: string) => string
   drawerCollapse: (label: string) => string
   startDictation: string
@@ -86,6 +88,7 @@ export const chatMessages: Record<AstryxLocale, ChatMessages> = {
     inputLabel: 'Message input',
     noSpeechDetected: 'No speech was detected.',
     expandPastedText: 'Expand',
+    pastedTextLabel: (lines, chars) => lines === 1 ? `${formatCount(chars, 'en')} chars` : `${formatCount(lines, 'en')} lines, ${formatCount(chars, 'en')} chars`,
     drawerExpand: label => `Expand ${label}`,
     drawerCollapse: label => `Collapse ${label}`,
     startDictation: 'Start dictation',
@@ -129,6 +132,7 @@ export const chatMessages: Record<AstryxLocale, ChatMessages> = {
     inputLabel: '消息输入框',
     noSpeechDetected: '未检测到语音。',
     expandPastedText: '展开',
+    pastedTextLabel: (lines, chars) => lines === 1 ? `${formatCount(chars, 'zh-CN')} 个字符` : `${formatCount(lines, 'zh-CN')} 行，${formatCount(chars, 'zh-CN')} 个字符`,
     drawerExpand: label => `展开 ${label}`,
     drawerCollapse: label => `折叠 ${label}`,
     startDictation: '开始语音输入',

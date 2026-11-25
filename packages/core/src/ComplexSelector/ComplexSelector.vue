@@ -172,17 +172,29 @@ useDevWarning(
   '`controlClass`/`controlStyle` have no effect on a custom trigger.',
   () => hasCustomTrigger.value && (props.controlClass != null || props.controlStyle != null),
 )
+// 自定义触发器也是这个字段的控件：和内置触发器一样是弹出对话框的 combobox，
+// 必填、禁用、忙碌状态都挂在它上面。combobox 不从内容取名字，所以用 label 命名，
+// 调用方给了 aria-label 用调用方的，给了 aria-labelledby 就不再加 aria-label。
 const triggerProps = computed<ComplexSelectorTriggerProps>(() => ({
   'id': triggerId,
   'onClick': onCustomClick,
   'onKeydown': onCustomKeyDown,
+  'role': 'combobox',
   'aria-disabled': props.isDisabled ? 'true' : undefined,
   'aria-haspopup': 'dialog',
   'aria-expanded': isOpen.value,
   'aria-controls': isOpen.value ? contentId : undefined,
   'aria-busy': isBusy.value ? true : undefined,
-  'aria-label': props.label,
+  'aria-required': props.isRequired ? 'true' : undefined,
+  'aria-label': customTriggerLabel(),
 }))
+
+function customTriggerLabel(): string | undefined {
+  const ariaLabel = attrs['aria-label']
+  if (typeof ariaLabel === 'string' && ariaLabel !== '')
+    return ariaLabel
+  return attrs['aria-labelledby'] != null ? undefined : props.label
+}
 const triggerView: Component = () => props.renderTrigger?.(triggerProps.value) ?? null
 
 const handle: ComplexSelectorHandle = { open, close, toggle, isOpen: () => isOpen.value }
@@ -280,6 +292,7 @@ defineExpose(handle)
       role="dialog"
       @open-change="setOpen"
     >
+      <!-- eslint-disable-next-line vue-a11y/role-has-required-aria-props -- aria-controls 由 Popover 在打开时写到触发器上。 -->
       <button
         v-bind="parts.forwardedAttrs()"
         :id="triggerId"
@@ -296,6 +309,7 @@ defineExpose(handle)
         :aria-disabled="isDisabled || undefined"
         :aria-labelledby="labelId"
         :aria-required="isRequired || undefined"
+        role="combobox"
         type="button"
         @click="onBuiltinClick"
         @keydown="onBuiltinKeyDown"

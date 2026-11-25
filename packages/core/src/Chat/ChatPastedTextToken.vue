@@ -15,7 +15,7 @@ const emit = defineEmits<{
 }>()
 
 const messages = useAstryxMessages()
-const label = computed(() => pastedTextLabel(props.text))
+const label = computed(() => pastedTextLabel(props.text, messages.value.chat.pastedTextLabel))
 </script>
 
 <template>

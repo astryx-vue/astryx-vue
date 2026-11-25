@@ -33,7 +33,7 @@ footer: false
       <tr><td><code>startIcon</code></td><td><code>string | Component</code></td><td>-</td><td>内置触发器开头的图标。</td></tr>
       <tr><td><code>variant</code></td><td><code>'input' | 'secondary' | 'ghost'</code></td><td><code>'input'</code></td><td><code>input</code> 是带边框的字段。<code>secondary</code> 对齐次要按钮。<code>ghost</code> 看起来像工具栏按钮。后两种上的 attached 状态会收成独立说明。</td></tr>
       <tr><td><code>containerClass</code> / <code>controlClass</code></td><td><code>class</code></td><td>—</td><td>外壳接收 <code>container*</code> 和根上的 class。内置按钮接收 <code>control*</code>。自定义触发器上这两类样式不生效，开发环境会警告。</td></tr>
-      <tr><td><code>renderTrigger</code></td><td><code>(props) =&gt; VNode</code></td><td>-</td><td>换掉字段和内置触发器。把 <code>props</code> 展开到你的控件上。<code>trigger</code> 插槽做同一件事。</td></tr>
+      <tr><td><code>renderTrigger</code></td><td><code>(props) =&gt; VNode</code></td><td>-</td><td>换掉字段和内置触发器。把 <code>props</code> 展开到你的控件上，它就成了这个字段的 combobox，带上 <code>role</code>、<code>aria-required</code>、<code>aria-disabled</code>，以及取自 <code>label</code> 的 <code>aria-label</code>（你传了 <code>aria-label</code> 或 <code>aria-labelledby</code> 时以你的为准）。<code>trigger</code> 插槽做同一件事。</td></tr>
       <tr><td><code>handleRef</code></td><td><code>Ref | (handle) =&gt; void</code></td><td>-</td><td>拿到 <code>open</code>、<code>close</code>、<code>toggle</code> 和 <code>isOpen</code>。模板 <code>ref</code> 暴露同样的方法。</td></tr>
       <tr><td><code>changeAction</code></td><td><code>(value) =&gt; void | Promise&lt;void&gt;</code></td><td>-</td><td>值变化后执行。还没结束时触发器显示加载指示。</td></tr>
     </tbody>

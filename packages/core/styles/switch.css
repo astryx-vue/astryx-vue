@@ -13,7 +13,8 @@
   .astryx-switch-row {
     display: inline-flex;
     align-items: center;
-    gap: var(--astryx-spacing-2, 8px);
+    /* 主题在 switch 目标上写的 gap 落在这里，见 theme/derivedVars.ts。 */
+    gap: var(--_switch-gap, var(--astryx-spacing-2, 8px));
   }
 
   .astryx-switch[data-label-spacing='spread'] > .astryx-switch-row {

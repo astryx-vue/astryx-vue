@@ -37,11 +37,21 @@ export interface ComplexSelectorTriggerProps {
   'id': string
   'onClick': (event: MouseEvent) => void
   'onKeydown': (event: KeyboardEvent) => void
+  /** 控件是这个字段本身：和内置触发器一样，是弹出对话框的 combobox。 */
+  'role': 'combobox'
+  /** 选择器禁用时为 `'true'`。控件仍留在 Tab 序列里，弹层不会打开。 */
+  'aria-disabled': 'true' | undefined
   'aria-haspopup': 'dialog'
   'aria-expanded': boolean
   'aria-controls': string | undefined
   'aria-busy': true | undefined
-  'aria-label': string
+  /** 字段必填时为 `'true'`。 */
+  'aria-required': 'true' | undefined
+  /**
+   * 字段的 `label`。combobox 不从内容取名字，所以用它命名控件；
+   * 给选择器传了 `aria-label` 时用传入的，传了 `aria-labelledby` 时为 undefined。
+   */
+  'aria-label': string | undefined
 }
 
 export interface ComplexSelectorSlotProps<Value> {
