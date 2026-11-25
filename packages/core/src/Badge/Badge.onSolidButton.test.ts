@@ -46,7 +46,8 @@ describe('indicator marks keep their share of the box', () => {
   it('sizes the dash as half the box in both sizes', () => {
     expect(rule('checkbox-indicator.css', '.astryx-checkbox-indicator-dash')).toContain('width: calc((100% + 2 * var(--astryx-border-width, 1px)) / 2)')
     expect(readFileSync(resolve(process.cwd(), 'packages/core/styles/checkbox-indicator.css'), 'utf8'))
-      .not.toContain('.astryx-checkbox-indicator[data-size=\'sm\'] > .astryx-checkbox-indicator-dash')
+      .not
+      .toContain('.astryx-checkbox-indicator[data-size=\'sm\'] > .astryx-checkbox-indicator-dash')
   })
 
   it.each([
