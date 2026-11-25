@@ -486,7 +486,7 @@
           },
           {
             "heading": "Template ref",
-            "text": "`Button` exposes `element`.\nIts type is `HTMLButtonElement | HTMLAnchorElement | HTMLElement | null`."
+            "text": "`Button` exposes `element`.\nIts type is `HTMLButtonElement | HTMLAnchorElement | HTMLElement | null`.\nIn link mode (with `href` and not disabled) it is the link element: the anchor, or the root element of the `as` link component. Otherwise it is the button."
           },
           {
             "heading": "Native attributes",
@@ -504,7 +504,7 @@
           },
           {
             "heading": "模板引用",
-            "text": "`Button` 公开 `element`。\n类型为 `HTMLButtonElement | HTMLAnchorElement | HTMLElement | null`。"
+            "text": "`Button` 公开 `element`。\n类型为 `HTMLButtonElement | HTMLAnchorElement | HTMLElement | null`。\n链接模式下（有 `href` 且未禁用），它是链接元素：原生锚点，或 `as` 链接组件的根元素；其他情况下是按钮本身。"
           },
           {
             "heading": "原生属性",
@@ -835,7 +835,7 @@
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Disables every Button and IconButton in the group."
+                "description": "Disables every Button and IconButton in the group. Members stay focusable and the group keeps its Tab stop."
               }
             ]
           }
@@ -872,7 +872,7 @@
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "是否禁用组内全部 Button 和 IconButton。"
+                "description": "是否禁用组内全部 Button 和 IconButton。成员仍可聚焦，整组也仍保留 Tab 停靠点。"
               }
             ]
           }
@@ -894,7 +894,7 @@
           },
           {
             "heading": "Keyboard navigation",
-            "text": "- Arrow-key navigation skips disabled buttons; when every button is disabled, the group still keeps one Tab stop so keyboard users can reach it.\n- Right-to-left horizontal layouts reverse the Left and Right Arrow behavior.\n\n- Left and Right Arrow: Left and Right Arrow\n- Up and Down Arrow: Up and Down Arrow\n- `Home`: `Home`\n- `End`: `End`"
+            "text": "- The group is a single Tab stop. A disabled member is marked `aria-disabled` rather than natively disabled, so it stays focusable.\n- When every member is disabled, the Tab stop stays on one disabled member, so keyboard users can still reach the group.\n- Right-to-left horizontal layouts reverse the Left and Right Arrow behavior.\n\n- Left and Right Arrow: Left and Right Arrow\n- Up and Down Arrow: Up and Down Arrow\n- `Home`: `Home`\n- `End`: `End`"
           },
           {
             "heading": "Template ref",
@@ -912,7 +912,7 @@
           },
           {
             "heading": "键盘导航",
-            "text": "- 方向键导航跳过禁用按钮；整组都禁用时仍保留一个 Tab 停靠点，键盘用户照样能到这组。\n- 从右到左的水平布局会交换左右方向键的行为。\n\n- 左右方向键: 左右方向键\n- 上下方向键: 上下方向键\n- `Home`: `Home`\n- `End`: `End`"
+            "text": "- 整组只占一个 Tab 停靠点。禁用的成员标记为 `aria-disabled`，不用原生 disabled，所以仍能获得焦点。\n- 整组都禁用时，Tab 停靠点留在其中一个禁用成员上，键盘用户照样能到这组。\n- 从右到左的水平布局会交换左右方向键的行为。\n\n- 左右方向键: 左右方向键\n- 上下方向键: 上下方向键\n- `Home`: `Home`\n- `End`: `End`"
           },
           {
             "heading": "模板引用",
@@ -3717,7 +3717,7 @@
           },
           {
             "heading": "Template ref",
-            "text": "`IconButton` exposes `element`.\nIts type is `HTMLButtonElement | HTMLAnchorElement | HTMLElement | null`."
+            "text": "`IconButton` exposes `element`.\nIts type is `HTMLButtonElement | HTMLAnchorElement | HTMLElement | null`.\nIn link mode (with `href` and not disabled) it is the link element: the anchor, or the root element of the `as` link component. Otherwise it is the button."
           },
           {
             "heading": "Native attributes",
@@ -3739,7 +3739,7 @@
           },
           {
             "heading": "模板引用",
-            "text": "`IconButton` 公开 `element`。\n类型为 `HTMLButtonElement | HTMLAnchorElement | HTMLElement | null`。"
+            "text": "`IconButton` 公开 `element`。\n类型为 `HTMLButtonElement | HTMLAnchorElement | HTMLElement | null`。\n链接模式下（有 `href` 且未禁用），它是链接元素：原生锚点，或 `as` 链接组件的根元素；其他情况下是按钮本身。"
           },
           {
             "heading": "原生属性",
@@ -5786,7 +5786,7 @@
                 "name": "`pressedChangeAction`",
                 "type": "`(isPressed: boolean) => void | Promise<void>`",
                 "default": "—",
-                "description": "Action for an API- or navigation-backed toggle. It runs after `pressedChange` unless that handler prevents the click default. While it is pending the button previews the next state with a spinner and stays clickable, so another click reverses the unsettled toggle. Ignored for a group member with a value."
+                "description": "Action for an API- or navigation-backed toggle. It runs after `click` and `pressedChange` unless either handler prevents the click default. While it is pending the button previews the next state with a spinner and stays clickable, so another click reverses the unsettled toggle. Ignored for a group member with a value."
               },
               {
                 "name": "`tooltip`",
@@ -5894,7 +5894,7 @@
                 "name": "`pressedChangeAction`",
                 "type": "`(isPressed: boolean) => void | Promise<void>`",
                 "default": "-",
-                "description": "由接口或路由支撑的切换动作。在 `pressedChange` 之后执行，除非该回调阻止了默认行为；执行期间按钮显示下一个状态和加载指示，并允许再次点击来反转尚未完成的选择。分组中带 value 的成员会忽略它。"
+                "description": "由接口或路由支撑的切换动作。在 `click` 和 `pressedChange` 之后执行，其中任一回调阻止了默认行为就不执行；执行期间按钮显示下一个状态和加载指示，并允许再次点击来反转尚未完成的选择。分组中带 value 的成员会忽略它。"
               },
               {
                 "name": "`tooltip`",
@@ -6029,7 +6029,7 @@
               {
                 "name": "`click`",
                 "payload": "`(event: MouseEvent)`",
-                "description": "The originating click, forwarded after the toggle has been requested. It is not emitted while the button is disabled."
+                "description": "The originating click. On a standalone button it is emitted first, before `pressedChange` and `pressedChangeAction`; calling `event.preventDefault()` here cancels the toggle, so neither runs. On a group member with a value it is emitted after the group toggles. It is not emitted while the button is disabled."
               },
               {
                 "name": "`change`",
@@ -6056,7 +6056,7 @@
               {
                 "name": "`click`",
                 "payload": "`(event: MouseEvent)`",
-                "description": "透传的点击事件，在切换请求之后发出。按钮被禁用时不会发出。"
+                "description": "原始的点击事件。独立按钮上它最先发出，早于 `pressedChange` 和 `pressedChangeAction`；在这里调用 `event.preventDefault()` 会取消这次切换，两者都不会执行。分组里带 value 的成员则在分组完成切换后才发出。按钮被禁用时不会发出。"
               },
               {
                 "name": "`change`",
@@ -29636,7 +29636,7 @@
                 "name": "`disabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Disables the group and the selectors inside it."
+                "description": "Disables the group. The inputs, selectors, and Button addons inside it are disabled too, and so is a nested group. Re-enabling the group leaves a control that disabled itself disabled."
               },
               {
                 "name": "`isOptional`",
@@ -29697,7 +29697,7 @@
                 "name": "`disabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "是否禁用整组，并传给组内选择器。"
+                "description": "是否禁用整组。组内的输入框、选择器和按钮附加件都会跟着禁用，嵌套的内层组也一样；组重新启用时，自己设了禁用的控件仍保持禁用。"
               },
               {
                 "name": "`isOptional`",
