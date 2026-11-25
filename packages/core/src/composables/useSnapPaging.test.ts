@@ -11,7 +11,14 @@ const advance = (ms: number) => vi.advanceTimersByTime(ms)
 const TEN = { width: 300, items: Array.from({ length: 10 }).fill(100) as number[] }
 
 function reducedMotion(matches: boolean): void {
-  vi.spyOn(window, 'matchMedia').mockImplementation(query => ({ matches: matches && query.includes('reduce'), media: query }) as MediaQueryList)
+  vi.spyOn(window, 'matchMedia').mockImplementation(query => ({
+    matches: matches && query.includes('reduce'),
+    media: query,
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    addListener: () => {},
+    removeListener: () => {},
+  }) as unknown as MediaQueryList)
 }
 
 beforeEach(() => {

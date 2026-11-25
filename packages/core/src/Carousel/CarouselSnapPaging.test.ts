@@ -16,7 +16,14 @@ const TEN = { width: 300, items: Array.from({ length: 10 }).fill(100) as number[
 
 beforeEach(() => {
   vi.useFakeTimers()
-  vi.spyOn(window, 'matchMedia').mockImplementation(query => ({ matches: false, media: query }) as MediaQueryList)
+  vi.spyOn(window, 'matchMedia').mockImplementation(query => ({
+    matches: false,
+    media: query,
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    addListener: () => {},
+    removeListener: () => {},
+  }) as unknown as MediaQueryList)
 })
 
 afterEach(() => {
