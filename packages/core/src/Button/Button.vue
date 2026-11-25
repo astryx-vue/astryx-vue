@@ -10,6 +10,9 @@ import { readLayerScoped } from '../layer/scopedProvide.js'
 import { isSafeUrl } from '../Link/safeUrl.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
 import { useSize } from '../SizeContext/SizeContext.js'
+import { hasCallerTooltip } from '../Text/cutText.js'
+import CutTextTooltip from '../Text/CutTextTooltip.vue'
+import { useCutTextOnKeyboardFocus } from '../Text/useCutTextOnKeyboardFocus.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import ButtonSpinner from './ButtonSpinner.vue'
 import ButtonTooltip from './ButtonTooltip.vue'
@@ -139,6 +142,14 @@ const element = computed<ButtonRootElement | null>(() => {
 })
 
 const buttonTooltip = useButtonTooltip(hasTooltip)
+// 标签被行宽截短时，键盘焦点到达就在提示里显示完整标签；调用方自己的提示优先。
+const labelElement = useTemplateRef<HTMLElement>('labelText')
+const cutLabel = useCutTextOnKeyboardFocus({
+  anchor: () => element.value,
+  measure: () => labelElement.value,
+  isEnabled: () => !props.isIconOnly && !hasTooltip.value,
+  isSuppressed: hasCallerTooltip,
+})
 
 const rootClass = computed(() => ['astryx-button', attrs.class])
 
@@ -220,8 +231,10 @@ function handleRootClick(event: MouseEvent): Promise<void> | void {
 }
 
 function handleRootKeydown(event: KeyboardEvent): void {
-  if (event.key === 'Escape')
+  if (event.key === 'Escape') {
     buttonTooltip.hideImmediately()
+    cutLabel.hide()
+  }
 
   if (isButtonDisabled.value && (event.key === 'Enter' || event.key === ' ')) {
     event.preventDefault()
@@ -265,6 +278,9 @@ defineExpose({
     @blur="buttonTooltip.onBlur"
     @click="handleRootClick"
     @focus="buttonTooltip.onFocus"
+    @focusin="cutLabel.onFocusin"
+    @focusout="cutLabel.onFocusout"
+    @pointerdown.capture="cutLabel.onPointerdown"
     @keydown="handleRootKeydown"
     @pointerdown="buttonTooltip.onPointerDown"
     @pointerenter="buttonTooltip.onPointerEnter"
@@ -293,7 +309,7 @@ defineExpose({
         </slot>
       </span>
 
-      <span v-if="!isIconOnly" class="astryx-button__label">
+      <span v-if="!isIconOnly" ref="labelText" class="astryx-button__label">
         <slot>{{ label }}</slot>
       </span>
 
@@ -318,6 +334,12 @@ defineExpose({
       :text="tooltip ?? ''"
       @pointer-enter="buttonTooltip.onTooltipPointerEnter"
       @pointer-leave="buttonTooltip.onTooltipPointerLeave"
+    />
+
+    <CutTextTooltip
+      v-if="cutLabel.cutText.value != null"
+      :anchor="element"
+      :text="cutLabel.cutText.value"
     />
   </component>
 </template>

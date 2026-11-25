@@ -24,7 +24,7 @@ footer: false
       <tr><td><code>isInterruptible</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Allows clickAction to run again while earlier work is pending.</td></tr>
       <tr><td><code>clickAction</code></td><td><code>(event: MouseEvent) =&gt; void | Promise&lt;void&gt;</code></td><td>—</td><td>Action function that automatically drives pending state.</td></tr>
       <tr><td><code>isIconOnly</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows only the icon slot and uses label to name the button.</td></tr>
-      <tr><td><code>width</code></td><td><code>number | string</code></td><td>—</td><td>Button width. Numbers become pixels; CSS strings are used as supplied.</td></tr>
+      <tr><td><code>width</code></td><td><code>number | string</code></td><td>—</td><td>Button width. Numbers become pixels; CSS strings are used as supplied. When a row is too narrow the label truncates with an ellipsis and shows in full in a tooltip on keyboard focus.</td></tr>
       <tr><td><code>loadingLabel</code></td><td><code>string</code></td><td><code>'Loading'</code></td><td>Localized text used by the spinner and live region.</td></tr>
       <tr><td><code>tooltip</code></td><td><code>string</code></td><td>—</td><td>Supplementary hint shown on hover and keyboard focus.</td></tr>
       <tr><td><code>href</code></td><td><code>string</code></td><td>—</td><td>Renders the enabled root as a link when present.</td></tr>

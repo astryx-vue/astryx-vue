@@ -60,7 +60,33 @@ import { useClipboard, useControllableState } from '@astryx-vue/core'
 | `useTheme`、`useMediaTheme` | `@astryx-vue/core/Theme` |
 | `useIndicator` | `@astryx-vue/core/Indicator` |
 | `useSemanticIcon` | `@astryx-vue/core/Icon` |
+| `useTruncation` | `@astryx-vue/core/Text` |
 | `useSyntaxTheme` | `@astryx-vue/core/Code` |
 | `useChatComposerContext`、`useChatComposerTokens`、`useChatPasteAsToken`、`useChatDictation`、`useSpeechRecognition` | `@astryx-vue/core/Chat` |
+
+## 截断检测：useTruncation
+
+`Text` 和 `Heading` 的截断提示就建在 `useTruncation` 上。自己的组件也要「文字被截断时才显示全文提示」，比如表格单元格，可以直接用它：
+
+```vue
+<script setup lang="ts">
+import { useTruncation } from '@astryx-vue/core/Text'
+import { Tooltip } from '@astryx-vue/core/Tooltip'
+
+defineProps<{ name: string }>()
+const truncation = useTruncation(1)
+</script>
+
+<template>
+  <Tooltip :content="truncation.fullText.value" :is-enabled="truncation.isTruncated.value">
+    <span :ref="truncation.bind" class="cell">{{ name }}</span>
+  </Tooltip>
+</template>
+```
+
+- 参数是最大行数（数字、ref 或 getter）。1 比较宽度；大于 1 用 Range 量真实高度，绕开 `-webkit-line-clamp` 夹住的 `scrollHeight`；0 不测量。
+- `bind` 绑到被测量的元素上，换元素时旧的观察自动解除。`isTruncated` 是此刻是否被截断，`fullText` 是元素当前的全部文字，尺寸不变、只换了文字时也会跟上。
+- 截断的样式要自己加：一行用 `white-space: nowrap` 加省略号，多行用 `-webkit-line-clamp`，这样看到的和量的是同一个形状。
+- 全页共用一个 ResizeObserver 和一个 MutationObserver，几百个单元格也只有各一个观察者；第一次测量在浏览器排版之后进行，挂载时不额外强制排版。
 
 多语言与国际化相关的 `provideAstryxLocale` 和 `useAstryxMessages`，请参阅 [国际化](/guide/i18n)。

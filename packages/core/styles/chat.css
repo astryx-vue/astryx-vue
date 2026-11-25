@@ -492,6 +492,8 @@
     max-width: 100%;
     min-width: 0;
     overflow-wrap: anywhere;
+    /* Text 和 Heading 在里面也按 anywhere 换行。 */
+    --_astryx-text-overflow-wrap: anywhere;
     text-align: center;
     white-space: normal;
   }

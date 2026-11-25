@@ -33,6 +33,8 @@
     margin: 0;
     outline: none;
     overflow-wrap: anywhere;
+    /* Text 和 Heading 在里面也按 anywhere 换行。 */
+    --_astryx-text-overflow-wrap: anywhere;
     color: var(--astryx-dialog-title-color, var(--astryx-color-text-primary, #000));
     font-size: var(--astryx-text-heading-2-size, 1.25rem);
     font-weight: var(--astryx-text-heading-2-weight, 600);

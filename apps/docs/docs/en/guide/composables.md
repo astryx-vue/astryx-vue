@@ -58,7 +58,33 @@ Some functions belong to one component and are not in the table above. Import th
 | `useTheme`, `useMediaTheme` | `@astryx-vue/core/Theme` |
 | `useIndicator` | `@astryx-vue/core/Indicator` |
 | `useSemanticIcon` | `@astryx-vue/core/Icon` |
+| `useTruncation` | `@astryx-vue/core/Text` |
 | `useSyntaxTheme` | `@astryx-vue/core/Code` |
 | `useChatComposerContext`, `useChatComposerTokens`, `useChatPasteAsToken`, `useChatDictation`, `useSpeechRecognition` | `@astryx-vue/core/Chat` |
+
+## Truncation detection: useTruncation
+
+`Text` and `Heading` build their truncation tooltips on `useTruncation`. Use it directly when your own component should show the full text only when it is actually cut off, such as a table cell:
+
+```vue
+<script setup lang="ts">
+import { useTruncation } from '@astryx-vue/core/Text'
+import { Tooltip } from '@astryx-vue/core/Tooltip'
+
+defineProps<{ name: string }>()
+const truncation = useTruncation(1)
+</script>
+
+<template>
+  <Tooltip :content="truncation.fullText.value" :is-enabled="truncation.isTruncated.value">
+    <span :ref="truncation.bind" class="cell">{{ name }}</span>
+  </Tooltip>
+</template>
+```
+
+- The argument is the maximum line count (a number, ref or getter). 1 compares widths; above 1 measures the real content height with a Range, bypassing the `scrollHeight` that `-webkit-line-clamp` clips; 0 measures nothing.
+- Bind `bind` to the measured element; binding another element releases the previous one. `isTruncated` says whether the text is cut off now, and `fullText` is the element's current text, which follows content changes that resize nothing.
+- Apply the matching clamp yourself: `white-space: nowrap` with an ellipsis for one line, `-webkit-line-clamp` for more, so what people see and what the hook measures have the same shape.
+- The whole page shares one ResizeObserver and one MutationObserver, so hundreds of cells create one of each, and the first measurement runs after the browser's own layout instead of forcing one during mount.
 
 `provideAstryxLocale` and `useAstryxMessages` are in [Internationalization](/en/guide/i18n).

@@ -1,13 +1,15 @@
 import type { ComputedRef, CSSProperties, MaybeRefOrGetter, Ref } from 'vue'
 import type { LayerPlacement } from '../layer/position.js'
 import type { TooltipAlignment, TooltipFocusTrigger, TooltipPlacement, TooltipTouchTrigger } from './types.js'
-import { computed, onMounted, onScopeDispose, ref, shallowRef, toValue, watch } from 'vue'
+import { computed, inject, onMounted, onScopeDispose, ref, shallowRef, toValue, watch } from 'vue'
 import { useAnnounce } from '../composables/useAnnounce.js'
 import { useLayer } from '../composables/useLayer.js'
 import { isFocusable } from '../layer/focus.js'
 import { useHoverLayerDismiss } from '../layer/useHoverLayerDismiss.js'
 import { listenOutside, listenPressEnd } from './documentListeners.js'
 import { renderedText } from './renderedText.js'
+import { answerPresentInterest, tooltipPresentInterestKey } from './tooltipPresentInterest.js'
+import { isActionTrigger, isTextEntryTap, matchesFocusVisible } from './tooltipTriggerRules.js'
 
 export interface UseTooltipOptions {
   /**
@@ -92,18 +94,7 @@ export interface UseTooltipReturn {
 }
 
 const GAP = 4
-/** 指针离开触发器到进入气泡之间的宽限时间。 */
-const HOVER_BRIDGE_DELAY = 100
-const ACTION_TAGS = ['A', 'BUTTON', 'INPUT', 'SELECT', 'TEXTAREA']
-
-function matchesFocusVisible(element: HTMLElement): boolean {
-  try {
-    return element.matches(':focus-visible')
-  }
-  catch {
-    return false
-  }
-}
+const HOVER_BRIDGE_DELAY = 100 // 指针离开触发器到进入气泡之间的宽限时间。
 
 /**
  * 对应原版 Astryx 的 `hooks/useTooltip`：悬停和焦点触发的文字提示。
@@ -119,6 +110,8 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
   const isTouchPointer = ref(false)
   let bound: HTMLElement | null = null
   const announce = useAnnounce()
+  // 截断文字的提示在第一次交互时才挂载，这里拿到的就是那次交互。
+  const presentInterest = inject(tooltipPresentInterestKey, null)
 
   const layer = useLayer({
     mode: 'context',
@@ -229,11 +222,11 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
     scheduleHide()
   }
 
-  function onTouchTap(): void {
+  function onTouchTap(tapEvent: Event | null): void {
     if (!isEnabled() || isControlled.value || touchTriggerMode() === 'none')
       return
     const trigger = triggerRef.value
-    if (touchTriggerMode() === 'auto' && trigger != null && ACTION_TAGS.includes(trigger.tagName))
+    if (trigger != null && ((touchTriggerMode() === 'auto' && isActionTrigger(trigger)) || isTextEntryTap(trigger, tapEvent)))
       return
     if (isOpen.value)
       hideNow()
@@ -275,7 +268,7 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
       return
     }
     if (event.pointerType === 'touch') {
-      onTouchTap()
+      onTouchTap(event)
       return
     }
     if (isControlled.value)
@@ -408,6 +401,14 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
     }
     describedByBefore = element.getAttribute('aria-describedby')
     element.setAttribute('aria-describedby', [describedByBefore, layer.id].filter(Boolean).join(' '))
+    answerPresentInterest(presentInterest, element, {
+      hover: scheduleShow,
+      tap: (tapEvent) => {
+        isTouchPointer.value = true
+        onTouchTap(tapEvent)
+      },
+      focus: focused => shouldListenFocus(element) && matchesFocusVisible(focused) && showNow(),
+    })
   }
 
   function unbind(): void {

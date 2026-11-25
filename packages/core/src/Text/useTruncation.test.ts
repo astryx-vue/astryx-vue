@@ -1,11 +1,24 @@
+import type { FakeResizeObserver } from '../composables/testing/fakeResizeObserver.js'
 import { enableAutoUnmount, mount } from '@vue/test-utils'
-import { afterEach, describe, expect, it, vi } from 'vitest'
-import { computed, defineComponent, nextTick } from 'vue'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { computed, defineComponent, effectScope, nextTick } from 'vue'
+import { installFakeResizeObserver } from '../composables/testing/fakeResizeObserver.js'
 import Heading from '../Heading/Heading.vue'
+import { observeResize } from '../utils/sharedResizeObserver.js'
 import Text from './Text.vue'
 import { useTruncation } from './useTruncation.js'
 
 enableAutoUnmount(afterEach)
+
+let resize: FakeResizeObserver
+
+beforeEach(() => {
+  resize = installFakeResizeObserver()
+})
+
+afterEach(() => {
+  resize.restore()
+})
 
 const Probe = defineComponent({
   props: { text: { type: String, required: true } },
@@ -42,6 +55,7 @@ function countScrollWidthReads(run: () => void): number {
 describe('useTruncation', () => {
   it('updates the captured text when content changes without a resize', async () => {
     const wrapper = mount(Probe, { attachTo: document.body, props: { text: 'planning the first step' } })
+    resize.notify()
     await nextTick()
     expect(wrapper.get('output').text()).toBe('planning the first step')
 
@@ -53,14 +67,48 @@ describe('useTruncation', () => {
     const reads = countScrollWidthReads(() => {
       mount(Text, { props: { maxLines: 1, hasTruncateTooltip: false }, slots: { default: 'Long text' } })
       mount(Heading, { props: { level: 2, maxLines: 1, hasTruncateTooltip: false }, slots: { default: 'Long heading' } })
+      resize.notify()
     })
     expect(reads).toBe(0)
   })
 
-  it('still measures when the tooltip is enabled', () => {
-    const reads = countScrollWidthReads(() => {
+  it('takes the first measurement from the shared observer, not while mounting', () => {
+    const readsWhileMounting = countScrollWidthReads(() => {
       mount(Text, { props: { maxLines: 1 }, slots: { default: 'Long text' } })
     })
-    expect(reads).toBeGreaterThan(0)
+    expect(readsWhileMounting).toBe(0)
+    expect(countScrollWidthReads(() => resize.notify())).toBeGreaterThan(0)
+  })
+
+  it('measures an element another subscriber already observes in a microtask', async () => {
+    const element = document.createElement('span')
+    element.textContent = 'Shared cell'
+    const stopOther = observeResize(element, () => {})
+    const scope = effectScope()
+    const truncation = scope.run(() => useTruncation(() => 1))!
+
+    truncation.bind(element)
+    expect(truncation.fullText.value).toBe('')
+    await Promise.resolve()
+    expect(truncation.fullText.value).toBe('Shared cell')
+
+    scope.stop()
+    stopOther()
+  })
+
+  it('measures at once where there is no ResizeObserver', () => {
+    vi.stubGlobal('ResizeObserver', undefined)
+    try {
+      const element = document.createElement('span')
+      element.textContent = 'Old browser'
+      const scope = effectScope()
+      const truncation = scope.run(() => useTruncation(() => 1))!
+      truncation.bind(element)
+      expect(truncation.fullText.value).toBe('Old browser')
+      scope.stop()
+    }
+    finally {
+      vi.unstubAllGlobals()
+    }
   })
 })

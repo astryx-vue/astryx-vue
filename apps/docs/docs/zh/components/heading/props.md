@@ -17,7 +17,7 @@ footer: false
         <td><code>level</code></td>
         <td><code>HeadingLevel</code></td>
         <td>-</td>
-        <td>标题层级（1–6），决定渲染 h1–h6 中的哪个语义元素。</td>
+        <td>标题层级（1–6），决定渲染 h1–h6 中的哪个语义元素。数字字符串按数字读；没写或不是 1–6 时按 2 级渲染，并在开发时给出警告。</td>
       </tr>
       <tr>
         <td><code>type</code></td>
@@ -59,7 +59,7 @@ footer: false
         <td><code>wordBreak</code></td>
         <td><code>'break-word' | 'break-all'</code></td>
         <td>单行截断为 <code>break-all</code>，多行为 <code>break-word</code></td>
-        <td>长词如何断开。</td>
+        <td>截断时长词如何断开。没有截断时，比一行还长的串（URL、ID）会换行（<code>overflow-wrap: break-word</code>），普通文档流里不会撑出横向滚动。放在 flex 行里时，记得给 flex 子项设 <code>min-width: 0</code> 让它能收缩。你自己设了 <code>overflow-wrap: anywhere</code> 的容器管不到这里的文字；Astryx 自带的容器会把它们的换行方式传进来。</td>
       </tr>
       <tr>
         <td><code>justify</code></td>
@@ -83,7 +83,7 @@ footer: false
         <td><code>hasTruncateTooltip</code></td>
         <td><code>boolean | 'above' | 'below' | 'start' | 'end'</code></td>
         <td><code>true</code></td>
-        <td>截断之后要不要把全文放进提示。<code>false</code> 关掉。没被截断时不会弹出。</td>
+        <td>截断之后要不要把全文放进提示。<code>false</code> 关掉，同时也不再测量。没被截断时不会弹出。提示等到第一次悬停、轻点或键盘聚焦才挂载，在那之前元素上没有提示层，也没有 <code>aria-describedby</code>。</td>
       </tr>
       <tr>
         <td><code>maxLines</code></td>
@@ -104,7 +104,7 @@ footer: false
 以下内容传入根元素：
 
 - HTML 属性。
-- `aria-*` 属性。
+- `aria-*` 属性。自己写的 `aria-level` 优先于 `accessibilityLevel` 算出的值。
 - `data-*` 属性。
 - `class`。
-- `style`。
+- `style`。`maxLines` 大于 1 时，行数截断会替换 `style` 里的 `-webkit-line-clamp`。

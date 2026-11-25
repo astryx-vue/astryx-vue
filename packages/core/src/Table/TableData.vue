@@ -12,6 +12,7 @@ import { computed, h, onBeforeUnmount, ref, useAttrs } from 'vue'
 import CheckboxInput from '../CheckboxInput/CheckboxInput.vue'
 import ComponentIcon from '../Icon/ComponentIcon.vue'
 import { useAstryxMessages } from '../locale/context.js'
+import CutTextTooltip from '../Text/CutTextTooltip.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { pixel, resolveColumnWidths, resolveTableMinWidth, splitStyleMinWidth } from './columnUtils.js'
 import { selectColumn } from './plugins/stickyColumns.js'
@@ -21,6 +22,7 @@ import TableFilterControl from './TableFilterControl.vue'
 import TableGroupHeader from './TableGroupHeader.vue'
 import TableRowMenu from './TableRowMenu.vue'
 import TableScroll from './TableScroll.vue'
+import { useHeaderCutText } from './useHeaderCutText.js'
 import { useTableColumnResizeSession } from './useTableColumnResizeSession.js'
 
 defineOptions({ inheritAttrs: false })
@@ -42,6 +44,8 @@ const props = defineProps<{
 }>()
 
 defineSlots<{ empty?: () => VNodeChild }>()
+
+const headerCutText = useHeaderCutText()
 
 const attrs = useAttrs()
 const messages = useAstryxMessages()
@@ -280,7 +284,12 @@ function isEnabled(row: Record<string, unknown>): boolean {
       :aria-rowcount="ariaRowCount"
       :style="tableStyle"
     >
-      <thead>
+      <thead
+        @focusin="headerCutText.onFocusin"
+        @focusout="headerCutText.onFocusout"
+        @pointerdown="headerCutText.onPointerdown"
+        @keydown="headerCutText.onKeydown"
+      >
         <tr>
           <th
             v-if="selection"
@@ -363,6 +372,11 @@ function isEnabled(row: Record<string, unknown>): boolean {
             />
           </th>
         </tr>
+        <CutTextTooltip
+          v-if="headerCutText.cutText.value != null"
+          :anchor="headerCutText.cell.value"
+          :text="headerCutText.cutText.value"
+        />
       </thead>
       <tbody>
         <tr v-if="rows.length === 0">

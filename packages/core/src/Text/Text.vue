@@ -3,9 +3,9 @@ import type { CSSProperties } from 'vue'
 import type { TextProps } from './types.js'
 import { computed, provide, useAttrs } from 'vue'
 import { readLayerScoped } from '../layer/scopedProvide.js'
-import Tooltip from '../Tooltip/Tooltip.vue'
 import { TextClampContext } from './textClampContext.js'
-import { truncatePlacement, useTruncation } from './useTruncation.js'
+import TruncationTooltip from './TruncationTooltip.vue'
+import { useTruncationTooltip } from './useTruncationTooltip.js'
 
 import '../../styles/text.css'
 
@@ -27,8 +27,8 @@ const color = computed(() => props.color ?? (props.type === 'supporting' ? 'seco
 const weight = computed(() => props.weight === 'normal' ? 'regular' : props.weight)
 const isBlock = computed(() => props.display === 'block' || props.maxLines > 0 || props.hasCapsize)
 const wordBreak = computed(() => props.wordBreak ?? (props.maxLines === 1 ? 'break-all' : props.maxLines > 1 ? 'break-word' : undefined))
-const placement = computed(() => props.maxLines > 0 ? truncatePlacement(props.hasTruncateTooltip) : null)
-const truncation = useTruncation(computed(() => props.maxLines))
+const tooltip = useTruncationTooltip(() => props.maxLines, () => props.hasTruncateTooltip)
+const { interest } = tooltip
 const attrs = useAttrs()
 
 /** 只有 capsize 会把多行截断取消掉（它把 display 改回 block）；单行截断不受影响。 */
@@ -61,33 +61,26 @@ const style = computed<CSSProperties>(() => {
 </script>
 
 <template>
-  <Tooltip
-    v-if="placement"
-    anchors-on-self
-    :has-hover-indication="false"
-    :content="truncation.fullText.value"
-    :is-enabled="truncation.isTruncated.value"
-    :placement="placement"
-  >
-    <component
-      :is="as"
-      :ref="truncation.bind"
-      v-bind="attrs"
-      class="astryx-text"
-      :class="classes"
-      :style="style"
-    >
-      <slot />
-    </component>
-  </Tooltip>
   <component
     :is="as"
-    v-else
+    :ref="tooltip.bind"
     v-bind="attrs"
     class="astryx-text"
     :class="classes"
     :style="style"
+    @pointerenter="interest.onPointerenter"
+    @pointerleave="interest.onPointerleave"
+    @pointerdown="interest.onPointerdown"
+    @focusin="interest.onFocusin"
+    @focusout="interest.onFocusout"
   >
     <slot />
+    <TruncationTooltip
+      v-if="tooltip.isMounted.value"
+      :anchor="tooltip.element.value"
+      :content="tooltip.truncation.fullText.value"
+      :placement="tooltip.placement.value!"
+      :interest="interest.state"
+    />
   </component>
 </template>
