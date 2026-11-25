@@ -52,6 +52,13 @@ export interface UseListFocusOptions {
    * @default false
    */
   hasCaretGuard?: boolean
+  /**
+   * 所有项都禁用时是否仍保留一个 Tab 停靠点（同上游 `oneTabStopAmong`）。
+   * 给禁用时仍可聚焦的项用，比如一组禁用的 Button：不开的话整组要么掉出 Tab 顺序，
+   * 要么每个成员各占一个停靠点。只在 `hasRovingTabIndex` 打开时生效。
+   * @default false
+   */
+  hasDisabledTabStop?: boolean
 }
 
 export interface ListFocus {
@@ -148,6 +155,7 @@ export function useListFocus(options: UseListFocusOptions = {}): ListFocus {
     hasPaging = false,
     hasRovingTabIndex = false,
     hasCaretGuard = false,
+    hasDisabledTabStop = false,
   } = options
 
   const listRef = ref<HTMLElement | null>(null)
@@ -212,10 +220,12 @@ export function useListFocus(options: UseListFocusOptions = {}): ListFocus {
   function syncTabStops(): void {
     const items = getItems()
     const enabled = items.filter(el => !isItemDisabled(el))
-    if (enabled.length === 0)
+    // 全部禁用时：默认不动 tabindex；hasDisabledTabStop 打开时在全部项里留一个停靠点。
+    const candidates = enabled.length > 0 ? enabled : hasDisabledTabStop ? items : []
+    if (candidates.length === 0)
       return
-    const current = enabled.find(el => el.getAttribute('tabindex') === '0')
-    const tabbable = current ?? enabled[0]
+    const current = candidates.find(el => el.getAttribute('tabindex') === '0')
+    const tabbable = current ?? candidates[0]
     for (const el of items)
       setTabIndex(el, el === tabbable ? 0 : -1)
   }

@@ -19,7 +19,7 @@ footer: false
       <tr><td><code>name</code></td><td><code>string</code></td><td>—</td><td>Form submission name.</td></tr>
       <tr><td><code>value</code></td><td><code>string | number | readonly string[]</code></td><td>—</td><td>Form submission value.</td></tr>
       <tr><td><code>form</code></td><td><code>string</code></td><td>—</td><td>ID of the associated form.</td></tr>
-      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disables interaction. A tooltip switches this to aria-disabled so focus remains available.</td></tr>
+      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disables interaction. The button never uses the native disabled attribute: it is marked aria-disabled and stays in the Tab order, so keyboard and screen-reader users can still reach it.</td></tr>
       <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows loading state, sets aria-busy, and disables non-interruptible activation.</td></tr>
       <tr><td><code>isInterruptible</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Allows clickAction to run again while earlier work is pending.</td></tr>
       <tr><td><code>clickAction</code></td><td><code>(event: MouseEvent) =&gt; void | Promise&lt;void&gt;</code></td><td>—</td><td>Action function that automatically drives pending state.</td></tr>

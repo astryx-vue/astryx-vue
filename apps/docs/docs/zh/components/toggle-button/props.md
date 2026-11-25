@@ -41,7 +41,7 @@ footer: false
         <td><code>isDisabled</code></td>
         <td><code>boolean</code></td>
         <td><code>false</code></td>
-        <td>是否禁用。分组的 isDisabled 会禁用全部成员；成员自己禁用自己时，启用中的分组不会把它重新启用。带 tooltip 时改用 <code>aria-disabled</code>，按钮仍可获得焦点以读出禁用原因。</td>
+        <td>是否禁用。分组的 isDisabled 会禁用全部成员；成员自己禁用自己时，启用中的分组不会把它重新启用。禁用时标记 <code>aria-disabled</code>，不用原生 disabled，按钮仍可获得焦点。</td>
       </tr>
       <tr>
         <td><code>isLoading</code></td>
@@ -204,7 +204,7 @@ ToggleButtonGroup 通过默认插槽接收 ToggleButton：
 | `Tab` | 依次聚焦每一个可用的切换按钮；分组不会把成员合并成单个 tab 停靠点。 |
 | `Enter` / `Space` | 切换当前焦点所在的按钮，与点击等价。 |
 
-分组本身不拦截方向键：每个成员都是独立的 tab 停靠点，`Tab` 逐个经过，方向键不会在成员之间移动焦点（这一点与 `ButtonGroup` 不同）。禁用的成员会被跳过，带 tooltip 的禁用成员仍可获得焦点以便读出禁用原因。
+分组本身不拦截方向键：每个成员都是独立的 tab 停靠点，`Tab` 逐个经过，方向键不会在成员之间移动焦点（这一点与 `ButtonGroup` 不同）。禁用的成员同样是 Tab 停靠点（标记为 `aria-disabled`），只是不响应激活。
 
 ## 模板引用
 

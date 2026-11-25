@@ -307,7 +307,7 @@ describe('listInput', () => {
   it('disables Add at maxItems while keeping removal available', async () => {
     const harness = mountList({ props: { maxItems: 2 } })
 
-    expect(buttonByLabel('Add guest')?.hasAttribute('disabled')).toBe(true)
+    expect(buttonByLabel('Add guest')?.getAttribute('aria-disabled')).toBe('true')
     const remove = buttonByLabel('Remove guest 1')
     expect(remove?.hasAttribute('disabled')).toBe(false)
 
@@ -505,13 +505,32 @@ describe('listInput', () => {
 
     for (const field of inputs())
       expect(field.hasAttribute('disabled')).toBe(true)
-    expect(buttonByLabel('Add guest')?.hasAttribute('disabled')).toBe(true)
-    expect(buttonByLabel('Reorder guest 1')?.hasAttribute('disabled')).toBe(true)
-    // Remove 带提示气泡，所以走 aria 禁用，仍然能聚焦读到原因。
+    expect(buttonByLabel('Add guest')?.getAttribute('aria-disabled')).toBe('true')
+    expect(buttonByLabel('Reorder guest 1')?.getAttribute('aria-disabled')).toBe('true')
+    // 禁用的按钮都走 aria 禁用（spec:AST-085），仍然能聚焦读到原因。
     expect(buttonByLabel('Remove guest 1')?.getAttribute('aria-disabled')).toBe('true')
 
     expect(inputs()[0]?.value).toBe('Ada')
     expect(harness.spy).not.toHaveBeenCalled()
+  })
+
+  it('never reorders while disabled or loading, though the handle stays focusable', async () => {
+    for (const props of [{ isDisabled: true }, { isLoading: true }]) {
+      const harness = mountList({ props: { ...props, isReorderable: true } })
+      const handle = buttonByLabel('Reorder guest 1')!
+
+      handle.focus()
+      expect(document.activeElement).toBe(handle)
+      await pressKey(handle, 'ArrowDown')
+      await pressKey(handle, ' ')
+      await pressKey(handle, 'ArrowDown')
+      firePointer(handle, 'pointerdown', { button: 0, pointerId: 1 })
+      await flush()
+
+      expect(harness.spy).not.toHaveBeenCalled()
+      expect(handle.getAttribute('aria-pressed')).toBeNull()
+      harness.wrapper.unmount()
+    }
   })
 
   it('marks the list busy and locks the same controls when isLoading is set', async () => {
@@ -524,7 +543,7 @@ describe('listInput', () => {
       expect(field.hasAttribute('disabled')).toBe(true)
     expect(buttonByLabel('Add guest')?.hasAttribute('disabled')).toBe(false)
     expect(buttonByLabel('Add guest')?.getAttribute('aria-disabled')).toBe('true')
-    expect(buttonByLabel('Reorder guest 1')?.hasAttribute('disabled')).toBe(true)
+    expect(buttonByLabel('Reorder guest 1')?.getAttribute('aria-disabled')).toBe('true')
     expect(buttonByLabel('Remove guest 1')?.getAttribute('aria-disabled')).toBe('true')
   })
 

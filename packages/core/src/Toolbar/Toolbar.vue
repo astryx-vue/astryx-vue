@@ -24,6 +24,8 @@ const { listRef, handleKeyDown, handleFocus } = useListFocus({
   hasRovingTabIndex: true,
   itemSelector: 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled])',
   hasCaretGuard: true,
+  // 全是禁用控件的只读工具栏也保留一个 Tab 停靠点。原生禁用的控件选择器已经排除，剩下的禁用 Button 可聚焦。
+  hasDisabledTabStop: true,
   orientation: props.orientation === 'vertical' ? 'vertical' : 'horizontal',
   wrap: true,
 })

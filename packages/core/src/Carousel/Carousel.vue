@@ -102,7 +102,8 @@ function onEndFocus(event: FocusEvent): void {
 
 function onNavBlur(event: FocusEvent): void {
   const button = buttonElement(event.currentTarget)
-  if (button != null && !button.disabled)
+  // 禁用的按钮是被这次更新顺带失焦的，不是用户移开了焦点。
+  if (button != null && button.getAttribute('aria-disabled') !== 'true')
     focusedNav.value = null
 }
 
@@ -155,7 +156,8 @@ function slideLabel(position: number, total: number): string {
       <CarouselItems :content="$slots.default" :label="slideLabel" @update="measure" />
     </div>
     <div v-if="hasButtons" class="astryx-carousel__controls">
-      <div class="astryx-carousel__pill astryx-carousel__pill--start" :data-hidden="!canScrollStart || undefined">
+      <!-- 隐藏的按钮不是 Tab 停靠点，也不在无障碍树里；光靠禁用态它仍可聚焦。 -->
+      <div class="astryx-carousel__pill astryx-carousel__pill--start" :data-hidden="!canScrollStart || undefined" :inert="!canScrollStart || undefined">
         <IconButton
           variant="ghost"
           size="sm"
@@ -168,7 +170,7 @@ function slideLabel(position: number, total: number): string {
           <Icon icon="chevronLeft" size="xsm" />
         </IconButton>
       </div>
-      <div class="astryx-carousel__pill astryx-carousel__pill--end" :data-hidden="!canScrollEnd || undefined">
+      <div class="astryx-carousel__pill astryx-carousel__pill--end" :data-hidden="!canScrollEnd || undefined" :inert="!canScrollEnd || undefined">
         <IconButton
           variant="ghost"
           size="sm"

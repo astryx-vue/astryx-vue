@@ -362,18 +362,65 @@ describe('button', () => {
     expect(onKeydown).toHaveBeenCalledTimes(1)
   })
 
-  it('keeps native disabled when isDisabled is the reason, even while loading', () => {
+  it('never renders native disabled: isDisabled uses aria-disabled, even while loading', () => {
     const disabled = mount(Button, {
       props: { isDisabled: true, label: 'Save' },
     })
-    expect(disabled.attributes('disabled')).toBe('')
-    expect(disabled.attributes('aria-disabled')).toBeUndefined()
+    expect(disabled.attributes('disabled')).toBeUndefined()
+    expect(disabled.attributes('aria-disabled')).toBe('true')
 
     const disabledAndLoading = mount(Button, {
       props: { isDisabled: true, isLoading: true, label: 'Save' },
     })
-    expect(disabledAndLoading.attributes('disabled')).toBe('')
-    expect(disabledAndLoading.attributes('aria-disabled')).toBeUndefined()
+    expect(disabledAndLoading.attributes('disabled')).toBeUndefined()
+    expect(disabledAndLoading.attributes('aria-disabled')).toBe('true')
+  })
+
+  it('stays in the Tab order and keeps focus when it becomes disabled', async () => {
+    const wrapper = mount(Button, { attachTo: document.body, props: { label: 'Save' } })
+    const button = wrapper.element as HTMLButtonElement
+    button.focus()
+    expect(document.activeElement).toBe(button)
+
+    await wrapper.setProps({ isDisabled: true })
+
+    expect(button.disabled).toBe(false)
+    expect(button.getAttribute('tabindex')).toBeNull()
+    expect(button.getAttribute('aria-disabled')).toBe('true')
+    expect(document.activeElement).toBe(button)
+    wrapper.unmount()
+  })
+
+  it('cancels Enter and Space while disabled but passes other keys to the caller', async () => {
+    const onKeydown = vi.fn()
+    const wrapper = mount(Button, { attrs: { onKeydown }, props: { isDisabled: true, label: 'Save' } })
+
+    for (const key of ['Enter', ' ']) {
+      const event = new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key })
+      wrapper.element.dispatchEvent(event)
+      expect(event.defaultPrevented).toBe(true)
+    }
+    expect(onKeydown).not.toHaveBeenCalled()
+
+    await wrapper.trigger('keydown', { key: 'Escape' })
+    expect(onKeydown).toHaveBeenCalledTimes(1)
+  })
+
+  it('withholds the name of a disabled submit button and never submits its form', async () => {
+    const onSubmit = vi.fn((event: Event) => event.preventDefault())
+    const wrapper = mount(defineComponent({
+      render: () => h('form', { onSubmit }, [
+        h(Button, { isDisabled: true, label: 'Send', name: 'intent', type: 'submit', value: 'send' }),
+      ]),
+    }), { attachTo: document.body })
+    await nextTick()
+    const button = wrapper.get('button')
+
+    expect(button.attributes('name')).toBeUndefined()
+    expect(button.attributes('type')).toBe('submit')
+    await button.trigger('click')
+    expect(onSubmit).not.toHaveBeenCalled()
+    wrapper.unmount()
   })
 
   it('suppresses click and clickAction when disabled', async () => {
@@ -460,9 +507,9 @@ describe('button', () => {
       },
     })
 
-    expect(wrapper.attributes('disabled')).toBe('')
+    expect(wrapper.attributes('disabled')).toBeUndefined()
     expect(wrapper.attributes('aria-describedby')).toBeUndefined()
-    expect(wrapper.attributes('aria-disabled')).toBeUndefined()
+    expect(wrapper.attributes('aria-disabled')).toBe('true')
   })
 
   it('adds no description when the tooltip repeats the accessible name', () => {
@@ -642,7 +689,8 @@ describe('button', () => {
 
     expect(wrapper.element.tagName).toBe('BUTTON')
     expect(wrapper.attributes('href')).toBeUndefined()
-    expect(wrapper.attributes('disabled')).toBe('')
+    expect(wrapper.attributes('disabled')).toBeUndefined()
+    expect(wrapper.attributes('aria-disabled')).toBe('true')
   })
 
   it('reacts when a link becomes disabled and enabled again', async () => {

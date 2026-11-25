@@ -61,6 +61,26 @@ describe('carousel', () => {
     expect(readOverflow(element)).toEqual({ hasOverflow: true, overflowStart: true, overflowEnd: false })
   })
 
+  it('makes a hidden scroll button inert, so its disabled state is no Tab stop', async () => {
+    const wrapper = mount(Host, { attachTo: document.body })
+    const scroller = wrapper.get<HTMLElement>('.astryx-carousel__scroller').element
+    Object.defineProperties(scroller, {
+      scrollWidth: { configurable: true, value: 400 },
+      clientWidth: { configurable: true, value: 100 },
+      scrollLeft: { configurable: true, value: 0, writable: true },
+    })
+    scroller.dispatchEvent(new Event('scroll'))
+    await new Promise(resolve => requestAnimationFrame(resolve))
+    await nextTick()
+
+    const start = wrapper.get('.astryx-carousel__pill--start')
+    const end = wrapper.get('.astryx-carousel__pill--end')
+    expect(start.attributes('data-hidden')).toBe('true')
+    expect(start.attributes('inert')).toBeDefined()
+    expect(start.get('button').attributes('aria-disabled')).toBe('true')
+    expect(end.attributes('inert')).toBeUndefined()
+  })
+
   it('moves focus from a run-out edge button to the scroll area without extra scrolling', async () => {
     const wrapper = mount(Host, { attachTo: document.body })
     const scroller = wrapper.get<HTMLElement>('.astryx-carousel__scroller').element

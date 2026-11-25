@@ -254,7 +254,7 @@ describe('transferListSelector', () => {
     const apply = buttonInPopover('Apply')
     expect(cancel?.hasAttribute('disabled')).toBe(false)
     expect(fieldset?.contains(cancel)).toBe(false)
-    expect(apply?.hasAttribute('disabled')).toBe(true)
+    expect(apply?.getAttribute('aria-disabled')).toBe('true')
     // 触发器保留 Tab 站位，用 aria-disabled 说明禁用（spec:AST-085 FR1）。
     expect(triggerButton().getAttribute('aria-disabled')).toBe('true')
 
@@ -264,7 +264,7 @@ describe('transferListSelector', () => {
     // 的焦点丢掉，焦点会掉回 body。
     expect(popover().querySelector('fieldset')?.hasAttribute('disabled')).toBe(false)
     expect(buttonInPopover('Cancel')?.hasAttribute('disabled')).toBe(false)
-    expect(buttonInPopover('Apply')?.hasAttribute('disabled')).toBe(true)
+    expect(buttonInPopover('Apply')?.getAttribute('aria-disabled')).toBe('true')
   })
 
   it('keeps focus inside the popup while a change is pending', async () => {

@@ -52,9 +52,28 @@ describe('buttonGroup', () => {
 
     expect(wrapper.attributes('aria-disabled')).toBe('true')
     expect(inherited?.attributes('data-size')).toBe('lg')
-    expect(inherited?.attributes('disabled')).toBe('')
+    expect(inherited?.attributes('aria-disabled')).toBe('true')
     expect(explicit?.attributes('data-size')).toBe('sm')
-    expect(explicit?.attributes('disabled')).toBe('')
+    expect(explicit?.attributes('aria-disabled')).toBe('true')
+  })
+
+  it('keeps exactly one Tab stop when every member is disabled', async () => {
+    // 一挂载就整组禁用：没有可用成员可选，旧逻辑不设 tabindex，每个成员各占一个停靠点。
+    const wrapper = mount(ButtonGroup, {
+      attachTo: document.body,
+      props: { isDisabled: true, label: 'Actions' },
+      slots: { default: () => renderButtons() },
+    })
+    await nextTick()
+    const stops = () => wrapper.findAll('button').map(button => button.attributes('tabindex'))
+    expect(wrapper.findAll('button').every(button => button.attributes('aria-disabled') === 'true')).toBe(true)
+    expect(stops()).toEqual(['0', '-1', '-1'])
+
+    // 重新启用后停靠点仍只有一个。
+    await wrapper.setProps({ isDisabled: false })
+    await nextTick()
+    expect(stops()).toEqual(['0', '-1', '-1'])
+    wrapper.unmount()
   })
 
   it('renders vertical orientation and group-owned elevation', () => {
