@@ -272,6 +272,9 @@
    * 所以直接继承按钮自己的弹性布局，内容位置不变；min-width: 0 让窄行里的标签照样能截断。
    */
   .astryx-button__content {
+    /* 触控热区（touch-hit-area.css）以按钮为包含块，从内边距盒算起，这里补上按钮的边框。 */
+    --_hit-border: var(--_button-border-width);
+
     display: flex;
     flex: 1 1 auto;
     flex-direction: inherit;

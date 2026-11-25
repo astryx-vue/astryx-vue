@@ -1,0 +1,37 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+/*
+ * 触控热区：粗指针下，一个透明的伪元素从被测元素的边框盒往外伸出 `--astryx-hit-inset-*`
+ * （useTouchHitArea 测量后写在被测元素上，往下继承）。按在它上面就是按在宿主上，
+ * 宿主自己的盒子不变。细指针下没有这个伪元素。
+ *
+ * - `.astryx-touch-hit-area`：画在 `::after` 上。伪元素的包含块是最近的定位祖先，
+ *   它就得是被测的那个元素。Button 把类放在内容包裹层上，热区以按钮为包含块，
+ *   按钮自己的 `::before`（触屏按压）和 `::after` 留给原来的用途。
+ * - `.astryx-touch-hit-area-below`：画在宿主自己的 `::before` 上，宿主就是包含块。
+ *   成员铺满盒子的组用它，定位的成员画在热区上面，成员自己那块的点按还是成员的。
+ *
+ * 偏移从包含块的内边距盒算起，测量从边框盒算起。宿主有边框时在 `--_hit-border`
+ * 里给出边框宽度，用负外边距补上；宽度写成不带单位的 0 时外边距的 calc 无效，正好退回 0。
+ */
+@layer astryx.components {
+  @media (pointer: coarse) {
+    .astryx-touch-hit-area::after,
+    .astryx-touch-hit-area-below::before {
+      content: '';
+      position: absolute;
+      inset:
+        calc(var(--astryx-hit-inset-top, 0px) * -1)
+        calc(var(--astryx-hit-inset-right, 0px) * -1)
+        calc(var(--astryx-hit-inset-bottom, 0px) * -1)
+        calc(var(--astryx-hit-inset-left, 0px) * -1);
+      margin: calc(var(--_hit-border, 0px) * -1);
+      /* 宿主内容被隐藏（忙碌时）也照样接点按。 */
+      visibility: visible;
+    }
+
+    .astryx-touch-hit-area-below {
+      position: relative;
+    }
+  }
+}

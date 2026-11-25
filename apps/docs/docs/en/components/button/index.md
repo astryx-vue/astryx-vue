@@ -53,6 +53,8 @@ import { Icon } from '@astryx-vue/core/Icon'
 
 A CSS icon class still works in the slot if you already generate one. UnoCSS is not required.
 
+On a touch-first device such as a phone or tablet, a button's tap target grows toward 44 px while the button keeps its size. The growth stops halfway to the nearest interactive neighbor, so a tap between two controls always goes to the nearer one. A disabled or busy button does not grow, and a button in a group grows through its group. A mouse sees no change.
+
 
 
 

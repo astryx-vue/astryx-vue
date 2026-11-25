@@ -4,6 +4,7 @@ import type { ButtonEmits, ButtonLinkElement, ButtonProps, ButtonRootElement, Bu
 import { computed, onBeforeUnmount, onMounted, ref, toRaw, useAttrs, useId, useSlots, useTemplateRef } from 'vue'
 import { hasSlotContent } from '../composables/internal/slotContent.js'
 import { pressGroupItemProps } from '../composables/internal/useActionGroupTracking.js'
+import { useTouchHitArea } from '../composables/internal/useTouchHitArea.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { provideIconSize } from '../Icon/context.js'
 import Icon from '../Icon/Icon.vue'
@@ -18,7 +19,7 @@ import { useCutTextOnKeyboardFocus } from '../Text/useCutTextOnKeyboardFocus.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import ButtonSpinner from './ButtonSpinner.vue'
 import ButtonTooltip from './ButtonTooltip.vue'
-import { buttonGroupContextKey } from './context.js'
+import { buttonGroupContextKey, buttonHitAreaContextKey } from './context.js'
 import { invokeNativeEventHandler } from './eventHandlers.js'
 import { useButtonAction } from './useButtonAction.js'
 import { useButtonTooltip } from './useButtonTooltip.js'
@@ -46,6 +47,7 @@ defineSlots<ButtonSlots>()
 const attrs = useAttrs()
 const slots = useSlots()
 const group = readLayerScoped(buttonGroupContextKey)
+const drawsOwnHitArea = readLayerScoped(buttonHitAreaContextKey)
 const linkComponent = useLinkComponent()
 const renderedRoot = useTemplateRef<ComponentPublicInstance | HTMLElement>('root')
 const tooltipId = `astryx-button-tooltip-${useId()}`
@@ -90,6 +92,9 @@ const isBusyOnlyDisabled = computed(() =>
 // 按钮因此留在 Tab 顺序里，聚焦时变成禁用也不会把焦点丢到 body；所有激活途径
 // （鼠标、Enter、Space）由 useButtonAction 和 handleRootKeydown 拦住。
 const isButtonDisabled = computed(() => isTrueDisabled.value || isBusyOnlyDisabled.value)
+// 粗指针下，按钮的点按目标朝 44px 长，长到离相邻控件一半间距为止，按钮自己的盒子不变。
+// 组里的按钮用组画的那一圈热区；禁用或只是忙碌的按钮不接点按，没有热区。
+const hasHitArea = computed(() => drawsOwnHitArea && !isButtonDisabled.value)
 const hasTooltip = computed(() => (props.tooltip?.trim().length ?? 0) > 0)
 const safeHref = computed(() => props.href != null && isSafeUrl(props.href) ? props.href : undefined)
 // 只有真正禁用才退回 <button>；忙碌时换掉 <a> 同样会让焦点丢失。
@@ -150,6 +155,8 @@ const element = computed<ButtonRootElement | null>(() => {
 
   return root.$el instanceof HTMLElement ? root.$el : null
 })
+
+useTouchHitArea(element, hasHitArea)
 
 const buttonTooltip = useButtonTooltip(hasTooltip)
 // 标签被行宽截短时，键盘焦点到达就在提示里显示完整标签；调用方自己的提示优先。
@@ -316,6 +323,7 @@ defineExpose({
 
     <span
       class="astryx-button__content"
+      :class="{ 'astryx-touch-hit-area': hasHitArea }"
       :aria-hidden="isLoadingState || undefined"
     >
       <span
