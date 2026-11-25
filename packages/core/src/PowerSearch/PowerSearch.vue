@@ -14,7 +14,8 @@ import { useResolvedLabelHidden } from '../composables/useResolvedLabelHidden.js
 import Field from '../Field/Field.vue'
 import { useFieldPartStyling } from '../Field/fieldParts.js'
 import Icon from '../Icon/Icon.vue'
-import { useAstryxLocale, useAstryxMessages } from '../locale/context.js'
+import { useAstryxLocale, useComponentMessages } from '../locale/context.js'
+import { powerSearchMessages } from '../locale/messages/power-search.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { useSize } from '../SizeContext/SizeContext.js'
 import Tooltip from '../Tooltip/Tooltip.vue'
@@ -62,7 +63,7 @@ const parts = useFieldPartStyling({
   reservedAttrs: ['id', 'type', 'role', 'value', 'disabled', 'readonly', 'placeholder', 'autocomplete', 'aria-expanded', 'aria-controls', 'aria-autocomplete', 'aria-activedescendant', 'aria-describedby', 'aria-disabled'],
 })
 const hideLabel = useResolvedLabelHidden(() => props.isLabelHidden, () => props.labelHidden, true)
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ powerSearch: powerSearchMessages })
 const locale = useAstryxLocale()
 const announce = useAnnounce()
 const generatedId = `astryx-power-search-${useId()}`

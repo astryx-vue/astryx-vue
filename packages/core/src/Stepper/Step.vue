@@ -3,7 +3,8 @@ import type { VNode } from 'vue'
 import type { StepProgress, StepProps, StepSlots } from './types.js'
 import { Comment, computed, Fragment, onUnmounted, Text, watch } from 'vue'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { stepperMessages } from '../locale/messages/stepper.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { useStepperContext } from './context.js'
 import { connectorFillTiming, resolveStepGlyph, STEP_FILL_ARRIVAL_SHARE_H, STEP_FILL_ARRIVAL_SHARE_V } from './logic.js'
@@ -35,7 +36,7 @@ function hasContent(nodes: VNode[] | undefined): boolean {
 }
 
 const stepper = useStepperContext()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ stepper: stepperMessages })
 const { pressableProps } = usePressFeedback({ hasOverlay: false })
 
 const progress = computed<StepProgress>(() => {

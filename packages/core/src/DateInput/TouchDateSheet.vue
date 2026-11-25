@@ -3,8 +3,10 @@ import type { WeekStartsOn } from '../composables/useDateRange.js'
 import type { PickerWheelOption } from './PickerWheel.vue'
 import { computed, ref } from 'vue'
 import Icon from '../Icon/Icon.vue'
+import { useAstryxLocale, useComponentMessages } from '../locale/context.js'
 import { formatCalendarMonth } from '../locale/format.js'
-import { useAstryxLocale, useAstryxMessages } from '../locale/index.js'
+import { calendarMessages } from '../locale/messages/calendar.js'
+import { dateInputMessages } from '../locale/messages/date-input.js'
 import { clampMonthIndex, fromMonthIndex, monthIndex, reachableMonthRange } from './monthRange.js'
 import PickerWheel from './PickerWheel.vue'
 import TouchMonthGrid from './TouchMonthGrid.vue'
@@ -29,7 +31,7 @@ const emit = defineEmits<{
   reset: []
 }>()
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ calendar: calendarMessages, dateInput: dateInputMessages })
 const locale = useAstryxLocale()
 const wheelsOpen = ref(false)
 const dragX = ref<number | null>(null)

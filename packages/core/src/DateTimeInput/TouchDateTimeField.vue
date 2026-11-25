@@ -6,7 +6,9 @@ import BottomSheet from '../BottomSheet/BottomSheet.vue'
 import { formatDisplayTime, formatISOTime, parseISOTime } from '../composables/useTimeValue.js'
 import TouchDateSheet from '../DateInput/TouchDateSheet.vue'
 import Icon from '../Icon/Icon.vue'
-import { useAstryxLocale, useAstryxMessages } from '../locale/index.js'
+import { useAstryxLocale, useComponentMessages } from '../locale/context.js'
+import { dateInputMessages } from '../locale/messages/date-input.js'
+import { dateTimeInputMessages } from '../locale/messages/date-time-input.js'
 import TouchTimeWheels from '../TimeInput/TouchTimeWheels.vue'
 import { formatInstant } from '../Timestamp/formatInstant.js'
 
@@ -38,7 +40,7 @@ const emit = defineEmits<{
   pickTime: [value: string]
   reset: []
 }>()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ dateInput: dateInputMessages, dateTimeInput: dateTimeInputMessages })
 const locale = useAstryxLocale()
 const open = ref(false)
 const panel = ref<'date' | 'time'>('date')

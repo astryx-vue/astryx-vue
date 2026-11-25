@@ -9,6 +9,8 @@
 //   5. 29 种语言的每句译文都能解析，占位符的名字和写法和英文原文一致；没有过期的键。
 //   6. en.json 的每个键要么接进了 upstreamMap，要么在 coverage.mjs 里写明了暂不接入的理由。
 //   7. 源码里 `t('@astryx.…')` 用到的键都在 upstreamMap 里。
+//   8. 组件只通过 `useComponentMessages` 按命名空间读内置文案，不引入整份文案的模块，
+//      这样只用 Button 的应用不会把别的组件的英文一起打进包里。
 // 译文少键（还没翻译）是正常状态，只作为提示打印。
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { dirname, join, relative } from 'node:path'
@@ -17,6 +19,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 import {
   checkBuiltInParity,
   checkBuiltInPlaceholders,
+  checkComponentMessageImports,
   checkCoverage,
   checkEnglishText,
   checkLocaleContracts,
@@ -74,7 +77,8 @@ async function main() {
   const catalogs = readCatalogs()
   const contracts = checkLocaleContracts(enCatalog, catalogs, icu)
   const coverage = checkCoverage(enCatalog, map, UNPORTED_NAMESPACES, UNPORTED_KEYS)
-  const refs = checkSourceRefs(readSources(join(coreDir, 'src')), map)
+  const sources = readSources(join(coreDir, 'src'))
+  const refs = checkSourceRefs(sources, map)
 
   const sections = [
     ['内置 en 和 zh-CN 的字段', checkBuiltInParity(messages.en, messages['zh-CN'])],
@@ -84,6 +88,7 @@ async function main() {
     ['语言目录的 ICU 占位符', contracts.problems],
     ['原版键的接入情况', coverage.problems],
     ['源码里的 t() 调用', refs.problems],
+    ['组件读内置文案的方式', checkComponentMessageImports(sources)],
   ]
 
   const failed = sections.filter(([, problems]) => problems.length > 0)

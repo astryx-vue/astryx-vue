@@ -3,7 +3,8 @@ import type { OutlineEmits, OutlineProps } from './types.js'
 import { computed, nextTick, ref, toRef, watch } from 'vue'
 import { useListFocus } from '../composables/useListFocus.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
-import { useAstryxMessages } from '../locale/context.js'
+import { useComponentMessages } from '../locale/context.js'
+import { outlineMessages } from '../locale/messages/outline.js'
 import { indentLevel } from './scrollGeometry.js'
 import { useOutlineIndicator } from './useIndicator.js'
 import { useScrollSpy } from './useScrollSpy.js'
@@ -19,7 +20,7 @@ const props = withDefaults(defineProps<OutlineProps>(), {
 })
 
 const emit = defineEmits<OutlineEmits>()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ outline: outlineMessages })
 const press = usePressFeedback()
 const root = ref<HTMLElement | null>(null)
 const regionLabel = computed(() => props.label ?? messages.value.outline.label)

@@ -4,7 +4,8 @@ import type { CommandPaletteEmits, CommandPaletteProps, CommandPaletteSlots } fr
 import { computed, provide, ref, useId, watch } from 'vue'
 import { useAnnounce, useAsyncSource } from '../composables/index.js'
 import Dialog from '../Dialog/Dialog.vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { commandPaletteMessages } from '../locale/messages/command-palette.js'
 import CommandPaletteEmpty from './CommandPaletteEmpty.vue'
 import CommandPaletteFooter from './CommandPaletteFooter.vue'
 import CommandPaletteGroup from './CommandPaletteGroup.vue'
@@ -27,7 +28,7 @@ const emit = defineEmits<CommandPaletteEmits>()
 defineSlots<CommandPaletteSlots<T>>()
 
 const value = defineModel<string | undefined>('value', { default: undefined })
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ commandPalette: commandPaletteMessages })
 const announce = useAnnounce()
 const search = ref('')
 const highlightedIndex = ref(-1)

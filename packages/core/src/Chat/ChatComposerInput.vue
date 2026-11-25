@@ -2,7 +2,8 @@
 import type { ChatComposerInputEmits, ChatComposerInputHandle, ChatComposerInputProps, ChatComposerToken } from './types.js'
 import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 import { isImeKeyEvent } from '../composables/internal/ime.js'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { chatMessages } from '../locale/messages/chat.js'
 import ChatPastedTextToken from './ChatPastedTextToken.vue'
 import ChatTokenContent from './ChatTokenContent.vue'
 import ChatTriggerMenu from './ChatTriggerMenu.vue'
@@ -27,7 +28,7 @@ const props = withDefaults(defineProps<ChatComposerInputProps>(), {
 const emit = defineEmits<ChatComposerInputEmits>()
 
 const LINE_HEIGHT = 22
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ chat: chatMessages })
 const composer = useChatComposerContext()
 const editableRef = useTemplateRef<HTMLDivElement>('editable')
 const self = ref<ChatComposerInputHandle | null>(null)

@@ -4,7 +4,8 @@ import { computed, toValue } from 'vue'
 import Button from '../Button/Button.vue'
 import { devPropError, isDevBuild } from '../composables/internal/devBuild.js'
 import Icon from '../Icon/Icon.vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { chatMessages } from '../locale/messages/chat.js'
 import '../../styles/chat.css'
 
 defineOptions({ name: 'AstryxChatDictationButton', inheritAttrs: false })
@@ -21,7 +22,7 @@ if (isDevBuild() && props.dictation == null) {
     'is required: the value of useChatDictation() or useSpeechRecognition(), for example :dictation="dictation".',
   )
 }
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ chat: chatMessages })
 const supported = computed(() => toValue(props.dictation.isSupported))
 const listening = computed(() => toValue(props.dictation.isListening))
 const label = computed(() => props.label ?? (

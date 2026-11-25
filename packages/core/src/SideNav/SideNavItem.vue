@@ -3,7 +3,8 @@ import type { StyleValue } from 'vue'
 import type { SideNavItemCollapsible, SideNavItemEmits, SideNavItemProps, SideNavItemSlots } from './types.js'
 import { computed, getCurrentInstance, provide, ref, useAttrs, useId, useSlots } from 'vue'
 import Icon from '../Icon/Icon.vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { navMessages } from '../locale/messages/nav.js'
 import NavItem from '../NavItem/NavItem.vue'
 import NavDisclosure from '../NavMenu/NavDisclosure.vue'
 import { SizeProvider } from '../SizeContext/SizeContext.js'
@@ -32,7 +33,7 @@ const accessibleLabel = computed(() => {
 })
 const collapse = useSideNavCollapse()
 const parentDepth = useSideNavDepth()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ nav: navMessages })
 const instance = getCurrentInstance()
 const childrenId = `astryx-side-nav-children-${useId()}`
 const labelId = `${childrenId}-label`

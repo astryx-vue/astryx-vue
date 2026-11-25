@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { ChatMessageProps, ChatMessageSlots } from './types.js'
 import { computed, provide, useId, useSlots, useTemplateRef } from 'vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { chatMessages } from '../locale/messages/chat.js'
 import { chatMessageContextKey, useChatListContext } from './context.js'
 import '../../styles/chat.css'
 
@@ -10,7 +11,7 @@ defineOptions({ name: 'AstryxChatMessage', inheritAttrs: false })
 const props = defineProps<ChatMessageProps>()
 defineSlots<ChatMessageSlots>()
 const slots = useSlots()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ chat: chatMessages })
 const list = useChatListContext()
 const root = useTemplateRef<HTMLElement>('root')
 const nameId = `astryx-chat-message-${useId()}`

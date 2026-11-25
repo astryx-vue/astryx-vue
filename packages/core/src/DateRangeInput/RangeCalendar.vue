@@ -4,8 +4,9 @@ import { computed } from 'vue'
 import { isDayOutsideSpan, orderRange, resolveWeekStart } from '../composables/useDateRange.js'
 import { addMonths, buildMonthGrid, todayISODate } from '../composables/useMonthGrid.js'
 import Icon from '../Icon/Icon.vue'
+import { useAstryxLocale, useComponentMessages } from '../locale/context.js'
 import { formatCalendarMonth, standaloneShortWeekdayNames, weekdayNames } from '../locale/format.js'
-import { useAstryxLocale, useAstryxMessages } from '../locale/index.js'
+import { calendarMessages } from '../locale/messages/calendar.js'
 import '../../styles/calendar.css'
 import '../../styles/date-range-input.css'
 
@@ -34,7 +35,7 @@ const emit = defineEmits<{
 }>()
 
 const locale = useAstryxLocale()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ calendar: calendarMessages })
 const hover = defineModel<string | null>('hover', { default: null })
 const today = todayISODate()
 const weekStart = computed(() => resolveWeekStart(props.weekStartsOn ?? (locale.value === 'zh-CN' ? 1 : 0)))

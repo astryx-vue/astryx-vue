@@ -1,7 +1,8 @@
 import type { ComputedRef } from 'vue'
 import type { VolumeAnalyser } from './volumeAnalyser.js'
 import { computed, getCurrentInstance, onMounted, onScopeDispose, ref, shallowRef } from 'vue'
-import { useAstryxLocale, useAstryxMessages } from '../locale/index.js'
+import { useAstryxLocale, useComponentMessages } from '../locale/context.js'
+import { chatMessages } from '../locale/messages/chat.js'
 import { createVolumeAnalyser, getSharedAudioContext } from './volumeAnalyser.js'
 
 export interface SpeechRecognitionError {
@@ -95,7 +96,7 @@ function speechRecognitionCtor(): SpeechRecognitionCtor | null {
  */
 export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}): UseSpeechRecognitionReturn {
   const locale = useAstryxLocale()
-  const messages = useAstryxMessages()
+  const messages = useComponentMessages({ chat: chatMessages })
   const continuous = options.continuous ?? true
   const interimResults = options.interimResults ?? true
   const trackVolume = options.trackVolume ?? true

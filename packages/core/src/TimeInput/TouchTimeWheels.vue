@@ -4,7 +4,8 @@ import type { PickerWheelOption } from '../DateInput/PickerWheel.vue'
 import { computed } from 'vue'
 import { formatISOTime, isTimeInRange, parseISOTime } from '../composables/useTimeValue.js'
 import PickerWheel from '../DateInput/PickerWheel.vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { dateTimeInputMessages } from '../locale/messages/date-time-input.js'
 
 const props = withDefaults(defineProps<{
   modelValue?: string | null
@@ -22,7 +23,7 @@ const emit = defineEmits<{
   'update:modelValue': [value: string]
 }>()
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ dateTimeInput: dateTimeInputMessages })
 const parsed = computed(() => props.modelValue ? parseISOTime(props.modelValue) : null)
 const hour24 = computed(() => parsed.value?.hours ?? 0)
 const minute = computed(() => parsed.value?.minutes ?? 0)

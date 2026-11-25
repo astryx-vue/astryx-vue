@@ -1,5 +1,6 @@
-export { astryxLocaleKey, astryxMessagesKey, normalizeLocale, provideAstryxLocale, useAstryxLocale, useAstryxMessages } from './context.js'
+export { astryxLocaleKey, astryxMessagesKey, normalizeLocale, provideAstryxLocale, useAstryxLocale } from './context.js'
 export { formatCalendarMonth, weekdayNames } from './format.js'
+export { useAstryxMessages } from './fullMessages.js'
 export { loadAstryxCatalog } from './loadCatalog.js'
 export type { AstryxUpstreamCatalog, AstryxUpstreamMessage, LoadedAstryxLocale, UnmappedUpstreamEntry, UnmappedUpstreamReason } from './loadCatalog.js'
 export type { AstryxMessages } from './messages.js'

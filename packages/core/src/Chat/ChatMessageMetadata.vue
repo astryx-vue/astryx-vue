@@ -2,7 +2,8 @@
 import type { ChatMessageMetadataProps, ChatMessageMetadataSlots, ChatMessageStatus } from './types.js'
 import { computed, useSlots } from 'vue'
 import Icon from '../Icon/Icon.vue'
-import { useAstryxLocale, useAstryxMessages } from '../locale/index.js'
+import { useAstryxLocale, useComponentMessages } from '../locale/context.js'
+import { chatMessages } from '../locale/messages/chat.js'
 import ChatIcon from './ChatIcon.vue'
 import { useChatMessageContext } from './context.js'
 import '../../styles/chat.css'
@@ -12,7 +13,7 @@ defineOptions({ name: 'AstryxChatMessageMetadata', inheritAttrs: false })
 const props = defineProps<ChatMessageMetadataProps>()
 defineSlots<ChatMessageMetadataSlots>()
 const slots = useSlots()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ chat: chatMessages })
 const locale = useAstryxLocale()
 const context = useChatMessageContext()
 const sender = computed(() => context?.sender.value ?? 'assistant')

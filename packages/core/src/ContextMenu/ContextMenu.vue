@@ -9,7 +9,8 @@ import { useOverflow } from '../composables/useOverflow.js'
 import { useMenuDrillIn } from '../DropdownMenu/useMenuDrillIn.js'
 import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { contextMenuMessages } from '../locale/messages/context-menu.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { contextMenuContextKey } from './context.js'
 import ContextMenuItems from './ContextMenuItems.vue'
@@ -30,7 +31,7 @@ const emit = defineEmits<ContextMenuEmits>()
 defineSlots<ContextMenuSlots>()
 
 const attrs = useAttrs()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ contextMenu: contextMenuMessages })
 const menuName = computed(() => props.label ?? messages.value.contextMenu.label)
 
 /**

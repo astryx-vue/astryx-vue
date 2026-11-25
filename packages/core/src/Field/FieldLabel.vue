@@ -4,7 +4,8 @@ import { computed, toRaw, useTemplateRef } from 'vue'
 import { showsOptionalIndicator, showsRequiredIndicator, useFormLayout } from '../FormLayout/context.js'
 import Icon from '../Icon/Icon.vue'
 import InfoTip from '../InfoTip/InfoTip.vue'
-import { useAstryxMessages } from '../locale/context.js'
+import { useComponentMessages } from '../locale/context.js'
+import { fieldMessages } from '../locale/messages/field.js'
 import '../../styles/field.css'
 
 defineOptions({ name: 'AstryxFieldLabel' })
@@ -13,7 +14,7 @@ const props = withDefaults(defineProps<FieldLabelProps>(), {
   requiredLabel: 'Required',
 })
 defineSlots<FieldLabelSlots>()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ field: fieldMessages })
 const element = useTemplateRef<HTMLElement>('label')
 defineExpose({ element })
 const labelId = computed(() => props.labelId ?? `${props.inputId}-label`)

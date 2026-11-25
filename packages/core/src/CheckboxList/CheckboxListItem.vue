@@ -4,7 +4,8 @@ import type { CheckboxListItemEmits, CheckboxListItemProps, CheckboxListItemSlot
 import { computed, useId, useSlots, useTemplateRef } from 'vue'
 import { readLayerScoped } from '../layer/scopedProvide.js'
 import ListItem from '../List/ListItem.vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { checkboxListMessages } from '../locale/messages/checkbox-list.js'
 import CheckboxListControl from './CheckboxListControl.vue'
 import { checkboxListKey } from './context.js'
 
@@ -16,7 +17,7 @@ defineSlots<CheckboxListItemSlots>()
 
 const context = readLayerScoped(checkboxListKey)
 const slots = useSlots()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ checkboxList: checkboxListMessages })
 const richLabel = computed(() => slots.label != null)
 // 紧凑密度下（原版渲染出来的结构）复选框的名字来自可见标签（aria-labelledby），
 // 隐藏的 <label> 只留通用词 "Checkbox"；其它密度下字符串标签直接做隐藏 <label> 的文字。

@@ -4,7 +4,8 @@ import type { ToastGestureDirection } from './useToastGesture.js'
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
-import { useAstryxMessages } from '../locale/context.js'
+import { useComponentMessages } from '../locale/context.js'
+import { toastMessages } from '../locale/messages/toast.js'
 import MediaTheme from '../Theme/MediaTheme.vue'
 import { useTheme } from '../Theme/useTheme.js'
 import { resolveAutoHide, resolveAutoHideDuration } from './options.js'
@@ -51,7 +52,7 @@ const startTime = ref<number | null>(null)
 const isAlert = computed(() => props.type === 'error')
 const role = computed(() => isAlert.value ? 'alert' : 'status')
 const ariaLive = computed(() => isAlert.value ? 'assertive' : 'polite')
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ toast: toastMessages })
 const theme = useTheme()
 const mediaFallback = computed(() => isAlert.value || theme.mode.value === 'light' ? 'dark' : 'light')
 const dismissLabel = computed(() => messages.value.toast.dismiss)

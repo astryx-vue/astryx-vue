@@ -3,7 +3,8 @@ import type { ChatSendButtonEmits, ChatSendButtonProps, ChatSendButtonSlots } fr
 import { computed } from 'vue'
 import Button from '../Button/Button.vue'
 import Icon from '../Icon/Icon.vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { chatMessages } from '../locale/messages/chat.js'
 import { useChatComposerContext } from './context.js'
 import { hasEmitListener, wasPropPassed } from './events.js'
 import '../../styles/chat.css'
@@ -16,7 +17,7 @@ const props = withDefaults(defineProps<ChatSendButtonProps>(), {
 const emit = defineEmits<ChatSendButtonEmits>()
 defineSlots<ChatSendButtonSlots>()
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ chat: chatMessages })
 const composer = useChatComposerContext()
 const sendListened = hasEmitListener('send')
 const stopListened = hasEmitListener('stop')

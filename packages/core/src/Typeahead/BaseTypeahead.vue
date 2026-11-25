@@ -5,7 +5,8 @@ import type { BaseTypeaheadProps, TypeaheadEmits, TypeaheadSlots } from './types
 import { computed, inject, nextTick, onMounted, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { typeaheadMessages } from '../locale/messages/typeahead.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { useLatchedOptionGrid } from '../selectors/useLatchedOptionGrid.js'
 import Spinner from '../Spinner/Spinner.vue'
@@ -39,7 +40,7 @@ const emit = defineEmits<TypeaheadEmits<T>>()
 defineSlots<TypeaheadSlots<T>>()
 
 const attrs = useAttrs()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ typeahead: typeaheadMessages })
 const generatedId = `astryx-typeahead-${useId()}`
 const inputId = computed(() => props.inputId ?? generatedId)
 const listboxId = computed(() => `${inputId.value}-listbox`)

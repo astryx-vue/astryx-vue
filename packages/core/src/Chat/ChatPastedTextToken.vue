@@ -3,7 +3,8 @@ import { computed } from 'vue'
 import Badge from '../Badge/Badge.vue'
 import Button from '../Button/Button.vue'
 import HoverCard from '../HoverCard/HoverCard.vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { chatMessages } from '../locale/messages/chat.js'
 import { pastedTextLabel } from './useChatPasteAsToken.js'
 
 const props = defineProps<{
@@ -14,7 +15,7 @@ const emit = defineEmits<{
   expand: []
 }>()
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ chat: chatMessages })
 const label = computed(() => pastedTextLabel(props.text, messages.value.chat.pastedTextLabel))
 </script>
 

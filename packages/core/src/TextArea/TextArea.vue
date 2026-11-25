@@ -14,7 +14,9 @@ import { useFieldPartStyling } from '../Field/fieldParts.js'
 import InputClearButton from '../Field/InputClearButton.vue'
 import { useAriaRequired } from '../FormLayout/context.js'
 import Icon from '../Icon/Icon.vue'
-import { useAstryxLocale, useAstryxMessages } from '../locale/index.js'
+import { useAstryxLocale, useComponentMessages } from '../locale/context.js'
+import { textAreaMessages } from '../locale/messages/text-area.js'
+import { textInputMessages } from '../locale/messages/text-input.js'
 import { useSize } from '../SizeContext/SizeContext.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { useTextAreaAction } from './useTextAreaAction.js'
@@ -34,7 +36,7 @@ defineSlots<TextAreaSlots>()
 // 显式 size > 外层 SizeContext（Toolbar、InputGroup 等）> 'md'。
 const size = useSize(() => props.size, 'md')
 const ariaRequired = useAriaRequired(props)
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ textArea: textAreaMessages, textInput: textInputMessages })
 const announce = useAnnounce()
 const COUNTER_WARNING_THRESHOLD = 0.8
 type CounterZone = 'under' | 'near' | 'over'

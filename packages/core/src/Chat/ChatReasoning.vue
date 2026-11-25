@@ -3,7 +3,8 @@ import type { VNode } from 'vue'
 import type { ChatReasoningEmits, ChatReasoningProps, ChatReasoningSlots } from './types.js'
 import { computed, ref, useId, useSlots, useTemplateRef } from 'vue'
 import Icon from '../Icon/Icon.vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { chatMessages } from '../locale/messages/chat.js'
 import ChatIcon from './ChatIcon.vue'
 import '../../styles/chat.css'
 
@@ -16,7 +17,7 @@ const props = withDefaults(defineProps<Omit<ChatReasoningProps, 'isExpanded'>>()
 const emit = defineEmits<ChatReasoningEmits>()
 defineSlots<ChatReasoningSlots>()
 const slots = useSlots()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ chat: chatMessages })
 const model = defineModel<boolean | undefined>('isExpanded', { default: undefined })
 const internalExpanded = ref(props.defaultIsExpanded)
 const isExpanded = computed(() => model.value ?? internalExpanded.value)

@@ -11,7 +11,9 @@ import Field from '../Field/Field.vue'
 import FieldIcon from '../Field/FieldIcon.vue'
 import { useFieldPartStyling } from '../Field/fieldParts.js'
 import IconButton from '../IconButton/IconButton.vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { dateInputMessages } from '../locale/messages/date-input.js'
+import { dateTimeInputMessages } from '../locale/messages/date-time-input.js'
 import { useSize } from '../SizeContext/SizeContext.js'
 import Spinner from '../Spinner/Spinner.vue'
 import TimeField from '../TimeInput/TimeField.vue'
@@ -46,7 +48,7 @@ const parts = useFieldPartStyling({
 })
 const hideLabel = useResolvedLabelHidden(() => props.isLabelHidden, () => props.labelHidden)
 const coarse = useMediaQuery('(pointer: coarse)')
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ dateInput: dateInputMessages, dateTimeInput: dateTimeInputMessages })
 const generatedId = `astryx-date-time-${useId()}`
 const draftDate = ref<Date | null | undefined>(undefined)
 const draftTime = ref<string | null | undefined>(undefined)

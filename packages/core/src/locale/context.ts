@@ -1,7 +1,7 @@
 import type { ComputedRef, InjectionKey, MaybeRefOrGetter } from 'vue'
 import type { AstryxMessages } from './messages.js'
+import type { AstryxLocale } from './types.js'
 import { computed, inject, provide, toValue } from 'vue'
-import { astryxMessages } from './messages.js'
 
 export const astryxLocaleKey: InjectionKey<MaybeRefOrGetter<string>> = Symbol('astryx-locale')
 export const astryxMessagesKey: InjectionKey<MaybeRefOrGetter<AstryxMessages>> = Symbol('astryx-messages')
@@ -44,20 +44,31 @@ export function useAstryxLocale(): ComputedRef<string> {
   return computed(() => injected == null ? 'en' : normalizeLocale(toValue(injected)))
 }
 
-/**
- * 一个语言标签对应的内置文案。只有简体中文有自己的一份，其余语言都用英文。
- * 别的语言要显示本地文字，得通过 `messages` 交进来。
- */
-export function builtInMessages(locale: string): AstryxMessages {
-  return locale === 'zh-CN' ? astryxMessages['zh-CN'] : astryxMessages.en
+/** 组件自带的默认文案：命名空间 → 每种内置语言的一份。只放这个组件自己用到的命名空间。 */
+export type ComponentMessageDefaults = {
+  [K in keyof AstryxMessages]?: Record<AstryxLocale, AstryxMessages[K]>
 }
 
-export function useAstryxMessages(): ComputedRef<AstryxMessages> {
+/** 按 `defaults` 的命名空间挑出来的文案，形状和 `AstryxMessages` 的对应字段一致。 */
+export type ComponentMessages<D extends ComponentMessageDefaults> = {
+  [K in keyof D & keyof AstryxMessages]: AstryxMessages[K]
+}
+
+/**
+ * 组件读内置文案的入口。组件只把自己用到的命名空间交进来，
+ * 打包时就只带上这几份文案，不会把整份 `AstryxMessages` 一起带进去。
+ *
+ * 外层 provider 交了文案树时取树里的同名命名空间；没有 provider 时按当前语言取 `defaults`。
+ */
+export function useComponentMessages<D extends ComponentMessageDefaults>(defaults: D): ComputedRef<ComponentMessages<D>> {
   const locale = useAstryxLocale()
   const provided = inject(astryxMessagesKey, undefined)
   return computed(() => {
-    if (provided != null)
-      return toValue(provided)
-    return builtInMessages(locale.value)
+    const tree = provided == null ? undefined : toValue(provided) as Partial<AstryxMessages>
+    const language: AstryxLocale = locale.value === 'zh-CN' ? 'zh-CN' : 'en'
+    const picked: Record<string, unknown> = {}
+    for (const name of Object.keys(defaults) as (keyof AstryxMessages)[])
+      picked[name] = tree?.[name] ?? defaults[name]?.[language]
+    return picked as ComponentMessages<D>
   })
 }

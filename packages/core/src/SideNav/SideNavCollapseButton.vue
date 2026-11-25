@@ -3,7 +3,8 @@ import type { SideNavCollapseButtonEmits, SideNavCollapseButtonProps, SideNavCol
 import { computed, inject } from 'vue'
 import Button from '../Button/Button.vue'
 import Icon from '../Icon/Icon.vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { navMessages } from '../locale/messages/nav.js'
 import { sideNavCollapseKey, useSideNavCollapse } from './context.js'
 import '../../styles/side-nav.css'
 
@@ -19,7 +20,7 @@ const props = withDefaults(defineProps<SideNavCollapseButtonProps>(), {
 const emit = defineEmits<SideNavCollapseButtonEmits>()
 defineSlots<SideNavCollapseButtonSlots>()
 const collapse = useSideNavCollapse()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ nav: navMessages })
 
 const inSideNav = inject(sideNavCollapseKey, null) !== null
 /** The controlled config handed in from outside; it outranks `v-model:isCollapsed`. */

@@ -3,7 +3,8 @@ import type { SideNavCollapsible, SideNavEmits, SideNavHandle, SideNavProps, Sid
 import { computed, provide, ref, useId, useTemplateRef, watch } from 'vue'
 import { useHandleRef } from '../composables/useHandleRef.js'
 import { useHotkeys } from '../composables/useHotkeys.js'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { navMessages } from '../locale/messages/nav.js'
 import ResizeHandle from '../Resizable/ResizeHandle.vue'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { SizeProvider } from '../SizeContext/SizeContext.js'
@@ -27,7 +28,7 @@ const slots = defineSlots<SideNavSlots>()
 /** 同上游 FOOTER_ICON_SIZE：折叠按钮和 footerIcons 同高。 */
 const FOOTER_ICON_SIZE = 'sm'
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ nav: navMessages })
 const navId = `astryx-side-nav-${useId()}`
 const localCollapsed = ref(false)
 const bodyEl = useTemplateRef<HTMLElement>('body')

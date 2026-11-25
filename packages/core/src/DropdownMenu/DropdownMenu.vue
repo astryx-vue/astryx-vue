@@ -14,11 +14,11 @@ import { useTypeahead } from '../composables/useTypeahead.js'
 import Icon from '../Icon/Icon.vue'
 import { clampInlineSize, isIntrinsicInlineSize, LAYER_MAX_INLINE_SIZE } from '../layer/inlineSize.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
-import { useAstryxMessages } from '../locale/index.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import DropdownMenuFrame from './DropdownMenuFrame.vue'
 import { dropdownMenuFrameKey } from './frame.js'
 import { activateMenuItem, MENU_ITEM_ROLES } from './menuItemRoles.js'
+import { useDropdownMenuMessages } from './useDropdownMenuMessages.js'
 import { useMenuDrillIn } from './useMenuDrillIn.js'
 import { useMenuFocus } from './useMenuFocus.js'
 import { useMenuRegions } from './useMenuRegions.js'
@@ -37,7 +37,7 @@ defineSlots<DropdownMenuSlots>()
 
 const attrs = useAttrs()
 const slots = useSlots()
-const messages = useAstryxMessages()
+const messages = useDropdownMenuMessages()
 const focusReturn = useFocusReturnVisibility()
 
 const GAP = 4
