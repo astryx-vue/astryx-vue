@@ -19,6 +19,12 @@ footer: false
         <td><code>'neutral'</code></td>
         <td>徽标的视觉变体。语义变体：neutral、info、success、warning、error；分类颜色：blue、cyan、green、orange、pink、purple、red、teal、yellow。</td>
       </tr>
+      <tr>
+        <td><code>label</code></td>
+        <td><code>string | number</code></td>
+        <td>-</td>
+        <td>徽标文字。用它或默认插槽给出文字，两者都给时以插槽为准。徽标只占一行，高度至少是这一行文字的高度，字号变大时跟着长高；宽度和文字一样，不会在网格单元格或栈里被拉满；放不下时文字末尾显示省略号，字符串或数字还会写进 title。</td>
+      </tr>
     </tbody>
   </table>
 </div>

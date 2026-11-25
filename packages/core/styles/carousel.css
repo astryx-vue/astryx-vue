@@ -36,9 +36,24 @@
     }
   }
 
+  /* 滚动区是焦点的主人，但它的边缘渐隐遮罩会盖住自己画的焦点环；
+     所以由外层在内容之上画一层同款焦点环，向内收一个环宽，完整落在轮播框内。 */
   .astryx-carousel__scroller:focus-visible {
+    outline: none;
+  }
+
+  .astryx-carousel::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    outline: none;
+  }
+
+  .astryx-carousel:has(> .astryx-carousel__scroller:focus-visible)::after {
     outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, var(--astryx-color-accent, #0074e2));
-    outline-offset: var(--astryx-focus-outline-offset, 3px);
+    outline-offset: calc(-1 * var(--astryx-focus-outline-width, 2px));
   }
 
   .astryx-carousel__scroller[data-snap] {
@@ -93,20 +108,13 @@
     --astryx-button-radius: var(--astryx-radius-full, 9999px);
   }
 
+  /* 每个按钮都收进焦点环以内（环的偏移加环宽），滚动区获得焦点时整圈环都看得见。 */
   .astryx-carousel__pill--start {
-    transform: translateX(-50%);
+    margin-inline-start: calc(var(--astryx-focus-outline-offset, 3px) + var(--astryx-focus-outline-width, 2px));
   }
 
   .astryx-carousel__pill--end {
-    transform: translateX(50%);
-  }
-
-  [dir='rtl'] .astryx-carousel__pill--start {
-    transform: translateX(50%);
-  }
-
-  [dir='rtl'] .astryx-carousel__pill--end {
-    transform: translateX(-50%);
+    margin-inline-end: calc(var(--astryx-focus-outline-offset, 3px) + var(--astryx-focus-outline-width, 2px));
   }
 
   .astryx-carousel__pill[data-hidden] {

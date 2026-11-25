@@ -17,7 +17,7 @@ footer: false
         <td><code>keys</code></td>
         <td><code>string</code></td>
         <td>-</td>
-        <td>Required. The keyboard shortcut to present, with the keys separated by <code>+</code>, such as <code>"mod+k"</code> or <code>"shift+plus"</code>. Each segment paints one key badge; whitespace around a segment is ignored, and an unrecognized segment is uppercased.</td>
+        <td>Required. The keyboard shortcut to present, with the keys separated by <code>+</code>, such as <code>"mod+k"</code> or <code>"shift+plus"</code>. Each segment paints one key badge; whitespace around a segment is ignored, and an unrecognized segment is uppercased. Modifiers paint Apple's symbol on Apple platforms and text elsewhere and before hydration (see the table below). In development, a <code>keys</code> that is not a string throws an error naming the prop; Kbd does not read slot content.</td>
       </tr>
     </tbody>
   </table>
@@ -32,9 +32,10 @@ footer: false
     </thead>
     <tbody>
       <tr><td><code>mod</code></td><td><code>⌘</code> / <code>Ctrl</code></td><td>Command on Apple platforms, Control elsewhere</td></tr>
-      <tr><td><code>ctrl</code></td><td><code>⌃</code></td><td>Control</td></tr>
-      <tr><td><code>alt</code></td><td><code>⌥</code></td><td>Alt</td></tr>
-      <tr><td><code>shift</code></td><td><code>⇧</code></td><td>Shift</td></tr>
+      <tr><td><code>ctrl</code></td><td><code>⌃</code> / <code>Ctrl</code></td><td>Control</td></tr>
+      <tr><td><code>alt</code></td><td><code>⌥</code> / <code>Alt</code></td><td>Alt</td></tr>
+      <tr><td><code>shift</code></td><td><code>⇧</code> / <code>Shift</code></td><td>Shift</td></tr>
+      <tr><td><code>meta</code></td><td><code>⌘</code> / <code>Win</code></td><td>META</td></tr>
       <tr><td><code>enter</code> / <code>return</code></td><td><code>↵</code></td><td>Enter</td></tr>
       <tr><td><code>backspace</code></td><td><code>⌫</code></td><td>Backspace</td></tr>
       <tr><td><code>tab</code></td><td><code>⇥</code></td><td>Tab</td></tr>

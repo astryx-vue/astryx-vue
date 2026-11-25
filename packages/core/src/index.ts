@@ -550,6 +550,12 @@ export {
   useSemanticIcon,
 } from './Icon/index.js'
 export type {
+  ComponentIconMap,
+  ComponentIconRequest,
+  ComponentIconSlotMap,
+  ComponentIconSlotName,
+  ComponentIconStaticMap,
+  ComponentIconValue,
   ExtendedIconName,
   IconColor,
   IconGlyphName,
@@ -558,10 +564,16 @@ export type {
   IconName,
   IconProps,
   IconRegistry,
+  IconRequest,
   IconSize,
   IconSlots,
+  IconVariant,
+  IconVariantMap,
   NamespacedIconName,
+  ResolvedComponentIcon,
   SemanticIconMap,
+  ThemeIconEntries,
+  ThemeIconEntry,
 } from './Icon/index.js'
 export { IconButton } from './IconButton/index.js'
 export type { IconButtonEmits, IconButtonProps, IconButtonSlots } from './IconButton/index.js'

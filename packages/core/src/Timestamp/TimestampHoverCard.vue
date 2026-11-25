@@ -2,7 +2,7 @@
 import type { TimestampTooltipLine } from './tooltipEntries.js'
 import { computed, ref } from 'vue'
 import HoverCard from '../HoverCard/HoverCard.vue'
-import Icon from '../Icon/Icon.vue'
+import ComponentIcon from '../Icon/ComponentIcon.vue'
 import IconButton from '../IconButton/IconButton.vue'
 import { useAstryxMessages } from '../locale/context.js'
 import '../../styles/timestamp.css'
@@ -69,7 +69,11 @@ async function copy(value: string, key: string) {
               :label="copiedKey === String(index) ? messages.timestamp.copied : messages.timestamp.copyValue(line.value)"
               @click="copy(line.value, String(index))"
             >
-              <Icon :icon="copiedKey === String(index) ? 'check' : 'copy'" size="sm" />
+              <ComponentIcon
+                icon-slot="timestamp-copy"
+                :state="{ copied: copiedKey === String(index) }"
+                :fallback="{ icon: copiedKey === String(index) ? 'check' : 'copy', size: 'sm' }"
+              />
             </IconButton>
           </div>
         </div>

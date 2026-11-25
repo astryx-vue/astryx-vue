@@ -77,7 +77,7 @@ footer: false
         <td><code>isDisabled</code></td>
         <td><code>boolean</code></td>
         <td><code>false</code></td>
-        <td>Whether the link is disabled.</td>
+        <td>Whether the link is disabled. It cannot navigate or emit <code>click</code>, keeps its Tab stop, and is announced as disabled. A caller <code>role</code> or <code>aria-disabled</code> does not replace that; a caller <code>tabindex</code> still applies.</td>
       </tr>
       <tr>
         <td><code>target</code></td>
@@ -147,6 +147,6 @@ The following are passed to the root element:
 
 - HTML attributes.
 - `aria-*` attributes.
-- `data-*` attributes.
+- `data-*` attributes. `data-color` always reflects `color`, so a caller value does not replace it.
 - `class`.
 - `style`.

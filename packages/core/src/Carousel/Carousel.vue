@@ -140,16 +140,19 @@ function slideLabel(position: number, total: number): string {
     :aria-label="regionLabel"
     data-component="carousel"
   >
-    <!-- eslint-disable-next-line vue-a11y/no-static-element-interactions -- tabindex 把滚动区放进 Tab 序列；左右方向键只滚动这一行。 -->
+    <!-- 滚动区是和轮播同名的分组，只在内容溢出时进 Tab 序列，左右方向键只滚动这一行。放得下时仍能被程序聚焦，用来接住边缘按钮交出的焦点。 -->
+    <!-- eslint-disable-next-line vue-a11y/no-static-element-interactions -- 分组本身接收方向键滚动，tabindex 随溢出切换。 -->
     <div
       ref="scroller"
       class="astryx-carousel__scroller astryx-carousel-scroller"
+      role="group"
+      :aria-label="regionLabel"
       :data-gap="gap"
       :data-padding="padding"
       :data-snap="hasSnap || undefined"
       :data-edge-fade="hasEdgeFade || undefined"
       :data-fade="fade"
-      tabindex="0"
+      :tabindex="overflow.hasOverflow ? 0 : -1"
       :style="scrollerStyle"
       @keydown="onKeyDown($event, hasLoop)"
     >

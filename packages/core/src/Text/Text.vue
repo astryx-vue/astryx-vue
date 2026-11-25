@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
 import type { TextProps } from './types.js'
-import { computed, useAttrs } from 'vue'
+import { computed, provide, useAttrs } from 'vue'
+import { readLayerScoped } from '../layer/scopedProvide.js'
+import { TextClampContext } from './textClampContext.js'
 import TruncationTooltip from './TruncationTooltip.vue'
 import { useTruncationTooltip } from './useTruncationTooltip.js'
 
@@ -28,6 +30,11 @@ const wordBreak = computed(() => props.wordBreak ?? (props.maxLines === 1 ? 'bre
 const tooltip = useTruncationTooltip(() => props.maxLines, () => props.hasTruncateTooltip)
 const { interest } = tooltip
 const attrs = useAttrs()
+
+/** 只有 capsize 会把多行截断取消掉（它把 display 改回 block）；单行截断不受影响。 */
+const isClamped = computed(() => props.maxLines === 1 || (props.maxLines > 1 && !props.hasCapsize))
+const outerClamp = readLayerScoped(TextClampContext)
+provide(TextClampContext, computed(() => isClamped.value || outerClamp.value))
 
 const classes = computed(() => [
   'astryx-text',

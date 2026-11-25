@@ -28,14 +28,15 @@ import { Kbd } from '@astryx-vue/core/Kbd'
 
 Every segment becomes its own badge, so `mod+k` paints two keys. Whitespace around a segment is ignored and the case does not matter, which makes `mod + K` and `mod+k` the same shortcut. Anything the component does not recognize is uppercased as written, so `f1` shows as `F1`.
 
-`mod` is the one key that follows the platform: it reads as `⌘` on Apple platforms and as `Ctrl` everywhere else. Reach for `mod` when you describe a shortcut that works across platforms, and use `ctrl` only when the shortcut really is bound to the Control key. The other named keys have a fixed glyph:
+The modifiers follow the platform: on Apple platforms they paint Apple's symbols, and elsewhere they paint the text printed on the keycap. A server render does not know the platform yet, so before hydration every modifier shows its text. `mod` is the Command key on Apple platforms and Control elsewhere, so reach for `mod` when you describe a shortcut that works across platforms, and use `ctrl` only when the shortcut really is bound to the Control key. The other named keys have a fixed glyph:
 
 | Written as | Painted as |
 | --- | --- |
 | `mod` | `⌘` on Apple platforms, `Ctrl` elsewhere |
-| `ctrl` | `⌃` |
-| `alt` | `⌥` |
-| `shift` | `⇧` |
+| `ctrl` | `⌃` on Apple platforms, `Ctrl` elsewhere |
+| `alt` | `⌥` on Apple platforms, `Alt` elsewhere |
+| `shift` | `⇧` on Apple platforms, `Shift` elsewhere |
+| `meta` | `⌘` on Apple platforms, `Win` elsewhere |
 | `enter` | `↵` |
 | `backspace` | `⌫` |
 | `tab` | `⇥` |
@@ -46,6 +47,8 @@ Every segment becomes its own badge, so `mod+k` paints two keys. Whitespace arou
 `esc` is an alias for `escape`, and `return` is an alias for `enter`; an alias paints and is announced exactly like the key it names. Because `+` separates the keys, write `plus` for the plus key itself, as in `shift+plus`.
 
 To a screen reader the whole group is one image named "Command + K"; the glyphs inside the badges are hidden because `⌘` and `⇧` are announced as nothing useful. The keys are spoken as words instead. Note that `Kbd` only presents a shortcut: it does not listen for keystrokes, and the shortcut still has to be implemented by the product.
+
+Each key badge keeps the theme's height at the default text size and grows with a larger text size, so a bigger glyph stays inside its badge.
 
 
 <ComponentAnatomy />

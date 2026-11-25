@@ -1,8 +1,18 @@
+import type { CitationProps } from './types.js'
+import { readFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import { defineComponent, h } from 'vue'
 import { provideAstryxLocale } from '../locale/index.js'
 import Citation from './Citation.vue'
+
+const css = readFileSync(resolve(dirname(fileURLToPath(import.meta.url)), '../../styles/citation.css'), 'utf8')
+
+function variantRule(variant: 'label' | 'number'): string {
+  return new RegExp(`\\.astryx-citation\\[data-variant='${variant}'\\]\\s*\\{([^}]*)\\}`).exec(css)?.[1] ?? ''
+}
 
 describe('citation', () => {
   it('renders a labelled link that opens in a new tab', () => {
@@ -73,5 +83,20 @@ describe('citation', () => {
 
     expect(wrapper.find('a').exists()).toBe(false)
     expect(wrapper.get('span.astryx-citation').attributes('role')).toBe('group')
+  })
+
+  it('centres a label chip on the line it sits in, with or without an icon', () => {
+    expect(variantRule('label')).toMatch(/vertical-align: middle;/)
+  })
+
+  it('keeps a number citation a superscript', () => {
+    expect(variantRule('number')).toMatch(/vertical-align: super;/)
+  })
+
+  it('names the prop and the fix in development when source is missing', () => {
+    expect(() => mount(Citation, {
+      props: { number: 1 } as unknown as CitationProps,
+      slots: { default: 'Annual report' },
+    })).toThrow('Citation: `source` is required, for example :source="{ title: \'Annual report\', url: \'https://example.com/report\' }". Citation does not read slot content.')
   })
 })

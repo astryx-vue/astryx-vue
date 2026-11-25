@@ -24,7 +24,8 @@ const interactiveRef = useTemplateRef<{ element: HTMLElement | null }>('interact
 const containerRef = computed(() => cardRef.value?.element ?? null)
 const controlRef = computed(() => interactiveRef.value?.element ?? null)
 
-const { pressableProps } = usePressFeedback({ hasOverlay: false })
+/** 卡片里放着别的控件：手指按在它们上面时卡片不亮。 */
+const { pressableProps, pressActionProps } = usePressFeedback({ hasOverlay: false, isContainer: true })
 /** 禁用时不再用原生 disabled 或 tabIndex=-1，改用可聚焦的 aria-disabled 加共用事件守卫。 */
 const disabledInteraction = computed(() => props.isDisabled ? disabledInteractionProps() : undefined)
 
@@ -92,7 +93,7 @@ function onInteractiveClick(event: MouseEvent): void {
       :role="isDisabled ? 'link' : undefined"
       :tabindex="0"
       :target="isDisabled ? undefined : target"
-      v-bind="disabledInteraction"
+      v-bind="{ ...disabledInteraction, ...pressActionProps }"
     />
     <VisuallyHidden
       v-else
@@ -101,7 +102,7 @@ function onInteractiveClick(event: MouseEvent): void {
       :aria-label="label"
       :aria-disabled="isDisabled || undefined"
       type="button"
-      v-bind="disabledInteraction"
+      v-bind="{ ...disabledInteraction, ...pressActionProps }"
       @click="onInteractiveClick"
     />
     <slot />

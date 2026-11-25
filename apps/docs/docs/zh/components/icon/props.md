@@ -12,7 +12,8 @@ footer: false
 <tr><td><code>name</code></td><td><code>string</code></td><td>—</td><td>Iconify 的 id，格式是 <code>集合:图标</code>。carbon 集合注册之后，<code>carbon-settings</code> 与 <code>carbon:settings</code> 相同。集合名里带连字符时请保留冒号。</td></tr>
 <tr><td><code>icon</code></td><td><code>string | Component</code></td><td>—</td><td>语义名、CSS 图标类，或你自己的组件。语义名由最近的主题换成 Iconify id；该图标尚未注册时用内置字形。设置了 <code>name</code> 时忽略它。</td></tr>
 <tr><td><code>color</code></td><td><code>'inherit' | 'primary' | 'secondary' | 'tertiary' | 'disabled' | 'accent' | 'success' | 'error' | 'warning' | 'blue' | 'cyan' | 'green' | 'gray' | 'orange' | 'pink' | 'purple' | 'red' | 'teal' | 'yellow'</code></td><td><code>'inherit'</code></td><td>决定图标里 <code>currentColor</code> 解析成哪种颜色。<code>inherit</code> 保持周围文字的颜色。</td></tr>
-<tr><td><code>size</code></td><td><code>'xsm' | 'sm' | 'md' | 'lg'</code></td><td>—</td><td>根字号 16px 时分别是 12px、16px、20px、24px。不传时，<code>name</code> 图标是 <code>1em</code>。其他图标在没有父级尺寸时回退到 <code>md</code>。</td></tr>
+<tr><td><code>size</code></td><td><code>'xsm' | 'sm' | 'md' | 'lg'</code></td><td>—</td><td>根字号 16px 时分别是 12px、16px、20px、24px。不传时，<code>name</code> 图标是 <code>1em</code>。其他图标在没有父级尺寸时回退到 <code>md</code>。主题在 <code>components.icon['size:sm']</code>（以及其他尺寸）上用 px 或 rem 写 <code>width</code> 和 <code>height</code>，就能改这一档的尺寸。</td></tr>
+<tr><td><code>variant</code></td><td><code>IconVariant</code></td><td>—</td><td>向最近的主题要这个语义名的另一种画法，比如 <code>filled</code>。只有主题在 <code>iconVariants</code> 里列了它，主题的函数条目才收得到；否则画普通的样子。不会写进 DOM。</td></tr>
 <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>有含义的图标的无障碍名称。会设置 <code>role="img"</code> 和 <code>aria-label</code>。装饰性图标省略它，保持 <code>aria-hidden="true"</code>。空字符串仍按装饰处理。</td></tr>
 </tbody></table>
 </div>
@@ -84,6 +85,48 @@ footer: false
 
 `useSemanticIcon(name)` 从 `@astryx-vue/core/Icon` 引入，也从包根导出。未知字符串、主题也没有覆盖时，返回空，调用方可以继续把它当 CSS 类。
 
+### 跟着尺寸变的条目
+
+`icons` 里的条目也可以是一个函数，参数是 `{ size, variant }`，返回 Iconify id。`Icon` 用它实际画的尺寸去调用，所以主题可以在 `sm` 时换一个笔画更粗的图形。函数的回答就是最终结果：返回 `null` 就什么都不画，不会退回默认 id。`theme.icons` 和 `useSemanticIcon` 按 `md` 读函数。
+
+```ts
+const brand = defineTheme({
+  name: 'brand',
+  iconVariants: ['outline', 'filled'],
+  icons: {
+    info: ({ size, variant }) => variant === 'filled'
+      ? 'mdi:information'
+      : size === 'sm' ? 'carbon:information-filled' : 'carbon:information',
+  },
+})
+```
+
+`iconVariants` 是整个主题支持的变体名单，只写一次。子主题不写就继承，写了就整份替换。继承来的函数只收得到定义它的那个主题列过的变体。应用用到哪些变体名，就在 `@astryx-vue/core/Icon` 上扩充 `IconVariantMap` 来声明。
+
+### 组件图标槽位
+
+槽位说的是「某个组件里这个图标是干什么的」。`defineTheme({ componentIcons })` 把槽位指向一个共享名字，不会改动这个名字在别处的画法。值可以是共享名字、`null`（隐藏图形）、部分的 `{ icon, variant, size }` 请求，或者一个以槽位状态为参数、返回请求的纯函数。请求里没写的字段保持组件自己的值；写错的字段会被忽略，开发环境下提示一次。
+
+<div class="component-api-table" role="region" aria-label="组件图标槽位" tabindex="0">
+<table><thead><tr><th>槽位</th><th>状态</th><th>默认</th><th>设为 <code>null</code> 时</th></tr></thead><tbody>
+<tr><td><code>code-block-copy</code></td><td><code>{ copied }</code></td><td><code>copy</code>，复制后显示 <code>check</code></td><td>复制按钮保留名称、提示和复制功能。</td></tr>
+<tr><td><code>timestamp-copy</code></td><td><code>{ copied }</code></td><td><code>copy</code>，复制后显示 <code>check</code></td><td>悬浮卡片里的复制按钮保留名称和功能。</td></tr>
+<tr><td><code>table-sort-indicator</code></td><td><code>{ direction }</code>：<code>ascending</code>、<code>descending</code> 或 <code>none</code></td><td>降序 <code>arrowDown</code>，其余 <code>arrowUp</code></td><td>排序按钮保留文字和排序功能，表头保留 <code>aria-sort</code>，文字旁不留空隙。</td></tr>
+<tr><td><code>table-row-expand</code></td><td><code>{ expanded }</code></td><td><code>chevronRight</code>，展开时转 90°</td><td>展开按钮保留尺寸、名称和 <code>aria-expanded</code>。换成更大的图形也不会撑高行。</td></tr>
+</tbody></table>
+</div>
+
+```ts
+defineTheme({
+  name: 'brand',
+  componentIcons: {
+    'code-block-copy': ({ copied }) => ({ icon: copied ? 'checkDouble' : 'copy' }),
+  },
+})
+```
+
+`theme.componentIcons` 能读回名字、`null` 和静态请求；用函数决定的槽位不在里面。
+
 ## 主题
 
 颜色走图标令牌。主题在根上覆盖对应变量即可。
@@ -108,3 +151,5 @@ footer: false
 根元素是 `<span>`。没有 `label` 时为 `aria-hidden="true"`。`label` 非空时为 `role="img"`，这段文字就是无障碍名称。内部 SVG 始终 `aria-hidden`。
 
 `class` 和 `style` 会落到根元素上。`name` 不会：它用来选择图标。
+
+在 `Icon` 上挂模板 ref，可以拿到 `element`（根盒子）和 `svg`（渲染出的 `<svg>`）。图形没有 `<svg>` 时（比如内置字形）`svg` 是 `null`；图形换了，它也跟着换。
