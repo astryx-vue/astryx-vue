@@ -1,5 +1,7 @@
 import type { SyntaxThemeDefinition } from '../Code/syntaxTheme.js'
+import type { ComponentIconMap, ComponentIconStaticMap, StoredComponentIconValue } from '../Icon/componentIcons.js'
 import type { SemanticIconMap } from '../Icon/semantic.js'
+import type { StoredIconEntry, ThemeIconEntries } from '../Icon/themeIcons.js'
 import type { IndicatorRegistry } from '../Indicator/types.js'
 import type { NormalizedThemeAdaptations, ResolvedThemeAdaptationRule, ThemeAdaptations, ThemeGenerativeAxes } from './adaptationTypes.js'
 import type { ColorScaleConfig } from './expandColorScale.js'
@@ -72,7 +74,37 @@ export interface TypographyConfig {
   code?: TypographyRole
 }
 
-export interface DefineThemeInput {
+/**
+ * The icon variant names a base theme lists: exact for a theme from
+ * `defineTheme`, none without a base.
+ */
+// eslint-disable-next-line ts/method-signature-style -- matches the method-shaped marker below
+type BaseThemeIconVariant<Base> = Base extends { __iconVariant?(variant: infer Variant): void }
+  ? Extract<Variant, string>
+  : never
+
+/** A theme's own `iconVariants` when it sets the field, otherwise the inherited list. */
+export type ThemeIconVariant<IconVariants extends readonly string[] | undefined, Base>
+  = [IconVariants] extends [readonly (infer Variant extends string)[]]
+    ? Variant
+    : BaseThemeIconVariant<Base>
+
+/**
+ * The same names, as a type `defineTheme` does not infer from: only
+ * `iconVariants` and `extends` decide them, never an entry's parameter type.
+ */
+type ThemeIconEntryVariant<IconVariants extends readonly string[] | undefined, Base>
+  = [ThemeIconVariant<IconVariants, Base>][IconVariants extends unknown ? 0 : never]
+
+/**
+ * Input to `defineTheme`. `IconVariants` is the theme's own `iconVariants`
+ * list and `Base` its `extends` theme; together they type the `variant` an
+ * icon entry function receives. `defineTheme` infers both.
+ */
+export interface DefineThemeInput<
+  IconVariants extends readonly string[] | undefined = readonly string[] | undefined,
+  Base extends ThemeDefinition | undefined = ThemeDefinition | undefined,
+> {
   /** Theme name. Used as `data-astryx-theme`. */
   name: string
   /** Semantic token overrides. These win over generated values, token by token. */
@@ -103,7 +135,7 @@ export interface DefineThemeInput {
    */
   components?: ComponentStyleMap
   /** Another theme to start from. This theme's own values win. */
-  extends?: ThemeDefinition
+  extends?: Base
   /** Syntax colors for code in this subtree, unless a SyntaxTheme is closer. */
   syntax?: SyntaxThemeDefinition
   /** Extra tokens and component styles for content on a dark surface. */
@@ -134,8 +166,27 @@ export interface DefineThemeInput {
    *
    * Entries replace the built-in map by name and merge with the theme this
    * one extends. A name that is not listed keeps the built-in id.
+   *
+   * An entry may also be a pure synchronous function of `{ size, variant }`
+   * that returns an id. `Icon` calls it with the size it renders at, so the
+   * theme can pick artwork per size. Its result is final: `null` draws no
+   * glyph instead of falling back to the built-in id.
    */
-  icons?: SemanticIconMap
+  icons?: ThemeIconEntries<ThemeIconEntryVariant<IconVariants, Base>>
+  /**
+   * The icon variant names this theme supports, listed once for the whole
+   * theme. Icon entry functions receive `variant` typed as these names.
+   * A list set here replaces the inherited one; an omitted list is inherited.
+   */
+  iconVariants?: IconVariants
+  /**
+   * Which shared icon a component's own icon role uses, by slot, such as
+   * `code-block-copy`. A value is a shared icon name, `null` to hide the
+   * icon, a partial `{ icon, variant, size }` request, or, for a slot with
+   * state, a pure function of that state that returns one. An entry
+   * replaces the inherited entry for the same slot.
+   */
+  componentIcons?: ComponentIconMap<ThemeIconEntryVariant<IconVariants, Base>>
   /**
    * Indicator graphics, replaced by name.
    *
@@ -145,7 +196,7 @@ export interface DefineThemeInput {
   indicators?: IndicatorRegistry
 }
 
-export interface ThemeDefinition {
+export interface ThemeDefinition<IconVariant extends string = string> {
   name: string
   /** Token values already written as CSS, with the `--astryx-` prefix. */
   tokens: Readonly<Record<string, string>>
@@ -160,8 +211,31 @@ export interface ThemeDefinition {
   /** Component styles on a light MediaTheme surface. */
   onLightComponents?: ComponentStyleMap
   syntax?: SyntaxThemeDefinition
-  /** Semantic icon overrides. Absent when this theme does not set any. */
+  /**
+   * Semantic icon overrides as ids. A function entry is read at size `md`.
+   * Absent when this theme does not set any.
+   */
   icons?: SemanticIconMap
+  /** Icon entries with their functions. Only icon resolution reads it. */
+  iconEntries?: Readonly<Record<string, StoredIconEntry>>
+  /** The icon variant names this theme lists, its own or inherited. */
+  iconVariants?: readonly string[]
+  /**
+   * The variant list of the theme that defined each inherited function
+   * entry, where it differs from `iconVariants`.
+   */
+  iconEntryVariants?: Readonly<Record<string, readonly string[] | undefined>>
+  /** Component icon slots: names, `null`, and static requests. Function slots are left out. */
+  componentIcons?: ComponentIconStaticMap
+  /** Component icon slot values with their functions. Only slot resolution reads it. */
+  componentIconValues?: Readonly<Record<string, StoredComponentIconValue | undefined>>
+  /**
+   * Type-only: the names in `iconVariants`, so a theme that extends this one
+   * types its icon entries by the list it inherits. Never set. Method
+   * syntax keeps themes with different lists assignable to each other.
+   */
+  // eslint-disable-next-line ts/method-signature-style -- a method stays bivariant in its parameter
+  __iconVariant?(variant: IconVariant): void
   /** Indicator overrides. Absent when this theme does not set any. */
   indicators?: IndicatorRegistry
   /**

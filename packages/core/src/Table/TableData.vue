@@ -10,7 +10,7 @@ import type {
 } from './types.js'
 import { computed, h, onBeforeUnmount, ref, useAttrs } from 'vue'
 import CheckboxInput from '../CheckboxInput/CheckboxInput.vue'
-import Icon from '../Icon/Icon.vue'
+import ComponentIcon from '../Icon/ComponentIcon.vue'
 import { useAstryxMessages } from '../locale/context.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { pixel, resolveColumnWidths, resolveTableMinWidth, splitStyleMinWidth } from './columnUtils.js'
@@ -325,7 +325,11 @@ function isEnabled(row: Record<string, unknown>): boolean {
                   </VisuallyHidden>
                   <HeaderContent v-else :column="column" />
                   <span class="astryx-table__sort-icon" :data-active="sortFor(column)?.direction != null || undefined">
-                    <Icon :icon="sortFor(column)?.direction === 'descending' ? 'arrowDown' : 'arrowUp'" size="xsm" />
+                    <ComponentIcon
+                      icon-slot="table-sort-indicator"
+                      :state="{ direction: sortFor(column)?.direction ?? 'none' }"
+                      :fallback="{ icon: sortFor(column)?.direction === 'descending' ? 'arrowDown' : 'arrowUp', size: 'xsm' }"
+                    />
                   </span>
                   <span v-if="sortFor(column)?.rank" class="astryx-table__sort-rank">{{ sortFor(column)?.rank }}</span>
                 </button>

@@ -17,7 +17,7 @@ footer: false
         <td><code>source</code></td>
         <td><code>CitationSource</code></td>
         <td>-</td>
-        <td><code>title</code> 是可见标题，空着就回退到编号。<code>url</code> 会渲染成链接。<code>src</code> 是站点图标。<code>icon</code> 是图片地址或 CSS 图标类，优先于 <code>src</code>。</td>
+        <td>必填。<code>title</code> 是可见标题，空着就回退到编号。<code>url</code> 会渲染成链接。<code>src</code> 是站点图标。<code>icon</code> 是图片地址或 CSS 图标类，优先于 <code>src</code>。开发环境下缺少 <code>source</code> 会抛出点名该属性的错误；Citation 不读取插槽内容。</td>
       </tr>
       <tr>
         <td><code>number</code></td>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { AvatarGroupOverflowEmits, AvatarGroupOverflowProps, AvatarGroupOverflowSlots } from './types.js'
-import { computed, getCurrentInstance, useAttrs } from 'vue'
+import { computed, getCurrentInstance, mergeProps, useAttrs } from 'vue'
 
 import { resolveSize } from '../Avatar/utils.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
@@ -9,7 +9,7 @@ import { useAstryxMessages } from '../locale/index.js'
 import { AvatarGroupContext } from './context.js'
 import '../../styles/avatar-group.css'
 
-defineOptions({ name: 'AstryxAvatarGroupOverflow' })
+defineOptions({ name: 'AstryxAvatarGroupOverflow', inheritAttrs: false })
 
 const props = defineProps<AvatarGroupOverflowProps>()
 const emit = defineEmits<AvatarGroupOverflowEmits>()
@@ -38,10 +38,21 @@ const isInteractive = computed(() => instance?.vnode.props?.onClick != null)
  */
 const safeCount = computed(() => Math.max(0, props.count))
 
-/** 读屏名走语言包（英文 `5 more`），跟着 `count` 变。 */
+/**
+ * 调用方给了非空的 `aria-label` 就用它；否则读屏名走语言包（英文 `5 more`），
+ * 跟着 `count` 变。调用方的 `aria-labelledby` 原样透传，浏览器会让它优先。
+ */
 const accessibleName = computed(() => {
-  const t = messages.value.nav.avatarOverflow
-  return t(safeCount.value)
+  const callerLabel = attrs['aria-label']
+  if (typeof callerLabel === 'string' && callerLabel !== '')
+    return callerLabel
+  return messages.value.nav.avatarOverflow(safeCount.value)
+})
+
+/** 除了名字，调用方的其他属性原样落到根元素上。 */
+const forwardedAttrs = computed(() => {
+  const { 'aria-label': _callerLabel, ...rest } = attrs
+  return rest
 })
 
 /** 字号随头像长：小头像沿用正文字号，大头像按比例放大。 */
@@ -65,7 +76,7 @@ const staticRole = computed(() => (attrs.role as string | undefined) ?? 'img')
 <template>
   <component
     :is="isInteractive ? 'button' : 'span'"
-    v-bind="pressBindings"
+    v-bind="mergeProps(forwardedAttrs, pressBindings)"
     class="astryx-avatar-group-overflow"
     :class="[`astryx-avatar-group-overflow--${shape}`, { 'astryx-avatar-group-overflow--interactive': isInteractive }]"
     :style="rootStyle"

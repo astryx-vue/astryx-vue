@@ -2,11 +2,14 @@
  * Key names that Kbd paints as a glyph or a fixed word rather than as the
  * uppercased key name.
  *
- * `mod` is resolved per platform: it reads as ⌘ on Apple platforms and as
- * `Ctrl` everywhere else.
+ * Modifiers are resolved per platform: `mod`, `ctrl`, `alt` and `shift` read
+ * as Apple's symbols on Apple platforms and as `Ctrl`, `Alt` and `Shift` text
+ * elsewhere and before hydration; `meta` reads as ⌘ on Apple platforms and as
+ * `Win` elsewhere and before hydration.
  */
 export type KbdSpecialKey
   = | 'mod'
+    | 'meta'
     | 'ctrl'
     | 'alt'
     | 'shift'
@@ -37,9 +40,11 @@ export interface KbdProps {
   /**
    * The keyboard shortcut to present. Separate keys with `+`.
    *
-   * Special keys: `mod` (Command on Apple platforms, Control elsewhere),
-   * `ctrl`, `alt`, `shift`, `enter`, `backspace`, `escape`, `tab`, `up`,
-   * `down`, `left`, `right`, and `plus`. Use `plus` for a literal `+` key, as
+   * Special keys: `mod` (⌘ on Apple platforms, `Ctrl` elsewhere), `ctrl`,
+   * `alt` and `shift` (Apple symbols on Apple platforms, `Ctrl`, `Alt` and
+   * `Shift` text elsewhere), `meta` (⌘ on Apple platforms, `Win` elsewhere),
+   * `enter`, `backspace`, `escape`, `tab`, `up`, `down`, `left`, `right`, and
+   * `plus`. Before hydration every modifier shows its text. Use `plus` for a literal `+` key, as
    * in `"shift+plus"`. `esc` is an alias for `escape`, and `return` is an
    * alias for `enter`.
    *
