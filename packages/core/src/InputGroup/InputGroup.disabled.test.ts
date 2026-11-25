@@ -30,7 +30,7 @@ function isDisabled(element: Element): boolean {
   return element.hasAttribute('disabled') || element.getAttribute('aria-disabled') === 'true'
 }
 
-describe('InputGroup disabled state', () => {
+describe('inputGroup disabled state', () => {
   it.each(members)('disables a grouped $name', async ({ render, control }) => {
     const wrapper = mount(InputGroup, {
       props: { label: 'Group', disabled: true },
