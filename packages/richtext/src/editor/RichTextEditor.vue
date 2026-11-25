@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { LexicalEditor } from 'lexical'
 import type { RichTextEditorEmits, RichTextEditorExposed, RichTextEditorProps, RichTextEditorSlots } from './types.js'
-import { Field, useAstryxMessages, VisuallyHidden } from '@astryx-vue/core'
+import { Field, textAreaMessages, useComponentMessages, VisuallyHidden } from '@astryx-vue/core'
 import { $generateHtmlFromNodes } from '@lexical/html'
 import { $getRoot, $isParagraphNode } from 'lexical'
 import { computed, onBeforeUnmount, onMounted, provide, shallowRef, useAttrs, useId, useTemplateRef, watch } from 'vue'
@@ -28,7 +28,7 @@ const emit = defineEmits<RichTextEditorEmits>()
 defineSlots<RichTextEditorSlots>()
 const attrs = useAttrs()
 const t = useRichTextMessages()
-const coreMessages = useAstryxMessages()
+const coreMessages = useComponentMessages({ textArea: textAreaMessages })
 
 /** 清空时用的状态：根下面一个空段落。用 `setEditorState` 重置，也会触发 `change`。 */
 const EMPTY_EDITOR_STATE = JSON.stringify({

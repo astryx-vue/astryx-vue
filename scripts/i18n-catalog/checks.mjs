@@ -344,3 +344,23 @@ export function checkComponentMessageImports(files) {
   }
   return problems
 }
+
+const CORE_PACKAGE_NAMES = /^import \{([^}]*)\} from '@astryx-vue\/core'/gm
+
+/**
+ * 其他包（richtext、lab）也只能通过 `useComponentMessages` 读 core 的内置文案。
+ * 从 `@astryx-vue/core` 拿读整份文案的导出算问题。
+ */
+export function checkPackageMessageImports(files) {
+  const problems = []
+  for (const { path, text } of files) {
+    for (const match of text.matchAll(CORE_PACKAGE_NAMES)) {
+      const names = match[1].split(',').map(name => name.trim())
+      if (names.some(name => FULL_CATALOG_EXPORTS.has(name))) {
+        const line = text.slice(0, match.index).split('\n').length
+        problems.push(`${path}:${line}  引入了整份内置文案，改用 useComponentMessages`)
+      }
+    }
+  }
+  return problems
+}

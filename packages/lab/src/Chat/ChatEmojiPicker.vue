@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ChatEmojiPickerEmits, ChatEmojiPickerProps, ChatEmojiPickerSlots } from './types.js'
-import { Popover, TextInput, useAstryxMessages, useGridFocus, useTranslator } from '@astryx-vue/core'
+import { emojiPickerMessages, Popover, TextInput, useComponentMessages, useGridFocus, useTranslator } from '@astryx-vue/core'
 import { computed, ref, useTemplateRef } from 'vue'
 import { CHAT_EMOJI_COLUMNS, DEFAULT_CHAT_EMOJIS } from './emojis.js'
 import { filterEmojis } from './filterEmojis.js'
@@ -13,7 +13,7 @@ const emit = defineEmits<ChatEmojiPickerEmits>()
 defineSlots<ChatEmojiPickerSlots>()
 
 const { t } = useTranslator()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ emojiPicker: emojiPickerMessages })
 const query = ref('')
 const isOpen = ref(false)
 const panel = useTemplateRef<HTMLDivElement>('panel')

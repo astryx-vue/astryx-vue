@@ -24,6 +24,7 @@ import {
   checkEnglishText,
   checkLocaleContracts,
   checkMapTargets,
+  checkPackageMessageImports,
   checkSourceRefs,
 } from './i18n-catalog/checks.mjs'
 import { UNPORTED_KEYS, UNPORTED_NAMESPACES } from './i18n-catalog/coverage.mjs'
@@ -34,6 +35,8 @@ const coreDir = join(rootDir, 'packages/core')
 const localesDir = join(coreDir, 'locales')
 const SOURCE_PATTERN = /\.(?:ts|vue)$/
 const SKIPPED_SOURCE = /\.(?:test|spec)\.ts$/
+// 除 core 外也读内置文案的包，同样只能按组件取。
+const MESSAGE_CONSUMER_PACKAGES = ['richtext']
 
 function readJson(file) {
   return JSON.parse(readFileSync(file, 'utf8'))
@@ -79,6 +82,7 @@ async function main() {
   const coverage = checkCoverage(enCatalog, map, UNPORTED_NAMESPACES, UNPORTED_KEYS)
   const sources = readSources(join(coreDir, 'src'))
   const refs = checkSourceRefs(sources, map)
+  const packageSources = MESSAGE_CONSUMER_PACKAGES.flatMap(name => readSources(join(rootDir, 'packages', name, 'src')))
 
   const sections = [
     ['内置 en 和 zh-CN 的字段', checkBuiltInParity(messages.en, messages['zh-CN'])],
@@ -89,6 +93,7 @@ async function main() {
     ['原版键的接入情况', coverage.problems],
     ['源码里的 t() 调用', refs.problems],
     ['组件读内置文案的方式', checkComponentMessageImports(sources)],
+    ['其他包读内置文案的方式', checkPackageMessageImports(packageSources)],
   ]
 
   const failed = sections.filter(([, problems]) => problems.length > 0)

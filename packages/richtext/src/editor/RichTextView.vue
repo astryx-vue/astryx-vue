@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { RichTextEditorInstance } from './createEditor.js'
 import type { RichTextViewProps, RichTextViewSlots } from './viewTypes.js'
-import { useAstryxMessages } from '@astryx-vue/core'
+import { tableMessages, useComponentMessages } from '@astryx-vue/core'
 import { computed, nextTick, onBeforeUnmount, onMounted, provide, shallowRef, useAttrs, watch } from 'vue'
 import { editorKey } from './context.js'
 import { createRichTextEditor } from './createEditor.js'
@@ -18,7 +18,7 @@ const emit = defineEmits<{ parseError: [error: Error] }>()
 defineSlots<RichTextViewSlots>()
 const attrs = useAttrs()
 // 表格滚动区域的名字用 core 的文案，和 core 的 Table 一致。
-const coreMessages = useAstryxMessages()
+const coreMessages = useComponentMessages({ table: tableMessages })
 
 const surface = shallowRef<HTMLDivElement | null>(null)
 const hasError = shallowRef(false)

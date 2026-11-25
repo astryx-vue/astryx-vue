@@ -1,5 +1,5 @@
 import type { VNodeChild } from 'vue'
-import { Icon, IconButton, useAstryxMessages, useCopyToClipboard } from '@astryx-vue/core'
+import { codeBlockMessages, Icon, IconButton, useComponentMessages, useCopyToClipboard } from '@astryx-vue/core'
 import { $isCodeNode } from '@lexical/code'
 import { $getNodeByKey, $getRoot } from 'lexical'
 import { defineComponent, h } from 'vue'
@@ -42,7 +42,7 @@ const CodeBlockHeader = defineComponent({
   props: { placement: { type: Object as () => HeaderPlacement, required: true } },
   setup(props) {
     const editor = useLexicalEditor()
-    const messages = useAstryxMessages()
+    const messages = useComponentMessages({ codeBlock: codeBlockMessages })
     const { copy, isCopied } = useCopyToClipboard({ announce: messages.value.codeBlock.copied })
 
     function copyCode(): void {
