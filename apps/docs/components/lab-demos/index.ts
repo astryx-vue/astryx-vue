@@ -29,6 +29,8 @@ import emojiPickerDemo from './emoji-picker.vue'
 import emojiPickerSource from './emoji-picker.vue?raw&highlighted'
 import infoTipDemo from './info-tip.vue'
 import infoTipSource from './info-tip.vue?raw&highlighted'
+import lineClampDemo from './line-clamp.vue'
+import lineClampSource from './line-clamp.vue?raw&highlighted'
 import listInputDemo from './list-input.vue'
 import listInputSource from './list-input.vue?raw&highlighted'
 import logStreamOverviewDemo from './log-stream-overview.vue'
@@ -71,6 +73,7 @@ export const labEmojiPicker = defineDemo(emojiPickerDemo, emojiPickerSource, opt
 export const labEmojiPickerPopover = defineDemo(emojiPickerPopoverDemo, emojiPickerPopoverSource, options)
 export const labDiffViewerOverview = defineDemo(diffViewerOverviewDemo, diffViewerOverviewSource, options)
 export const labInfoTip = defineDemo(infoTipDemo, infoTipSource, options)
+export const labLineClamp = defineDemo(lineClampDemo, lineClampSource, options)
 export const labListInput = defineDemo(listInputDemo, listInputSource, options)
 export const labLogStream = defineDemo(logStreamDemo, logStreamSource, options)
 export const labLogStreamOverview = defineDemo(logStreamOverviewDemo, logStreamOverviewSource, options)

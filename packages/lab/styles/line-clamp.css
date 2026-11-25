@@ -1,0 +1,20 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  /*
+   * 用 clip 而不是 hidden：两者裁切效果一样，但 hidden 会让盒子变成滚动容器，
+   * 聚焦一个被裁掉的链接时浏览器会滚动盒子，把看得见的那行换成看不见的那行。
+   */
+  .astryx-line-clamp {
+    display: -webkit-box;
+    overflow: clip;
+    -webkit-box-orient: vertical;
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .astryx-line-clamp:focus-visible {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, currentcolor);
+    outline-offset: var(--astryx-focus-outline-offset, 3px);
+  }
+}
