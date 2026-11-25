@@ -2,7 +2,7 @@
 import type { FieldStatusInput, PopoverPlacement } from '@astryx-vue/core'
 import type { Ref } from 'vue'
 import type { TransferListOption } from './types.js'
-import { Button, ComplexSelector, useTranslator } from '@astryx-vue/core'
+import { Button, ComplexSelector, transferListSelectorMessages, useComponentMessages } from '@astryx-vue/core'
 import { computed, ref, watch } from 'vue'
 import TransferList from './TransferList.vue'
 import '../../styles/transfer-list-selector.css'
@@ -57,11 +57,11 @@ const emit = defineEmits<{
 /** 弹层和字段的默认宽度：留出 32px 的视口空隙，再宽不超过 41rem。 */
 const DEFAULT_SELECTOR_WIDTH = 'min(41rem, calc(100vw - 32px))'
 
-const { t } = useTranslator()
+const messages = useComponentMessages({ transferListSelector: transferListSelectorMessages })
 
-const applyLabel = computed(() => props.applyLabel ?? t('@astryx.transferListSelector.apply'))
-const cancelLabel = computed(() => props.cancelLabel ?? t('@astryx.transferListSelector.cancel'))
-const triggerLabel = computed(() => props.triggerLabel ?? t('@astryx.transferListSelector.triggerLabel', { count: props.modelValue.length }))
+const applyLabel = computed(() => props.applyLabel ?? messages.value.transferListSelector.apply)
+const cancelLabel = computed(() => props.cancelLabel ?? messages.value.transferListSelector.cancel)
+const triggerLabel = computed(() => props.triggerLabel ?? messages.value.transferListSelector.triggerLabel(props.modelValue.length))
 
 const resolvedWidth = computed(() => typeof props.width === 'number' ? `${props.width}px` : (props.width ?? DEFAULT_SELECTOR_WIDTH))
 /** 弹层内容和字段同宽、去掉内边距，两栏贴到弹层边上；高度留出视口空隙，自己不滚。 */

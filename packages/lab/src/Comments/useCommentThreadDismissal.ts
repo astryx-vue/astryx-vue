@@ -1,7 +1,7 @@
 import type { AnnounceFn } from '@astryx-vue/core'
 import type { MaybeRefOrGetter, Ref } from 'vue'
 import type { CommentsContextValue } from './commentsContext.js'
-import { useDismiss, useTranslator } from '@astryx-vue/core'
+import { commentsMessages, useComponentMessages, useDismiss } from '@astryx-vue/core'
 import { computed, onScopeDispose, ref, toValue, watch, watchEffect } from 'vue'
 import { commentAnchorId, replyComposerId } from './utils.js'
 
@@ -184,7 +184,7 @@ export function useCommentThreadDismissal({
   draft,
   announce,
 }: CommentThreadDismissalOptions): CommentThreadDismissalReturn {
-  const { t } = useTranslator()
+  const messages = useComponentMessages({ comments: commentsMessages })
   const isEnabled = computed(() => toValue(onDismiss) != null)
   const guardedSignatureRef = ref<string | null>(null)
   const insidePressRef = ref<Event | null>(null)
@@ -233,7 +233,7 @@ export function useCommentThreadDismissal({
       shake(root)
       focusDraftInput(root, current)
     }
-    announce(t('@astryx.comments.unsavedDraft'), 'polite')
+    announce(messages.value.comments.unsavedDraft, 'polite')
     return 'guarded'
   }
 

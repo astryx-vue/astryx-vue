@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Card, HStack, Section, Skeleton, StackItem, useTranslator, VisuallyHidden, VStack } from '@astryx-vue/core'
+import { Card, commentsMessages, HStack, Section, Skeleton, StackItem, useComponentMessages, VisuallyHidden, VStack } from '@astryx-vue/core'
 import { AVATAR_SIZE } from './commentLayout.js'
 import '../../styles/comment-thread.css'
 
@@ -9,12 +9,12 @@ defineProps<{
   container: 'section' | 'card'
 }>()
 
-const { t } = useTranslator()
+const messages = useComponentMessages({ comments: commentsMessages })
 </script>
 
 <template>
   <VStack :gap="container === 'card' ? 0 : 2" width="100%" data-comments-loading="threads">
-    <VisuallyHidden>{{ t('@astryx.comments.loading') }}</VisuallyHidden>
+    <VisuallyHidden>{{ messages.comments.loading }}</VisuallyHidden>
     <component
       :is="container === 'card' ? Section : Card"
       v-for="index in [0, 1, 2]"

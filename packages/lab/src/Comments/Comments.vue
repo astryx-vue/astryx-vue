@@ -5,9 +5,11 @@ import {
   Button,
   ChatLayout,
   ChatMessageList,
+  commentComposerMessages,
+  commentsMessages,
   EmptyState,
   useAnnounce,
-  useTranslator,
+  useComponentMessages,
   VStack,
 } from '@astryx-vue/core'
 import { computed, h, nextTick, provide, ref, useSlots, watch } from 'vue'
@@ -41,7 +43,7 @@ const props = withDefaults(defineProps<CommentsProps>(), {
 const emit = defineEmits<CommentsEmits>()
 defineSlots<CommentsSlots>()
 const slots = useSlots()
-const { t } = useTranslator()
+const messages = useComponentMessages({ comments: commentsMessages, commentComposer: commentComposerMessages })
 const announce = useAnnounce()
 const rootRef = ref<HTMLElement | null>(null)
 const draft = ref('')
@@ -61,7 +63,7 @@ function setRootRef(el: unknown): void {
 const events = computed(() => props.events ?? [])
 const timelineEntries = computed(() => commentsTimeline(props.comments, events.value))
 const roots = computed(() => timelineEntries.value.flatMap(entry => entry.kind === 'comment' ? [entry.value] : []))
-const panelLabel = computed(() => props.label ?? t('@astryx.comments.label'))
+const panelLabel = computed(() => props.label ?? messages.value.comments.label)
 const listDensity = computed(() => props.density === 'compact' ? 'compact' : 'balanced')
 const isEmbedded = computed(() => props.layout === 'embedded')
 const bleedsToPanelEdge = computed(() => props.container === 'card' && !isEmbedded.value)
@@ -88,7 +90,7 @@ const anchorFocusKey = computed(() => {
 watch(() => props.loadError, (description) => {
   if (description == null || description === '')
     return
-  announce(`${t('@astryx.comments.loadFailed')} ${description}`, 'assertive')
+  announce(`${messages.value.comments.loadFailed} ${description}`, 'assertive')
 }, { immediate: true })
 
 const controller = useCommentsController({
@@ -142,7 +144,7 @@ async function submitComment(content: string): Promise<void> {
   else if (result === 'failed') {
     draft.value = submitted
     props.onComposerDraftChange?.(submitted, context)
-    topComposerError.value = t('@astryx.comments.postFailed')
+    topComposerError.value = messages.value.comments.postFailed
   }
 }
 
@@ -167,7 +169,7 @@ async function loadOlder(): Promise<void> {
   }
   catch {
     focusTarget = 'retry'
-    olderError.value = t('@astryx.comments.olderFailed')
+    olderError.value = messages.value.comments.olderFailed
     olderFailureCount.value += 1
     loadingOlder.value = false
   }
@@ -195,7 +197,7 @@ function defaultVersionBody(version: CommentVersion) {
 }
 
 const composerPlaceholderText = computed(() =>
-  props.composerPlaceholder ?? t('@astryx.commentComposer.placeholder'),
+  props.composerPlaceholder ?? messages.value.commentComposer.placeholder,
 )
 const composerErrorText = computed(() => topComposerError.value ?? props.composerError)
 const actionCount = computed(() => (props.onUploadImages == null ? 0 : 1) + (props.hasEmojiPicker ? 1 : 0))
@@ -203,7 +205,7 @@ const showComposer = computed(() => canCompose.value && !props.isLoading)
 const showLoadingComposer = computed(() =>
   props.isLoading && props.mode !== 'read-only' && props.composerPosition !== 'none',
 )
-const listLabel = computed(() => t('@astryx.comments.commentsLabel', { label: panelLabel.value }))
+const listLabel = computed(() => messages.value.comments.commentsLabel(panelLabel.value))
 const timelineClass = computed(() => [
   'astryx-comments-timeline',
   bleedsToPanelEdge.value
@@ -243,12 +245,12 @@ defineExpose({ element: rootRef })
     <Banner
       v-if="loadError != null"
       status="error"
-      :title="t('@astryx.comments.loadFailed')"
+      :title="messages.comments.loadFailed"
       :description="loadError"
       container="section"
     >
       <template v-if="onRetryLoad != null" #end>
-        <Button :label="t('@astryx.comments.retry')" variant="ghost" size="sm" @click="onRetryLoad" />
+        <Button :label="messages.comments.retry" variant="ghost" size="sm" @click="onRetryLoad" />
       </template>
     </Banner>
 
@@ -296,8 +298,8 @@ defineExpose({ element: rootRef })
         <component :is="() => emptyState" v-else-if="loadError == null && emptyState != null" />
         <EmptyState
           v-else-if="loadError == null"
-          :title="t('@astryx.comments.emptyTitle')"
-          :description="canCompose ? t('@astryx.comments.emptyDescription') : t('@astryx.comments.emptyReadOnlyDescription')"
+          :title="messages.comments.emptyTitle"
+          :description="canCompose ? messages.comments.emptyDescription : messages.comments.emptyReadOnlyDescription"
           :is-compact="true"
         />
       </template>
@@ -397,8 +399,8 @@ defineExpose({ element: rootRef })
         <component :is="() => emptyState" v-else-if="emptyState != null" />
         <EmptyState
           v-else
-          :title="t('@astryx.comments.emptyTitle')"
-          :description="canCompose ? t('@astryx.comments.emptyDescription') : t('@astryx.comments.emptyReadOnlyDescription')"
+          :title="messages.comments.emptyTitle"
+          :description="canCompose ? messages.comments.emptyDescription : messages.comments.emptyReadOnlyDescription"
           :is-compact="true"
         />
       </div>

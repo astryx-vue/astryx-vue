@@ -4,6 +4,7 @@ import type { CommentVersion } from './types.js'
 import type { AnyComment } from './utils.js'
 import {
   Banner,
+  commentsMessages,
   Dialog,
   DialogHeader,
   EmptyState,
@@ -12,7 +13,7 @@ import {
   Text,
   Timestamp,
   useAnnounce,
-  useTranslator,
+  useComponentMessages,
   VStack,
 } from '@astryx-vue/core'
 import { watch } from 'vue'
@@ -33,14 +34,14 @@ export interface HistoryState {
   error?: string
 }
 
-const { t } = useTranslator()
+const messages = useComponentMessages({ comments: commentsMessages })
 const announce = useAnnounce()
 
 watch(
   () => [props.history?.isLoading, props.history?.comment.id] as const,
   ([isLoading]) => {
     if (isLoading === true)
-      announce(t('@astryx.comments.historyLoading'), 'polite')
+      announce(messages.value.comments.historyLoading, 'polite')
   },
 )
 
@@ -58,8 +59,8 @@ function onOpenChange(open: boolean): void {
     @open-change="onOpenChange"
   >
     <DialogHeader
-      :title="t('@astryx.comments.historyTitle')"
-      :subtitle="t('@astryx.comments.historySubtitle', { name: history.comment.author.name })"
+      :title="messages.comments.historyTitle"
+      :subtitle="messages.comments.historySubtitle(history.comment.author.name)"
       has-divider
       @open-change="onOpenChange"
     />
@@ -67,18 +68,18 @@ function onOpenChange(open: boolean): void {
       <Banner
         v-if="!history.isLoading && history.error != null"
         status="error"
-        :title="t('@astryx.comments.historyFailed')"
+        :title="messages.comments.historyFailed"
         :description="history.error"
         container="section"
       />
     </div>
     <Text v-if="history.isLoading" type="body" color="secondary">
-      {{ t('@astryx.comments.historyLoading') }}
+      {{ messages.comments.historyLoading }}
     </Text>
     <EmptyState
       v-else-if="history.error == null && history.versions.length === 0"
-      :title="t('@astryx.comments.historyEmptyTitle')"
-      :description="t('@astryx.comments.historyEmptyDescription')"
+      :title="messages.comments.historyEmptyTitle"
+      :description="messages.comments.historyEmptyDescription"
       is-compact
     />
     <VStack v-else-if="history.error == null" :gap="3">
@@ -92,10 +93,10 @@ function onOpenChange(open: boolean): void {
           <HStack :gap="1" align="center" wrap="wrap">
             <Timestamp :value="version.editedAt" format="date_time" />
             <Text v-if="version.author != null" type="supporting" color="secondary">
-              {{ t('@astryx.comments.versionAuthor', { name: version.author.name }) }}
+              {{ messages.comments.versionAuthor(version.author.name) }}
             </Text>
             <Text v-if="version.isCurrent === true" type="supporting" weight="semibold">
-              {{ t('@astryx.comments.currentVersion') }}
+              {{ messages.comments.currentVersion }}
             </Text>
           </HStack>
           <component :is="() => renderVersionBody(version)" />

@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T">
 import type { ListInputChange, ListInputEmits, ListInputProps } from './types.js'
-import { Button, EmptyState, Field, useAnnounce, useTranslator, VisuallyHidden } from '@astryx-vue/core'
+import { Button, EmptyState, Field, listInputMessages, useAnnounce, useComponentMessages, VisuallyHidden } from '@astryx-vue/core'
 import { computed, ref, useId, useTemplateRef, watch } from 'vue'
 import { resolveGridTemplate } from './columns.js'
 import ListInputRow from './ListInputRow.vue'
@@ -26,7 +26,7 @@ const props = withDefaults(defineProps<ListInputProps<T>>(), {
 })
 
 const emit = defineEmits<ListInputEmits<T>>()
-const { t } = useTranslator()
+const messages = useComponentMessages({ listInput: listInputMessages })
 const announce = useAnnounce()
 
 const uid = useId()
@@ -52,19 +52,19 @@ watch(() => props.modelValue, (next) => {
 })
 
 const announceMessages = {
-  grabbed: (position: number) => t('@astryx.listInput.announceGrabbed', { itemName: props.itemName, position }),
-  movedToPosition: (position: number, total: number) => t('@astryx.listInput.announceMovedToPosition', { itemName: props.itemName, position, total }),
-  reorderCancelled: () => t('@astryx.listInput.announceReorderCancelled'),
-  returnedToPosition: (position: number) => t('@astryx.listInput.announceReturnedToPosition', { itemName: props.itemName, position }),
-  dropped: (position: number, total: number) => t('@astryx.listInput.announceDropped', { itemName: props.itemName, position, total }),
-  alreadyAtBoundary: (boundary: 'first' | 'last') => t('@astryx.listInput.announceAlreadyAtBoundary', { itemName: props.itemName, boundary }),
+  grabbed: (position: number) => messages.value.listInput.announceGrabbed(props.itemName, position),
+  movedToPosition: (position: number, total: number) => messages.value.listInput.announceMovedToPosition(props.itemName, position, total),
+  reorderCancelled: () => messages.value.listInput.announceReorderCancelled,
+  returnedToPosition: (position: number) => messages.value.listInput.announceReturnedToPosition(props.itemName, position),
+  dropped: (position: number, total: number) => messages.value.listInput.announceDropped(props.itemName, position, total),
+  alreadyAtBoundary: (boundary: 'first' | 'last') => messages.value.listInput.alreadyAtBoundary(props.itemName, boundary),
 }
 
 const labels = {
-  remove: (position: number) => t('@astryx.listInput.removeItem', { itemName: props.itemName, position }),
-  removeUnavailable: () => t('@astryx.listInput.removeUnavailable', { itemName: props.itemName }),
-  reorder: (position: number) => t('@astryx.listInput.reorderItem', { itemName: props.itemName, position }),
-  fieldLabel: (header: string, position: number, total: number) => t('@astryx.listInput.fieldLabelWithPosition', { header, itemName: props.itemName, position, total }),
+  remove: (position: number) => messages.value.listInput.removeItem(props.itemName, position),
+  removeUnavailable: () => messages.value.listInput.removeUnavailable,
+  reorder: (position: number) => messages.value.listInput.reorderItem(props.itemName, position),
+  fieldLabel: (header: string, position: number, total: number) => messages.value.listInput.fieldLabelWithPosition(header, props.itemName, position, total),
 }
 
 function emitValue(nextValue: T[], change: ListInputChange<T>): void {
@@ -127,7 +127,7 @@ function handleAdd(): void {
   const nextValue = [...props.modelValue, item]
   pendingFocus = { itemKey: itemKeyOf(item), target: 'first-field' }
   emitValue(nextValue, { type: 'add', item, index: props.modelValue.length })
-  announce(t('@astryx.listInput.announceAdded', { itemName: props.itemName, position: props.modelValue.length + 1 }))
+  announce(messages.value.listInput.announceAdded(props.itemName, props.modelValue.length + 1))
 }
 
 function handleUpdate(item: T, index: number, nextItem: T, columnKey?: string): void {
@@ -151,7 +151,7 @@ function handleRemove(item: T): void {
     ? { target: 'add' }
     : { itemKey: itemKeyOf(nextFocusItem), target: 'remove' }
   emitValue(nextValue, { type: 'remove', item: props.modelValue[index] as T, index })
-  announce(t('@astryx.listInput.announceRemoved', { itemName: props.itemName, position: index + 1 }))
+  announce(messages.value.listInput.announceRemoved(props.itemName, index + 1))
 }
 
 const handlers = {
@@ -209,8 +209,8 @@ watch([() => props.modelValue, () => props.columns, () => props.getItemKey], () 
       <ol :aria-labelledby="labelId" :aria-describedby="describedBy" class="astryx-list-input__list">
         <li v-if="reorder.displayValue.value.length === 0" data-list-input-motion-key="state:empty" class="astryx-list-input__empty-item">
           <EmptyState
-            :title="t('@astryx.listInput.emptyTitle', { itemName })"
-            :description="t('@astryx.listInput.emptyDescription', { itemName })" is-compact
+            :title="messages.listInput.emptyTitle(itemName)"
+            :description="messages.listInput.emptyDescription(itemName)" is-compact
           />
         </li>
         <ListInputRow
@@ -231,7 +231,7 @@ watch([() => props.modelValue, () => props.columns, () => props.getItemKey], () 
       <div data-list-input-motion-key="action:add" class="astryx-list-input__action-row">
         <div data-list-input-add-content="" class="astryx-list-input__action-content">
           <Button
-            ref="addButtonRef" :label="t('@astryx.listInput.addItem', { itemName })" variant="secondary"
+            ref="addButtonRef" :label="messages.listInput.addItem(itemName)" variant="secondary"
             size="md" width="100%" :is-disabled="isDisabled || hasReachedMax" :is-loading="isLoading"
             @click="handleAdd"
           />
@@ -239,7 +239,7 @@ watch([() => props.modelValue, () => props.columns, () => props.getItemKey], () 
       </div>
 
       <VisuallyHidden v-if="isReorderable" :id="reorderInstructionsId" as="div">
-        {{ t('@astryx.listInput.reorderInstructions') }}
+        {{ messages.listInput.reorderInstructions }}
       </VisuallyHidden>
     </div>
 

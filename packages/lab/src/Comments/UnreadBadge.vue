@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { Badge, HStack, useTranslator } from '@astryx-vue/core'
+import { Badge, commentsMessages, HStack, useComponentMessages } from '@astryx-vue/core'
 import { ref } from 'vue'
 
 defineOptions({ name: 'AstryxCommentUnreadBadge' })
 
-const { t } = useTranslator()
+const messages = useComponentMessages({ comments: commentsMessages })
 const hasFaded = ref(false)
 
 function onAnimationEnd(event: AnimationEvent): void {
@@ -21,6 +21,6 @@ function onAnimationEnd(event: AnimationEvent): void {
     data-comment-unread-badge="true"
     @animationend="onAnimationEnd"
   >
-    <Badge variant="info" :label="t('@astryx.comments.unread')" />
+    <Badge variant="info" :label="messages.comments.unread" />
   </HStack>
 </template>
