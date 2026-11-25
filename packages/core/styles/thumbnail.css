@@ -70,6 +70,23 @@
     overflow: hidden;
   }
 
+  /*
+   * 一次聚焦只画一个焦点环：图片容器替 Open 画，Open 自己不画。
+   * 聚焦 Remove 时容器也亮，Remove 自己的环可能落在照片上看不清。
+   */
+  .astryx-thumbnail__open:focus-visible {
+    outline: none;
+  }
+
+  .astryx-thumbnail__frame:has(:focus-visible) {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, var(--astryx-color-accent));
+    outline-offset: var(--astryx-focus-outline-offset, 3px);
+  }
+
+  .astryx-thumbnail__open[aria-disabled='true'] {
+    cursor: default;
+  }
+
   .astryx-thumbnail__open::after,
   .astryx-thumbnail__frame[data-interactive='true']::after {
     content: '';

@@ -14250,7 +14250,7 @@
                 "name": "`size`",
                 "type": "`AvatarSize`",
                 "default": "`'md'`",
-                "description": "Avatar size. Named size or numeric pixel value. See the table below for named sizes."
+                "description": "Avatar size: a named size or one of the numeric pixel values listed below. Inside an `AvatarGroup` the group's size always wins, including the group's default."
               },
               {
                 "name": "`shape`",
@@ -14334,7 +14334,7 @@
                 "name": "`size`",
                 "type": "`AvatarSize`",
                 "default": "`'md'`",
-                "description": "头像尺寸，支持命名尺寸或像素数值。命名尺寸见下表。"
+                "description": "头像尺寸：命名尺寸，或下面列出的某个像素数值。放在 `AvatarGroup` 里时，总是以组的尺寸为准，组用默认尺寸时也一样。"
               },
               {
                 "name": "`shape`",
@@ -14451,7 +14451,7 @@
           },
           {
             "heading": "Numeric sizes",
-            "text": "The `AvatarSize` type lists common pixel values for type hints and autocompletion:\n\n`16 | 20 | 24 | 32 | 36 | 40 | 48 | 60 | 64 | 72 | 96 | 128 | 144 | 180`\n\nThe component does not restrict you to these values. Passing any number will still render the avatar at that pixel size."
+            "text": "A numeric `size` must be one of the pixel values the `AvatarSize` type lists:\n\n`16 | 20 | 24 | 32 | 36 | 40 | 48 | 60 | 64 | 72 | 96 | 128 | 144 | 180`\n\nAny other number is a type error."
           },
           {
             "heading": "Native attributes",
@@ -14465,7 +14465,7 @@
           },
           {
             "heading": "像素尺寸",
-            "text": "`AvatarSize` 类型列出了常用的像素值，便于获得类型提示和自动补全：\n\n`16 | 20 | 24 | 32 | 36 | 40 | 48 | 60 | 64 | 72 | 96 | 128 | 144 | 180`\n\n组件本身并不限制只能使用这些数值。如果传入列表外的数字，头像仍会按该像素值渲染。"
+            "text": "数字形式的 `size` 只能取 `AvatarSize` 类型列出的这些像素值：\n\n`16 | 20 | 24 | 32 | 36 | 40 | 48 | 60 | 64 | 72 | 96 | 128 | 144 | 180`\n\n传入列表外的数字会报类型错误。"
           },
           {
             "heading": "原生属性",
@@ -14821,7 +14821,7 @@
                 "name": "`size`",
                 "type": "`AvatarSize`",
                 "default": "`'md'`",
-                "description": "Uniform size for all avatars in the group."
+                "description": "Uniform size for all avatars in the group: a named size or one of the numeric pixel values `AvatarSize` lists. It always overrides each child Avatar's own size, including when the group uses its default."
               },
               {
                 "name": "`shape`",
@@ -14851,7 +14851,7 @@
                 "name": "`size`",
                 "type": "`AvatarSize`",
                 "default": "`'md'`",
-                "description": "组内所有头像统一使用的尺寸，单个头像自身的 `size` 在组内不再生效。"
+                "description": "组内所有头像统一使用的尺寸：命名尺寸，或 `AvatarSize` 列出的某个像素数值。组用默认尺寸时也一样，单个头像自身的 `size` 在组内不再生效。"
               },
               {
                 "name": "`shape`",
@@ -15070,7 +15070,7 @@
                 "name": "`count`",
                 "type": "`number`",
                 "default": "—",
-                "description": "藏起来的头像数量。显示成 `+N`，读屏名也用它拼，并且跟着当前语言走（英文念 `5 more`）。传负数按 0 算。必填。"
+                "description": "藏起来的头像数量。显示成 `+N`，读屏名也用它拼，并且跟着当前语言走（英文念 `5 more`）。传负数按 0 算。传了非空的 `aria-label` 就用它当名字，传了 `aria-labelledby` 则以它为准。必填。"
               }
             ]
           }
@@ -15429,7 +15429,7 @@
                 "name": "`source`",
                 "type": "`CitationSource`",
                 "default": "-",
-                "description": "`title` is the visible label and falls back to the number. `url` renders a link. `src` is a favicon. `icon` is an image URL or a CSS icon class and wins over `src`."
+                "description": "Required. `title` is the visible label and falls back to the number. `url` renders a link. `src` is a favicon. `icon` is an image URL or a CSS icon class and wins over `src`. In development, a missing `source` throws an error naming the prop; Citation does not read slot content."
               },
               {
                 "name": "`number`",
@@ -15454,7 +15454,7 @@
                 "name": "`source`",
                 "type": "`CitationSource`",
                 "default": "-",
-                "description": "`title` 是可见标题，空着就回退到编号。`url` 会渲染成链接。`src` 是站点图标。`icon` 是图片地址或 CSS 图标类，优先于 `src`。"
+                "description": "必填。`title` 是可见标题，空着就回退到编号。`url` 会渲染成链接。`src` 是站点图标。`icon` 是图片地址或 CSS 图标类，优先于 `src`。开发环境下缺少 `source` 会抛出点名该属性的错误；Citation 不读取插槽内容。"
               },
               {
                 "name": "`number`",
@@ -16737,8 +16737,8 @@
         "zh": "`Kbd` 把一段键盘快捷键画成一组按键徽章，例如 `⌘K`、`⇧↵`。它常出现在菜单项、工具提示和帮助文字里，让你在说明某个操作时顺带告诉用户它的快捷方式，而不必用一句“先按住 Command 再按 K”来描述。"
       },
       "usage": {
-        "en": "`Kbd` presents a keyboard shortcut as a small group of painted key badges, such as `⌘K` or `⇧↵`. It belongs next to the action it triggers — on the right of a menu item, inside a tooltip, or at the end of a line of help text — so you can mention the shortcut without writing out \"hold Command and press K\".\n\nPass the shortcut as one string and separate the keys with `+`:\n\n```vue\n<script setup lang=\"ts\">\nimport { Kbd } from '@astryx-vue/core/Kbd'\n</script>\n\n<template>\n  <Kbd keys=\"mod+k\" />\n</template>\n```\n\nEvery segment becomes its own badge, so `mod+k` paints two keys. Whitespace around a segment is ignored and the case does not matter, which makes `mod + K` and `mod+k` the same shortcut. Anything the component does not recognize is uppercased as written, so `f1` shows as `F1`.\n\n`mod` is the one key that follows the platform: it reads as `⌘` on Apple platforms and as `Ctrl` everywhere else. Reach for `mod` when you describe a shortcut that works across platforms, and use `ctrl` only when the shortcut really is bound to the Control key. The other named keys have a fixed glyph:\n\n`esc` is an alias for `escape`, and `return` is an alias for `enter`; an alias paints and is announced exactly like the key it names. Because `+` separates the keys, write `plus` for the plus key itself, as in `shift+plus`.\n\nTo a screen reader the whole group is one image named \"Command + K\"; the glyphs inside the badges are hidden because `⌘` and `⇧` are announced as nothing useful. The keys are spoken as words instead. Note that `Kbd` only presents a shortcut: it does not listen for keystrokes, and the shortcut still has to be implemented by the product.",
-        "zh": "`Kbd` 把一段键盘快捷键画成一组按键徽章，例如 `⌘K`、`⇧↵`。它常出现在菜单项、工具提示和帮助文字里，让你在说明某个操作时顺带告诉用户它的快捷方式，而不必用一句“先按住 Command 再按 K”来描述。\n\n快捷键用字符串传入，按键之间用 `+` 分隔：\n\n```vue\n<script setup lang=\"ts\">\nimport { Kbd } from '@astryx-vue/core/Kbd'\n</script>\n\n<template>\n  <Kbd keys=\"mod+k\" />\n</template>\n```\n\n每个分段都会得到一枚独立的徽章，所以 `mod+k` 会画出两枚按键。分段周围的空格会被忽略，大小写也不敏感，`mod + K` 和 `mod+k` 完全等价；无法识别的分段会原样转成大写，例如 `f1` 显示为 `F1`。\n\n`mod` 是唯一会随平台变化的按键：在 Apple 平台上它显示为 `⌘`，在其他平台上显示为 `Ctrl`。因此描述跨平台快捷键时优先写 `mod`，只有快捷键确实固定在某一侧修饰键上时才写 `ctrl`。其余具名按键都有固定的字形：\n\n`esc` 是 `escape` 的别名，`return` 是 `enter` 的别名，两者的渲染和朗读完全一致。由于 `+` 本身是分隔符，要表示加号键请写 `plus`，例如 `shift+plus`。\n\n对屏幕阅读器来说，整组按键是一个名为 “Command + K” 的整体，徽章里的图形字符不会被逐个朗读——`⌘`、`⇧` 这类字形读出来没有意义，所以组件改用 `Command`、`Shift` 这样的词来描述这组快捷键。这也意味着 `Kbd` 只负责提示，它不会真的监听键盘，快捷键本身需要在产品里真正实现。"
+        "en": "`Kbd` presents a keyboard shortcut as a small group of painted key badges, such as `⌘K` or `⇧↵`. It belongs next to the action it triggers — on the right of a menu item, inside a tooltip, or at the end of a line of help text — so you can mention the shortcut without writing out \"hold Command and press K\".\n\nPass the shortcut as one string and separate the keys with `+`:\n\n```vue\n<script setup lang=\"ts\">\nimport { Kbd } from '@astryx-vue/core/Kbd'\n</script>\n\n<template>\n  <Kbd keys=\"mod+k\" />\n</template>\n```\n\nEvery segment becomes its own badge, so `mod+k` paints two keys. Whitespace around a segment is ignored and the case does not matter, which makes `mod + K` and `mod+k` the same shortcut. Anything the component does not recognize is uppercased as written, so `f1` shows as `F1`.\n\nThe modifiers follow the platform: on Apple platforms they paint Apple's symbols, and elsewhere they paint the text printed on the keycap. A server render does not know the platform yet, so before hydration every modifier shows its text. `mod` is the Command key on Apple platforms and Control elsewhere, so reach for `mod` when you describe a shortcut that works across platforms, and use `ctrl` only when the shortcut really is bound to the Control key. The other named keys have a fixed glyph:\n\n`esc` is an alias for `escape`, and `return` is an alias for `enter`; an alias paints and is announced exactly like the key it names. Because `+` separates the keys, write `plus` for the plus key itself, as in `shift+plus`.\n\nTo a screen reader the whole group is one image named \"Command + K\"; the glyphs inside the badges are hidden because `⌘` and `⇧` are announced as nothing useful. The keys are spoken as words instead. Note that `Kbd` only presents a shortcut: it does not listen for keystrokes, and the shortcut still has to be implemented by the product.\n\nEach key badge keeps the theme's height at the default text size and grows with a larger text size, so a bigger glyph stays inside its badge.",
+        "zh": "`Kbd` 把一段键盘快捷键画成一组按键徽章，例如 `⌘K`、`⇧↵`。它常出现在菜单项、工具提示和帮助文字里，让你在说明某个操作时顺带告诉用户它的快捷方式，而不必用一句“先按住 Command 再按 K”来描述。\n\n快捷键用字符串传入，按键之间用 `+` 分隔：\n\n```vue\n<script setup lang=\"ts\">\nimport { Kbd } from '@astryx-vue/core/Kbd'\n</script>\n\n<template>\n  <Kbd keys=\"mod+k\" />\n</template>\n```\n\n每个分段都会得到一枚独立的徽章，所以 `mod+k` 会画出两枚按键。分段周围的空格会被忽略，大小写也不敏感，`mod + K` 和 `mod+k` 完全等价；无法识别的分段会原样转成大写，例如 `f1` 显示为 `F1`。\n\n修饰键会随平台变化：在 Apple 平台上显示 Apple 的符号，在其他平台上显示键帽上印的文字。服务端渲染时还不知道平台，所以水合之前修饰键一律显示文字。`mod` 在 Apple 平台上是 Command 键，在其他平台上是 Control 键，因此描述跨平台快捷键时优先写 `mod`，只有快捷键确实固定在 Control 键上时才写 `ctrl`。其余具名按键都有固定的字形：\n\n`esc` 是 `escape` 的别名，`return` 是 `enter` 的别名，两者的渲染和朗读完全一致。由于 `+` 本身是分隔符，要表示加号键请写 `plus`，例如 `shift+plus`。\n\n对屏幕阅读器来说，整组按键是一个名为 “Command + K” 的整体，徽章里的图形字符不会被逐个朗读——`⌘`、`⇧` 这类字形读出来没有意义，所以组件改用 `Command`、`Shift` 这样的词来描述这组快捷键。这也意味着 `Kbd` 只负责提示，它不会真的监听键盘，快捷键本身需要在产品里真正实现。\n\n每枚按键徽章在默认字号下保持主题给的高度，字号变大时跟着长高，大一号的字形也不会溢出徽章。"
       },
       "practices": {
         "en": [
@@ -16811,7 +16811,7 @@
                 "name": "`keys`",
                 "type": "`string`",
                 "default": "-",
-                "description": "Required. The keyboard shortcut to present, with the keys separated by `+`, such as `\"mod+k\"` or `\"shift+plus\"`. Each segment paints one key badge; whitespace around a segment is ignored, and an unrecognized segment is uppercased."
+                "description": "Required. The keyboard shortcut to present, with the keys separated by `+`, such as `\"mod+k\"` or `\"shift+plus\"`. Each segment paints one key badge; whitespace around a segment is ignored, and an unrecognized segment is uppercased. Modifiers paint Apple's symbol on Apple platforms and text elsewhere and before hydration (see the table below). In development, a `keys` that is not a string throws an error naming the prop; Kbd does not read slot content."
               }
             ]
           }
@@ -16824,7 +16824,7 @@
                 "name": "`keys`",
                 "type": "`string`",
                 "default": "-",
-                "description": "必填。要呈现的键盘快捷键，按键之间用 `+` 分隔，例如 `\"mod+k\"`、`\"shift+plus\"`。每个分段渲染成一枚按键徽章，分段周围的空格会被忽略，无法识别的分段按大写显示。"
+                "description": "必填。要呈现的键盘快捷键，按键之间用 `+` 分隔，例如 `\"mod+k\"`、`\"shift+plus\"`。每个分段渲染成一枚按键徽章，分段周围的空格会被忽略，无法识别的分段按大写显示。修饰键在 Apple 平台上显示符号，在其他平台和水合之前显示文字（见下表）。开发环境下 `keys` 不是字符串时会抛出点名该属性的错误；Kbd 不读取插槽内容。"
               }
             ]
           }
@@ -16842,7 +16842,7 @@
         "en": [
           {
             "heading": "Key names",
-            "text": "A segment that is not in this table is painted uppercased as written and spoken as that same text, so `f1` paints as `F1`.\n\n- `mod`: `mod`\n- `ctrl`: `ctrl`\n- `alt`: `alt`\n- `shift`: `shift`\n- `enter` / `return`: `enter` / `return`\n- `backspace`: `backspace`\n- `tab`: `tab`\n- `escape` / `esc`: `escape` / `esc`\n- `up`: `up`\n- `down`: `down`\n- `left`: `left`\n- `right`: `right`\n- `plus`: `plus`"
+            "text": "A segment that is not in this table is painted uppercased as written and spoken as that same text, so `f1` paints as `F1`.\n\n- `mod`: `mod`\n- `ctrl`: `ctrl`\n- `alt`: `alt`\n- `shift`: `shift`\n- `meta`: `meta`\n- `enter` / `return`: `enter` / `return`\n- `backspace`: `backspace`\n- `tab`: `tab`\n- `escape` / `esc`: `escape` / `esc`\n- `up`: `up`\n- `down`: `down`\n- `left`: `left`\n- `right`: `right`\n- `plus`: `plus`"
           },
           {
             "heading": "Accessibility",
@@ -16856,7 +16856,7 @@
         "zh": [
           {
             "heading": "按键名称",
-            "text": "表中没有列出的分段按大写原样显示，朗读时读同一段文字，例如 `f1` 显示为 `F1`。\n\n- `mod`: `mod`\n- `ctrl`: `ctrl`\n- `alt`: `alt`\n- `shift`: `shift`\n- `enter` / `return`: `enter` / `return`\n- `backspace`: `backspace`\n- `tab`: `tab`\n- `escape` / `esc`: `escape` / `esc`\n- `up`: `up`\n- `down`: `down`\n- `left`: `left`\n- `right`: `right`\n- `plus`: `plus`"
+            "text": "表中没有列出的分段按大写原样显示，朗读时读同一段文字，例如 `f1` 显示为 `F1`。\n\n- `mod`: `mod`\n- `ctrl`: `ctrl`\n- `alt`: `alt`\n- `shift`: `shift`\n- `meta`: `meta`\n- `enter` / `return`: `enter` / `return`\n- `backspace`: `backspace`\n- `tab`: `tab`\n- `escape` / `esc`: `escape` / `esc`\n- `up`: `up`\n- `down`: `down`\n- `left`: `left`\n- `right`: `right`\n- `plus`: `plus`"
           },
           {
             "heading": "无障碍",
@@ -17847,8 +17847,8 @@
         "zh": "`Thumbnail` 是 64px 的预览。没有 `src` 时是占位图。只有 `isLoading`、没有 `src` 时是骨架。两者都有时，图片上盖一层加载指示。监听 `click` 后，预览变成按钮。监听 `remove` 后，出现关闭按钮。"
       },
       "usage": {
-        "en": "`Thumbnail` is a 64px preview. With no `src` it shows a placeholder. `isLoading` without `src` is a skeleton. `isLoading` with `src` covers the image with a spinner. Listen for `click` to make the preview a button, and for `remove` to show the dismiss control.\n\n`showRemoveOn` is `hover` by default. The control also appears on keyboard focus, and it stays visible for a coarse pointer. `always` keeps it visible. `isDisabled` fades the thumbnail and ignores both events.\n\n`label` is the accessible name. It is not drawn on the thumbnail. It is used by the tooltip and by the remove button.\n\n```vue\n<script setup lang=\"ts\">\nimport { Thumbnail } from '@astryx-vue/core/Thumbnail'\n</script>\n\n<template>\n  <Thumbnail src=\"/photo.jpg\" alt=\"Snowy mountain peaks\" label=\"snowy-peaks.jpg\" />\n</template>\n```",
-        "zh": "`Thumbnail` 是 64px 的预览。没有 `src` 时是占位图。只有 `isLoading`、没有 `src` 时是骨架。两者都有时，图片上盖一层加载指示。监听 `click` 后，预览变成按钮。监听 `remove` 后，出现关闭按钮。\n\n`showRemoveOn` 默认是 `hover`。键盘焦点时也会出现，粗指针设备上则一直可见。`always` 让它一直可见。`isDisabled` 会把缩略图调淡，并忽略点击和移除。\n\n`label` 是无障碍名称，不会画在方块上。提示和移除按钮都会用到它。\n\n```vue\n<script setup lang=\"ts\">\nimport { Thumbnail } from '@astryx-vue/core/Thumbnail'\n</script>\n\n<template>\n  <Thumbnail src=\"/photo.jpg\" alt=\"雪山\" label=\"snowy-peaks.jpg\" />\n</template>\n```"
+        "en": "`Thumbnail` is a 64px preview. With no `src` it shows a placeholder. `isLoading` without `src` is a skeleton. `isLoading` with `src` covers the image with a spinner. Listen for `click` to make the preview a button, and for `remove` to show the dismiss control.\n\n`showRemoveOn` is `hover` by default. The control also appears on keyboard focus, and it stays visible for a coarse pointer. `always` keeps it visible. `isDisabled` fades the thumbnail and ignores both events; its buttons stay focusable and are announced as disabled. Focusing the preview draws one ring, on the image.\n\n`label` is the accessible name. It is not drawn on the thumbnail. It is used by the tooltip and by the remove button.\n\n```vue\n<script setup lang=\"ts\">\nimport { Thumbnail } from '@astryx-vue/core/Thumbnail'\n</script>\n\n<template>\n  <Thumbnail src=\"/photo.jpg\" alt=\"Snowy mountain peaks\" label=\"snowy-peaks.jpg\" />\n</template>\n```",
+        "zh": "`Thumbnail` 是 64px 的预览。没有 `src` 时是占位图。只有 `isLoading`、没有 `src` 时是骨架。两者都有时，图片上盖一层加载指示。监听 `click` 后，预览变成按钮。监听 `remove` 后，出现关闭按钮。\n\n`showRemoveOn` 默认是 `hover`。键盘焦点时也会出现，粗指针设备上则一直可见。`always` 让它一直可见。`isDisabled` 会把缩略图调淡，并忽略点击和移除；按钮仍可聚焦，读屏念作已禁用。聚焦预览时只在图片外画一个焦点环。\n\n`label` 是无障碍名称，不会画在方块上。提示和移除按钮都会用到它。\n\n```vue\n<script setup lang=\"ts\">\nimport { Thumbnail } from '@astryx-vue/core/Thumbnail'\n</script>\n\n<template>\n  <Thumbnail src=\"/photo.jpg\" alt=\"雪山\" label=\"snowy-peaks.jpg\" />\n</template>\n```"
       },
       "practices": {
         "en": [
@@ -17902,13 +17902,13 @@
                 "name": "`isLoading`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Skeleton when there is no `src`. Spinner over the image when there is one."
+                "description": "Skeleton when there is no `src`. Spinner over the image when there is one; the Spinner is hidden from screen readers, and the thumbnail announces \"Loading\" once each time it starts loading. The preview button stays focusable and is announced as disabled while loading."
               },
               {
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Fades the thumbnail and ignores click and remove."
+                "description": "Fades the thumbnail and ignores click and remove. The preview and remove buttons stay focusable and are announced as disabled, so keyboard focus on them is not lost."
               },
               {
                 "name": "`showRemoveOn`",
@@ -17945,13 +17945,13 @@
                 "name": "`isLoading`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "没有 `src` 时是骨架。有图片时在上面盖加载指示。"
+                "description": "没有 `src` 时是骨架。有图片时在上面盖加载指示；加载指示对读屏隐藏，缩略图每次开始加载时播报一次「加载中」。加载期间预览按钮仍可聚焦，读屏念作已禁用。"
               },
               {
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "把缩略图调淡，并忽略点击和移除。"
+                "description": "把缩略图调淡，并忽略点击和移除。预览按钮和移除按钮仍可聚焦，读屏念作已禁用，键盘焦点不会丢失。"
               },
               {
                 "name": "`showRemoveOn`",
@@ -18028,8 +18028,8 @@
             "zh": "Thumbnail — 禁用"
           },
           "description": {
-            "en": "Thumbnails in the disabled state with reduced opacity. The remove button and click handler are suppressed when disabled.",
-            "zh": "禁用后透明度降低，移除按钮和点击都不再响应。"
+            "en": "Thumbnails in the disabled state with reduced opacity. The open and remove buttons stay focusable and announced as disabled, and call nothing.",
+            "zh": "禁用后透明度降低。打开和移除按钮仍可聚焦，读屏念作已禁用，但什么都不调用。"
           },
           "code": "<script setup lang=\"ts\">\nimport { Stack } from '@astryx-vue/core/Stack'\nimport { Text } from '@astryx-vue/core/Text'\nimport { Thumbnail } from '@astryx-vue/core/Thumbnail'\nimport { GOLDEN_SUNSET } from './images'\n\nfunction noop() {}\n</script>\n\n<template>\n  <Stack direction=\"vertical\" :gap=\"4\">\n    <Stack direction=\"vertical\" :gap=\"1\">\n      <Text type=\"supporting\" color=\"secondary\">\n        {{ 'Enabled' }}\n      </Text>\n      <Stack align=\"center\" direction=\"horizontal\" :gap=\"3\">\n        <Thumbnail\n          :src=\"GOLDEN_SUNSET\"\n          alt=\"Golden sunset over mountains\"\n          label=\"golden-sunset.jpg\"\n          show-remove-on=\"always\"\n          @remove=\"noop\"\n        />\n        <Thumbnail\n          label=\"document.pdf\"\n          show-remove-on=\"always\"\n          @remove=\"noop\"\n        />\n      </Stack>\n    </Stack>\n    <Stack direction=\"vertical\" :gap=\"1\">\n      <Text type=\"supporting\" color=\"secondary\">\n        {{ 'Disabled' }}\n      </Text>\n      <Stack align=\"center\" direction=\"horizontal\" :gap=\"3\">\n        <Thumbnail\n          :src=\"GOLDEN_SUNSET\"\n          alt=\"Golden sunset over mountains\"\n          label=\"golden-sunset.jpg\"\n          is-disabled\n          @remove=\"noop\"\n        />\n        <Thumbnail label=\"document.pdf\" is-disabled @remove=\"noop\" />\n      </Stack>\n    </Stack>\n  </Stack>\n</template>"
         },
@@ -22672,6 +22672,12 @@
                 "type": "`BadgeVariant`",
                 "default": "`'neutral'`",
                 "description": "Sets the visual variant of the badge. Optional: neutral, info, success, warning, error, blue, cyan, green, orange, pink, purple, red, teal, yellow."
+              },
+              {
+                "name": "`label`",
+                "type": "`string | number`",
+                "default": "-",
+                "description": "Badge text. Give the text here or through the default slot; the slot wins when both are set. A badge is one line and at least as tall as that line, so it grows with a larger text size. It is as wide as its label, so it does not stretch to fill a grid cell or a stack; a label wider than the space available ends in an ellipsis, and a string or number label is also set as the title."
               }
             ]
           }
@@ -22685,6 +22691,12 @@
                 "type": "`BadgeVariant`",
                 "default": "`'neutral'`",
                 "description": "徽标的视觉变体。语义变体：neutral、info、success、warning、error；分类颜色：blue、cyan、green、orange、pink、purple、red、teal、yellow。"
+              },
+              {
+                "name": "`label`",
+                "type": "`string | number`",
+                "default": "-",
+                "description": "徽标文字。用它或默认插槽给出文字，两者都给时以插槽为准。徽标只占一行，高度至少是这一行文字的高度，字号变大时跟着长高；宽度和文字一样，不会在网格单元格或栈里被拉满；放不下时文字末尾显示省略号，字符串或数字还会写进 title。"
               }
             ]
           }
