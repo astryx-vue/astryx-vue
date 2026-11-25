@@ -62295,7 +62295,7 @@
         "en": [
           {
             "heading": "Props",
-            "text": "`LightboxMedia` is `{ src, alt, caption?, type? }`. `type` is `image` or `video`, and defaults to `image`."
+            "text": "`LightboxMedia` is `{ src, alt, caption?, type? }`. `type` is `image` or `video`, and defaults to `image`. The whole caption is always the viewer's accessible description. In a gallery every page has a caption band two lines tall under its photo, so the photo keeps one size from page to page; a page without a caption keeps the band's space without its backing. A longer caption shows two lines and ends in an inline \"more\" that opens it in full over the photo; \"less\" and paging close it."
           },
           {
             "heading": "useLightbox",
@@ -62303,7 +62303,7 @@
           },
           {
             "heading": "Theme",
-            "text": "The dialog class is `astryx-lightbox`. Caption text uses the large type, `on-dark`, a max width of 600px, and padding of spacing 2 on the block start and spacing 3 on the inline sides. Close and navigation sit at spacing 3 from the frame."
+            "text": "The dialog class is `astryx-lightbox`. A single item's caption text uses the large type, `on-dark`, a max width of 600px, and padding of spacing 2 on the block start and spacing 3 on the inline sides. A gallery's caption uses the body type on a backing at 90% of the controls' overlay color, and its band clears the bottom safe area. Close and navigation sit at spacing 3 from the frame."
           }
         ],
         "zh": [
@@ -62313,7 +62313,7 @@
           },
           {
             "heading": "属性",
-            "text": "`LightboxMedia` 是 `{ src, alt, caption?, type? }`。`type` 为 `image` 或 `video`，默认 `image`。"
+            "text": "`LightboxMedia` 是 `{ src, alt, caption?, type? }`。`type` 为 `image` 或 `video`，默认 `image`。整段图注始终是查看器的无障碍描述。图集的每一页照片下面都有一条两行高的图注区域，翻页时照片大小不变；没有图注的页面也留着这块空间，只是不画底色。图注超过两行时只显示两行，末尾跟一个行内的「更多」，点开后整段图注盖在照片底部；「收起」或翻页会合上。"
           },
           {
             "heading": "useLightbox",
@@ -62321,7 +62321,7 @@
           },
           {
             "heading": "主题",
-            "text": "对话框类名是 `astryx-lightbox`。说明文字用 large 字号、`on-dark` 颜色，最大宽度 600px，块方向起始边距为间距 2，行内两侧为间距 3。关闭和翻页按钮距画面边缘为间距 3。"
+            "text": "对话框类名是 `astryx-lightbox`。单张媒体的说明文字用 large 字号、`on-dark` 颜色，最大宽度 600px，块方向起始边距为间距 2，行内两侧为间距 3。图集的图注用正文字号，底色为控件遮罩色的 90%，图注区域避开底部安全区。关闭和翻页按钮距画面边缘为间距 3。"
           }
         ]
       },

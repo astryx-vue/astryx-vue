@@ -18,7 +18,7 @@ footer: false
 </tbody></table>
 </div>
 
-`LightboxMedia` 是 `{ src, alt, caption?, type? }`。`type` 为 `image` 或 `video`，默认 `image`。
+`LightboxMedia` 是 `{ src, alt, caption?, type? }`。`type` 为 `image` 或 `video`，默认 `image`。整段图注始终是查看器的无障碍描述。图集的每一页照片下面都有一条两行高的图注区域，翻页时照片大小不变；没有图注的页面也留着这块空间，只是不画底色。图注超过两行时只显示两行，末尾跟一个行内的「更多」，点开后整段图注盖在照片底部；「收起」或翻页会合上。
 
 ## 事件
 
@@ -43,4 +43,4 @@ const { bindings, open, close, isOpen, index, getTriggerProps } = useLightbox({
 
 ## 主题
 
-对话框类名是 `astryx-lightbox`。说明文字用 large 字号、`on-dark` 颜色，最大宽度 600px，块方向起始边距为间距 2，行内两侧为间距 3。关闭和翻页按钮距画面边缘为间距 3。
+对话框类名是 `astryx-lightbox`。单张媒体的说明文字用 large 字号、`on-dark` 颜色，最大宽度 600px，块方向起始边距为间距 2，行内两侧为间距 3。图集的图注用正文字号，底色为控件遮罩色的 90%，图注区域避开底部安全区。关闭和翻页按钮距画面边缘为间距 3。

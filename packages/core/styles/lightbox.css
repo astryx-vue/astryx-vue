@@ -106,6 +106,84 @@
     text-align: center;
   }
 
+  /*
+   * 图集每一页的照片下面都有一条两行高的图注区域，不管图注长短，照片区域在每页都一样大，
+   * 翻页时照片不会忽大忽小。没有图注的页面也留着这块空间，只是不画底色。
+   */
+  .astryx-lightbox {
+    --_lightbox-caption-band-padding: var(--astryx-spacing-2, 8px);
+    --_lightbox-caption-band-height: calc(2 * var(--astryx-text-body-size, 1rem) * var(--astryx-text-body-leading, 1.4286));
+  }
+
+  .astryx-lightbox[data-gallery] .astryx-lightbox__image,
+  .astryx-lightbox[data-gallery] .astryx-lightbox__video {
+    max-height: calc(100vh - 7rem - var(--_lightbox-caption-band-height) - 2 * var(--_lightbox-caption-band-padding) - env(safe-area-inset-bottom, 0px));
+  }
+
+  .astryx-lightbox__caption-band {
+    position: relative;
+    flex-shrink: 0;
+    box-sizing: content-box;
+    width: min(600px, 100vw);
+    height: var(--_lightbox-caption-band-height);
+    padding-block: var(--_lightbox-caption-band-padding) calc(var(--_lightbox-caption-band-padding) + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* 图注在自己的底色上（控件底色的 90%），压在任何照片上都保持 4.5:1。展开时从底部往上盖住照片。 */
+  .astryx-lightbox__caption-panel {
+    position: absolute;
+    inset-inline: 0;
+    bottom: calc(var(--_lightbox-caption-band-padding) + env(safe-area-inset-bottom, 0px));
+    display: flex;
+    align-items: flex-end;
+    gap: var(--astryx-spacing-1, 4px);
+    padding-inline: var(--astryx-spacing-3, 12px);
+    border-radius: var(--astryx-radius-element, 0.625rem);
+    background-color: color-mix(in srgb, var(--astryx-color-overlay, #000000cc) 90%, transparent);
+    color: var(--astryx-color-on-dark, #fff);
+    font-size: var(--astryx-text-body-size, 1rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+  }
+
+  .astryx-lightbox__caption--band {
+    flex: 1;
+    min-width: 0;
+    max-width: none;
+    padding: 0;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    font-size: inherit;
+    line-height: inherit;
+    text-align: start;
+  }
+
+  .astryx-lightbox__caption-band[data-expanded] .astryx-lightbox__caption--band {
+    display: block;
+    max-height: 50vh;
+    overflow-y: auto;
+    -webkit-line-clamp: unset;
+  }
+
+  /* 「更多」「收起」是图注里的行内链接：用图注自己的字体和颜色，下划线把它和正文区分开。 */
+  .astryx-lightbox__caption-toggle {
+    flex-shrink: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .astryx-lightbox__caption-toggle:focus-visible {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, var(--astryx-color-accent, #0074e2));
+    outline-offset: 2px;
+  }
+
   .astryx-lightbox__close,
   .astryx-lightbox__nav,
   .astryx-lightbox__counter {

@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import type { LightboxEmits, LightboxMedia, LightboxProps } from './types.js'
-import { computed, onBeforeUnmount, ref, toRef, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, ref, toRef, useId, useTemplateRef, watch } from 'vue'
 import { useAnnounce } from '../composables/useAnnounce.js'
 import { useScrollLock } from '../composables/useScrollLock.js'
 import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
 import { resetLayerScopedContext } from '../layer/scopedProvide.js'
 import { useAstryxMessages } from '../locale/context.js'
+import LightboxCaption from './LightboxCaption.vue'
 import '../../styles/lightbox.css'
 
 defineOptions({ name: 'AstryxLightbox', inheritAttrs: false })
@@ -25,6 +26,9 @@ const announce = useAnnounce()
 resetLayerScopedContext()
 const dialogRef = useTemplateRef<HTMLDialogElement>('dialog')
 const containerRef = ref<HTMLElement | null>(null)
+const frameRef = useTemplateRef<HTMLElement>('frame')
+const closeRef = useTemplateRef<InstanceType<typeof IconButton>>('close')
+const captionId = `astryx-lightbox-caption-${useId()}`
 useScrollLock(toRef(props, 'isOpen'))
 
 const mediaList = computed(() => Array.isArray(props.media) ? props.media : [props.media])
@@ -180,6 +184,20 @@ watch(() => props.isOpen, (open) => {
   }
 }, { flush: 'post' })
 
+/**
+ * 从图注的「更多」「收起」上翻页时，旧图注随页面换掉，焦点会掉到 body。
+ * 这时把焦点交给新一页的照片（能缩放时），否则交给关闭按钮，方向键还能接着翻页。
+ */
+watch(index, () => {
+  const active = document.activeElement
+  if (active instanceof HTMLElement && active.closest('.astryx-lightbox__caption-band') != null) {
+    void nextTick(() => {
+      const target = zoomable.value ? frameRef.value : closeRef.value?.element
+      target?.focus()
+    })
+  }
+}, { flush: 'pre' })
+
 watch(index, () => {
   resetZoom()
   if (!props.isOpen)
@@ -222,6 +240,8 @@ watch(dragging, (isDragging, wasDragging) => {
     :class="$attrs.class"
     :style="$attrs.style"
     :aria-label="current.alt || messages.lightbox.mediaViewer"
+    :aria-describedby="current.caption ? captionId : undefined"
+    :data-gallery="isGallery || undefined"
     data-component="lightbox"
     @cancel="onCancel"
     @click="onBackdropClick"
@@ -229,6 +249,7 @@ watch(dragging, (isDragging, wasDragging) => {
   >
     <div ref="containerRef" class="astryx-lightbox__container">
       <IconButton
+        ref="close"
         class="astryx-lightbox__close"
         variant="ghost"
         size="sm"
@@ -253,6 +274,7 @@ watch(dragging, (isDragging, wasDragging) => {
       <div class="astryx-lightbox__media">
         <!-- eslint-disable-next-line vue-a11y/no-static-element-interactions -- 可缩放时 role、tabindex 和 aria 从脚本绑上；视频没有这些交互。 -->
         <div
+          ref="frame"
           class="astryx-lightbox__frame"
           :data-zoomable="zoomable || undefined"
           :data-zoomed="zoom > 1 || undefined"
@@ -284,7 +306,8 @@ watch(dragging, (isDragging, wasDragging) => {
             :data-dragging="dragging || undefined"
           >
         </div>
-        <p v-if="current.caption" class="astryx-lightbox__caption">
+        <LightboxCaption v-if="isGallery" :id="captionId" :key="index" :text="current.caption" />
+        <p v-else-if="current.caption" :id="captionId" class="astryx-lightbox__caption">
           {{ current.caption }}
         </p>
       </div>
