@@ -36,7 +36,7 @@ describe('hasSlotContent', () => {
 })
 
 describe('插槽什么都没画时不留空壳', () => {
-  it('Button 的 icon 和 end', () => {
+  it('button 的 icon 和 end', () => {
     for (const name of ['icon', 'end'] as const) {
       const selector = name === 'icon' ? '.astryx-button__icon' : '.astryx-button__end'
       expect(wrapperOf(Button, { label: 'Save' }, { [name]: nothing }, selector).exists(), name).toBe(false)
@@ -44,12 +44,12 @@ describe('插槽什么都没画时不留空壳', () => {
     }
   })
 
-  it('Avatar 的 status', () => {
+  it('avatar 的 status', () => {
     expect(wrapperOf(Avatar, { name: 'Ada' }, { status: nothing }, '.astryx-avatar__status').exists()).toBe(false)
     expect(wrapperOf(Avatar, { name: 'Ada' }, { status: zero }, '.astryx-avatar__status').text()).toBe('0')
   })
 
-  it('BreadcrumbItem 的 startIcon', () => {
+  it('breadcrumbItem 的 startIcon', () => {
     const render = (startIcon: () => unknown) => mount(Breadcrumbs, {
       slots: { default: () => h(BreadcrumbItem, { href: '/' }, { default: () => 'Home', startIcon }) },
     }).find('.astryx-breadcrumb-item__icon')
@@ -57,7 +57,7 @@ describe('插槽什么都没画时不留空壳', () => {
     expect(render(zero).text()).toBe('0')
   })
 
-  it('SegmentedControlItem 的 icon', () => {
+  it('segmentedControlItem 的 icon', () => {
     const render = (icon: () => unknown) => mount(SegmentedControl, {
       props: { 'label': 'Range', 'modelValue': 'day', 'onUpdate:modelValue': () => {} },
       slots: { default: () => h(SegmentedControlItem, { value: 'day', label: 'Day' }, { icon }) },
@@ -66,7 +66,7 @@ describe('插槽什么都没画时不留空壳', () => {
     expect(render(zero).text()).toBe('0')
   })
 
-  it('Tab 的 icon、selectedIcon 和 endContent', () => {
+  it('tab 的 icon、selectedIcon 和 endContent', () => {
     const render = (slots: Record<string, () => unknown>) => mount(TabList, {
       props: { 'value': 'a', 'onUpdate:value': () => {} },
       slots: { default: () => h(Tab, { value: 'a', label: 'Overview' }, slots) },
@@ -80,7 +80,7 @@ describe('插槽什么都没画时不留空壳', () => {
     expect(render({ endContent: zero }).find('.astryx-tab__end').text()).toBe('0')
   })
 
-  it('DropdownMenuGroup 的标题：没内容就不画标题，也不拿它命名这一组', () => {
+  it('dropdownMenuGroup 的标题：没内容就不画标题，也不拿它命名这一组', () => {
     const empty = mount(DropdownMenuGroup, { slots: { title: nothing, default: () => 'Row' } })
     expect(empty.find('.astryx-dropdown-menu-section-heading').exists()).toBe(false)
     expect(empty.attributes('aria-labelledby')).toBeUndefined()
