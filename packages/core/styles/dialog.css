@@ -117,4 +117,11 @@
       animation: none;
     }
   }
+
+  @media (forced-colors: active) {
+    /* 强制配色会去掉阴影，遮罩颜色也由系统接管，对话框靠这圈边和页面分开。全屏对话框四周没有页面，不加。 */
+    .astryx-dialog:not(.astryx-dialog--fullscreen) {
+      border: 1px solid CanvasText;
+    }
+  }
 }

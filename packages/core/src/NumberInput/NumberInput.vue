@@ -13,6 +13,7 @@ import { useFieldPartStyling } from '../Field/fieldParts.js'
 import InputClearButton from '../Field/InputClearButton.vue'
 import { useAriaRequired } from '../FormLayout/context.js'
 import Icon from '../Icon/Icon.vue'
+import { useInputGroupDisabled } from '../InputGroup/context.js'
 import { useAstryxLocale, useAstryxMessages } from '../locale/index.js'
 import { useSize } from '../SizeContext/SizeContext.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
@@ -52,7 +53,7 @@ const decrementLabel = computed(() => messages.value.numberInput.decrement(props
 const resolvedClearLabel = computed(() => messages.value.numberInput.clear(props.label))
 const ariaRequired = useAriaRequired(props)
 
-const isDisabled = computed(() => Boolean(props.isDisabled || props.disabled))
+const isDisabled = useInputGroupDisabled(() => props.isDisabled || props.disabled)
 const isReadOnly = computed(() => Boolean(props.isReadOnly))
 const isIntegerOnly = computed(() => Boolean(props.isIntegerOnly))
 const hasClear = computed(() => Boolean(props.hasClear || props.clearable))

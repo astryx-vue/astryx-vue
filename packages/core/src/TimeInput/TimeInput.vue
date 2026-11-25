@@ -4,6 +4,7 @@ import { computed, useAttrs, useId } from 'vue'
 import { useResolvedLabelHidden } from '../composables/useResolvedLabelHidden.js'
 import Field from '../Field/Field.vue'
 import { useFieldPartStyling } from '../Field/fieldParts.js'
+import { useInputGroupDisabled } from '../InputGroup/context.js'
 import { useSize } from '../SizeContext/SizeContext.js'
 import TimeField from './TimeField.vue'
 
@@ -22,6 +23,7 @@ defineEmits<TimeInputEmits>()
 
 // 显式 size > 外层 SizeContext（Toolbar、InputGroup 等）> 'md'。
 const size = useSize(() => props.size, 'md')
+const disabled = useInputGroupDisabled(() => props.isDisabled)
 
 const model = defineModel<string | null>({ default: null })
 const attrs = useAttrs()
@@ -44,7 +46,7 @@ function inputAttrs(): Record<string, unknown> {
   <Field
     :label="label" :input-id="inputId" :description="description" :width="width"
     :class="parts.containerClass.value" :style="parts.containerStyle.value"
-    :is-label-hidden="hideLabel" :is-disabled="isDisabled" :is-optional="isOptional" :is-required="isRequired"
+    :is-label-hidden="hideLabel" :is-disabled="disabled" :is-optional="isOptional" :is-required="isRequired"
     :label-tooltip="labelTooltip" :status="status" :status-variant="statusVariant"
   >
     <template #default="field">
@@ -57,7 +59,7 @@ function inputAttrs(): Record<string, unknown> {
         :placeholder="placeholder" :hour-format="hourFormat" :has-seconds="hasSeconds" :increment="increment"
         :min="min" :max="max" :presentation="presentation" :native-picker="nativePicker"
         :has-clear="hasClear" :clear-label="clearLabel" :size="size"
-        :is-disabled="isDisabled" :is-read-only="isReadOnly" :is-required="isRequired && !isOptional"
+        :is-disabled="disabled" :is-read-only="isReadOnly" :is-required="isRequired && !isOptional"
         :is-loading="isLoading" :loading-label="loadingLabel" :disabled-message="disabledMessage"
         :status="status"
       />
