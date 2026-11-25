@@ -1,4 +1,5 @@
 import type { PressGesture, PressPaint, PressStep, PressTimer } from './pressGesture.js'
+import { msSinceInput } from './inputAge.js'
 import {
   idlePressGesture,
   PRESS_FADE_MS,
@@ -7,6 +8,10 @@ import {
   PRESS_SCROLL_BRAKE_MS,
   pressGestureStep,
 } from './pressGesture.js'
+import { pressSurfaceAt } from './pressSurface.js'
+import { isInsideScrollView } from './scrollView.js'
+
+export { PRESS_ACTION_ATTRIBUTE, PRESS_CONTAINER_ATTRIBUTE, PRESSABLE_ATTRIBUTE } from './pressSurface.js'
 
 /**
  * 触屏按压模型的 DOM 那一半：整个文档只有一个委托控制器，
@@ -18,19 +23,17 @@ import {
  * 鼠标完全不管，CSS 的 `:active` 照旧。手指下，`@media (pointer: coarse)` 里的 `:active`
  * 被样式丢掉，改由这里在按压成立时写 `on`，抬手淡出时写 `fading`。
  * 样式见 `styles/pressable.css`。
+ *
+ * 手指只在滚动视图里才等：滚动视图外，落下那一帧就亮，和原生控件一样；
+ * 滚动视图里等 150ms，因为这次触摸可能变成滚动。这 150ms 从触摸自己的时间戳算起，
+ * 页面忙、监听函数跑晚了，不会让高亮跟着晚。
  */
-
-/** 可按元素的标记。控制器用 `closest()` 找它。 */
-export const PRESSABLE_ATTRIBUTE = 'data-astryx-pressable'
 
 /** 按压成立且手指还在时为 `on`，抬手淡出时为 `fading`，其余时候不存在。 */
 export const PRESSED_ATTRIBUTE = 'data-astryx-press'
 
 /** 手指离开后多久内的滚动还可能是那根手指甩出去的惯性。iOS 的惯性滚动会持续一两秒。 */
 export const PRESS_GESTURE_MEMORY_MS = 3000
-
-/** 不可用的元素怎么按都不画。 */
-const DISABLED = ':disabled, [aria-disabled="true"]'
 
 interface LiveGesture {
   element: HTMLElement
@@ -71,21 +74,33 @@ function parseTimeMs(value: string): number | null {
   return match[2] === 's' ? amount * 1000 : amount
 }
 
+/** 减少动态效果时，抬手淡出最多这么长，和样式里的上限一致。 */
+export const PRESS_FADE_REDUCED_MAX_MS = 200
+
+function prefersReducedMotion(): boolean {
+  return typeof window !== 'undefined'
+    && typeof window.matchMedia === 'function'
+    && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
+
 /**
  * 抬手后淡出的时长：元素上主题的 `--astryx-duration-exit`，抬手时读一次。
  * 读不出时间（没主题、或不是时间值）就用默认的 PRESS_FADE_MS。
+ * 减少动态效果时不超过 {@link PRESS_FADE_REDUCED_MAX_MS}。
  */
 export function pressFadeMs(element: HTMLElement): number {
   if (typeof getComputedStyle !== 'function')
     return PRESS_FADE_MS
   const ms = parseTimeMs(getComputedStyle(element).getPropertyValue('--astryx-duration-exit'))
-  return ms != null && ms >= 0 ? ms : PRESS_FADE_MS
+  const exit = ms != null && ms >= 0 ? ms : PRESS_FADE_MS
+  return prefersReducedMotion() ? Math.min(exit, PRESS_FADE_REDUCED_MAX_MS) : exit
 }
 
 function paintElement(element: HTMLElement, paint: PressPaint): void {
   if (paint === 'none')
     element.removeAttribute(PRESSED_ATTRIBUTE)
-  else
+  // 画的东西没变就不写，元素每次换样子只看到一次变化。
+  else if (element.getAttribute(PRESSED_ATTRIBUTE) !== paint)
     element.setAttribute(PRESSED_ATTRIBUTE, paint)
 }
 
@@ -105,7 +120,7 @@ function clearTimer(): void {
  * 轻点的 100ms 闪亮期内来了 pointercancel 或滚动，flashEnd 被清掉，一直亮着；
  * 淡出期内同样，`fading` 留在元素上。
  */
-function apply(step: PressStep): void {
+function apply(step: PressStep, sinceEventMs = 0): void {
   if (live == null)
     return
   const phaseMoved = step.gesture.phase !== live.gesture.phase
@@ -120,27 +135,16 @@ function apply(step: PressStep): void {
   if (step.timer != null) {
     const kind = step.timer
     // 用定时器，不用 requestAnimationFrame：iOS 滚动时会压低帧回调，按帧算的延时会在滚动结束后才到，
-    // 那时去亮一个已经没人按的控件。
-    const delay = kind === 'fade' ? pressFadeMs(live.element) : TIMER_MS[kind]
+    // 那时去亮一个已经没人按的控件。onset 从触摸算起，监听函数等掉的时间要扣掉。
+    const delay = kind === 'fade'
+      ? pressFadeMs(live.element)
+      : kind === 'onset' ? Math.max(0, TIMER_MS.onset - sinceEventMs) : TIMER_MS[kind]
     live.timer = setTimeout(() => {
       if (live != null)
         live.timer = null
       apply(pressGestureStep(live?.gesture ?? idlePressGesture(), { kind: TIMER_EVENT[kind] }))
     }, delay)
   }
-}
-
-/**
- * 手指下最里层的可按元素。里层优先：可按的行里有个按钮，按钮接走这次按压。
- * 不可用的元素也会接走，但什么都不画，所以按在禁用控件上不会把外面那一行点亮。
- */
-function surfaceAt(target: EventTarget | null): HTMLElement | null {
-  if (!(target instanceof Element))
-    return null
-  const found = target.closest(`[${PRESSABLE_ATTRIBUTE}]`)
-  if (!(found instanceof HTMLElement) || found.matches(DISABLED))
-    return null
-  return found
 }
 
 /**
@@ -180,7 +184,7 @@ function onPointerDown(event: PointerEvent): void {
     if (!fingerIsUp)
       return
   }
-  const element = surfaceAt(event.target)
+  const element = pressSurfaceAt(event.target)
   // 先判断刹车再记这次触摸的时间：问的是「上一根手指」还在不在带动滚动。
   const braking = element != null && scrollerIsBraking(element)
   lastTouchAt = Date.now()
@@ -188,7 +192,10 @@ function onPointerDown(event: PointerEvent): void {
   if (element == null || braking)
     return
   live = { element, gesture: idlePressGesture(), pointerId: event.pointerId, timer: null }
-  apply(pressGestureStep(live.gesture, { kind: 'down', x: event.clientX, y: event.clientY }))
+  apply(
+    pressGestureStep(live.gesture, { kind: 'down', x: event.clientX, y: event.clientY, delayed: isInsideScrollView(element) }),
+    msSinceInput(event.timeStamp, event),
+  )
 }
 
 function isOtherPointer(event: PointerEvent): boolean {

@@ -115,6 +115,10 @@
           {
             "guidance": "Don't",
             "text": "Use a button for navigation. If it only takes the user to another page, use a link instead. Buttons are for actions like saving, deleting, or submitting."
+          },
+          {
+            "guidance": "Don't",
+            "text": "Restyle Button's `::before` and expect it to hold through a touch press: under a coarse primary pointer, while a press is on or fading, Button paints the press on that pseudo-element (`z-index: -1`, its opacity animated), so your styles merge into the press layer for that moment. At rest Button adds nothing there. Style a child element instead."
           }
         ],
         "zh": [
@@ -149,6 +153,10 @@
           {
             "guidance": "避免",
             "text": "避免用按钮做纯粹的页面跳转：跳转请使用链接，按钮留给保存、删除、提交这类会改变状态的操作。"
+          },
+          {
+            "guidance": "避免",
+            "text": "避免给按钮的 `::before` 加自己的样式：在手机、平板这类以触屏为主的设备上，按下和松手淡出的那一刻，按钮把按压色画在 `::before` 上（`z-index: -1`，淡出时改它的透明度），你的样式会混进这一层。平时按钮不在那里放任何东西。要装饰就放一个子元素。"
           }
         ]
       },
@@ -75007,12 +75015,12 @@
       "importPath": null,
       "exportName": null,
       "summary": {
-        "en": "The touch press model every Astryx pressable uses, for a local component that paints its own press. Under a finger, CSS `:active` paints on the touch itself and can outlive the start of a scroll; the press model instead waits 150 ms before believing a press, cancels it the moment the finger travels 10 px or a scroll claims the gesture, never brings it back inside that gesture, answers a quick tap at the lift, and fades the release over 200 ms — the clocks a native list uses. One document-level controller does this for every marked element (installed by the first pressable to mount, removed by the last to unmount), so calling the hook adds no listener or state to your element. Under a mouse nothing changes: keep your `:active` rule, and drop it under `@media (pointer: coarse)` the way the built-in components do.",
-        "zh": "Astryx 里每个可按的地方都用的触摸按压模型，给自己画按压反馈的组件也用这一套。手指按下去的时候，CSS 的 `:active` 会立刻亮，而且滚动已经开始了它还可能亮着；按压模型反过来：先等 150 毫秒，确认这真是按压；手指一动超过 10 像素、或者页面滚走了，马上作废，这次手势里不再亮回来；快速点一下则在抬手时补上；松手后用 200 毫秒淡出。这几个时间和系统列表的手感一致。一个文档级控制器给所有带标记的元素做这件事（第一个用到的组件装上，最后一个卸载时拆掉），所以调用这个函数不会给你的元素加监听，也不加状态。鼠标上的表现不变：留着你的 `:active`，按内置组件的写法在 `@media (pointer: coarse)` 里把它丢掉就行。"
+        "en": "The touch press model every Astryx pressable uses, for a local component that paints its own press. Under a finger, CSS `:active` paints on the touch itself and can outlive the start of a scroll; the press model instead tracks the touch the way a native control does: outside a scroll view it highlights in the frame the finger lands; inside one it waits 150 ms, counted from the touch itself so a busy page does not delay it further, so a flick paints nothing. It cancels the moment the finger travels 10 px or a scroll claims the gesture, never brings it back inside that gesture, answers a quick tap at the lift, and fades the release on the theme's exit duration (`--astryx-duration-exit`), at most 200 ms under reduced motion. One document-level controller does this for every marked element (installed by the first pressable to mount, removed by the last to unmount), so calling the hook adds no listener or state to your element. Under a mouse nothing changes: keep your `:active` rule, and drop it under `@media (pointer: coarse)` the way the built-in components do.",
+        "zh": "Astryx 里每个可按的地方都用的触摸按压模型，给自己画按压反馈的组件也用这一套。手指按下去的时候，CSS 的 `:active` 会立刻亮，而且滚动已经开始了它还可能亮着；按压模型照系统控件的做法来：不在滚动区域里的控件，手指落下那一帧就亮；滚动区域里的先等 150 毫秒（从触摸本身算起，页面再忙也不会更晚），确认这不是一次滑动；手指一动超过 10 像素、或者页面滚走了，马上作废，这次手势里不再亮回来；快速点一下则在抬手时补上；松手后按主题的退出时长（`--astryx-duration-exit`）淡出，开了「减少动态效果」时最多 200 毫秒。一个文档级控制器给所有带标记的元素做这件事（第一个用到的组件装上，最后一个卸载时拆掉），所以调用这个函数不会给你的元素加监听，也不加状态。鼠标上的表现不变：留着你的 `:active`，按内置组件的写法在 `@media (pointer: coarse)` 里把它丢掉就行。"
       },
       "usage": {
-        "en": "The touch press model every Astryx pressable uses, for a local component that paints its own press. Under a finger, CSS `:active` paints on the touch itself and can outlive the start of a scroll; the press model instead waits 150 ms before believing a press, cancels it the moment the finger travels 10 px or a scroll claims the gesture, never brings it back inside that gesture, answers a quick tap at the lift, and fades the release over 200 ms — the clocks a native list uses. One document-level controller does this for every marked element (installed by the first pressable to mount, removed by the last to unmount), so calling the hook adds no listener or state to your element. Under a mouse nothing changes: keep your `:active` rule, and drop it under `@media (pointer: coarse)` the way the built-in components do.\n\n```ts\nimport { usePressFeedback } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { usePressFeedback } from '@astryx-vue/core'\n\nconst { pressableProps } = usePressFeedback()\n</script>\n\n<template>\n  <button type=\"button\" class=\"card\" v-bind=\"pressableProps\">\n    Press me\n  </button>\n</template>\n```\n\nThe hook brings `styles/pressable.css` along. The default `astryx-pressable` class paints the pressed token on a `::after` layer, keeps `:active` for a mouse, and under a finger reads the `data-astryx-press` attribute the controller writes (`on` while held, `fading` for the release). The press's strength is the registered `--astryx-press-alpha`; the release animates it from 1 to 0. A component that paints its own press passes `{ hasOverlay: false }` and paints both `[data-astryx-press]` states from `var(--_press-paint-image)` in its own styles.",
-        "zh": "Astryx 里每个可按的地方都用的触摸按压模型，给自己画按压反馈的组件也用这一套。手指按下去的时候，CSS 的 `:active` 会立刻亮，而且滚动已经开始了它还可能亮着；按压模型反过来：先等 150 毫秒，确认这真是按压；手指一动超过 10 像素、或者页面滚走了，马上作废，这次手势里不再亮回来；快速点一下则在抬手时补上；松手后用 200 毫秒淡出。这几个时间和系统列表的手感一致。一个文档级控制器给所有带标记的元素做这件事（第一个用到的组件装上，最后一个卸载时拆掉），所以调用这个函数不会给你的元素加监听，也不加状态。鼠标上的表现不变：留着你的 `:active`，按内置组件的写法在 `@media (pointer: coarse)` 里把它丢掉就行。\n\n```ts\nimport { usePressFeedback } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { usePressFeedback } from '@astryx-vue/core'\n\nconst { pressableProps } = usePressFeedback()\n</script>\n\n<template>\n  <button type=\"button\" class=\"card\" v-bind=\"pressableProps\">\n    按我\n  </button>\n</template>\n```\n\n样式文件 `styles/pressable.css` 会跟着这个函数一起带上：默认的 `astryx-pressable` 类在元素的 `::after` 上画按下的颜色，给鼠标留着 `:active`，手指下读控制器写的 `data-astryx-press`（`on` 是按住，`fading` 是抬手淡出）。按压强度是注册过的 `--astryx-press-alpha`，淡出就是它从 1 降到 0。组件想自己画按压时传 `{ hasOverlay: false }`，在自己的样式里用 `var(--_press-paint-image)` 画 `[data-astryx-press]` 两种状态。"
+        "en": "The touch press model every Astryx pressable uses, for a local component that paints its own press. Under a finger, CSS `:active` paints on the touch itself and can outlive the start of a scroll; the press model instead tracks the touch the way a native control does: outside a scroll view it highlights in the frame the finger lands; inside one it waits 150 ms, counted from the touch itself so a busy page does not delay it further, so a flick paints nothing. It cancels the moment the finger travels 10 px or a scroll claims the gesture, never brings it back inside that gesture, answers a quick tap at the lift, and fades the release on the theme's exit duration (`--astryx-duration-exit`), at most 200 ms under reduced motion. One document-level controller does this for every marked element (installed by the first pressable to mount, removed by the last to unmount), so calling the hook adds no listener or state to your element. Under a mouse nothing changes: keep your `:active` rule, and drop it under `@media (pointer: coarse)` the way the built-in components do.\n\n```ts\nimport { usePressFeedback } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { usePressFeedback } from '@astryx-vue/core'\n\nconst { pressableProps } = usePressFeedback()\n</script>\n\n<template>\n  <button type=\"button\" class=\"card\" v-bind=\"pressableProps\">\n    Press me\n  </button>\n</template>\n```\n\nThe hook brings `styles/pressable.css` along. The default `astryx-pressable` class paints the pressed token on a `::after` layer, keeps `:active` for a mouse, and under a finger reads the `data-astryx-press` attribute the controller writes (`on` while held, `fading` for the release). The press's strength is the registered `--astryx-press-alpha`; the release animates it from 1 to 0. A component that paints its own press passes `{ hasOverlay: false }` and paints both `[data-astryx-press]` states from `var(--_press-paint-image)` in its own styles.\n\nA container that holds other buttons or inputs, such as a list row or a card, passes `{ isContainer: true }`: a finger pressing one of those controls does not run the container's own action, so the container shows no press. Spread the returned `pressActionProps` on the container's own action element (such as a row's invisible link) so a press on it still presses the container.",
+        "zh": "Astryx 里每个可按的地方都用的触摸按压模型，给自己画按压反馈的组件也用这一套。手指按下去的时候，CSS 的 `:active` 会立刻亮，而且滚动已经开始了它还可能亮着；按压模型照系统控件的做法来：不在滚动区域里的控件，手指落下那一帧就亮；滚动区域里的先等 150 毫秒（从触摸本身算起，页面再忙也不会更晚），确认这不是一次滑动；手指一动超过 10 像素、或者页面滚走了，马上作废，这次手势里不再亮回来；快速点一下则在抬手时补上；松手后按主题的退出时长（`--astryx-duration-exit`）淡出，开了「减少动态效果」时最多 200 毫秒。一个文档级控制器给所有带标记的元素做这件事（第一个用到的组件装上，最后一个卸载时拆掉），所以调用这个函数不会给你的元素加监听，也不加状态。鼠标上的表现不变：留着你的 `:active`，按内置组件的写法在 `@media (pointer: coarse)` 里把它丢掉就行。\n\n```ts\nimport { usePressFeedback } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { usePressFeedback } from '@astryx-vue/core'\n\nconst { pressableProps } = usePressFeedback()\n</script>\n\n<template>\n  <button type=\"button\" class=\"card\" v-bind=\"pressableProps\">\n    按我\n  </button>\n</template>\n```\n\n样式文件 `styles/pressable.css` 会跟着这个函数一起带上：默认的 `astryx-pressable` 类在元素的 `::after` 上画按下的颜色，给鼠标留着 `:active`，手指下读控制器写的 `data-astryx-press`（`on` 是按住，`fading` 是抬手淡出）。按压强度是注册过的 `--astryx-press-alpha`，淡出就是它从 1 降到 0。组件想自己画按压时传 `{ hasOverlay: false }`，在自己的样式里用 `var(--_press-paint-image)` 画 `[data-astryx-press]` 两种状态。\n\n像列表行、卡片这种里面还放着别的按钮或输入框的容器，传 `{ isContainer: true }`：手指按在里面别的控件上时，那一下不会触发容器自己的动作，所以容器不亮。容器自己的动作元素（比如行里那个看不见的链接）摊上返回的 `pressActionProps`，按它照样算按容器。"
       },
       "practices": {
         "en": [
@@ -75045,6 +75053,12 @@
                 "type": "`boolean`",
                 "default": "`true`",
                 "description": "Whether to bring the default press paint (the `astryx-pressable` class, a layer on `::after`). Pass false when the component paints the press itself from `--_press-paint-image` and only needs the marker."
+              },
+              {
+                "name": "`options.isContainer`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "The element is a pressable container (a list row, a Token, a clickable card) that holds other controls. A finger pressing one of those controls does not run the container's action, so the container shows no press."
               }
             ]
           },
@@ -75054,7 +75068,12 @@
               {
                 "name": "`pressableProps`",
                 "type": "`Record<string, string>`",
-                "description": "Spread with `v-bind` on the element that paints the press: the `data-astryx-pressable` marker, plus `class: 'astryx-pressable'` by default. Under a finger the controller writes `data-astryx-press=\"on\"` while the press is believed and `\"fading\"` for the release. The default style paints `--astryx-color-overlay-pressed` at the press's strength on the first frame and fades it over 200 ms, keeping `:active` for a mouse."
+                "description": "Spread with `v-bind` on the element that paints the press: the `data-astryx-pressable` marker, plus `class: 'astryx-pressable'` by default. Under a finger the controller writes `data-astryx-press=\"on\"` while the press is believed and `\"fading\"` for the release. The default style paints `--astryx-color-overlay-pressed` at the press's strength on the first frame and fades it on the theme's exit duration, keeping `:active` for a mouse. With `isContainer` it also carries the container marker `data-astryx-press-container`."
+              },
+              {
+                "name": "`pressActionProps`",
+                "type": "`Record<string, string>`",
+                "description": "Spread with `v-bind` on a pressable container's own action element (a row's invisible link or button, a Token's main button): the `data-astryx-press-action` marker, so a finger pressing it still presses the container."
               }
             ]
           }
@@ -75068,6 +75087,12 @@
                 "type": "`boolean`",
                 "default": "`true`",
                 "description": "要不要带上默认的按压色（`astryx-pressable` 类，在 `::after` 上画一层）。组件自己在样式里读 `--_press-paint-image` 画按压时传 false，只拿标记。"
+              },
+              {
+                "name": "`options.isContainer`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "这个元素是可按容器（列表行、Token、可点卡片这类，里面还放着别的控件）。手指按在里面别的控件上时，那一下不会触发容器自己的动作，容器不亮。"
               }
             ]
           },
@@ -75077,7 +75102,12 @@
               {
                 "name": "`pressableProps`",
                 "type": "`Record<string, string>`",
-                "description": "用 `v-bind` 铺到「画按压」的元素上：标记属性 `data-astryx-pressable`，默认还有 `class: 'astryx-pressable'`。手指按压成立时控制器在元素上写 `data-astryx-press=\"on\"`，抬手淡出时写 `\"fading\"`。默认样式在按压成立的第一帧画出 `--astryx-color-overlay-pressed`，抬手后 200 毫秒淡出，鼠标仍然走 `:active`。"
+                "description": "用 `v-bind` 铺到「画按压」的元素上：标记属性 `data-astryx-pressable`，默认还有 `class: 'astryx-pressable'`。手指按压成立时控制器在元素上写 `data-astryx-press=\"on\"`，抬手淡出时写 `\"fading\"`。默认样式在按压成立的第一帧画出 `--astryx-color-overlay-pressed`，抬手后按主题的退出时长淡出，鼠标仍然走 `:active`。`isContainer` 为真时还带上容器标记 `data-astryx-press-container`。"
+              },
+              {
+                "name": "`pressActionProps`",
+                "type": "`Record<string, string>`",
+                "description": "用 `v-bind` 铺到可按容器自己的动作元素上（行里看不见的链接或按钮、Token 的主按钮）：标记属性 `data-astryx-press-action`，手指按它照样算按容器。"
               }
             ]
           }
