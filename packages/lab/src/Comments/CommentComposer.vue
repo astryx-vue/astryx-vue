@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { CommentComposerEmits, CommentComposerProps, CommentComposerSlots } from './types.js'
-import { useTranslator } from '@astryx-vue/core'
+import { commentComposerMessages, useComponentMessages } from '@astryx-vue/core'
 import { computed, getCurrentInstance, useTemplateRef } from 'vue'
 import CommentComposerBase from './CommentComposerBase.vue'
 
@@ -13,7 +13,7 @@ const props = withDefaults(defineProps<CommentComposerProps>(), {
 })
 const emit = defineEmits<CommentComposerEmits>()
 defineSlots<CommentComposerSlots>()
-const { t } = useTranslator()
+const messages = useComponentMessages({ commentComposer: commentComposerMessages })
 const root = useTemplateRef<{ element?: { value?: HTMLElement | null } }>('base')
 const instance = getCurrentInstance()
 
@@ -26,7 +26,7 @@ function hasListener(camelName: string): boolean {
 }
 
 const draft = computed(() => props.modelValue ?? props.value ?? '')
-const placeholder = computed(() => props.placeholder ?? t('@astryx.commentComposer.placeholder'))
+const placeholder = computed(() => props.placeholder ?? messages.value.commentComposer.placeholder)
 const context = computed(() =>
   props.anchor != null ? { kind: 'comment' as const, anchor: props.anchor } : { kind: 'comment' as const },
 )

@@ -1,7 +1,7 @@
 import type { ChatComposerTrigger, ChatComposerTriggerItem } from '@astryx-vue/core'
 import type { ComputedRef, MaybeRefOrGetter } from 'vue'
 import type { CommentAgentCommand } from './types.js'
-import { Avatar, createStaticSource, HStack, Text, useTranslator, VStack } from '@astryx-vue/core'
+import { Avatar, commentComposerMessages, createStaticSource, HStack, Text, useComponentMessages, VStack } from '@astryx-vue/core'
 import { computed, h, toValue } from 'vue'
 import { agentToken } from './agentToken.js'
 
@@ -32,7 +32,7 @@ function renderAgentCommandItem(item: ChatComposerTriggerItem): ReturnType<typeo
 export function useAgentCommandTrigger(
   agents: MaybeRefOrGetter<readonly CommentAgentCommand[]>,
 ): ComputedRef<ChatComposerTrigger | null> {
-  const { t } = useTranslator()
+  const messages = useComponentMessages({ commentComposer: commentComposerMessages })
   return computed(() => {
     const list = toValue(agents)
     if (list.length === 0)
@@ -49,8 +49,8 @@ export function useAgentCommandTrigger(
       }),
       renderItem: renderAgentCommandItem,
       onSelect: item => agentToken((item as { auxiliaryData: CommentAgentCommand }).auxiliaryData),
-      emptySearchText: t('@astryx.commentComposer.noAgents'),
-      menuLabel: t('@astryx.commentComposer.agents'),
+      emptySearchText: messages.value.commentComposer.noAgents,
+      menuLabel: messages.value.commentComposer.agents,
     }
   })
 }

@@ -4,6 +4,7 @@ import type { CommentReactionOption } from './types.js'
 import type { AnyComment } from './utils.js'
 import {
   Button,
+  commentsMessages,
   DropdownMenu,
   HStack,
   Icon,
@@ -12,7 +13,7 @@ import {
   Text,
   Tooltip,
   useClipboard,
-  useTranslator,
+  useComponentMessages,
 } from '@astryx-vue/core'
 import { computed, nextTick, ref } from 'vue'
 import { commentMoreMenuTrigger, visibleCommentAction } from './commentActionLookup.js'
@@ -42,7 +43,7 @@ const emit = defineEmits<{
 
 export interface ResolveAction { kind: 'resolve' | 'reopen', onClick: () => void }
 
-const { t } = useTranslator()
+const messages = useComponentMessages({ comments: commentsMessages })
 const { copy: copyToClipboard, isCopied: isLinkCopied } = useClipboard()
 const isLinkTooltipOpen = ref(false)
 const isPickerOpen = ref(false)
@@ -53,13 +54,13 @@ function setClusterRef(el: unknown): void {
 }
 const href = computed(() => `#${commentAnchorId(props.comment.id)}`)
 const linkLabel = computed(() =>
-  isLinkCopied.value ? t('@astryx.comments.linkCopied') : t('@astryx.comments.copyLink'),
+  isLinkCopied.value ? messages.value.comments.linkCopied : messages.value.comments.copyLink,
 )
 const isLinkInMenu = computed(() => props.menuItems.length > 0)
-const resolveLabel = computed(() => t('@astryx.comments.resolve'))
-const reopenLabel = computed(() => t('@astryx.comments.reopen'))
-const replyLabel = computed(() => t('@astryx.comments.reply'))
-const addReactionLabel = computed(() => t('@astryx.comments.addReaction'))
+const resolveLabel = computed(() => messages.value.comments.resolve)
+const reopenLabel = computed(() => messages.value.comments.reopen)
+const replyLabel = computed(() => messages.value.comments.reply)
+const addReactionLabel = computed(() => messages.value.comments.addReaction)
 
 async function copyCommentLink(): Promise<void> {
   await copyToClipboard(new URL(href.value, window.location.href).href)
@@ -136,7 +137,7 @@ const moreButton = computed(() => ({
         :is-open="isPickerOpen"
         placement="above"
         alignment="end"
-        :label="t('@astryx.comments.chooseReaction')"
+        :label="messages.comments.chooseReaction"
         width="fit-content"
         :has-close-button="false"
         @open-change="changePicker"
@@ -158,8 +159,8 @@ const moreButton = computed(() => ({
             <IconButton
               v-for="option in options"
               :key="option.key"
-              :label="reactionDescription(t, option)"
-              :tooltip="reactionDescription(t, option)"
+              :label="reactionDescription(messages.comments, option)"
+              :tooltip="reactionDescription(messages.comments, option)"
               variant="ghost"
               :data-reaction-option="option.key"
               :is-disabled="isBusy"

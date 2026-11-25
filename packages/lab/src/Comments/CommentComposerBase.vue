@@ -2,7 +2,7 @@
 import type { ChatComposerInputHandle, ChatComposerTrigger } from '@astryx-vue/core'
 import type { VNode } from 'vue'
 import type { CommentComposerBaseEmits, CommentComposerBaseProps, CommentComposerBaseSlots, ErrorBannerContent } from './types.js'
-import { Card, ChatComposer, ChatComposerInput, ChatSendButton, HStack, Icon, IconButton, Popover, StackItem, Text, useTranslator, VStack } from '@astryx-vue/core'
+import { Card, ChatComposer, ChatComposerInput, ChatSendButton, commentComposerMessages, commentsMessages, HStack, Icon, IconButton, Popover, StackItem, Text, useComponentMessages, VStack } from '@astryx-vue/core'
 import { computed, defineComponent, onBeforeUnmount, onMounted, reactive, ref, useTemplateRef, watch } from 'vue'
 import { EmojiPicker } from '../EmojiPicker/index.js'
 import ErrorBanner from './ErrorBanner.vue'
@@ -51,7 +51,7 @@ const COMPOSER_CONTROL_SELECTOR = [
 const COMPOSER_LAYER_SELECTOR = '[popover], [role="dialog"]'
 const PICKER_WIDTH = 'calc(var(--astryx-spacing-8, 32px) * 11)'
 
-const { t } = useTranslator()
+const messages = useComponentMessages({ commentComposer: commentComposerMessages, comments: commentsMessages })
 
 const agentCommandTrigger = useAgentCommandTrigger(() => props.agentCommands ?? [])
 const triggers = computed<ChatComposerTrigger[]>(() => {
@@ -127,15 +127,15 @@ async function uploadImages(files: readonly File[]): Promise<void> {
     const uploaded = await props.onUploadImages(files)
     if (!isMounted.value)
       return
-    const markdown = imagesToMarkdown(uploaded, t('@astryx.commentComposer.imageAlt'))
+    const markdown = imagesToMarkdown(uploaded, messages.value.commentComposer.imageAlt)
     if (markdown !== '')
       emit('change', appendDraftBlock(latestValue.value, markdown))
   }
   catch {
     if (isMounted.value) {
       reportActionError({
-        title: t('@astryx.commentComposer.uploadFailed'),
-        actionLabel: t('@astryx.comments.retry'),
+        title: messages.value.commentComposer.uploadFailed,
+        actionLabel: messages.value.comments.retry,
         onAction: () => beginImageUpload(files),
       })
     }
@@ -158,8 +158,8 @@ function beginImageUpload(files: readonly File[]): void {
   const images = files.filter(file => file.type.startsWith('image/'))
   if (images.length !== files.length) {
     reportActionError({
-      title: t('@astryx.commentComposer.imagesOnly'),
-      actionLabel: t('@astryx.commentComposer.chooseImages'),
+      title: messages.value.commentComposer.imagesOnly,
+      actionLabel: messages.value.commentComposer.chooseImages,
       onAction: () => {
         if (isSubmittingLatest.value || actionPending.value)
           return
@@ -188,7 +188,7 @@ const errorBanner = computed<ErrorBannerContent | undefined>(() => {
   if (props.error != null) {
     return {
       title: props.error,
-      actionLabel: showRetry.value ? t('@astryx.comments.retry') : undefined,
+      actionLabel: showRetry.value ? messages.value.comments.retry : undefined,
       onAction: showRetry.value ? () => emit('retry') : undefined,
     }
   }
@@ -300,7 +300,7 @@ const canUpload = computed(() => props.onUploadImages != null)
       <template v-if="showCancel">
         <MetadataSeparator type="supporting" />
         <MetadataActionLink
-          :label="t('@astryx.commentComposer.cancel')"
+          :label="messages.commentComposer.cancel"
           :is-disabled="isBusy"
           @click="emit('cancel')"
         />
@@ -340,8 +340,8 @@ const canUpload = computed(() => props.onUploadImages != null)
                 </StackItem>
                 <IconButton
                   v-if="showAnchorDismiss"
-                  :label="t('@astryx.commentComposer.removeQuote')"
-                  :tooltip="t('@astryx.commentComposer.removeQuote')"
+                  :label="messages.commentComposer.removeQuote"
+                  :tooltip="messages.commentComposer.removeQuote"
                   variant="ghost"
                   size="sm"
                   @click="emit('anchorDismiss')"
@@ -374,12 +374,12 @@ const canUpload = computed(() => props.onUploadImages != null)
                 accept="image/*"
                 multiple
                 hidden
-                :aria-label="t('@astryx.commentComposer.chooseImages')"
+                :aria-label="messages.commentComposer.chooseImages"
                 @change="onFileChange"
               >
               <IconButton
-                :label="t('@astryx.commentComposer.attachImages')"
-                :tooltip="t('@astryx.commentComposer.attachImages')"
+                :label="messages.commentComposer.attachImages"
+                :tooltip="messages.commentComposer.attachImages"
                 variant="ghost"
                 size="sm"
                 :is-disabled="isBusy"
@@ -393,14 +393,14 @@ const canUpload = computed(() => props.onUploadImages != null)
               :is-open="isPickerOpen"
               placement="above"
               alignment="start"
-              :label="t('@astryx.commentComposer.addEmoji')"
+              :label="messages.commentComposer.addEmoji"
               :width="PICKER_WIDTH"
               :padding="0"
               @open-change="onPickerOpenChange"
             >
               <IconButton
-                :label="t('@astryx.commentComposer.addEmoji')"
-                :tooltip="t('@astryx.commentComposer.addEmoji')"
+                :label="messages.commentComposer.addEmoji"
+                :tooltip="messages.commentComposer.addEmoji"
                 variant="ghost"
                 size="sm"
                 :is-disabled="isBusy"

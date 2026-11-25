@@ -3,7 +3,7 @@ import type { SpacingStep } from '@astryx-vue/core'
 import type { VNode } from 'vue'
 import type { CommentsTimelineEntry } from './commentsTimeline.js'
 import type { CommentActivityEvent, CommentsLayout } from './types.js'
-import { Button, useTranslator, VStack } from '@astryx-vue/core'
+import { Button, commentsMessages, useComponentMessages, VStack } from '@astryx-vue/core'
 import ActivityEventRow from './ActivityEventRow.vue'
 import CommentRow from './CommentRow.vue'
 import { commentsDividersAt } from './commentsTimeline.js'
@@ -32,7 +32,7 @@ const emit = defineEmits<{
   olderRetryRef: [el: unknown]
 }>()
 
-const { t } = useTranslator()
+const messages = useComponentMessages({ comments: commentsMessages })
 </script>
 
 <template>
@@ -44,7 +44,7 @@ const { t } = useTranslator()
         :action-ref="(el) => emit('olderRetryRef', el)"
         :content="{
           title: olderError,
-          actionLabel: t('@astryx.comments.retry'),
+          actionLabel: messages.comments.retry,
           onAction: () => emit('loadOlder'),
         }"
         data-comments-older-error="banner"
@@ -52,7 +52,7 @@ const { t } = useTranslator()
       <Button
         v-else
         :ref="(el) => emit('loadOlderRef', el)"
-        :label="t('@astryx.comments.loadOlder')"
+        :label="messages.comments.loadOlder"
         variant="ghost"
         size="sm"
         :is-loading="isLoadingOlder"

@@ -36,7 +36,7 @@ const localesDir = join(coreDir, 'locales')
 const SOURCE_PATTERN = /\.(?:ts|vue)$/
 const SKIPPED_SOURCE = /\.(?:test|spec)\.ts$/
 // 除 core 外也读内置文案的包，同样只能按组件取。
-const MESSAGE_CONSUMER_PACKAGES = ['richtext']
+const MESSAGE_CONSUMER_PACKAGES = ['richtext', 'lab']
 
 function readJson(file) {
   return JSON.parse(readFileSync(file, 'utf8'))

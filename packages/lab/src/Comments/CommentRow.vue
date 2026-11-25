@@ -7,12 +7,13 @@ import {
   Badge,
   ChatMessageMetadata,
   ChatTypingIndicator,
+  commentsMessages,
   HStack,
   StackItem,
   Text,
   Timestamp,
+  useComponentMessages,
   useContainerReveal,
-  useTranslator,
   VStack,
 } from '@astryx-vue/core'
 import { computed, h, ref } from 'vue'
@@ -51,7 +52,7 @@ const props = withDefaults(defineProps<{
   isParentThreadResolved: false,
 })
 
-const { t } = useTranslator()
+const messages = useComponentMessages({ comments: commentsMessages })
 const scope = useCommentsContext()
 const { containerProps, contentProps } = useContainerReveal()
 const articleRef = ref<HTMLElement | null>(null)
@@ -107,8 +108,8 @@ const showReplyDisclosure = computed(() => replies.value.length > 0 && scope.edi
 const isReplyDisclosureBusy = computed(() => scope.isComposerActionPending || scope.isSubmitting)
 const replyDisclosureLabel = computed(() =>
   areRepliesVisible.value
-    ? t('@astryx.comments.hideReplies')
-    : t('@astryx.comments.viewReplies', { count: replies.value.length }),
+    ? messages.value.comments.hideReplies
+    : messages.value.comments.viewReplies(replies.value.length),
 )
 const isRootReplyComposerOpen = computed(() =>
   scope.replyTarget?.parentId === props.comment.id && scope.replyTarget.comment.id === props.comment.id,
@@ -121,10 +122,10 @@ const isBodyExpanded = computed(() => (props.depth === 0 ? isThreadSelected.valu
 const menuItems = computed<DropdownMenuOption[]>(() => {
   const items: DropdownMenuOption[] = []
   if (canEdit.value) {
-    items.push({ id: 'edit', label: t('@astryx.comments.edit'), onClick: () => scope.startEdit(props.comment) })
+    items.push({ id: 'edit', label: messages.value.comments.edit, onClick: () => scope.startEdit(props.comment) })
   }
   if (canDelete.value) {
-    items.push({ id: 'delete', label: t('@astryx.comments.delete'), onClick: () => scope.requestDelete(props.comment) })
+    items.push({ id: 'delete', label: messages.value.comments.delete, onClick: () => scope.requestDelete(props.comment) })
   }
   return items
 })
@@ -211,7 +212,7 @@ function onDisclosureClick(event: MouseEvent): void {
       ? {
         surface: scope.container === 'card' ? 'section' : 'card',
         dividers: scope.container === 'card' ? dividers : [],
-        label: t('@astryx.comments.threadLabel', { name: comment.author.name }),
+        label: messages.comments.threadLabel(comment.author.name),
         isSelectable: canSelectThread,
         isSelected: isThreadSelected,
         isFilled: isThreadSelected || thread?.isHighlighted === true,
@@ -253,7 +254,7 @@ function onDisclosureClick(event: MouseEvent): void {
                   >
                     <AuthorName :id="authorNameId" :author="comment.author" />
                     <HStack v-if="comment.author.kind === 'agent'" align="center" class="astryx-comment-agent-badge">
-                      <Badge variant="neutral" :label="t('@astryx.comments.agentBadge')" />
+                      <Badge variant="neutral" :label="messages.comments.agentBadge" />
                     </HStack>
                     <MetadataSeparator />
                     <Timestamp :value="comment.createdAt" format="relative_short" type="body" color="secondary" is-live />
@@ -261,14 +262,14 @@ function onDisclosureClick(event: MouseEvent): void {
                       <MetadataSeparator />
                       <MetadataActionLink
                         v-if="hasHistory"
-                        :label="t('@astryx.comments.edited')"
-                        :accessible-label="t('@astryx.comments.viewHistory')"
+                        :label="messages.comments.edited"
+                        :accessible-label="messages.comments.viewHistory"
                         action-role="history"
                         text-type="body"
                         @click="scope.openHistory(comment)"
                       />
                       <Text v-else type="body" color="secondary" class="astryx-comment-nowrap">
-                        {{ t('@astryx.comments.edited') }}
+                        {{ messages.comments.edited }}
                       </Text>
                     </template>
                     <template v-if="isResolved">
@@ -292,7 +293,7 @@ function onDisclosureClick(event: MouseEvent): void {
                       :resolve-action="resolveAction"
                       :is-busy="rowActionsBusy"
                       :menu-items="menuItems"
-                      :menu-label="t('@astryx.comments.actionsLabel', { name: comment.author.name })"
+                      :menu-label="messages.comments.actionsLabel(comment.author.name)"
                       :options="scope.reactionOptions"
                       @react="(target, key, option) => scope.react(target, key, option)"
                       @reply="scope.startReply(threadId, comment, { focus: true })"
@@ -317,8 +318,8 @@ function onDisclosureClick(event: MouseEvent): void {
                   v-if="editorIsOpen && scope.editTarget != null"
                   :context="{ kind: 'edit', commentId: comment.id }"
                   :value="scope.editTarget.value"
-                  :placeholder="t('@astryx.comments.editPlaceholder')"
-                  :context-label="t('@astryx.comments.editingContext')"
+                  :placeholder="messages.comments.editPlaceholder"
+                  :context-label="messages.comments.editingContext"
                   :focus-key="`edit-${comment.id}`"
                   :is-submitting="isBusy"
                   :error="actionError"
@@ -350,9 +351,9 @@ function onDisclosureClick(event: MouseEvent): void {
                 <ErrorBanner
                   v-if="status === 'error'"
                   :content="{
-                    title: comment.errorMessage ?? t('@astryx.comments.sendFailed'),
+                    title: comment.errorMessage ?? messages.comments.sendFailed,
                     description: actionError,
-                    actionLabel: scope.can.retry ? t('@astryx.comments.retry') : undefined,
+                    actionLabel: scope.can.retry ? messages.comments.retry : undefined,
                     onAction: scope.can.retry ? () => scope.retry(comment) : undefined,
                     isActionDisabled: rowActionsBusy,
                     isRetrying: isBusy,
@@ -376,7 +377,7 @@ function onDisclosureClick(event: MouseEvent): void {
                     v-if="actionFailure != null && !editorIsOpen"
                     :content="{
                       title: actionFailure.message,
-                      actionLabel: actionFailure.retry != null ? t('@astryx.comments.retry') : undefined,
+                      actionLabel: actionFailure.retry != null ? messages.comments.retry : undefined,
                       onAction: actionFailure.retry,
                       isAnnounced: actionFailure.isAnnounced,
                     }"
@@ -461,8 +462,8 @@ function onDisclosureClick(event: MouseEvent): void {
               repliedToCommentId: scope.replyTarget.comment.id,
             }"
             :value="scope.replyDraft"
-            :placeholder="scope.composerPlaceholder ?? t('@astryx.comments.replyPlaceholder', { name: scope.replyTarget.comment.author.name })"
-            :context-label="t('@astryx.comments.replyingContext', { name: scope.replyTarget.comment.author.name })"
+            :placeholder="scope.composerPlaceholder ?? messages.comments.replyPlaceholder(scope.replyTarget.comment.author.name)"
+            :context-label="messages.comments.replyingContext(scope.replyTarget.comment.author.name)"
             :focus-key="scope.replyTarget.focusRequestId == null ? undefined : `reply-${scope.replyTarget.comment.id}-${scope.replyTarget.focusRequestId}`"
             :is-submitting="scope.isSubmitting"
             :error="scope.replyError"

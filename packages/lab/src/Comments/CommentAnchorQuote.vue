@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { CommentAnchor, CommentHighlightColor } from './types.js'
-import { Badge, HStack, StackItem, useTranslator } from '@astryx-vue/core'
+import { Badge, commentsMessages, HStack, StackItem, useComponentMessages } from '@astryx-vue/core'
 import { RESOLVED_TEXT_STYLE } from './commentLayout.js'
 import QuotedPassage from './QuotedPassage.vue'
 
@@ -12,7 +12,7 @@ defineProps<{
   isResolved: boolean
 }>()
 
-const { t } = useTranslator()
+const messages = useComponentMessages({ comments: commentsMessages })
 </script>
 
 <template>
@@ -31,7 +31,7 @@ const { t } = useTranslator()
       />
     </StackItem>
     <StackItem v-if="anchor.status === 'orphaned'" size="static">
-      <Badge variant="neutral" :label="t('@astryx.comments.outdated')" />
+      <Badge variant="neutral" :label="messages.comments.outdated" />
     </StackItem>
   </HStack>
 </template>

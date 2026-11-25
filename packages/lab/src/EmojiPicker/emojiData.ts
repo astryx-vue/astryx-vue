@@ -1,3 +1,4 @@
+import type { BundledGroupLabelKey } from './constants.js'
 import type { EmojiCategory, EmojiOption } from './types.js'
 import { BUNDLED_GROUP_KEYS } from './constants.js'
 
@@ -14,7 +15,7 @@ export interface EmojiDatumGroup {
   readonly emojis: readonly EmojiDatum[]
 }
 
-const bundledLabelKeys = new WeakMap<EmojiCategory, string>()
+const bundledLabelKeys = new WeakMap<EmojiCategory, BundledGroupLabelKey>()
 
 let bundledCategories: Promise<readonly EmojiCategory[]> | null = null
 
@@ -39,7 +40,7 @@ function toCategories(groups: readonly EmojiDatumGroup[]): readonly EmojiCategor
   })
 }
 
-export function bundledGroupLabelKey(group: EmojiCategory): string | undefined {
+export function bundledGroupLabelKey(group: EmojiCategory): BundledGroupLabelKey | undefined {
   return bundledLabelKeys.get(group)
 }
 

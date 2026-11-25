@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { EmojiCategory, EmojiOption, EmojiPickerEmits, EmojiPickerProps } from './types.js'
-import { Center, HStack, ScrollableArea, Spinner, Text, TextInput, useAnnounce, useGridFocus, useTranslator, VStack } from '@astryx-vue/core'
+import { Center, emojiPickerMessages, HStack, ScrollableArea, Spinner, Text, TextInput, useAnnounce, useComponentMessages, useGridFocus, VStack } from '@astryx-vue/core'
 import { computed, ref, useId, useTemplateRef, watch } from 'vue'
 import { DEFAULT_EMOJI_LIST_HEIGHT, DEFAULT_FREQUENT_EMOJIS, EMOJI_PICKER_COLUMNS } from './constants.js'
 import { bundledGroupLabelKey, loadBundledCategories } from './emojiData.js'
@@ -16,7 +16,7 @@ const props = withDefaults(defineProps<EmojiPickerProps>(), {
 })
 const emit = defineEmits<EmojiPickerEmits>()
 
-const { t } = useTranslator()
+const messages = useComponentMessages({ emojiPicker: emojiPickerMessages })
 const announce = useAnnounce()
 const query = ref('')
 const preview = ref<EmojiOption | null>(null)
@@ -76,8 +76,8 @@ watch(() => props.categories, (categories, _previous, onCleanup) => {
   )
 }, { immediate: true })
 
-const label = computed(() => props.label ?? t('@astryx.emojiPicker.label'))
-const searchLabel = computed(() => props.searchLabel ?? t('@astryx.emojiPicker.searchLabel'))
+const label = computed(() => props.label ?? messages.value.emojiPicker.label)
+const searchLabel = computed(() => props.searchLabel ?? messages.value.emojiPicker.searchLabel)
 const listHeight = computed(() => props.height ?? DEFAULT_EMOJI_LIST_HEIGHT)
 const frequentEmojis = computed(() => props.frequentEmojis ?? DEFAULT_FREQUENT_EMOJIS)
 const queryWords = computed(() => queryWordsOf(query.value))
@@ -87,17 +87,17 @@ const sections = computed(() => buildSections({
   queryWords: queryWords.value,
   frequentEmojis: frequentEmojis.value,
   groups: groups.value,
-  frequentLabel: t('@astryx.emojiPicker.frequentlyUsed'),
-  searchResultsLabel: t('@astryx.emojiPicker.searchResults'),
+  frequentLabel: messages.value.emojiPicker.frequentlyUsed,
+  searchResultsLabel: messages.value.emojiPicker.searchResults,
   groupLabel: (group) => {
     const labelKey = bundledGroupLabelKey(group)
-    return labelKey != null ? t(labelKey) : group.name
+    return labelKey != null ? messages.value.emojiPicker[labelKey] : group.name
   },
 }))
 const firstMatch = computed(() => sections.value[0]?.emojis[0])
 const noResultsMessage = computed(() => {
   if (!isLoading.value && queryWords.value.length > 0 && sections.value.length === 0)
-    return t('@astryx.emojiPicker.noResults', { query: query.value.trim() })
+    return messages.value.emojiPicker.noResults(query.value.trim())
   return undefined
 })
 const showLoading = computed(() => {
@@ -108,7 +108,7 @@ const showLoading = computed(() => {
 
 watch(showLoading, (busy) => {
   if (busy)
-    announce(t('@astryx.emojiPicker.loading'), 'polite')
+    announce(messages.value.emojiPicker.loading, 'polite')
 })
 
 function pick(option: EmojiOption): void {
@@ -226,7 +226,7 @@ defineExpose({ element: root })
           </VStack>
         </VStack>
         <Center v-if="showLoading">
-          <Spinner size="sm" :label="t('@astryx.emojiPicker.loading')" />
+          <Spinner size="sm" :label="messages.emojiPicker.loading" />
         </Center>
         <HStack
           role="status"
@@ -235,7 +235,7 @@ defineExpose({ element: root })
           data-emoji-picker-search-status="true"
         >
           <Text v-if="queryWords.length === 0 && loaded === 'failed'" type="supporting" color="secondary">
-            {{ t('@astryx.emojiPicker.loadFailed') }}
+            {{ messages.emojiPicker.loadFailed }}
           </Text>
           <Text v-else-if="noResultsMessage != null" type="supporting" color="secondary">
             {{ noResultsMessage }}

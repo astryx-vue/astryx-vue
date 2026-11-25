@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T extends string">
 import type { Ref, StyleValue } from 'vue'
 import type { PanelGroup, TransferListEmits, TransferListOption, TransferListProps, TransferListSlots } from './types.js'
-import { Text, TextInput, useAnnounce, useTranslator, VisuallyHidden } from '@astryx-vue/core'
+import { Text, TextInput, transferListMessages, useAnnounce, useComponentMessages, VisuallyHidden } from '@astryx-vue/core'
 import { computed, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
 import { SearchIcon } from '../MobileTokenizer/icons.js'
 import { groupOptions, matchesQuery } from './transferItems.js'
@@ -24,7 +24,7 @@ const emit = defineEmits<TransferListEmits<T>>()
 defineSlots<TransferListSlots<T>>()
 
 const attrs = useAttrs()
-const { t } = useTranslator()
+const messages = useComponentMessages({ transferList: transferListMessages })
 const announce = useAnnounce()
 
 const labelId = `astryx-transfer-list-label-${useId()}`
@@ -50,13 +50,13 @@ function commit(next: readonly T[]): void {
   emit('change', next)
 }
 
-const selectedLabel = computed(() => props.selectedLabel ?? t('@astryx.transferList.selectedLabel'))
-const availableLabel = computed(() => props.availableLabel ?? t('@astryx.transferList.availableLabel'))
-const searchLabel = computed(() => props.searchLabel ?? t('@astryx.transferList.searchLabel', { label: props.label }))
-const searchPlaceholder = computed(() => props.searchPlaceholder ?? t('@astryx.transferList.searchPlaceholder'))
-const selectedEmptyText = computed(() => props.selectedEmptyText ?? t('@astryx.transferList.selectedEmpty'))
-const availableEmptyText = computed(() => props.availableEmptyText ?? t('@astryx.transferList.availableEmpty'))
-const noResultsText = computed(() => props.noResultsText ?? t('@astryx.transferList.noResults'))
+const selectedLabel = computed(() => props.selectedLabel ?? messages.value.transferList.selectedLabel)
+const availableLabel = computed(() => props.availableLabel ?? messages.value.transferList.availableLabel)
+const searchLabel = computed(() => props.searchLabel ?? messages.value.transferList.searchLabel(props.label))
+const searchPlaceholder = computed(() => props.searchPlaceholder ?? messages.value.transferList.searchPlaceholder)
+const selectedEmptyText = computed(() => props.selectedEmptyText ?? messages.value.transferList.selectedEmpty)
+const availableEmptyText = computed(() => props.availableEmptyText ?? messages.value.transferList.availableEmpty)
+const noResultsText = computed(() => props.noResultsText ?? messages.value.transferList.noResults)
 
 const optionByValue = computed(() => {
   const map = new Map<T, TransferListOption<T>>()
@@ -110,11 +110,11 @@ const reorder = useTransferReorder<T>({
   commit,
   announce,
   messages: {
-    grabbed: (label, position, total) => t('@astryx.transferList.announceGrabbed', { label, position, total }),
-    moveCancelled: label => t('@astryx.transferList.announceMoveCancelled', { label }),
-    dropped: (label, position, total) => t('@astryx.transferList.announceDropped', { label, position, total }),
-    returned: (label, position) => t('@astryx.transferList.announceReturned', { label, position }),
-    movedToPosition: (label, position, total) => t('@astryx.transferList.announceMovedToPosition', { label, position, total }),
+    grabbed: (label, position, total) => messages.value.transferList.announceGrabbed(label, position, total),
+    moveCancelled: label => messages.value.transferList.announceMoveCancelled(label),
+    dropped: (label, position, total) => messages.value.transferList.announceDropped(label, position, total),
+    returned: (label, position) => messages.value.transferList.announceReturned(label, position),
+    movedToPosition: (label, position, total) => messages.value.transferList.announceMovedToPosition(label, position, total),
   },
 })
 
@@ -143,7 +143,7 @@ function addOption(option: TransferListOption<T>, index: number): void {
     return
   const nextValue = [...liveValue.value, option.value]
   commit(nextValue)
-  announce(t('@astryx.transferList.announceAdded', { label: option.label, count: nextValue.length }))
+  announce(messages.value.transferList.announceAdded(option.label, nextValue.length))
   focusAfterTransfer('available', index)
 }
 
@@ -152,7 +152,7 @@ function removeOption(option: TransferListOption<T>, index: number): void {
     return
   const nextValue = liveValue.value.filter(item => item !== option.value)
   commit(nextValue)
-  announce(t('@astryx.transferList.announceRemoved', { label: option.label, count: nextValue.length }))
+  announce(messages.value.transferList.announceRemoved(option.label, nextValue.length))
   focusAfterTransfer('selected', index)
 }
 
@@ -163,7 +163,7 @@ function addAll(): void {
   if (additions.length === 0)
     return
   commit([...liveValue.value, ...additions])
-  announce(t('@astryx.transferList.announceBulkAdded', { count: additions.length }))
+  announce(messages.value.transferList.announceBulkAdded(additions.length))
 }
 
 function clearSelected(): void {
@@ -175,7 +175,7 @@ function clearSelected(): void {
   if (removed === 0)
     return
   commit(nextValue)
-  announce(t('@astryx.transferList.announceBulkRemoved', { count: removed }))
+  announce(messages.value.transferList.announceBulkRemoved(removed))
 }
 
 function handleSearch(nextQuery: string): void {
@@ -186,7 +186,7 @@ function handleSearch(nextQuery: string): void {
     return
   }
   const count = props.options.filter(option => matchesQuery(option, normalized)).length
-  announce(t('@astryx.transferList.announceSearchResults', { count }))
+  announce(messages.value.transferList.announceSearchResults(count))
 }
 
 const isClearDisabled = computed(() =>
@@ -207,11 +207,11 @@ const rootAttrs = computed(() => Object.fromEntries(
 ))
 
 const labels = {
-  addOption: (label: string) => t('@astryx.transferList.addOption', { label }),
-  removeOption: (label: string) => t('@astryx.transferList.removeOption', { label }),
-  reorderOption: (label: string) => t('@astryx.transferList.reorderOption', { label }),
-  transferDisabled: (label: string) => t('@astryx.transferList.transferDisabled', { label }),
-  reorderDisabled: (label: string) => t('@astryx.transferList.reorderDisabled', { label }),
+  addOption: (label: string) => messages.value.transferList.addOption(label),
+  removeOption: (label: string) => messages.value.transferList.removeOption(label),
+  reorderOption: (label: string) => messages.value.transferList.reorderOption(label),
+  transferDisabled: (label: string) => messages.value.transferList.transferDisabled(label),
+  reorderDisabled: (label: string) => messages.value.transferList.reorderDisabled(label),
 }
 
 const handlers = {
@@ -252,15 +252,15 @@ const handlers = {
     </div>
 
     <VisuallyHidden :id="reorderInstructionsId">
-      {{ t('@astryx.transferList.reorderInstructions') }}
+      {{ messages.transferList.reorderInstructions }}
     </VisuallyHidden>
 
     <div class="astryx-transfer-list-collection">
       <TransferListPanel
         side="selected" :heading-id="selectedHeadingId" :label="selectedLabel"
-        :show-action="hasClear" :action-label="t('@astryx.transferList.clear')"
+        :show-action="hasClear" :action-label="messages.transferList.clear"
         :is-action-disabled="isClearDisabled" :groups="selectedGroups" :show-group-headings="false"
-        :ungrouped-label="t('@astryx.transferList.ungroupedLabel')"
+        :ungrouped-label="messages.transferList.ungroupedLabel"
         :empty-text="normalizedQuery === '' ? selectedEmptyText : noResultsText"
         :is-reorderable="isReorderable" :dragging-value="reorder.draggingValue.value"
         :grabbed-value="reorder.grabbedValue.value" :drop-target="reorder.pointerPlacement.value"
@@ -274,9 +274,9 @@ const handlers = {
 
       <TransferListPanel
         side="available" :heading-id="availableHeadingId" :label="availableLabel"
-        :show-action="hasSelectAll" :action-label="t('@astryx.transferList.addAll')"
+        :show-action="hasSelectAll" :action-label="messages.transferList.addAll"
         :is-action-disabled="isAddAllDisabled" :groups="availableGroups" :show-group-headings="true"
-        :ungrouped-label="t('@astryx.transferList.ungroupedLabel')"
+        :ungrouped-label="messages.transferList.ungroupedLabel"
         :empty-text="normalizedQuery === '' ? availableEmptyText : noResultsText"
         :is-reorderable="false" :dragging-value="null" :grabbed-value="null" :drop-target="null"
         :reorder-instructions-id="reorderInstructionsId" :labels="labels" :handlers="handlers"

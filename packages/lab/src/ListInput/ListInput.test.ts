@@ -328,6 +328,7 @@ describe('listInput', () => {
 
     await pressKey(handle, 'ArrowUp')
     expect(harness.spy).not.toHaveBeenCalled()
+    expect(liveRegionTexts()).toContain('This guest is already first.')
 
     await pressKey(handle, 'ArrowDown')
     expect(harness.spy).toHaveBeenCalledTimes(1)
