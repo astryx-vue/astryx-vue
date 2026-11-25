@@ -54,6 +54,7 @@ import '@astryx-vue/themes/neutral.css'
 | <Badge variant="success">推荐</Badge> | 对用于分组或分类的徽标，使用颜色变体（蓝色、紫色、青色等）。例如团队名称、内容类型、优先级。 |
 | <Badge variant="success">推荐</Badge> | 徽标文字保持一到两个词。需要更多说明时，把说明放在徽标外的文字中。 |
 | <Badge variant="success">推荐</Badge> | 图标有助于快速识别徽标类型时，添加图标。图标旁必须保留文字。 |
+| <Badge variant="success">推荐</Badge> | 字符串或数字标签在右到左页面上保持书写顺序，`+3`、`@alice` 照原样显示。插槽内容混排方向时，请在自己的内容上标明方向，例如用 `dir` 或 `<bdi>`。 |
 | <Badge variant="error">避免</Badge> | 为每个健康、活跃或正常的项目都使用 success 徽标。若每行都是绿色的 “Active”，徽标就无法突出。徽标只显示需要用户关注的状态，如错误、警告和待处理操作。 |
 | <Badge variant="error">避免</Badge> | 用徽标展示元数据。时长（“6h window”）、数量（“12 trigger types”）、日期和描述都不是状态或分类。应改用描述文本（Text 组件，type="supporting"）。 |
 | <Badge variant="error">避免</Badge> | 用 success、warning、error、info 等语义状态变体表示分类或说明性内容。这些变体视觉强烈，只用于表示系统状态。 |

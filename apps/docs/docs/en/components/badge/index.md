@@ -49,6 +49,7 @@ import { Badge } from '@astryx-vue/core/Badge'
 | <Badge variant="success">Do</Badge> | Use color variants (blue, purple, teal, etc.) for category tags that group or classify items: team names, content types, priority levels. |
 | <Badge variant="success">Do</Badge> | Keep labels to one or two words. If you need more detail, put it in surrounding text instead of the badge. |
 | <Badge variant="success">Do</Badge> | Add an icon when it helps identify the badge type quickly, but always include a text label alongside it. |
+| <Badge variant="success">Do</Badge> | A string or number label keeps its character order under right-to-left, so `+3` and `@alice` read as written. When slot content mixes directions, mark the direction on your own content, for example with `dir` or `<bdi>`. |
 | <Badge variant="error">Don't</Badge> | Apply a "success" badge to every healthy/active/normal item. If all rows show green "Active" badges, none stand out; the badge adds noise, not information. Show only the states that need user attention (errors, warnings, pending actions). |
 | <Badge variant="error">Don't</Badge> | Use badges for metadata. Durations ("6h window"), counts ("12 trigger types"), dates, and descriptions are not statuses or categories; use description text (Text with type="supporting") instead. |
 | <Badge variant="error">Don't</Badge> | Use semantic status variants (success, warning, error, info) for categories or informational content. These are visually loud and should only indicate system state. |

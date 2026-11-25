@@ -18513,11 +18513,15 @@
         "zh": "`Token` 是可交互的标签（chip），可移除、可点击、可作链接，用于已选值和筛选条件。`Badge` 是静态的状态或计数标记。"
       },
       "usage": {
-        "en": "`Token` is an interactive chip. It can be removed, clicked, or used as a link, for a selected value or a filter. `Badge` is a static status or count marker.\n\nTypeahead, Multi Selector, and Tokenizer use `Token` internally, and a chat composer can use it for an attachment or a mention.\n\n`removable` shows a focusable remove button. Click, `Backspace`, and `Delete` all emit `remove`. `disabled` ignores that action. `#icon` sits before the text and is the place for a type icon.\n\n`href` renders a link. When a remove button is also present, the link and the button are siblings, so the button is not nested inside the link.\n\n```vue\n<script setup lang=\"ts\">\nimport { Token } from '@astryx-vue/core/Token'\n</script>\n\n<template>\n  <Token label=\"Design review\" color=\"blue\" removable>\n    <template #icon>\n      <span aria-hidden=\"true\">#</span>\n    </template>\n  </Token>\n</template>\n```\n\nThe remove button’s accessible name defaults to `Remove Design review`. `provideAstryxLocale('zh-CN')` switches it to Chinese.",
-        "zh": "`Token` 是可交互的标签（chip），可移除、可点击、可作链接，用于已选值和筛选条件。`Badge` 是静态的状态或计数标记。\n\n自动补全、多选器和标签输入框内部都会用到 `Token`，对话输入区也可以直接拿来表示附件或提及。\n\n`removable` 会显示一个可聚焦的删除按钮。点击、`Backspace` 和 `Delete` 都会发出 `remove`。`disabled` 时删除按钮不再响应。`#icon` 放在文字前面，适合类型图标。\n\n有 `href` 时渲染成链接。删除按钮和链接同时存在时，两者是兄弟节点，按钮不会套在链接里面。\n\n```vue\n<script setup lang=\"ts\">\nimport { Token } from '@astryx-vue/core/Token'\n</script>\n\n<template>\n  <Token label=\"设计评审\" color=\"blue\" removable>\n    <template #icon>\n      <span aria-hidden=\"true\">#</span>\n    </template>\n  </Token>\n</template>\n```\n\n删除按钮的无障碍名称默认是英文 `Remove 设计评审`。调用 `provideAstryxLocale('zh-CN')` 后改为「移除设计评审」。"
+        "en": "`Token` is an interactive chip. It can be removed, clicked, or used as a link, for a selected value or a filter. `Badge` is a static status or count marker.\n\nTypeahead, Multi Selector, and Tokenizer use `Token` internally, and a chat composer can use it for an attachment or a mention.\n\n`removable` shows a focusable remove button. Click, `Backspace`, and `Delete` all emit `remove`. `disabled` ignores that action. `#icon` sits before the text and is the place for a type icon.\n\n`href` renders a link. When a remove button is also present, the link and the button are siblings, so the button is not nested inside the link. A `@click` listener still runs when the link is clicked. A disabled link token stays a focusable link that is announced as disabled and goes nowhere.\n\nOn a clickable token, `aria-labelledby`, `aria-describedby`, `aria-haspopup`, `aria-expanded`, and `aria-pressed` land on its inner button, the element that owns the action. A filter chip can pass `aria-pressed` to read as a toggle.\n\n```vue\n<script setup lang=\"ts\">\nimport { Token } from '@astryx-vue/core/Token'\n</script>\n\n<template>\n  <Token label=\"Design review\" color=\"blue\" removable>\n    <template #icon>\n      <span aria-hidden=\"true\">#</span>\n    </template>\n  </Token>\n</template>\n```\n\nThe remove button’s accessible name defaults to `Remove Design review`. `provideAstryxLocale('zh-CN')` switches it to Chinese.",
+        "zh": "`Token` 是可交互的标签（chip），可移除、可点击、可作链接，用于已选值和筛选条件。`Badge` 是静态的状态或计数标记。\n\n自动补全、多选器和标签输入框内部都会用到 `Token`，对话输入区也可以直接拿来表示附件或提及。\n\n`removable` 会显示一个可聚焦的删除按钮。点击、`Backspace` 和 `Delete` 都会发出 `remove`。`disabled` 时删除按钮不再响应。`#icon` 放在文字前面，适合类型图标。\n\n有 `href` 时渲染成链接。删除按钮和链接同时存在时，两者是兄弟节点，按钮不会套在链接里面。点链接时 `@click` 监听照样会调用。禁用的链接型标签仍是可聚焦的链接，读屏会读出「已禁用」，点了也不跳转。\n\n可点击的标签上，`aria-labelledby`、`aria-describedby`、`aria-haspopup`、`aria-expanded` 和 `aria-pressed` 会落到里面那个真正承担动作的按钮上。筛选标签可以传 `aria-pressed`，读屏就会把它当成开关。\n\n```vue\n<script setup lang=\"ts\">\nimport { Token } from '@astryx-vue/core/Token'\n</script>\n\n<template>\n  <Token label=\"设计评审\" color=\"blue\" removable>\n    <template #icon>\n      <span aria-hidden=\"true\">#</span>\n    </template>\n  </Token>\n</template>\n```\n\n删除按钮的无障碍名称默认是英文 `Remove 设计评审`。调用 `provideAstryxLocale('zh-CN')` 后改为「移除设计评审」。"
       },
       "practices": {
         "en": [
+          {
+            "guidance": "Do",
+            "text": "Do"
+          },
           {
             "guidance": "Do",
             "text": "Do"
@@ -18539,6 +18543,10 @@
           {
             "guidance": "推荐",
             "text": "用 `#icon` 区分类型，不要把图标写进 `label`。"
+          },
+          {
+            "guidance": "推荐",
+            "text": "在右到左页面上，标签文字保持书写顺序，`@alice`、`C++`、`example.com` 照原样显示；本身是右到左文字的标签仍然从右往左读。"
           },
           {
             "guidance": "避免",
@@ -18579,13 +18587,13 @@
                 "name": "`disabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Disable the token. The remove button stops responding."
+                "description": "Disable the token. The remove button stops responding. A disabled link token stays a focusable link with no destination."
               },
               {
                 "name": "`href`",
                 "type": "`string`",
                 "default": "—",
-                "description": "Render a link. With a remove button, the link and button are siblings."
+                "description": "Render a link. With a remove button, the link and button are siblings. A `@click` listener runs on the link."
               },
               {
                 "name": "`description`",
@@ -18634,13 +18642,13 @@
                 "name": "`disabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "禁用。删除按钮不再响应。"
+                "description": "禁用。删除按钮不再响应。禁用的链接型标签仍可聚焦，只是没有去处。"
               },
               {
                 "name": "`href`",
                 "type": "`string`",
                 "default": "—",
-                "description": "有值时渲染成链接。和删除按钮同时存在时，链接和按钮是兄弟节点。"
+                "description": "有值时渲染成链接。和删除按钮同时存在时，链接和按钮是兄弟节点。`@click` 监听在链接上照样调用。"
               },
               {
                 "name": "`description`",
@@ -22698,6 +22706,10 @@
             "text": "Add an icon when it helps identify the badge type quickly, but always include a text label alongside it."
           },
           {
+            "guidance": "Do",
+            "text": "A string or number label keeps its character order under right-to-left, so `+3` and `@alice` read as written. When slot content mixes directions, mark the direction on your own content, for example with `dir` or ``."
+          },
+          {
             "guidance": "Don't",
             "text": "Apply a \"success\" badge to every healthy/active/normal item. If all rows show green \"Active\" badges, none stand out; the badge adds noise, not information. Show only the states that need user attention (errors, warnings, pending actions)."
           },
@@ -22738,6 +22750,10 @@
           {
             "guidance": "推荐",
             "text": "图标有助于快速识别徽标类型时，添加图标。图标旁必须保留文字。"
+          },
+          {
+            "guidance": "推荐",
+            "text": "字符串或数字标签在右到左页面上保持书写顺序，`+3`、`@alice` 照原样显示。插槽内容混排方向时，请在自己的内容上标明方向，例如用 `dir` 或 ``。"
           },
           {
             "guidance": "避免",
@@ -29691,6 +29707,10 @@
             "text": "Do"
           },
           {
+            "guidance": "Do",
+            "text": "Do"
+          },
+          {
             "guidance": "Don't",
             "text": "Don't"
           }
@@ -29707,6 +29727,10 @@
           {
             "guidance": "推荐",
             "text": "保持前后缀内容简洁，避免占用过多空间。"
+          },
+          {
+            "guidance": "推荐",
+            "text": "`InputGroupText` 里的纯文字在右到左页面上保持书写顺序，`https://`、`.com` 照原样显示。富内容混排方向时，请在自己的内容上标明方向，例如用 `dir` 或 ``。"
           },
           {
             "guidance": "避免",
