@@ -11,6 +11,7 @@ import {
   checkEnglishText,
   checkLocaleContracts,
   checkMapTargets,
+  checkPackageMessageImports,
   checkSourceRefs,
 } from '../scripts/i18n-catalog/checks.mjs'
 
@@ -175,6 +176,20 @@ describe('checkComponentMessageImports', () => {
       { path: 'packages/core/src/index.ts', text: 'import { useTranslator } from \'./locale/index.js\'' },
     ]
     expect(checkComponentMessageImports(files)).toEqual([])
+  })
+})
+
+describe('checkPackageMessageImports', () => {
+  it('reports another package importing a whole-catalog helper from core', () => {
+    const files = [
+      { path: 'packages/richtext/src/A.vue', text: 'import { Field, useComponentMessages } from \'@astryx-vue/core\'' },
+      { path: 'packages/richtext/src/B.ts', text: 'import type { X } from \'vue\'\nimport {\n  Field,\n  useAstryxMessages,\n} from \'@astryx-vue/core\'' },
+      { path: 'packages/richtext/src/C.vue', text: 'import { useTranslator } from \'@astryx-vue/core\'' },
+    ]
+    expect(checkPackageMessageImports(files)).toEqual([
+      'packages/richtext/src/B.ts:2  引入了整份内置文案，改用 useComponentMessages',
+      'packages/richtext/src/C.vue:1  引入了整份内置文案，改用 useComponentMessages',
+    ])
   })
 })
 

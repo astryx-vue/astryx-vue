@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ChatReaction, ChatReactionBarEmits, ChatReactionBarProps } from './types.js'
-import { Tooltip, useAstryxMessages, useTranslator } from '@astryx-vue/core'
+import { commentsMessages, Tooltip, useComponentMessages, useTranslator } from '@astryx-vue/core'
 import { computed, getCurrentInstance, useTemplateRef } from 'vue'
 import ChatEmojiPicker from './ChatEmojiPicker.vue'
 import '../../styles/chat-reaction-bar.css'
@@ -11,7 +11,7 @@ const props = defineProps<ChatReactionBarProps>()
 defineEmits<ChatReactionBarEmits>()
 const instance = getCurrentInstance()
 const { t } = useTranslator()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ comments: commentsMessages })
 const root = useTemplateRef<HTMLDivElement>('root')
 
 const groupLabel = computed(() => props.label ?? messages.value.comments.reactionsLabel)
