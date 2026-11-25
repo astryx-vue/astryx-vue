@@ -59,7 +59,7 @@ footer: false
         <td><code>pressedChangeAction</code></td>
         <td><code>(isPressed: boolean) =&gt; void | Promise&lt;void&gt;</code></td>
         <td>-</td>
-        <td>由接口或路由支撑的切换动作。在 <code>pressedChange</code> 之后执行，除非该回调阻止了默认行为；执行期间按钮显示下一个状态和加载指示，并允许再次点击来反转尚未完成的选择。分组中带 value 的成员会忽略它。</td>
+        <td>由接口或路由支撑的切换动作。在 <code>click</code> 和 <code>pressedChange</code> 之后执行，其中任一回调阻止了默认行为就不执行；执行期间按钮显示下一个状态和加载指示，并允许再次点击来反转尚未完成的选择。分组中带 value 的成员会忽略它。</td>
       </tr>
       <tr>
         <td><code>tooltip</code></td>
@@ -146,7 +146,7 @@ footer: false
       <tr>
         <td><code>click</code></td>
         <td><code>(event: MouseEvent)</code></td>
-        <td>透传的点击事件，在切换请求之后发出。按钮被禁用时不会发出。</td>
+        <td>原始的点击事件。独立按钮上它最先发出，早于 <code>pressedChange</code> 和 <code>pressedChangeAction</code>；在这里调用 <code>event.preventDefault()</code> 会取消这次切换，两者都不会执行。分组里带 value 的成员则在分组完成切换后才发出。按钮被禁用时不会发出。</td>
       </tr>
       <tr>
         <td><code>change</code></td>
