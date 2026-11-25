@@ -167,8 +167,8 @@
 - [ ] [`c3cef9f67`](https://github.com/meta/astryx/commit/c3cef9f67) docs(records): Kbd, LayerProvider and theming-surface verification follow-ups (#10299)
 - [ ] [`9b7ebc461`](https://github.com/meta/astryx/commit/9b7ebc461) test(interaction-harness): a hold sent from the test names the motion it judges (#10438)
 - [ ] [`78df0c20b`](https://github.com/meta/astryx/commit/78df0c20b) fix(Carousel): under snap paging, scroll calls move through the paging (#10384)
-- [ ] [`4e6e67df6`](https://github.com/meta/astryx/commit/4e6e67df6) fix(core): make disabled Button focusable via aria-disabled per AST-085 (#7906)
-  - 待做（下一批）：上游 Button 完全不用原生 disabled，Vue 版没提示时还在用；连带 Toolbar、useListFocus、Carousel、ListInput
+- [x] [`4e6e67df6`](https://github.com/meta/astryx/commit/4e6e67df6) fix(core): make disabled Button focusable via aria-disabled per AST-085 (#7906)
+  - 已移植：[#496](https://github.com/astryx-vue/astryx-vue/pull/496)。Button 不再用原生 disabled；ButtonGroup、Toolbar 整组禁用保留一个 Tab 停靠点；Carousel 隐藏按钮 inert；lab ListInput 禁用时不重排
 - [ ] [`ed862ea90`](https://github.com/meta/astryx/commit/ed862ea90) test(Button): the press-release storyboard arms its hold first (#10479)
 - [x] [`422440a64`](https://github.com/meta/astryx/commit/422440a64) fix(core): two copies of Core's modules share one React context (#10233)
   - 不适用：React context 多副本问题
