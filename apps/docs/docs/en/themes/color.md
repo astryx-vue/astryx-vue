@@ -22,7 +22,7 @@ Each status (`info`, `success`, `warning`, `error`) has a role for every surface
 | `--astryx-color-icon-<status>` | Status icons on the page, such as `Icon color="success"` and Stepper glyphs. Follows the text role. |
 | `--astryx-color-border-<status>` | Status borders, such as an input in the error state. Follows the text role. |
 
-Info is its own status, not the accent. To change one status, set its fill; a theme from `defineTheme` works out the content and text roles you leave unset (see [Status colors in a theme](./extending#status-colors)).
+Info is its own status, not the accent. To change one status, set its fill; a theme from `defineTheme` works out the content and text roles you leave unset (see [Status colors in a theme](/en/guide/extending-themes#status-colors)).
 
 The defaults live in `@astryx-vue/themes/neutral/base.css`. Code that measures colors, such as a contrast check, can read the same values from `STATUS_COLOR_DEFAULTS` in `@astryx-vue/core/Theme`.
 

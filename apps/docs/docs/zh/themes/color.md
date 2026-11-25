@@ -35,7 +35,7 @@ title: 颜色
 | `--astryx-color-icon-<状态>` | 页面上的状态图标，比如 `Icon color="success"`、步骤条的状态图标。默认跟状态文字色一样。 |
 | `--astryx-color-border-<状态>` | 状态边框，比如出错的输入框。默认跟状态文字色一样。 |
 
-信息（info）是独立的状态，不再借用主题强调色。想换某个状态的颜色，写它的底色就够了：用 `defineTheme` 做的主题会把没写的字色自动算出来（见[主题里的状态色](./extending#status-colors)）。
+信息（info）是独立的状态，不再借用主题强调色。想换某个状态的颜色，写它的底色就够了：用 `defineTheme` 做的主题会把没写的字色自动算出来（见[主题里的状态色](/guide/extending-themes#status-colors)）。
 
 默认值写在 `@astryx-vue/themes/neutral/base.css` 里。需要量颜色的代码（比如对比度检查）可以从 `@astryx-vue/core/Theme` 导入 `STATUS_COLOR_DEFAULTS`，读到的是同一组值。
 
