@@ -72,6 +72,35 @@ describe('search compound names and word forms', () => {
   })
 })
 
+describe('search other names for a component', () => {
+  it.each([
+    ['ScrollArea viewport', 'ScrollableArea'],
+    ['toggle group of buttons', 'ToggleButtonGroup'],
+    ['circular progress for uploads', 'Spinner'],
+    ['AppHeader', 'LayoutHeader'],
+    ['tree view folders', 'TreeList'],
+    ['side sheet', 'Drawer'],
+    ['description list', 'MetadataList'],
+    ['split panes', 'useResizable'],
+    ['cog', 'Icon'],
+    ['lightning bolt', 'Icon'],
+    ['sparkles', 'Icon'],
+  ])('finds %s by another library\'s or a glyph\'s name', (query, name) => {
+    const { results } = searchCatalog(query, 'en', { limit: 5 })
+    expect(results[0]).toMatchObject({ name, reason: 'keyword' })
+  })
+
+  it('keeps an entry the query names ahead of a keyword match', () => {
+    const { results } = searchCatalog('inline code', 'en', { limit: 5 })
+    expect(results[0]).toMatchObject({ name: 'Code', reason: 'name' })
+  })
+
+  it('folds a gerund but not a past participle', () => {
+    const { results } = searchCatalog('listed', 'en', { limit: 5 })
+    expect(results.every(result => result.reason !== 'name')).toBe(true)
+  })
+})
+
 describe('search template display names', () => {
   it('treats an authored template title as a name', async () => {
     const results = await search(['Page Editor', '--type', 'template', '--limit', '5'])

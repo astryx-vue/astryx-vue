@@ -3,6 +3,7 @@ import type { Suggestion } from './error.ts'
 import type { SearchType } from './spec.ts'
 import { catalog, componentNames, examplesFor, text } from './catalog.ts'
 import { CliError } from './error.ts'
+import { componentKeywordScore } from './query-keywords.ts'
 import { compoundNameScore } from './query-words.ts'
 import { BINARY, DOCS_PACKAGE } from './spec.ts'
 
@@ -222,13 +223,19 @@ export function suggestByNames<T>(query: string, candidates: readonly T[], names
 }
 
 function scoreComponent(query: string, record: ComponentRecord, locale: 'en' | 'zh'): SearchHit | null {
-  const scored = scoreText(query, names(COMPONENT_LOOKUP, record), [
+  const fromText = scoreText(query, names(COMPONENT_LOOKUP, record), [
     text(record.summary, locale),
     text(record.title, locale),
     record.group,
     ...record.props[locale].flatMap(group => group.rows.map(row => row.name)),
     ...examplesFor(record, locale).flatMap(example => [example.title, example.description]),
   ])
+  // Another library's name for the component, or a glyph name for Icon. It
+  // never outranks a match on the component's own name.
+  const keyword = componentKeywordScore(query, record.slug)
+  const scored = keyword != null && (fromText == null || (fromText.reason !== 'name' && keyword > fromText.score))
+    ? { score: keyword, reason: 'keyword' }
+    : fromText
   if (!scored)
     return null
   const name = displayName(record)
