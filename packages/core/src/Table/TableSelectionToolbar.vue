@@ -2,7 +2,8 @@
 import type { TableSelectionToolbarProps, TableSelectionToolbarSlots } from './types.js'
 import { computed } from 'vue'
 import Button from '../Button/Button.vue'
-import { useAstryxMessages } from '../locale/context.js'
+import { useComponentMessages } from '../locale/context.js'
+import { tableMessages } from '../locale/messages/table.js'
 import Toolbar from '../Toolbar/Toolbar.vue'
 import '../../styles/table.css'
 
@@ -17,7 +18,7 @@ const props = withDefaults(defineProps<TableSelectionToolbarProps>(), {
 const emit = defineEmits<{ clear: [] }>()
 defineSlots<TableSelectionToolbarSlots>()
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ table: tableMessages })
 
 /** 有 selection 就用它的计数，否则回落到 count。 */
 const effectiveCount = computed(() => props.selection?.selectedCount ?? props.count)

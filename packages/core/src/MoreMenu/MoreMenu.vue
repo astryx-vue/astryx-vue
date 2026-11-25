@@ -3,7 +3,8 @@ import type { MoreMenuEmits, MoreMenuInitialFocus, MoreMenuProps, MoreMenuResolv
 import { computed, nextTick, onBeforeUnmount, onMounted, provide, shallowRef, useId, useTemplateRef, watch } from 'vue'
 import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { moreMenuMessages } from '../locale/messages/more-menu.js'
 import { useSize } from '../SizeContext/SizeContext.js'
 import { moreMenuContextKey } from './context.js'
 import MoreMenuPanel from './MoreMenuPanel.vue'
@@ -25,7 +26,7 @@ const emit = defineEmits<MoreMenuEmits>()
 defineSlots<MoreMenuSlots>()
 
 const openModel = defineModel<boolean | undefined>('isMenuOpen', { default: undefined })
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ moreMenu: moreMenuMessages })
 const size = useSize(() => props.size, 'md')
 const menuLabel = computed(() => props.label ?? messages.value.moreMenu.label)
 

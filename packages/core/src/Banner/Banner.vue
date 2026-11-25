@@ -4,7 +4,8 @@ import { computed, shallowRef, toRaw, useId, useTemplateRef, watch } from 'vue'
 import FieldIcon from '../Field/FieldIcon.vue'
 import IconButton from '../IconButton/IconButton.vue'
 import { isRenderable } from '../Indicator/isRenderable.js'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { bannerMessages } from '../locale/messages/banner.js'
 import '../../styles/banner.css'
 import '../../styles/field.css'
 
@@ -17,7 +18,7 @@ const props = withDefaults(defineProps<Omit<BannerProps, 'isOpen'>>(), {
 })
 const emit = defineEmits<BannerEmits>()
 const slots = defineSlots<BannerSlots>()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ banner: bannerMessages })
 const openModel = defineModel<boolean | undefined>('isOpen', { default: undefined })
 const localOpen = shallowRef(props.defaultIsOpen ?? false)
 const dismissed = shallowRef(false)

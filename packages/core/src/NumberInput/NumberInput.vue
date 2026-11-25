@@ -14,7 +14,8 @@ import InputClearButton from '../Field/InputClearButton.vue'
 import { useAriaRequired } from '../FormLayout/context.js'
 import Icon from '../Icon/Icon.vue'
 import { useInputGroupDisabled } from '../InputGroup/context.js'
-import { useAstryxLocale, useAstryxMessages } from '../locale/index.js'
+import { useAstryxLocale, useComponentMessages } from '../locale/context.js'
+import { numberInputMessages } from '../locale/messages/number-input.js'
 import { useSize } from '../SizeContext/SizeContext.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { parseNumberInput, resolveNumberInputCommit } from './numberInputCommit.js'
@@ -46,7 +47,7 @@ const unitsId = `${generatedId}-units`
 const disabledDescriptionId = `${generatedId}-disabled`
 const disabledTooltipId = `${generatedId}-tooltip`
 const inputId = computed(() => props.id ?? generatedId)
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ numberInput: numberInputMessages })
 const locale = useAstryxLocale()
 const incrementLabel = computed(() => messages.value.numberInput.increment(props.label))
 const decrementLabel = computed(() => messages.value.numberInput.decrement(props.label))

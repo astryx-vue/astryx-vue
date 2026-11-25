@@ -4,7 +4,8 @@ import { computed, provide, useTemplateRef, watch } from 'vue'
 import { useAnnounce } from '../composables/useAnnounce.js'
 import { useChatNewMessages } from '../composables/useChatNewMessages.js'
 import { useChatStreamScroll } from '../composables/useChatStreamScroll.js'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { chatMessages } from '../locale/messages/chat.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import ChatLayoutScrollButton from './ChatLayoutScrollButton.vue'
 import { chatLayoutContextKey } from './context.js'
@@ -18,7 +19,7 @@ const props = withDefaults(defineProps<ChatLayoutProps>(), {
 })
 defineSlots<ChatLayoutSlots>()
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ chat: chatMessages })
 const announce = useAnnounce()
 const root = useTemplateRef<HTMLDivElement>('root')
 const scrollTarget = computed(() => props.scrollRef ?? root.value)

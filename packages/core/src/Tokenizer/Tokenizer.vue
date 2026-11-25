@@ -11,7 +11,8 @@ import { useOverflow } from '../composables/useOverflow.js'
 import { useResolvedLabelHidden } from '../composables/useResolvedLabelHidden.js'
 import Field from '../Field/Field.vue'
 import { useFieldPartStyling } from '../Field/fieldParts.js'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { tokenizerMessages } from '../locale/messages/tokenizer.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { useLatchedOptionGrid } from '../selectors/useLatchedOptionGrid.js'
 import { useSize } from '../SizeContext/SizeContext.js'
@@ -61,7 +62,7 @@ const parts = useFieldPartStyling({
   attrs,
   reservedAttrs: ['id', 'role', 'aria-label', 'aria-labelledby', 'aria-describedby', 'aria-expanded', 'aria-controls', 'aria-haspopup', 'aria-activedescendant', 'aria-autocomplete', 'aria-disabled', 'aria-required'],
 })
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ tokenizer: tokenizerMessages })
 /** 正名 isLabelHidden，旧名 labelHidden 任一为真就藏起标签。 */
 const hideLabel = useResolvedLabelHidden(() => props.isLabelHidden, () => props.labelHidden)
 const inputId = `astryx-tokenizer-${useId()}`

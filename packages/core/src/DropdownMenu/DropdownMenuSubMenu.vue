@@ -13,12 +13,12 @@ import { clampInlineSize, isIntrinsicInlineSize } from '../layer/inlineSize.js'
 import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import Item from '../List/Item.vue'
-import { useAstryxMessages } from '../locale/index.js'
 import Spinner from '../Spinner/Spinner.vue'
 import { useDropdownMenuContext } from './context.js'
 import DropdownMenuBranch from './DropdownMenuBranch.vue'
 import DropdownMenuItem from './DropdownMenuItem.vue'
 import { activateMenuItem, MENU_ITEM_ROLES } from './menuItemRoles.js'
+import { useDropdownMenuMessages } from './useDropdownMenuMessages.js'
 import { useMenuFocus } from './useMenuFocus.js'
 import { useMenuRegions } from './useMenuRegions.js'
 import { useSubmenuMode } from './useSubmenuMode.js'
@@ -36,7 +36,7 @@ const emit = defineEmits<DropdownMenuSubMenuEmits>()
 defineSlots<DropdownMenuSubMenuSlots>()
 
 const slots = useSlots()
-const messages = useAstryxMessages()
+const messages = useDropdownMenuMessages()
 const menu = useDropdownMenuContext()
 const rowComponent = ref<{ element: HTMLElement | null, focus: () => void } | null>(null)
 const rowRef = computed(() => rowComponent.value?.element ?? null)

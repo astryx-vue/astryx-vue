@@ -2,13 +2,14 @@
 import type { ChatTypingIndicatorProps } from './types.js'
 import { computed, onMounted, useTemplateRef, watch } from 'vue'
 import { useAnnounce } from '../composables/useAnnounce.js'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { chatMessages } from '../locale/messages/chat.js'
 import '../../styles/chat.css'
 
 defineOptions({ name: 'AstryxChatTypingIndicator', inheritAttrs: false })
 
 const props = defineProps<ChatTypingIndicatorProps>()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ chat: chatMessages })
 const root = useTemplateRef<HTMLDivElement>('root')
 const announce = useAnnounce()
 const LIVE_CONTAINER_SELECTOR = '[role="log"], [role="status"], [role="alert"], [aria-live="polite"], [aria-live="assertive"]'

@@ -3,7 +3,8 @@ import type { CarouselHandle, CarouselProps, CarouselSlots } from './types.js'
 import { computed, nextTick, ref, watch } from 'vue'
 import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
-import { useAstryxMessages } from '../locale/context.js'
+import { useComponentMessages } from '../locale/context.js'
+import { carouselMessages } from '../locale/messages/carousel.js'
 import { CarouselItems } from './slides.js'
 import { useCarouselPaging } from './useCarouselPaging.js'
 import { useCarouselScroller } from './useCarouselScroll.js'
@@ -21,7 +22,7 @@ const props = withDefaults(defineProps<CarouselProps>(), {
 
 defineSlots<CarouselSlots>()
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ carousel: carouselMessages })
 const scroller = ref<HTMLElement | null>(null)
 const startButton = ref<HTMLButtonElement | null>(null)
 const endButton = ref<HTMLButtonElement | null>(null)

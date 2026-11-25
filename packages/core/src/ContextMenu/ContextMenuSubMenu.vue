@@ -4,11 +4,11 @@ import type { ContextMenuItemData, ContextMenuSubMenuEmits, ContextMenuSubMenuPr
 import { computed, inject, nextTick, provide, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
 import { useDismiss } from '../composables/useDismiss.js'
 import { useOverflow } from '../composables/useOverflow.js'
+import { useDropdownMenuMessages } from '../DropdownMenu/useDropdownMenuMessages.js'
 import { useSubmenuMode } from '../DropdownMenu/useSubmenuMode.js'
 import Icon from '../Icon/Icon.vue'
 import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
-import { useAstryxMessages } from '../locale/index.js'
 import Spinner from '../Spinner/Spinner.vue'
 import { isImeKeyEvent } from '../utils/ime.js'
 import { submenuAncestorOpenKey, useContextMenu, useContextMenuSize } from './context.js'
@@ -33,7 +33,7 @@ const attrs = useAttrs()
 
 const menu = useContextMenu()
 const size = useContextMenuSize()
-const messages = useAstryxMessages()
+const messages = useDropdownMenuMessages()
 const GAP = 4
 const viewId = useId()
 const mode = useSubmenuMode({

@@ -4,7 +4,8 @@ import { computed, provide, ref, useSlots, useTemplateRef, watch } from 'vue'
 import { isKeyboardModality, trackInteractionModality } from '../composables/internal/interactionModality.js'
 import { useAnnounce } from '../composables/useAnnounce.js'
 import Icon from '../Icon/Icon.vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { chatMessages } from '../locale/messages/chat.js'
 import ChatComposerInput from './ChatComposerInput.vue'
 import ChatSendButton from './ChatSendButton.vue'
 import { chatComposerContextKey } from './context.js'
@@ -20,7 +21,7 @@ const props = withDefaults(defineProps<ChatComposerProps>(), {
 const emit = defineEmits<ChatComposerEmits>()
 defineSlots<ChatComposerSlots>()
 const slots = useSlots()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ chat: chatMessages })
 const root = useTemplateRef<HTMLDivElement>('root')
 const body = useTemplateRef<HTMLDivElement>('body')
 const localValue = ref('')

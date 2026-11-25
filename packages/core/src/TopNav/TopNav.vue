@@ -3,7 +3,8 @@ import type { TopNavProps, TopNavSlots } from './types.js'
 import { computed, ref, useId, useSlots } from 'vue'
 import { useAppShellMobile } from '../composables/useAppShellMobile.js'
 import { useMediaQuery } from '../composables/useMediaQuery.js'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { navMessages } from '../locale/messages/nav.js'
 import MobileNav from '../MobileNav/MobileNav.vue'
 import MobileNavToggle from '../MobileNav/MobileNavToggle.vue'
 import '../../styles/top-nav.css'
@@ -13,7 +14,7 @@ defineOptions({ name: 'AstryxTopNav' })
 const props = defineProps<TopNavProps>()
 defineSlots<TopNavSlots>()
 const slots = useSlots()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ nav: navMessages })
 const drawerId = `astryx-top-nav-${useId()}`
 const mobileOpen = ref(false)
 const shell = useAppShellMobile()

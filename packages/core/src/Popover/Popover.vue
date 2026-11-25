@@ -6,7 +6,8 @@ import { useResolvedLayerTeleport } from '../composables/useLayerMountTarget.js'
 import { useMergedRefs } from '../composables/useMergedRefs.js'
 import { clampInlineSize, LAYER_MAX_INLINE_SIZE } from '../layer/inlineSize.js'
 import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { popoverMessages } from '../locale/messages/popover.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { usePopover } from './usePopover.js'
 import '../../styles/popover.css'
@@ -31,7 +32,7 @@ const props = withDefaults(defineProps<PopoverProps>(), {
 })
 const emit = defineEmits<{ openChange: [isOpen: boolean] }>()
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ popover: popoverMessages })
 const closeLabel = computed(() => props.closeButtonLabel ?? messages.value.popover.close)
 
 const DEFAULT_MAX_WIDTH = 320

@@ -1,7 +1,8 @@
 <script setup lang="ts" generic="T extends Record<string, unknown>">
 import type { TableColumn, TablePlugin, TableProps, TableSlots } from './types.js'
 import { computed } from 'vue'
-import { useAstryxMessages } from '../locale/context.js'
+import { useComponentMessages } from '../locale/context.js'
+import { tableMessages } from '../locale/messages/table.js'
 import TableData from './TableData.vue'
 import TableScroll from './TableScroll.vue'
 import '../../styles/table.css'
@@ -20,7 +21,7 @@ const props = withDefaults(defineProps<TableProps<T>>(), {
 
 defineSlots<TableSlots>()
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ table: tableMessages })
 const passedIdKey = computed(() => {
   const key = props.idKey
   if (typeof key === 'function')

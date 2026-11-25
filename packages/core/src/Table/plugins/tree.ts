@@ -2,7 +2,8 @@ import type { ComputedRef, MaybeRefOrGetter } from 'vue'
 import type { TableColumn, TablePlugin, TableRowPatch } from '../types.js'
 import { computed, h, ref, toValue } from 'vue'
 import Icon from '../../Icon/Icon.vue'
-import { useAstryxMessages } from '../../locale/context.js'
+import { useComponentMessages } from '../../locale/context.js'
+import { tableMessages } from '../../locale/messages/table.js'
 import { cellText } from '../columnUtils.js'
 import TableTreeCell from '../TableTreeCell.vue'
 import { isInteractiveRowClick } from './interaction.js'
@@ -129,7 +130,7 @@ function treeColumnKey<T extends Record<string, unknown>>(columns: readonly Tabl
 export function useTableTreeData<T extends Record<string, unknown>>(
   config: MaybeRefOrGetter<UseTableTreeDataConfig<T>>,
 ): TablePlugin<T> {
-  const messages = useAstryxMessages()
+  const messages = useComponentMessages({ table: tableMessages })
   const resolvedKey = ref<string | undefined>()
   return {
     transformColumns(columns) {

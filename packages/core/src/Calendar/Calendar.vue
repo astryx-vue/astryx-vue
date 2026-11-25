@@ -5,8 +5,9 @@ import { computed, nextTick, shallowRef, useTemplateRef, watch } from 'vue'
 import { useAnnounce } from '../composables/useAnnounce.js'
 import { useHandleRef } from '../composables/useHandleRef.js'
 import Icon from '../Icon/Icon.vue'
+import { useAstryxLocale, useComponentMessages } from '../locale/context.js'
 import { formatCalendarMonth, standaloneShortWeekdayNames, weekdayNames } from '../locale/format.js'
-import { useAstryxLocale, useAstryxMessages } from '../locale/index.js'
+import { calendarMessages } from '../locale/messages/calendar.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import {
   dateISO,
@@ -43,7 +44,7 @@ const emit = defineEmits<CalendarEmits>()
 defineSlots<CalendarSlots>()
 
 const locale = useAstryxLocale()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ calendar: calendarMessages })
 const announce = useAnnounce()
 const rootRef = useTemplateRef<HTMLElement>('root')
 const monthCount = computed<1 | 2>(() => props.numberOfMonths === 2 ? 2 : 1)

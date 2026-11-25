@@ -3,7 +3,8 @@ import type { DialogHeaderProps } from './types.js'
 import { computed, getCurrentInstance, inject, onBeforeUnmount, onMounted, useAttrs, useId } from 'vue'
 import IconButton from '../IconButton/IconButton.vue'
 import { useLayoutArea } from '../Layout/context.js'
-import { useAstryxMessages } from '../locale/context.js'
+import { useComponentMessages } from '../locale/context.js'
+import { dialogMessages } from '../locale/messages/dialog.js'
 import { DIALOG_CONTEXT_KEY } from './context.js'
 import '../../styles/dialog-header.css'
 
@@ -23,7 +24,7 @@ const slots = defineSlots<{
   endContent?: () => unknown
 }>()
 const attrs = useAttrs()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ dialog: dialogMessages })
 
 // 放在 Layout 的 header 槽里时，自己当一个带内边距的页头区域（原版的 DialogHeader 就是 LayoutHeader）。
 const layoutArea = useLayoutArea()

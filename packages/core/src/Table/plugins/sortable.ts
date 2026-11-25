@@ -1,7 +1,8 @@
 import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue'
 import type { TableColumn, TablePlugin, TableSortDirection, TableSortState } from '../types.js'
 import { computed, ref, toValue } from 'vue'
-import { useAstryxMessages } from '../../locale/context.js'
+import { useComponentMessages } from '../../locale/context.js'
+import { tableMessages } from '../../locale/messages/table.js'
 import { useCollator } from '../../locale/useCollator.js'
 import { sortRows } from '../columnUtils.js'
 
@@ -58,7 +59,7 @@ function nextDirection(current: TableSortDirection | null, allowUnsorted: boolea
 export function useTableSortable<T extends Record<string, unknown>>(
   config: MaybeRefOrGetter<UseTableSortableConfig>,
 ): TablePlugin<T> {
-  const messages = useAstryxMessages()
+  const messages = useComponentMessages({ table: tableMessages })
   return {
     sortFor(column) {
       const key = sortKeyOf(column)

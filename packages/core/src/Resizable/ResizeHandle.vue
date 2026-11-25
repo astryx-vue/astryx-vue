@@ -4,7 +4,8 @@ import type { ResizeHandleProps, ResizeHandleSlots, ResizePillPlacement } from '
 import { computed, onBeforeUnmount, ref, useAttrs, useTemplateRef, watch } from 'vue'
 import { getEffectiveMaxPx } from '../composables/internal/resizableChannel.js'
 import { devWarn } from '../composables/useDevWarning.js'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { layoutMessages } from '../locale/messages/layout.js'
 import { handleResizeKey, toggleCollapse } from './resizeKeyboard.js'
 import '../../styles/resize-handle.css'
 
@@ -26,7 +27,7 @@ const props = withDefaults(defineProps<ResizeHandleProps>(), {
 defineSlots<ResizeHandleSlots>()
 
 const attrs = useAttrs()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ layout: layoutMessages })
 const root = useTemplateRef<HTMLDivElement>('root')
 const dragging = ref(false)
 const hovered = ref(false)

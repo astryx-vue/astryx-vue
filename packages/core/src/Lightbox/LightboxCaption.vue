@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useAstryxMessages } from '../locale/context.js'
+import { useComponentMessages } from '../locale/context.js'
+import { lightboxMessages } from '../locale/messages/lightbox.js'
 import { useTruncation } from '../Text/useTruncation.js'
 
 defineOptions({ name: 'AstryxLightboxCaption' })
@@ -12,7 +13,7 @@ defineProps<{
   id: string
 }>()
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ lightbox: lightboxMessages })
 
 /**
  * 图注最多显示两行。超出时第二行末尾跟一个「更多」，点开后整段图注盖在照片底部，

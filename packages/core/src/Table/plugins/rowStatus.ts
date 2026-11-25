@@ -3,7 +3,8 @@ import type { IconColor } from '../../Icon/types.js'
 import type { TablePlugin } from '../types.js'
 import { h, toValue } from 'vue'
 import Icon from '../../Icon/Icon.vue'
-import { useAstryxMessages } from '../../locale/context.js'
+import { useComponentMessages } from '../../locale/context.js'
+import { tableMessages } from '../../locale/messages/table.js'
 import Tooltip from '../../Tooltip/Tooltip.vue'
 import { pixel } from '../columnUtils.js'
 
@@ -89,7 +90,7 @@ function statusMark(status: TableRowStatus): VNodeChild {
 export function useTableRowStatus<T extends Record<string, unknown>>(
   config: MaybeRefOrGetter<UseTableRowStatusConfig<T>>,
 ): TablePlugin<T> {
-  const messages = useAstryxMessages()
+  const messages = useComponentMessages({ table: tableMessages })
   return {
     transformColumns(columns) {
       return [{

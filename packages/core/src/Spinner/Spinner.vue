@@ -2,7 +2,8 @@
 import type { CSSProperties } from 'vue'
 import type { SpinnerProps, SpinnerSize } from './types.js'
 import { computed, useAttrs, useId, useSlots } from 'vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { spinnerMessages } from '../locale/messages/spinner.js'
 import { registerSpinnerGeometry } from './spinnerGeometry.js'
 import { bindSpinnerPhase } from './spinnerPhase.js'
 import '../../styles/spinner.css'
@@ -27,7 +28,7 @@ registerSpinnerGeometry()
 
 const attrs = useAttrs()
 const slots = useSlots()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ spinner: spinnerMessages })
 const labelId = `astryx-spinner-label-${useId()}`
 
 const hasLabel = computed(() => Boolean(props.label) || Boolean(slots.label))

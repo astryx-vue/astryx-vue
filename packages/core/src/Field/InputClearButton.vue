@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { useAttrs } from 'vue'
 import IconButton from '../IconButton/IconButton.vue'
-import { useTranslator } from '../locale/useTranslator.js'
+import { useComponentMessages } from '../locale/context.js'
+import { inputMessages } from '../locale/messages/input.js'
 import FieldIcon from './FieldIcon.vue'
 
 defineOptions({ name: 'AstryxInputClearButton', inheritAttrs: false })
@@ -17,7 +18,7 @@ const emit = defineEmits<{
 
 const attrs = useAttrs()
 
-const { t } = useTranslator()
+const messages = useComponentMessages({ input: inputMessages })
 
 function press(event: Event): void {
   // 按下时别把焦点从输入框偷走，否则清除之后页面会跳。
@@ -32,7 +33,7 @@ function press(event: Event): void {
     variant="ghost"
     size="sm"
     :label="label"
-    :tooltip="t('@astryx.inputClearButton.tooltip')"
+    :tooltip="messages.input.tooltip"
     @pointerdown="press"
     @mousedown="press"
     @click="emit('click', $event)"

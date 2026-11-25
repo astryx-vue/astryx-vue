@@ -4,7 +4,8 @@ import { computed, useTemplateRef } from 'vue'
 import { devPropError, isDevBuild } from '../composables/internal/devBuild.js'
 import Icon from '../Icon/Icon.vue'
 import { isSafeUrl } from '../Link/safeUrl.js'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { citationMessages } from '../locale/messages/citation.js'
 import '../../styles/citation.css'
 
 defineOptions({ name: 'AstryxCitation', inheritAttrs: false })
@@ -21,7 +22,7 @@ if (isDevBuild() && props.source == null) {
   )
 }
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ citation: citationMessages })
 const root = useTemplateRef<HTMLElement>('root')
 
 const title = computed(() => props.source.title?.trim() || String(props.number))

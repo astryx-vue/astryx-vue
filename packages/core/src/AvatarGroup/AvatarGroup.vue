@@ -6,7 +6,8 @@ import { computed, onMounted, onUpdated, provide, ref, useId } from 'vue'
 
 import { resolveSize } from '../Avatar/utils.js'
 import { useListFocus } from '../composables/useListFocus.js'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { avatarGroupMessages } from '../locale/messages/avatar-group.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { AvatarGroupContext } from './context.js'
 import '../../styles/avatar-group.css'
@@ -21,7 +22,7 @@ const OVERLAP_RATIO = 0.25
 
 const numericSize = computed(() => resolveSize(props.size))
 const overlap = computed(() => Math.round(numericSize.value * OVERLAP_RATIO))
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ avatarGroup: avatarGroupMessages })
 const hintId = `astryx-avatar-group-hint-${useId()}`
 const hasInteractive = ref(false)
 

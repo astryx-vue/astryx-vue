@@ -11,7 +11,8 @@ import FieldIcon from '../Field/FieldIcon.vue'
 import { useFieldPartStyling } from '../Field/fieldParts.js'
 import InputClearButton from '../Field/InputClearButton.vue'
 import Icon from '../Icon/Icon.vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { fileInputMessages } from '../locale/messages/file-input.js'
 import Spinner from '../Spinner/Spinner.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import '../../styles/bordered-control.css'
@@ -36,7 +37,7 @@ const parts = useFieldPartStyling({
   attrs,
   reservedAttrs: ['id', 'accept', 'multiple', 'disabled', 'type', 'tabindex', 'aria-disabled', 'aria-invalid', 'aria-describedby'],
 })
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ fileInput: fileInputMessages })
 const announce = useAnnounce()
 const generatedId = `astryx-file-input-${useId()}`
 const inputId = computed(() => props.id ?? generatedId)

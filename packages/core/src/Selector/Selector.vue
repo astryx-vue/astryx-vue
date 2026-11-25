@@ -17,7 +17,8 @@ import { useIndicator } from '../Indicator/useIndicator.js'
 import { useInputGroupContext, useInputGroupDisabled } from '../InputGroup/context.js'
 import { clampInlineSize } from '../layer/inlineSize.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { selectorMessages } from '../locale/messages/selector.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { normalizeTriggerVariant } from '../selectors/triggerVariant.js'
 import { useSize } from '../SizeContext/SizeContext.js'
@@ -77,7 +78,7 @@ const triggerVariant = computed(() => normalizeTriggerVariant(props.variant))
 const generatedId = `astryx-selector-${useId()}`
 const selectorId = computed(() => typeof attrs.id === 'string' && attrs.id !== '' ? attrs.id : generatedId)
 const listboxId = computed(() => `${selectorId.value}-listbox`)
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ selector: selectorMessages })
 const resolvedPlaceholder = computed(() => props.placeholder ?? messages.value.selector.placeholder)
 const resolvedSearchPlaceholder = computed(() => props.searchPlaceholder ?? messages.value.selector.search)
 const resolvedClearLabel = computed(() => props.clearLabel ?? messages.value.selector.clear)

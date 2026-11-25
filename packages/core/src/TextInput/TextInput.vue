@@ -12,7 +12,8 @@ import { useFieldPartStyling } from '../Field/fieldParts.js'
 import InputClearButton from '../Field/InputClearButton.vue'
 import { useAriaRequired } from '../FormLayout/context.js'
 import { useInputGroupDisabled } from '../InputGroup/context.js'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { textInputMessages } from '../locale/messages/text-input.js'
 import { useSize } from '../SizeContext/SizeContext.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { useTextInputAction } from './useTextInputAction.js'
@@ -31,7 +32,7 @@ defineSlots<TextInputSlots>()
 const size = useSize(() => props.size, 'md')
 const disabled = useInputGroupDisabled(() => props.isDisabled)
 const ariaRequired = useAriaRequired(props)
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ textInput: textInputMessages })
 const model = defineModel<string>({ required: true })
 const attrs = useAttrs()
 const input = useTemplateRef<HTMLInputElement>('input')

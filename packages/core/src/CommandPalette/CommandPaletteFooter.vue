@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import Kbd from '../Kbd/Kbd.vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { commandPaletteMessages } from '../locale/messages/command-palette.js'
 import '../../styles/command-palette.css'
 
 defineOptions({ name: 'AstryxCommandPaletteFooter' })
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ commandPalette: commandPaletteMessages })
 </script>
 
 <template>

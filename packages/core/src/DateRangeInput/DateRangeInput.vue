@@ -13,7 +13,9 @@ import { useFieldPartStyling } from '../Field/fieldParts.js'
 import { useAriaRequired } from '../FormLayout/context.js'
 import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
-import { useAstryxLocale, useAstryxMessages } from '../locale/index.js'
+import { useAstryxLocale, useComponentMessages } from '../locale/context.js'
+import { dateInputMessages } from '../locale/messages/date-input.js'
+import { dateRangeInputMessages } from '../locale/messages/date-range-input.js'
 import Popover from '../Popover/Popover.vue'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { useSize } from '../SizeContext/SizeContext.js'
@@ -49,7 +51,7 @@ const parts = useFieldPartStyling({
 })
 const hideLabel = useResolvedLabelHidden(() => props.isLabelHidden, () => props.labelHidden)
 const ariaRequired = useAriaRequired(props)
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ dateInput: dateInputMessages, dateRangeInput: dateRangeInputMessages })
 const locale = useAstryxLocale()
 const generatedId = `astryx-date-range-${useId()}`
 const inputId = computed(() => props.id ?? generatedId)

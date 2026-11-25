@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import Icon from '../Icon/Icon.vue'
-import { useAstryxMessages } from '../locale/context.js'
+import { useComponentMessages } from '../locale/context.js'
+import { tableMessages } from '../locale/messages/table.js'
 
 defineOptions({ name: 'AstryxTableTreeCell' })
 
@@ -15,7 +16,7 @@ const props = withDefaults(defineProps<{
 })
 
 const emit = defineEmits<{ toggle: [] }>()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ table: tableMessages })
 
 const step = computed(() => {
   if (props.indent === 'sm')
