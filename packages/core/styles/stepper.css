@@ -298,17 +298,17 @@
 
   .astryx-step-indicator[data-status='success'] {
     background: transparent;
-    color: var(--astryx-color-success, #16a34a);
+    color: var(--astryx-color-icon-success, #16a34a);
   }
 
   .astryx-step-indicator[data-status='warning'] {
     background: transparent;
-    color: var(--astryx-color-warning, #ca8a04);
+    color: var(--astryx-color-icon-warning, #ca8a04);
   }
 
   .astryx-step-indicator[data-status='error'] {
     background: transparent;
-    color: var(--astryx-color-error, #dc2626);
+    color: var(--astryx-color-icon-error, #dc2626);
   }
 
   /* 指示点自带 data-progress / data-status：嵌套的步骤条不会吃到外层步骤的状态。 */
@@ -483,6 +483,14 @@
     .astryx-step-connector::before {
       transition-duration: 0s;
       transition-delay: 0s;
+    }
+  }
+
+  /* 强制配色会把数字徽标的底色换成 Canvas，补一圈边让徽标的形状还看得见。 */
+  @media (forced-colors: active) {
+    .astryx-step-indicator[data-glyph='number'] {
+      outline: 1px solid CanvasText;
+      outline-offset: -1px;
     }
   }
 }

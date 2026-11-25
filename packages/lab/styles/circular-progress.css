@@ -92,15 +92,15 @@
   }
 
   .astryx-circular-progress__fill[data-variant='success'] {
-    stroke: var(--astryx-color-success, light-dark(#00490b, #a4d6a3));
+    stroke: var(--astryx-color-text-success, light-dark(#00490b, #a4d6a3));
   }
 
   .astryx-circular-progress__fill[data-variant='warning'] {
-    stroke: var(--astryx-color-warning, light-dark(#4b3900, #f8d36a));
+    stroke: var(--astryx-color-text-warning, light-dark(#4b3900, #f8d36a));
   }
 
   .astryx-circular-progress__fill[data-variant='error'] {
-    stroke: var(--astryx-color-error, light-dark(#76000c, #ffc4be));
+    stroke: var(--astryx-color-text-error, light-dark(#76000c, #ffc4be));
   }
 
   .astryx-circular-progress__fill[data-variant='neutral'],

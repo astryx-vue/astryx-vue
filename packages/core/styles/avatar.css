@@ -128,7 +128,7 @@
     border: var(--astryx-avatar-status-dot-border-width, var(--astryx-avatar-status-dot-computed-border-width, 1px)) solid var(--astryx-avatar-status-dot-border-color, var(--astryx-color-background-surface, #fff));
     border-radius: var(--astryx-radius-full, 9999px);
     background-color: var(--astryx-avatar-status-dot-success-background, var(--astryx-color-success, #198100));
-    color: var(--astryx-avatar-status-dot-success-foreground, var(--astryx-color-background-surface, #fff));
+    color: var(--astryx-avatar-status-dot-success-foreground, var(--astryx-color-on-success, #fff));
   }
 
   .astryx-avatar-status-dot[data-variant='neutral'] {
@@ -138,7 +138,7 @@
 
   .astryx-avatar-status-dot[data-variant='error'] {
     background-color: var(--astryx-avatar-status-dot-error-background, var(--astryx-color-error, #e33f4a));
-    color: var(--astryx-avatar-status-dot-error-foreground, var(--astryx-color-background-surface, #fff));
+    color: var(--astryx-avatar-status-dot-error-foreground, var(--astryx-color-on-error, #fff));
   }
 
   .astryx-avatar-status-dot__glyph {

@@ -11,6 +11,7 @@ import { normalizeThemeAdaptations, resolveThemeAdaptationRules } from './adapta
 import { assertTargetName } from './componentStyles.js'
 import { resolveLocalTokens } from './localTokens.js'
 import { mergeComponentMaps, resolveThemeValues, resolveTokenMap } from './resolveThemeValues.js'
+import { deriveStatusRoleTokens } from './statusRoleDerivation.js'
 import { resolveGenerativeAxes } from './themeAxes.js'
 import { compileThemeCss } from './themeCss.js'
 
@@ -50,6 +51,14 @@ function sealIndicators(indicators: IndicatorRegistry | undefined): IndicatorReg
   return sealed
 }
 
+/** The base's tokens without the ones it derived, so this theme derives its own. */
+function authoredBaseTokens(base: ThemeDefinition | undefined): Record<string, string> {
+  const tokens = { ...base?.tokens }
+  for (const name of base?.derivedTokens ?? [])
+    delete tokens[name]
+  return tokens
+}
+
 function assertTargets(components: ComponentStyleMap | undefined): void {
   for (const target of Object.keys(components ?? {}))
     assertTargetName(target)
@@ -66,6 +75,11 @@ function assertTargets(components: ComponentStyleMap | undefined): void {
  * `extends` starts from everything the base theme resolved to: tokens,
  * local tokens, component styles, surfaces, adaptations, icons, indicators.
  * This theme's own values win, and the result is self-contained.
+ *
+ * Status roles the theme does not set but whose colors it changes (a status
+ * fill, a pale fill, a surface, or the light and dark content colors) are
+ * computed against its own colors: content on each fill, status text, and
+ * content on each pale fill. See `statusRoleDerivation.ts`.
  */
 export function defineTheme<
   const IconVariants extends readonly string[] | undefined = undefined,
@@ -84,7 +98,11 @@ export function defineTheme<
 
   const base: ThemeDefinition | undefined = input.extends
   const own = resolveThemeValues(input, '')
-  const tokens = { ...base?.tokens, ...own.tokens }
+  const authoredTokens = { ...authoredBaseTokens(base), ...own.tokens }
+  // Status roles this theme leaves unset are computed from its own colors.
+  const derivedStatusRoles = deriveStatusRoleTokens(authoredTokens)
+  const tokens = { ...authoredTokens, ...derivedStatusRoles }
+  const derivedTokens = Object.keys(derivedStatusRoles)
   const components = mergeComponentMaps(base?.components, own.components)
   const local = resolveLocalTokens(input.name, input.localTokens, base, tokens)
 
@@ -132,6 +150,7 @@ export function defineTheme<
     __astryxTheme: true,
     name: input.name,
     tokens,
+    ...(derivedTokens.length > 0 ? { derivedTokens } : {}),
     ...(local ? { localTokens: local.localTokens, localTokenOwners: local.owners } : {}),
     onDark,
     onLight,

@@ -92,6 +92,26 @@ A `:hover` style applies to the enabled control only. Disabled and `aria-disable
 
 Some parts that paint inside a component have targets of their own: `kbd-key` on each key badge in Kbd, `typeahead-popup` on Typeahead's result popup, `calendar-range` and `calendar-range-preview` on Calendar's range band and its hover preview (with `start` and `end` on the band's first and last day), `bottom-sheet-handle` on BottomSheet's grab bar, and `alert-dialog-title` and `alert-dialog-description` on AlertDialog's title and description. `layout-header` and `layout-footer` reflect `container` (`card`, `dialog`, or `bottom-sheet`), so `'container:dialog'` styles a dialog's header without a card's. `toggle-button` reflects `grouped` inside a ToggleButtonGroup. An accent Link takes `--link-hover-color` on hover when a container or theme sets it.
 
+### Status colors
+
+A theme can set only a status fill and still get readable content and text. When a theme sets `--color-<status>`, `--color-<status>-muted`, a surface (`--color-background-surface` or `--color-background-card`), or its content colors (`--color-on-dark`, `--color-on-light`), `defineTheme` works out the roles measured against those colors that the theme leaves unset:
+
+- `--color-on-<status>`: `--color-on-dark` or `--color-on-light`, whichever contrasts more with the fill; pure white or black when neither reaches 4.5:1.
+- `--color-text-<status>`: the fill's hue, made lighter or darker until it reaches 4.5:1 on the surface and on cards.
+- `--color-on-<status>-muted`: the fill's hue at 4.5:1 on the pale fill.
+- `--color-icon-<status>` and `--color-border-<status>` follow the text role.
+
+```ts
+const brand = defineTheme({
+  name: 'brand',
+  tokens: { '--color-success': '#16a34a' },
+})
+// brand.tokens['--astryx-color-on-success'], ['--astryx-color-text-success'],
+// and ['--astryx-color-on-success-muted'] are filled in for both modes.
+```
+
+A role you set is never replaced, and fills are never worked out: a fill you leave unset keeps the default. A color you leave unset is read from `STATUS_COLOR_DEFAULTS`. A status whose measured colors are not plain hex or `rgb()`, such as `oklch()`, is left as it is. The worked-out names are listed in `theme.derivedTokens`; a theme that `extends` this one works them out again from its own colors. Adaptation rules do not work them out. To keep a component's previous color, set the matching role yourself, for example `--color-icon-success`.
+
 ### Local tokens
 
 `localTokens` holds values only one theme family uses, keyed by their full custom-property name. The name is kept exactly as written; no prefix is added. A shared token name such as `--color-accent` is refused here, because components already read it. A theme that extends this one inherits the local tokens and may change their values. A reference loop among them is an error.

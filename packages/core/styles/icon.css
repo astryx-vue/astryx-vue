@@ -131,6 +131,10 @@
     color: var(--astryx-icon-accent-foreground, currentcolor);
   }
 
+  .astryx-icon[data-color='info'] {
+    color: var(--astryx-icon-info-foreground, var(--astryx-color-icon-info, currentcolor));
+  }
+
   .astryx-icon[data-color='success'] {
     color: var(--astryx-icon-success-foreground, currentcolor);
   }

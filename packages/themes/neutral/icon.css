@@ -7,9 +7,10 @@
     --astryx-icon-secondary-foreground: light-dark(#6a6a6a, #9e9e9e);
     --astryx-icon-disabled-foreground: var(--astryx-color-text-disabled);
     --astryx-icon-accent-foreground: var(--astryx-color-icon-accent);
-    --astryx-icon-success-foreground: light-dark(#00490b, #a4d6a3);
-    --astryx-icon-error-foreground: light-dark(#76000c, #ffc4be);
-    --astryx-icon-warning-foreground: light-dark(#4b3900, #f8d36a);
+    --astryx-icon-info-foreground: var(--astryx-color-icon-info);
+    --astryx-icon-success-foreground: var(--astryx-color-icon-success);
+    --astryx-icon-error-foreground: var(--astryx-color-icon-error);
+    --astryx-icon-warning-foreground: var(--astryx-color-icon-warning);
     --astryx-icon-blue-foreground: light-dark(#003978, #88bcff);
     --astryx-icon-cyan-foreground: light-dark(#004351, #71c7dd);
     --astryx-icon-green-foreground: light-dark(#00490b, #a4d6a3);

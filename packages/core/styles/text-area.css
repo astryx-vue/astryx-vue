@@ -33,7 +33,7 @@
   }
 
   .astryx-text-area-count[data-over='true'] {
-    color: var(--astryx-input-error, #e33f4a);
+    color: var(--astryx-color-text-error, #e33f4a);
   }
 
   .astryx-text-area:has(.astryx-text-area-count) {
