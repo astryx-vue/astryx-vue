@@ -81,8 +81,8 @@
   - 不适用：只改上游 Avatar spec
 - [x] [`e9b3f3eda`](https://github.com/meta/astryx/commit/e9b3f3eda) fix(InputGroup): the group edge rules name members, not a universal selector (#8438)
   - Vue 版已有：InputGroup 由外层容器画边框，没有通配选择器的边缘规则
-- [ ] [`b298b37d1`](https://github.com/meta/astryx/commit/b298b37d1) feat(theme): add surface-specific status color roles (#7657)
-  - 待做：状态色角色 token 已有；缺给自定义主题自动推导 on/text/on-muted 角色，需要 core 内的 JS 颜色默认值表
+- [x] [`b298b37d1`](https://github.com/meta/astryx/commit/b298b37d1) feat(theme): add surface-specific status color roles (#7657)
+  - 已移植：[#517](https://github.com/astryx-vue/astryx-vue/pull/517)。core 新增默认状态色表（有防漂移测试），defineTheme 为自定义主题推导 on/text/on-muted 角色；组件改读正确的状态角色
 - [x] [`f042c6ebd`](https://github.com/meta/astryx/commit/f042c6ebd) docs(spec): Link records its shipped contract as current (#8455)
   - 不适用：只改上游内部规范文档
 - [x] [`21cab0e6f`](https://github.com/meta/astryx/commit/21cab0e6f) docs(spec): AvatarGroup records its shipped contract as current (#8450)
@@ -160,8 +160,8 @@
   - 已移植：[#505](https://github.com/astryx-vue/astryx-vue/pull/505)。不截断的 Text/Heading 里长串会换行，浮层根重置
 - [x] [`e3bd3d547`](https://github.com/meta/astryx/commit/e3bd3d547) fix(ButtonGroup, InputGroup): the last-member rule is :nth-last-child(1 of S), not a sibling-relative :has() (#9394)
   - 已移植：[#504](https://github.com/astryx-vue/astryx-vue/pull/504)。ButtonGroup 末尾成员用 :nth-last-child(1 of S)
-- [ ] [`99cc6dc85`](https://github.com/meta/astryx/commit/99cc6dc85) fix(core): many components carry only the English for their own strings (#9429)
-  - 待做：打包体积优化（每个组件只带自己的英文），用户可见文字不变；Vue 版内置文案是一整份 AstryxMessages，拆分需单独重构
+- [x] [`99cc6dc85`](https://github.com/meta/astryx/commit/99cc6dc85) fix(core): many components carry only the English for their own strings (#9429)
+  - 已移植：[#515](https://github.com/astryx-vue/astryx-vue/pull/515)。组件只按自己的命名空间读内置文案，单独引入一个组件时不再带上全部组件的文案；显示文字和 provider API 不变，有打包测试守住
 - [x] [`b5e716687`](https://github.com/meta/astryx/commit/b5e716687) refactor(Item, Token, ChatComposer): drop the per-site tooltip surface checks the layer boundary replaces (#9531)
   - 不适用：上游靠 React 合成事件在浮层根截停冒泡，Vue 按 DOM 冒泡仍需登记表
 
@@ -242,8 +242,8 @@
   - 已移植：[#501](https://github.com/astryx-vue/astryx-vue/pull/501)。粗指针下按压画在 ::before 上，抬手淡出走合成层
 - [x] [`f81f09df3`](https://github.com/meta/astryx/commit/f81f09df3) fix(CodeBlock, Carousel): the code viewport and the scroller draw the shared focus ring (#8875)
   - 已移植：[#498](https://github.com/astryx-vue/astryx-vue/pull/498)。焦点环画在根节点覆盖层上；CodeBlock 视口用共享焦点环
-- [ ] [`07f8de58c`](https://github.com/meta/astryx/commit/07f8de58c) feat(core): Carousel's hasSnap takes useSnapPaging(), iOS paging on native snap's stops (#8153)
-  - 待做：useSnapPaging 依赖手势系统、动画引擎和 createPager，归「交互逻辑常用函数」族（B3）的 SnapPaging/animator
+- [x] [`07f8de58c`](https://github.com/meta/astryx/commit/07f8de58c) feat(core): Carousel's hasSnap takes useSnapPaging(), iOS paging on native snap's stops (#8153)
+  - 已移植：[#518](https://github.com/astryx-vue/astryx-vue/pull/518)。新增 useSnapPaging，Carousel 的 hasSnap 接受它：手指或触控板横扫按速度选页、一次最多一页
 - [x] [`d88dff821`](https://github.com/meta/astryx/commit/d88dff821) docs(ButtonGroup): drop the rule that arrows skip disabled members (#10203)
   - 已移植：[#504](https://github.com/astryx-vue/astryx-vue/pull/504)。文档删掉“方向键跳过禁用成员”的承诺
 - [x] [`6da9b3244`](https://github.com/meta/astryx/commit/6da9b3244) fix(core): render plain Link anchors inline so an ancestor Text clamp can truncate them (#6038)
@@ -263,8 +263,8 @@
   - Vue 版已有：avatar.css 首字母颜色本就是 text-primary
 - [x] [`c48bb2334`](https://github.com/meta/astryx/commit/c48bb2334) fix(core): a labelled Button keeps its name in macOS 14 WebKit (#10256)
   - 已移植：[#494](https://github.com/astryx-vue/astryx-vue/pull/494)
-- [ ] [`e10347c4e`](https://github.com/meta/astryx/commit/e10347c4e) fix(Button): under a finger, a Button's target grows toward 44 px through the shared touch band (#10216)
-  - 待做：需要触控热区测量设施（useTouchHitArea、邻居半间距夹紧），属交互基础族（B3）
+- [x] [`e10347c4e`](https://github.com/meta/astryx/commit/e10347c4e) fix(Button): under a finger, a Button's target grows toward 44 px through the shared touch band (#10216)
+  - 已移植：[#516](https://github.com/astryx-vue/astryx-vue/pull/516)。新增触控热区设施：粗指针下按钮热区向 44px 扩大，夹紧到与邻居间距的一半；ButtonGroup、ToggleButtonGroup 成员共用组热区
 
 ### v0.7.12
 
@@ -274,14 +274,14 @@
   - 不适用：上游 Playwright 测试
 - [x] [`6cbcbf846`](https://github.com/meta/astryx/commit/6cbcbf846) fix(core): a press inside a scroll view highlights 150 ms after touch (#10260)
   - 已移植：[#501](https://github.com/astryx-vue/astryx-vue/pull/501)。滚动视图内 150ms 从触摸事件时间戳算起
-- [ ] [`72a355851`](https://github.com/meta/astryx/commit/72a355851) fix(Carousel): under snap paging, the edge buttons follow the held row (#10359)
-  - 待做：依赖 snap paging（B3）
+- [x] [`72a355851`](https://github.com/meta/astryx/commit/72a355851) fix(Carousel): under snap paging, the edge buttons follow the held row (#10359)
+  - 已移植：[#518](https://github.com/astryx-vue/astryx-vue/pull/518)。按住时边缘按钮、渐隐跟随被按住的行
 - [x] [`c3cef9f67`](https://github.com/meta/astryx/commit/c3cef9f67) docs(records): Kbd, LayerProvider and theming-surface verification follow-ups (#10299)
   - 不适用：只改上游 spec 与架构记录
 - [x] [`9b7ebc461`](https://github.com/meta/astryx/commit/9b7ebc461) test(interaction-harness): a hold sent from the test names the motion it judges (#10438)
   - 不适用：上游 interaction-harness 测试脚手架
-- [ ] [`78df0c20b`](https://github.com/meta/astryx/commit/78df0c20b) fix(Carousel): under snap paging, scroll calls move through the paging (#10384)
-  - 待做：依赖 snap paging（B3）
+- [x] [`78df0c20b`](https://github.com/meta/astryx/commit/78df0c20b) fix(Carousel): under snap paging, scroll calls move through the paging (#10384)
+  - 已移植：[#518](https://github.com/astryx-vue/astryx-vue/pull/518)。边缘按钮、方向键和 scroll 调用都走分页
 - [x] [`4e6e67df6`](https://github.com/meta/astryx/commit/4e6e67df6) fix(core): make disabled Button focusable via aria-disabled per AST-085 (#7906)
   - 已移植：[#496](https://github.com/astryx-vue/astryx-vue/pull/496)。Button 不再用原生 disabled；ButtonGroup、Toolbar 整组禁用保留一个 Tab 停靠点；Carousel 隐藏按钮 inert；lab ListInput 禁用时不重排
 - [x] [`ed862ea90`](https://github.com/meta/astryx/commit/ed862ea90) test(Button): the press-release storyboard arms its hold first (#10479)
@@ -290,14 +290,14 @@
   - 不适用：React context 多副本问题
 - [x] [`c8b4cba38`](https://github.com/meta/astryx/commit/c8b4cba38) test(Button, gestures): arm press holds and blocks before the gesture (#10521)
   - 不适用：上游 Playwright 测试
-- [ ] [`209e06765`](https://github.com/meta/astryx/commit/209e06765) fix(Carousel): an edge button changes in the frame the held row leaves (#10523)
-  - 待做：依赖 snap paging（B3）
+- [x] [`209e06765`](https://github.com/meta/astryx/commit/209e06765) fix(Carousel): an edge button changes in the frame the held row leaves (#10523)
+  - 已移植：[#518](https://github.com/astryx-vue/astryx-vue/pull/518)。边缘按钮在行离开边缘的同一帧切换
 - [x] [`62bc7a2fe`](https://github.com/meta/astryx/commit/62bc7a2fe) fix(core): a swizzled copy shares the animated-layout, code-language and snap-paging brands (#10576)
   - 不适用：Vue 版没有 animated-layout 句柄、代码语言品牌值和 snap paging
 - [x] [`fac363ee8`](https://github.com/meta/astryx/commit/fac363ee8) fix(Kbd): ctrl, alt, shift and meta show text off Apple platforms (#10524)
   - 已移植：[#503](https://github.com/astryx-vue/astryx-vue/pull/503)。非 Apple 平台修饰键显示文字
-- [ ] [`9218a4598`](https://github.com/meta/astryx/commit/9218a4598) fix(SnapPaging): a stop within half a step of the end is the end page (#10591)
-  - 待做：依赖 snap paging（B3）
+- [x] [`9218a4598`](https://github.com/meta/astryx/commit/9218a4598) fix(SnapPaging): a stop within half a step of the end is the end page (#10591)
+  - 已移植：[#518](https://github.com/astryx-vue/astryx-vue/pull/518)。离末端不到半步的停点并进最后一页
 - [x] [`7bc8230f8`](https://github.com/meta/astryx/commit/7bc8230f8) fix(Button): a labelled button grows with its label (#10588)
   - Vue 版已有：button.css 的 height: max(尺寸, 1lh)，纯图标按钮固定高度
 - [x] [`611382ee1`](https://github.com/meta/astryx/commit/611382ee1) feat(lab): add LineClamp — clamp arbitrary content to N lines (#4259)
