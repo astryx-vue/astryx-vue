@@ -802,7 +802,7 @@
 
   .astryx-chat-unread__label {
     flex-shrink: 0;
-    color: var(--astryx-chat-unread-color, var(--astryx-color-border-red));
+    color: var(--astryx-chat-unread-color, var(--astryx-color-text-error));
     font-size: var(--astryx-text-supporting-size, 0.75rem);
     font-weight: var(--astryx-chat-font-weight-bold, var(--astryx-font-weight-bold, 700));
     line-height: var(--astryx-text-supporting-leading, 1.6667);
@@ -1028,12 +1028,19 @@
 
   .astryx-chat-composer__status[data-type='error'] {
     background-color: var(--astryx-color-error-muted);
-    color: var(--astryx-color-text-red);
+    color: var(--astryx-color-on-error-muted);
   }
 
   .astryx-chat-composer__status[data-type='warning'] {
     background-color: var(--astryx-color-warning-muted);
-    color: var(--astryx-color-text-yellow);
+    color: var(--astryx-color-on-warning-muted);
+  }
+
+  @media (forced-colors: active) {
+    .astryx-chat-composer__status {
+      outline: 1px solid CanvasText;
+      outline-offset: -1px;
+    }
   }
 
   .astryx-chat-composer-input {

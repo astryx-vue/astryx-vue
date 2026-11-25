@@ -132,6 +132,33 @@ const brand = defineTheme({
 
 ## 进阶：主题自己的变量、环境适配和继承
 
+### 状态色 {#status-colors}
+
+自定义主题可以只给一个状态的底色，剩下的字色交给 `defineTheme` 去算。只要主题写了 `--color-<状态>`（实心底色）、`--color-<状态>-muted`（浅色底）、表面色（`--color-background-surface` 或 `--color-background-card`），或者两种内容色（`--color-on-dark`、`--color-on-light`）里的任何一个，跟这些颜色有关、而主题自己没写的角色，就会按主题自己的颜色算出来：
+
+- `--color-on-<状态>`：实心底上的字。从 `--color-on-dark` 和 `--color-on-light` 里挑和底色反差更大的那个；两个都不到 4.5:1 时，换成纯白或纯黑。
+- `--color-text-<状态>`：页面上的状态文字。保持底色的色相，调深或调浅，直到在表面和卡片上都够 4.5:1。
+- `--color-on-<状态>-muted`：浅色底上的字。同样保持色相，在浅色底上够 4.5:1。
+- `--color-icon-<状态>` 和 `--color-border-<状态>` 跟着状态文字色走。
+
+```ts
+const brand = defineTheme({
+  name: 'brand',
+  tokens: { '--color-success': '#16a34a' },
+})
+// brand.tokens 里会补上 --astryx-color-on-success、--astryx-color-text-success、
+// --astryx-color-on-success-muted，浅色和深色各一份。
+```
+
+几条规矩：
+
+- 主题自己写了的角色，一律不改。
+- 底色本身不会被算出来：没写的底色就用默认值。
+- 主题没写的颜色，从 `STATUS_COLOR_DEFAULTS` 里读默认值，这份表和 `@astryx-vue/themes/neutral/base.css` 保持一致。
+- 要量的颜色里只要有一个不是普通的十六进制或 `rgb()`（比如 `oklch()`），这个状态就不算，保持原样。
+- 算出来的变量名记在 `theme.derivedTokens` 里。用 `extends` 继承这套主题的子主题，会按自己的颜色重新算一遍。环境规则 `adaptations` 里不会算。
+- 想让某个组件保持原来的颜色，自己写上对应的角色就行，比如 `--color-icon-success`。
+
 ### 主题局部变量 `localTokens`
 
 有些值只有你这一套主题用得上，比如品牌的墨水色。把它放进 `localTokens`，键就是完整的 CSS 变量名，原样保存，不会加前缀：

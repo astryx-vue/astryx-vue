@@ -175,7 +175,7 @@
   }
 
   .astryx-more-menu__item--destructive {
-    color: var(--astryx-more-menu-destructive-foreground, var(--astryx-icon-error-foreground, light-dark(#76000c, #ffc4be)));
+    color: var(--astryx-more-menu-destructive-foreground, var(--astryx-color-text-error, light-dark(#76000c, #ffc4be)));
   }
 
   .astryx-more-menu__item-start,
@@ -357,10 +357,10 @@
   }
 
   .astryx-more-menu__sheet-item--destructive {
-    --astryx-item-label-color: var(--astryx-more-menu-destructive-foreground, var(--astryx-icon-error-foreground, light-dark(#76000c, #ffc4be)));
-    --astryx-item-description-color: var(--astryx-more-menu-destructive-foreground, var(--astryx-icon-error-foreground, light-dark(#76000c, #ffc4be)));
+    --astryx-item-label-color: var(--astryx-more-menu-destructive-foreground, var(--astryx-color-text-error, light-dark(#76000c, #ffc4be)));
+    --astryx-item-description-color: var(--astryx-more-menu-destructive-foreground, var(--astryx-color-text-error, light-dark(#76000c, #ffc4be)));
 
-    color: var(--astryx-more-menu-destructive-foreground, var(--astryx-icon-error-foreground, light-dark(#76000c, #ffc4be)));
+    color: var(--astryx-more-menu-destructive-foreground, var(--astryx-color-text-error, light-dark(#76000c, #ffc4be)));
   }
 
   .astryx-more-menu-sheet-enter-active,

@@ -6,7 +6,27 @@ title: Color
 
 Neutral colors are `--astryx-color-*`. Each one uses `light-dark()` for the light stop and the dark stop. In the grid below, the left chip is light and the right chip is dark. Translucent colors sit on a checkerboard.
 
-The set covers surfaces, text, icons, success, warning, error, and the blue, cyan, gray, green, orange, pink, purple, red, teal, and yellow groups for background, border, icon, and text. `Badge` variants use those names, for example `variant="blue"`.
+The set covers surfaces, text, icons, the info, success, warning, and error statuses, and the blue, cyan, gray, green, orange, pink, purple, red, teal, and yellow groups for background, border, icon, and text. `Badge` variants use those names, for example `variant="blue"`.
+
+## Status colors
+
+Each status (`info`, `success`, `warning`, `error`) has a role for every surface it appears on:
+
+| Variable | Where it goes |
+| --- | --- |
+| `--astryx-color-<status>` | The strong fill: Badge, StatusDot, progress fills. |
+| `--astryx-color-on-<status>` | Text and icons on the strong fill, at 4.5:1 or more. |
+| `--astryx-color-<status>-muted` | The pale fill: Banner, field status messages, the chat composer status bar. |
+| `--astryx-color-on-<status>-muted` | Text and icons on the pale fill. |
+| `--astryx-color-text-<status>` | Status text on the page and on cards, such as a destructive menu item or an over-limit count. |
+| `--astryx-color-icon-<status>` | Status icons on the page, such as `Icon color="success"` and Stepper glyphs. Follows the text role. |
+| `--astryx-color-border-<status>` | Status borders, such as an input in the error state. Follows the text role. |
+
+Info is its own status, not the accent. To change one status, set its fill; a theme from `defineTheme` works out the content and text roles you leave unset (see [Status colors in a theme](./extending#status-colors)).
+
+The defaults live in `@astryx-vue/themes/neutral/base.css`. Code that measures colors, such as a contrast check, can read the same values from `STATUS_COLOR_DEFAULTS` in `@astryx-vue/core/Theme`.
+
+## Chart colors
 
 Chart colors are `--astryx-color-data-*`, 56 of them, with the same names and values as upstream. Categorical colors give one color to each series, for example `--astryx-color-data-categorical-blue`, and the light and dark stops are the same hex. Sequential ramps run from 5 to 1, 5 darkest and 1 lightest, for example `--astryx-color-data-blue-5`. The gray ramp and `--astryx-color-data-neutral` change with the color scheme. The neutral one is for labels and reference lines.
 

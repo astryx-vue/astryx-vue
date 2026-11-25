@@ -18,8 +18,26 @@ title: 颜色
 
 系统中的大部分颜色都具有明确的「语义用途」，而不是冷冰冰的十六进制代码：
 - **基础层次：** 背景表面（surface/card）、各级文字（primary/secondary/tertiary）、图标和边框。
-- **状态反馈：** 成功（success）、警告（warning）、错误（danger）与信息提示。
+- **状态反馈：** 信息（info）、成功（success）、警告（warning）、错误（error）。
 - **色彩家族：** 蓝（blue）、青（cyan）、灰（gray）、绿（green）、橙（orange）、粉（pink）、紫（purple）、红（red）、茶（teal）、黄（yellow）。每一组颜色都配齐了对应的浅底背景、边框、图标与文字前景色。例如 `Badge` 徽标组件的 `variant="blue"` 就会成套取用这组蓝色。
+
+## 状态色的几种角色
+
+同一个状态会出现在不同的底上：有时是一整块实心的颜色，有时是一块浅浅的底，有时只是页面上的一行字。每种情况各有一个变量（`<状态>` 是 `info`、`success`、`warning`、`error` 之一）：
+
+| 变量 | 用在哪里 |
+| --- | --- |
+| `--astryx-color-<状态>` | 实心底色：Badge、StatusDot、进度条的填充。 |
+| `--astryx-color-on-<状态>` | 实心底上的文字和图标，反差至少 4.5:1。 |
+| `--astryx-color-<状态>-muted` | 浅色底：Banner、表单的状态提示、聊天输入框的状态条。 |
+| `--astryx-color-on-<状态>-muted` | 浅色底上的文字和图标。 |
+| `--astryx-color-text-<状态>` | 页面和卡片上的状态文字，比如菜单里的危险操作、超出字数的计数。 |
+| `--astryx-color-icon-<状态>` | 页面上的状态图标，比如 `Icon color="success"`、步骤条的状态图标。默认跟状态文字色一样。 |
+| `--astryx-color-border-<状态>` | 状态边框，比如出错的输入框。默认跟状态文字色一样。 |
+
+信息（info）是独立的状态，不再借用主题强调色。想换某个状态的颜色，写它的底色就够了：用 `defineTheme` 做的主题会把没写的字色自动算出来（见[主题里的状态色](./extending#status-colors)）。
+
+默认值写在 `@astryx-vue/themes/neutral/base.css` 里。需要量颜色的代码（比如对比度检查）可以从 `@astryx-vue/core/Theme` 导入 `STATUS_COLOR_DEFAULTS`，读到的是同一组值。
 
 ## 数据可视化与图表色
 

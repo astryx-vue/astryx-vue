@@ -112,6 +112,6 @@
   }
 
   .astryx-richtext-editor__counter[data-over='true'] {
-    color: var(--astryx-color-error, #e33f4a);
+    color: var(--astryx-color-text-error, #e33f4a);
   }
 }

@@ -34,18 +34,18 @@
   }
 
   .astryx-input-group.status-error {
-    --astryx-input-focus: var(--astryx-input-error, #e33f4a);
-    border-color: var(--astryx-input-error, #e33f4a);
+    --astryx-input-focus: var(--astryx-input-error, var(--astryx-color-border-error, #e33f4a));
+    border-color: var(--astryx-input-error, var(--astryx-color-border-error, #e33f4a));
   }
 
   .astryx-input-group.status-warning {
-    --astryx-input-focus: var(--astryx-input-warning, #a67a00);
-    border-color: var(--astryx-input-warning, #a67a00);
+    --astryx-input-focus: var(--astryx-input-warning, var(--astryx-color-border-warning, #a67a00));
+    border-color: var(--astryx-input-warning, var(--astryx-color-border-warning, #a67a00));
   }
 
   .astryx-input-group.status-success {
-    --astryx-input-focus: var(--astryx-input-success, #198100);
-    border-color: var(--astryx-input-success, #198100);
+    --astryx-input-focus: var(--astryx-input-success, var(--astryx-color-border-success, #198100));
+    border-color: var(--astryx-input-success, var(--astryx-color-border-success, #198100));
   }
 
   .astryx-input-group-shell {

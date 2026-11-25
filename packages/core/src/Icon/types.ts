@@ -15,6 +15,7 @@ export interface IconColorMap {
   error: true
   gray: true
   green: true
+  info: true
   inherit: true
   orange: true
   pink: true

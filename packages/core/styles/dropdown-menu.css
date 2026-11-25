@@ -172,9 +172,9 @@
 
   /* Only the text and icon recolor; the highlight stays the shared neutral. */
   .astryx-dropdown-menu .astryx-item.astryx-dropdown-menu-item[data-variant='destructive'] {
-    --astryx-item-label-color: var(--astryx-dropdown-menu-destructive-foreground, light-dark(#a50c25, #ffc6c1));
-    --astryx-item-description-color: var(--astryx-dropdown-menu-destructive-foreground, light-dark(#a50c25, #ffc6c1));
-    color: var(--astryx-dropdown-menu-destructive-foreground, light-dark(#a50c25, #ffc6c1));
+    --astryx-item-label-color: var(--astryx-dropdown-menu-destructive-foreground, var(--astryx-color-text-error, light-dark(#a50c25, #ffc6c1)));
+    --astryx-item-description-color: var(--astryx-dropdown-menu-destructive-foreground, var(--astryx-color-text-error, light-dark(#a50c25, #ffc6c1)));
+    color: var(--astryx-dropdown-menu-destructive-foreground, var(--astryx-color-text-error, light-dark(#a50c25, #ffc6c1)));
   }
 
   /*
