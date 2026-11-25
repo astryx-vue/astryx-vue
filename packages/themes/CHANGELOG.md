@@ -1,5 +1,9 @@
 # @astryx-vue/themes
 
+## 0.7.24
+
+No changes in this release.
+
 ## 0.7.23
 
 No changes in this release.
