@@ -106,6 +106,9 @@ export type {
 export { InfoTip } from './InfoTip/index.js'
 export type { InfoTipProps, InfoTipSize } from './InfoTip/index.js'
 
+export { LineClamp } from './LineClamp/index.js'
+export type { LineClampAs, LineClampProps, LineClampSlots, LineClampTooltipPlacement } from './LineClamp/index.js'
+
 export { ListInput } from './ListInput/index.js'
 export type {
   ListInputChange,

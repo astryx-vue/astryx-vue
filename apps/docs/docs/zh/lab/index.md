@@ -48,6 +48,7 @@ import '@astryx-vue/lab/lab.css'
 | [CircularProgress](/lab/circular-progress) | 显示确定或不确定的圆环进度。 |
 | [DiffViewer](/lab/diff-viewer) | 展示单个文件的统一或分栏 diff。 |
 | [InfoTip](/lab/info-tip) | 为术语和指标提供补充解释。 |
+| [LineClamp](/lab/line-clamp) | 把任意内容截成固定行数，截断时用提示显示全文。 |
 | [LogStream](/lab/log-stream) | 展示可展开、可跟随的日志流。 |
 | [Stat](/lab/stat) | 展示关键指标及趋势。 |
 | [SVGIcon](/lab/svg-icon) | 按路径角色渲染多变体 SVG 图标。 |
