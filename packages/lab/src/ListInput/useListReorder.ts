@@ -196,7 +196,8 @@ export function useListReorder<T>(options: ListReorderOptions<T>): ListReorder<T
   }
 
   function onHandleKeydown(event: KeyboardEvent, item: T, index: number): void {
-    if (event.altKey || event.ctrlKey || event.metaKey)
+    // 禁用的手柄用 aria-disabled，仍然能聚焦、收到方向键；列表禁用或加载中时一律不重排。
+    if (event.altKey || event.ctrlKey || event.metaKey || options.isBlocked())
       return
     const current = state.value
     const isActivationKey = event.key === ' ' || event.key === 'Enter'

@@ -29,11 +29,11 @@ describe('chat composer', () => {
     expect(wrapper.get('.astryx-chat-composer-input__placeholder').text()).toBe('Type a message…')
     expect(editable.attributes('role')).toBe('textbox')
     expect(editable.attributes('aria-label')).toBe('Message input')
-    expect(wrapper.get('button.astryx-chat-send').attributes('disabled')).toBe('')
+    expect(wrapper.get('button.astryx-chat-send').attributes('aria-disabled')).toBe('true')
 
     typeInto(editable.element, '  hello  ')
     await nextTick()
-    expect(wrapper.get('button.astryx-chat-send').attributes('disabled')).toBeUndefined()
+    expect(wrapper.get('button.astryx-chat-send').attributes('aria-disabled')).toBeUndefined()
 
     await editable.trigger('keydown', { key: 'Enter' })
     expect(wrapper.emitted('submit')).toEqual([['hello']])
@@ -47,8 +47,8 @@ describe('chat composer', () => {
       slots: { drawer: '<div class="drawer-slot">notes.md</div>' },
     })
     const button = wrapper.get('button.astryx-chat-send')
-    expect(button.attributes('disabled')).toBe('')
-    expect(button.attributes('aria-disabled')).toBeUndefined()
+    expect(button.attributes('disabled')).toBeUndefined()
+    expect(button.attributes('aria-disabled')).toBe('true')
 
     await button.trigger('click')
     expect(wrapper.emitted('submit')).toBeUndefined()
@@ -56,11 +56,11 @@ describe('chat composer', () => {
     const editable = wrapper.get('.astryx-chat-composer-input__editable')
     typeInto(editable.element, ' \n\t ')
     await nextTick()
-    expect(wrapper.get('button.astryx-chat-send').attributes('disabled')).toBe('')
+    expect(wrapper.get('button.astryx-chat-send').attributes('aria-disabled')).toBe('true')
 
     typeInto(editable.element, 'hello')
     await nextTick()
-    expect(wrapper.get('button.astryx-chat-send').attributes('disabled')).toBeUndefined()
+    expect(wrapper.get('button.astryx-chat-send').attributes('aria-disabled')).toBeUndefined()
     await wrapper.get('button.astryx-chat-send').trigger('click')
     expect(wrapper.emitted('submit')).toEqual([['hello']])
   })

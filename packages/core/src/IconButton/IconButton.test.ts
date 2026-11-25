@@ -41,6 +41,6 @@ describe('iconButton', () => {
     const button = wrapper.find('.astryx-button')
 
     expect(button.attributes('data-size')).toBe('sm')
-    expect(button.attributes('disabled')).toBe('')
+    expect(button.attributes('aria-disabled')).toBe('true')
   })
 })

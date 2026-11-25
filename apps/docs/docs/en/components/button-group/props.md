@@ -33,7 +33,7 @@ ButtonGroup receives Button or IconButton through its required default slot.
 | `Home` | Focus the first available button. |
 | `End` | Focus the last available button. |
 
-- Keyboard navigation skips disabled buttons.
+- Arrow-key navigation skips disabled buttons; when every button is disabled, the group still keeps one Tab stop so keyboard users can reach it.
 - Right-to-left horizontal layouts reverse the Left and Right Arrow behavior.
 
 ## Template ref

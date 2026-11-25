@@ -30,6 +30,8 @@ const { listRef: element, handleKeyDown, handleFocus } = useListFocus({
   boundarySelector: '[role="group"], [popover]',
   orientation: () => props.orientation,
   hasRovingTabIndex: true,
+  // 成员禁用时仍可聚焦，整组禁用也保留一个 Tab 停靠点，键盘用户照样能到这组。
+  hasDisabledTabStop: true,
 })
 const isDisabled = computed(() => props.isDisabled)
 const size = useSize(() => props.size, 'md')

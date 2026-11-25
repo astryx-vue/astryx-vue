@@ -198,7 +198,7 @@ describe('toggleButton', () => {
     })
 
     const button = wrapper.find('button')
-    expect(button.attributes('disabled')).toBeDefined()
+    expect(button.attributes('aria-disabled')).toBe('true')
 
     await button.trigger('click')
 
@@ -491,11 +491,11 @@ describe('toggleButtonGroup', () => {
       },
     })
 
-    expect(buttonNamed(wrapper, 'List')?.attributes('disabled')).toBeDefined()
-    expect(buttonNamed(wrapper, 'Grid')?.attributes('disabled')).toBeUndefined()
+    expect(buttonNamed(wrapper, 'List')?.attributes('aria-disabled')).toBe('true')
+    expect(buttonNamed(wrapper, 'Grid')?.attributes('aria-disabled')).toBeUndefined()
 
     await wrapper.setProps({ isDisabled: true })
-    expect(buttonNamed(wrapper, 'Grid')?.attributes('disabled')).toBeDefined()
+    expect(buttonNamed(wrapper, 'Grid')?.attributes('aria-disabled')).toBe('true')
   })
 
   it('owns the pressed state of a member that also carries standalone handlers', async () => {

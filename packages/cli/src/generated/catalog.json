@@ -209,7 +209,7 @@
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Disables interaction. A tooltip switches this to aria-disabled so focus remains available."
+                "description": "Disables interaction. The button never uses the native disabled attribute: it is marked aria-disabled and stays in the Tab order, so keyboard and screen-reader users can still reach it."
               },
               {
                 "name": "`isLoading`",
@@ -336,7 +336,7 @@
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "是否禁用，禁用后不再响应交互。存在 tooltip 时改用 aria-disabled，让按钮保留焦点。"
+                "description": "是否禁用，禁用后不再响应交互。按钮不用原生 disabled，而是标记 aria-disabled 并留在 Tab 顺序里，键盘和读屏用户仍能聚焦、读到它。"
               },
               {
                 "name": "`isLoading`",
@@ -894,7 +894,7 @@
           },
           {
             "heading": "Keyboard navigation",
-            "text": "- Keyboard navigation skips disabled buttons.\n- Right-to-left horizontal layouts reverse the Left and Right Arrow behavior.\n\n- Left and Right Arrow: Left and Right Arrow\n- Up and Down Arrow: Up and Down Arrow\n- `Home`: `Home`\n- `End`: `End`"
+            "text": "- Arrow-key navigation skips disabled buttons; when every button is disabled, the group still keeps one Tab stop so keyboard users can reach it.\n- Right-to-left horizontal layouts reverse the Left and Right Arrow behavior.\n\n- Left and Right Arrow: Left and Right Arrow\n- Up and Down Arrow: Up and Down Arrow\n- `Home`: `Home`\n- `End`: `End`"
           },
           {
             "heading": "Template ref",
@@ -912,7 +912,7 @@
           },
           {
             "heading": "键盘导航",
-            "text": "- 键盘导航跳过禁用按钮。\n- 从右到左的水平布局会交换左右方向键的行为。\n\n- 左右方向键: 左右方向键\n- 上下方向键: 上下方向键\n- `Home`: `Home`\n- `End`: `End`"
+            "text": "- 方向键导航跳过禁用按钮；整组都禁用时仍保留一个 Tab 停靠点，键盘用户照样能到这组。\n- 从右到左的水平布局会交换左右方向键的行为。\n\n- 左右方向键: 左右方向键\n- 上下方向键: 上下方向键\n- `Home`: `Home`\n- `End`: `End`"
           },
           {
             "heading": "模板引用",
@@ -3578,7 +3578,7 @@
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Disables interaction. A tooltip switches this to aria-disabled so focus remains available."
+                "description": "Disables interaction. The button never uses the native disabled attribute: it is marked aria-disabled and stays in the Tab order, so keyboard and screen-reader users can still reach it."
               },
               {
                 "name": "`isLoading`",
@@ -3651,7 +3651,7 @@
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "是否禁用交互。存在 tooltip 时改用 aria-disabled 标记，让按钮保留焦点以显示提示。"
+                "description": "是否禁用，禁用后不再响应交互。按钮不用原生 disabled，而是标记 aria-disabled 并留在 Tab 顺序里，键盘和读屏用户仍能聚焦、读到它。"
               },
               {
                 "name": "`isLoading`",
@@ -5768,7 +5768,7 @@
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Disables interaction. A disabled group disables every member, and an enabled group never re-enables a member that disabled itself. With a tooltip the button switches to `aria-disabled` so focus stays available to read the reason."
+                "description": "Disables interaction. A disabled group disables every member, and an enabled group never re-enables a member that disabled itself. A disabled button is marked `aria-disabled` instead of the native attribute, so it stays focusable."
               },
               {
                 "name": "`isLoading`",
@@ -5876,7 +5876,7 @@
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "是否禁用。分组的 isDisabled 会禁用全部成员；成员自己禁用自己时，启用中的分组不会把它重新启用。带 tooltip 时改用 `aria-disabled`，按钮仍可获得焦点以读出禁用原因。"
+                "description": "是否禁用。分组的 isDisabled 会禁用全部成员；成员自己禁用自己时，启用中的分组不会把它重新启用。禁用时标记 `aria-disabled`，不用原生 disabled，按钮仍可获得焦点。"
               },
               {
                 "name": "`isLoading`",
@@ -6075,7 +6075,7 @@
           },
           {
             "heading": "Keyboard",
-            "text": "The group does not take over the arrow keys: each member is its own tab stop, so `Tab` walks them one by one and the arrow keys do not move focus between members — unlike `ButtonGroup`. Disabled members are skipped, while a disabled member that carries a tooltip stays focusable so its reason can be read.\n\n- `Tab`: `Tab`\n- `Enter` / `Space`: `Enter` / `Space`"
+            "text": "The group does not take over the arrow keys: each member is its own tab stop, so `Tab` walks them one by one and the arrow keys do not move focus between members — unlike `ButtonGroup`. Disabled members stay tab stops too (marked `aria-disabled`); they just do not activate.\n\n- `Tab`: `Tab`\n- `Enter` / `Space`: `Enter` / `Space`"
           },
           {
             "heading": "Template ref",
@@ -6093,7 +6093,7 @@
           },
           {
             "heading": "键盘",
-            "text": "分组本身不拦截方向键：每个成员都是独立的 tab 停靠点，`Tab` 逐个经过，方向键不会在成员之间移动焦点（这一点与 `ButtonGroup` 不同）。禁用的成员会被跳过，带 tooltip 的禁用成员仍可获得焦点以便读出禁用原因。\n\n- `Tab`: `Tab`\n- `Enter` / `Space`: `Enter` / `Space`"
+            "text": "分组本身不拦截方向键：每个成员都是独立的 tab 停靠点，`Tab` 逐个经过，方向键不会在成员之间移动焦点（这一点与 `ButtonGroup` 不同）。禁用的成员同样是 Tab 停靠点（标记为 `aria-disabled`），只是不响应激活。\n\n- `Tab`: `Tab`\n- `Enter` / `Space`: `Enter` / `Space`"
           },
           {
             "heading": "模板引用",

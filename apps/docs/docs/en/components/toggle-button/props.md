@@ -41,7 +41,7 @@ footer: false
         <td><code>isDisabled</code></td>
         <td><code>boolean</code></td>
         <td><code>false</code></td>
-        <td>Disables interaction. A disabled group disables every member, and an enabled group never re-enables a member that disabled itself. With a tooltip the button switches to <code>aria-disabled</code> so focus stays available to read the reason.</td>
+        <td>Disables interaction. A disabled group disables every member, and an enabled group never re-enables a member that disabled itself. A disabled button is marked <code>aria-disabled</code> instead of the native attribute, so it stays focusable.</td>
       </tr>
       <tr>
         <td><code>isLoading</code></td>
@@ -204,7 +204,7 @@ ToggleButtonGroup takes its members through the default slot:
 | `Tab` | Moves through every available toggle; a group does not collapse its members into a single tab stop. |
 | `Enter` / `Space` | Toggles the focused button, exactly like a click. |
 
-The group does not take over the arrow keys: each member is its own tab stop, so `Tab` walks them one by one and the arrow keys do not move focus between members — unlike `ButtonGroup`. Disabled members are skipped, while a disabled member that carries a tooltip stays focusable so its reason can be read.
+The group does not take over the arrow keys: each member is its own tab stop, so `Tab` walks them one by one and the arrow keys do not move focus between members — unlike `ButtonGroup`. Disabled members stay tab stops too (marked `aria-disabled`); they just do not activate.
 
 ## Template ref
 

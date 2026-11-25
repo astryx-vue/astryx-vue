@@ -71,12 +71,11 @@ const isTrueDisabled = computed(() => isLocallyDisabled.value)
 const isBusyOnlyDisabled = computed(() =>
   !isTrueDisabled.value && isLoadingState.value && !props.isInterruptible,
 )
+// 同上游 #7906（AST-085）：按钮从不渲染原生 disabled，禁用和忙碌都用 aria-disabled。
+// 按钮因此留在 Tab 顺序里，聚焦时变成禁用也不会把焦点丢到 body；所有激活途径
+// （鼠标、Enter、Space）由 useButtonAction 和 handleRootKeydown 拦住。
 const isButtonDisabled = computed(() => isTrueDisabled.value || isBusyOnlyDisabled.value)
 const hasTooltip = computed(() => (props.tooltip?.trim().length ?? 0) > 0)
-// 忙碌或带提示时用 aria-disabled，按钮仍可聚焦；真正禁用且无提示才用原生 disabled。
-const useAriaDisabled = computed(() =>
-  isButtonDisabled.value && (isBusyOnlyDisabled.value || hasTooltip.value),
-)
 const safeHref = computed(() => props.href != null && isSafeUrl(props.href) ? props.href : undefined)
 // 只有真正禁用才退回 <button>；忙碌时换掉 <a> 同样会让焦点丢失。
 const renderAsLink = computed(() => props.href != null && !isTrueDisabled.value)
@@ -89,10 +88,7 @@ const rootComponent = computed<ButtonLinkElement | 'button'>(() => {
   return toRaw(props.as ?? linkComponent.value ?? 'a')
 })
 const isCustomLink = computed(() => renderAsLink.value && safeHref.value != null && rootComponent.value !== 'a')
-const nativeDisabled = computed(() =>
-  !renderAsLink.value && !useAriaDisabled.value && isButtonDisabled.value,
-)
-// 同上游 #11107：服务端输出的按钮在 hydration 之前没有点击守卫，而用 aria-disabled 的
+// 同上游 #11107：服务端输出的按钮在 hydration 之前没有点击守卫，而禁用的
 // submit / reset 按钮没有原生 disabled，会直接提交或重置表单。挂载前先渲染成普通按钮，
 // 服务端和 hydration 的首次渲染一致，挂载后再换回真正的 type。
 const isMounted = ref(false)
@@ -225,7 +221,7 @@ function handleRootKeydown(event: KeyboardEvent): void {
   if (event.key === 'Escape')
     buttonTooltip.hideImmediately()
 
-  if (useAriaDisabled.value && (event.key === 'Enter' || event.key === ' ')) {
+  if (isButtonDisabled.value && (event.key === 'Enter' || event.key === ' ')) {
     event.preventDefault()
     return
   }
@@ -245,7 +241,7 @@ defineExpose({
     v-bind="getForwardedAttrs()"
     :aria-busy="isLoadingState || undefined"
     :aria-describedby="ariaDescribedBy"
-    :aria-disabled="useAriaDisabled || undefined"
+    :aria-disabled="isButtonDisabled || undefined"
     :aria-label="ariaLabel"
     :class="rootClass"
     :data-astryx-edge-comp="variant === 'ghost' ? '' : undefined"
@@ -255,10 +251,9 @@ defineExpose({
     :data-icon-only="isIconOnly || undefined"
     :data-size="effectiveSize"
     :data-variant="variant"
-    :disabled="nativeDisabled || undefined"
     :form="renderAsLink ? undefined : form"
     :href="renderAsLink ? safeHref : undefined"
-    :name="renderAsLink ? undefined : name"
+    :name="renderAsLink || isTrueDisabled ? undefined : name"
     :rel="renderAsLink ? rel : undefined"
     :style="rootStyle"
     :target="renderAsLink ? target : undefined"

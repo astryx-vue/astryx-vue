@@ -34,6 +34,23 @@ describe('toolbar', () => {
     wrapper.unmount()
   })
 
+  it('keeps one Tab stop for a toolbar of disabled Buttons', async () => {
+    const { default: Button } = await import('../Button/Button.vue')
+    const wrapper = mount(Toolbar, {
+      attachTo: document.body,
+      props: { label: 'Read-only editor' },
+      slots: {
+        start: () => [
+          h(Button, { isDisabled: true, label: 'Bold' }),
+          h(Button, { isDisabled: true, label: 'Italic' }),
+        ],
+      },
+    })
+    await nextTick()
+    expect(wrapper.findAll('button').map(button => button.attributes('tabindex'))).toEqual(['0', '-1'])
+    wrapper.unmount()
+  })
+
   it('paints a muted bar and the requested dividers', () => {
     const wrapper = mount(Toolbar, {
       props: { dividers: ['bottom'], label: 'Bulk actions', variant: 'muted' },
