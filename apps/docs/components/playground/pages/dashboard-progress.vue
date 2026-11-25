@@ -5,7 +5,6 @@ import {
   Avatar,
   Badge,
   Button,
-  Card,
   EmptyState,
   Grid,
   Heading,
@@ -277,140 +276,132 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
             </template>
           </VStack>
         </Section>
-        <Section :padding="6" :padding-block="10">
-          <VStack :gap="6" class="content-column">
-            <Grid :gap="4" :columns="{ minWidth: 320, max: 3 }">
-              <Card :padding="6">
-                <VStack :gap="5">
-                  <VStack>
-                    <Heading :level="3" :accessibility-level="2">
-                      Overall progress
-                    </Heading>
+        <Section :padding="6" :padding-block="10" :dividers="['bottom']">
+          <Grid :gap="10" :columns="{ minWidth: 320, max: 3 }" class="content-column">
+            <VStack :gap="5">
+              <VStack>
+                <Heading :level="3" :accessibility-level="2">
+                  Overall progress
+                </Heading>
+                <Text type="supporting" color="secondary">
+                  {{ TASK_COUNT_TOTAL }} tasks · {{ TASK_POINTS_TOTAL }} story points
+                </Text>
+              </VStack>
+              <HStack :gap="8" align="center" wrap="wrap">
+                <PlaygroundDonutChart :segments="donutSegments" :gap-angle="2.3" />
+                <VStack :gap="2">
+                  <HStack v-for="s in TASK_STATUS" :key="s.key" :gap="2" align="center">
+                    <Icon name="stop" size="xsm" color="inherit" :style="{ color: s.color }" />
                     <Text type="supporting" color="secondary">
-                      {{ TASK_COUNT_TOTAL }} tasks · {{ TASK_POINTS_TOTAL }} story points
+                      {{ s.label }}
                     </Text>
-                  </VStack>
-                  <HStack :gap="8" align="center" wrap="wrap">
-                    <PlaygroundDonutChart :segments="donutSegments" :gap-angle="2.3" />
-                    <VStack :gap="2">
-                      <HStack v-for="s in TASK_STATUS" :key="s.key" :gap="2" align="center">
-                        <Icon name="stop" size="xsm" color="inherit" :style="{ color: s.color }" />
-                        <Text type="supporting" color="secondary">
-                          {{ s.label }}
-                        </Text>
-                      </HStack>
-                    </VStack>
                   </HStack>
                 </VStack>
-              </Card>
-              <Card :padding="6">
-                <VStack :gap="5">
-                  <VStack>
-                    <Heading :level="3" :accessibility-level="2">
-                      Scope burndown
-                    </Heading>
-                    <Text type="supporting" color="secondary">
-                      Remaining story points · {{ BURNDOWN.length }} weeks
-                    </Text>
-                  </VStack>
-                  <VStack :gap="3">
-                  <PlaygroundResponsive :height="208">
-                    <PlaygroundLineChart
-                      :data="BURNDOWN"
-                      x-key="week"
-                      :series="[
-                        { key: 'ideal', name: 'Ideal', color: IDEAL_COLOR },
-                        { key: 'actual', name: 'Actual', color: ACTUAL_COLOR },
-                      ]"
-                      :height="208"
-                      :y-ticks="[0, 80, 160, 240, 320]"
-                      y-unit=" pts"
-                      is-y-unit-stacked
-                      :x-ticks="[0, 3, 6, 9, 12]"
-                      :x-tick-format="(v: number) => BURNDOWN[v]?.label ?? ''"
-                      :pad="{ top: 16, right: 4, bottom: 34, left: 44 }"
-                      center-ticks
-                    />
-                  </PlaygroundResponsive>
-                  <HStack :gap="4" align="center" wrap="wrap">
-                    <HStack v-for="item in [{ label: 'Actual remaining', color: ACTUAL_COLOR }, { label: 'Ideal burndown', color: IDEAL_COLOR }]" :key="item.label" :gap="2" align="center">
-                      <Icon name="stop" size="xsm" color="inherit" :style="{ color: item.color }" />
-                      <Text type="supporting" color="secondary">
-                        {{ item.label }}
-                      </Text>
-                    </HStack>
-                  </HStack>
-                  </VStack>
-                </VStack>
-              </Card>
-              <Card :padding="6">
-                <VStack :gap="4">
-                  <VStack>
-                    <Heading :level="3" :accessibility-level="2">
-                      Blockers & risks
-                    </Heading>
-                    <Text type="supporting" color="secondary">
-                      Hover or focus a row for detail
-                    </Text>
-                  </VStack>
-                  <List v-if="risks.length" has-dividers class="risk-list">
-                    <HoverCard v-for="risk in risks" :key="risk.id" placement="below" alignment="start" focus-trigger="always">
-                      <ListItem
-                        :label="risk.title"
-                        :description="`${risk.workstream} · ${PHASE_LABEL[risk.phase]} · ${risk.owner}`"
-                        class="risk-row"
-                      >
-                        <template #endContent>
-                          <Badge :variant="RAG_BADGE[risk.severity]" :label="RAG_LABEL[risk.severity]" />
-                        </template>
-                      </ListItem>
-                      <template #content>
-                        <VStack :gap="2" class="risk-detail">
-                          <Text type="body" weight="semibold">
-                            {{ risk.title }}
-                          </Text>
-                          <Text type="supporting" color="secondary">
-                            {{ risk.detail }}
-                          </Text>
-                        </VStack>
-                      </template>
-                    </HoverCard>
-                  </List>
-                  <EmptyState
-                    v-else
-                    title="No open blockers or risks"
-                    description="Nothing flagged for the selected phase. Keep it up."
-                    is-compact
-                  >
-                    <template #icon>
-                      <Icon name="heroicons:check-circle" size="lg" color="success" />
-                    </template>
-                  </EmptyState>
-                </VStack>
-              </Card>
-            </Grid>
-            <Card :padding="6">
-              <VStack :padding-block-end="4">
-                <HStack :gap="3" h-align="between" align="center" wrap="wrap">
-                  <Heading :level="3" :accessibility-level="2">
-                    Workstreams
-                  </Heading>
-                  <Text type="body" color="secondary">
-                    {{ workstreams.length }} of {{ WORKSTREAMS.length }}
+              </HStack>
+            </VStack>
+            <VStack :gap="5">
+              <VStack>
+                <Heading :level="3" :accessibility-level="2">
+                  Scope burndown
+                </Heading>
+                <Text type="supporting" color="secondary">
+                  Remaining story points · {{ BURNDOWN.length }} weeks
+                </Text>
+              </VStack>
+              <VStack :gap="3">
+              <PlaygroundResponsive :height="208">
+                <PlaygroundLineChart
+                  :data="BURNDOWN"
+                  x-key="week"
+                  :series="[
+                    { key: 'ideal', name: 'Ideal', color: IDEAL_COLOR },
+                    { key: 'actual', name: 'Actual', color: ACTUAL_COLOR },
+                  ]"
+                  :height="208"
+                  :y-ticks="[0, 80, 160, 240, 320]"
+                  y-unit=" pts"
+                  is-y-unit-stacked
+                  :x-ticks="[0, 3, 6, 9, 12]"
+                  :x-tick-format="(v: number) => BURNDOWN[v]?.label ?? ''"
+                  :pad="{ top: 16, right: 4, bottom: 34, left: 44 }"
+                  center-ticks
+                />
+              </PlaygroundResponsive>
+              <HStack :gap="4" align="center" wrap="wrap">
+                <HStack v-for="item in [{ label: 'Actual remaining', color: ACTUAL_COLOR }, { label: 'Ideal burndown', color: IDEAL_COLOR }]" :key="item.label" :gap="2" align="center">
+                  <Icon name="stop" size="xsm" color="inherit" :style="{ color: item.color }" />
+                  <Text type="supporting" color="secondary">
+                    {{ item.label }}
                   </Text>
                 </HStack>
+              </HStack>
               </VStack>
-              <Table
-                v-if="workstreams.length"
-                :data="workstreams"
-                :columns="WORKSTREAM_COLUMNS"
-                id-key="id"
-                density="balanced"
-                dividers="rows"
-                has-hover
-              />
-              <EmptyState v-else title="No workstreams in this phase" description="Switch phases to see other workstreams." is-compact />
-            </Card>
+            </VStack>
+            <VStack :gap="4">
+              <VStack>
+                <Heading :level="3" :accessibility-level="2">
+                  Blockers & risks
+                </Heading>
+                <Text type="supporting" color="secondary">
+                  Hover or focus a row for detail
+                </Text>
+              </VStack>
+              <List v-if="risks.length" has-dividers class="risk-list">
+                <HoverCard v-for="risk in risks" :key="risk.id" placement="below" alignment="start" focus-trigger="always">
+                  <ListItem
+                    :label="risk.title"
+                    :description="`${risk.workstream} · ${PHASE_LABEL[risk.phase]} · ${risk.owner}`"
+                    class="risk-row"
+                  >
+                    <template #endContent>
+                      <Badge :variant="RAG_BADGE[risk.severity]" :label="RAG_LABEL[risk.severity]" />
+                    </template>
+                  </ListItem>
+                  <template #content>
+                    <VStack :gap="2" class="risk-detail">
+                      <Text type="body" weight="semibold">
+                        {{ risk.title }}
+                      </Text>
+                      <Text type="supporting" color="secondary">
+                        {{ risk.detail }}
+                      </Text>
+                    </VStack>
+                  </template>
+                </HoverCard>
+              </List>
+              <EmptyState
+                v-else
+                title="No open blockers or risks"
+                description="Nothing flagged for the selected phase. Keep it up."
+                is-compact
+              >
+                <template #icon>
+                  <Icon name="heroicons:check-circle" size="lg" color="success" />
+                </template>
+              </EmptyState>
+            </VStack>
+          </Grid>
+        </Section>
+        <Section :padding="6" :padding-block="10">
+          <VStack :gap="6" class="content-column">
+            <HStack :gap="3" h-align="between" align="center">
+              <Heading :level="2">
+                Workstreams
+              </Heading>
+              <Text type="supporting" color="secondary">
+                {{ workstreams.length }} of {{ WORKSTREAMS.length }}
+              </Text>
+            </HStack>
+            <Table
+              v-if="workstreams.length"
+              :data="workstreams"
+              :columns="WORKSTREAM_COLUMNS"
+              id-key="id"
+              density="balanced"
+              dividers="rows"
+              has-hover
+            />
+            <EmptyState v-else title="No workstreams in this phase" description="Switch phases to see other workstreams." is-compact />
           </VStack>
         </Section>
       </LayoutContent>

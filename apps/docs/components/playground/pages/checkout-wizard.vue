@@ -287,8 +287,8 @@ function isFreeDelivery(optionValue: string) {
           </HStack>
         </HStack>
 
-        <Stack :direction="isNarrow ? 'vertical' : 'horizontal'" :gap="6" align="start">
-          <StackItem size="fill" :cross-align-self="isNarrow ? 'stretch' : undefined">
+        <Stack :direction="isNarrow ? 'vertical' : 'horizontal'" :gap="6" align="start" wrap="wrap">
+          <StackItem size="fill" :cross-align-self="isNarrow ? 'stretch' : undefined" :class="isNarrow ? undefined : 'form-column'">
             <VStack :gap="6">
               <Banner
                 v-if="isComplete"
@@ -667,12 +667,22 @@ function isFreeDelivery(optionValue: string) {
 
 <style scoped>
 /* 摘要列固定 360 宽，表单滚过时贴在页面内边距处；窄版时排到表单前面、占满一行。 */
+/*
+ * A zero basis keeps the form beside the summary on wide hosts whatever the
+ * step's content width; the min width lets the summary wrap below the form on
+ * a narrow first paint, before script measures the host.
+ */
+.form-column {
+  flex-basis: 0;
+  min-width: min(100%, 480px);
+}
 .summary-column {
   position: sticky;
   top: var(--astryx-spacing-6);
   flex-shrink: 0;
   align-self: flex-start;
   width: 360px;
+  max-width: 100%;
 }
 .summary-column--narrow {
   position: static;
