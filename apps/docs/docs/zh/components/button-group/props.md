@@ -15,7 +15,7 @@ footer: false
       <tr><td><code>orientation</code></td><td><code>'horizontal' | 'vertical'</code></td><td><code>'horizontal'</code></td><td>按钮的排列方向，组内方向键沿此方向移动焦点。</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>组内按钮继承的默认尺寸；子按钮设置了自己的 size 时优先使用。</td></tr>
       <tr><td><code>elevation</code></td><td><code>'none' | 'low' | 'med' | 'high'</code></td><td><code>'none'</code></td><td>整个按钮组的静止阴影强度；放入组内的按钮不再单独显示阴影。</td></tr>
-      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否禁用组内全部 Button 和 IconButton。</td></tr>
+      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否禁用组内全部 Button 和 IconButton。成员仍可聚焦，整组也仍保留 Tab 停靠点。</td></tr>
     </tbody>
   </table>
 </div>
@@ -33,7 +33,8 @@ ButtonGroup 通过必需的默认插槽接收 Button 或 IconButton。
 | `Home` | 聚焦第一个可用按钮。 |
 | `End` | 聚焦最后一个可用按钮。 |
 
-- 方向键导航跳过禁用按钮；整组都禁用时仍保留一个 Tab 停靠点，键盘用户照样能到这组。
+- 整组只占一个 Tab 停靠点。禁用的成员标记为 `aria-disabled`，不用原生 disabled，所以仍能获得焦点。
+- 整组都禁用时，Tab 停靠点留在其中一个禁用成员上，键盘用户照样能到这组。
 - 从右到左的水平布局会交换左右方向键的行为。
 
 ## 模板引用

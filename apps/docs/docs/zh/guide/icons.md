@@ -130,3 +130,5 @@ const carbonTheme = defineTheme({
 ```
 
 如果你想在代码里读取当前生效的语义图标 ID，可以使用从 `@astryx-vue/core/Icon` 导出的 `useSemanticIcon` 组合式函数。完整的语义名称列表与默认对应关系，可查阅图标组件的 API 属性页。
+
+条目还可以写成函数，按图标实际的尺寸和主题列出的变体返回不同的图形；`componentIcons` 则决定某个组件自己的图标（比如 CodeBlock 的复制按钮）用哪个共享名字。两者的写法都在图标组件的 API 属性页里。

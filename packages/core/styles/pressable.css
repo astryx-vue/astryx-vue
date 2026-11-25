@@ -59,6 +59,13 @@
     animation-fill-mode: both;
   }
 
+  /* 减少动态效果时淡出最多 200ms，控制器的 pressFadeMs 用同一个上限。 */
+  @media (prefers-reduced-motion: reduce) {
+    [data-astryx-pressable][data-astryx-press='fading'] {
+      animation-duration: min(var(--astryx-duration-exit, 175ms), 200ms);
+    }
+  }
+
   /* 默认的一层按压色，给不想自己写样式的本地组件用。 */
   .astryx-pressable {
     position: relative;

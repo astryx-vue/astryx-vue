@@ -41,7 +41,9 @@ import { Link } from '@astryx-vue/core/Link'
 | <Badge variant="success">Recommended</Badge> | Use link text that describes the destination, e.g. "View docs" or "Contact us". Avoid "click here". |
 | <Badge variant="success">Recommended</Badge> | Use `isExternalLink` for off-site links to add `target="_blank"` and `rel="noopener noreferrer"`. |
 | <Badge variant="success">Recommended</Badge> | Use `color="secondary"` to reduce visual weight in groups of links or paragraphs. |
+| <Badge variant="success">Recommended</Badge> | Put a Link inside a `Text` with `maxLines` to truncate it with the surrounding text; inside a clamped `Text` the link flows in the text's lines. |
 | <Badge variant="error">Don't</Badge> | Make every piece of text a link; it weakens link discoverability. |
+| <Badge variant="error">Don't</Badge> | Expect a clamped `Text` to cut a Link that sets its own `maxLines` or renders as a button (no `href`); that Link keeps its own box. |
 | <Badge variant="error">Don't</Badge> | Make a critical action only a link. Important actions should use Button. |
 
 ## Examples

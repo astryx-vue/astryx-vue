@@ -11,6 +11,7 @@ import Field from '../Field/Field.vue'
 import { useFieldPartStyling } from '../Field/fieldParts.js'
 import InputClearButton from '../Field/InputClearButton.vue'
 import { useAriaRequired } from '../FormLayout/context.js'
+import { useInputGroupDisabled } from '../InputGroup/context.js'
 import { useAstryxMessages } from '../locale/index.js'
 import { useSize } from '../SizeContext/SizeContext.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
@@ -28,6 +29,7 @@ const emit = defineEmits<TextInputEmits>()
 defineSlots<TextInputSlots>()
 // 显式 size > 外层 SizeContext（Toolbar、InputGroup 等）> 'md'。
 const size = useSize(() => props.size, 'md')
+const disabled = useInputGroupDisabled(() => props.isDisabled)
 const ariaRequired = useAriaRequired(props)
 const messages = useAstryxMessages()
 const model = defineModel<string>({ required: true })
@@ -39,7 +41,7 @@ const inputId = computed(() => props.id ?? generatedId)
 const isComposing = shallowRef(false)
 const disabledDescriptionId = `${generatedId}-disabled`
 const disabledTooltipId = `${generatedId}-tooltip`
-const showsDisabledMessage = computed(() => !!props.isDisabled && !!props.disabledMessage?.trim())
+const showsDisabledMessage = computed(() => disabled.value && !!props.disabledMessage?.trim())
 const disabledTooltip = useButtonTooltip(showsDisabledMessage)
 const icon = computed(() => props.startIcon ? toRaw(props.startIcon) : undefined)
 const action = useTextInputAction({
@@ -78,7 +80,7 @@ function labelledBy(labelId: string): string {
   return [labelId, attrs['aria-labelledby']].filter(Boolean).join(' ')
 }
 function acceptInput(event: Event): void {
-  if (props.isDisabled || props.isReadOnly) {
+  if (disabled.value || props.isReadOnly) {
     if (input.value)
       input.value.value = action.value.value
     return
@@ -97,11 +99,11 @@ function keydown(event: KeyboardEvent): void {
   emit('keydown', event)
   if (event.key === 'Escape')
     disabledTooltip.hideImmediately()
-  if (!props.isDisabled && !event.defaultPrevented && event.key === 'Enter' && !isComposing.value && !event.isComposing && event.keyCode !== 229)
+  if (!disabled.value && !event.defaultPrevented && event.key === 'Enter' && !isComposing.value && !event.isComposing && event.keyCode !== 229)
     emit('enter', event)
 }
 async function clear(event: MouseEvent): Promise<void> {
-  if (props.isDisabled || props.isReadOnly)
+  if (disabled.value || props.isReadOnly)
     return
   action.commit('', event)
   emit('clear', event)
@@ -116,7 +118,7 @@ const { statusIcon, statusIconProps } = useInputStatusIcon({
 const inputContainer = useInputContainer({
   containerRef: container,
   inputRef: input,
-  disabled: () => props.isDisabled,
+  disabled: () => disabled.value,
 })
 onMounted(() => {
   if (props.hasAutoFocus)
@@ -127,7 +129,7 @@ onMounted(() => {
 <template>
   <Field
     :label="label" :input-id="inputId" :description="description" :width="width"
-    :is-label-hidden="isLabelHidden" :is-disabled="isDisabled" :is-optional="isOptional" :is-required="isRequired"
+    :is-label-hidden="isLabelHidden" :is-disabled="disabled" :is-optional="isOptional" :is-required="isRequired"
     :label-icon="labelIcon" :label-tooltip="labelTooltip" :optional-label="optionalLabel" :required-label="requiredLabel"
     :status="status" :status-variant="statusVariant"
     :class="parts.containerClass.value" :style="parts.containerStyle.value"
@@ -138,15 +140,15 @@ onMounted(() => {
     <template #default="field">
       <div
         ref="container" class="astryx-text-input" :class="parts.controlClass()" :style="parts.controlStyle()"
-        :data-size="size" :data-status="status?.type" :data-disabled="isDisabled || undefined" :data-readonly="isReadOnly || undefined"
+        :data-size="size" :data-status="status?.type" :data-disabled="disabled || undefined" :data-readonly="isReadOnly || undefined"
         @click="inputContainer.onClick" @mouseup="inputContainer.onMouseUp"
         @pointerenter="disabledTooltip.onPointerEnter" @pointerleave="disabledTooltip.onPointerLeave"
       >
         <span v-if="$slots.icon || icon" class="astryx-text-input-icon" aria-hidden="true"><slot name="icon"><component :is="icon" v-if="icon" /></slot></span>
         <input
           v-bind="inputAttrs()" :id="inputId" ref="input" class="astryx-text-input-control"
-          :type="type" :value="action.value.value" :placeholder="placeholder" :name="isDisabled ? undefined : (htmlName ?? inputAttrs().name)"
-          :autocomplete="(autoComplete ?? inputAttrs().autocomplete) as InputHTMLAttributes['autocomplete']" :disabled="isDisabled && !showsDisabledMessage" :readonly="isReadOnly || showsDisabledMessage"
+          :type="type" :value="action.value.value" :placeholder="placeholder" :name="disabled ? undefined : (htmlName ?? inputAttrs().name)"
+          :autocomplete="(autoComplete ?? inputAttrs().autocomplete) as InputHTMLAttributes['autocomplete']" :disabled="disabled && !showsDisabledMessage" :readonly="isReadOnly || showsDisabledMessage"
           :aria-disabled="showsDisabledMessage || undefined" :aria-busy="busy || undefined"
           :aria-required="ariaRequired" :aria-invalid="status?.type === 'error' ? true : inputAttrs()['aria-invalid']"
           :aria-labelledby="labelledBy(field.labelId)" :aria-describedby="describedBy(field.describedBy)" :data-autofocus="hasAutoFocus || undefined"
@@ -154,7 +156,7 @@ onMounted(() => {
           @focus="disabledTooltip.onTooltipPointerEnter" @blur="disabledTooltip.onBlur"
         >
         <span v-if="$slots.end" class="astryx-text-input-end"><slot name="end" /></span>
-        <InputClearButton v-if="hasClear && action.value.value && !isDisabled && !isReadOnly" :label="resolvedClearLabel" @click="clear" />
+        <InputClearButton v-if="hasClear && action.value.value && !disabled && !isReadOnly" :label="resolvedClearLabel" @click="clear" />
         <ButtonSpinner v-if="busy" class="astryx-text-input-spinner" :label="loadingLabel" />
         <component :is="statusIcon" v-if="statusIcon" v-bind="statusIconProps" />
       </div>

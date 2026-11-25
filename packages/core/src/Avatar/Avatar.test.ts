@@ -5,6 +5,12 @@ import Avatar from './Avatar.vue'
 import AvatarStatusDot from './AvatarStatusDot.vue'
 import { resolveStatusDotMetrics } from './utils.js'
 
+/** 首字母写在私有的行内自定义属性里，这里把那段 CSS 字符串读回来。 */
+function initialsOf(element: Element): string {
+  const value = (element as HTMLElement).style.getPropertyValue('--_avatar-initials').trim()
+  return value === '' ? '' : JSON.parse(value) as string
+}
+
 describe('avatar', () => {
   it('renders a span with role img and aria-label from name', () => {
     const wrapper = mount(Avatar, {
@@ -48,15 +54,22 @@ describe('avatar', () => {
 
     const fallback = wrapper.find('.astryx-avatar__fallback--initials')
     expect(fallback.exists()).toBe(true)
-    expect(fallback.attributes('data-initials')).toBe('JD')
+    expect(initialsOf(fallback.element)).toBe('JD')
     expect(fallback.text()).toBe('')
   })
 
+  it('renders no public attribute for the initials', () => {
+    const wrapper = mount(Avatar, { props: { name: 'Ada Lovelace' }, attrs: { onClick: () => {} } })
+    expect(wrapper.find('[data-initials]').exists()).toBe(false)
+    expect(initialsOf(wrapper.get('.astryx-avatar__fallback--initials').element)).toBe('AL')
+    expect(wrapper.get('button').text()).toBe('')
+  })
+
   it('builds initials from letters, digits and emoji, skipping punctuation', () => {
-    expect(mount(Avatar, { props: { name: 'Northwind Workbench (automation)' } }).find('.astryx-avatar__fallback--initials').attributes('data-initials')).toBe('NA')
-    expect(mount(Avatar, { props: { name: '- Alice' } }).find('.astryx-avatar__fallback--initials').attributes('data-initials')).toBe('A')
-    expect(mount(Avatar, { props: { name: 'A1 9' } }).find('.astryx-avatar__fallback--initials').attributes('data-initials')).toBe('A9')
-    expect(mount(Avatar, { props: { name: '🎉 Party' } }).find('.astryx-avatar__fallback--initials').attributes('data-initials')).toBe('🎉P')
+    expect(initialsOf(mount(Avatar, { props: { name: 'Northwind Workbench (automation)' } }).find('.astryx-avatar__fallback--initials').element)).toBe('NA')
+    expect(initialsOf(mount(Avatar, { props: { name: '- Alice' } }).find('.astryx-avatar__fallback--initials').element)).toBe('A')
+    expect(initialsOf(mount(Avatar, { props: { name: 'A1 9' } }).find('.astryx-avatar__fallback--initials').element)).toBe('A9')
+    expect(initialsOf(mount(Avatar, { props: { name: '🎉 Party' } }).find('.astryx-avatar__fallback--initials').element)).toBe('🎉P')
     expect(mount(Avatar, { props: { name: '()' } }).find('.astryx-avatar__fallback--icon').exists()).toBe(true)
   })
 
@@ -67,7 +80,7 @@ describe('avatar', () => {
       },
     })
 
-    expect(wrapper.find('.astryx-avatar__fallback--initials').attributes('data-initials')).toBe('A')
+    expect(initialsOf(wrapper.find('.astryx-avatar__fallback--initials').element)).toBe('A')
   })
 
   it('renders default icon when no name and no src are provided', () => {
@@ -102,7 +115,7 @@ describe('avatar', () => {
     await img.trigger('error')
 
     expect(wrapper.find('.astryx-avatar__image').exists()).toBe(false)
-    expect(wrapper.find('.astryx-avatar__fallback--initials').attributes('data-initials')).toBe('JD')
+    expect(initialsOf(wrapper.find('.astryx-avatar__fallback--initials').element)).toBe('JD')
   })
 
   it('uses fallbackSrc when primary src fails', async () => {

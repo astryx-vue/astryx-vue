@@ -35,13 +35,13 @@ footer: false
         <td><code>isLoading</code></td>
         <td><code>boolean</code></td>
         <td><code>false</code></td>
-        <td>Skeleton when there is no <code>src</code>. Spinner over the image when there is one.</td>
+        <td>Skeleton when there is no <code>src</code>. Spinner over the image when there is one; the Spinner is hidden from screen readers, and the thumbnail announces "Loading" once each time it starts loading. The preview button stays focusable and is announced as disabled while loading.</td>
       </tr>
       <tr>
         <td><code>isDisabled</code></td>
         <td><code>boolean</code></td>
         <td><code>false</code></td>
-        <td>Fades the thumbnail and ignores click and remove.</td>
+        <td>Fades the thumbnail and ignores click and remove. The preview and remove buttons stay focusable and are announced as disabled, so keyboard focus on them is not lost.</td>
       </tr>
       <tr>
         <td><code>showRemoveOn</code></td>

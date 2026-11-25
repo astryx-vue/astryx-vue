@@ -637,6 +637,24 @@ describe('button', () => {
     expect(wrapper.attributes('data-to')).toBe('/account')
   })
 
+  it('exposes the link element as element in link mode and the button otherwise', async () => {
+    const CustomLink = defineComponent({
+      setup(_, { slots: linkSlots }) {
+        return () => h('a', { 'data-custom-link': '' }, linkSlots.default?.())
+      },
+    })
+    const anchor = mount(Button, { props: { href: '/docs', label: 'Docs' } })
+    const custom = mount(Button, { props: { as: CustomLink, href: '/docs', label: 'Docs' } })
+
+    expect(anchor.vm.element).toBe(anchor.element)
+    expect(anchor.vm.element?.tagName).toBe('A')
+    expect(custom.vm.element).toBe(custom.element)
+    expect(custom.vm.element?.hasAttribute('data-custom-link')).toBe(true)
+
+    await anchor.setProps({ isDisabled: true })
+    expect(anchor.vm.element?.tagName).toBe('BUTTON')
+  })
+
   it('keeps a busy-only href button an anchor and focusable without navigating', async () => {
     const onKeydown = vi.fn()
     const wrapper = mount(Button, {

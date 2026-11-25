@@ -44,7 +44,9 @@ export interface LinkProps {
    */
   color?: LinkColor
   /**
-   * Whether the link is disabled.
+   * Whether the link is disabled. A disabled link cannot navigate or emit `click`,
+   * keeps its Tab stop, and is announced as disabled. A caller `role` or
+   * `aria-disabled` does not replace that; a caller `tabindex` still applies.
    * @default false
    */
   isDisabled?: boolean

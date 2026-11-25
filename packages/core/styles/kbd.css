@@ -16,6 +16,8 @@
     box-sizing: border-box;
     min-width: var(--astryx-spacing-5, 20px);
     height: var(--astryx-spacing-5, 20px);
+    /* 主题高度在一行文字放得下时生效；字号变大、行变高时键帽跟着长高。 */
+    min-height: 1lh;
     padding-inline: var(--astryx-spacing-1, 4px);
     border-bottom: 2px solid var(--astryx-kbd-border-color, var(--astryx-color-border-emphasized, #d4d4d4));
     border-radius: var(--astryx-radius-inner, 0.375rem);

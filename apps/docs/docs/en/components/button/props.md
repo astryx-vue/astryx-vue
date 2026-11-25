@@ -80,6 +80,7 @@ To cancel an earlier network request, call `AbortController.abort()` in the appl
 
 `Button` exposes `element`.
 Its type is `HTMLButtonElement | HTMLAnchorElement | HTMLElement | null`.
+In link mode (with `href` and not disabled) it is the link element: the anchor, or the root element of the `as` link component. Otherwise it is the button.
 
 ## Native attributes
 

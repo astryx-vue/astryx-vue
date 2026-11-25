@@ -2,7 +2,7 @@
 import type { ChatDictationButtonProps } from './types.js'
 import { computed, toValue } from 'vue'
 import Button from '../Button/Button.vue'
-import { assertDevProp } from '../composables/internal/devBuild.js'
+import { devPropError, isDevBuild } from '../composables/internal/devBuild.js'
 import Icon from '../Icon/Icon.vue'
 import { useAstryxMessages } from '../locale/index.js'
 import '../../styles/chat.css'
@@ -14,7 +14,13 @@ const props = withDefaults(defineProps<ChatDictationButtonProps>(), {
   isHiddenWhenUnsupported: true,
 })
 
-assertDevProp(props.dictation != null, 'ChatDictationButton', 'dictation', 'is required: the value of useChatDictation() or useSpeechRecognition(), for example :dictation="dictation".')
+if (isDevBuild() && props.dictation == null) {
+  throw devPropError(
+    'ChatDictationButton',
+    'dictation',
+    'is required: the value of useChatDictation() or useSpeechRecognition(), for example :dictation="dictation".',
+  )
+}
 const messages = useAstryxMessages()
 const supported = computed(() => toValue(props.dictation.isSupported))
 const listening = computed(() => toValue(props.dictation.isListening))

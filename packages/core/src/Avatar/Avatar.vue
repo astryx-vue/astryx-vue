@@ -12,7 +12,7 @@ import { useLinkComponent } from '../LinkProvider/context.js'
 import { useAstryxMessages } from '../locale/context.js'
 import Tooltip from '../Tooltip/Tooltip.vue'
 import { AvatarSizeContext, AvatarStatusLabelContext } from './context.js'
-import { composeAccessibleName, getInitials, resolveSize } from './utils.js'
+import { composeAccessibleName, cssString, getInitials, resolveSize } from './utils.js'
 import '../../styles/avatar.css'
 
 defineOptions({ inheritAttrs: false })
@@ -74,6 +74,16 @@ const meaningfulAlt = computed(() => {
 })
 
 const initials = computed(() => meaningfulName.value ? getInitials(meaningfulName.value) : '')
+
+/**
+ * 首字母由 `::before` 生成内容画出，属于头像这张「图」，不算控件的文字：
+ * 链接或按钮头像的可见文字若不在名字里，会违反 Label in Name。
+ * 首字母以 CSS 字符串写进私有的行内自定义属性，不暴露公开的 data 属性。
+ */
+const initialsStyle = computed<CSSProperties>(() => ({
+  'fontSize': `${numericSize.value * INITIALS_FONT_SIZE_RATIO}px`,
+  '--_avatar-initials': cssString(initials.value),
+}))
 
 const showInitials = computed(() => !showImage.value && !showFallbackImage.value && initials.value !== '')
 const showIcon = computed(() => !showImage.value && !showFallbackImage.value && initials.value === '')
@@ -208,8 +218,7 @@ function handleFallbackError() {
         <span
           v-else-if="showInitials"
           class="astryx-avatar__fallback astryx-avatar__fallback--initials"
-          :data-initials="initials"
-          :style="{ fontSize: `${numericSize * INITIALS_FONT_SIZE_RATIO}px` }"
+          :style="initialsStyle"
         />
         <span
           v-else-if="showIcon"
@@ -264,8 +273,7 @@ function handleFallbackError() {
       <span
         v-else-if="showInitials"
         class="astryx-avatar__fallback astryx-avatar__fallback--initials"
-        :data-initials="initials"
-        :style="{ fontSize: `${numericSize * INITIALS_FONT_SIZE_RATIO}px` }"
+        :style="initialsStyle"
       />
       <span
         v-else-if="showIcon"
