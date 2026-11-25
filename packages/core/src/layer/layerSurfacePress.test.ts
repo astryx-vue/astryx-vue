@@ -21,7 +21,7 @@ describe('a press inside an open Tooltip or HoverCard surface', () => {
     const onDocumentClick = vi.fn()
     document.addEventListener('click', onDocumentClick)
     const wrapper = mount(defineComponent({
-      render: () => h(ClickableCard, { onClick }, { default: () => [tooltipInParagraph(), h('span', { class: 'surface' }, 'Body')] }),
+      render: () => h(ClickableCard, { label: 'Card', onClick }, { default: () => [tooltipInParagraph(), h('span', { class: 'surface' }, 'Body')] }),
     }), { attachTo: document.body })
     await flushPromises()
 
