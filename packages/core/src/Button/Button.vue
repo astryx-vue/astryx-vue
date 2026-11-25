@@ -2,6 +2,7 @@
 import type { ComponentPublicInstance, CSSProperties, StyleValue } from 'vue'
 import type { ButtonEmits, ButtonLinkElement, ButtonProps, ButtonRootElement, ButtonSlots } from './types.js'
 import { computed, onBeforeUnmount, onMounted, ref, toRaw, useAttrs, useId, useSlots, useTemplateRef } from 'vue'
+import { hasSlotContent } from '../composables/internal/slotContent.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { provideIconSize } from '../Icon/context.js'
 import Icon from '../Icon/Icon.vue'
@@ -281,7 +282,7 @@ defineExpose({
       :aria-hidden="isLoadingState || undefined"
     >
       <span
-        v-if="$slots.icon || icon"
+        v-if="hasSlotContent($slots.icon) || icon"
         class="astryx-button__icon"
         aria-hidden="true"
       >
@@ -296,7 +297,7 @@ defineExpose({
       </span>
 
       <span
-        v-if="!isIconOnly && $slots.end"
+        v-if="!isIconOnly && hasSlotContent($slots.end)"
         class="astryx-button__end"
         aria-hidden="true"
       >
