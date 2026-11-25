@@ -4,6 +4,7 @@ import { computed, onMounted, onUpdated, ref } from 'vue'
 import { useResolvedLayerTeleport } from '../composables/useLayerMountTarget.js'
 import { useMergedRefs } from '../composables/useMergedRefs.js'
 import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
+import { registerLayerSurface } from '../layer/layerSurfacePress.js'
 import { useHoverCard } from './useHoverCard.js'
 import '../../styles/hover-card.css'
 
@@ -53,7 +54,8 @@ const {
 } = hoverCard
 
 // 浮层元素挂进 hook 的内容 ref，定位和指针桥接都靠它。
-const setContentRef = useMergedRefs<HTMLElement>([surfaceRef])
+// 在卡片里按下只作用于卡片，外面包着触发元素的可点容器不响应。
+const setContentRef = useMergedRefs<HTMLElement>([surfaceRef, registerLayerSurface])
 
 const wrapperRef = ref<HTMLElement | null>(null)
 // Dialog 里挂进对话框；触发器在段落或链接里时挂到安全的父级；其余挂到 body。

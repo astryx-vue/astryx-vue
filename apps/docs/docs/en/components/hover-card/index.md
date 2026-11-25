@@ -70,4 +70,6 @@ The hover card is a separate layer, and the component relates it to the trigger 
 
 The keyboard path is complete: focusing the trigger opens the card immediately, and moving focus between the trigger and the card keeps it open. Pressing Escape while the card is showing closes it; if focus was inside the card it returns to the trigger, and that refocus does not reopen the card. In the controlled mode Escape only emits `openChange(false)` and the parent decides whether to close.
 
+A press inside the open card acts only within the card: a clickable card, list row, or tree row around the trigger does not activate, while links and buttons inside the card keep working. Page-level listeners still receive the press.
+
 A touch screen has no hover, so `touchTrigger` decides what a tap does. The default `auto` opens the card on a tap of a trigger that performs no action of its own, and leaves the tap to buttons, links, and form controls; once open, a tap outside the card dismisses it. Because the content appears only briefly, keep information a user must see to complete a task out of the card.

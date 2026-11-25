@@ -5,6 +5,7 @@ import Badge from '../Badge/Badge.vue'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { isIconGlyph } from '../Icon/glyphs.js'
 import Icon from '../Icon/Icon.vue'
+import { isInLayerSurface } from '../layer/layerSurfacePress.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
 import { useAstryxMessages } from '../locale/context.js'
 import { consumeWhileDisabled } from '../utils/disabledInteraction.js'
@@ -62,6 +63,9 @@ function onRowClick(event: MouseEvent) {
     return
   const target = event.target
   if (target instanceof Element && target.closest('button, a, input, select, textarea'))
+    return
+  // 打开着的 Tooltip、HoverCard 里的按下属于气泡自己。
+  if (target instanceof Element && isInLayerSurface(target, event.currentTarget as Element))
     return
   if (props.item.onClick)
     props.item.onClick(event)
