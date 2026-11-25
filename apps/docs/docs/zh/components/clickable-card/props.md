@@ -16,7 +16,7 @@ footer: false
       <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>隐藏控件的无障碍名称。</td></tr>
       <tr><td><code>href</code></td><td><code>string</code></td><td>-</td><td>卡片要去的地址。不传时改由 <code>click</code> 处理。</td></tr>
       <tr><td><code>target</code></td><td><code>string</code></td><td>-</td><td><code>href</code> 的浏览上下文。<code>_blank</code> 打开新标签页。</td></tr>
-      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>卡片不再响应激活。</td></tr>
+      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>卡片不再响应激活，链接卡片也不再带地址。它保留 Tab 焦点位置，读屏会读出「已禁用」。</td></tr>
       <tr><td><code>variant</code></td><td><code>CardVariant</code></td><td><code>'default'</code></td><td>背景变体，传给 <code>Card</code>。</td></tr>
       <tr><td><code>elevation</code></td><td><code>CardElevation</code></td><td><code>'none'</code></td><td>静止阴影：none、low、med、high。</td></tr>
       <tr><td><code>padding</code></td><td><code>SpacingStep</code></td><td>-</td><td>传给 <code>Card</code> 的内边距。</td></tr>

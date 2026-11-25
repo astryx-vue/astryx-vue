@@ -17,7 +17,7 @@ footer: false
 
 <div class="component-api-table" role="region" aria-label="LinkProvider 插槽" tabindex="0">
 <table><thead><tr><th>插槽</th><th>说明</th></tr></thead><tbody>
-<tr><td><code>default</code></td><td>使用这个链接组件的子树。</td></tr>
+<tr><td><code>default</code></td><td>使用这个链接组件的子树。里面的链接默认交给 <code>component</code>；链接自己写了 <code>as</code>，或者更近的一层 <code>LinkProvider</code> 给了别的组件时，以它们为准。禁用的 <code>Link</code> 不用它。</td></tr>
 </tbody></table>
 </div>
 
