@@ -456,6 +456,11 @@
       border: 0;
     }
 
+    /* 危险按钮的边用 CanvasText，和上游主题约定一致；其余实心变体用 ButtonText。 */
+    .astryx-button[data-variant='destructive'] {
+      border-color: CanvasText;
+    }
+
     .astryx-button:focus-visible {
       outline-color: Highlight;
     }

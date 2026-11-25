@@ -4,6 +4,7 @@ import type { CodeBlockEmits, CodeBlockProps, TokenLine } from './types.js'
 import { computed, onBeforeUnmount, onMounted, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
 import { useClipboard } from '../composables/useClipboard.js'
 import { assertDevProp } from '../composables/useDevWarning.js'
+import ComponentIcon from '../Icon/ComponentIcon.vue'
 import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
@@ -313,7 +314,12 @@ const forwardedAttrs = computed(() => Object.fromEntries(
         :tooltip="copyLabel"
         @click.stop="onCopy"
       >
-        <Icon :icon="isCopied ? 'check' : 'copy'" size="sm" color="inherit" />
+        <ComponentIcon
+          icon-slot="code-block-copy"
+          :state="{ copied: isCopied }"
+          :fallback="{ icon: isCopied ? 'check' : 'copy', size: 'sm' }"
+          color="inherit"
+        />
       </IconButton>
     </div>
     <div
@@ -362,7 +368,12 @@ const forwardedAttrs = computed(() => Object.fromEntries(
       :tooltip="copyLabel"
       @click.stop="onCopy"
     >
-      <Icon :icon="isCopied ? 'check' : 'copy'" size="sm" color="inherit" />
+      <ComponentIcon
+        icon-slot="code-block-copy"
+        :state="{ copied: isCopied }"
+        :fallback="{ icon: isCopied ? 'check' : 'copy', size: 'sm' }"
+        color="inherit"
+      />
     </IconButton>
   </pre>
   <VisuallyHidden role="status" aria-live="polite">

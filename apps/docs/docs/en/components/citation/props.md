@@ -17,7 +17,7 @@ footer: false
         <td><code>source</code></td>
         <td><code>CitationSource</code></td>
         <td>-</td>
-        <td><code>title</code> is the visible label and falls back to the number. <code>url</code> renders a link. <code>src</code> is a favicon. <code>icon</code> is an image URL or a CSS icon class and wins over <code>src</code>.</td>
+        <td>Required. <code>title</code> is the visible label and falls back to the number. <code>url</code> renders a link. <code>src</code> is a favicon. <code>icon</code> is an image URL or a CSS icon class and wins over <code>src</code>. In development, a missing <code>source</code> throws an error naming the prop; Citation does not read slot content.</td>
       </tr>
       <tr>
         <td><code>number</code></td>

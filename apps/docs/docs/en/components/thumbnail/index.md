@@ -14,7 +14,7 @@ import { thumbnailDisabled, thumbnailGallery, thumbnailRemovable, thumbnailState
 
 `Thumbnail` is a 64px preview. With no `src` it shows a placeholder. `isLoading` without `src` is a skeleton. `isLoading` with `src` covers the image with a spinner. Listen for `click` to make the preview a button, and for `remove` to show the dismiss control.
 
-`showRemoveOn` is `hover` by default. The control also appears on keyboard focus, and it stays visible for a coarse pointer. `always` keeps it visible. `isDisabled` fades the thumbnail and ignores both events.
+`showRemoveOn` is `hover` by default. The control also appears on keyboard focus, and it stays visible for a coarse pointer. `always` keeps it visible. `isDisabled` fades the thumbnail and ignores both events; its buttons stay focusable and are announced as disabled. Focusing the preview draws one ring, on the image.
 
 `label` is the accessible name. It is not drawn on the thumbnail. It is used by the tooltip and by the remove button.
 
@@ -45,7 +45,7 @@ import { Thumbnail } from '@astryx-vue/core/Thumbnail'
 
 <DemoExample
   :demo="thumbnailDisabled"
-  description="Thumbnails in the disabled state with reduced opacity. The remove button and click handler are suppressed when disabled."
+  description="Thumbnails in the disabled state with reduced opacity. The open and remove buttons stay focusable and announced as disabled, and call nothing."
   locale="en"
   title="Thumbnail — Disabled"
 />

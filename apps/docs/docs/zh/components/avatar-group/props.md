@@ -17,7 +17,7 @@ footer: false
         <td><code>size</code></td>
         <td><code>AvatarSize</code></td>
         <td><code>'md'</code></td>
-        <td>组内所有头像统一使用的尺寸，单个头像自身的 <code>size</code> 在组内不再生效。</td>
+        <td>组内所有头像统一使用的尺寸：命名尺寸，或 <code>AvatarSize</code> 列出的某个像素数值。组用默认尺寸时也一样，单个头像自身的 <code>size</code> 在组内不再生效。</td>
       </tr>
       <tr>
         <td><code>shape</code></td>

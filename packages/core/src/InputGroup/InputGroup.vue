@@ -3,7 +3,7 @@ import type { InputGroupProps, InputGroupSlots } from './types.js'
 import { computed, provide, useId } from 'vue'
 import Field from '../Field/Field.vue'
 import { provideSize, useSize } from '../SizeContext/SizeContext.js'
-import { INPUT_GROUP_KEY } from './context.js'
+import { INPUT_GROUP_KEY, useInputGroupDisabled } from './context.js'
 import '../../styles/input-group.css'
 
 defineOptions({ name: 'AstryxInputGroup' })
@@ -19,7 +19,8 @@ defineSlots<InputGroupSlots>()
 // 显式 size > 外层 SizeContext（Toolbar、InputGroup 等）> 'md'。
 const size = useSize(() => props.size, 'md')
 provideSize(size)
-provideSize(size)
+// 嵌套在已禁用的外层组里时，本组也禁用。
+const disabled = useInputGroupDisabled(() => props.disabled)
 
 const inputId = `astryx-input-group-${useId()}`
 const labelId = computed(() => props.label ? `${inputId}-label` : undefined)
@@ -29,7 +30,7 @@ const describedBy = computed(() => [descriptionId.value, statusId.value].filter(
 
 provide(INPUT_GROUP_KEY, {
   size,
-  disabled: computed(() => props.disabled),
+  disabled,
   labelId,
   describedBy,
 })
@@ -37,7 +38,7 @@ provide(INPUT_GROUP_KEY, {
 const groupClass = computed(() => [
   `size-${size.value}`,
   {
-    'is-disabled': props.disabled,
+    'is-disabled': disabled.value,
     [`status-${props.status?.type}`]: props.status != null,
   },
 ])
@@ -63,6 +64,7 @@ const groupClass = computed(() => [
       class="astryx-input-group"
       :class="groupClass"
       role="group"
+      :aria-disabled="disabled || undefined"
       :aria-labelledby="labelId"
       :aria-describedby="describedBy"
     >
@@ -77,7 +79,7 @@ const groupClass = computed(() => [
       </div>
     </div>
   </Field>
-  <div v-else class="astryx-input-group" :class="groupClass">
+  <div v-else class="astryx-input-group" :class="groupClass" :aria-disabled="disabled || undefined">
     <div v-if="$slots.before" class="astryx-input-group-addon before">
       <slot name="before" />
     </div>

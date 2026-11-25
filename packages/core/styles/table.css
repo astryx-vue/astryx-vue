@@ -227,6 +227,11 @@
     opacity: 0.35;
   }
 
+  /* A theme that hides the sort glyph leaves no gap beside the label. */
+  .astryx-table__sort-icon:empty {
+    display: none;
+  }
+
   .astryx-table th:hover .astryx-table__sort-icon,
   .astryx-table__sort:focus-visible .astryx-table__sort-icon,
   .astryx-table__sort-icon[data-active='true'] {
@@ -524,6 +529,25 @@
   .astryx-table__chevron-icon {
     display: inline-flex;
     transition: transform var(--astryx-duration-fast, 125ms) var(--astryx-ease-move, cubic-bezier(0.24, 1, 0.4, 1));
+  }
+
+  /*
+   * The row-expansion toggle holds whatever the theme's table-row-expand slot
+   * resolves in a box the size of the default glyph, centred out of flow. A
+   * larger glyph or a hidden one keeps the toggle's baseline and the row height.
+   * The box carries the turn, so any glyph turns with it.
+   */
+  .astryx-table__chevron-icon--slot {
+    position: relative;
+    inline-size: 0.75rem;
+    block-size: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  .astryx-table__chevron-icon--slot > .astryx-icon {
+    position: absolute;
+    inset: 0;
+    margin: auto;
   }
 
   .astryx-table__chevron-icon.is-expanded {

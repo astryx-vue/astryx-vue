@@ -15,7 +15,7 @@ footer: false
       <tr><td><code>orientation</code></td><td><code>'horizontal' | 'vertical'</code></td><td><code>'horizontal'</code></td><td>Connected direction and arrow-key navigation axis.</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>Default inherited by child buttons. An explicit child size wins.</td></tr>
       <tr><td><code>elevation</code></td><td><code>'none' | 'low' | 'med' | 'high'</code></td><td><code>'none'</code></td><td>Shadow depth for the connected surface.</td></tr>
-      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disables every Button and IconButton in the group.</td></tr>
+      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disables every Button and IconButton in the group. Members stay focusable and the group keeps its Tab stop.</td></tr>
     </tbody>
   </table>
 </div>
@@ -33,7 +33,8 @@ ButtonGroup receives Button or IconButton through its required default slot.
 | `Home` | Focus the first available button. |
 | `End` | Focus the last available button. |
 
-- Arrow-key navigation skips disabled buttons; when every button is disabled, the group still keeps one Tab stop so keyboard users can reach it.
+- The group is a single Tab stop. A disabled member is marked `aria-disabled` rather than natively disabled, so it stays focusable.
+- When every member is disabled, the Tab stop stays on one disabled member, so keyboard users can still reach the group.
 - Right-to-left horizontal layouts reverse the Left and Right Arrow behavior.
 
 ## Template ref

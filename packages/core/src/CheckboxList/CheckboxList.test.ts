@@ -93,6 +93,32 @@ describe('checkbox list', () => {
     expect(wrapper.text()).toContain('Ask an administrator')
   })
 
+  it.each([
+    ['a disabled list', { isDisabled: true }, '<CheckboxListItem label="CSV" value="csv" /><CheckboxListItem label="PDF" value="pdf" />', [true, true]],
+    ['a disabled row', {}, '<CheckboxListItem label="CSV" value="csv" /><CheckboxListItem label="PDF" value="pdf" is-disabled />', [false, true]],
+  ])('keeps the rows of %s focusable and unchanged', async (_name, extraProps, rows, expectedDisabled) => {
+    const wrapper = mount(CheckboxList, {
+      attachTo: document.body,
+      props: { label: 'Export', modelValue: [], ...extraProps },
+      slots: { default: rows },
+      global: { components: { CheckboxListItem } },
+    })
+    const inputs = wrapper.findAll<HTMLInputElement>('input[type="checkbox"]')
+
+    expect(inputs.map(input => input.attributes('aria-disabled') === 'true')).toEqual(expectedDisabled)
+    for (const input of inputs) {
+      expect(input.attributes('disabled')).toBeUndefined()
+      input.element.focus()
+      expect(document.activeElement).toBe(input.element)
+    }
+
+    const disabledInput = inputs[1]!
+    await disabledInput.trigger('click')
+    expect(disabledInput.element.checked).toBe(false)
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+    wrapper.unmount()
+  })
+
   it('still accepts the older disabledReason name', () => {
     const wrapper = mount(CheckboxList, {
       props: { label: 'Export', modelValue: [], isDisabled: true, disabledReason: 'Ask an administrator' },
