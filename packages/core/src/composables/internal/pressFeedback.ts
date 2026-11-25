@@ -8,7 +8,7 @@ import {
   PRESS_SCROLL_BRAKE_MS,
   pressGestureStep,
 } from './pressGesture.js'
-import { pressSurfaceAt } from './pressSurface.js'
+import { isTrackedByGroup, pressSurfaceAt } from './pressSurface.js'
 import { isInsideScrollView } from './scrollView.js'
 
 export { PRESS_ACTION_ATTRIBUTE, PRESS_CONTAINER_ATTRIBUTE, PRESSABLE_ATTRIBUTE } from './pressSurface.js'
@@ -184,7 +184,9 @@ function onPointerDown(event: PointerEvent): void {
     if (!fingerIsUp)
       return
   }
-  const element = pressSurfaceAt(event.target)
+  // 按钮组、提示对话框正在跟踪这种指针的滑动：它们自己画高亮，这里不画。
+  const tracked = event.target instanceof Element && isTrackedByGroup(event.target, event.pointerType)
+  const element = tracked ? null : pressSurfaceAt(event.target)
   // 先判断刹车再记这次触摸的时间：问的是「上一根手指」还在不在带动滚动。
   const braking = element != null && scrollerIsBraking(element)
   lastTouchAt = Date.now()

@@ -75,6 +75,23 @@
     --astryx-button-separator: var(--astryx-button-solid-separator);
   }
 
+  /*
+   * 跟踪滑动时（触屏为主的设备上），沿着按钮排列方向的拖动留给滑动选按钮，另一个方向照常滚动页面，
+   * 按住也不选中文字、不弹系统菜单。
+   */
+  .astryx-button-group[data-press-tracking] {
+    -webkit-touch-callout: none;
+    user-select: none;
+  }
+
+  .astryx-button-group[data-orientation='horizontal'][data-press-tracking] {
+    touch-action: pan-y pinch-zoom;
+  }
+
+  .astryx-button-group[data-orientation='vertical'][data-press-tracking] {
+    touch-action: pan-x pinch-zoom;
+  }
+
   @media (forced-colors: active) {
     /*
      * 强制配色下实心按钮各自画一圈边。相邻两个按钮的边会叠成双线，所以末尾成员以外

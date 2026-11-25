@@ -15,6 +15,8 @@ import { toggleButtonGroupSelection, toggleButtonGroupVertical } from '../../../
 
 `type="single"` 同时只按下一个。再点一次会清空，值变成 `null`。`type="multiple"` 每个按钮各自按下，值是数组。`orientation` 是 `horizontal` 或 `vertical`。`label` 是这一组的无障碍名称。
 
+在手机、平板这类以触屏为主的设备上，手指和笔可以按住一个切换按钮滑到别的上面，只切换松手时手指下的那个；在组外松手什么都不切换。鼠标按下和原生按钮一样。没有 `value` 的按钮保留自己的按压。
+
 ```vue
 <script setup lang="ts">
 import { ToggleButton, ToggleButtonGroup } from '@astryx-vue/core/ToggleButton'

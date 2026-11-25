@@ -34,6 +34,8 @@ import { ButtonGroup } from '@astryx-vue/core/ButtonGroup'
 
 
 
+在手机、平板这类以触屏为主的设备上，按钮组像菜单一样跟踪手指和笔：按住一个按钮滑到别的按钮上，高亮跟着走，松手时执行手指下的那个；在组外松手什么都不执行。鼠标按下和原生按钮一样。组里的菜单触发器（带 `aria-haspopup`）保留自己的打开方式。
+
 <ComponentAnatomy />
 
 ## 最佳实践
