@@ -19,6 +19,27 @@ import { LinkProvider } from '@astryx-vue/core/LinkProvider'
 
 The component receives `href` and `to`, so a router link can read whichever one it expects. A single component's own `as` prop still wins over the provider. `useLinkComponent()` reads the provider from a descendant when you render a link yourself.
 
+### Links in your own components
+
+Read the provider with `useLinkComponent()` so a custom component's links follow the app's router the same way Astryx links do. Fall back to `'a'` outside a provider, and let an explicit `as` win.
+
+```vue
+<script setup lang="ts">
+import { useLinkComponent } from '@astryx-vue/core/LinkProvider'
+
+const props = defineProps<{ href: string, as?: string | object }>()
+const linkComponent = useLinkComponent()
+</script>
+
+<template>
+  <component :is="props.as ?? linkComponent ?? 'a'" :href="href" :to="href">
+    <slot />
+  </component>
+</template>
+```
+
+Pass `as="a"` for a destination the router cannot handle, such as a file download or a page outside the app. Importing the router's link straight into a shared component skips the provider, so that component no longer follows it.
+
 ## Examples
 
 Common configurations, variations, and states.

@@ -3933,8 +3933,16 @@
             "text": "Use `color=\"secondary\"` to reduce visual weight in groups of links or paragraphs."
           },
           {
+            "guidance": "Recommended",
+            "text": "Put a Link inside a `Text` with `maxLines` to truncate it with the surrounding text; inside a clamped `Text` the link flows in the text's lines."
+          },
+          {
             "guidance": "Don't",
             "text": "Make every piece of text a link; it weakens link discoverability."
+          },
+          {
+            "guidance": "Don't",
+            "text": "Expect a clamped `Text` to cut a Link that sets its own `maxLines` or renders as a button (no `href`); that Link keeps its own box."
           },
           {
             "guidance": "Don't",
@@ -3953,6 +3961,14 @@
           {
             "guidance": "推荐",
             "text": "在一组链接或长段落中，使用 `color=\"secondary\"` 降低视觉噪音，让真正的重点操作更突出。"
+          },
+          {
+            "guidance": "推荐",
+            "text": "想让链接跟着周围文字一起截断，就把它放进设了 `maxLines` 的 `Text` 里；这时链接会并入文字的行里。"
+          },
+          {
+            "guidance": "避免",
+            "text": "不要指望外面的截断能切开自己设了 `maxLines` 的链接，或者没有 `href`、渲染成按钮的链接；它们保留自己的盒子。"
           },
           {
             "guidance": "避免",
@@ -4033,7 +4049,7 @@
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Whether the link is disabled."
+                "description": "Whether the link is disabled. It cannot navigate or emit `click`, keeps its Tab stop, and is announced as disabled. A caller `role` or `aria-disabled` does not replace that; a caller `tabindex` still applies."
               },
               {
                 "name": "`target`",
@@ -4130,7 +4146,7 @@
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "是否禁用。"
+                "description": "是否禁用。禁用后不能跳转，也不触发 `click`；它保留 Tab 焦点位置，读屏会读出「已禁用」。调用方传的 `role` 或 `aria-disabled` 不会替换掉这一点，调用方传的 `tabindex` 照常生效。"
               },
               {
                 "name": "`target`",
@@ -4212,13 +4228,13 @@
         "en": [
           {
             "heading": "Native attributes",
-            "text": "The root element is an `<a>`, a `<button>`, or the component passed to `as`. A disabled link is always an `<a>` without an address.\n\nThe following are passed to the root element:\n\n- HTML attributes.\n- `aria-*` attributes.\n- `data-*` attributes.\n- `class`.\n- `style`."
+            "text": "The root element is an `<a>`, a `<button>`, or the component passed to `as`. A disabled link is always an `<a>` without an address.\n\nThe following are passed to the root element:\n\n- HTML attributes.\n- `aria-*` attributes.\n- `data-*` attributes. `data-color` always reflects `color`, so a caller value does not replace it.\n- `class`.\n- `style`."
           }
         ],
         "zh": [
           {
             "heading": "原生属性",
-            "text": "根元素为 `<a>`、`<button>`，或 `as` 传入的组件。禁用的链接始终是没有地址的 `<a>`。\n\n以下内容传入根元素：\n\n- HTML 属性。\n- `aria-*` 属性。\n- `data-*` 属性。\n- `class`。\n- `style`。"
+            "text": "根元素为 `<a>`、`<button>`，或 `as` 传入的组件。禁用的链接始终是没有地址的 `<a>`。\n\n以下内容传入根元素：\n\n- HTML 属性。\n- `aria-*` 属性。\n- `data-*` 属性。`data-color` 始终反映 `color`，调用方传的同名值不会替换它。\n- `class`。\n- `style`。"
           }
         ]
       },
@@ -13212,7 +13228,7 @@
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "The card ignores activation."
+                "description": "The card ignores activation and drops a link destination. It keeps its Tab stop and is announced as disabled."
               },
               {
                 "name": "`variant`",
@@ -13279,7 +13295,7 @@
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "卡片不再响应激活。"
+                "description": "卡片不再响应激活，链接卡片也不再带地址。它保留 Tab 焦点位置，读屏会读出「已禁用」。"
               },
               {
                 "name": "`variant`",
@@ -67137,6 +67153,10 @@
       "notes": {
         "en": [
           {
+            "heading": "Links in your own components",
+            "text": "Read the provider with `useLinkComponent()` so a custom component's links follow the app's router the same way Astryx links do. Fall back to `'a'` outside a provider, and let an explicit `as` win.\n\n```vue\n<script setup lang=\"ts\">\nimport { useLinkComponent } from '@astryx-vue/core/LinkProvider'\n\nconst props = defineProps<{ href: string, as?: string | object }>()\nconst linkComponent = useLinkComponent()\n</script>\n\n<template>\n  <component :is=\"props.as ?? linkComponent ?? 'a'\" :href=\"href\" :to=\"href\">\n    <slot />\n  </component>\n</template>\n```\n\nPass `as=\"a\"` for a destination the router cannot handle, such as a file download or a page outside the app. Importing the router's link straight into a shared component skips the provider, so that component no longer follows it."
+          },
+          {
             "heading": "Components that follow the provider",
             "text": "These render their link through the provider unless they are given their own `as`:\n\n- `Link`, `Button`, `Avatar`, `Token`\n- `NavItem`, `NavMenuItem`, `NavHeadingMenuItem`, `SideNavHeading`, `TopNavItem`, `TopNavMegaMenuItem`, `TopNavMegaMenuFeaturedCard`\n- `BreadcrumbItem`, `Tab`, `Item` (List)\n- `DropdownMenuItem`, `ContextMenuItem`, `MoreMenuRow`, `TreeListItem`\n\nNot routed through the provider: the `AppShell` skip link, `Outline` links (in-page anchors), `ClickableCard` (its overlay control is a visually hidden anchor), and links rendered from Markdown."
           },
@@ -67146,6 +67166,10 @@
           }
         ],
         "zh": [
+          {
+            "heading": "自己组件里的链接",
+            "text": "自己写的组件里要渲染链接时，用 `useLinkComponent()` 读外层 provider，这样它的链接和 Astryx 自己的链接一样走应用的路由。外层没有 provider 时退回 `'a'`，自己写的 `as` 优先。\n\n```vue\n<script setup lang=\"ts\">\nimport { useLinkComponent } from '@astryx-vue/core/LinkProvider'\n\nconst props = defineProps<{ href: string, as?: string | object }>()\nconst linkComponent = useLinkComponent()\n</script>\n\n<template>\n  <component :is=\"props.as ?? linkComponent ?? 'a'\" :href=\"href\" :to=\"href\">\n    <slot />\n  </component>\n</template>\n```\n\n路由处理不了的地址，比如文件下载或应用外的页面，传 `as=\"a\"`。在共用组件里直接引入路由的链接组件会绕开 provider，这个组件就不再跟着它走。"
+          },
           {
             "heading": "会走 provider 的组件",
             "text": "下面这些组件在没写自己的 `as` 时，链接会交给 provider 里的组件：\n\n- `Link`、`Button`、`Avatar`、`Token`\n- `NavItem`、`NavMenuItem`、`NavHeadingMenuItem`、`SideNavHeading`、`TopNavItem`、`TopNavMegaMenuItem`、`TopNavMegaMenuFeaturedCard`\n- `BreadcrumbItem`、`Tab`、`Item`（List）\n- `DropdownMenuItem`、`ContextMenuItem`、`MoreMenuRow`、`TreeListItem`\n\n不走 provider 的：`AppShell` 的跳转正文链接、`Outline` 的页内锚点、`ClickableCard`（它的可点击控件是一层视觉隐藏的 `<a>`），以及 Markdown 渲染出来的链接。"
