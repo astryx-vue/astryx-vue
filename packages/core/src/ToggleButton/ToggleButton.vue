@@ -119,6 +119,7 @@ defineExpose({
     class="astryx-toggle-button"
     :aria-pressed="isPressed ? 'true' : 'false'"
     :data-pressed="isPressed ? 'true' : 'false'"
+    :data-grouped="group != null ? 'grouped' : undefined"
     :elevation="elevation"
     :is-disabled="isDisabled"
     :is-icon-only="isIconOnly"

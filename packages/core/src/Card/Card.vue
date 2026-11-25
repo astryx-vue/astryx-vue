@@ -2,6 +2,7 @@
 import type { CSSProperties } from 'vue'
 import type { CardProps, CardSizeValue, CardSlots } from './types.js'
 import { computed, useTemplateRef } from 'vue'
+import { provideLayoutContainer } from '../Layout/context.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 
 import '../../styles/card.css'
@@ -14,6 +15,7 @@ const props = withDefaults(defineProps<CardProps>(), {
 })
 
 defineSlots<CardSlots>()
+provideLayoutContainer('card')
 
 const element = useTemplateRef<HTMLDivElement>('element')
 

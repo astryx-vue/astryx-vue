@@ -47,7 +47,7 @@ const forwardedAttrs = computed(() => Object.fromEntries(
     <kbd
       v-for="(key, index) in keys"
       :key="`${key.name}:${index}`"
-      class="astryx-kbd__key"
+      class="astryx-kbd__key astryx-kbd-key"
       aria-hidden="true"
     >
       {{ key.display }}

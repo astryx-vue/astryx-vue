@@ -121,7 +121,7 @@ const layout = computed(() => (isSmallScreen.value ? 'stacked' : 'row'))
     @open-change="emit('openChange', $event)"
   >
     <div ref="content" class="astryx-alert-dialog__content">
-      <Heading :id="titleId" class="astryx-alert-dialog__title" :level="2">
+      <Heading :id="titleId" class="astryx-alert-dialog__title astryx-alert-dialog-title" :level="2">
         <slot name="title">
           {{ title }}
         </slot>
@@ -129,7 +129,7 @@ const layout = computed(() => (isSmallScreen.value ? 'stacked' : 'row'))
       <Text
         :id="descriptionId"
         as="div"
-        class="astryx-alert-dialog__description"
+        class="astryx-alert-dialog__description astryx-alert-dialog-description"
         color="secondary"
         type="body"
       >

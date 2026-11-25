@@ -595,3 +595,18 @@ describe('item link safety and press', () => {
     expect(wrapper.classes()).not.toContain('astryx-pressable')
   })
 })
+
+describe('item focus ring owner', () => {
+  it('rings the row only for its own button or link, so a control in a slot rings itself', () => {
+    expect(listCss).not.toContain('.astryx-item:has(:focus-visible)')
+    expect(cssRule('.astryx-item:has(> .astryx-item__content:focus-visible')).toContain('outline: 2px solid')
+  })
+
+  it('keeps the ring on a delegating row, whose nested control is its only tab stop', () => {
+    expect(cssRule('.astryx-item--delegate:has(:focus-visible)')).toContain('outline: 2px solid')
+    const control = document.createElement('button')
+    const delegating = mount(Item, { props: { label: 'Row', interactiveRef: () => control } })
+    expect(delegating.classes()).toContain('astryx-item--delegate')
+    expect(mount(Item, { props: { label: 'Row', onClick: () => {} } }).classes()).not.toContain('astryx-item--delegate')
+  })
+})

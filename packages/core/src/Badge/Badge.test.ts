@@ -62,6 +62,13 @@ describe('badge', () => {
     expect(wrapper.text()).toContain('Synced')
   })
 
+  it('keeps a label with no right-to-left letter in its written order under RTL', () => {
+    expect(mount(Badge, { props: { label: '+3' } }).get('.astryx-badge__label').attributes('dir')).toBe('ltr')
+    expect(mount(Badge, { props: { label: 7 } }).get('.astryx-badge__label').attributes('dir')).toBe('ltr')
+    expect(mount(Badge, { props: { label: 'iPhone \u062C\u062F\u064A\u062F' } }).get('.astryx-badge__label').attributes('dir')).toBeUndefined()
+    expect(mount(Badge, { slots: { default: '<b>+3</b>' } }).get('.astryx-badge__label').attributes('dir')).toBeUndefined()
+  })
+
   it('is as wide as its label, so a grid cell or a stack does not stretch it', () => {
     expect(ruleBody('.astryx-badge')).toMatch(/width: fit-content;/)
     expect(ruleBody('.astryx-badge')).toMatch(/min-width: 0;/)

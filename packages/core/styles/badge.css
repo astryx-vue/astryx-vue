@@ -41,6 +41,7 @@
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
+    unicode-bidi: isolate;
   }
 
   .astryx-badge[data-variant='neutral'] {

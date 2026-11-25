@@ -44,6 +44,11 @@
     color: var(--astryx-link-accent-foreground, #0074e2);
   }
 
+  /* A container or a theme sets --link-hover-color; the accent link takes it on hover. */
+  .astryx-link.astryx-link--color-accent:hover:not(:disabled, [aria-disabled='true']) {
+    color: var(--astryx-link-hover-color, var(--astryx-link-accent-foreground, #0074e2));
+  }
+
   .astryx-link.astryx-link--color-inherit {
     color: inherit;
   }

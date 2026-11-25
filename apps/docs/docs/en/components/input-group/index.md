@@ -50,6 +50,7 @@ Once the group has a label, it is a field. The label, description, optional or r
 | <Badge variant="success">Do</Badge> | Use `before` for a fixed prefix such as a unit or `https://`. |
 | <Badge variant="success">Do</Badge> | Use `after` for a short action, such as clear or submit. |
 | <Badge variant="success">Do</Badge> | Keep the addons short so the field itself stays easy to read. |
+| <Badge variant="success">Do</Badge> | Plain text in `InputGroupText` keeps its character order under right-to-left, so `https://` and `.com` read as written. When rich content mixes directions, mark the direction on your own content, for example with `dir` or `<bdi>`. |
 | <Badge variant="error">Don't</Badge> | Stack several addons on both sides. The field becomes cramped. |
 
 ## Examples

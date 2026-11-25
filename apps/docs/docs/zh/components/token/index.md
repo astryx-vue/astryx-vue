@@ -18,7 +18,9 @@ import { tokenClickable, tokenColors, tokenEnd, tokenIcon, tokenRemovable } from
 
 `removable` 会显示一个可聚焦的删除按钮。点击、`Backspace` 和 `Delete` 都会发出 `remove`。`disabled` 时删除按钮不再响应。`#icon` 放在文字前面，适合类型图标。
 
-有 `href` 时渲染成链接。删除按钮和链接同时存在时，两者是兄弟节点，按钮不会套在链接里面。
+有 `href` 时渲染成链接。删除按钮和链接同时存在时，两者是兄弟节点，按钮不会套在链接里面。点链接时 `@click` 监听照样会调用。禁用的链接型标签仍是可聚焦的链接，读屏会读出「已禁用」，点了也不跳转。
+
+可点击的标签上，`aria-labelledby`、`aria-describedby`、`aria-haspopup`、`aria-expanded` 和 `aria-pressed` 会落到里面那个真正承担动作的按钮上。筛选标签可以传 `aria-pressed`，读屏就会把它当成开关。
 
 ```vue
 <script setup lang="ts">
@@ -45,6 +47,7 @@ import { Token } from '@astryx-vue/core/Token'
 | --- | --- |
 | <Badge variant="success">推荐</Badge> | 用户可以拿掉这条信息时打开 `removable`，并在 `remove` 里更新自己的列表。 |
 | <Badge variant="success">推荐</Badge> | 用 `#icon` 区分类型，不要把图标写进 `label`。 |
+| <Badge variant="success">推荐</Badge> | 在右到左页面上，标签文字保持书写顺序，`@alice`、`C++`、`example.com` 照原样显示；本身是右到左文字的标签仍然从右往左读。 |
 | <Badge variant="error">避免</Badge> | 用标签表达成功、警告这类状态。那种场景用 `Badge`。 |
 
 ## 示例
