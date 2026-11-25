@@ -1,5 +1,5 @@
 ---
-'@astryx-vue/core': minor
+'@astryx-vue/core': patch
 '@astryx-vue/lab': patch
 ---
 
