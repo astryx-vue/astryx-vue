@@ -1,9 +1,12 @@
 import type { Component } from 'vue'
 import type { SemanticIconMap } from '../Icon/semantic.js'
+import type { StoredIconEntry } from '../Icon/themeIcons.js'
 import type { IndicatorRegistry } from '../Indicator/types.js'
 import type { ThemeGenerativeAxes } from './adaptationTypes.js'
-import type { ComponentStyleMap, DefineThemeInput, ThemeDefinition } from './types.js'
+import type { ComponentStyleMap, DefineThemeInput, ThemeDefinition, ThemeIconVariant } from './types.js'
 import { markRaw } from 'vue'
+import { mergeComponentIcons, staticComponentIcons } from '../Icon/componentIcons.js'
+import { readThemeIconIds, resolveIconEntryVariants } from '../Icon/themeIcons.js'
 import { normalizeThemeAdaptations, resolveThemeAdaptationRules } from './adaptations.js'
 import { assertTargetName } from './componentStyles.js'
 import { resolveLocalTokens } from './localTokens.js'
@@ -64,7 +67,10 @@ function assertTargets(components: ComponentStyleMap | undefined): void {
  * local tokens, component styles, surfaces, adaptations, icons, indicators.
  * This theme's own values win, and the result is self-contained.
  */
-export function defineTheme(input: DefineThemeInput): ThemeDefinition {
+export function defineTheme<
+  const IconVariants extends readonly string[] | undefined = undefined,
+  Base extends ThemeDefinition | undefined = undefined,
+>(input: DefineThemeInput<IconVariants, Base>): ThemeDefinition<ThemeIconVariant<IconVariants, Base>> {
   if (!THEME_NAME.test(input.name))
     throw new Error(`Theme name "${input.name}" must use letters, numbers, and hyphens.`)
   // A present but undefined `extends` is what an import of the wrong name
@@ -76,7 +82,7 @@ export function defineTheme(input: DefineThemeInput): ThemeDefinition {
   assertTargets(input.onDark?.components)
   assertTargets(input.onLight?.components)
 
-  const base = input.extends
+  const base: ThemeDefinition | undefined = input.extends
   const own = resolveThemeValues(input, '')
   const tokens = { ...base?.tokens, ...own.tokens }
   const components = mergeComponentMaps(base?.components, own.components)
@@ -101,7 +107,15 @@ export function defineTheme(input: DefineThemeInput): ThemeDefinition {
   const onDarkComponents = mergeComponentMaps(base?.onDarkComponents, input.onDark?.components)
   const onLightComponents = mergeComponentMaps(base?.onLightComponents, input.onLight?.components)
 
-  const icons = mergeMaps<string>(base?.icons, input.icons) as SemanticIconMap | undefined
+  // The base's id view drops its functions, so merge from its entries.
+  const ownIcons = input.icons as Readonly<Record<string, StoredIconEntry>> | undefined
+  const iconEntries = mergeMaps<StoredIconEntry>(base?.iconEntries ?? base?.icons, ownIcons)
+  const icons = readThemeIconIds(iconEntries) as SemanticIconMap | undefined
+  // The variant list belongs to the whole theme: a list set here replaces the
+  // inherited one, an omitted list is inherited.
+  const iconVariants = input.iconVariants !== undefined ? [...input.iconVariants] : base?.iconVariants
+  const iconEntryVariants = resolveIconEntryVariants(iconEntries, ownIcons, base, iconVariants)
+  const componentIconValues = mergeComponentIcons(base?.componentIconValues, input.componentIcons)
   const indicators = sealIndicators(mergeMaps(base?.indicators, input.indicators))
   const css = compileThemeCss({
     name: input.name,
@@ -125,6 +139,10 @@ export function defineTheme(input: DefineThemeInput): ThemeDefinition {
     ...(onLightComponents ? { onLightComponents } : {}),
     syntax: input.syntax ?? base?.syntax,
     ...(icons ? { icons } : {}),
+    ...(iconEntries ? { iconEntries } : {}),
+    ...(iconVariants !== undefined ? { iconVariants } : {}),
+    ...(iconEntryVariants ? { iconEntryVariants } : {}),
+    ...(componentIconValues ? { componentIcons: staticComponentIcons(componentIconValues), componentIconValues } : {}),
     ...(indicators ? { indicators } : {}),
     ...(components ? { components } : {}),
     ...(css ? { css } : {}),

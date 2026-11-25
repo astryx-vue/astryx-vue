@@ -45,6 +45,10 @@ export const DERIVED_VARS: Readonly<Record<string, readonly DerivedVarEntry[]>> 
     { property: 'borderRadius', vars: ['--_dropdown-menu-radius'] },
     { property: 'padding', vars: ['--_dropdown-menu-padding'] },
   ],
+  'icon': [
+    { property: 'width', vars: ['--_icon-width'] },
+    { property: 'height', vars: ['--_icon-height'] },
+  ],
   'progress-bar-mark': [
     { property: 'width', vars: ['--_progressbar-mark-width'] },
     { property: 'height', vars: ['--_progressbar-mark-height'] },

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Icon from '../Icon/Icon.vue'
+import ComponentIcon from '../Icon/ComponentIcon.vue'
 import { useAstryxMessages } from '../locale/context.js'
 
 defineOptions({ name: 'AstryxTableExpansionChevron' })
@@ -17,8 +17,12 @@ const messages = useAstryxMessages()
     :aria-label="expanded ? messages.table.collapseRow : messages.table.expandRow"
     @click.stop="emit('toggle')"
   >
-    <span class="astryx-table__chevron-icon" :class="{ 'is-expanded': expanded }">
-      <Icon icon="chevronRight" size="xsm" />
+    <span class="astryx-table__chevron-icon astryx-table__chevron-icon--slot" :class="{ 'is-expanded': expanded }">
+      <ComponentIcon
+        icon-slot="table-row-expand"
+        :state="{ expanded }"
+        :fallback="{ icon: 'chevronRight', size: 'xsm' }"
+      />
     </span>
   </button>
 </template>
