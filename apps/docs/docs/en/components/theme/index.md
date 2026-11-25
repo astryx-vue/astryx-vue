@@ -42,6 +42,8 @@ const ocean = defineTheme({
 
 `neutralTheme` is the empty theme. Its colors still come from `@astryx-vue/themes/neutral.css`. The seven shipped themes stay handwritten CSS. They are not rebuilt from the generators below.
 
+Text inside a `Theme` that sets no size or line height of its own takes the theme's body size and body leading (`--text-body-leading`), so plain text in a Card or Stack moves when a theme changes them. To keep a different line height, set one on your own container.
+
 ## Generated from a few numbers
 
 `color`, `typography`, `radius`, and `motion` fill tokens on the theme object. A matching `tokens` entry wins. A reference such as `var(--color-accent)` is rewritten to the `--astryx-` name.
