@@ -1,5 +1,8 @@
 import type { Ref } from 'vue'
+import type { HeldRow } from '../composables/internal/snapPagingValue.js'
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { moveHeldSnapPaging, moveSnapPaging, nearestStop, snapStops } from '../composables/internal/snapPagingValue.js'
+import { pagingStep } from './useCarouselPaging.js'
 
 export interface CarouselOverflow {
   hasOverflow: boolean
@@ -81,7 +84,22 @@ function observeContent(element: HTMLElement, onChange: () => void): () => void 
   }
 }
 
+/** 分页按住的一行显示在哪，就按哪里算两端是否还藏着内容。 */
+function heldOverflow(held: HeldRow): CarouselOverflow {
+  const hasOverflow = held.travel > 1
+  return {
+    hasOverflow,
+    overflowStart: hasOverflow && held.offset > 1,
+    overflowEnd: hasOverflow && held.offset < held.travel - 1,
+  }
+}
+
+function sameOverflow(a: CarouselOverflow, b: CarouselOverflow): boolean {
+  return a.hasOverflow === b.hasOverflow && a.overflowStart === b.overflowStart && a.overflowEnd === b.overflowEnd
+}
+
 export function useCarouselScroller(scroller: Ref<HTMLElement | null>): {
+  followShown: (held: HeldRow | null) => void
   measure: () => void
   onKeyDown: (event: KeyboardEvent, hasLoop: boolean) => void
   overflow: Ref<CarouselOverflow>
@@ -97,6 +115,21 @@ export function useCarouselScroller(scroller: Ref<HTMLElement | null>): {
     overflow.value = element == null
       ? { hasOverflow: false, overflowStart: false, overflowEnd: false }
       : readOverflow(element)
+  }
+
+  /**
+   * 吸附分页按住这一行时，滚动偏移要等交还才落定，两端状态改按它显示的位置算，
+   * 并且就在这次回调里改，按钮和渐隐与这一行同一帧变化；两端都没变就什么也不写。
+   * 收到 null 说明已经交还，重新读滚动偏移。
+   */
+  function followShown(held: HeldRow | null): void {
+    if (held == null) {
+      measure()
+      return
+    }
+    const next = heldOverflow(held)
+    if (!sameOverflow(next, overflow.value))
+      overflow.value = next
   }
 
   function schedule(): void {
@@ -115,6 +148,9 @@ export function useCarouselScroller(scroller: Ref<HTMLElement | null>): {
   function scrollByDirection(direction: -1 | 1, hasLoop: boolean): void {
     const element = scroller.value
     if (element == null)
+      return
+    // 吸附分页下，不管这一行是否被按住，都由分页来挪：手指可以像接住轻扫一样接住它，松手停在某一页上。
+    if (moveSnapPaging(element, (at, end) => pagingStep(element, at, end, direction, hasLoop && end > 1)))
       return
     const behavior = prefersReducedMotion() ? 'auto' : 'smooth'
     const rtlSign = isRtlElement(element) ? -1 : 1
@@ -143,9 +179,13 @@ export function useCarouselScroller(scroller: Ref<HTMLElement | null>): {
     const behavior = prefersReducedMotion() ? 'auto' : 'smooth'
     const containerRect = element.getBoundingClientRect()
     const itemRect = target.getBoundingClientRect()
-    const delta = isRtlElement(element)
+    const rtl = isRtlElement(element)
+    const delta = rtl
       ? itemRect.right - containerRect.right
       : itemRect.left - containerRect.left
+    // 吸附分页下去这一项的停点（在 scroll-padding 之内），交还时原生吸附不会再把它拉回去。
+    if (moveSnapPaging(element, (at, end) => nearestStop(snapStops(element, at, end), at + (rtl ? -delta : delta))))
+      return
     element.scrollBy({ left: delta, behavior })
   }
 
@@ -155,8 +195,15 @@ export function useCarouselScroller(scroller: Ref<HTMLElement | null>): {
   function onWheel(event: WheelEvent): void {
     if (event.defaultPrevented || !event.shiftKey || event.deltaY === 0 || event.deltaX !== 0)
       return
+    const element = scroller.value
+    if (element == null)
+      return
     event.preventDefault()
-    scroller.value?.scrollBy({ left: event.deltaY, behavior: 'auto' })
+    // 分页按住这一行时，这一格滚轮交给分页，停到离这一步最近的停点。
+    const toEnd = (): number => isRtlElement(element) ? -event.deltaY : event.deltaY
+    if (moveHeldSnapPaging(element, (at, end) => nearestStop(snapStops(element, at, end), at + toEnd())))
+      return
+    element.scrollBy({ left: event.deltaY, behavior: 'auto' })
   }
 
   let wheelTarget: HTMLElement | null = null
@@ -203,5 +250,5 @@ export function useCarouselScroller(scroller: Ref<HTMLElement | null>): {
       cancelAnimationFrame(frame)
   })
 
-  return { measure, onKeyDown, overflow, scrollByDirection, scrollToIndex }
+  return { followShown, measure, onKeyDown, overflow, scrollByDirection, scrollToIndex }
 }

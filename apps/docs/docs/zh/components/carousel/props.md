@@ -13,7 +13,7 @@ footer: false
 <tr><td><code>hasButtons</code></td><td><code>boolean</code></td><td><code>true</code></td><td>内容溢出时显示上一张和下一张按钮。</td></tr>
 <tr><td><code>hasEdgeFade</code></td><td><code>boolean</code></td><td><code>true</code></td><td>在仍被裁切的一侧加上渐隐。</td></tr>
 <tr><td><code>hasLoop</code></td><td><code>boolean</code></td><td><code>false</code></td><td>从最后一项回到第一项。内容溢出时两端按钮都保持可用。</td></tr>
-<tr><td><code>hasSnap</code></td><td><code>boolean</code></td><td><code>false</code></td><td>每个直接子节点吸附到起始边。</td></tr>
+<tr><td><code>hasSnap</code></td><td><code>boolean | SnapPaging</code></td><td><code>false</code></td><td>每一项吸附到起始边。<code>true</code> 用原生 CSS 滚动吸附。传 <code>useSnapPaging()</code> 的返回值时，在同样的停点上加上 iOS 式翻页，用手指或触控板横扫时生效：轻扫一下翻一屏，传 <code>{ pages: 'item' }</code> 时翻一项。只有传了这个值才会加载翻页代码。</td></tr>
 <tr><td><code>padding</code></td><td><code>SpacingStep</code></td><td>—</td><td>滚动区域的行内内边距，并同步设置 scroll-padding。</td></tr>
 <tr><td><code>label</code></td><td><code>string</code></td><td><code>Carousel</code></td><td>区域的无障碍名称。默认文案随语言变化，中文为「轮播」。</td></tr>
 </tbody></table>

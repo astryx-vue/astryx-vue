@@ -258,6 +258,7 @@ const expectedCatalog = [
   { slug: 'use-translator', group: 'Utility', family: 'Utilities', en: 'useTranslator', zh: 'useTranslator' },
   { slug: 'use-tree-focus', group: 'Utility', family: 'Utilities', en: 'useTreeFocus', zh: 'useTreeFocus' },
   { slug: 'use-typeahead', group: 'Utility', family: 'Utilities', en: 'useTypeahead', zh: 'useTypeahead' },
+  { slug: 'use-snap-paging', group: 'Utility', family: 'Utilities', en: 'useSnapPaging', zh: 'useSnapPaging' },
 ]
 
 describe('component catalog meta', () => {

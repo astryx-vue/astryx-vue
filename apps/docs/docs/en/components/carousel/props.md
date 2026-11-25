@@ -13,7 +13,7 @@ footer: false
 <tr><td><code>hasButtons</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Previous and next buttons when the row overflows.</td></tr>
 <tr><td><code>hasEdgeFade</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Fade the edges that still hide overflow.</td></tr>
 <tr><td><code>hasLoop</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Wrap from the last item to the first. Buttons stay available at both ends while the row overflows.</td></tr>
-<tr><td><code>hasSnap</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Snap each direct child to the start edge.</td></tr>
+<tr><td><code>hasSnap</code></td><td><code>boolean | SnapPaging</code></td><td><code>false</code></td><td>Snap each item to the start edge. <code>true</code> uses native CSS scroll snap. A <code>useSnapPaging()</code> value adds iOS paging on the same stops, under a finger and on a trackpad swipe: a flick moves one view, or one item with <code>{ pages: 'item' }</code>. Only that value loads the paging code.</td></tr>
 <tr><td><code>padding</code></td><td><code>SpacingStep</code></td><td>—</td><td>Inline padding inside the scrollport, with matching scroll-padding.</td></tr>
 <tr><td><code>label</code></td><td><code>string</code></td><td><code>Carousel</code></td><td>Accessible name of the region. The default is localized.</td></tr>
 </tbody></table>

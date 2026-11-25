@@ -3,9 +3,12 @@ import cardsDemo from './cards.vue'
 import cardsSource from './cards.vue?raw&highlighted'
 import overviewDemo from './overview.vue'
 import overviewSource from './overview.vue?raw&highlighted'
+import snapPagingDemo from './snap-paging.vue'
+import snapPagingSource from './snap-paging.vue?raw&highlighted'
 import snapDemo from './snap.vue'
 import snapSource from './snap.vue?raw&highlighted'
 
 export const carouselOverview = defineDemo(overviewDemo, overviewSource)
 export const carouselCards = defineDemo(cardsDemo, cardsSource)
 export const carouselSnap = defineDemo(snapDemo, snapSource)
+export const carouselSnapPaging = defineDemo(snapPagingDemo, snapPagingSource)

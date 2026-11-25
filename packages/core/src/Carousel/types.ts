@@ -1,4 +1,5 @@
 import type { VNode } from 'vue'
+import type { SnapPaging } from '../composables/internal/snapPagingValue.js'
 import type { SpacingStep } from '../Stack/types.js'
 
 /** Gap steps the carousel actually spaces with. Padding accepts every spacing step. */
@@ -43,10 +44,13 @@ export interface CarouselProps {
    */
   hasLoop?: boolean
   /**
-   * Snap each direct child to the start edge.
+   * Snap each item to the start edge. `true` uses native CSS scroll snap.
+   * A `useSnapPaging()` value adds iOS paging on the same stops, under a finger
+   * and on a trackpad swipe: a flick moves one view, or one item with
+   * `useSnapPaging({ pages: 'item' })`. Only that value loads the paging code.
    * @default false
    */
-  hasSnap?: boolean
+  hasSnap?: boolean | SnapPaging
   /**
    * Inline padding inside the scrollport, with matching scroll-padding so snap
    * points line up with the content edge.

@@ -5,6 +5,7 @@ import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
 import { useAstryxMessages } from '../locale/context.js'
 import { CarouselItems } from './slides.js'
+import { useCarouselPaging } from './useCarouselPaging.js'
 import { useCarouselScroller } from './useCarouselScroll.js'
 import '../../styles/carousel.css'
 
@@ -25,7 +26,8 @@ const scroller = ref<HTMLElement | null>(null)
 const startButton = ref<HTMLButtonElement | null>(null)
 const endButton = ref<HTMLButtonElement | null>(null)
 const focusedNav = ref<'start' | 'end' | null>(null)
-const { measure, onKeyDown, overflow, scrollByDirection, scrollToIndex } = useCarouselScroller(scroller)
+const { followShown, measure, onKeyDown, overflow, scrollByDirection, scrollToIndex } = useCarouselScroller(scroller)
+useCarouselPaging(scroller, () => props.hasSnap, followShown)
 
 const regionLabel = computed(() => props.label ?? messages.value.carousel.label)
 
@@ -149,7 +151,7 @@ function slideLabel(position: number, total: number): string {
       :aria-label="regionLabel"
       :data-gap="gap"
       :data-padding="padding"
-      :data-snap="hasSnap || undefined"
+      :data-snap="hasSnap ? true : undefined"
       :data-edge-fade="hasEdgeFade || undefined"
       :data-fade="fade"
       :tabindex="overflow.hasOverflow ? 0 : -1"
