@@ -1,5 +1,11 @@
 # @astryx-vue/cli
 
+## 0.4.26
+
+### Patch Changes
+
+- [#519](https://github.com/astryx-vue/astryx-vue/pull/519) [`6e5953a`](https://github.com/astryx-vue/astryx-vue/commit/6e5953a3c3eed6c6d0d91f189f479bef95f47a97) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - CLI 内置文档里状态色说明的链接改为主题扩展页的实际网址。
+
 ## 0.4.25
 
 ### Patch Changes
