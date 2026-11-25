@@ -47,7 +47,8 @@ function onSurfaceClick(event: MouseEvent): void {
   handlers.onClick(event)
 }
 
-const { pressableProps } = usePressFeedback({ hasOverlay: false })
+/** 卡片里放着别的控件：手指按在它们上面时卡片不亮。 */
+const { pressableProps, pressActionProps } = usePressFeedback({ hasOverlay: false, isContainer: true })
 
 function onKeyDown(event: KeyboardEvent): void {
   if (props.isDisabled) {
@@ -84,6 +85,7 @@ function onKeyDown(event: KeyboardEvent): void {
       :aria-label="label"
       :checked="isSelected"
       type="checkbox"
+      v-bind="pressActionProps"
       @change="commit(($event.target as HTMLInputElement).checked)"
       @keydown="onKeyDown"
     />

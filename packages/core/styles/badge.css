@@ -20,8 +20,21 @@
     line-height: var(--astryx-text-supporting-leading, 1.6667);
     vertical-align: middle;
     white-space: nowrap;
+    /*
+     * 和文字一样宽：网格单元格和栈的交叉轴会把 width: auto 的子元素拉满。
+     * 在横向 flex 行里它照样能缩：flex 基准跟着这个宽度走，下面的 min-width 允许缩到更小。
+     */
+    width: fit-content;
     max-width: 100%;
     min-width: 0;
+  }
+
+  /*
+   * 至少有一行文字那么高：字号变大时徽章跟着文字长高，文字不会溢出。
+   * 用最小高度而不是新高度，默认字号下主题设的高度照旧生效。
+   */
+  .astryx-badge--has-label {
+    min-height: 1lh;
   }
 
   .astryx-badge__label {

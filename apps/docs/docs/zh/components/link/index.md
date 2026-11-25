@@ -39,6 +39,8 @@ import { Link } from '@astryx-vue/core/Link'
 | <Badge variant="success">推荐</Badge> | 链接文字应直接描述目标，例如“查看文档”“联系我们”，避免使用“点击这里”这类含糊表达。 |
 | <Badge variant="success">推荐</Badge> | 跳转到站外的链接使用 `isExternalLink`，组件会自动添加 `target="_blank"` 和 `rel="noopener noreferrer"`，并给出外部标识。 |
 | <Badge variant="success">推荐</Badge> | 在一组链接或长段落中，使用 `color="secondary"` 降低视觉噪音，让真正的重点操作更突出。 |
+| <Badge variant="success">推荐</Badge> | 想让链接跟着周围文字一起截断，就把它放进设了 `maxLines` 的 `Text` 里；这时链接会并入文字的行里。 |
+| <Badge variant="error">避免</Badge> | 不要指望外面的截断能切开自己设了 `maxLines` 的链接，或者没有 `href`、渲染成按钮的链接；它们保留自己的盒子。 |
 | <Badge variant="error">避免</Badge> | 避免把页面上的大量文字都做成链接：过多的下划线或强调色会削弱链接本身的可发现性。 |
 | <Badge variant="error">避免</Badge> | 避免把关键操作只做成链接。保存、删除、提交等核心操作应使用 `Button`，让用户明确感知这是一个动作。 |
 

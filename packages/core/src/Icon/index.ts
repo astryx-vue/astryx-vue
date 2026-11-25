@@ -1,3 +1,12 @@
+export type {
+  ComponentIconMap,
+  ComponentIconRequest,
+  ComponentIconSlotMap,
+  ComponentIconSlotName,
+  ComponentIconStaticMap,
+  ComponentIconValue,
+  ResolvedComponentIcon,
+} from './componentIcons.js'
 export { ICON_GLYPHS, iconGlyphSlug, isIconGlyph } from './glyphs.js'
 export type { IconGlyphName } from './glyphs.js'
 export { default as Icon } from './Icon.vue'
@@ -5,5 +14,6 @@ export { addCollection, addIcon } from './registry.js'
 export type { IconifyCollection, IconifyIcon } from './registry.js'
 export { defaultSemanticIcons, resolveSemanticIcon } from './semantic.js'
 export type { SemanticIconMap } from './semantic.js'
+export type { IconRequest, IconVariant, IconVariantMap, ThemeIconEntries, ThemeIconEntry } from './themeIcons.js'
 export type { ExtendedIconName, IconColor, IconName, IconProps, IconRegistry, IconSize, IconSlots, NamespacedIconName } from './types.js'
 export { useSemanticIcon } from './useSemanticIcon.js'

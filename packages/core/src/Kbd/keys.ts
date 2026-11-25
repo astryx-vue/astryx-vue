@@ -4,13 +4,10 @@ const KEY_ALIASES = new Map<string, string>([
 ])
 
 /**
- * Glyphs painted in a key badge. A `Map` keeps an unknown key such as
- * `constructor` from resolving to an object prototype member.
+ * Glyphs painted in a key badge on every platform. A `Map` keeps an unknown
+ * key such as `constructor` from resolving to an object prototype member.
  */
 const KEY_DISPLAY = new Map<string, string>([
-  ['ctrl', '\u2303'],
-  ['alt', '\u2325'],
-  ['shift', '\u21E7'],
   ['enter', '\u21B5'],
   ['backspace', '\u232B'],
   ['escape', 'Esc'],
@@ -20,6 +17,27 @@ const KEY_DISPLAY = new Map<string, string>([
   ['left', '\u2190'],
   ['right', '\u2192'],
   ['plus', '+'],
+])
+
+/** Modifier symbols on Apple platforms; `meta` is the Command key there. */
+const APPLE_MODIFIER_DISPLAY = new Map<string, string>([
+  ['mod', '\u2318'],
+  ['meta', '\u2318'],
+  ['ctrl', '\u2303'],
+  ['alt', '\u2325'],
+  ['shift', '\u21E7'],
+])
+
+/**
+ * Modifier text elsewhere, and before the platform is known (server render
+ * and the first client render), so the keycap reads as the user's keyboard.
+ */
+const MODIFIER_TEXT = new Map<string, string>([
+  ['mod', 'Ctrl'],
+  ['ctrl', 'Ctrl'],
+  ['alt', 'Alt'],
+  ['shift', 'Shift'],
+  ['meta', 'Win'],
 ])
 
 /**
@@ -51,10 +69,8 @@ export interface KbdKey {
 }
 
 function keyDisplay(name: string, isApple: boolean): string {
-  if (name === 'mod')
-    return isApple ? '\u2318' : 'Ctrl'
-
-  return KEY_DISPLAY.get(name) ?? name.toUpperCase()
+  const modifier = (isApple ? APPLE_MODIFIER_DISPLAY : MODIFIER_TEXT).get(name)
+  return modifier ?? KEY_DISPLAY.get(name) ?? name.toUpperCase()
 }
 
 function keyLabel(name: string, isApple: boolean): string {

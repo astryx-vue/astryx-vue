@@ -130,3 +130,8 @@ export function composeAccessibleName(
   }
   return name ?? status
 }
+
+/** 把文字写成 CSS 字符串字面量，转义引号、反斜杠和换行。 */
+export function cssString(text: string): string {
+  return `"${text.replace(/[\\"]/g, char => `\\${char}`).replace(/\n/g, '\\a ')}"`
+}

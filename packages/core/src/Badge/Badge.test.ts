@@ -1,7 +1,17 @@
+import { readFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { mount } from '@vue/test-utils'
 
 import { describe, expect, it } from 'vitest'
 import Badge from './Badge.vue'
+
+const css = readFileSync(resolve(dirname(fileURLToPath(import.meta.url)), '../../styles/badge.css'), 'utf8')
+
+function ruleBody(selector: string): string {
+  const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  return new RegExp(`${escaped}\\s*\\{([^}]*)\\}`).exec(css)?.[1] ?? ''
+}
 
 describe('badge', () => {
   it('renders its label in a span with the neutral variant by default', () => {
@@ -50,5 +60,26 @@ describe('badge', () => {
     expect(wrapper.find('[data-testid="badge-icon"]').exists()).toBe(true)
     expect(wrapper.text()).toContain('check')
     expect(wrapper.text()).toContain('Synced')
+  })
+
+  it('is as wide as its label, so a grid cell or a stack does not stretch it', () => {
+    expect(ruleBody('.astryx-badge')).toMatch(/width: fit-content;/)
+    expect(ruleBody('.astryx-badge')).toMatch(/min-width: 0;/)
+  })
+
+  it('grows with its label at a larger text size, while a color-only badge keeps its size', () => {
+    expect(ruleBody('.astryx-badge--has-label')).toMatch(/min-height: 1lh;/)
+
+    const fromProp = mount(Badge, { props: { label: 'Active' } })
+    const fromSlot = mount(Badge, { slots: { default: 'Active' } })
+    const fromNumber = mount(Badge, { props: { label: 0 } })
+    expect(fromProp.classes()).toContain('astryx-badge--has-label')
+    expect(fromSlot.classes()).toContain('astryx-badge--has-label')
+    expect(fromNumber.classes()).toContain('astryx-badge--has-label')
+
+    const colorOnly = mount(Badge, { props: { variant: 'success' } })
+    const emptyLabel = mount(Badge, { props: { label: '' } })
+    expect(colorOnly.classes()).not.toContain('astryx-badge--has-label')
+    expect(emptyLabel.classes()).not.toContain('astryx-badge--has-label')
   })
 })

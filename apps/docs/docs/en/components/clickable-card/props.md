@@ -16,7 +16,7 @@ footer: false
       <tr><td><code>label</code></td><td><code>string</code></td><td>-</td><td>Accessible name of the hidden control.</td></tr>
       <tr><td><code>href</code></td><td><code>string</code></td><td>-</td><td>Address the card navigates to. Leave it unset to handle <code>click</code> instead.</td></tr>
       <tr><td><code>target</code></td><td><code>string</code></td><td>-</td><td>Browsing context for <code>href</code>. <code>_blank</code> opens a new tab.</td></tr>
-      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>The card ignores activation.</td></tr>
+      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>The card ignores activation and drops a link destination. It keeps its Tab stop and is announced as disabled.</td></tr>
       <tr><td><code>variant</code></td><td><code>CardVariant</code></td><td><code>'default'</code></td><td>Background variant, forwarded to <code>Card</code>.</td></tr>
       <tr><td><code>elevation</code></td><td><code>CardElevation</code></td><td><code>'none'</code></td><td>Resting shadow: none, low, med, or high.</td></tr>
       <tr><td><code>padding</code></td><td><code>SpacingStep</code></td><td>-</td><td>Padding forwarded to <code>Card</code>.</td></tr>

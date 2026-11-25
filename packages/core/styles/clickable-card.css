@@ -24,11 +24,6 @@
     }
   }
 
-  .astryx-clickable-card[data-astryx-press]::after {
-    background-color: transparent;
-    background-image: var(--_press-paint-image);
-  }
-
   @media (hover: hover) {
     .astryx-clickable-card:hover::after {
       background-color: var(--astryx-color-overlay-hover, light-dark(#0536590c, #ffffff0c));
@@ -37,6 +32,17 @@
     .astryx-clickable-card[data-variant='default']:hover {
       border-color: var(--astryx-color-border-emphasized, #d4d4d4);
     }
+  }
+
+  /*
+   * 控制器画的按压（手指，或触屏优先设备上的鼠标、按键）是这一层的背景图，按下第一帧就满强度，
+   * 抬手时按自己的强度动画淡出。所以按压期间颜色不做过渡、直接让位：
+   * 混合设备上手指按下时 :active 和悬停也可能匹配，不让开就会叠成两层。写在悬停后面，盖过悬停的颜色。
+   */
+  .astryx-clickable-card[data-astryx-press]::after {
+    background-color: transparent;
+    background-image: var(--_press-paint-image);
+    transition-property: none;
   }
 
   .astryx-clickable-card:focus-within {
@@ -104,5 +110,13 @@
 
   .astryx-selectable-card[data-selected='true'][data-variant='yellow'] {
     --astryx-selectable-card-accent: var(--astryx-color-yellow, #ca8a04);
+  }
+
+  /* 减少动态效果时，悬停、按下、选中的颜色和边框都立即切换，不做过渡。 */
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-clickable-card::after,
+    .astryx-selectable-card {
+      transition-duration: 0s;
+    }
   }
 }

@@ -3,11 +3,15 @@
 @layer astryx.components {
   .astryx-link.astryx-link {
     display: inline-flex;
+    /* 根元素到容器为止，标签可以收窄：没有断点的长标签（比如一串网址）在行内换行，不会撑出去。 */
+    max-width: 100%;
     align-items: center;
     gap: var(--astryx-spacing-0-5, 2px);
     padding: 0;
     border: 0;
     background: transparent;
+    /* 按钮形态默认居中文字；跟随外面的对齐，换行后和锚点形态一样从行首排起。 */
+    text-align: inherit;
     color: var(--astryx-link-accent-foreground, #0074e2);
     font: inherit;
     text-decoration: none;
@@ -129,9 +133,24 @@
     white-space: nowrap;
   }
 
+  /* 截断的链接在弹性行里也能收窄到比标签短，标签才会溢出并画出省略号。 */
   .astryx-link.astryx-link--lines {
-    max-width: 100%;
+    min-width: 0;
     align-items: flex-start;
+  }
+
+  /*
+   * 在会截断行数的 Text 里，链接并入文字的行盒，外面的截断才能从链接中间切开；
+   * inline-flex 是整块的，切不动。截断会裁掉行边缘，所以焦点框往里收。
+   */
+  .astryx-link.astryx-link--in-clamp {
+    display: inline;
+    outline-offset: calc(-1 * var(--astryx-focus-outline-width, 2px));
+  }
+
+  .astryx-link--in-clamp .astryx-link__external {
+    margin-inline-start: var(--astryx-spacing-0-5, 2px);
+    vertical-align: middle;
   }
 
   .astryx-link__label--clamp {
