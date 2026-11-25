@@ -88,7 +88,7 @@ Run-together and camelCase names are not targets. `defineTheme()` throws for `bu
 
 Components also do not render bare value classes such as `.primary` or `.sm`. A selector like `.astryx-button.primary` in your own CSS becomes `.astryx-button[data-variant="primary"]`.
 
-A `:hover` style applies to the enabled control only. Disabled and `aria-disabled` elements skip it. For `card`, `dialog`, `bottom-sheet`, `dropdown-menu`, `context-menu`, and `segmented-control`, a themed `borderRadius` or `padding` also reaches the inner parts that follow it, such as a card's header corners. On `chat` a themed `borderRadius` and `padding` land on the composer, and on `progress-bar-mark` a themed `width` and `height` land on the tick itself.
+A `:hover` style applies to the enabled control only. Disabled and `aria-disabled` elements skip it. For `card`, `dialog`, `bottom-sheet`, `dropdown-menu`, `context-menu`, and `segmented-control`, a themed `borderRadius` or `padding` also reaches the inner parts that follow it, such as a card's header corners. On `chat` a themed `borderRadius` and `padding` land on the composer, and on `progress-bar-mark` a themed `width` and `height` land on the tick itself. On `checkbox-input` and `switch` a themed `gap` sets the room between the control and its label, and leaves the room above the status message alone.
 
 ### Local tokens
 

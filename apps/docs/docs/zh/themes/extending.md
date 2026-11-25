@@ -94,7 +94,7 @@ const brand = defineTheme({
 几点细节：
 
 - `:hover` 只对能点的控件生效，禁用的按钮不会因为鼠标悬停而变色。
-- `card`、`dialog`、`bottom-sheet`、`dropdown-menu`、`context-menu`、`segmented-control` 这几个组件，主题里改了 `borderRadius` 或 `padding`，里面跟着它走的部位也会一起变，比如卡片头部的圆角。`chat` 的 `borderRadius` 和 `padding` 会写到输入区的圆角和内边距上，`progress-bar-mark` 的 `width` 和 `height` 会写到那根刻度线上。
+- `card`、`dialog`、`bottom-sheet`、`dropdown-menu`、`context-menu`、`segmented-control` 这几个组件，主题里改了 `borderRadius` 或 `padding`，里面跟着它走的部位也会一起变，比如卡片头部的圆角。`chat` 的 `borderRadius` 和 `padding` 会写到输入区的圆角和内边距上，`progress-bar-mark` 的 `width` 和 `height` 会写到那根刻度线上。`checkbox-input` 和 `switch` 的 `gap` 只改控件和标签之间的距离，不动状态消息上方的间距。
 
 ### 旧写法已经不再支持
 
