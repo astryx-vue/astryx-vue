@@ -41,7 +41,7 @@ footer: false
         <td><code>size</code></td>
         <td><code>AvatarSize</code></td>
         <td><code>'md'</code></td>
-        <td>头像尺寸，支持命名尺寸或像素数值。命名尺寸见下表。</td>
+        <td>头像尺寸：命名尺寸，或下面列出的某个像素数值。放在 <code>AvatarGroup</code> 里时，总是以组的尺寸为准，组用默认尺寸时也一样。</td>
       </tr>
       <tr>
         <td><code>shape</code></td>
@@ -89,11 +89,11 @@ footer: false
 
 ### 像素尺寸
 
-`AvatarSize` 类型列出了常用的像素值，便于获得类型提示和自动补全：
+数字形式的 `size` 只能取 `AvatarSize` 类型列出的这些像素值：
 
 `16 | 20 | 24 | 32 | 36 | 40 | 48 | 60 | 64 | 72 | 96 | 128 | 144 | 180`
 
-组件本身并不限制只能使用这些数值。如果传入列表外的数字，头像仍会按该像素值渲染。
+传入列表外的数字会报类型错误。
 
 ## Avatar 插槽
 

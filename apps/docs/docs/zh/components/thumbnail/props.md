@@ -35,13 +35,13 @@ footer: false
         <td><code>isLoading</code></td>
         <td><code>boolean</code></td>
         <td><code>false</code></td>
-        <td>没有 <code>src</code> 时是骨架。有图片时在上面盖加载指示。</td>
+        <td>没有 <code>src</code> 时是骨架。有图片时在上面盖加载指示；加载指示对读屏隐藏，缩略图每次开始加载时播报一次「加载中」。加载期间预览按钮仍可聚焦，读屏念作已禁用。</td>
       </tr>
       <tr>
         <td><code>isDisabled</code></td>
         <td><code>boolean</code></td>
         <td><code>false</code></td>
-        <td>把缩略图调淡，并忽略点击和移除。</td>
+        <td>把缩略图调淡，并忽略点击和移除。预览按钮和移除按钮仍可聚焦，读屏念作已禁用，键盘焦点不会丢失。</td>
       </tr>
       <tr>
         <td><code>showRemoveOn</code></td>

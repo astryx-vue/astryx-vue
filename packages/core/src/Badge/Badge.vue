@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { BadgeProps } from './types.js'
-import { computed } from 'vue'
+import { computed, useSlots } from 'vue'
 import '../../styles/badge.css'
 
 defineOptions({
@@ -16,6 +16,8 @@ defineSlots<{
   icon?: () => unknown
 }>()
 
+const slots = useSlots()
+
 const labelTitle = computed(() => {
   const label = props.label
   if (typeof label === 'number')
@@ -24,11 +26,20 @@ const labelTitle = computed(() => {
     return label
   return undefined
 })
+
+/** 有文字的徽章才跟着文字长高；只有颜色的徽章没有文字要装，尺寸不变。 */
+const hasLabel = computed(() => {
+  if (slots.default != null)
+    return true
+  const label = props.label
+  return label != null && label !== ''
+})
 </script>
 
 <template>
   <span
     class="astryx-badge"
+    :class="{ 'astryx-badge--has-label': hasLabel }"
     :data-variant="variant"
     :title="labelTitle"
   >

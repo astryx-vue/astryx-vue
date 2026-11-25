@@ -14,7 +14,7 @@ import { thumbnailDisabled, thumbnailGallery, thumbnailRemovable, thumbnailState
 
 `Thumbnail` 是 64px 的预览。没有 `src` 时是占位图。只有 `isLoading`、没有 `src` 时是骨架。两者都有时，图片上盖一层加载指示。监听 `click` 后，预览变成按钮。监听 `remove` 后，出现关闭按钮。
 
-`showRemoveOn` 默认是 `hover`。键盘焦点时也会出现，粗指针设备上则一直可见。`always` 让它一直可见。`isDisabled` 会把缩略图调淡，并忽略点击和移除。
+`showRemoveOn` 默认是 `hover`。键盘焦点时也会出现，粗指针设备上则一直可见。`always` 让它一直可见。`isDisabled` 会把缩略图调淡，并忽略点击和移除；按钮仍可聚焦，读屏念作已禁用。聚焦预览时只在图片外画一个焦点环。
 
 `label` 是无障碍名称，不会画在方块上。提示和移除按钮都会用到它。
 
@@ -45,7 +45,7 @@ import { Thumbnail } from '@astryx-vue/core/Thumbnail'
 
 <DemoExample
   :demo="thumbnailDisabled"
-  description="禁用后透明度降低，移除按钮和点击都不再响应。"
+  description="禁用后透明度降低。打开和移除按钮仍可聚焦，读屏念作已禁用，但什么都不调用。"
   locale="zh"
   title="Thumbnail — 禁用"
 />

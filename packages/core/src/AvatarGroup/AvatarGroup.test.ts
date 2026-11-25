@@ -178,3 +178,34 @@ describe('avatarGroupOverflow', () => {
     expect(wrapper.get('.astryx-avatar-group-overflow').attributes('role')).toBe('note')
   })
 })
+
+describe.each([
+  ['static', {}],
+  ['clickable', { onClick: () => {} }],
+] as const)('the %s overflow indicator name', (_form, listeners) => {
+  it('is a caller aria-label', () => {
+    const wrapper = mount(AvatarGroupOverflow, {
+      props: { count: 5 },
+      attrs: { ...listeners, 'aria-label': 'Show 5 more teammates' },
+    })
+    expect(wrapper.attributes('aria-label')).toBe('Show 5 more teammates')
+    expect(wrapper.text()).toBe('+5')
+  })
+
+  it('keeps a caller aria-labelledby beside the count', () => {
+    const wrapper = mount(AvatarGroupOverflow, {
+      props: { count: 5 },
+      attrs: { ...listeners, 'aria-labelledby': 'overflow-name' },
+    })
+    expect(wrapper.attributes('aria-labelledby')).toBe('overflow-name')
+    expect(wrapper.attributes('aria-label')).toBe('5 more')
+  })
+
+  it('is the count when the caller aria-label is empty', () => {
+    const wrapper = mount(AvatarGroupOverflow, {
+      props: { count: 5 },
+      attrs: { ...listeners, 'aria-label': '' },
+    })
+    expect(wrapper.attributes('aria-label')).toBe('5 more')
+  })
+})
