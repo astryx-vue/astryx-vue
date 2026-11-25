@@ -775,9 +775,13 @@ html.dark .component-detail__stage {
   line-height: 1.7;
 }
 
+/*
+ * 组件页不在 .nagi-doc 里，行内代码没有底色，所以也不留内外边距：没有底色时 7px 内边距
+ * 看起来就是多打了空格，「打开 `hasSnap`。」会在句号前空出一截。源文里中英文之间本来就写了空格。
+ */
 .component-detail__body :where(:not(pre) > code) {
-  margin-inline: 2px;
-  padding-inline: 7px;
+  margin-inline: 0;
+  padding-inline: 0;
 }
 
 /* CodeBlock 的 code 包在 pre 里的 div 中，不能套用文档行内代码的绿色。 */
@@ -838,12 +842,16 @@ html.dark .component-example {
   letter-spacing: normal;
 }
 
+/*
+ * 上下留 16px：矮示例在 200px 里居中，看不出差别；比格子高的示例（多行按钮状态、表格、表单）
+ * 原来只剩 5px，内容贴着下面的标签栏。左右保持 5px，宽示例不受影响。
+ */
 .component-example__preview {
   display: grid;
   box-sizing: border-box;
   min-height: 200px;
   margin: -5px -5px 0;
-  padding: 5px;
+  padding: 16px 5px;
   place-items: center;
 }
 
@@ -1466,8 +1474,15 @@ html.dark .component-example {
   background: light-dark(#fff, #1f1f22);
 }
 
-.component-detail__body > table {
-  overflow: auto;
+/*
+ * 卡片里的表格要铺满卡片。display: block 时行只有内容那么宽，内容短的表（建议、无障碍）
+ * 分隔线会在卡片中间断掉。单元格本来就会换行，用不着横向滚动；圆角要用 separate 才生效。
+ * 写成 div.… 是为了和上面 :is(.nagi-doc > div table, …) 的优先级持平，靠后写的这条才能生效。
+ */
+div.component-detail__body > table {
+  display: table;
+  border-collapse: separate;
+  overflow: visible;
 }
 
 .component-detail__body .component-api-table :is(th, td),
