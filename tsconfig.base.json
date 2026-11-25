@@ -18,5 +18,6 @@
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
     "skipLibCheck": true
-  }
+  },
+  "files": ["./types/css-modules.d.ts"]
 }

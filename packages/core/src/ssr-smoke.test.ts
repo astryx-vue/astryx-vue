@@ -6,17 +6,11 @@ import { renderToString } from '@vue/server-renderer'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createSSRApp, defineComponent, h } from 'vue'
 import * as core from './index.js'
-import knownFailures from './ssr-known-failures.json'
 import { ssrFixtures } from './ssr-smoke.fixtures.js'
 
 // 把总入口导出的每个 Vue 组件在 Node 里用 renderToString 渲染一遍。
 // 通过的条件：不抛错、不碰浏览器全局对象、没有 Vue 警告或错误、输出不为空。
-//
-// 已知失败名单 ssr-known-failures.json 里的组件用 it.fails 跑：仍然失败才算通过。
-// 组件修好以后这条用例会变红，提醒把它从名单里删掉，名单只会越来越短。
 // 组件需要的必填 props、插槽和父组件写在 ssr-smoke.fixtures.ts。
-
-const KNOWN_FAILURES: Record<string, string> = knownFailures
 
 // Node 自带 navigator、sessionStorage、localStorage，浏览器才有的 window、document
 // 在 Node 里本来就不存在。渲染期间把这几个也拿掉，组件在服务端读它们就会抛 ReferenceError。
@@ -130,31 +124,16 @@ describe('ssr smoke', () => {
     expect(components.length).toBeGreaterThan(100)
   })
 
-  it('lists only exported components in the known-failure list', () => {
-    const stale = Object.keys(KNOWN_FAILURES).filter(name => !componentNames.has(name))
-    expect(stale, `这些名字已经不是公开组件，请从 ssr-known-failures.json 删掉：${stale.join('、')}`).toEqual([])
-  })
-
   it('lists only exported components in the fixture table', () => {
     const stale = Object.keys(ssrFixtures).filter(name => !componentNames.has(name))
     expect(stale, `这些名字已经不是公开组件，请从 ssr-smoke.fixtures.ts 删掉：${stale.join('、')}`).toEqual([])
   })
 
   for (const [name, component] of components) {
-    const reason = KNOWN_FAILURES[name]
-    if (reason) {
-      // 修好以后这条会失败：请把它从 ssr-known-failures.json 删掉。
-      it.fails(`${name}（已知失败：${reason}）`, async () => {
-        await renderSmoke(name, component)
-        expectNoConsoleOutput(consoleWarn, consoleError)
-      })
-    }
-    else {
-      it(name, async () => {
-        await renderSmoke(name, component)
-        expectNoConsoleOutput(consoleWarn, consoleError)
-      })
-    }
+    it(name, async () => {
+      await renderSmoke(name, component)
+      expectNoConsoleOutput(consoleWarn, consoleError)
+    })
   }
 })
 
