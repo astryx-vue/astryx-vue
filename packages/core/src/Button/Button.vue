@@ -2,6 +2,7 @@
 import type { ComponentPublicInstance, CSSProperties, StyleValue } from 'vue'
 import type { ButtonEmits, ButtonLinkElement, ButtonProps, ButtonRootElement, ButtonSlots } from './types.js'
 import { computed, onBeforeUnmount, onMounted, ref, toRaw, useAttrs, useId, useSlots, useTemplateRef } from 'vue'
+import { pressGroupItemProps } from '../composables/internal/useActionGroupTracking.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { provideIconSize } from '../Icon/context.js'
 import Icon from '../Icon/Icon.vue'
@@ -45,6 +46,14 @@ const renderedRoot = useTemplateRef<ComponentPublicInstance | HTMLElement>('root
 const tooltipId = `astryx-button-tooltip-${useId()}`
 
 const press = usePressFeedback({ hasOverlay: false })
+/** 菜单、列表框这类触发器保留自己的按压和打开方式，组不跟踪它。 */
+const MENU_POPUPS = new Set(['true', 'menu', 'listbox'])
+/** 跟踪滑动的按钮组里，这个按钮的手指、笔按压由组来画、松手由组来执行。 */
+const groupItemProps = computed(() =>
+  group?.tracksPress?.value === true && !MENU_POPUPS.has(String(attrs['aria-haspopup']))
+    ? pressGroupItemProps()
+    : undefined,
+)
 // 显式 size > 按钮组 > 外层 SizeContext（Toolbar 等）> 'md'。
 const effectiveSize = useSize(() => props.size ?? group?.size.value)
 /** 小、中按钮里的图标是 16px，大按钮是 20px。插槽里没写尺寸的图标跟着走。 */
@@ -210,6 +219,7 @@ function getForwardedAttrs(): Record<string, unknown> {
       Object.entries(attrs).filter(([key]) => !controlledAttrs.has(key)),
     ),
     ...press.pressableProps,
+    ...groupItemProps.value,
   }
 }
 

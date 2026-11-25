@@ -5,6 +5,8 @@ import type { ButtonGroupProps, ButtonGroupSlots } from './types.js'
 import { computed, provide, useAttrs } from 'vue'
 import { buttonGroupContextKey } from '../Button/context.js'
 import { invokeNativeEventHandler } from '../Button/eventHandlers.js'
+import { useActionGroupTracking } from '../composables/internal/useActionGroupTracking.js'
+import { useCoarsePointer } from '../composables/useCoarsePointer.js'
 import { useListFocus } from '../composables/useListFocus.js'
 import { provideSize, useSize } from '../SizeContext/SizeContext.js'
 import '../../styles/button-group.css'
@@ -37,10 +39,19 @@ const isDisabled = computed(() => props.isDisabled)
 const size = useSize(() => props.size, 'md')
 provideSize(size)
 
+/**
+ * 触屏为主的设备上，手指和笔可以按住一个按钮滑到别的按钮上，松手时执行手指下的那个；
+ * 在组外松手什么都不执行。鼠标还是原生按钮的行为。
+ */
+const isCoarse = useCoarsePointer()
+const tracksPress = computed(() => isCoarse.value && !props.isDisabled)
+useActionGroupTracking(element, { isEnabled: tracksPress })
+
 provide(buttonGroupContextKey, {
   isDisabled,
   orientation,
   size,
+  tracksPress,
 })
 
 const rootClass = computed(() => ['astryx-button-group', attrs.class])
@@ -82,6 +93,7 @@ defineExpose({
     :class="rootClass"
     :data-elevation="elevation"
     :data-orientation="orientation"
+    :data-press-tracking="tracksPress || undefined"
     :data-size="size"
     role="group"
     :style="rootStyle"

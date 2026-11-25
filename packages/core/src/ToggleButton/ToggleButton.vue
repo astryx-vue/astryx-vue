@@ -4,6 +4,7 @@ import type { ToggleButtonEmits, ToggleButtonProps, ToggleButtonSlots } from './
 import { computed, shallowRef, useTemplateRef } from 'vue'
 
 import Button from '../Button/Button.vue'
+import { pressGroupItemProps } from '../composables/internal/useActionGroupTracking.js'
 import { readLayerScoped } from '../layer/scopedProvide.js'
 import { toggleButtonGroupContextKey } from './context.js'
 import '../../styles/toggle-button.css'
@@ -39,6 +40,10 @@ const groupPressed = computed(() => {
 const isPressed = computed(() => groupPressed.value ?? optimisticPressed.value ?? isPressedModel.value)
 const isDisabled = computed(() => (group?.isDisabled.value ?? false) || props.isDisabled)
 const size = computed(() => props.size ?? group?.size.value ?? 'md')
+/** 跟踪滑动的组里，带 value 的切换按钮由组来画高亮、松手时切换。 */
+const groupItemProps = computed(() =>
+  group?.tracksPress?.value === true && props.value != null ? pressGroupItemProps() : undefined,
+)
 const element = computed<ButtonRootElement | null>(() => button.value?.element ?? null)
 
 function focus(options?: FocusOptions): void {
@@ -129,6 +134,7 @@ defineExpose({
     :tooltip="tooltip"
     variant="ghost"
     :click-action="clickAction"
+    v-bind="groupItemProps"
     @click="handleClick"
   >
     <template v-if="$slots.icon || $slots.pressedIcon" #icon>

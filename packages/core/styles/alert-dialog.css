@@ -44,4 +44,21 @@
     max-width: 100%;
     min-width: 0;
   }
+
+  /*
+   * 跟踪滑动时（触屏为主的设备上），沿着按钮排列方向的拖动留给滑动选按钮，另一个方向照常滚动页面，
+   * 按住也不选中文字、不弹系统菜单。
+   */
+  .astryx-alert-dialog__footer[data-press-tracking] {
+    -webkit-touch-callout: none;
+    user-select: none;
+  }
+
+  .astryx-alert-dialog[data-layout='row'] .astryx-alert-dialog__footer[data-press-tracking] {
+    touch-action: pan-y pinch-zoom;
+  }
+
+  .astryx-alert-dialog[data-layout='stacked'] .astryx-alert-dialog__footer[data-press-tracking] {
+    touch-action: pan-x pinch-zoom;
+  }
 }
