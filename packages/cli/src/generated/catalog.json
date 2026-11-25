@@ -13922,8 +13922,8 @@
         "zh": "`Carousel` 把一行内容横向滚过去。根节点是 `region`，`aria-roledescription` 为 `carousel`。每个直接子节点是一张幻灯片，名称为「第 N 张幻灯片，共 M 张」。"
       },
       "usage": {
-        "en": "`Carousel` scrolls a row of items sideways. The root is a `region` with `aria-roledescription=\"carousel\"`. Each direct child is one slide, named `Slide N of M`.\n\n`gap` is a spacing step (`0`, `0.5`, `1`, `1.5`, `2`, `3`, or `4`). `padding` uses the same scale and also sets scroll-padding, so a snap point lines up with the content edge. `hasSnap` snaps each child to the start edge. `hasEdgeFade` masks the edge that still has overflow.\n\n`hasButtons` shows previous and next controls when there is something to scroll. A button that cannot move is hidden and leaves the Tab order. If that button had focus, focus moves to the scroll area without scrolling it. `hasLoop` wraps from the last item to the first, and the buttons stay available at both ends while the row overflows. Shift plus one wheel notch scrolls the row sideways, once.\n\nThe scroll area is a group named like the carousel. It is a Tab stop only while its content overflows, and the arrow keys scroll it. Its focus ring is drawn by the carousel, above the edge fade, and the buttons sit just inside it.\n\nThe component exposes `scrollNext`, `scrollPrev`, `scrollTo`, `canScrollNext`, and `canScrollPrev` on the template ref.\n\n```vue\n<script setup lang=\"ts\">\nimport { Card } from '@astryx-vue/core/Card'\nimport { Carousel } from '@astryx-vue/core/Carousel'\n</script>\n\n<template>\n  <Carousel :gap=\"2\" has-snap label=\"Feature cards\" style=\"max-width: 520px\">\n    <Card :width=\"200\" :min-height=\"100\">\n      Design System\n    </Card>\n    <Card :width=\"200\" :min-height=\"100\">\n      Documentation\n    </Card>\n  </Carousel>\n</template>\n```",
-        "zh": "`Carousel` 把一行内容横向滚过去。根节点是 `region`，`aria-roledescription` 为 `carousel`。每个直接子节点是一张幻灯片，名称为「第 N 张幻灯片，共 M 张」。\n\n`gap` 是间距档（`0`、`0.5`、`1`、`1.5`、`2`、`3`、`4`）。`padding` 用同一套档位，并同时设置 scroll-padding，吸附点会和内容边缘对齐。`hasSnap` 让每一项贴到起始边。`hasEdgeFade` 在仍有溢出的那一侧加上渐隐。\n\n`hasButtons` 在还能滚动时显示上一张和下一张。不能再滚的那一侧按钮会隐藏，也不再是 Tab 停靠点。如果焦点正在这个按钮上，会移到滚动区，滚动位置不变。`hasLoop` 从最后一项回到第一项，内容溢出时两端按钮都保持可用。按住 Shift 拨一格滚轮，这一行横向滚一次。\n\n滚动区是一个和轮播同名的分组。只有内容溢出时它才是 Tab 停靠点，聚焦后用左右方向键滚动。它的焦点环由轮播画在边缘渐隐之上，两侧按钮收在焦点环以内。\n\n模板 ref 上可以调用 `scrollNext`、`scrollPrev`、`scrollTo`、`canScrollNext`、`canScrollPrev`。\n\n```vue\n<script setup lang=\"ts\">\nimport { Card } from '@astryx-vue/core/Card'\nimport { Carousel } from '@astryx-vue/core/Carousel'\n</script>\n\n<template>\n  <Carousel :gap=\"2\" has-snap label=\"功能卡片\" style=\"max-width: 520px\">\n    <Card :width=\"200\" :min-height=\"100\">\n      设计系统\n    </Card>\n    <Card :width=\"200\" :min-height=\"100\">\n      文档\n    </Card>\n  </Carousel>\n</template>\n```"
+        "en": "`Carousel` scrolls a row of items sideways. The root is a `region` with `aria-roledescription=\"carousel\"`. Each direct child is one slide, named `Slide N of M`.\n\n`gap` is a spacing step (`0`, `0.5`, `1`, `1.5`, `2`, `3`, or `4`). `padding` uses the same scale and also sets scroll-padding, so a snap point lines up with the content edge. `hasSnap` snaps each child to the start edge with native CSS scroll snap. Pass it a [`useSnapPaging()`](/en/components/use-snap-paging) value instead and the row pages like iOS on the same stops: under a finger or on a trackpad swipe, a flick moves one view, or one item with `{ pages: 'item' }`, and the edge buttons, arrow keys and `scrollNext`, `scrollPrev` and `scrollTo` move the row through the same paging. A mouse wheel and a mouse drag keep native scrolling. `hasEdgeFade` masks the edge that still has overflow.\n\n`hasButtons` shows previous and next controls when there is something to scroll. A button that cannot move is hidden and leaves the Tab order. If that button had focus, focus moves to the scroll area without scrolling it. `hasLoop` wraps from the last item to the first, and the buttons stay available at both ends while the row overflows. Shift plus one wheel notch scrolls the row sideways, once.\n\nThe scroll area is a group named like the carousel. It is a Tab stop only while its content overflows, and the arrow keys scroll it. Its focus ring is drawn by the carousel, above the edge fade, and the buttons sit just inside it.\n\nThe component exposes `scrollNext`, `scrollPrev`, `scrollTo`, `canScrollNext`, and `canScrollPrev` on the template ref.\n\n```vue\n<script setup lang=\"ts\">\nimport { Card } from '@astryx-vue/core/Card'\nimport { Carousel } from '@astryx-vue/core/Carousel'\n</script>\n\n<template>\n  <Carousel :gap=\"2\" has-snap label=\"Feature cards\" style=\"max-width: 520px\">\n    <Card :width=\"200\" :min-height=\"100\">\n      Design System\n    </Card>\n    <Card :width=\"200\" :min-height=\"100\">\n      Documentation\n    </Card>\n  </Carousel>\n</template>\n```",
+        "zh": "`Carousel` 把一行内容横向滚过去。根节点是 `region`，`aria-roledescription` 为 `carousel`。每个直接子节点是一张幻灯片，名称为「第 N 张幻灯片，共 M 张」。\n\n`gap` 是间距档（`0`、`0.5`、`1`、`1.5`、`2`、`3`、`4`）。`padding` 用同一套档位，并同时设置 scroll-padding，吸附点会和内容边缘对齐。`hasSnap` 用原生 CSS 滚动吸附让每一项贴到起始边。改传 [`useSnapPaging()`](/components/use-snap-paging) 的返回值，这一行就在同样的停点上像 iOS 那样翻页：用手指或触控板横扫时，轻扫一下翻一屏，传 `{ pages: 'item' }` 时翻一项；边缘按钮、方向键和 `scrollNext`、`scrollPrev`、`scrollTo` 也都经由同一套翻页来挪。鼠标滚轮和鼠标拖动仍然是原生滚动。`hasEdgeFade` 在仍有溢出的那一侧加上渐隐。\n\n`hasButtons` 在还能滚动时显示上一张和下一张。不能再滚的那一侧按钮会隐藏，也不再是 Tab 停靠点。如果焦点正在这个按钮上，会移到滚动区，滚动位置不变。`hasLoop` 从最后一项回到第一项，内容溢出时两端按钮都保持可用。按住 Shift 拨一格滚轮，这一行横向滚一次。\n\n滚动区是一个和轮播同名的分组。只有内容溢出时它才是 Tab 停靠点，聚焦后用左右方向键滚动。它的焦点环由轮播画在边缘渐隐之上，两侧按钮收在焦点环以内。\n\n模板 ref 上可以调用 `scrollNext`、`scrollPrev`、`scrollTo`、`canScrollNext`、`canScrollPrev`。\n\n```vue\n<script setup lang=\"ts\">\nimport { Card } from '@astryx-vue/core/Card'\nimport { Carousel } from '@astryx-vue/core/Carousel'\n</script>\n\n<template>\n  <Carousel :gap=\"2\" has-snap label=\"功能卡片\" style=\"max-width: 520px\">\n    <Card :width=\"200\" :min-height=\"100\">\n      设计系统\n    </Card>\n    <Card :width=\"200\" :min-height=\"100\">\n      文档\n    </Card>\n  </Carousel>\n</template>\n```"
       },
       "practices": {
         "en": [
@@ -13981,9 +13981,9 @@
               },
               {
                 "name": "`hasSnap`",
-                "type": "`boolean`",
+                "type": "`boolean | SnapPaging`",
                 "default": "`false`",
-                "description": "Snap each direct child to the start edge."
+                "description": "Snap each item to the start edge. `true` uses native CSS scroll snap. A `useSnapPaging()` value adds iOS paging on the same stops, under a finger and on a trackpad swipe: a flick moves one view, or one item with `{ pages: 'item' }`. Only that value loads the paging code."
               },
               {
                 "name": "`padding`",
@@ -14030,9 +14030,9 @@
               },
               {
                 "name": "`hasSnap`",
-                "type": "`boolean`",
+                "type": "`boolean | SnapPaging`",
                 "default": "`false`",
-                "description": "每个直接子节点吸附到起始边。"
+                "description": "每一项吸附到起始边。`true` 用原生 CSS 滚动吸附。传 `useSnapPaging()` 的返回值时，在同样的停点上加上 iOS 式翻页，用手指或触控板横扫时生效：轻扫一下翻一屏，传 `{ pages: 'item' }` 时翻一项。只有传了这个值才会加载翻页代码。"
               },
               {
                 "name": "`padding`",
@@ -14114,6 +14114,17 @@
             "zh": "带导航按钮和成员卡片的吸附轮播。滚动后每张卡片贴到起始边。适合一次看一项，而不是连成一条看。"
           },
           "code": "<script setup lang=\"ts\">\nimport { Avatar } from '@astryx-vue/core/Avatar'\nimport { Badge } from '@astryx-vue/core/Badge'\nimport { Card } from '@astryx-vue/core/Card'\nimport { Carousel } from '@astryx-vue/core/Carousel'\nimport { Stack } from '@astryx-vue/core/Stack'\nimport { Text } from '@astryx-vue/core/Text'\n\nconst team = [\n  { name: 'Alice Chen', role: 'Engineering Lead', color: 'blue' as const },\n  { name: 'Bob Smith', role: 'Product Designer', color: 'purple' as const },\n  { name: 'Carol Davis', role: 'Product Manager', color: 'green' as const },\n  { name: 'Andrew Thomas', role: 'Design Manager', color: 'red' as const },\n  { name: 'Gina Wilson', role: 'Software Engineer', color: 'orange' as const },\n]\n</script>\n\n<template>\n  <Stack direction=\"vertical\" :gap=\"3\" :max-width=\"520\" style=\"padding: 8px\">\n    <Text type=\"body\" weight=\"bold\">\n      Team members\n    </Text>\n    <Carousel :gap=\"2\" has-snap has-buttons label=\"Team members\">\n      <Card v-for=\"person in team\" :key=\"person.name\" :width=\"180\" :min-height=\"140\">\n        <Stack direction=\"vertical\" :gap=\"3\" h-align=\"center\">\n          <Avatar :name=\"person.name\" size=\"lg\" />\n          <Stack direction=\"vertical\" :gap=\"1\" h-align=\"center\">\n            <Text type=\"body\" weight=\"bold\">\n              {{ person.name }}\n            </Text>\n            <Badge :variant=\"person.color\">\n              {{ person.role }}\n            </Badge>\n          </Stack>\n        </Stack>\n      </Card>\n    </Carousel>\n  </Stack>\n</template>"
+        },
+        {
+          "title": {
+            "en": "Carousel — Snap paging",
+            "zh": "Carousel — 吸附分页"
+          },
+          "description": {
+            "en": "Onboarding screens with iOS-style snap paging. A flick moves one view; the switch makes it move one card. A touch catches a page turn in flight, and the row always rests on a card's start edge.",
+            "zh": "用 iOS 式吸附分页的引导页。轻扫一下翻一屏，打开开关后翻一张。翻到一半时按住能接住它，最后总是停在某张卡片的起始边。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { useSnapPaging } from '@astryx-vue/core'\nimport { Card } from '@astryx-vue/core/Card'\nimport { Carousel } from '@astryx-vue/core/Carousel'\nimport { Stack } from '@astryx-vue/core/Stack'\nimport { Switch } from '@astryx-vue/core/Switch'\nimport { Text } from '@astryx-vue/core/Text'\nimport { ref } from 'vue'\n\nconst screens = [\n  { title: 'Welcome', body: 'Swipe to see what is new.' },\n  { title: 'Shared albums', body: 'Invite friends to add their photos.' },\n  { title: 'Memories', body: 'See a day from years ago.' },\n  { title: 'Search', body: 'Find a photo by what is in it.' },\n  { title: 'All set', body: 'Your library is ready.' },\n]\n\nconst isOneCard = ref(false)\n// A flick moves one view, or one card with pages: 'item'.\nconst paging = useSnapPaging(() => ({ pages: isOneCard.value ? 'item' : 'view' }))\n</script>\n\n<template>\n  <Stack direction=\"vertical\" :gap=\"3\" :max-width=\"520\" style=\"padding: 8px\">\n    <Switch v-model=\"isOneCard\" label=\"One card per flick\" />\n    <Carousel :gap=\"2\" :has-snap=\"paging\" label=\"Onboarding\">\n      <Card v-for=\"screen in screens\" :key=\"screen.title\" :width=\"220\" :min-height=\"160\">\n        <Stack direction=\"vertical\" :gap=\"1\">\n          <Text type=\"body\" weight=\"bold\">\n            {{ screen.title }}\n          </Text>\n          <Text type=\"body\" color=\"secondary\">\n            {{ screen.body }}\n          </Text>\n        </Stack>\n      </Card>\n    </Carousel>\n  </Stack>\n</template>"
         }
       ],
       "anatomy": {
@@ -81415,6 +81426,150 @@
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/components/use-typeahead",
         "zh": "https://astryx-vue.pages.dev/components/use-typeahead"
+      }
+    },
+    {
+      "slug": "use-snap-paging",
+      "name": "UseSnapPaging",
+      "package": "@astryx-vue/core",
+      "kind": "composable",
+      "title": {
+        "en": "useSnapPaging",
+        "zh": "useSnapPaging"
+      },
+      "group": "Utility",
+      "groupTitle": {
+        "en": "Utility",
+        "zh": "工具"
+      },
+      "importPath": null,
+      "exportName": null,
+      "summary": {
+        "en": "Gives a [Carousel](/en/components/carousel) iOS paging on native snap's stops: pass the value as `:has-snap=\"paging\"`. Under a finger and on a trackpad swipe, the row follows the gesture, then a flick moves one view, or one item with `{ pages: 'item' }`, and the row rests on an item's start edge. However fast the flick, the row moves at most one page from where the gesture began. A touch catches a page turn in flight, and a still touch then rests the row on the nearest page.",
+        "zh": "`useSnapPaging` 让 [轮播](/components/carousel) 在原生吸附的停点上像 iOS 那样翻页：把返回值交给 `:has-snap=\"paging\"` 就行。用手指拖或在触控板上横扫时，这一行先跟着手走；松手时轻扫一下翻一屏，传 `{ pages: 'item' }` 时翻一项，最后停在某一项的起始边。不管扫得多快，离起手的那一页最多走一页。翻到一半时手指按上去能接住它，按着不动再松开，就停到最近的一页。"
+      },
+      "usage": {
+        "en": "Gives a [Carousel](/en/components/carousel) iOS paging on native snap's stops: pass the value as `:has-snap=\"paging\"`. Under a finger and on a trackpad swipe, the row follows the gesture, then a flick moves one view, or one item with `{ pages: 'item' }`, and the row rests on an item's start edge. However fast the flick, the row moves at most one page from where the gesture began. A touch catches a page turn in flight, and a still touch then rests the row on the nearest page.\n\nA view page lands on the item start edge nearest one viewport on, and always at least one item on. An item whose stop sits within half a step of the row's end belongs to the end page, so every input, native snap included, rests where the row ends.\n\nA mouse wheel and a mouse drag keep native scrolling and snapping. The edge buttons, the arrow keys, Shift plus the wheel, and the template ref's `scrollNext`, `scrollPrev` and `scrollTo` move the row through the paging, so a touch can catch those moves too. While the paging holds the row, the edge buttons and fades follow the row as it is shown, in the same frame. With reduced motion, a page turn jumps straight to its page.\n\n```ts\nimport { useSnapPaging } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useSnapPaging } from '@astryx-vue/core'\nimport { Carousel } from '@astryx-vue/core/Carousel'\n\nconst paging = useSnapPaging({ pages: 'item' })\n</script>\n\n<template>\n  <Carousel :has-snap=\"paging\" label=\"Photos\">\n    <!-- cards -->\n  </Carousel>\n</template>\n```\n\nOnly a carousel given the value loads the paging code. `options` may be a ref or a getter; a new `pages` applies from the next flick. Carousel keeps the value it first attached.",
+        "zh": "`useSnapPaging` 让 [轮播](/components/carousel) 在原生吸附的停点上像 iOS 那样翻页：把返回值交给 `:has-snap=\"paging\"` 就行。用手指拖或在触控板上横扫时，这一行先跟着手走；松手时轻扫一下翻一屏，传 `{ pages: 'item' }` 时翻一项，最后停在某一项的起始边。不管扫得多快，离起手的那一页最多走一页。翻到一半时手指按上去能接住它，按着不动再松开，就停到最近的一页。\n\n「一屏」的那一页，落在离一屏之外最近的那一项起始边上，并且至少往前走一项。停点离这一行末端不到半步的那一项归进最后一页，所以不管怎么滚（包括原生吸附），都停在这一行真正的尽头，不会差一两个像素。\n\n鼠标滚轮和鼠标拖动仍然是原生滚动和原生吸附。边缘按钮、方向键、Shift 加滚轮，以及模板 ref 上的 `scrollNext`、`scrollPrev`、`scrollTo`，都经由同一套翻页来挪，所以这些移动也能被手指接住。翻页按住这一行期间，边缘按钮和渐隐跟着这一行此刻显示的位置变，和这一行在同一帧里变化。系统打开「减少动态效果」时，翻页直接跳到目标页。\n\n```ts\nimport { useSnapPaging } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useSnapPaging } from '@astryx-vue/core'\nimport { Carousel } from '@astryx-vue/core/Carousel'\n\nconst paging = useSnapPaging({ pages: 'item' })\n</script>\n\n<template>\n  <Carousel :has-snap=\"paging\" label=\"照片\">\n    <!-- 卡片 -->\n  </Carousel>\n</template>\n```\n\n只有拿到这个值的轮播才会加载翻页代码。`options` 可以是 ref 或 getter，新的 `pages` 从下一次轻扫开始生效。轮播一直用它第一次挂上的那个值。"
+      },
+      "practices": {
+        "en": [
+          {
+            "guidance": "Do",
+            "text": "Use it for a row read one view at a time, such as onboarding screens or a photo strip, where a fast flick must not skip past the next view."
+          },
+          {
+            "guidance": "Do",
+            "text": "Pass `{ pages: 'item' }` when several items show at once and each flick should move only one of them."
+          },
+          {
+            "guidance": "Don't",
+            "text": "Use it for a row people scan quickly; plain `hasSnap` keeps native momentum, which can pass several items in one swipe."
+          }
+        ],
+        "zh": []
+      },
+      "props": {
+        "en": [
+          {
+            "heading": "Parameters",
+            "rows": [
+              {
+                "name": "`options`",
+                "type": "`MaybeRefOrGetter<SnapPagingOptions>`",
+                "default": "`{}`",
+                "description": "Paging options, or a ref or getter that returns them. Read at each flick, so a new value applies from the next one."
+              },
+              {
+                "name": "`options.pages`",
+                "type": "`'view' | 'item'`",
+                "default": "`'view'`",
+                "description": "What one flick moves. `'view'` moves one view and lands on the item start edge nearest one viewport on; `'item'` moves one item."
+              }
+            ]
+          },
+          {
+            "heading": "Returns",
+            "rows": [
+              {
+                "name": "`paging`",
+                "type": "`SnapPaging`",
+                "description": "Snap paging for Carousel's `hasSnap`. Carousel attaches it to its scroll area on mount and keeps the value it first attached; switching back to `true` or `false` detaches it."
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "参数",
+            "rows": [
+              {
+                "name": "`options`",
+                "type": "`MaybeRefOrGetter<SnapPagingOptions>`",
+                "default": "`{}`",
+                "description": "翻页选项，也可以是返回选项的 ref 或 getter。每次轻扫时读取，新值从下一次轻扫开始生效。"
+              },
+              {
+                "name": "`options.pages`",
+                "type": "`'view' | 'item'`",
+                "default": "`'view'`",
+                "description": "一次轻扫翻多少。`'view'` 翻一屏，停在离一屏之外最近的那一项起始边；`'item'` 翻一项。"
+              }
+            ]
+          },
+          {
+            "heading": "返回值",
+            "rows": [
+              {
+                "name": "`paging`",
+                "type": "`SnapPaging`",
+                "description": "交给轮播 `hasSnap` 的吸附分页。轮播挂载时把它挂到滚动区上，并一直用第一次挂上的那个值；改回 `true` 或 `false` 时卸下。"
+              }
+            ]
+          }
+        ]
+      },
+      "slots": {
+        "en": [],
+        "zh": []
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [],
+        "zh": [
+          {
+            "heading": "建议",
+            "text": "- 推荐: 用在一次看一屏的内容上，比如引导页或照片条，快速轻扫也不该跳过下一屏。\n- 推荐: 一屏同时露出好几项、每次轻扫只想挪一项时，传 `{ pages: 'item' }`。\n- 避免: 用在需要快速浏览的一行上；普通的 `hasSnap` 保留原生惯性，一次横扫能划过好几项。"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": {
+            "en": "useSnapPaging — Onboarding",
+            "zh": "useSnapPaging — 引导页"
+          },
+          "description": {
+            "en": "Onboarding screens with snap paging. A flick moves one view; the switch makes it move one card.",
+            "zh": "用吸附分页的引导页。轻扫一下翻一屏，打开开关后翻一张。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { useSnapPaging } from '@astryx-vue/core'\nimport { Card } from '@astryx-vue/core/Card'\nimport { Carousel } from '@astryx-vue/core/Carousel'\nimport { Stack } from '@astryx-vue/core/Stack'\nimport { Switch } from '@astryx-vue/core/Switch'\nimport { Text } from '@astryx-vue/core/Text'\nimport { ref } from 'vue'\n\nconst screens = [\n  { title: 'Welcome', body: 'Swipe to see what is new.' },\n  { title: 'Shared albums', body: 'Invite friends to add their photos.' },\n  { title: 'Memories', body: 'See a day from years ago.' },\n  { title: 'Search', body: 'Find a photo by what is in it.' },\n  { title: 'All set', body: 'Your library is ready.' },\n]\n\nconst isOneCard = ref(false)\n// A flick moves one view, or one card with pages: 'item'.\nconst paging = useSnapPaging(() => ({ pages: isOneCard.value ? 'item' : 'view' }))\n</script>\n\n<template>\n  <Stack direction=\"vertical\" :gap=\"3\" :max-width=\"520\" style=\"padding: 8px\">\n    <Switch v-model=\"isOneCard\" label=\"One card per flick\" />\n    <Carousel :gap=\"2\" :has-snap=\"paging\" label=\"Onboarding\">\n      <Card v-for=\"screen in screens\" :key=\"screen.title\" :width=\"220\" :min-height=\"160\">\n        <Stack direction=\"vertical\" :gap=\"1\">\n          <Text type=\"body\" weight=\"bold\">\n            {{ screen.title }}\n          </Text>\n          <Text type=\"body\" color=\"secondary\">\n            {{ screen.body }}\n          </Text>\n        </Stack>\n      </Card>\n    </Carousel>\n  </Stack>\n</template>"
+        }
+      ],
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/use-snap-paging",
+        "zh": "https://astryx-vue.pages.dev/components/use-snap-paging"
       }
     }
   ],

@@ -215,6 +215,9 @@ export { useScrollLock } from './useScrollLock.js'
 export { useScrollOverflow } from './useScrollOverflow.js'
 export type { ScrollOverflowState, UseScrollOverflowResult } from './useScrollOverflow.js'
 
+export { useSnapPaging } from './useSnapPaging.js'
+export type { SnapPaging, SnapPagingOptions } from './useSnapPaging.js'
+
 export { snapToGraphemeBoundary, useStreamingText } from './useStreamingText.js'
 export type { StreamingTextSpeed, UseStreamingTextOptions } from './useStreamingText.js'
 
