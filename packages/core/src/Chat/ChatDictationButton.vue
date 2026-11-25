@@ -2,7 +2,7 @@
 import type { ChatDictationButtonProps } from './types.js'
 import { computed, toValue } from 'vue'
 import Button from '../Button/Button.vue'
-import { assertDevProp } from '../composables/useDevWarning.js'
+import { assertDevProp } from '../composables/internal/devBuild.js'
 import Icon from '../Icon/Icon.vue'
 import { useAstryxMessages } from '../locale/index.js'
 import '../../styles/chat.css'
