@@ -1,5 +1,11 @@
 # @astryx-vue/core
 
+## 0.7.28
+
+### Patch Changes
+
+- [#515](https://github.com/astryx-vue/astryx-vue/pull/515) [`2bd41f7`](https://github.com/astryx-vue/astryx-vue/commit/2bd41f7c964b4b7bc0e31c7594b4703a34ed2189) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 每个组件只带自己的内置文案：只用到 Button、Spinner、Token 这类组件的应用，打包时不再把所有组件的英文和中文文案一起打进去。显示的文字、`InternationalizationProvider` 的用法和 `useAstryxMessages`、`useTranslator` 等公开接口都不变。
+
 ## 0.7.27
 
 ### Patch Changes
