@@ -225,7 +225,12 @@
     background-image: var(--_press-paint-image);
   }
 
-  .astryx-item:has(:focus-visible) {
+  /*
+   * 行只为自己的按钮或链接画环；委托模式下嵌套控件就是行的唯一 Tab 停点，照旧画在行上。
+   * 起止插槽里的其他控件自己画环，同一次聚焦不会出现两个环。
+   */
+  .astryx-item:has(> .astryx-item__content:focus-visible, > .astryx-item__surface > .astryx-item__content:focus-visible),
+  .astryx-item--delegate:has(:focus-visible) {
     outline: 2px solid var(--astryx-list-item-focus, light-dark(#0064e0, #2694fe));
     outline-offset: 3px;
   }

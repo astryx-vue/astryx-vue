@@ -79,6 +79,7 @@ footer: false
 
 `Button` 公开 `element`。
 类型为 `HTMLButtonElement | HTMLAnchorElement | HTMLElement | null`。
+链接模式下（有 `href` 且未禁用），它是链接元素：原生锚点，或 `as` 链接组件的根元素；其他情况下是按钮本身。
 
 ## 原生属性
 

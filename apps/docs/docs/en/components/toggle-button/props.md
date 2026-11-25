@@ -59,7 +59,7 @@ footer: false
         <td><code>pressedChangeAction</code></td>
         <td><code>(isPressed: boolean) =&gt; void | Promise&lt;void&gt;</code></td>
         <td>—</td>
-        <td>Action for an API- or navigation-backed toggle. It runs after <code>pressedChange</code> unless that handler prevents the click default. While it is pending the button previews the next state with a spinner and stays clickable, so another click reverses the unsettled toggle. Ignored for a group member with a value.</td>
+        <td>Action for an API- or navigation-backed toggle. It runs after <code>click</code> and <code>pressedChange</code> unless either handler prevents the click default. While it is pending the button previews the next state with a spinner and stays clickable, so another click reverses the unsettled toggle. Ignored for a group member with a value.</td>
       </tr>
       <tr>
         <td><code>tooltip</code></td>
@@ -146,7 +146,7 @@ footer: false
       <tr>
         <td><code>click</code></td>
         <td><code>(event: MouseEvent)</code></td>
-        <td>The originating click, forwarded after the toggle has been requested. It is not emitted while the button is disabled.</td>
+        <td>The originating click. On a standalone button it is emitted first, before <code>pressedChange</code> and <code>pressedChangeAction</code>; calling <code>event.preventDefault()</code> here cancels the toggle, so neither runs. On a group member with a value it is emitted after the group toggles. It is not emitted while the button is disabled.</td>
       </tr>
       <tr>
         <td><code>change</code></td>

@@ -17,6 +17,7 @@ import FieldIcon from '../Field/FieldIcon.vue'
 import { useFieldPartStyling } from '../Field/fieldParts.js'
 import { useAriaRequired } from '../FormLayout/context.js'
 import Icon from '../Icon/Icon.vue'
+import { useInputGroupDisabled } from '../InputGroup/context.js'
 import { useAstryxLocale, useAstryxMessages } from '../locale/index.js'
 import Popover from '../Popover/Popover.vue'
 import { useSize } from '../SizeContext/SizeContext.js'
@@ -83,7 +84,8 @@ const disabledMessageId = `${generatedId}-disabled`
 
 const pending = usePendingChange(() => props.changeAction)
 const busy = computed(() => props.isLoading || pending.busy.value)
-const locked = computed(() => props.disabled || busy.value)
+const isDisabled = useInputGroupDisabled(() => props.disabled)
+const locked = computed(() => isDisabled.value || busy.value)
 const disabledMessage = computed(() => (props.disabledMessage?.trim() || props.disabledReason?.trim()) || undefined)
 const showsDisabledMessage = computed(() => locked.value && disabledMessage.value != null)
 const disabledTooltip = useButtonTooltip(showsDisabledMessage)
@@ -302,7 +304,7 @@ syncDisplayValue()
     :is-optional="isOptional"
     :is-required="isRequired"
     :label-tooltip="labelTooltip"
-    :disabled="disabled"
+    :disabled="isDisabled"
     :disabled-reason="disabledReason"
     :is-loading="busy"
     :clearable="clearable"

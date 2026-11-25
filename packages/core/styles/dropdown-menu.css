@@ -411,4 +411,13 @@
       transition: none;
     }
   }
+
+  @media (forced-colors: active) {
+    /* 强制配色会去掉阴影，阴影是这块浮层唯一的边，这里补一圈系统色边框。 */
+    /* 底部抽屉和框里的菜单不是独立浮层，不加。子菜单的弹出面板同样带 .astryx-dropdown-menu。 */
+    .astryx-dropdown-menu:not(.is-sheet, .is-in-frame),
+    .astryx-dropdown-menu-popover {
+      border: 1px solid CanvasText;
+    }
+  }
 }

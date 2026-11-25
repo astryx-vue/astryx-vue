@@ -19,6 +19,8 @@ export const overlaysUpstreamMap: UpstreamMapPart = {
   '@astryx.lightbox.zoom': [{ path: 'lightbox.zoom' }],
   '@astryx.lightbox.zoomedIn': [{ path: 'lightbox.zoomedIn' }],
   '@astryx.lightbox.zoomedOut': [{ path: 'lightbox.zoomedOut' }],
+  '@astryx.lightbox.captionMore': [{ path: 'lightbox.captionMore' }],
+  '@astryx.lightbox.captionLess': [{ path: 'lightbox.captionLess' }],
   '@astryx.lightbox.imagePosition': [{ path: 'lightbox.imagePosition', args: ['index', 'total'] }],
   '@astryx.lightbox.mediaPosition': [{ path: 'lightbox.mediaPosition', args: ['alt', 'index', 'total'] }],
 

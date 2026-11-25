@@ -18,7 +18,7 @@ footer: false
 </tbody></table>
 </div>
 
-`LightboxMedia` is `{ src, alt, caption?, type? }`. `type` is `image` or `video`, and defaults to `image`.
+`LightboxMedia` is `{ src, alt, caption?, type? }`. `type` is `image` or `video`, and defaults to `image`. The whole caption is always the viewer's accessible description. In a gallery every page has a caption band two lines tall under its photo, so the photo keeps one size from page to page; a page without a caption keeps the band's space without its backing. A longer caption shows two lines and ends in an inline "more" that opens it in full over the photo; "less" and paging close it.
 
 ## Events
 
@@ -43,4 +43,4 @@ const { bindings, open, close, isOpen, index, getTriggerProps } = useLightbox({
 
 ## Theme
 
-The dialog class is `astryx-lightbox`. Caption text uses the large type, `on-dark`, a max width of 600px, and padding of spacing 2 on the block start and spacing 3 on the inline sides. Close and navigation sit at spacing 3 from the frame.
+The dialog class is `astryx-lightbox`. A single item's caption text uses the large type, `on-dark`, a max width of 600px, and padding of spacing 2 on the block start and spacing 3 on the inline sides. A gallery's caption uses the body type on a backing at 90% of the controls' overlay color, and its band clears the bottom safe area. Close and navigation sit at spacing 3 from the frame.
