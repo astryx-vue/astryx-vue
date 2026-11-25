@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import Heading from './Heading.vue'
 
 describe('heading', () => {
@@ -68,5 +68,53 @@ describe('heading', () => {
     expect(capped.classes()).toContain('astryx-heading--capsize')
     expect(capped.classes()).not.toContain('astryx-heading--inline')
     expect(capped.element.tagName).toBe('H2')
+  })
+})
+
+describe('heading outline and caller precedence', () => {
+  it('adds no aria-level when accessibilityLevel equals level', () => {
+    const wrapper = mount(Heading, { props: { level: 3, accessibilityLevel: 3 }, slots: { default: 'Matching outline' } })
+    expect(wrapper.element.tagName).toBe('H3')
+    expect(wrapper.attributes('aria-level')).toBeUndefined()
+  })
+
+  it('lets a caller aria-level win over the derived one', () => {
+    const wrapper = mount(Heading, {
+      props: { level: 2, accessibilityLevel: 3 },
+      attrs: { 'aria-level': '4' },
+      slots: { default: 'Caller outline' },
+    })
+    expect(wrapper.attributes('aria-level')).toBe('4')
+  })
+})
+
+describe('heading without a valid level', () => {
+  function headingWarnings(warn: { mock: { calls: unknown[][] } }): string[] {
+    return warn.mock.calls.map(call => String(call[0])).filter(message => message.startsWith('Heading:'))
+  }
+
+  it('renders an h2 at the level 2 scale and warns in development', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const wrapper = mount(Heading, { props: {} as never, slots: { default: 'Overview' } })
+    expect(wrapper.element.tagName).toBe('H2')
+    expect(wrapper.classes()).toContain('astryx-heading--level-2')
+    expect(headingWarnings(warn)).toEqual([expect.stringContaining('level must be 1, 2, 3, 4, 5 or 6, but it is undefined.')])
+    warn.mockRestore()
+  })
+
+  it('reads a level given as a numeric string, and warns', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const wrapper = mount(Heading, { props: { level: '3' } as never, slots: { default: 'Details' } })
+    expect(wrapper.element.tagName).toBe('H3')
+    expect(headingWarnings(warn)).toEqual([expect.stringContaining('but it is "3".')])
+    warn.mockRestore()
+  })
+
+  it('does not warn for a valid level', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const wrapper = mount(Heading, { props: { level: 4 }, slots: { default: 'Notes' } })
+    expect(wrapper.element.tagName).toBe('H4')
+    expect(headingWarnings(warn)).toEqual([])
+    warn.mockRestore()
   })
 })

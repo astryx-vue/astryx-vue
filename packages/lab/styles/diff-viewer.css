@@ -186,6 +186,8 @@
     white-space: pre-wrap;
     word-break: normal;
     overflow-wrap: anywhere;
+    /* Text 和 Heading 在里面也按 anywhere 换行。 */
+    --_astryx-text-overflow-wrap: anywhere;
   }
 
   /* 分栏固定在左右各一半；只有代码滚动，行号和变化标记留在原地。 */
@@ -337,6 +339,8 @@
   .astryx-diff-viewer__annotation-content {
     contain: inline-size;
     overflow-wrap: anywhere;
+    /* Text 和 Heading 在里面也按 anywhere 换行。 */
+    --_astryx-text-overflow-wrap: anywhere;
   }
 
   :dir(rtl) .astryx-diff-viewer__annotation-content {

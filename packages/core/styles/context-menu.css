@@ -270,6 +270,8 @@
 
   .astryx-context-menu-item__label {
     overflow-wrap: anywhere;
+    /* Text 和 Heading 在里面也按 anywhere 换行。 */
+    --_astryx-text-overflow-wrap: anywhere;
   }
 
   .astryx-context-menu-item__description {
@@ -277,6 +279,8 @@
     font-size: var(--astryx-text-supporting-size, 0.75rem);
     line-height: var(--astryx-text-supporting-leading, 1.6667);
     overflow-wrap: anywhere;
+    /* Text 和 Heading 在里面也按 anywhere 换行。 */
+    --_astryx-text-overflow-wrap: anywhere;
   }
 
   .astryx-context-menu-item--destructive .astryx-context-menu-item__description {

@@ -193,6 +193,8 @@
   .astryx-log-stream__message {
     min-width: 0;
     overflow-wrap: anywhere;
+    /* Text 和 Heading 在里面也按 anywhere 换行。 */
+    --_astryx-text-overflow-wrap: anywhere;
     white-space: pre-wrap;
   }
 

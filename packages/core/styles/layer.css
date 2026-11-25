@@ -68,5 +68,7 @@
     --_section-padding-propagated: initial;
     /* 步骤条的连接线空隙只属于外面那条轨道。浮层里的步骤条回到自己的 0。 */
     --astryx-step-connector-gap: initial;
+    /* 外面容器传给 Text 的 anywhere 换行也停在这里，浮层里的 Text 回到自己的 break-word。 */
+    --_astryx-text-overflow-wrap: initial;
   }
 }

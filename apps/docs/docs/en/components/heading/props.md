@@ -17,7 +17,7 @@ footer: false
         <td><code>level</code></td>
         <td><code>HeadingLevel</code></td>
         <td>-</td>
-        <td>Heading level (1–6). Determines the semantic element (h1–h6).</td>
+        <td>Heading level (1–6). Determines the semantic element (h1–h6). A numeric string reads as its number; a missing level, or one outside 1–6, renders level 2 and warns in development.</td>
       </tr>
       <tr>
         <td><code>type</code></td>
@@ -59,7 +59,7 @@ footer: false
         <td><code>wordBreak</code></td>
         <td><code>'break-word' | 'break-all'</code></td>
         <td><code>break-all</code> for one line, <code>break-word</code> for more</td>
-        <td>How long unbroken strings break.</td>
+        <td>How long unbroken strings break when truncating. Without truncation, a token longer than its line (a URL, an ID) wraps (<code>overflow-wrap: break-word</code>), so in ordinary flow the text does not make the page scroll sideways. Inside a flex row, give the flex child <code>min-width: 0</code> so it can shrink. A container you style with <code>overflow-wrap: anywhere</code> does not reach this text; Astryx's own containers pass their wrap through.</td>
       </tr>
       <tr>
         <td><code>justify</code></td>
@@ -83,7 +83,7 @@ footer: false
         <td><code>hasTruncateTooltip</code></td>
         <td><code>boolean | 'above' | 'below' | 'start' | 'end'</code></td>
         <td><code>true</code></td>
-        <td>Puts the full text in a tooltip after truncation. <code>false</code> turns it off. It stays closed when the text fits.</td>
+        <td>Puts the full text in a tooltip after truncation. <code>false</code> turns it off and skips the measurement. It stays closed when the text fits. The tooltip mounts on the first hover, tap or keyboard focus; until then the element has no tooltip layer and no <code>aria-describedby</code>.</td>
       </tr>
       <tr>
         <td><code>maxLines</code></td>
@@ -102,7 +102,7 @@ The root element is `<h1>` through `<h6>`.
 The following are passed to the root element:
 
 - HTML attributes.
-- `aria-*` attributes.
+- `aria-*` attributes. Your own `aria-level` wins over the one `accessibilityLevel` derives.
 - `data-*` attributes.
 - `class`.
-- `style`.
+- `style`. When `maxLines` is above 1, its line clamp replaces any `-webkit-line-clamp` in `style`.

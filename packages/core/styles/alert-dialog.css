@@ -13,6 +13,8 @@
     min-height: 0;
     overflow: auto;
     overflow-wrap: anywhere;
+    /* Text 和 Heading 在里面也按 anywhere 换行。 */
+    --_astryx-text-overflow-wrap: anywhere;
   }
 
   /* Two classes so the level-2 scale from Heading still loses to this rule

@@ -354,6 +354,8 @@
     font-size: 14px;
     line-height: 1.4286;
     overflow-wrap: anywhere;
+    /* Text 和 Heading 在里面也按 anywhere 换行。 */
+    --_astryx-text-overflow-wrap: anywhere;
     pointer-events: auto;
     animation: astryx-button-tooltip-enter 130ms cubic-bezier(0.24, 1, 0.4, 1);
   }

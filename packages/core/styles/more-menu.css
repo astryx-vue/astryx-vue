@@ -102,6 +102,8 @@
     padding-block: var(--astryx-spacing-1, 4px);
     padding-inline: var(--astryx-spacing-2, 8px);
     overflow-wrap: anywhere;
+    /* Text 和 Heading 在里面也按 anywhere 换行。 */
+    --_astryx-text-overflow-wrap: anywhere;
     color: var(--astryx-more-menu-heading-foreground, var(--astryx-color-text-secondary, light-dark(#525252, #a3a3a3)));
     font-size: var(--astryx-text-supporting-size, 0.75rem);
     line-height: var(--astryx-text-supporting-leading, 1.6667);
@@ -196,6 +198,8 @@
 
   .astryx-more-menu__item-label {
     overflow-wrap: anywhere;
+    /* Text 和 Heading 在里面也按 anywhere 换行。 */
+    --_astryx-text-overflow-wrap: anywhere;
   }
 
   .astryx-more-menu__item-description {
@@ -203,6 +207,8 @@
     font-size: var(--astryx-text-supporting-size, 0.75rem);
     line-height: var(--astryx-text-supporting-leading, 1.6667);
     overflow-wrap: anywhere;
+    /* Text 和 Heading 在里面也按 anywhere 换行。 */
+    --_astryx-text-overflow-wrap: anywhere;
   }
 
   .astryx-more-menu__item--destructive .astryx-more-menu__item-description {

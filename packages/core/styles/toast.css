@@ -195,6 +195,8 @@
     flex: 1;
     min-width: 0;
     overflow-wrap: anywhere;
+    /* Text 和 Heading 在里面也按 anywhere 换行。 */
+    --_astryx-text-overflow-wrap: anywhere;
   }
 
   /* 高度固定成一行正文，28px 的关闭按钮居中溢出，卡片不被它撑高。 */
