@@ -1,0 +1,12 @@
+@layer theme, base, astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides, components, utilities;
+
+/* Simulate Tailwind preflight in the layer order used by the local guide. */
+@layer base {
+  img, video { height: auto; }
+}
+
+body { margin: 0; font-family: sans-serif; }
+section { margin-block: 24px; }
+.demo-box { max-width: 720px; }
+.long-content { min-width: 0; overflow-wrap: anywhere; }
+input { min-width: 0; padding: 8px; }
