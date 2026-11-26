@@ -86,7 +86,7 @@ export const ssrFixtures: Record<string, SsrFixture> = {
   CommandPalette: { props: { isOpen: true, searchSource } },
   CommandPaletteGroup: { props: { heading: 'Recent' }, slots: { default: text('Items') } },
   CommandPaletteItem: { props: { value: 'open' }, slots: { default: text('Open') } },
-  ComplexSelector: { props: { label: 'Fruit', modelValue: 'apple', triggerLabel: 'Apple' } },
+  ComplexSelector: { props: { label: 'Fruit', modelValue: 'apple', triggerLabel: 'Apple' }, slots: { default: text('Picker') } },
   ContextMenuCheckboxItem: menuCheckboxItem,
   ContextMenuRadioGroup: menuRadioGroup,
   ContextMenuRadioItem: menuRadioItem,

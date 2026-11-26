@@ -1,3 +1,6 @@
+import { readFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { enableAutoUnmount, mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { h, nextTick } from 'vue'
@@ -83,6 +86,13 @@ describe('infoTip', () => {
     const { trigger, bubble } = render()
     expect(trigger.getAttribute('aria-describedby')).toContain(bubble.id)
     expect(bubble.textContent).toContain(TIP)
+  })
+
+  it('draws its touch target through the shared hit area, not a fixed inset', () => {
+    const wrapper = mount(InfoTip, { props: { content: 'Help' } })
+    expect(wrapper.get('button').classes()).toContain('astryx-touch-hit-area')
+    const css = readFileSync(resolve(dirname(fileURLToPath(import.meta.url)), '../../styles/info-tip.css'), 'utf8')
+    expect(css).not.toContain('inset: -12px')
   })
 
   it('exposes the button as its element', () => {

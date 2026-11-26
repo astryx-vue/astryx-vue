@@ -15,7 +15,7 @@ function openLayer(options: { dismissOnOutsidePan?: boolean, doc?: Document } = 
     token: {},
     getContainer: () => el,
     dismissOnPointerOutside: true,
-    dismissOnOutsidePan: options.dismissOnOutsidePan,
+    dismissOnOutsidePan: options.dismissOnOutsidePan ?? true,
     dismissOnEscape: 'close',
     onDismiss,
   })

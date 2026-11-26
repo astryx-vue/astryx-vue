@@ -4,6 +4,7 @@ import { nextTick, onScopeDispose, ref, watch } from 'vue'
 import { useLayerTeleportTarget } from '../composables/useLayerMountTarget.js'
 import { useLayerGutter } from '../LayerProvider/context.js'
 import { computeLayerPosition } from './position.js'
+import { getLayerViewport } from './visibleViewport.js'
 
 const GEOMETRY_POLL_INTERVAL = 100
 
@@ -49,7 +50,7 @@ export function usePositionedLayer(options: PositionedLayerOptions): PositionedL
     position.value = computeLayerPosition(
       anchorEl.getBoundingClientRect(),
       { width: layerEl.offsetWidth, height: layerEl.offsetHeight },
-      { width: window.innerWidth, height: window.innerHeight },
+      getLayerViewport(),
       placement.value,
       alignment.value,
       gap,
@@ -81,6 +82,7 @@ export function usePositionedLayer(options: PositionedLayerOptions): PositionedL
   function attach(): void {
     window.addEventListener('scroll', update, true)
     window.addEventListener('resize', update)
+    window.visualViewport?.addEventListener('resize', update)
     watchGeometry()
   }
 
@@ -88,6 +90,7 @@ export function usePositionedLayer(options: PositionedLayerOptions): PositionedL
     if (typeof window !== 'undefined') {
       window.removeEventListener('scroll', update, true)
       window.removeEventListener('resize', update)
+      window.visualViewport?.removeEventListener('resize', update)
     }
     clearInterval(pollId)
     pollId = undefined

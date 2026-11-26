@@ -1,0 +1,137 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  /*
+   * iOS 的多选圆圈。尺寸取自 UIKit：md 是「大」字号下的 21.8px，sm 是最小字号下的 18px，
+   * 居中放在宿主 24px / 20px 的位置里。圆环用内阴影画而不是边框：边框会被吸附到整数设备像素，
+   * 1.54px 在 3 倍屏上会变成 1.33px，阴影保持精确宽度。
+   */
+  .astryx-circle-check-indicator {
+    --_circle-stroke: 1.54px;
+
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 21.8px;
+    height: 21.8px;
+    border: 0 none transparent;
+    border-radius: var(--astryx-radius-full, 9999px);
+    transition-property: background-color, box-shadow;
+    transition-duration: var(--astryx-duration-fast, 125ms);
+    transition-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+  }
+
+  .astryx-circle-check-indicator[data-size='sm'] {
+    --_circle-stroke: 1.27px;
+
+    width: 18px;
+    height: 18px;
+  }
+
+  /* 空心圆环：中间透明，编辑态下选中行的底色透得过来。 */
+  .astryx-circle-check-indicator[data-state='unchecked'] {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 var(--_circle-stroke) var(--astryx-color-border-emphasized, #d4d4d4);
+  }
+
+  /* 选中和部分选中都是实心圆；加载圈用 inherit 时读这里的 currentColor。 */
+  .astryx-circle-check-indicator:not([data-state='unchecked']) {
+    color: var(--astryx-color-on-accent, #fff);
+    background-color: var(--astryx-color-accent, #262626);
+    box-shadow: none;
+  }
+
+  @media (hover: hover) {
+    .astryx-indicator-scope:hover .astryx-circle-check-indicator[data-state='unchecked']:not([data-disabled]) {
+      box-shadow: inset 0 0 0 var(--_circle-stroke) color-mix(in srgb, var(--astryx-color-border-emphasized, #d4d4d4), var(--astryx-color-tint-hover, black) 20%);
+    }
+
+    .astryx-indicator-scope:hover .astryx-circle-check-indicator:not([data-state='unchecked']):not([data-disabled]) {
+      background-color: color-mix(in srgb, var(--astryx-color-accent, #262626), var(--astryx-color-tint-hover, black) 15%);
+    }
+  }
+
+  .astryx-circle-check-indicator[data-disabled] {
+    opacity: 0.5;
+  }
+
+  /*
+   * 按压画在圆圈本身上。鼠标、触控笔按下时立刻画上，松开后渐隐：CheckboxInput 的行把这层
+   * 按压图像交给 `--_press-paint-image`；没有它时，细指针下 :active 直接压一层。
+   */
+  .astryx-circle-check-indicator:not([data-disabled])::after {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--astryx-radius-full, 9999px);
+    background-color: transparent;
+    background-image: var(--_press-paint-image, none);
+    content: '';
+    pointer-events: none;
+  }
+
+  @media not all and (pointer: coarse) {
+    .astryx-indicator-scope:not([data-astryx-press]):active .astryx-circle-check-indicator:not([data-disabled])::after {
+      background-color: var(--astryx-color-overlay-pressed, light-dark(#05365919, #ffffff19));
+    }
+  }
+
+  /* 对勾和横线：对勾比圆心略低 1px（sm 按比例 0.83px），横线和对勾一样宽、一样粗。 */
+  .astryx-circle-check-indicator-check {
+    display: none;
+    flex-shrink: 0;
+    width: 9px;
+    height: 9px;
+    overflow: visible;
+    color: var(--astryx-color-on-accent, #fff);
+    translate: 0 1px;
+  }
+
+  .astryx-circle-check-indicator-check[data-size='sm'] {
+    width: 8px;
+    height: 8px;
+    translate: 0 0.83px;
+  }
+
+  .astryx-circle-check-indicator-dash {
+    display: none;
+    flex-shrink: 0;
+    width: 9px;
+    height: 1.35px;
+    border-radius: var(--astryx-radius-full, 9999px);
+    background-color: var(--astryx-color-on-accent, #fff);
+  }
+
+  .astryx-circle-check-indicator-dash[data-size='sm'] {
+    width: 8px;
+    height: 1.2px;
+  }
+
+  .astryx-circle-check-indicator[data-state='checked'] > .astryx-circle-check-indicator-check,
+  .astryx-circle-check-indicator[data-state='indeterminate'] > .astryx-circle-check-indicator-dash {
+    display: block;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-circle-check-indicator {
+      transition-duration: 0s;
+    }
+  }
+
+  /* 强制颜色模式会丢掉内阴影圆环，改用系统色边框画出来；对勾用 CanvasText 保证看得见。 */
+  @media (forced-colors: active) {
+    .astryx-circle-check-indicator {
+      border: 1px solid CanvasText;
+    }
+
+    .astryx-circle-check-indicator-check {
+      color: CanvasText;
+    }
+
+    .astryx-circle-check-indicator-dash {
+      background-color: CanvasText;
+    }
+  }
+}

@@ -139,11 +139,39 @@ describe('circularProgress', () => {
     }
   })
 
-  it('computes stroke-dashoffset from value', () => {
-    const fill = renderProgress({ value: 25, max: 100 }).get('.astryx-circular-progress__fill')
-    // 周长 = 2π * 22 ≈ 138.23；偏移 = 周长 * (1 - 0.25)
-    expect(Number.parseFloat(fill.attributes('stroke-dasharray') ?? '')).toBeCloseTo(138.23, 1)
-    expect(Number.parseFloat(fill.attributes('stroke-dashoffset') ?? '')).toBeCloseTo(103.67, 1)
+  it('turns the fill\'s halves and leading cap from the value', () => {
+    function turnsAt(value: number) {
+      const wrapper = renderProgress({ value, size: 'md' })
+      const fill = wrapper.get('.astryx-circular-progress__fill--layers').element
+      const [right, left] = Array.from(fill.querySelectorAll<HTMLElement>('.astryx-circular-progress__turn'))
+        .map(layer => `${layer.style.transform} ${layer.style.opacity}`)
+      const cap = fill.querySelector<HTMLElement>(':scope > span.astryx-circular-progress__cap')
+      const start = fill.querySelector<SVGPathElement>(':scope > svg path')
+      const result = { right, left, cap: cap?.style.transform, caps: [cap?.style.opacity, start?.style.opacity] }
+      wrapper.unmount()
+      return result
+    }
+    // 右半环在前一半进度里转满，左半环在后一半；停在自己那一半边缘的半环隐藏。
+    expect(turnsAt(0)).toEqual({ right: 'rotate(0deg) 0', left: 'rotate(180deg) 0', cap: 'rotate(0deg)', caps: ['0', '0'] })
+    expect(turnsAt(25)).toEqual({ right: 'rotate(90deg) 1', left: 'rotate(180deg) 0', cap: 'rotate(90deg)', caps: ['1', '1'] })
+    expect(turnsAt(75)).toEqual({ right: 'rotate(180deg) 1', left: 'rotate(270deg) 1', cap: 'rotate(270deg)', caps: ['1', '1'] })
+    expect(turnsAt(100)).toEqual({ right: 'rotate(180deg) 1', left: 'rotate(360deg) 1', cap: 'rotate(360deg)', caps: ['1', '1'] })
+  })
+
+  it('draws each half as half the ring\'s stroke, colored by the fill target', () => {
+    const fill = renderProgress({ value: 25, size: 'md' }).get('.astryx-circular-progress__fill--layers')
+    expect(fill.attributes('aria-hidden')).toBe('true')
+    const halves = fill.findAll('circle')
+    expect(halves).toHaveLength(2)
+    // 周长 = 2π * 22 ≈ 138.23：每个半环画一半，从 6 点到 12 点。
+    for (const half of halves) {
+      const [dash, gap] = (half.attributes('stroke-dasharray') ?? '').split(' ').map(Number)
+      expect(dash).toBeCloseTo(138.23 / 2, 1)
+      expect(gap).toBeCloseTo(138.23, 1)
+      expect(half.attributes('transform')).toBe('rotate(90 24 24)')
+      // 颜色从外层继承，部件自己不写 stroke。
+      expect(half.attributes('stroke')).toBeUndefined()
+    }
   })
 
   it('handles zero max gracefully', () => {
@@ -177,6 +205,8 @@ describe('circularProgress', () => {
     it('swaps the fill to the disabled variant', () => {
       const wrapper = renderProgress({ isDisabled: true })
       expect(wrapper.get('.astryx-circular-progress__fill').attributes('data-variant')).toBe('disabled')
+      // 整个圆环（中心内容也算）一起变淡。
+      expect(wrapper.get('.astryx-circular-progress__ring').classes()).toContain('astryx-circular-progress__ring--disabled')
       // 根元素保留原 variant，主题还能按它选样式。
       expect(wrapper.get('.astryx-circular-progress').attributes('data-variant')).toBe('accent')
     })
@@ -211,12 +241,16 @@ describe('circularProgress', () => {
       expect(wrapper.find('.astryx-circular-progress__center').exists()).toBe(false)
     })
 
-    it('animates the dashed arc instead of drawing a fixed dasharray', () => {
-      const wrapper = renderProgress({ isIndeterminate: true })
+    it('turns Spinner\'s 135° arc from 12 o\'clock', () => {
+      const wrapper = renderProgress({ isIndeterminate: true, size: 'md' })
       const fill = wrapper.get('.astryx-circular-progress__fill')
       expect(fill.classes()).toContain('astryx-circular-progress__fill--indeterminate')
-      expect(fill.attributes('stroke-dasharray')).toBeUndefined()
+      const [arc, gap] = (fill.attributes('stroke-dasharray') ?? '').split(' ').map(Number)
+      expect(arc).toBeCloseTo(138.23 * 0.375, 1)
+      expect(gap).toBeCloseTo(138.23 * 0.625, 1)
+      expect(fill.attributes('transform')).toBe('rotate(-90 24 24)')
       expect(wrapper.get('svg').classes()).toContain('astryx-circular-progress__svg--indeterminate')
+      expect(wrapper.find('.astryx-circular-progress__fill--layers').exists()).toBe(false)
     })
 
     it('renders slot content alongside indeterminate animation', () => {

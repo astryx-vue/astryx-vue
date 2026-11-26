@@ -30,6 +30,15 @@ The layer order is:
 
 Application overrides belong in `astryx.overrides`. Unlayered global CSS beats these layers, so a bare `button { }` will paint over the component unless that is what you want.
 
+## Rules for your own styles
+
+Every approach below reads the same variables, so themes and dark mode keep working as long as these hold:
+
+- Take spacing, color, radius, and shadow from `var(--astryx-*)`, never from raw px or hex.
+- Put every hover style behind `@media (hover: hover)`, so a touch screen does not keep it after a tap.
+- Style a state through the component's props, and reach a component from your own CSS by its class and data attributes, such as `.astryx-button[data-variant="primary"]`, instead of toggling class names onto it.
+- To restyle a component everywhere, give the theme a `components` override in `defineTheme` and apply it with [Theme](/en/components/theme), instead of page-level selectors.
+
 ## Using Tailwind or UnoCSS alongside
 
 They work together as long as the layer order is fixed.

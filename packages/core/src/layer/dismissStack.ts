@@ -52,7 +52,7 @@ export interface DismissStackEntry {
   /**
    * 手指在外面落下后挪开（平移、滚动）时，是否也关闭这一层。
    * 菜单一平移就关；弹出框和选择列表只在外面轻点时关，滑一下页面不关。
-   * 不传当作 `true`。鼠标按下不受影响，照常在按下时判断。
+   * 不传当作 `false`。鼠标按下不受影响，照常在按下时判断。
    */
   dismissOnOutsidePan?: boolean
   /**
@@ -367,7 +367,7 @@ export function pushLayer(entry: DismissStackEntry): () => void {
   const full: StackEntry = {
     ...entry,
     depth: entry.depth ?? 0,
-    dismissOnOutsidePan: entry.dismissOnOutsidePan ?? true,
+    dismissOnOutsidePan: entry.dismissOnOutsidePan ?? false,
     doc: typeof document === 'undefined' ? null : ownerDocumentOf(entry),
     seq: seqFor(entry.token),
     bornPress: pressSerial,

@@ -15,14 +15,15 @@ export interface HeaderCutText {
 
 /**
  * 表头标题被列宽截短时，键盘焦点到达单元格里的东西（可排序表头的排序按钮）
- * 就在提示里显示完整标题。鼠标悬停不显示。只在表格里的表头单元格上生效。
+ * 就在提示里显示完整标题。鼠标悬停不显示。只有 `textOverflow="truncate"` 的表头会被截短，
+ * 也只在那里生效；默认的 `wrap` 下标题会折行，不会被截。
  * 监听挂在表头行或单元格上都行：焦点从哪个 `<th>` 里来，就量哪个。
  */
 export function useHeaderCutText(): HeaderCutText {
   const cell = shallowRef<HTMLElement | null>(null)
   const cut = useCutTextOnKeyboardFocus({
     anchor: () => cell.value,
-    isEnabled: () => cell.value?.closest('.astryx-table') != null,
+    isEnabled: () => cell.value?.closest('.astryx-table[data-overflow="truncate"]') != null,
   })
 
   return {

@@ -43,7 +43,12 @@ const rootStyle = computed<StyleValue>(() => [attrs.style as StyleValue, scroll.
     v-bind="scroll.viewportAttrs.value"
     :style="rootStyle"
   >
-    <div :ref="scroll.content" data-scroll-content>
+    <!--
+      表格的直接父元素永远不滚动：外层滚动区是唯一的视口。有的页面宿主给每个表格的父元素都写了
+      不在层叠层里的 overflow-x: auto，只有内联样式压得住它；两个方向都写 visible，免得一边 visible
+      一边滚动时被算成 auto。
+    -->
+    <div :ref="scroll.content" data-scroll-content style="overflow: visible">
       <slot />
     </div>
   </div>

@@ -82,10 +82,20 @@ export interface TableFilterField {
 export type TableFilterValue = string | number | string[]
 export type TableFilterState = Record<string, TableFilterValue>
 
+/** 按批加载的状态：还有没有下一批、现在是否正在加载。 */
+export interface TableLoadingState {
+  hasMore: boolean
+  isLoading: boolean
+}
+
 export interface TableSortContribution {
   direction: TableSortDirection | null
   rank: number | null
-  label: string
+  /**
+   * 表头按钮的描述，多列排序时说明这一列排第几（例如「Priority 2 of 3」），否则为 `null`。
+   * 按钮的名字就是列标题，方向由表头的 `aria-sort` 表达。
+   */
+  description: string | null
   onClick: (event: MouseEvent) => void
 }
 
@@ -212,6 +222,8 @@ export interface TablePlugin<T extends Record<string, unknown> = Record<string, 
   onColumnResizeEnd?: (updates: Record<string, number>) => void
   /** 渲染在表格上方的内容，分页这类插件用。 */
   above?: () => VNodeChild
+  /** 按批加载的插件报告加载状态；有插件在加载时，表格不显示默认的空状态。 */
+  loadingState?: () => TableLoadingState
   below?: () => VNodeChild
   /** 改一行的属性、点击、分组头或展开面板。多个插件的结果会合并。 */
   rowPatch?: (row: T, index: number, columnCount: number) => TableRowPatch | null

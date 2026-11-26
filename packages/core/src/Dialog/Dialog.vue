@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import type { LayerFocusRecord } from '../layer/layerFocusReturn.js'
 import type { DialogPadding, DialogProps } from './types.js'
 import { computed, onBeforeUnmount, onMounted, provide, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
-import { useFocusTrap, useRestoreFocus, useScrollLock } from '../composables/index.js'
+import { useFocusTrap, useScrollLock } from '../composables/index.js'
+import { isLayerFocusStranded, restoreLayerFocus, trackLayerFocus } from '../layer/layerFocusReturn.js'
 import { addModalOutlet, removeModalOutlet } from '../layer/modalOutlet.js'
 import { provideLayerMountTarget } from '../layer/mount.js'
 import { resetLayerScopedContext } from '../layer/scopedProvide.js'
@@ -129,8 +131,6 @@ const isDialogOpen = computed(() => {
   return dialogRef.value?.open ?? false
 })
 
-const shouldRestoreFocus = computed(() => isDialogOpen.value)
-
 // 打开期间同时充当全局 toast 的挂载点。
 let modalOutlet: HTMLDialogElement | null = null
 
@@ -167,10 +167,15 @@ useFocusTrap({
   initialFocus: initialFocusTarget,
 })
 
-const { save: saveFocus, restore: restoreFocus } = useRestoreFocus({
-  isEnabled: ref(true),
-  shouldRestore: shouldRestoreFocus,
-})
+// 焦点归还：打开时记下打开者；关闭时只救被困在对话框里（或掉到 body 上）的焦点，
+// 调用方自己挪走的焦点不动。打开者没了就沿共用的候选链找落点，永远不落到 body。
+let focusRecord: LayerFocusRecord | null = null
+
+function returnFocus(record: LayerFocusRecord, dialog: HTMLDialogElement | null, wasStranded: boolean): void {
+  if (wasStranded)
+    restoreLayerFocus(record, { layer: dialog, name: 'Dialog' })
+  record.stop()
+}
 
 function openDialog(): void {
   if (props.isInline)
@@ -179,7 +184,11 @@ function openDialog(): void {
   if (!dialog || dialog.open)
     return
   triggerElement = document.activeElement as HTMLElement | null
-  saveFocus()
+  focusRecord?.stop()
+  focusRecord = trackLayerFocus({
+    getLayer: () => dialogRef.value,
+    opener: triggerElement instanceof HTMLElement ? triggerElement : null,
+  })
   applyEntryDirection(dialog)
   dialog.showModal()
   initialFocusTarget()?.focus({ preventScroll: true })
@@ -191,9 +200,14 @@ function closeDialog(): void {
   if (props.isInline)
     return
   const dialog = dialogRef.value
+  const record = focusRecord
+  focusRecord = null
+  // 关闭之前先看焦点是否被困住：原生 close() 自己也会挪焦点。
+  const wasStranded = record != null && isLayerFocusStranded(record, dialog)
   if (dialog?.open)
     dialog.close()
-  restoreFocus()
+  if (record != null)
+    returnFocus(record, dialog, wasStranded)
   detachModalOutlet()
   unlockScroll()
 }
@@ -229,6 +243,14 @@ onMounted(() => {
 onBeforeUnmount(() => {
   detachModalOutlet()
   unlockScroll()
+  // 打开着就被卸载（只在打开时渲染、或随整个视图一起移除）：等它离开文档后再把焦点送出去。
+  const record = focusRecord
+  focusRecord = null
+  if (record == null)
+    return
+  const dialog = dialogRef.value
+  const wasStranded = isLayerFocusStranded(record, dialog)
+  queueMicrotask(() => returnFocus(record, null, wasStranded))
 })
 </script>
 

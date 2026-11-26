@@ -104,6 +104,8 @@
     flex-direction: column;
     min-block-size: 0;
     max-block-size: calc(100vh - 16px);
+    /* 动态视口减去上下两道间距，间距在刘海和主屏指示条处随安全区变大。 */
+    max-block-size: calc(100dvh - max(16px, env(safe-area-inset-top, 0px)) - max(16px, env(safe-area-inset-bottom, 0px)));
     overflow: auto;
     overscroll-behavior: contain;
     padding: var(--_popover-padding, var(--astryx-spacing-3, 12px));

@@ -11,7 +11,7 @@ import { useTableFilterStateInline, useTableFilterStatePopover } from '../../../
 
 ## Usage
 
-Managed state hook for table filtering. Returns the current filter map, an onChange handler, and a way to clear everything. Pass the map and the handler to `useTableFiltering`, and the map to `applyTableFilters()` to get the matching rows.
+Managed state hook for table filtering. Returns `filters` (the current filter map), `onFilterChange`, and `clearAll`, which clears every filter, for example from a "Clear filters" button in the table's `empty` slot. Pass the map and the handler to `useTableFiltering`, and the map to `applyTableFilters()` to get the matching rows.
 
 ```ts
 import { useTableFilterState } from '@astryx-vue/core/Table'

@@ -59,6 +59,18 @@ describe('chart formatters', () => {
     expect(shortDate(value, 'de-DE')).not.toBe(shortDate(value, 'en-US'))
   })
 
+  it('writes dates in a calendar the caller passes', () => {
+    const value = '2026-08-22'
+    const date = new Date(2026, 7, 22)
+    expect(shortDate(value, 'en-US', 'persian')).toBe(
+      new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', calendar: 'persian' }).format(date),
+    )
+    expect(monthYear(value, 'en-US', 'persian')).toBe(
+      new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric', calendar: 'persian' }).format(date),
+    )
+    expect(shortDate(value, 'en-US', 'persian')).not.toBe(shortDate(value, 'en-US'))
+  })
+
   it('keeps Gregorian dates for locales that default to another calendar', () => {
     const value = '2026-08-22'
     const date = new Date(2026, 7, 22)

@@ -4,7 +4,7 @@ export const meta = {
   slug: 'use-table-selection-state',
   group: 'Utility',
   family: 'Table',
-  order: 146,
+  order: 147,
   en: 'useTableSelectionState',
   zh: 'useTableSelectionState',
 } satisfies DemoMeta

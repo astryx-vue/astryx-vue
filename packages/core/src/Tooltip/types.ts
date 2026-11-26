@@ -16,8 +16,8 @@ export interface TooltipProps {
   hideDelay?: number
   /**
    * 何时监听聚焦：
-   * - `auto`：仅当触发元素本身可聚焦时
-   * - `always`：始终监听
+   * - `auto`：焦点落在触发元素自己身上，或落在里面而触发元素此刻可聚焦时
+   * - `always`：里面任何焦点都算
    * - `never`：从不监听
    */
   focusTrigger?: TooltipFocusTrigger
@@ -32,7 +32,7 @@ export interface TooltipProps {
   isEnabled?: boolean
   /** 是否在纯文字触发元素上显示虚线下划线。 */
   hasHoverIndication?: 'auto' | boolean
-  /** 受控显示状态。未提供时由悬停与聚焦控制。 */
+  /** 受控显示状态。未提供时由悬停与聚焦控制；为 false 时本该打开的焦点只发出 `openChange(true)`，不显示。 */
   isOpen?: boolean
   /** 挂载时是否默认显示。 */
   isDefaultOpen?: boolean

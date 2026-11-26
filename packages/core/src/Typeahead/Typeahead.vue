@@ -18,6 +18,7 @@ const props = withDefaults(defineProps<TypeaheadProps<T>>(), {
   labelHidden: false,
   disabled: false,
   status: 'default',
+  statusVariant: 'attached',
   size: 'md',
   clearable: true,
   hasClear: true,
@@ -64,6 +65,12 @@ const fieldStatus = computed<FieldStatusInput | undefined>(() => {
   return { type: props.status, message: props.statusMessage }
 })
 
+/** 调用方的 aria-labelledby 接在字段自己的标签后面，不取代它。 */
+function labelledBy(fieldLabelId: string): string | undefined {
+  const external = attrs['aria-labelledby']
+  return typeof external === 'string' && external !== '' ? `${fieldLabelId} ${external}` : undefined
+}
+
 defineExpose({
   focus: () => base.value?.focus(),
   blur: () => base.value?.blur(),
@@ -84,12 +91,13 @@ defineExpose({
     :is-required="props.required"
     :is-optional="props.optional"
     :status="fieldStatus"
+    :status-variant="props.statusVariant"
     :width="props.width"
   >
     <template #default="field">
       <BaseTypeahead
         ref="base"
-        v-bind="parts.forwardedAttrs()"
+        v-bind="{ ...parts.forwardedAttrs(), ariaLabelledBy: labelledBy(field.labelId) }"
         :control-class="parts.controlClass()"
         :control-style="parts.controlStyle()"
         :model-value="props.modelValue"
@@ -101,6 +109,8 @@ defineExpose({
         :disabled="isDisabled"
         :disabled-reason="disabledMessage"
         :status="props.status"
+        :status-message="props.statusMessage"
+        :status-variant="props.statusVariant"
         :size="props.size"
         :clearable="showsClear"
         :debounce-ms="props.debounceMs"

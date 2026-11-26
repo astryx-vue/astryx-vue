@@ -6,10 +6,9 @@
  * @position Lab utility; computes a line diff (Myers) when the caller has two
  *   texts rather than a patch
  *
- * Shared leading and trailing lines are matched without a search. The minimal
- * search over the rest stops after MAX_EDIT_DISTANCE changed lines, so memory
- * stays bounded for any input; a middle that differs more than that is shown
- * as one replaced block rather than a minimal diff.
+ * The line diff itself is in editScript.ts: changes up to 10,000 lines are
+ * compared line by line in linear memory; a larger middle becomes one
+ * replaced block, marked with `isReplacedBlock` on its hunk.
  *
  * SYNC: When modified, update:
  * - /packages/lab/src/DiffViewer/createDiffFile.test.ts
@@ -21,6 +20,7 @@ import type {
   DiffViewerHunk,
   DiffViewerLine,
 } from './diffTypes.js'
+import { diffLines } from './editScript.js'
 
 export interface CreateDiffFileOptions {
   /** The original text. */
@@ -44,11 +44,6 @@ export interface CreateDiffFileOptions {
   contextLines?: number
 }
 
-type Op
-  = | { kind: 'context', a: number, b: number }
-    | { kind: 'removed', a: number }
-    | { kind: 'added', b: number }
-
 function splitLines(value: string): string[] {
   if (value === '') {
     return []
@@ -58,133 +53,6 @@ function splitLines(value: string): string[] {
     lines.pop()
   }
   return lines
-}
-
-/**
- * Most changed lines the minimal search explores before giving up. The trace
- * it keeps grows with the square of this, so the cap bounds memory to a few
- * megabytes; past it the changed middle is shown as one replaced block.
- */
-const MAX_EDIT_DISTANCE = 2000
-
-/**
- * Line edit script from `a` to `b`. Shared leading and trailing lines are
- * context without a search; the middle uses Myers' O(ND) shortest edit script,
- * or, when it needs more than MAX_EDIT_DISTANCE edits, removes the old middle
- * and adds the new one.
- */
-function diffLines(a: string[], b: string[]): Op[] {
-  let head = 0
-  while (head < a.length && head < b.length && a[head] === b[head]) {
-    head++
-  }
-  let tailA = a.length
-  let tailB = b.length
-  while (tailA > head && tailB > head && a[tailA - 1] === b[tailB - 1]) {
-    tailA--
-    tailB--
-  }
-
-  const ops: Op[] = []
-  for (let i = 0; i < head; i++) {
-    ops.push({ kind: 'context', a: i, b: i })
-  }
-  const middle = myers(a, b, head, tailA, tailB)
-  if (middle != null) {
-    // A loop, not a spread: one call argument per op overflows the stack on
-    // long inputs.
-    for (const op of middle) {
-      ops.push(op)
-    }
-  }
-  else {
-    for (let i = head; i < tailA; i++) {
-      ops.push({ kind: 'removed', a: i })
-    }
-    for (let j = head; j < tailB; j++) {
-      ops.push({ kind: 'added', b: j })
-    }
-  }
-  for (let i = 0; tailA + i < a.length; i++) {
-    ops.push({ kind: 'context', a: tailA + i, b: tailB + i })
-  }
-  return ops
-}
-
-/**
- * Myers' shortest edit script over `a[start, endA)` and `b[start, endB)`,
- * with absolute indexes in the ops; null when it needs more than
- * MAX_EDIT_DISTANCE edits.
- */
-function myers(
-  a: string[],
-  b: string[],
-  start: number,
-  endA: number,
-  endB: number,
-): Op[] | null {
-  const n = endA - start
-  const m = endB - start
-  const max = n + m
-  const offset = max + 1
-  const v = new Int32Array(2 * max + 3)
-  // trace[d] holds diagonals -d..d of v as it was before step d.
-  const trace: Int32Array[] = []
-
-  let done = false
-  for (let d = 0; d <= max && !done; d++) {
-    if (d > MAX_EDIT_DISTANCE) {
-      return null
-    }
-    trace.push(v.slice(offset - d, offset + d + 1))
-    for (let k = -d; k <= d; k += 2) {
-      let x
-        = k === -d || (k !== d && v[offset + k - 1] < v[offset + k + 1])
-          ? v[offset + k + 1]
-          : v[offset + k - 1] + 1
-      let y = x - k
-      while (x < n && y < m && a[start + x] === b[start + y]) {
-        x++
-        y++
-      }
-      v[offset + k] = x
-      if (x >= n && y >= m) {
-        done = true
-        break
-      }
-    }
-  }
-
-  const ops: Op[] = []
-  let x = n
-  let y = m
-  for (let d = trace.length - 1; d >= 0; d--) {
-    const vd = trace[d]
-    // Outside the stored window (only k = 1 at d = 0) v was still zero.
-    const at = (k: number): number => vd[k + d] ?? 0
-    const k = x - y
-    const prevK
-      = k === -d || (k !== d && at(k - 1) < at(k + 1)) ? k + 1 : k - 1
-    const prevX = at(prevK)
-    const prevY = prevX - prevK
-    while (x > prevX && y > prevY) {
-      x--
-      y--
-      ops.push({ kind: 'context', a: start + x, b: start + y })
-    }
-    if (d > 0) {
-      if (x === prevX) {
-        ops.push({ kind: 'added', b: start + prevY })
-      }
-      else {
-        ops.push({ kind: 'removed', a: start + prevX })
-      }
-    }
-    x = prevX
-    y = prevY
-  }
-  ops.reverse()
-  return ops
 }
 
 function formatRange(start: number, count: number): string {
@@ -228,7 +96,7 @@ export function createDiffFile({
 
   const a = splitLines(oldValue)
   const b = splitLines(newValue)
-  const ops = diffLines(a, b)
+  const { ops, isReplacedBlock } = diffLines(a, b)
 
   const changed: number[] = []
   ops.forEach((op, i) => {
@@ -307,6 +175,8 @@ export function createDiffFile({
       newStart,
       newLines: newCount,
       lines,
+      // 整块替换是唯一的改动，所以它占满唯一的一个片段。
+      ...(isReplacedBlock ? { isReplacedBlock: true } : {}),
     })
     g = h
   }

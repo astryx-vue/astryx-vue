@@ -4,7 +4,7 @@ export const meta = {
   slug: 'use-typeahead',
   group: 'Utility',
   family: 'Utilities',
-  order: 156,
+  order: 157,
   en: 'useTypeahead',
   zh: 'useTypeahead',
 } satisfies DemoMeta

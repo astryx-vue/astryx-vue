@@ -57,16 +57,18 @@ describe('组件自带的辅助文字跟着语言走', () => {
     }
   })
 
-  it('formatFileSize 不传单位时保持英文写法', () => {
+  it('formatFileSize 不传单位时用英文：字节不分组，KB、MB 保留一位小数', () => {
     expect(formatFileSize(1023)).toBe('1023 B')
-    expect(formatFileSize(2048)).toBe('2 KB')
+    expect(formatFileSize(2048)).toBe('2.0 KB')
+    expect(formatFileSize(1536)).toBe('1.5 KB')
     expect(formatFileSize(1.5 * 1024 * 1024)).toBe('1.5 MB')
+    expect(formatFileSize(2000 * 1024 * 1024)).toBe('2000.0 MB')
   })
 
   it('chat 粘贴文本小块上的计数', () => {
     expect(pastedTextLabel('hello')).toBe('5 chars')
     expect(pastedTextLabel('a\nb')).toBe('2 lines, 3 chars')
-    expect(pastedTextLabel(`${'a'.repeat(1499)}\n`)).toBe('2 lines, 1,500 chars')
+    expect(pastedTextLabel(`${'a'.repeat(1499)}\n`)).toBe('2 lines, 1500 chars')
     const wrapper = inLocale('zh-CN', ChatPastedTextToken, { text: 'a\nb' })
     expect(wrapper.text()).toContain('2 行，3 个字符')
   })

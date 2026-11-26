@@ -5,6 +5,7 @@ import type { BaseTypeaheadProps, TypeaheadEmits, TypeaheadSlots } from './types
 import { computed, inject, nextTick, onMounted, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
+import { useInputStatusIcon } from '../composables/useInputStatusIcon.js'
 import { useComponentMessages } from '../locale/context.js'
 import { typeaheadMessages } from '../locale/messages/typeahead.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
@@ -15,6 +16,7 @@ import { isImeKeyEvent } from '../utils/ime.js'
 import { typeaheadChromeKey } from './context.js'
 import TypeaheadMenu from './TypeaheadMenu.vue'
 import { scrollOptionIntoView, useAnchoredListbox } from './useAnchoredListbox.js'
+import { useTypeaheadAnnouncement } from './useTypeaheadAnnouncement.js'
 import { useTypeaheadMenu } from './useTypeaheadMenu.js'
 import '../../styles/typeahead.css'
 import '../../styles/visually-hidden-utility.css'
@@ -28,6 +30,7 @@ const props = withDefaults(defineProps<BaseTypeaheadProps<T>>(), {
   status: 'default',
   size: 'md',
   clearable: true,
+  statusVariant: 'attached',
   debounceMs: 150,
   maxMenuItems: 10,
   minQueryLength: 1,
@@ -62,6 +65,10 @@ const focusableDisabled = computed(() => Boolean(props.isFocusableDisabled) || (
 /** 有禁用原因时鼠标悬停或键盘聚焦都能读到它。 */
 const showsDisabledMessage = computed(() => Boolean(props.disabled) && Boolean(props.disabledReason?.trim()))
 const disabledTooltip = useButtonTooltip(showsDisabledMessage)
+const { statusIcon, statusIconProps } = useInputStatusIcon({
+  status: () => props.status !== 'default' && props.statusMessage ? { type: props.status, message: props.statusMessage } : undefined,
+  statusVariant: () => props.statusVariant,
+})
 
 function attrString(name: string): string | undefined {
   const value = attrs[name]
@@ -78,7 +85,7 @@ const tokenValueId = computed(() => `${inputId.value}-value`)
  * 有值时，值 Token 的按钮就是这个字段的 Tab 停点。它和输入框一样用字段标签
  * （再加上调用方的 aria-labelledby）命名，后面跟着值；说明也和输入框一样。
  */
-const tokenLabelledBy = computed(() => [props.labelId, labelledBy.value, tokenValueId.value].filter(Boolean).join(' '))
+const tokenLabelledBy = computed(() => [...new Set([props.labelId, ...(labelledBy.value?.split(' ') ?? []), tokenValueId.value])].filter(Boolean).join(' '))
 
 const describedBy = computed(() => {
   return [props.describedBy, externalDescribedBy.value, focusableDisabled.value ? disabledId.value : undefined]
@@ -112,6 +119,7 @@ const controlledAttrs = new Set([
   'aria-autocomplete',
   'aria-disabled',
   'aria-required',
+  'aria-invalid',
 ])
 
 function inputAttrs(): Record<string, unknown> {
@@ -135,6 +143,13 @@ const menu = useTypeaheadMenu<T>({
     emit('search', query)
     emit('changeQuery', query)
   },
+})
+
+useTypeaheadAnnouncement({
+  menu,
+  emptyText: () => emptyText.value,
+  emptySearchText: () => emptyText.value,
+  resultCount: count => messages.value.typeahead.resultCount(count),
 })
 
 /** 下拉挂靠外面给的元素；没给就挂在自己的外框上。 */
@@ -345,6 +360,7 @@ defineExpose({
         :aria-activedescendant="optionGrid.gridMode.value ? optionGrid.actionGrid.activeDescendant.value : (menu.activeId.value ? `${listboxId}-option-${menu.combobox.activeIndex.value}` : undefined)"
         :aria-describedby="describedBy"
         :aria-required="props.required || undefined"
+        :aria-invalid="props.status === 'error' ? true : undefined"
         @input="onInput"
         @focus="onFocus"
         @blur="onBlur"
@@ -362,6 +378,7 @@ defineExpose({
           <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
         </svg>
       </button>
+      <component :is="statusIcon" v-if="statusIcon" v-bind="statusIconProps" />
       <span v-if="focusableDisabled" :id="disabledId" class="astryx-visually-hidden">{{ props.disabledReason }}</span>
       <input v-if="props.name" type="hidden" :name="props.name" :value="selected?.id ?? ''">
     </div>

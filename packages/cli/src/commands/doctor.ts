@@ -1,21 +1,29 @@
 import type { CommandArgs, CommandOutput } from '../cli/context.ts'
+import type { Project, SourceFile } from '../project.ts'
 import { catalog, text } from '../catalog.ts'
 import { printJson } from '../cli/context.ts'
+import { buttonActionsCheck } from '../doctor-buttons.ts'
 import { successEnvelope } from '../envelope.ts'
 import { CliError } from '../error.ts'
 import { formatDoctorReport } from '../format-doctor.ts'
-import { compareVersions, findLines, readProject, readSourceFiles, versionOf } from '../project.ts'
+import { compareVersions, findLines, installAllCommands, isInstalledOnDisk, readProject, readSourceFiles, versionOf } from '../project.ts'
 import { CORE_PACKAGE } from '../spec.ts'
+import { starterInstallCommands, THEMES_PACKAGE } from '../starter-install.ts'
 
-export type DoctorStatus = 'ok' | 'warn' | 'fail'
+/** `info` reports a check that could not run, and never changes the overall status. */
+export type DoctorStatus = 'ok' | 'info' | 'warn' | 'fail'
 
 export interface DoctorCheck {
-  id: 'core-version' | 'themes-installed' | 'vue-version' | 'theme-stylesheet' | 'theme-attribute'
+  id: 'core-version' | 'themes-installed' | 'vue-version' | 'theme-stylesheet' | 'theme-attribute' | 'button-actions'
   status: DoctorStatus
   /** One line saying what was found. */
   detail: string
   /** Where the docs explain the fix, when a docs page does. */
   docsUrl?: string
+  /** Commands that fix it, in the project's package manager (every form when none is detected). */
+  commands?: string[]
+  /** What to change, when the fix is not a command. */
+  fix?: string
 }
 
 export interface DoctorReport {
@@ -42,6 +50,9 @@ export async function doctorCommand(args: CommandArgs): Promise<CommandOutput> {
   return { stdout, exitCode: report.status === 'fail' ? 1 : 0 }
 }
 
+/** The most source files doctor reads; at the limit it cannot tell where every component renders. */
+const SOURCE_FILE_LIMIT = 4000
+
 async function runChecks(args: CommandArgs): Promise<DoctorReport> {
   const project = await readProject(args.cwd)
   const locale = args.locale
@@ -52,17 +63,15 @@ async function runChecks(args: CommandArgs): Promise<DoctorReport> {
   const coreVersion = versionOf(coreRange)
   checks.push({
     id: 'core-version',
-    ...versionCheck(coreRange, coreVersion, latest, locale),
+    ...(await notOnDiskCheck(args.cwd, project, CORE_PACKAGE, locale)
+      ?? withInstall(versionCheck(coreRange, coreVersion, latest, locale), coreRange === undefined ? starterInstallCommands(project, [CORE_PACKAGE]) : undefined)),
     docsUrl: topicUrl('guide/installation', locale),
   })
 
-  const themesRange = project.dependencies['@astryx-vue/themes']
+  const themesRange = project.dependencies[THEMES_PACKAGE]
   checks.push({
     id: 'themes-installed',
-    status: themesRange ? 'ok' : 'fail',
-    detail: themesRange
-      ? (locale === 'zh' ? `已安装 @astryx-vue/themes（${themesRange}）。` : `@astryx-vue/themes is installed (${themesRange}).`)
-      : (locale === 'zh' ? '没有安装 @astryx-vue/themes，主题样式来自这个包。' : '@astryx-vue/themes is not installed, and the theme styles come from it.'),
+    ...(await notOnDiskCheck(args.cwd, project, THEMES_PACKAGE, locale) ?? themesCheck(project, themesRange, locale)),
     docsUrl: topicUrl('guide/installation', locale),
   })
 
@@ -74,7 +83,7 @@ async function runChecks(args: CommandArgs): Promise<DoctorReport> {
     docsUrl: topicUrl('guide/installation', locale),
   })
 
-  const files = await readSourceFiles(args.cwd)
+  const files = await readSourceFiles(args.cwd, { limit: SOURCE_FILE_LIMIT })
   const stylesheets = new Set<string>()
   for (const file of files) {
     for (const match of file.text.matchAll(/@astryx-vue\/themes\/[a-z0-9-]+\.css/g))
@@ -86,17 +95,58 @@ async function runChecks(args: CommandArgs): Promise<DoctorReport> {
     docsUrl: topicUrl('themes/index', locale) ?? topicUrl('guide/styling', locale),
   })
 
-  const attributeHits = files.flatMap(file => findLines(file, line => line.includes('data-astryx-theme')))
+  const attributeHits = files.flatMap(themeWiringLines)
   checks.push({
     id: 'theme-attribute',
     ...attributeCheck(attributeHits.slice(0, 3), locale),
     docsUrl: topicUrl('themes/index', locale),
   })
 
+  if (coreRange !== undefined)
+    checks.push(buttonActionsCheck(files, files.length >= SOURCE_FILE_LIMIT, locale))
+
   const status: DoctorStatus = checks.some(check => check.status === 'fail')
     ? 'fail'
     : checks.some(check => check.status === 'warn') ? 'warn' : 'ok'
   return { status, locale, checks }
+}
+
+type CheckResult = Pick<DoctorCheck, 'status' | 'detail' | 'commands'>
+
+function withInstall(result: CheckResult, commands: string[] | undefined): CheckResult {
+  return commands ? { ...result, commands } : result
+}
+
+/**
+ * A package package.json lists but no `node_modules` folder holds, as in a fresh
+ * clone. The fix is the project's own install, which keeps the versions the
+ * project lists; adding the package again would replace them.
+ */
+async function notOnDiskCheck(cwd: string, project: Project, name: string, locale: 'en' | 'zh'): Promise<CheckResult | null> {
+  const range = project.dependencies[name]
+  if (range === undefined || await isInstalledOnDisk(cwd, name) !== false)
+    return null
+  return {
+    status: 'fail',
+    detail: locale === 'zh'
+      ? `package.json 写了 ${name}（${range}），但还没装上，先安装项目的依赖。`
+      : `${name} is listed in package.json (${range}) but not installed yet. Install the project's dependencies.`,
+    commands: installAllCommands(project.packageManager),
+  }
+}
+
+function themesCheck(project: Project, range: string | undefined, locale: 'en' | 'zh'): CheckResult {
+  if (range !== undefined) {
+    return {
+      status: 'ok',
+      detail: locale === 'zh' ? `已安装 ${THEMES_PACKAGE}（${range}）。` : `${THEMES_PACKAGE} is installed (${range}).`,
+    }
+  }
+  return {
+    status: 'fail',
+    detail: locale === 'zh' ? `没有安装 ${THEMES_PACKAGE}，主题样式来自这个包。` : `${THEMES_PACKAGE} is not installed, and the theme styles come from it.`,
+    commands: starterInstallCommands(project, [THEMES_PACKAGE]),
+  }
 }
 
 function versionCheck(range: string | undefined, version: string | null, latest: string, locale: 'en' | 'zh'): { status: DoctorStatus, detail: string } {
@@ -176,8 +226,8 @@ function attributeCheck(hits: readonly { path: string, line: number }[], locale:
     return {
       status: 'warn',
       detail: locale === 'zh'
-        ? '没有找到 data-astryx-theme。Neutral 不用写也能用；换别的主题，或只给某个区块换主题，就要写这个属性。'
-        : 'No `data-astryx-theme` attribute was found. Neutral works without it; switching to another theme, or theming one subtree, needs it.',
+        ? '没有找到 data-astryx-theme，也没有用 Core 的 `<Theme>`。Neutral 不用写也能用；换别的主题，或只给某个区块换主题，就要写这个属性或用 `<Theme>`。'
+        : 'No `data-astryx-theme` attribute or Core `<Theme>` was found. Neutral works without them; switching to another theme, or theming one subtree, needs one.',
     }
   }
   const where = hits.map(hit => `${hit.path}:${hit.line}`).join(', ')
@@ -185,6 +235,22 @@ function attributeCheck(hits: readonly { path: string, line: number }[], locale:
     status: 'ok',
     detail: locale === 'zh' ? `找到设置主题的地方：${where}。` : `A theme is set at ${where}.`,
   }
+}
+
+/** An import of the `Theme` component from Core's root or its `Theme` subpath. */
+const THEME_COMPONENT_IMPORT = /import\s*\{[^}]*\bTheme\b[^}]*\}\s*from\s*['"]@astryx-vue\/core(?:\/Theme)?['"]/
+
+/**
+ * Lines that set a theme: the attribute written out, the attribute set from a
+ * script through `dataset.astryxTheme`, or a `<Theme>` from Core, whose
+ * outermost instance writes the attribute on the document root. The theme it
+ * receives may sit in a variable, so the tag itself is what counts.
+ */
+function themeWiringLines(file: SourceFile): { path: string, line: number }[] {
+  const rendersTheme = THEME_COMPONENT_IMPORT.test(file.text)
+  return findLines(file, line => line.includes('data-astryx-theme')
+    || line.includes('dataset.astryxTheme')
+    || (rendersTheme && /<Theme[\s>/]/.test(line)))
 }
 
 /** The docs URL of a topic the catalog carries, so a check points at the page that explains it. */

@@ -63,3 +63,5 @@ const file = createDiffFile({
 ```
 
 `parseUnifiedDiff` accepts `git diff`, `diff -u`, and bare hunks; unreadable input yields an empty array instead of throwing. `createDiffFile` computes a Myers line diff from two texts and returns the same `DiffViewerFile` shape. `contextLines` defaults to 3; pass `oldPath: null` or `newPath: null` to mark a file added or deleted.
+
+Changes of up to 10,000 lines are compared line by line, in memory that grows with the text rather than with the change. A change too large for that is marked with `isReplacedBlock` on its hunk: every old line is listed as removed and every new line as added. DiffViewer folds those lines behind a "Large change: N lines" row, where N counts the removed plus added lines, with a Show full diff button. A file with more than 2,000 other changed lines starts folded the same way, because every row costs render time; its line diff is still there when the reader opens it. A fold that would hide an annotated line starts open, so no review comment is hidden. Rows are plain DOM with no virtualization: collapse or window very large files.

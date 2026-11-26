@@ -55,7 +55,7 @@ The config is a `MaybeRefOrGetter`, so pass a getter or a ref to keep the plugin
         <td><code>getIsItemEnabled</code></td>
         <td><code>(item: T) =&gt; boolean</code></td>
         <td><code>() =&gt; true</code></td>
-        <td>Returns whether a row checkbox is interactive. Disabled rows keep their checkbox, rendered disabled, so the selection column stays aligned.</td>
+        <td>Returns whether a row checkbox is interactive. Disabled rows keep their checkbox, rendered disabled, so the selection column stays aligned. Unlike <code>getIsItemSelectable</code> (no checkbox at all), the row still shows that it could be selected; with <code>useTableSelectionState</code>, select-all leaves both kinds of row as they were.</td>
       </tr>
       <tr>
         <td><code>getRowLabel</code></td>

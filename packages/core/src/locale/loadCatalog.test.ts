@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url'
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import { defineComponent, h } from 'vue'
-import { formatIcu, icuArgumentKinds } from './icu.js'
+import { formatIcu, icuArgumentKinds, icuSelectOptions } from './icu.js'
 import { provideAstryxLocale, useAstryxLocale, useAstryxMessages, useCollator } from './index.js'
 import { loadAstryxCatalog } from './loadCatalog.js'
 import { astryxMessages } from './messages.js'
@@ -33,6 +33,19 @@ describe('icu', () => {
     expect(icuArgumentKinds('{count, number} {count, plural, one {# x} other {# xs}} {name}')).toEqual({
       count: ['number', 'plural'],
       name: ['argument'],
+    })
+  })
+
+  it('follows the grouping and fraction digits of a number skeleton', () => {
+    expect(formatIcu('{size, number, ::group-off} B', { size: 1234 }, 'en')).toBe('1234 B')
+    expect(formatIcu('{size, number, :: .0 group-off} KB', { size: 1234.56 }, 'en')).toBe('1234.6 KB')
+    expect(formatIcu('{size, number, :: .0 group-off} KB', { size: 2 }, 'de-DE')).toBe('2,0 KB')
+    expect(formatIcu('{size, number, ::.0#} MB', { size: 1.5 }, 'en')).toBe('1.5 MB')
+    expect(formatIcu('{size, number, ::.0#} MB', { size: 1.234 }, 'en')).toBe('1.23 MB')
+    expect(formatIcu('{size, number, ::percent} x', { size: 1234 }, 'en')).toBe('1,234 x')
+    expect(icuSelectOptions('{named, select, yes {A ({calendar})} other {A}} {bounds, select, min {a} max {b} other {c}}')).toEqual({
+      named: ['yes'],
+      bounds: ['min', 'max'],
     })
   })
 

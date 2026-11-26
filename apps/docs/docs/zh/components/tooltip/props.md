@@ -14,11 +14,11 @@ footer: false
 <tr><td><code>alignment</code></td><td><code>'start' | 'center' | 'end'</code></td><td><code>'center'</code></td><td>气泡沿位置方向的对齐方式：靠起始端、居中或靠末端。</td></tr>
 <tr><td><code>delay</code></td><td><code>number</code></td><td><code>200</code></td><td>悬停或聚焦后，提示显示前的等待时间（毫秒）。</td></tr>
 <tr><td><code>hideDelay</code></td><td><code>number</code></td><td><code>0</code></td><td>鼠标或焦点离开后，提示隐藏前的等待时间（毫秒）。为 0 时使用 100 毫秒，给鼠标移入气泡留出时间。</td></tr>
-<tr><td><code>focusTrigger</code></td><td><code>'auto' | 'always' | 'never'</code></td><td><code>'auto'</code></td><td>聚焦时是否显示提示：auto 仅在触发元素本身可聚焦时监听，always 始终监听，never 从不监听。</td></tr>
+<tr><td><code>focusTrigger</code></td><td><code>'auto' | 'always' | 'never'</code></td><td><code>'auto'</code></td><td>聚焦时是否显示提示：auto 在焦点到达时判断，焦点落在触发元素自己身上算，落在里面时要触发元素此刻可聚焦才算；always 里面任何焦点都算；never 从不算。鼠标按下之后挪到非文本触发器上的焦点不会打开提示。</td></tr>
 <tr><td><code>touchTrigger</code></td><td><code>'auto' | 'tap' | 'none'</code></td><td><code>'auto'</code></td><td>触摸设备上轻点触发元素时的行为：auto 时轻点切换提示，但按钮、链接和表单控件自身的轻点不触发，设置了 aria-disabled 的控件除外，轻点它会显示禁用原因；tap 总是切换；none 不打开。轻点打开的提示在外面轻点即关闭；从触发元素上开始的滚动不会打开提示。</td></tr>
 <tr><td><code>isEnabled</code></td><td><code>boolean</code></td><td><code>true</code></td><td>是否启用提示。为 false 时禁用悬停与聚焦触发。</td></tr>
 <tr><td><code>hasHoverIndication</code></td><td><code>'auto' | boolean</code></td><td><code>'auto'</code></td><td>是否在纯文字触发元素上显示虚线下划线。auto 时仅对纯文字触发元素生效。</td></tr>
-<tr><td><code>isOpen</code></td><td><code>boolean</code></td><td>—</td><td>受控显示状态。设置后悬停与聚焦不再触发提示。</td></tr>
+<tr><td><code>isOpen</code></td><td><code>boolean</code></td><td>—</td><td>受控显示状态。设置后悬停与聚焦不会改变它；为 false 时，本该打开提示的键盘焦点会发出 openChange(true)，但不显示。</td></tr>
 <tr><td><code>isDefaultOpen</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否在挂载时就显示提示。仅在未设置 isOpen 时生效。</td></tr>
 <tr><td><code>anchorsOnSelf</code></td><td><code>boolean</code></td><td><code>false</code></td><td>不再包一层 span，插槽的根元素自己当触发器。标题和段落必须这样用。</td></tr>
 <tr><td><code>anchor</code></td><td><code>HTMLElement | null</code></td><td>—</td><td>用外部元素当触发器。这时不渲染外层 span，默认插槽可以不写，悬停、聚焦和 <code>aria-describedby</code> 都挂到该元素上。</td></tr>

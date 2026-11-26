@@ -11,7 +11,7 @@ import { useTableFilterStateInline, useTableFilterStatePopover } from '../../../
 
 ## 使用方法
 
-管表格过滤状态。它交出当前的过滤映射、一个改值的处理函数，还有一个清空的办法。把映射和处理函数交给 `useTableFiltering`，把映射交给 `applyTableFilters()` 就能拿到匹配的行。
+管表格过滤状态。它交出 `filters`（当前的过滤映射）、`onFilterChange` 和 `clearAll`；`clearAll` 清空所有过滤，比如放在表格 `empty` 插槽里的「清除筛选」按钮上。把映射和处理函数交给 `useTableFiltering`，把映射交给 `applyTableFilters()` 就能拿到匹配的行。
 
 ```ts
 import { useTableFilterState } from '@astryx-vue/core/Table'

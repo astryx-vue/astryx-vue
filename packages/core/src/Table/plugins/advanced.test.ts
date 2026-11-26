@@ -9,7 +9,7 @@ import { useTableRowExpansion } from './rowExpansion.js'
 import { useTableRowIndex } from './rowIndex.js'
 import { useTableRowStatus } from './rowStatus.js'
 import { stickyOffsets, useTableStickyColumns } from './stickyColumns.js'
-import { flattenTree, useTableTreeState } from './tree.js'
+import { flattenTree, useTableTreeData, useTableTreeState } from './tree.js'
 
 interface Person extends Record<string, unknown> {
   id: string
@@ -102,11 +102,11 @@ describe('tree rows', () => {
     expect(tree.visibleData.value.map(row => row.name)).toEqual(['Other'])
   })
 
-  it('exposes the level on the row and expands every branch from the header', async () => {
+  it('follows the disclosure pattern: rows carry no tree ARIA, the expander controls its child rows', async () => {
     const nodes = [{
       id: 'root',
       name: 'Root',
-      children: [{ id: 'child', name: 'Child' }],
+      children: [{ id: 'child', name: 'Child' }, { id: 'child two', name: 'Second' }],
     }]
     const wrapper = mount({
       components: { Table },
@@ -120,12 +120,47 @@ describe('tree rows', () => {
       },
       template: '<Table :data="rows" :columns="columns" id-key="id" :plugins="{ tree: plugin }" />',
     })
-    expect(wrapper.get('tbody tr').attributes('aria-level')).toBe('1')
-    expect(wrapper.get('tbody tr').attributes('aria-expanded')).toBe('false')
+    const root = wrapper.get('tbody tr')
+    expect(root.attributes('aria-level')).toBeUndefined()
+    expect(root.attributes('aria-expanded')).toBeUndefined()
+    const expander = root.get('button')
+    expect(expander.attributes('aria-expanded')).toBe('false')
+    expect(expander.attributes('aria-controls')).toBeUndefined()
     expect(wrapper.text()).not.toContain('Child')
     await wrapper.get('thead button').trigger('click')
     expect(wrapper.text()).toContain('Child')
-    expect(wrapper.findAll('tbody tr')[1]?.attributes('aria-level')).toBe('2')
+    const rows = wrapper.findAll('tbody tr')
+    expect(rows[1]?.attributes('aria-level')).toBeUndefined()
+    const childIds = rows.slice(1).map(row => row.attributes('id'))
+    expect(childIds.every(id => id != null && id !== '')).toBe(true)
+    expect(new Set(childIds).size).toBe(2)
+    expect(root.get('button').attributes('aria-expanded')).toBe('true')
+    expect(root.get('button').attributes('aria-controls')).toBe(childIds.join(' '))
+  })
+
+  it('names the tree expander after its row when getRowLabel is given', async () => {
+    const nodes = [{ id: 'root', name: 'Root', children: [{ id: 'child', name: 'Child' }] }]
+    const wrapper = mount({
+      components: { Table },
+      setup() {
+        const expanded = ref<ReadonlySet<string>>(new Set())
+        const plugin = useTableTreeData<Record<string, unknown>>(() => ({
+          getRowMeta: item => item.id === 'root'
+            ? { id: 'root', level: 0, hasChildren: true, isExpanded: expanded.value.has('root') }
+            : undefined,
+          onToggleItem: () => {
+            expanded.value = new Set(expanded.value.has('root') ? [] : ['root'])
+          },
+          getRowLabel: item => String(item.name),
+          hasExpandableRows: true,
+        }))
+        return { rows: nodes, plugin, columns: [{ key: 'name', header: 'Name' }] }
+      },
+      template: '<Table :data="rows" :columns="columns" id-key="id" :plugins="{ tree: plugin }" />',
+    })
+    expect(wrapper.get('tbody tr button').attributes('aria-label')).toBe('Expand Root')
+    await wrapper.get('tbody tr button').trigger('click')
+    expect(wrapper.get('tbody tr button').attributes('aria-label')).toBe('Collapse Root')
   })
 })
 
