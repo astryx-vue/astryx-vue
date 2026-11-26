@@ -115,17 +115,21 @@ describe('mediaPlayer', () => {
     expect(playback.getCurrentTime()).toBe(5)
     expect(await readAnnouncement()).toBe(formatSpokenTime(5, 'en'))
 
+    // 每次播报写在下一帧，先读出来再按下一个键，免得几帧挤在一起。
     await press(element, 'l')
     expect(playback.getCurrentTime()).toBe(15)
+    expect(await readAnnouncement()).toBe(formatSpokenTime(15, 'en'))
 
     await press(element, '5')
     expect(playback.getCurrentTime()).toBe(60)
+    expect(await readAnnouncement()).toBe(formatSpokenTime(60, 'en'))
 
     await press(element, '>')
     expect(playback.getPlaybackRate()).toBe(1.25)
     expect(await readAnnouncement()).toBe('Speed 1.25×')
 
     await press(element, 'm')
+    expect(await readAnnouncement()).toBe('Unmuted')
     await press(element, 'ArrowDown')
     expect(playback.getVolume()).toBe(0.95)
     expect(await readAnnouncement()).toBe('Volume 95%')
