@@ -55,6 +55,7 @@ describe('doctor', () => {
         'vue-version:ok',
         'theme-stylesheet:ok',
         'theme-attribute:ok',
+        'button-actions:ok',
       ])
       expect(data.checks.every(check => check.detail.length > 0)).toBe(true)
     }
@@ -246,6 +247,36 @@ describe('doctor', () => {
       await rm(provider, { recursive: true, force: true })
       await rm(dataset, { recursive: true, force: true })
       await rm(unrelated, { recursive: true, force: true })
+    }
+  })
+
+  it('warns about a Core button that does nothing when pressed, without failing', async () => {
+    const cwd = await project({
+      'package.json': JSON.stringify({ name: 'demo', dependencies: { '@astryx-vue/core': `^${CORE_VERSION}`, '@astryx-vue/themes': `^${CORE_VERSION}`, 'vue': '^3.5.0' } }),
+      'src/main.ts': 'import \'@astryx-vue/themes/neutral.css\'\n',
+      'index.html': '<html data-astryx-theme="neutral"></html>\n',
+      'src/App.vue': '<script setup lang="ts">\nimport { Button } from \'@astryx-vue/core/Button\'\n</script>\n\n<template>\n  <Button label="Save" />\n  <Button label="Undo" @click="() => {}" />\n  <Button label="Open" @click="open" />\n</template>\n',
+      ...installed(...STARTERS),
+    })
+    try {
+      const { data, exitCode } = await report(cwd)
+      expect(exitCode).toBe(0)
+      const check = data.checks.find(candidate => candidate.id === 'button-actions') as { status: string, detail: string, fix?: string } | undefined
+      expect(check?.status).toBe('warn')
+      expect(check?.detail).toBe('2 buttons do nothing when pressed: src/App.vue:6 "Save", src/App.vue:7 "Undo" (empty handler).')
+      expect(check?.fix).toContain('is-disabled')
+
+      const text = await runCli(['doctor', '--zh'], { cwd })
+      expect(text.stdout).toContain('2 个按钮按下后什么都不做：src/App.vue:6 "Save"，src/App.vue:7 "Undo"（处理函数是空的）')
+      expect(text.stdout).toContain('怎么改:')
+
+      await writeFile(join(cwd, 'src/keys.ts'), 'window.addEventListener(\'click\', track)\n')
+      const skipped = (await report(cwd)).data.checks.find(candidate => candidate.id === 'button-actions')
+      expect(skipped).toMatchObject({ status: 'info' })
+      expect(skipped?.detail).toContain('src/keys.ts:1')
+    }
+    finally {
+      await rm(cwd, { recursive: true, force: true })
     }
   })
 

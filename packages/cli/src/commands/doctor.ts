@@ -2,6 +2,7 @@ import type { CommandArgs, CommandOutput } from '../cli/context.ts'
 import type { Project, SourceFile } from '../project.ts'
 import { catalog, text } from '../catalog.ts'
 import { printJson } from '../cli/context.ts'
+import { buttonActionsCheck } from '../doctor-buttons.ts'
 import { successEnvelope } from '../envelope.ts'
 import { CliError } from '../error.ts'
 import { formatDoctorReport } from '../format-doctor.ts'
@@ -9,10 +10,11 @@ import { compareVersions, findLines, installAllCommands, isInstalledOnDisk, read
 import { CORE_PACKAGE } from '../spec.ts'
 import { starterInstallCommands, THEMES_PACKAGE } from '../starter-install.ts'
 
-export type DoctorStatus = 'ok' | 'warn' | 'fail'
+/** `info` reports a check that could not run, and never changes the overall status. */
+export type DoctorStatus = 'ok' | 'info' | 'warn' | 'fail'
 
 export interface DoctorCheck {
-  id: 'core-version' | 'themes-installed' | 'vue-version' | 'theme-stylesheet' | 'theme-attribute'
+  id: 'core-version' | 'themes-installed' | 'vue-version' | 'theme-stylesheet' | 'theme-attribute' | 'button-actions'
   status: DoctorStatus
   /** One line saying what was found. */
   detail: string
@@ -20,6 +22,8 @@ export interface DoctorCheck {
   docsUrl?: string
   /** Commands that fix it, in the project's package manager (every form when none is detected). */
   commands?: string[]
+  /** What to change, when the fix is not a command. */
+  fix?: string
 }
 
 export interface DoctorReport {
@@ -45,6 +49,9 @@ export async function doctorCommand(args: CommandArgs): Promise<CommandOutput> {
   // script can branch on the exit code.
   return { stdout, exitCode: report.status === 'fail' ? 1 : 0 }
 }
+
+/** The most source files doctor reads; at the limit it cannot tell where every component renders. */
+const SOURCE_FILE_LIMIT = 4000
 
 async function runChecks(args: CommandArgs): Promise<DoctorReport> {
   const project = await readProject(args.cwd)
@@ -76,7 +83,7 @@ async function runChecks(args: CommandArgs): Promise<DoctorReport> {
     docsUrl: topicUrl('guide/installation', locale),
   })
 
-  const files = await readSourceFiles(args.cwd)
+  const files = await readSourceFiles(args.cwd, { limit: SOURCE_FILE_LIMIT })
   const stylesheets = new Set<string>()
   for (const file of files) {
     for (const match of file.text.matchAll(/@astryx-vue\/themes\/[a-z0-9-]+\.css/g))
@@ -94,6 +101,9 @@ async function runChecks(args: CommandArgs): Promise<DoctorReport> {
     ...attributeCheck(attributeHits.slice(0, 3), locale),
     docsUrl: topicUrl('themes/index', locale),
   })
+
+  if (coreRange !== undefined)
+    checks.push(buttonActionsCheck(files, files.length >= SOURCE_FILE_LIMIT, locale))
 
   const status: DoctorStatus = checks.some(check => check.status === 'fail')
     ? 'fail'
