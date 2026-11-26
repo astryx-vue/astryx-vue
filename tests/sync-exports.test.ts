@@ -262,8 +262,13 @@ const expectedCatalog = [
   { slug: 'use-snap-paging', group: 'Utility', family: 'Utilities', en: 'useSnapPaging', zh: 'useSnapPaging' },
   { slug: 'use-locale-direction', group: 'Utility', family: 'Utilities', en: 'useLocaleDirection', zh: 'useLocaleDirection' },
   { slug: 'use-lightbox', group: 'Utility', family: 'Utilities', en: 'useLightbox', zh: 'useLightbox' },
+  { slug: 'use-table-sortable-state', group: 'Utility', family: 'Table', en: 'useTableSortableState', zh: 'useTableSortableState' },
   { slug: 'use-table-rows-virtualization', group: 'Utility', family: 'Table', en: 'useTableRowsVirtualization', zh: 'useTableRowsVirtualization' },
   { slug: 'use-table-columns-virtualization', group: 'Utility', family: 'Table', en: 'useTableColumnsVirtualization', zh: 'useTableColumnsVirtualization' },
+  { slug: 'use-outline-from-markdown', group: 'Utility', family: 'Utilities', en: 'useOutlineFromMarkdown', zh: 'useOutlineFromMarkdown' },
+  { slug: 'use-power-search-config', group: 'Utility', family: 'Utilities', en: 'usePowerSearchConfig', zh: 'usePowerSearchConfig' },
+  { slug: 'use-truncation', group: 'Utility', family: 'Utilities', en: 'useTruncation', zh: 'useTruncation' },
+  { slug: 'use-combobox', group: 'Utility', family: 'Utilities', en: 'useCombobox', zh: 'useCombobox' },
 ]
 
 describe('component catalog meta', () => {
