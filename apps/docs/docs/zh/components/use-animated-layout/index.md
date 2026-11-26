@@ -40,7 +40,7 @@ const animatedLayout = useAnimatedLayout({ containerRef: panel })
 
 组件尺寸一变，它在容器里后面的内容都按主题的「移动」时长和曲线一起滑到新位置；展开出来的内容从边缘滑入，收起的内容先滑出、让出空间，再消失。展开箭头也按同样的节奏转动。
 
-现在接受句柄的组件有 `Collapsible` 和 `TreeList`。
+现在接受句柄的有 `Collapsible`、`TreeList`，以及 `useTableRowExpansion` 的 `animatedLayout` 配置。
 
 - 只有容器里、排在变化组件后面的内容会动。容器外的内容直接落到新位置。
 - 固定定位和吸顶（sticky 吸住时）的元素不动，滑动也不会滚动容器。

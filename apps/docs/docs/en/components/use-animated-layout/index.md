@@ -40,7 +40,7 @@ const animatedLayout = useAnimatedLayout({ containerRef: panel })
 
 When the component's size changes, the content after it in the container glides to its new place together, on the theme's move duration and curve. Revealed content slides in from its edge; hidden content slides out and gives up its space before it goes. The disclosure chevron turns on the same timing.
 
-`Collapsible` and `TreeList` take the handle today.
+`Collapsible`, `TreeList`, and the `animatedLayout` option of `useTableRowExpansion` take the handle today.
 
 - Only the content after the changed component, inside the container, moves. Content outside the container lands at once.
 - Fixed elements and stuck sticky elements stay put, and the glide never scrolls the container.

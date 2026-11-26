@@ -34,7 +34,7 @@ footer: false
       <tr>
         <td><code>AnimatedLayout</code></td>
         <td><code>AnimatedLayout</code></td>
-        <td>An opaque handle with no public members. Pass it to the <code>animatedLayout</code> prop of <code>Collapsible</code> or <code>TreeList</code>.</td>
+        <td>An opaque handle with no public members. Pass it to the <code>animatedLayout</code> prop of <code>Collapsible</code> or <code>TreeList</code>, or to the <code>animatedLayout</code> option of <code>useTableRowExpansion</code>.</td>
       </tr>
     </tbody>
   </table>

@@ -148,6 +148,7 @@ footer: false
       <tr><td><code>getIsItemExpandable</code></td><td><code>(item: T) =&gt; boolean</code></td><td>every row</td><td>Which rows can open.</td></tr>
       <tr><td><code>panelVariant</code></td><td><code>'muted' | 'transparent'</code></td><td><code>transparent</code></td><td>Panel surface. Transparent continues the table surface. Muted separates the detail from the data.</td></tr>
       <tr><td><code>hasRowClickExpansion</code></td><td><code>boolean</code></td><td><code>false</code></td><td>A row click toggles the panel. Clicks on controls or a text selection do not.</td></tr>
+      <tr><td><code>animatedLayout</code></td><td><code>AnimatedLayout | null</code></td><td>—</td><td>The handle from <code>useAnimatedLayout</code>. Rows below a panel glide instead of jumping as it opens or closes.</td></tr>
     </tbody>
   </table>
 </div>
