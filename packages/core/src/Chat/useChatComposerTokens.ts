@@ -1,7 +1,7 @@
 import type { Ref } from 'vue'
 import type { ChatComposerToken } from './types.js'
 import { ref } from 'vue'
-import { ensureCaretInside, insertTextAtCursor } from './selection.js'
+import { ensureCaretInside, insertTextAtCursor, placeCaretAfterRemovedToken } from './selection.js'
 
 export interface TokenPortal {
   id: string
@@ -73,7 +73,7 @@ export function useChatComposerTokens(options: UseChatComposerTokensOptions): Us
     span.after(space)
 
     const next = document.createRange()
-    next.setStartAfter(space)
+    next.setStart(space, space.length)
     next.collapse(true)
     selection.removeAllRanges()
     selection.addRange(next)
@@ -99,9 +99,13 @@ export function useChatComposerTokens(options: UseChatComposerTokensOptions): Us
       return false
     if (startContainer.textContent === TRAILING_SPACE && startOffset <= 1) {
       event.preventDefault()
+      const before = previous.previousSibling
+      const after = startContainer.nextSibling
       const parent = startContainer.parentNode
       parent?.removeChild(startContainer)
       parent?.removeChild(previous)
+      if (parent instanceof HTMLElement)
+        placeCaretAfterRemovedToken(parent, before, after)
       options.onEmitChange()
       return true
     }
@@ -123,7 +127,7 @@ export function useChatComposerTokens(options: UseChatComposerTokensOptions): Us
     const space = token.nextSibling
     const next = document.createRange()
     if (space && space.nodeType === Node.TEXT_NODE)
-      next.setStartAfter(space)
+      next.setStart(space, space.nodeValue?.length ?? 0)
     else
       next.setStartAfter(token)
     next.collapse(true)
@@ -149,7 +153,7 @@ export function useChatComposerTokens(options: UseChatComposerTokensOptions): Us
     const selection = window.getSelection()
     if (selection) {
       const range = document.createRange()
-      range.setStartAfter(textNode)
+      range.setStart(textNode, textNode.length)
       range.collapse(true)
       selection.removeAllRanges()
       selection.addRange(range)

@@ -14,6 +14,8 @@ import '../../styles/chat.css'
 const props = defineProps<{
   open: boolean
   anchor: HTMLElement | null
+  /** 输入框本身：里面的按压不算点在菜单外面。 */
+  editor?: HTMLElement | null
   listboxId: string
   label: string
   items: SearchableItem[]
@@ -39,6 +41,9 @@ watch(() => props.anchor, (value) => {
   anchorWritable.value = value
 }, { immediate: true })
 
+// 触发器是输入框而不是光标处的锚点：点进编辑区不该把打开的菜单关掉。
+const editorTrigger = computed(() => props.editor ?? anchorWritable.value)
+
 const { position } = usePositionedLayer({
   anchor: anchorWritable,
   layer: surfaceRef,
@@ -50,7 +55,7 @@ const { position } = usePositionedLayer({
 
 useDismiss({
   container: surfaceRef,
-  trigger: anchorWritable,
+  trigger: editorTrigger,
   isEnabled: open,
   dismissOnEscape: 'ignore',
   onDismiss: () => emit('dismiss'),
@@ -126,7 +131,7 @@ function onSelect(item: SearchableItem, event: MouseEvent): void {
         role="listbox"
         :aria-label="label"
       >
-        <div v-if="loading" class="astryx-chat-trigger__status" role="status">
+        <div v-if="loading" class="astryx-chat-trigger__status">
           {{ loadingText }}
         </div>
         <div v-else-if="items.length === 0 && empty !== ''" class="astryx-chat-trigger__status">

@@ -24,3 +24,17 @@ export function wasPropPassed(name: string): boolean {
   const kebab = name.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`)
   return Object.hasOwn(props, kebab)
 }
+
+/**
+ * Like {@link wasPropPassed}, but read again on every call, so a prop the parent
+ * only starts passing after setup still counts. Call `propPassedChecker` during
+ * setup and the returned function anywhere afterwards.
+ */
+export function propPassedChecker(name: string): () => boolean {
+  const instance = getCurrentInstance()
+  const kebab = name.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`)
+  return () => {
+    const props = instance?.vnode.props
+    return props != null && (Object.hasOwn(props, name) || Object.hasOwn(props, kebab))
+  }
+}

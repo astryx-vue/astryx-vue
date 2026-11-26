@@ -16,6 +16,8 @@ export interface AnnounceRenderedTextOptions {
   skipFirstRender?: boolean
   /** @default 'polite' */
   politeness?: MaybeRefOrGetter<AnnouncePoliteness>
+  /** 同样的文字换了这个键，算新的一次播报（例如状态类型变了）。 */
+  key?: MaybeRefOrGetter<string>
   /** 元素里没有可读文字时播报的名字。 */
   fallbackText?: MaybeRefOrGetter<string | undefined>
 }
@@ -65,9 +67,10 @@ export function useAnnounceRenderedText(
       lastText = null
       return
     }
-    if (text === lastText)
+    const occasion = `${toValue(options.key) ?? ''}\0${text}`
+    if (occasion === lastText)
       return
-    lastText = text
+    lastText = occasion
     announce(text, toValue(options.politeness) ?? 'polite', { within: element })
   }
 
