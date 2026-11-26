@@ -150,8 +150,8 @@ describe('timeInput 留下被拒的时间并说明原因', () => {
         'presentation': 'text-input',
         'hourFormat': '24h',
         'modelValue': value.value,
-        'onUpdate:modelValue': (next: string | null) => {
-          value.value = next
+        'onUpdate:modelValue': (next: unknown) => {
+          value.value = next as string | null
         },
       }),
     })
