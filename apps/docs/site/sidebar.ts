@@ -112,6 +112,7 @@ export function labSidebar(english: boolean): Sidebar {
         item('InfoTip', `${prefix}/lab/info-tip`),
         item('LineClamp', `${prefix}/lab/line-clamp`),
         item('LogStream', `${prefix}/lab/log-stream`),
+        item('MediaPlayer', `${prefix}/lab/media-player`),
         item('Stat', `${prefix}/lab/stat`),
         item('SVGIcon', `${prefix}/lab/svg-icon`),
         item('EmojiPicker', `${prefix}/lab/emoji-picker`),

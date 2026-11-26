@@ -5,7 +5,7 @@ export const UNPORTED_NAMESPACES = {
   chart: 'F2b 图表组件（packages/charts）',
   chartLegend: 'F2b 图表组件（packages/charts）',
   diffViewer: 'F3h lab 代码类',
-  mediaPlayer: 'lab 媒体播放器还没有 Vue 版',
+  mediaPlayer: 'lab 媒体播放器的文案内置在 lab 里，core 的 AstryxMessages 还没有这个命名空间',
   tabBar: 'lab 底部 TabBar 还没有 Vue 版',
   navigationStack: 'lab NavigationStack 还没有 Vue 版',
   searchField: 'lab SearchField 还没有 Vue 版',

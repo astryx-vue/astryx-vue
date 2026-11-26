@@ -52,6 +52,7 @@ import '@astryx-vue/lab/lab.css'
 | [InfoTip](/lab/info-tip) | 为术语和指标提供补充解释。 |
 | [LineClamp](/lab/line-clamp) | 把任意内容截成固定行数，截断时用提示显示全文。 |
 | [LogStream](/lab/log-stream) | 展示可展开、可跟随的日志流。 |
+| [MediaPlayer](/lab/media-player) | 用播放、时间轴、音量等控件拼出自己的视频或音频播放器。 |
 | [Stat](/lab/stat) | 展示关键指标及趋势。 |
 | [SVGIcon](/lab/svg-icon) | 按路径角色渲染多变体 SVG 图标。 |
 | [EmojiPicker](/lab/emoji-picker) | 按分组搜索全部表情并选中，可内嵌或放进弹出层。 |
