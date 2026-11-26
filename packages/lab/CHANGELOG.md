@@ -1,5 +1,16 @@
 # @astryx-vue/lab
 
+## 0.9.0
+
+### Minor Changes
+
+- [#585](https://github.com/astryx-vue/astryx-vue/pull/585) [`b4c1246`](https://github.com/astryx-vue/astryx-vue/commit/b4c124601db95576e89bd372cb3a35f0f30bbe57) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `InternationalizationProvider` 新增 `calendar`，可以选波斯历、希伯来历、伊斯兰历、佛历、和历、农历等历法：`Calendar` 按这个历法排月份、翻月和写日期（也可以用组件自己的 `calendar` 属性），`Timestamp`、`PowerSearch` 和实验室的 `Schedule` 按它写日期，`useLocale()` 返回当前的 `calendar`；值始终是公历日期，不设时仍是公历。`fa-IR`、`th-TH` 等默认历法不是公历的语言下，公历日历的标题和读屏名字不再混进别的历法。
+
+### Patch Changes
+
+- Updated dependencies [[`b4c1246`](https://github.com/astryx-vue/astryx-vue/commit/b4c124601db95576e89bd372cb3a35f0f30bbe57), [`cb9b686`](https://github.com/astryx-vue/astryx-vue/commit/cb9b686abf974dc69c59b61072cc77aa4008cb75), [`09ce82c`](https://github.com/astryx-vue/astryx-vue/commit/09ce82c05935e677b00f8c301e877ce7817fa930), [`e54c2eb`](https://github.com/astryx-vue/astryx-vue/commit/e54c2ebe572c5fb88343175f9f0c67c56999d197)]:
+  - @astryx-vue/core@0.23.0
+
 ## 0.8.7
 
 ### Patch Changes

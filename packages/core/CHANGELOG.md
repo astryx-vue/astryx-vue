@@ -1,5 +1,17 @@
 # @astryx-vue/core
 
+## 0.23.0
+
+### Minor Changes
+
+- [#585](https://github.com/astryx-vue/astryx-vue/pull/585) [`b4c1246`](https://github.com/astryx-vue/astryx-vue/commit/b4c124601db95576e89bd372cb3a35f0f30bbe57) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `InternationalizationProvider` 新增 `calendar`，可以选波斯历、希伯来历、伊斯兰历、佛历、和历、农历等历法：`Calendar` 按这个历法排月份、翻月和写日期（也可以用组件自己的 `calendar` 属性），`Timestamp`、`PowerSearch` 和实验室的 `Schedule` 按它写日期，`useLocale()` 返回当前的 `calendar`；值始终是公历日期，不设时仍是公历。`fa-IR`、`th-TH` 等默认历法不是公历的语言下，公历日历的标题和读屏名字不再混进别的历法。
+
+- [#586](https://github.com/astryx-vue/astryx-vue/pull/586) [`cb9b686`](https://github.com/astryx-vue/astryx-vue/commit/cb9b686abf974dc69c59b61072cc77aa4008cb75) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `DateInput`、`DateTimeInput`、`DateRangeInput` 新增 `calendar` 并跟随 provider 的历法：按这个历法显示、打字和选择日期，非公历的空字段聚焦时给出示例日期，系统日期控件在非公历下换成 Astryx 的选择器；值始终是公历日期，公历下的行为不变。
+
+- [#588](https://github.com/astryx-vue/astryx-vue/pull/588) [`09ce82c`](https://github.com/astryx-vue/astryx-vue/commit/09ce82c05935e677b00f8c301e877ce7817fa930) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增公开组合式函数 `useCalendarDays`、`useCalendarNavigation`、`useCalendarConstraints`，可以自己拼月历：排月格子、翻月和判断日期能不能选，前两个可以传 `calendar` 按非公历历法排。
+
+- [#587](https://github.com/astryx-vue/astryx-vue/pull/587) [`e54c2eb`](https://github.com/astryx-vue/astryx-vue/commit/e54c2ebe572c5fb88343175f9f0c67c56999d197) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 布局类组件一批对齐：AppShell 新增 `mobileNav.defaultIsMobile`（服务端直接渲染手机布局），读到窗口前侧栏和抬起背板的圆角在手机宽度先收起，宽度断点跟主题的宽度点走，第二个 AppShell 拿自己的主区域 id，AppShell 作为布局根不再吃外层 Layout、Card、Section 传下来的内边距、容器和分隔线默认值，页头和内容末尾避开设备安全区；Collapsible 收起时内容里的焦点移回触发按钮；LayoutPanel 和 ResizeHandle 的 `resizable` 可直接传 `useResizable()` 的返回值，区域收起时面板内焦点移到分隔条且面板 inert，宽度为 0 的面板不占位也不露出子元素；ResizeHandle 的抓取区始终居中在分隔条上，握把自己接管拖动，悬停才显示的握把能从抓取区够到，分隔条只处理方向键、Home、End、Enter，带 Alt、Ctrl、Meta 的组合放行；拖动中卸载时补写已拖到的尺寸；Layout 没设 `contentWidth` 时不再限制页头页脚宽度，页头页脚无分隔线时只收拢自己 Layout 的内容内边距，内容和侧面板发布的容器内边距与实际边距一致；Grid 的 `align`、`justify` 不设置时交给浏览器默认值；带中间区的 Toolbar 在大字号下换行而不重叠；ScrollableArea 触屏保留平台滚动指示条；AspectRatio 的 `fit` 子元素尺寸挪到 base 层，Tailwind 等后面的层能覆盖；SelectableCard 文档改为只推荐多选；CLI 搜索不再把「splitview」当作 useResizable 的别名。
+
 ## 0.22.0
 
 ### Minor Changes
