@@ -1,6 +1,6 @@
 /**
  * worktree 工具用到的 git 和子进程操作。所有命令都同步执行，失败时抛出带输出的 Error。
- * 子进程环境里去掉 NODE_ENV，和 CI 一致（见 SWARM.md「跑检查时的环境」）。
+ * 子进程环境里去掉 NODE_ENV，和 CI 跑检查时的环境一致。
  */
 import { spawnSync } from 'node:child_process'
 import { existsSync, realpathSync } from 'node:fs'
