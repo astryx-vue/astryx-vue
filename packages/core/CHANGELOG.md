@@ -1,5 +1,15 @@
 # @astryx-vue/core
 
+## 0.17.0
+
+### Minor Changes
+
+- [#568](https://github.com/astryx-vue/astryx-vue/pull/568) [`a9ae1a0`](https://github.com/astryx-vue/astryx-vue/commit/a9ae1a0767b1781ec2af2333b0fc50f07f218b56) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增主题 `motion.tempo` / `motion.character` 旋钮，以及公开的 `createAnimator`、`useAnimator` 弹簧动画器。
+
+- [#569](https://github.com/astryx-vue/astryx-vue/pull/569) [`b272df5`](https://github.com/astryx-vue/astryx-vue/commit/b272df56af84a0ad60f9044a3c582221e7f4c52b) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 对齐上游 Selector 系列的无障碍和交互：Selector 的触发器接上调用方的 `aria-labelledby`（带搜索时名字末尾带上所选的值），列表由字段标签命名，必填的带搜索 Selector 把 `aria-required` 放到搜索框上；选中后焦点回到触发器，列表开着时被禁用就不再改值，选项变了高亮跟着原来的选项走；AltGr 键入的字母也能按字母跳转；选项带 `highlighted`、`selected`、`disabled` 主题状态；幽灵和次要样式的触发器有键盘焦点环；缺少 `options` 时开发期报明确的错误；ComplexSelector 的忙碌图标对读屏隐藏并只念一次「加载中」。`useCombobox` 新增 `getFieldProps`、`getListboxProps`、`getOptionProps` 和 `getItemId`，给自己渲染的输入框接组合框。
+
+- [#570](https://github.com/astryx-vue/astryx-vue/pull/570) [`815fd22`](https://github.com/astryx-vue/astryx-vue/commit/815fd22cd455f3bf03ecfee74ee1d5260c925c4f) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 对齐上游 Typeahead、Tokenizer 的菜单和状态：新增 `menu` 属性（结果列表周围放信息的 `listbox` 角色，或会拿走焦点的 `dialog` 角色）、`menu` 插槽和 `open()`、`close()` 方法；搜索源的 `search` 第三个参数 `context.update(items)` 可以先显示本地匹配、再追加服务端结果；禁用的字段仍是 Tab 停点，列表残留时也不能再选；搜索忙碌时由输入框念一次「加载中」，防抖里的新输入不再带着上一个查询的「没有结果」；聚焦清单为空或加载失败时收起；选中后把清空的查询报给 `changeQuery`；编辑已选值时 `Escape` 先收起列表，值标签上按退格或删除会清掉值并念出来；搜索框请求触屏键盘的 Search 键且不自动纠正；`startIcon` 可以直接写语义图标名。
+
 ## 0.16.5
 
 ### Patch Changes

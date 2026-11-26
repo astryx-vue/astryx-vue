@@ -18,9 +18,10 @@ footer: false
 <tr><td><code>ariaLabelledBy</code></td><td><code>string</code></td><td>—</td><td>专给输入框用的 <code>aria-labelledby</code> 别名。写了它就以它为准。</td></tr>
 <tr><td><code>anchorRef</code></td><td><code>HTMLElement | null</code></td><td>—</td><td>下拉挂靠的元素，也用它来量宽度。不传就用输入框自己那层。</td></tr>
 <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>Search…</code></td><td>占位文字，还没选东西时显示。</td></tr>
-<tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>禁用输入框。</td></tr>
+<tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>禁用输入框。禁用的输入框仍是 Tab 停点：它带 <code>aria-disabled</code> 且只读，不开列表也不选，列表在禁用前就开着也一样；<code>Escape</code> 或 <code>Tab</code> 仍能把它关掉。</td></tr>
 <tr><td><code>disabledReason</code></td><td><code>string</code></td><td>—</td><td>为什么禁用。悬停或键盘聚焦时弹出提示，同时当说明念出来，输入框保持可聚焦。</td></tr>
-<tr><td><code>isFocusableDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>强制让禁用的输入框还能聚焦（用 <code>aria-disabled</code> 加 <code>readonly</code>），这样调用方给的禁用原因读得到。文字还是打不进去。</td></tr>
+<tr><td><code>isFocusableDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>强制让禁用的输入框还能聚焦（用 <code>aria-disabled</code> 加 <code>readonly</code>），这样调用方给的禁用原因读得到。禁用的输入框总是可聚焦。文字还是打不进去。</td></tr>
+<tr><td><code>menu</code></td><td><code>{ role: 'listbox' } | { role: 'dialog', label: string }</code></td><td><code>{ role: 'listbox' }</code></td><td>菜单里放什么，和 <code>Typeahead</code> 一样：结果列表（<code>menu</code> 插槽可以在周围放信息），或会拿走焦点、只能通过 <code>open()</code> 打开的内容。模板 ref 暴露 <code>open()</code> 和 <code>close()</code>。</td></tr>
 <tr><td><code>status</code></td><td><code>'default' | 'success' | 'warning' | 'error'</code></td><td><code>'default'</code></td><td>输入框边框的校验色。提示文案由调用方的字段自己负责。</td></tr>
 <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>输入框和下拉每一行的大小。</td></tr>
 <tr><td><code>clearable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>显示清除按钮。</td></tr>
@@ -52,3 +53,4 @@ footer: false
 - `icon`：输入框开头的图案。这层对读屏是隐藏的。
 - `item`：换掉默认那一行，会收到 `item`、`isActive` 和 `isSelected`。负责高亮、选中、指针和键盘的外壳还在。
 - `empty`：换掉「没有结果」的内容。
+- `menu`：菜单内容。`listbox` 菜单收到 `listbox`、`query`、`isBusy`、`isEmptySearch` 和 `close`，用 `<component :is="listbox" />` 渲染一次列表，信息放在它周围；`dialog` 菜单收到 `query` 和 `close`，插槽就是全部内容。

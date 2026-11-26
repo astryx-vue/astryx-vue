@@ -116,7 +116,9 @@ describe('typeahead-popup and the link hover color', () => {
 
   it('typeahead-popup is on the result popup', () => {
     const source = readFileSync(resolve(core, 'src/Typeahead/BaseTypeahead.vue'), 'utf8')
-    expect(source).toMatch(/class="astryx-typeahead-listbox astryx-typeahead-popup/)
+    const popup = readFileSync(resolve(core, 'src/Typeahead/TypeaheadPopup.vue'), 'utf8')
+    expect(source).toContain('popup-class="astryx-typeahead-popup"')
+    expect(popup).toContain(':class="popupClass"')
   })
 
   it('an accent link takes --link-hover-color on hover', () => {

@@ -91,6 +91,7 @@ export const formsUpstreamMap: UpstreamMapPart = {
     { path: 'tokenizer.loading' },
   ],
   '@astryx.typeahead.clearSelection': [{ path: 'typeahead.clear' }],
+  '@astryx.typeahead.selectionCleared': [{ path: 'typeahead.selectionCleared', args: ['label'] }],
   '@astryx.typeahead.resultCount': [
     { path: 'typeahead.resultCount', args: ['count'] },
     { path: 'tokenizer.resultCount', args: ['count'] },

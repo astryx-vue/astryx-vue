@@ -18,7 +18,7 @@ footer: false
       <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>Tooltip text on an info icon next to the label.</td></tr>
       <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Hides the label visually while keeping it accessible. <code>labelHidden</code> is the older name; either one hides it.</td></tr>
       <tr><td><code>containerClass</code> / <code>controlClass</code></td><td><code>class</code></td><td>—</td><td>Field shell and input box. A root class lands on the box, not the native input. An item <code>action</code> turns the menu into two columns and does not select the item.</td></tr>
-      <tr><td><code>startIcon</code></td><td><code>Component</code></td><td>—</td><td>Icon at the start of the input. An <code>icon</code> slot replaces it.</td></tr>
+      <tr><td><code>startIcon</code></td><td><code>string | Component</code></td><td>—</td><td>Icon at the start of the input: a semantic icon name such as <code>'search'</code>, or an icon component. An <code>icon</code> slot replaces it.</td></tr>
       <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>Search…</code> / <code>搜索…</code></td><td>Placeholder. English unless a locale is provided.</td></tr>
       <tr><td><code>debounceMs</code></td><td><code>number</code></td><td><code>150</code></td><td>Wait after typing before searching. Use 0 for local data.</td></tr>
       <tr><td><code>minQueryLength</code></td><td><code>number</code></td><td><code>1</code></td><td>Shortest query that gets searched, counted in visible characters. Below it nothing is searched and the menu stays closed, so a query nobody searched never reports "no results". An empty query is not "too short": it still bootstraps.</td></tr>
@@ -30,7 +30,7 @@ footer: false
       <tr><td><code>clearable</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Legacy name for <code>hasClear</code>. Turning either one off removes the button.</td></tr>
       <tr><td><code>emptySearchText</code></td><td><code>string | null</code></td><td><code>'No results found'</code> / <code>'未找到结果'</code></td><td>Text shown when the query matched nothing. <code>null</code> means "not given" and falls through to the default; an empty string renders nothing. For rich content use the <code>empty</code> slot.</td></tr>
       <tr><td><code>emptyText</code></td><td><code>string | null</code></td><td>—</td><td>Legacy name for <code>emptySearchText</code>.</td></tr>
-      <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disable the field.</td></tr>
+      <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disable the field. A disabled field keeps its tab stop: the input is <code>aria-disabled</code> and read-only, opens no list and picks nothing, and submits no value.</td></tr>
       <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>Explains why the field is disabled. With <code>disabled</code>, the control stays focusable through <code>aria-disabled</code> and <code>readonly</code> instead of the native <code>disabled</code>, and the message shows as a tooltip on hover or keyboard focus.</td></tr>
       <tr><td><code>disabledReason</code></td><td><code>string</code></td><td>—</td><td>Legacy name for <code>disabledMessage</code>.</td></tr>
       <tr><td><code>status</code></td><td><code>'default' | 'success' | 'warning' | 'error'</code></td><td><code>'default'</code></td><td>Status style.</td></tr>
@@ -41,6 +41,7 @@ footer: false
       <tr><td><code>optional</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows an optional indicator on the label.</td></tr>
       <tr><td><code>name</code></td><td><code>string</code></td><td>—</td><td>Form field name. Submits the selected id.</td></tr>
       <tr><td><code>width</code></td><td><code>number | string</code></td><td>—</td><td>Width of the whole field (number = pixels, string used as-is).</td></tr>
+      <tr><td><code>menu</code></td><td><code>{ role: 'listbox' } | { role: 'dialog', label: string }</code></td><td><code>{ role: 'listbox' }</code></td><td>What the menu holds. <code>listbox</code> is the result list, and the <code>menu</code> slot may put information around it. <code>dialog</code> is content that takes focus, named by <code>label</code>. It opens only through <code>open()</code>: typing, focusing and the arrow keys leave it closed. A <code>listbox</code> menu can change to <code>dialog</code> and stay open on the same anchor.</td></tr>
     </tbody>
   </table>
 </div>
@@ -69,9 +70,30 @@ footer: false
       <tr><td><code>icon</code></td><td>—</td><td>Icon at the start of the input.</td></tr>
       <tr><td><code>item</code></td><td><code>{ item, isActive, isSelected }</code></td><td>Custom menu row. Replaces the default <code>TypeaheadItem</code>.</td></tr>
       <tr><td><code>empty</code></td><td>—</td><td>Custom empty state.</td></tr>
+      <tr><td><code>menu</code></td><td><code>{ listbox, query, isBusy, isEmptySearch, close }</code> or <code>{ query, close }</code></td><td>Menu content. With a <code>listbox</code> menu, render the result list once with <code>&lt;component :is="listbox" /&gt;</code> and put headers or hints around it; the arrow keys move through the list. Anything a person acts on belongs in the list as a result, and a control outside it triggers a development warning. With a <code>dialog</code> menu the slot is the whole content, and <code>close</code> returns focus to the element that was focused when it opened.</td></tr>
     </tbody>
   </table>
 </div>
+
+## Methods
+
+A template ref to `Typeahead` exposes `focus()`, `blur()`, `open()` and `close()`. `open()` shows a `dialog` menu at once and focus moves into it; with a `listbox` menu it shows the results, loading them first if needed. Called from a `change` handler, it keeps the menu open through the pick. When a `dialog` menu closes by `Escape` or `close()`, focus returns to the element that was focused when `open()` ran, and to the input (or the value token that covers it) when that element is gone. A press outside the field and the menu closes it without taking focus from where the press landed.
+
+## Showing local matches first
+
+`search(query, signal, context)` receives a `context`. Call `context.update(items)` to show matches the page already has, then return the server's answer. Pass `debounceMs` of `0` and delay the server request inside the source.
+
+```ts
+const source: SearchSource<Person> = {
+  async search(query, signal, context) {
+    context?.update(localPeople.filter(person => person.label.includes(query)))
+    await sleep(200, signal)
+    return await fetchPeople(query, signal)
+  },
+}
+```
+
+Every list is the source's complete answer at that moment. The first list for a query may replace the rows; every later list, including the returned one, keeps the rows already shown first and in order and adds new rows after them, so the highlighted row never moves. An empty list leaves the shown rows in place. A later list that moves or removes shown rows is shown as given, with a development warning. The field stays busy until `search` returns, and the result count is announced once, when it does. Calls for a query that is no longer current, or after `search` returned, are ignored.
 
 ## createStaticSource
 
@@ -114,7 +136,8 @@ No field label, description, or validation message. Use it where the surrounding
       <tr><td><code>ariaLabelledBy</code></td><td><code>string</code></td><td>—</td><td>Input-specific alias for <code>aria-labelledby</code>. Takes precedence over the native attribute.</td></tr>
       <tr><td><code>anchorRef</code></td><td><code>HTMLElement | null</code></td><td>—</td><td>Element the dropdown hangs from and measures itself against. Defaults to the input's own wrapper.</td></tr>
       <tr><td><code>inputTabIndex</code></td><td><code>number</code></td><td>—</td><td>Tab order of the input. Defaults to <code>-1</code> while the selected token covers the input, so the invisible input is not a tab stop.</td></tr>
-      <tr><td><code>isFocusableDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Keep a disabled input focusable through <code>aria-disabled</code> and <code>readonly</code> so a caller-owned disabled reason stays discoverable. Text entry stays blocked.</td></tr>
+      <tr><td><code>isFocusableDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Keep a disabled input focusable through <code>aria-disabled</code> and <code>readonly</code> so a caller-owned disabled reason stays discoverable. A disabled <code>BaseTypeahead</code> is always focusable; text entry, opening the list and picking stay blocked, also from a list that was open before it became disabled. <code>Escape</code> or <code>Tab</code> still closes that list.</td></tr>
+      <tr><td><code>menu</code></td><td><code>{ role: 'listbox' } | { role: 'dialog', label: string }</code></td><td><code>{ role: 'listbox' }</code></td><td>What the menu holds, as on <code>Typeahead</code>. A template ref exposes <code>open()</code> and <code>close()</code>.</td></tr>
       <tr><td><code>hasAutoFocus</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Focus the input on mount.</td></tr>
       <tr><td><code>hasEntriesOnFocus</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Show bootstrap results on focus before the user types.</td></tr>
       <tr><td><code>showOnFocus</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Legacy name for <code>hasEntriesOnFocus</code>. Either one turns it on.</td></tr>
@@ -159,7 +182,7 @@ Native attributes and listeners that are not listed above land on the input elem
     <tbody>
       <tr><td><code>item</code></td><td><code>SearchableItem</code></td><td>Required</td><td>The search result this row shows.</td></tr>
       <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>Overrides the item's own description.</td></tr>
-      <tr><td><code>group</code></td><td><code>string</code></td><td>—</td><td>Accepted for API parity; the row itself draws no heading. Grouping is done by the menu from <code>item.auxiliaryData.group</code>.</td></tr>
+      <tr><td><code>group</code></td><td><code>string</code></td><td>—</td><td>Has no effect, and is accepted only for API parity. Set <code>item.auxiliaryData.group</code> on the search-source items to group results in <code>Typeahead</code> or <code>BaseTypeahead</code>.</td></tr>
       <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Paints the row as unavailable.</td></tr>
       <tr><td><code>icon</code> (slot)</td><td>—</td><td>—</td><td>Icon or avatar shown before the label.</td></tr>
     </tbody>

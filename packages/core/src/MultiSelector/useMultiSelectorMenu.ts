@@ -8,6 +8,7 @@ import { useKeyboardHighlight } from '../composables/internal/useKeyboardHighlig
 import { useAnnounce } from '../composables/useAnnounce.js'
 import { useCombobox } from '../composables/useCombobox.js'
 import { searchResultMessage } from '../Selector/searchResultMessage.js'
+import { assertOptionsArray } from '../selectors/assertOptions.js'
 import { isOptionAction } from '../selectors/optionAction.js'
 import { useOptionActionGrid } from '../selectors/useOptionActionGrid.js'
 import { scrollOptionIntoView } from '../Typeahead/useAnchoredListbox.js'
@@ -70,6 +71,7 @@ export interface MultiSelectorMenuApi {
 
 /** 多选面板的列表、创建行和选项操作。触发器自己的展示留在组件里。 */
 export function useMultiSelectorMenu(host: MultiSelectorMenuHost): MultiSelectorMenuApi {
+  assertOptionsArray('MultiSelector', host.props.options)
   const query = ref('')
   const selectedValues = computed(() => host.props.modelValue ?? [])
   const searchPlaceholder = computed(() => host.props.searchPlaceholder ?? host.messages.value.multiSelector.search)

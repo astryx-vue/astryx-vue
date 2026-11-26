@@ -1,9 +1,54 @@
-import type { HTMLAttributes, StyleValue } from 'vue'
+import type { Component, HTMLAttributes, StyleValue } from 'vue'
 import type { SearchableItem, SearchSource } from '../composables/useAsyncSource.js'
 import type { InputStatusVariant } from '../composables/useInputStatusIcon.js'
 import type { FieldPartStylingProps } from '../Field/fieldParts.js'
 
 export type TypeaheadSize = 'sm' | 'md' | 'lg'
+
+/**
+ * 菜单里放什么。Astryx 管菜单这一层：位置、点外面关闭、Escape、焦点回收、和输入框的 ARIA 关联，
+ * 调用方只负责填内容。
+ *
+ * - `listbox`：结果列表，焦点留在输入框。`menu` 插槽可以在列表周围放信息（标题、提示）；
+ *   要点的东西都应该做成列表里的一个结果，这样方向键才够得到。
+ * - `dialog`：会拿走焦点的内容，由 `label` 命名。只能通过 `open()` 打开：输入、聚焦、方向键都不会打开它。
+ *   从 `listbox` 换成 `dialog` 时，菜单挂在同一个锚点上保持打开。
+ */
+export type TypeaheadMenuConfig
+  = | { role: 'listbox' }
+    | { role: 'dialog', label: string }
+
+/** `menu` 插槽（listbox 角色）拿到的东西。 */
+export interface TypeaheadListboxMenuSlotProps {
+  /** 结果列表。只渲染一次，方向键在它里面移动：`<component :is="listbox" />`。 */
+  listbox: Component
+  /** 输入框里的查询。 */
+  query: string
+  /** 搜索或聚焦清单正在加载。 */
+  isBusy: boolean
+  /** 这次查询搜完了，没有结果。 */
+  isEmptySearch: boolean
+  /** 关闭菜单。 */
+  close: () => void
+}
+
+/** `menu` 插槽（dialog 角色）拿到的东西。 */
+export interface TypeaheadDialogMenuSlotProps {
+  query: string
+  /** 关闭菜单，并把焦点还给打开它时的元素。 */
+  close: () => void
+}
+
+/** 组件实例上暴露的方法，用模板 ref 调用。 */
+export interface TypeaheadHandle {
+  /**
+   * 打开菜单。dialog 角色马上打开；listbox 角色显示结果，需要时先加载。
+   * 在 `change` 里调用，菜单会在这次选择之后保持打开。
+   */
+  open: () => void
+  /** 关闭菜单。 */
+  close: () => void
+}
 export type TypeaheadStatus = 'default' | 'success' | 'warning' | 'error'
 
 export interface BaseTypeaheadProps<T extends SearchableItem = SearchableItem> {
@@ -71,6 +116,8 @@ export interface BaseTypeaheadProps<T extends SearchableItem = SearchableItem> {
   /** 加到输入外框上，不落到原生 input。 */
   controlClass?: HTMLAttributes['class']
   controlStyle?: StyleValue
+  /** 菜单里放什么，默认是结果列表。见 {@link TypeaheadMenuConfig}。 */
+  menu?: TypeaheadMenuConfig
 }
 
 export interface TypeaheadProps<T extends SearchableItem = SearchableItem> extends FieldPartStylingProps {
@@ -129,6 +176,8 @@ export interface TypeaheadProps<T extends SearchableItem = SearchableItem> exten
   width?: number | string
   /** 输入框起始侧的图标。没有 icon 插槽时使用。 */
   startIcon?: unknown
+  /** 菜单里放什么，默认是结果列表。见 {@link TypeaheadMenuConfig}。 */
+  menu?: TypeaheadMenuConfig
 }
 
 export interface TypeaheadEmits<T extends SearchableItem = SearchableItem> {
@@ -161,4 +210,6 @@ export interface TypeaheadSlots<T extends SearchableItem = SearchableItem> {
   item?: (props: { item: T, isActive: boolean, isSelected: boolean }) => unknown
   /** 自定义空状态。 */
   empty?: () => unknown
+  /** 菜单内容：listbox 角色在结果列表周围放信息，dialog 角色是菜单的全部内容。 */
+  menu?: (props: TypeaheadListboxMenuSlotProps & TypeaheadDialogMenuSlotProps) => unknown
 }

@@ -5,7 +5,7 @@
     {
       "name": "@astryx-vue/core",
       "directory": "packages/core",
-      "version": "0.16.5",
+      "version": "0.17.0",
       "description": "Vue 3 components for the unofficial astryx-vue port of Astryx. Not affiliated with Meta.",
       "canary": false,
       "published": true
@@ -13,7 +13,7 @@
     {
       "name": "@astryx-vue/charts",
       "directory": "packages/charts",
-      "version": "0.9.12",
+      "version": "0.9.13",
       "description": "Astryx charts for Vue — a config-model data visualization layer (d3-based).",
       "canary": false,
       "published": true
@@ -21,7 +21,7 @@
     {
       "name": "@astryx-vue/lab",
       "directory": "packages/lab",
-      "version": "0.8.1",
+      "version": "0.8.2",
       "description": "Astryx lab components for Vue 3 — experimental components that may change. Ships only under the canary dist-tag.",
       "canary": true,
       "published": true
@@ -29,7 +29,7 @@
     {
       "name": "@astryx-vue/richtext",
       "directory": "packages/richtext",
-      "version": "0.16.5",
+      "version": "0.17.0",
       "description": "Astryx rich text for Vue — Lexical nodes and lossless Markdown import/export. Not affiliated with Meta.",
       "canary": false,
       "published": true
@@ -37,7 +37,7 @@
     {
       "name": "@astryx-vue/themes",
       "directory": "packages/themes",
-      "version": "0.16.5",
+      "version": "0.17.0",
       "description": "CSS themes for the unofficial astryx-vue port of Astryx. Not affiliated with Meta.",
       "canary": false,
       "published": true
@@ -32938,8 +32938,8 @@
         "zh": "`Selector` 是一个下拉选择器组件，用户点击后展开选项列表，选择一项后收起。它支持搜索过滤、清除选择、禁用选项等功能。"
       },
       "usage": {
-        "en": "`Selector` opens a list when the trigger is clicked. Choosing one option closes the list. It can filter the list, clear the current value, and disable individual options.\n\nPass the options and bind the value:\n\n```vue\n<script setup lang=\"ts\">\nimport { Selector } from '@astryx-vue/core/Selector'\nimport { ref } from 'vue'\n\nconst selected = ref(null)\nconst options = [\n  { value: 'apple', label: 'Apple' },\n  { value: 'banana', label: 'Banana' },\n  { value: 'cherry', label: 'Cherry' },\n]\n</script>\n\n<template>\n  <Selector v-model=\"selected\" :options=\"options\" placeholder=\"Select a fruit\" />\n</template>\n```\n\nEach option has a `value` and a `label`. Set `disabled` to skip an option, or `description` to add a second line of text.\n\n`searchable` shows a search field that filters the list. `hasClear` adds a clear button next to the current value; `clearable` is the older name. The menu is at least as wide as the trigger, and grows when an option label is longer.\n\nA read-only field keeps the current value, stays focusable, and still submits with the form. It does not open, and it has no clear button or chevron. It does not dim. Disabled wins when both are set. While loading, the trigger shows a spinner and the menu does not claim that nothing was found. An empty catalog and a search with no matches use different sentences. The check mark sits at the end of a selected row by default, and can move to the start. An unselected row does not reserve space for it. `disabledMessage` explains a disabled field: a tooltip follows hover and keyboard focus, the trigger stays focusable through `aria-disabled`, and the list still does not open.\n\nArrow keys move the highlight. Home and End jump to the ends. Enter selects the highlighted option, and Escape closes the list. Once the search field is open, the arrow keys and Enter apply there, and Space still types a character.\n\nBuilt-in strings such as the placeholder and the empty state are English. Call `provideAstryxLocale('zh-CN')` to use the Chinese strings.",
-        "zh": "`Selector` 是一个下拉选择器组件，用户点击后展开选项列表，选择一项后收起。它支持搜索过滤、清除选择、禁用选项等功能。\n\n基本用法只需要传入选项数组和绑定值：\n\n```vue\n<script setup lang=\"ts\">\nimport { Selector } from '@astryx-vue/core/Selector'\nimport { ref } from 'vue'\n\nconst selected = ref(null)\nconst options = [\n  { value: 'apple', label: '苹果' },\n  { value: 'banana', label: '香蕉' },\n  { value: 'cherry', label: '樱桃' },\n]\n</script>\n\n<template>\n  <Selector v-model=\"selected\" :options=\"options\" placeholder=\"选择水果\" />\n</template>\n```\n\n每个选项对象包含 `value`（唯一标识）和 `label`（显示文本）。可选的 `disabled` 属性可以禁用特定选项，`description` 可以添加辅助说明。\n\n开启 `searchable` 属性后，选择器会显示搜索框，用户可以输入文字过滤选项。开启 `hasClear` 后，已选中的值旁边会出现清除按钮；`clearable` 是旧名字。\n\n只读时当前值还在，可以聚焦，也会随表单提交，但打不开列表，也没有清除和展开箭头，外观不会变暗。同时禁用时按禁用处理。加载时触发器里是旋转指示，列表在选项到达之前不说「没有结果」。没有任何选项，和搜索之后没有命中，是两句不同的话。选中标记默认画在行尾，也可以改到行首；没选中时标记不占位。`disabledMessage` 用来解释为什么禁用：悬停和键盘聚焦时弹出提示，触发器靠 `aria-disabled` 保持可聚焦，但列表仍然打不开。\n\n方向键上下移动高亮项，Home 和 End 跳到首尾，Enter 选中当前项，Escape 关闭列表。搜索框打开后，方向键和回车作用在搜索框上，空格仍用于输入。\n\n菜单至少和触发器一样宽，选项更长时会跟着变宽。组件自带文案默认是英文，调用 `provideAstryxLocale('zh-CN')` 后改为中文。文档页会按当前语言自动提供。"
+        "en": "`Selector` opens a list when the trigger is clicked. Choosing one option closes the list. It can filter the list, clear the current value, and disable individual options.\n\nPass the options and bind the value:\n\n```vue\n<script setup lang=\"ts\">\nimport { Selector } from '@astryx-vue/core/Selector'\nimport { ref } from 'vue'\n\nconst selected = ref(null)\nconst options = [\n  { value: 'apple', label: 'Apple' },\n  { value: 'banana', label: 'Banana' },\n  { value: 'cherry', label: 'Cherry' },\n]\n</script>\n\n<template>\n  <Selector v-model=\"selected\" :options=\"options\" placeholder=\"Select a fruit\" />\n</template>\n```\n\nEach option has a `value` and a `label`. Set `disabled` to skip an option, or `description` to add a second line of text.\n\n`searchable` shows a search field that filters the list. `hasClear` adds a clear button next to the current value; `clearable` is the older name. The menu is at least as wide as the trigger, and grows when an option label is longer.\n\nA read-only field keeps the current value, stays focusable, and still submits with the form. It does not open, and it has no clear button or chevron. It does not dim. Disabled wins when both are set. While loading, the trigger shows a spinner and the menu does not claim that nothing was found. An empty catalog and a search with no matches use different sentences. The check mark sits at the end of a selected row by default, and can move to the start. An unselected row does not reserve space for it. `disabledMessage` explains a disabled field: a tooltip follows hover and keyboard focus, the trigger stays focusable through `aria-disabled`, and the list still does not open.\n\nThe list is named by the field label in every presentation. A caller `aria-labelledby` is appended after the field label, and with `searchable` the trigger's name ends with the selected value, because a role-less button does not read its value. With `searchable`, `aria-required` goes on the search field in the open list, since ARIA does not allow it on a button. A selection returns focus to the trigger. Opening the list highlights the selected option, or the first enabled option, never a disabled one. If the options change while the list is open, the highlight follows its option by value, and moves to the next enabled option when that option is gone.\n\nArrow keys move the highlight. Home and End jump to the ends. Enter selects the highlighted option, and Escape closes the list. Once the search field is open, the arrow keys and Enter apply there, and Space still types a character.\n\nTyping a letter jumps to the next option that starts with it, ignoring case and accents, and a letter typed with AltGr counts too.\n\nBuilt-in strings such as the placeholder and the empty state are English. Call `provideAstryxLocale('zh-CN')` to use the Chinese strings.",
+        "zh": "`Selector` 是一个下拉选择器组件，用户点击后展开选项列表，选择一项后收起。它支持搜索过滤、清除选择、禁用选项等功能。\n\n基本用法只需要传入选项数组和绑定值：\n\n```vue\n<script setup lang=\"ts\">\nimport { Selector } from '@astryx-vue/core/Selector'\nimport { ref } from 'vue'\n\nconst selected = ref(null)\nconst options = [\n  { value: 'apple', label: '苹果' },\n  { value: 'banana', label: '香蕉' },\n  { value: 'cherry', label: '樱桃' },\n]\n</script>\n\n<template>\n  <Selector v-model=\"selected\" :options=\"options\" placeholder=\"选择水果\" />\n</template>\n```\n\n每个选项对象包含 `value`（唯一标识）和 `label`（显示文本）。可选的 `disabled` 属性可以禁用特定选项，`description` 可以添加辅助说明。\n\n开启 `searchable` 属性后，选择器会显示搜索框，用户可以输入文字过滤选项。开启 `hasClear` 后，已选中的值旁边会出现清除按钮；`clearable` 是旧名字。\n\n只读时当前值还在，可以聚焦，也会随表单提交，但打不开列表，也没有清除和展开箭头，外观不会变暗。同时禁用时按禁用处理。加载时触发器里是旋转指示，列表在选项到达之前不说「没有结果」。没有任何选项，和搜索之后没有命中，是两句不同的话。选中标记默认画在行尾，也可以改到行首；没选中时标记不占位。`disabledMessage` 用来解释为什么禁用：悬停和键盘聚焦时弹出提示，触发器靠 `aria-disabled` 保持可聚焦，但列表仍然打不开。\n\n列表在每种呈现方式下都由字段标签命名。调用方给的 `aria-labelledby` 接在字段标签后面；带 `searchable` 时，触发器的名字末尾带上所选的值，因为不带角色的按钮不会念它的值。带 `searchable` 时 `aria-required` 放在打开后的搜索框上，因为 ARIA 不允许按钮带它。选中之后焦点回到触发器。打开列表时高亮所选的选项，没有选中项就是第一个可用选项，不会落在禁用项上。列表开着时选项变了，高亮按值跟着原来的选项走，那个选项没了就落到后面第一个可用的。\n\n输入字母会跳到下一个以它开头的选项，忽略大小写和重音符号，用 AltGr 键入的字母也算。\n\n方向键上下移动高亮项，Home 和 End 跳到首尾，Enter 选中当前项，Escape 关闭列表。搜索框打开后，方向键和回车作用在搜索框上，空格仍用于输入。\n\n菜单至少和触发器一样宽，选项更长时会跟着变宽。组件自带文案默认是英文，调用 `provideAstryxLocale('zh-CN')` 后改为中文。文档页会按当前语言自动提供。"
       },
       "practices": {
         "en": [
@@ -37493,7 +37493,7 @@
                 "name": "`disabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Disable the field and every token interaction."
+                "description": "Disable the field and every token interaction. A disabled field keeps its tab stop: the input is `aria-disabled` and read-only, opens no list and picks nothing. With `overflow=\"unfocused-layer\"` and no `disabledMessage`, the input is natively disabled instead."
               },
               {
                 "name": "`disabledMessage`",
@@ -37704,7 +37704,7 @@
                 "name": "`disabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "禁用整个字段和所有标签交互。"
+                "description": "禁用整个字段和所有标签交互。禁用的字段仍是 Tab 停点：输入框带 `aria-disabled` 且只读，不开列表也不选。`overflow=\"unfocused-layer\"` 且没有 `disabledMessage` 时，输入框改用原生 `disabled`。"
               },
               {
                 "name": "`disabledMessage`",
@@ -37794,6 +37794,10 @@
               {
                 "name": "`empty`",
                 "description": "—"
+              },
+              {
+                "name": "`menu`",
+                "description": "`{ listbox, query, isBusy, isEmptySearch, close }` or `{ query, close }`"
               }
             ]
           }
@@ -37826,6 +37830,11 @@
                 "name": "`empty`",
                 "payload": "—",
                 "description": "自定义空状态。"
+              },
+              {
+                "name": "`menu`",
+                "payload": "`{ listbox, query, isBusy, isEmptySearch, close }` 或 `{ query, close }`",
+                "description": "菜单内容，和 `Typeahead` 一样：`listbox` 菜单在结果列表周围放信息，`dialog` 菜单的插槽就是全部内容。"
               }
             ]
           }
@@ -37914,13 +37923,13 @@
         "en": [
           {
             "heading": "Tokenizer Slots",
-            "text": "Native attributes and listeners that are not listed above land on the input element, so `@keydown`, `@paste` and `aria-*` work as they would on a plain `<input>`. A `keydown` listener runs before the internal token navigation; call `event.preventDefault()` to skip it."
+            "text": "A template ref exposes <code>focus()</code>, <code>blur()</code>, <code>open()</code> and <code>close()</code>. The <code>menu</code> prop (<code>{ role: 'listbox' }</code> or <code>{ role: 'dialog', label }</code>) and <code>openChange</code> work as they do on <code>Typeahead</code>. A <code>search</code> that calls <code>context.update(items)</code> shows its early matches at once, without the tokens already picked, and later lists only append.\n\nNative attributes and listeners that are not listed above land on the input element, so `@keydown`, `@paste` and `aria-*` work as they would on a plain `<input>`. A `keydown` listener runs before the internal token navigation; call `event.preventDefault()` to skip it."
           }
         ],
         "zh": [
           {
             "heading": "Tokenizer Slots",
-            "text": "上面没列出的原生属性和事件监听会落到输入框上，所以 `@keydown`、`@paste` 和 `aria-*` 的用法跟普通 `<input>` 一样。`keydown` 监听先于内部的标签间导航执行，调用 `event.preventDefault()` 就能跳过内部处理。"
+            "text": "模板 ref 暴露 <code>focus()</code>、<code>blur()</code>、<code>open()</code> 和 <code>close()</code>。<code>menu</code> 属性（<code>{ role: 'listbox' }</code> 或 <code>{ role: 'dialog', label }</code>）和 <code>openChange</code> 的用法与 <code>Typeahead</code> 相同。<code>search</code> 里调用 <code>context.update(items)</code> 会马上显示先拿到的匹配项（已选的标签不在其中），之后的列表只往后追加。\n\n上面没列出的原生属性和事件监听会落到输入框上，所以 `@keydown`、`@paste` 和 `aria-*` 的用法跟普通 `<input>` 一样。`keydown` 监听先于内部的标签间导航执行，调用 `event.preventDefault()` 就能跳过内部处理。"
           }
         ]
       },
@@ -38095,8 +38104,8 @@
         "zh": "`Typeahead` 是单选搜索框。输入框是 combobox，下拉列表是 listbox。本地数据用 `createStaticSource`，远程数据自己实现 `search`。"
       },
       "usage": {
-        "en": "`Typeahead` is a single-select search field. The input is a combobox and the menu is a listbox. Use `createStaticSource` for local data, or implement `search` for a remote source.\n\nLocal search matches the label and optional keywords. Set `debounceMs` to `0` to filter immediately:\n\n```vue\n<script setup lang=\"ts\">\nimport { createStaticSource } from '@astryx-vue/core'\nimport { Typeahead } from '@astryx-vue/core/Typeahead'\nimport { ref } from 'vue'\n\nconst selected = ref(null)\nconst source = createStaticSource([\n  { id: 'apple', label: 'Apple' },\n  { id: 'grape', label: 'Grape' },\n], { keywords: item => item.id === 'grape' ? ['raisin'] : [] })\n</script>\n\n<template>\n  <Typeahead v-model=\"selected\" :search-source=\"source\" label=\"Fruit\" :debounce-ms=\"0\" show-on-focus />\n</template>\n```\n\nAn async source returns a Promise. `useAsyncSource` waits until typing pauses, 150 milliseconds by default, then starts the request. A newer search cancels the previous one, and a stale response is dropped. An empty query uses `bootstrap` when it exists. Loading, no results, and a failed request each get their own row in the menu.\n\nArrow keys move the highlight, `Enter` selects it, and `Escape` closes the menu. While focus is in the input, `Home` and `End` move the caret. After a selection, the value collapses to a focusable token. Focusing it again returns to search.\n\nBuilt-in strings are English. Call `provideAstryxLocale('zh-CN')` for the Chinese strings.",
-        "zh": "`Typeahead` 是单选搜索框。输入框是 combobox，下拉列表是 listbox。本地数据用 `createStaticSource`，远程数据自己实现 `search`。\n\n本地搜索按标签和可选关键词做子串匹配。`debounceMs` 设为 `0` 会立刻过滤：\n\n```vue\n<script setup lang=\"ts\">\nimport { createStaticSource } from '@astryx-vue/core'\nimport { Typeahead } from '@astryx-vue/core/Typeahead'\nimport { ref } from 'vue'\n\nconst selected = ref(null)\nconst source = createStaticSource([\n  { id: 'apple', label: '苹果' },\n  { id: 'grape', label: '葡萄' },\n], { keywords: item => item.id === 'grape' ? ['提子'] : [] })\n</script>\n\n<template>\n  <Typeahead v-model=\"selected\" :search-source=\"source\" label=\"水果\" :debounce-ms=\"0\" show-on-focus />\n</template>\n```\n\n异步数据源返回 Promise。`useAsyncSource` 会在输入停顿后发起请求，默认等待 150 毫秒。新的一次搜索会取消上一次，过期结果不会写回列表。空查询优先走 `bootstrap`。加载、没有结果、请求失败分别显示加载文案、空状态和错误文案。\n\n方向键移动高亮项，`Enter` 选中，`Escape` 关闭列表。焦点在输入框里时，`Home` 和 `End` 移动光标。选中后结果收成一枚可聚焦的标签，再次聚焦会回到搜索。\n\n内置文案默认是英文。调用 `provideAstryxLocale('zh-CN')` 后改为中文。文档页会按当前语言自动提供。"
+        "en": "`Typeahead` is a single-select search field. The input is a combobox and the menu is a listbox. Use `createStaticSource` for local data, or implement `search` for a remote source.\n\nLocal search matches the label and optional keywords. Set `debounceMs` to `0` to filter immediately:\n\n```vue\n<script setup lang=\"ts\">\nimport { createStaticSource } from '@astryx-vue/core'\nimport { Typeahead } from '@astryx-vue/core/Typeahead'\nimport { ref } from 'vue'\n\nconst selected = ref(null)\nconst source = createStaticSource([\n  { id: 'apple', label: 'Apple' },\n  { id: 'grape', label: 'Grape' },\n], { keywords: item => item.id === 'grape' ? ['raisin'] : [] })\n</script>\n\n<template>\n  <Typeahead v-model=\"selected\" :search-source=\"source\" label=\"Fruit\" :debounce-ms=\"0\" show-on-focus />\n</template>\n```\n\nAn async source returns a Promise. `useAsyncSource` waits until typing pauses, 150 milliseconds by default, then starts the request. A newer search cancels the previous one, and a stale response is dropped. An empty query uses `bootstrap` when it exists. Loading, no results, and a failed request each get their own row in the menu.\n\nArrow keys move the highlight, `Enter` selects it, and `Escape` closes the menu. While focus is in the input, `Home` and `End` move the caret. After a selection, the value collapses to a focusable token. Focusing it again returns to search. While the value is being edited, `Escape` closes the list first; a second `Escape` restores the token and puts focus on it. `Backspace` or `Delete` on the token clears the value the way the clear button does and announces it, or starts editing when the clear button is off. Choosing a result reports the emptied query through `changeQuery`. A focus list that has nothing to show, or fails to load, closes instead of staying open and empty.\n\nBuilt-in strings are English. Call `provideAstryxLocale('zh-CN')` for the Chinese strings.",
+        "zh": "`Typeahead` 是单选搜索框。输入框是 combobox，下拉列表是 listbox。本地数据用 `createStaticSource`，远程数据自己实现 `search`。\n\n本地搜索按标签和可选关键词做子串匹配。`debounceMs` 设为 `0` 会立刻过滤：\n\n```vue\n<script setup lang=\"ts\">\nimport { createStaticSource } from '@astryx-vue/core'\nimport { Typeahead } from '@astryx-vue/core/Typeahead'\nimport { ref } from 'vue'\n\nconst selected = ref(null)\nconst source = createStaticSource([\n  { id: 'apple', label: '苹果' },\n  { id: 'grape', label: '葡萄' },\n], { keywords: item => item.id === 'grape' ? ['提子'] : [] })\n</script>\n\n<template>\n  <Typeahead v-model=\"selected\" :search-source=\"source\" label=\"水果\" :debounce-ms=\"0\" show-on-focus />\n</template>\n```\n\n异步数据源返回 Promise。`useAsyncSource` 会在输入停顿后发起请求，默认等待 150 毫秒。新的一次搜索会取消上一次，过期结果不会写回列表。空查询优先走 `bootstrap`。加载、没有结果、请求失败分别显示加载文案、空状态和错误文案。\n\n方向键移动高亮项，`Enter` 选中，`Escape` 关闭列表。焦点在输入框里时，`Home` 和 `End` 移动光标。选中后结果收成一枚可聚焦的标签，再次聚焦会回到搜索。编辑已选的值时，`Escape` 先收起列表；再按一次才还原标签并把焦点交给它。标签上按 `Backspace` 或 `Delete`，会像清除按钮一样清掉值并念出来；没有清除按钮时则进入编辑。选中一条结果后，清空后的查询会通过 `changeQuery` 报出来。聚焦时展开的清单没有可显示的内容、或加载失败，会收起，而不是留着一个空列表。\n\n内置文案默认是英文。调用 `provideAstryxLocale('zh-CN')` 后改为中文。文档页会按当前语言自动提供。"
       },
       "practices": {
         "en": [
@@ -38177,9 +38186,9 @@
               },
               {
                 "name": "`startIcon`",
-                "type": "`Component`",
+                "type": "`string | Component`",
                 "default": "—",
-                "description": "Icon at the start of the input. An `icon` slot replaces it."
+                "description": "Icon at the start of the input: a semantic icon name such as `'search'`, or an icon component. An `icon` slot replaces it."
               },
               {
                 "name": "`placeholder`",
@@ -38251,7 +38260,7 @@
                 "name": "`disabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Disable the field."
+                "description": "Disable the field. A disabled field keeps its tab stop: the input is `aria-disabled` and read-only, opens no list and picks nothing, and submits no value."
               },
               {
                 "name": "`disabledMessage`",
@@ -38312,6 +38321,12 @@
                 "type": "`number | string`",
                 "default": "—",
                 "description": "Width of the whole field (number = pixels, string used as-is)."
+              },
+              {
+                "name": "`menu`",
+                "type": "`{ role: 'listbox' } | { role: 'dialog', label: string }`",
+                "default": "`{ role: 'listbox' }`",
+                "description": "What the menu holds. `listbox` is the result list, and the `menu` slot may put information around it. `dialog` is content that takes focus, named by `label`. It opens only through `open()`: typing, focusing and the arrow keys leave it closed. A `listbox` menu can change to `dialog` and stay open on the same anchor."
               }
             ]
           },
@@ -38397,7 +38412,13 @@
                 "name": "`isFocusableDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Keep a disabled input focusable through `aria-disabled` and `readonly` so a caller-owned disabled reason stays discoverable. Text entry stays blocked."
+                "description": "Keep a disabled input focusable through `aria-disabled` and `readonly` so a caller-owned disabled reason stays discoverable. A disabled `BaseTypeahead` is always focusable; text entry, opening the list and picking stay blocked, also from a list that was open before it became disabled. `Escape` or `Tab` still closes that list."
+              },
+              {
+                "name": "`menu`",
+                "type": "`{ role: 'listbox' } | { role: 'dialog', label: string }`",
+                "default": "`{ role: 'listbox' }`",
+                "description": "What the menu holds, as on `Typeahead`. A template ref exposes `open()` and `close()`."
               },
               {
                 "name": "`hasAutoFocus`",
@@ -38522,7 +38543,7 @@
                 "name": "`group`",
                 "type": "`string`",
                 "default": "—",
-                "description": "Accepted for API parity; the row itself draws no heading. Grouping is done by the menu from `item.auxiliaryData.group`."
+                "description": "Has no effect, and is accepted only for API parity. Set `item.auxiliaryData.group` on the search-source items to group results in `Typeahead` or `BaseTypeahead`."
               },
               {
                 "name": "`isDisabled`",
@@ -38587,9 +38608,9 @@
               },
               {
                 "name": "`startIcon`",
-                "type": "`Component`",
+                "type": "`string | Component`",
                 "default": "—",
-                "description": "输入框起始侧的图标。已有 `icon` 插槽时以插槽为准。"
+                "description": "输入框起始侧的图标：可以直接写语义图标名（如 `'search'`），也可以传图标组件。已有 `icon` 插槽时以插槽为准。"
               },
               {
                 "name": "`placeholder`",
@@ -38661,13 +38682,13 @@
                 "name": "`disabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "是否禁用。"
+                "description": "是否禁用。禁用的字段仍是 Tab 停点：输入框带 `aria-disabled` 且只读，不开列表也不选，也不向表单交值。"
               },
               {
                 "name": "`disabledMessage`",
                 "type": "`string`",
                 "default": "—",
-                "description": "说明为什么被禁用。和 `disabled` 一起用时，控件改用 `aria-disabled` 加 `readonly`，因此仍然可聚焦，鼠标悬停或键盘聚焦都能读到这段说明。"
+                "description": "说明为什么被禁用。鼠标悬停或键盘聚焦都能读到这段说明，并作为输入框的说明被读出。"
               },
               {
                 "name": "`disabledReason`",
@@ -38722,6 +38743,12 @@
                 "type": "`number | string`",
                 "default": "—",
                 "description": "整个字段的宽度（数字按像素算，字符串原样使用）。"
+              },
+              {
+                "name": "`menu`",
+                "type": "`{ role: 'listbox' } | { role: 'dialog', label: string }`",
+                "default": "`{ role: 'listbox' }`",
+                "description": "菜单里放什么。`listbox` 是结果列表，`menu` 插槽可以在列表周围放信息；`dialog` 是会拿走焦点的内容，由 `label` 命名，只能通过 `open()` 打开：输入、聚焦和方向键都不会打开它。`listbox` 可以换成 `dialog`，菜单挂在同一个锚点上保持打开。"
               }
             ]
           },
@@ -38807,7 +38834,13 @@
                 "name": "`isFocusableDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "让禁用的输入框改用 `aria-disabled` 加 `readonly`，仍然可聚焦，好让调用方给的禁用说明读得到。输入内容照样被挡住。"
+                "description": "让禁用的输入框改用 `aria-disabled` 加 `readonly`，仍然可聚焦，好让调用方给的禁用说明读得到。输入内容照样被挡住。禁用的 `BaseTypeahead` 总是可聚焦，列表在禁用前就开着也不能再选；`Escape` 或 `Tab` 仍能把它关掉。"
+              },
+              {
+                "name": "`menu`",
+                "type": "`{ role: 'listbox' } | { role: 'dialog', label: string }`",
+                "default": "`{ role: 'listbox' }`",
+                "description": "菜单里放什么，和 `Typeahead` 一样：结果列表（`menu` 插槽可以在周围放信息），或会拿走焦点、只能通过 `open()` 打开的内容。模板 ref 暴露 `open()` 和 `close()`。"
               },
               {
                 "name": "`hasAutoFocus`",
@@ -38932,7 +38965,7 @@
                 "name": "`group`",
                 "type": "`string`",
                 "default": "—",
-                "description": "为了和同名属性对得上而接受；这一行自己不会画标题。分组由下拉按 `item.auxiliaryData.group` 完成。"
+                "description": "没有任何作用，只为和原版属性名对上而接受。要给 `Typeahead` 或 `BaseTypeahead` 的结果分组，在搜索源条目上设 `item.auxiliaryData.group`。"
               },
               {
                 "name": "`isDisabled`",
@@ -38966,6 +38999,10 @@
               {
                 "name": "`empty`",
                 "description": "—"
+              },
+              {
+                "name": "`menu`",
+                "description": "`{ listbox, query, isBusy, isEmptySearch, close }` or `{ query, close }`"
               }
             ]
           }
@@ -38988,6 +39025,11 @@
                 "name": "`empty`",
                 "payload": "—",
                 "description": "自定义空状态。"
+              },
+              {
+                "name": "`menu`",
+                "payload": "`{ listbox, query, isBusy, isEmptySearch, close }` 或 `{ query, close }`",
+                "description": "菜单内容。`listbox` 菜单里用 `<component :is=\"listbox\" />` 渲染一次结果列表，标题、提示放在它周围；方向键在列表里移动。要点的东西应该做成列表里的一个结果，放在列表外面的控件会在开发期报警告。`dialog` 菜单里这个插槽就是全部内容，`close` 关闭菜单并把焦点还给打开它时的元素。"
               }
             ]
           }
@@ -39112,6 +39154,14 @@
       "notes": {
         "en": [
           {
+            "heading": "Methods",
+            "text": "A template ref to `Typeahead` exposes `focus()`, `blur()`, `open()` and `close()`. `open()` shows a `dialog` menu at once and focus moves into it; with a `listbox` menu it shows the results, loading them first if needed. Called from a `change` handler, it keeps the menu open through the pick. When a `dialog` menu closes by `Escape` or `close()`, focus returns to the element that was focused when `open()` ran, and to the input (or the value token that covers it) when that element is gone. A press outside the field and the menu closes it without taking focus from where the press landed."
+          },
+          {
+            "heading": "Showing local matches first",
+            "text": "`search(query, signal, context)` receives a `context`. Call `context.update(items)` to show matches the page already has, then return the server's answer. Pass `debounceMs` of `0` and delay the server request inside the source.\n\n```ts\nconst source: SearchSource<Person> = {\n  async search(query, signal, context) {\n    context?.update(localPeople.filter(person => person.label.includes(query)))\n    await sleep(200, signal)\n    return await fetchPeople(query, signal)\n  },\n}\n```\n\nEvery list is the source's complete answer at that moment. The first list for a query may replace the rows; every later list, including the returned one, keeps the rows already shown first and in order and adds new rows after them, so the highlighted row never moves. An empty list leaves the shown rows in place. A later list that moves or removes shown rows is shown as given, with a development warning. The field stays busy until `search` returns, and the result count is announced once, when it does. Calls for a query that is no longer current, or after `search` returned, are ignored."
+          },
+          {
             "heading": "Grouping results",
             "text": "Put a group name on `item.auxiliaryData.group`. Rows that share a name are rendered as one `role=\"group\"` block with a visible heading, in the order the groups first appear. Rows without a group stay at their own position.\n\n```ts\nconst items = [\n  { id: 'apple', label: 'Apple', auxiliaryData: { group: 'Fruit' } },\n  { id: 'carrot', label: 'Carrot', auxiliaryData: { group: 'Vegetable' } },\n]\n```"
           },
@@ -39121,6 +39171,14 @@
           }
         ],
         "zh": [
+          {
+            "heading": "方法",
+            "text": "<code>Typeahead</code> 的模板 ref 暴露 <code>focus()</code>、<code>blur()</code>、<code>open()</code> 和 <code>close()</code>。<code>open()</code> 对 <code>dialog</code> 菜单是马上打开并把焦点移进去；对 <code>listbox</code> 菜单是显示结果，需要时先加载。在 <code>change</code> 处理函数里调用，菜单会在这次选择之后保持打开。<code>dialog</code> 菜单被 <code>Escape</code> 或 <code>close()</code> 关掉后，焦点回到调用 <code>open()</code> 时有焦点的元素；那个元素没了，就回到输入框（值标签盖着输入框时回到标签的按钮）。点在字段和菜单之外会关掉它，但不会抢走点击落到的焦点。"
+          },
+          {
+            "heading": "先显示本地匹配",
+            "text": "<code>search(query, signal, context)</code> 会收到 <code>context</code>。调用 <code>context.update(items)</code> 先显示页面上已有的匹配项，再返回服务端的答案。把 <code>debounceMs</code> 设为 <code>0</code>，在数据源里自己延迟服务端请求。\n\n```ts\nconst source: SearchSource<Person> = {\n  async search(query, signal, context) {\n    context?.update(localPeople.filter(person => person.label.includes(query)))\n    await sleep(200, signal)\n    return await fetchPeople(query, signal)\n  },\n}\n```\n\n每一份列表都是数据源当时的完整答案。同一个查询的第一份列表可以换掉已有的行；之后的每一份（包括返回值）把已经显示的行留在最前面、顺序不变，新行只加在它们后面，所以高亮的行不会移动。空列表不动已显示的行。后一份列表挪动或去掉了已显示的行时，按它给的显示，并在开发期警告。字段在 <code>search</code> 返回前一直忙碌，结果数在返回时只念一次。查询已经不是当前查询、或 <code>search</code> 已经返回之后的调用会被忽略。"
+          },
           {
             "heading": "结果分组",
             "text": "把分组名放在 `item.auxiliaryData.group` 上。同名的条目会渲染成一个 `role=\"group\"` 区块，前面带可见的标题，顺序按分组第一次出现的先后。没有分组名的条目留在原位。\n\n```ts\nconst items = [\n  { id: 'apple', label: 'Apple', auxiliaryData: { group: 'Fruit' } },\n  { id: 'carrot', label: 'Carrot', auxiliaryData: { group: 'Vegetable' } },\n]\n```"
@@ -39446,6 +39504,12 @@
                 "default": "`false`"
               },
               {
+                "name": "`menu`",
+                "description": "`menu`",
+                "type": "`{ role: 'listbox' } | { role: 'dialog', label: string }`",
+                "default": "`{ role: 'listbox' }`"
+              },
+              {
                 "name": "`status`",
                 "description": "`status`",
                 "type": "`'default' | 'success' | 'warning' | 'error'`",
@@ -39600,7 +39664,7 @@
                 "name": "`disabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "禁用输入框。"
+                "description": "禁用输入框。禁用的输入框仍是 Tab 停点：它带 `aria-disabled` 且只读，不开列表也不选，列表在禁用前就开着也一样；`Escape` 或 `Tab` 仍能把它关掉。"
               },
               {
                 "name": "`disabledReason`",
@@ -39612,7 +39676,13 @@
                 "name": "`isFocusableDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "强制让禁用的输入框还能聚焦（用 `aria-disabled` 加 `readonly`），这样调用方给的禁用原因读得到。文字还是打不进去。"
+                "description": "强制让禁用的输入框还能聚焦（用 `aria-disabled` 加 `readonly`），这样调用方给的禁用原因读得到。禁用的输入框总是可聚焦。文字还是打不进去。"
+              },
+              {
+                "name": "`menu`",
+                "type": "`{ role: 'listbox' } | { role: 'dialog', label: string }`",
+                "default": "`{ role: 'listbox' }`",
+                "description": "菜单里放什么，和 `Typeahead` 一样：结果列表（`menu` 插槽可以在周围放信息），或会拿走焦点、只能通过 `open()` 打开的内容。模板 ref 暴露 `open()` 和 `close()`。"
               },
               {
                 "name": "`status`",
@@ -39724,7 +39794,7 @@
           },
           {
             "heading": "Slots",
-            "text": "- `icon`: artwork at the start of the input. The wrapper is hidden from assistive technology.\n- `item`: replaces the default row, and receives `item`, `isActive`, and `isSelected`. The row wrapper that owns highlight, selection, pointer, and keyboard behavior stays.\n- `empty`: replaces the no-results content."
+            "text": "- `icon`: artwork at the start of the input. The wrapper is hidden from assistive technology.\n- `item`: replaces the default row, and receives `item`, `isActive`, and `isSelected`. The row wrapper that owns highlight, selection, pointer, and keyboard behavior stays.\n- `empty`: replaces the no-results content.\n- `menu`: the menu content. With a `listbox` menu it receives `listbox`, `query`, `isBusy`, `isEmptySearch` and `close`; render the list once with `<component :is=\"listbox\" />` and put information around it. With a `dialog` menu it receives `query` and `close` and is the whole content."
           }
         ],
         "zh": [
@@ -39738,7 +39808,7 @@
           },
           {
             "heading": "插槽",
-            "text": "- `icon`：输入框开头的图案。这层对读屏是隐藏的。\n- `item`：换掉默认那一行，会收到 `item`、`isActive` 和 `isSelected`。负责高亮、选中、指针和键盘的外壳还在。\n- `empty`：换掉「没有结果」的内容。"
+            "text": "- `icon`：输入框开头的图案。这层对读屏是隐藏的。\n- `item`：换掉默认那一行，会收到 `item`、`isActive` 和 `isSelected`。负责高亮、选中、指针和键盘的外壳还在。\n- `empty`：换掉「没有结果」的内容。\n- `menu`：菜单内容。`listbox` 菜单收到 `listbox`、`query`、`isBusy`、`isEmptySearch` 和 `close`，用 `<component :is=\"listbox\" />` 渲染一次列表，信息放在它周围；`dialog` 菜单收到 `query` 和 `close`，插槽就是全部内容。"
           }
         ]
       },
@@ -39922,7 +39992,7 @@
                 "name": "`group`",
                 "type": "`string`",
                 "default": "—",
-                "description": "只为和原版属性名对上而接受。每一行自己不画分组标题，分组由下拉按 `item.auxiliaryData.group` 来排。"
+                "description": "没有任何作用，只为和原版属性名对上而接受。要给 `Typeahead` 或 `BaseTypeahead` 的结果分组，在搜索源条目上设 `item.auxiliaryData.group`。"
               },
               {
                 "name": "`isDisabled`",
@@ -83857,8 +83927,17 @@
         "zh": []
       },
       "notes": {
-        "en": [],
+        "en": [
+          {
+            "heading": "A field you render yourself",
+            "text": "For a single-line text field you render, spread the prop getters instead of wiring the attributes by hand. Focus never leaves the field: the active option is named through `aria-activedescendant`, and the field keeps every key the list does not need.\n\n```vue\n<script setup lang=\"ts\">\nimport { useCombobox } from '@astryx-vue/core'\nimport { computed, ref } from 'vue'\n\nconst query = ref('')\nconst picked = ref<string | null>(null)\nconst options = computed(() => people.filter(person => person.label.toLowerCase().includes(query.value.toLowerCase())))\nconst combobox = useCombobox({ options, modelValue: picked, onChange: value => (picked.value = value as string | null), listboxId: 'people' })\n</script>\n\n<template>\n  <input v-model=\"query\" aria-label=\"Assign to\" v-bind=\"combobox.getFieldProps()\" @input=\"combobox.open()\">\n  <ul v-if=\"combobox.isOpen.value && options.length > 0\" aria-label=\"People\" v-bind=\"combobox.getListboxProps()\">\n    <li v-for=\"(option, index) in options\" :key=\"option.value\" v-bind=\"combobox.getOptionProps(index)\">\n      {{ option.label }}\n    </li>\n  </ul>\n</template>\n```\n\n- `getFieldProps(handlers?)` returns `role=\"combobox\"`, `aria-autocomplete=\"list\"`, `aria-expanded`, `aria-controls` only while the listbox is shown (open, with at least one option), `aria-activedescendant` only while an option is active, and the key handler. Pass your own `onKeydown` here: it runs after the combobox's handler, unless that handler claimed the key.\n- `getListboxProps()` returns `id`, `role=\"listbox\"` and a press handler that keeps focus in the field. Render the list while it is open and there are options, and name it with `aria-label` or `aria-labelledby`. Render other controls, such as a create button or an empty message, beside the list.\n- `getOptionProps(index)` returns `id`, `role=\"option\"`, `aria-selected` (true on the active option), `aria-disabled` on a disabled one, a pointer move that makes it active without moving focus, and a press that picks it.\n- `getItemId(index)` is the option's id. `listboxId` is the list's id, and it is generated when you leave it out.\n\nWhile the list is shown, `ArrowDown` and `ArrowUp` move the active option and wrap; `Enter` picks an active option and only then stops the field's own `Enter`; `Escape`, whatever modifier is held, hides the list without closing an enclosing dialog or popover on the same press. While it is hidden, `ArrowDown` shows it when there are options. `Home`, `End`, other chords such as `Shift+Enter`, and every other key reach the field. No key moves, picks or hides while an input method is composing text. When a new query changes the options, set `activeIndex` yourself: `0` so `Enter` picks the first option, or `-1` so `Enter` stays the field's. Announce the number of results with `useAnnounce`."
+          }
+        ],
         "zh": [
+          {
+            "heading": "自己渲染的输入框",
+            "text": "给自己渲染的单行文本框接组合框时，直接展开属性生成器，不用手写那些属性。焦点始终留在输入框里：高亮的选项由 `aria-activedescendant` 指出，输入框保留列表用不到的所有按键。\n\n```vue\n<script setup lang=\"ts\">\nimport { useCombobox } from '@astryx-vue/core'\nimport { computed, ref } from 'vue'\n\nconst query = ref('')\nconst picked = ref<string | null>(null)\nconst options = computed(() => people.filter(person => person.label.toLowerCase().includes(query.value.toLowerCase())))\nconst combobox = useCombobox({ options, modelValue: picked, onChange: value => (picked.value = value as string | null), listboxId: 'people' })\n</script>\n\n<template>\n  <input v-model=\"query\" aria-label=\"指派给\" v-bind=\"combobox.getFieldProps()\" @input=\"combobox.open()\">\n  <ul v-if=\"combobox.isOpen.value && options.length > 0\" aria-label=\"人员\" v-bind=\"combobox.getListboxProps()\">\n    <li v-for=\"(option, index) in options\" :key=\"option.value\" v-bind=\"combobox.getOptionProps(index)\">\n      {{ option.label }}\n    </li>\n  </ul>\n</template>\n```\n\n- `getFieldProps(handlers?)` 返回 `role=\"combobox\"`、`aria-autocomplete=\"list\"`、`aria-expanded`、只在列表显示（已打开且至少有一个选项）时才有的 `aria-controls`、只在有高亮选项时才有的 `aria-activedescendant`，以及按键处理。自己的 `onKeydown` 传在这里：它在组合框的处理之后运行，组合框认领了的按键就不再交给它。\n- `getListboxProps()` 返回 `id`、`role=\"listbox\"`，以及按下时不把焦点从输入框带走的处理。列表打开且有选项时才渲染它，用 `aria-label` 或 `aria-labelledby` 给它起名。创建按钮、空状态这类别的控件放在列表旁边，不要放进去。\n- `getOptionProps(index)` 返回 `id`、`role=\"option\"`、`aria-selected`（高亮的那个为 true）、禁用项的 `aria-disabled`、指针移过去高亮但不动焦点的处理，以及点击选中。\n- `getItemId(index)` 是选项的 id。`listboxId` 是列表的 id，不传会自动生成。\n\n列表显示时，`ArrowDown`、`ArrowUp` 移动高亮并首尾循环；`Enter` 只在有高亮选项时选中并拦下输入框自己的回车；`Escape` 不管带不带修饰键都收起列表，外层的对话框或弹出框不会在同一次按键里一起关掉。列表收起时，有选项的话 `ArrowDown` 把它显示出来。`Home`、`End`、`Shift+Enter` 这类带修饰键的组合和其余所有键都交给输入框。输入法组词时，任何键都不会移动、选中或收起。新的查询改变了选项时，自己设置 `activeIndex`：设为 `0`，回车选第一项；设为 `-1`，回车仍归输入框。用 `useAnnounce` 播报结果数。"
+          },
           {
             "heading": "建议",
             "text": "- 推荐: 输入框加 `role=\"combobox\"`、`aria-expanded` 和 `aria-activedescendant`，列表加 `role=\"listbox\"`，每行用 `role=\"option\"`。\n- 推荐: 在 `mousedown` 里选中并 `preventDefault`，输入框才不会失焦，blur 处理也不会抢在选中前把列表关掉。\n- 避免: 自己重写键盘处理。`onKeyDown` 已经覆盖方向键、Home、End、Enter、Escape 和按字母跳转。"
