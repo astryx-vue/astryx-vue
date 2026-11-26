@@ -5981,35 +5981,50 @@
 
 ### v0.7.2
 
-- [ ] [`86e839219`](https://github.com/meta/astryx/commit/86e839219) feat(core): promote Drawer and DrawerHeader from Lab (#6071)
-- [ ] [`d3ec0b25c`](https://github.com/meta/astryx/commit/d3ec0b25c) fix(AspectRatio): fit fills the box on the documented Tailwind setups (#7521)
-- [ ] [`c35e7ac4c`](https://github.com/meta/astryx/commit/c35e7ac4c) fix(GridSpan): keep long content such as a Tokenizer token in its column (#7528)
-- [ ] [`3c9b4ef2f`](https://github.com/meta/astryx/commit/3c9b4ef2f) fix(AppShell): defer hiding the mobile nav Activity boundary until close finishes (#6319)
-- [ ] [`e26723dcf`](https://github.com/meta/astryx/commit/e26723dcf) docs(cli): import each Core export from the path `astryx component` prints (#7623)
-- [ ] [`493231799`](https://github.com/meta/astryx/commit/493231799) fix(cli): search finds compound names typed as words, other libraries' names, and verb forms (#7718)
-- [ ] [`caf5673d4`](https://github.com/meta/astryx/commit/caf5673d4) fix(cli): search ranks longer partial-name matches above a shorter named entry (#7725)
+- [x] [`86e839219`](https://github.com/meta/astryx/commit/86e839219) feat(core): promote Drawer and DrawerHeader from Lab (#6071)
+  - Vue 版已有：Drawer 与 DrawerHeader 已在 core，这里只改了容器内边距的文件注释
+- [x] [`d3ec0b25c`](https://github.com/meta/astryx/commit/d3ec0b25c) fix(AspectRatio): fit fills the box on the documented Tailwind setups (#7521)
+  - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。AspectRatio 的 fit 子元素尺寸从 reset 层挪到 base 层，不再写进 reset.css，Tailwind 等后面的层和不分层 CSS 能覆盖
+- [x] [`c35e7ac4c`](https://github.com/meta/astryx/commit/c35e7ac4c) fix(GridSpan): keep long content such as a Tokenizer token in its column (#7528)
+  - Vue 版已有：.astryx-grid-span 的隐式列用 minmax(0, 1fr)，长内容留在当前列里
+- [x] [`3c9b4ef2f`](https://github.com/meta/astryx/commit/3c9b4ef2f) fix(AppShell): defer hiding the mobile nav Activity boundary until close finishes (#6319)
+  - 不适用：React Activity 边界延迟隐藏
+- [x] [`e26723dcf`](https://github.com/meta/astryx/commit/e26723dcf) docs(cli): import each Core export from the path `astryx component` prints (#7623)
+  - 不适用：上游 CLI 打印组件导入路径的文档措辞；Vue 版文档和 CLI 已按组件子路径给出导入
+- [x] [`493231799`](https://github.com/meta/astryx/commit/493231799) fix(cli): search finds compound names typed as words, other libraries' names, and verb forms (#7718)
+  - Vue 版已有：搜索关键词已由 #514 加入（layout-header、scrollable-area、use-resizable 在 query-keywords.ts 里已有）
+- [x] [`caf5673d4`](https://github.com/meta/astryx/commit/caf5673d4) fix(cli): search ranks longer partial-name matches above a shorter named entry (#7725)
+  - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。搜索关键词里去掉 useResizable 的「splitview」，与上游一致（排序部分归 CLI 搜索任务）
 - [x] [`29fc5f906`](https://github.com/meta/astryx/commit/29fc5f906) test(a11y): add Toolbar contract and bind Toolbar (#7731)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`72db6f922`](https://github.com/meta/astryx/commit/72db6f922) fix(Grid): keep theme metadata authoritative (#7788)
-- [ ] [`577a62e59`](https://github.com/meta/astryx/commit/577a62e59) [Component Audit] Grid: make responsive track behavior and evidence trustworthy (#7789)
+- [x] [`72db6f922`](https://github.com/meta/astryx/commit/72db6f922) fix(Grid): keep theme metadata authoritative (#7788)
+  - Vue 版已有：Grid 与 GridSpan 的 data-* 主题标记写在透传属性之后，组件自己的值优先
+- [x] [`577a62e59`](https://github.com/meta/astryx/commit/577a62e59) [Component Audit] Grid: make responsive track behavior and evidence trustworthy (#7789)
+  - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。文档与类型注释：数字列是 1fr 轨道、最小内容可撑宽，full 跨所有显式列（中英文档同步）
 
 ### v0.7.3
 
-- [ ] [`29ead9885`](https://github.com/meta/astryx/commit/29ead9885) fix(core): disabled links, tokens and cards stay focusable (#7842)
+- [x] [`29ead9885`](https://github.com/meta/astryx/commit/29ead9885) fix(core): disabled links, tokens and cards stay focusable (#7842)
+  - Vue 版已有：Link 与 ClickableCard 禁用时用 aria-disabled 并保留 Tab 焦点（#499 #496 已覆盖）
 
 ### v0.7.5
 
-- [ ] [`3001ed5be`](https://github.com/meta/astryx/commit/3001ed5be) fix(core): enforce VisuallyHidden's styling-free contract at runtime (#7826)
-- [ ] [`a88f185a1`](https://github.com/meta/astryx/commit/a88f185a1) fix(core): a card's press overlay paints a finger's press (#8057)
+- [x] [`3001ed5be`](https://github.com/meta/astryx/commit/3001ed5be) fix(core): enforce VisuallyHidden's styling-free contract at runtime (#7826)
+  - Vue 版已有：VisuallyHidden 只转发 class、style 之外的属性，自己的 class 固定，不接受样式属性
+- [x] [`a88f185a1`](https://github.com/meta/astryx/commit/a88f185a1) fix(core): a card's press overlay paints a finger's press (#8057)
+  - Vue 版已有：ClickableCard、SelectableCard 触屏按压规则已由 #501 移植
 - [x] [`c85932b82`](https://github.com/meta/astryx/commit/c85932b82) docs(spec): AppShell records its shipped contract as current (#8262)
   - 不适用：上游组件规范文档（自动初筛）
-- [ ] [`24ed36dce`](https://github.com/meta/astryx/commit/24ed36dce) fix(ScrollableArea): touch screens keep the platform's scroll indicator (#8372)
+- [x] [`24ed36dce`](https://github.com/meta/astryx/commit/24ed36dce) fix(ScrollableArea): touch screens keep the platform's scroll indicator (#8372)
+  - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。ScrollableArea 触屏和强制颜色下保留平台滚动指示条
 - [x] [`a56c06134`](https://github.com/meta/astryx/commit/a56c06134) fix(Tooltip): a tooltip taller than the room around its trigger opens clear of it (#8254)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`174300fcb`](https://github.com/meta/astryx/commit/174300fcb) ci: discover PR browser accessibility specs, so a new spec needs no workflow edit (#8367)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`c4f6253e5`](https://github.com/meta/astryx/commit/c4f6253e5) docs(SelectableCard): stop recommending it for single-select groups (#8419)
-- [ ] [`28317b054`](https://github.com/meta/astryx/commit/28317b054) fix(Layout): collapse header/footer padding with sibling markers, not :has() followed by * (#8417)
+- [x] [`c4f6253e5`](https://github.com/meta/astryx/commit/c4f6253e5) docs(SelectableCard): stop recommending it for single-select groups (#8419)
+  - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。SelectableCard 文档改为只推荐多选，单选组改用 RadioList（中英）
+- [x] [`28317b054`](https://github.com/meta/astryx/commit/28317b054) fix(Layout): collapse header/footer padding with sibling markers, not :has() followed by * (#8417)
+  - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。页头页脚无分隔线时收拢内容内边距改用兄弟选择器，只作用于这个 Layout 自己的内容，嵌套 Layout 不吃外层收拢
 - [x] [`23de0923e`](https://github.com/meta/astryx/commit/23de0923e) spec(AST-094): touch presentations feel native by default (#8409)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`a3bf5402b`](https://github.com/meta/astryx/commit/a3bf5402b) docs(spec): AspectRatio records its shipped contract as current (#8529)
@@ -6052,94 +6067,126 @@
 
 - [x] [`9e07422c7`](https://github.com/meta/astryx/commit/9e07422c7) test(a11y): the coverage checks of 17 binding specs run as one serial part per state (#9071)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`f277e2580`](https://github.com/meta/astryx/commit/f277e2580) fix(core): a single esbuild bundle renders Core: lazily imported modules import Core directly, not through barrels (#9055)
+- [x] [`f277e2580`](https://github.com/meta/astryx/commit/f277e2580) fix(core): a single esbuild bundle renders Core: lazily imported modules import Core directly, not through barrels (#9055)
+  - 不适用：React 版 esbuild 单包打包下懒加载模块的导入路径
 - [x] [`961f6336e`](https://github.com/meta/astryx/commit/961f6336e) docs(spec): Collapsible records its shipped contract as current (#9062)
   - 不适用：上游组件规范文档（自动初筛）
-- [ ] [`9b695006a`](https://github.com/meta/astryx/commit/9b695006a) fix(useResizable): read the window size during render only, not again after each commit (#8857)
+- [x] [`9b695006a`](https://github.com/meta/astryx/commit/9b695006a) fix(useResizable): read the window size during render only, not again after each commit (#8857)
+  - 不适用：只改 React 里 useSyncExternalStore 读窗口的时机，Vue 版只在 setup 和挂载时读一次窗口尺寸
 - [x] [`48f3699cf`](https://github.com/meta/astryx/commit/48f3699cf) docs(spec): Layout records its shipped contract as current (#8822)
   - 不适用：上游内部规范和架构文档、上游组件规范文档（自动初筛）
 - [x] [`c5383172d`](https://github.com/meta/astryx/commit/c5383172d) spec(AST-025): a Tab-able scroll area is named by its owner (FR12) (#9088)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`b9b2db588`](https://github.com/meta/astryx/commit/b9b2db588) fix(Toolbar): a link shares the row's single tab stop (#8921)
-- [ ] [`726703b55`](https://github.com/meta/astryx/commit/726703b55) fix(core): keep disabled ClickableCard out of the router link (#8659)
-- [ ] [`00507ba07`](https://github.com/meta/astryx/commit/00507ba07) fix(AppShell): with fill height, keyboard users can scroll an overflowing main region (#8111)
+- [x] [`b9b2db588`](https://github.com/meta/astryx/commit/b9b2db588) fix(Toolbar): a link shares the row's single tab stop (#8921)
+  - Vue 版已有：Toolbar 的 useListFocus 候选项已含 a[href]，链接和按钮共用一个 Tab 停靠点
+- [x] [`726703b55`](https://github.com/meta/astryx/commit/726703b55) fix(core): keep disabled ClickableCard out of the router link (#8659)
+  - Vue 版已有：禁用的 ClickableCard 不输出 href（Vue 版没有路由链接）
+- [x] [`00507ba07`](https://github.com/meta/astryx/commit/00507ba07) fix(AppShell): with fill height, keyboard users can scroll an overflowing main region (#8111)
+  - Vue 版已有：AppShell 已有主区域溢出观察与键盘滚动委托（mainOverflow.ts、scrollKeyboardDelegation.ts，data-scroll-region 加 tabindex）
 - [x] [`25339ebac`](https://github.com/meta/astryx/commit/25339ebac) docs(spec): Resizable records its shipped contract as current (#9105)
   - 不适用：上游组件规范文档（自动初筛）
-- [ ] [`94eb29bea`](https://github.com/meta/astryx/commit/94eb29bea) fix(useResizable): a drag saves its size once, when it ends, not on every move (#7782)
+- [x] [`94eb29bea`](https://github.com/meta/astryx/commit/94eb29bea) fix(useResizable): a drag saves its size once, when it ends, not on every move (#7782)
+  - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。拖动期间不写存储，松手时才存一次；拖动中卸载时把拖到的尺寸补写
 - [x] [`0fa02074f`](https://github.com/meta/astryx/commit/0fa02074f) spec(AST-105, Resizable, LayoutPanel, SideNav): one shared edge reveal; a resizable LayoutPanel slides on collapse and open; focus leaves a collapsing panel (#8783)
   - 不适用：上游内部规范和架构文档、上游组件规范文档（自动初筛）
-- [ ] [`e0a03766d`](https://github.com/meta/astryx/commit/e0a03766d) docs(knowledge): every component spec lives in docs/specs/components, one folder per component (#9007)
-- [ ] [`853d94a02`](https://github.com/meta/astryx/commit/853d94a02) refactor(AppShell): main's ref is the one owner of its overflow observation and keyboard delegation (#9262)
-- [ ] [`00146a716`](https://github.com/meta/astryx/commit/00146a716) refactor(Resizable): the resize model's pure parts live in one non-React module (#9197)
-- [ ] [`8c15f9975`](https://github.com/meta/astryx/commit/8c15f9975) [Component Audit] GridSpan: accessibility and RTL audits now reach spanned grid items (#9312)
-- [ ] [`8c8f0dac6`](https://github.com/meta/astryx/commit/8c8f0dac6) fix(Collapsible): focus inside closing content moves to the trigger (#9250)
+- [x] [`e0a03766d`](https://github.com/meta/astryx/commit/e0a03766d) docs(knowledge): every component spec lives in docs/specs/components, one folder per component (#9007)
+  - 不适用：上游规范文档换目录
+- [x] [`853d94a02`](https://github.com/meta/astryx/commit/853d94a02) refactor(AppShell): main's ref is the one owner of its overflow observation and keyboard delegation (#9262)
+  - 不适用：只是 React 里主区域 ref 归属的重构，Vue 用 watch 观察
+- [x] [`00146a716`](https://github.com/meta/astryx/commit/00146a716) refactor(Resizable): the resize model's pure parts live in one non-React module (#9197)
+  - 不适用：把 React 版纯函数挪进非 React 模块的重构
+- [x] [`8c15f9975`](https://github.com/meta/astryx/commit/8c15f9975) [Component Audit] GridSpan: accessibility and RTL audits now reach spanned grid items (#9312)
+  - 不适用：只补上游无障碍与 RTL 审计用例和文档引用，组件行为不变
+- [x] [`8c8f0dac6`](https://github.com/meta/astryx/commit/8c8f0dac6) fix(Collapsible): focus inside closing content moves to the trigger (#9250)
+  - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。Collapsible 收起时焦点在内容里就移回触发按钮，焦点在别处不动，补测试
 - [x] [`350ee2eb9`](https://github.com/meta/astryx/commit/350ee2eb9) docs(spec): GridSpan and Heading verification maps name the checks that now cover them (#9349)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`3d44c583a`](https://github.com/meta/astryx/commit/3d44c583a) fix(Tooltip, HoverCard): a press inside an open surface doesn't activate the card, row or field around it (#9252)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`f885b8b29`](https://github.com/meta/astryx/commit/f885b8b29) test(rtl): RTL coverage for Stack, StackItem, HStack, VStack and Grid (#9303)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`7c4e5fac0`](https://github.com/meta/astryx/commit/7c4e5fac0) docs(Grid): align and justify leave the browser default when unset (#9347)
+- [x] [`7c4e5fac0`](https://github.com/meta/astryx/commit/7c4e5fac0) docs(Grid): align and justify leave the browser default when unset (#9347)
+  - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。align、justify 不设置时交给浏览器默认值 normal，不再强行写 stretch，文档同步
 - [x] [`4ee1f87eb`](https://github.com/meta/astryx/commit/4ee1f87eb) test(rtl): RTL coverage for LayoutContent, LayoutPanel and ResizeHandle (#9292)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`f05874d4c`](https://github.com/meta/astryx/commit/f05874d4c) spec(AppShell): AppShell is a layout root and cancels inherited layout context (#9403)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`c5fbecb8d`](https://github.com/meta/astryx/commit/c5fbecb8d) spec(i18n, Resizable, AST-103): factories take announcement and label options with a catalog default (#9395)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`99cc6dc85`](https://github.com/meta/astryx/commit/99cc6dc85) fix(core): many components carry only the English for their own strings (#9429)
-- [ ] [`4f4795a61`](https://github.com/meta/astryx/commit/4f4795a61) fix(AppShell): AppShell is a layout root; nothing an ancestor Layout, Card or Section passes down reaches its regions (#9418)
+- [x] [`99cc6dc85`](https://github.com/meta/astryx/commit/99cc6dc85) fix(core): many components carry only the English for their own strings (#9429)
+  - Vue 版已有：AppShell 与 ResizeHandle 已只按自己的命名空间读内置文案（useComponentMessages，#515）
+- [x] [`4f4795a61`](https://github.com/meta/astryx/commit/4f4795a61) fix(AppShell): AppShell is a layout root; nothing an ancestor Layout, Card or Section passes down reaches its regions (#9418)
+  - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。AppShell 作为布局根，外层 Layout/Card/Section 的内边距宽度变量与区域、槽位、分隔线默认值停在壳处，补测试
 - [x] [`41aa83233`](https://github.com/meta/astryx/commit/41aa83233) spec(layer-runtime): a click inside a layer stops at the layer root (#9398)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`a986306fa`](https://github.com/meta/astryx/commit/a986306fa) spec(container-padding): AppShell is a boundary owner (#9461)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`09a482eaf`](https://github.com/meta/astryx/commit/09a482eaf) fix(Layer): a press inside a layer stops at the layer root in the React tree (#9497)
-- [ ] [`f20625c02`](https://github.com/meta/astryx/commit/f20625c02) [Component Audit] HStack: alignment and right-to-left flow are now proven in a browser (#9540)
+- [x] [`09a482eaf`](https://github.com/meta/astryx/commit/09a482eaf) fix(Layer): a press inside a layer stops at the layer root in the React tree (#9497)
+  - 不适用：上游靠 React 合成事件在浮层根截停冒泡，Vue 按 DOM 冒泡
+- [x] [`f20625c02`](https://github.com/meta/astryx/commit/f20625c02) [Component Audit] HStack: alignment and right-to-left flow are now proven in a browser (#9540)
+  - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。HStack 沿行内方向排列、别名与 hAlign/vAlign 同时设置时以后者为准，补文档说明（中英）
 - [x] [`2227dcbf6`](https://github.com/meta/astryx/commit/2227dcbf6) spec(HoverCard, Stack): verification maps name the audit tests and browser evidence (#9582)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`c3cdc8e97`](https://github.com/meta/astryx/commit/c3cdc8e97) docs(Stack, VStack, StackItem): horizontal flow follows the writing direction, and the styling props and ref are documented (#9583)
+- [x] [`c3cdc8e97`](https://github.com/meta/astryx/commit/c3cdc8e97) docs(Stack, VStack, StackItem): horizontal flow follows the writing direction, and the styling props and ref are documented (#9583)
+  - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。Stack/HStack 文档说明水平方向跟随书写方向、别名优先级（中英）
 
 ### v0.7.7
 
-- [ ] [`36f8ea10e`](https://github.com/meta/astryx/commit/36f8ea10e) feat(AppShell): keep the header's items and the content's end inside the device's safe area (#8150)
+- [x] [`36f8ea10e`](https://github.com/meta/astryx/commit/36f8ea10e) feat(AppShell): keep the header's items and the content's end inside the device's safe area (#8150)
+  - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。AppShell 页头和内容末尾避开设备安全区
 - [x] [`cae1f668c`](https://github.com/meta/astryx/commit/cae1f668c) test(Resizable): load the package root while the file is collected, not inside a timed test (#8471)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`3e0934850`](https://github.com/meta/astryx/commit/3e0934850) test(AspectRatio): the fit-layer spec answers the story's remote photos locally (#9703)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`30bae0c89`](https://github.com/meta/astryx/commit/30bae0c89) refactor(Resizable): ResizeHandle's input moves into resizeGesture.ts (#9680)
-- [ ] [`ab905553a`](https://github.com/meta/astryx/commit/ab905553a) fix(BreadcrumbItem): a crumb in the AppShell mobile drawer closes it (#9683)
+- [x] [`30bae0c89`](https://github.com/meta/astryx/commit/30bae0c89) refactor(Resizable): ResizeHandle's input moves into resizeGesture.ts (#9680)
+  - 不适用：ResizeHandle 输入挪进 resizeGesture.ts 的重构，Vue 版输入留在组件里
+- [x] [`ab905553a`](https://github.com/meta/astryx/commit/ab905553a) fix(BreadcrumbItem): a crumb in the AppShell mobile drawer closes it (#9683)
+  - Vue 版已有：AppShell.drawerClose 测试已覆盖抽屉里面包屑关抽屉
 
 ### v0.7.8
 
-- [ ] [`b377b211b`](https://github.com/meta/astryx/commit/b377b211b) fix(Resizable): the Grab zone stays on the Handle whatever pillPlacement says, and a short item keeps its own drag (#9529)
+- [x] [`b377b211b`](https://github.com/meta/astryx/commit/b377b211b) fix(Resizable): the Grab zone stays on the Handle whatever pillPlacement says, and a short item keeps its own drag (#9529)
+  - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。抓取区始终居中在分隔条上，短面板最多占一半，握把自己接管指针，悬停握把带延伸
 - [ ] [`9136e28c7`](https://github.com/meta/astryx/commit/9136e28c7) feat: a single-choice set of selectable cards is a radio group (lab SelectableCardGroup) (#8260)
-- [ ] [`9889a3438`](https://github.com/meta/astryx/commit/9889a3438) chore(core): name the system that 88 kept Effects sync (#9787)
-- [ ] [`f9a696545`](https://github.com/meta/astryx/commit/f9a696545) refactor(Resizable): one internal createResizable factory, which useResizable's configuration-object form and ResizeHandle's resizable path go through (#9297)
+  - 暂缓：上游新增 lab 组件 SelectableCardGroup（单选卡片组按单选组语义、一个 Tab 停靠点、方向键），Vue 版 lab 没有这个组件，整套组件与文档未移植
+- [x] [`9889a3438`](https://github.com/meta/astryx/commit/9889a3438) chore(core): name the system that 88 kept Effects sync (#9787)
+  - 不适用：只给 React useEffect 加注释
+- [x] [`f9a696545`](https://github.com/meta/astryx/commit/f9a696545) refactor(Resizable): one internal createResizable factory, which useResizable's configuration-object form and ResizeHandle's resizable path go through (#9297)
+  - 不适用：React 内部 createResizable 工厂的重构，Vue 版 useResizable 本来就接受配置对象
 - [x] [`73996f1b2`](https://github.com/meta/astryx/commit/73996f1b2) fix(core): a layout change made late in a long task plays its motion instead of skipping past it (#9274)
   - 暂缓：本期已做 长任务末尾的布局变化照样播放（模块与 frameBlock 部分）；剩 SideNav、AppShell 接入，归动效与手势引擎的组件接入阶段
   - 已移植：[#578](https://github.com/astryx-vue/astryx-vue/pull/578)。初始状态不播（轨道首次绘制前的非自带开关变化直接落位）；长任务末尾的变化播放由 #563-#568 的模块已做，AppShell 的交换沿用 layoutStartFor
-- [ ] [`946211065`](https://github.com/meta/astryx/commit/946211065) perf(core): an overlay's eager import no longer carries the lazy BottomSheet's padding (#8550)
-- [ ] [`cfd120e4c`](https://github.com/meta/astryx/commit/cfd120e4c) feat(Resizable): createResizable drives a plain handle element, with one separator derivation (#9718)
+- [x] [`946211065`](https://github.com/meta/astryx/commit/946211065) perf(core): an overlay's eager import no longer carries the lazy BottomSheet's padding (#8550)
+  - 不适用：StyleX 打包体积优化：浮层的内联导入不再带上 BottomSheet 的内边距
+- [x] [`cfd120e4c`](https://github.com/meta/astryx/commit/cfd120e4c) feat(Resizable): createResizable drives a plain handle element, with one separator derivation (#9718)
+  - 不适用：createResizable 驱动裸元素是 React 版内部抽象；分隔条属性已由 ResizeHandle 统一推导
 - [x] [`e390c3c43`](https://github.com/meta/astryx/commit/e390c3c43) test(browser): keep every Playwright browser context off remote hosts (#9811)
   - 不适用：只改上游测试（自动初筛）
 
 ### v0.7.9
 
-- [ ] [`f59ffe155`](https://github.com/meta/astryx/commit/f59ffe155) fix(ClickableCard, SelectableCard): no touch pressed look for a finger press that starts on a control inside the card (#9801)
+- [x] [`f59ffe155`](https://github.com/meta/astryx/commit/f59ffe155) fix(ClickableCard, SelectableCard): no touch pressed look for a finger press that starts on a control inside the card (#9801)
+  - Vue 版已有：ClickableCard 与 SelectableCard 已用 isContainer，手指按在卡片里的控件上时卡片不画按压（#501）
 - [x] [`a0c48b8d7`](https://github.com/meta/astryx/commit/a0c48b8d7) docs(AST-105, AST-108): glides and tap-to-expand play the theme's motion tokens (#9964)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`35985f2bd`](https://github.com/meta/astryx/commit/35985f2bd) test: each --repeat-each copy of an audit keeps its own evidence folder (#9515)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`63a41bbdc`](https://github.com/meta/astryx/commit/63a41bbdc) spec(MobileNav): the drawer's links sit in a navigation landmark (DEC-1) (#9010)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`cb2a34a62`](https://github.com/meta/astryx/commit/cb2a34a62) fix(a11y): name a scrolling LayoutContent, LayoutPanel or StackItem (#9985)
+- [x] [`cb2a34a62`](https://github.com/meta/astryx/commit/cb2a34a62) fix(a11y): name a scrolling LayoutContent, LayoutPanel or StackItem (#9985)
+  - Vue 版已有：LayoutContent、LayoutPanel、StackItem 滚动时已用 useScrollRegionProps 命名（默认名 Content，不设置 label 时）
 - [x] [`b1e8e09c9`](https://github.com/meta/astryx/commit/b1e8e09c9) fix(a11y): give the scroll-region name stories focusable content (#10019)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`1fec9fa77`](https://github.com/meta/astryx/commit/1fec9fa77) feat(Resizable): `resizable` takes useResizable's output on LayoutPanel, ResizeHandle and SideNav, and focus leaves a collapsing panel (#9300)
+- [x] [`1fec9fa77`](https://github.com/meta/astryx/commit/1fec9fa77) feat(Resizable): `resizable` takes useResizable's output on LayoutPanel, ResizeHandle and SideNav, and focus leaves a collapsing panel (#9300)
+  - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。LayoutPanel 与 ResizeHandle 的 resizable 接受 useResizable() 返回值，收起时面板内焦点移到分隔条且面板 inert（SideNav 部分见 #578）
 - [x] [`634b64991`](https://github.com/meta/astryx/commit/634b64991) test(core): the StyleX rule recorders load their components before any test, not inside a 30 s hook (#10014)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`267399819`](https://github.com/meta/astryx/commit/267399819) chore(Resizable): restore mocks after each resizable-slot case, plus two source cleanups (#10032)
-- [ ] [`57e054031`](https://github.com/meta/astryx/commit/57e054031) fix(LayoutPanel): a panel at width 0 takes no space and shows none of its children (#9992)
-- [ ] [`5985abc13`](https://github.com/meta/astryx/commit/5985abc13) fix(core): no press scale or card color fade under reduced motion (#8326)
+- [x] [`267399819`](https://github.com/meta/astryx/commit/267399819) chore(Resizable): restore mocks after each resizable-slot case, plus two source cleanups (#10032)
+  - 不适用：只是上游测试里还原 mock 和两处源码清理
+- [x] [`57e054031`](https://github.com/meta/astryx/commit/57e054031) fix(LayoutPanel): a panel at width 0 takes no space and shows none of its children (#9992)
+  - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。宽度为 0 的 LayoutPanel 不占位、不露出子元素、不滚动
+- [x] [`5985abc13`](https://github.com/meta/astryx/commit/5985abc13) fix(core): no press scale or card color fade under reduced motion (#8326)
+  - Vue 版已有：减少动态效果时卡片不缩放、不做颜色过渡，已由 #501 移植
 
 ### v0.7.10
 
@@ -6147,60 +6194,87 @@
   - 暂缓：内核部分已在 #563-#568；剩 AppShell 与 SideNav 侧栏收展动效，归动效与手势引擎的组件接入阶段
   - 暂缓：本期已做 布局滑动走主题的移动曲线（模块与 Table 部分）；剩 SideNav 折叠栏、AppShell 接入，归动效与手势引擎的组件接入阶段
   - 已移植：[#578](https://github.com/astryx-vue/astryx-vue/pull/578)。轨道和 AppShell 内容区的滑动走主题的移动曲线（glide），和布局模块同一条时钟
-- [ ] [`2151c883d`](https://github.com/meta/astryx/commit/2151c883d) fix(AppShell): a second shell on a page gets its own main id (#10199)
+- [x] [`2151c883d`](https://github.com/meta/astryx/commit/2151c883d) fix(AppShell): a second shell on a page gets its own main id (#10199)
+  - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。第二个 AppShell 拿自己的主区域 id，补测试
 
 ### v0.7.11
 
-- [ ] [`a9c911421`](https://github.com/meta/astryx/commit/a9c911421) fix(core): Overlay, AppShell and MobileNav work with no matchMedia (#10327)
-- [ ] [`1f88264ec`](https://github.com/meta/astryx/commit/1f88264ec) docs(core): Layout's fill height needs a container with a set height (#10348)
+- [x] [`a9c911421`](https://github.com/meta/astryx/commit/a9c911421) fix(core): Overlay, AppShell and MobileNav work with no matchMedia (#10327)
+  - Vue 版已有：AppShell 读媒体查询前判断 matchMedia 是否存在
+- [x] [`1f88264ec`](https://github.com/meta/astryx/commit/1f88264ec) docs(core): Layout's fill height needs a container with a set height (#10348)
+  - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。Layout height 文档补 fill 需要有确定高度的容器（中英）
 - [x] [`0ecd324bf`](https://github.com/meta/astryx/commit/0ecd324bf) fix(core): a block-edge reveal slides its parts on the glide's frames (#10296)
   - 已移植：[#574](https://github.com/astryx-vue/astryx-vue/pull/574)。边缘揭示按滑动的帧移动各部分（模块随 #572），Table 展开面板的分隔线偏移随 #574
 
 ### v0.7.12
 
-- [ ] [`c942796a1`](https://github.com/meta/astryx/commit/c942796a1) docs(Section): center a Section with the inline-margin longhands in xstyle (#10207)
+- [x] [`c942796a1`](https://github.com/meta/astryx/commit/c942796a1) docs(Section): center a Section with the inline-margin longhands in xstyle (#10207)
+  - 不适用：上游 xstyle 里用 margin 长写法居中 Section 的写法
 - [x] [`4e6e67df6`](https://github.com/meta/astryx/commit/4e6e67df6) fix(core): make disabled Button focusable via aria-disabled per AST-085 (#7906)
   - Vue 版已有：#496 已有：禁用按钮用 aria-disabled 仍可聚焦
-- [ ] [`422440a64`](https://github.com/meta/astryx/commit/422440a64) fix(core): two copies of Core's modules share one React context (#10233)
-- [ ] [`227855776`](https://github.com/meta/astryx/commit/227855776) [Component Audit] Layout: a region hidden with && lays out like an omitted one (#10500)
-- [ ] [`8591d75ed`](https://github.com/meta/astryx/commit/8591d75ed) [Component Audit] LayoutContent: full-bleed children and open edges line up with the Layout (#10516)
+- [x] [`422440a64`](https://github.com/meta/astryx/commit/422440a64) fix(core): two copies of Core's modules share one React context (#10233)
+  - 不适用：两份 Core 副本共享 React context 的打包问题
+- [x] [`227855776`](https://github.com/meta/astryx/commit/227855776) [Component Audit] Layout: a region hidden with && lays out like an omitted one (#10500)
+  - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。Layout 判断页头、页脚、起始、结束区域是否存在时看渲染出来有没有内容，v-if 去掉、只剩注释或空白的区域和没写一样排版，补测试
+- [x] [`8591d75ed`](https://github.com/meta/astryx/commit/8591d75ed) [Component Audit] LayoutContent: full-bleed children and open edges line up with the Layout (#10516)
+  - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。内容区收拢上下内边距时同步归零发布给贴边子元素的容器内边距，行内结束边的内边距只由结束边发布
 - [x] [`64ca3b715`](https://github.com/meta/astryx/commit/64ca3b715) docs(specs): Layout and LayoutContent records match the closed slot and inset gaps (#10557)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`46d181337`](https://github.com/meta/astryx/commit/46d181337) feat(Resizable): a resizable LayoutPanel slides closed and open under every pointer (#9989)
   - 暂缓：本期已做 模块里的尺寸揭示；剩 可拖动调整的 LayoutPanel 开合滑动（Vue 版还没有 createResizable），归动效与手势引擎的组件接入阶段
+  - 暂缓：可调整面板在所有指针下滑动收起与展开：归动效与手势引擎任务，Vue 版缺面板滑动与跟手设施
 - [ ] [`916a8e2fa`](https://github.com/meta/astryx/commit/916a8e2fa) feat(Resizable): a pull past a limit rubber-bands and only the lift closes (#10292)
   - 暂缓：本期已做拖动识别器；剩 Resizable 拉过限位的橡皮筋，归组件接入阶段
-- [ ] [`0c0f9515f`](https://github.com/meta/astryx/commit/0c0f9515f) fix(Toolbar): the three-lane row wraps instead of letting lanes overlap at large text (#10563)
-- [ ] [`1ffc0dac9`](https://github.com/meta/astryx/commit/1ffc0dac9) fix(BottomSheet): resting content starts below the grab bar, whatever the padding (#8558)
+  - 暂缓：拖过界限橡皮筋回弹、松手才关闭：归动效与手势引擎任务，Vue 版缺橡皮筋与松手关闭设施
+- [x] [`0c0f9515f`](https://github.com/meta/astryx/commit/0c0f9515f) fix(Toolbar): the three-lane row wraps instead of letting lanes overlap at large text (#10563)
+  - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。带中间区的工具栏改为可换行的三条道，大字号下不再重叠；换行后选中标签的指示条留在标签上
+- [x] [`1ffc0dac9`](https://github.com/meta/astryx/commit/1ffc0dac9) fix(BottomSheet): resting content starts below the grab bar, whatever the padding (#8558)
+  - Vue 版已有：BottomSheet 面板静止内容从抓手条下面开始已由 #546 移植，布局容器文件只有注释变化
 - [ ] [`7c3d28a62`](https://github.com/meta/astryx/commit/7c3d28a62) docs(Resizable): the close-on-lift docs name every pointer and the key step (#10635)
-- [ ] [`db40c6b01`](https://github.com/meta/astryx/commit/db40c6b01) refactor(core): share per-instance warning dedupe and temporary focus targets (#10655)
-- [ ] [`17f6985ed`](https://github.com/meta/astryx/commit/17f6985ed) fix(Layout): a full-bleed Table or List row takes the rounded container corner it reaches (#10586)
-- [ ] [`9d753c5c2`](https://github.com/meta/astryx/commit/9d753c5c2) [Component Audit] LayoutFooter: spacing above the footer always follows its divider (#10674)
-- [ ] [`44862e54e`](https://github.com/meta/astryx/commit/44862e54e) [Component Audit] LayoutHeader: spacing below the header always follows its divider (#10686)
+  - 暂缓：松手关闭的文档依赖 916a8e2fa 的松手关闭行为，随之暂缓
+- [x] [`db40c6b01`](https://github.com/meta/astryx/commit/db40c6b01) refactor(core): share per-instance warning dedupe and temporary focus targets (#10655)
+  - 不适用：每实例告警去重与临时焦点目标的内部共享重构
+- [x] [`17f6985ed`](https://github.com/meta/astryx/commit/17f6985ed) fix(Layout): a full-bleed Table or List row takes the rounded container corner it reaches (#10586)
+  - Vue 版已有：Card、Dialog 已发布容器圆角，贴边的表格滚动区跟着圆角（#549 #565）
+- [x] [`9d753c5c2`](https://github.com/meta/astryx/commit/9d753c5c2) [Component Audit] LayoutFooter: spacing above the footer always follows its divider (#10674)
+  - Vue 版已有：页脚上方间距跟随自己的分隔线：data-divider 由组件在透传属性之后写入，padding 属性已有文档
+- [x] [`44862e54e`](https://github.com/meta/astryx/commit/44862e54e) [Component Audit] LayoutHeader: spacing below the header always follows its divider (#10686)
+  - Vue 版已有：页头下方间距跟随自己的分隔线：同上，paddingBlockEnd 与 padding 已有文档
 - [x] [`c86484dc5`](https://github.com/meta/astryx/commit/c86484dc5) docs(specs): LayoutHeader and LayoutFooter records state that a caller data-divider never replaces the divider state (#10714)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`0191e1370`](https://github.com/meta/astryx/commit/0191e1370) fix(Layout): a Layout with no contentWidth caps no header or footer (#10715)
-- [ ] [`3165c2fb3`](https://github.com/meta/astryx/commit/3165c2fb3) docs(Layout): containerCorners' header says the corner variables ship in the CSS (#10701)
-- [ ] [`50d20be92`](https://github.com/meta/astryx/commit/50d20be92) docs(LayoutPanel): the JSDoc example wraps its Layout in a Card (#10716)
+- [x] [`0191e1370`](https://github.com/meta/astryx/commit/0191e1370) fix(Layout): a Layout with no contentWidth caps no header or footer (#10715)
+  - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。没设 contentWidth 的 Layout 不再限制页头页脚宽度（--layout-content-width 回到 initial）
+- [x] [`3165c2fb3`](https://github.com/meta/astryx/commit/3165c2fb3) docs(Layout): containerCorners' header says the corner variables ship in the CSS (#10701)
+  - 不适用：上游 StyleX 文件头注释
+- [x] [`50d20be92`](https://github.com/meta/astryx/commit/50d20be92) docs(LayoutPanel): the JSDoc example wraps its Layout in a Card (#10716)
+  - 不适用：只改 React 版 JSDoc 示例
 - [x] [`3e987d69c`](https://github.com/meta/astryx/commit/3e987d69c) test(Layout): regular tests for LayoutHeader and LayoutFooter edges and xstyle order (#10737)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`7f04a6c5a`](https://github.com/meta/astryx/commit/7f04a6c5a) fix(Table): an unbounded column's resize handle announces a range that holds its width (#10577)
+- [x] [`7f04a6c5a`](https://github.com/meta/astryx/commit/7f04a6c5a) fix(Table): an unbounded column's resize handle announces a range that holds its width (#10577)
+  - Vue 版已有：useResizable 对无上限区域报出的上限本来就取窗口或容器尺寸并不低于当前值（Table 列宽部分见 #539）
 - [x] [`669270b3f`](https://github.com/meta/astryx/commit/669270b3f) docs(Layout): LayoutHeader and LayoutFooter verification maps name the regular edge and xstyle tests (#10751)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`ff7e096ba`](https://github.com/meta/astryx/commit/ff7e096ba) fix(ScrollableArea): complete hardening audit (#6314)
-- [ ] [`fe174dd12`](https://github.com/meta/astryx/commit/fe174dd12) [Component Audit] LayoutPanel: full-bleed children reach the panel's outer edge (#10774)
+- [x] [`ff7e096ba`](https://github.com/meta/astryx/commit/ff7e096ba) fix(ScrollableArea): complete hardening audit (#6314)
+  - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。ScrollableArea role 文档补地标导航提示，补各边内边距优先级测试
+- [x] [`fe174dd12`](https://github.com/meta/astryx/commit/fe174dd12) [Component Audit] LayoutPanel: full-bleed children reach the panel's outer edge (#10774)
+  - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。LayoutPanel 文档补 hasDivider 与 padding 的准确说明，贴边子元素沿用容器内边距变量
 - [x] [`78ac0b132`](https://github.com/meta/astryx/commit/78ac0b132) docs(records): LayoutPanel publishes its applied inset; Lightbox's gaps for 0, announcements and Tab are closed (#10819)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`d53cec5c7`](https://github.com/meta/astryx/commit/d53cec5c7) docs(useClickableContainer): a pressable surface without Card chrome (#10880)
+- [x] [`d53cec5c7`](https://github.com/meta/astryx/commit/d53cec5c7) docs(useClickableContainer): a pressable surface without Card chrome (#10880)
+  - Vue 版已有：useClickableContainer 文档已补不带 Card 外观的可按表面做法（#548）
 
 ### v0.7.14
 
-- [ ] [`108f354ae`](https://github.com/meta/astryx/commit/108f354ae) fix(core): drop 'use client' from the package root and the component barrels (#11106)
+- [x] [`108f354ae`](https://github.com/meta/astryx/commit/108f354ae) fix(core): drop 'use client' from the package root and the component barrels (#11106)
+  - 不适用：React Server Components 的 use client 指令
 - [x] [`9a3f29608`](https://github.com/meta/astryx/commit/9a3f29608) fix(useKeyboardHint): the arrow-key hint stays until dismissed, and Escape closes it (#10564)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`e392855f9`](https://github.com/meta/astryx/commit/e392855f9) fix(core): a swizzled ResizeHandle and LayoutPanel find each other across copies (AST-110 FR3) (#11131)
-- [ ] [`62093dfb5`](https://github.com/meta/astryx/commit/62093dfb5) docs(AppShell): name TopNav with label and SideNav with aria-label (#11151)
-- [ ] [`34f7fd0b9`](https://github.com/meta/astryx/commit/34f7fd0b9) fix(core): one outermost AppShell keeps the main id across swizzled copies (AST-110 FR3) (#11208)
+- [x] [`e392855f9`](https://github.com/meta/astryx/commit/e392855f9) fix(core): a swizzled ResizeHandle and LayoutPanel find each other across copies (AST-110 FR3) (#11131)
+  - 不适用：swizzle 后 ResizeHandle 与 LayoutPanel 跨副本互相找到的 React 打包问题
+- [x] [`62093dfb5`](https://github.com/meta/astryx/commit/62093dfb5) docs(AppShell): name TopNav with label and SideNav with aria-label (#11151)
+  - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。AppShell 文档补导航插槽无障碍名称的说明（中英）
+- [x] [`34f7fd0b9`](https://github.com/meta/astryx/commit/34f7fd0b9) fix(core): one outermost AppShell keeps the main id across swizzled copies (AST-110 FR3) (#11208)
+  - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。外层 AppShell 保持固定 id 的行为已由上一条的登记表实现（两份拷贝共享部分不适用）
 - [x] [`dc1103320`](https://github.com/meta/astryx/commit/dc1103320) test(SideNav): block the reversal only after a drawn collapse frame (#10984)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`1cca49a92`](https://github.com/meta/astryx/commit/1cca49a92) test(AppShell): load the layout-root story once, not once per host (#10985)
@@ -6208,35 +6282,50 @@
 
 ### v0.7.15
 
-- [ ] [`426ba2361`](https://github.com/meta/astryx/commit/426ba2361) fix(Resizable): write the handle's refs at commit, not in render (#10803)
+- [x] [`426ba2361`](https://github.com/meta/astryx/commit/426ba2361) fix(Resizable): write the handle's refs at commit, not in render (#10803)
+  - 不适用：React 渲染期与提交期写 ref 的时机
 
 ### v0.7.16
 
-- [ ] [`869cfc51b`](https://github.com/meta/astryx/commit/869cfc51b) fix(AppShell): content that has not hydrated keeps its server HTML below the mobile breakpoint (#11441)
-- [ ] [`2fec02259`](https://github.com/meta/astryx/commit/2fec02259) fix(SideNav, TopNav): a modified click on a drawer link leaves the mobile drawer open (#9390)
+- [x] [`869cfc51b`](https://github.com/meta/astryx/commit/869cfc51b) fix(AppShell): content that has not hydrated keeps its server HTML below the mobile breakpoint (#11441)
+  - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。接管服务端 HTML 时先按服务端提示渲染，挂载后才换成读到的窗口宽度
+- [x] [`2fec02259`](https://github.com/meta/astryx/commit/2fec02259) fix(SideNav, TopNav): a modified click on a drawer link leaves the mobile drawer open (#9390)
+  - Vue 版已有：抽屉里的行激活后关抽屉，已有（导航族移植）
 
 ### v0.7.17
 
-- [ ] [`ce0feb506`](https://github.com/meta/astryx/commit/ce0feb506) fix(core): a Table bleeds to a block edge only as its container's direct first or last child (#12068)
+- [x] [`ce0feb506`](https://github.com/meta/astryx/commit/ce0feb506) fix(core): a Table bleeds to a block edge only as its container's direct first or last child (#12068)
+  - Vue 版已有：table.css 只对容器的直接首个、末个子元素抵消上下内边距
 - [x] [`cb315c6ae`](https://github.com/meta/astryx/commit/cb315c6ae) docs(architecture): press feedback has one engine and three recipes (#12115)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`f5bd0f8de`](https://github.com/meta/astryx/commit/f5bd0f8de) Component docs: playground.mobile for a phone-width render (AppShell's mobile layout) (#12477)
-- [ ] [`3b4c1993c`](https://github.com/meta/astryx/commit/3b4c1993c) fix(core): theme targets for parts that paint inside a component (#12081)
+- [x] [`f5bd0f8de`](https://github.com/meta/astryx/commit/f5bd0f8de) Component docs: playground.mobile for a phone-width render (AppShell's mobile layout) (#12477)
+  - 不适用：上游主题编辑器预览用的 playground.mobile，Vue 文档站没有对应的主题编辑器
+- [x] [`3b4c1993c`](https://github.com/meta/astryx/commit/3b4c1993c) fix(core): theme targets for parts that paint inside a component (#12081)
+  - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。AppShell 作为布局根也停下外层 Card、Dialog 命名的容器，壳自己的页头页脚不带 data-container（Card、Layout 页眉页脚的部位标记 Vue 版已有）
 - [x] [`a2edb5300`](https://github.com/meta/astryx/commit/a2edb5300) chore: land batch 2 (16 pull requests) (#12718)
   - 已移植：[#579](https://github.com/astryx-vue/astryx-vue/pull/579)。批量合入里宿主的改动随宿主一起移植
-- [ ] [`d6ac73ef3`](https://github.com/meta/astryx/commit/d6ac73ef3) chore: land batch 4 (12 pull requests) (#12738)
-- [ ] [`9e19fa47e`](https://github.com/meta/astryx/commit/9e19fa47e) chore: land batch 8 (11 pull requests) (#12827)
+- [x] [`d6ac73ef3`](https://github.com/meta/astryx/commit/d6ac73ef3) chore: land batch 4 (12 pull requests) (#12738)
+  - Vue 版已有：Grid minWidth 在窄容器收缩与 Toolbar 换行已由 #510 移植（Vue 版已有 min(100%, …)）
+- [x] [`9e19fa47e`](https://github.com/meta/astryx/commit/9e19fa47e) chore: land batch 8 (11 pull requests) (#12827)
+  - Vue 版已有：LayoutContent、页眉页脚的 data-container 已由 #542 移植，Layout 文档也已写明
 - [x] [`a60f74251`](https://github.com/meta/astryx/commit/a60f74251) chore: land batch 12 (3 pull requests) (#12841)
   - 不适用：只改上游 gestures/README.md，Vue 版的说明写在源码注释和文档页里
-- [ ] [`b9f60ffba`](https://github.com/meta/astryx/commit/b9f60ffba) perf(Resizable): ResizeHandle reads the hook's channel from the resize model, not useResizable (#12050)
-- [ ] [`472896d35`](https://github.com/meta/astryx/commit/472896d35) fix(Toolbar, OverflowList): a start lane's own OverflowList folds beside the end lane (#12238)
-- [ ] [`53615c1f4`](https://github.com/meta/astryx/commit/53615c1f4) chore: land batch 19 (3 pull requests) (#12875)
-- [ ] [`a16f2e4a4`](https://github.com/meta/astryx/commit/a16f2e4a4) chore: land batch 13 (2 pull requests) (#12854)
+- [x] [`b9f60ffba`](https://github.com/meta/astryx/commit/b9f60ffba) perf(Resizable): ResizeHandle reads the hook's channel from the resize model, not useResizable (#12050)
+  - 不适用：React 版 ResizeHandle 从 resize 模型读通道的性能重构
+- [x] [`472896d35`](https://github.com/meta/astryx/commit/472896d35) fix(Toolbar, OverflowList): a start lane's own OverflowList folds beside the end lane (#12238)
+  - Vue 版已有：toolbar.css 已有「首部直接放 OverflowList」时让它占满剩余宽度折叠、尾部保持内容宽度的规则
+- [x] [`53615c1f4`](https://github.com/meta/astryx/commit/53615c1f4) chore: land batch 19 (3 pull requests) (#12875)
+  - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。Collapsible 触发行文字与箭头补大字号行高、AppShell 跳转链接补正文行高
+- [x] [`a16f2e4a4`](https://github.com/meta/astryx/commit/a16f2e4a4) chore: land batch 13 (2 pull requests) (#12854)
+  - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。Grid 文档补上只写 minWidth 会保留空轨道、用 fit 或 max 的提示（中英）
 - [ ] [`8efb25a85`](https://github.com/meta/astryx/commit/8efb25a85) chore: land batch 23 (4 pull requests) (#12885)
   - 暂缓：要还原上游动效，归动效与手势引擎任务
-- [ ] [`904b58e64`](https://github.com/meta/astryx/commit/904b58e64) chore: land batch 29 (3 pull requests) (#12894)
+- [x] [`904b58e64`](https://github.com/meta/astryx/commit/904b58e64) chore: land batch 29 (3 pull requests) (#12894)
+  - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。同 a2edb5300，读窗口前的断点标记现在侧栏也用
 - [ ] [`476d9063f`](https://github.com/meta/astryx/commit/476d9063f) chore: land batch 63 (3 pull requests) (#12945)
-- [ ] [`8c5fa4736`](https://github.com/meta/astryx/commit/8c5fa4736) fix(Resizable): only the handle's own keys act; other modifier combinations pass through (#11995)
+  - 暂缓：上游把圆角拆成逐角主题变量（corners 派生）再交给贴边子元素；Vue 版没有主题逐角圆角变量体系，Card 仍是单一圆角
+- [x] [`8c5fa4736`](https://github.com/meta/astryx/commit/8c5fa4736) fix(Resizable): only the handle's own keys act; other modifier combinations pass through (#11995)
+  - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。分隔条只处理自己的按键，其他修饰键组合放行
 
 ## 列表与树形结构（area:core）
 
