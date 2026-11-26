@@ -14,7 +14,7 @@ const RULE = 'rule'
 /**
  * 每个文档只加一次这条规则。规则挂在属性上而不是元素的行内样式，所以调用方自己的
  * `overflow-anchor` 既不会被读、也不会被写或还原，属性去掉后它重新生效。
- * 组件库不用 `!important`，调用方想在这个容器上自己决定锚定时，行内样式仍然优先。
+ * 这条规则不抢优先级：调用方想在这个容器上自己决定锚定时，行内样式仍然优先。
  */
 function ensureRule(doc: Document): void {
   if (doc.head.querySelector(`[${SCROLL_ANCHORING}="${RULE}"]`) != null)
