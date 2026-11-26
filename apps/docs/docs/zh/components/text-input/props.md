@@ -15,7 +15,7 @@ footer: false
       <tr><td><code>label</code></td><td><code>string</code></td><td>必需</td><td>字段的可见标签。即使被隐藏，也会作为控件的名称提供给辅助技术。</td></tr>
       <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td>false</td><td>在视觉上隐藏标签与说明，同时保留它们与控件的无障碍关联。</td></tr>
       <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>显示在标签下方、控件上方的补充说明文字。</td></tr>
-      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td>false</td><td>禁用输入框。被禁用的字段不参与表单提交。</td></tr>
+      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td>false</td><td>禁用输入框。它仍留在 Tab 顺序里（带 <code>aria-disabled</code>），内容只读，除聚焦和失焦外不运行调用方的处理函数，值也不参与表单提交。</td></tr>
       <tr><td><code>isOptional</code></td><td><code>boolean</code></td><td>false</td><td>显示“可选”提示。与 isRequired 同时设置时，isOptional 优先。</td></tr>
       <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td>false</td><td>显示“必填”提示，组件同时会设置 aria-required。</td></tr>
       <tr><td><code>labelIcon</code></td><td><code>Component</code></td><td>—</td><td>显示在标签前的图标组件。与 labelIcon 插槽同时使用时，插槽优先。</td></tr>
@@ -23,11 +23,11 @@ footer: false
       <tr><td><code>optionalLabel</code></td><td><code>string</code></td><td>Optional</td><td>“可选”提示的显示文字，用于本地化。</td></tr>
       <tr><td><code>requiredLabel</code></td><td><code>string</code></td><td>Required</td><td>“必填”提示的显示文字，用于本地化。</td></tr>
       <tr><td><code>id</code></td><td><code>string</code></td><td>自动生成</td><td>原生 input 的 ID。设置后会同步更新标签与说明的关联。</td></tr>
-      <tr><td><code>type</code></td><td><code>&#x27;text&#x27; | &#x27;password&#x27; | &#x27;email&#x27;</code></td><td>text</td><td>输入框类型。多行内容请改用 TextArea。</td></tr>
+      <tr><td><code>type</code></td><td><code>&#x27;text&#x27; | &#x27;password&#x27; | &#x27;email&#x27; | &#x27;search&#x27; | &#x27;tel&#x27; | &#x27;url&#x27;</code></td><td>text</td><td>输入框类型。<code>email</code>、<code>tel</code>、<code>url</code> 同时决定弹出对应的软键盘；<code>search</code> 让字段成为搜索框（搭配 <code>enterKeyHint="search"</code>）。多行内容请改用 TextArea。</td></tr>
       <tr><td><code>size</code></td><td><code>&#x27;sm&#x27; | &#x27;md&#x27; | &#x27;lg&#x27;</code></td><td>md</td><td>输入框高度。Neutral 主题下三档分别为 28、32、36px。</td></tr>
       <tr><td><code>isReadOnly</code></td><td><code>boolean</code></td><td>false</td><td>内容不可编辑，但输入框保留焦点、正常显示，值仍会参与表单提交。</td></tr>
       <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>说明禁用原因。设置后改用 aria-disabled 与 readonly 保留焦点，方便用户查看原因；字段仍不可修改，也不会随表单提交。</td></tr>
-      <tr><td><code>startIcon</code></td><td><code>Component</code></td><td>—</td><td>显示在输入框前端的装饰图标。与 icon 插槽同时使用时，插槽优先。</td></tr>
+      <tr><td><code>startIcon</code></td><td><code>IconName | Component</code></td><td>—</td><td>显示在输入框前端的装饰图标：语义图标名（如 <code>'search'</code>）或图标组件。与 icon 插槽同时使用时，插槽优先。</td></tr>
       <tr><td><code>status</code></td><td><code>TextInputStatus</code></td><td>—</td><td>设置 error、warning 或 success 校验状态，可附带 message 和 messageId。错误状态会设置 aria-invalid。</td></tr>
       <tr><td><code>statusVariant</code></td><td><code>&#x27;attached&#x27; | &#x27;detached&#x27; | &#x27;tooltip&#x27;</code></td><td>attached</td><td>状态消息的展示方式：紧贴控件、分离显示，或收进图标提示。三种方式均与输入框保持关联。</td></tr>
       <tr><td><code>changeAction</code></td><td><code>(value: string, event: TextInputChangeEvent) =&gt; void | Promise&lt;void&gt;</code></td><td>—</td><td>在值变化后执行的动作。返回 Promise 时，组件会显示加载状态。</td></tr>
@@ -38,6 +38,11 @@ footer: false
       <tr><td><code>hasAutoFocus</code></td><td><code>boolean</code></td><td>false</td><td>组件挂载后自动聚焦原生 input。</td></tr>
       <tr><td><code>htmlName</code></td><td><code>string</code></td><td>—</td><td>原生 input 的 name 属性，优先于通过原生属性传入的 name。字段禁用时会被移除。</td></tr>
       <tr><td><code>autoComplete</code></td><td><code>string</code></td><td>—</td><td>原样透传给原生 input 的 autocomplete 属性。</td></tr>
+      <tr><td><code>enterKeyHint</code></td><td><code>&#x27;enter&#x27; | &#x27;done&#x27; | &#x27;go&#x27; | &#x27;next&#x27; | &#x27;previous&#x27; | &#x27;search&#x27; | &#x27;send&#x27;</code></td><td>—</td><td>软键盘回车键上的字（原生 <code>enterkeyhint</code>）。只改键面，按回车做什么不变。</td></tr>
+      <tr><td><code>inputMode</code></td><td><code>&#x27;none&#x27; | &#x27;text&#x27; | &#x27;tel&#x27; | &#x27;url&#x27; | &#x27;email&#x27; | &#x27;numeric&#x27; | &#x27;decimal&#x27; | &#x27;search&#x27;</code></td><td>—</td><td>字段要哪种软键盘（原生 <code>inputmode</code>），不改变字段接受什么。</td></tr>
+      <tr><td><code>autoCapitalize</code></td><td><code>&#x27;off&#x27; | &#x27;none&#x27; | &#x27;on&#x27; | &#x27;sentences&#x27; | &#x27;words&#x27; | &#x27;characters&#x27;</code></td><td>—</td><td>软键盘输入时什么时候自动大写（原生 <code>autocapitalize</code>）。</td></tr>
+      <tr><td><code>hasAutoCorrect</code></td><td><code>boolean</code></td><td>—</td><td>软键盘是否在输入时纠正单词（原生 <code>autocorrect</code>）。不传时用浏览器默认。</td></tr>
+      <tr><td><code>hasSpellCheck</code></td><td><code>boolean</code></td><td>—</td><td>是否给拼错的词画下划线（原生 <code>spellcheck</code>）。不传时用浏览器默认。</td></tr>
       <tr><td><code>clearLabel</code></td><td><code>string</code></td><td>Clear {label}</td><td>清除按钮的读屏名称，默认带字段名。悬停或键盘聚焦时，提示只说「清除」。</td></tr>
       <tr><td><code>loadingLabel</code></td><td><code>string</code></td><td>Loading</td><td>加载指示器的无障碍名称，用于本地化。</td></tr>
       <tr><td><code>containerClass</code></td><td><code>string | object | array</code></td><td>—</td><td>加到字段外壳（Field 那一层，包着标签、输入框和状态消息）的 class。在 InputGroup 和横向标签的 FormLayout 里没有外壳，此时不生效，开发环境会警告。</td></tr>

@@ -17,14 +17,20 @@ footer: false
 <tr><td><code>cols</code></td><td><code>number</code></td><td>—</td><td>原生 textarea 的 cols 属性。</td></tr>
 <tr><td><code>minlength</code></td><td><code>number | string</code></td><td>—</td><td>原生 textarea 的 minlength 属性。</td></tr>
 <tr><td><code>maxlength</code></td><td><code>number | string</code></td><td>—</td><td>可见字符上限，一个 emoji 算一个。可以继续输入，超出后字数变红，接近上限和超出时读屏会播报。不会写进原生 maxlength。</td></tr>
+<tr><td><code>htmlMaxLength</code></td><td><code>number</code></td><td>—</td><td>原生 <code>maxlength</code>：输入达到这么多个 UTF-16 码元后浏览器不再接受输入（一个 emoji 可能占两个或更多）。独立于 <code>maxlength</code> 那个按可见字符计数的软计数器：不显示也不改变计数器，组件自己也不截断。</td></tr>
 <tr><td><code>wrap</code></td><td><code>&#x27;soft&#x27; | &#x27;hard&#x27;</code></td><td>soft</td><td>原生 textarea 的 wrap 属性。</td></tr>
 <tr><td><code>resize</code></td><td><code>&#x27;none&#x27; | &#x27;both&#x27; | &#x27;horizontal&#x27; | &#x27;vertical&#x27;</code></td><td>vertical</td><td>原生 resize 样式，控制可拖拽调整的方向。默认 vertical，只允许垂直拖动。</td></tr>
 <tr><td><code>autoComplete</code></td><td><code>string</code></td><td>—</td><td>原生 textarea 的 autocomplete，例如 <code>off</code>、<code>email</code>。原样透传，不影响受控值。</td></tr>
 <tr><td><code>hasSpellCheck</code></td><td><code>boolean</code></td><td>true</td><td>是否启用浏览器拼写检查。</td></tr>
+<tr><td><code>enterKeyHint</code></td><td><code>&#x27;enter&#x27; | &#x27;done&#x27; | &#x27;go&#x27; | &#x27;next&#x27; | &#x27;previous&#x27; | &#x27;search&#x27; | &#x27;send&#x27;</code></td><td>—</td><td>软键盘回车键上的字（原生 <code>enterkeyhint</code>）。</td></tr>
+<tr><td><code>inputMode</code></td><td><code>&#x27;none&#x27; | &#x27;text&#x27; | &#x27;tel&#x27; | &#x27;url&#x27; | &#x27;email&#x27; | &#x27;numeric&#x27; | &#x27;decimal&#x27; | &#x27;search&#x27;</code></td><td>—</td><td>字段要哪种软键盘（原生 <code>inputmode</code>）。</td></tr>
+<tr><td><code>autoCapitalize</code></td><td><code>&#x27;off&#x27; | &#x27;none&#x27; | &#x27;on&#x27; | &#x27;sentences&#x27; | &#x27;words&#x27; | &#x27;characters&#x27;</code></td><td>—</td><td>软键盘输入时什么时候自动大写（原生 <code>autocapitalize</code>）。</td></tr>
+<tr><td><code>hasAutoCorrect</code></td><td><code>boolean</code></td><td>—</td><td>软键盘是否在输入时纠正单词（原生 <code>autocorrect</code>）。</td></tr>
+<tr><td><code>startIcon</code></td><td><code>IconName | Component</code></td><td>—</td><td>文本域前端的装饰图标：语义图标名（如 <code>'search'</code>）或图标组件。</td></tr>
 <tr><td><code>placeholder</code></td><td><code>string</code></td><td>—</td><td>输入为空时显示的占位文本，不能替代 label。</td></tr>
 <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>显示在标签下方的补充说明。</td></tr>
 <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td>false</td><td>在视觉上隐藏标签，仍保留无障碍名称。</td></tr>
-<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td>false</td><td>禁用文本域，内容不可修改，值也不会随表单提交。</td></tr>
+<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td>false</td><td>禁用文本域：内容不可修改，仍留在 Tab 顺序里（带 <code>aria-disabled</code>），除聚焦和失焦外不运行调用方的处理函数，值也不会随表单提交。</td></tr>
 <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>说明禁用原因。设置后，被禁用的文本域仍可聚焦，以便用户查看原因。</td></tr>
 <tr><td><code>isReadOnly</code></td><td><code>boolean</code></td><td>false</td><td>内容只读、不可修改，但值仍会随表单提交。</td></tr>
 <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td>false</td><td>显示必填提示，但不会执行浏览器原生的必填校验。</td></tr>

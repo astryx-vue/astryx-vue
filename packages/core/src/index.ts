@@ -485,6 +485,8 @@ export { EmptyState } from './EmptyState/index.js'
 export type { EmptyStateHeadingLevel, EmptyStateProps, EmptyStateSlots } from './EmptyState/index.js'
 export { Field, FieldLabel, InputClearButton } from './Field/index.js'
 export type {
+  AutoCapitalize,
+  EnterKeyHint,
   FieldLabelProps,
   FieldLabelSlots,
   FieldPartStylingProps,
@@ -492,9 +494,11 @@ export type {
   FieldSlotProps,
   FieldSlots,
   FieldStatusInput,
+  FieldStatusPlacement,
   FieldStatusProps,
   FieldStatusType,
   FieldStatusVariant,
+  InputMode,
 } from './Field/index.js'
 export { FieldStatus } from './FieldStatus/index.js'
 export { FileInput } from './FileInput/index.js'

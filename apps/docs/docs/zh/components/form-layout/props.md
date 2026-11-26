@@ -23,7 +23,7 @@ footer: false
         <td><code>defaultOptionality</code></td>
         <td><code>'optional' | 'required'</code></td>
         <td>-</td>
-        <td>没有自己写 <code>isOptional</code> 或 <code>isRequired</code> 的字段用这个默认值。它改标记和 <code>aria-required</code>，不写原生 <code>required</code>。两个都写时，选填优先。</td>
+        <td>没有自己写 <code>isOptional</code> 或 <code>isRequired</code> 的字段用这个默认值。它改标记和 <code>aria-required</code>，不写原生 <code>required</code>。两个都写时，选填优先。复选框和开关是例外：没勾的复选框、关着的开关本身就是一个答案，所以不从默认值得到必填状态，只由它们自己的 <code>isRequired</code> 决定。</td>
       </tr>
       <tr>
         <td><code>defaultEntryErrorBehavior</code></td>

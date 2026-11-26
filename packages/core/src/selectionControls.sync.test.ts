@@ -111,11 +111,24 @@ describe('必填控件的无效状态跟着 status', () => {
     expect(wrapper.get('input').element.required).toBe(false)
   })
 
-  it('formLayout 的默认必填只读成 aria-required，不写原生 required', () => {
-    const wrapper = mount(FormLayout, { props: { defaultOptionality: 'required' }, slots: { default: () => h(Switch, { label: 'A', modelValue: false }) } })
-    const input = wrapper.get('input')
-    expect(input.attributes('aria-required')).toBe('true')
-    expect(input.element.required).toBe(false)
+  it('formLayout 的默认必填不让没勾的复选框、关着的开关变成必填', () => {
+    const wrapper = mount(FormLayout, {
+      props: { defaultOptionality: 'required' },
+      slots: { default: () => [h(Switch, { label: 'A', modelValue: false }), h(CheckboxInput, { label: 'B', modelValue: false })] },
+    })
+    for (const input of wrapper.findAll('input')) {
+      expect(input.attributes('aria-required')).toBeUndefined()
+      expect(input.element.required).toBe(false)
+    }
+  })
+
+  it('开关和复选框只由自己的 isRequired 变成必填', () => {
+    const wrapper = mount(FormLayout, {
+      props: { defaultOptionality: 'required' },
+      slots: { default: () => [h(Switch, { label: 'A', modelValue: false, isRequired: true }), h(CheckboxInput, { label: 'B', modelValue: false, isRequired: true })] },
+    })
+    for (const input of wrapper.findAll('input'))
+      expect(input.attributes('aria-required')).toBe('true')
   })
 
   it('必填的 CheckboxInput 没有错误时 aria-invalid 是 false', () => {

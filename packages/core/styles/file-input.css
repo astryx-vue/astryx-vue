@@ -54,8 +54,15 @@
   }
 
   .astryx-file-input-trigger:disabled,
-  .astryx-file-input[data-disabled='true'] .astryx-file-input-trigger {
+  .astryx-file-input[data-disabled='true'] .astryx-file-input-trigger,
+  .astryx-file-input[data-busy='true'] .astryx-file-input-trigger {
     cursor: default;
+  }
+
+  /* 忙碌时不再接受新的选择：不画可点光标，也不画悬停和拖入的反馈，但不套禁用的淡化。 */
+  .astryx-file-input[data-busy='true'] {
+    cursor: default;
+    box-shadow: none;
   }
 
   .astryx-file-input-text {

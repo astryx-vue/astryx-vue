@@ -19,8 +19,8 @@ footer: false
 <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>Choose file</code></td><td>Text shown when nothing is selected. Follows the locale.</td></tr>
 <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>Field height. 28, 32, or 36px.</td></tr>
 <tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>—</td><td>Error, warning, or success. A rejected file supplies an error when this is omitted.</td></tr>
-<tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'attached'</code></td><td>Where the status message sits.</td></tr>
-<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Blocks the picker and drops.</td></tr>
+<tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'attached'</code> in input mode, <code>'detached'</code> in dropzone mode</td><td>Where the status message sits. A dropzone's tall surface cannot carry an attached message, so it defaults to detached; <code>tooltip</code> shows the message from a focusable status button, in both modes and while uploading.</td></tr>
+<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Blocks the picker and drops. The trigger stays in the tab order with <code>aria-disabled</code>; the chosen files are left out of form submission.</td></tr>
 <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>Explains why the field is disabled. With <code>isDisabled</code>, the message shows in a tooltip on hover or keyboard focus and the trigger stays focusable with <code>aria-disabled</code>; the picker still cannot open.</td></tr>
 <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>Hint shown from the info icon at the end of the label.</td></tr>
 <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Marks the field required.</td></tr>

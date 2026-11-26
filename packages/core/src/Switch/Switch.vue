@@ -8,7 +8,7 @@ import { useAnnounce } from '../composables/useAnnounce.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import FieldLabel from '../Field/FieldLabel.vue'
 import FieldStatus from '../Field/FieldStatus.vue'
-import { useAriaRequired } from '../FormLayout/context.js'
+import { ariaRequired as resolveAriaRequired } from '../FormLayout/context.js'
 import { useComponentMessages } from '../locale/context.js'
 import { switchMessages } from '../locale/messages/switch.js'
 import { withholdCallerHandlers } from '../utils/disabledInteraction.js'
@@ -25,7 +25,8 @@ const props = withDefaults(defineProps<Omit<SwitchProps, 'modelValue'>>(), {
 })
 const emit = defineEmits<SwitchEmits>()
 defineSlots<SwitchSlots>()
-const ariaRequired = useAriaRequired(props)
+// 没勾的复选框、关着的开关本身就是一个答案：表单的默认必填不让它们变成必填，只有自己的 isRequired 才算。
+const ariaRequired = computed(() => resolveAriaRequired(props.isRequired, props.isOptional, undefined))
 const messages = useComponentMessages({ switch: switchMessages })
 const announce = useAnnounce()
 const press = usePressFeedback({ hasOverlay: false })

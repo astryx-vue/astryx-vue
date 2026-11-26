@@ -12,7 +12,7 @@ import { formLayoutHorizontal, formLayoutHorizontalLabels, formLayoutMixed, form
 
 ## 使用方法
 
-`FormLayout` 排列字段。它不是 `<form>`。字段放在默认插槽里，再选一个方向。
+`FormLayout` 排列字段。它不是 `<form>`：状态和提交请包一层原生 `<form>`，它没有对应的 Astryx 组件，保持普通元素即可。字段放在默认插槽里，再选一个方向。
 
 ```vue
 <script setup lang="ts">
@@ -30,7 +30,7 @@ import { TextInput } from '@astryx-vue/core/TextInput'
 
 `direction` 取 `vertical`（默认）、`horizontal` 或 `horizontal-labels`。纵向按间距刻度 4 往下排。横向把字段放进等宽的列。横向标签把标签放在左边、控件放在右边，窄于 480px 时改回纵向。
 
-`defaultOptionality` 取 `optional` 或 `required`。它只影响没有自己写 `isOptional` 或 `isRequired` 的字段的标记和 `aria-required`，不写原生 `required`。同一字段两个都写时，选填优先。没有 `FormLayout` 祖先时，`aria-required` 仍是 `isRequired && !isOptional`。
+`defaultOptionality` 取 `optional` 或 `required`。它只影响没有自己写 `isOptional` 或 `isRequired` 的字段的标记和 `aria-required`，不写原生 `required`。同一字段两个都写时，选填优先。复选框和开关是例外：没勾的复选框、关着的开关本身就是一个答案，所以不从默认值得到必填状态，只由它们自己的 `isRequired` 决定。没有 `FormLayout` 祖先时，`aria-required` 仍是 `isRequired && !isOptional`。
 
 嵌套的布局各自保留方向。纵向表单里可以放一行横向字段。
 

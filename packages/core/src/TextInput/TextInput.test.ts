@@ -129,7 +129,10 @@ describe('textInput', () => {
     expect(new FormData(form).get('name')).toBe('Ada')
     await wrapper.setProps({ isDisabled: true })
     expect(new FormData(form).has('name')).toBe(false)
-    expect(wrapper.get('input').attributes('disabled')).toBe('')
+    // 禁用的输入框不带原生 disabled：还在 Tab 顺序里，读屏念出「不可用」。
+    expect(wrapper.get('input').attributes('disabled')).toBeUndefined()
+    expect(wrapper.get('input').attributes('aria-disabled')).toBe('true')
+    expect(wrapper.get('input').attributes('readonly')).toBe('')
   })
 
   it('makes a disabled reason discoverable without permitting editing or submitting', async () => {
@@ -148,10 +151,33 @@ describe('textInput', () => {
     expect(wrapper.emitted('enter')).toBeUndefined()
   })
 
-  it('treats a blank disabledMessage as absent', () => {
+  it('keeps a disabled field in the tab order without a disabledMessage', () => {
     const wrapper = renderInput({ isDisabled: true, disabledMessage: '  ' })
-    expect(wrapper.get('input').attributes('disabled')).toBe('')
-    expect(wrapper.get('input').attributes('aria-disabled')).toBeUndefined()
+    const input = wrapper.get('input')
+    expect(input.attributes('disabled')).toBeUndefined()
+    expect(input.attributes('aria-disabled')).toBe('true')
+    expect(input.attributes('aria-describedby') ?? '').not.toContain('-disabled')
+    input.element.focus()
+    expect(document.activeElement).toBe(input.element)
+  })
+
+  it('runs no caller handler except focus and blur while disabled, and Enter does not submit', async () => {
+    const onClick = vi.fn()
+    const onFocus = vi.fn()
+    const onKeyup = vi.fn()
+    const wrapper = renderInput({ isDisabled: true, modelValue: 'Ada' }, { onClick, onFocus, onKeyup })
+    const input = wrapper.get('input')
+    await input.trigger('click')
+    await input.trigger('keyup', { key: 'a' })
+    input.element.focus()
+    expect(onClick).not.toHaveBeenCalled()
+    expect(onKeyup).not.toHaveBeenCalled()
+    expect(onFocus).toHaveBeenCalledTimes(1)
+    const enter = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true })
+    input.element.dispatchEvent(enter)
+    expect(enter.defaultPrevented).toBe(true)
+    expect(wrapper.emitted('enter')).toBeUndefined()
+    expect(wrapper.emitted('keydown')).toBeUndefined()
   })
 
   it('runs model update and change before changeAction and permits cancellation', async () => {
@@ -310,5 +336,94 @@ describe('textInput', () => {
     expect(id).toBeTruthy()
     expect(html).toContain(`for="${id}"`)
     expect(html).toContain(`aria-labelledby="${id}-label"`)
+  })
+})
+
+describe('textInput touch keyboard traits', () => {
+  it('renders no keyboard attribute until a prop sets it', () => {
+    const input = renderInput().get('input')
+    for (const name of ['enterkeyhint', 'inputmode', 'autocapitalize', 'autocorrect', 'spellcheck'])
+      expect(input.attributes(name)).toBeUndefined()
+  })
+
+  it('renders each trait as the native attribute of the same name', () => {
+    const input = renderInput({ enterKeyHint: 'search', inputMode: 'search', autoCapitalize: 'words', hasAutoCorrect: false, hasSpellCheck: false, type: 'search' }).get('input')
+    expect(input.attributes('enterkeyhint')).toBe('search')
+    expect(input.attributes('inputmode')).toBe('search')
+    expect(input.attributes('autocapitalize')).toBe('words')
+    expect(input.attributes('autocorrect')).toBe('off')
+    expect(input.attributes('spellcheck')).toBe('false')
+    expect(input.attributes('type')).toBe('search')
+  })
+
+  it('writes autocorrect on for true, and takes the tel and url types', () => {
+    expect(renderInput({ hasAutoCorrect: true, type: 'tel' }).get('input').attributes('autocorrect')).toBe('on')
+    expect(renderInput({ type: 'url' }).get('input').attributes('type')).toBe('url')
+  })
+
+  it('leaves Enter doing what it did whatever the Return key says', async () => {
+    const wrapper = renderInput({ enterKeyHint: 'send' })
+    await wrapper.get('input').trigger('keydown', { key: 'Enter' })
+    expect(wrapper.emitted('enter')).toHaveLength(1)
+  })
+})
+
+describe('textInput startIcon', () => {
+  it('takes a semantic icon name as well as a component', () => {
+    const wrapper = renderInput({ startIcon: 'search' })
+    expect(wrapper.find('.astryx-text-input-icon .astryx-icon').exists()).toBe(true)
+  })
+
+  it.each([null, false, ''])('renders no icon slot for %j', (value) => {
+    const wrapper = renderInput({ startIcon: value as unknown as undefined })
+    expect(wrapper.find('.astryx-text-input-icon').exists()).toBe(false)
+  })
+})
+
+describe('textInput clear and busy', () => {
+  it('focuses the input inside the tap, without scrolling', async () => {
+    const wrapper = renderInput({ modelValue: 'Ada', hasClear: true })
+    const focus = vi.spyOn(wrapper.get('input').element, 'focus')
+    const raf = vi.spyOn(window, 'requestAnimationFrame')
+    // 点按里的 click：不能等到下一帧或下一次渲染再聚焦。
+    wrapper.get('button[aria-label="Clear Name"]').element.dispatchEvent(new MouseEvent('click', { bubbles: true, detail: 1 }))
+    expect(focus).toHaveBeenCalledWith({ preventScroll: true })
+    expect(raf).not.toHaveBeenCalled()
+    raf.mockRestore()
+  })
+
+  it('keeps the clear button where it is when the field turns busy', async () => {
+    const wrapper = renderInput({ modelValue: 'Ada', hasClear: true })
+    const children = () => Array.from(wrapper.get('.astryx-text-input').element.children)
+    const after = () => {
+      const button = wrapper.get('button[aria-label="Clear Name"]').element
+      return children().length - children().indexOf(button) - 1
+    }
+    const idle = after()
+    await wrapper.setProps({ isLoading: true })
+    expect(after()).toBe(idle)
+    const button = wrapper.get('button[aria-label="Clear Name"]').element
+    expect(button.previousElementSibling?.classList.contains('astryx-text-input-spinner')).toBe(true)
+  })
+})
+
+describe('textInput error without a message', () => {
+  it('describes the field by hidden fallback text and warns once', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const wrapper = renderInput({ label: 'Email', status: { type: 'error' } })
+    const input = wrapper.get('input')
+    expect(input.attributes('aria-invalid')).toBe('true')
+    const describedBy = input.attributes('aria-describedby') ?? ''
+    expect(describedBy.split(' ').map(id => document.getElementById(id)?.textContent?.trim())).toContain('Invalid value')
+    await wrapper.setProps({ modelValue: 'x' })
+    expect(warn.mock.calls.filter(call => String(call[0]).includes('an error status has no message'))).toHaveLength(1)
+    warn.mockRestore()
+  })
+
+  it('adds no fallback when a message is given or the status is a warning', () => {
+    const withMessage = renderInput({ status: { type: 'error', message: 'Enter an email address' } })
+    expect(withMessage.text()).not.toContain('Invalid value')
+    const warning = renderInput({ status: { type: 'warning' } })
+    expect(warning.text()).not.toContain('Invalid value')
   })
 })
