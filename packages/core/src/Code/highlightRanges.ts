@@ -152,28 +152,55 @@ export function applyHighlightRangesFlat(codeElement: HTMLElement, tokenLines: T
   return paintWithRecovery(() => paintFlat(codeElement, tokenLines))
 }
 
+interface TextPoint {
+  node: Text
+  offset: number
+}
+
+/**
+ * 可编辑区域里，浏览器在回车、粘贴时可能把文字拆成好几个文本节点。
+ * 这里把整段文本的字符位置换算成「哪个节点、节点里第几个字」。
+ * `preferNext` 为 true 时，恰好落在两个节点交界处的位置算到后一个节点上（用作范围起点）。
+ */
+function createTextLocator(codeElement: HTMLElement): (position: number, preferNext: boolean) => TextPoint | null {
+  const nodes: { node: Text, start: number }[] = []
+  const walker = codeElement.ownerDocument.createTreeWalker(codeElement, NodeFilter.SHOW_TEXT)
+  let total = 0
+  for (let node = walker.nextNode() as Text | null; node != null; node = walker.nextNode() as Text | null) {
+    nodes.push({ node, start: total })
+    total += node.length
+  }
+  return (position, preferNext) => {
+    if (nodes.length === 0 || position < 0 || position > total)
+      return null
+    for (const { node, start } of nodes) {
+      const end = start + node.length
+      if (position < end || (position === end && !preferNext))
+        return { node, offset: position - start }
+    }
+    const last = nodes[nodes.length - 1]!
+    return { node: last.node, offset: last.node.length }
+  }
+}
+
 function paintFlat(codeElement: HTMLElement, tokenLines: TokenLine[]): HighlightRange[] {
   const applied: HighlightRange[] = []
-  const walker = codeElement.ownerDocument.createTreeWalker(codeElement, NodeFilter.SHOW_TEXT)
-  const text = walker.nextNode() as Text | null
-  if (text == null)
-    return applied
-
+  const locate = createTextLocator(codeElement)
   const source = codeElement.textContent ?? ''
   let lineStart = 0
   for (const tokens of tokenLines) {
     for (const token of tokens) {
-      const start = lineStart + token.start
-      const end = lineStart + token.end
-      if (start >= text.length || end <= 0)
+      const from = locate(lineStart + token.start, true)
+      const to = locate(lineStart + token.end, false)
+      if (from == null || to == null)
         continue
       const highlight = resolveHighlight(token.type)
       if (highlight == null)
         continue
       try {
         const range = new Range()
-        range.setStart(text, Math.max(0, Math.min(start, text.length)))
-        range.setEnd(text, Math.max(0, Math.min(end, text.length)))
+        range.setStart(from.node, from.offset)
+        range.setEnd(to.node, to.offset)
         if (range.collapsed)
           continue
         highlight.add(range)
