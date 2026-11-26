@@ -5,11 +5,21 @@
  * their own animations; these names are for later use and for the theme docs.
  * prefers-reduced-motion collapses the distance, scale, and opacity delta to
  * nothing, without rewriting component duration tokens.
+ *
+ * Reduce Motion splits by pointer, as UIKit does: under
+ * `@media (prefers-reduced-motion: reduce) and (pointer: coarse)` a change
+ * cross-fades over `--_astryx-reduced-motion-fade-duration` on
+ * `--_astryx-reduced-motion-fade-easing`; under
+ * `@media (prefers-reduced-motion: reduce) and (not (pointer: coarse))` it
+ * lands at once. The fade is a constant, not a theme token (no theme
+ * lengthens it); src/motion/reducedMotionCss.ts holds the same values.
  */
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 
 @layer astryx.tokens {
   :root {
+    --_astryx-reduced-motion-fade-duration: 200ms;
+    --_astryx-reduced-motion-fade-easing: cubic-bezier(0.42, 0, 0.58, 1);
     --astryx-motion-enter-opacity: 0;
     --astryx-motion-exit-opacity: 1;
     --astryx-motion-scale-from: 0.95;
