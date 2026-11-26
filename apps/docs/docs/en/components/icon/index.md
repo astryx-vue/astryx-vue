@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { iconBasic, iconButton, iconPalette, iconSemantic, iconSizes, iconStatus, iconThemes } from '../../../../components/demos/icon'
+import { iconBasic, iconButton, iconHookStatusRow, iconPalette, iconSemantic, iconSizes, iconStatus, iconThemes } from '../../../../components/demos/icon'
 </script>
 
 ## Usage
@@ -172,6 +172,13 @@ The full list is on the props page. Read the current id with `useSemanticIcon`, 
   description="The same semantic names. The first row is the built-in glyphs. The next two rows point search, close, check, and the downward chevron at Carbon and Heroicons."
   locale="en"
   title="Swap the drawings with the theme"
+/>
+
+<DemoExample
+  :demo="iconHookStatusRow"
+  description="A custom status row that reads the success, warning and error drawings with useSemanticIcon. The same row renders under the current theme and under a Theme whose icons override those three, and its icons change with no change to the component."
+  locale="en"
+  title="useSemanticIcon — Status Row"
 />
 
 ## Accessibility

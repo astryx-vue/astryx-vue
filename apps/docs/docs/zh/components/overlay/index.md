@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { overlayBottomStrip, overlayHoverReveal } from '../../../../components/demos/overlay'
+import { overlayBottomStrip, overlayHookQuickView, overlayHoverReveal } from '../../../../components/demos/overlay'
 </script>
 
 ## 使用方法
@@ -79,6 +79,8 @@ const { containerRef, containerProps, scrimProps } = useOverlay({ showOn: 'hover
 
 容器上要同时挂 `containerProps`（它带来定位、裁剪和点按切换）和 `containerRef`，遮罩要渲染在这个容器内部，悬停和焦点的祖先选择器才找得到它。返回的属性是响应式的：`showOn`、`isOpen` 这些选项传 `ref` 或 `computed` 时，遮罩会跟着变；传普通值时它们只在初始化时读一次。
 
+遮罩显示出来后，它盖住的那一块会接住鼠标点击。图片本身是链接时，用 `bottom` 或 `top` 横条，不要用默认的整块遮罩，这样点图片其余部分仍然能打开链接。
+
 
 <ComponentAnatomy />
 
@@ -108,4 +110,11 @@ const { containerRef, containerProps, scrimProps } = useOverlay({ showOn: 'hover
   description="Quick view 按钮在图片被悬停或聚焦之前保持隐藏。"
   locale="zh"
   title="悬停显示"
+/>
+
+<DemoExample
+  :demo="overlayHookQuickView"
+  description="商品卡片本身就是浮层容器：useOverlay 返回挂在 Card 上的 ref 和属性，以及图片上那一个 OverlayScrim 的属性。鼠标移到卡片上，或键盘焦点进入卡片，图片底部就滑出 Quick view 按钮。图片仍是一个能点的链接，按 Tab 先到图片，再到 Quick view。"
+  locale="zh"
+  title="useOverlay —— 商品快速预览"
 />

@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { internationalizationProviderOverrides } from '../../../../components/demos/internationalization-provider'
+import { internationalizationProviderDirectionSparkline, internationalizationProviderOverrides } from '../../../../components/demos/internationalization-provider'
 </script>
 
 ## Usage
@@ -39,3 +39,5 @@ Nesting works: the inner provider wins for its subtree.
 Common configurations, variations, and states.
 
 <DemoExample :demo="internationalizationProviderOverrides" title="InternationalizationProvider — Overrides" description="Override a small number of Astryx strings without providing a full locale catalog." locale="en" />
+
+<DemoExample :demo="internationalizationProviderDirectionSparkline" title="useLocaleDirection — Live Sparkline" description="A canvas sparkline reads the writing direction with useLocaleDirection, because a canvas does not follow CSS direction. Switch the locale to Arabic and the oldest point moves to the right edge, with the latest value on the left." locale="en" />

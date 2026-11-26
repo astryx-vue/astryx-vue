@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { useThemeTokenValues } from '../../../../components/demos/use-theme'
+import { useThemeActiveName, useThemeTokenValues } from '../../../../components/demos/use-theme'
 </script>
 
 ## 使用方法
@@ -44,4 +44,11 @@ const categorical = tokens.value['--color-data-categorical-blue']
   description="用 useTheme 读出解析后的 token 值，给 SVG 图表这类不吃 CSS 的地方用。"
   locale="zh"
   title="useTheme — 读取 token 值"
+/>
+
+<DemoExample
+  :demo="useThemeActiveName"
+  description="代码只想知道当前是哪个主题时，读 useTheme 的 name。在 harbor 这个 Theme 里，卡片显示 harbor；不在任何 Theme 里时名字是 neutral。"
+  locale="zh"
+  title="useTheme —— 当前主题名"
 />

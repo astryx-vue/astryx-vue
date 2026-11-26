@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { iconBasic, iconButton, iconPalette, iconSemantic, iconSizes, iconStatus, iconThemes } from '../../../../components/demos/icon'
+import { iconBasic, iconButton, iconHookStatusRow, iconPalette, iconSemantic, iconSizes, iconStatus, iconThemes } from '../../../../components/demos/icon'
 </script>
 
 ## 使用方法
@@ -172,6 +172,13 @@ import { defineTheme, Theme } from '@astryx-vue/core/Theme'
   description="同一组语义名。第一行是内置字形。后两行把搜索、关闭、勾选和向下箭头换成 Carbon 和 Heroicons。"
   locale="zh"
   title="随主题换图形"
+/>
+
+<DemoExample
+  :demo="iconHookStatusRow"
+  description="一行自定义的状态，用 useSemanticIcon 读出成功、警告和错误各用哪个图形。同一行分别放在当前主题下和一个改写了这三个图标的 Theme 里，组件一行没改，图标就跟着变。"
+  locale="zh"
+  title="useSemanticIcon —— 状态行"
 />
 
 ## 无障碍

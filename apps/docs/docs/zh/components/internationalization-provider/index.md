@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { internationalizationProviderOverrides } from '../../../../components/demos/internationalization-provider'
+import { internationalizationProviderDirectionSparkline, internationalizationProviderOverrides } from '../../../../components/demos/internationalization-provider'
 </script>
 
 ## 使用方法
@@ -39,3 +39,5 @@ import { InternationalizationProvider } from '@astryx-vue/core/Internationalizat
 常见的用法和不同的状态。
 
 <DemoExample :demo="internationalizationProviderOverrides" title="InternationalizationProvider — Overrides" description="不提供整份语言目录，只替换少数几句 Astryx 文案。" locale="zh" />
+
+<DemoExample :demo="internationalizationProviderDirectionSparkline" title="useLocaleDirection —— 实时迷你折线" description="canvas 不跟随 CSS 的书写方向，所以这条迷你折线用 useLocaleDirection 读出方向再画。切到阿拉伯语后，最早的点挪到右边，最新的值在左边。" locale="zh" />

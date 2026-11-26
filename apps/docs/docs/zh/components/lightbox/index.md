@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { lightboxGallery, lightboxVideo, lightboxZoom } from '../../../../components/demos/lightbox'
+import { lightboxGallery, lightboxHookGrid, lightboxVideo, lightboxZoom } from '../../../../components/demos/lightbox'
 </script>
 
 ## 使用方法
@@ -73,4 +73,11 @@ const { bindings, open } = useLightbox({ media: photo })
   description="打开缩放和平移。双击图片放大，拖动查看。再双击一次，或点关闭，回到原大小并退出。"
   locale="zh"
   title="缩放"
+/>
+
+<DemoExample
+  :demo="lightboxHookGrid"
+  description="直接调用 useLightbox 的照片网格：getTriggerProps(index) 把每张缩略图变成一个按钮，点击、回车或空格都会在这张照片处打开图库。"
+  locale="zh"
+  title="useLightbox —— 照片网格"
 />

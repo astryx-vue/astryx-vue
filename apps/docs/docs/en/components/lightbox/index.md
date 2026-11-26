@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { lightboxGallery, lightboxVideo, lightboxZoom } from '../../../../components/demos/lightbox'
+import { lightboxGallery, lightboxHookGrid, lightboxVideo, lightboxZoom } from '../../../../components/demos/lightbox'
 </script>
 
 ## Usage
@@ -73,4 +73,11 @@ const { bindings, open } = useLightbox({ media: photo })
   description="Double-click the image to zoom in, then drag to pan. Double-click again, or close, to leave zoom."
   locale="en"
   title="Zoom"
+/>
+
+<DemoExample
+  :demo="lightboxHookGrid"
+  description="A photo grid that calls useLightbox directly: getTriggerProps(index) turns each thumbnail into a button that opens the gallery at that photo, with Enter and Space as well as a click."
+  locale="en"
+  title="useLightbox — Gallery Grid"
 />
