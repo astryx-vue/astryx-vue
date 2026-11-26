@@ -52,6 +52,12 @@ describe('chat.css 输入区', () => {
   })
 })
 
+describe('chat.css 系统消息', () => {
+  it('默认系统消息的行高读主题的辅助文字行高', () => {
+    expect(rule('.astryx-chat-system-message[data-variant=\'default\']')).toContain('line-height: var(--astryx-text-supporting-leading, 1.6667)')
+  })
+})
+
 describe('chat.css 消息列表', () => {
   it('键盘焦点环画在列表自己的盒子里面，用共享的焦点环令牌', () => {
     const ring = rule('.astryx-chat-message-list:focus-visible')

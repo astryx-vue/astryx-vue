@@ -14,14 +14,14 @@ const RULE = 'rule'
 /**
  * 每个文档只加一次这条规则。规则挂在属性上而不是元素的行内样式，所以调用方自己的
  * `overflow-anchor` 既不会被读、也不会被写或还原，属性去掉后它重新生效。
- * `!important` 让行内的 `auto` 也没法在组件自己摆放内容的容器上把锚定重新打开。
+ * 组件库不用 `!important`，调用方想在这个容器上自己决定锚定时，行内样式仍然优先。
  */
 function ensureRule(doc: Document): void {
   if (doc.head.querySelector(`[${SCROLL_ANCHORING}="${RULE}"]`) != null)
     return
   const style = doc.createElement('style')
   style.setAttribute(SCROLL_ANCHORING, RULE)
-  style.textContent = `[${SCROLL_ANCHORING}="${OFF}"]{overflow-anchor:none !important}`
+  style.textContent = `[${SCROLL_ANCHORING}="${OFF}"]{overflow-anchor:none}`
   doc.head.appendChild(style)
 }
 
