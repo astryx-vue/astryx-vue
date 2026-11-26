@@ -67,3 +67,8 @@ export function familyForNode(node) {
 export function validateFamilies() {
   return Object.keys(NODES).filter(node => !BY_NODE.has(node))
 }
+
+/** 全部长期组件族（每个族一条），用来把命令行里的族 id 换成清单里的标题。 */
+export function listFamilies() {
+  return [...new Map([...BY_NODE.values()].map(family => [family.id, family])).values()]
+}
