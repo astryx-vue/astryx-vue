@@ -28,7 +28,7 @@ const range = shallowRef<DateRange | null>(null)
 </template>
 ```
 
-The popover shows two months under one header. The first click sets the start. The second click commits the range when the span is allowed. Clicking the start again commits a single day when the shortest span is one day, and cancels the selection otherwise. The closed field omits the year when both ends are in the current year. Presets stay beside the calendars. When the two months no longer fit side by side, they wrap onto separate rows. A constraint can still turn individual days off. While a change is saving, the field cannot be edited.
+The popover shows two months under one header. The first click sets the start. The second click commits the range when the span is allowed. Clicking the start again commits a single day when the shortest span is one day, and cancels the selection otherwise. The closed field omits the year when both ends are in the current year; on the server and while hydrating the year is always written, so a server in another time zone cannot cause a mismatch. Presets stay beside the calendars. When the presets and one month no longer fit side by side, the presets stack above the calendar and the popover scrolls inside the layer. When the two months no longer fit side by side, they wrap onto separate rows. A constraint can still turn individual days off. While a change is saving, the field cannot be edited.
 
 
 <ComponentAnatomy />

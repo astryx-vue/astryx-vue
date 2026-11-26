@@ -1,5 +1,21 @@
 # @astryx-vue/cli
 
+## 0.4.48
+
+### Patch Changes
+
+- [#576](https://github.com/astryx-vue/astryx-vue/pull/576) [`815ff06`](https://github.com/astryx-vue/astryx-vue/commit/815ff0633ed0c8ee086b63742a7d1f04a12f934b) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - DateRangeInput：预设和一个月的日历并排放不下时（窄页面），预设叠到日历上面，弹层在层的高度内自己滚动，日历和翻月按钮不再被切掉；字段收起后的文字在服务端和水合那一趟一律写出年份，挂载后再省掉今年的年份，服务端在别的时区也不会水合不一致；字段锁定时弹层里的点击不再改动选择；值里放了 `Date` 对象时，开发期抛出点明 `modelValue` 和改法的错误。
+
+## 0.4.47
+
+### Patch Changes
+
+- [#571](https://github.com/astryx-vue/astryx-vue/pull/571) [`dbc08b8`](https://github.com/astryx-vue/astryx-vue/commit/dbc08b8abccd4b06c24d1be3771a679801bea68f) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 对齐上游 Calendar 的几处细节：日期数字和周数用当前语言的数字写法（如阿拉伯语、波斯语）；周起始日是周日或周六时，周数按每行周四所在的 ISO 周计，不再整体错一周；两个月并排时，选中日或今天落在 `max` 所在的月份，会让这个月显示在右边那一格；没有内置表头数据的语言，星期名改用 `Intl` 的缩写（七个都不超过四个字符时）或窄写法；日期按钮高度是下限，文字放大时按钮跟着长高；DateRangeInput 弹层里不可选的日子不再用原生 `disabled`，保持可聚焦并带 `aria-disabled`。
+
+- [#575](https://github.com/astryx-vue/astryx-vue/pull/575) [`427fe3c`](https://github.com/astryx-vue/astryx-vue/commit/427fe3c616eca359f46cf20dbe13d6965e3e9d16) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - TimeInput 和 DateTimeInput 的时间文字跟随语言：没写 `hourFormat` 时按当前语言的时制（`en-GB`、`de-DE`、`zh-CN` 默认 24 小时），数字、分隔符和上下午的词也用语言自己的写法，打字时读得懂这些写法。时间那段被拒的输入现在留在框里并说明原因：没打完的时间不标，完整却超出 `min`/`max` 的时间立刻亮出来（`entryErrorBehavior="blur-or-enter"` 则等 Enter 或失焦），读不成时间的文字等 Enter 或失焦；Enter 不再被拦，外面的表单照常提交。TimeInput 新增 `entryErrorBehavior` 属性和 `entryErrorChange` 事件。忙碌时的转圈对读屏隐藏，字段自己只念一次「加载中」。Timer 的 elapsed 文字按当前语言写单位。
+
+- [#573](https://github.com/astryx-vue/astryx-vue/pull/573) [`eca17f2`](https://github.com/astryx-vue/astryx-vue/commit/eca17f24b65bd2e4860f223d687f0b6c12a93b1b) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Timestamp 新增 `timezoneID`，绝对格式按指定时区写文字，服务端和浏览器一致；`tooltipEntries` 里没写时区的行跟随它。写在 Timestamp 上的属性现在落到 `<time>` 上，调用方的 `aria-label` 和 `tabindex` 优先；相对读数的名字以屏幕上显示的词开头，后面接完整日期；实时刷新在时间或名字有它参与的控件拿着焦点时先等着；悬停卡片保持描述列表结构，复制按钮在各行的值里面，没有标签的行用时区全名命名；卡片的 `aria-controls` 写在能聚焦的 `<time>` 上。HoverCard 只在支持的角色上写 `aria-haspopup`，没有角色的触发器不再写。
+
 ## 0.4.46
 
 ### Patch Changes

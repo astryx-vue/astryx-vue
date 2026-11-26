@@ -9,7 +9,7 @@ footer: false
 
 <div class="component-api-table" role="region" aria-label="DateRangeInput 属性" tabindex="0">
 <table><thead><tr><th>名称</th><th>类型</th><th>默认值</th><th>说明</th></tr></thead><tbody>
-<tr><td><code>v-model</code></td><td><code>DateRange | null</code></td><td><code>null</code></td><td><code>{ start, end }</code>，ISO 日期。</td></tr>
+<tr><td><code>v-model</code></td><td><code>DateRange | null</code></td><td><code>null</code></td><td><code>{ start, end }</code>，ISO 日期字符串。传 <code>Date</code> 对象会在开发期抛出点明属性的错误。</td></tr>
 <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>必填。无障碍名称。</td></tr>
 <tr><td><code>presets</code></td><td><code>{ label, getRange }[]</code></td><td>—</td><td>快捷按钮。<code>getRange</code> 返回区间。</td></tr>
 <tr><td><code>monthCount</code></td><td><code>number</code></td><td><code>2</code></td><td>弹出层显示几个月。</td></tr>
