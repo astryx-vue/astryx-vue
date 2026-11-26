@@ -57,6 +57,12 @@
     display: inline;
   }
 
+  /* 文本触发器是 Astryx 加上的 Tab 停靠点，自己画共用的焦点环。 */
+  .astryx-tooltip-trigger.astryx-tooltip-trigger--text:focus-visible {
+    outline: 2px solid var(--astryx-color-border-focus, #0074e2);
+    outline-offset: 2px;
+  }
+
   .astryx-tooltip-trigger--indicated {
     text-decoration-line: underline;
     text-decoration-style: dashed;

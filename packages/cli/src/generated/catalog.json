@@ -59027,7 +59027,7 @@
                 "name": "`focusTrigger`",
                 "type": "`'auto' | 'always' | 'never'`",
                 "default": "`'auto'`",
-                "description": "Whether focus opens the card. auto listens only when the trigger is itself focusable."
+                "description": "When focus opens the card. auto opens when the trigger itself takes focus, or when focus lands inside a trigger that is focusable at that moment, so a roving-tabindex member opens once it becomes the tab stop. always opens on focus anywhere inside the trigger; never never opens on focus."
               },
               {
                 "name": "`touchTrigger`",
@@ -59106,7 +59106,7 @@
                 "name": "`focusTrigger`",
                 "type": "`'auto' | 'always' | 'never'`",
                 "default": "`'auto'`",
-                "description": "聚焦时是否打开卡片：auto 仅在触发元素本身可聚焦时监听，always 始终监听，never 从不监听。"
+                "description": "焦点何时打开卡片：auto 在触发元素自身获得焦点，或焦点落在当时可聚焦的触发元素内部时打开，因此漫游 tabindex 的成员变成 Tab 停靠点后就会打开；always 在触发元素内任何位置获得焦点都打开；never 从不因焦点打开。"
               },
               {
                 "name": "`touchTrigger`",

@@ -4,8 +4,8 @@ import type { HoverCardAlignment, HoverCardFocusTrigger, HoverCardPlacement, Hov
 import { computed, onMounted, onScopeDispose, shallowRef, toValue, watch } from 'vue'
 import { useTouchTriggerInternal } from '../composables/internal/useTouchTriggerInternal.js'
 import { useLayer } from '../composables/useLayer.js'
-import { isFocusable } from '../layer/focus.js'
 import { useHoverLayerDismiss } from '../layer/useHoverLayerDismiss.js'
+import { createFocusGate } from '../Tooltip/tooltipFocusRules.js'
 import { supportsAriaExpanded } from './hoverCardTrigger.js'
 import { useHoverCardTriggerBinding } from './hoverCardTriggerBinding.js'
 
@@ -208,11 +208,23 @@ export function useHoverCard(options: UseHoverCardOptions = {}): UseHoverCardRet
   }
 
   function onPointerDown(event: PointerEvent): void {
-    touch.handlePointerDown(event)
+    // 笔在感应范围内就开始了悬停的延时打开，落笔时若还挂着，卡片会在按下期间打开，
+    // 随后这一下轻点又把它关掉。落笔按触屏处理，先取消挂着的打开。
+    if (touch.handlePointerDown(event))
+      clearTimeout(showTimer)
   }
 
-  function onFocusIn(): void {
+  const focusGate = createFocusGate(() => toValue(options.focusTrigger) ?? 'auto')
+
+  function onFocusIn(event: FocusEvent): void {
+    // 焦点到达时才判断这次算不算触发器的焦点：漫游 tabindex 的成员挂监听时可能是 -1，
+    // 轮到它时已经是 Tab 停靠点了。
+    if (!focusGate.arrive(triggerRef.value, event.target))
+      return
     if (!isEnabled())
+      return
+    // 受控且为 false 时由调用方做主，任何焦点都不打开卡片。
+    if (toValue(options.isOpen) === false)
       return
     // 轻点把焦点留在触发器上，关掉的对话框把焦点还回来时用户也可能正在用软键盘打字，
     // 这些都还是触屏场景，焦点不开卡片。
@@ -228,6 +240,8 @@ export function useHoverCard(options: UseHoverCardOptions = {}): UseHoverCardRet
   function onFocusOut(event: FocusEvent): void {
     const related = event.relatedTarget as HTMLElement | null
     if (related && layer.contentRef.value?.contains(related))
+      return
+    if (!focusGate.leave(triggerRef.value, event.target))
       return
     scheduleHide()
   }
@@ -268,9 +282,8 @@ export function useHoverCard(options: UseHoverCardOptions = {}): UseHoverCardRet
     }
   }
 
-  function shouldListenFocus(element: HTMLElement): boolean {
-    const mode = toValue(options.focusTrigger) ?? 'auto'
-    return mode === 'always' || (mode === 'auto' && isFocusable(element))
+  function shouldListenFocus(): boolean {
+    return (toValue(options.focusTrigger) ?? 'auto') !== 'never'
   }
 
   const { bind, unbind, applyTriggerAttributes } = useHoverCardTriggerBinding({

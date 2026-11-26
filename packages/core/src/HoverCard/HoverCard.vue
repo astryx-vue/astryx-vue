@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { HoverCardEmits, HoverCardProps, HoverCardSlots } from './types.js'
-import { computed, onMounted, onUpdated, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, onUpdated, ref } from 'vue'
 import { useResolvedLayerTeleport } from '../composables/useLayerMountTarget.js'
 import { useMergedRefs } from '../composables/useMergedRefs.js'
 import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
@@ -86,6 +86,21 @@ function syncTrigger(): void {
 
 onMounted(syncTrigger)
 onUpdated(syncTrigger)
+
+// 触发元素可能在这里没有重新渲染时被换掉（子组件自己换了根元素）：
+// 盯着包裹元素的子节点，换了就重新接线，旧元素先放手。
+let childObserver: MutationObserver | null = null
+onMounted(() => {
+  const wrapper = wrapperRef.value
+  if (wrapper == null || typeof MutationObserver === 'undefined')
+    return
+  childObserver = new MutationObserver(() => {
+    if (wrapper.firstElementChild !== triggerRef.value && wrapper.firstElementChild != null)
+      syncTrigger()
+  })
+  childObserver.observe(wrapper, { childList: true })
+})
+onBeforeUnmount(() => childObserver?.disconnect())
 
 defineExpose({ element, show, hide })
 </script>
