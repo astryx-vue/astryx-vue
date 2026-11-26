@@ -15,6 +15,31 @@
     cursor: pointer;
   }
 
+  .astryx-radio[data-align='start'] {
+    align-items: flex-start;
+  }
+
+  /*
+   * first-line：单选圈贴顶，再按「一行文字的行高减圈的高度」的一半往下推，
+   * 圈的中心就落在标签第一行的中心。圈比这一行高时（md 24px），不推，文字被它压下去。
+   */
+  .astryx-radio[data-align='first-line'] {
+    --_radio-size: var(--astryx-radio-size, 18px);
+    align-items: flex-start;
+  }
+
+  .astryx-radio[data-align='first-line'][data-size='sm'] {
+    --_radio-size: 20px;
+  }
+
+  .astryx-radio[data-align='first-line'][data-size='md'] {
+    --_radio-size: 24px;
+  }
+
+  .astryx-radio[data-align='first-line'] > .astryx-radio-indicator {
+    margin-block-start: max(0px, calc((var(--astryx-text-body-size, 0.875rem) * var(--astryx-text-body-leading, 1.4286) - var(--_radio-size)) / 2));
+  }
+
   .astryx-radio[data-disabled='true'] {
     opacity: 0.5;
     cursor: default;

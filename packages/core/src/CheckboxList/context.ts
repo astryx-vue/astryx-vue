@@ -7,6 +7,8 @@ export interface CheckboxListContext {
   toggle: (value: string, checked: boolean) => void
   isDisabled: ComputedRef<boolean>
   disabledReason: ComputedRef<string | undefined>
+  /** 组的状态是错误：每个复选框都带 aria-invalid。 */
+  hasErrorStatus: ComputedRef<boolean>
   isReadOnly: ComputedRef<boolean>
   loadingValues: ComputedRef<readonly string[]>
   size: ComputedRef<'sm' | 'md'>

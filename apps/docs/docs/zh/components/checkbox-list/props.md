@@ -36,7 +36,7 @@ footer: false
 <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>必填。行标题，也是复选框的名称。需要链接等富内容时用 <code>label</code> 插槽，复选框的名字取可见文字。</td></tr>
 <tr><td><code>ariaLabel</code></td><td><code>string</code></td><td>—</td><td>覆盖复选框的无障碍名称。富文本标题没有可读文字时使用。</td></tr>
 <tr><td><code>value</code></td><td><code>string</code></td><td>—</td><td>集合模式必填。独立行不要传。</td></tr>
-<tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>次要文字，同时作为复选框的说明。富内容用 <code>description</code> 插槽，仍然通过 <code>aria-describedby</code> 关联。</td></tr>
+<tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>次要文字，同时作为复选框的说明。字符串只显示一行，过长时行会用省略号截断；要显示完整文字，用 <code>description</code> 插槽，仍然通过 <code>aria-describedby</code> 关联。</td></tr>
 <tr><td><code>isChecked</code></td><td><code>boolean | 'indeterminate'</code></td><td>—</td><td>独立行的勾选状态。集合模式忽略它。</td></tr>
 <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>禁用这一行。</td></tr>
 <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>这一行自己的加载。复选框里显示旋转指示，并且不能切换。</td></tr>

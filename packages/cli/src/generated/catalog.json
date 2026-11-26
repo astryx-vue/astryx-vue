@@ -5409,7 +5409,7 @@
               "Pointer down",
               "Selected"
             ],
-            "description": "Each label must have at least 4.5:1 contrast with its segment background. Check unselected, Hover, Pointer down, and selected colors as they appear on screen. For Hover and Pointer down, measure the final background after the overlay is applied."
+            "description": "Each label must have at least 4.5:1 contrast with its segment background. Check unselected, Hover, Pointer down, and selected colors as they appear on screen. For Hover and Pointer down, measure the final background after the overlay is applied. The track is translucent, so label contrast depends on the background behind the control. Check the labels on every background the control sits on, including a custom page color."
           },
           {
             "name": "Essential icon",
@@ -5474,7 +5474,7 @@
               "Pointer down",
               "Selected"
             ],
-            "description": "每段文字和这段的底至少 4.5:1。未选中、悬停、按下、选中，都按屏幕上的颜色量。悬停和按下，量的是叠层加上去之后的最终底色。"
+            "description": "每段文字和这段的底至少 4.5:1。未选中、悬停、按下、选中，都按屏幕上的颜色量。悬停和按下，量的是叠层加上去之后的最终底色。轨道是半透明的，所以文字对比度还取决于控件后面的背景。控件放在哪种背景上，就在哪种背景上检查文字，自定义的页面底色也要查。"
           },
           {
             "name": "代替文字的图标",
@@ -25767,7 +25767,7 @@
                 "name": "`description`",
                 "type": "`string`",
                 "default": "—",
-                "description": "Secondary text, also the checkbox description. Rich content goes in the `description` slot and stays linked with `aria-describedby`."
+                "description": "Secondary text, also the checkbox description. A string shows on one line and the row cuts long text with an ellipsis, so for full text use the `description` slot, which stays linked with `aria-describedby`."
               },
               {
                 "name": "`isChecked`",
@@ -25923,7 +25923,7 @@
                 "name": "`description`",
                 "type": "`string`",
                 "default": "—",
-                "description": "次要文字，同时作为复选框的说明。富内容用 `description` 插槽，仍然通过 `aria-describedby` 关联。"
+                "description": "次要文字，同时作为复选框的说明。字符串只显示一行，过长时行会用省略号截断；要显示完整文字，用 `description` 插槽，仍然通过 `aria-describedby` 关联。"
               },
               {
                 "name": "`isChecked`",
@@ -26159,6 +26159,12 @@
                 "default": "—"
               },
               {
+                "name": "`align`",
+                "description": "`align`",
+                "type": "`'center' | 'start' | 'first-line'`",
+                "default": "`'center'`"
+              },
+              {
                 "name": "`isChecked`",
                 "description": "`isChecked`",
                 "type": "`CheckboxValue` (`boolean | 'indeterminate'`)",
@@ -26200,6 +26206,12 @@
                 "type": "`string`",
                 "default": "—",
                 "description": "名字下面的一行小字。它也是复选框的说明，读屏会先读名字再读这句。"
+              },
+              {
+                "name": "`align`",
+                "type": "`'center' | 'start' | 'first-line'`",
+                "default": "`'center'`",
+                "description": "复选框相对标签的垂直对齐，原样交给这一行。`first-line` 让复选框和换行标签的第一行保持水平。"
               },
               {
                 "name": "`isChecked`",
@@ -31854,6 +31866,12 @@
                 "description": "ID of the native input. Auto-generated when omitted."
               },
               {
+                "name": "`align`",
+                "type": "`'center' | 'start' | 'first-line'`",
+                "default": "`'center'`",
+                "description": "Vertical alignment of the radio circle against the label. `first-line` keeps the circle level with the first line of a wrapped label; `start` aligns it to the top."
+              },
+              {
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
@@ -31895,6 +31913,12 @@
                 "type": "`string`",
                 "default": "—",
                 "description": "原生 input 元素的 ID，省略时自动生成。"
+              },
+              {
+                "name": "`align`",
+                "type": "`'center' | 'start' | 'first-line'`",
+                "default": "`'center'`",
+                "description": "单选圈相对标签的垂直对齐。`first-line` 让圈和换行标签的第一行保持水平，`start` 贴顶。"
               },
               {
                 "name": "`isDisabled`",
@@ -32865,6 +32889,12 @@
                 "default": "—"
               },
               {
+                "name": "`align`",
+                "description": "`align`",
+                "type": "`'center' | 'start' | 'first-line'`",
+                "default": "`'center'`"
+              },
+              {
                 "name": "`isDisabled`",
                 "description": "`isDisabled`",
                 "type": "`boolean`",
@@ -32900,6 +32930,12 @@
                 "type": "`string`",
                 "default": "—",
                 "description": "名字下面的一行小字，读屏会先读名字再读这句。"
+              },
+              {
+                "name": "`align`",
+                "type": "`'center' | 'start' | 'first-line'`",
+                "default": "`'center'`",
+                "description": "单选圈相对标签的垂直对齐。`first-line` 让圈和换行标签的第一行保持水平，`start` 贴顶。"
               },
               {
                 "name": "`isDisabled`",
@@ -34792,9 +34828,9 @@
               },
               {
                 "name": "`labelIcon`",
-                "type": "`Component`",
+                "type": "`IconName | Component`",
                 "default": "—",
-                "description": "Decorative icon before the label."
+                "description": "Decorative icon before the label: a semantic icon name such as `'search'` or an icon component."
               },
               {
                 "name": "`labelTooltip`",
@@ -34943,9 +34979,9 @@
               },
               {
                 "name": "`labelIcon`",
-                "type": "`Component`",
+                "type": "`IconName | Component`",
                 "default": "—",
-                "description": "标签前的装饰图标。"
+                "description": "标签前的装饰图标：可以传语义图标名（比如 `'search'`），也可以传图标组件。"
               },
               {
                 "name": "`labelTooltip`",

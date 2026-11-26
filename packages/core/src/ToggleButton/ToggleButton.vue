@@ -9,7 +9,8 @@ import { readLayerScoped } from '../layer/scopedProvide.js'
 import { toggleButtonGroupContextKey } from './context.js'
 import '../../styles/toggle-button.css'
 
-defineOptions({ name: 'AstryxToggleButton' })
+// 调用方的 aria-pressed、data-pressed 排在前面，由组件按真实的按下状态覆盖。
+defineOptions({ name: 'AstryxToggleButton', inheritAttrs: false })
 
 const props = withDefaults(defineProps<Omit<ToggleButtonProps, 'isPressed'>>(), {
   elevation: 'none',
@@ -121,6 +122,7 @@ defineExpose({
 <template>
   <Button
     ref="button"
+    v-bind="{ ...$attrs, ...groupItemProps }"
     class="astryx-toggle-button"
     :aria-pressed="isPressed ? 'true' : 'false'"
     :data-pressed="isPressed ? 'true' : 'false'"
@@ -135,7 +137,6 @@ defineExpose({
     :tooltip="tooltip"
     variant="ghost"
     :click-action="clickAction"
-    v-bind="groupItemProps"
     @click="handleClick"
   >
     <template v-if="$slots.icon || $slots.pressedIcon" #icon>

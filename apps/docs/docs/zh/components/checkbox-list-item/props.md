@@ -12,6 +12,7 @@ footer: false
 <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>这一行的名字。它同时也是复选框的无障碍名，不用再另外起名。必填。</td></tr>
 <tr><td><code>value</code></td><td><code>string</code></td><td>—</td><td>这一行的身份，父组件拿它去数组里找。跟着 <code>CheckboxList</code> 用时必填，单独用时不用写。</td></tr>
 <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>名字下面的一行小字。它也是复选框的说明，读屏会先读名字再读这句。</td></tr>
+<tr><td><code>align</code></td><td><code>'center' | 'start' | 'first-line'</code></td><td><code>'center'</code></td><td>复选框相对标签的垂直对齐，原样交给这一行。<code>first-line</code> 让复选框和换行标签的第一行保持水平。</td></tr>
 <tr><td><code>isChecked</code></td><td><code>CheckboxValue</code>（<code>boolean | 'indeterminate'</code>）</td><td><code>false</code></td><td>单独用时决定勾不勾。父组件传了数组时这个属性不起作用。</td></tr>
 <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>把这一行禁用。行还在，文字照样看得到，就是点不动了。</td></tr>
 <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>这一行正在处理。复选框里转圈，也点不动。跟着 <code>CheckboxList</code> 用时，父组件的 <code>changeAction</code> 还没完成，它也会自动转圈。</td></tr>

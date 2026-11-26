@@ -12,7 +12,7 @@
     border-style: solid;
     border-width: var(--astryx-border-width, 1px);
     border-color: var(--astryx-input-status-color, var(--astryx-color-border-emphasized, #d4d4d4));
-    border-radius: var(--astryx-radius-full, 9999px);
+    border-radius: 50%;
     color: var(--astryx-color-accent, #262626);
     background: var(--astryx-color-background-surface, #fff);
     transition-property: background-color, border-color;
@@ -48,7 +48,7 @@
   .astryx-radio-indicator-dot {
     width: calc((100% + 2 * var(--astryx-border-width, 1px)) * 10 / 24);
     height: calc((100% + 2 * var(--astryx-border-width, 1px)) * 10 / 24);
-    border-radius: var(--astryx-radius-full, 9999px);
+    border-radius: 50%;
     background: currentcolor;
   }
 

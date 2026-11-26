@@ -46,15 +46,18 @@
     pointer-events: none;
   }
 
+  /* 成员在窄屏上换行，每个标签保留完整宽度；单个成员比容器还宽时才截断。 */
   .astryx-toggle-button-group {
     display: inline-flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: var(--astryx-toggle-button-group-gap, var(--astryx-spacing-1, 4px));
     max-width: 100%;
   }
 
   .astryx-toggle-button-group[data-orientation='vertical'] {
     flex-direction: column;
+    flex-wrap: nowrap;
     align-items: stretch;
   }
 

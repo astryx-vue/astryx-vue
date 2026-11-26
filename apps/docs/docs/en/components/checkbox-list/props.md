@@ -36,7 +36,7 @@ footer: false
 <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>Required row label. It names the checkbox. Use the <code>label</code> slot for rich content such as a link; the checkbox name comes from the visible text.</td></tr>
 <tr><td><code>ariaLabel</code></td><td><code>string</code></td><td>—</td><td>Overrides the checkbox name. Use it when a rich label has no readable text.</td></tr>
 <tr><td><code>value</code></td><td><code>string</code></td><td>—</td><td>Required in collection mode. Omit it for a standalone row.</td></tr>
-<tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>Secondary text, also the checkbox description. Rich content goes in the <code>description</code> slot and stays linked with <code>aria-describedby</code>.</td></tr>
+<tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>Secondary text, also the checkbox description. A string shows on one line and the row cuts long text with an ellipsis, so for full text use the <code>description</code> slot, which stays linked with <code>aria-describedby</code>.</td></tr>
 <tr><td><code>isChecked</code></td><td><code>boolean | 'indeterminate'</code></td><td>—</td><td>Standalone checked state. Ignored in collection mode.</td></tr>
 <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disables this row.</td></tr>
 <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Loading for this row. The checkbox shows a spinner and cannot be toggled.</td></tr>

@@ -132,7 +132,8 @@
     flex: none;
     width: var(--astryx-switch-thumb-size, 16px);
     height: var(--astryx-switch-thumb-size, 16px);
-    border-radius: var(--astryx-switch-thumb-radius, 999px);
+    /* 圆用 50% 画在方盒子上：主题把 --astryx-radius-full 改成方角时，轨道变方，拇指仍是圆的。 */
+    border-radius: var(--astryx-switch-thumb-radius, 50%);
     background: var(--astryx-switch-thumb, #fff);
     transform: translateX(0);
     transition: transform 130ms cubic-bezier(0.24, 1, 0.4, 1), background-color var(--astryx-duration-exit, 175ms) var(--astryx-ease-exit, cubic-bezier(0.3, 0, 0.6, 0.6)), width var(--astryx-duration-exit, 175ms) var(--astryx-ease-exit, cubic-bezier(0.3, 0, 0.6, 0.6)), height var(--astryx-duration-exit, 175ms) var(--astryx-ease-exit, cubic-bezier(0.3, 0, 0.6, 0.6));

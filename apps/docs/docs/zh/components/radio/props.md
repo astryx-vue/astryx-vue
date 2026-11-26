@@ -13,6 +13,7 @@ footer: false
 <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>必需。选项的可见标签，同时作为无障碍名称供屏幕阅读器朗读。</td></tr>
 <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>显示在标签下方的补充说明。</td></tr>
 <tr><td><code>id</code></td><td><code>string</code></td><td>—</td><td>原生 input 元素的 ID，省略时自动生成。</td></tr>
+<tr><td><code>align</code></td><td><code>'center' | 'start' | 'first-line'</code></td><td><code>'center'</code></td><td>单选圈相对标签的垂直对齐。<code>first-line</code> 让圈和换行标签的第一行保持水平，<code>start</code> 贴顶。</td></tr>
 <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否禁用该选项，禁用后不可选择。</td></tr>
 <tr><td><code>isReadOnly</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否只读。只读的选项仍可见，但无法更改选中状态。</td></tr>
 </tbody></table>

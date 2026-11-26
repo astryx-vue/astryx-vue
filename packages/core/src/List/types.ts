@@ -138,6 +138,15 @@ export interface ListSlots {
 
 export interface ListItemProps {
   /**
+   * Vertical alignment of the start and end content slots. `center` centers
+   * each slot on the whole text block; `start` lines up slot tops with the
+   * text's top; `first-line` centers each slot on the label's first line, so a
+   * small mark stays level with the first line of a wrapped label. A slot
+   * taller than that line moves the text down.
+   * @default 'center'
+   */
+  align?: ItemAlign
+  /**
    * Primary text identifying the row. Use the `label` slot for rich content.
    */
   label?: ItemText
@@ -221,15 +230,6 @@ export interface ItemProps extends ListItemProps {
    * @default 'div'
    */
   as?: ItemElement
-  /**
-   * Vertical alignment of the start and end content slots. `center` centers
-   * each slot on the whole text block; `start` lines up slot tops with the
-   * text's top; `first-line` centers each slot on the label's first line, so a
-   * small mark stays level with the first line of a wrapped label. A slot
-   * taller than that line moves the text down.
-   * @default 'center'
-   */
-  align?: ItemAlign
   /**
    * How the label and description sit together. `stacked` puts the description
    * on its own line; `inline` keeps both on one line, with the description

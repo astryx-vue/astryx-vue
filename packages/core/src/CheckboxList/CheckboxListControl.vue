@@ -17,6 +17,7 @@ defineProps<{
   loadingLabel?: string
   disabledMessage?: string
   ariaLabelledby?: string
+  isInvalid?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -34,7 +35,7 @@ defineExpose({ element })
     ref="checkbox" :model-value="modelValue" :label="label" is-label-hidden
     :size="size" :is-disabled="isDisabled" :is-read-only="isReadOnly"
     :is-loading="isLoading" :loading-label="loadingLabel" :disabled-message="disabledMessage"
-    :aria-describedby="descriptionId ?? undefined" :aria-labelledby="ariaLabelledby"
+    :aria-describedby="descriptionId ?? undefined" :aria-invalid="isInvalid || undefined" :aria-labelledby="ariaLabelledby"
     @update:model-value="emit('update:modelValue', $event)"
   />
 </template>

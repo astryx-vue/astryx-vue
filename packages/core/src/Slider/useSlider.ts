@@ -47,22 +47,35 @@ export function useSlider(options: SliderOptions): SliderControl {
     trackInteractionModality()
   let pointerId: number | null = null
   let latest: SliderValue | undefined
-  watch([() => p.isDisabled, () => p.orientation, () => Array.isArray(options.model())], () => {
+  // 在两个重合的滑块上按下后、还没移动时，指针当时的取值；第一次移动的方向决定哪个滑块走。
+  let coincidentPress: number | null = null
+  // 这次拖动是不是从两个重合的滑块上开始的：这样的拖动随时都能跟着指针，
+  // 被拖的滑块顶住另一个、指针越过它时，由另一个接手。
+  let coincidentOrigin = false
+  function resetDrag(): void {
     dragging.value = null
     pointerId = null
     latest = undefined
-  })
+    coincidentPress = null
+    coincidentOrigin = false
+  }
+  watch([() => p.isDisabled, () => p.orientation, () => Array.isArray(options.model())], resetDrag)
   watch(values, () => {
     latest = undefined
   })
 
-  function bounds(index: number): [number, number] {
-    return [index === 1 ? add(values.value[0]!, gap.value) : min.value, values.value.length === 2 && index === 0 ? add(values.value[1]!, -gap.value) : max.value]
+  function boundsFor(index: number, base: readonly number[]): [number, number] {
+    return [index === 1 ? add(base[0]!, gap.value) : min.value, base.length === 2 && index === 0 ? add(base[1]!, -gap.value) : max.value]
   }
 
-  function update(index: number, raw: number, shouldSnap = true): SliderValue {
-    const next = [...values.value]
-    const [lower, upper] = bounds(index)
+  function bounds(index: number): [number, number] {
+    return boundsFor(index, values.value)
+  }
+
+  // 同一个事件里要动两个滑块时（拖动从一个重合的滑块交给另一个），从 base 这组值开始算。
+  function update(index: number, raw: number, shouldSnap = true, base: readonly number[] = values.value): SliderValue {
+    const next = [...base]
+    const [lower, upper] = boundsFor(index, base)
     const stepped = shouldSnap ? snap(raw, min.value, step.value) : raw
     next[index] = clamp(stepped, lower, upper)
     const value: SliderValue = next.length === 2 ? [next[0]!, next[1]!] : next[0]!
@@ -89,28 +102,69 @@ export function useSlider(options: SliderOptions): SliderControl {
     const mark = target.closest<HTMLElement>('[data-mark-value]')
     const thumb = target.closest<HTMLElement>('[data-thumb-index]')
     const raw = mark ? Number(mark.dataset.markValue) : pointerValue(event)
-    const index = thumb ? Number(thumb.dataset.thumbIndex) : values.value.length === 2 && Math.abs(raw - values.value[1]!) < Math.abs(raw - values.value[0]!) ? 1 : 0
+    const isCoincident = values.value.length === 2 && values.value[0] === values.value[1]
+    // 两个滑块在同一个值上时，只有一个能朝指针去的方向走：
+    // 按在滑块上（或它们共同的值上，比如那个刻度的文字）什么都不动，由第一次移动的方向选滑块；
+    // 按在旁边的轨道上，直接选那一侧的滑块。停着的按下由盖在上面的滑块（下标 1）扛着。
+    const parks = isCoincident && (thumb != null || raw === values.value[0])
+    let index = thumb ? Number(thumb.dataset.thumbIndex) : values.value.length === 2 && Math.abs(raw - values.value[1]!) < Math.abs(raw - values.value[0]!) ? 1 : 0
+    if (parks && thumb == null)
+      index = 1
+    if (isCoincident && !parks)
+      index = raw > values.value[0]! ? 1 : 0
     event.preventDefault()
     dragging.value = index
     pointerId = event.pointerId
+    // 第一次移动从指针自己量起，不是从按下的刻度量起（宽文字离它的刻度有一段距离）。
+    coincidentPress = parks ? pointerValue(event) : null
+    coincidentOrigin = parks
     options.track.value.querySelectorAll<HTMLElement>('[role="slider"]')[index]?.focus({ preventScroll: true })
     keyboardFocus.value = null
-    update(index, raw)
+    update(index, parks ? values.value[index]! : raw)
     options.track.value.setPointerCapture?.(event.pointerId)
   }
 
+  function handTo(index: number): void {
+    if (index === dragging.value)
+      return
+    dragging.value = index
+    options.track.value?.querySelectorAll<HTMLElement>('[role="slider"]')[index]?.focus({ preventScroll: true })
+    keyboardFocus.value = null
+  }
+
   function pointerMove(event: PointerEvent): void {
-    if (!p.isDisabled && pointerId === event.pointerId && dragging.value !== null)
-      update(dragging.value, pointerValue(event))
+    if (p.isDisabled || pointerId !== event.pointerId || dragging.value === null)
+      return
+    const value = pointerValue(event)
+    if (coincidentPress !== null) {
+      if (value === coincidentPress)
+        return
+      // 重合的滑块上按下后的第一次移动，把拖动交给能朝那个方向走的滑块。
+      const origin = coincidentPress
+      coincidentPress = null
+      handTo(value > origin ? 1 : 0)
+    }
+    else if (coincidentOrigin) {
+      const current = values.value
+      const held = dragging.value
+      const other = held === 0 ? 1 : 0
+      if ((held === 0 && value > current[1]!) || (held === 1 && value < current[0]!)) {
+        // 被拖的滑块停在另一个旁边，就像它一路跟着指针到了那里，另一个接着跟。
+        const base = [...current]
+        base[held] = current[other]!
+        handTo(other)
+        update(other, value, true, base)
+        return
+      }
+    }
+    update(dragging.value, value)
   }
 
   function pointerEnd(event: PointerEvent): void {
     if (pointerId !== event.pointerId || dragging.value === null)
       return
     const value = latest ?? (values.value.length === 2 ? [values.value[0]!, values.value[1]!] : values.value[0]!) as SliderValue
-    dragging.value = null
-    pointerId = null
-    latest = undefined
+    resetDrag()
     if (options.track.value?.hasPointerCapture?.(event.pointerId))
       options.track.value.releasePointerCapture(event.pointerId)
     if (!p.isDisabled)

@@ -21,6 +21,8 @@ const props = defineProps<{
   isFocusable: boolean
   tooltipText?: string
   dragging: boolean
+  /** 有滑块在被拖动（不一定是这一个）。 */
+  dragActive?: boolean
   keyboardFocus?: boolean
   extraAttrs?: Record<string, unknown>
 }>()
@@ -35,7 +37,7 @@ const tabIndex = computed(() => props.isFocusable ? 0 : -1)
 const focused = shallowRef(false)
 const hovered = shallowRef(false)
 const dismissed = shallowRef(false)
-const open = computed(() => !!props.tooltipText && !props.isDisabled && !dismissed.value && (focused.value || hovered.value || props.dragging))
+const open = computed(() => !!props.tooltipText && !props.isDisabled && !dismissed.value && (props.dragActive ? props.dragging : focused.value || hovered.value))
 const style = computed(() => props.orientation === 'horizontal' ? { insetInlineStart: position(props.percentage) } : { bottom: position(props.percentage) })
 watch(() => props.dragging, () => {
   dismissed.value = false

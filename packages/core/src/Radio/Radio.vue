@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import type { RadioEmits, RadioProps, RadioSlots } from './types.js'
-import { computed, useAttrs, useId, useSlots, useTemplateRef } from 'vue'
+import { computed, mergeProps, useAttrs, useId, useSlots, useTemplateRef } from 'vue'
 import { useTouchHitArea } from '../composables/internal/useTouchHitArea.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { useIndicator } from '../Indicator/useIndicator.js'
 import { readLayerScoped } from '../layer/scopedProvide.js'
+import { withholdCallerHandlers } from '../utils/disabledInteraction.js'
 import { radioContextKey } from './types.js'
 
-defineOptions({ name: 'AstryxRadio' })
+defineOptions({ name: 'AstryxRadio', inheritAttrs: false })
 const props = defineProps<RadioProps>()
 const emit = defineEmits<RadioEmits>()
 defineSlots<RadioSlots>()
@@ -50,6 +51,8 @@ const hasDescription = computed(() => !!props.description || slots.description !
 function describedBy(): string | undefined {
   return [hasDescription.value ? `${inputId.value}-description` : undefined, messageDescriptionId.value].filter(Boolean).join(' ') || undefined
 }
+// 禁用的单选项还能聚焦（整组带原因时），调用方的处理函数除了聚焦和失焦都不运行。
+const rowAttrs = computed(() => mergeProps(withholdCallerHandlers(attrs, !!isDisabled.value), isDisabled.value ? {} : press.pressableProps))
 function rowClick(event: MouseEvent): void {
   const target = event.target
   if (target instanceof Element && target.closest('a, button, select, textarea, [role="button"], [role="link"]'))
@@ -59,12 +62,14 @@ function rowClick(event: MouseEvent): void {
 
 <template>
   <!-- eslint-disable-next-line vue-a11y/click-events-have-key-events, vue-a11y/no-static-element-interactions -- 标签包住整行。点到链接时取消标签的默认选中，键盘仍由单选框处理。 -->
-  <label ref="row" :for="inputId" class="astryx-radio" :class="{ 'astryx-indicator-scope': !isDisabled, 'astryx-touch-hit-area-band': !isDisabled }" v-bind="isDisabled ? undefined : press.pressableProps" :data-size="indicatorSize" :data-disabled="isDisabled || undefined" :data-readonly="isReadOnly || undefined" @click="rowClick">
+  <label ref="row" v-bind="rowAttrs" :for="inputId" class="astryx-radio" :class="{ 'astryx-indicator-scope': !isDisabled, 'astryx-touch-hit-area-band': !isDisabled }" :data-size="indicatorSize" :data-align="align && align !== 'center' ? align : undefined" :data-disabled="isDisabled || undefined" :data-readonly="isReadOnly || undefined" @click="rowClick">
     <input
       :id="inputId" class="astryx-radio-native" type="radio" :name="name" :value="value"
       :checked="isSelected" :disabled="isDisabled && !explainedByMessage" :readonly="isReadOnly"
       :form="explainedByMessage ? '' : undefined"
       :aria-disabled="explainedByMessage || undefined"
+      :required="context?.isRequired.value || undefined"
+      :aria-invalid="context?.isRequired.value ? context.hasErrorStatus.value : undefined"
       :aria-describedby="describedBy()"
       @click="click" @change="change"
     >

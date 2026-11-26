@@ -55,3 +55,15 @@ export function disabledInteractionProps(
     },
   }
 }
+
+/**
+ * 可聚焦的禁用控件交给元素的调用方 props：除了聚焦和失焦，所有 `on*` 处理函数都不给，
+ * 和原生 `disabled` 一样，控件不会运行任何调用方回调。没禁用时原样返回。
+ */
+export function withholdCallerHandlers<P extends object>(props: P, isDisabled: boolean): P {
+  if (!isDisabled)
+    return props
+  return Object.fromEntries(
+    Object.entries(props).filter(([key]) => !/^on[A-Z]/.test(key) || /^on(?:Focus|Blur)/.test(key)),
+  ) as P
+}

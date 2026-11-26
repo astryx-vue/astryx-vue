@@ -31,7 +31,7 @@ footer: false
 <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'detached'</code></td><td>状态消息的显示位置。</td></tr>
 <tr><td><code>changeAction</code></td><td><code>SwitchChangeAction</code></td><td>—</td><td>切换后执行的操作。支持 Promise。</td></tr>
 <tr><td><code>hasAutoFocus</code></td><td><code>boolean</code></td><td><code>false</code></td><td>挂载后聚焦输入元素。</td></tr>
-<tr><td><code>labelIcon</code></td><td><code>Component</code></td><td>—</td><td>标签前的装饰图标。</td></tr>
+<tr><td><code>labelIcon</code></td><td><code>IconName | Component</code></td><td>—</td><td>标签前的装饰图标：可以传语义图标名（比如 <code>'search'</code>），也可以传图标组件。</td></tr>
 <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>标签旁的信息按钮提示。</td></tr>
 </tbody></table>
 </div>

@@ -13,6 +13,7 @@ footer: false
 <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>Required. Visible label and accessible name.</td></tr>
 <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>Description shown below the label.</td></tr>
 <tr><td><code>id</code></td><td><code>string</code></td><td>—</td><td>ID of the native input. Auto-generated when omitted.</td></tr>
+<tr><td><code>align</code></td><td><code>'center' | 'start' | 'first-line'</code></td><td><code>'center'</code></td><td>Vertical alignment of the radio circle against the label. <code>first-line</code> keeps the circle level with the first line of a wrapped label; <code>start</code> aligns it to the top.</td></tr>
 <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disable this option.</td></tr>
 <tr><td><code>isReadOnly</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Make this option read-only.</td></tr>
 </tbody></table>

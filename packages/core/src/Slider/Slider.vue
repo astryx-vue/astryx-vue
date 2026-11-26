@@ -7,8 +7,10 @@ import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import Field from '../Field/Field.vue'
 import { useFieldPartStyling } from '../Field/fieldParts.js'
+import { useAriaRequired } from '../FormLayout/context.js'
 import { useComponentMessages } from '../locale/context.js'
 import { sliderMessages } from '../locale/messages/slider.js'
+import { withholdCallerHandlers } from '../utils/disabledInteraction.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { percent, position } from './sliderMath.js'
 import SliderThumb from './SliderThumb.vue'
@@ -49,7 +51,9 @@ const { min, max, values, dragging } = control
 const isRange = computed(() => values.value.length === 2)
 const showsDisabledMessage = computed(() => !!props.isDisabled && !!props.disabledMessage?.trim())
 const tooltip = useButtonTooltip(showsDisabledMessage)
-const required = computed(() => !!props.isRequired && !props.isOptional)
+// 外层 FormLayout 的默认必填也算：没标 optional 的字段同样要报必填。
+const ariaRequired = useAriaRequired(props)
+const required = computed(() => ariaRequired.value === true)
 const marks = computed(() => props.marks?.filter(mark => Number.isFinite(mark.value) && mark.value >= min.value && mark.value <= max.value) ?? [])
 const hasMarkLabels = computed(() => marks.value.some(mark => mark.label))
 const format = (value: number): string => props.formatValue?.(value) ?? String(value)
@@ -70,6 +74,9 @@ function isFilled(value: number): boolean {
   return value <= values.value.at(-1)! && (!isRange.value || value >= values.value[0]!)
 }
 function callConsumerPointer(event: PointerEvent): void {
+  // 禁用的滑块还留着 Tab 落脚点，事件照常来；调用方的处理函数一个都不运行。
+  if (props.isDisabled)
+    return
   const names: Record<string, string[]> = {
     pointerdown: ['onPointerdown', 'onPointerDown'],
     pointermove: ['onPointermove', 'onPointerMove'],
@@ -95,9 +102,9 @@ function onPointerEnd(event: PointerEvent): void {
   callConsumerPointer(event)
 }
 const shellStyle = computed<StyleValue>(() => [attrs.style as StyleValue, parts.containerStyle.value])
-const thumbAttrs = computed(() => isRange.value ? {} : parts.forwardedAttrs())
+const thumbAttrs = computed(() => isRange.value ? {} : withholdCallerHandlers(parts.forwardedAttrs(), !!props.isDisabled))
 const trackAttrs = computed(() => ({
-  ...(isRange.value ? parts.forwardedAttrs() : {}),
+  ...(isRange.value ? withholdCallerHandlers(parts.forwardedAttrs(), !!props.isDisabled) : {}),
   ...(props.isDisabled ? {} : press.pressableProps),
 }))
 function focus(index = 0, options?: FocusOptions): void {
@@ -132,7 +139,7 @@ defineExpose({ element, focus, blur })
         <div
           ref="track" v-bind="trackAttrs" class="astryx-slider-control" :class="controlClass" :style="controlStyle"
           :data-orientation="orientation" :data-disabled="isDisabled || undefined"
-          :role="isRange ? 'group' : undefined" :aria-labelledby="isRange ? field.labelId : undefined"
+          :role="isRange ? 'group' : undefined" :aria-labelledby="isRange ? [field.labelId, attrs['aria-labelledby']].filter(Boolean).join(' ') : undefined"
           @pointerdown="onPointerDown" @pointermove="onPointerMove" @pointerup="onPointerEnd" @pointercancel="onPointerEnd" @lostpointercapture="onPointerEnd"
           @pointerenter="tooltip.onPointerEnter" @pointerleave="tooltip.onPointerLeave" @focusin="tooltip.onTooltipPointerEnter" @focusout="tooltip.onBlur" @keydown.esc="tooltip.hideImmediately"
         >
@@ -146,7 +153,7 @@ defineExpose({ element, focus, blur })
             :min="control.bounds(index)[0]" :max="control.bounds(index)[1]" :orientation="orientation"
             :labelled-by="[field.labelId, isRange ? `${inputId}-label-${index}` : undefined, isRange ? undefined : attrs['aria-labelledby']].filter(Boolean).join(' ')"
             :described-by="describedBy(field.describedBy)" :value-text="formatValue ? format(value) : undefined" :is-invalid="status?.type === 'error'"
-            :is-disabled="isDisabled" :is-focusable="!isDisabled || showsDisabledMessage" :dragging="dragging === index"
+            :is-disabled="isDisabled" :is-focusable="!isDisabled || showsDisabledMessage" :dragging="dragging === index" :drag-active="dragging !== null"
             :keyboard-focus="control.keyboardFocus.value === index" :extra-attrs="thumbAttrs"
             :tooltip-text="valueDisplay === 'tooltip' ? format(value) : undefined"
             @keydown="control.keydown(index, $event)" @focus="control.thumbFocus(index)" @blur="control.thumbBlur()"
