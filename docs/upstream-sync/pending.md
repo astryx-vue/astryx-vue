@@ -713,26 +713,33 @@
 
 - [x] [`a61db6f03`](https://github.com/meta/astryx/commit/a61db6f03) fix(RadioList): keep a caller aria-labelledby on the radiogroup (#5656)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`95e1674ce`](https://github.com/meta/astryx/commit/95e1674ce) fix(ChatLayout): release hidden scroll affordance focus (#7738)
+- [x] [`95e1674ce`](https://github.com/meta/astryx/commit/95e1674ce) fix(ChatLayout): release hidden scroll affordance focus (#7738)
+  - Vue 版已有：ChatLayoutScrollButton 的药丸元素带 :inert="!isVisible"，隐藏时焦点立刻被放掉，CSS 也用 visibility 把它移出 Tab 顺序
 
 ### v0.7.3
 
-- [ ] [`c1fcd07d7`](https://github.com/meta/astryx/commit/c1fcd07d7) fix(ChatComposer): announce the status through the shared channel, not a live region born with its text (#7894)
-- [ ] [`0a4c894d5`](https://github.com/meta/astryx/commit/0a4c894d5) fix(ChatSystemMessage): leave notices inside a chat log to the log (#7869)
+- [x] [`c1fcd07d7`](https://github.com/meta/astryx/commit/c1fcd07d7) fix(ChatComposer): announce the status through the shared channel, not a live region born with its text (#7894)
+  - Vue 版已有：ChatComposer 状态条不带 live role，文字经共用通道播报（error assertive、warning polite），ChatComposerStatus.test.ts 覆盖
+- [x] [`0a4c894d5`](https://github.com/meta/astryx/commit/0a4c894d5) fix(ChatSystemMessage): leave notices inside a chat log to the log (#7869)
+  - Vue 版已有：ChatSystemMessage 根元素不带 role，默认和分隔两种都交给外层 log，ChatSystemMessage.test.ts 覆盖
 
 ### v0.7.4
 
-- [ ] [`51ad2f40d`](https://github.com/meta/astryx/commit/51ad2f40d) fix(ChatComposerInput): announce the trigger menu's loading text through the shared channel (#7900)
-- [ ] [`10b832e02`](https://github.com/meta/astryx/commit/10b832e02) fix(DropdownMenuSubMenu, Thumbnail, ChatMessageList): silence the busy Spinner and announce the busy start once (#7950)
+- [x] [`51ad2f40d`](https://github.com/meta/astryx/commit/51ad2f40d) fix(ChatComposerInput): announce the trigger menu's loading text through the shared channel (#7900)
+  - 已移植：[#598](https://github.com/astryx-vue/astryx-vue/pull/598)。触发菜单的加载行去掉 role=status，「Searching…」每次搜索念一次，补测试
+- [x] [`10b832e02`](https://github.com/meta/astryx/commit/10b832e02) fix(DropdownMenuSubMenu, Thumbnail, ChatMessageList): silence the busy Spinner and announce the busy start once (#7950)
+  - 已移植：[#598](https://github.com/astryx-vue/astryx-vue/pull/598)。ChatMessageList 顶部加载的转圈静音，由列表通过共用忙碌播报念一次（Thumbnail 部分归基础族 #503）
 
 ### v0.7.5
 
-- [ ] [`5b9e43bd0`](https://github.com/meta/astryx/commit/5b9e43bd0) fix(ChatComposer): the status bar announces through the shared own-content module (#8363)
+- [x] [`5b9e43bd0`](https://github.com/meta/astryx/commit/5b9e43bd0) fix(ChatComposer): the status bar announces through the shared own-content module (#8363)
+  - 已移植：[#598](https://github.com/astryx-vue/astryx-vue/pull/598)。ChatComposer 状态条改由渲染文字播报：加载前已显示的保持安静，类型变化算新的一次，补测试
 - [x] [`174300fcb`](https://github.com/meta/astryx/commit/174300fcb) ci: discover PR browser accessibility specs, so a new spec needs no workflow edit (#8367)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`b298b37d1`](https://github.com/meta/astryx/commit/b298b37d1) feat(theme): add surface-specific status color roles (#7657)
   - 已移植：[#517](https://github.com/astryx-vue/astryx-vue/pull/517)。core 新增默认状态色表，组件改读正确的状态角色
-- [ ] [`0cbddeac0`](https://github.com/meta/astryx/commit/0cbddeac0) fix(ChatComposerInput): retain focus while disabled (#8431)
+- [x] [`0cbddeac0`](https://github.com/meta/astryx/commit/0cbddeac0) fix(ChatComposerInput): retain focus while disabled (#8431)
+  - 已移植：[#598](https://github.com/astryx-vue/astryx-vue/pull/598)。禁用的输入框留在 Tab 顺序里不丢焦点，句柄、粘贴、拖放、调用方回调全部失效，combobox 不再宣称展开，补测试
 - [x] [`c86dc620c`](https://github.com/meta/astryx/commit/c86dc620c) fix(i18n): catch formatter returns and localize helper text (#7849)
   - 已移植：[#508](https://github.com/astryx-vue/astryx-vue/pull/508)。FileInput 大小单位等改读内置文案
 - [x] [`ac096a7e1`](https://github.com/meta/astryx/commit/ac096a7e1) test(ChatLayout): the hiding-affordance contract reads visibility as focus leaves (#9003)
@@ -758,9 +765,12 @@
   - 不适用：React 每个组件只调一次交互方式 hook 的整理；Vue 版交互方式按文档统一跟踪
 - [x] [`4f35412e2`](https://github.com/meta/astryx/commit/4f35412e2) fix(ChatComposerInput): a tap on a pasted-text token opens its preview without raising the keyboard (#9189)
   - 已移植：[#545](https://github.com/astryx-vue/astryx-vue/pull/545)。粘贴文本令牌被轻点时取消合成的鼠标按下，不弹键盘（createTapStop）
-- [ ] [`3e735de86`](https://github.com/meta/astryx/commit/3e735de86) fix(core A–M): slots use isRenderable; the remaining checks are allowed with a reason (#9204)
-- [ ] [`891aa236c`](https://github.com/meta/astryx/commit/891aa236c) refactor(core): drop a dead private selector and collapse duplicate attribute spellings (INV23 step 4) (#9256)
-- [ ] [`e0a03766d`](https://github.com/meta/astryx/commit/e0a03766d) docs(knowledge): every component spec lives in docs/specs/components, one folder per component (#9007)
+- [x] [`3e735de86`](https://github.com/meta/astryx/commit/3e735de86) fix(core A–M): slots use isRenderable; the remaining checks are allowed with a reason (#9204)
+  - 已移植：[#598](https://github.com/astryx-vue/astryx-vue/pull/598)。插槽判空改用「是否真的渲染出内容」：ChatSystemMessage 图标、ChatMessageList、ChatLayout 的空状态，补测试
+- [x] [`891aa236c`](https://github.com/meta/astryx/commit/891aa236c) refactor(core): drop a dead private selector and collapse duplicate attribute spellings (INV23 step 4) (#9256)
+  - 已移植：[#600](https://github.com/astryx-vue/astryx-vue/pull/600)。去掉 ChatLayout 里隐藏滚动条的 data-astryx-scrolling 规则和对应属性写入
+- [x] [`e0a03766d`](https://github.com/meta/astryx/commit/e0a03766d) docs(knowledge): every component spec lives in docs/specs/components, one folder per component (#9007)
+  - 不适用：上游把规范文档搬到 docs/specs 的目录调整，不是用户可见行为
 - [x] [`9b6d03e50`](https://github.com/meta/astryx/commit/9b6d03e50) docs(spec): ChatMessageBubble records its shipped contract as current (#9136)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`1bf015937`](https://github.com/meta/astryx/commit/1bf015937) docs(spec): ChatMessageList records its shipped contract as current (#9270)
@@ -773,22 +783,31 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`974c3c870`](https://github.com/meta/astryx/commit/974c3c870) docs(spec): ChatToolCalls records its shipped contract as current (#9339)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`9963c0e16`](https://github.com/meta/astryx/commit/9963c0e16) refactor(useTriggerMenu): announce Searching… through the shared busy path (#9154)
-- [ ] [`42754d567`](https://github.com/meta/astryx/commit/42754d567) fix(ChatComposer): a click inside an open Tooltip or HoverCard doesn't focus the input (#9375)
+- [x] [`9963c0e16`](https://github.com/meta/astryx/commit/9963c0e16) refactor(useTriggerMenu): announce Searching… through the shared busy path (#9154)
+  - 已移植：[#598](https://github.com/astryx-vue/astryx-vue/pull/598)。触发菜单的 Searching… 走 useBusyAnnouncement，结果先到就撤回未念出的那一次，补测试
+- [x] [`42754d567`](https://github.com/meta/astryx/commit/42754d567) fix(ChatComposer): a click inside an open Tooltip or HoverCard doesn't focus the input (#9375)
+  - 已移植：[#598](https://github.com/astryx-vue/astryx-vue/pull/598)。点在打开着的 Tooltip 或 HoverCard 里不再把焦点抢给输入框（isInLayerSurface），补测试
 - [x] [`e64b41bfc`](https://github.com/meta/astryx/commit/e64b41bfc) spec(TextInput, TextArea, search, ChatComposer): touch keyboard props and return-key defaults (#9424)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`644a601ac`](https://github.com/meta/astryx/commit/644a601ac) fix(ChatMessage): the avatar's name-row spacing is parent-relative, so WebKit stays linear (#9438)
-- [ ] [`16fe5f199`](https://github.com/meta/astryx/commit/16fe5f199) fix(core): Table, Chat, CommandPalette and the date and time inputs carry only their own English (#9452)
+- [x] [`644a601ac`](https://github.com/meta/astryx/commit/644a601ac) fix(ChatMessage): the avatar's name-row spacing is parent-relative, so WebKit stays linear (#9438)
+  - 已移植：[#600](https://github.com/astryx-vue/astryx-vue/pull/600)。头像顶部偏移改成每条消息自己设的变量，嵌套消息不再继承外层，样式测试覆盖
+- [x] [`16fe5f199`](https://github.com/meta/astryx/commit/16fe5f199) fix(core): Table, Chat, CommandPalette and the date and time inputs carry only their own English (#9452)
+  - Vue 版已有：每个组件只带自己的内置文案（2bd41f7c），Chat 各部件用 useComponentMessages 注册自己的文案
 - [x] [`41aa83233`](https://github.com/meta/astryx/commit/41aa83233) spec(layer-runtime): a click inside a layer stops at the layer root (#9398)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`8835deca3`](https://github.com/meta/astryx/commit/8835deca3) fix(ChatComposerInput): a press in the editor keeps the trigger menu open (#9503)
-- [ ] [`beb03f8bd`](https://github.com/meta/astryx/commit/beb03f8bd) fix(DateInput): a press in the field's own input, clear button or label keeps the calendar open (#9433)
-- [ ] [`b5e716687`](https://github.com/meta/astryx/commit/b5e716687) refactor(Item, Token, ChatComposer): drop the per-site tooltip surface checks the layer boundary replaces (#9531)
+- [x] [`8835deca3`](https://github.com/meta/astryx/commit/8835deca3) fix(ChatComposerInput): a press in the editor keeps the trigger menu open (#9503)
+  - 已移植：[#598](https://github.com/astryx-vue/astryx-vue/pull/598)。点进编辑区不再关掉触发菜单（输入框作为菜单的触发器），点击把光标挪出查询时重新判断，补测试
+- [x] [`beb03f8bd`](https://github.com/meta/astryx/commit/beb03f8bd) fix(DateInput): a press in the field's own input, clear button or label keeps the calendar open (#9433)
+  - 已移植：[#598](https://github.com/astryx-vue/astryx-vue/pull/598)。触发菜单的编辑区内按压算菜单内部，随 8835deca3 落地；DateInput 日历部分不属本族
+- [x] [`b5e716687`](https://github.com/meta/astryx/commit/b5e716687) refactor(Item, Token, ChatComposer): drop the per-site tooltip surface checks the layer boundary replaces (#9531)
+  - 不适用：上游靠 React 合成事件在浮层根截停冒泡，Vue 按 DOM 冒泡仍需登记表（基础族已判）
 
 ### v0.7.7
 
-- [ ] [`65ad191d8`](https://github.com/meta/astryx/commit/65ad191d8) feat(ChatComposerInput): the touch keyboard's Return key says Send (#8167)
-- [ ] [`d40b5b7a5`](https://github.com/meta/astryx/commit/d40b5b7a5) chore(ChatMessage): give the avatar offset variable a private literal name (#9602)
+- [x] [`65ad191d8`](https://github.com/meta/astryx/commit/65ad191d8) feat(ChatComposerInput): the touch keyboard's Return key says Send (#8167)
+  - 已移植：[#598](https://github.com/astryx-vue/astryx-vue/pull/598)。ChatComposerInput 新增 enterKeyHint，默认 send，中英文档同步，补测试
+- [x] [`d40b5b7a5`](https://github.com/meta/astryx/commit/d40b5b7a5) chore(ChatMessage): give the avatar offset variable a private literal name (#9602)
+  - 已移植：[#600](https://github.com/astryx-vue/astryx-vue/pull/600)。头像偏移变量用私有名 --_chat-avatar-offset，随 644a601ac 落地
 - [x] [`b11e000b5`](https://github.com/meta/astryx/commit/b11e000b5) fix(Selector): a row that scrolls under a still mouse does not take the keyboard's highlight (#9671)
   - 不适用：只改上游测试（自动初筛）
 
@@ -805,14 +824,17 @@
 
 - [x] [`35985f2bd`](https://github.com/meta/astryx/commit/35985f2bd) test: each --repeat-each copy of an audit keeps its own evidence folder (#9515)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`0d436a195`](https://github.com/meta/astryx/commit/0d436a195) fix(ChatMessageList, Tooltip, HoverCard): the chat log and text trigger spans draw the shared focus ring (#8876)
-- [ ] [`df0e60e70`](https://github.com/meta/astryx/commit/df0e60e70) fix(Chat): latest-value refs are written at commit (#10162)
+- [x] [`0d436a195`](https://github.com/meta/astryx/commit/0d436a195) fix(ChatMessageList, Tooltip, HoverCard): the chat log and text trigger spans draw the shared focus ring (#8876)
+  - 已移植：[#600](https://github.com/astryx-vue/astryx-vue/pull/600)。消息列表的键盘焦点环改用共享焦点环令牌并画在盒子里面，样式测试覆盖；Tooltip 与 HoverCard 文字触发器部分不属本族
+- [x] [`df0e60e70`](https://github.com/meta/astryx/commit/df0e60e70) fix(Chat): latest-value refs are written at commit (#10162)
+  - 不适用：React 在提交时才写最新值 ref，Vue 的组合式函数直接读响应式值，没有这个时机问题
 - [x] [`c706f1563`](https://github.com/meta/astryx/commit/c706f1563) test(ChatSendButton): expect no press scale under reduced motion (#10200)
   - 不适用：只改上游测试（自动初筛）
 
 ### v0.7.10
 
-- [ ] [`e40adf9aa`](https://github.com/meta/astryx/commit/e40adf9aa) fix(ChatComposerInput): an imperative insertToken reports its value through onChange (#10167)
+- [x] [`e40adf9aa`](https://github.com/meta/astryx/commit/e40adf9aa) fix(ChatComposerInput): an imperative insertToken reports its value through onChange (#10167)
+  - 已移植：[#598](https://github.com/astryx-vue/astryx-vue/pull/598)。句柄 insertToken 已发布变化；补上默认粘贴成令牌路径只触发一次 change，补测试
 
 ### v0.7.12
 
@@ -820,7 +842,8 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`4e6e67df6`](https://github.com/meta/astryx/commit/4e6e67df6) fix(core): make disabled Button focusable via aria-disabled per AST-085 (#7906)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`6e0b60429`](https://github.com/meta/astryx/commit/6e0b60429) chore(core): one owner module turns scroll anchoring off (#10173)
+- [x] [`6e0b60429`](https://github.com/meta/astryx/commit/6e0b60429) chore(core): one owner module turns scroll anchoring off (#10173)
+  - 已移植：[#600](https://github.com/astryx-vue/astryx-vue/pull/600)。跟随末尾期间由 setScrollAnchoringOff 独占关掉浏览器滚动锚定，补测试；Lab 的 ChatVirtualizer 不在本族
 - [x] [`422440a64`](https://github.com/meta/astryx/commit/422440a64) fix(core): two copies of Core's modules share one React context (#10233)
   - 不适用：React context 多副本问题
 - [x] [`80e880df0`](https://github.com/meta/astryx/commit/80e880df0) test(Chat): read aria-disabled in SendButton audit (#10512)
@@ -828,19 +851,27 @@
 - [x] [`a3f795c57`](https://github.com/meta/astryx/commit/a3f795c57) test(ChatSendButton): the a11y audit checks a disabled send stays focusable (#10517)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`695653f5d`](https://github.com/meta/astryx/commit/695653f5d) feat(ChatLayout): the composer rides the software keyboard (#8176)
+  - 暂缓：缺屏幕键盘模块（上游 keyboard/ 的键盘高度、useMobileKeyboard、rideKeyboard，对应 #8559）；ChatLayout 的 useChatKeyboard、输入区骑软键盘、Done 键停靠都建在它上面，归键盘与底部面板任务
 - [x] [`619ffeb27`](https://github.com/meta/astryx/commit/619ffeb27) fix(core, richtext): no focus fade on text fields under a coarse pointer (#10611)
   - 不适用：本清单范围里只改上游 docs/design/user-states.md 设计文档
 - [x] [`c08de542e`](https://github.com/meta/astryx/commit/c08de542e) test(ChatLayout): the rise proof keeps the caret out and names a starved start (#10489)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`1b06024be`](https://github.com/meta/astryx/commit/1b06024be) fix(ChatLayout): the newest message rests above a fixed dock (#10676)
+- [x] [`1b06024be`](https://github.com/meta/astryx/commit/1b06024be) fix(ChatLayout): the newest message rests above a fixed dock (#10676)
+  - 已移植：[#600](https://github.com/astryx-vue/astryx-vue/pull/600)。外部 scrollRef 时消息区底部留白加上固定输入区的高度，最新消息落在输入区上面，补测试
 - [ ] [`db40c6b01`](https://github.com/meta/astryx/commit/db40c6b01) refactor(core): share per-instance warning dedupe and temporary focus targets (#10655)
-- [ ] [`1e95e11ad`](https://github.com/meta/astryx/commit/1e95e11ad) fix(ChatComposerInput): anchor programmatic carets into trailing text nodes for IME composition (#6411) (#6423)
-- [ ] [`d49271d81`](https://github.com/meta/astryx/commit/d49271d81) fix(ChatLayout): the scroll button follows a page that scrolls (#10779)
-- [ ] [`e633aab2b`](https://github.com/meta/astryx/commit/e633aab2b) fix(Chat): scrollToMessage lands a message at the page's top (#10781)
+  - 暂缓：改的是 useChatKeyboard 的 Done 键停靠实现，Vue 版没有 useChatKeyboard，随 695653f5d 的屏幕键盘模块一起做
+- [x] [`1e95e11ad`](https://github.com/meta/astryx/commit/1e95e11ad) fix(ChatComposerInput): anchor programmatic carets into trailing text nodes for IME composition (#6411) (#6423)
+  - 已移植：[#598](https://github.com/astryx-vue/astryx-vue/pull/598)。光标落进文本节点才能让输入法组字：placeCaretAtEnd、插入文字与令牌、删令牌后的光标位置，补测试
+- [x] [`d49271d81`](https://github.com/meta/astryx/commit/d49271d81) fix(ChatLayout): the scroll button follows a page that scrolls (#10779)
+  - 已移植：[#600](https://github.com/astryx-vue/astryx-vue/pull/600)。scrollRef 是整页滚动者时监听 document 的滚动、按视口高度量到末尾距离，滚动按钮能出现、上滑会停止跟随，补测试
+- [x] [`e633aab2b`](https://github.com/meta/astryx/commit/e633aab2b) fix(Chat): scrollToMessage lands a message at the page's top (#10781)
+  - 已移植：[#600](https://github.com/astryx-vue/astryx-vue/pull/600)。scrollToMessage 在整页滚动者上从视口顶部量起，补测试
 - [x] [`daa239e98`](https://github.com/meta/astryx/commit/daa239e98) feat(lab): experimental ChatVirtualizer (#5461)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`cc154981d`](https://github.com/meta/astryx/commit/cc154981d) docs(ChatComposerInput): file FR18 verification under interaction and list the IME caret spec (#10811)
-- [ ] [`b6b0c68ad`](https://github.com/meta/astryx/commit/b6b0c68ad) docs(ChatLayout): a reply gets one right edge with contentWidth="100%"; Markdown keeps its 680px measure (#6608)
+- [x] [`cc154981d`](https://github.com/meta/astryx/commit/cc154981d) docs(ChatComposerInput): file FR18 verification under interaction and list the IME caret spec (#10811)
+  - 不适用：上游规格文档归档和删一行复述代码的注释，没有用户可见行为
+- [x] [`b6b0c68ad`](https://github.com/meta/astryx/commit/b6b0c68ad) docs(ChatLayout): a reply gets one right edge with contentWidth="100%"; Markdown keeps its 680px measure (#6608)
+  - 不适用：提示针对上游 Markdown 默认 680px 版心；Vue 版 Markdown 的 contentWidth 缺省不限宽，回复本来就只有一个右边缘
 
 ### v0.7.13
 
@@ -851,7 +882,8 @@
 
 - [x] [`108f354ae`](https://github.com/meta/astryx/commit/108f354ae) fix(core): drop 'use client' from the package root and the component barrels (#11106)
   - 不适用：React Server Components 的 use client 指令
-- [ ] [`9600e3500`](https://github.com/meta/astryx/commit/9600e3500) refactor(core): useChatStreamScroll's page-scroller rules move to one owner module (#11160)
+- [x] [`9600e3500`](https://github.com/meta/astryx/commit/9600e3500) refactor(core): useChatStreamScroll's page-scroller rules move to one owner module (#11160)
+  - 已移植：[#600](https://github.com/astryx-vue/astryx-vue/pull/600)。整页滚动者的规则收进 utils/pageScroller.ts（scrollsPage、scrollportTop、scrollEventTarget），跟随滚动改读它
 - [x] [`a3a6f1c85`](https://github.com/meta/astryx/commit/a3a6f1c85) fix(ChatVirtualizer): attach mode works on the page's own scroller (#10879)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`c6614a5e8`](https://github.com/meta/astryx/commit/c6614a5e8) ci: release-specs (changed) adds tagged specs, visited components and Lab-only pull requests, in shards (#11171)
@@ -864,22 +896,35 @@
 
 ### v0.7.16
 
-- [ ] [`2d6c090c6`](https://github.com/meta/astryx/commit/2d6c090c6) fix(ChatComposerInput): an empty input keeps its line after a restyle (#11428)
+- [x] [`2d6c090c6`](https://github.com/meta/astryx/commit/2d6c090c6) fix(ChatComposerInput): an empty input keeps its line after a restyle (#11428)
+  - 已移植：[#600](https://github.com/astryx-vue/astryx-vue/pull/600)。编辑区自己也有 22px 的一行下限，空输入框重新排版后不会塌成 0 高，样式测试覆盖
 
 ### v0.7.17
 
-- [ ] [`538e297e5`](https://github.com/meta/astryx/commit/538e297e5) docs(useChatDictation): add hook docs and a voice input example block (#11237)
-- [ ] [`b31d8b327`](https://github.com/meta/astryx/commit/b31d8b327) docs(useSpeechRecognition): add hook docs and a transcript example block (#11238)
-- [ ] [`27ba2010f`](https://github.com/meta/astryx/commit/27ba2010f) docs(useChatPasteAsToken): add hook docs and a long paste example block (#11239)
-- [ ] [`d7680a644`](https://github.com/meta/astryx/commit/d7680a644) fix(core): useSpeechRecognition no longer causes a hydration mismatch (#12121)
-- [ ] [`23638a7a7`](https://github.com/meta/astryx/commit/23638a7a7) fix(core): ChatToolCalls truncates its target inside a ChatMessage (#12424)
-- [ ] [`8dbb75a28`](https://github.com/meta/astryx/commit/8dbb75a28) fix(ChatComposerDrawer): round the drawer with the composer corner (#12481)
-- [ ] [`8bd67fe30`](https://github.com/meta/astryx/commit/8bd67fe30) chore: land batch 1 (12 pull requests) (#12713)
-- [ ] [`3b21ca666`](https://github.com/meta/astryx/commit/3b21ca666) feat(theme): chat surfaces default to the container radius (#12794)
-- [ ] [`8688c1885`](https://github.com/meta/astryx/commit/8688c1885) chore: land batch 6 (11 pull requests) (#12812)
-- [ ] [`53615c1f4`](https://github.com/meta/astryx/commit/53615c1f4) chore: land batch 19 (3 pull requests) (#12875)
-- [ ] [`3344f149a`](https://github.com/meta/astryx/commit/3344f149a) fix(ChatComposerInput): the trigger menu's no-results message comes from the catalog (#12677)
-- [ ] [`e7f5815c3`](https://github.com/meta/astryx/commit/e7f5815c3) fix(core): six components' fixed-English built-in text follows the locale; the hardcoded-string lint config has no exemption list and reports a stale entry (#12721)
+- [x] [`538e297e5`](https://github.com/meta/astryx/commit/538e297e5) docs(useChatDictation): add hook docs and a voice input example block (#11237)
+  - 已移植：[#600](https://github.com/astryx-vue/astryx-vue/pull/600)。补 useChatDictation 的中英文档页（参数、返回值、用法与示例）
+- [x] [`b31d8b327`](https://github.com/meta/astryx/commit/b31d8b327) docs(useSpeechRecognition): add hook docs and a transcript example block (#11238)
+  - 已移植：[#600](https://github.com/astryx-vue/astryx-vue/pull/600)。补 useSpeechRecognition 的中英文档页，isSupported 说明服务端与水合时为 false
+- [x] [`27ba2010f`](https://github.com/meta/astryx/commit/27ba2010f) docs(useChatPasteAsToken): add hook docs and a long paste example block (#11239)
+  - 已移植：[#600](https://github.com/astryx-vue/astryx-vue/pull/600)。补 useChatPasteAsToken 的中英文档页，说明 pasteAsToken 要传整个返回值
+- [x] [`d7680a644`](https://github.com/meta/astryx/commit/d7680a644) fix(core): useSpeechRecognition no longer causes a hydration mismatch (#12121)
+  - Vue 版已有：useSpeechRecognition 的 isSupported 在挂载后检测，服务端与水合渲染一致（ChatDictationButton.hydration.test.ts），文档页也写明
+- [x] [`23638a7a7`](https://github.com/meta/astryx/commit/23638a7a7) fix(core): ChatToolCalls truncates its target inside a ChatMessage (#12424)
+  - Vue 版已有：.astryx-chat-tool-calls 本来就是 max-width: 100% 加 min-width: 0，目标在消息列里会截断
+- [x] [`8dbb75a28`](https://github.com/meta/astryx/commit/8dbb75a28) fix(ChatComposerDrawer): round the drawer with the composer corner (#12481)
+  - 已移植：[#600](https://github.com/astryx-vue/astryx-vue/pull/600)。ChatComposerDrawer 的顶部圆角和塞入量跟着输入区自己的圆角，单独使用时取聊天圆角，样式测试覆盖
+- [x] [`8bd67fe30`](https://github.com/meta/astryx/commit/8bd67fe30) chore: land batch 1 (12 pull requests) (#12713)
+  - Vue 版已有：ChatToolCalls、ChatDictationButton 缺必填 prop 的开发期报错已由基础族 #508 落地（Chat.missingProps.test.ts）；批次里其余条目属别族
+- [x] [`3b21ca666`](https://github.com/meta/astryx/commit/3b21ca666) feat(theme): chat surfaces default to the container radius (#12794)
+  - 已移植：[#600](https://github.com/astryx-vue/astryx-vue/pull/600)。Chat 侧：发送键自己声明按钮圆角、在输入区里保持圆形；--radius-chat 默认跟随容器圆角、主题与升级脚本部分归主题系统任务
+- [x] [`8688c1885`](https://github.com/meta/astryx/commit/8688c1885) chore: land batch 6 (11 pull requests) (#12812)
+  - 已移植：[#600](https://github.com/astryx-vue/astryx-vue/pull/600)。ChatComposer 页脚里调用方的操作换行、发送操作不让出宽度，样式测试覆盖；批次里其余条目属别族
+- [x] [`53615c1f4`](https://github.com/meta/astryx/commit/53615c1f4) chore: land batch 19 (3 pull requests) (#12875)
+  - 已移植：[#600](https://github.com/astryx-vue/astryx-vue/pull/600)。默认系统消息的行高改读主题的辅助文字行高（其余粘贴文本、触发菜单状态行已读它）；Pagination 与 doctor 部分属别族
+- [x] [`3344f149a`](https://github.com/meta/astryx/commit/3344f149a) fix(ChatComposerInput): the trigger menu's no-results message comes from the catalog (#12677)
+  - Vue 版已有：触发菜单的无结果文案来自内置目录（messages.chat.noResults），ChatComposerInput 里直接取
+- [x] [`e7f5815c3`](https://github.com/meta/astryx/commit/e7f5815c3) fix(core): six components' fixed-English built-in text follows the locale; the hardcoded-string lint config has no exemption list and reports a stale entry (#12721)
+  - Vue 版已有：粘贴文本计数文案读内置目录，useChatPasteAsToken 的默认令牌标签也跟着语言走
 
 ## 样式分层自动迁移脚本（area:cli）
 
