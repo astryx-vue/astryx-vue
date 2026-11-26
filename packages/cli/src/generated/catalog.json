@@ -69322,6 +69322,10 @@
             "text": "Use inside `ClickableCard` or `SelectableCard` for the standard card interaction pattern."
           },
           {
+            "guidance": "Do",
+            "text": "For a pressable surface without Card chrome, such as a quoted message that jumps on press, compose it yourself: this hook on the surface; `usePressFeedback()` on the same element for the hover tint and touch press; a native `` (or an `` for a destination) inside `VisuallyHidden` as the named control and `interactiveRef`; and a `:focus-within` ring built from the focus tokens on the surface, the same ring `ClickableCard` draws."
+          },
+          {
             "guidance": "Don't",
             "text": "Use when the entire container is a single interactive element; just use a `` or `` directly."
           }
@@ -69471,7 +69475,7 @@
         "zh": [
           {
             "heading": "建议",
-            "text": "- 推荐: 把 `onClick` 和 `onMouseUp` 都绑到容器上（`@click` 和 `@mouseup`），这样连中键点击也能处理。\n- 推荐: 在 `ClickableCard` 或 `SelectableCard` 内部使用，就是标准的卡片交互写法。\n- 避免: 整块容器本来就是一个可交互元素时不要用它；直接用 `` 或 ``。"
+            "text": "- 推荐: 把 `onClick` 和 `onMouseUp` 都绑到容器上（`@click` 和 `@mouseup`），这样连中键点击也能处理。\n- 推荐: 在 `ClickableCard` 或 `SelectableCard` 内部使用，就是标准的卡片交互写法。\n- 推荐: 想要不带 Card 外观、只是按下有反应的表面（比如按一下就跳到原文的引用消息），自己组合：表面上用这个函数；同一个元素上用 `usePressFeedback()` 得到悬停底色和触屏按下效果；里面放一个包在 `VisuallyHidden` 里的原生 ``（目的地是页面时用 ``）当有名字的控件，并传给 `interactiveRef`；表面上用焦点 token 画 `:focus-within` 的焦点环，和 `ClickableCard` 画的是同一个。\n- 避免: 整块容器本来就是一个可交互元素时不要用它；直接用 `` 或 ``。"
           }
         ]
       },
