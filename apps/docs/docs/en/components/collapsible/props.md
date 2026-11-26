@@ -43,6 +43,12 @@ footer: false
         <td><code>'end'</code></td>
         <td>Logical position of the disclosure chevron. <code>end</code> (default) follows the label, pointing down while collapsed and up while expanded; <code>start</code> leads the label, pointing into the content while collapsed (mirrored under RTL) and down while expanded.</td>
       </tr>
+      <tr>
+        <td><code>animatedLayout</code></td>
+        <td><code>AnimatedLayout</code></td>
+        <td>-</td>
+        <td>The handle from <code>useAnimatedLayout({ containerRef })</code>. With it, opening and closing glides the content after this Collapsible, up to that container, instead of jumping, and the chevron turns on the same timing.</td>
+      </tr>
     </tbody>
   </table>
 </div>

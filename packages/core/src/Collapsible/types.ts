@@ -1,4 +1,5 @@
 import type { VNode } from 'vue'
+import type { AnimatedLayout } from '../composables/useAnimatedLayout.js'
 
 /**
  * Logical side of the trigger label that carries the disclosure chevron.
@@ -49,6 +50,12 @@ export interface CollapsibleProps {
    * `value` keeps its own open state even when it sits inside a group.
    */
   value?: string
+  /**
+   * The handle from `useAnimatedLayout({ containerRef })`. With it, opening and
+   * closing glides the content after this Collapsible, up to that container,
+   * instead of jumping, and the chevron turns on the same timing.
+   */
+  animatedLayout?: AnimatedLayout
 }
 
 export interface CollapsibleEmits {

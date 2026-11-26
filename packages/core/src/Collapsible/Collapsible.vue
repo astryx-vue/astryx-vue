@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { CollapsibleEmits, CollapsibleProps, CollapsibleSlots } from './types.js'
 import { computed, useId, useTemplateRef } from 'vue'
+import { useLayoutDisclosure } from '../composables/internal/layoutDisclosure.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import Icon from '../Icon/Icon.vue'
 import { readLayerScoped } from '../layer/scopedProvide.js'
@@ -36,6 +37,14 @@ const { pressableProps } = usePressFeedback({ hasOverlay: false })
 const contentId = `astryx-collapsible-${useId()}`
 const root = useTemplateRef<HTMLDivElement>('root')
 const element = computed(() => root.value ?? null)
+const triggerButton = useTemplateRef<HTMLButtonElement>('triggerButton')
+const content = useTemplateRef<HTMLDivElement>('content')
+const { isExiting } = useLayoutDisclosure({
+  animatedLayout: () => props.animatedLayout,
+  isOpen: () => isOpen.value,
+  content: () => content.value ?? null,
+  chevron: () => triggerButton.value?.querySelector<HTMLElement>('.astryx-collapsible-chevron') ?? null,
+})
 
 defineExpose({ element })
 
@@ -55,6 +64,7 @@ function toggle(): void {
     :data-dividers="hasDividers || undefined"
   >
     <button
+      ref="triggerButton"
       type="button"
       class="astryx-collapsible-trigger"
       :data-chevron-position="chevronPosition"
@@ -85,10 +95,12 @@ function toggle(): void {
         size="sm"
       />
     </button>
-    <Transition name="astryx-collapsible-reveal">
+    <!-- 有句柄时开合交给布局动效，不再走 CSS 过渡；收起后内容播完退场才隐藏。 -->
+    <Transition name="astryx-collapsible-reveal" :css="animatedLayout == null">
       <div
-        v-show="isOpen"
+        v-show="isOpen || isExiting"
         :id="contentId"
+        ref="content"
         class="astryx-collapsible-content"
         :data-open="isOpen ? 'open' : undefined"
       >

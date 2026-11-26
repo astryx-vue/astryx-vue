@@ -270,6 +270,7 @@ const expectedCatalog = [
   { slug: 'use-truncation', group: 'Utility', family: 'Utilities', en: 'useTruncation', zh: 'useTruncation' },
   { slug: 'use-combobox', group: 'Utility', family: 'Utilities', en: 'useCombobox', zh: 'useCombobox' },
   { slug: 'use-animator', group: 'Utility', family: 'Utilities', en: 'useAnimator', zh: 'useAnimator' },
+  { slug: 'use-animated-layout', group: 'Utility', family: 'Utilities', en: 'useAnimatedLayout', zh: 'useAnimatedLayout' },
 ]
 
 describe('component catalog meta', () => {

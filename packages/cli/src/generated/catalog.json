@@ -12909,6 +12909,12 @@
                 "type": "`CollapsibleChevronPosition`",
                 "default": "`'end'`",
                 "description": "Logical position of the disclosure chevron. `end` (default) follows the label, pointing down while collapsed and up while expanded; `start` leads the label, pointing into the content while collapsed (mirrored under RTL) and down while expanded."
+              },
+              {
+                "name": "`animatedLayout`",
+                "type": "`AnimatedLayout`",
+                "default": "-",
+                "description": "The handle from `useAnimatedLayout({ containerRef })`. With it, opening and closing glides the content after this Collapsible, up to that container, instead of jumping, and the chevron turns on the same timing."
               }
             ]
           }
@@ -12946,6 +12952,12 @@
                 "type": "`CollapsibleChevronPosition`",
                 "default": "`'end'`",
                 "description": "指示箭头的逻辑位置。end（默认）跟在标签后面，收起时朝下、展开时朝上；start 放在标签前面，收起时指向内容一侧（RTL 下镜像），展开时朝下。"
+              },
+              {
+                "name": "`animatedLayout`",
+                "type": "`AnimatedLayout`",
+                "default": "-",
+                "description": "`useAnimatedLayout({ containerRef })` 返回的句柄。传了以后，展开、收起时这个 Collapsible 后面、直到那个容器为止的内容会滑到新位置，而不是一下子跳过去，箭头也按同样的节奏转动。"
               }
             ]
           }
@@ -66457,6 +66469,12 @@
                 "description": "Whether parent and child rows are joined by a guide line."
               },
               {
+                "name": "`animatedLayout`",
+                "type": "`AnimatedLayout`",
+                "default": "-",
+                "description": "The handle from `useAnimatedLayout({ containerRef })`. With it, expanding or collapsing a row glides the rows and content after it, up to that container, instead of jumping, and the chevron turns on the same timing."
+              },
+              {
                 "name": "`header`",
                 "type": "`string`",
                 "default": "-",
@@ -66567,6 +66585,12 @@
                 "type": "`'lineGuides' | 'noGuides'`",
                 "default": "`'lineGuides'`",
                 "description": "父子行之间是否画引导线。"
+              },
+              {
+                "name": "`animatedLayout`",
+                "type": "`AnimatedLayout`",
+                "default": "-",
+                "description": "`useAnimatedLayout({ containerRef })` 返回的句柄。传了以后，展开、收起一行时它后面、直到那个容器为止的行和内容会滑到新位置，而不是一下子跳过去，箭头也按同样的节奏转动。"
               },
               {
                 "name": "`header`",
@@ -84091,6 +84115,130 @@
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/components/use-animator",
         "zh": "https://astryx-vue.pages.dev/components/use-animator"
+      }
+    },
+    {
+      "slug": "use-animated-layout",
+      "name": "UseAnimatedLayout",
+      "package": "@astryx-vue/core",
+      "kind": "composable",
+      "title": {
+        "en": "useAnimatedLayout",
+        "zh": "useAnimatedLayout"
+      },
+      "group": "Utility",
+      "groupTitle": {
+        "en": "Utility",
+        "zh": "工具"
+      },
+      "importPath": null,
+      "exportName": null,
+      "summary": {
+        "en": "When a component grows or shrinks (a folder in a tree opens, say), the content after it jumps to its new place. `useAnimatedLayout` makes that content glide there instead.",
+        "zh": "一个组件变高或变矮时（比如展开树里的一个目录），它下面的内容会一下子跳到新位置。`useAnimatedLayout` 让这些内容滑过去，而不是跳过去。"
+      },
+      "usage": {
+        "en": "When a component grows or shrinks (a folder in a tree opens, say), the content after it jumps to its new place. `useAnimatedLayout` makes that content glide there instead.\n\nHand `useAnimatedLayout` a container (a scroll area or a panel) and get a handle back, then pass the handle to the `animatedLayout` prop of the component whose size changes.\n\n```ts\nimport { useAnimatedLayout } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useAnimatedLayout } from '@astryx-vue/core'\nimport { TreeList } from '@astryx-vue/core/TreeList'\nimport { useTemplateRef } from 'vue'\n\nconst panel = useTemplateRef<HTMLElement>('panel')\nconst animatedLayout = useAnimatedLayout({ containerRef: panel })\n</script>\n\n<template>\n  <div ref=\"panel\">\n    <TreeList :items=\"items\" :animated-layout=\"animatedLayout\" />\n    <p>Notes</p>\n  </div>\n</template>\n```\n\nWhen the component's size changes, the content after it in the container glides to its new place together, on the theme's move duration and curve. Revealed content slides in from its edge; hidden content slides out and gives up its space before it goes. The disclosure chevron turns on the same timing.\n\n`Collapsible` and `TreeList` take the handle today.\n\n- Only the content after the changed component, inside the container, moves. Content outside the container lands at once.\n- Fixed elements and stuck sticky elements stay put, and the glide never scrolls the container.\n- Changes in one container in one frame move as one glide.\n- With Reduce Motion on, a touch screen gets a short cross-fade instead, and a mouse lands at once.\n- The handle is created once and reads the container when a change happens, so the ref can point somewhere else later. It touches no DOM during server rendering.",
+        "zh": "一个组件变高或变矮时（比如展开树里的一个目录），它下面的内容会一下子跳到新位置。`useAnimatedLayout` 让这些内容滑过去，而不是跳过去。\n\n用法分两步：把一个容器（滚动区域或面板）交给 `useAnimatedLayout`，拿回一个句柄；再把句柄传给尺寸会变的组件的 `animatedLayout` 属性。\n\n```ts\nimport { useAnimatedLayout } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useAnimatedLayout } from '@astryx-vue/core'\nimport { TreeList } from '@astryx-vue/core/TreeList'\nimport { useTemplateRef } from 'vue'\n\nconst panel = useTemplateRef<HTMLElement>('panel')\nconst animatedLayout = useAnimatedLayout({ containerRef: panel })\n</script>\n\n<template>\n  <div ref=\"panel\">\n    <TreeList :items=\"items\" :animated-layout=\"animatedLayout\" />\n    <p>备注</p>\n  </div>\n</template>\n```\n\n组件尺寸一变，它在容器里后面的内容都按主题的「移动」时长和曲线一起滑到新位置；展开出来的内容从边缘滑入，收起的内容先滑出、让出空间，再消失。展开箭头也按同样的节奏转动。\n\n现在接受句柄的组件有 `Collapsible` 和 `TreeList`。\n\n- 只有容器里、排在变化组件后面的内容会动。容器外的内容直接落到新位置。\n- 固定定位和吸顶（sticky 吸住时）的元素不动，滑动也不会滚动容器。\n- 同一帧里同一个容器的多处变化合成一次滑动。\n- 系统开启「减弱动态效果」时：触屏上换成短暂的淡入淡出，鼠标环境下直接落到新位置。\n- 句柄只创建一次，容器在变化发生时才读取，所以 ref 之后换了元素也没关系。服务端渲染时不碰 DOM。"
+      },
+      "practices": {
+        "en": [],
+        "zh": []
+      },
+      "props": {
+        "en": [
+          {
+            "heading": "Parameters",
+            "rows": [
+              {
+                "name": "`containerRef`",
+                "type": "`MaybeRefOrGetter<Element | ComponentPublicInstance | null | undefined>`",
+                "default": "—",
+                "description": "The container the content glides in: a template ref, a getter, or the element. A component instance stands for its root element. Read when a change happens."
+              }
+            ]
+          },
+          {
+            "heading": "Returns",
+            "rows": [
+              {
+                "name": "`AnimatedLayout`",
+                "type": "`AnimatedLayout`",
+                "description": "An opaque handle with no public members. Pass it to the `animatedLayout` prop of `Collapsible` or `TreeList`."
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "参数",
+            "rows": [
+              {
+                "name": "`containerRef`",
+                "type": "`MaybeRefOrGetter<Element | ComponentPublicInstance | null | undefined>`",
+                "default": "—",
+                "description": "内容在里面滑动的容器：模板 ref、getter 或元素本身；给组件实例时取它的根元素。变化发生时才读取。"
+              }
+            ]
+          },
+          {
+            "heading": "返回值",
+            "rows": [
+              {
+                "name": "`AnimatedLayout`",
+                "type": "`AnimatedLayout`",
+                "description": "不透明的句柄，没有公开成员。传给 `Collapsible`、`TreeList` 的 `animatedLayout` 属性。"
+              }
+            ]
+          }
+        ]
+      },
+      "slots": {
+        "en": [],
+        "zh": []
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [
+          {
+            "heading": "Guidelines",
+            "text": "- Do: Use the block that actually gets pushed around as the container: a sidebar, a card, or a scroll area.\n- Do: Share one handle among the components in one container, so their changes glide together.\n- Don't: Use the whole page as the container: everything below a change glides with it, which is too loud."
+          }
+        ],
+        "zh": [
+          {
+            "heading": "建议",
+            "text": "- 推荐: 把容器设成真正会被挤动的那一块：侧栏、卡片或滚动区域。\n- 推荐: 同一个容器里的组件共用一个句柄，它们的变化会合在一起滑。\n- 避免: 把整个页面当容器：变化下面的所有内容都会跟着滑，太抢眼。"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": {
+            "en": "useAnimatedLayout — File tree",
+            "zh": "useAnimatedLayout — 文件树"
+          },
+          "description": {
+            "en": "Open or close a folder, or the notes below it, and the content after it glides to its new place.",
+            "zh": "展开、收起目录或下面的说明，后面的内容会滑到新位置。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport type { TreeListItemData } from '@astryx-vue/core/TreeList'\nimport { useAnimatedLayout } from '@astryx-vue/core'\nimport { Collapsible } from '@astryx-vue/core/Collapsible'\nimport { Text } from '@astryx-vue/core/Text'\nimport { TreeList } from '@astryx-vue/core/TreeList'\nimport { useTemplateRef } from 'vue'\n\nconst panel = useTemplateRef<HTMLElement>('panel')\nconst animatedLayout = useAnimatedLayout({ containerRef: panel })\n\nconst items: TreeListItemData[] = [\n  {\n    id: 'src',\n    label: 'src',\n    isExpanded: true,\n    icon: 'i-heroicons-folder',\n    children: [\n      {\n        id: 'components',\n        label: 'components',\n        icon: 'i-heroicons-folder',\n        children: [\n          { id: 'button', label: 'Button.vue', icon: 'i-heroicons-document' },\n          { id: 'card', label: 'Card.vue', icon: 'i-heroicons-document' },\n          { id: 'dialog', label: 'Dialog.vue', icon: 'i-heroicons-document' },\n        ],\n      },\n      { id: 'app', label: 'App.vue', icon: 'i-heroicons-document' },\n      { id: 'main', label: 'main.ts', icon: 'i-heroicons-document' },\n    ],\n  },\n  { id: 'pkg', label: 'package.json', icon: 'i-heroicons-document' },\n]\n</script>\n\n<template>\n  <div ref=\"panel\" class=\"animated-layout-panel\">\n    <TreeList :items=\"items\" label=\"Project files\" :animated-layout=\"animatedLayout\" />\n    <Collapsible trigger=\"Notes\" :default-is-open=\"false\" :animated-layout=\"animatedLayout\">\n      <Text type=\"body\" color=\"secondary\">\n        Everything below a folder you open or close glides to its new place.\n      </Text>\n    </Collapsible>\n    <Text type=\"supporting\">\n      Last edited today\n    </Text>\n  </div>\n</template>\n\n<style scoped>\n.animated-layout-panel {\n  display: flex;\n  flex-direction: column;\n  gap: var(--astryx-spacing-3, 12px);\n  width: min(100%, 320px);\n}\n</style>"
+        }
+      ],
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/use-animated-layout",
+        "zh": "https://astryx-vue.pages.dev/components/use-animated-layout"
       }
     }
   ],

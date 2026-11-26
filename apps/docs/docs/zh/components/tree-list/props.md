@@ -32,6 +32,12 @@ footer: false
         <td>父子行之间是否画引导线。</td>
       </tr>
       <tr>
+        <td><code>animatedLayout</code></td>
+        <td><code>AnimatedLayout</code></td>
+        <td>-</td>
+        <td><code>useAnimatedLayout({ containerRef })</code> 返回的句柄。传了以后，展开、收起一行时它后面、直到那个容器为止的行和内容会滑到新位置，而不是一下子跳过去，箭头也按同样的节奏转动。</td>
+      </tr>
+      <tr>
         <td><code>header</code></td>
         <td><code>string</code></td>
         <td>-</td>

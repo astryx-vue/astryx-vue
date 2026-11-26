@@ -1,4 +1,5 @@
 import type { Component, CSSProperties, VNode, VNodeChild } from 'vue'
+import type { AnimatedLayout } from '../composables/useAnimatedLayout.js'
 
 export type TreeListDensity = 'compact' | 'balanced' | 'spacious'
 export type TreeListVariant = 'lineGuides' | 'noGuides'
@@ -38,6 +39,12 @@ export interface TreeListItemData {
 
 export interface TreeListProps {
   items: TreeListItemData[]
+  /**
+   * The handle from `useAnimatedLayout({ containerRef })`. With it, expanding
+   * or collapsing a row glides the rows and content after it, up to that
+   * container, instead of jumping, and the chevron turns on the same timing.
+   */
+  animatedLayout?: AnimatedLayout
   /** @default 'balanced' */
   density?: TreeListDensity
   /** @default 'lineGuides' */
