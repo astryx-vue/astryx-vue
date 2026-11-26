@@ -65,7 +65,7 @@ footer: false
         <td><code>options.typeahead</code></td>
         <td><code>boolean</code></td>
         <td><code>true</code></td>
-        <td>Whether typeahead is enabled: a printable character jumps to the next item whose text starts with the typed characters.</td>
+        <td>Whether typeahead is enabled: a printable character jumps to the next item whose text starts with the typed characters, ignoring case, accents, the stroked letters đ ł ø ħ ŧ ƀ and Turkish ı/İ in every locale.</td>
       </tr>
     </tbody>
   </table>

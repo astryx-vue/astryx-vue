@@ -1,5 +1,6 @@
 import { onScopeDispose, ref } from 'vue'
 import { isImeKeyEvent } from '../utils/ime.js'
+import { findTypeaheadMatch, isShortcutChord, nextTypeaheadBuffer } from '../utils/typeaheadMatch.js'
 
 export interface UseTypeaheadOptions {
   /** 当前 DOM 顺序上的标签。某一项可以是 null，表示这个下标不能匹配。 */
@@ -55,19 +56,24 @@ export function useTypeahead(options: UseTypeaheadOptions): UseTypeaheadReturn {
   }
 
   function onKeyDown(event: KeyboardEvent): boolean {
-    const extendsQuery = event.key === ' ' && !event.ctrlKey && !event.metaKey && !isImeKeyEvent(event) && buffer.value.length > 0
-    const isPrintable = event.key.length === 1 && !event.ctrlKey && !event.metaKey && !isImeKeyEvent(event) && event.key !== ' '
+    // Alt 单独按下不排除：macOS 上 Option+字母会敲出带符号的字母（Option+a 是 å）。
+    // Windows 的 AltGr 也报 Control，敲出来的仍然是字母，见 isShortcutChord。
+    const isTyping = !isShortcutChord(event) && !isImeKeyEvent(event)
+    const extendsQuery = event.key === ' ' && isTyping && buffer.value.length > 0
+    const isPrintable = event.key.length === 1 && isTyping && event.key !== ' '
 
     if (!isPrintable && !extendsQuery)
+      return false
+
+    // 第一个键是单独的组合附加符号时不算跳转；反复敲同一个字母在匹配项之间循环。
+    const next = nextTypeaheadBuffer(buffer.value, event.key)
+    if (next == null)
       return false
 
     const labels = getItemLabels()
     if (labels.length === 0)
       return false
 
-    const char = event.key.toLowerCase()
-    const isRepeatSameChar = buffer.value.length > 0 && [...buffer.value].every(entry => entry === char)
-    const next = isRepeatSameChar ? char : buffer.value + char
     buffer.value = next
     scheduleReset()
 
@@ -78,16 +84,16 @@ export function useTypeahead(options: UseTypeaheadOptions): UseTypeaheadReturn {
     // 单个字符从当前项的下一项开始，避免按一次字母还停在已经高亮的那一行。
     const offset = hasCurrent && next.length === 1 ? 1 : 0
 
+    const order: number[] = []
     for (let i = 0; i < count; i++) {
       const index = (start + offset + i + count) % count
-      if (isDisabled?.(index))
-        continue
-      const label = labels[index]
-      if (label != null && label.trim().toLowerCase().startsWith(next)) {
-        onMatch(index)
-        return true
-      }
+      if (!isDisabled?.(index))
+        order.push(index)
     }
+    // 大小写、重音、带横线的字母和土耳其语的 i 都折叠掉；敲进来的字母带符号时优先完全匹配。
+    const match = findTypeaheadMatch(order, index => labels[index], next)
+    if (match >= 0)
+      onMatch(match)
     return true
   }
 
