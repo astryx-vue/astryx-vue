@@ -259,6 +259,7 @@ describe('命令行', () => {
     expect(runStatus(['set', 'A4', '--file', file]).code).toBe(2)
     expect(runStatus(['set', 'A4', 'done', '--round', 'x', '--file', file]).code).toBe(2)
     expect(runStatus(['frobnicate']).code).toBe(2)
+    expect(runStatus(['check']).code).toBe(2)
     expect(runStatus(['set', 'A4', 'done', '--file', file]).code).toBe(1)
     expect(readFileSync(file, 'utf8')).toBe(FIXTURE)
   })

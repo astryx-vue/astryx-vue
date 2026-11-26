@@ -253,9 +253,6 @@ catalogs:
     eslint-plugin-vuejs-accessibility:
       specifier: 2.6.0
       version: 2.6.0
-    globals:
-      specifier: 17.13.0
-      version: 17.13.0
   release:
     '@arethetypeswrong/cli':
       specifier: 0.18.5
@@ -361,9 +358,6 @@ catalogs:
       specifier: 7.0.0
       version: 7.0.0
   vue:
-    '@vue/compiler-dom':
-      specifier: 3.5.43
-      version: 3.5.43
     '@vue/compiler-sfc':
       specifier: 3.5.43
       version: 3.5.43
@@ -413,9 +407,6 @@ importers:
       '@vitejs/plugin-vue':
         specifier: catalog:build
         version: 6.0.9(vite@8.3.3(@types/node@26.6.4)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))(vue@3.5.43(@typescript/typescript6@6.0.2))
-      '@vue/compiler-dom':
-        specifier: catalog:vue
-        version: 3.5.43
       '@vue/compiler-sfc':
         specifier: catalog:vue
         version: 3.5.43
@@ -434,9 +425,6 @@ importers:
       eslint-plugin-vuejs-accessibility:
         specifier: catalog:linting
         version: 2.6.0(eslint@10.12.0(jiti@2.7.0)(supports-color@10.2.2))(globals@17.13.0)(supports-color@10.2.2)
-      globals:
-        specifier: catalog:linting
-        version: 17.13.0
       happy-dom:
         specifier: catalog:testing
         version: 20.14.5
@@ -5075,12 +5063,15 @@ packages:
 
   yuku-ast@0.10.2:
     resolution: {integrity: sha512-UnG9mA6giglCvSErft2/40TVFX750Sj1xgwddPLpG7J7rlr/P1wPADg9G2RK+d/1tNLtRVoLdMMOMVBB9561TQ==}
+    deprecated: 'Yuku is now one package with one core. Use "yuku" instead: https://yuku.fyi/javascript/. Existing installs keep working but get no more fixes.'
 
   yuku-codegen@0.10.2:
     resolution: {integrity: sha512-hentl2dtrF6cPjiAirtkfxfFZBA6Hdm61UqRJ7cA0qrlDNMk9PZGOjw5w1mx3E0hu/6pHcJF4dJW+D0SXHPZOA==}
+    deprecated: 'Yuku is now one package with one core. Use "yuku" instead: https://yuku.fyi/javascript/. Existing installs keep working but get no more fixes.'
 
   yuku-parser@0.10.2:
     resolution: {integrity: sha512-CgaU0/PPjCAIEZ3WQroosOxTY3eeKldAN3h+vk8pMNz4+jl1CZzBR4pW+K/rRPF112VooCL5FdjJoiMNjDrL2A==}
+    deprecated: 'Yuku is now one package with one core. Use "yuku" instead: https://yuku.fyi/javascript/. Existing installs keep working but get no more fixes.'
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}

@@ -217,8 +217,6 @@ function richTextNodes(json: string): Array<Recognized> {
 }
 
 /** Every node type in stored RichText state. */
-// 只有暂时标成 todo 的那条用例用它，先留着。
-
 function nodeTypes(json: string): Set<string> {
   const types = new Set<string>()
   const visit = (node: Record<string, unknown>) => {

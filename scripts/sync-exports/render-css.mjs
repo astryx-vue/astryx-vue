@@ -13,7 +13,8 @@ const THEME_SHARED_IMPORTS = [
   '@import \'./data.css\';',
 ]
 
-// 这些样式由组件单文件直接引入，styles.css 原来没有汇总。新的 css 会自动汇总。
+// 这些样式只由用到它们的组件单文件直接引入，不汇总进 styles.css，保持已发布的 styles.css 内容不变。
+// 目录里其它 css（包括新加的）都会自动汇总。
 // scrollbars.css 只在 ScrollbarsProvider 里引入，不汇总进 styles.css，
 // 免得没开自绘滚动条的用户也带上 overlayscrollbars 的样式。
 const STYLE_FILE_OMISSIONS = new Set([

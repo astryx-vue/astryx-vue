@@ -17,7 +17,7 @@ function sourceFiles(dir: string): string[] {
   return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
     const file = join(dir, entry.name)
     if (entry.isDirectory())
-      return entry.name === '__fixtures__' ? [] : sourceFiles(file)
+      return sourceFiles(file)
     return /\.(?:ts|vue)$/.test(entry.name) && !SKIPPED.test(entry.name) ? [file] : []
   })
 }

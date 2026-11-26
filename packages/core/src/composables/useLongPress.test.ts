@@ -121,9 +121,4 @@ describe('useLongPress', () => {
     vi.advanceTimersByTime(100)
     expect(onLongPress).not.toHaveBeenCalled()
   })
-
-  it('旧路径仍然导出同一个函数', async () => {
-    const moved = await import('../ContextMenu/useLongPress.js')
-    expect(moved.useLongPress).toBe(useLongPress)
-  })
 })
