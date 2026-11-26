@@ -2,6 +2,7 @@
 import type { Component, ComponentPublicInstance, CSSProperties, StyleValue } from 'vue'
 import type { ItemProps, ItemSlots } from './types.js'
 import { computed, provide, toRaw, toValue, useAttrs, useId, useSlots, useTemplateRef, watchEffect } from 'vue'
+import { useFocusAcrossSwap } from '../composables/internal/focusAcrossSwap.js'
 import { useInteractiveRole } from '../composables/useInteractiveRole.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { isInLayerSurface, isLayerSurface } from '../layer/layerSurfacePress.js'
@@ -154,6 +155,8 @@ const labelStyle = computed(() => clampStyle(labelClamp.value))
 const descriptionClasses = computed(() => clampClass(descriptionClamp.value))
 const descriptionStyle = computed(() => clampStyle(descriptionClamp.value))
 
+useFocusAcrossSwap(() => element.value, '.astryx-item__content', () => props.isDisabled)
+
 const contentRole = useInteractiveRole({
   href: () => (hasParentRole.value || isDelegate.value ? undefined : safeHref.value),
   hasOnClick: () => !hasParentRole.value && !isDelegate.value && props.onClick != null,
@@ -161,7 +164,7 @@ const contentRole = useInteractiveRole({
 
 const contentTag = computed(() => {
   if (contentRole.role.value === 'link')
-    return isLinkContent.value ? toRaw(customLink.value as Component) : 'a'
+    return isLinkContent.value && !props.isDisabled ? toRaw(customLink.value as Component) : 'a'
 
   return contentRole.role.value === 'button' ? 'button' : 'span'
 })
@@ -173,13 +176,21 @@ function handleContentClick(event: MouseEvent): void {
 const contentAttrs = computed<Record<string, unknown>>(() => {
   const href = safeHref.value
   if (href != null && !hasParentRole.value && !isDelegate.value) {
+    // 禁用的链接行没有去处：屏幕阅读器的点击、回车、链接菜单都无处可去，
+    // 保留链接角色，也不走路由链接组件。
+    if (props.isDisabled) {
+      return {
+        'role': 'link',
+        'aria-disabled': true,
+        'tabindex': -1,
+        ...pressActionProps,
+      }
+    }
     return {
-      'href': href,
-      'to': isLinkContent.value ? href : undefined,
-      'rel': resolvedRel.value,
-      'target': resolvedTarget.value,
-      'aria-disabled': props.isDisabled || undefined,
-      'tabindex': props.isDisabled ? -1 : undefined,
+      href,
+      to: isLinkContent.value ? href : undefined,
+      rel: resolvedRel.value,
+      target: resolvedTarget.value,
       ...pressActionProps,
     }
   }

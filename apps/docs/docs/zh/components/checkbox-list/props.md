@@ -12,6 +12,8 @@ footer: false
 <tr><td><code>v-model</code></td><td><code>string[]</code></td><td>—</td><td>已勾选的值。独立行不要传。</td></tr>
 <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>必填。这一组的无障碍名称。</td></tr>
 <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>标签下的说明。</td></tr>
+<tr><td><code>isRequired</code></td><td><code>boolean</code></td><td><code>false</code></td><td>这一组至少要勾一项。标签后显示必填标记，规则和其他输入控件一样。一项都没勾时，浏览器会拦住提交，并带着自己的提示把焦点移到第一个既没禁用也不是只读的复选框上。禁用或只读的组不要求任何东西。错误文字用 <code>status</code> 自己给。和 <code>isOptional</code> 互斥。</td></tr>
+<tr><td><code>isOptional</code></td><td><code>boolean</code></td><td><code>false</code></td><td>这一组是可选的。标签后显示可选标记；外层 FormLayout 已经默认把字段设为可选时不重复显示。</td></tr>
 <tr><td><code>density</code></td><td><code>'compact' | 'balanced' | 'spacious'</code></td><td><code>'balanced'</code></td><td>行距。紧凑时用小号复选框。</td></tr>
 <tr><td><code>hasDividers</code></td><td><code>boolean</code></td><td><code>false</code></td><td>行与行之间画分隔线。</td></tr>
 <tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>—</td><td>错误、警告或成功。</td></tr>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { CheckboxValue } from '../CheckboxInput/types.js'
 import type { CheckboxListItemEmits, CheckboxListItemProps, CheckboxListItemSlots } from './types.js'
-import { computed, useId, useSlots, useTemplateRef } from 'vue'
+import { computed, onBeforeUnmount, useId, useSlots, useTemplateRef, watchEffect } from 'vue'
 import { readLayerScoped } from '../layer/scopedProvide.js'
 import ListItem from '../List/ListItem.vue'
 import { useComponentMessages } from '../locale/context.js'
@@ -38,6 +38,17 @@ const readOnly = computed(() => context?.isReadOnly.value ?? false)
 const loading = computed(() => props.isLoading || (props.value != null && (context?.loadingValues.value.includes(props.value) ?? false)))
 const reason = computed(() => context?.isDisabled.value ? context.disabledReason.value : undefined)
 const selected = computed(() => checked.value === true && !disabled.value && !readOnly.value)
+
+let unregister: (() => void) | undefined
+watchEffect(() => {
+  unregister?.()
+  unregister = undefined
+  const group = context?.requiredGroup.value
+  const input = checkbox.value?.element
+  if (group != null && input != null)
+    unregister = group.register(input, { isChecked: checked.value === true, isEnabled: !disabled.value && !readOnly.value })
+}, { flush: 'post' })
+onBeforeUnmount(() => unregister?.())
 
 if (collection.value && props.value == null)
   throw new Error('CheckboxListItem 在集合模式下必须提供 value。')

@@ -25645,6 +25645,18 @@
                 "description": "Help text under the label."
               },
               {
+                "name": "`isRequired`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "Whether the group needs at least one checked box. Shows the required indicator after the group label by the same rules as every input field. While no box is checked, the browser blocks submit and moves focus to the first box that is neither disabled nor read-only, with its own message. A disabled or read-only group requires nothing. Show your own error text through `status`. Mutually exclusive with `isOptional`."
+              },
+              {
+                "name": "`isOptional`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "Whether the group is optional. Shows the optional indicator after the group label, unless a surrounding FormLayout already makes fields optional by default."
+              },
+              {
                 "name": "`density`",
                 "type": "`'compact' | 'balanced' | 'spacious'`",
                 "default": "`'balanced'`",
@@ -25787,6 +25799,18 @@
                 "type": "`string`",
                 "default": "—",
                 "description": "标签下的说明。"
+              },
+              {
+                "name": "`isRequired`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "这一组至少要勾一项。标签后显示必填标记，规则和其他输入控件一样。一项都没勾时，浏览器会拦住提交，并带着自己的提示把焦点移到第一个既没禁用也不是只读的复选框上。禁用或只读的组不要求任何东西。错误文字用 `status` 自己给。和 `isOptional` 互斥。"
+              },
+              {
+                "name": "`isOptional`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "这一组是可选的。标签后显示可选标记；外层 FormLayout 已经默认把字段设为可选时不重复显示。"
               },
               {
                 "name": "`density`",
