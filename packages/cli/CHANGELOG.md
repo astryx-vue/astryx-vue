@@ -1,5 +1,11 @@
 # @astryx-vue/cli
 
+## 0.4.48
+
+### Patch Changes
+
+- [#576](https://github.com/astryx-vue/astryx-vue/pull/576) [`815ff06`](https://github.com/astryx-vue/astryx-vue/commit/815ff0633ed0c8ee086b63742a7d1f04a12f934b) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - DateRangeInput：预设和一个月的日历并排放不下时（窄页面），预设叠到日历上面，弹层在层的高度内自己滚动，日历和翻月按钮不再被切掉；字段收起后的文字在服务端和水合那一趟一律写出年份，挂载后再省掉今年的年份，服务端在别的时区也不会水合不一致；字段锁定时弹层里的点击不再改动选择；值里放了 `Date` 对象时，开发期抛出点明 `modelValue` 和改法的错误。
+
 ## 0.4.47
 
 ### Patch Changes
