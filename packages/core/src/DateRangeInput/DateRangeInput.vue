@@ -3,6 +3,7 @@ import type { DateRange, DateRangeInputEmits, DateRangeInputProps, DateRangePres
 import { computed, shallowRef, useAttrs, useId, useTemplateRef } from 'vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
+import { useBusyAnnouncement } from '../composables/internal/busyAnnouncement.js'
 import { applyRangeClick, formatDateRange, isRangeWithinSpan } from '../composables/useDateRange.js'
 import { addMonths, todayISODate } from '../composables/useMonthGrid.js'
 import { usePendingChange } from '../composables/usePendingChange.js'
@@ -70,6 +71,8 @@ const containerRef = useTemplateRef<HTMLDivElement>('containerRef')
 const panelEl = useTemplateRef<HTMLElement>('panelEl')
 useScrollbars(panelEl)
 const visibleMonths = computed(() => props.numberOfMonths ?? props.monthCount)
+
+useBusyAnnouncement(busy, () => messages.value.dateInput.loading, () => containerRef.value)
 
 const display = computed(() => formatDateRange(model.value, locale.value))
 const placeholder = computed(() => props.placeholder ?? messages.value.dateRangeInput.placeholder)
@@ -179,7 +182,7 @@ function onTriggerClick(event: MouseEvent): void {
           <IconButton v-if="hasClear && model && !locked" class="astryx-input-clear-button" variant="ghost" size="sm" :label="clearLabel" @click="clear">
             <FieldIcon type="clear" />
           </IconButton>
-          <Spinner v-if="busy" size="sm" :aria-label="messages.dateInput.loading" />
+          <Spinner v-if="busy" size="sm" aria-hidden="true" />
           <FieldIcon v-else-if="status" :type="status.type" />
         </div>
         <template #content>
@@ -194,6 +197,7 @@ function onTriggerClick(event: MouseEvent): void {
                 </button>
               </div>
               <RangeCalendar
+                v-if="open"
                 :cursor-year="cursor.year" :cursor-month="cursor.month" :month-count="visibleMonths"
                 :range="model" :pending="pending" :min="min" :max="max" :date-constraints="dateConstraints"
                 :min-range-span="minRangeSpan" :max-range-span="maxRangeSpan" :week-starts-on="weekStartsOn"

@@ -68,7 +68,7 @@ export interface DateInputProps extends FieldPartStylingProps {
   isRequired?: boolean
   /** 标签末尾信息图标里的说明。 */
   labelTooltip?: string
-  /** 是否禁用 */
+  /** 是否禁用。输入框和日历按钮仍可聚焦并带 `aria-disabled`，但不能输入或打开日历。 */
   disabled?: boolean
   /**
    * 为什么禁用。和 disabled 一起用时，悬停或键盘聚焦会显示这段提示，
@@ -77,7 +77,10 @@ export interface DateInputProps extends FieldPartStylingProps {
   disabledMessage?: string
   /** 禁用原因。等同于 disabledMessage。 */
   disabledReason?: string
-  /** 正在提交。字段不可改，并显示加载指示。 */
+  /**
+   * 正在提交。字段仍可聚焦，通过 `aria-busy` 和加载指示表示忙碌，进入忙碌时播报一次；
+   * 结束前不能输入、选择或清除日期。
+   */
   isLoading?: boolean
   /**
    * 值已经提交之后再跑。返回 Promise 时，字段保持加载直到它结束。

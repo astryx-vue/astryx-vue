@@ -6,6 +6,7 @@ import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import { toCalendarDate } from '../Calendar/calendarDate.js'
 import { isCalendarDateDisabled } from '../Calendar/useCalendarConstraints.js'
+import { useBusyAnnouncement } from '../composables/internal/busyAnnouncement.js'
 import { usePendingChange } from '../composables/usePendingChange.js'
 import Field from '../Field/Field.vue'
 import FieldIcon from '../Field/FieldIcon.vue'
@@ -14,8 +15,8 @@ import Icon from '../Icon/Icon.vue'
 import { useAstryxLocale, useComponentMessages } from '../locale/context.js'
 import { dateInputMessages } from '../locale/messages/date-input.js'
 import Spinner from '../Spinner/Spinner.vue'
-import { formatInstant } from '../Timestamp/formatInstant.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
+import { formatCommittedDate, resolveDateStatus, toIsoDate } from './dateText.js'
 import '../../styles/date-input.css'
 
 defineOptions({ inheritAttrs: false })
@@ -61,11 +62,7 @@ const showsDisabledMessage = computed(() => locked.value && disabledMessage.valu
 const disabledTooltip = useButtonTooltip(showsDisabledMessage)
 const showsClear = computed(() => (props.hasClear || props.clearable) && Boolean(props.modelValue) && !locked.value)
 
-function toIso(date: Date): string {
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
-  return `${date.getFullYear()}-${month}-${day}`
-}
+useBusyAnnouncement(busy, () => messages.value.dateInput.loading, () => containerRef.value)
 
 function allowed(date: Date): boolean {
   return !isCalendarDateDisabled(toCalendarDate(date), {
@@ -76,33 +73,14 @@ function allowed(date: Date): boolean {
   })
 }
 
-const nativeValue = computed(() => props.modelValue ? toIso(props.modelValue) : '')
-const overlay = computed(() => {
-  if (!props.modelValue)
-    return props.placeholder ?? messages.value.dateInput.placeholder
-  const iso = toIso(props.modelValue)
-  if (typeof props.format === 'function')
-    return props.format(iso)
-  if (props.format === 'system_date')
-    return iso
-  return formatInstant(props.modelValue, props.format ?? 'date_long', locale.value)
-})
-const statusType = computed(() => {
-  const status = props.status
-  if (status == null || status === 'default')
-    return undefined
-  return typeof status === 'string' ? status : status.type
-})
-const statusValue = computed(() => {
-  const status = props.status
-  if (status == null || status === 'default')
-    return undefined
-  if (typeof status === 'string')
-    return { type: status }
-  return status
-})
-const minIso = computed(() => props.min ? toIso(props.min) : undefined)
-const maxIso = computed(() => props.max ? toIso(props.max) : undefined)
+const nativeValue = computed(() => props.modelValue ? toIsoDate(props.modelValue) : '')
+const overlay = computed(() => props.modelValue
+  ? formatCommittedDate(props.modelValue, props.format, locale.value)
+  : props.placeholder ?? messages.value.dateInput.placeholder)
+const statusValue = computed(() => resolveDateStatus(props.status))
+const statusType = computed(() => statusValue.value?.type)
+const minIso = computed(() => props.min ? toIsoDate(props.min) : undefined)
+const maxIso = computed(() => props.max ? toIsoDate(props.max) : undefined)
 
 function write(value: string): void {
   const input = inputRef.value
@@ -136,7 +114,7 @@ function read(raw: string): void {
     return
   }
   rejected.value = false
-  if (!props.modelValue || toIso(props.modelValue) !== raw)
+  if (!props.modelValue || toIsoDate(props.modelValue) !== raw)
     commit(date)
 }
 
@@ -236,7 +214,8 @@ watch(nativeValue, (value) => {
       >
         <div
           class="astryx-date-input-wrapper"
-          :data-disabled="locked ? 'true' : undefined"
+          :data-disabled="disabled ? 'true' : undefined"
+          :data-busy="busy || undefined"
           :data-size="size"
           :data-status="statusType"
         >
@@ -287,7 +266,7 @@ watch(nativeValue, (value) => {
           >
             <Icon icon="close" size="sm" />
           </button>
-          <Spinner v-if="busy" size="sm" :aria-label="messages.dateInput.loading" />
+          <Spinner v-if="busy" size="sm" aria-hidden="true" />
           <FieldIcon v-else-if="statusType && statusVariant !== 'tooltip'" :type="statusType" />
         </div>
         <div class="astryx-date-input-alert" role="alert">
