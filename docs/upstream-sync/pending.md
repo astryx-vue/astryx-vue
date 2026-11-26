@@ -2289,7 +2289,8 @@
 ### v0.7.2
 
 - [ ] [`4eaefd464`](https://github.com/meta/astryx/commit/4eaefd464) fix(templates): label the table-filter view-options panel by its selected tab (#7591)
-- [ ] [`86e839219`](https://github.com/meta/astryx/commit/86e839219) feat(core): promote Drawer and DrawerHeader from Lab (#6071)
+- [x] [`86e839219`](https://github.com/meta/astryx/commit/86e839219) feat(core): promote Drawer and DrawerHeader from Lab (#6071)
+  - Vue 版已有：Drawer 和 DrawerHeader 本来就在 core，Vue 的 lab 没有 Drawer；块示例对应 Vue 文档里已有的 drawer 页示例
 - [ ] [`52c42390c`](https://github.com/meta/astryx/commit/52c42390c) fix(cli): exclude template-local helpers from extractComponents (#7641)
 - [ ] [`17e56d8ad`](https://github.com/meta/astryx/commit/17e56d8ad) feat(cli): check each authored doc against its published authoring type (#7664)
 - [ ] [`e26723dcf`](https://github.com/meta/astryx/commit/e26723dcf) docs(cli): import each Core export from the path `astryx component` prints (#7623)
@@ -2310,23 +2311,34 @@
 
 ### v0.7.4
 
-- [ ] [`36515dccd`](https://github.com/meta/astryx/commit/36515dccd) feat(core): BottomSheetSwitcher presents each sheet in its own native dialog (#7720)
+- [x] [`36515dccd`](https://github.com/meta/astryx/commit/36515dccd) feat(core): BottomSheetSwitcher presents each sheet in its own native dialog (#7720)
+  - Vue 版已有：BottomSheetSwitcher.vue 用原生 dialog 呈现每一页
 - [ ] [`1a552f29b`](https://github.com/meta/astryx/commit/1a552f29b) [CLI] Doc syntax: {@command}, {@pm}, {@pm-only} tokens, and integration check --next (#7868)
 - [ ] [`78641f811`](https://github.com/meta/astryx/commit/78641f811) [CLI] Integration checks for component examples, showcases, template categories and packed assets (#7891)
-- [ ] [`4fc0c4a48`](https://github.com/meta/astryx/commit/4fc0c4a48) feat(cli): experimental icon sets — icon definitions, `astryx experimental icon`, templates that use the installed set (#7759)
-- [ ] [`b33622e50`](https://github.com/meta/astryx/commit/b33622e50) docs: say what four block templates are for (#7963)
-- [ ] [`768c2f0f6`](https://github.com/meta/astryx/commit/768c2f0f6) [Component Audit] CommandPaletteItem: let themes style highlighted, selected, and disabled items (#7967)
+- [x] [`4fc0c4a48`](https://github.com/meta/astryx/commit/4fc0c4a48) feat(cli): experimental icon sets — icon definitions, `astryx experimental icon`, templates that use the installed set (#7759)
+  - 不适用：上游实验性图标集（icon set 定义、experimental icon 命令、模板按图标集换图标），我们的 CLI 没有图标集配置，模板直接用 core 的 Icon
+- [x] [`b33622e50`](https://github.com/meta/astryx/commit/b33622e50) docs: say what four block templates are for (#7963)
+  - 不适用：只改上游块模板的说明文字；Vue 没有块模板，对应示例在文档页里各自带说明
+- [x] [`768c2f0f6`](https://github.com/meta/astryx/commit/768c2f0f6) [Component Audit] CommandPaletteItem: let themes style highlighted, selected, and disabled items (#7967)
+  - Vue 版已有：CommandPaletteItem.vue 已把高亮、选中、禁用反映成 data-highlighted、data-selected、data-disabled
 
 ### v0.7.5
 
-- [ ] [`51c62ca66`](https://github.com/meta/astryx/commit/51c62ca66) docs(cli): Tokenizer blocks and stories fit a phone-sized screen (#8002)
-- [ ] [`2a50a8064`](https://github.com/meta/astryx/commit/2a50a8064) feat(cli): experimental icon sets — authoring fixes from fresh-agent Heroicons and Lucide runs (#7964)
+- [x] [`51c62ca66`](https://github.com/meta/astryx/commit/51c62ca66) docs(cli): Tokenizer blocks and stories fit a phone-sized screen (#8002)
+  - 不适用：上游 CLI 里 Tokenizer 块模板的手机宽度；Vue 文档示例在文档站预览框里自适应宽度
+- [x] [`2a50a8064`](https://github.com/meta/astryx/commit/2a50a8064) feat(cli): experimental icon sets — authoring fixes from fresh-agent Heroicons and Lucide runs (#7964)
+  - 不适用：上游实验性图标集（icon set 定义、experimental icon 命令、模板按图标集换图标），我们的 CLI 没有图标集配置，模板直接用 core 的 Icon
 - [ ] [`298a4ce17`](https://github.com/meta/astryx/commit/298a4ce17) fix(cli): stop not-found suggestions where the matches get weaker (#7999)
-- [ ] [`ee98ff9a8`](https://github.com/meta/astryx/commit/ee98ff9a8) docs: TabList scrolls its overflow, and MobileNav is a drawer (#8100)
-- [ ] [`c19b5e326`](https://github.com/meta/astryx/commit/c19b5e326) fix(CodeBlock): the headerless Copy button never covers code (#8101)
-- [ ] [`b298b37d1`](https://github.com/meta/astryx/commit/b298b37d1) feat(theme): add surface-specific status color roles (#7657)
-- [ ] [`bb12cfbd6`](https://github.com/meta/astryx/commit/bb12cfbd6) fix(Thumbnail): Open and Remove stay mounted while they cannot act (#8542)
+- [x] [`ee98ff9a8`](https://github.com/meta/astryx/commit/ee98ff9a8) docs: TabList scrolls its overflow, and MobileNav is a drawer (#8100)
+  - Vue 版已有：library.vue 里 MobileNav 的描述已经是滑出式导航抽屉
+- [x] [`c19b5e326`](https://github.com/meta/astryx/commit/c19b5e326) fix(CodeBlock): the headerless Copy button never covers code (#8101)
+  - 不适用：本族只涉及上游块模板说明，Vue 没有块模板；CodeBlock（core/src/Code）复制按钮的修复归富文本与代码高亮族
+- [x] [`b298b37d1`](https://github.com/meta/astryx/commit/b298b37d1) feat(theme): add surface-specific status color roles (#7657)
+  - 已移植：[#554](https://github.com/astryx-vue/astryx-vue/pull/554)。表格对比、告警栏仪表盘页的状态文字改读 text 状态色；状态色角色本身见 #517
+- [x] [`bb12cfbd6`](https://github.com/meta/astryx/commit/bb12cfbd6) fix(Thumbnail): Open and Remove stay mounted while they cannot act (#8542)
+  - 已移植：[#503](https://github.com/astryx-vue/astryx-vue/pull/503)。按基础展示族结论：Thumbnail 的 Open/Remove 不能操作时仍挂载并标 aria-disabled
 - [ ] [`2a162e1b6`](https://github.com/meta/astryx/commit/2a162e1b6) feat(core): BottomSheet stacks by open order, replaces on a same-update switch, and BottomSheetSwitcher is deprecated (#7648)
+  - 暂缓：BottomSheet 按打开顺序叠放、同一次更新里切换替换：Vue 没有等价的打开顺序栈，Switcher 弃用说明待单独处理
 - [ ] [`dbb2d527e`](https://github.com/meta/astryx/commit/dbb2d527e) fix(cli): the Tokenizer showcase block searches its tags (#8737)
 - [x] [`b84bf77fa`](https://github.com/meta/astryx/commit/b84bf77fa) chore: move project links to meta/astryx (#8827)
   - 不适用：上游内部规范和架构文档（自动初筛）
@@ -2335,68 +2347,112 @@
 
 - [x] [`3f19de5d3`](https://github.com/meta/astryx/commit/3f19de5d3) spec(template-authoring): motion and gesture examples swap docs-only showcase elements for generic ones when distributed (#9419)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`e84fb851f`](https://github.com/meta/astryx/commit/e84fb851f) fix(cli): BottomSheet checklist examples toggle from the whole row (#9533)
+- [x] [`e84fb851f`](https://github.com/meta/astryx/commit/e84fb851f) fix(cli): BottomSheet checklist examples toggle from the whole row (#9533)
+  - Vue 版已有：bottom-sheet 示例的筛选清单用 CheckboxListItem，点整行就能切换
 - [ ] [`61e061cb5`](https://github.com/meta/astryx/commit/61e061cb5) feat: replace demo-content elements on every copy and every surface that hands out example source (#9430)
-- [ ] [`a34b88669`](https://github.com/meta/astryx/commit/a34b88669) docs(useCollator): add a locale-aware name sort example block (#9510)
-- [ ] [`d34e843ea`](https://github.com/meta/astryx/commit/d34e843ea) docs(useToast): add a settings saved example block (#9512)
-- [ ] [`d219cdfc6`](https://github.com/meta/astryx/commit/d219cdfc6) docs(useTranslator): add a load-more footer example block (#9573)
-- [ ] [`1667ea833`](https://github.com/meta/astryx/commit/1667ea833) docs(core): add a usePressFeedback example on a pressable Card (#9431)
+- [x] [`a34b88669`](https://github.com/meta/astryx/commit/a34b88669) docs(useCollator): add a locale-aware name sort example block (#9510)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。useCollator 页补按语言排姓名的示例
+- [x] [`d34e843ea`](https://github.com/meta/astryx/commit/d34e843ea) docs(useToast): add a settings saved example block (#9512)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。useToast 页补「设置已保存」示例
+- [x] [`d219cdfc6`](https://github.com/meta/astryx/commit/d219cdfc6) docs(useTranslator): add a load-more footer example block (#9573)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。useTranslator 页补加载更多页脚示例
+- [x] [`1667ea833`](https://github.com/meta/astryx/commit/1667ea833) docs(core): add a usePressFeedback example on a pressable Card (#9431)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。usePressFeedback 页用可按的卡片做示例
 
 ### v0.7.7
 
-- [ ] [`e0548a647`](https://github.com/meta/astryx/commit/e0548a647) docs(useListFocus): add a recent files example block (#9577)
-- [ ] [`637d2352c`](https://github.com/meta/astryx/commit/637d2352c) docs(useCombobox): add an assign-to field example block (#9576)
-- [ ] [`e0eac233d`](https://github.com/meta/astryx/commit/e0eac233d) docs(core): smaller, realistic playing-card demo for motion and gesture examples, with a usage hint (#9607)
-- [ ] [`d5a3d00d0`](https://github.com/meta/astryx/commit/d5a3d00d0) docs(useOverflow): add an editor toolbar example block (#9689)
-- [ ] [`559b0054f`](https://github.com/meta/astryx/commit/559b0054f) docs(useGridFocus): add a color swatch grid example block (#9574)
-- [ ] [`120847534`](https://github.com/meta/astryx/commit/120847534) docs(useOutlineFromMarkdown): add hook docs and a docs article example block (#9719)
+- [x] [`e0548a647`](https://github.com/meta/astryx/commit/e0548a647) docs(useListFocus): add a recent files example block (#9577)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。useListFocus 页补最近文件示例
+- [x] [`637d2352c`](https://github.com/meta/astryx/commit/637d2352c) docs(useCombobox): add an assign-to field example block (#9576)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。新增 useCombobox 文档页和「指派给」字段示例
+- [x] [`e0eac233d`](https://github.com/meta/astryx/commit/e0eac233d) docs(core): smaller, realistic playing-card demo for motion and gesture examples, with a usage hint (#9607)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。usePressFeedback 示例已是一张可按的卡片；扑克牌示例随 pan、animator 等 hook 暂缓
+- [x] [`d5a3d00d0`](https://github.com/meta/astryx/commit/d5a3d00d0) docs(useOverflow): add an editor toolbar example block (#9689)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。useOverflow 页补编辑器工具栏示例
+- [x] [`559b0054f`](https://github.com/meta/astryx/commit/559b0054f) docs(useGridFocus): add a color swatch grid example block (#9574)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。useGridFocus 页补色板网格示例
+- [x] [`120847534`](https://github.com/meta/astryx/commit/120847534) docs(useOutlineFromMarkdown): add hook docs and a docs article example block (#9719)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。新增 useOutlineFromMarkdown 文档页和文档文章示例
 
 ### v0.7.8
 
 - [ ] [`871bc3d5e`](https://github.com/meta/astryx/commit/871bc3d5e) feat(core): createAnimator and useAnimator animate one element (#8653)
-- [ ] [`dc90b5031`](https://github.com/meta/astryx/commit/dc90b5031) docs(useAnnounce): add a filter result count example block (#9509)
+  - 暂缓：createAnimator/useAnimator、createPanGesture/usePanGesture、createDragToSnapPoints 这批动效与手势 hook 在 Vue 版还没有（由交互族任务落地），示例块等它们落地后再补
+- [x] [`dc90b5031`](https://github.com/meta/astryx/commit/dc90b5031) docs(useAnnounce): add a filter result count example block (#9509)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。useAnnounce 页补筛选结果数播报示例
 - [ ] [`dcf3d6f86`](https://github.com/meta/astryx/commit/dcf3d6f86) feat(Tokenizer): presentation is a stable prop, and adaptive is its default (#9796)
-- [ ] [`1404bf84e`](https://github.com/meta/astryx/commit/1404bf84e) docs(useFocusTrap): add a quick edit panel example block (#9513)
-- [ ] [`96066d710`](https://github.com/meta/astryx/commit/96066d710) docs(useLocale): add an invoice summary example block (#9511)
-- [ ] [`09ea8afb2`](https://github.com/meta/astryx/commit/09ea8afb2) docs(useKeyboardHint): call the hook directly in a star rating example (#9575)
-- [ ] [`ad27496be`](https://github.com/meta/astryx/commit/ad27496be) docs(useTypeahead): add a type-to-focus country list example block (#9614)
-- [ ] [`4934ffcf9`](https://github.com/meta/astryx/commit/4934ffcf9) docs(useScrollableArea): add an activity log panel example block (#9618)
-- [ ] [`ff5b5ac7e`](https://github.com/meta/astryx/commit/ff5b5ac7e) docs(useLightbox): add hook docs and a gallery grid example block (#9752)
-- [ ] [`721bba9d6`](https://github.com/meta/astryx/commit/721bba9d6) docs(useHotkeys): add a search and help shortcuts example block (#9508)
-- [ ] [`ffd29c58b`](https://github.com/meta/astryx/commit/ffd29c58b) docs(useInputStatusIcon): add a minimal live example (#9714)
-- [ ] [`8c2262460`](https://github.com/meta/astryx/commit/8c2262460) docs(useTreeFocus): add a keyboard file tree example block (#9617)
+  - 暂缓：Tokenizer 的 presentation 属性和 adaptive 默认值依赖 Vue 版还没有的触屏弹层
+- [x] [`1404bf84e`](https://github.com/meta/astryx/commit/1404bf84e) docs(useFocusTrap): add a quick edit panel example block (#9513)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。useFocusTrap 页补快速编辑面板示例
+- [x] [`96066d710`](https://github.com/meta/astryx/commit/96066d710) docs(useLocale): add an invoice summary example block (#9511)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。useLocale 页补发票汇总示例
+- [x] [`09ea8afb2`](https://github.com/meta/astryx/commit/09ea8afb2) docs(useKeyboardHint): call the hook directly in a star rating example (#9575)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。useKeyboardHint 页直接调用 hook 做星级评分示例
+- [x] [`ad27496be`](https://github.com/meta/astryx/commit/ad27496be) docs(useTypeahead): add a type-to-focus country list example block (#9614)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。useTypeahead 页补按字母跳到国家的示例
+- [x] [`4934ffcf9`](https://github.com/meta/astryx/commit/4934ffcf9) docs(useScrollableArea): add an activity log panel example block (#9618)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。useScrollableArea 页补动态日志面板示例
+- [x] [`ff5b5ac7e`](https://github.com/meta/astryx/commit/ff5b5ac7e) docs(useLightbox): add hook docs and a gallery grid example block (#9752)
+  - 已移植：[#542](https://github.com/astryx-vue/astryx-vue/pull/542)。新增 useLightbox 文档页和图集网格示例
+- [x] [`721bba9d6`](https://github.com/meta/astryx/commit/721bba9d6) docs(useHotkeys): add a search and help shortcuts example block (#9508)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。useHotkeys 页补搜索与帮助快捷键示例
+- [x] [`ffd29c58b`](https://github.com/meta/astryx/commit/ffd29c58b) docs(useInputStatusIcon): add a minimal live example (#9714)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。useInputStatusIcon 页补优惠码示例
+- [x] [`8c2262460`](https://github.com/meta/astryx/commit/8c2262460) docs(useTreeFocus): add a keyboard file tree example block (#9617)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。useTreeFocus 页补键盘文件树示例
 - [ ] [`442f2ddd4`](https://github.com/meta/astryx/commit/442f2ddd4) perf(cli): search parses a page template only when a term can match it (#9871)
-- [ ] [`1027ce206`](https://github.com/meta/astryx/commit/1027ce206) docs(useClipboard): add a share-link example block (#9507)
+- [x] [`1027ce206`](https://github.com/meta/astryx/commit/1027ce206) docs(useClipboard): add a share-link example block (#9507)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。useClipboard 页补分享链接示例
 
 ### v0.7.9
 
-- [ ] [`f9ba0f03b`](https://github.com/meta/astryx/commit/f9ba0f03b) docs(useClickableContainer): add a clickable project card example block (#9596)
-- [ ] [`c03a87c51`](https://github.com/meta/astryx/commit/c03a87c51) docs(useImageMode): add a photo caption example block (#9893)
-- [ ] [`d9a3da5fe`](https://github.com/meta/astryx/commit/d9a3da5fe) [Component Audit] InfoTip: the docs page gets worked examples, and hover, focus, pin, and Escape are proven in a browser (#9940)
-- [ ] [`380defeb5`](https://github.com/meta/astryx/commit/380defeb5) fix(PowerSearch): the docs examples fit a phone, and a long sheet-trigger placeholder ends in an ellipsis (#9898)
+- [x] [`f9ba0f03b`](https://github.com/meta/astryx/commit/f9ba0f03b) docs(useClickableContainer): add a clickable project card example block (#9596)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。useClickableContainer 页补可点项目卡示例
+- [x] [`c03a87c51`](https://github.com/meta/astryx/commit/c03a87c51) docs(useImageMode): add a photo caption example block (#9893)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。useImageMode 页补照片说明示例
+- [x] [`d9a3da5fe`](https://github.com/meta/astryx/commit/d9a3da5fe) [Component Audit] InfoTip: the docs page gets worked examples, and hover, focus, pin, and Escape are proven in a browser (#9940)
+  - 已移植：[#542](https://github.com/astryx-vue/astryx-vue/pull/542)。InfoTip 页补指标释义、权限说明两个示例；浏览器验证属上游测试设施
+- [x] [`380defeb5`](https://github.com/meta/astryx/commit/380defeb5) fix(PowerSearch): the docs examples fit a phone, and a long sheet-trigger placeholder ends in an ellipsis (#9898)
+  - Vue 版已有：PowerSearch 的输入框用原生 placeholder，过长自带省略；Vue 示例没有写死宽度，也没有触屏 sheet 触发器
 - [ ] [`da771b3e5`](https://github.com/meta/astryx/commit/da771b3e5) chore(Tokenizer): docs examples, blocks and templates follow the adaptive default (#9883)
+  - 暂缓：Tokenizer 示例、块和模板跟 adaptive 默认值走，随 presentation 属性一起暂缓
 - [x] [`b1f604c9f`](https://github.com/meta/astryx/commit/b1f604c9f) fix(OverflowList): a resize shows the new visible set in the same frame (height-changing folds stay one frame late) (#9926)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`f384e62f5`](https://github.com/meta/astryx/commit/f384e62f5) docs(useIcon): add hook docs and a status row example block (#9900)
+- [x] [`f384e62f5`](https://github.com/meta/astryx/commit/f384e62f5) docs(useIcon): add hook docs and a status row example block (#9900)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。Icon 页补直接调用 useIcon 的状态行示例
 - [x] [`97b1bb01b`](https://github.com/meta/astryx/commit/97b1bb01b) test(cli): the templates check fails on an unloadable Core template doc (#10082)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`7d6481ef3`](https://github.com/meta/astryx/commit/7d6481ef3) feat(core): createPanGesture and usePanGesture report a drag as values (spec:AST-107 FR1, FR6) (#8655)
-- [ ] [`7b831ae03`](https://github.com/meta/astryx/commit/7b831ae03) docs(useLinkComponent): add hook docs and an article card example block (#9901)
-- [ ] [`9d1405aca`](https://github.com/meta/astryx/commit/9d1405aca) docs(useScrollOverflow): add a filter strip edge fade example block (#9616)
-- [ ] [`b2659fea5`](https://github.com/meta/astryx/commit/b2659fea5) docs(hooks): add useMergedRefs AutoGrowTextArea example block (#9938)
+  - 暂缓：createAnimator/useAnimator、createPanGesture/usePanGesture、createDragToSnapPoints 这批动效与手势 hook 在 Vue 版还没有（由交互族任务落地），示例块等它们落地后再补
+- [x] [`7b831ae03`](https://github.com/meta/astryx/commit/7b831ae03) docs(useLinkComponent): add hook docs and an article card example block (#9901)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。LinkProvider 页补直接调用 useLinkComponent 的文章卡示例
+- [x] [`9d1405aca`](https://github.com/meta/astryx/commit/9d1405aca) docs(useScrollOverflow): add a filter strip edge fade example block (#9616)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。useScrollOverflow 页补筛选条边缘渐隐示例
+- [x] [`b2659fea5`](https://github.com/meta/astryx/commit/b2659fea5) docs(hooks): add useMergedRefs AutoGrowTextArea example block (#9938)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。useMergedRefs 页补自动增高文本框示例
 - [ ] [`df15de7fc`](https://github.com/meta/astryx/commit/df15de7fc) docs(core): open the pan hook pages with a minimal draggable box (#9928)
-- [ ] [`c8a172b4b`](https://github.com/meta/astryx/commit/c8a172b4b) docs(useOverlay): add hook docs and a product quick view example block (#9908)
-- [ ] [`a4dd70eb1`](https://github.com/meta/astryx/commit/a4dd70eb1) docs(useCalendarDays): add hook docs and a month grid example block (#9905)
-- [ ] [`7b87e121f`](https://github.com/meta/astryx/commit/7b87e121f) docs(useInputContainer): add a search field wrapper example block (#9619)
-- [ ] [`5f8a80903`](https://github.com/meta/astryx/commit/5f8a80903) docs(useTableSortableState): add hook docs and a multi-sort orders example block (#9911)
-- [ ] [`b9e3dc27e`](https://github.com/meta/astryx/commit/b9e3dc27e) docs(useScrollLock): add a full-screen mobile menu example block (#9595)
+  - 暂缓：createAnimator/useAnimator、createPanGesture/usePanGesture、createDragToSnapPoints 这批动效与手势 hook 在 Vue 版还没有（由交互族任务落地），示例块等它们落地后再补
+- [x] [`c8a172b4b`](https://github.com/meta/astryx/commit/c8a172b4b) docs(useOverlay): add hook docs and a product quick view example block (#9908)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。Overlay 页补直接调用 useOverlay 的商品快速查看示例
+- [x] [`a4dd70eb1`](https://github.com/meta/astryx/commit/a4dd70eb1) docs(useCalendarDays): add hook docs and a month grid example block (#9905)
+  - 不适用：useCalendar 在 Vue 版不对外导出，没有公开的日历 hook 可写文档页
+- [x] [`7b87e121f`](https://github.com/meta/astryx/commit/7b87e121f) docs(useInputContainer): add a search field wrapper example block (#9619)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。useInputContainer 页补搜索框外壳示例
+- [x] [`5f8a80903`](https://github.com/meta/astryx/commit/5f8a80903) docs(useTableSortableState): add hook docs and a multi-sort orders example block (#9911)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。新增 useTableSortableState 文档页和多列排序示例
+- [x] [`b9e3dc27e`](https://github.com/meta/astryx/commit/b9e3dc27e) docs(useScrollLock): add a full-screen mobile menu example block (#9595)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。useScrollLock 页补全屏移动菜单示例
 
 ### v0.7.10
 
-- [ ] [`e40adf9aa`](https://github.com/meta/astryx/commit/e40adf9aa) fix(ChatComposerInput): an imperative insertToken reports its value through onChange (#10167)
-- [ ] [`62f5ebc5e`](https://github.com/meta/astryx/commit/62f5ebc5e) docs(useMultiCombobox): add an issue labels example block (#9578)
+- [x] [`e40adf9aa`](https://github.com/meta/astryx/commit/e40adf9aa) fix(ChatComposerInput): an imperative insertToken reports its value through onChange (#10167)
+  - Vue 版已有：ChatComposerInput 的 insertToken 句柄插入成功后会 publish，onChange 能收到
+- [x] [`62f5ebc5e`](https://github.com/meta/astryx/commit/62f5ebc5e) docs(useMultiCombobox): add an issue labels example block (#9578)
+  - 不适用：Vue 版没有 useMultiCombobox，MultiSelector 内部直接用 useCombobox
 - [ ] [`a789c8cd7`](https://github.com/meta/astryx/commit/a789c8cd7) feat(core): createDragToSnapPoints and useDragToSnapPoints settle an element on snap points (#8658)
-- [ ] [`07f8de58c`](https://github.com/meta/astryx/commit/07f8de58c) feat(core): Carousel's hasSnap takes useSnapPaging(), iOS paging on native snap's stops (#8153)
+  - 暂缓：createAnimator/useAnimator、createPanGesture/usePanGesture、createDragToSnapPoints 这批动效与手势 hook 在 Vue 版还没有（由交互族任务落地），示例块等它们落地后再补
+- [x] [`07f8de58c`](https://github.com/meta/astryx/commit/07f8de58c) feat(core): Carousel's hasSnap takes useSnapPaging(), iOS paging on native snap's stops (#8153)
+  - 已移植：[#518](https://github.com/astryx-vue/astryx-vue/pull/518)。按基础展示族结论：新增 useSnapPaging，Carousel 的 hasSnap 接受它
 
 ### v0.7.11
 
@@ -2405,49 +2461,76 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`755206df2`](https://github.com/meta/astryx/commit/755206df2) test(cli): catalog-heavy tests load their code under test natively (#10328)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`fed78ba24`](https://github.com/meta/astryx/commit/fed78ba24) docs(Table): a block that puts row selection in each row's leading mark (#10395)
+- [x] [`fed78ba24`](https://github.com/meta/astryx/commit/fed78ba24) docs(Table): a block that puts row selection in each row's leading mark (#10395)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。useTableSelectionState 页补头像位置勾选示例
 
 ### v0.7.12
 
-- [ ] [`3bbab18c8`](https://github.com/meta/astryx/commit/3bbab18c8) Align Theme Showcase with Astryx template conventions (#10404)
-- [ ] [`61e6c96bf`](https://github.com/meta/astryx/commit/61e6c96bf) refactor(templates): the file explorer scrolls its columns with Stack props, not custom CSS (#10421)
-- [ ] [`b4a4fa075`](https://github.com/meta/astryx/commit/b4a4fa075) refactor(templates): the grouped table template groups its rows with useTableGroupedRows (#10423)
-- [ ] [`d81027191`](https://github.com/meta/astryx/commit/d81027191) feat(templates): add course-detail page template (#9753)
-- [ ] [`5e0f3d3cb`](https://github.com/meta/astryx/commit/5e0f3d3cb) feat(Table): plugins get an immutable row and render context; useTableRowIndex numbers from it (#10171)
-- [ ] [`8091fbc64`](https://github.com/meta/astryx/commit/8091fbc64) docs(useCalendarNavigation): add hook docs and a month pager example block (#10154)
-- [ ] [`62c7802e8`](https://github.com/meta/astryx/commit/62c7802e8) docs(useCalendarConstraints): add hook docs and a hotel booking range example block (#10151)
+- [x] [`3bbab18c8`](https://github.com/meta/astryx/commit/3bbab18c8) Align Theme Showcase with Astryx template conventions (#10404)
+  - Vue 版已有：theme-showcase.vue 已按 Vue 模板约定写，每个区块用 core 组件和令牌
+- [x] [`61e6c96bf`](https://github.com/meta/astryx/commit/61e6c96bf) refactor(templates): the file explorer scrolls its columns with Stack props, not custom CSS (#10421)
+  - 已移植：[#554](https://github.com/astryx-vue/astryx-vue/pull/554)。文件浏览器的每一列和详情栏用 StackItem 自带滚动并按文件夹名命名，整行 HStack 横向滚动，箭头在从右往左时镜像
+- [x] [`b4a4fa075`](https://github.com/meta/astryx/commit/b4a4fa075) refactor(templates): the grouped table template groups its rows with useTableGroupedRows (#10423)
+  - Vue 版已有：table-grouped.vue 已用 useTableGroupedRows 分组
+- [x] [`d81027191`](https://github.com/meta/astryx/commit/d81027191) feat(templates): add course-detail page template (#9753)
+  - Vue 版已有：course-detail.vue 和 template-meta 里的 course-detail 已在
+- [x] [`5e0f3d3cb`](https://github.com/meta/astryx/commit/5e0f3d3cb) feat(Table): plugins get an immutable row and render context; useTableRowIndex numbers from it (#10171)
+  - 已移植：[#539](https://github.com/astryx-vue/astryx-vue/pull/539)。useTableRowIndex 的 data 可选，按渲染出的位置编号；只读上下文协议属 React 设施
+- [x] [`8091fbc64`](https://github.com/meta/astryx/commit/8091fbc64) docs(useCalendarNavigation): add hook docs and a month pager example block (#10154)
+  - 不适用：同上：Vue 版没有公开的月份导航 hook
+- [x] [`62c7802e8`](https://github.com/meta/astryx/commit/62c7802e8) docs(useCalendarConstraints): add hook docs and a hotel booking range example block (#10151)
+  - 不适用：同上：Vue 版没有公开的日历约束 hook，约束由 Calendar 组件的 min、max、dateConstraints 提供
 - [ ] [`670aada7f`](https://github.com/meta/astryx/commit/670aada7f) docs(cli): the coupon code block's field shows its focus look at once (#10649)
-- [ ] [`7bc8230f8`](https://github.com/meta/astryx/commit/7bc8230f8) fix(Button): a labelled button grows with its label (#10588)
-- [ ] [`1ffc0dac9`](https://github.com/meta/astryx/commit/1ffc0dac9) fix(BottomSheet): resting content starts below the grab bar, whatever the padding (#8558)
-- [ ] [`df5f6926e`](https://github.com/meta/astryx/commit/df5f6926e) docs(useTableColumnSettingsState): add hook docs and a column visibility picker example block (#10652)
-- [ ] [`5b3e17bb2`](https://github.com/meta/astryx/commit/5b3e17bb2) feat(Table): window fixed-height flat tables through useTableRowsVirtualization (#8280)
+- [x] [`7bc8230f8`](https://github.com/meta/astryx/commit/7bc8230f8) fix(Button): a labelled button grows with its label (#10588)
+  - Vue 版已有：button.css 的 height 取尺寸与 1lh 的较大值，带文字的按钮随文字长高
+- [x] [`1ffc0dac9`](https://github.com/meta/astryx/commit/1ffc0dac9) fix(BottomSheet): resting content starts below the grab bar, whatever the padding (#8558)
+  - 已移植：[#546](https://github.com/astryx-vue/astryx-vue/pull/546)。面板静止内容从抓手条下面开始，不受内边距影响
+- [x] [`df5f6926e`](https://github.com/meta/astryx/commit/df5f6926e) docs(useTableColumnSettingsState): add hook docs and a column visibility picker example block (#10652)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。useTableColumnSettings 页补列显隐选择器示例
+- [x] [`5b3e17bb2`](https://github.com/meta/astryx/commit/5b3e17bb2) feat(Table): window fixed-height flat tables through useTableRowsVirtualization (#8280)
+  - 已移植：[#547](https://github.com/astryx-vue/astryx-vue/pull/547)。新增 useTableRowsVirtualization，定高扁平行只挂载视口附近的行
 - [ ] [`31ae99075`](https://github.com/meta/astryx/commit/31ae99075) fix(cli): template — a typo's near name comes first in the suggestions (#10712)
 - [x] [`3cd23eafb`](https://github.com/meta/astryx/commit/3cd23eafb) test(cli): node tests no longer time out under load (#10740)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`c44f02ec2`](https://github.com/meta/astryx/commit/c44f02ec2) docs(useStreamingText): make the example actually stream (#9975)
-- [ ] [`1f9ac7198`](https://github.com/meta/astryx/commit/1f9ac7198) docs(useInteractiveRole): add a four-roles example block (#9972)
+- [x] [`c44f02ec2`](https://github.com/meta/astryx/commit/c44f02ec2) docs(useStreamingText): make the example actually stream (#9975)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。useStreamingText 示例改成真的在流式输出
+- [x] [`1f9ac7198`](https://github.com/meta/astryx/commit/1f9ac7198) docs(useInteractiveRole): add a four-roles example block (#9972)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。useInteractiveRole 页补四种角色示例
 - [ ] [`c5cc8f4c4`](https://github.com/meta/astryx/commit/c5cc8f4c4) docs(useLinkify): add hook docs and a comment-thread example block (#9969)
-- [ ] [`d84658f7d`](https://github.com/meta/astryx/commit/d84658f7d) docs(usePowerSearchConfig): add hook docs and a filtered directory table example block (#10660)
-- [ ] [`52356e690`](https://github.com/meta/astryx/commit/52356e690) feat(Table): useTableRowsVirtualization's viewportHeight becomes initialViewportHeight, which no longer sizes the Table (#10894)
+  - 暂缓：Vue 版缺 useLinkify（上游 v0.7.1 前就有的 hook，一直没移植），先补 hook 才有文档可写
+- [x] [`d84658f7d`](https://github.com/meta/astryx/commit/d84658f7d) docs(usePowerSearchConfig): add hook docs and a filtered directory table example block (#10660)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。新增 usePowerSearchConfig 文档页和过滤目录表示例
+- [x] [`52356e690`](https://github.com/meta/astryx/commit/52356e690) feat(Table): useTableRowsVirtualization's viewportHeight becomes initialViewportHeight, which no longer sizes the Table (#10894)
+  - 已移植：[#547](https://github.com/astryx-vue/astryx-vue/pull/547)。配置改为 initialViewportHeight，表格高度由父元素决定
 - [ ] [`a9265f169`](https://github.com/meta/astryx/commit/a9265f169) style(cli): format doctor.mjs and template.mjs with Prettier (#10988)
 - [ ] [`4b6ad11c0`](https://github.com/meta/astryx/commit/4b6ad11c0) fix(cli): remove internal-format identifiers from comments and sample data (#10958)
 
 ### v0.7.13
 
-- [ ] [`367229613`](https://github.com/meta/astryx/commit/367229613) feat(cli): experimental icon sets — one main set with backups, a local placeholder for missing icons, and a docs-site set choice (#10959)
+- [x] [`367229613`](https://github.com/meta/astryx/commit/367229613) feat(cli): experimental icon sets — one main set with backups, a local placeholder for missing icons, and a docs-site set choice (#10959)
+  - 不适用：上游实验性图标集（icon set 定义、experimental icon 命令、模板按图标集换图标），我们的 CLI 没有图标集配置，模板直接用 core 的 Icon
 - [ ] [`43fa8be5a`](https://github.com/meta/astryx/commit/43fa8be5a) Merge branch 'm2' into m3 (#10625)
-- [ ] [`6af6700c8`](https://github.com/meta/astryx/commit/6af6700c8) docs(useDirection): add hook docs and a live sparkline example block (#10547)
+  - 暂缓：示例依赖 BaseTypeahead 的 menu（列表框与对话框角色切换），Vue 版 BaseTypeahead 没有这个配置
+- [x] [`6af6700c8`](https://github.com/meta/astryx/commit/6af6700c8) docs(useDirection): add hook docs and a live sparkline example block (#10547)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。useLocaleDirection 页补实时迷你折线示例（对应上游 useDirection）
 - [ ] [`57009119a`](https://github.com/meta/astryx/commit/57009119a) docs(InternationalizationProvider): add a calendar example (#10135)
+  - 暂缓：日历示例依赖 provider 的 calendar，Vue 版还没有日历系统设施
 
 ### v0.7.14
 
-- [ ] [`7c8a2e23b`](https://github.com/meta/astryx/commit/7c8a2e23b) docs(useTruncation): add hook docs and a live table cell truncation example block (#10555)
+- [x] [`7c8a2e23b`](https://github.com/meta/astryx/commit/7c8a2e23b) docs(useTruncation): add hook docs and a live table cell truncation example block (#10555)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。新增 useTruncation 文档页和表格单元格截断示例
 - [ ] [`cfa1d6273`](https://github.com/meta/astryx/commit/cfa1d6273) feat(cli): experimental icon sets — show which template icon meanings a set does not map, and smoother set authoring (#11090)
-- [ ] [`7882c6028`](https://github.com/meta/astryx/commit/7882c6028) docs(InternationalizationProvider): order the examples locale, RTL, overrides, calendar (#11094)
-- [ ] [`15c9ab5e7`](https://github.com/meta/astryx/commit/15c9ab5e7) feat(cli): open a sign-in dialog from the theme showcase (#11130)
-- [ ] [`fb823d928`](https://github.com/meta/astryx/commit/fb823d928) fix(cli): the theme showcase's Sign in dialog opens empty each time (#11139)
-- [ ] [`441e079d2`](https://github.com/meta/astryx/commit/441e079d2) fix(cli): experimental icon sets — distinct template icon meanings, keep a wrapped library's icons, docs-site icon-set build fixes (#11142)
-- [ ] [`0a368ec47`](https://github.com/meta/astryx/commit/0a368ec47) fix(cli): template placeholder images follow dark mode (#11150)
+- [x] [`7882c6028`](https://github.com/meta/astryx/commit/7882c6028) docs(InternationalizationProvider): order the examples locale, RTL, overrides, calendar (#11094)
+  - 已移植：[#534](https://github.com/astryx-vue/astryx-vue/pull/534)。provider 文档示例按载入语言目录、RTL、覆盖文案排序；日历示例随日历设施暂缓
+- [x] [`15c9ab5e7`](https://github.com/meta/astryx/commit/15c9ab5e7) feat(cli): open a sign-in dialog from the theme showcase (#11130)
+  - Vue 版已有：theme-showcase.vue 有 Sign in 按钮，打开真的对话框
+- [x] [`fb823d928`](https://github.com/meta/astryx/commit/fb823d928) fix(cli): the theme showcase's Sign in dialog opens empty each time (#11139)
+  - Vue 版已有：theme-showcase.vue 每次打开给表单换 key，重开后是空的
+- [x] [`441e079d2`](https://github.com/meta/astryx/commit/441e079d2) fix(cli): experimental icon sets — distinct template icon meanings, keep a wrapped library's icons, docs-site icon-set build fixes (#11142)
+  - 不适用：上游实验性图标集（icon set 定义、experimental icon 命令、模板按图标集换图标），我们的 CLI 没有图标集配置，模板直接用 core 的 Icon
+- [x] [`0a368ec47`](https://github.com/meta/astryx/commit/0a368ec47) fix(cli): template placeholder images follow dark mode (#11150)
+  - 已移植：[#554](https://github.com/astryx-vue/astryx-vue/pull/554)。复制出去的占位图改成低透明度灰，随深色模式变深；画廊页 key 改用 alt，首页箭头镜像
 - [ ] [`dd4952ab7`](https://github.com/meta/astryx/commit/dd4952ab7) perf(cli): read shipped templates' components from a stored list (#11190)
 - [x] [`a728ac04a`](https://github.com/meta/astryx/commit/a728ac04a) perf(cli): print root help from a stored command list (#11194)
   - 不适用：只改上游测试（自动初筛）
@@ -2457,7 +2540,8 @@
 ### v0.7.15
 
 - [ ] [`3d19fc8cc`](https://github.com/meta/astryx/commit/3d19fc8cc) perf(cli): keep search's gathered catalog between runs while its inputs are unchanged (#11251)
-- [ ] [`1c2cea6b6`](https://github.com/meta/astryx/commit/1c2cea6b6) docs(useThemeName): add hook docs and an active theme example block (#11235)
+- [x] [`1c2cea6b6`](https://github.com/meta/astryx/commit/1c2cea6b6) docs(useThemeName): add hook docs and an active theme example block (#11235)
+  - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。useTheme 页补当前主题名示例
 - [ ] [`d084760db`](https://github.com/meta/astryx/commit/d084760db) perf(docsite): serve template preview images through the image optimizer (#11320)
 - [ ] [`a6e588a48`](https://github.com/meta/astryx/commit/a6e588a48) perf(cli): read which packages a shipped template imports from the copy stored at publish (#11315)
 - [x] [`318ab8029`](https://github.com/meta/astryx/commit/318ab8029) feat(cli): the integration file takes an optional logo; integration check notes what a listing needs (#11278)
@@ -2466,7 +2550,8 @@
 
 ### v0.7.16
 
-- [ ] [`58b844d16`](https://github.com/meta/astryx/commit/58b844d16) feat(Table): Promise-based infinite loading with useTableInfiniteScroll (#10570)
+- [x] [`58b844d16`](https://github.com/meta/astryx/commit/58b844d16) feat(Table): Promise-based infinite loading with useTableInfiniteScroll (#10570)
+  - 已移植：[#540](https://github.com/astryx-vue/astryx-vue/pull/540)。新增 useTableInfiniteScroll 并配加载更多示例
 - [ ] [`10bae0687`](https://github.com/meta/astryx/commit/10bae0687) feat(Table): useTableColumnsVirtualization windows the unpinned columns (#11014)
 - [ ] [`56680f6a7`](https://github.com/meta/astryx/commit/56680f6a7) fix(cli): themeBuild no longer takes the watch and private-var hand-off callbacks, and the dashboard page template typechecks with noUncheckedIndexedAccess (#11420)
 - [x] [`723a112c3`](https://github.com/meta/astryx/commit/723a112c3) test: split the heaviest Node test files so the legs can spread them (#11436)
