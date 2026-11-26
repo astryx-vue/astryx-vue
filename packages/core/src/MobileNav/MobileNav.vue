@@ -178,7 +178,7 @@ onBeforeUnmount(() => {
     @cancel="onCancel"
     @click="onDialogClick"
   >
-    <div class="astryx-mobile-nav__drawer">
+    <div class="astryx-mobile-nav__drawer astryx-mobile-nav-drawer" :data-side="resolvedSide">
       <div class="astryx-mobile-nav__header" :class="{ 'astryx-mobile-nav__header--end': !$slots.header && !header }">
         <div v-if="$slots.header || header" :id="labelId" class="astryx-mobile-nav__title">
           <slot name="header">
