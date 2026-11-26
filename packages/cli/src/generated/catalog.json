@@ -13,7 +13,7 @@
     {
       "name": "@astryx-vue/charts",
       "directory": "packages/charts",
-      "version": "0.9.5",
+      "version": "0.9.6",
       "description": "Astryx charts for Vue — a config-model data visualization layer (d3-based).",
       "canary": false,
       "published": true
@@ -21,7 +21,7 @@
     {
       "name": "@astryx-vue/lab",
       "directory": "packages/lab",
-      "version": "0.6.6",
+      "version": "0.6.7",
       "description": "Astryx lab components for Vue 3 — experimental components that may change. Ships only under the canary dist-tag.",
       "canary": true,
       "published": true
