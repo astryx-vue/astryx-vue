@@ -25,3 +25,14 @@ export function foldTypeaheadText(text: string): string {
 export function startsWithTypeahead(label: string, prefix: string): boolean {
   return foldTypeaheadText(label).startsWith(prefix)
 }
+
+/**
+ * 按键是不是 Control 或 Command 快捷键，而不是键入的字符。
+ * Windows 上 AltGr 也会报 Control，同时带 AltGraph 修饰；它给出的是用户键入的字母，比如 ł。
+ * 单独的 Alt 不算：macOS 的 Option 加字母会组出字符（Option+a 得到 å）。
+ */
+export function isShortcutChord(event: Pick<KeyboardEvent, 'ctrlKey' | 'metaKey' | 'getModifierState'>): boolean {
+  if (event.metaKey)
+    return true
+  return event.ctrlKey && event.getModifierState?.('AltGraph') !== true
+}

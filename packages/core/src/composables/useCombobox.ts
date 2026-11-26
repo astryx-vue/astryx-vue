@@ -1,6 +1,8 @@
 import type { Ref } from 'vue'
-import { computed, onScopeDispose, ref, watch } from 'vue'
-import { foldTypeaheadText, startsWithTypeahead } from './internal/typeaheadText.js'
+import type { ComboboxFieldHandlers, ComboboxFieldProps, ComboboxListboxProps, ComboboxOptionProps } from './internal/comboboxFieldProps.js'
+import { computed, nextTick, onScopeDispose, ref, useId, watch } from 'vue'
+import { createComboboxFieldProps } from './internal/comboboxFieldProps.js'
+import { foldTypeaheadText, isShortcutChord, startsWithTypeahead } from './internal/typeaheadText.js'
 
 export interface ComboboxOption {
   value: string | number
@@ -22,6 +24,11 @@ export interface UseComboboxOptions<T = string | number> {
   onChange: (value: T | null) => void
   /** 打开/关闭状态变化回调 */
   onOpenChange?: (isOpen: boolean) => void
+  /**
+   * 列表元素的 id，选项的 id 由它派生（`<id>-option-<下标>`）。
+   * 给调用方自己渲染的输入框接 `getFieldProps` 等属性生成器时用；不给就自动生成。
+   */
+  listboxId?: string
 }
 
 export interface Combobox<T = string | number> {
@@ -57,6 +64,18 @@ export interface Combobox<T = string | number> {
   jumpToMatch: (char: string) => void
   /** 处理键盘按键 */
   onKeyDown: (event: KeyboardEvent) => void
+  /** 第 `index` 个选项的 id：渲染选项时用它，输入框的 `aria-activedescendant` 指向它。 */
+  getItemId: (index: number) => string
+  /**
+   * 调用方自己渲染的单行输入框要展开的属性：`role="combobox"`、`aria-expanded`、`aria-autocomplete="list"`、
+   * 列表显示时才有的 `aria-controls`、有高亮选项时才有的 `aria-activedescendant`，以及输入框的按键处理。
+   * 自己的 `onKeydown` 传在这里：它在组合框的处理之后运行，组合框认领了的按键就不再交给它。
+   */
+  getFieldProps: (handlers?: ComboboxFieldHandlers) => ComboboxFieldProps
+  /** 调用方自己渲染的列表要展开的属性：`id`、`role`，以及按下时不把焦点从输入框带走。名字由调用方给。 */
+  getListboxProps: () => ComboboxListboxProps
+  /** 第 `index` 个选项要展开的属性：`id`、`role`、`aria-selected`、`aria-disabled`、指针移过去高亮、点击选中。 */
+  getOptionProps: (index: number) => ComboboxOptionProps
 }
 
 const TYPEAHEAD_RESET_MS = 750
@@ -75,10 +94,13 @@ export function useCombobox<T = string | number>(
     isSearchable = ref(false),
     onChange,
     onOpenChange,
+    listboxId = `astryx-combobox-${useId()}`,
   } = options
 
   const isOpen = ref(false)
   const activeIndex = ref(-1)
+  /** 查询变化带来的列表变化由查询自己处理高亮，不走「跟着选项走」。 */
+  let queryChanging = false
   const searchQuery = ref('')
   let typeaheadBuffer = ''
   let typeaheadTimer: ReturnType<typeof setTimeout> | undefined
@@ -128,6 +150,9 @@ export function useCombobox<T = string | number>(
   }
 
   function select(value: T | null): void {
+    // 列表比启用状态活得久：打开后字段被禁用，选中也不再改值。
+    if (!isEnabled.value)
+      return
     onChange(value)
     close()
   }
@@ -207,7 +232,12 @@ export function useCombobox<T = string | number>(
 
   function setSearchQuery(query: string): void {
     searchQuery.value = query
-    // 搜索时重置高亮到第一项
+    // 新查询是一份新列表，旧高亮的下标会指到别的选项上：先清掉，有查询时再落到第一项。
+    queryChanging = true
+    void nextTick(() => {
+      queryChanging = false
+    })
+    activeIndex.value = -1
     if (query && filteredOptions.value.length > 0) {
       highlightFirst()
     }
@@ -314,13 +344,11 @@ export function useCombobox<T = string | number>(
         }
         break
       default:
-        // 类型跳转：单字符且未按修饰键
+        // 类型跳转：单字符，且不是 Control / Command 快捷键（AltGr 键入的字母照常跳转）
         if (
           !isSearchInput
           && event.key.length === 1
-          && !event.ctrlKey
-          && !event.metaKey
-          && !event.altKey
+          && !isShortcutChord(event)
         ) {
           event.preventDefault()
           if (!isOpen.value) {
@@ -342,10 +370,50 @@ export function useCombobox<T = string | number>(
     }
   })
 
+  // 选项换了或重新加载时，高亮按值跟着原来的选项走，不指到旧下标上的另一个选项。
+  // 原选项没了或被禁用，落到后面第一个可用选项；后面没有就落到前面最近的；都没有则清空。
+  watch(filteredOptions, (next, previous) => {
+    if (queryChanging || !isOpen.value || activeIndex.value < 0 || next === previous)
+      return
+    const enabledIndexOf = (value: ComboboxOption['value'] | undefined): number =>
+      value === undefined ? -1 : next.findIndex(option => option.value === value && !option.disabled)
+    const stayed = enabledIndexOf(previous[activeIndex.value]?.value)
+    if (stayed >= 0) {
+      activeIndex.value = stayed
+      return
+    }
+    for (let after = activeIndex.value + 1; after < previous.length; after++) {
+      const found = enabledIndexOf(previous[after]?.value)
+      if (found >= 0) {
+        activeIndex.value = found
+        return
+      }
+    }
+    for (let before = Math.min(activeIndex.value, previous.length) - 1; before >= 0; before--) {
+      const found = enabledIndexOf(previous[before]?.value)
+      if (found >= 0) {
+        activeIndex.value = found
+        return
+      }
+    }
+    activeIndex.value = -1
+  })
+
   onScopeDispose(() => {
     if (typeaheadTimer !== undefined) {
       clearTimeout(typeaheadTimer)
     }
+  })
+
+  const fieldProps = createComboboxFieldProps({
+    listboxId,
+    isOpen,
+    isEnabled,
+    activeIndex,
+    options: filteredOptions,
+    open,
+    close,
+    select: value => select(value as T),
   })
 
   return {
@@ -353,6 +421,7 @@ export function useCombobox<T = string | number>(
     activeIndex,
     searchQuery,
     filteredOptions,
+    ...fieldProps,
     open,
     close,
     toggle,

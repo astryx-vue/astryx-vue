@@ -40,7 +40,11 @@ Each option has a `value` and a `label`. Set `disabled` to skip an option, or `d
 
 A read-only field keeps the current value, stays focusable, and still submits with the form. It does not open, and it has no clear button or chevron. It does not dim. Disabled wins when both are set. While loading, the trigger shows a spinner and the menu does not claim that nothing was found. An empty catalog and a search with no matches use different sentences. The check mark sits at the end of a selected row by default, and can move to the start. An unselected row does not reserve space for it. `disabledMessage` explains a disabled field: a tooltip follows hover and keyboard focus, the trigger stays focusable through `aria-disabled`, and the list still does not open.
 
+The list is named by the field label in every presentation. A caller `aria-labelledby` is appended after the field label, and with `searchable` the trigger's name ends with the selected value, because a role-less button does not read its value. With `searchable`, `aria-required` goes on the search field in the open list, since ARIA does not allow it on a button. A selection returns focus to the trigger. Opening the list highlights the selected option, or the first enabled option, never a disabled one. If the options change while the list is open, the highlight follows its option by value, and moves to the next enabled option when that option is gone.
+
 Arrow keys move the highlight. Home and End jump to the ends. Enter selects the highlighted option, and Escape closes the list. Once the search field is open, the arrow keys and Enter apply there, and Space still types a character.
+
+Typing a letter jumps to the next option that starts with it, ignoring case and accents, and a letter typed with AltGr counts too.
 
 Built-in strings such as the placeholder and the empty state are English. Call `provideAstryxLocale('zh-CN')` to use the Chinese strings.
 
