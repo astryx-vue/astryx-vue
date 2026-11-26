@@ -1,5 +1,6 @@
 import type { PlainDate } from './plainDate.js'
 import { plainDateCreate, plainDateFromDate } from './plainDate.js'
+import { unicodeRegExp } from './unicodeRegExp.js'
 
 export {
   plainDateToISO as dateToISO,
@@ -19,8 +20,8 @@ export function isLocaleDayFirst(locale: string = 'en'): boolean {
   return dayIndex < monthIndex
 }
 
-const LETTER_FREE = /^\P{L}+$/u
-const YEAR_FIRST = /^\d{4}[^\p{L}\d]/u
+const LETTER_FREE = unicodeRegExp('^\\P{L}+$')
+const YEAR_FIRST = unicodeRegExp('^\\d{4}[^\\p{L}\\d]')
 
 /**
  * Parses user input into a PlainDate.
