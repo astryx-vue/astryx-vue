@@ -5,6 +5,7 @@ import AlertDialog from '../AlertDialog/AlertDialog.vue'
 import Button from '../Button/Button.vue'
 import { PRESS_GROUP_ITEM_ATTRIBUTE } from '../composables/internal/useActionGroupTracking.js'
 import { ensureDialogModalApi } from '../Dialog/testUtils.js'
+import { isInHeldLayer } from '../layer/inputHold.js'
 import ToggleButton from '../ToggleButton/ToggleButton.vue'
 import ToggleButtonGroup from '../ToggleButton/ToggleButtonGroup.vue'
 import ButtonGroup from './ButtonGroup.vue'
@@ -128,6 +129,8 @@ describe('提示对话框的两个按钮在触屏设备上跟踪手指滑动', (
     const cancel = document.querySelector('.astryx-alert-dialog__action--cancel')!
     const confirm = document.querySelector('.astryx-alert-dialog__action--confirm')!
     expect(cancel.getAttribute(PRESS_GROUP_ITEM_ATTRIBUTE)).toBe('touch pen')
+    // 手指下的弹窗进场期间挡住输入：等进场播完再滑。
+    await vi.waitFor(() => expect(isInHeldLayer(cancel)).toBe(false))
     slide(cancel, confirm)
     await flushPromises()
     expect(onAction).toHaveBeenCalledTimes(1)
