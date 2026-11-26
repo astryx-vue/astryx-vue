@@ -60,6 +60,16 @@ The popover calendar and the bottom sheet both lay out the calendar's months. Th
 
 In Gregorian all of this stays as before: the same text, the same parsing, the same system control.
 
+## Custom calendars
+
+`useCalendarDays` and `useCalendarNavigation` take `calendar` too: they lay out, step and label that calendar's months while dates stay Gregorian ISO. They never read the provider calendar and default to Gregorian; pass `useLocale().calendar` to follow it. `useCalendarConstraints` works on Gregorian dates only, so it fits any calendar.
+
+```ts
+const { calendar } = useLocale()
+const nav = useCalendarNavigation(() => ({ initialValue: '2026-10-23', calendar: calendar.value }))
+const { weeks } = useCalendarDays(() => ({ ...nav.visibleCalendarMonths.value[0]!, calendar: calendar.value }))
+```
+
 ## Supported calendars
 
 | Calendar | Identifiers |

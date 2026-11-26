@@ -1,2 +1,8 @@
 export { default as Calendar } from './Calendar.vue'
 export type * from './types.js'
+export { useCalendarConstraints } from './useCalendarConstraints.js'
+export type { UseCalendarConstraintsOptions, UseCalendarConstraintsReturn } from './useCalendarConstraints.js'
+export { useCalendarDays } from './useCalendarDays.js'
+export type { CalendarDay, UseCalendarDaysOptions, UseCalendarDaysReturn } from './useCalendarDays.js'
+export { useCalendarNavigation } from './useCalendarNavigation.js'
+export type { UseCalendarNavigationOptions, UseCalendarNavigationReturn } from './useCalendarNavigation.js'

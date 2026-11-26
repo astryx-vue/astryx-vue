@@ -91,14 +91,21 @@ export type {
 } from './Button/index.js'
 export { ButtonGroup } from './ButtonGroup/index.js'
 export type { ButtonGroupOrientation, ButtonGroupProps, ButtonGroupSlots } from './ButtonGroup/index.js'
-export { Calendar } from './Calendar/index.js'
+export { Calendar, useCalendarConstraints, useCalendarDays, useCalendarNavigation } from './Calendar/index.js'
 export type {
+  CalendarDay,
   CalendarEmits,
   CalendarHandle,
   CalendarHandleRef,
   CalendarProps,
   CalendarRangeValue,
   CalendarSlots,
+  UseCalendarConstraintsOptions,
+  UseCalendarConstraintsReturn,
+  UseCalendarDaysOptions,
+  UseCalendarDaysReturn,
+  UseCalendarNavigationOptions,
+  UseCalendarNavigationReturn,
 } from './Calendar/index.js'
 export { Card } from './Card/index.js'
 export type { CardElevation, CardProps, CardSizeValue, CardSlots, CardVariant, CardVariantMap } from './Card/index.js'

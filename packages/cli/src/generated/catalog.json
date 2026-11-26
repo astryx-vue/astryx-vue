@@ -83312,6 +83312,704 @@
       }
     },
     {
+      "slug": "use-calendar-days",
+      "name": "UseCalendarDays",
+      "package": "@astryx-vue/core",
+      "kind": "composable",
+      "title": {
+        "en": "useCalendarDays",
+        "zh": "useCalendarDays"
+      },
+      "group": "Utility",
+      "groupTitle": {
+        "en": "Utility",
+        "zh": "工具"
+      },
+      "importPath": null,
+      "exportName": null,
+      "summary": {
+        "en": "Builds the day grid for one month: every date to show, including the previous and next months' days that fill the first and last weeks, grouped into weeks, plus localized weekday header names that start on `weekStartsOn`. It is the layout `Calendar` uses, for a custom month view such as a compact availability grid or a mini calendar. It returns data only: rendering, selection, keyboard navigation and the grid's accessibility semantics are the caller's.",
+        "zh": "排出一个月的日子格子：这个月的每一天，加上补齐首尾两周的前后月日子，按周分好，再给一行按语言写的星期名，从 `weekStartsOn` 开始。和 `Calendar` 用的是同一套排法，适合自己拼一个紧凑的空闲日历或迷你月历。它只返回数据：渲染、选择、键盘导航和格子的无障碍语义都由调用方负责。"
+      },
+      "usage": {
+        "en": "Builds the day grid for one month: every date to show, including the previous and next months' days that fill the first and last weeks, grouped into weeks, plus localized weekday header names that start on `weekStartsOn`. It is the layout `Calendar` uses, for a custom month view such as a compact availability grid or a mini calendar. It returns data only: rendering, selection, keyboard navigation and the grid's accessibility semantics are the caller's.\n\nWith `calendar`, the month comes from that calendar system: `{ year: 1405, month: 8, calendar: 'persian' }` is Aban in the Persian calendar, while each day's `date` and `iso` stay Gregorian. The composable never reads the provider calendar; pass `useLocale().calendar` to follow it.\n\n```ts\nimport { useCalendarDays } from '@astryx-vue/core/Calendar'\n```\n\n```ts\nconst { weeks, dayNames } = useCalendarDays({ year: 2026, month: 12, weekStartsOn: 1 })\n\n// Pass a getter when the options change\nconst { weeks: persianWeeks } = useCalendarDays(() => ({ year: year.value, month: month.value, calendar: 'persian' }))\n```",
+        "zh": "排出一个月的日子格子：这个月的每一天，加上补齐首尾两周的前后月日子，按周分好，再给一行按语言写的星期名，从 `weekStartsOn` 开始。和 `Calendar` 用的是同一套排法，适合自己拼一个紧凑的空闲日历或迷你月历。它只返回数据：渲染、选择、键盘导航和格子的无障碍语义都由调用方负责。\n\n传 `calendar` 时按那个历法排月份，例如 `{ year: 1405, month: 8, calendar: 'persian' }` 是波斯历阿班月；每一天的 `date` 和 `iso` 仍是公历。它不读 provider 的历法，要跟随时自己把 `useLocale().calendar` 传进来。\n\n```ts\nimport { useCalendarDays } from '@astryx-vue/core/Calendar'\n```\n\n```ts\nconst { weeks, dayNames } = useCalendarDays({ year: 2026, month: 12, weekStartsOn: 1 })\n\n// 选项会变时传取值函数\nconst { weeks: persianWeeks } = useCalendarDays(() => ({ year: year.value, month: month.value, calendar: 'persian' }))\n```"
+      },
+      "practices": {
+        "en": [
+          {
+            "guidance": "Do",
+            "text": "Render `dayNames` as the header row so the header follows `weekStartsOn` and the locale together with the grid."
+          },
+          {
+            "guidance": "Do",
+            "text": "Style days with `isOutside` differently, for example dimmed, so the filler days read as part of the next or previous month."
+          },
+          {
+            "guidance": "Don't",
+            "text": "Use it to build a date picker that people choose from; use `Calendar`, which adds selection, keyboard navigation and grid semantics."
+          }
+        ],
+        "zh": []
+      },
+      "props": {
+        "en": [
+          {
+            "heading": "Parameters",
+            "rows": [
+              {
+                "name": "`options`",
+                "type": "`MaybeRefOrGetter<UseCalendarDaysOptions>`",
+                "default": "—",
+                "description": "The month to lay out and how. Pass a `ref` or a getter when the options change."
+              },
+              {
+                "name": "`options.year`",
+                "type": "`number`",
+                "default": "—",
+                "description": "Year of the month to lay out, as `options.calendar` numbers it."
+              },
+              {
+                "name": "`options.month`",
+                "type": "`number`",
+                "default": "—",
+                "description": "The month's position in its year, 1-based. In the Gregorian calendar 1 is January and 12 is December; a Hebrew leap year runs from 1 to 13."
+              },
+              {
+                "name": "`options.weekStartsOn`",
+                "type": "`0-6 | 'sun' | 'mon' | ...`",
+                "default": "`0`",
+                "description": "First day of the week. It sets the first column of both the grid and `dayNames`."
+              },
+              {
+                "name": "`options.hasVariableRowCount`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "Use only as many week rows as the month needs instead of a fixed 6-row grid. That is 4 to 6 for a Gregorian month, and 1 or 2 for the short thirteenth month of the Coptic and Ethiopic calendars."
+              },
+              {
+                "name": "`options.calendar`",
+                "type": "`CalendarSystem`",
+                "default": "`'gregory'`",
+                "description": "The calendar system that numbers `year`, `month` and each day's `dayNumber`. Every day keeps its Gregorian `date` and `iso`. The provider calendar is never read. A calendar the runtime cannot show falls back to Gregorian with a one-time warning in development."
+              }
+            ]
+          },
+          {
+            "heading": "Returns",
+            "rows": [
+              {
+                "name": "`days`",
+                "type": "`ComputedRef<CalendarDay[]>`",
+                "description": "Every cell of the grid in order, including the filler days from the previous and next months. Each day has `date` (a Gregorian `PlainDate`), `iso` (`YYYY-MM-DD`), `isOutside` (true for a day outside the month) and `dayNumber` (its day of the calendar month)."
+              },
+              {
+                "name": "`weeks`",
+                "type": "`ComputedRef<CalendarDay[][]>`",
+                "description": "The same days grouped into rows of seven."
+              },
+              {
+                "name": "`dayNames`",
+                "type": "`ComputedRef<string[]>`",
+                "description": "Weekday header names in the `InternationalizationProvider` locale, starting at `weekStartsOn`."
+              },
+              {
+                "name": "`totalCells`",
+                "type": "`ComputedRef<number>`",
+                "description": "Number of cells in the grid: 42 for the fixed grid, otherwise rows times seven."
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "参数",
+            "rows": [
+              {
+                "name": "`options`",
+                "type": "`MaybeRefOrGetter<UseCalendarDaysOptions>`",
+                "default": "—",
+                "description": "要排的月份和排法。选项会变时传 `ref` 或取值函数。"
+              },
+              {
+                "name": "`options.year`",
+                "type": "`number`",
+                "default": "—",
+                "description": "月份所在的年，按 `options.calendar` 的纪年。"
+              },
+              {
+                "name": "`options.month`",
+                "type": "`number`",
+                "default": "—",
+                "description": "月份在这一年里是第几个月，从 1 开始。公历 1 是一月、12 是十二月；希伯来历闰年从 1 数到 13。"
+              },
+              {
+                "name": "`options.weekStartsOn`",
+                "type": "`0-6 | 'sun' | 'mon' | ...`",
+                "default": "`0`",
+                "description": "一周的第一天，同时决定格子和 `dayNames` 的第一列。"
+              },
+              {
+                "name": "`options.hasVariableRowCount`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "只用这个月需要的行数，不固定六行。公历月是 4 到 6 行，科普特历和埃塞俄比亚历短短的第十三个月是 1 到 2 行。"
+              },
+              {
+                "name": "`options.calendar`",
+                "type": "`CalendarSystem`",
+                "default": "`'gregory'`",
+                "description": "给 `year`、`month` 和每天的 `dayNumber` 编号的历法。每天的 `date` 和 `iso` 始终是公历。不读 provider 的历法；显示不了的历法退回公历，开发期警告一次。"
+              }
+            ]
+          },
+          {
+            "heading": "返回值",
+            "rows": [
+              {
+                "name": "`days`",
+                "type": "`ComputedRef<CalendarDay[]>`",
+                "description": "格子里的每一天，按顺序，含首尾补齐的前后月日子。每一天有 `date`（公历 `PlainDate`）、`iso`（`YYYY-MM-DD`）、`isOutside`（不属于这个月时为 true）和 `dayNumber`（在它所在的历法月里是第几天）。"
+              },
+              {
+                "name": "`weeks`",
+                "type": "`ComputedRef<CalendarDay[][]>`",
+                "description": "同样的日子，每七天一行。"
+              },
+              {
+                "name": "`dayNames`",
+                "type": "`ComputedRef<string[]>`",
+                "description": "表头的星期名，按 `InternationalizationProvider` 的语言，从 `weekStartsOn` 开始。"
+              },
+              {
+                "name": "`totalCells`",
+                "type": "`ComputedRef<number>`",
+                "description": "格子总数：固定六行时是 42，否则是行数乘 7。"
+              }
+            ]
+          }
+        ]
+      },
+      "slots": {
+        "en": [],
+        "zh": []
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [],
+        "zh": [
+          {
+            "heading": "建议",
+            "text": "- 推荐: 把 `dayNames` 渲染成表头，表头和格子一起跟着 `weekStartsOn` 和语言变。\n- 推荐: `isOutside` 的日子换个样式（比如变淡），让人看出它们属于前后月。\n- 避免: 拿它做让人选日期的控件；那种场景用 `Calendar`，它自带选择、键盘导航和格子语义。"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": {
+            "en": "useCalendarDays — Month Grid",
+            "zh": "useCalendarDays — 月格子"
+          },
+          "description": {
+            "en": "December 2026 laid out with useCalendarDays: the header and the grid start on the chosen first day of the week, and the filler days from the neighboring months are dimmed.",
+            "zh": "用 useCalendarDays 排出 2026 年 12 月：表头和格子都从所选的周起始日开始，前后月补齐的日子变淡。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { useCalendarDays } from '@astryx-vue/core/Calendar'\nimport { SegmentedControl, SegmentedControlItem } from '@astryx-vue/core/SegmentedControl'\nimport { HStack, VStack } from '@astryx-vue/core/Stack'\nimport { Text } from '@astryx-vue/core/Text'\nimport { ref } from 'vue'\n\nconst weekStartsOn = ref<'0' | '1'>('0')\nconst { weeks, dayNames } = useCalendarDays(() => ({\n  year: 2026,\n  month: 12,\n  weekStartsOn: weekStartsOn.value === '1' ? 1 : 0,\n  hasVariableRowCount: true,\n}))\n</script>\n\n<template>\n  <VStack :gap=\"3\">\n    <HStack :gap=\"2\" align=\"center\">\n      <Text type=\"body\">\n        Week starts on\n      </Text>\n      <SegmentedControl v-model=\"weekStartsOn\" label=\"Week starts on\" size=\"sm\">\n        <SegmentedControlItem value=\"0\" label=\"Sunday\" />\n        <SegmentedControlItem value=\"1\" label=\"Monday\" />\n      </SegmentedControl>\n    </HStack>\n    <table :style=\"{ tableLayout: 'fixed', width: '280px' }\">\n      <caption>\n        <Text type=\"body\" weight=\"bold\">\n          December 2026\n        </Text>\n      </caption>\n      <thead>\n        <tr>\n          <th v-for=\"name in dayNames\" :key=\"name\" scope=\"col\">\n            <Text type=\"supporting\" color=\"secondary\">\n              {{ name }}\n            </Text>\n          </th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr v-for=\"week in weeks\" :key=\"week[0]!.iso\">\n          <td v-for=\"day in week\" :key=\"day.iso\" align=\"center\">\n            <Text type=\"body\" :color=\"day.isOutside ? 'secondary' : 'primary'\">\n              {{ day.dayNumber }}\n            </Text>\n          </td>\n        </tr>\n      </tbody>\n    </table>\n  </VStack>\n</template>"
+        }
+      ],
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/use-calendar-days",
+        "zh": "https://astryx-vue.pages.dev/components/use-calendar-days"
+      }
+    },
+    {
+      "slug": "use-calendar-navigation",
+      "name": "UseCalendarNavigation",
+      "package": "@astryx-vue/core",
+      "kind": "composable",
+      "title": {
+        "en": "useCalendarNavigation",
+        "zh": "useCalendarNavigation"
+      },
+      "group": "Utility",
+      "groupTitle": {
+        "en": "Utility",
+        "zh": "工具"
+      },
+      "importPath": null,
+      "exportName": null,
+      "summary": {
+        "en": "Manages which month a calendar shows: previous and next month, a month header written in the locale and calendar, and the day to focus next when keyboard navigation crosses a month edge, so arrow keys walk from the last day of one month into the next. Use it with `useCalendarDays` when composing custom calendar headers, pagers or two-month pickers.",
+        "zh": "管理日历当前显示哪个月：上一月、下一月、按语言和历法写的月份标题，以及键盘跨月时下一个要聚焦的日子，让方向键从这个月的最后一天顺着走进下个月。自己拼日历头、翻页按钮或双月选择器时直接用它，和 `useCalendarDays` 搭配。"
+      },
+      "usage": {
+        "en": "Manages which month a calendar shows: previous and next month, a month header written in the locale and calendar, and the day to focus next when keyboard navigation crosses a month edge, so arrow keys walk from the last day of one month into the next. Use it with `useCalendarDays` when composing custom calendar headers, pagers or two-month pickers.\n\nIt works uncontrolled (`initialValue`) or controlled (`focusDate` with `onFocusDateChange`). With `calendar`, it steps that calendar's months, and `visibleCalendarMonths` gives that calendar's year and month, ready for `useCalendarDays` with the same `calendar`; dates stay Gregorian ISO. The provider calendar is never read.\n\n```ts\nimport { useCalendarNavigation } from '@astryx-vue/core/Calendar'\n```\n\n```ts\nconst nav = useCalendarNavigation({ initialValue: '2026-01-15' })\nconst { weeks } = useCalendarDays(() => ({ ...nav.visibleCalendarMonths.value[0]! }))\n\nnav.navigateMonth(1) // next month\nnav.navigateMonth(1, focusedIso, 1) // arrow key across the month edge; focus nav.pendingFocus afterwards\n```",
+        "zh": "管理日历当前显示哪个月：上一月、下一月、按语言和历法写的月份标题，以及键盘跨月时下一个要聚焦的日子，让方向键从这个月的最后一天顺着走进下个月。自己拼日历头、翻页按钮或双月选择器时直接用它，和 `useCalendarDays` 搭配。\n\n可以不受控（`initialValue`），也可以受控（`focusDate` 加 `onFocusDateChange`）。传 `calendar` 时按那个历法的月翻页，`visibleCalendarMonths` 给出那个历法的年和月，可以直接交给同一历法的 `useCalendarDays`；日期仍是公历 ISO。它不读 provider 的历法。\n\n```ts\nimport { useCalendarNavigation } from '@astryx-vue/core/Calendar'\n```\n\n```ts\nconst nav = useCalendarNavigation({ initialValue: '2026-01-15' })\nconst { weeks } = useCalendarDays(() => ({ ...nav.visibleCalendarMonths.value[0]! }))\n\nnav.navigateMonth(1) // 下一月\nnav.navigateMonth(1, focusedIso, 1) // 方向键跨月，翻过去后聚焦 nav.pendingFocus\n```"
+      },
+      "practices": {
+        "en": [
+          {
+            "guidance": "Do",
+            "text": "Wire `navigateMonth(-1)` and `navigateMonth(1)` to the previous and next month buttons."
+          },
+          {
+            "guidance": "Do",
+            "text": "When an arrow key crosses a month edge, pass `focusedDate` and `offset` (1 for left and right, 7 for up and down) to `navigateMonth`, focus the `pendingFocus` day after the month changes, then call `clearPendingFocus`."
+          },
+          {
+            "guidance": "Don't",
+            "text": "Hardcode month header strings; use `monthYearLabel`, which follows the locale and the calendar."
+          }
+        ],
+        "zh": []
+      },
+      "props": {
+        "en": [
+          {
+            "heading": "Parameters",
+            "rows": [
+              {
+                "name": "`options`",
+                "type": "`MaybeRefOrGetter<UseCalendarNavigationOptions>`",
+                "default": "—",
+                "description": "Which month to show, the calendar system, and the navigation callback. Pass a getter when controlled so the month follows `focusDate`."
+              },
+              {
+                "name": "`options.initialValue`",
+                "type": "`ISODateString`",
+                "default": "—",
+                "description": "Starting month when uncontrolled. Read once on creation."
+              },
+              {
+                "name": "`options.focusDate`",
+                "type": "`ISODateString`",
+                "default": "—",
+                "description": "Controlled date whose month is shown. Pair it with `onFocusDateChange`."
+              },
+              {
+                "name": "`options.onFocusDateChange`",
+                "type": "`(focusDate: ISODateString) => void`",
+                "default": "—",
+                "description": "Receives the Gregorian ISO first day of the new month on navigation."
+              },
+              {
+                "name": "`options.numberOfMonths`",
+                "type": "`1 | 2`",
+                "default": "`1`",
+                "description": "Number of consecutive months shown."
+              },
+              {
+                "name": "`options.calendar`",
+                "type": "`CalendarSystem`",
+                "default": "`'gregory'`",
+                "description": "Calendar system whose months are stepped and labeled, such as `'persian'` or `'hebrew'`. Dates stay Gregorian ISO. The provider calendar is never read."
+              }
+            ]
+          },
+          {
+            "heading": "Returns",
+            "rows": [
+              {
+                "name": "`baseMonth`",
+                "type": "`ComputedRef<PlainDate>`",
+                "description": "The Gregorian first day of the focus month."
+              },
+              {
+                "name": "`visibleMonths`",
+                "type": "`ComputedRef<PlainDate[]>`",
+                "description": "The Gregorian first day of each visible month."
+              },
+              {
+                "name": "`visibleCalendarMonths`",
+                "type": "`ComputedRef<{ year: number, month: number }[]>`",
+                "description": "Year and month of each visible month in `calendar`, matching the `useCalendarDays` options."
+              },
+              {
+                "name": "`monthYearLabel`",
+                "type": "`ComputedRef<string>`",
+                "description": "Month header in the current locale and `calendar`, such as “June 2026”; two months are joined with “ – ”."
+              },
+              {
+                "name": "`navigateMonth`",
+                "type": "`(delta: number, focusedDate?: ISODateString, offset?: number) => void`",
+                "description": "Steps forward (+1) or backward (-1). With `focusedDate`, it computes the day to focus after the step using `offset` (default 7) and stores it in `pendingFocus`."
+              },
+              {
+                "name": "`pendingFocus`",
+                "type": "`Readonly<Ref<ISODateString | null>>`",
+                "description": "The day to focus after a month step, or null when no cross-month focus is pending."
+              },
+              {
+                "name": "`clearPendingFocus`",
+                "type": "`() => void`",
+                "description": "Clears `pendingFocus` once the target day has focus."
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "参数",
+            "rows": [
+              {
+                "name": "`options`",
+                "type": "`MaybeRefOrGetter<UseCalendarNavigationOptions>`",
+                "default": "—",
+                "description": "显示哪个月、用哪种历法和翻月回调。受控时传取值函数，`focusDate` 变了标题和月份跟着变。"
+              },
+              {
+                "name": "`options.initialValue`",
+                "type": "`ISODateString`",
+                "default": "—",
+                "description": "不受控时，从这一天所在的月开始。只在创建时读一次。"
+              },
+              {
+                "name": "`options.focusDate`",
+                "type": "`ISODateString`",
+                "default": "—",
+                "description": "受控时显示这一天所在的月。和 `onFocusDateChange` 成对传。"
+              },
+              {
+                "name": "`options.onFocusDateChange`",
+                "type": "`(focusDate: ISODateString) => void`",
+                "default": "—",
+                "description": "翻月时收到新月份第一天的公历 ISO 日期。"
+              },
+              {
+                "name": "`options.numberOfMonths`",
+                "type": "`1 | 2`",
+                "default": "`1`",
+                "description": "同时显示几个连续的月。"
+              },
+              {
+                "name": "`options.calendar`",
+                "type": "`CalendarSystem`",
+                "default": "`'gregory'`",
+                "description": "按哪种历法翻月和写标题，例如 `'persian'`、`'hebrew'`。日期仍是公历 ISO。不读 provider 的历法。"
+              }
+            ]
+          },
+          {
+            "heading": "返回值",
+            "rows": [
+              {
+                "name": "`baseMonth`",
+                "type": "`ComputedRef<PlainDate>`",
+                "description": "当前月第一天的公历日期。"
+              },
+              {
+                "name": "`visibleMonths`",
+                "type": "`ComputedRef<PlainDate[]>`",
+                "description": "每个可见月第一天的公历日期。"
+              },
+              {
+                "name": "`visibleCalendarMonths`",
+                "type": "`ComputedRef<{ year: number, month: number }[]>`",
+                "description": "每个可见月在 `calendar` 里的年和月，和 `useCalendarDays` 的选项对得上。"
+              },
+              {
+                "name": "`monthYearLabel`",
+                "type": "`ComputedRef<string>`",
+                "description": "月份标题，按当前语言和 `calendar` 写，例如 “June 2026”；两个月时用 “ – ” 连起来。"
+              },
+              {
+                "name": "`navigateMonth`",
+                "type": "`(delta: number, focusedDate?: ISODateString, offset?: number) => void`",
+                "description": "往后（+1）或往前（-1）翻月。传了 `focusedDate` 时，按 `offset`（默认 7）算出翻过去后要聚焦的日子，写进 `pendingFocus`。"
+              },
+              {
+                "name": "`pendingFocus`",
+                "type": "`Readonly<Ref<ISODateString | null>>`",
+                "description": "翻月后要聚焦的日子；没有跨月聚焦时为 null。"
+              },
+              {
+                "name": "`clearPendingFocus`",
+                "type": "`() => void`",
+                "description": "目标日子拿到焦点后清掉 `pendingFocus`。"
+              }
+            ]
+          }
+        ]
+      },
+      "slots": {
+        "en": [],
+        "zh": []
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [],
+        "zh": [
+          {
+            "heading": "建议",
+            "text": "- 推荐: 把 `navigateMonth(-1)` 和 `navigateMonth(1)` 接到上一月、下一月按钮上。\n- 推荐: 方向键跨月时把 `focusedDate` 和 `offset`（左右键 1，上下键 7）传给 `navigateMonth`，翻过去后把焦点放到 `pendingFocus` 那天，再调 `clearPendingFocus`。\n- 避免: 手写月份标题；用 `monthYearLabel`，它跟着语言和历法写。"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": {
+            "en": "useCalendarNavigation — Month Pager",
+            "zh": "useCalendarNavigation — 月份翻页"
+          },
+          "description": {
+            "en": "A month view built from useCalendarNavigation and useCalendarDays: the buttons page through months, and pressing the right arrow on the last day moves to the next month and focuses its first day.",
+            "zh": "用 useCalendarNavigation 加 useCalendarDays 拼一个月历：按钮翻月，在月末按右方向键会翻到下个月并聚焦第一天。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport type { CalendarDay, ISODateString } from '@astryx-vue/core'\nimport { Button } from '@astryx-vue/core/Button'\nimport { useCalendarDays, useCalendarNavigation } from '@astryx-vue/core/Calendar'\nimport { HStack, VStack } from '@astryx-vue/core/Stack'\nimport { Text } from '@astryx-vue/core/Text'\nimport { nextTick, ref, watch } from 'vue'\n\nconst focusDate = ref<ISODateString>('2026-06-01')\nconst { monthYearLabel, visibleCalendarMonths, navigateMonth, pendingFocus, clearPendingFocus } = useCalendarNavigation(() => ({\n  focusDate: focusDate.value,\n  onFocusDateChange: (next: ISODateString) => {\n    focusDate.value = next\n  },\n}))\nconst { weeks, dayNames } = useCalendarDays(() => ({ ...visibleCalendarMonths.value[0]!, hasVariableRowCount: true }))\n\nconst buttons = new Map<string, HTMLButtonElement>()\nfunction bind(iso: string, el: unknown): void {\n  if (el instanceof HTMLButtonElement)\n    buttons.set(iso, el)\n  else\n    buttons.delete(iso)\n}\n\n// 跨月后，等新的一个月画出来再把焦点放到目标日子上。\nwatch(pendingFocus, async (target) => {\n  if (!target)\n    return\n  await nextTick()\n  buttons.get(target)?.focus()\n  clearPendingFocus()\n})\n\nfunction onKeydown(event: KeyboardEvent, day: CalendarDay): void {\n  const rtl = getComputedStyle(event.currentTarget as Element).direction === 'rtl'\n  const step = event.key === (rtl ? 'ArrowLeft' : 'ArrowRight') ? 1 : event.key === (rtl ? 'ArrowRight' : 'ArrowLeft') ? -1 : 0\n  if (step === 0)\n    return\n  event.preventDefault()\n  const inMonth = weeks.value.flat().filter(d => !d.isOutside)\n  const index = inMonth.findIndex(d => d.iso === day.iso) + step\n  if (index < 0 || index >= inMonth.length)\n    navigateMonth(step, day.iso, 1)\n  else\n    buttons.get(inMonth[index]!.iso)?.focus()\n}\n</script>\n\n<template>\n  <VStack :gap=\"3\" :width=\"280\">\n    <HStack :gap=\"2\" align=\"center\" justify=\"between\">\n      <Button label=\"Previous\" size=\"sm\" variant=\"secondary\" aria-label=\"Previous month\" @click=\"navigateMonth(-1)\" />\n      <Text type=\"body\" weight=\"bold\">\n        {{ monthYearLabel }}\n      </Text>\n      <Button label=\"Next\" size=\"sm\" variant=\"secondary\" aria-label=\"Next month\" @click=\"navigateMonth(1)\" />\n    </HStack>\n    <table :style=\"{ tableLayout: 'fixed', width: '280px' }\">\n      <thead>\n        <tr>\n          <th v-for=\"name in dayNames\" :key=\"name\" scope=\"col\">\n            <Text type=\"supporting\" color=\"secondary\">\n              {{ name }}\n            </Text>\n          </th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr v-for=\"week in weeks\" :key=\"week[0]!.iso\">\n          <td v-for=\"day in week\" :key=\"day.iso\" align=\"center\">\n            <Text v-if=\"day.isOutside\" type=\"body\" color=\"secondary\" aria-hidden=\"true\">\n              {{ day.dayNumber }}\n            </Text>\n            <button\n              v-else\n              :ref=\"el => bind(day.iso, el)\"\n              type=\"button\"\n              :aria-label=\"`${monthYearLabel} ${day.dayNumber}`\"\n              :style=\"{ width: '32px', height: '32px', borderRadius: '6px', border: 'none', background: 'transparent', cursor: 'pointer' }\"\n              @keydown=\"onKeydown($event, day)\"\n            >\n              <Text type=\"body\">\n                {{ day.dayNumber }}\n              </Text>\n            </button>\n          </td>\n        </tr>\n      </tbody>\n    </table>\n  </VStack>\n</template>"
+        }
+      ],
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/use-calendar-navigation",
+        "zh": "https://astryx-vue.pages.dev/components/use-calendar-navigation"
+      }
+    },
+    {
+      "slug": "use-calendar-constraints",
+      "name": "UseCalendarConstraints",
+      "package": "@astryx-vue/core",
+      "kind": "composable",
+      "title": {
+        "en": "useCalendarConstraints",
+        "zh": "useCalendarConstraints"
+      },
+      "group": "Utility",
+      "groupTitle": {
+        "en": "Utility",
+        "zh": "工具"
+      },
+      "importPath": null,
+      "exportName": null,
+      "summary": {
+        "en": "Decides whether a date can be picked: it combines `min` / `max` bounds, span limits measured from an in-progress range start, and custom rules (such as weekly closures or blackout dates) into one `isDateDisabled`. `Calendar` uses the same rules internally; use it directly when building scheduling interfaces or range pickers of your own.",
+        "zh": "判断日期能不能选：把 `min` / `max` 边界、从正在选的范围起点量的跨度，以及自定义规则（每周的休息日、封锁日）合成一个 `isDateDisabled`。`Calendar` 内部用的就是这套规则；自己做排期界面或范围选择器时直接用它。"
+      },
+      "usage": {
+        "en": "Decides whether a date can be picked: it combines `min` / `max` bounds, span limits measured from an in-progress range start, and custom rules (such as weekly closures or blackout dates) into one `isDateDisabled`. `Calendar` uses the same rules internally; use it directly when building scheduling interfaces or range pickers of your own.\n\n`isDateDisabled` reads the latest options on every call, so calling it in a template keeps up with option changes. Dates are Gregorian `PlainDate` values, the same as `day.date` from `useCalendarDays`, so it works with any calendar system.\n\n```ts\nimport { useCalendarConstraints } from '@astryx-vue/core/Calendar'\n```\n\n```ts\nconst anchor = ref<PlainDate | null>(null)\nconst { isDateDisabled } = useCalendarConstraints(() => ({\n  min: '2026-06-05',\n  max: '2026-06-25',\n  maxRangeSpan: 8,\n  rangeAnchor: anchor.value,\n  dateConstraints: [date => date.getDay() !== 1],\n}))\n\nisDateDisabled({ year: 2026, month: 6, day: 15 })\n```",
+        "zh": "判断日期能不能选：把 `min` / `max` 边界、从正在选的范围起点量的跨度，以及自定义规则（每周的休息日、封锁日）合成一个 `isDateDisabled`。`Calendar` 内部用的就是这套规则；自己做排期界面或范围选择器时直接用它。\n\n`isDateDisabled` 每次调用都读最新的选项，所以在模板里调用会跟着选项更新。日期都是公历 `PlainDate`，和 `useCalendarDays` 给出的 `day.date` 一样，在任何历法下都通用。\n\n```ts\nimport { useCalendarConstraints } from '@astryx-vue/core/Calendar'\n```\n\n```ts\nconst anchor = ref<PlainDate | null>(null)\nconst { isDateDisabled } = useCalendarConstraints(() => ({\n  min: '2026-06-05',\n  max: '2026-06-25',\n  maxRangeSpan: 8,\n  rangeAnchor: anchor.value,\n  dateConstraints: [date => date.getDay() !== 1],\n}))\n\nisDateDisabled({ year: 2026, month: 6, day: 15 })\n```"
+      },
+      "practices": {
+        "en": [
+          {
+            "guidance": "Do",
+            "text": "Pass `rangeAnchor` only after the user picks the first date, so every eligible start date stays selectable before the first click."
+          },
+          {
+            "guidance": "Do",
+            "text": "Use `dateConstraints` for recurring or changing rules, such as closed weekdays, past holidays or sold-out dates."
+          },
+          {
+            "guidance": "Don't",
+            "text": "Make network calls or heavy calculations inside `dateConstraints`; `isDateDisabled` runs synchronously for every day rendered in the grid."
+          }
+        ],
+        "zh": []
+      },
+      "props": {
+        "en": [
+          {
+            "heading": "Parameters",
+            "rows": [
+              {
+                "name": "`options`",
+                "type": "`MaybeRefOrGetter<UseCalendarConstraintsOptions>`",
+                "default": "—",
+                "description": "Bounds, span limits and custom rules. Pass a `ref` or a getter when they change."
+              },
+              {
+                "name": "`options.min`",
+                "type": "`ISODateString`",
+                "default": "—",
+                "description": "Earliest selectable date, `YYYY-MM-DD`. Days before it are disabled."
+              },
+              {
+                "name": "`options.max`",
+                "type": "`ISODateString`",
+                "default": "—",
+                "description": "Latest selectable date, `YYYY-MM-DD`. Days after it are disabled."
+              },
+              {
+                "name": "`options.dateConstraints`",
+                "type": "`ReadonlyArray<(date: Date) => boolean>`",
+                "default": "—",
+                "description": "Custom rules that receive a native `Date`; if any returns false, the day is disabled."
+              },
+              {
+                "name": "`options.maxRangeSpan`",
+                "type": "`number`",
+                "default": "—",
+                "description": "Maximum days a range may span, counting both endpoints (7 allows a 7-day window). Inactive until `rangeAnchor` is set."
+              },
+              {
+                "name": "`options.minRangeSpan`",
+                "type": "`number`",
+                "default": "—",
+                "description": "Minimum days a range must span, counting both endpoints. Days too close to the start are disabled, except the start itself, so a picker that forbids single-day ranges must refuse a second click on the start."
+              },
+              {
+                "name": "`options.rangeAnchor`",
+                "type": "`PlainDate | null`",
+                "default": "—",
+                "description": "The in-progress range start. Span limits are measured from it; null when no selection is underway."
+              }
+            ]
+          },
+          {
+            "heading": "Returns",
+            "rows": [
+              {
+                "name": "`isDateDisabled`",
+                "type": "`(date: PlainDate) => boolean`",
+                "description": "Returns true when the day is outside the bounds, closer to `rangeAnchor` than `minRangeSpan` allows (except the anchor itself), farther than `maxRangeSpan` allows, or fails any `dateConstraints` rule."
+              },
+              {
+                "name": "`minDate`",
+                "type": "`ComputedRef<PlainDate | null>`",
+                "description": "Parsed `min`, or null when not given."
+              },
+              {
+                "name": "`maxDate`",
+                "type": "`ComputedRef<PlainDate | null>`",
+                "description": "Parsed `max`, or null when not given."
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "参数",
+            "rows": [
+              {
+                "name": "`options`",
+                "type": "`MaybeRefOrGetter<UseCalendarConstraintsOptions>`",
+                "default": "—",
+                "description": "边界、跨度和自定义规则。会变时传 `ref` 或取值函数。"
+              },
+              {
+                "name": "`options.min`",
+                "type": "`ISODateString`",
+                "default": "—",
+                "description": "最早能选的日期，`YYYY-MM-DD`。早于它的日子不可选。"
+              },
+              {
+                "name": "`options.max`",
+                "type": "`ISODateString`",
+                "default": "—",
+                "description": "最晚能选的日期，`YYYY-MM-DD`。晚于它的日子不可选。"
+              },
+              {
+                "name": "`options.dateConstraints`",
+                "type": "`ReadonlyArray<(date: Date) => boolean>`",
+                "default": "—",
+                "description": "自定义规则，拿到原生 `Date`；任何一个返回 false，这一天就不可选。"
+              },
+              {
+                "name": "`options.maxRangeSpan`",
+                "type": "`number`",
+                "default": "—",
+                "description": "范围最多跨几天，两端都算（7 就是 7 天的窗口）。有了 `rangeAnchor` 才生效。"
+              },
+              {
+                "name": "`options.minRangeSpan`",
+                "type": "`number`",
+                "default": "—",
+                "description": "范围最少跨几天，两端都算。离起点太近的日子不可选，但起点本身始终可选；不允许只选一天的选择器要自己拒绝在起点上点第二下。"
+              },
+              {
+                "name": "`options.rangeAnchor`",
+                "type": "`PlainDate | null`",
+                "default": "—",
+                "description": "正在选的范围起点。跨度从这里量；没在选时为 null。"
+              }
+            ]
+          },
+          {
+            "heading": "返回值",
+            "rows": [
+              {
+                "name": "`isDateDisabled`",
+                "type": "`(date: PlainDate) => boolean`",
+                "description": "这一天落在边界外、离起点比 `minRangeSpan` 允许的近（起点除外）、比 `maxRangeSpan` 允许的远，或者没通过某条 `dateConstraints` 时返回 true。"
+              },
+              {
+                "name": "`minDate`",
+                "type": "`ComputedRef<PlainDate | null>`",
+                "description": "解析后的 `min`，没给时为 null。"
+              },
+              {
+                "name": "`maxDate`",
+                "type": "`ComputedRef<PlainDate | null>`",
+                "description": "解析后的 `max`，没给时为 null。"
+              }
+            ]
+          }
+        ]
+      },
+      "slots": {
+        "en": [],
+        "zh": []
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [],
+        "zh": [
+          {
+            "heading": "建议",
+            "text": "- 推荐: 用户点了第一个日期之后再传 `rangeAnchor`，这样点第一下之前所有能做起点的日子都可选。\n- 推荐: 每周的休息日、过去的节假日、已售完的日期这类会变的规则放进 `dateConstraints`。\n- 避免: 在 `dateConstraints` 里发网络请求或做重计算；格子里每画一天都会同步调用一次 `isDateDisabled`。"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": {
+            "en": "useCalendarConstraints — Hotel Booking",
+            "zh": "useCalendarConstraints — 酒店预订"
+          },
+          "description": {
+            "en": "A hotel booking month built from useCalendarConstraints and useCalendarDays: days outside the season and Mondays are disabled, and after a check-in is picked, days beyond a 7-night stay are disabled too.",
+            "zh": "用 useCalendarConstraints 加 useCalendarDays 做一个酒店预订月历：营业季之外和周一不能选；选了入住日后，超过 7 晚的日子也变成不可选。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport type { CalendarDay, PlainDate } from '@astryx-vue/core'\nimport { Button } from '@astryx-vue/core/Button'\nimport { useCalendarConstraints, useCalendarDays } from '@astryx-vue/core/Calendar'\nimport { HStack, VStack } from '@astryx-vue/core/Stack'\nimport { Text } from '@astryx-vue/core/Text'\nimport { computed, ref } from 'vue'\n\nconst checkIn = ref<PlainDate | null>(null)\nconst checkOut = ref<PlainDate | null>(null)\n\n// 6 月 5 日到 25 日营业，最多住 7 晚（跨 8 天），周一不开门。订好以后放开起点，整季都能看。\nconst { isDateDisabled } = useCalendarConstraints(() => ({\n  min: '2026-06-05',\n  max: '2026-06-25',\n  maxRangeSpan: 8,\n  rangeAnchor: checkOut.value ? null : checkIn.value,\n  dateConstraints: [(date: Date) => date.getDay() !== 1],\n}))\nconst { weeks, dayNames } = useCalendarDays({ year: 2026, month: 6, hasVariableRowCount: true })\n\nconst status = computed(() => {\n  if (!checkIn.value)\n    return 'Pick a check-in date'\n  if (!checkOut.value)\n    return `Check-in: Jun ${checkIn.value.day} (pick check-out)`\n  return `Booked: Jun ${checkIn.value.day} – Jun ${checkOut.value.day}`\n})\n\nfunction isPicked(day: CalendarDay): boolean {\n  return day.date.day === checkIn.value?.day || day.date.day === checkOut.value?.day\n}\n\nfunction select(day: CalendarDay): void {\n  if (isDateDisabled(day.date))\n    return\n  if (!checkIn.value || checkOut.value || day.date.day <= checkIn.value.day) {\n    checkIn.value = day.date\n    checkOut.value = null\n  }\n  else {\n    checkOut.value = day.date\n  }\n}\n\nfunction reset(): void {\n  checkIn.value = null\n  checkOut.value = null\n}\n</script>\n\n<template>\n  <VStack :gap=\"3\">\n    <VStack :gap=\"1\">\n      <Text type=\"body\" weight=\"bold\">\n        Hotel Booking — June 2026\n      </Text>\n      <Text type=\"supporting\" color=\"secondary\">\n        Season: Jun 5 – Jun 25 · Max stay: 7 nights · Closed Mondays\n      </Text>\n    </VStack>\n    <HStack :gap=\"2\" align=\"center\">\n      <Text type=\"supporting\">\n        {{ status }}\n      </Text>\n      <Button v-if=\"checkIn\" label=\"Reset\" size=\"sm\" variant=\"secondary\" @click=\"reset\" />\n    </HStack>\n    <table :style=\"{ tableLayout: 'fixed', width: '280px' }\">\n      <thead>\n        <tr>\n          <th v-for=\"name in dayNames\" :key=\"name\" scope=\"col\">\n            <Text type=\"supporting\" color=\"secondary\">\n              {{ name }}\n            </Text>\n          </th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr v-for=\"week in weeks\" :key=\"week[0]!.iso\">\n          <td v-for=\"day in week\" :key=\"day.iso\" align=\"center\">\n            <button\n              v-if=\"!day.isOutside\"\n              type=\"button\"\n              :disabled=\"isDateDisabled(day.date)\"\n              :aria-pressed=\"isPicked(day)\"\n              :aria-label=\"`June ${day.dayNumber}`\"\n              :style=\"{ width: '32px', height: '32px', borderRadius: '6px', border: isPicked(day) ? '1px solid currentColor' : 'none', background: 'transparent', opacity: isDateDisabled(day.date) ? 0.35 : 1, cursor: isDateDisabled(day.date) ? 'not-allowed' : 'pointer' }\"\n              @click=\"select(day)\"\n            >\n              <Text type=\"body\" :color=\"isDateDisabled(day.date) ? 'secondary' : 'primary'\">\n                {{ day.dayNumber }}\n              </Text>\n            </button>\n          </td>\n        </tr>\n      </tbody>\n    </table>\n  </VStack>\n</template>"
+        }
+      ],
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/use-calendar-constraints",
+        "zh": "https://astryx-vue.pages.dev/components/use-calendar-constraints"
+      }
+    },
+    {
       "slug": "use-table-rows-virtualization",
       "name": "UseTableRowsVirtualization",
       "package": "@astryx-vue/core",
@@ -85087,6 +85785,7 @@
         "en": [
           "Choose a calendar",
           "Date inputs",
+          "Custom calendars",
           "Supported calendars",
           "Server rendering",
           "Week numbers"
@@ -85094,6 +85793,7 @@
         "zh": [
           "选一种历法",
           "日期输入",
+          "自己拼日历",
           "支持的历法",
           "服务端渲染",
           "周数"
@@ -85132,8 +85832,8 @@
         ]
       },
       "body": {
-        "en": "# Calendars\n\nDate components show the Gregorian calendar by default. An application can switch to the Persian, Hebrew, Hijri, Buddhist, Japanese, Chinese, and other calendars. Whatever calendar is shown, **values stay Gregorian dates**: `v-model`, `min`, `max`, and events carry Gregorian `Date` objects, so your data, server code, and existing handlers keep working.\n\n## Choose a calendar\n\nSet `calendar` on `InternationalizationProvider` and the whole subtree shows it:\n\n```vue\n<script setup lang=\"ts\">\nimport { Calendar } from '@astryx-vue/core/Calendar'\nimport { InternationalizationProvider } from '@astryx-vue/core/InternationalizationProvider'\nimport { ref } from 'vue'\n\n// Shows Aban 1405 in the Persian calendar; the value stays 2026-10-30\nconst date = ref<Date | null>(new Date(2026, 9, 30))\n</script>\n\n<template>\n  <InternationalizationProvider locale=\"fa-IR\" calendar=\"persian\">\n    <Calendar v-model=\"date\" />\n  </InternationalizationProvider>\n</template>\n```\n\nThese follow `calendar`:\n\n- `Calendar`: the grid shows the calendar's months, and the header, day numbers, screen reader names, and month paging (including Page Up / Page Down and Shift + Page Up / Page Down) follow it.\n- `DateInput`, `DateTimeInput`, `DateRangeInput`: display, typing and picking follow it; see [Date inputs](#date-inputs) below.\n- `Timestamp`: date-bearing formats write the date in it; `system_*` and `unix_seconds` stay Gregorian ISO or plain numbers in every calendar.\n- `PowerSearch`: absolute date values are written in it.\n- Lab's `Schedule`: titles and dates are written in it, while the grid keeps Gregorian months and weeks.\n\nCalendar and language are independent: `locale=\"en\" calendar=\"hebrew\"` shows Hebrew dates in English. A locale never selects the calendar on its own: `fa-IR` without `calendar` shows Gregorian dates in Persian, and a `-u-ca-` keyword in the locale (such as `th-TH-u-ca-buddhist`) keeps Gregorian dates too. Set `calendar` to choose one.\n\n`Calendar` and the three date inputs also take their own `calendar`, which wins over the provider. Use it when one screen shows two calendars side by side.\n\nOutside a component, the `calendar` returned by `useLocale()` is the calendar in effect.\n\n## Date inputs\n\nDate inputs write their text in the calendar, such as `Aban 8, 1405 AP`, and read it back the same way:\n\n- People can type month names, numbers, or a year with its era, such as `Aban 8, 1405`. On blur the field commits the matching Gregorian `Date`.\n- A day the calendar does not have (such as `Esfand 31` in a common year) gets an explanation and is not committed. Out-of-range messages write the `min` and `max` dates in the calendar too.\n- When an empty non-Gregorian field is focused and no `placeholder` is set, the placeholder becomes an example date in the calendar, showing what to type.\n- When the field's calendar differs from the provider's (including a Gregorian field inside an app on another calendar), screen readers announce which calendar the field uses.\n- With a `format` function or `system_date`, the text stays a Gregorian ISO date.\n\nThe system date control only knows Gregorian, so outside Gregorian:\n\n- Without `presentation`, or with `adaptive-native`, coarse pointers get the bottom sheet and fine pointers get the popover calendar as usual.\n- An explicit `native` is also replaced by the Astryx picker, with a one-time warning in development.\n\nThe popover calendar and the bottom sheet both lay out the calendar's months. The sheet's month wheel uses the calendar's month names (a Hebrew leap year has 13 months) and its year wheel shows the era. `DateRangeInput` writes its button text and its two-month calendar in the calendar too; the range value stays Gregorian ISO dates.\n\nIn Gregorian all of this stays as before: the same text, the same parsing, the same system control.\n\n## Supported calendars\n\n| Calendar | Identifiers |\n| --- | --- |\n| Gregorian | `gregory`, `iso8601` |\n| Buddhist | `buddhist` |\n| Minguo | `roc` |\n| Japanese | `japanese` |\n| Persian | `persian` |\n| Indian National | `indian` |\n| Hebrew | `hebrew` |\n| Hijri | `islamic-umalqura`, `islamic-civil`, `islamic-tbla` |\n| Chinese | `chinese` |\n| Dangi | `dangi` |\n| Coptic | `coptic` |\n| Ethiopic | `ethiopic`, `ethioaa` |\n\nAny other identifier, such as `islamic`, shows Gregorian dates and warns once in development.\n\nMonth lengths, leap months, and years come from the runtime's built-in `Intl`, so no extra library or polyfill is needed. Where a runtime's `Intl` cannot show a calendar, components show Gregorian dates and warn once in development.\n\n## Server rendering\n\nComponents resolve the calendar and its months during render, and the server and the browser each read their own `Intl`. When both have the same ICU data (Node.js ships full ICU by default), they render the same markup.\n\nIn the lunisolar calendars (Chinese and Dangi), months start on new moons computed from astronomy, and ICU versions occasionally disagree by a day on when one month starts. When a server and a browser disagree on that day, that month renders again in the browser. When identical markup matters, give the server an ICU version close to the browsers you target.\n\n## Week numbers\n\n`Calendar`'s `hasWeekNumbers` shows ISO 8601 week numbers in every calendar.",
-        "zh": "# 历法\n\n日期组件默认显示公历。应用可以换成波斯历、希伯来历、伊斯兰历、佛历、和历、农历等别的历法。不管显示哪种历法，**值始终是公历日期**：`v-model`、`min`、`max` 和事件拿到的都是公历的 `Date`，数据、服务端代码和现有的处理函数都不用改。\n\n## 选一种历法\n\n在 `InternationalizationProvider` 上设 `calendar`，整棵子树都按它显示：\n\n```vue\n<script setup lang=\"ts\">\nimport { Calendar } from '@astryx-vue/core/Calendar'\nimport { InternationalizationProvider } from '@astryx-vue/core/InternationalizationProvider'\nimport { ref } from 'vue'\n\n// 显示的是波斯历 1405 年阿班月，值仍然是公历 2026-10-30\nconst date = ref<Date | null>(new Date(2026, 9, 30))\n</script>\n\n<template>\n  <InternationalizationProvider locale=\"fa-IR\" calendar=\"persian\">\n    <Calendar v-model=\"date\" />\n  </InternationalizationProvider>\n</template>\n```\n\n跟着 `calendar` 变的有：\n\n- `Calendar`：格子按这个历法的月份排，标题、日子、读屏名字和翻月（包括 Page Up / Page Down、Shift + Page Up / Page Down）都按它走。\n- `DateInput`、`DateTimeInput`、`DateRangeInput`：显示、打字和选择都按它走，见下面的[日期输入](#日期输入)。\n- `Timestamp`：带日期的格式按它写；`system_*` 和 `unix_seconds` 在任何历法下都写公历 ISO 或纯数字。\n- `PowerSearch`：绝对日期的条件值按它写。\n- 实验室里的 `Schedule`：标题和日期按它写，格子仍按公历月和公历周排。\n\n语言和历法互不影响：`locale=\"en\" calendar=\"hebrew\"` 用英文显示希伯来历。语言本身从不决定历法，`fa-IR` 不设 `calendar` 时显示的是波斯语的公历；语言标签里的 `-u-ca-` 扩展（例如 `th-TH-u-ca-buddhist`）也不会改变历法，要换历法就设 `calendar`。\n\n`Calendar` 和三个日期输入也有自己的 `calendar` 属性，优先于 provider。同一屏要并排显示两种历法时用它。\n\n在组件之外，`useLocale()` 返回的 `calendar` 是当前生效的历法。\n\n## 日期输入\n\n日期输入里的文字按历法写，例如 `Aban 8, 1405 AP`，也按历法读：\n\n- 可以打月份名、数字，或者带纪元的年份，例如 `Aban 8, 1405`。失焦时提交对应的公历 `Date`。\n- 历法里没有的日子（例如平年的 `Esfand 31`）会说明原因，不提交；超出 `min`、`max` 时，提示里的边界日期也按历法写。\n- 非公历的空字段聚焦、又没有传 `placeholder` 时，占位符换成一个按历法写的示例日期，告诉用户该怎么打。\n- 字段的历法和 provider 不同时（包括公历字段放在别的历法的应用里），读屏会念出这个字段用的是哪种历法。\n- `format` 传函数或 `system_date` 时，文字仍是公历 ISO 日期。\n\n系统日期控件只认公历，所以在非公历下：\n\n- 不传 `presentation`、或者传 `adaptive-native` 时，粗指针上改用底部面板，细指针上照常弹出日历。\n- 显式传 `native` 时同样换成 Astryx 的选择器，开发期警告一次。\n\n弹出的日历和底部面板都按历法排月份；底部面板的月份滚轮用历法的月份名（希伯来历闰年有 13 个月），年份滚轮带纪元。`DateRangeInput` 的按钮文字和两个月的日历也按历法写，范围的值仍是公历 ISO 日期。\n\n公历下这些都和以前一样：同样的文字、同样的读法、同样的系统控件。\n\n## 支持的历法\n\n| 历法 | 标识 |\n| --- | --- |\n| 公历 | `gregory`、`iso8601` |\n| 佛历 | `buddhist` |\n| 民国纪年 | `roc` |\n| 和历 | `japanese` |\n| 波斯历 | `persian` |\n| 印度国定历 | `indian` |\n| 希伯来历 | `hebrew` |\n| 伊斯兰历 | `islamic-umalqura`、`islamic-civil`、`islamic-tbla` |\n| 农历 | `chinese` |\n| 朝鲜历 | `dangi` |\n| 科普特历 | `coptic` |\n| 埃塞俄比亚历 | `ethiopic`、`ethioaa` |\n\n别的标识（例如 `islamic`）显示公历，开发期警告一次。\n\n月份的长度、闰月和年份都从浏览器自带的 `Intl` 读，不需要额外的库，也不需要 polyfill。运行环境的 `Intl` 显示不了某种历法时，组件显示公历，开发期警告一次。\n\n## 服务端渲染\n\n组件在渲染时就确定历法和月份，服务端和浏览器读的是各自的 `Intl`。两边的 ICU 数据一致时（Node.js 默认带完整的 ICU），渲染出的标记相同。\n\n农历和朝鲜历这类阴阳历的月份从新月的天文计算得来，不同版本的 ICU 偶尔会在某个月从哪天开始上有一天的差别。服务端和浏览器差了这一天时，那个月在浏览器里会重新渲染。需要两边逐字一致时，让服务端用和目标浏览器相近版本的 ICU。\n\n## 周数\n\n`Calendar` 的 `hasWeekNumbers` 在任何历法下都显示 ISO 8601 周数。"
+        "en": "# Calendars\n\nDate components show the Gregorian calendar by default. An application can switch to the Persian, Hebrew, Hijri, Buddhist, Japanese, Chinese, and other calendars. Whatever calendar is shown, **values stay Gregorian dates**: `v-model`, `min`, `max`, and events carry Gregorian `Date` objects, so your data, server code, and existing handlers keep working.\n\n## Choose a calendar\n\nSet `calendar` on `InternationalizationProvider` and the whole subtree shows it:\n\n```vue\n<script setup lang=\"ts\">\nimport { Calendar } from '@astryx-vue/core/Calendar'\nimport { InternationalizationProvider } from '@astryx-vue/core/InternationalizationProvider'\nimport { ref } from 'vue'\n\n// Shows Aban 1405 in the Persian calendar; the value stays 2026-10-30\nconst date = ref<Date | null>(new Date(2026, 9, 30))\n</script>\n\n<template>\n  <InternationalizationProvider locale=\"fa-IR\" calendar=\"persian\">\n    <Calendar v-model=\"date\" />\n  </InternationalizationProvider>\n</template>\n```\n\nThese follow `calendar`:\n\n- `Calendar`: the grid shows the calendar's months, and the header, day numbers, screen reader names, and month paging (including Page Up / Page Down and Shift + Page Up / Page Down) follow it.\n- `DateInput`, `DateTimeInput`, `DateRangeInput`: display, typing and picking follow it; see [Date inputs](#date-inputs) below.\n- `Timestamp`: date-bearing formats write the date in it; `system_*` and `unix_seconds` stay Gregorian ISO or plain numbers in every calendar.\n- `PowerSearch`: absolute date values are written in it.\n- Lab's `Schedule`: titles and dates are written in it, while the grid keeps Gregorian months and weeks.\n\nCalendar and language are independent: `locale=\"en\" calendar=\"hebrew\"` shows Hebrew dates in English. A locale never selects the calendar on its own: `fa-IR` without `calendar` shows Gregorian dates in Persian, and a `-u-ca-` keyword in the locale (such as `th-TH-u-ca-buddhist`) keeps Gregorian dates too. Set `calendar` to choose one.\n\n`Calendar` and the three date inputs also take their own `calendar`, which wins over the provider. Use it when one screen shows two calendars side by side.\n\nOutside a component, the `calendar` returned by `useLocale()` is the calendar in effect.\n\n## Date inputs\n\nDate inputs write their text in the calendar, such as `Aban 8, 1405 AP`, and read it back the same way:\n\n- People can type month names, numbers, or a year with its era, such as `Aban 8, 1405`. On blur the field commits the matching Gregorian `Date`.\n- A day the calendar does not have (such as `Esfand 31` in a common year) gets an explanation and is not committed. Out-of-range messages write the `min` and `max` dates in the calendar too.\n- When an empty non-Gregorian field is focused and no `placeholder` is set, the placeholder becomes an example date in the calendar, showing what to type.\n- When the field's calendar differs from the provider's (including a Gregorian field inside an app on another calendar), screen readers announce which calendar the field uses.\n- With a `format` function or `system_date`, the text stays a Gregorian ISO date.\n\nThe system date control only knows Gregorian, so outside Gregorian:\n\n- Without `presentation`, or with `adaptive-native`, coarse pointers get the bottom sheet and fine pointers get the popover calendar as usual.\n- An explicit `native` is also replaced by the Astryx picker, with a one-time warning in development.\n\nThe popover calendar and the bottom sheet both lay out the calendar's months. The sheet's month wheel uses the calendar's month names (a Hebrew leap year has 13 months) and its year wheel shows the era. `DateRangeInput` writes its button text and its two-month calendar in the calendar too; the range value stays Gregorian ISO dates.\n\nIn Gregorian all of this stays as before: the same text, the same parsing, the same system control.\n\n## Custom calendars\n\n`useCalendarDays` and `useCalendarNavigation` take `calendar` too: they lay out, step and label that calendar's months while dates stay Gregorian ISO. They never read the provider calendar and default to Gregorian; pass `useLocale().calendar` to follow it. `useCalendarConstraints` works on Gregorian dates only, so it fits any calendar.\n\n```ts\nconst { calendar } = useLocale()\nconst nav = useCalendarNavigation(() => ({ initialValue: '2026-10-23', calendar: calendar.value }))\nconst { weeks } = useCalendarDays(() => ({ ...nav.visibleCalendarMonths.value[0]!, calendar: calendar.value }))\n```\n\n## Supported calendars\n\n| Calendar | Identifiers |\n| --- | --- |\n| Gregorian | `gregory`, `iso8601` |\n| Buddhist | `buddhist` |\n| Minguo | `roc` |\n| Japanese | `japanese` |\n| Persian | `persian` |\n| Indian National | `indian` |\n| Hebrew | `hebrew` |\n| Hijri | `islamic-umalqura`, `islamic-civil`, `islamic-tbla` |\n| Chinese | `chinese` |\n| Dangi | `dangi` |\n| Coptic | `coptic` |\n| Ethiopic | `ethiopic`, `ethioaa` |\n\nAny other identifier, such as `islamic`, shows Gregorian dates and warns once in development.\n\nMonth lengths, leap months, and years come from the runtime's built-in `Intl`, so no extra library or polyfill is needed. Where a runtime's `Intl` cannot show a calendar, components show Gregorian dates and warn once in development.\n\n## Server rendering\n\nComponents resolve the calendar and its months during render, and the server and the browser each read their own `Intl`. When both have the same ICU data (Node.js ships full ICU by default), they render the same markup.\n\nIn the lunisolar calendars (Chinese and Dangi), months start on new moons computed from astronomy, and ICU versions occasionally disagree by a day on when one month starts. When a server and a browser disagree on that day, that month renders again in the browser. When identical markup matters, give the server an ICU version close to the browsers you target.\n\n## Week numbers\n\n`Calendar`'s `hasWeekNumbers` shows ISO 8601 week numbers in every calendar.",
+        "zh": "# 历法\n\n日期组件默认显示公历。应用可以换成波斯历、希伯来历、伊斯兰历、佛历、和历、农历等别的历法。不管显示哪种历法，**值始终是公历日期**：`v-model`、`min`、`max` 和事件拿到的都是公历的 `Date`，数据、服务端代码和现有的处理函数都不用改。\n\n## 选一种历法\n\n在 `InternationalizationProvider` 上设 `calendar`，整棵子树都按它显示：\n\n```vue\n<script setup lang=\"ts\">\nimport { Calendar } from '@astryx-vue/core/Calendar'\nimport { InternationalizationProvider } from '@astryx-vue/core/InternationalizationProvider'\nimport { ref } from 'vue'\n\n// 显示的是波斯历 1405 年阿班月，值仍然是公历 2026-10-30\nconst date = ref<Date | null>(new Date(2026, 9, 30))\n</script>\n\n<template>\n  <InternationalizationProvider locale=\"fa-IR\" calendar=\"persian\">\n    <Calendar v-model=\"date\" />\n  </InternationalizationProvider>\n</template>\n```\n\n跟着 `calendar` 变的有：\n\n- `Calendar`：格子按这个历法的月份排，标题、日子、读屏名字和翻月（包括 Page Up / Page Down、Shift + Page Up / Page Down）都按它走。\n- `DateInput`、`DateTimeInput`、`DateRangeInput`：显示、打字和选择都按它走，见下面的[日期输入](#日期输入)。\n- `Timestamp`：带日期的格式按它写；`system_*` 和 `unix_seconds` 在任何历法下都写公历 ISO 或纯数字。\n- `PowerSearch`：绝对日期的条件值按它写。\n- 实验室里的 `Schedule`：标题和日期按它写，格子仍按公历月和公历周排。\n\n语言和历法互不影响：`locale=\"en\" calendar=\"hebrew\"` 用英文显示希伯来历。语言本身从不决定历法，`fa-IR` 不设 `calendar` 时显示的是波斯语的公历；语言标签里的 `-u-ca-` 扩展（例如 `th-TH-u-ca-buddhist`）也不会改变历法，要换历法就设 `calendar`。\n\n`Calendar` 和三个日期输入也有自己的 `calendar` 属性，优先于 provider。同一屏要并排显示两种历法时用它。\n\n在组件之外，`useLocale()` 返回的 `calendar` 是当前生效的历法。\n\n## 日期输入\n\n日期输入里的文字按历法写，例如 `Aban 8, 1405 AP`，也按历法读：\n\n- 可以打月份名、数字，或者带纪元的年份，例如 `Aban 8, 1405`。失焦时提交对应的公历 `Date`。\n- 历法里没有的日子（例如平年的 `Esfand 31`）会说明原因，不提交；超出 `min`、`max` 时，提示里的边界日期也按历法写。\n- 非公历的空字段聚焦、又没有传 `placeholder` 时，占位符换成一个按历法写的示例日期，告诉用户该怎么打。\n- 字段的历法和 provider 不同时（包括公历字段放在别的历法的应用里），读屏会念出这个字段用的是哪种历法。\n- `format` 传函数或 `system_date` 时，文字仍是公历 ISO 日期。\n\n系统日期控件只认公历，所以在非公历下：\n\n- 不传 `presentation`、或者传 `adaptive-native` 时，粗指针上改用底部面板，细指针上照常弹出日历。\n- 显式传 `native` 时同样换成 Astryx 的选择器，开发期警告一次。\n\n弹出的日历和底部面板都按历法排月份；底部面板的月份滚轮用历法的月份名（希伯来历闰年有 13 个月），年份滚轮带纪元。`DateRangeInput` 的按钮文字和两个月的日历也按历法写，范围的值仍是公历 ISO 日期。\n\n公历下这些都和以前一样：同样的文字、同样的读法、同样的系统控件。\n\n## 自己拼日历\n\n`useCalendarDays` 和 `useCalendarNavigation` 也收 `calendar`：按那个历法排月格子、翻月和写月份标题，日期仍是公历 ISO。它们不读 provider 的历法，默认是公历；要跟随时把 `useLocale().calendar` 传进去。`useCalendarConstraints` 只看公历日期，在任何历法下都通用。\n\n```ts\nconst { calendar } = useLocale()\nconst nav = useCalendarNavigation(() => ({ initialValue: '2026-10-23', calendar: calendar.value }))\nconst { weeks } = useCalendarDays(() => ({ ...nav.visibleCalendarMonths.value[0]!, calendar: calendar.value }))\n```\n\n## 支持的历法\n\n| 历法 | 标识 |\n| --- | --- |\n| 公历 | `gregory`、`iso8601` |\n| 佛历 | `buddhist` |\n| 民国纪年 | `roc` |\n| 和历 | `japanese` |\n| 波斯历 | `persian` |\n| 印度国定历 | `indian` |\n| 希伯来历 | `hebrew` |\n| 伊斯兰历 | `islamic-umalqura`、`islamic-civil`、`islamic-tbla` |\n| 农历 | `chinese` |\n| 朝鲜历 | `dangi` |\n| 科普特历 | `coptic` |\n| 埃塞俄比亚历 | `ethiopic`、`ethioaa` |\n\n别的标识（例如 `islamic`）显示公历，开发期警告一次。\n\n月份的长度、闰月和年份都从浏览器自带的 `Intl` 读，不需要额外的库，也不需要 polyfill。运行环境的 `Intl` 显示不了某种历法时，组件显示公历，开发期警告一次。\n\n## 服务端渲染\n\n组件在渲染时就确定历法和月份，服务端和浏览器读的是各自的 `Intl`。两边的 ICU 数据一致时（Node.js 默认带完整的 ICU），渲染出的标记相同。\n\n农历和朝鲜历这类阴阳历的月份从新月的天文计算得来，不同版本的 ICU 偶尔会在某个月从哪天开始上有一天的差别。服务端和浏览器差了这一天时，那个月在浏览器里会重新渲染。需要两边逐字一致时，让服务端用和目标浏览器相近版本的 ICU。\n\n## 周数\n\n`Calendar` 的 `hasWeekNumbers` 在任何历法下都显示 ISO 8601 周数。"
       },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/guide/calendars",
