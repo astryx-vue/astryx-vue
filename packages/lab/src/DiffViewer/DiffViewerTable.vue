@@ -5,6 +5,7 @@ import type { LineCell, SplitRow, UnifiedRow } from './rows.js'
 import type { DiffViewerChangeIndicator, DiffViewerViewMode } from './types.js'
 import { VisuallyHidden } from '@astryx-vue/core'
 import { computed, useTemplateRef } from 'vue'
+import DiffViewerFold from './DiffViewerFold.vue'
 import RenderVNode from './RenderVNode.js'
 
 defineOptions({ name: 'AstryxDiffViewerTable' })
@@ -23,6 +24,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   lineNumberClick: [ref: DiffViewerLineRef, event: MouseEvent]
+  toggleFold: [hunkIndex: number]
 }>()
 
 const splitTable = useTemplateRef<HTMLTableElement>('splitTable')
@@ -130,6 +132,16 @@ function newNote(row: SplitRow): unknown {
         <tr v-if="row.type === 'hunk'">
           <td :colspan="unifiedColumns" class="astryx-diff-viewer__hunk">
             <span class="astryx-diff-viewer__ltr">{{ row.header }}</span>
+          </td>
+        </tr>
+        <tr v-else-if="row.type === 'fold'">
+          <td :colspan="unifiedColumns" class="astryx-diff-viewer__fold">
+            <DiffViewerFold
+              :changed-lines="row.fold.changedLines"
+              :is-expanded="row.fold.isExpanded"
+              :is-sticky="!isWrapped"
+              @toggle="emit('toggleFold', row.fold.hunkIndex)"
+            />
           </td>
         </tr>
         <template v-else>
@@ -264,6 +276,16 @@ function newNote(row: SplitRow): unknown {
         <tr v-if="row.type === 'hunk'">
           <td :colspan="splitSideColumns * 2" class="astryx-diff-viewer__hunk">
             <span class="astryx-diff-viewer__ltr">{{ row.header }}</span>
+          </td>
+        </tr>
+        <tr v-else-if="row.type === 'fold'">
+          <td :colspan="splitSideColumns * 2" class="astryx-diff-viewer__fold">
+            <DiffViewerFold
+              :changed-lines="row.fold.changedLines"
+              :is-expanded="row.fold.isExpanded"
+              :is-sticky="!isWrapped"
+              @toggle="emit('toggleFold', row.fold.hunkIndex)"
+            />
           </td>
         </tr>
         <template v-else>

@@ -85,7 +85,11 @@ export type TableFilterState = Record<string, TableFilterValue>
 export interface TableSortContribution {
   direction: TableSortDirection | null
   rank: number | null
-  label: string
+  /**
+   * 表头按钮的描述，多列排序时说明这一列排第几（例如「Priority 2 of 3」），否则为 `null`。
+   * 按钮的名字就是列标题，方向由表头的 `aria-sort` 表达。
+   */
+  description: string | null
   onClick: (event: MouseEvent) => void
 }
 

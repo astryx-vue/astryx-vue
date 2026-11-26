@@ -1,4 +1,5 @@
 import type { AstryxLocale } from '../types.js'
+import { formatCount } from './shared.js'
 
 export interface TokenizerMessages {
   placeholder: string
@@ -21,7 +22,7 @@ export const tokenizerMessages: Record<AstryxLocale, TokenizerMessages> = {
     error: 'Couldn\'t load results',
     clear: 'Clear all',
     results: 'Search results',
-    more: count => `+${count} more`,
+    more: count => `+${formatCount(count, 'en')} more`,
     added: label => `Added ${label}`,
     removed: label => `Removed ${label}`,
     create: query => `Create "${query}"`,
@@ -33,7 +34,7 @@ export const tokenizerMessages: Record<AstryxLocale, TokenizerMessages> = {
     error: '加载失败',
     clear: '全部清除',
     results: '搜索结果',
-    more: count => `另外 ${count} 个`,
+    more: count => `另外 ${formatCount(count, 'zh-CN')} 个`,
     added: label => `已添加${label}`,
     removed: label => `已移除${label}`,
     create: query => `创建「${query}」`,

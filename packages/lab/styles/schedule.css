@@ -78,7 +78,6 @@
     visibility: hidden;
   }
 
-  .astryx-schedule__live,
   .astryx-schedule__sr {
     position: absolute;
     width: 1px;

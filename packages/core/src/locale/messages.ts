@@ -42,6 +42,7 @@ import type { PopoverMessages } from './messages/popover.js'
 import type { PowerSearchMessages } from './messages/power-search.js'
 import type { RichTextEditorMessages } from './messages/rich-text-editor.js'
 import type { SelectorMessages } from './messages/selector.js'
+import type { SliderMessages } from './messages/slider.js'
 import type { SpinnerMessages } from './messages/spinner.js'
 import type { StepperMessages } from './messages/stepper.js'
 import type { SwitchMessages } from './messages/switch.js'
@@ -102,6 +103,7 @@ import { popoverMessages } from './messages/popover.js'
 import { powerSearchMessages } from './messages/power-search.js'
 import { richTextEditorMessages } from './messages/rich-text-editor.js'
 import { selectorMessages } from './messages/selector.js'
+import { sliderMessages } from './messages/slider.js'
 import { spinnerMessages } from './messages/spinner.js'
 import { stepperMessages } from './messages/stepper.js'
 import { switchMessages } from './messages/switch.js'
@@ -163,6 +165,7 @@ export interface AstryxMessages {
   powerSearch: PowerSearchMessages
   richTextEditor: RichTextEditorMessages
   selector: SelectorMessages
+  slider: SliderMessages
   spinner: SpinnerMessages
   stepper: StepperMessages
   switch: SwitchMessages
@@ -226,6 +229,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     powerSearch: powerSearchMessages.en,
     richTextEditor: richTextEditorMessages.en,
     selector: selectorMessages.en,
+    slider: sliderMessages.en,
     spinner: spinnerMessages.en,
     stepper: stepperMessages.en,
     switch: switchMessages.en,
@@ -287,6 +291,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     powerSearch: powerSearchMessages['zh-CN'],
     richTextEditor: richTextEditorMessages['zh-CN'],
     selector: selectorMessages['zh-CN'],
+    slider: sliderMessages['zh-CN'],
     spinner: spinnerMessages['zh-CN'],
     stepper: stepperMessages['zh-CN'],
     switch: switchMessages['zh-CN'],
