@@ -1,5 +1,11 @@
 # @astryx-vue/core
 
+## 0.16.4
+
+### Patch Changes
+
+- [#562](https://github.com/astryx-vue/astryx-vue/pull/562) [`a12067c`](https://github.com/astryx-vue/astryx-vue/commit/a12067c18293f163990c985818406cae013a8a07) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - IconButton 现在会把 `icon` 属性传给按钮，只传 `icon`、不写插槽时也能显示图标。
+
 ## 0.16.3
 
 ### Patch Changes

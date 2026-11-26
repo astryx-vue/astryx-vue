@@ -1,5 +1,13 @@
 # @astryx-vue/lab
 
+## 0.8.1
+
+### Patch Changes
+
+- [#562](https://github.com/astryx-vue/astryx-vue/pull/562) [`ec3af5c`](https://github.com/astryx-vue/astryx-vue/commit/ec3af5c924db1ebacac17989d949690138b1643f) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - VideoPlayer renders on the server without throwing `HTMLVideoElement is not defined`.
+- Updated dependencies [[`a12067c`](https://github.com/astryx-vue/astryx-vue/commit/a12067c18293f163990c985818406cae013a8a07)]:
+  - @astryx-vue/core@0.16.4
+
 ## 0.8.0
 
 ### Minor Changes
