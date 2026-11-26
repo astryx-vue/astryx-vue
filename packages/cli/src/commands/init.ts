@@ -265,6 +265,14 @@ async function starterInstallStep(cwd: string, project: Project): Promise<Starte
   return { kind: 'none', missing, commands: [] }
 }
 
+const FAILURE_REASONS: Record<string, string> = {
+  EACCES: 'permission denied (EACCES)',
+  EPERM: 'operation not permitted (EPERM)',
+  EROFS: 'the file system is read-only (EROFS)',
+  EISDIR: 'it is a folder, not a file (EISDIR)',
+  ENOTDIR: 'a part of the path is a file, not a folder (ENOTDIR)',
+}
+
 /** A read or write that failed, with the reason and what to change. */
 function writeFailed(verb: 'read' | 'write', shown: string, error: unknown): CliError {
   const code = typeof error === 'object' && error !== null && 'code' in error ? String(error.code) : ''
@@ -274,14 +282,6 @@ function writeFailed(verb: 'read' | 'write', shown: string, error: unknown): Cli
     'ERR_WRITE_FAILED',
     1,
   )
-}
-
-const FAILURE_REASONS: Record<string, string> = {
-  EACCES: 'permission denied (EACCES)',
-  EPERM: 'operation not permitted (EPERM)',
-  EROFS: 'the file system is read-only (EROFS)',
-  EISDIR: 'it is a folder, not a file (EISDIR)',
-  ENOTDIR: 'a part of the path is a file, not a folder (ENOTDIR)',
 }
 
 function isMissing(error: unknown): boolean {

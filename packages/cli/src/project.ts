@@ -68,6 +68,9 @@ export function dependenciesOf(packageJson: ProjectPackageJson | null): Record<s
   }
 }
 
+/** The flag that saves the version as written instead of as a `^` range. */
+const EXACT_FLAG: Record<PackageManager, string> = { pnpm: '-E', npm: '-E', yarn: '-E', bun: '--exact' }
+
 /**
  * The command that adds packages with the manager the project already uses. When
  * no manager could be detected the caller gets every form, because guessing one
@@ -89,9 +92,6 @@ export function installAllCommands(manager: PackageManager | null): string[] {
 function managersFor(manager: PackageManager | null): PackageManager[] {
   return manager ? [manager] : ['pnpm', 'npm', 'yarn', 'bun']
 }
-
-/** The flag that saves the version as written instead of as a `^` range. */
-const EXACT_FLAG: Record<PackageManager, string> = { pnpm: '-E', npm: '-E', yarn: '-E', bun: '--exact' }
 
 /**
  * True when the range names one version and nothing else (`0.9.1`, `=0.9.1`),
