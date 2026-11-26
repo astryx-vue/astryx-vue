@@ -5,9 +5,9 @@ import horizontalDemo from './horizontal.vue'
 import horizontalSource from './horizontal.vue?raw&highlighted'
 import mixedDemo from './mixed.vue'
 import mixedSource from './mixed.vue?raw&highlighted'
-import nestedDemo from './nested.vue'
-import nestedSource from './nested.vue?raw&highlighted'
+import nestedDemo from './overview.vue'
 import overviewDemo from './overview.vue'
+import nestedSource from './overview.vue?raw&highlighted'
 import overviewSource from './overview.vue?raw&highlighted'
 
 const options = { className: 'form-layout-preview' }

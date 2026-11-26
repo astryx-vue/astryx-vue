@@ -91,6 +91,8 @@ The ranking is local and deterministic: keyword matching over each template's sl
 
 `--json` prints a typed envelope on stdout. `--dense` shortens the text people read; together with `--json` it is ignored, and the envelope stays complete. `--zh` uses Simplified Chinese where this site has a translation. `--cwd` is the project directory `template` and `init` write inside.
 
+No command asks a question, so there is nothing to confirm. A `--yes`, `-y`, `--non-interactive`, or `--no-input` is refused with exit code 2, and the error names the same command without it.
+
 The template `--json` types are `template.list`, `template.show`, `template.skeleton`, and `template.copy`; `build` returns `build.help` and `build.kit`. Errors carry a code such as `ERR_UNKNOWN_TEMPLATE`, `ERR_TEMPLATE_NOT_READY`, `ERR_FILE_EXISTS`, or `ERR_PATH_TRAVERSAL`.
 
 ## Agent file

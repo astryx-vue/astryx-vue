@@ -26,10 +26,10 @@ footer: false
 <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>禁用原因。提供原因时，禁用滑块仍可聚焦。</td></tr>
 <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td>false</td><td>显示必填提示。不会执行原生必填校验。</td></tr>
 <tr><td><code>isOptional</code></td><td><code>boolean</code></td><td>false</td><td>显示可选提示。优先于 isRequired。</td></tr>
-<tr><td><code>requiredLabel</code></td><td><code>string</code></td><td>Required</td><td>必填提示文本。</td></tr>
+<tr><td><code>requiredLabel</code></td><td><code>string</code></td><td>Required</td><td>必填提示文本。默认值随当前语言变化。</td></tr>
 <tr><td><code>optionalLabel</code></td><td><code>string</code></td><td>Optional</td><td>可选提示文本。</td></tr>
-<tr><td><code>minLabel</code></td><td><code>string</code></td><td>Minimum value</td><td>区间下限的无障碍名称。</td></tr>
-<tr><td><code>maxLabel</code></td><td><code>string</code></td><td>Maximum value</td><td>区间上限的无障碍名称。</td></tr>
+<tr><td><code>minLabel</code></td><td><code>string</code></td><td>Minimum value</td><td>区间下限的无障碍名称。默认值随当前语言变化。</td></tr>
+<tr><td><code>maxLabel</code></td><td><code>string</code></td><td>Maximum value</td><td>区间上限的无障碍名称。默认值随当前语言变化。</td></tr>
 <tr><td><code>width</code></td><td><code>number | string</code></td><td>—</td><td>整个字段的宽度。数字按 px 处理。</td></tr>
 <tr><td><code>htmlName</code></td><td><code>string</code></td><td>—</td><td>隐藏表单字段的名称。</td></tr>
 <tr><td><code>form</code></td><td><code>string</code></td><td>—</td><td>关联表单的 ID。</td></tr>

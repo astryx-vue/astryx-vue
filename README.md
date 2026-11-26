@@ -60,6 +60,12 @@ pnpm exec astryx-vue component Button
 npx astryx-vue search dialog
 ```
 
+Then run `init` once, before you write UI. It asks no questions, prints the setup steps (packages, theme, locale), and saves the astryx-vue guide to `AGENTS.md`/`CLAUDE.md`, so you and your agents look components up instead of guessing:
+
+```sh
+pnpm exec astryx-vue init   # or: npx astryx-vue init
+```
+
 Without installing it, run `npx @astryx-vue/cli …`; the scope is required, because the bare `astryx-vue` name on npm is not this package.
 
 ```sh

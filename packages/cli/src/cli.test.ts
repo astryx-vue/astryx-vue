@@ -156,7 +156,7 @@ describe('json envelopes', () => {
     }
     expect(data.locale).toBe('en')
     const all = Object.values(data.composables).flat()
-    expect(all).toHaveLength(58)
+    expect(all).toHaveLength(59)
     expect(all.map(item => item.name).every(name => name.startsWith('use'))).toBe(true)
     expect(all.find(item => item.name === 'useClipboard')).toMatchObject({ slug: 'use-clipboard', import: null })
   })
@@ -276,6 +276,26 @@ describe('json envelopes', () => {
     const option = await run(['component', '--theme', '--json'])
     expect(option.exitCode).toBe(2)
     expect(parseResponse(option.stdout)).toMatchObject({ code: 'ERR_INVALID_OPTION' })
+  })
+
+  it('answers a confirm-style option with the run without it', async () => {
+    const json = await run(['template', 'login-card', './src/pages', '--yes', '--json'])
+    expect(json.exitCode).toBe(2)
+    expect(parseResponse(json.stdout)).toMatchObject({
+      code: 'ERR_INVALID_OPTION',
+      error: expect.stringContaining('never ask questions'),
+      suggestions: [{ name: 'astryx-vue template login-card ./src/pages --json', reason: 'do this instead' }],
+    })
+
+    // `-y` is read as the option, not as a positional the command would misread.
+    const short = await run(['search', 'date picker', '-y'])
+    expect(short.exitCode).toBe(2)
+    expect(short.stdout).toBe('')
+    expect(short.stderr).toBe('-y is not needed: astryx-vue commands never ask questions. Drop it and run: astryx-vue search \'date picker\'\n')
+
+    // A second mistake in the same run is the one to fix.
+    const other = await run(['component', 'Button', '--non-interactive', '--theme', '--json'])
+    expect(parseResponse(other.stdout)).toMatchObject({ code: 'ERR_INVALID_OPTION', error: 'Unknown option --theme.' })
   })
 })
 
@@ -567,7 +587,7 @@ describe('catalog source', () => {
   })
 
   it('marks composables and stores topic bodies without frontmatter', async () => {
-    expect(catalog.components.filter(component => component.kind === 'composable')).toHaveLength(58)
+    expect(catalog.components.filter(component => component.kind === 'composable')).toHaveLength(59)
     expect(catalog.components.filter(component => component.kind === 'component')).toHaveLength(193)
     const clipboard = catalog.components.find(component => component.slug === 'use-clipboard')
     expect(clipboard?.kind).toBe('composable')

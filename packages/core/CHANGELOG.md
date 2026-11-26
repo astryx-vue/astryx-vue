@@ -1,5 +1,21 @@
 # @astryx-vue/core
 
+## 0.10.1
+
+### Patch Changes
+
+- [#533](https://github.com/astryx-vue/astryx-vue/pull/533) [`e869ec3`](https://github.com/astryx-vue/astryx-vue/commit/e869ec3cb4f87419d5f78ddcbf9d5fa1fda63f75) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 语言目录对齐到上游 v0.7.17：键盘按键名、文件大小、字段说明按钮、InfoTip、滑块、Tokenizer 溢出数等文案都能随加载的目录翻译；SideNav、TopNav 标题旁的菜单按钮名带上标题；Table 的排序按钮改用列标题命名，多列排序时用描述读出优先级；文件大小改为 KB、MB 保留一位小数。
+
+## 0.10.0
+
+No changes in this release.
+
+## 0.9.2
+
+### Patch Changes
+
+- [#531](https://github.com/astryx-vue/astryx-vue/pull/531) [`c4f306d`](https://github.com/astryx-vue/astryx-vue/commit/c4f306d4de9b02036f7fc7aae1e9188cd833f535) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 敲字母跳转（菜单、Selector、TreeList 等）不再区分重音和带横线的字母：敲 `a` 能跳到「Ánh」，敲 `d` 能跳到「Đào」；Windows 上用 AltGr 敲出的字母也能跳转。
+
 ## 0.9.1
 
 ### Patch Changes

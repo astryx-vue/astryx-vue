@@ -24,6 +24,6 @@ describe('file selection', () => {
     ], { accept: 'image/*', isMultiple: true, maxFiles: 2 })
     expect(Array.isArray(result.files) && result.files.map(item => item.name)).toEqual(['a.png', 'b.png'])
     expect(result.rejections).toEqual([{ code: 'count', maxFiles: 2 }])
-    expect(formatFileSize(5 * 1024 * 1024)).toBe('5 MB')
+    expect(formatFileSize(5 * 1024 * 1024)).toBe('5.0 MB')
   })
 })

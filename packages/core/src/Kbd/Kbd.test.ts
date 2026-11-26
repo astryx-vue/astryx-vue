@@ -4,6 +4,8 @@ import type { KbdProps } from './types.js'
 import { mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { defineComponent, h, nextTick, ref } from 'vue'
+import { astryxMessagesKey } from '../locale/context.js'
+import { loadAstryxCatalog } from '../locale/loadCatalog.js'
 import Kbd from './Kbd.vue'
 
 const originalPlatform = navigator.platform
@@ -123,6 +125,22 @@ describe('kbd', () => {
 
     expect(badgeTexts(wrapper)).toEqual(['Ctrl', 'Alt', 'Shift', 'Win'])
     expect(accessibleName(wrapper)).toBe('Control + Alt + Shift + META')
+  })
+
+  it('takes the alt, shift and Windows keycap text off Apple platforms from a loaded catalog', async () => {
+    const { messages } = loadAstryxCatalog('de-DE', {
+      '@astryx.kbd.key.altShort': 'Alt Gr',
+      '@astryx.kbd.key.shiftShort': 'Umschalt',
+      '@astryx.kbd.key.windowsShort': 'Windows',
+      '@astryx.kbd.key.controlShort': 'Strg',
+    })
+    const wrapper = mount(Kbd, {
+      props: { keys: 'ctrl+alt+shift+meta' },
+      global: { provide: { [astryxMessagesKey as symbol]: messages } },
+    })
+    await nextTick()
+
+    expect(badgeTexts(wrapper)).toEqual(['Strg', 'Alt Gr', 'Umschalt', 'Windows'])
   })
 
   it('shows Apple modifier symbols, with meta as the Command key, on Apple platforms', async () => {

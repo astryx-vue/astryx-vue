@@ -13,14 +13,8 @@ export interface TableMessages {
   sortAscending: string
   sortDescending: string
   clearSort: string
-  /** 排序方向词，会填进 `sortedBy` 那句话里。 */
-  sortedAscending: string
-  sortedDescending: string
-  sortBy: (label: string) => string
-  /** 已排序列的表头按钮名。 */
-  sortedBy: (label: string, direction: string) => string
-  /** 多列排序时，已排序列的表头按钮名，带上它排第几。 */
-  sortedByWithPriority: (label: string, direction: string, rank: number, total: number) => string
+  /** 多列排序时表头按钮的描述：这一列排第几。按钮名就是列标题，方向看 `aria-sort`。 */
+  sortPriority: (rank: number, total: number) => string
   /** 列筛选控件的名字、占位文字和无障碍名。 */
   filterByColumn: (header: string) => string
   bulkActionsLabel: string
@@ -59,11 +53,7 @@ export const tableMessages: Record<AstryxLocale, TableMessages> = {
     sortAscending: 'Sort ascending',
     sortDescending: 'Sort descending',
     clearSort: 'Clear sort',
-    sortedAscending: 'ascending',
-    sortedDescending: 'descending',
-    sortBy: label => `Sort by ${label}`,
-    sortedBy: (label, direction) => `Sort by ${label}, sorted ${direction}`,
-    sortedByWithPriority: (label, direction, rank, total) => `Sort by ${label}, sorted ${direction}, priority ${formatCount(rank, 'en')} of ${formatCount(total, 'en')}`,
+    sortPriority: (rank, total) => `Priority ${formatCount(rank, 'en')} of ${formatCount(total, 'en')}`,
     filterByColumn: header => `Filter ${header}`,
     bulkActionsLabel: 'Bulk actions',
     clearAll: 'Unselect All',
@@ -97,11 +87,7 @@ export const tableMessages: Record<AstryxLocale, TableMessages> = {
     sortAscending: '升序排序',
     sortDescending: '降序排序',
     clearSort: '清除排序',
-    sortedAscending: '升序',
-    sortedDescending: '降序',
-    sortBy: label => `按${label}排序`,
-    sortedBy: (label, direction) => `按${label}排序，当前为${direction}`,
-    sortedByWithPriority: (label, direction, rank, total) => `按${label}排序，当前为${direction}，优先级 ${formatCount(rank, 'zh-CN')}/${formatCount(total, 'zh-CN')}`,
+    sortPriority: (rank, total) => `排序优先级 ${formatCount(rank, 'zh-CN')}/${formatCount(total, 'zh-CN')}`,
     filterByColumn: header => `筛选${header}`,
     bulkActionsLabel: '批量操作',
     clearAll: '取消全选',

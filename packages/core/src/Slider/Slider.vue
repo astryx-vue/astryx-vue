@@ -7,6 +7,8 @@ import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import Field from '../Field/Field.vue'
 import { useFieldPartStyling } from '../Field/fieldParts.js'
+import { useComponentMessages } from '../locale/context.js'
+import { sliderMessages } from '../locale/messages/slider.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { percent, position } from './sliderMath.js'
 import SliderThumb from './SliderThumb.vue'
@@ -14,11 +16,15 @@ import { useSlider } from './useSlider.js'
 import '../../styles/slider.css'
 
 defineOptions({ name: 'AstryxSlider', inheritAttrs: false })
-const props = withDefaults(defineProps<Omit<SliderProps<T>, 'modelValue'>>(), { min: 0, max: 100, step: 1, orientation: 'horizontal', valueDisplay: 'tooltip', minLabel: 'Minimum value', maxLabel: 'Maximum value', requiredLabel: 'Required' })
+const props = withDefaults(defineProps<Omit<SliderProps<T>, 'modelValue'>>(), { min: 0, max: 100, step: 1, orientation: 'horizontal', valueDisplay: 'tooltip' })
 const emit = defineEmits<SliderEmits<T>>()
 defineSlots<SliderSlots>()
 const model = defineModel<T>({ required: true })
 const attrs = useAttrs()
+const messages = useComponentMessages({ slider: sliderMessages })
+const minName = computed(() => props.minLabel ?? messages.value.slider.minimumThumb)
+const maxName = computed(() => props.maxLabel ?? messages.value.slider.maximumThumb)
+const requiredName = computed(() => props.requiredLabel ?? messages.value.slider.required)
 const press = usePressFeedback({ hasOverlay: false })
 const parts = useFieldPartStyling({
   component: 'Slider',
@@ -150,14 +156,14 @@ defineExpose({ element, focus, blur })
       </div>
       <template v-if="isRange">
         <VisuallyHidden :id="`${inputId}-label-0`">
-          {{ minLabel }}
+          {{ minName }}
         </VisuallyHidden>
         <VisuallyHidden :id="`${inputId}-label-1`">
-          {{ maxLabel }}
+          {{ maxName }}
         </VisuallyHidden>
       </template>
       <VisuallyHidden v-if="required" :id="`${inputId}-required`">
-        {{ requiredLabel }}
+        {{ requiredName }}
       </VisuallyHidden>
       <VisuallyHidden v-if="showsDisabledMessage" :id="`${inputId}-disabled`">
         {{ disabledMessage }}

@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { internationalizationProviderOverrides } from '../../../../components/demos/internationalization-provider'
+import { internationalizationProviderOverrides, internationalizationProviderRtlDirection, internationalizationProviderShippedLocale } from '../../../../components/demos/internationalization-provider'
 </script>
 
 ## Usage
@@ -24,6 +24,14 @@ import { InternationalizationProvider } from '@astryx-vue/core/Internationalizat
 
 Nesting works: the inner provider wins for its subtree.
 
+To reword a string for one component, use that component's own prop, such as `placeholder` or `label`. `overrides` changes a string everywhere in the app; reach for it only when every instance should read the same way.
+
+## Anatomy
+
+| Element | Description |
+| --- | --- |
+| Provider boundary | Required. A nonvisual context boundary that supplies locale, message catalogs, overrides, and direction to descendant Astryx components. It renders no DOM element. |
+
 ## Best practices
 
 | Guidance | Practices |
@@ -38,4 +46,8 @@ Nesting works: the inner provider wins for its subtree.
 
 Common configurations, variations, and states.
 
-<DemoExample :demo="internationalizationProviderOverrides" title="InternationalizationProvider — Overrides" description="Override a small number of Astryx strings without providing a full locale catalog." locale="en" />
+<DemoExample :demo="internationalizationProviderShippedLocale" title="Load a shipped Astryx locale catalog" description="Pass a vendored locale JSON from @astryx-vue/core/locales to messages, keyed by its tag." locale="en" />
+
+<DemoExample :demo="internationalizationProviderRtlDirection" title="Mirror the layout for right-to-left text" description="Pass the same direction to the provider and to the element that holds the content, so Astryx components and the page mirror together." locale="en" />
+
+<DemoExample :demo="internationalizationProviderOverrides" title="Change one Astryx string across your app" description="Override a small number of Astryx strings everywhere in the app without providing a full locale catalog." locale="en" />
