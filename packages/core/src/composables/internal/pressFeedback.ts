@@ -84,14 +84,38 @@ function prefersReducedMotion(): boolean {
 }
 
 /**
- * 抬手后淡出的时长：元素上主题的 `--astryx-duration-exit`，抬手时读一次。
+ * 自定义属性读出来是原文，`calc(100ms + 75ms)` 这类写法不是纯时间。
+ * 让一个不显示的探针元素把这段原文当作 transition-duration，由浏览器算出实际长度，
+ * 和释放动画（用同一个 token 当时长）算出的结果一致。
+ */
+function resolveTimeMs(element: HTMLElement, raw: string): number | null {
+  const plain = parseTimeMs(raw)
+  if (plain != null || raw.trim() === '')
+    return plain
+  const probe = element.ownerDocument.createElement('span')
+  probe.style.setProperty('display', 'none', 'important')
+  probe.style.setProperty('transition-duration', raw, 'important')
+  if (probe.style.getPropertyValue('transition-duration') === '')
+    return null
+  element.appendChild(probe)
+  try {
+    return parseTimeMs(getComputedStyle(probe).transitionDuration.split(',')[0] ?? '')
+  }
+  finally {
+    probe.remove()
+  }
+}
+
+/**
+ * 抬手后淡出的时长：元素上主题的 `--astryx-duration-exit`，抬手时读一次，
+ * `calc()` 之类的写法按浏览器算出的长度算。
  * 读不出时间（没主题、或不是时间值）就用默认的 PRESS_FADE_MS。
  * 减少动态效果时不超过 {@link PRESS_FADE_REDUCED_MAX_MS}。
  */
 export function pressFadeMs(element: HTMLElement): number {
   if (typeof getComputedStyle !== 'function')
     return PRESS_FADE_MS
-  const ms = parseTimeMs(getComputedStyle(element).getPropertyValue('--astryx-duration-exit'))
+  const ms = resolveTimeMs(element, getComputedStyle(element).getPropertyValue('--astryx-duration-exit'))
   const exit = ms != null && ms >= 0 ? ms : PRESS_FADE_MS
   return prefersReducedMotion() ? Math.min(exit, PRESS_FADE_REDUCED_MAX_MS) : exit
 }

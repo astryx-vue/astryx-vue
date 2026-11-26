@@ -118,3 +118,28 @@ describe('减少动态效果时的抬手淡出', () => {
     expect(pressFadeMs(withExit('400ms'))).toBe(400)
   })
 })
+
+describe('calc() 写的退出时长', () => {
+  it('按浏览器算出的长度计时，而不是退回默认值', () => {
+    vi.stubGlobal('matchMedia', () => ({ matches: false }))
+    const element = document.createElement('div')
+    element.style.setProperty('--astryx-duration-exit', 'calc(100ms + 100ms)')
+    document.body.appendChild(element)
+    const real = window.getComputedStyle.bind(window)
+    vi.spyOn(window, 'getComputedStyle').mockImplementation((target: Element) => {
+      if (target.parentElement === element)
+        return { transitionDuration: '200ms' } as CSSStyleDeclaration
+      return real(target)
+    })
+    expect(pressFadeMs(element)).toBe(200)
+  })
+
+  it('探针用完就移除', () => {
+    vi.stubGlobal('matchMedia', () => ({ matches: false }))
+    const element = document.createElement('div')
+    element.style.setProperty('--astryx-duration-exit', 'calc(100ms + 100ms)')
+    document.body.appendChild(element)
+    pressFadeMs(element)
+    expect(element.childElementCount).toBe(0)
+  })
+})
