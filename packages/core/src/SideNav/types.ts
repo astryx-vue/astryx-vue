@@ -1,4 +1,5 @@
 import type { HandleRef } from '../composables/useHandleRef.js'
+import type { ResizableRegion } from '../composables/useResizable.js'
 import type { NavItemSize, NavLinkComponent } from '../NavItem/types.js'
 import type { NavMenuFocusRequest } from '../NavMenu/context.js'
 
@@ -60,9 +61,13 @@ export interface SideNavProps {
   /**
    * 在结束边拖宽度。`true` 使用 260px 初始、180–480px 范围。
    * 收起后把手隐藏。拖到 160px 以下会收起（需要同时可收起）。
+   * 也可以直接传 `useResizable()` 的返回值：这个区域拥有宽度和收起状态，轨道跟着它的
+   * `isCollapsed`，收起按钮调用它的 `collapse` 和 `expand`，`autoSaveId` 记宽度；
+   * 能不能收起由区域自己的 `collapsible` 选项决定，`collapsible` 写了收起状态或与之不一致时
+   * 以区域为准，开发环境里警告。
    * @default false
    */
-  resizable?: boolean | SideNavResizable
+  resizable?: boolean | SideNavResizable | ResizableRegion
   /**
    * 侧栏外面的收起按钮可以拿这个句柄。
    * 和根元素的模板 ref 分开。更常见的做法是两边共用 `v-model:is-collapsed`。

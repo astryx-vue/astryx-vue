@@ -23,6 +23,8 @@ const here = dirname(fileURLToPath(import.meta.url))
 const coreSrc = join(here, '..')
 /** Every source file that takes a handle or reports to the module. */
 const ADOPTERS = [
+  'AppShell/useAppShellRail.ts',
+  'SideNav/railMotion.ts',
   'Table/plugins/rowExpansionGlide.ts',
   'TreeList/useTreeLayoutMotion.ts',
   'composables/internal/layoutDisclosure.ts',

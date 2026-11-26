@@ -10,9 +10,9 @@
     overflow: hidden;
     background: transparent;
     color: var(--astryx-color-text-primary);
-    transition: width var(--astryx-duration-medium-max) var(--astryx-ease-standard);
   }
 
+  /* 宽度一步落到最终值，收起、展开的动效由 useRailMotion 用裁剪和淡入淡出播放。 */
   .astryx-side-nav--collapsed {
     width: var(--astryx-side-nav-collapsed-width, 48px);
   }
@@ -27,10 +27,6 @@
     flex: none;
     height: 100%;
     overflow: clip;
-  }
-
-  .astryx-side-nav--resizing {
-    transition: none;
   }
 
   .astryx-side-nav--topbar {
@@ -253,6 +249,24 @@
     margin-inline-start: auto;
   }
 
+  /* 整个标题是链接、旁边还有末端内容时，链接占满剩下的宽度。 */
+  .astryx-side-nav-heading__whole-link {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    align-self: stretch;
+    gap: var(--astryx-spacing-2, 8px);
+    min-width: 0;
+    border-radius: var(--astryx-radius-element, 0.625rem);
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .astryx-side-nav-heading__whole-link:focus-visible {
+    outline: var(--astryx-focus-outline-width) var(--astryx-focus-outline-style) var(--astryx-focus-outline-color);
+    outline-offset: var(--astryx-focus-outline-offset);
+  }
+
   .astryx-side-nav-heading__icon {
     display: inline-flex;
     flex: none;
@@ -384,6 +398,11 @@
     height: 1em;
   }
 
+  /* 收起的轨道里，禁用的图标行仍要接住指针，提示气泡才能在悬停时出现。 */
+  .astryx-side-nav .astryx-nav-item--disabled.astryx-nav-item--icon-only {
+    pointer-events: auto;
+  }
+
   .astryx-side-nav-item { width: 100%; }
 
   /* Nested rows keep the full-width surface; only their content moves inward. */
@@ -450,19 +469,28 @@
     background: var(--astryx-color-overlay-hover);
   }
 
+  /*
+   * 下级组只在收起动画期间裁剪：嵌套行和组等宽，常驻裁剪会切掉它们画在行外的焦点环。
+   * overflow 是离散属性，靠 allow-discrete 和等于展开时长的延迟，等行高稳定后才放开裁剪；
+   * 收起时立刻回到裁剪，下级行不会在收起过程中溢出。
+   */
   .astryx-side-nav-item__children {
     display: grid;
     grid-template-rows: 1fr;
-    transition: grid-template-rows var(--astryx-duration-medium-max) var(--astryx-ease-standard);
+    overflow: visible;
+    transition:
+      grid-template-rows var(--astryx-duration-medium-max) var(--astryx-ease-standard),
+      overflow 0s var(--astryx-duration-medium-max) allow-discrete;
   }
 
   .astryx-side-nav-item__children--collapsed {
     grid-template-rows: 0fr;
+    overflow: hidden;
+    transition-delay: 0s, 0s;
   }
 
   .astryx-side-nav-item__children-inner {
     min-height: 0;
-    overflow: hidden;
   }
 
   .astryx-side-nav-item__popover {
@@ -482,11 +510,11 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .astryx-side-nav,
     .astryx-side-nav-item__children,
     .astryx-side-nav-item__chevron,
     .astryx-side-nav-collapse__chevron {
       transition-duration: 0.01ms;
+      transition-delay: 0s;
     }
   }
 }

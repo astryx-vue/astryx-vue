@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { SideNavSectionProps, SideNavSectionSlots } from './types.js'
 import { computed, useId } from 'vue'
+import { hasSlotContent } from '../composables/internal/slotContent.js'
 import { useSideNavCollapse } from './context.js'
 import '../../styles/side-nav.css'
 import '../../styles/visually-hidden.css'
@@ -28,7 +29,7 @@ const hideHeader = computed(() => props.isHeaderHidden || collapse.isCollapsed.v
         <span :id="titleId" class="astryx-side-nav-section__title">{{ title }}</span>
         <span v-if="subtitle" class="astryx-side-nav-section__subtitle">{{ subtitle }}</span>
       </span>
-      <span v-if="$slots.end" class="astryx-side-nav-section__end">
+      <span v-if="hasSlotContent($slots.end)" class="astryx-side-nav-section__end">
         <slot name="end" />
       </span>
     </div>

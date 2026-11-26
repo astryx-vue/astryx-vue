@@ -86,6 +86,27 @@ const textProps = computed(() => ({
     </span>
   </component>
 
+  <!-- 整个标题是链接、又带末端内容：末端内容常是控件，不能放进 <a>，所以链接和末端内容并排放在一个 div 里。 -->
+  <div
+    v-else-if="mode === 'whole-link' && kind === 'side' && $slots.end"
+    :class="[block, `${block}--link`]"
+  >
+    <component
+      :is="headingRoot"
+      :class="`${block}__whole-link`"
+      :href="safeHeadingHref"
+      :to="safeHeadingHref && customLink != null ? safeHeadingHref : undefined"
+    >
+      <span v-if="$slots.icon" :class="`${block}__icon`">
+        <slot name="icon" />
+      </span>
+      <NavHeadingText v-bind="textProps" />
+    </component>
+    <span :class="`${block}__end`">
+      <slot name="end" />
+    </span>
+  </div>
+
   <component
     :is="headingRoot"
     v-else-if="mode === 'whole-link'"

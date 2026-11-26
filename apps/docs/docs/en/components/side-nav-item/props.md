@@ -17,7 +17,7 @@ footer: false
 <tr><td><code>iconClass</code></td><td><code>string</code></td><td>—</td><td>Icon before the label, given as a CSS icon class such as <code>i-carbon-home</code>. An item without an icon is left out while the rail is collapsed.</td></tr>
 <tr><td><code>selectedIconClass</code></td><td><code>string</code></td><td>—</td><td>Icon used instead of <code>iconClass</code> while the item is selected.</td></tr>
 <tr><td><code>isSelected</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Whether this is the current page. Sets <code>aria-current="page"</code> and the selected styles.</td></tr>
-<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Whether the item is disabled. Blocks the default action and emits nothing.</td></tr>
+<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Whether the item is disabled. It stays focusable (<code>aria-disabled="true"</code>, keeping its Tab stop) but blocks the default action, emits nothing, and runs none of your handlers except focus and blur.</td></tr>
 <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>Height and horizontal padding of the row.</td></tr>
 <tr><td><code>collapsible</code></td><td><code>boolean | { defaultIsCollapsed?: boolean, isCollapsed?: boolean }</code></td><td>—</td><td>Whether the children can be folded. Left unset, a row with children folds. <code>false</code> keeps them open. The object form sets the starting or the controlled state.</td></tr>
 </tbody></table>
@@ -29,7 +29,7 @@ footer: false
 
 ## Slots
 
-- `default`: child items. A row with children folds them into a group.
+- `default`: child items. A row with children folds them into a group. Child rows span the full width of the list like top-level rows; only their content is indented, one step per level.
 - `icon`: icon element before the label. An alternative to `iconClass`.
 - `selectedIcon`: icon element used while the item is selected. Falls back to `icon`.
 - `end`: content at the trailing edge of the row, such as a badge or a count.

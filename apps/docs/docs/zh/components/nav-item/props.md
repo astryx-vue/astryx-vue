@@ -19,7 +19,8 @@ footer: false
       <tr><td><code>target</code></td><td><code>string</code></td><td>-</td><td>链接的 target。为 <code>_blank</code> 时自动补上 <code>noopener noreferrer</code>。</td></tr>
       <tr><td><code>rel</code></td><td><code>string</code></td><td>-</td><td>链接的 rel。</td></tr>
       <tr><td><code>isSelected</code></td><td><code>boolean</code></td><td><code>false</code></td><td>当前页。会设置 <code>aria-current="page"</code>。</td></tr>
-      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>禁用后渲染成按钮，不进入 Tab 顺序。</td></tr>
+      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>禁用后渲染成按钮，默认不进入 Tab 顺序。配合 <code>isFocusableWhenDisabled</code> 可保留 Tab 停靠点。</td></tr>
+      <tr><td><code>isFocusableWhenDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>让禁用的按钮仍可聚焦：不用原生 <code>disabled</code>，改写 <code>aria-disabled="true"</code>，点击、回车和空格都不触发行为，除聚焦和失焦外你写的处理函数也不会运行。<code>SideNavItem</code> 已打开它。</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>高度和内边距。</td></tr>
       <tr><td><code>iconClass</code></td><td><code>string</code></td><td>-</td><td>图标的 CSS class，例如 <code>i-carbon-home</code>。</td></tr>
       <tr><td><code>selectedIconClass</code></td><td><code>string</code></td><td>-</td><td>选中时替换 <code>iconClass</code>。</td></tr>

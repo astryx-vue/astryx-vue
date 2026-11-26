@@ -13,9 +13,9 @@ footer: false
     <tbody>
       <tr><td><code>isOpen</code></td><td><code>boolean</code></td><td><code>false</code></td><td>打开状态，配合 <code>v-model:is-open</code>。</td></tr>
       <tr><td><code>header</code></td><td><code>string</code></td><td>-</td><td>抽屉标题。也可以用 <code>header</code> 插槽。</td></tr>
-      <tr><td><code>width</code></td><td><code>number</code></td><td><code>320</code></td><td>抽屉宽度，单位像素。</td></tr>
-      <tr><td><code>side</code></td><td><code>'start' | 'end' | 'auto'</code></td><td><code>'auto'</code></td><td>从哪一侧滑入。</td></tr>
-      <tr><td><code>label</code></td><td><code>string</code></td><td>标题或当前语言的「导航」</td><td>没有标题时作为对话框的无障碍名称。</td></tr>
+      <tr><td><code>width</code></td><td><code>number</code></td><td><code>320</code></td><td>抽屉宽度，单位像素。最宽不超过视口宽度的 85%，抽屉旁边总留一条可点的遮罩。</td></tr>
+      <tr><td><code>side</code></td><td><code>'start' | 'end' | 'auto'</code></td><td><code>'auto'</code></td><td>从哪一侧滑入。<code>auto</code> 按打开它的元素（有焦点的元素，否则是 <code>aria-controls</code> 指向抽屉的元素）所在的一侧、随文字方向选行内起始边或结束边；正中间的打开者、或找不到打开者，都从行内结束边出来。</td></tr>
+      <tr><td><code>label</code></td><td><code>string</code></td><td>标题或当前语言的「导航」</td><td>没有标题时作为对话框和它里面导航地标的无障碍名称。你传的 <code>aria-labelledby</code> 优先。</td></tr>
     </tbody>
   </table>
 </div>
