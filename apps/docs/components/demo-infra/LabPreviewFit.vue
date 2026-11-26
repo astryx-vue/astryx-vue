@@ -72,6 +72,8 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: center;
   width: 100%;
+  margin: 0;
+  padding: 0;
   overflow: visible;
 }
 </style>

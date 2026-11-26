@@ -42,7 +42,7 @@ describe('diffViewer 显示选项', () => {
   it('样式支持 bars 和关闭行底色', () => {
     const css = readFileSync(join(process.cwd(), 'packages/lab/styles/diff-viewer.css'), 'utf8')
     expect(css).toContain('data-change-indicator=\'bars\'')
-    expect(css).toContain('border-inline-start-style: dashed')
+    expect(css).toContain('repeating-linear-gradient(')
     expect(css).toContain('data-change-background=\'false\'')
   })
 })
