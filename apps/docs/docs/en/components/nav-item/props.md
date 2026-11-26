@@ -19,7 +19,8 @@ footer: false
       <tr><td><code>target</code></td><td><code>string</code></td><td>-</td><td>Link target. <code>_blank</code> also adds <code>noopener noreferrer</code>.</td></tr>
       <tr><td><code>rel</code></td><td><code>string</code></td><td>-</td><td>Link rel.</td></tr>
       <tr><td><code>isSelected</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Current page. Sets <code>aria-current="page"</code>.</td></tr>
-      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Renders a button that is removed from tab order.</td></tr>
+      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Renders a button that is removed from tab order. With <code>isFocusableWhenDisabled</code> it keeps its tab stop.</td></tr>
+      <tr><td><code>isFocusableWhenDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Keeps a disabled button focusable: it carries <code>aria-disabled="true"</code> instead of the native <code>disabled</code>, and neither clicks nor Enter and Space do anything. Your handlers except focus and blur do not run. <code>SideNavItem</code> turns it on.</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>Height and padding.</td></tr>
       <tr><td><code>iconClass</code></td><td><code>string</code></td><td>-</td><td>CSS icon class, such as <code>i-carbon-home</code>.</td></tr>
       <tr><td><code>selectedIconClass</code></td><td><code>string</code></td><td>-</td><td>Replaces <code>iconClass</code> while selected.</td></tr>

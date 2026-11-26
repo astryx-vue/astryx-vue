@@ -10,7 +10,7 @@ footer: false
 <div class="component-api-table" role="region" aria-label="SideNavCollapseButton 属性" tabindex="0">
 <table><thead><tr><th>属性</th><th>类型</th><th>默认值</th><th>说明</th></tr></thead><tbody>
 <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>按钮文字。传了就把只有图标的方块变成带文字的按钮，箭头在文字前面。不传时，读屏读到的名字跟着状态走：展开侧栏或收起侧栏。</td></tr>
-<tr><td><code>collapsible</code></td><td><code>SideNavControlledCollapsible</code></td><td>—</td><td>受控的 <code>{ isCollapsed, onCollapsedChange }</code> 配置。按钮渲染在 <code>SideNav</code> 外面、读不到侧栏上下文时用它，并把同一个对象交给 <code>SideNav</code>。它优先于 <code>isCollapsed</code>。</td></tr>
+<tr><td><code>collapsible</code></td><td><code>SideNavControlledCollapsible</code></td><td>—</td><td>和 <code>SideNav</code> 收到的同一份受控 <code>collapsible</code> 配置，包含它的全部键（<code>isCollapsed</code> 和 <code>onCollapsedChange</code> 必填；<code>defaultIsCollapsed</code>、<code>hasButton</code>、<code>buttonLabel</code>、<code>hotkey</code> 可选）。按钮渲染在 <code>SideNav</code> 外面、读不到侧栏上下文时用它，并把同一个对象交给 <code>SideNav</code>。它优先于 <code>isCollapsed</code>。</td></tr>
 <tr><td><code>isCollapsed</code></td><td><code>boolean</code></td><td>—</td><td>受控的收起状态，给放在 <code>SideNav</code> 外面的按钮用。用 <code>v-model:is-collapsed</code> 绑上，并给侧栏同一个值，两边才不会打架。</td></tr>
 <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td>在 <code>SideNav</code> 里是 <code>'sm'</code>，外面是 <code>'md'</code></td><td>按钮大小。默认跟着容器走。</td></tr>
 </tbody></table>

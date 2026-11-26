@@ -29,7 +29,8 @@
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
-    width: min(100%, var(--astryx-mobile-nav-width, 320px));
+    /* 抽屉最宽不超过视口的 85%，窄屏上遮罩总留一条可点的空隙。 */
+    width: min(var(--astryx-mobile-nav-width, 320px), 85vw);
     height: 100%;
     background: var(--astryx-color-background-popover);
     color: var(--astryx-color-text-primary);
@@ -60,7 +61,8 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--astryx-spacing-2, 8px);
-    height: 48px;
+    /* 至少一条栏高，头部内容更高（标题加搜索框、放大字号折行）时随内容长高，不压到第一项。 */
+    min-height: 48px;
     padding-inline: var(--astryx-spacing-2, 8px);
     border-block-end: var(--astryx-border-width, 1px) solid var(--astryx-color-border-emphasized, #d4d4d4);
   }

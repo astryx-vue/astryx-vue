@@ -18,8 +18,14 @@ export interface NavItemProps {
   rel?: string
   /** 当前页。 @default false */
   isSelected?: boolean
-  /** 禁用后渲染成按钮，不进入 Tab 顺序。 @default false */
+  /** 禁用后渲染成按钮，默认不进入 Tab 顺序。 @default false */
   isDisabled?: boolean
+  /**
+   * 禁用后仍保留 Tab 停靠点：按钮不用原生 `disabled`，改写 `aria-disabled="true"`，
+   * 点击和回车、空格都不触发行为。侧边导航项打开它。
+   * @default false
+   */
+  isFocusableWhenDisabled?: boolean
   /** 高度和内边距。 @default 'md' */
   size?: NavItemSize
   /** 图标的 CSS class，例如 `i-carbon-home`。 */

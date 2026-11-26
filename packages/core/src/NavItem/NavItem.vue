@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import type { NavItemEmits, NavItemProps, NavItemSlots } from './types.js'
 import { computed, useAttrs, useSlots } from 'vue'
+import { hasSlotContent } from '../composables/internal/slotContent.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
+import { disabledInteractionProps } from '../utils/disabledInteraction.js'
 import { isExternalNavTarget, isNavigableHref, resolveNavRoot } from './link.js'
 import '../../styles/nav-item.css'
 
@@ -11,6 +13,7 @@ defineOptions({ name: 'AstryxNavItem', inheritAttrs: false })
 const props = withDefaults(defineProps<NavItemProps>(), {
   block: false,
   isDisabled: false,
+  isFocusableWhenDisabled: false,
   isIconOnly: false,
   isSelected: false,
   plain: false,
@@ -24,14 +27,21 @@ const attrs = useAttrs()
 const linkComponent = useLinkComponent()
 /** 触屏按压模型只标记，按压色由 nav-item.css 自己画。 */
 const { pressableProps } = usePressFeedback({ hasOverlay: false })
+const isLink = computed(() => isNavigableHref(props.href, props.isDisabled))
+/** 禁用但仍可聚焦的按钮：浏览器照常派发事件，所以调用方的处理函数一个都不能跑（焦点和失焦除外）。 */
+const keepsFocus = computed(() => props.isDisabled && props.isFocusableWhenDisabled && !isLink.value)
+const HELD_BACK = /^on(?!Focus|Blur)[A-Z]/
 function forwardedAttrs(): Record<string, unknown> {
   const forwarded = Object.fromEntries(
     Object.entries(attrs).filter(([key]) => key !== 'class' && key !== 'style'),
   )
+  if (keepsFocus.value) {
+    const kept = Object.fromEntries(Object.entries(forwarded).filter(([key]) => !HELD_BACK.test(key)))
+    return { ...kept, ...disabledInteractionProps() }
+  }
   return props.isDisabled ? forwarded : { ...pressableProps, ...forwarded }
 }
 
-const isLink = computed(() => isNavigableHref(props.href, props.isDisabled))
 const iconOnlyName = computed(() => {
   const given = attrs['aria-label']
   if (!props.isIconOnly)
@@ -49,10 +59,10 @@ const glyph = computed(() => {
   return props.iconClass
 })
 const showSelectedArtwork = computed(() =>
-  props.isSelected && (props.selectedIconClass != null || slots.selectedIcon != null),
+  props.isSelected && (props.selectedIconClass != null || hasSlotContent(slots.selectedIcon)),
 )
 const hasIcon = computed(() =>
-  Boolean(props.iconClass || props.selectedIconClass || slots.icon || slots.selectedIcon),
+  Boolean(props.iconClass || props.selectedIconClass || hasSlotContent(slots.icon) || hasSlotContent(slots.selectedIcon)),
 )
 
 const rel = computed(() => {
@@ -97,7 +107,7 @@ function onClick(event: MouseEvent): void {
     :target="isLink ? target : undefined"
     :rel="rel"
     :type="isLink ? undefined : 'button'"
-    :disabled="isLink ? undefined : isDisabled"
+    :disabled="isLink || keepsFocus ? undefined : isDisabled"
     :aria-current="isSelected ? 'page' : undefined"
     :aria-disabled="isDisabled || undefined"
     :aria-label="iconOnlyName"
@@ -122,7 +132,7 @@ function onClick(event: MouseEvent): void {
     <span v-if="!isIconOnly" class="astryx-nav-item__label">
       <slot>{{ label }}</slot>
     </span>
-    <span v-if="!isIconOnly && $slots.end" class="astryx-nav-item__end">
+    <span v-if="!isIconOnly && hasSlotContent($slots.end)" class="astryx-nav-item__end">
       <slot name="end" />
     </span>
   </component>

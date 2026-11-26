@@ -14,7 +14,7 @@ footer: false
       <tr><td><code>label</code></td><td><code>string</code></td><td>当前语言的「侧边导航」</td><td>导航地标的无障碍名称。</td></tr>
       <tr><td><code>collapsible</code></td><td><code>boolean | SideNavCollapsible</code></td><td><code>false</code></td><td>允许收成图标栏。对象可设置初始状态、内置按钮和快捷键。</td></tr>
       <tr><td><code>isCollapsed</code></td><td><code>boolean</code></td><td>-</td><td>受控收起状态，配合 <code>v-model:is-collapsed</code>。</td></tr>
-      <tr><td><code>resizable</code></td><td><code>boolean | SideNavResizable</code></td><td><code>false</code></td><td>在结束边拖宽度。对象可设置初始宽度、最小和最大宽度，以及记住宽度的 <code>autoSaveId</code>。</td></tr>
+      <tr><td><code>resizable</code></td><td><code>boolean | SideNavResizable | ResizableRegion</code></td><td><code>false</code></td><td>在结束边拖宽度。对象可设置初始宽度、最小和最大宽度，以及记住宽度的 <code>autoSaveId</code>。也可以直接传 <code>useResizable()</code> 的返回值：这个区域拥有宽度和收起状态，轨道跟着它的 <code>isCollapsed</code>，收起按钮调用它的 <code>collapse</code> 和 <code>expand</code>，<code>autoSaveId</code> 记宽度。能不能收起由区域自己的 <code>collapsible</code> 选项决定；<code>collapsible</code> 写了收起状态或与之不一致时被忽略，开发环境里会警告。</td></tr>
       <tr><td><code>handleRef</code></td><td><code>HandleRef&lt;SideNavHandle&gt;</code></td><td>-</td><td>侧栏外面的按钮可以拿到收起、展开和切换。更常见的做法是两边共用 <code>v-model:is-collapsed</code>。</td></tr>
     </tbody>
   </table>

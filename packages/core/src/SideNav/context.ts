@@ -1,4 +1,5 @@
 import type { ComputedRef, InjectionKey, Ref } from 'vue'
+import type { SideNavShell } from './railMotion.js'
 import { computed, inject, ref } from 'vue'
 
 export type SideNavRenderMode = 'default' | 'topbar' | 'drawer' | 'drawer-content'
@@ -40,3 +41,6 @@ export const sideNavDepthKey: InjectionKey<Ref<number>> = Symbol('astryx-side-na
 export function useSideNavDepth(): Ref<number> {
   return inject(sideNavDepthKey, ref(0))
 }
+
+/** AppShell 借给里面的 SideNav：让内容区跟着侧栏的收展一起动。 */
+export const sideNavShellKey: InjectionKey<SideNavShell | null> = Symbol('astryx-side-nav-shell')

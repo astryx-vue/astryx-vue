@@ -49676,19 +49676,19 @@
                 "name": "`width`",
                 "type": "`number`",
                 "default": "`320`",
-                "description": "Drawer width in pixels."
+                "description": "Drawer width in pixels. Capped at 85% of the viewport width, so a strip of the dimmed page always stays beside the drawer to tap."
               },
               {
                 "name": "`side`",
                 "type": "`'start' | 'end' | 'auto'`",
                 "default": "`'auto'`",
-                "description": "Which edge the drawer enters from."
+                "description": "Which edge the drawer enters from. `auto` picks the inline edge on the side of the element that opened it (the focused element, else the one whose `aria-controls` names the drawer), following the text direction; a centred opener, or none, gives the inline end."
               },
               {
                 "name": "`label`",
                 "type": "`string`",
                 "default": "The title, or localized “Navigation”",
-                "description": "Accessible name when there is no title."
+                "description": "Accessible name of the dialog and of its navigation landmark when there is no title. An `aria-labelledby` you pass outranks it."
               }
             ]
           },
@@ -49736,19 +49736,19 @@
                 "name": "`width`",
                 "type": "`number`",
                 "default": "`320`",
-                "description": "抽屉宽度，单位像素。"
+                "description": "抽屉宽度，单位像素。最宽不超过视口宽度的 85%，抽屉旁边总留一条可点的遮罩。"
               },
               {
                 "name": "`side`",
                 "type": "`'start' | 'end' | 'auto'`",
                 "default": "`'auto'`",
-                "description": "从哪一侧滑入。"
+                "description": "从哪一侧滑入。`auto` 按打开它的元素（有焦点的元素，否则是 `aria-controls` 指向抽屉的元素）所在的一侧、随文字方向选行内起始边或结束边；正中间的打开者、或找不到打开者，都从行内结束边出来。"
               },
               {
                 "name": "`label`",
                 "type": "`string`",
                 "default": "标题或当前语言的「导航」",
-                "description": "没有标题时作为对话框的无障碍名称。"
+                "description": "没有标题时作为对话框和它里面导航地标的无障碍名称。你传的 `aria-labelledby` 优先。"
               }
             ]
           },
@@ -50208,7 +50208,13 @@
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Renders a button that is removed from tab order."
+                "description": "Renders a button that is removed from tab order. With `isFocusableWhenDisabled` it keeps its tab stop."
+              },
+              {
+                "name": "`isFocusableWhenDisabled`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "Keeps a disabled button focusable: it carries `aria-disabled=\"true\"` instead of the native `disabled`, and neither clicks nor Enter and Space do anything. Your handlers except focus and blur do not run. `SideNavItem` turns it on."
               },
               {
                 "name": "`size`",
@@ -50334,7 +50340,13 @@
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "禁用后渲染成按钮，不进入 Tab 顺序。"
+                "description": "禁用后渲染成按钮，默认不进入 Tab 顺序。配合 `isFocusableWhenDisabled` 可保留 Tab 停靠点。"
+              },
+              {
+                "name": "`isFocusableWhenDisabled`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "让禁用的按钮仍可聚焦：不用原生 `disabled`，改写 `aria-disabled=\"true\"`，点击、回车和空格都不触发行为，除聚焦和失焦外你写的处理函数也不会运行。`SideNavItem` 已打开它。"
               },
               {
                 "name": "`size`",
@@ -52207,9 +52219,9 @@
               },
               {
                 "name": "`resizable`",
-                "type": "`boolean | SideNavResizable`",
+                "type": "`boolean | SideNavResizable | ResizableRegion`",
                 "default": "`false`",
-                "description": "Drag the trailing edge. An object can set the starting, minimum, and maximum widths, and an `autoSaveId` that remembers the width."
+                "description": "Drag the trailing edge. An object can set the starting, minimum, and maximum widths, and an `autoSaveId` that remembers the width. It also takes the return value of `useResizable()`: that region then owns the width and the collapse state, so the rail follows its `isCollapsed`, the toggle calls its `collapse` and `expand`, and its `autoSaveId` saves the width. The region's own `collapsible` option decides whether the rail collapses; a `collapsible` that sets a collapsed state or disagrees is ignored, with a warning in development."
               },
               {
                 "name": "`handleRef`",
@@ -52396,9 +52408,9 @@
               },
               {
                 "name": "`resizable`",
-                "type": "`boolean | SideNavResizable`",
+                "type": "`boolean | SideNavResizable | ResizableRegion`",
                 "default": "`false`",
-                "description": "在结束边拖宽度。对象可设置初始宽度、最小和最大宽度，以及记住宽度的 `autoSaveId`。"
+                "description": "在结束边拖宽度。对象可设置初始宽度、最小和最大宽度，以及记住宽度的 `autoSaveId`。也可以直接传 `useResizable()` 的返回值：这个区域拥有宽度和收起状态，轨道跟着它的 `isCollapsed`，收起按钮调用它的 `collapse` 和 `expand`，`autoSaveId` 记宽度。能不能收起由区域自己的 `collapsible` 选项决定；`collapsible` 写了收起状态或与之不一致时被忽略，开发环境里会警告。"
               },
               {
                 "name": "`handleRef`",
@@ -53017,7 +53029,7 @@
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "禁用这一项。会挡掉默认行为，也不触发事件。"
+                "description": "禁用这一项。它仍可聚焦（`aria-disabled=\"true\"`，保留 Tab 停靠点），但会挡掉默认行为、不触发事件，除了聚焦和失焦，你写的处理函数也都不会运行。"
               },
               {
                 "name": "`size`",
@@ -53051,7 +53063,7 @@
           },
           {
             "heading": "Slots",
-            "text": "- `default`: child items. A row with children folds them into a group.\n- `icon`: icon element before the label. An alternative to `iconClass`.\n- `selectedIcon`: icon element used while the item is selected. Falls back to `icon`.\n- `end`: content at the trailing edge of the row, such as a badge or a count."
+            "text": "- `default`: child items. A row with children folds them into a group. Child rows span the full width of the list like top-level rows; only their content is indented, one step per level.\n- `icon`: icon element before the label. An alternative to `iconClass`.\n- `selectedIcon`: icon element used while the item is selected. Falls back to `icon`.\n- `end`: content at the trailing edge of the row, such as a badge or a count."
           }
         ],
         "zh": [
@@ -53061,7 +53073,7 @@
           },
           {
             "heading": "插槽",
-            "text": "- `default`：下级导航项。有下级的行会把它收成一个分组。\n- `icon`：文字前面的图标元素，和 `iconClass` 二选一。\n- `selectedIcon`：选中时的图标元素，不写就用 `icon`。\n- `end`：这一行末尾的内容，例如徽标或计数。"
+            "text": "- `default`：下级导航项。有下级的行会把它收成一个分组。下级行和顶层行一样占满列表宽度，只有内容按层级往里缩进，每层一步。\n- `icon`：文字前面的图标元素，和 `iconClass` 二选一。\n- `selectedIcon`：选中时的图标元素，不写就用 `icon`。\n- `end`：这一行末尾的内容，例如徽标或计数。"
           }
         ]
       },
@@ -53481,7 +53493,7 @@
                 "name": "`collapsible`",
                 "type": "`SideNavControlledCollapsible`",
                 "default": "—",
-                "description": "受控的 `{ isCollapsed, onCollapsedChange }` 配置。按钮渲染在 `SideNav` 外面、读不到侧栏上下文时用它，并把同一个对象交给 `SideNav`。它优先于 `isCollapsed`。"
+                "description": "和 `SideNav` 收到的同一份受控 `collapsible` 配置，包含它的全部键（`isCollapsed` 和 `onCollapsedChange` 必填；`defaultIsCollapsed`、`hasButton`、`buttonLabel`、`hotkey` 可选）。按钮渲染在 `SideNav` 外面、读不到侧栏上下文时用它，并把同一个对象交给 `SideNav`。它优先于 `isCollapsed`。"
               },
               {
                 "name": "`isCollapsed`",

@@ -14,7 +14,9 @@ import { layoutMessages } from '../locale/messages/layout.js'
 import { navMessages } from '../locale/messages/nav.js'
 import MobileNav from '../MobileNav/MobileNav.vue'
 import MobileNavToggle from '../MobileNav/MobileNavToggle.vue'
+import { sideNavShellKey } from '../SideNav/context.js'
 import SideNavRenderMode from '../SideNav/SideNavRenderMode.vue'
+import { useAppShellRail } from './useAppShellRail.js'
 import '../../styles/app-shell.css'
 
 defineOptions({
@@ -159,6 +161,16 @@ watch(
   { flush: 'post', immediate: true },
 )
 
+// 内联侧栏收起、展开时，内容区跟着侧栏一起动（见 useAppShellRail）。
+const rail = useTemplateRef<{ element: HTMLElement | null }>('rail')
+const backdrop = useTemplateRef<HTMLElement>('backdrop')
+provide(sideNavShellKey, useAppShellRail({
+  root: computed(() => root.value),
+  rail: computed(() => rail.value?.element ?? null),
+  main: computed(() => content.value?.element ?? null),
+  backdrop: computed(() => backdrop.value),
+}))
+
 function focusMain() {
   const main = root.value?.ownerDocument.getElementById(mainId)
   if (main == null)
@@ -210,12 +222,12 @@ function onMainFocusOut(event: FocusEvent) {
         </div>
       </template>
       <template v-if="showSideInline" #start>
-        <LayoutPanel class="astryx-app-shell__sidenav" :padding="0" :has-divider="variant === 'section'" :is-scrollable="height === 'fill'" :data-variant="variant">
+        <LayoutPanel ref="rail" class="astryx-app-shell__sidenav" :padding="0" :has-divider="variant === 'section'" :is-scrollable="height === 'fill'" :data-variant="variant">
           <slot name="sideNav" />
         </LayoutPanel>
       </template>
       <div class="astryx-app-shell__main" :data-elevated="elevate || undefined">
-        <div v-if="elevate" class="astryx-app-shell__backdrop" />
+        <div v-if="elevate" ref="backdrop" class="astryx-app-shell__backdrop" />
         <LayoutContent
           :id="mainId"
           ref="content"
