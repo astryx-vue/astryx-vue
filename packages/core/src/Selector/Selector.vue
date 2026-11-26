@@ -5,6 +5,7 @@ import BottomSheet from '../BottomSheet/BottomSheet.vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import { useBusyAnnouncement } from '../composables/internal/busyAnnouncement.js'
+import { useKeyboardHighlight } from '../composables/internal/useKeyboardHighlight.js'
 import { useAnnounce } from '../composables/useAnnounce.js'
 import { useCombobox } from '../composables/useCombobox.js'
 import { useDismiss } from '../composables/useDismiss.js'
@@ -151,6 +152,7 @@ const combobox = useCombobox({
     }
   },
 })
+const keyboardHighlight = useKeyboardHighlight(combobox.activeIndex)
 
 const sheetOpen = computed({
   get: () => isSheet.value && combobox.isOpen.value,
@@ -445,6 +447,7 @@ onMounted(syncAnchorWidth)
         :class="[{ 'is-sheet': isSheet, 'is-input': triggerVariant === 'input' }, `size-${size}`]"
         :data-placement="isSheet ? undefined : position.placement"
         :style="listboxStyle"
+        :data-keyboard-highlight="keyboardHighlight.isKeyboardHighlight.value || undefined"
         tabindex="-1"
       >
         <SelectorPanel

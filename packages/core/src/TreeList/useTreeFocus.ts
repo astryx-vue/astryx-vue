@@ -61,6 +61,8 @@ export function useTreeFocus(options: UseTreeFocusOptions): {
   handleFocus: (event?: FocusEvent) => void
   focusFirst: () => void
   focusLast: () => void
+  /** 把焦点和 Tab 停靠点挪到指定的树节点。 */
+  focusRow: (item: HTMLElement) => void
 } {
   const treeRef = ref<HTMLElement | null>(null)
   const typeahead = { buffer: '', timer: undefined as ReturnType<typeof setTimeout> | undefined }
@@ -273,5 +275,5 @@ export function useTreeFocus(options: UseTreeFocusOptions): {
     focusEnabledFrom(list, list.length - 1, -1)
   }
 
-  return { treeRef: treeRef as Ref<HTMLElement | null>, focusFirst, focusLast, handleFocus, handleKeyDown }
+  return { treeRef: treeRef as Ref<HTMLElement | null>, focusFirst, focusLast, focusRow: focusItem, handleFocus, handleKeyDown }
 }

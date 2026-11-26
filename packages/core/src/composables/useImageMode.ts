@@ -1,5 +1,5 @@
 import type { MaybeRefOrGetter, Ref } from 'vue'
-import { onScopeDispose, ref, toValue, watch } from 'vue'
+import { computed, onScopeDispose, ref, toValue, watch } from 'vue'
 
 export interface ImageSampleRegion {
   /** 左边缘，0 是左，1 是右。 */
@@ -94,7 +94,15 @@ export function useImageMode(
     }
   }
 
-  watch(() => toValue(src), (url) => {
+  // 依赖的是区域和阈值的数值，不是对象本身：调用方常把区域直接写在调用处，每次求值都是新对象，
+  // 按身份比较会让同一张图被反复下载、反复采样。
+  const sampleKey = computed(() => {
+    const { region, threshold } = toValue(options)
+    return [toValue(src), region?.x, region?.y, region?.width, region?.height, threshold].join('|')
+  })
+
+  watch(sampleKey, () => {
+    const url = toValue(src)
     if (!url) {
       request += 1
       mode.value = toValue(options).fallback ?? null

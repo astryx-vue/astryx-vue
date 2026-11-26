@@ -75,8 +75,23 @@ function currentExpanded(id: string, items: TreeListItemData[]): boolean {
   return id in expanded ? expanded[id] === true : seeded
 }
 
+/** 焦点在要收起的分支里面时，先把焦点挪到这一行：分支收起会把里面的节点从页面上拿掉，焦点会掉到 body。 */
+function keepFocusOnCollapsingRow(id: string): void {
+  const tree = treeRef.value
+  const active = typeof document === 'undefined' ? null : document.activeElement
+  if (tree == null || active == null || !tree.contains(active))
+    return
+  const row = [...tree.querySelectorAll<HTMLElement>('[role="treeitem"]')].find(item => item.dataset.treeId === id)
+  const group = row?.querySelector(':scope > [role="group"]')
+  if (row != null && group?.contains(active) === true)
+    focusRow(row)
+}
+
 function toggle(id: string) {
-  expanded[id] = !currentExpanded(id, props.items)
+  const collapsing = currentExpanded(id, props.items)
+  if (collapsing)
+    keepFocusOnCollapsingRow(id)
+  expanded[id] = !collapsing
 }
 
 const hasExpandable = computed(() => {
@@ -109,7 +124,7 @@ function initialTabbable(items: TreeListItemData[]): string | undefined {
 
 const tabbableId = computed(() => initialTabbable(props.items))
 
-const { treeRef, handleKeyDown, handleFocus } = useTreeFocus({
+const { treeRef, focusRow, handleKeyDown, handleFocus } = useTreeFocus({
   hasRovingTabIndex: true,
   matchLabelledBy: true,
   onToggleExpand: toggle,
