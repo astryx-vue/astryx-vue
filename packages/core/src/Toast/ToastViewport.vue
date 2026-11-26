@@ -2,10 +2,11 @@
 import type { CSSProperties } from 'vue'
 import type { ResolvedLayerInset } from '../LayerProvider/context.js'
 import type { ToastDismissReason, ToastPlacement } from './types.js'
-import { computed, onMounted, reactive, ref, watch } from 'vue'
+import { computed, onMounted, provide, reactive, ref, watch } from 'vue'
 import { useActiveModalOutlet, whenModalSettled } from '../layer/modalOutlet.js'
 import { resetLayerScopedContext } from '../layer/scopedProvide.js'
 import { useLayerConfig } from '../LayerProvider/context.js'
+import { TOAST_VIEWPORT_KEY } from './context.js'
 import { readToastMotionDurationMs } from './motionDuration.js'
 import { toastStore } from './store.js'
 import Toast from './Toast.vue'
@@ -14,6 +15,8 @@ import { createToastFocusHandoff } from './toastFocus.js'
 const props = defineProps<{
   placement?: ToastPlacement
 }>()
+
+provide(TOAST_VIEWPORT_KEY, true)
 
 // toast 内容是这一层的成员边界：外面组里的尺寸、禁用、选中值都不再算数。
 resetLayerScopedContext()

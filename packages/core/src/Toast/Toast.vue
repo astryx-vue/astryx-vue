@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import type { ToastContentScope, ToastDismissReason, ToastOptions, ToastSlots } from './types.js'
 import type { ToastGestureDirection } from './useToastGesture.js'
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, inject, onMounted, onUnmounted, ref, watch } from 'vue'
 import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
 import { useComponentMessages } from '../locale/context.js'
 import { toastMessages } from '../locale/messages/toast.js'
 import MediaTheme from '../Theme/MediaTheme.vue'
 import { useTheme } from '../Theme/useTheme.js'
+import { TOAST_VIEWPORT_KEY } from './context.js'
 import { resolveAutoHide, resolveAutoHideDuration } from './options.js'
 import { useToastGesture } from './useToastGesture.js'
 
@@ -57,8 +58,10 @@ const timer = ref<ReturnType<typeof setTimeout> | null>(null)
 const startTime = ref<number | null>(null)
 
 const isAlert = computed(() => props.type === 'error')
-const role = computed(() => isAlert.value ? 'alert' : 'status')
-const ariaLive = computed(() => isAlert.value ? 'assertive' : 'polite')
+// 只有视口里的卡片是 live 区域；单独渲染的 Toast 不带 live 角色。
+const isInViewport = inject(TOAST_VIEWPORT_KEY, false)
+const role = computed(() => isInViewport ? (isAlert.value ? 'alert' : 'status') : undefined)
+const ariaLive = computed(() => isInViewport ? (isAlert.value ? 'assertive' : 'polite') : undefined)
 const messages = useComponentMessages({ toast: toastMessages })
 const theme = useTheme()
 const mediaFallback = computed(() => isAlert.value || theme.mode.value === 'light' ? 'dark' : 'light')
