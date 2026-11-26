@@ -8,6 +8,7 @@ import DropdownMenu from '../DropdownMenu/DropdownMenu.vue'
 import Icon from '../Icon/Icon.vue'
 import { readLayerScoped } from '../layer/scopedProvide.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
+import { useCloseMobileDrawer } from '../MobileNav/closeOnActivate.js'
 import { isNavigableHref } from '../NavItem/link.js'
 import { breadcrumbContextKey } from './context.js'
 
@@ -28,6 +29,7 @@ const slots = defineSlots<{
 }>()
 
 const context = readLayerScoped(breadcrumbContextKey)
+const closeMobileDrawer = useCloseMobileDrawer()
 const linkComponent = useLinkComponent()
 const itemId = useId()
 const variant = computed(() => context?.variant.value ?? 'default')
@@ -74,6 +76,7 @@ function handleClick(event: MouseEvent) {
     return
   }
   emit('click', event)
+  closeMobileDrawer()
 }
 </script>
 

@@ -9,7 +9,8 @@ function ends(props: Record<string, unknown>): [string | undefined, string | und
   const last = wrapper.findAll('[data-last="last"]')
   expect(first).toHaveLength(1)
   expect(last).toHaveLength(1)
-  return [first[0]!.classes().find(name => name !== 'astryx-pagination-button'), last[0]!.classes().find(name => name !== 'astryx-pagination-button')]
+  const named = (classes: string[]) => classes.find(name => name !== 'astryx-pagination-button' && name !== 'astryx-pagination-item')
+  return [named(first[0]!.classes()), named(last[0]!.classes())]
 }
 
 describe('pagination 这一排控件的两头', () => {

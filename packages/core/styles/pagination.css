@@ -97,7 +97,7 @@
   .astryx-pagination--sm .astryx-pagination-button,
   .astryx-pagination--sm .astryx-pagination-page {
     min-width: var(--astryx-size-element-sm, 28px);
-    height: var(--astryx-size-element-sm, 28px);
+    min-height: var(--astryx-size-element-sm, 28px);
     font-size: var(--astryx-text-supporting-size, 0.75rem);
     line-height: var(--astryx-text-supporting-leading, 1.6667);
   }
@@ -117,7 +117,7 @@
     justify-content: center;
     gap: var(--astryx-spacing-1);
     min-width: var(--astryx-size-element-md);
-    height: var(--astryx-size-element-md);
+    min-height: var(--astryx-size-element-md);
     padding: 0 var(--astryx-spacing-2);
     border: 0;
     border-radius: var(--astryx-radius-element);

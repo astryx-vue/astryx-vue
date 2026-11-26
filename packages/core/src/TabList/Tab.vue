@@ -160,5 +160,6 @@ watch(() => props.disabled, (disabled) => {
     >
       <slot name="endContent" />
     </span>
+    <span v-if="isSelected" class="astryx-tab__indicator astryx-tab-indicator" aria-hidden="true" />
   </component>
 </template>

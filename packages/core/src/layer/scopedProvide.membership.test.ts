@@ -41,6 +41,8 @@ const RAW_OK = new Set([
   'AvatarStatusLabelContext',
   'navMenuCloseKey',
   'navMenuFocusKey',
+  'navMenuLabelKey',
+  'navMenuPickKey',
   'dropdownMenuRadioGroupKey',
   'itemDescriptionContextKey',
 ])

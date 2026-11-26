@@ -5,7 +5,7 @@ import { useListFocus } from '../composables/useListFocus.js'
 import { useMenuPress } from '../composables/useMenuPress.js'
 import { useOverflow } from '../composables/useOverflow.js'
 import { useTypeahead } from '../composables/useTypeahead.js'
-import { navMenuCloseKey, navMenuFocusKey, navMenuKey } from './context.js'
+import { navMenuCloseKey, navMenuFocusKey, navMenuKey, navMenuLabelKey } from './context.js'
 import '../../styles/nav-menu.css'
 
 defineOptions({ name: 'AstryxNavHeadingMenu', inheritAttrs: false })
@@ -19,6 +19,7 @@ const emit = defineEmits<NavHeadingMenuEmits>()
 
 const closeMenu = inject(navMenuCloseKey, undefined)
 const injectedFocus = inject(navMenuFocusKey, ref(null))
+const injectedLabel = inject(navMenuLabelKey, ref(undefined))
 const size = computed(() => props.size)
 const requestedFocus = computed(() => props.focusRequest ?? injectedFocus.value)
 
@@ -151,7 +152,7 @@ provide(navMenuKey, {
     :class="`astryx-nav-menu--${size}`"
     role="menu"
     tabindex="-1"
-    :aria-label="label"
+    :aria-label="label ?? injectedLabel"
     :data-overflow="hasOverflow || undefined"
     :style="minWidthStyle"
     data-astryx-menu-press=""

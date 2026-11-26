@@ -27,9 +27,10 @@
       color var(--astryx-duration-fast-max) var(--astryx-ease-standard);
   }
 
-  .astryx-nav-item--sm { height: var(--astryx-size-element-sm, 28px); padding-inline: var(--astryx-spacing-1, 4px); }
-  .astryx-nav-item--md { height: var(--astryx-size-element-md, 32px); }
-  .astryx-nav-item--lg { height: var(--astryx-size-element-lg, 36px); }
+  /* 最小高度而不是固定高度：行随更大的文字尺寸长高，标签不会跑出行外。 */
+  .astryx-nav-item--sm { min-height: var(--astryx-size-element-sm, 28px); padding-inline: var(--astryx-spacing-1, 4px); }
+  .astryx-nav-item--md { min-height: var(--astryx-size-element-md, 32px); }
+  .astryx-nav-item--lg { min-height: var(--astryx-size-element-lg, 36px); }
 
   .astryx-nav-item--block { width: 100%; }
 
@@ -41,6 +42,11 @@
 
   .astryx-nav-item--sm.astryx-nav-item--icon-only { width: 28px; }
   .astryx-nav-item--lg.astryx-nav-item--icon-only { width: 36px; }
+
+  /* 只有图标的行（收起的轨道）里没有会长高的文字，保持固定的方块。 */
+  .astryx-nav-item--icon-only { height: var(--astryx-size-element-md, 32px); }
+  .astryx-nav-item--sm.astryx-nav-item--icon-only { height: var(--astryx-size-element-sm, 28px); }
+  .astryx-nav-item--lg.astryx-nav-item--icon-only { height: var(--astryx-size-element-lg, 36px); }
 
   .astryx-nav-item--plain {
     width: auto;

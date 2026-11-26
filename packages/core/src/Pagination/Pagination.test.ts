@@ -254,7 +254,10 @@ describe('pagination', () => {
 
     const dots = wrapper.findAll('.astryx-pagination-dot')
     expect(dots).toHaveLength(4)
-    expect(dots[1]!.attributes('aria-current')).toBe('page')
+    expect(wrapper.get('.astryx-pagination-dots').attributes('role')).toBe('radiogroup')
+    expect(dots.map(dot => dot.attributes('role'))).toEqual(['radio', 'radio', 'radio', 'radio'])
+    expect(dots.map(dot => dot.attributes('aria-checked'))).toEqual(['false', 'true', 'false', 'false'])
+    expect(dots[1]!.attributes('aria-current')).toBeUndefined()
     expect(wrapper.find('.astryx-pagination-pages').exists()).toBe(false)
 
     await dots[2]!.trigger('click')

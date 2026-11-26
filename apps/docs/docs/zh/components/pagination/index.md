@@ -42,6 +42,8 @@ const total = ref(100)
 | <Badge variant="success">推荐</Badge> | 在表格、列表等数据展示场景使用分页控制。 |
 | <Badge variant="success">推荐</Badge> | 数据量大时提供页码跳转和每页数量选择功能。 |
 | <Badge variant="success">推荐</Badge> | 显示总条目数和当前范围，让用户了解数据规模。 |
+| <Badge variant="success">推荐</Badge> | 每一页都有自己的地址时传 `getPageHref`，这样页面可以在新标签页打开、可以复制地址。 |
+| <Badge variant="error">避免</Badge> | 设了 `getPageHref` 还在 `change` 里导航。链接会自己导航，`change` 只用来更新状态或上报统计。 |
 | <Badge variant="error">避免</Badge> | 在窄屏上铺一长排页码按钮。页码很多时让控件保持紧凑。 |
 
 ## 示例

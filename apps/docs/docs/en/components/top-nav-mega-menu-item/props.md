@@ -14,6 +14,7 @@ footer: false
 <tr><td><code>href</code></td><td><code>string</code></td><td>—</td><td>URL to navigate to when clicked. Without it the item renders as a button.</td></tr>
 <tr><td><code>as</code></td><td><code>NavLinkComponent</code></td><td>—</td><td>Custom component to render instead of <code>&lt;a&gt;</code> for link items. Overrides the provider-level default set by <code>LinkProvider</code>.</td></tr>
 <tr><td><code>iconClass</code></td><td><code>string</code></td><td>—</td><td>CSS icon class drawn in the leading icon box. The <code>icon</code> slot takes precedence.</td></tr>
+<tr><td><code>hasCloseOnSelect</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Closes the panel after the item is chosen with the keyboard, a finger or a pen (a mouse or trackpad pick leaves it open; the panel closes when the pointer leaves). Set it to <code>false</code> to keep the panel open, for an action that reports its result on the item.</td></tr>
 </tbody></table>
 </div>
 

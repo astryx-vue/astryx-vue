@@ -15,8 +15,12 @@ import Dialog from '../Dialog/Dialog.vue'
 import Kbd from '../Kbd/Kbd.vue'
 import LayoutFooter from '../Layout/LayoutFooter.vue'
 import LayoutHeader from '../Layout/LayoutHeader.vue'
+import Pagination from '../Pagination/Pagination.vue'
+import Tab from '../TabList/Tab.vue'
+import TabList from '../TabList/TabList.vue'
 import ToggleButton from '../ToggleButton/ToggleButton.vue'
 import ToggleButtonGroup from '../ToggleButton/ToggleButtonGroup.vue'
+import TopNav from '../TopNav/TopNav.vue'
 import { targetSelectors } from './componentStyles.js'
 
 afterEach(() => {
@@ -131,5 +135,28 @@ describe('typeahead-popup and the link hover color', () => {
     const metadata = readFileSync(resolve(core, 'styles/metadata-list.css'), 'utf8')
     expect(table).toMatch(/\.astryx-table__sort-rank \{\s*color: var\(--astryx-color-text-accent/)
     expect(metadata).toMatch(/\.astryx-metadata-list__toggle \{[^}]*color: var\(--astryx-color-text-accent/)
+  })
+})
+
+describe('navigation parts', () => {
+  it('pagination: control row, cells, current cell and ellipsis have their own targets', () => {
+    const wrapper = mount(Pagination, { props: { page: 5, totalPages: 20, variant: 'pages' } })
+    expect(wrapper.find('.astryx-pagination-list').exists()).toBe(true)
+    expect(wrapper.find('.astryx-pagination-item[data-selected="selected"]').exists()).toBe(true)
+    expect(wrapper.find('.astryx-pagination-ellipsis').exists()).toBe(true)
+    expect(targetSelectors('pagination-list', 'variant:pages')).toContain('.astryx-pagination-list[data-variant="pages"]')
+    expect(targetSelectors('pagination-item', 'selected')).toContain('.astryx-pagination-item[data-selected="selected"]')
+  })
+
+  it('tab-indicator is the selected tab\'s underline element', () => {
+    const wrapper = mount(TabList, { props: { value: 'a' }, slots: { default: () => [h(Tab, { value: 'a' }, () => 'A')] } })
+    expect(wrapper.find('.astryx-tab .astryx-tab-indicator').exists()).toBe(true)
+    expect(targetSelectors('tab-indicator', 'base')).toContain('.astryx-tab-indicator')
+  })
+
+  it('top-nav reflects mode on the phone bar', () => {
+    expect(mount(TopNav).get('nav').attributes('data-mode')).toBeUndefined()
+    expect(targetSelectors('top-nav', 'mode:mobile-bar')).toContain('.astryx-top-nav[data-mode="mobile-bar"]')
+    expect(targetSelectors('top-nav-item', 'mode:drawer')).toContain('.astryx-top-nav-item[data-mode="drawer"]')
   })
 })

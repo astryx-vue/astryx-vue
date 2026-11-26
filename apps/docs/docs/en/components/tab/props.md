@@ -24,4 +24,4 @@ footer: false
 - `default`: the label text. Falls back to the `label` prop.
 - `icon`: icon shown while the tab is not selected.
 - `selectedIcon`: icon shown while the tab is selected. Falls back to `icon`.
-- `endContent`: content after the label, such as a badge count or a status dot.
+- `endContent`: content after the label, such as a badge count or a status dot. The tab is one button, so put only non-interactive content here: no button, link, or other focusable control. To explain a tab, anchor a `Tooltip` on the tab element through its `anchor` prop, render it after the `TabList`, and put a decorative info icon here.

@@ -22,8 +22,10 @@ interface ModalityStore {
    * 触屏判断读这一项，不把打字当成「换成键盘操作了」。旧版本建的存储里没有它。
    */
   isTextEntrySincePointer?: boolean
+  /** 上一次指针按下是什么设备：mouse、touch、pen。 */
+  lastPointerType?: string
   isListening: boolean
-  onPointerDown: () => void
+  onPointerDown: (event: PointerEvent) => void
   onKeyDown: (event: KeyboardEvent) => void
 }
 
@@ -42,8 +44,9 @@ function getStore(doc: Document): ModalityStore {
     modality: 'keyboard',
     isTextEntrySincePointer: false,
     isListening: false,
-    onPointerDown: () => {
+    onPointerDown: (event) => {
       store.modality = 'pointer'
+      store.lastPointerType = event.pointerType
       store.isTextEntrySincePointer = true
     },
     onKeyDown: (event) => {
@@ -95,6 +98,11 @@ export function trackInteractionModality(doc?: Document): void {
 /** 上一次的交互模态。没有 document 时答键盘。 */
 export function getInteractionModality(): InteractionModality {
   return typeof document === 'undefined' ? 'keyboard' : getStore(document).modality
+}
+
+/** 上一次指针按下的设备类型（mouse、touch、pen）；还没有指针输入时为 undefined。 */
+export function getLastPointerType(): string | undefined {
+  return typeof document === 'undefined' ? undefined : getStore(document).lastPointerType
 }
 
 /** 上一次是不是键盘。顺手确保跟踪已经装上。 */

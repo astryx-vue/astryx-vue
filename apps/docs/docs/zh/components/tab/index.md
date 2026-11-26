@@ -35,6 +35,67 @@ const value = ref('inbox')
 </template>
 ```
 
+要说明一个标签，把 `Tooltip` 锚定在标签元素上，并渲染在 `TabList` 之后。标签本身是一个按钮，所以 `endContent` 只放装饰：这里的信息图标不是第二个控件。
+
+```vue
+<script setup lang="ts">
+import { Icon } from '@astryx-vue/core/Icon'
+import { Tab, TabList } from '@astryx-vue/core/TabList'
+import { Tooltip } from '@astryx-vue/core/Tooltip'
+import { computed, ref } from 'vue'
+
+const value = ref('general')
+const generalTab = ref<InstanceType<typeof Tab> | null>(null)
+const generalEl = computed(() => (generalTab.value?.$el as HTMLElement | undefined) ?? null)
+</script>
+
+<template>
+  <TabList v-model:value="value" role="tablist" aria-label="Settings">
+    <Tab ref="generalTab" value="general" panel-id="panel-general">
+      General
+      <template #endContent>
+        <Icon icon="info" size="sm" />
+      </template>
+    </Tab>
+    <Tab value="advanced" panel-id="panel-advanced">
+      Advanced
+    </Tab>
+  </TabList>
+  <Tooltip content="Name, language, and time zone for this workspace." :anchor="generalEl" />
+</template>
+```
+
+### 整个标签宽度的下划线
+
+选中标签的下划线默认停在标签的左右内边距处。编辑器风格的标签条可以在嵌套的 `Theme` 里改 `tab-indicator` 部位，让它从标签的一边拉到另一边。只有这一条标签条会变，其他 `TabList` 仍用应用主题的下划线。`insetInline` 不是这个部位保证提供的属性，跨版本只能当尽力而为的覆盖。
+
+```vue
+<script setup lang="ts">
+import { Tab, TabList } from '@astryx-vue/core/TabList'
+import { defineTheme, Theme } from '@astryx-vue/core/Theme'
+import { ref } from 'vue'
+
+const fullWidthIndicator = defineTheme({
+  name: 'full-width-tab-indicator',
+  components: { 'tab-indicator': { base: { insetInline: '0' } } },
+})
+const value = ref('app')
+</script>
+
+<template>
+  <Theme :theme="fullWidthIndicator">
+    <TabList v-model:value="value" aria-label="Open files" size="sm" has-divider>
+      <Tab value="app">
+        App.vue
+      </Tab>
+      <Tab value="styles">
+        styles.css
+      </Tab>
+    </TabList>
+  </Theme>
+</template>
+```
+
 ## 示例
 
 常见的用法和不同的状态。

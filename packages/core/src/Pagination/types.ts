@@ -1,3 +1,5 @@
+import type { NavLinkComponent } from '../NavItem/types.js'
+
 /** 上一页和下一页之间显示什么。 */
 export type PaginationVariant = 'pages' | 'count' | 'compact' | 'dots' | 'input' | 'none'
 
@@ -48,6 +50,18 @@ export interface PaginationProps {
    * @default `input` 为 true，`compact` 为 false
    */
   hasFirstLast?: boolean | null
+  /**
+   * 返回某一页的地址。设置后，页码、上一页、下一页、首页和末页控件渲染成指向该地址的链接，
+   * 页面可以在新标签页打开、可以复制地址，脚本加载前也能用。激活链接时仍会触发 `change`，
+   * 用它更新状态或上报统计，不要在里面再导航，链接会自己导航。
+   * 设置了 `pageSize`（或 `pageSizeOptions`）时，第二个参数是当前每页条数。
+   * 圆点、页码输入框和每页条数选择器不是链接。选每页条数时，请在 `pageSizeChange` 里
+   * 导航到新条数下第 1 页的地址。游标分页时，把前一页和后一页映射成游标的地址。
+   * 地址遵循共享的导航规则，不安全的地址不会写进 `href`，那个控件的点击也不换页。
+   */
+  getPageHref?: (page: number, pageSize?: number) => string
+  /** 给 `getPageHref` 生成的链接用的链接组件，例如路由链接。覆盖 `LinkProvider` 的默认值。 */
+  as?: NavLinkComponent
   /**
    * 页码已经提交之后再跑的动作。控件会在它结束前标成忙碌，失败也不会把页码改回去。
    */

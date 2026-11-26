@@ -10,7 +10,7 @@ import { useComponentMessages } from '../locale/context.js'
 import { navMessages } from '../locale/messages/nav.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { resolveAutoSide } from './autoSide.js'
-import { mobileNavKey } from './context.js'
+import { mobileNavCloseKey, mobileNavKey } from './context.js'
 import { useMobileNavLayer } from './useMobileNavLayer.js'
 import '../../styles/mobile-nav.css'
 
@@ -56,6 +56,7 @@ useScrollLock(isOpen)
 useRestoreFocus({ isEnabled: computed(() => true), shouldRestore: trapEnabled })
 useFocusTrap({ container: dialogRef, isEnabled: trapEnabled })
 provide(mobileNavKey, true)
+provide(mobileNavCloseKey, () => setOpen(false))
 
 const layer = useMobileNavLayer({
   getContainer: () => dialogRef.value,
