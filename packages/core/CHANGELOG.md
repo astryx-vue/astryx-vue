@@ -1,5 +1,11 @@
 # @astryx-vue/core
 
+## 0.9.1
+
+### Patch Changes
+
+- [#523](https://github.com/astryx-vue/astryx-vue/pull/523) [`bd3e926`](https://github.com/astryx-vue/astryx-vue/commit/bd3e92607249ed99ec025c868c6e33690fb2af24) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `useClipboard`、`useTypeahead` 的类型说明注释改为只描述现状。
+
 ## 0.9.0
 
 ### Minor Changes
