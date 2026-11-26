@@ -46,7 +46,7 @@ const galleryImageClip: CSSProperties = {
           <HStack :gap="3">
             <Button label="Get started" variant="primary" href="#">
               <template #end>
-                <Icon name="heroicons:arrow-right-20-solid" size="sm" color="inherit" />
+                <Icon class="mirror-rtl" name="heroicons:arrow-right-20-solid" size="sm" color="inherit" />
               </template>
             </Button>
             <Button label="Learn more" variant="secondary" href="#" />
@@ -55,7 +55,7 @@ const galleryImageClip: CSSProperties = {
         <Grid :columns="{ minWidth: 200, repeat: 'fit' }" :gap="4">
           <AspectRatio
             v-for="image in IMAGES"
-            :key="image.src"
+            :key="image.alt"
             :ratio="4 / 5"
             :style="galleryImageClip"
           >
@@ -66,3 +66,9 @@ const galleryImageClip: CSSProperties = {
     </LayoutContent>
   </Layout>
 </template>
+
+<style scoped>
+:global([dir='rtl'] .mirror-rtl) {
+  transform: scaleX(-1);
+}
+</style>

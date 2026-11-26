@@ -82,9 +82,9 @@ const SPARK_LEN: Record<TimeWindow, number> = { '1h': 60, '1d': 90, '7d': 120 }
 
 /** 迷你折线的颜色用原版的「文字前景」那一档（浅色深绿 / 深色浅绿），站点里没有对应变量，所以直接写 light-dark。 */
 const STATUS_STROKE: Record<HealthStatus, string> = {
-  healthy: 'light-dark(#09441F, #A5F690)',
-  warning: 'light-dark(#753F07, #FBCE03)',
-  critical: 'light-dark(#7B0210, #FFB2B8)',
+  healthy: 'var(--astryx-color-text-success)',
+  warning: 'var(--astryx-color-text-warning)',
+  critical: 'var(--astryx-color-text-error)',
 }
 
 type AlertState = 'firing' | 'acknowledged' | 'resolved'
