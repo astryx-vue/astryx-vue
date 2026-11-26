@@ -1,5 +1,17 @@
 # @astryx-vue/core
 
+## 0.16.5
+
+### Patch Changes
+
+- [#565](https://github.com/astryx-vue/astryx-vue/pull/565) [`d34dfc2`](https://github.com/astryx-vue/astryx-vue/commit/d34dfc261958b9f9bcda78a702b989f268c34159) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 浮层关闭归还焦点时不再滚动页面；对话框里贴边的表格和列表行取对话框的圆角，全屏对话框保持直角。
+
+- [#565](https://github.com/astryx-vue/astryx-vue/pull/565) [`30f0c5b`](https://github.com/astryx-vue/astryx-vue/commit/30f0c5b3819f8ddb1143669f75f9cc40193ffb98) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Dialog：初始焦点跳过藏在 hidden、inert 里和被禁用的请求，顺延给下一个，嵌套子对话框里的请求留给子对话框；第二个文档里的对话框按触发器所在窗口算进场方向。DialogHeader 的标题行罩得住标题和控件。Lightbox 里冒上来的 cancel（取消文件选择器）不再关闭它。文档补上 AlertDialog 是对话框嵌套的唯一例外。
+
+- [#566](https://github.com/astryx-vue/astryx-vue/pull/566) [`8f755e5`](https://github.com/astryx-vue/astryx-vue/commit/8f755e542a881dc8042ed6d87501cd969fa6587d) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - HoverCard 与 Tooltip：笔落下时取消挂着的悬停打开，不再在按下期间打开又被这一下轻点关掉；HoverCard 的 focusTrigger="auto" 在焦点到达时才判断（漫游 tabindex 的成员变成 Tab 停靠点后会打开），受控 isOpen 为 false 时焦点也不再打开卡片；触发元素被子组件悄悄换掉后会重新接线；文本触发器画共用的焦点环。
+
+- [#564](https://github.com/astryx-vue/astryx-vue/pull/564) [`773b43a`](https://github.com/astryx-vue/astryx-vue/commit/773b43aa2fceb2787a8cee743806249c7cd998f8) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Toast：悬停、焦点、窗口失焦各自按住自动关闭的计时，最后一个放开才继续；窗口在后台时弹出的提示从暂停开始；同一个 uniqueID 的新提示覆盖旧提示后计时重新开始；焦点在离场的提示里时交给相邻提示，一张不剩就还给进入前的元素；超出可见上限的离场提示直接出栈；没有提示时视口不占盒子，触屏下沿让开底部安全区；单独渲染的 Toast 不再带 live 角色，播报由视口里的卡片负责。
+
 ## 0.16.4
 
 ### Patch Changes
