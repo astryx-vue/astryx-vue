@@ -5097,9 +5097,12 @@
 
 ### v0.7.2
 
-- [ ] [`81b8df40f`](https://github.com/meta/astryx/commit/81b8df40f) fix(Layer): ship the dynamic-viewport cap and safe-area gutter, not only their fallbacks (#7622)
-- [ ] [`3f45fc2f6`](https://github.com/meta/astryx/commit/3f45fc2f6) fix: Omit the popover source when the trigger is not an HTML element (#7227)
-- [ ] [`86e839219`](https://github.com/meta/astryx/commit/86e839219) feat(core): promote Drawer and DrawerHeader from Lab (#6071)
+- [x] [`81b8df40f`](https://github.com/meta/astryx/commit/81b8df40f) fix(Layer): ship the dynamic-viewport cap and safe-area gutter, not only their fallbacks (#7622)
+  - 已移植：[#542](https://github.com/astryx-vue/astryx-vue/pull/542)。动态视口上限和安全区空隙，#542 已移植（LayerProvider 空隙、popover 的 dvh 上限）
+- [x] [`3f45fc2f6`](https://github.com/meta/astryx/commit/3f45fc2f6) fix: Omit the popover source when the trigger is not an HTML element (#7227)
+  - 不适用：上游给 popover API 的 source 属性，Vue 浮层用 Teleport 加 JS 定位，没有这个属性
+- [x] [`86e839219`](https://github.com/meta/astryx/commit/86e839219) feat(core): promote Drawer and DrawerHeader from Lab (#6071)
+  - Vue 版已有：Drawer 已在 core 里，Drawer 也登记在共享关闭栈；这条的运行时文档改动在 Vue 版没有对应
 
 ### v0.7.4
 
@@ -5108,60 +5111,83 @@
 
 ### v0.7.5
 
-- [ ] [`7cb897b4e`](https://github.com/meta/astryx/commit/7cb897b4e) fix(BottomSheet): keep toasts visible and clickable above an open sheet (#7781)
-- [ ] [`1554dc626`](https://github.com/meta/astryx/commit/1554dc626) fix(Tooltip, HoverCard): a touch opens them only once it is a tap (#8165)
+- [x] [`7cb897b4e`](https://github.com/meta/astryx/commit/7cb897b4e) fix(BottomSheet): keep toasts visible and clickable above an open sheet (#7781)
+  - 已移植：[#545](https://github.com/astryx-vue/astryx-vue/pull/545)。独立的模态 BottomSheet 打开期间是 toast 的挂载点，toast 显示在它上面并可点击
+- [x] [`1554dc626`](https://github.com/meta/astryx/commit/1554dc626) fix(Tooltip, HoverCard): a touch opens them only once it is a tap (#8165)
+  - 已移植：[#545](https://github.com/astryx-vue/astryx-vue/pull/545)。触屏上 Tooltip、HoverCard 等手指真的轻点才开，滚动不开（tapRecognizer 加 useTouchTriggerInternal）
 - [ ] [`216ad5788`](https://github.com/meta/astryx/commit/216ad5788) fix(Layer): under a finger with Reduce Motion, a layer fades in instead of appearing at once (#8322)
-- [ ] [`4b05772a2`](https://github.com/meta/astryx/commit/4b05772a2) fix(Popover): focus, Tab and Escape work in a second document (#7356)
-- [ ] [`a56c06134`](https://github.com/meta/astryx/commit/a56c06134) fix(Tooltip): a tooltip taller than the room around its trigger opens clear of it (#8254)
+  - 暂缓：触屏呈现下减少动效改为淡入：依赖 Vue 版还没有的触屏呈现（从触发器长出、退场副本）
+- [x] [`4b05772a2`](https://github.com/meta/astryx/commit/4b05772a2) fix(Popover): focus, Tab and Escape work in a second document (#7356)
+  - 已移植：[#545](https://github.com/astryx-vue/astryx-vue/pull/545)。浮层关闭栈按 document 分开登记，iframe 或另一窗口里的 Escape 与点外面只管那个文档里的层
+- [x] [`a56c06134`](https://github.com/meta/astryx/commit/a56c06134) fix(Tooltip): a tooltip taller than the room around its trigger opens clear of it (#8254)
+  - 已移植：[#545](https://github.com/astryx-vue/astryx-vue/pull/545)。Tooltip 比四周空地都高时改放触发器旁边，再不行就限高滚动，不盖触发器（anchorClear）
 - [x] [`174300fcb`](https://github.com/meta/astryx/commit/174300fcb) ci: discover PR browser accessibility specs, so a new spec needs no workflow edit (#8367)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`116f54be5`](https://github.com/meta/astryx/commit/116f54be5) fix(Tooltip): an open tooltip follows a trigger that moves on screen (#8364)
+- [x] [`116f54be5`](https://github.com/meta/astryx/commit/116f54be5) fix(Tooltip): an open tooltip follows a trigger that moves on screen (#8364)
+  - Vue 版已有：usePositionedLayer 打开期间轮询锚点几何，触发器移动后气泡跟着走
 - [x] [`caa1f04fe`](https://github.com/meta/astryx/commit/caa1f04fe) fix(ContextMenu): the long press that opens the menu no longer closes it (#7308)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`66e257a4c`](https://github.com/meta/astryx/commit/66e257a4c) architecture(layer-runtime): one generic layer runtime, and one opt-in lift-from-trigger module (INV14, INV15) (#8448)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`2af4d305a`](https://github.com/meta/astryx/commit/2af4d305a) feat(Popover): presentation — a BottomSheet on a phone when asked, as iOS presents a popover (#8229)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`87a9e776c`](https://github.com/meta/astryx/commit/87a9e776c) perf(useLayer): placing a context layer re-renders its slot, not its host (#8519)
+- [x] [`87a9e776c`](https://github.com/meta/astryx/commit/87a9e776c) perf(useLayer): placing a context layer re-renders its slot, not its host (#8519)
+  - 不适用：React 重渲染性能：Vue 的 ref 不会让宿主重渲染
 - [ ] [`2a162e1b6`](https://github.com/meta/astryx/commit/2a162e1b6) feat(core): BottomSheet stacks by open order, replaces on a same-update switch, and BottomSheetSwitcher is deprecated (#7648)
+  - 暂缓：BottomSheet 按打开顺序叠放、同一次更新里切换替换：Vue 的抽屉叠放用切换器管理，没有等价的打开顺序栈；Switcher 弃用说明待单独处理
 - [x] [`6752d03da`](https://github.com/meta/astryx/commit/6752d03da) spec(AST-059): proposed — the software keyboard caps an anchored layer (FR9, FR10, DEC-6) (#8506)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`2bae302a6`](https://github.com/meta/astryx/commit/2bae302a6) docs(spec): Layer records its shipped contract as current (#8815)
   - 不适用：上游组件规范文档（自动初筛）
 - [x] [`b84bf77fa`](https://github.com/meta/astryx/commit/b84bf77fa) chore: move project links to meta/astryx (#8827)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`249501fb0`](https://github.com/meta/astryx/commit/249501fb0) fix(Overlay, DropdownMenuGroup, MobileNavToggle): forward host attributes to the element each owns (#8755)
-- [ ] [`e9ac835eb`](https://github.com/meta/astryx/commit/e9ac835eb) perf(Layer): a closed layer reads its writing context when it first opens, not on mount (#9012)
+- [x] [`249501fb0`](https://github.com/meta/astryx/commit/249501fb0) fix(Overlay, DropdownMenuGroup, MobileNavToggle): forward host attributes to the element each owns (#8755)
+  - Vue 版已有：Overlay 把宿主属性透传到自己拥有的根元素
+- [x] [`e9ac835eb`](https://github.com/meta/astryx/commit/e9ac835eb) perf(Layer): a closed layer reads its writing context when it first opens, not on mount (#9012)
+  - 不适用：React 浮层首次打开才读写作上下文的性能优化，Vue 没有这个上下文读取
 
 ### v0.7.6
 
-- [ ] [`d6697625e`](https://github.com/meta/astryx/commit/d6697625e) fix(Layer): a show that a browser-run hide wakes waits for that hide (#8543)
-- [ ] [`dfc83eedc`](https://github.com/meta/astryx/commit/dfc83eedc) fix(Layer): a layer that keeps its anchor clear reads an anchor move in the next frame, so the second frame is clear (#9123)
-- [ ] [`cfbc66fb7`](https://github.com/meta/astryx/commit/cfbc66fb7) fix(FieldLabel): a tap on the label's info icon opens its help without activating the control (#9089)
+- [x] [`d6697625e`](https://github.com/meta/astryx/commit/d6697625e) fix(Layer): a show that a browser-run hide wakes waits for that hide (#8543)
+  - Vue 版已有：useLayer 的 show 遇到正在关闭就排到这次关闭结束后再开（isHiding 加 pendingShow）
+- [x] [`dfc83eedc`](https://github.com/meta/astryx/commit/dfc83eedc) fix(Layer): a layer that keeps its anchor clear reads an anchor move in the next frame, so the second frame is clear (#9123)
+  - Vue 版已有：usePositionedLayer 每次滚动、尺寸变化和几何轮询都重新算位置，锚点移动会在下一次更新里纠正
+- [x] [`cfbc66fb7`](https://github.com/meta/astryx/commit/cfbc66fb7) fix(FieldLabel): a tap on the label's info icon opens its help without activating the control (#9089)
+  - Vue 版已有：InfoTip 在标签之外，点击里 stopPropagation 加 preventDefault，不会激活标签的控件
 - [x] [`1d8696ad9`](https://github.com/meta/astryx/commit/1d8696ad9) spec: Tooltip and HoverCard pin on press; InfoTip is the info preset (#9175)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`b56b6d4fc`](https://github.com/meta/astryx/commit/b56b6d4fc) fix(core): one modality call per component, reading the component's own document (#9148)
-- [ ] [`4f35412e2`](https://github.com/meta/astryx/commit/4f35412e2) fix(ChatComposerInput): a tap on a pasted-text token opens its preview without raising the keyboard (#9189)
+- [x] [`b56b6d4fc`](https://github.com/meta/astryx/commit/b56b6d4fc) fix(core): one modality call per component, reading the component's own document (#9148)
+  - 已移植：[#545](https://github.com/astryx-vue/astryx-vue/pull/545)。每个组件只跟踪一次输入模态，读自己所在文档（useTouchTriggerInternal 里按触发器的 ownerDocument 跟踪）
+- [x] [`4f35412e2`](https://github.com/meta/astryx/commit/4f35412e2) fix(ChatComposerInput): a tap on a pasted-text token opens its preview without raising the keyboard (#9189)
+  - 已移植：[#545](https://github.com/astryx-vue/astryx-vue/pull/545)。粘贴文本令牌被手指或笔轻点时取消合成的鼠标按下，预览打开而输入框不拿焦点、键盘不弹出（createTapStop）
 - [x] [`a03bffd8e`](https://github.com/meta/astryx/commit/a03bffd8e) feat(Typeahead): show local matches at once and append server results (spec:AST-092) (#7962)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`97b3711d6`](https://github.com/meta/astryx/commit/97b3711d6) fix(Tooltip, HoverCard): a disabled control's reason opens on a tap (#8207)
+- [x] [`97b3711d6`](https://github.com/meta/astryx/commit/97b3711d6) fix(Tooltip, HoverCard): a disabled control's reason opens on a tap (#8207)
+  - 已移植：[#545](https://github.com/astryx-vue/astryx-vue/pull/545)。轻点 aria-disabled 控件打开它的禁用原因（Tooltip、HoverCard）
 - [x] [`e0a03766d`](https://github.com/meta/astryx/commit/e0a03766d) docs(knowledge): every component spec lives in docs/specs/components, one folder per component (#9007)
   - 不适用：上游内部规范和架构文档、上游组件规范文档（自动初筛）
-- [ ] [`eb6d2cc12`](https://github.com/meta/astryx/commit/eb6d2cc12) fix(ContextMenu): a context menu mounts its layer at its first open, so a large Table shows its rows in seconds in Safari (#9278)
+- [x] [`eb6d2cc12`](https://github.com/meta/astryx/commit/eb6d2cc12) fix(ContextMenu): a context menu mounts its layer at its first open, so a large Table shows its rows in seconds in Safari (#9278)
+  - 不适用：上游是 React 里菜单图层跟着大表格一起渲染的代价；Vue 的菜单面板和触发区是各自的节点，触发区内容不随菜单渲染
 - [x] [`0fad9d216`](https://github.com/meta/astryx/commit/0fad9d216) test(rtl): RTL coverage for Blockquote, InputGroupText and Overlay (#9309)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`3d44c583a`](https://github.com/meta/astryx/commit/3d44c583a) fix(Tooltip, HoverCard): a press inside an open surface doesn't activate the card, row or field around it (#9252)
-- [ ] [`389dc8448`](https://github.com/meta/astryx/commit/389dc8448) fix(Text, Heading): a long unbroken token wraps in text that is not truncated (#9351)
-- [ ] [`a4226c9a2`](https://github.com/meta/astryx/commit/a4226c9a2) fix(Typeahead, Tokenizer): a press in the field's own input or buttons keeps the list open (#9367)
+- [x] [`3d44c583a`](https://github.com/meta/astryx/commit/3d44c583a) fix(Tooltip, HoverCard): a press inside an open surface doesn't activate the card, row or field around it (#9252)
+  - 已移植：[#512](https://github.com/astryx-vue/astryx-vue/pull/512)。Tooltip、HoverCard 气泡内按下不激活外层卡片、行、字段
+- [x] [`389dc8448`](https://github.com/meta/astryx/commit/389dc8448) fix(Text, Heading): a long unbroken token wraps in text that is not truncated (#9351)
+  - 已移植：[#505](https://github.com/astryx-vue/astryx-vue/pull/505)。不截断的 Text、Heading 里长串换行，浮层根重置
+- [x] [`a4226c9a2`](https://github.com/meta/astryx/commit/a4226c9a2) fix(Typeahead, Tokenizer): a press in the field's own input or buttons keeps the list open (#9367)
+  - Vue 版已有：Typeahead、Tokenizer 的列表把整个字段当触发器，点字段自己的输入框和按钮不关列表
 - [x] [`41aa83233`](https://github.com/meta/astryx/commit/41aa83233) spec(layer-runtime): a click inside a layer stops at the layer root (#9398)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`fc44bc3b7`](https://github.com/meta/astryx/commit/fc44bc3b7) fix(DateTimeInput): a press in the time input keeps the preset-time list open (#9459)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`09a482eaf`](https://github.com/meta/astryx/commit/09a482eaf) fix(Layer): a press inside a layer stops at the layer root in the React tree (#9497)
+- [x] [`09a482eaf`](https://github.com/meta/astryx/commit/09a482eaf) fix(Layer): a press inside a layer stops at the layer root in the React tree (#9497)
+  - 不适用：上游靠 React 合成事件在浮层根截停冒泡，Vue 走 DOM 冒泡并由 layerSurfacePress 登记
 - [x] [`8835deca3`](https://github.com/meta/astryx/commit/8835deca3) fix(ChatComposerInput): a press in the editor keeps the trigger menu open (#9503)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`beb03f8bd`](https://github.com/meta/astryx/commit/beb03f8bd) fix(DateInput): a press in the field's own input, clear button or label keeps the calendar open (#9433)
-- [ ] [`b5e716687`](https://github.com/meta/astryx/commit/b5e716687) refactor(Item, Token, ChatComposer): drop the per-site tooltip surface checks the layer boundary replaces (#9531)
+- [x] [`beb03f8bd`](https://github.com/meta/astryx/commit/beb03f8bd) fix(DateInput): a press in the field's own input, clear button or label keeps the calendar open (#9433)
+  - Vue 版已有：日期输入的弹层把整个字段当触发器，点在字段自己的输入框、清除钮、标签里时 dismissStack 不关弹层
+- [x] [`b5e716687`](https://github.com/meta/astryx/commit/b5e716687) refactor(Item, Token, ChatComposer): drop the per-site tooltip surface checks the layer boundary replaces (#9531)
+  - 不适用：上游靠 React 合成事件在浮层根截停冒泡，Vue 按 DOM 冒泡仍需登记表
 
 ### v0.7.7
 
@@ -5169,38 +5195,56 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`36f8ea10e`](https://github.com/meta/astryx/commit/36f8ea10e) feat(AppShell): keep the header's items and the content's end inside the device's safe area (#8150)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`1d04d40fd`](https://github.com/meta/astryx/commit/1d04d40fd) feat(Tooltip): triggerBehavior="toggle" pins the tooltip on a press (#9232)
-- [ ] [`9ae589b92`](https://github.com/meta/astryx/commit/9ae589b92) fix(Tooltip): Space on keyup and a press outside in another document, with triggerBehavior evidence (#9406)
+- [x] [`1d04d40fd`](https://github.com/meta/astryx/commit/1d04d40fd) feat(Tooltip): triggerBehavior="toggle" pins the tooltip on a press (#9232)
+  - 不适用：triggerBehavior 属性后来在发布前就被删掉（见 1821fb3fa），净效果为零
+- [x] [`9ae589b92`](https://github.com/meta/astryx/commit/9ae589b92) fix(Tooltip): Space on keyup and a press outside in another document, with triggerBehavior evidence (#9406)
+  - 不适用：triggerBehavior 属性后来在发布前就被删掉，净效果为零
 - [x] [`0f12096d3`](https://github.com/meta/astryx/commit/0f12096d3) fix(Drawer): a scrimless drawer announces its top-layer entry, so toasts stay above it (#9594)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`ce667be4d`](https://github.com/meta/astryx/commit/ce667be4d) fix(Dialog, Drawer): a backdrop press dismisses only when it starts and ends on the backdrop (#9613)
-- [ ] [`1821fb3fa`](https://github.com/meta/astryx/commit/1821fb3fa) fix(Tooltip): remove the unreleased triggerBehavior prop before 0.7.7 (#9711)
+- [x] [`ce667be4d`](https://github.com/meta/astryx/commit/ce667be4d) fix(Dialog, Drawer): a backdrop press dismisses only when it starts and ends on the backdrop (#9613)
+  - 已移植：[#545](https://github.com/astryx-vue/astryx-vue/pull/545)。Dialog、Drawer 的遮罩按下和松手都在遮罩上才关（useBackdropPress）
+- [x] [`1821fb3fa`](https://github.com/meta/astryx/commit/1821fb3fa) fix(Tooltip): remove the unreleased triggerBehavior prop before 0.7.7 (#9711)
+  - 不适用：删除未发布的 triggerBehavior 属性，Vue 版从来没有加过
 - [ ] [`e629e7dff`](https://github.com/meta/astryx/commit/e629e7dff) fix(Layer): the touch cross-fade uses the motion foundation's Reduce Motion values (#8355)
+  - 暂缓：触屏淡入使用动效基础的减少动效值：依赖触屏呈现，Vue 版没有
 - [x] [`4e495ec5e`](https://github.com/meta/astryx/commit/4e495ec5e) fix(BottomSheet): a standalone sheet closing with focus inside stays out of inert while focus stays (#9635)
   - 不适用：上游内部规范和架构文档（自动初筛）
 
 ### v0.7.8
 
-- [ ] [`97191cf7f`](https://github.com/meta/astryx/commit/97191cf7f) feat(Tooltip): useTooltip returns show() and hide() for an app-built toggle trigger (#9727)
-- [ ] [`9889a3438`](https://github.com/meta/astryx/commit/9889a3438) chore(core): name the system that 88 kept Effects sync (#9787)
-- [ ] [`61cf773c2`](https://github.com/meta/astryx/commit/61cf773c2) refactor(InfoTip): build on useTooltip's show() and hide(); remove the internal toggle path (#9756)
-- [ ] [`946211065`](https://github.com/meta/astryx/commit/946211065) perf(core): an overlay's eager import no longer carries the lazy BottomSheet's padding (#8550)
+- [x] [`97191cf7f`](https://github.com/meta/astryx/commit/97191cf7f) feat(Tooltip): useTooltip returns show() and hide() for an app-built toggle trigger (#9727)
+  - Vue 版已有：useTooltip 已返回 show() 和 hide()，保持打开直到 hide、Escape、点外面
+- [x] [`9889a3438`](https://github.com/meta/astryx/commit/9889a3438) chore(core): name the system that 88 kept Effects sync (#9787)
+  - 不适用：只给 React useEffect 加注释
+- [x] [`61cf773c2`](https://github.com/meta/astryx/commit/61cf773c2) refactor(InfoTip): build on useTooltip's show() and hide(); remove the internal toggle path (#9756)
+  - Vue 版已有：Vue 的 InfoTip 本来就建在 useTooltip 的 show/hide 上，没有内部切换路径
+- [x] [`946211065`](https://github.com/meta/astryx/commit/946211065) perf(core): an overlay's eager import no longer carries the lazy BottomSheet's padding (#8550)
+  - 不适用：React 打包体积：懒加载 BottomSheet 的内边距不跟随 Overlay 的急切导入
 - [x] [`e390c3c43`](https://github.com/meta/astryx/commit/e390c3c43) test(browser): keep every Playwright browser context off remote hosts (#9811)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`bb5650811`](https://github.com/meta/astryx/commit/bb5650811) fix(Tooltip, HoverCard): a pen held before it lifts no longer closes the layer it opened (#9819)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`a343c796d`](https://github.com/meta/astryx/commit/a343c796d) docs(Overlay): say why the radius Effect stays, and pin when the radius is read (#9870)
+- [x] [`a343c796d`](https://github.com/meta/astryx/commit/a343c796d) docs(Overlay): say why the radius Effect stays, and pin when the radius is read (#9870)
+  - Vue 版已有：Overlay 圆角取值时机的说明，Vue 版在挂载时读一次
 
 ### v0.7.9
 
-- [ ] [`8ddcfe11c`](https://github.com/meta/astryx/commit/8ddcfe11c) fix(core): a layout motion's copy carries on the CSS animations and transitions running in it (#9534)
+- [x] [`8ddcfe11c`](https://github.com/meta/astryx/commit/8ddcfe11c) fix(core): a layout motion's copy carries on the CSS animations and transitions running in it (#9534)
+  - 不适用：React 布局动效的副本，Vue 没有这套布局动效运行时
 - [ ] [`252b45bb1`](https://github.com/meta/astryx/commit/252b45bb1) feat(Layer): one input hold, first used by Dialog, Drawer and MobileNav (spec:AST-094 FR35) (#8342)
-- [ ] [`5c91e81ee`](https://github.com/meta/astryx/commit/5c91e81ee) fix(Layer): a closed layer's trigger is no CSS anchor (#9963)
-- [ ] [`a866c2ab0`](https://github.com/meta/astryx/commit/a866c2ab0) fix(Dialog, Drawer): a backdrop press that closes a popover inside closes only the popover (#9988)
-- [ ] [`af7037b4a`](https://github.com/meta/astryx/commit/af7037b4a) perf(Layer): LayerProvider loads no Toast; Toast registers its viewport (#10012)
-- [ ] [`7e69f91dc`](https://github.com/meta/astryx/commit/7e69f91dc) fix(core): an anchored layer that would run under the software keyboard ends above it (#8208)
+  - 暂缓：进场输入遮挡（Dialog、Drawer、MobileNav 进场时挡住点击）：依赖触屏呈现和进场运行时，Vue 版没有
+- [x] [`5c91e81ee`](https://github.com/meta/astryx/commit/5c91e81ee) fix(Layer): a closed layer's trigger is no CSS anchor (#9963)
+  - 不适用：上游关闭的浮层触发器不是 CSS 锚点，Vue 用 JS 定位，不设 anchor-name
+- [x] [`a866c2ab0`](https://github.com/meta/astryx/commit/a866c2ab0) fix(Dialog, Drawer): a backdrop press that closes a popover inside closes only the popover (#9988)
+  - 已移植：[#545](https://github.com/astryx-vue/astryx-vue/pull/545)。按遮罩关掉里面的弹出框时，对话框和抽屉留着（didOutsideDismissInGesture）
+- [x] [`af7037b4a`](https://github.com/meta/astryx/commit/af7037b4a) perf(Layer): LayerProvider loads no Toast; Toast registers its viewport (#10012)
+  - 不适用：React 打包拆分：LayerProvider 不加载 Toast
+- [x] [`7e69f91dc`](https://github.com/meta/astryx/commit/7e69f91dc) fix(core): an anchored layer that would run under the software keyboard ends above it (#8208)
+  - 已移植：[#542](https://github.com/astryx-vue/astryx-vue/pull/542)。锚定浮层避开软键盘：getLayerViewport 扣掉键盘占的那一截
 - [ ] [`5b54b834c`](https://github.com/meta/astryx/commit/5b54b834c) fix(DropdownMenu): on a phone or a tablet, a tap while the menu enters is ignored, as on iOS (#8458)
-- [ ] [`c8a172b4b`](https://github.com/meta/astryx/commit/c8a172b4b) docs(useOverlay): add hook docs and a product quick view example block (#9908)
+  - 暂缓：手机和平板上菜单进场时的点击被忽略：依赖进场输入遮挡，Vue 版没有
+- [x] [`c8a172b4b`](https://github.com/meta/astryx/commit/c8a172b4b) docs(useOverlay): add hook docs and a product quick view example block (#9908)
+  - Vue 版已有：useOverlay 已有文档页（apps/docs 的 overlay 组件目录）
 - [x] [`992e28c60`](https://github.com/meta/astryx/commit/992e28c60) docs(architecture): the layer runtime's keyboard cap in INV11 and INV12 (#10143)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`8d59e5d35`](https://github.com/meta/astryx/commit/8d59e5d35) docs(layer-runtime): toastHost owns the toast context and queue (#10166)
@@ -5208,9 +5252,12 @@
 
 ### v0.7.10
 
-- [ ] [`306051090`](https://github.com/meta/astryx/commit/306051090) fix(core): gestures read another window's nodes and touches (#10224)
-- [ ] [`332cc3bef`](https://github.com/meta/astryx/commit/332cc3bef) chore(core): split two long comments in LayerProvider and ToastViewport (#10244)
-- [ ] [`0d7a25130`](https://github.com/meta/astryx/commit/0d7a25130) perf(Layer): the observer that follows a Tooltip's trigger re-arms from its own report, with no layout read (#10235)
+- [x] [`306051090`](https://github.com/meta/astryx/commit/306051090) fix(core): gestures read another window's nodes and touches (#10224)
+  - 已移植：[#545](https://github.com/astryx-vue/astryx-vue/pull/545)。手势读取其他窗口的节点和触摸：点按识别、关闭栈、触屏规则按元素自己的 document 工作
+- [x] [`332cc3bef`](https://github.com/meta/astryx/commit/332cc3bef) chore(core): split two long comments in LayerProvider and ToastViewport (#10244)
+  - 不适用：只拆分两段长注释
+- [x] [`0d7a25130`](https://github.com/meta/astryx/commit/0d7a25130) perf(Layer): the observer that follows a Tooltip's trigger re-arms from its own report, with no layout read (#10235)
+  - 不适用：React 里观察 Tooltip 触发器的性能调整，Vue 版用几何轮询
 - [x] [`c09c370ca`](https://github.com/meta/astryx/commit/c09c370ca) docs(AST-059): anchored layers place with CSS during scroll; keep three event reads (#10255)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`4ceed673b`](https://github.com/meta/astryx/commit/4ceed673b) docs(AST-059): anchored layers flip before moving beside (#10257)
@@ -5218,63 +5265,94 @@
 
 ### v0.7.11
 
-- [ ] [`9a8d14d6d`](https://github.com/meta/astryx/commit/9a8d14d6d) fix(Layer): toasts leave a closing modal in the commit that closes it (#10251)
+- [x] [`9a8d14d6d`](https://github.com/meta/astryx/commit/9a8d14d6d) fix(Layer): toasts leave a closing modal in the commit that closes it (#10251)
+  - 不适用：React 提交时机：toast 随模态对话框关闭的同一次提交离开；Vue 的 modalOutlet 在 close 事件里撤销
 - [ ] [`a19128275`](https://github.com/meta/astryx/commit/a19128275) chore(core): the layer runtime's exit copy, for a touch presentation's close (#8186)
+  - 暂缓：触屏呈现关闭用的退场副本：Vue 的浮层关闭即卸载，没有退场副本设施
 - [x] [`14b138763`](https://github.com/meta/astryx/commit/14b138763) docs(AST-059): anchored layers re-pick once after scrolling stops (#10289)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`445b2b7a8`](https://github.com/meta/astryx/commit/445b2b7a8) [Component Audit] LayerProvider: its docs reach editors and describe nested providers correctly (#10283)
+- [x] [`445b2b7a8`](https://github.com/meta/astryx/commit/445b2b7a8) [Component Audit] LayerProvider: its docs reach editors and describe nested providers correctly (#10283)
+  - Vue 版已有：LayerProvider 文档已写明嵌套的 LayerProvider 不会开第二个 toast 视口
 - [ ] [`5e67f0874`](https://github.com/meta/astryx/commit/5e67f0874) feat(Popover): under a finger, it grows out of its trigger and shrinks back into it (#8187)
+  - 暂缓：手指下 Popover 从触发器长出再缩回：依赖退场副本和触屏呈现，Vue 版没有
 - [x] [`74eb2160c`](https://github.com/meta/astryx/commit/74eb2160c) docs(layer-runtime, Popover): name settledBox's readers; fix comments (#10300)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`3bd5a4c1b`](https://github.com/meta/astryx/commit/3bd5a4c1b) fix(Layer): a still mouse presses through an entrance's input hold (#10303)
-- [ ] [`a9c911421`](https://github.com/meta/astryx/commit/a9c911421) fix(core): Overlay, AppShell and MobileNav work with no matchMedia (#10327)
-- [ ] [`a5b485e92`](https://github.com/meta/astryx/commit/a5b485e92) fix(Layer, Selector): the overlay slides above the software keyboard and keeps its top (#10169)
+  - 暂缓：静止鼠标穿过进场输入遮挡：依赖进场输入遮挡，Vue 版没有
+- [x] [`a9c911421`](https://github.com/meta/astryx/commit/a9c911421) fix(core): Overlay, AppShell and MobileNav work with no matchMedia (#10327)
+  - Vue 版已有：useOverlay 没有 matchMedia 的环境不抛错，已有测试
+- [x] [`a5b485e92`](https://github.com/meta/astryx/commit/a5b485e92) fix(Layer, Selector): the overlay slides above the software keyboard and keeps its top (#10169)
+  - 已移植：[#542](https://github.com/astryx-vue/astryx-vue/pull/542)。浮层在软键盘上方，位置由 getLayerViewport 扣键盘高度，顶部不动
 - [ ] [`5a6ed906f`](https://github.com/meta/astryx/commit/5a6ed906f) chore(Layer): name the gap a still mouse leaves, exactly (#10317)
-- [ ] [`2816569ac`](https://github.com/meta/astryx/commit/2816569ac) perf(Layer): a closing layer reads its animations only when its closed state declares an exit (#10368)
-- [ ] [`8ba5bbcc3`](https://github.com/meta/astryx/commit/8ba5bbcc3) refactor(Layer): modals hand toasts back through a callback ref (#10351)
+  - 暂缓：进场输入遮挡里静止鼠标留下空隙的说明：依赖进场输入遮挡
+- [x] [`2816569ac`](https://github.com/meta/astryx/commit/2816569ac) perf(Layer): a closing layer reads its animations only when its closed state declares an exit (#10368)
+  - 不适用：React 性能：关闭时只在有退场动画时才读动画
+- [x] [`8ba5bbcc3`](https://github.com/meta/astryx/commit/8ba5bbcc3) refactor(Layer): modals hand toasts back through a callback ref (#10351)
+  - 不适用：React 回调 ref 重构
 
 ### v0.7.12
 
-- [ ] [`360701de7`](https://github.com/meta/astryx/commit/360701de7) fix(Text, Heading): the truncation tooltip mounts on the first hover, tap or focus (#10290)
+- [x] [`360701de7`](https://github.com/meta/astryx/commit/360701de7) fix(Text, Heading): the truncation tooltip mounts on the first hover, tap or focus (#10290)
+  - 已移植：[#505](https://github.com/astryx-vue/astryx-vue/pull/505)。截断提示在第一次悬停、轻点或聚焦时才挂载
 - [ ] [`95572ae80`](https://github.com/meta/astryx/commit/95572ae80) fix(Layer): a press that went down before an input hold lifts through the hold's shield (#10398)
+  - 暂缓：进场输入遮挡抬起穿过遮挡：依赖进场输入遮挡
 - [x] [`c3cef9f67`](https://github.com/meta/astryx/commit/c3cef9f67) docs(records): Kbd, LayerProvider and theming-surface verification follow-ups (#10299)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`55acf21ba`](https://github.com/meta/astryx/commit/55acf21ba) perf(Layer): read an entering layer's box without writing styles (#10240)
-- [ ] [`0d7498a70`](https://github.com/meta/astryx/commit/0d7498a70) fix(Layer): a scroll started after the keyboard caps a layer is not undone (#10457)
-- [ ] [`cd748d0e9`](https://github.com/meta/astryx/commit/cd748d0e9) chore(Layer): the outside-press watch can close on a pan, follow chosen pointer types, and judge a press in a closed shadow root (#9814)
-- [ ] [`698487f45`](https://github.com/meta/astryx/commit/698487f45) perf(Layer): an anchored layer's own hide runs only its layout (#10346)
+- [x] [`55acf21ba`](https://github.com/meta/astryx/commit/55acf21ba) perf(Layer): read an entering layer's box without writing styles (#10240)
+  - 不适用：React 性能：读进场浮层的盒子不写样式
+- [x] [`0d7498a70`](https://github.com/meta/astryx/commit/0d7498a70) fix(Layer): a scroll started after the keyboard caps a layer is not undone (#10457)
+  - 已移植：[#542](https://github.com/astryx-vue/astryx-vue/pull/542)。键盘遮住后又开始的滚动不被撤销：位置每次从最新可视视口重算
+- [x] [`cd748d0e9`](https://github.com/meta/astryx/commit/cd748d0e9) chore(Layer): the outside-press watch can close on a pan, follow chosen pointer types, and judge a press in a closed shadow root (#9814)
+  - 已移植：[#542](https://github.com/astryx-vue/astryx-vue/pull/542)。点外面的关闭可以按平移关闭、区分指针类型：dismissOnOutsidePan 和按指针类型的手指等抬起
+- [x] [`698487f45`](https://github.com/meta/astryx/commit/698487f45) perf(Layer): an anchored layer's own hide runs only its layout (#10346)
+  - 不适用：React 性能：锚定浮层自己隐藏时只做布局
 - [x] [`4e6e67df6`](https://github.com/meta/astryx/commit/4e6e67df6) fix(core): make disabled Button focusable via aria-disabled per AST-085 (#7906)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`422440a64`](https://github.com/meta/astryx/commit/422440a64) fix(core): two copies of Core's modules share one React context (#10233)
+- [x] [`422440a64`](https://github.com/meta/astryx/commit/422440a64) fix(core): two copies of Core's modules share one React context (#10233)
+  - 不适用：React 里两份模块共用同一个 context 的问题
 - [x] [`b7e55a4cd`](https://github.com/meta/astryx/commit/b7e55a4cd) test(perf): overlay-churn-settled lets each anchored entrance end, so its count does not follow the runner's speed (#10496)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`3890d68ef`](https://github.com/meta/astryx/commit/3890d68ef) fix(Layer): a capped layer over its trigger keeps its top (#10497)
-- [ ] [`a21cd3ca0`](https://github.com/meta/astryx/commit/a21cd3ca0) fix(Layer): a Tooltip re-picks its side once a scroll stops, never mid-scroll (#10439)
+- [x] [`3890d68ef`](https://github.com/meta/astryx/commit/3890d68ef) fix(Layer): a capped layer over its trigger keeps its top (#10497)
+  - 已移植：[#542](https://github.com/astryx-vue/astryx-vue/pull/542)。被限高的浮层压在触发器上方时保持顶边：键盘视口里重新计算位置
+- [x] [`a21cd3ca0`](https://github.com/meta/astryx/commit/a21cd3ca0) fix(Layer): a Tooltip re-picks its side once a scroll stops, never mid-scroll (#10439)
+  - 不适用：上游 CSS 锚点定位的 position-try 在滚动中途不换边；Vue 用 JS 每次按几何算位置，没有这个问题
 - [x] [`71ade25a1`](https://github.com/meta/astryx/commit/71ade25a1) test(Layer): the close-layout proof traces once the layer rests (#10527)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`def46d15d`](https://github.com/meta/astryx/commit/def46d15d) fix(Layer): a Tooltip scrolls by CSS, and nothing watches its trigger move (#10472)
-- [ ] [`9dca38629`](https://github.com/meta/astryx/commit/9dca38629) perf(Layer): anchored entrances play on the surface (#10561)
-- [ ] [`1c8292c42`](https://github.com/meta/astryx/commit/1c8292c42) fix(Layer): keep decorator portals outside renderer-managed DOM (#7633)
-- [ ] [`92784f658`](https://github.com/meta/astryx/commit/92784f658) fix(core): a swizzled copy shares the package's per-page touch state (#10599)
+- [x] [`def46d15d`](https://github.com/meta/astryx/commit/def46d15d) fix(Layer): a Tooltip scrolls by CSS, and nothing watches its trigger move (#10472)
+  - 不适用：上游 Tooltip 改成靠 CSS 滚动、不再监听触发器移动；Vue 靠 JS 定位和轮询
+- [x] [`9dca38629`](https://github.com/meta/astryx/commit/9dca38629) perf(Layer): anchored entrances play on the surface (#10561)
+  - 不适用：React 性能：锚定进场动画放在表面上
+- [x] [`1c8292c42`](https://github.com/meta/astryx/commit/1c8292c42) fix(Layer): keep decorator portals outside renderer-managed DOM (#7633)
+  - 不适用：React 渲染器托管的 DOM 与装饰器门户
+- [x] [`92784f658`](https://github.com/meta/astryx/commit/92784f658) fix(core): a swizzled copy shares the package's per-page touch state (#10599)
+  - 不适用：上游复制出来的组件共享页面级触屏状态；Vue 没有拷贝源码的用法
 - [ ] [`6422a1db4`](https://github.com/meta/astryx/commit/6422a1db4) refactor(Layer): one presentation hold keeps a layer's chosen presentation until its close settles (#8587)
-- [ ] [`59881c7cc`](https://github.com/meta/astryx/commit/59881c7cc) fix(HoverCard,Tooltip): wait for the trigger to have a layout box before showing (#5398)
-- [ ] [`28401fb14`](https://github.com/meta/astryx/commit/28401fb14) fix(Layer): a layer opened by a right click stays open when that press is released (#10128)
+  - 暂缓：呈现保持（浮层选定的呈现直到关闭结束才换）：依赖触屏呈现，Vue 版没有
+- [x] [`59881c7cc`](https://github.com/meta/astryx/commit/59881c7cc) fix(HoverCard,Tooltip): wait for the trigger to have a layout box before showing (#5398)
+  - Vue 版已有：Vue 的 usePositionedLayer 在锚点几何变化时重算，触发器还没布局出来时先放着，布局出来后 100 毫秒内纠正
+- [x] [`28401fb14`](https://github.com/meta/astryx/commit/28401fb14) fix(Layer): a layer opened by a right click stays open when that press is released (#10128)
+  - Vue 版已有：dismissStack 按下时定计划，这次按压里才登记的层不会被这次按压关掉，右键打开的菜单松手不关
 - [x] [`f9981429b`](https://github.com/meta/astryx/commit/f9981429b) test(Layer): the entrance layout proof names the source of a layout (#10684)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`71450dd2c`](https://github.com/meta/astryx/commit/71450dd2c) fix(DropdownMenu): the press that opens the menu does not close it (#10689)
-- [ ] [`b01b7ee1c`](https://github.com/meta/astryx/commit/b01b7ee1c) fix(HoverCard): Escape and focus work in the card's own document, such as an iframe (#9592)
+- [x] [`71450dd2c`](https://github.com/meta/astryx/commit/71450dd2c) fix(DropdownMenu): the press that opens the menu does not close it (#10689)
+  - Vue 版已有：同上：打开菜单的那一次按压不会关掉它（bornPress）
+- [x] [`b01b7ee1c`](https://github.com/meta/astryx/commit/b01b7ee1c) fix(HoverCard): Escape and focus work in the card's own document, such as an iframe (#9592)
+  - 已移植：[#545](https://github.com/astryx-vue/astryx-vue/pull/545)。HoverCard 的 Escape 和焦点在卡片自己的文档（如 iframe）里也管用
 - [x] [`41e0de2e0`](https://github.com/meta/astryx/commit/41e0de2e0) test(Layer): the late-registration cases load their modules once (#10759)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`49bc221f5`](https://github.com/meta/astryx/commit/49bc221f5) fix(Layer): a swizzled LayerProvider shows the package's toasts (#10800)
+- [x] [`49bc221f5`](https://github.com/meta/astryx/commit/49bc221f5) fix(Layer): a swizzled LayerProvider shows the package's toasts (#10800)
+  - 不适用：上游复制出来的 LayerProvider 要显示包里的 toast；Vue 没有拷贝源码的用法
 - [x] [`438a0ff88`](https://github.com/meta/astryx/commit/438a0ff88) docs(layer-runtime, HoverCard): a trigger inside SVG foreignObject cannot be a CSS anchor in Chromium (#10908)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`a1fda63c7`](https://github.com/meta/astryx/commit/a1fda63c7) fix(core): typing in a touch dialog's field no longer opens the trigger's tooltip on returned focus (#10639)
+- [x] [`a1fda63c7`](https://github.com/meta/astryx/commit/a1fda63c7) fix(core): typing in a touch dialog's field no longer opens the trigger's tooltip on returned focus (#10639)
+  - 已移植：[#545](https://github.com/astryx-vue/astryx-vue/pull/545)。触屏对话框的输入框里打字，不再因焦点还给触发器而打开它的提示
 - [x] [`db705b961`](https://github.com/meta/astryx/commit/db705b961) feat(core): shared-realm helpers hold every kind of cross-module state (AST-110 FR3) (#10817)
   - 不适用：只改上游测试（自动初筛）
 
 ### v0.7.13
 
-- [ ] [`cc5ff492c`](https://github.com/meta/astryx/commit/cc5ff492c) fix(core): the layer runtime is one per page across swizzled copies (AST-110 FR3) (#10998)
+- [x] [`cc5ff492c`](https://github.com/meta/astryx/commit/cc5ff492c) fix(core): the layer runtime is one per page across swizzled copies (AST-110 FR3) (#10998)
+  - 不适用：上游复制出来的多份组件共用一个页面级运行时；Vue 没有拷贝源码的用法
 - [x] [`392bcef5e`](https://github.com/meta/astryx/commit/392bcef5e) spec(layers): layers follow anchors through CSS only and never inherit a press transform (#11024)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`4398069ad`](https://github.com/meta/astryx/commit/4398069ad) test(Layer): browser cases for INV22, a layer and its trigger's press scale (#11028)
@@ -5283,33 +5361,47 @@
 ### v0.7.14
 
 - [ ] [`19eadab60`](https://github.com/meta/astryx/commit/19eadab60) feat(Layer): an entrance slides from the side its layer lands on (#10771)
-- [ ] [`108f354ae`](https://github.com/meta/astryx/commit/108f354ae) fix(core): drop 'use client' from the package root and the component barrels (#11106)
+  - 暂缓：进场从浮层所在的一侧滑入：依赖触屏呈现和进场运行时
+- [x] [`108f354ae`](https://github.com/meta/astryx/commit/108f354ae) fix(core): drop 'use client' from the package root and the component barrels (#11106)
+  - 不适用：React Server Components 的 'use client' 指令
 - [x] [`fc9fb8ccc`](https://github.com/meta/astryx/commit/fc9fb8ccc) fix(core): registered icons reach swizzled copies; icon and theme registries are one per React (AST-110 FR3) (#11096)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`09479d9c7`](https://github.com/meta/astryx/commit/09479d9c7) fix(Popover): a touch that pans is not an outside press, even without pointercancel (#11038)
-- [ ] [`9a3f29608`](https://github.com/meta/astryx/commit/9a3f29608) fix(useKeyboardHint): the arrow-key hint stays until dismissed, and Escape closes it (#10564)
+- [x] [`09479d9c7`](https://github.com/meta/astryx/commit/09479d9c7) fix(Popover): a touch that pans is not an outside press, even without pointercancel (#11038)
+  - 已移植：[#542](https://github.com/astryx-vue/astryx-vue/pull/542)。手指在外面平移不算点外面，哪怕没有 pointercancel
+- [x] [`9a3f29608`](https://github.com/meta/astryx/commit/9a3f29608) fix(useKeyboardHint): the arrow-key hint stays until dismissed, and Escape closes it (#10564)
+  - 已移植：[#545](https://github.com/astryx-vue/astryx-vue/pull/545)。useKeyboardHint 默认不再 3 秒后消失，Escape 只关提示
 - [x] [`25b7f1407`](https://github.com/meta/astryx/commit/25b7f1407) docs(layer-runtime): name the two remaining INV7 outside-pan gaps (#11157)
   - 不适用：上游内部规范和架构文档（自动初筛）
 
 ### v0.7.15
 
-- [ ] [`38521acb9`](https://github.com/meta/astryx/commit/38521acb9) chore(core): remove the same-press leftovers: an unread dismissal field and stale comments (#11332)
-- [ ] [`eec79323c`](https://github.com/meta/astryx/commit/eec79323c) fix(Text, Tooltip): on Android, the first tap on a button or link in truncated text opens its tooltip; a tap on a text field never does (#11213)
+- [x] [`38521acb9`](https://github.com/meta/astryx/commit/38521acb9) chore(core): remove the same-press leftovers: an unread dismissal field and stale comments (#11332)
+  - Vue 版已有：同一次按压的残留清理：Vue 的 dismissStack 没有那个未读字段
+- [x] [`eec79323c`](https://github.com/meta/astryx/commit/eec79323c) fix(Text, Tooltip): on Android, the first tap on a button or link in truncated text opens its tooltip; a tap on a text field never does (#11213)
+  - 已移植：[#505](https://github.com/astryx-vue/astryx-vue/pull/505)。只认 :focus-visible 焦点；轻点文本框不开提示
 
 ### v0.7.16
 
-- [ ] [`1dbbc7302`](https://github.com/meta/astryx/commit/1dbbc7302) fix(useLayer): read committed callbacks and open state (#10912)
+- [x] [`1dbbc7302`](https://github.com/meta/astryx/commit/1dbbc7302) fix(useLayer): read committed callbacks and open state (#10912)
+  - 不适用：React 里读取已提交的回调和打开状态
 - [ ] [`91cd63fb1`](https://github.com/meta/astryx/commit/91cd63fb1) fix(Layer): keep an entrance's first frame off its trigger (#11396)
+  - 暂缓：进场第一帧离开触发器：依赖进场从所在一侧滑入，Vue 版没有
 - [x] [`7197c5827`](https://github.com/meta/astryx/commit/7197c5827) architecture(layer-runtime): the runtime owns the one input hold (INV16) (#8595)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`0e8c9613b`](https://github.com/meta/astryx/commit/0e8c9613b) fix(Layer): keep a flush layer's entrance off its trigger (#11417)
+  - 暂缓：贴边浮层进场离开触发器：依赖进场从所在一侧滑入，Vue 版没有
 - [x] [`b300313cb`](https://github.com/meta/astryx/commit/b300313cb) feat(Lightbox): a gallery's caption sits in a two-line band (#9810)
   - 不适用：上游内部规范和架构文档、只改上游测试（自动初筛）
-- [ ] [`cfc431d7a`](https://github.com/meta/astryx/commit/cfc431d7a) fix(layer): a release does not dismiss the layer it opened (#11258)
-- [ ] [`36f68b0da`](https://github.com/meta/astryx/commit/36f68b0da) fix(layer): a press on another trigger of an open layer opens it there (#11337)
-- [ ] [`1d48cc5e9`](https://github.com/meta/astryx/commit/1d48cc5e9) fix(useTouchTrigger): sync its callback refs at commit (#10892)
+- [x] [`cfc431d7a`](https://github.com/meta/astryx/commit/cfc431d7a) fix(layer): a release does not dismiss the layer it opened (#11258)
+  - Vue 版已有：松手不会关掉刚被它打开的层：dismissStack 的 bornPress 加按下时定计划
+- [x] [`36f68b0da`](https://github.com/meta/astryx/commit/36f68b0da) fix(layer): a press on another trigger of an open layer opens it there (#11337)
+  - Vue 版已有：按下已开浮层的另一个触发器：先关再开，由 dismissStack 只管栈顶自己的触发器
+- [x] [`1d48cc5e9`](https://github.com/meta/astryx/commit/1d48cc5e9) fix(useTouchTrigger): sync its callback refs at commit (#10892)
+  - 不适用：React 里 useTouchTrigger 的回调 ref 在提交时同步；Vue 没有这个问题
 - [ ] [`e372e3979`](https://github.com/meta/astryx/commit/e372e3979) fix(Popover): touch growth starts where the popover meets its trigger (#10949)
+  - 暂缓：手指下 Popover 的长出起点：依赖触屏呈现，Vue 版没有
 - [ ] [`248de60ab`](https://github.com/meta/astryx/commit/248de60ab) refactor(layer): a closing BottomSheet takes the shared input hold (#11447)
+  - 暂缓：关闭中的 BottomSheet 使用共享输入遮挡：依赖输入遮挡
 - [x] [`961b472f5`](https://github.com/meta/astryx/commit/961b472f5) test(Layer): count an entrance's layouts over its whole frames (#11512)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`8a50ab2e8`](https://github.com/meta/astryx/commit/8a50ab2e8) feat(core): an internal shared-context entry for Lab (#11448)
@@ -5322,22 +5414,33 @@
 - [x] [`55e666665`](https://github.com/meta/astryx/commit/55e666665) fix(core): no press scale on a trigger whose own layer is open (#11062)
   - 不适用：上游内部规范和架构文档、只改上游测试（自动初筛）
 - [ ] [`4800d992e`](https://github.com/meta/astryx/commit/4800d992e) feat(AlertDialog): touch motion on the theme's timing (#8373)
+  - 暂缓：AlertDialog 触屏动效：依赖触屏呈现，Vue 版没有
 - [ ] [`fb91b761f`](https://github.com/meta/astryx/commit/fb91b761f) fix(Layer): a released kept-inside hold never makes its layer inert (#11684)
-- [ ] [`762a65d60`](https://github.com/meta/astryx/commit/762a65d60) perf(Layer): keep the tap recognizer apart from the touch trigger, so Text's first load drops 9.6 KB (#11599)
+  - 暂缓：已释放的保持内遮挡不再让浮层 inert：依赖输入遮挡
+- [x] [`762a65d60`](https://github.com/meta/astryx/commit/762a65d60) perf(Layer): keep the tap recognizer apart from the touch trigger, so Text's first load drops 9.6 KB (#11599)
+  - 不适用：React 包体拆分
 - [ ] [`8c8dd0539`](https://github.com/meta/astryx/commit/8c8dd0539) fix(Layer): an exit copy keeps the padding and colors of what it copies (#11796)
-- [ ] [`6115f1130`](https://github.com/meta/astryx/commit/6115f1130) fix(Layer): open on a trigger in a closed <dialog> that renders (#11864)
-- [ ] [`bf8555451`](https://github.com/meta/astryx/commit/bf8555451) fix(useFocusTrap): Tab stops inside a closed dialog the page displays (#11892)
-- [ ] [`5a24fc0cf`](https://github.com/meta/astryx/commit/5a24fc0cf) fix(DropdownMenu): a waiting open still takes focus and fires onClick (#11905)
-- [ ] [`1bcd5bc44`](https://github.com/meta/astryx/commit/1bcd5bc44) fix(Selector, MultiSelector): a pick, or a press on a container that is no Tab stop, returns focus to the trigger (#11851)
-- [ ] [`120629d82`](https://github.com/meta/astryx/commit/120629d82) fix(DropdownMenu): a mouse press opens a menu in another document (#11938)
+  - 暂缓：退场副本保留内边距和颜色：依赖退场副本，Vue 版没有
+- [x] [`6115f1130`](https://github.com/meta/astryx/commit/6115f1130) fix(Layer): open on a trigger in a closed <dialog> that renders (#11864)
+  - Vue 版已有：同 #5398：锚点在还没渲染的 dialog 里时几何为零，渲染出来后轮询纠正位置
+- [x] [`bf8555451`](https://github.com/meta/astryx/commit/bf8555451) fix(useFocusTrap): Tab stops inside a closed dialog the page displays (#11892)
+  - 不适用：Vue Dialog 靠 showModal 显示，关闭的 dialog 不在页面上显示，没有「关闭但在显示」的状态
+- [x] [`5a24fc0cf`](https://github.com/meta/astryx/commit/5a24fc0cf) fix(DropdownMenu): a waiting open still takes focus and fires onClick (#11905)
+  - 不适用：上游等待中的打开仍取焦点、触发 onClick：针对 React 的 popover 等待路径，Vue 的 show 不经过等待
+- [x] [`1bcd5bc44`](https://github.com/meta/astryx/commit/1bcd5bc44) fix(Selector, MultiSelector): a pick, or a press on a container that is no Tab stop, returns focus to the trigger (#11851)
+  - 已移植：[#543](https://github.com/astryx-vue/astryx-vue/pull/543)。Selector、MultiSelector 选完或点在不是 Tab 停靠点的容器上，焦点回触发器
+- [x] [`120629d82`](https://github.com/meta/astryx/commit/120629d82) fix(DropdownMenu): a mouse press opens a menu in another document (#11938)
+  - Vue 版已有：Vue 的关闭栈在每个有层的 document 上各挂一套监听，且按下即关，另一个文档里的鼠标按下打开菜单后松手不会关掉它
 - [x] [`0c52d0454`](https://github.com/meta/astryx/commit/0c52d0454) docs(spec): AST-116 Popover anchoring, modality and layer focus return (draft) (#11112)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`d9676b913`](https://github.com/meta/astryx/commit/d9676b913) perf(CheckboxInput): the disabled-message tooltip runs only while it can show (#12376)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`8ecfe59a4`](https://github.com/meta/astryx/commit/8ecfe59a4) chore: land batch 61 (4 pull requests) (#12940)
+- [x] [`8ecfe59a4`](https://github.com/meta/astryx/commit/8ecfe59a4) chore: land batch 61 (4 pull requests) (#12940)
+  - 已移植：[#542](https://github.com/astryx-vue/astryx-vue/pull/542)。合并批次里键盘视口与限高的部分按 #542 已移植；退场副本相关部分见各自条目的暂缓
 - [x] [`c1f52ff91`](https://github.com/meta/astryx/commit/c1f52ff91) perf(core): reading the locale or direction does not load the message parser (#12975)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`0dad34541`](https://github.com/meta/astryx/commit/0dad34541) feat(usePopover): anchorRef names an anchor apart from the trigger (spec:AST-116 FR1–FR3, FR5, FR6) (#11117)
+- [x] [`0dad34541`](https://github.com/meta/astryx/commit/0dad34541) feat(usePopover): anchorRef names an anchor apart from the trigger (spec:AST-116 FR1–FR3, FR5, FR6) (#11117)
+  - Vue 版已有：usePopover 的 anchorRef 已和 triggerRef 分开，定位用 anchorRef，缺省回退到触发器
 - [x] [`416b167cf`](https://github.com/meta/astryx/commit/416b167cf) fix(core): one focus return for Popover and DropdownMenu (popover presentation) and Dialog that never strands focus (AST-116 FR17–FR21, AR1) (#11121)
   - 不适用：只改上游测试（自动初筛）
 
