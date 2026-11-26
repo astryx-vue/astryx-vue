@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import type { MoreMenuRowProps } from './types.js'
 import { computed, onBeforeUnmount, toRaw, useTemplateRef, watch } from 'vue'
+import { isModifiedClick } from '../composables/internal/menuActivation.js'
 import Icon from '../Icon/Icon.vue'
 import { useLinkComponent } from '../LinkProvider/context.js'
 import { useMoreMenuContext, useMoreMenuLevel } from './context.js'
-import { isModifiedClick, isRtl } from './menuNav.js'
+import { isRtl } from './menuNav.js'
 import '../../styles/more-menu.css'
 
 defineOptions({ name: 'AstryxMoreMenuRow' })

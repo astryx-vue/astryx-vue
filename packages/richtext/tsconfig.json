@@ -2,11 +2,18 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "rootDir": "../..",
+    "customConditions": ["source"],
     "paths": {
-      "@astryx-vue/core": ["../core/src/index.ts"],
-      "@astryx-vue/core/Markdown/parser": ["../core/src/Markdown/parser/index.ts"],
-      "@astryx-vue/core/Markdown/plugin-renderer": ["../core/src/Markdown/plugin-renderer/index.ts"],
-      "@astryx-vue/core/Markdown/plugins": ["../core/src/Markdown/plugin-protocol/index.ts"]
+      "@internationalized/date": [
+        "../core/node_modules/@internationalized/date/dist/types/src/index.d.ts"
+      ],
+      "lexical": [
+        "./node_modules/lexical/dist/index.d.ts"
+      ],
+      "@lexical/*": [
+        "./node_modules/@lexical/*/dist/index.d.ts",
+        "../../node_modules/.pnpm/node_modules/@lexical/*/dist/index.d.ts"
+      ]
     },
     "types": ["node"]
   },

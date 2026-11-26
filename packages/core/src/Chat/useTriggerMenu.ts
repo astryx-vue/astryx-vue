@@ -2,7 +2,7 @@ import type { ComputedRef, Ref } from 'vue'
 import type { SearchableItem } from '../composables/useAsyncSource.js'
 import type { ChatComposerToken, ChatComposerTrigger } from './types.js'
 import { computed, onScopeDispose, reactive, ref, useId } from 'vue'
-import { isImeKeyEvent } from '../composables/internal/ime.js'
+import { isImeKeyEvent } from '../utils/ime.js'
 import { flattenSearchItems } from './groupSearchItems.js'
 import { caretTextNode, findActiveTrigger, isUnmatchedMultiWordQuery, textBeforeCursor } from './triggerQuery.js'
 

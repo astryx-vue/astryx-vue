@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { ChatComposerInputEmits, ChatComposerInputHandle, ChatComposerInputProps, ChatComposerToken } from './types.js'
 import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
-import { isImeKeyEvent } from '../composables/internal/ime.js'
 import { useComponentMessages } from '../locale/context.js'
 import { chatMessages } from '../locale/messages/chat.js'
+import { isImeKeyEvent } from '../utils/ime.js'
 import ChatPastedTextToken from './ChatPastedTextToken.vue'
 import ChatTokenContent from './ChatTokenContent.vue'
 import ChatTriggerMenu from './ChatTriggerMenu.vue'

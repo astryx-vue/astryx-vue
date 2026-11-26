@@ -2,12 +2,12 @@
 import type { StyleValue } from 'vue'
 import type { DropdownMenuItemEmits, DropdownMenuItemProps, DropdownMenuItemSlots } from './types.js'
 import { computed, toRaw, useAttrs, useSlots } from 'vue'
+import { isModifiedClick } from '../composables/internal/menuActivation.js'
 import { isMenuPressActivation } from '../composables/internal/strayClick.js'
 import Icon from '../Icon/Icon.vue'
 import { useLinkComponent } from '../LinkProvider/context.js'
 import Item from '../List/Item.vue'
 import { useDropdownMenuContext } from './context.js'
-import { isModifiedClick } from './menuItemRoles.js'
 import '../../styles/dropdown-menu.css'
 
 defineOptions({ name: 'AstryxDropdownMenuItem', inheritAttrs: false })

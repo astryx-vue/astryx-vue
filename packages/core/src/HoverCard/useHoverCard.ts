@@ -3,9 +3,10 @@ import type { LayerPlacement } from '../layer/position.js'
 import type { HoverCardAlignment, HoverCardFocusTrigger, HoverCardPlacement, HoverCardTouchTrigger } from './types.js'
 import { computed, onMounted, onScopeDispose, shallowRef, toValue, watch } from 'vue'
 import { useLayer } from '../composables/useLayer.js'
+import { isActionTrigger } from '../composables/useTouchTrigger.js'
 import { isFocusable } from '../layer/focus.js'
 import { useHoverLayerDismiss } from '../layer/useHoverLayerDismiss.js'
-import { isActionTrigger, supportsAriaExpanded } from './hoverCardTrigger.js'
+import { supportsAriaExpanded } from './hoverCardTrigger.js'
 import { useHoverCardTriggerBinding } from './hoverCardTriggerBinding.js'
 
 export interface UseHoverCardOptions {

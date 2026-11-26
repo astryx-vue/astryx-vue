@@ -1,5 +1,5 @@
 import { onScopeDispose, ref } from 'vue'
-import { isImeKeyEvent } from './internal/ime.js'
+import { isImeKeyEvent } from '../utils/ime.js'
 
 export interface UseTypeaheadOptions {
   /** 当前 DOM 顺序上的标签。某一项可以是 null，表示这个下标不能匹配。 */

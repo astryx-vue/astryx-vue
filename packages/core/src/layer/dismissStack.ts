@@ -1,4 +1,4 @@
-import { isImeKeyEvent } from '../composables/internal/ime.js'
+import { isImeKeyEvent } from '../utils/ime.js'
 
 /**
  * 全页面共用的「浮层关闭栈」。
