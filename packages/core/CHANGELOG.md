@@ -1,5 +1,15 @@
 # @astryx-vue/core
 
+## 0.15.0
+
+### Minor Changes
+
+- [#547](https://github.com/astryx-vue/astryx-vue/pull/547) [`b17b492`](https://github.com/astryx-vue/astryx-vue/commit/b17b4922330c59dec2eb8973615848aa1b22e63f) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增 `useTableRowsVirtualization` 和 `useTableColumnsVirtualization`：数据很多的表格只渲染看得见的行和列，滚动手感不变；开启后单元格默认单行截断，行版本会让表格填满父元素的高度并在里面滚动。
+
+### Patch Changes
+
+- [#549](https://github.com/astryx-vue/astryx-vue/pull/549) [`0dab467`](https://github.com/astryx-vue/astryx-vue/commit/0dab467a81ac4130ac5f33511c69c9fa0b3b30e7) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Card 里贴到上下边缘的 Table，那一侧的角跟着卡片变圆，焦点环和底色不再在角上被裁掉。
+
 ## 0.14.0
 
 ### Minor Changes

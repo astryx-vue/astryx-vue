@@ -1,5 +1,11 @@
 # @astryx-vue/cli
 
+## 0.4.41
+
+### Patch Changes
+
+- [#547](https://github.com/astryx-vue/astryx-vue/pull/547) [`b17b492`](https://github.com/astryx-vue/astryx-vue/commit/b17b4922330c59dec2eb8973615848aa1b22e63f) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增 `useTableRowsVirtualization` 和 `useTableColumnsVirtualization`：数据很多的表格只渲染看得见的行和列，滚动手感不变；开启后单元格默认单行截断，行版本会让表格填满父元素的高度并在里面滚动。
+
 ## 0.4.40
 
 ### Patch Changes

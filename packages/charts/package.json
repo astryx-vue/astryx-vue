@@ -1,7 +1,7 @@
 {
   "name": "@astryx-vue/charts",
   "type": "module",
-  "version": "0.9.10",
+  "version": "0.9.11",
   "description": "Astryx charts for Vue — a config-model data visualization layer (d3-based).",
   "author": "ShenQingchuan",
   "license": "MIT",
