@@ -20,8 +20,7 @@
     width: 100%;
     height: 100%;
     object-fit: contain;
-    /* 画面还没出来时露出的底，和视频的黑边一样固定为黑色；上面的控件按深色底配色，不随页面主题翻转。 */
-    background-color: #000;
+    background-color: var(--astryx-color-background-inverted, #171717);
   }
 
   /* 按钮旁边展开滑块的一组。条件和容器揭示一致：悬停、焦点在里面、粗指针。 */
