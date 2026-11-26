@@ -16,6 +16,7 @@ export const formsUpstreamMap: UpstreamMapPart = {
   '@astryx.field.optional': [{ path: 'field.optional' }],
   '@astryx.field.required': [{ path: 'field.required' }],
   '@astryx.field.labelTooltip': [{ path: 'field.labelTooltip', args: ['label'] }],
+  '@astryx.field.errorFallback': [{ path: 'field.errorFallback' }],
   '@astryx.infoTip.label': [{ path: 'infoTip.label' }],
   '@astryx.slider.minimumThumb': [{ path: 'slider.minimumThumb' }],
   '@astryx.slider.maximumThumb': [{ path: 'slider.maximumThumb' }],

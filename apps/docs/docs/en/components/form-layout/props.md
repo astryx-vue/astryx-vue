@@ -23,7 +23,7 @@ footer: false
         <td><code>defaultOptionality</code></td>
         <td><code>'optional' | 'required'</code></td>
         <td>-</td>
-        <td>Default for fields that do not set <code>isOptional</code> or <code>isRequired</code>. It changes the indicator and <code>aria-required</code>. It does not set the native <code>required</code> attribute. When a field sets both, optional wins.</td>
+        <td>Default for fields that do not set <code>isOptional</code> or <code>isRequired</code>. It changes the indicator and <code>aria-required</code>. It does not set the native <code>required</code> attribute. When a field sets both, optional wins. Checkboxes and switches are the exception: an unchecked box or an off switch is an answer, so they take no required state from the default and are required only through their own <code>isRequired</code>.</td>
       </tr>
       <tr>
         <td><code>defaultEntryErrorBehavior</code></td>

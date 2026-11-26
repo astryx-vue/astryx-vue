@@ -1,6 +1,8 @@
 import type { Component, VNode } from 'vue'
 import type { FieldPartStylingProps } from '../Field/fieldParts.js'
-import type { FieldLabelProps, FieldStatusInput, FieldStatusType, FieldStatusVariant } from '../Field/types.js'
+import type { TextEntryTraitProps } from '../Field/textEntryTraits.js'
+import type { FieldLabelProps, FieldStatusInput, FieldStatusPlacement, FieldStatusType } from '../Field/types.js'
+import type { IconName } from '../Icon/types.js'
 
 export type TextAreaSize = 'sm' | 'md' | 'lg'
 export type TextAreaStatus = FieldStatusInput
@@ -10,15 +12,16 @@ export type TextAreaChangeAction = (value: string, event: TextAreaChangeEvent) =
 export type TextAreaWrap = 'soft' | 'hard'
 export type TextAreaResize = 'none' | 'both' | 'horizontal' | 'vertical'
 
-export interface TextAreaProps extends Omit<FieldLabelProps, 'inputId' | 'labelId' | 'descriptionId' | 'isGroupLabel'>, FieldPartStylingProps {
+export interface TextAreaProps extends Omit<FieldLabelProps, 'inputId' | 'labelId' | 'descriptionId' | 'isGroupLabel'>, FieldPartStylingProps, TextEntryTraitProps {
   modelValue: string
   id?: string
   size?: TextAreaSize
   isReadOnly?: boolean
   disabledMessage?: string
-  startIcon?: Component
+  /** 文本框起始位置的图标：语义图标名（如 `'search'`），或一个图标组件。 */
+  startIcon?: IconName | Component
   status?: TextAreaStatus
-  statusVariant?: FieldStatusVariant | 'tooltip'
+  statusVariant?: FieldStatusPlacement
   changeAction?: TextAreaChangeAction
   isLoading?: boolean
   placeholder?: string
@@ -42,6 +45,12 @@ export interface TextAreaProps extends Omit<FieldLabelProps, 'inputId' | 'labelI
   maxlength?: number | string
   /** 同 `maxlength`，原版的写法（`max-length`）；两个都给时以它为准 */
   maxLength?: number | string
+  /**
+   * 原生 `maxlength` 属性：输入达到这么多个 UTF-16 码元后，浏览器不再接受输入（一个 emoji 可能占两个或更多）。
+   * 独立于 `maxlength` / `maxLength` 那个按可见字符计数的软计数器：不显示也不改变计数器。
+   * 组件自己不截断、不校验，更长的受控值保持原样。
+   */
+  htmlMaxLength?: number
   wrap?: TextAreaWrap
   resize?: TextAreaResize
   hasClear?: boolean

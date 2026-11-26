@@ -29486,14 +29486,14 @@
               {
                 "name": "`statusVariant`",
                 "type": "`'attached' | 'detached' | 'tooltip'`",
-                "default": "`'attached'`",
-                "description": "Where the status message sits."
+                "default": "`'attached'` in input mode, `'detached'` in dropzone mode",
+                "description": "Where the status message sits. A dropzone's tall surface cannot carry an attached message, so it defaults to detached; `tooltip` shows the message from a focusable status button, in both modes and while uploading."
               },
               {
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Blocks the picker and drops."
+                "description": "Blocks the picker and drops. The trigger stays in the tab order with `aria-disabled`; the chosen files are left out of form submission."
               },
               {
                 "name": "`disabledMessage`",
@@ -29637,14 +29637,14 @@
               {
                 "name": "`statusVariant`",
                 "type": "`'attached' | 'detached' | 'tooltip'`",
-                "default": "`'attached'`",
-                "description": "状态消息的位置。"
+                "default": "输入模式 `'attached'`，拖放模式 `'detached'`",
+                "description": "状态消息的位置。拖放区又高又大，贴在底下的消息会盖住放文件的地方，所以默认放到下面；`tooltip` 用一个可聚焦的状态按钮显示消息，两种模式和上传中都保留。"
               },
               {
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "禁止打开选择器，也不接受拖放。"
+                "description": "禁止打开选择器，也不接受拖放。触发按钮仍留在 Tab 顺序里（带 `aria-disabled`），已选的文件不参与表单提交。"
               },
               {
                 "name": "`disabledMessage`",
@@ -35446,6 +35446,12 @@
                 "default": "—"
               },
               {
+                "name": "`htmlMaxLength`",
+                "description": "`htmlMaxLength`",
+                "type": "`number`",
+                "default": "—"
+              },
+              {
                 "name": "`wrap`",
                 "description": "`wrap`",
                 "type": "`'soft' | 'hard'`",
@@ -35468,6 +35474,36 @@
                 "description": "`hasSpellCheck`",
                 "type": "`boolean`",
                 "default": "true"
+              },
+              {
+                "name": "`enterKeyHint`",
+                "description": "`enterKeyHint`",
+                "type": "`'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send'`",
+                "default": "—"
+              },
+              {
+                "name": "`inputMode`",
+                "description": "`inputMode`",
+                "type": "`'none' | 'text' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal' | 'search'`",
+                "default": "—"
+              },
+              {
+                "name": "`autoCapitalize`",
+                "description": "`autoCapitalize`",
+                "type": "`'off' | 'none' | 'on' | 'sentences' | 'words' | 'characters'`",
+                "default": "—"
+              },
+              {
+                "name": "`hasAutoCorrect`",
+                "description": "`hasAutoCorrect`",
+                "type": "`boolean`",
+                "default": "—"
+              },
+              {
+                "name": "`startIcon`",
+                "description": "`startIcon`",
+                "type": "`IconName | Component`",
+                "default": "—"
               },
               {
                 "name": "`placeholder`",
@@ -35687,6 +35723,12 @@
                 "description": "可见字符上限，一个 emoji 算一个。可以继续输入，超出后字数变红，接近上限和超出时读屏会播报。不会写进原生 maxlength。"
               },
               {
+                "name": "`htmlMaxLength`",
+                "type": "`number`",
+                "default": "—",
+                "description": "原生 `maxlength`：输入达到这么多个 UTF-16 码元后浏览器不再接受输入（一个 emoji 可能占两个或更多）。独立于 `maxlength` 那个按可见字符计数的软计数器：不显示也不改变计数器，组件自己也不截断。"
+              },
+              {
                 "name": "`wrap`",
                 "type": "`'soft' | 'hard'`",
                 "default": "soft",
@@ -35711,6 +35753,36 @@
                 "description": "是否启用浏览器拼写检查。"
               },
               {
+                "name": "`enterKeyHint`",
+                "type": "`'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send'`",
+                "default": "—",
+                "description": "软键盘回车键上的字（原生 `enterkeyhint`）。"
+              },
+              {
+                "name": "`inputMode`",
+                "type": "`'none' | 'text' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal' | 'search'`",
+                "default": "—",
+                "description": "字段要哪种软键盘（原生 `inputmode`）。"
+              },
+              {
+                "name": "`autoCapitalize`",
+                "type": "`'off' | 'none' | 'on' | 'sentences' | 'words' | 'characters'`",
+                "default": "—",
+                "description": "软键盘输入时什么时候自动大写（原生 `autocapitalize`）。"
+              },
+              {
+                "name": "`hasAutoCorrect`",
+                "type": "`boolean`",
+                "default": "—",
+                "description": "软键盘是否在输入时纠正单词（原生 `autocorrect`）。"
+              },
+              {
+                "name": "`startIcon`",
+                "type": "`IconName | Component`",
+                "default": "—",
+                "description": "文本域前端的装饰图标：语义图标名（如 `'search'`）或图标组件。"
+              },
+              {
                 "name": "`placeholder`",
                 "type": "`string`",
                 "default": "—",
@@ -35732,7 +35804,7 @@
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "false",
-                "description": "禁用文本域，内容不可修改，值也不会随表单提交。"
+                "description": "禁用文本域：内容不可修改，仍留在 Tab 顺序里（带 `aria-disabled`），除聚焦和失焦外不运行调用方的处理函数，值也不会随表单提交。"
               },
               {
                 "name": "`disabledMessage`",
@@ -36182,7 +36254,7 @@
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "false",
-                "description": "Disables the input. Disabled values are excluded from form submission."
+                "description": "Disables the input. It stays in the tab order with `aria-disabled` and is read-only, runs no caller handler except focus and blur, and its value is excluded from form submission."
               },
               {
                 "name": "`isOptional`",
@@ -36228,9 +36300,9 @@
               },
               {
                 "name": "`type`",
-                "type": "`'text' | 'password' | 'email'`",
+                "type": "`'text' | 'password' | 'email' | 'search' | 'tel' | 'url'`",
                 "default": "text",
-                "description": "Single-line input type. Use a textarea for multiline content."
+                "description": "Single-line input type. `email`, `tel` and `url` also bring up the matching touch keyboard; `search` makes the field a search box (pair it with `enterKeyHint=\"search\"`). Use a textarea for multiline content."
               },
               {
                 "name": "`size`",
@@ -36252,9 +36324,9 @@
               },
               {
                 "name": "`startIcon`",
-                "type": "`Component`",
+                "type": "`IconName | Component`",
                 "default": "—",
-                "description": "Decorative leading icon component. The icon slot takes precedence."
+                "description": "Decorative leading icon: a semantic icon name such as `'search'`, or an icon component. The icon slot takes precedence."
               },
               {
                 "name": "`status`",
@@ -36315,6 +36387,36 @@
                 "type": "`string`",
                 "default": "—",
                 "description": "Forwarded unchanged to native autocomplete."
+              },
+              {
+                "name": "`enterKeyHint`",
+                "type": "`'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send'`",
+                "default": "—",
+                "description": "What the Return key of a touch keyboard says (native `enterkeyhint`). It only labels the key; Enter keeps doing what it did."
+              },
+              {
+                "name": "`inputMode`",
+                "type": "`'none' | 'text' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal' | 'search'`",
+                "default": "—",
+                "description": "Which touch keyboard the field asks for (native `inputmode`), without changing what it accepts."
+              },
+              {
+                "name": "`autoCapitalize`",
+                "type": "`'off' | 'none' | 'on' | 'sentences' | 'words' | 'characters'`",
+                "default": "—",
+                "description": "When a touch keyboard capitalizes as you type (native `autocapitalize`)."
+              },
+              {
+                "name": "`hasAutoCorrect`",
+                "type": "`boolean`",
+                "default": "—",
+                "description": "Whether a touch keyboard corrects words as you type (native `autocorrect`). Unset leaves the browser default."
+              },
+              {
+                "name": "`hasSpellCheck`",
+                "type": "`boolean`",
+                "default": "—",
+                "description": "Whether misspelled words are underlined (native `spellcheck`). Unset leaves the browser default."
               },
               {
                 "name": "`clearLabel`",
@@ -36407,7 +36509,7 @@
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "false",
-                "description": "禁用输入框。被禁用的字段不参与表单提交。"
+                "description": "禁用输入框。它仍留在 Tab 顺序里（带 `aria-disabled`），内容只读，除聚焦和失焦外不运行调用方的处理函数，值也不参与表单提交。"
               },
               {
                 "name": "`isOptional`",
@@ -36453,9 +36555,9 @@
               },
               {
                 "name": "`type`",
-                "type": "`'text' | 'password' | 'email'`",
+                "type": "`'text' | 'password' | 'email' | 'search' | 'tel' | 'url'`",
                 "default": "text",
-                "description": "输入框类型。多行内容请改用 TextArea。"
+                "description": "输入框类型。`email`、`tel`、`url` 同时决定弹出对应的软键盘；`search` 让字段成为搜索框（搭配 `enterKeyHint=\"search\"`）。多行内容请改用 TextArea。"
               },
               {
                 "name": "`size`",
@@ -36477,9 +36579,9 @@
               },
               {
                 "name": "`startIcon`",
-                "type": "`Component`",
+                "type": "`IconName | Component`",
                 "default": "—",
-                "description": "显示在输入框前端的装饰图标。与 icon 插槽同时使用时，插槽优先。"
+                "description": "显示在输入框前端的装饰图标：语义图标名（如 `'search'`）或图标组件。与 icon 插槽同时使用时，插槽优先。"
               },
               {
                 "name": "`status`",
@@ -36540,6 +36642,36 @@
                 "type": "`string`",
                 "default": "—",
                 "description": "原样透传给原生 input 的 autocomplete 属性。"
+              },
+              {
+                "name": "`enterKeyHint`",
+                "type": "`'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send'`",
+                "default": "—",
+                "description": "软键盘回车键上的字（原生 `enterkeyhint`）。只改键面，按回车做什么不变。"
+              },
+              {
+                "name": "`inputMode`",
+                "type": "`'none' | 'text' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal' | 'search'`",
+                "default": "—",
+                "description": "字段要哪种软键盘（原生 `inputmode`），不改变字段接受什么。"
+              },
+              {
+                "name": "`autoCapitalize`",
+                "type": "`'off' | 'none' | 'on' | 'sentences' | 'words' | 'characters'`",
+                "default": "—",
+                "description": "软键盘输入时什么时候自动大写（原生 `autocapitalize`）。"
+              },
+              {
+                "name": "`hasAutoCorrect`",
+                "type": "`boolean`",
+                "default": "—",
+                "description": "软键盘是否在输入时纠正单词（原生 `autocorrect`）。不传时用浏览器默认。"
+              },
+              {
+                "name": "`hasSpellCheck`",
+                "type": "`boolean`",
+                "default": "—",
+                "description": "是否给拼错的词画下划线（原生 `spellcheck`）。不传时用浏览器默认。"
               },
               {
                 "name": "`clearLabel`",
@@ -46440,12 +46572,12 @@
       "importPath": "@astryx-vue/core/FormLayout",
       "exportName": "FormLayout",
       "summary": {
-        "en": "`FormLayout` arranges fields. It is not a `<form>`. Put the fields in the default slot and choose a direction.",
-        "zh": "`FormLayout` 排列字段。它不是 `<form>`。字段放在默认插槽里，再选一个方向。"
+        "en": "`FormLayout` arranges fields. It is not a `<form>`: wrap it in a native `<form>` for state and submission. `<form>` has no Astryx replacement, so it stays a plain element. Put the fields in the default slot and choose a direction.",
+        "zh": "`FormLayout` 排列字段。它不是 `<form>`：状态和提交请包一层原生 `<form>`，它没有对应的 Astryx 组件，保持普通元素即可。字段放在默认插槽里，再选一个方向。"
       },
       "usage": {
-        "en": "`FormLayout` arranges fields. It is not a `<form>`. Put the fields in the default slot and choose a direction.\n\n```vue\n<script setup lang=\"ts\">\nimport { FormLayout } from '@astryx-vue/core/FormLayout'\nimport { TextInput } from '@astryx-vue/core/TextInput'\n</script>\n\n<template>\n  <FormLayout>\n    <TextInput v-model=\"name\" label=\"Name\" />\n    <TextInput v-model=\"email\" label=\"Email\" />\n  </FormLayout>\n</template>\n```\n\n`direction` is `vertical` (the default), `horizontal`, or `horizontal-labels`. Vertical stacks fields with a gap of spacing step 4. Horizontal places them in equal columns. Horizontal labels put the label on the left and the control on the right, and collapse to a column below 480px.\n\n`defaultOptionality` is `optional` or `required`. It changes the indicator and `aria-required` on fields that do not set their own `isOptional` or `isRequired`. It does not set the native `required` attribute. When a field sets both, optional wins. Outside a `FormLayout`, `aria-required` stays `isRequired && !isOptional`.\n\nNested layouts keep their own direction. A horizontal row can sit inside a vertical form.",
-        "zh": "`FormLayout` 排列字段。它不是 `<form>`。字段放在默认插槽里，再选一个方向。\n\n```vue\n<script setup lang=\"ts\">\nimport { FormLayout } from '@astryx-vue/core/FormLayout'\nimport { TextInput } from '@astryx-vue/core/TextInput'\n</script>\n\n<template>\n  <FormLayout>\n    <TextInput v-model=\"name\" label=\"姓名\" />\n    <TextInput v-model=\"email\" label=\"邮箱\" />\n  </FormLayout>\n</template>\n```\n\n`direction` 取 `vertical`（默认）、`horizontal` 或 `horizontal-labels`。纵向按间距刻度 4 往下排。横向把字段放进等宽的列。横向标签把标签放在左边、控件放在右边，窄于 480px 时改回纵向。\n\n`defaultOptionality` 取 `optional` 或 `required`。它只影响没有自己写 `isOptional` 或 `isRequired` 的字段的标记和 `aria-required`，不写原生 `required`。同一字段两个都写时，选填优先。没有 `FormLayout` 祖先时，`aria-required` 仍是 `isRequired && !isOptional`。\n\n嵌套的布局各自保留方向。纵向表单里可以放一行横向字段。"
+        "en": "`FormLayout` arranges fields. It is not a `<form>`: wrap it in a native `<form>` for state and submission. `<form>` has no Astryx replacement, so it stays a plain element. Put the fields in the default slot and choose a direction.\n\n```vue\n<script setup lang=\"ts\">\nimport { FormLayout } from '@astryx-vue/core/FormLayout'\nimport { TextInput } from '@astryx-vue/core/TextInput'\n</script>\n\n<template>\n  <FormLayout>\n    <TextInput v-model=\"name\" label=\"Name\" />\n    <TextInput v-model=\"email\" label=\"Email\" />\n  </FormLayout>\n</template>\n```\n\n`direction` is `vertical` (the default), `horizontal`, or `horizontal-labels`. Vertical stacks fields with a gap of spacing step 4. Horizontal places them in equal columns. Horizontal labels put the label on the left and the control on the right, and collapse to a column below 480px.\n\n`defaultOptionality` is `optional` or `required`. It changes the indicator and `aria-required` on fields that do not set their own `isOptional` or `isRequired`. It does not set the native `required` attribute. When a field sets both, optional wins. Checkboxes and switches are the exception: an unchecked box or an off switch is an answer, so they take no required state from the default and are required only through their own `isRequired`. Outside a `FormLayout`, `aria-required` stays `isRequired && !isOptional`.\n\nNested layouts keep their own direction. A horizontal row can sit inside a vertical form.",
+        "zh": "`FormLayout` 排列字段。它不是 `<form>`：状态和提交请包一层原生 `<form>`，它没有对应的 Astryx 组件，保持普通元素即可。字段放在默认插槽里，再选一个方向。\n\n```vue\n<script setup lang=\"ts\">\nimport { FormLayout } from '@astryx-vue/core/FormLayout'\nimport { TextInput } from '@astryx-vue/core/TextInput'\n</script>\n\n<template>\n  <FormLayout>\n    <TextInput v-model=\"name\" label=\"姓名\" />\n    <TextInput v-model=\"email\" label=\"邮箱\" />\n  </FormLayout>\n</template>\n```\n\n`direction` 取 `vertical`（默认）、`horizontal` 或 `horizontal-labels`。纵向按间距刻度 4 往下排。横向把字段放进等宽的列。横向标签把标签放在左边、控件放在右边，窄于 480px 时改回纵向。\n\n`defaultOptionality` 取 `optional` 或 `required`。它只影响没有自己写 `isOptional` 或 `isRequired` 的字段的标记和 `aria-required`，不写原生 `required`。同一字段两个都写时，选填优先。复选框和开关是例外：没勾的复选框、关着的开关本身就是一个答案，所以不从默认值得到必填状态，只由它们自己的 `isRequired` 决定。没有 `FormLayout` 祖先时，`aria-required` 仍是 `isRequired && !isOptional`。\n\n嵌套的布局各自保留方向。纵向表单里可以放一行横向字段。"
       },
       "practices": {
         "en": [
@@ -46500,7 +46632,7 @@
                 "name": "`defaultOptionality`",
                 "type": "`'optional' | 'required'`",
                 "default": "-",
-                "description": "Default for fields that do not set `isOptional` or `isRequired`. It changes the indicator and `aria-required`. It does not set the native `required` attribute. When a field sets both, optional wins."
+                "description": "Default for fields that do not set `isOptional` or `isRequired`. It changes the indicator and `aria-required`. It does not set the native `required` attribute. When a field sets both, optional wins. Checkboxes and switches are the exception: an unchecked box or an off switch is an answer, so they take no required state from the default and are required only through their own `isRequired`."
               },
               {
                 "name": "`defaultEntryErrorBehavior`",
@@ -46525,7 +46657,7 @@
                 "name": "`defaultOptionality`",
                 "type": "`'optional' | 'required'`",
                 "default": "-",
-                "description": "没有自己写 `isOptional` 或 `isRequired` 的字段用这个默认值。它改标记和 `aria-required`，不写原生 `required`。两个都写时，选填优先。"
+                "description": "没有自己写 `isOptional` 或 `isRequired` 的字段用这个默认值。它改标记和 `aria-required`，不写原生 `required`。两个都写时，选填优先。复选框和开关是例外：没勾的复选框、关着的开关本身就是一个答案，所以不从默认值得到必填状态，只由它们自己的 `isRequired` 决定。"
               },
               {
                 "name": "`defaultEntryErrorBehavior`",

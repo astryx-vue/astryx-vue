@@ -17,14 +17,20 @@ footer: false
 <tr><td><code>cols</code></td><td><code>number</code></td><td>—</td><td>Native textarea cols.</td></tr>
 <tr><td><code>minlength</code></td><td><code>number | string</code></td><td>—</td><td>Native textarea minlength.</td></tr>
 <tr><td><code>maxlength</code></td><td><code>number | string</code></td><td>—</td><td>Visible-character limit. One emoji counts as one. Typing past it stays allowed; the count turns red, and screen readers hear the near and over zones. It is not written to the native maxlength attribute.</td></tr>
+<tr><td><code>htmlMaxLength</code></td><td><code>number</code></td><td>—</td><td>Native <code>maxlength</code>: the browser stops typing past this many UTF-16 code units (an emoji can take two or more). Separate from <code>maxlength</code>, the soft counter of visible characters: it neither shows nor changes the counter, and the component adds no truncation of its own.</td></tr>
 <tr><td><code>wrap</code></td><td><code>&#x27;soft&#x27; | &#x27;hard&#x27;</code></td><td>soft</td><td>Native textarea wrap.</td></tr>
 <tr><td><code>resize</code></td><td><code>&#x27;none&#x27; | &#x27;both&#x27; | &#x27;horizontal&#x27; | &#x27;vertical&#x27;</code></td><td>vertical</td><td>Native textarea resize. Vertical dragging is enabled by default.</td></tr>
 <tr><td><code>autoComplete</code></td><td><code>string</code></td><td>—</td><td>Native textarea autocomplete token, such as <code>off</code> or <code>email</code>. Forwarded unchanged; the controlled value is not affected.</td></tr>
 <tr><td><code>hasSpellCheck</code></td><td><code>boolean</code></td><td>true</td><td>Turns the browser spell checker on or off for the textarea.</td></tr>
+<tr><td><code>enterKeyHint</code></td><td><code>&#x27;enter&#x27; | &#x27;done&#x27; | &#x27;go&#x27; | &#x27;next&#x27; | &#x27;previous&#x27; | &#x27;search&#x27; | &#x27;send&#x27;</code></td><td>—</td><td>What the Return key of a touch keyboard says (native <code>enterkeyhint</code>).</td></tr>
+<tr><td><code>inputMode</code></td><td><code>&#x27;none&#x27; | &#x27;text&#x27; | &#x27;tel&#x27; | &#x27;url&#x27; | &#x27;email&#x27; | &#x27;numeric&#x27; | &#x27;decimal&#x27; | &#x27;search&#x27;</code></td><td>—</td><td>Which touch keyboard the field asks for (native <code>inputmode</code>).</td></tr>
+<tr><td><code>autoCapitalize</code></td><td><code>&#x27;off&#x27; | &#x27;none&#x27; | &#x27;on&#x27; | &#x27;sentences&#x27; | &#x27;words&#x27; | &#x27;characters&#x27;</code></td><td>—</td><td>When a touch keyboard capitalizes as you type (native <code>autocapitalize</code>).</td></tr>
+<tr><td><code>hasAutoCorrect</code></td><td><code>boolean</code></td><td>—</td><td>Whether a touch keyboard corrects words as you type (native <code>autocorrect</code>).</td></tr>
+<tr><td><code>startIcon</code></td><td><code>IconName | Component</code></td><td>—</td><td>Decorative leading icon: a semantic icon name such as <code>'search'</code>, or an icon component.</td></tr>
 <tr><td><code>placeholder</code></td><td><code>string</code></td><td>—</td><td>Placeholder text.</td></tr>
 <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>Description below the label.</td></tr>
 <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td>false</td><td>Hide the visual label. Keep the accessible name.</td></tr>
-<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td>false</td><td>Prevent edits. Do not submit the form value.</td></tr>
+<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td>false</td><td>Prevent edits. It stays in the tab order with <code>aria-disabled</code>, runs no caller handler except focus and blur, and does not submit the form value.</td></tr>
 <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>Reason for disabling. The disabled text area stays focusable when provided.</td></tr>
 <tr><td><code>isReadOnly</code></td><td><code>boolean</code></td><td>false</td><td>Prevent edits. Include the value in form submission.</td></tr>
 <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td>false</td><td>Show a required description. Does not run native required validation.</td></tr>

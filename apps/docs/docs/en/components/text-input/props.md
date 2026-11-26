@@ -15,7 +15,7 @@ footer: false
       <tr><td><code>label</code></td><td><code>string</code></td><td>Required</td><td>Visible label. Still names the control when visually hidden.</td></tr>
       <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td>false</td><td>Visually hides the label and description without removing accessible associations.</td></tr>
       <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>Helper text between the label and control.</td></tr>
-      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td>false</td><td>Disables the input. Disabled values are excluded from form submission.</td></tr>
+      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td>false</td><td>Disables the input. It stays in the tab order with <code>aria-disabled</code> and is read-only, runs no caller handler except focus and blur, and its value is excluded from form submission.</td></tr>
       <tr><td><code>isOptional</code></td><td><code>boolean</code></td><td>false</td><td>Shows an optional indicator and takes precedence over isRequired.</td></tr>
       <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td>false</td><td>Shows a required indicator; TextInput also sets aria-required.</td></tr>
       <tr><td><code>labelIcon</code></td><td><code>Component</code></td><td>—</td><td>Vue icon component before the label. The labelIcon slot takes precedence.</td></tr>
@@ -23,11 +23,11 @@ footer: false
       <tr><td><code>optionalLabel</code></td><td><code>string</code></td><td>Optional</td><td>Localized optional indicator.</td></tr>
       <tr><td><code>requiredLabel</code></td><td><code>string</code></td><td>Required</td><td>Localized required indicator.</td></tr>
       <tr><td><code>id</code></td><td><code>string</code></td><td>Generated</td><td>Native input ID. Label and description associations update together.</td></tr>
-      <tr><td><code>type</code></td><td><code>&#x27;text&#x27; | &#x27;password&#x27; | &#x27;email&#x27;</code></td><td>text</td><td>Single-line input type. Use a textarea for multiline content.</td></tr>
+      <tr><td><code>type</code></td><td><code>&#x27;text&#x27; | &#x27;password&#x27; | &#x27;email&#x27; | &#x27;search&#x27; | &#x27;tel&#x27; | &#x27;url&#x27;</code></td><td>text</td><td>Single-line input type. <code>email</code>, <code>tel</code> and <code>url</code> also bring up the matching touch keyboard; <code>search</code> makes the field a search box (pair it with <code>enterKeyHint="search"</code>). Use a textarea for multiline content.</td></tr>
       <tr><td><code>size</code></td><td><code>&#x27;sm&#x27; | &#x27;md&#x27; | &#x27;lg&#x27;</code></td><td>md</td><td>Neutral heights are 28, 32 and 36px respectively.</td></tr>
       <tr><td><code>isReadOnly</code></td><td><code>boolean</code></td><td>false</td><td>Prevents editing, but remains focusable, undimmed and included in form submission.</td></tr>
       <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>Disabled reason. Uses aria-disabled and readonly to preserve focus, while blocking edits and excluding the field from submission.</td></tr>
-      <tr><td><code>startIcon</code></td><td><code>Component</code></td><td>—</td><td>Decorative leading icon component. The icon slot takes precedence.</td></tr>
+      <tr><td><code>startIcon</code></td><td><code>IconName | Component</code></td><td>—</td><td>Decorative leading icon: a semantic icon name such as <code>'search'</code>, or an icon component. The icon slot takes precedence.</td></tr>
       <tr><td><code>status</code></td><td><code>TextInputStatus</code></td><td>—</td><td>Error, warning or success, optionally with message and messageId. Error sets aria-invalid.</td></tr>
       <tr><td><code>statusVariant</code></td><td><code>&#x27;attached&#x27; | &#x27;detached&#x27; | &#x27;tooltip&#x27;</code></td><td>attached</td><td>Attached, detached or an icon tooltip. All variants describe the input accessibly.</td></tr>
       <tr><td><code>changeAction</code></td><td><code>(value: string, event: TextInputChangeEvent) =&gt; void | Promise&lt;void&gt;</code></td><td>—</td><td>Runs after a value change. A returned Promise automatically drives pending state.</td></tr>
@@ -38,6 +38,11 @@ footer: false
       <tr><td><code>hasAutoFocus</code></td><td><code>boolean</code></td><td>false</td><td>Focuses the native input after mounting.</td></tr>
       <tr><td><code>htmlName</code></td><td><code>string</code></td><td>—</td><td>Native name, taking precedence over a forwarded name and removed when disabled.</td></tr>
       <tr><td><code>autoComplete</code></td><td><code>string</code></td><td>—</td><td>Forwarded unchanged to native autocomplete.</td></tr>
+      <tr><td><code>enterKeyHint</code></td><td><code>&#x27;enter&#x27; | &#x27;done&#x27; | &#x27;go&#x27; | &#x27;next&#x27; | &#x27;previous&#x27; | &#x27;search&#x27; | &#x27;send&#x27;</code></td><td>—</td><td>What the Return key of a touch keyboard says (native <code>enterkeyhint</code>). It only labels the key; Enter keeps doing what it did.</td></tr>
+      <tr><td><code>inputMode</code></td><td><code>&#x27;none&#x27; | &#x27;text&#x27; | &#x27;tel&#x27; | &#x27;url&#x27; | &#x27;email&#x27; | &#x27;numeric&#x27; | &#x27;decimal&#x27; | &#x27;search&#x27;</code></td><td>—</td><td>Which touch keyboard the field asks for (native <code>inputmode</code>), without changing what it accepts.</td></tr>
+      <tr><td><code>autoCapitalize</code></td><td><code>&#x27;off&#x27; | &#x27;none&#x27; | &#x27;on&#x27; | &#x27;sentences&#x27; | &#x27;words&#x27; | &#x27;characters&#x27;</code></td><td>—</td><td>When a touch keyboard capitalizes as you type (native <code>autocapitalize</code>).</td></tr>
+      <tr><td><code>hasAutoCorrect</code></td><td><code>boolean</code></td><td>—</td><td>Whether a touch keyboard corrects words as you type (native <code>autocorrect</code>). Unset leaves the browser default.</td></tr>
+      <tr><td><code>hasSpellCheck</code></td><td><code>boolean</code></td><td>—</td><td>Whether misspelled words are underlined (native <code>spellcheck</code>). Unset leaves the browser default.</td></tr>
       <tr><td><code>clearLabel</code></td><td><code>string</code></td><td>Clear {label}</td><td>Accessible name of the clear button. It includes the field label by default. The tooltip only says “Clear”.</td></tr>
       <tr><td><code>loadingLabel</code></td><td><code>string</code></td><td>Loading</td><td>Localized loading-indicator name.</td></tr>
       <tr><td><code>containerClass</code></td><td><code>string | object | array</code></td><td>—</td><td>Class for the field container: the Field box around the label, control box, and status message. Has no effect, and warns in development, where no Field box renders (inside InputGroup and in a horizontal-labels FormLayout).</td></tr>

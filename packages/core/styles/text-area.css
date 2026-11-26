@@ -71,6 +71,12 @@
     cursor: default;
   }
 
+  /* 禁用的文本框还留在 Tab 顺序里：键盘聚焦时仍画聚焦环，和整块字段一样被淡化。 */
+  .astryx-text-area[data-disabled='true']:has(> [aria-disabled='true']:focus-visible) {
+    border-color: var(--astryx-input-focus, #262626);
+    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--astryx-input-focus, #262626) 15%, transparent);
+  }
+
   .astryx-text-area-control {
     box-sizing: border-box;
     display: block;
@@ -122,13 +128,19 @@
     right: var(--astryx-spacing-1, 4px);
   }
 
-  .astryx-text-area-control:disabled {
+  .astryx-text-area-control:disabled,
+  .astryx-text-area-control[aria-disabled='true'] {
     color: inherit;
     cursor: default;
     -webkit-text-fill-color: currentcolor;
   }
 
   @media (pointer: coarse) {
+    /* 点一下文本框就会升起键盘，聚焦外观淡入会在升起的每一帧重绘，所以粗指针下立刻显示。 */
+    .astryx-text-area {
+      transition-duration: 0s;
+    }
+
     @supports (-webkit-touch-callout: none) {
       .astryx-text-area-control {
         font-size: max(1rem, var(--astryx-text-body-size, 14px));
@@ -156,6 +168,9 @@
       color: GrayText;
       border-color: GrayText;
       opacity: 1;
+    }
+    .astryx-text-area[data-disabled='true']:has(> [aria-disabled='true']:focus-visible) {
+      border-color: Highlight;
     }
   }
 }

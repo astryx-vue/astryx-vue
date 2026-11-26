@@ -1,5 +1,5 @@
 import type { FieldPartStylingProps } from '../Field/fieldParts.js'
-import type { FieldStatusInput, FieldStatusVariant } from '../Field/types.js'
+import type { FieldStatusInput, FieldStatusPlacement } from '../Field/types.js'
 
 export type FileInputMode = 'input' | 'dropzone'
 export type FileInputSize = 'sm' | 'md' | 'lg'
@@ -31,7 +31,7 @@ export interface FileInputProps extends FieldPartStylingProps {
    */
   disabledMessage?: string
   status?: FileInputStatus
-  statusVariant?: FieldStatusVariant | 'tooltip'
+  statusVariant?: FieldStatusPlacement
   width?: number | string
   clearLabel?: string
   /**

@@ -82,6 +82,6 @@ describe('inputGroup disabled state', () => {
 
     expect(groups).toHaveLength(2)
     expect(groups.every(group => group.attributes('aria-disabled') === 'true')).toBe(true)
-    expect(wrapper.get('input').attributes('disabled')).toBeDefined()
+    expect(wrapper.get('input').attributes('aria-disabled')).toBe('true')
   })
 })
