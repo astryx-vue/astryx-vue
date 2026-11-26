@@ -1,10 +1,37 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { reactive, ref } from 'vue'
-import { WHEEL_IDLE_MS } from './internal/snapPagingAttach.js'
-import { createVelocitySampler, pickPage, viewPages } from './internal/snapPagingMotion.js'
+import { wheelEvent } from '../gestures/__tests__/wheelEvent'
+import { TOUCH_ACTION_ATTRIBUTE } from '../gestures/touchActionRule'
+import { paging } from '../motion/uikit/paging'
+import { pickPage, viewPages } from './internal/snapPagingMotion.js'
 import { attachSnapPaging, isSnapPaging, moveHeldSnapPaging, moveSnapPaging, nearestStop, snapPages, snapStops } from './internal/snapPagingValue.js'
 import { fakeRow, layOutRow, swipe, touch } from './testing/fakeSnapRow.js'
 import { useSnapPaging } from './useSnapPaging.js'
+
+// 记下每个元素的尺寸回调，测试里手动报一次「改了尺寸」。
+const resizeCallbacks = vi.hoisted(() => new Map<Element, Set<() => void>>())
+vi.mock('../utils/sharedResizeObserver', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../utils/sharedResizeObserver')>()
+  return {
+    ...actual,
+    observeResize(element: Element, callback: (entry: ResizeObserverEntry) => void) {
+      const notify = () => callback({ target: element } as ResizeObserverEntry)
+      const set = resizeCallbacks.get(element) ?? new Set()
+      set.add(notify)
+      resizeCallbacks.set(element, set)
+      const unobserve = actual.observeResize(element, callback)
+      return () => {
+        set.delete(notify)
+        unobserve()
+      }
+    },
+  }
+})
+
+function reportResize(element: Element): void {
+  for (const notify of resizeCallbacks.get(element) ?? [])
+    notify()
+}
 
 const advance = (ms: number) => vi.advanceTimersByTime(ms)
 // 十项、每项 100 像素，一屏 300 像素：停点是 0 到 700，每 100 一个。
@@ -21,12 +48,17 @@ function reducedMotion(matches: boolean): void {
   }) as unknown as MediaQueryList)
 }
 
+// 手势宿主跟着 document 活过一个个测试，所以事件时间只能往前走。
+let elapsed = 0
+
 beforeEach(() => {
   vi.useFakeTimers()
+  vi.advanceTimersByTime(elapsed)
   reducedMotion(false)
 })
 
 afterEach(() => {
+  elapsed = performance.now() + 10_000
   vi.useRealTimers()
   vi.restoreAllMocks()
   document.body.innerHTML = ''
@@ -105,14 +137,6 @@ describe('pages and the page a release picks', () => {
     expect(pickPage([0, 300, 600], 140, 0, 0)).toBe(0)
     expect(pickPage([0, 300, 600], 160, 0, 0)).toBe(1)
   })
-
-  it('reads no speed from a finger that stopped before it lifted', () => {
-    const sampler = createVelocitySampler()
-    sampler.add(0, 0)
-    sampler.add(16, 32)
-    expect(sampler.velocity(16)).toBe(2000)
-    expect(sampler.velocity(100)).toBe(0)
-  })
 })
 
 describe('paging under a finger', () => {
@@ -188,24 +212,61 @@ describe('paging under a finger', () => {
 
   it('keeps vertical touches for the page and takes horizontal ones while attached', () => {
     const { row, detach } = attach()
-    expect(row.style.getPropertyValue('touch-action')).toBe('pan-y pinch-zoom')
+    expect(row.getAttribute(TOUCH_ACTION_ATTRIBUTE)).toBe('pan-y pinch-zoom')
     detach()
-    expect(row.style.getPropertyValue('touch-action')).toBe('')
+    expect(row.hasAttribute(TOUCH_ACTION_ATTRIBUTE)).toBe(false)
   })
 
-  it('catches a settle under a still touch, and rests on a page after the lift', () => {
-    const { row } = attach({ pages: 'item' })
-    swipe(row, advance, [250, 230, 200, 160])
-    advance(48)
-    const caught = row.scrollLeft
-    expect(caught).toBeGreaterThan(40)
-    expect(caught).toBeLessThan(100)
+  it('catches a release settle 85 ms after a still touch, keeps the touch from the content, and rests on a page after the lift', () => {
+    const { row } = attach()
+    const clicks = vi.fn()
+    row.addEventListener('click', clicks)
+    swipe(row, advance, [250, 200, 150, 100])
+    advance(16)
+    const touched = row.scrollLeft
+    expect(touched).toBeGreaterThan(100)
+    expect(touched).toBeLessThan(300)
     touch(row, 'pointerdown', 100)
+    // 按下后这一行再走 85 毫秒（UIKit 实测）才停住。
+    advance(paging.catchStopMs)
+    const caught = row.scrollLeft
+    expect(caught).toBeGreaterThan(touched)
+    expect(caught).toBeLessThan(300)
     advance(300)
     expect(row.scrollLeft).toBe(caught)
     touch(row, 'pointerup', 100)
+    row.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, detail: 1 }))
+    expect(clicks).not.toHaveBeenCalled()
     advance(2000)
-    expect([0, 100]).toContain(row.scrollLeft)
+    expect([0, 300]).toContain(row.scrollLeft)
+    expect(row.style.getPropertyValue('scroll-snap-type')).toBe('')
+  })
+
+  it('lets a release settle run on when the touch lifts before the catch', () => {
+    const { row } = attach()
+    swipe(row, advance, [250, 200, 150, 100])
+    advance(16)
+    touch(row, 'pointerdown', 100)
+    advance(30)
+    touch(row, 'pointerup', 100)
+    advance(2000)
+    expect(row.scrollLeft).toBe(300)
+  })
+
+  it('stops a programmatic move at the touch itself', () => {
+    const { row } = attach()
+    moveSnapPaging(row, () => 600)
+    advance(48)
+    const touched = row.scrollLeft
+    expect(touched).toBeGreaterThan(0)
+    expect(touched).toBeLessThan(600)
+    touch(row, 'pointerdown', 100)
+    advance(300)
+    expect(row.scrollLeft).toBe(touched)
+    // 停住后直接抬起：停到最近的一项。
+    touch(row, 'pointerup', 100)
+    advance(2000)
+    expect(row.scrollLeft).toBe(Math.round(touched / 100) * 100)
     expect(row.style.getPropertyValue('scroll-snap-type')).toBe('')
   })
 
@@ -217,20 +278,52 @@ describe('paging under a finger', () => {
     expect(row.scrollLeft).toBe(-300)
   })
 
+  it('follows a resize while held: the travel shrinks and the held position stays inside it', () => {
+    const { row, detach } = attach()
+    // 拖到接近末端再按住不放。
+    swipe(row, advance, [290, 200, 100, 10], { stepMs: 100, lift: false })
+    const held = row.scrollLeft
+    expect(held).toBeGreaterThan(200)
+    // 这一行的项变窄：可滚动距离从 700 变成 200。
+    Object.defineProperty(row, 'scrollWidth', { configurable: true, value: 500 })
+    reportResize(row)
+    expect(row.scrollLeft).toBe(200)
+    // 收进新范围以后照样跟手。
+    touch(row, 'pointermove', 60)
+    expect(row.scrollLeft).toBe(200)
+    touch(row, 'pointermove', 150)
+    expect(row.scrollLeft).toBeLessThan(200)
+    advance(100)
+    touch(row, 'pointerup', 150)
+    advance(2000)
+    detach()
+    expect(resizeCallbacks.get(row)?.size ?? 0).toBe(0)
+  })
+
   it('hands a held row back where it is shown on detach', () => {
     const { row, detach } = attach()
     swipe(row, advance, [250, 200, 150], { lift: false })
     detach()
-    expect(row.scrollLeft).toBe(50)
+    expect(row.scrollLeft).toBe(90)
     expect(row.style.getPropertyValue('scroll-snap-type')).toBe('')
     advance(2000)
-    expect(row.scrollLeft).toBe(50)
+    expect(row.scrollLeft).toBe(90)
+    touch(row, 'pointerup', 150)
   })
 })
 
 describe('paging on a trackpad swipe', () => {
   function wheel(row: HTMLElement, init: WheelEventInit): WheelEvent {
-    const event = new WheelEvent('wheel', { bubbles: true, cancelable: true, ...init })
+    const event = wheelEvent('wheel', { bubbles: true, cancelable: true, ...init })
+    row.dispatchEvent(event)
+    return event
+  }
+
+  /** 触控板的横扫：像素增量正好是旧版 `wheelDelta` 的三分之一，浏览器靠这个认出触控板。 */
+  function trackpad(row: HTMLElement, deltaX: number): WheelEvent {
+    const event = wheelEvent('wheel', { bubbles: true, cancelable: true, deltaX })
+    Object.defineProperty(event, 'wheelDeltaX', { value: -3 * deltaX })
+    Object.defineProperty(event, 'wheelDeltaY', { value: 0 })
     row.dispatchEvent(event)
     return event
   }
@@ -240,12 +333,12 @@ describe('paging on a trackpad swipe', () => {
     attachSnapPaging(useSnapPaging(), row)
     const events = []
     for (let i = 0; i < 30; i++) {
-      events.push(wheel(row, { deltaX: 40 }))
+      events.push(trackpad(row, 30))
       advance(16)
     }
     expect(events.every(event => event.defaultPrevented)).toBe(true)
     expect(row.scrollLeft).toBe(300)
-    advance(WHEEL_IDLE_MS + 2000)
+    advance(2000)
     expect(row.scrollLeft).toBe(300)
   })
 
@@ -261,7 +354,7 @@ describe('paging on a trackpad swipe', () => {
     const row = fakeRow(TEN)
     layOutRow(row, TEN)
     attachSnapPaging(useSnapPaging(), row)
-    wheel(row, { deltaX: 30 })
+    trackpad(row, 30)
     expect(moveHeldSnapPaging(row, () => 5000)).toBe(true)
     advance(2000)
     expect(row.scrollLeft).toBe(700)

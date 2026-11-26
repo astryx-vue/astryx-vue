@@ -1,6 +1,6 @@
 /**
- * 吸附分页的数学部分：速度采样、按停点排出每一页、松手时选哪一页，以及把一行
- * 带到目标页的弹簧。都不碰 DOM，时间由调用方给。
+ * 吸附分页的数学部分：按停点排出每一页、松手时选哪一页，以及把一行带到目标页的
+ * 弹簧。都不碰 DOM，时间由调用方给；松手速度来自手势引擎的拖动识别器。
  */
 
 /** 时间来源和逐帧回调，测试里可以换成假时钟。 */
@@ -14,41 +14,6 @@ export const browserClock: FrameClock = {
   now: () => performance.now(),
   frame: callback => requestAnimationFrame(() => callback()),
   cancel: handle => cancelAnimationFrame(handle),
-}
-
-/** 只看最近这么久的位置算速度。 */
-const VELOCITY_WINDOW_MS = 100
-/** 最后一次移动之后停了这么久，就当手指已经停住，速度为 0。 */
-const STILL_AFTER_MS = 50
-
-/** 记录拖动中的位置，算出松手时的速度（像素每秒，朝末端为正）。 */
-export function createVelocitySampler(): {
-  add: (time: number, position: number) => void
-  reset: () => void
-  velocity: (time: number) => number
-  lastTime: () => number | null
-} {
-  let samples: { time: number, position: number }[] = []
-  return {
-    add(time, position) {
-      samples.push({ time, position })
-      samples = samples.filter(sample => time - sample.time <= VELOCITY_WINDOW_MS)
-    },
-    reset() {
-      samples = []
-    },
-    velocity(time) {
-      const last = samples[samples.length - 1]
-      const first = samples[0]
-      if (last == null || first == null || last === first || time - last.time > STILL_AFTER_MS)
-        return 0
-      const elapsed = last.time - first.time
-      return elapsed > 0 ? (last.position - first.position) / elapsed * 1000 : 0
-    },
-    lastTime() {
-      return samples[samples.length - 1]?.time ?? null
-    },
-  }
 }
 
 /** 下标列表里离 `to` 最近的那一个。 */
