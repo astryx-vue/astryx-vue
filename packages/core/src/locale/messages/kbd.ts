@@ -3,6 +3,8 @@ import type { AstryxLocale } from '../types.js'
 export interface KbdMessages {
   /** 读出来的按键名，拼进快捷键的无障碍名。 */
   alt: string
+  /** 非 Apple 平台 Alt 键帽上显示的缩写。 */
+  altShort: string
   backspace: string
   /** Apple 平台的 Command 键。 */
   command: string
@@ -20,8 +22,12 @@ export interface KbdMessages {
   plus: string
   right: string
   shift: string
+  /** 非 Apple 平台 Shift 键帽上显示的文字。 */
+  shiftShort: string
   tab: string
   up: string
+  /** 非 Apple 平台 meta（Windows 徽标键）键帽上显示的缩写。 */
+  windowsShort: string
   /** 把前面已经拼好的按键和下一个键的名字连起来。 */
   shortcut: (shortcut: string, key: string) => string
 }
@@ -29,6 +35,7 @@ export interface KbdMessages {
 export const kbdMessages: Record<AstryxLocale, KbdMessages> = {
   'en': {
     alt: 'Alt',
+    altShort: 'Alt',
     backspace: 'Backspace',
     command: 'Command',
     control: 'Control',
@@ -41,12 +48,15 @@ export const kbdMessages: Record<AstryxLocale, KbdMessages> = {
     plus: 'Plus',
     right: 'Right arrow',
     shift: 'Shift',
+    shiftShort: 'Shift',
     tab: 'Tab',
     up: 'Up arrow',
+    windowsShort: 'Win',
     shortcut: (shortcut, key) => `${shortcut} + ${key}`,
   },
   'zh-CN': {
     alt: 'Alt',
+    altShort: 'Alt',
     backspace: '退格',
     command: 'Command',
     control: 'Control',
@@ -59,8 +69,10 @@ export const kbdMessages: Record<AstryxLocale, KbdMessages> = {
     plus: '加号',
     right: '右方向键',
     shift: 'Shift',
+    shiftShort: 'Shift',
     tab: 'Tab',
     up: '上方向键',
+    windowsShort: 'Win',
     shortcut: (shortcut, key) => `${shortcut} + ${key}`,
   },
 }

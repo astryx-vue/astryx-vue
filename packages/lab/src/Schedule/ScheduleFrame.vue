@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { VNodeChild } from 'vue'
 import type { ScheduleHeaderContent } from './types.js'
-import { Heading, Spinner } from '@astryx-vue/core'
-import { h, ref, useSlots, watch } from 'vue'
+import { Heading, Spinner, useAnnounce } from '@astryx-vue/core'
+import { h, useSlots, watch } from 'vue'
 import { useScheduleContext } from './context.js'
 import { VNodeHost } from './VNodeHost.js'
 
@@ -15,13 +15,14 @@ const props = defineProps<{
 
 const ctx = useScheduleContext()
 const slots = useSlots()
-const announce = ref('')
+const announce = useAnnounce()
 
-watch(() => props.isLoading, (loading, previous) => {
-  if (previous === undefined)
-    return
-  announce.value = loading ? 'Loading events' : ''
-})
+// 圆环本身不出声，由日程通过共享播报通道说一次「开始加载」。
+// 页面还在加载时已经在加载的不播报，免得进页面就念一遍。
+watch(() => props.isLoading, (loading) => {
+  if (loading && document.readyState === 'complete')
+    announce('Loading events', 'polite')
+}, { immediate: typeof document !== 'undefined' })
 
 function header(): ScheduleHeaderContent {
   let content: ScheduleHeaderContent = {
@@ -32,7 +33,7 @@ function header(): ScheduleHeaderContent {
         'class': ['astryx-schedule__spinner', !props.isLoading && 'is-hidden'],
         'aria-hidden': props.isLoading ? undefined : 'true',
       }, [
-        h(Spinner, { 'size': 'md', 'aria-label': 'Loading events' }),
+        h(Spinner, { 'size': 'md', 'aria-label': 'Loading events', 'aria-hidden': 'true' }),
       ]),
     ]),
     endContent: null,
@@ -60,9 +61,6 @@ function bar() {
 
 <template>
   <section class="astryx-schedule__frame" :aria-label="titleLabel">
-    <div class="astryx-schedule__live" aria-live="polite">
-      {{ announce }}
-    </div>
     <VNodeHost :nodes="bar()" />
     <slot />
   </section>

@@ -40,6 +40,12 @@ footer: false
         <td>必填。画出展开后那一整行详情面板里的内容，参数是这一行的数据。</td>
       </tr>
       <tr>
+        <td><code>getRowLabel</code></td>
+        <td><code>(item: T) =&gt; string</code></td>
+        <td>—</td>
+        <td>行的可读名字，拼进展开按钮的无障碍名称，例如「展开 Acme」。返回空白时用通用的「展开行」。</td>
+      </tr>
+      <tr>
         <td><code>getIsItemExpandable</code></td>
         <td><code>(item: T) =&gt; boolean</code></td>
         <td>—</td>

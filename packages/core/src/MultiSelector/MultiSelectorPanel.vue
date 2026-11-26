@@ -6,12 +6,15 @@ import { computed, useTemplateRef } from 'vue'
 import Icon from '../Icon/Icon.vue'
 import { isOptionAction } from '../selectors/optionAction.js'
 import { OptionAction } from '../selectors/optionActionView.js'
+import { createStillPointerGate } from '../selectors/stillPointerGate.js'
 import { SELECT_ALL_VALUE } from './options.js'
 
 defineOptions({ name: 'AstryxMultiSelectorPanel' })
 
 const props = defineProps<{
   searchable: boolean
+  /** 字段必填：打开时搜索框带 aria-required。 */
+  required?: boolean
   query: string
   searchId: string
   searchPlaceholder: string
@@ -59,6 +62,13 @@ defineSlots<{
 }>()
 
 const searchRef = useTemplateRef<HTMLInputElement>('searchRef')
+const pointerGate = createStillPointerGate()
+
+/** 只有鼠标真的移动了才让行拿走高亮；键盘滚动让行从静止的鼠标下冒出来不算。 */
+function onRowEnter(event: MouseEvent, index: number): void {
+  if (pointerGate.moved(event))
+    emit('highlight', index)
+}
 const markSize = computed(() => props.size === 'lg' ? 'md' : 'sm')
 
 defineExpose({
@@ -72,7 +82,7 @@ function actionOf(option: MultiSelectorOptionData | undefined) {
 </script>
 
 <template>
-  <div>
+  <div @mousemove="pointerGate.track">
     <div v-if="searchable" class="astryx-multi-selector-search" :data-keyboard-focus="searchKeyboardFocus ? 'true' : undefined">
       <Icon class="astryx-multi-selector-search-icon" icon="search" size="sm" />
       <input
@@ -87,6 +97,7 @@ function actionOf(option: MultiSelectorOptionData | undefined) {
         :aria-controls="listboxId"
         aria-autocomplete="list"
         :aria-activedescendant="activeDescendant"
+        :aria-required="required || undefined"
         :placeholder="searchPlaceholder"
         :value="query"
         @input="emit('query', $event)"
@@ -115,7 +126,7 @@ function actionOf(option: MultiSelectorOptionData | undefined) {
       :data-option-id="String(createOption.value)"
       tabindex="-1"
       @mousedown.prevent
-      @mouseenter="emit('highlight', 0)"
+      @mouseenter="onRowEnter($event, 0)"
       @click="emit('toggle', createOption.value)"
     >
       <span class="astryx-multi-selector-option-label">{{ createOption.label }}</span>
@@ -128,7 +139,7 @@ function actionOf(option: MultiSelectorOptionData | undefined) {
       :aria-selected="false"
     >
       <!-- eslint-disable-next-line vue-a11y/click-events-have-key-events, vue-a11y/mouse-events-have-key-events -- 创建行不进 Tab 序，方向键和回车由组合框处理。 -->
-      <div :id="optionDomId(0)" class="astryx-multi-selector-option-main" role="gridcell" tabindex="-1" :data-option-id="String(createOption.value)" @mousedown.prevent @mouseenter="emit('highlight', 0)" @click="emit('toggle', createOption.value)">
+      <div :id="optionDomId(0)" class="astryx-multi-selector-option-main" role="gridcell" tabindex="-1" :data-option-id="String(createOption.value)" @mousedown.prevent @mouseenter="onRowEnter($event, 0)" @click="emit('toggle', createOption.value)">
         <span class="astryx-multi-selector-option-label">{{ createOption.label }}</span>
       </div>
       <div :id="actionDomId(0)" class="astryx-multi-selector-option-action" role="gridcell" />
@@ -144,7 +155,7 @@ function actionOf(option: MultiSelectorOptionData | undefined) {
       :data-option-id="SELECT_ALL_VALUE"
       tabindex="-1"
       @mousedown.prevent
-      @mouseenter="emit('highlight', selectAllIndex)"
+      @mouseenter="onRowEnter($event, selectAllIndex)"
       @click="emit('toggle', SELECT_ALL_VALUE)"
     >
       <component :is="mark" v-if="checkboxPosition === 'start'" :state="selectAllState" :size="markSize" />
@@ -159,7 +170,7 @@ function actionOf(option: MultiSelectorOptionData | undefined) {
       :aria-selected="selectAllState === 'checked'"
     >
       <!-- eslint-disable-next-line vue-a11y/click-events-have-key-events, vue-a11y/mouse-events-have-key-events -- 全选行不进 Tab 序，方向键和空格由组合框处理。 -->
-      <div :id="optionDomId(selectAllIndex)" class="astryx-multi-selector-option-main" role="gridcell" tabindex="-1" :data-option-id="SELECT_ALL_VALUE" @mousedown.prevent @mouseenter="emit('highlight', selectAllIndex)" @click="emit('toggle', SELECT_ALL_VALUE)">
+      <div :id="optionDomId(selectAllIndex)" class="astryx-multi-selector-option-main" role="gridcell" tabindex="-1" :data-option-id="SELECT_ALL_VALUE" @mousedown.prevent @mouseenter="onRowEnter($event, selectAllIndex)" @click="emit('toggle', SELECT_ALL_VALUE)">
         <component :is="mark" v-if="checkboxPosition === 'start'" :state="selectAllState" :size="markSize" />
         <span class="astryx-multi-selector-option-label">{{ selectAllLabel }}</span>
         <component :is="mark" v-if="checkboxPosition === 'end'" :state="selectAllState" :size="markSize" />
@@ -190,7 +201,7 @@ function actionOf(option: MultiSelectorOptionData | undefined) {
           :data-option-id="String(row.option.value)"
           tabindex="-1"
           @mousedown.prevent
-          @mouseenter="emit('highlight', optionIndex(row.option.value))"
+          @mouseenter="onRowEnter($event, optionIndex(row.option.value))"
           @click="emit('toggle', row.option.value)"
         >
           <component :is="mark" v-if="checkboxPosition === 'start'" :state="checkboxState(row.option)" :size="markSize" :is-disabled="row.option.disabled" />
@@ -222,7 +233,7 @@ function actionOf(option: MultiSelectorOptionData | undefined) {
             tabindex="-1"
             :data-option-id="String(row.option.value)"
             @mousedown.prevent
-            @mouseenter="emit('highlight', optionIndex(row.option.value))"
+            @mouseenter="onRowEnter($event, optionIndex(row.option.value))"
             @click="emit('toggle', row.option.value)"
           >
             <component :is="mark" v-if="checkboxPosition === 'start'" :state="checkboxState(row.option)" :size="markSize" :is-disabled="row.option.disabled" />

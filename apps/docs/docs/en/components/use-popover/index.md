@@ -18,7 +18,7 @@ Headless hook for click-triggered popovers with focus trapping. Combines `useLay
 import { usePopover } from '@astryx-vue/core/Popover'
 ```
 
-Bind `triggerRef` to the element that should open the popover. The hook attaches the click and keyboard handlers and writes `aria-haspopup`, `aria-expanded`, and `aria-controls` on that element. Render the surface yourself and spread `surfaceProps` and `contentStyle` on it:
+Bind `triggerRef` to the element that should open the popover. The hook attaches the click and keyboard handlers and writes `aria-haspopup` and `aria-expanded` on that element, plus `aria-controls` while the popover is open. Render the surface yourself and spread `surfaceProps` and `contentStyle` on it:
 
 ```vue
 <script setup lang="ts">

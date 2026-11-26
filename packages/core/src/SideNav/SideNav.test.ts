@@ -2,8 +2,11 @@ import type { SideNavHandle } from './types.js'
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import { h, nextTick, ref } from 'vue'
+import NavHeadingMenu from '../NavMenu/NavHeadingMenu.vue'
+import NavHeadingMenuItem from '../NavMenu/NavHeadingMenuItem.vue'
 import SideNav from './SideNav.vue'
 import SideNavCollapseButton from './SideNavCollapseButton.vue'
+import SideNavHeading from './SideNavHeading.vue'
 import SideNavItem from './SideNavItem.vue'
 import SideNavSection from './SideNavSection.vue'
 
@@ -222,5 +225,18 @@ describe('side-nav', () => {
     const label = wrapper.find('.astryx-side-nav-item__children-inner > span')
     expect(label.attributes('hidden')).toBeDefined()
     expect(label.classes()).not.toContain('astryx-visually-hidden')
+  })
+
+  it('names the heading menu button after the visible heading, with or without a heading link', () => {
+    for (const headingHref of [undefined, '/console']) {
+      const wrapper = mount(SideNavHeading, {
+        props: { heading: 'Console', headingHref },
+        slots: {
+          menu: () => h(NavHeadingMenu, () => h(NavHeadingMenuItem, { href: '/switch', label: 'Switch' })),
+        },
+      })
+      expect(wrapper.get('button[aria-haspopup="menu"]').attributes('aria-label')).toBe('Console, Open menu')
+      wrapper.unmount()
+    }
   })
 })

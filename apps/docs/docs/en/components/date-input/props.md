@@ -29,15 +29,16 @@ footer: false
       <tr><td><code>nativePicker</code></td><td><code>'touch' | 'always' | 'never'</code></td><td>—</td><td>Older surface name. touch follows the pointer, always uses the system control, and never switches between the popover and the bottom sheet by pointer. presentation wins when both are set.</td></tr>
       <tr><td><code>numberOfMonths</code></td><td><code>1 | 2</code></td><td><code>1</code></td><td>Months shown side by side in the calendar. The system date control cannot express this.</td></tr>
       <tr><td><code>weekStartsOn</code></td><td><code>0-6 | 'sun' | 'mon' | ...</code></td><td>—</td><td>First day of the week in the calendar. The system date control cannot express this.</td></tr>
-      <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disables the field.</td></tr>
-      <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>The field cannot be edited and shows a loading indicator.</td></tr>
+      <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disables the field. The input and calendar button stay focusable and expose <code>aria-disabled</code>; typing and opening are blocked.</td></tr>
+      <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>The field stays focusable and exposes <code>aria-busy</code> with a spinner; typing, picking, and clearing are blocked until loading ends. The busy start is announced once.</td></tr>
       <tr><td><code>changeAction</code></td><td><code>(value: Date | null) =&gt; void | Promise&lt;void&gt;</code></td><td>—</td><td>Runs after the value is committed. A promise keeps the field busy until it settles.</td></tr>
       <tr><td><code>width</code></td><td><code>number | string</code></td><td>—</td><td>Width of the whole field. A number is pixels.</td></tr>
       <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>Explains why the field is disabled. With <code>disabled</code>, the message shows in a tooltip on hover or keyboard focus and the input stays focusable with <code>aria-disabled</code>; the value still cannot change. The older <code>disabledReason</code> name works too.</td></tr>
       <tr><td><code>hasClear</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows a clear button when a date is set. Clearing also returns focus to the input. The older <code>clearable</code> name works too.</td></tr>
       <tr><td><code>clearLabel</code></td><td><code>string</code></td><td><code>Clear</code> / <code>清除</code></td><td>Accessible name for the clear button. Includes <code>label</code> when one is set. English by default; Chinese when <code>zh-CN</code> is provided.</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>Field size.</td></tr>
-      <tr><td><code>status</code></td><td><code>'default' | 'error' | 'warning' | 'success' | { type, message? }</code></td><td>—</td><td>Validation status. An object with <code>message</code> shows that text under the field.</td></tr>
+      <tr><td><code>status</code></td><td><code>'default' | 'error' | 'warning' | 'success' | { type, message? }</code></td><td>—</td><td>Validation status. An object with <code>message</code> shows that text under the field. While the field rejects typed text, its own message replaces this status, unless you listen to <code>entryErrorChange</code>: then an <code>error</code> status with a message words the rejection.</td></tr>
+      <tr><td><code>entryErrorBehavior</code></td><td><code>'complete' | 'blur-or-enter'</code></td><td><code>'complete'</code></td><td>When a rejected entry shows. <code>complete</code> shows a complete date that is out of range or does not exist as soon as it is typed; text that is not a date waits for Enter or blur. <code>blur-or-enter</code> shows nothing while typing. Without it, the nearest FormLayout's <code>defaultEntryErrorBehavior</code> applies.</td></tr>
       <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'attached'</code></td><td>Where the status message sits.</td></tr>
       <tr><td><code>containerClass</code></td><td><code>string | object | array</code></td><td>—</td><td>Class for the field container. Has no effect, and warns in development, inside InputGroup and in a horizontal-labels FormLayout.</td></tr>
       <tr><td><code>containerStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>Inline style for the field container. Same targeting as containerClass.</td></tr>
@@ -55,6 +56,7 @@ footer: false
     <tbody>
       <tr><td><code>update:modelValue</code></td><td><code>value: Date | null</code></td><td>Emitted when the date changes.</td></tr>
       <tr><td><code>change</code></td><td><code>value: Date | null</code></td><td>Emitted when the date changes.</td></tr>
+      <tr><td><code>entryErrorChange</code></td><td><code>error: { kind, text, date? } | null</code></td><td>Emitted each time the field's rejection of typed text starts, changes, or ends (<code>null</code>). <code>kind</code> is <code>unreadable</code>, <code>incomplete</code>, <code>nonexistent</code>, <code>outOfRange</code>, or <code>unavailable</code>; <code>date</code> is the ISO date for the last two.</td></tr>
     </tbody>
   </table>
 </div>

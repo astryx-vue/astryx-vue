@@ -30,17 +30,66 @@ function isShown(surface: HTMLElement): boolean {
 }
 
 describe('popover', () => {
-  it('links the trigger to a hidden dialog surface', () => {
+  it('a closed surface carries no dialog role or name, and a closed trigger names no popup', () => {
     const { trigger, surface } = renderPopover()
 
     expect(isShown(surface)).toBe(false)
+    expect(surface.hasAttribute('role')).toBe(false)
+    expect(surface.hasAttribute('aria-modal')).toBe(false)
+    expect(surface.hasAttribute('aria-label')).toBe(false)
+    expect(surface.getAttribute('tabindex')).toBe('-1')
+    expect(document.querySelector('[role="dialog"]')).toBeNull()
+    expect(trigger.getAttribute('aria-haspopup')).toBe('dialog')
+    expect(trigger.getAttribute('aria-expanded')).toBe('false')
+    expect(trigger.hasAttribute('aria-controls')).toBe(false)
+  })
+
+  it('links the trigger to an open dialog surface and drops the link on close', async () => {
+    const { trigger, surface } = renderPopover({ hasAutoFocus: false })
+
+    trigger.click()
+    await flushPromises()
     expect(surface.getAttribute('role')).toBe('dialog')
     expect(surface.getAttribute('aria-modal')).toBe('true')
     expect(surface.getAttribute('aria-label')).toBe('Options')
-    expect(surface.getAttribute('tabindex')).toBe('-1')
-    expect(trigger.getAttribute('aria-haspopup')).toBe('dialog')
-    expect(trigger.getAttribute('aria-expanded')).toBe('false')
     expect(trigger.getAttribute('aria-controls')).toBe(surface.id)
+
+    trigger.click()
+    await flushPromises()
+    expect(surface.hasAttribute('role')).toBe(false)
+    expect(trigger.hasAttribute('aria-controls')).toBe(false)
+  })
+
+  it('does not open from an aria-disabled trigger, even for a click dispatched on it', async () => {
+    const wrapper = mount(Popover, {
+      attachTo: document.body,
+      props: { label: 'Options' },
+      slots: { default: '<button type="button" aria-disabled="true">Open</button>', content: CONTENT },
+    })
+    const trigger = document.querySelector('.astryx-popover-trigger > button') as HTMLButtonElement
+    trigger.click()
+    await flushPromises()
+    expect(trigger.getAttribute('aria-expanded')).toBe('false')
+    expect(wrapper.emitted('openChange')).toBeUndefined()
+  })
+
+  it('starts focus on an enabled tab stop, skipping aria-disabled controls and roving -1 members', async () => {
+    const { trigger, surface } = renderPopover({}, [
+      '<button type="button" aria-disabled="true">Previous month</button>',
+      '<div role="grid"><button type="button" tabindex="-1">1</button><button type="button" tabindex="0">15</button></div>',
+    ].join(''))
+
+    trigger.click()
+    await flushPromises()
+    expect(document.activeElement).toBe(surface.querySelector('[tabindex="0"]'))
+  })
+
+  it('starts focus on the labelled surface when every control is disabled', async () => {
+    const { trigger, surface } = renderPopover({}, '<button type="button" aria-disabled="true">Only</button>')
+
+    trigger.click()
+    await flushPromises()
+    expect(document.activeElement).toBe(surface)
   })
 
   it('opens on trigger click, reports openChange and moves focus to the first focusable', async () => {
@@ -80,7 +129,7 @@ describe('popover', () => {
     surface.querySelectorAll = ((selector: string) => {
       const found = [...queryAll(selector)]
       return found.reverse()
-    }) as typeof surface.querySelectorAll
+    }) as unknown as typeof surface.querySelectorAll
 
     trigger.click()
     await flushPromises()

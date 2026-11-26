@@ -51,6 +51,13 @@ const mode = computed(() => resolveNavHeadingMode({
 }))
 const headingRoot = computed(() => resolveNavRoot(safeHeadingHref.value, false, customLink.value))
 const logoName = computed(() => props.logoLabel || props.heading)
+/** 菜单按钮的名字带上看得见的标题，读屏时知道打开的是哪个产品或空间的菜单。 */
+const menuButtonLabel = computed(() => {
+  const nav = messages.value.nav
+  if (props.kind === 'top')
+    return nav.topNavOpenMenu(props.heading ? 'true' : 'false', props.heading ?? '')
+  return props.heading ? nav.headingOpenMenu(props.heading) : nav.openMenu
+})
 const logoIsLink = computed(() => Boolean(safeHeadingHref.value) && mode.value !== 'whole-link' && mode.value !== 'logo')
 
 const textProps = computed(() => ({
@@ -122,7 +129,7 @@ const textProps = computed(() => ({
             <button
               type="button"
               :class="`${block}__chevron`"
-              :aria-label="messages.nav.openMenu"
+              :aria-label="menuButtonLabel"
               :aria-expanded="isOpen ? 'true' : 'false'"
               :aria-controls="panelId"
               aria-haspopup="menu"

@@ -6,6 +6,7 @@ import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 import { h } from 'vue'
 import { resetInteractionModalityForTest } from '../composables/internal/interactionModality.js'
 import { pushLayer, resetDismissStackForTests } from '../layer/dismissStack.js'
+import { resetModalOutletsForTests, useActiveModalOutlet } from '../layer/modalOutlet.js'
 import BottomSheet from './BottomSheet.vue'
 
 enableAutoUnmount(afterEach)
@@ -541,5 +542,37 @@ describe('bottom sheet', () => {
     const panel: DOMWrapper<Element> = wrapper.find('.astryx-bottom-sheet')
     expect(panel.attributes('id')).toBe('sheet-surface')
     expect(dialogEl().getAttribute('id')).toBeNull()
+  })
+})
+
+describe('bottom sheet 作为 toast 的挂载点', () => {
+  afterEach(() => resetModalOutletsForTests())
+
+  it('带遮罩的模态抽屉打开期间是挂载点，关闭后撤销', async () => {
+    const active = useActiveModalOutlet()
+    const wrapper = renderSheet()
+    expect(active.value).toBeNull()
+
+    await wrapper.setProps({ isOpen: true })
+    expect(active.value).toBe(dialogEl())
+
+    await wrapper.setProps({ isOpen: false })
+    expect(active.value).toBeNull()
+  })
+
+  it('没有遮罩的非模态抽屉不登记', async () => {
+    const active = useActiveModalOutlet()
+    const wrapper = renderSheet({ hasScrim: false })
+    await wrapper.setProps({ isOpen: true })
+    expect(active.value).toBeNull()
+  })
+
+  it('打开着就被卸载时撤销登记', async () => {
+    const active = useActiveModalOutlet()
+    const wrapper = renderSheet({ isOpen: true })
+    await flushPromises()
+    expect(active.value).not.toBeNull()
+    wrapper.unmount()
+    expect(active.value).toBeNull()
   })
 })

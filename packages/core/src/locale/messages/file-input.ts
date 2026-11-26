@@ -1,5 +1,9 @@
 import type { AstryxLocale } from '../types.js'
-import { clearLabel } from './shared.js'
+import { clearLabel, formatNumber } from './shared.js'
+
+/** 字节数不分组；KB、MB 保留一位小数、不分组，和原版的数字骨架一致。 */
+const WHOLE: Intl.NumberFormatOptions = { useGrouping: false }
+const ONE_DECIMAL: Intl.NumberFormatOptions = { useGrouping: false, minimumFractionDigits: 1, maximumFractionDigits: 1 }
 
 export interface FileInputMessages {
   placeholder: string
@@ -38,9 +42,9 @@ export const fileInputMessages: Record<AstryxLocale, FileInputMessages> = {
     errorType: fileName => `"${fileName}" is not an accepted file type`,
     errorSize: (fileName, maxSize) => `"${fileName}" exceeds ${maxSize} limit`,
     errorCount: maxFiles => `Maximum ${maxFiles} files allowed`,
-    fileSizeBytes: size => `${size} B`,
-    fileSizeKilobytes: size => `${size} KB`,
-    fileSizeMegabytes: size => `${size} MB`,
+    fileSizeBytes: size => `${formatNumber(size, 'en', WHOLE)} B`,
+    fileSizeKilobytes: size => `${formatNumber(size, 'en', ONE_DECIMAL)} KB`,
+    fileSizeMegabytes: size => `${formatNumber(size, 'en', ONE_DECIMAL)} MB`,
   },
   'zh-CN': {
     placeholder: '选择文件',
@@ -55,8 +59,8 @@ export const fileInputMessages: Record<AstryxLocale, FileInputMessages> = {
     errorType: fileName => `不支持“${fileName}”的文件类型`,
     errorSize: (fileName, maxSize) => `“${fileName}”超过了 ${maxSize} 的大小限制`,
     errorCount: maxFiles => `最多只能选择 ${maxFiles} 个文件`,
-    fileSizeBytes: size => `${size} 字节`,
-    fileSizeKilobytes: size => `${size} KB`,
-    fileSizeMegabytes: size => `${size} MB`,
+    fileSizeBytes: size => `${formatNumber(size, 'zh-CN', WHOLE)} 字节`,
+    fileSizeKilobytes: size => `${formatNumber(size, 'zh-CN', ONE_DECIMAL)} KB`,
+    fileSizeMegabytes: size => `${formatNumber(size, 'zh-CN', ONE_DECIMAL)} MB`,
   },
 }

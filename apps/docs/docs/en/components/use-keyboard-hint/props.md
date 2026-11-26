@@ -28,8 +28,8 @@ footer: false
       <tr>
         <td><code>options.dismissAfterMs</code></td>
         <td><code>number</code></td>
-        <td><code>3000</code></td>
-        <td>Milliseconds before the hint auto-dismisses after appearing.</td>
+        <td>—</td>
+        <td>Milliseconds before the hint dismisses itself after appearing. Leave it unset: the hint then stays until an arrow key, Escape, or focus leaving the group. A time limit can remove the hint before it is read (WCAG 1.4.13).</td>
       </tr>
       <tr>
         <td><code>options.isEnabled</code></td>

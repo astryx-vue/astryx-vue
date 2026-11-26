@@ -12,7 +12,7 @@ import { useKeyboardHintToolbar } from '../../../../components/demos/use-keyboar
 
 ## 使用方法
 
-一组靠方向键移动的控件，第一次被键盘点进来时，在当前项旁边短暂提示一句「用方向键移动」。这是给看得见键盘用户的：告诉他方向键在这个组里能走。提示里的方向键用 `Kbd` 画，用 `fixed` 定位跟在当前项旁边，所以不会被滚动容器裁掉，并且是 `aria-hidden`。按过方向键、超时、或者焦点离开这个组，它都会自己关掉；关掉之后这个实例就不再提示。自己搭 roving-tabindex 控件时才会直接用到这个 hook；`Toolbar`、`TabList`、`SegmentedControl` 不会替你挂。
+一组靠方向键移动的控件，第一次被键盘点进来时，在当前项旁边提示一句「用方向键移动」。这是给看得见键盘用户的：告诉他方向键在这个组里能走。提示里的方向键用 `Kbd` 画，用 `fixed` 定位跟在当前项旁边，所以不会被滚动容器裁掉，并且是 `aria-hidden`。它会一直停留，直到按下方向键、按下 Escape（只关提示，焦点不动）或焦点离开这个组；关掉之后这个实例就不再提示。自己搭 roving-tabindex 控件时才会直接用到这个 hook；`Toolbar`、`TabList`、`SegmentedControl` 不会替你挂。
 
 hook 返回的 `Hint` 组件要放在这一组容器里面，作为最后一个子元素。
 

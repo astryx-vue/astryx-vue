@@ -49,7 +49,6 @@
 
   .astryx-dialog::backdrop {
     background: var(--astryx-dialog-overlay, rgb(255 255 255 / 50%));
-    backdrop-filter: blur(2px);
   }
 
   .astryx-dialog--inline {

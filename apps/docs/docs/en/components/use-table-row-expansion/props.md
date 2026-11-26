@@ -40,6 +40,12 @@ footer: false
         <td>Required. Render the detail content shown in a full-width panel below the row when it is expanded. Receives the row item.</td>
       </tr>
       <tr>
+        <td><code>getRowLabel</code></td>
+        <td><code>(item: T) =&gt; string</code></td>
+        <td>—</td>
+        <td>A readable row identity for the toggle's accessible name, such as "Expand Acme". A blank label falls back to the generic "Expand row".</td>
+      </tr>
+      <tr>
         <td><code>getIsItemExpandable</code></td>
         <td><code>(item: T) =&gt; boolean</code></td>
         <td>—</td>

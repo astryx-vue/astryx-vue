@@ -4,7 +4,7 @@ export const meta = {
   slug: 'use-table-row-index',
   group: 'Utility',
   family: 'Table',
-  order: 143,
+  order: 144,
   en: 'useTableRowIndex',
   zh: 'useTableRowIndex',
 } satisfies DemoMeta

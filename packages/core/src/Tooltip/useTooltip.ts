@@ -1,15 +1,16 @@
 import type { ComputedRef, CSSProperties, MaybeRefOrGetter, Ref } from 'vue'
 import type { LayerPlacement } from '../layer/position.js'
 import type { TooltipAlignment, TooltipFocusTrigger, TooltipPlacement, TooltipTouchTrigger } from './types.js'
-import { computed, inject, onMounted, onScopeDispose, ref, shallowRef, toValue, watch } from 'vue'
+import { computed, inject, onMounted, onScopeDispose, shallowRef, toValue, watch } from 'vue'
+import { trackInteractionModality } from '../composables/internal/interactionModality.js'
+import { useTouchTriggerInternal } from '../composables/internal/useTouchTriggerInternal.js'
 import { useAnnounce } from '../composables/useAnnounce.js'
 import { useLayer } from '../composables/useLayer.js'
-import { isFocusable } from '../layer/focus.js'
 import { useHoverLayerDismiss } from '../layer/useHoverLayerDismiss.js'
 import { listenOutside, listenPressEnd } from './documentListeners.js'
 import { renderedText } from './renderedText.js'
+import { createFocusGate, opensOnFocus } from './tooltipFocusRules.js'
 import { answerPresentInterest, tooltipPresentInterestKey } from './tooltipPresentInterest.js'
-import { isActionTrigger, isTextEntryTap, matchesFocusVisible } from './tooltipTriggerRules.js'
 
 export interface UseTooltipOptions {
   /**
@@ -33,7 +34,8 @@ export interface UseTooltipOptions {
    */
   hideDelay?: MaybeRefOrGetter<number>
   /**
-   * 焦点是否打开气泡。
+   * 焦点是否打开气泡，焦点到达时判断：`auto` 在焦点落到触发器自己身上，或落在里面而触发器此刻可聚焦时打开，
+   * `always` 里面任何焦点都打开，`never` 从不。
    * @default 'auto'
    */
   focusTrigger?: MaybeRefOrGetter<TooltipFocusTrigger>
@@ -48,7 +50,7 @@ export interface UseTooltipOptions {
    */
   isEnabled?: MaybeRefOrGetter<boolean>
   /**
-   * 受控的打开状态。true 强制显示，false 强制隐藏，undefined 交给悬停/焦点管理。
+   * 受控的打开状态。true 强制显示，false 强制隐藏（本该打开的焦点只调用 `onShow`），undefined 交给悬停/焦点管理。
    */
   isOpen?: MaybeRefOrGetter<boolean | undefined>
   /**
@@ -107,7 +109,6 @@ const HOVER_BRIDGE_DELAY = 100 // 指针离开触发器到进入气泡之间的�
 export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
   const triggerRef = shallowRef<HTMLElement | null>(null)
   const isControlled = computed(() => toValue(options.isOpen) !== undefined)
-  const isTouchPointer = ref(false)
   let bound: HTMLElement | null = null
   const announce = useAnnounce()
   // 截断文字的提示在第一次交互时才挂载，这里拿到的就是那次交互。
@@ -119,23 +120,16 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
     placement: () => toValue(options.placement) ?? 'above',
     alignment: () => toValue(options.alignment) ?? 'center',
     gap: GAP,
+    keepAnchorClear: true,
     onShow: () => options.onShow?.(),
     onHide: () => options.onHide?.(),
   })
 
   const isOpen = computed(() => toValue(options.isOpen) ?? layer.isOpen.value)
 
-  function isEnabled(): boolean {
-    return toValue(options.isEnabled) ?? true
-  }
-
-  function focusTriggerMode(): TooltipFocusTrigger {
-    return toValue(options.focusTrigger) ?? 'auto'
-  }
-
-  function touchTriggerMode(): TooltipTouchTrigger {
-    return toValue(options.touchTrigger) ?? 'auto'
-  }
+  const isEnabled = (): boolean => toValue(options.isEnabled) ?? true
+  const focusTriggerMode = (): TooltipFocusTrigger => toValue(options.focusTrigger) ?? 'auto'
+  const touchTriggerMode = (): TooltipTouchTrigger => toValue(options.touchTrigger) ?? 'auto'
 
   let showTimer: ReturnType<typeof setTimeout> | undefined
   let hideTimer: ReturnType<typeof setTimeout> | undefined
@@ -166,6 +160,19 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
   function isInsideTooltip(node: Node | null): boolean {
     return node != null && (bound?.contains(node) === true || layer.contentRef.value?.contains(node) === true)
   }
+
+  // 触屏：等按压成了轻点才开关，点开后在外面轻点或滚动时关。
+  const touch = useTouchTriggerInternal({
+    touchTrigger: touchTriggerMode,
+    isEnabled,
+    isControlled,
+    isOpen,
+    layerId: layer.id,
+    triggerRef,
+    show: showNow,
+    hide: hideNow,
+  }, { isTextEntryTapIgnored: true })
+  const isTouchPointer = touch.isTouchPointer
 
   function showNow(): void {
     clearTimers()
@@ -201,10 +208,6 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
     hideTimer = undefined
   }
 
-  function onPointerEnter(event: PointerEvent): void {
-    isTouchPointer.value = event.pointerType === 'touch'
-  }
-
   function onMouseEnter(): void {
     if (isTouchPointer.value)
       return
@@ -220,18 +223,6 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
     if (next instanceof Node && layer.contentRef.value?.contains(next))
       return
     scheduleHide()
-  }
-
-  function onTouchTap(tapEvent: Event | null): void {
-    if (!isEnabled() || isControlled.value || touchTriggerMode() === 'none')
-      return
-    const trigger = triggerRef.value
-    if (trigger != null && ((touchTriggerMode() === 'auto' && isActionTrigger(trigger)) || isTextEntryTap(trigger, tapEvent)))
-      return
-    if (isOpen.value)
-      hideNow()
-    else
-      showNow()
   }
 
   function trackTriggerPress(): void {
@@ -267,25 +258,30 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
         isHoldFromPress = true
       return
     }
-    if (event.pointerType === 'touch') {
-      onTouchTap(event)
-      return
-    }
-    if (isControlled.value)
+    if (touch.handlePointerDown(event) || isControlled.value)
       return
     hideNow()
   }
 
-  function onFocusIn(event: FocusEvent): void {
-    if (!isEnabled() || isTouchPointer.value)
+  const focusGate = createFocusGate(focusTriggerMode)
+
+  // 受控且保持关闭（isOpen 为 false）时，本该打开提示的焦点只上报，由调用方决定。
+  function onFocusArrive(trigger: HTMLElement | null, target: EventTarget | null, isTouch: boolean): void {
+    if (!focusGate.arrive(trigger, target) || !isEnabled() || !opensOnFocus(target as HTMLElement, isTouch))
       return
-    if (!matchesFocusVisible(event.target as HTMLElement))
-      return
-    showNow()
+    if (toValue(options.isOpen) === false)
+      options.onShow?.()
+    else
+      showNow()
   }
 
-  function onFocusOut(): void {
-    scheduleHide()
+  function onFocusIn(event: FocusEvent): void {
+    onFocusArrive(bound, event.target, isTouchPointer.value)
+  }
+
+  function onFocusOut(event: FocusEvent): void {
+    if (focusGate.leave(bound, event.target))
+      scheduleHide()
   }
 
   // 焦点离开触发器和气泡就结束保持，不管 focusTrigger 是什么。
@@ -379,10 +375,6 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
     },
   })
 
-  function shouldListenFocus(element: HTMLElement): boolean {
-    return focusTriggerMode() === 'always' || (focusTriggerMode() === 'auto' && isFocusable(element))
-  }
-
   let describedByBefore: string | null = null
 
   function bind(element: HTMLElement): void {
@@ -390,38 +382,37 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
       return
     unbind()
     bound = element
-    element.addEventListener('pointerenter', onPointerEnter as EventListener)
+    trackInteractionModality()
+    element.addEventListener('pointerenter', touch.handlePointerEnter as EventListener)
     element.addEventListener('mouseenter', onMouseEnter)
     element.addEventListener('mouseleave', onMouseLeave)
     element.addEventListener('pointerdown', onPointerDown as EventListener)
     element.addEventListener('focusout', onHeldFocusOut as EventListener)
-    if (shouldListenFocus(element)) {
-      element.addEventListener('focusin', onFocusIn as EventListener)
-      element.addEventListener('focusout', onFocusOut)
-    }
+    element.addEventListener('focusin', onFocusIn as EventListener)
+    element.addEventListener('focusout', onFocusOut as EventListener)
     describedByBefore = element.getAttribute('aria-describedby')
     element.setAttribute('aria-describedby', [describedByBefore, layer.id].filter(Boolean).join(' '))
     answerPresentInterest(presentInterest, element, {
       hover: scheduleShow,
       tap: (tapEvent) => {
         isTouchPointer.value = true
-        onTouchTap(tapEvent)
+        touch.answerTap(tapEvent)
       },
-      focus: focused => shouldListenFocus(element) && matchesFocusVisible(focused) && showNow(),
+      focus: focused => onFocusArrive(element, focused, false),
     })
   }
 
   function unbind(): void {
     if (bound == null)
       return
-    bound.removeEventListener('pointerenter', onPointerEnter as EventListener)
+    bound.removeEventListener('pointerenter', touch.handlePointerEnter as EventListener)
     bound.removeEventListener('mouseenter', onMouseEnter)
     bound.removeEventListener('mouseleave', onMouseLeave)
     bound.removeEventListener('pointerdown', onPointerDown as EventListener)
     bound.removeEventListener('focusout', onHeldFocusOut as EventListener)
     stopPressTracking?.()
     bound.removeEventListener('focusin', onFocusIn as EventListener)
-    bound.removeEventListener('focusout', onFocusOut)
+    bound.removeEventListener('focusout', onFocusOut as EventListener)
     if (describedByBefore)
       bound.setAttribute('aria-describedby', describedByBefore)
     else
@@ -438,12 +429,12 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
       bind(element)
   }, { flush: 'sync' })
 
+  // 禁用时收起已打开的提示、丢掉排队的显示；重新启用时，焦点已在触发器里而且会打开提示的话就打开。
   watch(() => toValue(options.isEnabled), (enabled) => {
-    if (enabled !== false)
-      return
-    // 禁用后触发器已解绑，没必要再保留一次不会生效的显示；隐藏仍要继续。
-    clearTimeout(showTimer)
-    showTimer = undefined
+    if (enabled === false)
+      hideNow()
+    else if (bound != null && bound.contains(document.activeElement))
+      onFocusArrive(bound, document.activeElement, false)
   }, { flush: 'sync' })
 
   // 受控值落到内部状态上，只同步不生事件：这是使用方自己设的值，不该再回报给它。

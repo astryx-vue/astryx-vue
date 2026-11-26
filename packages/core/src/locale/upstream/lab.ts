@@ -25,6 +25,9 @@ export const labUpstreamMap: UpstreamMapPart = {
   '@astryx.listInput.announceDropped': [
     { path: 'listInput.announceDropped', args: ['itemName', 'position', 'total'] },
   ],
+  '@astryx.listInput.announceAlreadyAtBoundary': [
+    { path: 'listInput.alreadyAtBoundary', args: ['itemName', 'boundary'] },
+  ],
 
   '@astryx.transferList.selectedLabel': [{ path: 'transferList.selectedLabel' }],
   '@astryx.transferList.availableLabel': [{ path: 'transferList.availableLabel' }],

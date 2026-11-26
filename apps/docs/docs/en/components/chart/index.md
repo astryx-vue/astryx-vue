@@ -408,8 +408,8 @@ The library includes formatting helpers for common chart values. Formatting func
 - `compactNumber(value, locale)`: Abbreviates large numbers. For example, `1200` becomes "1.2K", `1500000` becomes "1.5M", and `1e12` becomes "1T".
 - `currency(symbol?, locale?)`: Creates a currency formatter. For example, `currency('$')` can be passed to `ChartAxis`'s `tickFormat`. Values over 1,000 are automatically abbreviated (such as "$1.5K").
 - `percent(value, locale)`: Formats a decimal ratio as a percentage. For example, `0.45` becomes "45%" and `0.005` becomes "0.5%".
-- `shortDate(value, locale)`: Formats dates as a short month and day. For example, "Jan 5".
-- `monthYear(value, locale)`: Formats dates as month and year. For example, "Jan 2024".
+- `shortDate(value, locale, calendar?)`: Formats dates as a short month and day. For example, "Jan 5". Dates are Gregorian unless you pass an `Intl` calendar such as `'persian'`.
+- `monthYear(value, locale, calendar?)`: Formats dates as month and year. For example, "Jan 2024". Takes the same optional calendar.
 - `formatList(values, locale)`: Formats a list of words into a natural language string according to locale rules, such as "A, B, and C".
 
 ## Reduce large line datasets
@@ -445,7 +445,7 @@ Input data must be sorted by `x` in ascending order. `width` is the positive cha
 | `labelKey` | `string` | `undefined` | Slice label field. |
 | `innerRadius` | `number` | `0` | Inner radius as a fraction of the outer radius. For example, `0.6` creates a donut. |
 | `padAngle` | `number` | `0.02` | Angular gap between adjacent slices. |
-| `interactive` | `boolean` | `false` | Prevents page scrolling during touch dragging. When off, `pan-y` remains available. |
+| `interactive` | `boolean` | `false` | Turns on touch for the tooltip (tap to show, drag to scrub, lift to dismiss) and stops the page scrolling while a finger drags. When off, touch is left to the page and `pan-y` stays available; mouse hover works either way. |
 | `label` | `string` | Derived from the mode | Accessible SVG name. |
 
 ### Radar charts
@@ -495,7 +495,7 @@ Input data must be sorted by `x` in ascending order. `width` is the positive cha
 
 ### Radial tooltips
 
-`RadialTooltip` hit-tests slices by radius and angle in pie mode. In radar mode, it shows the nearest axis and the highest series value on that axis. It supports mouse hover, touch tapping, and dragging. `highlight` draws and offsets the active slice outline; `highlightOffset` controls the offset distance.
+`RadialTooltip` hit-tests slices by radius and angle in pie mode. In radar mode, it shows the nearest axis and the highest series value on that axis. It supports mouse hover; touch tapping and dragging work when the chart's `interactive` is on. `highlight` draws and offsets the active slice outline; `highlightOffset` controls the offset distance.
 
 Use the default slot for custom content. It receives `label`, `value`, `percentage`, and `index`:
 
@@ -652,7 +652,7 @@ The `select` event receives `(datum, index)`; `selection-change` receives the ne
 
 ## Zoom and pan
 
-Place `<ChartZoom>` in the `interactions` slot to let users zoom with the wheel or a pinch gesture and drag to pan. The top-right toolbar provides zoom in, zoom out, and reset buttons; set `toolbar="false"` to hide it.
+Place `<ChartZoom>` in the `interactions` slot to let users zoom with the wheel or a pinch gesture and drag to pan. The top-right toolbar provides zoom in, zoom out, and reset buttons; set `toolbar="false"` to hide it. A wheel over the chart zooms it without scrolling the page; a sideways-only wheel still scrolls the page.
 
 Zoom updates controlled domains through events rather than changing the `<Chart>` internal state:
 

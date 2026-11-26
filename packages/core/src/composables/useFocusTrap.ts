@@ -164,7 +164,10 @@ export function useFocusTrap(options: UseFocusTrapOptions = {}): FocusTrap {
     const doc = trapDocument()
     if (doc != null) {
       const active = doc.activeElement
-      previouslyFocused = active instanceof HTMLElement && active !== doc.body ? active : null
+      // 第二个窗口里的元素不是这个窗口的 HTMLElement 实例，按能不能聚焦来认。
+      previouslyFocused = active != null && active !== doc.body && typeof (active as HTMLElement).focus === 'function'
+        ? active as HTMLElement
+        : null
     }
     hasFocusEntered = false
     setup()
@@ -200,6 +203,7 @@ export function useFocusTrap(options: UseFocusTrapOptions = {}): FocusTrap {
     restoreFocus()
   }
 
+  /** 正在监听的 document，摘监听时用同一个。 */
   let listeningDoc: Document | null = null
 
   function setup(): void {

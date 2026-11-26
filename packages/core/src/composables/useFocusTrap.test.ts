@@ -278,4 +278,27 @@ describe('useFocusTrap', () => {
     expect(focus).toHaveBeenLastCalledWith({ focusVisible: false })
     trigger.remove()
   })
+
+  it('容器在 iframe 里时，Tab 在那个窗口里照样循环', async () => {
+    const frame = document.createElement('iframe')
+    document.body.append(frame)
+    const doc = frame.contentDocument!
+    const frameContainer = doc.createElement('div')
+    const first = doc.createElement('button')
+    const last = doc.createElement('button')
+    frameContainer.append(first, last)
+    doc.body.append(frameContainer)
+
+    mountComposable(() => useFocusTrap({ container: ref(frameContainer), isEnabled: ref(true) }))
+    await nextTick()
+    last.focus()
+    expect(doc.activeElement).toBe(last)
+
+    const event = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true })
+    last.dispatchEvent(event)
+
+    expect(event.defaultPrevented).toBe(true)
+    expect(doc.activeElement).toBe(first)
+    frame.remove()
+  })
 })

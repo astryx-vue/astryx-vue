@@ -1,5 +1,6 @@
 import type { ColumnResizeSnapshot } from './plugins/columnResize.js'
 import type { TableColumn, TableColumnResizeContribution, TablePlugin } from './types.js'
+import { columnHeaderText } from './headerText.js'
 import { columnResizeDirectionSign, columnResizeStep, resizeColumnWidths } from './plugins/columnResize.js'
 
 interface ResizeState {
@@ -16,7 +17,6 @@ export interface TableColumnResizeSession {
   startResize: (event: PointerEvent, column: TableColumn) => void
   onResizeKeydown: (event: KeyboardEvent, column: TableColumn) => void
   resizeLabel: (column: TableColumn) => string
-  resizeMax: (contribution: TableColumnResizeContribution | null | undefined) => number | undefined
 }
 
 /**
@@ -109,14 +109,9 @@ export function useTableColumnResizeSession(options: {
       plugin.onColumnResizeEnd?.(updates)
   }
 
+  /** 按列头的可见文字命名，函数式列头也读它渲染出的文字；读不到文字才用列 key。 */
   function resizeLabel(column: TableColumn): string {
-    const header = typeof column.header === 'string' && column.header.length > 0 ? column.header : column.key
-    return options.resizeColumnLabel(header)
-  }
-
-  function resizeMax(contribution: TableColumnResizeContribution | null | undefined): number | undefined {
-    const max = contribution?.maxWidth
-    return max == null || !Number.isFinite(max) ? undefined : max
+    return options.resizeColumnLabel(columnHeaderText(column))
   }
 
   function startResize(event: PointerEvent, column: TableColumn): void {
@@ -203,5 +198,5 @@ export function useTableColumnResizeSession(options: {
     commitResize(state, delta)
   }
 
-  return { startResize, onResizeKeydown, resizeLabel, resizeMax }
+  return { startResize, onResizeKeydown, resizeLabel }
 }

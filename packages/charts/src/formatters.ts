@@ -5,8 +5,8 @@
  * - 不好看的值原样返回。非有限数（NaN、±Infinity）和读不出数字的字符串不加工，
  *   免得出现「InfinityB」这类垃圾；任何输入都不抛错。
  * - 数字和日期都交给带缓存的 `Intl` 格式化器，所以输出跟随语言，进位也正确。
- * - 日期按格里高利历输出。有些语言（如 `fa-IR`、`th-TH`）默认用别的历法，
- *   不指定就会变成波斯历数字或佛历年份。
+ * - 日期默认按格里高利历输出。有些语言（如 `fa-IR`、`th-TH`）默认用别的历法，
+ *   不指定就会变成波斯历数字或佛历年份。要用别的历法，显式传 `calendar`。
  */
 
 /** 一种 BCP 47 语言标签，例如 `'en-US'`、`'de-DE'`。 */
@@ -39,21 +39,23 @@ const getPercentFormat = byLocale(
   }),
 )
 
-const getShortDateFormat = byLocale(
-  locale => new Intl.DateTimeFormat(locale, {
-    month: 'short',
-    day: 'numeric',
-    calendar: 'gregory',
-  }),
-)
+/** 日期格式化器按「语言 + 历法」缓存。 */
+function byLocaleAndCalendar(options: Intl.DateTimeFormatOptions): (locale: ChartLocale | undefined, calendar: string) => Intl.DateTimeFormat {
+  const cache = new Map<string, Intl.DateTimeFormat>()
+  return (locale, calendar) => {
+    const key = `${locale ?? ''}\u0000${calendar}`
+    let value = cache.get(key)
+    if (value === undefined) {
+      value = new Intl.DateTimeFormat(locale, { ...options, calendar })
+      cache.set(key, value)
+    }
+    return value
+  }
+}
 
-const getMonthYearFormat = byLocale(
-  locale => new Intl.DateTimeFormat(locale, {
-    month: 'short',
-    year: 'numeric',
-    calendar: 'gregory',
-  }),
-)
+const getShortDateFormat = byLocaleAndCalendar({ month: 'short', day: 'numeric' })
+
+const getMonthYearFormat = byLocaleAndCalendar({ month: 'short', year: 'numeric' })
 
 const getListFormat = byLocale(
   locale => new Intl.ListFormat(locale, { style: 'long', type: 'conjunction' }),
@@ -156,18 +158,21 @@ function toDate(value: unknown): Date {
   return new Date(Number.NaN)
 }
 
-/** 短日期，例如「Jan 5」「Mar 12」。 */
-export function shortDate(value: unknown, locale: ChartLocale): string {
+/**
+ * 短日期，例如「Jan 5」「Mar 12」。`calendar` 是 `Intl` 的历法标识（如 `'persian'`），
+ * 默认格里高利历。
+ */
+export function shortDate(value: unknown, locale: ChartLocale, calendar = 'gregory'): string {
   const d = toDate(value)
   if (Number.isNaN(d.getTime()))
     return String(value)
-  return getShortDateFormat(locale).format(d)
+  return getShortDateFormat(locale, calendar).format(d)
 }
 
-/** 年月，例如「Jan 2024」「Mar 2025」。 */
-export function monthYear(value: unknown, locale: ChartLocale): string {
+/** 年月，例如「Jan 2024」「Mar 2025」。`calendar` 同 `shortDate`，默认格里高利历。 */
+export function monthYear(value: unknown, locale: ChartLocale, calendar = 'gregory'): string {
   const d = toDate(value)
   if (Number.isNaN(d.getTime()))
     return String(value)
-  return getMonthYearFormat(locale).format(d)
+  return getMonthYearFormat(locale, calendar).format(d)
 }

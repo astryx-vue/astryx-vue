@@ -14,6 +14,13 @@ export interface UseDismissOptions {
   /** 是否响应点击外部。与 Escape 的开关独立。 */
   dismissOnPointerOutside?: MaybeRefOrGetter<boolean>
   /**
+   * 手指在外面落下后挪开（平移、滚动页面）时是否也关闭。
+   * 菜单保持默认的 `true`；弹出框、选择列表传 `false`，只在外面轻点时关。
+   * 手指在外面轻点总是在抬起时才关。
+   * @default true
+   */
+  dismissOnOutsidePan?: MaybeRefOrGetter<boolean>
+  /**
    * Escape 到达这一层时怎么处理。
    * `'close'` 关掉，`'block'` 吃掉按键但不关，`'ignore'` 留给自己会
    * `preventDefault` 的输入组件。默认 `'close'`。
@@ -55,6 +62,7 @@ export function useDismiss(options: UseDismissOptions): void {
       getContainer: () => container.value,
       getTrigger: () => trigger?.value ?? null,
       dismissOnPointerOutside: toValue(options.dismissOnPointerOutside) ?? true,
+      dismissOnOutsidePan: toValue(options.dismissOnOutsidePan) ?? true,
       dismissOnEscape: escapeMode(),
       onEscape: options.onEscape,
       onDismiss,
@@ -81,7 +89,12 @@ export function useDismiss(options: UseDismissOptions): void {
     }
   }
 
-  watch([isEnabled, () => escapeMode(), () => toValue(options.dismissOnPointerOutside) ?? true], ([enabled]) => sync(enabled), { immediate: true })
+  watch([
+    isEnabled,
+    () => escapeMode(),
+    () => toValue(options.dismissOnPointerOutside) ?? true,
+    () => toValue(options.dismissOnOutsidePan) ?? true,
+  ], ([enabled]) => sync(enabled), { immediate: true })
 
   onScopeDispose(teardown)
 }

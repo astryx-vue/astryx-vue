@@ -1,13 +1,13 @@
 import { defineDemo } from '../../demo-infra/defineDemo'
-import basicDemo from './basic.vue'
-import basicSource from './basic.vue?raw&highlighted'
 import collapsibleDemo from './collapsible.vue'
 import collapsibleSource from './collapsible.vue?raw&highlighted'
 import horizontalDemo from './horizontal.vue'
 import horizontalSource from './horizontal.vue?raw&highlighted'
 import multiColumnDemo from './multi-column.vue'
 import multiColumnSource from './multi-column.vue?raw&highlighted'
+import basicDemo from './overview.vue'
 import overviewDemo from './overview.vue'
+import basicSource from './overview.vue?raw&highlighted'
 import overviewSource from './overview.vue?raw&highlighted'
 
 export const metadataListOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-hug' })

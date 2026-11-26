@@ -103,16 +103,3 @@ export function hasInnerRegionHolding(container: HTMLElement, active: Element): 
   }
   return false
 }
-
-/** `element` 自己或它在 `container` 里的某个祖先带 `aria-disabled="true"`。挑初始焦点时跳过它，Tab 仍能走到。 */
-export function isDisabledWithin(element: Element, container: Element): boolean {
-  const disabled = element.closest('[aria-disabled="true"]')
-  return disabled != null && container.contains(disabled)
-}
-
-/** 先放 Tab 落脚点，再放 `tabindex="-1"` 的成员，各自按文档顺序。复合控件里握着 `tabindex="0"` 的成员排在前面。 */
-export function preferTabStops<T extends Element>(elements: readonly T[]): T[] {
-  const ordered = inDocumentOrder(elements)
-  const isTabStop = (element: T): boolean => element.getAttribute('tabindex') !== '-1'
-  return [...ordered.filter(isTabStop), ...ordered.filter(element => !isTabStop(element))]
-}

@@ -20,6 +20,8 @@ const props = defineProps<{
   isDateDisabled?: (date: Date) => boolean
   dateConstraints?: ReadonlyArray<(date: Date) => boolean>
   weekStartsOn?: WeekStartsOn
+  /** 今天。由面板在挂载后读好传进来，服务端渲染和水合时不读时钟。 */
+  today: Date
 }>()
 
 const emit = defineEmits<{
@@ -30,7 +32,7 @@ const emit = defineEmits<{
 const locale = useAstryxLocale()
 const weekStart = computed(() => weekStartIndex(props.weekStartsOn))
 const selectedDate = computed(() => props.selected ? toCalendarDate(props.selected) : null)
-const today = toCalendarDate(new Date())
+const todayDate = computed(() => toCalendarDate(props.today))
 const focused = shallowRef<CalendarDate>(new CalendarDay(props.year, props.month, 1))
 
 const headers = computed(() => {
@@ -115,14 +117,14 @@ function onKeydown(event: KeyboardEvent): void {
           class="astryx-calendar-cell"
           :class="{
             'is-selected': !!selectedDate && !day.outside && sameCalendarDay(day.date, selectedDate),
-            'is-today': !day.outside && sameCalendarDay(day.date, today),
+            'is-today': !day.outside && sameCalendarDay(day.date, todayDate),
             'is-disabled': day.outside || blocked(day.date),
             'is-other-month': day.outside,
           }"
           :data-date="day.iso"
           :tabindex="!day.outside && sameCalendarDay(day.date, focused) ? 0 : -1"
           :aria-disabled="day.outside || blocked(day.date) || undefined"
-          :aria-current="!day.outside && sameCalendarDay(day.date, today) ? 'date' : undefined"
+          :aria-current="!day.outside && sameCalendarDay(day.date, todayDate) ? 'date' : undefined"
           :aria-label="formatWeekdayDate(day.date, locale)"
           @click="pick(day.date, day.outside)"
         >

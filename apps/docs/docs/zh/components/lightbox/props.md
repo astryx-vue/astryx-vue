@@ -13,8 +13,8 @@ footer: false
 <tr><td><code>media</code></td><td><code>LightboxMedia | readonly LightboxMedia[]</code></td><td>—</td><td>一项，或一组。数组会显示上一张、下一张和计数。</td></tr>
 <tr><td><code>index</code></td><td><code>number</code></td><td>—</td><td>受控的图库下标。用 <code>v-model:index</code> 绑定。</td></tr>
 <tr><td><code>defaultIndex</code></td><td><code>number</code></td><td><code>0</code></td><td>没有传 <code>index</code> 时的起始下标。</td></tr>
-<tr><td><code>hasZoom</code></td><td><code>boolean</code></td><td><code>false</code></td><td>双击、Enter、Space、<code>+</code>、<code>-</code> 缩放图片。放大后方向键平移。</td></tr>
-<tr><td><code>hasAutoPlay</code></td><td><code>boolean</code></td><td><code>false</code></td><td>显示出视频时开始播放。</td></tr>
+<tr><td><code>hasZoom</code></td><td><code>boolean</code></td><td><code>false</code></td><td>双击、Enter、Space、<code>+</code>、<code>-</code> 缩放图片，<code>0</code> 回到适应大小。放大后方向键平移。</td></tr>
+<tr><td><code>hasAutoPlay</code></td><td><code>boolean</code></td><td><code>false</code></td><td>在打开的灯箱里显示出视频时开始播放。</td></tr>
 </tbody></table>
 </div>
 

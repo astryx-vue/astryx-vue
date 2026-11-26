@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { infoTipFieldLabel, infoTipSizes } from '../../../../components/demos/info-tip'
+import { infoTipFieldLabel, infoTipMetricDefinitions, infoTipPermissionNotes, infoTipSizes } from '../../../../components/demos/info-tip'
 </script>
 
 ## Usage
@@ -42,6 +42,10 @@ The button is a `useTooltip` toggle: it calls the hook's `show()` and `hide()`, 
 <DemoExample :demo="infoTipSizes" title="Sizes" description="xsm, sm (default), md, and lg map one to one to the Icon sizes: 12, 16, 20, and 24px." locale="en" />
 
 <DemoExample :demo="infoTipFieldLabel" title="Field label" description="`labelTooltip` on any field draws an InfoTip beside the label, named “About Workspace name”." locale="en" />
+
+<DemoExample :demo="infoTipMetricDefinitions" title="Metric definitions" description="Put an InfoTip next to a metric name to define how the number is counted, without crowding the dashboard." locale="en" />
+
+<DemoExample :demo="infoTipPermissionNotes" title="Permission notes" description="Explain who can change a value right beside it. Hover or focus previews the note, and a press pins it." locale="en" />
 
 ## Accessibility
 

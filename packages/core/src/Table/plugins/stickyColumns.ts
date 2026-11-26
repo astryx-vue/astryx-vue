@@ -110,6 +110,13 @@ export function useTableStickyColumns<T extends Record<string, unknown>>(
       if ((current.endKeys?.length ?? 0) > 0)
         element.style.setProperty('--table-sticky-shadow-end', hasOverflow && position < maxScroll - 1 ? '1' : '0')
     }
+    // 固定列所在的一侧用阴影提示藏着的列，那一侧不再淡出。
+    const fadeOff = (): void => {
+      const current = toValue(config)
+      element.style.setProperty('--_table-fade-start', (current.startKeys?.length ?? 0) > 0 ? '0px' : '')
+      element.style.setProperty('--_table-fade-end', (current.endKeys?.length ?? 0) > 0 ? '0px' : '')
+    }
+    fadeOff()
     element.addEventListener('scroll', update, { passive: true })
     const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(update)
     observer?.observe(element)
@@ -117,6 +124,8 @@ export function useTableStickyColumns<T extends Record<string, unknown>>(
     detach = () => {
       element.removeEventListener('scroll', update)
       observer?.disconnect()
+      element.style.removeProperty('--_table-fade-start')
+      element.style.removeProperty('--_table-fade-end')
     }
   }
 
