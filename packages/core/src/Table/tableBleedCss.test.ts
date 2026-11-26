@@ -12,4 +12,12 @@ describe('table 块方向贴边', () => {
     expect(css).toMatch(/\.astryx-card,[\s\S]*?\)\s*>\s*\.astryx-table-scroll:first-child\s*\{\s*margin-top:/)
     expect(css).toMatch(/\.astryx-layout-content,[\s\S]*?\)\s*>\s*\.astryx-table-scroll:last-child\s*\{\s*margin-bottom:/)
   })
+
+  it('贴到卡片上下边缘的那一侧用卡片的圆角', () => {
+    const cardCss = readFileSync(resolve(dirname(fileURLToPath(import.meta.url)), '../../styles/card.css'), 'utf8')
+    expect(cardCss).toMatch(/--_container-corner-block-start:\s*var\(--_card-radius\)/)
+    expect(cardCss).toMatch(/--_container-corner-block-end:\s*var\(--_card-radius\)/)
+    expect(css).toMatch(/\.astryx-card > \.astryx-table-scroll:first-child\s*\{\s*border-start-start-radius:\s*var\(--_container-corner-block-start, 0px\);\s*border-start-end-radius:/)
+    expect(css).toMatch(/\.astryx-card > \.astryx-table-scroll:last-child\s*\{\s*border-end-start-radius:\s*var\(--_container-corner-block-end, 0px\);\s*border-end-end-radius:/)
+  })
 })
