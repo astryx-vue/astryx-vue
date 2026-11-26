@@ -4,7 +4,7 @@ export const meta = {
   slug: 'use-tree-focus',
   group: 'Utility',
   family: 'Utilities',
-  order: 155,
+  order: 156,
   en: 'useTreeFocus',
   zh: 'useTreeFocus',
 } satisfies DemoMeta

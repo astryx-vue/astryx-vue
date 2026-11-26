@@ -4,6 +4,7 @@ import type { UpstreamMapPart } from './types.js'
 export const dataUpstreamMap: UpstreamMapPart = {
   '@astryx.table.label': [{ path: 'table.label' }],
   '@astryx.table.noData': [{ path: 'table.noData' }],
+  '@astryx.table.loadMore': [{ path: 'table.loadMore' }],
   '@astryx.table.filter.allPlaceholder': [{ path: 'table.filterAll' }],
   '@astryx.table.filter.reset': [{ path: 'table.reset' }],
   '@astryx.table.filter.apply': [{ path: 'table.apply' }],

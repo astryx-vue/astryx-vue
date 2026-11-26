@@ -4,7 +4,7 @@ export const meta = {
   slug: 'use-snap-paging',
   group: 'Utility',
   family: 'Utilities',
-  order: 157,
+  order: 158,
   en: 'useSnapPaging',
   zh: 'useSnapPaging',
 } satisfies DemoMeta

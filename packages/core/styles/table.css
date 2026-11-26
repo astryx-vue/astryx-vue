@@ -499,6 +499,18 @@
     margin-bottom: var(--astryx-spacing-2, 8px);
   }
 
+  .astryx-table__load-more {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-table__load-more-sentinel {
+    align-self: stretch;
+    block-size: 1px;
+  }
+
   .astryx-table__pagination[data-align='start'] {
     justify-content: flex-start;
   }

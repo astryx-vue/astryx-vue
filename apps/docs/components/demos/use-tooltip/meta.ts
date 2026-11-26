@@ -4,7 +4,7 @@ export const meta = {
   slug: 'use-tooltip',
   group: 'Utility',
   family: 'Tooltip',
-  order: 153,
+  order: 154,
   en: 'useTooltip',
   zh: 'useTooltip',
 } satisfies DemoMeta
