@@ -64,7 +64,23 @@ function setFooter(el: unknown): void {
 function setRegionMenu(el: unknown): void {
   regionMenuRef.value = (el as HTMLElement | null) ?? null
 }
-const stringLabel = computed(() => typeof props.label === 'string' ? props.label : undefined)
+const stringLabel = computed(() => typeof props.label === 'string' && props.label !== '' ? props.label : undefined)
+// 标签是节点（label 插槽）时，渲染在自己的元素里：展开的视图用它命名，
+// 嵌套视图的返回行用打开这一层时读到的文字。
+const hasNodeLabel = computed(() => stringLabel.value == null && slots.label != null)
+const nodeLabelId = `astryx-dropdown-submenu-label-${useId()}`
+const nodeLabelText = ref<string | undefined>()
+const viewLabelledBy = computed(() => hasNodeLabel.value ? nodeLabelId : undefined)
+
+function readNodeLabelText(): string | undefined {
+  const element = document.getElementById(nodeLabelId)
+  if (element == null)
+    return undefined
+  const copy = element.cloneNode(true) as Element
+  for (const hidden of copy.querySelectorAll('[aria-hidden="true"]'))
+    hidden.remove()
+  return copy.textContent?.replace(/\s+/g, ' ').trim() || undefined
+}
 const focus = useMenuFocus({ list: flyoutRef })
 const drillFocus = useMenuFocus({ list: drillRef })
 const hasOverflow = useOverflow(flyoutRef, flyoutOpen)
@@ -90,6 +106,10 @@ const drillOnStack = mode.isOnStack
 const drillIsTop = mode.isTop
 
 const isShown = computed(() => isDrill.value ? drillOnStack.value : flyoutOpen.value)
+watch(isShown, (shown) => {
+  if (shown && hasNodeLabel.value)
+    nodeLabelText.value = readNodeLabelText()
+})
 const backLabel = computed(() => {
   const parent = menu?.menuLabel.value
   return parent != null && parent !== ''
@@ -259,7 +279,7 @@ const nestedContext: DropdownMenuContextValue = {
   moveDialogTab: (event, fromFlyout) => menu?.moveDialogTab(event, fromFlyout),
   hasRegions: computed(() => menu?.hasRegions.value ?? false),
   isOpen: computed(() => (menu?.isOpen.value ?? true) && isShown.value),
-  menuLabel: computed(() => stringLabel.value ?? menu?.menuLabel.value),
+  menuLabel: computed(() => stringLabel.value ?? (hasNodeLabel.value ? nodeLabelText.value : undefined) ?? menu?.menuLabel.value),
   menuSize,
 }
 
@@ -365,7 +385,8 @@ watch(drillOnStack, (onStack, wasOnStack) => {
       </slot>
     </template>
     <template v-if="slots.label" #label>
-      <slot name="label" />
+      <span v-if="hasNodeLabel" :id="nodeLabelId"><slot name="label" /></span>
+      <slot v-else name="label" />
     </template>
     <template v-if="slots.description" #description>
       <slot name="description" />
@@ -386,6 +407,7 @@ watch(drillOnStack, (onStack, wasOnStack) => {
       :class="{ 'is-frame': hasRegions }"
       :role="hasRegions ? 'dialog' : 'menu'"
       :aria-label="stringLabel"
+      :aria-labelledby="viewLabelledBy"
       :aria-modal="hasRegions ? 'true' : undefined"
       :hidden="drillIsTop ? undefined : true"
       tabindex="-1"
@@ -397,7 +419,7 @@ watch(drillOnStack, (onStack, wasOnStack) => {
             <div :ref="setHeader" class="astryx-dropdown-menu-region" @keydown="regions.onRegionKeydown">
               <slot name="header" />
             </div>
-            <div :ref="setRegionMenu" class="astryx-dropdown-menu-region-menu" :aria-label="stringLabel" role="menu" tabindex="-1">
+            <div :ref="setRegionMenu" class="astryx-dropdown-menu-region-menu" :aria-label="stringLabel" :aria-labelledby="viewLabelledBy" role="menu" tabindex="-1">
               <DropdownMenuItem :has-close-on-select="false" :label="backLabel" @click="closeFlyout(true)">
                 <template #icon>
                   <Icon color="secondary" icon="chevronLeft" size="sm" />
@@ -430,6 +452,7 @@ watch(drillOnStack, (onStack, wasOnStack) => {
       :class="{ 'is-frame': hasRegions }"
       :role="hasRegions ? 'dialog' : 'menu'"
       :aria-label="stringLabel"
+      :aria-labelledby="viewLabelledBy"
       :aria-modal="hasRegions ? 'true' : undefined"
       :data-overflow="hasOverflow || undefined"
       :style="flyoutStyle"
@@ -444,7 +467,7 @@ watch(drillOnStack, (onStack, wasOnStack) => {
             <div :ref="setHeader" class="astryx-dropdown-menu-region" @keydown="regions.onRegionKeydown">
               <slot name="header" />
             </div>
-            <div :ref="setRegionMenu" class="astryx-dropdown-menu-region-menu" :aria-label="stringLabel" role="menu" tabindex="-1">
+            <div :ref="setRegionMenu" class="astryx-dropdown-menu-region-menu" :aria-label="stringLabel" :aria-labelledby="viewLabelledBy" role="menu" tabindex="-1">
               <slot />
             </div>
             <div :ref="setFooter" class="astryx-dropdown-menu-region" @keydown="regions.onRegionKeydown">

@@ -19,8 +19,14 @@ describe('tree list 全宽嵌套行', () => {
 
 describe('tree list 内部焦点', () => {
   it('内部按钮或链接聚焦时，整行画出焦点环', () => {
-    const focusRule = /\.astryx-tree-list__item:has\(:focus-visible\) > \.astryx-tree-list__row > \.astryx-tree-list__content\s*\{([^}]*)\}/.exec(css)?.[1] ?? ''
+    const focusRule = /\.astryx-tree-list__item:has\(> \.astryx-tree-list__row :focus-visible\) > \.astryx-tree-list__row > \.astryx-tree-list__content\s*\{([^}]*)\}/.exec(css)?.[1] ?? ''
     expect(focusRule).toContain('--astryx-focus-outline-width')
     expect(focusRule).toContain('outline-offset')
+  })
+
+  it('行自己（没有动作的普通行也算）拿到键盘焦点时画环，子级行的焦点不连带上级行', () => {
+    const ringRule = /\.astryx-tree-list__item:focus-visible > \.astryx-tree-list__row > \.astryx-tree-list__content,[^{]*\{([^}]*)\}/.exec(css)?.[1] ?? ''
+    expect(ringRule).toContain('--astryx-focus-outline-width')
+    expect(css).not.toMatch(/\.astryx-tree-list__item:has\(:focus-visible\)/)
   })
 })

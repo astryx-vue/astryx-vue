@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { TreeListDensity, TreeListItemData, TreeListVariant } from './types.js'
-import { computed, toRaw, useId } from 'vue'
+import { computed, toRaw, useId, useTemplateRef } from 'vue'
 import Badge from '../Badge/Badge.vue'
+import { useFocusAcrossSwap } from '../composables/internal/focusAcrossSwap.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { isIconGlyph } from '../Icon/glyphs.js'
 import Icon from '../Icon/Icon.vue'
@@ -33,6 +34,8 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{ toggle: [id: string] }>()
+const rowElement = useTemplateRef<HTMLElement>('row')
+useFocusAcrossSwap(() => rowElement.value, '.astryx-tree-list__action', () => props.item.isDisabled === true)
 const messages = useComponentMessages({ treeList: treeListMessages })
 const linkComponent = useLinkComponent()
 const labelId = useId()
@@ -146,7 +149,7 @@ const rowPress = computed(() => {
         <span class="astryx-tree-list__guide-line" :data-span="isLast ? 'last' : 'full'" />
       </span>
     </template>
-    <div class="astryx-tree-list__row">
+    <div ref="row" class="astryx-tree-list__row">
       <!-- eslint-disable-next-line vue-a11y/click-events-have-key-events, vue-a11y/no-static-element-interactions -- 键盘由外层 role="tree" 处理，这一层只接指针点击。 -->
       <div
         class="astryx-tree-list__content"
@@ -185,14 +188,15 @@ const rowPress = computed(() => {
             </span>
           </span>
           <component
-            :is="linkRoot"
+            :is="item.isDisabled ? 'a' : linkRoot"
             v-if="safeHref"
             class="astryx-tree-list__action"
             v-bind="press.pressActionProps"
-            :href="safeHref"
-            :to="linkRoot === 'a' ? undefined : safeHref"
-            :target="item.target"
-            :rel="linkRel"
+            :role="item.isDisabled ? 'link' : undefined"
+            :href="item.isDisabled ? undefined : safeHref"
+            :to="item.isDisabled || linkRoot === 'a' ? undefined : safeHref"
+            :target="item.isDisabled ? undefined : item.target"
+            :rel="item.isDisabled ? undefined : linkRel"
             :aria-labelledby="labelId"
             :aria-describedby="item.description ? descriptionId : undefined"
             :aria-disabled="item.isDisabled || undefined"
