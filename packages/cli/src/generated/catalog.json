@@ -19407,8 +19407,8 @@
         "zh": "`Timer` 把一段正在增加的时长写进 `<time>`。`startTime` 是毫秒级 unix 时间。不传就从这次挂载开始计。文字和 `dateTime` 直接写在元素上。组件不会为每一次跳动重新渲染，也不使用 `aria-live`。"
       },
       "usage": {
-        "en": "`Timer` writes a running duration into a `<time>` element. `startTime` is unix milliseconds. Omit it and the count starts when this timer mounts. The text and `dateTime` are written on the element. The component does not re-render on every tick, and it does not use `aria-live`.\n\n`format=\"elapsed\"` is the default. Under a minute it reads `Ns`. Under an hour it reads `Nm NNs`. At an hour and beyond it reads `Nh NNm` and drops seconds, both in the text and in `dateTime` (`PT{minutes * 60}S`). `format=\"clock\"` stays on seconds: `m:ss`, or `h:mm:ss` past an hour, with `dateTime=\"PT{seconds}S\"`.\n\nThe clock updates once a second until the elapsed format reaches an hour, then once a minute. If `startTime` is still in the future, the first change waits until one second after that start.\n\nTypography matches `Timestamp`. `type` defaults to `supporting`, `color` to `secondary`. `type=\"inherit\"` does not wrap the time in `Text`, so it takes the surrounding font. `color=\"disabled\"` uses the disabled text color. `size` and `weight` override the type scale the same way they do on `Text`.\n\n```vue\n<script setup lang=\"ts\">\nimport { Text } from '@astryx-vue/core/Text'\nimport { Timer } from '@astryx-vue/core/Timer'\n</script>\n\n<template>\n  <Text type=\"body\" color=\"primary\">\n    Processing for <Timer type=\"inherit\" color=\"inherit\" />\n  </Text>\n</template>\n```",
-        "zh": "`Timer` 把一段正在增加的时长写进 `<time>`。`startTime` 是毫秒级 unix 时间。不传就从这次挂载开始计。文字和 `dateTime` 直接写在元素上。组件不会为每一次跳动重新渲染，也不使用 `aria-live`。\n\n默认 `format=\"elapsed\"`。不到一分钟显示 `Ns`，不到一小时显示 `Nm NNs`，满一小时显示 `Nh NNm`，文字和 `dateTime` 都不再带秒（存成 `PT{分钟数 × 60}S`）。`format=\"clock\"` 始终精确到秒：不到一小时是 `m:ss`，超过则是 `h:mm:ss`，`dateTime` 为 `PT{秒数}S`。\n\n未满一小时时大约每秒更新一次，elapsed 满一小时后改为每分钟一次。如果 `startTime` 还在未来，第一次变化会等到开始后再过一秒。\n\n排版和 `Timestamp` 同一套。`type` 默认 `supporting`，`color` 默认 `secondary`。`type=\"inherit\"` 不用 `Text` 包一层，字体跟周围走。`color=\"disabled\"` 用禁用文字色。`size` 和 `weight` 的覆盖方式和 `Text` 一样。\n\n```vue\n<script setup lang=\"ts\">\nimport { Text } from '@astryx-vue/core/Text'\nimport { Timer } from '@astryx-vue/core/Timer'\n</script>\n\n<template>\n  <Text type=\"body\" color=\"primary\">\n    Processing for <Timer type=\"inherit\" color=\"inherit\" />\n  </Text>\n</template>\n```"
+        "en": "`Timer` writes a running duration into a `<time>` element. `startTime` is unix milliseconds. Omit it and the count starts when this timer mounts. The text and `dateTime` are written on the element. The component does not re-render on every tick, and it does not use `aria-live`.\n\n`format=\"elapsed\"` is the default. The unit names, digits and joining follow the active locale (English shown here). Under a minute it reads `Ns`. Under an hour it reads `Nm NNs`. At an hour and beyond it reads `Nh NNm` and drops seconds, both in the text and in `dateTime` (`PT{minutes * 60}S`). `format=\"clock\"` stays on seconds: `m:ss`, or `h:mm:ss` past an hour, with `dateTime=\"PT{seconds}S\"`.\n\nThe clock updates once a second until the elapsed format reaches an hour, then once a minute. If `startTime` is still in the future, the first change waits until one second after that start.\n\nTypography matches `Timestamp`. `type` defaults to `supporting`, `color` to `secondary`. `type=\"inherit\"` does not wrap the time in `Text`, so it takes the surrounding font. `color=\"disabled\"` uses the disabled text color. `size` and `weight` override the type scale the same way they do on `Text`.\n\n```vue\n<script setup lang=\"ts\">\nimport { Text } from '@astryx-vue/core/Text'\nimport { Timer } from '@astryx-vue/core/Timer'\n</script>\n\n<template>\n  <Text type=\"body\" color=\"primary\">\n    Processing for <Timer type=\"inherit\" color=\"inherit\" />\n  </Text>\n</template>\n```",
+        "zh": "`Timer` 把一段正在增加的时长写进 `<time>`。`startTime` 是毫秒级 unix 时间。不传就从这次挂载开始计。文字和 `dateTime` 直接写在元素上。组件不会为每一次跳动重新渲染，也不使用 `aria-live`。\n\n默认 `format=\"elapsed\"`。单位的写法、数字和连接方式跟随当前语言（这里按英文写）。不到一分钟显示 `Ns`，不到一小时显示 `Nm NNs`，满一小时显示 `Nh NNm`，文字和 `dateTime` 都不再带秒（存成 `PT{分钟数 × 60}S`）。`format=\"clock\"` 始终精确到秒：不到一小时是 `m:ss`，超过则是 `h:mm:ss`，`dateTime` 为 `PT{秒数}S`。\n\n未满一小时时大约每秒更新一次，elapsed 满一小时后改为每分钟一次。如果 `startTime` 还在未来，第一次变化会等到开始后再过一秒。\n\n排版和 `Timestamp` 同一套。`type` 默认 `supporting`，`color` 默认 `secondary`。`type=\"inherit\"` 不用 `Text` 包一层，字体跟周围走。`color=\"disabled\"` 用禁用文字色。`size` 和 `weight` 的覆盖方式和 `Text` 一样。\n\n```vue\n<script setup lang=\"ts\">\nimport { Text } from '@astryx-vue/core/Text'\nimport { Timer } from '@astryx-vue/core/Timer'\n</script>\n\n<template>\n  <Text type=\"body\" color=\"primary\">\n    Processing for <Timer type=\"inherit\" color=\"inherit\" />\n  </Text>\n</template>\n```"
       },
       "practices": {
         "en": [
@@ -27537,8 +27537,8 @@
               {
                 "name": "`hourFormat`",
                 "type": "`'12h' | '24h'`",
-                "default": "`'12h'`",
-                "description": "Display format of the time. The model stays ISO."
+                "default": "The locale's hour cycle",
+                "description": "Display format of the time. Unset, it follows the active locale, with its digits and day-period words. The model stays ISO."
               },
               {
                 "name": "`presentation`",
@@ -27688,7 +27688,7 @@
                 "name": "`entryErrorBehavior`",
                 "type": "`'complete' | 'blur-or-enter'`",
                 "default": "`'complete'`",
-                "description": "When the date part's rejected entry shows, as on DateInput. Emits `entryErrorChange` the same way."
+                "description": "When the date part's rejected entry shows, as on DateInput. Emits `entryErrorChange` the same way. The time part follows `entryErrorBehavior` as TimeInput does: its rejected text stays, its message shows under the pair unless the date part has one, and it sets `aria-invalid` on the time input."
               },
               {
                 "name": "`isOptional`",
@@ -27736,8 +27736,8 @@
               {
                 "name": "`hourFormat`",
                 "type": "`'12h' | '24h'`",
-                "default": "`'12h'`",
-                "description": "时间的显示格式。模型值仍是 ISO。"
+                "default": "语言自己的时制",
+                "description": "时间的显示格式。不传就跟随当前语言，数字和上下午的词也跟着语言走。模型值仍是 ISO。"
               },
               {
                 "name": "`presentation`",
@@ -27887,7 +27887,7 @@
                 "name": "`entryErrorBehavior`",
                 "type": "`'complete' | 'blur-or-enter'`",
                 "default": "`'complete'`",
-                "description": "日期那段被拒的输入什么时候亮出来，同 DateInput；同样会触发 `entryErrorChange`。"
+                "description": "日期那段被拒的输入什么时候亮出来，同 DateInput；同样会触发 `entryErrorChange`。时间那段也按 `entryErrorBehavior` 走，和 TimeInput 一样：被拒的文字留在框里，原因显示在整组下面（日期那段有自己的原因时让给它），并在时间输入上设置 `aria-invalid`。"
               },
               {
                 "name": "`isOptional`",
@@ -36908,8 +36908,8 @@
               {
                 "name": "`hourFormat`",
                 "type": "`'12h' | '24h'`",
-                "default": "`'12h'`",
-                "description": "How the value is shown. The model stays 24-hour ISO."
+                "default": "The locale's hour cycle",
+                "description": "How the value is shown. Unset, it follows the active locale: 12-hour for `en`, 24-hour for `en-GB`, `de-DE` and `zh-CN`. Digits, separators and day-period words follow the locale too. The model stays 24-hour ISO."
               },
               {
                 "name": "`hasSeconds`",
@@ -36921,7 +36921,13 @@
                 "name": "`increment`",
                 "type": "`number`",
                 "default": "`1`",
-                "description": "Minutes added or removed by the arrow keys."
+                "description": "Minutes added or removed by the arrow keys. Steps are whole minutes; a fractional value leaves the time unchanged."
+              },
+              {
+                "name": "`entryErrorBehavior`",
+                "type": "`'complete' | 'blur-or-enter'`",
+                "default": "`'complete'`",
+                "description": "When a rejected entry shows. A typed time is complete once it has its hours, both minute digits, both second digits when seconds show, and, in 12-hour text, its day period (hours 0 and 13 to 23 need none). `complete` shows a complete time outside `min` or `max` at once; `blur-or-enter` waits for Enter or blur. Text that is not a time always waits for Enter or blur. The rejected text stays in the field, the field shows why, sets `aria-invalid` and announces it once. Enter commits the draft and still submits a surrounding form. A caller `error` status with a message shows in place of the field's message; a warning or success status never hides a rejection. Without a `FormLayout` default it is `complete`."
               },
               {
                 "name": "`min`",
@@ -37053,8 +37059,8 @@
               {
                 "name": "`hourFormat`",
                 "type": "`'12h' | '24h'`",
-                "default": "`'12h'`",
-                "description": "显示格式。模型值始终是 24 小时 ISO。"
+                "default": "语言自己的时制",
+                "description": "显示格式。不传就跟随当前语言：`en` 是 12 小时，`en-GB`、`de-DE`、`zh-CN` 是 24 小时；数字、分隔符和上下午的词也跟着语言走。模型值始终是 24 小时 ISO。"
               },
               {
                 "name": "`hasSeconds`",
@@ -37066,7 +37072,13 @@
                 "name": "`increment`",
                 "type": "`number`",
                 "default": "`1`",
-                "description": "方向键每次增减的分钟数。"
+                "description": "方向键每次增减的分钟数。步长按整分钟计，写小数时时间保持不变。"
+              },
+              {
+                "name": "`entryErrorBehavior`",
+                "type": "`'complete' | 'blur-or-enter'`",
+                "default": "`'complete'`",
+                "description": "打字被拒什么时候亮出来。一段文字有了小时、两位分钟（显示秒时还有两位秒）、12 小时制还写了上下午（0 点和 13 到 23 点不用写）才算打完整。`complete` 下，完整却超出 `min` 或 `max` 的时间立刻亮出来；`blur-or-enter` 等到 Enter 或失焦。读不成时间的文字永远等 Enter 或失焦。被拒的文字留在框里，字段显示为什么不收、设置 `aria-invalid` 并只念一次。Enter 收下打进来的文字，外面的表单照常提交。调用方带说明的 `error` 状态替字段措辞；警告和成功状态不挡住拒绝。没有 `FormLayout` 的默认值时是 `complete`。"
               },
               {
                 "name": "`min`",
@@ -37185,8 +37197,40 @@
         "zh": []
       },
       "events": {
-        "en": [],
-        "zh": []
+        "en": [
+          {
+            "heading": "TimeInput events",
+            "rows": [
+              {
+                "name": "`update:modelValue`",
+                "payload": "`value: string | null`",
+                "description": "Emitted when the time changes."
+              },
+              {
+                "name": "`entryErrorChange`",
+                "payload": "`error: { kind, text, time? } | null`",
+                "description": "Emitted each time the field's rejection of typed text starts, changes, or ends (`null`). `kind` is `unreadable` or `outOfRange`; `time` is the ISO time the text names, for `outOfRange`."
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "TimeInput 事件",
+            "rows": [
+              {
+                "name": "`update:modelValue`",
+                "payload": "`value: string | null`",
+                "description": "时间变化时触发。"
+              },
+              {
+                "name": "`entryErrorChange`",
+                "payload": "`error: { kind, text, time? } | null`",
+                "description": "字段对打进来的文字的拒绝开始、改变或结束时触发，结束时是 `null`。`kind` 是 `unreadable` 或 `outOfRange`；`time` 是 `outOfRange` 时文字指向的 ISO 时间。"
+              }
+            ]
+          }
+        ]
       },
       "notes": {
         "en": [],

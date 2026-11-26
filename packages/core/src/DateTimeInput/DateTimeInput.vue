@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import type { DatePresentation } from '../composables/useDatePresentation.js'
+import type { DateInputEntryError } from '../DateInput/dateEntry.js'
+import type { FieldStatusInput } from '../Field/types.js'
 import type { DateTimeInputEmits, DateTimeInputProps } from './types.js'
-import { computed, ref, useAttrs, useId, watch } from 'vue'
+import { computed, ref, shallowRef, useAttrs, useId, useTemplateRef, watch } from 'vue'
+import { useBusyAnnouncement } from '../composables/internal/busyAnnouncement.js'
 import { useMediaQuery } from '../composables/useMediaQuery.js'
 import { usePendingChange } from '../composables/usePendingChange.js'
 import { useResolvedLabelHidden } from '../composables/useResolvedLabelHidden.js'
@@ -25,7 +28,6 @@ defineOptions({ name: 'AstryxDateTimeInput', inheritAttrs: false })
 
 const props = withDefaults(defineProps<Omit<DateTimeInputProps, 'modelValue'>>(), {
   modelValue: null,
-  hourFormat: '12h',
   hasClear: false,
   hasSeconds: false,
   timeIncrement: 1,
@@ -54,8 +56,30 @@ const draftDate = ref<Date | null | undefined>(undefined)
 const draftTime = ref<string | null | undefined>(undefined)
 const action = usePendingChange(() => props.changeAction)
 const busy = computed(() => props.isLoading || action.busy.value)
+const containerRef = useTemplateRef<HTMLElement>('container')
 const locked = computed(() => props.isDisabled || busy.value)
 const sheetLocked = computed(() => locked.value || props.isReadOnly === true)
+
+// 忙碌的转圈只是装饰；字段自己播报一次。触屏面板开着时从面板里播报，面板外的公共播报区域被模态面板挡住了。
+useBusyAnnouncement(busy, () => messages.value.dateInput.loading, () => {
+  const sheet = document.getElementById(`${generatedId}-sheet`)
+  return sheet?.closest('dialog[open]') ? sheet : containerRef.value
+})
+
+/** 日期那段当前的拒绝；时间那段的拒绝让位给它，日期那段的话在它自己的字段下面。 */
+const dateEntryError = shallowRef<DateInputEntryError | null>(null)
+const timeMessage = shallowRef<string | null>(null)
+const fieldStatus = computed<FieldStatusInput | undefined>(() => {
+  const own = props.status
+  if (timeMessage.value == null || dateEntryError.value != null || (own?.type === 'error' && own.message))
+    return own
+  return { type: 'error', message: timeMessage.value }
+})
+
+function onDateEntryError(error: DateInputEntryError | null): void {
+  dateEntryError.value = error
+  emit('entryErrorChange', error)
+}
 const datePresentation = computed<DatePresentation | undefined>(() => {
   const value = props.presentation
   if (value == null || value === 'text-input')
@@ -167,10 +191,11 @@ watch(model, (value) => {
     :class="parts.containerClass.value" :style="parts.containerStyle.value"
     :label="label" :input-id="generatedId" :description="description" :width="width"
     :is-label-hidden="hideLabel" :is-disabled="locked" :is-optional="isOptional" :is-required="isRequired"
-    :label-tooltip="labelTooltip" :status="status" :status-variant="statusVariant"
+    :label-tooltip="labelTooltip" :status="fieldStatus" :status-variant="statusVariant"
   >
     <template #default="field">
       <div
+        ref="container"
         class="astryx-date-time-input"
         :class="parts.controlClass()"
         :style="parts.controlStyle()"
@@ -207,7 +232,7 @@ watch(model, (value) => {
             :disabled-message="disabledMessage"
             :entry-error-behavior="entryErrorBehavior"
             @update:model-value="onDate"
-            @entry-error-change="emit('entryErrorChange', $event)"
+            @entry-error-change="onDateEntryError"
           />
           <TimeField
             :model-value="timeValue" :label="resolvedTimeLabel" :described-by="[attrs['aria-describedby'], field.describedBy].filter(Boolean).join(' ') || undefined"
@@ -216,10 +241,11 @@ watch(model, (value) => {
             :has-seconds="hasSeconds" :increment="timeIncrement" :option-interval="timeOptionInterval"
             :min="timeMin" :max="timeMax" :size="size" :is-disabled="locked" :is-read-only="isReadOnly"
             :disabled-message="disabledMessage"
-            :status="status" @update:model-value="onTime"
+            :status="status" :entry-error-behavior="entryErrorBehavior"
+            @update:model-value="onTime" @message-change="timeMessage = $event"
           />
         </div>
-        <Spinner v-if="busy" size="sm" :aria-label="messages.dateInput.loading" />
+        <Spinner v-if="busy" size="sm" aria-hidden="true" />
         <IconButton
           v-else-if="hasClear && (dateValue || timeValue) && !locked" class="astryx-input-clear-button" variant="ghost" size="sm"
           :label="clearLabel" @click="clear"

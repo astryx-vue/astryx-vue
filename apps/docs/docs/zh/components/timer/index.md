@@ -14,7 +14,7 @@ import { timerFormats, timerInline, timerTypography } from '../../../../componen
 
 `Timer` 把一段正在增加的时长写进 `<time>`。`startTime` 是毫秒级 unix 时间。不传就从这次挂载开始计。文字和 `dateTime` 直接写在元素上。组件不会为每一次跳动重新渲染，也不使用 `aria-live`。
 
-默认 `format="elapsed"`。不到一分钟显示 `Ns`，不到一小时显示 `Nm NNs`，满一小时显示 `Nh NNm`，文字和 `dateTime` 都不再带秒（存成 `PT{分钟数 × 60}S`）。`format="clock"` 始终精确到秒：不到一小时是 `m:ss`，超过则是 `h:mm:ss`，`dateTime` 为 `PT{秒数}S`。
+默认 `format="elapsed"`。单位的写法、数字和连接方式跟随当前语言（这里按英文写）。不到一分钟显示 `Ns`，不到一小时显示 `Nm NNs`，满一小时显示 `Nh NNm`，文字和 `dateTime` 都不再带秒（存成 `PT{分钟数 × 60}S`）。`format="clock"` 始终精确到秒：不到一小时是 `m:ss`，超过则是 `h:mm:ss`，`dateTime` 为 `PT{秒数}S`。
 
 未满一小时时大约每秒更新一次，elapsed 满一小时后改为每分钟一次。如果 `startTime` 还在未来，第一次变化会等到开始后再过一秒。
 

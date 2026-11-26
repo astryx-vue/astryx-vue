@@ -2,27 +2,31 @@
 import type { HTMLAttributes, StyleValue } from 'vue'
 import type { HourFormat, NativePicker, TimePresentation } from '../composables/useTimeValue.js'
 import type { FieldStatusInput } from '../Field/types.js'
+import type { EntryErrorBehavior } from '../FormLayout/context.js'
 import type { TimeInputSize } from './types.js'
+import type { TimeInputEntryError } from './useTypedTime.js'
 import { computed, nextTick, shallowRef, useAttrs, useId, useTemplateRef, watch } from 'vue'
 import BottomSheet from '../BottomSheet/BottomSheet.vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
-import { useDismiss } from '../composables/useDismiss.js'
+import { useBusyAnnouncement } from '../composables/internal/busyAnnouncement.js'
 import { useMediaQuery } from '../composables/useMediaQuery.js'
-import { formatDisplayTime, formatISOTime, isTimeInRange, parseDisplayTime, resolveTimeSurface, shiftTime } from '../composables/useTimeValue.js'
+import { formatDisplayTime, isTimeInRange, parseDisplayTime, resolveTimeSurface, shiftTime } from '../composables/useTimeValue.js'
 import FieldIcon from '../Field/FieldIcon.vue'
-import { useAriaRequired } from '../FormLayout/context.js'
+import { useAriaRequired, useEntryErrorBehavior } from '../FormLayout/context.js'
 import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
-import { usePositionedLayer } from '../layer/usePositionedLayer.js'
-import { useComponentMessages } from '../locale/context.js'
+import { useAstryxLocale, useComponentMessages } from '../locale/context.js'
 import { dateInputMessages } from '../locale/messages/date-input.js'
 import { timeInputMessages } from '../locale/messages/time-input.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import Spinner from '../Spinner/Spinner.vue'
 import { isImeKeyEvent } from '../utils/ime.js'
+import { resolveHourFormat } from '../utils/timeFormat.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import TouchTimeWheels from './TouchTimeWheels.vue'
+import { useTimePresetOptions } from './useTimePresetOptions.js'
+import { useTypedTime } from './useTypedTime.js'
 import '../../styles/bordered-control.css'
 import '../../styles/date-input.css'
 import '../../styles/time-input.css'
@@ -58,24 +62,34 @@ const props = withDefaults(defineProps<{
   /** 为什么禁用。提示会关联到可聚焦的字段；禁用和忙碌时不能改值。 */
   disabledMessage?: string
   status?: FieldStatusInput
+  /** 打字被拒什么时候亮出来。不传时用最近 FormLayout 的 `defaultEntryErrorBehavior`，再没有就是 `complete`。 */
+  entryErrorBehavior?: EntryErrorBehavior
   controlClass?: HTMLAttributes['class']
   controlStyle?: StyleValue
 }>(), {
-  hourFormat: '12h',
   hasSeconds: false,
   increment: 1,
   size: 'md',
   hasClear: false,
 })
 
+const emit = defineEmits<{
+  /** 字段对打进来的文字的拒绝开始、改变或结束，结束时参数是 `null`。 */
+  entryErrorChange: [error: TimeInputEntryError | null]
+  /** 亮着的拒绝那句话，没有拒绝时是 `null`。外壳用它写字段的错误状态。 */
+  messageChange: [message: string | null]
+}>()
+
 const model = defineModel<string | null>({ default: null })
 const attrs = useAttrs()
 const ariaRequired = useAriaRequired(props)
 const messages = useComponentMessages({ dateInput: dateInputMessages, timeInput: timeInputMessages })
+const locale = useAstryxLocale()
+const hourFormat = computed(() => resolveHourFormat(locale.value, props.hourFormat))
+const entryErrorBehavior = useEntryErrorBehavior(() => props.entryErrorBehavior)
 const sheetOpen = shallowRef(false)
 const coarse = useMediaQuery('(pointer: coarse)')
 const focused = shallowRef(false)
-const draft = shallowRef('')
 const container = useTemplateRef<HTMLDivElement>('container')
 const optionsRef = useTemplateRef<HTMLDivElement>('options')
 useScrollbars(optionsRef)
@@ -99,14 +113,47 @@ const surface = computed(() => resolveTimeSurface({
 }))
 
 const clearLabel = computed(() => props.clearLabel ?? messages.value.timeInput.clear(props.label))
-const formatHint = computed(() => props.hourFormat === '24h' || props.hasSeconds
+const formatHint = computed(() => hourFormat.value === '24h' || props.hasSeconds
   ? messages.value.timeInput.formatHint24
   : messages.value.timeInput.formatHint12)
 
-watch(() => model.value, (value) => {
-  if (!focused.value)
-    draft.value = value ? formatDisplayTime(value, props.hourFormat, props.hasSeconds) : ''
-}, { immediate: true })
+function formatCommitted(value: string): string {
+  return formatDisplayTime(value, hourFormat.value, props.hasSeconds, locale.value)
+}
+
+const typed = useTypedTime({
+  value: () => model.value,
+  locale: () => locale.value,
+  hourFormat: () => hourFormat.value,
+  hasSeconds: () => props.hasSeconds,
+  min: () => props.min,
+  max: () => props.max,
+  isLocked: () => locked.value,
+  behavior: () => entryErrorBehavior.value,
+  status: () => props.status,
+  messages: () => messages.value.timeInput,
+  commitValue: (value) => {
+    model.value = value
+  },
+  formatCommitted,
+  reportEntryError: error => emit('entryErrorChange', error),
+})
+const status = typed.fieldStatus
+const draft = typed.displayValue
+
+watch(typed.message, message => emit('messageChange', message), { immediate: true })
+// 系统时间控件那一路被拒的编辑跟着控件走：换成打字的字段、或者字段被禁用，拒绝就结束。
+watch(() => surface.value, () => typed.reset())
+watch(() => props.isDisabled, (disabled) => {
+  if (disabled)
+    typed.reset()
+})
+
+useBusyAnnouncement(
+  () => busy.value,
+  () => props.loadingLabel ?? messages.value.timeInput.loading,
+  () => (surface.value === 'sheet' && sheetOpen.value ? document.getElementById(sheetId) : null) ?? container.value,
+)
 
 const shownPlaceholder = computed(() => {
   if (focused.value && !draft.value)
@@ -118,27 +165,12 @@ function commit(value: string | null): void {
   if (locked.value)
     return
   model.value = value
-  draft.value = value ? formatDisplayTime(value, props.hourFormat, props.hasSeconds) : ''
-}
-
-function commitText(text: string): void {
-  if (!text.trim()) {
-    commit(null)
-    return
-  }
-  const parsed = parseDisplayTime(text, props.hasSeconds)
-  if (parsed == null || !isTimeInRange(parsed, props.min, props.max)) {
-    draft.value = model.value ? formatDisplayTime(model.value, props.hourFormat, props.hasSeconds) : ''
-    return
-  }
-  commit(parsed)
+  typed.reset()
 }
 
 // 禁用态没有再走原生 `disabled`，输入和改值都靠这里的守卫挡住（spec:AST-085 FR2）。
 function onInput(event: Event): void {
-  if (locked.value)
-    return
-  draft.value = (event.target as HTMLInputElement).value
+  typed.onInput((event.target as HTMLInputElement).value)
 }
 
 function onNativeInput(event: Event): void {
@@ -150,47 +182,46 @@ function onNativeInput(event: Event): void {
     return
   }
   const parsed = parseDisplayTime(value, props.hasSeconds)
-  if (parsed == null || !isTimeInRange(parsed, props.min, props.max))
+  if (parsed == null)
     return
+  if (!isTimeInRange(parsed, props.min, props.max)) {
+    typed.rejectNative({ text: value, time: parsed })
+    return
+  }
   commit(parsed)
 }
 
-const timeOptions = computed<string[]>(() => {
-  const interval = props.optionInterval
-  if (interval == null || interval <= 0)
-    return []
-  const options: string[] = []
-  for (let minutes = 0; minutes < 24 * 60; minutes += interval) {
-    const value = formatISOTime({ hours: Math.floor(minutes / 60), minutes: minutes % 60, seconds: 0 }, props.hasSeconds)
-    if (isTimeInRange(value, props.min, props.max))
-      options.push(value)
-  }
-  return options
-})
-const showsOptions = computed(() => timeOptions.value.length > 0)
-const resolvedOptionsLabel = computed(() => props.optionsLabel ?? `${props.label ?? messages.value.timeInput.placeholder} options`)
-const isOptionsOpen = shallowRef(false)
-const activeOption = shallowRef(-1)
-const optionsPosition = usePositionedLayer({
-  anchor: container,
-  layer: optionsRef,
-  isOpen: isOptionsOpen,
-  placement: computed(() => 'below' as const),
-  alignment: computed(() => 'start' as const),
-  gap: 4,
-})
-const optionsStyle = computed(() => ({
-  top: `${optionsPosition.position.value.top}px`,
-  left: `${optionsPosition.position.value.left}px`,
-}))
+/** 系统时间控件失焦时回到已提交的时间，被拒的那次编辑仍然亮着。 */
+function onNativeBlur(event: FocusEvent): void {
+  disabledTooltip.onBlur()
+  const input = event.target
+  if (input instanceof HTMLInputElement)
+    input.value = model.value ?? ''
+}
 
-useDismiss({
-  container: optionsRef,
-  trigger: container,
-  isEnabled: isOptionsOpen,
-  dismissOnEscape: 'ignore',
-  onDismiss: () => closeOptions(),
+const {
+  timeOptions,
+  showsOptions,
+  isOptionsOpen,
+  activeOption,
+  optionsStyle,
+  openOptions,
+  closeOptions,
+  moveActive,
+  selectOption,
+} = useTimePresetOptions({
+  interval: () => props.optionInterval,
+  hasSeconds: () => props.hasSeconds,
+  min: () => props.min,
+  max: () => props.max,
+  isLocked: () => locked.value,
+  value: () => model.value,
+  container,
+  list: optionsRef,
+  commit,
+  focusInput,
 })
+const resolvedOptionsLabel = computed(() => props.optionsLabel ?? `${props.label ?? messages.value.timeInput.placeholder} options`)
 
 function openSheet(): void {
   if (!locked.value)
@@ -224,10 +255,15 @@ function onKeydown(event: KeyboardEvent): void {
       moveActive(event.key === 'ArrowDown' ? 1 : -1)
     return
   }
-  if (event.key === 'Enter' && isOptionsOpen.value) {
-    event.preventDefault()
-    if (activeOption.value >= 0)
-      selectOption(activeOption.value)
+  if (event.key === 'Enter') {
+    if (isOptionsOpen.value) {
+      event.preventDefault()
+      if (activeOption.value >= 0)
+        selectOption(activeOption.value)
+      return
+    }
+    // 收下打进来的文字，但不拦着 Enter，外面的表单照常提交。
+    typed.commit()
     return
   }
   if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown')
@@ -241,13 +277,10 @@ function onKeydown(event: KeyboardEvent): void {
 
 async function onBlur(): Promise<void> {
   focused.value = false
+  typed.onBlur()
   disabledTooltip.onBlur()
   if (surface.value === 'text') {
-    if (locked.value)
-      draft.value = model.value ? formatDisplayTime(model.value, props.hourFormat, props.hasSeconds) : ''
-    else
-      commitText(draft.value)
-    // 调用方即使直接写了原生 input 的 value，blur 后也同步回已提交值。
+    // 调用方即使直接写了原生 input 的 value，blur 后也同步回字段显示的文字。
     await nextTick()
     const input = container.value?.querySelector('input')
     if (input instanceof HTMLInputElement)
@@ -257,6 +290,7 @@ async function onBlur(): Promise<void> {
 
 function onInputFocus(event: FocusEvent): void {
   focused.value = true
+  typed.onFocus()
   disabledTooltip.onFocus(event)
 }
 
@@ -268,59 +302,6 @@ function clear(): void {
   if (locked.value)
     return
   commit(null)
-}
-
-function optionIndexFor(value: string | null): number {
-  if (value == null)
-    return -1
-  return timeOptions.value.indexOf(value)
-}
-
-function openOptions(): void {
-  if (locked.value || !showsOptions.value || isOptionsOpen.value)
-    return
-  activeOption.value = optionIndexFor(model.value)
-  isOptionsOpen.value = true
-  void nextTick(() => scrollActiveOption())
-}
-
-function closeOptions(): void {
-  isOptionsOpen.value = false
-  activeOption.value = -1
-}
-
-function scrollActiveOption(): void {
-  const layer = optionsRef.value
-  const index = activeOption.value
-  if (!layer || index < 0)
-    return
-  const option = layer.querySelector<HTMLElement>(`[data-option-index="${index}"]`)
-  if (!option)
-    return
-  const layerRect = layer.getBoundingClientRect()
-  const optionRect = option.getBoundingClientRect()
-  if (optionRect.top < layerRect.top)
-    layer.scrollTop -= layerRect.top - optionRect.top
-  else if (optionRect.bottom > layerRect.bottom)
-    layer.scrollTop += optionRect.bottom - layerRect.bottom
-}
-
-function moveActive(step: number): void {
-  const total = timeOptions.value.length
-  if (total === 0)
-    return
-  const current = activeOption.value < 0 ? (step > 0 ? -1 : total) : activeOption.value
-  activeOption.value = (current + step + total) % total
-  void nextTick(() => scrollActiveOption())
-}
-
-function selectOption(index: number): void {
-  const value = timeOptions.value[index]
-  if (value == null || locked.value)
-    return
-  commit(value)
-  closeOptions()
-  focusInput()
 }
 
 function focusInput(): void {
@@ -370,7 +351,7 @@ function onInputClick(): void {
       :aria-label="labelledBy ? undefined : label" :aria-labelledby="labelledBy"
       :aria-describedby="resolvedDescribedBy()" :aria-required="ariaRequired"
       :aria-invalid="status?.type === 'error' || undefined"
-      @input="onNativeInput"
+      @input="onNativeInput" @blur="onNativeBlur"
     >
     <input
       v-else-if="surface === 'sheet'"
@@ -395,6 +376,7 @@ function onInputClick(): void {
       :aria-label="labelledBy ? undefined : label" :aria-labelledby="labelledBy"
       :aria-describedby="resolvedDescribedBy()" :aria-required="ariaRequired"
       :aria-invalid="status?.type === 'error' || undefined"
+      :name="typed.isInvalid.value ? undefined : (attrs.name as string | undefined)"
       :aria-expanded="showsOptions ? isOptionsOpen : undefined"
       :aria-controls="showsOptions ? listboxId : undefined"
       :aria-autocomplete="showsOptions ? 'list' : undefined"
@@ -404,8 +386,12 @@ function onInputClick(): void {
     <IconButton v-if="hasClear && model && !locked" class="astryx-input-clear-button" variant="ghost" size="sm" :label="clearLabel" @click="clear">
       <FieldIcon type="clear" />
     </IconButton>
-    <Spinner v-if="busy" size="sm" :aria-label="loadingLabel ?? messages.timeInput.loading" />
+    <Spinner v-if="busy" size="sm" aria-hidden="true" />
     <FieldIcon v-else-if="status" :type="status.type" />
+  </div>
+  <input v-if="typed.isInvalid.value && attrs.name" type="hidden" :name="attrs.name as string" :value="model ? formatCommitted(model) : ''">
+  <div class="astryx-date-input-alert" role="alert">
+    {{ typed.alertMessage.value }}
   </div>
   <VisuallyHidden v-if="showsDisabledMessage" :id="disabledMessageId">
     {{ disabledMessage }}
@@ -455,7 +441,7 @@ function onInputClick(): void {
         @mousedown.prevent
         @click="selectOption(index)"
       >
-        {{ formatDisplayTime(option, hourFormat, hasSeconds) }}
+        {{ formatDisplayTime(option, hourFormat, hasSeconds, locale) }}
       </div>
     </div>
   </Teleport>
