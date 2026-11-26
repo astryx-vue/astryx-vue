@@ -62,7 +62,7 @@ Actions go into the `actions` slot, usually one or two of them, and they give th
 
 In tight places such as cards and sidebars, `isCompact` reduces the spacing and the text sizes, and stacks the actions in a column.
 
-The component carries `role="status"`, so when it appears after data finishes loading a screen reader announces it. Attributes you pass — `class`, `style`, `data-*`, and the rest — land on the root element, and an explicit `role` overrides that default.
+The root is not a live region, because one that is born holding its text is spoken unreliably. When the component appears after the page has loaded, or its title or description changes later, the title and description are announced once through the shared polite live region; one that is part of the page when it loads stays silent, and so does one inside a live container such as a chat log. Action labels and the icon are never part of the announcement. Attributes you pass — `class`, `style`, `data-*`, and the rest — land on the root element, including a `role` you choose.
 
 
 <ComponentAnatomy />

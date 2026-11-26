@@ -413,6 +413,22 @@
   }
 
   @media (forced-colors: active) {
+    /* 强制配色把半透明的焦点叠色换成页面色，聚焦的行就看不出来了：用系统的 Highlight / HighlightText 配对涂出来。 */
+    .astryx-dropdown-menu [role='menuitem']:focus,
+    .astryx-dropdown-menu [role='menuitemcheckbox']:focus,
+    .astryx-dropdown-menu [role='menuitemradio']:focus {
+      background: Highlight;
+      color: HighlightText;
+      forced-color-adjust: none;
+    }
+
+    .astryx-dropdown-menu [role='menuitemradio']:focus .astryx-dropdown-menu-radio {
+      border-color: HighlightText;
+      background: Highlight;
+    }
+  }
+
+  @media (forced-colors: active) {
     /* 强制配色会去掉阴影，阴影是这块浮层唯一的边，这里补一圈系统色边框。 */
     /* 底部抽屉和框里的菜单不是独立浮层，不加。子菜单的弹出面板同样带 .astryx-dropdown-menu。 */
     .astryx-dropdown-menu:not(.is-sheet, .is-in-frame),

@@ -137,6 +137,7 @@ const menu = useMultiSelectorMenu({
   isLoading: control.isLoading,
   messages,
   announce,
+  settleBusy: useBusyAnnouncement(() => control.isLoading.value, () => messages.value.multiSelector.loading),
   listboxRef,
   getSearchInput: () => panelRef.value ? (panelRef.value as { searchInput?: HTMLInputElement | null }).searchInput ?? null : null,
   focusTrigger: () => {
@@ -147,7 +148,6 @@ const menu = useMultiSelectorMenu({
   listboxId,
 })
 const { combobox, selectedValues, selectedOptions } = menu
-useBusyAnnouncement(() => control.isLoading.value, () => messages.value.multiSelector.loading)
 /** 禁用的字段不向表单交值：不渲染隐藏输入，而不是渲染一个原生禁用的。 */
 /** 带搜索时触发器是普通按钮，搜索框才是组合框；ARIA 不允许按钮带 aria-required，必填交给搜索框。 */
 const hasSearchRole = computed(() => Boolean(props.searchable) && !control.isReadOnly.value)
@@ -429,6 +429,7 @@ defineExpose({
       :id="listboxId"
       ref="listboxRef"
       class="astryx-multi-selector-listbox astryx-layer"
+      :data-keyboard-highlight="menu.isKeyboardHighlight.value || undefined"
       :class="{ 'is-sheet': isSheet }"
       :role="menu.gridMode.value ? 'grid' : 'listbox'"
       aria-multiselectable="true"

@@ -38,6 +38,7 @@ export const navigationUpstreamMap: UpstreamMapPart = {
 
   '@astryx.appShell.skipToContent': [{ path: 'layout.skipToContent' }],
   '@astryx.appShell.mobileNavigation': [{ path: 'layout.mobileNavigation' }],
+  '@astryx.scrollRegion.label': [{ path: 'layout.scrollRegion' }],
   '@astryx.resizable.handle.label': [{ path: 'layout.resizeHandle' }],
   '@astryx.resizable.collapsed': [{ path: 'layout.collapsed' }],
 

@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
-import { defineComponent, h } from 'vue'
+import { defineComponent, h, nextTick } from 'vue'
 import { useAppShellMobile } from '../composables/useAppShellMobile.js'
 import SideNav from '../SideNav/SideNav.vue'
 import SideNavHeading from '../SideNav/SideNavHeading.vue'
@@ -64,6 +64,46 @@ describe('app shell', () => {
     expect(wrapper.get('.astryx-mobile-nav').text()).toContain('Dashboard')
     wrapper.unmount()
     window.matchMedia = original
+  })
+
+  it('makes main a keyboard stop only while its content overflows under fill height', async () => {
+    const wrapper = mount(AppShell, {
+      attachTo: document.body,
+      props: { height: 'fill' },
+      slots: { default: () => h('p', 'Page Content') },
+    })
+    const main = wrapper.get('[role="main"]').element as HTMLElement
+    const box = { clientWidth: 200, clientHeight: 100, scrollWidth: 200, scrollHeight: 100, scrollTop: 0, scrollLeft: 0 }
+    for (const key of Object.keys(box) as (keyof typeof box)[])
+      Object.defineProperty(main, key, { configurable: true, get: () => box[key] })
+    main.style.overflowX = 'auto'
+    main.style.overflowY = 'auto'
+    const remeasure = async (): Promise<void> => {
+      window.dispatchEvent(new Event('resize'))
+      await new Promise(resolve => requestAnimationFrame(() => resolve(undefined)))
+      await nextTick()
+    }
+
+    await remeasure()
+    expect(main.getAttribute('tabindex')).toBe('-1')
+
+    box.scrollHeight = 400
+    await remeasure()
+    expect(main.getAttribute('tabindex')).toBe('0')
+    expect(main.getAttribute('role')).toBe('main')
+    expect(main.getAttribute('aria-label')).toBeNull()
+
+    box.scrollHeight = 100
+    await remeasure()
+    expect(main.getAttribute('tabindex')).toBe('-1')
+    wrapper.unmount()
+  })
+
+  it('does not draw the ring on main when the skip link focuses it', async () => {
+    const wrapper = mount(AppShell, { attachTo: document.body, slots: { default: () => h('p', 'Page Content') } })
+    await wrapper.get('.astryx-app-shell__skip').trigger('click')
+    expect(wrapper.get('[role="main"]').attributes('data-programmatic-focus')).toBe('true')
+    wrapper.unmount()
   })
 
   it('returns inert defaults outside a shell', () => {

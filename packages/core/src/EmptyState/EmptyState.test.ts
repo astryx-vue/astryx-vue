@@ -1,16 +1,17 @@
 import { mount } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
+import { resetLiveRegionsForTest } from '../composables/testing/resetLiveRegions.js'
 import EmptyState from './EmptyState.vue'
 
 describe('emptyState', () => {
-  it('renders the title as a level 3 heading inside a status region', () => {
+  it('renders the title as a level 3 heading in a root that is not a live region', () => {
     const wrapper = mount(EmptyState, { props: { title: 'No results found' } })
 
     const root = wrapper.find('.astryx-empty-state')
     expect(root.exists()).toBe(true)
     expect(root.element.tagName).toBe('DIV')
-    expect(root.attributes('role')).toBe('status')
+    expect(root.attributes('role')).toBeUndefined()
 
     const heading = wrapper.find('h3.astryx-empty-state-title')
     expect(heading.exists()).toBe(true)
@@ -24,7 +25,7 @@ describe('emptyState', () => {
       })
 
       expect(wrapper.find(`h${level}.astryx-empty-state-title`).exists()).toBe(true)
-      expect(wrapper.find('.astryx-empty-state').attributes('role')).toBe('status')
+      expect(wrapper.find('.astryx-empty-state').attributes('role')).toBeUndefined()
       wrapper.unmount()
     }
   })
@@ -165,5 +166,55 @@ describe('emptyState', () => {
     expect(root.classes()).toContain('custom-class')
     expect(root.attributes('data-testid')).toBe('empty-state')
     expect(root.attributes('role')).toBe('region')
+  })
+
+  describe('announcement', () => {
+    afterEach(() => {
+      resetLiveRegionsForTest()
+    })
+
+    const frame = (): Promise<void> => new Promise(resolve => requestAnimationFrame(() => resolve()))
+    const polite = (): string => document.querySelector('[data-astryx-live-region="polite"]')?.textContent ?? ''
+
+    it('announces title and description once when it appears after the page has loaded', async () => {
+      const wrapper = mount(EmptyState, {
+        attachTo: document.body,
+        props: { title: 'No results found', description: 'Try another filter.' },
+        slots: { actions: () => 'Clear filters' },
+      })
+      await frame()
+      expect(polite()).toBe('No results found Try another filter.')
+      wrapper.unmount()
+    })
+
+    it('announces again when its message changes, not when it re-renders unchanged', async () => {
+      const wrapper = mount(EmptyState, { attachTo: document.body, props: { title: 'Nothing here' } })
+      await frame()
+      await wrapper.setProps({ isCompact: true })
+      await frame()
+      expect(polite()).toBe('Nothing here')
+
+      await wrapper.setProps({ title: 'Nothing found' })
+      await frame()
+      expect(polite()).toBe('Nothing found')
+      wrapper.unmount()
+    })
+
+    it('stays silent while the document is still loading, and inside a live container', async () => {
+      const readyState = vi.spyOn(document, 'readyState', 'get').mockReturnValue('loading')
+      const loading = mount(EmptyState, { attachTo: document.body, props: { title: 'Page content' } })
+      await frame()
+      expect(polite()).toBe('')
+      loading.unmount()
+      readyState.mockRestore()
+
+      const log = document.createElement('div')
+      log.setAttribute('role', 'log')
+      document.body.append(log)
+      const inLog = mount(EmptyState, { attachTo: log, props: { title: 'Delivered by the log' } })
+      await frame()
+      expect(polite()).toBe('')
+      inLog.unmount()
+    })
   })
 })

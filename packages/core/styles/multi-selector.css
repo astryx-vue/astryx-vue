@@ -350,6 +350,12 @@
     background: var(--astryx-dropdown-menu-hover-background, light-dark(#0536590c, #ffffff0c));
   }
 
+  /* 键盘移到的高亮选项画标准焦点环：只靠填充色，它和列表底色的对比不到 3:1。指针移到的高亮只有填充。 */
+  .astryx-multi-selector-listbox[data-keyboard-highlight] .astryx-multi-selector-option.is-active:not(.is-disabled) {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, currentcolor);
+    outline-offset: calc(-1 * var(--astryx-focus-outline-width, 2px));
+  }
+
   .astryx-multi-selector-option.is-disabled {
     cursor: default;
     opacity: 0.5;

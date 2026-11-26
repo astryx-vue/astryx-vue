@@ -16143,8 +16143,8 @@
         "zh": "`EmptyState` 用来占据一块暂时没有内容的区域：搜索没有结果、列表里还没有数据、用户第一次进入某个页面。它比一句干巴巴的“暂无数据”多给出三件事——这块区域现在为什么是空的、将来会有什么、用户此刻可以做什么。"
       },
       "usage": {
-        "en": "`EmptyState` fills a region that has no content yet: a search that returned nothing, a list that is still empty, a page the user is visiting for the first time. It carries three things that a bare \"No data\" line does not — why the region is empty now, what will live there, and what the user can do about it.\n\nThe component has four parts: an icon or illustration, a title, a description, and actions. Only `title` is required:\n\n```vue\n<script setup lang=\"ts\">\nimport { Button } from '@astryx-vue/core/Button'\nimport { EmptyState } from '@astryx-vue/core/EmptyState'\n</script>\n\n<template>\n  <EmptyState\n    title=\"No results found\"\n    description=\"Try adjusting your search terms, or clear the filters.\"\n  >\n    <template #icon>\n      <!-- Your icon class; UnoCSS's icon preset fills the container, so size the box. -->\n      <span class=\"i-carbon-search\" style=\"width: 24px; height: 24px\" />\n    </template>\n    <template #actions>\n      <Button label=\"Clear filters\" variant=\"secondary\" />\n      <Button label=\"Create item\" variant=\"primary\" />\n    </template>\n  </EmptyState>\n</template>\n```\n\nastryx-vue ships no icons of its own: what goes into the `icon` slot is yours. Put a CSS icon class there (an UnoCSS class such as `i-carbon-search`, for instance), or your own component or inline drawing. UnoCSS's icon preset makes the glyph fill its container, so give the element that carries the class a size; the example does it with an inline style, and a size class of your own works just as well.\n\nThe icon or illustration goes into the `icon` slot. That slot sits inside an `aria-hidden=\"true\"` wrapper, because the artwork only supports the text and should not be announced on its own; an icon placed there therefore needs no `label`.\n\n`title` renders as a heading, `h3` by default. `headingLevel` changes only the tag itself (h1–h6) so the title joins the document outline, and the title's size stays the same at every level — choosing `h2` does not make it larger.\n\n`description` takes a string, or richer content through the slot of the same name. It renders as a `<div>` rather than a `<p>`, so the slot can hold block content such as a list or a link:\n\n```vue\n<EmptyState title=\"No results found\">\n  <template #description>\n    <ul>\n      <li>Check the spelling of the search term.</li>\n      <li>Remove one of the active filters.</li>\n    </ul>\n  </template>\n</EmptyState>\n```\n\nActions go into the `actions` slot, usually one or two of them, and they give the user a clear next step. Just like the title and the description, `title` and `description` also each have a slot of the same name that overrides the plain text passed as a prop.\n\nIn tight places such as cards and sidebars, `isCompact` reduces the spacing and the text sizes, and stacks the actions in a column.\n\nThe component carries `role=\"status\"`, so when it appears after data finishes loading a screen reader announces it. Attributes you pass — `class`, `style`, `data-*`, and the rest — land on the root element, and an explicit `role` overrides that default.",
-        "zh": "`EmptyState` 用来占据一块暂时没有内容的区域：搜索没有结果、列表里还没有数据、用户第一次进入某个页面。它比一句干巴巴的“暂无数据”多给出三件事——这块区域现在为什么是空的、将来会有什么、用户此刻可以做什么。\n\n组件由四部分组成：图标或插图、标题、说明文字和操作按钮。其中只有 `title` 是必填的：\n\n```vue\n<script setup lang=\"ts\">\nimport { Button } from '@astryx-vue/core/Button'\nimport { EmptyState } from '@astryx-vue/core/EmptyState'\n</script>\n\n<template>\n  <EmptyState\n    title=\"No results found\"\n    description=\"Try adjusting your search terms, or clear the filters.\"\n  >\n    <template #icon>\n      <!-- 你自己的图标类；UnoCSS 的图标预设会铺满容器，所以给盒子一个尺寸 -->\n      <span class=\"i-carbon-search\" style=\"width: 24px; height: 24px\" />\n    </template>\n    <template #actions>\n      <Button label=\"Clear filters\" variant=\"secondary\" />\n      <Button label=\"Create item\" variant=\"primary\" />\n    </template>\n  </EmptyState>\n</template>\n```\n\nastryx-vue 不自带图标：`icon` 插槽里放什么由你决定，可以是图标库的 CSS 类（例如 UnoCSS 的 `i-carbon-search`），也可以是你自己的 SVG 组件或内联画。注意 UnoCSS 的图标预设会让图形铺满容器，所以要给承载类名的元素一个尺寸；上例用内联样式给出 24px，换成你自己的尺寸类也可以。\n\n图标或插图放进 `icon` 插槽。插槽外面套了一层 `aria-hidden=\"true\"` 的容器，因为插图只是文字的补充，不必让屏幕阅读器单独读出来；放在这里的图标因此也不需要设置 `label`。\n\n`title` 会渲染成一个标题元素，默认是 `h3`。`headingLevel` 只改变标签本身（h1–h6），让标题能接上页面的文档大纲；标题的字号在任何级别下都相同，不会因为选择 `h2` 而变大。\n\n`description` 可以传字符串，也可以用同名插槽传入更富的内容。它渲染成 `<div>` 而不是 `<p>`，所以插槽里可以放列表、链接这类块级内容：\n\n```vue\n<EmptyState title=\"No results found\">\n  <template #description>\n    <ul>\n      <li>Check the spelling of the search term.</li>\n      <li>Remove one of the active filters.</li>\n    </ul>\n  </template>\n</EmptyState>\n```\n\n操作按钮放进 `actions` 插槽，通常是一到两个，给用户一个明确的下一步。与标题、说明一样，`title` 和 `description` 也都各有一个同名插槽，用来覆盖属性传入的纯文本。\n\n在卡片、侧边栏这类空间有限的地方，加上 `isCompact` 会同时收紧间距和字号，操作按钮也从一行改为竖排。\n\n组件自带 `role=\"status\"`，当它在数据加载完成之后才出现时，屏幕阅读器会把内容读出来。传进来的 `class`、`style`、`data-*` 等属性会落到根元素上；显式给出的 `role` 会覆盖默认值。"
+        "en": "`EmptyState` fills a region that has no content yet: a search that returned nothing, a list that is still empty, a page the user is visiting for the first time. It carries three things that a bare \"No data\" line does not — why the region is empty now, what will live there, and what the user can do about it.\n\nThe component has four parts: an icon or illustration, a title, a description, and actions. Only `title` is required:\n\n```vue\n<script setup lang=\"ts\">\nimport { Button } from '@astryx-vue/core/Button'\nimport { EmptyState } from '@astryx-vue/core/EmptyState'\n</script>\n\n<template>\n  <EmptyState\n    title=\"No results found\"\n    description=\"Try adjusting your search terms, or clear the filters.\"\n  >\n    <template #icon>\n      <!-- Your icon class; UnoCSS's icon preset fills the container, so size the box. -->\n      <span class=\"i-carbon-search\" style=\"width: 24px; height: 24px\" />\n    </template>\n    <template #actions>\n      <Button label=\"Clear filters\" variant=\"secondary\" />\n      <Button label=\"Create item\" variant=\"primary\" />\n    </template>\n  </EmptyState>\n</template>\n```\n\nastryx-vue ships no icons of its own: what goes into the `icon` slot is yours. Put a CSS icon class there (an UnoCSS class such as `i-carbon-search`, for instance), or your own component or inline drawing. UnoCSS's icon preset makes the glyph fill its container, so give the element that carries the class a size; the example does it with an inline style, and a size class of your own works just as well.\n\nThe icon or illustration goes into the `icon` slot. That slot sits inside an `aria-hidden=\"true\"` wrapper, because the artwork only supports the text and should not be announced on its own; an icon placed there therefore needs no `label`.\n\n`title` renders as a heading, `h3` by default. `headingLevel` changes only the tag itself (h1–h6) so the title joins the document outline, and the title's size stays the same at every level — choosing `h2` does not make it larger.\n\n`description` takes a string, or richer content through the slot of the same name. It renders as a `<div>` rather than a `<p>`, so the slot can hold block content such as a list or a link:\n\n```vue\n<EmptyState title=\"No results found\">\n  <template #description>\n    <ul>\n      <li>Check the spelling of the search term.</li>\n      <li>Remove one of the active filters.</li>\n    </ul>\n  </template>\n</EmptyState>\n```\n\nActions go into the `actions` slot, usually one or two of them, and they give the user a clear next step. Just like the title and the description, `title` and `description` also each have a slot of the same name that overrides the plain text passed as a prop.\n\nIn tight places such as cards and sidebars, `isCompact` reduces the spacing and the text sizes, and stacks the actions in a column.\n\nThe root is not a live region, because one that is born holding its text is spoken unreliably. When the component appears after the page has loaded, or its title or description changes later, the title and description are announced once through the shared polite live region; one that is part of the page when it loads stays silent, and so does one inside a live container such as a chat log. Action labels and the icon are never part of the announcement. Attributes you pass — `class`, `style`, `data-*`, and the rest — land on the root element, including a `role` you choose.",
+        "zh": "`EmptyState` 用来占据一块暂时没有内容的区域：搜索没有结果、列表里还没有数据、用户第一次进入某个页面。它比一句干巴巴的“暂无数据”多给出三件事——这块区域现在为什么是空的、将来会有什么、用户此刻可以做什么。\n\n组件由四部分组成：图标或插图、标题、说明文字和操作按钮。其中只有 `title` 是必填的：\n\n```vue\n<script setup lang=\"ts\">\nimport { Button } from '@astryx-vue/core/Button'\nimport { EmptyState } from '@astryx-vue/core/EmptyState'\n</script>\n\n<template>\n  <EmptyState\n    title=\"No results found\"\n    description=\"Try adjusting your search terms, or clear the filters.\"\n  >\n    <template #icon>\n      <!-- 你自己的图标类；UnoCSS 的图标预设会铺满容器，所以给盒子一个尺寸 -->\n      <span class=\"i-carbon-search\" style=\"width: 24px; height: 24px\" />\n    </template>\n    <template #actions>\n      <Button label=\"Clear filters\" variant=\"secondary\" />\n      <Button label=\"Create item\" variant=\"primary\" />\n    </template>\n  </EmptyState>\n</template>\n```\n\nastryx-vue 不自带图标：`icon` 插槽里放什么由你决定，可以是图标库的 CSS 类（例如 UnoCSS 的 `i-carbon-search`），也可以是你自己的 SVG 组件或内联画。注意 UnoCSS 的图标预设会让图形铺满容器，所以要给承载类名的元素一个尺寸；上例用内联样式给出 24px，换成你自己的尺寸类也可以。\n\n图标或插图放进 `icon` 插槽。插槽外面套了一层 `aria-hidden=\"true\"` 的容器，因为插图只是文字的补充，不必让屏幕阅读器单独读出来；放在这里的图标因此也不需要设置 `label`。\n\n`title` 会渲染成一个标题元素，默认是 `h3`。`headingLevel` 只改变标签本身（h1–h6），让标题能接上页面的文档大纲；标题的字号在任何级别下都相同，不会因为选择 `h2` 而变大。\n\n`description` 可以传字符串，也可以用同名插槽传入更富的内容。它渲染成 `<div>` 而不是 `<p>`，所以插槽里可以放列表、链接这类块级内容：\n\n```vue\n<EmptyState title=\"No results found\">\n  <template #description>\n    <ul>\n      <li>Check the spelling of the search term.</li>\n      <li>Remove one of the active filters.</li>\n    </ul>\n  </template>\n</EmptyState>\n```\n\n操作按钮放进 `actions` 插槽，通常是一到两个，给用户一个明确的下一步。与标题、说明一样，`title` 和 `description` 也都各有一个同名插槽，用来覆盖属性传入的纯文本。\n\n在卡片、侧边栏这类空间有限的地方，加上 `isCompact` 会同时收紧间距和字号，操作按钮也从一行改为竖排。\n\n根元素不是 live 区域：带着文字一起出生的 live 区域，读屏念不念全看软件。页面加载完成之后才出现、或者标题和描述之后变了，标题和描述会通过共用的 polite 播报通道念一次；页面加载时就在的保持安静，放在聊天记录这类 live 容器里的也不重复念。操作按钮的文字和图标不属于播报内容。传进来的 `class`、`style`、`data-*` 等属性，包括你选的 `role`，都会落到根元素上。"
       },
       "practices": {
         "en": [
@@ -19023,6 +19023,12 @@
                 "description": "Name and announcement after a successful copy."
               },
               {
+                "name": "`copyFailedLabel`",
+                "type": "`string`",
+                "default": "`'Failed to copy value to clipboard.'`",
+                "description": "Name, tooltip and announcement for 2 seconds after the clipboard rejects a write, while the button shows a cross. A theme that maps the `code-block-copy` icon slot keeps its own glyph during a failure."
+              },
+              {
                 "name": "`codeLabel`",
                 "type": "`string`",
                 "default": "`'Code'`",
@@ -19166,6 +19172,12 @@
                 "description": "复制成功后的名称和播报。"
               },
               {
+                "name": "`copyFailedLabel`",
+                "type": "`string`",
+                "default": "`'Failed to copy value to clipboard.'`",
+                "description": "剪贴板拒绝写入后 2 秒内的名称、提示和播报，按钮同时换成叉。主题映射了 `code-block-copy` 图标槽时，失败期间仍显示主题自己的图标。"
+              },
+              {
                 "name": "`codeLabel`",
                 "type": "`string`",
                 "default": "`'Code'`",
@@ -19197,7 +19209,7 @@
         "en": [
           {
             "heading": "CodeBlock events",
-            "text": "- `copy`: emitted after the code string was written to the clipboard."
+            "text": "- `copy`: emitted after the code string was written to the clipboard.\n- `copyError`: emitted once per failed copy with the rejection. The error itself is never shown."
           },
           {
             "heading": "SyntaxTheme",
@@ -19211,7 +19223,7 @@
           },
           {
             "heading": "CodeBlock 事件",
-            "text": "- `copy`：代码字符串写入剪贴板之后发出。"
+            "text": "- `copy`：代码字符串写入剪贴板之后发出。\n- `copyError`：每次复制失败发出一次，参数是拒绝的原因；原因本身不会显示出来。"
           },
           {
             "heading": "SyntaxTheme",
@@ -45272,7 +45284,7 @@
                 "name": "`isScrollable`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "内容超出时允许滚动。这层包装已经把 flex 的最小尺寸清掉了，所以 `size=\"fill\"` 配上 `isScrollable` 就是一块完整的滚动区域。"
+                "description": "内容超出时允许滚动。`div` 或 `span` 条目的内容溢出期间，它是一个分组，名字取 `aria-label`，没设时用翻译过的「内容」；你设的 `role` 保留不动。这层包装已经把 flex 的最小尺寸清掉了，所以 `size=\"fill\"` 配上 `isScrollable` 就是一块完整的滚动区域。"
               },
               {
                 "name": "`size`",
@@ -47018,7 +47030,7 @@
                 "name": "`label`",
                 "type": "`string`",
                 "default": "—",
-                "description": "这个地标的无障碍名称。"
+                "description": "这个地标的无障碍名称。面板在滚动（且没设 `role`）期间，它同时是滚动分组的名称，没设时用翻译过的「内容」。"
               },
               {
                 "name": "`padding`",
@@ -47558,7 +47570,7 @@
                 "name": "`label`",
                 "type": "`string`",
                 "default": "—",
-                "description": "这个地标的无障碍名称。"
+                "description": "这个地标的无障碍名称。内容在滚动（且没设 `role`）期间，它同时是滚动分组的名称，没设时用翻译过的「内容」。"
               },
               {
                 "name": "`padding`",
@@ -68995,12 +69007,12 @@
       "importPath": null,
       "exportName": null,
       "summary": {
-        "en": "Imperatively announces a message to screen readers through a visually-hidden live region. Use it for state that is only conveyed visually; search result counts, \"no results\", loading and saved confirmations, validation errors (WCAG 4.1.3 Status Messages). The polite and assertive regions are created empty on first use and stay mounted, which is what makes announcements reliable: most screen readers ignore a live region that is inserted together with its content. Each message is cleared a couple of seconds after it is announced so stale status does not linger in the accessibility tree.",
-        "zh": "用一块视觉上隐藏的 live region，主动把一句话念给读屏软件听。只靠眼睛才能看出来的状态用它播报：搜索结果条数、\"没有结果\"、加载中和已保存的提示、校验错误（WCAG 4.1.3 状态消息）。polite 和 assertive 两块区域在第一次使用时以空内容创建，之后一直留在页面里，只换文字——这正是一次播报能被听到的原因：很多读屏软件会忽略和内容同时插入的 live region。每条消息播报完一两秒后会被清空，旧状态不会一直留在无障碍树里。"
+        "en": "Imperatively announces a message to screen readers through a visually-hidden live region. Use it for state that is only conveyed visually; search result counts, \"no results\", loading and saved confirmations, validation errors (WCAG 4.1.3 Status Messages). The polite and assertive regions are created empty on first use and stay mounted, which is what makes announcements reliable: most screen readers ignore a live region that is inserted together with its content. Messages announced in the same frame are spoken together, in order, and an identical repeat is spoken once; an empty message clears whatever has not been spoken yet. While a native modal dialog is open, the message is written into that dialog's own live region, since the page's regions are outside the dialog and cannot be heard. Each message is cleared a couple of seconds after it is announced so stale status does not linger in the accessibility tree.",
+        "zh": "用一块视觉上隐藏的 live region，主动把一句话念给读屏软件听。只靠眼睛才能看出来的状态用它播报：搜索结果条数、\"没有结果\"、加载中和已保存的提示、校验错误（WCAG 4.1.3 状态消息）。polite 和 assertive 两块区域在第一次使用时以空内容创建，之后一直留在页面里，只换文字——这正是一次播报能被听到的原因：很多读屏软件会忽略和内容同时插入的 live region。同一帧里播报的多条消息按顺序连在一起念，一模一样的重复只念一次；传空字符串会把还没念出去的也一起清掉。原生模态对话框打开时，消息写进那个对话框自己的 live region，因为页面上的区域在对话框外面，读屏念不到。每条消息播报完一两秒后会被清空，旧状态不会一直留在无障碍树里。"
       },
       "usage": {
-        "en": "Imperatively announces a message to screen readers through a visually-hidden live region. Use it for state that is only conveyed visually; search result counts, \"no results\", loading and saved confirmations, validation errors (WCAG 4.1.3 Status Messages). The polite and assertive regions are created empty on first use and stay mounted, which is what makes announcements reliable: most screen readers ignore a live region that is inserted together with its content. Each message is cleared a couple of seconds after it is announced so stale status does not linger in the accessibility tree.\n\n```ts\nimport { useAnnounce } from '@astryx-vue/core'\n```\n\n```ts\nconst announce = useAnnounce()\n\nannounce('12 results')\nannounce('The file could not be saved.', 'assertive')\n```",
-        "zh": "用一块视觉上隐藏的 live region，主动把一句话念给读屏软件听。只靠眼睛才能看出来的状态用它播报：搜索结果条数、\"没有结果\"、加载中和已保存的提示、校验错误（WCAG 4.1.3 状态消息）。polite 和 assertive 两块区域在第一次使用时以空内容创建，之后一直留在页面里，只换文字——这正是一次播报能被听到的原因：很多读屏软件会忽略和内容同时插入的 live region。每条消息播报完一两秒后会被清空，旧状态不会一直留在无障碍树里。\n\n```ts\nimport { useAnnounce } from '@astryx-vue/core'\n```\n\n```ts\nconst announce = useAnnounce()\n\nannounce('找到 12 条结果')\nannounce('文件保存失败。', 'assertive')\n```"
+        "en": "Imperatively announces a message to screen readers through a visually-hidden live region. Use it for state that is only conveyed visually; search result counts, \"no results\", loading and saved confirmations, validation errors (WCAG 4.1.3 Status Messages). The polite and assertive regions are created empty on first use and stay mounted, which is what makes announcements reliable: most screen readers ignore a live region that is inserted together with its content. Messages announced in the same frame are spoken together, in order, and an identical repeat is spoken once; an empty message clears whatever has not been spoken yet. While a native modal dialog is open, the message is written into that dialog's own live region, since the page's regions are outside the dialog and cannot be heard. Each message is cleared a couple of seconds after it is announced so stale status does not linger in the accessibility tree.\n\n```ts\nimport { useAnnounce } from '@astryx-vue/core'\n```\n\n```ts\nconst announce = useAnnounce()\n\nannounce('12 results')\nannounce('The file could not be saved.', 'assertive')\n```\n\nA status that is restated on every keystroke can take back its own previous message while it has not been spoken yet, so fast typing is not read out as a string of stale counts:\n\n```ts\nconst announceSearch = useAnnounce({ hasReplace: true })\n```",
+        "zh": "用一块视觉上隐藏的 live region，主动把一句话念给读屏软件听。只靠眼睛才能看出来的状态用它播报：搜索结果条数、\"没有结果\"、加载中和已保存的提示、校验错误（WCAG 4.1.3 状态消息）。polite 和 assertive 两块区域在第一次使用时以空内容创建，之后一直留在页面里，只换文字——这正是一次播报能被听到的原因：很多读屏软件会忽略和内容同时插入的 live region。同一帧里播报的多条消息按顺序连在一起念，一模一样的重复只念一次；传空字符串会把还没念出去的也一起清掉。原生模态对话框打开时，消息写进那个对话框自己的 live region，因为页面上的区域在对话框外面，读屏念不到。每条消息播报完一两秒后会被清空，旧状态不会一直留在无障碍树里。\n\n```ts\nimport { useAnnounce } from '@astryx-vue/core'\n```\n\n```ts\nconst announce = useAnnounce()\n\nannounce('找到 12 条结果')\nannounce('文件保存失败。', 'assertive')\n```\n\n每次按键都重新说一遍的状态，可以让它收回自己上一条还没念出去的消息，快速输入时就不会念出一串过期的数字：\n\n```ts\nconst announceSearch = useAnnounce({ hasReplace: true })\n```"
       },
       "practices": {
         "en": [
@@ -69026,24 +69038,46 @@
       "props": {
         "en": [
           {
+            "heading": "Parameters",
+            "rows": [
+              {
+                "name": "`options.hasReplace`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "This announcer's new message takes back its own previous message while that one has not been spoken yet, whatever the two politenesses. The new one is written to the region of its own politeness. Messages from other announcers still join."
+              }
+            ]
+          },
+          {
             "heading": "Returns",
             "rows": [
               {
                 "name": "`announce`",
                 "type": "`(message: string, politeness?: 'polite' | 'assertive') => void`",
-                "description": "Speaks a message through the shared live region. Politeness defaults to `polite`; an empty message clears any lingering status instead of announcing."
+                "description": "Speaks a message through the shared live region. Politeness defaults to `polite`; messages announced in the same frame are joined, in order, into one announcement, and an identical repeat is kept once. An empty message clears any lingering status, including joined messages not yet spoken, instead of announcing."
               }
             ]
           }
         ],
         "zh": [
           {
+            "heading": "参数",
+            "rows": [
+              {
+                "name": "`options.hasReplace`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "这个播报者的新消息会收回它自己上一条还没念出去的消息，不管两条紧迫度是否相同；新消息写进它自己紧迫度的区域。别的播报者的消息照样连在一起。"
+              }
+            ]
+          },
+          {
             "heading": "返回值",
             "rows": [
               {
                 "name": "`announce`",
                 "type": "`(message: string, politeness?: 'polite' | 'assertive') => void`",
-                "description": "通过共享的 live region 念一句话。第二项默认是 `polite`；传空字符串表示清空残留的状态，不播报。"
+                "description": "通过共享的 live region 念一句话。第二项默认是 `polite`；同一帧里播报的消息按顺序连成一条念，一模一样的重复只留一条；传空字符串表示清空残留的状态（包括连在一起还没念的消息），不播报。"
               }
             ]
           }
@@ -69559,7 +69593,19 @@
                 "name": "`options.resetAfterMs`",
                 "type": "`number`",
                 "default": "`2000`",
-                "description": "Milliseconds `isCopied` stays true after a successful copy before reverting."
+                "description": "Milliseconds `isCopied` or `isFailed` stays true after a copy before reverting."
+              },
+              {
+                "name": "`options.announceFailure`",
+                "type": "`string`",
+                "default": "—",
+                "description": "Message announced to the assertive live region when the copy fails, because a failure is an error. Accepts a ref or getter. Omit to skip the announcement."
+              },
+              {
+                "name": "`options.onError`",
+                "type": "`(error: unknown) => void`",
+                "default": "—",
+                "description": "Called once with the rejection when the clipboard write fails. The error itself is never shown."
               }
             ]
           },
@@ -69569,7 +69615,12 @@
               {
                 "name": "`copy`",
                 "type": "`(text: string) => Promise<boolean>`",
-                "description": "Writes `text` to the clipboard. On success flips `isCopied` to true, announces the configured message, restarts the reset timer, and resolves true. Where the frame refuses the async Clipboard API (a sandboxed viewer or an embed), or the browser refuses the write, the text is copied with the browser copy command inside the reader's click or key press, without moving focus. A failed write is a silent no-op that leaves the copied state unchanged and resolves false."
+                "description": "Writes `text` to the clipboard. On success flips `isCopied` to true, announces the configured message, restarts the reset timer, and resolves true. Where the frame refuses the async Clipboard API (a sandboxed viewer or an embed), or the browser refuses the write, the text is copied with the browser copy command inside the reader's click or key press, without moving focus. A failed write flips `isFailed` to true, announces the failure message, restarts the reset timer, and resolves false."
+              },
+              {
+                "name": "`isFailed`",
+                "type": "`Ref<boolean>`",
+                "description": "True for `resetAfterMs` after a failed copy. The next copy clears it."
               },
               {
                 "name": "`isCopied`",
@@ -69599,7 +69650,19 @@
                 "name": "`options.resetAfterMs`",
                 "type": "`number`",
                 "default": "`2000`",
-                "description": "复制成功后 `isCopied` 保持为 true 的毫秒数。"
+                "description": "复制之后 `isCopied` 或 `isFailed` 保持为 true 的毫秒数。"
+              },
+              {
+                "name": "`options.announceFailure`",
+                "type": "`string`",
+                "default": "—",
+                "description": "复制失败时念给读屏的句子，走 assertive 播报，因为失败是错误。可以传 ref 或 getter。不传就不播报。"
+              },
+              {
+                "name": "`options.onError`",
+                "type": "`(error: unknown) => void`",
+                "default": "—",
+                "description": "剪贴板写入被拒绝时调用一次，参数是拒绝的原因。原因本身不会显示出来。"
               }
             ]
           },
@@ -69609,7 +69672,12 @@
               {
                 "name": "`copy`",
                 "type": "`(text: string) => Promise<boolean>`",
-                "description": "把 `text` 写进剪贴板。成功时 `isCopied` 变为 true、播报配置的句子、重置定时器，并返回 true。所在框架不允许异步 Clipboard API（沙箱里的预览、嵌入页）或浏览器拒绝写入时，在这次点击或按键里改用浏览器的复制命令，不移动焦点。两条路都失败时什么都不改，返回 false。"
+                "description": "把 `text` 写进剪贴板。成功时 `isCopied` 变为 true、播报配置的句子、重置定时器，并返回 true。所在框架不允许异步 Clipboard API（沙箱里的预览、嵌入页）或浏览器拒绝写入时，在这次点击或按键里改用浏览器的复制命令，不移动焦点。两条路都失败时 `isFailed` 变为 true、播报失败的句子、重置定时器，并返回 false。"
+              },
+              {
+                "name": "`isFailed`",
+                "type": "`Ref<boolean>`",
+                "description": "复制失败后的 `resetAfterMs` 内为 true，下一次复制开始时清掉。"
               },
               {
                 "name": "`isCopied`",
@@ -75906,8 +75974,8 @@
         "zh": "`isLocked` 为 true 的时候把 `body` 的滚动锁住，弹层后面的页面就停在原地不动。`isLocked` 是个 ref：把打开弹层的那个开关传进来，它自己跟着走。"
       },
       "usage": {
-        "en": "Locks `body` scroll while `isLocked` is true, so the page behind a modal or a dialog stays where it is. `isLocked` is a ref: pass the same flag that opens the overlay, and the hook follows it.\n\nThe lock is reference counted. The page is released only when the outermost lock goes away, so closing a sheet that sits inside a dialog does not unlock the page under it. The inline `overflow` that `body` had before is put back when the last lock is released. Where the scrollbar takes space (Windows and Linux desktops, or macOS set to always show scroll bars), its gutter is held open while locked (`scrollbar-gutter: stable`, with padding as the fallback), so neither the page nor its fixed-position chrome jumps sideways, and a scope that goes away releases its own lock.\n\n```ts\nimport { useScrollLock } from '@astryx-vue/core'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\nuseScrollLock(isOpen)\n```",
-        "zh": "`isLocked` 为 true 的时候把 `body` 的滚动锁住，弹层后面的页面就停在原地不动。`isLocked` 是个 ref：把打开弹层的那个开关传进来，它自己跟着走。\n\n这个锁按次数算。最外层的锁都放开，页面才真的松开，所以对话框里再叠一个抽屉，抽屉关掉不会把下面那层解锁。锁住之前 `body` 上原本的 `overflow` 会记下来，最后一层解开时写回去。滚动条是占地方的那种（Windows、Linux 桌面，或者 macOS 设成始终显示滚动条）时，锁住期间给它留住位置（`scrollbar-gutter: stable`，不支持的浏览器补 padding），页面和固定定位的元素都不会左右跳。作用域被清理掉的时候，它自己那一层也会放开。\n\n```ts\nimport { useScrollLock } from '@astryx-vue/core'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\nuseScrollLock(isOpen)\n```"
+        "en": "Locks `body` scroll while `isLocked` is true, so the page behind a modal or a dialog stays where it is. `isLocked` is a ref: pass the same flag that opens the overlay, and the hook follows it.\n\nThe lock is reference counted. The page is released only when the outermost lock goes away, so closing a sheet that sits inside a dialog does not unlock the page under it. The inline `overflow` that `body` had before is put back when the last lock is released. Where the scrollbar takes space (Windows and Linux desktops, or macOS set to always show scroll bars), its gutter is held open while locked (`scrollbar-gutter: stable`, with padding as the fallback), so neither the page nor its fixed-position chrome jumps sideways, and a scope that goes away releases its own lock. The page is never pinned with `position: fixed`, so its scroll offset does not change. Where the primary pointer is coarse (phones and tablets), iOS Safari scrolls an `overflow: hidden` page under a finger, so a one-finger pan that nothing inside the overlay takes is cancelled (pans a scroller in the overlay can take, a pinch, a zoomed page and a range slider still work), and the page's overscroll bounce is turned off while locked.\n\n```ts\nimport { useScrollLock } from '@astryx-vue/core'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\nuseScrollLock(isOpen)\n```",
+        "zh": "`isLocked` 为 true 的时候把 `body` 的滚动锁住，弹层后面的页面就停在原地不动。`isLocked` 是个 ref：把打开弹层的那个开关传进来，它自己跟着走。\n\n这个锁按次数算。最外层的锁都放开，页面才真的松开，所以对话框里再叠一个抽屉，抽屉关掉不会把下面那层解锁。锁住之前 `body` 上原本的 `overflow` 会记下来，最后一层解开时写回去。滚动条是占地方的那种（Windows、Linux 桌面，或者 macOS 设成始终显示滚动条）时，锁住期间给它留住位置（`scrollbar-gutter: stable`，不支持的浏览器补 padding），页面和固定定位的元素都不会左右跳。作用域被清理掉的时候，它自己那一层也会放开。页面从不被钉成 `position: fixed`，滚动位置不会变。主指针是触屏时（手机和平板），iOS Safari 会让手指把 `overflow: hidden` 的页面拖着走，所以浮层里没有人接的单指拖动会被取消（浮层里的滚动区能接的拖动、捏合、放大后的页面和滑块照常可用），页面的回弹在锁住期间也关掉。\n\n```ts\nimport { useScrollLock } from '@astryx-vue/core'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\nuseScrollLock(isOpen)\n```"
       },
       "practices": {
         "en": [

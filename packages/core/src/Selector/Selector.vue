@@ -5,6 +5,7 @@ import BottomSheet from '../BottomSheet/BottomSheet.vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import { useBusyAnnouncement } from '../composables/internal/busyAnnouncement.js'
+import { useKeyboardHighlight } from '../composables/internal/useKeyboardHighlight.js'
 import { useAnnounce } from '../composables/useAnnounce.js'
 import { useCombobox } from '../composables/useCombobox.js'
 import { useDismiss } from '../composables/useDismiss.js'
@@ -59,7 +60,6 @@ const props = withDefaults(defineProps<SelectorProps>(), {
 })
 
 const emit = defineEmits<SelectorEmits>()
-
 defineSlots<SelectorSlots>()
 
 // 显式 size > 外层 SizeContext（Toolbar、InputGroup 等）> 'md'。
@@ -96,7 +96,7 @@ const control = useFieldControlState({
   loading: () => props.isLoading,
 })
 const announce = useAnnounce()
-useBusyAnnouncement(() => control.isLoading.value, () => messages.value.selector.loading)
+const settleBusy = useBusyAnnouncement(() => control.isLoading.value, () => messages.value.selector.loading)
 const readOnlyId = computed(() => `${selectorId.value}-readonly`)
 const disabledMessageId = computed(() => `${selectorId.value}-disabled-message`)
 const disabledTooltipId = computed(() => `${selectorId.value}-disabled-tooltip`)
@@ -151,7 +151,7 @@ const combobox = useCombobox({
     }
   },
 })
-
+const { isKeyboardHighlight } = useKeyboardHighlight(combobox.activeIndex)
 const sheetOpen = computed({
   get: () => isSheet.value && combobox.isOpen.value,
   set: (open: boolean) => {
@@ -237,8 +237,10 @@ const announcement = computed(() => searchResultMessage({
 }))
 
 watch(announcement, (message) => {
-  if (message)
-    announce(message)
+  if (!message)
+    return
+  settleBusy() // 结果要播报了：还没念出去的「加载中」随即收回
+  announce(message)
 })
 
 function onTriggerFocus(event: FocusEvent): void {
@@ -442,6 +444,7 @@ onMounted(syncAnchorWidth)
         :class="[{ 'is-sheet': isSheet, 'is-input': triggerVariant === 'input' }, `size-${size}`]"
         :data-placement="isSheet ? undefined : position.placement"
         :style="listboxStyle"
+        :data-keyboard-highlight="isKeyboardHighlight || undefined"
         tabindex="-1"
       >
         <SelectorPanel

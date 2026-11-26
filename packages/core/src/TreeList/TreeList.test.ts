@@ -238,4 +238,26 @@ describe('tree list', () => {
     })
     expect(wrapper.find('a').exists()).toBe(false)
   })
+
+  it('moves focus to the row when the branch holding it collapses', async () => {
+    const wrapper = mount(TreeList, { attachTo: document.body, props: { items, label: 'Files' } })
+    ;(wrapper.get('[data-tree-id="app"]').element as HTMLElement).focus()
+    expect(document.activeElement).toBe(wrapper.get('[data-tree-id="app"]').element)
+
+    await wrapper.get('[data-tree-id="src"] [data-tree-toggle]').trigger('click')
+
+    expect(wrapper.find('[data-tree-id="app"]').exists()).toBe(false)
+    const row = wrapper.get('[data-tree-id="src"]').element as HTMLElement
+    expect(document.activeElement).toBe(row)
+    expect(row.getAttribute('tabindex')).toBe('0')
+    wrapper.unmount()
+  })
+
+  it('leaves focus alone when it is outside the collapsing branch', async () => {
+    const wrapper = mount(TreeList, { attachTo: document.body, props: { items, label: 'Files' } })
+    ;(wrapper.get('[data-tree-id="readme"]').element as HTMLElement).focus()
+    await wrapper.get('[data-tree-id="src"] [data-tree-toggle]').trigger('click')
+    expect(document.activeElement).toBe(wrapper.get('[data-tree-id="readme"]').element)
+    wrapper.unmount()
+  })
 })

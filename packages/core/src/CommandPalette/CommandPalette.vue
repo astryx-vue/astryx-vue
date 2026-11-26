@@ -29,7 +29,8 @@ defineSlots<CommandPaletteSlots<T>>()
 
 const value = defineModel<string | undefined>('value', { default: undefined })
 const messages = useComponentMessages({ commandPalette: commandPaletteMessages })
-const announce = useAnnounce()
+// 每次搜索状态都重新说一遍：快速输入时，后一条取代还没念出去的前一条，结果也取代还没念出去的「加载中」。
+const announce = useAnnounce({ hasReplace: true })
 const search = ref('')
 const highlightedIndex = ref(-1)
 const highlightCause = ref<'keyboard' | 'pointer' | 'sync'>('sync')

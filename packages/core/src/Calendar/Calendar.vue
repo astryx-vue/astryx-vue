@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { CalendarDate } from '@internationalized/date'
 import type { CalendarEmits, CalendarHandle, CalendarProps, CalendarRangeValue, CalendarSlots } from './types.js'
-import { computed, nextTick, shallowRef, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, onMounted, shallowRef, useTemplateRef, watch } from 'vue'
 import { useAnnounce } from '../composables/useAnnounce.js'
 import { useHandleRef } from '../composables/useHandleRef.js'
 import Icon from '../Icon/Icon.vue'
@@ -13,7 +13,7 @@ import {
   dateISO,
   formatWeekdayDate,
   fromCalendarDate,
-  initialCalendarFocus,
+  inSpan,
   sameCalendarDay,
   shiftMonth,
   toCalendarDate,
@@ -23,6 +23,7 @@ import {
 import { isCalendarDateDisabled, isOutsideCalendarBounds } from './useCalendarConstraints.js'
 import { buildCalendarWeeks } from './useCalendarGrid.js'
 import { resolveCalendarKey } from './useCalendarKeyboard.js'
+import { useCalendarToday } from './useCalendarToday.js'
 import '../../styles/calendar.css'
 
 defineOptions({ name: 'AstryxCalendar' })
@@ -49,19 +50,11 @@ const announce = useAnnounce()
 const rootRef = useTemplateRef<HTMLElement>('root')
 const monthCount = computed<1 | 2>(() => props.numberOfMonths === 2 ? 2 : 1)
 const weekStart = computed(() => weekStartIndex(props.weekStartsOn))
-const todayDate = toCalendarDate(new Date())
+const { hasExplicitOpening, isMonthPending, isResolvingToday, openingFocus, resolveToday, today } = useCalendarToday(props, monthCount)
 const pending = shallowRef<CalendarDate | null>(null)
 const hover = shallowRef<CalendarDate | null>(null)
 
-const opened = initialCalendarFocus({
-  focusDate: props.focusDate,
-  selected: props.mode === 'single' ? props.modelValue : null,
-  rangeStart: props.range?.start ?? null,
-  min: props.min,
-  max: props.max,
-  numberOfMonths: monthCount.value,
-  today: fromCalendarDate(todayDate),
-})
+const opened = openingFocus(today.value)
 const view = shallowRef(shiftMonth(opened, 0))
 const focused = shallowRef<CalendarDate>(opened)
 
@@ -108,7 +101,8 @@ function seed(month: CalendarDate): CalendarDate {
   const candidates: CalendarDate[] = []
   if (props.mode === 'single' && props.modelValue)
     candidates.push(toCalendarDate(props.modelValue))
-  candidates.push(todayDate)
+  if (today.value != null)
+    candidates.push(today.value)
   for (const date of candidates) {
     if (date.year === month.year && date.month === month.month && !blocked(date))
       return date
@@ -211,11 +205,17 @@ watch(() => props.focusDate ? dateISO(props.focusDate) : '', (iso) => {
     focused.value = seed(view.value)
 })
 
-watch(headerLabel, label => announce(label))
+watch(headerLabel, (label) => {
+  if (!isResolvingToday())
+    announce(label)
+}, { flush: 'sync' })
 
-function inSpan(date: CalendarDate, start: CalendarDate | null, end: CalendarDate | null): boolean {
-  return !!start && !!end && date.compare(start) >= 0 && date.compare(end) <= 0
-}
+onMounted(() => resolveToday((known) => {
+  if (hasExplicitOpening)
+    return
+  view.value = shiftMonth(openingFocus(known), 0)
+  focused.value = seed(view.value)
+}))
 
 interface DayView {
   iso: string
@@ -280,7 +280,7 @@ function paint(week: { days: { date: CalendarDate, iso: string, outside: boolean
       bandEnd: continues && !isStart && !isEnd && (!nextContinues || (!!end && sameCalendarDay(next!.date, end))),
       rangeStart: isStart,
       rangeEnd: isEnd,
-      today: !outside && sameCalendarDay(day.date, todayDate),
+      today: !outside && today.value != null && sameCalendarDay(day.date, today.value),
       tab: !outside && !props.disabled && sameCalendarDay(day.date, focused.value),
       roundStart: continues && (isStart || index === 0 || !previousContinues),
       roundEnd: continues && (isEnd || index === 6 || !nextContinues),
@@ -375,6 +375,7 @@ function onKeyDown(event: KeyboardEvent): void {
     ref="root"
     class="astryx-calendar"
     :class="{ 'is-disabled': disabled }"
+    :data-month-pending="isMonthPending || undefined"
     :data-months="monthCount"
     :data-mode="mode"
     :data-week-numbers="hasWeekNumbers || undefined"
@@ -391,7 +392,7 @@ function onKeyDown(event: KeyboardEvent): void {
         >
           <Icon icon="chevronLeft" size="sm" />
         </button>
-        <span class="astryx-calendar-month-year">{{ headerLabel }}</span>
+        <span class="astryx-calendar-month-year">{{ isMonthPending ? '' : headerLabel }}</span>
         <button
           type="button"
           class="astryx-calendar-nav-button"

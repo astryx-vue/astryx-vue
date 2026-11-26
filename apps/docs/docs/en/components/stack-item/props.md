@@ -11,7 +11,7 @@ footer: false
 <table><thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>as</code></td><td><code>string | Component</code></td><td><code>'div'</code></td><td>Element or component rendered at the root.</td></tr>
 <tr><td><code>crossAlignSelf</code></td><td><code>StackCrossAlignment</code></td><td>—</td><td>Overrides the parent stack's cross-axis alignment for this item: <code>start</code>, <code>center</code>, <code>end</code>, or <code>stretch</code>.</td></tr>
-<tr><td><code>isScrollable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Enables scrollable overflow. The wrapper already resets the flex minimum size, so <code>size="fill"</code> together with <code>isScrollable</code> is a complete scroll region.</td></tr>
+<tr><td><code>isScrollable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Enables scrollable overflow. While a <code>div</code> or <code>span</code> item's content overflows, it is a group named by <code>aria-label</code>, or by a translated "Content"; a <code>role</code> you set stays. The wrapper already resets the flex minimum size, so <code>size="fill"</code> together with <code>isScrollable</code> is a complete scroll region.</td></tr>
 <tr><td><code>size</code></td><td><code>'static' | 'fill'</code></td><td><code>'static'</code></td><td><code>static</code> keeps the natural size; <code>fill</code> expands to consume the space the other items leave over.</td></tr>
 </tbody></table>
 </div>

@@ -53,6 +53,38 @@ describe('useClipboard', () => {
     expect(result.isCopied.value).toBe(false)
   })
 
+  it('写入失败时 isFailed 到时恢复，失败走 assertive 播报，原因交给 onError，不显示', async () => {
+    vi.useFakeTimers()
+    const denied = new Error('denied')
+    clipboard(vi.fn().mockRejectedValue(denied))
+    const onError = vi.fn()
+    const { result } = mountComposable(() => useClipboard({ announceFailure: '复制失败', onError, resetAfterMs: 2000 }))
+
+    await expect(result.copy('hello')).resolves.toBe(false)
+    expect(result.isFailed.value).toBe(true)
+    expect(result.isCopied.value).toBe(false)
+    expect(onError).toHaveBeenCalledExactlyOnceWith(denied)
+
+    await vi.advanceTimersByTimeAsync(16)
+    expect(document.querySelector('[data-astryx-live-region="assertive"]')?.textContent).toBe('复制失败')
+    expect(document.querySelector('[data-astryx-live-region="polite"]')?.textContent ?? '').toBe('')
+
+    await vi.advanceTimersByTimeAsync(2000)
+    expect(result.isFailed.value).toBe(false)
+  })
+
+  it('下一次复制成功时清掉失败状态', async () => {
+    const writeText = vi.fn().mockRejectedValueOnce(new Error('denied')).mockResolvedValue(undefined)
+    clipboard(writeText)
+    const { result } = mountComposable(() => useClipboard())
+
+    await result.copy('hello')
+    expect(result.isFailed.value).toBe(true)
+    await result.copy('hello')
+    expect(result.isFailed.value).toBe(false)
+    expect(result.isCopied.value).toBe(true)
+  })
+
   it('配置了播报文案时，成功后写入 polite 区域', async () => {
     clipboard(vi.fn().mockResolvedValue(undefined))
     const { result } = mountComposable(() => useClipboard({ announce: '已复制' }))
