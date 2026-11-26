@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { CalendarDate } from '@internationalized/date'
 import type { CalendarEmits, CalendarHandle, CalendarProps, CalendarRangeValue, CalendarSlots } from './types.js'
-import { computed, nextTick, shallowRef, useTemplateRef, watch } from 'vue'
+import { CalendarDate as CalendarDay } from '@internationalized/date'
+import { computed, getCurrentInstance, nextTick, onMounted, shallowRef, useTemplateRef, watch } from 'vue'
 import { useAnnounce } from '../composables/useAnnounce.js'
 import { useHandleRef } from '../composables/useHandleRef.js'
 import Icon from '../Icon/Icon.vue'
@@ -49,19 +50,32 @@ const announce = useAnnounce()
 const rootRef = useTemplateRef<HTMLElement>('root')
 const monthCount = computed<1 | 2>(() => props.numberOfMonths === 2 ? 2 : 1)
 const weekStart = computed(() => weekStartIndex(props.weekStartsOn))
-const todayDate = toCalendarDate(new Date())
+// 服务端和浏览器可能在不同的日期（不同时区）：渲染和接管服务端 HTML 时先不知道今天，挂载之后再读。
+// 只在浏览器里直接挂载（没有服务端 HTML 可对）时马上就知道。
+const isServerOrHydrating = typeof document === 'undefined' || getCurrentInstance()?.vnode.el != null
+const today = shallowRef<CalendarDate | null>(isServerOrHydrating ? null : toCalendarDate(new Date()))
+const hasExplicitOpening = Boolean(props.focusDate || (props.mode === 'single' && props.modelValue) || props.range?.start)
+/** 没有 focusDate 也没有值，开着的月份要由今天决定；今天还不知道时月份格子先藏着。 */
+const isMonthPending = computed(() => today.value == null && !hasExplicitOpening)
+let isResolvingToday = false
 const pending = shallowRef<CalendarDate | null>(null)
 const hover = shallowRef<CalendarDate | null>(null)
 
-const opened = initialCalendarFocus({
-  focusDate: props.focusDate,
-  selected: props.mode === 'single' ? props.modelValue : null,
-  rangeStart: props.range?.start ?? null,
-  min: props.min,
-  max: props.max,
-  numberOfMonths: monthCount.value,
-  today: fromCalendarDate(todayDate),
-})
+function openingFocus(known: CalendarDate | null): CalendarDate {
+  if (known == null && !hasExplicitOpening)
+    return new CalendarDay(2000, 1, 1)
+  return initialCalendarFocus({
+    focusDate: props.focusDate,
+    selected: props.mode === 'single' ? props.modelValue : null,
+    rangeStart: props.range?.start ?? null,
+    min: props.min,
+    max: props.max,
+    numberOfMonths: monthCount.value,
+    today: known == null ? undefined : fromCalendarDate(known),
+  })
+}
+
+const opened = openingFocus(today.value)
 const view = shallowRef(shiftMonth(opened, 0))
 const focused = shallowRef<CalendarDate>(opened)
 
@@ -108,7 +122,8 @@ function seed(month: CalendarDate): CalendarDate {
   const candidates: CalendarDate[] = []
   if (props.mode === 'single' && props.modelValue)
     candidates.push(toCalendarDate(props.modelValue))
-  candidates.push(todayDate)
+  if (today.value != null)
+    candidates.push(today.value)
   for (const date of candidates) {
     if (date.year === month.year && date.month === month.month && !blocked(date))
       return date
@@ -211,7 +226,23 @@ watch(() => props.focusDate ? dateISO(props.focusDate) : '', (iso) => {
     focused.value = seed(view.value)
 })
 
-watch(headerLabel, label => announce(label))
+watch(headerLabel, (label) => {
+  if (!isResolvingToday)
+    announce(label)
+}, { flush: 'sync' })
+
+onMounted(() => {
+  if (today.value != null)
+    return
+  const known = toCalendarDate(new Date())
+  isResolvingToday = true
+  today.value = known
+  if (!hasExplicitOpening) {
+    view.value = shiftMonth(openingFocus(known), 0)
+    focused.value = seed(view.value)
+  }
+  isResolvingToday = false
+})
 
 function inSpan(date: CalendarDate, start: CalendarDate | null, end: CalendarDate | null): boolean {
   return !!start && !!end && date.compare(start) >= 0 && date.compare(end) <= 0
@@ -280,7 +311,7 @@ function paint(week: { days: { date: CalendarDate, iso: string, outside: boolean
       bandEnd: continues && !isStart && !isEnd && (!nextContinues || (!!end && sameCalendarDay(next!.date, end))),
       rangeStart: isStart,
       rangeEnd: isEnd,
-      today: !outside && sameCalendarDay(day.date, todayDate),
+      today: !outside && today.value != null && sameCalendarDay(day.date, today.value),
       tab: !outside && !props.disabled && sameCalendarDay(day.date, focused.value),
       roundStart: continues && (isStart || index === 0 || !previousContinues),
       roundEnd: continues && (isEnd || index === 6 || !nextContinues),
@@ -375,6 +406,7 @@ function onKeyDown(event: KeyboardEvent): void {
     ref="root"
     class="astryx-calendar"
     :class="{ 'is-disabled': disabled }"
+    :data-month-pending="isMonthPending || undefined"
     :data-months="monthCount"
     :data-mode="mode"
     :data-week-numbers="hasWeekNumbers || undefined"
@@ -391,7 +423,7 @@ function onKeyDown(event: KeyboardEvent): void {
         >
           <Icon icon="chevronLeft" size="sm" />
         </button>
-        <span class="astryx-calendar-month-year">{{ headerLabel }}</span>
+        <span class="astryx-calendar-month-year">{{ isMonthPending ? '' : headerLabel }}</span>
         <button
           type="button"
           class="astryx-calendar-nav-button"

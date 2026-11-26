@@ -3,6 +3,7 @@ import type { InputHTMLAttributes } from 'vue'
 import type { TextInputEmits, TextInputProps, TextInputSlots } from './types.js'
 import { computed, nextTick, onMounted, shallowRef, toRaw, useAttrs, useId, useTemplateRef } from 'vue'
 import ButtonSpinner from '../Button/ButtonSpinner.vue'
+import { useBusyAnnouncement } from '../composables/internal/busyAnnouncement.js'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import { useInputContainer } from '../composables/useInputContainer.js'
@@ -52,6 +53,8 @@ const action = useTextInputAction({
   emitError: (error, value, event) => emit('actionError', error, value, event),
 })
 const busy = computed(() => props.isLoading || action.isPending.value)
+// 加载圈只是装饰；忙碌由输入框自己念一次（在对话框里就写进那个对话框）。
+useBusyAnnouncement(busy, () => props.loadingLabel, () => container.value)
 const element = computed(() => input.value ?? null)
 
 function focus(options?: FocusOptions): void {
@@ -158,7 +161,7 @@ onMounted(() => {
         >
         <span v-if="$slots.end" class="astryx-text-input-end"><slot name="end" /></span>
         <InputClearButton v-if="hasClear && action.value.value && !disabled && !isReadOnly" :label="resolvedClearLabel" @click="clear" />
-        <ButtonSpinner v-if="busy" class="astryx-text-input-spinner" :label="loadingLabel" />
+        <ButtonSpinner v-if="busy" class="astryx-text-input-spinner" :label="loadingLabel" is-decorative />
         <component :is="statusIcon" v-if="statusIcon" v-bind="statusIconProps" />
       </div>
     </template>

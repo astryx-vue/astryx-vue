@@ -4,10 +4,12 @@ import { renderToString } from '@vue/server-renderer'
 import { enableAutoUnmount, flushPromises, mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { createSSRApp, h, nextTick } from 'vue'
+import { resetLiveRegionsForTest } from '../composables/testing/resetLiveRegions.js'
 import TextInput from './TextInput.vue'
 
 enableAutoUnmount(afterEach)
 afterEach(() => {
+  resetLiveRegionsForTest()
   vi.useRealTimers()
   document.body.innerHTML = ''
 })
@@ -178,7 +180,7 @@ describe('textInput', () => {
     await wrapper.get('input').setValue('Pending')
     expect(wrapper.get('input').element.value).toBe('Pending')
     expect(wrapper.get('input').attributes('aria-busy')).toBe('true')
-    expect(wrapper.find('[role="status"]').exists()).toBe(true)
+    expect(wrapper.find('.astryx-text-input-spinner').exists()).toBe(true)
     pending.resolve()
     await flushPromises()
     expect(wrapper.get('input').attributes('aria-busy')).toBeUndefined()
@@ -221,10 +223,16 @@ describe('textInput', () => {
 
   it('combines explicit loading with pending actions and uses localized loading text', async () => {
     const wrapper = renderInput({ isLoading: true, loadingLabel: '正在保存' })
-    expect(wrapper.get('[role="status"]').attributes('aria-label')).toBe('正在保存')
+    // 加载圈只是装饰，忙碌由输入框自己念一次。
+    const spinner = wrapper.get('.astryx-text-input-spinner')
+    expect(spinner.attributes('aria-hidden')).toBe('true')
+    expect(spinner.attributes('role')).toBeUndefined()
+    await new Promise(resolve => requestAnimationFrame(resolve))
+    await new Promise(resolve => requestAnimationFrame(resolve))
+    expect(document.querySelector('[data-astryx-live-region="polite"]')?.textContent).toBe('正在保存')
     expect(wrapper.get('input').attributes('disabled')).toBeUndefined()
     await wrapper.setProps({ isLoading: false })
-    expect(wrapper.find('[role="status"]').exists()).toBe(false)
+    expect(wrapper.find('.astryx-text-input-spinner').exists()).toBe(false)
   })
 
   it('exposes native ref methods and autofocus', async () => {
