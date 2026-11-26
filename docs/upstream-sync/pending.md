@@ -9523,9 +9523,12 @@
 
 ### v0.7.2
 
-- [ ] [`374b53a9e`](https://github.com/meta/astryx/commit/374b53a9e) fix(Text): truncation tooltip follows changed content, not only resizes (#7611)
-- [ ] [`3aca324d4`](https://github.com/meta/astryx/commit/3aca324d4) fix(MultiSelector): the active action cell draws the standard focus ring (#7542)
-- [ ] [`e63f97283`](https://github.com/meta/astryx/commit/e63f97283) fix(Calendar): compute ISO week numbers without local DST offset leaking in (#6365)
+- [x] [`374b53a9e`](https://github.com/meta/astryx/commit/374b53a9e) fix(Text): truncation tooltip follows changed content, not only resizes (#7611)
+  - Vue 版已有：useTruncation 已用共享 MutationObserver（utils/sharedMutationObserver）跟上内容变化
+- [x] [`3aca324d4`](https://github.com/meta/astryx/commit/3aca324d4) fix(MultiSelector): the active action cell draws the standard focus ring (#7542)
+  - Vue 版已有：操作格 is-active 用焦点令牌画轮廓，只有键盘进入操作列才会落在操作格上
+- [x] [`e63f97283`](https://github.com/meta/astryx/commit/e63f97283) fix(Calendar): compute ISO week numbers without local DST offset leaking in (#6365)
+  - Vue 版已有：plainDateGetWeekNumber 已全程用 UTC 锚点（utcTime）算 ISO 周，plainDate.test.ts 已有悉尼、奥克兰、圣地亚哥的 DST 用例
 - [x] [`5fb597d93`](https://github.com/meta/astryx/commit/5fb597d93) fix(core): build Unicode property regexes at runtime (#7767)
   - 不适用：只改上游测试（自动初筛）
 
@@ -9533,182 +9536,294 @@
 
 - [x] [`d4ade4a04`](https://github.com/meta/astryx/commit/d4ade4a04) spec(knowledge): every current record is reachable from a path; records declare paths no other link reaches (#7794)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`677d96c8b`](https://github.com/meta/astryx/commit/677d96c8b) fix(core): adjustTime emits "14:30.5" for a fractional increment, on both the public util and TimeInput/DateTimeInput (#7823)
-- [ ] [`29ead9885`](https://github.com/meta/astryx/commit/29ead9885) fix(core): disabled links, tokens and cards stay focusable (#7842)
+- [x] [`677d96c8b`](https://github.com/meta/astryx/commit/677d96c8b) fix(core): adjustTime emits "14:30.5" for a fractional increment, on both the public util and TimeInput/DateTimeInput (#7823)
+  - 已移植：[#575](https://github.com/astryx-vue/astryx-vue/pull/575)。adjustTime 拒绝小数分钟的改动已在工具函数里，补 TimeInput 文档和组件层测试
+- [x] [`29ead9885`](https://github.com/meta/astryx/commit/29ead9885) fix(core): disabled links, tokens and cards stay focusable (#7842)
+  - 已移植：[#541](https://github.com/astryx-vue/astryx-vue/pull/541)。aria-disabled 的触发器保持可聚焦但不打开浮层；Link、ClickableCard 禁用时保留焦点本来就有
 
 ### v0.7.5
 
 - [x] [`a88f185a1`](https://github.com/meta/astryx/commit/a88f185a1) fix(core): a card's press overlay paints a finger's press (#8057)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`a4261e95a`](https://github.com/meta/astryx/commit/a4261e95a) refactor(core): a shared edge autoscroll timer, used by the menu press model (#8334)
+- [x] [`a4261e95a`](https://github.com/meta/astryx/commit/a4261e95a) refactor(core): a shared edge autoscroll timer, used by the menu press model (#8334)
+  - Vue 版已有：边缘自动滚动已是 internal/menuPressAutoscroll，菜单按压模型共用
 - [ ] [`cd3787bac`](https://github.com/meta/astryx/commit/cd3787bac) feat(core): one touch presentation resolver (#8062)
-- [ ] [`844d734d0`](https://github.com/meta/astryx/commit/844d734d0) chore(core): a shared touch hit area that grows toward 44 px and stops at half the gap to each neighbour (#8635)
+  - 暂缓：触屏呈现解析器依赖 presentation 设施（Vue 版没有 presentation 属性和 experimental.presentation），归动效与手势引擎任务
+- [x] [`844d734d0`](https://github.com/meta/astryx/commit/844d734d0) chore(core): a shared touch hit area that grows toward 44 px and stops at half the gap to each neighbour (#8635)
+  - 已移植：[#516](https://github.com/astryx-vue/astryx-vue/pull/516)。共用触控热区（粗指针朝 44px 长，停在与邻居间距的一半）已在 composables/internal/hitArea 和 hitAreaWatch
 
 ### v0.7.6
 
 - [ ] [`4cc972c3a`](https://github.com/meta/astryx/commit/4cc972c3a) chore(core): resolve a component's presentation so a caller's choice wins over touch defaults (#8298)
-- [ ] [`1db4108ac`](https://github.com/meta/astryx/commit/1db4108ac) test(core): one internal definition pins core's touch style keys (#8331)
-- [ ] [`bb18c817a`](https://github.com/meta/astryx/commit/bb18c817a) fix(Table): a column-resize handle is named by a node header's visible text (#9057)
-- [ ] [`faee47927`](https://github.com/meta/astryx/commit/faee47927) fix(TimeInput, DateTimeInput): time text follows the locale's hour cycle and day periods (#9022)
-- [ ] [`ae7ac1864`](https://github.com/meta/astryx/commit/ae7ac1864) perf(core): plainDateFormat reuses one formatter per locale and options (#8335)
+  - 暂缓：组件呈现解析让调用方的选择胜过触屏默认：依赖 presentation 设施，Vue 版没有，归动效与手势引擎任务
+- [x] [`1db4108ac`](https://github.com/meta/astryx/commit/1db4108ac) test(core): one internal definition pins core's touch style keys (#8331)
+  - 不适用：只是用测试钉住上游 StyleX 触屏样式键的内部定义，Vue 版不用 StyleX
+- [x] [`bb18c817a`](https://github.com/meta/astryx/commit/bb18c817a) fix(Table): a column-resize handle is named by a node header's visible text (#9057)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；getNodeText 是 React 节点转文本的工具，Vue 版没有对应用法；列宽拖柄名的键由 Table 任务接入
+- [x] [`faee47927`](https://github.com/meta/astryx/commit/faee47927) fix(TimeInput, DateTimeInput): time text follows the locale's hour cycle and day periods (#9022)
+  - 已移植：[#575](https://github.com/astryx-vue/astryx-vue/pull/575)。时间文字跟随语言：没写 hourFormat 取语言的时制，数字、分隔符、上下午的词按语言写并读得回，新增 utils/timeFormat.ts，补测试
+- [x] [`ae7ac1864`](https://github.com/meta/astryx/commit/ae7ac1864) perf(core): plainDateFormat reuses one formatter per locale and options (#8335)
+  - 已移植：[#580](https://github.com/astryx-vue/astryx-vue/pull/580)。plainDateFormat 同一语言和选项只建一次 Intl.DateTimeFormat（utils/dateTimeFormatCache.ts），只含日期字段时按 UTC 午夜用 UTC 格式化，补测试
 - [ ] [`5cd7a15d4`](https://github.com/meta/astryx/commit/5cd7a15d4) feat(core): touch-action derivation, native scroll probe, haptics and the gesture host (#8071)
-- [ ] [`00507ba07`](https://github.com/meta/astryx/commit/00507ba07) fix(AppShell): with fill height, keyboard users can scroll an overflowing main region (#8111)
+  - 暂缓：触屏手势宿主、touch-action 推导、原生滚动探测和触感反馈整套设施 Vue 版没有，归动效与手势引擎任务
+- [x] [`00507ba07`](https://github.com/meta/astryx/commit/00507ba07) fix(AppShell): with fill height, keyboard users can scroll an overflowing main region (#8111)
+  - 已移植：[#550](https://github.com/astryx-vue/astryx-vue/pull/550)。AppShell fill 时主区域溢出成为键盘停靠点，Tab 进来交给里面第一个链接或按钮，补测试
 - [ ] [`5dd4d2691`](https://github.com/meta/astryx/commit/5dd4d2691) feat(core): the internal touch foundation: press tracking and the animator (#8076)
-- [ ] [`7544940f4`](https://github.com/meta/astryx/commit/7544940f4) fix(ComplexSelector): tooltip status placement keeps its message (#9026)
-- [ ] [`d7cd32c09`](https://github.com/meta/astryx/commit/d7cd32c09) fix(Item, TreeList): a disabled row's link has no destination (spec:AST-085 FR2) (#9056)
-- [ ] [`0135af462`](https://github.com/meta/astryx/commit/0135af462) fix(core N–Z): slots use isRenderable; the remaining checks are allowed with a reason (#9206)
-- [ ] [`acfa52701`](https://github.com/meta/astryx/commit/acfa52701) fix(useTypeahead): type-to-select ignores accents (#8864)
-- [ ] [`372a0eae2`](https://github.com/meta/astryx/commit/372a0eae2) fix(SideNav): focus on a row the collapsed rail removes moves to the collapse toggle or the nearest rail row (#9249)
-- [ ] [`8c8f0dac6`](https://github.com/meta/astryx/commit/8c8f0dac6) fix(Collapsible): focus inside closing content moves to the trigger (#9250)
-- [ ] [`f5db72546`](https://github.com/meta/astryx/commit/f5db72546) refactor(ModalAnnounceProvider): watch presentation through the shared MutationObserver (#9151)
+  - 暂缓：依赖触屏手势与动画器基础设施（GestureArena、PressTracker、animator），归动效与手势引擎任务
+- [x] [`7544940f4`](https://github.com/meta/astryx/commit/7544940f4) fix(ComplexSelector): tooltip status placement keeps its message (#9026)
+  - 已移植：[#543](https://github.com/astryx-vue/astryx-vue/pull/543)。tooltip 状态的说明收进能聚焦的状态图标按钮，点它不开弹层，触发器带 aria-describedby，补测试
+- [x] [`d7cd32c09`](https://github.com/meta/astryx/commit/d7cd32c09) fix(Item, TreeList): a disabled row's link has no destination (spec:AST-085 FR2) (#9056)
+  - 已移植：[#581](https://github.com/astryx-vue/astryx-vue/pull/581)。List 的 Item 和 TreeList 禁用的链接行没有 href、target、rel，不走路由链接组件，保留链接角色；聚焦时被禁用焦点交给换出来的元素，补测试
+- [x] [`0135af462`](https://github.com/meta/astryx/commit/0135af462) fix(core N–Z): slots use isRenderable; the remaining checks are allowed with a reason (#9206)
+  - 不适用：上游 React 插槽改用 isRenderable 判断并给 lint 例外写理由，Vue 模板没有这套检查
+- [x] [`acfa52701`](https://github.com/meta/astryx/commit/acfa52701) fix(useTypeahead): type-to-select ignores accents (#8864)
+  - 已移植：[#544](https://github.com/astryx-vue/astryx-vue/pull/544)。按字母跳转忽略大小写、重音、带斜杠字母，useTypeahead 和 useTreeFocus 共用 typeaheadMatch
+- [x] [`372a0eae2`](https://github.com/meta/astryx/commit/372a0eae2) fix(SideNav): focus on a row the collapsed rail removes moves to the collapse toggle or the nearest rail row (#9249)
+  - 已移植：[#578](https://github.com/astryx-vue/astryx-vue/pull/578)。收起时焦点在轨道丢掉的行上交给收起按钮或最近保留行，补测试
+- [x] [`8c8f0dac6`](https://github.com/meta/astryx/commit/8c8f0dac6) fix(Collapsible): focus inside closing content moves to the trigger (#9250)
+  - 已移植：[#578](https://github.com/astryx-vue/astryx-vue/pull/578)。SideNav 用共用的 useFocusLeavingChange 接力焦点；Collapsible 关闭内容时焦点回触发器另有布局任务
+- [x] [`f5db72546`](https://github.com/meta/astryx/commit/f5db72546) refactor(ModalAnnounceProvider): watch presentation through the shared MutationObserver (#9151)
+  - 不适用：上游用共享 MutationObserver 监听 provider 的呈现状态；Vue 在播报时直接查正开着的模态对话框，没有 provider 和观察器
 - [ ] [`134afc4b3`](https://github.com/meta/astryx/commit/134afc4b3) fix(core): one click guard for the menu press model and the gesture host (#8360)
-- [ ] [`ad2e378cb`](https://github.com/meta/astryx/commit/ad2e378cb) fix(Calendar): a stand-alone month label starts with a capital where CLDR capitalizes one (#9371)
-- [ ] [`2d6154dc5`](https://github.com/meta/astryx/commit/2d6154dc5) chore(utils): trim the remaining long utility comments (#9527)
-- [ ] [`09a09fff3`](https://github.com/meta/astryx/commit/09a09fff3) chore(utils): source comments in ten utility files explain only non-obvious reasons (1 of 2) (#9522)
+  - 暂缓：共用点击守卫、选择锁、输入流、粗指针判断给菜单按压模型和手势宿主共用，宿主这一半 Vue 版没有，归动效与手势引擎任务；菜单按压的杂散点击拦截已在 #548
+- [x] [`ad2e378cb`](https://github.com/meta/astryx/commit/ad2e378cb) fix(Calendar): a stand-alone month label starts with a capital where CLDR capitalizes one (#9371)
+  - 已移植：[#546](https://github.com/astryx-vue/astryx-vue/pull/546)。独立的月份标题在需要大写的语言里首字母大写
+- [x] [`2d6154dc5`](https://github.com/meta/astryx/commit/2d6154dc5) chore(utils): trim the remaining long utility comments (#9527)
+  - 不适用：上游只是削减工具文件里的长注释，不改行为
+- [x] [`09a09fff3`](https://github.com/meta/astryx/commit/09a09fff3) chore(utils): source comments in ten utility files explain only non-obvious reasons (1 of 2) (#9522)
+  - 不适用：上游只是把十个工具文件的注释改成只写不明显的原因，不改行为
 
 ### v0.7.7
 
 - [ ] [`5f3198edf`](https://github.com/meta/astryx/commit/5f3198edf) fix(gestures): a mouse or pen drag a gesture claims keeps the page's text selection (spec:AST-094 FR41) (#8665)
+  - 暂缓：手势认领的鼠标或笔拖动保留页面文字选区，依赖手势宿主的选择锁，归动效与手势引擎任务
 - [ ] [`4a8a76eeb`](https://github.com/meta/astryx/commit/4a8a76eeb) fix(core): the click guard takes a claimed touch's late mousedown and mouseup (#9677)
+  - 暂缓：点击守卫接住被认领触摸迟到的 mousedown、mouseup，服务手势宿主的认领机制，归动效与手势引擎任务
 - [ ] [`95438ffaf`](https://github.com/meta/astryx/commit/95438ffaf) feat(SegmentedControl): the selection slides on every change and drags with any pointer (#9632)
-- [ ] [`cec65f35f`](https://github.com/meta/astryx/commit/cec65f35f) fix(DropdownMenu): a late native click after a touch drill-in no longer picks a row (#8275)
+  - 暂缓：SegmentedControl 的弹簧滑动和任意指针拖动依赖动效与手势设施（animator、segmented 弹簧角色），归动效与手势引擎任务
+- [x] [`cec65f35f`](https://github.com/meta/astryx/commit/cec65f35f) fix(DropdownMenu): a late native click after a touch drill-in no longer picks a row (#8275)
+  - 已移植：[#548](https://github.com/astryx-vue/astryx-vue/pull/548)。手指松开选中后用 touchend 取消让浏览器不再补发 click，之后没有按压对应的 click 照常放行，补测试
 
 ### v0.7.8
 
-- [ ] [`a3d7b46c7`](https://github.com/meta/astryx/commit/a3d7b46c7) fix(dateParser): in day-first locales, numeric text never takes the native month-first reading (#9726)
-- [ ] [`f88f5dc65`](https://github.com/meta/astryx/commit/f88f5dc65) fix(HoverCard): focusTrigger="auto" decides when focus arrives, through Tooltip's shared check (#9597)
-- [ ] [`984eab751`](https://github.com/meta/astryx/commit/984eab751) fix(Calendar): day and week numbers use the locale's digits (#9610)
-- [ ] [`41cce0b0a`](https://github.com/meta/astryx/commit/41cce0b0a) fix(core): a disabled Slider no longer runs a caller's handlers (#9729)
-- [ ] [`16a5397c9`](https://github.com/meta/astryx/commit/16a5397c9) feat(Calendar): weekday headers show abbreviated names where all seven fit in four characters (#9824)
-- [ ] [`c8f08f967`](https://github.com/meta/astryx/commit/c8f08f967) fix(core): PowerSearch gives `isDateOnly: false` the time of day it names (#9702)
-- [ ] [`946211065`](https://github.com/meta/astryx/commit/946211065) perf(core): an overlay's eager import no longer carries the lazy BottomSheet's padding (#8550)
-- [ ] [`6255d3022`](https://github.com/meta/astryx/commit/6255d3022) feat(CheckboxList): a required checkbox group needs one checked box (isRequired) (#9854)
+- [x] [`a3d7b46c7`](https://github.com/meta/astryx/commit/a3d7b46c7) fix(dateParser): in day-first locales, numeric text never takes the native month-first reading (#9726)
+  - 已移植：[#580](https://github.com/astryx-vue/astryx-vue/pull/580)。日优先的语言里，没被语言顺序写法匹配的纯数字文字不再落到原生月优先读法，四位年份在前照常解析，补测试
+- [x] [`f88f5dc65`](https://github.com/meta/astryx/commit/f88f5dc65) fix(HoverCard): focusTrigger="auto" decides when focus arrives, through Tooltip's shared check (#9597)
+  - 已移植：[#566](https://github.com/astryx-vue/astryx-vue/pull/566)。focusTrigger="auto" 在焦点到达时判断，复用 Tooltip 的 createFocusGate，补测试和文档
+- [x] [`984eab751`](https://github.com/meta/astryx/commit/984eab751) fix(Calendar): day and week numbers use the locale's digits (#9610)
+  - 已移植：[#571](https://github.com/astryx-vue/astryx-vue/pull/571)。日期数字和周数用当前语言的数字（Calendar、DateRangeInput 弹层、触屏月份网格），补 ar-EG 测试
+- [x] [`41cce0b0a`](https://github.com/meta/astryx/commit/41cce0b0a) fix(core): a disabled Slider no longer runs a caller's handlers (#9729)
+  - Vue 版已有：Selector、MultiSelector 禁用时用 consumeWhileDisabled 拦下点击和按键；Slider 归别族
+- [x] [`16a5397c9`](https://github.com/meta/astryx/commit/16a5397c9) feat(Calendar): weekday headers show abbreviated names where all seven fit in four characters (#9824)
+  - 已移植：[#571](https://github.com/astryx-vue/astryx-vue/pull/571)。表头缩写数据早已内置；没有内置数据的语言用 Intl 缩写，七个都不超过四个字符，否则窄写法
+- [x] [`c8f08f967`](https://github.com/meta/astryx/commit/c8f08f967) fix(core): PowerSearch gives `isDateOnly: false` the time of day it names (#9702)
+  - 不适用：本范围只是把 wall-clock 读数抽成共享函数给 PowerSearch 用，PowerSearch 的 isDateOnly 行为归搜索族
+- [x] [`946211065`](https://github.com/meta/astryx/commit/946211065) perf(core): an overlay's eager import no longer carries the lazy BottomSheet's padding (#8550)
+  - 不适用：React 打包体积问题：懒加载 BottomSheet 的内边距不跟随 Overlay 的急切导入，Vue 的 MobileNav 不引入 BottomSheet
+- [x] [`6255d3022`](https://github.com/meta/astryx/commit/6255d3022) feat(CheckboxList): a required checkbox group needs one checked box (isRequired) (#9854)
+  - 已移植：[#581](https://github.com/astryx-vue/astryx-vue/pull/581)。CheckboxList isRequired 的实际校验：没勾时第一个可用的框带原生 required，重排后跟着新的第一项，禁用只读不算，补测试和中英文属性表
 - [ ] [`7b87c5c1d`](https://github.com/meta/astryx/commit/7b87c5c1d) fix(gestures): a selection a claimed lift's own handlers make stays (#9848)
+  - 暂缓：认领的抬起自己的处理函数做出的选择保留，依赖手势宿主的选择锁，归动效与手势引擎任务
 - [ ] [`f5a315249`](https://github.com/meta/astryx/commit/f5a315249) fix(TimeInput, DateTimeInput): under a finger the AM/PM wheel follows the hour (#8179)
+  - 暂缓：手指下上午下午滚轮跟着小时走依赖滚轮的手指滚动和 spinTo，归动效与手势引擎任务；其中 clampTime 取整分钟的纯函数部分已随 #580 移植
 - [ ] [`0588a1342`](https://github.com/meta/astryx/commit/0588a1342) feat(core): one on-screen keyboard module; a Tall BottomSheet reads it and rides Gboard's slides (#8559)
+  - 暂缓：屏幕键盘模块（视觉视口、Gboard 滑动跟随、Tall BottomSheet 读它）Vue 版没有，归动效与手势引擎任务
 
 ### v0.7.9
 
-- [ ] [`5083ead48`](https://github.com/meta/astryx/commit/5083ead48) fix(DropdownMenu): prevent stale trigger tooltips after selection (#9280)
+- [x] [`5083ead48`](https://github.com/meta/astryx/commit/5083ead48) fix(DropdownMenu): prevent stale trigger tooltips after selection (#9280)
+  - 已移植：[#542](https://github.com/astryx-vue/astryx-vue/pull/542)。isEnabled 变 false 时收起已打开的提示；重新启用时焦点已在触发器里且会打开提示就再打开，补用例
 - [ ] [`298bafbc1`](https://github.com/meta/astryx/commit/298bafbc1) fix(core): a list row's touch press release runs on the compositor (#9762)
+  - 暂缓：触屏下列表行按压释放改成合成器上的 opacity 动画：Vue 行的按压用 background-image 绘制，缺这个独立按压层，归动效与手势引擎任务
 - [ ] [`252b45bb1`](https://github.com/meta/astryx/commit/252b45bb1) feat(Layer): one input hold, first used by Dialog, Drawer and MobileNav (spec:AST-094 FR35) (#8342)
-- [ ] [`0f0592804`](https://github.com/meta/astryx/commit/0f0592804) fix(core): a control in an opening layer keeps its settled touch insets (#9957)
-- [ ] [`2db57bd97`](https://github.com/meta/astryx/commit/2db57bd97) fix(core): the touch-inset pass resolves no style for unscaled controls (#9987)
-- [ ] [`3d225c35b`](https://github.com/meta/astryx/commit/3d225c35b) feat(core): under a finger a pressable highlights at touch-down outside scroll views (#9765)
-- [ ] [`9bd11b363`](https://github.com/meta/astryx/commit/9bd11b363) feat(core): a checkbox's or radio option's hit area grows toward 44 px (#8241)
-- [ ] [`7f8de290c`](https://github.com/meta/astryx/commit/7f8de290c) fix(core): a press's release fades on the theme's exit motion tokens (#9890)
+  - 暂缓：Dialog、Drawer、MobileNav 进场时的输入遮挡依赖触屏呈现和进场运行时，归动效与手势引擎任务
+- [x] [`0f0592804`](https://github.com/meta/astryx/commit/0f0592804) fix(core): a control in an opening layer keeps its settled touch insets (#9957)
+  - 已移植：[#582](https://github.com/astryx-vue/astryx-vue/pull/582)。从小比例展开的层里，控件的热区按停稳后的布局像素量（屏幕矩形除以盒子的屏幕缩放），补测试
+- [x] [`2db57bd97`](https://github.com/meta/astryx/commit/2db57bd97) fix(core): the touch-inset pass resolves no style for unscaled controls (#9987)
+  - 已移植：[#582](https://github.com/astryx-vue/astryx-vue/pull/582)。没缩放的盒子只比较 client 与 offset 尺寸，不解析样式；被变换缩放过的才读计算样式
+- [x] [`3d225c35b`](https://github.com/meta/astryx/commit/3d225c35b) feat(core): under a finger a pressable highlights at touch-down outside scroll views (#9765)
+  - 已移植：[#501](https://github.com/astryx-vue/astryx-vue/pull/501)。滚动视图外手指落下即高亮
+- [x] [`9bd11b363`](https://github.com/meta/astryx/commit/9bd11b363) feat(core): a checkbox's or radio option's hit area grows toward 44 px (#8241)
+  - 已移植：[#582](https://github.com/astryx-vue/astryx-vue/pull/582)。粗指针下有标签的复选框和可用的单选项整行朝 44px 长出看不见的热区，停在邻居间距的一半，落在热区上的点按切换控件，补测试
+- [x] [`7f8de290c`](https://github.com/meta/astryx/commit/7f8de290c) fix(core): a press's release fades on the theme's exit motion tokens (#9890)
+  - 已移植：[#501](https://github.com/astryx-vue/astryx-vue/pull/501)。按主题退出动效淡出（已有），减少动态效果时最多 200ms
 - [ ] [`4e7823a56`](https://github.com/meta/astryx/commit/4e7823a56) feat(i18n): InternationalizationProvider takes a calendar and exposes the resolved calendar (#9791)
+  - 暂缓：Vue 版没有日历系统设施：InternationalizationProvider 无 calendar，日期组件只按公历计算，归日历系统任务
 - [ ] [`fe1cf0c6d`](https://github.com/meta/astryx/commit/fe1cf0c6d) feat(Calendar): show the months of the selected calendar system (#9622)
+  - 暂缓：显示所选历法的月份依赖非公历日历系统，归日历系统任务
 - [ ] [`aa7c50176`](https://github.com/meta/astryx/commit/aa7c50176) feat(Calendar): useCalendarDays and useCalendarNavigation take an optional calendar (#10007)
+  - 暂缓：日历钩子接受可选历法依赖非公历日历系统，归日历系统任务
 - [ ] [`edf7128e3`](https://github.com/meta/astryx/commit/edf7128e3) feat(Timestamp, PowerSearch): write dates in the provider's calendar (#9639)
+  - 暂缓：Timestamp、PowerSearch 按 provider 日历写日期依赖非公历日历系统，归日历系统任务；图表的 shortDate、monthYear 可选历法参数已在 #532
 - [ ] [`7be6b4644`](https://github.com/meta/astryx/commit/7be6b4644) feat(core): read typed dates in every calendar (#9792)
+  - 暂缓：读各种历法写的日期文字（calendarDateParser）依赖非公历日历系统，归日历系统任务
 - [ ] [`6e2e24293`](https://github.com/meta/astryx/commit/6e2e24293) feat(lab): Schedule writes dates in the provider's calendar (#9994)
+  - 暂缓：Schedule 按 provider 日历写日期依赖 core 的日历系统，归日历系统任务
 - [ ] [`52e65f3ef`](https://github.com/meta/astryx/commit/52e65f3ef) fix(utils): read back calendar text in Latvian, Amharic and Hindi (#9840)
-- [ ] [`7b71d71b4`](https://github.com/meta/astryx/commit/7b71d71b4) feat(List): a row's touch target grows toward 44 px where its neighbors leave room (#8085)
-- [ ] [`a6a9b9c50`](https://github.com/meta/astryx/commit/a6a9b9c50) fix(CheckboxListItem): a row answers a finger the same wherever it lands (#8212)
+  - 暂缓：拉脱维亚语、阿姆哈拉语、印地语日历文字的读回属于 calendarDateParser，依赖非公历日历系统，归日历系统任务
+- [x] [`7b71d71b4`](https://github.com/meta/astryx/commit/7b71d71b4) feat(List): a row's touch target grows toward 44 px where its neighbors leave room (#8085)
+  - 已移植：[#542](https://github.com/astryx-vue/astryx-vue/pull/542)。InfoTip 的触控热区朝 44px 长并在邻居间距一半处停住；List 行部分由 useTouchHitArea 共用
+- [x] [`a6a9b9c50`](https://github.com/meta/astryx/commit/a6a9b9c50) fix(CheckboxListItem): a row answers a finger the same wherever it lands (#8212)
+  - 已移植：[#550](https://github.com/astryx-vue/astryx-vue/pull/550)。useMediaQuery 每条查询只挂一个监听，补测试；转发点击的行里手指按被转发的控件照亮整行已在 #501
 - [ ] [`189a730ce`](https://github.com/meta/astryx/commit/189a730ce) feat(DateInput, DateTimeInput, DateRangeInput): type, pick and show dates in the active calendar (#9643, #9842)
-- [ ] [`ddb8b3462`](https://github.com/meta/astryx/commit/ddb8b3462) feat(ButtonGroup): a finger's slide runs the button it lifts on (#8657)
+  - 暂缓：按当前历法输入、选择和显示日期，依赖非公历日历系统，归日历系统任务；en.json 部分已在 #533 对齐
+- [x] [`ddb8b3462`](https://github.com/meta/astryx/commit/ddb8b3462) feat(ButtonGroup): a finger's slide runs the button it lifts on (#8657)
+  - 已移植：[#509](https://github.com/astryx-vue/astryx-vue/pull/509)。ButtonGroup 手指滑动在松手处执行
 
 ### v0.7.10
 
 - [ ] [`add05168f`](https://github.com/meta/astryx/commit/add05168f) fix(core): a finger held on a control's box picks it, not the text (#10091)
-- [ ] [`2c66211e8`](https://github.com/meta/astryx/commit/2c66211e8) fix(SegmentedControl): a segment's touch target grows toward 44 px without growing its box (#10137)
-- [ ] [`306051090`](https://github.com/meta/astryx/commit/306051090) fix(core): gestures read another window's nodes and touches (#10224)
-- [ ] [`b4fc6840c`](https://github.com/meta/astryx/commit/b4fc6840c) perf(core): a touch hit-area pass keeps the page's interactive elements until the DOM changes (#10242)
+  - 暂缓：手指按住控件的盒子选中控件而不是文字（boxHold）依赖手势宿主的点击守卫和选择锁，归动效与手势引擎任务
+- [x] [`2c66211e8`](https://github.com/meta/astryx/commit/2c66211e8) fix(SegmentedControl): a segment's touch target grows toward 44 px without growing its box (#10137)
+  - 已移植：[#582](https://github.com/astryx-vue/astryx-vue/pull/582)。每个可用的分段共用触控热区，盒子不变，补测试；「抬起落在热区算该分段」依赖触摸滑动跟踪，随 95438ffaf 归动效与手势引擎任务
+- [x] [`306051090`](https://github.com/meta/astryx/commit/306051090) fix(core): gestures read another window's nodes and touches (#10224)
+  - 已移植：[#545](https://github.com/astryx-vue/astryx-vue/pull/545)。手势读取其他窗口的节点和触摸：点按识别、关闭栈、触屏规则按元素自己的 document 工作
+- [x] [`b4fc6840c`](https://github.com/meta/astryx/commit/b4fc6840c) perf(core): a touch hit-area pass keeps the page's interactive elements until the DOM changes (#10242)
+  - Vue 版已有：hitAreaWatch 已缓存页面上的可点元素（candidates），只有 CANDIDATE_MUTATIONS 的变化才让缓存失效
 
 ### v0.7.11
 
-- [ ] [`66b09526b`](https://github.com/meta/astryx/commit/66b09526b) fix(core): a swizzled copy type-checks without Node's types (#10252)
+- [x] [`66b09526b`](https://github.com/meta/astryx/commit/66b09526b) fix(core): a swizzled copy type-checks without Node's types (#10252)
+  - 不适用：给拷贝（swizzle）出的 React 源文件补 Node 类型声明，只关系到 swizzle 的类型检查
 - [x] [`28c2e3fe5`](https://github.com/meta/astryx/commit/28c2e3fe5) test(core): six date and time cases pin each CLDR version's words (#10264)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`e348759a9`](https://github.com/meta/astryx/commit/e348759a9) fix(core): a presentation resolves with no matchMedia, as in a test DOM (#10275)
+  - 暂缓：触屏呈现 presentation 在没有 matchMedia 时的解析；Vue 版还没有 presentation，归动效与手势引擎的触屏呈现阶段
 - [ ] [`3bd5a4c1b`](https://github.com/meta/astryx/commit/3bd5a4c1b) fix(Layer): a still mouse presses through an entrance's input hold (#10303)
+  - 暂缓：静止鼠标穿过进场输入遮挡：依赖进场输入遮挡，归动效与手势引擎任务
 - [ ] [`e245db5fb`](https://github.com/meta/astryx/commit/e245db5fb) feat(core): the keyboard module's docked ride, the scroller's reveal and the tap route (#9776)
-- [ ] [`e10347c4e`](https://github.com/meta/astryx/commit/e10347c4e) fix(Button): under a finger, a Button's target grows toward 44 px through the shared touch band (#10216)
+  - 暂缓：屏幕键盘模块的贴靠、滚动容器露出和点按路由，依赖键盘模块与手势宿主，归动效与手势引擎任务
+- [x] [`e10347c4e`](https://github.com/meta/astryx/commit/e10347c4e) fix(Button): under a finger, a Button's target grows toward 44 px through the shared touch band (#10216)
+  - 已移植：[#516](https://github.com/astryx-vue/astryx-vue/pull/516)。粗指针下按钮热区朝 44px 扩大，夹紧到与邻居间距的一半；ButtonGroup、ToggleButtonGroup 成员共用组热区
 
 ### v0.7.12
 
-- [ ] [`360701de7`](https://github.com/meta/astryx/commit/360701de7) fix(Text, Heading): the truncation tooltip mounts on the first hover, tap or focus (#10290)
-- [ ] [`6cbcbf846`](https://github.com/meta/astryx/commit/6cbcbf846) fix(core): a press inside a scroll view highlights 150 ms after touch (#10260)
+- [x] [`360701de7`](https://github.com/meta/astryx/commit/360701de7) fix(Text, Heading): the truncation tooltip mounts on the first hover, tap or focus (#10290)
+  - 已移植：[#505](https://github.com/astryx-vue/astryx-vue/pull/505)。截断提示在第一次悬停、轻点或聚焦时才挂载
+- [x] [`6cbcbf846`](https://github.com/meta/astryx/commit/6cbcbf846) fix(core): a press inside a scroll view highlights 150 ms after touch (#10260)
+  - 已移植：[#501](https://github.com/astryx-vue/astryx-vue/pull/501)。滚动视图内 150ms 从触摸事件时间戳算起
 - [ ] [`95572ae80`](https://github.com/meta/astryx/commit/95572ae80) fix(Layer): a press that went down before an input hold lifts through the hold's shield (#10398)
+  - 暂缓：按下发生在输入遮挡之前的触摸抬起穿过遮挡：依赖进场输入遮挡，归动效与手势引擎任务
 - [ ] [`24d845b42`](https://github.com/meta/astryx/commit/24d845b42) fix(core): a month past the end of its year constrains to the last month (#10461)
-- [ ] [`cd748d0e9`](https://github.com/meta/astryx/commit/cd748d0e9) chore(Layer): the outside-press watch can close on a pan, follow chosen pointer types, and judge a press in a closed shadow root (#9814)
-- [ ] [`6e0b60429`](https://github.com/meta/astryx/commit/6e0b60429) chore(core): one owner module turns scroll anchoring off (#10173)
-- [ ] [`422440a64`](https://github.com/meta/astryx/commit/422440a64) fix(core): two copies of Core's modules share one React context (#10233)
+  - 暂缓：超出一年末尾的月份收敛到最后一个月属于非公历日历系统，归日历系统任务
+- [x] [`cd748d0e9`](https://github.com/meta/astryx/commit/cd748d0e9) chore(Layer): the outside-press watch can close on a pan, follow chosen pointer types, and judge a press in a closed shadow root (#9814)
+  - 已移植：[#542](https://github.com/astryx-vue/astryx-vue/pull/542)。点外面的关闭可以按平移关闭、区分指针类型：dismissOnOutsidePan 和按指针类型的手指等抬起
+- [x] [`6e0b60429`](https://github.com/meta/astryx/commit/6e0b60429) chore(core): one owner module turns scroll anchoring off (#10173)
+  - 不适用：上游把关闭滚动锚定的属性收进一个所属模块并给 Lab 开内部入口，只是 React 包之间的代码归属整理
+- [x] [`422440a64`](https://github.com/meta/astryx/commit/422440a64) fix(core): two copies of Core's modules share one React context (#10233)
+  - 不适用：React context 多份拷贝共用的问题，Vue 的注入键是模块级 Symbol
 - [x] [`5eb6b2137`](https://github.com/meta/astryx/commit/5eb6b2137) fix(lab): a swizzled ListInput type-checks without Node's types (#10574)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`6718d7e8e`](https://github.com/meta/astryx/commit/6718d7e8e) fix(core): parseColor answers null for names the prototype chain supplies (#10468)
+- [x] [`6718d7e8e`](https://github.com/meta/astryx/commit/6718d7e8e) fix(core): parseColor answers null for names the prototype chain supplies (#10468)
+  - 已移植：[#580](https://github.com/astryx-vue/astryx-vue/pull/580)。图表的 parseColor 只认自有属性，constructor、__proto__ 等名字返回 null，不再得到 NaN 颜色，补测试
 - [x] [`62bc7a2fe`](https://github.com/meta/astryx/commit/62bc7a2fe) fix(core): a swizzled copy shares the animated-layout, code-language and snap-paging brands (#10576)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`92784f658`](https://github.com/meta/astryx/commit/92784f658) fix(core): a swizzled copy shares the package's per-page touch state (#10599)
+- [x] [`92784f658`](https://github.com/meta/astryx/commit/92784f658) fix(core): a swizzled copy shares the package's per-page touch state (#10599)
+  - 不适用：上游复制出来的组件共享页面级触屏状态；Vue 没有拷贝源码的用法
 - [x] [`f09230814`](https://github.com/meta/astryx/commit/f09230814) fix(core): a swizzled Outline type-checks against the package's Markdown plugins (#10641)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`611382ee1`](https://github.com/meta/astryx/commit/611382ee1) feat(lab): add LineClamp — clamp arbitrary content to N lines (#4259)
-- [ ] [`db40c6b01`](https://github.com/meta/astryx/commit/db40c6b01) refactor(core): share per-instance warning dedupe and temporary focus targets (#10655)
-- [ ] [`d0ab3cb26`](https://github.com/meta/astryx/commit/d0ab3cb26) feat(core): add the shared list-windowing module and Table's capability hook (#10656)
-- [ ] [`8f8b3db65`](https://github.com/meta/astryx/commit/8f8b3db65) perf(Text): take a new text's first truncation measurement from the shared observer (#10668)
+- [x] [`611382ee1`](https://github.com/meta/astryx/commit/611382ee1) feat(lab): add LineClamp — clamp arbitrary content to N lines (#4259)
+  - Vue 版已有：基础展示族已在 #511 新增 LineClamp
+- [x] [`db40c6b01`](https://github.com/meta/astryx/commit/db40c6b01) refactor(core): share per-instance warning dedupe and temporary focus targets (#10655)
+  - 不适用：上游把 React StrictMode 下的每实例警告去重和临时焦点目标收进共用模块；Vue 的 useDevWarning 已集中，焦点归还已在 internal/focusReturn
+- [x] [`d0ab3cb26`](https://github.com/meta/astryx/commit/d0ab3cb26) feat(core): add the shared list-windowing module and Table's capability hook (#10656)
+  - 已移植：[#547](https://github.com/astryx-vue/astryx-vue/pull/547)。共用列表窗口模块放在 composables/internal/listWindow，表格按插件声明判断能否窗口化
+- [x] [`8f8b3db65`](https://github.com/meta/astryx/commit/8f8b3db65) perf(Text): take a new text's first truncation measurement from the shared observer (#10668)
+  - 已移植：[#505](https://github.com/astryx-vue/astryx-vue/pull/505)。第一次测量取自共享 ResizeObserver 的首次通知
 - [ ] [`a28d586eb`](https://github.com/meta/astryx/commit/a28d586eb) feat(core): createReorderable makes List rows reorderable (#8139)
   - 暂缓：本期已做 animatedLayout 与 inertClone；剩 createReorderable 拖动重排（依赖手势），归动效与手势引擎的组件接入阶段
-- [ ] [`7f04a6c5a`](https://github.com/meta/astryx/commit/7f04a6c5a) fix(Table): an unbounded column's resize handle announces a range that holds its width (#10577)
-- [ ] [`bb0786673`](https://github.com/meta/astryx/commit/bb0786673) fix(TextInput): dispatch changeAction and update optimistic value on clear (#6425)
+  - 暂缓：createReorderable 依赖 animatedLayout、animator 和 inertClone 这套动效设施，归动效与手势引擎任务；en.json 的键已在 #533 对齐
+- [x] [`7f04a6c5a`](https://github.com/meta/astryx/commit/7f04a6c5a) fix(Table): an unbounded column's resize handle announces a range that holds its width (#10577)
+  - 已移植：[#539](https://github.com/astryx-vue/astryx-vue/pull/539)。没有最大宽度的列，拖柄以窗口宽度作替代 aria-valuemax（不低于当前值），并用 aria-valuetext 念出像素数
+- [x] [`bb0786673`](https://github.com/meta/astryx/commit/bb0786673) fix(TextInput): dispatch changeAction and update optimistic value on clear (#6425)
+  - 不适用：TextInput 清除时用原生 value setter 派发 input 事件，为的是 React 的 changeAction；Vue 版直接改状态
 - [x] [`f2a6332eb`](https://github.com/meta/astryx/commit/f2a6332eb) fix(List): a swizzled copy reads a package reorderable object (#10741)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`da3dbdc8b`](https://github.com/meta/astryx/commit/da3dbdc8b) fix(Table): a swizzled Table honors the package's virtualization capability (#10798)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`2e6162c9a`](https://github.com/meta/astryx/commit/2e6162c9a) fix(MultiSelector): opening the closed list never highlights a disabled option (#10820)
+- [x] [`2e6162c9a`](https://github.com/meta/astryx/commit/2e6162c9a) fix(MultiSelector): opening the closed list never highlights a disabled option (#10820)
+  - 已移植：[#544](https://github.com/astryx-vue/astryx-vue/pull/544)。打开时落在第一个可用选项上，不再落在禁用项
 - [x] [`52356e690`](https://github.com/meta/astryx/commit/52356e690) feat(Table): useTableRowsVirtualization's viewportHeight becomes initialViewportHeight, which no longer sizes the Table (#10894)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`db705b961`](https://github.com/meta/astryx/commit/db705b961) feat(core): shared-realm helpers hold every kind of cross-module state (AST-110 FR3) (#10817)
-- [ ] [`0840fcc47`](https://github.com/meta/astryx/commit/0840fcc47) fix(core): page scroll and selection locks are one per page across Core loads (AST-110 FR3) (#10822)
+- [x] [`db705b961`](https://github.com/meta/astryx/commit/db705b961) feat(core): shared-realm helpers hold every kind of cross-module state (AST-110 FR3) (#10817)
+  - 不适用：跨多份 Core 拷贝共用状态的 shared-realm 辅助，Vue 版是单份模块
+- [x] [`0840fcc47`](https://github.com/meta/astryx/commit/0840fcc47) fix(core): page scroll and selection locks are one per page across Core loads (AST-110 FR3) (#10822)
+  - 不适用：上游是同一页面里多份 Core 加载时共用一把页面滚动锁和选区锁；Vue 版是单份模块
 
 ### v0.7.13
 
-- [ ] [`1ac0c2464`](https://github.com/meta/astryx/commit/1ac0c2464) refactor(core): one shared list-windowing engine, with Table as its first consumer (#10810)
+- [x] [`1ac0c2464`](https://github.com/meta/astryx/commit/1ac0c2464) refactor(core): one shared list-windowing engine, with Table as its first consumer (#10810)
+  - 已移植：[#547](https://github.com/astryx-vue/astryx-vue/pull/547)。窗口引擎与表格解耦，表格作为第一个使用方
 - [x] [`d130dffdc`](https://github.com/meta/astryx/commit/d130dffdc) fix(Markdown): the public parser drops every data: URL; <Markdown> renders data: links and images as source text (#11020)
   - 不适用：上游内部规范和架构文档（自动初筛）
 
 ### v0.7.14
 
-- [ ] [`8bc7850e0`](https://github.com/meta/astryx/commit/8bc7850e0) fix(core): createISOTimeString answers null unless the trimmed input is H:M or H:M:S with one- or two-digit fields (a seconds fraction is dropped) (#11023)
-- [ ] [`fc9fb8ccc`](https://github.com/meta/astryx/commit/fc9fb8ccc) fix(core): registered icons reach swizzled copies; icon and theme registries are one per React (AST-110 FR3) (#11096)
-- [ ] [`09479d9c7`](https://github.com/meta/astryx/commit/09479d9c7) fix(Popover): a touch that pans is not an outside press, even without pointercancel (#11038)
+- [x] [`8bc7850e0`](https://github.com/meta/astryx/commit/8bc7850e0) fix(core): createISOTimeString answers null unless the trimmed input is H:M or H:M:S with one- or two-digit fields (a seconds fraction is dropped) (#11023)
+  - 已移植：[#580](https://github.com/astryx-vue/astryx-vue/pull/580)。createISOTimeString 只认一位或两位数字的 H:M、H:M:S（秒的小数丢掉，首尾空白容忍），非字符串返回 null，补测试
+- [x] [`fc9fb8ccc`](https://github.com/meta/astryx/commit/fc9fb8ccc) fix(core): registered icons reach swizzled copies; icon and theme registries are one per React (AST-110 FR3) (#11096)
+  - 已移植：[#502](https://github.com/astryx-vue/astryx-vue/pull/502)。图标注册表挂到 globalThis，多份副本共享
+- [x] [`09479d9c7`](https://github.com/meta/astryx/commit/09479d9c7) fix(Popover): a touch that pans is not an outside press, even without pointercancel (#11038)
+  - 已移植：[#542](https://github.com/astryx-vue/astryx-vue/pull/542)。触摸在层外按下后抬起才关，拖动超过平移距离或被取消就不关；鼠标和笔仍按下即关，补用例
 - [ ] [`08b74222f`](https://github.com/meta/astryx/commit/08b74222f) perf(core): hit areas read no layout during a scroll or a press at rest (#11083)
-- [ ] [`db3e8334f`](https://github.com/meta/astryx/commit/db3e8334f) fix(core): InputGroupText, Badge and Token keep caller text in its written order under RTL (#10114)
-- [ ] [`9600e3500`](https://github.com/meta/astryx/commit/9600e3500) refactor(core): useChatStreamScroll's page-scroller rules move to one owner module (#11160)
+  - 暂缓：热区的性能重写（滚动时不测量、按压只武装点击后复查、等祖先动画结束再量、子树就地重新分组），只关系到性能、行为不变，留给触屏设施的后续
+- [x] [`db3e8334f`](https://github.com/meta/astryx/commit/db3e8334f) fix(core): InputGroupText, Badge and Token keep caller text in its written order under RTL (#10114)
+  - 已移植：[#500](https://github.com/astryx-vue/astryx-vue/pull/500)。Token、Badge、InputGroupText 的文字在 RTL 下保持书写顺序
+- [x] [`9600e3500`](https://github.com/meta/astryx/commit/9600e3500) refactor(core): useChatStreamScroll's page-scroller rules move to one owner module (#11160)
+  - 不适用：useChatStreamScroll 的页面滚动规则挪到一个所属模块，只是上游内部的代码归属整理，行为不变
 
 ### v0.7.15
 
 - [ ] [`b8835b84f`](https://github.com/meta/astryx/commit/b8835b84f) fix(gestures): each document's gesture host reads that window's clock (#11155)
-- [ ] [`1740654b7`](https://github.com/meta/astryx/commit/1740654b7) feat(core): add the internal useCommittedRef hook for latest-value refs (#11352)
+  - 暂缓：每个文档的手势宿主按自己窗口的时钟读时间，属于手势宿主；Vue 的 inputAge 已按事件所在窗口的时钟算，归动效与手势引擎任务
+- [x] [`1740654b7`](https://github.com/meta/astryx/commit/1740654b7) feat(core): add the internal useCommittedRef hook for latest-value refs (#11352)
+  - 不适用：React 里读最新值的内部 ref hook，Vue 的 ref 没有这个问题
 
 ### v0.7.16
 
-- [ ] [`200e53a5f`](https://github.com/meta/astryx/commit/200e53a5f) fix(core): a time clamp with no whole minute inside the range keeps the bound (#10159)
-- [ ] [`a4595efa9`](https://github.com/meta/astryx/commit/a4595efa9) fix(menu press): cancel only the lifted finger's touchend (#11164)
-- [ ] [`b300313cb`](https://github.com/meta/astryx/commit/b300313cb) feat(Lightbox): a gallery's caption sits in a two-line band (#9810)
-- [ ] [`cfc431d7a`](https://github.com/meta/astryx/commit/cfc431d7a) fix(layer): a release does not dismiss the layer it opened (#11258)
-- [ ] [`a32287bcb`](https://github.com/meta/astryx/commit/a32287bcb) fix(TimeInput, DateTimeInput): keep rejected time entries and show why (#11413)
-- [ ] [`8a50ab2e8`](https://github.com/meta/astryx/commit/8a50ab2e8) feat(core): an internal shared-context entry for Lab (#11448)
+- [x] [`200e53a5f`](https://github.com/meta/astryx/commit/200e53a5f) fix(core): a time clamp with no whole minute inside the range keeps the bound (#10159)
+  - 已移植：[#580](https://github.com/astryx-vue/astryx-vue/pull/580)。clampTime 没有整分钟落在范围内时保留边界本身，补测试
+- [x] [`a4595efa9`](https://github.com/meta/astryx/commit/a4595efa9) fix(menu press): cancel only the lifted finger's touchend (#11164)
+  - 已移植：[#548](https://github.com/astryx-vue/astryx-vue/pull/548)。只取消挑选那根手指的 touchend，别的手指和浏览器当作滚动的 touchend 不碰，补测试
+- [x] [`b300313cb`](https://github.com/meta/astryx/commit/b300313cb) feat(Lightbox): a gallery's caption sits in a two-line band (#9810)
+  - 已移植：[#507](https://github.com/astryx-vue/astryx-vue/pull/507)。图集图注占两行区域，可展开收起
+- [x] [`cfc431d7a`](https://github.com/meta/astryx/commit/cfc431d7a) fix(layer): a release does not dismiss the layer it opened (#11258)
+  - Vue 版已有：dismissStack 用按压编号，按下那一次登记的层不会被这次按压自己关掉
+- [x] [`a32287bcb`](https://github.com/meta/astryx/commit/a32287bcb) fix(TimeInput, DateTimeInput): keep rejected time entries and show why (#11413)
+  - 已移植：[#575](https://github.com/astryx-vue/astryx-vue/pull/575)。被拒的时间文字留在框里并说明原因：新增 useTypedTime，TimeInput 新增 entryErrorBehavior 和 entryErrorChange，补测试
+- [x] [`8a50ab2e8`](https://github.com/meta/astryx/commit/8a50ab2e8) feat(core): an internal shared-context entry for Lab (#11448)
+  - 不适用：给 Lab 开 core 的共享上下文内部入口，Vue 版 lab 直接引用 core
 
 ### v0.7.17
 
-- [ ] [`c3d24e124`](https://github.com/meta/astryx/commit/c3d24e124) fix(Comments): a failed comment-link copy shows and announces itself (#10435)
-- [ ] [`1d2d6299d`](https://github.com/meta/astryx/commit/1d2d6299d) fix(DropdownMenu): a sub-menu whose label is not a string names its view, its Back row and its sheet (#11594)
-- [ ] [`bf8555451`](https://github.com/meta/astryx/commit/bf8555451) fix(useFocusTrap): Tab stops inside a closed dialog the page displays (#11892)
+- [x] [`c3d24e124`](https://github.com/meta/astryx/commit/c3d24e124) fix(Comments): a failed comment-link copy shows and announces itself (#10435)
+  - 已移植：[#550](https://github.com/astryx-vue/astryx-vue/pull/550)。评论链接复制失败时按钮变叉、名字提示播报失败，补测试
+- [x] [`1d2d6299d`](https://github.com/meta/astryx/commit/1d2d6299d) fix(DropdownMenu): a sub-menu whose label is not a string names its view, its Back row and its sheet (#11594)
+  - 已移植：[#581](https://github.com/astryx-vue/astryx-vue/pull/581)。子菜单标签用 label 插槽写成富内容时，展开的视图用标签命名，嵌套视图的返回行按这个标签的文字写，补测试；底部面板随层级改名 Vue 版本来就不做
+- [x] [`bf8555451`](https://github.com/meta/astryx/commit/bf8555451) fix(useFocusTrap): Tab stops inside a closed dialog the page displays (#11892)
+  - 已移植：[#548](https://github.com/astryx-vue/astryx-vue/pull/548)。焦点陷阱不算页面不显示的关着的 dialog 里的控件，显示着的关着的 dialog 里的照算，补测试
 - [ ] [`d504f0094`](https://github.com/meta/astryx/commit/d504f0094) feat(TextInput, TextArea, NumberInput): fields stay above the keyboard (#9777)
-- [ ] [`c3b7f32fb`](https://github.com/meta/astryx/commit/c3b7f32fb) fix(Selector): without options, Selector and MultiSelector name the prop and the fix in development (#12386)
-- [ ] [`56d3546d5`](https://github.com/meta/astryx/commit/56d3546d5) fix(core): a TreeList row with no action shows its keyboard focus ring (#12153)
-- [ ] [`f939a6f90`](https://github.com/meta/astryx/commit/f939a6f90) fix(core): type-to-select takes a letter typed with AltGr (#12644)
+  - 暂缓：输入框停在屏幕键盘上方依赖屏幕键盘模块，归动效与手势引擎任务
+- [x] [`c3b7f32fb`](https://github.com/meta/astryx/commit/c3b7f32fb) fix(Selector): without options, Selector and MultiSelector name the prop and the fix in development (#12386)
+  - 已移植：[#569](https://github.com/astryx-vue/astryx-vue/pull/569)。Selector、MultiSelector 缺 options 时开发期报错，点名组件、属性和改法，补测试
+- [x] [`56d3546d5`](https://github.com/meta/astryx/commit/56d3546d5) fix(core): a TreeList row with no action shows its keyboard focus ring (#12153)
+  - 已移植：[#581](https://github.com/astryx-vue/astryx-vue/pull/581)。TreeList 的 treeitem 自己拿到键盘焦点（含无动作的普通行）时画焦点环，子级行聚焦不再连带上级行，补 CSS 断言
+- [x] [`f939a6f90`](https://github.com/meta/astryx/commit/f939a6f90) fix(core): type-to-select takes a letter typed with AltGr (#12644)
+  - 已移植：[#569](https://github.com/astryx-vue/astryx-vue/pull/569)。useCombobox 按字母跳转用 isShortcutChord：AltGr 和单独的 Alt 键入的字母都算；菜单和树里本来就有
 - [x] [`a2edb5300`](https://github.com/meta/astryx/commit/a2edb5300) chore: land batch 2 (16 pull requests) (#12718)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`a60f74251`](https://github.com/meta/astryx/commit/a60f74251) chore: land batch 12 (3 pull requests) (#12841)
-- [ ] [`472896d35`](https://github.com/meta/astryx/commit/472896d35) fix(Toolbar, OverflowList): a start lane's own OverflowList folds beside the end lane (#12238)
+  - 暂缓：这一批合并涉及触屏呈现（touchPresentation）的调整，依赖 presentation 设施，归动效与手势引擎任务
+- [x] [`472896d35`](https://github.com/meta/astryx/commit/472896d35) fix(Toolbar, OverflowList): a start lane's own OverflowList folds beside the end lane (#12238)
+  - 已移植：[#548](https://github.com/astryx-vue/astryx-vue/pull/548)。Toolbar 首部直接放 OverflowList 时占满尾部让出的宽度、折叠让位；全部放得下时不给指示器留位置，补测试
 - [x] [`904b58e64`](https://github.com/meta/astryx/commit/904b58e64) chore: land batch 29 (3 pull requests) (#12894)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`1f48950f9`](https://github.com/meta/astryx/commit/1f48950f9) chore: land batch 67 (7 pull requests) (#12957)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`e7f5815c3`](https://github.com/meta/astryx/commit/e7f5815c3) fix(core): six components' fixed-English built-in text follows the locale; the hardcoded-string lint config has no exemption list and reports a stale entry (#12721)
-- [ ] [`416b167cf`](https://github.com/meta/astryx/commit/416b167cf) fix(core): one focus return for Popover and DropdownMenu (popover presentation) and Dialog that never strands focus (AST-116 FR17–FR21, AR1) (#11121)
+- [x] [`e7f5815c3`](https://github.com/meta/astryx/commit/e7f5815c3) fix(core): six components' fixed-English built-in text follows the locale; the hardcoded-string lint config has no exemption list and reports a stale entry (#12721)
+  - 已移植：[#575](https://github.com/astryx-vue/astryx-vue/pull/575)。Timer 的 elapsed 文字和初始文字按语言写单位，其余五个组件的固定英文在 Vue 版本来就走文案目录，补测试
+- [x] [`416b167cf`](https://github.com/meta/astryx/commit/416b167cf) fix(core): one focus return for Popover and DropdownMenu (popover presentation) and Dialog that never strands focus (AST-116 FR17–FR21, AR1) (#11121)
+  - 已移植：[#541](https://github.com/astryx-vue/astryx-vue/pull/541)。Popover 与 Dialog 共用一套焦点归还，焦点不会掉到 body
 
 ## 图表包（area:charts）
 
