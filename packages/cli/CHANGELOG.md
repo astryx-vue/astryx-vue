@@ -1,5 +1,13 @@
 # @astryx-vue/cli
 
+## 0.4.46
+
+### Patch Changes
+
+- [#572](https://github.com/astryx-vue/astryx-vue/pull/572) [`3482ec8`](https://github.com/astryx-vue/astryx-vue/commit/3482ec86f1a322a9fea811d67d456166e0378986) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增 `useAnimatedLayout`：把它返回的句柄传给 `Collapsible`、`TreeList` 的 `animatedLayout`，展开收起时后面的内容会滑到新位置，而不是一下子跳过去。
+
+- [#574](https://github.com/astryx-vue/astryx-vue/pull/574) [`8f246ae`](https://github.com/astryx-vue/astryx-vue/commit/8f246ae8499d5cd9b1ac56db6e9ee441a2a5fc9a) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `useTableRowExpansion` 新增 `animatedLayout` 配置：传入 `useAnimatedLayout` 的句柄后，详情面板开合时下面的行会滑到新位置，分隔线跟着走，箭头同步转动。
+
 ## 0.4.45
 
 ### Patch Changes
