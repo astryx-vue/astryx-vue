@@ -1,5 +1,13 @@
 # @astryx-vue/lab
 
+## 0.7.7
+
+### Patch Changes
+
+- [#556](https://github.com/astryx-vue/astryx-vue/pull/556) [`68cac05`](https://github.com/astryx-vue/astryx-vue/commit/68cac056a700ba83d73a4c0207c76a20733b617d) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - The Tour callout stays invisible until it is placed next to its target, so it no longer flashes in the top-left corner when a tour starts or moves to another step.
+- Updated dependencies [[`68cac05`](https://github.com/astryx-vue/astryx-vue/commit/68cac056a700ba83d73a4c0207c76a20733b617d)]:
+  - @astryx-vue/core@0.16.1
+
 ## 0.7.6
 
 ### Patch Changes

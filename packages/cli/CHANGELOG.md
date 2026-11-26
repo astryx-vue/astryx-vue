@@ -1,5 +1,17 @@
 # @astryx-vue/cli
 
+## 0.4.43
+
+### Patch Changes
+
+- [#554](https://github.com/astryx-vue/astryx-vue/pull/554) [`5541909`](https://github.com/astryx-vue/astryx-vue/commit/5541909871bb8fc91740c99747399b549e0bc4db) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 页面模板跟上游一批小修：文件浏览器的列用 Stack 自带的滚动、箭头在从右往左时镜像，状态文字改读 text 状态色，复制出去的占位图随深色模式变深。
+
+- [#553](https://github.com/astryx-vue/astryx-vue/pull/553) [`7d9b459`](https://github.com/astryx-vue/astryx-vue/commit/7d9b459410ce9a3b6627a5a4a264c69ad9cb371d) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 文档里 useCollator、useToast、useTranslator、usePressFeedback、useListFocus、useOverflow、useGridFocus、useAnnounce、useFocusTrap、useLocale、useKeyboardHint、useTypeahead、useScrollableArea 的页面各补了一个能直接上手的示例。
+
+- [#553](https://github.com/astryx-vue/astryx-vue/pull/553) [`6f51865`](https://github.com/astryx-vue/astryx-vue/commit/6f51865c2b188accb54c1cb4037a240ed603fd35) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `astryx-vue composable` 能查到 useOutlineFromMarkdown、usePowerSearchConfig、useTruncation、useTableSortableState、useCombobox 五个 hook 的文档，Lightbox、Overlay、列设置、图标、LinkProvider、useTheme、国际化 Provider 的文档也各多了一个直接调用 hook 的示例。
+
+- [#553](https://github.com/astryx-vue/astryx-vue/pull/553) [`d086b4c`](https://github.com/astryx-vue/astryx-vue/commit/d086b4c21778235098bc92c0b4221389011f6ebc) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - useHotkeys、useInputStatusIcon、useTreeFocus、useClipboard、useClickableContainer、useImageMode、useScrollOverflow、useMergedRefs、useInputContainer、useScrollLock、useInteractiveRole 的文档页新增可交互示例，useStreamingText 的示例改成真的分段流式输出。
+
 ## 0.4.42
 
 ### Patch Changes

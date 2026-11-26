@@ -1,5 +1,11 @@
 # @astryx-vue/core
 
+## 0.16.1
+
+### Patch Changes
+
+- [#556](https://github.com/astryx-vue/astryx-vue/pull/556) [`68cac05`](https://github.com/astryx-vue/astryx-vue/commit/68cac056a700ba83d73a4c0207c76a20733b617d) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - CodeBlock and CodeEditor syntax highlighting repaints itself after the code is moved in the DOM (for example by a scroll container or Teleport), instead of losing its colors. `useLayer` now returns `reposition()` to realign a layer right away when its anchor moves.
+
 ## 0.16.0
 
 ### Minor Changes
