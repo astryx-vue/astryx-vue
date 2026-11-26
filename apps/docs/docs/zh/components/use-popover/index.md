@@ -18,7 +18,7 @@ import { usePopoverQuickActions } from '../../../../components/demos/use-popover
 import { usePopover } from '@astryx-vue/core/Popover'
 ```
 
-把 `triggerRef` 绑到负责打开浮层的元素上：hook 会给它挂点击和键盘处理，并写好 `aria-haspopup`、`aria-expanded`、`aria-controls`。浮层自己渲染，把 `surfaceProps` 和 `contentStyle` 摊到浮层元素上：
+把 `triggerRef` 绑到负责打开浮层的元素上：hook 会给它挂点击和键盘处理，并写好 `aria-haspopup`、`aria-expanded`，打开期间再加上 `aria-controls`。浮层自己渲染，把 `surfaceProps` 和 `contentStyle` 摊到浮层元素上：
 
 ```vue
 <script setup lang="ts">
