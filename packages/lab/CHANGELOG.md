@@ -1,5 +1,11 @@
 # @astryx-vue/lab
 
+## 0.6.8
+
+### Patch Changes
+
+- [#535](https://github.com/astryx-vue/astryx-vue/pull/535) [`3cf0198`](https://github.com/astryx-vue/astryx-vue/commit/3cf01987b8851556dd83c5f4a42a44ee3daa0555) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 实验包 DiffViewer：`createDiffFile` 在线性内存里逐行比较最多 10,000 行改动，更大的改动在片段上标 `isReplacedBlock`；DiffViewer 把整块替换和改动超过 2,000 行的文件折在「Large change: N lines」后面，点 Show full diff 展开，折叠会藏住批注时一开始就展开。
+
 ## 0.6.7
 
 ### Patch Changes
