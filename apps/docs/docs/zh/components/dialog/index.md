@@ -58,7 +58,7 @@ const isOpen = ref(false)
 | <Badge variant="success">推荐</Badge> | 含有输入内容的对话框使用 purpose="form"。这样用户不会因误点遮罩而丢失数据。 |
 | <Badge variant="success">推荐</Badge> | 对话框只处理单一任务。内容超出可容纳范围时，考虑改用整页。 |
 | <Badge variant="error">避免</Badge> | 用对话框展示简单消息。这类消息可以内联显示，或使用 Toast 通知。 |
-| <Badge variant="error">避免</Badge> | 在对话框中嵌套对话框。应把流程拆成单个对话框内的多个步骤。 |
+| <Badge variant="error">避免</Badge> | 在对话框中嵌套对话框。应把流程拆成单个对话框内的多个步骤。唯一的例外是确认破坏性操作的 AlertDialog：它只问一个问题，按 Escape 只会关掉这个警示框。 |
 | <Badge variant="error">避免</Badge> | 为简单确认使用 fullscreen 变体。它适用于编辑器或长表单等复杂内容。 |
 
 ## 示例
