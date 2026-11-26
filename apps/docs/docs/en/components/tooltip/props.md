@@ -15,7 +15,7 @@ footer: false
 <tr><td><code>delay</code></td><td><code>number</code></td><td><code>200</code></td><td>Milliseconds before showing on hover.</td></tr>
 <tr><td><code>hideDelay</code></td><td><code>number</code></td><td><code>0</code></td><td>Milliseconds before hiding. 0 uses a 100ms bridge so the pointer can reach the bubble.</td></tr>
 <tr><td><code>focusTrigger</code></td><td><code>'auto' | 'always' | 'never'</code></td><td><code>'auto'</code></td><td>Whether focus shows the tooltip. auto listens only when the trigger is focusable.</td></tr>
-<tr><td><code>touchTrigger</code></td><td><code>'auto' | 'tap' | 'none'</code></td><td><code>'auto'</code></td><td>Tap behavior on touch. auto skips buttons, links, and form controls.</td></tr>
+<tr><td><code>touchTrigger</code></td><td><code>'auto' | 'tap' | 'none'</code></td><td><code>'auto'</code></td><td>Tap behavior on touch. auto skips buttons, links, and form controls, but a tap on an aria-disabled control opens its reason. A tap-opened tooltip closes on a tap outside. A touch that turns into a scroll opens nothing.</td></tr>
 <tr><td><code>isEnabled</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Disables hover and focus triggers when false.</td></tr>
 <tr><td><code>hasHoverIndication</code></td><td><code>'auto' | boolean</code></td><td><code>'auto'</code></td><td>Dashed underline on a text-only trigger. auto applies it only to text.</td></tr>
 <tr><td><code>isOpen</code></td><td><code>boolean</code></td><td>—</td><td>Controlled visibility. Hover and focus are ignored when set.</td></tr>

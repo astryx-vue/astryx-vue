@@ -5,6 +5,7 @@ import { useFocusTrap, useRestoreFocus, useScrollLock } from '../composables/ind
 import { addModalOutlet, removeModalOutlet } from '../layer/modalOutlet.js'
 import { provideLayerMountTarget } from '../layer/mount.js'
 import { resetLayerScopedContext } from '../layer/scopedProvide.js'
+import { useBackdropPress } from '../layer/useBackdropPress.js'
 import { provideLayoutContainer } from '../Layout/context.js'
 import { DIALOG_CONTEXT_KEY } from './context.js'
 import { formatDialogSize, resolveDialogPositionOffsets } from './position.js'
@@ -207,10 +208,11 @@ function onCancel(event: Event): void {
     emit('openChange', false)
 }
 
-function onBackdropClick(event: MouseEvent): void {
-  if (event.target === event.currentTarget && props.purpose === 'info')
+// 只有按下和松手都在遮罩上、而且这一下没先关掉框里的弹出框，才算点遮罩。
+const backdropPress = useBackdropPress(() => dialogRef.value, () => {
+  if (props.purpose === 'info')
     emit('openChange', false)
-}
+})
 
 watch(() => props.isOpen, (open) => {
   if (open)
@@ -260,7 +262,8 @@ onBeforeUnmount(() => {
     aria-modal="true"
     :aria-labelledby="resolvedLabelledBy()"
     :style="rootStyle"
-    @click="onBackdropClick"
+    @pointerdown="backdropPress.onPointerDown"
+    @click="backdropPress.onClick"
     @cancel="onCancel"
   >
     <div class="astryx-dialog__inner" :style="innerStyle">

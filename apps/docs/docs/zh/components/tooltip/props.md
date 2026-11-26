@@ -15,7 +15,7 @@ footer: false
 <tr><td><code>delay</code></td><td><code>number</code></td><td><code>200</code></td><td>悬停或聚焦后，提示显示前的等待时间（毫秒）。</td></tr>
 <tr><td><code>hideDelay</code></td><td><code>number</code></td><td><code>0</code></td><td>鼠标或焦点离开后，提示隐藏前的等待时间（毫秒）。为 0 时使用 100 毫秒，给鼠标移入气泡留出时间。</td></tr>
 <tr><td><code>focusTrigger</code></td><td><code>'auto' | 'always' | 'never'</code></td><td><code>'auto'</code></td><td>聚焦时是否显示提示：auto 仅在触发元素本身可聚焦时监听，always 始终监听，never 从不监听。</td></tr>
-<tr><td><code>touchTrigger</code></td><td><code>'auto' | 'tap' | 'none'</code></td><td><code>'auto'</code></td><td>触摸设备上点击触发元素时的行为：auto 时点击切换提示，但按钮、链接和表单控件自身的点击不触发；tap 总是切换；none 不打开。</td></tr>
+<tr><td><code>touchTrigger</code></td><td><code>'auto' | 'tap' | 'none'</code></td><td><code>'auto'</code></td><td>触摸设备上轻点触发元素时的行为：auto 时轻点切换提示，但按钮、链接和表单控件自身的轻点不触发，设置了 aria-disabled 的控件除外，轻点它会显示禁用原因；tap 总是切换；none 不打开。轻点打开的提示在外面轻点即关闭；从触发元素上开始的滚动不会打开提示。</td></tr>
 <tr><td><code>isEnabled</code></td><td><code>boolean</code></td><td><code>true</code></td><td>是否启用提示。为 false 时禁用悬停与聚焦触发。</td></tr>
 <tr><td><code>hasHoverIndication</code></td><td><code>'auto' | boolean</code></td><td><code>'auto'</code></td><td>是否在纯文字触发元素上显示虚线下划线。auto 时仅对纯文字触发元素生效。</td></tr>
 <tr><td><code>isOpen</code></td><td><code>boolean</code></td><td>—</td><td>受控显示状态。设置后悬停与聚焦不再触发提示。</td></tr>

@@ -154,6 +154,8 @@ export function usePopover(options: UsePopoverOptions = {}): UsePopoverReturn {
     trigger: triggerRef,
     isEnabled: computed(() => isOpen.value && ((toValue(options.hasLightDismiss) ?? true) || (toValue(options.hasEscapeDismiss) ?? true))),
     dismissOnPointerOutside: () => toValue(options.hasLightDismiss) ?? true,
+    // 弹出框只在外面轻点时关，手指滑一下页面不关（菜单用自己的关闭登记，一平移就关）。
+    dismissOnOutsidePan: false,
     dismissOnEscape: computed(() => (toValue(options.hasEscapeDismiss) ?? true) ? 'close' : 'block'),
     onDismiss: () => layer.hide(),
   })

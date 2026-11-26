@@ -47,7 +47,7 @@ footer: false
         <td><code>touchTrigger</code></td>
         <td><code>'auto' | 'tap' | 'none' | MaybeRefOrGetter</code></td>
         <td><code>'auto'</code></td>
-        <td>没有 hover 的触摸设备上轻点做什么。<code>auto</code> 在触发器自己有动作时不打开；<code>tap</code> 总是打开；<code>none</code> 从不打开。</td>
+        <td>没有 hover 的触摸设备上轻点做什么。<code>auto</code> 在触发器自己有动作时不打开（设置了 aria-disabled 的控件不算有动作，轻点它会显示原因）；<code>tap</code> 总是打开；<code>none</code> 从不打开。</td>
       </tr>
       <tr>
         <td><code>isEnabled</code></td>

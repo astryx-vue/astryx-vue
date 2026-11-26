@@ -58920,7 +58920,7 @@
                 "name": "`touchTrigger`",
                 "type": "`'auto' | 'tap' | 'none'`",
                 "default": "`'auto'`",
-                "description": "Tap behavior on touch. auto opens on a trigger that performs no action of its own and leaves the tap to buttons and links; tap always opens; none never opens. A tap-opened card closes on a tap outside."
+                "description": "Tap behavior on touch. auto opens on a trigger that performs no action of its own and leaves the tap to buttons and links; tap always opens; none never opens. An aria-disabled control performs no action, so a tap on it opens its reason. A tap-opened card closes on a tap outside, and a touch that turns into a scroll opens nothing."
               },
               {
                 "name": "`isEnabled`",
@@ -58999,7 +58999,7 @@
                 "name": "`touchTrigger`",
                 "type": "`'auto' | 'tap' | 'none'`",
                 "default": "`'auto'`",
-                "description": "触摸设备上轻点触发元素的行为：auto 时本身不执行操作的触发元素轻点即打开，按钮和链接保留自己的轻点；tap 总是打开；none 不打开。轻点打开的卡片在卡片外轻点即关闭。"
+                "description": "触摸设备上轻点触发元素的行为：auto 时本身不执行操作的触发元素轻点即打开，按钮和链接保留自己的轻点；tap 总是打开；none 不打开。设置了 aria-disabled 的控件不执行操作，轻点它会显示原因。轻点打开的卡片在卡片外轻点即关闭；从触发元素上开始的滚动不会打开卡片。"
               },
               {
                 "name": "`isEnabled`",
@@ -60583,7 +60583,7 @@
                 "name": "`touchTrigger`",
                 "type": "`'auto' | 'tap' | 'none'`",
                 "default": "`'auto'`",
-                "description": "Tap behavior on touch. auto skips buttons, links, and form controls."
+                "description": "Tap behavior on touch. auto skips buttons, links, and form controls, but a tap on an aria-disabled control opens its reason. A tap-opened tooltip closes on a tap outside. A touch that turns into a scroll opens nothing."
               },
               {
                 "name": "`isEnabled`",
@@ -60668,7 +60668,7 @@
                 "name": "`touchTrigger`",
                 "type": "`'auto' | 'tap' | 'none'`",
                 "default": "`'auto'`",
-                "description": "触摸设备上点击触发元素时的行为：auto 时点击切换提示，但按钮、链接和表单控件自身的点击不触发；tap 总是切换；none 不打开。"
+                "description": "触摸设备上轻点触发元素时的行为：auto 时轻点切换提示，但按钮、链接和表单控件自身的轻点不触发，设置了 aria-disabled 的控件除外，轻点它会显示禁用原因；tap 总是切换；none 不打开。轻点打开的提示在外面轻点即关闭；从触发元素上开始的滚动不会打开提示。"
               },
               {
                 "name": "`isEnabled`",
@@ -71068,7 +71068,7 @@
                 "name": "`touchTrigger`",
                 "type": "`'auto' | 'tap' | 'none' | MaybeRefOrGetter`",
                 "default": "`'auto'`",
-                "description": "What a tap does where there is no hover. `auto` opens on tap unless the trigger performs an action of its own; `tap` always opens; `none` never opens on touch."
+                "description": "What a tap does where there is no hover. `auto` opens on tap unless the trigger performs an action of its own (an aria-disabled control performs none, so its reason opens); `tap` always opens; `none` never opens on touch."
               },
               {
                 "name": "`isEnabled`",
@@ -71218,7 +71218,7 @@
                 "payload": "`touchTrigger`",
                 "type": "`'auto' | 'tap' | 'none' | MaybeRefOrGetter`",
                 "default": "`'auto'`",
-                "description": "没有 hover 的触摸设备上轻点做什么。`auto` 在触发器自己有动作时不打开；`tap` 总是打开；`none` 从不打开。"
+                "description": "没有 hover 的触摸设备上轻点做什么。`auto` 在触发器自己有动作时不打开（设置了 aria-disabled 的控件不算有动作，轻点它会显示原因）；`tap` 总是打开；`none` 从不打开。"
               },
               {
                 "name": "`isEnabled`",
@@ -80625,7 +80625,7 @@
                 "name": "`touchTrigger`",
                 "type": "`'auto' | 'tap' | 'none' | MaybeRefOrGetter`",
                 "default": "`'auto'`",
-                "description": "What a tap does where there is no hover. `auto` opens on tap unless the trigger performs an action of its own; `tap` always opens; `none` never opens on touch."
+                "description": "What a tap does where there is no hover. `auto` opens on tap unless the trigger performs an action of its own (an aria-disabled control performs none, so its reason opens); `tap` always opens; `none` never opens on touch."
               },
               {
                 "name": "`isEnabled`",
@@ -80754,7 +80754,7 @@
                 "payload": "`touchTrigger`",
                 "type": "`'auto' | 'tap' | 'none' | MaybeRefOrGetter`",
                 "default": "`'auto'`",
-                "description": "没有 hover 的触摸设备上轻点做什么。`auto` 在触发器自己有动作时不打开；`tap` 总是打开；`none` 从不打开。"
+                "description": "没有 hover 的触摸设备上轻点做什么。`auto` 在触发器自己有动作时不打开（设置了 aria-disabled 的控件不算有动作，轻点它会显示原因）；`tap` 总是打开；`none` 从不打开。"
               },
               {
                 "name": "`isEnabled`",
