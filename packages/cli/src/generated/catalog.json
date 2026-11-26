@@ -29211,6 +29211,10 @@
             "text": "Do"
           },
           {
+            "guidance": "Do",
+            "text": "Do"
+          },
+          {
             "guidance": "Don't",
             "text": "Don't"
           }
@@ -29219,6 +29223,10 @@
           {
             "guidance": "推荐",
             "text": "消息没有贴在输入框外壳上时，用 `detached`。"
+          },
+          {
+            "guidance": "推荐",
+            "text": "再次提交仍然失败、错误没变时，由表单用 `useAnnounce` 念一次，例如 `announce(`${errors.length} 个错误。${errors[0]}`, 'assertive')`，并把焦点移到第一个无效字段。状态只在第一次出现、说明或类型变化时才播报，所以第一次提交失败时由各字段念自己的错误，表单不用再加。"
           },
           {
             "guidance": "避免",
@@ -29997,7 +30005,7 @@
                 "name": "`status`",
                 "type": "`FieldStatusInput`",
                 "default": "—",
-                "description": "Status on the group border and under the control."
+                "description": "Validation status. Its message shows below the group. The group border does not change; a theme can style the row from `data-status`."
               },
               {
                 "name": "`labelTooltip`",
@@ -30058,7 +30066,7 @@
                 "name": "`status`",
                 "type": "`FieldStatusInput`",
                 "default": "—",
-                "description": "整组边框和控件下方的状态。"
+                "description": "校验状态。说明显示在整组下面，整组边框不变色；主题可以按 `data-status` 给这一行上样式。"
               },
               {
                 "name": "`labelTooltip`",
@@ -30243,8 +30251,42 @@
         "zh": "放在 `InputGroup` 里面的一段前缀或后缀文字，也可以放图标。\n\n把它塞进 `InputGroup` 的 `before` 或 `after` 插槽，就能在输入框两边显示单位、货币符号、协议名或者固定的域名。这段文字不能编辑，按 Tab 也跳不到它，所以不会挡住打字。\n\n```vue\n<script setup lang=\"ts\">\nimport { InputGroup, InputGroupText } from '@astryx-vue/core/InputGroup'\nimport { TextInput } from '@astryx-vue/core/TextInput'\nimport { ref } from 'vue'\n\nconst price = ref('')\n</script>\n\n<template>\n  <InputGroup label=\"价格\">\n    <template #before>\n      <InputGroupText>$</InputGroupText>\n    </template>\n    <TextInput v-model=\"price\" label=\"金额\" is-label-hidden placeholder=\"0.00\" />\n    <template #after>\n      <InputGroupText>USD</InputGroupText>\n    </template>\n  </InputGroup>\n</template>\n```\n\n默认插槽里放文字。插槽接受任意标记，所以放图标也行；图标只当装饰，因为给读屏报名字的是整组的 `label`。\n\n```ts\nimport { InputGroupText } from '@astryx-vue/core/InputGroup'\n```"
       },
       "practices": {
-        "en": [],
-        "zh": []
+        "en": [
+          {
+            "guidance": "Do",
+            "text": "Keep the text short, such as `$`, `https://` or `kg`. It stays on one line and does not shrink."
+          },
+          {
+            "guidance": "Do",
+            "text": "Put what a screen reader user needs in the input's own label, such as \"Amount in USD\" beside a `$` prefix. The addon is read as plain text in reading order."
+          },
+          {
+            "guidance": "Don't",
+            "text": "Put buttons, links or other controls inside `InputGroupText`. Use a `Button` addon for an action."
+          },
+          {
+            "guidance": "Don't",
+            "text": "Use `InputGroupText` outside `InputGroup`. Its borders and corners join an `InputGroup` row."
+          }
+        ],
+        "zh": [
+          {
+            "guidance": "推荐",
+            "text": "推荐"
+          },
+          {
+            "guidance": "推荐",
+            "text": "推荐"
+          },
+          {
+            "guidance": "避免",
+            "text": "避免"
+          },
+          {
+            "guidance": "避免",
+            "text": "避免"
+          }
+        ]
       },
       "props": {
         "en": [
@@ -31246,7 +31288,7 @@
                 "name": "`hasNumberSteppers`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Shows increment and decrement buttons at the end of the input. A button is disabled when its step would not change the value."
+                "description": "Shows increment and decrement buttons at the end of the input. A button is `aria-disabled` when its step would not change the value. Holding a button with a mouse or pen repeats the step and commits once, when the hold ends. The buttons are hidden on coarse pointers (touch); typing and the arrow keys still work."
               },
               {
                 "name": "`isWheelEnabled`",
@@ -31282,7 +31324,7 @@
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Disables the field."
+                "description": "Disables the field. It stays in the tab order with `aria-disabled` and is read-only, cannot be edited or stepped, runs no caller handler except focus and blur, and its value is left out of form submission."
               },
               {
                 "name": "`disabledMessage`",
@@ -31328,9 +31370,9 @@
               },
               {
                 "name": "`startIcon`",
-                "type": "`Component`",
+                "type": "`IconName | Component`",
                 "default": "—",
-                "description": "Icon shown at the start of the input. The `icon` slot works too."
+                "description": "Icon shown at the start of the input: a semantic icon name such as `'search'`, or an icon component. The `icon` slot works too."
               },
               {
                 "name": "`size`",
@@ -31348,13 +31390,19 @@
                 "name": "`status`",
                 "type": "`'default' | 'error' | 'warning' | 'success' | { type, message? }`",
                 "default": "—",
-                "description": "Validation status. An object with `message` shows that text under the field."
+                "description": "Validation status. An object with `message` shows that text under the field. When Enter or blur keeps typed text that cannot commit, the field shows its own error message in place of `status`; an `error` status with a message shows instead of it, and a `warning` or `success` status, or an `error` without a message, never replaces it."
               },
               {
                 "name": "`statusVariant`",
                 "type": "`'attached' | 'detached' | 'tooltip'`",
                 "default": "`'attached'`",
                 "description": "How the status message is placed. `'tooltip'` hides the message box and reveals it from the status icon instead."
+              },
+              {
+                "name": "`entryErrorBehavior`",
+                "type": "`'complete' | 'blur-or-enter'`",
+                "default": "—",
+                "description": "Lets a form pass one value to all of its date, time and number fields. A typed number is complete only at Enter or blur, so both values keep the field's timing: nothing shows while typing, and a rejection shows at Enter or blur. It is not written to the input, and NumberInput reads no FormLayout default."
               },
               {
                 "name": "`htmlName`",
@@ -31481,7 +31529,7 @@
                 "name": "`hasNumberSteppers`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "在输入框末尾显示加、减按钮。这一步不会改变值时，对应按钮置灰。"
+                "description": "在输入框末尾显示加、减按钮。这一步不会改变值时，对应按钮带 `aria-disabled`。用鼠标或笔按住按钮会重复步进，松手时只提交一次。触屏（粗指针）上按钮会隐藏，仍可直接输入和用方向键步进。"
               },
               {
                 "name": "`isWheelEnabled`",
@@ -31517,7 +31565,7 @@
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "是否禁用。"
+                "description": "是否禁用。禁用的字段仍留在 Tab 顺序里（带 `aria-disabled`），只读、不能编辑或步进，除聚焦和失焦外不运行调用方的处理函数，值也不参与表单提交。"
               },
               {
                 "name": "`disabledMessage`",
@@ -31583,13 +31631,19 @@
                 "name": "`status`",
                 "type": "`'default' | 'error' | 'warning' | 'success' | { type, message? }`",
                 "default": "—",
-                "description": "校验状态。对象带 `message` 时，说明会显示在字段下方。"
+                "description": "校验状态。对象带 `message` 时，说明显示在字段下方。回车或失焦留下提交不了的文字时，字段用自己的错误说明顶替 `status`；带说明的 `error` 状态会顶替字段的说明，`warning`、`success`，或没有说明的 `error` 不会。"
               },
               {
                 "name": "`statusVariant`",
                 "type": "`'attached' | 'detached' | 'tooltip'`",
                 "default": "`'attached'`",
                 "description": "状态说明的呈现方式。`'tooltip'` 不显示说明框，改为从状态图标里点开。"
+              },
+              {
+                "name": "`entryErrorBehavior`",
+                "type": "`'complete' | 'blur-or-enter'`",
+                "default": "—",
+                "description": "让一个表单把同一个值传给里面所有的日期、时间和数字字段。一个数只有回车或失焦才算打完，所以两个值对数字框的时机相同：打字时什么都不亮，回车或失焦时才亮出被拒的输入。它不会写到 input 上，数字框也不读 FormLayout 的默认值。"
               },
               {
                 "name": "`htmlName`",
@@ -31733,6 +31787,11 @@
                 "name": "`keydown`",
                 "payload": "`event: KeyboardEvent`",
                 "description": "Emitted on keydown in the input, before the arrow keys step the value. Calling `preventDefault()` keeps the value unchanged."
+              },
+              {
+                "name": "`entryErrorChange`",
+                "payload": "`error: { kind, text, value? } | null`",
+                "description": "Emitted each time the field's rejection of typed text starts, changes, or ends (`null`), and with `null` when the field unmounts during one. A typed number is complete only at Enter or blur, so a rejection starts there, never while typing. `kind` is `unreadable` (not a number), `fractional` (a fraction in an `isIntegerOnly` field) or `outOfRange` (any number while `min` is above `max`); `text` is the typed text and `value` the number it names, for `fractional` and `outOfRange`. A number outside an ordinary range clamps at commit and is no rejection. Listening lets an `error` `status` word the rejection."
               }
             ]
           }
@@ -31770,6 +31829,11 @@
                 "name": "`keydown`",
                 "payload": "`event: KeyboardEvent`",
                 "description": "输入框按键时触发，方向键步进之前发出。在回调里调用 `preventDefault()` 可以阻止这次步进。"
+              },
+              {
+                "name": "`entryErrorChange`",
+                "payload": "`error: { kind, text, value? } | null`",
+                "description": "字段对打进来的文字的拒绝开始、改变、结束（`null`）时触发，拒绝还在时字段卸载也会带 `null` 报一次。一个数只有回车或失焦才算打完，所以拒绝从那一刻开始，打字时不会触发。`kind` 是 `unreadable`（读不成数字）、`fractional`（`isIntegerOnly` 字段里带小数）或 `outOfRange`（`min` 大于 `max` 时的任何数）；`text` 是打进来的文字，`value` 是它指向的数（`fractional`、`outOfRange` 带）。超出普通范围的数在提交时夹到边界，不算拒绝。监听它后，带说明的 `error` 状态可以替字段措辞。"
               }
             ]
           }
@@ -46638,7 +46702,7 @@
                 "name": "`defaultEntryErrorBehavior`",
                 "type": "`'complete' | 'blur-or-enter'`",
                 "default": "-",
-                "description": "Default `entryErrorBehavior` for the date fields inside (DateInput, DateTimeInput). A field's own setting wins; without either, fields use `complete`."
+                "description": "Default `entryErrorBehavior` for the date and time fields inside (DateInput, DateTimeInput, TimeInput). NumberInput takes the prop too but reads no default, since a typed number is complete only at Enter or blur. A field's own setting wins; without either, fields use `complete`."
               }
             ]
           }
@@ -46663,7 +46727,7 @@
                 "name": "`defaultEntryErrorBehavior`",
                 "type": "`'complete' | 'blur-or-enter'`",
                 "default": "-",
-                "description": "里面日期字段（DateInput、DateTimeInput）默认的 `entryErrorBehavior`。字段自己设了以字段为准，都没设时是 `complete`。"
+                "description": "里面日期和时间字段（DateInput、DateTimeInput、TimeInput）默认的 `entryErrorBehavior`。NumberInput 也接受这个属性，但不读默认值：一个数只有回车或失焦才算打完。字段自己设了以字段为准，都没设时是 `complete`。"
               }
             ]
           }
@@ -52036,7 +52100,7 @@
                 "name": "`variant`",
                 "type": "`'pages' | 'count' | 'compact' | 'dots' | 'input' | 'none'`",
                 "default": "`'pages'`",
-                "description": "Middle of the control. `input` is an editable page field; the `compact` readout can add first/last buttons with `hasFirstLast`."
+                "description": "Middle of the control. `input` is an editable page field (a whole-number `NumberInput`: a page past the last clamps to it, and a rejected entry stays in the box with its message on the status icon); the `compact` readout can add first/last buttons with `hasFirstLast`."
               },
               {
                 "name": "`getPageHref`",
@@ -52175,7 +52239,7 @@
                 "name": "`variant`",
                 "type": "`'pages' | 'count' | 'compact' | 'dots' | 'input' | 'none'`",
                 "default": "`'pages'`",
-                "description": "中间区域。 `input` 是可输入的页码；`compact` 的「第几页 / 共几页」可以用 `hasFirstLast` 加上首尾按钮。"
+                "description": "中间区域。 `input` 是可输入的页码（一个只收整数的 `NumberInput`：超过最后一页会收到最后一页，被拒的输入留在框里，说明显示在状态图标上）；`compact` 的「第几页 / 共几页」可以用 `hasFirstLast` 加上首尾按钮。"
               },
               {
                 "name": "`getPageHref`",

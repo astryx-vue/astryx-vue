@@ -2,7 +2,7 @@
 import type { InputHTMLAttributes } from 'vue'
 import type { FieldStatusInput, FieldStatusType } from '../Field/types.js'
 import type { NumberInputEmits, NumberInputProps, NumberInputSlots, NumberInputStatus } from './types.js'
-import { computed, nextTick, onMounted, shallowRef, toRaw, useAttrs, useId, useTemplateRef } from 'vue'
+import { computed, getCurrentInstance, nextTick, onMounted, shallowRef, toRaw, useAttrs, useId, useTemplateRef } from 'vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import { computeSteppedValue, useNumberField } from '../composables/useNumberField.js'
@@ -17,9 +17,12 @@ import { useInputGroupDisabled } from '../InputGroup/context.js'
 import { useAstryxLocale, useComponentMessages } from '../locale/context.js'
 import { numberInputMessages } from '../locale/messages/number-input.js'
 import { useSize } from '../SizeContext/SizeContext.js'
+import { withholdCallerHandlers } from '../utils/disabledInteraction.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
-import { parseNumberInput, resolveNumberInputCommit } from './numberInputCommit.js'
+import { parseNumberInput } from './numberInputCommit.js'
 import { formatEditableNumber } from './numberParser.js'
+import { useStepperHold } from './useStepperHold.js'
+import { useTypedNumber } from './useTypedNumber.js'
 import '../../styles/number-input.css'
 
 defineOptions({ name: 'AstryxNumberInput', inheritAttrs: false })
@@ -39,6 +42,7 @@ defineSlots<NumberInputSlots>()
 // 显式 size > 外层 SizeContext（Toolbar、InputGroup 等）> 'md'。
 const size = useSize(() => props.size, 'md')
 
+const instance = getCurrentInstance()
 const attrs = useAttrs()
 const inputElement = useTemplateRef<HTMLInputElement>('input')
 const container = useTemplateRef<HTMLDivElement>('container')
@@ -62,27 +66,13 @@ const resolvedName = computed(() => props.htmlName ?? props.name)
 const disabledMessage = computed(() => props.disabledMessage ?? props.disabledReason)
 const showsDisabledMessage = computed(() => isDisabled.value && !!disabledMessage.value?.trim())
 const disabledTooltip = useButtonTooltip(showsDisabledMessage)
-const icon = computed(() => props.startIcon ? toRaw(props.startIcon) : undefined)
+const iconName = computed(() => typeof props.startIcon === 'string' && props.startIcon ? props.startIcon : undefined)
+const icon = computed(() => props.startIcon && typeof props.startIcon !== 'string' ? toRaw(props.startIcon) : undefined)
 const labelIcon = computed(() => props.labelIcon ? toRaw(props.labelIcon) : undefined)
 
-/** 正在编辑的原始文本；null 表示没有未提交的输入，按聚焦状态决定显示什么 */
-const draft = shallowRef<string | null>(null)
 const isFocused = shallowRef(false)
-
-const formattedText = computed(() => {
-  if (props.modelValue == null)
-    return ''
-  return props.formatValue?.(props.modelValue) ?? String(props.modelValue)
-})
-
-// 聚焦时给原始数字，方便继续编辑；离开后回到格式化文本。
-const displayValue = computed(() => {
-  if (draft.value !== null)
-    return draft.value
-  if (props.modelValue == null)
-    return ''
-  return isFocused.value ? formatEditableNumber(props.modelValue, locale.value) : formattedText.value
-})
+/** 按住步进重复走到的数，按住期间输入框显示它。 */
+const heldValue = shallowRef<number | null>(null)
 
 function draftOptions() {
   return {
@@ -92,22 +82,6 @@ function draftOptions() {
     locale: locale.value,
   }
 }
-
-/** 草稿文本是否有问题：解析不出数字，或者跑出范围。空草稿不算无效。 */
-const isDraftValid = computed(() => {
-  if (draft.value === null || draft.value.trim() === '')
-    return true
-  return parseNumberInput(draft.value, draftOptions()) !== null
-})
-
-/** 步进从草稿的读数走。读不出来就用已经提交的值。 */
-const valueForStepping = computed(() => {
-  if (draft.value === null)
-    return props.modelValue ?? null
-  if (draft.value.trim() === '')
-    return null
-  return parseNumberInput(draft.value, draftOptions()) ?? props.modelValue ?? null
-})
 
 const modelValueRef = computed<number | null>({
   get: () => props.modelValue ?? null,
@@ -138,7 +112,57 @@ function resolvedStatus(status: NumberInputStatus | undefined): FieldStatusInput
   return status
 }
 
-const statusValue = computed(() => resolvedStatus(props.status))
+/** 调用方是否监听了 `entryErrorChange`。声明过的事件不进 attrs，只能看 vnode 上的 props。 */
+function hasEntryErrorListener(): boolean {
+  return Boolean(instance?.vnode.props?.onEntryErrorChange)
+}
+
+// 一个数没有固定长度，只有 Enter 或失焦才算打完；被拒的草稿留在框里，字段说明为什么。
+// 按住步进时输入框显示的是格子上的数，拒绝暂时藏起来。
+const typed = useTypedNumber({
+  value: () => props.modelValue,
+  rules: draftOptions,
+  hasClear: () => hasClear.value,
+  isDisabled: () => isDisabled.value,
+  isHeld: () => heldValue.value !== null,
+  status: () => resolvedStatus(props.status),
+  hasListener: hasEntryErrorListener,
+  message: () => messages.value.numberInput.invalidNumber,
+  commitValue: value => numberField.setValue(value),
+  reportEntryError: error => emit('entryErrorChange', error),
+})
+const draft = typed.draft
+
+const formattedText = computed(() => {
+  if (props.modelValue == null)
+    return ''
+  return props.formatValue?.(props.modelValue) ?? String(props.modelValue)
+})
+
+// 按住步进时显示重复走到的数；聚焦时给原始数字，方便继续编辑；离开后回到格式化文本。
+const displayValue = computed(() => {
+  const held = heldValue.value
+  if (held !== null)
+    return formatEditableNumber(held, locale.value)
+  if (draft.value !== null)
+    return draft.value
+  if (props.modelValue == null)
+    return ''
+  return isFocused.value ? formatEditableNumber(props.modelValue, locale.value) : formattedText.value
+})
+
+/** 步进从草稿的读数走。读不出来就用已经提交的值。 */
+const valueForStepping = computed(() => {
+  if (draft.value === null)
+    return props.modelValue ?? null
+  if (draft.value.trim() === '')
+    return null
+  return parseNumberInput(draft.value, draftOptions()) ?? props.modelValue ?? null
+})
+
+// 有 `formatValue`，或失焦留下了被拒的草稿时，表单提交已提交的数，输入框自己不带 name。
+const hasHiddenFormInput = computed(() => Boolean(props.formatValue) || typed.isKeptAtBlur.value)
+const statusValue = computed(() => typed.fieldStatus.value)
 const statusType = computed<FieldStatusType | undefined>(() => statusValue.value?.type)
 // 同上游：标签藏起来也照样渲染 Field，隐藏的 <label> 给读屏，width 也落在 Field 上
 const fieldBindings = computed(() => ({
@@ -162,8 +186,9 @@ const parts = useFieldPartStyling({
   attrs,
   reservedAttrs: ['id', 'value', 'type', 'disabled', 'readonly', 'autofocus', 'role', 'inputmode', 'aria-labelledby', 'aria-describedby', 'aria-required', 'aria-invalid', 'aria-disabled', 'aria-valuenow', 'aria-valuemin', 'aria-valuemax', 'aria-valuetext', 'name'],
 })
+// 禁用的输入框还留在 Tab 顺序里，浏览器照常派发事件；调用方的处理函数除了聚焦和失焦都不运行。
 function inputAttrs(): InputHTMLAttributes {
-  return parts.forwardedAttrs() as InputHTMLAttributes
+  return withholdCallerHandlers(parts.forwardedAttrs(), isDisabled.value) as InputHTMLAttributes
 }
 
 function describedBy(fieldIds?: string): string | undefined {
@@ -178,9 +203,9 @@ function labelledBy(fieldLabelId?: string): string | undefined {
   return [fieldLabelId, attrs['aria-labelledby']].filter(Boolean).join(' ') || undefined
 }
 
-function nextStep(direction: 1 | -1): number | null {
+function stepFrom(current: number | null, direction: 1 | -1): number | null {
   return computeSteppedValue({
-    currentValue: valueForStepping.value,
+    currentValue: current,
     direction,
     min: props.min ?? null,
     max: props.max ?? null,
@@ -189,18 +214,32 @@ function nextStep(direction: 1 | -1): number | null {
   })
 }
 
-const canIncrement = computed(() => nextStep(1) !== valueForStepping.value)
-const canDecrement = computed(() => nextStep(-1) !== valueForStepping.value)
+function commitStepped(value: number): void {
+  typed.reset()
+  if (value !== (props.modelValue ?? null))
+    numberField.setValue(value)
+}
+
+const stepperHold = useStepperHold({
+  heldValue,
+  base: () => valueForStepping.value,
+  stepFrom,
+  isLocked: () => isDisabled.value || isReadOnly.value,
+  commit: commitStepped,
+})
+
+// 按住期间，步进按钮跟着它显示的数走。
+const steppingBase = computed(() => heldValue.value ?? valueForStepping.value)
+const canIncrement = computed(() => stepFrom(steppingBase.value, 1) !== steppingBase.value)
+const canDecrement = computed(() => stepFrom(steppingBase.value, -1) !== steppingBase.value)
 
 function stepBy(direction: 1 | -1): void {
   if (isDisabled.value || isReadOnly.value)
     return
-  const next = nextStep(direction)
+  const next = stepFrom(valueForStepping.value, direction)
   if (next == null)
     return
-  draft.value = null
-  if (next !== (props.modelValue ?? null))
-    numberField.setValue(next)
+  commitStepped(next)
 }
 
 function focusInput(): void {
@@ -213,36 +252,31 @@ function onInput(event: Event): void {
     target.value = displayValue.value
     return
   }
-  draft.value = target.value
+  typed.onInput(target.value)
 }
 
-function commitDraft(trigger: 'blur' | 'enter'): void {
-  if (draft.value === null)
-    return
-  const decision = resolveNumberInputCommit(draft.value, {
-    ...draftOptions(),
-    hasClear: hasClear.value,
-  })
-  if (trigger === 'blur' || (decision.type === 'commit' && decision.didClamp))
+async function onFocus(event: FocusEvent): Promise<void> {
+  // 失焦时留下的被拒草稿，回来聚焦时还在，可以接着改。
+  if (!typed.isKeptAtBlur.value)
     draft.value = null
-  if (decision.type === 'clear') {
-    if (hasClear.value && props.modelValue != null)
-      numberField.setValue(null)
-  }
-  else if (decision.type === 'commit' && decision.value !== props.modelValue) {
-    numberField.setValue(decision.value)
-  }
-}
-
-function onFocus(event: FocusEvent): void {
-  draft.value = null
+  // Tab 进来会选中全部文字，方便直接替换。有 `formatValue` 时静止的文字和可编辑的文字不同，
+  // 聚焦后换文字会把全选压成光标，所以换完再选一次。
+  const input = event.currentTarget as HTMLInputElement
+  const shouldReselect = input.value.length > 0
+    && input.selectionStart === 0
+    && input.selectionEnd === input.value.length
   isFocused.value = true
   disabledTooltip.onTooltipPointerEnter()
   emit('focus', event)
+  if (shouldReselect) {
+    await nextTick()
+    if (input.ownerDocument.activeElement === input)
+      input.setSelectionRange(0, input.value.length)
+  }
 }
 
 function onBlur(event: FocusEvent): void {
-  commitDraft('blur')
+  typed.commit('blur')
   isFocused.value = false
   disabledTooltip.onBlur()
   emit('blur', event)
@@ -252,6 +286,13 @@ function onKeyDown(event: KeyboardEvent): void {
   // 输入法组字期间的 Enter 和方向键属于候选词，不该提交或步进
   if (event.isComposing || event.keyCode === 229)
     return
+
+  if (isDisabled.value) {
+    // 禁用的输入框按回车不提交表单，也不运行调用方的回调。
+    if (event.key === 'Enter')
+      event.preventDefault()
+    return
+  }
 
   const hasModifier = event.altKey || event.ctrlKey || event.metaKey || event.shiftKey
   if (!hasModifier && (event.key === 'ArrowUp' || event.key === 'ArrowDown')) {
@@ -264,7 +305,7 @@ function onKeyDown(event: KeyboardEvent): void {
   }
 
   if (event.key === 'Enter') {
-    commitDraft('enter')
+    typed.commit('enter')
     emit('enter', event)
   }
   emit('keydown', event)
@@ -283,12 +324,12 @@ function onWheel(event: WheelEvent): void {
   stepBy(event.deltaY < 0 ? 1 : -1)
 }
 
-async function clearValue(): Promise<void> {
+function clearValue(): void {
   if (isDisabled.value || isReadOnly.value)
     return
-  draft.value = null
+  typed.reset()
   numberField.setValue(null)
-  await nextTick()
+  // 在点按这一下里聚焦：iOS Safari 只有在处理触摸的那一刻聚焦才会弹出键盘。
   focusInput()
 }
 
@@ -303,7 +344,12 @@ function focusFromContainer(event: MouseEvent): void {
   focusInput()
 }
 
-function stepFromButton(direction: 1 | -1): void {
+function stepFromButton(direction: 1 | -1, event: MouseEvent): void {
+  // 按住松手后跟着来的那一下 click 不再步进；读屏的 click 没有指针，照常步进。
+  if (stepperHold.consumeClick(event)) {
+    focusInput()
+    return
+  }
   focusInput()
   stepBy(direction)
 }
@@ -330,8 +376,8 @@ onMounted(() => {
         @pointerenter="disabledTooltip.onPointerEnter"
         @pointerleave="disabledTooltip.onPointerLeave"
       >
-        <span v-if="$slots.icon || icon" class="astryx-number-input-icon" aria-hidden="true">
-          <slot name="icon"><component :is="icon" v-if="icon" /></slot>
+        <span v-if="$slots.icon || icon || iconName" class="astryx-number-input-icon" aria-hidden="true">
+          <slot name="icon"><Icon v-if="iconName" :icon="iconName" size="sm" /><component :is="icon" v-else-if="icon" /></slot>
         </span>
         <input
           :id="inputId"
@@ -342,18 +388,17 @@ onMounted(() => {
           :inputmode="isIntegerOnly ? 'numeric' : 'decimal'"
           role="spinbutton"
           :value="displayValue"
-          :name="resolvedName && !isDisabled && !props.formatValue ? resolvedName : undefined"
+          :name="resolvedName && !isDisabled && !hasHiddenFormInput ? resolvedName : undefined"
           :placeholder="props.placeholder"
           :autocomplete="(props.autoComplete ?? inputAttrs().autocomplete) as InputHTMLAttributes['autocomplete']"
-          :disabled="isDisabled && !showsDisabledMessage"
-          :readonly="isReadOnly || showsDisabledMessage"
-          :aria-disabled="showsDisabledMessage || undefined"
+          :readonly="isReadOnly || isDisabled"
+          :aria-disabled="isDisabled || undefined"
           :aria-valuemin="props.min ?? undefined"
           :aria-valuemax="props.max ?? undefined"
           :aria-valuenow="props.modelValue ?? undefined"
           :aria-valuetext="props.modelValue == null || !props.formatValue ? undefined : formattedText"
           :aria-required="ariaRequired"
-          :aria-invalid="statusType === 'error' || !isDraftValid ? 'true' : undefined"
+          :aria-invalid="statusType === 'error' || typed.entryError.value != null ? 'true' : undefined"
           :aria-labelledby="labelledBy(field?.labelId)"
           :aria-describedby="describedBy(field?.describedBy)"
           :data-autofocus="props.hasAutoFocus || undefined"
@@ -365,7 +410,7 @@ onMounted(() => {
         >
         <span v-if="props.units" :id="unitsId" class="astryx-number-input-units">{{ props.units }}</span>
         <VisuallyHidden as="div" role="alert" aria-live="assertive">
-          {{ isDraftValid ? '' : messages.numberInput.invalidNumber }}
+          {{ typed.alertMessage.value }}
         </VisuallyHidden>
         <InputClearButton
           v-if="hasClear && props.modelValue != null && !isDisabled && !isReadOnly"
@@ -380,31 +425,27 @@ onMounted(() => {
         <FieldIcon v-else-if="statusValue" :type="statusValue.type" />
         <div v-if="props.hasNumberSteppers" class="astryx-number-input-buttons">
           <button
+            v-for="direction in ([1, -1] as const)"
+            :key="direction"
             type="button"
-            class="astryx-number-input-button increment"
-            :disabled="isDisabled || isReadOnly || !canIncrement"
-            :aria-label="incrementLabel"
+            class="astryx-number-input-button astryx-number-input-stepper" :class="direction === 1 ? 'increment' : 'decrement'"
+            :data-direction="direction === 1 ? 'increment' : 'decrement'"
+            :aria-disabled="isDisabled || isReadOnly || !(direction === 1 ? canIncrement : canDecrement) || undefined"
+            :aria-label="direction === 1 ? incrementLabel : decrementLabel"
             tabindex="-1"
-            @pointerdown.prevent
-            @click="stepFromButton(1)"
-          >
-            <Icon class="astryx-number-input-chevron" icon="numberInput:stepperDown" size="xsm" />
-          </button>
-          <button
-            type="button"
-            class="astryx-number-input-button decrement"
-            :disabled="isDisabled || isReadOnly || !canDecrement"
-            :aria-label="decrementLabel"
-            tabindex="-1"
-            @pointerdown.prevent
-            @click="stepFromButton(-1)"
+            @pointerdown.prevent="stepperHold.start(direction, direction === 1 ? canIncrement : canDecrement, $event)"
+            @pointerup="stepperHold.end('release', $event.pointerId)"
+            @pointercancel="stepperHold.end('cancel', $event.pointerId)"
+            @lostpointercapture="stepperHold.end('cancel', $event.pointerId)"
+            @contextmenu="stepperHold.onContextMenu()"
+            @click="stepFromButton(direction, $event)"
           >
             <Icon class="astryx-number-input-chevron" icon="numberInput:stepperDown" size="xsm" />
           </button>
         </div>
 
         <input
-          v-if="resolvedName && !isDisabled && props.formatValue"
+          v-if="resolvedName && !isDisabled && hasHiddenFormInput"
           type="hidden"
           :name="resolvedName"
           :value="props.modelValue ?? ''"

@@ -85,8 +85,8 @@ describe('numberInput', () => {
       },
     })
 
-    expect(wrapper.get('.increment').attributes('disabled')).toBeDefined()
-    expect(wrapper.get('.decrement').attributes('disabled')).toBeUndefined()
+    expect(wrapper.get('.increment').attributes('aria-disabled')).toBe('true')
+    expect(wrapper.get('.decrement').attributes('aria-disabled')).toBeUndefined()
   })
 
   it('increments with ArrowUp key', async () => {
@@ -200,7 +200,7 @@ describe('numberInput', () => {
     expect(cleared.emitted('update:modelValue')?.[0]).toEqual([null])
   })
 
-  it('clamps to min and max on blur, and marks the draft invalid while typing', async () => {
+  it('clamps to min and max on blur, and marks nothing while typing', async () => {
     const below = mount(NumberInput, {
       props: {
         modelValue: 5,
@@ -210,8 +210,8 @@ describe('numberInput', () => {
     inputElement(below).value = '-10'
     await inputElement(below).dispatchEvent(new Event('input'))
     expect(below.emitted('update:modelValue')).toBeUndefined()
-    expect(textInput(below).attributes('aria-invalid')).toBe('true')
-    expect(below.get('[role="alert"]').text()).toBe('Invalid number')
+    expect(textInput(below).attributes('aria-invalid')).toBeUndefined()
+    expect(below.get('[role="alert"]').text()).toBe('')
     await textInput(below).trigger('blur')
     expect(below.emitted('update:modelValue')?.[0]).toEqual([0])
 
@@ -241,7 +241,7 @@ describe('numberInput', () => {
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([15])
   })
 
-  it('disables input and buttons when disabled', () => {
+  it('keeps a disabled input in the tab order and marks it aria-disabled', () => {
     const wrapper = mount(NumberInput, {
       props: {
         modelValue: 5,
@@ -250,9 +250,11 @@ describe('numberInput', () => {
       },
     })
 
-    expect(textInput(wrapper).attributes('disabled')).toBeDefined()
-    expect(wrapper.get('.increment').attributes('disabled')).toBeDefined()
-    expect(wrapper.get('.decrement').attributes('disabled')).toBeDefined()
+    expect(textInput(wrapper).attributes('disabled')).toBeUndefined()
+    expect(textInput(wrapper).attributes('aria-disabled')).toBe('true')
+    expect(textInput(wrapper).attributes('readonly')).toBeDefined()
+    expect(wrapper.get('.increment').attributes('aria-disabled')).toBe('true')
+    expect(wrapper.get('.decrement').attributes('aria-disabled')).toBe('true')
   })
 
   it('still accepts the disabled alias', () => {
@@ -263,7 +265,7 @@ describe('numberInput', () => {
       },
     })
 
-    expect(textInput(wrapper).attributes('disabled')).toBeDefined()
+    expect(textInput(wrapper).attributes('aria-disabled')).toBe('true')
   })
 
   it('displays placeholder', () => {
@@ -324,7 +326,7 @@ describe('numberInput', () => {
     expect(textInput(wrapper).attributes('name')).toBe('quantity')
   })
 
-  it('keeps text that is not a number until the field loses focus', async () => {
+  it('keeps text that is not a number in the field after it loses focus', async () => {
     const wrapper = mount(NumberInput, {
       props: {
         modelValue: 5,
@@ -338,10 +340,13 @@ describe('numberInput', () => {
 
     expect(wrapper.emitted('update:modelValue')).toBeUndefined()
     expect(input.value).toBe('abc')
-    expect(textInput(wrapper).attributes('aria-invalid')).toBe('true')
+    // 打字时什么都不标。
+    expect(textInput(wrapper).attributes('aria-invalid')).toBeUndefined()
 
     await textInput(wrapper).trigger('blur')
-    expect(input.value).toBe('5')
+    expect(input.value).toBe('abc')
+    expect(textInput(wrapper).attributes('aria-invalid')).toBe('true')
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
   })
 
   it('has correct inputmode attribute', () => {
@@ -482,7 +487,10 @@ describe('numberInput', () => {
       await input.dispatchEvent(new Event('input'))
 
       expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+      await textInput(wrapper).trigger('keydown', { key: 'Enter' })
+      expect(wrapper.emitted('update:modelValue')).toBeUndefined()
       expect(textInput(wrapper).attributes('aria-invalid')).toBe('true')
+      expect(input.value).toBe('5.5')
     })
 
     it('commits whole numbers', async () => {
@@ -516,7 +524,7 @@ describe('numberInput', () => {
 
       expect(textInput(wrapper).attributes('readonly')).toBeDefined()
       expect(wrapper.find('.astryx-number-input-clear').exists()).toBe(false)
-      expect(wrapper.get('.increment').attributes('disabled')).toBeDefined()
+      expect(wrapper.get('.increment').attributes('aria-disabled')).toBe('true')
     })
 
     it('ignores arrow keys and typed text', async () => {
@@ -746,21 +754,22 @@ describe('numberInput', () => {
     expect(pasted.emitted('update:modelValue')?.[0]).toEqual([1234])
   })
 
-  it('rejects an unreadable draft and says the number is invalid', async () => {
-    const wrapper = mount(NumberInput, { props: { modelValue: 5 } })
+  it('rejects an unreadable draft at Enter and keeps it', async () => {
+    const wrapper = mount(NumberInput, { props: { modelValue: 5, label: 'Qty' } })
     inputElement(wrapper).value = '12abc'
     await inputElement(wrapper).dispatchEvent(new Event('input'))
     expect(wrapper.emitted('update:modelValue')).toBeUndefined()
-    expect(textInput(wrapper).attributes('aria-invalid')).toBe('true')
-    expect(wrapper.get('[role="alert"]').text()).toBe('Invalid number')
+    expect(textInput(wrapper).attributes('aria-invalid')).toBeUndefined()
 
     await textInput(wrapper).trigger('keydown', { key: 'Enter' })
     expect(wrapper.emitted('update:modelValue')).toBeUndefined()
     expect(inputElement(wrapper).value).toBe('12abc')
+    expect(textInput(wrapper).attributes('aria-invalid')).toBe('true')
+    expect(wrapper.text()).toContain('Invalid number')
 
     await textInput(wrapper).trigger('blur')
     expect(wrapper.emitted('update:modelValue')).toBeUndefined()
-    expect(inputElement(wrapper).value).toBe('5')
+    expect(inputElement(wrapper).value).toBe('12abc')
   })
 
   it('works with v-model', async () => {

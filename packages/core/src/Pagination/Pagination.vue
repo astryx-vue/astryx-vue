@@ -2,7 +2,7 @@
 import type { PaginationDensity } from '../composables/usePagination.js'
 import type { SelectorOption } from '../Selector/types.js'
 import type { PaginationEmits, PaginationProps, PaginationSlots, PaginationVariant } from './types.js'
-import { computed, getCurrentInstance, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, getCurrentInstance, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
 import { useFocusAcrossSwap } from '../composables/internal/focusAcrossSwap.js'
 import { focusForLastInput } from '../composables/internal/focusReturn.js'
 import { useListFocus } from '../composables/useListFocus.js'
@@ -10,6 +10,7 @@ import { paginationDensityForWidth, siblingCountForDensity, usePagination } from
 import { usePendingChange } from '../composables/usePendingChange.js'
 import { useComponentMessages } from '../locale/context.js'
 import { paginationMessages } from '../locale/messages/pagination.js'
+import NumberInput from '../NumberInput/NumberInput.vue'
 import Selector from '../Selector/Selector.vue'
 import { consumeWhileDisabled } from '../utils/disabledInteraction.js'
 import { usePaginationLinks } from './usePaginationLinks.js'
@@ -182,12 +183,18 @@ const showFirstLast = computed(() => {
   return enabled && pagination.totalPages.value > 1
 })
 
-function onInputCommit(event: Event): void {
-  const raw = Number((event.target as HTMLInputElement).value)
-  if (!Number.isFinite(raw))
+function onInputCommit(value: number | null): void {
+  if (value == null || !Number.isFinite(value))
     return
-  pagination.goto(Math.trunc(raw))
+  pagination.goto(Math.trunc(value))
 }
+
+/** 页码框正留着一个被拒的输入：框要变宽，装得下文字旁边的状态图标。 */
+const isPageEntryRejected = shallowRef(false)
+const pageBoxWidth = computed(() => {
+  const width = `var(--astryx-size-element-${props.size === 'sm' ? 'sm' : 'md'}, ${props.size === 'sm' ? 28 : 36}px)`
+  return isPageEntryRejected.value ? `calc(${width} + var(--astryx-spacing-10, 40px))` : width
+})
 
 const pageSizeOptions = computed<SelectorOption[]>(() => {
   return props.pageSizeOptions.map(size => ({
@@ -303,18 +310,22 @@ function onDotClick(event: MouseEvent): void {
 
       <span v-if="variant === 'input'" class="astryx-pagination-input">
         <span class="astryx-pagination-input-label" aria-hidden="true">{{ resolvedPageLabel }}</span>
-        <input
-          class="astryx-pagination-input-field"
-          type="number"
-          inputmode="numeric"
+        <!-- 说明收进状态图标（tooltip），被拒的输入留着也不会把页码条撑高；这里的输入时机自己管，所以显式写 complete。 -->
+        <NumberInput
+          :label="messages.pagination.goToPage"
+          is-label-hidden
+          :model-value="pageRef"
           :min="1"
           :max="pagination.isCursor.value ? undefined : pagination.totalPages.value"
-          :value="pageRef"
-          :disabled="disabledControl || pagination.isCursor.value"
-          :aria-label="messages.pagination.goToPage"
+          is-integer-only
+          :size="props.size"
+          :width="pageBoxWidth"
+          :is-disabled="disabledControl || pagination.isCursor.value"
+          entry-error-behavior="complete"
+          status-variant="tooltip"
           @change="onInputCommit"
-          @keydown.enter="onInputCommit"
-        >
+          @entry-error-change="isPageEntryRejected = $event != null"
+        />
         <span v-if="!pagination.isCursor.value" class="astryx-pagination-input-total">{{ messages.pagination.ofTotal(pagination.totalPages.value) }}</span>
       </span>
 

@@ -34,6 +34,7 @@ import { FieldStatus } from '@astryx-vue/core/FieldStatus'
 | 指引 | 实践 |
 | --- | --- |
 | <Badge variant="success">推荐</Badge> | 消息没有贴在输入框外壳上时，用 `detached`。 |
+| <Badge variant="success">推荐</Badge> | 再次提交仍然失败、错误没变时，由表单用 `useAnnounce` 念一次，例如 `announce(`${errors.length} 个错误。${errors[0]}`, 'assertive')`，并把焦点移到第一个无效字段。状态只在第一次出现、说明或类型变化时才播报，所以第一次提交失败时由各字段念自己的错误，表单不用再加。 |
 | <Badge variant="error">避免</Badge> | 再做一套状态样式。字段已经在用这一套。 |
 
 ## 示例

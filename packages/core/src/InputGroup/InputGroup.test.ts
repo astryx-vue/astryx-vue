@@ -159,7 +159,9 @@ describe('inputGroup', () => {
     expect(wrapper.text()).toContain('Before tax')
     expect(wrapper.text()).toContain('Optional')
     expect(wrapper.text()).toContain('Enter an amount')
-    expect(wrapper.get('.astryx-input-group').classes()).toContain('status-error')
+    // 状态说明显示在组下面，组的边框不变色；主题可以按 data-status 给这一行上样式。
+    expect(wrapper.get('.astryx-input-group').attributes('data-status')).toBe('error')
+    expect(wrapper.get('.astryx-input-group').classes()).not.toContain('status-error')
 
     const text = mount(InputGroupText, { slots: { default: 'kg' } })
     expect(text.text()).toBe('kg')

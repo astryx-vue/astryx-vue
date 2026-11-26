@@ -3,8 +3,9 @@ import type { HourFormat } from '../composables/useTimeValue.js'
 import type { FieldStatusInput } from '../Field/types.js'
 import type { EntryErrorBehavior } from '../FormLayout/context.js'
 import type { TimeInputMessages } from '../locale/messages/time-input.js'
-import { computed, nextTick, onScopeDispose, ref, shallowRef, watch } from 'vue'
+import { computed, nextTick, ref, shallowRef, watch } from 'vue'
 import { isTimeInRange, parseDisplayTime } from '../composables/useTimeValue.js'
+import { useEntryErrorReport } from '../Field/useEntryErrorReport.js'
 import { isLocaleTimeComplete } from '../utils/timeFormat.js'
 
 /**
@@ -151,41 +152,13 @@ export function useTypedTime(options: TypedTimeOptions): TypedTime {
     const messages = options.messages()
     return entryError.value.kind === 'unreadable' ? messages.invalidTime : messages.outOfRange
   })
-  const callerError = computed(() => {
-    const status = options.status()
-    return status?.type === 'error' && status.message ? status.message : null
-  })
-
-  const fieldStatus = computed<FieldStatusInput | undefined>(() => message.value != null && callerError.value == null
-    ? { type: 'error', message: message.value }
-    : options.status())
-
-  // 拒绝开始时调用方的 error 说明没变，状态就不会变，也就没人念；字段的 alert 念一次。
-  // 拒绝期间调用方换了说明，Field 会念新的，这里不再重复。
-  const repeat = shallowRef<string | null>(null)
-  watch(() => message.value != null, (rejected) => {
-    repeat.value = rejected ? callerError.value : null
-  })
-  watch(callerError, (next) => {
-    if (repeat.value !== null && repeat.value !== next)
-      repeat.value = null
-  })
-  const alertMessage = computed(() => message.value != null && repeat.value != null && repeat.value === callerError.value ? repeat.value : '')
-
-  function sameError(a: TimeInputEntryError | null, b: TimeInputEntryError | null): boolean {
-    return a === b || (a != null && b != null && a.kind === b.kind && a.text === b.text && a.time === b.time)
-  }
-
-  let lastReport: TimeInputEntryError | null = null
-  watch(entryError, (next) => {
-    if (sameError(next, lastReport))
-      return
-    lastReport = next
-    options.reportEntryError(next)
-  })
-  onScopeDispose(() => {
-    if (lastReport != null)
-      options.reportEntryError(null)
+  const { fieldStatus, alertMessage } = useEntryErrorReport<TimeInputEntryError>({
+    entryError: () => entryError.value,
+    rejectionMessage: () => message.value,
+    status: options.status,
+    callerErrorPrecedence: 'always',
+    hasListener: () => true,
+    report: options.reportEntryError,
   })
 
   function reset(): void {

@@ -18,7 +18,7 @@ footer: false
       <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disables the group. The inputs, selectors, and Button addons inside it are disabled too, and so is a nested group. Re-enabling the group leaves a control that disabled itself disabled.</td></tr>
       <tr><td><code>isOptional</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Marks the label as optional.</td></tr>
       <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Marks the label as required.</td></tr>
-      <tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>—</td><td>Status on the group border and under the control.</td></tr>
+      <tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>—</td><td>Validation status. Its message shows below the group. The group border does not change; a theme can style the row from <code>data-status</code>.</td></tr>
       <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>Tooltip at the end of the label.</td></tr>
     </tbody>
   </table>

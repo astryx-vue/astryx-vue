@@ -435,12 +435,53 @@ describe('pagination', () => {
     expect(wrapper.find('.astryx-pagination-first').exists()).toBe(true)
     const input = wrapper.get('input')
     await input.setValue('6')
-    await input.trigger('change')
+    await input.trigger('keydown', { key: 'Enter' })
     expect(wrapper.emitted('update:page')?.[0]).toEqual([6])
     expect(wrapper.get('nav').attributes('aria-busy')).toBe('true')
     release()
     await flushPromises()
     expect(wrapper.get('nav').attributes('aria-busy')).toBeUndefined()
+  })
+
+  describe('page box', () => {
+    it('is a NumberInput that takes whole pages from 1 to the total, and clamps a larger page', async () => {
+      const wrapper = mount(Pagination, { props: { page: 2, pageSize: 10, total: 80, variant: 'input' } })
+      const input = wrapper.get('input[role="spinbutton"]')
+      expect(input.attributes('aria-valuemin')).toBe('1')
+      expect(input.attributes('aria-valuemax')).toBe('8')
+      expect(input.attributes('aria-label') ?? wrapper.get('label').text()).toBeTruthy()
+      await input.setValue('99')
+      await input.trigger('blur')
+      expect(wrapper.emitted('update:page')?.[0]).toEqual([8])
+    })
+
+    it('keeps a rejected entry in the box, shows the message from the status icon and widens the box', async () => {
+      const wrapper = mount(Pagination, { props: { page: 2, pageSize: 10, total: 80, variant: 'input' }, attachTo: document.body })
+      const input = wrapper.get<HTMLInputElement>('input[role="spinbutton"]')
+      const field = wrapper.get('.astryx-pagination-input .astryx-field')
+      const narrow = field.attributes('style')
+      await input.setValue('abc')
+      await input.trigger('keydown', { key: 'Enter' })
+      await nextTick()
+      expect(input.element.value).toBe('abc')
+      expect(input.attributes('aria-invalid')).toBe('true')
+      expect(wrapper.emitted('update:page')).toBeUndefined()
+      // 说明在状态图标上，不再多出一个说明框把页码条撑高。
+      expect(wrapper.find('.astryx-field-info-tip').exists()).toBe(true)
+      expect(wrapper.find('.astryx-field-status:not([data-hidden])').exists()).toBe(false)
+      expect(field.attributes('style')).not.toBe(narrow)
+      expect(field.attributes('style')).toContain('calc(')
+      await input.setValue('3')
+      await nextTick()
+      expect(field.attributes('style')).toBe(narrow)
+    })
+
+    it('is disabled for a cursor total or a disabled bar', () => {
+      const cursor = mount(Pagination, { props: { page: 1, total: 0, hasMore: true, variant: 'input' } })
+      expect(cursor.get('input[role="spinbutton"]').attributes('aria-disabled')).toBe('true')
+      const disabled = mount(Pagination, { props: { page: 2, pageSize: 10, total: 80, variant: 'input', isDisabled: true } })
+      expect(disabled.get('input[role="spinbutton"]').attributes('aria-disabled')).toBe('true')
+    })
   })
 
   it('keeps moving forward when the total is unknown and hasMore is set', async () => {
