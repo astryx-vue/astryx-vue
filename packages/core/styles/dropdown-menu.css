@@ -81,47 +81,44 @@
     outline: none;
   }
 
-  .astryx-dropdown-menu-enter-active,
+  /*
+   * The anchored layer entrance (layer.css): the panel slides in from the side
+   * the positioning runtime writes, and scales about the point where it meets
+   * its trigger. It is a CSS animation, so it is running the moment the panel
+   * shows, and the entrance hold can wait for it.
+   */
+  .astryx-dropdown-menu[data-placement] {
+    animation-name: astryx-layer-enter;
+    animation-duration: var(--astryx-duration-fast-max, 165ms);
+    animation-fill-mode: backwards;
+    animation-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+    transform-origin: var(--_astryx-layer-enter-origin, 50% 50%);
+  }
+
+  .astryx-dropdown-menu-popover[data-placement] {
+    animation-name: astryx-layer-enter;
+    animation-duration: var(--astryx-duration-fast-max, 165ms);
+    animation-fill-mode: backwards;
+    animation-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+    transform-origin: var(--_astryx-layer-enter-origin, 50% 50%);
+  }
+
+  /* The leave runs back toward the trigger and keeps its last frame until Vue takes the panel away. */
   .astryx-dropdown-menu-leave-active {
+    animation: none;
     transition:
       opacity var(--astryx-duration-fast-max, 165ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1)),
       transform var(--astryx-duration-fast-max, 165ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
   }
 
-  .astryx-dropdown-menu-enter-from,
   .astryx-dropdown-menu-leave-to {
     opacity: 0;
-  }
-
-  /* The panel grows out of the edge it is anchored to. */
-  .astryx-dropdown-menu-enter-from[data-placement='above'],
-  .astryx-dropdown-menu-leave-to[data-placement='above'] {
-    transform: translateY(var(--astryx-spacing-2, 8px)) scale(0.95);
-  }
-
-  .astryx-dropdown-menu-enter-from[data-placement='below'],
-  .astryx-dropdown-menu-leave-to[data-placement='below'] {
-    transform: translateY(calc(-1 * var(--astryx-spacing-2, 8px))) scale(0.95);
-  }
-
-  .astryx-dropdown-menu-enter-from[data-placement='start'],
-  .astryx-dropdown-menu-leave-to[data-placement='start'] {
-    transform: translateX(var(--astryx-spacing-2, 8px)) scale(0.95);
-  }
-
-  .astryx-dropdown-menu-enter-from[data-placement='end'],
-  .astryx-dropdown-menu-leave-to[data-placement='end'] {
-    transform: translateX(calc(-1 * var(--astryx-spacing-2, 8px))) scale(0.95);
-  }
-
-  .astryx-dropdown-menu-enter-from[data-placement='start']:is([dir='rtl'] *),
-  .astryx-dropdown-menu-leave-to[data-placement='start']:is([dir='rtl'] *) {
-    transform: translateX(calc(-1 * var(--astryx-spacing-2, 8px))) scale(0.95);
-  }
-
-  .astryx-dropdown-menu-enter-from[data-placement='end']:is([dir='rtl'] *),
-  .astryx-dropdown-menu-leave-to[data-placement='end']:is([dir='rtl'] *) {
-    transform: translateX(var(--astryx-spacing-2, 8px)) scale(0.95);
+    transform:
+      translate(
+        calc(var(--_astryx-layer-enter-x, var(--_astryx-layer-enter-from-x, 0)) * min(var(--astryx-spacing-2, 8px), var(--_astryx-layer-enter-gap, var(--astryx-spacing-2, 8px)))),
+        calc(var(--_astryx-layer-enter-y, var(--_astryx-layer-enter-from-y, -1)) * min(var(--astryx-spacing-2, 8px), var(--_astryx-layer-enter-gap, var(--astryx-spacing-2, 8px))))
+      )
+      scale(0.95);
   }
 
   /*
@@ -394,21 +391,33 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .astryx-dropdown-menu-enter-active,
     .astryx-dropdown-menu-leave-active {
       transition: none;
     }
 
-    .astryx-dropdown-menu-enter-from,
-    .astryx-dropdown-menu-leave-to,
-    .astryx-dropdown-menu-enter-from[data-placement],
-    .astryx-dropdown-menu-leave-to[data-placement] {
+    .astryx-dropdown-menu-leave-to {
       opacity: 1;
       transform: none;
     }
 
     .astryx-dropdown-menu-radio {
       transition: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) and (not (pointer: coarse)) {
+    .astryx-dropdown-menu[data-placement],
+    .astryx-dropdown-menu-popover[data-placement] {
+      animation: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) and (pointer: coarse) {
+    .astryx-dropdown-menu[data-placement],
+    .astryx-dropdown-menu-popover[data-placement] {
+      animation-name: astryx-layer-fade-in;
+      animation-duration: var(--_astryx-reduced-motion-fade-duration, 200ms);
+      animation-timing-function: var(--_astryx-reduced-motion-fade-easing, cubic-bezier(0.42, 0, 0.58, 1));
     }
   }
 

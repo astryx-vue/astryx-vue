@@ -20,6 +20,7 @@ import { dropdownMenuFrameKey } from './frame.js'
 import { activateFocusedMenuItem } from './menuItemRoles.js'
 import { useDropdownMenuMessages } from './useDropdownMenuMessages.js'
 import { useMenuDrillIn } from './useMenuDrillIn.js'
+import { useMenuEntranceHold } from './useMenuEntranceHold.js'
 import { useMenuFocus } from './useMenuFocus.js'
 import { useMenuRegions } from './useMenuRegions.js'
 import '../../styles/dropdown-menu.css'
@@ -144,6 +145,7 @@ const { position, teleportTarget, detach: detachPosition } = usePositionedLayer(
 watch(isOpen, (nowOpen) => {
   layerIsOpen.value = nowOpen && !isSheet.value
 })
+useMenuEntranceHold(positionedEl, layerIsOpen)
 
 const surfaceStyle = computed<CSSProperties>(() => {
   if (isSheet.value)
