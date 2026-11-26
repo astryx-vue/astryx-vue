@@ -119,6 +119,29 @@
     transform: rotate(180deg);
   }
 
+  .astryx-complex-selector-field .astryx-popover-trigger {
+    position: relative;
+  }
+
+  /* 状态图标顶替箭头的位置，文字再长也不挤它。 */
+  .astryx-complex-selector .astryx-field-status-glyph,
+  .astryx-complex-selector-status-slot {
+    flex-shrink: 0;
+  }
+
+  .astryx-complex-selector-status-slot {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* 提示按钮不能嵌在触发器按钮里，叠在触发器末尾留出的那块空位上。 */
+  .astryx-complex-selector-status-tip {
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-end: var(--astryx-spacing-3, 12px);
+    transform: translateY(-50%);
+  }
+
   .astryx-complex-selector-content {
     box-sizing: border-box;
     max-height: min(480px, calc(100vh - 32px));

@@ -2,9 +2,12 @@
 import type { Component } from 'vue'
 import type { ComplexSelectorEmits, ComplexSelectorHandle, ComplexSelectorProps, ComplexSelectorSlots, ComplexSelectorState, ComplexSelectorTriggerProps } from './types.js'
 import { computed, onBeforeUnmount, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
+import ButtonTooltip from '../Button/ButtonTooltip.vue'
+import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import { useDevWarning } from '../composables/useDevWarning.js'
 import Field from '../Field/Field.vue'
 import { useFieldPartStyling } from '../Field/fieldParts.js'
+import StatusGlyph from '../Field/StatusGlyph.vue'
 import { fieldStatusPlacement } from '../Field/statusPlacement.js'
 import Icon from '../Icon/Icon.vue'
 import { useComponentMessages } from '../locale/context.js'
@@ -15,6 +18,7 @@ import { normalizeTriggerVariant } from '../selectors/triggerVariant.js'
 import Spinner from '../Spinner/Spinner.vue'
 import { consumeWhileDisabled } from '../utils/disabledInteraction.js'
 import '../../styles/complex-selector.css'
+import '../../styles/visually-hidden-utility.css'
 
 defineOptions({ name: 'AstryxComplexSelector', inheritAttrs: false })
 
@@ -44,7 +48,7 @@ const parts = useFieldPartStyling({
       return Reflect.get(target, key, receiver)
     },
   }),
-  reservedAttrs: ['id', 'role', 'aria-label', 'aria-labelledby', 'aria-expanded', 'aria-controls', 'aria-haspopup', 'aria-busy', 'aria-invalid', 'aria-required', 'disabled'],
+  reservedAttrs: ['id', 'role', 'aria-label', 'aria-labelledby', 'aria-describedby', 'aria-expanded', 'aria-controls', 'aria-haspopup', 'aria-busy', 'aria-invalid', 'aria-required', 'disabled'],
 })
 const triggerVariant = computed(() => normalizeTriggerVariant(props.variant))
 const effectiveStatusVariant = computed(() => fieldStatusPlacement(props.variant, props.statusVariant))
@@ -61,6 +65,46 @@ const uid = useId()
 const triggerId = `astryx-complex-selector-${uid}`
 const labelId = `${triggerId}-label`
 const contentId = `${triggerId}-content`
+const disabledId = `${triggerId}-disabled`
+const disabledTooltipId = `${triggerId}-disabled-tooltip`
+const triggerEl = useTemplateRef<HTMLElement>('triggerEl')
+
+/** 有禁用原因时，悬停、键盘聚焦和点按都能读到它。 */
+const resolvedDisabledMessage = computed(() => props.disabledMessage?.trim() || undefined)
+const showsDisabledMessage = computed(() => props.isDisabled && resolvedDisabledMessage.value != null)
+const disabledTooltip = useButtonTooltip(showsDisabledMessage)
+
+/**
+ * 内置触发器的状态图标：attached 是普通图标，tooltip 是能聚焦的提示按钮，都顶替箭头的位置；
+ * detached 不画，箭头照旧。
+ */
+const statusGlyph = computed(() => {
+  const type = props.status?.type
+  if (type == null || effectiveStatusVariant.value === 'detached')
+    return undefined
+  return type
+})
+const isTooltipStatus = computed(() => statusGlyph.value != null && effectiveStatusVariant.value === 'tooltip')
+
+/**
+ * 内置触发器默认由字段标签命名；调用方给了 aria-label 或 aria-labelledby 就用调用方的。
+ */
+const builtinLabelledBy = computed(() => {
+  const external = attrs['aria-labelledby']
+  if (typeof external === 'string' && external !== '')
+    return external
+  return typeof attrs['aria-label'] === 'string' && attrs['aria-label'] !== '' ? undefined : labelId
+})
+const builtinLabel = computed(() => typeof attrs['aria-label'] === 'string' && attrs['aria-label'] !== '' ? attrs['aria-label'] : undefined)
+const describedBy = computed(() => {
+  const external = typeof attrs['aria-describedby'] === 'string' ? attrs['aria-describedby'] : undefined
+  return [
+    external,
+    props.description ? `${triggerId}-description` : undefined,
+    props.status?.message ? `${triggerId}-status` : undefined,
+    showsDisabledMessage.value ? disabledId : undefined,
+  ].filter(Boolean).join(' ') || undefined
+})
 
 const placeholder = computed(() => props.placeholder ?? messages.value.selector.placeholder)
 const isBusy = computed(() => props.isLoading || isPending.value)
@@ -81,6 +125,9 @@ function setOpen(next: boolean): void {
 }
 
 async function commit(next: Value): Promise<void> {
+  // 弹层在禁用之前就开着时，里面的内容仍可能调用 commit；禁用的字段不改值、不跑 changeAction。
+  if (props.isDisabled)
+    return
   model.value = next
   emit('change', next)
   if (props.changeAction == null)
@@ -129,6 +176,8 @@ function blockedWhileDisabled(event: Event): boolean {
 }
 
 function onBuiltinClick(event: MouseEvent): void {
+  if (showsDisabledMessage.value)
+    disabledTooltip.onTooltipPointerEnter()
   if (blockedWhileDisabled(event))
     return
   emit('click', event)
@@ -163,6 +212,16 @@ function onCustomKeyDown(event: KeyboardEvent): void {
 }
 
 const hasCustomTrigger = computed(() => props.renderTrigger != null || slots.trigger != null)
+useDevWarning(
+  'ComplexSelector',
+  'needs a default slot that renders the picker, for example `<template #default="{ value, commit }"><MyPicker :value="value" @change="commit" /></template>`.',
+  () => slots.default == null,
+)
+useDevWarning(
+  'ComplexSelector',
+  '`disabledMessage` has no effect on a custom trigger.',
+  () => hasCustomTrigger.value && props.disabledMessage != null,
+)
 useDevWarning(
   'ComplexSelector',
   '`containerClass`/`containerStyle` have no effect on a custom trigger.',
@@ -297,6 +356,7 @@ defineExpose(handle)
       <button
         v-bind="parts.forwardedAttrs()"
         :id="triggerId"
+        ref="triggerEl"
         class="astryx-complex-selector"
         :class="controlClass"
         :style="controlStyle"
@@ -308,12 +368,18 @@ defineExpose(handle)
         :aria-expanded="isOpen"
         :aria-invalid="status?.type === 'error' || undefined"
         :aria-disabled="isDisabled || undefined"
-        :aria-labelledby="labelId"
+        :aria-label="builtinLabel"
+        :aria-labelledby="builtinLabelledBy"
+        :aria-describedby="describedBy"
         :aria-required="isRequired || undefined"
         role="combobox"
         type="button"
         @click="onBuiltinClick"
         @keydown="onBuiltinKeyDown"
+        @focus="disabledTooltip.onFocus"
+        @blur="disabledTooltip.onBlur"
+        @pointerenter="disabledTooltip.onPointerEnter"
+        @pointerleave="disabledTooltip.onPointerLeave"
       >
         <Icon
           v-if="startIcon"
@@ -324,7 +390,11 @@ defineExpose(handle)
         />
         <span class="astryx-complex-selector-value">{{ hasTriggerLabel ? triggerLabel : placeholder }}</span>
         <Spinner v-if="isBusy" size="sm" />
+        <StatusGlyph v-if="statusGlyph && !isTooltipStatus" :type="statusGlyph" />
+        <!-- 提示按钮不能套在按钮里，它浮在这块空位上。 -->
+        <span v-else-if="isTooltipStatus" class="astryx-complex-selector-status-slot" aria-hidden="true" />
         <Icon
+          v-else
           class="astryx-complex-selector-chevron"
           :data-state="isOpen ? 'expanded' : 'collapsed'"
           color="secondary"
@@ -332,6 +402,15 @@ defineExpose(handle)
           size="sm"
         />
       </button>
+      <!-- 提示按钮是自己的控件：点它只显示说明，不打开弹层。 -->
+      <StatusGlyph
+        v-if="isTooltipStatus && statusGlyph"
+        class="astryx-complex-selector-status-tip"
+        :type="statusGlyph"
+        :message="status?.message"
+        tooltip
+      />
+      <span v-if="showsDisabledMessage" :id="disabledId" class="astryx-visually-hidden">{{ resolvedDisabledMessage }}</span>
       <template #content>
         <div :id="contentId" ref="contentEl" class="astryx-complex-selector-content" :class="contentClass" :style="contentStyle">
           <slot
@@ -344,4 +423,13 @@ defineExpose(handle)
       </template>
     </Popover>
   </Field>
+  <ButtonTooltip
+    v-if="showsDisabledMessage && !hasCustomTrigger"
+    :id="disabledTooltipId"
+    :anchor="triggerEl"
+    :open="disabledTooltip.isOpen.value"
+    :text="resolvedDisabledMessage ?? ''"
+    @pointer-enter="disabledTooltip.onTooltipPointerEnter"
+    @pointer-leave="disabledTooltip.onTooltipPointerLeave"
+  />
 </template>

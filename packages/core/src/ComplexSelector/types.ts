@@ -83,6 +83,11 @@ export interface ComplexSelectorProps<Value = unknown> extends FieldPartStylingP
   isRequired?: boolean
   /** @default false */
   isDisabled?: boolean
+  /**
+   * 为什么禁用。和 `isDisabled` 一起用时，鼠标悬停、键盘聚焦或手指点按触发器都会弹出这段说明，
+   * 读屏也会把它当成触发器的说明读出来。自定义触发器（`trigger` 插槽、`renderTrigger`）不显示它。
+   */
+  disabledMessage?: string
   /** @default false */
   isLoading?: boolean
   status?: FieldStatusInput
