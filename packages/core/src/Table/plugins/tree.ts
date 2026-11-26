@@ -137,6 +137,7 @@ export function useTableTreeData<T extends Record<string, unknown>>(
   const resolvedKey = ref<string | undefined>()
   const rowIdPrefix = useTreeRowIdPrefix()
   return {
+    rowModel: 'tree',
     transformColumns(columns) {
       const current = toValue(config)
       const key = treeColumnKey(columns, current.treeColumnKey)

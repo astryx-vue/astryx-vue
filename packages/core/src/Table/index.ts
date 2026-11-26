@@ -50,6 +50,8 @@ export { resolveStickySide, stickyOffsets, useTableStickyColumns } from './plugi
 export type { StickySide, UseTableStickyColumnsConfig } from './plugins/stickyColumns.js'
 export { flattenTree, useTableTreeData, useTableTreeState } from './plugins/tree.js'
 export type { TableTreeRowMeta, UseTableTreeDataConfig, UseTableTreeStateConfig } from './plugins/tree.js'
+export { useTableColumnsVirtualization, useTableRowsVirtualization } from './plugins/virtualization.js'
+export type { UseTableColumnsVirtualizationConfig, UseTableRowsVirtualizationConfig } from './plugins/virtualization.js'
 export { default as Table } from './Table.vue'
 export { default as TableBody } from './TableBody.vue'
 export { default as TableCell } from './TableCell.vue'
@@ -82,6 +84,7 @@ export type {
   TableProps,
   TableRowListeners,
   TableRowMenuItem,
+  TableRowModel,
   TableRowPatch,
   TableRowProps,
   TableSelectionToolbarProps,
@@ -91,4 +94,5 @@ export type {
   TableSortState,
   TableTextOverflow,
   TableVerticalAlign,
+  TableVirtualizationContribution,
 } from './types.js'

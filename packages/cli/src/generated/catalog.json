@@ -64531,8 +64531,8 @@
         "zh": "`Table`（数据表格）用来以行和列的方式整整齐齐地展示结构化数据。只要传入行数据 `data` 和列配置 `columns` 就能快速渲染出表格。每一列都要有唯一标识 `key`、表头文字 `header`，也可以用 `proportional()` 或 `pixel()` 来分配宽度。单元格默认直接显示数据字段的值，需要自定义内容时可以通过 `renderCell` 渲染徽标、链接或按钮。`idKey` 用来区分每一行的唯一身份，默认取数据里的 `id`。"
       },
       "usage": {
-        "en": "`Table` renders from `data` and `columns`. Each column has a `key`, a `header`, and an optional `width` from `proportional()` or `pixel()`. A cell shows `row[key]` unless `renderCell` returns something else. `idKey` identifies a row. The default is `id`.\n\nBehavior is added with plugins, composed in the `plugins` object:\n\n- `useTableSortable` cycles a header through ascending, descending, and unsorted. Shift-click adds a column when `isMultiSortEnabled` is set. `useTableSortableState` holds the sort and returns the sorted rows.\n- `useTableSelection` adds a checkbox column and highlights selected rows. `useTableSelectionState` holds the selected ids. Pass its `selectionState` to `TableSelectionToolbar` to run bulk actions on the selection; the bar stays hidden until something is selected. Set `hasRowHighlight` to `false` when the row background already means something else. Checked rows stay `aria-selected`.\n- `useTablePagination` renders a pager under the table. Slice the rows with `paginateData` before passing `data`.\n- `useTableColumnSettings` shows only the active column keys, and keeps `isAlwaysVisible` columns on.\n- `useTableColumnResize` lets a header edge be dragged. The smallest width is 60px.\n- `useTableFiltering` puts a string or enum filter on any column whose `filter` names a field. `applyTableFilters` returns the matching rows. String fields match a substring. Enum fields match exactly. This filtering stays separate from Power Search.\n- `useTableGroupedRows` turns the rows you already filtered, sorted, and sliced into sections. Pass its data, plugin, and row identity back to the table together. A collapsed section keeps its header. Replace the collapsed set instead of mutating it.\n- `useTableTreeState` decides which nodes are open. `useTableTreeData` draws the indent and the buttons. Child rows reuse the parent columns. The header button expands or collapses every branch, and a cycle is skipped.\n- `useTableRowExpansion` places a detail panel under a row. The same action is on the row’s context menu. `hasRowClickExpansion` also toggles from a click on the row, and leaves buttons, links, editable text, and an existing text selection alone. The panel lines up with the first column and is not counted as a striped row. Use the tree plugins when the children should reuse the columns.\n- `useTableStickyColumns` pins the contiguous run from the first column through a listed key, or from a listed key through the last column. The shadow appears only while the table overflows. An empty config pins nothing.\n- `useTableRowStatus` puts a success, warning, or error mark at the start of a row. A custom color can be a named color or a plain dot.\n- `useTableRowIndex` numbers real rows. Group headers do not take a number.\n\nA column with no width stays at least 60px wide. A `style.minWidth` smaller than the sum of those floors is raised so the columns stay readable; a larger value is kept. A table that fits does not trap the scroll chain. Horizontal overscroll is contained only while the table actually overflows.\n\nTo open a row (go to a detail page, open a side panel), put a `Link` or a `Button` in the row's main cell with `renderCell`. Table has no row-click prop. A click handler on the `<tr>` cannot be reached with the keyboard or a screen reader, so do not make it the only way to open a row.\n\n```ts\nconst columns: TableColumn<User>[] = [\n  { key: 'name', header: 'Name', renderCell: user => h(Link, { href: `/users/${user.id}`, label: user.name }) },\n  { key: 'role', header: 'Role' },\n]\n```\n\nA custom plugin is a plain `TablePlugin` object of optional hooks: `transformColumns` adds, removes or reorders columns; `rowPatch` and `cellPatch` add classes, attributes and handlers to rows and cells; `headerPatch` puts content before a header label; `above` and `below` render content around the table; `bindScrollRoot` receives the scroll region. Plugins run in the order of the `plugins` object.\n\nWhen you pass `columns`, a data-driven table sizes them from their definitions, not their content, so under `textOverflow=\"wrap\"` a token longer than its column, such as a code identifier or a URL, breaks inside the token. To keep such tokens whole, give that column a floor that fits them with `proportional(1, { minWidth })` or `pixel()`, or compose the table in children mode, whose columns follow their content.\n\n`density` is `compact`, `balanced`, or `spacious`. `dividers` is `rows`, `columns`, `grid`, or `none`. `isStriped` and `hasHover` are independent. An empty `data` array renders the localized empty message, or the `empty` slot.\n\nWithout `data`, the table is composed from `TableHeader`, `TableBody`, `TableFooter`, `TableRow`, `TableHeaderCell`, and `TableCell`.\n\n```vue\n<script setup lang=\"ts\">\nimport { proportional, Table } from '@astryx-vue/core/Table'\n\nconst rows = [\n  { id: '1', name: 'Alice Johnson', email: 'alice@example.com' },\n]\nconst columns = [\n  { key: 'name', header: 'Name', width: proportional(1) },\n  { key: 'email', header: 'Email', width: proportional(2) },\n]\n</script>\n\n<template>\n  <Table :data=\"rows\" :columns=\"columns\" has-hover />\n</template>\n```\n\nPass the column filter state through a getter so the table reads the latest value:\n\n```ts\nconst { filters, onFilterChange } = useTableFilterState()\nconst filterPlugin = useTableFiltering(() => ({\n  filters: filters.value,\n  onFilterChange,\n  fields,\n}))\n```\n\n`rowCount` and `rowIndexStart` report where the visible window sits in the full result. Setting either one numbers the data rows. When only the start is set, the total count is unknown. Group headers and detail panels are not numbered.",
-        "zh": "`Table`（数据表格）用来以行和列的方式整整齐齐地展示结构化数据。只要传入行数据 `data` 和列配置 `columns` 就能快速渲染出表格。每一列都要有唯一标识 `key`、表头文字 `header`，也可以用 `proportional()` 或 `pixel()` 来分配宽度。单元格默认直接显示数据字段的值，需要自定义内容时可以通过 `renderCell` 渲染徽标、链接或按钮。`idKey` 用来区分每一行的唯一身份，默认取数据里的 `id`。\n\n**什么时候用：**\n- 需要对比多条结构相似的数据（例如订单列表、用户清单、财务账目），或者需要对数据进行排序、筛选、分页和多选时。\n\n**什么时候不要用：**\n- 数据结构不规则，或者更适合用卡片呈现视觉封面时，请改用网格或卡片列表。\n- 在屏幕极窄的手机端，普通大表格容易被挤压，可以考虑使用精简列表或折叠详情面板。\n\n常用的高级功能可以通过配套的函数插件（`plugins`）按需开启：\n\n- `useTableSortable`：让用户点击表头在升序、降序和恢复默认之间切换。开启 `isMultiSortEnabled` 后，按住 Shift 键再点表头可以同时按多个列排序。搭配 `useTableSortableState` 保存排序规则并返回排好序的数据。\n- `useTableSelection`：在每行最左侧添加复选框，点击可以选中或高亮当前行。搭配 `useTableSelectionState` 保存选中的行 ID。选中之后把返回的 `selectionState` 交给 `TableSelectionToolbar`，就可以对选中项做批量操作；一个都没选中时这条不出现。周围已经用行底色表示别的含义时，把 `hasRowHighlight` 设为 `false`，选中行不再铺底色，读屏仍能读到已选中。\n- `useTablePagination`：在表格底部添加分页器。在传给表格前，用 `paginateData` 把总数据切出当前页的内容。\n- `useTableColumnSettings`：让用户自己勾选显示或隐藏哪些列，带有 `isAlwaysVisible` 的列会固定保留。\n- `useTableColumnResize`：允许用户拖动表头边缘自由调整列宽，最小宽度为 60px。\n- `useTableFiltering`：为指定列开启文字模糊搜索或选项精确匹配。搭配 `applyTableFilters` 过滤出符合条件的行。\n- `useTableGroupedRows`：把已经排好序的数据按某个分类整理成分组折叠行。\n- `useTableTreeState` 与 `useTableTreeData`：支持像文件夹树一样展开或折叠带有层级关系的子行。\n- `useTableRowExpansion`：允许点击行首箭头在某一行下方展开一整块详情面板。打开 `hasRowClickExpansion` 后点整行也能展开；点到按钮、链接、可编辑文字或已经选中的文字时不会切换。详情和第一列对齐，不把面板算进斑马纹。\n- `useTableStickyColumns`：当表格很宽需要横向滚动时，把左侧或右侧的指定列钉住固定不动。\n- `useTableRowStatus`：在行首显示成功、警告或错误等状态标记圆点，鼠标悬停时还可以看到文字解释。\n- `useTableRowIndex`：自动为真正的数据行生成连续的序号。\n\n没写宽度的列至少留 60px。写在表格上的 `style.minWidth` 如果比各列下限的总和还小，表格会抬到这个下限，避免列被压到读不清；写得更大时保留你给的值。表格放得下时，滚轮继续交给外面的页面；横向溢出之后才拦住回弹。\n\n要打开某一行（进详情页、开侧边面板），用 `renderCell` 在这一行的主单元格里放一个 `Link` 或 `Button`。Table 没有行点击属性。`<tr>` 上的点击处理用键盘和读屏都够不着，别把它当成打开一行的唯一方式。\n\n```ts\nconst columns: TableColumn<User>[] = [\n  { key: 'name', header: 'Name', renderCell: user => h(Link, { href: `/users/${user.id}`, label: user.name }) },\n  { key: 'role', header: 'Role' },\n]\n```\n\n自定义插件就是一个由可选钩子组成的 `TablePlugin` 对象：`transformColumns` 增删、重排列；`rowPatch`、`cellPatch` 给行和格子加类名、属性和事件；`headerPatch` 在表头文字前面放东西；`above`、`below` 在表格上下方渲染内容；`bindScrollRoot` 拿到滚动区。插件按 `plugins` 对象里的顺序执行。\n\n传了 `columns` 的数据模式表格按列定义定宽，不按内容，所以 `textOverflow=\"wrap\"` 下，比列还宽的长单词（代码标识符、URL）会在单词中间断开。想让它们保持完整，给那一列一个装得下的下限，用 `proportional(1, { minWidth })` 或 `pixel()`；或者改用手写行列的模式，列宽跟着内容走。\n\n表格的显示风格也很灵活：`density` 可以调节行高间距（紧凑 `compact`、适中 `balanced` 或宽松 `spacious`）；`dividers` 控制网格线的样式（仅行线 `rows`、仅列线 `columns`、全网格 `grid` 或无边框 `none`）；`isStriped` 开启隔行换色的斑马纹，`hasHover` 开启鼠标悬停高亮。当 `data` 为空时，表格会自动显示贴心的缺省提示，也可以通过 `empty` 插槽换成自己的图文。\n\n如果不需要配置式的驱动，也可以直接使用 `TableHeader`、`TableBody`、`TableFooter`、`TableRow`、`TableHeaderCell` 和 `TableCell` 这些原子组件像写普通 HTML 表格一样自由拼接。\n\n```vue\n<script setup lang=\"ts\">\nimport { proportional, Table } from '@astryx-vue/core/Table'\n\nconst rows = [\n  { id: '1', name: 'Alice Johnson', email: 'alice@example.com' },\n]\nconst columns = [\n  { key: 'name', header: 'Name', width: proportional(1) },\n  { key: 'email', header: 'Email', width: proportional(2) },\n]\n</script>\n\n<template>\n  <Table :data=\"rows\" :columns=\"columns\" has-hover />\n</template>\n```\n\n如果开启了列过滤，状态要用函数（getter）的形式传进去，表格才能敏锐察觉到过滤词的变化：\n\n```ts\nconst { filters, onFilterChange } = useTableFilterState()\nconst filterPlugin = useTableFiltering(() => ({\n  filters: filters.value,\n  onFilterChange,\n  fields,\n}))\n```\n\n`rowCount` 和 `rowIndexStart` 用来告诉读屏软件当前这一页数据在全表里的位置。两者只要填了一个，读屏就能准确播报当前行号。分组的表头和展开的详情面板不会占用行号。"
+        "en": "`Table` renders from `data` and `columns`. Each column has a `key`, a `header`, and an optional `width` from `proportional()` or `pixel()`. A cell shows `row[key]` unless `renderCell` returns something else. `idKey` identifies a row. The default is `id`.\n\nBehavior is added with plugins, composed in the `plugins` object:\n\n- `useTableSortable` cycles a header through ascending, descending, and unsorted. Shift-click adds a column when `isMultiSortEnabled` is set. `useTableSortableState` holds the sort and returns the sorted rows.\n- `useTableSelection` adds a checkbox column and highlights selected rows. `useTableSelectionState` holds the selected ids. Pass its `selectionState` to `TableSelectionToolbar` to run bulk actions on the selection; the bar stays hidden until something is selected. Set `hasRowHighlight` to `false` when the row background already means something else. Checked rows stay `aria-selected`.\n- `useTablePagination` renders a pager under the table. Slice the rows with `paginateData` before passing `data`.\n- `useTableColumnSettings` shows only the active column keys, and keeps `isAlwaysVisible` columns on.\n- `useTableColumnResize` lets a header edge be dragged. The smallest width is 60px.\n- `useTableFiltering` puts a string or enum filter on any column whose `filter` names a field. `applyTableFilters` returns the matching rows. String fields match a substring. Enum fields match exactly. This filtering stays separate from Power Search.\n- `useTableGroupedRows` turns the rows you already filtered, sorted, and sliced into sections. Pass its data, plugin, and row identity back to the table together. A collapsed section keeps its header. Replace the collapsed set instead of mutating it.\n- `useTableTreeState` decides which nodes are open. `useTableTreeData` draws the indent and the buttons. Child rows reuse the parent columns. The header button expands or collapses every branch, and a cycle is skipped.\n- `useTableRowExpansion` places a detail panel under a row. The same action is on the row’s context menu. `hasRowClickExpansion` also toggles from a click on the row, and leaves buttons, links, editable text, and an existing text selection alone. The panel lines up with the first column and is not counted as a striped row. Use the tree plugins when the children should reuse the columns.\n- `useTableStickyColumns` pins the contiguous run from the first column through a listed key, or from a listed key through the last column. The shadow appears only while the table overflows. An empty config pins nothing.\n- `useTableRowStatus` puts a success, warning, or error mark at the start of a row. A custom color can be a named color or a plain dot.\n- `useTableRowIndex` numbers real rows. Group headers do not take a number.\n- `useTableRowsVirtualization` and `useTableColumnsVirtualization` render only the rows or columns in view when there are many of them, with the same scroll feel. Cells default to a single truncated line; the rows plugin makes the table fill its parent's height and scroll inside it.\n\nA column with no width stays at least 60px wide. A `style.minWidth` smaller than the sum of those floors is raised so the columns stay readable; a larger value is kept. A table that fits does not trap the scroll chain. Horizontal overscroll is contained only while the table actually overflows.\n\nTo open a row (go to a detail page, open a side panel), put a `Link` or a `Button` in the row's main cell with `renderCell`. Table has no row-click prop. A click handler on the `<tr>` cannot be reached with the keyboard or a screen reader, so do not make it the only way to open a row.\n\n```ts\nconst columns: TableColumn<User>[] = [\n  { key: 'name', header: 'Name', renderCell: user => h(Link, { href: `/users/${user.id}`, label: user.name }) },\n  { key: 'role', header: 'Role' },\n]\n```\n\nA custom plugin is a plain `TablePlugin` object of optional hooks: `transformColumns` adds, removes or reorders columns; `rowPatch` and `cellPatch` add classes, attributes and handlers to rows and cells; `headerPatch` puts content before a header label; `above` and `below` render content around the table; `bindScrollRoot` receives the scroll region. Plugins run in the order of the `plugins` object.\n\nWhen you pass `columns`, a data-driven table sizes them from their definitions, not their content, so under `textOverflow=\"wrap\"` a token longer than its column, such as a code identifier or a URL, breaks inside the token. To keep such tokens whole, give that column a floor that fits them with `proportional(1, { minWidth })` or `pixel()`, or compose the table in children mode, whose columns follow their content.\n\n`density` is `compact`, `balanced`, or `spacious`. `dividers` is `rows`, `columns`, `grid`, or `none`. `isStriped` and `hasHover` are independent. An empty `data` array renders the localized empty message, or the `empty` slot.\n\nWithout `data`, the table is composed from `TableHeader`, `TableBody`, `TableFooter`, `TableRow`, `TableHeaderCell`, and `TableCell`.\n\n```vue\n<script setup lang=\"ts\">\nimport { proportional, Table } from '@astryx-vue/core/Table'\n\nconst rows = [\n  { id: '1', name: 'Alice Johnson', email: 'alice@example.com' },\n]\nconst columns = [\n  { key: 'name', header: 'Name', width: proportional(1) },\n  { key: 'email', header: 'Email', width: proportional(2) },\n]\n</script>\n\n<template>\n  <Table :data=\"rows\" :columns=\"columns\" has-hover />\n</template>\n```\n\nPass the column filter state through a getter so the table reads the latest value:\n\n```ts\nconst { filters, onFilterChange } = useTableFilterState()\nconst filterPlugin = useTableFiltering(() => ({\n  filters: filters.value,\n  onFilterChange,\n  fields,\n}))\n```\n\n`rowCount` and `rowIndexStart` report where the visible window sits in the full result. Setting either one numbers the data rows. When only the start is set, the total count is unknown. Group headers and detail panels are not numbered.",
+        "zh": "`Table`（数据表格）用来以行和列的方式整整齐齐地展示结构化数据。只要传入行数据 `data` 和列配置 `columns` 就能快速渲染出表格。每一列都要有唯一标识 `key`、表头文字 `header`，也可以用 `proportional()` 或 `pixel()` 来分配宽度。单元格默认直接显示数据字段的值，需要自定义内容时可以通过 `renderCell` 渲染徽标、链接或按钮。`idKey` 用来区分每一行的唯一身份，默认取数据里的 `id`。\n\n**什么时候用：**\n- 需要对比多条结构相似的数据（例如订单列表、用户清单、财务账目），或者需要对数据进行排序、筛选、分页和多选时。\n\n**什么时候不要用：**\n- 数据结构不规则，或者更适合用卡片呈现视觉封面时，请改用网格或卡片列表。\n- 在屏幕极窄的手机端，普通大表格容易被挤压，可以考虑使用精简列表或折叠详情面板。\n\n常用的高级功能可以通过配套的函数插件（`plugins`）按需开启：\n\n- `useTableSortable`：让用户点击表头在升序、降序和恢复默认之间切换。开启 `isMultiSortEnabled` 后，按住 Shift 键再点表头可以同时按多个列排序。搭配 `useTableSortableState` 保存排序规则并返回排好序的数据。\n- `useTableSelection`：在每行最左侧添加复选框，点击可以选中或高亮当前行。搭配 `useTableSelectionState` 保存选中的行 ID。选中之后把返回的 `selectionState` 交给 `TableSelectionToolbar`，就可以对选中项做批量操作；一个都没选中时这条不出现。周围已经用行底色表示别的含义时，把 `hasRowHighlight` 设为 `false`，选中行不再铺底色，读屏仍能读到已选中。\n- `useTablePagination`：在表格底部添加分页器。在传给表格前，用 `paginateData` 把总数据切出当前页的内容。\n- `useTableColumnSettings`：让用户自己勾选显示或隐藏哪些列，带有 `isAlwaysVisible` 的列会固定保留。\n- `useTableColumnResize`：允许用户拖动表头边缘自由调整列宽，最小宽度为 60px。\n- `useTableFiltering`：为指定列开启文字模糊搜索或选项精确匹配。搭配 `applyTableFilters` 过滤出符合条件的行。\n- `useTableGroupedRows`：把已经排好序的数据按某个分类整理成分组折叠行。\n- `useTableTreeState` 与 `useTableTreeData`：支持像文件夹树一样展开或折叠带有层级关系的子行。\n- `useTableRowExpansion`：允许点击行首箭头在某一行下方展开一整块详情面板。打开 `hasRowClickExpansion` 后点整行也能展开；点到按钮、链接、可编辑文字或已经选中的文字时不会切换。详情和第一列对齐，不把面板算进斑马纹。\n- `useTableStickyColumns`：当表格很宽需要横向滚动时，把左侧或右侧的指定列钉住固定不动。\n- `useTableRowStatus`：在行首显示成功、警告或错误等状态标记圆点，鼠标悬停时还可以看到文字解释。\n- `useTableRowIndex`：自动为真正的数据行生成连续的序号。\n- `useTableRowsVirtualization` 与 `useTableColumnsVirtualization`：行或列特别多时，只渲染视口里看得见的那部分，滚动手感不变。开启后单元格默认单行截断，行版本会让表格填满父元素给的高度并在里面上下滚动。\n\n没写宽度的列至少留 60px。写在表格上的 `style.minWidth` 如果比各列下限的总和还小，表格会抬到这个下限，避免列被压到读不清；写得更大时保留你给的值。表格放得下时，滚轮继续交给外面的页面；横向溢出之后才拦住回弹。\n\n要打开某一行（进详情页、开侧边面板），用 `renderCell` 在这一行的主单元格里放一个 `Link` 或 `Button`。Table 没有行点击属性。`<tr>` 上的点击处理用键盘和读屏都够不着，别把它当成打开一行的唯一方式。\n\n```ts\nconst columns: TableColumn<User>[] = [\n  { key: 'name', header: 'Name', renderCell: user => h(Link, { href: `/users/${user.id}`, label: user.name }) },\n  { key: 'role', header: 'Role' },\n]\n```\n\n自定义插件就是一个由可选钩子组成的 `TablePlugin` 对象：`transformColumns` 增删、重排列；`rowPatch`、`cellPatch` 给行和格子加类名、属性和事件；`headerPatch` 在表头文字前面放东西；`above`、`below` 在表格上下方渲染内容；`bindScrollRoot` 拿到滚动区。插件按 `plugins` 对象里的顺序执行。\n\n传了 `columns` 的数据模式表格按列定义定宽，不按内容，所以 `textOverflow=\"wrap\"` 下，比列还宽的长单词（代码标识符、URL）会在单词中间断开。想让它们保持完整，给那一列一个装得下的下限，用 `proportional(1, { minWidth })` 或 `pixel()`；或者改用手写行列的模式，列宽跟着内容走。\n\n表格的显示风格也很灵活：`density` 可以调节行高间距（紧凑 `compact`、适中 `balanced` 或宽松 `spacious`）；`dividers` 控制网格线的样式（仅行线 `rows`、仅列线 `columns`、全网格 `grid` 或无边框 `none`）；`isStriped` 开启隔行换色的斑马纹，`hasHover` 开启鼠标悬停高亮。当 `data` 为空时，表格会自动显示贴心的缺省提示，也可以通过 `empty` 插槽换成自己的图文。\n\n如果不需要配置式的驱动，也可以直接使用 `TableHeader`、`TableBody`、`TableFooter`、`TableRow`、`TableHeaderCell` 和 `TableCell` 这些原子组件像写普通 HTML 表格一样自由拼接。\n\n```vue\n<script setup lang=\"ts\">\nimport { proportional, Table } from '@astryx-vue/core/Table'\n\nconst rows = [\n  { id: '1', name: 'Alice Johnson', email: 'alice@example.com' },\n]\nconst columns = [\n  { key: 'name', header: 'Name', width: proportional(1) },\n  { key: 'email', header: 'Email', width: proportional(2) },\n]\n</script>\n\n<template>\n  <Table :data=\"rows\" :columns=\"columns\" has-hover />\n</template>\n```\n\n如果开启了列过滤，状态要用函数（getter）的形式传进去，表格才能敏锐察觉到过滤词的变化：\n\n```ts\nconst { filters, onFilterChange } = useTableFilterState()\nconst filterPlugin = useTableFiltering(() => ({\n  filters: filters.value,\n  onFilterChange,\n  fields,\n}))\n```\n\n`rowCount` 和 `rowIndexStart` 用来告诉读屏软件当前这一页数据在全表里的位置。两者只要填了一个，读屏就能准确播报当前行号。分组的表头和展开的详情面板不会占用行号。"
       },
       "practices": {
         "en": [
@@ -64627,7 +64627,7 @@
               {
                 "name": "`textOverflow`",
                 "type": "`'wrap' | 'truncate'`",
-                "default": "`'wrap'`",
+                "default": "`'wrap'`; `'truncate'` with a row or column virtualization plugin",
                 "description": "Whether cell text wraps or clips to one line. Column headings follow it: under `'wrap'` a long heading in a data-driven table wraps onto more lines, and in children mode its column grows to keep it on one line; under `'truncate'` headings stay on one line and end in an ellipsis."
               },
               {
@@ -64894,7 +64894,7 @@
               {
                 "name": "`textOverflow`",
                 "type": "`'wrap' | 'truncate'`",
-                "default": "`'wrap'`",
+                "default": "`'wrap'`；开了行、列窗口化插件时为 `'truncate'`",
                 "description": "文字换行，或截成一行。列标题也跟着它：`'wrap'` 下，数据模式里过长的标题会折成多行，手写行列的模式里列会变宽，让标题保持一行；`'truncate'` 下标题保持一行，放不下以省略号收尾。"
               },
               {
@@ -82363,6 +82363,289 @@
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/components/use-lightbox",
         "zh": "https://astryx-vue.pages.dev/components/use-lightbox"
+      }
+    },
+    {
+      "slug": "use-table-rows-virtualization",
+      "name": "UseTableRowsVirtualization",
+      "package": "@astryx-vue/core",
+      "kind": "composable",
+      "title": {
+        "en": "useTableRowsVirtualization",
+        "zh": "useTableRowsVirtualization"
+      },
+      "group": "Utility",
+      "groupTitle": {
+        "en": "Utility",
+        "zh": "工具"
+      },
+      "importPath": null,
+      "exportName": null,
+      "summary": {
+        "en": "Hook that returns a TablePlugin for rendering only the visible rows of a long flat table. A few extra rows are mounted on each side of the viewport, and spacer rows keep the scroll height the same as if every row were rendered.",
+        "zh": "返回一个 `TablePlugin`，让很长的扁平表格只渲染看得见的那几行。打个比方：一千行数据像一卷很长的纸，表格只把窗口里露出来的那一段真的画出来，上下没露出来的部分用一块等高的空白撑着，滚动条的长短和手感都和全部画出来时一样。窗口前后各多画几行，快速滚动时不会露白。"
+      },
+      "usage": {
+        "en": "Hook that returns a TablePlugin for rendering only the visible rows of a long flat table. A few extra rows are mounted on each side of the viewport, and spacer rows keep the scroll height the same as if every row were rendered.\n\n```ts\nimport { useTableRowsVirtualization } from '@astryx-vue/core/Table'\n```\n\nThe table fills the height its parent gives it and scrolls vertically inside it, so give the parent a height: a fixed value, a percentage or a flex item. Pass data, columns, `idKey` and other plugins to the table as usual.",
+        "zh": "返回一个 `TablePlugin`，让很长的扁平表格只渲染看得见的那几行。打个比方：一千行数据像一卷很长的纸，表格只把窗口里露出来的那一段真的画出来，上下没露出来的部分用一块等高的空白撑着，滚动条的长短和手感都和全部画出来时一样。窗口前后各多画几行，快速滚动时不会露白。\n\n```ts\nimport { useTableRowsVirtualization } from '@astryx-vue/core/Table'\n```\n\n表格会填满父元素给的高度，并在里面上下滚动。所以要给父元素一个高度：固定值、百分比，或者 flex 子项都行。数据、列、`idKey` 和别的插件照常传给表格。"
+      },
+      "practices": {
+        "en": [],
+        "zh": []
+      },
+      "props": {
+        "en": [
+          {
+            "heading": "Parameters",
+            "rows": [
+              {
+                "name": "`rowHeight`",
+                "description": "`rowHeight`",
+                "type": "`number`",
+                "default": "—"
+              },
+              {
+                "name": "`initialViewportHeight`",
+                "description": "`initialViewportHeight`",
+                "type": "`number`",
+                "default": "—"
+              }
+            ]
+          },
+          {
+            "heading": "Returns",
+            "rows": [
+              {
+                "name": "`rowModel`",
+                "description": "`rowModel`",
+                "type": "`'flat'`"
+              },
+              {
+                "name": "`virtualization`",
+                "description": "`virtualization`",
+                "type": "`TableVirtualizationContribution`"
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "参数",
+            "rows": [
+              {
+                "name": "`rowHeight`",
+                "payload": "`rowHeight`",
+                "type": "`number`",
+                "default": "—",
+                "description": "一行的总高度（CSS 像素），含内边距和分隔线。行不会比它矮；所有挂载的行一起变高时，按量到的行高继续窗口化。"
+              },
+              {
+                "name": "`initialViewportHeight`",
+                "payload": "`initialViewportHeight`",
+                "type": "`number`",
+                "default": "—",
+                "description": "首帧（服务端渲染、还没量到视口时）用来估算要渲染几行的视口高度（CSS 像素）。它不决定表格多高。"
+              }
+            ]
+          },
+          {
+            "heading": "返回值",
+            "rows": [
+              {
+                "name": "`rowModel`",
+                "description": "`rowModel`",
+                "type": "`'flat'`"
+              },
+              {
+                "name": "`virtualization`",
+                "description": "`virtualization`",
+                "type": "`TableVirtualizationContribution`"
+              }
+            ]
+          }
+        ]
+      },
+      "slots": {
+        "en": [],
+        "zh": []
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [
+          {
+            "heading": "Best practices",
+            "text": "- Set `rowHeight` to the full height of a row, padding and divider included. Rows never get shorter than that. When every row grows together (for example after the user enlarges the text), the table uses the measured height and warns in development.\n- With the plugin on, cells default to a single truncated line so every row has the same height. An explicit `textOverflow=\"wrap\"` renders every row instead.\n- The table renders every row, and explains why in development, for grouped, tree or expandable rows; duplicate or missing row ids; `rowIndexStart` or `rowCount`; columns with `renderCell`; and rows that turn out to have uneven heights or overflowing content once mounted.\n- A row that holds keyboard focus stays mounted after it scrolls out of view, so focus is never lost. Screen readers get the real row count and each row's position.\n- For wide tables, add `useTableColumnsVirtualization` and put both plugins in `plugins`."
+          }
+        ],
+        "zh": [
+          {
+            "heading": "建议",
+            "text": "- `rowHeight` 写一行的真实总高度（含内边距和分隔线）。行不会比它矮；所有行一起变高时（例如用户放大了字号），表格会改用量到的行高，并在开发环境提醒你。\n- 开启后，单元格默认单行显示、超出部分用省略号截断，这样每一行一样高。显式写 `textOverflow=\"wrap\"` 会退回全部渲染。\n- 下面这些情况表格会退回全部渲染，并在开发环境说明原因：分组、树形或可展开详情的行；有重复或缺失的行 ID；写了 `rowIndexStart` 或 `rowCount`；有 `renderCell` 的自定义列；挂载后发现行高不一致或内容溢出。\n- 键盘焦点所在的行滚出视口后会继续留在页面上，焦点不会丢。读屏会读到真实的总行数和每一行的位置。\n- 列也很多时，再加上 `useTableColumnsVirtualization`，两个插件一起放进 `plugins`。"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": {
+            "en": "useTableRowsVirtualization — A thousand rows",
+            "zh": "useTableRowsVirtualization — 一千行"
+          },
+          "description": {
+            "en": "A thousand orders in a 320px container, with selection and row numbers. Only a few dozen rows near the viewport are in the page while you scroll.",
+            "zh": "一千行订单放在 320px 高的容器里，同时开着多选和序号。滚动时只有视口附近的几十行在页面上。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport type { TableColumn } from '@astryx-vue/core/Table'\nimport { proportional, Table, useTableRowIndex, useTableRowsVirtualization, useTableSelection, useTableSelectionState } from '@astryx-vue/core/Table'\nimport { ref } from 'vue'\n\ninterface Order extends Record<string, unknown> {\n  id: string\n  customer: string\n  city: string\n  total: number\n}\n\nconst CITIES = ['Lisbon', 'Osaka', 'Denver', 'Nairobi', 'Oslo', 'Lima']\n\nconst orders: Order[] = Array.from({ length: 1000 }, (_, index) => ({\n  id: `order-${index + 1}`,\n  customer: `Customer ${index + 1}`,\n  city: CITIES[index % CITIES.length]!,\n  total: 20 + (index * 37) % 480,\n}))\n\nconst columns: TableColumn<Order>[] = [\n  { key: 'customer', header: 'Customer', width: proportional(2) },\n  { key: 'city', header: 'City', width: proportional(1) },\n  { key: 'total', header: 'Total ($)', width: proportional(1), align: 'end' },\n]\n\nconst selectedKeys = ref(new Set<string>())\nconst { selectionConfig } = useTableSelectionState<Order>({\n  data: orders,\n  idKey: 'id',\n  selectedKeys,\n  setSelectedKeys(keys) {\n    selectedKeys.value = keys\n  },\n})\nconst selection = useTableSelection<Order>(selectionConfig)\nconst numbers = useTableRowIndex<Order>({ data: orders, getRowKey: order => order.id })\nconst rows = useTableRowsVirtualization<Order>({ rowHeight: 40, initialViewportHeight: 320 })\n</script>\n\n<template>\n  <div style=\"height: 320px\">\n    <Table\n      :data=\"orders\"\n      :columns=\"columns\"\n      id-key=\"id\"\n      :plugins=\"{ selection, numbers, rows }\"\n    />\n  </div>\n</template>"
+        }
+      ],
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/use-table-rows-virtualization",
+        "zh": "https://astryx-vue.pages.dev/components/use-table-rows-virtualization"
+      }
+    },
+    {
+      "slug": "use-table-columns-virtualization",
+      "name": "UseTableColumnsVirtualization",
+      "package": "@astryx-vue/core",
+      "kind": "composable",
+      "title": {
+        "en": "useTableColumnsVirtualization",
+        "zh": "useTableColumnsVirtualization"
+      },
+      "group": "Utility",
+      "groupTitle": {
+        "en": "Utility",
+        "zh": "工具"
+      },
+      "importPath": null,
+      "exportName": null,
+      "summary": {
+        "en": "Hook that returns a TablePlugin for rendering only the columns that are visible in a wide table. Spacer cells keep the horizontal scroll width the same as if every column were rendered, and a few extra columns are mounted on each side of the viewport.",
+        "zh": "返回一个 `TablePlugin`，让列很多的宽表格只渲染横向看得见的那几列。没露出来的列用一格等宽的空白撑着，横向滚动条和全部渲染时一样长；视口左右各多渲染几列，快速滚动时不会露白。"
+      },
+      "usage": {
+        "en": "Hook that returns a TablePlugin for rendering only the columns that are visible in a wide table. Spacer cells keep the horizontal scroll width the same as if every column were rendered, and a few extra columns are mounted on each side of the viewport.\n\n```ts\nimport { useTableColumnsVirtualization } from '@astryx-vue/core/Table'\n```\n\nWhen the scroll region fits the whole table, every column renders. Columns pinned with `useTableStickyColumns` always stay mounted; only the columns between them take part in windowing.",
+        "zh": "返回一个 `TablePlugin`，让列很多的宽表格只渲染横向看得见的那几列。没露出来的列用一格等宽的空白撑着，横向滚动条和全部渲染时一样长；视口左右各多渲染几列，快速滚动时不会露白。\n\n```ts\nimport { useTableColumnsVirtualization } from '@astryx-vue/core/Table'\n```\n\n滚动区放得下整张表时，所有列都会渲染。用 `useTableStickyColumns` 钉住的列一直在页面上，只有夹在中间的列参与窗口化。"
+      },
+      "practices": {
+        "en": [],
+        "zh": []
+      },
+      "props": {
+        "en": [
+          {
+            "heading": "Parameters",
+            "rows": [
+              {
+                "name": "`initialViewportWidth`",
+                "description": "`initialViewportWidth`",
+                "type": "`number`",
+                "default": "—"
+              }
+            ]
+          },
+          {
+            "heading": "Returns",
+            "rows": [
+              {
+                "name": "`rowModel`",
+                "description": "`rowModel`",
+                "type": "`'flat'`"
+              },
+              {
+                "name": "`virtualization`",
+                "description": "`virtualization`",
+                "type": "`TableVirtualizationContribution`"
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "参数",
+            "rows": [
+              {
+                "name": "`initialViewportWidth`",
+                "payload": "`initialViewportWidth`",
+                "type": "`number`",
+                "default": "—",
+                "description": "首帧（服务端渲染、还没量到滚动区时）用来估算要渲染几列的视口宽度（CSS 像素）。它不决定表格多宽。"
+              }
+            ]
+          },
+          {
+            "heading": "返回值",
+            "rows": [
+              {
+                "name": "`rowModel`",
+                "description": "`rowModel`",
+                "type": "`'flat'`"
+              },
+              {
+                "name": "`virtualization`",
+                "description": "`virtualization`",
+                "type": "`TableVirtualizationContribution`"
+              }
+            ]
+          }
+        ]
+      },
+      "slots": {
+        "en": [],
+        "zh": []
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [
+          {
+            "heading": "Best practices",
+            "text": "- Size columns with `pixel()` or a `proportional()` with a floor. While windowed, every column renders at its pixel width under the table's minimum width; the table no longer stretches columns to fill spare space.\n- With the plugin on, cells default to a single truncated line. An explicit `textOverflow=\"wrap\"`, a table `style.minWidth` wider than the column floors, or columns with `renderCell` render every column instead.\n- The column of a focused cell stays mounted after it scrolls out of view, until focus leaves the table or moves to another cell. Screen readers get the real column count and each cell's column position.\n- For long tables, add `useTableRowsVirtualization` and put both plugins in `plugins`."
+          }
+        ],
+        "zh": [
+          {
+            "heading": "建议",
+            "text": "- 列宽用 `pixel()` 或带下限的 `proportional()`。窗口化时每一列按表格最小宽度下的像素宽度显示，表格不会再拉伸列去填满剩余空间。\n- 开启后，单元格默认单行显示、超出部分用省略号截断。显式写 `textOverflow=\"wrap\"`、表格 `style.minWidth` 比各列下限之和更宽，或者有 `renderCell` 的自定义列时，会退回渲染所有列。\n- 焦点所在的格子滚出视口后，那一列会继续留在页面上，直到焦点离开表格或换到别的格子。读屏会读到真实的总列数和每一格的列位置。\n- 行也很多时，再加上 `useTableRowsVirtualization`，两个插件一起放进 `plugins`。"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": {
+            "en": "useTableColumnsVirtualization — Wide table",
+            "zh": "useTableColumnsVirtualization — 宽表格"
+          },
+          "description": {
+            "en": "A 49-column temperature table with the first column pinned. Only the columns near the viewport are in the page while you scroll sideways.",
+            "zh": "49 列的温度表，第一列钉在左边。左右滚动时，只有视口附近的几列在页面上。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport type { TableColumn } from '@astryx-vue/core/Table'\nimport { pixel, Table, useTableColumnsVirtualization, useTableStickyColumns } from '@astryx-vue/core/Table'\n\ntype Reading = Record<string, unknown> & { id: string, station: string }\n\nconst HOURS = Array.from({ length: 48 }, (_, index) => `h${index}`)\n\nconst readings: Reading[] = Array.from({ length: 12 }, (_, row) => ({\n  id: `station-${row + 1}`,\n  station: `Station ${row + 1}`,\n  ...Object.fromEntries(HOURS.map((key, hour) => [key, `${10 + (row * 3 + hour * 7) % 25}°`])),\n}))\n\nconst columns: TableColumn<Reading>[] = [\n  { key: 'station', header: 'Station', width: pixel(140) },\n  ...HOURS.map((key, hour) => ({ key, header: `Day ${Math.floor(hour / 24) + 1} ${String(hour % 24).padStart(2, '0')}:00`, width: pixel(120) })),\n]\n\nconst sticky = useTableStickyColumns<Reading>({ startKeys: ['station'] })\nconst columnWindow = useTableColumnsVirtualization<Reading>({ initialViewportWidth: 720 })\n</script>\n\n<template>\n  <Table\n    :data=\"readings\"\n    :columns=\"columns\"\n    id-key=\"id\"\n    :plugins=\"{ sticky, columnWindow }\"\n  />\n</template>"
+        }
+      ],
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/use-table-columns-virtualization",
+        "zh": "https://astryx-vue.pages.dev/components/use-table-columns-virtualization"
       }
     }
   ],

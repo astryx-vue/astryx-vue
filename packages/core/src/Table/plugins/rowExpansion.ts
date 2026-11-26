@@ -29,6 +29,7 @@ export function useTableRowExpansion<T extends Record<string, unknown>>(
 ): TablePlugin<T> {
   const messages = useComponentMessages({ table: tableMessages })
   return {
+    rowModel: 'detail',
     transformColumns(columns) {
       return [{
         key: EXPANSION_COLUMN_KEY,

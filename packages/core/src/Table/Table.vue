@@ -17,7 +17,7 @@ const props = withDefaults(defineProps<TableProps<T>>(), {
   isStriped: false,
   hasHover: false,
   verticalAlign: 'middle',
-  textOverflow: 'wrap',
+  textOverflow: undefined,
 })
 
 defineSlots<TableSlots>()
@@ -70,7 +70,7 @@ provide(TABLE_SECTION_KEY, null)
       :data-dividers="dividers"
       :data-striped="isStriped || undefined"
       :data-hover="hasHover || undefined"
-      :data-overflow="textOverflow"
+      :data-overflow="textOverflow ?? 'wrap'"
       :data-valign="verticalAlign"
     >
       <slot />

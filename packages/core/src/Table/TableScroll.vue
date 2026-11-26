@@ -6,13 +6,19 @@ import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 
 defineOptions({ inheritAttrs: false })
 
-defineProps<{ label: string }>()
+const props = defineProps<{
+  label: string
+  /** 行窗口化时滚动区也在块方向上滚动，并占满父元素给的高度。 */
+  hasBlockViewport?: boolean
+}>()
 
 const emit = defineEmits<{ viewport: [element: HTMLElement | null] }>()
 
 const attrs = useAttrs()
 const scroll = useScrollableArea({
-  axis: 'inline',
+  get axis() {
+    return props.hasBlockViewport ? 'both' as const : 'inline' as const
+  },
   overscroll: 'contain',
   keyboardAccess: { owner: 'content' },
 })
@@ -28,9 +34,14 @@ function bindViewport(element: unknown): void {
 
 useScrollbars(viewportEl)
 
-const tabindex = computed(() => (scroll.state.value.inline.isScrollable ? 0 : undefined))
+const tabindex = computed(() => (scroll.state.value.inline.isScrollable || scroll.state.value.block.isScrollable ? 0 : undefined))
 const rootClass = computed(() => ['astryx-table-scroll', attrs.class])
-const rootStyle = computed<StyleValue>(() => [attrs.style as StyleValue, scroll.viewportStyle.value])
+// 块方向滚到头时把滚动交还给页面，长表格不困住页面滚动。
+const rootStyle = computed<StyleValue>(() => [
+  attrs.style as StyleValue,
+  scroll.viewportStyle.value,
+  props.hasBlockViewport ? { overscrollBehaviorY: 'auto' } : undefined,
+])
 </script>
 
 <template>
@@ -39,6 +50,7 @@ const rootStyle = computed<StyleValue>(() => [attrs.style as StyleValue, scroll.
     :class="rootClass"
     role="group"
     :aria-label="label"
+    :data-block-viewport="hasBlockViewport || undefined"
     :tabindex="tabindex"
     v-bind="scroll.viewportAttrs.value"
     :style="rootStyle"

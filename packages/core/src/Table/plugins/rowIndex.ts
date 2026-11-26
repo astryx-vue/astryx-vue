@@ -3,6 +3,7 @@ import type { TableColumn, TablePlugin } from '../types.js'
 import { computed, h, toValue } from 'vue'
 import { pixel } from '../columnUtils.js'
 import { isTableGroupHeader } from './groupedRows.js'
+import { registerFixedHeightColumn } from './virtualization/admission.js'
 
 export const ROW_INDEX_COLUMN_KEY = '__rowIndex'
 
@@ -40,7 +41,8 @@ export function useTableRowIndex<T extends Record<string, unknown>>(
   })
   return {
     transformColumns(columns) {
-      const indexColumn: TableColumn<T> = {
+      // 行号只有一行数字，窗口化时不因为它自带 renderCell 就退回全部渲染。
+      const indexColumn: TableColumn<T> = registerFixedHeightColumn({
         key: ROW_INDEX_COLUMN_KEY,
         header: toValue(config).label ?? '#',
         width: pixel(48),
@@ -55,7 +57,7 @@ export function useTableRowIndex<T extends Record<string, unknown>>(
           const start = toValue(config).startFrom ?? 1
           return h('span', { class: 'astryx-table__row-index' }, String(start + position))
         },
-      }
+      })
       return [indexColumn, ...columns]
     },
   }

@@ -6,6 +6,17 @@
     margin-inline-start: calc(-1 * var(--container-padding-inline-start, 0px));
     margin-inline-end: calc(-1 * var(--container-padding-inline-end, 0px));
     width: calc(100% + var(--container-padding-inline-start, 0px) + var(--container-padding-inline-end, 0px));
+    --_table-bleed-block-start: 0px;
+    --_table-bleed-block-end: 0px;
+  }
+
+  /*
+   * 行窗口化的表格在父元素给的高度里滚动。贴到容器上下边缘时，高度把抵消掉的那段内边距加回来，
+   * 底边仍然落在容器边缘。
+   */
+  .astryx-table-scroll[data-block-viewport] {
+    height: calc(100% + var(--_table-bleed-block-start) + var(--_table-bleed-block-end));
+    min-height: 0;
   }
 
   /*
@@ -66,6 +77,7 @@
     .astryx-bottom-sheet__content
   ) > .astryx-table-scroll:first-child {
     margin-top: calc(-1 * var(--container-padding-block-start, 0px));
+    --_table-bleed-block-start: var(--container-padding-block-start, 0px);
   }
 
   :is(
@@ -79,6 +91,7 @@
     .astryx-bottom-sheet__content
   ) > .astryx-table-scroll:last-child {
     margin-bottom: calc(-1 * var(--container-padding-block-end, 0px));
+    --_table-bleed-block-end: var(--container-padding-block-end, 0px);
   }
 
   .astryx-table {
@@ -241,9 +254,25 @@
     overflow-wrap: break-word;
   }
 
-  .astryx-table[data-striped='true'] tbody tr:nth-child(even of :not([data-expansion-panel], [data-group-header])) {
+  .astryx-table[data-striped='true']:not([data-windowed]) tbody tr:nth-child(even of :not([data-expansion-panel], [data-group-header])),
+  .astryx-table[data-striped='true'][data-windowed] tbody tr[data-parity='even'] {
     --table-row-overlay: var(--astryx-color-background-muted, light-dark(#f1f1f1, #1b1b1b));
     background-color: var(--astryx-color-background-muted, light-dark(#f1f1f1, #1b1b1b));
+  }
+
+  /*
+   * 窗口化时没挂载的行、列由占位行和占位格撑住位置。它们只占地方：没有内边距、分隔线和底色，
+   * 特异性压过密度、分隔线和悬停的规则。
+   */
+  .astryx-table.astryx-table.astryx-table :is(th, td)[data-window-gap] {
+    padding: 0;
+    border-width: 0;
+    line-height: 0;
+    max-width: none;
+  }
+
+  .astryx-table.astryx-table.astryx-table tbody tr[data-window-gap] {
+    background-color: transparent;
   }
 
   .astryx-table[data-hover='true'] tbody tr {

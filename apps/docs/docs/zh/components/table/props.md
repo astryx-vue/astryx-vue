@@ -66,7 +66,7 @@ footer: false
       <tr>
         <td><code>textOverflow</code></td>
         <td><code>'wrap' | 'truncate'</code></td>
-        <td><code>'wrap'</code></td>
+        <td><code>'wrap'</code>；开了行、列窗口化插件时为 <code>'truncate'</code></td>
         <td>文字换行，或截成一行。列标题也跟着它：<code>'wrap'</code> 下，数据模式里过长的标题会折成多行，手写行列的模式里列会变宽，让标题保持一行；<code>'truncate'</code> 下标题保持一行，放不下以省略号收尾。</td>
       </tr>
       <tr>
