@@ -39,6 +39,7 @@ import { Tooltip } from '@astryx-vue/core/Tooltip'
 | --- | --- |
 | <Badge variant="success">推荐</Badge> | 保持提示框内容简洁，纯文本建议少于 140 个字符。 |
 | <Badge variant="success">推荐</Badge> | 为没有可见标签的纯图标按钮和控件添加提示框。 |
+| <Badge variant="success">推荐</Badge> | 提示内容比触发器上下的空地都高时，它会改放到触发器旁边，或放在空地更大的一侧并限高、在框内滚动，不会盖住触发器。 |
 | <Badge variant="error">避免</Badge> | 在提示框中放置链接或按钮这类可交互元素。应改用 HoverCard 或 Popover。 |
 | <Badge variant="error">避免</Badge> | 用提示框展示用户完成任务必须看到的关键信息。 |
 

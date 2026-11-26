@@ -4,9 +4,10 @@ import type { DialogPadding, DialogProps } from './types.js'
 import { computed, onBeforeUnmount, onMounted, provide, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
 import { useFocusTrap, useScrollLock } from '../composables/index.js'
 import { isLayerFocusStranded, restoreLayerFocus, trackLayerFocus } from '../layer/layerFocusReturn.js'
-import { addModalOutlet, removeModalOutlet } from '../layer/modalOutlet.js'
+import { createModalOutletHandle } from '../layer/modalOutlet.js'
 import { provideLayerMountTarget } from '../layer/mount.js'
 import { resetLayerScopedContext } from '../layer/scopedProvide.js'
+import { useBackdropPress } from '../layer/useBackdropPress.js'
 import { provideLayoutContainer } from '../Layout/context.js'
 import { DIALOG_CONTEXT_KEY } from './context.js'
 import { formatDialogSize, resolveDialogPositionOffsets } from './position.js'
@@ -131,24 +132,9 @@ const isDialogOpen = computed(() => {
 })
 
 // 打开期间同时充当全局 toast 的挂载点。
-let modalOutlet: HTMLDialogElement | null = null
-
-function attachModalOutlet(dialog: HTMLDialogElement): void {
-  if (modalOutlet === dialog)
-    return
-  detachModalOutlet()
-  modalOutlet = dialog
-  dialog.addEventListener('close', detachModalOutlet)
-  addModalOutlet(dialog)
-}
-
-function detachModalOutlet(): void {
-  if (modalOutlet == null)
-    return
-  modalOutlet.removeEventListener('close', detachModalOutlet)
-  removeModalOutlet(modalOutlet)
-  modalOutlet = null
-}
+const modalOutlet = createModalOutletHandle()
+const attachModalOutlet = modalOutlet.attach
+const detachModalOutlet = modalOutlet.detach
 
 function initialFocusTarget(): HTMLElement | null {
   const dialog = dialogRef.value
@@ -221,10 +207,11 @@ function onCancel(event: Event): void {
     emit('openChange', false)
 }
 
-function onBackdropClick(event: MouseEvent): void {
-  if (event.target === event.currentTarget && props.purpose === 'info')
+// 只有按下和松手都在遮罩上、而且这一下没先关掉框里的弹出框，才算点遮罩。
+const backdropPress = useBackdropPress(() => dialogRef.value, () => {
+  if (props.purpose === 'info')
     emit('openChange', false)
-}
+})
 
 watch(() => props.isOpen, (open) => {
   if (open)
@@ -282,7 +269,8 @@ onBeforeUnmount(() => {
     aria-modal="true"
     :aria-labelledby="resolvedLabelledBy()"
     :style="rootStyle"
-    @click="onBackdropClick"
+    @pointerdown="backdropPress.onPointerDown"
+    @click="backdropPress.onClick"
     @cancel="onCancel"
   >
     <div class="astryx-dialog__inner" :style="innerStyle">

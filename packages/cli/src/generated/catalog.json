@@ -58956,7 +58956,7 @@
                 "name": "`touchTrigger`",
                 "type": "`'auto' | 'tap' | 'none'`",
                 "default": "`'auto'`",
-                "description": "Tap behavior on touch. auto opens on a trigger that performs no action of its own and leaves the tap to buttons and links; tap always opens; none never opens. A tap-opened card closes on a tap outside."
+                "description": "Tap behavior on touch. auto opens on a trigger that performs no action of its own and leaves the tap to buttons and links; tap always opens; none never opens. An aria-disabled control performs no action, so a tap on it opens its reason. A tap-opened card closes on a tap outside, and a touch that turns into a scroll opens nothing."
               },
               {
                 "name": "`isEnabled`",
@@ -59035,7 +59035,7 @@
                 "name": "`touchTrigger`",
                 "type": "`'auto' | 'tap' | 'none'`",
                 "default": "`'auto'`",
-                "description": "触摸设备上轻点触发元素的行为：auto 时本身不执行操作的触发元素轻点即打开，按钮和链接保留自己的轻点；tap 总是打开；none 不打开。轻点打开的卡片在卡片外轻点即关闭。"
+                "description": "触摸设备上轻点触发元素的行为：auto 时本身不执行操作的触发元素轻点即打开，按钮和链接保留自己的轻点；tap 总是打开；none 不打开。设置了 aria-disabled 的控件不执行操作，轻点它会显示原因。轻点打开的卡片在卡片外轻点即关闭；从触发元素上开始的滚动不会打开卡片。"
               },
               {
                 "name": "`isEnabled`",
@@ -60547,6 +60547,10 @@
             "text": "Add a tooltip to icon-only buttons and controls that lack a visible label."
           },
           {
+            "guidance": "Do",
+            "text": "Expect a tooltip taller than the room above and below its trigger to open beside it, or to scroll inside a box capped to the roomier side, and never to cover the trigger."
+          },
+          {
             "guidance": "Don't",
             "text": "Place interactive elements like links or buttons inside a tooltip; use HoverCard or Popover instead."
           },
@@ -60563,6 +60567,10 @@
           {
             "guidance": "推荐",
             "text": "为没有可见标签的纯图标按钮和控件添加提示框。"
+          },
+          {
+            "guidance": "推荐",
+            "text": "提示内容比触发器上下的空地都高时，它会改放到触发器旁边，或放在空地更大的一侧并限高、在框内滚动，不会盖住触发器。"
           },
           {
             "guidance": "避免",
@@ -60619,7 +60627,7 @@
                 "name": "`touchTrigger`",
                 "type": "`'auto' | 'tap' | 'none'`",
                 "default": "`'auto'`",
-                "description": "Tap behavior on touch. auto skips buttons, links, and form controls."
+                "description": "Tap behavior on touch. auto skips buttons, links, and form controls, but a tap on an aria-disabled control opens its reason. A tap-opened tooltip closes on a tap outside. A touch that turns into a scroll opens nothing."
               },
               {
                 "name": "`isEnabled`",
@@ -60704,7 +60712,7 @@
                 "name": "`touchTrigger`",
                 "type": "`'auto' | 'tap' | 'none'`",
                 "default": "`'auto'`",
-                "description": "触摸设备上点击触发元素时的行为：auto 时点击切换提示，但按钮、链接和表单控件自身的点击不触发；tap 总是切换；none 不打开。"
+                "description": "触摸设备上轻点触发元素时的行为：auto 时轻点切换提示，但按钮、链接和表单控件自身的轻点不触发，设置了 aria-disabled 的控件除外，轻点它会显示禁用原因；tap 总是切换；none 不打开。轻点打开的提示在外面轻点即关闭；从触发元素上开始的滚动不会打开提示。"
               },
               {
                 "name": "`isEnabled`",
@@ -71176,7 +71184,7 @@
                 "name": "`touchTrigger`",
                 "type": "`'auto' | 'tap' | 'none' | MaybeRefOrGetter`",
                 "default": "`'auto'`",
-                "description": "What a tap does where there is no hover. `auto` opens on tap unless the trigger performs an action of its own; `tap` always opens; `none` never opens on touch."
+                "description": "What a tap does where there is no hover. `auto` opens on tap unless the trigger performs an action of its own (an aria-disabled control performs none, so its reason opens); `tap` always opens; `none` never opens on touch."
               },
               {
                 "name": "`isEnabled`",
@@ -71326,7 +71334,7 @@
                 "payload": "`touchTrigger`",
                 "type": "`'auto' | 'tap' | 'none' | MaybeRefOrGetter`",
                 "default": "`'auto'`",
-                "description": "没有 hover 的触摸设备上轻点做什么。`auto` 在触发器自己有动作时不打开；`tap` 总是打开；`none` 从不打开。"
+                "description": "没有 hover 的触摸设备上轻点做什么。`auto` 在触发器自己有动作时不打开（设置了 aria-disabled 的控件不算有动作，轻点它会显示原因）；`tap` 总是打开；`none` 从不打开。"
               },
               {
                 "name": "`isEnabled`",
@@ -72759,12 +72767,12 @@
       "importPath": null,
       "exportName": null,
       "summary": {
-        "en": "Shows an ephemeral \"← → to navigate\" hint anchored to the focused item the first time a roving-tabindex composite receives keyboard focus. It teaches sighted keyboard users that arrow keys move within the group. The hint renders arrow keys with `Kbd`, is positioned `fixed` next to the focused element, so overflow containers never clip it, and is `aria-hidden`. It dismisses on the first arrow press, on timeout, or when focus leaves the group, and after a dismissal it does not show again for that instance. Reach for the hook directly when building a custom roving-tabindex widget; `Toolbar`, `TabList`, and `SegmentedControl` do not mount it for you.",
-        "zh": "一组靠方向键移动的控件，第一次被键盘点进来时，在当前项旁边短暂提示一句「用方向键移动」。这是给看得见键盘用户的：告诉他方向键在这个组里能走。提示里的方向键用 `Kbd` 画，用 `fixed` 定位跟在当前项旁边，所以不会被滚动容器裁掉，并且是 `aria-hidden`。按过方向键、超时、或者焦点离开这个组，它都会自己关掉；关掉之后这个实例就不再提示。自己搭 roving-tabindex 控件时才会直接用到这个 hook；`Toolbar`、`TabList`、`SegmentedControl` 不会替你挂。"
+        "en": "Shows a \"← → to navigate\" hint anchored to the focused item the first time a roving-tabindex composite receives keyboard focus. It teaches sighted keyboard users that arrow keys move within the group. The hint renders arrow keys with `Kbd`, is positioned `fixed` next to the focused element, so overflow containers never clip it, and is `aria-hidden`. It stays until the first arrow press, Escape (which closes only the hint and leaves focus where it is), or focus leaving the group, and after a dismissal it does not show again for that instance. Reach for the hook directly when building a custom roving-tabindex widget; `Toolbar`, `TabList`, and `SegmentedControl` do not mount it for you.",
+        "zh": "一组靠方向键移动的控件，第一次被键盘点进来时，在当前项旁边提示一句「用方向键移动」。这是给看得见键盘用户的：告诉他方向键在这个组里能走。提示里的方向键用 `Kbd` 画，用 `fixed` 定位跟在当前项旁边，所以不会被滚动容器裁掉，并且是 `aria-hidden`。它会一直停留，直到按下方向键、按下 Escape（只关提示，焦点不动）或焦点离开这个组；关掉之后这个实例就不再提示。自己搭 roving-tabindex 控件时才会直接用到这个 hook；`Toolbar`、`TabList`、`SegmentedControl` 不会替你挂。"
       },
       "usage": {
-        "en": "Shows an ephemeral \"← → to navigate\" hint anchored to the focused item the first time a roving-tabindex composite receives keyboard focus. It teaches sighted keyboard users that arrow keys move within the group. The hint renders arrow keys with `Kbd`, is positioned `fixed` next to the focused element, so overflow containers never clip it, and is `aria-hidden`. It dismisses on the first arrow press, on timeout, or when focus leaves the group, and after a dismissal it does not show again for that instance. Reach for the hook directly when building a custom roving-tabindex widget; `Toolbar`, `TabList`, and `SegmentedControl` do not mount it for you.\n\nThe `Hint` component returned by the hook is rendered inside the composite container, as its last child.\n\n```ts\nimport { useKeyboardHint } from '@astryx-vue/core'\n```",
-        "zh": "一组靠方向键移动的控件，第一次被键盘点进来时，在当前项旁边短暂提示一句「用方向键移动」。这是给看得见键盘用户的：告诉他方向键在这个组里能走。提示里的方向键用 `Kbd` 画，用 `fixed` 定位跟在当前项旁边，所以不会被滚动容器裁掉，并且是 `aria-hidden`。按过方向键、超时、或者焦点离开这个组，它都会自己关掉；关掉之后这个实例就不再提示。自己搭 roving-tabindex 控件时才会直接用到这个 hook；`Toolbar`、`TabList`、`SegmentedControl` 不会替你挂。\n\nhook 返回的 `Hint` 组件要放在这一组容器里面，作为最后一个子元素。\n\n```ts\nimport { useKeyboardHint } from '@astryx-vue/core'\n```"
+        "en": "Shows a \"← → to navigate\" hint anchored to the focused item the first time a roving-tabindex composite receives keyboard focus. It teaches sighted keyboard users that arrow keys move within the group. The hint renders arrow keys with `Kbd`, is positioned `fixed` next to the focused element, so overflow containers never clip it, and is `aria-hidden`. It stays until the first arrow press, Escape (which closes only the hint and leaves focus where it is), or focus leaving the group, and after a dismissal it does not show again for that instance. Reach for the hook directly when building a custom roving-tabindex widget; `Toolbar`, `TabList`, and `SegmentedControl` do not mount it for you.\n\nThe `Hint` component returned by the hook is rendered inside the composite container, as its last child.\n\n```ts\nimport { useKeyboardHint } from '@astryx-vue/core'\n```",
+        "zh": "一组靠方向键移动的控件，第一次被键盘点进来时，在当前项旁边提示一句「用方向键移动」。这是给看得见键盘用户的：告诉他方向键在这个组里能走。提示里的方向键用 `Kbd` 画，用 `fixed` 定位跟在当前项旁边，所以不会被滚动容器裁掉，并且是 `aria-hidden`。它会一直停留，直到按下方向键、按下 Escape（只关提示，焦点不动）或焦点离开这个组；关掉之后这个实例就不再提示。自己搭 roving-tabindex 控件时才会直接用到这个 hook；`Toolbar`、`TabList`、`SegmentedControl` 不会替你挂。\n\nhook 返回的 `Hint` 组件要放在这一组容器里面，作为最后一个子元素。\n\n```ts\nimport { useKeyboardHint } from '@astryx-vue/core'\n```"
       },
       "practices": {
         "en": [
@@ -72807,8 +72815,8 @@
               {
                 "name": "`options.dismissAfterMs`",
                 "type": "`number`",
-                "default": "`3000`",
-                "description": "Milliseconds before the hint auto-dismisses after appearing."
+                "default": "—",
+                "description": "Milliseconds before the hint dismisses itself after appearing. Leave it unset: the hint then stays until an arrow key, Escape, or focus leaving the group. A time limit can remove the hint before it is read (WCAG 1.4.13)."
               },
               {
                 "name": "`options.isEnabled`",
@@ -72878,8 +72886,8 @@
               {
                 "name": "`options.dismissAfterMs`",
                 "type": "`number`",
-                "default": "`3000`",
-                "description": "出现之后过多少毫秒自己消失。"
+                "default": "—",
+                "description": "出现之后过多少毫秒自己消失。不传就没有时限：提示停留到按下方向键、Escape 或焦点离开这一组。时限可能让人没读完提示就看不到了（WCAG 1.4.13）。"
               },
               {
                 "name": "`options.isEnabled`",
@@ -81026,7 +81034,7 @@
                 "name": "`touchTrigger`",
                 "type": "`'auto' | 'tap' | 'none' | MaybeRefOrGetter`",
                 "default": "`'auto'`",
-                "description": "What a tap does where there is no hover. `auto` opens on tap unless the trigger performs an action of its own; `tap` always opens; `none` never opens on touch."
+                "description": "What a tap does where there is no hover. `auto` opens on tap unless the trigger performs an action of its own (an aria-disabled control performs none, so its reason opens); `tap` always opens; `none` never opens on touch."
               },
               {
                 "name": "`isEnabled`",
@@ -81155,7 +81163,7 @@
                 "payload": "`touchTrigger`",
                 "type": "`'auto' | 'tap' | 'none' | MaybeRefOrGetter`",
                 "default": "`'auto'`",
-                "description": "没有 hover 的触摸设备上轻点做什么。`auto` 在触发器自己有动作时不打开；`tap` 总是打开；`none` 从不打开。"
+                "description": "没有 hover 的触摸设备上轻点做什么。`auto` 在触发器自己有动作时不打开（设置了 aria-disabled 的控件不算有动作，轻点它会显示原因）；`tap` 总是打开；`none` 从不打开。"
               },
               {
                 "name": "`isEnabled`",

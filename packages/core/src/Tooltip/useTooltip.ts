@@ -1,8 +1,9 @@
 import type { ComputedRef, CSSProperties, MaybeRefOrGetter, Ref } from 'vue'
 import type { LayerPlacement } from '../layer/position.js'
 import type { TooltipAlignment, TooltipFocusTrigger, TooltipPlacement, TooltipTouchTrigger } from './types.js'
-import { computed, inject, onMounted, onScopeDispose, ref, shallowRef, toValue, watch } from 'vue'
+import { computed, inject, onMounted, onScopeDispose, shallowRef, toValue, watch } from 'vue'
 import { trackInteractionModality } from '../composables/internal/interactionModality.js'
+import { useTouchTriggerInternal } from '../composables/internal/useTouchTriggerInternal.js'
 import { useAnnounce } from '../composables/useAnnounce.js'
 import { useLayer } from '../composables/useLayer.js'
 import { useHoverLayerDismiss } from '../layer/useHoverLayerDismiss.js'
@@ -10,7 +11,6 @@ import { listenOutside, listenPressEnd } from './documentListeners.js'
 import { renderedText } from './renderedText.js'
 import { createFocusGate, opensOnFocus } from './tooltipFocusRules.js'
 import { answerPresentInterest, tooltipPresentInterestKey } from './tooltipPresentInterest.js'
-import { isActionTrigger, isTextEntryTap } from './tooltipTriggerRules.js'
 
 export interface UseTooltipOptions {
   /**
@@ -109,7 +109,6 @@ const HOVER_BRIDGE_DELAY = 100 // 指针离开触发器到进入气泡之间的�
 export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
   const triggerRef = shallowRef<HTMLElement | null>(null)
   const isControlled = computed(() => toValue(options.isOpen) !== undefined)
-  const isTouchPointer = ref(false)
   let bound: HTMLElement | null = null
   const announce = useAnnounce()
   // 截断文字的提示在第一次交互时才挂载，这里拿到的就是那次交互。
@@ -121,6 +120,7 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
     placement: () => toValue(options.placement) ?? 'above',
     alignment: () => toValue(options.alignment) ?? 'center',
     gap: GAP,
+    keepAnchorClear: true,
     onShow: () => options.onShow?.(),
     onHide: () => options.onHide?.(),
   })
@@ -161,6 +161,19 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
     return node != null && (bound?.contains(node) === true || layer.contentRef.value?.contains(node) === true)
   }
 
+  // 触屏：等按压成了轻点才开关，点开后在外面轻点或滚动时关。
+  const touch = useTouchTriggerInternal({
+    touchTrigger: touchTriggerMode,
+    isEnabled,
+    isControlled,
+    isOpen,
+    layerId: layer.id,
+    triggerRef,
+    show: showNow,
+    hide: hideNow,
+  }, { isTextEntryTapIgnored: true })
+  const isTouchPointer = touch.isTouchPointer
+
   function showNow(): void {
     clearTimers()
     if (!isEnabled() || isControlled.value)
@@ -195,10 +208,6 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
     hideTimer = undefined
   }
 
-  function onPointerEnter(event: PointerEvent): void {
-    isTouchPointer.value = event.pointerType === 'touch'
-  }
-
   function onMouseEnter(): void {
     if (isTouchPointer.value)
       return
@@ -214,18 +223,6 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
     if (next instanceof Node && layer.contentRef.value?.contains(next))
       return
     scheduleHide()
-  }
-
-  function onTouchTap(tapEvent: Event | null): void {
-    if (!isEnabled() || isControlled.value || touchTriggerMode() === 'none')
-      return
-    const trigger = triggerRef.value
-    if (trigger != null && ((touchTriggerMode() === 'auto' && isActionTrigger(trigger)) || isTextEntryTap(trigger, tapEvent)))
-      return
-    if (isOpen.value)
-      hideNow()
-    else
-      showNow()
   }
 
   function trackTriggerPress(): void {
@@ -261,11 +258,7 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
         isHoldFromPress = true
       return
     }
-    if (event.pointerType === 'touch') {
-      onTouchTap(event)
-      return
-    }
-    if (isControlled.value)
+    if (touch.handlePointerDown(event) || isControlled.value)
       return
     hideNow()
   }
@@ -390,7 +383,7 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
     unbind()
     bound = element
     trackInteractionModality()
-    element.addEventListener('pointerenter', onPointerEnter as EventListener)
+    element.addEventListener('pointerenter', touch.handlePointerEnter as EventListener)
     element.addEventListener('mouseenter', onMouseEnter)
     element.addEventListener('mouseleave', onMouseLeave)
     element.addEventListener('pointerdown', onPointerDown as EventListener)
@@ -403,7 +396,7 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
       hover: scheduleShow,
       tap: (tapEvent) => {
         isTouchPointer.value = true
-        onTouchTap(tapEvent)
+        touch.answerTap(tapEvent)
       },
       focus: focused => onFocusArrive(element, focused, false),
     })
@@ -412,7 +405,7 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
   function unbind(): void {
     if (bound == null)
       return
-    bound.removeEventListener('pointerenter', onPointerEnter as EventListener)
+    bound.removeEventListener('pointerenter', touch.handlePointerEnter as EventListener)
     bound.removeEventListener('mouseenter', onMouseEnter)
     bound.removeEventListener('mouseleave', onMouseLeave)
     bound.removeEventListener('pointerdown', onPointerDown as EventListener)

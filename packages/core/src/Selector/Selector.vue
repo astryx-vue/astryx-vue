@@ -187,6 +187,8 @@ useDismiss({
   container: listboxRef,
   trigger: fieldRef,
   isEnabled: popoverOpen,
+  // 选项列表和弹出框一样：手指滑一下页面不关，只在外面轻点时关。
+  dismissOnOutsidePan: false,
   dismissOnEscape: 'close',
   onEscape: () => dismissSelectorEscape(listboxRef.value, () => combobox.close(), focusTrigger),
   onDismiss: () => combobox.close(),

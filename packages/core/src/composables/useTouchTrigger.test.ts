@@ -34,8 +34,15 @@ function bindHandlers(element: HTMLElement, touch: Touch): void {
   })
 }
 
-function press(element: HTMLElement, pointerType = 'touch'): void {
-  element.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true, pointerType }))
+function pointer(type: string, element: Element, pointerType = 'touch'): void {
+  element.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, pointerType }))
+}
+
+/** 一次完整的轻点：按下、抬起，浏览器认定是轻点后派发 click。 */
+function press(element: Element, pointerType = 'touch'): void {
+  pointer('pointerdown', element, pointerType)
+  pointer('pointerup', element, pointerType)
+  element.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }))
 }
 
 function setup(options: Partial<Parameters<typeof useTouchTrigger>[0]> = {}) {
@@ -216,6 +223,116 @@ describe('useTouchTrigger', () => {
 
     press(trigger, 'pen')
     expect(touch.isTouchPointer.value).toBe(true)
+  })
+
+  it('opens only once the touch is a tap, at its click', () => {
+    const { show } = setup()
+
+    pointer('pointerdown', trigger)
+    pointer('pointerup', trigger)
+    expect(show).not.toHaveBeenCalled()
+
+    trigger.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    expect(show).toHaveBeenCalledOnce()
+  })
+
+  it('never opens for a touch that the browser takes as a scroll', () => {
+    const { show } = setup()
+
+    pointer('pointerdown', trigger)
+    pointer('pointercancel', trigger)
+    trigger.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+
+    expect(show).not.toHaveBeenCalled()
+  })
+
+  it('does not take a later keyboard click for the tap', () => {
+    const { show } = setup()
+
+    pointer('pointerdown', trigger)
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }))
+    trigger.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+
+    expect(show).not.toHaveBeenCalled()
+  })
+
+  it('closes a tap-opened layer at the lift of a press outside, not as it lands', () => {
+    const { hide } = setup()
+    press(trigger)
+    const outside = document.createElement('div')
+    document.body.append(outside)
+
+    pointer('pointerdown', outside)
+    expect(hide).not.toHaveBeenCalled()
+    pointer('pointerup', outside)
+    expect(hide).toHaveBeenCalledOnce()
+    outside.remove()
+  })
+
+  it('closes a tap-opened layer when a scroll outside takes the touch', () => {
+    const { hide } = setup()
+    press(trigger)
+    const outside = document.createElement('div')
+    document.body.append(outside)
+
+    pointer('pointerdown', outside)
+    expect(hide).not.toHaveBeenCalled()
+    pointer('pointercancel', outside)
+
+    expect(hide).toHaveBeenCalledOnce()
+    outside.remove()
+  })
+
+  it('opens the reason of an aria-disabled control on a tap', () => {
+    const button = document.createElement('button')
+    button.setAttribute('aria-disabled', 'true')
+    document.body.append(button)
+    const { show } = setup({ triggerRef: ref<HTMLElement | null>(button) })
+
+    press(button)
+
+    expect(show).toHaveBeenCalledOnce()
+    button.remove()
+  })
+
+  it('opens on a tap that lands in a disabled control inside an action trigger', () => {
+    const wrapper = document.createElement('div')
+    wrapper.setAttribute('role', 'button')
+    const disabled = document.createElement('span')
+    disabled.setAttribute('role', 'button')
+    disabled.setAttribute('aria-disabled', 'true')
+    wrapper.append(disabled)
+    document.body.append(wrapper)
+    const { show } = setup({ triggerRef: ref<HTMLElement | null>(wrapper) })
+
+    press(disabled)
+
+    expect(show).toHaveBeenCalledOnce()
+    wrapper.remove()
+  })
+
+  it('treats a label for a disabled control as inert', () => {
+    const label = document.createElement('label')
+    const input = document.createElement('input')
+    input.disabled = true
+    label.append(input)
+    expect(isActionTrigger(label)).toBe(false)
+    input.disabled = false
+    expect(isActionTrigger(label)).toBe(true)
+  })
+
+  it('keeps a touch interaction while the person types into a text field', () => {
+    const { touch } = setup()
+    const field = document.createElement('input')
+    document.body.append(field)
+
+    press(trigger)
+    field.dispatchEvent(new KeyboardEvent('keydown', { key: 'a', bubbles: true }))
+    expect(touch.isTouchInteraction()).toBe(true)
+
+    field.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true }))
+    expect(touch.isTouchInteraction()).toBe(false)
+    field.remove()
   })
 
   it('reports a touch interaction only while the pointer modality is in charge', () => {

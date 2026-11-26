@@ -1,7 +1,8 @@
 import type { TooltipFocusTrigger } from './types.js'
 import { getInteractionModality } from '../composables/internal/interactionModality.js'
 import { isFocusable } from '../layer/focus.js'
-import { isTextEntryControl, matchesFocusVisible } from './tooltipTriggerRules.js'
+import { isTextEntryControl } from '../utils/controlKind.js'
+import { matchesFocusVisible } from './tooltipTriggerRules.js'
 
 /**
  * 这次焦点算不算触发器的焦点，焦点到达时才判断：

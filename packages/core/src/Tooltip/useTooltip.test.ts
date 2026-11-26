@@ -246,6 +246,10 @@ describe('useTooltip', () => {
     Object.defineProperty(event, 'pointerType', { value: 'touch' })
 
     trigger!.dispatchEvent(event)
+    // 按下本身不开：等浏览器认定这是一次轻点、派发 click。
+    await nextTick()
+    expect(tooltip.isOpen.value).toBe(false)
+    trigger!.dispatchEvent(new MouseEvent('click', { bubbles: true }))
     await nextTick()
     expect(tooltip.isOpen.value).toBe(true)
   })
@@ -253,7 +257,7 @@ describe('useTooltip', () => {
   it('轻点触发器里的文本框只让它获得焦点，不开也不关提示', async () => {
     const { tooltip } = setupTooltip({ delay: 0 })
     const trigger = document.createElement('div')
-    trigger.innerHTML = '<span>Name</span><input type="text"><input type="text" disabled>'
+    trigger.innerHTML = '<span>Name</span><input type="text"><input type="text" aria-disabled="true">'
     document.body.append(trigger)
     tooltip.triggerRef.value = trigger
     const [label, field, disabledField] = [...trigger.children] as HTMLElement[]
@@ -261,6 +265,7 @@ describe('useTooltip', () => {
       const event = new Event('pointerdown', { bubbles: true })
       Object.defineProperty(event, 'pointerType', { value: 'touch' })
       target.dispatchEvent(event)
+      target.dispatchEvent(new MouseEvent('click', { bubbles: true }))
     }
 
     tap(field!)
@@ -275,8 +280,38 @@ describe('useTooltip', () => {
     await nextTick()
     expect(tooltip.isOpen.value).toBe(true)
 
-    // 禁用的输入框不能输入，轻点照常交给触发器。
+    // 禁用的输入框不能输入，轻点照常交给触发器。原生 disabled 的控件收不到 click，用 aria-disabled 的。
     tap(disabledField!)
+    await nextTick()
+    expect(tooltip.isOpen.value).toBe(false)
+  })
+
+  it('触屏点开的提示在外面轻点抬起时关，从触发器上开始的滚动不打开', async () => {
+    const { tooltip } = setupTooltip({ delay: 0 })
+    const trigger = document.createElement('span')
+    document.body.append(trigger)
+    tooltip.triggerRef.value = trigger
+    const pointer = (type: string, target: EventTarget): void => {
+      const event = new Event(type, { bubbles: true })
+      Object.defineProperty(event, 'pointerType', { value: 'touch' })
+      target.dispatchEvent(event)
+    }
+
+    pointer('pointerdown', trigger)
+    pointer('pointercancel', trigger)
+    trigger.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    await nextTick()
+    expect(tooltip.isOpen.value).toBe(false)
+
+    pointer('pointerdown', trigger)
+    trigger.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    await nextTick()
+    expect(tooltip.isOpen.value).toBe(true)
+
+    pointer('pointerdown', document.body)
+    await nextTick()
+    expect(tooltip.isOpen.value).toBe(true)
+    pointer('pointerup', document.body)
     await nextTick()
     expect(tooltip.isOpen.value).toBe(false)
   })

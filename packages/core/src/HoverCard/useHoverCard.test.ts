@@ -20,6 +20,13 @@ function pointerEvent(type: string, pointerType: string): Event {
   return event
 }
 
+/** 一次完整的手指轻点：按下、抬起，浏览器认定是轻点后派发 click。 */
+function tap(target: EventTarget): void {
+  target.dispatchEvent(pointerEvent('pointerdown', 'touch'))
+  target.dispatchEvent(pointerEvent('pointerup', 'touch'))
+  target.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }))
+}
+
 function setupHoverCard(
   options: UseHoverCardOptions = {},
   tagName = 'button',
@@ -223,14 +230,14 @@ describe('useHoverCard', () => {
   it('触摸轻点在自己有动作的触发器上不打开，切到 tap 才打开', async () => {
     const action = setupHoverCard()
     action.trigger.dispatchEvent(pointerEvent('pointerenter', 'touch'))
-    action.trigger.dispatchEvent(pointerEvent('pointerdown', 'touch'))
+    tap(action.trigger)
     await nextTick()
     expect(action.card.isOpen.value).toBe(false)
 
     document.body.innerHTML = ''
     const tapped = setupHoverCard({ touchTrigger: 'tap' })
     tapped.trigger.dispatchEvent(pointerEvent('pointerenter', 'touch'))
-    tapped.trigger.dispatchEvent(pointerEvent('pointerdown', 'touch'))
+    tap(tapped.trigger)
     await nextTick()
     expect(tapped.card.isOpen.value).toBe(true)
   })
@@ -238,7 +245,7 @@ describe('useHoverCard', () => {
   it('上面还有浮层时，点外面不关卡片', async () => {
     const { card, trigger, wrapper } = setupHoverCard({}, 'span')
     trigger.dispatchEvent(pointerEvent('pointerenter', 'touch'))
-    trigger.dispatchEvent(pointerEvent('pointerdown', 'touch'))
+    tap(trigger)
     await nextTick()
     expect(card.isOpen.value).toBe(true)
 
@@ -250,26 +257,62 @@ describe('useHoverCard', () => {
       isPresent: () => true,
       onDismiss: () => {},
     })
-    document.body.dispatchEvent(pointerEvent('pointerdown', 'touch'))
+    tap(document.body)
     await nextTick()
     expect(card.isOpen.value).toBe(true)
 
     stop()
-    document.body.dispatchEvent(pointerEvent('pointerdown', 'touch'))
+    tap(document.body)
     await nextTick()
     expect(card.isOpen.value).toBe(false)
     wrapper.unmount()
+  })
+
+  it('从触发器上开始的滚动不打开卡片', async () => {
+    const { card, trigger } = setupHoverCard({}, 'span')
+
+    trigger.dispatchEvent(pointerEvent('pointerdown', 'touch'))
+    trigger.dispatchEvent(pointerEvent('pointercancel', 'touch'))
+    await nextTick()
+
+    expect(card.isOpen.value).toBe(false)
+  })
+
+  it('轻点禁用的按钮会打开解释原因的卡片', async () => {
+    const { card, trigger } = setupHoverCard({}, 'button', { 'aria-disabled': 'true' })
+
+    tap(trigger)
+    await nextTick()
+
+    expect(card.isOpen.value).toBe(true)
+  })
+
+  it('轻点之后用软键盘打字，焦点回到触发器也不打开卡片', async () => {
+    const { card, trigger } = setupHoverCard({}, 'button', { 'aria-disabled': 'true' })
+    const field = document.createElement('input')
+    document.body.append(field)
+    tap(trigger)
+    await nextTick()
+    tap(document.body)
+    await nextTick()
+    expect(card.isOpen.value).toBe(false)
+
+    field.dispatchEvent(new KeyboardEvent('keydown', { key: 'a', bubbles: true }))
+    trigger.dispatchEvent(new FocusEvent('focusin', { bubbles: true }))
+    await nextTick()
+
+    expect(card.isOpen.value).toBe(false)
   })
 
   it('触摸轻点卡片外部会关闭', async () => {
     const { card, trigger } = setupHoverCard({}, 'span')
 
     trigger.dispatchEvent(pointerEvent('pointerenter', 'touch'))
-    trigger.dispatchEvent(pointerEvent('pointerdown', 'touch'))
+    tap(trigger)
     await nextTick()
     expect(card.isOpen.value).toBe(true)
 
-    document.body.dispatchEvent(pointerEvent('pointerdown', 'touch'))
+    tap(document.body)
     await nextTick()
     expect(card.isOpen.value).toBe(false)
   })

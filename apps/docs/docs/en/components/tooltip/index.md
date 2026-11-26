@@ -39,6 +39,7 @@ import { Tooltip } from '@astryx-vue/core/Tooltip'
 | --- | --- |
 | <Badge variant="success">Do</Badge> | Keep tooltip content concise: aim for under 140 characters of plain text. |
 | <Badge variant="success">Do</Badge> | Add a tooltip to icon-only buttons and controls that lack a visible label. |
+| <Badge variant="success">Do</Badge> | Expect a tooltip taller than the room above and below its trigger to open beside it, or to scroll inside a box capped to the roomier side, and never to cover the trigger. |
 | <Badge variant="error">Don't</Badge> | Place interactive elements like links or buttons inside a tooltip; use HoverCard or Popover instead. |
 | <Badge variant="error">Don't</Badge> | Use tooltips for essential information that users must see to complete a task. |
 
