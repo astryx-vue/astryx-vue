@@ -4,7 +4,11 @@ title: SVGIcon
 
 # SVGIcon
 
-根据图形角色渲染多层级 SVG 图标，支持多种变体、语义颜色和光学描边补偿。它不同于 core 的 Iconify 方案，适合需要逐路径控制变体的图标。
+根据图形角色渲染多层级 SVG 图标，支持多种变体、语义颜色和光学描边补偿。
+
+::: tip 日常图标请用 Icon
+界面里的普通图标，推荐用 core 的 [Icon](/components/icon)（Iconify 方案，见[图标指南](/guide/icons)）。SVGIcon 只在同一个图形要切换 linear、bold、twotone 等变体时才需要，而且图形要写成标好每条路径角色的 `SVGIconDef`。
+:::
 
 <script setup lang="ts">
 import { labSvgIcon } from '../../../../components/lab-demos'
@@ -18,7 +22,7 @@ import { labSvgIcon } from '../../../../components/lab-demos'
 import { homeIcon, SVGIcon } from '@astryx-vue/lab'
 ```
 
-包内附带 `starterIcons` 和 `bellIcon`、`homeIcon` 等图形定义，也可以传入自己的 `SVGIconDef`。
+`homeIcon`、`bellIcon` 等 16 个图形（合集为 `starterIcons`）是演示这种分层格式的样例，不是完整的图标库；实际使用时传入自己的 `SVGIconDef`。
 
 ## 属性
 

@@ -1,9 +1,6 @@
+import type { PaintedRange as HighlightRange } from './highlightRecovery.js'
 import type { SyntaxToken, TokenLine } from './types.js'
-
-interface HighlightRange {
-  highlight: Highlight
-  range: Range
-}
+import { paintWithRecovery } from './highlightRecovery.js'
 
 interface HighlightHost {
   highlights: {
@@ -119,6 +116,8 @@ function addLineRanges(line: Element, tokens: SyntaxToken[], applied: HighlightR
       const range = new Range()
       range.setStart(text, Math.min(token.start, length))
       range.setEnd(text, Math.min(token.end, length))
+      if (range.collapsed)
+        continue
       highlight.add(range)
       applied.push({ highlight, range })
     }
@@ -134,29 +133,31 @@ function addLineRanges(line: Element, tokens: SyntaxToken[], applied: HighlightR
  * added.
  */
 export function applyHighlightRanges(codeElement: HTMLElement, tokenLines: TokenLine[]): () => void {
-  const applied: HighlightRange[] = []
-  const lines = codeElement.querySelectorAll('[data-line]')
+  return paintWithRecovery(() => {
+    const applied: HighlightRange[] = []
+    const lines = codeElement.querySelectorAll('[data-line]')
 
-  for (let i = 0; i < lines.length; i++) {
-    const tokens = tokenLines[i]
+    for (let i = 0; i < lines.length; i++) {
+      const tokens = tokenLines[i]
 
-    if (tokens != null && tokens.length > 0)
-      addLineRanges(lines[i], tokens, applied)
-  }
-
-  return () => {
-    for (const { highlight, range } of applied)
-      highlight.delete(range)
-  }
+      if (tokens != null && tokens.length > 0)
+        addLineRanges(lines[i], tokens, applied)
+    }
+    return applied
+  })
 }
 
 /** 给 contenteditable 的单文本节点画行内 token；token.start/end 是行内偏移。 */
 export function applyHighlightRangesFlat(codeElement: HTMLElement, tokenLines: TokenLine[]): () => void {
+  return paintWithRecovery(() => paintFlat(codeElement, tokenLines))
+}
+
+function paintFlat(codeElement: HTMLElement, tokenLines: TokenLine[]): HighlightRange[] {
   const applied: HighlightRange[] = []
   const walker = codeElement.ownerDocument.createTreeWalker(codeElement, NodeFilter.SHOW_TEXT)
   const text = walker.nextNode() as Text | null
   if (text == null)
-    return () => {}
+    return applied
 
   const source = codeElement.textContent ?? ''
   let lineStart = 0
@@ -173,6 +174,8 @@ export function applyHighlightRangesFlat(codeElement: HTMLElement, tokenLines: T
         const range = new Range()
         range.setStart(text, Math.max(0, Math.min(start, text.length)))
         range.setEnd(text, Math.max(0, Math.min(end, text.length)))
+        if (range.collapsed)
+          continue
         highlight.add(range)
         applied.push({ highlight, range })
       }
@@ -183,9 +186,5 @@ export function applyHighlightRangesFlat(codeElement: HTMLElement, tokenLines: T
     const lineEnd = source.indexOf('\n', lineStart)
     lineStart = lineEnd < 0 ? source.length : lineEnd + 1
   }
-
-  return () => {
-    for (const { highlight, range } of applied)
-      highlight.delete(range)
-  }
+  return applied
 }

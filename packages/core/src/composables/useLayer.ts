@@ -95,6 +95,8 @@ export interface UseLayerReturn {
   show: () => void
   /** 关闭浮层。 */
   hide: () => void
+  /** 按锚点当前的几何立刻重新定位。锚点在本组件之外移动、又等不及下一次轮询时调用；fixed 模式下什么也不做。 */
+  reposition: () => void
 }
 
 /**
@@ -223,5 +225,6 @@ export function useLayer(options: UseLayerOptions): UseLayerReturn {
     anchorId,
     show,
     hide,
+    reposition: () => positioned?.update(),
   }
 }

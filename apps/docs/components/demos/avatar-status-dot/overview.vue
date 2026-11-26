@@ -5,17 +5,17 @@ import { HStack } from '@astryx-vue/core/Stack'
 
 <template>
   <HStack :gap="4" align="center">
-    <Avatar name="Online User" size="xl">
+    <Avatar name="Online User" size="lg">
       <template #status>
         <AvatarStatusDot variant="success" label="Online" />
       </template>
     </Avatar>
-    <Avatar name="Away User" size="xl">
+    <Avatar name="Away User" size="lg">
       <template #status>
         <AvatarStatusDot variant="neutral" label="Away" />
       </template>
     </Avatar>
-    <Avatar name="Busy User" size="xl">
+    <Avatar name="Busy User" size="lg">
       <template #status>
         <AvatarStatusDot variant="error" label="Busy" />
       </template>
