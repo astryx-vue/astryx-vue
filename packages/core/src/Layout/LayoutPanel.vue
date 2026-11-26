@@ -2,6 +2,9 @@
 import type { CSSProperties, StyleValue } from 'vue'
 import type { LayoutPanelProps, LayoutPanelSlots } from './types.js'
 import { computed, useAttrs, useTemplateRef } from 'vue'
+import { useScrollRegionProps } from '../composables/internal/useScrollRegionProps.js'
+import { useComponentMessages } from '../locale/context.js'
+import { layoutMessages } from '../locale/messages/layout.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { useLayoutArea, useLayoutSlots } from './context.js'
 import { regionPaddingStyle } from './regionPadding.js'
@@ -23,6 +26,14 @@ defineSlots<LayoutPanelSlots>()
 const attrs = useAttrs()
 const root = useTemplateRef<HTMLDivElement>('root')
 useScrollbars(root, { enabled: () => props.isScrollable })
+const messages = useComponentMessages({ layout: layoutMessages })
+const region = useScrollRegionProps({
+  defaultLabel: () => messages.value.layout.scrollRegion,
+  isScrollable: () => props.isScrollable,
+  label: () => props.label,
+  role: () => props.role,
+  target: root,
+})
 const area = useLayoutArea()
 const slots = useLayoutSlots()
 
@@ -47,8 +58,8 @@ const rootStyle = computed<StyleValue>(() => [
     v-bind="forwardedAttrs"
     :class="rootClass"
     :style="rootStyle"
-    :role="role"
-    :aria-label="label"
+    :role="region.role.value"
+    :aria-label="region.ariaLabel.value"
     :data-area="area"
     :data-divider="hasDivider || undefined"
     :data-collapse="collapse || undefined"

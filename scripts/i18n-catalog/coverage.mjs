@@ -113,7 +113,6 @@ export const UNPORTED_KEYS = {
   '@astryx.timestamp.relativeLabel': 'Timestamp 相对时间的无障碍名以显示的词开头还没移植',
   '@astryx.typeahead.selectionCleared': 'Typeahead 用退格或删除键清掉已选值后的播报还没移植',
   '@astryx.step.status.unavailable': 'Stepper 紧凑布局里禁用步骤的读屏状态词还没移植',
-  '@astryx.scrollRegion.label': '可滚动的 LayoutContent、LayoutPanel、StackItem 没给名字时的默认名还没移植',
   '@astryx.field.errorFallback': 'TextInput、TextArea 的错误状态没有文字时给读屏的兜底说明还没移植',
   '@astryx.richTextEditor.link.urlPlaceholder': 'RichTextEditor 的链接编辑还是对话框，换成锚定弹出层还没移植',
   '@astryx.textArea.counter': 'Vue 版 TextArea 计数直接按当前语言的数字格式写成「已输入/上限」，没有要翻译的文字',
