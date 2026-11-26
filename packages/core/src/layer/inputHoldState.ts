@@ -10,9 +10,11 @@ import { sharedState } from '../utils/sharedRealm'
 
 /**
  * 暂挡的范围。`'viewport'`：一块盖满视口的挡板，模态浮层进场时用；
+ * `'layer'`：同样盖满视口，并且把浮层内容变成 inert、把焦点移出去，浮层退场时用，
+ * 它里面的另一个浮层（模态框托管的 toast 区域）照常可用；
  * `'surface'`：只挡浮层自己那块，周围页面照常可点，非模态浮层进场时用。
  */
-export type InputHoldScope = 'viewport' | 'surface'
+export type InputHoldScope = 'viewport' | 'layer' | 'surface'
 
 /** 什么时候放开：一个 promise，或者带 `finished` 的动画句柄。 */
 export type InputHoldEnd
@@ -20,7 +22,11 @@ export type InputHoldEnd
 
 export interface HeldLayer {
   viewport: number
+  /** 退场暂挡（`'layer'`）的层数。 */
+  layer: number
   surface: number
+  /** 退场暂挡变成 inert 的内容，以及它们原来是不是 inert。 */
+  inertContent: Map<Element, boolean> | null
   shield: HTMLElement | null
   /** 挡板盖满视口，还是只盖浮层自己。 */
   isShieldFull: boolean

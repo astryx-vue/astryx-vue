@@ -13,6 +13,7 @@ import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import Stack from '../Stack/Stack.vue'
 import Text from '../Text/Text.vue'
 import { ALERT_DIALOG_CONTEXT_KEY } from './context.js'
+import { useAlertMotion } from './useAlertMotion.js'
 import '../../styles/alert-dialog.css'
 
 defineOptions({ name: 'AstryxAlertDialog', inheritAttrs: false })
@@ -112,6 +113,14 @@ const tracksPress = useCoarsePointer()
 useActionGroupTracking(footer, { isEnabled: tracksPress })
 const actionTrackingProps = computed(() => (tracksPress.value ? pressGroupItemProps() : undefined))
 
+// 手指下弹窗缩放淡入、淡出，淡出播完对话框才关闭；内联的弹窗不是浮层，不播。
+const motion = useAlertMotion({
+  isOpen: () => props.isOpen,
+  isEnabled: () => tracksPress.value && !props.isInline,
+  element: () => element.value,
+})
+const isPresented = motion.isPresented
+
 const dialogRole = computed(() => (props.isInline ? 'group' : 'alertdialog'))
 const layout = computed(() => (isSmallScreen.value ? 'stacked' : 'row'))
 </script>
@@ -125,7 +134,8 @@ const layout = computed(() => (isSmallScreen.value ? 'stacked' : 'row'))
     :aria-labelledby="titleId"
     :data-layout="layout"
     :is-inline="isInline"
-    :is-open="isOpen"
+    :is-open="isPresented"
+    :data-touch-motion="motion.isDriving.value || undefined"
     purpose="form"
     :role="dialogRole"
     :width="width"
