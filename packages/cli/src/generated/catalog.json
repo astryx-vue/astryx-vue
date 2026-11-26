@@ -39966,7 +39966,13 @@
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "The trigger does not open."
+                "description": "The trigger does not open. It stays in the tab order with `aria-disabled`, and a commit from a popup that was already open is ignored."
+              },
+              {
+                "name": "`disabledMessage`",
+                "type": "`string`",
+                "default": "-",
+                "description": "Why the field is disabled. With `isDisabled`, hovering, keyboard focus or a tap on the trigger shows it in a tooltip, and it describes the trigger for screen readers. With a custom trigger, spread the trigger props onto your control and it shows the tooltip and carries the description; drop the control's own tooltip while disabled."
               },
               {
                 "name": "`isLoading`",
@@ -39984,7 +39990,7 @@
                 "name": "`statusVariant`",
                 "type": "`'attached' | 'detached' | 'tooltip'`",
                 "default": "`'attached'`",
-                "description": "Where the status message sits."
+                "description": "Where the status message sits. `attached` and `tooltip` put a status icon in the chevron's place; with `tooltip` the icon is a focusable button that holds the message, and pressing it does not open the popup."
               },
               {
                 "name": "`labelTooltip`",
@@ -40111,7 +40117,13 @@
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "触发器不再打开。"
+                "description": "触发器不再打开。它用 `aria-disabled` 留在 Tab 序里；禁用前已经开着的弹层里再提交也不会改值。"
+              },
+              {
+                "name": "`disabledMessage`",
+                "type": "`string`",
+                "default": "-",
+                "description": "为什么禁用。和 `isDisabled` 一起用时，鼠标悬停、键盘聚焦或手指点按触发器都会弹出这段说明，读屏也会把它当成触发器的说明。自定义触发器把拿到的触发器属性铺到自己的控件上就会显示提示并带上说明，控件自己的提示在禁用时请去掉。"
               },
               {
                 "name": "`isLoading`",
@@ -40129,7 +40141,7 @@
                 "name": "`statusVariant`",
                 "type": "`'attached' | 'detached' | 'tooltip'`",
                 "default": "`'attached'`",
-                "description": "状态消息放在哪里。"
+                "description": "状态消息放在哪里。`attached` 和 `tooltip` 会在箭头的位置画状态图标；`tooltip` 时图标是能聚焦的按钮，说明收在它的提示里，点它不会打开弹层。"
               },
               {
                 "name": "`labelTooltip`",
