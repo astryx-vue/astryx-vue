@@ -1,11 +1,20 @@
 <script setup lang="ts">
 import type { TypeaheadItemProps } from './types.js'
+import { devPropError, isDevBuild } from '../composables/internal/devBuild.js'
 import '../../styles/typeahead.css'
 
 defineOptions({ name: 'AstryxTypeaheadItem' })
 
 // group 只为和同名属性对得上而接受；分组标题由下拉按 item.auxiliaryData.group 画。
 const props = defineProps<TypeaheadItemProps>()
+
+if (isDevBuild() && props.item == null) {
+  throw devPropError(
+    'TypeaheadItem',
+    'item',
+    'is required: the item to show, for example :item="{ id: \'nyc\', label: \'New York\' }".',
+  )
+}
 </script>
 
 <template>

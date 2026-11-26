@@ -37362,7 +37362,7 @@
                 "name": "`hasEntriesOnFocus`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Show results on focus before the user types."
+                "description": "Show results on focus before the user types. After a pick from that list, the input keeps focus and the list stays open with the next choice active while another choice remains."
               },
               {
                 "name": "`showOnFocus`",
@@ -37443,6 +37443,12 @@
                 "description": "Status text under the field."
               },
               {
+                "name": "`statusVariant`",
+                "type": "`'attached' | 'detached' | 'tooltip'`",
+                "default": "`'attached'`",
+                "description": "Where the status message sits. `attached` draws a status icon at the end of the field with the message below; `detached` keeps only the message; with `tooltip` the icon is a focusable button that holds the message."
+              },
+              {
                 "name": "`size`",
                 "type": "`'sm' | 'md' | 'lg'`",
                 "default": "`'md'`",
@@ -37464,7 +37470,7 @@
                 "name": "`name`",
                 "type": "`string`",
                 "default": "—",
-                "description": "Form field name. Each selected id is submitted once."
+                "description": "Form field name. Each selected id is submitted once. A disabled field submits nothing."
               },
               {
                 "name": "`width`",
@@ -37567,7 +37573,7 @@
                 "name": "`hasEntriesOnFocus`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "聚焦后还没输入就展示结果。"
+                "description": "聚焦后还没输入就展示结果。从该列表中选一项后，只要还有其他选项，输入框保持焦点，列表保持打开，并激活下一项。"
               },
               {
                 "name": "`showOnFocus`",
@@ -37648,6 +37654,12 @@
                 "description": "字段下方的状态说明。"
               },
               {
+                "name": "`statusVariant`",
+                "type": "`'attached' | 'detached' | 'tooltip'`",
+                "default": "`'attached'`",
+                "description": "状态说明放哪里。`attached` 在字段末尾画状态图标、说明在下面；`detached` 只留下面的说明；`tooltip` 的图标是能聚焦的按钮，说明收在它的提示里。"
+              },
+              {
                 "name": "`size`",
                 "type": "`'sm' | 'md' | 'lg'`",
                 "default": "`'md'`",
@@ -37669,7 +37681,7 @@
                 "name": "`name`",
                 "type": "`string`",
                 "default": "—",
-                "description": "表单字段名。每个已选 id 提交一次。"
+                "description": "表单字段名。每个已选 id 提交一次；字段禁用时不提交。"
               },
               {
                 "name": "`width`",
@@ -38189,6 +38201,12 @@
                 "description": "Status text under the field."
               },
               {
+                "name": "`statusVariant`",
+                "type": "`'attached' | 'detached' | 'tooltip'`",
+                "default": "`'attached'`",
+                "description": "Where the status message sits. `attached` draws a status icon at the end of the field with the message below; `detached` keeps only the message; with `tooltip` the icon is a focusable button that holds the message."
+              },
+              {
                 "name": "`size`",
                 "type": "`'sm' | 'md' | 'lg'`",
                 "default": "`'md'`",
@@ -38591,6 +38609,12 @@
                 "type": "`string`",
                 "default": "—",
                 "description": "字段下方的状态说明。"
+              },
+              {
+                "name": "`statusVariant`",
+                "type": "`'attached' | 'detached' | 'tooltip'`",
+                "default": "`'attached'`",
+                "description": "状态说明放哪里。`attached` 在字段末尾画状态图标、说明在下面；`detached` 只留下面的说明；`tooltip` 的图标是能聚焦的按钮，说明收在它的提示里。"
               },
               {
                 "name": "`size`",

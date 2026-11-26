@@ -1,4 +1,5 @@
 import type { SearchableItem, SearchSource } from '../composables/useAsyncSource.js'
+import type { InputStatusVariant } from '../composables/useInputStatusIcon.js'
 import type { FieldPartStylingProps } from '../Field/fieldParts.js'
 
 export type TokenizerSize = 'sm' | 'md' | 'lg'
@@ -35,6 +36,12 @@ export interface TokenizerProps<T extends SearchableItem = SearchableItem> exten
   disabledMessage?: string
   status?: TokenizerStatus
   statusMessage?: string
+  /**
+   * 状态相对输入框怎么摆：`attached` 框里画图标、说明在下面，`detached` 只画下面的说明，
+   * `tooltip` 框里画一个能聚焦的图标按钮，说明收在它的提示里。
+   * @default 'attached'
+   */
+  statusVariant?: InputStatusVariant
   size?: TokenizerSize
   clearable?: boolean
   /** `clearable` 的原版名。 */

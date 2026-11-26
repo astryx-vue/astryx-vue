@@ -154,6 +154,8 @@ export interface MultiSelectorTriggerProps {
   'onClick': (event: MouseEvent) => void
   'onKeyDown': (event: KeyboardEvent) => void
   'onFocus': (event: FocusEvent) => void
+  /** 字段禁用（含 InputGroup 带来的禁用）时为 `'true'`。控件仍留在 Tab 序列里，面板不会打开。 */
+  'aria-disabled': 'true' | undefined
   'aria-haspopup': 'listbox' | 'grid' | 'dialog'
   'aria-expanded': boolean
   'aria-controls': string
