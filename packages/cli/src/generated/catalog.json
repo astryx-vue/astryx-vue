@@ -26981,8 +26981,8 @@
         "zh": "`DateRangeInput` 选择开始日期和结束日期。值是 `{ start, end }`，两端都是 ISO 日期；没有选择时是 `null`。"
       },
       "usage": {
-        "en": "`DateRangeInput` selects a start date and an end date. The value is `{ start, end }` with ISO dates, or `null`.\n\n```vue\n<script setup lang=\"ts\">\nimport type { DateRange } from '@astryx-vue/core/DateRangeInput'\nimport { DateRangeInput } from '@astryx-vue/core/DateRangeInput'\nimport { shallowRef } from 'vue'\n\nconst range = shallowRef<DateRange | null>(null)\n</script>\n\n<template>\n  <DateRangeInput v-model=\"range\" label=\"Date range\" />\n</template>\n```\n\nThe popover shows two months under one header. The first click sets the start. The second click commits the range when the span is allowed. Clicking the start again commits a single day when the shortest span is one day, and cancels the selection otherwise. The closed field omits the year when both ends are in the current year. Presets stay beside the calendars. When the two months no longer fit side by side, they wrap onto separate rows. A constraint can still turn individual days off. While a change is saving, the field cannot be edited.",
-        "zh": "`DateRangeInput` 选择开始日期和结束日期。值是 `{ start, end }`，两端都是 ISO 日期；没有选择时是 `null`。\n\n```vue\n<script setup lang=\"ts\">\nimport type { DateRange } from '@astryx-vue/core/DateRangeInput'\nimport { DateRangeInput } from '@astryx-vue/core/DateRangeInput'\nimport { shallowRef } from 'vue'\n\nconst range = shallowRef<DateRange | null>(null)\n</script>\n\n<template>\n  <DateRangeInput v-model=\"range\" label=\"日期区间\" />\n</template>\n```\n\n弹出层默认把两个月放在同一条标题下面。第一次点击记下起点，第二次点击在跨度合法时提交区间。再次点击起点时，最短天数是 1 就提交单日，否则取消这次选择。两端都在今年时，收起后的文字不写年份。预设按钮一直在日历旁边。两个月并排放不下时，月份会自动换成上下两行。约束函数可以再排除具体的日子。正在保存时字段不能改，保存会在区间写进去之后进行。"
+        "en": "`DateRangeInput` selects a start date and an end date. The value is `{ start, end }` with ISO dates, or `null`.\n\n```vue\n<script setup lang=\"ts\">\nimport type { DateRange } from '@astryx-vue/core/DateRangeInput'\nimport { DateRangeInput } from '@astryx-vue/core/DateRangeInput'\nimport { shallowRef } from 'vue'\n\nconst range = shallowRef<DateRange | null>(null)\n</script>\n\n<template>\n  <DateRangeInput v-model=\"range\" label=\"Date range\" />\n</template>\n```\n\nThe popover shows two months under one header. The first click sets the start. The second click commits the range when the span is allowed. Clicking the start again commits a single day when the shortest span is one day, and cancels the selection otherwise. The closed field omits the year when both ends are in the current year; on the server and while hydrating the year is always written, so a server in another time zone cannot cause a mismatch. Presets stay beside the calendars. When the presets and one month no longer fit side by side, the presets stack above the calendar and the popover scrolls inside the layer. When the two months no longer fit side by side, they wrap onto separate rows. A constraint can still turn individual days off. While a change is saving, the field cannot be edited.",
+        "zh": "`DateRangeInput` 选择开始日期和结束日期。值是 `{ start, end }`，两端都是 ISO 日期；没有选择时是 `null`。\n\n```vue\n<script setup lang=\"ts\">\nimport type { DateRange } from '@astryx-vue/core/DateRangeInput'\nimport { DateRangeInput } from '@astryx-vue/core/DateRangeInput'\nimport { shallowRef } from 'vue'\n\nconst range = shallowRef<DateRange | null>(null)\n</script>\n\n<template>\n  <DateRangeInput v-model=\"range\" label=\"日期区间\" />\n</template>\n```\n\n弹出层默认把两个月放在同一条标题下面。第一次点击记下起点，第二次点击在跨度合法时提交区间。再次点击起点时，最短天数是 1 就提交单日，否则取消这次选择。两端都在今年时，收起后的文字不写年份。服务端渲染和水合那一趟不读时钟，年份一律写出来，服务端在别的时区也不会水合不一致。预设按钮在日历旁边；预设和一个月的日历并排放不下时，预设叠到日历上面，弹层在层的高度内自己滚动。两个月并排放不下时，月份会自动换成上下两行。约束函数可以再排除具体的日子。正在保存时字段不能改，保存会在区间写进去之后进行。"
       },
       "practices": {
         "en": [
@@ -27023,7 +27023,7 @@
                 "name": "`v-model`",
                 "type": "`DateRange | null`",
                 "default": "`null`",
-                "description": "`{ start, end }` ISO dates."
+                "description": "`{ start, end }` ISO date strings. Passing `Date` objects throws a development error that names the prop."
               },
               {
                 "name": "`label`",
@@ -27186,7 +27186,7 @@
                 "name": "`v-model`",
                 "type": "`DateRange | null`",
                 "default": "`null`",
-                "description": "`{ start, end }`，ISO 日期。"
+                "description": "`{ start, end }`，ISO 日期字符串。传 `Date` 对象会在开发期抛出点明属性的错误。"
               },
               {
                 "name": "`label`",

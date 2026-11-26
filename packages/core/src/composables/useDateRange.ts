@@ -83,13 +83,16 @@ export function isDayOutsideSpan(pending: string | null, day: string, minRangeSp
   return !isRangeWithinSpan(orderRange(pending, day), minRangeSpan, maxRangeSpan)
 }
 
-export function formatDateRange(range: ISODateRange | null, locale: string): string {
+/**
+ * 一段日期范围的显示文字。起止都在今年时省掉年份。`currentYear` 缺省读时钟；
+ * 传 `null` 表示今年还不知道（服务端渲染、水合那一趟），这时一律写出年份。
+ */
+export function formatDateRange(range: ISODateRange | null, locale: string, currentYear: number | null = new Date().getFullYear()): string {
   if (range == null)
     return ''
-  const currentYear = new Date().getFullYear()
   const startYear = Number(range.start.slice(0, 4))
   const endYear = Number(range.end.slice(0, 4))
-  const withYear = !(startYear === endYear && startYear === currentYear)
+  const withYear = !(currentYear != null && startYear === endYear && startYear === currentYear)
   const formatter = new Intl.DateTimeFormat(locale === 'zh-CN' ? 'zh-CN' : 'en', {
     month: 'short',
     day: 'numeric',
