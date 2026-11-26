@@ -60,6 +60,16 @@ const date = ref<Date | null>(new Date(2026, 9, 30))
 
 公历下这些都和以前一样：同样的文字、同样的读法、同样的系统控件。
 
+## 自己拼日历
+
+`useCalendarDays` 和 `useCalendarNavigation` 也收 `calendar`：按那个历法排月格子、翻月和写月份标题，日期仍是公历 ISO。它们不读 provider 的历法，默认是公历；要跟随时把 `useLocale().calendar` 传进去。`useCalendarConstraints` 只看公历日期，在任何历法下都通用。
+
+```ts
+const { calendar } = useLocale()
+const nav = useCalendarNavigation(() => ({ initialValue: '2026-10-23', calendar: calendar.value }))
+const { weeks } = useCalendarDays(() => ({ ...nav.visibleCalendarMonths.value[0]!, calendar: calendar.value }))
+```
+
 ## 支持的历法
 
 | 历法 | 标识 |
