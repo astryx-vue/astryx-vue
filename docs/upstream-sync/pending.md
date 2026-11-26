@@ -6798,15 +6798,19 @@
 - [ ] [`07f97c668`](https://github.com/meta/astryx/commit/07f97c668) feat(TabMenu): forward host attributes and DOM handlers to the trigger (#7295)
 - [x] [`7c206edbb`](https://github.com/meta/astryx/commit/7c206edbb) feat(List): one edge prop for padded, flush, outset, and bleed rows (#7592)
   - 不适用：上游组件规范文档（自动初筛）
-- [ ] [`e40ce5a06`](https://github.com/meta/astryx/commit/e40ce5a06) fix(DropdownMenu): close submenu flyouts when the menu is light-dismissed (#6912)
+- [x] [`e40ce5a06`](https://github.com/meta/astryx/commit/e40ce5a06) fix(DropdownMenu): close submenu flyouts when the menu is light-dismissed (#6912)
+  - 不适用：BreadcrumbItem.vue 的菜单直接渲染 DropdownMenu，没有自己的菜单实现；子菜单随菜单关闭的修复归菜单任务
 - [x] [`6d4f178a2`](https://github.com/meta/astryx/commit/6d4f178a2) Audit DropdownMenuDivider evidence and contract (#7693)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`27c8c55f2`](https://github.com/meta/astryx/commit/27c8c55f2) feat(SideNav): keep nested items full width and indent their content (#7594)
+- [x] [`27c8c55f2`](https://github.com/meta/astryx/commit/27c8c55f2) feat(SideNav): keep nested items full width and indent their content (#7594)
+  - 已移植：[#578](https://github.com/astryx-vue/astryx-vue/pull/578)。嵌套行等宽、内容缩进本来就有；补上下级组只在收起动画期间裁剪（overflow 靠 allow-discrete 延迟放开，焦点环不被切），文档补说明，补测试
 - [ ] [`a7d26b7c9`](https://github.com/meta/astryx/commit/a7d26b7c9) fix(TopNav): stop clipping the focus ring inside expanded drawer sections (#7701)
-- [ ] [`3c9b4ef2f`](https://github.com/meta/astryx/commit/3c9b4ef2f) fix(AppShell): defer hiding the mobile nav Activity boundary until close finishes (#6319)
+- [x] [`3c9b4ef2f`](https://github.com/meta/astryx/commit/3c9b4ef2f) fix(AppShell): defer hiding the mobile nav Activity boundary until close finishes (#6319)
+  - 不适用：针对 React.Activity 边界在关闭同一帧被隐藏，Vue 版 AppShell 没有这个边界
 - [x] [`020e1fefa`](https://github.com/meta/astryx/commit/020e1fefa) spec(SideNav): nested rows are full width with the indent inside the row (#7647)
   - 不适用：上游组件规范文档（自动初筛）
-- [ ] [`3c1d32d9a`](https://github.com/meta/astryx/commit/3c1d32d9a) fix(SideNavItem): keep a caller's className on the row element (#7772)
+- [x] [`3c1d32d9a`](https://github.com/meta/astryx/commit/3c1d32d9a) fix(SideNavItem): keep a caller's className on the row element (#7772)
+  - Vue 版已有：SideNavItem 把调用方的 class 和 style 交给 NavItem，NavItem 合并到行元素上，SideNav.test.ts 已有测试
 - [ ] [`6c54bddfb`](https://github.com/meta/astryx/commit/6c54bddfb) fix(TopNav): make collapsed drawer sections inert (#7699)
 
 ### v0.7.3
@@ -6818,15 +6822,19 @@
 
 ### v0.7.5
 
-- [ ] [`f81b8bba4`](https://github.com/meta/astryx/commit/f81b8bba4) fix(SideNavHeading): render end content beside a whole-heading link (#8029)
+- [x] [`f81b8bba4`](https://github.com/meta/astryx/commit/f81b8bba4) fix(SideNavHeading): render end content beside a whole-heading link (#8029)
+  - 已移植：[#578](https://github.com/astryx-vue/astryx-vue/pull/578)。整个标题是链接又带末端内容时，改成 div 里链接和末端内容并排，末端控件不再塞进 a，补测试
 - [x] [`92697387b`](https://github.com/meta/astryx/commit/92697387b) fix(NumberInput): a disabled field stays in the tab order (#8099)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`ee98ff9a8`](https://github.com/meta/astryx/commit/ee98ff9a8) docs: TabList scrolls its overflow, and MobileNav is a drawer (#8100)
-- [ ] [`785e42ad9`](https://github.com/meta/astryx/commit/785e42ad9) fix(DropdownMenu): a row the pointer lights takes focus without :focus-visible (#8221)
+- [x] [`785e42ad9`](https://github.com/meta/astryx/commit/785e42ad9) fix(DropdownMenu): a row the pointer lights takes focus without :focus-visible (#8221)
+  - 不适用：同上：面包屑菜单复用 DropdownMenu，行被指针点亮时的焦点修复在 DropdownMenu 里，归菜单任务
 - [x] [`a6740a738`](https://github.com/meta/astryx/commit/a6740a738) fix(Popover): cancel the auto-focus frame when the popover closes first (#8276)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`d0c4bf26f`](https://github.com/meta/astryx/commit/d0c4bf26f) fix(MobileNav): the drawer is never wider than 85% of the viewport (#8063)
-- [ ] [`4b05772a2`](https://github.com/meta/astryx/commit/4b05772a2) fix(Popover): focus, Tab and Escape work in a second document (#7356)
+- [x] [`d0c4bf26f`](https://github.com/meta/astryx/commit/d0c4bf26f) fix(MobileNav): the drawer is never wider than 85% of the viewport (#8063)
+  - 已移植：[#578](https://github.com/astryx-vue/astryx-vue/pull/578)。抽屉宽度改为 min(width, 85vw)，窄屏上总留一条可点的遮罩，补测试和文档
+- [x] [`4b05772a2`](https://github.com/meta/astryx/commit/4b05772a2) fix(Popover): focus, Tab and Escape work in a second document (#7356)
+  - 已移植：[#545](https://github.com/astryx-vue/astryx-vue/pull/545)。浮层关闭栈按文档分开登记，MobileNav 登记时已传 getContainer
 - [x] [`174300fcb`](https://github.com/meta/astryx/commit/174300fcb) ci: discover PR browser accessibility specs, so a new spec needs no workflow edit (#8367)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`cdade71e6`](https://github.com/meta/astryx/commit/cdade71e6) docs(spec): TopNav and its sub-components record their shipped contracts as current (#8317)
@@ -6841,19 +6849,22 @@
   - 不适用：上游组件规范文档（自动初筛）
 - [x] [`79fb52533`](https://github.com/meta/astryx/commit/79fb52533) docs(spec): NavMenu records its shipped contract as current (#8524)
   - 不适用：上游组件规范文档（自动初筛）
-- [ ] [`c22cbe2fd`](https://github.com/meta/astryx/commit/c22cbe2fd) fix(core): useAnnounce delivers inside the open Astryx modal that encloses its caller (#8009)
+- [x] [`c22cbe2fd`](https://github.com/meta/astryx/commit/c22cbe2fd) fix(core): useAnnounce delivers inside the open Astryx modal that encloses its caller (#8009)
+  - 已移植：[#550](https://github.com/astryx-vue/astryx-vue/pull/550)。原生模态打开时播报写进对话框自己的区域，MobileNav 用原生对话框，随共用通道
 - [ ] [`fbbe89780`](https://github.com/meta/astryx/commit/fbbe89780) fix(TopNav): under reduced motion the mega-menu panel never rises (#8612)
 - [x] [`ef6d25b71`](https://github.com/meta/astryx/commit/ef6d25b71) docs(spec): Breadcrumbs records its shipped contract as current (#8560)
   - 不适用：上游组件规范文档（自动初筛）
-- [ ] [`12e7190f6`](https://github.com/meta/astryx/commit/12e7190f6) fix(SideNavItem): the collapsed rail tooltip describes the item's control, not its row (#7502)
+- [x] [`12e7190f6`](https://github.com/meta/astryx/commit/12e7190f6) fix(SideNavItem): the collapsed rail tooltip describes the item's control, not its row (#7502)
+  - Vue 版已有：Tooltip 以插槽里第一个元素（收起行的链接或按钮）为触发器，描述挂在它身上；禁用图标行另加 pointer-events 让悬停也出提示
 - [x] [`39ed04d76`](https://github.com/meta/astryx/commit/39ed04d76) docs(spec): TabList records its shipped contract as current (#8643)
   - 不适用：上游组件规范文档（自动初筛）
 - [ ] [`08e626f37`](https://github.com/meta/astryx/commit/08e626f37) fix(TabList): a hugging tab keeps its label's width, so a narrow strip scrolls (#8730)
 - [ ] [`4c9a9d331`](https://github.com/meta/astryx/commit/4c9a9d331) fix(core): a disabled NavHeadingMenuItem link no longer navigates (#8667)
 - [x] [`db165f86f`](https://github.com/meta/astryx/commit/db165f86f) spec(SideNav, AppShell): rail collapse by snap, clip and cross-fade (D38) (#8720)
   - 不适用：上游组件规范文档（自动初筛）
-- [ ] [`b8c5e4aee`](https://github.com/meta/astryx/commit/b8c5e4aee) feat(core): SideNav's rail collapses by snap, clip and cross-fade; AppShell's content moves on its clock (#8723)
+- [x] [`b8c5e4aee`](https://github.com/meta/astryx/commit/b8c5e4aee) feat(core): SideNav's rail collapses by snap, clip and cross-fade; AppShell's content moves on its clock (#8723)
   - 暂缓：本期已做 animatedLayout 模块与句柄；剩 SideNav 折叠栏的收起动效和 AppShell 内容跟随，归动效与手势引擎的组件接入阶段
+  - 已移植：[#578](https://github.com/astryx-vue/astryx-vue/pull/578)。收起、展开一步落宽，旧轨道留副本并从行内结束边裁剪，文字、图标按 40%、60%、30% 淡入淡出；AppShell 内容区列滑动、新旧内容交叉淡入淡出，补测试
 - [x] [`7d23f0bb6`](https://github.com/meta/astryx/commit/7d23f0bb6) docs(SideNav, AppShell): the rail collapse motion is implemented (FR6, FR17) (#8790)
   - 不适用：上游组件规范文档（自动初筛）
 - [x] [`34d2513d8`](https://github.com/meta/astryx/commit/34d2513d8) test(SideNav, AppShell): real-browser frame evidence for the rail collapse (#8792)
@@ -6863,7 +6874,8 @@
 - [ ] [`7824f29dc`](https://github.com/meta/astryx/commit/7824f29dc) fix(TopNav): a mouse slide across TopNavMenu's action items selects no text (#8807)
 - [x] [`f3d85ed05`](https://github.com/meta/astryx/commit/f3d85ed05) test(Breadcrumbs): the hover-focus case waits for the open's first-row focus, so it no longer races it (#8824)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`249501fb0`](https://github.com/meta/astryx/commit/249501fb0) fix(Overlay, DropdownMenuGroup, MobileNavToggle): forward host attributes to the element each owns (#8755)
+- [x] [`249501fb0`](https://github.com/meta/astryx/commit/249501fb0) fix(Overlay, DropdownMenuGroup, MobileNavToggle): forward host attributes to the element each owns (#8755)
+  - Vue 版已有：MobileNavToggle 的根是 button，宿主属性和监听器直接落在上面；MobileNav 的根是 dialog，同样透传
 
 ### v0.7.6
 
@@ -6871,9 +6883,11 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`257380d6d`](https://github.com/meta/astryx/commit/257380d6d) fix(SideNavHeading, TopNavHeading): one arrow key moves one item in a NavHeadingMenu (#9019)
   - 不适用：上游组件规范文档、只改上游测试（自动初筛）
-- [ ] [`1a4158ea3`](https://github.com/meta/astryx/commit/1a4158ea3) fix(Drawer, MobileNav, Lightbox): a dismissed file picker inside no longer closes them (#8855)
+- [x] [`1a4158ea3`](https://github.com/meta/astryx/commit/1a4158ea3) fix(Drawer, MobileNav, Lightbox): a dismissed file picker inside no longer closes them (#8855)
+  - 已移植：[#578](https://github.com/astryx-vue/astryx-vue/pull/578)。MobileNav 只认发给 dialog 自己的 cancel，文件选择器取消不再关抽屉，补测试；Lightbox 见 #565，Drawer 走 Dialog 已有
 - [ ] [`09382da26`](https://github.com/meta/astryx/commit/09382da26) fix(TabList): a press measures the selected tab in the next frame, not inside the press (#8856)
-- [ ] [`cdc4dcbab`](https://github.com/meta/astryx/commit/cdc4dcbab) fix(MobileNav): the header row grows with taller header content (#8865)
+- [x] [`cdc4dcbab`](https://github.com/meta/astryx/commit/cdc4dcbab) fix(MobileNav): the header row grows with taller header content (#8865)
+  - 已移植：[#578](https://github.com/astryx-vue/astryx-vue/pull/578)。头部行 height 改 min-height，随内容长高，补测试
 - [x] [`1db4108ac`](https://github.com/meta/astryx/commit/1db4108ac) test(core): one internal definition pins core's touch style keys (#8331)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`6751c2597`](https://github.com/meta/astryx/commit/6751c2597) test(TabList): TabMenu's arrow-key tests wait for the open's focus to land (#8493)
@@ -6881,26 +6895,33 @@
 - [x] [`8a768dc3f`](https://github.com/meta/astryx/commit/8a768dc3f) test(SideNav): the rail's Reduce Motion cases read the motion by its own start and end (#8914)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`e203bb226`](https://github.com/meta/astryx/commit/e203bb226) fix(core): TopNavMenu and TopNavMegaMenu forward ref to the drawer trigger (#8897)
-- [ ] [`7958bd2b1`](https://github.com/meta/astryx/commit/7958bd2b1) fix(SideNavItem): a disabled item keeps its Tab stop (spec:AST-085 FR1) (#9102)
+- [x] [`7958bd2b1`](https://github.com/meta/astryx/commit/7958bd2b1) fix(SideNavItem): a disabled item keeps its Tab stop (spec:AST-085 FR1) (#9102)
+  - 已移植：[#578](https://github.com/astryx-vue/astryx-vue/pull/578)。禁用的侧栏项改为 aria-disabled 并保留 Tab 停靠点，NavItem 新增 isFocusableWhenDisabled，补测试和文档
 - [ ] [`d7cd32c09`](https://github.com/meta/astryx/commit/d7cd32c09) fix(Item, TreeList): a disabled row's link has no destination (spec:AST-085 FR2) (#9056)
 - [x] [`d279d1e79`](https://github.com/meta/astryx/commit/d279d1e79) docs(spec): Pagination records its shipped contract as current (#9101)
   - 不适用：上游组件规范文档（自动初筛）
 - [x] [`0fa02074f`](https://github.com/meta/astryx/commit/0fa02074f) spec(AST-105, Resizable, LayoutPanel, SideNav): one shared edge reveal; a resizable LayoutPanel slides on collapse and open; focus leaves a collapsing panel (#8783)
   - 不适用：上游组件规范文档（自动初筛）
-- [ ] [`b56b6d4fc`](https://github.com/meta/astryx/commit/b56b6d4fc) fix(core): one modality call per component, reading the component's own document (#9148)
+- [x] [`b56b6d4fc`](https://github.com/meta/astryx/commit/b56b6d4fc) fix(core): one modality call per component, reading the component's own document (#9148)
+  - 不适用：针对 React 里面包屑菜单触发器自己追踪输入模态；Vue 版复用 DropdownMenu，没有这段代码
 - [ ] [`0135af462`](https://github.com/meta/astryx/commit/0135af462) fix(core N–Z): slots use isRenderable; the remaining checks are allowed with a reason (#9206)
 - [x] [`e0a03766d`](https://github.com/meta/astryx/commit/e0a03766d) docs(knowledge): every component spec lives in docs/specs/components, one folder per component (#9007)
   - 不适用：上游内部规范和架构文档、上游组件规范文档（自动初筛）
-- [ ] [`5909b939e`](https://github.com/meta/astryx/commit/5909b939e) feat(core): one shared edge reveal in the animated-layout module, which the SideNav rail moves onto (#8721)
+- [x] [`5909b939e`](https://github.com/meta/astryx/commit/5909b939e) feat(core): one shared edge reveal in the animated-layout module, which the SideNav rail moves onto (#8721)
   - 暂缓：本期已做 模块里共用的边缘揭示（reportLayoutEdge/playLayoutEdge）；剩 SideNav 折叠栏改用它，归动效与手势引擎的组件接入阶段
+  - 已移植：[#578](https://github.com/astryx-vue/astryx-vue/pull/578)。轨道用布局动效模块里共用的两态边缘揭示（holdLayoutEdge、playLayoutEdge），不再手写裁剪
 - [x] [`a9b974a46`](https://github.com/meta/astryx/commit/a9b974a46) test(SideNav): the rail proofs read the motion on its own clock, not on the frames and wall time a loaded page gets (#9289)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`372a0eae2`](https://github.com/meta/astryx/commit/372a0eae2) fix(SideNav): focus on a row the collapsed rail removes moves to the collapse toggle or the nearest rail row (#9249)
-- [ ] [`8c8f0dac6`](https://github.com/meta/astryx/commit/8c8f0dac6) fix(Collapsible): focus inside closing content moves to the trigger (#9250)
-- [ ] [`d51f57efa`](https://github.com/meta/astryx/commit/d51f57efa) fix(SideNavHeading, TopNavHeading): include headings in menu button names (#9329)
+- [x] [`372a0eae2`](https://github.com/meta/astryx/commit/372a0eae2) fix(SideNav): focus on a row the collapsed rail removes moves to the collapse toggle or the nearest rail row (#9249)
+  - 已移植：[#578](https://github.com/astryx-vue/astryx-vue/pull/578)。收起时焦点在轨道丢掉的行上交给收起按钮或最近保留行，保留行留在原行控件，页脚控件按名字找回；新增 focusLeaving 辅助，补测试
+- [x] [`8c8f0dac6`](https://github.com/meta/astryx/commit/8c8f0dac6) fix(Collapsible): focus inside closing content moves to the trigger (#9250)
+  - 已移植：[#578](https://github.com/astryx-vue/astryx-vue/pull/578)。SideNav 部分：用共用的 useFocusLeavingChange（先记焦点、变化后再挪）跑焦点接力；Collapsible 关闭内容时焦点回触发器归布局任务
+- [x] [`d51f57efa`](https://github.com/meta/astryx/commit/d51f57efa) fix(SideNavHeading, TopNavHeading): include headings in menu button names (#9329)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。SideNavHeading、TopNavHeading 菜单按钮名带上标题
 - [x] [`b793e5d1b`](https://github.com/meta/astryx/commit/b793e5d1b) test(rtl): RTL coverage for six TopNav parts (FeaturedCard bug left visible) (#9313)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`e736b92c8`](https://github.com/meta/astryx/commit/e736b92c8) fix(SideNav): a resizable rail keeps its nav and items mounted across a collapse (#9290)
+- [x] [`e736b92c8`](https://github.com/meta/astryx/commit/e736b92c8) fix(SideNav): a resizable rail keeps its nav and items mounted across a collapse (#9290)
+  - 已移植：[#578](https://github.com/astryx-vue/astryx-vue/pull/578)。可缩放时外层框架收起后也保留，只有手柄进出，nav 和里面的行不重建；动效以外层框架为被移动的轨道，副本放在页面行里不被裁
 - [ ] [`01015794a`](https://github.com/meta/astryx/commit/01015794a) fix(TopNav): the featured card's link arrow mirrors in RTL (#9317)
 - [x] [`1a4c048bc`](https://github.com/meta/astryx/commit/1a4c048bc) test(rtl): RTL coverage for the SideNav parts (#9311)
   - 不适用：上游内部规范和架构文档（自动初筛）
@@ -6910,14 +6931,18 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`daa87e136`](https://github.com/meta/astryx/commit/daa87e136) test(rtl): RTL coverage for TopNavMegaMenuFeaturedCard (#9380)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`99cc6dc85`](https://github.com/meta/astryx/commit/99cc6dc85) fix(core): many components carry only the English for their own strings (#9429)
-- [ ] [`9444ac083`](https://github.com/meta/astryx/commit/9444ac083) fix(SideNav): slots follow the shared isRenderable presence check (#9498)
-- [ ] [`09a482eaf`](https://github.com/meta/astryx/commit/09a482eaf) fix(Layer): a press inside a layer stops at the layer root in the React tree (#9497)
+- [x] [`99cc6dc85`](https://github.com/meta/astryx/commit/99cc6dc85) fix(core): many components carry only the English for their own strings (#9429)
+  - 已移植：[#515](https://github.com/astryx-vue/astryx-vue/pull/515)。每个组件只读自己命名空间的内置文案
+- [x] [`9444ac083`](https://github.com/meta/astryx/commit/9444ac083) fix(SideNav): slots follow the shared isRenderable presence check (#9498)
+  - 已移植：[#578](https://github.com/astryx-vue/astryx-vue/pull/578)。SideNav、SideNavItem、SideNavHeading、SideNavSection 和 NavItem 的插槽判空走 hasSlotContent，空插槽不画包裹元素，0 算内容，补测试
+- [x] [`09a482eaf`](https://github.com/meta/astryx/commit/09a482eaf) fix(Layer): a press inside a layer stops at the layer root in the React tree (#9497)
+  - 不适用：靠 React 合成事件在浮层根截停冒泡，Vue 按 DOM 冒泡由 layerSurfacePress 登记
 - [ ] [`27a1c48eb`](https://github.com/meta/astryx/commit/27a1c48eb) fix(TopNav): slots follow the shared isRenderable presence check (#9500)
 
 ### v0.7.7
 
-- [ ] [`322c0d6e6`](https://github.com/meta/astryx/commit/322c0d6e6) fix(Button, Tab, Tokenizer and more): slots follow isRenderable; no truthy-guard baseline (#9501)
+- [x] [`322c0d6e6`](https://github.com/meta/astryx/commit/322c0d6e6) fix(Button, Tab, Tokenizer and more): slots follow isRenderable; no truthy-guard baseline (#9501)
+  - 已移植：[#508](https://github.com/astryx-vue/astryx-vue/pull/508)。Button、Tab、SegmentedControl、Breadcrumb、Avatar 的空插槽不画包裹元素
 - [x] [`e02c9552c`](https://github.com/meta/astryx/commit/e02c9552c) test(motion, SideNav): the rail proofs judge the frames a loaded page draws, not a frame rate (#9518)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`ab905553a`](https://github.com/meta/astryx/commit/ab905553a) fix(BreadcrumbItem): a crumb in the AppShell mobile drawer closes it (#9683)
@@ -6927,12 +6952,15 @@
 
 ### v0.7.8
 
-- [ ] [`2188aa9ff`](https://github.com/meta/astryx/commit/2188aa9ff) fix(useScrollLock): keep the page where it is while an overlay is open (#8098)
+- [x] [`2188aa9ff`](https://github.com/meta/astryx/commit/2188aa9ff) fix(useScrollLock): keep the page where it is while an overlay is open (#8098)
+  - 已移植：[#550](https://github.com/astryx-vue/astryx-vue/pull/550)。锁滚动不钉死页面、只取消没人接的单指拖动；MobileNav 本来就用 useScrollLock，随之生效
 - [x] [`7d768634e`](https://github.com/meta/astryx/commit/7d768634e) test(MobileNav): a native close of the drawer releases the page lock (#8119)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`73996f1b2`](https://github.com/meta/astryx/commit/73996f1b2) fix(core): a layout change made late in a long task plays its motion instead of skipping past it (#9274)
+- [x] [`73996f1b2`](https://github.com/meta/astryx/commit/73996f1b2) fix(core): a layout change made late in a long task plays its motion instead of skipping past it (#9274)
   - 暂缓：本期已做 长任务末尾的布局变化照样播放（模块与 frameBlock 部分）；剩 SideNav、AppShell 接入，归动效与手势引擎的组件接入阶段
-- [ ] [`946211065`](https://github.com/meta/astryx/commit/946211065) perf(core): an overlay's eager import no longer carries the lazy BottomSheet's padding (#8550)
+  - 已移植：[#578](https://github.com/astryx-vue/astryx-vue/pull/578)。初始状态不播（轨道首次绘制前的非自带开关变化直接落位）；长任务末尾的变化播放由 #563-#568 的模块已做，AppShell 的交换沿用 layoutStartFor
+- [x] [`946211065`](https://github.com/meta/astryx/commit/946211065) perf(core): an overlay's eager import no longer carries the lazy BottomSheet's padding (#8550)
+  - 不适用：React 懒加载 BottomSheet 的引入体积问题，Vue 的 MobileNav 不引入 BottomSheet
 - [x] [`e390c3c43`](https://github.com/meta/astryx/commit/e390c3c43) test(browser): keep every Playwright browser context off remote hosts (#9811)
   - 不适用：只改上游测试（自动初筛）
 
@@ -6942,23 +6970,29 @@
   - 暂缓：要还原上游动效，归动效与手势引擎任务
   - 暂缓：本期已做 布局动效的副本带上 CSS 动画（transientCopy/carryAnimations）；剩 Layer 退场副本改用 carryAnimations，归动效与手势引擎的组件接入阶段
 - [ ] [`252b45bb1`](https://github.com/meta/astryx/commit/252b45bb1) feat(Layer): one input hold, first used by Dialog, Drawer and MobileNav (spec:AST-094 FR35) (#8342)
+  - 暂缓：触屏进场期间的输入遮挡（Layer input hold）依赖触屏呈现基础设施，Vue 版还没有；归动效与手势引擎任务
 - [x] [`a0c48b8d7`](https://github.com/meta/astryx/commit/a0c48b8d7) docs(AST-105, AST-108): glides and tap-to-expand play the theme's motion tokens (#9964)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`63a41bbdc`](https://github.com/meta/astryx/commit/63a41bbdc) spec(MobileNav): the drawer's links sit in a navigation landmark (DEC-1) (#9010)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`15a95e7d2`](https://github.com/meta/astryx/commit/15a95e7d2) fix(MobileNav): Tab wraps inside the open drawer through the shared focus-region module (#9999)
+- [x] [`15a95e7d2`](https://github.com/meta/astryx/commit/15a95e7d2) fix(MobileNav): Tab wraps inside the open drawer through the shared focus-region module (#9999)
+  - Vue 版已有：MobileNav 的 useFocusTrap 经 composables/internal/focusRegion.ts 的共享焦点区域处理 Tab 环绕，已有测试
 - [x] [`5c91e81ee`](https://github.com/meta/astryx/commit/5c91e81ee) fix(Layer): a closed layer's trigger is no CSS anchor (#9963)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`1fec9fa77`](https://github.com/meta/astryx/commit/1fec9fa77) feat(Resizable): `resizable` takes useResizable's output on LayoutPanel, ResizeHandle and SideNav, and focus leaves a collapsing panel (#9300)
+- [x] [`1fec9fa77`](https://github.com/meta/astryx/commit/1fec9fa77) feat(Resizable): `resizable` takes useResizable's output on LayoutPanel, ResizeHandle and SideNav, and focus leaves a collapsing panel (#9300)
+  - 已移植：[#578](https://github.com/astryx-vue/astryx-vue/pull/578)。SideNav 的 resizable 可直接传 useResizable() 的返回值：区域拥有宽度和收起状态，能否收起由区域决定，collapsible 冲突时警告；LayoutPanel 与 ResizeHandle 部分归布局任务
 - [ ] [`aabfc163d`](https://github.com/meta/astryx/commit/aabfc163d) fix(core): a disabled Tab no longer runs a caller's handlers (#10035)
 - [x] [`a96269ed3`](https://github.com/meta/astryx/commit/a96269ed3) spec(DropdownMenu): a disabled menu row is reached by the keyboard and stays inert (DEC-11) (#9008)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`267399819`](https://github.com/meta/astryx/commit/267399819) chore(Resizable): restore mocks after each resizable-slot case, plus two source cleanups (#10032)
+- [x] [`267399819`](https://github.com/meta/astryx/commit/267399819) chore(Resizable): restore mocks after each resizable-slot case, plus two source cleanups (#10032)
+  - 不适用：只删一行源码注释，其余是 React 测试里的 mock 还原
 - [x] [`9f84782a6`](https://github.com/meta/astryx/commit/9f84782a6) test(Breadcrumbs): wait for the menu's focus before the light dismiss (#10080)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`1aeaf6e1e`](https://github.com/meta/astryx/commit/1aeaf6e1e) fix(core): disabled SideNavItem rows and collapsed leaves no longer run a caller's handlers (#10037)
+- [x] [`1aeaf6e1e`](https://github.com/meta/astryx/commit/1aeaf6e1e) fix(core): disabled SideNavItem rows and collapsed leaves no longer run a caller's handlers (#10037)
+  - 已移植：[#578](https://github.com/astryx-vue/astryx-vue/pull/578)。禁用的行和收起的叶子不运行调用方的处理函数，聚焦和失焦除外，补测试
 - [ ] [`dedecd034`](https://github.com/meta/astryx/commit/dedecd034) fix(core): a disabled TopNavItem no longer runs a caller's handlers (#10039)
-- [ ] [`7e69f91dc`](https://github.com/meta/astryx/commit/7e69f91dc) fix(core): an anchored layer that would run under the software keyboard ends above it (#8208)
+- [x] [`7e69f91dc`](https://github.com/meta/astryx/commit/7e69f91dc) fix(core): an anchored layer that would run under the software keyboard ends above it (#8208)
+  - 不适用：面包屑菜单的最大高度修复；Vue 版复用 DropdownMenu，没有自己的菜单样式，归菜单任务
 - [x] [`b8ee12e34`](https://github.com/meta/astryx/commit/b8ee12e34) spec(SideNavHeading, TopNavHeading): record the heading in the menu button name (backfill) (#9385)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`4789178a2`](https://github.com/meta/astryx/commit/4789178a2) fix(TabList): keep TabMenu arrow keys out of the tab strip (#7323)
@@ -6966,29 +7000,37 @@
 
 ### v0.7.10
 
-- [ ] [`70597367f`](https://github.com/meta/astryx/commit/70597367f) fix(DropdownMenu, ContextMenu): Tab from any sub-menu level closes the whole menu (#8870)
+- [x] [`70597367f`](https://github.com/meta/astryx/commit/70597367f) fix(DropdownMenu, ContextMenu): Tab from any sub-menu level closes the whole menu (#8870)
+  - 不适用：面包屑菜单的 Tab 键处理；Vue 版复用 DropdownMenu，没有自己的键盘处理，归菜单任务
 - [x] [`a0fcc977c`](https://github.com/meta/astryx/commit/a0fcc977c) fix(SideNav): the collapse copy paints at the rail's own level, with no z-index escalation (#10145)
   - 不适用：上游内部规范和架构文档、只改上游测试（自动初筛）
-- [ ] [`d67a7848e`](https://github.com/meta/astryx/commit/d67a7848e) fix(MobileNav): the drawer's content region is a navigation landmark named like the dialog (#10130)
-- [ ] [`8bd8c6146`](https://github.com/meta/astryx/commit/8bd8c6146) fix(core): layout glides play the theme's move curve, not a spring (#10236)
+- [x] [`d67a7848e`](https://github.com/meta/astryx/commit/d67a7848e) fix(MobileNav): the drawer's content region is a navigation landmark named like the dialog (#10130)
+  - 已移植：[#578](https://github.com/astryx-vue/astryx-vue/pull/578)。抽屉内容区改成 nav 地标，和对话框同名（标题、调用方 aria-labelledby、aria-label 三级回退），补测试
+- [x] [`8bd8c6146`](https://github.com/meta/astryx/commit/8bd8c6146) fix(core): layout glides play the theme's move curve, not a spring (#10236)
   - 暂缓：内核部分已在 #563-#568；剩 AppShell 与 SideNav 侧栏收展动效，归动效与手势引擎的组件接入阶段
   - 暂缓：本期已做 布局滑动走主题的移动曲线（模块与 Table 部分）；剩 SideNav 折叠栏、AppShell 接入，归动效与手势引擎的组件接入阶段
+  - 已移植：[#578](https://github.com/astryx-vue/astryx-vue/pull/578)。轨道和 AppShell 内容区的滑动走主题的移动曲线（glide），和布局模块同一条时钟
 
 ### v0.7.11
 
-- [ ] [`66b09526b`](https://github.com/meta/astryx/commit/66b09526b) fix(core): a swizzled copy type-checks without Node's types (#10252)
+- [x] [`66b09526b`](https://github.com/meta/astryx/commit/66b09526b) fix(core): a swizzled copy type-checks without Node's types (#10252)
+  - 不适用：给拷贝出去的 React 源文件补 Node 类型声明，只关系到 swizzle 的类型检查
 - [x] [`ddedd4c58`](https://github.com/meta/astryx/commit/ddedd4c58) [Spec] motion DEC-1: every hover-to-display interaction is debounced (#7327)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`a9c911421`](https://github.com/meta/astryx/commit/a9c911421) fix(core): Overlay, AppShell and MobileNav work with no matchMedia (#10327)
+- [x] [`a9c911421`](https://github.com/meta/astryx/commit/a9c911421) fix(core): Overlay, AppShell and MobileNav work with no matchMedia (#10327)
+  - Vue 版已有：MobileNav 读减少动态效果前判断 matchMedia 是否存在，AppShell 的断点侦听同样判断
 
 ### v0.7.12
 
-- [ ] [`79817bfeb`](https://github.com/meta/astryx/commit/79817bfeb) docs(SideNavCollapseButton): the collapsible prop lists every key of the config it takes (#10282)
+- [x] [`79817bfeb`](https://github.com/meta/astryx/commit/79817bfeb) docs(SideNavCollapseButton): the collapsible prop lists every key of the config it takes (#10282)
+  - 已移植：[#578](https://github.com/astryx-vue/astryx-vue/pull/578)。收起按钮 collapsible 属性的说明列出配置的全部键，中英文档都改
 - [x] [`4e6e67df6`](https://github.com/meta/astryx/commit/4e6e67df6) fix(core): make disabled Button focusable via aria-disabled per AST-085 (#7906)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`422440a64`](https://github.com/meta/astryx/commit/422440a64) fix(core): two copies of Core's modules share one React context (#10233)
+- [x] [`422440a64`](https://github.com/meta/astryx/commit/422440a64) fix(core): two copies of Core's modules share one React context (#10233)
+  - 不适用：React context 多份拷贝共用的问题，Vue 的注入键是模块级 Symbol
 - [ ] [`c4455dd50`](https://github.com/meta/astryx/commit/c4455dd50) fix(Pagination): the row wraps instead of scrolling the page at large text (#10552)
-- [ ] [`9dca38629`](https://github.com/meta/astryx/commit/9dca38629) perf(Layer): anchored entrances play on the surface (#10561)
+- [x] [`9dca38629`](https://github.com/meta/astryx/commit/9dca38629) perf(Layer): anchored entrances play on the surface (#10561)
+  - 不适用：面包屑菜单把进场动画放到表面上；Vue 版复用 DropdownMenu，没有这段代码
 - [ ] [`dd09d678d`](https://github.com/meta/astryx/commit/dd09d678d) fix(menus): the keys and type-ahead reach a disabled row, which stays inert (#10160)
 - [ ] [`4deee89c6`](https://github.com/meta/astryx/commit/4deee89c6) fix(SideNav): expanded rows grow with a larger text size (#10550)
 - [ ] [`19981aa37`](https://github.com/meta/astryx/commit/19981aa37) fix(TopNav): the bar wraps instead of letting regions overlap at large text (#10571)
@@ -6998,7 +7040,8 @@
 - [ ] [`db40c6b01`](https://github.com/meta/astryx/commit/db40c6b01) refactor(core): share per-instance warning dedupe and temporary focus targets (#10655)
 - [ ] [`aba928398`](https://github.com/meta/astryx/commit/aba928398) fix(TopNav): let the heading shrink so a long heading truncates inside its column (#9551)
 - [ ] [`242d20d62`](https://github.com/meta/astryx/commit/242d20d62) docs(Tab): describe a tab with a Tooltip anchored on it (#10734)
-- [ ] [`8abf7bdfd`](https://github.com/meta/astryx/commit/8abf7bdfd) fix(SideNav): render the footer row only when it holds the collapse button or footerIcons (#10721)
+- [x] [`8abf7bdfd`](https://github.com/meta/astryx/commit/8abf7bdfd) fix(SideNav): render the footer row only when it holds the collapse button or footerIcons (#10721)
+  - Vue 版已有：SideNav.vue 的底部行 v-if 只在有收起按钮或 footerIcons 时才画；判空改用 hasSlotContent
 - [ ] [`09710569f`](https://github.com/meta/astryx/commit/09710569f) docs(Tab): underline the whole selected tab with a nested Theme (#10814)
 
 ### v0.7.13
@@ -7011,8 +7054,10 @@
 - [x] [`894a2a0b2`](https://github.com/meta/astryx/commit/894a2a0b2) fix(motion): a carried pending animation runs in step with its original (#10983)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`2e65a090b`](https://github.com/meta/astryx/commit/2e65a090b) fix(core): make onClick-only TopNav items keyboard accessible (#9334)
-- [ ] [`77aa2b996`](https://github.com/meta/astryx/commit/77aa2b996) refactor(MobileNav): keep the closing dialog rendered through the layer runtime's presentation hold (#8590)
-- [ ] [`108f354ae`](https://github.com/meta/astryx/commit/108f354ae) fix(core): drop 'use client' from the package root and the component barrels (#11106)
+- [x] [`77aa2b996`](https://github.com/meta/astryx/commit/77aa2b996) refactor(MobileNav): keep the closing dialog rendered through the layer runtime's presentation hold (#8590)
+  - 不适用：React 浮层运行时的呈现保持机制，Vue 版用 closing 状态加定时器保持渲染
+- [x] [`108f354ae`](https://github.com/meta/astryx/commit/108f354ae) fix(core): drop 'use client' from the package root and the component barrels (#11106)
+  - 不适用：React Server Components 的 use client 指令
 - [ ] [`09479d9c7`](https://github.com/meta/astryx/commit/09479d9c7) fix(Popover): a touch that pans is not an outside press, even without pointercancel (#11038)
 - [x] [`dc1103320`](https://github.com/meta/astryx/commit/dc1103320) test(SideNav): block the reversal only after a drawn collapse frame (#10984)
   - 不适用：上游内部规范和架构文档、只改上游测试（自动初筛）
@@ -7030,20 +7075,28 @@
 
 ### v0.7.17
 
-- [ ] [`84a446b7e`](https://github.com/meta/astryx/commit/84a446b7e) fix(MobileNav): side="auto" resolves the drawer edge in RTL and on first open (#11227)
+- [x] [`84a446b7e`](https://github.com/meta/astryx/commit/84a446b7e) fix(MobileNav): side="auto" resolves the drawer edge in RTL and on first open (#11227)
+  - 已移植：[#578](https://github.com/astryx-vue/astryx-vue/pull/578)。side=auto 按文字方向和打开者位置选边，渲染前就算好；没有焦点时找 aria-controls 指向抽屉的元素，找不到从行内结束边出来，补测试
 - [ ] [`9d19da96a`](https://github.com/meta/astryx/commit/9d19da96a) fix(TopNav): the phone bar keeps a plain-text heading on one line (#11647)
 - [ ] [`54f211658`](https://github.com/meta/astryx/commit/54f211658) feat(Pagination): page links through getPageHref (#11578)
-- [ ] [`ae1507195`](https://github.com/meta/astryx/commit/ae1507195) [Component Audit] MobileNavToggle: docs list every case where the menu button renders nothing, and tests guard it (#11737)
-- [ ] [`34e3d212f`](https://github.com/meta/astryx/commit/34e3d212f) fix(core): dialog text reads the theme, and toast text reaches AA on its card (#12095)
+- [x] [`ae1507195`](https://github.com/meta/astryx/commit/ae1507195) [Component Audit] MobileNavToggle: docs list every case where the menu button renders nothing, and tests guard it (#11737)
+  - 不适用：Vue 的 MobileNavToggle 是受控按钮（v-model:is-open），始终渲染，不读 AppShell 上下文，没有这些不渲染的情形
+- [x] [`34e3d212f`](https://github.com/meta/astryx/commit/34e3d212f) fix(core): dialog text reads the theme, and toast text reaches AA on its card (#12095)
+  - Vue 版已有：dialog.css 文字色读主题变量，抽屉面板文字色由主题映射到主文字色
 - [ ] [`64260e60e`](https://github.com/meta/astryx/commit/64260e60e) fix(core): TopNavMenu and TopNavMegaMenu close on a keyboard or touch pick and return focus; items get hasCloseOnSelect (#12140)
-- [ ] [`782b392ce`](https://github.com/meta/astryx/commit/782b392ce) fix(MobileNav): the painted drawer panel carries its own theme target (#12382)
+- [x] [`782b392ce`](https://github.com/meta/astryx/commit/782b392ce) fix(MobileNav): the painted drawer panel carries its own theme target (#12382)
+  - 已移植：[#578](https://github.com/astryx-vue/astryx-vue/pull/578)。MobileNav 抽屉面板加主题挂点 mobile-nav-drawer（带 side），补测试和主题文档（主会话补）
 - [ ] [`ea92bc042`](https://github.com/meta/astryx/commit/ea92bc042) fix(core): theme targets for Pagination's control row, cells and ellipsis (#12253)
-- [ ] [`72f2d7caa`](https://github.com/meta/astryx/commit/72f2d7caa) docs: icon props take semantic names; Selector hasClear types; useTableSelectionState returns (#12583)
+- [x] [`72f2d7caa`](https://github.com/meta/astryx/commit/72f2d7caa) docs: icon props take semantic names; Selector hasClear types; useTableSelectionState returns (#12583)
+  - 不适用：文档里图标属性接受语义名称；Vue 版图标是 iconClass 或插槽，没有语义图标名
 - [ ] [`2c7cc9451`](https://github.com/meta/astryx/commit/2c7cc9451) fix(Tab): a wrapped label stays centered in its tab, selected or not (#12593)
 - [ ] [`d7c7e7014`](https://github.com/meta/astryx/commit/d7c7e7014) fix(TopNav): the phone bar keeps wide end content inside it, so the Shell Nav menu button stays in view (#12300)
-- [ ] [`a2edb5300`](https://github.com/meta/astryx/commit/a2edb5300) chore: land batch 2 (16 pull requests) (#12718)
-- [ ] [`8c52e3bba`](https://github.com/meta/astryx/commit/8c52e3bba) chore: land batch 7 (3 pull requests) (#12811)
-- [ ] [`9c2767b31`](https://github.com/meta/astryx/commit/9c2767b31) [Component Audit] MobileNav: the menu button keeps its link to the drawer when id is undefined, and docs list the label prop (#11621)
+- [x] [`a2edb5300`](https://github.com/meta/astryx/commit/a2edb5300) chore: land batch 2 (16 pull requests) (#12718)
+  - 不适用：收起时普通标题只居中、保留根的内边距；Vue 的收起标题是固定 32px 方块居中，没有内边距之争
+- [x] [`8c52e3bba`](https://github.com/meta/astryx/commit/8c52e3bba) chore: land batch 7 (3 pull requests) (#12811)
+  - 不适用：面包屑菜单的间距改为浮层自带的偏移；Vue 版复用 DropdownMenu，没有自己的菜单样式
+- [x] [`9c2767b31`](https://github.com/meta/astryx/commit/9c2767b31) [Component Audit] MobileNav: the menu button keeps its link to the drawer when id is undefined, and docs list the label prop (#11621)
+  - 已移植：[#578](https://github.com/astryx-vue/astryx-vue/pull/578)。caller id 缺省时自动生成 id 本来就有；label 属性说明补上导航地标
 - [x] [`4739b00f0`](https://github.com/meta/astryx/commit/4739b00f0) test(Pagination): the late-page focus test waits for the press's transition to end (#12824)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`a60f74251`](https://github.com/meta/astryx/commit/a60f74251) chore: land batch 12 (3 pull requests) (#12841)
@@ -7052,7 +7105,8 @@
 - [ ] [`53615c1f4`](https://github.com/meta/astryx/commit/53615c1f4) chore: land batch 19 (3 pull requests) (#12875)
 - [ ] [`783e47029`](https://github.com/meta/astryx/commit/783e47029) chore: land batch 17 (2 pull requests) (#12866)
 - [ ] [`904b58e64`](https://github.com/meta/astryx/commit/904b58e64) chore: land batch 29 (3 pull requests) (#12894)
-- [ ] [`476d9063f`](https://github.com/meta/astryx/commit/476d9063f) chore: land batch 63 (3 pull requests) (#12945)
+- [x] [`476d9063f`](https://github.com/meta/astryx/commit/476d9063f) chore: land batch 63 (3 pull requests) (#12945)
+  - 不适用：面包屑菜单重置主题圆角变量；Vue 版复用 DropdownMenu，没有自己的菜单样式
 - [ ] [`1f48950f9`](https://github.com/meta/astryx/commit/1f48950f9) chore: land batch 67 (7 pull requests) (#12957)
 - [ ] [`8ecfe59a4`](https://github.com/meta/astryx/commit/8ecfe59a4) chore: land batch 61 (4 pull requests) (#12940)
 - [x] [`1eecb6108`](https://github.com/meta/astryx/commit/1eecb6108) test(TabList): the forward arrow focuses and reveals an overflowed tab (#12361)
