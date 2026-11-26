@@ -18,6 +18,9 @@ const focused = ref(false)
 const composing = ref(false)
 const tabMovesFocus = ref(false)
 const hintId = `astryx-code-editor-${useId()}-escape`
+// 编辑区的文字归浏览器管：模板只放进第一次的值（服务端渲染也有内容），之后由下面的 watch 只在不一致时改写。
+// 让模板跟着 value 重渲染的话，每敲一个字文字节点都会被整个换掉，光标就掉回开头。
+const initialValue = props.value
 const lines = computed(() => props.value.split('\n'))
 const showPlaceholder = computed(() => props.value === '' && Boolean(props.placeholder))
 const containerStyle = computed(() => props.maxHeight == null
@@ -181,7 +184,7 @@ function onKeydown(event: KeyboardEvent): void {
           @blur="focused = false; tabMovesFocus = false"
           @compositionstart="composing = true"
           @compositionend="composing = false; onInput()"
-        >{{ value }}</code>
+        >{{ initialValue }}</code>
         <VisuallyHidden v-if="!isReadOnly" :id="hintId">
           {{ escapeHint }}
         </VisuallyHidden>
