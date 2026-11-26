@@ -62188,12 +62188,12 @@
       "importPath": "@astryx-vue/core/Lightbox",
       "exportName": "Lightbox",
       "summary": {
-        "en": "`Lightbox` opens media in a native `<dialog>`. Bind `isOpen` with `v-model:is-open`. A single `media` object is one image or video. An array is a gallery: previous, next, and a counter stay mounted, and the ends disable instead of disappearing.",
-        "zh": "`Lightbox` 用原生 `<dialog>` 打开媒体。`isOpen` 用 `v-model:is-open` 绑定。`media` 传一个对象就是单张图片或一段视频。传数组就是图库：上一张、下一张和计数一直留在页面上，到头时禁用，而不是消失。"
+        "en": "`Lightbox` opens media in a native `<dialog>`. Bind `isOpen` with `v-model:is-open`. A single `media` object is one image or video. An array is a gallery: previous, next, and a counter stay mounted, and the ends disable instead of disappearing. The arrow keys follow the writing direction: in a right-to-left page ArrowLeft goes to the next item, like the Next button on the left. An index past either end shows the nearest item; a fraction rounds to the nearest one and `NaN` shows the first. A viewer opened before its first item arrives opens when that item does.",
+        "zh": "`Lightbox` 用原生 `<dialog>` 打开媒体。`isOpen` 用 `v-model:is-open` 绑定。`media` 传一个对象就是单张图片或一段视频。传数组就是图库：上一张、下一张和计数一直留在页面上，到头时禁用，而不是消失。方向键跟着书写方向走：从右往左的页面里 ArrowLeft 去下一张，和左边的「下一张」按钮一致。下标越界时显示最近的一项；小数四舍五入到最近的一项，`NaN` 显示第一项。第一项还没到就打开的灯箱，等它到了再打开。"
       },
       "usage": {
-        "en": "`Lightbox` opens media in a native `<dialog>`. Bind `isOpen` with `v-model:is-open`. A single `media` object is one image or video. An array is a gallery: previous, next, and a counter stay mounted, and the ends disable instead of disappearing.\n\n`useLightbox({ media })` owns the open state and the index. Bind `bindings` onto `Lightbox`, and call `open(index)` from a thumbnail.\n\n`hasZoom` turns an image into a button. Double-click, Enter, Space, `+`, and `-` toggle between 1× and 2×. While zoomed, drag or the arrow keys pan; each arrow moves 50px. A drag does not also close the dialog. Video items keep the browser controls and do not zoom. `hasAutoPlay` starts a video when that item is shown.\n\nEscape and the close button emit `update:isOpen` with `false`. A backdrop click on the dialog or the frame does the same.\n\n```vue\n<script setup lang=\"ts\">\nimport { Lightbox, useLightbox } from '@astryx-vue/core/Lightbox'\nimport { Thumbnail } from '@astryx-vue/core/Thumbnail'\n\nconst photo = {\n  src: '/template-assets/light-scene-horizontal-1.png',\n  alt: 'Coastal shoreline with ocean waves',\n  caption: 'A scenic coastline with waves rolling onto a sandy beach beneath a clear sky.',\n}\nconst { bindings, open } = useLightbox({ media: photo })\n</script>\n\n<template>\n  <Thumbnail :src=\"photo.src\" :alt=\"photo.alt\" :label=\"photo.alt\" @click=\"open()\" />\n  <Lightbox v-bind=\"bindings\" />\n</template>\n```",
-        "zh": "`Lightbox` 用原生 `<dialog>` 打开媒体。`isOpen` 用 `v-model:is-open` 绑定。`media` 传一个对象就是单张图片或一段视频。传数组就是图库：上一张、下一张和计数一直留在页面上，到头时禁用，而不是消失。\n\n`useLightbox({ media })` 管打开状态和下标。把 `bindings` 绑到 `Lightbox` 上，缩略图里调用 `open(index)`。\n\n`hasZoom` 把图片变成按钮。双击、Enter、Space、`+`、`-` 在 1 倍和 2 倍之间切换。放大后可以拖动，方向键每次平移 50px。拖动结束时的那一下点击不会把对话框关掉。视频用浏览器自己的控件，不能缩放。`hasAutoPlay` 在显示出视频时开始播放。\n\nEscape 和关闭按钮都会发出 `update:isOpen`，值为 `false`。点对话框或画面外的遮罩也一样。\n\n```vue\n<script setup lang=\"ts\">\nimport { Lightbox, useLightbox } from '@astryx-vue/core/Lightbox'\nimport { Thumbnail } from '@astryx-vue/core/Thumbnail'\n\nconst photo = {\n  src: '/template-assets/light-scene-horizontal-1.png',\n  alt: 'Coastal shoreline with ocean waves',\n  caption: 'A scenic coastline with waves rolling onto a sandy beach beneath a clear sky.',\n}\nconst { bindings, open } = useLightbox({ media: photo })\n</script>\n\n<template>\n  <Thumbnail :src=\"photo.src\" :alt=\"photo.alt\" :label=\"photo.alt\" @click=\"open()\" />\n  <Lightbox v-bind=\"bindings\" />\n</template>\n```"
+        "en": "`Lightbox` opens media in a native `<dialog>`. Bind `isOpen` with `v-model:is-open`. A single `media` object is one image or video. An array is a gallery: previous, next, and a counter stay mounted, and the ends disable instead of disappearing. The arrow keys follow the writing direction: in a right-to-left page ArrowLeft goes to the next item, like the Next button on the left. An index past either end shows the nearest item; a fraction rounds to the nearest one and `NaN` shows the first. A viewer opened before its first item arrives opens when that item does.\n\n`useLightbox({ media })` owns the open state and the index. Bind `bindings` onto `Lightbox`, and call `open(index)` from a thumbnail.\n\nA caption sits in a two-line band under the photo, on a backing that keeps it readable over any picture; a longer one ends in \"more\". A single photo with a caption uses the same band, and a photo with no caption has none.\n\n`hasZoom` turns an image into a button. Double-click, Enter, Space, `+`, and `-` toggle between 1× and 2×, and `0` returns to the fitted size (Ctrl or Cmd with `0` stays the browser's page zoom). While zoomed, drag or the arrow keys pan; each arrow moves 50px. A drag does not also close the dialog. Video items keep the browser controls and do not zoom. `hasAutoPlay` starts a video when that item is shown in an open viewer; closing the viewer stops a playing video.\n\nEscape and the close button emit `update:isOpen` with `false`. A click anywhere outside the photo and the caption band does the same, including the space beside a photo narrower than the viewer. Tab stays inside the open viewer, and a screen reader hears the item changes from inside it. When the viewer closes, or is removed while open, focus goes back to the element that opened it.\n\n```vue\n<script setup lang=\"ts\">\nimport { Lightbox, useLightbox } from '@astryx-vue/core/Lightbox'\nimport { Thumbnail } from '@astryx-vue/core/Thumbnail'\n\nconst photo = {\n  src: '/template-assets/light-scene-horizontal-1.png',\n  alt: 'Coastal shoreline with ocean waves',\n  caption: 'A scenic coastline with waves rolling onto a sandy beach beneath a clear sky.',\n}\nconst { bindings, open } = useLightbox({ media: photo })\n</script>\n\n<template>\n  <Thumbnail :src=\"photo.src\" :alt=\"photo.alt\" :label=\"photo.alt\" @click=\"open()\" />\n  <Lightbox v-bind=\"bindings\" />\n</template>\n```",
+        "zh": "`Lightbox` 用原生 `<dialog>` 打开媒体。`isOpen` 用 `v-model:is-open` 绑定。`media` 传一个对象就是单张图片或一段视频。传数组就是图库：上一张、下一张和计数一直留在页面上，到头时禁用，而不是消失。方向键跟着书写方向走：从右往左的页面里 ArrowLeft 去下一张，和左边的「下一张」按钮一致。下标越界时显示最近的一项；小数四舍五入到最近的一项，`NaN` 显示第一项。第一项还没到就打开的灯箱，等它到了再打开。\n\n`useLightbox({ media })` 管打开状态和下标。把 `bindings` 绑到 `Lightbox` 上，缩略图里调用 `open(index)`。\n\n图注放在照片下面一条两行高的区域里，垫着一块底色，压在什么照片上都看得清；更长的图注末尾有「更多」。单张照片有图注时用同样的区域，没有图注就没有这条区域。\n\n`hasZoom` 把图片变成按钮。双击、Enter、Space、`+`、`-` 在 1 倍和 2 倍之间切换，`0` 回到适应大小（Ctrl 或 Cmd 加 `0` 仍是浏览器自己的页面缩放）。放大后可以拖动，方向键每次平移 50px。拖动结束时的那一下点击不会把对话框关掉。视频用浏览器自己的控件，不能缩放。`hasAutoPlay` 在打开的灯箱里显示出视频时开始播放；关闭灯箱会停下正在播放的视频。\n\nEscape 和关闭按钮都会发出 `update:isOpen`，值为 `false`。点在照片和图注区域以外的任何地方也一样，包括比灯箱窄的照片两旁的空白。Tab 只在打开的灯箱里循环，读屏在灯箱里面就能听到换页的播报。灯箱关闭、或打开着就被移除时，焦点回到打开它的那个元素。\n\n```vue\n<script setup lang=\"ts\">\nimport { Lightbox, useLightbox } from '@astryx-vue/core/Lightbox'\nimport { Thumbnail } from '@astryx-vue/core/Thumbnail'\n\nconst photo = {\n  src: '/template-assets/light-scene-horizontal-1.png',\n  alt: 'Coastal shoreline with ocean waves',\n  caption: 'A scenic coastline with waves rolling onto a sandy beach beneath a clear sky.',\n}\nconst { bindings, open } = useLightbox({ media: photo })\n</script>\n\n<template>\n  <Thumbnail :src=\"photo.src\" :alt=\"photo.alt\" :label=\"photo.alt\" @click=\"open()\" />\n  <Lightbox v-bind=\"bindings\" />\n</template>\n```"
       },
       "practices": {
         "en": [
@@ -62253,13 +62253,13 @@
                 "name": "`hasZoom`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Double-click, Enter, Space, `+`, and `-` zoom images. Arrow keys pan while zoomed."
+                "description": "Double-click, Enter, Space, `+`, and `-` zoom images, and `0` returns to the fitted size. Arrow keys pan while zoomed."
               },
               {
                 "name": "`hasAutoPlay`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Start video playback when a video item is shown."
+                "description": "Start video playback when a video item is shown in an open viewer."
               }
             ]
           }
@@ -62296,13 +62296,13 @@
                 "name": "`hasZoom`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "双击、Enter、Space、`+`、`-` 缩放图片。放大后方向键平移。"
+                "description": "双击、Enter、Space、`+`、`-` 缩放图片，`0` 回到适应大小。放大后方向键平移。"
               },
               {
                 "name": "`hasAutoPlay`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "显示出视频时开始播放。"
+                "description": "在打开的灯箱里显示出视频时开始播放。"
               }
             ]
           }

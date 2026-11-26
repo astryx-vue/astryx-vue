@@ -12,13 +12,15 @@ import { lightboxGallery, lightboxVideo, lightboxZoom } from '../../../../compon
 
 ## Usage
 
-`Lightbox` opens media in a native `<dialog>`. Bind `isOpen` with `v-model:is-open`. A single `media` object is one image or video. An array is a gallery: previous, next, and a counter stay mounted, and the ends disable instead of disappearing.
+`Lightbox` opens media in a native `<dialog>`. Bind `isOpen` with `v-model:is-open`. A single `media` object is one image or video. An array is a gallery: previous, next, and a counter stay mounted, and the ends disable instead of disappearing. The arrow keys follow the writing direction: in a right-to-left page ArrowLeft goes to the next item, like the Next button on the left. An index past either end shows the nearest item; a fraction rounds to the nearest one and `NaN` shows the first. A viewer opened before its first item arrives opens when that item does.
 
 `useLightbox({ media })` owns the open state and the index. Bind `bindings` onto `Lightbox`, and call `open(index)` from a thumbnail.
 
-`hasZoom` turns an image into a button. Double-click, Enter, Space, `+`, and `-` toggle between 1× and 2×. While zoomed, drag or the arrow keys pan; each arrow moves 50px. A drag does not also close the dialog. Video items keep the browser controls and do not zoom. `hasAutoPlay` starts a video when that item is shown.
+A caption sits in a two-line band under the photo, on a backing that keeps it readable over any picture; a longer one ends in "more". A single photo with a caption uses the same band, and a photo with no caption has none.
 
-Escape and the close button emit `update:isOpen` with `false`. A backdrop click on the dialog or the frame does the same.
+`hasZoom` turns an image into a button. Double-click, Enter, Space, `+`, and `-` toggle between 1× and 2×, and `0` returns to the fitted size (Ctrl or Cmd with `0` stays the browser's page zoom). While zoomed, drag or the arrow keys pan; each arrow moves 50px. A drag does not also close the dialog. Video items keep the browser controls and do not zoom. `hasAutoPlay` starts a video when that item is shown in an open viewer; closing the viewer stops a playing video.
+
+Escape and the close button emit `update:isOpen` with `false`. A click anywhere outside the photo and the caption band does the same, including the space beside a photo narrower than the viewer. Tab stays inside the open viewer, and a screen reader hears the item changes from inside it. When the viewer closes, or is removed while open, focus goes back to the element that opened it.
 
 ```vue
 <script setup lang="ts">
