@@ -10,6 +10,7 @@ import { resetLayerScopedContext } from '../layer/scopedProvide.js'
 import { useBackdropPress } from '../layer/useBackdropPress.js'
 import { provideLayoutContainer } from '../Layout/context.js'
 import { DIALOG_CONTEXT_KEY } from './context.js'
+import { findInitialFocusTarget } from './initialFocus.js'
 import { formatDialogSize, resolveDialogPositionOffsets } from './position.js'
 import '../../styles/dialog.css'
 
@@ -96,8 +97,10 @@ function rootAttrs(): Record<string, unknown> {
 
 function getDialogDirection(trigger: HTMLElement, distance = 16): { x: number, y: number } {
   const rect = trigger.getBoundingClientRect()
-  const dx = rect.left + rect.width / 2 - window.innerWidth / 2
-  const dy = rect.top + rect.height / 2 - window.innerHeight / 2
+  // 触发器自己的窗口：第二个文档（iframe、画中画）里量出的位置按那个窗口的视口算。
+  const view = trigger.ownerDocument.defaultView ?? window
+  const dx = rect.left + rect.width / 2 - view.innerWidth / 2
+  const dy = rect.top + rect.height / 2 - view.innerHeight / 2
   const length = Math.sqrt(dx * dx + dy * dy) || 1
   return {
     x: Math.round((dx / length) * distance),
@@ -138,11 +141,7 @@ const detachModalOutlet = modalOutlet.detach
 
 function initialFocusTarget(): HTMLElement | null {
   const dialog = dialogRef.value
-  if (!dialog)
-    return null
-  return dialog.querySelector<HTMLElement>('[data-autofocus]')
-    ?? dialog.querySelector<HTMLElement>('[data-dialog-default-focus]')
-    ?? null
+  return dialog ? findInitialFocusTarget(dialog) : null
 }
 
 // 使用共享的焦点管理
@@ -168,7 +167,9 @@ function openDialog(): void {
   const dialog = dialogRef.value
   if (!dialog || dialog.open)
     return
-  triggerElement = document.activeElement as HTMLElement | null
+  // 对话框所在文档正拿着焦点时，打开者在那个文档里（iframe、画中画窗口里的控件）。
+  const focusDocument = dialog.ownerDocument.hasFocus() ? dialog.ownerDocument : document
+  triggerElement = focusDocument.activeElement as HTMLElement | null
   focusRecord?.stop()
   focusRecord = trackLayerFocus({
     getLayer: () => dialogRef.value,

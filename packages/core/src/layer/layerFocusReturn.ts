@@ -164,7 +164,10 @@ function focusWithTemporaryStop(element: HTMLElement): void {
     element.setAttribute('tabindex', '-1')
     element.addEventListener('blur', () => element.removeAttribute('tabindex'), { once: true })
   }
-  focusForLastInput(element)
+  // 归还焦点不滚动页面：打开者在浮层打开时就在屏幕上，页面之后没动过。
+  // WebKit 会把轻点按钮时落到的最近可聚焦祖先（如 tabindex="-1" 的主区域）记成打开者，
+  // 带滚动的聚焦会把页面卷回那个区域的顶边。
+  focusForLastInput(element, { preventScroll: true })
 }
 
 /**

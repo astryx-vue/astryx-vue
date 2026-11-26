@@ -53,6 +53,8 @@ const compensateInline = computed(() => {
   return axis === 'inline' || axis === 'all'
 })
 
+const hasEndActions = computed(() => Boolean(slots.endContent) || showClose.value)
+
 onMounted(() => {
   dialog?.registerTitle(true)
 })
@@ -67,7 +69,7 @@ function rootAttrs(): Record<string, unknown> {
 </script>
 
 <template>
-  <div v-bind="rootAttrs()" class="astryx-dialog-header" :class="{ 'astryx-dialog-header--divider': hasDivider }" :data-layout-header="inLayoutHeader || undefined">
+  <div v-bind="rootAttrs()" class="astryx-dialog-header" :class="{ 'astryx-dialog-header--divider': hasDivider, 'astryx-dialog-header--compensate-end-block': hasEndActions && compensateBlock }" :data-layout-header="inLayoutHeader || undefined">
     <div v-if="slots.startContent" class="astryx-dialog-header__actions astryx-dialog-header-start-content">
       <slot name="startContent" />
     </div>

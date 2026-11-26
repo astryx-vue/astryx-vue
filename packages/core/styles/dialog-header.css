@@ -7,6 +7,18 @@
     align-items: flex-start;
     justify-content: space-between;
     gap: var(--astryx-spacing-3, 12px);
+    /* 标题的中线对齐关闭按钮的中线：中号按钮的一半，减去它外溢的 spacing-2，再减去标题行高的一半。 */
+    --_dialog-header-title-offset: calc(var(--astryx-size-element-md, 32px) / 2 - var(--astryx-spacing-2, 8px) - var(--astryx-text-heading-2-size, 1.25rem) * var(--astryx-text-heading-2-leading, 1.4) / 2);
+    --_dialog-header-end-offset: 0px;
+    /* 各槽位保留自己相对标题行的垂直偏移；负外边距会让整行比槽位矮，带底色的标题栏就罩不住标题。
+       所以整行取最负的那个偏移，各槽位再减去它，差值永远不为负。 */
+    --_dialog-header-row-offset: min(var(--_dialog-header-title-offset), var(--_dialog-header-end-offset), 0px);
+    margin-block: var(--_dialog-header-row-offset);
+  }
+
+  /* 右侧操作区的视觉内边距由按钮自身承担，整行也读这个偏移。 */
+  .astryx-dialog-header--compensate-end-block {
+    --_dialog-header-end-offset: calc(-1 * var(--astryx-spacing-2, 8px));
   }
 
   .astryx-dialog-header[data-layout-header] {
@@ -24,8 +36,7 @@
     flex: 1 1 auto;
     flex-direction: column;
     min-width: 0;
-    /* 与关闭按钮的中心线对齐 */
-    margin-block: calc(var(--astryx-size-element-md, 32px) / 2 - var(--astryx-spacing-2, 8px) - var(--astryx-text-heading-2-size, 1.25rem) * var(--astryx-text-heading-2-leading, 1.4) / 2);
+    margin-block: calc(var(--_dialog-header-title-offset) - var(--_dialog-header-row-offset));
   }
 
   /* 标题使用 role="heading" 而非 h2，宿主页面对 h2 的全局边框与外边距不会作用到组件上 */
@@ -54,9 +65,13 @@
     gap: var(--astryx-spacing-2, 8px);
   }
 
+  .astryx-dialog-header-start-content {
+    margin-block: calc(0px - var(--_dialog-header-row-offset));
+  }
+
   /* 关闭按钮的视觉内边距由按钮自身承担，此处抵消以对齐边缘 */
-  .astryx-dialog-header__actions--compensate-block {
-    margin-block: calc(-1 * var(--astryx-spacing-2, 8px));
+  .astryx-dialog-header-end-content {
+    margin-block: calc(var(--_dialog-header-end-offset) - var(--_dialog-header-row-offset));
   }
 
   .astryx-dialog-header__actions--compensate-inline {

@@ -96,6 +96,9 @@ function toggleZoom(): void {
 }
 
 function onCancel(event: Event): void {
+  // 里面冒上来的 cancel（文件选择器被取消）不是关闭请求，平台自己的 cancel 直接发给 dialog。
+  if (event.target !== event.currentTarget)
+    return
   event.preventDefault()
   close()
 }

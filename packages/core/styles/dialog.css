@@ -59,6 +59,7 @@
   }
 
   .astryx-dialog--fullscreen {
+    --_dialog-radius: 0px;
     width: 100dvw;
     height: 100dvh;
     max-width: 100dvw;
@@ -93,6 +94,9 @@
     min-height: 0;
     overflow: hidden;
     border-radius: inherit;
+    /* 贴边的表格、列表行取对话框的圆角，免得方角戳出圆角之外。 */
+    --_container-corner-block-start: var(--_dialog-radius);
+    --_container-corner-block-end: var(--_dialog-radius);
     padding-block: var(--_dialog-pad-block-start) var(--_dialog-pad-block-end);
     padding-inline: var(--_dialog-pad-inline-start) var(--_dialog-pad-inline-end);
   }

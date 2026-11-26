@@ -47,7 +47,7 @@ const isOpen = ref(false)
 | <Badge variant="success">Do</Badge> | Use purpose="form" for dialogs with inputs so the user can't accidentally lose data by clicking the backdrop. |
 | <Badge variant="success">Do</Badge> | Keep dialogs focused on a single task; if the content grows beyond what fits, consider a full page instead. |
 | <Badge variant="error">Don't</Badge> | Use a dialog for simple messages that could be shown inline or as a toast notification. |
-| <Badge variant="error">Don't</Badge> | Nest dialogs inside other dialogs; restructure the flow into steps within a single dialog instead. |
+| <Badge variant="error">Don't</Badge> | Nest dialogs inside other dialogs; restructure the flow into steps within a single dialog instead. The one exception is an AlertDialog that confirms a destructive action: it asks one question, and Escape closes only the alert. |
 | <Badge variant="error">Don't</Badge> | Use the fullscreen variant for simple confirmations; it is meant for complex content like editors or long forms. |
 
 ## Examples
