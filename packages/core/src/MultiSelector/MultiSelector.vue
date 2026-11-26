@@ -7,7 +7,6 @@ import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import { useBusyAnnouncement } from '../composables/internal/busyAnnouncement.js'
 import { isKeyboardModality, trackInteractionModality } from '../composables/internal/interactionModality.js'
-import { useKeyboardHighlight } from '../composables/internal/useKeyboardHighlight.js'
 import { useAnnounce } from '../composables/useAnnounce.js'
 import { useDevWarning } from '../composables/useDevWarning.js'
 import { useDisclosureHandle } from '../composables/useDisclosureHandle.js'
@@ -82,8 +81,6 @@ const CheckboxMark = useIndicator('checkbox')
 
 const messages = useComponentMessages({ multiSelector: multiSelectorMessages })
 const announce = useAnnounce()
-/** 搜索状态每次按键都重说一遍：快速输入时只念最新的，不把过期的状态连成一串。 */
-const announceSearch = useAnnounce({ hasReplace: true })
 const inputGroup = useInputGroupContext()
 const inGroup = computed(() => inputGroup != null)
 const groupDisabled = useInputGroupDisabled(() => props.disabled)
@@ -130,7 +127,6 @@ const statusGlyph = computed(() => {
 })
 
 const panelRef = useTemplateRef<{ focusSearch: () => void }>('panelRef')
-const settleBusy = useBusyAnnouncement(() => control.isLoading.value, () => messages.value.multiSelector.loading)
 const menu = useMultiSelectorMenu({
   props,
   emitUpdate: value => emit('update:modelValue', value),
@@ -141,8 +137,7 @@ const menu = useMultiSelectorMenu({
   isLoading: control.isLoading,
   messages,
   announce,
-  announceSearch,
-  settleBusy,
+  settleBusy: useBusyAnnouncement(() => control.isLoading.value, () => messages.value.multiSelector.loading),
   listboxRef,
   getSearchInput: () => panelRef.value ? (panelRef.value as { searchInput?: HTMLInputElement | null }).searchInput ?? null : null,
   focusTrigger: () => {
@@ -153,11 +148,6 @@ const menu = useMultiSelectorMenu({
   listboxId,
 })
 const { combobox, selectedValues, selectedOptions } = menu
-const keyboardHighlight = useKeyboardHighlight(combobox.activeIndex)
-function onPanelHighlight(index: number): void {
-  keyboardHighlight.notePointerMove()
-  menu.highlight(index)
-}
 /** 禁用的字段不向表单交值：不渲染隐藏输入，而不是渲染一个原生禁用的。 */
 /** 带搜索时触发器是普通按钮，搜索框才是组合框；ARIA 不允许按钮带 aria-required，必填交给搜索框。 */
 const hasSearchRole = computed(() => Boolean(props.searchable) && !control.isReadOnly.value)
@@ -439,7 +429,7 @@ defineExpose({
       :id="listboxId"
       ref="listboxRef"
       class="astryx-multi-selector-listbox astryx-layer"
-      :data-keyboard-highlight="keyboardHighlight.isKeyboardHighlight.value || undefined"
+      :data-keyboard-highlight="menu.isKeyboardHighlight.value || undefined"
       :class="{ 'is-sheet': isSheet }"
       :role="menu.gridMode.value ? 'grid' : 'listbox'"
       aria-multiselectable="true"
@@ -487,7 +477,7 @@ defineExpose({
         @search-focus="onSearchFocus"
         @search-blur="onSearchBlur"
         @toggle="menu.toggleValue"
-        @highlight="onPanelHighlight"
+        @highlight="menu.highlight"
       >
         <template v-if="$slots.option" #option="slotProps">
           <slot name="option" v-bind="slotProps" />

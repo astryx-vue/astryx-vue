@@ -11,7 +11,7 @@ import { Badge } from '@astryx-vue/core/Badge'
 
 ## Usage
 
-Imperatively announces a message to screen readers through a visually-hidden live region. Use it for state that is only conveyed visually; search result counts, "no results", loading and saved confirmations, validation errors (WCAG 4.1.3 Status Messages). The polite and assertive regions are created empty on first use and stay mounted, which is what makes announcements reliable: most screen readers ignore a live region that is inserted together with its content. Each message is cleared a couple of seconds after it is announced so stale status does not linger in the accessibility tree.
+Imperatively announces a message to screen readers through a visually-hidden live region. Use it for state that is only conveyed visually; search result counts, "no results", loading and saved confirmations, validation errors (WCAG 4.1.3 Status Messages). The polite and assertive regions are created empty on first use and stay mounted, which is what makes announcements reliable: most screen readers ignore a live region that is inserted together with its content. Messages announced in the same frame are spoken together, in order, and an identical repeat is spoken once; an empty message clears whatever has not been spoken yet. While a native modal dialog is open, the message is written into that dialog's own live region, since the page's regions are outside the dialog and cannot be heard. Each message is cleared a couple of seconds after it is announced so stale status does not linger in the accessibility tree.
 
 ```ts
 import { useAnnounce } from '@astryx-vue/core'
@@ -22,6 +22,12 @@ const announce = useAnnounce()
 
 announce('12 results')
 announce('The file could not be saved.', 'assertive')
+```
+
+A status that is restated on every keystroke can take back its own previous message while it has not been spoken yet, so fast typing is not read out as a string of stale counts:
+
+```ts
+const announceSearch = useAnnounce({ hasReplace: true })
 ```
 
 ## Best practices

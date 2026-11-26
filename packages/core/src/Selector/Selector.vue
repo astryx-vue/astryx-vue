@@ -60,7 +60,6 @@ const props = withDefaults(defineProps<SelectorProps>(), {
 })
 
 const emit = defineEmits<SelectorEmits>()
-
 defineSlots<SelectorSlots>()
 
 // 显式 size > 外层 SizeContext（Toolbar、InputGroup 等）> 'md'。
@@ -152,8 +151,7 @@ const combobox = useCombobox({
     }
   },
 })
-const keyboardHighlight = useKeyboardHighlight(combobox.activeIndex)
-
+const { isKeyboardHighlight } = useKeyboardHighlight(combobox.activeIndex)
 const sheetOpen = computed({
   get: () => isSheet.value && combobox.isOpen.value,
   set: (open: boolean) => {
@@ -241,8 +239,7 @@ const announcement = computed(() => searchResultMessage({
 watch(announcement, (message) => {
   if (!message)
     return
-  // 结果要播报了：还没念出去的「加载中」随即收回，不跟在结果后面。
-  settleBusy()
+  settleBusy() // 结果要播报了：还没念出去的「加载中」随即收回
   announce(message)
 })
 
@@ -447,7 +444,7 @@ onMounted(syncAnchorWidth)
         :class="[{ 'is-sheet': isSheet, 'is-input': triggerVariant === 'input' }, `size-${size}`]"
         :data-placement="isSheet ? undefined : position.placement"
         :style="listboxStyle"
-        :data-keyboard-highlight="keyboardHighlight.isKeyboardHighlight.value || undefined"
+        :data-keyboard-highlight="isKeyboardHighlight || undefined"
         tabindex="-1"
       >
         <SelectorPanel

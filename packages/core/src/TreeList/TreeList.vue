@@ -75,17 +75,8 @@ function currentExpanded(id: string, items: TreeListItemData[]): boolean {
   return id in expanded ? expanded[id] === true : seeded
 }
 
-/** 焦点在要收起的分支里面时，先把焦点挪到这一行：分支收起会把里面的节点从页面上拿掉，焦点会掉到 body。 */
-function keepFocusOnCollapsingRow(id: string): void {
-  const tree = treeRef.value
-  const active = typeof document === 'undefined' ? null : document.activeElement
-  if (tree == null || active == null || !tree.contains(active))
-    return
-  const row = [...tree.querySelectorAll<HTMLElement>('[role="treeitem"]')].find(item => item.dataset.treeId === id)
-  const group = row?.querySelector(':scope > [role="group"]')
-  if (row != null && group?.contains(active) === true)
-    focusRow(row)
-}
+/** 焦点在要收起的分支里面时，先把焦点挪到这一行：分支收起会把里面的节点从页面上拿掉，焦点会掉到 body。树的焦点模型建好后接上。 */
+let keepFocusOnCollapsingRow: (id: string) => void = () => {}
 
 function toggle(id: string) {
   const collapsing = currentExpanded(id, props.items)
@@ -139,6 +130,16 @@ const { treeRef, focusRow, handleKeyDown, handleFocus } = useTreeFocus({
     return false
   },
 })
+keepFocusOnCollapsingRow = (id) => {
+  const tree = treeRef.value
+  const active = typeof document === 'undefined' ? null : document.activeElement
+  if (tree == null || active == null || !tree.contains(active))
+    return
+  const row = [...tree.querySelectorAll<HTMLElement>('[role="treeitem"]')].find(item => item.dataset.treeId === id)
+  const group = row?.querySelector(':scope > [role="group"]')
+  if (row != null && group?.contains(active) === true)
+    focusRow(row)
+}
 
 function callKeydown(listener: unknown, event: KeyboardEvent): void {
   if (typeof listener === 'function')

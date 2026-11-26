@@ -10,7 +10,7 @@ footer: false
 <div class="component-api-table" role="region" aria-label="LayoutContent 属性" tabindex="0">
 <table><thead><tr><th>属性</th><th>类型</th><th>默认值</th><th>说明</th></tr></thead><tbody>
 <tr><td><code>isScrollable</code></td><td><code>boolean</code></td><td><code>true</code></td><td>内容比自己分到的空间高时，在这块里滚动。</td></tr>
-<tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>这个地标的无障碍名称。</td></tr>
+<tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>这个地标的无障碍名称。内容在滚动（且没设 <code>role</code>）期间，它同时是滚动分组的名称，没设时用翻译过的「内容」。</td></tr>
 <tr><td><code>padding</code></td><td><code>SpacingStep</code></td><td>—</td><td>用间距刻度写内边距，会盖掉外层布局传下来的值。写 <code>0</code> 就是通栏。</td></tr>
 <tr><td><code>role</code></td><td><code>string</code></td><td>—</td><td>ARIA 地标角色。</td></tr>
 </tbody></table>

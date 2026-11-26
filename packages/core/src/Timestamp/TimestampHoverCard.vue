@@ -63,7 +63,7 @@ function copyLabel(line: TimestampTooltipLine, key: string): string {
   return copiedKey.value === key ? messages.value.timestamp.copied : messages.value.timestamp.copyValue(line.value)
 }
 
-function copyIcon(key: string): string {
+function copyIcon(key: string): 'check' | 'close' | 'copy' {
   if (failedKey.value === key)
     return 'close'
   return copiedKey.value === key ? 'check' : 'copy'
