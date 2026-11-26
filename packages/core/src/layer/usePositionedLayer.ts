@@ -4,6 +4,7 @@ import { nextTick, onScopeDispose, ref, watch } from 'vue'
 import { useLayerTeleportTarget } from '../composables/useLayerMountTarget.js'
 import { useLayerGutter } from '../LayerProvider/context.js'
 import { keepClearOfAnchor } from './anchorClear.js'
+import { layerEntranceSide, writeLayerEntranceSide } from './layerEntranceSide.js'
 import { computeLayerPosition } from './position.js'
 import { getLayerViewport } from './visibleViewport.js'
 
@@ -58,9 +59,13 @@ export function usePositionedLayer(options: PositionedLayerOptions): PositionedL
       height: options.keepAnchorClear === true ? Math.max(layerEl.offsetHeight, layerEl.scrollHeight) : layerEl.offsetHeight,
     }
     const placed = computeLayerPosition(anchorRect, box, viewport, placement.value, alignment.value, gap, gutter.value)
-    position.value = options.keepAnchorClear === true
+    const next = options.keepAnchorClear === true
       ? keepClearOfAnchor(placed, anchorRect, box, viewport, gap, gutter.value)
       : placed
+    position.value = next
+    // 进场从摆好之后（翻面也算）落在的那一侧滑进来，在第一帧之前写好。
+    const height = next.maxHeight == null ? box.height : Math.min(box.height, next.maxHeight)
+    writeLayerEntranceSide(layerEl, layerEntranceSide({ left: next.left, top: next.top, width: box.width, height }, anchorRect))
   }
 
   let pollId: ReturnType<typeof setInterval> | undefined

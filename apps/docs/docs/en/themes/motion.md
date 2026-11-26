@@ -35,7 +35,7 @@ Shared enter and exit keyframes live in `@astryx-vue/core` at `styles/motion.css
 | `astryx-motion-slide-in-start` / `out` | from the start side |
 | `astryx-motion-slide-in-end` / `out` | from the end side |
 
-Distance and scale read `--astryx-motion-offset`, `--astryx-motion-scale-from`, and the opacity variables. When the system asks for reduced motion, those distances and the scale collapse to zero, opacity jumps to the end state, and the shared classes use a duration of `0.01ms`. Component duration tokens are left alone.
+Distance and scale read `--astryx-motion-offset`, `--astryx-motion-scale-from`, and the opacity variables. When the system asks for reduced motion, those distances and the scale collapse to zero, opacity jumps to the end state, and the shared classes use a duration of `0.01ms`. Component duration tokens are left alone. A layer's entrance (Popover, Tooltip, HoverCard, menus, the Selector list) and a Dialog's entrance stop travelling and scaling: under a coarse primary pointer (a finger) they fade in where they land, in 200ms on ease-in-out; under a mouse they appear at once.
 
 Replay the samples below. With reduced motion on, they sit at the end state.
 

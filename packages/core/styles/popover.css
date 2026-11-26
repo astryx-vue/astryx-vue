@@ -1,53 +1,5 @@
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 
-@keyframes astryx-popover-enter-above {
-  from {
-    opacity: 0;
-    transform: translateY(var(--astryx-spacing-2, 8px)) scale(0.95);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes astryx-popover-enter-below {
-  from {
-    opacity: 0;
-    transform: translateY(calc(-1 * var(--astryx-spacing-2, 8px))) scale(0.95);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes astryx-popover-enter-start {
-  from {
-    opacity: 0;
-    transform: translateX(var(--astryx-spacing-2, 8px)) scale(0.95);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0) scale(1);
-  }
-}
-
-@keyframes astryx-popover-enter-end {
-  from {
-    opacity: 0;
-    transform: translateX(calc(-1 * var(--astryx-spacing-2, 8px))) scale(0.95);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0) scale(1);
-  }
-}
-
 @layer astryx.components {
   .astryx-popover-trigger {
     display: inline-flex;
@@ -74,28 +26,9 @@
     animation-timing-function: var(--astryx-ease-entrance, cubic-bezier(0.24, 1, 0.4, 1));
   }
 
-  .astryx-popover[data-placement='above'] {
-    animation-name: astryx-popover-enter-above;
-  }
-
-  .astryx-popover[data-placement='below'] {
-    animation-name: astryx-popover-enter-below;
-  }
-
-  .astryx-popover[data-placement='start'] {
-    animation-name: astryx-popover-enter-start;
-  }
-
-  .astryx-popover[data-placement='end'] {
-    animation-name: astryx-popover-enter-end;
-  }
-
-  .astryx-popover[data-placement='start']:is([dir='rtl'] *) {
-    animation-name: astryx-popover-enter-end;
-  }
-
-  .astryx-popover[data-placement='end']:is([dir='rtl'] *) {
-    animation-name: astryx-popover-enter-start;
+  .astryx-popover[data-placement] {
+    animation-name: astryx-layer-enter;
+    transform-origin: var(--_astryx-layer-enter-origin, 50% 50%);
   }
 
   .astryx-popover__body {
@@ -133,9 +66,17 @@
     padding-block-start: var(--astryx-spacing-1, 4px);
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .astryx-popover {
+  @media (prefers-reduced-motion: reduce) and (not (pointer: coarse)) {
+    .astryx-popover[data-placement] {
       animation: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) and (pointer: coarse) {
+    .astryx-popover[data-placement] {
+      animation-name: astryx-layer-fade-in;
+      animation-duration: var(--_astryx-reduced-motion-fade-duration, 200ms);
+      animation-timing-function: var(--_astryx-reduced-motion-fade-easing, cubic-bezier(0.42, 0, 0.58, 1));
     }
   }
 
