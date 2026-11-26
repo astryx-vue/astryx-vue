@@ -258,7 +258,14 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
         isHoldFromPress = true
       return
     }
-    if (touch.handlePointerDown(event) || isControlled.value)
+    if (touch.handlePointerDown(event)) {
+      // 笔在感应范围内就开始了悬停的延时打开，落笔按触屏处理，先取消挂着的打开，
+      // 否则提示会在按下期间打开，随后这一下轻点又把它关掉。
+      clearTimeout(showTimer)
+      showTimer = undefined
+      return
+    }
+    if (isControlled.value)
       return
     hideNow()
   }

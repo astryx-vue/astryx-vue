@@ -13,7 +13,7 @@ export interface HoverCardTriggerHandlers {
   onMouseEnter: () => void
   onMouseLeave: () => void
   onPointerDown: (event: PointerEvent) => void
-  onFocusIn: () => void
+  onFocusIn: (event: FocusEvent) => void
   onFocusOut: (event: FocusEvent) => void
 }
 
@@ -23,7 +23,7 @@ export interface HoverCardTriggerBindingOptions {
   isDialog: ComputedRef<boolean>
   layerId: string
   supportsExpanded: (element: HTMLElement) => boolean
-  shouldListenFocus: (element: HTMLElement) => boolean
+  shouldListenFocus: () => boolean
   handlers: HoverCardTriggerHandlers
 }
 
@@ -101,7 +101,7 @@ export function useHoverCardTriggerBinding(options: HoverCardTriggerBindingOptio
     element.addEventListener('mouseenter', options.handlers.onMouseEnter)
     element.addEventListener('mouseleave', options.handlers.onMouseLeave)
     element.addEventListener('pointerdown', options.handlers.onPointerDown as EventListener)
-    if (options.shouldListenFocus(element)) {
+    if (options.shouldListenFocus()) {
       element.addEventListener('focusin', options.handlers.onFocusIn)
       element.addEventListener('focusout', options.handlers.onFocusOut)
     }
