@@ -1,5 +1,15 @@
 # @astryx-vue/core
 
+## 0.24.0
+
+### Minor Changes
+
+- [#589](https://github.com/astryx-vue/astryx-vue/pull/589) [`d700d0d`](https://github.com/astryx-vue/astryx-vue/commit/d700d0dc97ad83056d72fa10a8985e1964b16854) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 选择类控件对齐上游：禁用的开关、复选框、单选项、分段、滑块不再运行调用方的处理函数；必填的开关、复选框、单选项在出错前不会被读成无效；禁用或出错的复选框组、单选组把状态写到整组和每个复选框上；Slider 的两个重合滑块能拉开，范围滑块保留调用方的 aria-labelledby，拖动时只有被拖的滑块显示数值，刻度文字下方留够空间；复选框、单选项列表行新增 align，ToggleButton 保持真实按下状态，ToggleButtonGroup 窄屏换行，单选圈和开关拇指始终是圆的。
+
+### Patch Changes
+
+- [#590](https://github.com/astryx-vue/astryx-vue/pull/590) [`8a56364`](https://github.com/astryx-vue/astryx-vue/commit/8a56364b5c1892ec4af4dc6736e4fe08edaa5ad2) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - SegmentedControl 的选中块每次切换都会滑到新选中的分段上，宽度也跟着变；首屏直接落在选中项上，减少动态效果时不滑动。
+
 ## 0.23.0
 
 ### Minor Changes
