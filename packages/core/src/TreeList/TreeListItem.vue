@@ -23,6 +23,9 @@ const props = defineProps<{
   isLast: boolean
   ancestorsIsLast: boolean[]
   expanded: Record<string, boolean>
+  exitingIds: ReadonlySet<string>
+  /** 这一行在正在播放收起退场的子组里：已经不算树里的行了。 */
+  isLeaving?: boolean
   hasExpandableItems: boolean
   tabbableId?: string
   posInSet: number
@@ -47,6 +50,8 @@ const linkRel = computed(() => (
 
 const hasChildren = computed(() => (props.item.children?.length ?? 0) > 0)
 const isExpanded = computed(() => hasChildren.value && props.expanded[props.item.id] === true)
+/** 收起了、子组还在播放退场：子组继续渲染。 */
+const isExiting = computed(() => hasChildren.value && !isExpanded.value && props.exitingIds.has(props.item.id))
 const reservesChevron = computed(() => !hasChildren.value && props.hasExpandableItems)
 const indent = computed(() => reservesChevron.value
   ? `calc(${props.nestedLevel} * var(--tree-list-indent) + var(--astryx-spacing-4, 16px) + var(--astryx-spacing-2, 8px))`
@@ -111,6 +116,7 @@ const rowPress = computed(() => {
     role="treeitem"
     :data-tree-id="item.id"
     :data-tree-disabled="item.isDisabled ? 'true' : undefined"
+    :data-tree-exiting="isLeaving ? '' : undefined"
     :style="item.style"
     :aria-level="nestedLevel + 1"
     :aria-posinset="posInSet"
@@ -229,7 +235,7 @@ const rowPress = computed(() => {
         </div>
       </div>
     </div>
-    <ul v-if="hasChildren && isExpanded" class="astryx-tree-list__group" role="group">
+    <ul v-if="hasChildren && (isExpanded || isExiting)" class="astryx-tree-list__group" role="group">
       <TreeListItem
         v-for="(child, index) in item.children"
         :key="child.id"
@@ -240,6 +246,8 @@ const rowPress = computed(() => {
         :is-last="index === (item.children?.length ?? 1) - 1"
         :ancestors-is-last="childAncestors"
         :expanded="expanded"
+        :exiting-ids="exitingIds"
+        :is-leaving="isLeaving || isExiting"
         :has-expandable-items="hasExpandableItems"
         :tabbable-id="tabbableId"
         :pos-in-set="index + 1"

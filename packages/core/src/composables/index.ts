@@ -13,6 +13,9 @@ export type {
   AnimatorValues,
 } from './createAnimator.js'
 
+export { useAnimatedLayout } from './useAnimatedLayout.js'
+export type { AnimatedLayout, UseAnimatedLayoutOptions } from './useAnimatedLayout.js'
+
 export { useAnimator } from './useAnimator.js'
 
 export { useAnnounce } from './useAnnounce.js'

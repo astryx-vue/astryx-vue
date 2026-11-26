@@ -43,6 +43,12 @@ footer: false
         <td><code>'end'</code></td>
         <td>指示箭头的逻辑位置。end（默认）跟在标签后面，收起时朝下、展开时朝上；start 放在标签前面，收起时指向内容一侧（RTL 下镜像），展开时朝下。</td>
       </tr>
+      <tr>
+        <td><code>animatedLayout</code></td>
+        <td><code>AnimatedLayout</code></td>
+        <td>-</td>
+        <td><code>useAnimatedLayout({ containerRef })</code> 返回的句柄。传了以后，展开、收起时这个 Collapsible 后面、直到那个容器为止的内容会滑到新位置，而不是一下子跳过去，箭头也按同样的节奏转动。</td>
+      </tr>
     </tbody>
   </table>
 </div>

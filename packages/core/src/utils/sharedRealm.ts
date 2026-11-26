@@ -31,3 +31,36 @@ export function realmValue<T>(
   realm[key] = value
   return value
 }
+
+/**
+ * 按注册名在整页共享一份值：计数器、开关，或装着几样东西的对象。
+ * 名字写成 `<目录>/<文件>/<绑定名>`（短横线小写），值的形状变了就升版本。
+ */
+export function sharedState<T>(
+  name: string,
+  version: number,
+  create: () => T,
+): T {
+  return realmValue(sharedKey(name, version), create)
+}
+
+/** 按注册名共享的 Map。 */
+export function sharedMap<K, V>(name: string, version: number): Map<K, V> {
+  return sharedState(name, version, () => new Map<K, V>())
+}
+
+/** 按注册名共享的 WeakMap，例如按文档存的状态。 */
+export function sharedWeakMap<K extends WeakKey, V>(
+  name: string,
+  version: number,
+): WeakMap<K, V> {
+  return sharedState(name, version, () => new WeakMap<K, V>())
+}
+
+/** 按注册名共享的 WeakSet，例如登记过的值。 */
+export function sharedWeakSet<T extends WeakKey>(
+  name: string,
+  version: number,
+): WeakSet<T> {
+  return sharedState(name, version, () => new WeakSet<T>())
+}

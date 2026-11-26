@@ -3,6 +3,7 @@ import type { TreeListItemData, TreeListProps, TreeListSlots } from './types.js'
 import { computed, reactive, useAttrs, useId, useSlots } from 'vue'
 import TreeListItem from './TreeListItem.vue'
 import { useTreeFocus } from './useTreeFocus.js'
+import { useTreeLayoutMotion } from './useTreeLayoutMotion.js'
 import '../../styles/tree-list.css'
 
 defineOptions({ name: 'AstryxTreeList', inheritAttrs: false })
@@ -115,9 +116,26 @@ function initialTabbable(items: TreeListItemData[]): string | undefined {
 
 const tabbableId = computed(() => initialTabbable(props.items))
 
+/** 现在展开着的行（祖先也展开着），不管是点击、键盘还是 `items` 让它展开的。 */
+const expandedIds = computed<ReadonlySet<string>>(() => {
+  const out = new Set<string>()
+  const visit = (list: TreeListItemData[]): void => {
+    for (const item of list) {
+      if (item.children && item.children.length > 0 && currentExpanded(item.id, props.items)) {
+        out.add(item.id)
+        visit(item.children)
+      }
+    }
+  }
+  visit(props.items)
+  return out
+})
+
 const { treeRef, focusRow, handleKeyDown, handleFocus } = useTreeFocus({
   hasRovingTabIndex: true,
   matchLabelledBy: true,
+  // 正在播放收起退场的子组里的行，已经不算树里的行了。
+  itemSelector: '[role="treeitem"]:not([data-tree-exiting])',
   onToggleExpand: toggle,
   onActivate: (current) => {
     const candidates = current.querySelectorAll<HTMLElement>('a[href], button:not([data-tree-toggle])')
@@ -129,6 +147,11 @@ const { treeRef, focusRow, handleKeyDown, handleFocus } = useTreeFocus({
     }
     return false
   },
+})
+const { exitingIds } = useTreeLayoutMotion({
+  animatedLayout: () => props.animatedLayout,
+  expandedIds: () => expandedIds.value,
+  tree: () => treeRef.value ?? null,
 })
 keepFocusOnCollapsingRow = (id) => {
   const tree = treeRef.value
@@ -191,6 +214,7 @@ function onKeyDown(event: KeyboardEvent) {
         :is-last="index === items.length - 1"
         :ancestors-is-last="[]"
         :expanded="expanded"
+        :exiting-ids="exitingIds"
         :has-expandable-items="hasExpandable"
         :tabbable-id="tabbableId"
         :pos-in-set="index + 1"
