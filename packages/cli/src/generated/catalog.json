@@ -68296,7 +68296,7 @@
         "en": [
           {
             "heading": "Generated from a few numbers",
-            "text": "`color`, `typography`, `radius`, and `motion` fill tokens on the theme object. A matching `tokens` entry wins. A reference such as `var(--color-accent)` is rewritten to the `--astryx-` name.\n\n`color.accent` is one hex color, or `[light, dark]`. The palette is HCT: hue and chroma come from the seed, tone walks a fixed ramp, and the stops are paired into light and dark. Omit the accent and set `neutralStyle` to recolor only the neutrals. `--color-on-accent` is baked from the seed so the contrast holds. The muted, text, and icon accent tokens reference `--color-accent`, so a later accent override carries them along.\n\nType sizes come from `typography.scale` `base` and `ratio`, rounded from `base × ratio` at each step. Radii come from `radius` `base` and `multiplier`. `none` and `full` stay fixed. Durations come from `motion` `fast`, `medium`, `slow`, and `ratio`. The min step multiplies the base by the ratio, and the max step divides by it. Both round to 5 milliseconds.\n\n`components` overrides styles by theme target, written `<component-kebab>-<part>`, such as `button` or `card-header`. `base` hits the target itself. `variant:secondary` hits `[data-variant=\"secondary\"]`. `Theme` puts the compiled rules in the `astryx.overrides` layer, scoped to its `data-astryx-theme` subtree and stopping at a nested theme. `localTokens`, `adaptations`, removed target names, and `extends` are covered in [Extending a theme](/en/guide/extending-themes). The semantic icon table is still `icons`: a name points at an Iconify id.\n\n```ts\nconst brand = defineTheme({\n  name: 'brand',\n  color: { accent: '#0064E0' },\n  typography: { scale: { base: 14, ratio: 1.2 } },\n  radius: { base: 4, multiplier: 1 },\n  motion: { fast: 125, medium: 300, slow: 700, ratio: 0.75 },\n})\n```\n\nFor the tokens alone, call `expandColorScale`, `expandTypeScale`, `expandRadiusScale`, or `expandMotionScale`. They return the unprefixed names. Pass that object to `defineTheme()` as `tokens`."
+            "text": "`color`, `typography`, `radius`, and `motion` fill tokens on the theme object. A matching `tokens` entry wins. A reference such as `var(--color-accent)` is rewritten to the `--astryx-` name.\n\n`color.accent` is one hex color, or `[light, dark]`. The palette is HCT: hue and chroma come from the seed, tone walks a fixed ramp, and the stops are paired into light and dark. Omit the accent and set `neutralStyle` to recolor only the neutrals. `--color-on-accent` is baked from the seed so the contrast holds. The muted, text, and icon accent tokens reference `--color-accent`, so a later accent override carries them along.\n\nType sizes come from `typography.scale` `base` and `ratio`, rounded from `base × ratio` at each step. Radii come from `radius` `base` and `multiplier`. `none` and `full` stay fixed. Durations come from `motion` `fast`, `medium`, `slow`, and `ratio`. The min step multiplies the base by the ratio, and the max step divides by it. Both round to 5 milliseconds. `motion` also takes `tempo` (overall pace, 0.75 to 1.5) and `character` (the entrance and move curves: `'crisp'`, `'standard'`, `'expressive'`); see [Motion](/en/guide/motion).\n\n`components` overrides styles by theme target, written `<component-kebab>-<part>`, such as `button` or `card-header`. `base` hits the target itself. `variant:secondary` hits `[data-variant=\"secondary\"]`. `Theme` puts the compiled rules in the `astryx.overrides` layer, scoped to its `data-astryx-theme` subtree and stopping at a nested theme. `localTokens`, `adaptations`, removed target names, and `extends` are covered in [Extending a theme](/en/guide/extending-themes). The semantic icon table is still `icons`: a name points at an Iconify id.\n\n```ts\nconst brand = defineTheme({\n  name: 'brand',\n  color: { accent: '#0064E0' },\n  typography: { scale: { base: 14, ratio: 1.2 } },\n  radius: { base: 4, multiplier: 1 },\n  motion: { fast: 125, medium: 300, slow: 700, ratio: 0.75 },\n})\n```\n\nFor the tokens alone, call `expandColorScale`, `expandTypeScale`, `expandRadiusScale`, or `expandMotionScale`. They return the unprefixed names. Pass that object to `defineTheme()` as `tokens`."
           },
           {
             "heading": "defineTheme",
@@ -68318,7 +68318,7 @@
         "zh": [
           {
             "heading": "从几个数生成",
-            "text": "`color`、`typography`、`radius`、`motion` 会算出一批 token，写进主题对象。同名的 `tokens` 优先。`var(--color-accent)` 这种引用会改成带 `--astryx-` 前缀的名字。\n\n`color.accent` 是一个十六进制颜色，也可以写成 `[浅色, 深色]`。调色板按 HCT 来：色相和彩度取自种子色，明度走固定阶梯，再配成浅色和深色。不写 accent、只写 `neutralStyle` 时，强调色保持原样，只重算中性色。`--color-on-accent` 按种子色算好对比色；弱化色、文字强调色和图标强调色则引用 `--color-accent`，所以后面改强调色时它们会跟着走。\n\n字号用 `typography.scale` 的 `base` 和 `ratio`，按 `base × ratio` 的步长取整。圆角用 `radius` 的 `base` 和 `multiplier`，`none` 和 `full` 不动。时长用 `motion` 的 `fast`、`medium`、`slow` 和 `ratio`。最小档是基准乘以 ratio，最大档是基准除以 ratio，再取整到 5 毫秒。\n\n`components` 按换肤挂点覆盖样式，挂点写成 `组件名-部位`，比如 `button`、`card-header`。`base` 作用在挂点本身，`variant:secondary` 作用在 `[data-variant=\"secondary\"]` 上。`Theme` 把编译结果放进 `astryx.overrides` 层，只作用在自己的 `data-astryx-theme` 子树里，遇到嵌套的主题就停下。`localTokens`、`adaptations`、已删除的旧挂点名和 `extends` 的细节，见 [扩展与自定义主题](/guide/extending-themes)。语义图标表仍然是 `icons`，按名字换成 Iconify id。\n\n```ts\nconst brand = defineTheme({\n  name: 'brand',\n  color: { accent: '#0064E0' },\n  typography: { scale: { base: 14, ratio: 1.2 } },\n  radius: { base: 4, multiplier: 1 },\n  motion: { fast: 125, medium: 300, slow: 700, ratio: 0.75 },\n})\n```\n\n只要 token、不要组件时，也可以直接调用 `expandColorScale`、`expandTypeScale`、`expandRadiusScale`、`expandMotionScale`。它们返回的还是不带前缀的名字，交给 `defineTheme()` 的 `tokens` 即可。"
+            "text": "`color`、`typography`、`radius`、`motion` 会算出一批 token，写进主题对象。同名的 `tokens` 优先。`var(--color-accent)` 这种引用会改成带 `--astryx-` 前缀的名字。\n\n`color.accent` 是一个十六进制颜色，也可以写成 `[浅色, 深色]`。调色板按 HCT 来：色相和彩度取自种子色，明度走固定阶梯，再配成浅色和深色。不写 accent、只写 `neutralStyle` 时，强调色保持原样，只重算中性色。`--color-on-accent` 按种子色算好对比色；弱化色、文字强调色和图标强调色则引用 `--color-accent`，所以后面改强调色时它们会跟着走。\n\n字号用 `typography.scale` 的 `base` 和 `ratio`，按 `base × ratio` 的步长取整。圆角用 `radius` 的 `base` 和 `multiplier`，`none` 和 `full` 不动。时长用 `motion` 的 `fast`、`medium`、`slow` 和 `ratio`。最小档是基准乘以 ratio，最大档是基准除以 ratio，再取整到 5 毫秒。`motion` 也可以只写 `tempo`（整体快慢，0.75 到 1.5）和 `character`（进场和移动曲线：`'crisp'`、`'standard'`、`'expressive'`），详见[动画与过渡](/guide/motion)。\n\n`components` 按换肤挂点覆盖样式，挂点写成 `组件名-部位`，比如 `button`、`card-header`。`base` 作用在挂点本身，`variant:secondary` 作用在 `[data-variant=\"secondary\"]` 上。`Theme` 把编译结果放进 `astryx.overrides` 层，只作用在自己的 `data-astryx-theme` 子树里，遇到嵌套的主题就停下。`localTokens`、`adaptations`、已删除的旧挂点名和 `extends` 的细节，见 [扩展与自定义主题](/guide/extending-themes)。语义图标表仍然是 `icons`，按名字换成 Iconify id。\n\n```ts\nconst brand = defineTheme({\n  name: 'brand',\n  color: { accent: '#0064E0' },\n  typography: { scale: { base: 14, ratio: 1.2 } },\n  radius: { base: 4, multiplier: 1 },\n  motion: { fast: 125, medium: 300, slow: 700, ratio: 0.75 },\n})\n```\n\n只要 token、不要组件时，也可以直接调用 `expandColorScale`、`expandTypeScale`、`expandRadiusScale`、`expandMotionScale`。它们返回的还是不带前缀的名字，交给 `defineTheme()` 的 `tokens` 即可。"
           },
           {
             "heading": "defineTheme",
@@ -83866,6 +83866,232 @@
         "en": "https://astryx-vue.pages.dev/en/components/use-combobox",
         "zh": "https://astryx-vue.pages.dev/components/use-combobox"
       }
+    },
+    {
+      "slug": "use-animator",
+      "name": "UseAnimator",
+      "package": "@astryx-vue/core",
+      "kind": "composable",
+      "title": {
+        "en": "useAnimator",
+        "zh": "useAnimator"
+      },
+      "group": "Utility",
+      "groupTitle": {
+        "en": "Utility",
+        "zh": "工具"
+      },
+      "importPath": null,
+      "exportName": null,
+      "summary": {
+        "en": "`useAnimator` drives one element with the springs and momentum the components use. Pass it a template ref and it returns an animator:",
+        "zh": "`useAnimator` 用组件库自己的弹簧和惯性来驱动一个元素。把模板 ref 交给它，拿回一个 animator："
+      },
+      "usage": {
+        "en": "`useAnimator` drives one element with the springs and momentum the components use. Pass it a template ref and it returns an animator:\n\n- `animate(target, options?)` springs channels to a target on the state-change spring. Without a velocity it carries on from the velocity on screen, so interrupting another animation stays smooth. Pass `velocity`, such as a drag's release velocity, to start from it.\n- `decay(velocity)` coasts from a release velocity, slowing as a scroll view's momentum does. There are no bounds; opacity stops at 0 or 1.\n- `set(values)` puts channels in place at once: the per-frame write of a drag.\n- `get()` and `getVelocity()` read every channel's value and velocity on screen.\n- `stop()` halts every channel where it is.\n\nThe channels are `x` and `y` (px), `scale` (1 is its size), `rotate` (degrees, clockwise) and `opacity` (0 to 1). Each method acts on the channels it is given and leaves the others where they are. The promises from `animate` and `decay` resolve when the channels arrive, or as soon as a later call takes any of them over.\n\n```ts\nimport { useAnimator } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useAnimator } from '@astryx-vue/core'\nimport { useTemplateRef } from 'vue'\n\nconst card = useTemplateRef<HTMLElement>('card')\nconst animator = useAnimator(card)\n</script>\n\n<template>\n  <div ref=\"card\">\n    Card\n  </div>\n  <button type=\"button\" @click=\"animator.animate({ scale: 1.2 })\">\n    Pop\n  </button>\n</template>\n```\n\nThe animator is made once, and animating never re-renders the component. It follows the element behind the ref: a node that replaces it starts at rest, and an unmount stops running motion and drops the values. While no element is attached, every call does nothing, and `animate` and `decay` resolve at once. It touches no DOM during server rendering. `target` may also be a getter or an element.\n\nWith reduced motion, every call is planned: a move becomes a short cross-fade on a touch screen, and lands at once with a mouse. A release coast keeps its momentum. The springs follow the theme's `motion.tempo`.\n\nOutside a component, use `createAnimator(element)`. It returns the same methods plus `destroy()`, which stops every motion and lets the element go; the animator does nothing after it.\n\n```ts\nimport { createAnimator } from '@astryx-vue/core'\n\nconst animator = createAnimator(element)\nawait animator.animate({ x: 0, rotate: 0 }, { velocity: { x: -900 } })\nanimator.destroy()\n```",
+        "zh": "`useAnimator` 用组件库自己的弹簧和惯性来驱动一个元素。把模板 ref 交给它，拿回一个 animator：\n\n- `animate(target, options?)`：用「状态切换」弹簧把通道带到目标值。不传速度时，从元素此刻的速度接着走，所以打断上一次动画也很顺滑。传 `velocity`（比如拖拽松手时的速度）就从这个速度起步。\n- `decay(velocity)`：从松手速度开始惯性滑行，像滚动视图的惯性一样慢慢停下。没有边界，透明度停在 0 或 1。\n- `set(values)`：直接跳到这些值，适合拖拽时每一帧的写入。\n- `get()`、`getVelocity()`：读每个通道此刻的值和速度。\n- `stop()`：让所有通道停在当前位置。\n\n通道有五个：`x`、`y`（像素位移）、`scale`（1 是原大小）、`rotate`（角度，顺时针）、`opacity`（0 到 1）。每个方法只动传进去的通道，其余的保持原样。`animate` 和 `decay` 返回的 Promise 在到达终点时 resolve；后面的调用接管了其中任一通道时，也会立刻 resolve。\n\n```ts\nimport { useAnimator } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useAnimator } from '@astryx-vue/core'\nimport { useTemplateRef } from 'vue'\n\nconst card = useTemplateRef<HTMLElement>('card')\nconst animator = useAnimator(card)\n</script>\n\n<template>\n  <div ref=\"card\">\n    卡片\n  </div>\n  <button type=\"button\" @click=\"animator.animate({ scale: 1.2 })\">\n    弹一下\n  </button>\n</template>\n```\n\nanimator 只创建一次，动画不会让组件重新渲染。它跟着 ref 当前指向的元素走：换成新元素时，新元素从静止状态开始；元素卸载时，正在跑的动画停下、数值清空。没有元素时每个调用都不做事，`animate` 和 `decay` 立刻 resolve。服务端渲染时不碰 DOM。`target` 也可以是 getter 或元素本身。\n\n系统开启「减弱动态效果」时，每次调用都会换成替代方案：触屏上位移变成短暂的淡出淡入，鼠标环境下直接落到终点。松手后的惯性滑行保留。弹簧的快慢跟着主题 `motion.tempo` 走。\n\n不在组件里时（比如普通脚本），用 `createAnimator(element)`。它返回同样的方法，外加 `destroy()`：停下所有动画、放开元素，之后调用都不做事。\n\n```ts\nimport { createAnimator } from '@astryx-vue/core'\n\nconst animator = createAnimator(element)\nawait animator.animate({ x: 0, rotate: 0 }, { velocity: { x: -900 } })\nanimator.destroy()\n```"
+      },
+      "practices": {
+        "en": [
+          {
+            "guidance": "Do",
+            "text": "Follow a drag with `set`, then hand the measured velocity to `animate` or `decay` on release so the motion carries on."
+          },
+          {
+            "guidance": "Do",
+            "text": "Use one animator per element."
+          },
+          {
+            "guidance": "Don't",
+            "text": "Drive one element from two animators; they overwrite each other."
+          },
+          {
+            "guidance": "Don't",
+            "text": "Use it for plain enter and exit; CSS transitions and the shared `astryx-motion-*` classes are simpler."
+          }
+        ],
+        "zh": []
+      },
+      "props": {
+        "en": [
+          {
+            "heading": "Parameters",
+            "rows": [
+              {
+                "name": "`target`",
+                "type": "`MaybeRefOrGetter<HTMLElement | null | undefined>`",
+                "default": "—",
+                "description": "The element to drive: a template ref, a getter, or the element. The animator follows the element it points at, and does nothing while there is none."
+              }
+            ]
+          },
+          {
+            "heading": "Returns",
+            "rows": [
+              {
+                "name": "`animate`",
+                "type": "`(target: AnimatorValues, options?: { velocity?: AnimatorValues }) => Promise<void>`",
+                "description": "Springs the given channels to the target on the state-change spring. Without `velocity`, each starts from its velocity on screen. Resolves when they arrive, or when a later call takes one over."
+              },
+              {
+                "name": "`decay`",
+                "type": "`(velocity: AnimatorValues) => Promise<void>`",
+                "description": "Coasts from a release velocity, in units per second. Resolves when the channels stop, or when a later call takes one over."
+              },
+              {
+                "name": "`set`",
+                "type": "`(values: AnimatorValues) => void`",
+                "description": "Puts the given channels at these values at once, ending their motion."
+              },
+              {
+                "name": "`get`",
+                "type": "`() => AnimatorSnapshot`",
+                "description": "Every channel's value on screen now."
+              },
+              {
+                "name": "`getVelocity`",
+                "type": "`() => AnimatorSnapshot`",
+                "description": "Every channel's velocity on screen now, in units per second."
+              },
+              {
+                "name": "`stop`",
+                "type": "`() => void`",
+                "description": "Halts every channel where it is on screen."
+              }
+            ]
+          },
+          {
+            "heading": "createAnimator",
+            "rows": [
+              {
+                "name": "`createAnimator`",
+                "type": "`(element: HTMLElement) => Animator`",
+                "description": "For use outside a component. Returns the methods above, plus `destroy`."
+              },
+              {
+                "name": "`destroy`",
+                "type": "`() => void`",
+                "description": "Stops every motion and lets the element go; the element keeps the values it shows. The animator does nothing after it."
+              },
+              {
+                "name": "`AnimatorValues`",
+                "type": "`Partial<Record<'x' | 'y' | 'scale' | 'rotate' | 'opacity', number>>`",
+                "description": "Values or velocities by channel: `x` and `y` in px, `scale` with 1 as its size, `rotate` in degrees, `opacity` from 0 to 1."
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "参数",
+            "rows": [
+              {
+                "name": "`target`",
+                "type": "`MaybeRefOrGetter<HTMLElement | null | undefined>`",
+                "default": "—",
+                "description": "要驱动的元素：模板 ref、getter 或元素本身。animator 跟着它当前指向的元素走，没有元素时调用都不做事。"
+              }
+            ]
+          },
+          {
+            "heading": "返回值",
+            "rows": [
+              {
+                "name": "`animate`",
+                "type": "`(target: AnimatorValues, options?: { velocity?: AnimatorValues }) => Promise<void>`",
+                "description": "用状态切换弹簧把给定通道带到目标值。不传 `velocity` 时从元素此刻的速度接着走。到达终点，或被后面的调用接管时 resolve。"
+              },
+              {
+                "name": "`decay`",
+                "type": "`(velocity: AnimatorValues) => Promise<void>`",
+                "description": "从松手速度开始惯性滑行，单位是每秒（像素、角度等）。停下或被接管时 resolve。"
+              },
+              {
+                "name": "`set`",
+                "type": "`(values: AnimatorValues) => void`",
+                "description": "直接把给定通道放到这些值，并结束它们的动画。"
+              },
+              {
+                "name": "`get`",
+                "type": "`() => AnimatorSnapshot`",
+                "description": "每个通道此刻在屏幕上的值。"
+              },
+              {
+                "name": "`getVelocity`",
+                "type": "`() => AnimatorSnapshot`",
+                "description": "每个通道此刻的速度，单位是每秒。"
+              },
+              {
+                "name": "`stop`",
+                "type": "`() => void`",
+                "description": "让所有通道停在当前位置。"
+              }
+            ]
+          },
+          {
+            "heading": "createAnimator",
+            "rows": [
+              {
+                "name": "`createAnimator`",
+                "type": "`(element: HTMLElement) => Animator`",
+                "description": "不在组件里时使用。返回上面这些方法，外加 `destroy`。"
+              },
+              {
+                "name": "`destroy`",
+                "type": "`() => void`",
+                "description": "停下所有动画并放开元素，元素保留当前显示的值。之后的调用都不做事。"
+              },
+              {
+                "name": "`AnimatorValues`",
+                "type": "`Partial<Record<'x' | 'y' | 'scale' | 'rotate' | 'opacity', number>>`",
+                "description": "按通道给出的值或速度。`x`、`y` 是像素，`scale` 以 1 为原大小，`rotate` 是角度，`opacity` 是 0 到 1。"
+              }
+            ]
+          }
+        ]
+      },
+      "slots": {
+        "en": [],
+        "zh": []
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [],
+        "zh": [
+          {
+            "heading": "建议",
+            "text": "- 推荐: 拖拽时用 `set` 跟手，松手时把测到的速度传给 `animate` 或 `decay`，动作就能接上。\n- 推荐: 一个元素只配一个 animator。\n- 避免: 两个 animator 驱动同一个元素，它们会互相覆盖。\n- 避免: 用它做普通的进场退场；CSS 过渡和共享的 `astryx-motion-*` 类更省事。"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": {
+            "en": "useAnimator — drag and spring back",
+            "zh": "useAnimator — 拖拽回弹"
+          },
+          "description": {
+            "en": "Drag the card; on release it springs home from the speed of your hand. The buttons pop, spin, fling it on a momentum coast, and reset it.",
+            "zh": "拖动卡片，松手后它带着手上的速度弹回原位。按钮分别演示弹一下、旋转、甩出去的惯性滑行和复位。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { useAnimator } from '@astryx-vue/core'\nimport { Button } from '@astryx-vue/core/Button'\nimport { HStack, VStack } from '@astryx-vue/core/Stack'\nimport { useTemplateRef } from 'vue'\n\nconst card = useTemplateRef<HTMLElement>('card')\nconst animator = useAnimator(card)\n\nlet origin: { x: number, y: number, at: number } | null = null\nlet last = { x: 0, y: 0, at: 0 }\nlet velocity = { x: 0, y: 0 }\n\nfunction onPointerDown(event: PointerEvent): void {\n  const { x, y } = animator.get()\n  animator.stop()\n  origin = { x: event.clientX - x, y: event.clientY - y, at: event.timeStamp }\n  last = { x, y, at: event.timeStamp }\n  velocity = { x: 0, y: 0 }\n  card.value?.setPointerCapture(event.pointerId)\n}\n\nfunction onPointerMove(event: PointerEvent): void {\n  if (!origin)\n    return\n  const x = event.clientX - origin.x\n  const y = event.clientY - origin.y\n  const seconds = (event.timeStamp - last.at) / 1000\n  if (seconds > 0)\n    velocity = { x: (x - last.x) / seconds, y: (y - last.y) / seconds }\n  last = { x, y, at: event.timeStamp }\n  animator.set({ x, y })\n}\n\nfunction onPointerUp(): void {\n  if (!origin)\n    return\n  origin = null\n  // Springs home from the speed of the release.\n  void animator.animate({ x: 0, y: 0 }, { velocity })\n}\n</script>\n\n<template>\n  <VStack :gap=\"4\" align=\"center\">\n    <div class=\"drag-card-stage\">\n      <div\n        ref=\"card\"\n        class=\"drag-card\"\n        @pointerdown=\"onPointerDown\"\n        @pointermove=\"onPointerMove\"\n        @pointerup=\"onPointerUp\"\n        @pointercancel=\"onPointerUp\"\n      >\n        Drag me\n      </div>\n    </div>\n    <HStack :gap=\"2\">\n      <Button label=\"Pop\" @click=\"animator.animate({ scale: 1.2 }).then(() => animator.animate({ scale: 1 }))\" />\n      <Button label=\"Spin\" @click=\"animator.animate({ rotate: animator.get().rotate + 90 })\" />\n      <Button label=\"Fling\" @click=\"animator.decay({ x: 900 })\" />\n      <Button label=\"Reset\" variant=\"secondary\" @click=\"animator.animate({ x: 0, y: 0, scale: 1, rotate: 0 })\" />\n    </HStack>\n  </VStack>\n</template>\n\n<style scoped>\n.drag-card-stage {\n  display: grid;\n  place-items: center;\n  width: 100%;\n  min-height: 200px;\n  overflow: hidden;\n}\n\n.drag-card {\n  display: grid;\n  place-items: center;\n  width: 120px;\n  height: 120px;\n  border-radius: var(--astryx-radius-container, 12px);\n  background: var(--astryx-color-accent);\n  color: var(--astryx-color-on-accent, #fff);\n  cursor: grab;\n  touch-action: none;\n  user-select: none;\n}\n</style>"
+        }
+      ],
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/use-animator",
+        "zh": "https://astryx-vue.pages.dev/components/use-animator"
+      }
     }
   ],
   "topics": [
@@ -85273,14 +85499,18 @@
         "zh": "动画与过渡"
       },
       "summary": {
-        "en": "Durations come from the Neutral motion scale. The bases are fast 125, medium 300, and slow 700. Neighbors use a 0.75 ratio, and the results are rounded to 5 milliseconds. There is one easing token, `--astryx-ease-standard`: `cubic-bezier(0.24, 1, 0.4, 1)`.",
+        "en": "Durations come from the Neutral motion scale. The bases are fast 125, medium 300, and slow 700. Neighbors use a 0.75 ratio, and the results are rounded to 5 milliseconds. The standard easing, `--astryx-ease-standard`, is `cubic-bezier(0.24, 1, 0.4, 1)`: quick out of the gate, settling at the end. `--astryx-ease-entrance` and `--astryx-ease-move` time entrances and moves on screen, and equal the standard curve by default. `--astryx-ease-exit` is `cubic-bezier(0.3, 0, 0.6, 0.6)` for things leaving, and `--astryx-duration-exit` follows `--astryx-duration-fast`.",
         "zh": "界面的动效就像演员走位时的节奏感：太快了显得生硬突兀，太慢了又让人觉得卡顿拖沓。astryx-vue 的动效体系沿袭了 Astryx 的标准规范，旨在提供干脆、克制且符合物理规律的交互体验。"
       },
       "headings": {
-        "en": [],
+        "en": [
+          "Tempo and character",
+          "Shared keyframes"
+        ],
         "zh": [
           "动画时长梯级（Duration）",
           "缓动曲线（Easing）",
+          "节奏和性格：tempo 与 character",
           "共享进出场关键帧",
           "关爱易眩晕用户：无障碍减少动效支持",
           "动态效果预览"
@@ -85307,8 +85537,8 @@
         ]
       },
       "body": {
-        "en": "# Motion\n\nDurations come from the Neutral motion scale. The bases are fast 125, medium 300, and slow 700. Neighbors use a 0.75 ratio, and the results are rounded to 5 milliseconds. There is one easing token, `--astryx-ease-standard`: `cubic-bezier(0.24, 1, 0.4, 1)`.\n\nShared enter and exit keyframes live in `@astryx-vue/core` at `styles/motion.css`. They are available when you import `@astryx-vue/core/styles.css`, or any component sheet that pulls that file in. Existing components still use their own animation names, and these shared utility classes provide reusable motion primitives:\n\n| Class | Keyframes |\n| --- | --- |\n| `astryx-motion-fade-in` / `fade-out` | `astryx-fade-in` / `astryx-fade-out` |\n| `astryx-motion-scale-in` / `scale-out` | `astryx-scale-in` / `astryx-scale-out` |\n| `astryx-motion-slide-in-above` / `out` | from above |\n| `astryx-motion-slide-in-below` / `out` | from below |\n| `astryx-motion-slide-in-start` / `out` | from the start side |\n| `astryx-motion-slide-in-end` / `out` | from the end side |\n\nDistance and scale read `--astryx-motion-offset`, `--astryx-motion-scale-from`, and the opacity variables. When the system asks for reduced motion, those distances and the scale collapse to zero, opacity jumps to the end state, and the shared classes use a duration of `0.01ms`. Component duration tokens are left alone.\n\nReplay the samples below. With reduced motion on, they sit at the end state.\n\n<TokenReference locale=\"en\" motion :sections=\"['duration', 'ease']\" />",
-        "zh": "# 动画与过渡\n\n界面的动效就像演员走位时的节奏感：太快了显得生硬突兀，太慢了又让人觉得卡顿拖沓。astryx-vue 的动效体系沿袭了 Astryx 的标准规范，旨在提供干脆、克制且符合物理规律的交互体验。\n\n## 动画时长梯级（Duration）\n\n动画时长基于 Neutral 预设的运动刻度计算而成。系统划定了三个基础参考档位：\n- **快速交互（fast）：** `125ms`，适合开关、复选框点击、图标翻转等微小的即时反馈。\n- **常规操作（medium）：** `300ms`，适合下拉菜单展开、卡片悬浮浮起等大多数界面过渡。\n- **大型进出场（slow）：** `700ms`，适合大型全屏抽屉、模态弹窗的推入推出。\n\n相邻档位之间按照约 0.75 的步长递增或递减，最终结果四舍五入精确到 5 毫秒，避免出现不规则的零碎时间。\n\n## 缓动曲线（Easing）\n\n整套设计系统只保留了一条最核心的标准缓动曲线：\n- **`--astryx-ease-standard`**：数值为 `cubic-bezier(0.24, 1, 0.4, 1)`。\n\n这是一条具有减速特征的曲线：起步迅速，在接近终点时平滑减速落定。\n\n## 共享进出场关键帧\n\n在 `@astryx-vue/core` 的 `styles/motion.css` 中，我们预制了一组通用的进入与退出 CSS 类名。只要你的项目引入了 `@astryx-vue/core/styles.css` 或者使用了带样式的组件，就可以在任何你自己的 HTML 元素或 Vue 过渡（`<Transition>`）中直接复用它们：\n\n| 进场类名 / 出场类名 | 动画视觉效果 |\n| --- | --- |\n| `astryx-motion-fade-in` / `astryx-motion-fade-out` | 纯淡入 / 纯淡出 |\n| `astryx-motion-scale-in` / `astryx-motion-scale-out` | 缩放轻微放大进场 / 缩小退场 |\n| `astryx-motion-slide-in-above` / `out` | 从上方轻微滑入 / 向上滑出 |\n| `astryx-motion-slide-in-below` / `out` | 从下方轻微滑入 / 向下滑出 |\n| `astryx-motion-slide-in-start` / `out` | 从行起始侧（默认左侧）滑入 / 滑出 |\n| `astryx-motion-slide-in-end` / `out` | 从行结束侧（默认右侧）滑入 / 滑出 |\n\n位移距离和缩放比例分别由 `--astryx-motion-offset` 与 `--astryx-motion-scale-from` 变量控制。\n\n## 关爱易眩晕用户：无障碍减少动效支持\n\n如果用户在操作系统的辅助功能中开启了「减少动态效果（prefers-reduced-motion: reduce）」，astryx-vue 会自动做出安全响应：\n- 所有位移距离和缩放比例自动归零。\n- 透明度直接瞬间跳到最终可见状态。\n- 通用共享类的过渡时间自动缩短为极微小的 `0.01ms`，彻底避免画面大幅晃动对晕动症或光敏感用户造成身体不适。\n\n**注意：** 为了保证关键交互状态不发生破坏性错位，组件自身特定的内部时长 token 保持原值，无障碍规则主要通过限制大幅位移与缩放来保障体验。\n\n## 动态效果预览\n\n点击下方的重播按钮，可以实时观察不同动画档位的过渡节奏（如果你在系统设置里开启了减少动态效果，方块会直接停留在最终位置）：\n\n<TokenReference locale=\"zh\" motion :sections=\"['duration', 'ease']\" />"
+        "en": "# Motion\n\nDurations come from the Neutral motion scale. The bases are fast 125, medium 300, and slow 700. Neighbors use a 0.75 ratio, and the results are rounded to 5 milliseconds. The standard easing, `--astryx-ease-standard`, is `cubic-bezier(0.24, 1, 0.4, 1)`: quick out of the gate, settling at the end. `--astryx-ease-entrance` and `--astryx-ease-move` time entrances and moves on screen, and equal the standard curve by default. `--astryx-ease-exit` is `cubic-bezier(0.3, 0, 0.6, 0.6)` for things leaving, and `--astryx-duration-exit` follows `--astryx-duration-fast`.\n\n## Tempo and character\n\nA theme's `motion` has two knobs that change the feel without listing durations:\n\n- **`tempo`** scales every duration, from 0.75 to 1.5 (default 1), to the millisecond. Higher is slower. A value outside the range is clamped. Springs such as `useAnimator`'s follow it too.\n- **`character`** picks the entrance and move curves: `'crisp'`, `'expressive'` (a little overshoot), or `'standard'` (the default), which keeps them on the standard curve. Exits are unchanged.\n\n```ts\nconst calm = defineTheme({\n  name: 'calm',\n  motion: { tempo: 1.2, character: 'expressive' },\n})\n```\n\nA duration scale (`fast`, `medium`, `ratio`) wins over `tempo` for the durations it sets, and must supply all three. Explicit `tokens` win over both. A child theme keeps each knob it leaves out, and an adaptation rule can set them. A theme with no `motion` writes no motion token.\n\n## Shared keyframes\n\nShared enter and exit keyframes live in `@astryx-vue/core` at `styles/motion.css`. They are available when you import `@astryx-vue/core/styles.css`, or any component sheet that pulls that file in. Existing components still use their own animation names, and these shared utility classes provide reusable motion primitives:\n\n| Class | Keyframes |\n| --- | --- |\n| `astryx-motion-fade-in` / `fade-out` | `astryx-fade-in` / `astryx-fade-out` |\n| `astryx-motion-scale-in` / `scale-out` | `astryx-scale-in` / `astryx-scale-out` |\n| `astryx-motion-slide-in-above` / `out` | from above |\n| `astryx-motion-slide-in-below` / `out` | from below |\n| `astryx-motion-slide-in-start` / `out` | from the start side |\n| `astryx-motion-slide-in-end` / `out` | from the end side |\n\nDistance and scale read `--astryx-motion-offset`, `--astryx-motion-scale-from`, and the opacity variables. When the system asks for reduced motion, those distances and the scale collapse to zero, opacity jumps to the end state, and the shared classes use a duration of `0.01ms`. Component duration tokens are left alone.\n\nReplay the samples below. With reduced motion on, they sit at the end state.\n\n<TokenReference locale=\"en\" motion :sections=\"['duration', 'ease']\" />",
+        "zh": "# 动画与过渡\n\n界面的动效就像演员走位时的节奏感：太快了显得生硬突兀，太慢了又让人觉得卡顿拖沓。astryx-vue 的动效体系沿袭了 Astryx 的标准规范，旨在提供干脆、克制且符合物理规律的交互体验。\n\n## 动画时长梯级（Duration）\n\n动画时长基于 Neutral 预设的运动刻度计算而成。系统划定了三个基础参考档位：\n- **快速交互（fast）：** `125ms`，适合开关、复选框点击、图标翻转等微小的即时反馈。\n- **常规操作（medium）：** `300ms`，适合下拉菜单展开、卡片悬浮浮起等大多数界面过渡。\n- **大型进出场（slow）：** `700ms`，适合大型全屏抽屉、模态弹窗的推入推出。\n\n相邻档位之间按照约 0.75 的步长递增或递减，最终结果四舍五入精确到 5 毫秒，避免出现不规则的零碎时间。\n\n## 缓动曲线（Easing）\n\n核心是一条标准缓动曲线，另外三条各管一种场景：\n- **`--astryx-ease-standard`**：`cubic-bezier(0.24, 1, 0.4, 1)`，起步快、快到终点时慢慢落定，用于状态切换。\n- **`--astryx-ease-entrance`** 和 **`--astryx-ease-move`**：进场和屏幕内移动用的曲线，默认就等于标准曲线。\n- **`--astryx-ease-exit`**：`cubic-bezier(0.3, 0, 0.6, 0.6)`，越走越快，用于东西离开。\n\n收起、关闭这类退场用 `--astryx-duration-exit`，它默认指向 `--astryx-duration-fast`。\n\n## 节奏和性格：tempo 与 character\n\n主题的 `motion` 里有两个旋钮，不用一个个改时长就能换整体手感：\n\n- **`tempo`**：整体快慢，范围 0.75 到 1.5，默认 1。数字越大越慢：`1.2` 表示每个时长都乘以 1.2，再取整到毫秒。超出范围的值会被夹到边界。组件里的弹簧动画（比如 `useAnimator`）也跟着这个节奏走。\n- **`character`**：进场和移动的「性格」。`'crisp'` 干脆利落，`'expressive'` 带一点回弹，`'standard'`（默认）就用标准曲线。退场曲线不受影响。\n\n```ts\nconst calm = defineTheme({\n  name: 'calm',\n  motion: { tempo: 1.2, character: 'expressive' },\n})\n```\n\n几条规则：\n- 写了 `fast`、`medium`、`ratio` 这组时长刻度时，刻度算出的时长优先，`tempo` 只缩放刻度没管到的那些。刻度要写就三个都写全，缺一个会直接报错，而不是悄悄丢掉。\n- `tokens` 里明确写的值永远最优先。\n- 子主题（`extends`）没写的旋钮沿用父主题的。自适应规则（`adaptations`）里也能写这两个旋钮，比如触屏上放慢一点。\n- 不写 `motion` 的主题不会输出任何动效 token，渲染结果和以前完全一样。\n\n## 共享进出场关键帧\n\n在 `@astryx-vue/core` 的 `styles/motion.css` 中，我们预制了一组通用的进入与退出 CSS 类名。只要你的项目引入了 `@astryx-vue/core/styles.css` 或者使用了带样式的组件，就可以在任何你自己的 HTML 元素或 Vue 过渡（`<Transition>`）中直接复用它们：\n\n| 进场类名 / 出场类名 | 动画视觉效果 |\n| --- | --- |\n| `astryx-motion-fade-in` / `astryx-motion-fade-out` | 纯淡入 / 纯淡出 |\n| `astryx-motion-scale-in` / `astryx-motion-scale-out` | 缩放轻微放大进场 / 缩小退场 |\n| `astryx-motion-slide-in-above` / `out` | 从上方轻微滑入 / 向上滑出 |\n| `astryx-motion-slide-in-below` / `out` | 从下方轻微滑入 / 向下滑出 |\n| `astryx-motion-slide-in-start` / `out` | 从行起始侧（默认左侧）滑入 / 滑出 |\n| `astryx-motion-slide-in-end` / `out` | 从行结束侧（默认右侧）滑入 / 滑出 |\n\n位移距离和缩放比例分别由 `--astryx-motion-offset` 与 `--astryx-motion-scale-from` 变量控制。\n\n## 关爱易眩晕用户：无障碍减少动效支持\n\n如果用户在操作系统的辅助功能中开启了「减少动态效果（prefers-reduced-motion: reduce）」，astryx-vue 会自动做出安全响应：\n- 所有位移距离和缩放比例自动归零。\n- 透明度直接瞬间跳到最终可见状态。\n- 通用共享类的过渡时间自动缩短为极微小的 `0.01ms`，彻底避免画面大幅晃动对晕动症或光敏感用户造成身体不适。\n\n**注意：** 为了保证关键交互状态不发生破坏性错位，组件自身特定的内部时长 token 保持原值，无障碍规则主要通过限制大幅位移与缩放来保障体验。\n\n## 动态效果预览\n\n点击下方的重播按钮，可以实时观察不同动画档位的过渡节奏（如果你在系统设置里开启了减少动态效果，方块会直接停留在最终位置）：\n\n<TokenReference locale=\"zh\" motion :sections=\"['duration', 'ease']\" />"
       },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/guide/motion",

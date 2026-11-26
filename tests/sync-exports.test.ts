@@ -269,6 +269,7 @@ const expectedCatalog = [
   { slug: 'use-power-search-config', group: 'Utility', family: 'Utilities', en: 'usePowerSearchConfig', zh: 'usePowerSearchConfig' },
   { slug: 'use-truncation', group: 'Utility', family: 'Utilities', en: 'useTruncation', zh: 'useTruncation' },
   { slug: 'use-combobox', group: 'Utility', family: 'Utilities', en: 'useCombobox', zh: 'useCombobox' },
+  { slug: 'use-animator', group: 'Utility', family: 'Utilities', en: 'useAnimator', zh: 'useAnimator' },
 ]
 
 describe('component catalog meta', () => {

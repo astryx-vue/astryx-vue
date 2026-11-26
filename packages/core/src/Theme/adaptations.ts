@@ -12,6 +12,7 @@ import type { ThemeValuesInput } from './resolveThemeValues.js'
 import type { ComponentStyleMap, TypographyConfig, TypographyRole } from './types.js'
 import { DEFAULT_WIDTH_BREAKPOINTS, WIDTH_BREAKPOINT_NAMES } from './adaptationTypes.js'
 import { assertNoTokenCycles, resolveAdaptationLocalTokens } from './localTokens.js'
+import { completeMotion } from './motionLayerTokens.js'
 import { resolveThemeValues } from './resolveThemeValues.js'
 
 const BREAKPOINT_NAMES = new Set<string>(WIDTH_BREAKPOINT_NAMES)
@@ -176,7 +177,7 @@ function ruleInput(value: ThemeAdaptationValue, axes: ThemeGenerativeAxes, path:
     typography,
     color: value.color ? { ...axes.color, ...value.color } : undefined,
     radius: value.radius ? completeNumbers(axes.radius, value.radius, ['base', 'multiplier'], `${path}.radius`) : undefined,
-    motion: value.motion ? completeNumbers(axes.motion, value.motion, ['fast', 'medium', 'ratio'], `${path}.motion`) : undefined,
+    motion: value.motion ? completeMotion(axes.motion, value.motion, `${path}.motion`) : undefined,
     tokens: value.tokens,
     components: value.components,
   }
@@ -270,7 +271,13 @@ export function resolveThemeAdaptationRules(
   const resolved = adaptations.rules.map((rule, index): ResolvedThemeAdaptationRule => {
     const path = `defineTheme("${themeName}").adaptations.rules[${index}]`
     const input = ruleInput(rule.value, axes, `${path}.value`)
-    const values = resolveThemeValues(input, `${path}.value.`)
+    // A rule without motion of its own keeps the theme's character, so its
+    // explicit --ease-standard leaves that character's curves alone; one at
+    // 'standard' matches the theme's --ease-standard.
+    const values = resolveThemeValues(input, `${path}.value.`, {
+      inheritedCharacter: axes.motion?.character,
+      standardBeneath: root.tokens['--astryx-ease-standard'],
+    })
     for (const name of Object.keys(rule.value.tokens ?? {})) {
       if (root.localTokens && Object.hasOwn(root.localTokens, name))
         throw new Error(`${path}.value.tokens["${name}"] is a theme-local token; write it through value.localTokens.`)

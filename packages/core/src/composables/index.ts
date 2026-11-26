@@ -2,6 +2,19 @@
 
 export { countCharacters } from './countCharacters.js'
 
+export { createAnimator } from './createAnimator.js'
+export type {
+  Animator,
+  AnimatorAnimateOptions,
+  AnimatorChannel,
+  AnimatorDecayVelocity,
+  AnimatorHandle,
+  AnimatorSnapshot,
+  AnimatorValues,
+} from './createAnimator.js'
+
+export { useAnimator } from './useAnimator.js'
+
 export { useAnnounce } from './useAnnounce.js'
 export type { AnnounceFn, AnnouncePoliteness, UseAnnounceOptions } from './useAnnounce.js'
 

@@ -50,7 +50,7 @@ const ocean = defineTheme({
 
 `color.accent` 是一个十六进制颜色，也可以写成 `[浅色, 深色]`。调色板按 HCT 来：色相和彩度取自种子色，明度走固定阶梯，再配成浅色和深色。不写 accent、只写 `neutralStyle` 时，强调色保持原样，只重算中性色。`--color-on-accent` 按种子色算好对比色；弱化色、文字强调色和图标强调色则引用 `--color-accent`，所以后面改强调色时它们会跟着走。
 
-字号用 `typography.scale` 的 `base` 和 `ratio`，按 `base × ratio` 的步长取整。圆角用 `radius` 的 `base` 和 `multiplier`，`none` 和 `full` 不动。时长用 `motion` 的 `fast`、`medium`、`slow` 和 `ratio`。最小档是基准乘以 ratio，最大档是基准除以 ratio，再取整到 5 毫秒。
+字号用 `typography.scale` 的 `base` 和 `ratio`，按 `base × ratio` 的步长取整。圆角用 `radius` 的 `base` 和 `multiplier`，`none` 和 `full` 不动。时长用 `motion` 的 `fast`、`medium`、`slow` 和 `ratio`。最小档是基准乘以 ratio，最大档是基准除以 ratio，再取整到 5 毫秒。`motion` 也可以只写 `tempo`（整体快慢，0.75 到 1.5）和 `character`（进场和移动曲线：`'crisp'`、`'standard'`、`'expressive'`），详见[动画与过渡](/guide/motion)。
 
 `components` 按换肤挂点覆盖样式，挂点写成 `组件名-部位`，比如 `button`、`card-header`。`base` 作用在挂点本身，`variant:secondary` 作用在 `[data-variant="secondary"]` 上。`Theme` 把编译结果放进 `astryx.overrides` 层，只作用在自己的 `data-astryx-theme` 子树里，遇到嵌套的主题就停下。`localTokens`、`adaptations`、已删除的旧挂点名和 `extends` 的细节，见 [扩展与自定义主题](/guide/extending-themes)。语义图标表仍然是 `icons`，按名字换成 Iconify id。
 

@@ -17,10 +17,32 @@ title: 动画与过渡
 
 ## 缓动曲线（Easing）
 
-整套设计系统只保留了一条最核心的标准缓动曲线：
-- **`--astryx-ease-standard`**：数值为 `cubic-bezier(0.24, 1, 0.4, 1)`。
+核心是一条标准缓动曲线，另外三条各管一种场景：
+- **`--astryx-ease-standard`**：`cubic-bezier(0.24, 1, 0.4, 1)`，起步快、快到终点时慢慢落定，用于状态切换。
+- **`--astryx-ease-entrance`** 和 **`--astryx-ease-move`**：进场和屏幕内移动用的曲线，默认就等于标准曲线。
+- **`--astryx-ease-exit`**：`cubic-bezier(0.3, 0, 0.6, 0.6)`，越走越快，用于东西离开。
 
-这是一条具有减速特征的曲线：起步迅速，在接近终点时平滑减速落定。
+收起、关闭这类退场用 `--astryx-duration-exit`，它默认指向 `--astryx-duration-fast`。
+
+## 节奏和性格：tempo 与 character
+
+主题的 `motion` 里有两个旋钮，不用一个个改时长就能换整体手感：
+
+- **`tempo`**：整体快慢，范围 0.75 到 1.5，默认 1。数字越大越慢：`1.2` 表示每个时长都乘以 1.2，再取整到毫秒。超出范围的值会被夹到边界。组件里的弹簧动画（比如 `useAnimator`）也跟着这个节奏走。
+- **`character`**：进场和移动的「性格」。`'crisp'` 干脆利落，`'expressive'` 带一点回弹，`'standard'`（默认）就用标准曲线。退场曲线不受影响。
+
+```ts
+const calm = defineTheme({
+  name: 'calm',
+  motion: { tempo: 1.2, character: 'expressive' },
+})
+```
+
+几条规则：
+- 写了 `fast`、`medium`、`ratio` 这组时长刻度时，刻度算出的时长优先，`tempo` 只缩放刻度没管到的那些。刻度要写就三个都写全，缺一个会直接报错，而不是悄悄丢掉。
+- `tokens` 里明确写的值永远最优先。
+- 子主题（`extends`）没写的旋钮沿用父主题的。自适应规则（`adaptations`）里也能写这两个旋钮，比如触屏上放慢一点。
+- 不写 `motion` 的主题不会输出任何动效 token，渲染结果和以前完全一样。
 
 ## 共享进出场关键帧
 

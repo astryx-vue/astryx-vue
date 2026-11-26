@@ -11,6 +11,7 @@ import { normalizeThemeAdaptations, resolveThemeAdaptationRules } from './adapta
 import { assertTargetName } from './componentStyles.js'
 import { resolveLocalTokens } from './localTokens.js'
 import { mergeComponentMaps, resolveThemeValues, resolveTokenMap } from './resolveThemeValues.js'
+import { resolveRootMotion } from './rootMotion.js'
 import { deriveStatusRoleTokens } from './statusRoleDerivation.js'
 import { resolveGenerativeAxes } from './themeAxes.js'
 import { compileThemeCss } from './themeCss.js'
@@ -97,7 +98,12 @@ export function defineTheme<
   assertTargets(input.onLight?.components)
 
   const base: ThemeDefinition | undefined = input.extends
-  const own = resolveThemeValues(input, '')
+  const { motion, inheritedTokens } = resolveRootMotion(input.name, input.motion, base)
+  const ownInput = inheritedTokens ? { ...input, motion, tokens: { ...inheritedTokens, ...input.tokens } } : { ...input, motion }
+  const own = resolveThemeValues(ownInput, '', {
+    inheritedCharacter: base?.axes?.motion?.character,
+    standardBeneath: base?.tokens['--astryx-ease-standard'],
+  })
   const authoredTokens = { ...authoredBaseTokens(base), ...own.tokens }
   // Status roles this theme leaves unset are computed from its own colors.
   const derivedStatusRoles = deriveStatusRoleTokens(authoredTokens)

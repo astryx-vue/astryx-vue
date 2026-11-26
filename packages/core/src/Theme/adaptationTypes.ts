@@ -2,6 +2,7 @@ import type { ColorScaleConfig } from './expandColorScale.js'
 import type { MotionScaleConfig } from './expandMotionScale.js'
 import type { RadiusScaleConfig } from './expandRadiusScale.js'
 import type { TypeScaleConfig } from './expandTypeScale.js'
+import type { ThemeMotionConfig, ThemeMotionKnobs } from './themeMotion.js'
 import type { ComponentStyleMap, ThemeTokens, ThemeTokenValue, TypographyConfig } from './types.js'
 
 /** Fixed names for viewport-width tier start points. */
@@ -53,8 +54,8 @@ export interface ThemeAdaptationValue {
   color?: Partial<ColorScaleConfig>
   /** Completed from the root theme's radius config. */
   radius?: Partial<RadiusScaleConfig>
-  /** Completed from the root theme's motion config. */
-  motion?: Partial<MotionScaleConfig>
+  /** Scale fields or the `tempo` and `character` knobs, completed from the root theme's motion config. */
+  motion?: Partial<MotionScaleConfig> & ThemeMotionKnobs
   /** Shared token writes. */
   tokens?: ThemeTokens
   /** New values for theme-local tokens the root theme already declares. */
@@ -92,7 +93,7 @@ export interface ThemeGenerativeAxes {
   typography?: TypographyConfig
   color?: ColorScaleConfig
   radius?: RadiusScaleConfig
-  motion?: MotionScaleConfig
+  motion?: ThemeMotionConfig
 }
 
 /** One rule lowered to concrete writes, ready to compile. */
