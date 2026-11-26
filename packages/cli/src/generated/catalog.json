@@ -64945,6 +64945,12 @@
                 "type": "`boolean`",
                 "default": "`false`",
                 "description": "A row click toggles the panel. Clicks on controls or a text selection do not."
+              },
+              {
+                "name": "`animatedLayout`",
+                "type": "`AnimatedLayout | null`",
+                "default": "—",
+                "description": "The handle from `useAnimatedLayout`. Rows below a panel glide instead of jumping as it opens or closes."
               }
             ]
           },
@@ -65212,6 +65218,12 @@
                 "type": "`boolean`",
                 "default": "`false`",
                 "description": "点行也能展开。点到控件或选中的文字时不动。"
+              },
+              {
+                "name": "`animatedLayout`",
+                "type": "`AnimatedLayout | null`",
+                "default": "—",
+                "description": "`useAnimatedLayout` 返回的句柄。面板开合时下面的行滑过去，而不是跳过去。"
               }
             ]
           },
@@ -78967,6 +78979,12 @@
                 "type": "`boolean`",
                 "default": "`false`",
                 "description": "Toggle a row by clicking anywhere on it, not only on its chevron. A pointer-only convenience layered over the chevron, which stays the accessible control for keyboard and assistive tech. Clicks on interactive cell content (buttons, links, form controls) or on a text selection do not toggle, and non-expandable rows stay inert."
+              },
+              {
+                "name": "`animatedLayout`",
+                "type": "`AnimatedLayout | null`",
+                "default": "—",
+                "description": "The handle from `useAnimatedLayout`. With it, the rows below a panel glide to their new positions as it opens or closes, their dividers move with them, an opening panel plays its entrance, and the chevron turns on the same timing."
               }
             ]
           },
@@ -78987,6 +79005,11 @@
                 "name": "`cellPatch`",
                 "type": "`(input: TableCellPatchInput<T>) => TableCellPatch | null`",
                 "description": "Marks the chevron cells with the `astryx-table__expansion` class so they keep their 40px width."
+              },
+              {
+                "name": "`bindScrollRoot`",
+                "type": "`(element: HTMLElement | null) => void`",
+                "description": "Keeps the table's scroll container, where the changed rows are found when `animatedLayout` is passed."
               }
             ]
           },
@@ -78996,7 +79019,7 @@
               {
                 "name": "`attrs`",
                 "type": "`Record<string, string | undefined>`",
-                "description": "`data-expanded` is set on an open row."
+                "description": "Every expandable row carries `data-expansion-key` (its row key); an open row also carries `data-expanded`."
               },
               {
                 "name": "`class`",
@@ -79072,6 +79095,12 @@
                 "type": "`boolean`",
                 "default": "`false`",
                 "description": "点整行就能切换，不只点折叠按钮。这是给指针设备加的方便，按钮仍然是键盘和辅助技术用的那个控件。点在可交互的单元格内容（按钮、链接、表单控件）上，或者正在选中文字时，不会切换；不能展开的行没有反应。"
+              },
+              {
+                "name": "`animatedLayout`",
+                "type": "`AnimatedLayout | null`",
+                "default": "—",
+                "description": "`useAnimatedLayout` 返回的句柄。传了之后，面板展开或收起时下面的行滑到新位置，分隔线跟着行走，展开的面板播放入场，折叠按钮的箭头按同样的节奏转动。"
               }
             ]
           },
@@ -79092,6 +79121,11 @@
                 "name": "`cellPatch`",
                 "description": "`cellPatch`",
                 "type": "`(input: TableCellPatchInput<T>) => TableCellPatch | null`"
+              },
+              {
+                "name": "`bindScrollRoot`",
+                "description": "`bindScrollRoot`",
+                "type": "`(element: HTMLElement | null) => void`"
               }
             ]
           },
@@ -79143,7 +79177,7 @@
           },
           {
             "heading": "Returns",
-            "text": "`useTableRowExpansion()` returns one `TablePlugin&lt;T&gt;`. Pass it to `Table` in `plugins`. The plugin fills three fields of the plugin contract:"
+            "text": "`useTableRowExpansion()` returns one `TablePlugin&lt;T&gt;`. Pass it to `Table` in `plugins`. The plugin fills these fields of the plugin contract:"
           }
         ],
         "zh": [
@@ -79153,7 +79187,7 @@
           },
           {
             "heading": "返回值",
-            "text": "`useTableRowExpansion()` 返回一个 `TablePlugin&lt;T&gt;`，放进 `Table` 的 `plugins` 里。它填的是插件协议上的三个字段："
+            "text": "`useTableRowExpansion()` 返回一个 `TablePlugin&lt;T&gt;`，放进 `Table` 的 `plugins` 里。它填的是插件协议上的这些字段："
           }
         ]
       },
@@ -84217,8 +84251,8 @@
         "zh": "一个组件变高或变矮时（比如展开树里的一个目录），它下面的内容会一下子跳到新位置。`useAnimatedLayout` 让这些内容滑过去，而不是跳过去。"
       },
       "usage": {
-        "en": "When a component grows or shrinks (a folder in a tree opens, say), the content after it jumps to its new place. `useAnimatedLayout` makes that content glide there instead.\n\nHand `useAnimatedLayout` a container (a scroll area or a panel) and get a handle back, then pass the handle to the `animatedLayout` prop of the component whose size changes.\n\n```ts\nimport { useAnimatedLayout } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useAnimatedLayout } from '@astryx-vue/core'\nimport { TreeList } from '@astryx-vue/core/TreeList'\nimport { useTemplateRef } from 'vue'\n\nconst panel = useTemplateRef<HTMLElement>('panel')\nconst animatedLayout = useAnimatedLayout({ containerRef: panel })\n</script>\n\n<template>\n  <div ref=\"panel\">\n    <TreeList :items=\"items\" :animated-layout=\"animatedLayout\" />\n    <p>Notes</p>\n  </div>\n</template>\n```\n\nWhen the component's size changes, the content after it in the container glides to its new place together, on the theme's move duration and curve. Revealed content slides in from its edge; hidden content slides out and gives up its space before it goes. The disclosure chevron turns on the same timing.\n\n`Collapsible` and `TreeList` take the handle today.\n\n- Only the content after the changed component, inside the container, moves. Content outside the container lands at once.\n- Fixed elements and stuck sticky elements stay put, and the glide never scrolls the container.\n- Changes in one container in one frame move as one glide.\n- With Reduce Motion on, a touch screen gets a short cross-fade instead, and a mouse lands at once.\n- The handle is created once and reads the container when a change happens, so the ref can point somewhere else later. It touches no DOM during server rendering.",
-        "zh": "一个组件变高或变矮时（比如展开树里的一个目录），它下面的内容会一下子跳到新位置。`useAnimatedLayout` 让这些内容滑过去，而不是跳过去。\n\n用法分两步：把一个容器（滚动区域或面板）交给 `useAnimatedLayout`，拿回一个句柄；再把句柄传给尺寸会变的组件的 `animatedLayout` 属性。\n\n```ts\nimport { useAnimatedLayout } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useAnimatedLayout } from '@astryx-vue/core'\nimport { TreeList } from '@astryx-vue/core/TreeList'\nimport { useTemplateRef } from 'vue'\n\nconst panel = useTemplateRef<HTMLElement>('panel')\nconst animatedLayout = useAnimatedLayout({ containerRef: panel })\n</script>\n\n<template>\n  <div ref=\"panel\">\n    <TreeList :items=\"items\" :animated-layout=\"animatedLayout\" />\n    <p>备注</p>\n  </div>\n</template>\n```\n\n组件尺寸一变，它在容器里后面的内容都按主题的「移动」时长和曲线一起滑到新位置；展开出来的内容从边缘滑入，收起的内容先滑出、让出空间，再消失。展开箭头也按同样的节奏转动。\n\n现在接受句柄的组件有 `Collapsible` 和 `TreeList`。\n\n- 只有容器里、排在变化组件后面的内容会动。容器外的内容直接落到新位置。\n- 固定定位和吸顶（sticky 吸住时）的元素不动，滑动也不会滚动容器。\n- 同一帧里同一个容器的多处变化合成一次滑动。\n- 系统开启「减弱动态效果」时：触屏上换成短暂的淡入淡出，鼠标环境下直接落到新位置。\n- 句柄只创建一次，容器在变化发生时才读取，所以 ref 之后换了元素也没关系。服务端渲染时不碰 DOM。"
+        "en": "When a component grows or shrinks (a folder in a tree opens, say), the content after it jumps to its new place. `useAnimatedLayout` makes that content glide there instead.\n\nHand `useAnimatedLayout` a container (a scroll area or a panel) and get a handle back, then pass the handle to the `animatedLayout` prop of the component whose size changes.\n\n```ts\nimport { useAnimatedLayout } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useAnimatedLayout } from '@astryx-vue/core'\nimport { TreeList } from '@astryx-vue/core/TreeList'\nimport { useTemplateRef } from 'vue'\n\nconst panel = useTemplateRef<HTMLElement>('panel')\nconst animatedLayout = useAnimatedLayout({ containerRef: panel })\n</script>\n\n<template>\n  <div ref=\"panel\">\n    <TreeList :items=\"items\" :animated-layout=\"animatedLayout\" />\n    <p>Notes</p>\n  </div>\n</template>\n```\n\nWhen the component's size changes, the content after it in the container glides to its new place together, on the theme's move duration and curve. Revealed content slides in from its edge; hidden content slides out and gives up its space before it goes. The disclosure chevron turns on the same timing.\n\n`Collapsible`, `TreeList`, and the `animatedLayout` option of `useTableRowExpansion` take the handle today.\n\n- Only the content after the changed component, inside the container, moves. Content outside the container lands at once.\n- Fixed elements and stuck sticky elements stay put, and the glide never scrolls the container.\n- Changes in one container in one frame move as one glide.\n- With Reduce Motion on, a touch screen gets a short cross-fade instead, and a mouse lands at once.\n- The handle is created once and reads the container when a change happens, so the ref can point somewhere else later. It touches no DOM during server rendering.",
+        "zh": "一个组件变高或变矮时（比如展开树里的一个目录），它下面的内容会一下子跳到新位置。`useAnimatedLayout` 让这些内容滑过去，而不是跳过去。\n\n用法分两步：把一个容器（滚动区域或面板）交给 `useAnimatedLayout`，拿回一个句柄；再把句柄传给尺寸会变的组件的 `animatedLayout` 属性。\n\n```ts\nimport { useAnimatedLayout } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useAnimatedLayout } from '@astryx-vue/core'\nimport { TreeList } from '@astryx-vue/core/TreeList'\nimport { useTemplateRef } from 'vue'\n\nconst panel = useTemplateRef<HTMLElement>('panel')\nconst animatedLayout = useAnimatedLayout({ containerRef: panel })\n</script>\n\n<template>\n  <div ref=\"panel\">\n    <TreeList :items=\"items\" :animated-layout=\"animatedLayout\" />\n    <p>备注</p>\n  </div>\n</template>\n```\n\n组件尺寸一变，它在容器里后面的内容都按主题的「移动」时长和曲线一起滑到新位置；展开出来的内容从边缘滑入，收起的内容先滑出、让出空间，再消失。展开箭头也按同样的节奏转动。\n\n现在接受句柄的有 `Collapsible`、`TreeList`，以及 `useTableRowExpansion` 的 `animatedLayout` 配置。\n\n- 只有容器里、排在变化组件后面的内容会动。容器外的内容直接落到新位置。\n- 固定定位和吸顶（sticky 吸住时）的元素不动，滑动也不会滚动容器。\n- 同一帧里同一个容器的多处变化合成一次滑动。\n- 系统开启「减弱动态效果」时：触屏上换成短暂的淡入淡出，鼠标环境下直接落到新位置。\n- 句柄只创建一次，容器在变化发生时才读取，所以 ref 之后换了元素也没关系。服务端渲染时不碰 DOM。"
       },
       "practices": {
         "en": [],
@@ -84243,7 +84277,7 @@
               {
                 "name": "`AnimatedLayout`",
                 "type": "`AnimatedLayout`",
-                "description": "An opaque handle with no public members. Pass it to the `animatedLayout` prop of `Collapsible` or `TreeList`."
+                "description": "An opaque handle with no public members. Pass it to the `animatedLayout` prop of `Collapsible` or `TreeList`, or to the `animatedLayout` option of `useTableRowExpansion`."
               }
             ]
           }
@@ -84266,7 +84300,7 @@
               {
                 "name": "`AnimatedLayout`",
                 "type": "`AnimatedLayout`",
-                "description": "不透明的句柄，没有公开成员。传给 `Collapsible`、`TreeList` 的 `animatedLayout` 属性。"
+                "description": "不透明的句柄，没有公开成员。传给 `Collapsible`、`TreeList` 的 `animatedLayout` 属性，或 `useTableRowExpansion` 的 `animatedLayout` 配置。"
               }
             ]
           }

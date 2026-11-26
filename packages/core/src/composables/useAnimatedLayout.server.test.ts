@@ -24,15 +24,26 @@ describe('layout motion on the server', () => {
     const { useAnimatedLayout } = await import('./useAnimatedLayout.js')
     const { default: Collapsible } = await import('../Collapsible/Collapsible.vue')
     const { default: TreeList } = await import('../TreeList/TreeList.vue')
+    const { default: Table } = await import('../Table/Table.vue')
+    const { useTableRowExpansion } = await import('../Table/plugins/rowExpansion.js')
+    const rows = [{ id: '1', name: 'Alice' }, { id: '2', name: 'Bob' }]
     const items = [{ id: 'a', label: 'A', isExpanded: true, children: [{ id: 'b', label: 'B' }] }]
     const page = (withHandle: boolean) => defineComponent({
       setup() {
         const container = ref<HTMLElement | null>(null)
         const handle = useAnimatedLayout({ containerRef: container })
         const animatedLayout = withHandle ? handle : undefined
+        const expansion = useTableRowExpansion<Record<string, unknown>>({
+          expandedKeys: new Set(['1']),
+          onToggle: () => {},
+          getRowKey: row => String(row.id),
+          renderExpanded: row => `Detail ${String(row.name)}`,
+          animatedLayout,
+        })
         return () => h('div', { ref: container }, [
           h(Collapsible, { trigger: 'Details', animatedLayout }, () => 'Body'),
           h(TreeList, { items, label: 'Files', animatedLayout }),
+          h(Table, { data: rows, columns: [{ key: 'name', header: 'Name' }], idKey: 'id', plugins: { expansion } }),
         ])
       },
     })
@@ -40,6 +51,7 @@ describe('layout motion on the server', () => {
     const withHandle = await renderToString(h(page(true)))
     const withoutHandle = await renderToString(h(page(false)))
     expect(withHandle).toContain('Body')
+    expect(withHandle).toContain('Detail Alice')
     expect(withHandle).toBe(withoutHandle)
   })
 })

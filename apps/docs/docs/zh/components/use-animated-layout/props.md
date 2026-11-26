@@ -34,7 +34,7 @@ footer: false
       <tr>
         <td><code>AnimatedLayout</code></td>
         <td><code>AnimatedLayout</code></td>
-        <td>不透明的句柄，没有公开成员。传给 <code>Collapsible</code>、<code>TreeList</code> 的 <code>animatedLayout</code> 属性。</td>
+        <td>不透明的句柄，没有公开成员。传给 <code>Collapsible</code>、<code>TreeList</code> 的 <code>animatedLayout</code> 属性，或 <code>useTableRowExpansion</code> 的 <code>animatedLayout</code> 配置。</td>
       </tr>
     </tbody>
   </table>

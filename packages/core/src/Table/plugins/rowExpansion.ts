@@ -1,4 +1,5 @@
 import type { MaybeRefOrGetter, VNodeChild } from 'vue'
+import type { AnimatedLayout } from '../../composables/useAnimatedLayout.js'
 import type { TablePlugin, TableRowPatch } from '../types.js'
 import { h, toValue } from 'vue'
 import { useComponentMessages } from '../../locale/context.js'
@@ -6,6 +7,7 @@ import { tableMessages } from '../../locale/messages/table.js'
 import { pixel } from '../columnUtils.js'
 import TableExpansionChevron from '../TableExpansionChevron.vue'
 import { isInteractiveRowClick } from './interaction.js'
+import { EXPANSION_KEY_ATTRIBUTE, useRowExpansionGlide } from './rowExpansionGlide.js'
 
 export const EXPANSION_COLUMN_KEY = '__expansion'
 export const EXPANSION_COLUMN_WIDTH = 40
@@ -22,14 +24,24 @@ export interface UseTableRowExpansionConfig<T extends Record<string, unknown>> {
   getIsItemExpandable?: (item: T) => boolean
   panelVariant?: 'muted' | 'transparent'
   hasRowClickExpansion?: boolean
+  /**
+   * `useAnimatedLayout` 返回的句柄。传了之后，面板展开或收起时下面的行滑到新位置，
+   * 展开的面板播放入场，箭头按同样的节奏转动。
+   */
+  animatedLayout?: AnimatedLayout | null
 }
 
 export function useTableRowExpansion<T extends Record<string, unknown>>(
   config: MaybeRefOrGetter<UseTableRowExpansionConfig<T>>,
 ): TablePlugin<T> {
   const messages = useComponentMessages({ table: tableMessages })
+  const glide = useRowExpansionGlide({
+    animatedLayout: () => toValue(config).animatedLayout,
+    expandedKeys: () => toValue(config).expandedKeys,
+  })
   return {
     rowModel: 'detail',
+    bindScrollRoot: glide.bindScrollRoot,
     transformColumns(columns) {
       return [{
         key: EXPANSION_COLUMN_KEY,
@@ -60,7 +72,9 @@ export function useTableRowExpansion<T extends Record<string, unknown>>(
       const expanded = current.expandedKeys.has(key)
       const variant = current.panelVariant ?? 'transparent'
       return {
-        attrs: expanded ? { 'data-expanded': '' } : undefined,
+        attrs: expanded
+          ? { [EXPANSION_KEY_ATTRIBUTE]: key, 'data-expanded': '' }
+          : { [EXPANSION_KEY_ATTRIBUTE]: key },
         class: current.hasRowClickExpansion ? 'astryx-table__clickable' : undefined,
         onClick: current.hasRowClickExpansion
           ? (event) => {

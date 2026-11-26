@@ -148,6 +148,7 @@ footer: false
       <tr><td><code>getIsItemExpandable</code></td><td><code>(item: T) =&gt; boolean</code></td><td>全部可以</td><td>哪些行可以展开。</td></tr>
       <tr><td><code>panelVariant</code></td><td><code>'muted' | 'transparent'</code></td><td><code>transparent</code></td><td>详情的底。透明时接着表格自己的表面，淡底用来和数据行分开。</td></tr>
       <tr><td><code>hasRowClickExpansion</code></td><td><code>boolean</code></td><td><code>false</code></td><td>点行也能展开。点到控件或选中的文字时不动。</td></tr>
+      <tr><td><code>animatedLayout</code></td><td><code>AnimatedLayout | null</code></td><td>—</td><td><code>useAnimatedLayout</code> 返回的句柄。面板开合时下面的行滑过去，而不是跳过去。</td></tr>
     </tbody>
   </table>
 </div>
