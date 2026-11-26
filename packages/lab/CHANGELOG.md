@@ -1,5 +1,11 @@
 # @astryx-vue/lab
 
+## 0.7.6
+
+### Patch Changes
+
+- [#551](https://github.com/astryx-vue/astryx-vue/pull/551) [`94beb19`](https://github.com/astryx-vue/astryx-vue/commit/94beb198da3a3a3452eeba6932261f045e101c50) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - DiffViewer 对齐原版样式：去掉列头多余的框线，增删行底色改用背景图层（吸顶行号列也能着色），竖条标记改成实线／虚线条纹；DialogHeroHeader 的关闭按钮稳定浮在媒体区右上角。
+
 ## 0.7.5
 
 ### Patch Changes
