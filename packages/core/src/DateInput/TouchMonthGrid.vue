@@ -7,7 +7,7 @@ import { formatWeekdayDate, sameCalendarDay, toCalendarDate, weekStartIndex } fr
 import { isCalendarDateDisabled, isOutsideCalendarBounds } from '../Calendar/useCalendarConstraints.js'
 import { buildCalendarWeeks } from '../Calendar/useCalendarGrid.js'
 import { resolveCalendarKey } from '../Calendar/useCalendarKeyboard.js'
-import { formatCalendarMonth, standaloneShortWeekdayNames, weekdayNames } from '../locale/format.js'
+import { formatCalendarMonth, formatDayNumber, standaloneShortWeekdayNames, weekdayNames } from '../locale/format.js'
 import { useAstryxLocale } from '../locale/index.js'
 import '../../styles/calendar.css'
 
@@ -128,7 +128,7 @@ function onKeydown(event: KeyboardEvent): void {
           :aria-label="formatWeekdayDate(day.date, locale)"
           @click="pick(day.date, day.outside)"
         >
-          <span class="astryx-calendar-day">{{ day.day }}</span>
+          <span class="astryx-calendar-day">{{ formatDayNumber(day.day, locale) }}</span>
         </button>
       </div>
     </div>

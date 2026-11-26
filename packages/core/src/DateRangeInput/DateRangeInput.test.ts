@@ -128,4 +128,20 @@ describe('date range input', () => {
     expect(wrapper.emitted('update:modelValue')).toBeUndefined()
     wrapper.unmount()
   })
+
+  it('keeps a day outside min and max focusable and inert', async () => {
+    const wrapper = mount(DateRangeInput, {
+      props: { label: 'Report period', modelValue: null, monthCount: 1, min: '2030-01-10', max: '2030-01-20' },
+      attachTo: document.body,
+    })
+    await wrapper.get('.astryx-date-range-trigger').trigger('click')
+    const blocked = document.querySelector<HTMLButtonElement>('.astryx-calendar-cell.is-disabled')
+    expect(blocked).not.toBeNull()
+    expect(blocked?.hasAttribute('disabled')).toBe(false)
+    expect(blocked?.getAttribute('aria-disabled')).toBe('true')
+    blocked?.click()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+    wrapper.unmount()
+  })
 })

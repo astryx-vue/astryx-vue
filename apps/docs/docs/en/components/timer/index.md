@@ -14,7 +14,7 @@ import { timerFormats, timerInline, timerTypography } from '../../../../componen
 
 `Timer` writes a running duration into a `<time>` element. `startTime` is unix milliseconds. Omit it and the count starts when this timer mounts. The text and `dateTime` are written on the element. The component does not re-render on every tick, and it does not use `aria-live`.
 
-`format="elapsed"` is the default. Under a minute it reads `Ns`. Under an hour it reads `Nm NNs`. At an hour and beyond it reads `Nh NNm` and drops seconds, both in the text and in `dateTime` (`PT{minutes * 60}S`). `format="clock"` stays on seconds: `m:ss`, or `h:mm:ss` past an hour, with `dateTime="PT{seconds}S"`.
+`format="elapsed"` is the default. The unit names, digits and joining follow the active locale (English shown here). Under a minute it reads `Ns`. Under an hour it reads `Nm NNs`. At an hour and beyond it reads `Nh NNm` and drops seconds, both in the text and in `dateTime` (`PT{minutes * 60}S`). `format="clock"` stays on seconds: `m:ss`, or `h:mm:ss` past an hour, with `dateTime="PT{seconds}S"`.
 
 The clock updates once a second until the elapsed format reaches an hour, then once a minute. If `startTime` is still in the future, the first change waits until one second after that start.
 

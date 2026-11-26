@@ -5,7 +5,7 @@
     {
       "name": "@astryx-vue/core",
       "directory": "packages/core",
-      "version": "0.17.0",
+      "version": "0.18.0",
       "description": "Vue 3 components for the unofficial astryx-vue port of Astryx. Not affiliated with Meta.",
       "canary": false,
       "published": true
@@ -13,7 +13,7 @@
     {
       "name": "@astryx-vue/charts",
       "directory": "packages/charts",
-      "version": "0.9.13",
+      "version": "0.9.14",
       "description": "Astryx charts for Vue — a config-model data visualization layer (d3-based).",
       "canary": false,
       "published": true
@@ -21,7 +21,7 @@
     {
       "name": "@astryx-vue/lab",
       "directory": "packages/lab",
-      "version": "0.8.2",
+      "version": "0.8.3",
       "description": "Astryx lab components for Vue 3 — experimental components that may change. Ships only under the canary dist-tag.",
       "canary": true,
       "published": true
@@ -29,7 +29,7 @@
     {
       "name": "@astryx-vue/richtext",
       "directory": "packages/richtext",
-      "version": "0.17.0",
+      "version": "0.18.0",
       "description": "Astryx rich text for Vue — Lexical nodes and lossless Markdown import/export. Not affiliated with Meta.",
       "canary": false,
       "published": true
@@ -37,7 +37,7 @@
     {
       "name": "@astryx-vue/themes",
       "directory": "packages/themes",
-      "version": "0.17.0",
+      "version": "0.18.0",
       "description": "CSS themes for the unofficial astryx-vue port of Astryx. Not affiliated with Meta.",
       "canary": false,
       "published": true
@@ -18190,8 +18190,8 @@
         "zh": "`Timestamp` 用 `<time>` 画出一个时刻。`value` 是 ISO 字符串，或按秒计的 unix 时间。默认格式是 `auto`：在 `autoThreshold`（七天）以内用相对时间，更早的用 `date_time`。"
       },
       "usage": {
-        "en": "`Timestamp` renders one instant in a `<time>` element. `value` is an ISO string or a unix timestamp in seconds. The default format is `auto`: a relative phrase while the instant is inside `autoThreshold` (seven days), then `date_time`.\n\n`hasTooltip` is on by default and opens a hover card that can be copied. Pass `tooltipEntries` to list the same instant in several zones or formats. `isTimezoneShown` appends a short zone name to `date_time` and `time`. `isLive` refreshes a relative reading on a short interval.\n\nRelative text keeps a long zone name in `aria-label`, so the accessible name does not depend on the tooltip.\n\n```vue\n<script setup lang=\"ts\">\nimport { Timestamp } from '@astryx-vue/core/Timestamp'\n</script>\n\n<template>\n  <Timestamp value=\"2026-03-25T12:00:00Z\" color=\"primary\" />\n</template>\n```",
-        "zh": "`Timestamp` 用 `<time>` 画出一个时刻。`value` 是 ISO 字符串，或按秒计的 unix 时间。默认格式是 `auto`：在 `autoThreshold`（七天）以内用相对时间，更早的用 `date_time`。\n\n`hasTooltip` 默认打开，悬停卡片里的时间可以复制。`tooltipEntries` 把同一个时刻列成几种时区或格式。`isTimezoneShown` 在 `date_time` 和 `time` 后面加上短时区名。`isLive` 按较短的间隔刷新相对时间。\n\n相对格式会把带长时区名的说法放进 `aria-label`，不依赖提示卡片也能读出绝对时间。\n\n```vue\n<script setup lang=\"ts\">\nimport { Timestamp } from '@astryx-vue/core/Timestamp'\n</script>\n\n<template>\n  <Timestamp value=\"2026-03-25T12:00:00Z\" color=\"primary\" />\n</template>\n```"
+        "en": "`Timestamp` renders one instant in a `<time>` element. `value` is an ISO string or a unix timestamp in seconds. The default format is `auto`: a relative phrase while the instant is inside `autoThreshold` (seven days), then `date_time`.\n\n`hasTooltip` is on by default and opens a hover card that can be copied. Pass `tooltipEntries` to list the same instant in several zones or formats. `isTimezoneShown` appends a short zone name to `date_time` and `time`. `isLive` refreshes a relative reading on a short interval.\n\nA relative reading is named by the words it shows, a comma, then the full date with the long zone name, so a button or link named from its content keeps its visible words in its name. Your own `aria-label` replaces that name. While a live relative reading, or a control it names, has focus, the refresh waits and catches up when focus leaves.\n\nThe hover card is a description list. A row without a label is named by its zone's long name in a visually hidden term, and each copy button sits inside its row's value. The card's `aria-controls` is on the focusable `<time>`.\n\n```vue\n<script setup lang=\"ts\">\nimport { Timestamp } from '@astryx-vue/core/Timestamp'\n</script>\n\n<template>\n  <Timestamp value=\"2026-03-25T12:00:00Z\" color=\"primary\" />\n</template>\n```",
+        "zh": "`Timestamp` 用 `<time>` 画出一个时刻。`value` 是 ISO 字符串，或按秒计的 unix 时间。默认格式是 `auto`：在 `autoThreshold`（七天）以内用相对时间，更早的用 `date_time`。\n\n`hasTooltip` 默认打开，悬停卡片里的时间可以复制。`tooltipEntries` 把同一个时刻列成几种时区或格式。`isTimezoneShown` 在 `date_time` 和 `time` 后面加上短时区名。`isLive` 按较短的间隔刷新相对时间。\n\n相对格式的名字是屏幕上显示的词，加一个逗号，再加带长时区名的完整日期，名字来自内容的按钮或链接因此仍包含它看得见的字。你自己写的 `aria-label` 会替换这个名字。实时刷新的相对读数，或者名字有它参与的控件拿着焦点时，刷新先等着，焦点离开时补上。\n\n悬停卡片是一个描述列表。没有标签的行用时区全名命名，这个名字只给读屏、不显示；复制按钮在各自那一行的值里面。卡片的 `aria-controls` 写在能聚焦的 `<time>` 上。\n\n```vue\n<script setup lang=\"ts\">\nimport { Timestamp } from '@astryx-vue/core/Timestamp'\n</script>\n\n<template>\n  <Timestamp value=\"2026-03-25T12:00:00Z\" color=\"primary\" />\n</template>\n```"
       },
       "practices": {
         "en": [
@@ -18245,13 +18245,19 @@
                 "name": "`hasTooltip`",
                 "type": "`boolean`",
                 "default": "`true`",
-                "description": "Shows a hover card with a copyable absolute time. `tooltipEntries` replaces the default lines."
+                "description": "Shows a card with a copyable absolute time on hover or keyboard focus. `tooltipEntries` replaces the default lines."
               },
               {
                 "name": "`tooltipEntries`",
                 "type": "`TimestampTooltipEntry[]`",
                 "default": "-",
-                "description": "Each entry picks a format, an optional `timezoneID`, and an optional label."
+                "description": "Each entry picks a format, an optional `timezoneID`, and an optional label. An entry without a `timezoneID` follows the `timezoneID` prop, or the viewer's zone when that is not set; `'local'` always means the viewer's zone."
+              },
+              {
+                "name": "`timezoneID`",
+                "type": "`string`",
+                "default": "-",
+                "description": "IANA zone the absolute formats are written in, such as `'UTC'`. Omit it, or pass `'local'`, for the viewer's own zone. A named zone gives the same text on the server and in the browser. Relative formats ignore it, and a `tooltipEntries` row without its own `timezoneID` follows it."
               },
               {
                 "name": "`isTimezoneShown`",
@@ -18318,13 +18324,19 @@
                 "name": "`hasTooltip`",
                 "type": "`boolean`",
                 "default": "`true`",
-                "description": "悬停卡片里是可复制的绝对时间。`tooltipEntries` 会替换默认行。"
+                "description": "悬停或键盘聚焦时弹出卡片，里面是可复制的绝对时间。`tooltipEntries` 会替换默认行。"
               },
               {
                 "name": "`tooltipEntries`",
                 "type": "`TimestampTooltipEntry[]`",
                 "default": "-",
-                "description": "每一项选择一种格式、可选的 `timezoneID` 和可选标签。"
+                "description": "每一项选择一种格式、可选的 `timezoneID` 和可选标签。没写 `timezoneID` 的项跟随 `timezoneID` 属性，属性也没写就是观看者的时区；写 `'local'` 永远是观看者的时区。"
+              },
+              {
+                "name": "`timezoneID`",
+                "type": "`string`",
+                "default": "-",
+                "description": "绝对格式所用的 IANA 时区，例如 `'UTC'`。不写或写 `'local'` 就是观看者自己的时区。写明时区后，服务端和浏览器写出同一段文字。相对格式不受它影响，`tooltipEntries` 里没写 `timezoneID` 的行跟随它。"
               },
               {
                 "name": "`isTimezoneShown`",
@@ -18378,7 +18390,7 @@
         "en": [
           {
             "heading": "Props",
-            "text": "An unknown <code>timezoneID</code> warns in the console and falls back to the local zone."
+            "text": "An unknown <code>timezoneID</code>, on the prop or in an entry, warns in the console and falls back to the local zone.\n\nAttributes you put on <code>Timestamp</code> land on the <code>&lt;time&gt;</code> element. Your own <code>aria-label</code> and <code>tabindex</code> replace the ones the component would add."
           },
           {
             "heading": "Theming",
@@ -18392,7 +18404,7 @@
           },
           {
             "heading": "属性",
-            "text": "不认识的 <code>timezoneID</code> 会在控制台警告，并回退到本地时区。"
+            "text": "不认识的 <code>timezoneID</code>（属性上或某一项里）会在控制台警告，并回退到本地时区。\n\n写在 <code>Timestamp</code> 上的属性会落到 <code>&lt;time&gt;</code> 元素上。你自己写的 <code>aria-label</code> 和 <code>tabindex</code> 会替换组件原本要加的。"
           },
           {
             "heading": "主题",
@@ -19395,8 +19407,8 @@
         "zh": "`Timer` 把一段正在增加的时长写进 `<time>`。`startTime` 是毫秒级 unix 时间。不传就从这次挂载开始计。文字和 `dateTime` 直接写在元素上。组件不会为每一次跳动重新渲染，也不使用 `aria-live`。"
       },
       "usage": {
-        "en": "`Timer` writes a running duration into a `<time>` element. `startTime` is unix milliseconds. Omit it and the count starts when this timer mounts. The text and `dateTime` are written on the element. The component does not re-render on every tick, and it does not use `aria-live`.\n\n`format=\"elapsed\"` is the default. Under a minute it reads `Ns`. Under an hour it reads `Nm NNs`. At an hour and beyond it reads `Nh NNm` and drops seconds, both in the text and in `dateTime` (`PT{minutes * 60}S`). `format=\"clock\"` stays on seconds: `m:ss`, or `h:mm:ss` past an hour, with `dateTime=\"PT{seconds}S\"`.\n\nThe clock updates once a second until the elapsed format reaches an hour, then once a minute. If `startTime` is still in the future, the first change waits until one second after that start.\n\nTypography matches `Timestamp`. `type` defaults to `supporting`, `color` to `secondary`. `type=\"inherit\"` does not wrap the time in `Text`, so it takes the surrounding font. `color=\"disabled\"` uses the disabled text color. `size` and `weight` override the type scale the same way they do on `Text`.\n\n```vue\n<script setup lang=\"ts\">\nimport { Text } from '@astryx-vue/core/Text'\nimport { Timer } from '@astryx-vue/core/Timer'\n</script>\n\n<template>\n  <Text type=\"body\" color=\"primary\">\n    Processing for <Timer type=\"inherit\" color=\"inherit\" />\n  </Text>\n</template>\n```",
-        "zh": "`Timer` 把一段正在增加的时长写进 `<time>`。`startTime` 是毫秒级 unix 时间。不传就从这次挂载开始计。文字和 `dateTime` 直接写在元素上。组件不会为每一次跳动重新渲染，也不使用 `aria-live`。\n\n默认 `format=\"elapsed\"`。不到一分钟显示 `Ns`，不到一小时显示 `Nm NNs`，满一小时显示 `Nh NNm`，文字和 `dateTime` 都不再带秒（存成 `PT{分钟数 × 60}S`）。`format=\"clock\"` 始终精确到秒：不到一小时是 `m:ss`，超过则是 `h:mm:ss`，`dateTime` 为 `PT{秒数}S`。\n\n未满一小时时大约每秒更新一次，elapsed 满一小时后改为每分钟一次。如果 `startTime` 还在未来，第一次变化会等到开始后再过一秒。\n\n排版和 `Timestamp` 同一套。`type` 默认 `supporting`，`color` 默认 `secondary`。`type=\"inherit\"` 不用 `Text` 包一层，字体跟周围走。`color=\"disabled\"` 用禁用文字色。`size` 和 `weight` 的覆盖方式和 `Text` 一样。\n\n```vue\n<script setup lang=\"ts\">\nimport { Text } from '@astryx-vue/core/Text'\nimport { Timer } from '@astryx-vue/core/Timer'\n</script>\n\n<template>\n  <Text type=\"body\" color=\"primary\">\n    Processing for <Timer type=\"inherit\" color=\"inherit\" />\n  </Text>\n</template>\n```"
+        "en": "`Timer` writes a running duration into a `<time>` element. `startTime` is unix milliseconds. Omit it and the count starts when this timer mounts. The text and `dateTime` are written on the element. The component does not re-render on every tick, and it does not use `aria-live`.\n\n`format=\"elapsed\"` is the default. The unit names, digits and joining follow the active locale (English shown here). Under a minute it reads `Ns`. Under an hour it reads `Nm NNs`. At an hour and beyond it reads `Nh NNm` and drops seconds, both in the text and in `dateTime` (`PT{minutes * 60}S`). `format=\"clock\"` stays on seconds: `m:ss`, or `h:mm:ss` past an hour, with `dateTime=\"PT{seconds}S\"`.\n\nThe clock updates once a second until the elapsed format reaches an hour, then once a minute. If `startTime` is still in the future, the first change waits until one second after that start.\n\nTypography matches `Timestamp`. `type` defaults to `supporting`, `color` to `secondary`. `type=\"inherit\"` does not wrap the time in `Text`, so it takes the surrounding font. `color=\"disabled\"` uses the disabled text color. `size` and `weight` override the type scale the same way they do on `Text`.\n\n```vue\n<script setup lang=\"ts\">\nimport { Text } from '@astryx-vue/core/Text'\nimport { Timer } from '@astryx-vue/core/Timer'\n</script>\n\n<template>\n  <Text type=\"body\" color=\"primary\">\n    Processing for <Timer type=\"inherit\" color=\"inherit\" />\n  </Text>\n</template>\n```",
+        "zh": "`Timer` 把一段正在增加的时长写进 `<time>`。`startTime` 是毫秒级 unix 时间。不传就从这次挂载开始计。文字和 `dateTime` 直接写在元素上。组件不会为每一次跳动重新渲染，也不使用 `aria-live`。\n\n默认 `format=\"elapsed\"`。单位的写法、数字和连接方式跟随当前语言（这里按英文写）。不到一分钟显示 `Ns`，不到一小时显示 `Nm NNs`，满一小时显示 `Nh NNm`，文字和 `dateTime` 都不再带秒（存成 `PT{分钟数 × 60}S`）。`format=\"clock\"` 始终精确到秒：不到一小时是 `m:ss`，超过则是 `h:mm:ss`，`dateTime` 为 `PT{秒数}S`。\n\n未满一小时时大约每秒更新一次，elapsed 满一小时后改为每分钟一次。如果 `startTime` 还在未来，第一次变化会等到开始后再过一秒。\n\n排版和 `Timestamp` 同一套。`type` 默认 `supporting`，`color` 默认 `secondary`。`type=\"inherit\"` 不用 `Text` 包一层，字体跟周围走。`color=\"disabled\"` 用禁用文字色。`size` 和 `weight` 的覆盖方式和 `Text` 一样。\n\n```vue\n<script setup lang=\"ts\">\nimport { Text } from '@astryx-vue/core/Text'\nimport { Timer } from '@astryx-vue/core/Timer'\n</script>\n\n<template>\n  <Text type=\"body\" color=\"primary\">\n    Processing for <Timer type=\"inherit\" color=\"inherit\" />\n  </Text>\n</template>\n```"
       },
       "practices": {
         "en": [
@@ -24519,8 +24531,8 @@
         "zh": "`Calendar` 用月历网格选日期。可以选一天，也可以选一段起止日期，并排显示一个月或两个月。打开时先落到指定的月份；没有指定时，落在已选日期或今天，并尽量落进最早和最晚日期之间。"
       },
       "usage": {
-        "en": "`Calendar` shows one or two months and selects a day or a start and end. It opens on the requested month, or on the selected day, or on today when that day still falls inside the earliest and latest dates.\n\nA day is unavailable when it is outside those bounds, when a predicate returns true, or when any constraint returns false. A range can also require a minimum and maximum length, counting both ends. Week numbers can sit beside each row. Days from the neighboring months can fill the grid, and they cannot be picked. The grid can shrink to the weeks the month needs, or stay six rows tall. The week can start on Sunday or on any other day, given as a number or a short name. A handle can move the visible month to a date and focus that day.\n\nArrow keys move by a day or a week, cross into the next month, and skip days that cannot be picked. Home and End move to the first and last available day of the week. Page Up and Page Down move by a month, and with Shift by a year (February 29 lands on February 28; a target past `min` or `max` keeps the focus, and a disabled target lands on that month's first available day). Enter or Space picks the focused day. Escape cancels a range that has a start but no end yet. Each month is a grid named with that month. Selection, today, and unavailable days are exposed to assistive technology.\n\nBind a date:\n\n```vue\n<script setup lang=\"ts\">\nimport { Calendar } from '@astryx-vue/core/Calendar'\nimport { ref } from 'vue'\n\nconst date = ref<Date | null>(new Date(2026, 9, 11))\n</script>\n\n<template>\n  <Calendar v-model=\"date\" label=\"Select a date\" />\n</template>\n```\n\nThe value is a local `Date`. The month title and weekday names follow the active locale. Built-in labels are English unless the app calls `provideAstryxLocale('zh-CN')`.",
-        "zh": "`Calendar` 用月历网格选日期。可以选一天，也可以选一段起止日期，并排显示一个月或两个月。打开时先落到指定的月份；没有指定时，落在已选日期或今天，并尽量落进最早和最晚日期之间。\n\n最早日期、最晚日期、返回真值的判断，以及一组返回假值的约束，都会让对应的日子不能选。范围还可以限制最短和最长天数，天数把两端都算进去。周数可以显示在每一行左侧。相邻月份的日期可以留在格子里，但不能选。行数可以按当月缩短，也可以固定六行。一周从哪一天开始，用数字或星期缩写指定。外面也可以拿到一个句柄，直接把月份翻到某一天并聚焦它。\n\n方向键按天或按周移动，到头会翻月，并跳过不能选的日子。Home 和 End 移到这一周里能选的第一天和最后一天。PageUp 和 PageDown 翻一个月，按住 Shift 翻一年（2 月 29 日落在 2 月 28 日；目标超出 `min` 或 `max` 时焦点不动；目标日不能选时落在那个月第一个能选的日子）。Enter 或空格确认。范围还没选完时，Escape 取消。每个月是一块带月份名字的网格，今天、选中和禁用都能被读屏读到。\n\n基本用法只需要绑定一个日期值：\n\n```vue\n<script setup lang=\"ts\">\nimport { Calendar } from '@astryx-vue/core/Calendar'\nimport { ref } from 'vue'\n\nconst date = ref<Date | null>(new Date(2026, 9, 11))\n</script>\n\n<template>\n  <Calendar v-model=\"date\" label=\"选择日期\" />\n</template>\n```\n\n绑定值是原生 `Date`。通过 `min` 和 `max` 限制可选日期范围，通过 `isDateDisabled` 函数禁用特定日期。月份标题和星期名称跟随当前语言。组件自带文案默认是英文，调用 `provideAstryxLocale('zh-CN')` 后改为中文。"
+        "en": "`Calendar` shows one or two months and selects a day or a start and end. It opens on the requested month, or on the selected day, or on today when that day still falls inside the earliest and latest dates.\n\nA day is unavailable when it is outside those bounds, when a predicate returns true, or when any constraint returns false. A range can also require a minimum and maximum length, counting both ends. Week numbers can sit beside each row. Days from the neighboring months can fill the grid, and they cannot be picked. The grid can shrink to the weeks the month needs, or stay six rows tall. The week can start on Sunday or on any other day, given as a number or a short name. A handle can move the visible month to a date and focus that day.\n\nArrow keys move by a day or a week, cross into the next month, and skip days that cannot be picked. Home and End move to the first and last available day of the week. Page Up and Page Down move by a month, and with Shift by a year (February 29 lands on February 28; a target past `min` or `max` keeps the focus, and a disabled target lands on that month's first available day). Enter or Space picks the focused day. Escape cancels a range that has a start but no end yet. Each month is a grid named with that month. Selection, today, and unavailable days are exposed to assistive technology.\n\nBind a date:\n\n```vue\n<script setup lang=\"ts\">\nimport { Calendar } from '@astryx-vue/core/Calendar'\nimport { ref } from 'vue'\n\nconst date = ref<Date | null>(new Date(2026, 9, 11))\n</script>\n\n<template>\n  <Calendar v-model=\"date\" label=\"Select a date\" />\n</template>\n```\n\nThe value is a local `Date`. The month title, weekday names, and day and week numbers follow the active locale, digits included. Built-in labels are English unless the app calls `provideAstryxLocale('zh-CN')`.",
+        "zh": "`Calendar` 用月历网格选日期。可以选一天，也可以选一段起止日期，并排显示一个月或两个月。打开时先落到指定的月份；没有指定时，落在已选日期或今天，并尽量落进最早和最晚日期之间。\n\n最早日期、最晚日期、返回真值的判断，以及一组返回假值的约束，都会让对应的日子不能选。范围还可以限制最短和最长天数，天数把两端都算进去。周数可以显示在每一行左侧。相邻月份的日期可以留在格子里，但不能选。行数可以按当月缩短，也可以固定六行。一周从哪一天开始，用数字或星期缩写指定。外面也可以拿到一个句柄，直接把月份翻到某一天并聚焦它。\n\n方向键按天或按周移动，到头会翻月，并跳过不能选的日子。Home 和 End 移到这一周里能选的第一天和最后一天。PageUp 和 PageDown 翻一个月，按住 Shift 翻一年（2 月 29 日落在 2 月 28 日；目标超出 `min` 或 `max` 时焦点不动；目标日不能选时落在那个月第一个能选的日子）。Enter 或空格确认。范围还没选完时，Escape 取消。每个月是一块带月份名字的网格，今天、选中和禁用都能被读屏读到。\n\n基本用法只需要绑定一个日期值：\n\n```vue\n<script setup lang=\"ts\">\nimport { Calendar } from '@astryx-vue/core/Calendar'\nimport { ref } from 'vue'\n\nconst date = ref<Date | null>(new Date(2026, 9, 11))\n</script>\n\n<template>\n  <Calendar v-model=\"date\" label=\"选择日期\" />\n</template>\n```\n\n绑定值是原生 `Date`。通过 `min` 和 `max` 限制可选日期范围，通过 `isDateDisabled` 函数禁用特定日期。月份标题、星期名称、日期数字和周数跟随当前语言，数字也用该语言的写法。组件自带文案默认是英文，调用 `provideAstryxLocale('zh-CN')` 后改为中文。"
       },
       "practices": {
         "en": [
@@ -24587,7 +24599,7 @@
                 "name": "`numberOfMonths`",
                 "type": "`1 | 2`",
                 "default": "`1`",
-                "description": "How many months to show side by side."
+                "description": "How many months to show side by side. With two months, a selection or today in the month of `max` opens with that month in the right-hand pane."
               },
               {
                 "name": "`focusDate`",
@@ -24641,7 +24653,7 @@
                 "name": "`hasWeekNumbers`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Show the week number at the start of each row."
+                "description": "Show the ISO week number at the start of each row. A row takes the week that holds its Thursday, whatever the week start."
               },
               {
                 "name": "`hasVariableRowCount`",
@@ -24702,7 +24714,7 @@
                 "name": "`numberOfMonths`",
                 "type": "`1 | 2`",
                 "default": "`1`",
-                "description": "并排显示的月份数。"
+                "description": "并排显示的月份数。两个月时，选中日或今天落在 `max` 所在的月份，就让这个月显示在右边那一格。"
               },
               {
                 "name": "`focusDate`",
@@ -24756,7 +24768,7 @@
                 "name": "`hasWeekNumbers`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "在每一行左侧显示周数。"
+                "description": "在每一行左侧显示 ISO 周数。每一行按它的周四所在的周计，不管一周从哪天开始。"
               },
               {
                 "name": "`hasVariableRowCount`",
@@ -27525,8 +27537,8 @@
               {
                 "name": "`hourFormat`",
                 "type": "`'12h' | '24h'`",
-                "default": "`'12h'`",
-                "description": "Display format of the time. The model stays ISO."
+                "default": "The locale's hour cycle",
+                "description": "Display format of the time. Unset, it follows the active locale, with its digits and day-period words. The model stays ISO."
               },
               {
                 "name": "`presentation`",
@@ -27676,7 +27688,7 @@
                 "name": "`entryErrorBehavior`",
                 "type": "`'complete' | 'blur-or-enter'`",
                 "default": "`'complete'`",
-                "description": "When the date part's rejected entry shows, as on DateInput. Emits `entryErrorChange` the same way."
+                "description": "When the date part's rejected entry shows, as on DateInput. Emits `entryErrorChange` the same way. The time part follows `entryErrorBehavior` as TimeInput does: its rejected text stays, its message shows under the pair unless the date part has one, and it sets `aria-invalid` on the time input."
               },
               {
                 "name": "`isOptional`",
@@ -27724,8 +27736,8 @@
               {
                 "name": "`hourFormat`",
                 "type": "`'12h' | '24h'`",
-                "default": "`'12h'`",
-                "description": "时间的显示格式。模型值仍是 ISO。"
+                "default": "语言自己的时制",
+                "description": "时间的显示格式。不传就跟随当前语言，数字和上下午的词也跟着语言走。模型值仍是 ISO。"
               },
               {
                 "name": "`presentation`",
@@ -27875,7 +27887,7 @@
                 "name": "`entryErrorBehavior`",
                 "type": "`'complete' | 'blur-or-enter'`",
                 "default": "`'complete'`",
-                "description": "日期那段被拒的输入什么时候亮出来，同 DateInput；同样会触发 `entryErrorChange`。"
+                "description": "日期那段被拒的输入什么时候亮出来，同 DateInput；同样会触发 `entryErrorChange`。时间那段也按 `entryErrorBehavior` 走，和 TimeInput 一样：被拒的文字留在框里，原因显示在整组下面（日期那段有自己的原因时让给它），并在时间输入上设置 `aria-invalid`。"
               },
               {
                 "name": "`isOptional`",
@@ -36896,8 +36908,8 @@
               {
                 "name": "`hourFormat`",
                 "type": "`'12h' | '24h'`",
-                "default": "`'12h'`",
-                "description": "How the value is shown. The model stays 24-hour ISO."
+                "default": "The locale's hour cycle",
+                "description": "How the value is shown. Unset, it follows the active locale: 12-hour for `en`, 24-hour for `en-GB`, `de-DE` and `zh-CN`. Digits, separators and day-period words follow the locale too. The model stays 24-hour ISO."
               },
               {
                 "name": "`hasSeconds`",
@@ -36909,7 +36921,13 @@
                 "name": "`increment`",
                 "type": "`number`",
                 "default": "`1`",
-                "description": "Minutes added or removed by the arrow keys."
+                "description": "Minutes added or removed by the arrow keys. Steps are whole minutes; a fractional value leaves the time unchanged."
+              },
+              {
+                "name": "`entryErrorBehavior`",
+                "type": "`'complete' | 'blur-or-enter'`",
+                "default": "`'complete'`",
+                "description": "When a rejected entry shows. A typed time is complete once it has its hours, both minute digits, both second digits when seconds show, and, in 12-hour text, its day period (hours 0 and 13 to 23 need none). `complete` shows a complete time outside `min` or `max` at once; `blur-or-enter` waits for Enter or blur. Text that is not a time always waits for Enter or blur. The rejected text stays in the field, the field shows why, sets `aria-invalid` and announces it once. Enter commits the draft and still submits a surrounding form. A caller `error` status with a message shows in place of the field's message; a warning or success status never hides a rejection. Without a `FormLayout` default it is `complete`."
               },
               {
                 "name": "`min`",
@@ -37041,8 +37059,8 @@
               {
                 "name": "`hourFormat`",
                 "type": "`'12h' | '24h'`",
-                "default": "`'12h'`",
-                "description": "显示格式。模型值始终是 24 小时 ISO。"
+                "default": "语言自己的时制",
+                "description": "显示格式。不传就跟随当前语言：`en` 是 12 小时，`en-GB`、`de-DE`、`zh-CN` 是 24 小时；数字、分隔符和上下午的词也跟着语言走。模型值始终是 24 小时 ISO。"
               },
               {
                 "name": "`hasSeconds`",
@@ -37054,7 +37072,13 @@
                 "name": "`increment`",
                 "type": "`number`",
                 "default": "`1`",
-                "description": "方向键每次增减的分钟数。"
+                "description": "方向键每次增减的分钟数。步长按整分钟计，写小数时时间保持不变。"
+              },
+              {
+                "name": "`entryErrorBehavior`",
+                "type": "`'complete' | 'blur-or-enter'`",
+                "default": "`'complete'`",
+                "description": "打字被拒什么时候亮出来。一段文字有了小时、两位分钟（显示秒时还有两位秒）、12 小时制还写了上下午（0 点和 13 到 23 点不用写）才算打完整。`complete` 下，完整却超出 `min` 或 `max` 的时间立刻亮出来；`blur-or-enter` 等到 Enter 或失焦。读不成时间的文字永远等 Enter 或失焦。被拒的文字留在框里，字段显示为什么不收、设置 `aria-invalid` 并只念一次。Enter 收下打进来的文字，外面的表单照常提交。调用方带说明的 `error` 状态替字段措辞；警告和成功状态不挡住拒绝。没有 `FormLayout` 的默认值时是 `complete`。"
               },
               {
                 "name": "`min`",
@@ -37173,8 +37197,40 @@
         "zh": []
       },
       "events": {
-        "en": [],
-        "zh": []
+        "en": [
+          {
+            "heading": "TimeInput events",
+            "rows": [
+              {
+                "name": "`update:modelValue`",
+                "payload": "`value: string | null`",
+                "description": "Emitted when the time changes."
+              },
+              {
+                "name": "`entryErrorChange`",
+                "payload": "`error: { kind, text, time? } | null`",
+                "description": "Emitted each time the field's rejection of typed text starts, changes, or ends (`null`). `kind` is `unreadable` or `outOfRange`; `time` is the ISO time the text names, for `outOfRange`."
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "TimeInput 事件",
+            "rows": [
+              {
+                "name": "`update:modelValue`",
+                "payload": "`value: string | null`",
+                "description": "时间变化时触发。"
+              },
+              {
+                "name": "`entryErrorChange`",
+                "payload": "`error: { kind, text, time? } | null`",
+                "description": "字段对打进来的文字的拒绝开始、改变或结束时触发，结束时是 `null`。`kind` 是 `unreadable` 或 `outOfRange`；`time` 是 `outOfRange` 时文字指向的 ISO 时间。"
+              }
+            ]
+          }
+        ]
       },
       "notes": {
         "en": [],

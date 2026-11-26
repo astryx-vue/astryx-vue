@@ -33,7 +33,7 @@ const date = ref<Date | null>(new Date(2026, 9, 11))
 </template>
 ```
 
-绑定值是原生 `Date`。通过 `min` 和 `max` 限制可选日期范围，通过 `isDateDisabled` 函数禁用特定日期。月份标题和星期名称跟随当前语言。组件自带文案默认是英文，调用 `provideAstryxLocale('zh-CN')` 后改为中文。
+绑定值是原生 `Date`。通过 `min` 和 `max` 限制可选日期范围，通过 `isDateDisabled` 函数禁用特定日期。月份标题、星期名称、日期数字和周数跟随当前语言，数字也用该语言的写法。组件自带文案默认是英文，调用 `provideAstryxLocale('zh-CN')` 后改为中文。
 
 
 <ComponentAnatomy />

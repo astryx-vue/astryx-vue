@@ -14,7 +14,7 @@ footer: false
       <tr><td><code>modelValue</code></td><td><code>Date | null</code></td><td><code>null</code></td><td>当前选中的日期。</td></tr>
       <tr><td><code>mode</code></td><td><code>'single' | 'range'</code></td><td><code>'single'</code></td><td>选一天，或选一段起止日期。</td></tr>
       <tr><td><code>range</code></td><td><code>{ start: Date | null, end: Date | null } | null</code></td><td><code>null</code></td><td>范围值，用 <code>v-model:range</code> 绑定。</td></tr>
-      <tr><td><code>numberOfMonths</code></td><td><code>1 | 2</code></td><td><code>1</code></td><td>并排显示的月份数。</td></tr>
+      <tr><td><code>numberOfMonths</code></td><td><code>1 | 2</code></td><td><code>1</code></td><td>并排显示的月份数。两个月时，选中日或今天落在 `max` 所在的月份，就让这个月显示在右边那一格。</td></tr>
       <tr><td><code>focusDate</code></td><td><code>Date</code></td><td>—</td><td>先显示这一天所在的月份。</td></tr>
       <tr><td><code>min</code></td><td><code>Date</code></td><td>—</td><td>最早可选日期。</td></tr>
       <tr><td><code>max</code></td><td><code>Date</code></td><td>—</td><td>最晚可选日期。</td></tr>
@@ -23,7 +23,7 @@ footer: false
       <tr><td><code>minRangeSpan</code></td><td><code>number</code></td><td><code>1</code></td><td>范围最短天数，含两端。大于 1 时，再点一次起点会取消这次选择。</td></tr>
       <tr><td><code>maxRangeSpan</code></td><td><code>number</code></td><td>—</td><td>范围最长天数，含两端。起点还没选中时不生效。</td></tr>
       <tr><td><code>hasOutsideDays</code></td><td><code>boolean</code></td><td><code>true</code></td><td>显示相邻月份的日期。这些日期不能选。</td></tr>
-      <tr><td><code>hasWeekNumbers</code></td><td><code>boolean</code></td><td><code>false</code></td><td>在每一行左侧显示周数。</td></tr>
+      <tr><td><code>hasWeekNumbers</code></td><td><code>boolean</code></td><td><code>false</code></td><td>在每一行左侧显示 ISO 周数。每一行按它的周四所在的周计，不管一周从哪天开始。</td></tr>
       <tr><td><code>hasVariableRowCount</code></td><td><code>boolean</code></td><td><code>false</code></td><td>行数随当月缩短。关闭时固定六行。</td></tr>
       <tr><td><code>weekStartsOn</code></td><td><code>0-6 | 'sun' | 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat'</code></td><td><code>0</code></td><td>一周从哪一天开始。0 是周日。</td></tr>
       <tr><td><code>handleRef</code></td><td><code>Ref | (handle) =&gt; void</code></td><td>—</td><td>接收翻月句柄。调用 navigateTo 会翻到那一天并聚焦它。</td></tr>

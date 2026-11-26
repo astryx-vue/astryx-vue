@@ -4,8 +4,9 @@ import type { PickerWheelOption } from '../DateInput/PickerWheel.vue'
 import { computed } from 'vue'
 import { formatISOTime, isTimeInRange, parseISOTime } from '../composables/useTimeValue.js'
 import PickerWheel from '../DateInput/PickerWheel.vue'
-import { useComponentMessages } from '../locale/context.js'
+import { useAstryxLocale, useComponentMessages } from '../locale/context.js'
 import { dateTimeInputMessages } from '../locale/messages/date-time-input.js'
+import { resolveHourFormat } from '../utils/timeFormat.js'
 
 const props = withDefaults(defineProps<{
   modelValue?: string | null
@@ -15,7 +16,6 @@ const props = withDefaults(defineProps<{
   max?: string
 }>(), {
   modelValue: null,
-  hourFormat: '12h',
   hasSeconds: false,
 })
 
@@ -24,6 +24,8 @@ const emit = defineEmits<{
 }>()
 
 const messages = useComponentMessages({ dateTimeInput: dateTimeInputMessages })
+const locale = useAstryxLocale()
+const hourFormat = computed(() => resolveHourFormat(locale.value, props.hourFormat))
 const parsed = computed(() => props.modelValue ? parseISOTime(props.modelValue) : null)
 const hour24 = computed(() => parsed.value?.hours ?? 0)
 const minute = computed(() => parsed.value?.minutes ?? 0)
@@ -63,7 +65,7 @@ function from12(hour: number, pm: boolean): number {
 }
 
 const hourOptions = computed<PickerWheelOption[]>(() => {
-  if (props.hourFormat === '24h') {
+  if (hourFormat.value === '24h') {
     return Array.from({ length: 24 }, (_, hour) => ({
       value: String(hour),
       label: String(hour).padStart(2, '0'),
@@ -98,7 +100,7 @@ const meridiemOptions = computed<PickerWheelOption[]>(() => [
 ])
 
 function onHour(value: string): void {
-  const hour = props.hourFormat === '24h' ? Number(value) : from12(Number(value), isPm.value)
+  const hour = hourFormat.value === '24h' ? Number(value) : from12(Number(value), isPm.value)
   commit(hour, minute.value, second.value)
 }
 

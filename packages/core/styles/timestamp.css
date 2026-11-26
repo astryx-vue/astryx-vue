@@ -45,19 +45,14 @@
     max-width: 300px;
   }
 
+  /* 复制按钮在这一行的 dd 里，dd 横跨值和按钮两列，所以按钮靠右对齐。 */
+  .astryx-timestamp__card[data-columns='label-value'],
   .astryx-timestamp__card[data-columns='label-value-action'] {
-    grid-template-columns: auto 1fr auto;
-  }
-
-  .astryx-timestamp__card[data-columns='label-value'] {
     grid-template-columns: auto 1fr;
   }
 
+  .astryx-timestamp__card[data-columns='value'],
   .astryx-timestamp__card[data-columns='value-action'] {
-    grid-template-columns: 1fr auto;
-  }
-
-  .astryx-timestamp__card[data-columns='value'] {
     grid-template-columns: 1fr;
   }
 
@@ -85,9 +80,26 @@
     line-height: var(--astryx-text-body-leading, 1.5);
   }
 
-  .astryx-timestamp__action {
+  .astryx-timestamp__value {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: space-between;
+    column-gap: var(--astryx-spacing-4, 16px);
+  }
+
+  .astryx-timestamp__action {
+    flex: none;
+  }
+
+  /* 没有标签时，时区全名只给读屏，不显示。 */
+  .astryx-timestamp__zone-name {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 }

@@ -347,4 +347,18 @@ describe('calendar', () => {
     await nextTick()
     expect(capped.get('.astryx-calendar-month-year').text()).toBe('March 2026')
   })
+
+  it('writes day and week numbers with the locale digits', () => {
+    const host = defineComponent({
+      setup() {
+        provideAstryxLocale('ar-EG')
+        return () => h(Calendar, { focusDate: new Date(2026, 0, 1), hasWeekNumbers: true })
+      },
+    })
+    const wrapper = mount(host)
+    expect(wrapper.find('.astryx-calendar-day').text()).toMatch(/^[\u0660-\u0669]+$/)
+    expect(wrapper.find('.astryx-calendar-week-number').text()).toMatch(/^[\u0660-\u0669]+$/)
+    const latin = mount(Calendar, { props: { focusDate: new Date(2026, 0, 1), hasWeekNumbers: true } })
+    expect(latin.find('.astryx-calendar-day').text()).toMatch(/^\d+$/)
+  })
 })

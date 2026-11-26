@@ -92,30 +92,60 @@ export interface InitialCalendarFocus {
 }
 
 /**
- * The month the calendar opens on. An explicit focus date wins, then the
- * selection. Otherwise today is clamped into the min/max window so the first
- * paint is not an all-disabled month.
+ * The month the calendar opens on. An explicit focus date wins and is never
+ * second-guessed. Then the selection, whose month is shown even when it lies
+ * outside min/max. Otherwise today is clamped into the min/max window so the
+ * first paint is not an all-disabled month.
+ *
+ * With two months, a selection or today inside max's month still opens one
+ * pane earlier, so max's month is the last pane and the panes before it keep
+ * selectable days. That shift never crosses min's month.
  */
 export function initialCalendarFocus(options: InitialCalendarFocus): CalendarDate {
   if (options.focusDate)
     return toCalendarDate(options.focusDate)
-  if (options.selected)
-    return toCalendarDate(options.selected)
-  if (options.rangeStart)
-    return toCalendarDate(options.rangeStart)
-
-  const today = options.today ? toCalendarDate(options.today) : toCalendarDate(new Date())
   const min = options.min ? toCalendarDate(options.min) : null
   const max = options.max ? toCalendarDate(options.max) : null
+  const panes = options.numberOfMonths
+  if (options.selected)
+    return keepLastPaneWithinMax(toCalendarDate(options.selected), min, max, panes)
+  if (options.rangeStart)
+    return keepLastPaneWithinMax(toCalendarDate(options.rangeStart), min, max, panes)
+
+  const today = options.today ? toCalendarDate(options.today) : toCalendarDate(new Date())
   if (min && today.compare(min) < 0)
     return min
   if (max && today.compare(max) > 0) {
-    const shifted = shiftMonth(max, -(Math.max(0, options.numberOfMonths - 1)))
+    const shifted = shiftMonth(max, -(Math.max(0, panes - 1)))
     if (min && shifted.compare(new CalendarDate(min.year, min.month, 1)) < 0)
       return min
     return shifted
   }
-  return today
+  return keepLastPaneWithinMax(today, min, max, panes)
+}
+
+/**
+ * `date` 所在的月份显示着，但后面的窗格会整个落在 max 之后时，把起始月往前挪：
+ * 最后一个窗格落在 max 所在的月份，第一个窗格不早于 min 所在的月份。
+ * 窗格本来就在 max 的月份结束，或者 `date` 自己的月份已经晚于 max 的月份，就原样返回。
+ */
+function keepLastPaneWithinMax(date: CalendarDate, min: CalendarDate | null, max: CalendarDate | null, numberOfMonths: number): CalendarDate {
+  const lastPane = Math.max(0, numberOfMonths - 1)
+  if (!max || lastPane === 0)
+    return date
+  const month = monthIndex(date)
+  const maxMonth = monthIndex(max)
+  const latestFirstPane = maxMonth - lastPane
+  if (month <= latestFirstPane || month > maxMonth)
+    return date
+  const earliest = shiftMonth(max, -lastPane)
+  if (!min)
+    return earliest
+  const minMonth = monthIndex(min)
+  if (latestFirstPane >= minMonth)
+    return earliest
+  // min 比完整的挪动更近：只退到 min 所在的月份，date 已经在那里或更早就不动。
+  return month > minMonth ? min : date
 }
 
 /** `date` 在 `start` 和 `end` 之间（含两端）。任何一端缺了就不在。 */

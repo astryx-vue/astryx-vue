@@ -1,3 +1,5 @@
+import { formatElapsedDuration } from '../utils/timeFormat.js'
+
 export type TimerFormat = 'elapsed' | 'clock'
 
 const ONE_SECOND_MS = 1000
@@ -22,7 +24,8 @@ export function getElapsedMilliseconds(now: number, startTime: number): number {
   return Math.max(0, now - startTime)
 }
 
-export function getPresentation(elapsedMilliseconds: number, format: TimerFormat): TimerPresentation {
+/** `locale` 决定 elapsed 格式里单位的写法、数字和连接方式（英文是「2m 08s」）。 */
+export function getPresentation(elapsedMilliseconds: number, format: TimerFormat, locale = 'en'): TimerPresentation {
   const elapsedSeconds = Math.floor(elapsedMilliseconds / ONE_SECOND_MS)
 
   if (format === 'clock') {
@@ -38,21 +41,21 @@ export function getPresentation(elapsedMilliseconds: number, format: TimerFormat
   }
 
   if (elapsedSeconds < 60) {
-    return { dateTime: `PT${elapsedSeconds}S`, text: `${String(elapsedSeconds)}s` }
+    return { dateTime: `PT${elapsedSeconds}S`, text: formatElapsedDuration(locale, [['second', elapsedSeconds]]) }
   }
 
   const totalMinutes = Math.floor(elapsedSeconds / 60)
   if (totalMinutes < 60) {
     return {
       dateTime: `PT${elapsedSeconds}S`,
-      text: `${String(totalMinutes)}m ${pad(elapsedSeconds % 60)}s`,
+      text: formatElapsedDuration(locale, [['minute', totalMinutes], ['second', elapsedSeconds % 60]]),
     }
   }
 
   const representedSeconds = totalMinutes * 60
   return {
     dateTime: `PT${representedSeconds}S`,
-    text: `${String(Math.floor(totalMinutes / 60))}h ${pad(totalMinutes % 60)}m`,
+    text: formatElapsedDuration(locale, [['hour', Math.floor(totalMinutes / 60)], ['minute', totalMinutes % 60]]),
   }
 }
 

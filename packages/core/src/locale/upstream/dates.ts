@@ -62,5 +62,6 @@ export const datesUpstreamMap: UpstreamMapPart = {
   '@astryx.timestamp.copy': [{ path: 'timestamp.copy' }],
   '@astryx.timestamp.copied': [{ path: 'timestamp.copied' }],
   '@astryx.timestamp.copyFailed': [{ path: 'timestamp.copyFailed' }],
+  '@astryx.timestamp.relativeLabel': [{ path: 'timestamp.relativeLabel', args: ['relative', 'date'] }],
   '@astryx.timestamp.detailsLabel': [{ path: 'timestamp.detailsLabel' }],
 }
