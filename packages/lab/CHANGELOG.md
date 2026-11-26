@@ -1,5 +1,12 @@
 # @astryx-vue/lab
 
+## 0.9.3
+
+### Patch Changes
+
+- Updated dependencies [[`ec208da`](https://github.com/astryx-vue/astryx-vue/commit/ec208dae73420d8a2d053b238b5b6dde01c8c960), [`33cec03`](https://github.com/astryx-vue/astryx-vue/commit/33cec037092f04970b22a9265f365660f88c95a7), [`57250a9`](https://github.com/astryx-vue/astryx-vue/commit/57250a95eac0080bc86f795d96e5daf2b50dc0b0), [`500b7bb`](https://github.com/astryx-vue/astryx-vue/commit/500b7bb7ccab6c36627ae837180dbbe8f75b0f5c), [`d4a40a6`](https://github.com/astryx-vue/astryx-vue/commit/d4a40a6b1c2dc0bf5b3073f1786c2f2eb6a41a9c), [`c66168c`](https://github.com/astryx-vue/astryx-vue/commit/c66168c00e9f06435ae85cf4e170e7d178ca54bb), [`627d55a`](https://github.com/astryx-vue/astryx-vue/commit/627d55a2bd93c04b03009fbf92783f5de983d615), [`ee32ea2`](https://github.com/astryx-vue/astryx-vue/commit/ee32ea2a72a6a69f76fee6b511bdea0c5ff29793)]:
+  - @astryx-vue/core@0.26.0
+
 ## 0.9.2
 
 ### Patch Changes
