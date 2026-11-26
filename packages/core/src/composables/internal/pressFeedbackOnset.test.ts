@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { isInsideScrollView } from '../../utils/scrollView'
 import {
   installPressFeedback,
   PRESS_FADE_REDUCED_MAX_MS,
@@ -8,7 +9,6 @@ import {
   resetPressFeedbackForTest,
 } from './pressFeedback.js'
 import { PRESS_ONSET_MS } from './pressGesture.js'
-import { isInsideScrollView } from './scrollView.js'
 
 let release: () => void = () => undefined
 

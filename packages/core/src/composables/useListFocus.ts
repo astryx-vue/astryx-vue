@@ -1,5 +1,6 @@
 import type { MaybeRefOrGetter, Ref } from 'vue'
 import { ref, toValue, watch } from 'vue'
+import { isRtlElement } from '../utils/isRtlElement'
 
 /**
  * 一维列表的方向。
@@ -91,12 +92,6 @@ const TEXT_INPUT_TYPES = new Set([
 function isHiddenWithin(el: HTMLElement, listEl: HTMLElement): boolean {
   const hidden = el.parentElement?.closest('[hidden],[inert]')
   return hidden != null && hidden !== listEl && listEl.contains(hidden)
-}
-
-function isRtlElement(el: HTMLElement | null): boolean {
-  if (el == null || typeof window === 'undefined')
-    return false
-  return window.getComputedStyle(el).direction === 'rtl'
 }
 
 function getContentEditableRoot(el: HTMLElement): HTMLElement | null {

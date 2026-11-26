@@ -1,8 +1,8 @@
 import type { HitRect } from './hitArea.js'
+import { armClickGuard } from '../../utils/clickGuard'
 import { INTERACTIVE_SELECTOR, resolveHitTarget } from './hitArea.js'
 import { PRESSED_ATTRIBUTE, pressFadeMs } from './pressFeedback.js'
 import { isTrackedByGroup, PRESS_GROUP_ITEM_ATTRIBUTE } from './pressSurface.js'
-import { armStrayClick } from './strayClick.js'
 
 /**
  * 一组并排的动作（提示对话框的两个按钮、按钮组、切换按钮组）当成一个控件来跟踪手指，
@@ -181,7 +181,7 @@ export function createActionGroupTracker(): ActionGroupTracker {
       if (lifted.matches(DISABLED))
         return null
       // 浏览器随后还会给按下的那个元素补一个 click，吞掉它，动作只执行一次。
-      armStrayClick(lifted.ownerDocument)
+      armClickGuard(lifted.ownerDocument)
       lifted.click()
       return lifted
     },

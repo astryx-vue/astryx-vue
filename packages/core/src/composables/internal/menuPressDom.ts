@@ -1,6 +1,6 @@
 import type { MenuPressPointerType } from './menuPressGesture.js'
 import { focusForLastInput } from './focusReturn.js'
-import { runAsMenuPressActivation } from './strayClick.js'
+import { runAsMenuPressActivation } from './menuPressActivation.js'
 
 /** 带这个标记的菜单根用的是按压模型。嵌套的飞出层靠它分清一次按压归哪一层。 */
 export const MENU_PRESS_MARKER = 'data-astryx-menu-press'

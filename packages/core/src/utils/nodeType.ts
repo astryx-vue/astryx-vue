@@ -22,3 +22,13 @@ export function isElement(value: unknown): value is Element {
 export function isShadowRoot(value: unknown): value is ShadowRoot {
   return isNode(value) && value.nodeType === 11 && 'host' in value
 }
+
+/** `value` 是不是一个文档，不管来自哪个窗口。 */
+export function isDocument(value: unknown): value is Document {
+  return isNode(value) && value.nodeType === 9
+}
+
+/** `value` 是不是一个 HTML 元素，不管来自哪个窗口：看命名空间，在窗口之间搬过的元素也认得出来。 */
+export function isHTMLElement(value: unknown): value is HTMLElement {
+  return isElement(value) && value.namespaceURI === 'http://www.w3.org/1999/xhtml'
+}

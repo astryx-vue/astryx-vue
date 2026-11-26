@@ -1,9 +1,9 @@
 import type { MaybeRefOrGetter, Ref } from 'vue'
 import { getCurrentScope, onScopeDispose, toValue, watch } from 'vue'
+import { msSinceInput } from '../../utils/inputAge'
+import { isInsideScrollView } from '../../utils/scrollView'
 import { createActionGroupTracker, GROUP_PRESS_POINTERS, isTrackedByGroup, PRESS_GROUP_ITEM_ATTRIBUTE, resolveGroupTouch } from './actionGroupTracker.js'
-import { msSinceInput } from './inputAge.js'
 import { PRESS_ONSET_MS, PRESS_SLOP_PX } from './pressGesture.js'
-import { isInsideScrollView } from './scrollView.js'
 
 export { GROUP_PRESS_POINTERS, PRESS_GROUP_ITEM_ATTRIBUTE, pressGroupItemProps } from './actionGroupTracker.js'
 

@@ -1,9 +1,12 @@
 /**
  * @file selectionLock.ts
  * @input The elements a held touch contact presses, and the touch's target
- * @output lockSelection and locksSelectionFor give a held finger's lock.
+ * @output lockSelection and locksSelectionFor give a held finger's lock;
+ *   lockStyles and isTextEntry are shared with a claimed drag's hold
+ *   (dragSelection.ts)
  * @position Recognizers whose hold does something bring lockSelection; the
- *   gesture host calls it through the recognizer and never imports it.
+ *   gesture host reads locksSelectionFor, and its drag hold is
+ *   dragSelection.ts
  */
 
 // A hold that does something never starts a selection or the callout under
@@ -107,7 +110,7 @@ export function lockSelection(
  * The selection-lock styles on `set`, refcounted per element; idempotent
  * release.
  */
-function lockStyles(set: ReadonlySet<Element>): () => void {
+export function lockStyles(set: ReadonlySet<Element>): () => void {
   const locked: Element[] = []
   for (const element of set) {
     const style = styleOf(element)
@@ -170,7 +173,7 @@ function isSelectableControl(node: unknown): node is HTMLInputElement {
 }
 
 /** Text a held finger edits: it places the caret there. */
-function isTextEntry(node: EventTarget | null): boolean {
+export function isTextEntry(node: EventTarget | null): boolean {
   const element = isElement(node)
     ? node
     : isNode(node)

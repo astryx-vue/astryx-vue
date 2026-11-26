@@ -1,7 +1,9 @@
 import type { MaybeRefOrGetter, Ref } from 'vue'
 import type { MenuPressEffect, MenuPressEvent, MenuPressGesture, MenuPressPointerType } from './internal/menuPressGesture.js'
 import { getCurrentScope, onScopeDispose, toValue } from 'vue'
+import { armClickGuard } from '../utils/clickGuard'
 import { currentGesture } from './internal/gestureCounter.js'
+import { runAsMenuPressActivation, trackTouchOfPointer } from './internal/menuPressActivation.js'
 import { createMenuAutoscroll, overflowingMenu } from './internal/menuPressAutoscroll.js'
 import {
   dispatchRowClick,
@@ -13,9 +15,9 @@ import {
   resolvePoint,
 } from './internal/menuPressDom.js'
 import { IDLE_MENU_PRESS, menuPressStep } from './internal/menuPressGesture.js'
-import { armStrayClick, runAsMenuPressActivation, trackTouchOfPointer } from './internal/strayClick.js'
 import { useLongPress } from './useLongPress.js'
 
+export { isMenuPressActivation, resetMenuPress } from './internal/menuPressActivation.js'
 export { MENU_PRESS_MARKER } from './internal/menuPressDom.js'
 export { MENU_PRESS_SETTLE_MS, menuPressStep } from './internal/menuPressGesture.js'
 export type {
@@ -25,7 +27,6 @@ export type {
   MenuPressPointerType,
   MenuPressStep,
 } from './internal/menuPressGesture.js'
-export { isMenuPressActivation, resetMenuPress } from './internal/strayClick.js'
 
 /** 手指在触发器上按多久菜单才打开。 */
 const MENU_PRESS_LONG_PRESS_MS = 500
@@ -130,7 +131,8 @@ export function useMenuPress(options: MenuPressOptions): MenuPress {
   /** 手指松开时挑选的那根手指的 touchend 要取消；鼠标和笔没有 touchend。 */
   function armAfterRelease(doc: Document, native: PointerEvent | undefined, touchIdentifier: number | null): void {
     const isTouch = native?.pointerType === 'touch'
-    armStrayClick(doc, { cancelsTouchEnd: isTouch, touchIdentifier })
+    // 布下之后一直装着，排在页面后来加的 window 监听前面。
+    armClickGuard(doc, { staysInstalled: true, cancelsTouchEnd: isTouch, touchIdentifier: touchIdentifier ?? undefined })
   }
 
   function endGesture(): void {
