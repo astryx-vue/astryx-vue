@@ -34,4 +34,9 @@ const dotsPage = ref(3)
 .pagination-overview {
   width: 100%;
 }
+
+/* 分页本身撑满一行（容器查询靠它收起），按钮在行里居中，和原版缩成内容宽度再居中看起来一致。 */
+.pagination-overview :deep(.astryx-pagination) {
+  justify-content: center;
+}
 </style>
