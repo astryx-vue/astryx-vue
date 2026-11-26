@@ -242,6 +242,7 @@ const expectedCatalog = [
   { slug: 'use-table-filter-state', group: 'Utility', family: 'Table', en: 'useTableFilterState', zh: 'useTableFilterState' },
   { slug: 'use-table-filtering', group: 'Utility', family: 'Table', en: 'useTableFiltering', zh: 'useTableFiltering' },
   { slug: 'use-table-grouped-rows', group: 'Utility', family: 'Table', en: 'useTableGroupedRows', zh: 'useTableGroupedRows' },
+  { slug: 'use-table-infinite-scroll', group: 'Utility', family: 'Table', en: 'useTableInfiniteScroll', zh: 'useTableInfiniteScroll' },
   { slug: 'use-table-pagination', group: 'Utility', family: 'Table', en: 'useTablePagination', zh: 'useTablePagination' },
   { slug: 'use-table-row-expansion', group: 'Utility', family: 'Table', en: 'useTableRowExpansion', zh: 'useTableRowExpansion' },
   { slug: 'use-table-row-index', group: 'Utility', family: 'Table', en: 'useTableRowIndex', zh: 'useTableRowIndex' },
@@ -259,6 +260,7 @@ const expectedCatalog = [
   { slug: 'use-tree-focus', group: 'Utility', family: 'Utilities', en: 'useTreeFocus', zh: 'useTreeFocus' },
   { slug: 'use-typeahead', group: 'Utility', family: 'Utilities', en: 'useTypeahead', zh: 'useTypeahead' },
   { slug: 'use-snap-paging', group: 'Utility', family: 'Utilities', en: 'useSnapPaging', zh: 'useSnapPaging' },
+  { slug: 'use-locale-direction', group: 'Utility', family: 'Utilities', en: 'useLocaleDirection', zh: 'useLocaleDirection' },
 ]
 
 describe('component catalog meta', () => {

@@ -120,9 +120,27 @@ describe('schedule views', () => {
     await nextTick()
     expect(seen).toEqual([[start.instant, end.instant]])
     expect(document.body.textContent).not.toContain('Standup')
+    // 加载圈只是装饰，不再自带 status 区域；加载中它的外层可见，加载完才隐藏。
+    const spinner = document.querySelector('[aria-label="Loading events"]')!
+    expect(spinner.getAttribute('aria-hidden')).toBe('true')
+    expect(spinner.parentElement?.closest('[aria-hidden="true"]')).toBeNull()
     resolveLoad([event('Standup', '2026-05-13T16:00:00.000Z', '2026-05-13T16:30:00.000Z')])
     await flushPromises()
     expect(document.body.textContent).toContain('Standup')
+    expect(spinner.parentElement?.closest('[aria-hidden="true"]')).not.toBeNull()
+  })
+
+  it('announces a busy start once through the shared channel', async () => {
+    const view = createScheduleWeeklyView()
+    renderSchedule({ view, events: () => new Promise(() => {}) })
+    await nextTick()
+    await new Promise(resolve => requestAnimationFrame(() => resolve(null)))
+    await new Promise(resolve => requestAnimationFrame(() => resolve(null)))
+    const announced = [...document.querySelectorAll('[aria-live="polite"]')]
+      .filter(region => region.textContent?.includes('Loading events'))
+    expect(announced).toHaveLength(1)
+    // 播报来自共享通道，不是日程自己挂的区域。
+    expect(announced[0]!.closest('.astryx-schedule__frame')).toBeNull()
   })
 
   it('pages with onChangeDate, keeping the time of day, and Today uses now', async () => {

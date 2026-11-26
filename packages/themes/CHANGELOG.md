@@ -1,5 +1,27 @@
 # @astryx-vue/themes
 
+## 0.11.0
+
+No changes in this release.
+
+## 0.10.2
+
+No changes in this release.
+
+## 0.10.1
+
+No changes in this release.
+
+## 0.10.0
+
+### Minor Changes
+
+- [#529](https://github.com/astryx-vue/astryx-vue/pull/529) [`eaf8636`](https://github.com/astryx-vue/astryx-vue/commit/eaf8636c9905a09460b8e7c15f1b84710a3862ae) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 删掉各主题里只有一行占位注释的 `<主题>/field.css`。主题入口文件（如 `neutral.css`）不受影响；如果单独引入过 `@astryx-vue/themes/<主题>/field.css`，删掉这行引入即可，它本来就不含任何样式。
+
+## 0.9.2
+
+No changes in this release.
+
 ## 0.9.1
 
 No changes in this release.

@@ -5,6 +5,8 @@ import { computed } from 'vue'
 const props = defineProps<{
   rect: TargetRect | null
   hasBackdrop: boolean
+  /** 拿到高亮框元素，说明框锚在它上面。 */
+  highlightRef?: (element: HTMLElement | null) => void
 }>()
 const emit = defineEmits<{ backdropClick: [] }>()
 function onBackdropPointerDown(event: PointerEvent): void {
@@ -35,6 +37,7 @@ const highlightStyle = computed(() => props.rect == null
     @pointerdown="onBackdropPointerDown"
   >
     <div
+      :ref="(element) => highlightRef?.(element as HTMLElement | null)"
       class="astryx-tour-highlight"
       :class="{ 'has-backdrop': hasBackdrop, 'is-hidden': rect == null }"
       :style="highlightStyle"

@@ -23,10 +23,7 @@ const columns: TableColumn<Track>[] = [
   { key: 'plays', header: 'Plays', width: proportional(1), align: 'end' },
 ]
 
-const rowIndex = useTableRowIndex<Track>({
-  data: tracks,
-  getRowKey: track => track.id,
-})
+const rowIndex = useTableRowIndex<Track>()
 </script>
 
 <template>

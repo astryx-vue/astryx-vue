@@ -1,3 +1,5 @@
+import { fileInputMessages } from '../locale/messages/file-input.js'
+
 export interface FileRejection {
   code: 'type' | 'size' | 'count'
   fileName?: string
@@ -34,31 +36,24 @@ function matchesAccept(file: File, accept: string | undefined): boolean {
   })
 }
 
-/** 文件大小的三种单位写法。数值已经换算好，只负责带上本地化的单位。 */
+/** 文件大小的三种单位写法。数值已经换算好，负责按单位的格式写数字并带上本地化的单位。 */
 export interface FileSizeUnits {
   fileSizeBytes: (size: number) => string
   fileSizeKilobytes: (size: number) => string
   fileSizeMegabytes: (size: number) => string
 }
 
-const ENGLISH_UNITS: FileSizeUnits = {
-  fileSizeBytes: size => `${size} B`,
-  fileSizeKilobytes: size => `${size} KB`,
-  fileSizeMegabytes: size => `${size} MB`,
-}
-
 /**
- * 把字节数写成给人看的大小。`units` 决定单位怎么写，FileInput 传当前语言的文案；
- * 不传时用英文的 B、KB、MB。
+ * 把字节数写成给人看的大小：不到 1024 字节写字节数，不到 1 MB 写 KB，其余写 MB，
+ * KB 和 MB 保留一位小数。`units` 决定数字和单位怎么写，FileInput 传当前语言的文案；
+ * 不传时用英文。
  */
-export function formatFileSize(bytes: number, units: FileSizeUnits = ENGLISH_UNITS): string {
+export function formatFileSize(bytes: number, units: FileSizeUnits = fileInputMessages.en): string {
   if (bytes < 1024)
     return units.fileSizeBytes(bytes)
   if (bytes < 1024 * 1024)
-    return units.fileSizeKilobytes(Math.max(1, Math.round(bytes / 1024)))
-  const megabytes = bytes / (1024 * 1024)
-  const rounded = megabytes >= 10 ? Math.round(megabytes) : Math.round(megabytes * 10) / 10
-  return units.fileSizeMegabytes(rounded)
+    return units.fileSizeKilobytes(bytes / 1024)
+  return units.fileSizeMegabytes(bytes / (1024 * 1024))
 }
 
 export function selectFiles(list: FileList | File[] | null | undefined, options: FileSelectionOptions): FileSelectionResult {

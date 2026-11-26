@@ -19,13 +19,13 @@ footer: false
         <td><code>data</code></td>
         <td><code>readonly T[]</code></td>
         <td>—</td>
-        <td>表格当前渲染的数据数组（排序、过滤、分页之后）。序号按这个顺序走。</td>
+        <td>可选：序号顺序跟着的数组，例如分组表格里未分组的那份行。不传时按表格渲染出的位置编号。</td>
       </tr>
       <tr>
         <td><code>getRowKey</code></td>
         <td><code>(item: T) =&gt; string</code></td>
         <td>—</td>
-        <td>可选的行键提取函数，给每一行返回唯一字符串。传了就用这个字符串查序号，不传就按引用相等来认行。放在 getter 里的普通函数本身是稳定的，不需要额外缓存。</td>
+        <td>可选的行键提取函数，给每一行返回唯一字符串。传了就用这个字符串查序号，不传就按引用相等来认行。配合 <code>data</code> 用。放在 getter 里的普通函数本身是稳定的，不需要额外缓存。</td>
       </tr>
       <tr>
         <td><code>label</code></td>

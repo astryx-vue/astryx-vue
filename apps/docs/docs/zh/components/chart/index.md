@@ -408,8 +408,8 @@ declare function candlestick(options: CandlestickOptions): SeriesDef
 - `compactNumber(value, locale)`：将大数字缩写。例如 `1200` 转为「1.2K」，`1500000` 转为「1.5M」，`1e12` 转为「1T」。
 - `currency(symbol?, locale?)`：创建货币格式化器。例如 `currency('¥')` 可以直接传给 `ChartAxis` 的 `tickFormat` 属性，数值大于一千时会自动应用缩写（如「¥1.5K」）。
 - `percent(value, locale)`：将小数比例转换为百分比。例如 `0.45` 转换为「45%」，`0.005` 转换为「0.5%」。
-- `shortDate(value, locale)`：将日期格式化为简短的月日。例如「Jan 5」或「3月12日」。
-- `monthYear(value, locale)`：将日期格式化为年月。例如「Jan 2024」或「2025年3月」。
+- `shortDate(value, locale, calendar?)`：将日期格式化为简短的月日。例如「Jan 5」或「3月12日」。默认用格里高利历，传入 `Intl` 历法标识（如 `'persian'`）可以换成别的历法。
+- `monthYear(value, locale, calendar?)`：将日期格式化为年月。例如「Jan 2024」或「2025年3月」。历法参数同上。
 - `formatList(values, locale)`：按指定语言的语法规则把多个词汇拼接为自然语言列表，例如将数组拼成「甲、乙和丙」。
 
 ## 大数据折线缩减
@@ -445,7 +445,7 @@ const reduced = m4Reduce(rawData, chartWidth, xDomain)
 | `labelKey` | `string` | `undefined` | 饼图扇区的标签字段。 |
 | `innerRadius` | `number` | `0` | 内半径占外半径的比例；例如 `0.6` 创建 donut。 |
 | `padAngle` | `number` | `0.02` | 相邻扇区之间的弧度间隔。 |
-| `interactive` | `boolean` | `false` | 触摸拖动时阻止页面滚动；关闭时保留 `pan-y`。 |
+| `interactive` | `boolean` | `false` | 打开提示框的触摸操作（点按显示、拖动查看、抬起收起），手指拖动时页面不滚动。关闭时触摸交给页面，保留 `pan-y`；鼠标悬停两种情况下都能用。 |
 | `label` | `string` | 按模式生成 | SVG 的无障碍名称。 |
 
 ### 雷达图
@@ -495,7 +495,7 @@ const reduced = m4Reduce(rawData, chartWidth, xDomain)
 
 ### 径向提示框
 
-`RadialTooltip` 在饼图中按半径和角度命中扇区，在雷达图中显示最近的轴及该轴的最大系列值。鼠标悬停、触摸点按和拖动均可使用。`highlight` 默认绘制并外移当前扇区的轮廓，`highlightOffset` 控制外移距离。
+`RadialTooltip` 在饼图中按半径和角度命中扇区，在雷达图中显示最近的轴及该轴的最大系列值。鼠标悬停随时可用；图表打开 `interactive` 后，触摸点按和拖动才生效。`highlight` 默认绘制并外移当前扇区的轮廓，`highlightOffset` 控制外移距离。
 
 自定义内容使用默认插槽，插槽参数为 `label`、`value`、`percentage` 和 `index`：
 
@@ -652,7 +652,7 @@ const reduced = m4Reduce(rawData, chartWidth, xDomain)
 
 ## 缩放和平移
 
-在 `interactions` 插槽里放 `<ChartZoom>`，用户就可以通过滚轮或双指手势缩放，并拖动平移图表。右上角工具栏提供放大、缩小和重置按钮；`toolbar="false"` 可以隐藏它。
+在 `interactions` 插槽里放 `<ChartZoom>`，用户就可以通过滚轮或双指手势缩放，并拖动平移图表。右上角工具栏提供放大、缩小和重置按钮；`toolbar="false"` 可以隐藏它。在图表上滚动滚轮只缩放图表，不会带着页面滚动；只有横向分量的滚动仍然交给页面。
 
 Zoom 通过事件更新受控 domain，不会直接修改 `<Chart>` 的内部状态：
 

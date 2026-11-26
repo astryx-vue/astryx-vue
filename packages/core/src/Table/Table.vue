@@ -1,9 +1,10 @@
 <script setup lang="ts" generic="T extends Record<string, unknown>">
 import type { TableColumn, TablePlugin, TableProps, TableSlots } from './types.js'
-import { computed } from 'vue'
+import { computed, provide } from 'vue'
 import { useComponentMessages } from '../locale/context.js'
 import { tableMessages } from '../locale/messages/table.js'
 import TableData from './TableData.vue'
+import { TABLE_SECTION_KEY, TABLE_STRIPED_KEY } from './tableRowPlacement.js'
 import TableScroll from './TableScroll.vue'
 import '../../styles/table.css'
 
@@ -31,6 +32,10 @@ const passedIdKey = computed(() => {
 const plugins = computed(() => Object.values(props.plugins ?? {}).filter((plugin): plugin is TablePlugin<T> => plugin != null))
 const dataMode = computed(() => props.data != null)
 const columns = computed(() => (props.columns ?? []) as TableColumn[])
+
+// 嵌在别的表格格子里的表格从自己这里重新开始，不沿用外层的斑马纹和区块。
+provide(TABLE_STRIPED_KEY, () => props.isStriped)
+provide(TABLE_SECTION_KEY, null)
 </script>
 
 <template>

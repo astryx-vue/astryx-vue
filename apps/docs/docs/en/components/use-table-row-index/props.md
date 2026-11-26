@@ -19,13 +19,13 @@ The config is a `MaybeRefOrGetter`, so pass a getter or a ref to keep the plugin
         <td><code>data</code></td>
         <td><code>readonly T[]</code></td>
         <td>—</td>
-        <td>The data array currently rendered by the table (post sort/filter/page). Numbering follows this order.</td>
+        <td>Optional: the array whose order the numbers follow, for example a grouped table's ungrouped rows. Omit it to number rows from the positions the table renders them at.</td>
       </tr>
       <tr>
         <td><code>getRowKey</code></td>
         <td><code>(item: T) =&gt; string</code></td>
         <td>—</td>
-        <td>Optional key extractor returning a unique string per row. When provided, index lookup is keyed by the returned string; otherwise items are matched by reference identity. A plain function in a getter is already stable, so there is nothing to memoize.</td>
+        <td>Optional key extractor returning a unique string per row. When provided, index lookup is keyed by the returned string; otherwise items are matched by reference identity. Used with <code>data</code>. A plain function in a getter is already stable, so there is nothing to memoize.</td>
       </tr>
       <tr>
         <td><code>label</code></td>

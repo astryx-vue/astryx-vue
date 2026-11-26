@@ -1,5 +1,33 @@
 # @astryx-vue/core
 
+## 0.11.0
+
+### Minor Changes
+
+- [#536](https://github.com/astryx-vue/astryx-vue/pull/536) [`bf97b13`](https://github.com/astryx-vue/astryx-vue/commit/bf97b13f85a406f7e637a8f5b4977546504e28aa) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 实验包新增 CircleCheckIndicator（iOS 的多选圆圈，在主题里映射到 `checkbox` 后所有复选框都画成圆圈，鼠标、触控笔按下时按压色立刻画在圆圈上）和 DialogHeroHeader（标题上方铺满媒体、关闭按钮浮在媒体上的对话框页头）；core 公开 `useDialogContext`，让自己画对话框页头的组件读到标题约定。
+
+## 0.10.2
+
+### Patch Changes
+
+- [#534](https://github.com/astryx-vue/astryx-vue/pull/534) [`dc8015d`](https://github.com/astryx-vue/astryx-vue/commit/dc8015d7a86410799e01769fc2ee0aa4554dabbf) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - FileInput 一次挑了几个不合格的文件时，状态提示按当前语言列出每个文件和原因，不再只说第一个；InternationalizationProvider 漏写 `locale` 时，开发环境直接报错并给出改法。
+
+## 0.10.1
+
+### Patch Changes
+
+- [#533](https://github.com/astryx-vue/astryx-vue/pull/533) [`e869ec3`](https://github.com/astryx-vue/astryx-vue/commit/e869ec3cb4f87419d5f78ddcbf9d5fa1fda63f75) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 语言目录对齐到上游 v0.7.17：键盘按键名、文件大小、字段说明按钮、InfoTip、滑块、Tokenizer 溢出数等文案都能随加载的目录翻译；SideNav、TopNav 标题旁的菜单按钮名带上标题；Table 的排序按钮改用列标题命名，多列排序时用描述读出优先级；文件大小改为 KB、MB 保留一位小数。
+
+## 0.10.0
+
+No changes in this release.
+
+## 0.9.2
+
+### Patch Changes
+
+- [#531](https://github.com/astryx-vue/astryx-vue/pull/531) [`c4f306d`](https://github.com/astryx-vue/astryx-vue/commit/c4f306d4de9b02036f7fc7aae1e9188cd833f535) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 敲字母跳转（菜单、Selector、TreeList 等）不再区分重音和带横线的字母：敲 `a` 能跳到「Ánh」，敲 `d` 能跳到「Đào」；Windows 上用 AltGr 敲出的字母也能跳转。
+
 ## 0.9.1
 
 ### Patch Changes

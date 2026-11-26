@@ -4,6 +4,7 @@ import { renderToString } from '@vue/server-renderer'
 import { enableAutoUnmount, mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { createSSRApp, h, nextTick } from 'vue'
+import { astryxLocaleKey } from '../locale/context.js'
 import Slider from './Slider.vue'
 
 enableAutoUnmount(afterEach)
@@ -70,6 +71,19 @@ describe('slider', () => {
     expect(range).toEqual([20, 80])
     expect(wrapper.text()).toContain('Lower')
     expect(wrapper.text()).toContain('Upper')
+  })
+
+  it('names range thumbs and the required hint in the active locale by default', () => {
+    const wrapper = mount(Slider, {
+      props: { label: 'Price', modelValue: [20, 80] as SliderValue, isRequired: true },
+      global: { provide: { [astryxLocaleKey as symbol]: 'zh-CN' } },
+    })
+    const [low, high] = wrapper.findAll('[role="slider"]')
+    const nameOf = (id: string | undefined) => wrapper.find(`[id="${id?.split(' ')[1]}"]`).text()
+    expect(nameOf(low!.attributes('aria-labelledby'))).toBe('最小值')
+    expect(nameOf(high!.attributes('aria-labelledby'))).toBe('最大值')
+    expect(wrapper.text()).toContain('必填')
+    expect(wrapper.text()).not.toContain('Minimum value')
   })
 
   it('handles reversed, out-of-bounds, collapsed and non-finite inputs without NaN ARIA', async () => {

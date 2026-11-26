@@ -43,11 +43,11 @@ export const navigationUpstreamMap: UpstreamMapPart = {
 
   '@astryx.sideNav.label': [{ path: 'nav.sideNav' }],
   '@astryx.sideNav.resizeSidebar': [{ path: 'nav.resizeSidebar' }],
-  '@astryx.sideNav.heading.openMenu': [{ path: 'nav.openMenu' }],
+  '@astryx.sideNav.heading.openMenu': [{ path: 'nav.headingOpenMenu', args: ['heading'] }],
   '@astryx.sideNav.heading.dialogLabel': [{ path: 'nav.headingDialog' }],
   '@astryx.topNav.heading.dialogLabel': [{ path: 'nav.topNavHeadingDialog' }],
   '@astryx.topNav.landmarkLabel': [{ path: 'nav.topNav' }],
-  '@astryx.topNav.heading.openMenu': [{ path: 'nav.topNavOpenMenu' }],
+  '@astryx.topNav.heading.openMenu': [{ path: 'nav.topNavOpenMenu', args: ['hasHeading', 'heading'] }],
   '@astryx.mobileNav.navigation': [{ path: 'nav.mobileNav' }],
   '@astryx.mobileNav.toggle.open': [{ path: 'nav.openNavigation' }],
   '@astryx.mobileNav.closeNavigation': [{ path: 'nav.close' }],

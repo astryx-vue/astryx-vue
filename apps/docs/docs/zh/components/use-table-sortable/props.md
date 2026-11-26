@@ -67,9 +67,9 @@ footer: false
         <td>多列排序时它排第几（从 1 计），显示在箭头旁边。只排了一列时是 <code>null</code>。</td>
       </tr>
       <tr>
-        <td><code>sortFor().label</code></td>
-        <td><code>string</code></td>
-        <td>表头按钮的本地化无障碍名称，例如「按名称排序。改为降序」。</td>
+        <td><code>sortFor().description</code></td>
+        <td><code>string | null</code></td>
+        <td>多列排序时表头按钮的本地化描述，例如「排序优先级 2/3」；其余时候是 <code>null</code>。按钮的名字就是列标题，方向由表头的 <code>aria-sort</code> 表达。</td>
       </tr>
       <tr>
         <td><code>sortFor().onClick</code></td>
@@ -79,3 +79,52 @@ footer: false
     </tbody>
   </table>
 </div>
+
+## useTableSortableState
+
+托住排序状态并返回排好的行。把 `sortConfig` 交给 `useTableSortable`，把 `sortedData` 交给表格。`data`、`columns`、`defaultSort` 可以是值、ref 或 getter。
+
+<div class="component-api-table" role="region" aria-label="useTableSortableState 参数" tabindex="0">
+  <table>
+    <thead>
+      <tr><th>参数</th><th>类型</th><th>默认值</th><th>说明</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>data</code></td><td><code>MaybeRefOrGetter&lt;readonly T[]&gt;</code></td><td>—</td><td>要排序的行。</td></tr>
+      <tr><td><code>columns</code></td><td><code>MaybeRefOrGetter&lt;readonly TableColumn&lt;T&gt;[]&gt;</code></td><td>—</td><td>表格的列。<code>sortable</code> 里带了 <code>compare</code> 的列，按那个比较函数排它的键。</td></tr>
+      <tr><td><code>defaultSort</code></td><td><code>MaybeRefOrGetter&lt;TableSortState&gt;</code></td><td><code>[]</code></td><td>首次渲染时的排序，按多列排序的先后：第一项是主排序。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="component-api-table" role="region" aria-label="useTableSortableState 返回值" tabindex="0">
+  <table>
+    <thead>
+      <tr><th>字段</th><th>类型</th><th>说明</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>sortedData</code></td><td><code>ComputedRef&lt;T[]&gt;</code></td><td>排好序的 <code>data</code> 副本。只有数据、排序或语言变了才重新排。</td></tr>
+      <tr><td><code>sort</code></td><td><code>Ref&lt;TableSortState&gt;</code></td><td>当前的排序。在代码里改它就能排序。</td></tr>
+      <tr><td><code>sortConfig</code></td><td><code>UseTableSortableConfig</code></td><td>交给 <code>useTableSortable</code>。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+比较函数（`sortable: { compare }`）按升序写，降序时钩子自己反过来。没有比较函数的键：数字按大小比，其余按当前语言、开了数字排序的 collator 当文字比。`Date` 按时间先后排。`null`、`undefined`、`NaN` 和 Invalid Date 是缺失值：升序排最后，降序排最前。数组和普通对象没有可排序的文字，彼此算相等，升序时排在文字前面，所以 `tags` 这种键要给比较函数。状态等级这类顺序也要：
+
+```ts
+const statusRank = { blocked: 0, active: 1, done: 2 }
+const columns: TableColumn<Task>[] = [
+  { key: 'title', header: 'Title' },
+  { key: 'status', header: 'Status', sortable: { compare: (a, b) => statusRank[a.status] - statusRank[b.status] } },
+  { key: 'tags', header: 'Tags', sortable: { compare: (a, b) => a.tags.join(', ').localeCompare(b.tags.join(', ')) }, renderCell: task => task.tags.join(', ') },
+]
+const { sortedData, sortConfig } = useTableSortableState<Task>({
+  data: tasks,
+  columns,
+  defaultSort: [{ sortKey: 'status', direction: 'ascending' }, { sortKey: 'title', direction: 'ascending' }],
+})
+const sortPlugin = useTableSortable<Task>(() => ({ ...sortConfig, isMultiSortEnabled: true }))
+```
+
+开了 `isMultiSortEnabled` 后，Shift 加点击把一列加进排序，每个已排序的表头显示它排第几。

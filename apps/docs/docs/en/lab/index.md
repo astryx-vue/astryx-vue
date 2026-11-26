@@ -46,6 +46,8 @@ import '@astryx-vue/lab/lab.css'
 | [Comments](/en/lab/comments) | A comments panel: threads, activity events, and a composer for new comments. |
 | [CommentPin](/en/lab/comment-pin) | Avatar-first annotation marker for one thread or a grouped set of threads. |
 | [CircularProgress](/en/lab/circular-progress) | Determinate and indeterminate ring progress. |
+| [CircleCheckIndicator](/en/lab/circle-check-indicator) | The iOS multiple-selection circle, mapped to checkbox in a theme. |
+| [DialogHeroHeader](/en/lab/dialog-hero-header) | A Dialog header with full-bleed media above the title. |
 | [DiffViewer](/en/lab/diff-viewer) | Unified or split diff for one file. |
 | [InfoTip](/en/lab/info-tip) | Supplementary explanations for terms and metrics. |
 | [LineClamp](/en/lab/line-clamp) | Clamps any content to a set number of lines, with the full text in a tooltip. |

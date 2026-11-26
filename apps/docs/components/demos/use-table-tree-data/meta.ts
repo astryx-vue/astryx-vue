@@ -4,7 +4,7 @@ export const meta = {
   slug: 'use-table-tree-data',
   group: 'Utility',
   family: 'Table',
-  order: 149,
+  order: 150,
   en: 'useTableTreeData',
   zh: 'useTableTreeData',
 } satisfies DemoMeta

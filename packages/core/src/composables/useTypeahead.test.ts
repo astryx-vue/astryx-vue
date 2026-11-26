@@ -126,6 +126,48 @@ describe('useTypeahead', () => {
     expect(matches).toEqual([0, 1])
   })
 
+  it('不看重音和带横线的字母，敲的字母带符号时优先完全匹配', () => {
+    const labels = ['Ánh', 'Đào', 'Ñandú', 'Dung']
+    const matches: number[] = []
+    const { result } = mountComposable(() => useTypeahead({
+      getItemLabels: () => labels,
+      onMatch: index => matches.push(index),
+    }))
+
+    result.onKeyDown(key('a'))
+    result.reset()
+    result.onKeyDown(key('n'))
+    result.reset()
+    result.onKeyDown(key('d'))
+    result.reset()
+    result.onKeyDown(key('đ'))
+    expect(matches).toEqual([0, 2, 1, 1])
+  })
+
+  it('第一个键是单独的组合附加符号时不算查询', () => {
+    const onMatch = vi.fn()
+    const { result } = mountComposable(() => useTypeahead({
+      getItemLabels: () => ['Anna'],
+      onMatch,
+    }))
+    expect(result.onKeyDown(key('\u0301'))).toBe(false)
+    expect(onMatch).not.toHaveBeenCalled()
+  })
+
+  it('在 Windows 上用 AltGr 敲出的字母照样跳转，Ctrl 快捷键不算', () => {
+    const matches: number[] = []
+    const { result } = mountComposable(() => useTypeahead({
+      getItemLabels: () => ['Apple', 'Łódź'],
+      onMatch: index => matches.push(index),
+    }))
+    const altGr = key('ł', { ctrlKey: true, altKey: true })
+    Object.defineProperty(altGr, 'getModifierState', { value: (name: string) => name === 'AltGraph' })
+    expect(result.onKeyDown(altGr)).toBe(true)
+    expect(matches).toEqual([1])
+    result.reset()
+    expect(result.onKeyDown(key('a', { ctrlKey: true }))).toBe(false)
+  })
+
   it('没有匹配项时仍然算处理过这个字符', () => {
     const { result } = mountComposable(() => useTypeahead({
       getItemLabels: () => ['Apple'],
