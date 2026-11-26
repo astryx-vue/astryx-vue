@@ -95,12 +95,18 @@ describe('hoverCard', () => {
     expect(trigger.getAttribute('aria-controls')).toBe(surface.id)
   })
 
-  it('omits aria-expanded on a trigger whose role does not support it', () => {
-    const { trigger } = renderHoverCard({ label: 'Project details' }, { default: '<span>Hover me</span>' })
+  it('omits aria-haspopup and aria-expanded on a trigger whose role does not support them', async () => {
+    const { surface, trigger } = renderHoverCard({ delay: 0, label: 'Project details' }, { default: '<span>Hover me</span>' })
 
     expect(trigger.tagName).toBe('SPAN')
-    expect(trigger.getAttribute('aria-haspopup')).toBe('dialog')
+    expect(trigger.hasAttribute('aria-haspopup')).toBe(false)
     expect(trigger.hasAttribute('aria-expanded')).toBe(false)
+
+    trigger.dispatchEvent(new Event('mouseenter'))
+    vi.advanceTimersByTime(0)
+    await nextTick()
+    // 没有这两个属性时，卡片打开后仍用 aria-controls 指向它。
+    expect(trigger.getAttribute('aria-controls')).toBe(surface.id)
   })
 
   it('preserves and restores popup attributes the trigger already carried', async () => {

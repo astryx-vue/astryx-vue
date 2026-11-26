@@ -35,13 +35,19 @@ footer: false
         <td><code>hasTooltip</code></td>
         <td><code>boolean</code></td>
         <td><code>true</code></td>
-        <td>悬停卡片里是可复制的绝对时间。<code>tooltipEntries</code> 会替换默认行。</td>
+        <td>悬停或键盘聚焦时弹出卡片，里面是可复制的绝对时间。<code>tooltipEntries</code> 会替换默认行。</td>
       </tr>
       <tr>
         <td><code>tooltipEntries</code></td>
         <td><code>TimestampTooltipEntry[]</code></td>
         <td>-</td>
-        <td>每一项选择一种格式、可选的 <code>timezoneID</code> 和可选标签。</td>
+        <td>每一项选择一种格式、可选的 <code>timezoneID</code> 和可选标签。没写 <code>timezoneID</code> 的项跟随 <code>timezoneID</code> 属性，属性也没写就是观看者的时区；写 <code>'local'</code> 永远是观看者的时区。</td>
+      </tr>
+      <tr>
+        <td><code>timezoneID</code></td>
+        <td><code>string</code></td>
+        <td>-</td>
+        <td>绝对格式所用的 IANA 时区，例如 <code>'UTC'</code>。不写或写 <code>'local'</code> 就是观看者自己的时区。写明时区后，服务端和浏览器写出同一段文字。相对格式不受它影响，<code>tooltipEntries</code> 里没写 <code>timezoneID</code> 的行跟随它。</td>
       </tr>
       <tr>
         <td><code>isTimezoneShown</code></td>
@@ -83,7 +89,9 @@ footer: false
   </table>
 </div>
 
-不认识的 <code>timezoneID</code> 会在控制台警告，并回退到本地时区。
+不认识的 <code>timezoneID</code>（属性上或某一项里）会在控制台警告，并回退到本地时区。
+
+写在 <code>Timestamp</code> 上的属性会落到 <code>&lt;time&gt;</code> 元素上。你自己写的 <code>aria-label</code> 和 <code>tabindex</code> 会替换组件原本要加的。
 
 ## 主题
 
