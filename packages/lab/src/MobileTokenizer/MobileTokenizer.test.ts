@@ -285,7 +285,7 @@ describe('mobileTokenizer (Lab, single-sheet flow)', () => {
 
     const title = listOf(wrapper).get('.astryx-empty-state-title')
     expect(title.text()).toBe('No results found')
-    const emptyState = title.element.closest('[role="status"]')
+    const emptyState = title.element.closest('.astryx-empty-state')
     expect(emptyState?.textContent).toContain('Try a different search.')
     expect(emptyState?.querySelector('.astryx-icon')?.getAttribute('data-size')).toBe('lg')
   })
