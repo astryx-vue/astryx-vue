@@ -27,7 +27,6 @@ defineExpose({ element })
 const size = computed<SegmentedControlSize>(() => context?.size.value ?? 'md')
 const isSelected = computed(() => context != null && context.value.value === props.value)
 const isDisabled = computed(() => props.isDisabled || (context?.isDisabled.value ?? false))
-const keepsSelectedFocusable = computed(() => isSelected.value && (context?.hasDisabledMessage.value ?? false) && !props.isDisabled)
 
 // A segment with only an icon has no label to truncate, so it keeps its
 // content size while labelled segments may shrink.
@@ -37,8 +36,14 @@ const tabIndex = computed(() => {
   if (context == null)
     return props.isDisabled ? -1 : 0
 
-  return (isSelected.value && !isDisabled.value) || keepsSelectedFocusable.value ? 0 : -1
+  // 选中的分段拿 Tab 落脚点，禁用与否都一样；点击仍然被 isDisabled 挡住。
+  return isSelected.value ? 0 : -1
 })
+
+const describedBy = computed(() => [
+  attrs['aria-describedby'],
+  context?.disabledReasonId.value,
+].filter(Boolean).join(' ') || undefined)
 
 function handleClick(event: MouseEvent): void {
   invokeNativeEventHandler(attrs.onClick, event)
@@ -51,6 +56,7 @@ function handleClick(event: MouseEvent): void {
 
 const controlledAttrs = new Set([
   'aria-checked',
+  'aria-describedby',
   'aria-disabled',
   'aria-label',
   'class',
@@ -74,9 +80,11 @@ const rootClass = computed(() => ['astryx-segmented-control-item', attrs.class])
     ref="root"
     v-bind="{ ...forwardedAttrs, ...(isDisabled ? {} : press.pressableProps) }"
     :aria-checked="isSelected"
+    :aria-describedby="describedBy"
     :aria-disabled="isDisabled || undefined"
     :aria-label="isLabelHidden ? label : undefined"
     :class="rootClass"
+    :data-own-disabled="props.isDisabled || undefined"
     :data-icon-only="iconOnly || undefined"
     :data-selected="isSelected || undefined"
     :data-size="size"

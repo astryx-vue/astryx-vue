@@ -1,3 +1,4 @@
+import { inDocumentOrder } from '../composables/internal/focusRegion.js'
 import { getFocusables } from '../layer/focus.js'
 
 /** `element` 或它到 `container` 之间的某个祖先带着 `aria-disabled="true"`。 */
@@ -21,7 +22,7 @@ export function preferTabStops<T extends Element>(elements: readonly T[]): T[] {
  * 但不该一打开就停在它上面。
  */
 export function initialFocusCandidates(surface: HTMLElement, skipSelector?: string): HTMLElement[] {
-  return preferTabStops(getFocusables(surface).filter(element =>
+  return preferTabStops(inDocumentOrder(getFocusables(surface)).filter(element =>
     (skipSelector == null || element.closest(skipSelector) == null)
     && !isDisabledWithin(element, surface),
   ))

@@ -32,6 +32,12 @@ footer: false
         <td>项与项的间距，单位像素，参与宽度计算。</td>
       </tr>
       <tr>
+        <td><code>options.gapToken</code></td>
+        <td><code>MaybeRefOrGetter&lt;string&gt;</code></td>
+        <td>—</td>
+        <td>间距在主题里的值，比如 <code>var(--astryx-spacing-2)</code>。传了就不用 <code>gap</code>，改读测量副本在浏览器里真正排出来的间距：间距阶梯跟主题和根字号走，像素值排完版才知道。值变了会重新量一次。</td>
+      </tr>
+      <tr>
         <td><code>options.minVisibleItems</code></td>
         <td><code>number</code></td>
         <td><code>0</code></td>
@@ -102,6 +108,16 @@ footer: false
         <td><code>rowHeight</code></td>
         <td><code>Ref&lt;number&gt;</code></td>
         <td>量到的最大项高，多行容器用它定高度。</td>
+      </tr>
+      <tr>
+        <td><code>renderedGap</code></td>
+        <td><code>Ref&lt;number&gt;</code></td>
+        <td>上一次测量用的间距（像素）：传了 <code>gapToken</code> 时是排出来的值，否则是 <code>gap</code>。</td>
+      </tr>
+      <tr>
+        <td><code>inlineBounds</code></td>
+        <td><code>Ref&lt;{ collapsed, rendered, inFlexRow }&gt;</code></td>
+        <td>只有单行模式有。<code>collapsed</code> 是只留下限项加指示器的宽度，<code>rendered</code> 是全部项展开的宽度，<code>inFlexRow</code> 是父元素是不是横向 flex。量之前是 0 或 false。</td>
       </tr>
       <tr>
         <td><code>remeasure</code></td>

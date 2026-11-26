@@ -10,6 +10,7 @@ import {
   mappingsEqual,
   measureOverflow,
   measureScrollAxis,
+  measureScrollPosition,
 } from './internal/scrollGeometry.js'
 import { watchScrollInvalidation } from './internal/scrollInvalidation.js'
 import { attachScrollKeyboardDelegation } from './internal/scrollKeyboardDelegation.js'
@@ -129,6 +130,38 @@ export function useScrollableArea(options: UseScrollableAreaOptions): UseScrolla
     })
   }
 
+  /**
+   * 滚动只挪偏移量，所以只靠盒子几何重算两头的位置：不读计算样式，也不排队等下一次测量。
+   * 滚动解释不了的变化（请求的轴上溢出出现或消失、偏移量的正负号和书写方向矛盾）仍然走完整测量。
+   */
+  function onScroll(): void {
+    const element = viewport.value
+    if (element == null || queued)
+      return
+    const current = measured.value
+    let next = current
+    for (const name of ['inline', 'block'] as const) {
+      if (!requested(name))
+        continue
+      const position = measureScrollPosition(element, name, mapping.value)
+      if (position == null)
+        return
+      const overflowed = name === 'inline' ? overflowInline.value : overflowBlock.value
+      if (position.overflows !== overflowed || position.contradictsMapping) {
+        queueMeasure()
+        return
+      }
+      const axisState = current[name]
+      if (!axisState.isScrollable || (axisState.atStart === position.atStart && axisState.atEnd === position.atEnd))
+        continue
+      next = { ...next, [name]: { isScrollable: true, atStart: position.atStart, atEnd: position.atEnd } }
+    }
+    if (next !== current) {
+      measured.value = next
+      registerScrollOwner(element, next)
+    }
+  }
+
   function onViewportFocusIn(event: FocusEvent): void {
     viewportHasFocus.value = event.target === viewport.value
   }
@@ -157,7 +190,7 @@ export function useScrollableArea(options: UseScrollableAreaOptions): UseScrolla
   watch([viewport, content], ([element, inner], _previous, onCleanup) => {
     if (element == null || inner == null)
       return
-    onCleanup(watchScrollInvalidation(element, inner, queueMeasure))
+    onCleanup(watchScrollInvalidation(element, inner, queueMeasure, onScroll))
     queueMeasure()
   }, { immediate: true })
 

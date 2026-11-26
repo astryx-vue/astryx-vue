@@ -1,7 +1,7 @@
 import type { MaybeRefOrGetter, Ref } from 'vue'
 import { onScopeDispose, ref, toValue, watch } from 'vue'
-import { getFocusables } from '../layer/focus.js'
 import { isImeKeyEvent } from '../utils/ime.js'
+import { attemptFocus, collapseRadioGroups, focusablesIn, hasInnerRegionHolding, precedes, registerRegion } from './internal/focusRegion.js'
 import { focusForLastInput } from './internal/focusReturn.js'
 import { trackInteractionModality } from './internal/interactionModality.js'
 
@@ -48,27 +48,19 @@ export function useFocusTrap(options: UseFocusTrapOptions = {}): FocusTrap {
   /** 焦点是否进过陷阱。没进过就不还焦点，免得抢走浮层触发器的焦点。 */
   let hasFocusEntered = false
 
-  /**
-   * 陷阱所在的 document：容器的。经 Teleport 渲染进同源 iframe 或画中画窗口的陷阱，
-   * 按键和焦点变化只到那个窗口的 document，全局 `document` 收不到。
-   */
-  function trapDocument(): Document {
-    return containerRef.value?.ownerDocument ?? document
-  }
-
-  /** 正在监听的 document，摘监听时用同一个。 */
-  let listeningDoc: Document | null = null
-
   function isActive(): boolean {
     return toValue(options.isActive) ?? toValue(options.isEnabled) ?? false
   }
 
+  /** 陷阱所在的文档：容器自己的。传送进同源 iframe 或画中画窗口的浮层，按键和焦点事件只发生在那个文档里。 */
+  function trapDocument(): Document | null {
+    return containerRef.value?.ownerDocument ?? (typeof document === 'undefined' ? null : document)
+  }
+
   function isFocusInside(): boolean {
     const el = containerRef.value
-    if (el == null || typeof document === 'undefined')
-      return false
-    const active = trapDocument().activeElement
-    return active != null && el.contains(active)
+    const active = trapDocument()?.activeElement
+    return el != null && active != null && el.contains(active)
   }
 
   function isTargetInside(event: Event): boolean {
@@ -76,53 +68,65 @@ export function useFocusTrap(options: UseFocusTrapOptions = {}): FocusTrap {
     return el != null && event.target instanceof Node && el.contains(event.target)
   }
 
-  function onKeyDown(event: KeyboardEvent): void {
+  /** 把焦点绕到 `target`，只有焦点真的过去了才拦下这次 Tab；被拒绝时（被上层模态盖住）交给浏览器。 */
+  function wrapFocus(event: KeyboardEvent, target: HTMLElement | undefined): void {
+    if (target != null && attemptFocus(target))
+      event.preventDefault()
+  }
+
+  function onEscapeKeyDown(event: KeyboardEvent): void {
+    if (!isActive() || event.key !== 'Escape')
+      return
+    if (event.defaultPrevented || isImeKeyEvent(event))
+      return
+    if (options.onEscape != null && (isTargetInside(event) || isFocusInside()))
+      options.onEscape()
+  }
+
+  /** Tab 在冒泡阶段处理，内容里自己接住 Tab 的控件先有机会取消它。 */
+  function onTabKeyDown(event: KeyboardEvent): void {
     if (!isActive())
       return
-
-    if (event.key === 'Escape') {
-      if (event.defaultPrevented || isImeKeyEvent(event))
-        return
-      if (options.onEscape != null && (isTargetInside(event) || isFocusInside()))
-        options.onEscape()
+    // Ctrl+Tab 和 Meta+Tab 是切标签页或切应用，不移动焦点，留给浏览器。Alt+Tab 照常处理：Safari 用 Option+Tab 逐项移动焦点。
+    if (event.key !== 'Tab' || event.ctrlKey || event.metaKey)
       return
-    }
-
-    if (event.key !== 'Tab')
+    // 自己处理了 Tab 的控件（比如按 Tab 缩进的编辑器）让焦点留在原地。
+    if (event.defaultPrevented)
       return
 
     const el = containerRef.value
-    if (!el || !isFocusInside())
+    const active = trapDocument()?.activeElement ?? null
+    if (el == null || active == null || !el.contains(active))
+      return
+    // 嵌套在里面的区域（对话框里开的对话框、抽屉里的 Popover）握着焦点时，由它来接这次 Tab。
+    if (hasInnerRegionHolding(el, active))
       return
 
-    const focusables = getFocusables(el)
+    const focusables = focusablesIn(el)
     if (focusables.length === 0) {
       // 没有地方可去。焦点留在当前的程序聚焦目标上（例如 tabindex=-1 的对话框面板），不放到背景内容里。
       event.preventDefault()
       return
     }
 
-    const first = focusables[0]
-    const last = focusables[focusables.length - 1]
-    const active = trapDocument().activeElement
+    const stops = collapseRadioGroups(focusables, active)
+    const first = stops[0]
+    const last = stops[stops.length - 1]
 
     if (active === el) {
       // 程序把初始焦点放在了容器自己身上，Tab 要进入可聚焦元素的循环，而不是逃出去。
-      event.preventDefault()
-      if (event.shiftKey)
-        last.focus()
-      else
-        first.focus()
+      wrapFocus(event, event.shiftKey ? last : first)
       return
     }
 
-    if (event.shiftKey && active === first) {
-      event.preventDefault()
-      last.focus()
+    // 程序聚焦的元素也可能不是 Tab 落脚点（例如 tabindex=-1 的标题）。按它在文档里的位置判断是不是已经到头。
+    const isProgrammaticStop = !focusables.includes(active as HTMLElement)
+    if (event.shiftKey) {
+      if (active === first || (isProgrammaticStop && first != null && precedes(active, first)))
+        wrapFocus(event, last)
     }
-    else if (!event.shiftKey && active === last) {
-      event.preventDefault()
-      first.focus()
+    else if (active === last || (isProgrammaticStop && last != null && precedes(last, active))) {
+      wrapFocus(event, first)
     }
   }
 
@@ -139,24 +143,26 @@ export function useFocusTrap(options: UseFocusTrapOptions = {}): FocusTrap {
     const el = containerRef.value
     if (!el)
       return
-    const focusables = getFocusables(el)
-    if (focusables.length > 0)
-      focusables[0].focus()
+    for (const element of focusablesIn(el)) {
+      if (attemptFocus(element))
+        return
+    }
   }
 
   function focusLast(): void {
     const el = containerRef.value
     if (!el)
       return
-    const focusables = getFocusables(el)
-    if (focusables.length > 0)
-      focusables[focusables.length - 1].focus()
+    for (const element of focusablesIn(el).reverse()) {
+      if (attemptFocus(element))
+        return
+    }
   }
 
   function activate(): void {
     trackInteractionModality()
-    if (typeof document !== 'undefined') {
-      const doc = trapDocument()
+    const doc = trapDocument()
+    if (doc != null) {
       const active = doc.activeElement
       // 第二个窗口里的元素不是这个窗口的 HTMLElement 实例，按能不能聚焦来认。
       previouslyFocused = active != null && active !== doc.body && typeof (active as HTMLElement).focus === 'function'
@@ -185,7 +191,7 @@ export function useFocusTrap(options: UseFocusTrapOptions = {}): FocusTrap {
     if (target == null || !hasEntered || !target.isConnected)
       return
     // 焦点已经被应用挪到别处了，就不要抢回来。
-    const doc = typeof document === 'undefined' ? null : trapDocument()
+    const doc = trapDocument()
     const active = doc?.activeElement ?? null
     if (active != null && active !== doc?.body && !isFocusInside())
       return
@@ -197,22 +203,38 @@ export function useFocusTrap(options: UseFocusTrapOptions = {}): FocusTrap {
     restoreFocus()
   }
 
+  /** 正在监听的 document，摘监听时用同一个。 */
+  let listeningDoc: Document | null = null
+
   function setup(): void {
-    if (typeof document === 'undefined')
-      return
     teardown()
-    listeningDoc = trapDocument()
-    listeningDoc.addEventListener('keydown', onKeyDown, true)
-    listeningDoc.addEventListener('focusin', onFocusIn, true)
+    const doc = trapDocument()
+    if (doc == null)
+      return
+    listeningDoc = doc
+    doc.addEventListener('keydown', onEscapeKeyDown, true)
+    doc.addEventListener('keydown', onTabKeyDown)
+    doc.addEventListener('focusin', onFocusIn, true)
   }
 
   function teardown(): void {
-    if (listeningDoc == null)
-      return
-    listeningDoc.removeEventListener('keydown', onKeyDown, true)
-    listeningDoc.removeEventListener('focusin', onFocusIn, true)
+    const doc = listeningDoc
     listeningDoc = null
+    if (doc == null)
+      return
+    doc.removeEventListener('keydown', onEscapeKeyDown, true)
+    doc.removeEventListener('keydown', onTabKeyDown)
+    doc.removeEventListener('focusin', onFocusIn, true)
   }
+
+  // 容器晚于开关出现（或换了文档）时，监听跟着挪过去；同时登记为启用中的区域，好让外层区域把 Tab 让给它。
+  let unregister: (() => void) | null = null
+  watch([isActive, containerRef], ([enabled, container]) => {
+    unregister?.()
+    unregister = enabled && container != null ? registerRegion(container) : null
+    if (enabled && listeningDoc != null && container != null && container.ownerDocument !== listeningDoc)
+      setup()
+  }, { immediate: true })
 
   watch(isActive, (enabled) => {
     if (enabled)
@@ -221,13 +243,11 @@ export function useFocusTrap(options: UseFocusTrapOptions = {}): FocusTrap {
       deactivate()
   }, { immediate: true })
 
-  // 容器晚于开启才挂上、或换到了别的窗口时，监听跟着换到它的 document。
-  watch(containerRef, () => {
-    if (isActive() && listeningDoc !== trapDocument())
-      setup()
+  onScopeDispose(() => {
+    unregister?.()
+    unregister = null
+    deactivate()
   })
-
-  onScopeDispose(deactivate)
 
   return { containerRef, focusFirst, focusLast, update }
 }

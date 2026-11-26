@@ -11,6 +11,8 @@ export interface CalendarKeyTarget {
 
 export interface CalendarKeyInput {
   key: string
+  /** Shift+Page Up / Page Down 按一年走，不带 Shift 按一个月走。 */
+  shiftKey?: boolean
   rtl?: boolean
   focused: CalendarDate
   weekStartsOn: number
@@ -50,7 +52,8 @@ function walk(focused: CalendarDate, step: number, input: CalendarKeyInput): Cal
 }
 
 function page(focused: CalendarDate, delta: number, input: CalendarKeyInput): CalendarDate | null {
-  const candidate = focused.add({ months: delta })
+  // 2 月 29 日加一年落在 2 月 28 日，和加一个月遇到没有的日子时取当月最后一天一致。
+  const candidate = input.shiftKey ? focused.add({ years: delta }) : focused.add({ months: delta })
   if (input.isOutOfBounds(candidate))
     return null
   if (!input.isDisabled(candidate))

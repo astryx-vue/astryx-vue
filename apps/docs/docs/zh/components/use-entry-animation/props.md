@@ -34,7 +34,7 @@ footer: false
       <tr>
         <td><code>entryClass</code></td>
         <td><code>string | null</code></td>
-        <td>入场动画用的共享 class；元素是在首屏渲染出来的（不需要动画）时为 <code>null</code>。取值是 <code>astryx-motion-slide-in-below</code>、<code>astryx-motion-slide-in-above</code>、<code>astryx-motion-fade-in</code>、<code>astryx-motion-scale-in</code> 之一。</td>
+        <td>入场动画用的共享 class；元素是在首屏渲染出来的、或是从服务端 HTML 接管的（不需要动画）时为 <code>null</code>。取值是 <code>astryx-motion-slide-in-below</code>、<code>astryx-motion-slide-in-above</code>、<code>astryx-motion-fade-in</code>、<code>astryx-motion-scale-in</code> 之一。</td>
       </tr>
     </tbody>
   </table>

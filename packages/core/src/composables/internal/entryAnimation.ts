@@ -1,3 +1,5 @@
+import { getCurrentInstance } from 'vue'
+
 /** 入场动画的预设。名字说的是元素往哪个方向动。 */
 export type EntryAnimationPreset = 'slideDown' | 'slideUp' | 'fadeIn' | 'scaleIn'
 
@@ -11,7 +13,7 @@ export interface UseEntryAnimationOptions {
 
 export interface UseEntryAnimationReturn {
   /**
-   * 绑到元素的 `class` 上。首屏渲染出来的元素、以及服务端渲染时都是 `null`，
+   * 绑到元素的 `class` 上。首屏渲染出来的元素、服务端渲染时、以及接管服务端 HTML 时都是 `null`，
    * 也就是说这些元素不播放动画。
    */
   entryClass: string | null
@@ -70,7 +72,19 @@ export function resetEntryAnimationForTest(): void {
  */
 export function useEntryAnimation(options: UseEntryAnimationOptions = {}): UseEntryAnimationReturn {
   const preset = options.preset ?? 'slideDown'
+  // 正在接管服务端 HTML 的组件，元素本来就在页面加载时出现，客户端必须渲染出和服务端一样的 class，
+  // 不然浏览器在接管前已经画过一帧时会对不上。之后才挂载的元素照常播放。
+  if (isHydrating())
+    return { entryClass: null }
   return { entryClass: isAfterFirstPaint() ? ENTRY_ANIMATION_CLASSES[preset] : null }
+}
+
+/**
+ * 当前组件是否在接管服务端渲染的 DOM。Vue 接管时先把已有的 DOM 节点交给组件的 vnode，
+ * 再运行 setup；普通挂载时这里还是 null。不在组件里调用时返回 false。
+ */
+function isHydrating(): boolean {
+  return getCurrentInstance()?.vnode.el != null
 }
 
 // 模块加载时就开始等首屏画完。页面一开始没有用到入场动画的元素时，

@@ -104,6 +104,39 @@ describe('popover', () => {
     expect(document.activeElement).toBe(surface.querySelector('input'))
   })
 
+  it('starts focus on the first enabled control, skipping aria-disabled ones', async () => {
+    const { trigger, surface } = renderPopover({}, '<button type="button" aria-disabled="true">Previous</button><button type="button">Next</button>')
+
+    trigger.click()
+    await flushPromises()
+
+    expect(document.activeElement).toBe(surface.querySelector('button:not([aria-disabled])'))
+  })
+
+  it('starts focus on the surface when every control is aria-disabled', async () => {
+    const { trigger, surface } = renderPopover({}, '<button type="button" aria-disabled="true">Previous</button>')
+
+    trigger.click()
+    await flushPromises()
+
+    expect(document.activeElement).toBe(surface)
+  })
+
+  it('starts focus on the first control in document order', async () => {
+    const { trigger, surface } = renderPopover({}, '<a href="#more">More</a><button type="button">Action</button>')
+    const queryAll = surface.querySelectorAll.bind(surface)
+    // jsdom 和 happy-dom 都可能把选择器列表的结果按选择器分组返回，而不是文档顺序。
+    surface.querySelectorAll = ((selector: string) => {
+      const found = [...queryAll(selector)]
+      return found.reverse()
+    }) as unknown as typeof surface.querySelectorAll
+
+    trigger.click()
+    await flushPromises()
+
+    expect(document.activeElement).toBe(surface.querySelector('a'))
+  })
+
   it('closes on trigger click when already open', async () => {
     const { wrapper, trigger, surface } = renderPopover()
 

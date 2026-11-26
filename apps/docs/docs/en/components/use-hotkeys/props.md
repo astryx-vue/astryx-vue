@@ -23,7 +23,7 @@ footer: false
         <td><code>hotkeys[].keys</code></td>
         <td><code>string</code></td>
         <td>—</td>
-        <td>A <code>"+"</code>-separated combo like <code>"mod+k"</code>, <code>"shift+/"</code>, <code>"escape"</code>. <code>mod</code> is ⌘ on macOS and Ctrl elsewhere. Aliases: <code>esc</code>, <code>space</code>, <code>up</code>, <code>down</code>, <code>left</code>, <code>right</code>, <code>return</code>, and <code>plus</code> for a literal <code>+</code>. Without <code>shift</code> in the combo, the shift state is ignored, so a single letter does not care about case.</td>
+        <td>A <code>"+"</code>-separated combo like <code>"mod+k"</code>, <code>"?"</code>, <code>"escape"</code>. Register a punctuation key that shift changes as the character it produces: <code>"?"</code>, not <code>"shift+/"</code>, because the final key is compared against <code>event.key</code>. <code>mod</code> is ⌘ on macOS and Ctrl elsewhere. Aliases: <code>esc</code>, <code>space</code>, <code>up</code>, <code>down</code>, <code>left</code>, <code>right</code>, <code>return</code>, and <code>plus</code> for a literal <code>+</code>. Without <code>shift</code> in the combo, the shift state is ignored, so a single letter does not care about case.</td>
       </tr>
       <tr>
         <td><code>hotkeys[].onPress</code></td>

@@ -1,5 +1,6 @@
 import type { Ref } from 'vue'
 import { onScopeDispose, ref } from 'vue'
+import { writeClipboardText } from './internal/clipboardWrite.js'
 import { useAnnounce } from './useAnnounce.js'
 
 const DEFAULT_RESET_AFTER_MS = 2000
@@ -20,6 +21,7 @@ export interface UseClipboardOptions {
 export interface UseClipboardReturn {
   /**
    * 把 `text` 写进剪贴板。成功时 `isCopied` 变为 true，并重新计时，返回 true。
+   * 所在框架不允许异步 Clipboard API、或浏览器拒绝写入时，在这次点击或按键里改用浏览器的复制命令。
    * 写入失败时状态不动，返回 false。
    */
   copy: (text: string) => Promise<boolean>
@@ -49,7 +51,7 @@ export function useClipboard(options: UseClipboardOptions = {}): UseClipboardRet
 
   async function copy(text: string): Promise<boolean> {
     try {
-      await navigator.clipboard.writeText(text)
+      await writeClipboardText(text)
     }
     catch {
       return false

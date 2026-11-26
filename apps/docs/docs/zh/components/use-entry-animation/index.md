@@ -11,7 +11,7 @@ import { Badge } from '@astryx-vue/core/Badge'
 
 ## 使用方法
 
-返回一个 class，元素挂载时用它播放入场动画。只有首屏画完之后才动态插进来的元素才有动画；页面一开始就渲染出来的元素不播。时长和缓动取自 Astryx 的 motion token，动画节奏和其他地方保持一致。服务端渲染时不会有任何动画。
+返回一个 class，元素挂载时用它播放入场动画。只有首屏画完之后才动态插进来的元素才有动画；页面一开始就渲染出来的元素不播。时长和缓动取自 Astryx 的 motion token，动画节奏和其他地方保持一致。服务端渲染出来的元素接管时也不带动画类，和服务端的 HTML 对得上，之后也不会补播；接管完成后再挂载的元素照常播放。
 
 ```ts
 import { useEntryAnimation } from '@astryx-vue/core'

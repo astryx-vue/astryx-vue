@@ -59,7 +59,7 @@ footer: false
         <td><code>options.onHighlight</code></td>
         <td><code>(row: HTMLElement | null) =&gt; void</code></td>
         <td>—</td>
-        <td>挪动高亮。不传就把 DOM 焦点用 <code>preventScroll</code> 挪到那一行。靠 <code>aria-activedescendant</code> 表示高亮的列表自己传。</td>
+        <td>挪动高亮。不传就把 DOM 焦点用 <code>preventScroll</code> 挪到那一行；指针按下之后的这次聚焦不匹配 <code>:focus-visible</code>。靠 <code>aria-activedescendant</code> 表示高亮的列表自己传。</td>
       </tr>
       <tr>
         <td><code>options.onActivate</code></td>

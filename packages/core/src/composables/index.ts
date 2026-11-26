@@ -168,6 +168,7 @@ export { computeOverflow, useOverflow } from './useOverflow.js'
 export type {
   ComputeOverflowInput,
   ComputeOverflowResult,
+  OverflowInlineBounds,
   UseOverflowOptions,
   UseOverflowReturn,
 } from './useOverflow.js'

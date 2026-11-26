@@ -35,17 +35,12 @@
   }
 
   /*
-   * A disabled control no longer reacts to the pointer. The one exception is a
-   * disabled control with a disabledMessage: it keeps receiving hover so the
-   * reason can be surfaced, while selection stays blocked in the handlers.
+   * A disabled control is dimmed but keeps the pointer: a press can focus the
+   * segment that holds the Tab stop and a reason can open on hover. Selection
+   * stays blocked in the handlers.
    */
   .astryx-segmented-control[data-disabled='true'] {
     opacity: 0.5;
-    pointer-events: none;
-  }
-
-  .astryx-segmented-control[data-disabled='true'][data-disabled-message='true'] {
-    pointer-events: auto;
   }
 
   .astryx-segmented-control-item {

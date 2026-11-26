@@ -23,7 +23,7 @@ The listener is removed when the component unmounts, not when the list changes.
 
 | Guidance | Practices |
 | --- | --- |
-| <Badge variant="success">Do</Badge> | Use for app-level shortcuts like command palettes (`mod+k`), help overlays (`shift+/`), and navigation keys. |
+| <Badge variant="success">Do</Badge> | Use for app-level shortcuts like command palettes (`mod+k`), help overlays (`?`), and navigation keys. |
 | <Badge variant="success">Do</Badge> | Pair with the `Kbd` component to display the same combo you register; both resolve `mod` per platform identically. |
 | <Badge variant="success">Do</Badge> | Use `isDisabled` to suspend shortcuts while a modal or wizard owns the keyboard, instead of unmounting the hook. |
 | <Badge variant="error">Don't</Badge> | Use for focus-scoped keyboard navigation inside a widget; use `useListFocus` or `useGridRovingFocus` instead. |

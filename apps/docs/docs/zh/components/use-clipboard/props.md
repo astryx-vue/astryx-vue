@@ -46,7 +46,7 @@ footer: false
       <tr>
         <td><code>copy</code></td>
         <td><code>(text: string) =&gt; Promise&lt;boolean&gt;</code></td>
-        <td>把 <code>text</code> 写进剪贴板。成功时 <code>isCopied</code> 变为 true、播报配置的句子、重置定时器，并返回 true。写入被拒绝时什么都不改，返回 false。</td>
+        <td>把 <code>text</code> 写进剪贴板。成功时 <code>isCopied</code> 变为 true、播报配置的句子、重置定时器，并返回 true。所在框架不允许异步 Clipboard API（沙箱里的预览、嵌入页）或浏览器拒绝写入时，在这次点击或按键里改用浏览器的复制命令，不移动焦点。两条路都失败时什么都不改，返回 false。</td>
       </tr>
       <tr>
         <td><code>isCopied</code></td>
