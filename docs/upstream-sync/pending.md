@@ -5281,7 +5281,8 @@
 
 ### v0.7.17
 
-- [ ] [`e2b63aeb6`](https://github.com/meta/astryx/commit/e2b63aeb6) feat(lab): add VideoPlayer and AudioPlayer media players (#9832)
+- [x] [`e2b63aeb6`](https://github.com/meta/astryx/commit/e2b63aeb6) feat(lab): add VideoPlayer and AudioPlayer media players (#9832)
+  - 已移植  #559：[#555](https://github.com/astryx-vue/astryx-vue/pull/555)。媒体状态和控件（MediaPlayer、Media* 控件、useMediaPlayer）在 #555，现成的 VideoPlayer 和 AudioPlayer（含系统媒体控制、字幕避让）在 #559
 
 ## 实验包：输入类组件（area:lab）
 
@@ -9850,10 +9851,12 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`82af9164d`](https://github.com/meta/astryx/commit/82af9164d) fix(ProgressBar, CircularProgress, themes): every enabled progress fill reaches 3:1 against its track (#12398)
   - 已移植：[#532](https://github.com/astryx-vue/astryx-vue/pull/532)。CircularProgress 所有变体共用 background-muted 轨道，neutral 和 disabled 用次要文字色，禁用时整圈半透明
-- [ ] [`e2b63aeb6`](https://github.com/meta/astryx/commit/e2b63aeb6) feat(lab): add VideoPlayer and AudioPlayer media players (#9832)
+- [x] [`e2b63aeb6`](https://github.com/meta/astryx/commit/e2b63aeb6) feat(lab): add VideoPlayer and AudioPlayer media players (#9832)
   - 暂缓：VideoPlayer 和 AudioPlayer 体量大（约 5,000 行：媒体状态仓库、控件条、两套播放器），本轮没有排上
-- [ ] [`ee65f4f0a`](https://github.com/meta/astryx/commit/ee65f4f0a) fix(VideoPlayer): a small player gets a compact control bar, and the empty track shows on the bar (#13016)
+  - 已移植  #559：[#555](https://github.com/astryx-vue/astryx-vue/pull/555)。媒体状态和控件（MediaPlayer、Media* 控件、useMediaPlayer）在 #555，现成的 VideoPlayer 和 AudioPlayer（含系统媒体控制、字幕避让）在 #559
+- [x] [`ee65f4f0a`](https://github.com/meta/astryx/commit/ee65f4f0a) fix(VideoPlayer): a small player gets a compact control bar, and the empty track shows on the bar (#13016)
   - 暂缓：MediaPlayer 未移植
+  - 已移植：[#559](https://github.com/astryx-vue/astryx-vue/pull/559)。视频控件条在 360px 及以下变紧凑，控件条上时间轴空轨道用强调色 24%
 - [x] [`5815d02bf`](https://github.com/meta/astryx/commit/5815d02bf) test(NavigationStack): a push after a heavy commit never skips into its curve (#12990)
   - 不适用：只改上游测试（自动初筛）
 
