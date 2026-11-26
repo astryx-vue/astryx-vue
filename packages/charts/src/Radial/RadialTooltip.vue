@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { RadialTooltipDatum, RadialTooltipProps, RadialTooltipSlots } from './types.js'
 import { useLayer } from '@astryx-vue/core'
-import { computed, nextTick, onScopeDispose, ref } from 'vue'
+import { computed, nextTick, onScopeDispose, ref, watch } from 'vue'
 import { computeCardPosition } from '../ChartTooltip/position.js'
 import { useChartMessages } from '../messages.js'
 import { radialArcPath } from './arc.js'
@@ -121,22 +121,22 @@ function updateTooltip(event: PointerEvent): void {
   void clampToViewport(event)
 }
 
+// 触摸只在 interactive 时生效：按下显示、拖动查看、抬起收起；关掉时触摸完全交给页面滚动。
+// 鼠标悬停不受 interactive 影响。
 function handlePointerDown(event: PointerEvent): void {
-  if (event.pointerType === 'mouse')
+  if (event.pointerType === 'mouse' || !radial.interactive)
     return
   active.value = true
-  if (radial.interactive) {
-    event.preventDefault()
-    const capture = event.currentTarget as SVGCircleElement | null
-    capture?.setPointerCapture?.(event.pointerId)
-  }
+  event.preventDefault()
+  const capture = event.currentTarget as SVGCircleElement | null
+  capture?.setPointerCapture?.(event.pointerId)
   updateTooltip(event)
 }
 
 function handlePointerMove(event: PointerEvent): void {
-  if (event.pointerType !== 'mouse' && !active.value)
+  if (event.pointerType !== 'mouse' && (!radial.interactive || !active.value))
     return
-  if (event.pointerType !== 'mouse' && radial.interactive)
+  if (event.pointerType !== 'mouse')
     event.preventDefault()
   updateTooltip(event)
 }
@@ -155,6 +155,14 @@ function handlePointerUp(event: PointerEvent): void {
     capture.releasePointerCapture(event.pointerId)
   hideTooltip()
 }
+
+// interactive 关掉时结束正在进行的触摸，重新打开也不会接着上次的触摸。
+watch(() => radial.interactive, (interactive) => {
+  if (!interactive && active.value) {
+    active.value = false
+    hideTooltip()
+  }
+})
 
 function handlePointerLeave(): void {
   if (!active.value)

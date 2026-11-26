@@ -22220,7 +22220,7 @@
           },
           {
             "heading": "Formatting functions",
-            "text": "The library includes formatting helpers for common chart values. Formatting functions follow a safe fallback rule: if an input is `NaN`, `Infinity`, or cannot be parsed, the function returns the original string as-is instead of printing errors or throwing exceptions.\n\n- `compactNumber(value, locale)`: Abbreviates large numbers. For example, `1200` becomes \"1.2K\", `1500000` becomes \"1.5M\", and `1e12` becomes \"1T\".\n- `currency(symbol?, locale?)`: Creates a currency formatter. For example, `currency('$')` can be passed to `ChartAxis`'s `tickFormat`. Values over 1,000 are automatically abbreviated (such as \"$1.5K\").\n- `percent(value, locale)`: Formats a decimal ratio as a percentage. For example, `0.45` becomes \"45%\" and `0.005` becomes \"0.5%\".\n- `shortDate(value, locale)`: Formats dates as a short month and day. For example, \"Jan 5\".\n- `monthYear(value, locale)`: Formats dates as month and year. For example, \"Jan 2024\".\n- `formatList(values, locale)`: Formats a list of words into a natural language string according to locale rules, such as \"A, B, and C\"."
+            "text": "The library includes formatting helpers for common chart values. Formatting functions follow a safe fallback rule: if an input is `NaN`, `Infinity`, or cannot be parsed, the function returns the original string as-is instead of printing errors or throwing exceptions.\n\n- `compactNumber(value, locale)`: Abbreviates large numbers. For example, `1200` becomes \"1.2K\", `1500000` becomes \"1.5M\", and `1e12` becomes \"1T\".\n- `currency(symbol?, locale?)`: Creates a currency formatter. For example, `currency('$')` can be passed to `ChartAxis`'s `tickFormat`. Values over 1,000 are automatically abbreviated (such as \"$1.5K\").\n- `percent(value, locale)`: Formats a decimal ratio as a percentage. For example, `0.45` becomes \"45%\" and `0.005` becomes \"0.5%\".\n- `shortDate(value, locale, calendar?)`: Formats dates as a short month and day. For example, \"Jan 5\". Dates are Gregorian unless you pass an `Intl` calendar such as `'persian'`.\n- `monthYear(value, locale, calendar?)`: Formats dates as month and year. For example, \"Jan 2024\". Takes the same optional calendar.\n- `formatList(values, locale)`: Formats a list of words into a natural language string according to locale rules, such as \"A, B, and C\"."
           },
           {
             "heading": "Reduce large line datasets",
@@ -22240,7 +22240,7 @@
           },
           {
             "heading": "Radial tooltips",
-            "text": "`RadialTooltip` hit-tests slices by radius and angle in pie mode. In radar mode, it shows the nearest axis and the highest series value on that axis. It supports mouse hover, touch tapping, and dragging. `highlight` draws and offsets the active slice outline; `highlightOffset` controls the offset distance.\n\nUse the default slot for custom content. It receives `label`, `value`, `percentage`, and `index`:\n\n```vue\n<RadialTooltip>\n  <template #default=\"{ label, value, percentage }\">\n    <strong>{{ label }}</strong>\n    {{ value }} · {{ Math.round((percentage ?? 0) * 100) }}%\n  </template>\n</RadialTooltip>\n```"
+            "text": "`RadialTooltip` hit-tests slices by radius and angle in pie mode. In radar mode, it shows the nearest axis and the highest series value on that axis. It supports mouse hover; touch tapping and dragging work when the chart's `interactive` is on. `highlight` draws and offsets the active slice outline; `highlightOffset` controls the offset distance.\n\nUse the default slot for custom content. It receives `label`, `value`, `percentage`, and `index`:\n\n```vue\n<RadialTooltip>\n  <template #default=\"{ label, value, percentage }\">\n    <strong>{{ label }}</strong>\n    {{ value }} · {{ Math.round((percentage ?? 0) * 100) }}%\n  </template>\n</RadialTooltip>\n```"
           },
           {
             "heading": "Sankey charts",
@@ -22268,7 +22268,7 @@
           },
           {
             "heading": "Zoom and pan",
-            "text": "Place `<ChartZoom>` in the `interactions` slot to let users zoom with the wheel or a pinch gesture and drag to pan. The top-right toolbar provides zoom in, zoom out, and reset buttons; set `toolbar=\"false\"` to hide it.\n\nZoom updates controlled domains through events rather than changing the `<Chart>` internal state:\n\n```vue\n<Chart :data=\"data\" x-key=\"x\" :series=\"series\" :x-domain=\"xDomain\" :y-domain=\"yDomain\">\n  <template #interactions>\n    <ChartZoom @x-domain-change=\"xDomain = $event\" @y-domain-change=\"yDomain = $event\" />\n  </template>\n</Chart>\n```\n\nReset restores the initial domains captured when ChartZoom mounts. A categorical x axis does not participate in numeric zoom or pan. Use `xOnly` or `yOnly` to operate on one axis."
+            "text": "Place `<ChartZoom>` in the `interactions` slot to let users zoom with the wheel or a pinch gesture and drag to pan. The top-right toolbar provides zoom in, zoom out, and reset buttons; set `toolbar=\"false\"` to hide it. A wheel over the chart zooms it without scrolling the page; a sideways-only wheel still scrolls the page.\n\nZoom updates controlled domains through events rather than changing the `<Chart>` internal state:\n\n```vue\n<Chart :data=\"data\" x-key=\"x\" :series=\"series\" :x-domain=\"xDomain\" :y-domain=\"yDomain\">\n  <template #interactions>\n    <ChartZoom @x-domain-change=\"xDomain = $event\" @y-domain-change=\"yDomain = $event\" />\n  </template>\n</Chart>\n```\n\nReset restores the initial domains captured when ChartZoom mounts. A categorical x axis does not participate in numeric zoom or pan. Use `xOnly` or `yOnly` to operate on one axis."
           },
           {
             "heading": "Streaming data ranges",
@@ -22374,7 +22374,7 @@
           },
           {
             "heading": "格式化函数",
-            "text": "图表库内置了一组常用的格式化函数。所有格式化函数都遵循安全原则：如果遇到 `NaN`、`Infinity` 或无法解析的值，会原样返回原字符串，绝对不会在界面上打印出异常信息，也不会报错崩溃。\n\n- `compactNumber(value, locale)`：将大数字缩写。例如 `1200` 转为「1.2K」，`1500000` 转为「1.5M」，`1e12` 转为「1T」。\n- `currency(symbol?, locale?)`：创建货币格式化器。例如 `currency('¥')` 可以直接传给 `ChartAxis` 的 `tickFormat` 属性，数值大于一千时会自动应用缩写（如「¥1.5K」）。\n- `percent(value, locale)`：将小数比例转换为百分比。例如 `0.45` 转换为「45%」，`0.005` 转换为「0.5%」。\n- `shortDate(value, locale)`：将日期格式化为简短的月日。例如「Jan 5」或「3月12日」。\n- `monthYear(value, locale)`：将日期格式化为年月。例如「Jan 2024」或「2025年3月」。\n- `formatList(values, locale)`：按指定语言的语法规则把多个词汇拼接为自然语言列表，例如将数组拼成「甲、乙和丙」。"
+            "text": "图表库内置了一组常用的格式化函数。所有格式化函数都遵循安全原则：如果遇到 `NaN`、`Infinity` 或无法解析的值，会原样返回原字符串，绝对不会在界面上打印出异常信息，也不会报错崩溃。\n\n- `compactNumber(value, locale)`：将大数字缩写。例如 `1200` 转为「1.2K」，`1500000` 转为「1.5M」，`1e12` 转为「1T」。\n- `currency(symbol?, locale?)`：创建货币格式化器。例如 `currency('¥')` 可以直接传给 `ChartAxis` 的 `tickFormat` 属性，数值大于一千时会自动应用缩写（如「¥1.5K」）。\n- `percent(value, locale)`：将小数比例转换为百分比。例如 `0.45` 转换为「45%」，`0.005` 转换为「0.5%」。\n- `shortDate(value, locale, calendar?)`：将日期格式化为简短的月日。例如「Jan 5」或「3月12日」。默认用格里高利历，传入 `Intl` 历法标识（如 `'persian'`）可以换成别的历法。\n- `monthYear(value, locale, calendar?)`：将日期格式化为年月。例如「Jan 2024」或「2025年3月」。历法参数同上。\n- `formatList(values, locale)`：按指定语言的语法规则把多个词汇拼接为自然语言列表，例如将数组拼成「甲、乙和丙」。"
           },
           {
             "heading": "大数据折线缩减",
@@ -22394,7 +22394,7 @@
           },
           {
             "heading": "径向提示框",
-            "text": "`RadialTooltip` 在饼图中按半径和角度命中扇区，在雷达图中显示最近的轴及该轴的最大系列值。鼠标悬停、触摸点按和拖动均可使用。`highlight` 默认绘制并外移当前扇区的轮廓，`highlightOffset` 控制外移距离。\n\n自定义内容使用默认插槽，插槽参数为 `label`、`value`、`percentage` 和 `index`：\n\n```vue\n<RadialTooltip>\n  <template #default=\"{ label, value, percentage }\">\n    <strong>{{ label }}</strong>\n    {{ value }} · {{ Math.round((percentage ?? 0) * 100) }}%\n  </template>\n</RadialTooltip>\n```"
+            "text": "`RadialTooltip` 在饼图中按半径和角度命中扇区，在雷达图中显示最近的轴及该轴的最大系列值。鼠标悬停随时可用；图表打开 `interactive` 后，触摸点按和拖动才生效。`highlight` 默认绘制并外移当前扇区的轮廓，`highlightOffset` 控制外移距离。\n\n自定义内容使用默认插槽，插槽参数为 `label`、`value`、`percentage` 和 `index`：\n\n```vue\n<RadialTooltip>\n  <template #default=\"{ label, value, percentage }\">\n    <strong>{{ label }}</strong>\n    {{ value }} · {{ Math.round((percentage ?? 0) * 100) }}%\n  </template>\n</RadialTooltip>\n```"
           },
           {
             "heading": "桑基图",
@@ -22422,7 +22422,7 @@
           },
           {
             "heading": "缩放和平移",
-            "text": "在 `interactions` 插槽里放 `<ChartZoom>`，用户就可以通过滚轮或双指手势缩放，并拖动平移图表。右上角工具栏提供放大、缩小和重置按钮；`toolbar=\"false\"` 可以隐藏它。\n\nZoom 通过事件更新受控 domain，不会直接修改 `<Chart>` 的内部状态：\n\n```vue\n<Chart :data=\"data\" x-key=\"x\" :series=\"series\" :x-domain=\"xDomain\" :y-domain=\"yDomain\">\n  <template #interactions>\n    <ChartZoom @x-domain-change=\"xDomain = $event\" @y-domain-change=\"yDomain = $event\" />\n  </template>\n</Chart>\n```\n\n重置会回到 ChartZoom 挂载时的初始 domain。分类 x 轴不参与数值缩放和平移；`xOnly` 或 `yOnly` 可以只操作一条轴。"
+            "text": "在 `interactions` 插槽里放 `<ChartZoom>`，用户就可以通过滚轮或双指手势缩放，并拖动平移图表。右上角工具栏提供放大、缩小和重置按钮；`toolbar=\"false\"` 可以隐藏它。在图表上滚动滚轮只缩放图表，不会带着页面滚动；只有横向分量的滚动仍然交给页面。\n\nZoom 通过事件更新受控 domain，不会直接修改 `<Chart>` 的内部状态：\n\n```vue\n<Chart :data=\"data\" x-key=\"x\" :series=\"series\" :x-domain=\"xDomain\" :y-domain=\"yDomain\">\n  <template #interactions>\n    <ChartZoom @x-domain-change=\"xDomain = $event\" @y-domain-change=\"yDomain = $event\" />\n  </template>\n</Chart>\n```\n\n重置会回到 ChartZoom 挂载时的初始 domain。分类 x 轴不参与数值缩放和平移；`xOnly` 或 `yOnly` 可以只操作一条轴。"
           },
           {
             "heading": "流式数据范围",
