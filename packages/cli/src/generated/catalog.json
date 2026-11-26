@@ -18178,8 +18178,8 @@
         "zh": "`Timestamp` 用 `<time>` 画出一个时刻。`value` 是 ISO 字符串，或按秒计的 unix 时间。默认格式是 `auto`：在 `autoThreshold`（七天）以内用相对时间，更早的用 `date_time`。"
       },
       "usage": {
-        "en": "`Timestamp` renders one instant in a `<time>` element. `value` is an ISO string or a unix timestamp in seconds. The default format is `auto`: a relative phrase while the instant is inside `autoThreshold` (seven days), then `date_time`.\n\n`hasTooltip` is on by default and opens a hover card that can be copied. Pass `tooltipEntries` to list the same instant in several zones or formats. `isTimezoneShown` appends a short zone name to `date_time` and `time`. `isLive` refreshes a relative reading on a short interval.\n\nRelative text keeps a long zone name in `aria-label`, so the accessible name does not depend on the tooltip.\n\n```vue\n<script setup lang=\"ts\">\nimport { Timestamp } from '@astryx-vue/core/Timestamp'\n</script>\n\n<template>\n  <Timestamp value=\"2026-03-25T12:00:00Z\" color=\"primary\" />\n</template>\n```",
-        "zh": "`Timestamp` 用 `<time>` 画出一个时刻。`value` 是 ISO 字符串，或按秒计的 unix 时间。默认格式是 `auto`：在 `autoThreshold`（七天）以内用相对时间，更早的用 `date_time`。\n\n`hasTooltip` 默认打开，悬停卡片里的时间可以复制。`tooltipEntries` 把同一个时刻列成几种时区或格式。`isTimezoneShown` 在 `date_time` 和 `time` 后面加上短时区名。`isLive` 按较短的间隔刷新相对时间。\n\n相对格式会把带长时区名的说法放进 `aria-label`，不依赖提示卡片也能读出绝对时间。\n\n```vue\n<script setup lang=\"ts\">\nimport { Timestamp } from '@astryx-vue/core/Timestamp'\n</script>\n\n<template>\n  <Timestamp value=\"2026-03-25T12:00:00Z\" color=\"primary\" />\n</template>\n```"
+        "en": "`Timestamp` renders one instant in a `<time>` element. `value` is an ISO string or a unix timestamp in seconds. The default format is `auto`: a relative phrase while the instant is inside `autoThreshold` (seven days), then `date_time`.\n\n`hasTooltip` is on by default and opens a hover card that can be copied. Pass `tooltipEntries` to list the same instant in several zones or formats. `isTimezoneShown` appends a short zone name to `date_time` and `time`. `isLive` refreshes a relative reading on a short interval.\n\nA relative reading is named by the words it shows, a comma, then the full date with the long zone name, so a button or link named from its content keeps its visible words in its name. Your own `aria-label` replaces that name. While a live relative reading, or a control it names, has focus, the refresh waits and catches up when focus leaves.\n\nThe hover card is a description list. A row without a label is named by its zone's long name in a visually hidden term, and each copy button sits inside its row's value. The card's `aria-controls` is on the focusable `<time>`.\n\n```vue\n<script setup lang=\"ts\">\nimport { Timestamp } from '@astryx-vue/core/Timestamp'\n</script>\n\n<template>\n  <Timestamp value=\"2026-03-25T12:00:00Z\" color=\"primary\" />\n</template>\n```",
+        "zh": "`Timestamp` 用 `<time>` 画出一个时刻。`value` 是 ISO 字符串，或按秒计的 unix 时间。默认格式是 `auto`：在 `autoThreshold`（七天）以内用相对时间，更早的用 `date_time`。\n\n`hasTooltip` 默认打开，悬停卡片里的时间可以复制。`tooltipEntries` 把同一个时刻列成几种时区或格式。`isTimezoneShown` 在 `date_time` 和 `time` 后面加上短时区名。`isLive` 按较短的间隔刷新相对时间。\n\n相对格式的名字是屏幕上显示的词，加一个逗号，再加带长时区名的完整日期，名字来自内容的按钮或链接因此仍包含它看得见的字。你自己写的 `aria-label` 会替换这个名字。实时刷新的相对读数，或者名字有它参与的控件拿着焦点时，刷新先等着，焦点离开时补上。\n\n悬停卡片是一个描述列表。没有标签的行用时区全名命名，这个名字只给读屏、不显示；复制按钮在各自那一行的值里面。卡片的 `aria-controls` 写在能聚焦的 `<time>` 上。\n\n```vue\n<script setup lang=\"ts\">\nimport { Timestamp } from '@astryx-vue/core/Timestamp'\n</script>\n\n<template>\n  <Timestamp value=\"2026-03-25T12:00:00Z\" color=\"primary\" />\n</template>\n```"
       },
       "practices": {
         "en": [
@@ -18233,13 +18233,19 @@
                 "name": "`hasTooltip`",
                 "type": "`boolean`",
                 "default": "`true`",
-                "description": "Shows a hover card with a copyable absolute time. `tooltipEntries` replaces the default lines."
+                "description": "Shows a card with a copyable absolute time on hover or keyboard focus. `tooltipEntries` replaces the default lines."
               },
               {
                 "name": "`tooltipEntries`",
                 "type": "`TimestampTooltipEntry[]`",
                 "default": "-",
-                "description": "Each entry picks a format, an optional `timezoneID`, and an optional label."
+                "description": "Each entry picks a format, an optional `timezoneID`, and an optional label. An entry without a `timezoneID` follows the `timezoneID` prop, or the viewer's zone when that is not set; `'local'` always means the viewer's zone."
+              },
+              {
+                "name": "`timezoneID`",
+                "type": "`string`",
+                "default": "-",
+                "description": "IANA zone the absolute formats are written in, such as `'UTC'`. Omit it, or pass `'local'`, for the viewer's own zone. A named zone gives the same text on the server and in the browser. Relative formats ignore it, and a `tooltipEntries` row without its own `timezoneID` follows it."
               },
               {
                 "name": "`isTimezoneShown`",
@@ -18306,13 +18312,19 @@
                 "name": "`hasTooltip`",
                 "type": "`boolean`",
                 "default": "`true`",
-                "description": "悬停卡片里是可复制的绝对时间。`tooltipEntries` 会替换默认行。"
+                "description": "悬停或键盘聚焦时弹出卡片，里面是可复制的绝对时间。`tooltipEntries` 会替换默认行。"
               },
               {
                 "name": "`tooltipEntries`",
                 "type": "`TimestampTooltipEntry[]`",
                 "default": "-",
-                "description": "每一项选择一种格式、可选的 `timezoneID` 和可选标签。"
+                "description": "每一项选择一种格式、可选的 `timezoneID` 和可选标签。没写 `timezoneID` 的项跟随 `timezoneID` 属性，属性也没写就是观看者的时区；写 `'local'` 永远是观看者的时区。"
+              },
+              {
+                "name": "`timezoneID`",
+                "type": "`string`",
+                "default": "-",
+                "description": "绝对格式所用的 IANA 时区，例如 `'UTC'`。不写或写 `'local'` 就是观看者自己的时区。写明时区后，服务端和浏览器写出同一段文字。相对格式不受它影响，`tooltipEntries` 里没写 `timezoneID` 的行跟随它。"
               },
               {
                 "name": "`isTimezoneShown`",
@@ -18366,7 +18378,7 @@
         "en": [
           {
             "heading": "Props",
-            "text": "An unknown <code>timezoneID</code> warns in the console and falls back to the local zone."
+            "text": "An unknown <code>timezoneID</code>, on the prop or in an entry, warns in the console and falls back to the local zone.\n\nAttributes you put on <code>Timestamp</code> land on the <code>&lt;time&gt;</code> element. Your own <code>aria-label</code> and <code>tabindex</code> replace the ones the component would add."
           },
           {
             "heading": "Theming",
@@ -18380,7 +18392,7 @@
           },
           {
             "heading": "属性",
-            "text": "不认识的 <code>timezoneID</code> 会在控制台警告，并回退到本地时区。"
+            "text": "不认识的 <code>timezoneID</code>（属性上或某一项里）会在控制台警告，并回退到本地时区。\n\n写在 <code>Timestamp</code> 上的属性会落到 <code>&lt;time&gt;</code> 元素上。你自己写的 <code>aria-label</code> 和 <code>tabindex</code> 会替换组件原本要加的。"
           },
           {
             "heading": "主题",

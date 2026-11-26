@@ -6,7 +6,7 @@
  */
 
 import type { ComputedRef, Ref } from 'vue'
-import { mergeIds } from './hoverCardTrigger.js'
+import { mergeIds, supportsAriaHaspopup } from './hoverCardTrigger.js'
 
 export interface HoverCardTriggerHandlers {
   onPointerEnter: (event: PointerEvent) => void
@@ -40,6 +40,7 @@ export function useHoverCardTriggerBinding(options: HoverCardTriggerBindingOptio
   let controlsBefore: string | null = null
   let expandedBefore: string | null = null
   let canExpand = false
+  let canHaspopup = false
 
   function applyTriggerAttributes(): void {
     const active = options.triggerRef.value
@@ -47,7 +48,12 @@ export function useHoverCardTriggerBinding(options: HoverCardTriggerBindingOptio
       return
 
     if (options.isDialog.value) {
-      active.setAttribute('aria-haspopup', 'dialog')
+      if (canHaspopup)
+        active.setAttribute('aria-haspopup', 'dialog')
+      else if (haspopupBefore)
+        active.setAttribute('aria-haspopup', haspopupBefore)
+      else
+        active.removeAttribute('aria-haspopup')
       if (options.isOpen.value)
         active.setAttribute('aria-controls', mergeIds(controlsBefore, options.layerId) ?? '')
       else if (controlsBefore)
@@ -96,6 +102,7 @@ export function useHoverCardTriggerBinding(options: HoverCardTriggerBindingOptio
     controlsBefore = element.getAttribute('aria-controls')
     expandedBefore = element.getAttribute('aria-expanded')
     canExpand = options.supportsExpanded(element)
+    canHaspopup = supportsAriaHaspopup(element)
 
     element.addEventListener('pointerenter', options.handlers.onPointerEnter as EventListener)
     element.addEventListener('mouseenter', options.handlers.onMouseEnter)
@@ -124,6 +131,7 @@ export function useHoverCardTriggerBinding(options: HoverCardTriggerBindingOptio
     controlsBefore = null
     expandedBefore = null
     canExpand = false
+    canHaspopup = false
   }
 
   return { bind, unbind, applyTriggerAttributes }

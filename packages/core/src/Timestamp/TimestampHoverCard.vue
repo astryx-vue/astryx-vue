@@ -84,12 +84,15 @@ function copyIcon(key: string): 'check' | 'close' | 'copy' {
           <dt v-if="hasLabel" class="astryx-timestamp__label">
             {{ line.label ?? '' }}
           </dt>
+          <!-- 没有标签的行靠时区全名在描述列表里有名字：它不显示出来，卡片看起来不变。 -->
+          <dt v-else class="astryx-timestamp__zone-name">
+            {{ line.zoneName }}
+          </dt>
           <dd class="astryx-timestamp__value">
-            {{ line.value }}
-          </dd>
-          <div v-if="hasAction" class="astryx-timestamp__action">
+            <span class="astryx-timestamp__text">{{ line.value }}</span>
             <IconButton
               v-if="line.isCopyable"
+              class="astryx-timestamp__action"
               variant="ghost"
               size="sm"
               :label="copyLabel(line, String(index))"
@@ -101,7 +104,7 @@ function copyIcon(key: string): 'check' | 'close' | 'copy' {
                 :fallback="{ icon: copyIcon(String(index)), size: 'sm' }"
               />
             </IconButton>
-          </div>
+          </dd>
         </div>
       </dl>
     </template>

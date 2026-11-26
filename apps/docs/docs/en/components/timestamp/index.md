@@ -16,7 +16,9 @@ import { timestampAuto, timestampColors, timestampFormats, timestampRelative, ti
 
 `hasTooltip` is on by default and opens a hover card that can be copied. Pass `tooltipEntries` to list the same instant in several zones or formats. `isTimezoneShown` appends a short zone name to `date_time` and `time`. `isLive` refreshes a relative reading on a short interval.
 
-Relative text keeps a long zone name in `aria-label`, so the accessible name does not depend on the tooltip.
+A relative reading is named by the words it shows, a comma, then the full date with the long zone name, so a button or link named from its content keeps its visible words in its name. Your own `aria-label` replaces that name. While a live relative reading, or a control it names, has focus, the refresh waits and catches up when focus leaves.
+
+The hover card is a description list. A row without a label is named by its zone's long name in a visually hidden term, and each copy button sits inside its row's value. The card's `aria-controls` is on the focusable `<time>`.
 
 ```vue
 <script setup lang="ts">

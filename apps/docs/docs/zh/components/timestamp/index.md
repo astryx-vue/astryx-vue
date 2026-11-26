@@ -16,7 +16,9 @@ import { timestampAuto, timestampColors, timestampFormats, timestampRelative, ti
 
 `hasTooltip` 默认打开，悬停卡片里的时间可以复制。`tooltipEntries` 把同一个时刻列成几种时区或格式。`isTimezoneShown` 在 `date_time` 和 `time` 后面加上短时区名。`isLive` 按较短的间隔刷新相对时间。
 
-相对格式会把带长时区名的说法放进 `aria-label`，不依赖提示卡片也能读出绝对时间。
+相对格式的名字是屏幕上显示的词，加一个逗号，再加带长时区名的完整日期，名字来自内容的按钮或链接因此仍包含它看得见的字。你自己写的 `aria-label` 会替换这个名字。实时刷新的相对读数，或者名字有它参与的控件拿着焦点时，刷新先等着，焦点离开时补上。
+
+悬停卡片是一个描述列表。没有标签的行用时区全名命名，这个名字只给读屏、不显示；复制按钮在各自那一行的值里面。卡片的 `aria-controls` 写在能聚焦的 `<time>` 上。
 
 ```vue
 <script setup lang="ts">
