@@ -75,7 +75,11 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: var(--astryx-input-height-md, 32px);
+  }
+
+  /* 日期按钮的尺寸是下限：文字放大时按钮跟着数字长高，数字不会压到下一行的日期上。 */
+  .astryx-calendar-cell {
+    min-height: var(--astryx-input-height-md, 32px);
   }
 
   .astryx-calendar-weekday {

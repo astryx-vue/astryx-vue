@@ -33,7 +33,7 @@ const date = ref<Date | null>(new Date(2026, 9, 11))
 </template>
 ```
 
-The value is a local `Date`. The month title and weekday names follow the active locale. Built-in labels are English unless the app calls `provideAstryxLocale('zh-CN')`.
+The value is a local `Date`. The month title, weekday names, and day and week numbers follow the active locale, digits included. Built-in labels are English unless the app calls `provideAstryxLocale('zh-CN')`.
 
 
 <ComponentAnatomy />

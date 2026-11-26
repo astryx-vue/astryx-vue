@@ -1,19 +1,41 @@
 import type { StandaloneShortWeekdayNames } from './weekdays.js'
-import { firstCharacter } from '../utils/characters.js'
+import { characterCount, firstCharacter } from '../utils/characters.js'
 import { standaloneShortWeekdayNamesByLocale } from './weekdays.js'
 
 const weekdayStart = new Date(2023, 0, 1)
 const englishWeekdays = standaloneShortWeekdayNamesByLocale.en!
 
 /**
+ * 没有内置表头数据的语言：`Intl` 的缩写写法（CLDR abbreviated）七个都不超过四个字符就用它，
+ * 否则退到窄写法，免得表头列被长名字撑挤。无效标签和宿主不认识的语言回到英文。
+ */
+const MAX_ABBREVIATED_HEADER_LENGTH = 4
+
+function intlWeekdayNames(locale: string): StandaloneShortWeekdayNames | null {
+  let supported = false
+  try {
+    supported = Intl.DateTimeFormat.supportedLocalesOf([locale]).length > 0
+  }
+  catch {
+    return null
+  }
+  if (!supported)
+    return null
+  const abbreviated = weekdayNames(locale, 'short')
+  const fits = abbreviated.every(name => characterCount(name) <= MAX_ABBREVIATED_HEADER_LENGTH)
+  return (fits ? abbreviated : weekdayNames(locale, 'narrow')) as unknown as StandaloneShortWeekdayNames
+}
+
+/**
  * 日历表头用的短星期名，从周日开始。
- * 先找完整标签，再找基础语言（`fr-FR` 找 `fr`），都没有时回到英文，和原版一致。
+ * 先找完整标签，再找基础语言（`fr-FR` 找 `fr`），再用 `Intl` 自己的写法，都没有时回到英文。
  */
 export function standaloneShortWeekdayNames(locale: string): StandaloneShortWeekdayNames {
   try {
     const parsed = new Intl.Locale(locale)
     return standaloneShortWeekdayNamesByLocale[parsed.baseName]
       ?? standaloneShortWeekdayNamesByLocale[parsed.language]
+      ?? intlWeekdayNames(parsed.baseName)
       ?? englishWeekdays
   }
   catch {
@@ -53,4 +75,21 @@ export function weekdayNames(locale: string, style: 'long' | 'narrow' | 'short')
     date.setDate(weekdayStart.getDate() + index)
     return formatter.format(date)
   })
+}
+
+const dayNumberFormats = new Map<string, Intl.NumberFormat>()
+
+/** 日期数字和周数：用语言自己的数字写法（如 fa-IR、ar-EG），不分组。 */
+export function formatDayNumber(value: number, locale: string): string {
+  let format = dayNumberFormats.get(locale)
+  if (format == null) {
+    try {
+      format = new Intl.NumberFormat(locale, { useGrouping: false })
+    }
+    catch {
+      format = new Intl.NumberFormat('en', { useGrouping: false })
+    }
+    dayNumberFormats.set(locale, format)
+  }
+  return format.format(value)
 }

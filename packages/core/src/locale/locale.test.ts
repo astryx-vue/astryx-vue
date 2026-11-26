@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import { defineComponent, h } from 'vue'
-import { formatCalendarMonth, standaloneShortWeekdayNames, weekdayNames } from './format.js'
+import { formatCalendarMonth, formatDayNumber, standaloneShortWeekdayNames, weekdayNames } from './format.js'
 import { normalizeLocale, provideAstryxLocale, useAstryxMessages } from './index.js'
 import { astryxMessages } from './messages.js'
 
@@ -44,6 +44,22 @@ describe('locale', () => {
     expect(standaloneShortWeekdayNames('pt-PT')[6]).toBe('sáb.')
     expect(standaloneShortWeekdayNames('en-GB')).toEqual(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'])
     expect(standaloneShortWeekdayNames('xx')).toEqual(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'])
+  })
+
+  it('writes a language with no vendored row from Intl: abbreviated names when all seven fit, narrow otherwise', () => {
+    // tr 的缩写写法（Paz、Pzt ...）七个都在四个字符内。
+    expect(standaloneShortWeekdayNames('tr')).toEqual(weekdayNames('tr', 'short'))
+    // sw 的缩写写法超过四个字符，退到窄写法。
+    const long = weekdayNames('sw', 'short')
+    expect(long.some(name => [...name].length > 4)).toBe(true)
+    expect(standaloneShortWeekdayNames('sw')).toEqual(weekdayNames('sw', 'narrow'))
+  })
+
+  it('writes day numbers in the locale digits', () => {
+    expect(formatDayNumber(12, 'en')).toBe('12')
+    expect(formatDayNumber(12, 'ar-EG')).toBe('١٢')
+    expect(formatDayNumber(12, 'fa-IR')).toBe('۱۲')
+    expect(formatDayNumber(1000, 'en')).toBe('1000')
   })
 
   it('keeps a regional English tag and still reads the English copy', () => {
