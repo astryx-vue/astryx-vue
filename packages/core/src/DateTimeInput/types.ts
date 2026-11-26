@@ -1,7 +1,7 @@
 import type { WeekStartsOn } from '../composables/useDateRange.js'
 import type { HourFormat, NativePicker, TimePresentation } from '../composables/useTimeValue.js'
-import type { FieldPartStylingProps } from '../Field/fieldParts.js'
 import type { DateInputEntryError } from '../DateInput/dateEntry.js'
+import type { FieldPartStylingProps } from '../Field/fieldParts.js'
 import type { FieldStatusInput, FieldStatusVariant } from '../Field/types.js'
 import type { EntryErrorBehavior } from '../FormLayout/context.js'
 

@@ -1,5 +1,7 @@
 import type { Ref } from 'vue'
 import { onScopeDispose, watch } from 'vue'
+import { currentGesture } from '../composables/internal/gestureCounter.js'
+import { noteOutsideDismissal } from '../layer/dismissStack.js'
 
 export interface CalendarDismissOptions {
   /** 日历是否开着。只在开着时监听。 */
@@ -28,6 +30,7 @@ function isLabelFor(target: EventTarget, input: HTMLInputElement | null): boolea
  * 指向输入框的 label 上、或者日历里，日历都保持打开；按在别处才关。
  * 焦点从字段里移到字段和日历之外的地方时也关，下一个字段的日历就不会和它并排开着。
  * 焦点哪儿也没去（切走窗口）时不关。
+ * 日历在模态框里被这样关掉时，会登记到手势上，让同一下遮罩按压只关日历、不关模态框。
  */
 export function useCalendarDismiss(options: CalendarDismissOptions): { onFieldFocusOut: (event: FocusEvent) => void } {
   function popupSurface(): HTMLElement | null {
@@ -46,6 +49,7 @@ export function useCalendarDismiss(options: CalendarDismissOptions): { onFieldFo
     const input = options.input()
     if (path.some(target => isInside(target) || isLabelFor(target, input)))
       return
+    noteOutsideDismissal()
     options.close()
   }
 
@@ -62,6 +66,8 @@ export function useCalendarDismiss(options: CalendarDismissOptions): { onFieldFo
     if (typeof document === 'undefined')
       return
     if (open && !listening) {
+      // 手势计数器要排在本监听之前，同一下按压里读到的才是同一个编号。
+      currentGesture()
       document.addEventListener('pointerdown', onPointerDown, true)
       listening = true
     }
@@ -76,6 +82,8 @@ export function useCalendarDismiss(options: CalendarDismissOptions): { onFieldFo
     const next = event.relatedTarget
     if (!options.isOpen.value || next == null || isInside(next))
       return
+    // 鼠标按在模态框遮罩上时，字段的失焦先于遮罩的 click，同样算这一下按压关掉的。
+    noteOutsideDismissal()
     options.close()
   }
 

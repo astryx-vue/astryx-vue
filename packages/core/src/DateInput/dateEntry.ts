@@ -23,12 +23,12 @@ export interface DateInputEntryError {
 }
 
 /** 读一段文字的结果。`isComplete` 表示再打字也改变不了这个日子。 */
-export type DateEntryResult =
-  | { kind: 'value', date: Date, isComplete: boolean }
-  | { kind: 'outOfRange', date: Date, isComplete: boolean }
-  | { kind: 'nonexistent' }
-  | { kind: 'incomplete' }
-  | { kind: 'unreadable' }
+export type DateEntryResult
+  = | { kind: 'value', date: Date, isComplete: boolean }
+    | { kind: 'outOfRange', date: Date, isComplete: boolean }
+    | { kind: 'nonexistent' }
+    | { kind: 'incomplete' }
+    | { kind: 'unreadable' }
 
 /** 字段亮出来的拒绝原因，按它显示的那句话分。 */
 export type DateEntryErrorKind = 'unreadable' | 'nonexistent' | 'outOfRange'

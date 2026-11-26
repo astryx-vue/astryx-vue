@@ -91,8 +91,11 @@ let pressSerial = 0
 /** 上一次「点外面关掉了某一层」发生在哪次手势里（手势计数器的编号）。 */
 let lastOutsideDismissGesture: number | null = null
 
-/** 记下这次手势关掉了一层。 */
-function noteOutsideDismissal(): void {
+/**
+ * 记下这次手势关掉了一层。自己监听「点外面」的层（比如日期字段的日历）关闭时也要调用，
+ * 这样模态框的遮罩不会把同一下按压再当成关自己。
+ */
+export function noteOutsideDismissal(): void {
   lastOutsideDismissGesture = currentGesture()
 }
 
