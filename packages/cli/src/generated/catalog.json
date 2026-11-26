@@ -60491,7 +60491,7 @@
                 "name": "`label`",
                 "type": "`string`",
                 "default": "—",
-                "description": "Accessible name of the dialog. Provide it when `role` is `dialog`."
+                "description": "Accessible name of the dialog. Provide it when `role` is `dialog`. A bottom sheet without one is named by the trigger's text."
               },
               {
                 "name": "`role`",
@@ -60540,6 +60540,12 @@
                 "type": "`HTMLElement | null`",
                 "default": "—",
                 "description": "External element to anchor to. No trigger wrapper is rendered and the default slot can be omitted; click, keydown and ARIA wiring land on the button inside that element."
+              },
+              {
+                "name": "`presentation`",
+                "type": "`'popover' | 'bottom-sheet' | 'adaptive'`",
+                "default": "`'popover'`",
+                "description": "The surface that holds the content. `popover` anchors it to the trigger, `bottom-sheet` presents it in a modal BottomSheet named by `label`, and `adaptive` uses the BottomSheet on a compact touch screen (a coarse pointer on a screen narrower than the theme's `md` width point or shorter than 500px, so a phone in either orientation) and the anchored popover elsewhere. In a sheet, `placement`, `alignment`, `width`, `role`, `isModal` and `hasAutoFocus` do not apply and `padding` insets the sheet's content. The sheet always closes on a tap outside it or a swipe down, whatever `hasLightDismiss` says; Escape follows `hasEscapeDismiss`. The surface is chosen as it opens and kept until it closes."
               }
             ]
           }
@@ -60588,7 +60594,7 @@
                 "name": "`label`",
                 "type": "`string`",
                 "default": "—",
-                "description": "浮层作为对话框时的无障碍名称，`role` 为 `dialog` 时应提供。"
+                "description": "浮层作为对话框时的无障碍名称，`role` 为 `dialog` 时应提供。没写时，底部弹层用触发器的文字命名。"
               },
               {
                 "name": "`role`",
@@ -60637,6 +60643,12 @@
                 "type": "`HTMLElement | null`",
                 "default": "—",
                 "description": "用外部元素当锚点。这时不渲染触发容器，默认插槽可以不写；点击、键盘和 ARIA 属性都挂到该元素里的按钮上。"
+              },
+              {
+                "name": "`presentation`",
+                "type": "`'popover' | 'bottom-sheet' | 'adaptive'`",
+                "default": "`'popover'`",
+                "description": "承载内容的界面。`popover` 锚定在触发器上；`bottom-sheet` 放进模态 BottomSheet，由 `label` 命名；`adaptive` 在紧凑触屏（粗指针，并且屏幕窄于主题的 `md` 宽度点或矮于 500px，横竖屏的手机都算）上用 BottomSheet，其余用锚定浮层。在底部弹层里，`placement`、`alignment`、`width`、`role`、`isModal`、`hasAutoFocus` 不生效，`padding` 是弹层内容的内边距。弹层总能轻点外面或向下轻扫关闭，不管 `hasLightDismiss`；Escape 跟着 `hasEscapeDismiss`。界面在打开时选定，保持到关闭。"
               }
             ]
           }
@@ -60654,7 +60666,7 @@
         "en": [
           {
             "heading": "Accessibility",
-            "text": "A popover has to communicate its presence, its current open state, and its content to people who use a screen reader or a keyboard. The component links the trigger to the surface automatically and manages focus as the surface opens and closes, so you only need to supply the accessible name.\n\n- The trigger receives `aria-haspopup` and `aria-expanded`, so assistive technology knows it is a button that opens a surface and can announce whether that surface is currently expanded. While the surface is open it also gets `aria-controls`; a closed trigger points at nothing.\n- An open `dialog` surface has `role=\"dialog\"`; when `isModal` is set it also has `aria-modal=\"true\"`, and the `label` serves as its accessible name. The closed surface stays in the DOM, hidden, without the dialog role or name.\n- A trigger with `aria-disabled=\"true\"` stays focusable but opens nothing, even for a click dispatched on it.\n- On open, focus moves to the first enabled tab stop inside the surface: controls with `aria-disabled` are skipped, and in a roving group the member with `tabindex=\"0\"` wins. With nothing to take it, the labelled surface does. Focus that is already on a control inside stays there.\n- On close, focus returns only when it is stuck inside the surface or on the page body. It goes to the element that opened the popover; if that is gone, to the trigger, the anchor, the tab stop that took the opener's place, a nearby ancestor, then `main`. It never lands on the body, and focus already outside the surface is left alone.\n- With `isModal` set, Tab focus stays inside the surface while it is open.\n- The built-in close button is visually hidden until it receives focus, so it appears once the keyboard reaches it."
+            "text": "A popover has to communicate its presence, its current open state, and its content to people who use a screen reader or a keyboard. The component links the trigger to the surface automatically and manages focus as the surface opens and closes, so you only need to supply the accessible name.\n\n- The trigger receives `aria-haspopup` and `aria-expanded`, so assistive technology knows it is a button that opens a surface and can announce whether that surface is currently expanded. While the surface is open it also gets `aria-controls`; a closed trigger points at nothing.\n- An open `dialog` surface has `role=\"dialog\"`; when `isModal` is set it also has `aria-modal=\"true\"`, and the `label` serves as its accessible name. The closed surface stays in the DOM, hidden, without the dialog role or name.\n- A trigger with `aria-disabled=\"true\"` stays focusable but opens nothing, even for a click dispatched on it.\n- On open, focus moves to the first enabled tab stop inside the surface: controls with `aria-disabled` are skipped, and in a roving group the member with `tabindex=\"0\"` wins. With nothing to take it, the labelled surface does. Focus that is already on a control inside stays there.\n- On close, focus returns only when it is stuck inside the surface or on the page body. It goes to the element that opened the popover; if that is gone, to the trigger, the anchor, the tab stop that took the opener's place, a nearby ancestor, then `main`. It never lands on the body, and focus already outside the surface is left alone.\n- With `isModal` set, Tab focus stays inside the surface while it is open.\n- The built-in close button is visually hidden until it receives focus, so it appears once the keyboard reaches it.\n- In a bottom sheet (`presentation`), the trigger points at the sheet with `aria-controls` and reports its open state. Each opening moves focus to the first content control, never the close button. When the sheet closes, focus returns to the trigger."
           },
           {
             "heading": "Layout",
@@ -60676,7 +60688,7 @@
         "zh": [
           {
             "heading": "无障碍",
-            "text": "弹出层要把自己的存在、当前的开合状态和内部内容告诉使用屏幕阅读器或键盘的用户。组件会自动把触发元素和浮层关联起来，并在浮层打开、关闭时管理焦点，你只需要提供必要的无障碍名称。\n\n- 触发元素上带有 `aria-haspopup` 与 `aria-expanded`，辅助技术由此知道这是一个会打开浮层的按钮，并能读出浮层当前是展开还是收起。浮层打开期间它还带 `aria-controls`；关着的触发器不指向任何浮层。\n- 打开着的 `dialog` 类型浮层带有 `role=\"dialog\"`；设置 `isModal` 时还会带有 `aria-modal=\"true\"`，并以 `label` 作为无障碍名称。关着的浮层隐藏在 DOM 里，不带对话框的 role 和名称。\n- 带 `aria-disabled=\"true\"` 的触发器仍能聚焦，但不会打开浮层，直接在它上面 `click()` 也一样。\n- 打开时焦点移到浮层里第一个可用的 Tab 停靠点：带 `aria-disabled` 的控件会跳过，漫游组里拿着 `tabindex=\"0\"` 的成员优先；一个都没有时落到带名称的浮层本身。焦点已经在里面某个控件上就留在那里。\n- 关闭时，只有焦点困在浮层里或掉到页面 body 上才会被送回：先回到打开浮层的那个元素；它不在了，就依次试触发器、锚点、顶替它位置的 Tab 停靠点、附近的祖先元素，最后是 `main`。焦点永远不落到 body；已经在浮层外面的焦点不会被抢回来。\n- 设置 `isModal` 后，浮层打开期间 Tab 焦点保持在浮层内。\n- 内置关闭按钮在获得焦点前视觉隐藏，键盘聚焦到它时才显示出来。"
+            "text": "弹出层要把自己的存在、当前的开合状态和内部内容告诉使用屏幕阅读器或键盘的用户。组件会自动把触发元素和浮层关联起来，并在浮层打开、关闭时管理焦点，你只需要提供必要的无障碍名称。\n\n- 触发元素上带有 `aria-haspopup` 与 `aria-expanded`，辅助技术由此知道这是一个会打开浮层的按钮，并能读出浮层当前是展开还是收起。浮层打开期间它还带 `aria-controls`；关着的触发器不指向任何浮层。\n- 打开着的 `dialog` 类型浮层带有 `role=\"dialog\"`；设置 `isModal` 时还会带有 `aria-modal=\"true\"`，并以 `label` 作为无障碍名称。关着的浮层隐藏在 DOM 里，不带对话框的 role 和名称。\n- 带 `aria-disabled=\"true\"` 的触发器仍能聚焦，但不会打开浮层，直接在它上面 `click()` 也一样。\n- 打开时焦点移到浮层里第一个可用的 Tab 停靠点：带 `aria-disabled` 的控件会跳过，漫游组里拿着 `tabindex=\"0\"` 的成员优先；一个都没有时落到带名称的浮层本身。焦点已经在里面某个控件上就留在那里。\n- 关闭时，只有焦点困在浮层里或掉到页面 body 上才会被送回：先回到打开浮层的那个元素；它不在了，就依次试触发器、锚点、顶替它位置的 Tab 停靠点、附近的祖先元素，最后是 `main`。焦点永远不落到 body；已经在浮层外面的焦点不会被抢回来。\n- 设置 `isModal` 后，浮层打开期间 Tab 焦点保持在浮层内。\n- 内置关闭按钮在获得焦点前视觉隐藏，键盘聚焦到它时才显示出来。\n- 在底部弹层里（`presentation`），触发器用 `aria-controls` 指向弹层并报告它的开合。每次打开焦点都移到第一个内容控件，不会停在关闭按钮上；弹层关闭后焦点回到触发器。"
           },
           {
             "heading": "布局",
@@ -60699,14 +60711,14 @@
       "examples": [
         {
           "title": {
-            "en": "Bottom sheet alternative",
-            "zh": "底部弹层"
+            "en": "Adaptive presentation",
+            "zh": "自适应呈现"
           },
           "description": {
-            "en": "On a compact touch surface, project actions open in a bottom sheet instead of an anchored popover.",
-            "zh": "紧凑触屏上，项目操作改由底部弹层承接，而不是锚在按钮旁的弹出层。"
+            "en": "With presentation set to adaptive, project actions open in a bottom sheet on a phone and stay anchored to the button everywhere else.",
+            "zh": "presentation 设为 adaptive：手机上项目操作从底部弹层打开，其余设备上仍锚在按钮旁边。"
           },
-          "code": "<script setup lang=\"ts\">\nimport type { Component } from 'vue'\nimport { BottomSheet } from '@astryx-vue/core/BottomSheet'\nimport { Button } from '@astryx-vue/core/Button'\nimport { Heading } from '@astryx-vue/core/Heading'\nimport { Icon } from '@astryx-vue/core/Icon'\nimport { List, ListItem } from '@astryx-vue/core/List'\nimport { Section } from '@astryx-vue/core/Section'\nimport { VStack } from '@astryx-vue/core/Stack'\nimport { Text } from '@astryx-vue/core/Text'\nimport { h, ref } from 'vue'\n\nfunction svgIcon(paths: string[]): Component {\n  return () => h('svg', {\n    'viewBox': '0 0 24 24',\n    'fill': 'none',\n    'stroke': 'currentColor',\n    'stroke-width': 1.5,\n    'stroke-linecap': 'round',\n    'stroke-linejoin': 'round',\n  }, paths.map(d => h('path', { d })))\n}\n\nconst UserIcon = svgIcon(['M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2', 'M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8'])\nconst TagIcon = svgIcon(['M20.6 13.4 12 22l-8.6-8.6a2 2 0 0 1-.6-1.4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 1.4.6L20.6 8a2 2 0 0 1 0 2.8Z', 'M7.5 7.5h.01'])\nconst CalendarIcon = svgIcon(['M8 2v4', 'M16 2v4', 'M3 10h18', 'M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z'])\n\nconst actions = [\n  { icon: UserIcon, label: 'Assign owner', description: 'Route follow-up to a teammate.' },\n  { icon: TagIcon, label: 'Add label', description: 'Group this item with related work.' },\n  { icon: CalendarIcon, label: 'Set due date', description: 'Pick a reminder for review.' },\n]\n\nconst isOpen = ref(false)\n</script>\n\n<template>\n  <Button label=\"Open project actions\" @click=\"isOpen = true\" />\n  <BottomSheet v-model:is-open=\"isOpen\" label=\"Project actions\" height=\"hug\">\n    <Section :padding-block=\"4\" :padding-inline=\"1\">\n      <VStack :gap=\"3\">\n        <VStack :gap=\"1\" style=\"margin-inline-start: var(--astryx-spacing-3, 12px)\">\n          <Heading :level=\"3\">\n            Project actions\n          </Heading>\n          <Text type=\"supporting\" color=\"secondary\">\n            Use this modal touch surface when the task should move away from its trigger and stay close to the bottom edge.\n          </Text>\n        </VStack>\n        <List density=\"spacious\">\n          <ListItem\n            v-for=\"action in actions\"\n            :key=\"action.label\"\n            :label=\"action.label\"\n            :description=\"action.description\"\n            :on-click=\"() => { isOpen = false }\"\n          >\n            <template #startContent>\n              <Icon :icon=\"action.icon\" size=\"md\" color=\"secondary\" />\n            </template>\n          </ListItem>\n        </List>\n      </VStack>\n    </Section>\n  </BottomSheet>\n</template>"
+          "code": "<script setup lang=\"ts\">\nimport type { Component } from 'vue'\nimport { Button } from '@astryx-vue/core/Button'\nimport { Heading } from '@astryx-vue/core/Heading'\nimport { Icon } from '@astryx-vue/core/Icon'\nimport { List, ListItem } from '@astryx-vue/core/List'\nimport { Popover } from '@astryx-vue/core/Popover'\nimport { VStack } from '@astryx-vue/core/Stack'\nimport { Text } from '@astryx-vue/core/Text'\nimport { h, ref } from 'vue'\n\nfunction svgIcon(paths: string[]): Component {\n  return () => h('svg', {\n    'viewBox': '0 0 24 24',\n    'fill': 'none',\n    'stroke': 'currentColor',\n    'stroke-width': 1.5,\n    'stroke-linecap': 'round',\n    'stroke-linejoin': 'round',\n  }, paths.map(d => h('path', { d })))\n}\n\nconst UserIcon = svgIcon(['M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2', 'M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8'])\nconst TagIcon = svgIcon(['M20.6 13.4 12 22l-8.6-8.6a2 2 0 0 1-.6-1.4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 1.4.6L20.6 8a2 2 0 0 1 0 2.8Z', 'M7.5 7.5h.01'])\nconst CalendarIcon = svgIcon(['M8 2v4', 'M16 2v4', 'M3 10h18', 'M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z'])\n\nconst actions = [\n  { icon: UserIcon, label: 'Assign owner', description: 'Route follow-up to a teammate.' },\n  { icon: TagIcon, label: 'Add label', description: 'Group this item with related work.' },\n  { icon: CalendarIcon, label: 'Set due date', description: 'Pick a reminder for review.' },\n]\n\nconst isOpen = ref(false)\n</script>\n\n<template>\n  <Popover\n    :is-open=\"isOpen\"\n    presentation=\"adaptive\"\n    label=\"Project actions\"\n    :width=\"320\"\n    @open-change=\"isOpen = $event\"\n  >\n    <Button label=\"Project actions\" variant=\"secondary\" />\n    <template #content>\n      <VStack :gap=\"2\">\n        <VStack :gap=\"1\" style=\"margin-inline-start: var(--astryx-spacing-3, 12px)\">\n          <Heading :level=\"4\">\n            Project actions\n          </Heading>\n          <Text type=\"supporting\" color=\"secondary\">\n            On a phone this opens as a bottom sheet; elsewhere it stays next to the button.\n          </Text>\n        </VStack>\n        <List density=\"spacious\">\n          <ListItem\n            v-for=\"action in actions\"\n            :key=\"action.label\"\n            :label=\"action.label\"\n            :description=\"action.description\"\n            :on-click=\"() => { isOpen = false }\"\n          >\n            <template #startContent>\n              <Icon :icon=\"action.icon\" size=\"md\" color=\"secondary\" />\n            </template>\n          </ListItem>\n        </List>\n      </VStack>\n    </template>\n  </Popover>\n</template>"
         },
         {
           "title": {

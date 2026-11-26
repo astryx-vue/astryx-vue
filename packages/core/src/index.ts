@@ -1028,6 +1028,7 @@ export type {
   PopoverAlignment,
   PopoverPadding,
   PopoverPlacement,
+  PopoverPresentation,
   PopoverProps,
   PopoverRole,
   UsePopoverOptions,

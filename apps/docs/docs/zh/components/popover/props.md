@@ -15,7 +15,7 @@ footer: false
 <tr><td><code>isEnabled</code></td><td><code>boolean</code></td><td><code>true</code></td><td>是否启用。为 false 时触发元素无法打开浮层。</td></tr>
 <tr><td><code>width</code></td><td><code>number | string</code></td><td>触发元素宽度</td><td>浮层宽度，数字单位为像素。未设置时最小与触发元素等宽，最大为 320px，且不超出视口。</td></tr>
 <tr><td><code>padding</code></td><td><code>0 | 0.5 | 1 | 1.5 | 2 | 3 | 4 | 5 | 6 | 8 | 10</code></td><td><code>3</code></td><td>浮层内边距，取值对应 <code>--astryx-spacing-*</code> 令牌。</td></tr>
-<tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>浮层作为对话框时的无障碍名称，<code>role</code> 为 <code>dialog</code> 时应提供。</td></tr>
+<tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>浮层作为对话框时的无障碍名称，<code>role</code> 为 <code>dialog</code> 时应提供。没写时，底部弹层用触发器的文字命名。</td></tr>
 <tr><td><code>role</code></td><td><code>'dialog' | 'none'</code></td><td><code>'dialog'</code></td><td>浮层的语义角色：包含交互内容时使用 <code>dialog</code>；内容自带角色（例如菜单）时使用 <code>none</code>。</td></tr>
 <tr><td><code>isModal</code></td><td><code>boolean</code></td><td><code>true</code></td><td>浮层打开期间将 Tab 焦点限制在浮层内。仅对 <code>dialog</code> 角色生效。</td></tr>
 <tr><td><code>hasCloseButton</code></td><td><code>boolean</code></td><td><code>true</code></td><td>是否显示关闭按钮。关闭按钮在获得焦点前保持视觉隐藏。</td></tr>
@@ -24,6 +24,7 @@ footer: false
 <tr><td><code>hasLightDismiss</code></td><td><code>boolean</code></td><td><code>true</code></td><td>是否允许点击浮层与触发元素以外的区域来关闭。</td></tr>
 <tr><td><code>hasEscapeDismiss</code></td><td><code>boolean</code></td><td><code>true</code></td><td>是否允许按下 Escape 关闭浮层。</td></tr>
 <tr><td><code>anchor</code></td><td><code>HTMLElement | null</code></td><td>—</td><td>用外部元素当锚点。这时不渲染触发容器，默认插槽可以不写；点击、键盘和 ARIA 属性都挂到该元素里的按钮上。</td></tr>
+<tr><td><code>presentation</code></td><td><code>'popover' | 'bottom-sheet' | 'adaptive'</code></td><td><code>'popover'</code></td><td>承载内容的界面。<code>popover</code> 锚定在触发器上；<code>bottom-sheet</code> 放进模态 BottomSheet，由 <code>label</code> 命名；<code>adaptive</code> 在紧凑触屏（粗指针，并且屏幕窄于主题的 <code>md</code> 宽度点或矮于 500px，横竖屏的手机都算）上用 BottomSheet，其余用锚定浮层。在底部弹层里，<code>placement</code>、<code>alignment</code>、<code>width</code>、<code>role</code>、<code>isModal</code>、<code>hasAutoFocus</code> 不生效，<code>padding</code> 是弹层内容的内边距。弹层总能轻点外面或向下轻扫关闭，不管 <code>hasLightDismiss</code>；Escape 跟着 <code>hasEscapeDismiss</code>。界面在打开时选定，保持到关闭。</td></tr>
 </tbody></table>
 </div>
 

@@ -48,7 +48,7 @@ import { Popover } from '@astryx-vue/core/Popover'
 
 ## Examples
 
-<DemoExample :demo="popoverBottomSheet" title="Bottom sheet alternative" description="On a compact touch surface, project actions open in a bottom sheet instead of an anchored popover." locale="en" />
+<DemoExample :demo="popoverBottomSheet" title="Adaptive presentation" description="With presentation set to adaptive, project actions open in a bottom sheet on a phone and stay anchored to the button everywhere else." locale="en" />
 
 <DemoExample :demo="popoverConfirm" title="Confirm action" description="A destructive button opens a short confirmation with Delete and Cancel." locale="en" />
 
@@ -69,6 +69,7 @@ A popover has to communicate its presence, its current open state, and its conte
 - On close, focus returns only when it is stuck inside the surface or on the page body. It goes to the element that opened the popover; if that is gone, to the trigger, the anchor, the tab stop that took the opener's place, a nearby ancestor, then `main`. It never lands on the body, and focus already outside the surface is left alone.
 - With `isModal` set, Tab focus stays inside the surface while it is open.
 - The built-in close button is visually hidden until it receives focus, so it appears once the keyboard reaches it.
+- In a bottom sheet (`presentation`), the trigger points at the sheet with `aria-controls` and reports its open state. Each opening moves focus to the first content control, never the close button. When the sheet closes, focus returns to the trigger.
 
 ## Layout
 

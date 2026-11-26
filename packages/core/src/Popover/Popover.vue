@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { PopoverProps } from './types.js'
-import { computed, nextTick, onMounted, onUpdated, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, onUpdated, ref, useId, watch } from 'vue'
 import { Button } from '../Button/index.js'
 import { useResolvedLayerTeleport } from '../composables/useLayerMountTarget.js'
 import { useMergedRefs } from '../composables/useMergedRefs.js'
@@ -9,7 +9,9 @@ import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
 import { useComponentMessages } from '../locale/context.js'
 import { popoverMessages } from '../locale/messages/popover.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
-import { usePopover } from './usePopover.js'
+import PopoverSheet from './PopoverSheet.vue'
+import { usePopoverSurface } from './usePopover.js'
+import { usePopoverSheet } from './usePopoverSheet.js'
 import '../../styles/popover.css'
 
 defineOptions({ name: 'AstryxPopover' })
@@ -29,6 +31,7 @@ const props = withDefaults(defineProps<PopoverProps>(), {
   hasLightDismiss: true,
   hasEscapeDismiss: true,
   anchor: undefined,
+  presentation: 'popover',
 })
 const emit = defineEmits<{ openChange: [isOpen: boolean] }>()
 
@@ -36,10 +39,19 @@ const messages = useComponentMessages({ popover: popoverMessages })
 const closeLabel = computed(() => props.closeButtonLabel ?? messages.value.popover.close)
 
 const DEFAULT_MAX_WIDTH = 320
-const popover = usePopover({
+// 底部弹层呈现先建：锚定浮层的受控开关要读它在打开那一刻做的选择。
+let popover: ReturnType<typeof usePopoverSurface> | null = null
+const sheet = usePopoverSheet({
+  presentation: () => props.presentation,
+  controlledOpen: () => props.isOpen,
+  isPopoverOpen: () => popover?.isOpen.value ?? false,
+  onOpenChange: open => emit('openChange', open),
+})
+const sheetId = useId()
+popover = usePopoverSurface({
   placement: () => props.placement,
   alignment: () => props.alignment,
-  isOpen: () => props.isOpen,
+  isOpen: sheet.popoverControlledOpen,
   isEnabled: () => props.isEnabled,
   hasLightDismiss: () => props.hasLightDismiss,
   hasEscapeDismiss: () => props.hasEscapeDismiss,
@@ -50,6 +62,11 @@ const popover = usePopover({
   isModal: () => props.isModal,
   onShow: () => emit('openChange', true),
   onHide: () => emit('openChange', false),
+}, {
+  onTriggerPress: sheet.onTriggerPress,
+  sheetTrigger: () => sheet.isMounted.value
+    ? { expanded: sheet.isOpen.value || (popover?.isOpen.value ?? false), controls: sheetId }
+    : null,
 })
 
 const {
@@ -60,6 +77,7 @@ const {
   contentStyle: layerStyle,
   resolvedPlacement,
   surfaceProps,
+  hide: hidePopover,
 } = popover
 
 // 浮层元素挂进 hook 的内容 ref，定位和关闭逻辑都靠它。
@@ -139,13 +157,27 @@ onUpdated(syncTrigger)
       v-bind="surfaceProps"
     >
       <div ref="bodyRef" class="astryx-popover__body">
-        <LayerContentBoundary>
+        <LayerContentBoundary v-if="!sheet.isMounted.value">
           <slot name="content" />
         </LayerContentBoundary>
       </div>
       <div v-if="hasCloseButton" class="astryx-popover__close">
-        <Button variant="secondary" :label="closeLabel" @click="popover.hide()" />
+        <Button variant="secondary" :label="closeLabel" @click="hidePopover" />
       </div>
     </div>
   </Teleport>
+  <PopoverSheet
+    v-if="sheet.isMounted.value"
+    :id="sheetId"
+    :is-open="sheet.isOpen.value"
+    :label="label ?? sheet.triggerText.value"
+    :padding="padding"
+    :has-escape-dismiss="hasEscapeDismiss"
+    :has-close-button="hasCloseButton"
+    :close-label="closeLabel"
+    @open-change="sheet.setOpen"
+    @motion-complete="sheet.onMotionComplete"
+  >
+    <slot name="content" />
+  </PopoverSheet>
 </template>
