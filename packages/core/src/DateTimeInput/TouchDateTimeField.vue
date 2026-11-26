@@ -11,6 +11,7 @@ import { dateInputMessages } from '../locale/messages/date-input.js'
 import { dateTimeInputMessages } from '../locale/messages/date-time-input.js'
 import TouchTimeWheels from '../TimeInput/TouchTimeWheels.vue'
 import { formatInstant } from '../Timestamp/formatInstant.js'
+import { resolveHourFormat } from '../utils/timeFormat.js'
 
 const props = withDefaults(defineProps<{
   label: string
@@ -31,7 +32,6 @@ const props = withDefaults(defineProps<{
 }>(), {
   date: null,
   time: null,
-  hourFormat: '12h',
   hasSeconds: false,
 })
 
@@ -54,7 +54,8 @@ function datePart(value: string | null): Date | null {
 }
 
 const dateText = computed(() => props.date ? formatInstant(props.date, 'date_long', locale.value) : '')
-const timeText = computed(() => props.time ? formatDisplayTime(props.time, props.hourFormat, props.hasSeconds) : '')
+const hourFormat = computed(() => resolveHourFormat(locale.value, props.hourFormat))
+const timeText = computed(() => props.time ? formatDisplayTime(props.time, hourFormat.value, props.hasSeconds, locale.value) : '')
 
 function clockBound(value?: string): string | undefined {
   const parsed = parseISOTime(value?.slice(11) ?? '')
@@ -127,7 +128,7 @@ function close(): void {
     </button>
   </div>
   <BottomSheet v-model:is-open="open" :label="messages.dateTimeInput.dialogLabel" height="hug" :padding="0">
-    <div class="astryx-date-time-touch">
+    <div :id="`${inputId}-sheet`" class="astryx-date-time-touch">
       <div class="astryx-date-time-touch-tabs" role="tablist" :aria-label="messages.dateTimeInput.pickerMode">
         <button type="button" role="tab" :aria-selected="panel === 'date'" @click="panel = 'date'">
           {{ messages.dateTimeInput.dateLabel }}

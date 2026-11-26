@@ -1442,7 +1442,7 @@ export type {
 export { Thumbnail } from './Thumbnail/index.js'
 export type { ThumbnailEmits, ThumbnailProps, ThumbnailRemoveVisibility } from './Thumbnail/index.js'
 export { TimeInput } from './TimeInput/index.js'
-export type { TimeInputEmits, TimeInputProps, TimeInputSize } from './TimeInput/index.js'
+export type { TimeInputEmits, TimeInputEntryError, TimeInputProps, TimeInputSize } from './TimeInput/index.js'
 export { getPresentation, Timer } from './Timer/index.js'
 export type { TimerColor, TimerFormat, TimerPresentation, TimerProps, TimerType } from './Timer/index.js'
 export { formatInstant, formatRelativeTime, formatTooltipLines, Timestamp } from './Timestamp/index.js'

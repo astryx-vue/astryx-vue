@@ -1,8 +1,7 @@
 import type { ISOTimeString as BrandedISOTime } from '../utils/timeParser.js'
+import { formatLocaleTime, readLocaleTime } from '../utils/timeFormat.js'
 import {
   adjustTime,
-  formatDisplayTime12h,
-  formatDisplayTime24h,
   formatISOTime as formatParsedTime,
   isTimeInRange as isTimeInRangeParsed,
   parseTimeInput,
@@ -36,18 +35,22 @@ export function formatISOTime(time: ParsedTime, hasSeconds: boolean): ISOTimeStr
   return formatParsedTime({ hour: time.hours, minute: time.minutes, second: time.seconds }, hasSeconds)
 }
 
-export function formatDisplayTime(value: string, hourFormat: HourFormat, hasSeconds: boolean): string {
+/**
+ * 字段显示的时间文字。`locale` 决定数字、分隔符和上下午的词，不传就是英文写法（「2:30 PM」）。
+ */
+export function formatDisplayTime(value: string, hourFormat: HourFormat, hasSeconds: boolean, locale = 'en'): string {
   const time = parseISOTime(value) ? value.trim() : null
   if (time == null)
     return value
-  return hourFormat === '24h'
-    ? formatDisplayTime24h(time as BrandedISOTime, hasSeconds)
-    : formatDisplayTime12h(time as BrandedISOTime, hasSeconds)
+  return formatLocaleTime(time as BrandedISOTime, locale, hourFormat, hasSeconds)
 }
 
-export function parseDisplayTime(text: string, hasSeconds: boolean): ISOTimeString | null {
-  const trimmed = text.trim()
-  return TYPED_TIME.test(trimmed) ? parseTimeInput(trimmed, hasSeconds) : null
+/**
+ * 把打进来的文字读成 ISO 时间。除了英文写法，还认 `locale` 的数字、分隔符和上下午的词。
+ */
+export function parseDisplayTime(text: string, hasSeconds: boolean, locale = 'en'): ISOTimeString | null {
+  const read = readLocaleTime(text, locale)?.trim()
+  return read && TYPED_TIME.test(read) ? parseTimeInput(read, hasSeconds) : null
 }
 
 export function shiftTime(value: string, minuteDelta: number, hasSeconds: boolean): ISOTimeString {
