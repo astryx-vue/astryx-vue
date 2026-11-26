@@ -24519,8 +24519,8 @@
         "zh": "`Calendar` 用月历网格选日期。可以选一天，也可以选一段起止日期，并排显示一个月或两个月。打开时先落到指定的月份；没有指定时，落在已选日期或今天，并尽量落进最早和最晚日期之间。"
       },
       "usage": {
-        "en": "`Calendar` shows one or two months and selects a day or a start and end. It opens on the requested month, or on the selected day, or on today when that day still falls inside the earliest and latest dates.\n\nA day is unavailable when it is outside those bounds, when a predicate returns true, or when any constraint returns false. A range can also require a minimum and maximum length, counting both ends. Week numbers can sit beside each row. Days from the neighboring months can fill the grid, and they cannot be picked. The grid can shrink to the weeks the month needs, or stay six rows tall. The week can start on Sunday or on any other day, given as a number or a short name. A handle can move the visible month to a date and focus that day.\n\nArrow keys move by a day or a week, cross into the next month, and skip days that cannot be picked. Home and End move to the first and last available day of the week. Page Up and Page Down move by a month, and with Shift by a year (February 29 lands on February 28; a target past `min` or `max` keeps the focus, and a disabled target lands on that month's first available day). Enter or Space picks the focused day. Escape cancels a range that has a start but no end yet. Each month is a grid named with that month. Selection, today, and unavailable days are exposed to assistive technology.\n\nBind a date:\n\n```vue\n<script setup lang=\"ts\">\nimport { Calendar } from '@astryx-vue/core/Calendar'\nimport { ref } from 'vue'\n\nconst date = ref<Date | null>(new Date(2026, 9, 11))\n</script>\n\n<template>\n  <Calendar v-model=\"date\" label=\"Select a date\" />\n</template>\n```\n\nThe value is a local `Date`. The month title and weekday names follow the active locale. Built-in labels are English unless the app calls `provideAstryxLocale('zh-CN')`.",
-        "zh": "`Calendar` 用月历网格选日期。可以选一天，也可以选一段起止日期，并排显示一个月或两个月。打开时先落到指定的月份；没有指定时，落在已选日期或今天，并尽量落进最早和最晚日期之间。\n\n最早日期、最晚日期、返回真值的判断，以及一组返回假值的约束，都会让对应的日子不能选。范围还可以限制最短和最长天数，天数把两端都算进去。周数可以显示在每一行左侧。相邻月份的日期可以留在格子里，但不能选。行数可以按当月缩短，也可以固定六行。一周从哪一天开始，用数字或星期缩写指定。外面也可以拿到一个句柄，直接把月份翻到某一天并聚焦它。\n\n方向键按天或按周移动，到头会翻月，并跳过不能选的日子。Home 和 End 移到这一周里能选的第一天和最后一天。PageUp 和 PageDown 翻一个月，按住 Shift 翻一年（2 月 29 日落在 2 月 28 日；目标超出 `min` 或 `max` 时焦点不动；目标日不能选时落在那个月第一个能选的日子）。Enter 或空格确认。范围还没选完时，Escape 取消。每个月是一块带月份名字的网格，今天、选中和禁用都能被读屏读到。\n\n基本用法只需要绑定一个日期值：\n\n```vue\n<script setup lang=\"ts\">\nimport { Calendar } from '@astryx-vue/core/Calendar'\nimport { ref } from 'vue'\n\nconst date = ref<Date | null>(new Date(2026, 9, 11))\n</script>\n\n<template>\n  <Calendar v-model=\"date\" label=\"选择日期\" />\n</template>\n```\n\n绑定值是原生 `Date`。通过 `min` 和 `max` 限制可选日期范围，通过 `isDateDisabled` 函数禁用特定日期。月份标题和星期名称跟随当前语言。组件自带文案默认是英文，调用 `provideAstryxLocale('zh-CN')` 后改为中文。"
+        "en": "`Calendar` shows one or two months and selects a day or a start and end. It opens on the requested month, or on the selected day, or on today when that day still falls inside the earliest and latest dates.\n\nA day is unavailable when it is outside those bounds, when a predicate returns true, or when any constraint returns false. A range can also require a minimum and maximum length, counting both ends. Week numbers can sit beside each row. Days from the neighboring months can fill the grid, and they cannot be picked. The grid can shrink to the weeks the month needs, or stay six rows tall. The week can start on Sunday or on any other day, given as a number or a short name. A handle can move the visible month to a date and focus that day.\n\nArrow keys move by a day or a week, cross into the next month, and skip days that cannot be picked. Home and End move to the first and last available day of the week. Page Up and Page Down move by a month, and with Shift by a year (February 29 lands on February 28; a target past `min` or `max` keeps the focus, and a disabled target lands on that month's first available day). Enter or Space picks the focused day. Escape cancels a range that has a start but no end yet. Each month is a grid named with that month. Selection, today, and unavailable days are exposed to assistive technology.\n\nBind a date:\n\n```vue\n<script setup lang=\"ts\">\nimport { Calendar } from '@astryx-vue/core/Calendar'\nimport { ref } from 'vue'\n\nconst date = ref<Date | null>(new Date(2026, 9, 11))\n</script>\n\n<template>\n  <Calendar v-model=\"date\" label=\"Select a date\" />\n</template>\n```\n\nThe value is a local `Date`. The month title, weekday names, and day and week numbers follow the active locale, digits included. Built-in labels are English unless the app calls `provideAstryxLocale('zh-CN')`.",
+        "zh": "`Calendar` 用月历网格选日期。可以选一天，也可以选一段起止日期，并排显示一个月或两个月。打开时先落到指定的月份；没有指定时，落在已选日期或今天，并尽量落进最早和最晚日期之间。\n\n最早日期、最晚日期、返回真值的判断，以及一组返回假值的约束，都会让对应的日子不能选。范围还可以限制最短和最长天数，天数把两端都算进去。周数可以显示在每一行左侧。相邻月份的日期可以留在格子里，但不能选。行数可以按当月缩短，也可以固定六行。一周从哪一天开始，用数字或星期缩写指定。外面也可以拿到一个句柄，直接把月份翻到某一天并聚焦它。\n\n方向键按天或按周移动，到头会翻月，并跳过不能选的日子。Home 和 End 移到这一周里能选的第一天和最后一天。PageUp 和 PageDown 翻一个月，按住 Shift 翻一年（2 月 29 日落在 2 月 28 日；目标超出 `min` 或 `max` 时焦点不动；目标日不能选时落在那个月第一个能选的日子）。Enter 或空格确认。范围还没选完时，Escape 取消。每个月是一块带月份名字的网格，今天、选中和禁用都能被读屏读到。\n\n基本用法只需要绑定一个日期值：\n\n```vue\n<script setup lang=\"ts\">\nimport { Calendar } from '@astryx-vue/core/Calendar'\nimport { ref } from 'vue'\n\nconst date = ref<Date | null>(new Date(2026, 9, 11))\n</script>\n\n<template>\n  <Calendar v-model=\"date\" label=\"选择日期\" />\n</template>\n```\n\n绑定值是原生 `Date`。通过 `min` 和 `max` 限制可选日期范围，通过 `isDateDisabled` 函数禁用特定日期。月份标题、星期名称、日期数字和周数跟随当前语言，数字也用该语言的写法。组件自带文案默认是英文，调用 `provideAstryxLocale('zh-CN')` 后改为中文。"
       },
       "practices": {
         "en": [
@@ -24587,7 +24587,7 @@
                 "name": "`numberOfMonths`",
                 "type": "`1 | 2`",
                 "default": "`1`",
-                "description": "How many months to show side by side."
+                "description": "How many months to show side by side. With two months, a selection or today in the month of `max` opens with that month in the right-hand pane."
               },
               {
                 "name": "`focusDate`",
@@ -24641,7 +24641,7 @@
                 "name": "`hasWeekNumbers`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Show the week number at the start of each row."
+                "description": "Show the ISO week number at the start of each row. A row takes the week that holds its Thursday, whatever the week start."
               },
               {
                 "name": "`hasVariableRowCount`",
@@ -24702,7 +24702,7 @@
                 "name": "`numberOfMonths`",
                 "type": "`1 | 2`",
                 "default": "`1`",
-                "description": "并排显示的月份数。"
+                "description": "并排显示的月份数。两个月时，选中日或今天落在 `max` 所在的月份，就让这个月显示在右边那一格。"
               },
               {
                 "name": "`focusDate`",
@@ -24756,7 +24756,7 @@
                 "name": "`hasWeekNumbers`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "在每一行左侧显示周数。"
+                "description": "在每一行左侧显示 ISO 周数。每一行按它的周四所在的周计，不管一周从哪天开始。"
               },
               {
                 "name": "`hasVariableRowCount`",

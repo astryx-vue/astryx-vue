@@ -20,6 +20,12 @@ describe('calendar weekday columns', () => {
     expect(weekday).toContain('min-width: var(--astryx-input-height-md, 32px)')
   })
 
+  it('gives a day button a minimum height so it grows with its number', () => {
+    const cellRules = [...css.matchAll(/\.astryx-calendar-cell \{[^}]*\}/g)].map(match => match[0])
+    expect(cellRules.some(rule => rule.includes('min-height: var(--astryx-input-height-md, 32px)'))).toBe(true)
+    expect(cellRules.some(rule => /(?<!min-)height:/.test(rule))).toBe(false)
+  })
+
   it('shares one set of columns that are never narrower than their widest cell', () => {
     expect(supports).toContain('grid-template-columns: repeat(7, minmax(min-content, 1fr))')
     expect(supports).toContain('grid-template-columns: var(--astryx-spacing-6, 24px) repeat(7, minmax(min-content, 1fr))')

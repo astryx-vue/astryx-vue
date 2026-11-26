@@ -5,7 +5,7 @@ import { isDayOutsideSpan, orderRange, resolveWeekStart } from '../composables/u
 import { addMonths, buildMonthGrid, todayISODate } from '../composables/useMonthGrid.js'
 import Icon from '../Icon/Icon.vue'
 import { useAstryxLocale, useComponentMessages } from '../locale/context.js'
-import { formatCalendarMonth, standaloneShortWeekdayNames, weekdayNames } from '../locale/format.js'
+import { formatCalendarMonth, formatDayNumber, standaloneShortWeekdayNames, weekdayNames } from '../locale/format.js'
 import { calendarMessages } from '../locale/messages/calendar.js'
 import '../../styles/calendar.css'
 import '../../styles/date-range-input.css'
@@ -119,16 +119,16 @@ function isDisabled(day: string): boolean {
               'is-range-end': day === preview?.end,
               'is-disabled': isDisabled(day),
             }"
-            :disabled="isDisabled(day)"
+            :aria-disabled="isDisabled(day) || undefined"
             :aria-pressed="day === preview?.start || day === preview?.end || undefined"
             :aria-current="day === today ? 'date' : undefined"
-            @click="emit('select', day)"
-            @mouseenter="hover = day"
+            @click="isDisabled(day) ? undefined : emit('select', day)"
+            @mouseenter="hover = isDisabled(day) ? null : day"
             @mouseleave="hover = null"
-            @focus="hover = day"
+            @focus="hover = isDisabled(day) ? null : day"
             @blur="hover = null"
           >
-            <span class="astryx-calendar-day">{{ Number(day.slice(8)) }}</span>
+            <span class="astryx-calendar-day">{{ formatDayNumber(Number(day.slice(8)), locale) }}</span>
           </button>
         </div>
       </div>

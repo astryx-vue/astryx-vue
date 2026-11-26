@@ -6,7 +6,7 @@ import { useAnnounce } from '../composables/useAnnounce.js'
 import { useHandleRef } from '../composables/useHandleRef.js'
 import Icon from '../Icon/Icon.vue'
 import { useAstryxLocale, useComponentMessages } from '../locale/context.js'
-import { formatCalendarMonth, standaloneShortWeekdayNames, weekdayNames } from '../locale/format.js'
+import { formatCalendarMonth, formatDayNumber, standaloneShortWeekdayNames, weekdayNames } from '../locale/format.js'
 import { calendarMessages } from '../locale/messages/calendar.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import {
@@ -440,7 +440,7 @@ function onKeyDown(event: KeyboardEvent): void {
             role="row"
           >
             <div v-if="hasWeekNumbers" class="astryx-calendar-week-number" role="rowheader">
-              {{ week.number }}
+              {{ formatDayNumber(week.number, locale) }}
             </div>
             <div
               v-for="day in paint(week)"
@@ -487,7 +487,7 @@ function onKeyDown(event: KeyboardEvent): void {
                   :is-today="day.today"
                   :is-in-month="!day.outside"
                 >
-                  <span class="astryx-calendar-day">{{ day.text }}</span>
+                  <span class="astryx-calendar-day">{{ formatDayNumber(day.text, locale) }}</span>
                 </slot>
               </button>
             </div>

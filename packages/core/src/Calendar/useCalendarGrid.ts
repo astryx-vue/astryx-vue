@@ -33,8 +33,10 @@ export function buildCalendarWeeks(year: number, month: number, weekStartsOn = 0
       })
       cursor = cursor.add({ days: 1 })
     }
-    const anchor = days.find(day => !day.outside)?.date ?? days[0]!.date
-    weeks.push({ number: isoWeekNumber(anchor), days })
+    // ISO 8601 按周四定周：一行里的周四所在的 ISO 周，就是这一行大多数日子所在的周，
+    // 周起始日是周日或周六时也一样。
+    const thursday = days[(4 - weekStartsOn + 7) % 7]!.date
+    weeks.push({ number: isoWeekNumber(thursday), days })
   }
 
   return weeks
