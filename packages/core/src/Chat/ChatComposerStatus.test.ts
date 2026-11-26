@@ -1,21 +1,34 @@
 import type { ChatComposerStatus } from './composerTypes.js'
 import { mount } from '@vue/test-utils'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
 import ChatComposer from './ChatComposer.vue'
 
 const { announce } = vi.hoisted(() => ({ announce: vi.fn() }))
 
-vi.mock('../composables/useAnnounce.js', () => ({
-  useAnnounce: () => announce,
+vi.mock('../composables/internal/announce.js', async importOriginal => ({
+  ...await importOriginal<typeof import('../composables/internal/announce.js')>(),
+  useAnnouncer: () => announce,
 }))
+
+const mounted: Array<{ unmount: () => void }> = []
 
 beforeEach(() => {
   announce.mockClear()
 })
 
+afterEach(() => {
+  mounted.splice(0).forEach(wrapper => wrapper.unmount())
+})
+
 function renderStatus(status?: ChatComposerStatus) {
-  return mount(ChatComposer, { props: { status } })
+  const wrapper = mount(ChatComposer, { attachTo: document.body, props: { status } })
+  mounted.push(wrapper)
+  return wrapper
+}
+
+function spoken(): Array<[string, string]> {
+  return announce.mock.calls.map(([message, politeness]) => [message, politeness])
 }
 
 describe('chatComposer 状态播报', () => {
@@ -41,7 +54,7 @@ describe('chatComposer 状态播报', () => {
 
     await wrapper.setProps({ status: { type: 'error', message: 'Send failed' } })
     await wrapper.setProps({ status: { type: 'warning', message: 'Offline' } })
-    expect(announce.mock.calls).toEqual([
+    expect(spoken()).toEqual([
       ['Send failed', 'assertive'],
       ['Offline', 'polite'],
     ])
@@ -52,14 +65,35 @@ describe('chatComposer 状态播报', () => {
     const wrapper = renderStatus(status)
     await nextTick()
     await wrapper.setProps({ status: { ...status } })
-    expect(announce.mock.calls).toEqual([['Send failed', 'assertive']])
+    expect(spoken()).toEqual([['Send failed', 'assertive']])
 
     await wrapper.setProps({ status: undefined })
     await wrapper.setProps({ status })
-    expect(announce.mock.calls).toEqual([
+    expect(spoken()).toEqual([
       ['Send failed', 'assertive'],
       ['Send failed', 'assertive'],
     ])
+  })
+
+  it('文字不变、类型变了算新的一次', async () => {
+    const wrapper = renderStatus({ type: 'warning', message: 'Check your connection' })
+    await wrapper.setProps({ status: { type: 'error', message: 'Check your connection' } })
+    expect(spoken()).toEqual([
+      ['Check your connection', 'polite'],
+      ['Check your connection', 'assertive'],
+    ])
+  })
+
+  it('页面加载完成之前就显示的状态保持安静', async () => {
+    const readyState = vi.spyOn(document, 'readyState', 'get').mockReturnValue('loading')
+    try {
+      renderStatus({ type: 'error', message: 'Send failed' })
+      await nextTick()
+      expect(announce).not.toHaveBeenCalled()
+    }
+    finally {
+      readyState.mockRestore()
+    }
   })
 
   it('没有消息文字时不播报', () => {

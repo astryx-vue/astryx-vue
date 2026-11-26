@@ -91,6 +91,7 @@ describe('useTriggerMenu', () => {
           triggers: triggersRef,
           editable: editableRef,
           debounceMs: debounceRef,
+          defaultLoadingText: ref('Searching…'),
           onInsertToken: () => {},
           onInsertText: () => {},
           onEmitChange: () => {},

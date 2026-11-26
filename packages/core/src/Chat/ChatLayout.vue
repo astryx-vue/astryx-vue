@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { ChatLayoutProps, ChatLayoutSlots } from './types.js'
-import { computed, provide, useTemplateRef, watch } from 'vue'
+import { computed, provide, useSlots, useTemplateRef, watch } from 'vue'
+import { hasSlotContent } from '../composables/internal/slotContent.js'
 import { useAnnounce } from '../composables/useAnnounce.js'
 import { useChatNewMessages } from '../composables/useChatNewMessages.js'
 import { useChatStreamScroll } from '../composables/useChatStreamScroll.js'
@@ -18,6 +19,7 @@ const props = withDefaults(defineProps<ChatLayoutProps>(), {
   showScrollButton: true,
 })
 defineSlots<ChatLayoutSlots>()
+const slots = useSlots()
 
 const messages = useComponentMessages({ chat: chatMessages })
 const announce = useAnnounce()
@@ -62,7 +64,7 @@ defineExpose({ element: root, scrollToBottom })
     :data-scroll="isSelfScrolling ? 'self' : 'external'"
   >
     <div class="astryx-chat-layout__messages" :data-density="density">
-      <div v-if="!$slots.default && $slots.empty" class="astryx-chat-layout__empty">
+      <div v-if="!hasSlotContent(slots.default) && $slots.empty" class="astryx-chat-layout__empty">
         <slot name="empty" />
       </div>
       <slot v-else />

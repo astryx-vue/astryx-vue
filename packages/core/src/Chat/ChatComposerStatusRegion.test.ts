@@ -14,6 +14,7 @@ async function flushFrame(): Promise<void> {
 describe('chatComposer 共享 live region', () => {
   it('把错误和警告写入已有的全局播报区域', async () => {
     const wrapper = mount(ChatComposer, {
+      attachTo: document.body,
       props: { status: { type: 'error', message: 'Send failed' } },
     })
     await flushFrame()
@@ -22,5 +23,6 @@ describe('chatComposer 共享 live region', () => {
     await wrapper.setProps({ status: { type: 'warning', message: 'Offline' } })
     await flushFrame()
     expect(document.querySelector('[data-astryx-live-region="polite"]')?.textContent).toBe('Offline')
+    wrapper.unmount()
   })
 })

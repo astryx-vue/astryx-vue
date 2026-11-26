@@ -1,6 +1,7 @@
 import type { MaybeRefOrGetter, VNode } from 'vue'
 import type { BadgeVariant } from '../Badge/types.js'
 import type { SearchableItem, SearchSource } from '../composables/useAsyncSource.js'
+import type { EnterKeyHint } from '../Field/textEntryTraits.js'
 import type { ChatDensity } from './messageTypes.js'
 
 /** Visual density of the composer shell. `spacious` uses the same spacing as `balanced`. */
@@ -179,6 +180,14 @@ export interface ChatComposerInputProps {
    * inserting the text itself.
    */
   pasteAction?: (event: ClipboardEvent, text: string) => boolean | void
+  /**
+   * What the Return key of a touch keyboard says (the native `enterkeyhint`).
+   * Enter sends the message, so the key says so: iOS shows its Send key.
+   * When a `keydown` listener makes Enter insert a line break on touch
+   * keyboards, pass `'enter'` so the key shows Return again.
+   * @default 'send'
+   */
+  enterKeyHint?: EnterKeyHint
 }
 
 export interface ChatComposerInputEmits {

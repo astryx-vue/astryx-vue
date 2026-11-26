@@ -537,6 +537,12 @@ footer: false
         <td>-</td>
         <td>纯文本粘贴的第一站。返回 true 时输入框不再自己插入。</td>
       </tr>
+      <tr>
+        <td><code>enterKeyHint</code></td>
+        <td><code>'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send'</code></td>
+        <td><code>'send'</code></td>
+        <td>触屏键盘上回车键写的字。如果 keydown 监听让触屏键盘上的回车插入换行，就传 'enter'。不管传什么，回车都会提交。</td>
+      </tr>
     </tbody>
   </table>
 </div>
