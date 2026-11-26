@@ -17,10 +17,6 @@
     overflow-y: auto;
   }
 
-  .astryx-chat-layout[data-astryx-scrolling] {
-    scrollbar-width: none;
-  }
-
   .astryx-chat-layout__messages {
     display: flex;
     flex-direction: column;
@@ -173,9 +169,10 @@
     outline: none;
   }
 
+  /* 列表撑满滚动它的区域，边缘会被裁掉，所以键盘焦点环画在自己的盒子里面。 */
   .astryx-chat-message-list:focus-visible {
-    outline: 2px solid var(--astryx-chat-focus, var(--astryx-focus-outline-color));
-    outline-offset: 2px;
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-chat-focus, var(--astryx-focus-outline-color, currentcolor));
+    outline-offset: calc(-1 * var(--astryx-focus-outline-width, 2px));
   }
 
   .astryx-chat-message-list__inner {
@@ -261,12 +258,21 @@
   .astryx-chat-message:has(.astryx-chat-message__avatar)[data-density='balanced'] { gap: var(--astryx-spacing-2, 8px); }
   .astryx-chat-message:has(.astryx-chat-message__avatar)[data-density='spacious'] { gap: var(--astryx-spacing-3, 12px); }
 
-  .astryx-chat-message__avatar {
-    flex-shrink: 0;
+  /*
+   * 头像顶部的偏移由每条消息自己根据自己的内容设定（只看自己，不看兄弟），
+   * 嵌套的消息各设各的，不会继承外层那条的值。
+   */
+  .astryx-chat-message {
+    --_chat-avatar-offset: 0px;
   }
 
-  .astryx-chat-message:has([data-chat-name]) .astryx-chat-message__avatar {
-    margin-block-start: var(--astryx-spacing-5, 20px);
+  .astryx-chat-message:has([data-chat-name]) {
+    --_chat-avatar-offset: var(--astryx-spacing-5, 20px);
+  }
+
+  .astryx-chat-message__avatar {
+    flex-shrink: 0;
+    margin-block-start: var(--_chat-avatar-offset);
   }
 
   .astryx-chat-message__column {
@@ -896,6 +902,13 @@
       border-color var(--astryx-duration-fast, 125ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
   }
 
+  /* 点一下输入区就会升起键盘，聚焦外观淡入会在升起的每一帧重绘，所以粗指针下立刻显示。 */
+  @media (pointer: coarse) {
+    .astryx-chat-composer__body {
+      transition-duration: 0s;
+    }
+  }
+
   .astryx-chat-composer__body:is(:disabled, [aria-disabled='true']) {
     cursor: default;
   }
@@ -968,6 +981,17 @@
     display: flex;
     align-items: center;
     gap: var(--astryx-spacing-1, 4px);
+  }
+
+  /* 调用方的操作在页脚里换行，发送操作始终留在输入区里；比页脚还宽的操作仍然截断。 */
+  .astryx-chat-composer__footer-start {
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+
+  /* 主操作从不为调用方的操作让出宽度。 */
+  .astryx-chat-composer__footer-end {
+    flex-shrink: 0;
   }
 
   .astryx-chat-composer__header-end {
@@ -1064,6 +1088,8 @@
   }
 
   .astryx-chat-composer-input__editable {
+    /* 编辑区是会滚动的 flex 子项，自动最小高度为 0：重新排版后空的编辑区可能塌成 0px，点击就落不到它身上。 */
+    min-height: 22px;
     outline: none;
     white-space: pre-wrap;
     word-break: break-word;
@@ -1110,8 +1136,10 @@
   }
 
   .astryx-chat-send {
+    /* 发送键自己声明按钮圆角：输入区的同心圆角靠继承传给别的按钮，发送键在里面仍保持圆形。 */
+    --astryx-button-radius: var(--astryx-radius-full, 9999px);
     flex-shrink: 0;
-    border-radius: var(--astryx-button-radius, var(--astryx-radius-full, 9999px));
+    border-radius: var(--astryx-button-radius);
   }
 
   .astryx-chat-drawer {
@@ -1123,12 +1151,13 @@
     box-sizing: border-box;
     padding-inline: var(--astryx-spacing-4, 16px);
     padding-block-start: var(--astryx-spacing-3, 12px);
-    padding-block-end: calc(var(--astryx-spacing-3, 12px) + var(--astryx-radius-chat, 28px));
-    margin-block-end: calc(-1 * var(--astryx-radius-chat, 28px));
+    /* 抽屉塞在输入区正文后面一个圆角的高度，顶部圆角和这段塞入量都跟着输入区自己的圆角；单独使用时取聊天圆角。 */
+    padding-block-end: calc(var(--astryx-spacing-3, 12px) + var(--_chat-composer-radius, var(--astryx-radius-chat, 28px)));
+    margin-block-end: calc(-1 * var(--_chat-composer-radius, var(--astryx-radius-chat, 28px)));
     background-color: var(--astryx-color-background-surface);
     background-image: linear-gradient(var(--astryx-color-background-muted), var(--astryx-color-background-muted));
-    border-start-start-radius: var(--astryx-radius-chat, 28px);
-    border-start-end-radius: var(--astryx-radius-chat, 28px);
+    border-start-start-radius: var(--_chat-composer-radius, var(--astryx-radius-chat, 28px));
+    border-start-end-radius: var(--_chat-composer-radius, var(--astryx-radius-chat, 28px));
   }
 
   .astryx-chat-drawer__toggle {

@@ -1,5 +1,8 @@
 import type { MaybeRefOrGetter, Ref } from 'vue'
 import { ref, toValue, watch } from 'vue'
+import { subscribeInput } from '../utils/inputStream.js'
+import { scrollEventTarget, scrollportTop, scrollsPage } from '../utils/pageScroller.js'
+import { setScrollAnchoringOff } from './internal/scrollAnchoring.js'
 import { useMediaQuery } from './useMediaQuery.js'
 
 /** How `scrollToBottom` moves. `instant` skips the spring. */
@@ -67,6 +70,11 @@ const CHAT_MESSAGE_CLASS = 'astryx-chat-message'
  * a spring, unless reduced motion is requested. Scrolling up — wheel, touch,
  * keyboard, or the scrollbar — unlocks immediately. Settling within
  * `lockThreshold` of the bottom locks again.
+ *
+ * While locked the hook is the only thing that moves the container, so the
+ * browser's scroll anchoring is off on it. `scrollRef` may be the page's own
+ * scroller (`document.scrollingElement`): the hook then listens to the
+ * document's scroll events and measures the visible height from the viewport.
  */
 export function useChatStreamScroll(options: UseChatStreamScrollOptions): UseChatStreamScrollReturn {
   const {
@@ -96,12 +104,11 @@ export function useChatStreamScroll(options: UseChatStreamScrollOptions): UseCha
   function setLocked(next: boolean): void {
     locked = next
     isLocked.value = next
-    if (!next) {
+    const el = scrollRef.value
+    if (el)
+      setScrollAnchoringOff(el, next)
+    if (!next)
       cancelFrame()
-      const el = scrollRef.value
-      if (el)
-        markScrolling(el, false)
-    }
   }
 
   function cancelFrame(): void {
@@ -114,13 +121,6 @@ export function useChatStreamScroll(options: UseChatStreamScrollOptions): UseCha
     lastTick = undefined
   }
 
-  function markScrolling(el: HTMLElement, active: boolean): void {
-    if (active)
-      el.setAttribute('data-astryx-scrolling', '')
-    else
-      el.removeAttribute('data-astryx-scrolling')
-  }
-
   function jumpToBottom(): void {
     const el = scrollRef.value
     if (!el)
@@ -128,20 +128,16 @@ export function useChatStreamScroll(options: UseChatStreamScrollOptions): UseCha
     cancelFrame()
     el.scrollTop = el.scrollHeight - el.clientHeight
     lastScrollTop = el.scrollTop
-    markScrolling(el, false)
   }
 
   function animate(): void {
     const el = scrollRef.value
     if (!el || !locked) {
-      if (el)
-        markScrolling(el, false)
       cancelFrame()
       return
     }
 
     if (el.scrollHeight <= el.clientHeight) {
-      markScrolling(el, false)
       cancelFrame()
       return
     }
@@ -152,7 +148,6 @@ export function useChatStreamScroll(options: UseChatStreamScrollOptions): UseCha
     if (Math.abs(diff) < 0.5 && Math.abs(velocity) < 0.1) {
       el.scrollTop = target
       lastScrollTop = el.scrollTop
-      markScrolling(el, false)
       cancelFrame()
       return
     }
@@ -164,10 +159,8 @@ export function useChatStreamScroll(options: UseChatStreamScrollOptions): UseCha
     el.scrollTop += velocity * tickDelta
     lastScrollTop = el.scrollTop
     // A scroll listener may have unlocked while this assignment was applied.
-    if (!locked) {
-      markScrolling(el, false)
+    if (!locked)
       return
-    }
     frame = requestAnimationFrame(animate)
   }
 
@@ -178,9 +171,6 @@ export function useChatStreamScroll(options: UseChatStreamScrollOptions): UseCha
       jumpToBottom()
       return
     }
-    const el = scrollRef.value
-    if (el)
-      markScrolling(el, true)
     if (!animating) {
       animating = true
       lastTick = undefined
@@ -203,9 +193,9 @@ export function useChatStreamScroll(options: UseChatStreamScrollOptions): UseCha
     const container = scrollRef.value
     if (!container)
       return
-    const containerRect = container.getBoundingClientRect()
-    const elRect = el.getBoundingClientRect()
-    const offset = elRect.top - containerRect.top + container.scrollTop
+    // A page's visible area starts at the viewport's top, not at the root's box,
+    // which moves up by the page's scroll.
+    const offset = el.getBoundingClientRect().top - scrollportTop(container) + container.scrollTop
     container.scrollTo({ top: offset, behavior: 'instant' })
     lastScrollTop = container.scrollTop
   }
@@ -248,12 +238,19 @@ export function useChatStreamScroll(options: UseChatStreamScrollOptions): UseCha
       if (!el || !isEnabled)
         return
 
+      const isPage = scrollsPage(el)
+      // The root's offsetHeight is the page's height. Its clientHeight is the
+      // viewport's, which is what the reader sees.
+      const shownHeight = (): number => isPage ? el.clientHeight : el.offsetHeight
+
       lastScrollTop = el.scrollTop
       lastScrollHeight = el.scrollHeight
-      lastOffsetHeight = el.offsetHeight
+      lastOffsetHeight = shownHeight()
+      setScrollAnchoringOff(el, locked)
 
       const onScroll = (): void => {
-        const { scrollTop, scrollHeight, offsetHeight } = el
+        const { scrollTop, scrollHeight } = el
+        const offsetHeight = shownHeight()
         const distance = scrollHeight - scrollTop - offsetHeight
         isScrolledUp.value = distance > buttonThreshold
 
@@ -274,10 +271,9 @@ export function useChatStreamScroll(options: UseChatStreamScrollOptions): UseCha
       }
 
       const onScrollEnd = (): void => {
-        const distance = el.scrollHeight - el.scrollTop - el.offsetHeight
+        const distance = el.scrollHeight - el.scrollTop - shownHeight()
         if (distance <= lockThreshold) {
-          locked = true
-          isLocked.value = true
+          setLocked(true)
         }
       }
 
@@ -291,8 +287,24 @@ export function useChatStreamScroll(options: UseChatStreamScrollOptions): UseCha
           setLocked(false)
       }
 
-      el.addEventListener('scroll', onScroll, { passive: true })
-      el.addEventListener('scrollend', onScrollEnd)
+      // A scroll of the page fires at the document, not at its root element.
+      const eventTarget = scrollEventTarget(el)
+      const view = eventTarget === el.ownerDocument ? el.ownerDocument.defaultView : null
+      const stopPageListeners: Array<() => void> = []
+      if (view != null) {
+        const atDocument = (listener: () => void) => (event: Event): void => {
+          if (event.target === eventTarget)
+            listener()
+        }
+        stopPageListeners.push(
+          subscribeInput(view, 'scroll', atDocument(onScroll)),
+          subscribeInput(view, 'scrollend', atDocument(onScrollEnd)),
+        )
+      }
+      else {
+        el.addEventListener('scroll', onScroll, { passive: true })
+        el.addEventListener('scrollend', onScrollEnd)
+      }
       el.addEventListener('wheel', onWheel, { passive: true })
       el.addEventListener('touchmove', onTouchMove, { passive: true })
 
@@ -307,11 +319,13 @@ export function useChatStreamScroll(options: UseChatStreamScrollOptions): UseCha
       onCleanup(() => {
         cancelAnimationFrame(initialFrame)
         cancelFrame()
+        for (const stop of stopPageListeners)
+          stop()
         el.removeEventListener('scroll', onScroll)
         el.removeEventListener('scrollend', onScrollEnd)
         el.removeEventListener('wheel', onWheel)
         el.removeEventListener('touchmove', onTouchMove)
-        markScrolling(el, false)
+        setScrollAnchoringOff(el, false)
       })
     },
     { immediate: true },
