@@ -27,11 +27,9 @@ const isOpen = ref(false)
           </template>
         </DialogHeroHeader>
       </template>
-      <template #content>
-        <LayoutContent>
-          <Text>Get started in three steps: invite your team, connect a data source, and share your first dashboard.</Text>
-        </LayoutContent>
-      </template>
+      <LayoutContent>
+        <Text>Get started in three steps: invite your team, connect a data source, and share your first dashboard.</Text>
+      </LayoutContent>
       <template #footer>
         <LayoutFooter>
           <Button variant="primary" label="Get started" @click="isOpen = false" />

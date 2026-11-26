@@ -1994,6 +1994,39 @@ div.component-detail__body > table {
 }
 
 /*
+ * 文档正文排版（表格边框、段落间距、列表缩进、行内代码底色……）写在
+ * `kawa.theme` 层，排在 astryx 组件层之前：组件自己写了的属性没问题，没写的
+ * 属性却会被正文样式填上，表格多出满格边框、display 变成 block 就是这样来的。
+ * demo 外壳里是组件真实的样子，不该吃正文排版，所以在 `kawa.theme` 层里把它
+ * 整体退回到下一层（kawa.base 里的 astryx reset）。revert-layer 只能退掉它
+ * 自己所在的层，因此这条必须写进 kawa.theme；`:not(#_)` 抬高优先级，保证压过
+ * 正文里任何选择器。
+ */
+@layer kawa.theme {
+  .nagi-doc .astryx-demo *:not(#_) {
+    all: revert-layer;
+  }
+}
+
+/*
+ * 预览区把 demo 外壳居中，但外壳常被 className 定了宽度（比如 640px），
+ * 外壳里比它窄的内容会贴左。块级内容靠左右自动外边距居中，行内内容（按钮
+ * 这类 inline-flex）靠外壳的 text-align 居中；子元素再把 text-align 改回
+ * start，组件里的文字不跟着居中。宽度自动的内容照样撑满。写在 kawa.base
+ * 层：组件和 demo 自己写了外边距、对齐时以它们为准。
+ */
+@layer kawa.base {
+  .component-example__preview > .astryx-demo {
+    text-align: center;
+  }
+
+  .component-example__preview > .astryx-demo > * {
+    margin-inline: auto;
+    text-align: start;
+  }
+}
+
+/*
  * VitePress styles every bare list inside `.nagi-doc`: an `ol` picks up its
  * padding, its top margin, and decimal markers, which both pushed the trail off
  * center and added a marker column. Our components own those elements and reset
@@ -2829,11 +2862,28 @@ div.component-detail__body > table {
   width: 100%;
 }
 
+/*
+ * lab 示例外壳铺满预览区的整行，内容在里面水平居中：窄的示例（一个按钮、
+ * 一张卡片）落在正中，要铺满的示例自己声明 width: 100%。safe 保证内容比外壳宽
+ * 时从左边开始，可以横向滚动看全，而不是两头都被裁掉。
+ *
+ * 外壳是滚动容器，会裁掉贴边组件向外画的焦点环和阴影。内边距给它们留出 4px
+ * （2px 描边 + 2px 偏移），等量负外边距抵消掉，组件在页面上的位置不变。
+ */
 .astryx-demo.lab-demo {
-  display: block;
-  width: 100%;
+  --_lab-demo-bleed: 4px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: safe center;
+  box-sizing: border-box;
+  width: calc(100% + 2 * var(--_lab-demo-bleed));
+  max-width: none;
+  margin: calc(-1 * var(--_lab-demo-bleed));
+  padding: var(--_lab-demo-bleed);
   overflow-x: auto;
 }
+
 
 .lab-demo-row {
   display: flex;

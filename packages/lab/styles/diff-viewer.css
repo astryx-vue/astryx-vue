@@ -11,6 +11,8 @@
     flex-direction: column;
     min-width: 0;
     overflow: hidden;
+    /* 固定列的 z-index 只在组件内部比较，不会盖过页面上的吸顶栏。 */
+    isolation: isolate;
     border: var(--astryx-border-width, 1px) solid var(--astryx-color-border, light-dark(#00000014, #ffffff1a));
     border-radius: var(--astryx-radius-element, 0.625rem);
     background-color: var(--astryx-code-block-background, var(--astryx-color-background-surface, light-dark(#ffffff, #262626)));
@@ -132,6 +134,12 @@
     table-layout: fixed;
   }
 
+  /* 表头只给读屏用：文字视觉隐藏，这一行不占高度。 */
+  .astryx-diff-viewer__column-header {
+    padding: 0;
+    border: 0;
+  }
+
   .astryx-diff-viewer__gutter-col {
     width: calc(var(--astryx-diff-viewer-gutter-width, 2ch) + 2 * var(--astryx-spacing-2, 8px));
   }
@@ -154,7 +162,7 @@
     margin: 0;
     padding: 0;
     border: 0;
-    border-radius: var(--astryx-radius-inner, 0.375rem);
+    border-radius: var(--astryx-radius-element, 0.625rem);
     background: transparent;
     color: inherit;
     font: inherit;
@@ -245,32 +253,62 @@
 
   .astryx-diff-viewer__table[data-change-background='false'] .is-added,
   .astryx-diff-viewer__table[data-change-background='false'] .is-removed {
-    background-color: transparent;
+    background-image: none;
   }
 
+  .astryx-diff-viewer__table[data-change-indicator='bars'] .astryx-diff-viewer__marker-col {
+    width: var(--astryx-spacing-3, 12px);
+  }
+
+  .astryx-diff-viewer__table[data-change-indicator='none'] .astryx-diff-viewer__marker-col {
+    width: var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-diff-viewer__table:not([data-change-indicator='classic']) .astryx-diff-viewer__marker {
+    padding-inline: 0;
+  }
+
+  /* 竖条贴着代码：新增实线、删除虚线，不靠颜色也分得开。 */
   .astryx-diff-viewer__table[data-change-indicator='bars'] .astryx-diff-viewer__marker.is-added::before,
   .astryx-diff-viewer__table[data-change-indicator='bars'] .astryx-diff-viewer__marker.is-removed::before {
     content: '';
     position: absolute;
     inset-block: 0;
     inset-inline-start: 0;
-    border-inline-start: 2px solid currentColor;
+    width: calc(3 * var(--astryx-border-width, 1px));
+  }
+
+  .astryx-diff-viewer__table[data-change-indicator='bars'] .astryx-diff-viewer__marker.is-added::before {
+    background-color: currentColor;
   }
 
   .astryx-diff-viewer__table[data-change-indicator='bars'] .astryx-diff-viewer__marker.is-removed::before {
-    border-inline-start-style: dashed;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      currentColor 0 calc(2 * var(--astryx-border-width, 1px)),
+      transparent calc(2 * var(--astryx-border-width, 1px)) calc(4 * var(--astryx-border-width, 1px))
+    );
+  }
+
+  /*
+   * 行染色画在 background-image 上：固定在左侧的行号和标记格子先铺一层
+   * 不透明底色挡住滚过去的代码，染色再叠在它上面。
+   */
+  .astryx-diff-viewer {
+    --_diff-added: var(--astryx-code-syntax-added, color-mix(in srgb, var(--astryx-color-success-muted, #bbf7d0) 25%, transparent));
+    --_diff-removed: var(--astryx-code-syntax-removed, color-mix(in srgb, var(--astryx-color-error-muted, #fecaca) 25%, transparent));
   }
 
   .astryx-diff-viewer__gutter.is-added,
   .astryx-diff-viewer__marker.is-added,
   .astryx-diff-viewer__code.is-added {
-    background-color: var(--astryx-code-syntax-added, color-mix(in srgb, var(--astryx-color-success-muted, #bbf7d0) 25%, transparent));
+    background-image: linear-gradient(var(--_diff-added), var(--_diff-added));
   }
 
   .astryx-diff-viewer__gutter.is-removed,
   .astryx-diff-viewer__marker.is-removed,
   .astryx-diff-viewer__code.is-removed {
-    background-color: var(--astryx-code-syntax-removed, color-mix(in srgb, var(--astryx-color-error-muted, #fecaca) 25%, transparent));
+    background-image: linear-gradient(var(--_diff-removed), var(--_diff-removed));
   }
 
   .astryx-diff-viewer__gutter.is-added,
@@ -338,11 +376,13 @@
   }
 
   .astryx-diff-viewer__change[data-kind='added'] {
-    background-color: var(--astryx-code-syntax-added, color-mix(in srgb, var(--astryx-color-success-muted, #bbf7d0) 25%, transparent));
+    background-color: var(--_diff-added);
+    background-image: linear-gradient(var(--_diff-added), var(--_diff-added));
   }
 
   .astryx-diff-viewer__change[data-kind='removed'] {
-    background-color: var(--astryx-code-syntax-removed, color-mix(in srgb, var(--astryx-color-error-muted, #fecaca) 25%, transparent));
+    background-color: var(--_diff-removed);
+    background-image: linear-gradient(var(--_diff-removed), var(--_diff-removed));
   }
 
   .astryx-diff-viewer__annotation {

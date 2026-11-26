@@ -62,6 +62,7 @@ const scheduleView = computed(() => view.value)
 
 <style scoped>
 .schedule-demo {
+  width: 100%;
   min-height: 720px;
 }
 </style>
