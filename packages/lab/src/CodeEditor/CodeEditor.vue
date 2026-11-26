@@ -152,14 +152,16 @@ function onKeydown(event: KeyboardEvent): void {
     :data-size="size"
     :data-language="language"
   >
-    <div class="astryx-code-editor__container" :style="containerStyle">
+    <!-- 代码连同行号在从右到左的页面里也保持从左到右：缩进正确，长行从行首开始滚动。 -->
+    <div class="astryx-code-editor__container" dir="ltr" :style="containerStyle">
       <div v-if="hasLineNumbers" class="astryx-code-editor__gutter" aria-hidden="true">
         <div v-for="(_, index) in lines" :key="index">
           {{ index + 1 }}
         </div>
       </div>
       <div class="astryx-code-editor__body">
-        <div v-if="showPlaceholder" class="astryx-code-editor__placeholder" aria-hidden="true">
+        <!-- 占位提示是文字不是代码，按它自己的文字方向排，阿拉伯语、希伯来语提示照样读得通。 -->
+        <div v-if="showPlaceholder" class="astryx-code-editor__placeholder" dir="auto" aria-hidden="true">
           {{ placeholder }}
         </div>
         <code

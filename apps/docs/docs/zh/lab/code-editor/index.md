@@ -4,7 +4,7 @@ title: CodeEditor
 
 # CodeEditor
 
-CodeEditor 是一个轻量的代码输入区：受控文本、语法高亮、行号、占位和只读状态。它使用 `contenteditable="plaintext-only"` 与 CSS Custom Highlight API，不引入 Monaco。属于 Lab，只通过 `canary` 标签发布。
+CodeEditor 是一个轻量的代码输入区：受控文本、语法高亮、行号、占位和只读状态。它使用 `contenteditable="plaintext-only"` 与 CSS Custom Highlight API，不引入 Monaco。在从右到左的页面里，代码和行号仍然从左到右排，占位提示按它自己的文字方向排。属于 Lab，只通过 `canary` 标签发布。
 
 <script setup lang="ts">
 import { labCodeEditor } from '../../../../components/lab-demos'
