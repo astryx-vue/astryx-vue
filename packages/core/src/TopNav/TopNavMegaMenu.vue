@@ -4,6 +4,7 @@ import { inject, ref, useId } from 'vue'
 import Icon from '../Icon/Icon.vue'
 import { mobileNavKey } from '../MobileNav/context.js'
 import NavDisclosure from '../NavMenu/NavDisclosure.vue'
+import { provideTopNavPick } from './pickCloses.js'
 import TopNavMegaMenuPanel from './TopNavMegaMenuPanel.vue'
 import '../../styles/top-nav.css'
 
@@ -18,6 +19,7 @@ const emit = defineEmits<TopNavMegaMenuEmits>()
 defineSlots<TopNavMegaMenuSlots>()
 
 const inDrawer = inject(mobileNavKey, false)
+provideTopNavPick()
 const expanded = ref(false)
 const drawerItemsId = `astryx-top-nav-mega-items-${useId()}`
 </script>

@@ -42,6 +42,7 @@ const RAW_OK = new Set([
   'navMenuCloseKey',
   'navMenuFocusKey',
   'navMenuLabelKey',
+  'navMenuPickKey',
   'dropdownMenuRadioGroupKey',
   'itemDescriptionContextKey',
 ])

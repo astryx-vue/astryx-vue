@@ -5,7 +5,7 @@ import { hasSlotContent } from '../composables/internal/slotContent.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
 import { useCloseMobileDrawer } from '../MobileNav/closeOnActivate.js'
 import { isNavigableHref, resolveNavRoot } from '../NavItem/link.js'
-import { navMenuCloseKey } from '../NavMenu/context.js'
+import { navMenuCloseKey, navMenuPickKey } from '../NavMenu/context.js'
 import '../../styles/top-nav.css'
 
 defineOptions({ name: 'AstryxTopNavMegaMenuItem' })
@@ -16,6 +16,7 @@ const props = withDefaults(defineProps<TopNavMegaMenuItemProps>(), {
 defineSlots<TopNavMegaMenuItemSlots>()
 
 const closeMenu = inject(navMenuCloseKey, undefined)
+const picksClose = inject(navMenuPickKey, undefined)
 const closeMobileDrawer = useCloseMobileDrawer()
 const linkComponent = useLinkComponent()
 /** 自己的 `as` 优先，其次是 LinkProvider 给的默认链接组件。 */
@@ -24,7 +25,7 @@ const navigableHref = computed(() => isNavigableHref(props.href) ? props.href : 
 const root = computed(() => resolveNavRoot(navigableHref.value, false, customLink.value))
 
 function onClick(): void {
-  if (props.hasCloseOnSelect)
+  if (props.hasCloseOnSelect && (picksClose == null || picksClose()))
     closeMenu?.()
   closeMobileDrawer()
 }

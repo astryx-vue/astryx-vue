@@ -25,7 +25,7 @@ footer: false
 <tr><td><code>href</code></td><td><code>string</code></td><td>—</td><td>Renders the item as a link when set. Without it, the item is a plain menu entry.</td></tr>
 <tr><td><code>iconClass</code></td><td><code>string</code></td><td>—</td><td>CSS class of the icon in front of the text.</td></tr>
 <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disabled entry. Arrow keys and typeahead skip it.</td></tr>
-<tr><td><code>hasCloseOnSelect</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Closes the menu after the entry is chosen. Set it to <code>false</code> to keep the menu open, for an action that reports its result on the entry.</td></tr>
+<tr><td><code>hasCloseOnSelect</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Closes the menu after the entry is chosen with the keyboard, a finger or a pen (a mouse or trackpad pick leaves it open; the menu closes when the pointer leaves). Set it to <code>false</code> to keep the menu open, for an action that reports its result on the entry.</td></tr>
 <tr><td><code>id</code></td><td><code>string</code></td><td>—</td><td>Stable key for the entry. The label is used when it is empty.</td></tr>
 </tbody></table>
 </div>

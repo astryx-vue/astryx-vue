@@ -3,7 +3,7 @@ import type { TopNavMegaMenuFeaturedCardProps, TopNavMegaMenuFeaturedCardSlots }
 import { computed, inject } from 'vue'
 import { useLinkComponent } from '../LinkProvider/context.js'
 import { resolveNavRoot, safeNavHref } from '../NavItem/link.js'
-import { navMenuCloseKey } from '../NavMenu/context.js'
+import { navMenuCloseKey, navMenuPickKey } from '../NavMenu/context.js'
 import '../../styles/top-nav.css'
 
 defineOptions({ name: 'AstryxTopNavMegaMenuFeaturedCard' })
@@ -12,6 +12,7 @@ const props = defineProps<TopNavMegaMenuFeaturedCardProps>()
 defineSlots<TopNavMegaMenuFeaturedCardSlots>()
 
 const closeMenu = inject(navMenuCloseKey, undefined)
+const picksClose = inject(navMenuPickKey, undefined)
 const linkComponent = useLinkComponent()
 const ctaHref = computed(() => {
   if (!props.linkLabel)
@@ -26,7 +27,8 @@ const ctaRoot = computed(() => ctaHref.value ? resolveNavRoot(ctaHref.value, fal
 const imageIsDecorative = computed(() => props.image != null && !props.imageAlt)
 
 function onNavigate(): void {
-  closeMenu?.()
+  if (picksClose == null || picksClose())
+    closeMenu?.()
 }
 </script>
 

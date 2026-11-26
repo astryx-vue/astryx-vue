@@ -7,6 +7,7 @@ import { mobileNavKey } from '../MobileNav/context.js'
 import NavDisclosure from '../NavMenu/NavDisclosure.vue'
 import NavMenu from '../NavMenu/NavMenu.vue'
 import NavMenuItem from '../NavMenu/NavMenuItem.vue'
+import { provideTopNavPick } from './pickCloses.js'
 import '../../styles/top-nav.css'
 
 defineOptions({ name: 'AstryxTopNavMenu' })
@@ -19,6 +20,7 @@ withDefaults(defineProps<TopNavMenuProps>(), {
 const emit = defineEmits<TopNavMenuEmits>()
 const inDrawer = inject(mobileNavKey, false)
 const closeMobileDrawer = useCloseMobileDrawer()
+provideTopNavPick()
 const expanded = ref(false)
 const drawerItemsId = `astryx-top-nav-menu-items-${useId()}`
 </script>
