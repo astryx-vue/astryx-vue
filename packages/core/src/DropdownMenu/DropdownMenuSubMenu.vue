@@ -17,7 +17,7 @@ import Spinner from '../Spinner/Spinner.vue'
 import { useDropdownMenuContext } from './context.js'
 import DropdownMenuBranch from './DropdownMenuBranch.vue'
 import DropdownMenuItem from './DropdownMenuItem.vue'
-import { activateMenuItem, MENU_ITEM_ROLES } from './menuItemRoles.js'
+import { activateFocusedMenuItem } from './menuItemRoles.js'
 import { useDropdownMenuMessages } from './useDropdownMenuMessages.js'
 import { useMenuFocus } from './useMenuFocus.js'
 import { useMenuRegions } from './useMenuRegions.js'
@@ -204,9 +204,7 @@ function onDrillKeydown(event: KeyboardEvent): void {
     event.stopPropagation()
     if (event.repeat)
       return
-    const focused = document.activeElement
-    if (focused instanceof HTMLElement && MENU_ITEM_ROLES.has(focused.getAttribute('role') ?? ''))
-      activateMenuItem(focused, event)
+    activateFocusedMenuItem(event)
     return
   }
   event.stopPropagation()
@@ -236,9 +234,7 @@ function onFlyoutKeydown(event: KeyboardEvent): void {
     event.stopPropagation()
     if (event.repeat)
       return
-    const focused = document.activeElement
-    if (focused instanceof HTMLElement && MENU_ITEM_ROLES.has(focused.getAttribute('role') ?? ''))
-      activateMenuItem(focused, event)
+    activateFocusedMenuItem(event)
     return
   }
   event.stopPropagation()

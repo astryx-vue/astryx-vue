@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { isImeKeyEvent } from '../../utils/ime.js'
 import { focusForLastInput, isFocusDetached } from './focusReturn.js'
-import { isImeKeyEvent } from './ime.js'
 import {
   getInteractionModality,
   isKeyboardModality,

@@ -17,7 +17,7 @@ import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import DropdownMenuFrame from './DropdownMenuFrame.vue'
 import { dropdownMenuFrameKey } from './frame.js'
-import { activateMenuItem, MENU_ITEM_ROLES } from './menuItemRoles.js'
+import { activateFocusedMenuItem } from './menuItemRoles.js'
 import { useDropdownMenuMessages } from './useDropdownMenuMessages.js'
 import { useMenuDrillIn } from './useMenuDrillIn.js'
 import { useMenuFocus } from './useMenuFocus.js'
@@ -325,9 +325,7 @@ function onSurfaceKeydown(event: KeyboardEvent): void {
     event.preventDefault()
     if (event.repeat)
       return
-    const focused = typeof document !== 'undefined' ? document.activeElement : null
-    if (focused instanceof HTMLElement && MENU_ITEM_ROLES.has(focused.getAttribute('role') ?? ''))
-      activateMenuItem(focused, event)
+    activateFocusedMenuItem(event)
     return
   }
   if (event.key === 'Tab') {

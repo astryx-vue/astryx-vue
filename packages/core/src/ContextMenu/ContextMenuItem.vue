@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { ContextMenuItemEmits, ContextMenuItemProps, ContextMenuItemSlots } from './types.js'
 import { computed, toRaw, useTemplateRef } from 'vue'
+import { isModifiedClick } from '../composables/internal/menuActivation.js'
 import Icon from '../Icon/Icon.vue'
 import { useLinkComponent } from '../LinkProvider/context.js'
 import { useContextMenu, useContextMenuSize } from './context.js'
-import { isModifiedClick } from './menuNav.js'
 import '../../styles/context-menu.css'
 
 defineOptions({ name: 'AstryxContextMenuItem' })

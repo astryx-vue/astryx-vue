@@ -1,8 +1,8 @@
 import type { MaybeRefOrGetter, Ref } from 'vue'
 import { onScopeDispose, ref, toValue, watch } from 'vue'
 import { getFocusables } from '../layer/focus.js'
+import { isImeKeyEvent } from '../utils/ime.js'
 import { focusForLastInput } from './internal/focusReturn.js'
-import { isImeKeyEvent } from './internal/ime.js'
 import { trackInteractionModality } from './internal/interactionModality.js'
 
 export interface UseFocusTrapOptions {

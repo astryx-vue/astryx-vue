@@ -1,6 +1,6 @@
 import type { MaybeRefOrGetter } from 'vue'
 import { onMounted, onScopeDispose, toValue } from 'vue'
-import { isImeKeyEvent } from './internal/ime.js'
+import { isImeKeyEvent } from '../utils/ime.js'
 import { isApplePlatform } from './internal/platform.js'
 
 /**

@@ -2,10 +2,10 @@
 import type { ListItemProps } from '../List/types.js'
 import type { MoreMenuItem, MoreMenuSheetRowEmits, MoreMenuSheetRowProps } from './types.js'
 import { computed } from 'vue'
+import { isModifiedClick } from '../composables/internal/menuActivation.js'
 import Icon from '../Icon/Icon.vue'
 import ListItem from '../List/ListItem.vue'
 import { isSubmenuItem } from './menuItems.js'
-import { isModifiedClick } from './menuNav.js'
 import '../../styles/more-menu.css'
 
 defineOptions({ name: 'AstryxMoreMenuSheetRow' })
