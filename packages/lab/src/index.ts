@@ -130,6 +130,7 @@ export { LogStream } from './LogStream/index.js'
 export type { LogEntry, LogStreamEmits, LogStreamLevel, LogStreamProps } from './LogStream/index.js'
 
 export {
+  AudioPlayer,
   DEFAULT_PLAYBACK_RATES,
   formatClock,
   formatSpokenTime,
@@ -148,8 +149,11 @@ export {
   MediaVolume,
   useMediaPlaybackTime,
   useMediaPlayer,
+  VideoPlayer,
 } from './MediaPlayer/index.js'
 export type {
+  AudioPlayerProps,
+  AudioPlayerSlots,
   MediaButtonPartProps,
   MediaControlsHold,
   MediaControlSize,
@@ -175,6 +179,8 @@ export type {
   MediaTimeSliderProps,
   MediaVolumeProps,
   UseMediaPlayerReturn,
+  VideoPlayerCaptionTrack,
+  VideoPlayerProps,
 } from './MediaPlayer/index.js'
 
 export { MobileTokenizer } from './MobileTokenizer/index.js'

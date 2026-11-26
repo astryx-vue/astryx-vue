@@ -186,3 +186,78 @@ export interface MediaPlaybackRateProps extends MediaButtonPartProps {
   /** 滑块变体里，滑块出现在按钮的哪一侧。默认 `'end'`。 */
   sliderPlacement?: MediaSliderPlacement
 }
+
+/** VideoPlayer 的一条字幕文件。 */
+export interface VideoPlayerCaptionTrack {
+  /** WebVTT 文件地址。跨域文件需要服务端允许跨域，并设置 `crossOrigin`。 */
+  src: string
+  /** 给人看的名字，比如「中文」。 */
+  label: string
+  /** BCP 47 语言标签，比如 `zh`。 */
+  language: string
+  /** 默认 `'captions'`。 */
+  kind?: 'captions' | 'subtitles'
+  /** 视频加载后就显示这条字幕。 */
+  isDefault?: boolean
+}
+
+export interface VideoPlayerProps {
+  /** 视频地址。 */
+  src: string
+  /** 播放器的无障碍名称，比如视频标题。 */
+  label: string
+  /** 播放前显示的图片。 */
+  poster?: string
+  /** 字幕文件。有字幕时控件条上出现字幕开关。 */
+  captions?: readonly VideoPlayerCaptionTrack[]
+  /** 宽除以高。默认 16 / 9。 */
+  aspectRatio?: number
+  /** 加载后静音自动播放（浏览器不允许有声自动播放）。浏览器仍然拒绝时，播放键照常可用。 */
+  hasAutoPlay?: boolean
+  /** 播完从头再播。 */
+  isLooping?: boolean
+  /** 播放前加载多少。默认 `'metadata'`。 */
+  preload?: 'none' | 'metadata' | 'auto'
+  /** 视频和字幕文件的跨域方式。 */
+  crossOrigin?: 'anonymous' | 'use-credentials'
+  /** 章节，画成时间轴上的几段，预览里显示章节名。 */
+  chapters?: readonly MediaTimelineChapter[]
+  /** 关注点，比如带时间戳的评论，画在时间轴上。 */
+  markers?: readonly MediaTimelineMarker[]
+}
+
+export interface AudioPlayerProps {
+  /** 音频地址。 */
+  src: string
+  /** 节目或曲目的标题。也是播放器的名字。 */
+  title: string
+  /** 节目名、艺人等补充信息。 */
+  subtitle?: string
+  /** 封面图地址。显示在标题前面，也交给系统的媒体控制（比如锁屏）。 */
+  artworkSrc?: string
+  /** 封面的宽除以高。默认 1，正方形。 */
+  artworkAspectRatio?: number
+  /** 播放器的无障碍名称。默认用 `title`。 */
+  label?: string
+  /** 后退键跳多少秒。默认 15。 */
+  skipBackSeconds?: number
+  /** 前进键跳多少秒。默认 30。 */
+  skipForwardSeconds?: number
+  /** 播放前加载多少。默认 `'metadata'`。 */
+  preload?: 'none' | 'metadata' | 'auto'
+  /** 音频的跨域方式。 */
+  crossOrigin?: 'anonymous' | 'use-credentials'
+  /** 去产品播放队列里的上一首。传了才出现「上一首」按钮和对应的系统媒体操作。 */
+  onPreviousTrack?: () => void
+  /** 去产品播放队列里的下一首。传了才出现「下一首」按钮和对应的系统媒体操作。 */
+  onNextTrack?: () => void
+  /** 章节，画成时间轴上的几段，预览里显示章节名。 */
+  chapters?: readonly MediaTimelineChapter[]
+  /** 关注点，比如带时间戳的评论，画在时间轴上。 */
+  markers?: readonly MediaTimelineMarker[]
+}
+
+export interface AudioPlayerSlots {
+  /** 标题前面的媒体，比如视频截图。它在屏幕上取代 `artworkSrc`，`artworkSrc` 仍交给系统媒体控制。都没有时显示通用的音频文件图标。 */
+  artwork?: () => unknown
+}

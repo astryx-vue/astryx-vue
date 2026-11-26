@@ -54,7 +54,14 @@ export function fakePlayback(
     paused = true
     fire('pause')
   })
-  const load = vi.fn()
+  // 像浏览器一样：重新加载清掉错误，回到还没开始播放的样子。
+  const load = vi.fn(() => {
+    error = null
+    paused = true
+    ended = false
+    currentTime = 0
+    fire('emptied')
+  })
   Object.defineProperties(element, {
     paused: { configurable: true, get: () => paused },
     ended: { configurable: true, get: () => ended },

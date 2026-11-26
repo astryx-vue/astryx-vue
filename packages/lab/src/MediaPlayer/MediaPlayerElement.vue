@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { MediaPlayerElementProps, MediaPlayerElementSlots } from './types.js'
-import { onBeforeUnmount } from 'vue'
+import { onBeforeUnmount, shallowRef } from 'vue'
 import { useMediaPlayerContext } from './context.js'
 
 defineOptions({ name: 'AstryxMediaPlayerElement' })
@@ -8,13 +8,22 @@ withDefaults(defineProps<MediaPlayerElementProps>(), { playsInline: true })
 defineSlots<MediaPlayerElementSlots>()
 
 const { store } = useMediaPlayerContext('MediaPlayerElement')
+const element = shallowRef<HTMLMediaElement | null>(null)
 
 // 换成另一种元素（video ↔ audio）时，新元素挂上、旧元素卸下，仓库总是看着当前那个。
-function attach(element: unknown): void {
-  if (element instanceof HTMLMediaElement)
-    store.attachMedia(element)
+function attach(next: unknown): void {
+  if (next instanceof HTMLMediaElement) {
+    element.value = next
+    store.attachMedia(next)
+  }
 }
-onBeforeUnmount(() => store.attachMedia(null))
+onBeforeUnmount(() => {
+  element.value = null
+  store.attachMedia(null)
+})
+
+/** 渲染出来的 `<video>` 或 `<audio>`。 */
+defineExpose({ element })
 </script>
 
 <template>

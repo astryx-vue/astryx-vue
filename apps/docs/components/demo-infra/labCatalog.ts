@@ -1,5 +1,6 @@
 import type { DemoModule } from './types'
 import {
+  labAudioPlayer,
   labChatEmojiPicker,
   labChatReactionBar,
   labCircleCheckIndicator,
@@ -22,6 +23,7 @@ import {
   labSvgIcon,
   labTourOverview,
   labTransferListOverview,
+  labVideoPlayer,
 } from '../lab-demos'
 
 export interface LabCatalogEntry {
@@ -32,6 +34,7 @@ export interface LabCatalogEntry {
 
 /** 主站 overview 的 Lab 卡片。正文和安装说明仍由 /lab/ 页面维护。 */
 export const LAB_COMPONENTS: readonly LabCatalogEntry[] = [
+  { slug: 'audio-player', name: 'AudioPlayer', demo: labAudioPlayer },
   { slug: 'chat-emoji-picker', name: 'ChatEmojiPicker', demo: labChatEmojiPicker },
   { slug: 'chat-reaction-bar', name: 'ChatReactionBar', demo: labChatReactionBar },
   { slug: 'circular-progress', name: 'CircularProgress', demo: labCircularProgress },
@@ -54,4 +57,5 @@ export const LAB_COMPONENTS: readonly LabCatalogEntry[] = [
   { slug: 'svg-icon', name: 'SVGIcon', demo: labSvgIcon },
   { slug: 'tour', name: 'Tour', demo: labTourOverview },
   { slug: 'transfer-list', name: 'TransferList', demo: labTransferListOverview },
+  { slug: 'video-player', name: 'VideoPlayer', demo: labVideoPlayer },
 ]
