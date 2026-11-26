@@ -12,6 +12,12 @@ export interface AppShellMobileNav {
   isOpen?: boolean
   /** 窄屏时要不要自动放开关。 @default true */
   hasToggle?: boolean
+  /**
+   * 服务端渲染时是否按手机布局出页面，菜单开关也一并带上。
+   * 不传时，宽屏布局先出，手机上要等脚本跑起来才换成手机布局。`breakpoint` 为 `none` 时忽略。
+   * 可以从 User-Agent 或设备探测 cookie 推出来再传下来。
+   */
+  defaultIsMobile?: boolean
 }
 
 export interface AppShellProps {

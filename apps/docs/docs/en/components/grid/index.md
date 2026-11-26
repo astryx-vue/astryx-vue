@@ -30,7 +30,7 @@ import { Grid } from '@astryx-vue/core/Grid'
 </template>
 ```
 
-A number for `columns` means a fixed number of equal-width columns. An object means responsive columns: `minWidth` is the smallest a column may get, in pixels, and the grid decides how many columns fit in the available width on its own, dropping to fewer columns on a narrow screen.
+A number for `columns` means a fixed number of `1fr` tracks; a child's minimum content can widen its track beyond an equal share. An object means responsive columns: `minWidth` is the smallest a column may get, in pixels, and the grid decides how many columns fit in the available width on its own, dropping to fewer columns on a narrow screen.
 
 ```vue
 <template>
@@ -61,7 +61,7 @@ Wrap an item in `GridSpan` when it has to span more than one column or row. Its 
 </template>
 ```
 
-`width`, `height`, `maxWidth`, and `minHeight` size the container itself: numbers are pixels and strings are used as they are. `align` controls how items sit vertically inside their row (`align-items`) and `justify` controls the horizontal axis (`justify-items`); both default to `stretch`, which makes every item fill its cell.
+`width`, `height`, `maxWidth`, and `minHeight` size the container itself: numbers are pixels and strings are used as they are. `align` controls how items sit vertically inside their row (`align-items`) and `justify` controls the horizontal axis (`justify-items`); both are left to the browser default (`normal`) until set, which stretches items that have no natural size or aspect ratio.
 
 The column template is written to the container as the CSS variable `--astryx-grid-template-columns` rather than as an inline `grid-template-columns` declaration. That way your own stylesheet, including a rule inside a media query, can still override the variable or the declaration itself.
 
@@ -74,6 +74,7 @@ The column template is written to the container as the CSS variable `--astryx-gr
 | --- | --- |
 | <Badge variant="success">Do</Badge> | Use responsive columns (`:columns="{ minWidth: 280 }"`) whenever the layout should adapt to the screen. Let the grid work out the column count instead of writing media queries. |
 | <Badge variant="success">Do</Badge> | Cap the count with `max` on wide screens. Without a cap each column grows very wide and the contents of a row drift far apart. |
+| <Badge variant="success">Do</Badge> | Remember that `{ minWidth }` alone keeps each column at its track width, and a grid with fewer items than tracks keeps the empty tracks: two items in an 880px grid with `minWidth: 280` leave an empty third column. To let the items grow to fill the row, use `repeat: 'fit'`, or set `max` to no more than the item count. |
 | <Badge variant="success">Do</Badge> | Keep the default `repeat: 'fill'` when every column should have the same width, and switch to `'fit'` when the items of a partly filled row should stretch into the leftover space. |
 | <Badge variant="success">Do</Badge> | Leave spacing to `gap` and the container size to `width`, `maxWidth`, and friends rather than adding margins to the children. |
 | <Badge variant="error">Don't</Badge> | Hand-write `display: grid` and `grid-template-columns` and compute the gaps yourself. `Grid` already does that work. |

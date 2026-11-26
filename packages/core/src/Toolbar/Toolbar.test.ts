@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { mount } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { h, nextTick } from 'vue'
 import Toolbar from './Toolbar.vue'
 
@@ -134,5 +134,55 @@ describe('toolbar', () => {
     expect(rule('.astryx-toolbar--two-lane')).toContain('flex-wrap: wrap')
     expect(rule('.astryx-toolbar--two-lane > .astryx-toolbar__slot--end')).toContain('flex-grow: 1')
     expect(css).toMatch(/\.astryx-toolbar--two-lane > \.astryx-toolbar__slot--start,\s*\.astryx-toolbar--two-lane > \.astryx-toolbar__slot--end \{[^}]*min-width: fit-content/)
+  })
+
+  describe('three lanes', () => {
+    afterEach(() => {
+      vi.restoreAllMocks()
+    })
+
+    const css = readFileSync(resolve(process.cwd(), 'packages/core/styles/toolbar.css'), 'utf8')
+
+    function rectAt(top: number, height = 20): DOMRect {
+      return { top, bottom: top + height, height, left: 0, right: 0, width: 0, x: 0, y: top, toJSON: () => ({}) }
+    }
+
+    function mountThreeLanes() {
+      return mount(Toolbar, {
+        attachTo: document.body,
+        props: { dividers: ['bottom'], label: 'Lanes' },
+        slots: {
+          start: () => h('span', 'Start'),
+          center: () => h('span', 'Center'),
+          end: () => h('span', 'End'),
+        },
+      })
+    }
+
+    it('wraps instead of overlapping, rather than sitting in a three-column grid', () => {
+      const centered = css.slice(css.indexOf('.astryx-toolbar--centered {'))
+      expect(centered.slice(0, centered.indexOf('}'))).toContain('flex-wrap: wrap')
+      expect(css).not.toContain('grid-template-columns: 1fr auto 1fr')
+      expect(css).toContain('flex: 1000 1 min-content')
+    })
+
+    it('drops the tab indicator onto the divider while the lanes share one line', async () => {
+      vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(() => rectAt(0))
+      const wrapper = mountThreeLanes()
+      await nextTick()
+      expect((wrapper.get('[role="toolbar"]').element as HTMLElement).style.getPropertyValue('--_tab-indicator-bottom')).not.toBe('')
+      wrapper.unmount()
+    })
+
+    it('keeps the tab indicator on its tab once the lanes wrap', async () => {
+      vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (this: Element) {
+        return this.classList.contains('astryx-toolbar__slot--end') ? rectAt(60) : rectAt(0)
+      })
+      const wrapper = mountThreeLanes()
+      await nextTick()
+      await nextTick()
+      expect((wrapper.get('[role="toolbar"]').element as HTMLElement).style.getPropertyValue('--_tab-indicator-bottom')).toBe('')
+      wrapper.unmount()
+    })
   })
 })

@@ -566,13 +566,75 @@ describe('resizeHandle collapse and snaps', () => {
     expect(separator.attributes('aria-valuenow')).toBe('200')
   })
 
-  it('flips the grab-zone centering shift under RTL', () => {
+  it('centres the grab zone on the handle in both directions of writing', () => {
     const css = readFileSync(resolve(process.cwd(), 'packages/core/styles/resize-handle.css'), 'utf8')
-    expect(css).toContain('- 6.5px')
-    expect(css).toMatch(/\[dir='rtl'\][\s\S]*\+ 6\.5px/)
-    const wrapper = mountStub(makeResizable(), { pillPlacement: 'start' })
-    expect(wrapper.get('.astryx-resize-handle__hit').attributes('data-bias')).toBe('start')
-    const centered = mountStub(makeResizable(), { pillPlacement: 'center' })
-    expect(centered.get('.astryx-resize-handle__hit').attributes('data-bias')).toBe('center')
+    expect(css).toContain('transform: translateX(-50%)')
+    expect(css).toMatch(/\[dir='rtl'\][^{]*__hit\)\s*\{\s*transform: translateX\(50%\)/)
+  })
+
+  describe('keys outside the handle\'s key map', () => {
+    it.each([
+      ['ArrowRight', { altKey: true }],
+      ['ArrowLeft', { ctrlKey: true }],
+      ['ArrowDown', { metaKey: true }],
+      ['Home', { altKey: true }],
+      ['End', { ctrlKey: true }],
+      ['Enter', { metaKey: true }],
+      ['Home', { shiftKey: true }],
+      ['End', { shiftKey: true }],
+      ['Enter', { shiftKey: true }],
+    ])('%s with %j passes through and leaves the size alone', async (key, modifiers) => {
+      const resizable = makeResizable({ _collapsible: true })
+      const wrapper = mountStub(resizable)
+      const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true, ...modifiers })
+      separatorOf(wrapper).element.dispatchEvent(event)
+      expect(event.defaultPrevented).toBe(false)
+      expect(resizable._onResizeMove).not.toHaveBeenCalled()
+    })
+
+    it('still takes Shift with an arrow as the larger step', async () => {
+      const resizable = makeResizable()
+      const wrapper = mountStub(resizable)
+      await separatorOf(wrapper).trigger('keydown', { key: 'ArrowRight', shiftKey: true })
+      expect(resizable._onResizeMove).toHaveBeenCalledWith(KEYBOARD_LARGE_STEP)
+    })
+  })
+
+  it('takes the whole useResizable() result as well as its props', async () => {
+    const Host = defineComponent({
+      setup() {
+        const region = useResizable({ defaultSize: 200, minSize: 100, maxSize: 400 })
+        return () => h(ResizeHandle, { resizable: region, label: 'Resize' })
+      },
+    })
+    const wrapper = mount(Host, { attachTo: document.body })
+    const separator = wrapper.get('[role="separator"]')
+    expect(separator.attributes('aria-valuenow')).toBe('200')
+    await separator.trigger('keydown', { key: 'ArrowRight' })
+    expect(separator.attributes('aria-valuenow')).toBe(String(200 + KEYBOARD_STEP))
+    wrapper.unmount()
+  })
+
+  it('keeps the grab zone centred on the handle whatever pillPlacement says', () => {
+    for (const pillPlacement of ['auto', 'start', 'end', 'center'] as const) {
+      const wrapper = mountStub(makeResizable(), { pillPlacement })
+      expect(wrapper.get('.astryx-resize-handle__hit').attributes('data-bias')).toBe('center')
+      wrapper.unmount()
+    }
+  })
+
+  it('lets the grip pill start a drag', async () => {
+    const resizable = makeResizable()
+    const wrapper = mountStub(resizable)
+    await wrapper.get('.astryx-resize-handle-pill').trigger('pointerdown', { pointerId: 1, clientX: 10, button: 0 })
+    expect(resizable._onResizeStart).toHaveBeenCalledTimes(1)
+  })
+
+  it('marks a pane with length so the grab zone can stay within it', () => {
+    const open = mountStub(makeResizable({ _size: 12 }))
+    expect(separatorOf(open).attributes('data-pane')).toBe('true')
+    expect(separatorOf(open).attributes('style')).toContain('--_resize-pane-length: 12px')
+    const collapsed = mountStub(makeResizable({ _size: 0, _isCollapsed: true }))
+    expect(separatorOf(collapsed).attributes('data-pane')).toBeUndefined()
   })
 })

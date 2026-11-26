@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import type { StyleValue } from 'vue'
-import type { AppShellBreakpoint, AppShellEmits, AppShellProps, AppShellSlots } from './types.js'
-import { computed, onMounted, provide, reactive, ref, useAttrs, useId, useSlots, useTemplateRef, watch } from 'vue'
+import type { AppShellEmits, AppShellProps, AppShellSlots } from './types.js'
+import { computed, getCurrentInstance, inject, onMounted, provide, reactive, ref, useAttrs, useId, useSlots, useTemplateRef, watch } from 'vue'
 import { observeMainOverflow } from '../composables/internal/mainOverflow.js'
 import { attachScrollKeyboardDelegation } from '../composables/internal/scrollKeyboardDelegation.js'
 import { appShellMobileKey } from '../composables/useAppShellMobile.js'
+import { emptyLayoutSlots, layoutAreaKey, layoutContainerKey, layoutDividerKey, layoutSlotsKey } from '../Layout/context.js'
 import Layout from '../Layout/Layout.vue'
 import LayoutContent from '../Layout/LayoutContent.vue'
 import LayoutHeader from '../Layout/LayoutHeader.vue'
@@ -16,6 +17,9 @@ import MobileNav from '../MobileNav/MobileNav.vue'
 import MobileNavToggle from '../MobileNav/MobileNavToggle.vue'
 import { sideNavShellKey } from '../SideNav/context.js'
 import SideNavRenderMode from '../SideNav/SideNavRenderMode.vue'
+import { DEFAULT_WIDTH_BREAKPOINTS } from '../Theme/adaptationTypes.js'
+import { themeContextKey } from '../Theme/context.js'
+import { provideAppShellNesting, useAppShellMainId } from './useAppShellMainId.js'
 import { useAppShellRail } from './useAppShellRail.js'
 import '../../styles/app-shell.css'
 
@@ -37,32 +41,40 @@ const attrs = useAttrs()
 const slots = useSlots()
 const messages = useComponentMessages({ layout: layoutMessages, nav: navMessages })
 const root = useTemplateRef<HTMLDivElement>('root')
-const mainId = 'astryx-app-shell-main'
+const { mainId } = useAppShellMainId()
+provideAppShellNesting()
+// AppShell 是布局的根：外层 Layout 传下来的区域、槽位和分隔线默认值到此为止。
+provide(layoutAreaKey, computed(() => null))
+provide(layoutSlotsKey, emptyLayoutSlots)
+provide(layoutDividerKey, computed(() => undefined))
+provide(layoutContainerKey, null)
 const mobileNavId = `astryx-app-shell-${useId()}`
 const uncontrolledOpen = defineModel<boolean>('mobileNavOpen', { default: false })
 
 defineExpose({ element: root })
 
-const BREAKPOINTS: Record<Exclude<AppShellBreakpoint, 'none'>, number> = {
-  'sm': 640,
-  'md': 768,
-  'lg': 1024,
-  'xl': 1280,
-  '2xl': 1536,
-}
-
-const isBelow = ref(false)
-/** 脚本读到窗口之前为 false：服务端渲染出来的整条顶栏可能正显示在手机上。 */
-const windowRead = ref(false)
-onMounted(() => {
-  windowRead.value = true
-})
+const theme = inject(themeContextKey, null)
 
 const breakpoint = computed(() => (typeof props.mobileNav === 'object' ? props.mobileNav.breakpoint : undefined) ?? 'md')
-const query = computed(() => {
+/** 断点的像素宽度：主题改过宽度点就跟主题走，否则用标准值。`none` 没有断点。 */
+const breakpointWidth = computed(() => {
   if (breakpoint.value === 'none')
-    return '(width < 0px)'
-  return `(width < ${BREAKPOINTS[breakpoint.value]}px)`
+    return null
+  return theme?.value.theme.adaptations?.widthBreakpoints[breakpoint.value] ?? DEFAULT_WIDTH_BREAKPOINTS[breakpoint.value]
+})
+const query = computed(() => `(width < ${breakpointWidth.value ?? 0}px)`)
+
+/** 正在接管服务端 HTML 时，先按服务端给的提示渲染，挂载后再换成读到的窗口宽度，不让内容重新渲染。 */
+const isHydrating = getCurrentInstance()?.vnode.el != null
+const serverIsMobile = computed(() => breakpointWidth.value != null && typeof props.mobileNav === 'object' && props.mobileNav.defaultIsMobile === true)
+const measuredBelow = ref(false)
+const hasReadWindow = ref(!isHydrating && typeof window !== 'undefined')
+/** 脚本读到窗口之前为 false：服务端渲染出来的整条顶栏和侧栏可能正显示在手机上。 */
+const windowRead = ref(false)
+const isBelow = computed(() => hasReadWindow.value ? measuredBelow.value : serverIsMobile.value)
+onMounted(() => {
+  windowRead.value = true
+  hasReadWindow.value = true
 })
 
 const open = computed({
@@ -79,7 +91,7 @@ const hasCustomDrawer = computed(() => slots.mobileNav != null)
 const mobileEnabled = computed(() => props.mobileNav !== false && (hasTopNav.value || hasSideNav.value) && !hasCustomDrawer.value)
 /** 读到窗口之前，标准断点下的顶栏用 CSS 先把起始和中间内容在手机上藏起来，和读完窗口后的手机条一致。 */
 const unreadBreakpoint = computed(() => {
-  if (windowRead.value || !hasTopNav.value || !mobileEnabled.value || breakpoint.value === 'none')
+  if (windowRead.value || !mobileEnabled.value || breakpoint.value === 'none' || breakpointWidth.value !== DEFAULT_WIDTH_BREAKPOINTS[breakpoint.value])
     return undefined
   return breakpoint.value
 })
@@ -93,7 +105,7 @@ watch(query, (value, _previous, onCleanup) => {
     return
   const media = window.matchMedia(value)
   const update = () => {
-    isBelow.value = media.matches
+    measuredBelow.value = media.matches
   }
   update()
   media.addEventListener('change', update)
@@ -183,7 +195,7 @@ provide(sideNavShellKey, useAppShellRail({
 }))
 
 function focusMain() {
-  const main = root.value?.ownerDocument.getElementById(mainId)
+  const main = root.value?.ownerDocument.getElementById(mainId.value)
   if (main == null)
     return
   isMainProgrammaticFocus.value = true

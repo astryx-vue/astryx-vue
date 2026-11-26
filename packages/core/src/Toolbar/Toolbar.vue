@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { ToolbarProps, ToolbarSlots } from './types.js'
-import { computed } from 'vue'
+import { computed, onBeforeUnmount, ref, useSlots, watch } from 'vue'
 import { useListFocus } from '../composables/useListFocus.js'
 import Section from '../Section/Section.vue'
 import { provideSize } from '../SizeContext/SizeContext.js'
+import { observeResize } from '../utils/sharedResizeObserver.js'
 import '../../styles/toolbar.css'
 
 defineOptions({ name: 'AstryxToolbar' })
@@ -17,6 +18,17 @@ const props = withDefaults(defineProps<ToolbarProps>(), {
 
 defineSlots<ToolbarSlots>()
 
+/** 三条道换行后不再共用一条水平带：有的道顶部落在别的道底部之下。空道没有高度，和每一行共用。 */
+function lanesHaveWrapped(row: Element): boolean {
+  const boxes = [...row.children]
+    .slice(0, 3)
+    .map(lane => lane.getBoundingClientRect())
+    .filter(box => box.height > 0)
+  return boxes.length > 1 && Math.max(...boxes.map(box => box.top)) >= Math.min(...boxes.map(box => box.bottom))
+}
+
+const slots = useSlots()
+const hasCenter = computed(() => slots.center != null)
 const gapToken = computed(() => String(props.gap).replace('.', '-'))
 const { listRef, handleKeyDown, handleFocus } = useListFocus({
   boundarySelector: '[role="toolbar"], [role="menu"], [role="dialog"]',
@@ -31,13 +43,29 @@ const { listRef, handleKeyDown, handleFocus } = useListFocus({
 })
 void listRef.value
 
+// 底部分隔线时，标签的指示条穿过块向内边距落到分隔线上。这只在几条道共用一行时才对，
+// 换行后指示条留在标签上。换行是排版之后才知道的，在尺寸观察里报告。
+const isWrapped = ref(false)
+const watchesWrap = computed(() => hasCenter.value && props.dividers?.includes('bottom') === true)
+watch([listRef, watchesWrap], ([row, watching], _previous, onCleanup) => {
+  isWrapped.value = false
+  if (row == null || !watching)
+    return
+  onCleanup(observeResize(row, () => {
+    isWrapped.value = lanesHaveWrapped(row)
+  }))
+}, { flush: 'post', immediate: true })
+onBeforeUnmount(() => {
+  isWrapped.value = false
+})
+
 // 工具栏里的按钮、输入框、标签页等默认跟着工具栏的尺寸，自己写了 size 的不受影响。
 provideSize(() => props.size)
 
 /** 带底部分隔线时，选中标签的指示条要穿过工具栏的块向内边距落到分隔线上。 */
 const toolbarStyle = computed(() => ({
   '--astryx-toolbar-gap': `var(--astryx-spacing-${gapToken.value})`,
-  '--_tab-indicator-bottom': props.dividers?.includes('bottom')
+  '--_tab-indicator-bottom': props.dividers?.includes('bottom') && !isWrapped.value
     ? 'calc(-1 * (var(--astryx-spacing-2, 8px) + 1px))'
     : undefined,
 }))

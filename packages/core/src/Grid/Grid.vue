@@ -8,10 +8,7 @@ import '../../styles/grid.css'
 
 defineOptions({ name: 'AstryxGrid', inheritAttrs: false })
 
-const props = withDefaults(defineProps<GridProps>(), {
-  align: 'stretch',
-  justify: 'stretch',
-})
+const props = defineProps<GridProps>()
 
 defineSlots<GridSlots>()
 

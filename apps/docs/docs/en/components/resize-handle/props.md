@@ -53,7 +53,7 @@ footer: false
         <td><code>pillPlacement</code></td>
         <td><code>'auto' | 'start' | 'end' | 'center'</code></td>
         <td><code>'auto'</code></td>
-        <td>Where the grip sits on the line. <code>auto</code> stays on the panel side, and flips when the panel size is 0.</td>
+        <td>Where the grip sits on the line. <code>auto</code> stays on the panel side, and flips when the panel size is 0. It moves only the grip: the grab zone stays centred on the handle, and the grip takes a drag wherever it sits. On a pane too short for the full zone, the zone shrinks so the pane keeps at least half of itself for its own drag.</td>
       </tr>
       <tr>
         <td><code>label</code></td>
@@ -63,9 +63,9 @@ footer: false
       </tr>
       <tr>
         <td><code>resizable</code></td>
-        <td><code>ResizableProps</code></td>
+        <td><code>ResizableRegion | ResizableProps</code></td>
         <td>-</td>
-        <td>The <code>props</code> object returned by <code>useResizable</code>.</td>
+        <td>The result of <code>useResizable()</code>, or its <code>props</code>.</td>
       </tr>
     </tbody>
   </table>

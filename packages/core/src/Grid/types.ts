@@ -113,15 +113,15 @@ export interface GridProps {
    */
   rowHeight?: number
   /**
-   * Vertical alignment of items (`align-items`).
-   *
-   * @default 'stretch'
+   * Vertical alignment of items (`align-items`). Unset leaves the browser
+   * default, `normal`, which stretches items that have no natural size or
+   * aspect ratio.
    */
   align?: GridAlignment
   /**
-   * Horizontal alignment of items (`justify-items`).
-   *
-   * @default 'stretch'
+   * Horizontal alignment of items (`justify-items`). Unset leaves the browser
+   * default, `normal`, which stretches items that have no natural size or
+   * aspect ratio.
    */
   justify?: GridAlignment
 }
@@ -135,7 +135,7 @@ export interface GridSpanProps {
   /**
    * Number of columns the item spans, or `'full'` to span the whole row.
    *
-   * `'full'` renders `grid-column: 1 / -1`, which works for any column count.
+   * `'full'` renders `grid-column: 1 / -1`, which spans all explicit columns for any column count.
    */
   columns?: GridSpanColumns
   /**

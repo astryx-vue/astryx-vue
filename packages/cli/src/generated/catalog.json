@@ -13477,8 +13477,8 @@
         "zh": "`SelectableCard` 是带选中状态的卡片。键盘焦点落在一个视觉上隐藏的复选框上。单张卡片用 `v-model:is-selected`。几张卡片共用一个值时，传入 `:is-selected`，再处理 `update:isSelected`。"
       },
       "usage": {
-        "en": "`SelectableCard` is a card with a selected state. The keyboard stop is a visually hidden checkbox. Bind the state with `v-model:is-selected`, or pass `:is-selected` and handle `update:isSelected` when several cards share one value.\n\nThe selected card draws an accent border and an inset ring. `elevation` stays in the shadow, and the ring is composed on top of it. `variant` recolors that accent.\n\n```vue\n<script setup lang=\"ts\">\nimport { SelectableCard } from '@astryx-vue/core/SelectableCard'\nimport { ref } from 'vue'\n\nconst selected = ref('pro')\n</script>\n\n<template>\n  <SelectableCard\n    :is-selected=\"selected === 'pro'\"\n    label=\"Pro\"\n    @update:is-selected=\"(next) => { if (next) selected = 'pro' }\"\n  >\n    Pro\n  </SelectableCard>\n</template>\n```",
-        "zh": "`SelectableCard` 是带选中状态的卡片。键盘焦点落在一个视觉上隐藏的复选框上。单张卡片用 `v-model:is-selected`。几张卡片共用一个值时，传入 `:is-selected`，再处理 `update:isSelected`。\n\n选中后画出强调色边框和一条内描边。`elevation` 仍是阴影，描边叠在阴影上面。`variant` 会换这道强调色。\n\n```vue\n<script setup lang=\"ts\">\nimport { SelectableCard } from '@astryx-vue/core/SelectableCard'\nimport { ref } from 'vue'\n\nconst selected = ref('pro')\n</script>\n\n<template>\n  <SelectableCard\n    :is-selected=\"selected === 'pro'\"\n    label=\"Pro\"\n    @update:is-selected=\"(next) => { if (next) selected = 'pro' }\"\n  >\n    Pro\n  </SelectableCard>\n</template>\n```"
+        "en": "`SelectableCard` is a card with a selected state. The keyboard stop is a visually hidden checkbox. Bind the state with `v-model:is-selected`, or pass `:is-selected` and handle `update:isSelected` when several cards share one value.\n\nThe selected card draws an accent border and an inset ring. `elevation` stays in the shadow, and the ring is composed on top of it. `variant` recolors that accent.\n\n```vue\n<script setup lang=\"ts\">\nimport { SelectableCard } from '@astryx-vue/core/SelectableCard'\nimport { ref } from 'vue'\n\nconst selected = ref(new Set(['pro']))\n\nfunction toggle(id: string, isSelected: boolean) {\n  const next = new Set(selected.value)\n  if (isSelected)\n    next.add(id)\n  else\n    next.delete(id)\n  selected.value = next\n}\n</script>\n\n<template>\n  <SelectableCard\n    :is-selected=\"selected.has('pro')\"\n    label=\"Pro\"\n    @update:is-selected=\"(next) => toggle('pro', next)\"\n  >\n    Pro\n  </SelectableCard>\n</template>\n```\n\nUse `SelectableCard` for multi-select choices, such as filter chips, feature add-ons, or option grids where several can be on, and track the selected IDs in a `Set`. Do not use it for a single-select group: each card is a checkbox, so assistive technology announces a multi-select group with one tab stop per card. For one choice among several, use `RadioList`.",
+        "zh": "`SelectableCard` 是带选中状态的卡片。键盘焦点落在一个视觉上隐藏的复选框上。单张卡片用 `v-model:is-selected`。几张卡片共用一个值时，传入 `:is-selected`，再处理 `update:isSelected`。\n\n选中后画出强调色边框和一条内描边。`elevation` 仍是阴影，描边叠在阴影上面。`variant` 会换这道强调色。\n\n```vue\n<script setup lang=\"ts\">\nimport { SelectableCard } from '@astryx-vue/core/SelectableCard'\nimport { ref } from 'vue'\n\nconst selected = ref(new Set(['pro']))\n\nfunction toggle(id: string, isSelected: boolean) {\n  const next = new Set(selected.value)\n  if (isSelected)\n    next.add(id)\n  else\n    next.delete(id)\n  selected.value = next\n}\n</script>\n\n<template>\n  <SelectableCard\n    :is-selected=\"selected.has('pro')\"\n    label=\"Pro\"\n    @update:is-selected=\"(next) => toggle('pro', next)\"\n  >\n    Pro\n  </SelectableCard>\n</template>\n```\n\n`SelectableCard` 适合多选：筛选标签、功能附加项、可以同时选几个的选项网格，选中的 ID 用 `Set` 记录。不要拿它做单选组：每张卡片都是一个复选框，辅助技术会把它读成多选组，而且每张卡片各占一个 Tab 停靠点。几个里选一个，用 `RadioList`。"
       },
       "practices": {
         "en": [],
@@ -43474,8 +43474,8 @@
         "zh": "`Grid` 用 CSS 网格把子元素排进行和列，解决的是二维布局：卡片墙、仪表盘面板，以及任何需要多列对齐的区域。一维排布交给 `Stack` 系列，只有当行和列都要对齐时才换成 `Grid`。"
       },
       "usage": {
-        "en": "`Grid` arranges its children into rows and columns with CSS grid. It solves two-dimensional layout: card galleries, dashboard panels, and any region where several columns have to line up. One-dimensional arrangement belongs to the `Stack` family; reach for `Grid` when rows and columns both matter.\n\nGive it a column configuration and it is ready:\n\n```vue\n<script setup lang=\"ts\">\nimport { Grid } from '@astryx-vue/core/Grid'\n</script>\n\n<template>\n  <Grid :columns=\"3\" :gap=\"4\">\n    <div>First</div>\n    <div>Second</div>\n    <div>Third</div>\n  </Grid>\n</template>\n```\n\nA number for `columns` means a fixed number of equal-width columns. An object means responsive columns: `minWidth` is the smallest a column may get, in pixels, and the grid decides how many columns fit in the available width on its own, dropping to fewer columns on a narrow screen.\n\n```vue\n<template>\n  <Grid :columns=\"{ minWidth: 280 }\" :gap=\"4\">\n    <div>First</div>\n    <div>Second</div>\n  </Grid>\n</template>\n```\n\nThe responsive configuration has two more options. `repeat` decides what happens to the gap a partly filled last row leaves behind: `'fill'` (the default) keeps the empty tracks, so every column always has the same width, while `'fit'` collapses them so the columns that are present stretch across the whole row. `max` caps how many columns may appear, which keeps columns from growing uncomfortably wide on a large screen. The cap sits on the minimum track size rather than the maximum, so the count never exceeds `max` while the columns that are present still fill the row — no dead space on the right.\n\n`gap` sets the spacing between rows and columns, with `rowGap` and `columnGap` overriding it on a single axis, and all three take a step from the Astryx spacing scale. `rowHeight` fixes the height of implicit rows in pixels and, together with `GridSpan rows`, produces items that span several rows.\n\nWrap an item in `GridSpan` when it has to span more than one column or row. Its `columns` takes a number for the number of columns, or `'full'` to span the entire row, and `rows` takes the number of rows.\n\n```vue\n<template>\n  <Grid :columns=\"4\" :gap=\"3\">\n    <GridSpan :columns=\"2\">\n      Spans two columns\n    </GridSpan>\n    <div>Regular item</div>\n    <GridSpan columns=\"full\">\n      Spans the full row\n    </GridSpan>\n  </Grid>\n</template>\n```\n\n`width`, `height`, `maxWidth`, and `minHeight` size the container itself: numbers are pixels and strings are used as they are. `align` controls how items sit vertically inside their row (`align-items`) and `justify` controls the horizontal axis (`justify-items`); both default to `stretch`, which makes every item fill its cell.\n\nThe column template is written to the container as the CSS variable `--astryx-grid-template-columns` rather than as an inline `grid-template-columns` declaration. That way your own stylesheet, including a rule inside a media query, can still override the variable or the declaration itself.",
-        "zh": "`Grid` 用 CSS 网格把子元素排进行和列，解决的是二维布局：卡片墙、仪表盘面板，以及任何需要多列对齐的区域。一维排布交给 `Stack` 系列，只有当行和列都要对齐时才换成 `Grid`。\n\n给出列配置就能开始使用：\n\n```vue\n<script setup lang=\"ts\">\nimport { Grid } from '@astryx-vue/core/Grid'\n</script>\n\n<template>\n  <Grid :columns=\"3\" :gap=\"4\">\n    <div>第一项</div>\n    <div>第二项</div>\n    <div>第三项</div>\n  </Grid>\n</template>\n```\n\n`columns` 传数字表示固定列数，每一列等宽。传对象则表示响应式列：`minWidth` 是每列的最小宽度（像素），网格按可用宽度自己决定能放几列，窄屏时自动减少列数。\n\n```vue\n<template>\n  <Grid :columns=\"{ minWidth: 280 }\" :gap=\"4\">\n    <div>第一项</div>\n    <div>第二项</div>\n  </Grid>\n</template>\n```\n\n响应式配置里还有两个可选项。`repeat` 决定最后一行没排满时留下的空隙如何处理：`'fill'`（默认）保留空的轨道，所以每列宽度始终一致；`'fit'` 收起空轨道，让实际存在的列把整行撑满。`max` 限制最多几列，避免大屏上每一列被拉得过宽。列数上限加在轨道的最小尺寸上而不是最大尺寸上，因此列数不会超过 `max`，而排不满时留下的列依然会撑满整行，右侧不会出现空白。\n\n`gap` 控制行列间距，`rowGap` 与 `columnGap` 可以分别在行、列方向覆盖它，取值都来自 Astryx 的间距刻度。`rowHeight` 用像素固定隐式行高，配合 `GridSpan` 的 `rows` 可以做出跨若干行的布局。\n\n需要某一项跨列或跨行时，用 `GridSpan` 包一层。它的 `columns` 给数字表示跨几列，给 `'full'` 表示跨越整行；`rows` 表示跨几行。\n\n```vue\n<template>\n  <Grid :columns=\"4\" :gap=\"3\">\n    <GridSpan :columns=\"2\">\n      跨两列的项目\n    </GridSpan>\n    <div>普通项目</div>\n    <GridSpan columns=\"full\">\n      跨越整行\n    </GridSpan>\n  </Grid>\n</template>\n```\n\n`width`、`height`、`maxWidth`、`minHeight` 控制容器自身的尺寸，数字按像素处理，字符串原样使用。`align` 控制项目在行内的垂直对齐（`align-items`），`justify` 控制水平对齐（`justify-items`），两者默认都是 `stretch`，也就是撑满所在的单元格。\n\n列模板写在容器的 CSS 变量 `--astryx-grid-template-columns` 上，而不是内联的 `grid-template-columns` 声明。因此在自有样式或媒体查询里重写这个变量、或者直接重写 `grid-template-columns`，都能生效。"
+        "en": "`Grid` arranges its children into rows and columns with CSS grid. It solves two-dimensional layout: card galleries, dashboard panels, and any region where several columns have to line up. One-dimensional arrangement belongs to the `Stack` family; reach for `Grid` when rows and columns both matter.\n\nGive it a column configuration and it is ready:\n\n```vue\n<script setup lang=\"ts\">\nimport { Grid } from '@astryx-vue/core/Grid'\n</script>\n\n<template>\n  <Grid :columns=\"3\" :gap=\"4\">\n    <div>First</div>\n    <div>Second</div>\n    <div>Third</div>\n  </Grid>\n</template>\n```\n\nA number for `columns` means a fixed number of `1fr` tracks; a child's minimum content can widen its track beyond an equal share. An object means responsive columns: `minWidth` is the smallest a column may get, in pixels, and the grid decides how many columns fit in the available width on its own, dropping to fewer columns on a narrow screen.\n\n```vue\n<template>\n  <Grid :columns=\"{ minWidth: 280 }\" :gap=\"4\">\n    <div>First</div>\n    <div>Second</div>\n  </Grid>\n</template>\n```\n\nThe responsive configuration has two more options. `repeat` decides what happens to the gap a partly filled last row leaves behind: `'fill'` (the default) keeps the empty tracks, so every column always has the same width, while `'fit'` collapses them so the columns that are present stretch across the whole row. `max` caps how many columns may appear, which keeps columns from growing uncomfortably wide on a large screen. The cap sits on the minimum track size rather than the maximum, so the count never exceeds `max` while the columns that are present still fill the row — no dead space on the right.\n\n`gap` sets the spacing between rows and columns, with `rowGap` and `columnGap` overriding it on a single axis, and all three take a step from the Astryx spacing scale. `rowHeight` fixes the height of implicit rows in pixels and, together with `GridSpan rows`, produces items that span several rows.\n\nWrap an item in `GridSpan` when it has to span more than one column or row. Its `columns` takes a number for the number of columns, or `'full'` to span the entire row, and `rows` takes the number of rows.\n\n```vue\n<template>\n  <Grid :columns=\"4\" :gap=\"3\">\n    <GridSpan :columns=\"2\">\n      Spans two columns\n    </GridSpan>\n    <div>Regular item</div>\n    <GridSpan columns=\"full\">\n      Spans the full row\n    </GridSpan>\n  </Grid>\n</template>\n```\n\n`width`, `height`, `maxWidth`, and `minHeight` size the container itself: numbers are pixels and strings are used as they are. `align` controls how items sit vertically inside their row (`align-items`) and `justify` controls the horizontal axis (`justify-items`); both are left to the browser default (`normal`) until set, which stretches items that have no natural size or aspect ratio.\n\nThe column template is written to the container as the CSS variable `--astryx-grid-template-columns` rather than as an inline `grid-template-columns` declaration. That way your own stylesheet, including a rule inside a media query, can still override the variable or the declaration itself.",
+        "zh": "`Grid` 用 CSS 网格把子元素排进行和列，解决的是二维布局：卡片墙、仪表盘面板，以及任何需要多列对齐的区域。一维排布交给 `Stack` 系列，只有当行和列都要对齐时才换成 `Grid`。\n\n给出列配置就能开始使用：\n\n```vue\n<script setup lang=\"ts\">\nimport { Grid } from '@astryx-vue/core/Grid'\n</script>\n\n<template>\n  <Grid :columns=\"3\" :gap=\"4\">\n    <div>第一项</div>\n    <div>第二项</div>\n    <div>第三项</div>\n  </Grid>\n</template>\n```\n\n`columns` 传数字表示固定个数的 `1fr` 轨道；子项的最小内容宽度可能把所在轨道撑得比平分更宽。传对象则表示响应式列：`minWidth` 是每列的最小宽度（像素），网格按可用宽度自己决定能放几列，窄屏时自动减少列数。\n\n```vue\n<template>\n  <Grid :columns=\"{ minWidth: 280 }\" :gap=\"4\">\n    <div>第一项</div>\n    <div>第二项</div>\n  </Grid>\n</template>\n```\n\n响应式配置里还有两个可选项。`repeat` 决定最后一行没排满时留下的空隙如何处理：`'fill'`（默认）保留空的轨道，所以每列宽度始终一致；`'fit'` 收起空轨道，让实际存在的列把整行撑满。`max` 限制最多几列，避免大屏上每一列被拉得过宽。列数上限加在轨道的最小尺寸上而不是最大尺寸上，因此列数不会超过 `max`，而排不满时留下的列依然会撑满整行，右侧不会出现空白。\n\n`gap` 控制行列间距，`rowGap` 与 `columnGap` 可以分别在行、列方向覆盖它，取值都来自 Astryx 的间距刻度。`rowHeight` 用像素固定隐式行高，配合 `GridSpan` 的 `rows` 可以做出跨若干行的布局。\n\n需要某一项跨列或跨行时，用 `GridSpan` 包一层。它的 `columns` 给数字表示跨几列，给 `'full'` 表示跨越整行；`rows` 表示跨几行。\n\n```vue\n<template>\n  <Grid :columns=\"4\" :gap=\"3\">\n    <GridSpan :columns=\"2\">\n      跨两列的项目\n    </GridSpan>\n    <div>普通项目</div>\n    <GridSpan columns=\"full\">\n      跨越整行\n    </GridSpan>\n  </Grid>\n</template>\n```\n\n`width`、`height`、`maxWidth`、`minHeight` 控制容器自身的尺寸，数字按像素处理，字符串原样使用。`align` 控制项目在行内的垂直对齐（`align-items`），`justify` 控制水平对齐（`justify-items`），两者不设置时交给浏览器默认值（`normal`），它会拉伸没有自然尺寸或宽高比的项目。\n\n列模板写在容器的 CSS 变量 `--astryx-grid-template-columns` 上，而不是内联的 `grid-template-columns` 声明。因此在自有样式或媒体查询里重写这个变量、或者直接重写 `grid-template-columns`，都能生效。"
       },
       "practices": {
         "en": [
@@ -43486,6 +43486,10 @@
           {
             "guidance": "Do",
             "text": "Cap the count with `max` on wide screens. Without a cap each column grows very wide and the contents of a row drift far apart."
+          },
+          {
+            "guidance": "Do",
+            "text": "Remember that `{ minWidth }` alone keeps each column at its track width, and a grid with fewer items than tracks keeps the empty tracks: two items in an 880px grid with `minWidth: 280` leave an empty third column. To let the items grow to fill the row, use `repeat: 'fit'`, or set `max` to no more than the item count."
           },
           {
             "guidance": "Do",
@@ -43519,6 +43523,10 @@
           },
           {
             "guidance": "推荐",
+            "text": "只写 `{ minWidth }` 时每列保持轨道宽度，项目比轨道少就会留下空轨道：880px 宽的网格里放 2 个项目、`minWidth: 280`，右边会空出第三列。想让项目撑满整行，用 `repeat: 'fit'`，或把 `max` 设成不超过项目数。"
+          },
+          {
+            "guidance": "推荐",
             "text": "需要每列宽度一致时保留默认的 `repeat: 'fill'`；希望不足一行的项目撑开剩余空间时改用 `'fit'`。"
           },
           {
@@ -43548,7 +43556,7 @@
                 "name": "`columns`",
                 "type": "`number | GridResponsiveColumns`",
                 "default": "-",
-                "description": "Column configuration. A number is a fixed count of equal-width columns; an object `{ minWidth, max?, repeat? }` creates responsive columns that reflow with the available width. A missing, zero, or negative value falls back to a single column."
+                "description": "Column configuration. A number is a fixed count of `1fr` tracks (a child's minimum content can widen its track); an object `{ minWidth, max?, repeat? }` creates responsive columns that reflow with the available width. A missing, zero, or negative value falls back to a single column."
               },
               {
                 "name": "`width`",
@@ -43601,14 +43609,14 @@
               {
                 "name": "`align`",
                 "type": "`GridAlignment`",
-                "default": "`'stretch'`",
-                "description": "Vertical alignment of items inside their row (`align-items`): start, center, end, or stretch."
+                "default": "-",
+                "description": "Vertical alignment of items inside their row (`align-items`): start, center, end, or stretch. Unset leaves the browser default, `normal`, which stretches items that have no natural size or aspect ratio."
               },
               {
                 "name": "`justify`",
                 "type": "`GridAlignment`",
-                "default": "`'stretch'`",
-                "description": "Horizontal alignment of items within their row (`justify-items`): start, center, end, or stretch."
+                "default": "-",
+                "description": "Horizontal alignment of items within their row (`justify-items`): start, center, end, or stretch. Unset leaves the browser default, `normal`, which stretches items that have no natural size or aspect ratio."
               }
             ]
           },
@@ -43619,7 +43627,7 @@
                 "name": "`columns`",
                 "type": "`number | 'full'`",
                 "default": "-",
-                "description": "Columns to span. `'full'` renders `grid-column: 1 / -1`, which spans the row whatever the column count is."
+                "description": "Columns to span. `'full'` renders `grid-column: 1 / -1`, which spans all explicit columns whatever the column count is."
               },
               {
                 "name": "`rows`",
@@ -43638,7 +43646,7 @@
                 "name": "`columns`",
                 "type": "`number | GridResponsiveColumns`",
                 "default": "-",
-                "description": "列配置。传数字是固定列数，每一列等宽；传对象 `{ minWidth, max?, repeat? }` 是响应式列，按可用宽度自动决定列数。缺失、为 0 或为负数时回退为单列。"
+                "description": "列配置。传数字是固定个数的 `1fr` 轨道（子项的最小内容宽度可能撑宽所在轨道）；传对象 `{ minWidth, max?, repeat? }` 是响应式列，按可用宽度自动决定列数。缺失、为 0 或为负数时回退为单列。"
               },
               {
                 "name": "`width`",
@@ -43691,14 +43699,14 @@
               {
                 "name": "`align`",
                 "type": "`GridAlignment`",
-                "default": "`'stretch'`",
-                "description": "项目在行内的垂直对齐（`align-items`），可选 start、center、end、stretch。"
+                "default": "-",
+                "description": "项目在行内的垂直对齐（`align-items`），可选 start、center、end、stretch。不设置时用浏览器默认值 `normal`，它会拉伸没有自然尺寸或宽高比的项目。"
               },
               {
                 "name": "`justify`",
                 "type": "`GridAlignment`",
-                "default": "`'stretch'`",
-                "description": "项目在同一行内的水平对齐（`justify-items`），可选 start、center、end、stretch。"
+                "default": "-",
+                "description": "项目在同一行内的水平对齐（`justify-items`），可选 start、center、end、stretch。不设置时用浏览器默认值 `normal`，它会拉伸没有自然尺寸或宽高比的项目。"
               }
             ]
           },
@@ -43709,7 +43717,7 @@
                 "name": "`columns`",
                 "type": "`number | 'full'`",
                 "default": "-",
-                "description": "跨越的列数。`'full'` 渲染为 `grid-column: 1 / -1`，跨越整行，与列数无关。"
+                "description": "跨越的列数。`'full'` 渲染为 `grid-column: 1 / -1`，跨越所有显式列，与列数无关。"
               },
               {
                 "name": "`rows`",
@@ -43938,7 +43946,7 @@
                 "name": "`columns`",
                 "type": "`number | 'full'`",
                 "default": "—",
-                "description": "占几列，渲染成 `grid-column: span N`。写 `'full'` 渲染成 `grid-column: 1 / -1`，不管一共几列都能占满一行。"
+                "description": "占几列，渲染成 `grid-column: span N`。写 `'full'` 渲染成 `grid-column: 1 / -1`，不管一共几列都能占满所有显式列。"
               },
               {
                 "name": "`rows`",
@@ -44085,7 +44093,7 @@
                 "name": "`direction`",
                 "type": "`'horizontal' | 'vertical'`",
                 "default": "`'vertical'`",
-                "description": "Direction in which children are arranged."
+                "description": "Direction in which children are arranged. `'horizontal'` flows along the inline axis: left to right in LTR, right to left in RTL."
               },
               {
                 "name": "`gap`",
@@ -44151,13 +44159,13 @@
                 "name": "`justify`",
                 "type": "`StackMainAlignment`",
                 "default": "—",
-                "description": "Alias for main-axis alignment."
+                "description": "Alias for main-axis alignment. When `hAlign` or `vAlign` sets the same axis, that prop wins."
               },
               {
                 "name": "`align`",
                 "type": "`StackCrossAlignment`",
                 "default": "—",
-                "description": "Alias for cross-axis alignment."
+                "description": "Alias for cross-axis alignment. When `hAlign` or `vAlign` sets the same axis, that prop wins."
               },
               {
                 "name": "`wrap`",
@@ -44275,7 +44283,7 @@
                 "name": "`direction`",
                 "type": "`'horizontal' | 'vertical'`",
                 "default": "`'vertical'`",
-                "description": "内容排列方向。"
+                "description": "内容排列方向。`'horizontal'` 沿行内方向排列：LTR 中从左到右，RTL 中从右到左。"
               },
               {
                 "name": "`gap`",
@@ -44341,13 +44349,13 @@
                 "name": "`justify`",
                 "type": "`StackMainAlignment`",
                 "default": "—",
-                "description": "主轴对齐别名。"
+                "description": "主轴对齐别名。`hAlign` 或 `vAlign` 设置了同一根轴时，以它们为准。"
               },
               {
                 "name": "`align`",
                 "type": "`StackCrossAlignment`",
                 "default": "—",
-                "description": "交叉轴对齐别名。"
+                "description": "交叉轴对齐别名。`hAlign` 或 `vAlign` 设置了同一根轴时，以它们为准。"
               },
               {
                 "name": "`wrap`",
@@ -44474,7 +44482,7 @@
           },
           {
             "heading": "HStack Props",
-            "text": "`HStack` uses a fixed horizontal direction.\n\n- The component supports shared `Stack` props.\n- The component does not expose `direction`.\n- The table below defines alignment."
+            "text": "`HStack` uses a fixed horizontal direction. It arranges items along the inline axis: left to right in LTR, right to left in RTL.\n\n- The component supports shared `Stack` props.\n- The component does not expose `direction`.\n- The table below defines alignment."
           },
           {
             "heading": "VStack Props",
@@ -44496,7 +44504,7 @@
           },
           {
             "heading": "HStack Props",
-            "text": "`HStack` 固定使用水平方向。\n\n- 组件支持 `Stack` 的通用属性。\n- 组件不提供 `direction` 属性。\n- 对齐规则见下表。"
+            "text": "`HStack` 固定使用水平方向，沿行内方向排列：LTR 中从左到右，RTL 中从右到左。\n\n- 组件支持 `Stack` 的通用属性。\n- 组件不提供 `direction` 属性。\n- 对齐规则见下表。"
           },
           {
             "heading": "VStack Props",
@@ -45580,8 +45588,8 @@
         "zh": "`AppShell`（应用外壳）是承载整个网站或管理后台的大骨架，用来规整地安排顶部导航、侧边菜单、重要横幅以及中间的主内容区。默认插槽放页面的正文，其余重要区域通过具名插槽放入：`topNav`（顶栏）、`sideNav`（侧栏）、`banner`（通知横幅）和 `mobileNav`（移动端导航）。"
       },
       "usage": {
-        "en": "`AppShell` is the page frame. The default slot is the page content. `topNav`, `sideNav`, `banner`, and `mobileNav` are named slots.\n\n```vue\n<script setup lang=\"ts\">\nimport { AppShell } from '@astryx-vue/core/AppShell'\nimport { SideNav, SideNavItem } from '@astryx-vue/core/SideNav'\n</script>\n\n<template>\n  <AppShell :content-padding=\"6\">\n    <template #sideNav>\n      <SideNav>\n        <SideNavItem href=\"#orders\" is-selected label=\"Orders\" />\n      </SideNav>\n    </template>\n    <p>Orders</p>\n  </AppShell>\n</template>\n```\n\n`variant` is `wash`, `surface`, `section`, or `elevated` (the default). `contentPadding` is a spacing step for the content region. `height` is `fill` or `auto`. `fill` uses `100dvh`; an inline `height: 100%` overrides it when the shell sits in a sized preview.\n\n`mobileNav` is `false` or `{ breakpoint, isOpen, hasToggle }`. The default breakpoint is `md` (768px). Below the breakpoint the side nav moves into a drawer. A top nav inside the shell uses that drawer instead of opening one of its own. `v-model:mobile-nav-open` controls the drawer, and the component emits `mobileNavOpenChange`.\n\nA skip link points at `#astryx-app-shell-main`. The main region is a `div` with `role=\"main\"` and `tabindex=\"-1\"`. With `variant=\"elevated\"` and both a top nav and a side nav on a wide viewport, the content sits on a rounded backdrop.\n\n`useAppShellMobile` reads the nearest shell. Outside a shell, or when mobile nav is off, `isMobile` and `isMobileNavEnabled` are false and the open and close methods do nothing.",
-        "zh": "`AppShell`（应用外壳）是承载整个网站或管理后台的大骨架，用来规整地安排顶部导航、侧边菜单、重要横幅以及中间的主内容区。默认插槽放页面的正文，其余重要区域通过具名插槽放入：`topNav`（顶栏）、`sideNav`（侧栏）、`banner`（通知横幅）和 `mobileNav`（移动端导航）。\n\n**什么时候用：**\n- 构建后台管理系统、多页面 SaaS 应用或需要统一导航布局的完整平台时。\n\n**什么时候不要用：**\n- 如果只是页面内部的一小块局部排版（例如卡片内的两栏布局），请使用专门的 [Layout](/components/layout) 或弹性盒/网格，不要滥用 AppShell。\n- 独立的单页落地页、注册登录页或全屏沉浸式预览，通常不需要复杂的外壳，使用纯正文模式或直接排版即可。\n\n```vue\n<script setup lang=\"ts\">\nimport { AppShell } from '@astryx-vue/core/AppShell'\nimport { SideNav, SideNavItem } from '@astryx-vue/core/SideNav'\n</script>\n\n<template>\n  <AppShell :content-padding=\"6\">\n    <template #sideNav>\n      <SideNav>\n        <SideNavItem href=\"#orders\" is-selected label=\"订单\" />\n      </SideNav>\n    </template>\n    <p>订单</p>\n  </AppShell>\n</template>\n```\n\n外壳的常用配置项如下：\n\n- `variant` 可以调整底色风格：包含纯净底色 `wash`、面板底色 `surface`、区块底色 `section`，或者默认的浮起卡片质感 `elevated`。\n- `contentPadding` 控制正文区域四周的留白间距等级。\n- `height` 设置外壳的高度模式，可以填满全屏（`fill`，使用 `100dvh`），也可以随内容自适应撑开（`auto`）。\n- `mobileNav` 用来控制手机端的抽屉导航。默认在宽度低于 768px（`md` 断点）时，原本在左侧的侧边菜单会自动收拢进一个侧滑抽屉里。顶栏里的汉堡按钮会自动连接并控制这只抽屉，无需自己重复写逻辑。可以通过 `v-model:mobile-nav-open` 双向绑定抽屉的打开状态。\n- 组件内置了专门为键盘操作和读屏用户准备的「跳转到主内容」快捷链接，回车即可将光标焦点直接定位到带有 `role=\"main\"` 的正文容器上。\n- `useAppShellMobile` 组合式函数可以在任何子组件里读取当前外壳的移动端适配状态（如抽屉是否开启、是否处于手机屏幕断点下）。"
+        "en": "`AppShell` is the page frame. The default slot is the page content. `topNav`, `sideNav`, `banner`, and `mobileNav` are named slots.\n\n```vue\n<script setup lang=\"ts\">\nimport { AppShell } from '@astryx-vue/core/AppShell'\nimport { SideNav, SideNavItem } from '@astryx-vue/core/SideNav'\n</script>\n\n<template>\n  <AppShell :content-padding=\"6\">\n    <template #sideNav>\n      <SideNav>\n        <SideNavItem href=\"#orders\" is-selected label=\"Orders\" />\n      </SideNav>\n    </template>\n    <p>Orders</p>\n  </AppShell>\n</template>\n```\n\n`variant` is `wash`, `surface`, `section`, or `elevated` (the default). `contentPadding` is a spacing step for the content region. `height` is `fill` or `auto`. `fill` uses `100dvh`; an inline `height: 100%` overrides it when the shell sits in a sized preview.\n\n`mobileNav` is `false` or `{ breakpoint, isOpen, hasToggle }`. The default breakpoint is `md` (768px). Below the breakpoint the side nav moves into a drawer. A top nav inside the shell uses that drawer instead of opening one of its own. `v-model:mobile-nav-open` controls the drawer, and the component emits `mobileNavOpenChange`.\n\nA skip link points at `#astryx-app-shell-main`; the first outermost shell on a page keeps that id, and a second or nested shell gets its own. An AppShell is a layout root: the padding, widths, and divider default that an ancestor Layout, Card, or Section passes down do not reach its regions. The main region is a `div` with `role=\"main\"` and `tabindex=\"-1\"`. With `variant=\"elevated\"` and both a top nav and a side nav on a wide viewport, the content sits on a rounded backdrop.\n\n`useAppShellMobile` reads the nearest shell. Outside a shell, or when mobile nav is off, `isMobile` and `isMobileNavEnabled` are false and the open and close methods do nothing.",
+        "zh": "`AppShell`（应用外壳）是承载整个网站或管理后台的大骨架，用来规整地安排顶部导航、侧边菜单、重要横幅以及中间的主内容区。默认插槽放页面的正文，其余重要区域通过具名插槽放入：`topNav`（顶栏）、`sideNav`（侧栏）、`banner`（通知横幅）和 `mobileNav`（移动端导航）。\n\n**什么时候用：**\n- 构建后台管理系统、多页面 SaaS 应用或需要统一导航布局的完整平台时。\n\n**什么时候不要用：**\n- 如果只是页面内部的一小块局部排版（例如卡片内的两栏布局），请使用专门的 [Layout](/components/layout) 或弹性盒/网格，不要滥用 AppShell。\n- 独立的单页落地页、注册登录页或全屏沉浸式预览，通常不需要复杂的外壳，使用纯正文模式或直接排版即可。\n\n```vue\n<script setup lang=\"ts\">\nimport { AppShell } from '@astryx-vue/core/AppShell'\nimport { SideNav, SideNavItem } from '@astryx-vue/core/SideNav'\n</script>\n\n<template>\n  <AppShell :content-padding=\"6\">\n    <template #sideNav>\n      <SideNav>\n        <SideNavItem href=\"#orders\" is-selected label=\"订单\" />\n      </SideNav>\n    </template>\n    <p>订单</p>\n  </AppShell>\n</template>\n```\n\n外壳的常用配置项如下：\n\n- `variant` 可以调整底色风格：包含纯净底色 `wash`、面板底色 `surface`、区块底色 `section`，或者默认的浮起卡片质感 `elevated`。\n- `contentPadding` 控制正文区域四周的留白间距等级。\n- `height` 设置外壳的高度模式，可以填满全屏（`fill`，使用 `100dvh`），也可以随内容自适应撑开（`auto`）。\n- `mobileNav` 用来控制手机端的抽屉导航。默认在宽度低于 768px（`md` 断点）时，原本在左侧的侧边菜单会自动收拢进一个侧滑抽屉里。顶栏里的汉堡按钮会自动连接并控制这只抽屉，无需自己重复写逻辑。可以通过 `v-model:mobile-nav-open` 双向绑定抽屉的打开状态。\n- 组件内置了专门为键盘操作和读屏用户准备的「跳转到主内容」快捷链接，回车即可将光标焦点直接定位到带有 `role=\"main\"` 的正文容器上。\n- 页面上第一个外层外壳的主区域保持固定 id `astryx-app-shell-main`，第二个外壳或嵌在别的外壳内容里的外壳会拿到自己的 id。`AppShell` 是布局的根：外层 Layout、Card、Section 传下来的内边距、宽度和分隔线默认值不会进到它的各个区域。\n- `useAppShellMobile` 组合式函数可以在任何子组件里读取当前外壳的移动端适配状态（如抽屉是否开启、是否处于手机屏幕断点下）。"
       },
       "practices": {
         "en": [
@@ -45592,6 +45600,14 @@
           {
             "guidance": "Do",
             "text": "Give the side nav a heading so the mobile drawer has a name."
+          },
+          {
+            "guidance": "Do",
+            "text": "Give every nav slot an accessible name. The shell renders TopNav and SideNav as separate navigation landmarks, and a screen reader lists them by name. Pass `label` to TopNav. SideNav has a translated default name; pass `label` to rename it."
+          },
+          {
+            "guidance": "Do",
+            "text": "On phones, opt the page into the full screen with `viewport-fit=cover` in the viewport meta tag (`width=device-width, initial-scale=1, viewport-fit=cover`). The shell then extends its header under the status bar and out to the screen sides, and keeps the header's items and the end of the content inside the device's safe area. In landscape only the header is inset; an inline SideNav and the content's sides still reach under a notch, so keep content padding there. A shell with no header region or phone top bar keeps no top inset; keep top padding there."
           },
           {
             "guidance": "Don't",
@@ -45610,6 +45626,14 @@
           {
             "guidance": "推荐",
             "text": "给侧栏一个标题，移动抽屉才有名字。"
+          },
+          {
+            "guidance": "推荐",
+            "text": "给每个导航插槽一个无障碍名称。外壳把 TopNav 和 SideNav 渲染成各自独立的导航地标，读屏按名字列出它们。给 TopNav 传 `label`；SideNav 有翻译好的默认名字，想改就传 `label`。"
+          },
+          {
+            "guidance": "推荐",
+            "text": "手机上要让页面铺满全屏，在 viewport meta 里加 `viewport-fit=cover`（`width=device-width, initial-scale=1, viewport-fit=cover`）。外壳会把页头延伸到状态栏下面和屏幕两侧，同时让页头里的内容和内容区末尾留在设备安全区内。横屏时只有页头避让；内联侧栏和内容两侧仍会伸到刘海下面，那里要自己留内容内边距。没有页头区域或手机顶栏的外壳不留顶部安全区，顶部内边距要自己留。"
           },
           {
             "guidance": "避免",
@@ -45648,7 +45672,7 @@
                 "name": "`mobileNav`",
                 "type": "`false | AppShellMobileNav`",
                 "default": "-",
-                "description": "`false` turns the drawer off. An object sets `breakpoint` (`sm` 640, `md` 768, `lg` 1024, `xl` 1280, `2xl` 1536, or `none`), `isOpen`, and `hasToggle`."
+                "description": "`false` turns the drawer off. An object sets `breakpoint` (`sm` 640, `md` 768, `lg` 1024, `xl` 1280, `2xl` 1536, or `none`), `isOpen`, `hasToggle`, and `defaultIsMobile`. A theme that moves the width points moves the breakpoint with them. `defaultIsMobile` is a server-rendering hint: the server renders the phone layout, menu toggle included. Without it, the wide layout still paints without its inline side nav below the breakpoint, and the toggle arrives when the page's script runs. It is ignored when `breakpoint` is `none`."
               },
               {
                 "name": "`mobileNavOpen`",
@@ -45735,7 +45759,7 @@
                 "name": "`mobileNav`",
                 "type": "`false | AppShellMobileNav`",
                 "default": "-",
-                "description": "`false` 关掉抽屉。对象可以设置 `breakpoint`（`sm` 640、`md` 768、`lg` 1024、`xl` 1280、`2xl` 1536 或 `none`）、`isOpen` 和 `hasToggle`。"
+                "description": "`false` 关掉抽屉。对象可以设置 `breakpoint`（`sm` 640、`md` 768、`lg` 1024、`xl` 1280、`2xl` 1536 或 `none`）、`isOpen`、`hasToggle` 和 `defaultIsMobile`。主题移动了宽度点，断点跟着移动。`defaultIsMobile` 是服务端渲染的提示：服务端直接出手机布局，菜单开关也带上；不传时，宽屏布局先出，手机上内联侧栏先不显示，要等脚本跑起来才补上开关。`breakpoint` 为 `none` 时忽略。"
               },
               {
                 "name": "`mobileNavOpen`",
@@ -45865,7 +45889,7 @@
           },
           {
             "heading": "useAppShellMobile",
-            "text": "Import it from <code>@astryx-vue/core</code>. It returns the nearest shell:\n\nThe main region is <code>#astryx-app-shell-main</code>, a <code>div</code> with <code>role=\"main\"</code> and <code>tabindex=\"-1\"</code>. The skip link label follows the active locale."
+            "text": "Import it from <code>@astryx-vue/core</code>. It returns the nearest shell:\n\nThe main region is <code>#astryx-app-shell-main</code>, a <code>div</code> with <code>role=\"main\"</code> and <code>tabindex=\"-1\"</code>. The first outermost shell on a page keeps that id; a second shell, or one nested in another shell's content, gets its own generated id, and its skip link points there. The skip link label follows the active locale."
           },
           {
             "heading": "Native attributes",
@@ -45879,7 +45903,7 @@
           },
           {
             "heading": "useAppShellMobile",
-            "text": "从 <code>@astryx-vue/core</code> 引入。它返回最近的外壳：\n\n主区域是 <code>#astryx-app-shell-main</code>，一个带 <code>role=\"main\"</code> 和 <code>tabindex=\"-1\"</code> 的 <code>div</code>。跳过链接的文案跟随当前语言。"
+            "text": "从 <code>@astryx-vue/core</code> 引入。它返回最近的外壳：\n\n主区域是 <code>#astryx-app-shell-main</code>，一个带 <code>role=\"main\"</code> 和 <code>tabindex=\"-1\"</code> 的 <code>div</code>。跳过链接的文案跟随当前语言。页面上第一个外层外壳保持这个 id；第二个外壳，或嵌在别的外壳内容里的外壳，会拿到自己生成的 id，它的跳过链接也指向那个 id。"
           },
           {
             "heading": "原生属性",
@@ -46529,8 +46553,8 @@
         "zh": "`Layout` 最多排五个区域：页眉、起始边、正文、结束边、页脚。默认插槽是正文，其余是具名插槽。页面外框交给 `AppShell`；`Layout` 用在页面内部、卡片或对话框里。内容只是一行或一列时用 `HStack` 或 `VStack`。"
       },
       "usage": {
-        "en": "`Layout` arranges up to five regions: header, start, content, end, and footer. The default slot is the content. The other regions are named slots. `AppShell` owns the page frame; use `Layout` inside a page, a card, or a dialog. Use `HStack` or `VStack` when the content is only a row or a column.\n\n```vue\n<script setup lang=\"ts\">\nimport { Layout, LayoutContent, LayoutHeader } from '@astryx-vue/core/Layout'\n</script>\n\n<template>\n  <Layout>\n    <template #header>\n      <LayoutHeader has-divider>\n        Orders\n      </LayoutHeader>\n    </template>\n    <LayoutContent>\n      Select an order.\n    </LayoutContent>\n  </Layout>\n</template>\n```\n\n`height` is `fill` or `auto`. `fill` stretches to the container and scrolls the content; `auto` grows with the content. `contentWidth` limits the width of the content and centers it. Dividers stay full width. A percentage, `fit-content`, `max-content`, `min-content`, or a bare `var()` uses the constrained width mode. `padding` sets this layout's own outer inset and does not pass to a nested layout. `defaultHasDividers` is the fallback for a header or footer that does not set `hasDivider`.\n\n`LayoutHeader`, `LayoutFooter`, `LayoutContent`, and `LayoutPanel` are the region components. A panel's `width` is pixels when it is a number. Pass `resizable` from `useResizable` when a `ResizeHandle` controls that width.",
-        "zh": "`Layout` 最多排五个区域：页眉、起始边、正文、结束边、页脚。默认插槽是正文，其余是具名插槽。页面外框交给 `AppShell`；`Layout` 用在页面内部、卡片或对话框里。内容只是一行或一列时用 `HStack` 或 `VStack`。\n\n```vue\n<script setup lang=\"ts\">\nimport { Layout, LayoutContent, LayoutHeader } from '@astryx-vue/core/Layout'\n</script>\n\n<template>\n  <Layout>\n    <template #header>\n      <LayoutHeader has-divider>\n        订单\n      </LayoutHeader>\n    </template>\n    <LayoutContent>\n      选择一笔订单。\n    </LayoutContent>\n  </Layout>\n</template>\n```\n\n`height` 取 `fill` 或 `auto`。`fill` 撑满容器，正文在中间滚动；`auto` 随内容长高。`contentWidth` 限制正文宽度并居中，分隔线仍然拉满。百分比、`fit-content`、`max-content`、`min-content` 或裸 `var()` 走约束宽度。`padding` 只作用于这一层，不会传给嵌套的 `Layout`。页眉或页脚没有写 `hasDivider` 时，用 `defaultHasDividers`。\n\n`LayoutHeader`、`LayoutFooter`、`LayoutContent`、`LayoutPanel` 是四个区域组件。面板的 `width` 传数字时按像素。宽度由 `ResizeHandle` 控制时，把 `useResizable` 返回的 `props` 传给 `resizable`。"
+        "en": "`Layout` arranges up to five regions: header, start, content, end, and footer. The default slot is the content. The other regions are named slots. `AppShell` owns the page frame; use `Layout` inside a page, a card, or a dialog. Use `HStack` or `VStack` when the content is only a row or a column.\n\n```vue\n<script setup lang=\"ts\">\nimport { Layout, LayoutContent, LayoutHeader } from '@astryx-vue/core/Layout'\n</script>\n\n<template>\n  <Layout>\n    <template #header>\n      <LayoutHeader has-divider>\n        Orders\n      </LayoutHeader>\n    </template>\n    <LayoutContent>\n      Select an order.\n    </LayoutContent>\n  </Layout>\n</template>\n```\n\n`height` is `fill` or `auto`. `fill` stretches to the container's height and scrolls the content, and needs a container with a set height (an AppShell's content area, say); `auto` grows with the content. `contentWidth` limits the width of the content and centers it. Dividers stay full width. A percentage, `fit-content`, `max-content`, `min-content`, or a bare `var()` uses the constrained width mode. `padding` sets this layout's own outer inset and does not pass to a nested layout. `defaultHasDividers` is the fallback for a header or footer that does not set `hasDivider`.\n\n`LayoutHeader`, `LayoutFooter`, `LayoutContent`, and `LayoutPanel` are the region components. A panel's `width` is pixels when it is a number. Pass `resizable` from `useResizable` when a `ResizeHandle` controls that width.",
+        "zh": "`Layout` 最多排五个区域：页眉、起始边、正文、结束边、页脚。默认插槽是正文，其余是具名插槽。页面外框交给 `AppShell`；`Layout` 用在页面内部、卡片或对话框里。内容只是一行或一列时用 `HStack` 或 `VStack`。\n\n```vue\n<script setup lang=\"ts\">\nimport { Layout, LayoutContent, LayoutHeader } from '@astryx-vue/core/Layout'\n</script>\n\n<template>\n  <Layout>\n    <template #header>\n      <LayoutHeader has-divider>\n        订单\n      </LayoutHeader>\n    </template>\n    <LayoutContent>\n      选择一笔订单。\n    </LayoutContent>\n  </Layout>\n</template>\n```\n\n`height` 取 `fill` 或 `auto`。`fill` 撑满容器的高度，正文在中间滚动，需要一个有确定高度的容器（比如 AppShell 的内容区）；`auto` 随内容长高。`contentWidth` 限制正文宽度并居中，分隔线仍然拉满。百分比、`fit-content`、`max-content`、`min-content` 或裸 `var()` 走约束宽度。`padding` 只作用于这一层，不会传给嵌套的 `Layout`。页眉或页脚没有写 `hasDivider` 时，用 `defaultHasDividers`。\n\n`LayoutHeader`、`LayoutFooter`、`LayoutContent`、`LayoutPanel` 是四个区域组件。面板的 `width` 传数字时按像素。宽度由 `ResizeHandle` 控制时，把 `useResizable` 返回的 `props` 传给 `resizable`。"
       },
       "practices": {
         "en": [
@@ -46585,7 +46609,7 @@
                 "name": "`height`",
                 "type": "`'fill' | 'auto'`",
                 "default": "`'fill'`",
-                "description": "`fill` stretches to the container and scrolls the content. `auto` grows with the content."
+                "description": "`fill` stretches to the container's height and scrolls the content. It needs a container with a set height, such as an AppShell's content area; under an app root with no height, the layout grows with its content. `auto` grows with the content."
               },
               {
                 "name": "`padding`",
@@ -46733,7 +46757,7 @@
                 "name": "`height`",
                 "type": "`'fill' | 'auto'`",
                 "default": "`'fill'`",
-                "description": "`fill` 撑满容器，正文在中间滚动。`auto` 随内容长高。"
+                "description": "`fill` 撑满容器的高度，正文在中间滚动。它需要一个有确定高度的容器，比如 AppShell 的内容区；放在没有高度的应用根下，布局会随内容长高。`auto` 随内容长高。"
               },
               {
                 "name": "`padding`",
@@ -47191,7 +47215,7 @@
                 "name": "`hasDivider`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "在朝内容的那条边上画一条线。紧挨着的 `ResizeHandle` 已经在同一条边画线时，这里就不要开。"
+                "description": "在朝内容的那条边上画一条线：start 插槽里在行内结束边，end 插槽里在行内起始边。不写它也不写 `padding` 时，面板和内容共用一个间距。Layout 的 `defaultHasDividers` 对它不生效。紧挨着的 `ResizeHandle` 已经在同一条边画线时，这里就不要开。"
               },
               {
                 "name": "`isScrollable`",
@@ -47209,13 +47233,13 @@
                 "name": "`padding`",
                 "type": "`SpacingStep`",
                 "default": "—",
-                "description": "用间距刻度写内边距，会盖掉外层布局传下来的值。写 `0` 就是通栏。"
+                "description": "用间距刻度给四边写内边距，会替换自动内边距以及与内容共用的间距。写 `0` 就是通栏。"
               },
               {
                 "name": "`resizable`",
                 "type": "`LayoutResizable`",
                 "default": "—",
-                "description": "`useResizable` 返回的 `props`。传了它宽度就由那个 hook 说了算，`width` 不再生效。旁边要放一个 `ResizeHandle`，并把同一个对象交给它。对象里带着这块区域的轴 `_direction`（`'horizontal' | 'vertical'`），要和把手的 `direction` 一致。只有 `_size` 是必填的，手写 `{ _size: 250 }` 依然可用。"
+                "description": "`useResizable()` 的返回值，或它的 `props`。传了它宽度就由那个 hook 说了算，`width` 不再生效。旁边要放一个 `ResizeHandle`，并把同一个对象交给它。对象里带着这块区域的轴 `_direction`（`'horizontal' | 'vertical'`），要和把手的 `direction` 一致。只有 `_size` 是必填的，手写 `{ _size: 250 }` 依然可用。区域收起时，面板里的焦点会移到它的 `ResizeHandle`，收起期间面板为 inert 并对读屏隐藏。宽度为 0 的面板不占位，也不露出任何子元素。"
               },
               {
                 "name": "`role`",
@@ -47932,7 +47956,7 @@
                 "name": "`pillPlacement`",
                 "type": "`'auto' | 'start' | 'end' | 'center'`",
                 "default": "`'auto'`",
-                "description": "Where the grip sits on the line. `auto` stays on the panel side, and flips when the panel size is 0."
+                "description": "Where the grip sits on the line. `auto` stays on the panel side, and flips when the panel size is 0. It moves only the grip: the grab zone stays centred on the handle, and the grip takes a drag wherever it sits. On a pane too short for the full zone, the zone shrinks so the pane keeps at least half of itself for its own drag."
               },
               {
                 "name": "`label`",
@@ -47942,9 +47966,9 @@
               },
               {
                 "name": "`resizable`",
-                "type": "`ResizableProps`",
+                "type": "`ResizableRegion | ResizableProps`",
                 "default": "-",
-                "description": "The `props` object returned by `useResizable`."
+                "description": "The result of `useResizable()`, or its `props`."
               }
             ]
           },
@@ -48088,7 +48112,7 @@
                 "name": "`pillPlacement`",
                 "type": "`'auto' | 'start' | 'end' | 'center'`",
                 "default": "`'auto'`",
-                "description": "握把相对分隔线的位置。`auto` 靠面板一侧，面板收到 0 时翻到另一侧。"
+                "description": "握把相对分隔线的位置。`auto` 靠面板一侧，面板收到 0 时翻到另一侧。它只挪握把：抓取区始终居中在分隔条上，握把摆在哪都能接管拖动。面板短到放不下整块抓取区时，抓取区会缩小，让面板至少留一半给自己的拖动。"
               },
               {
                 "name": "`label`",
@@ -48098,9 +48122,9 @@
               },
               {
                 "name": "`resizable`",
-                "type": "`ResizableProps`",
+                "type": "`ResizableRegion | ResizableProps`",
                 "default": "-",
-                "description": "`useResizable` 返回的 `props`。"
+                "description": "`useResizable()` 的返回值，或它的 `props`。"
               }
             ]
           },
@@ -48360,7 +48384,7 @@
                 "name": "`role`",
                 "type": "`'group' | 'region'`",
                 "default": "`'group'`",
-                "description": "Role of the named viewport."
+                "description": "Role of the named viewport. Leave it unset for ordinary scroll containers; choose `region` only for areas that belong in landmark navigation, since every `region` adds an entry to a screen reader's landmark list."
               },
               {
                 "name": "`overscroll`",
@@ -48475,7 +48499,7 @@
                 "name": "`role`",
                 "type": "`'group' | 'region'`",
                 "default": "`'group'`",
-                "description": "这块命名视口的角色。"
+                "description": "这块命名视口的角色。普通滚动容器保持默认即可；只有值得出现在地标导航里的区域才选 `region`，每个 `region` 都会在读屏的地标列表里多出一条。"
               },
               {
                 "name": "`overscroll`",

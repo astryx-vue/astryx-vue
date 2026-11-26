@@ -35,7 +35,7 @@ footer: false
         <td><code>mobileNav</code></td>
         <td><code>false | AppShellMobileNav</code></td>
         <td>-</td>
-        <td><code>false</code> turns the drawer off. An object sets <code>breakpoint</code> (<code>sm</code> 640, <code>md</code> 768, <code>lg</code> 1024, <code>xl</code> 1280, <code>2xl</code> 1536, or <code>none</code>), <code>isOpen</code>, and <code>hasToggle</code>.</td>
+        <td><code>false</code> turns the drawer off. An object sets <code>breakpoint</code> (<code>sm</code> 640, <code>md</code> 768, <code>lg</code> 1024, <code>xl</code> 1280, <code>2xl</code> 1536, or <code>none</code>), <code>isOpen</code>, <code>hasToggle</code>, and <code>defaultIsMobile</code>. A theme that moves the width points moves the breakpoint with them. <code>defaultIsMobile</code> is a server-rendering hint: the server renders the phone layout, menu toggle included. Without it, the wide layout still paints without its inline side nav below the breakpoint, and the toggle arrives when the page's script runs. It is ignored when <code>breakpoint</code> is <code>none</code>.</td>
       </tr>
       <tr>
         <td><code>mobileNavOpen</code></td>
@@ -140,7 +140,7 @@ Import it from <code>@astryx-vue/core</code>. It returns the nearest shell:
   </table>
 </div>
 
-The main region is <code>#astryx-app-shell-main</code>, a <code>div</code> with <code>role="main"</code> and <code>tabindex="-1"</code>. The skip link label follows the active locale.
+The main region is <code>#astryx-app-shell-main</code>, a <code>div</code> with <code>role="main"</code> and <code>tabindex="-1"</code>. The first outermost shell on a page keeps that id; a second shell, or one nested in another shell's content, gets its own generated id, and its skip link points there. The skip link label follows the active locale.
 
 ## Native attributes
 

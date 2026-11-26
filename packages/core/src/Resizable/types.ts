@@ -1,5 +1,5 @@
 import type { VNodeChild } from 'vue'
-import type { ResizableProps } from '../composables/useResizable.js'
+import type { ResizableProps, ResizableRegion } from '../composables/useResizable.js'
 
 export type ResizeDirection = 'horizontal' | 'vertical'
 export type ResizePosition = 'inline' | 'overlay'
@@ -25,7 +25,8 @@ export interface ResizeHandleProps {
   pillPlacement?: ResizePillPlacement
   /** 分隔条的无障碍名称。不传时用当前语言的默认文案。 */
   label?: string
-  resizable?: ResizableProps
+  /** `useResizable()` 的返回值，或它的 `props`。 */
+  resizable?: ResizableRegion | ResizableProps
 }
 
 export interface ResizeHandleSlots {

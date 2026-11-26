@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import AspectRatio from './AspectRatio.vue'
@@ -46,5 +48,14 @@ describe('aspect ratio', () => {
     expect(wrapper.classes()).toContain('hero')
     expect(wrapper.attributes('data-testid')).toBe('ratio')
     expect(wrapper.element.style.maxWidth).toBe('12rem')
+  })
+
+  it('sizes fit children in the base layer, not in reset.css', () => {
+    const component = readFileSync(resolve(process.cwd(), 'packages/core/styles/aspect-ratio.css'), 'utf8')
+    const layer = component.slice(component.indexOf('@layer astryx.base {'))
+    expect(layer.slice(0, layer.indexOf('@layer astryx.components'))).toContain('data-astryx-aspect-ratio-override')
+    expect(component).not.toMatch(/@layer astryx\.reset\s*\{[^}]*aspect-ratio-override/)
+    const reset = readFileSync(resolve(process.cwd(), 'packages/core/reset.css'), 'utf8')
+    expect(reset).not.toContain('aspect-ratio-override')
   })
 })

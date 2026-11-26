@@ -33,7 +33,7 @@ import { Layout, LayoutContent, LayoutHeader } from '@astryx-vue/core/Layout'
 </template>
 ```
 
-`height` 取 `fill` 或 `auto`。`fill` 撑满容器，正文在中间滚动；`auto` 随内容长高。`contentWidth` 限制正文宽度并居中，分隔线仍然拉满。百分比、`fit-content`、`max-content`、`min-content` 或裸 `var()` 走约束宽度。`padding` 只作用于这一层，不会传给嵌套的 `Layout`。页眉或页脚没有写 `hasDivider` 时，用 `defaultHasDividers`。
+`height` 取 `fill` 或 `auto`。`fill` 撑满容器的高度，正文在中间滚动，需要一个有确定高度的容器（比如 AppShell 的内容区）；`auto` 随内容长高。`contentWidth` 限制正文宽度并居中，分隔线仍然拉满。百分比、`fit-content`、`max-content`、`min-content` 或裸 `var()` 走约束宽度。`padding` 只作用于这一层，不会传给嵌套的 `Layout`。页眉或页脚没有写 `hasDivider` 时，用 `defaultHasDividers`。
 
 `LayoutHeader`、`LayoutFooter`、`LayoutContent`、`LayoutPanel` 是四个区域组件。面板的 `width` 传数字时按像素。宽度由 `ResizeHandle` 控制时，把 `useResizable` 返回的 `props` 传给 `resizable`。
 

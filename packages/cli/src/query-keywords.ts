@@ -55,7 +55,7 @@ const COMPONENT_KEYWORDS: Readonly<Record<string, readonly string[]>> = {
   'timestamp': ['relativetime'],
   'toggle-button-group': ['togglegroup', 'buttontogglegroup'],
   'tree-list': ['treeview'],
-  'use-resizable': ['splitpane', 'splitview', 'resizablepanel'],
+  'use-resizable': ['splitpane', 'resizablepanel'],
 }
 
 const MAX_RUN = 6

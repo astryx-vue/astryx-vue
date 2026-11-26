@@ -29,7 +29,7 @@ footer: false
         <td><code>role</code></td>
         <td><code>'group' | 'region'</code></td>
         <td><code>'group'</code></td>
-        <td>这块命名视口的角色。</td>
+        <td>这块命名视口的角色。普通滚动容器保持默认即可；只有值得出现在地标导航里的区域才选 <code>region</code>，每个 <code>region</code> 都会在读屏的地标列表里多出一条。</td>
       </tr>
       <tr>
         <td><code>overscroll</code></td>

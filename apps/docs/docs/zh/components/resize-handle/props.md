@@ -53,7 +53,7 @@ footer: false
         <td><code>pillPlacement</code></td>
         <td><code>'auto' | 'start' | 'end' | 'center'</code></td>
         <td><code>'auto'</code></td>
-        <td>握把相对分隔线的位置。<code>auto</code> 靠面板一侧，面板收到 0 时翻到另一侧。</td>
+        <td>握把相对分隔线的位置。<code>auto</code> 靠面板一侧，面板收到 0 时翻到另一侧。它只挪握把：抓取区始终居中在分隔条上，握把摆在哪都能接管拖动。面板短到放不下整块抓取区时，抓取区会缩小，让面板至少留一半给自己的拖动。</td>
       </tr>
       <tr>
         <td><code>label</code></td>
@@ -63,9 +63,9 @@ footer: false
       </tr>
       <tr>
         <td><code>resizable</code></td>
-        <td><code>ResizableProps</code></td>
+        <td><code>ResizableRegion | ResizableProps</code></td>
         <td>-</td>
-        <td><code>useResizable</code> 返回的 <code>props</code>。</td>
+        <td><code>useResizable()</code> 的返回值，或它的 <code>props</code>。</td>
       </tr>
     </tbody>
   </table>

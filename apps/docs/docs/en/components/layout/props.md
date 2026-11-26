@@ -23,7 +23,7 @@ footer: false
         <td><code>height</code></td>
         <td><code>'fill' | 'auto'</code></td>
         <td><code>'fill'</code></td>
-        <td><code>fill</code> stretches to the container and scrolls the content. <code>auto</code> grows with the content.</td>
+        <td><code>fill</code> stretches to the container's height and scrolls the content. It needs a container with a set height, such as an AppShell's content area; under an app root with no height, the layout grows with its content. <code>auto</code> grows with the content.</td>
       </tr>
       <tr>
         <td><code>padding</code></td>

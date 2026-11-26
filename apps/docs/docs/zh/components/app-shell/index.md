@@ -46,6 +46,7 @@ import { SideNav, SideNavItem } from '@astryx-vue/core/SideNav'
 - `height` 设置外壳的高度模式，可以填满全屏（`fill`，使用 `100dvh`），也可以随内容自适应撑开（`auto`）。
 - `mobileNav` 用来控制手机端的抽屉导航。默认在宽度低于 768px（`md` 断点）时，原本在左侧的侧边菜单会自动收拢进一个侧滑抽屉里。顶栏里的汉堡按钮会自动连接并控制这只抽屉，无需自己重复写逻辑。可以通过 `v-model:mobile-nav-open` 双向绑定抽屉的打开状态。
 - 组件内置了专门为键盘操作和读屏用户准备的「跳转到主内容」快捷链接，回车即可将光标焦点直接定位到带有 `role="main"` 的正文容器上。
+- 页面上第一个外层外壳的主区域保持固定 id `astryx-app-shell-main`，第二个外壳或嵌在别的外壳内容里的外壳会拿到自己的 id。`AppShell` 是布局的根：外层 Layout、Card、Section 传下来的内边距、宽度和分隔线默认值不会进到它的各个区域。
 - `useAppShellMobile` 组合式函数可以在任何子组件里读取当前外壳的移动端适配状态（如抽屉是否开启、是否处于手机屏幕断点下）。
 
 
@@ -57,6 +58,8 @@ import { SideNav, SideNavItem } from '@astryx-vue/core/SideNav'
 | --- | --- |
 | <Badge variant="success">推荐</Badge> | 应用导航放在 topNav 和 sideNav。页面内部的区域用 Layout。 |
 | <Badge variant="success">推荐</Badge> | 给侧栏一个标题，移动抽屉才有名字。 |
+| <Badge variant="success">推荐</Badge> | 给每个导航插槽一个无障碍名称。外壳把 TopNav 和 SideNav 渲染成各自独立的导航地标，读屏按名字列出它们。给 TopNav 传 `label`；SideNav 有翻译好的默认名字，想改就传 `label`。 |
+| <Badge variant="success">推荐</Badge> | 手机上要让页面铺满全屏，在 viewport meta 里加 `viewport-fit=cover`（`width=device-width, initial-scale=1, viewport-fit=cover`）。外壳会把页头延伸到状态栏下面和屏幕两侧，同时让页头里的内容和内容区末尾留在设备安全区内。横屏时只有页头避让；内联侧栏和内容两侧仍会伸到刘海下面，那里要自己留内容内边距。没有页头区域或手机顶栏的外壳不留顶部安全区，顶部内边距要自己留。 |
 | <Badge variant="error">避免</Badge> | 顶栏已经在 AppShell 里时，再让 TopNav 自己开一只抽屉。抽屉归外壳管。 |
 | <Badge variant="error">避免</Badge> | 调用 useAppShellMobile 时假定外壳一定存在。先看 isMobileNavEnabled。 |
 

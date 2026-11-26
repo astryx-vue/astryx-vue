@@ -29,7 +29,7 @@
     --container-padding-inline-end: 0px;
     --container-padding-block-start: 0px;
     --container-padding-block-end: 0px;
-    --layout-content-width: 100cqi;
+    --layout-content-width: initial;
     --layout-alignment-width: 100cqi;
     --layout-padding-own-outer-x: initial;
     --layout-padding-own-outer-y: initial;
@@ -178,11 +178,11 @@
   .astryx-layout-content[data-edge-start]:not([data-explicit-padding]) {
     padding-inline-start: var(--layout-pad-outer-x);
     --container-padding-inline-start: var(--layout-pad-outer-x);
-    --container-padding-inline-end: var(--layout-pad-outer-x);
   }
 
   .astryx-layout-content[data-edge-end]:not([data-explicit-padding]) {
     padding-inline-end: var(--layout-pad-outer-x);
+    --container-padding-inline-end: var(--layout-pad-outer-x);
   }
 
   .astryx-layout-content[data-edge-header]:not([data-explicit-padding]) {
@@ -195,13 +195,20 @@
     --container-padding-block-end: var(--layout-pad-outer-y);
   }
 
-  .astryx-layout__inner:has(> .astryx-layout-header:not([data-divider])) .astryx-layout-content:not([data-explicit-padding]),
-  .astryx-layout__inner:has(> .astryx-dialog-header[data-layout-header]:not(.astryx-dialog-header--divider)) .astryx-layout-content:not([data-explicit-padding]) {
+  /*
+   * 页头没有分隔线时，内容顶部的内边距收掉；页脚没有分隔线时收掉底部的。
+   * 用兄弟关系只看这一个 Layout 自己的那一行：嵌套的 Layout 不会吃到外层的收拢。
+   * 同时把发布给贴边子元素（Table、Divider）的容器内边距一起归零，它们才和内容的实际边距对得上。
+   */
+  .astryx-layout__inner > .astryx-layout-header:not([data-divider]) ~ .astryx-layout__middle > .astryx-layout__content-slot > .astryx-layout-content:not([data-explicit-padding]),
+  .astryx-layout__inner > .astryx-dialog-header[data-layout-header]:not(.astryx-dialog-header--divider) ~ .astryx-layout__middle > .astryx-layout__content-slot > .astryx-layout-content:not([data-explicit-padding]) {
     padding-block-start: 0;
+    --container-padding-block-start: 0px;
   }
 
-  .astryx-layout__inner:has(> .astryx-layout-footer:not([data-divider])) .astryx-layout-content:not([data-explicit-padding]) {
+  .astryx-layout__middle:has(~ .astryx-layout-footer:not([data-divider])) > .astryx-layout__content-slot > .astryx-layout-content:not([data-explicit-padding]) {
     padding-block-end: 0;
+    --container-padding-block-end: 0px;
   }
 
   .astryx-layout-content[data-scrollable] {
@@ -243,24 +250,34 @@
     --container-padding-block-end: var(--_layout-panel-block-end, var(--layout-pad-block));
   }
 
+  /* 贴着 Layout 边界的那条边用 Layout 的外缘内边距，并把它发布出去，贴边子元素才和它对得上。 */
   .astryx-layout-panel[data-area='start']:not([data-explicit-padding]) {
     padding-inline-start: var(--layout-pad-outer-x);
+    --container-padding-inline-start: var(--layout-pad-outer-x);
   }
 
   .astryx-layout-panel[data-area='end']:not([data-explicit-padding]) {
     padding-inline-end: var(--layout-pad-outer-x);
+    --container-padding-inline-end: var(--layout-pad-outer-x);
   }
 
   .astryx-layout-panel[data-edge-header]:not([data-explicit-padding]) {
     padding-block-start: var(--layout-pad-outer-y);
+    --container-padding-block-start: var(--layout-pad-outer-y);
   }
 
   .astryx-layout-panel[data-edge-footer]:not([data-explicit-padding]) {
     padding-block-end: var(--layout-pad-outer-y);
+    --container-padding-block-end: var(--layout-pad-outer-y);
   }
 
   .astryx-layout-panel[data-scrollable] {
     overflow: auto;
+  }
+
+  .astryx-layout-panel[data-zero-width][data-zero-width] {
+    padding-inline: 0;
+    overflow: clip;
   }
 
   .astryx-layout-panel[data-area='start'][data-divider] {

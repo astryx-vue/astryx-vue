@@ -1,6 +1,8 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
-import { defineComponent, h } from 'vue'
+import { defineComponent, h, nextTick } from 'vue'
+import { useResizable } from '../composables/useResizable.js'
+import ResizeHandle from '../Resizable/ResizeHandle.vue'
 import { provideLayoutContainer } from './context.js'
 import Layout from './Layout.vue'
 import LayoutContent from './LayoutContent.vue'
@@ -98,6 +100,50 @@ describe('layout', () => {
     })
 
     expect((panel.element as HTMLElement).style.width).toBe('0px')
+    panel.unmount()
+  })
+
+  it('takes the whole useResizable() result and hides a panel that has no width', async () => {
+    const Host = defineComponent({
+      setup() {
+        const region = useResizable({ defaultSize: 200, collapsible: true })
+        return { region }
+      },
+      render() {
+        return h(Layout, null, {
+          start: () => [
+            h(LayoutPanel, { resizable: this.region }, () => h('button', { id: 'inside' }, 'Inside')),
+            h(ResizeHandle, { resizable: this.region }),
+          ],
+          default: () => h(LayoutContent, null, () => 'Body'),
+        })
+      },
+    })
+    const wrapper = mount(Host, { attachTo: document.body })
+    const panel = wrapper.get('.astryx-layout-panel')
+    expect((panel.element as HTMLElement).style.width).toBe('200px')
+    expect(panel.attributes('inert')).toBeUndefined()
+    ;(wrapper.get('#inside').element as HTMLElement).focus()
+    wrapper.vm.region.collapse()
+    await nextTick()
+    await nextTick()
+    expect((panel.element as HTMLElement).style.width).toBe('0px')
+    expect(panel.attributes('data-zero-width')).toBe('true')
+    expect(panel.attributes('data-scrollable')).toBeUndefined()
+    expect(panel.attributes('inert')).toBeDefined()
+    expect(panel.attributes('aria-hidden')).toBe('true')
+    expect(document.activeElement).toBe(wrapper.get('[role="separator"]').element)
+    wrapper.vm.region.expand()
+    await nextTick()
+    expect(panel.attributes('inert')).toBeUndefined()
+    wrapper.unmount()
+  })
+
+  it('treats width 0 as no space and no scrolling, with or without a hook', () => {
+    const panel = mount(LayoutPanel, { props: { width: 0, hasDivider: false } })
+    expect(panel.attributes('data-zero-width')).toBe('true')
+    expect(panel.attributes('data-collapse')).toBeUndefined()
+    expect(panel.attributes('data-scrollable')).toBeUndefined()
     panel.unmount()
   })
 

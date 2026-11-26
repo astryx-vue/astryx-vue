@@ -23,7 +23,7 @@ footer: false
         <td><code>height</code></td>
         <td><code>'fill' | 'auto'</code></td>
         <td><code>'fill'</code></td>
-        <td><code>fill</code> 撑满容器，正文在中间滚动。<code>auto</code> 随内容长高。</td>
+        <td><code>fill</code> 撑满容器的高度，正文在中间滚动。它需要一个有确定高度的容器，比如 AppShell 的内容区；放在没有高度的应用根下，布局会随内容长高。<code>auto</code> 随内容长高。</td>
       </tr>
       <tr>
         <td><code>padding</code></td>
