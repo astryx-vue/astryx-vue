@@ -1,5 +1,12 @@
 # @astryx-vue/charts
 
+## 0.9.16
+
+### Patch Changes
+
+- Updated dependencies [[`4c7b227`](https://github.com/astryx-vue/astryx-vue/commit/4c7b2277f9643201e9c37a39856941b821142dd4)]:
+  - @astryx-vue/core@0.20.0
+
 ## 0.9.15
 
 ### Patch Changes
