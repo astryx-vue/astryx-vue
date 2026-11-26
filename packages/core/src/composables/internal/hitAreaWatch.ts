@@ -3,11 +3,13 @@ import {
   clampedHitInsets,
   distanceTo,
   grown,
+  inLayout,
   INTERACTIVE_SELECTOR,
   MIN_TOUCH_TARGET,
   NO_HIT_INSETS,
   plainRect,
   sameInsets,
+  screenScale,
 } from './hitArea.js'
 
 /**
@@ -128,8 +130,14 @@ function isOwn(element: Element, candidate: Element): boolean {
 
 function measureOne(watch: Watch, all: ReadonlyArray<Candidate>): { target: HitRect, insets: HitInsets, neighbours: HitRect[] } {
   const target = plainRect(watch.element)
+  const scale = screenScale(watch.element, target)
   // 两个各自最多长半个最小尺寸的目标，相距一个最小尺寸以内才可能碰上。
-  const band = grown(target, { top: MIN_TOUCH_TARGET, right: MIN_TOUCH_TARGET, bottom: MIN_TOUCH_TARGET, left: MIN_TOUCH_TARGET })
+  const band = grown(target, {
+    top: MIN_TOUCH_TARGET * scale.y,
+    right: MIN_TOUCH_TARGET * scale.x,
+    bottom: MIN_TOUCH_TARGET * scale.y,
+    left: MIN_TOUCH_TARGET * scale.x,
+  })
   const neighbours = all
     .filter(({ element, rect }) =>
       rect.right > rect.left
@@ -139,7 +147,14 @@ function measureOne(watch: Watch, all: ReadonlyArray<Candidate>): { target: HitR
     .map(({ rect }) => rect)
   return {
     target,
-    insets: clampedHitInsets(target, neighbours, MIN_TOUCH_TARGET, watch.growth?.(target, watch.element)),
+    // 热区是控件自己盒子里的长度，所以用布局像素量：从小比例展开的层停稳后保留的是最终大小的热区。
+    // 返回的矩形仍是屏幕像素，供触摸的距离判断用。
+    insets: clampedHitInsets(
+      inLayout(target, target, scale),
+      neighbours.map(rect => inLayout(rect, target, scale)),
+      MIN_TOUCH_TARGET,
+      watch.growth?.(target, watch.element),
+    ),
     neighbours,
   }
 }
