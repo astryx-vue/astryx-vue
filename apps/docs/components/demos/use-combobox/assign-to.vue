@@ -39,9 +39,9 @@ function onInput(event: Event): void {
 <template>
   <Card :width="320" :padding="4">
     <div class="assign-to">
-      <label class="assign-to__label" for="assign-to-input">Assign to</label>
+      <span id="assign-to-label" class="assign-to__label">Assign to</span>
       <input
-        id="assign-to-input"
+        aria-labelledby="assign-to-label"
         class="assign-to__input"
         role="combobox"
         aria-controls="assign-to-list"
@@ -63,6 +63,7 @@ function onInput(event: Event): void {
           :key="option.value"
           class="assign-to__option"
           role="option"
+          tabindex="-1"
           :aria-selected="option.value === assignee"
           :aria-disabled="option.disabled || undefined"
           :data-active="index === combobox.activeIndex.value || undefined"
