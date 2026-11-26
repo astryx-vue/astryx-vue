@@ -74,3 +74,5 @@ A popover has to communicate its presence, its current open state, and its conte
 ## Layout
 
 The surface is positioned with JavaScript. It recalculates its position when the page scrolls or resizes, and it flips to the other side when the chosen side has no room. The entrance slides in from the side the surface actually lands on and grows from the edge that faces the trigger, never travelling further than the gap between them, so a flipped surface never starts over its trigger.
+
+Opened with a finger, the surface grows out of its trigger the way an iOS popover does. It scales up from the point where it meets the trigger and shows its content from the first frame. Taps during the growth are ignored, so they neither close the surface nor reach what is under it. On close it shrinks back into the trigger. Opened with a mouse, it keeps the slide-in above. With Reduce Motion on, a surface opened with a finger fades in and out where it stands.
