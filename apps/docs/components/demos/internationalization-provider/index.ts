@@ -1,4 +1,6 @@
 import { defineDemo } from '../../demo-infra/defineDemo'
+import directionSparklineDemo from './direction-sparkline.vue'
+import directionSparklineSource from './direction-sparkline.vue?raw&highlighted'
 import overridesDemo from './overrides.vue'
 import overridesSource from './overrides.vue?raw&highlighted'
 import overviewDemo from './overview.vue'
@@ -14,3 +16,4 @@ export const internationalizationProviderOverview = defineDemo(overviewDemo, ove
 export const internationalizationProviderOverrides = defineDemo(overridesDemo, overridesSource, options)
 export const internationalizationProviderShippedLocale = defineDemo(shippedLocaleDemo, shippedLocaleSource, options)
 export const internationalizationProviderRtlDirection = defineDemo(rtlDirectionDemo, rtlDirectionSource, options)
+export const internationalizationProviderDirectionSparkline = defineDemo(directionSparklineDemo, directionSparklineSource, options)

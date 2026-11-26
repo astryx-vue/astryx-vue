@@ -6,7 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
-import { useTableColumnSettingsPicker } from '../../../../components/demos/use-table-column-settings'
+import { useTableColumnSettingsPicker, useTableColumnSettingsStateVisibilityPicker } from '../../../../components/demos/use-table-column-settings'
 </script>
 
 ## 使用方法
@@ -45,4 +45,11 @@ const state = useTableColumnSettingsState({
   description="工具栏里放一个列选择器的表格。可以开关列，Name 列始终保留。"
   locale="zh"
   title="Table — 列设置"
+/>
+
+<DemoExample
+  :demo="useTableColumnSettingsStateVisibilityPicker"
+  description="表格工具栏里有一个 Columns 菜单，里面是一排复选框。勾掉 Email 就更新显示的列，Reset 恢复默认，状态 hook 的配置直接交给 useTableColumnSettings。"
+  locale="zh"
+  title="useTableColumnSettingsState —— 列显示选择器"
 />

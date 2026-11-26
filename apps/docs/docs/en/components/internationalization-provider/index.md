@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { internationalizationProviderOverrides, internationalizationProviderRtlDirection, internationalizationProviderShippedLocale } from '../../../../components/demos/internationalization-provider'
+import { internationalizationProviderDirectionSparkline, internationalizationProviderOverrides, internationalizationProviderRtlDirection, internationalizationProviderShippedLocale } from '../../../../components/demos/internationalization-provider'
 </script>
 
 ## Usage
@@ -51,3 +51,5 @@ Common configurations, variations, and states.
 <DemoExample :demo="internationalizationProviderRtlDirection" title="Mirror the layout for right-to-left text" description="Pass the same direction to the provider and to the element that holds the content, so Astryx components and the page mirror together." locale="en" />
 
 <DemoExample :demo="internationalizationProviderOverrides" title="Change one Astryx string across your app" description="Override a small number of Astryx strings everywhere in the app without providing a full locale catalog." locale="en" />
+
+<DemoExample :demo="internationalizationProviderDirectionSparkline" title="useLocaleDirection — Live Sparkline" description="A canvas sparkline reads the writing direction with useLocaleDirection, because a canvas does not follow CSS direction. Switch the locale to Arabic and the oldest point moves to the right edge, with the latest value on the left." locale="en" />

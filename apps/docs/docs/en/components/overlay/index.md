@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { overlayBottomStrip, overlayHoverReveal } from '../../../../components/demos/overlay'
+import { overlayBottomStrip, overlayHookQuickView, overlayHoverReveal } from '../../../../components/demos/overlay'
 </script>
 
 ## Usage
@@ -79,6 +79,8 @@ const { containerRef, containerProps, scrimProps } = useOverlay({ showOn: 'hover
 
 The container needs both `containerProps` — which bring the positioning, the clipping, and the tap toggle — and `containerRef`, and the scrim has to render inside that container for the hover and focus selectors to find it. The returned state is reactive: pass a `ref` or a `computed` for options such as `showOn` and `isOpen` and the scrim follows them, while plain values are read once at setup.
 
+A revealed scrim takes pointer input over the area it covers. When the media itself is a link, use a `bottom` or `top` strip instead of the default fill, so a click on the rest of the image still reaches the link.
+
 
 <ComponentAnatomy />
 
@@ -108,4 +110,11 @@ The container needs both `containerProps` — which bring the positioning, the c
   description="The Quick view button stays hidden until the image is hovered or focused."
   locale="en"
   title="Hover reveal"
+/>
+
+<DemoExample
+  :demo="overlayHookQuickView"
+  description="A product card that is its own overlay container: useOverlay returns the ref and attributes for the Card and the props for one OverlayScrim over the image. Hovering the card, or moving keyboard focus into it, slides in a Quick view button along the bottom of the image. The image stays a clickable link above the strip, and Tab reaches it before Quick view."
+  locale="en"
+  title="useOverlay — Product Quick View"
 />
