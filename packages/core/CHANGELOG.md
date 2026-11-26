@@ -1,5 +1,15 @@
 # @astryx-vue/core
 
+## 0.20.1
+
+### Patch Changes
+
+- [#581](https://github.com/astryx-vue/astryx-vue/pull/581) [`04df208`](https://github.com/astryx-vue/astryx-vue/commit/04df2084111d41780ec2c58efd68a3d1e5ba1288) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - CheckboxList 新增 `isRequired` 的实际校验：一项都没勾时第一个可用的复选框带原生 required，浏览器拦住提交并把焦点移过去，重排后跟着新的第一项；禁用或只读的链接行（List 的 Item、TreeList）不再有 href 和 target，也不走路由链接组件，焦点在上面时被禁用，焦点会交给换出来的元素；TreeList 没有任何动作的普通行拿到键盘焦点时画出焦点环，子级行的焦点不再让上级行也画环；DropdownMenuSubMenu 的标签用插槽写成富内容时，展开的视图用标签命名，嵌套视图的返回行也按这个标签的文字写。
+
+- [#580](https://github.com/astryx-vue/astryx-vue/pull/580) [`d14bab0`](https://github.com/astryx-vue/astryx-vue/commit/d14bab0a6236ca38b3874dfbb6e196bfbcebc661) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 日期与时间：日历按月格式化日期更快（同一语言和格式只建一次格式化器）；日优先的语言（如 en-GB）里 `12/01/2` 这类不完整的数字文字不再被当成月优先的日期；`createISOTimeString` 只认一位或两位数字的 `H:M`、`H:M:S`，`2:30 PM` 这类文字返回 null；没有整分钟落在范围内时，`clampTime` 保留边界本身而不是落到范围外；图表颜色解析遇到 `constructor`、`__proto__` 这类名字返回 null，不再得到 NaN 颜色。
+
+- [#582](https://github.com/astryx-vue/astryx-vue/pull/582) [`21f37ba`](https://github.com/astryx-vue/astryx-vue/commit/21f37baaa173c85e9892a91e2e15e59f8d1c56db) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 粗指针下，有标签的复选框、可用的单选项、SegmentedControl 的每个分段朝 44px 长出一圈看不见的触控热区，停在和邻居间距的一半，盒子大小不变；从小比例展开的层（如弹出层）里的控件，热区按停稳后的布局像素量，不再被缩放带偏。
+
 ## 0.20.0
 
 ### Minor Changes

@@ -1,5 +1,13 @@
 # @astryx-vue/charts
 
+## 0.9.17
+
+### Patch Changes
+
+- [#580](https://github.com/astryx-vue/astryx-vue/pull/580) [`d14bab0`](https://github.com/astryx-vue/astryx-vue/commit/d14bab0a6236ca38b3874dfbb6e196bfbcebc661) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 日期与时间：日历按月格式化日期更快（同一语言和格式只建一次格式化器）；日优先的语言（如 en-GB）里 `12/01/2` 这类不完整的数字文字不再被当成月优先的日期；`createISOTimeString` 只认一位或两位数字的 `H:M`、`H:M:S`，`2:30 PM` 这类文字返回 null；没有整分钟落在范围内时，`clampTime` 保留边界本身而不是落到范围外；图表颜色解析遇到 `constructor`、`__proto__` 这类名字返回 null，不再得到 NaN 颜色。
+- Updated dependencies [[`04df208`](https://github.com/astryx-vue/astryx-vue/commit/04df2084111d41780ec2c58efd68a3d1e5ba1288), [`d14bab0`](https://github.com/astryx-vue/astryx-vue/commit/d14bab0a6236ca38b3874dfbb6e196bfbcebc661), [`21f37ba`](https://github.com/astryx-vue/astryx-vue/commit/21f37baaa173c85e9892a91e2e15e59f8d1c56db)]:
+  - @astryx-vue/core@0.20.1
+
 ## 0.9.16
 
 ### Patch Changes
