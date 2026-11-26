@@ -4,7 +4,7 @@ title: CodeEditor
 
 # CodeEditor
 
-CodeEditor is a lightweight code input with a controlled value, syntax highlighting, line numbers, placeholder text, and read-only state. It uses `contenteditable="plaintext-only"` and the CSS Custom Highlight API, not Monaco. It is a Lab component and ships only under the `canary` tag.
+CodeEditor is a lightweight code input with a controlled value, syntax highlighting, line numbers, placeholder text, and read-only state. It uses `contenteditable="plaintext-only"` and the CSS Custom Highlight API, not Monaco. In a right-to-left page the code and its line numbers stay left-to-right, while the placeholder follows its own text direction. It is a Lab component and ships only under the `canary` tag.
 
 <script setup lang="ts">
 import { labCodeEditor } from '../../../../components/lab-demos'

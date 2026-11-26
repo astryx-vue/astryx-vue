@@ -123,6 +123,12 @@
     box-shadow: inset 0 0 0 1px var(--astryx-color-border-emphasized, #d4d4d4);
   }
 
+  /* 今天还不知道，开着的月份就还没定：格子先占着位置藏起来，月份一定下来就显示。 */
+  .astryx-calendar[data-month-pending] .astryx-calendar-months,
+  .astryx-calendar[data-month-pending] .astryx-calendar-nav-button {
+    visibility: hidden;
+  }
+
   .astryx-calendar-months {
     display: flex;
     flex-wrap: wrap;

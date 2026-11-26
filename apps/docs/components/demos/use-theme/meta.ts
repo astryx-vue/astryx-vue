@@ -4,7 +4,7 @@ export const meta = {
   slug: 'use-theme',
   group: 'Utility',
   family: 'Utilities',
-  order: 151,
+  order: 152,
   en: 'useTheme',
   zh: 'useTheme',
 } satisfies DemoMeta

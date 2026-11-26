@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import type { HTMLAttributes, StyleValue } from 'vue'
 import type { DateInputProps } from './types.js'
-import { computed, onBeforeUnmount, onMounted, ref, useAttrs, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, useAttrs, useTemplateRef, watch } from 'vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import { toCalendarDate } from '../Calendar/calendarDate.js'
 import { isCalendarDateDisabled } from '../Calendar/useCalendarConstraints.js'
+import { useBusyAnnouncement } from '../composables/internal/busyAnnouncement.js'
 import { usePendingChange } from '../composables/usePendingChange.js'
 import Field from '../Field/Field.vue'
 import FieldIcon from '../Field/FieldIcon.vue'
@@ -14,8 +15,9 @@ import Icon from '../Icon/Icon.vue'
 import { useAstryxLocale, useComponentMessages } from '../locale/context.js'
 import { dateInputMessages } from '../locale/messages/date-input.js'
 import Spinner from '../Spinner/Spinner.vue'
-import { formatInstant } from '../Timestamp/formatInstant.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
+import { dateEntryMessage } from './dateEntry.js'
+import { formatCommittedDate, resolveDateStatus, toIsoDate } from './dateText.js'
 import '../../styles/date-input.css'
 
 defineOptions({ inheritAttrs: false })
@@ -29,6 +31,8 @@ const props = withDefaults(defineProps<Pick<DateInputProps, 'id' | 'modelValue' 
     containerStyle?: StyleValue
     controlClass?: HTMLAttributes['class']
     controlStyle?: StyleValue
+    /** 调用方监听了 `entryErrorChange`：它带说明的 error 状态替被拒的日子措辞。 */
+    hasEntryErrorListener?: boolean
   }>(), {
   modelValue: null,
   disabled: false,
@@ -51,7 +55,11 @@ const locale = useAstryxLocale()
 const inputRef = useTemplateRef<HTMLInputElement>('input')
 const containerRef = useTemplateRef<HTMLDivElement>('container')
 const focused = ref(false)
-const rejected = ref(false)
+/** 系统控件报上来、字段不收的日子，等 Enter 或失焦再亮出来。 */
+const heldRefusal = ref<Date | null>(null)
+/** Enter 或失焦亮出来的被拒日子。控件恢复成已提交的值后仍然亮着，直到报来能收的日子或清空。 */
+const shownRefusal = ref<Date | null>(null)
+let isRevealing = false
 const pending = usePendingChange(() => props.changeAction)
 const busy = computed(() => props.isLoading || pending.busy.value)
 const locked = computed(() => props.disabled || busy.value)
@@ -61,11 +69,7 @@ const showsDisabledMessage = computed(() => locked.value && disabledMessage.valu
 const disabledTooltip = useButtonTooltip(showsDisabledMessage)
 const showsClear = computed(() => (props.hasClear || props.clearable) && Boolean(props.modelValue) && !locked.value)
 
-function toIso(date: Date): string {
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
-  return `${date.getFullYear()}-${month}-${day}`
-}
+useBusyAnnouncement(busy, () => messages.value.dateInput.loading, () => containerRef.value)
 
 function allowed(date: Date): boolean {
   return !isCalendarDateDisabled(toCalendarDate(date), {
@@ -76,33 +80,33 @@ function allowed(date: Date): boolean {
   })
 }
 
-const nativeValue = computed(() => props.modelValue ? toIso(props.modelValue) : '')
-const overlay = computed(() => {
-  if (!props.modelValue)
-    return props.placeholder ?? messages.value.dateInput.placeholder
-  const iso = toIso(props.modelValue)
-  if (typeof props.format === 'function')
-    return props.format(iso)
-  if (props.format === 'system_date')
-    return iso
-  return formatInstant(props.modelValue, props.format ?? 'date_long', locale.value)
+const nativeValue = computed(() => props.modelValue ? toIsoDate(props.modelValue) : '')
+const overlay = computed(() => props.modelValue
+  ? formatCommittedDate(props.modelValue, props.format, locale.value)
+  : props.placeholder ?? messages.value.dateInput.placeholder)
+const refusalMessage = computed(() => !locked.value && shownRefusal.value
+  ? dateEntryMessage({ kind: 'outOfRange', date: shownRefusal.value, isComplete: true }, { min: props.min, max: props.max }, props.format, locale.value, messages.value.dateInput)
+  : null)
+const callerError = computed(() => {
+  const status = resolveDateStatus(props.status)
+  return props.hasEntryErrorListener && status?.type === 'error' && status.message ? status.message : null
 })
-const statusType = computed(() => {
-  const status = props.status
-  if (status == null || status === 'default')
-    return undefined
-  return typeof status === 'string' ? status : status.type
+const statusValue = computed(() => refusalMessage.value != null && callerError.value == null
+  ? { type: 'error' as const, message: refusalMessage.value }
+  : resolveDateStatus(props.status))
+const statusType = computed(() => statusValue.value?.type)
+// 拒绝开始时调用方的 error 说明没变，状态不变就没人念，由 alert 念一次。
+const repeat = ref<string | null>(null)
+watch(() => refusalMessage.value != null, (rejected) => {
+  repeat.value = rejected ? callerError.value : null
 })
-const statusValue = computed(() => {
-  const status = props.status
-  if (status == null || status === 'default')
-    return undefined
-  if (typeof status === 'string')
-    return { type: status }
-  return status
+watch(callerError, (next) => {
+  if (repeat.value !== null && repeat.value !== next)
+    repeat.value = null
 })
-const minIso = computed(() => props.min ? toIso(props.min) : undefined)
-const maxIso = computed(() => props.max ? toIso(props.max) : undefined)
+const alertMessage = computed(() => refusalMessage.value != null && repeat.value != null && repeat.value === callerError.value ? repeat.value : '')
+const minIso = computed(() => props.min ? toIsoDate(props.min) : undefined)
+const maxIso = computed(() => props.max ? toIsoDate(props.max) : undefined)
 
 function write(value: string): void {
   const input = inputRef.value
@@ -122,7 +126,8 @@ function read(raw: string): void {
   if (locked.value)
     return
   if (!raw) {
-    rejected.value = false
+    heldRefusal.value = null
+    shownRefusal.value = null
     if (props.modelValue)
       commit(null)
     return
@@ -131,12 +136,14 @@ function read(raw: string): void {
   if (!match)
     return
   const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]))
+  // 敲年份时控件会把每个半截年份都报成日子，所以被拒的日子先压着，Enter 或失焦再亮。
   if (!allowed(date)) {
-    rejected.value = true
+    heldRefusal.value = date
     return
   }
-  rejected.value = false
-  if (!props.modelValue || toIso(props.modelValue) !== raw)
+  heldRefusal.value = null
+  shownRefusal.value = null
+  if (!props.modelValue || toIsoDate(props.modelValue) !== raw)
     commit(date)
 }
 
@@ -148,11 +155,28 @@ function onFocus(): void {
   focused.value = true
 }
 
+/** Enter 或失焦：亮出压着的被拒日子。 */
+function revealRefusal(): void {
+  if (locked.value || heldRefusal.value == null)
+    return
+  shownRefusal.value = heldRefusal.value
+  heldRefusal.value = null
+  isRevealing = true
+  void nextTick(() => {
+    isRevealing = false
+  })
+}
+
 function onBlur(): void {
   focused.value = false
-  rejected.value = false
   read(inputRef.value?.value ?? '')
+  revealRefusal()
   write(nativeValue.value)
+}
+
+function onKeydown(event: KeyboardEvent): void {
+  if (event.key === 'Enter')
+    revealRefusal()
 }
 
 function onInputFocus(event: FocusEvent): void {
@@ -202,6 +226,11 @@ onBeforeUnmount(() => {
 })
 
 watch(nativeValue, (value) => {
+  // 外面传来的新值结束拒绝；亮出拒绝的那一刻传进来的不算，调用方可以在那里恢复自己的值。
+  if (!isRevealing) {
+    heldRefusal.value = null
+    shownRefusal.value = null
+  }
   if (!focused.value)
     write(value)
 })
@@ -236,7 +265,8 @@ watch(nativeValue, (value) => {
       >
         <div
           class="astryx-date-input-wrapper"
-          :data-disabled="locked ? 'true' : undefined"
+          :data-disabled="disabled ? 'true' : undefined"
+          :data-busy="busy || undefined"
           :data-size="size"
           :data-status="statusType"
         >
@@ -266,12 +296,13 @@ watch(nativeValue, (value) => {
               :aria-labelledby="label ? field.labelId : undefined"
               :aria-describedby="[describedBy, field.describedBy, showsDisabledMessage ? disabledMessageId : undefined].filter(Boolean).join(' ') || undefined"
               :aria-disabled="locked || undefined"
-              :aria-invalid="statusType === 'error' || rejected ? 'true' : undefined"
+              :aria-invalid="statusType === 'error' ? 'true' : undefined"
               :aria-required="ariaRequired"
               :aria-busy="busy || undefined"
               autocomplete="off"
               @focus="onInputFocus"
               @blur="onInputBlur"
+              @keydown="onKeydown"
             >
             <span class="astryx-date-input-overlay" :data-placeholder="modelValue ? undefined : 'true'" aria-hidden="true">
               {{ overlay }}
@@ -287,11 +318,11 @@ watch(nativeValue, (value) => {
           >
             <Icon icon="close" size="sm" />
           </button>
-          <Spinner v-if="busy" size="sm" :aria-label="messages.dateInput.loading" />
+          <Spinner v-if="busy" size="sm" aria-hidden="true" />
           <FieldIcon v-else-if="statusType && statusVariant !== 'tooltip'" :type="statusType" />
         </div>
         <div class="astryx-date-input-alert" role="alert">
-          {{ rejected ? messages.dateInput.invalidDate : '' }}
+          {{ alertMessage }}
         </div>
       </div>
     </template>

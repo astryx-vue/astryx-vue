@@ -8,6 +8,8 @@ export interface LayerPosition {
   top: number
   left: number
   placement: LayerPlacement
+  /** 内容比可用空地高时的高度上限，超出的部分在浮层里滚动。 */
+  maxHeight?: number
 }
 
 export interface LayerBox {

@@ -344,3 +344,31 @@
   outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, var(--astryx-color-accent));
   outline-offset: 1px;
 }
+
+/* 强制颜色下焦点只剩边框能表达：聚焦（含可聚焦的禁用字段）的边框取系统 Highlight 色。 */
+@layer astryx.components {
+  @media (forced-colors: active) {
+    .astryx-typeahead-control:focus-within,
+    .astryx-typeahead-control.is-open {
+      border-color: Highlight;
+    }
+  }
+}
+
+@layer astryx.components {
+  /* 状态图标顶在输入框末尾，颜色跟着状态色；清除按钮在它前面。 */
+  .astryx-typeahead-control > .astryx-field-icon,
+  .astryx-typeahead-control > .astryx-field-info-tip {
+    flex: none;
+    color: var(--astryx-input-status-color, var(--astryx-color-text-secondary, #525252));
+  }
+}
+
+@layer astryx.components {
+  /* 触屏上点输入框会升起键盘，焦点外观淡入的每一帧都要重绘，改成立刻出现；鼠标和 Tab 仍淡入。 */
+  @media (pointer: coarse) {
+    .astryx-typeahead-control {
+      transition: none;
+    }
+  }
+}

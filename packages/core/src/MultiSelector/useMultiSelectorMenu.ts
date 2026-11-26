@@ -4,6 +4,8 @@ import type { AstryxMessages } from '../locale/messages.js'
 import type { OptionActionGrid } from '../selectors/useOptionActionGrid.js'
 import type { MultiSelectorCreateChange, MultiSelectorOptionData, MultiSelectorProps } from './types.js'
 import { computed, nextTick, ref, watch } from 'vue'
+import { useKeyboardHighlight } from '../composables/internal/useKeyboardHighlight.js'
+import { useAnnounce } from '../composables/useAnnounce.js'
 import { useCombobox } from '../composables/useCombobox.js'
 import { searchResultMessage } from '../Selector/searchResultMessage.js'
 import { isOptionAction } from '../selectors/optionAction.js'
@@ -24,6 +26,8 @@ export interface MultiSelectorMenuHost {
   isLoading: ComputedRef<boolean>
   messages: ComputedRef<Pick<AstryxMessages, 'multiSelector'>>
   announce: (message: string) => void
+  /** 搜索结果要播报了，收回还没念出去的「加载中」。 */
+  settleBusy: () => void
   listboxRef: Readonly<ShallowRef<HTMLElement | null>>
   getSearchInput: () => HTMLInputElement | null
   focusTrigger: () => void
@@ -33,6 +37,8 @@ export interface MultiSelectorMenuHost {
 export interface MultiSelectorMenuApi {
   query: Ref<string>
   combobox: Combobox<string | number>
+  /** 上一次高亮移动是键盘引起的。 */
+  isKeyboardHighlight: Ref<boolean>
   rows: ComputedRef<ReturnType<typeof flattenOptions>>
   createOption: ComputedRef<MultiSelectorOptionData | null>
   selectAllIndex: ComputedRef<number>
@@ -124,6 +130,9 @@ export function useMultiSelectorMenu(host: MultiSelectorMenuHost): MultiSelector
         query.value = ''
     },
   })
+  const keyboardHighlight = useKeyboardHighlight(combobox.activeIndex)
+  /** 搜索状态（结果数、创建行、空结果）每次按键都重说一遍：快速输入时只念最新的，不把过期的状态连成一串。 */
+  const announceSearch = useAnnounce({ hasReplace: true })
 
   const selectedOptions = computed(() => selectedValues.value.flatMap((value) => {
     const option = optionByValue.value.get(value)
@@ -196,8 +205,10 @@ export function useMultiSelectorMenu(host: MultiSelectorMenuHost): MultiSelector
   })
 
   watch(announcement, (message) => {
-    if (message)
-      host.announce(message)
+    if (!message)
+      return
+    host.settleBusy()
+    announceSearch(message)
   })
 
   watch(() => [host.props.hasCreate, host.props.searchable] as const, ([create, search]) => {
@@ -253,10 +264,13 @@ export function useMultiSelectorMenu(host: MultiSelectorMenuHost): MultiSelector
     return selectable.value.findIndex(option => option.value === value)
   }
 
+  /** 指针悬停挪动高亮：下一次高亮变化按指针算，不画只给键盘看的焦点环。 */
   function highlight(index: number): void {
     const option = selectable.value[index]
-    if (option && !option.disabled)
+    if (option && !option.disabled) {
+      keyboardHighlight.notePointerMove()
       combobox.activeIndex.value = index
+    }
   }
 
   function checkboxState(option: MultiSelectorOptionData): 'checked' | 'unchecked' | 'indeterminate' {
@@ -306,6 +320,7 @@ export function useMultiSelectorMenu(host: MultiSelectorMenuHost): MultiSelector
   return {
     query,
     combobox,
+    isKeyboardHighlight: keyboardHighlight.isKeyboardHighlight,
     rows,
     createOption,
     selectAllIndex,

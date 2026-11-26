@@ -147,6 +147,19 @@
     outline: none;
   }
 
+  /*
+   * 内容溢出时主区域是键盘停靠点：只有 Tab 到它才画标准焦点环，往里收一圈免得被外壳裁掉；
+   * 跳转链接和脚本的聚焦（data-programmatic-focus）不画。
+   */
+  .astryx-app-shell__content[data-scroll-region]:focus-visible:not([data-programmatic-focus]) {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, currentcolor);
+    outline-offset: calc(-1 * var(--astryx-focus-outline-width, 2px));
+  }
+
+  .astryx-app-shell__content[data-corner][data-scroll-region]:focus-visible {
+    border-start-start-radius: var(--astryx-radius-page, 1.75rem);
+  }
+
   .astryx-app-shell__content[data-variant='wash'] {
     background-color: var(--astryx-color-background-body, #f1f1f1);
   }

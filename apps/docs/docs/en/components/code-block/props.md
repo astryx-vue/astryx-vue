@@ -31,6 +31,7 @@ footer: false
 <tr><td><code>highlightMode</code></td><td><code>'auto' | 'ranges' | 'spans'</code></td><td><code>'auto'</code></td><td>How tokens are painted.</td></tr>
 <tr><td><code>copyLabel</code></td><td><code>string</code></td><td><code>'Copy code'</code></td><td>Accessible name of the copy control before a copy.</td></tr>
 <tr><td><code>copiedLabel</code></td><td><code>string</code></td><td><code>'Copied'</code></td><td>Name and announcement after a successful copy.</td></tr>
+<tr><td><code>copyFailedLabel</code></td><td><code>string</code></td><td><code>'Failed to copy value to clipboard.'</code></td><td>Name, tooltip and announcement for 2 seconds after the clipboard rejects a write, while the button shows a cross. A theme that maps the <code>code-block-copy</code> icon slot keeps its own glyph during a failure.</td></tr>
 <tr><td><code>codeLabel</code></td><td><code>string</code></td><td><code>'Code'</code></td><td>Accessible name of the code viewport.</td></tr>
 </tbody></table>
 </div>
@@ -38,6 +39,7 @@ footer: false
 ## CodeBlock events
 
 - `copy`: emitted after the code string was written to the clipboard.
+- `copyError`: emitted once per failed copy with the rejection. The error itself is never shown.
 
 ## SyntaxTheme
 

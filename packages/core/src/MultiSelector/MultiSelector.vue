@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import type { FieldStatusInput } from '../Field/types.js'
 import type { MultiSelectorEmits, MultiSelectorHandle, MultiSelectorProps, MultiSelectorSlots, MultiSelectorTriggerProps } from './types.js'
-import { computed, nextTick, onMounted, onScopeDispose, ref, shallowRef, useAttrs, useId, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, shallowRef, useAttrs, useId, useTemplateRef } from 'vue'
 import BottomSheet from '../BottomSheet/BottomSheet.vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
+import { useBusyAnnouncement } from '../composables/internal/busyAnnouncement.js'
 import { isKeyboardModality, trackInteractionModality } from '../composables/internal/interactionModality.js'
 import { useAnnounce } from '../composables/useAnnounce.js'
 import { useDevWarning } from '../composables/useDevWarning.js'
 import { useDisclosureHandle } from '../composables/useDisclosureHandle.js'
 import { useFieldControlState } from '../composables/useFieldControlState.js'
-import { useOverflow } from '../composables/useOverflow.js'
 import Field from '../Field/Field.vue'
 import { useFieldPartStyling } from '../Field/fieldParts.js'
 import InputClearButton from '../Field/InputClearButton.vue'
@@ -23,6 +23,7 @@ import { focusElement } from '../layer/focus.js'
 import { useComponentMessages } from '../locale/context.js'
 import { multiSelectorMessages } from '../locale/messages/multi-selector.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
+import { bindListboxEscape } from '../Selector/selectorEscape.js'
 import { normalizeTriggerVariant } from '../selectors/triggerVariant.js'
 import { useSize } from '../SizeContext/SizeContext.js'
 import Spinner from '../Spinner/Spinner.vue'
@@ -30,6 +31,7 @@ import Token from '../Token/Token.vue'
 import { useAnchoredListbox } from '../Typeahead/useAnchoredListbox.js'
 import { consumeWhileDisabled } from '../utils/disabledInteraction.js'
 import MultiSelectorPanel from './MultiSelectorPanel.vue'
+import { useMultiSelectorDisplay } from './useMultiSelectorDisplay.js'
 import { useMultiSelectorMenu } from './useMultiSelectorMenu.js'
 import '../../styles/button.css'
 import '../../styles/multi-selector.css'
@@ -101,6 +103,7 @@ const disabledTooltipId = `${triggerId}-disabled-tooltip`
 const resolvedDisabledMessage = computed(() => props.disabledMessage?.trim() || props.disabledReason?.trim())
 const showsDisabledMessage = computed(() => control.isDisabled.value && !!resolvedDisabledMessage.value)
 const disabledTooltip = useButtonTooltip(showsDisabledMessage)
+const fieldLabelId = `${triggerId}-label`
 const hasClear = computed(() => props.hasClear || props.clearable)
 const hasCustomTrigger = computed(() => slots.trigger != null)
 const customAnchor = shallowRef<HTMLElement | null>(null)
@@ -134,6 +137,7 @@ const menu = useMultiSelectorMenu({
   isLoading: control.isLoading,
   messages,
   announce,
+  settleBusy: useBusyAnnouncement(() => control.isLoading.value, () => messages.value.multiSelector.loading),
   listboxRef,
   getSearchInput: () => panelRef.value ? (panelRef.value as { searchInput?: HTMLInputElement | null }).searchInput ?? null : null,
   focusTrigger: () => {
@@ -144,6 +148,10 @@ const menu = useMultiSelectorMenu({
   listboxId,
 })
 const { combobox, selectedValues, selectedOptions } = menu
+/** 禁用的字段不向表单交值：不渲染隐藏输入，而不是渲染一个原生禁用的。 */
+/** 带搜索时触发器是普通按钮，搜索框才是组合框；ARIA 不允许按钮带 aria-required，必填交给搜索框。 */
+const hasSearchRole = computed(() => Boolean(props.searchable) && !control.isReadOnly.value)
+const hiddenCarrierValues = computed(() => control.isDisabled.value ? [] : selectedValues.value)
 
 trackInteractionModality()
 const searchKeyboardFocus = ref(false)
@@ -175,23 +183,17 @@ const anchored = useAnchoredListbox({
   },
 })
 
-const badgeCount = computed(() => selectedOptions.value.length)
-const overflow = useOverflow(badgeCount, { gap: 4 })
-const visibleBadgeCount = computed(() => Math.min(overflow.visibleCount.value, props.maxBadges, badgeCount.value))
-const hiddenBadgeCount = computed(() => Math.max(0, badgeCount.value - visibleBadgeCount.value))
-const measureMoreLabel = computed(() => messages.value.multiSelector.more(Math.max(hiddenBadgeCount.value, 1)))
-const labelText = computed(() => {
-  const labels = selectedOptions.value.map(option => option.label)
-  const shown = labels.slice(0, props.maxBadges)
-  const extra = labels.length - shown.length
-  if (shown.length === 0)
-    return ''
-  return extra > 0 ? `${shown.join(', ')} ${messages.value.multiSelector.more(extra)}` : shown.join(', ')
+const { overflow, visibleBadgeCount, hiddenBadgeCount, measureMoreLabel, labelText, formattedValue } = useMultiSelectorDisplay({
+  props,
+  selectedOptions,
+  messages,
 })
-const formattedValue = computed(() => {
-  if (selectedOptions.value.length === 0 || props.formatValue == null || props.triggerDisplay === 'badges')
+/** 调用方的 aria-labelledby 接在字段自己的标签后面（组内先是组标签），不取代它。 */
+const labelledBy = computed(() => {
+  const external = attrs['aria-labelledby']
+  if (typeof external !== 'string' || external === '')
     return undefined
-  return props.formatValue(selectedOptions.value.map(option => ({ value: option.value, label: option.label })))
+  return [inGroup.value ? inputGroup?.labelId.value : undefined, fieldLabelId, external].filter(Boolean).join(' ')
 })
 const describedBy = computed(() => {
   return [
@@ -239,23 +241,34 @@ function onTriggerKeyDown(event: KeyboardEvent): void {
 }
 
 /** 选项和操作按钮上的 Escape 不会经过搜索框，在列表根上接住并回到触发器。 */
-function onListboxEscape(event: KeyboardEvent): void {
+bindListboxEscape(listboxRef, (event) => {
   if (event.key !== 'Escape' || event.defaultPrevented || event.isComposing)
     return
   menu.onKeyDown(event)
+})
+
+/**
+ * 自制控件在禁用、只读（含 InputGroup 带来的禁用）时仍可聚焦，但调用方绑在同一个
+ * 元素上的点击和按键处理也不该运行：先到的这一份把事件整个拦下。
+ */
+function onCustomTriggerClick(event: MouseEvent): void {
+  if (!control.canActivate.value)
+    event.stopImmediatePropagation()
+  onTriggerClick(event)
 }
 
-watch(listboxRef, (el, prev) => {
-  prev?.removeEventListener('keydown', onListboxEscape)
-  el?.addEventListener('keydown', onListboxEscape)
-}, { flush: 'sync' })
-onScopeDispose(() => listboxRef.value?.removeEventListener('keydown', onListboxEscape))
+function onCustomTriggerKeyDown(event: KeyboardEvent): void {
+  if (!control.canActivate.value && event.key !== 'Tab')
+    event.stopImmediatePropagation()
+  onTriggerKeyDown(event)
+}
 
 const triggerProps = computed<MultiSelectorTriggerProps>(() => ({
   'id': triggerId,
-  'onClick': onTriggerClick,
-  'onKeyDown': onTriggerKeyDown,
+  'onClick': onCustomTriggerClick,
+  'onKeyDown': onCustomTriggerKeyDown,
   'onFocus': onTriggerFocus,
+  'aria-disabled': control.isDisabled.value ? 'true' : undefined,
   'aria-haspopup': menu.popupKind.value,
   'aria-expanded': combobox.isOpen.value,
   'aria-controls': listboxId,
@@ -303,6 +316,7 @@ defineExpose({
     :style="parts.containerStyle.value"
     :label="props.label"
     :input-id="props.searchable && combobox.isOpen.value ? searchId : triggerId"
+    :label-id="fieldLabelId"
     :is-label-hidden="inGroup || props.isLabelHidden || props.labelHidden"
     :is-disabled="control.isDisabled.value"
     :is-required="inGroup ? false : props.required"
@@ -339,12 +353,14 @@ defineExpose({
         :aria-disabled="control.isDisabled.value || undefined"
         :aria-readonly="control.isReadOnly.value || undefined"
         :aria-busy="control.isLoading.value || undefined"
-        :role="props.searchable && !control.isReadOnly.value ? undefined : 'combobox'"
+        :role="hasSearchRole ? undefined : 'combobox'"
         :aria-haspopup="control.isReadOnly.value ? undefined : menu.popupKind.value"
         :aria-expanded="control.isReadOnly.value ? false : combobox.isOpen.value"
         :aria-controls="control.isReadOnly.value ? undefined : listboxId"
         :aria-autocomplete="props.searchable ? undefined : 'none'"
         :aria-activedescendant="!props.searchable ? menu.actionGrid.activeDescendant.value : undefined"
+        :aria-labelledby="labelledBy"
+        :aria-required="props.required && !hasSearchRole ? true : undefined"
         :aria-describedby="[describedBy, control.isReadOnly.value ? readOnlyId : undefined].filter(Boolean).join(' ') || undefined"
         @click="onTriggerClick"
         @focus="onTriggerFocus"
@@ -366,7 +382,7 @@ defineExpose({
           </span>
         </span>
       </button>
-      <Spinner v-if="control.isLoading.value" class="astryx-multi-selector-spinner" size="sm" :aria-label="messages.multiSelector.loading" />
+      <Spinner v-if="control.isLoading.value" class="astryx-multi-selector-spinner" size="sm" aria-hidden="true" />
       <InputClearButton
         v-if="hasClear && selectedValues.length > 0 && control.canActivate.value"
         class="astryx-multi-selector-clear"
@@ -391,7 +407,7 @@ defineExpose({
         <span class="astryx-multi-selector-more" data-overflow-indicator>{{ measureMoreLabel }}</span>
       </span>
       <span v-if="showsDisabledMessage" :id="disabledId" class="astryx-visually-hidden">{{ resolvedDisabledMessage }}</span>
-      <input v-for="value in selectedValues" :key="value" type="hidden" :name="props.name" :value="value" :disabled="!props.name">
+      <input v-for="value in hiddenCarrierValues" :key="value" type="hidden" :name="props.name" :value="value" :disabled="!props.name">
     </div>
   </Field>
   <BottomSheet
@@ -413,6 +429,7 @@ defineExpose({
       :id="listboxId"
       ref="listboxRef"
       class="astryx-multi-selector-listbox astryx-layer"
+      :data-keyboard-highlight="menu.isKeyboardHighlight.value || undefined"
       :class="{ 'is-sheet': isSheet }"
       :role="menu.gridMode.value ? 'grid' : 'listbox'"
       aria-multiselectable="true"
@@ -424,6 +441,7 @@ defineExpose({
       <MultiSelectorPanel
         ref="panelRef"
         :searchable="Boolean(props.searchable)"
+        :required="props.required"
         :query="menu.query.value"
         :search-id="searchId"
         :search-placeholder="menu.searchPlaceholder.value"

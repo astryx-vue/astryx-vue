@@ -23,7 +23,7 @@ import { useHotkeys } from '@astryx-vue/core'
 
 | 指引 | 实践 |
 | --- | --- |
-| <Badge variant="success">推荐</Badge> | 用于应用级快捷键：命令面板（`mod+k`）、帮助浮层（`shift+/`）、导航键。 |
+| <Badge variant="success">推荐</Badge> | 用于应用级快捷键：命令面板（`mod+k`）、帮助浮层（`?`）、导航键。 |
 | <Badge variant="success">推荐</Badge> | 用 `Kbd` 组件把同一条组合显示出来；两边对 `mod` 的平台判断是同一套。 |
 | <Badge variant="success">推荐</Badge> | 弹窗或向导占用键盘时，用 `isDisabled` 暂时停掉快捷键，而不是把 hook 卸掉。 |
 | <Badge variant="error">避免</Badge> | 用它做控件内部的焦点导航；那种场景用 `useListFocus` 或 `useGridRovingFocus`。 |

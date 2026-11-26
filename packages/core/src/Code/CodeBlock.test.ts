@@ -178,16 +178,21 @@ describe('codeBlock', () => {
     expect(document.getElementById(tooltipId)?.textContent).toBe('Copy code')
   })
 
-  it('reports no success when the clipboard write fails', async () => {
-    writeText.mockRejectedValue(new Error('denied'))
+  it('says when the clipboard write fails: a cross, the failed name, one error event, no success', async () => {
+    const denied = new Error('denied')
+    writeText.mockRejectedValue(denied)
     const wrapper = renderCodeBlock({ code: 'const x = 1;' })
 
     await copyButton(wrapper).trigger('click')
     await settle()
 
     expect(wrapper.emitted('copy')).toBeUndefined()
-    expect(copyButton(wrapper).attributes('aria-label')).toBe('Copy code')
+    expect(wrapper.emitted('copyError')).toEqual([[denied]])
+    expect(copyButton(wrapper).attributes('aria-label')).toBe('Failed to copy value to clipboard.')
+    expect(copyButton(wrapper).find('.astryx-icon--close').exists()).toBe(true)
     expect(wrapper.findAll('[role="status"]').some(status => status.text() === 'Copied')).toBe(false)
+    await new Promise(resolve => requestAnimationFrame(resolve))
+    expect(document.querySelector('[data-astryx-live-region="assertive"]')?.textContent).toBe('Failed to copy value to clipboard.')
   })
 
   it('reverts the copied state after two seconds and restarts on a rapid re-copy', async () => {

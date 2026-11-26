@@ -25,7 +25,7 @@ footer: false
       <tr><td><code>maxEntries</code></td><td><code>number</code></td><td>—</td><td>最多可选几条。达到上限后输入框只读。</td></tr>
       <tr><td><code>debounceMs</code></td><td><code>number</code></td><td><code>150</code></td><td>输入停顿后再搜索。</td></tr>
       <tr><td><code>minQueryLength</code></td><td><code>number</code></td><td><code>1</code></td><td>够长才去搜索的下限，按人眼看到的字符数算。太短就完全不搜，下拉也不打开——除非开了 <code>hasCreate</code>：「新建 …」是从输入文字派生的，不用搜。</td></tr>
-      <tr><td><code>hasEntriesOnFocus</code></td><td><code>boolean</code></td><td><code>false</code></td><td>聚焦后还没输入就展示结果。</td></tr>
+      <tr><td><code>hasEntriesOnFocus</code></td><td><code>boolean</code></td><td><code>false</code></td><td>聚焦后还没输入就展示结果。从该列表中选一项后，只要还有其他选项，输入框保持焦点，列表保持打开，并激活下一项。</td></tr>
       <tr><td><code>showOnFocus</code></td><td><code>boolean</code></td><td><code>false</code></td><td><code>hasEntriesOnFocus</code> 的旧名。两者任一为真即生效。</td></tr>
       <tr><td><code>hasAutoFocus</code></td><td><code>boolean</code></td><td><code>false</code></td><td>挂载后自动聚焦输入框。</td></tr>
       <tr><td><code>menuWidth</code></td><td><code>number</code></td><td>—</td><td>下拉想要的宽度，单位像素。窄不过输入区，再宽会被视口截住。</td></tr>
@@ -39,10 +39,11 @@ footer: false
       <tr><td><code>disabledReason</code></td><td><code>string</code></td><td>—</td><td><code>disabledMessage</code> 的旧名。</td></tr>
       <tr><td><code>status</code></td><td><code>'default' | 'success' | 'warning' | 'error'</code></td><td><code>'default'</code></td><td>状态样式。</td></tr>
       <tr><td><code>statusMessage</code></td><td><code>string</code></td><td>—</td><td>字段下方的状态说明。</td></tr>
+      <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'attached'</code></td><td>状态说明放哪里。<code>attached</code> 在字段末尾画状态图标、说明在下面；<code>detached</code> 只留下面的说明；<code>tooltip</code> 的图标是能聚焦的按钮，说明收在它的提示里。</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>输入框和标签的尺寸。</td></tr>
       <tr><td><code>required</code></td><td><code>boolean</code></td><td><code>false</code></td><td>标记为必填。</td></tr>
       <tr><td><code>optional</code></td><td><code>boolean</code></td><td><code>false</code></td><td>标签上显示「可选」标记。</td></tr>
-      <tr><td><code>name</code></td><td><code>string</code></td><td>—</td><td>表单字段名。每个已选 id 提交一次。</td></tr>
+      <tr><td><code>name</code></td><td><code>string</code></td><td>—</td><td>表单字段名。每个已选 id 提交一次；字段禁用时不提交。</td></tr>
       <tr><td><code>width</code></td><td><code>number | string</code></td><td>—</td><td>整个字段的宽度（数字按像素算，字符串原样使用）。</td></tr>
     </tbody>
   </table>

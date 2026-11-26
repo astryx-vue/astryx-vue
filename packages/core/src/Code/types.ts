@@ -184,6 +184,12 @@ export interface CodeBlockProps {
    */
   copiedLabel?: string
   /**
+   * The copy control name, tooltip and announcement for 2 seconds after the
+   * clipboard rejects a write, while the button shows a cross.
+   * @default 'Failed to copy value to clipboard.'
+   */
+  copyFailedLabel?: string
+  /**
    * The accessible name of the code viewport, and of a collapsible header that
    * has no visible title or language label.
    * @default 'Code'
@@ -194,4 +200,6 @@ export interface CodeBlockProps {
 export interface CodeBlockEmits {
   /** Emitted after the code string was written to the clipboard. */
   copy: []
+  /** Emitted once per failed copy with the rejection. The error itself is never shown. */
+  copyError: [error: unknown]
 }

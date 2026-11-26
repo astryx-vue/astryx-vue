@@ -1,4 +1,5 @@
 import type { MenuPressPointerType } from './menuPressGesture.js'
+import { focusForLastInput } from './focusReturn.js'
 import { runAsMenuPressActivation } from './strayClick.js'
 
 /** 带这个标记的菜单根用的是按压模型。嵌套的飞出层靠它分清一次按压归哪一层。 */
@@ -47,10 +48,13 @@ export function getOutermostRoot(menu: HTMLElement): HTMLElement {
  * 手指的指针事件一直发给它落下的那个元素，所以要按坐标找当前在它下面的是谁。
  * 测试环境的 `elementFromPoint` 没有布局，答不出来时退回事件目标。
  */
-function elementUnder(event: PointerEvent, doc: Document, hitTest?: ResolvePointInput['hitTest']): Element | null {
+function elementUnder(event: PointerEvent, doc: Document, menu: HTMLElement | null, hitTest?: ResolvePointInput['hitTest']): Element | null {
+  // 菜单在 shadow root 里时，文档层面的命中测试只能拿到宿主元素，要在菜单自己的根上测。
+  const tree = menu?.getRootNode() as (Document | ShadowRoot | undefined)
+  const scope = tree != null && typeof tree.elementFromPoint === 'function' ? tree : doc
   const hit = hitTest != null
     ? hitTest(event.clientX, event.clientY)
-    : (typeof doc.elementFromPoint === 'function' ? doc.elementFromPoint(event.clientX, event.clientY) : null)
+    : (typeof scope.elementFromPoint === 'function' ? scope.elementFromPoint(event.clientX, event.clientY) : null)
   if (hit != null)
     return hit
   return event.target instanceof Element ? event.target : null
@@ -58,7 +62,7 @@ function elementUnder(event: PointerEvent, doc: Document, hitTest?: ResolvePoint
 
 /** 指针下面是哪一行、在不在菜单里、在不在触发器上。 */
 export function resolvePoint(event: PointerEvent, doc: Document, input: ResolvePointInput): ResolvedPoint {
-  const element = elementUnder(event, doc, input.hitTest)
+  const element = elementUnder(event, doc, input.menu, input.hitTest)
   const root = input.menu == null ? null : getOutermostRoot(input.menu)
   const isInMenu = root != null && element != null && root.contains(element)
   const isOnTrigger = input.trigger != null && element != null && input.trigger.contains(element)
@@ -72,15 +76,16 @@ export function resolvePoint(event: PointerEvent, doc: Document, input: ResolveP
 }
 
 /**
- * 默认的高亮：菜单里高亮就是 DOM 焦点（`preventScroll`）。
+ * 默认的高亮：菜单里高亮就是 DOM 焦点（`preventScroll`）。指针按下之后的这次聚焦不画键盘焦点环。
  * 行本身不可聚焦时聚焦里面的控件；指针下没有行时把焦点放在菜单根上，这样没有一行亮着。
  */
 export function focusHighlight(row: HTMLElement | null, menu: HTMLElement | null, doc: Document): void {
   const target = row == null
     ? menu
     : (row.matches(FOCUSABLE_ROW_SELECTOR) ? row : row.querySelector<HTMLElement>(INNER_CONTROL_SELECTOR))
+  // 指针点亮的行不该匹配 :focus-visible，否则只给键盘看的焦点样式会跟着鼠标走。
   if (target != null && target !== doc.activeElement)
-    target.focus({ preventScroll: true })
+    focusForLastInput(target, { preventScroll: true })
 }
 
 /**

@@ -66,8 +66,8 @@ footer: false
       <tr>
         <td><code>textOverflow</code></td>
         <td><code>'wrap' | 'truncate'</code></td>
-        <td><code>'wrap'</code></td>
-        <td>文字换行，或截成一行。</td>
+        <td><code>'wrap'</code>；开了行、列窗口化插件时为 <code>'truncate'</code></td>
+        <td>文字换行，或截成一行。列标题也跟着它：<code>'wrap'</code> 下，数据模式里过长的标题会折成多行，手写行列的模式里列会变宽，让标题保持一行；<code>'truncate'</code> 下标题保持一行，放不下以省略号收尾。</td>
       </tr>
       <tr>
         <td><code>plugins</code></td>
@@ -170,7 +170,7 @@ footer: false
 
 ### useTableRowIndex
 
-`data` 是表格正在画的行，分组之后的那一份。`startFrom` 默认从 1 开始。`getRowKey` 用来认出同一行；不传就按对象本身比较。`label` 是这一列表头，默认是一个井号。
+不传 `data` 时，按表格渲染出的位置编号；传了就按那份数组编号，分组头不占号。`startFrom` 默认从 1 开始。`getRowKey` 用来认出同一行；不传就按对象本身比较。`label` 是这一列表头，默认是一个井号。
 
 `proportional(value)` 分剩余宽度，默认最小 120px。没写宽度的列是弹性列，下限 60px。`pixel(value)` 同时设定宽度和最小宽度。
 
@@ -181,3 +181,7 @@ footer: false
 ## 主题
 
 表头用标签字号、半粗字重和次要文字色。表体用正文字号。选中行用强调色的淡底。斑马纹用淡底。悬停用悬停遮罩。放进卡片时，滚动区域会用卡片公布的容器内边距，让首尾单元格和标题对齐。
+
+每一行都带 `table-row` 主题目标。数据模式的表体行带 `parity`（第一、三、五……行是 `odd`，其余是 `even`）；`isStriped` 表格里可能上斑马纹的行（表头行除外）带 `striped` 状态；被 `useTableSelection` 选中的行带 `selected` 状态。例如 `components: { 'table-row': { 'parity:odd+striped': { backgroundColor: '#f9f9f9' } } }`。选中行的底色读 `--color-accent-muted`，在 `selected` 状态里改这个变量就能换色。主题给行设的底色也会带到固定列上。
+
+手机和平板上滚动条只在滚动时出现，表格横向能滚时，藏着内容的那一侧边缘会淡出；固定列所在的一侧保留自己的阴影。

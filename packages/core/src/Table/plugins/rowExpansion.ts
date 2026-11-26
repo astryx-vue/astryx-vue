@@ -15,6 +15,10 @@ export interface UseTableRowExpansionConfig<T extends Record<string, unknown>> {
   onToggle: (key: string) => void
   getRowKey: (item: T) => string
   renderExpanded: (item: T) => VNodeChild
+  /**
+   * 行的可读名字，拼进展开按钮的无障碍名称（「Expand Acme」）。返回空白时退回通用的「Expand row」。
+   */
+  getRowLabel?: (item: T) => string
   getIsItemExpandable?: (item: T) => boolean
   panelVariant?: 'muted' | 'transparent'
   hasRowClickExpansion?: boolean
@@ -25,6 +29,7 @@ export function useTableRowExpansion<T extends Record<string, unknown>>(
 ): TablePlugin<T> {
   const messages = useComponentMessages({ table: tableMessages })
   return {
+    rowModel: 'detail',
     transformColumns(columns) {
       return [{
         key: EXPANSION_COLUMN_KEY,
@@ -40,6 +45,7 @@ export function useTableRowExpansion<T extends Record<string, unknown>>(
           const key = current.getRowKey(item)
           return h(TableExpansionChevron, {
             expanded: current.expandedKeys.has(key),
+            rowLabel: current.getRowLabel?.(item)?.trim() || undefined,
             onToggle: () => current.onToggle(key),
           })
         },

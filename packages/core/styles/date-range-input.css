@@ -1,6 +1,13 @@
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 
 @layer astryx.components {
+  /* 粗指针下点一下就弹键盘，焦点样子渐变会在键盘升起的每一帧重画，所以直接出现。 */
+  @media (pointer: coarse) {
+    .astryx-date-range-input.astryx-bordered-control {
+      transition: none;
+    }
+  }
+
   .astryx-date-range-input {
     width: 100%;
   }

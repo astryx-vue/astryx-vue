@@ -44,4 +44,5 @@ const { onClick, onMouseUp } = useClickableContainer({
 | --- | --- |
 | <Badge variant="success">Do</Badge> | Attach both `onClick` and `onMouseUp` to the container element (`@click` and `@mouseup`) for full click handling including middle-click. |
 | <Badge variant="success">Do</Badge> | Use inside `ClickableCard` or `SelectableCard` for the standard card interaction pattern. |
+| <Badge variant="success">Do</Badge> | For a pressable surface without Card chrome, such as a quoted message that jumps on press, compose it yourself: this hook on the surface; `usePressFeedback()` on the same element for the hover tint and touch press; a native `<button>` (or an `<a>` for a destination) inside `VisuallyHidden` as the named control and `interactiveRef`; and a `:focus-within` ring built from the focus tokens on the surface, the same ring `ClickableCard` draws. |
 | <Badge variant="error">Don't</Badge> | Use when the entire container is a single interactive element; just use a `<button>` or `<a>` directly. |

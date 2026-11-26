@@ -7,6 +7,8 @@ import Icon from '../Icon/Icon.vue'
 import { useComponentMessages } from '../locale/context.js'
 import { inputMessages } from '../locale/messages/input.js'
 
+defineOptions({ inheritAttrs: false })
+
 const props = defineProps<{
   type: FieldStatusType
   message?: string
@@ -31,6 +33,7 @@ const label = computed(() => {
 <template>
   <button
     v-if="showsTooltip"
+    v-bind="$attrs"
     ref="button"
     type="button"
     class="astryx-field-status-glyph"
@@ -45,7 +48,7 @@ const label = computed(() => {
   >
     <Icon :icon="type" size="sm" />
   </button>
-  <Icon v-else class="astryx-field-status-glyph" :icon="type" size="sm" :data-status="type" />
+  <Icon v-else v-bind="$attrs" class="astryx-field-status-glyph" :icon="type" size="sm" :data-status="type" />
   <ButtonTooltip
     v-if="showsTooltip"
     :id="tooltipId"

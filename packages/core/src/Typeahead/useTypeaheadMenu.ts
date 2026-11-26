@@ -59,6 +59,8 @@ export interface TypeaheadMenu<T extends SearchableItem = SearchableItem> {
   activeId: ComputedRef<string | undefined>
   /** 输入还没到够搜的长度：此时不搜，下拉也不打开。 */
   belowMinQueryLength: ComputedRef<boolean>
+  /** 数据源这次搜到的全部匹配条数，包括被 `maxItems` 截掉没显示的，不含「创建」行。 */
+  matchCount: ComputedRef<number>
   setQuery: (value: string) => void
   open: () => void
   close: () => void
@@ -90,6 +92,13 @@ export function useTypeaheadMenu<T extends SearchableItem>(options: UseTypeahead
       return
     asyncSource.status.value = 'idle'
   }, { flush: 'sync' })
+
+  const matchCount = computed(() => {
+    if (belowMinQueryLength.value)
+      return 0
+    const excluded = new Set(toValue(options.excludeIds) ?? [])
+    return asyncSource.items.value.filter(item => !excluded.has(item.id)).length
+  })
 
   const entries = computed<TypeaheadMenuEntry<T>[]>(() => {
     const excluded = new Set(toValue(options.excludeIds) ?? [])
@@ -293,6 +302,7 @@ export function useTypeaheadMenu<T extends SearchableItem>(options: UseTypeahead
     error: asyncSource.error,
     activeId,
     belowMinQueryLength,
+    matchCount,
     setQuery,
     open,
     close,

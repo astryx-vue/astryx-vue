@@ -1,30 +1,26 @@
 <script setup lang="ts">
-import type { CSSProperties, VNodeChild, VNodeRef } from 'vue'
-import type {
-  TableCellPatch,
-  TableColumn,
-  TableColumnResizeContribution,
-  TablePlugin,
-  TableRowMenuItem,
-  TableRowPatch,
-} from './types.js'
-import { computed, h, onBeforeUnmount, ref, useAttrs } from 'vue'
+import type { VNodeChild, VNodeRef } from 'vue'
+import type { TableColumn, TablePlugin, TableRowMenuItem, TableRowPatch } from './types.js'
+import { computed, h, onBeforeUnmount, ref, useAttrs, useId } from 'vue'
 import CheckboxInput from '../CheckboxInput/CheckboxInput.vue'
 import ComponentIcon from '../Icon/ComponentIcon.vue'
 import { useComponentMessages } from '../locale/context.js'
 import { tableMessages } from '../locale/messages/table.js'
 import CutTextTooltip from '../Text/CutTextTooltip.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
-import { pixel, resolveColumnWidths, resolveTableMinWidth, splitStyleMinWidth } from './columnUtils.js'
-import { selectColumn } from './plugins/stickyColumns.js'
+import { resolveTableMinWidth, splitStyleMinWidth } from './columnUtils.js'
+import { columnHeaderText } from './headerText.js'
+import { useTableWindowing } from './plugins/virtualization/useTableWindowing.js'
 import { mergeRowPatches } from './rowPatch.js'
 import { CellContent, HeaderAddon, PluginFooter, RenderFn } from './TableDataRenderers.js'
 import TableFilterControl from './TableFilterControl.vue'
 import TableGroupHeader from './TableGroupHeader.vue'
 import TableRowMenu from './TableRowMenu.vue'
 import TableScroll from './TableScroll.vue'
+import { useColumnResizeAria } from './useColumnResizeAria.js'
 import { useHeaderCutText } from './useHeaderCutText.js'
 import { useTableColumnResizeSession } from './useTableColumnResizeSession.js'
+import { useTableDataModel } from './useTableDataModel.js'
 
 defineOptions({ inheritAttrs: false })
 
@@ -38,7 +34,7 @@ const props = defineProps<{
   dividers: string
   isStriped: boolean
   hasHover: boolean
-  textOverflow: string
+  textOverflow?: string
   verticalAlign: string
   rowIndexStart?: number
   rowCount?: number
@@ -50,66 +46,73 @@ const headerCutText = useHeaderCutText()
 
 const attrs = useAttrs()
 const messages = useComponentMessages({ table: tableMessages })
+const headerIdPrefix = useId()
+/** 排序按钮描述（多列排序时的优先级）的 id 前缀，后面接列的序号。 */
+const sortIdBase = useId()
 const scrollRoot = ref<HTMLElement | null>(null)
+const tableEl = ref<HTMLTableElement | null>(null)
+const bodyEl = ref<HTMLTableSectionElement | null>(null)
 const menu = ref<{ x: number, y: number, items: readonly TableRowMenuItem[] } | null>(null)
 const scrollStyle = computed(() => splitStyleMinWidth(attrs.style).style)
 
-const resolvedColumns = computed(() => props.plugins.reduce(
-  (columns, plugin) => plugin.transformColumns?.(columns) ?? columns,
-  [...props.columns],
-))
+const {
+  layoutColumns,
+  selection,
+  widths,
+  resizeContributions,
+  sortFor,
+  filterAt,
+  mergeCell,
+  headerStyle,
+  widthOverride,
+  bodyStyle,
+  selectCellPatch,
+} = useTableDataModel({ columns: () => props.columns, plugins: () => props.plugins })
 
-const selection = computed(() => props.plugins.find(plugin => plugin.selection)?.selection)
-
-/**
- * 选择列的宽度可以被插件的 `widthFor` 改（原版靠 `transformColumns` 改选择列宽）。
- * 它和别的列一起进 `resolveColumnWidths`，所以表头、数据格和表格最小宽度读到同一个值。
- */
-const selectionColumn = computed(() => {
-  const base = selectColumn()
-  const override = props.plugins.map(plugin => plugin.widthFor?.(base)).find(value => value != null)
-  return override == null ? base : { ...base, width: pixel(override) }
+const windowing = useTableWindowing({
+  rows: () => props.rows,
+  plugins: () => props.plugins,
+  idKey: () => props.idKey,
+  textOverflow: () => props.textOverflow,
+  rowIndexStart: () => props.rowIndexStart,
+  rowCount: () => props.rowCount,
+  layoutColumns: () => layoutColumns.value,
+  hasSelection: () => selection.value != null,
+  widthOverride,
+  consumerMinWidth: () => splitStyleMinWidth(attrs.style).minWidth,
+  viewport: () => scrollRoot.value,
+  table: () => tableEl.value,
+  body: () => bodyEl.value,
 })
-const layoutColumns = computed(() => selection.value
-  ? [selectionColumn.value, ...resolvedColumns.value]
-  : resolvedColumns.value)
-// 原版把选择列（fixed pixel 宽）也算进 tableMinWidth，比例列分到的下限才不被它挤占。
-const widths = computed(() => resolveColumnWidths(layoutColumns.value))
-const canResize = computed(() => props.plugins.some(plugin => plugin.onColumnResizeEnd))
+const {
+  textOverflow: resolvedTextOverflow,
+  hasBlockViewport,
+  rowSlots,
+  columnSlots,
+  cellCount,
+  widthStyle,
+  tableAttrs,
+  headerRowIndex,
+  rowAriaIndex,
+  colAriaIndex,
+  onRowFocusin,
+  onRowFocusout,
+} = windowing
+const isRowWindowed = windowing.rows.isWindowed
+const minRowHeight = windowing.rows.minRowHeight
+const columnWindow = windowing.columns
 
-/**
- * 一列参与拖动改宽的方式。第一个给出结果的插件说了算。
- * 只实现了 `onColumnResizeEnd` 的老插件仍然拿到一个最朴素的把手：只管自己这一列，最窄 60px。
- */
-function resizeContribution(column: TableColumn): TableColumnResizeContribution | null {
-  for (const plugin of props.plugins) {
-    const contribution = plugin.resizeFor?.(column, resolvedColumns.value)
-    if (contribution != null)
-      return contribution
-  }
-  if (!canResize.value || column.resizable === false)
-    return null
-  return { minWidth: 60, maxWidth: Number.POSITIVE_INFINITY, neighborKey: null, hasHandle: true }
-}
-
-const resizeContributions = computed(() => new Map(
-  resolvedColumns.value.map(column => [column.key, resizeContribution(column)]),
-))
-const { startResize, onResizeKeydown, resizeLabel, resizeMax } = useTableColumnResizeSession({
+const { startResize, onResizeKeydown, resizeLabel } = useTableColumnResizeSession({
   plugins: () => props.plugins,
   contributions: () => resizeContributions.value,
   resizeColumnLabel: header => messages.value.table.resizeColumn(header),
 })
+const resizeAria = useColumnResizeAria(width => messages.value.table.columnWidthValue(width))
 const tableStyle = computed(() => ({
   minWidth: resolveTableMinWidth(splitStyleMinWidth(attrs.style).minWidth, widths.value.tableMinWidth),
 }))
 const columnCount = computed(() => layoutColumns.value.length)
 const trackRows = computed(() => props.rowCount != null || props.rowIndexStart != null)
-const ariaRowCount = computed(() => {
-  if (!trackRows.value)
-    return undefined
-  return String(props.rowCount ?? -1)
-})
 
 function bindScroll(element: HTMLElement | null): void {
   for (const plugin of props.plugins)
@@ -130,60 +133,19 @@ onBeforeUnmount(() => {
   bindScroll(null)
 })
 
-/** 列头的纯文本形态：函数式列头没有纯文本，可访问名称回退到 key。 */
-function headerText(column: TableColumn): string {
-  return typeof column.header === 'string' && column.header !== '' ? column.header : column.key
-}
-
 /** 列头内容：字符串直接显示，函数按函数式组件渲染。 */
 function HeaderContent(props: { column: TableColumn }) {
   return typeof props.column.header === 'function'
     ? props.column.header()
-    : h('span', null, headerText(props.column))
+    : h('span', null, columnHeaderText(props.column))
 }
-
-function styleFor(column: TableColumn): CSSProperties {
-  const base = { ...(widths.value.columns.get(column.key)?.style ?? {}) }
-  const override = props.plugins.map(plugin => plugin.widthFor?.(column)).find(value => value != null)
-    ?? resizeContributions.value.get(column.key)?.currentWidth
-  if (override != null) {
-    base.width = `${override}px`
-    base.minWidth = `${override}px`
-  }
-  return base
-}
-
-function sortFor(column: TableColumn) {
-  for (const plugin of props.plugins) {
-    const sort = plugin.sortFor?.(column)
-    if (sort)
-      return sort
-  }
-  return null
-}
-
-function filterFor(column: TableColumn) {
-  for (const plugin of props.plugins) {
-    const filter = plugin.filterFor?.(column)
-    if (filter)
-      return filter
-  }
-  return null
-}
-
-const filterContributions = computed(() => new Map(
-  resolvedColumns.value.map(column => [column.key, filterFor(column)]),
-))
 
 /**
- * 取某一列落在指定位置的筛选控件。
- * `popover` 是一个漏斗按钮，跟标题、排序图标同一行；`inline` 系列是输入框，垫在标题下面。
+ * 有拖动把手的列头不从内容取名字：把手是可聚焦的分隔条，会把它的宽度值拼进列头名里。
+ * 这时列头用 `aria-labelledby` 指向标题那一块，名字只剩标题。
  */
-function filterAt(column: TableColumn, place: 'line' | 'below') {
-  const filter = filterContributions.value.get(column.key) ?? null
-  if (filter == null)
-    return null
-  return (filter.variant === 'popover' ? 'line' : 'below') === place ? filter : null
+function headerContentId(index: number): string {
+  return `${headerIdPrefix}-header-${index}`
 }
 
 function rowKey(row: Record<string, unknown>, index: number) {
@@ -191,35 +153,6 @@ function rowKey(row: Record<string, unknown>, index: number) {
     return props.idKey(row)
   const id = row[props.idKey]
   return id == null ? String(index) : String(id)
-}
-
-function mergeCell(column: TableColumn, row: Record<string, unknown> | null, kind: 'header' | 'body'): TableCellPatch {
-  const style: CSSProperties = {}
-  const classes: string[] = []
-  const attrs: Record<string, string | undefined> = {}
-  for (const plugin of props.plugins) {
-    const patch = plugin.cellPatch?.({ column, columns: layoutColumns.value, row, kind })
-    if (patch == null)
-      continue
-    if (patch.class)
-      classes.push(patch.class)
-    if (patch.style)
-      Object.assign(style, patch.style)
-    if (patch.attrs)
-      Object.assign(attrs, patch.attrs)
-  }
-  return { class: classes.join(' ') || undefined, style, attrs }
-}
-
-function headerStyle(column: TableColumn): CSSProperties {
-  return { ...styleFor(column), ...mergeCell(column, null, 'header').style }
-}
-
-function bodyStyle(column: TableColumn, row: Record<string, unknown>): CSSProperties {
-  const style: CSSProperties = { ...mergeCell(column, row, 'body').style }
-  if (column.verticalAlign)
-    style.verticalAlign = column.verticalAlign
-  return style
 }
 
 /** Vue 的 ref 回调拿到的是更宽的 `Element`，收窄成 `<tr>` 再交给插件。 */
@@ -232,19 +165,31 @@ function rowRefBinding(patch: TableRowPatch): VNodeRef | undefined {
   }
 }
 
+/** 要渲染的行：窗口化时只有挂载的行，中间夹着占位行。 */
 const entries = computed(() => {
   let ordinal = 0
   const start = props.rowIndexStart ?? 1
-  return props.rows.map((row, index) => {
+  return rowSlots.value.map((slot) => {
+    if (slot.kind === 'gap')
+      return slot
+    const index = slot.index
+    const row = props.rows[index]!
     const patch = mergeRowPatches(props.plugins, row, index, columnCount.value)
-    let rowIndex: number | undefined
+    let rowIndex = rowAriaIndex(index)
     if (trackRows.value && !patch.skipRowIndex) {
       rowIndex = start + ordinal
       ordinal += 1
     }
-    return { key: rowKey(row, index), row, index, patch, ref: rowRefBinding(patch), rowIndex }
+    return { kind: 'row' as const, key: rowKey(row, index), row, index, patch, ref: rowRefBinding(patch), rowIndex }
   })
 })
+
+const rowStyle = computed(() => (isRowWindowed.value ? { height: `${minRowHeight.value}px` } : undefined))
+
+function gapStyle(size: number, axis: 'block' | 'inline') {
+  const value = `${size}px`
+  return axis === 'block' ? { height: value } : { width: value, minWidth: value, maxWidth: value }
+}
 
 function openMenu(event: MouseEvent, items: readonly TableRowMenuItem[] | undefined): void {
   if (items == null || items.length === 0)
@@ -253,16 +198,12 @@ function openMenu(event: MouseEvent, items: readonly TableRowMenuItem[] | undefi
   menu.value = { x: event.clientX, y: event.clientY, items }
 }
 
-/** 选择列的格子：宽度来自布局里的选择列，再叠加插件的补丁。 */
-function selectCellPatch(kind: 'header' | 'body', row: Record<string, unknown> | null) {
-  const patch = mergeCell(selectionColumn.value, row, kind)
-  const width = widths.value.columns.get(selectionColumn.value.key)?.style.width
-  return { ...patch, style: { width, minWidth: width, maxWidth: width, ...patch.style } }
-}
-
 function isSelected(row: Record<string, unknown>): boolean {
   return selection.value?.isSelected(row) === true
 }
+
+/** 有插件正在加载下一批时，空表格不显示默认的空状态。 */
+const isLoadingRows = computed(() => props.plugins.some(plugin => plugin.loadingState?.().isLoading === true))
 
 function isEnabled(row: Record<string, unknown>): boolean {
   return selection.value?.isEnabled?.(row) ?? true
@@ -270,20 +211,23 @@ function isEnabled(row: Record<string, unknown>): boolean {
 </script>
 
 <template>
-  <TableScroll :class="attrs.class" :style="scrollStyle" :label="label" @viewport="onViewport">
+  <TableScroll :class="attrs.class" :style="scrollStyle" :label="label" :has-block-viewport="hasBlockViewport" @viewport="onViewport">
     <PluginFooter v-for="(plugin, index) in plugins.filter(item => item.above)" :key="`above-${index}`" :plugin="plugin" place="above" />
     <table
+      ref="tableEl"
       class="astryx-table"
       data-layout="fixed"
       :data-density="density"
       :data-dividers="dividers"
       :data-striped="isStriped || undefined"
       :data-hover="hasHover || undefined"
-      :data-overflow="textOverflow"
+      :data-overflow="resolvedTextOverflow"
       :data-valign="verticalAlign"
       :data-row-highlight="selection?.hasRowHighlight === false ? 'off' : undefined"
-      :aria-rowcount="ariaRowCount"
+      v-bind="tableAttrs"
       :style="tableStyle"
+      @focusin="columnWindow.onFocusin"
+      @focusout="columnWindow.onFocusout"
     >
       <thead
         @focusin="headerCutText.onFocusin"
@@ -291,87 +235,97 @@ function isEnabled(row: Record<string, unknown>): boolean {
         @pointerdown="headerCutText.onPointerdown"
         @keydown="headerCutText.onKeydown"
       >
-        <tr>
-          <th
-            v-if="selection"
-            class="astryx-table__select"
-            :class="selectCellPatch('header', null).class"
-            scope="col"
-            v-bind="selectCellPatch('header', null).attrs"
-            :style="selectCellPatch('header', null).style"
-          >
-            <CheckboxInput
-              :model-value="selection.isIndeterminate() ? 'indeterminate' : selection.isAllSelected()"
-              :label="messages.table.selectAllRows"
-              is-label-hidden
-              size="sm"
-              @update:model-value="value => selection?.selectAll(value === true)"
-            />
-          </th>
-          <th
-            v-for="column in resolvedColumns"
-            :key="column.key"
-            scope="col"
-            :data-column="column.key"
-            :data-align="column.align"
-            :class="mergeCell(column, null, 'header').class"
-            v-bind="mergeCell(column, null, 'header').attrs"
-            :style="headerStyle(column)"
-            :aria-sort="sortFor(column)?.direction ?? undefined"
-          >
-            <div class="astryx-table__header">
-              <div class="astryx-table__header-line">
-                <HeaderAddon :column="column" :plugins="plugins" />
-                <button
-                  v-if="sortFor(column)"
-                  type="button"
-                  class="astryx-table__sort"
-                  :data-align="column.align"
-                  :aria-label="sortFor(column)?.label"
-                  @click="sortFor(column)?.onClick($event)"
-                >
-                  <VisuallyHidden v-if="column.headerHidden">
-                    {{ headerText(column) }}
+        <tr class="astryx-table-row" data-header-row :aria-rowindex="headerRowIndex">
+          <template v-for="slot in columnSlots" :key="slot.key">
+            <!-- eslint-disable-next-line vue-a11y/no-aria-hidden-on-focusable -- 占位格不可聚焦，只替没挂载的行列占位置；规则把所有 td 都当成可交互的格子。 -->
+            <td v-if="slot.kind === 'gap'" aria-hidden="true" data-window-gap :style="gapStyle(slot.width, 'inline')" />
+            <th
+              v-else-if="slot.kind === 'select' && selection"
+              class="astryx-table__select"
+              :class="selectCellPatch('header', null).class"
+              scope="col"
+              v-bind="selectCellPatch('header', null).attrs"
+              :aria-colindex="colAriaIndex(slot.position)"
+              :style="selectCellPatch('header', null).style"
+            >
+              <CheckboxInput
+                :model-value="selection.isIndeterminate() ? 'indeterminate' : selection.isAllSelected()"
+                :label="messages.table.selectAllRows"
+                is-label-hidden
+                size="sm"
+                @update:model-value="value => selection?.selectAll(value === true)"
+              />
+            </th>
+            <th
+              v-else-if="slot.kind === 'column'"
+              scope="col"
+              :data-column="slot.column.key"
+              :data-align="slot.column.align"
+              :class="mergeCell(slot.column, null, 'header').class"
+              v-bind="mergeCell(slot.column, null, 'header').attrs"
+              :aria-colindex="colAriaIndex(slot.position)"
+              :style="[headerStyle(slot.column), widthStyle(slot.position)]"
+              :aria-sort="sortFor(slot.column)?.direction ?? undefined"
+              :aria-labelledby="resizeContributions.get(slot.column.key)?.hasHandle ? headerContentId(slot.position) : undefined"
+            >
+              <div :id="headerContentId(slot.position)" class="astryx-table__header">
+                <div class="astryx-table__header-line">
+                  <HeaderAddon :column="slot.column" :plugins="plugins" />
+                  <template v-if="sortFor(slot.column)">
+                    <button
+                      type="button"
+                      class="astryx-table__sort"
+                      :data-align="slot.column.align"
+                      :aria-describedby="sortFor(slot.column)?.description ? `${sortIdBase}-${slot.position}` : undefined"
+                      @click="sortFor(slot.column)?.onClick($event)"
+                    >
+                      <VisuallyHidden v-if="slot.column.headerHidden">
+                        {{ columnHeaderText(slot.column) }}
+                      </VisuallyHidden>
+                      <span v-else class="astryx-table__header-label"><HeaderContent :column="slot.column" /></span>
+                      <span class="astryx-table__sort-icon" :data-active="sortFor(slot.column)?.direction != null || undefined">
+                        <ComponentIcon
+                          icon-slot="table-sort-indicator"
+                          :state="{ direction: sortFor(slot.column)?.direction ?? 'none' }"
+                          :fallback="{ icon: sortFor(slot.column)?.direction === 'descending' ? 'arrowDown' : 'arrowUp', size: 'xsm' }"
+                        />
+                      </span>
+                      <span v-if="sortFor(slot.column)?.rank" class="astryx-table__sort-rank" aria-hidden="true">{{ sortFor(slot.column)?.rank }}</span>
+                    </button>
+                    <span v-if="sortFor(slot.column)?.description" :id="`${sortIdBase}-${slot.position}`" hidden>{{ sortFor(slot.column)?.description }}</span>
+                  </template>
+                  <VisuallyHidden v-else-if="slot.column.headerHidden">
+                    {{ columnHeaderText(slot.column) }}
                   </VisuallyHidden>
-                  <HeaderContent v-else :column="column" />
-                  <span class="astryx-table__sort-icon" :data-active="sortFor(column)?.direction != null || undefined">
-                    <ComponentIcon
-                      icon-slot="table-sort-indicator"
-                      :state="{ direction: sortFor(column)?.direction ?? 'none' }"
-                      :fallback="{ icon: sortFor(column)?.direction === 'descending' ? 'arrowDown' : 'arrowUp', size: 'xsm' }"
-                    />
-                  </span>
-                  <span v-if="sortFor(column)?.rank" class="astryx-table__sort-rank">{{ sortFor(column)?.rank }}</span>
-                </button>
-                <VisuallyHidden v-else-if="column.headerHidden">
-                  {{ headerText(column) }}
-                </VisuallyHidden>
-                <HeaderContent v-else :column="column" />
+                  <span v-else class="astryx-table__header-label"><HeaderContent :column="slot.column" /></span>
+                  <TableFilterControl
+                    v-if="filterAt(slot.column, 'line')"
+                    :filter="filterAt(slot.column, 'line')!"
+                  />
+                </div>
                 <TableFilterControl
-                  v-if="filterAt(column, 'line')"
-                  :filter="filterAt(column, 'line')!"
+                  v-if="filterAt(slot.column, 'below')"
+                  :filter="filterAt(slot.column, 'below')!"
                 />
               </div>
-              <TableFilterControl
-                v-if="filterAt(column, 'below')"
-                :filter="filterAt(column, 'below')!"
+              <!-- eslint-disable-next-line vue-a11y/no-static-element-interactions -- role="separator" 是 WAI-ARIA 的分隔条：自己可聚焦，方向键也归它处理。 -->
+              <span
+                v-if="resizeContributions.get(slot.column.key)?.hasHandle"
+                :ref="element => resizeAria.observeHandle(slot.column.key, element)"
+                class="astryx-table__resize"
+                role="separator"
+                aria-orientation="vertical"
+                :aria-label="resizeLabel(slot.column)"
+                :aria-valuenow="resizeAria.ariaValue(slot.column.key, resizeContributions.get(slot.column.key)).now"
+                :aria-valuemin="resizeAria.ariaValue(slot.column.key, resizeContributions.get(slot.column.key)).min"
+                :aria-valuemax="resizeAria.ariaValue(slot.column.key, resizeContributions.get(slot.column.key)).max"
+                :aria-valuetext="resizeAria.ariaValue(slot.column.key, resizeContributions.get(slot.column.key)).text"
+                tabindex="0"
+                @pointerdown="startResize($event, slot.column)"
+                @keydown="onResizeKeydown($event, slot.column)"
               />
-            </div>
-            <!-- eslint-disable-next-line vue-a11y/no-static-element-interactions -- role="separator" 是 WAI-ARIA 的分隔条：自己可聚焦，方向键也归它处理。 -->
-            <span
-              v-if="resizeContributions.get(column.key)?.hasHandle"
-              class="astryx-table__resize"
-              role="separator"
-              aria-orientation="vertical"
-              :aria-label="resizeLabel(column)"
-              :aria-valuenow="resizeContributions.get(column.key)?.currentWidth ?? resizeContributions.get(column.key)?.minWidth"
-              :aria-valuemin="resizeContributions.get(column.key)?.minWidth"
-              :aria-valuemax="resizeMax(resizeContributions.get(column.key))"
-              tabindex="0"
-              @pointerdown="startResize($event, column)"
-              @keydown="onResizeKeydown($event, column)"
-            />
-          </th>
+            </th>
+          </template>
         </tr>
         <CutTextTooltip
           v-if="headerCutText.cutText.value != null"
@@ -379,30 +333,43 @@ function isEnabled(row: Record<string, unknown>): boolean {
           :text="headerCutText.cutText.value"
         />
       </thead>
-      <tbody>
-        <tr v-if="rows.length === 0">
-          <td class="astryx-table__empty" :colspan="columnCount">
+      <tbody ref="bodyEl">
+        <tr v-if="rows.length === 0 && !isLoadingRows">
+          <td class="astryx-table__empty" :colspan="cellCount">
             <slot name="empty">
               {{ messages.table.noData }}
             </slot>
           </td>
         </tr>
         <template v-for="entry in entries" :key="entry.key">
+          <!-- eslint-disable-next-line vue-a11y/no-aria-hidden-on-focusable -- 占位格不可聚焦，只替没挂载的行列占位置；规则把所有 td 都当成可交互的格子。 -->
+          <tr v-if="entry.kind === 'gap'" aria-hidden="true" data-window-gap>
+            <td data-window-gap :colspan="cellCount" :style="gapStyle(entry.height, 'block')" />
+          </tr>
           <tr
+            v-else
             :ref="entry.ref"
             :aria-selected="!entry.patch.group && isSelected(entry.row) ? 'true' : undefined"
             :aria-rowindex="entry.rowIndex"
+            class="astryx-table-row"
             :class="entry.patch.class"
+            :data-parity="entry.index % 2 === 0 ? 'odd' : 'even'"
+            :data-striped="isStriped ? 'striped' : undefined"
+            :data-selected="!entry.patch.group && isSelected(entry.row) ? 'selected' : undefined"
+            :data-window-row="isRowWindowed || undefined"
+            :style="rowStyle"
             v-bind="entry.patch.attrs"
             @blur="entry.patch.listeners?.onBlur?.($event)"
             @click="entry.patch.onClick?.($event)"
             @contextmenu="openMenu($event, entry.patch.menu)"
             @focus="entry.patch.listeners?.onFocus?.($event)"
+            @focusin="onRowFocusin(entry.index)"
+            @focusout="onRowFocusout"
             @mouseenter="entry.patch.listeners?.onMouseenter?.($event)"
             @mouseleave="entry.patch.listeners?.onMouseleave?.($event)"
           >
             <template v-if="entry.patch.group">
-              <td class="astryx-table__group" :colspan="columnCount">
+              <td class="astryx-table__group" :colspan="cellCount">
                 <TableGroupHeader
                   :group-key="entry.patch.group.groupKey"
                   :count="entry.patch.group.count"
@@ -414,12 +381,15 @@ function isEnabled(row: Record<string, unknown>): boolean {
                 </TableGroupHeader>
               </td>
             </template>
-            <template v-else>
+            <template v-for="slot in (entry.patch.group ? [] : columnSlots)" :key="slot.key">
+              <!-- eslint-disable-next-line vue-a11y/no-aria-hidden-on-focusable -- 占位格不可聚焦，只替没挂载的行列占位置；规则把所有 td 都当成可交互的格子。 -->
+              <td v-if="slot.kind === 'gap'" aria-hidden="true" data-window-gap :style="gapStyle(slot.width, 'inline')" />
               <td
-                v-if="selection && !entry.patch.suppressSelection"
+                v-else-if="slot.kind === 'select' && selection && !entry.patch.suppressSelection"
                 class="astryx-table__select"
                 :class="selectCellPatch('body', entry.row).class"
                 v-bind="selectCellPatch('body', entry.row).attrs"
+                :aria-colindex="colAriaIndex(slot.position)"
                 :style="selectCellPatch('body', entry.row).style"
               >
                 <CheckboxInput
@@ -433,25 +403,25 @@ function isEnabled(row: Record<string, unknown>): boolean {
                 />
               </td>
               <td
-                v-for="column in resolvedColumns"
-                :key="column.key"
-                :data-column="column.key"
-                :data-align="column.align"
-                :class="mergeCell(column, entry.row, 'body').class"
-                v-bind="mergeCell(column, entry.row, 'body').attrs"
-                :style="bodyStyle(column, entry.row)"
+                v-else-if="slot.kind === 'column'"
+                :data-column="slot.column.key"
+                :data-align="slot.column.align"
+                :class="mergeCell(slot.column, entry.row, 'body').class"
+                v-bind="mergeCell(slot.column, entry.row, 'body').attrs"
+                :aria-colindex="colAriaIndex(slot.position)"
+                :style="bodyStyle(slot.column, entry.row)"
               >
-                <CellContent :column="column" :row="entry.row" :index="entry.index" />
+                <CellContent :column="slot.column" :row="entry.row" :index="entry.index" />
               </td>
             </template>
           </tr>
           <tr
-            v-if="entry.patch.panel"
+            v-if="entry.kind === 'row' && entry.patch.panel"
             data-expansion-panel
             class="astryx-table__panel-row"
             :data-variant="entry.patch.panel.variant"
           >
-            <td class="astryx-table__panel" :colspan="columnCount">
+            <td class="astryx-table__panel" :colspan="cellCount">
               <RenderFn :render="entry.patch.panel.render" />
             </td>
           </tr>

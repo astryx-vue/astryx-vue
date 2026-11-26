@@ -2,6 +2,7 @@ import type { Ref } from 'vue'
 import type { ScrollbarGutterHold } from './scrollbarGutter.js'
 import { onScopeDispose, watch } from 'vue'
 import { holdScrollbarGutter } from './scrollbarGutter.js'
+import { attachScrollLockTouchGuard } from './scrollLockTouchGuard.js'
 
 /**
  * 对应原版 Astryx 的 `hooks/useScrollLock`。
@@ -9,13 +10,13 @@ import { holdScrollbarGutter } from './scrollbarGutter.js'
  * 按引用计数锁住 body 滚动：里层关掉时，外层还开着就不会把页面放开。
  * 锁的时候藏掉 body 的滚动，同时给滚动条留住位置，页面不会左右跳一下。
  *
- * 原版用 `position: fixed` 把页面钉住，再在放开时 `scrollTo` 回去，因为 iOS Safari
- * 不认 `overscroll-behavior`。这边不这么做：打开浮层时滚动位置留在原地，body 的
- * `position` 也不改。钉住 body 会让页面里的 `position: fixed` 改参照，放开时的
- * `scrollTo` 也会在画完一帧之后才把页面拽回去。iOS 上背景仍可能被带着滚，这是这套锁的边界。
+ * 页面不钉成 `position: fixed`：打开浮层时滚动位置留在原地，body 的 `position` 也不改。
+ * 钉住 body 会让页面里的 `position: fixed` 改参照，放开时的 `scrollTo` 也会在画完一帧之后才把页面拽回去。
+ * iOS Safari 不认 `overflow: hidden` 的页面，所以触屏为主指针时再取消没有人接的一根手指拖动，
+ * 并关掉页面的回弹（`overscroll-behavior-y: none`），见 `scrollLockTouchGuard`。
  */
 let depth = 0
-let saved: { overflow: string, gutter: ScrollbarGutterHold } | null = null
+let saved: { overflow: string, overscroll: [string, string], gutter: ScrollbarGutterHold, releaseTouch: () => void } | null = null
 
 export function useScrollLock(isLocked: Ref<boolean>): void {
   let held = false
@@ -27,8 +28,16 @@ export function useScrollLock(isLocked: Ref<boolean>): void {
       const body = document.body
       // 要在下面藏掉滚动条之前量。
       const gutter = holdScrollbarGutter(body)
-      saved = { overflow: body.style.overflow, gutter }
+      const root = document.documentElement
+      saved = {
+        overflow: body.style.overflow,
+        overscroll: [root.style.overscrollBehaviorY, body.style.overscrollBehaviorY],
+        gutter,
+        releaseTouch: attachScrollLockTouchGuard(document),
+      }
       body.style.overflow = 'hidden'
+      root.style.overscrollBehaviorY = 'none'
+      body.style.overscrollBehaviorY = 'none'
       gutter.settle()
     }
     depth += 1
@@ -41,8 +50,12 @@ export function useScrollLock(isLocked: Ref<boolean>): void {
     held = false
     depth -= 1
     if (depth === 0 && saved != null) {
-      if (typeof document !== 'undefined')
+      if (typeof document !== 'undefined') {
         document.body.style.overflow = saved.overflow
+        document.documentElement.style.overscrollBehaviorY = saved.overscroll[0]
+        document.body.style.overscrollBehaviorY = saved.overscroll[1]
+      }
+      saved.releaseTouch()
       saved.gutter.release()
       saved = null
     }
@@ -60,6 +73,7 @@ export function useScrollLock(isLocked: Ref<boolean>): void {
 
 /** 测试用：清掉锁定计数。不从包入口导出。 */
 export function resetScrollLockForTest(): void {
+  saved?.releaseTouch()
   saved?.gutter.release()
   depth = 0
   saved = null

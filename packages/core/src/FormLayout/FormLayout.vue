@@ -24,6 +24,7 @@ defineExpose({ element: root })
 const context = computed(() => ({
   direction: props.direction,
   defaultOptionality: props.defaultOptionality,
+  defaultEntryErrorBehavior: props.defaultEntryErrorBehavior,
 }))
 
 provide(formLayoutKey, context)

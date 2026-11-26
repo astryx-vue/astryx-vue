@@ -416,6 +416,12 @@
     background: var(--astryx-dropdown-menu-hover-background, light-dark(#0536590c, #ffffff0c));
   }
 
+  /* 键盘移到的高亮选项画标准焦点环：只靠填充色，它和列表底色的对比不到 3:1。指针移到的高亮只有填充。 */
+  .astryx-selector-listbox[data-keyboard-highlight] .astryx-selector-option.is-active:not(.is-disabled) {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, currentcolor);
+    outline-offset: calc(-1 * var(--astryx-focus-outline-width, 2px));
+  }
+
   .astryx-selector-option.is-selected {
     font-weight: var(--astryx-font-weight-medium, 500);
   }
@@ -527,4 +533,14 @@
 .astryx-selector-search-clear:focus,
 .astryx-selector-search-clear:focus-visible {
   outline: none;
+}
+
+/* 强制颜色下焦点只剩边框能表达：聚焦（含可聚焦的禁用字段）的边框取系统 Highlight 色。 */
+@layer astryx.components {
+  @media (forced-colors: active) {
+    .astryx-selector-field:focus-within,
+    .astryx-selector-field.is-open {
+      border-color: Highlight;
+    }
+  }
 }

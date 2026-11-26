@@ -3,6 +3,10 @@ import type { WeekStartsOn } from '../composables/useDateRange.js'
 import type { NativePicker } from '../composables/useTimeValue.js'
 import type { FieldPartStylingProps } from '../Field/fieldParts.js'
 import type { FieldStatusInput, FieldStatusType, FieldStatusVariant } from '../Field/types.js'
+import type { EntryErrorBehavior } from '../FormLayout/context.js'
+import type { DateInputEntryError } from './dateEntry.js'
+
+export type { DateInputEntryError } from './dateEntry.js'
 
 /**
  * Named display formats for a committed date. Same shapes as Timestamp:
@@ -68,7 +72,7 @@ export interface DateInputProps extends FieldPartStylingProps {
   isRequired?: boolean
   /** 标签末尾信息图标里的说明。 */
   labelTooltip?: string
-  /** 是否禁用 */
+  /** 是否禁用。输入框和日历按钮仍可聚焦并带 `aria-disabled`，但不能输入或打开日历。 */
   disabled?: boolean
   /**
    * 为什么禁用。和 disabled 一起用时，悬停或键盘聚焦会显示这段提示，
@@ -77,7 +81,10 @@ export interface DateInputProps extends FieldPartStylingProps {
   disabledMessage?: string
   /** 禁用原因。等同于 disabledMessage。 */
   disabledReason?: string
-  /** 正在提交。字段不可改，并显示加载指示。 */
+  /**
+   * 正在提交。字段仍可聚焦，通过 `aria-busy` 和加载指示表示忙碌，进入忙碌时播报一次；
+   * 结束前不能输入、选择或清除日期。
+   */
   isLoading?: boolean
   /**
    * 值已经提交之后再跑。返回 Promise 时，字段保持加载直到它结束。
@@ -113,11 +120,22 @@ export interface DateInputProps extends FieldPartStylingProps {
   weekStartsOn?: WeekStartsOn
   /** 整段字段的宽度。数字按像素算。 */
   width?: number | string
+  /**
+   * 打字被拒时什么时候亮出来。`complete`：打成一个完整的日子就亮（读不懂的文字仍等 Enter 或失焦）；
+   * `blur-or-enter`：打字时什么都不亮，Enter 或失焦时才亮。
+   * 不传时用最近 FormLayout 的 `defaultEntryErrorBehavior`，再没有就是 `complete`。
+   */
+  entryErrorBehavior?: EntryErrorBehavior
 }
 
 export interface DateInputEmits {
   (event: 'update:modelValue', value: Date | null): void
   (event: 'change', value: Date | null): void
+  /**
+   * 字段对打进来的文字的拒绝开始、改变或结束时触发，结束时参数是 `null`。
+   * 监听了这个事件时，`status` 里带说明的 error 替字段措辞，字段自己的说明退为后备。
+   */
+  (event: 'entryErrorChange', error: DateInputEntryError | null): void
 }
 
 export interface DateInputSlots {

@@ -6,6 +6,7 @@ import ButtonSpinner from '../Button/ButtonSpinner.vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import { countCharacters } from '../composables/countCharacters.js'
+import { useBusyAnnouncement } from '../composables/internal/busyAnnouncement.js'
 import { useAnnounce } from '../composables/useAnnounce.js'
 import { useInputContainer } from '../composables/useInputContainer.js'
 import Field from '../Field/Field.vue'
@@ -67,6 +68,8 @@ const action = useTextAreaAction({
   emitError: (error, value, event) => emit('actionError', error, value, event),
 })
 const busy = computed(() => props.isLoading || action.isPending.value)
+// 加载圈只是装饰；忙碌由输入框自己念一次（在对话框里就写进那个对话框）。
+useBusyAnnouncement(busy, () => props.loadingLabel, () => container.value)
 const valueLength = computed(() => (limit.value == null ? 0 : countCharacters(action.value.value)))
 const locale = useAstryxLocale()
 // 同上游 @astryx.textArea.counter：「164/2,000」，没有空格，数字按语言分组
@@ -204,7 +207,7 @@ onMounted(() => {
         </span>
         <span v-if="$slots.end" class="astryx-text-area-end"><slot name="end" /></span>
         <InputClearButton v-if="hasClear && action.value.value && !isDisabled && !isReadOnly" class="astryx-text-area-clear-button" :label="resolvedClearLabel" @click="clear" />
-        <ButtonSpinner v-if="busy" class="astryx-text-area-spinner" :label="loadingLabel" />
+        <ButtonSpinner v-if="busy" class="astryx-text-area-spinner" :label="loadingLabel" is-decorative />
         <FieldInfoTip v-if="status?.message && statusVariant === 'tooltip'" :text="status.message" :type="status.type" />
       </div>
     </template>

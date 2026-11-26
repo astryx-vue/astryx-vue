@@ -13,7 +13,7 @@ import {
   resolvePoint,
 } from './internal/menuPressDom.js'
 import { IDLE_MENU_PRESS, menuPressStep } from './internal/menuPressGesture.js'
-import { armStrayClick, runAsMenuPressActivation } from './internal/strayClick.js'
+import { armStrayClick, runAsMenuPressActivation, trackTouchOfPointer } from './internal/strayClick.js'
 import { useLongPress } from './useLongPress.js'
 
 export { MENU_PRESS_MARKER } from './internal/menuPressDom.js'
@@ -125,7 +125,17 @@ export function useMenuPress(options: MenuPressOptions): MenuPress {
     onLongPress: fireLongPress,
   })
 
+  let touchTracker: ReturnType<typeof trackTouchOfPointer> | null = null
+
+  /** 手指松开时挑选的那根手指的 touchend 要取消；鼠标和笔没有 touchend。 */
+  function armAfterRelease(doc: Document, native: PointerEvent | undefined, touchIdentifier: number | null): void {
+    const isTouch = native?.pointerType === 'touch'
+    armStrayClick(doc, { cancelsTouchEnd: isTouch, touchIdentifier })
+  }
+
   function endGesture(): void {
+    touchTracker?.stop()
+    touchTracker = null
     longPress.cancel()
     stopTouchPrevent?.()
     stopTouchPrevent = null
@@ -169,19 +179,23 @@ export function useMenuPress(options: MenuPressOptions): MenuPress {
       case 'clear':
         highlight(null)
         return
-      case 'act':
+      case 'act': {
         // 先拆再执行：执行通常会把菜单关掉。
+        const touchIdentifier = touchTracker?.identifier() ?? null
         endGesture()
-        armStrayClick(doc)
+        armAfterRelease(doc, native, touchIdentifier)
         if (native != null)
           activate(effect.row, native)
         return
-      case 'settle':
+      }
+      case 'settle': {
+        const touchIdentifier = touchTracker?.identifier() ?? null
         endGesture()
         if (effect.stray)
-          armStrayClick(doc)
+          armAfterRelease(doc, native, touchIdentifier)
         if (effect.dismiss)
           options.onDismiss?.()
+      }
     }
   }
 
@@ -237,11 +251,13 @@ export function useMenuPress(options: MenuPressOptions): MenuPress {
     step({ type: 'cancel' })
   }
 
-  function attach(id: number): void {
+  function attach(id: number, pointerType: string): void {
     detach?.()
     const doc = getDocument()
     const view = doc.defaultView
     pointerId = id
+    touchTracker?.stop()
+    touchTracker = pointerType === 'touch' && view != null ? trackTouchOfPointer(view, id) : null
     doc.addEventListener('pointermove', onDocumentMove, true)
     doc.addEventListener('pointerup', onDocumentUp, true)
     doc.addEventListener('pointercancel', onDocumentCancel, true)
@@ -294,7 +310,7 @@ export function useMenuPress(options: MenuPressOptions): MenuPress {
     // 手指抬起时浏览器会向落下的那一行补发兼容鼠标事件，再点亮它一次。取消 pointerdown 就没有这些事件，滚动不受影响。
     if (pointerType !== 'mouse')
       event.preventDefault()
-    attach(event.pointerId)
+    attach(event.pointerId, pointerType)
     lastPointerEvent = event
     const point = pointAt(event)
     step({ type: 'down', target: 'menu', pointerType, row: point.row, time: Date.now() }, event)
@@ -309,7 +325,7 @@ export function useMenuPress(options: MenuPressOptions): MenuPress {
     // macOS 上 Control+点击是右键菜单。
     if (pointerType === 'mouse' && event.ctrlKey)
       return
-    attach(event.pointerId)
+    attach(event.pointerId, pointerType)
     lastPointerEvent = event
     if (pointerType !== 'mouse')
       longPress.start({ x: event.clientX, y: event.clientY })

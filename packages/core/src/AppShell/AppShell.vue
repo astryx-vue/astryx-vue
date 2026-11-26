@@ -2,6 +2,8 @@
 import type { StyleValue } from 'vue'
 import type { AppShellBreakpoint, AppShellEmits, AppShellProps, AppShellSlots } from './types.js'
 import { computed, provide, reactive, ref, useAttrs, useId, useSlots, useTemplateRef, watch } from 'vue'
+import { observeMainOverflow } from '../composables/internal/mainOverflow.js'
+import { attachScrollKeyboardDelegation } from '../composables/internal/scrollKeyboardDelegation.js'
 import { appShellMobileKey } from '../composables/useAppShellMobile.js'
 import Layout from '../Layout/Layout.vue'
 import LayoutContent from '../Layout/LayoutContent.vue'
@@ -123,8 +125,51 @@ const forwardedAttrs = computed(() => Object.fromEntries(
 const rootClass = computed(() => ['astryx-app-shell', attrs.class])
 const rootStyle = computed<StyleValue>(() => attrs.style as StyleValue)
 
+/**
+ * `height="fill"` 时主区域自己是页面的滚动容器。内容溢出期间，键盘必须够得到它，
+ * 哪怕里面没有可聚焦的东西：它进入 Tab 顺序，Tab 进来时如果里面有链接或按钮就直接交给第一个。
+ * 内容放得下、或者 `height="auto"` 时它仍是 `tabindex="-1"`，只给跳转链接用。
+ */
+const content = useTemplateRef<{ element: HTMLElement | null }>('content')
+const isMainOverflowing = ref(false)
+const isMainScrollRegion = computed(() => props.height === 'fill' && isMainOverflowing.value)
+/** 跳转链接或脚本把焦点放上来时不画焦点环；只有 Tab 到主区域才画。 */
+const isMainProgrammaticFocus = ref(false)
+
+watch(
+  [() => content.value?.element ?? null, () => props.height === 'fill'],
+  ([main, isFill], _previous, onCleanup) => {
+    isMainOverflowing.value = false
+    if (main == null || !isFill)
+      return
+    onCleanup(observeMainOverflow(main, (overflows) => {
+      isMainOverflowing.value = overflows
+    }))
+  },
+  { flush: 'post', immediate: true },
+)
+
+watch(
+  [() => content.value?.element ?? null, isMainScrollRegion],
+  ([main, isRegion], _previous, onCleanup) => {
+    if (main == null || !isRegion)
+      return
+    onCleanup(attachScrollKeyboardDelegation(main, main))
+  },
+  { flush: 'post', immediate: true },
+)
+
 function focusMain() {
-  root.value?.ownerDocument.getElementById(mainId)?.focus()
+  const main = root.value?.ownerDocument.getElementById(mainId)
+  if (main == null)
+    return
+  isMainProgrammaticFocus.value = true
+  main.focus()
+}
+
+function onMainFocusOut(event: FocusEvent) {
+  if (event.target === event.currentTarget)
+    isMainProgrammaticFocus.value = false
 }
 </script>
 
@@ -173,13 +218,17 @@ function focusMain() {
         <div v-if="elevate" class="astryx-app-shell__backdrop" />
         <LayoutContent
           :id="mainId"
+          ref="content"
           class="astryx-app-shell__content"
           role="main"
-          :tabindex="-1"
+          :tabindex="isMainScrollRegion ? 0 : -1"
+          :data-scroll-region="isMainScrollRegion || undefined"
+          :data-programmatic-focus="isMainProgrammaticFocus || undefined"
           :padding="contentPadding ?? 0"
           :is-scrollable="height === 'fill'"
           :data-variant="variant"
           :data-corner="elevate || undefined"
+          @focusout="onMainFocusOut"
         >
           <slot />
         </LayoutContent>

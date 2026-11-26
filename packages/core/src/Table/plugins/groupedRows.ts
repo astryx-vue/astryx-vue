@@ -97,6 +97,7 @@ export function useTableGroupedRows<T extends Record<string, unknown>>(
   }
 
   const plugin: TablePlugin<T> = {
+    rowModel: 'grouped',
     rowPatch(row): TableRowPatch | null {
       if (!isTableGroupHeader(row))
         return null

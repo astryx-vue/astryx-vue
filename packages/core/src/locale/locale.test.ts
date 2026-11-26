@@ -28,6 +28,15 @@ describe('locale', () => {
     expect(weekdayNames('zh-CN', 'narrow')[0]).toBe('日')
   })
 
+  it('单独成行的月份标题在 CLDR 要求大写的语言里首字母大写', () => {
+    expect(formatCalendarMonth(2026, 10, 'es')).toBe('Octubre de 2026')
+    expect(formatCalendarMonth(2026, 10, 'fr-FR')).toBe('Octobre 2026')
+    expect(formatCalendarMonth(2026, 10, 'ru-RU').startsWith('Октябрь')).toBe(true)
+    expect(formatCalendarMonth(2026, 10, 'uk-UA').startsWith('Жовтень')).toBe(true)
+    expect(formatCalendarMonth(2026, 10, 'de-DE')).toBe('Oktober 2026')
+    expect(formatCalendarMonth(2026, 10, 'pt-BR').startsWith('outubro')).toBe(true)
+  })
+
   it('reads CLDR weekday headers for every vendored locale, then the base language, then English', () => {
     expect(standaloneShortWeekdayNames('fr-FR')).toEqual(['dim.', 'lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.'])
     expect(standaloneShortWeekdayNames('ja-JP')[1]).toBe('月')

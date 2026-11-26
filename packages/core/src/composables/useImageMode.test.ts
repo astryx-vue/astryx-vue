@@ -29,4 +29,35 @@ describe('useImageMode', () => {
     wrapper.unmount()
     vi.unstubAllGlobals()
   })
+
+  it('samples once for an inline region object across re-evaluations, and again when its numbers change', async () => {
+    const fetchSpy = vi.fn(async () => {
+      throw new Error('offline')
+    })
+    vi.stubGlobal('fetch', fetchSpy)
+    const src = ref('https://example.test/photo.jpg')
+    const height = ref(0.3)
+    const Host = defineComponent({
+      setup() {
+        // 区域直接写在调用处：每次求值都是新对象。
+        const mode = useImageMode(src, () => ({ fallback: 'dark', region: { x: 0, y: 0.7, width: 1, height: height.value } }))
+        return () => mode.value ?? 'empty'
+      },
+    })
+    const wrapper = mount(Host)
+    await nextTick()
+    await Promise.resolve()
+    expect(fetchSpy).toHaveBeenCalledTimes(1)
+
+    await wrapper.setProps({})
+    await nextTick()
+    expect(fetchSpy).toHaveBeenCalledTimes(1)
+
+    height.value = 0.5
+    await nextTick()
+    await Promise.resolve()
+    expect(fetchSpy).toHaveBeenCalledTimes(2)
+    wrapper.unmount()
+    vi.unstubAllGlobals()
+  })
 })

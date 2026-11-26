@@ -37,6 +37,7 @@ footer: false
 <tr><td><code>nativePicker</code></td><td><code>'touch' | 'always' | 'never'</code></td><td>—</td><td>Older surface name, passed to both the date and the time.</td></tr>
 <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Neither field can be edited.</td></tr>
 <tr><td><code>changeAction</code></td><td><code>(value) =&gt; void | Promise&lt;void&gt;</code></td><td>—</td><td>Runs once both the date and the time exist. A promise keeps the pair busy. Clearing runs it too.</td></tr>
+<tr><td><code>entryErrorBehavior</code></td><td><code>'complete' | 'blur-or-enter'</code></td><td><code>'complete'</code></td><td>When the date part's rejected entry shows, as on DateInput. Emits <code>entryErrorChange</code> the same way.</td></tr>
 <tr><td><code>isOptional</code></td><td><code>boolean</code></td><td>—</td><td>Marks the label as optional.</td></tr>
 <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td>—</td><td>Marks the pair required.</td></tr>
 <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>Hint shown from the info icon at the end of the label.</td></tr>

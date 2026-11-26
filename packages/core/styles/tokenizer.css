@@ -108,6 +108,18 @@
     cursor: pointer;
   }
 
+  .astryx-tokenizer-control > .astryx-field-icon,
+  .astryx-tokenizer-control > .astryx-field-info-tip {
+    flex: none;
+    margin-inline-start: auto;
+    color: var(--astryx-input-status-color, var(--astryx-color-text-secondary, #525252));
+  }
+
+  .astryx-tokenizer-clear + .astryx-field-icon,
+  .astryx-tokenizer-clear + .astryx-field-info-tip {
+    margin-inline-start: 0;
+  }
+
   .astryx-tokenizer-measure {
     position: absolute;
     display: flex;
@@ -148,6 +160,39 @@
     width: 1px;
     min-width: 1px;
     padding: 0;
+  }
+
+  /* 展开时标签直接排进外框的弹性行，输入框跟在最后一个标签后面，光标就落在接着打字的地方。 */
+  .astryx-tokenizer-tokens:not(.is-collapsed) {
+    display: contents;
+  }
+
+  /*
+   * 有标签时输入框跟在最后一个标签后面。空着失焦（或只读）时不占任何位置，
+   * 连列间距都收回，所以不会为它多出一行空白；聚焦时只要文字内缩进加光标的宽度，
+   * 并把光标的宽度还给这一行。打了字就恢复完整的输入宽度，必要时换行。
+   */
+  .astryx-tokenizer-control.has-tokens .astryx-tokenizer-input {
+    box-sizing: border-box;
+    flex: 1 1 40px;
+    width: 0;
+    min-width: 40px;
+    padding-inline: calc(var(--astryx-spacing-2, 8px) - var(--astryx-spacing-1, 4px) + 1px) 0;
+  }
+
+  .astryx-tokenizer-control.has-tokens .astryx-tokenizer-input.is-empty {
+    min-width: 0;
+    flex-basis: 0;
+  }
+
+  .astryx-tokenizer-control.has-tokens .astryx-tokenizer-input.is-empty:is(:not(:focus), :read-only) {
+    margin-inline-start: calc(-1 * var(--astryx-spacing-1, 4px));
+    padding-inline-start: 0;
+  }
+
+  .astryx-tokenizer-control.has-tokens .astryx-tokenizer-input.is-empty:focus:not(:read-only) {
+    min-width: calc(var(--astryx-spacing-2, 8px) - var(--astryx-spacing-1, 4px) + 3px);
+    margin-inline-end: -2px;
   }
 
   .astryx-tokenizer-token {
@@ -205,4 +250,23 @@
 .astryx-tokenizer-token:focus-visible .astryx-token {
   outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, var(--astryx-color-accent));
   outline-offset: 1px;
+}
+
+/* 强制颜色下焦点只剩边框能表达：聚焦（含可聚焦的禁用字段）的边框取系统 Highlight 色。 */
+@layer astryx.components {
+  @media (forced-colors: active) {
+    .astryx-tokenizer-control:focus-within,
+    .astryx-tokenizer-control.is-open {
+      border-color: Highlight;
+    }
+  }
+}
+
+@layer astryx.components {
+  /* 触屏上点输入框会升起键盘，焦点外观淡入的每一帧都要重绘，改成立刻出现；鼠标和 Tab 仍淡入。 */
+  @media (pointer: coarse) {
+    .astryx-tokenizer-control {
+      transition: none;
+    }
+  }
 }

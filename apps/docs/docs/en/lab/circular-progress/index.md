@@ -30,7 +30,9 @@ import { CircularProgress } from '@astryx-vue/lab'
 | `formatValueLabel` | `(value, max) => string` | Percentage | Custom center-value formatter. |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Ring size. |
 | `variant` | `'accent' \| 'success' \| 'warning' \| 'error' \| 'neutral'` | `'accent'` | Semantic color. |
-| `isIndeterminate` | `boolean` | `false` | Shows indeterminate animation. |
-| `isDisabled` | `boolean` | `false` | Uses disabled colors. |
+| `isIndeterminate` | `boolean` | `false` | Shows an arc that turns as Spinner's does; reduced motion slows it without stopping it. |
+| `isDisabled` | `boolean` | `false` | Takes the neutral fill and draws the whole ring, center content included, at half opacity. |
 
 Use the default slot to replace the center content. `value` and `hasValueLabel` are ignored when `isIndeterminate` is enabled.
+
+Every variant draws its fill over the same muted track, so each enabled fill reaches 3:1 against it. A value change keeps moving even while a script holds the page busy: the arc turns on the compositor over the theme's duration and easing.

@@ -37,6 +37,16 @@ export interface LongPressHandlers {
 
 const DEFAULT_DELAY_MS = 500
 const DEFAULT_MOVE_CANCEL_PX = 10
+/** 大于这个数的时间戳是 epoch 毫秒（测试环境常见），不是页面时钟上的毫秒。 */
+const EPOCH_STAMP_FLOOR = 1e11
+
+/** 把触摸事件的时间戳换成现在这一刻之前多久（毫秒）。读不出来按 0 算。 */
+function ageOf(stamp: number | undefined): number {
+  if (stamp == null || !Number.isFinite(stamp))
+    return 0
+  const now = stamp > EPOCH_STAMP_FLOOR ? Date.now() : (typeof performance === 'undefined' ? 0 : performance.now())
+  return Math.max(0, now - stamp)
+}
 
 function touchPoint(event: TouchEvent): Point | null {
   const touch = event.touches?.[0] ?? event.changedTouches?.[0]
@@ -63,6 +73,8 @@ export function useLongPress(options: LongPressOptions): LongPressHandlers {
 
   let timer: ReturnType<typeof setTimeout> | null = null
   let origin: Point | null = null
+  /** 触摸事件自己的时钟上，这次按住到期的时刻。页面忙的时候事件晚到，时刻不会晚。 */
+  let deadline: number | null = null
 
   function isDisabled(): boolean {
     return toValue(options.isDisabled) === true || toValue(options.disabled) === true
@@ -74,21 +86,34 @@ export function useLongPress(options: LongPressOptions): LongPressHandlers {
       timer = null
     }
     origin = null
+    deadline = null
   }
 
-  function start(point: Point): void {
+  function fire(): void {
+    const from = origin
+    timer = null
+    deadline = null
+    if (from == null)
+      return
+    options.onLongPress({ x: from.x, y: from.y })
+  }
+
+  /** 事件的时间戳到了按住的时刻：先把这次长按报出去，再处理这个事件（移动、抬起、第二根手指）。 */
+  function reportIfDue(event: TouchEvent): void {
+    if (timer == null || deadline == null || !(event.timeStamp >= deadline))
+      return
+    clearTimeout(timer)
+    fire()
+  }
+
+  /** `age` 是起手事件已经晚到了多久：计时器只等剩下的那一段，晚到的触摸不会把按住的时间拉长。 */
+  function start(point: Point, age = 0): void {
     if (isDisabled())
       return
     // Clearing also nulls the origin, so the order matters.
     cancel()
     origin = { x: point.x, y: point.y }
-    timer = setTimeout(() => {
-      const from = origin
-      timer = null
-      if (from == null)
-        return
-      options.onLongPress({ x: from.x, y: from.y })
-    }, delayMs)
+    timer = setTimeout(fire, Math.max(0, delayMs - age))
   }
 
   function moveTo(point: Point): boolean {
@@ -107,17 +132,22 @@ export function useLongPress(options: LongPressOptions): LongPressHandlers {
    */
   function onTouchStart(event: TouchEvent): void {
     if ((event.touches?.length ?? 0) !== 1) {
+      reportIfDue(event)
       cancel()
       return
     }
     const point = touchPoint(event)
-    if (point != null)
-      start(point)
+    if (point == null)
+      return
+    start(point, ageOf(event.timeStamp))
+    if (timer != null && Number.isFinite(event.timeStamp))
+      deadline = event.timeStamp + delayMs
   }
 
   function onTouchMove(event: TouchEvent): void {
     if (origin == null)
       return
+    reportIfDue(event)
     if ((event.touches?.length ?? 0) > 1) {
       cancel()
       return
@@ -127,7 +157,8 @@ export function useLongPress(options: LongPressOptions): LongPressHandlers {
       moveTo(point)
   }
 
-  function onTouchEnd(): void {
+  function onTouchEnd(event: TouchEvent): void {
+    reportIfDue(event)
     cancel()
   }
 

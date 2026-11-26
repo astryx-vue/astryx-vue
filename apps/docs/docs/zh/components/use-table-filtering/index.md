@@ -37,6 +37,8 @@ const fields: TableFilterField[] = [
 ]
 ```
 
+插件只画筛选控件，不删行。数据要你自己筛，比如用 `applyTableFilters()`，再把结果交给表格。一行都对不上时，给表格的 `empty` 插槽写上说明，并给一条出路，比如调用 `useTableFilterState` 的 `clearAll` 的「清除筛选」按钮。
+
 `applyTableFilters()` 返回同时满足所有生效过滤的行，插件自己不碰 `data`。
 
 ```ts

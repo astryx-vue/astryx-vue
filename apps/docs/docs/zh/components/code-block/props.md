@@ -31,6 +31,7 @@ footer: false
 <tr><td><code>highlightMode</code></td><td><code>'auto' | 'ranges' | 'spans'</code></td><td><code>'auto'</code></td><td>token 的绘制方式。</td></tr>
 <tr><td><code>copyLabel</code></td><td><code>string</code></td><td><code>'Copy code'</code></td><td>复制前，复制控件的无障碍名称。</td></tr>
 <tr><td><code>copiedLabel</code></td><td><code>string</code></td><td><code>'Copied'</code></td><td>复制成功后的名称和播报。</td></tr>
+<tr><td><code>copyFailedLabel</code></td><td><code>string</code></td><td><code>'Failed to copy value to clipboard.'</code></td><td>剪贴板拒绝写入后 2 秒内的名称、提示和播报，按钮同时换成叉。主题映射了 <code>code-block-copy</code> 图标槽时，失败期间仍显示主题自己的图标。</td></tr>
 <tr><td><code>codeLabel</code></td><td><code>string</code></td><td><code>'Code'</code></td><td>代码视口的无障碍名称。</td></tr>
 </tbody></table>
 </div>
@@ -38,6 +39,7 @@ footer: false
 ## CodeBlock 事件
 
 - `copy`：代码字符串写入剪贴板之后发出。
+- `copyError`：每次复制失败发出一次，参数是拒绝的原因；原因本身不会显示出来。
 
 ## SyntaxTheme
 

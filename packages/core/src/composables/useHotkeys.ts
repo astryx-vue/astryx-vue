@@ -6,7 +6,8 @@ import { isApplePlatform } from './internal/platform.js'
 /**
  * 一条全局快捷键。
  *
- * `keys` 用 `+` 串起来，例如 `mod+k`、`shift+/`、`escape`。
+ * `keys` 用 `+` 串起来，例如 `mod+k`、`?`、`escape`。
+ * 会被 shift 改变的标点按它敲出来的字符注册：写 `?`，不要写 `shift+/`，因为最后一个键是和 `event.key` 比的。
  * `mod` 在 Apple 平台是 ⌘，其他平台是 Ctrl，和 Kbd 用同一套平台判断。
  * 没有写 `shift` 时，忽略 shift 状态，所以单个字母不区分大小写。
  * 字面量 `+` 写成 `plus`。

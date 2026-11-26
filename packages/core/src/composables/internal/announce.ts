@@ -1,153 +1,56 @@
+import type { AnnouncePoliteness, AnnounceReceipt, AnnounceTarget } from './announceChannel.js'
+import { clearAnnouncements, writeAnnouncement } from './announceChannel.js'
+
 /**
  * 对应原版 Astryx 的 `hooks/useAnnounce`。
  *
  * 读屏播报。polite / assertive 两块区域在第一次使用时创建，之后一直留在文档里，
  * 只改文字。区域如果和文字一起出生，很多读屏软件不会念。
+ * 同一帧里的多条消息按顺序连在一起念，一模一样的重复只念一次；空消息清掉还没念出去的。
+ * 原生模态对话框打开时，播报写进那个对话框里的区域（body 上的区域被挡在外面，读屏念不到）。
  */
 
-export type AnnouncePoliteness = 'polite' | 'assertive'
+export type { AnnouncePoliteness } from './announceChannel.js'
+export { resetLiveRegionsForTest } from './announceChannel.js'
 
 export type AnnounceFn = (message: string, politeness?: AnnouncePoliteness) => void
 
-const CONTAINER_ATTR = 'data-astryx-live-region'
-const CLEAR_DELAY_MS = 2000
-const VISUALLY_HIDDEN_CSS = [
-  'position:absolute',
-  'width:1px',
-  'height:1px',
-  'margin:-1px',
-  'padding:0',
-  'overflow:hidden',
-  'clip:rect(0,0,0,0)',
-  'white-space:nowrap',
-  'border:0',
-  'inset-block-start:0',
-  'inset-inline-start:0',
-  'pointer-events:none',
-  'user-select:none',
-].join(';')
-
-interface LiveRegions {
-  polite: HTMLElement
-  assertive: HTMLElement
+export interface UseAnnounceOptions {
+  /**
+   * 这个播报者的新消息会收回它自己上一条还没念出去的消息，不管两条紧迫度是否相同。
+   * 新消息写进它自己紧迫度的区域；别的播报者的消息照样连在一起。
+   * 适合每次按键都重新说一遍状态的组件：快速输入时，念出来的只是最后一条，不是一串过期的状态。
+   * @default false
+   */
+  hasReplace?: boolean
 }
 
-const clearTimers: Record<AnnouncePoliteness, ReturnType<typeof setTimeout> | null> = {
-  polite: null,
-  assertive: null,
+/** 组件内部用的播报者：和 `useAnnounce` 一样，另外能指定调用方所在的元素，并拿到收据。 */
+export interface Announcer {
+  (message: string, politeness?: AnnouncePoliteness, target?: AnnounceTarget): AnnounceReceipt | null
 }
 
-let regions: LiveRegions | null = null
-
-/** 每块区域还没写进去的那一帧。清空区域时要一并取消，不然旧文字会在清空之后又冒出来。 */
-const pendingFrames: Record<AnnouncePoliteness, Set<number>> = {
-  polite: new Set(),
-  assertive: new Set(),
-}
-
-function cancelPendingFrames(politeness: AnnouncePoliteness): void {
-  if (typeof cancelAnimationFrame === 'function') {
-    for (const frame of pendingFrames[politeness])
-      cancelAnimationFrame(frame)
-  }
-  pendingFrames[politeness].clear()
-}
-
-function cancelScheduledClear(politeness: AnnouncePoliteness): void {
-  const timer = clearTimers[politeness]
-  if (timer != null) {
-    clearTimeout(timer)
-    clearTimers[politeness] = null
-  }
-}
-
-function scheduleClear(politeness: AnnouncePoliteness, target: HTMLElement): void {
-  cancelScheduledClear(politeness)
-  clearTimers[politeness] = setTimeout(() => {
-    clearTimers[politeness] = null
-    target.textContent = ''
-  }, CLEAR_DELAY_MS)
-}
-
-function createRegion(politeness: AnnouncePoliteness): HTMLElement {
-  const el = document.createElement('div')
-  el.setAttribute(CONTAINER_ATTR, politeness)
-  el.setAttribute('aria-live', politeness)
-  el.setAttribute('aria-atomic', 'true')
-  el.setAttribute('role', politeness === 'assertive' ? 'alert' : 'status')
-  el.style.cssText = VISUALLY_HIDDEN_CSS
-  document.body.appendChild(el)
-  return el
-}
-
-function getRegions(): LiveRegions | null {
-  if (typeof document === 'undefined')
-    return null
-  if (regions != null) {
-    if (!regions.polite.isConnected)
-      document.body.appendChild(regions.polite)
-    if (!regions.assertive.isConnected)
-      document.body.appendChild(regions.assertive)
-    return regions
-  }
-  regions = {
-    polite: createRegion('polite'),
-    assertive: createRegion('assertive'),
-  }
-  return regions
-}
-
-function announceMessage(message: string, politeness: AnnouncePoliteness): void {
-  const live = getRegions()
-  if (live == null)
-    return
-  const target = politeness === 'assertive' ? live.assertive : live.polite
-  // 先清空，同样的文字再写一次也会被读屏当成新内容。
-  target.textContent = ''
-  const write = (): void => {
-    target.textContent = message
-  }
-  if (typeof requestAnimationFrame === 'function') {
-    const frame = requestAnimationFrame(() => {
-      pendingFrames[politeness].delete(frame)
-      write()
-    })
-    pendingFrames[politeness].add(frame)
-  }
-  else {
-    write()
-  }
-  scheduleClear(politeness, target)
-}
-
-function clearRegion(politeness: AnnouncePoliteness): void {
-  cancelPendingFrames(politeness)
-  cancelScheduledClear(politeness)
-  if (regions == null)
-    return
-  const target = politeness === 'assertive' ? regions.assertive : regions.polite
-  target.textContent = ''
-}
-
-export function useAnnounce(): AnnounceFn {
-  return (message: string, politeness: AnnouncePoliteness = 'polite') => {
-    if (message === '') {
-      clearRegion(politeness)
-      return
+export function useAnnouncer(options: UseAnnounceOptions = {}): Announcer {
+  let lastReceipt: AnnounceReceipt | null = null
+  return (message, politeness = 'polite', target = {}) => {
+    if (options.hasReplace === true) {
+      lastReceipt?.withdraw()
+      lastReceipt = null
     }
-    announceMessage(message, politeness)
+    if (message === '') {
+      clearAnnouncements(politeness, target)
+      return null
+    }
+    const receipt = writeAnnouncement(message, politeness, target)
+    if (options.hasReplace === true)
+      lastReceipt = receipt
+    return receipt
   }
 }
 
-/** 测试用：拆掉单例区域，避免用例之间串味。不从包入口导出。 */
-export function resetLiveRegionsForTest(): void {
-  cancelPendingFrames('polite')
-  cancelPendingFrames('assertive')
-  cancelScheduledClear('polite')
-  cancelScheduledClear('assertive')
-  if (regions != null) {
-    regions.polite.remove()
-    regions.assertive.remove()
-    regions = null
+export function useAnnounce(options: UseAnnounceOptions = {}): AnnounceFn {
+  const announcer = useAnnouncer(options)
+  return (message, politeness) => {
+    announcer(message, politeness)
   }
 }

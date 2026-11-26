@@ -34,6 +34,7 @@ export const overlaysUpstreamMap: UpstreamMapPart = {
   '@astryx.citation.label': [{ path: 'citation.label', args: ['number', 'title'] }],
 
   '@astryx.codeBlock.copied': [{ path: 'codeBlock.copied' }],
+  '@astryx.codeBlock.copyFailed': [{ path: 'codeBlock.copyFailed' }],
   '@astryx.codeBlock.copyCode': [{ path: 'codeBlock.copyCode' }],
   '@astryx.codeBlock.code': [{ path: 'codeBlock.code' }],
   '@astryx.markdownHeadingLinks.copy': [{ path: 'markdown.headingLinkCopy', args: ['heading'] }],

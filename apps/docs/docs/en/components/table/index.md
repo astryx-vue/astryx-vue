@@ -45,8 +45,22 @@ Behavior is added with plugins, composed in the `plugins` object:
 - `useTableStickyColumns` pins the contiguous run from the first column through a listed key, or from a listed key through the last column. The shadow appears only while the table overflows. An empty config pins nothing.
 - `useTableRowStatus` puts a success, warning, or error mark at the start of a row. A custom color can be a named color or a plain dot.
 - `useTableRowIndex` numbers real rows. Group headers do not take a number.
+- `useTableRowsVirtualization` and `useTableColumnsVirtualization` render only the rows or columns in view when there are many of them, with the same scroll feel. Cells default to a single truncated line; the rows plugin makes the table fill its parent's height and scroll inside it.
 
 A column with no width stays at least 60px wide. A `style.minWidth` smaller than the sum of those floors is raised so the columns stay readable; a larger value is kept. A table that fits does not trap the scroll chain. Horizontal overscroll is contained only while the table actually overflows.
+
+To open a row (go to a detail page, open a side panel), put a `Link` or a `Button` in the row's main cell with `renderCell`. Table has no row-click prop. A click handler on the `<tr>` cannot be reached with the keyboard or a screen reader, so do not make it the only way to open a row.
+
+```ts
+const columns: TableColumn<User>[] = [
+  { key: 'name', header: 'Name', renderCell: user => h(Link, { href: `/users/${user.id}`, label: user.name }) },
+  { key: 'role', header: 'Role' },
+]
+```
+
+A custom plugin is a plain `TablePlugin` object of optional hooks: `transformColumns` adds, removes or reorders columns; `rowPatch` and `cellPatch` add classes, attributes and handlers to rows and cells; `headerPatch` puts content before a header label; `above` and `below` render content around the table; `bindScrollRoot` receives the scroll region. Plugins run in the order of the `plugins` object.
+
+When you pass `columns`, a data-driven table sizes them from their definitions, not their content, so under `textOverflow="wrap"` a token longer than its column, such as a code identifier or a URL, breaks inside the token. To keep such tokens whole, give that column a floor that fits them with `proportional(1, { minWidth })` or `pixel()`, or compose the table in children mode, whose columns follow their content.
 
 `density` is `compact`, `balanced`, or `spacious`. `dividers` is `rows`, `columns`, `grid`, or `none`. `isStriped` and `hasHover` are independent. An empty `data` array renders the localized empty message, or the `empty` slot.
 
@@ -93,7 +107,10 @@ const filterPlugin = useTableFiltering(() => ({
 | <Badge variant="success">Do</Badge> | Give every row a stable `idKey`. Selection and row identity depend on it. |
 | <Badge variant="success">Do</Badge> | Use `pixel()` for short numeric columns and `proportional()` for text that should share the remaining width. |
 | <Badge variant="success">Do</Badge> | Keep sort, selection, and filter state outside the table and pass the derived rows in `data`. |
+| <Badge variant="success">Do</Badge> | When filters or a search can leave no rows, fill the `empty` slot with what happened and a way out, such as a "Clear filters" button. |
+| <Badge variant="success">Do</Badge> | Open a row from a link or button in its main cell. |
 | <Badge variant="error">Don't</Badge> | Sort or paginate inside `renderCell`. The cell only paints the row it is given. |
+| <Badge variant="error">Don't</Badge> | Rely on a click handler on the `<tr>` as the only way to open a row. |
 | <Badge variant="error">Don't</Badge> | Turn on every plugin in one table. A dense grid rarely also needs filters, resize, and selection at once. |
 
 ## Examples

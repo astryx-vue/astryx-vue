@@ -6,6 +6,7 @@ import { useComponentMessages } from '../../locale/context.js'
 import { tableMessages } from '../../locale/messages/table.js'
 import { cellText } from '../columnUtils.js'
 import TableTreeCell from '../TableTreeCell.vue'
+import { TREE_LEVEL_ATTRIBUTE, treeRowDomId, useTreeRowIdPrefix } from '../treeRowAria.js'
 import { isInteractiveRowClick } from './interaction.js'
 
 export interface TableTreeRowMeta {
@@ -18,6 +19,8 @@ export interface TableTreeRowMeta {
 export interface UseTableTreeDataConfig<T extends Record<string, unknown>> {
   getRowMeta: (item: T) => TableTreeRowMeta | undefined
   onToggleItem: (item: T) => void
+  /** 行的可读名字，拼进展开按钮的名字（「Expand Acme」）。返回空白时用通用的「Expand row」。 */
+  getRowLabel?: (item: T) => string
   hasExpandableRows: boolean
   isAllExpanded?: boolean | 'indeterminate'
   onExpandAll?: () => void
@@ -132,7 +135,9 @@ export function useTableTreeData<T extends Record<string, unknown>>(
 ): TablePlugin<T> {
   const messages = useComponentMessages({ table: tableMessages })
   const resolvedKey = ref<string | undefined>()
+  const rowIdPrefix = useTreeRowIdPrefix()
   return {
+    rowModel: 'tree',
     transformColumns(columns) {
       const current = toValue(config)
       const key = treeColumnKey(columns, current.treeColumnKey)
@@ -156,6 +161,7 @@ export function useTableTreeData<T extends Record<string, unknown>>(
               hasChildren: meta.hasChildren,
               expanded: meta.isExpanded,
               indent: live.indent ?? 'md',
+              rowLabel: live.getRowLabel?.(item),
               onToggle: () => live.onToggleItem(item),
             }, { default: () => body })
           },
@@ -173,7 +179,7 @@ export function useTableTreeData<T extends Record<string, unknown>>(
         before: () => h('button', {
           'type': 'button',
           'class': 'astryx-table__expander',
-          'aria-label': allExpanded ? messages.value.table.collapseAllRows : messages.value.table.expandAllRows,
+          'aria-label': allExpanded ? messages.value.table.treeCollapseAllRows : messages.value.table.treeExpandAllRows,
           'aria-expanded': String(allExpanded),
           'onClick': (event: MouseEvent) => {
             event.stopPropagation()
@@ -196,9 +202,8 @@ export function useTableTreeData<T extends Record<string, unknown>>(
         return null
       const attrs: Record<string, string | undefined> = {}
       if (meta != null) {
-        attrs['aria-level'] = String(meta.level + 1)
-        if (meta.hasChildren)
-          attrs['aria-expanded'] = String(meta.isExpanded)
+        attrs.id = treeRowDomId(rowIdPrefix, meta.id)
+        attrs[TREE_LEVEL_ATTRIBUTE] = String(meta.level)
       }
       const clickable = current.hasRowClickExpansion === true && meta?.hasChildren === true
       return {

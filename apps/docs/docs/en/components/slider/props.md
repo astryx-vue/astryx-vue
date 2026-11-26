@@ -26,10 +26,10 @@ footer: false
 <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>Disabled reason. Keeps disabled thumbs focusable.</td></tr>
 <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td>false</td><td>Shows the required marker. Does not run native required validation.</td></tr>
 <tr><td><code>isOptional</code></td><td><code>boolean</code></td><td>false</td><td>Shows the optional marker. Overrides isRequired.</td></tr>
-<tr><td><code>requiredLabel</code></td><td><code>string</code></td><td>Required</td><td>Required marker text.</td></tr>
+<tr><td><code>requiredLabel</code></td><td><code>string</code></td><td>Required</td><td>Required marker text. The default follows the active locale.</td></tr>
 <tr><td><code>optionalLabel</code></td><td><code>string</code></td><td>Optional</td><td>Optional marker text.</td></tr>
-<tr><td><code>minLabel</code></td><td><code>string</code></td><td>Minimum value</td><td>Accessible name for the lower thumb.</td></tr>
-<tr><td><code>maxLabel</code></td><td><code>string</code></td><td>Maximum value</td><td>Accessible name for the upper thumb.</td></tr>
+<tr><td><code>minLabel</code></td><td><code>string</code></td><td>Minimum value</td><td>Accessible name for the lower thumb. The default follows the active locale.</td></tr>
+<tr><td><code>maxLabel</code></td><td><code>string</code></td><td>Maximum value</td><td>Accessible name for the upper thumb. The default follows the active locale.</td></tr>
 <tr><td><code>width</code></td><td><code>number | string</code></td><td>—</td><td>Field width. Numbers use pixels.</td></tr>
 <tr><td><code>htmlName</code></td><td><code>string</code></td><td>—</td><td>Name for hidden form values.</td></tr>
 <tr><td><code>form</code></td><td><code>string</code></td><td>—</td><td>ID of the associated form.</td></tr>

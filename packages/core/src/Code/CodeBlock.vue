@@ -21,6 +21,7 @@ const props = withDefaults(defineProps<CodeBlockProps>(), {
   collapsibleThreshold: 10,
   container: 'card',
   copiedLabel: 'Copied',
+  copyFailedLabel: 'Failed to copy value to clipboard.',
   copyLabel: 'Copy code',
   hasCopyButton: true,
   hasLanguageLabel: true,
@@ -238,9 +239,22 @@ function onTitleKeydown(event: KeyboardEvent): void {
   }
 }
 
-const { copy, isCopied } = useClipboard()
+const { copy, isCopied, isFailed } = useClipboard({
+  announceFailure: () => props.copyFailedLabel,
+  onError: error => emit('copyError', error),
+})
 
-const copyButtonLabel = computed(() => (isCopied.value ? props.copiedLabel : props.copyLabel))
+const copyButtonLabel = computed(() => {
+  if (isFailed.value)
+    return props.copyFailedLabel
+  return isCopied.value ? props.copiedLabel : props.copyLabel
+})
+const copyTooltip = computed(() => (isFailed.value ? props.copyFailedLabel : props.copyLabel))
+const copyIcon = computed(() => {
+  if (isFailed.value)
+    return 'close'
+  return isCopied.value ? 'check' : 'copy'
+})
 
 async function onCopy(): Promise<void> {
   if (await copy(props.code))
@@ -312,13 +326,13 @@ const forwardedAttrs = computed(() => Object.fromEntries(
         variant="ghost"
         size="sm"
         :label="copyButtonLabel"
-        :tooltip="copyLabel"
+        :tooltip="copyTooltip"
         @click.stop="onCopy"
       >
         <ComponentIcon
           icon-slot="code-block-copy"
           :state="{ copied: isCopied }"
-          :fallback="{ icon: isCopied ? 'check' : 'copy', size: 'sm' }"
+          :fallback="{ icon: copyIcon, size: 'sm' }"
           color="inherit"
         />
       </IconButton>
@@ -366,13 +380,13 @@ const forwardedAttrs = computed(() => Object.fromEntries(
       variant="ghost"
       size="sm"
       :label="copyButtonLabel"
-      :tooltip="copyLabel"
+      :tooltip="copyTooltip"
       @click.stop="onCopy"
     >
       <ComponentIcon
         icon-slot="code-block-copy"
         :state="{ copied: isCopied }"
-        :fallback="{ icon: isCopied ? 'check' : 'copy', size: 'sm' }"
+        :fallback="{ icon: copyIcon, size: 'sm' }"
         color="inherit"
       />
     </IconButton>

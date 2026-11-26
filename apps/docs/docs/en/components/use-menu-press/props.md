@@ -59,7 +59,7 @@ footer: false
         <td><code>options.onHighlight</code></td>
         <td><code>(row: HTMLElement | null) =&gt; void</code></td>
         <td>—</td>
-        <td>Move the highlight. Defaults to moving DOM focus with <code>preventScroll</code> onto the row. A picker that highlights through <code>aria-activedescendant</code> supplies its own.</td>
+        <td>Move the highlight. Defaults to moving DOM focus with <code>preventScroll</code> onto the row; after a pointer press that focus does not match <code>:focus-visible</code>. A picker that highlights through <code>aria-activedescendant</code> supplies its own.</td>
       </tr>
       <tr>
         <td><code>options.onActivate</code></td>

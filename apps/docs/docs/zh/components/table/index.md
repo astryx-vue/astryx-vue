@@ -52,8 +52,22 @@ import {
 - `useTableStickyColumns`：当表格很宽需要横向滚动时，把左侧或右侧的指定列钉住固定不动。
 - `useTableRowStatus`：在行首显示成功、警告或错误等状态标记圆点，鼠标悬停时还可以看到文字解释。
 - `useTableRowIndex`：自动为真正的数据行生成连续的序号。
+- `useTableRowsVirtualization` 与 `useTableColumnsVirtualization`：行或列特别多时，只渲染视口里看得见的那部分，滚动手感不变。开启后单元格默认单行截断，行版本会让表格填满父元素给的高度并在里面上下滚动。
 
 没写宽度的列至少留 60px。写在表格上的 `style.minWidth` 如果比各列下限的总和还小，表格会抬到这个下限，避免列被压到读不清；写得更大时保留你给的值。表格放得下时，滚轮继续交给外面的页面；横向溢出之后才拦住回弹。
+
+要打开某一行（进详情页、开侧边面板），用 `renderCell` 在这一行的主单元格里放一个 `Link` 或 `Button`。Table 没有行点击属性。`<tr>` 上的点击处理用键盘和读屏都够不着，别把它当成打开一行的唯一方式。
+
+```ts
+const columns: TableColumn<User>[] = [
+  { key: 'name', header: 'Name', renderCell: user => h(Link, { href: `/users/${user.id}`, label: user.name }) },
+  { key: 'role', header: 'Role' },
+]
+```
+
+自定义插件就是一个由可选钩子组成的 `TablePlugin` 对象：`transformColumns` 增删、重排列；`rowPatch`、`cellPatch` 给行和格子加类名、属性和事件；`headerPatch` 在表头文字前面放东西；`above`、`below` 在表格上下方渲染内容；`bindScrollRoot` 拿到滚动区。插件按 `plugins` 对象里的顺序执行。
+
+传了 `columns` 的数据模式表格按列定义定宽，不按内容，所以 `textOverflow="wrap"` 下，比列还宽的长单词（代码标识符、URL）会在单词中间断开。想让它们保持完整，给那一列一个装得下的下限，用 `proportional(1, { minWidth })` 或 `pixel()`；或者改用手写行列的模式，列宽跟着内容走。
 
 表格的显示风格也很灵活：`density` 可以调节行高间距（紧凑 `compact`、适中 `balanced` 或宽松 `spacious`）；`dividers` 控制网格线的样式（仅行线 `rows`、仅列线 `columns`、全网格 `grid` 或无边框 `none`）；`isStriped` 开启隔行换色的斑马纹，`hasHover` 开启鼠标悬停高亮。当 `data` 为空时，表格会自动显示贴心的缺省提示，也可以通过 `empty` 插槽换成自己的图文。
 
@@ -97,7 +111,10 @@ const filterPlugin = useTableFiltering(() => ({
 | <Badge variant="success">推荐</Badge> | 每一行给一个稳定的 `idKey`。选择和行身份都靠它。 |
 | <Badge variant="success">推荐</Badge> | 短的数字列用 `pixel()`，需要分剩余宽度的文字列用 `proportional()`。 |
 | <Badge variant="success">推荐</Badge> | 排序、选择和过滤的状态放在表格外面，把算好的行放进 `data`。 |
+| <Badge variant="success">推荐</Badge> | 筛选或搜索可能一行都不剩时，在 `empty` 插槽里说明发生了什么，并给一条出路，比如「清除筛选」按钮。 |
+| <Badge variant="success">推荐</Badge> | 用主单元格里的链接或按钮打开一行。 |
 | <Badge variant="error">避免</Badge> | 在 `renderCell` 里排序或分页。单元格只画交给它的那一行。 |
+| <Badge variant="error">避免</Badge> | 只靠 `<tr>` 上的点击处理来打开一行。 |
 | <Badge variant="error">避免</Badge> | 一张表把每个插件都打开。又密又要过滤、拖宽度、还要多选，通常太挤。 |
 
 

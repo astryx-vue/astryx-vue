@@ -1,14 +1,122 @@
 // 原版 en.json 里暂时不接进 upstreamMap 的命名空间（`@astryx.<命名空间>.*`）。
-// 这些组件还没移植进 core，接入由对应节点负责，见 docs/adr/0001-new-packages.md。
+// 这些组件在 Vue 版还没有，接入由对应节点负责，见 docs/adr/0001-new-packages.md。
 // 节点接入时把命名空间从这里删掉，再把键写进 packages/core/src/locale/upstream/。
 export const UNPORTED_NAMESPACES = {
   chart: 'F2b 图表组件（packages/charts）',
   chartLegend: 'F2b 图表组件（packages/charts）',
   diffViewer: 'F3h lab 代码类',
+  mediaPlayer: 'lab 媒体播放器还没有 Vue 版',
+  tabBar: 'lab 底部 TabBar 还没有 Vue 版',
+  navigationStack: 'lab NavigationStack 还没有 Vue 版',
+  searchField: 'lab SearchField 还没有 Vue 版',
+  chatVirtualizer: 'lab ChatVirtualizer 还没有 Vue 版',
+  rating: 'Rating 还没有 Vue 版',
 }
 
-// 单个键没法接进 upstreamMap 的理由。检查器要求内置文案原样吐出每个占位符的值，
-// 而 `select` 型的占位符只会渲染命中的那一支，两条检查互相冲突。
+/** 同一个理由下的一组键。 */
+function keys(prefix, names, reason) {
+  return Object.fromEntries(names.map(name => [`${prefix}${name}`, reason]))
+}
+
+// 组件已经移植、但用到这些文案的那部分行为还没跟上的键，逐条写明缺什么。
+// 对应行为移植时，把键从这里删掉，写进 upstreamMap 和内置文案。
 export const UNPORTED_KEYS = {
-  '@astryx.listInput.announceAlreadyAtBoundary': '占位符是 select（first/last/other），检查器要求的输出和 select 的渲染结果互相矛盾',
+  ...keys('@astryx.powersearch.sheet.', [
+    'filtersTitle',
+    'addFilter',
+    'noFilters',
+    'noFiltersInDraft',
+    'noFiltersDescription',
+    'clearAll',
+    'clearAllTitle',
+    'clearAllDescription',
+    'clearAllConfirm',
+    'clearAllCancel',
+    'done',
+    'discardTitle',
+    'discardDescription',
+    'keepEditing',
+    'discardConfirm',
+    'search',
+    'searchResults',
+    'searchFields',
+    'searchFieldsPlaceholder',
+    'ungroupedFields',
+    'noMatchingFields',
+    'tryDifferentSearch',
+    'noResults',
+    'filterUnavailable',
+    'removeFilter',
+    'relativeDaysAgo',
+    'relativeDaysFromNow',
+    'relativeWeeksAgo',
+    'relativeWeeksFromNow',
+    'relativeMonthsAgo',
+    'relativeMonthsFromNow',
+    'fieldOperator',
+    'labelValue',
+  ], 'PowerSearch 的触屏底部弹层（experimental.presentation）还没有 Vue 版'),
+  ...keys('@astryx.powersearch.', [
+    'token.fieldOperator',
+    'token.labelValue',
+  ], 'PowerSearch 筛选 token 按字段、运算符、值分段取文案还没移植'),
+  ...keys('@astryx.powersearch.', [
+    'allFiltersRemoved',
+    'editableFiltersRemoved',
+  ], 'PowerSearch「全部清除」用自己的话播报一次（并保留只读筛选）还没移植'),
+  ...keys('@astryx.tokenizer.', [
+    'search',
+    'searchPlaceholder',
+    'noResultsDescription',
+    'add',
+    'addValue',
+    'done',
+    'save',
+    'selectionLimit',
+    'discardChangesTitle',
+    'discardChangesDescription',
+    'keepEditing',
+    'discardChanges',
+    'clearAllTitle',
+    'clearAllDescription',
+    'nothingToClear',
+    'selectedCount',
+    'clearSelection',
+  ], 'Tokenizer 的触屏底部弹层在 Vue 版是 lab MobileTokenizer，它的草稿、确认弹窗和文案还没对齐'),
+  ...keys('@astryx.list.', [
+    'reorderHandle',
+    'reorderHandleVerb',
+    'reorderHandleAt',
+    'reorderHint',
+    'reorderPlace',
+    'reorderPlaceTop',
+    'reorderPlaceEnd',
+    'reorderRefused',
+    'reorderItemAt',
+    'reorderMoveUp',
+    'reorderMoveDown',
+    'reorderDone',
+    'reorderModeDone',
+    'reorderPickedUp',
+    'reorderDropped',
+    'reorderCancelled',
+  ], 'List 还没有 createReorderable 拖拽排序'),
+  '@astryx.listInput.itemName': 'lab ListInput 还没改用 createReorderable，排序手柄和播报里的记录名由 listInput 自己的文案拼',
+  '@astryx.markdownHeadingLinks.copyFailed': 'Markdown 标题没有复制链接按钮，复制失败的提示还没有用处',
+  '@astryx.codeBlock.diffLabel': 'CodeBlock 显示 diff 时的「<语言> diff」标题还没移植',
+  '@astryx.comments.errorAnnouncement': 'lab Comments 错误横幅通过共用播报通道读出还没移植',
+  '@astryx.timestamp.relativeLabel': 'Timestamp 相对时间的无障碍名以显示的词开头还没移植',
+  '@astryx.typeahead.selectionCleared': 'Typeahead 用退格或删除键清掉已选值后的播报还没移植',
+  '@astryx.step.status.unavailable': 'Stepper 紧凑布局里禁用步骤的读屏状态词还没移植',
+  '@astryx.field.errorFallback': 'TextInput、TextArea 的错误状态没有文字时给读屏的兜底说明还没移植',
+  '@astryx.richTextEditor.link.urlPlaceholder': 'RichTextEditor 的链接编辑还是对话框，换成锚定弹出层还没移植',
+  '@astryx.textArea.counter': 'Vue 版 TextArea 计数直接按当前语言的数字格式写成「已输入/上限」，没有要翻译的文字',
+  ...keys('@astryx.dateInput.', [
+    'nonexistentDate',
+    'outOfRangeDate',
+  ], 'DateInput、DateTimeInput 保留被拒绝的输入并说明原因还没移植'),
+  ...keys('@astryx.dateInput.', [
+    'formatHint',
+    'calendarDescription',
+  ], 'Vue 版日期组件只支持公历，还没有按 InternationalizationProvider 的 calendar 切换日历系统'),
 }

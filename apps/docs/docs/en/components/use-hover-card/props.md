@@ -47,7 +47,7 @@ footer: false
         <td><code>touchTrigger</code></td>
         <td><code>'auto' | 'tap' | 'none' | MaybeRefOrGetter</code></td>
         <td><code>'auto'</code></td>
-        <td>What a tap does where there is no hover. <code>auto</code> opens on tap unless the trigger performs an action of its own; <code>tap</code> always opens; <code>none</code> never opens on touch.</td>
+        <td>What a tap does where there is no hover. <code>auto</code> opens on tap unless the trigger performs an action of its own (an aria-disabled control performs none, so its reason opens); <code>tap</code> always opens; <code>none</code> never opens on touch.</td>
       </tr>
       <tr>
         <td><code>isEnabled</code></td>

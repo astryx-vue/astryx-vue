@@ -1,5 +1,53 @@
 # @astryx-vue/charts
 
+## 0.9.11
+
+### Patch Changes
+
+- Updated dependencies [[`0dab467`](https://github.com/astryx-vue/astryx-vue/commit/0dab467a81ac4130ac5f33511c69c9fa0b3b30e7), [`b17b492`](https://github.com/astryx-vue/astryx-vue/commit/b17b4922330c59dec2eb8973615848aa1b22e63f)]:
+  - @astryx-vue/core@0.15.0
+
+## 0.9.10
+
+### Patch Changes
+
+- Updated dependencies [[`2f825cd`](https://github.com/astryx-vue/astryx-vue/commit/2f825cdf9c5c41cd4de6ab097ab28ee6665ad65e)]:
+  - @astryx-vue/core@0.14.0
+
+## 0.9.9
+
+### Patch Changes
+
+- Updated dependencies [[`fe992ac`](https://github.com/astryx-vue/astryx-vue/commit/fe992ac67b9b112c3685be0b249ab42dfbb670fc), [`d2849f1`](https://github.com/astryx-vue/astryx-vue/commit/d2849f15a3059c03dab71271bc64e5811fd766ec)]:
+  - @astryx-vue/core@0.13.0
+
+## 0.9.8
+
+### Patch Changes
+
+- Updated dependencies [[`b74909f`](https://github.com/astryx-vue/astryx-vue/commit/b74909fc6e89b8cf365eb9ce41cda4178c69cc99), [`083cd85`](https://github.com/astryx-vue/astryx-vue/commit/083cd85c3e72ee76353719f81598895b13707072)]:
+  - @astryx-vue/core@0.12.0
+
+## 0.9.7
+
+### Patch Changes
+
+- Updated dependencies [[`bf97b13`](https://github.com/astryx-vue/astryx-vue/commit/bf97b13f85a406f7e637a8f5b4977546504e28aa)]:
+  - @astryx-vue/core@0.11.0
+
+## 0.9.6
+
+### Patch Changes
+
+- [#532](https://github.com/astryx-vue/astryx-vue/pull/532) [`41a3277`](https://github.com/astryx-vue/astryx-vue/commit/41a32773b15cdbc36962d70c6bbb75c89394ac9e) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - RadialChart 的提示框只在 `interactive` 打开时响应触摸，关掉时触摸交给页面；ChartZoom 只有横向分量的滚轮不再拦住页面滚动；`shortDate`、`monthYear` 可以传入历法。
+
+## 0.9.5
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @astryx-vue/core@0.10.0
+
 ## 0.9.4
 
 ### Patch Changes

@@ -117,3 +117,8 @@ export function initialCalendarFocus(options: InitialCalendarFocus): CalendarDat
   }
   return today
 }
+
+/** `date` 在 `start` 和 `end` 之间（含两端）。任何一端缺了就不在。 */
+export function inSpan(date: CalendarDate, start: CalendarDate | null, end: CalendarDate | null): boolean {
+  return !!start && !!end && date.compare(start) >= 0 && date.compare(end) <= 0
+}

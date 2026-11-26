@@ -4,6 +4,8 @@ import { computed, nextTick, onMounted, ref, useAttrs, useId, useSlots, useTempl
 import BottomSheet from '../BottomSheet/BottomSheet.vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
+import { useBusyAnnouncement } from '../composables/internal/busyAnnouncement.js'
+import { useKeyboardHighlight } from '../composables/internal/useKeyboardHighlight.js'
 import { useAnnounce } from '../composables/useAnnounce.js'
 import { useCombobox } from '../composables/useCombobox.js'
 import { useDismiss } from '../composables/useDismiss.js'
@@ -58,7 +60,6 @@ const props = withDefaults(defineProps<SelectorProps>(), {
 })
 
 const emit = defineEmits<SelectorEmits>()
-
 defineSlots<SelectorSlots>()
 
 // 显式 size > 外层 SizeContext（Toolbar、InputGroup 等）> 'md'。
@@ -95,6 +96,7 @@ const control = useFieldControlState({
   loading: () => props.isLoading,
 })
 const announce = useAnnounce()
+const settleBusy = useBusyAnnouncement(() => control.isLoading.value, () => messages.value.selector.loading)
 const readOnlyId = computed(() => `${selectorId.value}-readonly`)
 const disabledMessageId = computed(() => `${selectorId.value}-disabled-message`)
 const disabledTooltipId = computed(() => `${selectorId.value}-disabled-tooltip`)
@@ -149,7 +151,7 @@ const combobox = useCombobox({
     }
   },
 })
-
+const { isKeyboardHighlight } = useKeyboardHighlight(combobox.activeIndex)
 const sheetOpen = computed({
   get: () => isSheet.value && combobox.isOpen.value,
   set: (open: boolean) => {
@@ -185,6 +187,8 @@ useDismiss({
   container: listboxRef,
   trigger: fieldRef,
   isEnabled: popoverOpen,
+  // 选项列表和弹出框一样：手指滑一下页面不关，只在外面轻点时关。
+  dismissOnOutsidePan: false,
   dismissOnEscape: 'close',
   onEscape: () => dismissSelectorEscape(listboxRef.value, () => combobox.close(), focusTrigger),
   onDismiss: () => combobox.close(),
@@ -233,8 +237,10 @@ const announcement = computed(() => searchResultMessage({
 }))
 
 watch(announcement, (message) => {
-  if (message)
-    announce(message)
+  if (!message)
+    return
+  settleBusy() // 结果要播报了：还没念出去的「加载中」随即收回
+  announce(message)
 })
 
 function onTriggerFocus(event: FocusEvent): void {
@@ -383,7 +389,7 @@ onMounted(syncAnchorWidth)
           </template>
         </span>
       </button>
-      <Spinner v-if="control.isLoading.value" class="astryx-selector-spinner" size="sm" :aria-label="messages.selector.loading" />
+      <Spinner v-if="control.isLoading.value" class="astryx-selector-spinner" size="sm" aria-hidden="true" />
       <button
         v-if="hasClear && selectedOption && control.canActivate.value"
         type="button"
@@ -438,6 +444,7 @@ onMounted(syncAnchorWidth)
         :class="[{ 'is-sheet': isSheet, 'is-input': triggerVariant === 'input' }, `size-${size}`]"
         :data-placement="isSheet ? undefined : position.placement"
         :style="listboxStyle"
+        :data-keyboard-highlight="isKeyboardHighlight || undefined"
         tabindex="-1"
       >
         <SelectorPanel

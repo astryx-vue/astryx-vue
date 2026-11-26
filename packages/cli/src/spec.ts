@@ -278,7 +278,7 @@ export const COMMANDS: readonly CommandSpec[] = [
   },
   {
     name: 'doctor',
-    summary: 'Check the project\'s versions, theme stylesheet, and theme attribute. Changes nothing.',
+    summary: 'Check the project\'s versions, theme stylesheet, theme attribute, and Core buttons that do nothing. Changes nothing.',
     arguments: [],
     options: [],
     json: true,

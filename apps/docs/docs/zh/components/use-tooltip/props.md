@@ -41,13 +41,13 @@ footer: false
         <td><code>focusTrigger</code></td>
         <td><code>'auto' | 'always' | 'never' | MaybeRefOrGetter</code></td>
         <td><code>'auto'</code></td>
-        <td>焦点何时打开提示。<code>auto</code> 只给本来就能聚焦的元素挂焦点监听。</td>
+        <td>焦点何时打开提示。<code>auto</code> 在焦点到达时判断：落在触发器自己身上算，落在里面时要触发器此刻可聚焦才算；<code>always</code> 里面任何焦点都算；<code>never</code> 从不算。</td>
       </tr>
       <tr>
         <td><code>touchTrigger</code></td>
         <td><code>'auto' | 'tap' | 'none' | MaybeRefOrGetter</code></td>
         <td><code>'auto'</code></td>
-        <td>没有 hover 的触摸设备上轻点做什么。<code>auto</code> 在触发器自己有动作时不打开；<code>tap</code> 总是打开；<code>none</code> 从不打开。</td>
+        <td>没有 hover 的触摸设备上轻点做什么。<code>auto</code> 在触发器自己有动作时不打开（设置了 aria-disabled 的控件不算有动作，轻点它会显示原因）；<code>tap</code> 总是打开；<code>none</code> 从不打开。</td>
       </tr>
       <tr>
         <td><code>isEnabled</code></td>
@@ -59,7 +59,7 @@ footer: false
         <td><code>isOpen</code></td>
         <td><code>boolean | undefined | MaybeRefOrGetter</code></td>
         <td>—</td>
-        <td>受控的打开状态。<code>true</code> 强制显示，<code>false</code> 强制隐藏，<code>undefined</code> 交给悬停/焦点管理。</td>
+        <td>受控的打开状态。<code>true</code> 强制显示，<code>false</code> 强制隐藏，<code>undefined</code> 交给悬停/焦点管理。为 <code>false</code> 时，本该打开提示的焦点只调用 <code>onShow</code>，不显示。</td>
       </tr>
       <tr>
         <td><code>isDefaultOpen</code></td>

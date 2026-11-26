@@ -41,13 +41,13 @@ footer: false
         <td><code>focusTrigger</code></td>
         <td><code>'auto' | 'always' | 'never' | MaybeRefOrGetter</code></td>
         <td><code>'auto'</code></td>
-        <td>When focus opens the tooltip. <code>auto</code> only attaches focus listeners to naturally focusable elements.</td>
+        <td>When focus opens the tooltip. <code>auto</code> decides when focus arrives: focus on the trigger itself counts, and focus inside it counts while the trigger is focusable. <code>always</code> counts any focus inside; <code>never</code> ignores focus.</td>
       </tr>
       <tr>
         <td><code>touchTrigger</code></td>
         <td><code>'auto' | 'tap' | 'none' | MaybeRefOrGetter</code></td>
         <td><code>'auto'</code></td>
-        <td>What a tap does where there is no hover. <code>auto</code> opens on tap unless the trigger performs an action of its own; <code>tap</code> always opens; <code>none</code> never opens on touch.</td>
+        <td>What a tap does where there is no hover. <code>auto</code> opens on tap unless the trigger performs an action of its own (an aria-disabled control performs none, so its reason opens); <code>tap</code> always opens; <code>none</code> never opens on touch.</td>
       </tr>
       <tr>
         <td><code>isEnabled</code></td>
@@ -59,7 +59,7 @@ footer: false
         <td><code>isOpen</code></td>
         <td><code>boolean | undefined | MaybeRefOrGetter</code></td>
         <td>—</td>
-        <td>Controlled open state. <code>true</code> force-shows, <code>false</code> force-hides, <code>undefined</code> lets hover and focus manage visibility.</td>
+        <td>Controlled open state. <code>true</code> force-shows, <code>false</code> force-hides, <code>undefined</code> lets hover and focus manage visibility. With <code>false</code>, focus that would open the tooltip calls <code>onShow</code> and shows nothing.</td>
       </tr>
       <tr>
         <td><code>isDefaultOpen</code></td>

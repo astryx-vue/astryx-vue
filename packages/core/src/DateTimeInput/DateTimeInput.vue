@@ -205,7 +205,9 @@ watch(model, (value) => {
             :date-constraints="dateConstraints" :number-of-months="numberOfMonths" :week-starts-on="weekStartsOn"
             :presentation="datePresentation" :native-picker="nativePicker"
             :disabled-message="disabledMessage"
+            :entry-error-behavior="entryErrorBehavior"
             @update:model-value="onDate"
+            @entry-error-change="emit('entryErrorChange', $event)"
           />
           <TimeField
             :model-value="timeValue" :label="resolvedTimeLabel" :described-by="[attrs['aria-describedby'], field.describedBy].filter(Boolean).join(' ') || undefined"

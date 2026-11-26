@@ -34,6 +34,7 @@ export interface CommentsMessages {
   historyTitle: string
   label: string
   linkCopied: string
+  linkCopyFailed: string
   loadFailed: string
   loadOlder: string
   loading: string
@@ -111,6 +112,7 @@ export const commentsMessages: Record<AstryxLocale, CommentsMessages> = {
     historyTitle: 'Edit history',
     label: 'Comments',
     linkCopied: 'Comment link copied',
+    linkCopyFailed: 'Failed to copy value to clipboard.',
     loadFailed: 'Comments couldn\'t load',
     loadOlder: 'Load earlier comments',
     loading: 'Loading comments',
@@ -180,6 +182,7 @@ export const commentsMessages: Record<AstryxLocale, CommentsMessages> = {
     historyTitle: '编辑历史',
     label: '评论',
     linkCopied: '评论链接已复制',
+    linkCopyFailed: '复制失败',
     loadFailed: '评论没能加载',
     loadOlder: '加载更早的评论',
     loading: '正在加载评论',

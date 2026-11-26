@@ -26,6 +26,8 @@ export type {
 } from './plugins/filtering.js'
 export { buildGroupedRows, isTableGroupHeader, useTableGroupedRows } from './plugins/groupedRows.js'
 export type { UseTableGroupedRowsConfig } from './plugins/groupedRows.js'
+export { useTableInfiniteScroll } from './plugins/infiniteScroll.js'
+export type { UseTableInfiniteScrollConfig } from './plugins/infiniteScroll.js'
 export { isInteractiveRowClick } from './plugins/interaction.js'
 export { paginateData as paginateTableData, useTablePagination } from './plugins/pagination.js'
 export type { TablePaginationVariant, UseTablePaginationConfig } from './plugins/pagination.js'
@@ -48,6 +50,8 @@ export { resolveStickySide, stickyOffsets, useTableStickyColumns } from './plugi
 export type { StickySide, UseTableStickyColumnsConfig } from './plugins/stickyColumns.js'
 export { flattenTree, useTableTreeData, useTableTreeState } from './plugins/tree.js'
 export type { TableTreeRowMeta, UseTableTreeDataConfig, UseTableTreeStateConfig } from './plugins/tree.js'
+export { useTableColumnsVirtualization, useTableRowsVirtualization } from './plugins/virtualization.js'
+export type { UseTableColumnsVirtualizationConfig, UseTableRowsVirtualizationConfig } from './plugins/virtualization.js'
 export { default as Table } from './Table.vue'
 export { default as TableBody } from './TableBody.vue'
 export { default as TableCell } from './TableCell.vue'
@@ -74,11 +78,13 @@ export type {
   TableFilterVariant,
   TableGroupPatch,
   TableHeaderPatch,
+  TableLoadingState,
   TablePanelPatch,
   TablePlugin,
   TableProps,
   TableRowListeners,
   TableRowMenuItem,
+  TableRowModel,
   TableRowPatch,
   TableRowProps,
   TableSelectionToolbarProps,
@@ -88,4 +94,5 @@ export type {
   TableSortState,
   TableTextOverflow,
   TableVerticalAlign,
+  TableVirtualizationContribution,
 } from './types.js'

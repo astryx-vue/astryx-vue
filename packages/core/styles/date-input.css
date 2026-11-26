@@ -41,7 +41,7 @@
   }
 
   @media (hover: hover) {
-    .astryx-date-input-wrapper:hover:not([data-disabled='true']):not(:focus-within) {
+    .astryx-date-input-wrapper:hover:not([data-disabled='true']):not([data-busy]):not(:focus-within) {
       box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--astryx-input-status-color, var(--astryx-input-border, #d4d4d4)) 30%, transparent);
     }
   }
@@ -51,10 +51,16 @@
     box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--astryx-input-status-color, var(--astryx-input-focus, #262626)) 15%, transparent);
   }
 
+  /* 禁用的样子只属于禁用；忙碌的字段保持平常的样子，只多一个转圈。 */
   .astryx-date-input-wrapper[data-disabled='true'] {
     opacity: 0.5;
     box-shadow: none;
     cursor: default;
+  }
+
+  /* 禁用的字段仍可聚焦，聚焦时焦点环照样出现。 */
+  .astryx-date-input-wrapper[data-disabled='true']:focus-within {
+    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--astryx-input-status-color, var(--astryx-input-focus, #262626)) 15%, transparent);
   }
 
   .astryx-date-input.status-error {
@@ -166,9 +172,32 @@
     flex: none;
   }
 
-  @media (prefers-reduced-motion: reduce) {
+  /* 粗指针下点一下就弹键盘，焦点样子渐变会在键盘升起的每一帧重画，所以直接出现。 */
+  @media (prefers-reduced-motion: reduce), (pointer: coarse) {
     .astryx-date-input-wrapper {
       transition: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .astryx-date-input-wrapper {
+      border-color: ButtonText;
+      color: CanvasText;
+      background: Canvas;
+      box-shadow: none;
+    }
+
+    .astryx-date-input-wrapper[data-disabled='true'] {
+      color: GrayText;
+      border-color: GrayText;
+      opacity: 1;
+    }
+
+    /* 强制颜色会把边框统一重画、去掉内阴影；聚焦的字段（含仍可聚焦的禁用字段）用 Highlight 标出来。 */
+    .astryx-date-input-wrapper:focus-within,
+    .astryx-date-input-wrapper[data-disabled='true']:focus-within {
+      border-color: Highlight;
+      box-shadow: none;
     }
   }
 
@@ -187,6 +216,18 @@
     flex-direction: column;
     gap: var(--astryx-spacing-3, 12px);
     padding: var(--astryx-spacing-3, 12px);
+  }
+
+  /* 底部面板的抓手条浮在内容上方、高 24px。静止时面板第一行要落在它下面：
+     面板自己的上内边距不够 24px 时，差多少这里补多少。 */
+  .astryx-date-touch,
+  .astryx-time-touch,
+  .astryx-date-time-touch-tabs {
+    padding-block-start: max(var(--astryx-spacing-3, 12px), calc(var(--astryx-spacing-6, 24px) - var(--container-padding-block-start, 0px)));
+  }
+
+  .astryx-date-time-touch .astryx-date-touch {
+    padding-block-start: var(--astryx-spacing-3, 12px);
   }
 
   .astryx-date-touch-header,
@@ -279,7 +320,8 @@
   }
 
   .astryx-date-time-touch-tabs {
-    padding: var(--astryx-spacing-3, 12px) var(--astryx-spacing-3, 12px) 0;
+    padding-inline: var(--astryx-spacing-3, 12px);
+    padding-block-end: 0;
   }
 }
 

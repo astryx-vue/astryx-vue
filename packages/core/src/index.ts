@@ -386,6 +386,7 @@ export type {
 export { DateInput } from './DateInput/index.js'
 export type {
   DateInputEmits,
+  DateInputEntryError,
   DateInputFormat,
   DateInputFormatName,
   DateInputNativePicker,
@@ -399,9 +400,10 @@ export { DateRangeInput } from './DateRangeInput/index.js'
 export type { DateRange, DateRangeInputEmits, DateRangeInputProps, DateRangePreset } from './DateRangeInput/index.js'
 export { DateTimeInput } from './DateTimeInput/index.js'
 export type { DateTimeInputEmits, DateTimeInputProps, DateTimeInputSize } from './DateTimeInput/index.js'
-export { Dialog, DialogHeader, useImperativeDialog } from './Dialog/index.js'
+export { Dialog, DialogHeader, useDialogContext, useImperativeDialog } from './Dialog/index.js'
 export type {
   DialogBlockPosition,
+  DialogContext,
   DialogHeaderProps,
   DialogPadding,
   DialogPosition,
@@ -498,7 +500,13 @@ export type {
   FileInputValue,
 } from './FileInput/index.js'
 export { FormLayout } from './FormLayout/index.js'
-export type { FormLayoutDirection, FormLayoutProps, FormLayoutSlots, FormOptionality } from './FormLayout/index.js'
+export type {
+  EntryErrorBehavior,
+  FormLayoutDirection,
+  FormLayoutProps,
+  FormLayoutSlots,
+  FormOptionality,
+} from './FormLayout/index.js'
 export { Grid, GridSpan } from './Grid/index.js'
 export type {
   GridAlignment,
@@ -732,6 +740,7 @@ export {
   provideAstryxLocale,
   richTextEditorMessages,
   selectorMessages,
+  sliderMessages,
   spinnerMessages,
   stepperMessages,
   switchMessages,
@@ -807,6 +816,7 @@ export type {
   PowerSearchOperatorMessages,
   RichTextEditorMessages,
   SelectorMessages,
+  SliderMessages,
   SpinnerMessages,
   StepperMessages,
   SwitchMessages,
@@ -1238,13 +1248,16 @@ export {
   useTableColumnResize,
   useTableColumnSettings,
   useTableColumnSettingsState,
+  useTableColumnsVirtualization,
   useTableFiltering,
   useTableFilterState,
   useTableGroupedRows,
+  useTableInfiniteScroll,
   useTablePagination,
   useTableRowExpansion,
   useTableRowIndex,
   useTableRowStatus,
+  useTableRowsVirtualization,
   useTableSelection,
   useTableSelectionState,
   useTableSortable,
@@ -1278,12 +1291,14 @@ export type {
   TableFilterVariant,
   TableGroupPatch,
   TableHeaderPatch,
+  TableLoadingState,
   TablePaginationVariant,
   TablePanelPatch,
   TablePlugin,
   TableProps,
   TableRowListeners,
   TableRowMenuItem,
+  TableRowModel,
   TableRowPatch,
   TableRowProps,
   TableRowStatus,
@@ -1300,15 +1315,19 @@ export type {
   TableTextOverflow,
   TableTreeRowMeta,
   TableVerticalAlign,
+  TableVirtualizationContribution,
   UseTableColumnResizeConfig,
   UseTableColumnSettingsConfig,
+  UseTableColumnsVirtualizationConfig,
   UseTableFilteringConfig,
   UseTableFilterStateOptions,
   UseTableGroupedRowsConfig,
+  UseTableInfiniteScrollConfig,
   UseTablePaginationConfig,
   UseTableRowExpansionConfig,
   UseTableRowIndexConfig,
   UseTableRowStatusConfig,
+  UseTableRowsVirtualizationConfig,
   UseTableSelectionConfig,
   UseTableSelectionStateConfig,
   UseTableSortableConfig,

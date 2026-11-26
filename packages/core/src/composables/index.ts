@@ -3,7 +3,7 @@
 export { countCharacters } from './countCharacters.js'
 
 export { useAnnounce } from './useAnnounce.js'
-export type { AnnounceFn, AnnouncePoliteness } from './useAnnounce.js'
+export type { AnnounceFn, AnnouncePoliteness, UseAnnounceOptions } from './useAnnounce.js'
 
 export { appShellMobileKey, useAppShellMobile } from './useAppShellMobile.js'
 export type { AppShellMobile } from './useAppShellMobile.js'
@@ -168,6 +168,7 @@ export { computeOverflow, useOverflow } from './useOverflow.js'
 export type {
   ComputeOverflowInput,
   ComputeOverflowResult,
+  OverflowInlineBounds,
   UseOverflowOptions,
   UseOverflowReturn,
 } from './useOverflow.js'

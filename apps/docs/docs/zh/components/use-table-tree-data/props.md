@@ -28,6 +28,12 @@ footer: false
         <td>切换这一行的展开状态。</td>
       </tr>
       <tr>
+        <td><code>getRowLabel</code></td>
+        <td><code>(item: T) =&gt; string</code></td>
+        <td>—</td>
+        <td>行的可读名字，拼进展开按钮的无障碍名称，例如「展开 Acme」。返回空白时用通用的「展开行」。</td>
+      </tr>
+      <tr>
         <td><code>hasExpandableRows</code></td>
         <td><code>boolean</code></td>
         <td>—</td>
@@ -100,7 +106,7 @@ footer: false
       <tr>
         <td><code>rowPatch</code></td>
         <td><code>(row: T, index: number, columnCount: number) =&gt; TableRowPatch | null</code></td>
-        <td>写出 <code>aria-level</code>（层级 + 1），有子行的还写 <code>aria-expanded</code>。开了 <code>hasRowClickExpansion</code> 时，还会给可展开行加上点击切换和 <code>astryx-table__clickable</code> 类。</td>
+        <td>给每个树形行一个 DOM id，父行展开时它的展开按钮用 <code>aria-controls</code> 指向这些子行。行上不带 <code>aria-level</code>、<code>aria-expanded</code>。开了 <code>hasRowClickExpansion</code> 时，还会给可展开行加上点击切换和 <code>astryx-table__clickable</code> 类。</td>
       </tr>
     </tbody>
   </table>
