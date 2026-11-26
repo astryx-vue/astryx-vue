@@ -12,6 +12,7 @@ footer: false
 <tr><td><code>value</code></td><td><code>RadioValue</code> (<code>string | number</code>)</td><td>—</td><td>The value this row reports when it becomes the selected one. Required.</td></tr>
 <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>Primary text for the row, and the radio's accessible name. Required.</td></tr>
 <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>Secondary text below the label, read after the name.</td></tr>
+<tr><td><code>align</code></td><td><code>'center' | 'start' | 'first-line'</code></td><td><code>'center'</code></td><td>Vertical alignment of the radio circle against the label. <code>first-line</code> keeps the circle level with the first line of a wrapped label; <code>start</code> aligns it to the top.</td></tr>
 <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disables this row. It keeps its place in the group and stays unselected.</td></tr>
 <tr><td><code>isReadOnly</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Read-only. The selection can be read and submitted but not changed, and the row does not dim.</td></tr>
 </tbody></table>

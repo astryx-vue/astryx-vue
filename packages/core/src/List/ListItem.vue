@@ -26,6 +26,7 @@ const isBullet = computed(() => marker.value === 'disc' || marker.value === 'cir
   <Item
     as="li"
     class="astryx-list-item"
+    :align="align"
     :description="description"
     :density="density"
     :href="href"

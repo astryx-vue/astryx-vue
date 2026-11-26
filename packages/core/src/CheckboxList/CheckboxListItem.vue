@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { CheckboxValue } from '../CheckboxInput/types.js'
 import type { CheckboxListItemEmits, CheckboxListItemProps, CheckboxListItemSlots } from './types.js'
-import { computed, onBeforeUnmount, useId, useSlots, useTemplateRef, watchEffect } from 'vue'
+import { computed, onBeforeUnmount, provide, useId, useSlots, useTemplateRef, watchEffect } from 'vue'
+import { checkboxRowPressKey } from '../CheckboxInput/rowPress.js'
 import { readLayerScoped } from '../layer/scopedProvide.js'
 import ListItem from '../List/ListItem.vue'
 import { useComponentMessages } from '../locale/context.js'
@@ -16,6 +17,8 @@ const emit = defineEmits<CheckboxListItemEmits>()
 defineSlots<CheckboxListItemSlots>()
 
 const context = readLayerScoped(checkboxListKey)
+// 整行代替里面的复选框回应按压。
+provide(checkboxRowPressKey, true)
 const slots = useSlots()
 const messages = useComponentMessages({ checkboxList: checkboxListMessages })
 const richLabel = computed(() => slots.label != null)
@@ -66,7 +69,7 @@ function onChecked(value: CheckboxValue): void {
 
 <template>
   <ListItem
-    :label="label" :description="description" :is-selected="selected" :is-disabled="disabled"
+    :align="align" :label="label" :description="description" :is-selected="selected" :is-disabled="disabled"
     :aria-busy="loading || undefined" :interactive-ref="interactiveRef"
   >
     <template #label>
@@ -81,7 +84,7 @@ function onChecked(value: CheckboxValue): void {
       <CheckboxListControl
         ref="checkbox" :model-value="checked" :label="ariaLabel ?? (hasVisibleLabel ? messages.checkboxList.checkbox : label)"
         :size="context?.size.value ?? 'md'" :is-disabled="disabled" :is-read-only="readOnly"
-        :is-loading="loading" :loading-label="messages.checkboxList.loading" :disabled-message="reason"
+        :is-loading="loading" :loading-label="messages.checkboxList.loading" :disabled-message="reason" :is-invalid="context?.hasErrorStatus.value"
         :aria-labelledby="hasVisibleLabel && !ariaLabel ? visibleLabelId : undefined"
         @update:model-value="onChecked"
       />

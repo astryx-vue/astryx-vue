@@ -11,6 +11,7 @@ import FieldStatus from '../Field/FieldStatus.vue'
 import { useAriaRequired } from '../FormLayout/context.js'
 import { useComponentMessages } from '../locale/context.js'
 import { switchMessages } from '../locale/messages/switch.js'
+import { withholdCallerHandlers } from '../utils/disabledInteraction.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { useSwitchAction } from './useSwitchAction.js'
 import '../../styles/switch.css'
@@ -63,7 +64,8 @@ defineExpose({ element, focus, blur })
 
 const controlledAttrs = new Set(['class', 'style', 'id', 'type', 'checked', 'disabled', 'readonly', 'autofocus', 'role', 'aria-checked', 'aria-labelledby', 'aria-describedby', 'aria-disabled', 'aria-readonly', 'aria-required', 'aria-busy'])
 function inputAttrs(): InputHTMLAttributes {
-  return Object.fromEntries(Object.entries(attrs).filter(([key]) => !controlledAttrs.has(key))) as InputHTMLAttributes
+  // 禁用的开关还能聚焦，浏览器照常派发事件；调用方的处理函数除了聚焦和失焦都不运行。
+  return Object.fromEntries(Object.entries(withholdCallerHandlers(attrs, !!props.isDisabled)).filter(([key]) => !controlledAttrs.has(key))) as InputHTMLAttributes
 }
 function describedBy(): string | undefined {
   // 调用方传的 aria-describedby 描述的是开关本身，排在本组件自己的说明、状态和禁用原因之前。
@@ -120,11 +122,12 @@ onBeforeUnmount(() => ownerDocument?.removeEventListener('reset', reset, true))
           :checked="action.value.value"
           :name="isDisabled ? undefined : (htmlName ?? inputAttrs().name)" :form="isDisabled ? '' : inputAttrs().form"
           :readonly="isReadOnly || showsDisabledMessage"
+          :required="isRequired && !isOptional"
           :aria-checked="action.value.value"
           :aria-labelledby="labelledBy()"
           :aria-describedby="describedBy()"
           :aria-disabled="isDisabled || undefined" :aria-readonly="isReadOnly || undefined" :aria-busy="busy || undefined"
-          :aria-required="ariaRequired" :aria-invalid="status?.type === 'error' ? true : inputAttrs()['aria-invalid']"
+          :aria-required="ariaRequired" :aria-invalid="status?.type === 'error' ? true : isRequired ? false : inputAttrs()['aria-invalid']"
           @click="click" @change="change" @keydown="keydown" @focus="tooltip.onFocus" @blur="tooltip.onBlur"
         >
         <span class="astryx-switch-track" aria-hidden="true">

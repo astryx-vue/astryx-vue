@@ -80,6 +80,7 @@ provide(checkboxListKey, {
   toggle,
   isDisabled: groupDisabled,
   disabledReason,
+  hasErrorStatus: computed(() => props.status?.type === 'error'),
   isReadOnly: computed(() => (props.isReadOnly ?? false) && !groupDisabled.value),
   loadingValues: computed(() => pending.value),
   size: computed(() => props.density === 'compact' ? 'sm' : 'md'),
@@ -98,7 +99,7 @@ provide(checkboxListKey, {
         <div
           ref="controlElement"
           class="astryx-checkbox-list-control" :class="controlClass" :style="controlStyle" role="group"
-          v-bind="parts.forwardedAttrs()" :aria-labelledby="groupLabelledBy(field.labelId)" :aria-describedby="groupDescribedBy(field.describedBy)"
+          v-bind="parts.forwardedAttrs()" :aria-disabled="groupDisabled || undefined" :aria-labelledby="groupLabelledBy(field.labelId)" :aria-describedby="groupDescribedBy(field.describedBy)"
         >
           <List :density="density" :has-dividers="hasDividers">
             <slot />

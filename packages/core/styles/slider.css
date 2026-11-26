@@ -87,11 +87,14 @@
     transform: translateX(-50%);
     color: var(--astryx-color-text-secondary, #525252);
     font-size: var(--astryx-text-supporting-size, 12px);
-    line-height: 1.5;
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
     white-space: nowrap;
   }
   .astryx-slider-mark-label:dir(rtl) { transform: translateX(50%); }
-  .astryx-slider[data-mark-labels='true'][data-orientation='horizontal'] .astryx-slider-row { margin-bottom: 24px; }
+  /* 横向的刻度文字挂在控件中线下面。行底部留出文字超出控件的那一截，滑块后面的内容就从文字下方开始。 */
+  .astryx-slider[data-mark-labels='true'][data-orientation='horizontal'] .astryx-slider-row {
+    padding-block-end: calc(4px + var(--astryx-text-supporting-size, 0.75rem) * var(--astryx-text-supporting-leading, 1.6667));
+  }
   .astryx-slider[data-orientation='vertical'] .astryx-slider-control { flex: none; width: 20px; height: var(--astryx-slider-height, 160px); }
   .astryx-slider[data-orientation='vertical'] :is(.astryx-slider-track, .astryx-slider-fill) { top: auto; left: 50%; width: 4px; height: auto; transform: translateX(-50%); }
   .astryx-slider[data-orientation='vertical'] .astryx-slider-track { top: 0; bottom: 0; inset-inline-end: auto; }
@@ -103,6 +106,9 @@
     .astryx-slider-thumb::before { content: ''; position: absolute; inset: -2px; }
     /* 控件和滑块一样高（20px），手指点按时把可点区域撑到 WCAG 2.5.8 的 24px，轨道和滑块都居中不动。 */
     .astryx-slider-control { min-height: 24px; }
+    .astryx-slider[data-mark-labels='true'][data-orientation='horizontal'] .astryx-slider-row {
+      padding-block-end: calc(2px + var(--astryx-text-supporting-size, 0.75rem) * var(--astryx-text-supporting-leading, 1.6667));
+    }
     .astryx-slider[data-orientation='vertical'] .astryx-slider-control { min-width: 24px; }
   }
   @media (prefers-reduced-motion: reduce) {

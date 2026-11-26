@@ -47,9 +47,13 @@ const describedBy = computed(() => [
 ].filter(Boolean).join(' ') || undefined)
 
 function handleClick(event: MouseEvent): void {
+  // 禁用的分段（包括带原因的禁用组里还能聚焦的选中分段）不运行调用方的点击回调。
+  if (isDisabled.value)
+    return
+
   invokeNativeEventHandler(attrs.onClick, event)
 
-  if (event.defaultPrevented || isDisabled.value)
+  if (event.defaultPrevented)
     return
 
   context?.select(props.value)

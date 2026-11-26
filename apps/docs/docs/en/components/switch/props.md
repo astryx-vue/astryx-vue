@@ -31,7 +31,7 @@ footer: false
 <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'detached'</code></td><td>Where to display the status message.</td></tr>
 <tr><td><code>changeAction</code></td><td><code>SwitchChangeAction</code></td><td>—</td><td>Action run after toggling. Supports Promise.</td></tr>
 <tr><td><code>hasAutoFocus</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Focus the input after mount.</td></tr>
-<tr><td><code>labelIcon</code></td><td><code>Component</code></td><td>—</td><td>Decorative icon before the label.</td></tr>
+<tr><td><code>labelIcon</code></td><td><code>IconName | Component</code></td><td>—</td><td>Decorative icon before the label: a semantic icon name such as <code>'search'</code> or an icon component.</td></tr>
 <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>Tooltip shown next to the label.</td></tr>
 </tbody></table>
 </div>

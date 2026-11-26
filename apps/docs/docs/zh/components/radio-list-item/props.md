@@ -12,6 +12,7 @@ footer: false
 <tr><td><code>value</code></td><td><code>RadioValue</code>（<code>string | number</code>）</td><td>—</td><td>这一行被选中时报给父组件的值。必填。</td></tr>
 <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>这一行的名字，也是单选按钮的无障碍名。必填。</td></tr>
 <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>名字下面的一行小字，读屏会先读名字再读这句。</td></tr>
+<tr><td><code>align</code></td><td><code>'center' | 'start' | 'first-line'</code></td><td><code>'center'</code></td><td>单选圈相对标签的垂直对齐。<code>first-line</code> 让圈和换行标签的第一行保持水平，<code>start</code> 贴顶。</td></tr>
 <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>把这一行禁用。行还在组里，但选中不了。</td></tr>
 <tr><td><code>isReadOnly</code></td><td><code>boolean</code></td><td><code>false</code></td><td>只读。选中状态还能看到、也会随表单提交，但改不了，行不会变暗。</td></tr>
 </tbody></table>
