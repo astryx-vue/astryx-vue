@@ -4640,48 +4640,64 @@
 
 ### v0.7.2
 
-- [ ] [`97a00379a`](https://github.com/meta/astryx/commit/97a00379a) feat(lab): DiffViewer — unified/split file diff for code review (#7536)
-- [ ] [`280c48a82`](https://github.com/meta/astryx/commit/280c48a82) feat(lab): createDiffFile builds a DiffViewer file from two versions of a text (#7565)
-- [ ] [`a09889314`](https://github.com/meta/astryx/commit/a09889314) feat(lab): DiffViewer display options — change bars, inline highlight, row tint toggle, fixed split with synced scrolling (#7589)
+- [x] [`97a00379a`](https://github.com/meta/astryx/commit/97a00379a) feat(lab): DiffViewer — unified/split file diff for code review (#7536)
+  - Vue 版已有：DiffViewer 已移植（packages/lab/src/DiffViewer），统一和分栏视图、批注、行号点击都有
+- [x] [`280c48a82`](https://github.com/meta/astryx/commit/280c48a82) feat(lab): createDiffFile builds a DiffViewer file from two versions of a text (#7565)
+  - Vue 版已有：createDiffFile 已有（packages/lab/src/DiffViewer/createDiffFile.ts）
+- [x] [`a09889314`](https://github.com/meta/astryx/commit/a09889314) feat(lab): DiffViewer display options — change bars, inline highlight, row tint toggle, fixed split with synced scrolling (#7589)
+  - Vue 版已有：changeIndicator、inlineHighlight、hasChangeBackground 和固定分栏同步滚动已有，有对应测试
 
 ### v0.7.5
 
 - [ ] [`fabf5e699`](https://github.com/meta/astryx/commit/fabf5e699) feat(Markdown, RichText, DiffViewer): codeLanguages lists CodeBlock language values (#8489)
+  - 暂缓：依赖 core CodeBlock 的语言值（CodeLanguage、createCodeLanguage，富文本族的 4adaeda93），Vue 版还没有
 
 ### v0.7.6
 
 - [x] [`e0a03766d`](https://github.com/meta/astryx/commit/e0a03766d) docs(knowledge): every component spec lives in docs/specs/components, one folder per component (#9007)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`f7a8f7085`](https://github.com/meta/astryx/commit/f7a8f7085) fix(CodeEditor): code and its line numbers stay left-to-right in a right-to-left page (#9363)
-- [ ] [`389dc8448`](https://github.com/meta/astryx/commit/389dc8448) fix(Text, Heading): a long unbroken token wraps in text that is not truncated (#9351)
-- [ ] [`168011f26`](https://github.com/meta/astryx/commit/168011f26) fix(CodeEditor): draw the border and gutter divider its styles declare (#9427)
-- [ ] [`437f54847`](https://github.com/meta/astryx/commit/437f54847) fix(DiffViewer): a change too large to compare line by line is labeled and folded, not shown as a silent replace (#9462)
+- [x] [`f7a8f7085`](https://github.com/meta/astryx/commit/f7a8f7085) fix(CodeEditor): code and its line numbers stay left-to-right in a right-to-left page (#9363)
+  - 已移植：[#532](https://github.com/astryx-vue/astryx-vue/pull/532)。CodeEditor 的代码区 dir=ltr、占位提示 dir=auto，补测试
+- [x] [`389dc8448`](https://github.com/meta/astryx/commit/389dc8448) fix(Text, Heading): a long unbroken token wraps in text that is not truncated (#9351)
+  - Vue 版已有：基础展示族已在 #505 移植：不截断的 Text 里长串会换行，LogStream 沿用
+- [x] [`168011f26`](https://github.com/meta/astryx/commit/168011f26) fix(CodeEditor): draw the border and gutter divider its styles declare (#9427)
+  - Vue 版已有：code-editor.css 本来就画 1px 边框和行号分隔线
+- [x] [`437f54847`](https://github.com/meta/astryx/commit/437f54847) fix(DiffViewer): a change too large to compare line by line is labeled and folded, not shown as a silent replace (#9462)
+  - 已移植：[#535](https://github.com/astryx-vue/astryx-vue/pull/535)。createDiffFile 给整块替换的片段标 isReplacedBlock，DiffViewer 带标签折叠并可展开，有批注时先展开，补测试
 
 ### v0.7.7
 
-- [ ] [`7261e2c2c`](https://github.com/meta/astryx/commit/7261e2c2c) fix(DiffViewer): line diffs for changes up to 10,000 lines in linear memory; files over 2,000 changed lines start folded (#9521)
+- [x] [`7261e2c2c`](https://github.com/meta/astryx/commit/7261e2c2c) fix(DiffViewer): line diffs for changes up to 10,000 lines in linear memory; files over 2,000 changed lines start folded (#9521)
+  - 已移植：[#535](https://github.com/astryx-vue/astryx-vue/pull/535)。线性内存逐行比较最多 10,000 行改动，长文件按工作量降上限；其余改动超过 2,000 行的文件先折叠，补测试
 
 ### v0.7.8
 
-- [ ] [`0b39b51c2`](https://github.com/meta/astryx/commit/0b39b51c2) refactor(ChartZoom): take the reset domains from the first render, not an Effect (#9809)
-- [ ] [`c1e6a5e78`](https://github.com/meta/astryx/commit/c1e6a5e78) refactor(Chart): observe the container width from its ref callback, not an Effect (#9867)
-- [ ] [`1bbc52546`](https://github.com/meta/astryx/commit/1bbc52546) refactor(SankeyChart): observe the container width from its ref callback, not an Effect (#9903)
+- [x] [`0b39b51c2`](https://github.com/meta/astryx/commit/0b39b51c2) refactor(ChartZoom): take the reset domains from the first render, not an Effect (#9809)
+  - 不适用：React 用 state 代替 Effect 记录初始范围的重构，没有行为变化
+- [x] [`c1e6a5e78`](https://github.com/meta/astryx/commit/c1e6a5e78) refactor(Chart): observe the container width from its ref callback, not an Effect (#9867)
+  - 不适用：React 用 ref 回调代替 Effect 监听容器宽度的重构，没有行为变化
+- [x] [`1bbc52546`](https://github.com/meta/astryx/commit/1bbc52546) refactor(SankeyChart): observe the container width from its ref callback, not an Effect (#9903)
+  - 不适用：React 用 ref 回调代替 Effect 监听容器宽度的重构，没有行为变化
 
 ### v0.7.9
 
-- [ ] [`edf7128e3`](https://github.com/meta/astryx/commit/edf7128e3) feat(Timestamp, PowerSearch): write dates in the provider's calendar (#9639)
+- [x] [`edf7128e3`](https://github.com/meta/astryx/commit/edf7128e3) feat(Timestamp, PowerSearch): write dates in the provider's calendar (#9639)
+  - 已移植：[#532](https://github.com/astryx-vue/astryx-vue/pull/532)。图表的 shortDate、monthYear 接受可选历法参数，默认格里高利历，补测试
 
 ### v0.7.10
 
-- [ ] [`5df77f48a`](https://github.com/meta/astryx/commit/5df77f48a) fix(lab): ChartZoom's wheel listener is native and non-passive (#10210)
+- [x] [`5df77f48a`](https://github.com/meta/astryx/commit/5df77f48a) fix(lab): ChartZoom's wheel listener is native and non-passive (#10210)
+  - 已移植：[#532](https://github.com/astryx-vue/astryx-vue/pull/532)。Vue 的 wheel 监听本来就不是 passive；补上只有横向分量的滚轮留给页面，补测试
 
 ### v0.7.12
 
-- [ ] [`da85f28ed`](https://github.com/meta/astryx/commit/da85f28ed) fix(RadialChart): honor interactive for touch input (#9741)
+- [x] [`da85f28ed`](https://github.com/meta/astryx/commit/da85f28ed) fix(RadialChart): honor interactive for touch input (#9741)
+  - 已移植：[#532](https://github.com/astryx-vue/astryx-vue/pull/532)。RadialTooltip 的触摸只在 interactive 时生效，关掉时结束正在进行的触摸，鼠标悬停不受影响，补测试
 
 ### v0.7.17
 
-- [ ] [`a2edb5300`](https://github.com/meta/astryx/commit/a2edb5300) chore: land batch 2 (16 pull requests) (#12718)
+- [x] [`a2edb5300`](https://github.com/meta/astryx/commit/a2edb5300) chore: land batch 2 (16 pull requests) (#12718)
+  - Vue 版已有：上游删掉的是窄标记列把内边距清零的样式；Vue 版标记列在各种标记模式下本来就保留内边距
 - [x] [`d6ac73ef3`](https://github.com/meta/astryx/commit/d6ac73ef3) chore: land batch 4 (12 pull requests) (#12738)
   - 不适用：上游内部规范和架构文档（自动初筛）
 
@@ -4957,15 +4973,18 @@
 
 ### v0.7.2
 
-- [ ] [`86e839219`](https://github.com/meta/astryx/commit/86e839219) feat(core): promote Drawer and DrawerHeader from Lab (#6071)
+- [x] [`86e839219`](https://github.com/meta/astryx/commit/86e839219) feat(core): promote Drawer and DrawerHeader from Lab (#6071)
+  - Vue 版已有：Drawer 和 DrawerHeader 已在 core（packages/core/src/Drawer），Vue 的 lab 从来没有 Drawer
 
 ### v0.7.5
 
-- [ ] [`b84bf77fa`](https://github.com/meta/astryx/commit/b84bf77fa) chore: move project links to meta/astryx (#8827)
+- [x] [`b84bf77fa`](https://github.com/meta/astryx/commit/b84bf77fa) chore: move project links to meta/astryx (#8827)
+  - 不适用：只改了 InfoTip 源码注释里的上游仓库链接；Vue 版 lab 的 InfoTip 只是转发 core 的弃用别名，没有这类链接
 
 ### v0.7.12
 
-- [ ] [`848bbe7c7`](https://github.com/meta/astryx/commit/848bbe7c7) feat(lab): DialogHeroHeader (#10108)
+- [x] [`848bbe7c7`](https://github.com/meta/astryx/commit/848bbe7c7) feat(lab): DialogHeroHeader (#10108)
+  - 已移植：[#536](https://github.com/astryx-vue/astryx-vue/pull/536)。lab 新增 DialogHeroHeader（媒体铺满、关闭按钮浮在媒体上、标题命名对话框并作默认焦点），core 公开 useDialogContext，中英文档和测试
 
 ### v0.7.14
 
@@ -4979,7 +4998,8 @@
 
 ### v0.7.16
 
-- [ ] [`2f2ccc79d`](https://github.com/meta/astryx/commit/2f2ccc79d) fix(lab): a TourStep points at any element and leaves the page usable (#11123)
+- [x] [`2f2ccc79d`](https://github.com/meta/astryx/commit/2f2ccc79d) fix(lab): a TourStep points at any element and leaves the page usable (#11123)
+  - 已移植：[#532](https://github.com/astryx-vue/astryx-vue/pull/532)。TourStep 改成锚在高亮框上的非模态区域，可指向任何元素，按目标或页面不结束，Escape 报 escape，结束时还焦点，补测试
 
 ### v0.7.17
 
@@ -8876,21 +8896,25 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`174300fcb`](https://github.com/meta/astryx/commit/174300fcb) ci: discover PR browser accessibility specs, so a new spec needs no workflow edit (#8367)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`b298b37d1`](https://github.com/meta/astryx/commit/b298b37d1) feat(theme): add surface-specific status color roles (#7657)
-- [ ] [`b84bf77fa`](https://github.com/meta/astryx/commit/b84bf77fa) chore: move project links to meta/astryx (#8827)
+- [x] [`b298b37d1`](https://github.com/meta/astryx/commit/b298b37d1) feat(theme): add surface-specific status color roles (#7657)
+  - Vue 版已有：lab 的 CircularProgress、LogStream、SVGIcon、Stat 已改读 text-*、icon-* 状态角色（#517 已对齐 core 状态色表），样式文件里就是这些变量
+- [x] [`b84bf77fa`](https://github.com/meta/astryx/commit/b84bf77fa) chore: move project links to meta/astryx (#8827)
+  - 不适用：只改了 InfoTip 源码注释里的上游仓库链接；Vue 版 lab 的 InfoTip 只是转发 core 的弃用别名，没有这类链接
 
 ### v0.7.6
 
 - [x] [`9e07422c7`](https://github.com/meta/astryx/commit/9e07422c7) test(a11y): the coverage checks of 17 binding specs run as one serial part per state (#9071)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`4426e1520`](https://github.com/meta/astryx/commit/4426e1520) fix(CircularProgress): a value change keeps moving while JavaScript runs (#8232)
+- [x] [`4426e1520`](https://github.com/meta/astryx/commit/4426e1520) fix(CircularProgress): a value change keeps moving while JavaScript runs (#8232)
+  - 已移植：[#532](https://github.com/astryx-vue/astryx-vue/pull/532)。CircularProgress 确定进度改成两个半环加两个圆头，用 Web Animations 在合成线程上按主题时长和缓动转动，打断时从当前位置接着转，补测试
 - [x] [`332dab752`](https://github.com/meta/astryx/commit/332dab752) test(Schedule): the time-direction contract runs in the Schedule's zone on a pinned daylight-saving week (#9236)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`c091cf102`](https://github.com/meta/astryx/commit/c091cf102) fix(storybook): Lab Schedule stories build their demo week from a fixed date in the Schedule's timezone (#9243)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`e0a03766d`](https://github.com/meta/astryx/commit/e0a03766d) docs(knowledge): every component spec lives in docs/specs/components, one folder per component (#9007)
   - 不适用：上游内部规范和架构文档、上游组件规范文档（自动初筛）
-- [ ] [`389dc8448`](https://github.com/meta/astryx/commit/389dc8448) fix(Text, Heading): a long unbroken token wraps in text that is not truncated (#9351)
+- [x] [`389dc8448`](https://github.com/meta/astryx/commit/389dc8448) fix(Text, Heading): a long unbroken token wraps in text that is not truncated (#9351)
+  - Vue 版已有：基础展示族已在 #505 移植：不截断的 Text 里长串会换行，LogStream 沿用
 - [x] [`7d493c12e`](https://github.com/meta/astryx/commit/7d493c12e) test(ProgressBar, CircularProgress): motion traces read screencast frames in the order they were presented (#9378)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`30c3fdf26`](https://github.com/meta/astryx/commit/30c3fdf26) test(ProgressBar, CircularProgress): motion traces measure what they claim on a loaded runner (#9413)
@@ -8900,7 +8924,8 @@
 
 - [x] [`d6a35ea15`](https://github.com/meta/astryx/commit/d6a35ea15) test(Schedule): the popover's keyboard-scroll proof follows each press to its scrollend (#9665)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`449486fdc`](https://github.com/meta/astryx/commit/449486fdc) feat(core): promote InfoTip from Lab as the info preset over Tooltip's press toggle (#9238)
+- [x] [`449486fdc`](https://github.com/meta/astryx/commit/449486fdc) feat(core): promote InfoTip from Lab as the info preset over Tooltip's press toggle (#9238)
+  - Vue 版已有：InfoTip 已在 core，lab 的 InfoTip/index.ts 只是带 @deprecated 的转发，测试覆盖
 
 ### v0.7.8
 
@@ -8912,18 +8937,28 @@
 ### v0.7.9
 
 - [ ] [`9d068fc89`](https://github.com/meta/astryx/commit/9d068fc89) feat(lab): useRefreshControl, UIKit's pull to refresh for an app's scroll container (#9865)
-- [ ] [`de1be1fd9`](https://github.com/meta/astryx/commit/de1be1fd9) fix(CircularProgress): the indeterminate ring turns with Spinner's rotor (#8256)
+  - 暂缓：RefreshControl 依赖 core 还没有的手势识别器（GestureArena、PanGestureRecognizer）和 UIKit 动效引擎（createMotionEngine、rubberBand、scroll 弹簧）
+- [x] [`de1be1fd9`](https://github.com/meta/astryx/commit/de1be1fd9) fix(CircularProgress): the indeterminate ring turns with Spinner's rotor (#8256)
+  - 已移植：[#532](https://github.com/astryx-vue/astryx-vue/pull/532)。不确定圆环改为和加载圈一样的 135° 弧整体旋转，一次迭代 100 圈，相位钉在时间线 0 点，补测试
 - [ ] [`6e2e24293`](https://github.com/meta/astryx/commit/6e2e24293) feat(lab): Schedule writes dates in the provider's calendar (#9994)
-- [ ] [`6f3befa82`](https://github.com/meta/astryx/commit/6f3befa82) feat(lab): CircleCheckIndicator, the iOS multiple-selection circle (#9723)
+  - 暂缓：依赖 core 的日历系统（InternationalizationProvider 的 calendar 和历法解析，日期族的 189a730ce 等），Vue 版 core 还没有
+- [x] [`6f3befa82`](https://github.com/meta/astryx/commit/6f3befa82) feat(lab): CircleCheckIndicator, the iOS multiple-selection circle (#9723)
+  - 已移植：[#536](https://github.com/astryx-vue/astryx-vue/pull/536)。lab 新增 CircleCheckIndicator，可在主题里映射到 checkbox，中英文档和测试
 - [ ] [`c26fcd543`](https://github.com/meta/astryx/commit/c26fcd543) chore(lab): Lab's animator hook, over Core's internal touch entry (#9754)
-- [ ] [`1ef21f898`](https://github.com/meta/astryx/commit/1ef21f898) fix(Spinner): route standalone loading through the shared announcement channel (#7910)
+  - 暂缓：RefreshControl 的动画钩子和触摸入口，随 RefreshControl 一起暂缓（缺手势识别器和动效引擎）
+- [x] [`1ef21f898`](https://github.com/meta/astryx/commit/1ef21f898) fix(Spinner): route standalone loading through the shared announcement channel (#7910)
+  - 已移植：[#532](https://github.com/astryx-vue/astryx-vue/pull/532)。Schedule 不再自带 live 区域，加载开始改走 useAnnounce 播报，加载圈 aria-hidden，补测试
 - [ ] [`4e4cf84d2`](https://github.com/meta/astryx/commit/4e4cf84d2) feat(lab): NavigationStack, push/pop navigation that moves like UINavigationController (#9697)
+  - 暂缓：NavigationStack 的推入弹出动画和侧滑返回依赖 core 还没有的手势识别器和 UIKit 动效引擎
 
 ### v0.7.10
 
 - [ ] [`75c3c48f5`](https://github.com/meta/astryx/commit/75c3c48f5) fix(lab): NavigationStack re-measures a screen when its title resizes (#10191)
+  - 暂缓：NavigationStack 未移植（缺手势识别器和动效引擎）
 - [ ] [`0081c1165`](https://github.com/meta/astryx/commit/0081c1165) feat(lab): under a finger, NavigationStack's bar takes the iOS 26 look (#8396)
+  - 暂缓：NavigationStack 未移植；滚动边缘外观还依赖上游 lab 的 useScrollEdgeEffect 和动效引擎
 - [ ] [`0cc540700`](https://github.com/meta/astryx/commit/0cc540700) feat(lab): PageControl, UIPageControl's indicators: a tap steps a page, a finger scrubs, every pointer pages (#9684)
+  - 暂缓：PageControl 的点按翻页、手指拖动和滑动关键帧依赖 core 还没有的手势识别器和动效引擎
 
 ### v0.7.11
 
@@ -8949,6 +8984,7 @@
 - [x] [`6706e0177`](https://github.com/meta/astryx/commit/6706e0177) test(interaction-harness): a proof starved of frames fails by name (#10456)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`c18bc584c`](https://github.com/meta/astryx/commit/c18bc584c) feat(lab): TabBar, iOS 26's floating tab bar, with its selection lens and press tracking (#9700)
+  - 暂缓：TabBar 的选择镜片和按压跟踪依赖 core 还没有的手势识别器和动效引擎
 - [x] [`d9292cb24`](https://github.com/meta/astryx/commit/d9292cb24) test(NavigationStack): block inside the push, name starved runs (#10509)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`c03e4cd76`](https://github.com/meta/astryx/commit/c03e4cd76) test(RefreshControl): send the trackpad pull as one wheel burst (#10520)
@@ -8960,15 +8996,23 @@
 - [x] [`33cf413d0`](https://github.com/meta/astryx/commit/33cf413d0) fix(NavigationStack): fade the veil for a late finger-scroll report (#10540)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`d9ffcf87a`](https://github.com/meta/astryx/commit/d9ffcf87a) fix(PageControl): the held look commits where the hold begins (#10553)
+  - 暂缓：PageControl 未移植（缺手势识别器和动效引擎）
 - [ ] [`de74088ce`](https://github.com/meta/astryx/commit/de74088ce) fix(lab): TabBar's lens jumps to the finger under Reduce Motion (#10581)
-- [ ] [`9dca38629`](https://github.com/meta/astryx/commit/9dca38629) perf(Layer): anchored entrances play on the surface (#10561)
+  - 暂缓：TabBar 未移植（缺手势识别器和动效引擎）
+- [x] [`9dca38629`](https://github.com/meta/astryx/commit/9dca38629) perf(Layer): anchored entrances play on the surface (#10561)
+  - 不适用：修的是 Chromium 对 CSS anchor 定位元素逐帧重排；Vue 的 Schedule 浮层用 JS 算坐标定位，入场动画本来就在唯一的浮层面上
 - [ ] [`6c5e2e665`](https://github.com/meta/astryx/commit/6c5e2e665) feat(lab): a TabBar tab can be disabled (#10539)
+  - 暂缓：TabBar 未移植（缺手势识别器和动效引擎）
 - [x] [`bb3a4b2ae`](https://github.com/meta/astryx/commit/bb3a4b2ae) test(interaction-harness): read a WebKit lift at its pointerup (#10585)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`611382ee1`](https://github.com/meta/astryx/commit/611382ee1) feat(lab): add LineClamp — clamp arbitrary content to N lines (#4259)
+- [x] [`611382ee1`](https://github.com/meta/astryx/commit/611382ee1) feat(lab): add LineClamp — clamp arbitrary content to N lines (#4259)
+  - Vue 版已有：基础展示族已在 #511 新增 LineClamp
 - [ ] [`3b8eb80d1`](https://github.com/meta/astryx/commit/3b8eb80d1) fix(RefreshControl): the end plays UIKit's curve over the duration token (#10582)
+  - 暂缓：RefreshControl 未移植（缺手势识别器和动效引擎）
 - [ ] [`5d1bfbc97`](https://github.com/meta/astryx/commit/5d1bfbc97) fix(lab): TabBar's held lens shows the selected look under Reduce Motion (#10603)
+  - 暂缓：TabBar 未移植（缺手势识别器和动效引擎）
 - [ ] [`f66574d82`](https://github.com/meta/astryx/commit/f66574d82) fix(lab): TabBar's lifted look shows at once under Reduce Motion (#10612)
+  - 暂缓：TabBar 未移植（缺手势识别器和动效引擎）
 - [x] [`58e528570`](https://github.com/meta/astryx/commit/58e528570) test(NavigationStack): a programmatic pop reads its layers held (#10743)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`9f55320cc`](https://github.com/meta/astryx/commit/9f55320cc) test(NavigationStack): a push reads its bars held (#10746)
@@ -8976,12 +9020,15 @@
 - [x] [`94c14d6da`](https://github.com/meta/astryx/commit/94c14d6da) test(lab): date TabBar's tap-held frames from the first one (#10747)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`d7326d9e7`](https://github.com/meta/astryx/commit/d7326d9e7) test(PageControl): the slide's own keyframes approach without overshoot (#10601)
+  - 暂缓：PageControl 未移植（缺手势识别器和动效引擎）
 - [x] [`b863888c5`](https://github.com/meta/astryx/commit/b863888c5) test(lab): judge TabBar's Reduce Motion lift held or by named frames (#10768)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`642cc2de1`](https://github.com/meta/astryx/commit/642cc2de1) fix(lab): write latest-value refs at commit, not during render (#10780)
+- [x] [`642cc2de1`](https://github.com/meta/astryx/commit/642cc2de1) fix(lab): write latest-value refs at commit, not during render (#10780)
+  - 不适用：React 的「在提交阶段写最新值 ref」规范，Vue 的 ref 没有渲染期写入的问题；RefreshControl 部分随它暂缓
 - [x] [`5797bbf9e`](https://github.com/meta/astryx/commit/5797bbf9e) test: three busy proofs decode each cast once (#10786)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`b5de1a82f`](https://github.com/meta/astryx/commit/b5de1a82f) refactor(lab): one-line ref effects in Comments and Schedule (#10805)
+- [x] [`b5de1a82f`](https://github.com/meta/astryx/commit/b5de1a82f) refactor(lab): one-line ref effects in Comments and Schedule (#10805)
+  - 不适用：React 的 ref 回调写法重构，没有行为变化
 - [x] [`f124c2f3d`](https://github.com/meta/astryx/commit/f124c2f3d) test(interaction-harness): name a touch play the runner starved (#10551)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`3239571ce`](https://github.com/meta/astryx/commit/3239571ce) test(interaction-harness): a wheel burst splits at a gap of maxGapMs (#10782)
@@ -8989,10 +9036,12 @@
 - [x] [`3582c71f9`](https://github.com/meta/astryx/commit/3582c71f9) docs(specs): a draft TabBar record for More, disabled tabs and a label (#10929)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`b04c4143e`](https://github.com/meta/astryx/commit/b04c4143e) feat(lab): reselecting a TabBar tab scrolls its panel to the top (#9966)
+  - 暂缓：TabBar 未移植（缺手势识别器和动效引擎）
 
 ### v0.7.13
 
 - [ ] [`0085c0f2b`](https://github.com/meta/astryx/commit/0085c0f2b) feat(lab): TabBar shows a More tab past five tabs (#10619)
+  - 暂缓：TabBar 和 TabBarMoreList 未移植（缺手势识别器和动效引擎）
 - [x] [`81e8ce68a`](https://github.com/meta/astryx/commit/81e8ce68a) test(PageControl): a jog slowed by a stalled page fails by name (#10993)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`fb23e8db0`](https://github.com/meta/astryx/commit/fb23e8db0) test(NavigationStack): hold the return, name a starved fade (#10986)
@@ -9001,31 +9050,40 @@
 ### v0.7.14
 
 - [ ] [`7deca3313`](https://github.com/meta/astryx/commit/7deca3313) feat(lab): SVG icons that follow the surrounding font-weight (#7918)
+  - 暂缓：WeightedSVGIcon 依赖上游的字重探测字体（generate-weight-probe-font.py 生成）和按字重生成图标数据的构建脚本，Vue 仓库还没有这套资产流水线
 - [x] [`c1a1ea82b`](https://github.com/meta/astryx/commit/c1a1ea82b) fix(core): a tap that wobbles at a scroll edge keeps its click (#10829)
   - 不适用：只改上游测试（自动初筛）
 
 ### v0.7.15
 
-- [ ] [`e7e9af2f8`](https://github.com/meta/astryx/commit/e7e9af2f8) feat(core): a mouse or pen press on a checkbox or a radio option paints at once and fades on release (#8696)
+- [x] [`e7e9af2f8`](https://github.com/meta/astryx/commit/e7e9af2f8) feat(core): a mouse or pen press on a checkbox or a radio option paints at once and fades on release (#8696)
+  - 已移植：[#536](https://github.com/astryx-vue/astryx-vue/pull/536)。CircleCheckIndicator 的按压画在圆圈本身上：读 core 行的 --_press-paint-image（按下立刻画、松开渐隐），细指针下 :active 兜底
 - [x] [`d49d9d5e0`](https://github.com/meta/astryx/commit/d49d9d5e0) test(lab): the PageControl busy proof pools three slides (#10935)
   - 不适用：只改上游测试（自动初筛）
 
 ### v0.7.16
 
-- [ ] [`36f68b0da`](https://github.com/meta/astryx/commit/36f68b0da) fix(layer): a press on another trigger of an open layer opens it there (#11337)
+- [x] [`36f68b0da`](https://github.com/meta/astryx/commit/36f68b0da) fix(layer): a press on another trigger of an open layer opens it there (#11337)
+  - Vue 版已有：useSchedulePopover 的 pointerdown 捕获已经先关再开，按另一个触发器在那里打开；#532 补了月视图按压测试
 
 ### v0.7.17
 
 - [x] [`ce3022d4c`](https://github.com/meta/astryx/commit/ce3022d4c) test(CircularProgress): hold motion before tracing its rendering window (#12118)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`7b8af163a`](https://github.com/meta/astryx/commit/7b8af163a) fix(NavigationStack): a push keeps focus a person moved into the new screen (#12009)
+  - 暂缓：NavigationStack 未移植（缺手势识别器和动效引擎）
 - [ ] [`96687ea2f`](https://github.com/meta/astryx/commit/96687ea2f) fix(NavigationStack): a push or pop from rest starts when its task ends (#12010)
+  - 暂缓：NavigationStack 未移植（缺手势识别器和动效引擎）
 - [ ] [`4f2ebbd34`](https://github.com/meta/astryx/commit/4f2ebbd34) fix(NavigationStack): screen content stays under the bar (#12001)
+  - 暂缓：NavigationStack 未移植（缺手势识别器和动效引擎）
 - [x] [`a60f74251`](https://github.com/meta/astryx/commit/a60f74251) chore: land batch 12 (3 pull requests) (#12841)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`82af9164d`](https://github.com/meta/astryx/commit/82af9164d) fix(ProgressBar, CircularProgress, themes): every enabled progress fill reaches 3:1 against its track (#12398)
+- [x] [`82af9164d`](https://github.com/meta/astryx/commit/82af9164d) fix(ProgressBar, CircularProgress, themes): every enabled progress fill reaches 3:1 against its track (#12398)
+  - 已移植：[#532](https://github.com/astryx-vue/astryx-vue/pull/532)。CircularProgress 所有变体共用 background-muted 轨道，neutral 和 disabled 用次要文字色，禁用时整圈半透明
 - [ ] [`e2b63aeb6`](https://github.com/meta/astryx/commit/e2b63aeb6) feat(lab): add VideoPlayer and AudioPlayer media players (#9832)
+  - 暂缓：VideoPlayer 和 AudioPlayer 体量大（约 5,000 行：媒体状态仓库、控件条、两套播放器），本轮没有排上
 - [ ] [`ee65f4f0a`](https://github.com/meta/astryx/commit/ee65f4f0a) fix(VideoPlayer): a small player gets a compact control bar, and the empty track shows on the bar (#13016)
+  - 暂缓：MediaPlayer 未移植
 - [x] [`5815d02bf`](https://github.com/meta/astryx/commit/5815d02bf) test(NavigationStack): a push after a heavy commit never skips into its curve (#12990)
   - 不适用：只改上游测试（自动初筛）
 
