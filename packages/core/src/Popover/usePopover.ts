@@ -1,12 +1,14 @@
 import type { ComputedRef, CSSProperties, MaybeRefOrGetter, Ref } from 'vue'
+import type { LayerFocusRecord } from '../layer/layerFocusReturn.js'
 import type { LayerPlacement } from '../layer/position.js'
 import type { PopoverAlignment, PopoverPlacement, PopoverRole } from './types.js'
 import { computed, nextTick, onScopeDispose, shallowRef, toValue, watch } from 'vue'
 import { useDismiss } from '../composables/useDismiss.js'
 import { useFocusTrap } from '../composables/useFocusTrap.js'
 import { useLayer } from '../composables/useLayer.js'
-import { useRestoreFocus } from '../composables/useRestoreFocus.js'
-import { focusElement, getFocusables } from '../layer/focus.js'
+import { focusElement } from '../layer/focus.js'
+import { isLayerFocusStranded, restoreLayerFocus, trackLayerFocus } from '../layer/layerFocusReturn.js'
+import { initialFocusCandidates } from './initialFocus.js'
 
 export interface UsePopoverOptions {
   /**
@@ -66,7 +68,10 @@ export interface UsePopoverOptions {
   isModal?: MaybeRefOrGetter<boolean>
   /** 浮层显示后调用。 */
   onShow?: () => void
-  /** 浮层隐藏后调用。 */
+  /**
+   * 浮层隐藏后调用。焦点会自己回到外面；想让焦点去别处，就在这里聚焦那个元素，
+   * 关闭时不会再把它抢回来。
+   */
   onHide?: () => void
 }
 
@@ -87,9 +92,9 @@ export interface UsePopoverReturn {
   contentStyle: ComputedRef<CSSProperties>
   /** 实际生效的方位（空间不够时会翻转）。 */
   resolvedPlacement: ComputedRef<LayerPlacement>
-  /** 直接摊到内容容器上的属性：ID、role、aria-modal、aria-label、tabindex。 */
+  /** 直接摊到内容容器上的属性：ID、tabindex；对话框浮层打开期间再加上 role、aria-modal、aria-label。 */
   surfaceProps: ComputedRef<Record<string, unknown>>
-  /** 触发器上要摊的 ARIA 属性。hook 也会自动写到 `triggerRef` 指向的元素上。 */
+  /** 触发器上要摊的 ARIA 属性（`aria-controls` 只在打开期间有）。hook 也会自动写到 `triggerRef` 指向的元素上。 */
   triggerProps: ComputedRef<Record<string, unknown>>
   /** 打开浮层。 */
   show: () => void
@@ -142,11 +147,16 @@ export function usePopover(options: UsePopoverOptions = {}): UsePopoverReturn {
   useFocusTrap({
     container: layer.contentRef,
     isEnabled: computed(() => isOpen.value && isModalDialog()),
-  })
-
-  useRestoreFocus({
-    isEnabled: computed(() => role() === 'dialog'),
-    shouldRestore: isOpen,
+    // 初始焦点由下面的 focusInitialTarget 决定。陷阱启用时内容还没显示，这里给出同一个目标；
+    // 不自动聚焦时交回当前焦点，等于原地不动。
+    initialFocus: () => {
+      const surface = layer.contentRef.value
+      if (surface == null)
+        return null
+      if (!(toValue(options.hasAutoFocus) ?? true))
+        return surface.ownerDocument.activeElement as HTMLElement | null
+      return initialFocusCandidates(surface, options.closeButtonSelector)[0] ?? surface
+    },
   })
 
   useDismiss({
@@ -171,18 +181,26 @@ export function usePopover(options: UsePopoverOptions = {}): UsePopoverReturn {
 
   function focusInitialTarget(): void {
     const surface = layer.contentRef.value
-    if (!surface)
+    if (!surface || !isOpen.value)
       return
-    const selector = options.closeButtonSelector
-    const first = getFocusables(surface).find(element => selector == null || !element.closest(selector))
-    if (first && focusElement(first))
+    // 焦点已经在内容里的某个控件上（onShow 里聚焦的、或者在内容里按下的），就留在那里。
+    const active = surface.ownerDocument.activeElement
+    if (active != null && active !== surface && surface.contains(active))
       return
+    for (const candidate of initialFocusCandidates(surface, options.closeButtonSelector)) {
+      if (focusElement(candidate))
+        return
+    }
     if (role() === 'dialog')
       focusElement(surface)
   }
 
-  function onTriggerClick(): void {
+  function onTriggerClick(event?: Event): void {
     if (!isEnabled())
+      return
+    // aria-disabled 的触发器仍能聚焦，但什么也不打开，直接在它上面 click() 也一样。
+    const target = event?.currentTarget
+    if (target instanceof Element && target.getAttribute('aria-disabled') === 'true')
       return
     toggle()
   }
@@ -191,7 +209,7 @@ export function usePopover(options: UsePopoverOptions = {}): UsePopoverReturn {
     if (event.key !== 'Enter' && event.key !== ' ')
       return
     event.preventDefault()
-    onTriggerClick()
+    onTriggerClick(event)
   }
 
   let bound: HTMLElement | null = null
@@ -205,7 +223,13 @@ export function usePopover(options: UsePopoverOptions = {}): UsePopoverReturn {
       return
     element.setAttribute('aria-haspopup', role() === 'dialog' ? 'dialog' : 'true')
     element.setAttribute('aria-expanded', String(isOpen.value))
-    element.setAttribute('aria-controls', layer.id)
+    // 关着的触发器不指向任何浮层：aria-controls 只在打开时写上。
+    if (isOpen.value)
+      element.setAttribute('aria-controls', layer.id)
+    else if (element === bound && controlsBefore)
+      element.setAttribute('aria-controls', controlsBefore)
+    else
+      element.removeAttribute('aria-controls')
   }
 
   function restoreTriggerAttributes(): void {
@@ -261,18 +285,42 @@ export function usePopover(options: UsePopoverOptions = {}): UsePopoverReturn {
       bind(element)
   }, { flush: 'sync' })
 
+  // 焦点归还：打开时记下打开者，关闭时只救被困在浮层里（或掉到 body 上）的焦点。
+  // 同步跑，这时内容还没隐藏，焦点也还没被浏览器挪走；调用方在 onHide 里自己挪了焦点就不动。
+  let focusRecord: LayerFocusRecord | null = null
+
+  function stopFocusRecord(): void {
+    focusRecord?.stop()
+    focusRecord = null
+  }
+
   watch(isOpen, (open) => {
-    applyTriggerAttributes()
     if (open) {
-      if ((toValue(options.hasAutoFocus) ?? true) && role() === 'dialog')
-        void nextTick(focusInitialTarget)
+      stopFocusRecord()
+      focusRecord = trackLayerFocus({ getLayer: () => layer.contentRef.value })
       return
     }
-    // 焦点还在浮层里时，关掉之后要回到触发器，否则它会掉到 body 上。
-    const hadFocus = layer.contentRef.value?.contains(typeof document !== 'undefined' ? document.activeElement : null) ?? false
-    const trigger = triggerRef.value
-    if (hadFocus && trigger)
-      void nextTick(() => focusElement(trigger))
+    const record = focusRecord
+    focusRecord = null
+    if (record == null)
+      return
+    const surface = layer.contentRef.value
+    if (isLayerFocusStranded(record, surface)) {
+      restoreLayerFocus(record, {
+        layer: surface,
+        trigger: triggerRef.value,
+        layerId: layer.id,
+        anchor: anchorRef.value,
+        name: 'usePopover',
+      })
+    }
+    record.stop()
+  }, { flush: 'sync' })
+
+  watch(isOpen, (open) => {
+    applyTriggerAttributes()
+    if (open && (toValue(options.hasAutoFocus) ?? true) && role() === 'dialog')
+      void nextTick(focusInitialTarget)
   }, { immediate: true })
 
   watch(() => toValue(options.isOpen), (open) => {
@@ -287,14 +335,20 @@ export function usePopover(options: UsePopoverOptions = {}): UsePopoverReturn {
   })
 
   // bind() 建立的监听和 ARIA 快照都挂在触发器元素上，作用域结束时必须还原。
-  onScopeDispose(unbind)
+  onScopeDispose(() => {
+    unbind()
+    stopFocusRecord()
+  })
 
   const surfaceProps = computed<Record<string, unknown>>(() => {
     const props: Record<string, unknown> = { id: layer.id }
-    if (role() === 'dialog') {
+    if (role() !== 'dialog')
+      return props
+    props.tabindex = -1
+    // 关着的浮层还挂在 DOM 里（只是隐藏），不带对话框的 role 和名称。
+    if (isOpen.value) {
       props.role = 'dialog'
       props['aria-label'] = toValue(options.dialogLabel)
-      props.tabindex = -1
       if (toValue(options.isModal) ?? true)
         props['aria-modal'] = 'true'
     }
@@ -304,7 +358,7 @@ export function usePopover(options: UsePopoverOptions = {}): UsePopoverReturn {
   const triggerProps = computed<Record<string, unknown>>(() => ({
     'aria-haspopup': role() === 'dialog' ? 'dialog' : 'true',
     'aria-expanded': String(isOpen.value),
-    'aria-controls': layer.id,
+    'aria-controls': isOpen.value ? layer.id : undefined,
   }))
 
   return {

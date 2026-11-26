@@ -35,13 +35,18 @@ function setupPopover(options: UsePopoverOptions = {}) {
 }
 
 describe('usePopover', () => {
-  it('把触发器和内容通过 ARIA 连起来', () => {
+  it('把触发器和内容通过 ARIA 连起来', async () => {
     const { popover, trigger } = setupPopover({ dialogLabel: 'Options' })
 
     expect(trigger.getAttribute('aria-haspopup')).toBe('dialog')
     expect(trigger.getAttribute('aria-expanded')).toBe('false')
-    expect(trigger.getAttribute('aria-controls')).toBe(popover.id)
+    expect(trigger.hasAttribute('aria-controls')).toBe(false)
+    expect(popover.surfaceProps.value.role).toBeUndefined()
 
+    popover.show()
+    await nextTick()
+    expect(trigger.getAttribute('aria-controls')).toBe(popover.id)
+    expect(popover.triggerProps.value['aria-controls']).toBe(popover.id)
     expect(popover.surfaceProps.value.id).toBe(popover.id)
     expect(popover.surfaceProps.value.role).toBe('dialog')
     expect(popover.surfaceProps.value['aria-modal']).toBe('true')
@@ -187,7 +192,7 @@ describe('usePopover', () => {
     expect(document.activeElement).toBe(trigger)
   })
 
-  it('卸载时把触发器原有的属性还原', () => {
+  it('卸载时把触发器原有的属性还原', async () => {
     let popover: UsePopoverReturn | undefined
     const trigger = document.createElement('button')
     trigger.setAttribute('aria-haspopup', 'menu')
@@ -202,6 +207,9 @@ describe('usePopover', () => {
       },
     }))
     expect(trigger.getAttribute('aria-haspopup')).toBe('dialog')
+    expect(trigger.getAttribute('aria-controls')).toBe('existing-menu')
+    popover!.show()
+    await nextTick()
     expect(trigger.getAttribute('aria-controls')).toBe(popover!.id)
 
     wrapper.unmount()
