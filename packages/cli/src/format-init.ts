@@ -1,4 +1,5 @@
-import type { InitGuide, InitPackage } from './commands/init.ts'
+import type { AgentDocAction, AgentDocsStatus, InitGuide, InitPackage } from './commands/init.ts'
+import { BINARY } from './spec.ts'
 
 /** The two packages a new project starts with, so they are not repeated as extras. */
 const STARTER_PACKAGES: readonly string[] = ['@astryx-vue/core', '@astryx-vue/themes']
@@ -22,9 +23,11 @@ function unpublishedReason(pkg: InitPackage, zh: boolean): string {
 
 /** `init` prints: what to install, what to import, and what the managed block did. */
 
-export function formatInitGuide(guide: InitGuide, files: readonly { path: string, action: string }[], locale: 'en' | 'zh', dense: boolean): string {
+export function formatInitGuide(guide: InitGuide, files: readonly { path: string, action: AgentDocAction }[], agentDocsStatus: AgentDocsStatus | null, locale: 'en' | 'zh', dense: boolean): string {
   const zh = locale === 'zh'
   const header = zh ? 'astryx-vue init — 交给 AI 助手的接入说明' : 'astryx-vue init — what an AI assistant has to wire up'
+  if (agentDocsStatus === 'current')
+    return formatAlreadySetUp(header, files, locale)
   const managerLine = guide.packageManager
     ? (zh
         ? `包管理器：${guide.packageManager}（来自 ${guide.packageManagerSource === 'packageManager' ? 'package.json 的 packageManager 字段' : guide.lockfile}）`
@@ -75,18 +78,45 @@ export function formatInitGuide(guide: InitGuide, files: readonly { path: string
     }
   }
 
-  if (files.length > 0) {
-    lines.push(zh ? '受管理的区块：' : 'Managed block:')
-    for (const file of files)
-      lines.push(`  ${blockAction(file, locale)}`)
-    lines.push('')
-  }
+  lines.push(...managedBlockLines(files, locale))
   return `${lines.join('\n').trimEnd()}\n`
 }
 
-/** How one agent file was handled, in a sentence a reader can act on. */
-function blockAction(file: { path: string, action: string }, locale: 'en' | 'zh'): string {
+/**
+ * Every agent file already holds the current block, so the project went through
+ * this setup before: the next thing to run is a lookup, not the install steps.
+ * `--json` still carries the whole guide.
+ */
+function formatAlreadySetUp(header: string, files: readonly { path: string, action: AgentDocAction }[], locale: 'en' | 'zh'): string {
   const zh = locale === 'zh'
+  const lines = [
+    header,
+    '',
+    zh ? '代理文件里的区块已是最新，这个项目已经接好了。接下来直接查：' : 'The agent file is current, so this project is already set up. Look things up next:',
+    '',
+    `  ${BINARY} build "<one sentence>"`,
+    `  ${BINARY} search <query>`,
+    '',
+    zh
+      ? `安装步骤在 \`${BINARY} docs guide/installation\`，或用 \`${BINARY} init --json\` 看完整的接入说明。`
+      : `The install steps are in \`${BINARY} docs guide/installation\`, and \`${BINARY} init --json\` carries the whole setup guide.`,
+    '',
+    ...managedBlockLines(files, locale),
+  ]
+  return `${lines.join('\n').trimEnd()}\n`
+}
+
+function managedBlockLines(files: readonly { path: string, action: AgentDocAction }[], locale: 'en' | 'zh'): string[] {
+  if (files.length === 0)
+    return []
+  return [locale === 'zh' ? '受管理的区块：' : 'Managed block:', ...files.map(file => `  ${blockAction(file, locale)}`), '']
+}
+
+/** How one agent file was handled, in a sentence a reader can act on. */
+function blockAction(file: { path: string, action: AgentDocAction }, locale: 'en' | 'zh'): string {
+  const zh = locale === 'zh'
+  if (file.action === 'unchanged')
+    return zh ? `${file.path} 已是最新，没有改动` : `${file.path} already current, nothing changed`
   if (file.action === 'created')
     return zh ? `已创建 ${file.path}` : `Created ${file.path}`
   if (file.action === 'appended')

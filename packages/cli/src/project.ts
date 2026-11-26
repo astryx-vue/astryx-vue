@@ -1,6 +1,6 @@
 import type { Dirent } from 'node:fs'
 import { readdir, readFile, stat } from 'node:fs/promises'
-import { join } from 'node:path'
+import { dirname, join, resolve } from 'node:path'
 
 /**
  * What the CLI is allowed to know about the reader's project: its package.json,
@@ -73,12 +73,52 @@ export function dependenciesOf(packageJson: ProjectPackageJson | null): Record<s
  * no manager could be detected the caller gets every form, because guessing one
  * would hand a reader a command their project cannot run.
  */
-export function installCommands(manager: PackageManager | null, packages: readonly string[], options: { dev?: boolean } = {}): string[] {
-  const managers: PackageManager[] = manager ? [manager] : ['pnpm', 'npm', 'yarn', 'bun']
-  return managers.map((candidate) => {
+export function installCommands(manager: PackageManager | null, packages: readonly string[], options: { dev?: boolean, exact?: boolean } = {}): string[] {
+  return managersFor(manager).map((candidate) => {
     const verb = candidate === 'npm' ? 'install' : 'add'
-    return [candidate, verb, ...(options.dev ? ['-D'] : []), ...packages].join(' ')
+    const flags = [...(options.dev ? ['-D'] : []), ...(options.exact ? [EXACT_FLAG[candidate]] : [])]
+    return [candidate, verb, ...flags, ...packages].join(' ')
   })
+}
+
+/** The command that installs what package.json already lists, as a fresh clone needs. */
+export function installAllCommands(manager: PackageManager | null): string[] {
+  return managersFor(manager).map(candidate => `${candidate} install`)
+}
+
+function managersFor(manager: PackageManager | null): PackageManager[] {
+  return manager ? [manager] : ['pnpm', 'npm', 'yarn', 'bun']
+}
+
+/** The flag that saves the version as written instead of as a `^` range. */
+const EXACT_FLAG: Record<PackageManager, string> = { pnpm: '-E', npm: '-E', yarn: '-E', bun: '--exact' }
+
+/**
+ * True when the range names one version and nothing else (`0.9.1`, `=0.9.1`),
+ * as a project does when it pins its packages. A command that adds a package
+ * next to it then saves that one exactly too.
+ */
+export function isExactPin(range: string | undefined): boolean {
+  return range !== undefined && /^=?v?\d+\.\d+\.\d+(?:-[\w.]+)?$/.test(range.trim())
+}
+
+/**
+ * Whether a package is on disk where Node would look for it from the project:
+ * a `node_modules/<name>` folder in the project or a folder above it. Null under
+ * Yarn Plug'n'Play, which keeps no such folder, so the answer is unknown.
+ */
+export async function isInstalledOnDisk(cwd: string, name: string): Promise<boolean | null> {
+  let dir = resolve(cwd)
+  while (true) {
+    if (await exists(join(dir, 'node_modules', name, 'package.json')))
+      return true
+    if (await exists(join(dir, '.pnp.cjs')) || await exists(join(dir, '.pnp.js')))
+      return null
+    const parent = dirname(dir)
+    if (parent === dir)
+      return false
+    dir = parent
+  }
 }
 
 /** `^0.4.0`, `~1.2`, `0.4.0` and `v0.4.0` all answer with `0.4.0`. */
