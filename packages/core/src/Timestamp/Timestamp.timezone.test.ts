@@ -6,7 +6,7 @@ import { formatTooltipLines } from './tooltipEntries.js'
 
 const INSTANT = new Date('2026-02-20T02:00:00Z')
 // 固定下来的时区取一个不是宿主时区的：UTC 机器上选 UTC 会在没有继承的情况下也通过。
-const HOST_ZONE = Intl.DateTimeFormat().resolvedOptions().timeZone
+const HOST_ZONE = new Intl.DateTimeFormat().resolvedOptions().timeZone
 const PINNED = HOST_ZONE === 'Asia/Tokyo' ? 'Australia/Sydney' : 'Asia/Tokyo'
 const PINNED_SYSTEM_DATE_TIME = PINNED === 'Asia/Tokyo' ? '2026-02-20 11:00:00' : '2026-02-20 13:00:00'
 

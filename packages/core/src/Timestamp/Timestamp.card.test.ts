@@ -1,3 +1,4 @@
+import type { TimestampProps } from './types.js'
 import { enableAutoUnmount, mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { defineComponent, h, nextTick } from 'vue'
@@ -14,7 +15,7 @@ beforeEach(() => {
   document.body.innerHTML = ''
 })
 
-async function openCard(props: Record<string, unknown>, attrs: Record<string, unknown> = {}) {
+async function openCard(props: TimestampProps, attrs: Record<string, unknown> = {}) {
   const wrapper = mount(Timestamp, { attachTo: document.body, props, attrs })
   await nextTick()
   const time = wrapper.get('time').element as HTMLTimeElement

@@ -20,7 +20,7 @@ export interface TimestampTooltipLine {
   value: string
   isCopyable: boolean
   /** 这一行时区的完整名字。没有标签的行靠它在描述列表里有名字。 */
-  zoneName: string
+  zoneName?: string
 }
 
 const LOCAL_ZONE = 'local'
@@ -49,9 +49,8 @@ export function resolveTimezoneID(timezoneID: string | undefined, context = 'too
 
 /** 一个时区在这一刻的完整名字（`Pacific Standard Time`）。`timeZone` 缺省是观看者的时区。 */
 export function longZoneName(date: Date, locale: string, timeZone?: string): string {
-  return new Intl.DateTimeFormat(locale, { timeZoneName: 'long', ...(timeZone == null ? {} : { timeZone }) })
-    .formatToParts(date)
-    .find(part => part.type === 'timeZoneName')?.value ?? ''
+  const parts = new Intl.DateTimeFormat(locale, { timeZoneName: 'long', ...(timeZone == null ? {} : { timeZone }) }).formatToParts(date)
+  return parts.find(part => part.type === 'timeZoneName')?.value ?? ''
 }
 
 function zoneKey(resolved: string | undefined): string {
