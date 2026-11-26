@@ -2976,7 +2976,8 @@ html.dark {
   background: var(--docs-c-bg-alt);
 }
 
-.nagi-language-menu {
+/* 顶栏里的语言下拉；侧边菜单里的语言列表（--list）保持主题自带的排版。 */
+.nagi-language-menu:not(.nagi-language-menu--list) {
   display: flex;
   align-items: center;
   width: 75px;

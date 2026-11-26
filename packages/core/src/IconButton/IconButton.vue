@@ -32,6 +32,7 @@ defineExpose({
     :elevation="elevation"
     :form="form"
     :href="href"
+    :icon="icon"
     :is-disabled="isDisabled"
     is-icon-only
     :is-interruptible="isInterruptible"
@@ -49,7 +50,7 @@ defineExpose({
     :width="width"
     @click="emit('click', $event)"
   >
-    <template #icon>
+    <template v-if="$slots.default" #icon>
       <slot />
     </template>
   </Button>

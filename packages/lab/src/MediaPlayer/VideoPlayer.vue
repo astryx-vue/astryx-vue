@@ -30,6 +30,9 @@ const mediaElement = useTemplateRef<{ element: HTMLMediaElement | null }>('media
 const controlBar = useTemplateRef<{ element: HTMLDivElement | null }>('bar')
 const video = computed(() => {
   const element = mediaElement.value?.element
+  // 服务端渲染时没有元素，也没有 HTMLVideoElement 这个类，先判空才不会去碰它。
+  if (element == null)
+    return null
   return element instanceof HTMLVideoElement ? element : null
 })
 useCueLayout(video, computed(() => controlBar.value?.element ?? null))
