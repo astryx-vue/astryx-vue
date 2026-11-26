@@ -1,5 +1,13 @@
 # @astryx-vue/cli
 
+## 0.4.36
+
+### Patch Changes
+
+- [#539](https://github.com/astryx-vue/astryx-vue/pull/539) [`b74909f`](https://github.com/astryx-vue/astryx-vue/commit/b74909fc6e89b8cf365eb9ce41cda4178c69cc99) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Table 对齐上游一批无障碍和外观修正：列宽把手按列头可见文字命名、不再混进列头名字，并念出实际列宽和合理的范围；树形表格改用披露模式（行上不再带 `aria-level`、`aria-expanded`，展开按钮用 `aria-controls` 指向子行）；行展开和树形插件新增 `getRowLabel`，按钮名字可以带上行名；`useTableRowIndex` 的 `data` 改为可选；数据模式的列标题跟着 `textOverflow` 折行，窄列里标题先省略、排序和筛选按钮留在格子里；手写行列的表格放不下时横向滚动，不再把单词压成一个字母宽；固定列自己画行分隔线；行带上 `table-row` 主题目标的 `parity`、`striped`、`selected` 状态；滚动区和树形按钮画共用的焦点环，手机上横向能滚时藏着内容的一侧会淡出；Invalid Date 显示为空格子，排序时当缺失值。
+
+- [#540](https://github.com/astryx-vue/astryx-vue/pull/540) [`083cd85`](https://github.com/astryx-vue/astryx-vue/commit/083cd85c3e72ee76353719f81598895b13707072) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Table 新增 `useTableInfiniteScroll`：按批加载扁平数据，表格下方有「加载更多」按钮，表格末尾滚进视口时自动加载下一批，失败后暂停自动加载、按钮仍可重试；第一批加载中时表格不显示默认空状态。`TablePlugin` 新增 `loadingState` 钩子，导出 `TableLoadingState` 类型。同时补充 `useTableSortable`（不会重排行、`useTableSortableState` 参数说明）、`useTableFiltering`、`TableSelectionToolbar` 和 Table 的文档。
+
 ## 0.4.35
 
 ### Patch Changes
