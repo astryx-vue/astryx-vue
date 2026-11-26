@@ -1,5 +1,16 @@
 # @astryx-vue/lab
 
+## 0.7.0
+
+### Minor Changes
+
+- [#536](https://github.com/astryx-vue/astryx-vue/pull/536) [`bf97b13`](https://github.com/astryx-vue/astryx-vue/commit/bf97b13f85a406f7e637a8f5b4977546504e28aa) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 实验包新增 CircleCheckIndicator（iOS 的多选圆圈，在主题里映射到 `checkbox` 后所有复选框都画成圆圈，鼠标、触控笔按下时按压色立刻画在圆圈上）和 DialogHeroHeader（标题上方铺满媒体、关闭按钮浮在媒体上的对话框页头）；core 公开 `useDialogContext`，让自己画对话框页头的组件读到标题约定。
+
+### Patch Changes
+
+- Updated dependencies [[`bf97b13`](https://github.com/astryx-vue/astryx-vue/commit/bf97b13f85a406f7e637a8f5b4977546504e28aa)]:
+  - @astryx-vue/core@0.11.0
+
 ## 0.6.8
 
 ### Patch Changes
