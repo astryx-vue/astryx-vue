@@ -207,7 +207,27 @@ export interface TableColumnResizeContribution {
   hasHandle: boolean
 }
 
+/**
+ * 插件改变行结构的方式。`flat` 表示每条数据仍然正好一行；树、分组、展开面板会多出或藏起行。
+ * 给了 `rowPatch` 或单元格补丁的插件不声明 `flat` 时按 `custom` 算，行窗口化退回全部渲染。
+ */
+export type TableRowModel = 'flat' | 'tree' | 'grouped' | 'detail' | 'custom'
+
+/** 窗口化插件交给表格的几何意图，数据、列和渲染仍由表格负责。 */
+export interface TableVirtualizationContribution {
+  /** 行窗口化：行高和首帧视口高度，CSS 像素。 */
+  rows?: () => { rowHeight: number, initialViewportHeight: number }
+  /** 列窗口化：首帧视口宽度，CSS 像素。 */
+  columns?: () => { initialViewportWidth: number }
+}
+
 export interface TablePlugin<T extends Record<string, unknown> = Record<string, unknown>> {
+  /** 见 `TableRowModel`。 */
+  rowModel?: TableRowModel
+  /** 行、列窗口化插件用。 */
+  virtualization?: TableVirtualizationContribution
+  /** 固定在两端的列，列窗口化让它们一直挂着。 */
+  pinnedColumns?: () => { startKeys: readonly string[], endKeys: readonly string[] }
   transformColumns?: (columns: TableColumn<T>[]) => TableColumn<T>[]
   sortFor?: (column: TableColumn<T>) => TableSortContribution | null
   filterFor?: (column: TableColumn<T>) => TableFilterContribution | null
@@ -254,6 +274,9 @@ export interface TableProps<T extends Record<string, unknown> = Record<string, u
   isStriped?: boolean
   hasHover?: boolean
   verticalAlign?: TableVerticalAlign
+  /**
+   * 单元格放不下时的处理。不传时按 `wrap`；用了行或列窗口化插件时按 `truncate`，行高保持一致。
+   */
   textOverflow?: TableTextOverflow
   plugins?: Record<string, TablePlugin<T> | undefined>
   label?: string

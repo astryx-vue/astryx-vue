@@ -24,6 +24,8 @@ export interface TableDataModel {
   filterAt: (column: TableColumn, place: 'line' | 'below') => TableFilterContribution | null
   mergeCell: (column: TableColumn, row: Row | null, kind: 'header' | 'body') => TableCellPatch
   headerStyle: (column: TableColumn) => CSSProperties
+  /** 插件（例如拖动改宽）给这一列定的像素宽度。 */
+  widthOverride: (column: TableColumn) => number | undefined
   bodyStyle: (column: TableColumn, row: Row) => CSSProperties
   selectCellPatch: (kind: 'header' | 'body', row: Row | null) => TableCellPatch
 }
@@ -78,10 +80,16 @@ export function useTableDataModel(options: {
     resolvedColumns.value.map(column => [column.key, resizeContribution(column)]),
   ))
 
+  function widthOverride(column: TableColumn): number | undefined {
+    if (column.key === selectionColumn.value.key)
+      return undefined
+    return options.plugins().map(plugin => plugin.widthFor?.(column)).find(value => value != null)
+      ?? resizeContributions.value.get(column.key)?.currentWidth
+  }
+
   function styleFor(column: TableColumn): CSSProperties {
     const base = { ...(widths.value.columns.get(column.key)?.style ?? {}) }
-    const override = options.plugins().map(plugin => plugin.widthFor?.(column)).find(value => value != null)
-      ?? resizeContributions.value.get(column.key)?.currentWidth
+    const override = widthOverride(column)
     if (override != null) {
       base.width = `${override}px`
       base.minWidth = `${override}px`
@@ -168,6 +176,7 @@ export function useTableDataModel(options: {
     filterAt,
     mergeCell,
     headerStyle,
+    widthOverride,
     bodyStyle,
     selectCellPatch,
   }

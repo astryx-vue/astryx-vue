@@ -45,6 +45,7 @@ Behavior is added with plugins, composed in the `plugins` object:
 - `useTableStickyColumns` pins the contiguous run from the first column through a listed key, or from a listed key through the last column. The shadow appears only while the table overflows. An empty config pins nothing.
 - `useTableRowStatus` puts a success, warning, or error mark at the start of a row. A custom color can be a named color or a plain dot.
 - `useTableRowIndex` numbers real rows. Group headers do not take a number.
+- `useTableRowsVirtualization` and `useTableColumnsVirtualization` render only the rows or columns in view when there are many of them, with the same scroll feel. Cells default to a single truncated line; the rows plugin makes the table fill its parent's height and scroll inside it.
 
 A column with no width stays at least 60px wide. A `style.minWidth` smaller than the sum of those floors is raised so the columns stay readable; a larger value is kept. A table that fits does not trap the scroll chain. Horizontal overscroll is contained only while the table actually overflows.
 

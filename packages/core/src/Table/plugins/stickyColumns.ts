@@ -135,6 +135,12 @@ export function useTableStickyColumns<T extends Record<string, unknown>>(
   })
 
   return {
+    // 只改格子的定位，不改行结构。
+    rowModel: 'flat',
+    pinnedColumns() {
+      const current = toValue(config)
+      return { startKeys: current.startKeys ?? [], endKeys: current.endKeys ?? [] }
+    },
     bindScrollRoot,
     cellPatch({ column, columns, kind }) {
       const current = toValue(config)

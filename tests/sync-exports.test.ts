@@ -262,6 +262,8 @@ const expectedCatalog = [
   { slug: 'use-snap-paging', group: 'Utility', family: 'Utilities', en: 'useSnapPaging', zh: 'useSnapPaging' },
   { slug: 'use-locale-direction', group: 'Utility', family: 'Utilities', en: 'useLocaleDirection', zh: 'useLocaleDirection' },
   { slug: 'use-lightbox', group: 'Utility', family: 'Utilities', en: 'useLightbox', zh: 'useLightbox' },
+  { slug: 'use-table-rows-virtualization', group: 'Utility', family: 'Table', en: 'useTableRowsVirtualization', zh: 'useTableRowsVirtualization' },
+  { slug: 'use-table-columns-virtualization', group: 'Utility', family: 'Table', en: 'useTableColumnsVirtualization', zh: 'useTableColumnsVirtualization' },
 ]
 
 describe('component catalog meta', () => {

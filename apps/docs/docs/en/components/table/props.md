@@ -66,7 +66,7 @@ footer: false
       <tr>
         <td><code>textOverflow</code></td>
         <td><code>'wrap' | 'truncate'</code></td>
-        <td><code>'wrap'</code></td>
+        <td><code>'wrap'</code>; <code>'truncate'</code> with a row or column virtualization plugin</td>
         <td>Whether cell text wraps or clips to one line. Column headings follow it: under <code>'wrap'</code> a long heading in a data-driven table wraps onto more lines, and in children mode its column grows to keep it on one line; under <code>'truncate'</code> headings stay on one line and end in an ellipsis.</td>
       </tr>
       <tr>

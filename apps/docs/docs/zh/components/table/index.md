@@ -52,6 +52,7 @@ import {
 - `useTableStickyColumns`：当表格很宽需要横向滚动时，把左侧或右侧的指定列钉住固定不动。
 - `useTableRowStatus`：在行首显示成功、警告或错误等状态标记圆点，鼠标悬停时还可以看到文字解释。
 - `useTableRowIndex`：自动为真正的数据行生成连续的序号。
+- `useTableRowsVirtualization` 与 `useTableColumnsVirtualization`：行或列特别多时，只渲染视口里看得见的那部分，滚动手感不变。开启后单元格默认单行截断，行版本会让表格填满父元素给的高度并在里面上下滚动。
 
 没写宽度的列至少留 60px。写在表格上的 `style.minWidth` 如果比各列下限的总和还小，表格会抬到这个下限，避免列被压到读不清；写得更大时保留你给的值。表格放得下时，滚轮继续交给外面的页面；横向溢出之后才拦住回弹。
 
