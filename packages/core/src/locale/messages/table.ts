@@ -4,6 +4,7 @@ import { englishPlural, formatCount } from './shared.js'
 export interface TableMessages {
   label: string
   noData: string
+  loadMore: string
   filterAll: string
   reset: string
   apply: string
@@ -52,6 +53,7 @@ export const tableMessages: Record<AstryxLocale, TableMessages> = {
   'en': {
     label: 'Table',
     noData: 'No data',
+    loadMore: 'Load more',
     filterAll: 'All',
     reset: 'Reset',
     apply: 'Apply',
@@ -91,6 +93,7 @@ export const tableMessages: Record<AstryxLocale, TableMessages> = {
   'zh-CN': {
     label: '表格',
     noData: '暂无数据',
+    loadMore: '加载更多',
     filterAll: '全部',
     reset: '重置',
     apply: '应用',

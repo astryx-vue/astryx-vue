@@ -37,7 +37,7 @@ const fields: TableFilterField[] = [
 ]
 ```
 
-`applyTableFilters()` returns the rows that match every active filter, so the plugin never touches `data` itself.
+The plugin renders the filter controls only; it does not remove rows. Filter the data yourself, with `applyTableFilters()` for example, which returns the rows that match every active filter, and pass the result to the table. When no row matches, give the table an `empty` slot that says so and offers a way out, such as a "Clear filters" button that calls `clearAll` from `useTableFilterState`.
 
 ```ts
 const { filters, onFilterChange } = useTableFilterState()

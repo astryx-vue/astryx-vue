@@ -159,6 +159,9 @@ function isSelected(row: Record<string, unknown>): boolean {
   return selection.value?.isSelected(row) === true
 }
 
+/** 有插件正在加载下一批时，空表格不显示默认的空状态。 */
+const isLoadingRows = computed(() => props.plugins.some(plugin => plugin.loadingState?.().isLoading === true))
+
 function isEnabled(row: Record<string, unknown>): boolean {
   return selection.value?.isEnabled?.(row) ?? true
 }
@@ -280,7 +283,7 @@ function isEnabled(row: Record<string, unknown>): boolean {
         />
       </thead>
       <tbody>
-        <tr v-if="rows.length === 0">
+        <tr v-if="rows.length === 0 && !isLoadingRows">
           <td class="astryx-table__empty" :colspan="columnCount">
             <slot name="empty">
               {{ messages.table.noData }}

@@ -21,6 +21,58 @@ import { TableSelectionToolbar } from '@astryx-vue/core/Table'
 
 <ComponentAnatomy />
 
+## 跨服务端分页选中全部匹配行
+
+行一页一页从服务端加载时，应用可以把选择记成「所有匹配的行，减去被取消勾选的那些」，这样还没加载的页上的行也算选中。表格和工具栏只负责显示：传你自己的 `TableSelectionState` 和自己的计数，不用 `useTableSelectionState` 给的那份。
+
+```ts
+const isAllMatching = ref(false)
+const picked = ref(new Set<string>()) // 一行行勾上的
+const excluded = ref(new Set<string>()) // 全选模式下取消勾选的
+
+const isSelected = (row: User) => isAllMatching.value ? !excluded.value.has(row.id) : picked.value.has(row.id)
+const isPageSelected = computed(() => pageRows.value.every(isSelected))
+const selectedCount = computed(() => isAllMatching.value ? total.value - excluded.value.size : picked.value.size)
+
+const selectionPlugin = useTableSelection<User>(() => ({
+  getIsItemSelected: isSelected,
+  // setRows 在全选模式下改 excluded，否则改 picked。
+  onSelectItem: ({ item, isSelected }) => setRows([item], isSelected),
+  onSelectAll: ({ isAllSelected }) => setRows(pageRows.value, isAllSelected),
+  getIsAllSelected: () => isPageSelected.value,
+}))
+
+const selection = computed<TableSelectionState>(() => ({
+  // 只有已加载的行：全部的键不在客户端。
+  selectedKeys: new Set(pageRows.value.filter(isSelected).map(row => row.id)),
+  selectedCount: selectedCount.value,
+  hasSelection: selectedCount.value > 0,
+  clearSelection: () => {
+    isAllMatching.value = false
+    picked.value = new Set()
+    excluded.value = new Set()
+  },
+}))
+```
+
+```vue
+<TableSelectionToolbar :selection="selection">
+  <template #start>
+    <Button label="归档" variant="ghost" @click="archive" />
+    <!-- 放在操作旁边，不占它的位置。用过之后它变成撤销自己的命令，焦点留在它上面，
+         再按一次也不会触发归档。 -->
+    <Button
+      v-if="isAllMatching || isPageSelected"
+      :label="isAllMatching ? '只选本页' : `选中全部 ${total} 条匹配`"
+      variant="ghost"
+      @click="toggleAllMatching"
+    />
+  </template>
+</TableSelectionToolbar>
+```
+
+「只选本页」会选中本页的每一行，所以按钮文字始终属实，获得焦点的按钮也不会被卸掉。执行批量操作时，把查询条件和被排除的 id 发给服务端，不要发选中 id 的列表。
+
 ## 建议
 
 | 建议 | 做法 |

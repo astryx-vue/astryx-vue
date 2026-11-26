@@ -4,7 +4,7 @@ export const meta = {
   slug: 'use-table-pagination',
   group: 'Utility',
   family: 'Table',
-  order: 141,
+  order: 142,
   en: 'useTablePagination',
   zh: 'useTablePagination',
 } satisfies DemoMeta

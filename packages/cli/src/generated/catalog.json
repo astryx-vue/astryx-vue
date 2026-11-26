@@ -64411,8 +64411,8 @@
         "zh": "`Table`（数据表格）用来以行和列的方式整整齐齐地展示结构化数据。只要传入行数据 `data` 和列配置 `columns` 就能快速渲染出表格。每一列都要有唯一标识 `key`、表头文字 `header`，也可以用 `proportional()` 或 `pixel()` 来分配宽度。单元格默认直接显示数据字段的值，需要自定义内容时可以通过 `renderCell` 渲染徽标、链接或按钮。`idKey` 用来区分每一行的唯一身份，默认取数据里的 `id`。"
       },
       "usage": {
-        "en": "`Table` renders from `data` and `columns`. Each column has a `key`, a `header`, and an optional `width` from `proportional()` or `pixel()`. A cell shows `row[key]` unless `renderCell` returns something else. `idKey` identifies a row. The default is `id`.\n\nBehavior is added with plugins, composed in the `plugins` object:\n\n- `useTableSortable` cycles a header through ascending, descending, and unsorted. Shift-click adds a column when `isMultiSortEnabled` is set. `useTableSortableState` holds the sort and returns the sorted rows.\n- `useTableSelection` adds a checkbox column and highlights selected rows. `useTableSelectionState` holds the selected ids. Pass its `selectionState` to `TableSelectionToolbar` to run bulk actions on the selection; the bar stays hidden until something is selected. Set `hasRowHighlight` to `false` when the row background already means something else. Checked rows stay `aria-selected`.\n- `useTablePagination` renders a pager under the table. Slice the rows with `paginateData` before passing `data`.\n- `useTableColumnSettings` shows only the active column keys, and keeps `isAlwaysVisible` columns on.\n- `useTableColumnResize` lets a header edge be dragged. The smallest width is 60px.\n- `useTableFiltering` puts a string or enum filter on any column whose `filter` names a field. `applyTableFilters` returns the matching rows. String fields match a substring. Enum fields match exactly. This filtering stays separate from Power Search.\n- `useTableGroupedRows` turns the rows you already filtered, sorted, and sliced into sections. Pass its data, plugin, and row identity back to the table together. A collapsed section keeps its header. Replace the collapsed set instead of mutating it.\n- `useTableTreeState` decides which nodes are open. `useTableTreeData` draws the indent and the buttons. Child rows reuse the parent columns. The header button expands or collapses every branch, and a cycle is skipped.\n- `useTableRowExpansion` places a detail panel under a row. The same action is on the row’s context menu. `hasRowClickExpansion` also toggles from a click on the row, and leaves buttons, links, editable text, and an existing text selection alone. The panel lines up with the first column and is not counted as a striped row. Use the tree plugins when the children should reuse the columns.\n- `useTableStickyColumns` pins the contiguous run from the first column through a listed key, or from a listed key through the last column. The shadow appears only while the table overflows. An empty config pins nothing.\n- `useTableRowStatus` puts a success, warning, or error mark at the start of a row. A custom color can be a named color or a plain dot.\n- `useTableRowIndex` numbers real rows. Group headers do not take a number.\n\nA column with no width stays at least 60px wide. A `style.minWidth` smaller than the sum of those floors is raised so the columns stay readable; a larger value is kept. A table that fits does not trap the scroll chain. Horizontal overscroll is contained only while the table actually overflows.\n\n`density` is `compact`, `balanced`, or `spacious`. `dividers` is `rows`, `columns`, `grid`, or `none`. `isStriped` and `hasHover` are independent. An empty `data` array renders the localized empty message, or the `empty` slot.\n\nWithout `data`, the table is composed from `TableHeader`, `TableBody`, `TableFooter`, `TableRow`, `TableHeaderCell`, and `TableCell`.\n\n```vue\n<script setup lang=\"ts\">\nimport { proportional, Table } from '@astryx-vue/core/Table'\n\nconst rows = [\n  { id: '1', name: 'Alice Johnson', email: 'alice@example.com' },\n]\nconst columns = [\n  { key: 'name', header: 'Name', width: proportional(1) },\n  { key: 'email', header: 'Email', width: proportional(2) },\n]\n</script>\n\n<template>\n  <Table :data=\"rows\" :columns=\"columns\" has-hover />\n</template>\n```\n\nPass the column filter state through a getter so the table reads the latest value:\n\n```ts\nconst { filters, onFilterChange } = useTableFilterState()\nconst filterPlugin = useTableFiltering(() => ({\n  filters: filters.value,\n  onFilterChange,\n  fields,\n}))\n```\n\n`rowCount` and `rowIndexStart` report where the visible window sits in the full result. Setting either one numbers the data rows. When only the start is set, the total count is unknown. Group headers and detail panels are not numbered.",
-        "zh": "`Table`（数据表格）用来以行和列的方式整整齐齐地展示结构化数据。只要传入行数据 `data` 和列配置 `columns` 就能快速渲染出表格。每一列都要有唯一标识 `key`、表头文字 `header`，也可以用 `proportional()` 或 `pixel()` 来分配宽度。单元格默认直接显示数据字段的值，需要自定义内容时可以通过 `renderCell` 渲染徽标、链接或按钮。`idKey` 用来区分每一行的唯一身份，默认取数据里的 `id`。\n\n**什么时候用：**\n- 需要对比多条结构相似的数据（例如订单列表、用户清单、财务账目），或者需要对数据进行排序、筛选、分页和多选时。\n\n**什么时候不要用：**\n- 数据结构不规则，或者更适合用卡片呈现视觉封面时，请改用网格或卡片列表。\n- 在屏幕极窄的手机端，普通大表格容易被挤压，可以考虑使用精简列表或折叠详情面板。\n\n常用的高级功能可以通过配套的函数插件（`plugins`）按需开启：\n\n- `useTableSortable`：让用户点击表头在升序、降序和恢复默认之间切换。开启 `isMultiSortEnabled` 后，按住 Shift 键再点表头可以同时按多个列排序。搭配 `useTableSortableState` 保存排序规则并返回排好序的数据。\n- `useTableSelection`：在每行最左侧添加复选框，点击可以选中或高亮当前行。搭配 `useTableSelectionState` 保存选中的行 ID。选中之后把返回的 `selectionState` 交给 `TableSelectionToolbar`，就可以对选中项做批量操作；一个都没选中时这条不出现。周围已经用行底色表示别的含义时，把 `hasRowHighlight` 设为 `false`，选中行不再铺底色，读屏仍能读到已选中。\n- `useTablePagination`：在表格底部添加分页器。在传给表格前，用 `paginateData` 把总数据切出当前页的内容。\n- `useTableColumnSettings`：让用户自己勾选显示或隐藏哪些列，带有 `isAlwaysVisible` 的列会固定保留。\n- `useTableColumnResize`：允许用户拖动表头边缘自由调整列宽，最小宽度为 60px。\n- `useTableFiltering`：为指定列开启文字模糊搜索或选项精确匹配。搭配 `applyTableFilters` 过滤出符合条件的行。\n- `useTableGroupedRows`：把已经排好序的数据按某个分类整理成分组折叠行。\n- `useTableTreeState` 与 `useTableTreeData`：支持像文件夹树一样展开或折叠带有层级关系的子行。\n- `useTableRowExpansion`：允许点击行首箭头在某一行下方展开一整块详情面板。打开 `hasRowClickExpansion` 后点整行也能展开；点到按钮、链接、可编辑文字或已经选中的文字时不会切换。详情和第一列对齐，不把面板算进斑马纹。\n- `useTableStickyColumns`：当表格很宽需要横向滚动时，把左侧或右侧的指定列钉住固定不动。\n- `useTableRowStatus`：在行首显示成功、警告或错误等状态标记圆点，鼠标悬停时还可以看到文字解释。\n- `useTableRowIndex`：自动为真正的数据行生成连续的序号。\n\n没写宽度的列至少留 60px。写在表格上的 `style.minWidth` 如果比各列下限的总和还小，表格会抬到这个下限，避免列被压到读不清；写得更大时保留你给的值。表格放得下时，滚轮继续交给外面的页面；横向溢出之后才拦住回弹。\n\n表格的显示风格也很灵活：`density` 可以调节行高间距（紧凑 `compact`、适中 `balanced` 或宽松 `spacious`）；`dividers` 控制网格线的样式（仅行线 `rows`、仅列线 `columns`、全网格 `grid` 或无边框 `none`）；`isStriped` 开启隔行换色的斑马纹，`hasHover` 开启鼠标悬停高亮。当 `data` 为空时，表格会自动显示贴心的缺省提示，也可以通过 `empty` 插槽换成自己的图文。\n\n如果不需要配置式的驱动，也可以直接使用 `TableHeader`、`TableBody`、`TableFooter`、`TableRow`、`TableHeaderCell` 和 `TableCell` 这些原子组件像写普通 HTML 表格一样自由拼接。\n\n```vue\n<script setup lang=\"ts\">\nimport { proportional, Table } from '@astryx-vue/core/Table'\n\nconst rows = [\n  { id: '1', name: 'Alice Johnson', email: 'alice@example.com' },\n]\nconst columns = [\n  { key: 'name', header: 'Name', width: proportional(1) },\n  { key: 'email', header: 'Email', width: proportional(2) },\n]\n</script>\n\n<template>\n  <Table :data=\"rows\" :columns=\"columns\" has-hover />\n</template>\n```\n\n如果开启了列过滤，状态要用函数（getter）的形式传进去，表格才能敏锐察觉到过滤词的变化：\n\n```ts\nconst { filters, onFilterChange } = useTableFilterState()\nconst filterPlugin = useTableFiltering(() => ({\n  filters: filters.value,\n  onFilterChange,\n  fields,\n}))\n```\n\n`rowCount` 和 `rowIndexStart` 用来告诉读屏软件当前这一页数据在全表里的位置。两者只要填了一个，读屏就能准确播报当前行号。分组的表头和展开的详情面板不会占用行号。"
+        "en": "`Table` renders from `data` and `columns`. Each column has a `key`, a `header`, and an optional `width` from `proportional()` or `pixel()`. A cell shows `row[key]` unless `renderCell` returns something else. `idKey` identifies a row. The default is `id`.\n\nBehavior is added with plugins, composed in the `plugins` object:\n\n- `useTableSortable` cycles a header through ascending, descending, and unsorted. Shift-click adds a column when `isMultiSortEnabled` is set. `useTableSortableState` holds the sort and returns the sorted rows.\n- `useTableSelection` adds a checkbox column and highlights selected rows. `useTableSelectionState` holds the selected ids. Pass its `selectionState` to `TableSelectionToolbar` to run bulk actions on the selection; the bar stays hidden until something is selected. Set `hasRowHighlight` to `false` when the row background already means something else. Checked rows stay `aria-selected`.\n- `useTablePagination` renders a pager under the table. Slice the rows with `paginateData` before passing `data`.\n- `useTableColumnSettings` shows only the active column keys, and keeps `isAlwaysVisible` columns on.\n- `useTableColumnResize` lets a header edge be dragged. The smallest width is 60px.\n- `useTableFiltering` puts a string or enum filter on any column whose `filter` names a field. `applyTableFilters` returns the matching rows. String fields match a substring. Enum fields match exactly. This filtering stays separate from Power Search.\n- `useTableGroupedRows` turns the rows you already filtered, sorted, and sliced into sections. Pass its data, plugin, and row identity back to the table together. A collapsed section keeps its header. Replace the collapsed set instead of mutating it.\n- `useTableTreeState` decides which nodes are open. `useTableTreeData` draws the indent and the buttons. Child rows reuse the parent columns. The header button expands or collapses every branch, and a cycle is skipped.\n- `useTableRowExpansion` places a detail panel under a row. The same action is on the row’s context menu. `hasRowClickExpansion` also toggles from a click on the row, and leaves buttons, links, editable text, and an existing text selection alone. The panel lines up with the first column and is not counted as a striped row. Use the tree plugins when the children should reuse the columns.\n- `useTableStickyColumns` pins the contiguous run from the first column through a listed key, or from a listed key through the last column. The shadow appears only while the table overflows. An empty config pins nothing.\n- `useTableRowStatus` puts a success, warning, or error mark at the start of a row. A custom color can be a named color or a plain dot.\n- `useTableRowIndex` numbers real rows. Group headers do not take a number.\n\nA column with no width stays at least 60px wide. A `style.minWidth` smaller than the sum of those floors is raised so the columns stay readable; a larger value is kept. A table that fits does not trap the scroll chain. Horizontal overscroll is contained only while the table actually overflows.\n\nTo open a row (go to a detail page, open a side panel), put a `Link` or a `Button` in the row's main cell with `renderCell`. Table has no row-click prop. A click handler on the `<tr>` cannot be reached with the keyboard or a screen reader, so do not make it the only way to open a row.\n\n```ts\nconst columns: TableColumn<User>[] = [\n  { key: 'name', header: 'Name', renderCell: user => h(Link, { href: `/users/${user.id}`, label: user.name }) },\n  { key: 'role', header: 'Role' },\n]\n```\n\nA custom plugin is a plain `TablePlugin` object of optional hooks: `transformColumns` adds, removes or reorders columns; `rowPatch` and `cellPatch` add classes, attributes and handlers to rows and cells; `headerPatch` puts content before a header label; `above` and `below` render content around the table; `bindScrollRoot` receives the scroll region. Plugins run in the order of the `plugins` object.\n\nWhen you pass `columns`, a data-driven table sizes them from their definitions, not their content, so under `textOverflow=\"wrap\"` a token longer than its column, such as a code identifier or a URL, breaks inside the token. To keep such tokens whole, give that column a floor that fits them with `proportional(1, { minWidth })` or `pixel()`, or compose the table in children mode, whose columns follow their content.\n\n`density` is `compact`, `balanced`, or `spacious`. `dividers` is `rows`, `columns`, `grid`, or `none`. `isStriped` and `hasHover` are independent. An empty `data` array renders the localized empty message, or the `empty` slot.\n\nWithout `data`, the table is composed from `TableHeader`, `TableBody`, `TableFooter`, `TableRow`, `TableHeaderCell`, and `TableCell`.\n\n```vue\n<script setup lang=\"ts\">\nimport { proportional, Table } from '@astryx-vue/core/Table'\n\nconst rows = [\n  { id: '1', name: 'Alice Johnson', email: 'alice@example.com' },\n]\nconst columns = [\n  { key: 'name', header: 'Name', width: proportional(1) },\n  { key: 'email', header: 'Email', width: proportional(2) },\n]\n</script>\n\n<template>\n  <Table :data=\"rows\" :columns=\"columns\" has-hover />\n</template>\n```\n\nPass the column filter state through a getter so the table reads the latest value:\n\n```ts\nconst { filters, onFilterChange } = useTableFilterState()\nconst filterPlugin = useTableFiltering(() => ({\n  filters: filters.value,\n  onFilterChange,\n  fields,\n}))\n```\n\n`rowCount` and `rowIndexStart` report where the visible window sits in the full result. Setting either one numbers the data rows. When only the start is set, the total count is unknown. Group headers and detail panels are not numbered.",
+        "zh": "`Table`（数据表格）用来以行和列的方式整整齐齐地展示结构化数据。只要传入行数据 `data` 和列配置 `columns` 就能快速渲染出表格。每一列都要有唯一标识 `key`、表头文字 `header`，也可以用 `proportional()` 或 `pixel()` 来分配宽度。单元格默认直接显示数据字段的值，需要自定义内容时可以通过 `renderCell` 渲染徽标、链接或按钮。`idKey` 用来区分每一行的唯一身份，默认取数据里的 `id`。\n\n**什么时候用：**\n- 需要对比多条结构相似的数据（例如订单列表、用户清单、财务账目），或者需要对数据进行排序、筛选、分页和多选时。\n\n**什么时候不要用：**\n- 数据结构不规则，或者更适合用卡片呈现视觉封面时，请改用网格或卡片列表。\n- 在屏幕极窄的手机端，普通大表格容易被挤压，可以考虑使用精简列表或折叠详情面板。\n\n常用的高级功能可以通过配套的函数插件（`plugins`）按需开启：\n\n- `useTableSortable`：让用户点击表头在升序、降序和恢复默认之间切换。开启 `isMultiSortEnabled` 后，按住 Shift 键再点表头可以同时按多个列排序。搭配 `useTableSortableState` 保存排序规则并返回排好序的数据。\n- `useTableSelection`：在每行最左侧添加复选框，点击可以选中或高亮当前行。搭配 `useTableSelectionState` 保存选中的行 ID。选中之后把返回的 `selectionState` 交给 `TableSelectionToolbar`，就可以对选中项做批量操作；一个都没选中时这条不出现。周围已经用行底色表示别的含义时，把 `hasRowHighlight` 设为 `false`，选中行不再铺底色，读屏仍能读到已选中。\n- `useTablePagination`：在表格底部添加分页器。在传给表格前，用 `paginateData` 把总数据切出当前页的内容。\n- `useTableColumnSettings`：让用户自己勾选显示或隐藏哪些列，带有 `isAlwaysVisible` 的列会固定保留。\n- `useTableColumnResize`：允许用户拖动表头边缘自由调整列宽，最小宽度为 60px。\n- `useTableFiltering`：为指定列开启文字模糊搜索或选项精确匹配。搭配 `applyTableFilters` 过滤出符合条件的行。\n- `useTableGroupedRows`：把已经排好序的数据按某个分类整理成分组折叠行。\n- `useTableTreeState` 与 `useTableTreeData`：支持像文件夹树一样展开或折叠带有层级关系的子行。\n- `useTableRowExpansion`：允许点击行首箭头在某一行下方展开一整块详情面板。打开 `hasRowClickExpansion` 后点整行也能展开；点到按钮、链接、可编辑文字或已经选中的文字时不会切换。详情和第一列对齐，不把面板算进斑马纹。\n- `useTableStickyColumns`：当表格很宽需要横向滚动时，把左侧或右侧的指定列钉住固定不动。\n- `useTableRowStatus`：在行首显示成功、警告或错误等状态标记圆点，鼠标悬停时还可以看到文字解释。\n- `useTableRowIndex`：自动为真正的数据行生成连续的序号。\n\n没写宽度的列至少留 60px。写在表格上的 `style.minWidth` 如果比各列下限的总和还小，表格会抬到这个下限，避免列被压到读不清；写得更大时保留你给的值。表格放得下时，滚轮继续交给外面的页面；横向溢出之后才拦住回弹。\n\n要打开某一行（进详情页、开侧边面板），用 `renderCell` 在这一行的主单元格里放一个 `Link` 或 `Button`。Table 没有行点击属性。`<tr>` 上的点击处理用键盘和读屏都够不着，别把它当成打开一行的唯一方式。\n\n```ts\nconst columns: TableColumn<User>[] = [\n  { key: 'name', header: 'Name', renderCell: user => h(Link, { href: `/users/${user.id}`, label: user.name }) },\n  { key: 'role', header: 'Role' },\n]\n```\n\n自定义插件就是一个由可选钩子组成的 `TablePlugin` 对象：`transformColumns` 增删、重排列；`rowPatch`、`cellPatch` 给行和格子加类名、属性和事件；`headerPatch` 在表头文字前面放东西；`above`、`below` 在表格上下方渲染内容；`bindScrollRoot` 拿到滚动区。插件按 `plugins` 对象里的顺序执行。\n\n传了 `columns` 的数据模式表格按列定义定宽，不按内容，所以 `textOverflow=\"wrap\"` 下，比列还宽的长单词（代码标识符、URL）会在单词中间断开。想让它们保持完整，给那一列一个装得下的下限，用 `proportional(1, { minWidth })` 或 `pixel()`；或者改用手写行列的模式，列宽跟着内容走。\n\n表格的显示风格也很灵活：`density` 可以调节行高间距（紧凑 `compact`、适中 `balanced` 或宽松 `spacious`）；`dividers` 控制网格线的样式（仅行线 `rows`、仅列线 `columns`、全网格 `grid` 或无边框 `none`）；`isStriped` 开启隔行换色的斑马纹，`hasHover` 开启鼠标悬停高亮。当 `data` 为空时，表格会自动显示贴心的缺省提示，也可以通过 `empty` 插槽换成自己的图文。\n\n如果不需要配置式的驱动，也可以直接使用 `TableHeader`、`TableBody`、`TableFooter`、`TableRow`、`TableHeaderCell` 和 `TableCell` 这些原子组件像写普通 HTML 表格一样自由拼接。\n\n```vue\n<script setup lang=\"ts\">\nimport { proportional, Table } from '@astryx-vue/core/Table'\n\nconst rows = [\n  { id: '1', name: 'Alice Johnson', email: 'alice@example.com' },\n]\nconst columns = [\n  { key: 'name', header: 'Name', width: proportional(1) },\n  { key: 'email', header: 'Email', width: proportional(2) },\n]\n</script>\n\n<template>\n  <Table :data=\"rows\" :columns=\"columns\" has-hover />\n</template>\n```\n\n如果开启了列过滤，状态要用函数（getter）的形式传进去，表格才能敏锐察觉到过滤词的变化：\n\n```ts\nconst { filters, onFilterChange } = useTableFilterState()\nconst filterPlugin = useTableFiltering(() => ({\n  filters: filters.value,\n  onFilterChange,\n  fields,\n}))\n```\n\n`rowCount` 和 `rowIndexStart` 用来告诉读屏软件当前这一页数据在全表里的位置。两者只要填了一个，读屏就能准确播报当前行号。分组的表头和展开的详情面板不会占用行号。"
       },
       "practices": {
         "en": [
@@ -64429,8 +64429,20 @@
             "text": "Keep sort, selection, and filter state outside the table and pass the derived rows in `data`."
           },
           {
+            "guidance": "Do",
+            "text": "When filters or a search can leave no rows, fill the `empty` slot with what happened and a way out, such as a \"Clear filters\" button."
+          },
+          {
+            "guidance": "Do",
+            "text": "Open a row from a link or button in its main cell."
+          },
+          {
             "guidance": "Don't",
             "text": "Sort or paginate inside `renderCell`. The cell only paints the row it is given."
+          },
+          {
+            "guidance": "Don't",
+            "text": "Rely on a click handler on the `` as the only way to open a row."
           },
           {
             "guidance": "Don't",
@@ -65005,7 +65017,7 @@
         "zh": [
           {
             "heading": "建议",
-            "text": "- 推荐: 推荐\n- 推荐: 推荐\n- 推荐: 推荐\n- 避免: 避免\n- 避免: 避免"
+            "text": "- 推荐: 推荐\n- 推荐: 推荐\n- 推荐: 推荐\n- 推荐: 推荐\n- 推荐: 推荐\n- 避免: 避免\n- 避免: 避免\n- 避免: 避免"
           },
           {
             "heading": "useTableRowStatus",
@@ -66162,6 +66174,10 @@
       "notes": {
         "en": [
           {
+            "heading": "Select every matching row across server pages",
+            "text": "When rows load one server page at a time, the app can keep the selection as \"every matching row, minus the ones the person unticked\", so rows on pages that never loaded count as selected too. The table and the toolbar only show that selection: pass your own `TableSelectionState`, with your own count, instead of the one `useTableSelectionState` returns.\n\n```ts\nconst isAllMatching = ref(false)\nconst picked = ref(new Set<string>()) // chosen one by one\nconst excluded = ref(new Set<string>()) // unticked in all mode\n\nconst isSelected = (row: User) => isAllMatching.value ? !excluded.value.has(row.id) : picked.value.has(row.id)\nconst isPageSelected = computed(() => pageRows.value.every(isSelected))\nconst selectedCount = computed(() => isAllMatching.value ? total.value - excluded.value.size : picked.value.size)\n\nconst selectionPlugin = useTableSelection<User>(() => ({\n  getIsItemSelected: isSelected,\n  // setRows adds to or removes from `excluded` in all mode, `picked` otherwise.\n  onSelectItem: ({ item, isSelected }) => setRows([item], isSelected),\n  onSelectAll: ({ isAllSelected }) => setRows(pageRows.value, isAllSelected),\n  getIsAllSelected: () => isPageSelected.value,\n}))\n\nconst selection = computed<TableSelectionState>(() => ({\n  // Only the loaded rows: the full set is not on the client.\n  selectedKeys: new Set(pageRows.value.filter(isSelected).map(row => row.id)),\n  selectedCount: selectedCount.value,\n  hasSelection: selectedCount.value > 0,\n  clearSelection: () => {\n    isAllMatching.value = false\n    picked.value = new Set()\n    excluded.value = new Set()\n  },\n}))\n```\n\n```vue\n<TableSelectionToolbar :selection=\"selection\">\n  <template #start>\n    <Button label=\"Archive\" variant=\"ghost\" @click=\"archive\" />\n    <!-- Beside the action, not in its place. Once used, the offer stays as the command that undoes it,\n         so focus stays on it and a second press can never run Archive. -->\n    <Button\n      v-if=\"isAllMatching || isPageSelected\"\n      :label=\"isAllMatching ? 'Select only this page' : `Select all ${total} matching`\"\n      variant=\"ghost\"\n      @click=\"toggleAllMatching\"\n    />\n  </template>\n</TableSelectionToolbar>\n```\n\n\"Select only this page\" selects every row on the page, so its label stays true and the focused button stays mounted. For the bulk action, send the server the query and the excluded ids, not a list of selected ids."
+          },
+          {
             "heading": "Events",
             "text": "- `clear()`: fires when the clear command is clicked. With `selection` passed, the bar empties the selected keys itself before emitting."
           },
@@ -66171,6 +66187,10 @@
           }
         ],
         "zh": [
+          {
+            "heading": "跨服务端分页选中全部匹配行",
+            "text": "行一页一页从服务端加载时，应用可以把选择记成「所有匹配的行，减去被取消勾选的那些」，这样还没加载的页上的行也算选中。表格和工具栏只负责显示：传你自己的 `TableSelectionState` 和自己的计数，不用 `useTableSelectionState` 给的那份。\n\n```ts\nconst isAllMatching = ref(false)\nconst picked = ref(new Set<string>()) // 一行行勾上的\nconst excluded = ref(new Set<string>()) // 全选模式下取消勾选的\n\nconst isSelected = (row: User) => isAllMatching.value ? !excluded.value.has(row.id) : picked.value.has(row.id)\nconst isPageSelected = computed(() => pageRows.value.every(isSelected))\nconst selectedCount = computed(() => isAllMatching.value ? total.value - excluded.value.size : picked.value.size)\n\nconst selectionPlugin = useTableSelection<User>(() => ({\n  getIsItemSelected: isSelected,\n  // setRows 在全选模式下改 excluded，否则改 picked。\n  onSelectItem: ({ item, isSelected }) => setRows([item], isSelected),\n  onSelectAll: ({ isAllSelected }) => setRows(pageRows.value, isAllSelected),\n  getIsAllSelected: () => isPageSelected.value,\n}))\n\nconst selection = computed<TableSelectionState>(() => ({\n  // 只有已加载的行：全部的键不在客户端。\n  selectedKeys: new Set(pageRows.value.filter(isSelected).map(row => row.id)),\n  selectedCount: selectedCount.value,\n  hasSelection: selectedCount.value > 0,\n  clearSelection: () => {\n    isAllMatching.value = false\n    picked.value = new Set()\n    excluded.value = new Set()\n  },\n}))\n```\n\n```vue\n<TableSelectionToolbar :selection=\"selection\">\n  <template #start>\n    <Button label=\"归档\" variant=\"ghost\" @click=\"archive\" />\n    <!-- 放在操作旁边，不占它的位置。用过之后它变成撤销自己的命令，焦点留在它上面，\n         再按一次也不会触发归档。 -->\n    <Button\n      v-if=\"isAllMatching || isPageSelected\"\n      :label=\"isAllMatching ? '只选本页' : `选中全部 ${total} 条匹配`\"\n      variant=\"ghost\"\n      @click=\"toggleAllMatching\"\n    />\n  </template>\n</TableSelectionToolbar>\n```\n\n「只选本页」会选中本页的每一行，所以按钮文字始终属实，获得焦点的按钮也不会被卸掉。执行批量操作时，把查询条件和被排除的 id 发给服务端，不要发选中 id 的列表。"
+          },
           {
             "heading": "建议",
             "text": "- 推荐: 推荐\n- 推荐: 推荐\n- 避免: 避免"
@@ -77019,12 +77039,12 @@
       "importPath": null,
       "exportName": null,
       "summary": {
-        "en": "Managed state hook for table filtering. Returns the current filter map, an onChange handler, and a way to clear everything. Pass the map and the handler to `useTableFiltering`, and the map to `applyTableFilters()` to get the matching rows.",
-        "zh": "管表格过滤状态。它交出当前的过滤映射、一个改值的处理函数，还有一个清空的办法。把映射和处理函数交给 `useTableFiltering`，把映射交给 `applyTableFilters()` 就能拿到匹配的行。"
+        "en": "Managed state hook for table filtering. Returns `filters` (the current filter map), `onFilterChange`, and `clearAll`, which clears every filter, for example from a \"Clear filters\" button in the table's `empty` slot. Pass the map and the handler to `useTableFiltering`, and the map to `applyTableFilters()` to get the matching rows.",
+        "zh": "管表格过滤状态。它交出 `filters`（当前的过滤映射）、`onFilterChange` 和 `clearAll`；`clearAll` 清空所有过滤，比如放在表格 `empty` 插槽里的「清除筛选」按钮上。把映射和处理函数交给 `useTableFiltering`，把映射交给 `applyTableFilters()` 就能拿到匹配的行。"
       },
       "usage": {
-        "en": "Managed state hook for table filtering. Returns the current filter map, an onChange handler, and a way to clear everything. Pass the map and the handler to `useTableFiltering`, and the map to `applyTableFilters()` to get the matching rows.\n\n```ts\nimport { useTableFilterState } from '@astryx-vue/core/Table'\n```\n\nA filter is \"off\" when its key is missing. Setting `null`, an empty string, or an empty array removes the key instead of storing an empty value, so a truthy key in the map always means a live filter.\n\nGive it an initial map when the table should open with a filter already applied. Pass the map directly, or wrap it as `initialState`. The initial object is shallow copied, so later writes never touch it.\n\n```ts\nconst direct = useTableFilterState({ role: 'Engineer' })\nconst wrapped = useTableFilterState({ initialState: { role: 'Engineer' } })\n```",
-        "zh": "管表格过滤状态。它交出当前的过滤映射、一个改值的处理函数，还有一个清空的办法。把映射和处理函数交给 `useTableFiltering`，把映射交给 `applyTableFilters()` 就能拿到匹配的行。\n\n```ts\nimport { useTableFilterState } from '@astryx-vue/core/Table'\n```\n\n一条过滤「关掉」的意思是它的 key 不在映射里。写 `null`、空字符串或空数组时，key 会被删掉，而不是存一个空值，所以映射里还留着的 key 一定是生效的过滤。\n\n需要打开页面就带着过滤时，给一个初始映射。可以直接把映射传进去，也可以写成 `initialState`。初始对象是浅拷贝的，后面怎么写都不会改到你传进去的那份。\n\n```ts\nconst direct = useTableFilterState({ role: 'Engineer' })\nconst wrapped = useTableFilterState({ initialState: { role: 'Engineer' } })\n```"
+        "en": "Managed state hook for table filtering. Returns `filters` (the current filter map), `onFilterChange`, and `clearAll`, which clears every filter, for example from a \"Clear filters\" button in the table's `empty` slot. Pass the map and the handler to `useTableFiltering`, and the map to `applyTableFilters()` to get the matching rows.\n\n```ts\nimport { useTableFilterState } from '@astryx-vue/core/Table'\n```\n\nA filter is \"off\" when its key is missing. Setting `null`, an empty string, or an empty array removes the key instead of storing an empty value, so a truthy key in the map always means a live filter.\n\nGive it an initial map when the table should open with a filter already applied. Pass the map directly, or wrap it as `initialState`. The initial object is shallow copied, so later writes never touch it.\n\n```ts\nconst direct = useTableFilterState({ role: 'Engineer' })\nconst wrapped = useTableFilterState({ initialState: { role: 'Engineer' } })\n```",
+        "zh": "管表格过滤状态。它交出 `filters`（当前的过滤映射）、`onFilterChange` 和 `clearAll`；`clearAll` 清空所有过滤，比如放在表格 `empty` 插槽里的「清除筛选」按钮上。把映射和处理函数交给 `useTableFiltering`，把映射交给 `applyTableFilters()` 就能拿到匹配的行。\n\n```ts\nimport { useTableFilterState } from '@astryx-vue/core/Table'\n```\n\n一条过滤「关掉」的意思是它的 key 不在映射里。写 `null`、空字符串或空数组时，key 会被删掉，而不是存一个空值，所以映射里还留着的 key 一定是生效的过滤。\n\n需要打开页面就带着过滤时，给一个初始映射。可以直接把映射传进去，也可以写成 `initialState`。初始对象是浅拷贝的，后面怎么写都不会改到你传进去的那份。\n\n```ts\nconst direct = useTableFilterState({ role: 'Engineer' })\nconst wrapped = useTableFilterState({ initialState: { role: 'Engineer' } })\n```"
       },
       "practices": {
         "en": [],
@@ -77210,8 +77230,8 @@
         "zh": "给表格的列加过滤器，控件可以是行内的，也可以在弹出层里。列的 `filter` 指向 `fields` 里的某个字段时，这一列才有过滤器。`inline` 变体把控件放在表头单元格里、列名下面；`inline-compact` 是同一个位置，但控件更紧凑，表格窄的时候用；`popover` 变体把它藏在一个漏斗按钮后面，确认后才生效。状态交给 `useTableFilterState` 管。"
       },
       "usage": {
-        "en": "Table plugin that adds column filters with popover or inline controls. A column gets a filter when its `filter` names a field in `fields`. In the `inline` variant the control sits in the header cell under the column label; `inline-compact` puts the same control in a tighter frame when the table is short on space; in the `popover` variant it hides behind a funnel button and applies on confirm. Pairs with `useTableFilterState` for managed state.\n\n```ts\nimport { useTableFiltering, useTableFilterState } from '@astryx-vue/core/Table'\n```\n\nFive field types are supported, and each one gets a matching control:\n\n```ts\nconst fields: TableFilterField[] = [\n  { key: 'name', label: 'Name', type: 'string' },\n  { key: 'role', label: 'Role', type: 'enum', options: roleOptions },\n  { key: 'teams', label: 'Teams', type: 'multi-select', options: teamOptions },\n  { key: 'age', label: 'Age', type: 'number', min: 18, max: 70, isIntegerOnly: true },\n  { key: 'hired', label: 'Hired', type: 'date' },\n]\n```\n\n`applyTableFilters()` returns the rows that match every active filter, so the plugin never touches `data` itself.\n\n```ts\nconst { filters, onFilterChange } = useTableFilterState()\nconst filterPlugin = useTableFiltering(() => ({\n  filters: filters.value,\n  onFilterChange,\n  fields,\n  variant: 'inline',\n}))\nconst rows = computed(() => applyTableFilters(employees, filters.value, fields))\n```\n\nThe config is read again on every access, so pass a getter when the filters live in a `ref`. A plain object works too, but the table keeps the filters it saw first.\n\nIn the inline variants a filtered column that declares no `width` gets `proportional(1)`, so the control has room to sit under the label.\n\nThis filtering is separate from Power Search. A column without `filter` is never filtered, and the plugin renders nothing for it.",
-        "zh": "给表格的列加过滤器，控件可以是行内的，也可以在弹出层里。列的 `filter` 指向 `fields` 里的某个字段时，这一列才有过滤器。`inline` 变体把控件放在表头单元格里、列名下面；`inline-compact` 是同一个位置，但控件更紧凑，表格窄的时候用；`popover` 变体把它藏在一个漏斗按钮后面，确认后才生效。状态交给 `useTableFilterState` 管。\n\n```ts\nimport { useTableFiltering, useTableFilterState } from '@astryx-vue/core/Table'\n```\n\n支持五种字段类型，每种都有对应的控件：\n\n```ts\nconst fields: TableFilterField[] = [\n  { key: 'name', label: 'Name', type: 'string' },\n  { key: 'role', label: 'Role', type: 'enum', options: roleOptions },\n  { key: 'teams', label: 'Teams', type: 'multi-select', options: teamOptions },\n  { key: 'age', label: 'Age', type: 'number', min: 18, max: 70, isIntegerOnly: true },\n  { key: 'hired', label: 'Hired', type: 'date' },\n]\n```\n\n`applyTableFilters()` 返回同时满足所有生效过滤的行，插件自己不碰 `data`。\n\n```ts\nconst { filters, onFilterChange } = useTableFilterState()\nconst filterPlugin = useTableFiltering(() => ({\n  filters: filters.value,\n  onFilterChange,\n  fields,\n  variant: 'inline',\n}))\nconst rows = computed(() => applyTableFilters(employees, filters.value, fields))\n```\n\n每次读配置都会重新取值，所以过滤值存在 `ref` 里时要传 getter。直接传对象也能跑，但表格会用第一次读到的过滤值。\n\n行内变体里，带过滤但没有写 `width` 的列会被补成 `proportional(1)`，控件在列名下面放得开。\n\n这套过滤和 Power Search 是分开的。没有 `filter` 的列永远不会被过滤，插件对它什么也不画。"
+        "en": "Table plugin that adds column filters with popover or inline controls. A column gets a filter when its `filter` names a field in `fields`. In the `inline` variant the control sits in the header cell under the column label; `inline-compact` puts the same control in a tighter frame when the table is short on space; in the `popover` variant it hides behind a funnel button and applies on confirm. Pairs with `useTableFilterState` for managed state.\n\n```ts\nimport { useTableFiltering, useTableFilterState } from '@astryx-vue/core/Table'\n```\n\nFive field types are supported, and each one gets a matching control:\n\n```ts\nconst fields: TableFilterField[] = [\n  { key: 'name', label: 'Name', type: 'string' },\n  { key: 'role', label: 'Role', type: 'enum', options: roleOptions },\n  { key: 'teams', label: 'Teams', type: 'multi-select', options: teamOptions },\n  { key: 'age', label: 'Age', type: 'number', min: 18, max: 70, isIntegerOnly: true },\n  { key: 'hired', label: 'Hired', type: 'date' },\n]\n```\n\nThe plugin renders the filter controls only; it does not remove rows. Filter the data yourself, with `applyTableFilters()` for example, which returns the rows that match every active filter, and pass the result to the table. When no row matches, give the table an `empty` slot that says so and offers a way out, such as a \"Clear filters\" button that calls `clearAll` from `useTableFilterState`.\n\n```ts\nconst { filters, onFilterChange } = useTableFilterState()\nconst filterPlugin = useTableFiltering(() => ({\n  filters: filters.value,\n  onFilterChange,\n  fields,\n  variant: 'inline',\n}))\nconst rows = computed(() => applyTableFilters(employees, filters.value, fields))\n```\n\nThe config is read again on every access, so pass a getter when the filters live in a `ref`. A plain object works too, but the table keeps the filters it saw first.\n\nIn the inline variants a filtered column that declares no `width` gets `proportional(1)`, so the control has room to sit under the label.\n\nThis filtering is separate from Power Search. A column without `filter` is never filtered, and the plugin renders nothing for it.",
+        "zh": "给表格的列加过滤器，控件可以是行内的，也可以在弹出层里。列的 `filter` 指向 `fields` 里的某个字段时，这一列才有过滤器。`inline` 变体把控件放在表头单元格里、列名下面；`inline-compact` 是同一个位置，但控件更紧凑，表格窄的时候用；`popover` 变体把它藏在一个漏斗按钮后面，确认后才生效。状态交给 `useTableFilterState` 管。\n\n```ts\nimport { useTableFiltering, useTableFilterState } from '@astryx-vue/core/Table'\n```\n\n支持五种字段类型，每种都有对应的控件：\n\n```ts\nconst fields: TableFilterField[] = [\n  { key: 'name', label: 'Name', type: 'string' },\n  { key: 'role', label: 'Role', type: 'enum', options: roleOptions },\n  { key: 'teams', label: 'Teams', type: 'multi-select', options: teamOptions },\n  { key: 'age', label: 'Age', type: 'number', min: 18, max: 70, isIntegerOnly: true },\n  { key: 'hired', label: 'Hired', type: 'date' },\n]\n```\n\n插件只画筛选控件，不删行。数据要你自己筛，比如用 `applyTableFilters()`，再把结果交给表格。一行都对不上时，给表格的 `empty` 插槽写上说明，并给一条出路，比如调用 `useTableFilterState` 的 `clearAll` 的「清除筛选」按钮。\n\n`applyTableFilters()` 返回同时满足所有生效过滤的行，插件自己不碰 `data`。\n\n```ts\nconst { filters, onFilterChange } = useTableFilterState()\nconst filterPlugin = useTableFiltering(() => ({\n  filters: filters.value,\n  onFilterChange,\n  fields,\n  variant: 'inline',\n}))\nconst rows = computed(() => applyTableFilters(employees, filters.value, fields))\n```\n\n每次读配置都会重新取值，所以过滤值存在 `ref` 里时要传 getter。直接传对象也能跑，但表格会用第一次读到的过滤值。\n\n行内变体里，带过滤但没有写 `width` 的列会被补成 `proportional(1)`，控件在列名下面放得开。\n\n这套过滤和 Power Search 是分开的。没有 `filter` 的列永远不会被过滤，插件对它什么也不画。"
       },
       "practices": {
         "en": [],
@@ -77816,6 +77836,167 @@
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/components/use-table-grouped-rows",
         "zh": "https://astryx-vue.pages.dev/components/use-table-grouped-rows"
+      }
+    },
+    {
+      "slug": "use-table-infinite-scroll",
+      "name": "UseTableInfiniteScroll",
+      "package": "@astryx-vue/core",
+      "kind": "composable",
+      "title": {
+        "en": "useTableInfiniteScroll",
+        "zh": "useTableInfiniteScroll"
+      },
+      "group": "Utility",
+      "groupTitle": {
+        "en": "Utility",
+        "zh": "工具"
+      },
+      "importPath": null,
+      "exportName": null,
+      "summary": {
+        "en": "Hook that returns a TablePlugin for loading flat data in batches. Rows, cursors and error messages stay with you: keep appending each batch to `data` and tell the plugin whether more rows exist and whether a request is in flight. While `hasMore` is true, a **Load more** button sits below the table; when the end of the table scrolls into the viewport, the next batch loads automatically. While the first batch is still loading, the table does not show its default empty state.",
+        "zh": "返回一个 `TablePlugin`，用来一批一批地加载扁平数据。行、游标和错误提示都由你自己管：每来一批就追加到 `data`，再告诉插件还有没有下一批、现在是不是正在请求。只要 `hasMore` 为 true，表格下方就有一个「加载更多」按钮；表格末尾滚进视口时，会自动加载下一批。第一批还在加载时，表格不显示默认的空状态。"
+      },
+      "usage": {
+        "en": "Hook that returns a TablePlugin for loading flat data in batches. Rows, cursors and error messages stay with you: keep appending each batch to `data` and tell the plugin whether more rows exist and whether a request is in flight. While `hasMore` is true, a **Load more** button sits below the table; when the end of the table scrolls into the viewport, the next batch loads automatically. While the first batch is still loading, the table does not show its default empty state.\n\n```ts\nimport { useTableInfiniteScroll } from '@astryx-vue/core/Table'\n```",
+        "zh": "返回一个 `TablePlugin`，用来一批一批地加载扁平数据。行、游标和错误提示都由你自己管：每来一批就追加到 `data`，再告诉插件还有没有下一批、现在是不是正在请求。只要 `hasMore` 为 true，表格下方就有一个「加载更多」按钮；表格末尾滚进视口时，会自动加载下一批。第一批还在加载时，表格不显示默认的空状态。\n\n```ts\nimport { useTableInfiniteScroll } from '@astryx-vue/core/Table'\n```"
+      },
+      "practices": {
+        "en": [],
+        "zh": []
+      },
+      "props": {
+        "en": [
+          {
+            "heading": "Parameters",
+            "rows": [
+              {
+                "name": "`hasMore`",
+                "type": "`boolean`",
+                "default": "—",
+                "description": "Whether the data source can return another batch. When false, the Load more button and the automatic loading go away."
+              },
+              {
+                "name": "`isLoading`",
+                "type": "`boolean`",
+                "default": "—",
+                "description": "Your own loading state. No new request starts while it is true."
+              },
+              {
+                "name": "`onLoadMore`",
+                "type": "`() => Promise<void>`",
+                "default": "—",
+                "description": "Fetches the next batch and appends it to your rows. Return a Promise that settles when the batch is done. A rejected Promise pauses automatic loading; returning anything other than a Promise also pauses it and warns in development."
+              }
+            ]
+          },
+          {
+            "heading": "Returns",
+            "rows": [
+              {
+                "name": "`loadingState`",
+                "description": "`loadingState`",
+                "type": "`() => TableLoadingState`"
+              },
+              {
+                "name": "`below`",
+                "description": "`below`",
+                "type": "`() => VNodeChild`"
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "参数",
+            "rows": [
+              {
+                "name": "`hasMore`",
+                "payload": "`hasMore`",
+                "type": "`boolean`",
+                "default": "—",
+                "description": "数据源还能不能再给一批。为 false 时，「加载更多」按钮和自动加载都会去掉。"
+              },
+              {
+                "name": "`isLoading`",
+                "payload": "`isLoading`",
+                "type": "`boolean`",
+                "default": "—",
+                "description": "你自己管理的加载状态。为 true 时不会发新请求。"
+              },
+              {
+                "name": "`onLoadMore`",
+                "payload": "`onLoadMore`",
+                "type": "`() => Promise<void>`",
+                "default": "—",
+                "description": "取下一批并追加到你的行里，返回在这一批完成时 settle 的 Promise。Promise 被拒绝会暂停自动加载；返回的不是 Promise 也会暂停，并在开发环境给出警告。"
+              }
+            ]
+          },
+          {
+            "heading": "返回值",
+            "rows": [
+              {
+                "name": "`loadingState`",
+                "description": "`loadingState`",
+                "type": "`() => TableLoadingState`"
+              },
+              {
+                "name": "`below`",
+                "description": "`below`",
+                "type": "`() => VNodeChild`"
+              }
+            ]
+          }
+        ]
+      },
+      "slots": {
+        "en": [],
+        "zh": []
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [
+          {
+            "heading": "Best practices",
+            "text": "- Return the request's Promise from `onLoadMore` and keep `isLoading` true while it runs. Only one request is in flight at a time, automatic or manual.\n- When a batch fails, show the error yourself. Automatic loading pauses after a failure; the Load more button still works as a retry, and one success resumes automatic loading.\n- Use it for flat lists. For grouped, tree or paginated tables, load the data your own way."
+          }
+        ],
+        "zh": [
+          {
+            "heading": "建议",
+            "text": "- `onLoadMore` 要返回这次请求的 Promise，请求期间让 `isLoading` 保持 true。不管是自动还是手动，同一时间只会有一个请求。\n- 某一批失败时，错误提示由你自己显示。失败后自动加载会暂停，「加载更多」按钮还能用来重试，成功一次就恢复自动加载。\n- 适合扁平列表。分组、树形或分页的表格，请用你自己的方式加载数据。"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": {
+            "en": "useTableInfiniteScroll — Load more",
+            "zh": "useTableInfiniteScroll — 加载更多"
+          },
+          "description": {
+            "en": "Eight rows per batch, thirty in all. Scroll to the end of the table or press Load more; the button goes away after the last batch.",
+            "zh": "每批 8 行，一共 30 行。滚到表格末尾或者点「加载更多」都能加载；最后一批到了，按钮就消失。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport type { TableColumn } from '@astryx-vue/core/Table'\nimport { proportional, Table, useTableInfiniteScroll } from '@astryx-vue/core/Table'\nimport { ref } from 'vue'\n\ninterface Walk extends Record<string, unknown> {\n  id: string\n  trail: string\n  distance: number\n}\n\nconst TOTAL = 30\nconst BATCH = 8\n\nfunction makeWalk(index: number): Walk {\n  return { id: `walk-${index}`, trail: `Trail ${index + 1}`, distance: 2 + (index * 7) % 13 }\n}\n\nconst columns: TableColumn<Walk>[] = [\n  { key: 'trail', header: 'Trail', width: proportional(2) },\n  { key: 'distance', header: 'Distance (km)', width: proportional(1), align: 'end' },\n]\n\nconst rows = ref<Walk[]>(Array.from({ length: BATCH }, (_, index) => makeWalk(index)))\nconst isLoading = ref(false)\nconst hasMore = ref(true)\n\nasync function loadMore(): Promise<void> {\n  isLoading.value = true\n  await new Promise(resolve => setTimeout(resolve, 600))\n  const start = rows.value.length\n  const next = Array.from({ length: Math.min(BATCH, TOTAL - start) }, (_, offset) => makeWalk(start + offset))\n  rows.value = [...rows.value, ...next]\n  hasMore.value = rows.value.length < TOTAL\n  isLoading.value = false\n}\n\nconst infiniteScroll = useTableInfiniteScroll<Walk>(() => ({\n  hasMore: hasMore.value,\n  isLoading: isLoading.value,\n  onLoadMore: loadMore,\n}))\n</script>\n\n<template>\n  <Table\n    :data=\"rows\"\n    :columns=\"columns\"\n    id-key=\"id\"\n    :plugins=\"{ infiniteScroll }\"\n  />\n</template>"
+        }
+      ],
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/use-table-infinite-scroll",
+        "zh": "https://astryx-vue.pages.dev/components/use-table-infinite-scroll"
       }
     },
     {
@@ -78792,7 +78973,7 @@
                 "name": "`getIsItemEnabled`",
                 "type": "`(item: T) => boolean`",
                 "default": "`() => true`",
-                "description": "Returns whether a row checkbox is interactive. Disabled rows keep their checkbox, rendered disabled, so the selection column stays aligned."
+                "description": "Returns whether a row checkbox is interactive. Disabled rows keep their checkbox, rendered disabled, so the selection column stays aligned. Unlike `getIsItemSelectable` (no checkbox at all), the row still shows that it could be selected; with `useTableSelectionState`, select-all leaves both kinds of row as they were."
               },
               {
                 "name": "`getRowLabel`",
@@ -78915,7 +79096,7 @@
                 "payload": "`getIsItemEnabled`",
                 "type": "`(item: T) => boolean`",
                 "default": "`() => true`",
-                "description": "这一行的复选框能不能点。返回 false 时复选框还在，但是禁用状态，选择列不会因此错位。"
+                "description": "这一行的复选框能不能点。返回 false 时复选框还在，但是禁用状态，选择列不会因此错位。和 `getIsItemSelectable`（连复选框都没有）不同，这一行仍看得出本来可以选；配合 `useTableSelectionState` 时，全选对这两种行都保持原样。"
               },
               {
                 "name": "`getRowLabel`",
@@ -79301,12 +79482,12 @@
       "importPath": null,
       "exportName": null,
       "summary": {
-        "en": "Call `useTableSortable` with a config object containing sort state and callback. Pass the returned plugin to `Table` via the `plugins` prop.",
-        "zh": "把排序状态和它的回调放进配置对象，交给 `useTableSortable`。它返回的插件通过 `plugins` 属性传给 `Table`。"
+        "en": "`useTableSortable` adds the sort controls and indicators to the headers of sortable columns, but it does not reorder the rows: pass rows that are already sorted as `data`, sorted by you from the sort state or by `useTableSortableState`, which returns `sortedData`. A column gets a sort control only when it sets `sortable: true` (the sort key is the column key) or `sortable: { sortKey }`. Call it with a config object containing the sort state and callback, and pass the returned plugin to `Table` via the `plugins` prop.",
+        "zh": "`useTableSortable` 只在可排序列的表头加上排序控件和指示器，不会重新排列行：`data` 要传已经排好的行，你自己按排序状态排，或者用会返回 `sortedData` 的 `useTableSortableState`。列要写 `sortable: true`（排序键就是列 key）或 `sortable: { sortKey }` 才有排序控件。"
       },
       "usage": {
-        "en": "Call `useTableSortable` with a config object containing sort state and callback. Pass the returned plugin to `Table` via the `plugins` prop.\n\n```ts\nimport { useTableSortable } from '@astryx-vue/core/Table'\n```",
-        "zh": "把排序状态和它的回调放进配置对象，交给 `useTableSortable`。它返回的插件通过 `plugins` 属性传给 `Table`。\n\n```ts\nimport { useTableSortable } from '@astryx-vue/core/Table'\n```"
+        "en": "`useTableSortable` adds the sort controls and indicators to the headers of sortable columns, but it does not reorder the rows: pass rows that are already sorted as `data`, sorted by you from the sort state or by `useTableSortableState`, which returns `sortedData`. A column gets a sort control only when it sets `sortable: true` (the sort key is the column key) or `sortable: { sortKey }`. Call it with a config object containing the sort state and callback, and pass the returned plugin to `Table` via the `plugins` prop.\n\nSort the rows yourself from the sort state:\n\n```ts\nconst sort = ref<TableSortState>([{ sortKey: 'name', direction: 'ascending' }])\nconst sortPlugin = useTableSortable<User>(() => ({\n  sort: sort.value,\n  onSortChange: next => (sort.value = next),\n}))\n\n// The plugin does not reorder rows: sort a copy of the data from `sort`.\nconst sortedUsers = computed(() => sortRows(users, sort.value, columns))\n```\n\nOr let `useTableSortableState` hold the sort and sort the rows:\n\n```ts\nconst { sortedData, sortConfig } = useTableSortableState<User>({\n  data: users,\n  columns,\n  defaultSort: [{ sortKey: 'name', direction: 'ascending' }],\n})\nconst sortPlugin = useTableSortable<User>(sortConfig)\n```\n\n`T` is the row type. TypeScript cannot infer it from the config, so pass it, as in `useTableSortable<User>(…)`, when the table's rows are typed. The same goes for `useTablePagination`, `useTableFiltering`, `useTableColumnSettings`, `useTableColumnResize`, `useTableStickyColumns` and `useTableInfiniteScroll`.\n\n```ts\nimport { useTableSortable } from '@astryx-vue/core/Table'\n```",
+        "zh": "`useTableSortable` 只在可排序列的表头加上排序控件和指示器，不会重新排列行：`data` 要传已经排好的行，你自己按排序状态排，或者用会返回 `sortedData` 的 `useTableSortableState`。列要写 `sortable: true`（排序键就是列 key）或 `sortable: { sortKey }` 才有排序控件。\n\n自己按排序状态排：\n\n```ts\nconst sort = ref<TableSortState>([{ sortKey: 'name', direction: 'ascending' }])\nconst sortPlugin = useTableSortable<User>(() => ({\n  sort: sort.value,\n  onSortChange: next => (sort.value = next),\n}))\n\n// 插件不动行的顺序：按 sort 给数据排一份副本。\nconst sortedUsers = computed(() => sortRows(users, sort.value, columns))\n```\n\n或者让 `useTableSortableState` 管排序状态并排好行：\n\n```ts\nconst { sortedData, sortConfig } = useTableSortableState<User>({\n  data: users,\n  columns,\n  defaultSort: [{ sortKey: 'name', direction: 'ascending' }],\n})\nconst sortPlugin = useTableSortable<User>(sortConfig)\n```\n\n`T` 是行的类型。TypeScript 没法从配置里推出来，表格的行有类型时要自己传，比如 `useTableSortable<User>(…)`。`useTablePagination`、`useTableFiltering`、`useTableColumnSettings`、`useTableColumnResize`、`useTableStickyColumns`、`useTableInfiniteScroll` 也一样。\n\n把排序状态和它的回调放进配置对象，交给 `useTableSortable`。它返回的插件通过 `plugins` 属性传给 `Table`。\n\n```ts\nimport { useTableSortable } from '@astryx-vue/core/Table'\n```"
       },
       "practices": {
         "en": [],
@@ -79370,6 +79551,49 @@
                 "name": "`sortFor().onClick`",
                 "description": "`sortFor().onClick`",
                 "type": "`(event: MouseEvent) => void`"
+              }
+            ]
+          },
+          {
+            "heading": "useTableSortableState",
+            "rows": [
+              {
+                "name": "`data`",
+                "type": "`MaybeRefOrGetter<readonly T[]>`",
+                "default": "—",
+                "description": "The rows to sort."
+              },
+              {
+                "name": "`columns`",
+                "type": "`MaybeRefOrGetter<readonly TableColumn<T>[]>`",
+                "default": "—",
+                "description": "The table's columns. A column whose `sortable` carries a `compare` sorts its key with that comparator."
+              },
+              {
+                "name": "`defaultSort`",
+                "type": "`MaybeRefOrGetter<TableSortState>`",
+                "default": "`[]`",
+                "description": "The sort on the first render. In multi-sort order: the first entry is the primary sort."
+              }
+            ]
+          },
+          {
+            "heading": "useTableSortableState",
+            "rows": [
+              {
+                "name": "`sortedData`",
+                "description": "`sortedData`",
+                "type": "`ComputedRef<T[]>`"
+              },
+              {
+                "name": "`sort`",
+                "description": "`sort`",
+                "type": "`Ref<TableSortState>`"
+              },
+              {
+                "name": "`sortConfig`",
+                "description": "`sortConfig`",
+                "type": "`UseTableSortableConfig`"
               }
             ]
           }
@@ -79437,6 +79661,52 @@
                 "type": "`(event: MouseEvent) => void`"
               }
             ]
+          },
+          {
+            "heading": "useTableSortableState",
+            "rows": [
+              {
+                "name": "`data`",
+                "payload": "`data`",
+                "type": "`MaybeRefOrGetter<readonly T[]>`",
+                "default": "—",
+                "description": "要排序的行。"
+              },
+              {
+                "name": "`columns`",
+                "payload": "`columns`",
+                "type": "`MaybeRefOrGetter<readonly TableColumn<T>[]>`",
+                "default": "—",
+                "description": "表格的列。`sortable` 里带了 `compare` 的列，按那个比较函数排它的键。"
+              },
+              {
+                "name": "`defaultSort`",
+                "payload": "`defaultSort`",
+                "type": "`MaybeRefOrGetter<TableSortState>`",
+                "default": "`[]`",
+                "description": "首次渲染时的排序，按多列排序的先后：第一项是主排序。"
+              }
+            ]
+          },
+          {
+            "heading": "useTableSortableState",
+            "rows": [
+              {
+                "name": "`sortedData`",
+                "description": "`sortedData`",
+                "type": "`ComputedRef<T[]>`"
+              },
+              {
+                "name": "`sort`",
+                "description": "`sort`",
+                "type": "`Ref<TableSortState>`"
+              },
+              {
+                "name": "`sortConfig`",
+                "description": "`sortConfig`",
+                "type": "`UseTableSortableConfig`"
+              }
+            ]
           }
         ]
       },
@@ -79449,8 +79719,18 @@
         "zh": []
       },
       "notes": {
-        "en": [],
-        "zh": []
+        "en": [
+          {
+            "heading": "useTableSortableState",
+            "text": "Holds the sort state and returns the sorted rows. Pass `sortConfig` to `useTableSortable` and `sortedData` to the table. `data`, `columns` and `defaultSort` take a value, a ref or a getter.\n\nA comparator (`sortable: { compare }`) sorts ascending; the hook flips it for descending. Keys without one compare numbers numerically and other values as text with a numeric collator in the active locale. A `Date` sorts by its time. `null`, `undefined`, `NaN` and an Invalid Date are missing values: they sort last in ascending order and first in descending. Arrays and plain objects have no sort text, so they compare as equal to each other and sort before text in ascending order: give a key such as `tags` a comparator. A status rank needs one too:\n\n```ts\nconst statusRank = { blocked: 0, active: 1, done: 2 }\nconst columns: TableColumn<Task>[] = [\n  { key: 'title', header: 'Title' },\n  { key: 'status', header: 'Status', sortable: { compare: (a, b) => statusRank[a.status] - statusRank[b.status] } },\n  { key: 'tags', header: 'Tags', sortable: { compare: (a, b) => a.tags.join(', ').localeCompare(b.tags.join(', ')) }, renderCell: task => task.tags.join(', ') },\n]\nconst { sortedData, sortConfig } = useTableSortableState<Task>({\n  data: tasks,\n  columns,\n  defaultSort: [{ sortKey: 'status', direction: 'ascending' }, { sortKey: 'title', direction: 'ascending' }],\n})\nconst sortPlugin = useTableSortable<Task>(() => ({ ...sortConfig, isMultiSortEnabled: true }))\n```\n\nWith `isMultiSortEnabled`, Shift-click adds a column to the sort and each sorted header shows its position."
+          }
+        ],
+        "zh": [
+          {
+            "heading": "useTableSortableState",
+            "text": "托住排序状态并返回排好的行。把 `sortConfig` 交给 `useTableSortable`，把 `sortedData` 交给表格。`data`、`columns`、`defaultSort` 可以是值、ref 或 getter。\n\n比较函数（`sortable: { compare }`）按升序写，降序时钩子自己反过来。没有比较函数的键：数字按大小比，其余按当前语言、开了数字排序的 collator 当文字比。`Date` 按时间先后排。`null`、`undefined`、`NaN` 和 Invalid Date 是缺失值：升序排最后，降序排最前。数组和普通对象没有可排序的文字，彼此算相等，升序时排在文字前面，所以 `tags` 这种键要给比较函数。状态等级这类顺序也要：\n\n```ts\nconst statusRank = { blocked: 0, active: 1, done: 2 }\nconst columns: TableColumn<Task>[] = [\n  { key: 'title', header: 'Title' },\n  { key: 'status', header: 'Status', sortable: { compare: (a, b) => statusRank[a.status] - statusRank[b.status] } },\n  { key: 'tags', header: 'Tags', sortable: { compare: (a, b) => a.tags.join(', ').localeCompare(b.tags.join(', ')) }, renderCell: task => task.tags.join(', ') },\n]\nconst { sortedData, sortConfig } = useTableSortableState<Task>({\n  data: tasks,\n  columns,\n  defaultSort: [{ sortKey: 'status', direction: 'ascending' }, { sortKey: 'title', direction: 'ascending' }],\n})\nconst sortPlugin = useTableSortable<Task>(() => ({ ...sortConfig, isMultiSortEnabled: true }))\n```\n\n开了 `isMultiSortEnabled` 后，Shift 加点击把一列加进排序，每个已排序的表头显示它排第几。"
+          }
+        ]
       },
       "examples": [
         {
