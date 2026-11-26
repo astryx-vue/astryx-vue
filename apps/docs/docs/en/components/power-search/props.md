@@ -29,7 +29,7 @@ footer: false
       <tr><td><code>maxOperatorMenuItems</code></td><td><code>number</code></td><td><code>10</code></td><td>Suggestions in string and entity value editors. It does not cap the field menu or enum menus.</td></tr>
       <tr><td><code>menuWidth</code></td><td><code>number</code></td><td>-</td><td>Exact pixel width of the field menu. It does not size the value editor.</td></tr>
       <tr><td><code>popoverSaveButtonLabel</code></td><td><code>string</code></td><td>Apply</td><td>Label of the save button in the filter editor popover. The older <code>saveLabel</code> name works too.</td></tr>
-      <tr><td><code>timezoneID</code></td><td><code>string</code></td><td>-</td><td>Time zone used when a date is shown, such as America/New_York. The older <code>timeZone</code> name works too.</td></tr>
+      <tr><td><code>timezoneID</code></td><td><code>string</code></td><td>-</td><td>Time zone used when a date is shown, such as America/New_York. The older <code>timeZone</code> name works too. Absolute dates are written in the provider's <code>calendar</code>.</td></tr>
       <tr><td><code>overflow</code></td><td><code>'none' | 'unfocused-inline' | 'unfocused-layer'</code></td><td><code>none</code></td><td>Wrap tokens, collapse them on blur, or expand them in a layer.</td></tr>
       <tr><td><code>resultCount</code></td><td><code>number | string</code></td><td>-</td><td>Match count. A number is formatted with the result plural. A string is shown as given.</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>md</code></td><td>Size of the input and the tokens.</td></tr>

@@ -776,6 +776,7 @@ export type {
   BreadcrumbsMessages,
   ButtonMessages,
   CalendarMessages,
+  CalendarSystem,
   CarouselMessages,
   ChatMessages,
   CheckboxListMessages,

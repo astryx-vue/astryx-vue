@@ -1,5 +1,6 @@
 import type { StandaloneShortWeekdayNames } from './weekdays.js'
 import { characterCount, firstCharacter } from '../utils/characters.js'
+import { dateTimeFormatFor } from '../utils/dateTimeFormatCache.js'
 import { standaloneShortWeekdayNamesByLocale } from './weekdays.js'
 
 const weekdayStart = new Date(2023, 0, 1)
@@ -52,9 +53,15 @@ const STANDALONE_MONTH_CAPITAL_LANGUAGES: ReadonlySet<string> = new Set(['es', '
 /**
  * 月份加年份，用在单独成行的地方：日历标题、月份网格的名字。
  * 和日历表头的星期名一样用单独出现的写法，CLDR 要求大写的语言首字母大写。
+ * 只按公历写，语言本身默认的历法（例如 `fa-IR` 的波斯历）不会改变它。
  */
 export function formatCalendarMonth(year: number, month: number, locale: string): string {
-  const label = new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' }).format(new Date(year, month - 1, 1))
+  return formatStandaloneMonthYear(new Date(Date.UTC(year, month - 1, 1)), locale, 'gregory')
+}
+
+/** 按指定历法写单独成行的「月份加年份」。`date` 按 UTC 读。 */
+export function formatStandaloneMonthYear(date: Date, locale: string, calendar: string): string {
+  const label = dateTimeFormatFor(locale, { month: 'long', year: 'numeric', calendar, timeZone: 'UTC' }).format(date)
   let language: string
   try {
     language = new Intl.Locale(locale).language

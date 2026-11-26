@@ -2,6 +2,7 @@
 import type { InternationalizationProviderProps, InternationalizationProviderSlots } from './types.js'
 import { computed, provide } from 'vue'
 import { devPropError, isDevBuild } from '../composables/internal/devBuild.js'
+import { provideAstryxCalendar } from '../locale/calendar.js'
 import { provideAstryxLocale } from '../locale/context.js'
 import { resolveProviderMessages } from './catalog.js'
 import { astryxDirectionKey } from './context.js'
@@ -25,6 +26,7 @@ const direction = computed(() => props.dir ?? getLocaleDirection(props.locale))
 
 provideAstryxLocale(() => props.locale, messages)
 provide(astryxDirectionKey, direction)
+provideAstryxCalendar(() => props.calendar)
 </script>
 
 <template>

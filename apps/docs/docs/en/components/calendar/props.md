@@ -27,6 +27,7 @@ footer: false
       <tr><td><code>hasVariableRowCount</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shrink the grid to the weeks the month needs. Otherwise the grid stays six rows tall.</td></tr>
       <tr><td><code>weekStartsOn</code></td><td><code>0-6 | 'sun' | 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat'</code></td><td><code>0</code></td><td>First day of the week. 0 is Sunday.</td></tr>
       <tr><td><code>handleRef</code></td><td><code>Ref | (handle) =&gt; void</code></td><td>—</td><td>Receives a handle. navigateTo moves the month to that day and focuses it.</td></tr>
+      <tr><td><code>calendar</code></td><td><code>CalendarSystem</code></td><td>From the provider</td><td>Calendar system that lays out the months and writes the dates, such as <code>'persian'</code>. When omitted, follows the nearest <code>InternationalizationProvider</code>, and is Gregorian without one. Month paging and Page Up / Page Down step through this calendar's months and years. Selected values stay Gregorian dates. See <a href="/en/guide/calendars">Calendars</a>.</td></tr>
       <tr><td><code>label</code></td><td><code>string</code></td><td><code>Calendar</code> / <code>日历</code></td><td>Accessible name for the calendar. English by default; Chinese when <code>zh-CN</code> is provided.</td></tr>
       <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disables the whole calendar.</td></tr>
     </tbody>

@@ -23,7 +23,7 @@ footer: false
         <td><code>format</code></td>
         <td><code>TimestampFormat</code></td>
         <td><code>'auto'</code></td>
-        <td><code>relative</code>、<code>relative_short</code>、<code>auto</code>、<code>date</code>、<code>date_long</code>、<code>date_weekday</code>、<code>date_time</code>、<code>time</code>、<code>system_date</code>、<code>system_date_time</code>、<code>system_time</code> 或 <code>unix_seconds</code>。</td>
+        <td><code>relative</code>、<code>relative_short</code>、<code>auto</code>、<code>date</code>、<code>date_long</code>、<code>date_weekday</code>、<code>date_time</code>、<code>time</code>、<code>system_date</code>、<code>system_date_time</code>、<code>system_time</code> 或 <code>unix_seconds</code>。带日期的格式按 provider 的 <code>calendar</code> 写日期；<code>system_*</code> 和 <code>unix_seconds</code> 在任何历法下都写公历 ISO 或纯数字。</td>
       </tr>
       <tr>
         <td><code>autoThreshold</code></td>

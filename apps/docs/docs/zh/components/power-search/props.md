@@ -29,7 +29,7 @@ footer: false
       <tr><td><code>maxOperatorMenuItems</code></td><td><code>number</code></td><td><code>10</code></td><td>字符串和实体的值补全最多几条。不影响字段菜单和枚举菜单。</td></tr>
       <tr><td><code>menuWidth</code></td><td><code>number</code></td><td>-</td><td>字段菜单的精确宽度，单位是像素。不作用于值编辑器。</td></tr>
       <tr><td><code>popoverSaveButtonLabel</code></td><td><code>string</code></td><td>应用</td><td>筛选编辑器里保存按钮的文字。旧名 <code>saveLabel</code> 同样可用。</td></tr>
-      <tr><td><code>timezoneID</code></td><td><code>string</code></td><td>-</td><td>日期怎么显示所用的时区 ID，例如 America/New_York。旧名 <code>timeZone</code> 同样可用。</td></tr>
+      <tr><td><code>timezoneID</code></td><td><code>string</code></td><td>-</td><td>日期怎么显示所用的时区 ID，例如 America/New_York。旧名 <code>timeZone</code> 同样可用。绝对日期按 provider 的 <code>calendar</code> 写。</td></tr>
       <tr><td><code>overflow</code></td><td><code>'none' | 'unfocused-inline' | 'unfocused-layer'</code></td><td><code>none</code></td><td>标签放不下时换行、失焦收成一行，或失焦后浮层展开。</td></tr>
       <tr><td><code>resultCount</code></td><td><code>number | string</code></td><td>-</td><td>匹配数量。数字会按结果的单复数格式化。</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>md</code></td><td>输入框和标签的尺寸。</td></tr>

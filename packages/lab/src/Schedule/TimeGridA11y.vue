@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { PlainDate } from '@astryx-vue/core'
+import type { CalendarSystem, PlainDate } from '@astryx-vue/core'
 import type { CalendarEvent, CalendarInstantEvent, ScheduleCategory } from './types.js'
 import { plainDateIsEqual, plainDateToISO } from '@astryx-vue/core'
 import { eventOccursOnDate } from './dateMath.js'
@@ -16,6 +16,7 @@ const props = defineProps<{
   focusDate: PlainDate
   hours: ReadonlyArray<number>
   locale: string
+  calendar: CalendarSystem
   timezoneID: string
   timezoneLabel: string
 }>()
@@ -38,7 +39,7 @@ function allDayOn(day: PlainDate): CalendarEvent[] {
         :aria-colindex="index + 2"
         :aria-current="plainDateIsEqual(day, focusDate) ? 'date' : undefined"
       >
-        {{ formatFullDate(day, locale) }}
+        {{ formatFullDate(day, locale, calendar) }}
       </div>
     </div>
     <div role="row">
@@ -54,8 +55,9 @@ function allDayOn(day: PlainDate): CalendarEvent[] {
           categories,
           day,
           events: allDayOn(day),
-          label: `${formatFullDate(day, locale)} all day`,
+          label: `${formatFullDate(day, locale, calendar)} all day`,
           locale,
+          calendar,
           timezoneID,
         })"
       />
@@ -73,8 +75,9 @@ function allDayOn(day: PlainDate): CalendarEvent[] {
           categories,
           day,
           events: events.filter(event => eventOverlapsHour(event, day, hour, timezoneID)),
-          label: `${formatFullDate(day, locale)} ${formatHour(hour, locale)}`,
+          label: `${formatFullDate(day, locale, calendar)} ${formatHour(hour, locale)}`,
           locale,
+          calendar,
           timezoneID,
         })"
       />

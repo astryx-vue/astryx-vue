@@ -27,6 +27,7 @@ footer: false
       <tr><td><code>hasVariableRowCount</code></td><td><code>boolean</code></td><td><code>false</code></td><td>行数随当月缩短。关闭时固定六行。</td></tr>
       <tr><td><code>weekStartsOn</code></td><td><code>0-6 | 'sun' | 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat'</code></td><td><code>0</code></td><td>一周从哪一天开始。0 是周日。</td></tr>
       <tr><td><code>handleRef</code></td><td><code>Ref | (handle) =&gt; void</code></td><td>—</td><td>接收翻月句柄。调用 navigateTo 会翻到那一天并聚焦它。</td></tr>
+      <tr><td><code>calendar</code></td><td><code>CalendarSystem</code></td><td>跟随 provider</td><td>按哪种历法排月份和写日期，例如 <code>'persian'</code>。不传时跟随最近的 <code>InternationalizationProvider</code>，都没有时是公历。翻月、Page Up / Page Down 都按这个历法的月和年走。选中的值始终是公历日期。见<a href="/guide/calendars">历法</a>。</td></tr>
       <tr><td><code>label</code></td><td><code>string</code></td><td><code>Calendar</code> / <code>日历</code></td><td>日历的无障碍名称。未设置语言时为英文，提供 <code>zh-CN</code> 后为中文。</td></tr>
       <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否禁用整个日历。</td></tr>
     </tbody>

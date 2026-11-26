@@ -18,6 +18,11 @@ footer: false
         <td><code>ComputedRef&lt;string&gt;</code></td>
         <td>最近的 <code>InternationalizationProvider</code> 的 BCP 47 语言标签。没有 provider 时是 <code>'en'</code>。</td>
       </tr>
+      <tr>
+        <td><code>calendar</code></td>
+        <td><code>ComputedRef&lt;CalendarSystem&gt;</code></td>
+        <td>最近的 <code>InternationalizationProvider</code> 选的历法，例如 <code>'persian'</code>。没有 provider 或没设 <code>calendar</code> 时是 <code>'gregory'</code>；不认识或当前环境显示不了的历法也读作 <code>'gregory'</code>。</td>
+      </tr>
     </tbody>
   </table>
 </div>

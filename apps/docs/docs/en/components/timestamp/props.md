@@ -23,7 +23,7 @@ footer: false
         <td><code>format</code></td>
         <td><code>TimestampFormat</code></td>
         <td><code>'auto'</code></td>
-        <td><code>relative</code>, <code>relative_short</code>, <code>auto</code>, <code>date</code>, <code>date_long</code>, <code>date_weekday</code>, <code>date_time</code>, <code>time</code>, <code>system_date</code>, <code>system_date_time</code>, <code>system_time</code>, or <code>unix_seconds</code>.</td>
+        <td><code>relative</code>, <code>relative_short</code>, <code>auto</code>, <code>date</code>, <code>date_long</code>, <code>date_weekday</code>, <code>date_time</code>, <code>time</code>, <code>system_date</code>, <code>system_date_time</code>, <code>system_time</code>, or <code>unix_seconds</code>. Date-bearing formats write the date in the provider's <code>calendar</code>; <code>system_*</code> and <code>unix_seconds</code> stay Gregorian ISO or plain numbers in every calendar.</td>
       </tr>
       <tr>
         <td><code>autoThreshold</code></td>

@@ -32,7 +32,7 @@ const props = defineProps<{
 
 const ctx = useScheduleContext()
 const dayISO = computed(() => plainDateToISO(props.day))
-const fullDate = computed(() => formatFullDate(props.day, ctx.locale))
+const fullDate = computed(() => formatFullDate(props.day, ctx.locale, ctx.calendar))
 const hasPopover = computed(() => props.renderPopover != null)
 
 function past(event: CalendarEvent): boolean {
@@ -45,7 +45,7 @@ function nameFor(event: CalendarEvent, dayLabel: string): string {
 
 function sinceLabel(chip: MonthChipPlacement): string {
   const start = props.days[chip.week * 7 + chip.columnStart]
-  const when = start == null ? fullDate.value : formatFullDate(start, ctx.locale)
+  const when = start == null ? fullDate.value : formatFullDate(start, ctx.locale, ctx.calendar)
   return nameFor(chip.event, `since ${when}`)
 }
 
@@ -70,7 +70,7 @@ function ownsRow(openKey: string): boolean {
   >
     <div class="astryx-schedule__day-number" :class="{ 'is-current': isFocus }">
       <Text type="supporting" color="inherit" weight="medium" has-tabular-numbers>
-        {{ formatDayNumber(day, ctx.locale) }}
+        {{ formatDayNumber(day, ctx.locale, ctx.calendar) }}
       </Text>
     </div>
     <template v-for="chip in cellChips" :key="chipKey(chip)">
@@ -84,7 +84,7 @@ function ownsRow(openKey: string): boolean {
           class="astryx-schedule__event-button astryx-schedule__chip"
           :class="{ 'is-last-column': isLastColumn }"
           :style="{ '--span': String(chip.columnEnd - chip.columnStart + 1), '--level': String(chip.level) }"
-          :aria-label="nameFor(chip.event, formatEventDays(chip.event, ctx.timezoneID, ctx.locale))"
+          :aria-label="nameFor(chip.event, formatEventDays(chip.event, ctx.timezoneID, ctx.locale, ctx.calendar))"
           data-schedule-month-chip=""
           v-bind="popover.getTriggerProps(chipKey(chip))"
         >
@@ -99,7 +99,7 @@ function ownsRow(openKey: string): boolean {
           data-schedule-month-chip=""
         >
           <span v-if="hasPopover" class="astryx-schedule__sr">
-            {{ nameFor(chip.event, formatEventDays(chip.event, ctx.timezoneID, ctx.locale)) }}
+            {{ nameFor(chip.event, formatEventDays(chip.event, ctx.timezoneID, ctx.locale, ctx.calendar)) }}
           </span>
           <EventPill :event="chip.event" :past="past(chip.event)" :aria-hidden="hasPopover ? 'true' : undefined" />
         </div>
