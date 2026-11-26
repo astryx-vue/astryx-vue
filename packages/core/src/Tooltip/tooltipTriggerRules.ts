@@ -17,7 +17,7 @@ export function isActionTrigger(trigger: Element): boolean {
   return ACTION_TAGS.includes(trigger.tagName)
 }
 
-function isTextEntryControl(element: Element): boolean {
+export function isTextEntryControl(element: Element): boolean {
   const tag = element.tagName
   if (tag === 'TEXTAREA')
     return true

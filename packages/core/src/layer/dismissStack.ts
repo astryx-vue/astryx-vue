@@ -139,44 +139,72 @@ export function isTopLayer(token: object): boolean {
 }
 
 /**
- * 关掉一次按压该关掉的层。
+ * 一次按压该关掉的层。
  *
  * 从最上面往下找，点在某一层里面就只关它上面的层；点在所有层外面就只关最上面那一层。
  * 点在栈顶自己的触发器上时什么都不关，那一下是触发器的开关动作。
  */
-function handlePointerDown(event: PointerEvent): void {
-  pressSerial += 1
-  const serial = pressSerial
-  const target = event.target
-  if (!(target instanceof Node))
-    return
-
+function layersToDismiss(target: Node, serial: number): StackEntry[] {
   const ordered = presentEntriesTopFirst()
     // 这次按压里才登记进来的层，不能被这次按压关掉。
     .filter(entry => entry.bornPress !== serial)
   const top = ordered[0]
   if (top == null)
-    return
+    return []
 
   const topTrigger = top.getTrigger?.() ?? null
   if (topTrigger != null && topTrigger.contains(target))
-    return
+    return []
 
   for (let i = 0; i < ordered.length; i++) {
     const container = ordered[i].getContainer?.() ?? null
     if (container == null || !container.contains(target))
       continue
     // 点在 i 这一层里面：它上面的层都该关，它自己不动。
-    for (let j = 0; j < i; j++) {
-      const above = ordered[j]
-      if (above.dismissOnPointerOutside)
-        above.onDismiss()
-    }
-    return
+    return ordered.slice(0, i).filter(above => above.dismissOnPointerOutside)
   }
 
-  if (top.dismissOnPointerOutside)
-    top.onDismiss()
+  return top.dismissOnPointerOutside ? [top] : []
+}
+
+/** 手指按下后移动超过这个距离（像素），这次触摸算拖动，不算点击。 */
+const TOUCH_PAN_DISTANCE = 10
+
+/**
+ * 手指在层外按下：等抬起时才关。拖动页面、滚动或被浏览器取消的触摸都不算点到外面。
+ * 鼠标和笔按下即关。
+ */
+function dismissOnTouchRelease(down: PointerEvent, layers: StackEntry[]): void {
+  const controller = new AbortController()
+  const listen = (type: string, handler: (event: PointerEvent) => void): void => {
+    document.addEventListener(type, event => event instanceof PointerEvent && event.pointerId === down.pointerId && handler(event), { capture: true, signal: controller.signal })
+  }
+  listen('pointermove', (event) => {
+    if (Math.hypot(event.clientX - down.clientX, event.clientY - down.clientY) > TOUCH_PAN_DISTANCE)
+      controller.abort()
+  })
+  listen('pointercancel', () => controller.abort())
+  listen('pointerup', () => {
+    controller.abort()
+    for (const layer of layers) {
+      if (entries.includes(layer) && isPresent(layer))
+        layer.onDismiss()
+    }
+  })
+}
+
+function handlePointerDown(event: PointerEvent): void {
+  pressSerial += 1
+  const target = event.target
+  if (!(target instanceof Node))
+    return
+  const layers = layersToDismiss(target, pressSerial)
+  if (layers.length === 0)
+    return
+  if (event.pointerType === 'touch')
+    dismissOnTouchRelease(event, layers)
+  else
+    layers.forEach(layer => layer.onDismiss())
 }
 
 /**

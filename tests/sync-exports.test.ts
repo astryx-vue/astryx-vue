@@ -261,6 +261,7 @@ const expectedCatalog = [
   { slug: 'use-typeahead', group: 'Utility', family: 'Utilities', en: 'useTypeahead', zh: 'useTypeahead' },
   { slug: 'use-snap-paging', group: 'Utility', family: 'Utilities', en: 'useSnapPaging', zh: 'useSnapPaging' },
   { slug: 'use-locale-direction', group: 'Utility', family: 'Utilities', en: 'useLocaleDirection', zh: 'useLocaleDirection' },
+  { slug: 'use-lightbox', group: 'Utility', family: 'Utilities', en: 'useLightbox', zh: 'useLightbox' },
 ]
 
 describe('component catalog meta', () => {

@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { infoTipFieldLabel, infoTipSizes } from '../../../../components/demos/info-tip'
+import { infoTipFieldLabel, infoTipMetricDefinitions, infoTipPermissionNotes, infoTipSizes } from '../../../../components/demos/info-tip'
 </script>
 
 ## 使用方法
@@ -42,6 +42,10 @@ import { InfoTip } from '@astryx-vue/core/InfoTip'
 <DemoExample :demo="infoTipSizes" title="尺寸" description="xsm、sm（默认）、md、lg 与 Icon 的 12、16、20、24px 一一对应。" locale="zh" />
 
 <DemoExample :demo="infoTipFieldLabel" title="字段标签" description="任何字段的 `labelTooltip` 都会在标签旁画一个 InfoTip，名称是“About Workspace name”。" locale="zh" />
+
+<DemoExample :demo="infoTipMetricDefinitions" title="指标释义" description="在指标名称旁放一个 InfoTip，说明这个数字怎么算，仪表盘不会因此变挤。" locale="zh" />
+
+<DemoExample :demo="infoTipPermissionNotes" title="权限说明" description="在数值旁边说明谁能修改它。悬停或聚焦预览说明，按一下把它钉住。" locale="zh" />
 
 ## 无障碍
 

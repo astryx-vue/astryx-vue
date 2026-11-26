@@ -60577,7 +60577,7 @@
                 "name": "`focusTrigger`",
                 "type": "`'auto' | 'always' | 'never'`",
                 "default": "`'auto'`",
-                "description": "Whether focus shows the tooltip. auto listens only when the trigger is focusable."
+                "description": "Whether focus shows the tooltip. auto decides when focus arrives: focus on the trigger itself counts, and focus inside it counts while the trigger is focusable. always counts any focus inside, never ignores focus. Focus a mouse press sends to a non-text trigger opens nothing."
               },
               {
                 "name": "`touchTrigger`",
@@ -60601,7 +60601,7 @@
                 "name": "`isOpen`",
                 "type": "`boolean`",
                 "default": "—",
-                "description": "Controlled visibility. Hover and focus are ignored when set."
+                "description": "Controlled visibility. Hover and focus never change it; with false, keyboard focus that would open the tooltip fires openChange(true) and shows nothing."
               },
               {
                 "name": "`isDefaultOpen`",
@@ -60662,7 +60662,7 @@
                 "name": "`focusTrigger`",
                 "type": "`'auto' | 'always' | 'never'`",
                 "default": "`'auto'`",
-                "description": "聚焦时是否显示提示：auto 仅在触发元素本身可聚焦时监听，always 始终监听，never 从不监听。"
+                "description": "聚焦时是否显示提示：auto 在焦点到达时判断，焦点落在触发元素自己身上算，落在里面时要触发元素此刻可聚焦才算；always 里面任何焦点都算；never 从不算。鼠标按下之后挪到非文本触发器上的焦点不会打开提示。"
               },
               {
                 "name": "`touchTrigger`",
@@ -60686,7 +60686,7 @@
                 "name": "`isOpen`",
                 "type": "`boolean`",
                 "default": "—",
-                "description": "受控显示状态。设置后悬停与聚焦不再触发提示。"
+                "description": "受控显示状态。设置后悬停与聚焦不会改变它；为 false 时，本该打开提示的键盘焦点会发出 openChange(true)，但不显示。"
               },
               {
                 "name": "`isDefaultOpen`",
@@ -62654,6 +62654,28 @@
             "zh": "任何字段的 `labelTooltip` 都会在标签旁画一个 InfoTip，名称是“About Workspace name”。"
           },
           "code": "<script setup lang=\"ts\">\nimport { TextInput } from '@astryx-vue/core/TextInput'\nimport { ref } from 'vue'\n\nconst name = ref('')\n</script>\n\n<template>\n  <div class=\"input-preview-grid\">\n    <TextInput v-model=\"name\" label=\"Workspace name\" label-tooltip=\"Shown to everyone in the workspace.\" />\n  </div>\n</template>"
+        },
+        {
+          "title": {
+            "en": "Metric definitions",
+            "zh": "指标释义"
+          },
+          "description": {
+            "en": "Put an InfoTip next to a metric name to define how the number is counted, without crowding the dashboard.",
+            "zh": "在指标名称旁放一个 InfoTip，说明这个数字怎么算，仪表盘不会因此变挤。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { InfoTip } from '@astryx-vue/core/InfoTip'\nimport { HStack, VStack } from '@astryx-vue/core/Stack'\nimport { Text } from '@astryx-vue/core/Text'\n\nconst metrics = [\n  { name: 'Active users', value: '48,210', definition: 'People who opened the app at least once in the last 28 days.' },\n  { name: 'Retention', value: '62%', definition: 'Share of last month’s active users who returned this month.' },\n  { name: 'Median session', value: '6m 40s', definition: 'Half of all sessions this week were shorter than this.' },\n]\n</script>\n\n<template>\n  <HStack :gap=\"6\" wrap=\"wrap\">\n    <VStack v-for=\"metric in metrics\" :key=\"metric.name\" :gap=\"1\">\n      <HStack :gap=\"1\" align=\"center\">\n        <Text type=\"label\" color=\"secondary\">\n          {{ metric.name }}\n        </Text>\n        <InfoTip :content=\"metric.definition\" :label=\"`About ${metric.name.toLowerCase()}`\" />\n      </HStack>\n      <Text type=\"large\">\n        {{ metric.value }}\n      </Text>\n    </VStack>\n  </HStack>\n</template>"
+        },
+        {
+          "title": {
+            "en": "Permission notes",
+            "zh": "权限说明"
+          },
+          "description": {
+            "en": "Explain who can change a value right beside it. Hover or focus previews the note, and a press pins it.",
+            "zh": "在数值旁边说明谁能修改它。悬停或聚焦预览说明，按一下把它钉住。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { InfoTip } from '@astryx-vue/core/InfoTip'\nimport { HStack, VStack } from '@astryx-vue/core/Stack'\nimport { Text } from '@astryx-vue/core/Text'\n\nconst fields = [\n  { name: 'Owner', value: 'Design Systems', note: 'Only admins can change the owner.' },\n  { name: 'Visibility', value: 'Everyone in the workspace', note: 'Editors can change this field; viewers cannot.' },\n]\n</script>\n\n<template>\n  <VStack :gap=\"4\">\n    <VStack v-for=\"field in fields\" :key=\"field.name\" :gap=\"1\">\n      <HStack :gap=\"1\" align=\"center\">\n        <Text type=\"label\">\n          {{ field.name }}\n        </Text>\n        <InfoTip :content=\"field.note\" :label=\"`Who can change ${field.name.toLowerCase()}`\" />\n      </HStack>\n      <Text type=\"body\" color=\"secondary\">\n        {{ field.value }}\n      </Text>\n    </VStack>\n  </VStack>\n</template>"
         }
       ],
       "anatomy": {
@@ -80962,7 +80984,7 @@
                 "name": "`focusTrigger`",
                 "type": "`'auto' | 'always' | 'never' | MaybeRefOrGetter`",
                 "default": "`'auto'`",
-                "description": "When focus opens the tooltip. `auto` only attaches focus listeners to naturally focusable elements."
+                "description": "When focus opens the tooltip. `auto` decides when focus arrives: focus on the trigger itself counts, and focus inside it counts while the trigger is focusable. `always` counts any focus inside; `never` ignores focus."
               },
               {
                 "name": "`touchTrigger`",
@@ -80980,7 +81002,7 @@
                 "name": "`isOpen`",
                 "type": "`boolean | undefined | MaybeRefOrGetter`",
                 "default": "—",
-                "description": "Controlled open state. `true` force-shows, `false` force-hides, `undefined` lets hover and focus manage visibility."
+                "description": "Controlled open state. `true` force-shows, `false` force-hides, `undefined` lets hover and focus manage visibility. With `false`, focus that would open the tooltip calls `onShow` and shows nothing."
               },
               {
                 "name": "`isDefaultOpen`",
@@ -81090,7 +81112,7 @@
                 "payload": "`focusTrigger`",
                 "type": "`'auto' | 'always' | 'never' | MaybeRefOrGetter`",
                 "default": "`'auto'`",
-                "description": "焦点何时打开提示。`auto` 只给本来就能聚焦的元素挂焦点监听。"
+                "description": "焦点何时打开提示。`auto` 在焦点到达时判断：落在触发器自己身上算，落在里面时要触发器此刻可聚焦才算；`always` 里面任何焦点都算；`never` 从不算。"
               },
               {
                 "name": "`touchTrigger`",
@@ -81111,7 +81133,7 @@
                 "payload": "`isOpen`",
                 "type": "`boolean | undefined | MaybeRefOrGetter`",
                 "default": "—",
-                "description": "受控的打开状态。`true` 强制显示，`false` 强制隐藏，`undefined` 交给悬停/焦点管理。"
+                "description": "受控的打开状态。`true` 强制显示，`false` 强制隐藏，`undefined` 交给悬停/焦点管理。为 `false` 时，本该打开提示的焦点只调用 `onShow`，不显示。"
               },
               {
                 "name": "`isDefaultOpen`",
@@ -82011,6 +82033,238 @@
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/components/use-locale-direction",
         "zh": "https://astryx-vue.pages.dev/components/use-locale-direction"
+      }
+    },
+    {
+      "slug": "use-lightbox",
+      "name": "UseLightbox",
+      "package": "@astryx-vue/core",
+      "kind": "composable",
+      "title": {
+        "en": "useLightbox",
+        "zh": "useLightbox"
+      },
+      "group": "Utility",
+      "groupTitle": {
+        "en": "Utility",
+        "zh": "工具"
+      },
+      "importPath": null,
+      "exportName": null,
+      "summary": {
+        "en": "Headless hook that owns the open state and the gallery index for a `Lightbox`. Use it when thumbnails, buttons, or other controls outside the viewer decide what it shows.",
+        "zh": "给每张缩略图一个名字，比如照片的 `alt`，让读屏用户知道每个按钮会打开什么。"
+      },
+      "usage": {
+        "en": "Headless hook that owns the open state and the gallery index for a `Lightbox`. Use it when thumbnails, buttons, or other controls outside the viewer decide what it shows.\n\n```ts\nimport { Lightbox, useLightbox } from '@astryx-vue/core/Lightbox'\n```\n\nBind `bindings` onto `Lightbox`, and call `open(index)` from a thumbnail:\n\n```vue\n<script setup lang=\"ts\">\nimport { Lightbox, useLightbox } from '@astryx-vue/core/Lightbox'\n\nconst photos = [\n  { src: '/a.png', alt: 'First photo', caption: 'The first photo.' },\n  { src: '/b.png', alt: 'Second photo', caption: 'The second photo.' },\n]\nconst { bindings, open } = useLightbox({ media: photos })\n</script>\n\n<template>\n  <button v-for=\"(photo, index) in photos\" :key=\"photo.src\" type=\"button\" @click=\"open(index)\">\n    {{ photo.alt }}\n  </button>\n  <Lightbox v-bind=\"bindings\" />\n</template>\n```\n\n`getTriggerProps(index)` returns `role=\"button\"`, `tabindex=\"0\"`, `aria-haspopup=\"dialog\"`, and Enter or Space activation for a trigger that is not a native button. When the viewer closes, focus returns to the element that opened it.",
+        "zh": ""
+      },
+      "practices": {
+        "en": [
+          {
+            "guidance": "Do",
+            "text": "Give every thumbnail a name, such as the photo's `alt`, so people using a screen reader know what each one opens."
+          },
+          {
+            "guidance": "Do",
+            "text": "Prefer the `Lightbox` component with `v-model:is-open` when one control opens a single viewer; reach for the hook when many triggers share one gallery."
+          },
+          {
+            "guidance": "Don't",
+            "text": "Render one `Lightbox` per thumbnail: the gallery needs one viewer that knows the whole `media` array."
+          }
+        ],
+        "zh": [
+          {
+            "guidance": "推荐",
+            "text": "给每张缩略图一个名字，比如照片的 `alt`，让读屏用户知道每个按钮会打开什么。"
+          },
+          {
+            "guidance": "推荐",
+            "text": "一个控件打开一个查看器时，直接用 `Lightbox` 加 `v-model:is-open`；多个触发器共用一个图集时再用这个函数。"
+          },
+          {
+            "guidance": "不推荐",
+            "text": "每张缩略图配一个 `Lightbox`：图集需要一个认识整个 `media` 数组的查看器。"
+          }
+        ]
+      },
+      "props": {
+        "en": [
+          {
+            "heading": "Options",
+            "rows": [
+              {
+                "name": "`media`",
+                "type": "`LightboxMedia | readonly LightboxMedia[]`",
+                "default": "—",
+                "description": "One image or video, or the gallery's array. An array opens as a gallery."
+              },
+              {
+                "name": "`hasZoom`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "Lets images zoom, as on `Lightbox`."
+              },
+              {
+                "name": "`hasAutoPlay`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "Plays a video when it is shown in an open viewer."
+              }
+            ]
+          },
+          {
+            "heading": "Returns",
+            "rows": [
+              {
+                "name": "`bindings`",
+                "type": "`ComputedRef`",
+                "description": "Props and update listeners for `v-bind` on `Lightbox`."
+              },
+              {
+                "name": "`open`",
+                "type": "`(index?: number) => void`",
+                "description": "Sets the gallery index (default 0) and opens the viewer."
+              },
+              {
+                "name": "`close`",
+                "type": "`() => void`",
+                "description": "Closes the viewer."
+              },
+              {
+                "name": "`isOpen`",
+                "type": "`Ref<boolean>`",
+                "description": "Whether the viewer is open."
+              },
+              {
+                "name": "`index`",
+                "type": "`Ref<number>`",
+                "description": "The index of the item shown."
+              },
+              {
+                "name": "`getTriggerProps`",
+                "type": "`(index: number) => LightboxTriggerProps`",
+                "description": "Button role, `tabindex`, `aria-haspopup=\"dialog\"`, click, and Enter or Space for a trigger that is not a native button."
+              },
+              {
+                "name": "`triggerProps`",
+                "type": "`ComputedRef<LightboxTriggerProps>`",
+                "description": "`getTriggerProps` for the first item."
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "参数",
+            "rows": [
+              {
+                "name": "`media`",
+                "payload": "`media`",
+                "type": "`LightboxMedia | readonly LightboxMedia[]`",
+                "default": "—",
+                "description": "一张图片或一段视频，或图集的数组。传数组就是图集。"
+              },
+              {
+                "name": "`hasZoom`",
+                "payload": "`hasZoom`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "让图片可以缩放，和 `Lightbox` 一样。"
+              },
+              {
+                "name": "`hasAutoPlay`",
+                "payload": "`hasAutoPlay`",
+                "type": "`boolean`",
+                "default": "`false`",
+                "description": "视频在打开的查看器里显示时自动播放。"
+              }
+            ]
+          },
+          {
+            "heading": "返回值",
+            "rows": [
+              {
+                "name": "`bindings`",
+                "type": "`ComputedRef`",
+                "description": "给 `Lightbox` 做 `v-bind` 的属性和更新监听。"
+              },
+              {
+                "name": "`open`",
+                "type": "`(index?: number) => void`",
+                "description": "设置图集下标（默认 0）并打开查看器。"
+              },
+              {
+                "name": "`close`",
+                "type": "`() => void`",
+                "description": "关闭查看器。"
+              },
+              {
+                "name": "`isOpen`",
+                "type": "`Ref<boolean>`",
+                "description": "查看器是否打开。"
+              },
+              {
+                "name": "`index`",
+                "type": "`Ref<number>`",
+                "description": "正在显示的这一项的下标。"
+              },
+              {
+                "name": "`getTriggerProps`",
+                "type": "`(index: number) => LightboxTriggerProps`",
+                "description": "按钮角色、`tabindex`、`aria-haspopup=\"dialog\"`、点击，以及回车或空格激活，给不是原生按钮的触发器用。"
+              },
+              {
+                "name": "`triggerProps`",
+                "type": "`ComputedRef<LightboxTriggerProps>`",
+                "description": "第一项的 `getTriggerProps`。"
+              }
+            ]
+          }
+        ]
+      },
+      "slots": {
+        "en": [],
+        "zh": []
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [],
+        "zh": [
+          {
+            "heading": "用法",
+            "text": "管着 `Lightbox` 打开状态和图集下标的无界面组合式函数。缩略图、按钮这类放在查看器外面的控件决定它显示什么时用它。\n\n```ts\nimport { Lightbox, useLightbox } from '@astryx-vue/core/Lightbox'\n```\n\n把 `bindings` 绑到 `Lightbox` 上，在缩略图里调 `open(index)`：\n\n```vue\n<script setup lang=\"ts\">\nimport { Lightbox, useLightbox } from '@astryx-vue/core/Lightbox'\n\nconst photos = [\n  { src: '/a.png', alt: '第一张', caption: '第一张照片。' },\n  { src: '/b.png', alt: '第二张', caption: '第二张照片。' },\n]\nconst { bindings, open } = useLightbox({ media: photos })\n</script>\n\n<template>\n  <button v-for=\"(photo, index) in photos\" :key=\"photo.src\" type=\"button\" @click=\"open(index)\">\n    {{ photo.alt }}\n  </button>\n  <Lightbox v-bind=\"bindings\" />\n</template>\n```\n\n触发器不是原生按钮时，`getTriggerProps(index)` 返回 `role=\"button\"`、`tabindex=\"0\"`、`aria-haspopup=\"dialog\"`，以及回车和空格激活。查看器关闭后，焦点回到打开它的元素。"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": {
+            "en": "Gallery grid",
+            "zh": "图集网格"
+          },
+          "description": {
+            "en": "Each thumbnail calls `open(index)`; the single `Lightbox` bound with `bindings` shows that photo and pages through the rest.",
+            "zh": "每张缩略图调用 `open(index)`，用 `bindings` 绑定的唯一一个 `Lightbox` 显示这张照片并可翻看其余照片。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { Grid } from '@astryx-vue/core/Grid'\nimport { Lightbox, useLightbox } from '@astryx-vue/core/Lightbox'\nimport { Thumbnail } from '@astryx-vue/core/Thumbnail'\n\nconst photos = [\n  {\n    src: '/template-assets/Neutral-Backpack.png',\n    alt: 'Backpack',\n    caption: 'A backpack displayed on a neutral background.',\n  },\n  {\n    src: '/template-assets/building.png',\n    alt: 'Modern building',\n    caption: 'A modern building with a contemporary architectural design.',\n  },\n  {\n    src: '/template-assets/light-scene-horizontal-1.png',\n    alt: 'Coastal shoreline with ocean waves',\n    caption: 'A scenic coastline with waves rolling onto a sandy beach beneath a clear sky.',\n  },\n  {\n    src: '/template-assets/illustrative-vertical-1.png',\n    alt: 'Illustrated lakeside landscape at sunset',\n    caption: 'A stylized landscape illustration featuring pink clouds reflected over a calm lake at sunset.',\n  },\n]\n\nconst { bindings, open } = useLightbox({ media: photos })\n</script>\n\n<template>\n  <Grid :columns=\"2\" :gap=\"2\" :width=\"136\">\n    <Thumbnail\n      v-for=\"(photo, index) in photos\"\n      :key=\"photo.src\"\n      :src=\"photo.src\"\n      :alt=\"photo.alt\"\n      :label=\"photo.alt\"\n      @click=\"open(index)\"\n    />\n  </Grid>\n  <Lightbox v-bind=\"bindings\" />\n</template>"
+        }
+      ],
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/use-lightbox",
+        "zh": "https://astryx-vue.pages.dev/components/use-lightbox"
       }
     }
   ],
