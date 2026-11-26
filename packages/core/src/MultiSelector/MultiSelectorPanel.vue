@@ -69,6 +69,15 @@ function onRowEnter(event: MouseEvent, index: number): void {
   if (pointerGate.moved(event))
     emit('highlight', index)
 }
+
+/** 主题用 highlighted、selected、disabled 状态属性挂样式。 */
+function stateAttrs(option: MultiSelectorOptionData): Record<string, string | undefined> {
+  return {
+    'data-highlighted': props.optionIndex(option.value) === props.activeIndex ? 'highlighted' : undefined,
+    'data-selected': props.isSelected(option.value) ? 'selected' : undefined,
+    'data-disabled': option.disabled ? 'disabled' : undefined,
+  }
+}
 const markSize = computed(() => props.size === 'lg' ? 'md' : 'sm')
 
 defineExpose({
@@ -92,6 +101,8 @@ function actionOf(option: MultiSelectorOptionData | undefined) {
         type="text"
         role="combobox"
         autocomplete="off"
+        autocorrect="off"
+        enterkeyhint="search"
         :aria-label="searchPlaceholder"
         aria-expanded="true"
         :aria-controls="listboxId"
@@ -199,6 +210,7 @@ function actionOf(option: MultiSelectorOptionData | undefined) {
           :aria-selected="isSelected(row.option.value)"
           :aria-disabled="row.option.disabled || undefined"
           :data-option-id="String(row.option.value)"
+          v-bind="stateAttrs(row.option)"
           tabindex="-1"
           @mousedown.prevent
           @mouseenter="onRowEnter($event, optionIndex(row.option.value))"
@@ -224,6 +236,7 @@ function actionOf(option: MultiSelectorOptionData | undefined) {
           role="row"
           :aria-selected="isSelected(row.option.value)"
           :aria-disabled="row.option.disabled || undefined"
+          v-bind="stateAttrs(row.option)"
         >
           <!-- eslint-disable-next-line vue-a11y/click-events-have-key-events, vue-a11y/mouse-events-have-key-events -- 选项不进 Tab 序，方向键和空格由组合框处理。 -->
           <div

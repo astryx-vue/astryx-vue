@@ -4,6 +4,7 @@ import type { ComplexSelectorEmits, ComplexSelectorHandle, ComplexSelectorProps,
 import { computed, onBeforeUnmount, ref, shallowRef, useAttrs, useId, useTemplateRef, watch } from 'vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
+import { useBusyAnnouncement } from '../composables/internal/busyAnnouncement.js'
 import { useDevWarning } from '../composables/useDevWarning.js'
 import Field from '../Field/Field.vue'
 import { useFieldPartStyling } from '../Field/fieldParts.js'
@@ -122,6 +123,8 @@ const contentStyles = computed(() => [
 
 const placeholder = computed(() => props.placeholder ?? messages.value.selector.placeholder)
 const isBusy = computed(() => props.isLoading || isPending.value)
+/** 框里的转圈只是装饰，忙碌由触发器自己念一次。 */
+useBusyAnnouncement(isBusy, () => messages.value.selector.loading, triggerEl)
 const displayValue = computed(() => (isPending.value && optimistic.value !== undefined ? optimistic.value as Value : model.value))
 const hasTriggerLabel = computed(() => props.triggerLabel != null && props.triggerLabel !== '')
 
@@ -415,7 +418,7 @@ defineExpose(handle)
           size="sm"
         />
         <span class="astryx-complex-selector-value">{{ hasTriggerLabel ? triggerLabel : placeholder }}</span>
-        <Spinner v-if="isBusy" size="sm" />
+        <Spinner v-if="isBusy" size="sm" aria-hidden="true" />
         <StatusGlyph v-if="statusGlyph && !isTooltipStatus" :type="statusGlyph" />
         <!-- 提示按钮不能套在按钮里，它浮在这块空位上。 -->
         <span v-else-if="isTooltipStatus" class="astryx-complex-selector-status-slot" aria-hidden="true" />

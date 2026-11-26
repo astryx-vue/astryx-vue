@@ -12,6 +12,8 @@ defineOptions({ name: 'AstryxSelectorPanel' })
 
 const props = defineProps<{
   searchable: boolean
+  /** 字段必填：搜索框带 aria-required（带搜索的触发器是按钮，不能带）。 */
+  required?: boolean
   query: string
   placeholder: string
   clearLabel: string
@@ -61,6 +63,15 @@ function active(index: number | undefined): boolean {
   return index === props.activeIndex
 }
 
+/** 主题用 highlighted、selected、disabled 状态属性挂样式。 */
+function stateAttrs(option: SelectorOption, index: number): Record<string, string | undefined> {
+  return {
+    'data-highlighted': active(index) ? 'highlighted' : undefined,
+    'data-selected': selected(option) ? 'selected' : undefined,
+    'data-disabled': option.disabled ? 'disabled' : undefined,
+  }
+}
+
 defineExpose({
   focusSearch: () => searchInput.value?.focus(),
 })
@@ -100,10 +111,13 @@ watch(() => [props.activeIndex, props.isOpen] as const, ([index, open]) => {
         class="astryx-selector-search-input"
         role="combobox"
         autocomplete="off"
+        autocorrect="off"
+        enterkeyhint="search"
         :aria-label="placeholder"
         :aria-expanded="isOpen"
         :aria-controls="listboxId"
         aria-autocomplete="list"
+        :aria-required="required || undefined"
         :aria-activedescendant="activeDescendant"
         :placeholder="placeholder"
         :value="query"
@@ -142,6 +156,7 @@ watch(() => [props.activeIndex, props.isOpen] as const, ([index, open]) => {
           }"
           :aria-selected="selected(row.option)"
           :aria-disabled="row.option.disabled"
+          v-bind="stateAttrs(row.option, row.index)"
           @click="emit('select', row.option)"
           @keydown.enter="emit('select', row.option)"
           @keydown.space.prevent="emit('select', row.option)"
@@ -174,6 +189,7 @@ watch(() => [props.activeIndex, props.isOpen] as const, ([index, open]) => {
           role="row"
           :aria-selected="selected(row.option)"
           :aria-disabled="row.option.disabled || undefined"
+          v-bind="stateAttrs(row.option, row.index)"
         >
           <!-- eslint-disable-next-line vue-a11y/click-events-have-key-events -- 选项格不进 Tab 序，方向键和回车由组合框处理。 -->
           <div

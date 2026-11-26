@@ -535,6 +535,16 @@
   outline: none;
 }
 
+/*
+ * 幽灵和次要触发器的外框没有边框和聚焦底纹，焦点环画在真正拿到键盘焦点的那一个上：
+ * 触发器聚焦时环画在外框，清除按钮聚焦时环画在它自己身上，不会两个一起圈。
+ */
+.astryx-selector-field:is(.is-ghost, [data-variant='secondary']):has(.astryx-selector-trigger:focus-visible),
+.astryx-selector-field:is(.is-ghost, [data-variant='secondary']) .astryx-selector-clear:focus-visible {
+  outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, currentcolor);
+  outline-offset: 2px;
+}
+
 /* 强制颜色下焦点只剩边框能表达：聚焦（含可聚焦的禁用字段）的边框取系统 Highlight 色。 */
 @layer astryx.components {
   @media (forced-colors: active) {
