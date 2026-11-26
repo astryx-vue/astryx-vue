@@ -40,3 +40,12 @@ Distance and scale read `--astryx-motion-offset`, `--astryx-motion-scale-from`, 
 Replay the samples below. With reduced motion on, they sit at the end state.
 
 <TokenReference locale="en" motion :sections="['duration', 'ease']" />
+
+## Touch entrances and exits
+
+On a phone or a tablet, where the primary pointer is a finger, a modal layer takes no taps while it enters:
+
+- After Dialog, Drawer and MobileNav open, a finger's or a pen's taps and drags reach neither the page nor the layer until the entrance ends (300ms at most for MobileNav). Keys and assistive technology stay live, and input comes back the moment the entrance ends.
+- Nothing is held where the primary pointer is a mouse, a touchscreen laptop included. A mouse on a touch device still clicks: one that has not moved since presses where it rests.
+- A finger that was already down when the entrance started lifts onto what is beneath it, so a light-dismissing layer still closes.
+- While a BottomSheet slides out, the page stays live. If focus is still inside the sheet (there was nothing to return it to), the sheet's content stays exposed and only Tab works; once focus leaves, the whole sheet stops taking input until it is gone.
