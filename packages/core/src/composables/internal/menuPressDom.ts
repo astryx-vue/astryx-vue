@@ -1,4 +1,5 @@
 import type { MenuPressPointerType } from './menuPressGesture.js'
+import { isInputShield } from '../../layer/inputHoldState.js'
 import { focusForLastInput } from './focusReturn.js'
 import { runAsMenuPressActivation } from './menuPressActivation.js'
 
@@ -52,9 +53,13 @@ function elementUnder(event: PointerEvent, doc: Document, menu: HTMLElement | nu
   // 菜单在 shadow root 里时，文档层面的命中测试只能拿到宿主元素，要在菜单自己的根上测。
   const tree = menu?.getRootNode() as (Document | ShadowRoot | undefined)
   const scope = tree != null && typeof tree.elementFromPoint === 'function' ? tree : doc
-  const hit = hitTest != null
+  let hit = hitTest != null
     ? hitTest(event.clientX, event.clientY)
     : (typeof scope.elementFromPoint === 'function' ? scope.elementFromPoint(event.clientX, event.clientY) : null)
+  // 菜单进场时输入暂挡的挡板盖满视口：它挡住新的输入，正在进行的这一下按压照样
+  // 落到它下面的行上，所以命中测试只看穿这块挡板。
+  if (hitTest == null && isInputShield(hit) && typeof scope.elementsFromPoint === 'function')
+    hit = scope.elementsFromPoint(event.clientX, event.clientY).find(candidate => !isInputShield(candidate)) ?? null
   if (hit != null)
     return hit
   return event.target instanceof Element ? event.target : null

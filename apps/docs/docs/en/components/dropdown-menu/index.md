@@ -63,6 +63,8 @@ Content that is not an option can sit above or below the rows: a filter field, o
 
 A submenu flies out beside its row on a wide screen. On a compact touch surface the next level replaces the current rows and adds a Back row at the top, named after the parent. That choice is made when the menu opens and does not change while it stays open. A submenu can also be forced to always fly out, or always replace the rows. While its children are still loading, the caret can become a spinner, and the submenu can still be opened. A flyout is at least about 160 pixels wide unless a width is set, and it never grows past the viewport.
 
+The anchored menu slides in from the side of its trigger and grows from the point where the two meet, on the theme's `--duration-fast-max` and `--ease-standard`; closing runs the same way back. With Reduce Motion it fades in under a finger and appears at once otherwise. On a phone or a tablet, a tap or a drag that lands while the menu is still entering is ignored, as on iOS: the menu finishes opening, stays open and keeps focus, and nothing under the tap reacts. The finger that opened the menu still picks a row. Keys and assistive technology stay live, and a mouse is never held.
+
 
 <ComponentAnatomy />
 
