@@ -1,4 +1,6 @@
 import { defineDemo } from '../demo-infra/defineDemo'
+import audioPlayerDemo from './audio-player.vue'
+import audioPlayerSource from './audio-player.vue?raw&highlighted'
 import chatEmojiPickerDemo from './chat-emoji-picker.vue'
 import chatEmojiPickerSource from './chat-emoji-picker.vue?raw&highlighted'
 import chatReactionBarDemo from './chat-reaction-bar.vue'
@@ -61,6 +63,8 @@ import transferListOverviewDemo from './transfer-list-overview.vue'
 import transferListOverviewSource from './transfer-list-overview.vue?raw&highlighted'
 import transferListDemo from './transfer-list.vue'
 import transferListSource from './transfer-list.vue?raw&highlighted'
+import videoPlayerDemo from './video-player.vue'
+import videoPlayerSource from './video-player.vue?raw&highlighted'
 
 const options = { className: 'lab-demo' }
 
@@ -86,6 +90,8 @@ export const labListInput = defineDemo(listInputDemo, listInputSource, options)
 export const labLogStream = defineDemo(logStreamDemo, logStreamSource, options)
 export const labLogStreamOverview = defineDemo(logStreamOverviewDemo, logStreamOverviewSource, options)
 export const labMediaPlayer = defineDemo(mediaPlayerDemo, mediaPlayerSource, options)
+export const labVideoPlayer = defineDemo(videoPlayerDemo, videoPlayerSource, options)
+export const labAudioPlayer = defineDemo(audioPlayerDemo, audioPlayerSource, options)
 export const labMobileTokenizer = defineDemo(mobileTokenizerDemo, mobileTokenizerSource, options)
 export const labMobileTokenizerOverview = defineDemo(mobileTokenizerOverviewDemo, mobileTokenizerOverviewSource, options)
 export const labSchedule = defineDemo(scheduleDemo, scheduleSource, options)

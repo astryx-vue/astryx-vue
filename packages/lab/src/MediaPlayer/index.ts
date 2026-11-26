@@ -1,3 +1,4 @@
+export { default as AudioPlayer } from './AudioPlayer.vue'
 export { MARKER_CONTENT_ATTRIBUTE, useMediaPlaybackTime, useMediaPlayer } from './context.js'
 export type { MediaControlsHold, UseMediaPlayerReturn } from './context.js'
 export { default as MediaCaptionsButton } from './MediaCaptionsButton.vue'
@@ -16,6 +17,8 @@ export { default as MediaVolume } from './MediaVolume.vue'
 export { mediaPlayerMessages } from './messages.js'
 export type { MediaPlayerMessages } from './messages.js'
 export type {
+  AudioPlayerProps,
+  AudioPlayerSlots,
   MediaButtonPartProps,
   MediaControlSize,
   MediaPlaybackRateProps,
@@ -37,4 +40,7 @@ export type {
   MediaTimeProps,
   MediaTimeSliderProps,
   MediaVolumeProps,
+  VideoPlayerCaptionTrack,
+  VideoPlayerProps,
 } from './types.js'
+export { default as VideoPlayer } from './VideoPlayer.vue'
