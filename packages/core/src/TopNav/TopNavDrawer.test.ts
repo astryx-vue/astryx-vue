@@ -114,6 +114,8 @@ describe('top-nav 抽屉里的分组', () => {
     const item = wrapper.get('.astryx-top-nav-item')
     expect(item.attributes('aria-disabled')).toBe('true')
     expect(item.attributes('tabindex')).not.toBe('-1')
+    // 原生 disabled 会让它掉出 Tab 顺序，所以靠 aria-disabled，不用原生 disabled。
+    expect(item.attributes('disabled')).toBeUndefined()
     await item.trigger('click')
     await item.trigger('keydown', { key: 'Enter' })
     expect(onClick).not.toHaveBeenCalled()
