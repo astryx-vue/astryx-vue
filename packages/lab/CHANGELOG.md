@@ -1,5 +1,11 @@
 # @astryx-vue/lab
 
+## 0.6.5
+
+### Patch Changes
+
+- [#524](https://github.com/astryx-vue/astryx-vue/pull/524) [`1c4d3db`](https://github.com/astryx-vue/astryx-vue/commit/1c4d3dba2a2d4f2862fe4c2dfc5001301d44958e) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `EmojiPicker` 遇到 `key` 为 `Process` 的按键也当作输入法组字，方向键和 Enter 留给候选框，和 core 的判断一致。
+
 ## 0.6.4
 
 ### Patch Changes
