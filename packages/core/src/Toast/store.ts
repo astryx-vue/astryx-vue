@@ -45,6 +45,7 @@ export const toastStore = reactive<{
         return null
       if (existing) {
         Object.assign(existing, resolved)
+        existing.revision += 1
         return existing.id
       }
     }
@@ -52,6 +53,7 @@ export const toastStore = reactive<{
     this.toasts.push({
       id,
       uniqueID: options.uniqueID,
+      revision: 0,
       isExiting: false,
       ...resolved,
     })

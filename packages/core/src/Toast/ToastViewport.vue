@@ -9,6 +9,7 @@ import { useLayerConfig } from '../LayerProvider/context.js'
 import { readToastMotionDurationMs } from './motionDuration.js'
 import { toastStore } from './store.js'
 import Toast from './Toast.vue'
+import { createToastFocusHandoff } from './toastFocus.js'
 
 const props = defineProps<{
   placement?: ToastPlacement
@@ -25,6 +26,7 @@ const activeModal = useActiveModalOutlet()
 const mountTarget = ref<string | HTMLElement>('body')
 
 const viewportRef = ref<HTMLElement | null>(null)
+const focusHandoff = createToastFocusHandoff(() => viewportRef.value)
 
 /** 等两帧，让浏览器把上一步的样式算完。没有 `requestAnimationFrame` 时立刻返回。 */
 function afterTwoFrames(): Promise<void> {
@@ -126,6 +128,8 @@ const classes = computed(() => [
   'astryx-layer',
   `astryx-toast-viewport--placement-${placement.value}`,
   { 'astryx-toast-viewport--rehosting': isRehosting.value },
+  // 没有提示时不占盒子：iOS Safari 会按贴底的固定元素给工具栏取色。
+  { 'astryx-toast-viewport--empty': toastStore.toasts.length === 0 },
 ])
 
 /** 超出可见上限时只渲染最新的几条。 */
@@ -145,8 +149,8 @@ const INSET_EDGES = [
 ] as const
 
 /**
- * 逐边偏移叠在基础内边距上。基础内边距取间距第 4 档和设备安全区的较大者，
- * 和锚定浮层的视口空隙保持一致。没有 provider 时不写内联样式，保持原来的样子。
+ * 逐边偏移叠在基础内边距上。基础内边距在上、左、右三边取间距第 4 档和设备安全区的较大者，
+ * 下沿则是间距第 4 档加设备安全区。没有 provider 时不写内联样式，保持原来的样子。
  */
 const viewportStyle = computed<CSSProperties | undefined>(() => {
   const inset: ResolvedLayerInset | undefined = layer?.value.toast.inset
@@ -156,7 +160,12 @@ const viewportStyle = computed<CSSProperties | undefined>(() => {
   const style: Record<string, string> = {}
   for (const [property, edge, areaEdge] of INSET_EDGES) {
     const extra = inset[edge] ?? 0
-    style[property] = `calc(max(var(--astryx-spacing-4, 16px), env(safe-area-inset-${areaEdge}, 0px)) + ${extra}px)`
+    // 下沿：iPhone 上从底部安全区起手的下滑会把整屏拉下来，提示要整个让开这一段，
+    // 所以是相加而不是取较大者。
+    const base = edge === 'blockEnd'
+      ? `var(--astryx-spacing-4, 16px) + max(env(safe-area-inset-bottom, 0px), var(--_toast-bottom-floor, 0px))`
+      : `max(var(--astryx-spacing-4, 16px), env(safe-area-inset-${areaEdge}, 0px))`
+    style[property] = `calc(${base} + ${extra}px)`
   }
   return style as CSSProperties
 })
@@ -182,6 +191,23 @@ function handleDismiss(id: string, reason: ToastDismissReason) {
   toastStore.dismissFromCard(id, reason)
 }
 
+// 开始离场的提示：焦点还在里面就交出去。超出可见上限被挤掉的离场提示没有行，
+// 也就等不到行的过渡结束，直接出栈，免得之后作为零高度的空行回来。
+watch(
+  () => `${toastStore.toasts.map(t => `${t.id}:${t.isExiting}`).join(',')}|${visibleToasts.value.map(t => t.id).join(',')}`,
+  () => {
+    const shown = new Set(visibleToasts.value.map(t => t.id))
+    for (const toast of [...toastStore.toasts]) {
+      if (!toast.isExiting)
+        continue
+      focusHandoff.handoff(toast.id)
+      if (!shown.has(toast.id))
+        toastStore.finalize(toast.id)
+    }
+  },
+  { flush: 'pre' },
+)
+
 watch(
   () => toastStore.toasts.map(t => t.id).join(','),
   () => {
@@ -203,10 +229,13 @@ watch(
       popover="manual"
       aria-live="polite"
       aria-atomic="false"
+      @focusin="focusHandoff.onFocusIn"
     >
       <div
         v-for="toast in visibleToasts"
         :key="toast.id"
+        :data-toast-id="toast.id"
+        :data-toast-exiting="toast.isExiting ? '' : undefined"
         class="astryx-toast-viewport__row"
         :class="[
           isTopPlacement ? 'astryx-toast-viewport__row--from-top' : 'astryx-toast-viewport__row--from-bottom',
@@ -226,6 +255,7 @@ watch(
             :end-content="toast.endContent"
             :is-exiting="toast.isExiting"
             :swipe-direction="isTopPlacement ? -1 : 1"
+            :timer-key="toast.revision"
             @dismiss="handleDismiss(toast.id, $event)"
           />
         </div>

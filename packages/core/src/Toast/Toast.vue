@@ -23,6 +23,10 @@ const props = withDefaults(defineProps<Omit<ToastOptions, 'onDismiss' | 'onHide'
    * 朝哪边滑出。1 向下，-1 向上。视口按提示贴在屏幕上沿还是下沿传入。
    */
   swipeDirection?: ToastGestureDirection
+  /**
+   * 同一个 `uniqueID` 的新提示原地覆盖这张卡片时会变，自动关闭的计时随之重新开始。
+   */
+  timerKey?: number
 }>(), {
   type: 'info',
   isExiting: false,
@@ -45,7 +49,10 @@ defineSlots<ToastSlots>()
 const duration = computed(() => resolveAutoHideDuration(props))
 const autoHide = computed(() => resolveAutoHide(props))
 const remaining = ref(duration.value)
-const isPaused = ref(false)
+// 悬停、焦点、手势、窗口失焦各自按住计时器，各自结束才算数：
+// 只有最后一个条件放开，计时才继续。
+type PauseSource = 'pointer' | 'focus' | 'gesture' | 'window'
+const pauseSources = new Set<PauseSource>()
 const timer = ref<ReturnType<typeof setTimeout> | null>(null)
 const startTime = ref<number | null>(null)
 
@@ -86,14 +93,14 @@ const gesture = useToastGesture({
   direction: () => props.swipeDirection,
   enabled: () => !props.isExiting,
   canPauseTimer: () => autoHide.value,
-  isTimerPaused: () => isPaused.value,
-  pauseTimer,
-  resumeTimer,
+  isTimerPaused: () => pauseSources.has('gesture'),
+  pauseTimer: () => pauseTimer('gesture'),
+  resumeTimer: () => resumeTimer('gesture'),
   dismiss: () => dismiss('manual'),
 })
 
 function startTimer() {
-  if (!autoHide.value || isPaused.value)
+  if (!autoHide.value || pauseSources.size > 0)
     return
   if (timer.value)
     clearTimeout(timer.value)
@@ -103,10 +110,13 @@ function startTimer() {
   }, remaining.value)
 }
 
-function pauseTimer() {
-  if (!autoHide.value || isPaused.value)
+function pauseTimer(source: PauseSource) {
+  if (!autoHide.value)
     return
-  isPaused.value = true
+  const wasRunning = pauseSources.size === 0
+  pauseSources.add(source)
+  if (!wasRunning)
+    return
   if (timer.value) {
     clearTimeout(timer.value)
     timer.value = null
@@ -117,10 +127,9 @@ function pauseTimer() {
   }
 }
 
-function resumeTimer() {
-  if (!autoHide.value || !isPaused.value)
+function resumeTimer(source: PauseSource) {
+  if (!autoHide.value || !pauseSources.delete(source))
     return
-  isPaused.value = false
   startTimer()
 }
 
@@ -130,11 +139,20 @@ function handleClose() {
 
 // A toast should not expire while the user is in another window or tab.
 function onWindowBlur(): void {
-  pauseTimer()
+  pauseTimer('window')
 }
 
 function onWindowFocus(): void {
-  resumeTimer()
+  resumeTimer('window')
+}
+
+// 焦点从卡片里的控件上被移除（控件卸载不会触发失焦）时，放掉焦点这一路按住。
+function onFocusOut(event: FocusEvent): void {
+  const root = event.currentTarget as HTMLElement
+  const next = event.relatedTarget
+  if (next instanceof Node && root.contains(next))
+    return
+  resumeTimer('focus')
 }
 
 watch(() => props.isExiting, (exiting) => {
@@ -151,11 +169,21 @@ watch(duration, (next) => {
   startTimer()
 })
 
+// 同一个 `uniqueID` 的新提示原地覆盖这张卡片：计时从头开始。
+watch(() => props.timerKey, () => {
+  remaining.value = duration.value
+  startTimer()
+})
+
 onMounted(() => {
   startTimer()
   if (autoHide.value) {
     window.addEventListener('blur', onWindowBlur)
     window.addEventListener('focus', onWindowFocus)
+    // 窗口在后台时弹出的提示收不到 blur 事件，从暂停开始，窗口下次获得焦点再继续。
+    if (typeof document.hasFocus === 'function' && !document.hasFocus()) {
+      pauseTimer('window')
+    }
   }
 })
 
@@ -175,10 +203,10 @@ onUnmounted(() => {
     :role="role"
     :aria-live="ariaLive"
     aria-atomic="true"
-    @mouseenter="pauseTimer"
-    @mouseleave="resumeTimer"
-    @focusin="pauseTimer"
-    @focusout="resumeTimer"
+    @mouseenter="pauseTimer('pointer')"
+    @mouseleave="resumeTimer('pointer')"
+    @focusin="pauseTimer('focus')"
+    @focusout="onFocusOut"
     @pointerdown="gesture.onPointerDown"
     @pointermove="gesture.onPointerMove"
     @pointerup="gesture.onPointerUp"
