@@ -59,7 +59,7 @@ npm run astryx-vue -- component Button
 | `astryx-vue theme` | Every built-in theme, one line each |
 | `astryx-vue theme <name>` | How to load one theme: stylesheet, `data-astryx-theme`, switching and scoping, verification |
 | `astryx-vue upgrade` | What upgrading the project's `@astryx-vue/core` takes, and where old names still appear |
-| `astryx-vue doctor` | Checks versions, the theme stylesheet, and the theme attribute. Reports only |
+| `astryx-vue doctor` | Checks versions, the theme stylesheet, the theme attribute, and Core buttons that do nothing when pressed. Reports only |
 | `astryx-vue init` | The setup guide for an AI assistant, plus the managed block in an agent file |
 
 Global flags:
