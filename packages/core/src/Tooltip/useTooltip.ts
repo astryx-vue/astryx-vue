@@ -120,6 +120,7 @@ export function useTooltip(options: UseTooltipOptions = {}): UseTooltipReturn {
     placement: () => toValue(options.placement) ?? 'above',
     alignment: () => toValue(options.alignment) ?? 'center',
     gap: GAP,
+    keepAnchorClear: true,
     onShow: () => options.onShow?.(),
     onHide: () => options.onHide?.(),
   })

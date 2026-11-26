@@ -3,6 +3,7 @@ import type { LayerAlignment, LayerPlacement, LayerPosition } from './position.j
 import { nextTick, onScopeDispose, ref, watch } from 'vue'
 import { useLayerTeleportTarget } from '../composables/useLayerMountTarget.js'
 import { useLayerGutter } from '../LayerProvider/context.js'
+import { keepClearOfAnchor } from './anchorClear.js'
 import { computeLayerPosition } from './position.js'
 import { getLayerViewport } from './visibleViewport.js'
 
@@ -15,6 +16,8 @@ export interface PositionedLayerOptions {
   placement: Ref<LayerPlacement>
   alignment: Ref<LayerAlignment>
   gap: number
+  /** 浮层比四周空地都高时也不盖住锚点：改放到锚点旁边，或限高后在浮层里滚动。 */
+  keepAnchorClear?: boolean
 }
 
 /**
@@ -47,15 +50,17 @@ export function usePositionedLayer(options: PositionedLayerOptions): PositionedL
     const layerEl = layer.value
     if (!anchorEl || !layerEl || !isOpen.value)
       return
-    position.value = computeLayerPosition(
-      anchorEl.getBoundingClientRect(),
-      { width: layerEl.offsetWidth, height: layerEl.offsetHeight },
-      getLayerViewport(),
-      placement.value,
-      alignment.value,
-      gap,
-      gutter.value,
-    )
+    const anchorRect = anchorEl.getBoundingClientRect()
+    const viewport = getLayerViewport()
+    // 限高之后 offsetHeight 只剩被限的那一截，scrollHeight 才是内容本来的高度。
+    const box = {
+      width: layerEl.offsetWidth,
+      height: options.keepAnchorClear === true ? Math.max(layerEl.offsetHeight, layerEl.scrollHeight) : layerEl.offsetHeight,
+    }
+    const placed = computeLayerPosition(anchorRect, box, viewport, placement.value, alignment.value, gap, gutter.value)
+    position.value = options.keepAnchorClear === true
+      ? keepClearOfAnchor(placed, anchorRect, box, viewport, gap, gutter.value)
+      : placed
   }
 
   let pollId: ReturnType<typeof setInterval> | undefined

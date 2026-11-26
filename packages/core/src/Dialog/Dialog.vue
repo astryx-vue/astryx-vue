@@ -4,7 +4,7 @@ import type { DialogPadding, DialogProps } from './types.js'
 import { computed, onBeforeUnmount, onMounted, provide, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
 import { useFocusTrap, useScrollLock } from '../composables/index.js'
 import { isLayerFocusStranded, restoreLayerFocus, trackLayerFocus } from '../layer/layerFocusReturn.js'
-import { addModalOutlet, removeModalOutlet } from '../layer/modalOutlet.js'
+import { createModalOutletHandle } from '../layer/modalOutlet.js'
 import { provideLayerMountTarget } from '../layer/mount.js'
 import { resetLayerScopedContext } from '../layer/scopedProvide.js'
 import { useBackdropPress } from '../layer/useBackdropPress.js'
@@ -132,24 +132,9 @@ const isDialogOpen = computed(() => {
 })
 
 // 打开期间同时充当全局 toast 的挂载点。
-let modalOutlet: HTMLDialogElement | null = null
-
-function attachModalOutlet(dialog: HTMLDialogElement): void {
-  if (modalOutlet === dialog)
-    return
-  detachModalOutlet()
-  modalOutlet = dialog
-  dialog.addEventListener('close', detachModalOutlet)
-  addModalOutlet(dialog)
-}
-
-function detachModalOutlet(): void {
-  if (modalOutlet == null)
-    return
-  modalOutlet.removeEventListener('close', detachModalOutlet)
-  removeModalOutlet(modalOutlet)
-  modalOutlet = null
-}
+const modalOutlet = createModalOutletHandle()
+const attachModalOutlet = modalOutlet.attach
+const detachModalOutlet = modalOutlet.detach
 
 function initialFocusTarget(): HTMLElement | null {
   const dialog = dialogRef.value

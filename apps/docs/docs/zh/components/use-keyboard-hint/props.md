@@ -28,8 +28,8 @@ footer: false
       <tr>
         <td><code>options.dismissAfterMs</code></td>
         <td><code>number</code></td>
-        <td><code>3000</code></td>
-        <td>出现之后过多少毫秒自己消失。</td>
+        <td>—</td>
+        <td>出现之后过多少毫秒自己消失。不传就没有时限：提示停留到按下方向键、Escape 或焦点离开这一组。时限可能让人没读完提示就看不到了（WCAG 1.4.13）。</td>
       </tr>
       <tr>
         <td><code>options.isEnabled</code></td>
