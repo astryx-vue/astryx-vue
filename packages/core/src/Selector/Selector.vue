@@ -96,7 +96,7 @@ const control = useFieldControlState({
   loading: () => props.isLoading,
 })
 const announce = useAnnounce()
-useBusyAnnouncement(() => control.isLoading.value, () => messages.value.selector.loading)
+const settleBusy = useBusyAnnouncement(() => control.isLoading.value, () => messages.value.selector.loading)
 const readOnlyId = computed(() => `${selectorId.value}-readonly`)
 const disabledMessageId = computed(() => `${selectorId.value}-disabled-message`)
 const disabledTooltipId = computed(() => `${selectorId.value}-disabled-tooltip`)
@@ -237,8 +237,11 @@ const announcement = computed(() => searchResultMessage({
 }))
 
 watch(announcement, (message) => {
-  if (message)
-    announce(message)
+  if (!message)
+    return
+  // 结果要播报了：还没念出去的「加载中」随即收回，不跟在结果后面。
+  settleBusy()
+  announce(message)
 })
 
 function onTriggerFocus(event: FocusEvent): void {

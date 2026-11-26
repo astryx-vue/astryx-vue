@@ -24,6 +24,10 @@ export interface MultiSelectorMenuHost {
   isLoading: ComputedRef<boolean>
   messages: ComputedRef<Pick<AstryxMessages, 'multiSelector'>>
   announce: (message: string) => void
+  /** 搜索状态（结果数、创建行、空结果）的播报：新的取代还没念出去的旧的。 */
+  announceSearch: (message: string) => void
+  /** 搜索结果要播报了，收回还没念出去的「加载中」。 */
+  settleBusy: () => void
   listboxRef: Readonly<ShallowRef<HTMLElement | null>>
   getSearchInput: () => HTMLInputElement | null
   focusTrigger: () => void
@@ -196,8 +200,10 @@ export function useMultiSelectorMenu(host: MultiSelectorMenuHost): MultiSelector
   })
 
   watch(announcement, (message) => {
-    if (message)
-      host.announce(message)
+    if (!message)
+      return
+    host.settleBusy()
+    host.announceSearch(message)
   })
 
   watch(() => [host.props.hasCreate, host.props.searchable] as const, ([create, search]) => {

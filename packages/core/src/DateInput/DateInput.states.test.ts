@@ -10,7 +10,7 @@ function nextFrame(): Promise<void> {
 }
 
 function politeRegion(): HTMLElement | null {
-  return document.querySelector('[data-astryx-live-region="polite"]')
+  return document.body.querySelector(':scope > [data-astryx-live-region="polite"]')
 }
 
 function mockPointer(coarse: boolean): void {
@@ -95,7 +95,7 @@ describe('dateInput 忙碌和禁用', () => {
     await nextFrame()
     await nextFrame()
     const dialog = document.querySelector('dialog')
-    const region = dialog?.querySelector(':scope > [data-astryx-modal-busy-region]')
+    const region = dialog?.querySelector(':scope > [data-astryx-live-region="polite"]')
     expect(region?.getAttribute('role')).toBe('status')
     expect(region?.textContent).toBe('Loading')
     expect(politeRegion()?.textContent ?? '').toBe('')

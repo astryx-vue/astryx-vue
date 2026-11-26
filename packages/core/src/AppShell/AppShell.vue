@@ -224,11 +224,11 @@ function onMainFocusOut(event: FocusEvent) {
           :tabindex="isMainScrollRegion ? 0 : -1"
           :data-scroll-region="isMainScrollRegion || undefined"
           :data-programmatic-focus="isMainProgrammaticFocus || undefined"
-          @focusout="onMainFocusOut"
           :padding="contentPadding ?? 0"
           :is-scrollable="height === 'fill'"
           :data-variant="variant"
           :data-corner="elevate || undefined"
+          @focusout="onMainFocusOut"
         >
           <slot />
         </LayoutContent>

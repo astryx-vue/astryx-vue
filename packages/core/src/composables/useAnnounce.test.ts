@@ -1,4 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { nextTick, ref } from 'vue'
+import { useAnnouncer } from './internal/announce.js'
+import { useBusyAnnouncement } from './internal/busyAnnouncement.js'
+import { mountComposable } from './testing/mountComposable.js'
 import { resetLiveRegionsForTest } from './testing/resetLiveRegions.js'
 import { useAnnounce } from './useAnnounce.js'
 
@@ -96,5 +100,120 @@ describe('useAnnounce', () => {
     await flushFrame()
     expect(polite?.textContent).toBe('')
     expect(assertive?.textContent).toBe('')
+  })
+
+  it('同一帧里的消息按顺序连在一起念，一模一样的重复只念一次', async () => {
+    const announce = useAnnounce()
+    announce('3 个结果')
+    announce('已保存')
+    announce('3 个结果')
+    await flushFrame()
+    expect(document.querySelector('[data-astryx-live-region="polite"]')?.textContent).toBe('3 个结果 已保存')
+
+    announce('下一条')
+    await flushFrame()
+    expect(document.querySelector('[data-astryx-live-region="polite"]')?.textContent).toBe('下一条')
+  })
+
+  it('紧迫度不同的消息各写各的区域，不连在一起', async () => {
+    const announce = useAnnounce()
+    announce('保存了')
+    announce('失败了', 'assertive')
+    await flushFrame()
+    expect(document.querySelector('[data-astryx-live-region="polite"]')?.textContent).toBe('保存了')
+    expect(document.querySelector('[data-astryx-live-region="assertive"]')?.textContent).toBe('失败了')
+  })
+
+  it('hasReplace 的播报者收回自己上一条还没念出去的消息，别的播报者的照样连在一起', async () => {
+    const typing = useAnnounce({ hasReplace: true })
+    const other = useAnnounce()
+    typing('Create "Ur"')
+    other('已选 1 项')
+    typing('Create "Urg"')
+    typing('Create "Urge"')
+    await flushFrame()
+    expect(document.querySelector('[data-astryx-live-region="polite"]')?.textContent).toBe('已选 1 项 Create "Urge"')
+  })
+
+  it('收据收回自己那份：另一个播报者写了同样的话时，那一份留着', async () => {
+    const first = useAnnouncer()
+    const second = useAnnouncer()
+    const mine = first('Loading')
+    const theirs = second('Loading')
+    mine?.withdraw()
+    await flushFrame()
+    expect(document.querySelector('[data-astryx-live-region="polite"]')?.textContent).toBe('Loading')
+
+    const alone = first('Loading')
+    alone?.withdraw()
+    await flushFrame()
+    expect(document.querySelector('[data-astryx-live-region="polite"]')?.textContent).toBe('')
+    theirs?.withdraw()
+  })
+
+  it('原生模态对话框打开时，播报写进那个对话框里的区域', async () => {
+    const dialog = document.createElement('dialog')
+    Object.defineProperty(dialog, 'open', { configurable: true, value: true })
+    const matches = dialog.matches.bind(dialog)
+    dialog.matches = ((selector: string) => selector === ':modal' || matches(selector)) as typeof dialog.matches
+    const inner = document.createElement('button')
+    dialog.append(inner)
+    document.body.append(dialog)
+
+    const announce = useAnnouncer()
+    announce('已复制', 'polite', { within: inner })
+    announce('出错了', 'assertive')
+    await flushFrame()
+    expect(dialog.querySelector(':scope > [data-astryx-live-region="polite"]')?.textContent).toBe('已复制')
+    expect(dialog.querySelector(':scope > [data-astryx-live-region="assertive"]')?.textContent).toBe('出错了')
+    expect(document.body.querySelector(':scope > [data-astryx-live-region]')).toBeNull()
+  })
+})
+
+describe('useBusyAnnouncement', () => {
+  afterEach(() => {
+    resetLiveRegionsForTest()
+  })
+
+  async function flushFrame(): Promise<void> {
+    await new Promise(resolve => requestAnimationFrame(resolve))
+  }
+
+  it('进入忙碌念一次，重新忙碌再念', async () => {
+    const busy = ref(false)
+    mountComposable(() => useBusyAnnouncement(busy, 'Loading'))
+    busy.value = true
+    await nextTick()
+    await flushFrame()
+    expect(document.querySelector('[data-astryx-live-region="polite"]')?.textContent).toBe('Loading')
+  })
+
+  it('结果先播报时，还没念出去的忙碌开始被收回，不会念在结果后面或和结果连成一句', async () => {
+    const busy = ref(false)
+    const element = document.createElement('div')
+    document.body.append(element)
+    const { result: settle } = mountComposable(() => useBusyAnnouncement(busy, 'Loading', element))
+    const outcome = useAnnounce()
+
+    busy.value = true
+    await nextTick()
+    settle()
+    outcome('3 个结果')
+    await flushFrame()
+    await flushFrame()
+    expect(document.querySelector('[data-astryx-live-region="polite"]')?.textContent).toBe('3 个结果')
+  })
+
+  it('已经写进通道但还没念出去的忙碌开始，也在结果播报前收回', async () => {
+    const busy = ref(false)
+    const { result: settle } = mountComposable(() => useBusyAnnouncement(busy, 'Loading'))
+    const outcome = useAnnounce()
+
+    busy.value = true
+    await nextTick()
+    settle()
+    outcome('3 个结果')
+    await flushFrame()
+    expect(document.querySelector('[data-astryx-live-region="polite"]')?.textContent).toBe('3 个结果')
   })
 })

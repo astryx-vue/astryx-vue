@@ -81,6 +81,8 @@ const CheckboxMark = useIndicator('checkbox')
 
 const messages = useComponentMessages({ multiSelector: multiSelectorMessages })
 const announce = useAnnounce()
+/** 搜索状态每次按键都重说一遍：快速输入时只念最新的，不把过期的状态连成一串。 */
+const announceSearch = useAnnounce({ hasReplace: true })
 const inputGroup = useInputGroupContext()
 const inGroup = computed(() => inputGroup != null)
 const groupDisabled = useInputGroupDisabled(() => props.disabled)
@@ -127,6 +129,7 @@ const statusGlyph = computed(() => {
 })
 
 const panelRef = useTemplateRef<{ focusSearch: () => void }>('panelRef')
+const settleBusy = useBusyAnnouncement(() => control.isLoading.value, () => messages.value.multiSelector.loading)
 const menu = useMultiSelectorMenu({
   props,
   emitUpdate: value => emit('update:modelValue', value),
@@ -137,6 +140,8 @@ const menu = useMultiSelectorMenu({
   isLoading: control.isLoading,
   messages,
   announce,
+  announceSearch,
+  settleBusy,
   listboxRef,
   getSearchInput: () => panelRef.value ? (panelRef.value as { searchInput?: HTMLInputElement | null }).searchInput ?? null : null,
   focusTrigger: () => {
@@ -147,7 +152,6 @@ const menu = useMultiSelectorMenu({
   listboxId,
 })
 const { combobox, selectedValues, selectedOptions } = menu
-useBusyAnnouncement(() => control.isLoading.value, () => messages.value.multiSelector.loading)
 /** 禁用的字段不向表单交值：不渲染隐藏输入，而不是渲染一个原生禁用的。 */
 /** 带搜索时触发器是普通按钮，搜索框才是组合框；ARIA 不允许按钮带 aria-required，必填交给搜索框。 */
 const hasSearchRole = computed(() => Boolean(props.searchable) && !control.isReadOnly.value)
