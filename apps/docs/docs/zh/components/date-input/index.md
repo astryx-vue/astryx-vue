@@ -33,6 +33,8 @@ const date = ref(null)
 
 日历可以从弹出层或底部面板打开。底部面板一次显示一个月，点一天就写入，保存才收起；点月份标题可以改月份和年份。系统日期控件可以一直用，也可以只在触摸设备上用。不指定时，鼠标走弹出层，触摸走系统控件。字段正在保存时不能改，保存会在新值写进去之后进行。标签可以带一条提示，并标明选填或必填。弹出的月历可以一次看两个月，一周从哪一天开始也能指定。
 
+用鼠标时，字段按 WAI-ARIA 的组合框加对话框弹层来：点字段、点日历按钮、按 ArrowDown 或 Alt+ArrowDown 打开日历，按 Escape 关上并把焦点还给字段。按在字段自己的输入框、清除按钮或标签上，日历保持打开；按在别处，或者焦点离开字段和日历，日历就关上。Enter 和普通文本框一样会提交表单，还有没变成值的半截文字、或者字段禁用或正在保存时不提交。禁用或正在保存的字段仍留在 Tab 顺序里。
+
 
 <ComponentAnatomy />
 
@@ -43,6 +45,7 @@ const date = ref(null)
 | <Badge variant="success">推荐</Badge> | 为非必填的日期字段提供清除功能。 |
 | <Badge variant="success">推荐</Badge> | 设置合理的日期范围限制，防止用户选择无效日期。 |
 | <Badge variant="success">推荐</Badge> | 使用清晰的占位符提示日期格式。 |
+| <Badge variant="success">推荐</Badge> | 用 `disabledMessage` 说明为什么禁用，不要在外面包一层 Tooltip。 |
 | <Badge variant="error">避免</Badge> | 在需要精确到时分秒的场景使用日期输入框。 |
 
 ## 示例

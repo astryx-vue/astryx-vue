@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import type { FieldStatusInput, FieldStatusType } from '../Field/types.js'
-import type { DateInputEmits, DateInputProps, DateInputSlots, DateInputStatus } from './types.js'
-import { computed, defineComponent, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
+import type { FieldStatusType } from '../Field/types.js'
+import type { DateInputEmits, DateInputProps, DateInputSlots } from './types.js'
+import { computed, defineComponent, getCurrentInstance, ref, useAttrs, useId, useTemplateRef } from 'vue'
 import BottomSheet from '../BottomSheet/BottomSheet.vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import Calendar from '../Calendar/Calendar.vue'
 import { toCalendarDate } from '../Calendar/calendarDate.js'
 import { isCalendarDateDisabled } from '../Calendar/useCalendarConstraints.js'
+import { useBusyAnnouncement } from '../composables/internal/busyAnnouncement.js'
 import { resolveDatePresentation, resolveDateSurface } from '../composables/useDatePresentation.js'
 import { useMediaQuery } from '../composables/useMediaQuery.js'
 import { usePendingChange } from '../composables/usePendingChange.js'
@@ -15,7 +16,7 @@ import { useResolvedLabelHidden } from '../composables/useResolvedLabelHidden.js
 import Field from '../Field/Field.vue'
 import FieldIcon from '../Field/FieldIcon.vue'
 import { useFieldPartStyling } from '../Field/fieldParts.js'
-import { useAriaRequired } from '../FormLayout/context.js'
+import { useAriaRequired, useEntryErrorBehavior } from '../FormLayout/context.js'
 import Icon from '../Icon/Icon.vue'
 import { useInputGroupDisabled } from '../InputGroup/context.js'
 import { useAstryxLocale, useComponentMessages } from '../locale/context.js'
@@ -23,11 +24,13 @@ import { dateInputMessages } from '../locale/messages/date-input.js'
 import Popover from '../Popover/Popover.vue'
 import { useSize } from '../SizeContext/SizeContext.js'
 import Spinner from '../Spinner/Spinner.vue'
-import { formatInstant } from '../Timestamp/formatInstant.js'
 import { isImeKeyEvent } from '../utils/ime.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
+import { parseTypedDate, resolveDateStatus, toIsoDate } from './dateText.js'
 import NativeDateField from './NativeDateField.vue'
 import TouchDateSheet from './TouchDateSheet.vue'
+import { useCalendarDismiss } from './useCalendarDismiss.js'
+import { useTypedDateEntry } from './useTypedDateEntry.js'
 import '../../styles/date-input.css'
 
 defineOptions({ name: 'AstryxDateInput', inheritAttrs: false })
@@ -80,7 +83,6 @@ const dialogLabel = computed(() => props.label || messages.value.dateInput.dialo
 const inputRef = useTemplateRef<HTMLInputElement>('inputRef')
 const containerRef = useTemplateRef<HTMLDivElement>('containerRef')
 const isOpen = ref(false)
-const inputValue = ref('')
 const disabledMessageId = `${generatedId}-disabled`
 
 const pending = usePendingChange(() => props.changeAction)
@@ -95,6 +97,29 @@ const policy = computed(() => resolveDatePresentation(props.presentation, props.
 const surface = computed(() => resolveDateSurface(policy.value, isCoarsePointer.value))
 const useSheet = computed(() => surface.value === 'sheet')
 const popupWidth = computed(() => props.numberOfMonths === 2 ? 'min(36rem, calc(100vw - 16px))' : 280)
+const popoverOpen = computed(() => !useSheet.value && isOpen.value)
+
+function popupElement(): HTMLElement | null {
+  return typeof document === 'undefined' ? null : document.getElementById(popupId.value)
+}
+
+// 系统日期控件那一路由 NativeDateField 自己播报。底部面板开着时从面板里播报，
+// 面板外的公共播报区域被模态面板挡住了。
+useBusyAnnouncement(
+  () => busy.value && surface.value !== 'native',
+  () => messages.value.dateInput.loading,
+  () => (useSheet.value && isOpen.value ? popupElement() : null) ?? containerRef.value,
+)
+
+const dismiss = useCalendarDismiss({
+  isOpen: popoverOpen,
+  field: () => containerRef.value,
+  input: () => inputRef.value,
+  popup: popupElement,
+  close: () => {
+    isOpen.value = false
+  },
+})
 
 function allowed(date: Date): boolean {
   return !isCalendarDateDisabled(toCalendarDate(date), {
@@ -104,6 +129,13 @@ function allowed(date: Date): boolean {
     dateConstraints: props.dateConstraints,
   })
 }
+
+const instance = getCurrentInstance()
+/** 调用方有没有监听 `entryErrorChange`。声明过的事件不进 attrs，只能看 vnode 上的 props。 */
+function hasEntryErrorListener(): boolean {
+  return Boolean(instance?.vnode.props?.onEntryErrorChange)
+}
+const entryErrorBehavior = useEntryErrorBehavior(() => props.entryErrorBehavior)
 
 function commit(value: Date | null): void {
   if (locked.value)
@@ -118,55 +150,25 @@ const modelValueRef = computed({
   set: value => commit(value),
 })
 
-function toIso(date: Date): string {
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
-  return `${year}-${month}-${day}`
-}
+const parseDate = parseTypedDate
 
-function formatCommitted(date: Date | null): string {
-  if (!date)
-    return ''
-  const iso = toIso(date)
-  const format = props.format
-  if (typeof format === 'function')
-    return format(iso)
-  if (format === 'system_date')
-    return iso
-  return formatInstant(date, format, locale.value)
-}
+const entry = useTypedDateEntry({
+  value: () => props.modelValue,
+  format: () => props.format,
+  locale: () => locale.value,
+  bounds: () => ({ min: props.min, max: props.max }),
+  isBlocked: date => !allowed(date),
+  isLocked: () => locked.value,
+  behavior: () => entryErrorBehavior.value,
+  status: () => resolveDateStatus(props.status),
+  hasEntryErrorListener,
+  messages: () => messages.value.dateInput,
+  commitValue: value => commit(value),
+  reportEntryError: error => emit('entryErrorChange', error),
+})
+const inputValue = entry.displayValue
 
-function parseDate(str: string): Date | null {
-  if (!str.trim())
-    return null
-
-  const match = str.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/)
-  if (match) {
-    const [, year, month, day] = match
-    const date = new Date(Number(year), Number(month) - 1, Number(day))
-    if (!Number.isNaN(date.getTime()) && date.getFullYear() === Number(year) && date.getMonth() === Number(month) - 1 && date.getDate() === Number(day))
-      return date
-  }
-
-  return null
-}
-
-function syncDisplayValue(): void {
-  inputValue.value = formatCommitted(props.modelValue)
-}
-
-watch(() => [props.modelValue, props.format, locale.value] as const, syncDisplayValue, { immediate: true })
-
-function resolvedStatus(status: DateInputStatus | undefined): FieldStatusInput | undefined {
-  if (status == null || status === 'default')
-    return undefined
-  if (typeof status === 'string')
-    return { type: status }
-  return status
-}
-
-const statusValue = computed(() => resolvedStatus(props.status))
+const statusValue = entry.fieldStatus
 const statusType = computed<FieldStatusType | undefined>(() => statusValue.value?.type)
 const showsField = computed(() => Boolean(props.label || props.description || statusValue.value?.message))
 const shell = computed(() => showsField.value ? Field : PassThrough)
@@ -204,19 +206,17 @@ function onInput(event: Event): void {
   // 禁用和忙碌都不再走原生 `disabled`，输入要自己挡住（spec:AST-085 FR2）。
   if (useSheet.value || locked.value || (event instanceof InputEvent && event.isComposing))
     return
-  const target = event.target as HTMLInputElement
-  const value = target.value.trim()
-  inputValue.value = target.value
-
-  const parsed = parseDate(value)
-  if (parsed && allowed(parsed))
-    modelValueRef.value = parsed
+  entry.onInput((event.target as HTMLInputElement).value)
 }
 
 function onBlur(): void {
   disabledTooltip.onBlur()
-  if (!parseDate(inputValue.value.trim()))
-    syncDisplayValue()
+  entry.onBlur()
+}
+
+function onFocus(event: FocusEvent): void {
+  entry.onFocus()
+  disabledTooltip.onFocus(event)
 }
 
 function onOpenChange(open: boolean): void {
@@ -240,7 +240,18 @@ function onToggleClick(event: MouseEvent): void {
 }
 
 function onInputKeyDown(event: KeyboardEvent): void {
-  if (isImeKeyEvent(event) || locked.value || isOpen.value)
+  if (isImeKeyEvent(event))
+    return
+  if (event.key === 'Enter') {
+    // 有打了一半的文字时先收下它，不然表单会带着旧值提交；禁用或忙碌的字段也不能提交表单。
+    // 其余时候 Enter 和普通文本框一样，交给浏览器提交表单。
+    if (locked.value || entry.isPending.value) {
+      event.preventDefault()
+      entry.commit()
+    }
+    return
+  }
+  if (locked.value || isOpen.value)
     return
   if (event.key === 'ArrowDown' || (event.altKey && event.key === 'ArrowDown')) {
     event.preventDefault()
@@ -249,6 +260,7 @@ function onInputKeyDown(event: KeyboardEvent): void {
 }
 
 function onCalendarChange(date: Date | null): void {
+  entry.reset()
   modelValueRef.value = date
   if (!useSheet.value) {
     isOpen.value = false
@@ -261,14 +273,14 @@ function onSheetSave(): void {
 }
 
 function onSheetReset(): void {
+  entry.reset()
   modelValueRef.value = null
 }
 
 function onClear(event: Event): void {
   event.stopPropagation()
+  entry.reset()
   modelValueRef.value = null
-  inputValue.value = ''
-  isOpen.value = false
   inputRef.value?.focus({ preventScroll: true })
 }
 
@@ -284,8 +296,6 @@ defineExpose({
   onClear,
   parseDate,
 })
-
-syncDisplayValue()
 </script>
 
 <template>
@@ -321,6 +331,7 @@ syncDisplayValue()
     :container-style="parts.containerStyle.value"
     :control-class="parts.controlClass()"
     :control-style="parts.controlStyle()"
+    :has-entry-error-listener="hasEntryErrorListener()"
     v-bind="inputAttrs()"
     @update:model-value="commit"
   />
@@ -333,6 +344,7 @@ syncDisplayValue()
         :style="parts.controlStyle()"
         :data-status="statusType"
         :data-presentation="useSheet ? 'bottom-sheet' : 'popover'"
+        @focusout="dismiss.onFieldFocusOut"
         @pointerenter="disabledTooltip.onPointerEnter"
         @pointerleave="disabledTooltip.onPointerLeave"
       >
@@ -346,11 +358,12 @@ syncDisplayValue()
           :has-close-button="false"
           :is-modal="false"
           :has-auto-focus="true"
+          :has-light-dismiss="false"
           role="dialog"
           :label="dialogLabel"
           @open-change="onOpenChange"
         >
-          <div class="astryx-date-input-wrapper" :data-disabled="locked ? 'true' : undefined" :data-size="size" :data-status="statusType">
+          <div class="astryx-date-input-wrapper" :data-disabled="isDisabled ? 'true' : undefined" :data-busy="busy || undefined" :data-size="size" :data-status="statusType">
             <span v-if="$slots.prefix" class="astryx-date-input-prefix">
               <slot name="prefix" />
             </span>
@@ -380,7 +393,7 @@ syncDisplayValue()
               :aria-label="showsField ? undefined : props.label"
               :aria-labelledby="showsField ? field?.labelId : undefined"
               :aria-describedby="describedBy(field?.describedBy)"
-              :aria-invalid="statusType === 'error' ? 'true' : undefined"
+              :aria-invalid="statusType === 'error' || entry.isInvalid.value ? 'true' : undefined"
               :aria-required="ariaRequired"
               :aria-busy="busy || undefined"
               :aria-controls="popupId"
@@ -389,7 +402,7 @@ syncDisplayValue()
               autocomplete="off"
               @input="onInput"
               @blur="onBlur"
-              @focus="disabledTooltip.onFocus"
+              @focus="onFocus"
               @click="openCalendar"
               @keydown="onInputKeyDown"
             >
@@ -406,11 +419,11 @@ syncDisplayValue()
             <span v-else-if="$slots.suffix" class="astryx-date-input-suffix">
               <slot name="suffix" />
             </span>
-            <Spinner v-if="busy" class="astryx-date-input-spinner" size="sm" :aria-label="messages.dateInput.loading" />
+            <Spinner v-if="busy" class="astryx-date-input-spinner" size="sm" aria-hidden="true" />
             <FieldIcon v-else-if="statusType && props.statusVariant !== 'tooltip'" :type="statusType" />
           </div>
           <template #content>
-            <div v-if="!useSheet" :id="popupId">
+            <div v-if="popoverOpen" :id="popupId">
               <Calendar
                 :model-value="props.modelValue"
                 :min="props.min"
@@ -439,6 +452,7 @@ syncDisplayValue()
               :is-date-disabled="props.isDateDisabled"
               :date-constraints="props.dateConstraints"
               :week-starts-on="props.weekStartsOn"
+              :is-disabled="isDisabled"
               @pick="onCalendarChange"
               @save="onSheetSave"
               @reset="onSheetReset"
@@ -446,11 +460,14 @@ syncDisplayValue()
           </div>
         </BottomSheet>
 
+        <div class="astryx-date-input-alert" role="alert">
+          {{ entry.alertMessage.value }}
+        </div>
         <input
           v-if="props.name"
           type="hidden"
           :name="props.name"
-          :value="props.modelValue ? toIso(props.modelValue) : ''"
+          :value="props.modelValue ? toIsoDate(props.modelValue) : ''"
         >
       </div>
     </template>

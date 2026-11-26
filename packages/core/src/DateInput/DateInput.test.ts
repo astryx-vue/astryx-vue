@@ -414,7 +414,16 @@ describe('dateInput', () => {
     input.element.value = '2026-03-22'
     await input.trigger('change')
     expect(wrapper.emitted('update:modelValue')).toBeUndefined()
-    expect(wrapper.get('[role="alert"]').text()).toContain('Invalid date')
+    // 敲年份时控件会报出半截日子，所以拒绝等失焦再亮。
+    expect(wrapper.text()).not.toContain('Enter an available date')
+    await input.trigger('blur')
+    expect(wrapper.text()).toContain('Enter an available date')
+    expect(input.attributes('aria-invalid')).toBe('true')
+    // 控件恢复成已提交的值，拒绝仍然亮着，直到报来能收的日子。
+    expect((input.element as HTMLInputElement).value).toBe('2026-03-20')
+    input.element.value = '2026-03-23'
+    await input.trigger('change')
+    expect(wrapper.text()).not.toContain('Enter an available date')
   })
 })
 

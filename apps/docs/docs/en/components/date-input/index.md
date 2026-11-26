@@ -33,6 +33,8 @@ The value is a local date. The field writes it back as a long date, such as Marc
 
 The calendar can open in a popover or a bottom sheet. The sheet shows one month. Picking a day writes it immediately, and Save closes the sheet. The month title opens month and year wheels. The system date control can be used all the time, or only on a touch device. When nothing is specified, a mouse gets the popover and a coarse pointer gets the system control. While a change is saving, the field cannot be edited. The save runs after the new value is written. The label can carry a hint and mark the field optional or required. The popover can show two months, and the week can start on a chosen day.
 
+With a mouse the field follows the WAI-ARIA combobox pattern with a dialog popup: a click in the field, the calendar button, ArrowDown, or Alt+ArrowDown opens the calendar, and Escape closes it and returns focus to the field. A press in the field's own input, clear button, or label keeps the calendar open; a press elsewhere, or focus moving out of the field and the calendar, closes it. Enter submits the form as in any text field, unless half-typed text is still waiting to become the value or the field is disabled or saving. A disabled or saving field stays in the tab order.
+
 
 <ComponentAnatomy />
 
@@ -43,6 +45,7 @@ The calendar can open in a popover or a bottom sheet. The sheet shows one month.
 | <Badge variant="success">Do</Badge> | Turn on `clearable` when the date is optional. |
 | <Badge variant="success">Do</Badge> | Set `min` and `max` so people cannot pick a date the product will reject. |
 | <Badge variant="success">Do</Badge> | Use a placeholder that shows the expected format. |
+| <Badge variant="success">Do</Badge> | Use `disabledMessage` to say why the field is disabled, instead of wrapping it in a Tooltip. |
 | <Badge variant="error">Don't</Badge> | Use it when the value needs a time of day. This field is a calendar date. |
 
 ## Examples

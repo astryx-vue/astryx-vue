@@ -4,10 +4,17 @@ import { defineLayerScopedKey, readLayerScoped } from '../layer/scopedProvide.js
 
 export type FormLayoutDirection = 'vertical' | 'horizontal' | 'horizontal-labels'
 export type FormOptionality = 'optional' | 'required'
+/**
+ * 打字被拒时什么时候亮出来。`complete`：打成一个完整的日期就亮（读不懂的文字仍等 Enter 或失焦）；
+ * `blur-or-enter`：打字时什么都不亮，Enter 或失焦时才亮。
+ */
+export type EntryErrorBehavior = 'complete' | 'blur-or-enter'
 
 export interface FormLayoutContextValue {
   direction: FormLayoutDirection
   defaultOptionality?: FormOptionality
+  /** 表单里日期字段默认的 `entryErrorBehavior`。 */
+  defaultEntryErrorBehavior?: EntryErrorBehavior
 }
 
 const NO_FORM_LAYOUT = computed<FormLayoutContextValue | null>(() => null)
@@ -35,6 +42,12 @@ export function ariaRequired(
   if (optionality === 'required' || isRequired)
     return true
   return undefined
+}
+
+/** 字段自己的设置优先，其次最近的 FormLayout 默认值，都没有时是 `complete`。 */
+export function useEntryErrorBehavior(own: () => EntryErrorBehavior | undefined): ComputedRef<EntryErrorBehavior> {
+  const layout = useFormLayout()
+  return computed(() => own() ?? layout.value?.defaultEntryErrorBehavior ?? 'complete')
 }
 
 export function useAriaRequired(props: { isRequired?: boolean, isOptional?: boolean }): ComputedRef<true | undefined> {

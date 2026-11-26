@@ -386,6 +386,7 @@ export type {
 export { DateInput } from './DateInput/index.js'
 export type {
   DateInputEmits,
+  DateInputEntryError,
   DateInputFormat,
   DateInputFormatName,
   DateInputNativePicker,
@@ -499,7 +500,13 @@ export type {
   FileInputValue,
 } from './FileInput/index.js'
 export { FormLayout } from './FormLayout/index.js'
-export type { FormLayoutDirection, FormLayoutProps, FormLayoutSlots, FormOptionality } from './FormLayout/index.js'
+export type {
+  EntryErrorBehavior,
+  FormLayoutDirection,
+  FormLayoutProps,
+  FormLayoutSlots,
+  FormOptionality,
+} from './FormLayout/index.js'
 export { Grid, GridSpan } from './Grid/index.js'
 export type {
   GridAlignment,

@@ -24,24 +24,41 @@ function choose(value: string, disabled?: boolean): void {
     emit('update:modelValue', value)
 }
 
+/** Page Up / Page Down 一次走的行数。 */
+const PAGE_ROWS = 10
+
+const STEPS: Record<string, number> = {
+  ArrowUp: -1,
+  ArrowDown: 1,
+  PageUp: -PAGE_ROWS,
+  PageDown: PAGE_ROWS,
+}
+
+/**
+ * 滚轮是 listbox：方向键走一行，Page 键走十行，Home / End 到头。
+ * 只在可选的行之间走，走到头就停在头上，不绕回另一头。
+ */
 function onKeydown(event: KeyboardEvent): void {
-  if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown' && event.key !== 'Home' && event.key !== 'End')
+  const step = STEPS[event.key]
+  if (step == null && event.key !== 'Home' && event.key !== 'End')
     return
   event.preventDefault()
   const options = enabled()
   if (options.length === 0)
     return
+  const last = options.length - 1
   const current = options.findIndex(option => option.value === props.modelValue)
-  let next = 0
-  if (event.key === 'End') {
-    next = options.length - 1
-  }
-  else if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
-    const step = event.key === 'ArrowDown' ? 1 : -1
-    next = current < 0 ? (step > 0 ? 0 : options.length - 1) : (current + step + options.length) % options.length
-  }
+  let next: number
+  if (event.key === 'Home')
+    next = 0
+  else if (event.key === 'End')
+    next = last
+  else if (current < 0)
+    next = (step ?? 0) > 0 ? 0 : last
+  else
+    next = Math.min(Math.max(current + (step ?? 0), 0), last)
   const option = options[next]
-  if (option)
+  if (option && option.value !== props.modelValue)
     emit('update:modelValue', option.value)
 }
 </script>
