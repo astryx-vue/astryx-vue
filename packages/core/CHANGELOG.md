@@ -1,5 +1,11 @@
 # @astryx-vue/core
 
+## 0.16.3
+
+### Patch Changes
+
+- [#560](https://github.com/astryx-vue/astryx-vue/pull/560) [`2851fe3`](https://github.com/astryx-vue/astryx-vue/commit/2851fe345c0e0d9daeb1601325bac102aa5f2ed5) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Flat syntax highlighting (used by CodeEditor) colors code that the browser has split into several text nodes, such as after pressing Enter in an editable area.
+
 ## 0.16.2
 
 ### Patch Changes

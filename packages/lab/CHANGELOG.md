@@ -1,5 +1,19 @@
 # @astryx-vue/lab
 
+## 0.8.0
+
+### Minor Changes
+
+- [#555](https://github.com/astryx-vue/astryx-vue/pull/555) [`dbc9306`](https://github.com/astryx-vue/astryx-vue/commit/dbc9306ec28100b5047e68c11ed75953c543a5c4) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增 `MediaPlayer` 和一组媒体控件（播放、跳转、时间轴、时间、音量、速度、字幕、全屏）以及 `useMediaPlayer`，可以用浏览器原生的视频、音频元素拼出跟随主题的播放器，带键盘快捷键和读屏播报。
+
+- [#559](https://github.com/astryx-vue/astryx-vue/pull/559) [`7ed451a`](https://github.com/astryx-vue/astryx-vue/commit/7ed451a060c037b9f232ea72d927d9428a707b2a) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增现成的 `VideoPlayer` 和 `AudioPlayer`。`VideoPlayer` 的控件浮在画面上的毛玻璃条里，空闲时自动藏起，字幕摆在控件条上方，播放器宽度不超过 360px 时控件条变紧凑；`AudioPlayer` 带封面、标题、快退快进、速度和可选的上一首、下一首，播放时把信息交给系统的媒体控制。
+
+### Patch Changes
+
+- [#560](https://github.com/astryx-vue/astryx-vue/pull/560) [`ff7e351`](https://github.com/astryx-vue/astryx-vue/commit/ff7e351750a0b9844fdfe6ef22cf191c057a0c65) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - CodeEditor keeps the caret where you type instead of jumping to the start after each change. The Tour backdrop now covers the whole page, including fixed headers outside the tour's container.
+- Updated dependencies [[`2851fe3`](https://github.com/astryx-vue/astryx-vue/commit/2851fe345c0e0d9daeb1601325bac102aa5f2ed5)]:
+  - @astryx-vue/core@0.16.3
+
 ## 0.7.8
 
 ### Patch Changes
