@@ -1,13 +1,13 @@
 import type { FrameClock, SpringMotion } from './snapPagingMotion.js'
 import type { HeldRowListener, SnapPagingAttachment, SnapPagingOptions, SnapTarget } from './snapPagingValue.js'
-import { browserClock, createVelocitySampler, nearestIndex, pickPage, springTo, viewPages } from './snapPagingMotion.js'
+import { getGestureHost } from '../../gestures/GestureHost'
+import { PanGestureRecognizer } from '../../gestures/PanGestureRecognizer'
+import { paging } from '../../motion/uikit/paging'
+import { lockSelection, locksSelectionFor } from '../../utils/selectionLock'
+import { SettleCatcher } from './snapPagingCatcher.js'
+import { browserClock, nearestIndex, pickPage, springTo, viewPages } from './snapPagingMotion.js'
 import { followSkippedStops } from './snapPagingSkip.js'
 import { createSnapTrack } from './snapPagingTrack.js'
-
-/** 手指移动超过这么多像素才算拖动；先往竖直方向走的交给页面滚动。 */
-const DRAG_SLOP = 6
-/** 触控板的横向滚动停了这么久，就当手指离开了触控板。 */
-export const WHEEL_IDLE_MS = 120
 
 function prefersReducedMotion(): boolean {
   return typeof window !== 'undefined'
@@ -15,17 +15,16 @@ function prefersReducedMotion(): boolean {
     && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 }
 
-interface Drag {
-  readonly id: number
-  x: number
-  readonly y: number
-  from: number
-  isActive: boolean
-}
-
 /**
- * 把吸附分页挂到滚动行上。手指、触控笔和触控板横扫会接管这一行，停稳后交还；
- * 鼠标拖动和鼠标滚轮仍然是原生滚动。
+ * 把吸附分页挂到滚动行上。拖动走手势引擎：一个横向的拖动识别器接手指、触控笔和
+ * 触控板横扫，过了 UIKit 的 10pt 起拖距离才接管这一行，松手速度由识别器的
+ * VelocityTracker 给出；鼠标拖动和鼠标滚轮留给原生滚动。另有一个不认领触摸的
+ * 「接住」识别器：翻页途中按上去就停住这一行。
+ *
+ * - 松手后的翻页：按下后这一行再走 `paging.catchStopMs` 才停住，和 UIKit 实测一致；
+ *   手指或触控笔的这次触摸到不了下面的内容，鼠标保留它的点击。
+ * - 按钮、方向键、`scrollTo` 这类程序发起的翻页：手指一碰就停住。鼠标仍然等那一段。
+ * - 停住后不拖、直接抬起：停到最近的一页。停住之前就抬起：翻页照常走完。
  */
 export function attachPaging(
   element: HTMLElement,
@@ -35,15 +34,24 @@ export function attachPaging(
 ): SnapPagingAttachment {
   const track = createSnapTrack(element, onHeld)
   const skip = followSkippedStops(element, track)
-  const sampler = createVelocitySampler()
   // 接管时量好的各页停点，和起手所在那一页的下标。
   let pages: number[] = [0]
   let anchor = 0
   // 朝末端为正时，屏幕上的横向位移要乘的符号。从右往左排版时是 -1。
   let sign = 1
   let motion: SpringMotion | null = null
-  let drag: Drag | null = null
-  let wheelTimer: ReturnType<typeof setTimeout> | null = null
+  // 正在走的这段翻页是不是松手带出来的（而不是程序发起的）。
+  let isReleaseSettle = false
+  // 正在拖动时：起拖那一刻这一行的位置，以及这次拖动是不是触控板横扫。
+  let drag: { from: number, isScroll: boolean } | null = null
+  // 按下来、接住了一段翻页，还没抬起。
+  let isCaught = false
+  // 按下来了，接住的计时还没到。
+  let isCatchArmed = false
+  // 按住接住的这一行时，浏览器的长按选字和弹出菜单先关掉。
+  let releaseSelection: (() => void) | null = null
+  // 拆掉以后，识别器收尾时报来的状态一概不理。
+  let isAttached = true
 
   function hold(): void {
     motion?.stop()
@@ -59,14 +67,15 @@ export function attachPaging(
   }
 
   function finish(): void {
-    if (drag?.isActive || wheelTimer != null)
+    if (drag != null || isCaught)
       return
     track.handBack(skip.takeDue())
   }
 
-  function settleTo(target: number, velocity: number): void {
+  function settleTo(target: number, velocity: number, fromRelease: boolean): void {
     motion?.stop()
     motion = null
+    isReleaseSettle = fromRelease
     if (prefersReducedMotion()) {
       track.place(target)
       finish()
@@ -80,129 +89,153 @@ export function attachPaging(
 
   function release(velocity: number): void {
     const at = track.position()
-    settleTo(pages[pickPage(pages, at, velocity, anchor)] ?? at, velocity)
+    settleTo(pages[pickPage(pages, at, velocity, anchor)] ?? at, velocity, true)
   }
 
-  function onPointerDown(event: PointerEvent): void {
-    if (event.pointerType === 'mouse' || !event.isPrimary)
+  const host = getGestureHost(element.ownerDocument)
+  const pan = new PanGestureRecognizer({
+    name: 'snapPaging',
+    direction: 'horizontal',
+    allowedPointerTypes: ['touch', 'pen'],
+    // 触控板的横扫也是拖动；鼠标滚轮不是。
+    allowedScrollTypes: ['continuous'],
+    // 没有可滚的距离、也没被接住时，不接管。
+    shouldBegin: () => track.isHeld() || track.travel() > 1,
+  })
+
+  // 零时长的长按，只在有翻页在走、手上没在拖时开始。
+  const catcher = new SettleCatcher({
+    name: 'snapPagingCatch',
+    minimumPressDuration: 0,
+    allowableMovement: Number.POSITIVE_INFINITY,
+    // 它自己按住什么也不做，所以不锁选字：停着的一行上，原生长按照旧。接住时才锁。
+    selectionLock: null,
+    shouldBegin: () => motion != null && drag == null,
+  })
+  catcher.recognizeSimultaneouslyWith(pan)
+
+  function holdSelection(on: boolean): void {
+    if (on && releaseSelection == null && locksSelectionFor(catcher.pointerType ?? 'touch')) {
+      releaseSelection = lockSelection([element], null)
+    }
+    else if (!on && releaseSelection != null) {
+      releaseSelection()
+      releaseSelection = null
+    }
+  }
+
+  function clearCatchTimer(): void {
+    if (isCatchArmed) {
+      isCatchArmed = false
+      catcher.disarmCatch()
+    }
+  }
+
+  function catchSettle(): void {
+    if (motion == null || drag != null)
       return
-    // 手指按住一段正在进行的翻页，就地接住它。
-    const caught = motion != null
-    if (caught)
+    hold()
+    isCaught = true
+  }
+
+  pan.addListener(() => {
+    if (!isAttached)
+      return
+    const state = pan.state
+    if (state === 'began') {
+      // 拖动一开始就接住，从屏幕上的位置起步。
+      clearCatchTimer()
       hold()
-    drag = { id: event.pointerId, x: event.clientX, y: event.clientY, from: track.position(), isActive: caught }
-    sampler.reset()
-    if (caught)
-      sampler.add(clock.now(), track.position())
-  }
-
-  function onPointerMove(event: PointerEvent): void {
-    if (drag == null || event.pointerId !== drag.id)
+      drag = { from: track.position(), isScroll: pan.trackedTouches[0]?.scrollType != null }
+    }
+    if (drag == null)
       return
-    if (!drag.isActive) {
-      const dx = event.clientX - drag.x
-      const dy = event.clientY - drag.y
-      if (Math.abs(dx) < DRAG_SLOP && Math.abs(dy) < DRAG_SLOP)
-        return
-      if (Math.abs(dy) > Math.abs(dx) || track.travel() <= 1) {
-        drag = null
+    if (state === 'began' || state === 'changed') {
+      let at = drag.from - sign * pan.translation().x
+      if (drag.isScroll) {
+        // 触控板横扫最多走到起手那一页的前后一页。
+        const low = pages[anchor - 1] ?? pages[0] ?? 0
+        const high = pages[anchor + 1] ?? pages[pages.length - 1] ?? 0
+        at = Math.min(Math.max(at, low), high)
+      }
+      // 这次写入是识别器自己在滚这一行，不是浏览器接走了手指。
+      host.ownScroll(element)
+      track.place(at)
+      return
+    }
+    if (state === 'ended' || state === 'cancelled') {
+      drag = null
+      isCaught = false
+      release(state === 'ended' ? -sign * pan.velocity().x : 0)
+    }
+  })
+
+  catcher.addListener(() => {
+    if (!isAttached)
+      return
+    const state = catcher.state
+    if (state === 'began') {
+      holdSelection(true)
+      const isMouse = catcher.pointerType === 'mouse'
+      // 鼠标保留它的点击；手指或触控笔的这次触摸到不了内容。
+      if (isReleaseSettle && !isMouse)
+        catcher.takeFromContent()
+      clearCatchTimer()
+      isCaught = false
+      if (!isReleaseSettle && !isMouse) {
+        // UIKit 在触摸的那一刻就停住程序发起的 `setContentOffset` 动画。
+        catchSettle()
         return
       }
-      hold()
-      drag.isActive = true
-      drag.x = event.clientX
-      drag.from = track.position()
-      try {
-        element.setPointerCapture(event.pointerId)
-      }
-      catch {}
-    }
-    event.preventDefault()
-    track.place(drag.from - sign * (event.clientX - drag.x))
-    sampler.add(clock.now(), track.position())
-  }
-
-  function endDrag(event: PointerEvent, velocity: (now: number) => number): void {
-    if (drag == null || event.pointerId !== drag.id)
-      return
-    const wasActive = drag.isActive
-    drag = null
-    if (wasActive)
-      release(velocity(clock.now()))
-  }
-
-  const onPointerUp = (event: PointerEvent): void => endDrag(event, now => sampler.velocity(now))
-  const onPointerCancel = (event: PointerEvent): void => endDrag(event, () => 0)
-
-  // 触控板横扫：跟着增量走，最多走到起手那一页的前后一页，停下后按速度翻页。
-  // 鼠标滚轮只给竖直增量（或按行计），留给原生滚动。
-  function onWheel(event: WheelEvent): void {
-    if (event.defaultPrevented || event.deltaMode !== 0 || event.deltaX === 0 || Math.abs(event.deltaX) <= Math.abs(event.deltaY))
-      return
-    if (drag?.isActive) {
-      event.preventDefault()
+      isCatchArmed = true
+      catcher.armCatch(paging.catchStopMs, () => {
+        if (!isCatchArmed)
+          return
+        isCatchArmed = false
+        catchSettle()
+      })
       return
     }
-    if (wheelTimer == null) {
-      if (!track.isHeld() && track.travel() <= 1)
+    if (state === 'ended' || state === 'cancelled') {
+      holdSelection(false)
+      if (isCatchArmed) {
+        // 还没接住就抬起：翻页照常走完。
+        clearCatchTimer()
         return
-      hold()
-      sampler.reset()
+      }
+      const wasCaught = isCaught
+      isCaught = false
+      // 接住后不拖、直接抬起：停到最近的一页。
+      if (wasCaught && drag == null && motion == null)
+        release(0)
     }
-    else {
-      clearTimeout(wheelTimer)
-    }
-    event.preventDefault()
-    const low = pages[anchor - 1] ?? pages[0] ?? 0
-    const high = pages[anchor + 1] ?? pages[pages.length - 1] ?? 0
-    track.place(Math.min(Math.max(track.position() + sign * event.deltaX, low), high))
-    sampler.add(clock.now(), track.position())
-    wheelTimer = setTimeout(() => {
-      wheelTimer = null
-      release(sampler.velocity(sampler.lastTime() ?? clock.now()))
-    }, WHEEL_IDLE_MS)
-  }
+  })
+
+  const detachPan = host.attach(element, pan)
+  const detachCatch = host.attach(element, catcher)
 
   function move(target: SnapTarget): void {
-    // 手指在这一行上时，这一行归手指。
-    if (drag?.isActive)
+    // 手指在这一行上时，这一行归手指。触控板横扫则让给这次翻页，横扫余下的部分不再移动这一行。
+    if (drag != null && !drag.isScroll)
       return
+    drag = null
     const velocity = motion?.velocity() ?? 0
-    if (wheelTimer != null) {
-      clearTimeout(wheelTimer)
-      wheelTimer = null
-    }
     hold()
     const end = track.travel()
-    settleTo(Math.min(Math.max(target(track.position(), end), 0), end), velocity)
+    settleTo(Math.min(Math.max(target(track.position(), end), 0), end), velocity, false)
   }
-
-  // 拖动期间横向的触摸由这里处理，竖直方向仍交给页面滚动。
-  const ownTouchAction = element.style.getPropertyValue('touch-action')
-  element.style.setProperty('touch-action', 'pan-y pinch-zoom')
-  element.addEventListener('pointerdown', onPointerDown)
-  element.addEventListener('pointermove', onPointerMove)
-  element.addEventListener('pointerup', onPointerUp)
-  element.addEventListener('pointercancel', onPointerCancel)
-  element.addEventListener('wheel', onWheel, { passive: false })
 
   return {
     detach() {
-      element.removeEventListener('pointerdown', onPointerDown)
-      element.removeEventListener('pointermove', onPointerMove)
-      element.removeEventListener('pointerup', onPointerUp)
-      element.removeEventListener('pointercancel', onPointerCancel)
-      element.removeEventListener('wheel', onWheel)
-      if (ownTouchAction === '')
-        element.style.removeProperty('touch-action')
-      else
-        element.style.setProperty('touch-action', ownTouchAction)
-      if (wheelTimer != null)
-        clearTimeout(wheelTimer)
-      wheelTimer = null
+      isAttached = false
+      clearCatchTimer()
+      holdSelection(false)
+      detachCatch()
+      detachPan()
       motion?.stop()
       motion = null
       drag = null
+      isCaught = false
       track.handBack()
       skip.stop()
     },

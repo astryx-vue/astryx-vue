@@ -271,6 +271,8 @@ const expectedCatalog = [
   { slug: 'use-combobox', group: 'Utility', family: 'Utilities', en: 'useCombobox', zh: 'useCombobox' },
   { slug: 'use-animator', group: 'Utility', family: 'Utilities', en: 'useAnimator', zh: 'useAnimator' },
   { slug: 'use-animated-layout', group: 'Utility', family: 'Utilities', en: 'useAnimatedLayout', zh: 'useAnimatedLayout' },
+  { slug: 'use-pan-gesture', group: 'Utility', family: 'Utilities', en: 'usePanGesture', zh: 'usePanGesture' },
+  { slug: 'use-drag-to-snap-points', group: 'Utility', family: 'Utilities', en: 'useDragToSnapPoints', zh: 'useDragToSnapPoints' },
 ]
 
 describe('component catalog meta', () => {

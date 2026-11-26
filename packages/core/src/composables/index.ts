@@ -13,6 +13,12 @@ export type {
   AnimatorValues,
 } from './createAnimator.js'
 
+export { createDragToSnapPoints } from './createDragToSnapPoints.js'
+export type { DragToSnapPoints, DragToSnapPointsOptions } from './createDragToSnapPoints.js'
+
+export { createPanGesture } from './createPanGesture.js'
+export type { PanGesture, PanGestureEvent, PanGestureOptions, PanGestureState } from './createPanGesture.js'
+
 export { useAnimatedLayout } from './useAnimatedLayout.js'
 export type { AnimatedLayout, UseAnimatedLayoutOptions } from './useAnimatedLayout.js'
 
@@ -95,6 +101,9 @@ export type { DisclosureHandle, DisclosureHandleRef } from './useDisclosureHandl
 
 export { useDismiss } from './useDismiss.js'
 export type { UseDismissOptions } from './useDismiss.js'
+
+export { useDragToSnapPoints } from './useDragToSnapPoints.js'
+export type { UseDragToSnapPointsResult } from './useDragToSnapPoints.js'
 
 export { useEntryAnimation } from './useEntryAnimation.js'
 export type { EntryAnimationPreset, UseEntryAnimationOptions, UseEntryAnimationReturn } from './useEntryAnimation.js'
@@ -189,6 +198,8 @@ export type {
   UseOverflowOptions,
   UseOverflowReturn,
 } from './useOverflow.js'
+
+export { usePanGesture } from './usePanGesture.js'
 
 export { usePendingChange } from './usePendingChange.js'
 export type { PendingChange } from './usePendingChange.js'

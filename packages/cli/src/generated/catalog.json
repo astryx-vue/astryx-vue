@@ -84353,6 +84353,439 @@
         "en": "https://astryx-vue.pages.dev/en/components/use-animated-layout",
         "zh": "https://astryx-vue.pages.dev/components/use-animated-layout"
       }
+    },
+    {
+      "slug": "use-pan-gesture",
+      "name": "UsePanGesture",
+      "package": "@astryx-vue/core",
+      "kind": "composable",
+      "title": {
+        "en": "usePanGesture",
+        "zh": "usePanGesture"
+      },
+      "group": "Utility",
+      "groupTitle": {
+        "en": "Utility",
+        "zh": "工具"
+      },
+      "importPath": null,
+      "exportName": null,
+      "summary": {
+        "en": "`usePanGesture` reports a drag on an element as values, for a surface you move yourself: a card that follows the finger, a drawer pulled by its handle. A finger, a mouse and a pen all drive it.",
+        "zh": "`usePanGesture` 把元素上的一次拖动报成一串数值，元素怎么动由你自己决定：跟手的卡片、拉把手打开的抽屉都可以用它。手指、鼠标、触控笔都能拖。"
+      },
+      "usage": {
+        "en": "`usePanGesture` reports a drag on an element as values, for a surface you move yourself: a card that follows the finger, a drawer pulled by its handle. A finger, a mouse and a pen all drive it.\n\n`onPan` is called with `{ state, translation, velocity }` as the drag begins, changes, ends at the release, or is cancelled:\n\n- `state`: `'began'`, `'changed'`, `'ended'` or `'cancelled'`.\n- `translation`: the movement since the drag began, in pixels. The travel the drag needed to begin is not part of it, so an element that follows it does not jump.\n- `velocity`: in pixels per second. At `'ended'` it is the release velocity (0 when the finger rested before lifting); at `'cancelled'` it is 0.\n\n```ts\nimport { usePanGesture } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { usePanGesture } from '@astryx-vue/core'\nimport { useTemplateRef } from 'vue'\n\nconst handle = useTemplateRef<HTMLElement>('handle')\n\nusePanGesture(handle, {\n  axis: 'y',\n  onPan: ({ state, translation, velocity }) => {\n    // Follow translation while dragging; hand velocity to the settle on release.\n  },\n})\n</script>\n\n<template>\n  <div ref=\"handle\">\n    Handle\n  </div>\n</template>\n```\n\nThe drag claims its touch at UIKit's 10 pt, as `UIPanGestureRecognizer` does, so a tap stays a tap, and a press or a long press is never reported as a pan.\n\n- With `axis`, only a drag along that axis is reported, and the other component of every value reads 0. A scroll across that axis that starts on the element stays the page's.\n- Without it, the pan takes a drag in any direction, so a finger's scroll that starts on the element moves the element instead of the page. A trackpad scroll still scrolls the page.\n- A mouse or pen drag that starts on selectable text selects that text, and the pan reports nothing. Give that text `user-select: none`.\n\nThe composable creates one pan for the element behind the ref, creates a new one when the ref moves to another node or `axis` changes, and destroys it at unmount. `onPan` is read on each call, so a new function re-creates nothing. A drag in progress at unmount ends without calling `onPan` again. Nothing touches the DOM during server rendering. `target` may also be a getter or the element itself.\n\nOutside a component (a plain script), use `createPanGesture(element, options)`. It takes the same options and returns `{ destroy }`, which removes every listener it added and cancels a drag in progress.\n\n```ts\nimport { createPanGesture } from '@astryx-vue/core'\n\nconst pan = createPanGesture(element, { axis: 'x', onPan: event => console.log(event) })\npan.destroy()\n```\n\nThe pan moves nothing itself, so Reduce Motion applies to the motion you drive from it. A drag has no keyboard or assistive-technology path of its own: whatever it does needs another way to do it, such as buttons or arrow keys (WCAG 2.5.7). Where a component already offers the behavior, use its prop instead: BottomSheet's `snapPoints`, Carousel's `hasSnap`.",
+        "zh": "`usePanGesture` 把元素上的一次拖动报成一串数值，元素怎么动由你自己决定：跟手的卡片、拉把手打开的抽屉都可以用它。手指、鼠标、触控笔都能拖。\n\n每次拖动开始、移动、松手、被取消时，`onPan` 都会收到 `{ state, translation, velocity }`：\n\n- `state`：`'began'`、`'changed'`、`'ended'` 或 `'cancelled'`。\n- `translation`：从拖动开始算起移动了多少像素。起拖前要走的那一小段不算在里面，所以跟着它走的元素不会突然一跳。\n- `velocity`：每秒多少像素。`'ended'` 时是松手那一刻的速度（手指停住再抬起就是 0），`'cancelled'` 时是 0。\n\n```ts\nimport { usePanGesture } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { usePanGesture } from '@astryx-vue/core'\nimport { useTemplateRef } from 'vue'\n\nconst handle = useTemplateRef<HTMLElement>('handle')\n\nusePanGesture(handle, {\n  axis: 'y',\n  onPan: ({ state, translation, velocity }) => {\n    // 拖动时跟着 translation 走，松手时把 velocity 交给收尾的动画。\n  },\n})\n</script>\n\n<template>\n  <div ref=\"handle\">\n    把手\n  </div>\n</template>\n```\n\n拖动和 UIKit 的 `UIPanGestureRecognizer` 一样，手指走过 10pt 才认领这次触摸，所以轻点还是轻点，按住、长按都不会被当成拖动。\n\n- 传了 `axis`：只认这条轴上的拖动，另一条轴的分量永远是 0；从元素上开始的、横着这条轴的滚动仍然归页面。\n- 不传 `axis`：哪个方向都接，所以从元素上开始的手指滚动会拖元素，而不是滚页面。触控板的滚动始终滚页面。\n- 鼠标或触控笔从可选中的文字上开始拖，会选中文字，拖动什么也不报。给这段文字加上 `user-select: none`。\n\n组合式函数为 ref 指向的元素创建一个拖动；ref 换到别的节点，或者 `axis` 变了，就重新创建一个；组件卸载时销毁。`onPan` 每次用到时现读，换一个新函数不会重建任何东西。卸载时正在进行的拖动直接结束，不会再调用 `onPan`。服务端渲染时不碰 DOM。`target` 也可以是 getter 或元素本身。\n\n不在组件里时（比如普通脚本），用 `createPanGesture(element, options)`。它接受同样的选项，返回 `{ destroy }`：移除它加过的所有监听，并取消正在进行的拖动。\n\n```ts\nimport { createPanGesture } from '@astryx-vue/core'\n\nconst pan = createPanGesture(element, { axis: 'x', onPan: event => console.log(event) })\npan.destroy()\n```\n\n拖动本身不移动任何东西，所以「减弱动态效果」要由你驱动的动画来照顾。拖动也没有自己的键盘或读屏路径：它做的事，需要另给一条路，比如按钮或方向键（WCAG 2.5.7）。组件已经提供这个行为时，直接用组件的属性：BottomSheet 的 `snapPoints`、Carousel 的 `hasSnap`。"
+      },
+      "practices": {
+        "en": [
+          {
+            "guidance": "Do",
+            "text": "Move the element from `translation` added to where it was when the drag began, so it moves with the finger from the moment the drag claims it."
+          },
+          {
+            "guidance": "Do",
+            "text": "At `ended`, hand `velocity` to the animation that settles the element, so a flick carries on at the speed it was released."
+          },
+          {
+            "guidance": "Do",
+            "text": "Give every drag another way to do the same thing from a keyboard and from assistive technology, such as buttons, arrow keys or a menu."
+          },
+          {
+            "guidance": "Don't",
+            "text": "Rebuild what a component's prop already covers: BottomSheet's `snapPoints` for a sheet, Carousel's `hasSnap` for paging."
+          }
+        ],
+        "zh": []
+      },
+      "props": {
+        "en": [
+          {
+            "heading": "Parameters",
+            "rows": [
+              {
+                "name": "`target`",
+                "type": "`MaybeRefOrGetter<Element | null | undefined>`",
+                "default": "—",
+                "description": "The element to drag: a template ref, a getter or the element itself. A new node behind the ref creates the drag again; unmount destroys it."
+              },
+              {
+                "name": "`options.axis`",
+                "type": "`'x' | 'y'`",
+                "default": "—",
+                "description": "Limits the drag to one axis; the other component of every value reads 0. Omit it to report both axes. A new value creates the drag again."
+              },
+              {
+                "name": "`options.onPan`",
+                "type": "`(event: PanGestureEvent) => void`",
+                "default": "—",
+                "description": "Called as the drag begins, changes, ends at the release, or is cancelled. Read on each call, so a new function re-creates nothing."
+              }
+            ]
+          },
+          {
+            "heading": "PanGestureEvent",
+            "rows": [
+              {
+                "name": "`state`",
+                "type": "`'began' | 'changed' | 'ended' | 'cancelled'`",
+                "description": "Where the drag is."
+              },
+              {
+                "name": "`translation`",
+                "type": "`{ x: number, y: number }`",
+                "description": "The movement since the drag began, in px, without the travel it needed to begin."
+              },
+              {
+                "name": "`velocity`",
+                "type": "`{ x: number, y: number }`",
+                "description": "In px per second: the release velocity at `'ended'`, 0 at `'cancelled'`."
+              }
+            ]
+          },
+          {
+            "heading": "createPanGesture",
+            "rows": [
+              {
+                "name": "`createPanGesture`",
+                "type": "`(element: Element, options: PanGestureOptions) => PanGesture`",
+                "description": "For use outside a component. Takes the options above."
+              },
+              {
+                "name": "`destroy`",
+                "type": "`() => void`",
+                "description": "Removes every listener it added and cancels a drag in progress (one `'cancelled'` event)."
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "参数",
+            "rows": [
+              {
+                "name": "`target`",
+                "type": "`MaybeRefOrGetter<Element | null | undefined>`",
+                "default": "—",
+                "description": "要拖的元素：模板 ref、getter 或元素本身。ref 换到别的节点时重新创建拖动，卸载时销毁。"
+              },
+              {
+                "name": "`options.axis`",
+                "type": "`'x' | 'y'`",
+                "default": "—",
+                "description": "只认这条轴上的拖动，另一条轴的分量永远是 0。不传时哪个方向都接。改了会重新创建拖动。"
+              },
+              {
+                "name": "`options.onPan`",
+                "type": "`(event: PanGestureEvent) => void`",
+                "default": "—",
+                "description": "拖动开始、移动、松手、被取消时调用。每次用到时现读，换函数不会重建拖动。"
+              }
+            ]
+          },
+          {
+            "heading": "PanGestureEvent",
+            "rows": [
+              {
+                "name": "`state`",
+                "type": "`'began' | 'changed' | 'ended' | 'cancelled'`",
+                "description": "拖动走到了哪一步。"
+              },
+              {
+                "name": "`translation`",
+                "type": "`{ x: number, y: number }`",
+                "description": "从拖动开始算起移动的像素，不含起拖前那一小段。"
+              },
+              {
+                "name": "`velocity`",
+                "type": "`{ x: number, y: number }`",
+                "description": "每秒多少像素。`'ended'` 时是松手速度，`'cancelled'` 时是 0。"
+              }
+            ]
+          },
+          {
+            "heading": "createPanGesture",
+            "rows": [
+              {
+                "name": "`createPanGesture`",
+                "type": "`(element: Element, options: PanGestureOptions) => PanGesture`",
+                "description": "在组件外使用。选项和上面一样。"
+              },
+              {
+                "name": "`destroy`",
+                "type": "`() => void`",
+                "description": "移除它加过的所有监听，并取消正在进行的拖动（会报一次 `'cancelled'`）。"
+              }
+            ]
+          }
+        ]
+      },
+      "slots": {
+        "en": [],
+        "zh": []
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [
+          {
+            "heading": "Returns",
+            "text": "Nothing: the composable hands out no recognizer."
+          }
+        ],
+        "zh": [
+          {
+            "heading": "建议",
+            "text": "- 推荐: 元素的位置 = 拖动开始时的位置 + `translation`，这样从认领那一刻起就跟着手指走。\n- 推荐: `ended` 时把 `velocity` 交给收尾的动画，甩一下就带着松手的速度继续走。\n- 推荐: 给每个拖动配一条键盘和读屏也能走的路，比如按钮、方向键或菜单。\n- 避免: 组件属性已经能做到时自己重写：抽屉用 BottomSheet 的 `snapPoints`，分页用 Carousel 的 `hasSnap`。"
+          },
+          {
+            "heading": "返回值",
+            "text": "无。组合式函数不交出识别器。"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": {
+            "en": "usePanGesture — a card that follows the finger",
+            "zh": "usePanGesture — 跟手的卡片"
+          },
+          "description": {
+            "en": "Drag the card and it follows your finger; on release it springs home from the speed of your hand. The state of the drag shows below.",
+            "zh": "拖动卡片，它跟着手指走；松手后带着手上的速度弹回原位。下方显示拖动此刻的状态。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport type { PanGestureEvent } from '@astryx-vue/core'\nimport { useAnimator, usePanGesture } from '@astryx-vue/core'\nimport { VStack } from '@astryx-vue/core/Stack'\nimport { Text } from '@astryx-vue/core/Text'\nimport { ref, useTemplateRef } from 'vue'\n\nconst card = useTemplateRef<HTMLElement>('card')\nconst animator = useAnimator(card)\nconst state = ref('—')\n\n// Where the card was when the drag began.\nlet start = { x: 0, y: 0 }\n\nfunction onPan(event: PanGestureEvent): void {\n  state.value = event.state\n  if (event.state === 'began') {\n    const { x, y } = animator.get()\n    animator.stop()\n    start = { x, y }\n  }\n  if (event.state === 'began' || event.state === 'changed') {\n    animator.set({ x: start.x + event.translation.x, y: start.y + event.translation.y })\n    return\n  }\n  // Springs home from the speed of the release.\n  void animator.animate({ x: 0, y: 0 }, { velocity: event.velocity })\n}\n\nusePanGesture(card, { onPan })\n</script>\n\n<template>\n  <VStack :gap=\"2\" align=\"center\">\n    <div class=\"pan-stage\">\n      <div ref=\"card\" class=\"pan-card\">\n        Drag me\n      </div>\n    </div>\n    <Text type=\"supporting\" color=\"secondary\">\n      {{ state }}\n    </Text>\n  </VStack>\n</template>\n\n<style scoped>\n.pan-stage {\n  display: grid;\n  place-items: center;\n  width: 100%;\n  min-height: 220px;\n  overflow: hidden;\n}\n\n.pan-card {\n  display: grid;\n  place-items: center;\n  width: 120px;\n  height: 120px;\n  border-radius: var(--astryx-radius-container, 12px);\n  background: var(--astryx-color-accent);\n  color: var(--astryx-color-on-accent, #fff);\n  cursor: grab;\n  user-select: none;\n}\n</style>"
+        }
+      ],
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/use-pan-gesture",
+        "zh": "https://astryx-vue.pages.dev/components/use-pan-gesture"
+      }
+    },
+    {
+      "slug": "use-drag-to-snap-points",
+      "name": "UseDragToSnapPoints",
+      "package": "@astryx-vue/core",
+      "kind": "composable",
+      "title": {
+        "en": "useDragToSnapPoints",
+        "zh": "useDragToSnapPoints"
+      },
+      "group": "Utility",
+      "groupTitle": {
+        "en": "Utility",
+        "zh": "工具"
+      },
+      "importPath": null,
+      "exportName": null,
+      "summary": {
+        "en": "`useDragToSnapPoints` lets a drag move an element along one axis and settles it on snap points when the finger lifts, the way an iOS sheet settles on its detents:",
+        "zh": "`useDragToSnapPoints` 让一个元素能沿一条轴被拖动，手指抬起时停到某个吸附点上，就像 iOS 的面板停在它的几个档位上："
+      },
+      "usage": {
+        "en": "`useDragToSnapPoints` lets a drag move an element along one axis and settles it on snap points when the finger lifts, the way an iOS sheet settles on its detents:\n\n- A slow release settles on the snap point nearest to where it is.\n- A quick flick carries to the next snap point in its direction.\n- A release while the finger was moving back returns to where it started.\n\nThe settle continues the release's velocity, so the motion carries on.\n\n```ts\nimport { useDragToSnapPoints } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useDragToSnapPoints } from '@astryx-vue/core'\nimport { ref, useTemplateRef } from 'vue'\n\nconst drawer = useTemplateRef<HTMLElement>('drawer')\nconst settled = ref(0)\n\nconst { settleTo } = useDragToSnapPoints(drawer, {\n  axis: 'y',\n  snapPoints: [0, 240, 480],\n  onSettle: (index) => {\n    settled.value = index\n  },\n})\n</script>\n\n<template>\n  <div ref=\"drawer\">\n    Drawer\n  </div>\n  <button type=\"button\" @click=\"settleTo(0)\">\n    Expand\n  </button>\n</template>\n```\n\n`snapPoints` are offsets in px along `axis` from the element's resting position, such as `[0, 240, 480]`, sorted before use (`onSettle` and `settleTo` count in that order). Unlike BottomSheet's `snapPoints`, they are not fractions of the viewport. An empty list makes the drag do nothing and warns in development.\n\n`onSettle` is called with the snap point's index once the element settles on it, and is read on each call. `settleTo(index)` settles the element on the snap point at `index` without a drag: the keyboard and button path.\n\nA new `axis`, `snapPoints` or `flickThreshold` creates the drag again and nothing more: the element stays where it is, a settle in flight included, and the next drag or `settleTo` starts there. A new array with the same snap points is no change. The composable follows the element behind the ref, removes every listener at unmount, and reports nothing after it. Nothing touches the DOM during server rendering.\n\nOutside a component (a plain script), use `createDragToSnapPoints(element, options)`. It takes the same options and returns `{ settleTo, destroy }`; `destroy` removes every listener and stops the element where it is.\n\n```ts\nimport { createDragToSnapPoints } from '@astryx-vue/core'\n\nconst drag = createDragToSnapPoints(element, { axis: 'x', snapPoints: [0, 320], onSettle: index => console.log(index) })\ndrag.settleTo(1)\ndrag.destroy()\n```\n\nWhen the person asks for reduced motion, the settle after a touch drag becomes a short cross-fade into the snap point, as does any settle on a device whose primary pointer is coarse, such as a tablet; after a mouse or pen drag elsewhere it lands at once. `settleTo` fades on such a device and lands at once with a fine primary pointer. While the finger is down, the element still follows it.\n\nFor a bottom sheet, use BottomSheet's `snapPoints`; for a scrolling row, Carousel's `hasSnap`.",
+        "zh": "`useDragToSnapPoints` 让一个元素能沿一条轴被拖动，手指抬起时停到某个吸附点上，就像 iOS 的面板停在它的几个档位上：\n\n- 慢慢松手：停到离当前位置最近的吸附点。\n- 快速一甩：停到甩的方向上的下一个吸附点。\n- 手指正往回走时松手：回到起手时的那个点。\n\n收尾的动画接着松手时的速度走，所以动作是连贯的。\n\n```ts\nimport { useDragToSnapPoints } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useDragToSnapPoints } from '@astryx-vue/core'\nimport { ref, useTemplateRef } from 'vue'\n\nconst drawer = useTemplateRef<HTMLElement>('drawer')\nconst settled = ref(0)\n\nconst { settleTo } = useDragToSnapPoints(drawer, {\n  axis: 'y',\n  snapPoints: [0, 240, 480],\n  onSettle: (index) => {\n    settled.value = index\n  },\n})\n</script>\n\n<template>\n  <div ref=\"drawer\">\n    抽屉\n  </div>\n  <button type=\"button\" @click=\"settleTo(0)\">\n    展开\n  </button>\n</template>\n```\n\n`snapPoints` 是沿 `axis` 离元素静止位置的像素偏移，比如 `[0, 240, 480]`，用之前会先排序（`onSettle` 和 `settleTo` 的下标按排序后的顺序数）。它们不是视口高度的比例，这一点和 BottomSheet 的 `snapPoints` 不同。空列表时拖动什么也不做，开发环境下会给出警告。\n\n`onSettle` 在元素停稳到某个吸附点后调用，参数是这个点的下标，每次用到时现读。`settleTo(index)` 不用拖动就把元素停到第 `index` 个点上，是给键盘和按钮用的那条路。\n\n`axis`、`snapPoints`、`flickThreshold` 变了时，拖动会重新创建，除此之外什么也不做：元素留在原地（正在收尾的动画也就地停住），下一次拖动或 `settleTo` 从那里开始。内容相同的新数组不算变化。组合式函数跟着 ref 当前指向的元素走，卸载时移除所有监听，之后不再报告。服务端渲染时不碰 DOM。\n\n不在组件里时（比如普通脚本），用 `createDragToSnapPoints(element, options)`。它接受同样的选项，返回 `{ settleTo, destroy }`；`destroy` 移除所有监听，让元素停在原地。\n\n```ts\nimport { createDragToSnapPoints } from '@astryx-vue/core'\n\nconst drag = createDragToSnapPoints(element, { axis: 'x', snapPoints: [0, 320], onSettle: index => console.log(index) })\ndrag.settleTo(1)\ndrag.destroy()\n```\n\n系统开启「减弱动态效果」时，触摸拖动后的收尾变成一段很短的淡入，落到吸附点；主指针是粗指针（比如平板）时，任何收尾都这样。其他情况下鼠标或触控笔拖完直接落到终点。`settleTo` 在粗指针设备上淡入，细指针设备上直接落到终点。手指按着的时候，元素照常跟手。\n\n做底部面板请用 BottomSheet 的 `snapPoints`，做横向分页请用 Carousel 的 `hasSnap`。"
+      },
+      "practices": {
+        "en": [
+          {
+            "guidance": "Do",
+            "text": "Offer the same positions without a drag: buttons or keys that call `settleTo`."
+          },
+          {
+            "guidance": "Do",
+            "text": "Keep the settled index in state from `onSettle`, and render what the position means from it."
+          },
+          {
+            "guidance": "Do",
+            "text": "When a position changes what the element shows, announce the change."
+          },
+          {
+            "guidance": "Don't",
+            "text": "Use it for a sheet or a carousel: their own props already settle the way people expect."
+          }
+        ],
+        "zh": []
+      },
+      "props": {
+        "en": [
+          {
+            "heading": "Parameters",
+            "rows": [
+              {
+                "name": "`target`",
+                "type": "`MaybeRefOrGetter<HTMLElement | null | undefined>`",
+                "default": "—",
+                "description": "The element a drag moves, along `axis` only: a template ref, a getter or the element itself."
+              },
+              {
+                "name": "`options.axis`",
+                "type": "`'x' | 'y'`",
+                "default": "—",
+                "description": "The axis the element moves along. A new one creates the drag again, starting where the element is."
+              },
+              {
+                "name": "`options.snapPoints`",
+                "type": "`ReadonlyArray<number>`",
+                "default": "—",
+                "description": "Offsets in px along `axis` from the resting position, sorted before use. An empty list makes the drag do nothing. New ones create the drag again and leave the element where it is."
+              },
+              {
+                "name": "`options.flickThreshold`",
+                "type": "`number`",
+                "default": "`1008`",
+                "description": "A release faster than this, in px/s, carries to the next snap point in its direction. The default is the flick speed measured for UIKit's sheet."
+              },
+              {
+                "name": "`options.onSettle`",
+                "type": "`(index: number) => void`",
+                "default": "—",
+                "description": "Called with the snap point's index once the element settles on it. Read on each call."
+              }
+            ]
+          },
+          {
+            "heading": "Returns",
+            "rows": [
+              {
+                "name": "`settleTo`",
+                "type": "`(index: number) => void`",
+                "description": "Settles the element on the snap point at `index` without a drag, then calls `onSettle`. An index outside the snap points does nothing and warns in development."
+              }
+            ]
+          },
+          {
+            "heading": "createDragToSnapPoints",
+            "rows": [
+              {
+                "name": "`createDragToSnapPoints`",
+                "type": "`(element: HTMLElement, options: DragToSnapPointsOptions) => DragToSnapPoints`",
+                "description": "For use outside a component. Takes the options above and returns `settleTo` and `destroy`."
+              },
+              {
+                "name": "`destroy`",
+                "type": "`() => void`",
+                "description": "Removes every listener and stops the element where it is."
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "参数",
+            "rows": [
+              {
+                "name": "`target`",
+                "type": "`MaybeRefOrGetter<HTMLElement | null | undefined>`",
+                "default": "—",
+                "description": "被拖动的元素：模板 ref、getter 或元素本身。只沿 `axis` 移动。"
+              },
+              {
+                "name": "`options.axis`",
+                "type": "`'x' | 'y'`",
+                "default": "—",
+                "description": "元素移动的轴。改了会从元素当前位置重新创建拖动。"
+              },
+              {
+                "name": "`options.snapPoints`",
+                "type": "`ReadonlyArray<number>`",
+                "default": "—",
+                "description": "沿 `axis` 离静止位置的像素偏移，用前排序。空列表时拖动什么也不做。改了只重新创建拖动，元素留在原地。"
+              },
+              {
+                "name": "`options.flickThreshold`",
+                "type": "`number`",
+                "default": "`1008`",
+                "description": "松手速度超过它（像素/秒）时，带到甩的方向上的下一个吸附点。默认值是 UIKit 面板实测的甩动速度。"
+              },
+              {
+                "name": "`options.onSettle`",
+                "type": "`(index: number) => void`",
+                "default": "—",
+                "description": "元素停稳到某个吸附点后调用，参数是下标。每次用到时现读。"
+              }
+            ]
+          },
+          {
+            "heading": "返回值",
+            "rows": [
+              {
+                "name": "`settleTo`",
+                "type": "`(index: number) => void`",
+                "description": "不用拖动就把元素停到第 `index` 个吸附点上，再调用 `onSettle`。下标越界时什么也不做，开发环境下会警告。"
+              }
+            ]
+          },
+          {
+            "heading": "createDragToSnapPoints",
+            "rows": [
+              {
+                "name": "`createDragToSnapPoints`",
+                "type": "`(element: HTMLElement, options: DragToSnapPointsOptions) => DragToSnapPoints`",
+                "description": "在组件外使用。选项和上面一样，返回 `settleTo` 和 `destroy`。"
+              },
+              {
+                "name": "`destroy`",
+                "type": "`() => void`",
+                "description": "移除所有监听，让元素停在原地。"
+              }
+            ]
+          }
+        ]
+      },
+      "slots": {
+        "en": [],
+        "zh": []
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [],
+        "zh": [
+          {
+            "heading": "建议",
+            "text": "- 推荐: 不拖也能到达同样的位置：用按钮或按键调用 `settleTo`。\n- 推荐: 用 `onSettle` 把停住的下标存进状态，再根据它渲染这个位置代表的内容。\n- 推荐: 位置改变了元素显示的内容时，向读屏用户播报这个变化。\n- 避免: 用它重做面板或轮播：它们自己的属性已经按大家熟悉的方式吸附了。"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": {
+            "en": "useDragToSnapPoints — a three-detent panel",
+            "zh": "useDragToSnapPoints — 三档面板"
+          },
+          "description": {
+            "en": "Drag the panel up or down; on release it settles open, half open or peeking, and a quick flick carries to the next one in its direction. The buttons settle it without a drag.",
+            "zh": "上下拖动面板，松手后停在展开、半开或露头三档之一；快速一甩会跳到甩的方向上的下一档。按钮不用拖动也能切换档位。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { useDragToSnapPoints } from '@astryx-vue/core'\nimport { Button } from '@astryx-vue/core/Button'\nimport { HStack, VStack } from '@astryx-vue/core/Stack'\nimport { ref, useTemplateRef } from 'vue'\n\n// Offsets down from where the sheet rests: open, half open, peeking.\nconst SNAP_POINTS = [0, 110, 200]\nconst LABELS = ['Open', 'Half', 'Peek']\n\nconst sheet = useTemplateRef<HTMLElement>('sheet')\nconst settled = ref(0)\n\nconst { settleTo } = useDragToSnapPoints(sheet, {\n  axis: 'y',\n  snapPoints: SNAP_POINTS,\n  onSettle: (index) => {\n    settled.value = index\n  },\n})\n</script>\n\n<template>\n  <VStack :gap=\"4\" align=\"center\">\n    <div class=\"snap-stage\">\n      <div ref=\"sheet\" class=\"snap-sheet\">\n        <div class=\"snap-grabber\" />\n        {{ LABELS[settled] }}\n      </div>\n    </div>\n    <HStack :gap=\"2\">\n      <Button\n        v-for=\"(label, index) in LABELS\"\n        :key=\"label\"\n        :label=\"label\"\n        :variant=\"index === settled ? 'primary' : 'secondary'\"\n        @click=\"settleTo(index)\"\n      />\n    </HStack>\n  </VStack>\n</template>\n\n<style scoped>\n.snap-stage {\n  position: relative;\n  width: 100%;\n  max-width: 360px;\n  height: 260px;\n  overflow: hidden;\n  border-radius: var(--astryx-radius-container, 12px);\n  background: var(--astryx-color-background-muted, rgb(0 0 0 / 4%));\n}\n\n.snap-sheet {\n  position: absolute;\n  inset: 20px 0 auto;\n  display: grid;\n  justify-items: center;\n  align-content: start;\n  gap: 12px;\n  height: 240px;\n  padding-top: 8px;\n  border-radius: var(--astryx-radius-container, 12px) var(--astryx-radius-container, 12px) 0 0;\n  background: var(--astryx-color-accent);\n  color: var(--astryx-color-on-accent, #fff);\n  cursor: grab;\n  user-select: none;\n}\n\n.snap-grabber {\n  width: 36px;\n  height: 5px;\n  border-radius: 3px;\n  background: currentcolor;\n  opacity: 0.5;\n}\n</style>"
+        }
+      ],
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/use-drag-to-snap-points",
+        "zh": "https://astryx-vue.pages.dev/components/use-drag-to-snap-points"
+      }
     }
   ],
   "topics": [

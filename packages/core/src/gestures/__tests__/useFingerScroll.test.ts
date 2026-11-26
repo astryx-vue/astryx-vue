@@ -121,7 +121,8 @@ describe('useFingerScroll', () => {
     expect(core).not.toHaveProperty('useFingerScroll')
     expect(core).not.toHaveProperty('isFingerScroll')
     expect(core).not.toHaveProperty('watchFingerScrolls')
-  })
+    // 引入整个包的入口要编译几百个模块，机器忙时会超过默认的 5 秒。
+  }, 30_000)
 
   it('reads a finger\'s scroll until the scroller\'s scrollend, and the program\'s as false', () => {
     const wrapper = mount(list(ref(false)), { attachTo: document.body })
