@@ -1,7 +1,9 @@
 import type { WeekStartsOn } from '../composables/useDateRange.js'
 import type { HourFormat, NativePicker, TimePresentation } from '../composables/useTimeValue.js'
 import type { FieldPartStylingProps } from '../Field/fieldParts.js'
+import type { DateInputEntryError } from '../DateInput/dateEntry.js'
 import type { FieldStatusInput, FieldStatusVariant } from '../Field/types.js'
+import type { EntryErrorBehavior } from '../FormLayout/context.js'
 
 export type DateTimeInputSize = 'sm' | 'md' | 'lg'
 
@@ -49,9 +51,16 @@ export interface DateTimeInputProps extends FieldPartStylingProps {
   status?: FieldStatusInput
   statusVariant?: FieldStatusVariant | 'tooltip'
   width?: number | string
+  /**
+   * 日期那段打字被拒时什么时候亮出来，同 DateInput。
+   * 不传时用最近 FormLayout 的 `defaultEntryErrorBehavior`，再没有就是 `complete`。
+   */
+  entryErrorBehavior?: EntryErrorBehavior
 }
 
 export interface DateTimeInputEmits {
   'update:modelValue': [value: string | null]
   'change': [value: string | null]
+  /** 日期那段对打进来的文字的拒绝开始、改变或结束时触发，结束时参数是 `null`。 */
+  'entryErrorChange': [error: DateInputEntryError | null]
 }

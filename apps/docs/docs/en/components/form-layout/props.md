@@ -25,6 +25,12 @@ footer: false
         <td>-</td>
         <td>Default for fields that do not set <code>isOptional</code> or <code>isRequired</code>. It changes the indicator and <code>aria-required</code>. It does not set the native <code>required</code> attribute. When a field sets both, optional wins.</td>
       </tr>
+      <tr>
+        <td><code>defaultEntryErrorBehavior</code></td>
+        <td><code>'complete' | 'blur-or-enter'</code></td>
+        <td>-</td>
+        <td>Default <code>entryErrorBehavior</code> for the date fields inside (DateInput, DateTimeInput). A field's own setting wins; without either, fields use <code>complete</code>.</td>
+      </tr>
     </tbody>
   </table>
 </div>

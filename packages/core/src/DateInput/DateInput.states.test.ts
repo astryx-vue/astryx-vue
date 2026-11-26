@@ -198,13 +198,13 @@ describe('dateInput 的 Enter', () => {
     expect(pressEnter(wrapper.get('input').element).defaultPrevented).toBe(false)
   })
 
-  it('有打了一半的文字时 Enter 不提交，文字退回已提交的值', async () => {
+  it('有打了一半的文字时 Enter 不提交表单，先收下文字', async () => {
     const wrapper = mount(DateInput, { props: { label: 'Due', presentation: 'popover', modelValue: new Date(2026, 2, 21) } })
     const input = wrapper.get('input')
     await input.setValue('2026-03')
     expect(pressEnter(input.element).defaultPrevented).toBe(true)
     await nextTick()
-    expect((input.element as HTMLInputElement).value).toBe('March 21, 2026')
+    expect(wrapper.text()).toContain('Invalid date')
   })
 
   it('禁用或忙碌的字段 Enter 不提交表单', async () => {

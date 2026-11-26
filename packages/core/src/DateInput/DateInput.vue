@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { FieldStatusType } from '../Field/types.js'
 import type { DateInputEmits, DateInputProps, DateInputSlots } from './types.js'
-import { computed, defineComponent, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
+import { computed, defineComponent, getCurrentInstance, ref, useAttrs, useId, useTemplateRef } from 'vue'
 import BottomSheet from '../BottomSheet/BottomSheet.vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
@@ -16,7 +16,7 @@ import { useResolvedLabelHidden } from '../composables/useResolvedLabelHidden.js
 import Field from '../Field/Field.vue'
 import FieldIcon from '../Field/FieldIcon.vue'
 import { useFieldPartStyling } from '../Field/fieldParts.js'
-import { useAriaRequired } from '../FormLayout/context.js'
+import { useAriaRequired, useEntryErrorBehavior } from '../FormLayout/context.js'
 import Icon from '../Icon/Icon.vue'
 import { useInputGroupDisabled } from '../InputGroup/context.js'
 import { useAstryxLocale, useComponentMessages } from '../locale/context.js'
@@ -26,10 +26,11 @@ import { useSize } from '../SizeContext/SizeContext.js'
 import Spinner from '../Spinner/Spinner.vue'
 import { isImeKeyEvent } from '../utils/ime.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
-import { formatCommittedDate, parseTypedDate, resolveDateStatus, toIsoDate } from './dateText.js'
+import { parseTypedDate, resolveDateStatus, toIsoDate } from './dateText.js'
 import NativeDateField from './NativeDateField.vue'
 import TouchDateSheet from './TouchDateSheet.vue'
 import { useCalendarDismiss } from './useCalendarDismiss.js'
+import { useTypedDateEntry } from './useTypedDateEntry.js'
 import '../../styles/date-input.css'
 
 defineOptions({ name: 'AstryxDateInput', inheritAttrs: false })
@@ -82,7 +83,6 @@ const dialogLabel = computed(() => props.label || messages.value.dateInput.dialo
 const inputRef = useTemplateRef<HTMLInputElement>('inputRef')
 const containerRef = useTemplateRef<HTMLDivElement>('containerRef')
 const isOpen = ref(false)
-const inputValue = ref('')
 const disabledMessageId = `${generatedId}-disabled`
 
 const pending = usePendingChange(() => props.changeAction)
@@ -130,6 +130,13 @@ function allowed(date: Date): boolean {
   })
 }
 
+const instance = getCurrentInstance()
+/** 调用方有没有监听 `entryErrorChange`。声明过的事件不进 attrs，只能看 vnode 上的 props。 */
+function hasEntryErrorListener(): boolean {
+  return Boolean(instance?.vnode.props?.onEntryErrorChange)
+}
+const entryErrorBehavior = useEntryErrorBehavior(() => props.entryErrorBehavior)
+
 function commit(value: Date | null): void {
   if (locked.value)
     return
@@ -143,19 +150,25 @@ const modelValueRef = computed({
   set: value => commit(value),
 })
 
-function formatCommitted(date: Date | null): string {
-  return formatCommittedDate(date, props.format, locale.value)
-}
-
 const parseDate = parseTypedDate
 
-function syncDisplayValue(): void {
-  inputValue.value = formatCommitted(props.modelValue)
-}
+const entry = useTypedDateEntry({
+  value: () => props.modelValue,
+  format: () => props.format,
+  locale: () => locale.value,
+  bounds: () => ({ min: props.min, max: props.max }),
+  isBlocked: date => !allowed(date),
+  isLocked: () => locked.value,
+  behavior: () => entryErrorBehavior.value,
+  status: () => resolveDateStatus(props.status),
+  hasEntryErrorListener,
+  messages: () => messages.value.dateInput,
+  commitValue: value => commit(value),
+  reportEntryError: error => emit('entryErrorChange', error),
+})
+const inputValue = entry.displayValue
 
-watch(() => [props.modelValue, props.format, locale.value] as const, syncDisplayValue, { immediate: true })
-
-const statusValue = computed(() => resolveDateStatus(props.status))
+const statusValue = entry.fieldStatus
 const statusType = computed<FieldStatusType | undefined>(() => statusValue.value?.type)
 const showsField = computed(() => Boolean(props.label || props.description || statusValue.value?.message))
 const shell = computed(() => showsField.value ? Field : PassThrough)
@@ -193,19 +206,17 @@ function onInput(event: Event): void {
   // 禁用和忙碌都不再走原生 `disabled`，输入要自己挡住（spec:AST-085 FR2）。
   if (useSheet.value || locked.value || (event instanceof InputEvent && event.isComposing))
     return
-  const target = event.target as HTMLInputElement
-  const value = target.value.trim()
-  inputValue.value = target.value
-
-  const parsed = parseDate(value)
-  if (parsed && allowed(parsed))
-    modelValueRef.value = parsed
+  entry.onInput((event.target as HTMLInputElement).value)
 }
 
 function onBlur(): void {
   disabledTooltip.onBlur()
-  if (!parseDate(inputValue.value.trim()))
-    syncDisplayValue()
+  entry.onBlur()
+}
+
+function onFocus(event: FocusEvent): void {
+  entry.onFocus()
+  disabledTooltip.onFocus(event)
 }
 
 function onOpenChange(open: boolean): void {
@@ -228,28 +239,15 @@ function onToggleClick(event: MouseEvent): void {
     openCalendar()
 }
 
-/** 输入框里有还没变成值的文字。 */
-function hasDraft(): boolean {
-  return inputValue.value !== formatCommitted(props.modelValue)
-}
-
-function commitDraft(): void {
-  const parsed = parseDate(inputValue.value.trim())
-  if (parsed && allowed(parsed))
-    modelValueRef.value = parsed
-  syncDisplayValue()
-}
-
 function onInputKeyDown(event: KeyboardEvent): void {
   if (isImeKeyEvent(event))
     return
   if (event.key === 'Enter') {
     // 有打了一半的文字时先收下它，不然表单会带着旧值提交；禁用或忙碌的字段也不能提交表单。
     // 其余时候 Enter 和普通文本框一样，交给浏览器提交表单。
-    if (locked.value || hasDraft()) {
+    if (locked.value || entry.isPending.value) {
       event.preventDefault()
-      if (!locked.value)
-        commitDraft()
+      entry.commit()
     }
     return
   }
@@ -262,6 +260,7 @@ function onInputKeyDown(event: KeyboardEvent): void {
 }
 
 function onCalendarChange(date: Date | null): void {
+  entry.reset()
   modelValueRef.value = date
   if (!useSheet.value) {
     isOpen.value = false
@@ -274,13 +273,14 @@ function onSheetSave(): void {
 }
 
 function onSheetReset(): void {
+  entry.reset()
   modelValueRef.value = null
 }
 
 function onClear(event: Event): void {
   event.stopPropagation()
+  entry.reset()
   modelValueRef.value = null
-  inputValue.value = ''
   inputRef.value?.focus({ preventScroll: true })
 }
 
@@ -296,8 +296,6 @@ defineExpose({
   onClear,
   parseDate,
 })
-
-syncDisplayValue()
 </script>
 
 <template>
@@ -333,6 +331,7 @@ syncDisplayValue()
     :container-style="parts.containerStyle.value"
     :control-class="parts.controlClass()"
     :control-style="parts.controlStyle()"
+    :has-entry-error-listener="hasEntryErrorListener()"
     v-bind="inputAttrs()"
     @update:model-value="commit"
   />
@@ -394,7 +393,7 @@ syncDisplayValue()
               :aria-label="showsField ? undefined : props.label"
               :aria-labelledby="showsField ? field?.labelId : undefined"
               :aria-describedby="describedBy(field?.describedBy)"
-              :aria-invalid="statusType === 'error' ? 'true' : undefined"
+              :aria-invalid="statusType === 'error' || entry.isInvalid.value ? 'true' : undefined"
               :aria-required="ariaRequired"
               :aria-busy="busy || undefined"
               :aria-controls="popupId"
@@ -403,7 +402,7 @@ syncDisplayValue()
               autocomplete="off"
               @input="onInput"
               @blur="onBlur"
-              @focus="disabledTooltip.onFocus"
+              @focus="onFocus"
               @click="openCalendar"
               @keydown="onInputKeyDown"
             >
@@ -461,6 +460,9 @@ syncDisplayValue()
           </div>
         </BottomSheet>
 
+        <div class="astryx-date-input-alert" role="alert">
+          {{ entry.alertMessage.value }}
+        </div>
         <input
           v-if="props.name"
           type="hidden"

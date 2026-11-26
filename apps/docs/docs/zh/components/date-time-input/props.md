@@ -37,6 +37,7 @@ footer: false
 <tr><td><code>nativePicker</code></td><td><code>'touch' | 'always' | 'never'</code></td><td>—</td><td>旧的打开方式，同时传给日期和时间。</td></tr>
 <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>两个字段都不可改。</td></tr>
 <tr><td><code>changeAction</code></td><td><code>(value) =&gt; void | Promise&lt;void&gt;</code></td><td>—</td><td>日期和时间都齐了之后再跑。返回 Promise 时保持加载。清除也会跑。</td></tr>
+<tr><td><code>entryErrorBehavior</code></td><td><code>'complete' | 'blur-or-enter'</code></td><td><code>'complete'</code></td><td>日期那段被拒的输入什么时候亮出来，同 DateInput；同样会触发 <code>entryErrorChange</code>。</td></tr>
 <tr><td><code>isOptional</code></td><td><code>boolean</code></td><td>—</td><td>在标签旁标成可选。</td></tr>
 <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td>—</td><td>把这一对字段标成必填。</td></tr>
 <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>标签末尾信息图标里的说明。</td></tr>

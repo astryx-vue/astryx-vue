@@ -38,6 +38,7 @@ footer: false
       <tr><td><code>clearLabel</code></td><td><code>string</code></td><td><code>Clear</code> / <code>清除</code></td><td>清除按钮的无障碍名称。设置了 <code>label</code> 时会带上它。未设置语言时为英文，提供 <code>zh-CN</code> 后为中文。</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>尺寸。</td></tr>
       <tr><td><code>status</code></td><td><code>'default' | 'error' | 'warning' | 'success' | { type, message? }</code></td><td>—</td><td>校验状态。对象带 <code>message</code> 时，说明会显示在字段下方。</td></tr>
+      <tr><td><code>entryErrorBehavior</code></td><td><code>'complete' | 'blur-or-enter'</code></td><td><code>'complete'</code></td><td>被拒的输入什么时候亮出来。<code>complete</code>：打成一个完整、但超出范围或不存在的日子时立刻亮，读不成日期的文字等 Enter 或失焦；<code>blur-or-enter</code>：打字时什么都不亮。不传时用最近 FormLayout 的 <code>defaultEntryErrorBehavior</code>。</td></tr>
       <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'attached'</code></td><td>状态说明的位置。</td></tr>
       <tr><td><code>containerClass</code></td><td><code>string | object | array</code></td><td>—</td><td>加到字段外壳的 class。在 InputGroup 和横向标签的 FormLayout 里没有外壳，此时不生效，开发环境会警告。</td></tr>
       <tr><td><code>containerStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>加到字段外壳的行内样式。落点规则同 containerClass。</td></tr>
@@ -55,6 +56,7 @@ footer: false
     <tbody>
       <tr><td><code>update:modelValue</code></td><td><code>value: Date | null</code></td><td>日期变化时触发。</td></tr>
       <tr><td><code>change</code></td><td><code>value: Date | null</code></td><td>日期变化时触发。</td></tr>
+      <tr><td><code>entryErrorChange</code></td><td><code>error: { kind, text, date? } | null</code></td><td>字段对打进来的文字的拒绝开始、改变或结束（<code>null</code>）时触发。<code>kind</code> 是 <code>unreadable</code>、<code>incomplete</code>、<code>nonexistent</code>、<code>outOfRange</code> 或 <code>unavailable</code>，后两种带 ISO 日期 <code>date</code>。监听了它时，<code>status</code> 里带说明的 error 替字段措辞。</td></tr>
     </tbody>
   </table>
 </div>

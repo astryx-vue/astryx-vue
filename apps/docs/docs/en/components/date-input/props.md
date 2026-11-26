@@ -37,7 +37,8 @@ footer: false
       <tr><td><code>hasClear</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows a clear button when a date is set. Clearing also returns focus to the input. The older <code>clearable</code> name works too.</td></tr>
       <tr><td><code>clearLabel</code></td><td><code>string</code></td><td><code>Clear</code> / <code>清除</code></td><td>Accessible name for the clear button. Includes <code>label</code> when one is set. English by default; Chinese when <code>zh-CN</code> is provided.</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>Field size.</td></tr>
-      <tr><td><code>status</code></td><td><code>'default' | 'error' | 'warning' | 'success' | { type, message? }</code></td><td>—</td><td>Validation status. An object with <code>message</code> shows that text under the field.</td></tr>
+      <tr><td><code>status</code></td><td><code>'default' | 'error' | 'warning' | 'success' | { type, message? }</code></td><td>—</td><td>Validation status. An object with <code>message</code> shows that text under the field. While the field rejects typed text, its own message replaces this status, unless you listen to <code>entryErrorChange</code>: then an <code>error</code> status with a message words the rejection.</td></tr>
+      <tr><td><code>entryErrorBehavior</code></td><td><code>'complete' | 'blur-or-enter'</code></td><td><code>'complete'</code></td><td>When a rejected entry shows. <code>complete</code> shows a complete date that is out of range or does not exist as soon as it is typed; text that is not a date waits for Enter or blur. <code>blur-or-enter</code> shows nothing while typing. Without it, the nearest FormLayout's <code>defaultEntryErrorBehavior</code> applies.</td></tr>
       <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'attached'</code></td><td>Where the status message sits.</td></tr>
       <tr><td><code>containerClass</code></td><td><code>string | object | array</code></td><td>—</td><td>Class for the field container. Has no effect, and warns in development, inside InputGroup and in a horizontal-labels FormLayout.</td></tr>
       <tr><td><code>containerStyle</code></td><td><code>StyleValue</code></td><td>—</td><td>Inline style for the field container. Same targeting as containerClass.</td></tr>
@@ -55,6 +56,7 @@ footer: false
     <tbody>
       <tr><td><code>update:modelValue</code></td><td><code>value: Date | null</code></td><td>Emitted when the date changes.</td></tr>
       <tr><td><code>change</code></td><td><code>value: Date | null</code></td><td>Emitted when the date changes.</td></tr>
+      <tr><td><code>entryErrorChange</code></td><td><code>error: { kind, text, date? } | null</code></td><td>Emitted each time the field's rejection of typed text starts, changes, or ends (<code>null</code>). <code>kind</code> is <code>unreadable</code>, <code>incomplete</code>, <code>nonexistent</code>, <code>outOfRange</code>, or <code>unavailable</code>; <code>date</code> is the ISO date for the last two.</td></tr>
     </tbody>
   </table>
 </div>
