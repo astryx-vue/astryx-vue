@@ -1,5 +1,5 @@
 import type { AstryxLocale } from '../types.js'
-import { formatCount } from './shared.js'
+import { englishPlural, formatCount } from './shared.js'
 
 export interface TableMessages {
   label: string
@@ -24,10 +24,15 @@ export interface TableMessages {
   paginationLabelAbove: (label: string) => string
   paginationLabelBelow: (label: string) => string
   resizeColumn: (label: string) => string
+  /** 没有最大宽度的列，拖动把手念出的当前宽度，例如「133 pixels」。 */
+  columnWidthValue: (width: number) => string
   expandGroup: (groupKey: string) => string
   collapseGroup: (groupKey: string) => string
   expandRow: string
   collapseRow: string
+  /** 行展开按钮带上行名时的名字，例如「Expand Acme」。 */
+  expandRowNamed: (label: string) => string
+  collapseRowNamed: (label: string) => string
   expandAllRows: string
   collapseAllRows: string
   rowExpansion: string
@@ -35,6 +40,9 @@ export interface TableMessages {
   /** 树形数据里，行展开箭头的名字。 */
   treeExpandRow: string
   treeCollapseRow: string
+  /** 树形数据的展开箭头带上行名时的名字。 */
+  treeExpandRowNamed: (label: string) => string
+  treeCollapseRowNamed: (label: string) => string
   /** 树形数据表头那个「全部展开 / 全部收起」开关的名字。 */
   treeExpandAllRows: string
   treeCollapseAllRows: string
@@ -62,16 +70,21 @@ export const tableMessages: Record<AstryxLocale, TableMessages> = {
     paginationLabelAbove: label => `${label} (top)`,
     paginationLabelBelow: label => `${label} (bottom)`,
     resizeColumn: label => `Resize column ${label}`,
+    columnWidthValue: width => `${formatCount(width, 'en')} ${englishPlural(width, 'pixel', 'pixels')}`,
     expandGroup: groupKey => `Expand group ${groupKey}`,
     collapseGroup: groupKey => `Collapse group ${groupKey}`,
     expandRow: 'Expand row',
     collapseRow: 'Collapse row',
+    expandRowNamed: label => `Expand ${label}`,
+    collapseRowNamed: label => `Collapse ${label}`,
     expandAllRows: 'Expand all rows',
     collapseAllRows: 'Collapse all rows',
     rowExpansion: 'Row expansion',
     rowStatus: 'Row status',
     treeExpandRow: 'Expand row',
     treeCollapseRow: 'Collapse row',
+    treeExpandRowNamed: label => `Expand ${label}`,
+    treeCollapseRowNamed: label => `Collapse ${label}`,
     treeExpandAllRows: 'Expand all rows',
     treeCollapseAllRows: 'Collapse all rows',
   },
@@ -96,16 +109,21 @@ export const tableMessages: Record<AstryxLocale, TableMessages> = {
     paginationLabelAbove: label => `${label}（顶部）`,
     paginationLabelBelow: label => `${label}（底部）`,
     resizeColumn: label => `调整列宽 ${label}`,
+    columnWidthValue: width => `${formatCount(width, 'zh-CN')} 像素`,
     expandGroup: groupKey => `展开分组 ${groupKey}`,
     collapseGroup: groupKey => `折叠分组 ${groupKey}`,
     expandRow: '展开行',
     collapseRow: '折叠行',
+    expandRowNamed: label => `展开 ${label}`,
+    collapseRowNamed: label => `折叠 ${label}`,
     expandAllRows: '展开所有行',
     collapseAllRows: '折叠所有行',
     rowExpansion: '行展开',
     rowStatus: '行状态',
     treeExpandRow: '展开行',
     treeCollapseRow: '折叠行',
+    treeExpandRowNamed: label => `展开 ${label}`,
+    treeCollapseRowNamed: label => `折叠 ${label}`,
     treeExpandAllRows: '展开所有行',
     treeCollapseAllRows: '折叠所有行',
   },

@@ -103,15 +103,7 @@ export const UNPORTED_KEYS = {
     'reorderCancelled',
   ], 'List 还没有 createReorderable 拖拽排序'),
   '@astryx.listInput.itemName': 'lab ListInput 还没改用 createReorderable，排序手柄和播报里的记录名由 listInput 自己的文案拼',
-  ...keys('@astryx.', [
-    'table.loadMore',
-    'table.columnResize.resizeColumn',
-    'table.columnResize.widthValue',
-    'tableRowExpansion.expandRowNamed',
-    'tableRowExpansion.collapseRowNamed',
-    'tableTree.expandRowNamed',
-    'tableTree.collapseRowNamed',
-  ], '由 Table 的同步任务接入（无限加载、列宽拖柄的读值、按行名展开）'),
+  '@astryx.table.loadMore': '由 Table 的同步任务接入（无限加载）',
   ...keys('@astryx.', [
     'codeBlock.copyFailed',
     'markdownHeadingLinks.copyFailed',
