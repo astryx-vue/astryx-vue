@@ -26,8 +26,27 @@
     --astryx-toast-motion-duration: var(--astryx-duration-fast-max, 165ms);
   }
 
+  /* 触屏上下沿至少让开 34px：Face ID iPhone 竖屏的底部安全区，Safari 只在页面设了
+     viewport-fit=cover 时才报告它。 */
+  @media (pointer: coarse) {
+    .astryx-toast-viewport {
+      --_toast-bottom-floor: 34px;
+    }
+  }
+
+  .astryx-toast-viewport--placement-bottom-start,
+  .astryx-toast-viewport--placement-bottom-center,
+  .astryx-toast-viewport--placement-bottom-end {
+    padding-block-end: calc(var(--astryx-spacing-4, 16px) + max(env(safe-area-inset-bottom, 0px), var(--_toast-bottom-floor, 0px)));
+  }
+
   .astryx-toast-viewport > * {
     pointer-events: auto;
+  }
+
+  /* iOS Safari 按贴着屏幕下沿的固定元素给工具栏取色，没有提示的视口不占盒子。 */
+  .astryx-toast-viewport--empty {
+    display: none;
   }
 
   /* 视口搬进/搬出模态对话框时，节点等于重新插入文档，浏览器会把 `@starting-style`

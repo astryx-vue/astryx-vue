@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import type { ToastContentScope, ToastDismissReason, ToastOptions, ToastSlots } from './types.js'
 import type { ToastGestureDirection } from './useToastGesture.js'
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, inject, onMounted, onUnmounted, ref, watch } from 'vue'
 import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
 import { useComponentMessages } from '../locale/context.js'
 import { toastMessages } from '../locale/messages/toast.js'
 import MediaTheme from '../Theme/MediaTheme.vue'
 import { useTheme } from '../Theme/useTheme.js'
+import { TOAST_VIEWPORT_KEY } from './context.js'
 import { resolveAutoHide, resolveAutoHideDuration } from './options.js'
 import { useToastGesture } from './useToastGesture.js'
 
@@ -23,6 +24,10 @@ const props = withDefaults(defineProps<Omit<ToastOptions, 'onDismiss' | 'onHide'
    * 朝哪边滑出。1 向下，-1 向上。视口按提示贴在屏幕上沿还是下沿传入。
    */
   swipeDirection?: ToastGestureDirection
+  /**
+   * 同一个 `uniqueID` 的新提示原地覆盖这张卡片时会变，自动关闭的计时随之重新开始。
+   */
+  timerKey?: number
 }>(), {
   type: 'info',
   isExiting: false,
@@ -45,13 +50,18 @@ defineSlots<ToastSlots>()
 const duration = computed(() => resolveAutoHideDuration(props))
 const autoHide = computed(() => resolveAutoHide(props))
 const remaining = ref(duration.value)
-const isPaused = ref(false)
+// 悬停、焦点、手势、窗口失焦各自按住计时器，各自结束才算数：
+// 只有最后一个条件放开，计时才继续。
+type PauseSource = 'pointer' | 'focus' | 'gesture' | 'window'
+const pauseSources = new Set<PauseSource>()
 const timer = ref<ReturnType<typeof setTimeout> | null>(null)
 const startTime = ref<number | null>(null)
 
 const isAlert = computed(() => props.type === 'error')
-const role = computed(() => isAlert.value ? 'alert' : 'status')
-const ariaLive = computed(() => isAlert.value ? 'assertive' : 'polite')
+// 只有视口里的卡片是 live 区域；单独渲染的 Toast 不带 live 角色。
+const isInViewport = inject(TOAST_VIEWPORT_KEY, false)
+const role = computed(() => isInViewport ? (isAlert.value ? 'alert' : 'status') : undefined)
+const ariaLive = computed(() => isInViewport ? (isAlert.value ? 'assertive' : 'polite') : undefined)
 const messages = useComponentMessages({ toast: toastMessages })
 const theme = useTheme()
 const mediaFallback = computed(() => isAlert.value || theme.mode.value === 'light' ? 'dark' : 'light')
@@ -86,14 +96,14 @@ const gesture = useToastGesture({
   direction: () => props.swipeDirection,
   enabled: () => !props.isExiting,
   canPauseTimer: () => autoHide.value,
-  isTimerPaused: () => isPaused.value,
-  pauseTimer,
-  resumeTimer,
+  isTimerPaused: () => pauseSources.has('gesture'),
+  pauseTimer: () => pauseTimer('gesture'),
+  resumeTimer: () => resumeTimer('gesture'),
   dismiss: () => dismiss('manual'),
 })
 
 function startTimer() {
-  if (!autoHide.value || isPaused.value)
+  if (!autoHide.value || pauseSources.size > 0)
     return
   if (timer.value)
     clearTimeout(timer.value)
@@ -103,10 +113,13 @@ function startTimer() {
   }, remaining.value)
 }
 
-function pauseTimer() {
-  if (!autoHide.value || isPaused.value)
+function pauseTimer(source: PauseSource) {
+  if (!autoHide.value)
     return
-  isPaused.value = true
+  const wasRunning = pauseSources.size === 0
+  pauseSources.add(source)
+  if (!wasRunning)
+    return
   if (timer.value) {
     clearTimeout(timer.value)
     timer.value = null
@@ -117,10 +130,9 @@ function pauseTimer() {
   }
 }
 
-function resumeTimer() {
-  if (!autoHide.value || !isPaused.value)
+function resumeTimer(source: PauseSource) {
+  if (!autoHide.value || !pauseSources.delete(source))
     return
-  isPaused.value = false
   startTimer()
 }
 
@@ -130,11 +142,20 @@ function handleClose() {
 
 // A toast should not expire while the user is in another window or tab.
 function onWindowBlur(): void {
-  pauseTimer()
+  pauseTimer('window')
 }
 
 function onWindowFocus(): void {
-  resumeTimer()
+  resumeTimer('window')
+}
+
+// 焦点从卡片里的控件上被移除（控件卸载不会触发失焦）时，放掉焦点这一路按住。
+function onFocusOut(event: FocusEvent): void {
+  const root = event.currentTarget as HTMLElement
+  const next = event.relatedTarget
+  if (next instanceof Node && root.contains(next))
+    return
+  resumeTimer('focus')
 }
 
 watch(() => props.isExiting, (exiting) => {
@@ -151,11 +172,21 @@ watch(duration, (next) => {
   startTimer()
 })
 
+// 同一个 `uniqueID` 的新提示原地覆盖这张卡片：计时从头开始。
+watch(() => props.timerKey, () => {
+  remaining.value = duration.value
+  startTimer()
+})
+
 onMounted(() => {
   startTimer()
   if (autoHide.value) {
     window.addEventListener('blur', onWindowBlur)
     window.addEventListener('focus', onWindowFocus)
+    // 窗口在后台时弹出的提示收不到 blur 事件，从暂停开始，窗口下次获得焦点再继续。
+    if (typeof document.hasFocus === 'function' && !document.hasFocus()) {
+      pauseTimer('window')
+    }
   }
 })
 
@@ -175,10 +206,10 @@ onUnmounted(() => {
     :role="role"
     :aria-live="ariaLive"
     aria-atomic="true"
-    @mouseenter="pauseTimer"
-    @mouseleave="resumeTimer"
-    @focusin="pauseTimer"
-    @focusout="resumeTimer"
+    @mouseenter="pauseTimer('pointer')"
+    @mouseleave="resumeTimer('pointer')"
+    @focusin="pauseTimer('focus')"
+    @focusout="onFocusOut"
     @pointerdown="gesture.onPointerDown"
     @pointermove="gesture.onPointerMove"
     @pointerup="gesture.onPointerUp"

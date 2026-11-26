@@ -1,12 +1,14 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
+import { TOAST_VIEWPORT_KEY } from './context.js'
 import Toast from './Toast.vue'
 
 describe('toast', () => {
   it('renders body text and status role', () => {
     const wrapper = mount(Toast, {
       props: { body: 'Saved' },
+      global: { provide: { [TOAST_VIEWPORT_KEY as symbol]: true } },
     })
 
     expect(wrapper.text()).toContain('Saved')
@@ -17,10 +19,19 @@ describe('toast', () => {
   it('uses alert role for error type', () => {
     const wrapper = mount(Toast, {
       props: { body: 'Failed', type: 'error' },
+      global: { provide: { [TOAST_VIEWPORT_KEY as symbol]: true } },
     })
 
     expect(wrapper.find('[role="alert"]').exists()).toBe(true)
     expect(wrapper.find('[aria-live="assertive"]').exists()).toBe(true)
+  })
+
+  it('holds no live role when rendered on its own', () => {
+    const wrapper = mount(Toast, { props: { body: 'Saved' } })
+
+    const card = wrapper.get('.astryx-toast')
+    expect(card.attributes('role')).toBeUndefined()
+    expect(card.attributes('aria-live')).toBeUndefined()
   })
 
   it('adds the exiting class while the toast leaves', () => {

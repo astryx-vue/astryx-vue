@@ -23,6 +23,7 @@ const NON_MEMBERSHIP = new Set([
   'LinkProvider/context.ts',
   'ContextMenu/context.ts',
   'Dialog/context.ts',
+  'Toast/context.ts',
   'CommandPalette/context.ts',
   'AlertDialog/context.ts',
   'Typeahead/context.ts',
