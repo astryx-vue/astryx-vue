@@ -6,6 +6,10 @@ export function formatDoctorReport(report: DoctorReport): string {
   const lines = [zh ? 'astryx-vue doctor — 只报告，不改文件' : 'astryx-vue doctor — reports only, changes nothing', '']
   for (const check of report.checks) {
     lines.push(`  ${marker(check)} ${check.detail}`)
+    if (check.commands?.length && check.status !== 'ok') {
+      lines.push(`      ${zh ? '运行' : 'Run'}:`)
+      lines.push(...check.commands.map(command => `        ${command}`))
+    }
     if (check.docsUrl && check.status !== 'ok')
       lines.push(`      ${zh ? '文档' : 'Docs'}: ${check.docsUrl}`)
   }
