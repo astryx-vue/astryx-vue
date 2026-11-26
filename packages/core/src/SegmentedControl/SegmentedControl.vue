@@ -51,6 +51,7 @@ provide(segmentedControlContextKey, {
   layout: computed(() => props.layout),
   isDisabled: computed(() => props.isDisabled),
   hasDisabledMessage: showsDisabledMessage,
+  disabledReasonId: computed(() => showsDisabledMessage.value ? tooltipId : undefined),
   select,
 })
 
@@ -77,24 +78,26 @@ function setTabIndex(item: HTMLElement, value: 0 | -1): void {
     item.setAttribute('tabindex', String(value))
 }
 
+/** 分段自己被禁用（不是整个控件被禁用）。 */
+function isDisabledOnItsOwn(item: HTMLElement): boolean {
+  return item.hasAttribute('data-own-disabled')
+}
+
 /**
- * Keep exactly one enabled segment tabbable. The segment that already carries
- * the tab stop keeps it; when the selected value matches no segment (or the
- * matching one is disabled) the first enabled segment is promoted instead.
+ * 控件始终有且只有一个 Tab 落脚点：选中的分段，不管它是否被禁用、整个控件是否被禁用；
+ * 没有选中的分段时，取第一个没有被自己禁用的分段，再不行取第一个。
  */
 function syncTabStops(): void {
   const items = getItems()
   if (items.length === 0)
     return
 
-  const enabled = items.filter(item => !isItemDisabled(item))
-  if (enabled.length === 0)
-    return
-
-  const tabbable = enabled.find(item => item.getAttribute('tabindex') === '0') ?? enabled[0]
+  const stop = items.find(item => item.getAttribute('aria-checked') === 'true')
+    ?? items.find(item => !isDisabledOnItsOwn(item))
+    ?? items[0]
 
   for (const item of items)
-    setTabIndex(item, item === tabbable ? 0 : -1)
+    setTabIndex(item, item === stop ? 0 : -1)
 }
 
 onMounted(syncTabStops)

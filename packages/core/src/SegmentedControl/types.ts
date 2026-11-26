@@ -107,11 +107,9 @@ export interface SegmentedControlContextValue {
   size: ComputedRef<SegmentedControlSize>
   layout: ComputedRef<SegmentedControlLayout>
   isDisabled: ComputedRef<boolean>
-  /**
-   * True when the whole control is disabled and has a `disabledMessage`, the
-   * one case where the selected segment stays in the tab order so the reason
-   * is reachable by keyboard.
-   */
+  /** True when the whole control is disabled and has a `disabledMessage`. */
   hasDisabledMessage: ComputedRef<boolean>
+  /** 禁用原因提示的 id，原因同时描述每一个分段；没有原因时为空。 */
+  disabledReasonId: ComputedRef<string | undefined>
   select: (value: string) => void
 }

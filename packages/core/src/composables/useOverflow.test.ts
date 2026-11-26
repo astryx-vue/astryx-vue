@@ -38,6 +38,15 @@ describe('computeOverflow', () => {
     })).toEqual({ visibleCount: 1, rows: 1 })
   })
 
+  it('全部放得下时不给指示器留位置，即使最后一项比指示器窄', () => {
+    expect(computeOverflow({
+      ...base,
+      availableWidth: 70,
+      indicatorWidth: 40,
+      widths: [50, 10],
+    })).toEqual({ visibleCount: 2, rows: 1 })
+  })
+
   it('下限会压过放不下，上限会截断；下限比上限大时下限胜出', () => {
     expect(computeOverflow({
       ...base,
@@ -176,6 +185,33 @@ describe('useOverflow 横向收起', () => {
     expect(result.hasOverflow.value).toBe(true)
     expect(result.rows.value).toBe(1)
     expect(result.rowHeight.value).toBe(16)
+  })
+
+  it('传了 gapToken 就读测量副本排出来的间距，间距变了重新量', async () => {
+    const gapToken = ref('var(--astryx-spacing-2)')
+    const { result } = mountComposable(() => useOverflow(3, { gap: 8, gapToken }))
+    const container = document.createElement('div')
+    const measure = document.createElement('div')
+    setBox(container, { offsetWidth: 100 })
+    for (const width of [40, 40, 40]) {
+      const child = document.createElement('span')
+      setBox(child, { offsetHeight: 8, offsetWidth: width })
+      measure.append(child)
+    }
+    measure.style.columnGap = '8px'
+    document.body.append(container, measure)
+    result.containerRef.value = container
+    result.measureRef.value = measure
+    await nextTick()
+    expect(result.renderedGap.value).toBe(8)
+    expect(result.visibleCount.value).toBe(2)
+
+    measure.style.columnGap = '30px'
+    gapToken.value = 'var(--astryx-spacing-6)'
+    await nextTick()
+    await nextTick()
+    expect(result.renderedGap.value).toBe(30)
+    expect(result.visibleCount.value).toBe(1)
   })
 
   it('父元素模式用父级的内容宽度', async () => {

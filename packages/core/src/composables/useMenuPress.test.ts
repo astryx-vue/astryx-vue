@@ -194,6 +194,43 @@ describe('useMenuPress：一次手势只执行一次', () => {
   })
 })
 
+function touchEvent(target: EventTarget, type: string, identifiers: number[], cancelable = true): Event {
+  const event = new Event(type, { bubbles: true, cancelable })
+  Object.defineProperty(event, 'changedTouches', { value: identifiers.map(identifier => ({ identifier })) })
+  target.dispatchEvent(event)
+  return event
+}
+
+describe('useMenuPress：取消挑选那根手指的 touchend', () => {
+  it('手指松开挑中一行后，它的 touchend 被取消，之后没有按压对应的 click 照常放行', () => {
+    const onSelect = vi.fn()
+    mounted = mountHarness({ onSelect })
+    pointer(mounted.el('A'), 'pointerdown', { pointerId: 7 })
+    touchEvent(mounted.el('A'), 'touchstart', [7])
+    pointer(mounted.el('A'), 'pointerup', { pointerId: 7 })
+    expect(touchEvent(mounted.el('A'), 'touchend', [7]).defaultPrevented).toBe(true)
+    onSelect.mockClear()
+    mounted.el('B').dispatchEvent(new MouseEvent('click', { bubbles: true, detail: 1 }))
+    expect(onSelect).toHaveBeenCalledWith('B')
+  })
+
+  it('别的手指的 touchend 和浏览器当作滚动的 touchend 不碰', () => {
+    mounted = mountHarness()
+    pointer(mounted.el('A'), 'pointerdown', { pointerId: 7 })
+    touchEvent(mounted.el('A'), 'touchstart', [7])
+    pointer(mounted.el('A'), 'pointerup', { pointerId: 7 })
+    expect(touchEvent(mounted.el('A'), 'touchend', [9]).defaultPrevented).toBe(false)
+    expect(touchEvent(mounted.el('A'), 'touchend', [7], false).defaultPrevented).toBe(false)
+  })
+
+  it('鼠标松开不取消 touchend', () => {
+    mounted = mountHarness()
+    pointer(mounted.el('A'), 'pointerdown', { pointerType: 'mouse' })
+    pointer(mounted.el('A'), 'pointerup', { pointerType: 'mouse' })
+    expect(touchEvent(mounted.el('A'), 'touchend', [1]).defaultPrevented).toBe(false)
+  })
+})
+
 describe('useMenuPress：在外面松开和取消', () => {
   it('鼠标在外面松开：什么都不执行，关菜单；手指在外面松开：菜单留着', () => {
     const onDismiss = vi.fn()

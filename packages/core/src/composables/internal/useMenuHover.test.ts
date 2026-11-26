@@ -167,6 +167,16 @@ describe('useMenuHover：焦点和键盘', () => {
     current.items()[0]!.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }))
     expect(document.activeElement).toBe(current.items()[1])
   })
+
+  it('内容里的菜单已经处理过的方向键，不再挪第二次焦点', () => {
+    current = mountMenu()
+    current.click()
+    const [first, second] = current.items()
+    first!.focus()
+    first!.addEventListener('keydown', event => event.preventDefault())
+    first!.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true }))
+    expect(document.activeElement).not.toBe(second)
+  })
 })
 
 describe('useMenuHover：没有悬停能力的设备', () => {

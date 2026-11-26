@@ -29,6 +29,12 @@
     background: var(--astryx-color-background-surface, #fff);
     box-shadow: var(--astryx-shadow-high, 0 8px 24px rgb(0 0 0 / 16%));
     color: var(--astryx-color-text-primary, #171717);
+    /* 一个放得下的菜单保留捏合手势；能滚动时才放开纵向滚动。 */
+    touch-action: pinch-zoom;
+  }
+
+  .astryx-tab-menu-dropdown[data-overflow='true'] {
+    touch-action: pan-y pinch-zoom;
   }
 
   .astryx-tab-menu-heading {

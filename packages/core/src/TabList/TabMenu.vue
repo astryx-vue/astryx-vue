@@ -3,6 +3,8 @@ import type { TabMenuProps } from './types.js'
 import { computed, nextTick, onMounted, onUnmounted, ref, useAttrs, useId, watch } from 'vue'
 import { useDismiss } from '../composables/useDismiss.js'
 import { useListFocus } from '../composables/useListFocus.js'
+import { useMenuPress } from '../composables/useMenuPress.js'
+import { useOverflow } from '../composables/useOverflow.js'
 import Icon from '../Icon/Icon.vue'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { useTabListContext } from './context.js'
@@ -66,6 +68,16 @@ const listFocus = useListFocus({
     isOpen.value = false
   },
 })
+
+// 按住滑过各个选项，松开时选中松开处那一个，高亮跟着指针；鼠标在菜单外松开就关掉菜单。
+const menuPress = useMenuPress({
+  menuRef: surfaceRef,
+  itemSelector: '[role="menuitemradio"]:not([aria-disabled="true"])',
+  onDismiss: () => {
+    isOpen.value = false
+  },
+})
+const hasOverflow = useOverflow(surfaceRef, isOpen)
 
 useDismiss({
   container: surfaceRef,
@@ -206,7 +218,9 @@ onUnmounted(() => {
       role="menu"
       tabindex="-1"
       :aria-label="label"
+      :data-overflow="hasOverflow || undefined"
       :style="{ top: `${position.top}px`, left: `${position.left}px` }"
+      v-bind="menuPress.menuProps"
       @keydown="onMenuKeyDown"
       @focusin="listFocus.handleFocus"
     >

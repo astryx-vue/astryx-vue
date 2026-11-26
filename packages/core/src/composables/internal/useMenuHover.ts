@@ -254,8 +254,9 @@ export function useMenuHover(options: UseMenuHoverOptions): UseMenuHoverReturn {
       clearTimeouts()
   }
 
+  /** 内容里的菜单可能自己管列表按键；它已经处理过的键冒泡到这里时不能再挪一次焦点（一次方向键只走一项）。 */
   function onContentKeyDown(event: KeyboardEvent): void {
-    if (isEnabled())
+    if (isEnabled() && !event.defaultPrevented)
       list.handleKeyDown(event)
   }
 

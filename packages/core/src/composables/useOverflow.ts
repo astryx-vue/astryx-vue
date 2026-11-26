@@ -37,6 +37,12 @@ export interface UseOverflowOptions {
    */
   gap?: number
   /**
+   * 项间距在主题里的值（比如 `'var(--astryx-spacing-2)'`）。传了就不用 `gap`，
+   * 改读测量副本在浏览器里真正排出来的间距：间距阶梯跟主题和根字号走，像素值要排完版才知道。
+   * 值变了会重新量一次。
+   */
+  gapToken?: MaybeRefOrGetter<string | undefined>
+  /**
    * 哪怕挤不下也至少留下的项数。
    * @default 0
    */
@@ -63,6 +69,21 @@ export interface UseOverflowOptions {
   behavior?: 'observeParent' | 'observeSelf'
 }
 
+export interface OverflowInlineBounds {
+  collapsed: number
+  rendered: number
+  inFlexRow: boolean
+}
+
+const NO_INLINE_BOUNDS: OverflowInlineBounds = { collapsed: 0, rendered: 0, inFlexRow: false }
+
+function isFlexRow(parent: Element | null): boolean {
+  if (parent == null)
+    return false
+  const style = getComputedStyle(parent)
+  return (style.display === 'flex' || style.display === 'inline-flex') && style.flexDirection.startsWith('row')
+}
+
 export interface UseOverflowReturn {
   /** 绑到看得见的容器。 */
   containerRef: Ref<HTMLElement | null>
@@ -76,6 +97,14 @@ export interface UseOverflowReturn {
   rows: Ref<number>
   /** 测到的最大项高，多行容器用它定高度。 */
   rowHeight: Ref<number>
+  /**
+   * 单行列表的横向边界，从测量副本量出来；排版前都是 0。
+   * `collapsed` 是折到最窄（只剩下限的项加指示器）的宽度，`rendered` 是全部项展开的宽度，
+   * `inFlexRow` 是父元素是不是横向 flex（那时列表的宽度会跟着已显示的内容走）。
+   */
+  inlineBounds: Ref<OverflowInlineBounds>
+  /** 量的时候用的项间距（像素）：传了 `gapToken` 时是排出来的值，否则是 `gap`。 */
+  renderedGap: Ref<number>
   /** 宽度是测试里改的、或者折叠状态变了，再量一次。 */
   remeasure: () => void
 }
@@ -103,6 +132,11 @@ function computeSingleLineFit(
   floor: number,
   ceiling: number,
 ): number {
+  // 全部放得下就不需要指示器，也就不给它留位置：否则最后一项比指示器窄的一组，明明放得下也会折起来。
+  const allWidth = orderedWidths.reduce((sum, width) => sum + width, 0) + gap * Math.max(0, orderedWidths.length - 1)
+  if (orderedWidths.length <= ceiling && allWidth <= availableWidth)
+    return orderedWidths.length
+
   let totalWidth = 0
   let count = 0
 
@@ -336,6 +370,8 @@ function useItemOverflow(itemCount: MaybeRefOrGetter<number>, options: UseOverfl
   const rows = ref(count.value > 0 ? 1 : 0)
   const rowHeight = ref(0)
   const hasOverflow = computed(() => visibleCount.value < count.value)
+  const renderedGap = ref(gap)
+  const inlineBounds = ref<OverflowInlineBounds>(NO_INLINE_BOUNDS)
 
   let unobserveContainer: (() => void) | null = null
   let unobserveMeasure: (() => void) | null = null
@@ -356,6 +392,12 @@ function useItemOverflow(itemCount: MaybeRefOrGetter<number>, options: UseOverfl
     if (container == null || measure == null)
       return
 
+    // 间距阶梯跟主题走，像素值排完版才知道；读不出来就退回传进来的数字。
+    if (toValue(options.gapToken) != null) {
+      const rendered = Number.parseFloat(getComputedStyle(measure).columnGap)
+      renderedGap.value = Number.isFinite(rendered) ? rendered : gap
+    }
+    const gapWidth = renderedGap.value
     const availableWidth = availableWidthOf(container)
     const allChildren = Array.from(measure.children) as HTMLElement[]
     const hasIndicator = allChildren.length > total
@@ -379,11 +421,22 @@ function useItemOverflow(itemCount: MaybeRefOrGetter<number>, options: UseOverfl
     }
 
     const widths = children.map(child => child.offsetWidth)
+    if (!(maxRows != null && maxRows > 1)) {
+      const { floor } = resolveBounds(total, minVisibleItems, maxVisibleItems)
+      const kept = collapseFrom === 'end' ? widths.slice(0, floor) : widths.slice(widths.length - floor)
+      const keptWidth = kept.reduce((sum, width) => sum + width, 0) + gapWidth * Math.max(0, kept.length - 1)
+      const collapsed = Math.ceil(keptWidth + indicatorWidth + (kept.length > 0 && indicatorWidth > 0 ? gapWidth : 0))
+      const rendered = widths.reduce((sum, width) => sum + width, 0) + gapWidth * Math.max(0, widths.length - 1)
+      const inFlexRow = isFlexRow(container.parentElement)
+      const current = inlineBounds.value
+      if (current.collapsed !== collapsed || current.rendered !== rendered || current.inFlexRow !== inFlexRow)
+        inlineBounds.value = { collapsed, rendered, inFlexRow }
+    }
     const measuredRowHeight = children.reduce((max, child) => Math.max(max, child.offsetHeight || 0), 0)
     const next = computeOverflow({
       availableWidth,
       collapseFrom,
-      gap,
+      gap: gapWidth,
       indicatorWidth,
       maxRows,
       maxVisibleItems,
@@ -415,6 +468,10 @@ function useItemOverflow(itemCount: MaybeRefOrGetter<number>, options: UseOverfl
     calculate()
   }, { immediate: true })
 
+  watch(() => toValue(options.gapToken), () => {
+    void nextTick(calculate)
+  })
+
   onBeforeUnmount(() => {
     unobserveContainer?.()
     unobserveMeasure?.()
@@ -424,7 +481,9 @@ function useItemOverflow(itemCount: MaybeRefOrGetter<number>, options: UseOverfl
     containerRef,
     hasOverflow,
     measureRef,
+    inlineBounds,
     remeasure: calculate,
+    renderedGap,
     rowHeight,
     rows,
     visibleCount,

@@ -74,4 +74,33 @@ describe('nav heading menu', () => {
     expect(document.activeElement).toBe(items[0].element)
     wrapper.unmount()
   })
+
+  it('acts on the row a held pointer lifts on, and closes when a mouse lifts outside', () => {
+    const onFirst = vi.fn()
+    const onSecond = vi.fn()
+    const onClose = vi.fn()
+    const wrapper = mount(NavHeadingMenu, {
+      attachTo: document.body,
+      props: { onClose },
+      slots: {
+        default: () => [
+          h(NavHeadingMenuItem, { label: 'First', onClick: onFirst }),
+          h(NavHeadingMenuItem, { label: 'Second', onClick: onSecond }),
+        ],
+      },
+    })
+    const [first, second] = wrapper.findAll('[role="menuitem"]').map(item => item.element)
+    const fire = (target: Element, type: string, pointerType: string) =>
+      target.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, pointerId: 3, pointerType }))
+
+    fire(first, 'pointerdown', 'touch')
+    fire(second, 'pointerup', 'touch')
+    expect(onFirst).not.toHaveBeenCalled()
+    expect(onSecond).toHaveBeenCalledTimes(1)
+    onClose.mockClear()
+
+    fire(first, 'pointerdown', 'mouse')
+    fire(document.body, 'pointerup', 'mouse')
+    expect(onClose).toHaveBeenCalledTimes(1)
+  })
 })

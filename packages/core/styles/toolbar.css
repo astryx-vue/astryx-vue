@@ -90,5 +90,17 @@
   .astryx-toolbar--two-lane > .astryx-toolbar__slot--end {
     flex-grow: 1;
   }
+
+  /*
+   * 首部这条道里直接放着一个 OverflowList：它的自动最小宽度不能再按展开的项算，
+   * 否则列表永远看不到更窄的宽度，不会折叠，尾部那条被挤出工具栏。
+   * 它占满尾部让出的宽度，不换行（换行会把展开的列表挪到自己的一行），列表折到自己的下限为止。
+   * 这个因子远大于尾部的 1，尾部保持内容宽度。列表藏得更深的道不受影响。
+   */
+  .astryx-toolbar--two-lane > .astryx-toolbar__slot--start:has(> .astryx-overflow-list) {
+    flex: 1000000 1 0%;
+    flex-wrap: nowrap;
+    min-width: 0;
+  }
   .astryx-toolbar--centered .astryx-toolbar__slot--end { margin-inline-start: 0; }
 }

@@ -28,6 +28,12 @@
     gap: var(--astryx-spacing-0-5, 2px);
     margin: 0;
     padding: 0;
+    /* 一个放得下的菜单保留捏合手势；能滚动时才放开纵向滚动。 */
+    touch-action: pinch-zoom;
+  }
+
+  .astryx-nav-menu[data-overflow='true'] {
+    touch-action: pan-y pinch-zoom;
   }
 
   .astryx-nav-menu--sm { min-width: 160px; }

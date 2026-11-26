@@ -349,6 +349,7 @@ function onKeyDown(event: KeyboardEvent): void {
   }
   const move = resolveCalendarKey({
     key: event.key,
+    shiftKey: event.shiftKey,
     rtl: rtl.value,
     focused: focused.value,
     weekStartsOn: weekStart.value,

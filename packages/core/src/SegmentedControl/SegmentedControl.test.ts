@@ -289,13 +289,43 @@ describe('segmented-control disabled states', () => {
     expect(wrapper.emitted('update:modelValue')).toBeUndefined()
   })
 
-  it('drops every segment from the tab order when the control is disabled', () => {
+  it('keeps the selected segment as the one tab stop when the control is disabled', () => {
     const wrapper = renderControl('overview', { isDisabled: true })
     expect(segmentsOf(wrapper).map(segment => segment.attributes('tabindex'))).toEqual([
-      '-1',
+      '0',
       '-1',
       '-1',
     ])
+  })
+
+  it('keeps the tab stop on a selected segment that is disabled on its own', async () => {
+    const wrapper = mount(SegmentedControl, {
+      attachTo: document.body,
+      props: { 'label': 'Workspace view', 'modelValue': 'activity', 'onUpdate:modelValue': () => {} },
+      slots: {
+        default: () => [
+          h(SegmentedControlItem, { label: 'Overview', value: 'overview' }),
+          h(SegmentedControlItem, { label: 'Activity', value: 'activity', isDisabled: true }),
+        ],
+      },
+    })
+    await nextTick()
+    expect(segmentsOf(wrapper).map(segment => segment.attributes('tabindex'))).toEqual(['-1', '0'])
+  })
+
+  it('places one tab stop on the first segment not disabled on its own when none is selected', async () => {
+    const wrapper = mount(SegmentedControl, {
+      attachTo: document.body,
+      props: { 'label': 'Workspace view', 'modelValue': 'none', 'isDisabled': true, 'onUpdate:modelValue': () => {} },
+      slots: {
+        default: () => [
+          h(SegmentedControlItem, { label: 'Overview', value: 'overview', isDisabled: true }),
+          h(SegmentedControlItem, { label: 'Activity', value: 'activity' }),
+        ],
+      },
+    })
+    await nextTick()
+    expect(segmentsOf(wrapper).map(segment => segment.attributes('tabindex'))).toEqual(['-1', '0'])
   })
 
   it('marks a single segment disabled and refuses to select it', async () => {
@@ -327,6 +357,7 @@ describe('segmented-control disabled message', () => {
     expect(group.attributes('data-disabled-message')).toBe('true')
     const describedBy = group.attributes('aria-describedby')
     expect(describedBy).toBeTruthy()
+    expect(segmentsOf(wrapper).every(segment => segment.attributes('aria-describedby')?.split(' ').includes(describedBy!))).toBe(true)
 
     await nextTick()
     const tooltip = document.getElementById(describedBy!) as HTMLElement
