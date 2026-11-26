@@ -8283,6 +8283,7 @@
   - 已移植：[#539](https://github.com/astryx-vue/astryx-vue/pull/539)。固定列的 ::before 伸到边框区，用固定列底色盖住表格静态画的线，再按格子自己的边框样式和颜色画分隔线；读计算样式搬运应用自定义边框的部分没做
 - [ ] [`58fa49dfe`](https://github.com/meta/astryx/commit/58fa49dfe) feat(core): Table rows glide when a row's panel opens or closes, and their dividers move with them (#8656)
   - 暂缓：行在展开面板开合时滑动依赖上游的 useAnimatedLayout 布局动画系统，Vue 版还没有
+  - 暂缓：行展开时下方行滑动需要 Vue 版没有的 useAnimatedLayout 动画运行时（FLIP、分隔线替身、显露裁切），上游一个提交就 1500 多行
 - [x] [`b84bf77fa`](https://github.com/meta/astryx/commit/b84bf77fa) chore: move project links to meta/astryx (#8827)
   - 不适用：上游组件规范文档、只改上游测试（自动初筛）
 
@@ -8379,6 +8380,7 @@
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`0ecd324bf`](https://github.com/meta/astryx/commit/0ecd324bf) fix(core): a block-edge reveal slides its parts on the glide's frames (#10296)
   - 暂缓：块边缘揭示随布局动画滑动，依赖上游 useAnimatedLayout 动画系统，Vue 版还没有
+  - 暂缓：依赖 58fa49dfe 的行滑动动画，前者暂缓所以一起暂缓
 - [x] [`20ab99287`](https://github.com/meta/astryx/commit/20ab99287) test(Table): hold the row glide before reading chevron timing (#10329)
   - 不适用：只改上游测试（自动初筛）
 
@@ -8404,16 +8406,21 @@
   - 不适用：React 下每次渲染新建行号列导致整表重渲染的优化；Vue 按响应式依赖更新，不按列对象身份 memo
 - [x] [`df5f6926e`](https://github.com/meta/astryx/commit/df5f6926e) docs(useTableColumnSettingsState): add hook docs and a column visibility picker example block (#10652)
   - Vue 版已有：use-table-column-settings 文档已有 useTableColumnSettingsState 的参数、返回值和列显隐示例
-- [ ] [`17f6985ed`](https://github.com/meta/astryx/commit/17f6985ed) fix(Layout): a full-bleed Table or List row takes the rounded container corner it reaches (#10586)
+- [x] [`17f6985ed`](https://github.com/meta/astryx/commit/17f6985ed) fix(Layout): a full-bleed Table or List row takes the rounded container corner it reaches (#10586)
   - 暂缓：需要 Card、Dialog 发布容器圆角（--_container-corner-*）的设施，属于布局族，Vue 版还没有；Table 一侧只是读取它
-- [ ] [`d0ab3cb26`](https://github.com/meta/astryx/commit/d0ab3cb26) feat(core): add the shared list-windowing module and Table's capability hook (#10656)
+  - 已移植：[#549](https://github.com/astryx-vue/astryx-vue/pull/549)。Card 发布圆角变量，贴边的表格滚动区跟着卡片圆角；Dialog 里的表格本来不贴边，List 贴边圆角不在表格任务范围
+- [x] [`d0ab3cb26`](https://github.com/meta/astryx/commit/d0ab3cb26) feat(core): add the shared list-windowing module and Table's capability hook (#10656)
   - 暂缓：共用的列表窗口化模块和 useTableRowsVirtualization，Vue 版没有行虚拟化设施
-- [ ] [`0d7557304`](https://github.com/meta/astryx/commit/0d7557304) feat(Table): add the window controller and Table's shared-geometry runtime (#10657)
+  - 已移植：[#547](https://github.com/astryx-vue/astryx-vue/pull/547)。共用列表窗口模块放在 composables/internal/listWindow，表格按插件声明判断能否窗口化
+- [x] [`0d7557304`](https://github.com/meta/astryx/commit/0d7557304) feat(Table): add the window controller and Table's shared-geometry runtime (#10657)
   - 暂缓：窗口控制器和表格共享几何运行时，属于行虚拟化设施，Vue 版没有
-- [ ] [`5b3e17bb2`](https://github.com/meta/astryx/commit/5b3e17bb2) feat(Table): window fixed-height flat tables through useTableRowsVirtualization (#8280)
+  - 已移植：[#547](https://github.com/astryx-vue/astryx-vue/pull/547)。窗口控制器和共用几何测量（滚动监听 + ResizeObserver）
+- [x] [`5b3e17bb2`](https://github.com/meta/astryx/commit/5b3e17bb2) feat(Table): window fixed-height flat tables through useTableRowsVirtualization (#8280)
   - 暂缓：定高扁平表格的行窗口化，依赖还没有的虚拟化设施
-- [ ] [`90ebe00a2`](https://github.com/meta/astryx/commit/90ebe00a2) feat(Table): window tables that use selection and row index (#10658)
+  - 已移植：[#547](https://github.com/astryx-vue/astryx-vue/pull/547)。新增 useTableRowsVirtualization，定高扁平行只挂载视口附近的行，不满足条件时退回全部渲染
+- [x] [`90ebe00a2`](https://github.com/meta/astryx/commit/90ebe00a2) feat(Table): window tables that use selection and row index (#10658)
   - 暂缓：选择列、行号列参与行窗口化，依赖还没有的虚拟化设施
+  - 已移植：[#547](https://github.com/astryx-vue/astryx-vue/pull/547)。带多选和序号的表格也能窗口化；Vue 版序号列固定 48px，不需要按位数加宽
 - [x] [`c5ad42fe0`](https://github.com/meta/astryx/commit/c5ad42fe0) fix(Table): a plugin's scroll-wrapper className reaches the scroll container (#10702)
   - 不适用：插件的 transformScrollWrapper className 合并问题；Vue 版插件没有改滚动容器 props 的接口
 - [x] [`7f04a6c5a`](https://github.com/meta/astryx/commit/7f04a6c5a) fix(Table): an unbounded column's resize handle announces a range that holds its width (#10577)
@@ -8426,15 +8433,17 @@
   - 已移植：[#540](https://github.com/astryx-vue/astryx-vue/pull/540)。TableSelectionToolbar 文档补跨服务端分页「选中全部匹配行」的做法
 - [x] [`6c5c460d7`](https://github.com/meta/astryx/commit/6c5c460d7) fix(Table): keep column settings' active keys in state (#10911)
   - 不适用：React 丢弃渲染后列设置配置残留的问题；Vue 插件每次从 getter 读最新配置
-- [ ] [`52356e690`](https://github.com/meta/astryx/commit/52356e690) feat(Table): useTableRowsVirtualization's viewportHeight becomes initialViewportHeight, which no longer sizes the Table (#10894)
+- [x] [`52356e690`](https://github.com/meta/astryx/commit/52356e690) feat(Table): useTableRowsVirtualization's viewportHeight becomes initialViewportHeight, which no longer sizes the Table (#10894)
   - 暂缓：useTableRowsVirtualization 的参数改名和表格高度规则，依赖还没有的虚拟化设施
+  - 已移植：[#547](https://github.com/astryx-vue/astryx-vue/pull/547)。配置改为 initialViewportHeight，表格高度由父元素决定并在里面滚动
 
 ### v0.7.13
 
 - [x] [`42f1a7615`](https://github.com/meta/astryx/commit/42f1a7615) test(Table): add Chromium accessibility and 1k/10k/100k release evidence for row windowing (#10659)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`1ac0c2464`](https://github.com/meta/astryx/commit/1ac0c2464) refactor(core): one shared list-windowing engine, with Table as its first consumer (#10810)
+- [x] [`1ac0c2464`](https://github.com/meta/astryx/commit/1ac0c2464) refactor(core): one shared list-windowing engine, with Table as its first consumer (#10810)
   - 暂缓：共用列表窗口化引擎的重构，Vue 版没有虚拟化设施
+  - 已移植：[#547](https://github.com/astryx-vue/astryx-vue/pull/547)。窗口引擎与表格解耦，表格作为第一个使用方
 - [x] [`fcf92864d`](https://github.com/meta/astryx/commit/fcf92864d) test(Table): isolate the release timing proof and gate its timing on the release runner (#11055)
   - 不适用：上游内部规范和架构文档、只改上游测试（自动初筛）
 
@@ -8442,8 +8451,9 @@
 
 - [x] [`8f935dfd2`](https://github.com/meta/astryx/commit/8f935dfd2) spec(Table): windowing keeps going at a row height every mounted row shares (#10999)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`dcc88232c`](https://github.com/meta/astryx/commit/dcc88232c) fix(Table): windowing keeps going at a row height every mounted row shares (#11000)
+- [x] [`dcc88232c`](https://github.com/meta/astryx/commit/dcc88232c) fix(Table): windowing keeps going at a row height every mounted row shares (#11000)
   - 暂缓：窗口化在所有行同高时继续，依赖还没有的虚拟化设施
+  - 已移植：[#547](https://github.com/astryx-vue/astryx-vue/pull/547)。所有挂载行一起变高时按量到的行高继续窗口化，行高不一时退回
 - [x] [`f26571e10`](https://github.com/meta/astryx/commit/f26571e10) spec(Table): column virtualization windows the unpinned columns (#11013)
   - 不适用：上游内部规范和架构文档（自动初筛）
 
@@ -8460,14 +8470,17 @@
 
 - [x] [`58b844d16`](https://github.com/meta/astryx/commit/58b844d16) feat(Table): Promise-based infinite loading with useTableInfiniteScroll (#10570)
   - 已移植：[#540](https://github.com/astryx-vue/astryx-vue/pull/540)。新增 useTableInfiniteScroll：共用请求锁、IntersectionObserver 自动加载、常驻「加载更多」按钮、失败暂停自动加载、首批加载时不显示默认空状态、加载完把焦点交给滚动区
-- [ ] [`10bae0687`](https://github.com/meta/astryx/commit/10bae0687) feat(Table): useTableColumnsVirtualization windows the unpinned columns (#11014)
+- [x] [`10bae0687`](https://github.com/meta/astryx/commit/10bae0687) feat(Table): useTableColumnsVirtualization windows the unpinned columns (#11014)
   - 暂缓：列虚拟化 useTableColumnsVirtualization，依赖还没有的虚拟化设施
+  - 已移植：[#547](https://github.com/astryx-vue/astryx-vue/pull/547)。新增 useTableColumnsVirtualization，只窗口化固定列之间的列
 - [x] [`54dd64e1d`](https://github.com/meta/astryx/commit/54dd64e1d) fix(Table): useTableSortableState calls the committed onSortChange (#11433)
   - Vue 版已有：useTableSortableState 的 sortConfig.onSortChange 直接写当前的 sort ref，没有过期回调
-- [ ] [`ef87167d0`](https://github.com/meta/astryx/commit/ef87167d0) feat(Table): column windowing retains the focused column and anchors the first visible column (#11018)
+- [x] [`ef87167d0`](https://github.com/meta/astryx/commit/ef87167d0) feat(Table): column windowing retains the focused column and anchors the first visible column (#11018)
   - 暂缓：列窗口化保留焦点列和锚定首列，依赖还没有的虚拟化设施
-- [ ] [`51bc1857b`](https://github.com/meta/astryx/commit/51bc1857b) feat(Table): rows and columns window together (#11019)
+  - 已移植：[#547](https://github.com/astryx-vue/astryx-vue/pull/547)。列窗口保留有焦点的列，并锚定第一可见列
+- [x] [`51bc1857b`](https://github.com/meta/astryx/commit/51bc1857b) feat(Table): rows and columns window together (#11019)
   - 暂缓：行列同时窗口化，依赖还没有的虚拟化设施
+  - 已移植：[#547](https://github.com/astryx-vue/astryx-vue/pull/547)。行列两个插件可以一起窗口化
 - [x] [`130e5da2d`](https://github.com/meta/astryx/commit/130e5da2d) feat(DateInput, DateTimeInput, TimeInput, FormLayout): entryErrorBehavior and a form default (#11485)
   - Vue 版已有：Vue 版 DateInput 还没有 entryErrorBehavior，表格筛选里的日期输入一直是 complete 行为
 
@@ -8479,8 +8492,9 @@
   - Vue 版已有：Vue 版表头没有定位的右键菜单包裹层，拖动把手直接相对 th 定位在列边上
 - [x] [`b36275ed0`](https://github.com/meta/astryx/commit/b36275ed0) feat(core): TableRow exposes a selected theme state (#11729)
   - 已移植：[#539](https://github.com/astryx-vue/astryx-vue/pull/539)。被 useTableSelection 选中的行带 table-row 主题目标的 selected 状态，选中底色读 --color-accent-muted
-- [ ] [`bf845a523`](https://github.com/meta/astryx/commit/bf845a523) fix(Table): a column range change renders only the cells that enter (#11481)
+- [x] [`bf845a523`](https://github.com/meta/astryx/commit/bf845a523) fix(Table): a column range change renders only the cells that enter (#11481)
   - 暂缓：列窗口范围变化只渲染新进入的格子，属于列虚拟化，Vue 版没有
+  - 已移植：[#547](https://github.com/astryx-vue/astryx-vue/pull/547)。列范围变化时按列键复用已有格子，只渲染新进来的格子
 - [x] [`851cc902e`](https://github.com/meta/astryx/commit/851cc902e) test(Table): column windowing follows a right-to-left scroll and keeps its anchor there (#11823)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`ce0feb506`](https://github.com/meta/astryx/commit/ce0feb506) fix(core): a Table bleeds to a block edge only as its container's direct first or last child (#12068)
