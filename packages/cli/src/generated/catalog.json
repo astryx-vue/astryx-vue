@@ -60670,7 +60670,7 @@
           },
           {
             "heading": "Layout",
-            "text": "The surface is positioned with JavaScript. It recalculates its position when the page scrolls or resizes, and it flips to the other side when the chosen side has no room. The entrance slides in from the side the surface actually lands on and grows from the edge that faces the trigger, never travelling further than the gap between them, so a flipped surface never starts over its trigger."
+            "text": "The surface is positioned with JavaScript. It recalculates its position when the page scrolls or resizes, and it flips to the other side when the chosen side has no room. The entrance slides in from the side the surface actually lands on and grows from the edge that faces the trigger, never travelling further than the gap between them, so a flipped surface never starts over its trigger.\n\nOpened with a finger, the surface grows out of its trigger the way an iOS popover does. It scales up from the point where it meets the trigger and shows its content from the first frame. Taps during the growth are ignored, so they neither close the surface nor reach what is under it. On close it shrinks back into the trigger. Opened with a mouse, it keeps the slide-in above. With Reduce Motion on, a surface opened with a finger fades in and out where it stands."
           },
           {
             "heading": "Events",
@@ -60692,7 +60692,7 @@
           },
           {
             "heading": "布局",
-            "text": "浮层通过 JavaScript 定位。页面滚动或窗口尺寸变化时会重新计算位置；所选方向空间不足时翻转到另一侧。进场从浮层实际落在的那一侧滑进来、以朝向触发器的那条边为原点放大，滑动距离不超过浮层和触发器之间的空隙，所以翻到另一侧后也不会先压到触发器上。"
+            "text": "浮层通过 JavaScript 定位。页面滚动或窗口尺寸变化时会重新计算位置；所选方向空间不足时翻转到另一侧。进场从浮层实际落在的那一侧滑进来、以朝向触发器的那条边为原点放大，滑动距离不超过浮层和触发器之间的空隙，所以翻到另一侧后也不会先压到触发器上。\n\n用手指打开时，浮层像 iOS 的 popover 一样从触发器里长出来：从它和触发器相接的那一点放大，第一帧就能看到内容。长出的这段时间里点按会被忽略，不会误关浮层，也碰不到下面的东西。关闭时它缩回触发器。用鼠标打开时保留上面说的滑入。开启“减少动态效果”时，手指打开的浮层原地淡入淡出。"
           },
           {
             "heading": "事件",

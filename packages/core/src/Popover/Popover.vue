@@ -12,6 +12,7 @@ import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import PopoverSheet from './PopoverSheet.vue'
 import { usePopoverSurface } from './usePopover.js'
 import { usePopoverSheet } from './usePopoverSheet.js'
+import { usePopoverSurfaceMotion } from './usePopoverSurfaceMotion.js'
 import '../../styles/popover.css'
 
 defineOptions({ name: 'AstryxPopover' })
@@ -125,6 +126,15 @@ function syncTrigger(): void {
   anchorRef.value = triggerHost()
   triggerRef.value = findTriggerButton(triggerHost())
 }
+
+// 手指下浮层从触发器长出、缩回：打开时元素还没画出来，开始关闭时它还显示着。
+const surfaceMotion = usePopoverSurfaceMotion()
+watch(isOpenState, (open) => {
+  if (open)
+    surfaceMotion.present(contentRef.value, anchorRef.value ?? triggerRef.value)
+  else
+    surfaceMotion.closeStart()
+}, { flush: 'sync' })
 
 // 打开时按触发器宽度算最小宽度，浮层不会比触发器还窄。
 watch(isOpenState, (open) => {
