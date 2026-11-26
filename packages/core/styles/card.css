@@ -29,6 +29,9 @@
     --container-padding-inline-end: var(--_card-padding-inline-end);
     --container-padding-block-start: var(--_card-padding-block-start);
     --container-padding-block-end: var(--_card-padding-block-end);
+    /* 贴边子元素伸到边框底下，所以用外圈圆角。 */
+    --_container-corner-block-start: var(--_card-radius);
+    --_container-corner-block-end: var(--_card-radius);
     --layout-padding-own-outer-x: initial;
     --layout-padding-own-outer-y: initial;
     --layout-padding-outer-x: var(--_card-padding-inline-start);

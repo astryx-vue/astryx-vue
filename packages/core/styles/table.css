@@ -81,6 +81,20 @@
     margin-bottom: calc(-1 * var(--container-padding-block-end, 0px));
   }
 
+  /*
+   * 贴到卡片上下边缘的滚动区，在那一侧用卡片发布的圆角，焦点环和底色沿着卡片的弧线走，
+   * 不在角上被卡片裁掉。其余的角保持直角。
+   */
+  .astryx-card > .astryx-table-scroll:first-child {
+    border-start-start-radius: var(--_container-corner-block-start, 0px);
+    border-start-end-radius: var(--_container-corner-block-start, 0px);
+  }
+
+  .astryx-card > .astryx-table-scroll:last-child {
+    border-end-start-radius: var(--_container-corner-block-end, 0px);
+    border-end-end-radius: var(--_container-corner-block-end, 0px);
+  }
+
   .astryx-table {
     width: 100%;
     border-collapse: collapse;
