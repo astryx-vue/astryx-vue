@@ -182,4 +182,35 @@ describe('layout', () => {
     for (const part of ['header', 'content', 'footer'])
       expect(wrapper.get(`.astryx-layout-${part}`).attributes('data-container')).toBe('dialog')
   })
+
+  it('lays out a region that renders nothing like an omitted one', () => {
+    const empty = mount(Layout, {
+      slots: {
+        header: () => [],
+        start: () => h(LayoutPanel, { width: 100 }, () => 'Nav'),
+        end: () => null,
+        footer: () => '  ',
+        default: () => h(LayoutContent, null, () => 'Body'),
+      },
+    })
+    const omitted = mount(Layout, {
+      slots: {
+        start: () => h(LayoutPanel, { width: 100 }, () => 'Nav'),
+        default: () => h(LayoutContent, null, () => 'Body'),
+      },
+    })
+    const attrsOf = (wrapper: typeof empty) => wrapper.get('.astryx-layout-content').attributes()
+    expect(attrsOf(empty)).toEqual(attrsOf(omitted))
+    expect(empty.get('.astryx-layout__inner').attributes('data-panels')).toBe('start')
+    expect(empty.find('.astryx-layout-header').exists()).toBe(false)
+  })
+
+  it('treats a header whose component is removed by v-if as omitted', () => {
+    const Host = defineComponent({
+      components: { Layout, LayoutContent, LayoutHeader },
+      template: '<Layout><template #header><LayoutHeader v-if="false">T</LayoutHeader></template><LayoutContent>Body</LayoutContent></Layout>',
+    })
+    const wrapper = mount(Host)
+    expect(wrapper.get('.astryx-layout-content').attributes('data-edge-header')).toBe('true')
+  })
 })
