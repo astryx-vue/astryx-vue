@@ -78,6 +78,10 @@ footer: false
   </table>
 </div>
 
+## Handle accessibility
+
+Each handle is a focusable `separator` named after its column's visible text, also when the header is a render function; the column key is used only for a header with no text. The handle stays out of its column header's name, so a screen reader reads the header as its heading alone. `aria-valuenow` is the width the column renders at. A column with a maximum announces it as `aria-valuemax`; a column with none announces the window width instead, never below its current width, and says its width in words through `aria-valuetext` ("203 pixels"). A column the layout stretches past its limits widens the announced range to hold its width.
+
 ## Helpers
 
 The same module exports the pieces the plugin is built from, so you can reuse the arithmetic in your own UI.

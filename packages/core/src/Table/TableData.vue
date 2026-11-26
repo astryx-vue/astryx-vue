@@ -1,30 +1,25 @@
 <script setup lang="ts">
-import type { CSSProperties, VNodeChild, VNodeRef } from 'vue'
-import type {
-  TableCellPatch,
-  TableColumn,
-  TableColumnResizeContribution,
-  TablePlugin,
-  TableRowMenuItem,
-  TableRowPatch,
-} from './types.js'
-import { computed, h, onBeforeUnmount, ref, useAttrs } from 'vue'
+import type { VNodeChild, VNodeRef } from 'vue'
+import type { TableColumn, TablePlugin, TableRowMenuItem, TableRowPatch } from './types.js'
+import { computed, h, onBeforeUnmount, ref, useAttrs, useId } from 'vue'
 import CheckboxInput from '../CheckboxInput/CheckboxInput.vue'
 import ComponentIcon from '../Icon/ComponentIcon.vue'
 import { useComponentMessages } from '../locale/context.js'
 import { tableMessages } from '../locale/messages/table.js'
 import CutTextTooltip from '../Text/CutTextTooltip.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
-import { pixel, resolveColumnWidths, resolveTableMinWidth, splitStyleMinWidth } from './columnUtils.js'
-import { selectColumn } from './plugins/stickyColumns.js'
+import { resolveTableMinWidth, splitStyleMinWidth } from './columnUtils.js'
+import { columnHeaderText } from './headerText.js'
 import { mergeRowPatches } from './rowPatch.js'
 import { CellContent, HeaderAddon, PluginFooter, RenderFn } from './TableDataRenderers.js'
 import TableFilterControl from './TableFilterControl.vue'
 import TableGroupHeader from './TableGroupHeader.vue'
 import TableRowMenu from './TableRowMenu.vue'
 import TableScroll from './TableScroll.vue'
+import { useColumnResizeAria } from './useColumnResizeAria.js'
 import { useHeaderCutText } from './useHeaderCutText.js'
 import { useTableColumnResizeSession } from './useTableColumnResizeSession.js'
+import { useTableDataModel } from './useTableDataModel.js'
 
 defineOptions({ inheritAttrs: false })
 
@@ -50,56 +45,31 @@ const headerCutText = useHeaderCutText()
 
 const attrs = useAttrs()
 const messages = useComponentMessages({ table: tableMessages })
+const headerIdPrefix = useId()
 const scrollRoot = ref<HTMLElement | null>(null)
 const menu = ref<{ x: number, y: number, items: readonly TableRowMenuItem[] } | null>(null)
 const scrollStyle = computed(() => splitStyleMinWidth(attrs.style).style)
 
-const resolvedColumns = computed(() => props.plugins.reduce(
-  (columns, plugin) => plugin.transformColumns?.(columns) ?? columns,
-  [...props.columns],
-))
+const {
+  resolvedColumns,
+  layoutColumns,
+  selection,
+  widths,
+  resizeContributions,
+  sortFor,
+  filterAt,
+  mergeCell,
+  headerStyle,
+  bodyStyle,
+  selectCellPatch,
+} = useTableDataModel({ columns: () => props.columns, plugins: () => props.plugins })
 
-const selection = computed(() => props.plugins.find(plugin => plugin.selection)?.selection)
-
-/**
- * 选择列的宽度可以被插件的 `widthFor` 改（原版靠 `transformColumns` 改选择列宽）。
- * 它和别的列一起进 `resolveColumnWidths`，所以表头、数据格和表格最小宽度读到同一个值。
- */
-const selectionColumn = computed(() => {
-  const base = selectColumn()
-  const override = props.plugins.map(plugin => plugin.widthFor?.(base)).find(value => value != null)
-  return override == null ? base : { ...base, width: pixel(override) }
-})
-const layoutColumns = computed(() => selection.value
-  ? [selectionColumn.value, ...resolvedColumns.value]
-  : resolvedColumns.value)
-// 原版把选择列（fixed pixel 宽）也算进 tableMinWidth，比例列分到的下限才不被它挤占。
-const widths = computed(() => resolveColumnWidths(layoutColumns.value))
-const canResize = computed(() => props.plugins.some(plugin => plugin.onColumnResizeEnd))
-
-/**
- * 一列参与拖动改宽的方式。第一个给出结果的插件说了算。
- * 只实现了 `onColumnResizeEnd` 的老插件仍然拿到一个最朴素的把手：只管自己这一列，最窄 60px。
- */
-function resizeContribution(column: TableColumn): TableColumnResizeContribution | null {
-  for (const plugin of props.plugins) {
-    const contribution = plugin.resizeFor?.(column, resolvedColumns.value)
-    if (contribution != null)
-      return contribution
-  }
-  if (!canResize.value || column.resizable === false)
-    return null
-  return { minWidth: 60, maxWidth: Number.POSITIVE_INFINITY, neighborKey: null, hasHandle: true }
-}
-
-const resizeContributions = computed(() => new Map(
-  resolvedColumns.value.map(column => [column.key, resizeContribution(column)]),
-))
-const { startResize, onResizeKeydown, resizeLabel, resizeMax } = useTableColumnResizeSession({
+const { startResize, onResizeKeydown, resizeLabel } = useTableColumnResizeSession({
   plugins: () => props.plugins,
   contributions: () => resizeContributions.value,
   resizeColumnLabel: header => messages.value.table.resizeColumn(header),
 })
+const resizeAria = useColumnResizeAria(width => messages.value.table.columnWidthValue(width))
 const tableStyle = computed(() => ({
   minWidth: resolveTableMinWidth(splitStyleMinWidth(attrs.style).minWidth, widths.value.tableMinWidth),
 }))
@@ -130,60 +100,19 @@ onBeforeUnmount(() => {
   bindScroll(null)
 })
 
-/** 列头的纯文本形态：函数式列头没有纯文本，可访问名称回退到 key。 */
-function headerText(column: TableColumn): string {
-  return typeof column.header === 'string' && column.header !== '' ? column.header : column.key
-}
-
 /** 列头内容：字符串直接显示，函数按函数式组件渲染。 */
 function HeaderContent(props: { column: TableColumn }) {
   return typeof props.column.header === 'function'
     ? props.column.header()
-    : h('span', null, headerText(props.column))
+    : h('span', null, columnHeaderText(props.column))
 }
-
-function styleFor(column: TableColumn): CSSProperties {
-  const base = { ...(widths.value.columns.get(column.key)?.style ?? {}) }
-  const override = props.plugins.map(plugin => plugin.widthFor?.(column)).find(value => value != null)
-    ?? resizeContributions.value.get(column.key)?.currentWidth
-  if (override != null) {
-    base.width = `${override}px`
-    base.minWidth = `${override}px`
-  }
-  return base
-}
-
-function sortFor(column: TableColumn) {
-  for (const plugin of props.plugins) {
-    const sort = plugin.sortFor?.(column)
-    if (sort)
-      return sort
-  }
-  return null
-}
-
-function filterFor(column: TableColumn) {
-  for (const plugin of props.plugins) {
-    const filter = plugin.filterFor?.(column)
-    if (filter)
-      return filter
-  }
-  return null
-}
-
-const filterContributions = computed(() => new Map(
-  resolvedColumns.value.map(column => [column.key, filterFor(column)]),
-))
 
 /**
- * 取某一列落在指定位置的筛选控件。
- * `popover` 是一个漏斗按钮，跟标题、排序图标同一行；`inline` 系列是输入框，垫在标题下面。
+ * 有拖动把手的列头不从内容取名字：把手是可聚焦的分隔条，会把它的宽度值拼进列头名里。
+ * 这时列头用 `aria-labelledby` 指向标题那一块，名字只剩标题。
  */
-function filterAt(column: TableColumn, place: 'line' | 'below') {
-  const filter = filterContributions.value.get(column.key) ?? null
-  if (filter == null)
-    return null
-  return (filter.variant === 'popover' ? 'line' : 'below') === place ? filter : null
+function headerContentId(index: number): string {
+  return `${headerIdPrefix}-header-${index}`
 }
 
 function rowKey(row: Record<string, unknown>, index: number) {
@@ -191,35 +120,6 @@ function rowKey(row: Record<string, unknown>, index: number) {
     return props.idKey(row)
   const id = row[props.idKey]
   return id == null ? String(index) : String(id)
-}
-
-function mergeCell(column: TableColumn, row: Record<string, unknown> | null, kind: 'header' | 'body'): TableCellPatch {
-  const style: CSSProperties = {}
-  const classes: string[] = []
-  const attrs: Record<string, string | undefined> = {}
-  for (const plugin of props.plugins) {
-    const patch = plugin.cellPatch?.({ column, columns: layoutColumns.value, row, kind })
-    if (patch == null)
-      continue
-    if (patch.class)
-      classes.push(patch.class)
-    if (patch.style)
-      Object.assign(style, patch.style)
-    if (patch.attrs)
-      Object.assign(attrs, patch.attrs)
-  }
-  return { class: classes.join(' ') || undefined, style, attrs }
-}
-
-function headerStyle(column: TableColumn): CSSProperties {
-  return { ...styleFor(column), ...mergeCell(column, null, 'header').style }
-}
-
-function bodyStyle(column: TableColumn, row: Record<string, unknown>): CSSProperties {
-  const style: CSSProperties = { ...mergeCell(column, row, 'body').style }
-  if (column.verticalAlign)
-    style.verticalAlign = column.verticalAlign
-  return style
 }
 
 /** Vue 的 ref 回调拿到的是更宽的 `Element`，收窄成 `<tr>` 再交给插件。 */
@@ -253,13 +153,6 @@ function openMenu(event: MouseEvent, items: readonly TableRowMenuItem[] | undefi
   menu.value = { x: event.clientX, y: event.clientY, items }
 }
 
-/** 选择列的格子：宽度来自布局里的选择列，再叠加插件的补丁。 */
-function selectCellPatch(kind: 'header' | 'body', row: Record<string, unknown> | null) {
-  const patch = mergeCell(selectionColumn.value, row, kind)
-  const width = widths.value.columns.get(selectionColumn.value.key)?.style.width
-  return { ...patch, style: { width, minWidth: width, maxWidth: width, ...patch.style } }
-}
-
 function isSelected(row: Record<string, unknown>): boolean {
   return selection.value?.isSelected(row) === true
 }
@@ -291,7 +184,7 @@ function isEnabled(row: Record<string, unknown>): boolean {
         @pointerdown="headerCutText.onPointerdown"
         @keydown="headerCutText.onKeydown"
       >
-        <tr>
+        <tr class="astryx-table-row" data-header-row>
           <th
             v-if="selection"
             class="astryx-table__select"
@@ -309,7 +202,7 @@ function isEnabled(row: Record<string, unknown>): boolean {
             />
           </th>
           <th
-            v-for="column in resolvedColumns"
+            v-for="(column, columnIndex) in resolvedColumns"
             :key="column.key"
             scope="col"
             :data-column="column.key"
@@ -318,8 +211,9 @@ function isEnabled(row: Record<string, unknown>): boolean {
             v-bind="mergeCell(column, null, 'header').attrs"
             :style="headerStyle(column)"
             :aria-sort="sortFor(column)?.direction ?? undefined"
+            :aria-labelledby="resizeContributions.get(column.key)?.hasHandle ? headerContentId(columnIndex) : undefined"
           >
-            <div class="astryx-table__header">
+            <div :id="headerContentId(columnIndex)" class="astryx-table__header">
               <div class="astryx-table__header-line">
                 <HeaderAddon :column="column" :plugins="plugins" />
                 <button
@@ -331,9 +225,9 @@ function isEnabled(row: Record<string, unknown>): boolean {
                   @click="sortFor(column)?.onClick($event)"
                 >
                   <VisuallyHidden v-if="column.headerHidden">
-                    {{ headerText(column) }}
+                    {{ columnHeaderText(column) }}
                   </VisuallyHidden>
-                  <HeaderContent v-else :column="column" />
+                  <span v-else class="astryx-table__header-label"><HeaderContent :column="column" /></span>
                   <span class="astryx-table__sort-icon" :data-active="sortFor(column)?.direction != null || undefined">
                     <ComponentIcon
                       icon-slot="table-sort-indicator"
@@ -344,9 +238,9 @@ function isEnabled(row: Record<string, unknown>): boolean {
                   <span v-if="sortFor(column)?.rank" class="astryx-table__sort-rank">{{ sortFor(column)?.rank }}</span>
                 </button>
                 <VisuallyHidden v-else-if="column.headerHidden">
-                  {{ headerText(column) }}
+                  {{ columnHeaderText(column) }}
                 </VisuallyHidden>
-                <HeaderContent v-else :column="column" />
+                <span v-else class="astryx-table__header-label"><HeaderContent :column="column" /></span>
                 <TableFilterControl
                   v-if="filterAt(column, 'line')"
                   :filter="filterAt(column, 'line')!"
@@ -360,13 +254,15 @@ function isEnabled(row: Record<string, unknown>): boolean {
             <!-- eslint-disable-next-line vue-a11y/no-static-element-interactions -- role="separator" 是 WAI-ARIA 的分隔条：自己可聚焦，方向键也归它处理。 -->
             <span
               v-if="resizeContributions.get(column.key)?.hasHandle"
+              :ref="element => resizeAria.observeHandle(column.key, element)"
               class="astryx-table__resize"
               role="separator"
               aria-orientation="vertical"
               :aria-label="resizeLabel(column)"
-              :aria-valuenow="resizeContributions.get(column.key)?.currentWidth ?? resizeContributions.get(column.key)?.minWidth"
-              :aria-valuemin="resizeContributions.get(column.key)?.minWidth"
-              :aria-valuemax="resizeMax(resizeContributions.get(column.key))"
+              :aria-valuenow="resizeAria.ariaValue(column.key, resizeContributions.get(column.key)).now"
+              :aria-valuemin="resizeAria.ariaValue(column.key, resizeContributions.get(column.key)).min"
+              :aria-valuemax="resizeAria.ariaValue(column.key, resizeContributions.get(column.key)).max"
+              :aria-valuetext="resizeAria.ariaValue(column.key, resizeContributions.get(column.key)).text"
               tabindex="0"
               @pointerdown="startResize($event, column)"
               @keydown="onResizeKeydown($event, column)"
@@ -392,7 +288,11 @@ function isEnabled(row: Record<string, unknown>): boolean {
             :ref="entry.ref"
             :aria-selected="!entry.patch.group && isSelected(entry.row) ? 'true' : undefined"
             :aria-rowindex="entry.rowIndex"
+            class="astryx-table-row"
             :class="entry.patch.class"
+            :data-parity="entry.index % 2 === 0 ? 'odd' : 'even'"
+            :data-striped="isStriped ? 'striped' : undefined"
+            :data-selected="!entry.patch.group && isSelected(entry.row) ? 'selected' : undefined"
             v-bind="entry.patch.attrs"
             @blur="entry.patch.listeners?.onBlur?.($event)"
             @click="entry.patch.onClick?.($event)"

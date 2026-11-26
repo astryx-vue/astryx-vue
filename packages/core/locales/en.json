@@ -799,6 +799,14 @@
     "defaultMessage": "No data",
     "description": "Fallback empty-state text in the table body when there are zero rows. Neutral tone (not error-y); consumers commonly override with something specific like \"No results\"."
   },
+  "@astryx.table.columnResize.resizeColumn": {
+    "defaultMessage": "Resize column {label}",
+    "description": "Accessible name for a Table column-resize handle (a vertical separator between header cells). `label` is the column header's visible text, or the column key when the header has no text."
+  },
+  "@astryx.table.columnResize.widthValue": {
+    "defaultMessage": "{width, number} {width, plural, one {pixel} other {pixels}}",
+    "description": "Value a screen reader announces for a Table column-resize handle when the column has no maximum width. `width` is the column's current value as a whole number of CSS pixels, for example \"133 pixels\"."
+  },
   "@astryx.table.filter.allPlaceholder": {
     "defaultMessage": "All",
     "description": "Placeholder on a per-column filter dropdown when nothing is selected, meaning \"no filter — all rows match\". Determiner form (as in \"all values\"), not the pronoun."
@@ -1419,9 +1427,17 @@
     "defaultMessage": "Collapse row",
     "description": "Screen-reader-only label on the row-expand chevron when the row is currently expanded. Part of the four-way expand/collapse set."
   },
+  "@astryx.tableRowExpansion.collapseRowNamed": {
+    "defaultMessage": "Collapse {label}",
+    "description": "Aria label for an expanded row expansion control when a human-readable identity is available. `label` is the row identity from getRowLabel."
+  },
   "@astryx.tableRowExpansion.expandRow": {
     "defaultMessage": "Expand row",
     "description": "Screen-reader-only label on the row-expand chevron when the row is currently collapsed. Part of a four-way set with `collapseRow`, `expandAllRows`, `collapseAllRows`."
+  },
+  "@astryx.tableRowExpansion.expandRowNamed": {
+    "defaultMessage": "Expand {label}",
+    "description": "Aria label for a collapsed row expansion control when a human-readable identity is available. `label` is the row identity from getRowLabel."
   },
   "@astryx.tableRowExpansion.columnHeader": {
     "defaultMessage": "Row expansion",
@@ -1479,9 +1495,17 @@
     "defaultMessage": "Collapse row",
     "description": "Aria label for the Table tree-data expander chevron when the row is currently expanded."
   },
+  "@astryx.tableTree.collapseRowNamed": {
+    "defaultMessage": "Collapse {label}",
+    "description": "Aria label for an expanded Table tree-data row when a human-readable identity is available. `label` is the row identity from getRowLabel."
+  },
   "@astryx.tableTree.expandRow": {
     "defaultMessage": "Expand row",
     "description": "Aria label for the Table tree-data expander chevron when the row is currently collapsed."
+  },
+  "@astryx.tableTree.expandRowNamed": {
+    "defaultMessage": "Expand {label}",
+    "description": "Aria label for a collapsed Table tree-data row when a human-readable identity is available. `label` is the row identity from getRowLabel."
   },
   "@astryx.tableTree.collapseAllRows": {
     "defaultMessage": "Collapse all rows",
