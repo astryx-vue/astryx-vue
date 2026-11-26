@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useClickableContainerProjectCard } from '../../../../components/demos/use-clickable-container'
 </script>
 
 ## Usage
@@ -45,3 +46,14 @@ const { onClick, onMouseUp } = useClickableContainer({
 | <Badge variant="success">Do</Badge> | Attach both `onClick` and `onMouseUp` to the container element (`@click` and `@mouseup`) for full click handling including middle-click. |
 | <Badge variant="success">Do</Badge> | Use inside `ClickableCard` or `SelectableCard` for the standard card interaction pattern. |
 | <Badge variant="error">Don't</Badge> | Use when the entire container is a single interactive element; just use a `<button>` or `<a>` directly. |
+
+## Examples
+
+Common configurations, variations, and states.
+
+<DemoExample
+  :demo="useClickableContainerProjectCard"
+  description="A project card that useClickableContainer makes clickable anywhere: a click on the card follows its title link, while the Star button, the owner link and a text selection keep their own behavior, and Ctrl/Cmd+click or middle-click opens the project in a new tab."
+  locale="en"
+  title="useClickableContainer — Clickable Project Card"
+/>

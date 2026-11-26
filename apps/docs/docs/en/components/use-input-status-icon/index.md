@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useInputStatusIconCouponCode } from '../../../../components/demos/use-input-status-icon'
 </script>
 
 ## Usage
@@ -28,3 +29,14 @@ The accessibility wiring stays with `Field` in this port: it already renders the
 | <Badge variant="success">Do</Badge> | Render `statusIcon` inside the input container with `statusIconProps`. |
 | <Badge variant="success">Do</Badge> | Let it decide when nothing should render; pass `isInGroup` and `statusVariant` through rather than branching at the call site. |
 | <Badge variant="error">Don't</Badge> | Use it to convey the status by icon alone; the tooltip variant is the only one that carries the message, so the others still need a message box. |
+
+## Examples
+
+Common configurations, variations, and states.
+
+<DemoExample
+  :demo="useInputStatusIconCouponCode"
+  description="A custom bordered coupon-code input whose status affordance comes from useInputStatusIcon. A wrong code shows the error status and SAVE20 shows success. Switching the variant moves between a plain glyph with a message below (attached), no icon on the field (detached), and a focusable button whose tooltip keyboard and screen-reader users can reach (tooltip)."
+  locale="en"
+  title="useInputStatusIcon — Coupon Code Status"
+/>

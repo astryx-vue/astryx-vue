@@ -69305,7 +69305,19 @@
           }
         ]
       },
-      "examples": [],
+      "examples": [
+        {
+          "title": {
+            "en": "useClickableContainer — Clickable Project Card",
+            "zh": "useClickableContainer — 可点击的项目卡片"
+          },
+          "description": {
+            "en": "A project card that useClickableContainer makes clickable anywhere: a click on the card follows its title link, while the Star button, the owner link and a text selection keep their own behavior, and Ctrl/Cmd+click or middle-click opens the project in a new tab.",
+            "zh": "用 useClickableContainer 让整张项目卡片都能点：点卡片任何地方都跟随标题链接；Star 按钮、负责人链接和选中文字仍各管各的；Ctrl/Cmd 加点击或中键会在新标签页打开项目。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport type { ComponentPublicInstance } from 'vue'\nimport { useClickableContainer } from '@astryx-vue/core'\nimport { Button } from '@astryx-vue/core/Button'\nimport { Card } from '@astryx-vue/core/Card'\nimport { Heading } from '@astryx-vue/core/Heading'\nimport { Link } from '@astryx-vue/core/Link'\nimport { HStack, VStack } from '@astryx-vue/core/Stack'\nimport { Text } from '@astryx-vue/core/Text'\nimport { ref } from 'vue'\n\nconst PROJECT_HREF = '#project-design-tokens'\n\nconst containerRef = ref<HTMLElement | null>(null)\nconst projectLinkRef = ref<HTMLElement | null>(null)\nconst openCount = ref(0)\nconst isStarred = ref(false)\n\nconst { onClick, onMouseUp } = useClickableContainer({\n  containerRef,\n  interactiveRef: projectLinkRef,\n  href: PROJECT_HREF,\n})\n\nfunction elementOf(el: Element | ComponentPublicInstance | null): HTMLElement | null {\n  const node = el != null && '$el' in el ? el.$el : el\n  return node instanceof HTMLElement ? node : null\n}\n</script>\n\n<template>\n  <VStack :gap=\"3\">\n    <Card\n      :ref=\"el => { containerRef = elementOf(el) }\"\n      :width=\"360\"\n      :padding=\"4\"\n      @click=\"onClick\"\n      @mouseup=\"onMouseUp\"\n    >\n      <VStack :gap=\"2\">\n        <HStack align=\"center\" :gap=\"2\" justify=\"between\">\n          <Heading :level=\"4\">\n            <Link\n              :ref=\"el => { projectLinkRef = elementOf(el) }\"\n              :href=\"PROJECT_HREF\"\n              type=\"inherit\"\n              @click=\"openCount++\"\n            >\n              Design tokens\n            </Link>\n          </Heading>\n          <Button :label=\"isStarred ? 'Starred' : 'Star'\" variant=\"secondary\" @click=\"isStarred = !isStarred\" />\n        </HStack>\n        <Text type=\"body\" color=\"secondary\">\n          Color, spacing and type tokens shared by every product surface.\n        </Text>\n        <Text type=\"supporting\" color=\"secondary\">\n          Owned by <Link href=\"#team-design-systems\" type=\"inherit\">\n            Design Systems\n          </Link>\n        </Text>\n      </VStack>\n    </Card>\n    <Text type=\"supporting\">\n      Project opened {{ openCount }} {{ openCount === 1 ? 'time' : 'times' }}\n    </Text>\n  </VStack>\n</template>"
+        }
+      ],
       "anatomy": {
         "en": [],
         "zh": []
@@ -69463,7 +69475,19 @@
           }
         ]
       },
-      "examples": [],
+      "examples": [
+        {
+          "title": {
+            "en": "useClipboard — Share Link",
+            "zh": "useClipboard — 分享链接"
+          },
+          "description": {
+            "en": "A share card that copies its invite link with useClipboard: the Copy button reads Copied while isCopied is true, a screen reader hears Link copied, and a second press restarts the reset timer.",
+            "zh": "一张分享卡片，用 useClipboard 复制邀请链接：isCopied 为 true 时按钮显示 Copied，读屏会听到 Link copied，再按一次会重新开始计时。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { useClipboard } from '@astryx-vue/core'\nimport { Button } from '@astryx-vue/core/Button'\nimport { Card } from '@astryx-vue/core/Card'\nimport { HStack, StackItem, VStack } from '@astryx-vue/core/Stack'\nimport { Text } from '@astryx-vue/core/Text'\nimport { TextInput } from '@astryx-vue/core/TextInput'\n\nconst INVITE_LINK = 'https://example.com/invite/q7x2k9'\n\nconst { copy, isCopied } = useClipboard({ announce: 'Link copied' })\n</script>\n\n<template>\n  <Card :width=\"420\" :padding=\"4\">\n    <VStack :gap=\"3\">\n      <Text type=\"body\" weight=\"bold\">\n        Share\n      </Text>\n      <HStack align=\"end\" :gap=\"2\">\n        <StackItem size=\"fill\">\n          <TextInput :model-value=\"INVITE_LINK\" label=\"Invite link\" is-read-only />\n        </StackItem>\n        <Button :label=\"isCopied ? 'Copied' : 'Copy'\" @click=\"copy(INVITE_LINK)\" />\n      </HStack>\n    </VStack>\n  </Card>\n</template>"
+        }
+      ],
       "anatomy": {
         "en": [],
         "zh": []
@@ -70974,7 +70998,19 @@
           }
         ]
       },
-      "examples": [],
+      "examples": [
+        {
+          "title": {
+            "en": "useHotkeys — Search and Help Shortcuts",
+            "zh": "useHotkeys — 搜索与帮助快捷键"
+          },
+          "description": {
+            "en": "Page shortcuts registered with useHotkeys: / focuses the search field and ? opens the shortcut help, while typing either character in the field just types it. A switch turns the single-key shortcuts off through isDisabled.",
+            "zh": "用 useHotkeys 注册页面快捷键：按 / 聚焦搜索框，按 ? 打开快捷键帮助；在输入框里打这两个字符就只是正常输入。开关通过 isDisabled 关掉这些单键快捷键。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { useHotkeys } from '@astryx-vue/core'\nimport { Button } from '@astryx-vue/core/Button'\nimport { Card } from '@astryx-vue/core/Card'\nimport { Dialog, DialogHeader } from '@astryx-vue/core/Dialog'\nimport { Kbd } from '@astryx-vue/core/Kbd'\nimport { Layout, LayoutContent } from '@astryx-vue/core/Layout'\nimport { HStack, StackItem, VStack } from '@astryx-vue/core/Stack'\nimport { Switch } from '@astryx-vue/core/Switch'\nimport { Text } from '@astryx-vue/core/Text'\nimport { TextInput } from '@astryx-vue/core/TextInput'\nimport { ref } from 'vue'\n\nconst searchInput = ref<InstanceType<typeof TextInput> | null>(null)\nconst query = ref('')\nconst isHelpOpen = ref(false)\n// 单字符快捷键必须能关掉（WCAG 2.1.4）。\nconst hasShortcuts = ref(true)\n\nuseHotkeys(() => [\n  { keys: '/', onPress: () => searchInput.value?.focus(), isDisabled: !hasShortcuts.value },\n  { keys: '?', onPress: () => { isHelpOpen.value = true }, isDisabled: !hasShortcuts.value },\n])\n</script>\n\n<template>\n  <Card :width=\"480\" :padding=\"4\">\n    <VStack :gap=\"3\">\n      <HStack align=\"center\" :gap=\"2\">\n        <StackItem size=\"fill\">\n          <TextInput\n            ref=\"searchInput\"\n            v-model=\"query\"\n            label=\"Search\"\n            is-label-hidden\n            placeholder=\"Search projects\"\n          />\n        </StackItem>\n        <Button label=\"Shortcuts\" @click=\"isHelpOpen = true\" />\n      </HStack>\n      <Switch v-model=\"hasShortcuts\" label=\"Single-key shortcuts\" />\n    </VStack>\n    <Dialog :is-open=\"isHelpOpen\" @open-change=\"isHelpOpen = $event\">\n      <Layout>\n        <template #header>\n          <DialogHeader title=\"Keyboard shortcuts\" @open-change=\"isHelpOpen = $event\" />\n        </template>\n        <LayoutContent>\n          <VStack :gap=\"2\">\n            <HStack align=\"center\" :gap=\"2\">\n              <Kbd keys=\"/\" />\n              <Text type=\"body\">\n                Focus search\n              </Text>\n            </HStack>\n            <HStack align=\"center\" :gap=\"2\">\n              <Kbd keys=\"?\" />\n              <Text type=\"body\">\n                Show this help\n              </Text>\n            </HStack>\n          </VStack>\n        </LayoutContent>\n      </Layout>\n    </Dialog>\n  </Card>\n</template>"
+        }
+      ],
       "anatomy": {
         "en": [],
         "zh": []
@@ -71537,7 +71573,19 @@
           }
         ]
       },
-      "examples": [],
+      "examples": [
+        {
+          "title": {
+            "en": "useImageMode — Photo Caption",
+            "zh": "useImageMode — 照片标题"
+          },
+          "description": {
+            "en": "A photo banner with a caption over the sky. useImageMode samples only the strip under the caption and MediaTheme switches the caption between light and dark text from the result. A Beach photo switch swaps a night photo for a bright beach photo, and while the new photo loads the caption keeps the dark fallback.",
+            "zh": "一张照片横幅，标题压在天空上。useImageMode 只采样标题下面那一条，MediaTheme 按结果把标题切成浅色或深色文字。Beach photo 开关把夜景换成明亮的海滩照片，新照片加载期间标题保持深色兜底。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { useImageMode } from '@astryx-vue/core'\nimport { AspectRatio } from '@astryx-vue/core/AspectRatio'\nimport { VStack } from '@astryx-vue/core/Stack'\nimport { Switch } from '@astryx-vue/core/Switch'\nimport { Text } from '@astryx-vue/core/Text'\nimport { MediaTheme } from '@astryx-vue/core/Theme'\nimport { computed, ref } from 'vue'\n\nconst NIGHT_PHOTO = '/template-assets/moody-scene-horizontal-1.png'\nconst BEACH_PHOTO = '/template-assets/light-scene-horizontal-1.png'\nconst CAPTION_REGION = { x: 0, y: 0, width: 1, height: 0.3 }\n\nconst isBeach = ref(false)\nconst src = computed(() => isBeach.value ? BEACH_PHOTO : NIGHT_PHOTO)\nconst mode = useImageMode(src, { region: CAPTION_REGION, threshold: 0.4, fallback: 'dark' })\n</script>\n\n<template>\n  <VStack :gap=\"3\">\n    <AspectRatio :ratio=\"3 / 2\" class=\"photo-caption\">\n      <img\n        class=\"photo-caption__image\"\n        :src=\"src\"\n        :alt=\"isBeach ? 'A beach under a pale sky' : 'Snowy peaks at night'\"\n      >\n      <div class=\"photo-caption__overlay\">\n        <MediaTheme :mode=\"mode ?? 'off'\">\n          <VStack :gap=\"1\">\n            <Text type=\"body\" weight=\"bold\">\n              {{ isBeach ? 'Afternoon at the beach' : 'Night in the mountains' }}\n            </Text>\n            <Text type=\"supporting\">\n              Sky behind the caption: {{ mode }}\n            </Text>\n          </VStack>\n        </MediaTheme>\n      </div>\n    </AspectRatio>\n    <Switch v-model=\"isBeach\" label=\"Beach photo\" />\n  </VStack>\n</template>\n\n<style scoped>\n.photo-caption {\n  width: 360px;\n  max-width: 100%;\n  overflow: hidden;\n  border-radius: var(--astryx-radius-container, 0.75rem);\n}\n\n.photo-caption__image {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n}\n\n.photo-caption__overlay {\n  position: absolute;\n  inset: 0 0 auto;\n  padding: 16px;\n}\n</style>"
+        }
+      ],
       "anatomy": {
         "en": [],
         "zh": []
@@ -72322,7 +72370,19 @@
           }
         ]
       },
-      "examples": [],
+      "examples": [
+        {
+          "title": {
+            "en": "useInputContainer — Search Field Wrapper",
+            "zh": "useInputContainer — 搜索框外壳"
+          },
+          "description": {
+            "en": "A custom search field wrapper with a leading search icon, padding and a trailing Clear button. useInputContainer puts focus in the input when the icon or the padding is clicked, while a click on Clear empties the field without the wrapper taking it over.",
+            "zh": "一个自己画的搜索框外壳，前面有搜索图标、四周有留白、后面有清空按钮。点图标或留白时 useInputContainer 把焦点交给输入框；点清空按钮只清空内容，外壳不会抢走这次点击。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { useInputContainer } from '@astryx-vue/core'\nimport { InputClearButton } from '@astryx-vue/core/Field'\nimport { Icon } from '@astryx-vue/core/Icon'\nimport { ref } from 'vue'\n\nconst containerRef = ref<HTMLElement | null>(null)\nconst inputRef = ref<HTMLElement | null>(null)\nconst query = ref('')\n\nconst { onClick, onMouseUp } = useInputContainer({ containerRef, inputRef })\n\nfunction clear(): void {\n  query.value = ''\n  inputRef.value?.focus()\n}\n</script>\n\n<template>\n  <!-- eslint-disable-next-line vue-a11y/click-events-have-key-events, vue-a11y/no-static-element-interactions -- 外圈的点击只是把焦点交给里面的输入框，键盘用户直接 Tab 到输入框。 -->\n  <div ref=\"containerRef\" class=\"search-field\" @click=\"onClick\" @mouseup=\"onMouseUp\">\n    <Icon icon=\"search\" color=\"secondary\" />\n    <input\n      ref=\"inputRef\"\n      v-model=\"query\"\n      class=\"search-field__input\"\n      type=\"text\"\n      aria-label=\"Search\"\n      placeholder=\"Search\"\n    >\n    <InputClearButton v-if=\"query !== ''\" label=\"Clear search\" @click=\"clear\" />\n  </div>\n</template>\n\n<style scoped>\n.search-field {\n  box-sizing: border-box;\n  display: flex;\n  align-items: center;\n  gap: var(--astryx-spacing-2, 8px);\n  width: 320px;\n  min-height: 40px;\n  padding-inline: var(--astryx-spacing-3, 12px);\n  border: 1px solid var(--astryx-color-border-emphasized, #a3a3a3);\n  border-radius: var(--astryx-radius-element, 0.625rem);\n  cursor: text;\n}\n\n.search-field:has(> input:focus-visible) {\n  outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, #262626);\n  outline-offset: var(--astryx-focus-outline-offset, 0);\n}\n\n.search-field__input {\n  flex-grow: 1;\n  min-width: 0;\n  border: none;\n  outline: none;\n  color: inherit;\n  background: transparent;\n  font-family: inherit;\n  font-size: inherit;\n}\n</style>"
+        }
+      ],
       "anatomy": {
         "en": [],
         "zh": []
@@ -72476,7 +72536,19 @@
           }
         ]
       },
-      "examples": [],
+      "examples": [
+        {
+          "title": {
+            "en": "useInputStatusIcon — Coupon Code Status",
+            "zh": "useInputStatusIcon — 优惠码状态"
+          },
+          "description": {
+            "en": "A custom bordered coupon-code input whose status affordance comes from useInputStatusIcon. A wrong code shows the error status and SAVE20 shows success. Switching the variant moves between a plain glyph with a message below (attached), no icon on the field (detached), and a focusable button whose tooltip keyboard and screen-reader users can reach (tooltip).",
+            "zh": "一个自己画边框的优惠码输入框，状态标记交给 useInputStatusIcon 决定。填错显示错误状态，填 SAVE20 显示成功。切换摆放方式：attached 在框里画一个图标、文案写在下面；detached 框里不画图标；tooltip 画一个能用键盘和读屏够到说明的按钮。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport type { InputStatusVariant } from '@astryx-vue/core'\nimport type { FieldStatusInput } from '@astryx-vue/core/Field'\nimport { useInputStatusIcon } from '@astryx-vue/core'\nimport { Card } from '@astryx-vue/core/Card'\nimport { Field } from '@astryx-vue/core/Field'\nimport { SegmentedControl, SegmentedControlItem } from '@astryx-vue/core/SegmentedControl'\nimport { VStack } from '@astryx-vue/core/Stack'\nimport { Text } from '@astryx-vue/core/Text'\nimport { computed, ref, useId } from 'vue'\n\nconst VALID_CODE = 'SAVE20'\n\nconst statusVariant = ref<InputStatusVariant>('attached')\nconst code = ref('SAVE10')\nconst inputId = useId()\n\nconst status = computed<FieldStatusInput | undefined>(() => {\n  if (code.value === '')\n    return undefined\n  return code.value.toUpperCase() === VALID_CODE\n    ? { type: 'success', message: 'Code applied: 20% off.' }\n    : { type: 'error', message: 'This code is not valid.' }\n})\n\n// hook 按当前状态和摆放方式决定输入框里画什么：普通图标、带说明的按钮，或者什么都不画。\nconst { statusIcon, statusIconProps } = useInputStatusIcon({ status, statusVariant })\n</script>\n\n<template>\n  <Card :width=\"360\" :padding=\"4\">\n    <VStack :gap=\"3\">\n      <SegmentedControl v-model=\"statusVariant\" label=\"Status variant\" size=\"sm\">\n        <SegmentedControlItem value=\"attached\" label=\"Attached\" />\n        <SegmentedControlItem value=\"detached\" label=\"Detached\" />\n        <SegmentedControlItem value=\"tooltip\" label=\"Tooltip\" />\n      </SegmentedControl>\n      <Field\n        label=\"Coupon code\"\n        is-label-hidden\n        :input-id=\"inputId\"\n        :status=\"status\"\n        :status-variant=\"statusVariant\"\n      >\n        <template #default=\"field\">\n          <div class=\"coupon-field\" :data-status=\"status?.type\">\n            <input\n              :id=\"inputId\"\n              v-model=\"code\"\n              class=\"coupon-field__input\"\n              type=\"text\"\n              placeholder=\"Enter a coupon code\"\n              :aria-invalid=\"status?.type === 'error' || undefined\"\n              :aria-describedby=\"field.describedBy\"\n            >\n            <component :is=\"statusIcon\" v-if=\"statusIcon\" v-bind=\"statusIconProps\" />\n          </div>\n        </template>\n      </Field>\n      <Text type=\"supporting\">\n        Type {{ VALID_CODE }} to see the success status.\n      </Text>\n    </VStack>\n  </Card>\n</template>\n\n<style scoped>\n.coupon-field {\n  --coupon-border: var(--astryx-input-border, #d4d4d4);\n  box-sizing: border-box;\n  display: flex;\n  align-items: center;\n  gap: var(--astryx-spacing-2, 8px);\n  height: var(--astryx-input-height-md, 32px);\n  padding-inline: var(--astryx-spacing-3, 12px);\n  border: 1px solid var(--coupon-border);\n  border-radius: var(--astryx-radius-element, 0.625rem);\n  background: var(--astryx-input-background, #fff);\n}\n\n.coupon-field[data-status='error'] {\n  --coupon-border: var(--astryx-color-border-error, #e33f4a);\n  color: var(--astryx-color-border-error, #e33f4a);\n}\n\n.coupon-field[data-status='success'] {\n  --coupon-border: var(--astryx-color-border-success, #198100);\n  color: var(--astryx-color-border-success, #198100);\n}\n\n.coupon-field:focus-within {\n  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--coupon-border) 25%, transparent);\n}\n\n.coupon-field__input {\n  flex: 1;\n  min-width: 0;\n  padding: 0;\n  border: 0;\n  outline: none;\n  color: var(--astryx-color-text-primary, #171717);\n  background: transparent;\n  font: inherit;\n}\n</style>"
+        }
+      ],
       "anatomy": {
         "en": [],
         "zh": []
@@ -72620,7 +72692,19 @@
           }
         ]
       },
-      "examples": [],
+      "examples": [
+        {
+          "title": {
+            "en": "useInteractiveRole — One Tile, Three Roles",
+            "zh": "useInteractiveRole — 一个 Tile，三种角色"
+          },
+          "description": {
+            "en": "A polymorphic Tile used three ways: with an href it renders as a link, with a click handler as a button, and with neither as plain content — the resolution order in one place.",
+            "zh": "同一个多态 Tile 的三种用法：有 href 就渲染成链接，有点击处理就渲染成按钮，都没有就是普通内容——判断先后顺序集中在一处。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { useInteractiveRole } from '@astryx-vue/core'\nimport { Card } from '@astryx-vue/core/Card'\nimport { Link } from '@astryx-vue/core/Link'\nimport { VStack } from '@astryx-vue/core/Stack'\nimport { Text } from '@astryx-vue/core/Text'\nimport { defineComponent, h } from 'vue'\n\n// 一个多态的 Tile：渲染成什么只由 hook 决定——href 优先，其次是点击处理，都没有就是普通内容。\nconst Tile = defineComponent({\n  props: {\n    href: { type: String, default: undefined },\n    onClick: { type: Function, default: undefined },\n  },\n  setup(props, { slots }) {\n    const { role } = useInteractiveRole({\n      href: () => props.href,\n      hasOnClick: () => props.onClick != null,\n    })\n    return () => {\n      const body = h(Card, { padding: 3, width: 200 }, () => h(Text, { type: 'body' }, slots.default))\n      if (role.value === 'link')\n        return h(Link, { href: props.href }, () => body)\n      if (role.value === 'button')\n        return h('button', { type: 'button', class: 'role-tile__button', onClick: props.onClick }, body)\n      return body\n    }\n  },\n})\n\nfunction noop(): void {}\n</script>\n\n<template>\n  <VStack :gap=\"3\" h-align=\"center\" width=\"100%\">\n    <Tile href=\"https://example.com/docs\">\n      Renders as a link\n    </Tile>\n    <Tile :on-click=\"noop\">\n      Renders as a button\n    </Tile>\n    <Tile>Plain content</Tile>\n  </VStack>\n</template>\n\n<style scoped>\n:deep(.role-tile__button) {\n  padding: 0;\n  border: 0;\n  background: none;\n  font: inherit;\n  text-align: start;\n  cursor: pointer;\n}\n</style>"
+        }
+      ],
       "anatomy": {
         "en": [],
         "zh": []
@@ -74414,7 +74498,19 @@
           }
         ]
       },
-      "examples": [],
+      "examples": [
+        {
+          "title": {
+            "en": "useMergedRefs — AutoGrowTextArea",
+            "zh": "useMergedRefs — 自动长高的文本框"
+          },
+          "description": {
+            "en": "An AutoGrowTextArea that forwards the caller's ref and also keeps its own ref to measure scrollHeight. The merged ref attaches both to the same textarea: it resizes itself while a parent button focuses it through the forwarded ref.",
+            "zh": "一个自动长高的文本框：既把调用方给的 ref 转发出去，又自己留一份 ref 量 scrollHeight。合并后的 ref 把两份接到同一个 textarea 上：它自己调整高度，外面的按钮也能通过转发的 ref 让它获得焦点。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport type { MergedRef } from '@astryx-vue/core'\nimport type { PropType } from 'vue'\nimport { useMergedRefs } from '@astryx-vue/core'\nimport { Button } from '@astryx-vue/core/Button'\nimport { Card } from '@astryx-vue/core/Card'\nimport { VStack } from '@astryx-vue/core/Stack'\nimport { defineComponent, h, onMounted, ref, watch } from 'vue'\n\n// 转发调用方给的 ref，同时自己留一份 ref 量 scrollHeight；useMergedRefs 把两份接到同一个 textarea 上。\nconst AutoGrowTextArea = defineComponent({\n  props: {\n    modelValue: { type: String, required: true },\n    textareaRef: { type: Function as PropType<MergedRef<HTMLTextAreaElement>>, default: undefined },\n  },\n  emits: ['update:modelValue'],\n  setup(props, { emit }) {\n    const keptRef = ref<HTMLTextAreaElement | null>(null)\n    const mergedRef = useMergedRefs<HTMLTextAreaElement>([props.textareaRef, keptRef])\n\n    // 新文字写进 DOM 之后 scrollHeight 才准，所以挂载后量一次，之后每次改值都在 post 阶段再量。\n    function syncHeight(): void {\n      const el = keptRef.value\n      if (el == null)\n        return\n      el.style.height = 'auto'\n      el.style.height = `${el.scrollHeight}px`\n    }\n    onMounted(syncHeight)\n    watch(() => props.modelValue, syncHeight, { flush: 'post' })\n\n    return () => h('textarea', {\n      'ref': mergedRef,\n      'class': 'auto-grow-text-area',\n      'value': props.modelValue,\n      'rows': 1,\n      'aria-label': 'Auto-growing message',\n      'placeholder': 'Type — the box grows itself',\n      'onInput': (event: Event) => emit('update:modelValue', (event.target as HTMLTextAreaElement).value),\n    })\n  },\n})\n\nconst areaRef = ref<HTMLTextAreaElement | null>(null)\nconst value = ref('This box keeps its own ref to measure and grow. The button focuses it through the forwarded ref.')\n\nfunction forwardArea(el: HTMLTextAreaElement | null): void {\n  areaRef.value = el\n}\n</script>\n\n<template>\n  <Card :width=\"360\" :padding=\"4\">\n    <VStack :gap=\"3\">\n      <AutoGrowTextArea v-model=\"value\" :textarea-ref=\"forwardArea\" />\n      <Button label=\"Focus via forwarded ref\" size=\"sm\" @click=\"areaRef?.focus()\" />\n    </VStack>\n  </Card>\n</template>\n\n<style scoped>\n:deep(.auto-grow-text-area) {\n  box-sizing: border-box;\n  width: 100%;\n  padding: 8px;\n  border: 1px solid;\n  border-radius: 8px;\n  resize: none;\n  overflow: hidden;\n  color: inherit;\n  background: transparent;\n  font-family: inherit;\n  font-size: 14px;\n  line-height: 20px;\n}\n</style>"
+        }
+      ],
       "anatomy": {
         "en": [],
         "zh": []
@@ -75778,7 +75874,19 @@
           }
         ]
       },
-      "examples": [],
+      "examples": [
+        {
+          "title": {
+            "en": "useScrollLock — Full-screen Mobile Menu",
+            "zh": "useScrollLock — 全屏手机菜单"
+          },
+          "description": {
+            "en": "A custom full-screen menu opened from a Menu button. useScrollLock pins the page behind it while it is open, so the page does not scroll or shift sideways, and closing the menu returns the reader to the same scroll position.",
+            "zh": "点 Menu 按钮打开一个自己画的全屏菜单。菜单开着时 useScrollLock 把后面的页面钉住，页面不会滚动也不会左右跳动；关掉菜单后还停在原来的滚动位置。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { useFocusTrap, useScrollLock } from '@astryx-vue/core'\nimport { Button } from '@astryx-vue/core/Button'\nimport { Link } from '@astryx-vue/core/Link'\nimport { VStack } from '@astryx-vue/core/Stack'\nimport { ref, watch } from 'vue'\n\nconst MENU_ITEMS = ['Products', 'Pricing', 'Customers', 'Support']\n\nconst isOpen = ref(false)\nconst menuRef = ref<HTMLElement | null>(null)\n\nfunction menu(): HTMLDialogElement | null {\n  return menuRef.value as HTMLDialogElement | null\n}\n\nuseScrollLock(isOpen)\nconst { focusFirst } = useFocusTrap({ container: menuRef, isActive: isOpen, onEscape: close })\n\n// 先让对话框离开顶层再改状态，焦点陷阱把焦点还给 Menu 时页面已经不是 inert。\nfunction close(): void {\n  menu()?.close()\n  isOpen.value = false\n}\n\nfunction onCancel(event: Event): void {\n  event.preventDefault()\n  close()\n}\n\nwatch(isOpen, (open) => {\n  const dialog = menu()\n  if (open && dialog != null && !dialog.open) {\n    dialog.showModal()\n    focusFirst()\n  }\n}, { flush: 'post' })\n</script>\n\n<template>\n  <Button label=\"Menu\" @click=\"isOpen = true\" />\n  <dialog ref=\"menuRef\" class=\"mobile-menu\" aria-label=\"Menu\" @cancel=\"onCancel\">\n    <nav aria-label=\"Site menu\">\n      <VStack :gap=\"4\" h-align=\"start\">\n        <Button label=\"Close menu\" variant=\"secondary\" @click=\"close\" />\n        <Link v-for=\"item in MENU_ITEMS\" :key=\"item\" :href=\"`#menu-${item.toLowerCase()}`\" @click=\"close\">\n          {{ item }}\n        </Link>\n      </VStack>\n    </nav>\n  </dialog>\n</template>\n\n<style scoped>\n.mobile-menu {\n  box-sizing: border-box;\n  width: 100%;\n  height: 100%;\n  max-width: none;\n  max-height: none;\n  margin: 0;\n  padding: var(--astryx-spacing-4, 16px);\n  border: 0;\n  overflow-y: auto;\n  color: var(--astryx-color-text-primary, #171717);\n  background-color: var(--astryx-color-background-surface, #fff);\n}\n</style>"
+        }
+      ],
       "anatomy": {
         "en": [],
         "zh": []
@@ -75915,7 +76023,19 @@
           }
         ]
       },
-      "examples": [],
+      "examples": [
+        {
+          "title": {
+            "en": "useScrollOverflow — Filter Strip Edge Fades",
+            "zh": "useScrollOverflow — 筛选条两端渐隐"
+          },
+          "description": {
+            "en": "A row of active filters that scrolls sideways. useScrollOverflow reports which edge has hidden filters, and the strip fades only that edge: none while every filter fits, the end at the start, both mid-scroll and the start at the end. In a right-to-left layout the start edge is on the right.",
+            "zh": "一排能横向滚动的已选筛选项。useScrollOverflow 报告哪一边藏着筛选项，筛选条只淡出那一边：全部放得下时不淡出，滚到开头淡出结尾，滚到中间两边都淡出，滚到结尾淡出开头。从右到左的布局里，起始边在右边。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport type { ComponentPublicInstance } from 'vue'\nimport { useScrollOverflow } from '@astryx-vue/core'\nimport { Button } from '@astryx-vue/core/Button'\nimport { HStack, VStack } from '@astryx-vue/core/Stack'\nimport { Switch } from '@astryx-vue/core/Switch'\nimport { Token } from '@astryx-vue/core/Token'\nimport { computed, ref } from 'vue'\n\nconst FILTERS = [\n  'Open now',\n  'Free delivery',\n  'Vegetarian',\n  'Under $15',\n  'Top rated',\n  'Outdoor seating',\n  'Pet friendly',\n]\n\nconst filters = ref(FILTERS.slice(0, 2))\nconst isRtl = ref(false)\nconst { scrollRef, overflowStart, overflowEnd } = useScrollOverflow()\n\nconst nextFilter = computed(() => FILTERS.find(filter => !filters.value.includes(filter)))\n\n// 只淡出藏着筛选项的那一边；mask 按物理方向画，RTL 下起始边在右边。\nconst fade = computed(() => {\n  if (overflowStart.value && overflowEnd.value)\n    return 'both'\n  if (overflowStart.value)\n    return isRtl.value ? 'right' : 'left'\n  if (overflowEnd.value)\n    return isRtl.value ? 'left' : 'right'\n  return undefined\n})\n\nfunction bindStrip(el: Element | ComponentPublicInstance | null): void {\n  scrollRef(el instanceof HTMLElement ? el : null)\n}\n\nfunction addFilter(): void {\n  if (nextFilter.value != null)\n    filters.value = [...filters.value, nextFilter.value]\n}\n\nfunction removeFilter(filter: string): void {\n  filters.value = filters.value.filter(item => item !== filter)\n}\n</script>\n\n<template>\n  <VStack :gap=\"3\" :width=\"320\">\n    <div :dir=\"isRtl ? 'rtl' : 'ltr'\">\n      <div\n        :ref=\"bindStrip\"\n        class=\"filter-strip\"\n        :data-fade=\"fade\"\n        role=\"group\"\n        aria-label=\"Active filters\"\n      >\n        <Token\n          v-for=\"filter in filters\"\n          :key=\"filter\"\n          class=\"filter-strip__filter\"\n          :label=\"filter\"\n          removable\n          @remove=\"removeFilter(filter)\"\n        />\n      </div>\n    </div>\n    <HStack align=\"center\" :gap=\"3\">\n      <Button label=\"Add filter\" variant=\"secondary\" :is-disabled=\"nextFilter == null\" @click=\"addFilter\" />\n      <Switch v-model=\"isRtl\" label=\"Right to left\" />\n    </HStack>\n  </VStack>\n</template>\n\n<style scoped>\n.filter-strip {\n  --fade: var(--astryx-spacing-8, 32px);\n  display: flex;\n  gap: var(--astryx-spacing-2, 8px);\n  overflow-x: auto;\n}\n\n.filter-strip__filter {\n  flex-shrink: 0;\n}\n\n.filter-strip[data-fade='left'] {\n  mask-image: linear-gradient(to right, transparent, black var(--fade));\n}\n\n.filter-strip[data-fade='right'] {\n  mask-image: linear-gradient(to left, transparent, black var(--fade));\n}\n\n.filter-strip[data-fade='both'] {\n  mask-image: linear-gradient(to right, transparent, black var(--fade), black calc(100% - var(--fade)), transparent);\n}\n</style>"
+        }
+      ],
       "anatomy": {
         "en": [],
         "zh": []
@@ -76337,10 +76457,10 @@
             "zh": "useStreamingText — 流式回复"
           },
           "description": {
-            "en": "Smooth bursty generated text into a steady reveal with useStreamingText.",
-            "zh": "用 useStreamingText 把一阵一阵到达的生成文字抹平成稳定显示。"
+            "en": "A chat-style reply card: while the response streams in bursts, useStreamingText reveals it steadily character by character; when streaming ends the full text snaps into place. Regenerate replays the stream.",
+            "zh": "一张聊天回复卡片：回复一阵一阵到达时，useStreamingText 把它一个字一个字稳定地显示出来；流结束时直接显示完整文本。点 Regenerate 重放一遍。"
           },
-          "code": "<script setup lang=\"ts\">\nimport { useStreamingText } from '@astryx-vue/core'\nimport { Badge } from '@astryx-vue/core/Badge'\nimport { Button } from '@astryx-vue/core/Button'\nimport { Card } from '@astryx-vue/core/Card'\nimport { Heading } from '@astryx-vue/core/Heading'\nimport { Section } from '@astryx-vue/core/Section'\nimport { Stack } from '@astryx-vue/core/Stack'\nimport { Text } from '@astryx-vue/core/Text'\nimport { onBeforeUnmount, ref } from 'vue'\n\nconst target = 'Astryx hooks keep behavior reusable while components keep visuals consistent.'\n\nconst source = ref('')\nconst isStreaming = ref(false)\nconst displayedText = useStreamingText(source, isStreaming)\n\nlet timer: ReturnType<typeof setInterval> | undefined\n\nfunction stop(): void {\n  if (timer !== undefined) {\n    clearInterval(timer)\n    timer = undefined\n  }\n}\n\nfunction stream(): void {\n  stop()\n  source.value = ''\n  isStreaming.value = true\n  let offset = 0\n  // 每 200ms 送一小段，模拟生成中的分块到达\n  timer = setInterval(() => {\n    offset = Math.min(offset + 8, target.length)\n    source.value = target.slice(0, offset)\n    if (offset >= target.length) {\n      isStreaming.value = false\n      stop()\n    }\n  }, 200)\n}\n\nonBeforeUnmount(stop)\nstream()\n</script>\n\n<template>\n  <Section variant=\"muted\" :padding=\"4\" :max-width=\"520\">\n    <Card :padding=\"4\" width=\"100%\">\n      <Stack direction=\"vertical\" :gap=\"3\">\n        <Stack direction=\"horizontal\" :gap=\"2\" align=\"center\">\n          <Heading :level=\"4\">\n            Assistant response\n          </Heading>\n          <Badge :variant=\"isStreaming ? 'info' : 'success'\">\n            {{ isStreaming ? 'Streaming' : 'Complete' }}\n          </Badge>\n        </Stack>\n        <Text class=\"streaming-text\" type=\"body\">\n          {{ displayedText }}\n        </Text>\n        <Stack direction=\"horizontal\" :gap=\"2\">\n          <Button label=\"Stream again\" size=\"sm\" variant=\"secondary\" @click=\"stream\" />\n        </Stack>\n      </Stack>\n    </Card>\n  </Section>\n</template>\n\n<style scoped>\n.streaming-text {\n  min-height: 3.5rem;\n}\n</style>"
+          "code": "<script setup lang=\"ts\">\nimport { useStreamingText } from '@astryx-vue/core'\nimport { Button } from '@astryx-vue/core/Button'\nimport { Card } from '@astryx-vue/core/Card'\nimport { VStack } from '@astryx-vue/core/Stack'\nimport { Text } from '@astryx-vue/core/Text'\nimport { onBeforeUnmount, ref } from 'vue'\n\nconst CHUNKS = [\n  'Astryx hooks keep behavior reusable ',\n  'while components keep visuals consistent. ',\n  'Streaming text arrives in bursts; ',\n  'the hook smooths it into a steady reveal.',\n]\n\nconst target = ref('')\nconst isStreaming = ref(false)\nconst displayedText = useStreamingText(target, isStreaming, { speed: 'fast' })\n\n// 假的流：一段一段成批到达，像模型吐 token 那样。重新开始会停掉进行中的流，最后一段到达时流结束。\nlet timer: ReturnType<typeof setTimeout> | undefined\n\nfunction stop(): void {\n  if (timer !== undefined) {\n    clearTimeout(timer)\n    timer = undefined\n  }\n}\n\nfunction regenerate(): void {\n  stop()\n  target.value = ''\n  isStreaming.value = true\n  let index = 0\n  const tick = (): void => {\n    target.value += CHUNKS[index]\n    index += 1\n    if (index < CHUNKS.length) {\n      timer = setTimeout(tick, 350)\n    }\n    else {\n      timer = undefined\n      // 最后一段到了就结束流，hook 会直接显示完整文本。\n      isStreaming.value = false\n    }\n  }\n  timer = setTimeout(tick, 350)\n}\n\nonBeforeUnmount(stop)\n</script>\n\n<template>\n  <Card :width=\"420\" :padding=\"4\">\n    <VStack :gap=\"3\">\n      <Text type=\"body\" weight=\"bold\">\n        Assistant response\n      </Text>\n      <Text type=\"body\">\n        {{ displayedText }}\n      </Text>\n      <Button :label=\"isStreaming ? 'Streaming…' : 'Regenerate'\" variant=\"secondary\" size=\"sm\" @click=\"regenerate\" />\n    </VStack>\n  </Card>\n</template>"
         }
       ],
       "anatomy": {
@@ -81214,7 +81334,19 @@
           }
         ]
       },
-      "examples": [],
+      "examples": [
+        {
+          "title": {
+            "en": "useTreeFocus — Keyboard File Tree",
+            "zh": "useTreeFocus — 键盘文件树"
+          },
+          "description": {
+            "en": "A custom file tree built from plain rows with tree roles. useTreeFocus gives it the WAI-ARIA tree keyboard model: ArrowUp and ArrowDown move over the visible rows, ArrowRight opens a folder or moves into it, ArrowLeft closes it or moves to its parent, Home and End jump to the ends, a typed letter jumps to a matching name, Enter opens a file, and only one row is in the tab order.",
+            "zh": "用普通行加 tree 角色拼出的文件树。useTreeFocus 给它 WAI-ARIA 树形控件的键盘操作：上下方向键在可见行之间移动，右方向键展开文件夹或进入它，左方向键收起或回到上一级，Home 和 End 跳到两头，敲字母跳到名字匹配的行，Enter 打开文件，而且只有一行在 Tab 顺序里。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport type { ComponentPublicInstance } from 'vue'\nimport { useTreeFocus } from '@astryx-vue/core'\nimport { Icon } from '@astryx-vue/core/Icon'\nimport { HStack, VStack } from '@astryx-vue/core/Stack'\nimport { Text } from '@astryx-vue/core/Text'\nimport { computed, ref } from 'vue'\n\ninterface FileNode {\n  name: string\n  children?: FileNode[]\n}\n\nconst FILES: FileNode[] = [\n  { name: 'src', children: [{ name: 'index.ts' }, { name: 'theme.ts' }] },\n  { name: 'docs', children: [{ name: 'intro.md' }, { name: 'usage.md' }] },\n  { name: 'package.json' },\n  { name: 'README.md' },\n]\n\nconst FOLDERS = new Set(FILES.filter(node => node.children != null).map(node => node.name))\n\nconst expanded = ref<ReadonlySet<string>>(new Set(['src']))\nconst openFile = ref<string | null>(null)\n\nfunction toggle(name: string): void {\n  const next = new Set(expanded.value)\n  if (!next.delete(name))\n    next.add(name)\n  expanded.value = next\n}\n\nconst { treeRef, handleKeyDown, handleFocus } = useTreeFocus({\n  hasRovingTabIndex: true,\n  onToggleExpand: toggle,\n  onActivate: (_item, name) => {\n    if (name == null || FOLDERS.has(name))\n      return false\n    openFile.value = name\n    return true\n  },\n})\n\nfunction bindTree(el: Element | ComponentPublicInstance | null): void {\n  const node = el != null && '$el' in el ? el.$el : el\n  treeRef.value = node instanceof HTMLElement ? node : null\n}\n\nconst rows = computed(() => FILES.flatMap(node => [\n  { node, level: 1 },\n  ...(expanded.value.has(node.name) ? (node.children ?? []).map(child => ({ node: child, level: 2 })) : []),\n]))\n\nfunction indent(node: FileNode, level: number): 0 | 5 | 10 {\n  if (node.children != null)\n    return 0\n  return level === 1 ? 5 : 10\n}\n\nfunction activate(node: FileNode): void {\n  if (node.children != null)\n    toggle(node.name)\n  else\n    openFile.value = node.name\n}\n</script>\n\n<template>\n  <VStack :gap=\"3\" :width=\"240\">\n    <VStack\n      :ref=\"bindTree\"\n      role=\"tree\"\n      aria-label=\"Files\"\n      :gap=\"1\"\n      @keydown=\"handleKeyDown\"\n      @focusin=\"handleFocus\"\n    >\n      <HStack\n        v-for=\"{ node, level } in rows\"\n        :key=\"node.name\"\n        align=\"center\"\n        role=\"treeitem\"\n        :aria-level=\"level\"\n        :aria-expanded=\"node.children != null ? expanded.has(node.name) : undefined\"\n        :aria-selected=\"node.children != null ? undefined : openFile === node.name\"\n        :data-tree-id=\"node.name\"\n        :gap=\"1\"\n        :padding-inline-start=\"indent(node, level)\"\n        @click=\"activate(node)\"\n      >\n        <template v-if=\"node.children != null\">\n          <Icon v-if=\"expanded.has(node.name)\" icon=\"chevronDown\" />\n          <!-- 收起的箭头指向行内结尾方向，也就是展开文件夹的那个方向键（RTL 下是 ArrowLeft）。 -->\n          <Icon v-else class=\"file-tree__collapsed\" icon=\"chevronRight\" />\n        </template>\n        <Text type=\"body\">\n          {{ node.name }}\n        </Text>\n      </HStack>\n    </VStack>\n    <Text type=\"supporting\">\n      Open file: {{ openFile ?? 'none' }}\n    </Text>\n  </VStack>\n</template>\n\n<style scoped>\n.file-tree__collapsed:dir(rtl) {\n  transform: scaleX(-1);\n}\n</style>"
+        }
+      ],
       "anatomy": {
         "en": [],
         "zh": []

@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useInteractiveRoleRoles } from '../../../../components/demos/use-interactive-role'
 </script>
 
 ## Usage
@@ -28,3 +29,14 @@ Upstream also reads an interactive trigger context supplied by a parent (Popover
 | <Badge variant="success">Do</Badge> | Switch on the returned role to pick the element, and render an anchor only for `"link"` so keyboard and middle-click behavior come from the platform. |
 | <Badge variant="success">Do</Badge> | Pass `isDisabled` through rather than dropping the href yourself; the hook already ignores a disabled href when it resolves the role. |
 | <Badge variant="error">Don't</Badge> | Add another ad-hoc href / click precedence check in a component; every consumer should inherit the same order. |
+
+## Examples
+
+Common configurations, variations, and states.
+
+<DemoExample
+  :demo="useInteractiveRoleRoles"
+  description="A polymorphic Tile used three ways: with an href it renders as a link, with a click handler as a button, and with neither as plain content — the resolution order in one place."
+  locale="en"
+  title="useInteractiveRole — One Tile, Three Roles"
+/>

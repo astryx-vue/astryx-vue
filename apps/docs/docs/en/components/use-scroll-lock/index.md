@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useScrollLockMobileMenu } from '../../../../components/demos/use-scroll-lock'
 </script>
 
 ## Usage
@@ -31,3 +32,14 @@ useScrollLock(isOpen)
 | <Badge variant="success">Do</Badge> | Pass the same ref that controls dialog visibility as the `isLocked` argument. |
 | <Badge variant="success">Do</Badge> | Keep the call in the scope that owns the overlay. Leaving that scope releases the lock. |
 | <Badge variant="error">Don't</Badge> | Use for non-modal overlays like popovers or tooltips; users should be able to scroll away from those. |
+
+## Examples
+
+Common configurations, variations, and states.
+
+<DemoExample
+  :demo="useScrollLockMobileMenu"
+  description="A custom full-screen menu opened from a Menu button. useScrollLock pins the page behind it while it is open, so the page does not scroll or shift sideways, and closing the menu returns the reader to the same scroll position."
+  locale="en"
+  title="useScrollLock — Full-screen Mobile Menu"
+/>

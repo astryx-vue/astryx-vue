@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useClipboardShareLink } from '../../../../components/demos/use-clipboard'
 </script>
 
 ## 使用方法
@@ -35,3 +36,14 @@ import { useClipboard } from '@astryx-vue/core'
 | <Badge variant="success">推荐</Badge> | 传一个本地化好的 `announce` 句子，让读屏念出来；只换按钮的 `aria-label` 经常不会被念。 |
 | <Badge variant="success">推荐</Badge> | 常见的小图标复制按钮，用 ghost 的 `IconButton` 配一个「复制」的 Tooltip，`@click` 调 `copy()`；Tooltip 一直是「复制」，靠图标翻转表示已复制。 |
 | <Badge variant="error">避免</Badge> | 在 hook 之外再维护一个 `copied` 变量；`isCopied` 已经反映这段提示窗口，并且会自己归位。 |
+
+## 示例
+
+常见配置、变体和状态。
+
+<DemoExample
+  :demo="useClipboardShareLink"
+  description="一张分享卡片，用 useClipboard 复制邀请链接：isCopied 为 true 时按钮显示 Copied，读屏会听到 Link copied，再按一次会重新开始计时。"
+  locale="zh"
+  title="useClipboard — 分享链接"
+/>
