@@ -11,7 +11,7 @@ import { useTableRowIndexNumberedRows } from '../../../../components/demos/use-t
 
 ## 使用方法
 
-返回一个 `TablePlugin`，在表格最前面加一列右对齐、等宽的序号。序号跟着当前渲染的数据顺序走（排序、过滤、分页之后的结果），默认从 1 开始。`renderCell` 只拿到一行数据，所以插件需要你传入当前渲染的数据数组，用它算出每一行的序号。
+返回一个 `TablePlugin`，在表格最前面加一列右对齐、等宽的序号。序号跟着表格渲染出的行走（排序、过滤、分页之后的结果），默认从 1 开始。不传参数就按行渲染出的位置编号；只有想让序号跟着另一份数组走时才传 `data`。
 
 ```ts
 import { useTableRowIndex } from '@astryx-vue/core/Table'

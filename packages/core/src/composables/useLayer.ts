@@ -54,6 +54,13 @@ export interface UseLayerOptions {
    */
   lightDismiss?: MaybeRefOrGetter<boolean>
   /**
+   * 浮层比锚点四周的空地都高时，是否也不盖住锚点：改放到锚点右侧或左侧，
+   * 再不行就放在空地更大的上下一侧并限高，超出的内容在浮层里滚动。
+   * 装得下的浮层不受影响。Tooltip 用它。
+   * @default false
+   */
+  keepAnchorClear?: boolean
+  /**
    * 是否等到第一次 `show()` 才渲染内容。关闭后内容卸载，只留下占位。
    * @default false
    */
@@ -130,6 +137,7 @@ export function useLayer(options: UseLayerOptions): UseLayerReturn {
         placement,
         alignment,
         gap: options.gap ?? 4,
+        keepAnchorClear: options.keepAnchorClear,
       })
 
   const resolvedPlacement = computed(() => positioned?.position.value.placement ?? placement.value)
@@ -142,8 +150,15 @@ export function useLayer(options: UseLayerOptions): UseLayerReturn {
         left: `${toValue(options.x) ?? 0}px`,
       }
     }
-    const { top, left } = positioned?.position.value ?? { top: 0, left: 0 }
-    return { top: `${top}px`, left: `${left}px` }
+    const { top, left, maxHeight } = positioned?.position.value ?? { top: 0, left: 0, maxHeight: undefined }
+    const style: CSSProperties = { top: `${top}px`, left: `${left}px` }
+    // 内容比空地高：限高，只在真有溢出时才滚动，滚到头不带动页面。
+    if (maxHeight != null) {
+      style.maxHeight = `${maxHeight}px`
+      style.overflowY = 'auto'
+      style.overscrollBehavior = 'contain'
+    }
+    return style
   })
 
   const isMounted = computed(() => !toValue(options.lazyMount) || hasOpened.value)

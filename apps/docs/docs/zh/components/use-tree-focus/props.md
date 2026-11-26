@@ -65,7 +65,7 @@ footer: false
         <td><code>options.typeahead</code></td>
         <td><code>boolean</code></td>
         <td><code>true</code></td>
-        <td>是否启用 typeahead：敲一个可打印字符，跳到下一个文本以这些字符开头的节点。</td>
+        <td>是否启用 typeahead：敲一个可打印字符，跳到下一个文本以这些字符开头的节点。比对时不分大小写，也不看重音、带横线的字母（đ ł ø ħ ŧ ƀ）和土耳其语的 ı/İ。</td>
       </tr>
     </tbody>
   </table>

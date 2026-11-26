@@ -46,6 +46,8 @@ import '@astryx-vue/lab/lab.css'
 | [Comments](/lab/comments) | 评论面板：线程、动态事件，以及新评论输入框。 |
 | [CommentPin](/lab/comment-pin) | 头像优先的批注锚点：打开一条线程，或一组线程。 |
 | [CircularProgress](/lab/circular-progress) | 显示确定或不确定的圆环进度。 |
+| [CircleCheckIndicator](/lab/circle-check-indicator) | iOS 的多选圆圈，在主题里映射到 checkbox。 |
+| [DialogHeroHeader](/lab/dialog-hero-header) | 标题上方铺满媒体的对话框页头。 |
 | [DiffViewer](/lab/diff-viewer) | 展示单个文件的统一或分栏 diff。 |
 | [InfoTip](/lab/info-tip) | 为术语和指标提供补充解释。 |
 | [LineClamp](/lab/line-clamp) | 把任意内容截成固定行数，截断时用提示显示全文。 |

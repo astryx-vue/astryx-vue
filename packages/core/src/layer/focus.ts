@@ -22,7 +22,8 @@ export function focusElement(element: HTMLElement): boolean {
   catch {
     return false
   }
-  return document.activeElement === element
+  // 读元素自己的 document：iframe、画中画窗口里的元素，焦点记在那个窗口里。
+  return element.ownerDocument.activeElement === element
 }
 
 export function isFocusable(element: HTMLElement): boolean {

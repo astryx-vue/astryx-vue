@@ -63,3 +63,5 @@ const file = createDiffFile({
 ```
 
 `parseUnifiedDiff` 接受 `git diff`、`diff -u` 和单独的 hunk，读不出来时返回空数组，不会抛错。`createDiffFile` 用 Myers 行级 diff 从两段文本生成同一种 `DiffViewerFile`；`contextLines` 默认 3，可以用 `oldPath: null` 或 `newPath: null` 标记新增/删除文件。
+
+不超过 10,000 行的改动都会逐行比较，占用的内存只跟文本长度有关，不随改动量变大。再大的改动会在它的 hunk 上标 `isReplacedBlock`：旧行全部列为删除，新行全部列为新增。DiffViewer 把这些行折在一行「Large change: N lines」后面（N 是删除加新增的行数），旁边有 Show full diff 按钮。其余改动超过 2,000 行的文件一开始也这样折起来，因为每一行都要花渲染时间；读者展开后仍是逐行 diff。如果折叠会藏住带批注的行，就一开始展开，评审意见不会被藏起来。行是普通 DOM，没有虚拟滚动：特别大的文件请折叠或分段展示。

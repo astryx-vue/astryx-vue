@@ -28,12 +28,12 @@ export interface LightboxProps {
    */
   defaultIndex?: number
   /**
-   * Double-click, Enter, Space, `+`, and `-` zoom images. Arrow keys pan while zoomed.
+   * Double-click, Enter, Space, `+`, and `-` zoom images, and `0` returns to the fitted size. Arrow keys pan while zoomed.
    * @default false
    */
   hasZoom?: boolean
   /**
-   * Start video playback when a video item is shown.
+   * Start video playback when a video item is shown in an open viewer.
    * @default false
    */
   hasAutoPlay?: boolean

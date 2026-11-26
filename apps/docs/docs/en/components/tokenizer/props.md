@@ -25,7 +25,7 @@ footer: false
       <tr><td><code>maxEntries</code></td><td><code>number</code></td><td>—</td><td>Maximum number of tokens. The input becomes read-only at the limit.</td></tr>
       <tr><td><code>debounceMs</code></td><td><code>number</code></td><td><code>150</code></td><td>Wait after typing before searching.</td></tr>
       <tr><td><code>minQueryLength</code></td><td><code>number</code></td><td><code>1</code></td><td>Shortest query that gets searched, counted in visible characters. Below it nothing is searched and the menu stays closed — unless <code>hasCreate</code> is on, because a "Create …" row comes from the typed text and costs no search.</td></tr>
-      <tr><td><code>hasEntriesOnFocus</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Show results on focus before the user types.</td></tr>
+      <tr><td><code>hasEntriesOnFocus</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Show results on focus before the user types. After a pick from that list, the input keeps focus and the list stays open with the next choice active while another choice remains.</td></tr>
       <tr><td><code>showOnFocus</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Legacy name for <code>hasEntriesOnFocus</code>. Either one turns it on.</td></tr>
       <tr><td><code>hasAutoFocus</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Focus the input on mount.</td></tr>
       <tr><td><code>menuWidth</code></td><td><code>number</code></td><td>—</td><td>Requested dropdown width in pixels. Never narrower than the field, and clamped to the viewport.</td></tr>
@@ -39,10 +39,11 @@ footer: false
       <tr><td><code>disabledReason</code></td><td><code>string</code></td><td>—</td><td>Legacy name for <code>disabledMessage</code>.</td></tr>
       <tr><td><code>status</code></td><td><code>'default' | 'success' | 'warning' | 'error'</code></td><td><code>'default'</code></td><td>Status style.</td></tr>
       <tr><td><code>statusMessage</code></td><td><code>string</code></td><td>—</td><td>Status text under the field.</td></tr>
+      <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'attached'</code></td><td>Where the status message sits. <code>attached</code> draws a status icon at the end of the field with the message below; <code>detached</code> keeps only the message; with <code>tooltip</code> the icon is a focusable button that holds the message.</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>Input and token size.</td></tr>
       <tr><td><code>required</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Marks the field as required.</td></tr>
       <tr><td><code>optional</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows an optional indicator on the label.</td></tr>
-      <tr><td><code>name</code></td><td><code>string</code></td><td>—</td><td>Form field name. Each selected id is submitted once.</td></tr>
+      <tr><td><code>name</code></td><td><code>string</code></td><td>—</td><td>Form field name. Each selected id is submitted once. A disabled field submits nothing.</td></tr>
       <tr><td><code>width</code></td><td><code>number | string</code></td><td>—</td><td>Width of the whole field (number = pixels, string used as-is).</td></tr>
     </tbody>
   </table>

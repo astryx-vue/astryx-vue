@@ -11,7 +11,7 @@ import { useTableRowIndexNumberedRows } from '../../../../components/demos/use-t
 
 ## Usage
 
-Hook that returns a TablePlugin which prepends a right-aligned, monospaced row-number column. Numbering follows the rendered data order (reflecting the current sort / filter / pagination view) and starts at 1 by default. Astryx `renderCell` receives only the row item, so the plugin takes the rendered data array to derive each ordinal.
+Hook that returns a TablePlugin which prepends a right-aligned, monospaced row-number column. Numbering follows the rows the table renders (reflecting the current sort / filter / pagination view) and starts at 1 by default. Call it with no arguments to number rows from their rendered positions; pass `data` only when the numbers should follow another array.
 
 ```ts
 import { useTableRowIndex } from '@astryx-vue/core/Table'

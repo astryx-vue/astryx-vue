@@ -89,7 +89,7 @@ footer: false
         <td><code>onHide</code></td>
         <td><code>() =&gt; void</code></td>
         <td>—</td>
-        <td>Called when the popover is hidden. Use this to return focus to the trigger when needed.</td>
+        <td>Called when the popover is hidden. Focus returns on its own as the popover closes; focus another element here to send focus there instead.</td>
       </tr>
     </tbody>
   </table>
@@ -146,12 +146,12 @@ footer: false
       <tr>
         <td><code>surfaceProps</code></td>
         <td><code>ComputedRef&lt;Record&lt;string, unknown&gt;&gt;</code></td>
-        <td>Attributes for the content element: <code>id</code>, <code>role</code>, <code>aria-modal</code>, <code>aria-label</code>, <code>tabindex</code>.</td>
+        <td>Attributes for the content element: <code>id</code> and <code>tabindex</code>, plus <code>role</code>, <code>aria-modal</code> and <code>aria-label</code> while a dialog popover is open.</td>
       </tr>
       <tr>
         <td><code>triggerProps</code></td>
         <td><code>ComputedRef&lt;Record&lt;string, unknown&gt;&gt;</code></td>
-        <td>The ARIA attributes the hook writes onto <code>triggerRef</code>: <code>aria-haspopup</code>, <code>aria-expanded</code>, <code>aria-controls</code>.</td>
+        <td>The ARIA attributes the hook writes onto <code>triggerRef</code>: <code>aria-haspopup</code>, <code>aria-expanded</code>, and <code>aria-controls</code> while open.</td>
       </tr>
       <tr>
         <td><code>show</code></td>

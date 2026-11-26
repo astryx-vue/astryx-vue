@@ -4,6 +4,7 @@ import { computed, nextTick, onMounted, ref, useAttrs, useId, useSlots, useTempl
 import BottomSheet from '../BottomSheet/BottomSheet.vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
+import { useBusyAnnouncement } from '../composables/internal/busyAnnouncement.js'
 import { useAnnounce } from '../composables/useAnnounce.js'
 import { useCombobox } from '../composables/useCombobox.js'
 import { useDismiss } from '../composables/useDismiss.js'
@@ -95,6 +96,7 @@ const control = useFieldControlState({
   loading: () => props.isLoading,
 })
 const announce = useAnnounce()
+useBusyAnnouncement(() => control.isLoading.value, () => messages.value.selector.loading)
 const readOnlyId = computed(() => `${selectorId.value}-readonly`)
 const disabledMessageId = computed(() => `${selectorId.value}-disabled-message`)
 const disabledTooltipId = computed(() => `${selectorId.value}-disabled-tooltip`)
@@ -185,6 +187,8 @@ useDismiss({
   container: listboxRef,
   trigger: fieldRef,
   isEnabled: popoverOpen,
+  // 选项列表和弹出框一样：手指滑一下页面不关，只在外面轻点时关。
+  dismissOnOutsidePan: false,
   dismissOnEscape: 'close',
   onEscape: () => dismissSelectorEscape(listboxRef.value, () => combobox.close(), focusTrigger),
   onDismiss: () => combobox.close(),
@@ -383,7 +387,7 @@ onMounted(syncAnchorWidth)
           </template>
         </span>
       </button>
-      <Spinner v-if="control.isLoading.value" class="astryx-selector-spinner" size="sm" :aria-label="messages.selector.loading" />
+      <Spinner v-if="control.isLoading.value" class="astryx-selector-spinner" size="sm" aria-hidden="true" />
       <button
         v-if="hasClear && selectedOption && control.canActivate.value"
         type="button"

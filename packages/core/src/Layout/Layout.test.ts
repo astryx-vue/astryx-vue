@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
-import { h } from 'vue'
+import { defineComponent, h } from 'vue'
+import { provideLayoutContainer } from './context.js'
 import Layout from './Layout.vue'
 import LayoutContent from './LayoutContent.vue'
 import LayoutFooter from './LayoutFooter.vue'
@@ -113,5 +114,26 @@ describe('layout', () => {
     expect(wrapper.attributes('data-height')).toBe('fill')
     await wrapper.trigger('click')
     expect(onClick).toHaveBeenCalledOnce()
+  })
+
+  it('reflects the container a card or dialog names on its header, content and footer', () => {
+    const Host = defineComponent({
+      setup(_, { slots }) {
+        provideLayoutContainer('dialog')
+        return () => h('div', slots.default?.())
+      },
+    })
+    const wrapper = mount(Host, {
+      slots: {
+        default: () => h(Layout, null, {
+          header: () => h(LayoutHeader, null, () => 'Title'),
+          default: () => h(LayoutContent, null, () => 'Body'),
+          footer: () => h(LayoutFooter, null, () => 'Save'),
+        }),
+      },
+    })
+
+    for (const part of ['header', 'content', 'footer'])
+      expect(wrapper.get(`.astryx-layout-${part}`).attributes('data-container')).toBe('dialog')
   })
 })

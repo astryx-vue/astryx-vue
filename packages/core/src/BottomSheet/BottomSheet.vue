@@ -6,6 +6,7 @@ import { focusForLastInput } from '../composables/internal/focusReturn.js'
 import { useFocusTrap } from '../composables/useFocusTrap.js'
 import { useRestoreFocus } from '../composables/useRestoreFocus.js'
 import { useScrollLock } from '../composables/useScrollLock.js'
+import { createModalOutletHandle } from '../layer/modalOutlet.js'
 import { isImeKeyEvent } from '../utils/ime.js'
 import BottomSheetPanel from './BottomSheetPanel.vue'
 import { bottomSheetSwitcherKey } from './switcher.js'
@@ -118,6 +119,9 @@ function focusPanel(): void {
     element.focus({ preventScroll: true })
 }
 
+// 独立的模态抽屉打开期间充当全局 toast 的挂载点，toast 才不会被它盖住、点不到。
+const modalOutlet = createModalOutletHandle()
+
 function openSheet(): void {
   if (props.isInline || typeof document === 'undefined')
     return
@@ -128,6 +132,8 @@ function openSheet(): void {
   if (!dialogElement.open) {
     if (props.hasScrim) {
       dialogElement.showModal()
+      if (!hosted.value)
+        modalOutlet.attach(dialogElement)
     }
     else {
       dialogElement.show()
@@ -139,6 +145,7 @@ function openSheet(): void {
 }
 
 function closeSheet(): void {
+  modalOutlet.detach()
   dialog.value?.close()
   unlockScroll()
   isPresented.value = false
@@ -236,6 +243,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  modalOutlet.detach()
   if (props.sheetId != null)
     switcher?.unregister(props.sheetId)
   unlockScroll()

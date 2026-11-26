@@ -105,12 +105,18 @@ describe('lightbox gallery caption band', () => {
     expect(document.activeElement).toBe(wrapper.get(selector).element)
   })
 
-  it('keeps a single photo caption as one paragraph without a band', () => {
+  it('puts a single photo\'s caption on the band\'s backing, and draws no band without a caption', () => {
     const wrapper = mount(Lightbox, {
       props: { isOpen: true, media: media[0]! },
     })
-    expect(wrapper.find('.astryx-lightbox__caption-band').exists()).toBe(false)
+    expect(wrapper.find('.astryx-lightbox__caption-band .astryx-lightbox__caption-panel').exists()).toBe(true)
+    expect(wrapper.get('dialog').attributes('data-caption-band')).toBe('true')
+    expect(wrapper.find('.astryx-lightbox__counter').exists()).toBe(false)
     const caption = wrapper.get('.astryx-lightbox__caption')
     expect(wrapper.get('dialog').attributes('aria-describedby')).toBe(caption.attributes('id'))
+
+    const bare = mount(Lightbox, { props: { isOpen: true, media: media[1]! } })
+    expect(bare.find('.astryx-lightbox__caption-band').exists()).toBe(false)
+    expect(bare.get('dialog').attributes('data-caption-band')).toBeUndefined()
   })
 })

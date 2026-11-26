@@ -62,9 +62,11 @@ import { Popover } from '@astryx-vue/core/Popover'
 
 A popover has to communicate its presence, its current open state, and its content to people who use a screen reader or a keyboard. The component links the trigger to the surface automatically and manages focus as the surface opens and closes, so you only need to supply the accessible name.
 
-- The trigger receives `aria-haspopup`, `aria-expanded`, and `aria-controls`, so assistive technology knows it is a button that opens a surface and can announce whether that surface is currently expanded.
-- A `dialog` surface has `role="dialog"`; when `isModal` is set it also has `aria-modal="true"`, and the `label` serves as its accessible name.
-- Focus moves to the first focusable element inside the surface on open, and returns to the trigger when the user presses Escape or closes the surface.
+- The trigger receives `aria-haspopup` and `aria-expanded`, so assistive technology knows it is a button that opens a surface and can announce whether that surface is currently expanded. While the surface is open it also gets `aria-controls`; a closed trigger points at nothing.
+- An open `dialog` surface has `role="dialog"`; when `isModal` is set it also has `aria-modal="true"`, and the `label` serves as its accessible name. The closed surface stays in the DOM, hidden, without the dialog role or name.
+- A trigger with `aria-disabled="true"` stays focusable but opens nothing, even for a click dispatched on it.
+- On open, focus moves to the first enabled tab stop inside the surface: controls with `aria-disabled` are skipped, and in a roving group the member with `tabindex="0"` wins. With nothing to take it, the labelled surface does. Focus that is already on a control inside stays there.
+- On close, focus returns only when it is stuck inside the surface or on the page body. It goes to the element that opened the popover; if that is gone, to the trigger, the anchor, the tab stop that took the opener's place, a nearby ancestor, then `main`. It never lands on the body, and focus already outside the surface is left alone.
 - With `isModal` set, Tab focus stays inside the surface while it is open.
 - The built-in close button is visually hidden until it receives focus, so it appears once the keyboard reaches it.
 

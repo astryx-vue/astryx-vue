@@ -59,7 +59,7 @@ npm run astryx-vue -- component Button
 | `astryx-vue theme` | 全部内置主题，一行一个 |
 | `astryx-vue theme <名字>` | 一套主题的接入四步：样式、`data-astryx-theme`、切换与局部使用、验证 |
 | `astryx-vue upgrade` | 把项目里的 `@astryx-vue/core` 升上来要做什么，以及旧名字还出现在哪 |
-| `astryx-vue doctor` | 检查版本、主题样式有没有引、主题有没有设。只报告 |
+| `astryx-vue doctor` | 检查版本、主题样式有没有引、主题有没有设，以及按下后什么都不做的 core 按钮。只报告 |
 | `astryx-vue init` | 给 AI 助手的接入说明，外加 agent 文件里的受管理区块 |
 
 全局选项：

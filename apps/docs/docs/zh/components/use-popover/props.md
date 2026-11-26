@@ -89,7 +89,7 @@ footer: false
         <td><code>onHide</code></td>
         <td><code>() =&gt; void</code></td>
         <td>—</td>
-        <td>浮层隐藏后调用。需要时用它把焦点还给触发器。</td>
+        <td>浮层隐藏后调用。关闭时焦点会自己回到外面；想让焦点去别处，就在这里聚焦那个元素，不会被抢回来。</td>
       </tr>
     </tbody>
   </table>
@@ -146,12 +146,12 @@ footer: false
       <tr>
         <td><code>surfaceProps</code></td>
         <td><code>ComputedRef&lt;Record&lt;string, unknown&gt;&gt;</code></td>
-        <td>内容元素的属性：<code>id</code>、<code>role</code>、<code>aria-modal</code>、<code>aria-label</code>、<code>tabindex</code>。</td>
+        <td>内容元素的属性：<code>id</code>、<code>tabindex</code>；对话框浮层打开期间再加上 <code>role</code>、<code>aria-modal</code>、<code>aria-label</code>。</td>
       </tr>
       <tr>
         <td><code>triggerProps</code></td>
         <td><code>ComputedRef&lt;Record&lt;string, unknown&gt;&gt;</code></td>
-        <td>hook 自动写到 <code>triggerRef</code> 上的 ARIA 属性：<code>aria-haspopup</code>、<code>aria-expanded</code>、<code>aria-controls</code>。</td>
+        <td>hook 自动写到 <code>triggerRef</code> 上的 ARIA 属性：<code>aria-haspopup</code>、<code>aria-expanded</code>，打开期间还有 <code>aria-controls</code>。</td>
       </tr>
       <tr>
         <td><code>show</code></td>

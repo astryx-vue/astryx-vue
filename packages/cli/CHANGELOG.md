@@ -1,5 +1,73 @@
 # @astryx-vue/cli
 
+## 0.4.38
+
+### Patch Changes
+
+- [#543](https://github.com/astryx-vue/astryx-vue/pull/543) [`fe992ac`](https://github.com/astryx-vue/astryx-vue/commit/fe992ac67b9b112c3685be0b249ab42dfbb670fc) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - ComplexSelector 新增 `disabledMessage`（悬停、聚焦、点按触发器时弹出禁用原因，自定义触发器也能用），状态图标顶替箭头显示，`tooltip` 状态的说明收在能聚焦的图标按钮里，调用方的 `aria-label` / `aria-labelledby` 会给内置触发器命名，弹层在禁用前就开着时里面的提交不再改值，弹层内容的高度上限会扣掉 LayerProvider 为底栏留的空隙。
+
+- [#544](https://github.com/astryx-vue/astryx-vue/pull/544) [`d2849f1`](https://github.com/astryx-vue/astryx-vue/commit/d2849f15a3059c03dab71271bc64e5811fd766ec) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Tokenizer 和 Typeahead 新增 `statusVariant`（框内状态图标，`tooltip` 时是能聚焦的图标按钮）并暴露 `aria-invalid`、调用方的 `aria-labelledby` 接在字段标签后面，搜索结果数会念出全部匹配条数，Tokenizer 全部清除会播报一次、禁用时不再向表单交值、聚焦展开的清单里选一项后焦点和清单保留且下一项高亮、有标签时光标落在最后一个标签后面；MultiSelector 和 Selector 的忙碌图标不再对读屏暴露并只播报一次「加载中」，MultiSelector 的 `aria-labelledby` 接在字段标签后面、带搜索时必填标记挪到搜索框、自制触发器带 `aria-disabled` 且禁用时不再执行调用方的处理；选项列表打开时不再高亮禁用项、按字母跳转忽略重音、键盘滚动让行从静止的鼠标下冒出来时不抢高亮；强制颜色下可聚焦的禁用字段焦点边框取 Highlight，触屏上输入框焦点外观不再淡入。
+
+## 0.4.37
+
+### Patch Changes
+
+- [#541](https://github.com/astryx-vue/astryx-vue/pull/541) [`a059c14`](https://github.com/astryx-vue/astryx-vue/commit/a059c14bcde7d82367b5bf2f82e6e2b6d81d4b39) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Lightbox 修了一批看图时的问题：从右往左的页面里方向键朝按钮那一侧翻页；第一项还没到就打开的灯箱等它到了再打开；NaN 或小数下标显示最近的一项；`0` 回到适应大小；换页播报在打开的灯箱里也听得到；Tab 不再跑出灯箱；关闭或被移除时焦点回到打开者；关着时视频不自动播放，关闭时停下正在播的视频；单张照片的图注也坐在图注底色上；点照片旁边的空白会关闭；高度按手机实际露出的视口算，Safari 工具栏不再盖住图注。
+
+- [#542](https://github.com/astryx-vue/astryx-vue/pull/542) [`d74f8eb`](https://github.com/astryx-vue/astryx-vue/commit/d74f8eb77d168e27efbad72a49268dff795d3de5) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 浮层与提示的一批修正：Tooltip 在焦点到达时才判断它算不算触发焦点（漫游 tabindex 成员、可聚焦的包裹层都能用键盘打开，鼠标按下后脚本挪来的焦点不再打开提示），`isOpen` 为 false 时本该打开的焦点只发出 `openChange(true)`，禁用时收起已打开的提示；Popover 的高度跟随动态视口并避开刘海和主屏指示条，屏幕键盘弹出时锚定浮层落在键盘上方；触摸在浮层外按下后拖动不再关掉浮层；Dialog 与 Drawer 的遮罩不再模糊；InfoTip 在粗指针下的点击区域随邻居间距伸缩，补了「指标释义」和「权限说明」两个示例；LayoutContent 也带上 `data-container`，主题可以把对话框、卡片的正文和页眉页脚分开设计；新增 useLightbox 文档页。
+
+- [#541](https://github.com/astryx-vue/astryx-vue/pull/541) [`32ea195`](https://github.com/astryx-vue/astryx-vue/commit/32ea1954e3beea4936962d24d555582c8a859b9b) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Popover 和 Dialog 的焦点更稳：打开时焦点落在第一个可用的 Tab 停靠点（跳过 aria-disabled 控件，onShow 里自己放好的焦点不再被挪走）；关闭时只把困在里面的焦点送回打开者，打开者不在了就找它附近的停靠点，不再掉到 body，也不再抢走你在关闭回调里放好的焦点。关着的 Popover 不再带 dialog 角色和名称，关着的触发器不再写 aria-controls，aria-disabled 的触发器不会打开浮层。
+
+## 0.4.36
+
+### Patch Changes
+
+- [#539](https://github.com/astryx-vue/astryx-vue/pull/539) [`b74909f`](https://github.com/astryx-vue/astryx-vue/commit/b74909fc6e89b8cf365eb9ce41cda4178c69cc99) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Table 对齐上游一批无障碍和外观修正：列宽把手按列头可见文字命名、不再混进列头名字，并念出实际列宽和合理的范围；树形表格改用披露模式（行上不再带 `aria-level`、`aria-expanded`，展开按钮用 `aria-controls` 指向子行）；行展开和树形插件新增 `getRowLabel`，按钮名字可以带上行名；`useTableRowIndex` 的 `data` 改为可选；数据模式的列标题跟着 `textOverflow` 折行，窄列里标题先省略、排序和筛选按钮留在格子里；手写行列的表格放不下时横向滚动，不再把单词压成一个字母宽；固定列自己画行分隔线；行带上 `table-row` 主题目标的 `parity`、`striped`、`selected` 状态；滚动区和树形按钮画共用的焦点环，手机上横向能滚时藏着内容的一侧会淡出；Invalid Date 显示为空格子，排序时当缺失值。
+
+- [#540](https://github.com/astryx-vue/astryx-vue/pull/540) [`083cd85`](https://github.com/astryx-vue/astryx-vue/commit/083cd85c3e72ee76353719f81598895b13707072) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Table 新增 `useTableInfiniteScroll`：按批加载扁平数据，表格下方有「加载更多」按钮，表格末尾滚进视口时自动加载下一批，失败后暂停自动加载、按钮仍可重试；第一批加载中时表格不显示默认空状态。`TablePlugin` 新增 `loadingState` 钩子，导出 `TableLoadingState` 类型。同时补充 `useTableSortable`（不会重排行、`useTableSortableState` 参数说明）、`useTableFiltering`、`TableSelectionToolbar` 和 Table 的文档。
+
+## 0.4.35
+
+### Patch Changes
+
+- [#538](https://github.com/astryx-vue/astryx-vue/pull/538) [`d7a5a96`](https://github.com/astryx-vue/astryx-vue/commit/d7a5a96bbebc8a0a5977bc6dbb8c45c5a260130d) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `doctor` 新增 `button-actions` 检查：读项目自己 `.vue` 文件的模板，列出按下后什么都不做的 core `Button`、`IconButton`（没有 `@click`、`click-action`、`href` 或提交类型，处理函数是空的，或链接哪儿也不去），只在周围没有东西能接管按下时才判，只警告不让 doctor 失败。
+
+## 0.4.34
+
+### Patch Changes
+
+- [#537](https://github.com/astryx-vue/astryx-vue/pull/537) [`8bf1fd3`](https://github.com/astryx-vue/astryx-vue/commit/8bf1fd38a39473cdf74c9d7848f50fd4bbe07dcd) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `doctor` 在包没装好时给出修复命令：用项目自己的包管理器，缺 themes 时按项目 core 的版本装（core 钉死版本时加 `-E`），刚 clone 还没装依赖时让你运行项目自己的安装；用 core 的 `<Theme>` 或 `dataset.astryxTheme` 设主题也算设好了。`init` 逐个文件说明做了什么，区块已是最新时不重写文件、只打印 `build` 和 `search`，安装步骤只列还缺的包，写不了文件时说明原因和该改什么；内置的样式指南补上自己写样式时要守的几条。
+
+## 0.4.33
+
+### Patch Changes
+
+- [#532](https://github.com/astryx-vue/astryx-vue/pull/532) [`41a3277`](https://github.com/astryx-vue/astryx-vue/commit/41a32773b15cdbc36962d70c6bbb75c89394ac9e) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 实验包：CircularProgress 改为合成线程上转动的圆弧，页面忙时进度变化也不会卡住，不确定状态和加载圈一样转，所有变体共用浅色轨道、禁用时整圈半透明；Tour 的说明框改成非模态区域，可以指向任何元素，按目标或页面不再结束引导，Escape 报告 `escape`，结束后把焦点还回去；CodeEditor 在从右到左的页面里代码保持从左到右；Schedule 的加载提示改走共享播报通道。
+
+## 0.4.32
+
+### Patch Changes
+
+- [#534](https://github.com/astryx-vue/astryx-vue/pull/534) [`dc8015d`](https://github.com/astryx-vue/astryx-vue/commit/dc8015d7a86410799e01769fc2ee0aa4554dabbf) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - FileInput 一次挑了几个不合格的文件时，状态提示按当前语言列出每个文件和原因，不再只说第一个；InternationalizationProvider 漏写 `locale` 时，开发环境直接报错并给出改法。
+
+## 0.4.31
+
+### Patch Changes
+
+- [#533](https://github.com/astryx-vue/astryx-vue/pull/533) [`e869ec3`](https://github.com/astryx-vue/astryx-vue/commit/e869ec3cb4f87419d5f78ddcbf9d5fa1fda63f75) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 语言目录对齐到上游 v0.7.17：键盘按键名、文件大小、字段说明按钮、InfoTip、滑块、Tokenizer 溢出数等文案都能随加载的目录翻译；SideNav、TopNav 标题旁的菜单按钮名带上标题；Table 的排序按钮改用列标题命名，多列排序时用描述读出优先级；文件大小改为 KB、MB 保留一位小数。
+
+## 0.4.30
+
+### Patch Changes
+
+- [#531](https://github.com/astryx-vue/astryx-vue/pull/531) [`c4f306d`](https://github.com/astryx-vue/astryx-vue/commit/c4f306d4de9b02036f7fc7aae1e9188cd833f535) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 敲字母跳转（菜单、Selector、TreeList 等）不再区分重音和带横线的字母：敲 `a` 能跳到「Ánh」，敲 `d` 能跳到「Đào」；Windows 上用 AltGr 敲出的字母也能跳转。
+
+## 0.4.29
+
+### Patch Changes
+
+- [#530](https://github.com/astryx-vue/astryx-vue/pull/530) [`dc2208c`](https://github.com/astryx-vue/astryx-vue/commit/dc2208ceb9f15876579a64cbb1082e82c8a2a088) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 传 `--yes`、`-y`、`--non-interactive` 这类确认选项时，CLI 会说明所有命令都不会提问，并直接给出去掉该选项后的同一条命令；内置的使用原则文档改为「设置分组用 `Section`，不用 `Card`」。
+
 ## 0.4.28
 
 ### Patch Changes

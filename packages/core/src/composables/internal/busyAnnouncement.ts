@@ -68,13 +68,13 @@ function isOpenModal(dialog: HTMLDialogElement | null | undefined): dialog is HT
 /**
  * 每次进入忙碌播报一次 `message`，挂载时已经忙碌也算一次。
  *
- * `element` 是控件里的任意元素，用来找它所在的模态对话框。
+ * `element` 是控件里的任意元素，用来找它所在的模态对话框；不传时当场用公共播报区域念。
  * 路线在下一帧再选：同一轮里打开的对话框要等它自己的 `showModal()` 跑完。
  */
 export function useBusyAnnouncement(
   busy: MaybeRefOrGetter<boolean>,
   message: MaybeRefOrGetter<string>,
-  element: MaybeRefOrGetter<Element | null | undefined>,
+  element?: MaybeRefOrGetter<Element | null | undefined>,
 ): void {
   const announce = useAnnounce()
   let frame: number | null = null
@@ -86,7 +86,7 @@ export function useBusyAnnouncement(
   }
 
   function speak(): void {
-    const dialog = toValue(element)?.closest('dialog')
+    const dialog = element == null ? null : toValue(element)?.closest('dialog')
     if (isOpenModal(dialog))
       announceInModal(dialog, toValue(message))
     else
@@ -97,7 +97,7 @@ export function useBusyAnnouncement(
     cancel()
     if (!isBusy)
       return
-    if (typeof requestAnimationFrame !== 'function') {
+    if (element == null || typeof requestAnimationFrame !== 'function') {
       speak()
       return
     }

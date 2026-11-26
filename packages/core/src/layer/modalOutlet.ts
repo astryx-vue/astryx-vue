@@ -43,6 +43,33 @@ export function useActiveModalOutlet(): Readonly<Ref<HTMLDialogElement | null>> 
   return activeOutlet
 }
 
+/**
+ * 一个模态层「打开期间充当全局挂载点」的登记手柄。
+ * `attach` 登记并在它关闭（`close` 事件）时自动撤销，`detach` 手动撤销，重复调用无害。
+ */
+export function createModalOutletHandle(): { attach: (dialog: HTMLDialogElement) => void, detach: () => void } {
+  let current: HTMLDialogElement | null = null
+
+  function detach(): void {
+    if (current == null)
+      return
+    current.removeEventListener('close', detach)
+    removeModalOutlet(current)
+    current = null
+  }
+
+  function attach(dialog: HTMLDialogElement): void {
+    if (current === dialog)
+      return
+    detach()
+    current = dialog
+    dialog.addEventListener('close', detach)
+    addModalOutlet(dialog)
+  }
+
+  return { attach, detach }
+}
+
 /** 只给测试用：清空清单。 */
 export function resetModalOutletsForTests(): void {
   outlets.length = 0
