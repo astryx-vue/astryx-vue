@@ -43,7 +43,10 @@ const CodeBlockHeader = defineComponent({
   setup(props) {
     const editor = useLexicalEditor()
     const messages = useComponentMessages({ codeBlock: codeBlockMessages })
-    const { copy, isCopied } = useCopyToClipboard({ announce: messages.value.codeBlock.copied })
+    const { copy, isCopied, isFailed } = useCopyToClipboard({
+      announce: messages.value.codeBlock.copied,
+      announceFailure: () => messages.value.codeBlock.copyFailed,
+    })
 
     function copyCode(): void {
       const code = editor.getEditorState().read(() => $getNodeByKey(props.placement.key)?.getTextContent() ?? '')
@@ -52,15 +55,17 @@ const CodeBlockHeader = defineComponent({
 
     return (): VNodeChild => {
       const { placement } = props
-      const label = isCopied.value ? messages.value.codeBlock.copied : messages.value.codeBlock.copyCode
+      const label = isFailed.value
+        ? messages.value.codeBlock.copyFailed
+        : isCopied.value ? messages.value.codeBlock.copied : messages.value.codeBlock.copyCode
       const button = h(IconButton, {
         label,
         variant: 'ghost',
         size: 'sm',
-        tooltip: messages.value.codeBlock.copyCode,
+        tooltip: isFailed.value ? messages.value.codeBlock.copyFailed : messages.value.codeBlock.copyCode,
         class: 'astryx-richtext-code-header__copy',
         onClick: copyCode,
-      }, { default: () => h(Icon, { icon: isCopied.value ? 'check' : 'copy', size: 'sm', color: 'inherit' }) })
+      }, { default: () => h(Icon, { icon: isFailed.value ? 'close' : isCopied.value ? 'check' : 'copy', size: 'sm', color: 'inherit' }) })
 
       // 没写语言：只在右上角放一个复制按钮；写了语言：左边是语言名，右边是复制按钮。
       if (placement.language === null) {

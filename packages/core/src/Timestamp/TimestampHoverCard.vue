@@ -2,6 +2,7 @@
 import type { TimestampTooltipLine } from './tooltipEntries.js'
 import { computed, ref } from 'vue'
 import { writeClipboardText } from '../composables/internal/clipboardWrite.js'
+import { useAnnounce } from '../composables/useAnnounce.js'
 import HoverCard from '../HoverCard/HoverCard.vue'
 import ComponentIcon from '../Icon/ComponentIcon.vue'
 import IconButton from '../IconButton/IconButton.vue'
@@ -15,7 +16,9 @@ const props = defineProps<{
 }>()
 
 const messages = useComponentMessages({ timestamp: timestampMessages })
+const announce = useAnnounce()
 const copiedKey = ref<string>()
+const failedKey = ref<string>()
 let resetTimer: ReturnType<typeof setTimeout> | undefined
 
 const hasLabel = computed(() => props.lines.some(line => line.label != null && line.label !== ''))
@@ -31,18 +34,39 @@ const columns = computed(() => {
 })
 
 async function copy(value: string, key: string) {
+  clearTimeout(resetTimer)
   try {
     await writeClipboardText(value)
   }
   catch {
+    // 失败也要说：按钮换成叉，名字换成失败的话，并走更紧迫的播报，因为失败是错误。
+    copiedKey.value = undefined
+    failedKey.value = key
+    announce(messages.value.timestamp.copyFailed, 'assertive')
+    resetTimer = setTimeout(() => {
+      if (failedKey.value === key)
+        failedKey.value = undefined
+    }, 1500)
     return
   }
+  failedKey.value = undefined
   copiedKey.value = key
-  clearTimeout(resetTimer)
   resetTimer = setTimeout(() => {
     if (copiedKey.value === key)
       copiedKey.value = undefined
   }, 1500)
+}
+
+function copyLabel(line: TimestampTooltipLine, key: string): string {
+  if (failedKey.value === key)
+    return messages.value.timestamp.copyFailed
+  return copiedKey.value === key ? messages.value.timestamp.copied : messages.value.timestamp.copyValue(line.value)
+}
+
+function copyIcon(key: string): string {
+  if (failedKey.value === key)
+    return 'close'
+  return copiedKey.value === key ? 'check' : 'copy'
 }
 </script>
 
@@ -68,13 +92,13 @@ async function copy(value: string, key: string) {
               v-if="line.isCopyable"
               variant="ghost"
               size="sm"
-              :label="copiedKey === String(index) ? messages.timestamp.copied : messages.timestamp.copyValue(line.value)"
+              :label="copyLabel(line, String(index))"
               @click="copy(line.value, String(index))"
             >
               <ComponentIcon
                 icon-slot="timestamp-copy"
                 :state="{ copied: copiedKey === String(index) }"
-                :fallback="{ icon: copiedKey === String(index) ? 'check' : 'copy', size: 'sm' }"
+                :fallback="{ icon: copyIcon(String(index)), size: 'sm' }"
               />
             </IconButton>
           </div>

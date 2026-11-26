@@ -102,12 +102,7 @@ export const UNPORTED_KEYS = {
     'reorderCancelled',
   ], 'List 还没有 createReorderable 拖拽排序'),
   '@astryx.listInput.itemName': 'lab ListInput 还没改用 createReorderable，排序手柄和播报里的记录名由 listInput 自己的文案拼',
-  ...keys('@astryx.', [
-    'codeBlock.copyFailed',
-    'markdownHeadingLinks.copyFailed',
-    'timestamp.copyFailed',
-    'comments.linkCopyFailed',
-  ], '复制失败时显示并播报失败还没移植'),
+  '@astryx.markdownHeadingLinks.copyFailed': 'Markdown 标题没有复制链接按钮，复制失败的提示还没有用处',
   '@astryx.codeBlock.diffLabel': 'CodeBlock 显示 diff 时的「<语言> diff」标题还没移植',
   '@astryx.comments.errorAnnouncement': 'lab Comments 错误横幅通过共用播报通道读出还没移植',
   '@astryx.timestamp.relativeLabel': 'Timestamp 相对时间的无障碍名以显示的词开头还没移植',

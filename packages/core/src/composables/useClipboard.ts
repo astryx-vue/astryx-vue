@@ -1,5 +1,5 @@
-import type { Ref } from 'vue'
-import { onScopeDispose, ref } from 'vue'
+import type { MaybeRefOrGetter, Ref } from 'vue'
+import { onScopeDispose, ref, toValue } from 'vue'
 import { writeClipboardText } from './internal/clipboardWrite.js'
 import { useAnnounce } from './useAnnounce.js'
 
@@ -12,21 +12,29 @@ export interface UseClipboardOptions {
    */
   announce?: string
   /**
-   * `isCopied` 保持为 true 的毫秒数。
+   * `isCopied` 和 `isFailed` 保持为 true 的毫秒数。
    * @default 2000
    */
   resetAfterMs?: number
+  /**
+   * 复制失败后念给读屏的句子，走更紧迫的 assertive 播报，因为失败是错误。不传就不播报。
+   */
+  announceFailure?: MaybeRefOrGetter<string | undefined>
+  /** 剪贴板写入被拒绝时调用一次，参数是拒绝的原因。原因本身不会显示出来。 */
+  onError?: (error: unknown) => void
 }
 
 export interface UseClipboardReturn {
   /**
    * 把 `text` 写进剪贴板。成功时 `isCopied` 变为 true，并重新计时，返回 true。
    * 所在框架不允许异步 Clipboard API、或浏览器拒绝写入时，在这次点击或按键里改用浏览器的复制命令。
-   * 写入失败时状态不动，返回 false。
+   * 写入失败时 `isFailed` 变为 true 并重新计时，返回 false。
    */
   copy: (text: string) => Promise<boolean>
   /** 最近一次复制成功后的 `resetAfterMs` 内为 true。 */
   isCopied: Ref<boolean>
+  /** 最近一次复制失败后的 `resetAfterMs` 内为 true。下一次复制开始时清掉。 */
+  isFailed: Ref<boolean>
 }
 
 /**
@@ -40,6 +48,7 @@ export function useClipboard(options: UseClipboardOptions = {}): UseClipboardRet
   const announceMessage = options.announce
   const announce = useAnnounce()
   const isCopied = ref(false)
+  const isFailed = ref(false)
   let resetTimer: ReturnType<typeof setTimeout> | null = null
 
   function clearResetTimer(): void {
@@ -49,28 +58,40 @@ export function useClipboard(options: UseClipboardOptions = {}): UseClipboardRet
     }
   }
 
-  async function copy(text: string): Promise<boolean> {
-    try {
-      await writeClipboardText(text)
-    }
-    catch {
-      return false
-    }
-
-    isCopied.value = true
-    if (announceMessage)
-      announce(announceMessage)
-
+  function armReset(): void {
     clearResetTimer()
     resetTimer = setTimeout(() => {
       resetTimer = null
       isCopied.value = false
+      isFailed.value = false
     }, resetAfterMs)
+  }
+
+  async function copy(text: string): Promise<boolean> {
+    try {
+      await writeClipboardText(text)
+    }
+    catch (error) {
+      isCopied.value = false
+      isFailed.value = true
+      const failure = toValue(options.announceFailure)
+      if (failure)
+        announce(failure, 'assertive')
+      options.onError?.(error)
+      armReset()
+      return false
+    }
+
+    isFailed.value = false
+    isCopied.value = true
+    if (announceMessage)
+      announce(announceMessage)
+    armReset()
 
     return true
   }
 
   onScopeDispose(clearResetTimer)
 
-  return { copy, isCopied }
+  return { copy, isCopied, isFailed }
 }

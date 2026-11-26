@@ -44,7 +44,9 @@ const emit = defineEmits<{
 export interface ResolveAction { kind: 'resolve' | 'reopen', onClick: () => void }
 
 const messages = useComponentMessages({ comments: commentsMessages })
-const { copy: copyToClipboard, isCopied: isLinkCopied } = useClipboard()
+const { copy: copyToClipboard, isCopied: isLinkCopied, isFailed: isLinkFailed } = useClipboard({
+  announceFailure: () => messages.value.comments.linkCopyFailed,
+})
 const isLinkTooltipOpen = ref(false)
 const isPickerOpen = ref(false)
 const cluster = ref<HTMLElement | null>(null)
@@ -53,9 +55,11 @@ function setClusterRef(el: unknown): void {
   cluster.value = toElement(el)
 }
 const href = computed(() => `#${commentAnchorId(props.comment.id)}`)
-const linkLabel = computed(() =>
-  isLinkCopied.value ? messages.value.comments.linkCopied : messages.value.comments.copyLink,
-)
+const linkLabel = computed(() => {
+  if (isLinkFailed.value)
+    return messages.value.comments.linkCopyFailed
+  return isLinkCopied.value ? messages.value.comments.linkCopied : messages.value.comments.copyLink
+})
 const isLinkInMenu = computed(() => props.menuItems.length > 0)
 const resolveLabel = computed(() => messages.value.comments.resolve)
 const reopenLabel = computed(() => messages.value.comments.reopen)
@@ -188,7 +192,7 @@ const moreButton = computed(() => ({
       <Tooltip
         v-if="canCopyLink && !isLinkInMenu"
         :content="linkLabel"
-        :is-open="isLinkCopied || isLinkTooltipOpen"
+        :is-open="isLinkCopied || isLinkFailed || isLinkTooltipOpen"
         @open-change="isLinkTooltipOpen = $event"
       >
         <IconButton
@@ -197,9 +201,11 @@ const moreButton = computed(() => ({
           size="sm"
           data-comment-action="link"
           :data-link-copied="isLinkCopied ? 'true' : undefined"
+          :data-link-failed="isLinkFailed ? 'true' : undefined"
           @click="copyCommentLink"
         >
-          <Icon v-if="isLinkCopied" icon="check" color="secondary" />
+          <Icon v-if="isLinkFailed" icon="close" color="secondary" />
+          <Icon v-else-if="isLinkCopied" icon="check" color="secondary" />
           <CommentIcon v-else name="copyLink" />
         </IconButton>
       </Tooltip>

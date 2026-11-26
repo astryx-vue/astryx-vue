@@ -52,6 +52,7 @@ export const commentsUpstreamMap: UpstreamMapPart = {
   '@astryx.comments.historyTitle': [{ path: 'comments.historyTitle' }],
   '@astryx.comments.label': [{ path: 'comments.label' }],
   '@astryx.comments.linkCopied': [{ path: 'comments.linkCopied' }],
+  '@astryx.comments.linkCopyFailed': [{ path: 'comments.linkCopyFailed' }],
   '@astryx.comments.loadFailed': [{ path: 'comments.loadFailed' }],
   '@astryx.comments.loadOlder': [{ path: 'comments.loadOlder' }],
   '@astryx.comments.loading': [{ path: 'comments.loading' }],
