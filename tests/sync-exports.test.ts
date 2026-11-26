@@ -276,6 +276,9 @@ const expectedCatalog = [
   { slug: 'use-animated-layout', group: 'Utility', family: 'Utilities', en: 'useAnimatedLayout', zh: 'useAnimatedLayout' },
   { slug: 'use-pan-gesture', group: 'Utility', family: 'Utilities', en: 'usePanGesture', zh: 'usePanGesture' },
   { slug: 'use-drag-to-snap-points', group: 'Utility', family: 'Utilities', en: 'useDragToSnapPoints', zh: 'useDragToSnapPoints' },
+  { slug: 'use-speech-recognition', group: 'Utility', family: 'Utilities', en: 'useSpeechRecognition', zh: 'useSpeechRecognition' },
+  { slug: 'use-chat-dictation', group: 'Utility', family: 'Utilities', en: 'useChatDictation', zh: 'useChatDictation' },
+  { slug: 'use-chat-paste-as-token', group: 'Utility', family: 'Utilities', en: 'useChatPasteAsToken', zh: 'useChatPasteAsToken' },
 ]
 
 describe('component catalog meta', () => {
