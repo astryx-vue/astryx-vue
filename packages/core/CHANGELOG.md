@@ -1,5 +1,17 @@
 # @astryx-vue/core
 
+## 0.25.0
+
+### Minor Changes
+
+- [#591](https://github.com/astryx-vue/astryx-vue/pull/591) [`996b581`](https://github.com/astryx-vue/astryx-vue/commit/996b58189e8e9764c33a6ea450b906f27563d521) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `Selector` 和 `MultiSelector` 的 `presentation` 新增 `adaptive`；各组件的 `adaptive` 统一按主题的紧凑定义判断（粗略指针，并且视口宽度小于主题 `md` 断点、默认 768px，或高度小于 500px，所以横屏手机也会用底部弹层，正好 768px 宽的平板改用浮层），打开那一刻定下浮层还是底部弹层，开着时转屏不再中途换形态，退场播完才重新判断。
+
+### Patch Changes
+
+- [#592](https://github.com/astryx-vue/astryx-vue/pull/592) [`1cd234e`](https://github.com/astryx-vue/astryx-vue/commit/1cd234e37cf1b8adfbcb4bbb1fd8ed57e2953c9d) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Popover、Tooltip、HoverCard、ContextMenu、Selector、MultiSelector、Typeahead 的浮层进场改为从实际落在的那一侧滑进来、以朝向触发器的边为原点放大，滑动不超过和触发器之间的空隙（翻面后不再先压到触发器上，盖住触发器的 Selector 列表原地放大）；开启减少动效时，这些浮层和 Dialog 在触屏上改为 200ms 原地淡入，用鼠标时直接出现。
+
+- [#594](https://github.com/astryx-vue/astryx-vue/pull/594) [`9c99822`](https://github.com/astryx-vue/astryx-vue/commit/9c99822375b82404b48b2e93a01a5cbf666e78a5) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 主指针是手指时，Dialog、Drawer、MobileNav 进场动画播完之前不接手指和笔的点按（静止的鼠标照样能点，进场前按下的手指抬起时照常落到下面）；关闭中的 BottomSheet 不再一关就藏起仍有焦点的内容，改为只放行 Tab、焦点离开后才变成不可操作。
+
 ## 0.24.0
 
 ### Minor Changes
