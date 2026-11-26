@@ -66681,8 +66681,8 @@
         "zh": "把整个应用包起来，告诉里面的组件现在用哪种语言，顺便可以塞进更多翻译目录，或者针对某种语言改几个词。子树里的组件都按这份设置取文案。没有这个 provider 时，组件就用内置的英文。"
       },
       "usage": {
-        "en": "Wraps your app to set the active locale and (optionally) merge additional translation catalogs + per-locale overrides. Astryx components inside the subtree resolve their strings against this context. If no provider is present, components fall back to the shipped English defaults.\n\n```ts\nimport { InternationalizationProvider } from '@astryx-vue/core/InternationalizationProvider'\n```\n\n`messages` and `overrides` are both a map from a BCP 47 tag to a catalog keyed by the original `@astryx.*` message keys, so the same JSON shape works for a whole language and for a handful of keys. The two layers merge per key: a catalog replaces the shipped text for that locale, and the sparse overrides are laid on top. Overrides are keyed by locale, so a runtime locale swap picks up the right set.\n\n`dir` only sets the direction Astryx reads. It does not touch the DOM `dir` attribute: set that on `<html>` or a wrapping element yourself, and pass the same value to both. `getLocaleDirection(locale)` derives the value from a tag.\n\nNesting works: the inner provider wins for its subtree.",
-        "zh": "把整个应用包起来，告诉里面的组件现在用哪种语言，顺便可以塞进更多翻译目录，或者针对某种语言改几个词。子树里的组件都按这份设置取文案。没有这个 provider 时，组件就用内置的英文。\n\n```ts\nimport { InternationalizationProvider } from '@astryx-vue/core/InternationalizationProvider'\n```\n\n`messages` 和 `overrides` 都是「语言标签 → 目录」的映射，目录里的键就是原版那套 `@astryx.*`。也就是说，整门语言的 JSON 和只想改几个键的小对象是同一个写法。两层按同一个键合并：`messages` 里的目录替换这门语言的内置文案，`overrides` 再稀疏地盖在上面。覆盖是按语言存的，所以运行时换语言会自动用上对的那一份。\n\n`dir` 只决定 Astryx 组件读到的书写方向，不会去动 DOM 的 `dir` 属性。要自己给 `<html>` 或者外层元素设上 `dir`，并且两边写一样的值。`getLocaleDirection(locale)` 可以按语言标签算出这个值。\n\n可以嵌套：内层的 provider 管住自己那一段子树。"
+        "en": "Wraps your app to set the active locale and (optionally) merge additional translation catalogs + per-locale overrides. Astryx components inside the subtree resolve their strings against this context. If no provider is present, components fall back to the shipped English defaults.\n\n```ts\nimport { InternationalizationProvider } from '@astryx-vue/core/InternationalizationProvider'\n```\n\n`messages` and `overrides` are both a map from a BCP 47 tag to a catalog keyed by the original `@astryx.*` message keys, so the same JSON shape works for a whole language and for a handful of keys. The two layers merge per key: a catalog replaces the shipped text for that locale, and the sparse overrides are laid on top. Overrides are keyed by locale, so a runtime locale swap picks up the right set.\n\n`dir` only sets the direction Astryx reads. It does not touch the DOM `dir` attribute: set that on `<html>` or a wrapping element yourself, and pass the same value to both. `getLocaleDirection(locale)` derives the value from a tag.\n\nNesting works: the inner provider wins for its subtree.\n\nTo reword a string for one component, use that component's own prop, such as `placeholder` or `label`. `overrides` changes a string everywhere in the app; reach for it only when every instance should read the same way.",
+        "zh": "把整个应用包起来，告诉里面的组件现在用哪种语言，顺便可以塞进更多翻译目录，或者针对某种语言改几个词。子树里的组件都按这份设置取文案。没有这个 provider 时，组件就用内置的英文。\n\n```ts\nimport { InternationalizationProvider } from '@astryx-vue/core/InternationalizationProvider'\n```\n\n`messages` 和 `overrides` 都是「语言标签 → 目录」的映射，目录里的键就是原版那套 `@astryx.*`。也就是说，整门语言的 JSON 和只想改几个键的小对象是同一个写法。两层按同一个键合并：`messages` 里的目录替换这门语言的内置文案，`overrides` 再稀疏地盖在上面。覆盖是按语言存的，所以运行时换语言会自动用上对的那一份。\n\n`dir` 只决定 Astryx 组件读到的书写方向，不会去动 DOM 的 `dir` 属性。要自己给 `<html>` 或者外层元素设上 `dir`，并且两边写一样的值。`getLocaleDirection(locale)` 可以按语言标签算出这个值。\n\n可以嵌套：内层的 provider 管住自己那一段子树。\n\n只想改某一个组件的措辞时，用那个组件自己的属性，例如 `placeholder` 或 `label`。`overrides` 改的是整个应用里的这句话，只有每一处都该这么写时才用它。"
       },
       "practices": {
         "en": [
@@ -66854,11 +66854,19 @@
       "notes": {
         "en": [
           {
+            "heading": "Anatomy",
+            "text": "- Provider boundary: Required. A nonvisual context boundary that supplies locale, message catalogs, overrides, and direction to descendant Astryx components. It renders no DOM element."
+          },
+          {
             "heading": "Native attributes",
             "text": "The component renders no element of its own, so <code>class</code> and <code>style</code> are not forwarded."
           }
         ],
         "zh": [
+          {
+            "heading": "结构",
+            "text": "- Provider 边界: Provider 边界"
+          },
           {
             "heading": "建议",
             "text": "- Do: 目标语言有整份目录时，把整份目录交给 `messages`，形状和原版的 locale JSON 一致。\n- Do: 只有在原版还没出这门语言，或者你在试还没翻完的文案时，才自己写一份同形状的本地目录。\n- Do: 用真的 BCP 47 标签，例如 `fr-FR`、`pt-BR`、`ar-SA`。带地区的标签会先退回它的基础语言，最后才退回英文。\n- Do: 自己给 ``（或外层元素）设 `dir`，provider 不会帮你设。用 `getLocaleDirection(locale)` 算出这个值，provider 和 DOM 两边写一样的。\n- Don't: 不要把自定义目录强转成 `any`；`ProviderMessagesByLocale` 和 `ProviderOverrides` 就是给本地目录用的类型。"
@@ -66872,12 +66880,34 @@
       "examples": [
         {
           "title": {
-            "en": "InternationalizationProvider — Overrides",
-            "zh": "InternationalizationProvider — Overrides"
+            "en": "Load a shipped Astryx locale catalog",
+            "zh": "载入内置的 Astryx 语言目录"
           },
           "description": {
-            "en": "Override a small number of Astryx strings without providing a full locale catalog.",
-            "zh": "不提供整份语言目录，只替换少数几句 Astryx 文案。"
+            "en": "Pass a vendored locale JSON from @astryx-vue/core/locales to messages, keyed by its tag.",
+            "zh": "把 @astryx-vue/core/locales 里的语言 JSON 按语言标签交给 messages。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { InternationalizationProvider } from '@astryx-vue/core/InternationalizationProvider'\nimport frFR from '@astryx-vue/core/locales/fr-FR.json'\nimport { Selector } from '@astryx-vue/core/Selector'\nimport { ref } from 'vue'\n\nconst selected = ref<string | null>(null)\n\nconst options = [\n  { value: 'americas', label: 'Amériques' },\n  { value: 'emea', label: 'EMEA' },\n  { value: 'apac', label: 'APAC' },\n]\n</script>\n\n<template>\n  <div class=\"internationalization-provider-preview\">\n    <InternationalizationProvider locale=\"fr-FR\" :messages=\"{ 'fr-FR': frFR }\">\n      <Selector\n        v-model=\"selected\"\n        label=\"Région de facturation\"\n        :options=\"options\"\n        :width=\"240\"\n        has-clear\n      />\n    </InternationalizationProvider>\n  </div>\n</template>"
+        },
+        {
+          "title": {
+            "en": "Mirror the layout for right-to-left text",
+            "zh": "为从右往左的文字镜像布局"
+          },
+          "description": {
+            "en": "Pass the same direction to the provider and to the element that holds the content, so Astryx components and the page mirror together.",
+            "zh": "provider 和装内容的元素写同一个方向，Astryx 组件和页面一起镜像。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { getLocaleDirection, InternationalizationProvider } from '@astryx-vue/core/InternationalizationProvider'\nimport { Pagination } from '@astryx-vue/core/Pagination'\nimport { ref } from 'vue'\n\nconst locale = 'ar-SA'\nconst dir = getLocaleDirection(locale)\nconst page = ref(2)\n</script>\n\n<template>\n  <div class=\"internationalization-provider-preview\">\n    <InternationalizationProvider :locale=\"locale\" :dir=\"dir\">\n      <div :dir=\"dir\">\n        <Pagination v-model:page=\"page\" :page-size=\"10\" :total=\"50\" />\n      </div>\n    </InternationalizationProvider>\n  </div>\n</template>"
+        },
+        {
+          "title": {
+            "en": "Change one Astryx string across your app",
+            "zh": "在整个应用里改一句 Astryx 文案"
+          },
+          "description": {
+            "en": "Override a small number of Astryx strings everywhere in the app without providing a full locale catalog.",
+            "zh": "不提供整份语言目录，在整个应用里替换少数几句 Astryx 文案。"
           },
           "code": "<script setup lang=\"ts\">\nimport { InternationalizationProvider } from '@astryx-vue/core/InternationalizationProvider'\nimport { Selector } from '@astryx-vue/core/Selector'\nimport { ref } from 'vue'\n\nconst selected = ref<string | null>(null)\n\nconst options = [\n  { value: 'americas', label: 'Americas' },\n  { value: 'emea', label: 'EMEA' },\n  { value: 'apac', label: 'APAC' },\n]\n\n// Only the Selector placeholder changes; every other string stays the built-in English.\nconst overrides = {\n  en: {\n    '@astryx.selector.placeholder': 'Choose...',\n  },\n}\n</script>\n\n<template>\n  <div class=\"internationalization-provider-preview\">\n    <InternationalizationProvider locale=\"en\" :overrides=\"overrides\">\n      <Selector\n        v-model=\"selected\"\n        label=\"Billing region\"\n        :options=\"options\"\n        :width=\"240\"\n        has-clear\n      />\n    </InternationalizationProvider>\n  </div>\n</template>"
         }
@@ -81570,6 +81600,104 @@
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/components/use-snap-paging",
         "zh": "https://astryx-vue.pages.dev/components/use-snap-paging"
+      }
+    },
+    {
+      "slug": "use-locale-direction",
+      "name": "UseLocaleDirection",
+      "package": "@astryx-vue/core",
+      "kind": "composable",
+      "title": {
+        "en": "useLocaleDirection",
+        "zh": "useLocaleDirection"
+      },
+      "group": "Utility",
+      "groupTitle": {
+        "en": "Utility",
+        "zh": "工具"
+      },
+      "importPath": null,
+      "exportName": null,
+      "summary": {
+        "en": "Reads the current text direction from the nearest `InternationalizationProvider`. Reach for it as a last resort, when script needs the direction, such as canvas drawing that cannot use CSS logical properties. In order of preference, favor CSS logical properties (`margin-inline`, `inset-inline`), mirrored styles for directional icons, and DOM reads for keyboard or gesture logic.",
+        "zh": "读出最近的 `InternationalizationProvider` 定下的书写方向。这是最后的手段：只有脚本里非知道方向不可时才用，比如在 canvas 上画图，用不了 CSS 逻辑属性。优先顺序是：CSS 逻辑属性（`margin-inline`、`inset-inline`），方向图标的镜像样式，键盘或手势逻辑里直接读 DOM。"
+      },
+      "usage": {
+        "en": "Reads the current text direction from the nearest `InternationalizationProvider`. Reach for it as a last resort, when script needs the direction, such as canvas drawing that cannot use CSS logical properties. In order of preference, favor CSS logical properties (`margin-inline`, `inset-inline`), mirrored styles for directional icons, and DOM reads for keyboard or gesture logic.\n\n```ts\nimport { useLocaleDirection } from '@astryx-vue/core/InternationalizationProvider'\n```\n\n```ts\nconst direction = useLocaleDirection()\n\nfunction drawSparkline(context: CanvasRenderingContext2D, values: number[], width: number) {\n  const step = width / (values.length - 1)\n  values.forEach((value, index) => {\n    // The time axis starts on the inline-start edge: the right side in a right-to-left locale.\n    const x = direction.value === 'rtl' ? width - index * step : index * step\n    context.lineTo(x, value)\n  })\n  context.stroke()\n}\n```",
+        "zh": "读出最近的 `InternationalizationProvider` 定下的书写方向。这是最后的手段：只有脚本里非知道方向不可时才用，比如在 canvas 上画图，用不了 CSS 逻辑属性。优先顺序是：CSS 逻辑属性（`margin-inline`、`inset-inline`），方向图标的镜像样式，键盘或手势逻辑里直接读 DOM。\n\n```ts\nimport { useLocaleDirection } from '@astryx-vue/core/InternationalizationProvider'\n```\n\n```ts\nconst direction = useLocaleDirection()\n\nfunction drawSparkline(context: CanvasRenderingContext2D, values: number[], width: number) {\n  const step = width / (values.length - 1)\n  values.forEach((value, index) => {\n    // The time axis starts on the inline-start edge: the right side in a right-to-left locale.\n    const x = direction.value === 'rtl' ? width - index * step : index * step\n    context.lineTo(x, value)\n  })\n  context.stroke()\n}\n```"
+      },
+      "practices": {
+        "en": [
+          {
+            "guidance": "Do",
+            "text": "Prefer CSS logical properties and directional CSS mirroring before using `useLocaleDirection`."
+          },
+          {
+            "guidance": "Do",
+            "text": "Use it when drawing on a canvas or calculating non-CSS layout coordinates where the start edge depends on text direction."
+          },
+          {
+            "guidance": "Don't",
+            "text": "Use it to swap margins, paddings, or inline alignment that CSS logical properties already handle."
+          }
+        ],
+        "zh": []
+      },
+      "props": {
+        "en": [
+          {
+            "heading": "Returns",
+            "rows": [
+              {
+                "name": "`direction`",
+                "type": "`ComputedRef<'ltr' | 'rtl'>`",
+                "description": "The text direction of the nearest provider: its `dir`, else derived from its locale. Outside a provider it is derived from the default locale, so it is `'ltr'`."
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "返回值",
+            "rows": [
+              {
+                "name": "`direction`",
+                "type": "`ComputedRef<'ltr' | 'rtl'>`",
+                "description": "最近的 provider 的书写方向：有 `dir` 用它，否则按它的语言推导。没有 provider 时按默认语言推导，是 `'ltr'`。"
+              }
+            ]
+          }
+        ]
+      },
+      "slots": {
+        "en": [],
+        "zh": []
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [],
+        "zh": [
+          {
+            "heading": "建议",
+            "text": "- 推荐: 先用 CSS 逻辑属性和方向镜像样式，实在不行再用 `useLocaleDirection`。\n- 推荐: 在 canvas 上画图，或者计算起点随书写方向变化的非 CSS 坐标时使用。\n- 避免: 用它来切换 CSS 逻辑属性本来就能处理的外边距、内边距或行内对齐。"
+          }
+        ]
+      },
+      "examples": [],
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/use-locale-direction",
+        "zh": "https://astryx-vue.pages.dev/components/use-locale-direction"
       }
     }
   ],
