@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { RadioEmits, RadioProps, RadioSlots } from './types.js'
-import { computed, useAttrs, useId, useSlots } from 'vue'
+import { computed, useAttrs, useId, useSlots, useTemplateRef } from 'vue'
+import { useTouchHitArea } from '../composables/internal/useTouchHitArea.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { useIndicator } from '../Indicator/useIndicator.js'
 import { readLayerScoped } from '../layer/scopedProvide.js'
@@ -25,6 +26,9 @@ const groupMessage = computed(() => context?.disabledMessage.value)
 const explainedByMessage = computed(() => isDisabled.value && groupMessage.value != null)
 const messageDescriptionId = computed(() => explainedByMessage.value ? context?.disabledMessageId.value : undefined)
 const RadioMark = useIndicator('radio')
+// 粗指针下整行朝 44px 长出一圈看不见的热区，行自己的大小不变。
+const row = useTemplateRef<HTMLElement>('row')
+useTouchHitArea(row, () => !isDisabled.value)
 const indicatorSize = computed(() => context?.size?.value)
 
 function change(event: Event): void {
@@ -55,7 +59,7 @@ function rowClick(event: MouseEvent): void {
 
 <template>
   <!-- eslint-disable-next-line vue-a11y/click-events-have-key-events, vue-a11y/no-static-element-interactions -- 标签包住整行。点到链接时取消标签的默认选中，键盘仍由单选框处理。 -->
-  <label :for="inputId" class="astryx-radio" :class="{ 'astryx-indicator-scope': !isDisabled }" v-bind="isDisabled ? undefined : press.pressableProps" :data-size="indicatorSize" :data-disabled="isDisabled || undefined" :data-readonly="isReadOnly || undefined" @click="rowClick">
+  <label ref="row" :for="inputId" class="astryx-radio" :class="{ 'astryx-indicator-scope': !isDisabled, 'astryx-touch-hit-area-band': !isDisabled }" v-bind="isDisabled ? undefined : press.pressableProps" :data-size="indicatorSize" :data-disabled="isDisabled || undefined" :data-readonly="isReadOnly || undefined" @click="rowClick">
     <input
       :id="inputId" class="astryx-radio-native" type="radio" :name="name" :value="value"
       :checked="isSelected" :disabled="isDisabled && !explainedByMessage" :readonly="isReadOnly"

@@ -4,6 +4,7 @@ import type { CheckboxInputEmits, CheckboxInputProps, CheckboxInputSlots, Checkb
 import { computed, nextTick, onBeforeUnmount, onMounted, onUpdated, useAttrs, useId, useTemplateRef } from 'vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
+import { useTouchHitArea } from '../composables/internal/useTouchHitArea.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import FieldLabel from '../Field/FieldLabel.vue'
 import FieldStatus from '../Field/FieldStatus.vue'
@@ -37,6 +38,26 @@ const blocked = computed(() => props.isDisabled || props.isReadOnly || busy.valu
 const state = computed(() => action.value.value === 'indeterminate' ? 'indeterminate' : action.value.value ? 'checked' : 'unchecked')
 const CheckboxMark = useIndicator('checkbox')
 const press = usePressFeedback({ hasOverlay: false })
+// 有标签的复选框，粗指针下整行朝 44px 长出一圈看不见的热区，行自己的大小不变。
+// 标签隐藏的复选框是别的组件那一行里的标记，目标由那一行负责。
+const row = useTemplateRef<HTMLElement>('row')
+const hasHitArea = computed(() => !props.isLabelHidden && !props.isDisabled && !props.isReadOnly)
+useTouchHitArea(row, hasHitArea)
+/** 按下落在行自己（不是里面的控件）上时，这次按下的位置。 */
+let rowPress: { x: number, y: number } | null = null
+function rowPointerDown(event: PointerEvent): void {
+  rowPress = event.target === event.currentTarget ? { x: event.clientX, y: event.clientY } : null
+}
+/** 起点在热区（行盒子之外）的点按，和点在复选框上一样切换它；代码发出的点击（detail 为 0）不算。 */
+function rowClick(event: MouseEvent): void {
+  const start = rowPress
+  rowPress = null
+  if (start == null || event.detail === 0 || event.target !== event.currentTarget)
+    return
+  const box = (event.currentTarget as HTMLElement).getBoundingClientRect()
+  if (start.x < box.left || start.x > box.right || start.y < box.top || start.y > box.bottom)
+    input.value?.click()
+}
 const widthStyle = computed<CSSProperties>(() => ({ width: typeof props.width === 'number' ? `${props.width}px` : props.width }))
 const element = computed(() => input.value ?? null)
 function focus(options?: FocusOptions): void {
@@ -101,7 +122,8 @@ onBeforeUnmount(() => ownerDocument?.removeEventListener('reset', reset, true))
 
 <template>
   <div class="astryx-checkbox-input" :class="attrs.class" :style="[widthStyle, attrs.style as CSSProperties]" :data-size="size" :data-status="status?.type" :data-blocked="blocked || undefined">
-    <div class="astryx-checkbox-row" :class="{ 'astryx-indicator-scope': !blocked }" v-bind="blocked ? undefined : press.pressableProps" @pointerenter="tooltip.onPointerEnter" @pointerleave="tooltip.onPointerLeave">
+    <!-- eslint-disable-next-line vue-a11y/click-events-have-key-events, vue-a11y/no-static-element-interactions -- 点击只用来把热区上的点按交给里面的复选框，键盘由复选框自己处理。 -->
+    <div ref="row" class="astryx-checkbox-row" :class="{ 'astryx-indicator-scope': !blocked, 'astryx-touch-hit-area-band': hasHitArea }" v-bind="blocked ? undefined : press.pressableProps" @pointerenter="tooltip.onPointerEnter" @pointerleave="tooltip.onPointerLeave" @pointerdown="hasHitArea ? rowPointerDown($event) : undefined" @click="hasHitArea ? rowClick($event) : undefined">
       <span class="astryx-checkbox-control">
         <input
           v-bind="inputAttrs()" :id="inputId" ref="input" class="astryx-checkbox-native" type="checkbox"

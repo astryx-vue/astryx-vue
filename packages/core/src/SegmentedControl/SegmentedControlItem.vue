@@ -3,6 +3,7 @@ import type { SegmentedControlItemProps, SegmentedControlItemSlots, SegmentedCon
 import { computed, useAttrs, useTemplateRef } from 'vue'
 import { invokeNativeEventHandler } from '../Button/eventHandlers.js'
 import { hasSlotContent } from '../composables/internal/slotContent.js'
+import { useTouchHitArea } from '../composables/internal/useTouchHitArea.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { readLayerScoped } from '../layer/scopedProvide.js'
 import { segmentedControlContextKey } from './context.js'
@@ -72,7 +73,10 @@ const forwardedAttrs = computed(() => Object.fromEntries(
   Object.entries(attrs).filter(([key]) => !controlledAttrs.has(key)),
 ))
 
-const rootClass = computed(() => ['astryx-segmented-control-item', attrs.class])
+// 粗指针下每个可用的分段朝 44px 长出一圈看不见的热区，停在和邻居间距的一半，分段自己的盒子不变。
+useTouchHitArea(element, () => !isDisabled.value)
+
+const rootClass = computed(() => ['astryx-segmented-control-item', { 'astryx-touch-hit-area': !isDisabled.value }, attrs.class])
 </script>
 
 <template>

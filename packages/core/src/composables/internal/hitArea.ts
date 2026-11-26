@@ -217,3 +217,66 @@ export function plainRect(element: Element): HitRect {
   const { left, top, right, bottom } = element.getBoundingClientRect()
   return { left, top, right, bottom }
 }
+
+/** 变换没有缩放过的盒子。 */
+const UNSCALED: Scale = { x: 1, y: 1 }
+
+export interface Scale {
+  readonly x: number
+  readonly y: number
+}
+
+/** 一条轴上盒子在屏幕上的缩放：屏幕尺寸除以布局尺寸。 */
+function axisScale(onScreen: number, layout: number): number {
+  if (!(layout > 0) || !(onScreen > 0))
+    return 1
+  const scale = onScreen / layout
+  // 和 1 只差舍入误差时就是布局大小，不改动矩形。
+  return Math.abs(scale - 1) < 1e-3 ? 1 : scale
+}
+
+/**
+ * 包着 `element` 的变换把它的盒子在屏幕上缩放了多少。从小比例展开的层会缩放里面的每个矩形，
+ * 而布局盒保持层最终的大小。只预期缩放：旋转或倾斜的盒子会被读成更大的缩放。
+ */
+export function screenScale(element: Element, onScreen: HitRect): Scale {
+  // offset 尺寸是整像素的布局尺寸，不受变换影响，也不用解析样式；没有它的盒子
+  // （SVG 元素、没有布局的环境）按没缩放算。
+  const box = element as Partial<HTMLElement>
+  const offsetWidth = box.offsetWidth ?? 0
+  const offsetHeight = box.offsetHeight ?? 0
+  if (offsetWidth === 0 || offsetHeight === 0)
+    return UNSCALED
+  // 和布局尺寸差不到一像素就当没缩放，热区误差不超过一像素；只有被变换缩放过的盒子才读样式取精确尺寸。
+  if (
+    Math.abs(onScreen.right - onScreen.left - offsetWidth) <= 1
+    && Math.abs(onScreen.bottom - onScreen.top - offsetHeight) <= 1
+  ) {
+    return UNSCALED
+  }
+  const style = element.ownerDocument.defaultView?.getComputedStyle(element)
+  if (style == null || !style.width.endsWith('px'))
+    return UNSCALED
+  const px = (value: string): number => Number.parseFloat(value) || 0
+  const isContentBox = style.boxSizing !== 'border-box'
+  const width = px(style.width)
+    + (isContentBox ? px(style.paddingLeft) + px(style.paddingRight) + px(style.borderLeftWidth) + px(style.borderRightWidth) : 0)
+  const height = px(style.height)
+    + (isContentBox ? px(style.paddingTop) + px(style.paddingBottom) + px(style.borderTopWidth) + px(style.borderBottomWidth) : 0)
+  return {
+    x: axisScale(onScreen.right - onScreen.left, width),
+    y: axisScale(onScreen.bottom - onScreen.top, height),
+  }
+}
+
+/** `rect` 换算到以 `origin` 为原点的那个盒子的布局像素：到 `origin` 的偏移除以盒子的屏幕缩放。 */
+export function inLayout(rect: HitRect, origin: HitRect, scale: Scale): HitRect {
+  if (scale.x === 1 && scale.y === 1)
+    return rect
+  return {
+    left: origin.left + (rect.left - origin.left) / scale.x,
+    top: origin.top + (rect.top - origin.top) / scale.y,
+    right: origin.left + (rect.right - origin.left) / scale.x,
+    bottom: origin.top + (rect.bottom - origin.top) / scale.y,
+  }
+}
