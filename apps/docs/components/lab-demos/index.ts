@@ -41,6 +41,8 @@ import logStreamOverviewDemo from './log-stream-overview.vue'
 import logStreamOverviewSource from './log-stream-overview.vue?raw&highlighted'
 import logStreamDemo from './log-stream.vue'
 import logStreamSource from './log-stream.vue?raw&highlighted'
+import mediaPlayerDemo from './media-player.vue'
+import mediaPlayerSource from './media-player.vue?raw&highlighted'
 import mobileTokenizerOverviewDemo from './mobile-tokenizer-overview.vue'
 import mobileTokenizerOverviewSource from './mobile-tokenizer-overview.vue?raw&highlighted'
 import mobileTokenizerDemo from './mobile-tokenizer.vue'
@@ -83,6 +85,7 @@ export const labLineClamp = defineDemo(lineClampDemo, lineClampSource, options)
 export const labListInput = defineDemo(listInputDemo, listInputSource, options)
 export const labLogStream = defineDemo(logStreamDemo, logStreamSource, options)
 export const labLogStreamOverview = defineDemo(logStreamOverviewDemo, logStreamOverviewSource, options)
+export const labMediaPlayer = defineDemo(mediaPlayerDemo, mediaPlayerSource, options)
 export const labMobileTokenizer = defineDemo(mobileTokenizerDemo, mobileTokenizerSource, options)
 export const labMobileTokenizerOverview = defineDemo(mobileTokenizerOverviewDemo, mobileTokenizerOverviewSource, options)
 export const labSchedule = defineDemo(scheduleDemo, scheduleSource, options)

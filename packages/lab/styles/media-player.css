@@ -1,0 +1,272 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-media-player {
+    position: relative;
+    min-width: 0;
+  }
+
+  .astryx-media-player:focus-visible {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, currentcolor);
+    outline-offset: var(--astryx-focus-outline-offset, 2px);
+  }
+
+  .astryx-media-player--idle {
+    cursor: none;
+  }
+
+  .astryx-media-player-element[data-kind='video'] {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background-color: var(--astryx-color-background-inverted, #171717);
+  }
+
+  /* 按钮旁边展开滑块的一组。条件和容器揭示一致：悬停、焦点在里面、粗指针。 */
+  .astryx-media-reveal {
+    display: grid;
+    align-items: center;
+    /* 在一行里让时间轴让出空间，展开的滑块不会被截掉。 */
+    flex-shrink: 0;
+    transition: grid-template-columns var(--astryx-duration-fast, 150ms) var(--astryx-ease-standard, ease);
+  }
+
+  .astryx-media-reveal[data-placement='none'] {
+    grid-template-columns: auto;
+  }
+
+  /* 滑块在按钮前面打开：列宽变化时靠右，按钮停在指针下不动。 */
+  .astryx-media-reveal[data-placement='start'] {
+    justify-content: end;
+    grid-template-columns: 0fr auto;
+  }
+
+  .astryx-media-reveal[data-placement='end'] {
+    justify-content: start;
+    grid-template-columns: auto 0fr;
+  }
+
+  .astryx-media-reveal[data-placement='start']:focus-within {
+    grid-template-columns: 1fr auto;
+  }
+
+  .astryx-media-reveal[data-placement='end']:focus-within {
+    grid-template-columns: auto 1fr;
+  }
+
+  @media (hover: hover) {
+    .astryx-media-reveal[data-placement='start']:hover:where(:not(:disabled, [aria-disabled='true'])) {
+      grid-template-columns: 1fr auto;
+    }
+
+    .astryx-media-reveal[data-placement='end']:hover:where(:not(:disabled, [aria-disabled='true'])) {
+      grid-template-columns: auto 1fr;
+    }
+  }
+
+  @media (pointer: coarse) {
+    .astryx-media-reveal[data-placement='start'] {
+      grid-template-columns: 1fr auto;
+    }
+
+    .astryx-media-reveal[data-placement='end'] {
+      grid-template-columns: auto 1fr;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-media-reveal {
+      transition-duration: 0s;
+    }
+  }
+
+  .astryx-media-reveal__slot {
+    display: block;
+    min-width: 0;
+    overflow: clip;
+    overflow-clip-margin: var(--astryx-spacing-1, 4px);
+  }
+
+  /* 窄播放器只留按钮，不展开滑块。 */
+  @container (max-width: 480px) {
+    .astryx-media-reveal__slot {
+      display: none;
+    }
+  }
+
+  /* 间距放在展开的那一列里面，跟滑块一起收起。 */
+  .astryx-media-reveal[data-placement='start'] .astryx-media-reveal__slot > .astryx-slider {
+    padding-inline-end: var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-media-reveal[data-placement='end'] .astryx-media-reveal__slot > .astryx-slider {
+    padding-inline-start: var(--astryx-spacing-2, 8px);
+  }
+
+  /* 放得下最宽的速度，比如「1.75×」，换速度时宽度不变。 */
+  .astryx-media-playback-rate-button {
+    min-width: calc(4.5ch + var(--astryx-spacing-3, 12px) * 2);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .astryx-media-time {
+    flex-shrink: 0;
+    color: var(--astryx-color-text-primary, #171717);
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    font-variant-numeric: tabular-nums;
+    line-height: var(--astryx-text-supporting-leading, 1.3333);
+    white-space: nowrap;
+  }
+
+  .astryx-media-timeline {
+    position: relative;
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  /* 画出来的时间轴在滑块下面。滑块管交互和焦点框，这一层画轨道、缓冲、章节、已播放、标记和滑块圆点。 */
+  .astryx-media-timeline__layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .astryx-media-timeline__layer[data-disabled] {
+    opacity: 0.5;
+  }
+
+  /* 清掉滑块自己的轨道、填充和圆点颜色。上面那一层是它的兄弟，保留主题颜色。 */
+  .astryx-media-timeline__slider {
+    display: contents;
+    --astryx-slider-track: transparent;
+    --astryx-slider-accent: transparent;
+  }
+
+  .astryx-media-timeline__segment {
+    position: absolute;
+    top: 50%;
+    height: 4px;
+    overflow: hidden;
+    border-radius: var(--astryx-radius-full, 9999px);
+    /* 主题的轨道色可能和深色毛玻璃表面撞色，这样的表面（比如视频控件条）会设一个看得见的轨道色。 */
+    background-color: var(--_media-timeline-track, var(--astryx-color-track, #e5e5e5));
+    transform: translateY(-50%);
+  }
+
+  .astryx-media-timeline__buffered,
+  .astryx-media-timeline__played {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+  }
+
+  .astryx-media-timeline__buffered {
+    background-color: color-mix(in srgb, var(--astryx-color-accent, #262626) 40%, transparent);
+  }
+
+  .astryx-media-timeline__played {
+    background-color: var(--astryx-color-accent, #262626);
+  }
+
+  .astryx-media-timeline__marker,
+  .astryx-media-timeline__marker-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: var(--astryx-radius-full, 9999px);
+  }
+
+  .astryx-media-timeline__marker {
+    position: absolute;
+    top: 50%;
+    background-color: var(--astryx-color-text-primary, #171717);
+    box-shadow: 0 0 0 2px var(--astryx-color-background-surface, #fff);
+    transform: translate(-50%, -50%);
+  }
+
+  .astryx-media-timeline__marker-buttons {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  /* 弹性布局让气泡的触发器包装不进行盒，行高不会把圆点挤离轨道中线。 */
+  .astryx-media-timeline__marker-anchor {
+    position: absolute;
+    top: 50%;
+    display: flex;
+    transform: translate(-50%, -50%);
+    /* 藏起时间轴的表面（比如视频控件条）把它设成 none，藏着的标记不会被点到。 */
+    pointer-events: var(--_media-controls-pointer-events, auto);
+  }
+
+  .astryx-media-timeline__marker-anchor > .astryx-popover-trigger {
+    display: flex;
+  }
+
+  .astryx-media-timeline__marker-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 0;
+    border-radius: var(--astryx-radius-full, 9999px);
+    background-color: transparent;
+    cursor: pointer;
+  }
+
+  .astryx-media-timeline__marker-button:focus-visible {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, currentcolor);
+    outline-offset: var(--astryx-focus-outline-offset, 2px);
+  }
+
+  .astryx-media-timeline__marker-dot {
+    background-color: var(--astryx-color-text-primary, #171717);
+    box-shadow: 0 0 0 2px var(--astryx-color-background-surface, #fff);
+  }
+
+  .astryx-media-timeline__marker-content {
+    display: contents;
+  }
+
+  .astryx-media-timeline__thumb {
+    position: absolute;
+    top: 50%;
+    width: 20px;
+    height: 20px;
+    border-radius: var(--astryx-radius-full, 9999px);
+    background-color: var(--astryx-color-accent, #262626);
+    transform: translate(-50%, -50%);
+  }
+
+  .astryx-media-timeline__preview {
+    position: absolute;
+    bottom: calc(100% + var(--astryx-spacing-2, 8px));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 240px;
+    padding: var(--astryx-spacing-1, 4px) var(--astryx-spacing-2, 8px);
+    border-radius: var(--astryx-radius-container, 8px);
+    background-color: var(--astryx-color-text-primary, #171717);
+    color: var(--astryx-color-background-surface, #fff);
+    font-family: var(--astryx-font-family-body, inherit);
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    line-height: var(--astryx-text-supporting-leading, 1.3333);
+    text-align: center;
+    white-space: nowrap;
+    transform: translateX(-50%);
+  }
+
+  .astryx-media-timeline__preview-time {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .astryx-media-timeline__preview-line {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

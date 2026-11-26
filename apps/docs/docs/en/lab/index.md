@@ -52,6 +52,7 @@ import '@astryx-vue/lab/lab.css'
 | [InfoTip](/en/lab/info-tip) | Supplementary explanations for terms and metrics. |
 | [LineClamp](/en/lab/line-clamp) | Clamps any content to a set number of lines, with the full text in a tooltip. |
 | [LogStream](/en/lab/log-stream) | Expandable logs with an optional live tail. |
+| [MediaPlayer](/en/lab/media-player) | Build your own video or audio player from play, timeline, volume, and other parts. |
 | [Stat](/en/lab/stat) | Key metrics and trends. |
 | [SVGIcon](/en/lab/svg-icon) | Multi-variant SVG icons with per-shape roles. |
 | [EmojiPicker](/en/lab/emoji-picker) | Search every emoji by group and pick one, inline or in a popover. |
