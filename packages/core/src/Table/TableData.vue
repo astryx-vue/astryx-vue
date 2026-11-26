@@ -8,7 +8,7 @@ import type {
   TableRowMenuItem,
   TableRowPatch,
 } from './types.js'
-import { computed, h, onBeforeUnmount, ref, useAttrs } from 'vue'
+import { computed, h, onBeforeUnmount, ref, useAttrs, useId } from 'vue'
 import CheckboxInput from '../CheckboxInput/CheckboxInput.vue'
 import ComponentIcon from '../Icon/ComponentIcon.vue'
 import { useComponentMessages } from '../locale/context.js'
@@ -50,6 +50,8 @@ const headerCutText = useHeaderCutText()
 
 const attrs = useAttrs()
 const messages = useComponentMessages({ table: tableMessages })
+/** 排序按钮描述（多列排序时的优先级）的 id 前缀，后面接列的序号。 */
+const sortIdBase = useId()
 const scrollRoot = ref<HTMLElement | null>(null)
 const menu = ref<{ x: number, y: number, items: readonly TableRowMenuItem[] } | null>(null)
 const scrollStyle = computed(() => splitStyleMinWidth(attrs.style).style)
@@ -309,7 +311,7 @@ function isEnabled(row: Record<string, unknown>): boolean {
             />
           </th>
           <th
-            v-for="column in resolvedColumns"
+            v-for="(column, columnIndex) in resolvedColumns"
             :key="column.key"
             scope="col"
             :data-column="column.key"
@@ -327,7 +329,7 @@ function isEnabled(row: Record<string, unknown>): boolean {
                   type="button"
                   class="astryx-table__sort"
                   :data-align="column.align"
-                  :aria-label="sortFor(column)?.label"
+                  :aria-describedby="sortFor(column)?.description ? `${sortIdBase}-${columnIndex}` : undefined"
                   @click="sortFor(column)?.onClick($event)"
                 >
                   <VisuallyHidden v-if="column.headerHidden">
@@ -341,8 +343,9 @@ function isEnabled(row: Record<string, unknown>): boolean {
                       :fallback="{ icon: sortFor(column)?.direction === 'descending' ? 'arrowDown' : 'arrowUp', size: 'xsm' }"
                     />
                   </span>
-                  <span v-if="sortFor(column)?.rank" class="astryx-table__sort-rank">{{ sortFor(column)?.rank }}</span>
+                  <span v-if="sortFor(column)?.rank" class="astryx-table__sort-rank" aria-hidden="true">{{ sortFor(column)?.rank }}</span>
                 </button>
+                <span v-if="sortFor(column)?.description" :id="`${sortIdBase}-${columnIndex}`" hidden>{{ sortFor(column)?.description }}</span>
                 <VisuallyHidden v-else-if="column.headerHidden">
                   {{ headerText(column) }}
                 </VisuallyHidden>

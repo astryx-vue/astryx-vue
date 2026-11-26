@@ -31,14 +31,14 @@ const APPLE_MODIFIER_DISPLAY = new Map<string, string>([
 ])
 
 /**
- * Modifier text elsewhere, and before the platform is known (server render
- * and the first client render), so the keycap reads as the user's keyboard.
- * `mod` and `ctrl` read as the messages' short Control label.
+ * Message fields for modifier text elsewhere, and before the platform is known
+ * (server render and the first client render), so the keycap reads as the
+ * user's keyboard. `mod` and `ctrl` read as the messages' short Control label.
  */
-const MODIFIER_TEXT = new Map<string, string>([
-  ['alt', 'Alt'],
-  ['shift', 'Shift'],
-  ['meta', 'Win'],
+const MODIFIER_TEXT = new Map<string, 'altShort' | 'shiftShort' | 'windowsShort'>([
+  ['alt', 'altShort'],
+  ['shift', 'shiftShort'],
+  ['meta', 'windowsShort'],
 ])
 
 /**
@@ -81,9 +81,9 @@ function keyDisplay(name: string, isApple: boolean, messages: KbdMessages): stri
     return messages.controlShort
   }
   else {
-    const text = MODIFIER_TEXT.get(name)
-    if (text != null)
-      return text
+    const field = MODIFIER_TEXT.get(name)
+    if (field != null)
+      return messages[field]
   }
   if (name === 'escape')
     return messages.escapeShort

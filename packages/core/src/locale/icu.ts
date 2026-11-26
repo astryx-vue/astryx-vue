@@ -4,7 +4,7 @@ type Node
   = | { type: 'text', value: string }
     | { type: 'pound' }
     | { type: 'arg', name: string }
-    | { type: 'number', name: string }
+    | { type: 'number', name: string, options?: Intl.NumberFormatOptions }
     | { type: 'plural', name: string, offset: number, ordinal: boolean, options: PluralOption[] }
     | { type: 'select', name: string, options: PluralOption[] }
 
@@ -27,13 +27,40 @@ function rulesFor(locale: string, ordinal: boolean): Intl.PluralRules {
   return rules
 }
 
-function numberFor(locale: string): Intl.NumberFormat {
-  let format = numberFormats.get(locale)
+function numberFor(locale: string, options?: Intl.NumberFormatOptions): Intl.NumberFormat {
+  const key = options == null ? locale : `${locale}|${JSON.stringify(options)}`
+  let format = numberFormats.get(key)
   if (format == null) {
-    format = new Intl.NumberFormat(locale)
-    numberFormats.set(locale, format)
+    format = new Intl.NumberFormat(locale, options)
+    numberFormats.set(key, format)
   }
   return format
+}
+
+const FRACTION_STEM = /^\.(0*)(#*)(\+?)$/
+
+/**
+ * `{name, number, ::…}` 的数字骨架里认得的部分：`group-off` 关掉千分位，
+ * `.0`、`.0#`、`.00+` 这类写法定小数位数。其余写法照默认格式处理。
+ */
+function numberSkeletonOptions(style: string): Intl.NumberFormatOptions | undefined {
+  const trimmed = style.trim()
+  if (!trimmed.startsWith('::'))
+    return undefined
+  const options: Intl.NumberFormatOptions = {}
+  for (const stem of trimmed.slice(2).trim().split(/\s+/)) {
+    if (stem === 'group-off') {
+      options.useGrouping = false
+      continue
+    }
+    const fraction = FRACTION_STEM.exec(stem)
+    if (fraction != null) {
+      const [, required = '', optional = '', unlimited] = fraction
+      options.minimumFractionDigits = required.length
+      options.maximumFractionDigits = unlimited ? 20 : required.length + optional.length
+    }
+  }
+  return Object.keys(options).length === 0 ? undefined : options
 }
 
 /**
@@ -61,6 +88,33 @@ export function icuArgumentKinds(message: string): Record<string, IcuArgumentKin
   const kinds = new Map<string, Set<IcuArgumentKind>>()
   collectKinds(parseMessage(message), kinds)
   return Object.fromEntries([...kinds].map(([name, set]) => [name, [...set].sort()]))
+}
+
+/**
+ * 每个 `select` 占位符写出来的分支名（不含 `other`），按出现顺序去重。
+ * 检查器用它给 select 占位符挑样例值，让每个分支都渲染一次。
+ */
+export function icuSelectOptions(message: string): Record<string, string[]> {
+  const options = new Map<string, Set<string>>()
+  collectSelectOptions(parseMessage(message), options)
+  return Object.fromEntries([...options].map(([name, set]) => [name, [...set]]))
+}
+
+function collectSelectOptions(nodes: Node[], options: Map<string, Set<string>>): void {
+  for (const node of nodes) {
+    if (node.type !== 'plural' && node.type !== 'select')
+      continue
+    if (node.type === 'select') {
+      const set = options.get(node.name) ?? new Set<string>()
+      for (const option of node.options) {
+        if (option.selector !== 'other')
+          set.add(option.selector)
+      }
+      options.set(node.name, set)
+    }
+    for (const option of node.options)
+      collectSelectOptions(option.nodes, options)
+  }
 }
 
 function collectKinds(nodes: Node[], kinds: Map<string, Set<IcuArgumentKind>>): void {
@@ -106,7 +160,7 @@ function renderNode(
     return textValue(values[node.name])
   if (node.type === 'number') {
     const value = numericValue(values[node.name])
-    return value == null ? '' : numberFor(locale).format(value)
+    return value == null ? '' : numberFor(locale, node.options).format(value)
   }
   if (node.type === 'select')
     return renderChoice(node.options, selectSelector(values[node.name]), values, locale, pound)
@@ -251,11 +305,15 @@ function parseMessage(input: string): Node[] {
     const kind = readIdentifier()
     skipSpace()
     if (kind === 'number') {
-      if (input[index] === ',')
+      let options: Intl.NumberFormatOptions | undefined
+      if (input[index] === ',') {
+        const start = index + 1
         skipNumberStyle()
+        options = numberSkeletonOptions(input.slice(start, index))
+      }
       expectChar('}')
       index += 1
-      return { type: 'number', name }
+      return options == null ? { type: 'number', name } : { type: 'number', name, options }
     }
     if (kind === 'plural' || kind === 'selectordinal' || kind === 'select') {
       expectChar(',')
