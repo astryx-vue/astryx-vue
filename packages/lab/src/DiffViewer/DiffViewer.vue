@@ -5,10 +5,12 @@ import type { DiffViewerFileStatus, DiffViewerLineRef } from './diffTypes.js'
 import type { LineCell, SplitRow, UnifiedRow } from './rows.js'
 import type { DiffViewerEmits, DiffViewerProps, DiffViewerSlots } from './types.js'
 import { Icon, SyntaxTheme, Token, useScrollableArea, VisuallyHidden } from '@astryx-vue/core'
-import { computed, getCurrentInstance, ref, useAttrs, useId, useSlots } from 'vue'
+import { computed, getCurrentInstance, ref, toRef, useAttrs, useId, useSlots } from 'vue'
+import DiffViewerFold from './DiffViewerFold.vue'
 import DiffViewerTable from './DiffViewerTable.vue'
 import { inferLanguage } from './language.js'
 import { buildCells, buildSplitRows, buildUnifiedRows } from './rows.js'
+import { renderedAnnotation, useDiffFolds } from './useDiffFolds.js'
 import '../../styles/diff-viewer.css'
 
 defineOptions({ name: 'AstryxDiffViewer', inheritAttrs: false })
@@ -54,24 +56,29 @@ const displayPath = computed(() => {
 const language = computed(() => props.language ?? inferLanguage(path.value))
 const scrollLabel = computed(() => displayPath.value ?? props.label)
 
+const folds = useDiffFolds(toRef(props, 'file'), () => props.renderLineAnnotation)
+
+// 折起来的文件不建行，也就不做语法切分。
 const cells = computed(() => {
-  const built = buildCells(props.file, language.value, props.inlineHighlight)
+  if (folds.isFileFolded.value)
+    return []
+  const built = buildCells(props.file, language.value, props.inlineHighlight, folds.expandedBlocks.value)
   const annotate = props.renderLineAnnotation
 
   if (annotate == null)
     return built
 
-  return built.map(hunk => hunk.map((cell): LineCell => {
-    const note = annotate(cell.ref)
-    return { ...cell, note: typeof note === 'boolean' ? null : note }
+  return built.map(hunk => ({
+    ...hunk,
+    cells: hunk.cells.map((cell): LineCell => ({ ...cell, note: renderedAnnotation(annotate(cell.ref)) })),
   }))
 })
 
 const unifiedRows = computed<UnifiedRow[]>(() =>
-  props.viewMode === 'unified' ? buildUnifiedRows(props.file, cells.value) : [],
+  props.viewMode === 'unified' && !folds.isFileFolded.value ? buildUnifiedRows(props.file, cells.value) : [],
 )
 const splitRows = computed<SplitRow[]>(() =>
-  props.viewMode === 'split' ? buildSplitRows(props.file, cells.value) : [],
+  props.viewMode === 'split' && !folds.isFileFolded.value ? buildSplitRows(props.file, cells.value) : [],
 )
 
 const stats = computed(() => {
@@ -197,8 +204,16 @@ function relayLineNumberClick(ref: DiffViewerLineRef, event: MouseEvent): void {
           <div v-else-if="file.hunks.length === 0" class="astryx-diff-viewer__message">
             No content changes
           </div>
+          <!-- 文件级的折叠行无论开合都排在第一位，按钮切换时焦点不丢。 -->
+          <div v-if="!file.isBinary && file.hunks.length > 0 && folds.isLargeFile.value" class="astryx-diff-viewer__fold" data-diff-fold>
+            <DiffViewerFold
+              :changed-lines="folds.unfoldedChangedLines.value"
+              :is-expanded="!folds.isFileFolded.value"
+              @toggle="folds.toggleFile"
+            />
+          </div>
           <div
-            v-else
+            v-if="!file.isBinary && file.hunks.length > 0 && !folds.isFileFolded.value"
             :ref="scroll.viewport"
             v-bind="scroll.viewportAttrs.value"
             class="astryx-diff-viewer__viewport"
@@ -217,6 +232,7 @@ function relayLineNumberClick(ref: DiffViewerLineRef, event: MouseEvent): void {
                 :has-line-number-click="hasLineNumberClick"
                 :digits="stats.digits"
                 @line-number-click="relayLineNumberClick"
+                @toggle-fold="folds.toggleBlock"
               />
             </div>
           </div>

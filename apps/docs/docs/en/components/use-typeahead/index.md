@@ -11,7 +11,7 @@ import { Badge } from '@astryx-vue/core/Badge'
 
 ## Usage
 
-Adds APG type-to-focus search to a collection: printable keystrokes are buffered (resetting after a pause), and the first item whose label starts with the buffer is reported through `onMatch`. Pressing the same letter repeatedly cycles through the matches rather than filtering deeper. It moves nothing itself; pair it with the collection's own focus management, most often `useListFocus` or `useGridRovingFocus`.
+Adds APG type-to-focus search to a collection: printable keystrokes are buffered (resetting after a pause), and the first item whose label starts with the buffer (ignoring case, accents, the stroked letters đ ł ø ħ ŧ ƀ and Turkish ı/İ, the same in every locale; a typed accent prefers the exact match) is reported through `onMatch`. Pressing the same letter repeatedly cycles through the matches rather than filtering deeper. It moves nothing itself; pair it with the collection's own focus management, most often `useListFocus` or `useGridRovingFocus`.
 
 `onKeyDown` takes a native `KeyboardEvent` and returns `true` when it consumed a printable character, so let it look at the event first and fall through to arrow-key navigation only when it returns `false`. Space counts as part of the query only when something is already typed, so Space still activates the focused item. `reset()` clears a pending buffer, for example when the collection closes.
 

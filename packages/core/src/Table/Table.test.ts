@@ -216,6 +216,32 @@ describe('table', () => {
     expect(harness.get('th').attributes('aria-sort')).toBeUndefined()
   })
 
+  it('names a sort button by its column and describes its multi-sort priority', async () => {
+    const harness = mount({
+      components: { Table },
+      setup() {
+        const { sortedData, sortConfig } = useTableSortableState<Person>({
+          data: people,
+          defaultSort: [{ sortKey: 'age', direction: 'descending' }, { sortKey: 'name', direction: 'ascending' }],
+        })
+        const sortable = useTableSortable<Person>(sortConfig)
+        return { sortedData, sortable, columns }
+      },
+      template: '<Table :data="sortedData" :columns="columns" :plugins="{ sortable }" id-key="id" />',
+    })
+    const [name, age] = harness.findAll('th button')
+    expect(name!.attributes('aria-label')).toBeUndefined()
+    expect(name!.text()).toBe('Name2')
+    expect(harness.findAll('th')[1]!.attributes('aria-sort')).toBe('descending')
+    const description = harness.get(`#${age!.attributes('aria-describedby')}`)
+    expect(description.text()).toBe('Priority 1 of 2')
+    expect(description.attributes('hidden')).toBeDefined()
+    expect(name!.get('.astryx-table__sort-rank').attributes('aria-hidden')).toBe('true')
+
+    await name!.trigger('click')
+    expect(harness.get('th button').attributes('aria-describedby')).toBeUndefined()
+  })
+
   it('selects a row and the whole page', async () => {
     const selected = ref(new Set<string>())
     const wrapper = mount({

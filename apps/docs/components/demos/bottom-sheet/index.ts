@@ -1,6 +1,6 @@
 import { defineDemo } from '../../demo-infra/defineDemo'
-import adaptiveDialogDemo from './adaptive-dialog.vue'
-import adaptiveDialogSource from './adaptive-dialog.vue?raw&highlighted'
+import adaptiveDialogDemo from '../dialog/adaptive.vue'
+import adaptiveDialogSource from '../dialog/adaptive.vue?raw&highlighted'
 import adaptiveMenuDemo from './adaptive-menu.vue'
 import adaptiveMenuSource from './adaptive-menu.vue?raw&highlighted'
 import heightsDemo from './heights.vue'

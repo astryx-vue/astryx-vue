@@ -1,5 +1,6 @@
 import type { Ref } from 'vue'
 import { onMounted, ref } from 'vue'
+import { findTypeaheadMatch, isShortcutChord, nextTypeaheadBuffer } from '../utils/typeaheadMatch.js'
 
 const DEFAULT_ITEM_SELECTOR = '[role="treeitem"]'
 const TYPEAHEAD_RESET_MS = 500
@@ -90,10 +91,10 @@ export function useTreeFocus(options: UseTreeFocusOptions): {
       const ids = item.getAttribute('aria-labelledby')?.split(/\s+/).filter(Boolean) ?? []
       if (ids.length > 0) {
         const doc = item.ownerDocument
-        return ids.map(id => doc.getElementById(id)?.textContent ?? '').join(' ').trim().toLowerCase()
+        return ids.map(id => doc.getElementById(id)?.textContent ?? '').join(' ').trim()
       }
     }
-    return (item.textContent ?? '').trim().toLowerCase()
+    return (item.textContent ?? '').trim()
   }
 
   /** 树节点的 id：优先 `data-tree-id`，退回元素自己的 `id`。 */
@@ -147,19 +148,26 @@ export function useTreeFocus(options: UseTreeFocusOptions): {
     if (
       (options.typeahead ?? true)
       && event.key.length === 1
-      && !event.ctrlKey
-      && !event.metaKey
-      && !event.altKey
+      && !isShortcutChord(event)
+      // AltGr 也报 Alt，它敲出来的字母照样跳转。
+      && (!event.altKey || event.getModifierState('AltGraph'))
       && !NAVIGATION_KEYS.has(event.key)
     ) {
-      typeahead.buffer += event.key.toLowerCase()
+      // 和 useTypeahead 同一套缓冲：单独的组合附加符号不算，反复敲同一个字母在匹配项之间循环。
+      const nextBuffer = nextTypeaheadBuffer(typeahead.buffer, event.key)
+      if (nextBuffer == null)
+        return
+      typeahead.buffer = nextBuffer
       clearTimeout(typeahead.timer)
       typeahead.timer = setTimeout(() => {
         typeahead.buffer = ''
       }, TYPEAHEAD_RESET_MS)
       const query = typeahead.buffer
-      const ordered = [...list.slice(currentIndex + 1), ...list.slice(0, currentIndex + 1)]
-      const match = ordered.find(item => !disabled(item) && matchText(item).startsWith(query))
+      // 只有一个字母时从当前项的下一项找；更长的查询是在收窄，当前项也算。
+      const from = query.length === 1 ? currentIndex + 1 : Math.max(currentIndex, 0)
+      const ordered = [...list.slice(from), ...list.slice(0, from)].filter(item => !disabled(item))
+      const matchIndex = findTypeaheadMatch(ordered.map((_, index) => index), index => matchText(ordered[index]!), query)
+      const match = matchIndex >= 0 ? ordered[matchIndex] : undefined
       if (match != null) {
         event.preventDefault()
         focusItem(match)

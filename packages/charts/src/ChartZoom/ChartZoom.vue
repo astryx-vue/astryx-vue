@@ -71,7 +71,11 @@ function zoomBy(factor: number, pivotX?: number, pivotY?: number): void {
   }
 }
 
+// Vue 的 wheel 监听不是 passive，preventDefault 能拦住页面滚动。
+// 只有横向分量的滚轮不缩放任何东西，留给页面横向滚动。
 function onWheel(event: WheelEvent): void {
+  if (event.deltaY === 0)
+    return
   event.preventDefault()
   const local = localChartPoint(event)
   if (!local)

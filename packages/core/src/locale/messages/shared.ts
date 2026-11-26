@@ -17,6 +17,19 @@ export function formatCount(value: number, locale: 'en' | 'zh-CN'): string {
   return format.format(value)
 }
 
+const styledFormats = new Map<string, Intl.NumberFormat>()
+
+/** 按给定格式写数字，对应原版 ICU 里带骨架的 `{size, number, ::…}`。 */
+export function formatNumber(value: number, locale: 'en' | 'zh-CN', options: Intl.NumberFormatOptions): string {
+  const key = `${locale}|${JSON.stringify(options)}`
+  let format = styledFormats.get(key)
+  if (format == null) {
+    format = new Intl.NumberFormat(locale, options)
+    styledFormats.set(key, format)
+  }
+  return format.format(value)
+}
+
 /** 英文单复数：1 用单数，其余用复数，和原版 `plural, one {…} other {…}` 一致。 */
 export function englishPlural(count: number, one: string, other: string): string {
   return count === 1 ? one : other

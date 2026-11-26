@@ -67,9 +67,9 @@ footer: false
         <td>多列排序时它排第几（从 1 计），显示在箭头旁边。只排了一列时是 <code>null</code>。</td>
       </tr>
       <tr>
-        <td><code>sortFor().label</code></td>
-        <td><code>string</code></td>
-        <td>表头按钮的本地化无障碍名称，例如「按名称排序。改为降序」。</td>
+        <td><code>sortFor().description</code></td>
+        <td><code>string | null</code></td>
+        <td>多列排序时表头按钮的本地化描述，例如「排序优先级 2/3」；其余时候是 <code>null</code>。按钮的名字就是列标题，方向由表头的 <code>aria-sort</code> 表达。</td>
       </tr>
       <tr>
         <td><code>sortFor().onClick</code></td>

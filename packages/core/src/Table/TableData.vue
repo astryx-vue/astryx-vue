@@ -46,6 +46,8 @@ const headerCutText = useHeaderCutText()
 const attrs = useAttrs()
 const messages = useComponentMessages({ table: tableMessages })
 const headerIdPrefix = useId()
+/** 排序按钮描述（多列排序时的优先级）的 id 前缀，后面接列的序号。 */
+const sortIdBase = useId()
 const scrollRoot = ref<HTMLElement | null>(null)
 const menu = ref<{ x: number, y: number, items: readonly TableRowMenuItem[] } | null>(null)
 const scrollStyle = computed(() => splitStyleMinWidth(attrs.style).style)
@@ -216,27 +218,29 @@ function isEnabled(row: Record<string, unknown>): boolean {
             <div :id="headerContentId(columnIndex)" class="astryx-table__header">
               <div class="astryx-table__header-line">
                 <HeaderAddon :column="column" :plugins="plugins" />
-                <button
-                  v-if="sortFor(column)"
-                  type="button"
-                  class="astryx-table__sort"
-                  :data-align="column.align"
-                  :aria-label="sortFor(column)?.label"
-                  @click="sortFor(column)?.onClick($event)"
-                >
-                  <VisuallyHidden v-if="column.headerHidden">
-                    {{ columnHeaderText(column) }}
-                  </VisuallyHidden>
-                  <span v-else class="astryx-table__header-label"><HeaderContent :column="column" /></span>
-                  <span class="astryx-table__sort-icon" :data-active="sortFor(column)?.direction != null || undefined">
-                    <ComponentIcon
-                      icon-slot="table-sort-indicator"
-                      :state="{ direction: sortFor(column)?.direction ?? 'none' }"
-                      :fallback="{ icon: sortFor(column)?.direction === 'descending' ? 'arrowDown' : 'arrowUp', size: 'xsm' }"
-                    />
-                  </span>
-                  <span v-if="sortFor(column)?.rank" class="astryx-table__sort-rank">{{ sortFor(column)?.rank }}</span>
-                </button>
+                <template v-if="sortFor(column)">
+                  <button
+                    type="button"
+                    class="astryx-table__sort"
+                    :data-align="column.align"
+                    :aria-describedby="sortFor(column)?.description ? `${sortIdBase}-${columnIndex}` : undefined"
+                    @click="sortFor(column)?.onClick($event)"
+                  >
+                    <VisuallyHidden v-if="column.headerHidden">
+                      {{ columnHeaderText(column) }}
+                    </VisuallyHidden>
+                    <span v-else class="astryx-table__header-label"><HeaderContent :column="column" /></span>
+                    <span class="astryx-table__sort-icon" :data-active="sortFor(column)?.direction != null || undefined">
+                      <ComponentIcon
+                        icon-slot="table-sort-indicator"
+                        :state="{ direction: sortFor(column)?.direction ?? 'none' }"
+                        :fallback="{ icon: sortFor(column)?.direction === 'descending' ? 'arrowDown' : 'arrowUp', size: 'xsm' }"
+                      />
+                    </span>
+                    <span v-if="sortFor(column)?.rank" class="astryx-table__sort-rank" aria-hidden="true">{{ sortFor(column)?.rank }}</span>
+                  </button>
+                  <span v-if="sortFor(column)?.description" :id="`${sortIdBase}-${columnIndex}`" hidden>{{ sortFor(column)?.description }}</span>
+                </template>
                 <VisuallyHidden v-else-if="column.headerHidden">
                   {{ columnHeaderText(column) }}
                 </VisuallyHidden>

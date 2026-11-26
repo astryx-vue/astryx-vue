@@ -73,7 +73,6 @@ export const searchUpstreamMap: UpstreamMapPart = {
   '@astryx.commandPalette.emptySearch': [
     { path: 'commandPalette.emptySearch' },
     { path: 'powerSearch.empty' },
-    { path: 'chat.noResults' },
   ],
   '@astryx.commandPalette.emptyBootstrap': [{ path: 'commandPalette.emptyBootstrap' }],
   '@astryx.commandPalette.input.placeholder': [{ path: 'commandPalette.placeholder' }],

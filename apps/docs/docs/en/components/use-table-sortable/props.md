@@ -67,9 +67,9 @@ The config is a `MaybeRefOrGetter`, so pass a getter or a ref to keep the plugin
         <td>1-based position in a multi-sort, shown beside the arrow. <code>null</code> unless more than one entry is sorted.</td>
       </tr>
       <tr>
-        <td><code>sortFor().label</code></td>
-        <td><code>string</code></td>
-        <td>The localized accessible name for the header button, such as "Sort by Name. Sort descending".</td>
+        <td><code>sortFor().description</code></td>
+        <td><code>string | null</code></td>
+        <td>The localized description of the header button while several columns are sorted, such as "Priority 2 of 3"; <code>null</code> otherwise. The button is named by its column's text, and the header's <code>aria-sort</code> carries the direction.</td>
       </tr>
       <tr>
         <td><code>sortFor().onClick</code></td>

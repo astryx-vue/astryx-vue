@@ -399,9 +399,10 @@ export { DateRangeInput } from './DateRangeInput/index.js'
 export type { DateRange, DateRangeInputEmits, DateRangeInputProps, DateRangePreset } from './DateRangeInput/index.js'
 export { DateTimeInput } from './DateTimeInput/index.js'
 export type { DateTimeInputEmits, DateTimeInputProps, DateTimeInputSize } from './DateTimeInput/index.js'
-export { Dialog, DialogHeader, useImperativeDialog } from './Dialog/index.js'
+export { Dialog, DialogHeader, useDialogContext, useImperativeDialog } from './Dialog/index.js'
 export type {
   DialogBlockPosition,
+  DialogContext,
   DialogHeaderProps,
   DialogPadding,
   DialogPosition,
@@ -732,6 +733,7 @@ export {
   provideAstryxLocale,
   richTextEditorMessages,
   selectorMessages,
+  sliderMessages,
   spinnerMessages,
   stepperMessages,
   switchMessages,
@@ -807,6 +809,7 @@ export type {
   PowerSearchOperatorMessages,
   RichTextEditorMessages,
   SelectorMessages,
+  SliderMessages,
   SpinnerMessages,
   StepperMessages,
   SwitchMessages,

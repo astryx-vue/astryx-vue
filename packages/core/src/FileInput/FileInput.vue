@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { FileRejection } from '../composables/useFileSelection.js'
 import type { FieldStatusInput } from '../Field/types.js'
 import type { FileInputEmits, FileInputProps, FileInputValue } from './types.js'
 import { computed, shallowRef, useAttrs, useId, useTemplateRef } from 'vue'
@@ -13,6 +14,7 @@ import InputClearButton from '../Field/InputClearButton.vue'
 import Icon from '../Icon/Icon.vue'
 import { useComponentMessages } from '../locale/context.js'
 import { fileInputMessages } from '../locale/messages/file-input.js'
+import { useListFormatter } from '../locale/useListFormatter.js'
 import Spinner from '../Spinner/Spinner.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import '../../styles/bordered-control.css'
@@ -38,6 +40,7 @@ const parts = useFieldPartStyling({
   reservedAttrs: ['id', 'accept', 'multiple', 'disabled', 'type', 'tabindex', 'aria-disabled', 'aria-invalid', 'aria-describedby'],
 })
 const messages = useComponentMessages({ fileInput: fileInputMessages })
+const formatList = useListFormatter()
 const announce = useAnnounce()
 const generatedId = `astryx-file-input-${useId()}`
 const inputId = computed(() => props.id ?? generatedId)
@@ -102,6 +105,20 @@ function runChangeAction(value: FileInputValue): void {
   }
 }
 
+const REJECTION_ORDER: readonly FileRejection['code'][] = ['type', 'size', 'count']
+
+/** 每个被拒的文件各一句，先列类型不符的，再列超大的，最后是数量超限。 */
+function rejectionMessages(rejections: readonly FileRejection[]): string[] {
+  const text = messages.value.fileInput
+  return REJECTION_ORDER.flatMap(code => rejections.filter(rejection => rejection.code === code)).map((rejection) => {
+    if (rejection.code === 'type')
+      return text.errorType(rejection.fileName ?? '')
+    if (rejection.code === 'size')
+      return text.errorSize(rejection.fileName ?? '', formatFileSize(rejection.maxSize ?? 0, text))
+    return text.errorCount(rejection.maxFiles ?? 0)
+  })
+}
+
 function applyFiles(list: FileList | File[] | null | undefined): void {
   if (props.isDisabled)
     return
@@ -111,15 +128,8 @@ function applyFiles(list: FileList | File[] | null | undefined): void {
     maxFiles: props.maxFiles,
     isMultiple: props.isMultiple,
   })
-  const first = result.rejections[0]
-  if (first?.code === 'type' && first.fileName)
-    validationError.value = messages.value.fileInput.errorType(first.fileName)
-  else if (first?.code === 'size' && first.fileName)
-    validationError.value = messages.value.fileInput.errorSize(first.fileName, formatFileSize(first.maxSize ?? 0, messages.value.fileInput))
-  else if (first?.code === 'count')
-    validationError.value = messages.value.fileInput.errorCount(first.maxFiles ?? 0)
-  else
-    validationError.value = null
+  const errors = rejectionMessages(result.rejections)
+  validationError.value = errors.length > 0 ? formatList.value(errors) : null
 
   const files = result.files
   commit(files)

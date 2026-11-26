@@ -1,11 +1,12 @@
 import type { TableColumn } from './types.js'
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
-import { h, ref } from 'vue'
+import { defineComponent, h, ref } from 'vue'
 import { sortRows } from './columnUtils.js'
 import { useTableRowExpansion } from './plugins/rowExpansion.js'
 import { useTableRowIndex } from './plugins/rowIndex.js'
 import { useTableSelection } from './plugins/selection.js'
+import { useTableSortable } from './plugins/sortable.js'
 import Table from './Table.vue'
 import TableBody from './TableBody.vue'
 import TableCell from './TableCell.vue'
@@ -145,5 +146,32 @@ describe('scroll region', () => {
   it('wraps a header label so it gives up width before the sort and filter controls', () => {
     const wrapper = mount(Table, { props: { data: rows, columns } })
     expect(wrapper.get('thead th .astryx-table__header-label').text()).toBe('Name')
+  })
+})
+
+describe('sortable header', () => {
+  const sortColumns: TableColumn[] = [
+    { key: 'id', header: 'Id', sortable: true },
+    { key: 'name', header: 'Name', sortable: true },
+  ]
+  function mountSorted(sort: { sortKey: string, direction: 'ascending' | 'descending' }[]) {
+    return mount(defineComponent({
+      setup() {
+        const sortable = useTableSortable({ sort, onSortChange: () => {} })
+        return () => h(Table, { data: rows, columns: sortColumns, plugins: { sortable } })
+      },
+    }))
+  }
+
+  it('renders each column title once, inside its sort button, with a single sort', () => {
+    const headers = mountSorted([{ sortKey: 'name', direction: 'ascending' }]).findAll('th')
+    expect(headers.map(th => th.findAll('.astryx-table__header-label').length)).toEqual([1, 1])
+    expect(headers.every(th => th.find('.astryx-table__sort .astryx-table__header-label').exists())).toBe(true)
+  })
+
+  it('renders each column title once when the buttons carry a priority description', () => {
+    const wrapper = mountSorted([{ sortKey: 'name', direction: 'ascending' }, { sortKey: 'id', direction: 'descending' }])
+    expect(wrapper.findAll('th').map(th => th.findAll('.astryx-table__header-label').length)).toEqual([1, 1])
+    expect(wrapper.get('th[data-column="name"] .astryx-table__sort').attributes('aria-describedby')).toBeTruthy()
   })
 })

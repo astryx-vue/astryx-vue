@@ -9,6 +9,7 @@ export const chatUpstreamMap: UpstreamMapPart = {
   '@astryx.chat.status.failed': [{ path: 'chat.statusFailed' }],
   '@astryx.chat.messageAriaLabel': [{ path: 'chat.messageStatus', args: ['status'] }],
   '@astryx.chat.pastedText.expand': [{ path: 'chat.expandPastedText' }],
+  '@astryx.chat.pastedText.label': [{ path: 'chat.pastedTextLabel', args: ['lines', 'chars'] }],
   '@astryx.chat.composer.placeholder': [{ path: 'chat.placeholder' }],
   '@astryx.chat.composerDrawer.label': [{ path: 'chat.drawerLabel' }],
   '@astryx.chat.composerInput.label': [{ path: 'chat.inputLabel' }],
@@ -32,4 +33,6 @@ export const chatUpstreamMap: UpstreamMapPart = {
   '@astryx.chatToolCalls.status.complete': [{ path: 'chat.toolComplete' }],
   '@astryx.chatToolCalls.status.error': [{ path: 'chat.toolFailed' }],
   '@astryx.chatTriggerMenu.suggestions': [{ path: 'chat.suggestions' }],
+  '@astryx.chatTriggerMenu.noResults': [{ path: 'chat.noResults' }],
+  '@astryx.chatTriggerMenu.searching': [{ path: 'chat.searching' }],
 }

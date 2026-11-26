@@ -5,6 +5,7 @@
 //   1. 内置文案的每个字段，en 和 zh-CN 都有，形状一样，不为空。
 //   2. upstreamMap 写到的每个原版键都在 locales/en.json 里，字段存在，args 正好是原文的占位符。
 //   3. en 和 zh-CN 内置文案都用上了原版的每个占位符，结果里不残留 `{name}`。
+//      `select` 占位符的每个分支各渲染一次，只用来挑分支的占位符不要求出现在文字里。
 //   4. 内置英文和原版英文逐字一致。
 //   5. 29 种语言的每句译文都能解析，占位符的名字和写法和英文原文一致；没有过期的键。
 //   6. en.json 的每个键要么接进了 upstreamMap，要么在 coverage.mjs 里写明了暂不接入的理由。
@@ -66,12 +67,12 @@ function readSources(dir) {
 
 async function loadCore() {
   const load = path => import(pathToFileURL(join(coreDir, 'src/locale', path)).href)
-  const [{ upstreamMessageMap }, { astryxMessages }, { icuArgumentKinds, formatIcu }] = await Promise.all([
+  const [{ upstreamMessageMap }, { astryxMessages }, { icuArgumentKinds, formatIcu, icuSelectOptions }] = await Promise.all([
     load('upstreamMap.ts'),
     load('messages.ts'),
     load('icu.ts'),
   ])
-  return { map: upstreamMessageMap, messages: astryxMessages, icu: { argumentKinds: icuArgumentKinds, format: formatIcu } }
+  return { map: upstreamMessageMap, messages: astryxMessages, icu: { argumentKinds: icuArgumentKinds, format: formatIcu, selectOptions: icuSelectOptions } }
 }
 
 async function main() {
