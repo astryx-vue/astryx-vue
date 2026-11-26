@@ -120,6 +120,9 @@ export function useMenuHover(options: UseMenuHoverOptions): UseMenuHoverReturn {
   // 不管是什么关掉的，都在这里记一笔。同步回调，赶在浏览器对消失的面板做命中测试、补发 mouseenter 之前。
   watch(isOpen, (open, wasOpen) => {
     if (wasOpen && !open) {
+      // 关闭之前排好的悬停打开不能在关闭之后再触发，把别处刚关掉的又打开（比如根菜单点外关闭时收起的子菜单）。
+      // 新的一次 mouseenter 照样能打开，只取消过期的定时器。
+      clearTimeouts()
       isHoverMode = false
       hoverOpenedAt = 0
       closedAt = Date.now()

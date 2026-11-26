@@ -69395,7 +69395,7 @@
               {
                 "name": "`copy`",
                 "type": "`(text: string) => Promise<boolean>`",
-                "description": "Writes `text` to the clipboard. On success flips `isCopied` to true, announces the configured message, restarts the reset timer, and resolves true. A clipboard rejection is a silent no-op that leaves the copied state unchanged and resolves false."
+                "description": "Writes `text` to the clipboard. On success flips `isCopied` to true, announces the configured message, restarts the reset timer, and resolves true. Where the frame refuses the async Clipboard API (a sandboxed viewer or an embed), or the browser refuses the write, the text is copied with the browser copy command inside the reader's click or key press, without moving focus. A failed write is a silent no-op that leaves the copied state unchanged and resolves false."
               },
               {
                 "name": "`isCopied`",
@@ -69435,7 +69435,7 @@
               {
                 "name": "`copy`",
                 "type": "`(text: string) => Promise<boolean>`",
-                "description": "把 `text` 写进剪贴板。成功时 `isCopied` 变为 true、播报配置的句子、重置定时器，并返回 true。写入被拒绝时什么都不改，返回 false。"
+                "description": "把 `text` 写进剪贴板。成功时 `isCopied` 变为 true、播报配置的句子、重置定时器，并返回 true。所在框架不允许异步 Clipboard API（沙箱里的预览、嵌入页）或浏览器拒绝写入时，在这次点击或按键里改用浏览器的复制命令，不移动焦点。两条路都失败时什么都不改，返回 false。"
               },
               {
                 "name": "`isCopied`",
@@ -70217,12 +70217,12 @@
       "importPath": null,
       "exportName": null,
       "summary": {
-        "en": "Returns a class for animating an element on mount. Only animates when the element is dynamically inserted after the initial page paint; elements rendered on page load are not animated. Uses Astryx motion tokens (duration, easing) for consistent animation timing. Nothing animates during server rendering.",
-        "zh": "返回一个 class，元素挂载时用它播放入场动画。只有首屏画完之后才动态插进来的元素才有动画；页面一开始就渲染出来的元素不播。时长和缓动取自 Astryx 的 motion token，动画节奏和其他地方保持一致。服务端渲染时不会有任何动画。"
+        "en": "Returns a class for animating an element on mount. Only animates when the element is dynamically inserted after the initial page paint; elements rendered on page load are not animated. Uses Astryx motion tokens (duration, easing) for consistent animation timing. Server-rendered elements hydrate without the entry class and never animate; elements mounted after hydration animate.",
+        "zh": "返回一个 class，元素挂载时用它播放入场动画。只有首屏画完之后才动态插进来的元素才有动画；页面一开始就渲染出来的元素不播。时长和缓动取自 Astryx 的 motion token，动画节奏和其他地方保持一致。服务端渲染出来的元素接管时也不带动画类，和服务端的 HTML 对得上，之后也不会补播；接管完成后再挂载的元素照常播放。"
       },
       "usage": {
-        "en": "Returns a class for animating an element on mount. Only animates when the element is dynamically inserted after the initial page paint; elements rendered on page load are not animated. Uses Astryx motion tokens (duration, easing) for consistent animation timing. Nothing animates during server rendering.\n\n```ts\nimport { useEntryAnimation } from '@astryx-vue/core'\n```\n\nBind the returned `entryClass` next to the element's own classes; Vue merges `class` bindings, so it never replaces them. `entryClass` is `null` when the element should not animate, and a class binding drops `null`, which is exactly the behavior you want. The class carries the shared keyframes from `styles/motion.css`, so duration, easing, and the reduced-motion fallback all come from the theme.",
-        "zh": "返回一个 class，元素挂载时用它播放入场动画。只有首屏画完之后才动态插进来的元素才有动画；页面一开始就渲染出来的元素不播。时长和缓动取自 Astryx 的 motion token，动画节奏和其他地方保持一致。服务端渲染时不会有任何动画。\n\n```ts\nimport { useEntryAnimation } from '@astryx-vue/core'\n```\n\n把返回的 `entryClass` 和元素自己的 class 写在一起；Vue 会合并 `class` 绑定，不会把原来的覆盖掉。不该播动画时 `entryClass` 是 `null`，而 `null` 会被 class 绑定直接丢掉，正好是不播的效果。这个 class 带的是 `styles/motion.css` 里那套共享关键帧，所以时长、缓动和「减少动态效果」的兜底都跟着主题走。"
+        "en": "Returns a class for animating an element on mount. Only animates when the element is dynamically inserted after the initial page paint; elements rendered on page load are not animated. Uses Astryx motion tokens (duration, easing) for consistent animation timing. Server-rendered elements hydrate without the entry class and never animate; elements mounted after hydration animate.\n\n```ts\nimport { useEntryAnimation } from '@astryx-vue/core'\n```\n\nBind the returned `entryClass` next to the element's own classes; Vue merges `class` bindings, so it never replaces them. `entryClass` is `null` when the element should not animate, and a class binding drops `null`, which is exactly the behavior you want. The class carries the shared keyframes from `styles/motion.css`, so duration, easing, and the reduced-motion fallback all come from the theme.",
+        "zh": "返回一个 class，元素挂载时用它播放入场动画。只有首屏画完之后才动态插进来的元素才有动画；页面一开始就渲染出来的元素不播。时长和缓动取自 Astryx 的 motion token，动画节奏和其他地方保持一致。服务端渲染出来的元素接管时也不带动画类，和服务端的 HTML 对得上，之后也不会补播；接管完成后再挂载的元素照常播放。\n\n```ts\nimport { useEntryAnimation } from '@astryx-vue/core'\n```\n\n把返回的 `entryClass` 和元素自己的 class 写在一起；Vue 会合并 `class` 绑定，不会把原来的覆盖掉。不该播动画时 `entryClass` 是 `null`，而 `null` 会被 class 绑定直接丢掉，正好是不播的效果。这个 class 带的是 `styles/motion.css` 里那套共享关键帧，所以时长、缓动和「减少动态效果」的兜底都跟着主题走。"
       },
       "practices": {
         "en": [
@@ -70260,7 +70260,7 @@
               {
                 "name": "`entryClass`",
                 "type": "`string | null`",
-                "description": "A shared motion class for the entry animation, or `null` if the element was rendered on initial page load (no animation needed). One of `astryx-motion-slide-in-below`, `astryx-motion-slide-in-above`, `astryx-motion-fade-in`, or `astryx-motion-scale-in`."
+                "description": "A shared motion class for the entry animation, or `null` if the element was rendered on initial page load or hydrated from server HTML (no animation needed). One of `astryx-motion-slide-in-below`, `astryx-motion-slide-in-above`, `astryx-motion-fade-in`, or `astryx-motion-scale-in`."
               }
             ]
           }
@@ -70283,7 +70283,7 @@
               {
                 "name": "`entryClass`",
                 "type": "`string | null`",
-                "description": "入场动画用的共享 class；元素是在首屏渲染出来的（不需要动画）时为 `null`。取值是 `astryx-motion-slide-in-below`、`astryx-motion-slide-in-above`、`astryx-motion-fade-in`、`astryx-motion-scale-in` 之一。"
+                "description": "入场动画用的共享 class；元素是在首屏渲染出来的、或是从服务端 HTML 接管的（不需要动画）时为 `null`。取值是 `astryx-motion-slide-in-below`、`astryx-motion-slide-in-above`、`astryx-motion-fade-in`、`astryx-motion-scale-in` 之一。"
               }
             ]
           }
@@ -70341,8 +70341,8 @@
         "zh": "`useFocusTrap` 就像一个看不见的小管家，遵循 WAI-ARIA 规范，负责把键盘的光标焦点规整地关在指定的弹窗或容器里。"
       },
       "usage": {
-        "en": "Traps focus within a container element following the WAI-ARIA dialog focus trap pattern. While the trap is active it listens to `keydown` on the document and wraps Tab and Shift+Tab, so focus cycles inside the container instead of leaving it. Turning the trap on also moves focus in: the element returned by `initialFocus`, or else the first focusable element. Turning it off is the whole teardown, so a dialog can toggle the state without unmounting the hook.\n\nWhen the trap deactivates or unmounts, focus goes back to the element that was focused before activation. It stays put when focus was already moved elsewhere, or when focus never entered the trap — so a popup that keeps focus on its trigger, like a combobox, is left alone. Focus returned after a pointer close lands on the trigger without a focus ring; after a keyboard close the ring shows as usual.\n\nTab is cancelled only while focus is inside the container, so a layer that is open while focus legitimately sits outside it does not take Tab away from the page. When initial focus sits on the container itself, Tab moves into the tabbable cycle. An Escape that cancels an input-method composition does not call `onEscape`. Mouse clicks outside the container are not intercepted; use a light-dismiss handler for that.\n\n```ts\nimport { useFocusTrap } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useFocusTrap } from '@astryx-vue/core'\nimport { ref } from 'vue'\n\nconst containerRef = ref<HTMLElement | null>(null)\nconst isOpen = ref(false)\n\nconst trap = useFocusTrap({\n  container: containerRef,\n  isActive: isOpen,\n  onEscape: () => { isOpen.value = false },\n})\n</script>\n\n<template>\n  <div ref=\"containerRef\" role=\"dialog\">\n    <button @click=\"trap.focusFirst()\">\n      First field\n    </button>\n  </div>\n</template>\n```",
-        "zh": "`useFocusTrap` 就像一个看不见的小管家，遵循 WAI-ARIA 规范，负责把键盘的光标焦点规整地关在指定的弹窗或容器里。\n\n当弹窗打开并且焦点陷阱激活时，用户不断按下 Tab 键切换焦点，如果按到了容器里的最后一个按钮，再按 Tab 键就会悄悄绕回容器的第一个元素，焦点永远在弹窗内部循环，绝对不会不小心跳到背景网页上。打开陷阱时，它还会把光标焦点送进容器内部：优先定位到 `initialFocus` 指定的元素上，如果没有指定就会自动停留在第一个可以聚焦的元素上。\n\n当弹窗关闭或陷阱解除时，它会把焦点原路还给刚才点开它的那个元素，确保键盘操作流程顺畅完整。焦点从没进过容器（比如焦点一直留在输入框上的下拉列表），或者已经被挪到别处时，就不还。用鼠标或手指关掉的，焦点回到触发器上但不画焦点环；用键盘关掉的照常画。\n\nTab 键只在焦点真的在容器里面时才会被拦下，浮层开着、焦点合理地留在外面时，整个页面照样能用 Tab。程序把初始焦点放在容器自己身上时，按 Tab 会进入里面的循环。输入法正在拼字时按的 Escape 是取消拼字，不会触发 `onEscape`。在容器外面用鼠标点击不会被拦截，方便实现点击遮罩空白处关闭弹窗。\n\n**什么时候用：**\n- 编写自定义的模态对话框（Modal）、抽屉（Drawer）等全屏遮罩浮层，需要限制键盘焦点不能跑到弹窗外面时。\n\n**什么时候不要用：**\n- 像 Tooltip（文字提示）、下拉菜单（DropdownMenu）这类普通的浮层，请不要把焦点强行关在里面；它们需要的是轻量的点击外部关闭，而不是把焦点牢牢锁死。\n- 如果已经使用了官方的 [Dialog](/components/dialog) 或 [AlertDialog](/components/alert-dialog)，它们底层已经内置好了完备的焦点管理逻辑，无需再手动调用 `useFocusTrap`。\n\n```ts\nimport { useFocusTrap } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useFocusTrap } from '@astryx-vue/core'\nimport { ref } from 'vue'\n\nconst containerRef = ref<HTMLElement | null>(null)\nconst isOpen = ref(false)\n\nconst trap = useFocusTrap({\n  container: containerRef,\n  isActive: isOpen,\n  onEscape: () => { isOpen.value = false },\n})\n</script>\n\n<template>\n  <div ref=\"containerRef\" role=\"dialog\">\n    <button @click=\"trap.focusFirst()\">\n      第一个输入项\n    </button>\n  </div>\n</template>\n```"
+        "en": "Traps focus within a container element following the WAI-ARIA dialog focus trap pattern. While the trap is active it listens to `keydown` on the document and wraps Tab and Shift+Tab, so focus cycles inside the container instead of leaving it. Turning the trap on also moves focus in: the element returned by `initialFocus`, or else the first focusable element. Turning it off is the whole teardown, so a dialog can toggle the state without unmounting the hook.\n\nWhen the trap deactivates or unmounts, focus goes back to the element that was focused before activation. It stays put when focus was already moved elsewhere, or when focus never entered the trap — so a popup that keeps focus on its trigger, like a combobox, is left alone. Focus returned after a pointer close lands on the trigger without a focus ring; after a keyboard close the ring shows as usual.\n\nTab is cancelled only while focus is inside the container, so a layer that is open while focus legitimately sits outside it does not take Tab away from the page. When initial focus sits on the container itself, Tab moves into the tabbable cycle, and Shift+Tab from a focused title that is not a Tab stop wraps to the last stop. A same-name radio group counts as one stop, as the browser does, and controls inside a closed `<dialog>` are not stops. When traps nest, the innermost one holding focus answers Tab. Ctrl+Tab and Meta+Tab are left to the browser, and a control that handles Tab itself (an editor that indents) keeps focus. A container rendered into an iframe or a picture-in-picture window is trapped in that document. An Escape that cancels an input-method composition does not call `onEscape`. Mouse clicks outside the container are not intercepted; use a light-dismiss handler for that.\n\n```ts\nimport { useFocusTrap } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useFocusTrap } from '@astryx-vue/core'\nimport { ref } from 'vue'\n\nconst containerRef = ref<HTMLElement | null>(null)\nconst isOpen = ref(false)\n\nconst trap = useFocusTrap({\n  container: containerRef,\n  isActive: isOpen,\n  onEscape: () => { isOpen.value = false },\n})\n</script>\n\n<template>\n  <div ref=\"containerRef\" role=\"dialog\">\n    <button @click=\"trap.focusFirst()\">\n      First field\n    </button>\n  </div>\n</template>\n```",
+        "zh": "`useFocusTrap` 就像一个看不见的小管家，遵循 WAI-ARIA 规范，负责把键盘的光标焦点规整地关在指定的弹窗或容器里。\n\n当弹窗打开并且焦点陷阱激活时，用户不断按下 Tab 键切换焦点，如果按到了容器里的最后一个按钮，再按 Tab 键就会悄悄绕回容器的第一个元素，焦点永远在弹窗内部循环，绝对不会不小心跳到背景网页上。打开陷阱时，它还会把光标焦点送进容器内部：优先定位到 `initialFocus` 指定的元素上，如果没有指定就会自动停留在第一个可以聚焦的元素上。\n\n当弹窗关闭或陷阱解除时，它会把焦点原路还给刚才点开它的那个元素，确保键盘操作流程顺畅完整。焦点从没进过容器（比如焦点一直留在输入框上的下拉列表），或者已经被挪到别处时，就不还。用鼠标或手指关掉的，焦点回到触发器上但不画焦点环；用键盘关掉的照常画。\n\nTab 键只在焦点真的在容器里面时才会被拦下，浮层开着、焦点合理地留在外面时，整个页面照样能用 Tab。程序把初始焦点放在容器自己身上时，按 Tab 会进入里面的循环；焦点停在不是 Tab 落脚点的标题上时，Shift+Tab 也会绕到最后一个。同名的一组单选框只算一站，和浏览器自己按 Tab 时一样；藏在关着的 `<dialog>` 里的控件不算。陷阱嵌套时，握着焦点的最里层那个接 Tab。Ctrl+Tab、Meta+Tab 留给浏览器切标签页，自己处理了 Tab 的控件（比如按 Tab 缩进的编辑器）也不会被抢走焦点。容器传送进 iframe 或画中画窗口时，陷阱在那个文档里照常工作。输入法正在拼字时按的 Escape 是取消拼字，不会触发 `onEscape`。在容器外面用鼠标点击不会被拦截，方便实现点击遮罩空白处关闭弹窗。\n\n**什么时候用：**\n- 编写自定义的模态对话框（Modal）、抽屉（Drawer）等全屏遮罩浮层，需要限制键盘焦点不能跑到弹窗外面时。\n\n**什么时候不要用：**\n- 像 Tooltip（文字提示）、下拉菜单（DropdownMenu）这类普通的浮层，请不要把焦点强行关在里面；它们需要的是轻量的点击外部关闭，而不是把焦点牢牢锁死。\n- 如果已经使用了官方的 [Dialog](/components/dialog) 或 [AlertDialog](/components/alert-dialog)，它们底层已经内置好了完备的焦点管理逻辑，无需再手动调用 `useFocusTrap`。\n\n```ts\nimport { useFocusTrap } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useFocusTrap } from '@astryx-vue/core'\nimport { ref } from 'vue'\n\nconst containerRef = ref<HTMLElement | null>(null)\nconst isOpen = ref(false)\n\nconst trap = useFocusTrap({\n  container: containerRef,\n  isActive: isOpen,\n  onEscape: () => { isOpen.value = false },\n})\n</script>\n\n<template>\n  <div ref=\"containerRef\" role=\"dialog\">\n    <button @click=\"trap.focusFirst()\">\n      第一个输入项\n    </button>\n  </div>\n</template>\n```"
       },
       "practices": {
         "en": [
@@ -70844,7 +70844,7 @@
         "en": [
           {
             "guidance": "Do",
-            "text": "Use for app-level shortcuts like command palettes (`mod+k`), help overlays (`shift+/`), and navigation keys."
+            "text": "Use for app-level shortcuts like command palettes (`mod+k`), help overlays (`?`), and navigation keys."
           },
           {
             "guidance": "Do",
@@ -70876,7 +70876,7 @@
                 "name": "`hotkeys[].keys`",
                 "type": "`string`",
                 "default": "—",
-                "description": "A `\"+\"`-separated combo like `\"mod+k\"`, `\"shift+/\"`, `\"escape\"`. `mod` is ⌘ on macOS and Ctrl elsewhere. Aliases: `esc`, `space`, `up`, `down`, `left`, `right`, `return`, and `plus` for a literal `+`. Without `shift` in the combo, the shift state is ignored, so a single letter does not care about case."
+                "description": "A `\"+\"`-separated combo like `\"mod+k\"`, `\"?\"`, `\"escape\"`. Register a punctuation key that shift changes as the character it produces: `\"?\"`, not `\"shift+/\"`, because the final key is compared against `event.key`. `mod` is ⌘ on macOS and Ctrl elsewhere. Aliases: `esc`, `space`, `up`, `down`, `left`, `right`, `return`, and `plus` for a literal `+`. Without `shift` in the combo, the shift state is ignored, so a single letter does not care about case."
               },
               {
                 "name": "`hotkeys[].onPress`",
@@ -70923,7 +70923,7 @@
                 "name": "`hotkeys[].keys`",
                 "type": "`string`",
                 "default": "—",
-                "description": "用 `\"+\"` 串起来的组合，例如 `\"mod+k\"`、`\"shift+/\"`、`\"escape\"`。`mod` 在 macOS 上是 ⌘，其他平台是 Ctrl。别名有 `esc`、`space`、`up`、`down`、`left`、`right`、`return`，字面量 `+` 写成 `plus`。组合里不写 `shift` 时忽略 shift 状态，所以单个字母不区分大小写。"
+                "description": "用 `\"+\"` 串起来的组合，例如 `\"mod+k\"`、`\"?\"`、`\"escape\"`。会被 shift 改变的标点按它敲出来的字符注册：写 `\"?\"`，不要写 `\"shift+/\"`，因为最后一个键是和 `event.key` 比的。`mod` 在 macOS 上是 ⌘，其他平台是 Ctrl。别名有 `esc`、`space`、`up`、`down`、`left`、`right`、`return`，字面量 `+` 写成 `plus`。组合里不写 `shift` 时忽略 shift 状态，所以单个字母不区分大小写。"
               },
               {
                 "name": "`hotkeys[].onPress`",
@@ -70970,7 +70970,7 @@
         "zh": [
           {
             "heading": "建议",
-            "text": "- 推荐: 用于应用级快捷键：命令面板（`mod+k`）、帮助浮层（`shift+/`）、导航键。\n- 推荐: 用 `Kbd` 组件把同一条组合显示出来；两边对 `mod` 的平台判断是同一套。\n- 推荐: 弹窗或向导占用键盘时，用 `isDisabled` 暂时停掉快捷键，而不是把 hook 卸掉。\n- 避免: 用它做控件内部的焦点导航；那种场景用 `useListFocus` 或 `useGridRovingFocus`。"
+            "text": "- 推荐: 用于应用级快捷键：命令面板（`mod+k`）、帮助浮层（`?`）、导航键。\n- 推荐: 用 `Kbd` 组件把同一条组合显示出来；两边对 `mod` 的平台判断是同一套。\n- 推荐: 弹窗或向导占用键盘时，用 `isDisabled` 暂时停掉快捷键，而不是把 hook 卸掉。\n- 避免: 用它做控件内部的焦点导航；那种场景用 `useListFocus` 或 `useGridRovingFocus`。"
           }
         ]
       },
@@ -74031,7 +74031,7 @@
           },
           {
             "guidance": "Do",
-            "text": "Let the default highlight be DOM focus; the hook focuses the row under the pointer with `preventScroll`. Style the active row with `:focus`. Supply `onHighlight` only for a listbox that must keep focus on its combobox."
+            "text": "Let the default highlight be DOM focus; the hook focuses the row under the pointer with `preventScroll`, without `:focus-visible`, so a keyboard-only focus ring does not follow the mouse. Style the active row with `:focus`. Supply `onHighlight` only for a listbox that must keep focus on its combobox."
           },
           {
             "guidance": "Do",
@@ -74099,7 +74099,7 @@
                 "name": "`options.onHighlight`",
                 "type": "`(row: HTMLElement | null) => void`",
                 "default": "—",
-                "description": "Move the highlight. Defaults to moving DOM focus with `preventScroll` onto the row. A picker that highlights through `aria-activedescendant` supplies its own."
+                "description": "Move the highlight. Defaults to moving DOM focus with `preventScroll` onto the row; after a pointer press that focus does not match `:focus-visible`. A picker that highlights through `aria-activedescendant` supplies its own."
               },
               {
                 "name": "`options.onActivate`",
@@ -74208,7 +74208,7 @@
                 "name": "`options.onHighlight`",
                 "type": "`(row: HTMLElement | null) => void`",
                 "default": "—",
-                "description": "挪动高亮。不传就把 DOM 焦点用 `preventScroll` 挪到那一行。靠 `aria-activedescendant` 表示高亮的列表自己传。"
+                "description": "挪动高亮。不传就把 DOM 焦点用 `preventScroll` 挪到那一行；指针按下之后的这次聚焦不匹配 `:focus-visible`。靠 `aria-activedescendant` 表示高亮的列表自己传。"
               },
               {
                 "name": "`options.onActivate`",
@@ -74286,7 +74286,7 @@
         "zh": [
           {
             "heading": "建议",
-            "text": "- 推荐: 传的选择器只挑可用的行，这样指针压在分割线、标题或禁用行上时什么都不挑，而不是亮一下。\n- 推荐: 让高亮就是 DOM 焦点：hook 会把指针下面那一行聚焦（`preventScroll`）。当前行用 `:focus` 画出来。只有列表要把焦点留在组合框上时，才自己传 `onHighlight`。\n- 推荐: 在菜单根上声明 `touch-action`：行放得下时用 `pinch-zoom`，会滚动时用 `pan-y pinch-zoom`，让浏览器（而不是 hook）判断手指是不是在滚动，双指捏合也仍然能缩放页面。\n- 避免: 又在自己行的 `pointerdown` 或 `pointerup` 里执行一次；hook 已经按松开位置执行那一行，两条路会执行两遍。\n- 避免: 把 `detail` 为 0 的行 click 当成键盘触发；hook 派发的指针激活 `detail` 也是 0。派发出来的 click 不是可信事件，用 `event.isTrusted` 区分。"
+            "text": "- 推荐: 传的选择器只挑可用的行，这样指针压在分割线、标题或禁用行上时什么都不挑，而不是亮一下。\n- 推荐: 让高亮就是 DOM 焦点：hook 会把指针下面那一行聚焦（`preventScroll`），这次聚焦不匹配 `:focus-visible`，只给键盘看的焦点环不会跟着鼠标走。当前行用 `:focus` 画出来。只有列表要把焦点留在组合框上时，才自己传 `onHighlight`。\n- 推荐: 在菜单根上声明 `touch-action`：行放得下时用 `pinch-zoom`，会滚动时用 `pan-y pinch-zoom`，让浏览器（而不是 hook）判断手指是不是在滚动，双指捏合也仍然能缩放页面。\n- 避免: 又在自己行的 `pointerdown` 或 `pointerup` 里执行一次；hook 已经按松开位置执行那一行，两条路会执行两遍。\n- 避免: 把 `detail` 为 0 的行 click 当成键盘触发；hook 派发的指针激活 `detail` 也是 0。派发出来的 click 不是可信事件，用 `event.isTrusted` 区分。"
           },
           {
             "heading": "返回值",

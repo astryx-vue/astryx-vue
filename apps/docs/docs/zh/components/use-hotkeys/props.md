@@ -23,7 +23,7 @@ footer: false
         <td><code>hotkeys[].keys</code></td>
         <td><code>string</code></td>
         <td>—</td>
-        <td>用 <code>"+"</code> 串起来的组合，例如 <code>"mod+k"</code>、<code>"shift+/"</code>、<code>"escape"</code>。<code>mod</code> 在 macOS 上是 ⌘，其他平台是 Ctrl。别名有 <code>esc</code>、<code>space</code>、<code>up</code>、<code>down</code>、<code>left</code>、<code>right</code>、<code>return</code>，字面量 <code>+</code> 写成 <code>plus</code>。组合里不写 <code>shift</code> 时忽略 shift 状态，所以单个字母不区分大小写。</td>
+        <td>用 <code>"+"</code> 串起来的组合，例如 <code>"mod+k"</code>、<code>"?"</code>、<code>"escape"</code>。会被 shift 改变的标点按它敲出来的字符注册：写 <code>"?"</code>，不要写 <code>"shift+/"</code>，因为最后一个键是和 <code>event.key</code> 比的。<code>mod</code> 在 macOS 上是 ⌘，其他平台是 Ctrl。别名有 <code>esc</code>、<code>space</code>、<code>up</code>、<code>down</code>、<code>left</code>、<code>right</code>、<code>return</code>，字面量 <code>+</code> 写成 <code>plus</code>。组合里不写 <code>shift</code> 时忽略 shift 状态，所以单个字母不区分大小写。</td>
       </tr>
       <tr>
         <td><code>hotkeys[].onPress</code></td>

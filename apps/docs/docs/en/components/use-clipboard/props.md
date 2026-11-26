@@ -46,7 +46,7 @@ footer: false
       <tr>
         <td><code>copy</code></td>
         <td><code>(text: string) =&gt; Promise&lt;boolean&gt;</code></td>
-        <td>Writes <code>text</code> to the clipboard. On success flips <code>isCopied</code> to true, announces the configured message, restarts the reset timer, and resolves true. A clipboard rejection is a silent no-op that leaves the copied state unchanged and resolves false.</td>
+        <td>Writes <code>text</code> to the clipboard. On success flips <code>isCopied</code> to true, announces the configured message, restarts the reset timer, and resolves true. Where the frame refuses the async Clipboard API (a sandboxed viewer or an embed), or the browser refuses the write, the text is copied with the browser copy command inside the reader's click or key press, without moving focus. A failed write is a silent no-op that leaves the copied state unchanged and resolves false.</td>
       </tr>
       <tr>
         <td><code>isCopied</code></td>

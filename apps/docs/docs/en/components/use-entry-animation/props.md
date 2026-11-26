@@ -34,7 +34,7 @@ footer: false
       <tr>
         <td><code>entryClass</code></td>
         <td><code>string | null</code></td>
-        <td>A shared motion class for the entry animation, or <code>null</code> if the element was rendered on initial page load (no animation needed). One of <code>astryx-motion-slide-in-below</code>, <code>astryx-motion-slide-in-above</code>, <code>astryx-motion-fade-in</code>, or <code>astryx-motion-scale-in</code>.</td>
+        <td>A shared motion class for the entry animation, or <code>null</code> if the element was rendered on initial page load or hydrated from server HTML (no animation needed). One of <code>astryx-motion-slide-in-below</code>, <code>astryx-motion-slide-in-above</code>, <code>astryx-motion-fade-in</code>, or <code>astryx-motion-scale-in</code>.</td>
       </tr>
     </tbody>
   </table>

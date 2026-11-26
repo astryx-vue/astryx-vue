@@ -28,7 +28,7 @@ import { useMenuPress } from '@astryx-vue/core'
 | 指引 | 实践 |
 | --- | --- |
 | <Badge variant="success">推荐</Badge> | 传的选择器只挑可用的行，这样指针压在分割线、标题或禁用行上时什么都不挑，而不是亮一下。 |
-| <Badge variant="success">推荐</Badge> | 让高亮就是 DOM 焦点：hook 会把指针下面那一行聚焦（`preventScroll`）。当前行用 `:focus` 画出来。只有列表要把焦点留在组合框上时，才自己传 `onHighlight`。 |
+| <Badge variant="success">推荐</Badge> | 让高亮就是 DOM 焦点：hook 会把指针下面那一行聚焦（`preventScroll`），这次聚焦不匹配 `:focus-visible`，只给键盘看的焦点环不会跟着鼠标走。当前行用 `:focus` 画出来。只有列表要把焦点留在组合框上时，才自己传 `onHighlight`。 |
 | <Badge variant="success">推荐</Badge> | 在菜单根上声明 `touch-action`：行放得下时用 `pinch-zoom`，会滚动时用 `pan-y pinch-zoom`，让浏览器（而不是 hook）判断手指是不是在滚动，双指捏合也仍然能缩放页面。 |
 | <Badge variant="error">避免</Badge> | 又在自己行的 `pointerdown` 或 `pointerup` 里执行一次；hook 已经按松开位置执行那一行，两条路会执行两遍。 |
 | <Badge variant="error">避免</Badge> | 把 `detail` 为 0 的行 click 当成键盘触发；hook 派发的指针激活 `detail` 也是 0。派发出来的 click 不是可信事件，用 `event.isTrusted` 区分。 |

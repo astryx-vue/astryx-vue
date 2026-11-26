@@ -110,6 +110,33 @@ describe('useMenuPress：菜单里的跟踪', () => {
     expect(onSelect).not.toHaveBeenCalled()
   })
 
+  it('指针点亮的行拿到焦点但不匹配 :focus-visible', () => {
+    mounted = mountHarness()
+    const focus = vi.spyOn(mounted.el('B'), 'focus')
+    pointer(mounted.el('A'), 'pointerdown', { pointerType: 'mouse' })
+    pointer(mounted.el('B'), 'pointermove', { pointerType: 'mouse' })
+    expect(focus).toHaveBeenCalledWith({ preventScroll: true, focusVisible: false })
+  })
+
+  it('菜单在 shadow root 里时，在菜单自己的根上做命中测试', () => {
+    const onSelect = vi.fn()
+    mounted = mountHarness({ onSelect })
+    const menu = mounted.el('A').parentElement!
+    const outside = mounted.el('outside')
+    const row = mounted.el('C')
+    Object.defineProperty(menu, 'getRootNode', { configurable: true, value: () => ({ elementFromPoint: () => row }) })
+    Object.defineProperty(document, 'elementFromPoint', { configurable: true, value: () => outside })
+    try {
+      pointer(mounted.el('A'), 'pointerdown', { pointerType: 'mouse' })
+      pointer(mounted.el('A'), 'pointerup', { pointerType: 'mouse' })
+      expect(onSelect).toHaveBeenCalledTimes(1)
+      expect(onSelect).toHaveBeenCalledWith('C')
+    }
+    finally {
+      delete (document as { elementFromPoint?: unknown }).elementFromPoint
+    }
+  })
+
   it('传了 onHighlight 就交给它，不动焦点', () => {
     const onHighlight = vi.fn()
     mounted = mountHarness({ onHighlight })

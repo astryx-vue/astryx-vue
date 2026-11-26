@@ -227,3 +227,18 @@ describe('useMenuHover：悬停等待期间被禁用', () => {
     expect(current.isOpen.value).toBe(false)
   })
 })
+
+describe('useMenuHover：别处关掉了菜单', () => {
+  it('关闭之前排好的悬停打开不会在关闭后重新打开', async () => {
+    current = mountMenu()
+    current.trigger.dispatchEvent(new MouseEvent('mouseenter'))
+    vi.advanceTimersByTime(100)
+    // 悬停延时还没到，菜单被别的途径打开又关掉（例如根菜单点外关闭时收起子菜单）。
+    current.isOpen.value = true
+    await nextTick()
+    current.isOpen.value = false
+    await nextTick()
+    vi.advanceTimersByTime(500)
+    expect(current.isOpen.value).toBe(false)
+  })
+})

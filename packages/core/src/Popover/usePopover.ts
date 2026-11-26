@@ -2,11 +2,12 @@ import type { ComputedRef, CSSProperties, MaybeRefOrGetter, Ref } from 'vue'
 import type { LayerPlacement } from '../layer/position.js'
 import type { PopoverAlignment, PopoverPlacement, PopoverRole } from './types.js'
 import { computed, nextTick, onScopeDispose, shallowRef, toValue, watch } from 'vue'
+import { focusablesIn, isDisabledWithin, preferTabStops } from '../composables/internal/focusRegion.js'
 import { useDismiss } from '../composables/useDismiss.js'
 import { useFocusTrap } from '../composables/useFocusTrap.js'
 import { useLayer } from '../composables/useLayer.js'
 import { useRestoreFocus } from '../composables/useRestoreFocus.js'
-import { focusElement, getFocusables } from '../layer/focus.js'
+import { focusElement } from '../layer/focus.js'
 
 export interface UsePopoverOptions {
   /**
@@ -174,9 +175,13 @@ export function usePopover(options: UsePopoverOptions = {}): UsePopoverReturn {
     if (!surface)
       return
     const selector = options.closeButtonSelector
-    const first = getFocusables(surface).find(element => selector == null || !element.closest(selector))
-    if (first && focusElement(first))
-      return
+    // 按文档顺序，真正的 Tab 落脚点优先；aria-disabled 的控件不当起点（Tab 仍能走到它）。都不行时落在面板自己身上。
+    const candidates = preferTabStops(focusablesIn(surface))
+      .filter(element => (selector == null || !element.closest(selector)) && !isDisabledWithin(element, surface))
+    for (const candidate of candidates) {
+      if (focusElement(candidate))
+        return
+    }
     if (role() === 'dialog')
       focusElement(surface)
   }

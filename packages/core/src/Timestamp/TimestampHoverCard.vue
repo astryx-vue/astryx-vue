@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { TimestampTooltipLine } from './tooltipEntries.js'
 import { computed, ref } from 'vue'
+import { writeClipboardText } from '../composables/internal/clipboardWrite.js'
 import HoverCard from '../HoverCard/HoverCard.vue'
 import ComponentIcon from '../Icon/ComponentIcon.vue'
 import IconButton from '../IconButton/IconButton.vue'
@@ -31,7 +32,7 @@ const columns = computed(() => {
 
 async function copy(value: string, key: string) {
   try {
-    await navigator.clipboard.writeText(value)
+    await writeClipboardText(value)
   }
   catch {
     return
