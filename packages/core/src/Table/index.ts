@@ -26,6 +26,8 @@ export type {
 } from './plugins/filtering.js'
 export { buildGroupedRows, isTableGroupHeader, useTableGroupedRows } from './plugins/groupedRows.js'
 export type { UseTableGroupedRowsConfig } from './plugins/groupedRows.js'
+export { useTableInfiniteScroll } from './plugins/infiniteScroll.js'
+export type { UseTableInfiniteScrollConfig } from './plugins/infiniteScroll.js'
 export { isInteractiveRowClick } from './plugins/interaction.js'
 export { paginateData as paginateTableData, useTablePagination } from './plugins/pagination.js'
 export type { TablePaginationVariant, UseTablePaginationConfig } from './plugins/pagination.js'
@@ -74,6 +76,7 @@ export type {
   TableFilterVariant,
   TableGroupPatch,
   TableHeaderPatch,
+  TableLoadingState,
   TablePanelPatch,
   TablePlugin,
   TableProps,

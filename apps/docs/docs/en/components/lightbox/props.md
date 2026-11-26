@@ -13,8 +13,8 @@ footer: false
 <tr><td><code>media</code></td><td><code>LightboxMedia | readonly LightboxMedia[]</code></td><td>—</td><td>One item, or a gallery. An array shows previous, next, and a counter.</td></tr>
 <tr><td><code>index</code></td><td><code>number</code></td><td>—</td><td>Controlled gallery index. Bind with <code>v-model:index</code>.</td></tr>
 <tr><td><code>defaultIndex</code></td><td><code>number</code></td><td><code>0</code></td><td>Initial index when <code>index</code> is omitted.</td></tr>
-<tr><td><code>hasZoom</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Double-click, Enter, Space, <code>+</code>, and <code>-</code> zoom images. Arrow keys pan while zoomed.</td></tr>
-<tr><td><code>hasAutoPlay</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Start video playback when a video item is shown.</td></tr>
+<tr><td><code>hasZoom</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Double-click, Enter, Space, <code>+</code>, and <code>-</code> zoom images, and <code>0</code> returns to the fitted size. Arrow keys pan while zoomed.</td></tr>
+<tr><td><code>hasAutoPlay</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Start video playback when a video item is shown in an open viewer.</td></tr>
 </tbody></table>
 </div>
 

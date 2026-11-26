@@ -6,7 +6,9 @@
     inset: 0;
     width: 100vw;
     max-width: none;
+    /* 动态视口：手机浏览器实际露出来的高度。100vh 按收起工具栏算，Safari 底栏会盖住图注。 */
     height: 100vh;
+    height: 100dvh;
     max-height: none;
     margin: 0;
     padding: 0;
@@ -74,6 +76,7 @@
     display: block;
     max-width: min(100vw, 100%);
     max-height: calc(100vh - 7rem);
+    max-height: calc(100dvh - 7rem);
     object-fit: contain;
     outline: none;
   }
@@ -109,15 +112,17 @@
   /*
    * 图集每一页的照片下面都有一条两行高的图注区域，不管图注长短，照片区域在每页都一样大，
    * 翻页时照片不会忽大忽小。没有图注的页面也留着这块空间，只是不画底色。
+   * 单张照片有图注时用同一条区域和底色；没有图注就没有这条区域。
    */
   .astryx-lightbox {
     --_lightbox-caption-band-padding: var(--astryx-spacing-2, 8px);
     --_lightbox-caption-band-height: calc(2 * var(--astryx-text-body-size, 1rem) * var(--astryx-text-body-leading, 1.4286));
   }
 
-  .astryx-lightbox[data-gallery] .astryx-lightbox__image,
-  .astryx-lightbox[data-gallery] .astryx-lightbox__video {
+  .astryx-lightbox[data-caption-band] .astryx-lightbox__image,
+  .astryx-lightbox[data-caption-band] .astryx-lightbox__video {
     max-height: calc(100vh - 7rem - var(--_lightbox-caption-band-height) - 2 * var(--_lightbox-caption-band-padding) - env(safe-area-inset-bottom, 0px));
+    max-height: calc(100dvh - 7rem - var(--_lightbox-caption-band-height) - 2 * var(--_lightbox-caption-band-padding) - env(safe-area-inset-bottom, 0px));
   }
 
   .astryx-lightbox__caption-band {

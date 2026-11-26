@@ -131,7 +131,7 @@ describe('a Button whose label is cut short', () => {
 describe('a table header cell whose heading is cut short', () => {
   it('shows the full heading when keyboard focus reaches a control inside the cell', async () => {
     restoreWidths = makeOverflow('th')
-    const wrapper = mount(() => h(Table, null, () => h(TableHeader, null, () => h(TableRow, null, () => h(TableHeaderCell, null, () => [
+    const wrapper = mount(() => h(Table, { textOverflow: 'truncate' }, () => h(TableHeader, null, () => h(TableRow, null, () => h(TableHeaderCell, null, () => [
       'Quarterly revenue by region',
       h('button', { 'type': 'button', 'aria-label': 'Sort' }),
     ])))), { attachTo: document.body })
@@ -141,5 +141,18 @@ describe('a table header cell whose heading is cut short', () => {
     ;(wrapper.get('th button').element as HTMLElement).focus()
     await nextTick()
     expect(tooltips().map(tooltip => tooltip.textContent?.trim())).toEqual(['Quarterly revenue by region'])
+  })
+
+  it('shows nothing where headings wrap, the default', async () => {
+    restoreWidths = makeOverflow('th')
+    const wrapper = mount(() => h(Table, null, () => h(TableHeader, null, () => h(TableRow, null, () => h(TableHeaderCell, null, () => [
+      'Quarterly revenue by region',
+      h('button', { 'type': 'button', 'aria-label': 'Sort' }),
+    ])))), { attachTo: document.body })
+
+    pressKey('Tab')
+    ;(wrapper.get('th button').element as HTMLElement).focus()
+    await nextTick()
+    expect(tooltips()).toHaveLength(0)
   })
 })

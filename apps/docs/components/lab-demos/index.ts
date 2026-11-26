@@ -3,6 +3,8 @@ import chatEmojiPickerDemo from './chat-emoji-picker.vue'
 import chatEmojiPickerSource from './chat-emoji-picker.vue?raw&highlighted'
 import chatReactionBarDemo from './chat-reaction-bar.vue'
 import chatReactionBarSource from './chat-reaction-bar.vue?raw&highlighted'
+import circleCheckIndicatorDemo from './circle-check-indicator.vue'
+import circleCheckIndicatorSource from './circle-check-indicator.vue?raw&highlighted'
 import circularProgressDemo from './circular-progress.vue'
 import circularProgressSource from './circular-progress.vue?raw&highlighted'
 import codeEditorDemo from './code-editor.vue'
@@ -19,6 +21,8 @@ import commentThreadDemo from './comment-thread.vue'
 import commentThreadSource from './comment-thread.vue?raw&highlighted'
 import commentsDemo from './comments.vue'
 import commentsSource from './comments.vue?raw&highlighted'
+import dialogHeroHeaderDemo from './dialog-hero-header.vue'
+import dialogHeroHeaderSource from './dialog-hero-header.vue?raw&highlighted'
 import diffViewerOverviewDemo from './diff-viewer-overview.vue'
 import diffViewerOverviewSource from './diff-viewer-overview.vue?raw&highlighted'
 import diffViewerDemo from './diff-viewer.vue'
@@ -60,6 +64,8 @@ const options = { className: 'lab-demo' }
 
 export const labChatEmojiPicker = defineDemo(chatEmojiPickerDemo, chatEmojiPickerSource, options)
 export const labChatReactionBar = defineDemo(chatReactionBarDemo, chatReactionBarSource, options)
+export const labCircleCheckIndicator = defineDemo(circleCheckIndicatorDemo, circleCheckIndicatorSource, options)
+export const labDialogHeroHeader = defineDemo(dialogHeroHeaderDemo, dialogHeroHeaderSource, options)
 export const labCircularProgress = defineDemo(circularProgressDemo, circularProgressSource, options)
 export const labCodeEditor = defineDemo(codeEditorDemo, codeEditorSource, options)
 export const labCommentComposer = defineDemo(commentComposerDemo, commentComposerSource, options)

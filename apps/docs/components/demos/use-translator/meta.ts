@@ -4,7 +4,7 @@ export const meta = {
   slug: 'use-translator',
   group: 'Utility',
   family: 'Utilities',
-  order: 154,
+  order: 155,
   en: 'useTranslator',
   zh: 'useTranslator',
 } satisfies DemoMeta

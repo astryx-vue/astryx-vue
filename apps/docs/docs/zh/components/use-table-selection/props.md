@@ -55,7 +55,7 @@ footer: false
         <td><code>getIsItemEnabled</code></td>
         <td><code>(item: T) =&gt; boolean</code></td>
         <td><code>() =&gt; true</code></td>
-        <td>这一行的复选框能不能点。返回 false 时复选框还在，但是禁用状态，选择列不会因此错位。</td>
+        <td>这一行的复选框能不能点。返回 false 时复选框还在，但是禁用状态，选择列不会因此错位。和 <code>getIsItemSelectable</code>（连复选框都没有）不同，这一行仍看得出本来可以选；配合 <code>useTableSelectionState</code> 时，全选对这两种行都保持原样。</td>
       </tr>
       <tr>
         <td><code>getRowLabel</code></td>

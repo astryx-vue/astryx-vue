@@ -4,7 +4,7 @@ export const meta = {
   slug: 'use-table-row-status',
   group: 'Utility',
   family: 'Table',
-  order: 144,
+  order: 145,
   en: 'useTableRowStatus',
   zh: 'useTableRowStatus',
 } satisfies DemoMeta

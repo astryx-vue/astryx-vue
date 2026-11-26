@@ -85,7 +85,11 @@ The ranking is local and deterministic: keyword matching over each template's sl
 
 `astryx-vue upgrade` reads the `@astryx-vue/core` version in the project's `package.json`, compares it with the version the CLI documents, and prints the sections of the [upgrade guide](/en/guide/migration) — what changed, how it was written before, how it is written now, what to do. It then looks through the project's own sources for the old names that guide replaces and lists file and line. Nothing is changed, and nothing is fetched from the network.
 
-`astryx-vue doctor` reports five checks and edits nothing: whether core is installed and how its version compares, whether themes is installed, whether `vue` satisfies 3.5.0, whether a theme stylesheet is imported, and whether `data-astryx-theme` is set. Exit code is 0 when everything passed or only warned, and 1 when a check failed.
+`astryx-vue doctor` reports five checks and edits nothing: whether core is installed and how its version compares, whether themes is installed, whether `vue` satisfies 3.5.0, whether a theme stylesheet is imported, and whether a theme is set — a `data-astryx-theme` attribute, `dataset.astryxTheme` in a script, or a `<Theme>` from core, whose outermost instance writes the attribute. Exit code is 0 when everything passed or only warned, and 1 when a check failed.
+
+In a project that lists core, a sixth check, `button-actions`, reads the templates of the project's own `.vue` files and names each core `Button` or `IconButton` that does nothing when pressed: no `@click`, `click-action`, `href`, or `submit`/`reset` type, an empty handler such as `@click="() => {}"`, or a link that goes nowhere (`""`, `#`, `javascript:`; `#` is fine in an app that routes by the hash). It only judges a button when nothing around it can act on a press: every element around it, in its own file and in each file that renders that component, is plain HTML with no handler, a core layout component such as `Stack` or `Card`, or a Vue wrapper such as `Transition`. A button it cannot read fully is left out: one with spread props, a `ref`, an `id`, a `tooltip`, a disabled or loading state, slot content, or a component it cannot follow (a route table, a lazy load, an auto-imported tag). Test, story and fixture files are skipped. The check is a warning and never fails `doctor`; it reports `info` and judges nothing when the app listens for a press through the DOM (`addEventListener('click', …)`, `useEventListener`, an `onclick` property).
+
+A failed package check prints the command that fixes it, in the project's package manager. A missing themes package is named at the project's core release, because the two packages version together, and saved exactly (`-E`) when the project pins core to one version. A package that `package.json` lists but no `node_modules` folder holds, as in a fresh clone, gets the project's own install (`pnpm install`) instead, so the versions the project lists stay as they are.
 
 ## Flags
 
@@ -107,11 +111,15 @@ The command owns only the block between these markers:
 <!-- astryx-vue block end -->
 ```
 
-Every run replaces that block with freshly generated text. Text outside the markers stays. If the file exists and the markers are missing, the block is appended.
+Every run replaces that block with freshly generated text. Text outside the markers stays. If the file exists and the markers are missing, the block is appended. A file whose block is already current is not written, and the output says so for each file: created, appended, updated, or already current. The `--json` receipt has the same per file in `files[].action` (`created`, `appended`, `updated`, `unchanged`), and `agentDocsStatus` says how the agent files stood before the run: `missing`, `stale`, or `current` (null when no agent file was written).
+
+When every agent file is already current, the project went through this setup before, so the text output prints `build` and `search` and where the install steps are, instead of the whole guide. `--json` still carries the whole guide.
+
+A file the command cannot read or write fails with `ERR_WRITE_FAILED`, and the message names the file, the reason (such as `permission denied (EACCES)`), and what to change.
 
 The block names every package the CLI documents, marks the canary ones, and says plainly when a package is not on npm yet — those get no install command, so nobody is sent to a missing package. Then it describes a three-step workflow: run `build` to pick a page, run `template` to copy it, then run `component`, `composable`, or `docs` before writing code. It also says how to invoke the binary.
 
-The install command follows the project's package manager: the `packageManager` field first, then a lockfile. When neither says which manager it is, all four forms are printed.
+The install command follows the project's package manager: the `packageManager` field first, then a lockfile. When neither says which manager it is, all four forms are printed. The install step names only what `package.json` does not list yet: themes at the project's core release when core is already there, or the project's own install when both are listed but not installed.
 
 The sentences the CLI prints come from this docs site and from the playground pages. After a docs or template change, regenerate the catalog in the CLI package. The maintainer steps are in `packages/cli/CONTRIBUTING.md`.
 

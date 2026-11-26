@@ -33,13 +33,4 @@
     outline-color: var(--astryx-focus-outline-color, currentcolor);
     outline-offset: var(--astryx-focus-outline-offset, 3px);
   }
-
-  /* 触屏下按钮周围一圈看不见的点击带，把点击目标撑到 44px。 */
-  @media (pointer: coarse) {
-    .astryx-info-tip::after {
-      position: absolute;
-      inset: -12px;
-      content: '';
-    }
-  }
 }

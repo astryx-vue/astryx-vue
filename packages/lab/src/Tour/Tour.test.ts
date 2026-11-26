@@ -64,7 +64,8 @@ describe('tour', () => {
     await flush()
     expect(document.body.textContent).toContain('First')
     expect(document.body.textContent).not.toContain('Second')
-    expect(document.querySelector('[aria-label="First"]')).not.toBeNull()
+    const region = document.querySelector<HTMLElement>('section.astryx-tour-callout[aria-labelledby]')!
+    expect(document.getElementById(region.getAttribute('aria-labelledby')!)?.textContent).toContain('First')
 
     const next = [...document.querySelectorAll('button')].find(button => button.textContent === 'Next')
     next?.click()
@@ -126,13 +127,13 @@ describe('tour', () => {
     wrapper.unmount()
   })
 
-  it('closes the whole tour with Escape', async () => {
+  it('closes the whole tour with Escape, reported as escape', async () => {
     const onDismiss = vi.fn()
     const wrapper = mountTour({ onDismiss })
     await flush()
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
     await flush()
-    expect(onDismiss).toHaveBeenCalledWith('close')
+    expect(onDismiss).toHaveBeenCalledWith('escape')
     expect(document.body.textContent).not.toContain('First body')
     wrapper.unmount()
   })
@@ -154,6 +155,83 @@ describe('tour', () => {
     await flush()
     expect(document.body.textContent).toContain('First body')
     expect(document.body.textContent).not.toContain('Second body')
+    wrapper.unmount()
+  })
+
+  it('reports close from the step\'s close control', async () => {
+    const onDismiss = vi.fn()
+    const wrapper = mountTour({ onDismiss })
+    await flush()
+    document.querySelector<HTMLButtonElement>('[aria-label="Close tour"]')!.click()
+    await flush()
+    expect(onDismiss).toHaveBeenCalledWith('close')
+    wrapper.unmount()
+  })
+
+  it('moves focus to the callout, a non-modal region, when a step starts', async () => {
+    const wrapper = mountTour()
+    await flush()
+    const region = document.querySelector<HTMLElement>('section.astryx-tour-callout[aria-labelledby]')!
+    expect(document.activeElement).toBe(region)
+    expect(region.getAttribute('aria-modal')).toBeNull()
+    expect(region.tagName).toBe('SECTION')
+    document.querySelector<HTMLButtonElement>('button')!.focus()
+    await flush()
+    expect(document.body.textContent).toContain('First body')
+    wrapper.unmount()
+  })
+
+  it('keeps the tour running when the target or the page is pressed without a backdrop', async () => {
+    const onDismiss = vi.fn()
+    const wrapper = mountTour({ onDismiss })
+    await flush()
+    const target = [...document.querySelectorAll('button')].find(button => button.textContent === 'Target A')!
+    target.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }))
+    target.click()
+    document.body.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }))
+    document.body.click()
+    await flush()
+    expect(onDismiss).not.toHaveBeenCalled()
+    expect(document.body.textContent).toContain('First body')
+    wrapper.unmount()
+  })
+
+  it('points at any element and returns focus to a focusable target when the tour ends', async () => {
+    const wrapper = mountTour()
+    await flush()
+    document.querySelector<HTMLButtonElement>('[aria-label="Close tour"]')!.focus()
+    document.querySelector<HTMLButtonElement>('[aria-label="Close tour"]')!.click()
+    await flush()
+    expect(document.activeElement?.textContent).toBe('Target A')
+    wrapper.unmount()
+  })
+
+  it('returns focus to the opener when the target cannot take focus', async () => {
+    const wrapper = mount(defineComponent({
+      components: { Tour, TourStep },
+      setup() {
+        const active = ref(false)
+        const card = shallowRef<HTMLElement | null>(null)
+        return { active, card }
+      },
+      template: `
+        <button type="button" @click="active = true">Start tour</button>
+        <div ref="card" class="card">A card</div>
+        <Tour :is-active="active" @dismiss="active = false">
+          <TourStep :target-ref="card" heading="Card">Card body</TourStep>
+        </Tour>
+      `,
+    }), { attachTo: document.body })
+    const opener = document.querySelector<HTMLButtonElement>('button')!
+    opener.focus()
+    opener.click()
+    await flush()
+    expect(document.body.textContent).toContain('Card body')
+    expect(document.activeElement?.tagName).toBe('SECTION')
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+    await flush()
+    expect(document.body.textContent).not.toContain('Card body')
+    expect(document.activeElement).toBe(opener)
     wrapper.unmount()
   })
 

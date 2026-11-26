@@ -1,6 +1,6 @@
 // i18n 目录检查的判定部分。这里只收数据、回问题清单，不读文件也不打印，测试可以直接喂假数据。
-// ICU 解析用的两个函数由调用方传进来（`icu.argumentKinds`、`icu.format`），
-// 正式运行时就是 packages/core/src/locale/icu.ts 里的那两个，保证检查和运行时读法一致。
+// ICU 解析用的函数由调用方传进来（`icu.argumentKinds`、`icu.format`、可选的 `icu.selectOptions`），
+// 正式运行时就是 packages/core/src/locale/icu.ts 里的同名函数，保证检查和运行时读法一致。
 
 const ICU_LEFTOVER = /\{\s*\w+\s*(?:,[^}]*)?\}/
 const NUMERIC_KINDS = new Set(['number', 'plural', 'selectordinal'])
@@ -122,6 +122,38 @@ export function sampleValues(kinds, count) {
   return values
 }
 
+const MAX_VARIANTS = 32
+
+/**
+ * 一组样例值不够用的时候（有 `select` 占位符），把每个 select 的每个分支都取一遍。
+ * select 占位符除了写出来的分支名，还取一次 `sampleValues` 给的值，走到 `other`。
+ * 没有 select 时只有一组，和 `sampleValues` 一样。
+ */
+export function sampleVariants(kinds, selectOptions, count) {
+  const base = sampleValues(kinds, count)
+  let variants = [base]
+  for (const [name, options] of Object.entries(selectOptions)) {
+    if (!Object.hasOwn(kinds, name))
+      continue
+    const next = []
+    for (const variant of variants) {
+      for (const option of [...options, base[name]])
+        next.push({ ...variant, [name]: option })
+    }
+    variants = next.slice(0, MAX_VARIANTS)
+  }
+  return variants
+}
+
+/** 只用来挑分支的占位符：它的值本来就不会出现在文字里。 */
+function isSelectOnly(kinds, name) {
+  return kinds[name]?.every(kind => kind === 'select') ?? false
+}
+
+function readSelectOptions(icu, message) {
+  return icu.selectOptions == null ? {} : icu.selectOptions(message)
+}
+
 function render(value, args, values) {
   return typeof value === 'function' ? value(...args.map(name => values[name])) : value
 }
@@ -145,29 +177,38 @@ export function checkBuiltInPlaceholders(map, trees, enCatalog, icu) {
       catch {
         continue
       }
-      const values = sampleValues(kinds, 7)
+      const variants = sampleVariants(kinds, readSelectOptions(icu, message), 7)
       for (const target of targets) {
         const value = leaves.get(target.path)
         if (value == null)
           continue
         const args = target.args ?? []
-        let text
-        try {
-          text = render(value, args, values)
+        const texts = []
+        for (const values of variants) {
+          let text
+          try {
+            text = render(value, args, values)
+          }
+          catch (error) {
+            problems.push(`${tag} ${target.path}：调用时出错（${error.message}）`)
+            break
+          }
+          if (typeof text !== 'string' || text.trim() === '') {
+            problems.push(`${tag} ${target.path}：结果是空的`)
+            break
+          }
+          if (ICU_LEFTOVER.test(text)) {
+            problems.push(`${tag} ${target.path}：结果里还留着没填的 ICU 占位符：${JSON.stringify(text)}`)
+            break
+          }
+          texts.push({ text, values })
         }
-        catch (error) {
-          problems.push(`${tag} ${target.path}：调用时出错（${error.message}）`)
+        if (texts.length !== variants.length)
           continue
-        }
-        if (typeof text !== 'string' || text.trim() === '') {
-          problems.push(`${tag} ${target.path}：结果是空的`)
-          continue
-        }
-        const missing = args.filter(name => !text.includes(String(values[name])))
+        const missing = args.filter(name => !isSelectOnly(kinds, name)
+          && !texts.some(({ text, values }) => text.includes(String(values[name]))))
         if (missing.length > 0)
           problems.push(`${tag} ${target.path}：没有用上占位符 ${missing.join(', ')}（对应 ${key}）`)
-        if (ICU_LEFTOVER.test(text))
-          problems.push(`${tag} ${target.path}：结果里还留着没填的 ICU 占位符：${JSON.stringify(text)}`)
       }
     }
   }
@@ -176,6 +217,28 @@ export function checkBuiltInPlaceholders(map, trees, enCatalog, icu) {
 
 function cleanup(text) {
   return text.replace(/[ \t]{2,}/g, ' ').trim()
+}
+
+/** 一个键的内置英文和原版英文逐个样例比较，返回第一处不一致；调用出错时不再比较。 */
+function compareEnglish(key, target, value, message, kinds, icu) {
+  const selectOptions = readSelectOptions(icu, message)
+  const hasNumbers = Object.keys(kinds).some(name => kinds[name].some(kind => NUMERIC_KINDS.has(kind)))
+  const counts = typeof value === 'function' && hasNumbers ? [1, 3, 1234] : [1]
+  for (const count of counts) {
+    for (const values of sampleVariants(kinds, selectOptions, count)) {
+      let ours
+      try {
+        ours = render(value, target.args ?? [], values)
+      }
+      catch {
+        return undefined
+      }
+      const theirs = cleanup(icu.format(message, values, 'en'))
+      if (ours !== theirs)
+        return `${key} → ${target.path}：内置英文是 ${JSON.stringify(ours)}，原版是 ${JSON.stringify(theirs)}`
+    }
+  }
+  return undefined
 }
 
 /**
@@ -199,23 +262,9 @@ export function checkEnglishText(map, enTree, enCatalog, icu) {
     catch {
       continue
     }
-    for (const count of [1, 3, 1234]) {
-      const values = sampleValues(kinds, count)
-      let ours
-      try {
-        ours = render(value, target.args ?? [], values)
-      }
-      catch {
-        break
-      }
-      const theirs = cleanup(icu.format(message, values, 'en'))
-      if (ours !== theirs) {
-        problems.push(`${key} → ${target.path}：内置英文是 ${JSON.stringify(ours)}，原版是 ${JSON.stringify(theirs)}`)
-        break
-      }
-      if (typeof value !== 'function' || Object.keys(kinds).every(name => !kinds[name].some(kind => NUMERIC_KINDS.has(kind))))
-        break
-    }
+    const problem = compareEnglish(key, target, value, message, kinds, icu)
+    if (problem != null)
+      problems.push(problem)
   }
   return problems
 }

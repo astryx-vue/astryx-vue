@@ -41,7 +41,7 @@ footer: false
         <td><code>focusTrigger</code></td>
         <td><code>'auto' | 'always' | 'never' | MaybeRefOrGetter</code></td>
         <td><code>'auto'</code></td>
-        <td>When focus opens the tooltip. <code>auto</code> only attaches focus listeners to naturally focusable elements.</td>
+        <td>When focus opens the tooltip. <code>auto</code> decides when focus arrives: focus on the trigger itself counts, and focus inside it counts while the trigger is focusable. <code>always</code> counts any focus inside; <code>never</code> ignores focus.</td>
       </tr>
       <tr>
         <td><code>touchTrigger</code></td>
@@ -59,7 +59,7 @@ footer: false
         <td><code>isOpen</code></td>
         <td><code>boolean | undefined | MaybeRefOrGetter</code></td>
         <td>—</td>
-        <td>Controlled open state. <code>true</code> force-shows, <code>false</code> force-hides, <code>undefined</code> lets hover and focus manage visibility.</td>
+        <td>Controlled open state. <code>true</code> force-shows, <code>false</code> force-hides, <code>undefined</code> lets hover and focus manage visibility. With <code>false</code>, focus that would open the tooltip calls <code>onShow</code> and shows nothing.</td>
       </tr>
       <tr>
         <td><code>isDefaultOpen</code></td>

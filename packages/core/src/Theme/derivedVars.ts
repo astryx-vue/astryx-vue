@@ -66,6 +66,9 @@ export const DERIVED_VARS: Readonly<Record<string, readonly DerivedVarEntry[]>> 
     { property: 'borderRadius', vars: ['--_segmented-control-radius'] },
     { property: 'padding', vars: ['--_segmented-control-padding'] },
   ],
+  // A pinned column replays its row's fill from --table-row-overlay, so a
+  // theme's row background reaches the pinned cells too.
+  'table-row': [{ property: 'backgroundColor', vars: ['--table-row-overlay'] }],
   // The room between the track and its label, as on `checkbox-input`.
   'switch': [{ property: 'gap', vars: ['--_switch-gap'], replaces: true }],
 }

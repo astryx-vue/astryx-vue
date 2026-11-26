@@ -2,7 +2,7 @@ import { execFileSync } from 'node:child_process'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { formatIcu, icuArgumentKinds } from '../packages/core/src/locale/icu.ts'
+import { formatIcu, icuArgumentKinds, icuSelectOptions } from '../packages/core/src/locale/icu.ts'
 import {
   checkBuiltInParity,
   checkBuiltInPlaceholders,
@@ -15,7 +15,7 @@ import {
   checkSourceRefs,
 } from '../scripts/i18n-catalog/checks.mjs'
 
-const icu = { argumentKinds: icuArgumentKinds, format: formatIcu }
+const icu = { argumentKinds: icuArgumentKinds, format: formatIcu, selectOptions: icuSelectOptions }
 const rootDir = join(dirname(fileURLToPath(import.meta.url)), '..')
 
 const enCatalog = {
@@ -105,6 +105,28 @@ describe('checkEnglishText', () => {
     const problems = checkEnglishText(map, drifted, enCatalog, icu)
     expect(problems).toContain('@astryx.demo.close → demo.close：内置英文是 "Dismiss"，原版是 "Close"')
     expect(problems.some(problem => problem.startsWith('@astryx.demo.count → demo.count'))).toBe(true)
+  })
+})
+
+describe('select placeholders', () => {
+  const selectCatalog = {
+    '@astryx.demo.menu': { defaultMessage: '{hasHeading, select, true {{heading}, } other {}}Open menu' },
+  }
+  const selectMap = { '@astryx.demo.menu': [{ path: 'demo.menu', args: ['hasHeading', 'heading'] }] }
+  const menu = (hasHeading: string, heading: string) => hasHeading === 'true' ? `${heading}, Open menu` : 'Open menu'
+
+  it('renders every branch, and does not ask a branch-only placeholder to reach the text', () => {
+    const trees = { 'en': { demo: { menu } }, 'zh-CN': { demo: { menu: (hasHeading: string, heading: string) => hasHeading === 'true' ? `${heading}，打开菜单` : '打开菜单' } } }
+    expect(checkBuiltInPlaceholders(selectMap, trees, selectCatalog, icu)).toEqual([])
+    expect(checkEnglishText(selectMap, trees.en, selectCatalog, icu)).toEqual([])
+  })
+
+  it('still reports a placeholder that no branch shows, and English that drifts in one branch', () => {
+    const dropped = { demo: { menu: () => 'Open menu' } }
+    expect(checkBuiltInPlaceholders(selectMap, { en: dropped }, selectCatalog, icu))
+      .toEqual(['en demo.menu：没有用上占位符 heading（对应 @astryx.demo.menu）'])
+    const drifted = { demo: { menu: (hasHeading: string, heading: string) => hasHeading === 'true' ? `${heading}: Open menu` : 'Open menu' } }
+    expect(checkEnglishText(selectMap, drifted, selectCatalog, icu)).toHaveLength(1)
   })
 })
 

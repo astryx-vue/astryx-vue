@@ -42,8 +42,22 @@ function dismiss(source: Parameters<typeof emit>[1]): void {
   emit('dismiss', source)
 }
 
+// 开始引导时有焦点的元素。引导在一个拿不了焦点的目标上结束时，焦点还给它。
+// 同步记录，赶在第一步把焦点移进说明框之前。
+let opener: HTMLElement | null = null
+
+function rememberOpener(): void {
+  const active = typeof document === 'undefined' ? null : document.activeElement
+  opener = active instanceof HTMLElement && active !== document.body ? active : null
+}
+
+if (props.isActive)
+  rememberOpener()
+
 watch(() => props.isActive, (active) => {
-  if (!active)
+  if (active)
+    rememberOpener()
+  else
     activeStepIndex.value = 0
 }, { flush: 'sync' })
 
@@ -62,6 +76,7 @@ provide(TOUR_CONTEXT_KEY, {
   onNext: next,
   onPrevious: previous,
   onDismiss: dismiss,
+  getOpener: () => opener,
 })
 </script>
 

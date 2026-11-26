@@ -183,3 +183,10 @@ describe('internationalizationProvider', () => {
     wrapper.unmount()
   })
 })
+
+describe('internationalizationProvider without a locale', () => {
+  it('names the missing prop and the fix in development', () => {
+    expect(() => mount(InternationalizationProvider, { props: {} as never, slots: { default: () => h(Probe) } }))
+      .toThrow('InternationalizationProvider: `locale` is required: a BCP 47 language tag, for example locale="en" or locale="pt-BR".')
+  })
+})

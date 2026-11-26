@@ -124,6 +124,57 @@ describe('radialTooltip', () => {
     wrapper.unmount()
   })
 
+  async function touch(wrapper: ReturnType<typeof mountTooltip>, type: string, x = 400, y = 200): Promise<void> {
+    await wrapper.get('circle[fill="transparent"]').trigger(type, { clientX: x, clientY: y, pointerId: 1, pointerType: 'touch' })
+    await nextTick()
+    await nextTick()
+  }
+
+  function tooltipText(): string | undefined {
+    return document.body.querySelector('.astryx-radial-tooltip')?.textContent ?? undefined
+  }
+
+  it('leaves touch input to the page when interactive is off', async () => {
+    const wrapper = mountTooltip()
+    stubCoordinates(wrapper)
+    const down = new PointerEvent('pointerdown', { clientX: 400, clientY: 200, pointerType: 'touch', cancelable: true, bubbles: true })
+    wrapper.get('circle[fill="transparent"]').element.dispatchEvent(down)
+    await nextTick()
+    expect(down.defaultPrevented).toBe(false)
+    expect(tooltipText()).toBeUndefined()
+    await touch(wrapper, 'pointermove', 200, 200)
+    expect(tooltipText()).toBeUndefined()
+    wrapper.unmount()
+  })
+
+  it('ends an active touch when interactive turns off, without reviving it when it turns back on', async () => {
+    const wrapper = mountTooltip({}, { interactive: true })
+    stubCoordinates(wrapper)
+    await touch(wrapper, 'pointerdown')
+    expect(tooltipText()).toContain('NA')
+    await wrapper.setProps({ interactive: false })
+    await nextTick()
+    expect(tooltipText()).toBeUndefined()
+    await touch(wrapper, 'pointermove', 200, 200)
+    expect(tooltipText()).toBeUndefined()
+    await wrapper.setProps({ interactive: true })
+    await touch(wrapper, 'pointermove', 200, 200)
+    expect(tooltipText()).toBeUndefined()
+    await touch(wrapper, 'pointerdown', 200, 200)
+    expect(tooltipText()).toContain('EU')
+    wrapper.unmount()
+  })
+
+  it('keeps mouse hover in every interactive setting', async () => {
+    for (const interactive of [undefined, true, false]) {
+      const wrapper = mountTooltip({}, interactive === undefined ? {} : { interactive })
+      stubCoordinates(wrapper)
+      await hover(wrapper, 400, 200)
+      expect(tooltipText()).toContain('NA')
+      wrapper.unmount()
+    }
+  })
+
   it('supports custom Vue slot content', async () => {
     const wrapper = mountRadial(
       { data: pieData, valueKey: 'revenue', labelKey: 'region' },

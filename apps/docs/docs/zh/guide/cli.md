@@ -61,7 +61,8 @@ npm run astryx-vue -- component Button
 - `astryx-vue manifest --json`：输出 CLI 自身的接口定义清单（命令、选项、响应结构、错误码及退出码），方便被上层工具或脚本消费。
 - `astryx-vue theme`：列出全部内置主题；`astryx-vue theme butter` 输出这套主题的接入四步（引哪个样式表、`data-astryx-theme` 写什么、怎么换主题或同时用两套、改完怎么验证）。
 - `astryx-vue upgrade`：读项目里 `@astryx-vue/core` 的版本，和这个 CLI 对应版本比较，打印[升级指南](/guide/migration)里要做的每一件事，再在项目源码里指出旧名字所在文件和行号。不联网，不改文件。
-- `astryx-vue doctor`：检查依赖装没装、版本对不对、主题样式引没引、主题属性设没设，只报告不改文件；有失败时退出码是 1。
+- `astryx-vue doctor`：检查依赖装没装、版本对不对、主题样式引没引、主题设没设（写了 `data-astryx-theme` 属性、在脚本里设了 `dataset.astryxTheme`，或用了 core 的 `<Theme>`，最外层的 `<Theme>` 会自己写这个属性），只报告不改文件；有失败时退出码是 1。包没装好时，它会用项目自己的包管理器给出修复命令：缺 themes 就按项目 core 的版本装（两个包一起发版），项目把 core 钉死在一个版本时还会加 `-E` 精确保存；`package.json` 写了但 `node_modules` 里没有（比如刚 clone 下来），就让你运行项目自己的安装（如 `pnpm install`），不会再 add 一遍把项目写好的版本换掉。
+  项目写了 core 时还有第六项 `button-actions`：读项目自己 `.vue` 文件的模板，列出按下后什么都不做的 core `Button` 或 `IconButton`，也就是没有 `@click`、`click-action`、`href` 或 `submit`/`reset` 类型，处理函数是空的（如 `@click="() => {}"`），或者链接哪儿也不去（空、`#`、`javascript:`；用 hash 路由的应用里 `#` 不算）。只有周围没有东西能接管按下时才判：它所在文件里、以及渲染这个组件的每个文件里，外面套的都是没有事件处理的普通 HTML、`Stack`、`Card` 这类 core 布局组件，或 `Transition` 这类 Vue 自带包装。看不全的按钮一律不报：展开传入 props、写了 `ref`、`id`、`tooltip`、禁用或加载状态、放了插槽内容，或者所在组件追不到（路由表、懒加载、自动导入的标签）。测试、story 和 fixture 文件不看。这一项只警告，从不让 doctor 失败；应用自己通过 DOM 监听按下时（`addEventListener('click', …)`、`useEventListener`、`onclick` 属性）它报 `info`，不判任何按钮。
 - `astryx-vue init`：打印给 AI 助手的接入说明（装哪些包、主题样式引哪一行、语言怎么提供），并在项目根目录维护 agent 上下文文件。
 
 ## 页面模板与代码生成
@@ -94,9 +95,13 @@ npm run astryx-vue -- component Button
 
 区块开头列出这个 CLI 覆盖的每个包，能发 canary 的标出来；npm 上还没有的包会直说「还没发布到 npm」，并且不给安装命令，免得有人照着敲一个装不到的包名。随后是三步工作流：用 `build` 挑页面，用 `template` 复制，写代码前用 `component`、`composable` 或 `docs` 查询用法。
 
-`init` 打印的安装命令跟着项目走：先看 `packageManager` 字段，再看锁文件；两样都没有时把四种写法都列出来。
+`init` 打印的安装命令跟着项目走：先看 `packageManager` 字段，再看锁文件；两样都没有时把四种写法都列出来。安装这一步只列 `package.json` 里还没有的包：已经有 core 时，themes 按 core 的版本装；两个都写了但还没装上时，改成运行项目自己的安装。
 
-每次运行命令，工具只会用最新的组件库信息替换这两个标记之间的内容，标记之外由你自己撰写的项目规则会完好无损地保留下来。如果文件已存在但尚未包含这些标记，工具会安全地将其追加到文件末尾。
+每次运行命令，工具只会用最新的组件库信息替换这两个标记之间的内容，标记之外由你自己撰写的项目规则会完好无损地保留下来。如果文件已存在但尚未包含这些标记，工具会安全地将其追加到文件末尾。区块已经是最新的文件不会被重写，输出会逐个文件说明做了什么：新建、追加、更新，或已是最新没有改动。`--json` 里 `files[].action` 是同样的信息（`created`、`appended`、`updated`、`unchanged`），`agentDocsStatus` 说明运行前 agent 文件的状态：`missing`、`stale` 或 `current`（这次没写 agent 文件时为 null）。
+
+所有 agent 文件都已是最新时，说明这个项目已经接好了，文本输出只给出 `build` 和 `search` 两条命令以及安装步骤在哪儿，不再打印整份接入说明；`--json` 里仍然是完整的说明。
+
+读不了或写不了文件时以 `ERR_WRITE_FAILED` 失败，报错会写明是哪个文件、什么原因（例如 `permission denied (EACCES)`）以及该改什么。
 
 > **维护者提醒**：CLI 打印的内容均提取自当前文档站和演练场页面。当文档或模板修改后，需要重新生成 CLI 包内置的目录快照，操作步骤记录在 `packages/cli/CONTRIBUTING.md` 中。
 

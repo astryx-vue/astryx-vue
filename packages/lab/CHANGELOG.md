@@ -1,5 +1,42 @@
 # @astryx-vue/lab
 
+## 0.7.1
+
+### Patch Changes
+
+- Updated dependencies [[`b74909f`](https://github.com/astryx-vue/astryx-vue/commit/b74909fc6e89b8cf365eb9ce41cda4178c69cc99), [`083cd85`](https://github.com/astryx-vue/astryx-vue/commit/083cd85c3e72ee76353719f81598895b13707072)]:
+  - @astryx-vue/core@0.12.0
+
+## 0.7.0
+
+### Minor Changes
+
+- [#536](https://github.com/astryx-vue/astryx-vue/pull/536) [`bf97b13`](https://github.com/astryx-vue/astryx-vue/commit/bf97b13f85a406f7e637a8f5b4977546504e28aa) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 实验包新增 CircleCheckIndicator（iOS 的多选圆圈，在主题里映射到 `checkbox` 后所有复选框都画成圆圈，鼠标、触控笔按下时按压色立刻画在圆圈上）和 DialogHeroHeader（标题上方铺满媒体、关闭按钮浮在媒体上的对话框页头）；core 公开 `useDialogContext`，让自己画对话框页头的组件读到标题约定。
+
+### Patch Changes
+
+- Updated dependencies [[`bf97b13`](https://github.com/astryx-vue/astryx-vue/commit/bf97b13f85a406f7e637a8f5b4977546504e28aa)]:
+  - @astryx-vue/core@0.11.0
+
+## 0.6.8
+
+### Patch Changes
+
+- [#535](https://github.com/astryx-vue/astryx-vue/pull/535) [`3cf0198`](https://github.com/astryx-vue/astryx-vue/commit/3cf01987b8851556dd83c5f4a42a44ee3daa0555) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 实验包 DiffViewer：`createDiffFile` 在线性内存里逐行比较最多 10,000 行改动，更大的改动在片段上标 `isReplacedBlock`；DiffViewer 把整块替换和改动超过 2,000 行的文件折在「Large change: N lines」后面，点 Show full diff 展开，折叠会藏住批注时一开始就展开。
+
+## 0.6.7
+
+### Patch Changes
+
+- [#532](https://github.com/astryx-vue/astryx-vue/pull/532) [`41a3277`](https://github.com/astryx-vue/astryx-vue/commit/41a32773b15cdbc36962d70c6bbb75c89394ac9e) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 实验包：CircularProgress 改为合成线程上转动的圆弧，页面忙时进度变化也不会卡住，不确定状态和加载圈一样转，所有变体共用浅色轨道、禁用时整圈半透明；Tour 的说明框改成非模态区域，可以指向任何元素，按目标或页面不再结束引导，Escape 报告 `escape`，结束后把焦点还回去；CodeEditor 在从右到左的页面里代码保持从左到右；Schedule 的加载提示改走共享播报通道。
+
+## 0.6.6
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @astryx-vue/core@0.10.0
+
 ## 0.6.5
 
 ### Patch Changes

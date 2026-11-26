@@ -28,6 +28,12 @@ The config is a `MaybeRefOrGetter`, so pass a getter to keep the row meta, the e
         <td>Toggle a row's expansion.</td>
       </tr>
       <tr>
+        <td><code>getRowLabel</code></td>
+        <td><code>(item: T) =&gt; string</code></td>
+        <td>—</td>
+        <td>A readable row identity for the expander's accessible name, such as "Expand Acme". A blank label falls back to the generic "Expand row".</td>
+      </tr>
+      <tr>
         <td><code>hasExpandableRows</code></td>
         <td><code>boolean</code></td>
         <td>—</td>
@@ -100,7 +106,7 @@ The config is a `MaybeRefOrGetter`, so pass a getter to keep the row meta, the e
       <tr>
         <td><code>rowPatch</code></td>
         <td><code>(row: T, index: number, columnCount: number) =&gt; TableRowPatch | null</code></td>
-        <td>Sets <code>aria-level</code> (level + 1) and, for rows with children, <code>aria-expanded</code>. With <code>hasRowClickExpansion</code> it also adds the click-to-toggle handler and the <code>astryx-table__clickable</code> class on expandable rows.</td>
+        <td>Gives each tree row a DOM id, which its parent's expander names in <code>aria-controls</code> while expanded. Rows carry no <code>aria-level</code> or <code>aria-expanded</code>. With <code>hasRowClickExpansion</code> it also adds the click-to-toggle handler and the <code>astryx-table__clickable</code> class on expandable rows.</td>
       </tr>
     </tbody>
   </table>

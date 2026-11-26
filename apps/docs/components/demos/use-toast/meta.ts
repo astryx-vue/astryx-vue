@@ -5,7 +5,7 @@ export const meta = {
   slug: 'use-toast',
   group: 'Utility',
   family: 'Toast',
-  order: 152,
+  order: 153,
   en: 'useToast',
   zh: 'useToast',
   // 原版这个 hook 页顶部的预览和组件页是同一个 showcase。
