@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { DismissEscape } from '../layer/dismissStack.js'
 import type { BottomSheetEmits, BottomSheetMotion, BottomSheetProps, BottomSheetSlots, BottomSheetState } from './types.js'
-import { computed, inject, onBeforeUnmount, onMounted, ref, toValue, useAttrs, useTemplateRef, watch } from 'vue'
+import { computed, inject, onBeforeUnmount, onMounted, provide, ref, toValue, useAttrs, useTemplateRef, watch } from 'vue'
 import { focusForLastInput } from '../composables/internal/focusReturn.js'
 import { useFocusTrap } from '../composables/useFocusTrap.js'
 import { useRestoreFocus } from '../composables/useRestoreFocus.js'
@@ -10,6 +10,7 @@ import { holdKeptInside } from '../layer/inputHold.js'
 import { createModalOutletHandle } from '../layer/modalOutlet.js'
 import { isImeKeyEvent } from '../utils/ime.js'
 import BottomSheetPanel from './BottomSheetPanel.vue'
+import { bottomSheetEscapeKey } from './escape.js'
 import { bottomSheetSwitcherKey } from './switcher.js'
 import { useSheetLayerDismiss } from './useSheetLayerDismiss.js'
 import '../../styles/bottom-sheet.css'
@@ -31,6 +32,8 @@ defineSlots<BottomSheetSlots>()
 
 const isOpen = defineModel<boolean>('isOpen', { default: false })
 const switcher = inject(bottomSheetSwitcherKey, null)
+const isEscapeAllowed = inject(bottomSheetEscapeKey, () => true)
+provide(bottomSheetEscapeKey, () => true)
 const hosted = computed(() => switcher != null && props.sheetId != null)
 const retained = computed(() => {
   if (!hosted.value || switcher == null)
@@ -157,7 +160,7 @@ function closeSheet(): void {
 
 const layerActive = computed(() => !hosted.value && !props.isInline && (isOpen.value || isPresented.value))
 const layerEscape = computed<DismissEscape>(() => {
-  if (!isOpen.value || props.purpose === 'required')
+  if (!isOpen.value || props.purpose === 'required' || !isEscapeAllowed())
     return 'block'
   if (!props.hasScrim)
     return 'ignore'
@@ -187,7 +190,7 @@ function requestClose(): void {
 }
 
 function dismissOnEscape(): void {
-  if (props.purpose === 'required')
+  if (props.purpose === 'required' || !isEscapeAllowed())
     return
   requestClose()
 }

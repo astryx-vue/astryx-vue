@@ -66,6 +66,19 @@
     padding-block-start: var(--astryx-spacing-1, 4px);
   }
 
+  /* 底部弹层里的后备关闭按钮：平时移出排版并裁掉，聚焦时回到内容下方，留出焦点环的位置。 */
+  .astryx-popover__sheet-close:not(:focus) {
+    position: absolute;
+    clip-path: inset(50%);
+  }
+
+  .astryx-popover__sheet-close:focus {
+    position: relative;
+    display: flex;
+    width: fit-content;
+    margin-block-start: var(--astryx-spacing-3, 12px);
+  }
+
   @media (prefers-reduced-motion: reduce) and (not (pointer: coarse)) {
     .astryx-popover[data-placement] {
       animation: none;

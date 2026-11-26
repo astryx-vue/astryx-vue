@@ -48,7 +48,7 @@ import { Popover } from '@astryx-vue/core/Popover'
 
 ## 示例
 
-<DemoExample :demo="popoverBottomSheet" title="底部弹层" description="紧凑触屏上，项目操作改由底部弹层承接，而不是锚在按钮旁的弹出层。" locale="zh" />
+<DemoExample :demo="popoverBottomSheet" title="自适应呈现" description="presentation 设为 adaptive：手机上项目操作从底部弹层打开，其余设备上仍锚在按钮旁边。" locale="zh" />
 
 <DemoExample :demo="popoverConfirm" title="确认操作" description="破坏性按钮打开一段简短确认，里面是删除和取消。" locale="zh" />
 
@@ -69,6 +69,7 @@ import { Popover } from '@astryx-vue/core/Popover'
 - 关闭时，只有焦点困在浮层里或掉到页面 body 上才会被送回：先回到打开浮层的那个元素；它不在了，就依次试触发器、锚点、顶替它位置的 Tab 停靠点、附近的祖先元素，最后是 `main`。焦点永远不落到 body；已经在浮层外面的焦点不会被抢回来。
 - 设置 `isModal` 后，浮层打开期间 Tab 焦点保持在浮层内。
 - 内置关闭按钮在获得焦点前视觉隐藏，键盘聚焦到它时才显示出来。
+- 在底部弹层里（`presentation`），触发器用 `aria-controls` 指向弹层并报告它的开合。每次打开焦点都移到第一个内容控件，不会停在关闭按钮上；弹层关闭后焦点回到触发器。
 
 ## 布局
 

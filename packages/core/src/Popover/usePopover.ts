@@ -107,6 +107,17 @@ export interface UsePopoverReturn {
 const GAP = 4
 
 /**
+ * Popover 组件自己用的扩展点，不对外公开：底部弹层呈现接管触发器的点按和
+ * ARIA 关系时用。
+ */
+export interface PopoverSurfaceInternals {
+  /** 触发器被按下时先问这里；返回 true 表示已经处理（底部弹层开关），浮层不再切换。 */
+  onTriggerPress?: (trigger: HTMLElement | null) => boolean
+  /** 底部弹层挂着时触发器改指向它：展开状态和受控元素。没有底部弹层时返回 null。 */
+  sheetTrigger?: () => { expanded: boolean, controls: string } | null
+}
+
+/**
  * 对应原版 Astryx 的 `hooks/usePopover`：点击触发、能把焦点管起来的浮层。
  * 在 `useLayer` 之上叠了焦点陷阱、自动聚焦、点击外部 / Escape 关闭和 ARIA 关系，
  * `Popover` 组件内部也用它。
@@ -116,6 +127,11 @@ const GAP = 4
  * ```
  */
 export function usePopover(options: UsePopoverOptions = {}): UsePopoverReturn {
+  return usePopoverSurface(options)
+}
+
+/** `usePopover` 加上 Popover 组件自己的扩展点（见 `PopoverSurfaceInternals`）。 */
+export function usePopoverSurface(options: UsePopoverOptions, internals: PopoverSurfaceInternals = {}): UsePopoverReturn {
   const triggerRef = shallowRef<HTMLElement | null>(null)
   const anchorRef = shallowRef<HTMLElement | null>(null)
 
@@ -204,6 +220,8 @@ export function usePopover(options: UsePopoverOptions = {}): UsePopoverReturn {
     const target = event?.currentTarget
     if (target instanceof Element && target.getAttribute('aria-disabled') === 'true')
       return
+    if (internals.onTriggerPress?.(target instanceof HTMLElement ? target : triggerRef.value) === true)
+      return
     toggle()
   }
 
@@ -223,6 +241,14 @@ export function usePopover(options: UsePopoverOptions = {}): UsePopoverReturn {
     const element = triggerRef.value
     if (!element)
       return
+    const sheet = internals.sheetTrigger?.() ?? null
+    if (sheet != null) {
+      // 底部弹层永远是对话框，不管浮层的 role。
+      element.setAttribute('aria-haspopup', 'dialog')
+      element.setAttribute('aria-expanded', String(sheet.expanded))
+      element.setAttribute('aria-controls', sheet.controls)
+      return
+    }
     element.setAttribute('aria-haspopup', role() === 'dialog' ? 'dialog' : 'true')
     element.setAttribute('aria-expanded', String(isOpen.value))
     // 关着的触发器不指向任何浮层：aria-controls 只在打开时写上。
@@ -324,6 +350,9 @@ export function usePopover(options: UsePopoverOptions = {}): UsePopoverReturn {
     if (open && (toValue(options.hasAutoFocus) ?? true) && role() === 'dialog')
       void nextTick(focusInitialTarget)
   }, { immediate: true })
+
+  if (internals.sheetTrigger != null)
+    watch(internals.sheetTrigger, applyTriggerAttributes, { deep: true })
 
   watch(() => toValue(options.isOpen), (open) => {
     if (open === undefined)

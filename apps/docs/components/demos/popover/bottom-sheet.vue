@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import type { Component } from 'vue'
-import { BottomSheet } from '@astryx-vue/core/BottomSheet'
 import { Button } from '@astryx-vue/core/Button'
 import { Heading } from '@astryx-vue/core/Heading'
 import { Icon } from '@astryx-vue/core/Icon'
 import { List, ListItem } from '@astryx-vue/core/List'
-import { Section } from '@astryx-vue/core/Section'
+import { Popover } from '@astryx-vue/core/Popover'
 import { VStack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
 import { h, ref } from 'vue'
@@ -35,16 +34,22 @@ const isOpen = ref(false)
 </script>
 
 <template>
-  <Button label="Open project actions" @click="isOpen = true" />
-  <BottomSheet v-model:is-open="isOpen" label="Project actions" height="hug">
-    <Section :padding-block="4" :padding-inline="1">
-      <VStack :gap="3">
+  <Popover
+    :is-open="isOpen"
+    presentation="adaptive"
+    label="Project actions"
+    :width="320"
+    @open-change="isOpen = $event"
+  >
+    <Button label="Project actions" variant="secondary" />
+    <template #content>
+      <VStack :gap="2">
         <VStack :gap="1" style="margin-inline-start: var(--astryx-spacing-3, 12px)">
-          <Heading :level="3">
+          <Heading :level="4">
             Project actions
           </Heading>
           <Text type="supporting" color="secondary">
-            Use this modal touch surface when the task should move away from its trigger and stay close to the bottom edge.
+            On a phone this opens as a bottom sheet; elsewhere it stays next to the button.
           </Text>
         </VStack>
         <List density="spacious">
@@ -61,6 +66,6 @@ const isOpen = ref(false)
           </ListItem>
         </List>
       </VStack>
-    </Section>
-  </BottomSheet>
+    </template>
+  </Popover>
 </template>
