@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useGridFocusColorSwatches } from '../../../../components/demos/use-grid-focus'
 </script>
 
 ## Usage
@@ -27,3 +28,14 @@ The hook reads the cells out of the DOM, so `gridRef` and `handleKeyDown` go on 
 | <Badge variant="success">Do</Badge> | Attach both `gridRef` and `handleKeyDown` to the grid container element. |
 | <Badge variant="success">Do</Badge> | For roving-tabindex grids (e.g. Calendar), set `hasRovingTabIndex: true` and attach `handleFocus` to the container's `focusin` event; seed one focus target with `tabindex="0"` and the hook repairs and moves it. |
 | <Badge variant="error">Don't</Badge> | Use for simple linear lists; prefer `useListFocus` for 1D navigation. |
+
+## Examples
+
+Common configurations, variations, and states.
+
+<DemoExample
+  :demo="useGridFocusColorSwatches"
+  description="A color swatch picker in rows of eight with one Tab stop. useGridFocus moves focus with the arrow keys, Home and End, and Ctrl+Home and Ctrl+End. Each swatch is a button, so Enter or a click picks it."
+  locale="en"
+  title="useGridFocus — Color Swatch Grid"
+/>

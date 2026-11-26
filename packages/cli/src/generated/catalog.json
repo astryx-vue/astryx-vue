@@ -68896,7 +68896,19 @@
           }
         ]
       },
-      "examples": [],
+      "examples": [
+        {
+          "title": {
+            "en": "useAnnounce — Filter Result Count",
+            "zh": "useAnnounce — 筛选结果数"
+          },
+          "description": {
+            "en": "A product filter that announces its result count with useAnnounce: once typing pauses for 500 ms, a screen reader hears \"3 results\" or \"No results\". Each new count replaces the last one in the live region.",
+            "zh": "一个商品筛选框，用 useAnnounce 播报结果数：停止输入 500 毫秒后，读屏会读出「3 results」或「No results」。新的计数会替换实时区域里上一条。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { useAnnounce } from '@astryx-vue/core'\nimport { Card } from '@astryx-vue/core/Card'\nimport { List, ListItem } from '@astryx-vue/core/List'\nimport { VStack } from '@astryx-vue/core/Stack'\nimport { Text } from '@astryx-vue/core/Text'\nimport { TextInput } from '@astryx-vue/core/TextInput'\nimport { computed, onBeforeUnmount, ref, watch } from 'vue'\n\nconst PRODUCTS = [\n  'Desk lamp',\n  'Desk organizer',\n  'Standing desk',\n  'Office chair',\n  'Chair mat',\n  'Monitor arm',\n  'Monitor stand',\n  'Keyboard tray',\n]\n\nconst ANNOUNCE_DELAY_MS = 500\n\nfunction filterProducts(query: string): string[] {\n  const needle = query.trim().toLowerCase()\n  return PRODUCTS.filter(product => product.toLowerCase().includes(needle))\n}\n\nconst announce = useAnnounce()\nconst query = ref('')\nconst matches = computed(() => filterProducts(query.value))\n\nlet timer: ReturnType<typeof setTimeout> | null = null\n\nfunction cancelPending(): void {\n  if (timer != null) {\n    clearTimeout(timer)\n    timer = null\n  }\n}\n\nwatch(query, (value) => {\n  cancelPending()\n  if (value === '')\n    return\n  const nextCount = filterProducts(value).length\n  timer = setTimeout(() => {\n    timer = null\n    announce(nextCount === 0 ? 'No results' : `${nextCount} ${nextCount === 1 ? 'result' : 'results'}`)\n  }, ANNOUNCE_DELAY_MS)\n})\n\n// A count still pending at unmount would be spoken for a filter that is gone.\nonBeforeUnmount(cancelPending)\n</script>\n\n<template>\n  <Card :width=\"360\" :padding=\"4\">\n    <VStack :gap=\"3\">\n      <TextInput v-model=\"query\" label=\"Filter products\" has-clear />\n      <Text v-if=\"matches.length === 0\" type=\"body\" color=\"secondary\">\n        No results\n      </Text>\n      <List v-else density=\"compact\">\n        <ListItem v-for=\"product in matches\" :key=\"product\" :label=\"product\" />\n      </List>\n    </VStack>\n  </Card>\n</template>"
+        }
+      ],
       "anatomy": {
         "en": [],
         "zh": []
@@ -69808,7 +69820,19 @@
           }
         ]
       },
-      "examples": [],
+      "examples": [
+        {
+          "title": {
+            "en": "useCollator — Locale-aware Name Sort",
+            "zh": "useCollator — 按语言排序姓名"
+          },
+          "description": {
+            "en": "A list of names sorted with the compare function from useCollator: accented and lowercase names land where a reader expects, and switching the provider locale to Swedish moves Å and Ö after Z.",
+            "zh": "用 useCollator 返回的比较器给一串姓名排序：带重音和小写开头的名字排在读者预期的位置；把 provider 的语言切成瑞典语，Å 和 Ö 会排到 Z 后面。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { Card } from '@astryx-vue/core/Card'\nimport { InternationalizationProvider } from '@astryx-vue/core/InternationalizationProvider'\nimport { List, ListItem } from '@astryx-vue/core/List'\nimport { useCollator } from '@astryx-vue/core/locale'\nimport { SegmentedControl, SegmentedControlItem } from '@astryx-vue/core/SegmentedControl'\nimport { VStack } from '@astryx-vue/core/Stack'\nimport { computed, defineComponent, h, ref } from 'vue'\n\nconst PEOPLE = ['Zoë', 'emma', 'Örjan', 'Ana', 'Émile', 'oscar', 'Åsa']\n\n// useCollator reads the nearest provider, so the list renders inside it.\nconst PeopleList = defineComponent(() => {\n  const collator = useCollator()\n  const sorted = computed(() => [...PEOPLE].sort(collator.value.compare))\n\n  return () => h(List, { density: 'compact', hasDividers: true }, () =>\n    sorted.value.map(name => h(ListItem, { key: name, label: name })))\n})\n\nconst locale = ref('en')\n</script>\n\n<template>\n  <InternationalizationProvider :locale=\"locale\">\n    <Card :width=\"320\" :padding=\"4\">\n      <VStack :gap=\"3\">\n        <SegmentedControl v-model=\"locale\" label=\"Sort order\" size=\"sm\">\n          <SegmentedControlItem value=\"en\" label=\"English\" />\n          <SegmentedControlItem value=\"sv-SE\" label=\"Swedish\" />\n        </SegmentedControl>\n        <PeopleList />\n      </VStack>\n    </Card>\n  </InternationalizationProvider>\n</template>"
+        }
+      ],
       "anatomy": {
         "en": [],
         "zh": []
@@ -70520,7 +70544,19 @@
           }
         ]
       },
-      "examples": [],
+      "examples": [
+        {
+          "title": {
+            "en": "useFocusTrap — Quick Edit Panel",
+            "zh": "useFocusTrap — 快速编辑面板"
+          },
+          "description": {
+            "en": "A custom quick-edit panel, not built on Dialog, that traps focus with useFocusTrap: focusFirst moves focus to its field on open, Tab and Shift+Tab stay inside it, Escape closes it through onEscape, and closing returns focus to the Quick edit button.",
+            "zh": "一个不基于 Dialog 的自制快速编辑面板，用 useFocusTrap 困住焦点：打开时 focusFirst 把焦点放进输入框，Tab 和 Shift+Tab 都留在面板里，Escape 通过 onEscape 关闭，关闭后焦点回到「Quick edit」按钮。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport type { ComponentPublicInstance } from 'vue'\nimport { useFocusTrap } from '@astryx-vue/core'\nimport { Button } from '@astryx-vue/core/Button'\nimport { Card } from '@astryx-vue/core/Card'\nimport { HStack, VStack } from '@astryx-vue/core/Stack'\nimport { Text } from '@astryx-vue/core/Text'\nimport { TextInput } from '@astryx-vue/core/TextInput'\nimport { nextTick, ref, watch } from 'vue'\n\nconst isOpen = ref(false)\nconst title = ref('Update onboarding guide')\nconst draft = ref(title.value)\n\nfunction close(): void {\n  isOpen.value = false\n}\n\nconst { containerRef, focusFirst } = useFocusTrap({\n  isActive: isOpen,\n  onEscape: close,\n})\n\nfunction bindPanel(el: Element | ComponentPublicInstance | null): void {\n  const node = el != null && '$el' in el ? el.$el : el\n  containerRef.value = node instanceof HTMLElement ? node : null\n}\n\n// Waits for the panel to mount; useFocusTrap has already recorded the opener,\n// so closing the panel returns focus to it.\nwatch(isOpen, async (open) => {\n  if (!open)\n    return\n  await nextTick()\n  focusFirst()\n})\n\nfunction openPanel(): void {\n  draft.value = title.value\n  isOpen.value = true\n}\n\nfunction save(): void {\n  title.value = draft.value\n  close()\n}\n</script>\n\n<template>\n  <HStack :gap=\"4\" align=\"start\">\n    <VStack :gap=\"2\">\n      <Text type=\"body\" weight=\"bold\">\n        {{ title }}\n      </Text>\n      <Button label=\"Quick edit\" @click=\"openPanel\" />\n    </VStack>\n    <Card\n      v-if=\"isOpen\"\n      :ref=\"bindPanel\"\n      role=\"dialog\"\n      aria-label=\"Quick edit\"\n      :width=\"280\"\n      :padding=\"4\"\n    >\n      <VStack :gap=\"3\">\n        <TextInput v-model=\"draft\" label=\"Title\" />\n        <HStack :gap=\"2\" h-align=\"end\">\n          <Button label=\"Cancel\" variant=\"secondary\" @click=\"close\" />\n          <Button label=\"Save\" variant=\"primary\" @click=\"save\" />\n        </HStack>\n      </VStack>\n    </Card>\n  </HStack>\n</template>"
+        }
+      ],
       "anatomy": {
         "en": [],
         "zh": []
@@ -70802,7 +70838,19 @@
           }
         ]
       },
-      "examples": [],
+      "examples": [
+        {
+          "title": {
+            "en": "useGridFocus — Color Swatch Grid",
+            "zh": "useGridFocus — 色块网格"
+          },
+          "description": {
+            "en": "A color swatch picker in rows of eight with one Tab stop. useGridFocus moves focus with the arrow keys, Home and End, and Ctrl+Home and Ctrl+End. Each swatch is a button, so Enter or a click picks it.",
+            "zh": "每行八个色块的取色器，整个网格只占一个 Tab 停靠点。useGridFocus 让方向键、Home/End、Ctrl+Home/Ctrl+End 移动焦点。每个色块都是按钮，按 Enter 或点击就选中它。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport type { ComponentPublicInstance } from 'vue'\nimport { useGridFocus } from '@astryx-vue/core'\nimport { Card } from '@astryx-vue/core/Card'\nimport { VStack } from '@astryx-vue/core/Stack'\nimport { Text } from '@astryx-vue/core/Text'\nimport { ref } from 'vue'\n\nconst COLUMNS = 8\n\nconst SWATCHES = [\n  { name: 'Red', value: '#e5484d' },\n  { name: 'Tomato', value: '#f76b15' },\n  { name: 'Amber', value: '#ffc53d' },\n  { name: 'Lime', value: '#bdee63' },\n  { name: 'Green', value: '#30a46c' },\n  { name: 'Teal', value: '#12a594' },\n  { name: 'Cyan', value: '#00a2c7' },\n  { name: 'Blue', value: '#0090ff' },\n  { name: 'Indigo', value: '#3e63dd' },\n  { name: 'Violet', value: '#6e56cf' },\n  { name: 'Purple', value: '#8e4ec6' },\n  { name: 'Plum', value: '#ab4aba' },\n  { name: 'Pink', value: '#d6409f' },\n  { name: 'Brown', value: '#ad7f58' },\n  { name: 'Gray', value: '#8d8d8d' },\n  { name: 'Black', value: '#111111' },\n]\n\nconst ROWS = Array.from({ length: SWATCHES.length / COLUMNS }, (_, row) =>\n  SWATCHES.slice(row * COLUMNS, (row + 1) * COLUMNS))\n\nconst selected = ref(SWATCHES[0]!.name)\nconst { gridRef, handleKeyDown, handleFocus } = useGridFocus({\n  columns: COLUMNS,\n  cellSelector: '[role=\"gridcell\"]',\n  getFocusTarget: cell => cell.querySelector('button'),\n  hasRovingTabIndex: true,\n})\n\nfunction bindGrid(el: Element | ComponentPublicInstance | null): void {\n  gridRef.value = el instanceof HTMLElement ? el : null\n}\n</script>\n\n<template>\n  <Card :padding=\"4\">\n    <VStack :gap=\"3\">\n      <Text type=\"body\">\n        Selected: {{ selected }}\n      </Text>\n      <!-- eslint-disable-next-line vue-a11y/interactive-supports-focus -- 焦点停在格子里的按钮上（roving tabindex），网格容器只接冒泡上来的焦点与方向键。 -->\n      <div\n        :ref=\"bindGrid\"\n        class=\"swatch-grid-demo\"\n        role=\"grid\"\n        aria-label=\"Colors\"\n        @keydown=\"handleKeyDown\"\n        @focusin=\"handleFocus\"\n      >\n        <div v-for=\"(row, index) in ROWS\" :key=\"index\" class=\"swatch-grid-demo__row\" role=\"row\">\n          <div\n            v-for=\"swatch in row\"\n            :key=\"swatch.name\"\n            role=\"gridcell\"\n            :aria-selected=\"swatch.name === selected\"\n          >\n            <button\n              type=\"button\"\n              class=\"swatch-grid-demo__swatch\"\n              :aria-label=\"swatch.name\"\n              :aria-pressed=\"swatch.name === selected\"\n              :style=\"{ background: swatch.value }\"\n              @click=\"selected = swatch.name\"\n            />\n          </div>\n        </div>\n      </div>\n    </VStack>\n  </Card>\n</template>\n\n<style scoped>\n.swatch-grid-demo {\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n}\n\n.swatch-grid-demo__row {\n  display: flex;\n  gap: 4px;\n}\n\n.swatch-grid-demo__swatch {\n  width: 28px;\n  height: 28px;\n  border: none;\n  border-radius: 4px;\n  box-shadow: inset 0 0 0 1px var(--astryx-color-border-emphasized, var(--astryx-color-border));\n  cursor: pointer;\n}\n</style>"
+        }
+      ],
       "anatomy": {
         "en": [],
         "zh": []
@@ -72847,10 +72895,10 @@
             "zh": "useKeyboardHint — 方向键提示"
           },
           "description": {
-            "en": "A custom roving-tabindex toolbar shows an ephemeral arrow-key hint on first keyboard focus via useKeyboardHint, teaching sighted keyboard users that arrows move within the group.",
-            "zh": "自己搭的 roving-tabindex 工具栏，第一次被键盘聚焦时通过 useKeyboardHint 短暂提示方向键，让看得见的用户知道组里可以用方向键移动。"
+            "en": "A custom five-star rating with one Tab stop calls useKeyboardHint directly: tabbing into it shows a \"← → to navigate\" hint, the first arrow press dismisses it, and tabbing back in does not show it again.",
+            "zh": "一个只有一个 Tab 停靠点的自制五星评分，直接调用 useKeyboardHint：Tab 进来时出现「← → 切换」提示，第一次按方向键它就消失，再 Tab 回来也不会再出现。"
           },
-          "code": "<script setup lang=\"ts\">\nimport type { ComponentPublicInstance } from 'vue'\nimport { useKeyboardHint, useListFocus } from '@astryx-vue/core'\nimport { Button } from '@astryx-vue/core/Button'\nimport { Text } from '@astryx-vue/core/Text'\n\nconst actions = ['Bold', 'Italic', 'Underline', 'Strikethrough']\n\nconst list = useListFocus({\n  itemSelector: '[data-hint-item]',\n  orientation: 'horizontal',\n  hasRovingTabIndex: true,\n})\nconst hint = useKeyboardHint({ orientation: 'horizontal' })\n\n// 模板引用写进 hook 的 listRef，listRef 只由 hook 持有。\nfunction bindList(el: Element | ComponentPublicInstance | null): void {\n  list.listRef.value = el instanceof HTMLElement ? el : null\n}\n\nfunction onFocus(event: FocusEvent): void {\n  hint.onFocus(event)\n}\n\nfunction onBlur(event: FocusEvent): void {\n  hint.onBlur(event)\n}\n\nfunction onKeyDown(event: KeyboardEvent): void {\n  hint.onKeyDown(event)\n  list.handleKeyDown(event)\n}\n</script>\n\n<template>\n  <div class=\"hint-preview\">\n    <Text type=\"supporting\" color=\"secondary\">\n      {{ 'Tab into the group, then press the arrow keys.' }}\n    </Text>\n    <!-- eslint-disable-next-line vue-a11y/no-static-element-interactions -- role=\"toolbar\" 的焦点停在内部按钮上，容器只接冒泡上来的焦点与方向键。 -->\n    <div\n      :ref=\"bindList\"\n      class=\"hint-preview__group\"\n      role=\"toolbar\"\n      aria-label=\"Text formatting\"\n      @focusin=\"onFocus\"\n      @focusout=\"onBlur\"\n      @keydown=\"onKeyDown\"\n    >\n      <Button\n        v-for=\"action in actions\"\n        :key=\"action\"\n        :label=\"action\"\n        data-hint-item\n        size=\"sm\"\n        variant=\"ghost\"\n      />\n      <component :is=\"hint.Hint\" />\n    </div>\n  </div>\n</template>\n\n<style scoped>\n.hint-preview {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  gap: 8px;\n}\n\n.hint-preview__group {\n  display: flex;\n  align-items: center;\n  gap: 2px;\n  padding: 4px;\n  border: 1px solid var(--astryx-color-border);\n  border-radius: var(--astryx-radius-container, 0.75rem);\n  background: var(--astryx-color-background-surface);\n}\n</style>"
+          "code": "<script setup lang=\"ts\">\nimport type { ComponentPublicInstance } from 'vue'\nimport { useKeyboardHint, useListFocus } from '@astryx-vue/core'\nimport { Button } from '@astryx-vue/core/Button'\nimport { Card } from '@astryx-vue/core/Card'\nimport { Icon } from '@astryx-vue/core/Icon'\nimport { HStack } from '@astryx-vue/core/Stack'\nimport { ref } from 'vue'\n\nconst STARS = [1, 2, 3, 4, 5]\n\nconst rating = ref(0)\n// Left and Right move the rating, so the hint shows ← →.\nconst hint = useKeyboardHint({ orientation: 'horizontal' })\n// Moves focus between the stars, right-to-left aware and stopping at the\n// ends; the tab stop stays with the checked star below.\nconst list = useListFocus({\n  itemSelector: '[role=\"radio\"]',\n  orientation: 'horizontal',\n  wrap: false,\n  hasHomeEnd: false,\n})\n\nfunction bindList(el: Element | ComponentPublicInstance | null): void {\n  const node = el != null && '$el' in el ? el.$el : el\n  list.listRef.value = node instanceof HTMLElement ? node : null\n}\n\nfunction onKeyDown(event: KeyboardEvent): void {\n  // Dismisses the hint on the first arrow press; never prevents the key.\n  hint.onKeyDown(event)\n  list.handleKeyDown(event)\n  // The hook prevents the arrows it handled, so the rating follows focus.\n  if ((event.key === 'ArrowLeft' || event.key === 'ArrowRight') && event.defaultPrevented)\n    rating.value = list.getItems().indexOf(document.activeElement as HTMLElement) + 1\n}\n</script>\n\n<template>\n  <Card :padding=\"4\">\n    <HStack\n      :ref=\"bindList\"\n      :gap=\"1\"\n      role=\"radiogroup\"\n      aria-label=\"Rating\"\n      @focusin=\"hint.onFocus\"\n      @focusout=\"hint.onBlur\"\n      @keydown=\"onKeyDown\"\n    >\n      <Button\n        v-for=\"star in STARS\"\n        :key=\"star\"\n        role=\"radio\"\n        :aria-checked=\"star === rating\"\n        :tabindex=\"star === Math.max(rating, 1) ? 0 : -1\"\n        :label=\"star === 1 ? '1 star' : `${star} stars`\"\n        variant=\"ghost\"\n        is-icon-only\n        @click=\"rating = star\"\n      >\n        <template #icon>\n          <Icon :icon=\"star <= rating ? 'i-heroicons-star-solid' : 'i-heroicons-star'\" />\n        </template>\n      </Button>\n      <component :is=\"hint.Hint\" />\n    </HStack>\n  </Card>\n</template>"
         }
       ],
       "anatomy": {
@@ -73549,7 +73597,19 @@
           }
         ]
       },
-      "examples": [],
+      "examples": [
+        {
+          "title": {
+            "en": "useListFocus — Recent Files",
+            "zh": "useListFocus — 最近文件"
+          },
+          "description": {
+            "en": "A \"Recent files\" list of buttons with keyboard navigation from useListFocus: ArrowUp and ArrowDown move between rows, Home and End jump to the first and last row, focus wraps at the ends, and only one row is in the tab order.",
+            "zh": "一列「最近文件」按钮，键盘导航来自 useListFocus：上下方向键在行之间移动，Home 和 End 跳到第一行和最后一行，到头会绕回，Tab 顺序里只有一行。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport type { ComponentPublicInstance } from 'vue'\nimport { useListFocus } from '@astryx-vue/core'\nimport { Button } from '@astryx-vue/core/Button'\nimport { Card } from '@astryx-vue/core/Card'\nimport { VStack } from '@astryx-vue/core/Stack'\n\nconst RECENT_FILES = [\n  'Q3 roadmap.pdf',\n  'Budget 2026.xlsx',\n  'Offsite notes.docx',\n  'Launch checklist.md',\n]\n\nconst { listRef, handleKeyDown, handleFocus } = useListFocus({\n  itemSelector: 'button',\n  orientation: 'vertical',\n  wrap: true,\n  hasHomeEnd: true,\n  hasRovingTabIndex: true,\n})\n\nfunction bindList(el: Element | ComponentPublicInstance | null): void {\n  const node = el != null && '$el' in el ? el.$el : el\n  listRef.value = node instanceof HTMLElement ? node : null\n}\n</script>\n\n<template>\n  <Card :width=\"320\" :padding=\"2\">\n    <VStack\n      :ref=\"bindList\"\n      role=\"toolbar\"\n      aria-label=\"Recent files\"\n      aria-orientation=\"vertical\"\n      :gap=\"1\"\n      @keydown=\"handleKeyDown\"\n      @focusin=\"handleFocus\"\n    >\n      <Button v-for=\"name in RECENT_FILES\" :key=\"name\" :label=\"name\" variant=\"ghost\" />\n    </VStack>\n  </Card>\n</template>"
+        }
+      ],
       "anatomy": {
         "en": [],
         "zh": []
@@ -73643,7 +73703,19 @@
           }
         ]
       },
-      "examples": [],
+      "examples": [
+        {
+          "title": {
+            "en": "useLocale — Invoice Summary",
+            "zh": "useLocale — 账单摘要"
+          },
+          "description": {
+            "en": "An invoice summary that formats its date and amount with Intl using the locale from useLocale, so switching the provider from English to German changes \"Nov 2, 2026\" and \"$1,234.50\" to \"2. Nov. 2026\" and \"1.234,50 $\" with no second locale source.",
+            "zh": "账单摘要用 useLocale 拿到的语言交给 Intl 格式化日期和金额；把 provider 从英语切到德语，「Nov 2, 2026」和「$1,234.50」会变成「2. Nov. 2026」和「1.234,50 $」，不需要第二个语言来源。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { Card } from '@astryx-vue/core/Card'\nimport { InternationalizationProvider } from '@astryx-vue/core/InternationalizationProvider'\nimport { useLocale } from '@astryx-vue/core/locale'\nimport { SegmentedControl, SegmentedControlItem } from '@astryx-vue/core/SegmentedControl'\nimport { HStack, VStack } from '@astryx-vue/core/Stack'\nimport { Text } from '@astryx-vue/core/Text'\nimport { computed, defineComponent, h, ref } from 'vue'\n\nconst ISSUED_ON = new Date(2026, 10, 2)\nconst AMOUNT_DUE = 1234.5\n\n// useLocale reads the nearest provider, so the summary renders inside it.\nconst InvoiceSummary = defineComponent(() => {\n  const { locale } = useLocale()\n  const issuedOn = computed(() => new Intl.DateTimeFormat(locale.value, {\n    day: 'numeric',\n    month: 'short',\n    year: 'numeric',\n  }).format(ISSUED_ON))\n  const amountDue = computed(() => new Intl.NumberFormat(locale.value, {\n    style: 'currency',\n    currency: 'USD',\n  }).format(AMOUNT_DUE))\n\n  return () => h(VStack, { gap: 1 }, () => [\n    h(HStack, { hAlign: 'between' }, () => [\n      h(Text, { type: 'body', color: 'secondary' }, () => 'Issued'),\n      h(Text, { type: 'body' }, () => issuedOn.value),\n    ]),\n    h(HStack, { hAlign: 'between' }, () => [\n      h(Text, { type: 'body', color: 'secondary' }, () => 'Amount due'),\n      h(Text, { type: 'body', weight: 'bold' }, () => amountDue.value),\n    ]),\n  ])\n})\n\nconst locale = ref('en')\n</script>\n\n<template>\n  <InternationalizationProvider :locale=\"locale\">\n    <Card :width=\"320\" :padding=\"4\">\n      <VStack :gap=\"3\">\n        <SegmentedControl v-model=\"locale\" label=\"Language\" size=\"sm\">\n          <SegmentedControlItem value=\"en\" label=\"English\" />\n          <SegmentedControlItem value=\"de-DE\" label=\"German\" />\n        </SegmentedControl>\n        <InvoiceSummary />\n      </VStack>\n    </Card>\n  </InternationalizationProvider>\n</template>"
+        }
+      ],
       "anatomy": {
         "en": [],
         "zh": []
@@ -74735,7 +74807,19 @@
           }
         ]
       },
-      "examples": [],
+      "examples": [
+        {
+          "title": {
+            "en": "useOverflow — Editor Toolbar",
+            "zh": "useOverflow — 编辑器工具栏"
+          },
+          "description": {
+            "en": "Resize the card: useOverflow moves the toolbar actions that do not fit into a More menu, and shows them again when the card gets wider.",
+            "zh": "拖动卡片右下角改变宽度：放不下的工具栏按钮由 useOverflow 收进「More」菜单，卡片变宽后再放回来。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport type { ComponentPublicInstance } from 'vue'\nimport { useOverflow } from '@astryx-vue/core'\nimport { Button } from '@astryx-vue/core/Button'\nimport { Card } from '@astryx-vue/core/Card'\nimport { DropdownMenu } from '@astryx-vue/core/DropdownMenu'\nimport { computed } from 'vue'\n\nconst actions = [\n  'Bold',\n  'Italic',\n  'Underline',\n  'Strikethrough',\n  'Link',\n  'Quote',\n  'Code',\n  'Clear formatting',\n]\n\nconst GAP = 4\n\nconst { containerRef, measureRef, visibleCount, hasOverflow } = useOverflow(actions.length, { gap: GAP })\n\nfunction bindMeasure(el: Element | ComponentPublicInstance | null): void {\n  measureRef.value = el instanceof HTMLElement ? el : null\n}\n\nfunction bindContainer(el: Element | ComponentPublicInstance | null): void {\n  containerRef.value = el instanceof HTMLElement ? el : null\n}\n\nconst moreButton = { label: 'More', variant: 'ghost', size: 'sm' } as const\nconst allItems = actions.map(label => ({ label }))\nconst hiddenItems = computed(() => actions.slice(visibleCount.value).map(label => ({ label })))\n</script>\n\n<template>\n  <Card :padding=\"2\" class=\"overflow-toolbar-demo\">\n    <!-- Takes no space and paints nothing, so the hook measures every item without a flicker. Do not use display: none, which stops measurement. -->\n    <!-- eslint-disable-next-line vue-a11y/no-aria-hidden-on-focusable -- 测量层带 inert，里面的按钮不可聚焦。 -->\n    <div :ref=\"bindMeasure\" class=\"overflow-toolbar-demo__row overflow-toolbar-demo__measure\" aria-hidden=\"true\" inert>\n      <Button v-for=\"label in actions\" :key=\"label\" :label=\"label\" variant=\"ghost\" size=\"sm\" />\n      <div data-overflow-indicator>\n        <DropdownMenu :button=\"moreButton\" :items=\"allItems\" />\n      </div>\n    </div>\n    <div :ref=\"bindContainer\" class=\"overflow-toolbar-demo__row\" role=\"group\" aria-label=\"Text formatting\">\n      <Button v-for=\"label in actions.slice(0, visibleCount)\" :key=\"label\" :label=\"label\" variant=\"ghost\" size=\"sm\" />\n      <DropdownMenu v-if=\"hasOverflow\" :button=\"moreButton\" :items=\"hiddenItems\" />\n    </div>\n  </Card>\n</template>\n\n<style scoped>\n.overflow-toolbar-demo {\n  resize: horizontal;\n  overflow: hidden;\n  width: 480px;\n  min-width: 120px;\n  max-width: 100%;\n}\n\n.overflow-toolbar-demo__row {\n  display: flex;\n  gap: 4px;\n}\n\n.overflow-toolbar-demo__measure {\n  position: absolute;\n  visibility: hidden;\n  height: 0;\n  overflow: hidden;\n  white-space: nowrap;\n  pointer-events: none;\n}\n</style>"
+        }
+      ],
       "anatomy": {
         "en": [],
         "zh": []
@@ -75298,7 +75382,19 @@
           }
         ]
       },
-      "examples": [],
+      "examples": [
+        {
+          "title": {
+            "en": "usePressFeedback — Pressable Card",
+            "zh": "usePressFeedback — 可按的卡片"
+          },
+          "description": {
+            "en": "A Card made pressable with usePressFeedback: the returned pressableProps go straight on the Card, so a press darkens the card the way every Astryx pressable does; a focus-visible outline gives it the shared focus ring for keyboard focus; and a click, Enter or Space flips it.",
+            "zh": "用 usePressFeedback 把一张 Card 变成可按的表面：返回的 pressableProps 直接摊在 Card 上，按下时卡片会像所有 Astryx 可按控件一样变暗；键盘聚焦时画统一的焦点环；点击、Enter 或空格把卡片翻面。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { usePressFeedback } from '@astryx-vue/core'\nimport { Card } from '@astryx-vue/core/Card'\nimport { Text } from '@astryx-vue/core/Text'\nimport { ref } from 'vue'\n\nconst { pressableProps } = usePressFeedback()\nconst isFaceUp = ref(true)\n\nfunction flip(): void {\n  isFaceUp.value = !isFaceUp.value\n}\n</script>\n\n<template>\n  <div class=\"press-card-demo\">\n    <Card\n      v-bind=\"pressableProps\"\n      class=\"press-card-demo__card\"\n      :width=\"120\"\n      :padding=\"1\"\n      role=\"button\"\n      tabindex=\"0\"\n      aria-label=\"Flip card\"\n      :aria-pressed=\"!isFaceUp\"\n      @click=\"flip\"\n      @keydown.enter.prevent=\"flip\"\n      @keydown.space.prevent=\"flip\"\n    >\n      <div v-if=\"isFaceUp\" class=\"press-card-demo__face\">\n        <span class=\"press-card-demo__corner\">Q<br>♥</span>\n        <span class=\"press-card-demo__pip\">♥</span>\n        <span class=\"press-card-demo__corner press-card-demo__corner--end\">Q<br>♥</span>\n      </div>\n      <div v-else class=\"press-card-demo__back\" />\n    </Card>\n    <Text type=\"supporting\" color=\"secondary\">\n      Press and hold the card to see the press; tap, click, Enter or Space to flip it.\n    </Text>\n  </div>\n</template>\n\n<style scoped>\n.press-card-demo {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  gap: 12px;\n}\n\n.press-card-demo__card {\n  cursor: pointer;\n  user-select: none;\n}\n\n.press-card-demo__card:focus-visible {\n  outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, var(--astryx-color-accent));\n  outline-offset: var(--astryx-focus-outline-offset, 2px);\n}\n\n.press-card-demo__face,\n.press-card-demo__back {\n  position: relative;\n  aspect-ratio: 5 / 7;\n  border-radius: 6px;\n}\n\n.press-card-demo__face {\n  display: grid;\n  place-items: center;\n  color: #d0312d;\n  font-weight: 600;\n}\n\n.press-card-demo__corner {\n  position: absolute;\n  inset-block-start: 6px;\n  inset-inline-start: 8px;\n  font-size: 13px;\n  line-height: 1.1;\n  text-align: center;\n}\n\n.press-card-demo__corner--end {\n  inset-block: auto 6px;\n  inset-inline: auto 8px;\n  transform: rotate(180deg);\n}\n\n.press-card-demo__pip {\n  font-size: 40px;\n}\n\n.press-card-demo__back {\n  background:\n    repeating-linear-gradient(45deg, rgb(255 255 255 / 0.18) 0 4px, transparent 4px 8px),\n    var(--astryx-color-accent);\n}\n</style>"
+        }
+      ],
       "anatomy": {
         "en": [],
         "zh": []
@@ -76166,7 +76262,19 @@
           }
         ]
       },
-      "examples": [],
+      "examples": [
+        {
+          "title": {
+            "en": "useScrollableArea — Activity Log Panel",
+            "zh": "useScrollableArea — 动态日志面板"
+          },
+          "description": {
+            "en": "A fixed-height Activity log panel whose entries scroll up and down. useScrollableArea makes the panel a keyboard tab stop only when its entries overflow, reports which edges have more entries so a top or bottom shadow shows only there, and keeps a scroll that reaches the end from scrolling the page. Add entry flips the panel from not scrollable to scrollable.",
+            "zh": "一个固定高度、条目可以上下滚动的动态日志面板。useScrollableArea 只在条目溢出时让面板成为键盘 Tab 停靠点，报告哪一边还有内容，让顶部或底部阴影只出现在那一边，并且滚到头时不会带着页面一起滚。点「Add entry」会让面板从不能滚变成能滚。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport type { ComponentPublicInstance } from 'vue'\nimport { useScrollableArea } from '@astryx-vue/core'\nimport { Button } from '@astryx-vue/core/Button'\nimport { Card } from '@astryx-vue/core/Card'\nimport { Heading } from '@astryx-vue/core/Heading'\nimport { HStack, VStack } from '@astryx-vue/core/Stack'\nimport { Text } from '@astryx-vue/core/Text'\nimport { computed, ref } from 'vue'\n\nconst ACTIVITY = [\n  'Maya created the Checkout project',\n  'Sam invited Lee',\n  'Build 318 passed',\n  'Lee opened \"Card total rounds down\"',\n  'Maya deployed 1.4.2 to staging',\n  'Build 319 failed',\n  'Sam fixed the rounding test',\n  'Build 320 passed',\n  'Maya deployed 1.4.3 to production',\n  'Lee closed \"Card total rounds down\"',\n]\n\nconst count = ref(3)\nconst { viewport, content, viewportAttrs, viewportStyle, state } = useScrollableArea({\n  axis: 'block',\n  keyboardAccess: { owner: 'viewport', label: 'Activity log' },\n  overscroll: 'contain',\n})\n\nfunction bindContent(el: Element | ComponentPublicInstance | null): void {\n  content.value = el instanceof HTMLElement ? el : null\n}\n\nconst shadowClass = computed(() => {\n  const { isScrollable, atStart, atEnd } = state.value.block\n  return {\n    'activity-log-demo__viewport--above': isScrollable && !atStart,\n    'activity-log-demo__viewport--below': isScrollable && !atEnd,\n  }\n})\n</script>\n\n<template>\n  <Card :width=\"320\" :padding=\"4\">\n    <VStack :gap=\"3\">\n      <HStack h-align=\"between\" align=\"center\">\n        <Heading :level=\"4\">\n          Activity log\n        </Heading>\n        <Button\n          label=\"Add entry\"\n          variant=\"secondary\"\n          :is-disabled=\"count === ACTIVITY.length\"\n          @click=\"count += 1\"\n        />\n      </HStack>\n      <div\n        :ref=\"viewport\"\n        v-bind=\"viewportAttrs\"\n        class=\"activity-log-demo__viewport\"\n        :class=\"shadowClass\"\n        :style=\"viewportStyle\"\n      >\n        <div :ref=\"bindContent\" class=\"activity-log-demo__content\">\n          <Text v-for=\"entry in ACTIVITY.slice(0, count)\" :key=\"entry\" type=\"body\">\n            {{ entry }}\n          </Text>\n        </div>\n      </div>\n    </VStack>\n  </Card>\n</template>\n\n<style scoped>\n.activity-log-demo__viewport {\n  --_shadow-top: inset 0 12px 8px -8px var(--astryx-color-shadow);\n  --_shadow-bottom: inset 0 -12px 8px -8px var(--astryx-color-shadow);\n\n  height: 160px;\n}\n\n.activity-log-demo__viewport--above {\n  box-shadow: var(--_shadow-top);\n}\n\n.activity-log-demo__viewport--below {\n  box-shadow: var(--_shadow-bottom);\n}\n\n.activity-log-demo__viewport--above.activity-log-demo__viewport--below {\n  box-shadow: var(--_shadow-top), var(--_shadow-bottom);\n}\n\n.activity-log-demo__content {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n}\n</style>"
+        }
+      ],
       "anatomy": {
         "en": [],
         "zh": []
@@ -80530,6 +80638,17 @@
             "zh": "用 useToast 主动弹出轻提示，由 toast 视口负责渲染。"
           },
           "code": "<script setup lang=\"ts\">\nimport { Button } from '@astryx-vue/core/Button'\nimport { ToastViewport, useToast } from '@astryx-vue/core/Toast'\n\nconst toast = useToast()\n\nfunction showToast(): void {\n  toast({ body: 'Document saved successfully', type: 'success' })\n}\n</script>\n\n<template>\n  <div class=\"toast-preview__row\">\n    <Button label=\"Show toast\" variant=\"secondary\" @click=\"showToast\" />\n    <ToastViewport />\n  </div>\n</template>"
+        },
+        {
+          "title": {
+            "en": "useToast — Settings Saved",
+            "zh": "useToast — 设置已保存"
+          },
+          "description": {
+            "en": "Shows a toast from the function useToast returns: a \"Settings saved\" confirmation with an Undo action, a uniqueID so pressing the button again replaces the toast instead of stacking another, and an error toast when the request fails.",
+            "zh": "用 useToast 返回的函数弹提示：「Settings saved」确认带一个撤销按钮；设了 uniqueID，再点一次保存会替换这条提示而不是再叠一条；请求失败时弹错误提示。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { Button } from '@astryx-vue/core/Button'\nimport { Card } from '@astryx-vue/core/Card'\nimport { VStack } from '@astryx-vue/core/Stack'\nimport { Switch } from '@astryx-vue/core/Switch'\nimport { TextInput } from '@astryx-vue/core/TextInput'\nimport { useToast } from '@astryx-vue/core/Toast'\nimport { defineComponent, h, ref } from 'vue'\n\n// Toasts render in the app's single ToastViewport, mounted once at the root.\nconst toast = useToast()\nconst name = ref('Ada Lovelace')\nconst savedName = ref('Ada Lovelace')\nconst undoName = ref('Ada Lovelace')\nconst isSaveFailing = ref(false)\n\nfunction save(): void {\n  if (isSaveFailing.value) {\n    toast({\n      type: 'error',\n      body: 'Could not save settings',\n      uniqueID: 'settings-save',\n    })\n    return\n  }\n  // Saving an unchanged name keeps the earlier undo target.\n  const nextUndoName = name.value === savedName.value ? undoName.value : savedName.value\n  undoName.value = nextUndoName\n  savedName.value = name.value\n  const dismiss = toast({\n    body: 'Settings saved',\n    // A repeated Save replaces this toast instead of stacking another.\n    uniqueID: 'settings-save',\n    endContent: defineComponent(() => () => h(Button, {\n      label: 'Undo',\n      variant: 'ghost',\n      size: 'sm',\n      onClick: () => {\n        name.value = nextUndoName\n        savedName.value = nextUndoName\n        dismiss()\n      },\n    })),\n  })\n}\n</script>\n\n<template>\n  <Card :width=\"360\" :padding=\"4\">\n    <VStack :gap=\"3\">\n      <TextInput v-model=\"name\" label=\"Display name\" />\n      <Switch v-model=\"isSaveFailing\" label=\"Simulate a failed save\" />\n      <Button label=\"Save\" variant=\"primary\" @click=\"save\" />\n    </VStack>\n  </Card>\n</template>"
         }
       ],
       "anatomy": {
@@ -80954,7 +81073,19 @@
         "en": [],
         "zh": []
       },
-      "examples": [],
+      "examples": [
+        {
+          "title": {
+            "en": "useTranslator — Load More Footer",
+            "zh": "useTranslator — 加载更多页脚"
+          },
+          "description": {
+            "en": "A \"Show more\" footer under a list that gets its button label and its \"1–3 of 9\" count from the translator useTranslator returns, so switching the provider between English and Chinese changes both strings.",
+            "zh": "列表下方的「显示更多」页脚，按钮文字和「1–3 of 9」这样的计数都来自 useTranslator 返回的翻译函数；把 provider 在英文和中文之间切换，两段文字一起变。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { Button } from '@astryx-vue/core/Button'\nimport { Card } from '@astryx-vue/core/Card'\nimport { InternationalizationProvider } from '@astryx-vue/core/InternationalizationProvider'\nimport { List, ListItem } from '@astryx-vue/core/List'\nimport { useTranslator } from '@astryx-vue/core/locale'\nimport { SegmentedControl, SegmentedControlItem } from '@astryx-vue/core/SegmentedControl'\nimport { HStack, VStack } from '@astryx-vue/core/Stack'\nimport { Text } from '@astryx-vue/core/Text'\nimport { defineComponent, h, ref } from 'vue'\n\nconst INVOICES = Array.from({ length: 9 }, (_, index) => `INV-${1001 + index}`)\nconst PAGE_SIZE = 3\n\n// useTranslator reads the nearest provider, so the list renders inside it.\nconst InvoiceList = defineComponent(() => {\n  const { t } = useTranslator()\n  const shownCount = ref(PAGE_SIZE)\n  const total = INVOICES.length\n\n  return () => h(VStack, { gap: 3 }, () => [\n    h(List, { density: 'compact', hasDividers: true }, () =>\n      INVOICES.slice(0, shownCount.value).map(invoice => h(ListItem, { key: invoice, label: invoice }))),\n    h(HStack, { gap: 2, hAlign: 'between', vAlign: 'center' }, () => [\n      h(Text, { type: 'supporting' }, () =>\n        t('@astryx.pagination.count', { from: 1, to: shownCount.value, total })),\n      h(Button, {\n        label: t('@astryx.metadataList.showMore'),\n        size: 'sm',\n        isDisabled: shownCount.value >= total,\n        onClick: () => { shownCount.value += PAGE_SIZE },\n      }),\n    ]),\n  ])\n})\n\nconst locale = ref('en')\n</script>\n\n<template>\n  <InternationalizationProvider :locale=\"locale\">\n    <Card :width=\"360\" :padding=\"4\">\n      <VStack :gap=\"3\">\n        <SegmentedControl v-model=\"locale\" label=\"Language\" size=\"sm\">\n          <SegmentedControlItem value=\"en\" label=\"English\" />\n          <SegmentedControlItem value=\"zh-CN\" label=\"中文\" />\n        </SegmentedControl>\n        <InvoiceList />\n      </VStack>\n    </Card>\n  </InternationalizationProvider>\n</template>"
+        }
+      ],
       "anatomy": {
         "en": [],
         "zh": []
@@ -81414,7 +81545,19 @@
           }
         ]
       },
-      "examples": [],
+      "examples": [
+        {
+          "title": {
+            "en": "useTypeahead — Type to Focus a Country",
+            "zh": "useTypeahead — 输入字母聚焦国家"
+          },
+          "description": {
+            "en": "A country list of buttons with useListFocus arrow keys and useTypeahead type-to-focus. Typing \"can\" focuses Canada, and pressing \"b\" again and again cycles through Belgium, Brazil and Bulgaria. The hook only reports the match through onMatch, and useListFocus moves focus.",
+            "zh": "一列国家按钮，方向键来自 useListFocus，按字母跳转来自 useTypeahead。输入「can」聚焦 Canada，连按「b」在 Belgium、Brazil、Bulgaria 之间循环。这个 hook 只通过 onMatch 报告匹配项，移动焦点交给 useListFocus。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport type { ComponentPublicInstance } from 'vue'\nimport { useListFocus, useTypeahead } from '@astryx-vue/core'\nimport { Button } from '@astryx-vue/core/Button'\nimport { VStack } from '@astryx-vue/core/Stack'\nimport { Text } from '@astryx-vue/core/Text'\nimport { ref } from 'vue'\n\nconst COUNTRIES = [\n  'Belgium',\n  'Brazil',\n  'Bulgaria',\n  'Canada',\n  'Chile',\n  'Denmark',\n  'Éire',\n  'Finland',\n]\n\nconst country = ref<string | null>(null)\nconst { listRef, handleKeyDown, handleFocus, focusItem, getItems } = useListFocus({\n  itemSelector: 'button',\n  hasRovingTabIndex: true,\n})\nconst typeahead = useTypeahead({\n  getItemLabels: () => getItems().map(item => item.textContent),\n  onMatch: focusItem,\n  getCurrentIndex: () => getItems().findIndex(item => item === document.activeElement),\n})\n\nfunction bindList(el: Element | ComponentPublicInstance | null): void {\n  const node = el != null && '$el' in el ? el.$el : el\n  listRef.value = node instanceof HTMLElement ? node : null\n}\n\nfunction onFocusOut(event: FocusEvent): void {\n  const group = event.currentTarget as HTMLElement\n  if (!group.contains(event.relatedTarget as Node | null))\n    typeahead.reset()\n}\n\nfunction onKeyDown(event: KeyboardEvent): void {\n  if (typeahead.onKeyDown(event))\n    event.preventDefault()\n  else\n    handleKeyDown(event)\n}\n</script>\n\n<template>\n  <VStack :gap=\"3\" h-align=\"start\">\n    <VStack\n      :ref=\"bindList\"\n      role=\"group\"\n      aria-label=\"Country\"\n      h-align=\"start\"\n      @focusin=\"handleFocus\"\n      @focusout=\"onFocusOut\"\n      @keydown=\"onKeyDown\"\n    >\n      <Button\n        v-for=\"name in COUNTRIES\"\n        :key=\"name\"\n        :label=\"name\"\n        variant=\"ghost\"\n        :aria-pressed=\"country === name\"\n        @click=\"country = name\"\n      />\n    </VStack>\n    <Text type=\"supporting\">\n      Selected: {{ country ?? 'none' }}\n    </Text>\n  </VStack>\n</template>"
+        }
+      ],
       "anatomy": {
         "en": [],
         "zh": []

@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useListFocusRecentFiles } from '../../../../components/demos/use-list-focus'
 </script>
 
 ## Usage
@@ -27,3 +28,14 @@ import { useListFocus } from '@astryx-vue/core'
 | <Badge variant="success">Do</Badge> | Provide an `onEscape` callback for menus/dropdowns to return focus to the trigger. |
 | <Badge variant="success">Do</Badge> | Enable `hasRovingTabIndex` (and `hasCaretGuard` when the widget can contain text inputs) for toolbar-style composites that should be a single tab stop. |
 | <Badge variant="error">Don't</Badge> | Use for 2D grid navigation; prefer `useGridRovingFocus` for grids and calendars. |
+
+## Examples
+
+Common configurations, variations, and states.
+
+<DemoExample
+  :demo="useListFocusRecentFiles"
+  description="A &quot;Recent files&quot; list of buttons with keyboard navigation from useListFocus: ArrowUp and ArrowDown move between rows, Home and End jump to the first and last row, focus wraps at the ends, and only one row is in the tab order."
+  locale="en"
+  title="useListFocus — Recent Files"
+/>

@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { useKeyboardHintToolbar } from '../../../../components/demos/use-keyboard-hint'
+import { useKeyboardHintStarRating } from '../../../../components/demos/use-keyboard-hint'
 </script>
 
 ## Usage
@@ -34,8 +34,8 @@ import { useKeyboardHint } from '@astryx-vue/core'
 Common configurations, variations, and states.
 
 <DemoExample
-  :demo="useKeyboardHintToolbar"
-  description="A custom roving-tabindex toolbar shows an ephemeral arrow-key hint on first keyboard focus via useKeyboardHint, teaching sighted keyboard users that arrows move within the group."
+  :demo="useKeyboardHintStarRating"
+  description="A custom five-star rating with one Tab stop calls useKeyboardHint directly: tabbing into it shows a &quot;← → to navigate&quot; hint, the first arrow press dismisses it, and tabbing back in does not show it again."
   locale="en"
   title="useKeyboardHint — Arrow-key Hint"
 />

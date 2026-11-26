@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { useToastShow } from '../../../../components/demos/use-toast'
+import { useToastSettingsSaved, useToastShow } from '../../../../components/demos/use-toast'
 </script>
 
 ## 使用方法
@@ -61,4 +61,11 @@ const toast = useToast()
   description="用 useToast 主动弹出轻提示，由 toast 视口负责渲染。"
   locale="zh"
   title="useToast — 弹出提示"
+/>
+
+<DemoExample
+  :demo="useToastSettingsSaved"
+  description="用 useToast 返回的函数弹提示：「Settings saved」确认带一个撤销按钮；设了 uniqueID，再点一次保存会替换这条提示而不是再叠一条；请求失败时弹错误提示。"
+  locale="zh"
+  title="useToast — 设置已保存"
 />

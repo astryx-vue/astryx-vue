@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { usePressFeedbackPressableCard } from '../../../../components/demos/use-press-feedback'
 </script>
 
 ## Usage
@@ -43,3 +44,14 @@ A container that holds other buttons or inputs, such as a list row or a card, pa
 | <Badge variant="success">Do</Badge> | Let the shipped style own the press on every pointer: it keeps `:active` for a mouse and drops it under `@media (pointer: coarse)`, so a finger sees only the press model. A rule of your own that paints `:active` would paint under a finger too, on the touch and through a scroll. |
 | <Badge variant="error">Don't</Badge> | Add a pointer listener or component state to the element to track the press; the controller already writes the attribute, and per-element listeners are what a long list cannot afford. |
 | <Badge variant="error">Don't</Badge> | Call it for a control rendered by an Astryx component; those are marked already, and the innermost marked element takes the press. |
+
+## Examples
+
+Common configurations, variations, and states.
+
+<DemoExample
+  :demo="usePressFeedbackPressableCard"
+  description="A Card made pressable with usePressFeedback: the returned pressableProps go straight on the Card, so a press darkens the card the way every Astryx pressable does; a focus-visible outline gives it the shared focus ring for keyboard focus; and a click, Enter or Space flips it."
+  locale="en"
+  title="usePressFeedback — Pressable Card"
+/>

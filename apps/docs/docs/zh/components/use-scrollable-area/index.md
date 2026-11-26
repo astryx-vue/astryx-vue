@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useScrollableAreaActivityLog } from '../../../../components/demos/use-scrollable-area'
 </script>
 
 ## 使用方法
@@ -48,3 +49,14 @@ const { content, viewport, viewportAttrs, viewportStyle } = useScrollableArea({
 | <Badge variant="success">Do</Badge> | `overscroll` 保持 `allow`，除非手势滑到头就该停在这个盒子上。 |
 | <Badge variant="error">Don't</Badge> | 自己在视口上写 `overflow`。`viewportStyle` 会按测量结果在 `clip` 和 `auto` 之间挑。 |
 | <Badge variant="error">Don't</Badge> | 再套一层 overflow 容器。一块视口应该独占滚动。 |
+
+## 示例
+
+常见配置、变体和状态。
+
+<DemoExample
+  :demo="useScrollableAreaActivityLog"
+  description="一个固定高度、条目可以上下滚动的动态日志面板。useScrollableArea 只在条目溢出时让面板成为键盘 Tab 停靠点，报告哪一边还有内容，让顶部或底部阴影只出现在那一边，并且滚到头时不会带着页面一起滚。点「Add entry」会让面板从不能滚变成能滚。"
+  locale="zh"
+  title="useScrollableArea — 动态日志面板"
+/>

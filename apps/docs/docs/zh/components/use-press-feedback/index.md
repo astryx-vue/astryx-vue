@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { usePressFeedbackPressableCard } from '../../../../components/demos/use-press-feedback'
 </script>
 
 ## 使用方法
@@ -43,3 +44,14 @@ const { pressableProps } = usePressFeedback()
 | <Badge variant="success">推荐</Badge> | 各种指针都交给自带的样式：它给鼠标留着 `:active`，在 `@media (pointer: coarse)` 里丢掉，手指只会看到按压模型。自己再写一条 `:active`，手指下也会亮，落手就亮、滚动也不灭。 |
 | <Badge variant="error">不要</Badge> | 为了跟按压给元素加指针监听或者组件状态；控制器已经写好属性了，每个元素一套监听正是长列表受不了的。 |
 | <Badge variant="error">不要</Badge> | 给 Astryx 组件渲染出来的控件再调一次；那些本来就有标记，最里面那个带标记的元素才算数。 |
+
+## 示例
+
+常见配置、变体和状态。
+
+<DemoExample
+  :demo="usePressFeedbackPressableCard"
+  description="用 usePressFeedback 把一张 Card 变成可按的表面：返回的 pressableProps 直接摊在 Card 上，按下时卡片会像所有 Astryx 可按控件一样变暗；键盘聚焦时画统一的焦点环；点击、Enter 或空格把卡片翻面。"
+  locale="zh"
+  title="usePressFeedback — 可按的卡片"
+/>

@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useFocusTrapQuickEdit } from '../../../../components/demos/use-focus-trap'
 </script>
 
 ## 使用方法
@@ -62,3 +63,14 @@ const trap = useFocusTrap({
 | <Badge variant="success">推荐</Badge> | 传 `onEscape`，容器里按下 Escape 时关掉对话框。 |
 | <Badge variant="success">推荐</Badge> | 关闭后的焦点还原用内置的就行；只有确实要送别处时，才自己再写一套。 |
 | <Badge variant="error">避免</Badge> | 用在 Tooltip、下拉菜单这类非模态内容上；它们要的是轻关闭，不是关住焦点。 |
+
+## 示例
+
+常见配置、变体和状态。
+
+<DemoExample
+  :demo="useFocusTrapQuickEdit"
+  description="一个不基于 Dialog 的自制快速编辑面板，用 useFocusTrap 困住焦点：打开时 focusFirst 把焦点放进输入框，Tab 和 Shift+Tab 都留在面板里，Escape 通过 onEscape 关闭，关闭后焦点回到「Quick edit」按钮。"
+  locale="zh"
+  title="useFocusTrap — 快速编辑面板"
+/>
