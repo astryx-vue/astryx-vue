@@ -66,7 +66,7 @@ beforeEach(() => {
       get startTime() {
         return entry.startTime
       },
-      set startTime(value: number) {
+      set startTime(value: number | null) {
         entry.startTime = value
       },
     } as unknown as Animation
