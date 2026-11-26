@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useTreeFocusFileTree } from '../../../../components/demos/use-tree-focus'
 </script>
 
 ## Usage
@@ -44,3 +45,14 @@ const { treeRef, handleKeyDown, handleFocus } = useTreeFocus({
 | <Badge variant="success">Do</Badge> | Attach both `treeRef` and `handleKeyDown` to the `role="tree"` container element (`ref="treeRef"` and `@keydown="handleKeyDown"`). |
 | <Badge variant="success">Do</Badge> | Attach `handleFocus` to the container's `@focus` when the hook owns the tab stop: that is how it is repaired after a click. |
 | <Badge variant="error">Don't</Badge> | Use for linear lists (prefer `useListFocus`) or 2D grids (prefer `useGridRovingFocus`); those traversals differ from a tree. |
+
+## Examples
+
+Common configurations, variations, and states.
+
+<DemoExample
+  :demo="useTreeFocusFileTree"
+  description="A custom file tree built from plain rows with tree roles. useTreeFocus gives it the WAI-ARIA tree keyboard model: ArrowUp and ArrowDown move over the visible rows, ArrowRight opens a folder or moves into it, ArrowLeft closes it or moves to its parent, Home and End jump to the ends, a typed letter jumps to a matching name, Enter opens a file, and only one row is in the tab order."
+  locale="en"
+  title="useTreeFocus — Keyboard File Tree"
+/>

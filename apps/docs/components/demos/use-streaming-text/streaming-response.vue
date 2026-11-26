@@ -1,74 +1,65 @@
 <script setup lang="ts">
 import { useStreamingText } from '@astryx-vue/core'
-import { Badge } from '@astryx-vue/core/Badge'
 import { Button } from '@astryx-vue/core/Button'
 import { Card } from '@astryx-vue/core/Card'
-import { Heading } from '@astryx-vue/core/Heading'
-import { Section } from '@astryx-vue/core/Section'
-import { Stack } from '@astryx-vue/core/Stack'
+import { VStack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
 import { onBeforeUnmount, ref } from 'vue'
 
-const target = 'Astryx hooks keep behavior reusable while components keep visuals consistent.'
+const CHUNKS = [
+  'Astryx hooks keep behavior reusable ',
+  'while components keep visuals consistent. ',
+  'Streaming text arrives in bursts; ',
+  'the hook smooths it into a steady reveal.',
+]
 
-const source = ref('')
+const target = ref('')
 const isStreaming = ref(false)
-const displayedText = useStreamingText(source, isStreaming)
+const displayedText = useStreamingText(target, isStreaming, { speed: 'fast' })
 
-let timer: ReturnType<typeof setInterval> | undefined
+// 假的流：一段一段成批到达，像模型吐 token 那样。重新开始会停掉进行中的流，最后一段到达时流结束。
+let timer: ReturnType<typeof setTimeout> | undefined
 
 function stop(): void {
   if (timer !== undefined) {
-    clearInterval(timer)
+    clearTimeout(timer)
     timer = undefined
   }
 }
 
-function stream(): void {
+function regenerate(): void {
   stop()
-  source.value = ''
+  target.value = ''
   isStreaming.value = true
-  let offset = 0
-  // 每 200ms 送一小段，模拟生成中的分块到达
-  timer = setInterval(() => {
-    offset = Math.min(offset + 8, target.length)
-    source.value = target.slice(0, offset)
-    if (offset >= target.length) {
-      isStreaming.value = false
-      stop()
+  let index = 0
+  const tick = (): void => {
+    target.value += CHUNKS[index]
+    index += 1
+    if (index < CHUNKS.length) {
+      timer = setTimeout(tick, 350)
     }
-  }, 200)
+    else {
+      timer = undefined
+      // 最后一段到了就结束流，hook 会直接显示完整文本。
+      isStreaming.value = false
+    }
+  }
+  timer = setTimeout(tick, 350)
 }
 
 onBeforeUnmount(stop)
-stream()
 </script>
 
 <template>
-  <Section variant="muted" :padding="4" :max-width="520">
-    <Card :padding="4" width="100%">
-      <Stack direction="vertical" :gap="3">
-        <Stack direction="horizontal" :gap="2" align="center">
-          <Heading :level="4">
-            Assistant response
-          </Heading>
-          <Badge :variant="isStreaming ? 'info' : 'success'">
-            {{ isStreaming ? 'Streaming' : 'Complete' }}
-          </Badge>
-        </Stack>
-        <Text class="streaming-text" type="body">
-          {{ displayedText }}
-        </Text>
-        <Stack direction="horizontal" :gap="2">
-          <Button label="Stream again" size="sm" variant="secondary" @click="stream" />
-        </Stack>
-      </Stack>
-    </Card>
-  </Section>
+  <Card :width="420" :padding="4">
+    <VStack :gap="3">
+      <Text type="body" weight="bold">
+        Assistant response
+      </Text>
+      <Text type="body">
+        {{ displayedText }}
+      </Text>
+      <Button :label="isStreaming ? 'Streaming…' : 'Regenerate'" variant="secondary" size="sm" @click="regenerate" />
+    </VStack>
+  </Card>
 </template>
-
-<style scoped>
-.streaming-text {
-  min-height: 3.5rem;
-}
-</style>

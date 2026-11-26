@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useImageModePhotoCaption } from '../../../../components/demos/use-image-mode'
 </script>
 
 ## Usage
@@ -26,3 +27,14 @@ import { useImageMode } from '@astryx-vue/core'
 | <Badge variant="success">Do</Badge> | Pair with `MediaTheme` to automatically adapt text color over dynamic background images. |
 | <Badge variant="success">Do</Badge> | Use the `region` option to sample only the area where text overlays will appear for more accurate results. |
 | <Badge variant="error">Don't</Badge> | Use for images that change rapidly (e.g. video frames); each `src` change triggers a new fetch and analysis. |
+
+## Examples
+
+Common configurations, variations, and states.
+
+<DemoExample
+  :demo="useImageModePhotoCaption"
+  description="A photo banner with a caption over the sky. useImageMode samples only the strip under the caption and MediaTheme switches the caption between light and dark text from the result. A Beach photo switch swaps a night photo for a bright beach photo, and while the new photo loads the caption keeps the dark fallback."
+  locale="en"
+  title="useImageMode — Photo Caption"
+/>

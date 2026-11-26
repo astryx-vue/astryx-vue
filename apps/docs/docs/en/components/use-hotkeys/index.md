@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useHotkeysSearchHelp } from '../../../../components/demos/use-hotkeys'
 </script>
 
 ## Usage
@@ -27,3 +28,14 @@ The listener is removed when the component unmounts, not when the list changes.
 | <Badge variant="success">Do</Badge> | Pair with the `Kbd` component to display the same combo you register; both resolve `mod` per platform identically. |
 | <Badge variant="success">Do</Badge> | Use `isDisabled` to suspend shortcuts while a modal or wizard owns the keyboard, instead of unmounting the hook. |
 | <Badge variant="error">Don't</Badge> | Use for focus-scoped keyboard navigation inside a widget; use `useListFocus` or `useGridRovingFocus` instead. |
+
+## Examples
+
+Common configurations, variations, and states.
+
+<DemoExample
+  :demo="useHotkeysSearchHelp"
+  description="Page shortcuts registered with useHotkeys: / focuses the search field and ? opens the shortcut help, while typing either character in the field just types it. A switch turns the single-key shortcuts off through isDisabled."
+  locale="en"
+  title="useHotkeys — Search and Help Shortcuts"
+/>
