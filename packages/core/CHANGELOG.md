@@ -1,5 +1,11 @@
 # @astryx-vue/core
 
+## 0.10.2
+
+### Patch Changes
+
+- [#534](https://github.com/astryx-vue/astryx-vue/pull/534) [`dc8015d`](https://github.com/astryx-vue/astryx-vue/commit/dc8015d7a86410799e01769fc2ee0aa4554dabbf) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - FileInput 一次挑了几个不合格的文件时，状态提示按当前语言列出每个文件和原因，不再只说第一个；InternationalizationProvider 漏写 `locale` 时，开发环境直接报错并给出改法。
+
 ## 0.10.1
 
 ### Patch Changes
