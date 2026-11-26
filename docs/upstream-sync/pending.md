@@ -1320,7 +1320,8 @@
 - [ ] [`f8a309da0`](https://github.com/meta/astryx/commit/f8a309da0) test(cli): the main searcher's test checks the count contract per query (#9996)
 - [ ] [`45f77d085`](https://github.com/meta/astryx/commit/45f77d085) fix(cli): a crashed run's release install is recognized by the Node it ran on, whatever its name (#8520)
 - [ ] [`bb7702ce0`](https://github.com/meta/astryx/commit/bb7702ce0) perf(cli): findComponentReadme probes only folders that hold the name (#9904)
-- [ ] [`9cba0a867`](https://github.com/meta/astryx/commit/9cba0a867) docs(i18n): a Calendars guide page for other calendar systems (#10017)
+- [x] [`9cba0a867`](https://github.com/meta/astryx/commit/9cba0a867) docs(i18n): a Calendars guide page for other calendar systems (#10017)
+  - 已移植：[#585](https://github.com/astryx-vue/astryx-vue/pull/585)。新增中英文「历法」指南
 - [x] [`68507bbe5`](https://github.com/meta/astryx/commit/68507bbe5) fix(cli): theme build scans the icon import from the source it loaded (#8598)
   - 不适用：上游 theme build 把 StyleX defineTheme 的 TS 主题模块编译成 CSS/JS；我们的主题是现成 CSS，CLI 的 theme 只打印接入文档，没有构建步骤
 - [ ] [`3139560ab`](https://github.com/meta/astryx/commit/3139560ab) test(cli): the node suites rebuild a Core build older than its sources (#8567)
@@ -1332,7 +1333,8 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`53fa23739`](https://github.com/meta/astryx/commit/53fa23739) test(cli): version runs, -V and --json too, load no large CLI module (#10016)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`189a730ce`](https://github.com/meta/astryx/commit/189a730ce) feat(DateInput, DateTimeInput, DateRangeInput): type, pick and show dates in the active calendar (#9643, #9842)
+- [x] [`189a730ce`](https://github.com/meta/astryx/commit/189a730ce) feat(DateInput, DateTimeInput, DateRangeInput): type, pick and show dates in the active calendar (#9643, #9842)
+  - 已移植：[#586](https://github.com/astryx-vue/astryx-vue/pull/586)。DateInput、DateTimeInput、DateRangeInput 按历法显示、打字和选择，非公历换掉系统控件；#9842 的保留输入 Vue 版已有
 - [ ] [`e657e2e6a`](https://github.com/meta/astryx/commit/e657e2e6a) perf(cli): issues() reads Core templates only for integration templates (#10008)
 - [ ] [`f1f92c3cb`](https://github.com/meta/astryx/commit/f1f92c3cb) perf(cli): search computes a typo's distance only within its cap (#10030)
 - [ ] [`6f3befa82`](https://github.com/meta/astryx/commit/6f3befa82) feat(lab): CircleCheckIndicator, the iOS multiple-selection circle (#9723)
@@ -2522,8 +2524,9 @@
   - 暂缓：示例依赖 BaseTypeahead 的 menu（列表框与对话框角色切换），Vue 版 BaseTypeahead 没有这个配置
 - [x] [`6af6700c8`](https://github.com/meta/astryx/commit/6af6700c8) docs(useDirection): add hook docs and a live sparkline example block (#10547)
   - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。useLocaleDirection 页补实时迷你折线示例（对应上游 useDirection）
-- [ ] [`57009119a`](https://github.com/meta/astryx/commit/57009119a) docs(InternationalizationProvider): add a calendar example (#10135)
+- [x] [`57009119a`](https://github.com/meta/astryx/commit/57009119a) docs(InternationalizationProvider): add a calendar example (#10135)
   - 暂缓：日历示例依赖 provider 的 calendar，Vue 版还没有日历系统设施
+  - 已移植：[#585](https://github.com/astryx-vue/astryx-vue/pull/585)。provider 文档新增历法示例
 
 ### v0.7.14
 
@@ -2878,18 +2881,24 @@
   - 已移植：[#506](https://github.com/astryx-vue/astryx-vue/pull/506)。accent 文字改用 text-accent，暗色 accent 默认值在主题包，由基础展示族完成
 - [x] [`c5b2c54dd`](https://github.com/meta/astryx/commit/c5b2c54dd) spec(AST-111): date components use the calendar the application chooses (#9605)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`fe1cf0c6d`](https://github.com/meta/astryx/commit/fe1cf0c6d) feat(Calendar): show the months of the selected calendar system (#9622)
+- [x] [`fe1cf0c6d`](https://github.com/meta/astryx/commit/fe1cf0c6d) feat(Calendar): show the months of the selected calendar system (#9622)
   - 暂缓：显示所选历法的月份依赖非公历日历系统，归日历系统任务
-- [ ] [`aa7c50176`](https://github.com/meta/astryx/commit/aa7c50176) feat(Calendar): useCalendarDays and useCalendarNavigation take an optional calendar (#10007)
+  - 已移植：[#585](https://github.com/astryx-vue/astryx-vue/pull/585)。Calendar 按所选历法排月份、翻月和聚焦
+- [x] [`aa7c50176`](https://github.com/meta/astryx/commit/aa7c50176) feat(Calendar): useCalendarDays and useCalendarNavigation take an optional calendar (#10007)
   - 暂缓：日历钩子接受可选历法依赖非公历日历系统，归日历系统任务
-- [ ] [`edf7128e3`](https://github.com/meta/astryx/commit/edf7128e3) feat(Timestamp, PowerSearch): write dates in the provider's calendar (#9639)
+  - 已移植：[#588](https://github.com/astryx-vue/astryx-vue/pull/588)。useCalendarDays 和 useCalendarNavigation 收可选的 calendar，不读 provider
+- [x] [`edf7128e3`](https://github.com/meta/astryx/commit/edf7128e3) feat(Timestamp, PowerSearch): write dates in the provider's calendar (#9639)
   - 暂缓：Timestamp、PowerSearch 按 provider 日历写日期依赖非公历日历系统，归日历系统任务
-- [ ] [`9cba0a867`](https://github.com/meta/astryx/commit/9cba0a867) docs(i18n): a Calendars guide page for other calendar systems (#10017)
+  - 已移植：[#585](https://github.com/astryx-vue/astryx-vue/pull/585)。Timestamp 和 PowerSearch 按 provider 的历法写日期，charts 部分 Vue 版早已支持 calendar
+- [x] [`9cba0a867`](https://github.com/meta/astryx/commit/9cba0a867) docs(i18n): a Calendars guide page for other calendar systems (#10017)
   - 暂缓：其他历法的 Calendars 指南页只讲非公历日历系统，归日历系统任务
-- [ ] [`6e2e24293`](https://github.com/meta/astryx/commit/6e2e24293) feat(lab): Schedule writes dates in the provider's calendar (#9994)
+  - 已移植：[#585](https://github.com/astryx-vue/astryx-vue/pull/585)。新增中英文「历法」指南
+- [x] [`6e2e24293`](https://github.com/meta/astryx/commit/6e2e24293) feat(lab): Schedule writes dates in the provider's calendar (#9994)
   - 暂缓：Schedule 按 provider 日历写日期依赖非公历日历系统，归日历系统任务
-- [ ] [`189a730ce`](https://github.com/meta/astryx/commit/189a730ce) feat(DateInput, DateTimeInput, DateRangeInput): type, pick and show dates in the active calendar (#9643, #9842)
+  - 已移植：[#585](https://github.com/astryx-vue/astryx-vue/pull/585)。Schedule 按 provider 的历法写日期
+- [x] [`189a730ce`](https://github.com/meta/astryx/commit/189a730ce) feat(DateInput, DateTimeInput, DateRangeInput): type, pick and show dates in the active calendar (#9643, #9842)
   - 暂缓：按当前历法输入、选择和显示日期，依赖非公历日历系统，Vue 版还没有
+  - 已移植：[#586](https://github.com/astryx-vue/astryx-vue/pull/586)。DateInput、DateTimeInput、DateRangeInput 按历法显示、打字和选择，非公历换掉系统控件；#9842 的保留输入 Vue 版已有
 - [x] [`a866c2ab0`](https://github.com/meta/astryx/commit/a866c2ab0) fix(Dialog, Drawer): a backdrop press that closes a popover inside closes only the popover (#9988)
   - 已移植：[#546](https://github.com/astryx-vue/astryx-vue/pull/546)。日历在对话框里被点遮罩关掉时只关日历，对话框留着，补测试
 - [ ] [`c26fcd543`](https://github.com/meta/astryx/commit/c26fcd543) chore(lab): Lab's animator hook, over Core's internal touch entry (#9754)
@@ -2901,8 +2910,9 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`d7a7dd3bb`](https://github.com/meta/astryx/commit/d7a7dd3bb) feat(Timestamp): the hover card's copy button resolves its glyph through the timestamp-copy icon slot (#9830)
   - 已移植：[#502](https://github.com/astryx-vue/astryx-vue/pull/502)。Timestamp 复制按钮走 timestamp-copy 槽位，基础展示族完成
-- [ ] [`a4dd70eb1`](https://github.com/meta/astryx/commit/a4dd70eb1) docs(useCalendarDays): add hook docs and a month grid example block (#9905)
+- [x] [`a4dd70eb1`](https://github.com/meta/astryx/commit/a4dd70eb1) docs(useCalendarDays): add hook docs and a month grid example block (#9905)
   - 暂缓：给上游 useCalendarDays 钩子补文档和示例；Vue 版没有这个钩子，公开的是接口不同的 useCalendar；归日历系统任务，届时决定是否补齐上游 v0.7.1 前就公开的 useCalendarDays、useCalendarNavigation、useCalendarConstraints
+  - 已移植：[#588](https://github.com/astryx-vue/astryx-vue/pull/588)。公开 useCalendarDays，加中英文文档和月格子示例
 - [x] [`17e36e748`](https://github.com/meta/astryx/commit/17e36e748) fix(DateTimeInput): a press's deferred-click watchers leave with the field (#10155)
   - 不适用：按下后在 document 上挂一次性 click 监听的 React 实现，Vue 版没有这种监听
 - [ ] [`ab7facf1e`](https://github.com/meta/astryx/commit/ab7facf1e) fix(core): spring roles register themselves when they load (#10138)
@@ -2952,12 +2962,14 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`a4eca1690`](https://github.com/meta/astryx/commit/a4eca1690) fix(Popover): a dialog popover starts focus on an enabled tab stop (#10503)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`8091fbc64`](https://github.com/meta/astryx/commit/8091fbc64) docs(useCalendarNavigation): add hook docs and a month pager example block (#10154)
+- [x] [`8091fbc64`](https://github.com/meta/astryx/commit/8091fbc64) docs(useCalendarNavigation): add hook docs and a month pager example block (#10154)
   - 暂缓：给上游 useCalendarNavigation 钩子补文档和示例；Vue 版没有这个钩子；归日历系统任务，届时决定是否补齐上游 v0.7.1 前就公开的 useCalendarDays、useCalendarNavigation、useCalendarConstraints
+  - 已移植：[#588](https://github.com/astryx-vue/astryx-vue/pull/588)。公开 useCalendarNavigation，加中英文文档和月份翻页示例
 - [x] [`9d5507609`](https://github.com/meta/astryx/commit/9d5507609) fix(DateInput, DateTimeInput): under a finger the month/year wheels move the date like UIDatePicker's (#8209)
   - 已移植：[#546](https://github.com/astryx-vue/astryx-vue/pull/546)。手指下月份年份滚轮带着已选日期走，像 UIDatePicker
-- [ ] [`62c7802e8`](https://github.com/meta/astryx/commit/62c7802e8) docs(useCalendarConstraints): add hook docs and a hotel booking range example block (#10151)
+- [x] [`62c7802e8`](https://github.com/meta/astryx/commit/62c7802e8) docs(useCalendarConstraints): add hook docs and a hotel booking range example block (#10151)
   - 暂缓：给上游 useCalendarConstraints 钩子补文档和示例；Vue 版没有这个钩子；归日历系统任务，届时决定是否补齐上游 v0.7.1 前就公开的 useCalendarDays、useCalendarNavigation、useCalendarConstraints
+  - 已移植：[#588](https://github.com/astryx-vue/astryx-vue/pull/588)。公开 useCalendarConstraints，加中英文文档和酒店预订范围示例
 - [x] [`372f681ba`](https://github.com/meta/astryx/commit/372f681ba) fix(Calendar): day buttons grow with their numbers (#10596)
   - 已移植：[#571](https://github.com/astryx-vue/astryx-vue/pull/571)。日期按钮高度改为下限，文字放大时按钮跟着数字长高，补 CSS 测试
 - [x] [`619ffeb27`](https://github.com/meta/astryx/commit/619ffeb27) fix(core, richtext): no focus fade on text fields under a coarse pointer (#10611)
@@ -3408,20 +3420,26 @@
 
 - [x] [`cb2a34a62`](https://github.com/meta/astryx/commit/cb2a34a62) fix(a11y): name a scrolling LayoutContent, LayoutPanel or StackItem (#9985)
   - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；scrollRegion.label 暂列 coverage.mjs（布局组件行为不在本族清单）
-- [ ] [`4e7823a56`](https://github.com/meta/astryx/commit/4e7823a56) feat(i18n): InternationalizationProvider takes a calendar and exposes the resolved calendar (#9791)
+- [x] [`4e7823a56`](https://github.com/meta/astryx/commit/4e7823a56) feat(i18n): InternationalizationProvider takes a calendar and exposes the resolved calendar (#9791)
   - 暂缓：Vue 版没有日历系统设施：InternationalizationProvider 无 calendar，日期组件只按公历计算，需要 Temporal 或等价的历法换算
-- [ ] [`fe1cf0c6d`](https://github.com/meta/astryx/commit/fe1cf0c6d) feat(Calendar): show the months of the selected calendar system (#9622)
+  - 已移植：[#585](https://github.com/astryx-vue/astryx-vue/pull/585)。InternationalizationProvider 新增 calendar，useLocale 返回解析后的历法，未知历法退回公历并警告一次
+- [x] [`fe1cf0c6d`](https://github.com/meta/astryx/commit/fe1cf0c6d) feat(Calendar): show the months of the selected calendar system (#9622)
   - 暂缓：依赖 provider 的 calendar 与非公历月份计算，Vue 版 Calendar 只支持公历
-- [ ] [`aa7c50176`](https://github.com/meta/astryx/commit/aa7c50176) feat(Calendar): useCalendarDays and useCalendarNavigation take an optional calendar (#10007)
+  - 已移植：[#585](https://github.com/astryx-vue/astryx-vue/pull/585)。Calendar 按所选历法排月份、翻月和聚焦
+- [x] [`aa7c50176`](https://github.com/meta/astryx/commit/aa7c50176) feat(Calendar): useCalendarDays and useCalendarNavigation take an optional calendar (#10007)
   - 暂缓：useCalendarSystem 依赖日历系统设施，Vue 版还没有
-- [ ] [`edf7128e3`](https://github.com/meta/astryx/commit/edf7128e3) feat(Timestamp, PowerSearch): write dates in the provider's calendar (#9639)
+  - 已移植：[#588](https://github.com/astryx-vue/astryx-vue/pull/588)。useCalendarDays 和 useCalendarNavigation 收可选的 calendar，不读 provider
+- [x] [`edf7128e3`](https://github.com/meta/astryx/commit/edf7128e3) feat(Timestamp, PowerSearch): write dates in the provider's calendar (#9639)
   - 暂缓：Timestamp、PowerSearch 按 provider 日历写日期依赖日历系统设施
+  - 已移植：[#585](https://github.com/astryx-vue/astryx-vue/pull/585)。Timestamp 和 PowerSearch 按 provider 的历法写日期，charts 部分 Vue 版早已支持 calendar
 - [x] [`7be6b4644`](https://github.com/meta/astryx/commit/7be6b4644) feat(core): read typed dates in every calendar (#9792)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`6e2e24293`](https://github.com/meta/astryx/commit/6e2e24293) feat(lab): Schedule writes dates in the provider's calendar (#9994)
+- [x] [`6e2e24293`](https://github.com/meta/astryx/commit/6e2e24293) feat(lab): Schedule writes dates in the provider's calendar (#9994)
   - 暂缓：lab Schedule 按 provider 日历写日期依赖日历系统设施
-- [ ] [`189a730ce`](https://github.com/meta/astryx/commit/189a730ce) feat(DateInput, DateTimeInput, DateRangeInput): type, pick and show dates in the active calendar (#9643, #9842)
+  - 已移植：[#585](https://github.com/astryx-vue/astryx-vue/pull/585)。Schedule 按 provider 的历法写日期
+- [x] [`189a730ce`](https://github.com/meta/astryx/commit/189a730ce) feat(DateInput, DateTimeInput, DateRangeInput): type, pick and show dates in the active calendar (#9643, #9842)
   - 暂缓：日期输入按当前日历输入和显示依赖日历系统设施；en.json 部分已在 #533 对齐
+  - 已移植：[#586](https://github.com/astryx-vue/astryx-vue/pull/586)。DateInput、DateTimeInput、DateRangeInput 按历法显示、打字和选择，非公历换掉系统控件；#9842 的保留输入 Vue 版已有
 - [x] [`f384e62f5`](https://github.com/meta/astryx/commit/f384e62f5) docs(useIcon): add hook docs and a status row example block (#9900)
   - Vue 版已有：按基础展示族结论：useSemanticIcon 已有文档
 - [x] [`08313899e`](https://github.com/meta/astryx/commit/08313899e) test(scripts): the i18n watcher's signal test runs the forwarding runner alone (#10063)
@@ -3494,8 +3512,9 @@
   - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐
 - [x] [`6af6700c8`](https://github.com/meta/astryx/commit/6af6700c8) docs(useDirection): add hook docs and a live sparkline example block (#10547)
   - 已移植：[#534](https://github.com/astryx-vue/astryx-vue/pull/534)。新增 useLocaleDirection 文档页（中英），对应上游 useDirection 的用法、建议和返回值
-- [ ] [`57009119a`](https://github.com/meta/astryx/commit/57009119a) docs(InternationalizationProvider): add a calendar example (#10135)
+- [x] [`57009119a`](https://github.com/meta/astryx/commit/57009119a) docs(InternationalizationProvider): add a calendar example (#10135)
   - 暂缓：日历示例依赖 provider 的 calendar，Vue 版还没有日历系统设施
+  - 已移植：[#585](https://github.com/astryx-vue/astryx-vue/pull/585)。provider 文档新增历法示例
 
 ### v0.7.14
 
@@ -8341,8 +8360,10 @@
 - [x] [`7eee90594`](https://github.com/meta/astryx/commit/7eee90594) fix(Dialog, AlertDialog, CommandPalette, BottomSheet, Lightbox): Tab wraps inside the open modal through the shared focus-region module (#8883)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`380defeb5`](https://github.com/meta/astryx/commit/380defeb5) fix(PowerSearch): the docs examples fit a phone, and a long sheet-trigger placeholder ends in an ellipsis (#9898)
-- [ ] [`edf7128e3`](https://github.com/meta/astryx/commit/edf7128e3) feat(Timestamp, PowerSearch): write dates in the provider's calendar (#9639)
-- [ ] [`189a730ce`](https://github.com/meta/astryx/commit/189a730ce) feat(DateInput, DateTimeInput, DateRangeInput): type, pick and show dates in the active calendar (#9643, #9842)
+- [x] [`edf7128e3`](https://github.com/meta/astryx/commit/edf7128e3) feat(Timestamp, PowerSearch): write dates in the provider's calendar (#9639)
+  - 已移植：[#585](https://github.com/astryx-vue/astryx-vue/pull/585)。Timestamp 和 PowerSearch 按 provider 的历法写日期，charts 部分 Vue 版早已支持 calendar
+- [x] [`189a730ce`](https://github.com/meta/astryx/commit/189a730ce) feat(DateInput, DateTimeInput, DateRangeInput): type, pick and show dates in the active calendar (#9643, #9842)
+  - 已移植：[#586](https://github.com/astryx-vue/astryx-vue/pull/586)。DateInput、DateTimeInput、DateRangeInput 按历法显示、打字和选择，非公历换掉系统控件；#9842 的保留输入 Vue 版已有
 - [x] [`8ee380b8a`](https://github.com/meta/astryx/commit/8ee380b8a) test(CommandPalette): match the current Spinner progressbar role (#10196)
   - 不适用：只改上游测试（自动初筛）
 
@@ -9889,26 +9910,34 @@
   - 已移植：[#582](https://github.com/astryx-vue/astryx-vue/pull/582)。粗指针下有标签的复选框和可用的单选项整行朝 44px 长出看不见的热区，停在邻居间距的一半，落在热区上的点按切换控件，补测试
 - [x] [`7f8de290c`](https://github.com/meta/astryx/commit/7f8de290c) fix(core): a press's release fades on the theme's exit motion tokens (#9890)
   - 已移植：[#501](https://github.com/astryx-vue/astryx-vue/pull/501)。按主题退出动效淡出（已有），减少动态效果时最多 200ms
-- [ ] [`4e7823a56`](https://github.com/meta/astryx/commit/4e7823a56) feat(i18n): InternationalizationProvider takes a calendar and exposes the resolved calendar (#9791)
+- [x] [`4e7823a56`](https://github.com/meta/astryx/commit/4e7823a56) feat(i18n): InternationalizationProvider takes a calendar and exposes the resolved calendar (#9791)
   - 暂缓：Vue 版没有日历系统设施：InternationalizationProvider 无 calendar，日期组件只按公历计算，归日历系统任务
-- [ ] [`fe1cf0c6d`](https://github.com/meta/astryx/commit/fe1cf0c6d) feat(Calendar): show the months of the selected calendar system (#9622)
+  - 已移植：[#585](https://github.com/astryx-vue/astryx-vue/pull/585)。InternationalizationProvider 新增 calendar，useLocale 返回解析后的历法，未知历法退回公历并警告一次
+- [x] [`fe1cf0c6d`](https://github.com/meta/astryx/commit/fe1cf0c6d) feat(Calendar): show the months of the selected calendar system (#9622)
   - 暂缓：显示所选历法的月份依赖非公历日历系统，归日历系统任务
-- [ ] [`aa7c50176`](https://github.com/meta/astryx/commit/aa7c50176) feat(Calendar): useCalendarDays and useCalendarNavigation take an optional calendar (#10007)
+  - 已移植：[#585](https://github.com/astryx-vue/astryx-vue/pull/585)。Calendar 按所选历法排月份、翻月和聚焦
+- [x] [`aa7c50176`](https://github.com/meta/astryx/commit/aa7c50176) feat(Calendar): useCalendarDays and useCalendarNavigation take an optional calendar (#10007)
   - 暂缓：日历钩子接受可选历法依赖非公历日历系统，归日历系统任务
-- [ ] [`edf7128e3`](https://github.com/meta/astryx/commit/edf7128e3) feat(Timestamp, PowerSearch): write dates in the provider's calendar (#9639)
+  - 已移植：[#588](https://github.com/astryx-vue/astryx-vue/pull/588)。useCalendarDays 和 useCalendarNavigation 收可选的 calendar，不读 provider
+- [x] [`edf7128e3`](https://github.com/meta/astryx/commit/edf7128e3) feat(Timestamp, PowerSearch): write dates in the provider's calendar (#9639)
   - 暂缓：Timestamp、PowerSearch 按 provider 日历写日期依赖非公历日历系统，归日历系统任务；图表的 shortDate、monthYear 可选历法参数已在 #532
-- [ ] [`7be6b4644`](https://github.com/meta/astryx/commit/7be6b4644) feat(core): read typed dates in every calendar (#9792)
+  - 已移植：[#585](https://github.com/astryx-vue/astryx-vue/pull/585)。Timestamp 和 PowerSearch 按 provider 的历法写日期，charts 部分 Vue 版早已支持 calendar
+- [x] [`7be6b4644`](https://github.com/meta/astryx/commit/7be6b4644) feat(core): read typed dates in every calendar (#9792)
   - 暂缓：读各种历法写的日期文字（calendarDateParser）依赖非公历日历系统，归日历系统任务
-- [ ] [`6e2e24293`](https://github.com/meta/astryx/commit/6e2e24293) feat(lab): Schedule writes dates in the provider's calendar (#9994)
+  - 已移植：[#586](https://github.com/astryx-vue/astryx-vue/pull/586)。只靠 Intl 的历法日期解析器，每种历法都能读回打的日期
+- [x] [`6e2e24293`](https://github.com/meta/astryx/commit/6e2e24293) feat(lab): Schedule writes dates in the provider's calendar (#9994)
   - 暂缓：Schedule 按 provider 日历写日期依赖 core 的日历系统，归日历系统任务
-- [ ] [`52e65f3ef`](https://github.com/meta/astryx/commit/52e65f3ef) fix(utils): read back calendar text in Latvian, Amharic and Hindi (#9840)
+  - 已移植：[#585](https://github.com/astryx-vue/astryx-vue/pull/585)。Schedule 按 provider 的历法写日期
+- [x] [`52e65f3ef`](https://github.com/meta/astryx/commit/52e65f3ef) fix(utils): read back calendar text in Latvian, Amharic and Hindi (#9840)
   - 暂缓：拉脱维亚语、阿姆哈拉语、印地语日历文字的读回属于 calendarDateParser，依赖非公历日历系统，归日历系统任务
+  - 已移植：[#586](https://github.com/astryx-vue/astryx-vue/pull/586)。拉脱维亚语、阿姆哈拉语、印地语的历法文字能读回
 - [x] [`7b71d71b4`](https://github.com/meta/astryx/commit/7b71d71b4) feat(List): a row's touch target grows toward 44 px where its neighbors leave room (#8085)
   - 已移植：[#542](https://github.com/astryx-vue/astryx-vue/pull/542)。InfoTip 的触控热区朝 44px 长并在邻居间距一半处停住；List 行部分由 useTouchHitArea 共用
 - [x] [`a6a9b9c50`](https://github.com/meta/astryx/commit/a6a9b9c50) fix(CheckboxListItem): a row answers a finger the same wherever it lands (#8212)
   - 已移植：[#550](https://github.com/astryx-vue/astryx-vue/pull/550)。useMediaQuery 每条查询只挂一个监听，补测试；转发点击的行里手指按被转发的控件照亮整行已在 #501
-- [ ] [`189a730ce`](https://github.com/meta/astryx/commit/189a730ce) feat(DateInput, DateTimeInput, DateRangeInput): type, pick and show dates in the active calendar (#9643, #9842)
+- [x] [`189a730ce`](https://github.com/meta/astryx/commit/189a730ce) feat(DateInput, DateTimeInput, DateRangeInput): type, pick and show dates in the active calendar (#9643, #9842)
   - 暂缓：按当前历法输入、选择和显示日期，依赖非公历日历系统，归日历系统任务；en.json 部分已在 #533 对齐
+  - 已移植：[#586](https://github.com/astryx-vue/astryx-vue/pull/586)。DateInput、DateTimeInput、DateRangeInput 按历法显示、打字和选择，非公历换掉系统控件；#9842 的保留输入 Vue 版已有
 - [x] [`ddb8b3462`](https://github.com/meta/astryx/commit/ddb8b3462) feat(ButtonGroup): a finger's slide runs the button it lifts on (#8657)
   - 已移植：[#509](https://github.com/astryx-vue/astryx-vue/pull/509)。ButtonGroup 手指滑动在松手处执行
 
@@ -9946,8 +9975,9 @@
   - 已移植：[#501](https://github.com/astryx-vue/astryx-vue/pull/501)。滚动视图内 150ms 从触摸事件时间戳算起
 - [ ] [`95572ae80`](https://github.com/meta/astryx/commit/95572ae80) fix(Layer): a press that went down before an input hold lifts through the hold's shield (#10398)
   - 暂缓：按下发生在输入遮挡之前的触摸抬起穿过遮挡：依赖进场输入遮挡，归动效与手势引擎任务
-- [ ] [`24d845b42`](https://github.com/meta/astryx/commit/24d845b42) fix(core): a month past the end of its year constrains to the last month (#10461)
+- [x] [`24d845b42`](https://github.com/meta/astryx/commit/24d845b42) fix(core): a month past the end of its year constrains to the last month (#10461)
   - 暂缓：超出一年末尾的月份收敛到最后一个月属于非公历日历系统，归日历系统任务
+  - 已移植：[#585](https://github.com/astryx-vue/astryx-vue/pull/585)。跨年翻月时月份超过当年最后一个月就停在最后一个月
 - [x] [`cd748d0e9`](https://github.com/meta/astryx/commit/cd748d0e9) chore(Layer): the outside-press watch can close on a pan, follow chosen pointer types, and judge a press in a closed shadow root (#9814)
   - 已移植：[#542](https://github.com/astryx-vue/astryx-vue/pull/542)。点外面的关闭可以按平移关闭、区分指针类型：dismissOnOutsidePan 和按指针类型的手指等抬起
 - [x] [`6e0b60429`](https://github.com/meta/astryx/commit/6e0b60429) chore(core): one owner module turns scroll anchoring off (#10173)
@@ -10091,7 +10121,8 @@
 
 ### v0.7.9
 
-- [ ] [`edf7128e3`](https://github.com/meta/astryx/commit/edf7128e3) feat(Timestamp, PowerSearch): write dates in the provider's calendar (#9639)
+- [x] [`edf7128e3`](https://github.com/meta/astryx/commit/edf7128e3) feat(Timestamp, PowerSearch): write dates in the provider's calendar (#9639)
+  - 已移植：[#585](https://github.com/astryx-vue/astryx-vue/pull/585)。Timestamp 和 PowerSearch 按 provider 的历法写日期，charts 部分 Vue 版早已支持 calendar
 
 ### v0.7.10
 
@@ -10431,8 +10462,9 @@
   - 暂缓：RefreshControl 依赖 core 还没有的手势识别器（GestureArena、PanGestureRecognizer）和 UIKit 动效引擎（createMotionEngine、rubberBand、scroll 弹簧）
 - [x] [`de1be1fd9`](https://github.com/meta/astryx/commit/de1be1fd9) fix(CircularProgress): the indeterminate ring turns with Spinner's rotor (#8256)
   - 已移植：[#532](https://github.com/astryx-vue/astryx-vue/pull/532)。不确定圆环改为和加载圈一样的 135° 弧整体旋转，一次迭代 100 圈，相位钉在时间线 0 点，补测试
-- [ ] [`6e2e24293`](https://github.com/meta/astryx/commit/6e2e24293) feat(lab): Schedule writes dates in the provider's calendar (#9994)
+- [x] [`6e2e24293`](https://github.com/meta/astryx/commit/6e2e24293) feat(lab): Schedule writes dates in the provider's calendar (#9994)
   - 暂缓：依赖 core 的日历系统（InternationalizationProvider 的 calendar 和历法解析，日期族的 189a730ce 等），Vue 版 core 还没有
+  - 已移植：[#585](https://github.com/astryx-vue/astryx-vue/pull/585)。Schedule 按 provider 的历法写日期
 - [x] [`6f3befa82`](https://github.com/meta/astryx/commit/6f3befa82) feat(lab): CircleCheckIndicator, the iOS multiple-selection circle (#9723)
   - 已移植：[#536](https://github.com/astryx-vue/astryx-vue/pull/536)。lab 新增 CircleCheckIndicator，可在主题里映射到 checkbox，中英文档和测试
 - [ ] [`c26fcd543`](https://github.com/meta/astryx/commit/c26fcd543) chore(lab): Lab's animator hook, over Core's internal touch entry (#9754)
