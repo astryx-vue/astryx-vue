@@ -1,29 +1,5 @@
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 
-@keyframes astryx-selector-enter-below {
-  from {
-    opacity: 0;
-    transform: translateY(calc(-1 * var(--astryx-spacing-2, 8px))) scale(0.95);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes astryx-selector-enter-above {
-  from {
-    opacity: 0;
-    transform: translateY(var(--astryx-spacing-2, 8px)) scale(0.95);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
 @layer astryx.components {
   .astryx-selector {
     display: inline-block;
@@ -326,12 +302,9 @@
     font-weight: var(--astryx-font-weight-medium, 500);
   }
 
-  .astryx-selector-listbox[data-placement='below'] {
-    animation-name: astryx-selector-enter-below;
-  }
-
-  .astryx-selector-listbox[data-placement='above'] {
-    animation-name: astryx-selector-enter-above;
+  .astryx-selector-listbox[data-placement] {
+    animation-name: astryx-layer-enter;
+    transform-origin: var(--_astryx-layer-enter-origin, 50% 50%);
   }
 
   .astryx-selector-search {
@@ -519,6 +492,20 @@
     .astryx-selector-listbox {
       transition: none;
       animation: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) and (not (pointer: coarse)) {
+    .astryx-selector-listbox[data-placement] {
+      animation: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) and (pointer: coarse) {
+    .astryx-selector-listbox[data-placement] {
+      animation-name: astryx-layer-fade-in;
+      animation-duration: var(--_astryx-reduced-motion-fade-duration, 200ms);
+      animation-timing-function: var(--_astryx-reduced-motion-fade-easing, cubic-bezier(0.42, 0, 0.58, 1));
     }
   }
 }

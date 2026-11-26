@@ -1,29 +1,5 @@
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 
-@keyframes astryx-typeahead-enter-below {
-  from {
-    opacity: 0;
-    transform: translateY(calc(-1 * var(--astryx-spacing-2, 8px))) scale(0.95);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes astryx-typeahead-enter-above {
-  from {
-    opacity: 0;
-    transform: translateY(var(--astryx-spacing-2, 8px)) scale(0.95);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
 @layer astryx.components {
   /* 默认铺满容器。传入 width 时改走 --astryx-field-width。 */
   .astryx-field.astryx-typeahead {
@@ -174,12 +150,9 @@
     animation-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
   }
 
-  .astryx-typeahead-listbox[data-placement='below'] {
-    animation-name: astryx-typeahead-enter-below;
-  }
-
-  .astryx-typeahead-listbox[data-placement='above'] {
-    animation-name: astryx-typeahead-enter-above;
+  .astryx-typeahead-listbox[data-placement] {
+    animation-name: astryx-layer-enter;
+    transform-origin: var(--_astryx-layer-enter-origin, 50% 50%);
   }
 
   .astryx-typeahead-options {
@@ -329,6 +302,20 @@
     .astryx-typeahead-listbox {
       transition: none;
       animation: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) and (not (pointer: coarse)) {
+    .astryx-typeahead-listbox[data-placement] {
+      animation: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) and (pointer: coarse) {
+    .astryx-typeahead-listbox[data-placement] {
+      animation-name: astryx-layer-fade-in;
+      animation-duration: var(--_astryx-reduced-motion-fade-duration, 200ms);
+      animation-timing-function: var(--_astryx-reduced-motion-fade-easing, cubic-bezier(0.42, 0, 0.58, 1));
     }
   }
 }

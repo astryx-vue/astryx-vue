@@ -72,4 +72,4 @@ A popover has to communicate its presence, its current open state, and its conte
 
 ## Layout
 
-The surface is positioned with JavaScript. It recalculates its position when the page scrolls or resizes, and it flips to the other side when the chosen side has no room.
+The surface is positioned with JavaScript. It recalculates its position when the page scrolls or resizes, and it flips to the other side when the chosen side has no room. The entrance slides in from the side the surface actually lands on and grows from the edge that faces the trigger, never travelling further than the gap between them, so a flipped surface never starts over its trigger.

@@ -1,5 +1,15 @@
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 
+@keyframes astryx-dialog-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
 @keyframes astryx-dialog-enter {
   from {
     opacity: 0;
@@ -115,9 +125,16 @@
     display: contents;
   }
 
-  @media (prefers-reduced-motion: reduce) {
+  /* 减少动效时对话框不移动也不缩放：触屏上原地淡入（200ms 以内），用鼠标时直接出现。 */
+  @media (prefers-reduced-motion: reduce) and (not (pointer: coarse)) {
     .astryx-dialog[open] {
       animation: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) and (pointer: coarse) {
+    .astryx-dialog[open] {
+      animation: astryx-dialog-fade-in var(--_astryx-reduced-motion-fade-duration, 200ms) var(--_astryx-reduced-motion-fade-easing, cubic-bezier(0.42, 0, 0.58, 1)) backwards;
     }
   }
 

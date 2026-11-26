@@ -1,12 +1,13 @@
 import type { Ref } from 'vue'
 import { nextTick, onScopeDispose, ref, watch } from 'vue'
+import { layerEntranceSide, writeLayerEntranceSide } from '../layer/layerEntranceSide.js'
 import { observeResize } from '../utils/sharedResizeObserver.js'
 
 interface SelectedOverlayOptions {
   fieldRef: Readonly<Ref<HTMLElement | null>>
   listboxRef: Readonly<Ref<HTMLElement | null>>
   isOpen: Readonly<Ref<boolean>>
-  position: Readonly<Ref<{ placement: string }>>
+  position: Readonly<Ref<{ placement: string, left: number }>>
   value: () => unknown
   /** 没有搜索框、不是底部弹层、没指定位置时才生效。 */
   isEnabled: () => boolean
@@ -34,7 +35,10 @@ export function useListboxOverlay(options: SelectedOverlayOptions): { overlayTop
       ? fieldRect.top - list.clientTop - (selected.offsetTop - list.scrollTop)
       : fieldRect.bottom
     const maxTop = window.innerHeight - list.offsetHeight - 8
-    overlayTop.value = Math.max(8, Math.min(raw, Math.max(8, maxTop)))
+    const top = Math.max(8, Math.min(raw, Math.max(8, maxTop)))
+    overlayTop.value = top
+    // 列表挪到选中项盖住触发器之后，进场按挪过去的位置重算：盖住触发器中心就不滑动，以那里为原点缩放。
+    writeLayerEntranceSide(list, layerEntranceSide({ left: options.position.value.left, top, width: list.offsetWidth, height: list.offsetHeight }, fieldRect))
   }
 
   watch([options.isOpen, options.position, options.value], () => {
