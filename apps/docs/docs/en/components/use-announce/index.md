@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useAnnounceFilterResultCount } from '../../../../components/demos/use-announce'
 </script>
 
 ## Usage
@@ -38,3 +39,14 @@ const announceSearch = useAnnounce({ hasReplace: true })
 | <Badge variant="success">Do</Badge> | Keep `"polite"` for status and result counts; reserve `"assertive"` for errors and time-sensitive alerts, since it interrupts whatever the screen reader is saying. |
 | <Badge variant="success">Do</Badge> | Announce the outcome, not the interaction; `"12 results"` rather than `"search ran"`. |
 | <Badge variant="error">Don't</Badge> | Announce content that is already visible and correctly labeled in the DOM; that doubles up for screen reader users. |
+
+## Examples
+
+Common configurations, variations, and states.
+
+<DemoExample
+  :demo="useAnnounceFilterResultCount"
+  description="A product filter that announces its result count with useAnnounce: once typing pauses for 500 ms, a screen reader hears &quot;3 results&quot; or &quot;No results&quot;. Each new count replaces the last one in the live region."
+  locale="en"
+  title="useAnnounce — Filter Result Count"
+/>

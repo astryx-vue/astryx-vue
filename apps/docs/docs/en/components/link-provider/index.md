@@ -6,7 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
-import { linkProviderOverview } from '../../../../components/demos/link-provider'
+import { linkProviderHookArticleCard, linkProviderOverview } from '../../../../components/demos/link-provider'
 </script>
 
 ## Usage
@@ -45,3 +45,5 @@ Pass `as="a"` for a destination the router cannot handle, such as a file downloa
 Common configurations, variations, and states.
 
 <DemoExample :demo="linkProviderOverview" title="Link Provider — Custom Link Component" description="Routes every Astryx link through a custom component that intercepts the click, the hook frameworks like Vue Router use for client-side navigation. Click the link to see the custom handler fire instead of a full-page load." locale="en" />
+
+<DemoExample :demo="linkProviderHookArticleCard" title="useLinkComponent — Article Card" description="A custom article card reads the link component with useLinkComponent. Inside the provider, its title link is the router link and moves the router location without a page load; as='a' keeps a native anchor inside the provider; outside the provider it falls back to a native anchor." locale="en" />

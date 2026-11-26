@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { useKeyboardHintToolbar } from '../../../../components/demos/use-keyboard-hint'
+import { useKeyboardHintStarRating } from '../../../../components/demos/use-keyboard-hint'
 </script>
 
 ## 使用方法
@@ -32,8 +32,8 @@ import { useKeyboardHint } from '@astryx-vue/core'
 ## 示例
 
 <DemoExample
-  :demo="useKeyboardHintToolbar"
-  description="自己搭的 roving-tabindex 工具栏，第一次被键盘聚焦时通过 useKeyboardHint 短暂提示方向键，让看得见的用户知道组里可以用方向键移动。"
+  :demo="useKeyboardHintStarRating"
+  description="一个只有一个 Tab 停靠点的自制五星评分，直接调用 useKeyboardHint：Tab 进来时出现「← → 切换」提示，第一次按方向键它就消失，再 Tab 回来也不会再出现。"
   locale="zh"
   title="useKeyboardHint — 方向键提示"
 />

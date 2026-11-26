@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useOverflowEditorToolbar } from '../../../../components/demos/use-overflow'
 </script>
 
 ## Usage
@@ -57,3 +58,14 @@ The measured container is painted out of sight, so every item keeps its real wid
 | <Badge variant="success">Do</Badge> | Render all items into the `measureRef` container (hidden) and only the first `visibleCount` items into the `containerRef` container (visible). |
 | <Badge variant="success">Do</Badge> | Include an overflow indicator (e.g., "+N more" button) as the last child of the measurement container with a `data-overflow-indicator` attribute. |
 | <Badge variant="error">Don't</Badge> | Use for vertical overflow; this hook measures horizontal width only. |
+
+## Examples
+
+Common configurations, variations, and states.
+
+<DemoExample
+  :demo="useOverflowEditorToolbar"
+  description="Resize the card: useOverflow moves the toolbar actions that do not fit into a More menu, and shows them again when the card gets wider."
+  locale="en"
+  title="useOverflow — Editor Toolbar"
+/>

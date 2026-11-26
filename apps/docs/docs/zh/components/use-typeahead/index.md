@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useTypeaheadCountryList } from '../../../../components/demos/use-typeahead'
 </script>
 
 ## 使用方法
@@ -67,3 +68,14 @@ function handleArrows(event: KeyboardEvent): void {
 | <Badge variant="success">Do</Badge> | 让按键事件先过它，它返回 `false` 时再交给方向键。 |
 | <Badge variant="success">Do</Badge> | 传 `getCurrentIndex`，同一个字母才是在匹配项之间走，而不是一直卡在第一项。 |
 | <Badge variant="error">Don't</Badge> | 把它用在文本框上。字符本来就会进输入框，再来一套打字跳转只会跟输入的值打架。 |
+
+## 示例
+
+常见配置、变体和状态。
+
+<DemoExample
+  :demo="useTypeaheadCountryList"
+  description="一列国家按钮，方向键来自 useListFocus，按字母跳转来自 useTypeahead。输入「can」聚焦 Canada，连按「b」在 Belgium、Brazil、Bulgaria 之间循环。这个 hook 只通过 onMatch 报告匹配项，移动焦点交给 useListFocus。"
+  locale="zh"
+  title="useTypeahead — 输入字母聚焦国家"
+/>

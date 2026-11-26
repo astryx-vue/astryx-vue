@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useLocaleInvoiceSummary } from '../../../../components/demos/use-locale'
 </script>
 
 ## 使用方法
@@ -25,3 +26,14 @@ import { useLocale } from '@astryx-vue/core/locale'
 | --- | --- |
 | <Badge variant="success">推荐</Badge> | 把返回的语言标签交给纯 Astryx 函数，或交给需要显式语言的包。 |
 | <Badge variant="error">避免</Badge> | 把 `navigator.language` 或写死的展示语言当兜底。语言只认 `InternationalizationProvider` 这一处来源。 |
+
+## 示例
+
+常见配置、变体和状态。
+
+<DemoExample
+  :demo="useLocaleInvoiceSummary"
+  description="账单摘要用 useLocale 拿到的语言交给 Intl 格式化日期和金额；把 provider 从英语切到德语，「Nov 2, 2026」和「$1,234.50」会变成「2. Nov. 2026」和「1.234,50 $」，不需要第二个语言来源。"
+  locale="zh"
+  title="useLocale — 账单摘要"
+/>

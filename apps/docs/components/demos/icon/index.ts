@@ -3,6 +3,8 @@ import basicDemo from './basic.vue'
 import basicSource from './basic.vue?raw&highlighted'
 import buttonDemo from './button.vue'
 import buttonSource from './button.vue?raw&highlighted'
+import hookStatusRowDemo from './hook-status-row.vue'
+import hookStatusRowSource from './hook-status-row.vue?raw&highlighted'
 import overviewDemo from './overview.vue'
 import overviewSource from './overview.vue?raw&highlighted'
 import paletteDemo from './palette.vue'
@@ -23,5 +25,6 @@ export const iconPalette = defineDemo(paletteDemo, paletteSource)
 export const iconStatus = defineDemo(statusDemo, statusSource)
 export const iconButton = defineDemo(buttonDemo, buttonSource)
 export const iconThemes = defineDemo(themesDemo, themesSource)
+export const iconHookStatusRow = defineDemo(hookStatusRowDemo, hookStatusRowSource)
 
 export const iconOverview = defineDemo(overviewDemo, overviewSource, { className: 'overview-hug' })

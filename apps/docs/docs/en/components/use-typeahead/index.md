@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useTypeaheadCountryList } from '../../../../components/demos/use-typeahead'
 </script>
 
 ## Usage
@@ -67,3 +68,14 @@ function handleArrows(event: KeyboardEvent): void {
 | <Badge variant="success">Do</Badge> | Let it see the key event first and fall through to arrow-key navigation only when it returns `false`. |
 | <Badge variant="success">Do</Badge> | Pass `getCurrentIndex` so repeated presses of one letter walk through matches instead of sticking on the first. |
 | <Badge variant="error">Don't</Badge> | Use it on a text input; the field already receives the characters, and typeahead would fight the value. |
+
+## Examples
+
+Common configurations, variations, and states.
+
+<DemoExample
+  :demo="useTypeaheadCountryList"
+  description="A country list of buttons with useListFocus arrow keys and useTypeahead type-to-focus. Typing &quot;can&quot; focuses Canada, and pressing &quot;b&quot; again and again cycles through Belgium, Brazil and Bulgaria. The hook only reports the match through onMatch, and useListFocus moves focus."
+  locale="en"
+  title="useTypeahead — Type to Focus a Country"
+/>

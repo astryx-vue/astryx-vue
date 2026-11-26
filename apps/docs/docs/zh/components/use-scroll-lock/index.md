@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useScrollLockMobileMenu } from '../../../../components/demos/use-scroll-lock'
 </script>
 
 ## 使用方法
@@ -31,3 +32,14 @@ useScrollLock(isOpen)
 | <Badge variant="success">Do</Badge> | `isLocked` 传控制弹层开关的那个同一个 ref。 |
 | <Badge variant="success">Do</Badge> | 调用放在拥有这个弹层的作用域里。作用域没了，锁也就放了。 |
 | <Badge variant="error">Don't</Badge> | 拿它管气泡卡、提示这类非模态的浮层，那些东西应该允许用户滚开视线。 |
+
+## 示例
+
+常见配置、变体和状态。
+
+<DemoExample
+  :demo="useScrollLockMobileMenu"
+  description="点 Menu 按钮打开一个自己画的全屏菜单。菜单开着时 useScrollLock 把后面的页面钉住，页面不会滚动也不会左右跳动；关掉菜单后还停在原来的滚动位置。"
+  locale="zh"
+  title="useScrollLock — 全屏手机菜单"
+/>

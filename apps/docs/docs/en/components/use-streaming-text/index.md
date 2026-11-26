@@ -40,7 +40,7 @@ Common configurations, variations, and states.
 
 <DemoExample
   :demo="useStreamingTextResponse"
-  description="Smooth bursty generated text into a steady reveal with useStreamingText."
+  description="A chat-style reply card: while the response streams in bursts, useStreamingText reveals it steadily character by character; when streaming ends the full text snaps into place. Regenerate replays the stream."
   locale="en"
   title="useStreamingText — Streaming Response"
 />

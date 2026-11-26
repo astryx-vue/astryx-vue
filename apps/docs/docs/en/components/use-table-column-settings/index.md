@@ -6,7 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
-import { useTableColumnSettingsPicker } from '../../../../components/demos/use-table-column-settings'
+import { useTableColumnSettingsPicker, useTableColumnSettingsStateVisibilityPicker } from '../../../../components/demos/use-table-column-settings'
 </script>
 
 ## Usage
@@ -45,4 +45,11 @@ const state = useTableColumnSettingsState({
   description="Table with a column visibility picker in the toolbar. Toggle columns on and off; the Name column always stays."
   locale="en"
   title="Table — Column Settings"
+/>
+
+<DemoExample
+  :demo="useTableColumnSettingsStateVisibilityPicker"
+  description="A table toolbar with a Columns menu of checkboxes. Toggling Email updates the active columns, Reset restores the defaults, and the state hook hands its config straight to useTableColumnSettings."
+  locale="en"
+  title="useTableColumnSettingsState — Column Visibility Picker"
 />

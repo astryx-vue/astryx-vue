@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useAnnounceFilterResultCount } from '../../../../components/demos/use-announce'
 </script>
 
 ## 使用方法
@@ -38,3 +39,14 @@ const announceSearch = useAnnounce({ hasReplace: true })
 | <Badge variant="success">推荐</Badge> | `"polite"` 留给状态和结果条数；`"assertive"` 留给错误和和时间有关的提醒，因为它会打断读屏正在念的内容。 |
 | <Badge variant="success">推荐</Badge> | 播报结果，而不是操作；说 `"12 条结果"`，不要说 `"搜索跑了一次"`。 |
 | <Badge variant="error">避免</Badge> | 播报 DOM 里已经看得见、标签也写对的内容；读屏用户会听到两遍。 |
+
+## 示例
+
+常见配置、变体和状态。
+
+<DemoExample
+  :demo="useAnnounceFilterResultCount"
+  description="一个商品筛选框，用 useAnnounce 播报结果数：停止输入 500 毫秒后，读屏会读出「3 results」或「No results」。新的计数会替换实时区域里上一条。"
+  locale="zh"
+  title="useAnnounce — 筛选结果数"
+/>

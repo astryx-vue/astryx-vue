@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useFocusTrapQuickEdit } from '../../../../components/demos/use-focus-trap'
 </script>
 
 ## Usage
@@ -53,3 +54,14 @@ const trap = useFocusTrap({
 | <Badge variant="success">Do</Badge> | Provide an `onEscape` callback to close the dialog when Escape is pressed. |
 | <Badge variant="success">Do</Badge> | Rely on the built-in focus restoration on close; only add your own focus handling when you need to send focus somewhere other than the previously-focused element. |
 | <Badge variant="error">Don't</Badge> | Use on non-modal content like tooltips or dropdowns; those need light-dismiss, not focus trapping. |
+
+## Examples
+
+Common configurations, variations, and states.
+
+<DemoExample
+  :demo="useFocusTrapQuickEdit"
+  description="A custom quick-edit panel, not built on Dialog, that traps focus with useFocusTrap: focusFirst moves focus to its field on open, Tab and Shift+Tab stay inside it, Escape closes it through onEscape, and closing returns focus to the Quick edit button."
+  locale="en"
+  title="useFocusTrap — Quick Edit Panel"
+/>

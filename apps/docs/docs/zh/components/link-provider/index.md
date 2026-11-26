@@ -6,7 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
-import { linkProviderOverview } from '../../../../components/demos/link-provider'
+import { linkProviderHookArticleCard, linkProviderOverview } from '../../../../components/demos/link-provider'
 </script>
 
 ## 使用方法
@@ -45,3 +45,5 @@ const linkComponent = useLinkComponent()
 常见的用法和不同的状态。
 
 <DemoExample :demo="linkProviderOverview" title="Link Provider — Custom Link Component" description="把所有 Astryx 链接交给一个自定义组件：它拦住点击，交给框架路由惯用的那个位置处理。点一下链接，看到的是自定义处理函数在跑，而不是整页跳转。" locale="zh" />
+
+<DemoExample :demo="linkProviderHookArticleCard" title="useLinkComponent —— 文章卡片" description="一张自定义的文章卡片，用 useLinkComponent 读出链接组件。在 provider 里，标题链接就是路由链接，点了只改路由位置、不整页跳转；as='a' 在 provider 里也保留原生链接；在 provider 外面退回原生链接。" locale="zh" />

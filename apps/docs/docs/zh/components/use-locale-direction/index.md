@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useLocaleDirectionSparkline } from '../../../../components/demos/use-locale-direction'
 </script>
 
 ## 使用方法
@@ -38,3 +39,14 @@ function drawSparkline(context: CanvasRenderingContext2D, values: number[], widt
 | <Badge variant="success">推荐</Badge> | 先用 CSS 逻辑属性和方向镜像样式，实在不行再用 `useLocaleDirection`。 |
 | <Badge variant="success">推荐</Badge> | 在 canvas 上画图，或者计算起点随书写方向变化的非 CSS 坐标时使用。 |
 | <Badge variant="error">避免</Badge> | 用它来切换 CSS 逻辑属性本来就能处理的外边距、内边距或行内对齐。 |
+
+## 示例
+
+常见配置、变体和状态。
+
+<DemoExample
+  :demo="useLocaleDirectionSparkline"
+  description="canvas 不跟随 CSS 的书写方向，所以这条迷你折线用 useLocaleDirection 读出方向再画。切到阿拉伯语后，最早的点挪到右边，最新的值在左边。"
+  locale="zh"
+  title="useLocaleDirection —— 实时迷你折线"
+/>

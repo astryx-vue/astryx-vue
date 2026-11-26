@@ -1,5 +1,5 @@
 import { defineDemo } from '../../demo-infra/defineDemo'
-import toolbarDemo from './toolbar.vue'
-import toolbarSource from './toolbar.vue?raw&highlighted'
+import starRatingDemo from './star-rating.vue'
+import starRatingSource from './star-rating.vue?raw&highlighted'
 
-export const useKeyboardHintToolbar = defineDemo(toolbarDemo, toolbarSource)
+export const useKeyboardHintStarRating = defineDemo(starRatingDemo, starRatingSource)

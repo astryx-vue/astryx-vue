@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useHotkeysSearchHelp } from '../../../../components/demos/use-hotkeys'
 </script>
 
 ## 使用方法
@@ -27,3 +28,14 @@ import { useHotkeys } from '@astryx-vue/core'
 | <Badge variant="success">推荐</Badge> | 用 `Kbd` 组件把同一条组合显示出来；两边对 `mod` 的平台判断是同一套。 |
 | <Badge variant="success">推荐</Badge> | 弹窗或向导占用键盘时，用 `isDisabled` 暂时停掉快捷键，而不是把 hook 卸掉。 |
 | <Badge variant="error">避免</Badge> | 用它做控件内部的焦点导航；那种场景用 `useListFocus` 或 `useGridRovingFocus`。 |
+
+## 示例
+
+常见配置、变体和状态。
+
+<DemoExample
+  :demo="useHotkeysSearchHelp"
+  description="用 useHotkeys 注册页面快捷键：按 / 聚焦搜索框，按 ? 打开快捷键帮助；在输入框里打这两个字符就只是正常输入。开关通过 isDisabled 关掉这些单键快捷键。"
+  locale="zh"
+  title="useHotkeys — 搜索与帮助快捷键"
+/>
