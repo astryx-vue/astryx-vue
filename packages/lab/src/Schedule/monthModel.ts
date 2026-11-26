@@ -1,4 +1,4 @@
-import type { PlainDate } from '@astryx-vue/core'
+import type { CalendarSystem, PlainDate } from '@astryx-vue/core'
 import type { MonthChipPlacement } from './monthLayout.js'
 import type { CalendarEvent, ScheduleCategory } from './types.js'
 import { plainDateAddDays, plainDateIsAfter, plainDateIsBefore, plainDateIsEqual, plainDateToISO } from '@astryx-vue/core'
@@ -82,9 +82,9 @@ export function formatMonthEventName(
   return `${event.title}, ${time}, ${getEventCategory(event, categories).label}, ${dayLabel}`
 }
 
-export function formatEventDays(event: CalendarEvent, timezoneID: string, locale: string): string {
+export function formatEventDays(event: CalendarEvent, timezoneID: string, locale: string, calendar: CalendarSystem = 'gregory'): string {
   const [first, last] = getEventDateSpan(event, timezoneID)
   return plainDateIsEqual(first, last)
-    ? formatFullDate(first, locale)
-    : formatWeekRange(first, last, timezoneID, locale)
+    ? formatFullDate(first, locale, calendar)
+    : formatWeekRange(first, last, timezoneID, locale, calendar)
 }

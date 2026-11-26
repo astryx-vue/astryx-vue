@@ -1,6 +1,7 @@
 import type { CalendarDate } from '@internationalized/date'
 import type { Ref } from 'vue'
 import type { WeekStartsOn } from '../composables/useDateRange.js'
+import type { CalendarSystem } from '../utils/calendarSystem.js'
 
 export interface CalendarRangeValue {
   start: Date | null
@@ -56,6 +57,11 @@ export interface CalendarProps {
   weekStartsOn?: WeekStartsOn
   /** 命令式翻月。`navigateTo` 会显示那一天所在的月份并聚焦它。 */
   handleRef?: CalendarHandleRef
+  /**
+   * 按哪种历法排月份和写日期，例如 `persian`。不传时跟随最近的
+   * `InternationalizationProvider`，都没有时是公历。选中的值始终是公历日期。
+   */
+  calendar?: CalendarSystem
   /** 日历标签 */
   label?: string
   /** 是否禁用 */

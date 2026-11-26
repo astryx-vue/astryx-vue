@@ -80,8 +80,7 @@ describe('calendar keyboard', () => {
       focused: new CalendarDate(2026, 1, 30),
       weekStartsOn: 0,
       numberOfMonths: 1,
-      viewYear: 2026,
-      viewMonth: 1,
+      viewStart: new CalendarDate(2026, 1, 1),
       isOutOfBounds: () => false,
       isDisabled: date => date.toDate('UTC').getUTCDay() === 0 || date.toDate('UTC').getUTCDay() === 6,
     })
@@ -96,8 +95,7 @@ describe('calendar keyboard', () => {
       focused: new CalendarDate(2026, 1, 21),
       weekStartsOn: 0,
       numberOfMonths: 1,
-      viewYear: 2026,
-      viewMonth: 1,
+      viewStart: new CalendarDate(2026, 1, 1),
       isOutOfBounds: date => date.compare(new CalendarDate(2026, 1, 25)) > 0,
       isDisabled: () => false,
     })
@@ -111,8 +109,7 @@ describe('calendar keyboard', () => {
       focused: new CalendarDate(2026, 1, 3),
       weekStartsOn: 0,
       numberOfMonths: 1,
-      viewYear: 2026,
-      viewMonth: 1,
+      viewStart: new CalendarDate(2026, 1, 1),
       isOutOfBounds: () => false,
       isDisabled: date => calendarISO(date) === '2026-02-03',
     })

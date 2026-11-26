@@ -2,6 +2,7 @@
 import type { PowerSearchMessages } from '../locale/messages/power-search.js'
 import type { PowerSearchFilter, PowerSearchOperator } from './types.js'
 import { computed, provide } from 'vue'
+import { useCalendarSystem } from '../locale/calendar.js'
 import { tokenNamingKey } from '../Token/namingContext.js'
 import Token from '../Token/Token.vue'
 import { characterCount } from '../utils/characters.js'
@@ -34,11 +35,12 @@ const emit = defineEmits<{
   remove: []
 }>()
 
+const calendar = useCalendarSystem(undefined, 'PowerSearch')
 const operatorLabel = computed(() => resolveOperatorLabel(props.operator, props.messages))
 const tokenLabel = computed(() => `${props.fieldLabel}: ${operatorLabel.value}`)
 const valueText = computed(() => {
   const room = Math.max(props.maxLength - characterCount(props.fieldLabel) - characterCount(operatorLabel.value), 10)
-  return formatFilterValue(props.operator.value, props.filter.value, room, props.messages, props.locale, props.timeZone)
+  return formatFilterValue(props.operator.value, props.filter.value, room, props.messages, props.locale, props.timeZone, calendar.value)
 })
 /** 标签的全部可见文字：字段、运算符和值。按钮、删除按钮和编辑器都按它命名，同一字段的两个条件读出来不再一样。 */
 const visibleText = computed(() => valueText.value ? `${tokenLabel.value} ${valueText.value}` : tokenLabel.value)

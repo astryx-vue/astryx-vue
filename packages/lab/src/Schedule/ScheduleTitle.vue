@@ -2,7 +2,7 @@
 import type { PlainDate } from '@astryx-vue/core'
 import { computed } from 'vue'
 import { useScheduleContext } from './context.js'
-import { formatMonthName, formatMonthTitle, monthTitleParts } from './format.js'
+import { formatMonthName, formatMonthTitle, isSameCalendarMonth, isSameCalendarYear, monthTitleParts } from './format.js'
 
 defineOptions({ name: 'AstryxScheduleTitle' })
 
@@ -12,15 +12,12 @@ const props = defineProps<{
 }>()
 
 const ctx = useScheduleContext()
-const sameMonth = computed(() => {
-  const end = props.end
-  return end == null || (end.year === props.start.year && end.month === props.start.month)
-})
-const sameYear = computed(() => props.end == null || props.end.year === props.start.year)
-const startParts = computed(() => monthTitleParts(props.start, ctx.locale))
-const endParts = computed(() => monthTitleParts(props.end ?? props.start, ctx.locale))
-const startMonth = computed(() => formatMonthName(props.start, ctx.locale))
-const startFull = computed(() => formatMonthTitle(props.start, ctx.locale))
+const sameMonth = computed(() => props.end == null || isSameCalendarMonth(props.start, props.end, ctx.calendar))
+const sameYear = computed(() => props.end == null || isSameCalendarYear(props.start, props.end, ctx.calendar))
+const startParts = computed(() => monthTitleParts(props.start, ctx.locale, ctx.calendar))
+const endParts = computed(() => monthTitleParts(props.end ?? props.start, ctx.locale, ctx.calendar))
+const startMonth = computed(() => formatMonthName(props.start, ctx.locale, ctx.calendar))
+const startFull = computed(() => formatMonthTitle(props.start, ctx.locale, ctx.calendar))
 </script>
 
 <template>

@@ -14,7 +14,7 @@ defineProps<{ options: ScheduleDayViewOptions }>()
 const ctx = useScheduleContext()
 const day = computed(() => ctx.date.toPlainDate())
 const days = computed(() => enumerateDates(ctx.range.startDate, ctx.range.endDate))
-const titleLabel = computed(() => formatFullDate(day.value, ctx.locale))
+const titleLabel = computed(() => formatFullDate(day.value, ctx.locale, ctx.calendar))
 </script>
 
 <template>

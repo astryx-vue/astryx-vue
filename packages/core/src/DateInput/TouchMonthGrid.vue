@@ -77,8 +77,7 @@ function onKeydown(event: KeyboardEvent): void {
     focused: focused.value,
     weekStartsOn: weekStart.value,
     numberOfMonths: 1,
-    viewYear: props.year,
-    viewMonth: props.month,
+    viewStart: new CalendarDay(props.year, props.month, 1),
     isOutOfBounds: date => isOutsideCalendarBounds(date, props.min, props.max),
     isDisabled: date => blocked(date),
   })

@@ -20,7 +20,7 @@ const props = withDefaults(defineProps<ScheduleProps>(), {
 })
 const emit = defineEmits<ScheduleEmits>()
 
-const { locale } = useLocale()
+const { locale, calendar } = useLocale()
 const timezoneID = computed(() => props.timezoneID ?? getBrowserTimezoneID())
 const mountedFocus = Date.now()
 const focusInstant = computed(() => props.focusDate ?? mountedFocus)
@@ -75,6 +75,7 @@ const ctx = reactive({
   focusDate: focusZoned.value,
   timezoneID: timezoneID.value,
   locale: locale.value,
+  calendar: calendar.value,
   range: scheduleRange.value,
   isLoading: loaded.value.loading,
   onPreviousDate: () => shift(previous.value.range),
@@ -94,6 +95,7 @@ watchEffect(() => {
   ctx.focusDate = focusZoned.value
   ctx.timezoneID = timezoneID.value
   ctx.locale = locale.value
+  ctx.calendar = calendar.value
   ctx.range = scheduleRange.value
   ctx.isLoading = loaded.value.loading
   ctx.onPreviousDate = () => shift(previous.value.range)

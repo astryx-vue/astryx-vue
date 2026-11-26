@@ -1,3 +1,4 @@
+export type { CalendarSystem } from '../utils/calendarSystem.js'
 export { astryxLocaleKey, astryxMessagesKey, normalizeLocale, provideAstryxLocale, useAstryxLocale, useComponentMessages } from './context.js'
 export type { ComponentMessageDefaults, ComponentMessages } from './context.js'
 export { formatCalendarMonth, weekdayNames } from './format.js'

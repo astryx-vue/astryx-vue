@@ -48,7 +48,7 @@ const chipsByDay = computed(() => {
 const rangeDate = computed(() => ctx.date.toPlainDate())
 const monthStart = computed(() => plainDateSetFirstOfMonth(rangeDate.value))
 const monthEnd = computed(() => plainDateAddDays(plainDateAddMonths(monthStart.value, 1), -1))
-const monthTitle = computed(() => formatWeekTitle(monthStart.value, monthEnd.value, ctx.locale))
+const monthTitle = computed(() => formatWeekTitle(monthStart.value, monthEnd.value, ctx.locale, ctx.calendar))
 const weekdayHeaders = computed(() => days.value.slice(0, 7))
 
 function focusCell(dayISO: string | undefined): void {
@@ -64,7 +64,7 @@ const popover = useSchedulePopover(
       return monthTitle.value
     if (parsed.kind === 'day') {
       const day = days.value.find(item => plainDateToISO(item) === parsed.dayISO)
-      return day == null ? monthTitle.value : formatFullDate(day, ctx.locale)
+      return day == null ? monthTitle.value : formatFullDate(day, ctx.locale, ctx.calendar)
     }
     return ctx.events.find(event => event.id === parsed.eventID)?.title ?? monthTitle.value
   },
@@ -110,7 +110,7 @@ function openRow(event: CalendarEvent, day: PlainDate): void {
 }
 
 function rowLabel(event: CalendarEvent, day: PlainDate): string {
-  return formatMonthEventName(event, formatFullDate(day, ctx.locale), ctx.timezoneID, ctx.categories, ctx.locale)
+  return formatMonthEventName(event, formatFullDate(day, ctx.locale, ctx.calendar), ctx.timezoneID, ctx.categories, ctx.locale)
 }
 
 const openContent = computed(() => {
@@ -129,7 +129,7 @@ function weekRange(week: ReadonlyArray<PlainDate>): string {
   const end = week[week.length - 1]
   if (start == null || end == null)
     return ''
-  return formatWeekRange(start, end, ctx.timezoneID, ctx.locale)
+  return formatWeekRange(start, end, ctx.timezoneID, ctx.locale, ctx.calendar)
 }
 
 function onMonthKeydown(event: KeyboardEvent): void {
@@ -204,9 +204,9 @@ function onMonthKeydown(event: KeyboardEvent): void {
       </div>
     </div>
     <SchedulePopover :popover="popover">
-      <div v-if="openDay" class="astryx-schedule__day-popover" :aria-label="`${formatFullDate(openDay, ctx.locale)} events`">
+      <div v-if="openDay" class="astryx-schedule__day-popover" :aria-label="`${formatFullDate(openDay, ctx.locale, ctx.calendar)} events`">
         <Text type="supporting" weight="bold" color="secondary">
-          {{ formatFullDate(openDay, ctx.locale) }}
+          {{ formatFullDate(openDay, ctx.locale, ctx.calendar) }}
         </Text>
         <ul class="astryx-schedule__day-events">
           <li v-for="event in openDayEvents" :key="event.id">

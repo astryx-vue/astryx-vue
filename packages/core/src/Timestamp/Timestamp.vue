@@ -3,6 +3,7 @@ import type { TextColor } from '../Text/types.js'
 import type { TimestampTooltipLine } from './tooltipEntries.js'
 import type { TimestampFormat, TimestampProps } from './types.js'
 import { computed, onBeforeUnmount, onMounted, ref, useAttrs, useTemplateRef, watch } from 'vue'
+import { useCalendarSystem } from '../locale/calendar.js'
 import { useAstryxLocale, useComponentMessages } from '../locale/context.js'
 import { timestampMessages } from '../locale/messages/timestamp.js'
 import Text from '../Text/Text.vue'
@@ -27,6 +28,7 @@ const props = withDefaults(defineProps<TimestampProps>(), {
 
 const attrs = useAttrs()
 const locale = useAstryxLocale()
+const calendar = useCalendarSystem(undefined, 'Timestamp')
 const messages = useComponentMessages({ timestamp: timestampMessages })
 // 服务端渲染（含静态预渲染）和 hydration 这一趟都不能读当前时间，否则同一份值
 // 会写出依赖渲染时刻和时区的 HTML。依赖时钟的格式先渲染完整的 UTC 日期时间，
@@ -93,13 +95,13 @@ const displayText = computed(() => {
     return ''
   // 占位文本写成带标签的 UTC，服务端和时区不同的客户端才会得到同一段文本。
   return formatInstant(date.value, format, locale.value, isClockPending.value
-    ? { timeZone: 'UTC', isTimezoneShown: true }
-    : { timeZone: zone.value, isTimezoneShown: props.isTimezoneShown })
+    ? { timeZone: 'UTC', isTimezoneShown: true, calendar: calendar.value }
+    : { timeZone: zone.value, isTimezoneShown: props.isTimezoneShown, calendar: calendar.value })
 })
 
 /** 相对读数的名字：先是屏幕上显示的词，再是完整日期和时区全名，语音控制才找得到这段词。 */
 const ariaLabel = computed(() => valid.value && isRelative(effectiveFormat.value)
-  ? messages.value.timestamp.relativeLabel(displayText.value, formatInstant(date.value, 'full', locale.value, { timeZoneNameStyle: 'long' }))
+  ? messages.value.timestamp.relativeLabel(displayText.value, formatInstant(date.value, 'full', locale.value, { timeZoneNameStyle: 'long', calendar: calendar.value }))
   : undefined)
 
 const entries = computed(() => props.tooltipEntries != null && props.tooltipEntries.length > 0
@@ -112,8 +114,8 @@ const lines = computed<TimestampTooltipLine[]>(() => {
   if (!valid.value)
     return []
   if (entries.value == null)
-    return [{ value: formatInstant(date.value, 'full', locale.value), isCopyable: true, zoneName: longZoneName(date.value, locale.value) }]
-  return formatTooltipLines(date.value, entries.value, locale.value, zone.value)
+    return [{ value: formatInstant(date.value, 'full', locale.value, { calendar: calendar.value }), isCopyable: true, zoneName: longZoneName(date.value, locale.value) }]
+  return formatTooltipLines(date.value, entries.value, locale.value, zone.value, calendar.value)
 })
 
 const textColor = computed<TextColor>(() => props.color === 'disabled' ? 'inherit' : props.color)

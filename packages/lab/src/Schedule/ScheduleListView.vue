@@ -16,7 +16,7 @@ const ctx = useScheduleContext()
 const currentTime = useCurrentTime()
 const days = computed(() => enumerateDates(ctx.range.startDate, ctx.range.endDate))
 const endDate = computed(() => plainDateAddDays(ctx.range.endDate, -1))
-const titleLabel = computed(() => formatWeekTitle(ctx.range.startDate, endDate.value, ctx.locale))
+const titleLabel = computed(() => formatWeekTitle(ctx.range.startDate, endDate.value, ctx.locale, ctx.calendar))
 const today = computed(() => plainDateFromInstant(currentTime.value, ctx.timezoneID))
 
 const visibleDays = computed(() => days.value.flatMap((day) => {
@@ -57,11 +57,11 @@ function rows(events: ReadonlyArray<CalendarEvent>, isCurrentDay: boolean): Arra
           color="secondary"
           display="block"
           class="astryx-schedule__list-heading"
-          :aria-label="formatFullDate(record.day, ctx.locale)"
+          :aria-label="formatFullDate(record.day, ctx.locale, ctx.calendar)"
           :aria-current="record.isCurrentDay ? 'date' : undefined"
         >
           <span class="astryx-schedule__list-number" :class="{ 'is-current': record.isCurrentDay }">
-            <span class="astryx-schedule__list-number-text">{{ formatDayNumber(record.day, ctx.locale) }}</span>
+            <span class="astryx-schedule__list-number-text">{{ formatDayNumber(record.day, ctx.locale, ctx.calendar) }}</span>
           </span>
           {{ formatWeekday(record.day, 'short', ctx.locale) }}
         </Heading>

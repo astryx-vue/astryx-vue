@@ -1,3 +1,4 @@
+import type { CalendarSystem } from '../utils/calendarSystem.js'
 import type { ProviderMessagesByLocale, ProviderOverrides } from './catalog.js'
 import type { TextDirection } from './direction.js'
 
@@ -22,6 +23,13 @@ export interface InternationalizationProviderProps {
    * 它只决定 Astryx 组件读到的方向，不会去改 DOM 的 `dir` 属性。
    */
   dir?: TextDirection
+  /**
+   * 子树里日期组件显示的历法，例如 `persian`、`hebrew`、`islamic-umalqura`、`japanese`。
+   * 不传时是公历；语言标签本身（包括 `-u-ca-` 扩展）不会改变历法。
+   * 值始终是公历 ISO 日期，只有显示、输入和选择跟着历法走。
+   * 不认识的标识和当前环境显示不了的历法退回公历，开发期警告一次。
+   */
+  calendar?: CalendarSystem
 }
 
 export interface InternationalizationProviderSlots {

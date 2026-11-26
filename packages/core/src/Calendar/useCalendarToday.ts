@@ -1,5 +1,6 @@
 import type { CalendarDate } from '@internationalized/date'
 import type { ComputedRef, Ref, ShallowRef } from 'vue'
+import type { CalendarSystem } from '../utils/calendarSystem.js'
 import type { CalendarProps } from './types.js'
 import { CalendarDate as CalendarDay } from '@internationalized/date'
 import { computed, getCurrentInstance, shallowRef } from 'vue'
@@ -21,7 +22,7 @@ export interface CalendarToday {
  * 没有 `focusDate` 也没有值时，开着的月份要由今天决定：今天还不知道时给一个占位月份，
  * 月份格子先占着位置藏起来（`isMonthPending`），挂载后一读到今天就换成真的月份。
  */
-export function useCalendarToday(props: CalendarProps, monthCount: Ref<1 | 2>): CalendarToday {
+export function useCalendarToday(props: CalendarProps, monthCount: Ref<1 | 2>, calendar: Ref<CalendarSystem>): CalendarToday {
   const isServerOrHydrating = typeof document === 'undefined' || getCurrentInstance()?.vnode.el != null
   const today = shallowRef<CalendarDate | null>(isServerOrHydrating ? null : toCalendarDate(new Date()))
   const hasExplicitOpening = Boolean(props.focusDate || (props.mode === 'single' && props.modelValue) || props.range?.start)
@@ -40,6 +41,7 @@ export function useCalendarToday(props: CalendarProps, monthCount: Ref<1 | 2>): 
       max: props.max,
       numberOfMonths: monthCount.value,
       today: known == null ? undefined : fromCalendarDate(known),
+      calendar: calendar.value,
     })
   }
 

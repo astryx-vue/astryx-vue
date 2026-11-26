@@ -16,7 +16,7 @@ const ctx = useScheduleContext()
 const days = computed(() => enumerateDates(ctx.range.startDate, ctx.range.endDate))
 const start = computed(() => days.value[0] ?? ctx.range.startDate)
 const end = computed(() => days.value[days.value.length - 1] ?? plainDateAddDays(ctx.range.endDate, -1))
-const titleLabel = computed(() => formatWeekTitle(start.value, end.value, ctx.locale))
+const titleLabel = computed(() => formatWeekTitle(start.value, end.value, ctx.locale, ctx.calendar))
 </script>
 
 <template>

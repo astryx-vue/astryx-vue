@@ -1,4 +1,4 @@
-import type { PlainDate } from '@astryx-vue/core'
+import type { CalendarSystem, PlainDate } from '@astryx-vue/core'
 import type {
   CalendarEvent,
   CalendarInstantEvent,
@@ -30,51 +30,74 @@ export function getEventCategory(
       : DEFAULT_EVENT_CATEGORY)
 }
 
-function formatDate(date: PlainDate, options: Intl.DateTimeFormatOptions, locale: string): string {
-  return new Intl.DateTimeFormat(locale, { ...options, calendar: 'gregory' }).format(plainDateToDate(date))
+/** `Intl` 没有 `iso8601` 的月份名，按月日相同的公历写。 */
+function intlCalendar(calendar: CalendarSystem): string {
+  return calendar === 'iso8601' ? 'gregory' : calendar
 }
 
-export function monthTitleParts(date: PlainDate, locale: string): Intl.DateTimeFormatPart[] {
+function formatDate(date: PlainDate, options: Intl.DateTimeFormatOptions, locale: string, calendar: CalendarSystem): string {
+  return new Intl.DateTimeFormat(locale, { ...options, calendar: intlCalendar(calendar) }).format(plainDateToDate(date))
+}
+
+export function monthTitleParts(date: PlainDate, locale: string, calendar: CalendarSystem = 'gregory'): Intl.DateTimeFormatPart[] {
   return new Intl.DateTimeFormat(locale, {
     month: 'long',
     year: 'numeric',
-    calendar: 'gregory',
+    calendar: intlCalendar(calendar),
   }).formatToParts(plainDateToDate(date))
 }
 
-export function formatMonthTitle(date: PlainDate, locale: string): string {
-  return formatDate(date, { month: 'long', year: 'numeric' }, locale)
+export function formatMonthTitle(date: PlainDate, locale: string, calendar: CalendarSystem = 'gregory'): string {
+  return formatDate(date, { month: 'long', year: 'numeric' }, locale, calendar)
 }
 
-export function formatMonthName(date: PlainDate, locale: string): string {
-  return formatDate(date, { month: 'long' }, locale)
+export function formatMonthName(date: PlainDate, locale: string, calendar: CalendarSystem = 'gregory'): string {
+  return formatDate(date, { month: 'long' }, locale, calendar)
 }
 
-function sameMonth(a: PlainDate, b: PlainDate): boolean {
-  return a.year === b.year && a.month === b.month
+/** 日期在 `calendar` 里的年份和月份。一个公历月可能跨两个别的历法的月，范围标题按历法自己的月和年比。 */
+function calendarYearMonth(date: PlainDate, calendar: CalendarSystem): { year: string, month: string } {
+  const parts = new Intl.DateTimeFormat('en-u-nu-latn', {
+    year: 'numeric',
+    month: 'numeric',
+    calendar: intlCalendar(calendar),
+    timeZone: 'UTC',
+  }).formatToParts(new Date(Date.UTC(date.year, date.month - 1, date.day)))
+  const read = (type: string): string => parts.find(part => part.type === type)?.value ?? ''
+  return { year: read('relatedYear') || read('year'), month: read('month') }
 }
 
-export function formatWeekTitle(start: PlainDate, end: PlainDate, locale: string): string {
-  if (sameMonth(start, end))
-    return formatMonthTitle(start, locale)
-  const startMonth = formatMonthName(start, locale)
-  const endMonthTitle = formatMonthTitle(end, locale)
-  return start.year === end.year
+export function isSameCalendarMonth(a: PlainDate, b: PlainDate, calendar: CalendarSystem = 'gregory'): boolean {
+  const first = calendarYearMonth(a, calendar)
+  const second = calendarYearMonth(b, calendar)
+  return first.year === second.year && first.month === second.month
+}
+
+export function isSameCalendarYear(a: PlainDate, b: PlainDate, calendar: CalendarSystem = 'gregory'): boolean {
+  return calendarYearMonth(a, calendar).year === calendarYearMonth(b, calendar).year
+}
+
+export function formatWeekTitle(start: PlainDate, end: PlainDate, locale: string, calendar: CalendarSystem = 'gregory'): string {
+  if (isSameCalendarMonth(start, end, calendar))
+    return formatMonthTitle(start, locale, calendar)
+  const startMonth = formatMonthName(start, locale, calendar)
+  const endMonthTitle = formatMonthTitle(end, locale, calendar)
+  return isSameCalendarYear(start, end, calendar)
     ? `${startMonth} - ${endMonthTitle}`
-    : `${formatMonthTitle(start, locale)} - ${endMonthTitle}`
+    : `${formatMonthTitle(start, locale, calendar)} - ${endMonthTitle}`
 }
 
-export function formatFullDate(date: PlainDate, locale: string): string {
-  return formatDate(date, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }, locale)
+export function formatFullDate(date: PlainDate, locale: string, calendar: CalendarSystem = 'gregory'): string {
+  return formatDate(date, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }, locale, calendar)
 }
 
-export function formatWeekRange(start: PlainDate, end: PlainDate, timezoneID: string, locale: string): string {
+export function formatWeekRange(start: PlainDate, end: PlainDate, timezoneID: string, locale: string, calendar: CalendarSystem = 'gregory'): string {
   const formatter = new Intl.DateTimeFormat(locale, {
     month: 'long',
     day: 'numeric',
     year: 'numeric',
     timeZone: timezoneID,
-    calendar: 'gregory',
+    calendar: intlCalendar(calendar),
   })
   const startDate = new Date(plainDateToInstant(start, timezoneID, 12))
   const endDate = new Date(plainDateToInstant(end, timezoneID, 12))
@@ -84,11 +107,11 @@ export function formatWeekRange(start: PlainDate, end: PlainDate, timezoneID: st
 }
 
 export function formatWeekday(date: PlainDate, weekday: 'short' | 'long', locale: string): string {
-  return formatDate(date, { weekday }, locale)
+  return formatDate(date, { weekday }, locale, 'gregory')
 }
 
-export function formatDayNumber(date: PlainDate, locale: string): string {
-  return new Intl.DateTimeFormat(locale, { day: 'numeric', calendar: 'gregory' })
+export function formatDayNumber(date: PlainDate, locale: string, calendar: CalendarSystem = 'gregory'): string {
+  return new Intl.DateTimeFormat(locale, { day: 'numeric', calendar: intlCalendar(calendar) })
     .formatToParts(plainDateToDate(date))
     .filter(part => part.type === 'day')
     .map(part => part.value)
@@ -133,6 +156,7 @@ export function formatEventDateTimeRange(
   event: CalendarInstantEvent,
   timezoneID: string,
   locale: string,
+  calendar: CalendarSystem = 'gregory',
 ): string {
   const formatter = new Intl.DateTimeFormat(locale, {
     month: 'long',
@@ -140,7 +164,7 @@ export function formatEventDateTimeRange(
     hour: 'numeric',
     minute: '2-digit',
     timeZone: timezoneID,
-    calendar: 'gregory',
+    calendar: intlCalendar(calendar),
   })
   const start = new Date(event.start)
   const end = new Date(event.end)

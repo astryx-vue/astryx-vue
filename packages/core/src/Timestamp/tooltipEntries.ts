@@ -1,3 +1,4 @@
+import type { CalendarSystem } from '../utils/calendarSystem.js'
 import type { InstantFormat } from './formatInstant.js'
 import { devWarn } from '../composables/useDevWarning.js'
 import { formatInstant } from './formatInstant.js'
@@ -75,6 +76,7 @@ export function formatTooltipLines(
   entries: readonly TimestampTooltipEntry[],
   locale: string,
   defaultTimezoneID?: string,
+  calendar: CalendarSystem = 'gregory',
 ): TimestampTooltipLine[] {
   const resolved = entries.map(entry => entry.timezoneID === undefined
     ? defaultTimezoneID
@@ -93,6 +95,7 @@ export function formatTooltipLines(
       value: formatInstant(date, format, locale, {
         timeZone,
         isTimezoneShown: shouldShowZoneName(format, hasMultipleZones, timeZone != null),
+        calendar,
       }),
     }
   })
