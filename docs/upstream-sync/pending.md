@@ -2709,26 +2709,34 @@
 
 - [x] [`a61db6f03`](https://github.com/meta/astryx/commit/a61db6f03) fix(RadioList): keep a caller aria-labelledby on the radiogroup (#5656)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`493231799`](https://github.com/meta/astryx/commit/493231799) fix(cli): search finds compound names typed as words, other libraries' names, and verb forms (#7718)
+- [x] [`493231799`](https://github.com/meta/astryx/commit/493231799) fix(cli): search finds compound names typed as words, other libraries' names, and verb forms (#7718)
+  - 已移植：[#514](https://github.com/astryx-vue/astryx-vue/pull/514)。CLI 搜索收录别家组件库叫法与常见图标名，基础展示族完成
 
 ### v0.7.3
 
 - [x] [`7b6691327`](https://github.com/meta/astryx/commit/7b6691327) spec(AST-085): disabled controls stay focusable (#7793)
   - 不适用：上游组件规范文档（自动初筛）
-- [ ] [`677d96c8b`](https://github.com/meta/astryx/commit/677d96c8b) fix(core): adjustTime emits "14:30.5" for a fractional increment, on both the public util and TimeInput/DateTimeInput (#7823)
+- [x] [`677d96c8b`](https://github.com/meta/astryx/commit/677d96c8b) fix(core): adjustTime emits "14:30.5" for a fractional increment, on both the public util and TimeInput/DateTimeInput (#7823)
+  - 已移植：[#575](https://github.com/astryx-vue/astryx-vue/pull/575)。adjustTime 拒绝小数分钟的改动已在工具函数里，这里补 TimeInput 文档和组件层测试
 - [x] [`316e5ab54`](https://github.com/meta/astryx/commit/316e5ab54) fix(DateInput): disabled and busy fields stay focusable (#7843)
   - 已移植：[#546](https://github.com/astryx-vue/astryx-vue/pull/546)。忙碌和禁用的日期字段保持可聚焦，输入被挡住
-- [ ] [`5af3293b1`](https://github.com/meta/astryx/commit/5af3293b1) fix(DateRangeInput): disabled and busy fields and disabled presets stay focusable (#7866)
-- [ ] [`cde6233de`](https://github.com/meta/astryx/commit/cde6233de) fix(core): TreeList, Pagination dots and Calendar days use aria-disabled (#7887)
-- [ ] [`ca48bb778`](https://github.com/meta/astryx/commit/ca48bb778) fix(Timestamp): never read the current time during a server render (#7883)
-- [ ] [`e999ccdc9`](https://github.com/meta/astryx/commit/e999ccdc9) fix(DateTimeInput): disabled and busy fields stay focusable (#7889)
-- [ ] [`6e266c28d`](https://github.com/meta/astryx/commit/6e266c28d) fix(TimeInput): disabled fields stay focusable (#7898)
+- [x] [`5af3293b1`](https://github.com/meta/astryx/commit/5af3293b1) fix(DateRangeInput): disabled and busy fields and disabled presets stay focusable (#7866)
+  - Vue 版已有：DateRangeInput 触发按钮和预设只写 aria-disabled，输入由守卫挡住（#546），弹层里不可选的日子见 #571
+- [x] [`cde6233de`](https://github.com/meta/astryx/commit/cde6233de) fix(core): TreeList, Pagination dots and Calendar days use aria-disabled (#7887)
+  - 已移植：[#571](https://github.com/astryx-vue/astryx-vue/pull/571)。Calendar 日子本来只写 aria-disabled；DateRangeInput 弹层里的日子去掉原生 disabled，改成可聚焦的 aria-disabled，补测试
+- [x] [`ca48bb778`](https://github.com/meta/astryx/commit/ca48bb778) fix(Timestamp): never read the current time during a server render (#7883)
+  - Vue 版已有：Timestamp.vue 挂载后才读时钟，服务端和水合那一趟写带时区标签的 UTC 完整日期，已有水合测试守着
+- [x] [`e999ccdc9`](https://github.com/meta/astryx/commit/e999ccdc9) fix(DateTimeInput): disabled and busy fields stay focusable (#7889)
+  - Vue 版已有：DateTimeInput 禁用和忙碌时日期和时间两段都可聚焦：#546 加 TimeField 的 aria-disabled
+- [x] [`6e266c28d`](https://github.com/meta/astryx/commit/6e266c28d) fix(TimeInput): disabled fields stay focusable (#7898)
+  - Vue 版已有：TimeField.vue 禁用时用 aria-disabled 加 readonly，保持可聚焦，输入和方向键由守卫挡住
 
 ### v0.7.4
 
 - [x] [`a732e5c64`](https://github.com/meta/astryx/commit/a732e5c64) fix(DateInput, DateRangeInput): silence the busy Spinner and announce the busy start once (#7939)
   - 已移植：[#546](https://github.com/astryx-vue/astryx-vue/pull/546)。忙碌转圈不出声，进入忙碌只播报一次（DateRangeInput 同）
-- [ ] [`ec8c3c9f7`](https://github.com/meta/astryx/commit/ec8c3c9f7) fix(DateTimeInput, TimeInput): silence the busy Spinner and announce the busy start once (#7942)
+- [x] [`ec8c3c9f7`](https://github.com/meta/astryx/commit/ec8c3c9f7) fix(DateTimeInput, TimeInput): silence the busy Spinner and announce the busy start once (#7942)
+  - 已移植：[#575](https://github.com/astryx-vue/astryx-vue/pull/575)。TimeInput、DateTimeInput 的忙碌转圈对读屏隐藏，字段自己只念一次，触屏面板开着时从面板里念，补测试
 - [x] [`d648470ad`](https://github.com/meta/astryx/commit/d648470ad) [Component Audit] DateInput: busy fields stop looking disabled (#7968)
   - 已移植：[#546](https://github.com/astryx-vue/astryx-vue/pull/546)。忙碌的字段不再画成禁用的样子
 
@@ -2759,13 +2767,16 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`a2e2bcc15`](https://github.com/meta/astryx/commit/a2e2bcc15) docs(spec): Calendar records its shipped contract as current (#9058)
   - 不适用：上游组件规范文档（自动初筛）
-- [ ] [`f277e2580`](https://github.com/meta/astryx/commit/f277e2580) fix(core): a single esbuild bundle renders Core: lazily imported modules import Core directly, not through barrels (#9055)
-- [ ] [`377ab27fa`](https://github.com/meta/astryx/commit/377ab27fa) fix(Timestamp): keep a caller's aria-label and tabIndex (#8726)
+- [x] [`f277e2580`](https://github.com/meta/astryx/commit/f277e2580) fix(core): a single esbuild bundle renders Core: lazily imported modules import Core directly, not through barrels (#9055)
+  - 不适用：React 版 esbuild 打包入口的问题
+- [x] [`377ab27fa`](https://github.com/meta/astryx/commit/377ab27fa) fix(Timestamp): keep a caller's aria-label and tabIndex (#8726)
+  - 已移植：[#573](https://github.com/astryx-vue/astryx-vue/pull/573)。写在组件上的属性落到 time 上，调用方的 aria-label 和 tabindex 优先，补测试
 - [ ] [`16a749404`](https://github.com/meta/astryx/commit/16a749404) fix(DateInput, DateTimeInput): after a month arrow, Safari's calendar rests on the month the title names (#8513)
   - 暂缓：要还原上游动效，归动效与手势引擎任务
 - [x] [`d799afea8`](https://github.com/meta/astryx/commit/d799afea8) fix(DateInput, DateRangeInput, DateTimeInput): mount the calendar only while the popover is open (#8902)
   - 已移植：[#546](https://github.com/astryx-vue/astryx-vue/pull/546)。日历只在弹层打开时挂载（DateInput、DateRangeInput、DateTimeInput）
-- [ ] [`faee47927`](https://github.com/meta/astryx/commit/faee47927) fix(TimeInput, DateTimeInput): time text follows the locale's hour cycle and day periods (#9022)
+- [x] [`faee47927`](https://github.com/meta/astryx/commit/faee47927) fix(TimeInput, DateTimeInput): time text follows the locale's hour cycle and day periods (#9022)
+  - 已移植：[#575](https://github.com/astryx-vue/astryx-vue/pull/575)。时间文字跟随语言：没写 hourFormat 取语言的时制，数字、分隔符、上下午的词按语言写并读得回，新增 utils/timeFormat.ts，补测试
 - [x] [`e770c8296`](https://github.com/meta/astryx/commit/e770c8296) fix(DateInput): block changes from disabled open pickers (#8813)
   - 已移植：[#546](https://github.com/astryx-vue/astryx-vue/pull/546)。禁用的字段在弹层开着时不再接受改动
 - [ ] [`802da1a79`](https://github.com/meta/astryx/commit/802da1a79) fix(DateInput): a wheel commits at a mouse drag's release, not at every row it passes (#8483)
@@ -2774,7 +2785,8 @@
   - 不适用：上游组件规范文档（自动初筛）
 - [x] [`d29a10977`](https://github.com/meta/astryx/commit/d29a10977) docs(spec): DateInput records its shipped contract as current (#9128)
   - 不适用：上游组件规范文档（自动初筛）
-- [ ] [`2936b07e8`](https://github.com/meta/astryx/commit/2936b07e8) fix(DateRangeInput): reject commits after disabling open picker (#9155)
+- [x] [`2936b07e8`](https://github.com/meta/astryx/commit/2936b07e8) fix(DateRangeInput): reject commits after disabling open picker (#9155)
+  - 已移植：[#576](https://github.com/astryx-vue/astryx-vue/pull/576)。commit 在锁定时本来就返回；再让弹层开着时被锁定后的日子和预设点击不改动待选起点，补测试
 - [ ] [`67e293e0e`](https://github.com/meta/astryx/commit/67e293e0e) perf(DateInput): the month scroller adds and removes its input listeners directly, with one shared options object (#9146)
   - 暂缓：要还原上游动效，归动效与手势引擎任务
 - [x] [`f50374f51`](https://github.com/meta/astryx/commit/f50374f51) test(DateInput, DateTimeInput): MonthScroller's proofs hold on a loaded machine (#9177)
@@ -2787,11 +2799,14 @@
   - 已移植：[#546](https://github.com/astryx-vue/astryx-vue/pull/546)。独立的月份标题在需要大写的语言里首字母大写
 - [x] [`2555233fe`](https://github.com/meta/astryx/commit/2555233fe) spec(DateInput): wheel and calendar rules for the touch sheet (#9402)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`99cc6dc85`](https://github.com/meta/astryx/commit/99cc6dc85) fix(core): many components carry only the English for their own strings (#9429)
+- [x] [`99cc6dc85`](https://github.com/meta/astryx/commit/99cc6dc85) fix(core): many components carry only the English for their own strings (#9429)
+  - 已移植：[#515](https://github.com/astryx-vue/astryx-vue/pull/515)。组件只按自己的命名空间读内置文案，基础展示族完成
 - [x] [`ce052bf0a`](https://github.com/meta/astryx/commit/ce052bf0a) fix(Field): a focusable disabled field shows its focus under forced colors (#9410)
   - 已移植：[#546](https://github.com/astryx-vue/astryx-vue/pull/546)。可聚焦的禁用字段在强制颜色下显示焦点
-- [ ] [`16fe5f199`](https://github.com/meta/astryx/commit/16fe5f199) fix(core): Table, Chat, CommandPalette and the date and time inputs carry only their own English (#9452)
-- [ ] [`fc44bc3b7`](https://github.com/meta/astryx/commit/fc44bc3b7) fix(DateTimeInput): a press in the time input keeps the preset-time list open (#9459)
+- [x] [`16fe5f199`](https://github.com/meta/astryx/commit/16fe5f199) fix(core): Table, Chat, CommandPalette and the date and time inputs carry only their own English (#9452)
+  - Vue 版已有：日期时间输入只读自己用到的文案命名空间，useComponentMessages 本来就按命名空间取
+- [x] [`fc44bc3b7`](https://github.com/meta/astryx/commit/fc44bc3b7) fix(DateTimeInput): a press in the time input keeps the preset-time list open (#9459)
+  - Vue 版已有：预设时间列表不是 popover=auto，useDismiss 把字段外壳算作里面，按在时间输入里不会关列表
 - [x] [`beb03f8bd`](https://github.com/meta/astryx/commit/beb03f8bd) fix(DateInput): a press in the field's own input, clear button or label keeps the calendar open (#9433)
   - 已移植：[#546](https://github.com/astryx-vue/astryx-vue/pull/546)。按在字段自己的输入框、清除按钮或标签上不再关掉日历
 
@@ -2801,7 +2816,8 @@
   - 暂缓：要还原上游动效，归动效与手势引擎任务
 - [ ] [`6658a4c8a`](https://github.com/meta/astryx/commit/6658a4c8a) fix(Wheel): a wheel that stops outside the bounds rests on the nearest value inside them (#8131)
   - 暂缓：要还原上游动效，归动效与手势引擎任务
-- [ ] [`546aaa0bc`](https://github.com/meta/astryx/commit/546aaa0bc) fix(DateRangeInput): presets stack above the calendar when they don't fit (#9588)
+- [x] [`546aaa0bc`](https://github.com/meta/astryx/commit/546aaa0bc) fix(DateRangeInput): presets stack above the calendar when they don't fit (#9588)
+  - 已移植：[#576](https://github.com/astryx-vue/astryx-vue/pull/576)。预设放不下时叠到日历上面，弹层在层的高度内自己滚动，分隔线换到下边，补 CSS 测试
 - [x] [`443c7f83e`](https://github.com/meta/astryx/commit/443c7f83e) fix(DateInput, DateTimeInput): Enter submits the form when nothing is typed (#9678)
   - 已移植：[#546](https://github.com/astryx-vue/astryx-vue/pull/546)。没有打字时 Enter 照常提交表单（DateInput、DateTimeInput）
 - [x] [`b11e000b5`](https://github.com/meta/astryx/commit/b11e000b5) fix(Selector): a row that scrolls under a still mouse does not take the keyboard's highlight (#9671)
@@ -2815,16 +2831,20 @@
 
 - [x] [`a3d7b46c7`](https://github.com/meta/astryx/commit/a3d7b46c7) fix(dateParser): in day-first locales, numeric text never takes the native month-first reading (#9726)
   - 不适用：上游内部规范和架构文档、只改上游测试（自动初筛）
-- [ ] [`984eab751`](https://github.com/meta/astryx/commit/984eab751) fix(Calendar): day and week numbers use the locale's digits (#9610)
+- [x] [`984eab751`](https://github.com/meta/astryx/commit/984eab751) fix(Calendar): day and week numbers use the locale's digits (#9610)
+  - 已移植：[#571](https://github.com/astryx-vue/astryx-vue/pull/571)。日期数字和周数用当前语言的数字（Calendar、DateRangeInput 弹层、触屏月份网格），补 ar-EG 测试
 - [x] [`9889a3438`](https://github.com/meta/astryx/commit/9889a3438) chore(core): name the system that 88 kept Effects sync (#9787)
   - 不适用：只给 React useEffect 加注释
-- [ ] [`85afaa010`](https://github.com/meta/astryx/commit/85afaa010) fix(Calendar): Shift+Page Up and Shift+Page Down move by a year (#9609)
+- [x] [`85afaa010`](https://github.com/meta/astryx/commit/85afaa010) fix(Calendar): Shift+Page Up and Shift+Page Down move by a year (#9609)
+  - Vue 版已有：useCalendarKeyboard.ts 的 shiftKey 让 PageUp 和 PageDown 按一年走，2 月 29 日落在 28 日，目标越界不动，目标禁用落在当月第一个可选日
 - [x] [`54cc2c2b0`](https://github.com/meta/astryx/commit/54cc2c2b0) docs(spec): Calendar weekday headers show abbreviated names where they fit (#9072)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`593f96f76`](https://github.com/meta/astryx/commit/593f96f76) feat(Wheel): UIPickerView's motion under a finger, with flat rows (#8159)
   - 暂缓：UIPickerView 的手指动效（惯性、弹簧、平行行）依赖 Vue 还没有的滚轮物理设施
-- [ ] [`16a5397c9`](https://github.com/meta/astryx/commit/16a5397c9) feat(Calendar): weekday headers show abbreviated names where all seven fit in four characters (#9824)
-- [ ] [`c8f08f967`](https://github.com/meta/astryx/commit/c8f08f967) fix(core): PowerSearch gives `isDateOnly: false` the time of day it names (#9702)
+- [x] [`16a5397c9`](https://github.com/meta/astryx/commit/16a5397c9) feat(Calendar): weekday headers show abbreviated names where all seven fit in four characters (#9824)
+  - 已移植：[#571](https://github.com/astryx-vue/astryx-vue/pull/571)。表头缩写数据早已内置；补没有内置数据的语言：用 Intl 缩写，七个都不超过四个字符，否则窄写法
+- [x] [`c8f08f967`](https://github.com/meta/astryx/commit/c8f08f967) fix(core): PowerSearch gives `isDateOnly: false` the time of day it names (#9702)
+  - 不适用：本范围只是把 wall-clock 读数抽成共享函数给 PowerSearch 用，PowerSearch 的 isDateOnly 行为归搜索族
 - [x] [`07ee4b5c4`](https://github.com/meta/astryx/commit/07ee4b5c4) docs(DateInput): FR14 says when a tapped row commits (#9838)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`42ccd7cfa`](https://github.com/meta/astryx/commit/42ccd7cfa) fix(DateInput): the scrolling picker column's rows keep AA contrast; the depth fade uses theme text colours (#9853)
@@ -2838,6 +2858,7 @@
 - [x] [`f10bc9153`](https://github.com/meta/astryx/commit/f10bc9153) spec(AST-094): only a gesture's motion springs; other motion plays the theme's tokens (#9706)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`f5a315249`](https://github.com/meta/astryx/commit/f5a315249) fix(TimeInput, DateTimeInput): under a finger the AM/PM wheel follows the hour (#8179)
+  - 暂缓：手指下上午下午滚轮跟着小时走依赖滚轮的手指滚动和 spinTo，归动效与手势引擎任务
 
 ### v0.7.9
 
@@ -2850,10 +2871,15 @@
 - [x] [`c5b2c54dd`](https://github.com/meta/astryx/commit/c5b2c54dd) spec(AST-111): date components use the calendar the application chooses (#9605)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`fe1cf0c6d`](https://github.com/meta/astryx/commit/fe1cf0c6d) feat(Calendar): show the months of the selected calendar system (#9622)
+  - 暂缓：显示所选历法的月份依赖非公历日历系统，归日历系统任务
 - [ ] [`aa7c50176`](https://github.com/meta/astryx/commit/aa7c50176) feat(Calendar): useCalendarDays and useCalendarNavigation take an optional calendar (#10007)
+  - 暂缓：日历钩子接受可选历法依赖非公历日历系统，归日历系统任务
 - [ ] [`edf7128e3`](https://github.com/meta/astryx/commit/edf7128e3) feat(Timestamp, PowerSearch): write dates in the provider's calendar (#9639)
+  - 暂缓：Timestamp、PowerSearch 按 provider 日历写日期依赖非公历日历系统，归日历系统任务
 - [ ] [`9cba0a867`](https://github.com/meta/astryx/commit/9cba0a867) docs(i18n): a Calendars guide page for other calendar systems (#10017)
+  - 暂缓：其他历法的 Calendars 指南页只讲非公历日历系统，归日历系统任务
 - [ ] [`6e2e24293`](https://github.com/meta/astryx/commit/6e2e24293) feat(lab): Schedule writes dates in the provider's calendar (#9994)
+  - 暂缓：Schedule 按 provider 日历写日期依赖非公历日历系统，归日历系统任务
 - [ ] [`189a730ce`](https://github.com/meta/astryx/commit/189a730ce) feat(DateInput, DateTimeInput, DateRangeInput): type, pick and show dates in the active calendar (#9643, #9842)
   - 暂缓：按当前历法输入、选择和显示日期，依赖非公历日历系统，Vue 版还没有
 - [x] [`a866c2ab0`](https://github.com/meta/astryx/commit/a866c2ab0) fix(Dialog, Drawer): a backdrop press that closes a popover inside closes only the popover (#9988)
@@ -2865,17 +2891,22 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`3b8d81fd0`](https://github.com/meta/astryx/commit/3b8d81fd0) spec: record component icon slots in CodeBlock, Timestamp, and Table (#10045)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`d7a7dd3bb`](https://github.com/meta/astryx/commit/d7a7dd3bb) feat(Timestamp): the hover card's copy button resolves its glyph through the timestamp-copy icon slot (#9830)
+- [x] [`d7a7dd3bb`](https://github.com/meta/astryx/commit/d7a7dd3bb) feat(Timestamp): the hover card's copy button resolves its glyph through the timestamp-copy icon slot (#9830)
+  - 已移植：[#502](https://github.com/astryx-vue/astryx-vue/pull/502)。Timestamp 复制按钮走 timestamp-copy 槽位，基础展示族完成
 - [ ] [`a4dd70eb1`](https://github.com/meta/astryx/commit/a4dd70eb1) docs(useCalendarDays): add hook docs and a month grid example block (#9905)
-- [ ] [`17e36e748`](https://github.com/meta/astryx/commit/17e36e748) fix(DateTimeInput): a press's deferred-click watchers leave with the field (#10155)
+  - 暂缓：给上游 useCalendarDays 钩子补文档和示例；Vue 版没有这个钩子，公开的是接口不同的 useCalendar；归日历系统任务，届时决定是否补齐上游 v0.7.1 前就公开的 useCalendarDays、useCalendarNavigation、useCalendarConstraints
+- [x] [`17e36e748`](https://github.com/meta/astryx/commit/17e36e748) fix(DateTimeInput): a press's deferred-click watchers leave with the field (#10155)
+  - 不适用：按下后在 document 上挂一次性 click 监听的 React 实现，Vue 版没有这种监听
 - [ ] [`ab7facf1e`](https://github.com/meta/astryx/commit/ab7facf1e) fix(core): spring roles register themselves when they load (#10138)
   - 暂缓：要还原上游动效，归动效与手势引擎任务
   - 暂缓：内核部分已在 #563-#568；剩 DateInput PickerWheel 与 SegmentedControl 选中动效，归动效与手势引擎的组件接入阶段
 
 ### v0.7.10
 
-- [ ] [`bfc4940ec`](https://github.com/meta/astryx/commit/bfc4940ec) fix(Calendar): navigate internally when only onFocusDateChange is set (#10180)
-- [ ] [`e49ae7443`](https://github.com/meta/astryx/commit/e49ae7443) fix(Timestamp): the hover card keeps description-list structure (#9041)
+- [x] [`bfc4940ec`](https://github.com/meta/astryx/commit/bfc4940ec) fix(Calendar): navigate internally when only onFocusDateChange is set (#10180)
+  - Vue 版已有：Calendar.vue 的可见月份始终是内部状态，翻月先改内部再发 update:focusDate，focusDate 只负责外部指定月份
+- [x] [`e49ae7443`](https://github.com/meta/astryx/commit/e49ae7443) fix(Timestamp): the hover card keeps description-list structure (#9041)
+  - 已移植：[#573](https://github.com/astryx-vue/astryx-vue/pull/573)。悬停卡片保持描述列表：复制按钮放进各行 dd，没有标签的行用时区全名命名且不显示，补测试
 - [x] [`f88d572ac`](https://github.com/meta/astryx/commit/f88d572ac) fix(DateInput, TimeInput, DateTimeInput): value accepts an explicit undefined (#10129)
   - Vue 版已有：属性可选，传 undefined 等同不传，Vue 没有 exactOptionalPropertyTypes 的限制
 
@@ -2883,10 +2914,12 @@
 
 - [x] [`28c2e3fe5`](https://github.com/meta/astryx/commit/28c2e3fe5) test(core): six date and time cases pin each CLDR version's words (#10264)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`a26f7c452`](https://github.com/meta/astryx/commit/a26f7c452) fix(Calendar, DateRangeInput): today is read after hydration, so a server in another zone no longer causes a mismatch (#10226)
+- [x] [`a26f7c452`](https://github.com/meta/astryx/commit/a26f7c452) fix(Calendar, DateRangeInput): today is read after hydration, so a server in another zone no longer causes a mismatch (#10226)
+  - 已移植：[#576](https://github.com/astryx-vue/astryx-vue/pull/576)。Calendar 的挂载后再读今天 Vue 版早已有（useCalendarToday 加水合测试）；DateRangeInput 收起文字在服务端和水合一律写年份，挂载后再省掉今年
 - [x] [`089f7a078`](https://github.com/meta/astryx/commit/089f7a078) test: cut the jsdom style work that times out UI suites under load (#10285)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`7efb4f7ad`](https://github.com/meta/astryx/commit/7efb4f7ad) feat(core): add timezoneID prop to Timestamp (#9789)
+- [x] [`7efb4f7ad`](https://github.com/meta/astryx/commit/7efb4f7ad) feat(core): add timezoneID prop to Timestamp (#9789)
+  - 已移植：[#573](https://github.com/astryx-vue/astryx-vue/pull/573)。新增 timezoneID：绝对格式按指定时区写文字，tooltipEntries 里没写时区的行跟随它，补测试和文档
 - [x] [`3e8137f65`](https://github.com/meta/astryx/commit/3e8137f65) test(core): two busy-block proofs judge against the control (#10314)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`85788840e`](https://github.com/meta/astryx/commit/85788840e) fix(DateInput): a wheel's turn from a tap, a key or the program plays the settle spring (#9924)
@@ -2896,7 +2929,8 @@
 
 - [x] [`b1327c020`](https://github.com/meta/astryx/commit/b1327c020) test: watch before the action at 28 first-contact waits (#10286)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`2b3551d36`](https://github.com/meta/astryx/commit/2b3551d36) fix(TimeInput): drop the typed draft when an arrow key steps the value (#10179)
+- [x] [`2b3551d36`](https://github.com/meta/astryx/commit/2b3551d36) fix(TimeInput): drop the typed draft when an arrow key steps the value (#10179)
+  - Vue 版已有：TimeField.vue 的 commit 会重写显示文字，方向键步进后草稿即被丢掉，失焦不会把旧文字提交回去
 - [x] [`065603204`](https://github.com/meta/astryx/commit/065603204) test(Wheel): hold the coast from its start, and catch it frozen (#10340)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`9b7ebc461`](https://github.com/meta/astryx/commit/9b7ebc461) test(interaction-harness): a hold sent from the test names the motion it judges (#10438)
@@ -2910,10 +2944,13 @@
 - [x] [`a4eca1690`](https://github.com/meta/astryx/commit/a4eca1690) fix(Popover): a dialog popover starts focus on an enabled tab stop (#10503)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`8091fbc64`](https://github.com/meta/astryx/commit/8091fbc64) docs(useCalendarNavigation): add hook docs and a month pager example block (#10154)
+  - 暂缓：给上游 useCalendarNavigation 钩子补文档和示例；Vue 版没有这个钩子；归日历系统任务，届时决定是否补齐上游 v0.7.1 前就公开的 useCalendarDays、useCalendarNavigation、useCalendarConstraints
 - [x] [`9d5507609`](https://github.com/meta/astryx/commit/9d5507609) fix(DateInput, DateTimeInput): under a finger the month/year wheels move the date like UIDatePicker's (#8209)
   - 已移植：[#546](https://github.com/astryx-vue/astryx-vue/pull/546)。手指下月份年份滚轮带着已选日期走，像 UIDatePicker
 - [ ] [`62c7802e8`](https://github.com/meta/astryx/commit/62c7802e8) docs(useCalendarConstraints): add hook docs and a hotel booking range example block (#10151)
-- [ ] [`372f681ba`](https://github.com/meta/astryx/commit/372f681ba) fix(Calendar): day buttons grow with their numbers (#10596)
+  - 暂缓：给上游 useCalendarConstraints 钩子补文档和示例；Vue 版没有这个钩子；归日历系统任务，届时决定是否补齐上游 v0.7.1 前就公开的 useCalendarDays、useCalendarNavigation、useCalendarConstraints
+- [x] [`372f681ba`](https://github.com/meta/astryx/commit/372f681ba) fix(Calendar): day buttons grow with their numbers (#10596)
+  - 已移植：[#571](https://github.com/astryx-vue/astryx-vue/pull/571)。日期按钮高度改为下限，文字放大时按钮跟着数字长高，补 CSS 测试
 - [x] [`619ffeb27`](https://github.com/meta/astryx/commit/619ffeb27) fix(core, richtext): no focus fade on text fields under a coarse pointer (#10611)
   - 已移植：[#546](https://github.com/astryx-vue/astryx-vue/pull/546)。粗指针下文本字段不做焦点渐变
 - [x] [`36c29737f`](https://github.com/meta/astryx/commit/36c29737f) fix(DateInput, DateTimeInput): the sheet's calendar waits for today, so hydration matches (#10400)
@@ -2926,10 +2963,12 @@
   - Vue 版已有：同 button.css，默认字号下渲染不变
 - [x] [`5490c7c50`](https://github.com/meta/astryx/commit/5490c7c50) test(interaction-harness): share settlesAt with waitForRest's deadline (#10606)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`b207e607a`](https://github.com/meta/astryx/commit/b207e607a) fix(Timestamp): attach popup semantics to the focusable time (#6298)
+- [x] [`b207e607a`](https://github.com/meta/astryx/commit/b207e607a) fix(Timestamp): attach popup semantics to the focusable time (#6298)
+  - 已移植：[#573](https://github.com/astryx-vue/astryx-vue/pull/573)。悬停卡片的触发元素改成能聚焦的 time 本身，打开时 aria-controls 指向卡片，补测试
 - [x] [`9acc1b449`](https://github.com/meta/astryx/commit/9acc1b449) test(interaction-harness): no wheel re-takes; delete retakeOnWheelPacing (#10549)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`aa31eab11`](https://github.com/meta/astryx/commit/aa31eab11) fix(HoverCard): a labelled card puts aria-haspopup only on a trigger whose role supports it (#10733)
+- [x] [`aa31eab11`](https://github.com/meta/astryx/commit/aa31eab11) fix(HoverCard): a labelled card puts aria-haspopup only on a trigger whose role supports it (#10733)
+  - 已移植：[#573](https://github.com/astryx-vue/astryx-vue/pull/573)。HoverCard 只在支持的角色上写 aria-haspopup，span 和 time 这类没有角色的触发器不写，补测试
 - [x] [`86809383e`](https://github.com/meta/astryx/commit/86809383e) test(Timer): complete hardening audit layers 1-2 (#6483) (#6609)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`7cc934044`](https://github.com/meta/astryx/commit/7cc934044) fix(DateInput): a wheel's key step rests on the row it steps to (#10610)
@@ -2943,7 +2982,8 @@
 
 ### v0.7.14
 
-- [ ] [`108f354ae`](https://github.com/meta/astryx/commit/108f354ae) fix(core): drop 'use client' from the package root and the component barrels (#11106)
+- [x] [`108f354ae`](https://github.com/meta/astryx/commit/108f354ae) fix(core): drop 'use client' from the package root and the component barrels (#11106)
+  - 不适用：React Server Components 的 'use client' 指令
 - [x] [`9d5f4c7b1`](https://github.com/meta/astryx/commit/9d5f4c7b1) spec(AST-111): calendars go by their CLDR names (#11102)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`f27380ab3`](https://github.com/meta/astryx/commit/f27380ab3) feat(TimeInput): the minute wheel loops under a finger, as on iOS (#10953)
@@ -2951,16 +2991,20 @@
 
 ### v0.7.15
 
-- [ ] [`fe22e4197`](https://github.com/meta/astryx/commit/fe22e4197) fix(DateTimeInput): keep native picker bookkeeping in state (#10861)
-- [ ] [`804842e60`](https://github.com/meta/astryx/commit/804842e60) fix(Calendar): number each week row by the ISO week of its Thursday (#11271)
-- [ ] [`0f4e2c3fb`](https://github.com/meta/astryx/commit/0f4e2c3fb) fix(Calendar): a two-month calendar keeps max's month in the last pane (#11202)
+- [x] [`fe22e4197`](https://github.com/meta/astryx/commit/fe22e4197) fix(DateTimeInput): keep native picker bookkeeping in state (#10861)
+  - 不适用：React 渲染期间写 ref 被丢弃的渲染污染，Vue 没有这个渲染模型
+- [x] [`804842e60`](https://github.com/meta/astryx/commit/804842e60) fix(Calendar): number each week row by the ISO week of its Thursday (#11271)
+  - 已移植：[#571](https://github.com/astryx-vue/astryx-vue/pull/571)。周数按每行周四所在的 ISO 周计，周日或周六起始时不再整体错一周，补测试
+- [x] [`0f4e2c3fb`](https://github.com/meta/astryx/commit/0f4e2c3fb) fix(Calendar): a two-month calendar keeps max's month in the last pane (#11202)
+  - 已移植：[#571](https://github.com/astryx-vue/astryx-vue/pull/571)。两个月并排时 max 所在的月份留在右边那一格，不越过 min 的月份，补测试
 - [x] [`4b24212ad`](https://github.com/meta/astryx/commit/4b24212ad) fix(DateInput, DateTimeInput): plain wording for a date the calendar does not have (#11309)
   - 已移植：[#546](https://github.com/astryx-vue/astryx-vue/pull/546)。日历上没有的日子给出直白的措辞
 - [x] [`4705e6763`](https://github.com/meta/astryx/commit/4705e6763) feat(DateInput, DateTimeInput): report typed rejections through onEntryErrorChange (#11311)
   - 已移植：[#546](https://github.com/astryx-vue/astryx-vue/pull/546)。新增 entryErrorChange 事件报告打字被拒（DateInput、DateTimeInput）
 - [x] [`70f7b324e`](https://github.com/meta/astryx/commit/70f7b324e) fix(DateInput): keep typed and native field bookkeeping in state (#10877)
   - 不适用：打字与原生字段的记账从 ref 改为 state，是 React 内部重构
-- [ ] [`edb2de912`](https://github.com/meta/astryx/commit/edb2de912) fix(Timestamp): a hover-card copy button shows and announces a failed copy (#10434)
+- [x] [`edb2de912`](https://github.com/meta/astryx/commit/edb2de912) fix(Timestamp): a hover-card copy button shows and announces a failed copy (#10434)
+  - Vue 版已有：TimestampHoverCard.vue 复制失败时按钮换叉号、名字换成失败的话并 assertive 播报，1.5 秒后复原
 - [x] [`1182a6495`](https://github.com/meta/astryx/commit/1182a6495) spec(AST-117): entryErrorBehavior for inputs that check their own entries (#11310)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`0e8cc4b44`](https://github.com/meta/astryx/commit/0e8cc4b44) spec(AST-118): rejected entry feedback for inputs that check their own entries (#11321)
@@ -2978,21 +3022,27 @@
   - 不适用：本范围只是 DateInput 抽出共用 hook 的内部重构，NumberInput 的被拒输入归输入框族
 - [x] [`dcdfd7f43`](https://github.com/meta/astryx/commit/dcdfd7f43) fix(DateInput, DateTimeInput): a value passed at the revealing commit keeps the rejected date entry (#11470)
   - 已移植：[#546](https://github.com/astryx-vue/astryx-vue/pull/546)。揭示被拒输入那一刻传进来的值不顶掉被拒文字
-- [ ] [`a32287bcb`](https://github.com/meta/astryx/commit/a32287bcb) fix(TimeInput, DateTimeInput): keep rejected time entries and show why (#11413)
+- [x] [`a32287bcb`](https://github.com/meta/astryx/commit/a32287bcb) fix(TimeInput, DateTimeInput): keep rejected time entries and show why (#11413)
+  - 已移植：[#575](https://github.com/astryx-vue/astryx-vue/pull/575)。被拒的时间文字留在框里并说明原因：新增 useTypedTime，TimeInput 新增 entryErrorBehavior 和 entryErrorChange，DateTimeInput 时间段同规则，Enter 不再被拦，补测试
 - [x] [`130e5da2d`](https://github.com/meta/astryx/commit/130e5da2d) feat(DateInput, DateTimeInput, TimeInput, FormLayout): entryErrorBehavior and a form default (#11485)
   - 已移植：[#546](https://github.com/astryx-vue/astryx-vue/pull/546)。entryErrorBehavior 与 FormLayout 的 defaultEntryErrorBehavior（DateInput、DateTimeInput；TimeInput 随输入框族的时间被拒输入一起做）
 
 ### v0.7.17
 
-- [ ] [`3b4c1993c`](https://github.com/meta/astryx/commit/3b4c1993c) fix(core): theme targets for parts that paint inside a component (#12081)
-- [ ] [`d6ac73ef3`](https://github.com/meta/astryx/commit/d6ac73ef3) chore: land batch 4 (12 pull requests) (#12738)
+- [x] [`3b4c1993c`](https://github.com/meta/astryx/commit/3b4c1993c) fix(core): theme targets for parts that paint inside a component (#12081)
+  - 已移植：[#506](https://github.com/astryx-vue/astryx-vue/pull/506)。组件内部部位的主题挂点（kbd-key、typeahead-popup、calendar-range 等），基础展示族完成
+- [x] [`d6ac73ef3`](https://github.com/meta/astryx/commit/d6ac73ef3) chore: land batch 4 (12 pull requests) (#12738)
+  - 已移植：[#510](https://github.com/astryx-vue/astryx-vue/pull/510)。core 六处之一的 Calendar subgrid，基础展示族完成
 - [x] [`53615c1f4`](https://github.com/meta/astryx/commit/53615c1f4) chore: land batch 19 (3 pull requests) (#12875)
   - 已移植：[#508](https://github.com/astryx-vue/astryx-vue/pull/508)。Pagination 首尾标记、文字角色行高由基础展示族完成，其余不适用
-- [ ] [`83424673c`](https://github.com/meta/astryx/commit/83424673c) chore: land batch 16 (6 pull requests) (#12881)
-- [ ] [`972102325`](https://github.com/meta/astryx/commit/972102325) fix(Timestamp): a relative name starts with the words it shows (#12222)
+- [x] [`83424673c`](https://github.com/meta/astryx/commit/83424673c) chore: land batch 16 (6 pull requests) (#12881)
+  - 已移植：[#576](https://github.com/astryx-vue/astryx-vue/pull/576)。值里放 Date 对象时开发期抛出点明 modelValue 和改法的错误，补测试
+- [x] [`972102325`](https://github.com/meta/astryx/commit/972102325) fix(Timestamp): a relative name starts with the words it shows (#12222)
+  - 已移植：[#573](https://github.com/astryx-vue/astryx-vue/pull/573)。相对读数的名字以显示的词开头再接完整日期，连接符走文案目录，实时刷新在时间或它命名的控件拿着焦点时等着，补测试
 - [ ] [`230045ad2`](https://github.com/meta/astryx/commit/230045ad2) fix(DateInput): under Reduced Motion a wheel's mouse-drag release lands at once (#12522)
   - 暂缓：要还原上游动效，归动效与手势引擎任务
-- [ ] [`e7f5815c3`](https://github.com/meta/astryx/commit/e7f5815c3) fix(core): six components' fixed-English built-in text follows the locale; the hardcoded-string lint config has no exemption list and reports a stale entry (#12721)
+- [x] [`e7f5815c3`](https://github.com/meta/astryx/commit/e7f5815c3) fix(core): six components' fixed-English built-in text follows the locale; the hardcoded-string lint config has no exemption list and reports a stale entry (#12721)
+  - 已移植：[#575](https://github.com/astryx-vue/astryx-vue/pull/575)。Timer 的 elapsed 文字和初始文字按语言写单位，其余五个组件的固定英文在 Vue 版本来就走文案目录，补测试
 
 ## 状态反馈与加载（area:core）
 
