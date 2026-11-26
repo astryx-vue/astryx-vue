@@ -1,5 +1,11 @@
 # @astryx-vue/cli
 
+## 0.4.34
+
+### Patch Changes
+
+- [#537](https://github.com/astryx-vue/astryx-vue/pull/537) [`8bf1fd3`](https://github.com/astryx-vue/astryx-vue/commit/8bf1fd38a39473cdf74c9d7848f50fd4bbe07dcd) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `doctor` 在包没装好时给出修复命令：用项目自己的包管理器，缺 themes 时按项目 core 的版本装（core 钉死版本时加 `-E`），刚 clone 还没装依赖时让你运行项目自己的安装；用 core 的 `<Theme>` 或 `dataset.astryxTheme` 设主题也算设好了。`init` 逐个文件说明做了什么，区块已是最新时不重写文件、只打印 `build` 和 `search`，安装步骤只列还缺的包，写不了文件时说明原因和该改什么；内置的样式指南补上自己写样式时要守的几条。
+
 ## 0.4.33
 
 ### Patch Changes
