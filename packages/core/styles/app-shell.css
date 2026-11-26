@@ -7,6 +7,20 @@
     position: relative;
     overflow: clip;
     min-height: 0;
+    /* AppShell 是布局的根：外层 Card、Section、Layout 的内边距与宽度变量停在这里。 */
+    --container-padding-inline-start: 0px;
+    --container-padding-inline-end: 0px;
+    --container-padding-block-start: 0px;
+    --container-padding-block-end: 0px;
+    --layout-padding-outer-x: initial;
+    --layout-padding-outer-y: initial;
+    --layout-padding-own-outer-x: initial;
+    --layout-padding-own-outer-y: initial;
+    --layout-padding-inner-x: initial;
+    --layout-padding-inner-y: initial;
+    --layout-content-width: initial;
+    --layout-alignment-width: initial;
+    --_section-padding-propagated: initial;
   }
 
   .astryx-app-shell[data-variant='wash'],
@@ -89,6 +103,26 @@
     background-color: var(--astryx-color-background-surface, #fff);
   }
 
+  /*
+   * 页面设了 viewport-fit=cover 时，页头背景延伸到状态栏下面和屏幕两侧，
+   * 页头里的内容留在安全区内；没设时这些边距都是 0。安全区是物理方向，从右到左时内联两侧互换。
+   */
+  .astryx-app-shell__header,
+  .astryx-app-shell__mobile-bar {
+    box-sizing: border-box;
+    padding-inline-start: env(safe-area-inset-left, 0px);
+    padding-inline-end: env(safe-area-inset-right, 0px);
+  }
+
+  :is([dir='rtl'] .astryx-app-shell__header, [dir='rtl'] .astryx-app-shell__mobile-bar) {
+    padding-inline-start: env(safe-area-inset-right, 0px);
+    padding-inline-end: env(safe-area-inset-left, 0px);
+  }
+
+  .astryx-app-shell__header {
+    padding-block-start: env(safe-area-inset-top, 0px);
+  }
+
   .astryx-app-shell__banner {
     flex-shrink: 0;
   }
@@ -96,8 +130,18 @@
   .astryx-app-shell__mobile-bar {
     display: flex;
     align-items: center;
+    height: calc(var(--astryx-spacing-12, 48px) + env(safe-area-inset-top, 0px));
+    padding-block-start: env(safe-area-inset-top, 0px);
+  }
+
+  /* 横幅已经让出顶部安全区，下面的手机顶栏只留两侧；自动高度时它钉在顶部安全区下面。 */
+  .astryx-app-shell__header + .astryx-app-shell__mobile-bar {
     height: var(--astryx-spacing-12, 48px);
-    padding-inline: var(--astryx-spacing-2, 8px);
+    padding-block-start: 0;
+  }
+
+  .astryx-app-shell[data-height='auto'] .astryx-app-shell__header + .astryx-app-shell__mobile-bar {
+    top: env(safe-area-inset-top, 0px);
   }
 
   .astryx-app-shell__mobile-bar[data-variant='wash'],
@@ -116,6 +160,8 @@
     width: 100%;
     min-width: 0;
     height: 100%;
+    box-sizing: border-box;
+    padding-inline: var(--astryx-spacing-2, 8px);
   }
 
   .astryx-app-shell__mobile-nav > .astryx-mobile-nav-toggle {
@@ -147,6 +193,11 @@
     outline: none;
   }
 
+  /* 主区域在内容内边距之外再加底部安全区，铺满它的子元素也停在安全区之上。 */
+  .astryx-app-shell .astryx-app-shell__content {
+    padding-block-end: calc(var(--container-padding-block-end, 0px) + env(safe-area-inset-bottom, 0px));
+  }
+
   /*
    * 内容溢出时主区域是键盘停靠点：只有 Tab 到它才画标准焦点环，往里收一圈免得被外壳裁掉；
    * 跳转链接和脚本的聚焦（data-programmatic-focus）不画。
@@ -174,39 +225,69 @@
     isolation: isolate;
   }
 
-  /* 脚本读到窗口之前（服务端渲染的页面），整条顶栏在手机上先藏起起始和中间内容；读完窗口后由 TopNav 自己收进抽屉。 */
+  /*
+   * 脚本读到窗口之前（服务端渲染的页面），手机上先按手机布局显示：
+   * 顶栏藏起起始和中间内容，内联侧栏不出，抬起样式的背景板去掉圆角；
+   * 读完窗口后由 TopNav 收进抽屉、侧栏换成抽屉。
+   * 主题改过宽度点时没有对应规则，保持服务端的布局直到读到窗口。
+   */
   @media (width < 640px) {
     .astryx-app-shell[data-mobile-unread='sm'] .astryx-top-nav__items,
-    .astryx-app-shell[data-mobile-unread='sm'] .astryx-top-nav__center {
+    .astryx-app-shell[data-mobile-unread='sm'] .astryx-top-nav__center,
+    .astryx-app-shell[data-mobile-unread='sm'] .astryx-app-shell__sidenav {
       display: none;
+    }
+
+    .astryx-app-shell[data-mobile-unread='sm'] .astryx-app-shell__backdrop {
+      border-start-start-radius: 0;
     }
   }
 
   @media (width < 768px) {
     .astryx-app-shell[data-mobile-unread='md'] .astryx-top-nav__items,
-    .astryx-app-shell[data-mobile-unread='md'] .astryx-top-nav__center {
+    .astryx-app-shell[data-mobile-unread='md'] .astryx-top-nav__center,
+    .astryx-app-shell[data-mobile-unread='md'] .astryx-app-shell__sidenav {
       display: none;
+    }
+
+    .astryx-app-shell[data-mobile-unread='md'] .astryx-app-shell__backdrop {
+      border-start-start-radius: 0;
     }
   }
 
   @media (width < 1024px) {
     .astryx-app-shell[data-mobile-unread='lg'] .astryx-top-nav__items,
-    .astryx-app-shell[data-mobile-unread='lg'] .astryx-top-nav__center {
+    .astryx-app-shell[data-mobile-unread='lg'] .astryx-top-nav__center,
+    .astryx-app-shell[data-mobile-unread='lg'] .astryx-app-shell__sidenav {
       display: none;
+    }
+
+    .astryx-app-shell[data-mobile-unread='lg'] .astryx-app-shell__backdrop {
+      border-start-start-radius: 0;
     }
   }
 
   @media (width < 1280px) {
     .astryx-app-shell[data-mobile-unread='xl'] .astryx-top-nav__items,
-    .astryx-app-shell[data-mobile-unread='xl'] .astryx-top-nav__center {
+    .astryx-app-shell[data-mobile-unread='xl'] .astryx-top-nav__center,
+    .astryx-app-shell[data-mobile-unread='xl'] .astryx-app-shell__sidenav {
       display: none;
+    }
+
+    .astryx-app-shell[data-mobile-unread='xl'] .astryx-app-shell__backdrop {
+      border-start-start-radius: 0;
     }
   }
 
   @media (width < 1536px) {
     .astryx-app-shell[data-mobile-unread='2xl'] .astryx-top-nav__items,
-    .astryx-app-shell[data-mobile-unread='2xl'] .astryx-top-nav__center {
+    .astryx-app-shell[data-mobile-unread='2xl'] .astryx-top-nav__center,
+    .astryx-app-shell[data-mobile-unread='2xl'] .astryx-app-shell__sidenav {
       display: none;
+    }
+
+    .astryx-app-shell[data-mobile-unread='2xl'] .astryx-app-shell__backdrop {
+      border-start-start-radius: 0;
     }
   }
 }

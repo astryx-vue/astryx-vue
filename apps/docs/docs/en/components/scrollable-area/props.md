@@ -29,7 +29,7 @@ footer: false
         <td><code>role</code></td>
         <td><code>'group' | 'region'</code></td>
         <td><code>'group'</code></td>
-        <td>Role of the named viewport.</td>
+        <td>Role of the named viewport. Leave it unset for ordinary scroll containers; choose <code>region</code> only for areas that belong in landmark navigation, since every <code>region</code> adds an entry to a screen reader's landmark list.</td>
       </tr>
       <tr>
         <td><code>overscroll</code></td>

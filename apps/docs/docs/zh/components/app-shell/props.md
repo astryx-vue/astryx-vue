@@ -35,7 +35,7 @@ footer: false
         <td><code>mobileNav</code></td>
         <td><code>false | AppShellMobileNav</code></td>
         <td>-</td>
-        <td><code>false</code> 关掉抽屉。对象可以设置 <code>breakpoint</code>（<code>sm</code> 640、<code>md</code> 768、<code>lg</code> 1024、<code>xl</code> 1280、<code>2xl</code> 1536 或 <code>none</code>）、<code>isOpen</code> 和 <code>hasToggle</code>。</td>
+        <td><code>false</code> 关掉抽屉。对象可以设置 <code>breakpoint</code>（<code>sm</code> 640、<code>md</code> 768、<code>lg</code> 1024、<code>xl</code> 1280、<code>2xl</code> 1536 或 <code>none</code>）、<code>isOpen</code>、<code>hasToggle</code> 和 <code>defaultIsMobile</code>。主题移动了宽度点，断点跟着移动。<code>defaultIsMobile</code> 是服务端渲染的提示：服务端直接出手机布局，菜单开关也带上；不传时，宽屏布局先出，手机上内联侧栏先不显示，要等脚本跑起来才补上开关。<code>breakpoint</code> 为 <code>none</code> 时忽略。</td>
       </tr>
       <tr>
         <td><code>mobileNavOpen</code></td>
@@ -140,7 +140,7 @@ footer: false
   </table>
 </div>
 
-主区域是 <code>#astryx-app-shell-main</code>，一个带 <code>role="main"</code> 和 <code>tabindex="-1"</code> 的 <code>div</code>。跳过链接的文案跟随当前语言。
+主区域是 <code>#astryx-app-shell-main</code>，一个带 <code>role="main"</code> 和 <code>tabindex="-1"</code> 的 <code>div</code>。跳过链接的文案跟随当前语言。页面上第一个外层外壳保持这个 id；第二个外壳，或嵌在别的外壳内容里的外壳，会拿到自己生成的 id，它的跳过链接也指向那个 id。
 
 ## 原生属性
 

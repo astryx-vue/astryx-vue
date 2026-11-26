@@ -106,13 +106,13 @@ describe('grid', () => {
     expect(grid.attributes('data-justify')).toBe('start')
   })
 
-  it('omits the column count for responsive tracks and defaults alignment to stretch', () => {
+  it('omits the column count for responsive tracks and leaves alignment to the browser until set', () => {
     const wrapper = mount(Grid, { props: { columns: { minWidth: 240 } } })
 
     const grid = wrapper.find('.astryx-grid')
     expect(grid.attributes('data-columns')).toBeUndefined()
-    expect(grid.attributes('data-align')).toBe('stretch')
-    expect(grid.attributes('data-justify')).toBe('stretch')
+    expect(grid.attributes('data-align')).toBeUndefined()
+    expect(grid.attributes('data-justify')).toBeUndefined()
   })
 
   it('applies gap as spacing tokens and lets an axis override win', () => {

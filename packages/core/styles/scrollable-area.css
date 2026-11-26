@@ -10,6 +10,19 @@
     scrollbar-width: auto;
   }
 
+  /* 触屏保留平台自己的滚动指示条：iOS 只在滚动时显示它；写了颜色就会变成一条淡淡的常驻条，下拉露出的空隙里也看得见。 */
+  @media (pointer: coarse) {
+    .astryx-scrollable-area {
+      scrollbar-color: auto;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .astryx-scrollable-area {
+      scrollbar-color: auto;
+    }
+  }
+
   .astryx-scrollable-area:focus-visible {
     outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, currentcolor);
     outline-offset: var(--astryx-focus-outline-offset, 3px);

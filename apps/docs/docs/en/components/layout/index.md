@@ -33,7 +33,7 @@ import { Layout, LayoutContent, LayoutHeader } from '@astryx-vue/core/Layout'
 </template>
 ```
 
-`height` is `fill` or `auto`. `fill` stretches to the container and scrolls the content; `auto` grows with the content. `contentWidth` limits the width of the content and centers it. Dividers stay full width. A percentage, `fit-content`, `max-content`, `min-content`, or a bare `var()` uses the constrained width mode. `padding` sets this layout's own outer inset and does not pass to a nested layout. `defaultHasDividers` is the fallback for a header or footer that does not set `hasDivider`.
+`height` is `fill` or `auto`. `fill` stretches to the container's height and scrolls the content, and needs a container with a set height (an AppShell's content area, say); `auto` grows with the content. `contentWidth` limits the width of the content and centers it. Dividers stay full width. A percentage, `fit-content`, `max-content`, `min-content`, or a bare `var()` uses the constrained width mode. `padding` sets this layout's own outer inset and does not pass to a nested layout. `defaultHasDividers` is the fallback for a header or footer that does not set `hasDivider`.
 
 `LayoutHeader`, `LayoutFooter`, `LayoutContent`, and `LayoutPanel` are the region components. A panel's `width` is pixels when it is a number. Pass `resizable` from `useResizable` when a `ResizeHandle` controls that width.
 

@@ -380,7 +380,12 @@ function useSingleRegion(options: UseResizableSingleOptions, cascade?: CascadeLi
     observer = new ResizeObserver(() => measureDefault())
     observer.observe(element)
   })
-  onBeforeUnmount(() => observer?.disconnect())
+  onBeforeUnmount(() => {
+    observer?.disconnect()
+    // 拖动中卸载时没有松手事件，把拖到的尺寸写在退场时。
+    if (dragging)
+      persist()
+  })
 
   watch(controlledCollapse, (next) => {
     if (next != null) {

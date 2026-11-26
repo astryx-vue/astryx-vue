@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { CollapsibleEmits, CollapsibleProps, CollapsibleSlots } from './types.js'
 import { computed, useId, useTemplateRef } from 'vue'
+import { moveFocusLeftBehind, noteFocusWithin, useFocusLeavingChange } from '../composables/internal/focusLeaving.js'
 import { useLayoutDisclosure } from '../composables/internal/layoutDisclosure.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import Icon from '../Icon/Icon.vue'
@@ -45,6 +46,13 @@ const { isExiting } = useLayoutDisclosure({
   content: () => content.value ?? null,
   chevron: () => triggerButton.value?.querySelector<HTMLElement>('.astryx-collapsible-chevron') ?? null,
 })
+
+// 内容里的焦点在收起时会被藏起来，要移回触发按钮；焦点在别处就不动。
+useFocusLeavingChange(
+  () => isOpen.value,
+  wasOpen => (wasOpen ? noteFocusWithin(content.value) : null),
+  note => moveFocusLeftBehind(note, triggerButton.value, content.value),
+)
 
 defineExpose({ element })
 

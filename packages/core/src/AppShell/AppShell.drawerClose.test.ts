@@ -149,4 +149,28 @@ describe('外壳读到窗口之前的顶栏', () => {
     }))
     expect(off).not.toContain('data-mobile-unread')
   })
+
+  it('defaultIsMobile 让服务端渲染出手机布局，侧栏换成顶部的菜单开关', async () => {
+    const { renderToString } = await import('vue/server-renderer')
+    const { createSSRApp } = await import('vue')
+    const render = (mobileNav: { defaultIsMobile?: boolean }) => renderToString(createSSRApp({
+      render: () => h(AppShell, { mobileNav }, { default: () => 'Page', sideNav: () => h(SideNav) }),
+    }))
+    // 真正的服务端没有 window。
+    vi.stubGlobal('window', undefined)
+    const phone = await render({ defaultIsMobile: true })
+    const wide = await render({})
+    vi.unstubAllGlobals()
+    expect(phone).toContain('astryx-app-shell__mobile-bar')
+    expect(wide).not.toContain('astryx-app-shell__mobile-bar')
+  })
+
+  it('只有侧栏时服务端页面也带断点标记，让 CSS 在手机上先藏起内联侧栏', async () => {
+    const { renderToString } = await import('vue/server-renderer')
+    const { createSSRApp } = await import('vue')
+    const html = await renderToString(createSSRApp({
+      render: () => h(AppShell, null, { default: () => 'Page', sideNav: () => h(SideNav) }),
+    }))
+    expect(html).toContain('data-mobile-unread="md"')
+  })
 })

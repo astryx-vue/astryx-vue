@@ -2,6 +2,7 @@
 import type { CSSProperties, StyleValue } from 'vue'
 import type { LayoutProps, LayoutSlots } from './types.js'
 import { computed, provide, useAttrs, useSlots, useTemplateRef } from 'vue'
+import { hasSlotContent } from '../composables/internal/slotContent.js'
 import { layoutDividerKey, layoutSlotsKey, useLayoutDividers } from './context.js'
 import LayoutRegion from './LayoutRegion.vue'
 import { formatSize, spacingVariable, supportsInternalContentWidth } from './size.js'
@@ -25,11 +26,12 @@ const parentDividers = useLayoutDividers()
 
 defineExpose({ element: root })
 
+/** 区域「有没有」看渲染出来有没有内容：被 v-if 去掉、只剩注释或空白的区域和没写一样排版。 */
 const slotsState = computed(() => ({
-  hasHeader: slots.header != null,
-  hasFooter: slots.footer != null,
-  hasStart: slots.start != null,
-  hasEnd: slots.end != null,
+  hasHeader: hasSlotContent(slots.header),
+  hasFooter: hasSlotContent(slots.footer),
+  hasStart: hasSlotContent(slots.start),
+  hasEnd: hasSlotContent(slots.end),
 }))
 
 provide(layoutSlotsKey, slotsState)
@@ -93,11 +95,11 @@ const innerStyle = computed<CSSProperties>(() => {
       :data-width-mode="widthMode"
       :style="innerStyle"
     >
-      <LayoutRegion v-if="slots.header" area="header">
+      <LayoutRegion v-if="slotsState.hasHeader" area="header">
         <slot name="header" />
       </LayoutRegion>
       <div class="astryx-layout__middle">
-        <LayoutRegion v-if="slots.start" area="start">
+        <LayoutRegion v-if="slotsState.hasStart" area="start">
           <slot name="start" />
         </LayoutRegion>
         <div class="astryx-layout__content-slot">
@@ -105,11 +107,11 @@ const innerStyle = computed<CSSProperties>(() => {
             <slot />
           </LayoutRegion>
         </div>
-        <LayoutRegion v-if="slots.end" area="end">
+        <LayoutRegion v-if="slotsState.hasEnd" area="end">
           <slot name="end" />
         </LayoutRegion>
       </div>
-      <LayoutRegion v-if="slots.footer" area="footer">
+      <LayoutRegion v-if="slotsState.hasFooter" area="footer">
         <slot name="footer" />
       </LayoutRegion>
     </div>

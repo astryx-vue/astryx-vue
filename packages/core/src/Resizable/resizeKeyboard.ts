@@ -56,8 +56,11 @@ export function handleResizeKey(
   rtl: number,
   isHorizontal: boolean,
 ): void {
-  const step = event.shiftKey ? KEYBOARD_LARGE_STEP : KEYBOARD_STEP
   const key = event.key
+  // 只有无修饰键、或 Shift 加方向键才由分隔条处理，其余组合交给浏览器和应用自己的快捷键。
+  if (event.altKey || event.ctrlKey || event.metaKey || (event.shiftKey && !key.startsWith('Arrow')))
+    return
+  const step = event.shiftKey ? KEYBOARD_LARGE_STEP : KEYBOARD_STEP
   if (key === 'ArrowRight' || key === 'ArrowDown' || key === 'ArrowLeft' || key === 'ArrowUp') {
     event.preventDefault()
     if (resizable._isCollapsed) {

@@ -2,7 +2,7 @@
 import type { CSSProperties, StyleValue } from 'vue'
 import type { ResizeHandleProps, ResizeHandleSlots, ResizePillPlacement } from './types.js'
 import { computed, onBeforeUnmount, ref, useAttrs, useTemplateRef, watch } from 'vue'
-import { getEffectiveMaxPx } from '../composables/internal/resizableChannel.js'
+import { getEffectiveMaxPx, resizablePropsOf } from '../composables/internal/resizableChannel.js'
 import { devWarn } from '../composables/useDevWarning.js'
 import { useComponentMessages } from '../locale/context.js'
 import { layoutMessages } from '../locale/messages/layout.js'
@@ -36,9 +36,10 @@ let drag: { pointerId: number, start: number, rtl: number } | null = null
 
 defineExpose({ element: root })
 
+const resizableProps = computed(() => props.resizable == null ? undefined : resizablePropsOf(props.resizable))
 const label = computed(() => props.label || messages.value.layout.resizeHandle)
 const sign = computed(() => props.isReversed ? -1 : 1)
-const collapsed = computed(() => props.resizable?._isCollapsed ?? false)
+const collapsed = computed(() => resizableProps.value?._isCollapsed ?? false)
 const active = computed(() => hovered.value || focused.value || dragging.value)
 
 const pillSide = computed(() => resolveSide(props.pillPlacement, props.isReversed, collapsed.value))
@@ -48,17 +49,25 @@ const forwardedAttrs = computed(() => Object.fromEntries(
 ))
 
 const rootClass = computed(() => ['astryx-resize-handle', attrs.class])
-const rootStyle = computed<StyleValue>(() => attrs.style as StyleValue)
+/** 面板有长度且没收起：抓取区最多占面板的一半，短面板自己的拖动不被抢走。收起或长度为 0 时保留整块。 */
+const hasOpenPane = computed(() => {
+  const resizable = resizableProps.value
+  return resizable != null && !resizable._isCollapsed && resizable._size > 0
+})
+const rootStyle = computed<StyleValue>(() => [
+  hasOpenPane.value ? { '--_resize-pane-length': `${resizableProps.value?._size}px` } : undefined,
+  attrs.style as StyleValue,
+])
 
 const ariaNow = computed(() => {
-  const resizable = props.resizable
+  const resizable = resizableProps.value
   if (resizable == null)
     return undefined
   return collapsed.value ? Math.max(resizable._size, resizable._minSizePx) : resizable._size
 })
 
 const ariaMax = computed(() => {
-  const resizable = props.resizable
+  const resizable = resizableProps.value
   if (resizable == null)
     return undefined
   const reported = getEffectiveMaxPx(resizable)
@@ -69,7 +78,7 @@ const ariaMax = computed(() => {
 })
 
 let warnedAxis = false
-watch(() => [props.direction, props.resizable?._direction] as const, ([direction, hookDirection]) => {
+watch(() => [props.direction, resizableProps.value?._direction] as const, ([direction, hookDirection]) => {
   if (warnedAxis || hookDirection == null || hookDirection === direction)
     return
   warnedAxis = true
@@ -79,7 +88,7 @@ watch(() => [props.direction, props.resizable?._direction] as const, ([direction
   )
 }, { immediate: true })
 
-const ariaText = computed(() => collapsed.value && props.resizable ? messages.value.layout.collapsed : undefined)
+const ariaText = computed(() => collapsed.value && resizableProps.value ? messages.value.layout.collapsed : undefined)
 
 const pillStyle = computed<CSSProperties>(() => offsetStyle(props.direction, pillSide.value))
 
@@ -136,11 +145,11 @@ function flushMove(): void {
     cancelAnimationFrame(frame)
     frame = 0
   }
-  props.resizable?._onResizeMove(pendingDelta)
+  resizableProps.value?._onResizeMove(pendingDelta)
 }
 
 function pointerDown(event: PointerEvent) {
-  if (props.isDisabled || props.resizable == null || drag)
+  if (props.isDisabled || resizableProps.value == null || drag)
     return
   event.preventDefault()
   event.stopPropagation()
@@ -156,11 +165,11 @@ function pointerDown(event: PointerEvent) {
   pendingDelta = 0
   document.body.style.cursor = props.direction === 'horizontal' ? 'col-resize' : 'row-resize'
   document.body.style.userSelect = 'none'
-  props.resizable._onResizeStart()
+  resizableProps.value._onResizeStart()
 }
 
 function pointerMove(event: PointerEvent) {
-  if (drag == null || drag.pointerId !== event.pointerId || props.resizable == null)
+  if (drag == null || drag.pointerId !== event.pointerId || resizableProps.value == null)
     return
   const current = props.direction === 'horizontal' ? event.clientX : event.clientY
   pendingDelta = (current - drag.start) * drag.rtl * sign.value
@@ -168,7 +177,7 @@ function pointerMove(event: PointerEvent) {
     return
   frame = requestAnimationFrame(() => {
     frame = 0
-    props.resizable?._onResizeMove(pendingDelta)
+    resizableProps.value?._onResizeMove(pendingDelta)
   })
 }
 
@@ -177,7 +186,7 @@ function pointerUp(event: PointerEvent) {
     return
   flushMove()
   clearDrag()
-  props.resizable?._onResizeEnd()
+  resizableProps.value?._onResizeEnd()
 }
 
 function pointerCancel(event: PointerEvent) {
@@ -188,21 +197,21 @@ function pointerCancel(event: PointerEvent) {
     frame = 0
   }
   clearDrag()
-  props.resizable?._onResizeCancel?.()
+  resizableProps.value?._onResizeCancel?.()
 }
 
 function onRootKeyDown(event: KeyboardEvent) {
   callKeydown(attrs.onKeydown, event)
   if (attrs.onKeyDown !== attrs.onKeydown)
     callKeydown(attrs.onKeyDown, event)
-  const resizable = props.resizable
+  const resizable = resizableProps.value
   if (props.isDisabled || resizable == null)
     return
   handleResizeKey(event, resizable, sign.value, rtlMultiplier(), props.direction === 'horizontal')
 }
 
 function doubleClick() {
-  const resizable = props.resizable
+  const resizable = resizableProps.value
   if (props.isDisabled || resizable == null || !resizable._collapsible)
     return
   toggleCollapse(resizable)
@@ -228,7 +237,7 @@ onBeforeUnmount(() => {
     role="separator"
     :aria-orientation="direction === 'horizontal' ? 'vertical' : 'horizontal'"
     :aria-valuenow="ariaNow"
-    :aria-valuemin="resizable?._minSizePx"
+    :aria-valuemin="resizableProps?._minSizePx"
     :aria-valuemax="ariaMax"
     :aria-valuetext="ariaText"
     :aria-label="label"
@@ -240,6 +249,7 @@ onBeforeUnmount(() => {
     :data-disabled="isDisabled || undefined"
     :data-active="active || undefined"
     :data-resizing="dragging || undefined"
+    :data-pane="hasOpenPane || undefined"
     @keydown="onRootKeyDown"
     @dblclick="doubleClick"
     @focus="focused = true"
@@ -247,7 +257,7 @@ onBeforeUnmount(() => {
   >
     <div
       class="astryx-resize-handle__hit"
-      :data-bias="pillSide"
+      data-bias="center"
       @pointerdown="pointerDown"
       @pointermove="pointerMove"
       @pointerup="pointerUp"
@@ -260,7 +270,15 @@ onBeforeUnmount(() => {
       <div
         class="astryx-resize-handle-pill"
         :data-hidden="isAlwaysVisible ? undefined : true"
+        :data-side="pillSide"
         :style="pillStyle"
+        @pointerdown="pointerDown"
+        @pointermove="pointerMove"
+        @pointerup="pointerUp"
+        @pointercancel="pointerCancel"
+        @lostpointercapture="pointerCancel"
+        @pointerenter="hovered = true"
+        @pointerleave="hovered = dragging"
       />
     </slot>
   </div>

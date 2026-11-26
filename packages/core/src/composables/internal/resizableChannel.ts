@@ -1,4 +1,4 @@
-import type { ResizableProps } from '../useResizable.js'
+import type { ResizableProps, ResizableRegion } from '../useResizable.js'
 
 export interface CollapseControls {
   collapse: () => void
@@ -30,4 +30,20 @@ export function getCollapseControls(props: ResizableProps): CollapseControls | u
 
 export function getEffectiveMaxPx(props: ResizableProps): number | undefined {
   return effectiveMaxima.get(props)
+}
+
+/** `resizable` 传的是 `useResizable()` 的返回值（带着 `props`）还是它的 `props`，统一取出 `props`。 */
+export function resizablePropsOf<T extends object>(value: ResizableRegion | T): ResizableProps | T {
+  return isResizableRegion(value) ? value.props : value
+}
+
+function isResizableRegion(value: object): value is ResizableRegion {
+  const region = value as Partial<ResizableRegion>
+  return typeof region.collapse === 'function' && typeof region.expand === 'function' && region.props?._isResizableProps === true
+}
+
+/** 面板旁边紧挨着的那个分隔条：起始侧面板在它后面，结束侧面板在它前面。 */
+export function resizeHandleBeside(panel: HTMLElement, area: 'start' | 'end' | null): HTMLElement | null {
+  const sibling = area === 'end' ? panel.previousElementSibling : panel.nextElementSibling
+  return sibling instanceof HTMLElement && sibling.getAttribute('role') === 'separator' ? sibling : null
 }

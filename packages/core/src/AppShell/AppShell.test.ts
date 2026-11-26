@@ -1,10 +1,14 @@
-import { mount } from '@vue/test-utils'
-import { describe, expect, it, vi } from 'vitest'
+import { enableAutoUnmount, mount } from '@vue/test-utils'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { defineComponent, h, nextTick } from 'vue'
 import { useAppShellMobile } from '../composables/useAppShellMobile.js'
+import { provideLayoutContainer, useLayoutContainer, useLayoutDividers } from '../Layout/context.js'
+import Layout from '../Layout/Layout.vue'
 import SideNav from '../SideNav/SideNav.vue'
 import SideNavHeading from '../SideNav/SideNavHeading.vue'
 import AppShell from './AppShell.vue'
+
+enableAutoUnmount(afterEach)
 
 const Outside = defineComponent({
   setup() {
@@ -110,5 +114,75 @@ describe('app shell', () => {
     const wrapper = mount(Outside)
     expect(wrapper.get('.enabled').text()).toBe('false')
     expect(wrapper.get('.mobile').text()).toBe('false')
+  })
+
+  describe('main id', () => {
+    it('gives a second shell on the page its own main id and keeps the first on the fixed one', async () => {
+      const first = mount(AppShell, { slots: { default: '<p>One</p>' }, attachTo: document.body })
+      const second = mount(AppShell, { slots: { default: '<p>Two</p>' }, attachTo: document.body })
+      await nextTick()
+      const firstId = first.get('[role="main"]').attributes('id')
+      const secondId = second.get('[role="main"]').attributes('id')
+      expect(firstId).toBe('astryx-app-shell-main')
+      expect(secondId).not.toBe(firstId)
+      expect(second.get('.astryx-app-shell__skip').attributes('href')).toBe(`#${secondId}`)
+      first.unmount()
+      second.unmount()
+    })
+
+    it('gives a shell nested in another shell its own main id', async () => {
+      const Inner = { components: { AppShell }, template: '<AppShell><p>Inner</p></AppShell>' }
+      const outer = mount(AppShell, { slots: { default: h(Inner) }, attachTo: document.body })
+      await nextTick()
+      const ids = outer.findAll('[role="main"]').map(node => node.attributes('id'))
+      expect(ids).toHaveLength(2)
+      expect(new Set(ids).size).toBe(2)
+      expect(ids[0]).toBe('astryx-app-shell-main')
+      outer.unmount()
+    })
+
+    it('hands the fixed id on once the first shell unmounts', async () => {
+      const first = mount(AppShell, { slots: { default: '<p>One</p>' }, attachTo: document.body })
+      first.unmount()
+      const next = mount(AppShell, { slots: { default: '<p>Two</p>' }, attachTo: document.body })
+      await nextTick()
+      expect(next.get('[role="main"]').attributes('id')).toBe('astryx-app-shell-main')
+      next.unmount()
+    })
+  })
+
+  it('is a layout root: an ancestor Layout\'s divider default stops at the shell', () => {
+    const Probe = defineComponent({
+      setup() {
+        const dividers = useLayoutDividers()
+        return { dividers }
+      },
+      template: '<i class="probe">{{ String(dividers) }}</i>',
+    })
+    const Outer = defineComponent({
+      components: { AppShell, Layout, Probe },
+      template: '<Layout default-has-dividers><AppShell><template #mobileNav><Probe /></template></AppShell></Layout>',
+    })
+    const wrapper = mount(Outer)
+    expect(wrapper.get('.probe').text()).toBe('undefined')
+  })
+
+  it('also stops the container a Card or Dialog names, so the shell\'s header and footer take none', () => {
+    const Probe = defineComponent({
+      setup() {
+        return { container: useLayoutContainer() }
+      },
+      template: '<i class="probe">{{ String(container) }}</i>',
+    })
+    const Host = defineComponent({
+      setup(_, { slots }) {
+        provideLayoutContainer('card')
+        return () => h('div', slots.default?.())
+      },
+    })
+    const wrapper = mount(Host, {
+      slots: { default: () => h(AppShell, null, { mobileNav: () => h(Probe) }) },
+    })
+    expect(wrapper.get('.probe').text()).toBe('null')
   })
 })
