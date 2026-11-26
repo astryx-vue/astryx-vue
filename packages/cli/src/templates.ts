@@ -10,12 +10,13 @@ import { suggestByNames } from './query.ts'
 import { BINARY } from './spec.ts'
 
 /**
- * A neutral grey rectangle, fully percent-encoded so it stays valid inside a
- * single-quoted, double-quoted, or template string. The playground serves its
+ * A grey rectangle at low opacity, so it takes its tone from the surface behind
+ * it: light on a light page, dark in dark mode. It is fully percent-encoded so it
+ * stays valid inside a single-quoted, double-quoted, or template string. The playground serves its
  * demo photos from `/template-assets/`, a path that only exists on the docs
  * site; a page copied into a project must not point at it.
  */
-export const MEDIA_PLACEHOLDER = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2216%22 height=%229%22%3E%3Crect width=%2216%22 height=%229%22 fill=%22%23d4d4d4%22/%3E%3C/svg%3E'
+export const MEDIA_PLACEHOLDER = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2216%22 height=%229%22%3E%3Crect width=%2216%22 height=%229%22 fill=%22%23808080%22 fill-opacity=%220.12%22/%3E%3C/svg%3E'
 
 const DEMO_MEDIA = /\/template-assets\/[^'"`\s)]+/g
 

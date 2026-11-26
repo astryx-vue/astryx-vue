@@ -88,7 +88,7 @@ const IMAGES = [
         <Grid :columns="3" :gap="3">
           <AspectRatio
             v-for="img in IMAGES"
-            :key="img.src"
+            :key="img.alt"
             :ratio="1"
             :style="imageClip"
           >
