@@ -153,8 +153,8 @@
     position: relative;
   }
 
-  .astryx-transfer-list-item[data-transfer-list-drop-target]::before,
-  .astryx-transfer-list-item[data-transfer-list-drop-target]::after {
+  .astryx-transfer-list-item[data-transfer-list-drop-target='before']::before,
+  .astryx-transfer-list-item[data-transfer-list-drop-target='after']::after {
     content: '';
     position: absolute;
     inset-inline: 0;

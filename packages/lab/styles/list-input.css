@@ -125,8 +125,8 @@
     position: relative;
   }
 
-  .astryx-list-input__item[data-list-input-drop-target]::before,
-  .astryx-list-input__item[data-list-input-drop-target]::after {
+  .astryx-list-input__item[data-list-input-drop-target='before']::before,
+  .astryx-list-input__item[data-list-input-drop-target='after']::after {
     content: '';
     position: absolute;
     inset-inline: 0;
