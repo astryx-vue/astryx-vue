@@ -9,6 +9,7 @@ import type { PressHold } from './inputHoldState'
 import { containsAlongFlatTree } from '../utils/flatTree'
 import { subscribeInput } from '../utils/inputStream'
 import { isNode } from '../utils/nodeType'
+import { isInNestedLayer } from './inputHoldInert'
 import { openToMouse } from './inputHoldShield'
 import { held, isInputShield, liveLayers, pressHolds } from './inputHoldState'
 
@@ -92,8 +93,8 @@ function createPressHold(doc: Document): PressHold | null {
   }
 
   /**
-   * 落在 `target` 上的新按压要不要挡。有浮层盖满视口时，按在哪都挡；
-   * 只挡自己那块（`'surface'`）时，只挡按在浮层上的，周围页面照常。
+   * 落在 `target` 上的新按压要不要挡。有浮层盖满视口时，按在哪都挡，退场浮层
+   * 里面的另一个浮层除外；只挡自己那块（`'surface'`）时，只挡按在浮层上的，周围页面照常。
    */
   const holdsPressAt = (target: EventTarget | null): boolean => {
     if (!holdsNewPress())
@@ -102,7 +103,7 @@ function createPressHold(doc: Document): PressHold | null {
       const state = held.get(layer)
       if (state == null)
         continue
-      if (state.viewport > 0)
+      if (state.viewport > 0 || (state.layer > 0 && !(isNode(target) && isInNestedLayer(target, layer))))
         return true
       if (state.surface > 0 && isNode(target) && containsAlongFlatTree(layer, target))
         return true
@@ -119,7 +120,8 @@ function createPressHold(doc: Document): PressHold | null {
   const followPointer = (pointerType: string): void => {
     for (const layer of liveLayers(doc)) {
       const state = held.get(layer)
-      if (state?.shield == null)
+      // 退场暂挡挡住每一种指针，挡板不给鼠标让开。
+      if (state?.shield == null || state.layer > 0)
         continue
       const value = pointerType === 'mouse' ? 'none' : 'auto'
       if (state.shield.style.pointerEvents !== value)

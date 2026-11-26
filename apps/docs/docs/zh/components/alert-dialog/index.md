@@ -25,6 +25,8 @@ import { alertDialogLoading } from '../../../../components/demos/alert-dialog'
 
 在手机、平板这类以触屏为主的设备上，两个按钮像系统弹窗一样跟踪手指和笔：按下的那个立刻高亮，滑到另一个上高亮跟过去，松手时执行手指下的那个；在按钮外松手什么都不执行。鼠标按下和原生按钮一样。
 
+在这类设备上，弹窗的进退场也和系统弹窗一样：打开时从 1.2 倍大小缩到原大，弹窗和遮罩一起淡入，用主题的 `--duration-medium-max` 和 `--ease-entrance`，进场结束前的点按会被忽略。关闭时按 `--duration-exit` 和 `--ease-exit` 淡出，淡出期间里面的内容不再接收输入和焦点，淡出播完才真正关闭。进退场途中重新打开或关闭，都从当前的样子折返。用鼠标时保留主题的 CSS 进场，关闭是立即的。
+
 ```vue
 <script setup lang="ts">
 import { AlertDialog } from '@astryx-vue/core/AlertDialog'

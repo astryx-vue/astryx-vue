@@ -2,7 +2,8 @@
  * @file inputHold.test.ts
  * @output 输入暂挡：满屏挡板挡住手指、放开后照常；只挡自己时周围页面照常；
  *   静止的鼠标从挡板穿过去；挡板升起前按下的手指抬起时穿过挡板；手势宿主问得到；
- *   退场保留焦点的暂挡只放行 Tab、焦点离开才变 inert、放开后不再变 inert
+ *   退场保留焦点的暂挡只放行 Tab、焦点离开才变 inert、放开后不再变 inert；
+ *   浮层退场的暂挡让内容 inert、移走焦点、连鼠标也挡，里面的另一个浮层照常，放开后恢复
  * @position packages/core/src/layer/inputHold.ts 的单元测试
  */
 
@@ -207,5 +208,67 @@ describe('holdKeptInside', () => {
     await Promise.resolve()
     expect(layer.hasAttribute('inert')).toBe(false)
     expect(layer.hasAttribute('aria-hidden')).toBe(false)
+  })
+})
+
+describe('holdInput with the layer scope', () => {
+  function setUpLeaving(): { layer: HTMLElement, action: HTMLButtonElement, kept: HTMLElement, host: HTMLElement, toast: HTMLButtonElement, status: HTMLElement } {
+    const layer = document.createElement('dialog')
+    const action = document.createElement('button')
+    const kept = document.createElement('p')
+    kept.setAttribute('inert', '')
+    const status = document.createElement('div')
+    status.setAttribute('role', 'status')
+    // 模态框托管的 toast 区域：装着它的元素保持可用，旁边的子元素照样变 inert。
+    const host = document.createElement('div')
+    const beside = document.createElement('span')
+    const region = document.createElement('div')
+    region.className = 'astryx-layer'
+    const toast = document.createElement('button')
+    region.append(toast)
+    host.append(beside, region)
+    layer.append(action, kept, status, host)
+    document.body.append(layer)
+    return { layer, action, kept, host, toast, status }
+  }
+
+  it('makes the content inert and blurs focus while the layer leaves, and restores it on release', () => {
+    listenLikePressFeedback()
+    const { layer, action, kept, host, toast, status } = setUpLeaving()
+    action.focus()
+    expect(document.activeElement).toBe(action)
+
+    const release = holdInput(layer, { until: new Promise(() => {}), scope: 'layer' })
+    expect(action.hasAttribute('inert')).toBe(true)
+    expect(document.activeElement).not.toBe(action)
+    expect(layer.hasAttribute('inert')).toBe(false)
+    expect(status.hasAttribute('inert')).toBe(false)
+    expect(host.hasAttribute('inert')).toBe(false)
+    expect(host.firstElementChild!.hasAttribute('inert')).toBe(true)
+    expect(toast.closest('[inert]')).toBeNull()
+
+    release()
+    expect(action.hasAttribute('inert')).toBe(false)
+    expect(host.firstElementChild!.hasAttribute('inert')).toBe(false)
+    // 原来就是 inert 的保持原样。
+    expect(kept.hasAttribute('inert')).toBe(true)
+    expect(shieldOf(layer)).toBeNull()
+  })
+
+  it('holds every pointer on a leaving layer, the mouse too, but not its nested layer', () => {
+    listenLikePressFeedback()
+    const { layer, action, toast } = setUpLeaving()
+    pointer(document.body, 'pointermove', 'mouse', { clientX: 40, clientY: 50 })
+    holdInput(layer, { until: new Promise(() => {}), scope: 'layer' })
+
+    const shield = shieldOf(layer)!
+    expect(shield.style.position).toBe('fixed')
+    expect(shield.style.pointerEvents).toBe('auto')
+    expect(holdsTouch(action)).toBe(true)
+    expect(holdsTouch(toast)).toBe(false)
+
+    // 鼠标再动也不让路。
+    pointer(document.body, 'pointermove', 'mouse', { clientX: 60, clientY: 70, buttons: 0 })
+    expect(shield.style.pointerEvents).toBe('auto')
   })
 })

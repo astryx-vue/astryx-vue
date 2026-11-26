@@ -18,6 +18,8 @@ It implements the WAI-ARIA Alert Dialog pattern. The root element uses `role="al
 
 On a touch-first device such as a phone or tablet, the two actions track a finger or a pen the way a system alert does: the pressed action highlights at once, the highlight follows the pointer to the other action, and the lift runs the action under it. Lifting outside both runs nothing. A mouse press acts as a native button's.
 
+On those devices the dialog also moves the way a system alert does: it scales down from 1.2 times its size while it and its backdrop fade in, on the theme's `--duration-medium-max` and `--ease-entrance`, and taps are ignored until it settles. Closing fades it out on `--duration-exit` and `--ease-exit`; during the fade the content no longer takes input or focus, and the dialog closes once the fade ends. Closing or reopening midway turns back from where it is. A mouse keeps the theme's CSS entrance and closes at once.
+
 ```vue
 <script setup lang="ts">
 import { AlertDialog } from '@astryx-vue/core/AlertDialog'

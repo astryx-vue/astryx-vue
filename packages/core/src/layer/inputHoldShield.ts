@@ -132,7 +132,8 @@ export function openings(points: ReadonlyArray<MousePoint>): Opening[] {
  */
 export function openToMouse(state: HeldLayer, doc: Document): void {
   const { shield } = state
-  if (shield == null)
+  // 退场暂挡不给鼠标留路。
+  if (shield == null || state.layer > 0)
     return
   const view = doc.defaultView
   const mouse = view == null ? null : getLastMousePoint(view)
