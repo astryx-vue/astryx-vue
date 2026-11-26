@@ -1483,6 +1483,7 @@
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`7bdeb06d7`](https://github.com/meta/astryx/commit/7bdeb06d7) fix(theme): text follows the reader's text size in Safari on iPhone, in every theme (#10416)
 - [ ] [`a28d586eb`](https://github.com/meta/astryx/commit/a28d586eb) feat(core): createReorderable makes List rows reorderable (#8139)
+  - 暂缓：本期已做 animatedLayout 与 inertClone；剩 createReorderable 拖动重排（依赖手势），归动效与手势引擎的组件接入阶段
 - [x] [`44862e54e`](https://github.com/meta/astryx/commit/44862e54e) [Component Audit] LayoutHeader: spacing below the header always follows its divider (#10686)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`31ae99075`](https://github.com/meta/astryx/commit/31ae99075) fix(cli): template — a typo's near name comes first in the suggestions (#10712)
@@ -3144,6 +3145,7 @@
 - [x] [`4236e8829`](https://github.com/meta/astryx/commit/4236e8829) test(ProgressBar): wait for the story's bar, not 5 s (#10976)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`038b0a7d7`](https://github.com/meta/astryx/commit/038b0a7d7) fix(core): layout motion, spinner rotors and gesture sync are one per page across swizzled copies (AST-110 FR3) (#11027)
+  - 暂缓：本期已做 布局动效跨副本共用一份状态（sharedRealm）；剩 Spinner 转子和手势的跨副本同步，归动效与手势引擎的组件接入阶段
 - [ ] [`108f354ae`](https://github.com/meta/astryx/commit/108f354ae) fix(core): drop 'use client' from the package root and the component barrels (#11106)
 
 ### v0.7.15
@@ -4193,8 +4195,9 @@
 - [x] [`2c4f1728b`](https://github.com/meta/astryx/commit/2c4f1728b) chore(core): the animator plans Reduce Motion in its own module, shares a track per element and starts at the commit (#8056)
   - 暂缓：依赖动画器（animator）与主题时序/节奏的动效基础设施，Vue 版没有
   - 已移植：[#567](https://github.com/astryx-vue/astryx-vue/pull/567)。Reduce Motion 计划独立模块、每元素共享轨道、提交帧起步
-- [ ] [`7a530ccbf`](https://github.com/meta/astryx/commit/7a530ccbf) chore(core): the internal module for size-change glides (spec:AST-105, INV12) (#8482)
+- [x] [`7a530ccbf`](https://github.com/meta/astryx/commit/7a530ccbf) chore(core): the internal module for size-change glides (spec:AST-105, INV12) (#8482)
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
+  - 已移植：[#572](https://github.com/astryx-vue/astryx-vue/pull/572)。尺寸变化滑动模块 animatedLayout 搬到 motion/layout/，按职责拆成小文件，只用 CSS + TypeScript
 - [x] [`a00afee50`](https://github.com/meta/astryx/commit/a00afee50) chore(core): the animator plays any closed-form curve (#8521)
   - 暂缓：依赖动画器（animator）与主题时序/节奏的动效基础设施，Vue 版没有
   - 已移植：[#567](https://github.com/astryx-vue/astryx-vue/pull/567)。动画器播放任意闭式曲线
@@ -4235,8 +4238,9 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`a5cb073a8`](https://github.com/meta/astryx/commit/a5cb073a8) spec(AST-107): public gesture hooks — usePanGesture, useDragToSnapPoints, useAnimator (#8600)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`f8e0c9283`](https://github.com/meta/astryx/commit/f8e0c9283) feat(core): useAnimatedLayout, and Collapsible and TreeList glide the content after them (spec:AST-105) (#8568)
+- [x] [`f8e0c9283`](https://github.com/meta/astryx/commit/f8e0c9283) feat(core): useAnimatedLayout, and Collapsible and TreeList glide the content after them (spec:AST-105) (#8568)
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
+  - 已移植：[#572](https://github.com/astryx-vue/astryx-vue/pull/572)。公开 useAnimatedLayout（带中英文档页），Collapsible 与 TreeList 接入 animatedLayout
 - [x] [`dcdb3568f`](https://github.com/meta/astryx/commit/dcdb3568f) architecture(interaction-modality): hover intent is a hover-recognizer setting (INV11) (#8604)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`99445691a`](https://github.com/meta/astryx/commit/99445691a) docs(interaction-modality): INV11's hover recognizer is not implemented yet (#8761)
@@ -4245,20 +4249,26 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`db165f86f`](https://github.com/meta/astryx/commit/db165f86f) spec(SideNav, AppShell): rail collapse by snap, clip and cross-fade (D38) (#8720)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`0418c4705`](https://github.com/meta/astryx/commit/0418c4705) feat(core): the animated-layout glide moves the siblings before a change too, and its walk stops near the visible part (#8634)
+- [x] [`0418c4705`](https://github.com/meta/astryx/commit/0418c4705) feat(core): the animated-layout glide moves the siblings before a change too, and its walk stops near the visible part (#8634)
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
-- [ ] [`8f42b3d26`](https://github.com/meta/astryx/commit/8f42b3d26) perf(core): a glide in a long list lays the page out once, not once per moving element (#8639)
+  - 已移植：[#572](https://github.com/astryx-vue/astryx-vue/pull/572)。滑动带上变化前面的兄弟元素，遍历在附近停下
+- [x] [`8f42b3d26`](https://github.com/meta/astryx/commit/8f42b3d26) perf(core): a glide in a long list lays the page out once, not once per moving element (#8639)
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
-- [ ] [`60178b837`](https://github.com/meta/astryx/commit/60178b837) feat(core): the animated-layout module's in-place swap (spec:AST-105 FR8) (#8734)
+  - 已移植：[#572](https://github.com/astryx-vue/astryx-vue/pull/572)。长列表滑动只排一次版
+- [x] [`60178b837`](https://github.com/meta/astryx/commit/60178b837) feat(core): the animated-layout module's in-place swap (spec:AST-105 FR8) (#8734)
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
-- [ ] [`f0c69828b`](https://github.com/meta/astryx/commit/f0c69828b) fix(core): an element whose transform leaves it in place still glides (#8780)
+  - 已移植：[#572](https://github.com/astryx-vue/astryx-vue/pull/572)。原地交换（playLayoutSwap/holdLayoutSwap）
+- [x] [`f0c69828b`](https://github.com/meta/astryx/commit/f0c69828b) fix(core): an element whose transform leaves it in place still glides (#8780)
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
+  - 已移植：[#572](https://github.com/astryx-vue/astryx-vue/pull/572)。transform 不改变位置的元素也会滑
 - [x] [`b39314411`](https://github.com/meta/astryx/commit/b39314411) spec(family): action groups — press, slide across, act on lift (AST-094 FR26–FR28) (#8622)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`b8c5e4aee`](https://github.com/meta/astryx/commit/b8c5e4aee) feat(core): SideNav's rail collapses by snap, clip and cross-fade; AppShell's content moves on its clock (#8723)
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
-- [ ] [`58fa49dfe`](https://github.com/meta/astryx/commit/58fa49dfe) feat(core): Table rows glide when a row's panel opens or closes, and their dividers move with them (#8656)
+  - 暂缓：本期已做 animatedLayout 模块与句柄；剩 SideNav 折叠栏的收起动效和 AppShell 内容跟随，归动效与手势引擎的组件接入阶段
+- [x] [`58fa49dfe`](https://github.com/meta/astryx/commit/58fa49dfe) feat(core): Table rows glide when a row's panel opens or closes, and their dividers move with them (#8656)
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
+  - 已移植：[#574](https://github.com/astryx-vue/astryx-vue/pull/574)。Table 行展开面板开合时下面的行滑动，合并边框的分隔线用替身线跟着行走
 - [x] [`7bcb81cbe`](https://github.com/meta/astryx/commit/7bcb81cbe) feat(core): the nav, breadcrumb and tab menus track a held pointer across their items (#8791)
   - 已移植：[#548](https://github.com/astryx-vue/astryx-vue/pull/548)。NavMenu、NavHeadingMenu、TabMenu 接上菜单按压：按住滑过再松开选中，鼠标在外面松开关菜单，补测试
 - [x] [`820769dd7`](https://github.com/meta/astryx/commit/820769dd7) docs(action-groups): the nav menus adopt the menu press model (#8801)
@@ -4339,6 +4349,7 @@
   - 已移植：[#544](https://github.com/astryx-vue/astryx-vue/pull/544)。按字母跳转忽略重音、大小写、带斜杠字母，useTypeahead 和 useTreeFocus 共用 typeaheadMatch
 - [ ] [`5909b939e`](https://github.com/meta/astryx/commit/5909b939e) feat(core): one shared edge reveal in the animated-layout module, which the SideNav rail moves onto (#8721)
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
+  - 暂缓：本期已做 模块里共用的边缘揭示（reportLayoutEdge/playLayoutEdge）；剩 SideNav 折叠栏改用它，归动效与手势引擎的组件接入阶段
 - [x] [`48f6a067f`](https://github.com/meta/astryx/commit/48f6a067f) [Component Audit] DropdownMenu: keep the focused row visible in forced colors (#7517)
   - 已移植：[#550](https://github.com/astryx-vue/astryx-vue/pull/550)。强制配色下聚焦的菜单行用 Highlight/HighlightText 涂出来；指针关闭后的焦点环处理 Vue 版已有
 - [x] [`8b78da84a`](https://github.com/meta/astryx/commit/8b78da84a) test(core): the inline-end edge reveal's reversal proof reads both sides on the animation's own clock (#9298)
@@ -4359,8 +4370,9 @@
   - 已移植：[#512](https://github.com/astryx-vue/astryx-vue/pull/512)。Tooltip、HoverCard 气泡内按下不激活外层卡片、行、字段
 - [x] [`356e9a8ab`](https://github.com/meta/astryx/commit/356e9a8ab) fix(TreeList): focus inside a collapsing branch moves to its row (#9251)
   - 已移植：[#550](https://github.com/astryx-vue/astryx-vue/pull/550)。TreeList 收起分支时，焦点在里面就先挪到这一行并拿 Tab 停靠点，补测试
-- [ ] [`1ee5e4069`](https://github.com/meta/astryx/commit/1ee5e4069) fix(core): a glide retargeted by a second layout change starts where it is drawn (#9327)
+- [x] [`1ee5e4069`](https://github.com/meta/astryx/commit/1ee5e4069) fix(core): a glide retargeted by a second layout change starts where it is drawn (#9327)
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
+  - 已移植：[#572](https://github.com/astryx-vue/astryx-vue/pull/572)。被第二次变化改道的滑动从画面上的位置开始
 - [x] [`a68e0e372`](https://github.com/meta/astryx/commit/a68e0e372) spec(Tooltip, HoverCard): rename pressTrigger to triggerBehavior ('adaptive' | 'hover' | 'toggle') (#9379)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`134afc4b3`](https://github.com/meta/astryx/commit/134afc4b3) fix(core): one click guard for the menu press model and the gesture host (#8360)
@@ -4487,6 +4499,7 @@
   - 已移植：[#550](https://github.com/astryx-vue/astryx-vue/pull/550)。锁滚动的拖动判断读滚动链上各元素是否还能往这个方向滚（含边缘），补测试
 - [ ] [`73996f1b2`](https://github.com/meta/astryx/commit/73996f1b2) fix(core): a layout change made late in a long task plays its motion instead of skipping past it (#9274)
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
+  - 暂缓：本期已做 长任务末尾的布局变化照样播放（模块与 frameBlock 部分）；剩 SideNav、AppShell 接入，归动效与手势引擎的组件接入阶段
 - [x] [`61cf773c2`](https://github.com/meta/astryx/commit/61cf773c2) refactor(InfoTip): build on useTooltip's show() and hide(); remove the internal toggle path (#9756)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`946211065`](https://github.com/meta/astryx/commit/946211065) perf(core): an overlay's eager import no longer carries the lazy BottomSheet's padding (#8550)
@@ -4518,6 +4531,7 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`8ddcfe11c`](https://github.com/meta/astryx/commit/8ddcfe11c) fix(core): a layout motion's copy carries on the CSS animations and transitions running in it (#9534)
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
+  - 暂缓：本期已做 布局动效的副本带上 CSS 动画（transientCopy/carryAnimations）；剩 Layer 退场副本改用 carryAnimations，归动效与手势引擎的组件接入阶段
 - [x] [`f59ffe155`](https://github.com/meta/astryx/commit/f59ffe155) fix(ClickableCard, SelectableCard): no touch pressed look for a finger press that starts on a control inside the card (#9801)
   - 已移植：[#501](https://github.com/astryx-vue/astryx-vue/pull/501)。手指按在卡片里的控件上，卡片不画触屏按压
 - [x] [`fbb81c6cc`](https://github.com/meta/astryx/commit/fbb81c6cc) DropdownMenu: under a finger, the opening finger picks only after UIMenu's handoff (AST-094 FR29) (#8627)
@@ -4623,6 +4637,7 @@
 - [ ] [`a789c8cd7`](https://github.com/meta/astryx/commit/a789c8cd7) feat(core): createDragToSnapPoints and useDragToSnapPoints settle an element on snap points (#8658)
 - [ ] [`a0fcc977c`](https://github.com/meta/astryx/commit/a0fcc977c) fix(SideNav): the collapse copy paints at the rail's own level, with no z-index escalation (#10145)
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
+  - 暂缓：本期已做 模块与 transientCopy 的副本层级；剩 SideNav 收起副本的层级接入，归动效与手势引擎的组件接入阶段
 - [x] [`f81f09df3`](https://github.com/meta/astryx/commit/f81f09df3) fix(CodeBlock, Carousel): the code viewport and the scroller draw the shared focus ring (#8875)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`07f8de58c`](https://github.com/meta/astryx/commit/07f8de58c) feat(core): Carousel's hasSnap takes useSnapPaging(), iOS paging on native snap's stops (#8153)
@@ -4631,6 +4646,7 @@
 - [ ] [`8bd8c6146`](https://github.com/meta/astryx/commit/8bd8c6146) fix(core): layout glides play the theme's move curve, not a spring (#10236)
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
   - 暂缓：内核部分已在 #563-#568；剩 AppShell 与 SideNav 侧栏收展动效，归动效与手势引擎的组件接入阶段
+  - 暂缓：本期已做 布局滑动走主题的移动曲线（模块与 Table 部分）；剩 SideNav 折叠栏、AppShell 接入，归动效与手势引擎的组件接入阶段
 - [x] [`0c168a374`](https://github.com/meta/astryx/commit/0c168a374) feat(Lightbox): touch zoom like the iOS Photos viewer (#8148)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`b8ae86f94`](https://github.com/meta/astryx/commit/b8ae86f94) fix(core): a BottomSheet touch drag's close keeps its speed, and its scrim fades with it (#8105)
@@ -4651,8 +4667,9 @@
   - 已移植：[#550](https://github.com/astryx-vue/astryx-vue/pull/550)。Calendar 的今天在接管服务端 HTML 之后才读，服务端和浏览器不同日期也不再对不上，补水合测试
 - [x] [`e348759a9`](https://github.com/meta/astryx/commit/e348759a9) fix(core): a presentation resolves with no matchMedia, as in a test DOM (#10275)
   - 不适用：presentation 在没有 matchMedia 时的解析，Vue 版没有 presentation
-- [ ] [`3c63e6e18`](https://github.com/meta/astryx/commit/3c63e6e18) fix(core): the layout glide takes --duration-medium (#10261)
+- [x] [`3c63e6e18`](https://github.com/meta/astryx/commit/3c63e6e18) fix(core): the layout glide takes --duration-medium (#10261)
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
+  - 已移植：[#572](https://github.com/astryx-vue/astryx-vue/pull/572)。滑动用主题的 --duration-medium
 - [ ] [`6309b0b38`](https://github.com/meta/astryx/commit/6309b0b38) fix(core): a BottomSheet touch release takes UIKit's sheet values, and turning back cancels (#10234)
   - 暂缓：BottomSheet 触屏松手取 UIKit 数值，依赖 resolveSnapPoint 和触屏呈现设施
 - [ ] [`74eb2160c`](https://github.com/meta/astryx/commit/74eb2160c) docs(layer-runtime, Popover): name settledBox's readers; fix comments (#10300)
@@ -4675,8 +4692,9 @@
   - 不适用：上游内部规范和架构文档、只改上游测试（自动初筛）
 - [x] [`4c5a84866`](https://github.com/meta/astryx/commit/4c5a84866) spec(AST-094): the record governs the pager in hooks/usePager.ts (#10374)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`0ecd324bf`](https://github.com/meta/astryx/commit/0ecd324bf) fix(core): a block-edge reveal slides its parts on the glide's frames (#10296)
+- [x] [`0ecd324bf`](https://github.com/meta/astryx/commit/0ecd324bf) fix(core): a block-edge reveal slides its parts on the glide's frames (#10296)
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
+  - 已移植：[#574](https://github.com/astryx-vue/astryx-vue/pull/574)。边缘揭示按滑动的帧移动各部分（模块随 #572），Table 展开面板的分隔线偏移随 #574
 - [ ] [`2d91b990f`](https://github.com/meta/astryx/commit/2d91b990f) chore(core): the tap route reads the shared press slop (#10389)
 - [x] [`27aba94e8`](https://github.com/meta/astryx/commit/27aba94e8) test(core): the busy glide proof reads each glide on its own timeline (#10396)
   - 不适用：只改上游测试（自动初筛）
@@ -4701,6 +4719,7 @@
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`36929ac92`](https://github.com/meta/astryx/commit/36929ac92) feat(List): animate row inserts, removals and moves through the animatedLayout handle (#8106)
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
+  - 暂缓：本期已做 animatedLayout 模块与句柄；剩 List 增删、移动行的滑动接入（listLayoutUpdates 等），归动效与手势引擎的组件接入阶段
 - [x] [`95572ae80`](https://github.com/meta/astryx/commit/95572ae80) fix(Layer): a press that went down before an input hold lifts through the hold's shield (#10398)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`72a355851`](https://github.com/meta/astryx/commit/72a355851) fix(Carousel): under snap paging, the edge buttons follow the held row (#10359)
@@ -4754,6 +4773,7 @@
   - 暂缓：菜单的方向键、Home/End、翻页键和跳转要能走到禁用行（行仍然不可操作）：DropdownMenu、子菜单、ContextMenu、MoreMenu、NavHeadingMenu 各自有一套键盘逻辑和禁用行的 tabindex，要逐套改并重写对应用例，需要单独一个 PR
 - [ ] [`46d181337`](https://github.com/meta/astryx/commit/46d181337) feat(Resizable): a resizable LayoutPanel slides closed and open under every pointer (#9989)
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
+  - 暂缓：本期已做 模块里的尺寸揭示；剩 可拖动调整的 LayoutPanel 开合滑动（Vue 版还没有 createResizable），归动效与手势引擎的组件接入阶段
 - [ ] [`88ba27908`](https://github.com/meta/astryx/commit/88ba27908) feat(Lightbox): swipe between gallery photos like Photos (#8197)
   - 暂缓：Lightbox 滑动翻页依赖 paging 数值、usePager 和手势设施
 - [ ] [`92784f658`](https://github.com/meta/astryx/commit/92784f658) fix(core): a swizzled copy shares the package's per-page touch state (#10599)
@@ -4787,6 +4807,7 @@
 - [ ] [`a60baf519`](https://github.com/meta/astryx/commit/a60baf519) fix(core): ignore a pointerup with no pointerId when no press is held (#10695)
 - [ ] [`a28d586eb`](https://github.com/meta/astryx/commit/a28d586eb) feat(core): createReorderable makes List rows reorderable (#8139)
   - 暂缓：createReorderable 依赖 animatedLayout、animator 和 inertClone 这套动效设施
+  - 暂缓：本期已做 animatedLayout 与 inertClone；剩 createReorderable 拖动重排（依赖手势），归动效与手势引擎的组件接入阶段
 - [x] [`3fb73b3d4`](https://github.com/meta/astryx/commit/3fb73b3d4) fix(core): a spring retarget committed late starts at its frame (#10607)
   - 暂缓：依赖动画器（animator）与主题时序/节奏的动效基础设施，Vue 版没有
   - 已移植：[#567](https://github.com/astryx-vue/astryx-vue/pull/567)。迟到提交的弹簧改目标从它那一帧开始
@@ -4816,8 +4837,9 @@
 - [ ] [`d5b0bdaa1`](https://github.com/meta/astryx/commit/d5b0bdaa1) chore(core): re-export the scroll test and add the More tab's string (#10791)
 - [x] [`a257f8664`](https://github.com/meta/astryx/commit/a257f8664) spec(AST-094): evidence carries across a main merge that touches none of the PR's files, direct imports or shared motion and layer modules (DEC-31) (#10857)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`9ea776e22`](https://github.com/meta/astryx/commit/9ea776e22) fix(motion): WebKit draws a glide's last frame at its place (#10663)
+- [x] [`9ea776e22`](https://github.com/meta/astryx/commit/9ea776e22) fix(motion): WebKit draws a glide's last frame at its place (#10663)
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
+  - 已移植：[#572](https://github.com/astryx-vue/astryx-vue/pull/572)。WebKit 下最后一帧画在终点
 - [ ] [`e909dbff0`](https://github.com/meta/astryx/commit/e909dbff0) fix(SnapPaging): the pager's held stops and span take each translate off (#10860)
 - [x] [`a0e0536f3`](https://github.com/meta/astryx/commit/a0e0536f3) test(motion): a retarget's hand-off frame may show its held start (#10866)
   - 不适用：只改上游测试（自动初筛）
@@ -4852,6 +4874,7 @@
 
 - [ ] [`038b0a7d7`](https://github.com/meta/astryx/commit/038b0a7d7) fix(core): layout motion, spinner rotors and gesture sync are one per page across swizzled copies (AST-110 FR3) (#11027)
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
+  - 暂缓：本期已做 布局动效跨副本共用一份状态（sharedRealm）；剩 Spinner 转子和手势的跨副本同步，归动效与手势引擎的组件接入阶段
 - [x] [`b1566fdcf`](https://github.com/meta/astryx/commit/b1566fdcf) feat(agents): add a Claude Code and Codex marketplace that installs the Astryx skill (#10974)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`9f4ff7bbd`](https://github.com/meta/astryx/commit/9f4ff7bbd) test(TreeList): proofs read each motion as it starts, or name a starved page (#10994)
@@ -5611,6 +5634,7 @@
 
 - [ ] [`8ddcfe11c`](https://github.com/meta/astryx/commit/8ddcfe11c) fix(core): a layout motion's copy carries on the CSS animations and transitions running in it (#9534)
   - 暂缓：要还原上游动效，归动效与手势引擎任务
+  - 暂缓：本期已做 布局动效的副本带上 CSS 动画（transientCopy/carryAnimations）；剩 Layer 退场副本改用 carryAnimations，归动效与手势引擎的组件接入阶段
 - [ ] [`252b45bb1`](https://github.com/meta/astryx/commit/252b45bb1) feat(Layer): one input hold, first used by Dialog, Drawer and MobileNav (spec:AST-094 FR35) (#8342)
   - 暂缓：进场输入遮挡（Dialog、Drawer、MobileNav 进场时挡住点击）：依赖触屏呈现和进场运行时，Vue 版没有
 - [x] [`5c91e81ee`](https://github.com/meta/astryx/commit/5c91e81ee) fix(Layer): a closed layer's trigger is no CSS anchor (#9963)
@@ -5868,7 +5892,8 @@
   - 不适用：上游组件规范文档（自动初筛）
 - [x] [`16443d084`](https://github.com/meta/astryx/commit/16443d084) docs(spec): Divider records its shipped contract as current (#8743)
   - 不适用：上游组件规范文档（自动初筛）
-- [ ] [`f8e0c9283`](https://github.com/meta/astryx/commit/f8e0c9283) feat(core): useAnimatedLayout, and Collapsible and TreeList glide the content after them (spec:AST-105) (#8568)
+- [x] [`f8e0c9283`](https://github.com/meta/astryx/commit/f8e0c9283) feat(core): useAnimatedLayout, and Collapsible and TreeList glide the content after them (spec:AST-105) (#8568)
+  - 已移植：[#572](https://github.com/astryx-vue/astryx-vue/pull/572)。公开 useAnimatedLayout（带中英文档页），Collapsible 与 TreeList 接入 animatedLayout
 - [x] [`db165f86f`](https://github.com/meta/astryx/commit/db165f86f) spec(SideNav, AppShell): rail collapse by snap, clip and cross-fade (D38) (#8720)
   - 不适用：上游组件规范文档（自动初筛）
 - [x] [`daab0b6e2`](https://github.com/meta/astryx/commit/daab0b6e2) docs(spec): Card records its shipped contract as current (#8757)
@@ -5880,6 +5905,7 @@
 - [x] [`b39314411`](https://github.com/meta/astryx/commit/b39314411) spec(family): action groups — press, slide across, act on lift (AST-094 FR26–FR28) (#8622)
   - 不适用：上游内部规范和架构文档、上游组件规范文档（自动初筛）
 - [ ] [`b8c5e4aee`](https://github.com/meta/astryx/commit/b8c5e4aee) feat(core): SideNav's rail collapses by snap, clip and cross-fade; AppShell's content moves on its clock (#8723)
+  - 暂缓：本期已做 animatedLayout 模块与句柄；剩 SideNav 折叠栏的收起动效和 AppShell 内容跟随，归动效与手势引擎的组件接入阶段
 - [x] [`0ebde5a9d`](https://github.com/meta/astryx/commit/0ebde5a9d) docs(spec): Center records its shipped contract as current (#8788)
   - 不适用：上游组件规范文档（自动初筛）
 - [x] [`7d23f0bb6`](https://github.com/meta/astryx/commit/7d23f0bb6) docs(SideNav, AppShell): the rail collapse motion is implemented (FR6, FR17) (#8790)
@@ -5960,6 +5986,7 @@
 - [ ] [`9889a3438`](https://github.com/meta/astryx/commit/9889a3438) chore(core): name the system that 88 kept Effects sync (#9787)
 - [ ] [`f9a696545`](https://github.com/meta/astryx/commit/f9a696545) refactor(Resizable): one internal createResizable factory, which useResizable's configuration-object form and ResizeHandle's resizable path go through (#9297)
 - [ ] [`73996f1b2`](https://github.com/meta/astryx/commit/73996f1b2) fix(core): a layout change made late in a long task plays its motion instead of skipping past it (#9274)
+  - 暂缓：本期已做 长任务末尾的布局变化照样播放（模块与 frameBlock 部分）；剩 SideNav、AppShell 接入，归动效与手势引擎的组件接入阶段
 - [ ] [`946211065`](https://github.com/meta/astryx/commit/946211065) perf(core): an overlay's eager import no longer carries the lazy BottomSheet's padding (#8550)
 - [ ] [`cfd120e4c`](https://github.com/meta/astryx/commit/cfd120e4c) feat(Resizable): createResizable drives a plain handle element, with one separator derivation (#9718)
 - [x] [`e390c3c43`](https://github.com/meta/astryx/commit/e390c3c43) test(browser): keep every Playwright browser context off remote hosts (#9811)
@@ -5988,13 +6015,15 @@
 
 - [ ] [`8bd8c6146`](https://github.com/meta/astryx/commit/8bd8c6146) fix(core): layout glides play the theme's move curve, not a spring (#10236)
   - 暂缓：内核部分已在 #563-#568；剩 AppShell 与 SideNav 侧栏收展动效，归动效与手势引擎的组件接入阶段
+  - 暂缓：本期已做 布局滑动走主题的移动曲线（模块与 Table 部分）；剩 SideNav 折叠栏、AppShell 接入，归动效与手势引擎的组件接入阶段
 - [ ] [`2151c883d`](https://github.com/meta/astryx/commit/2151c883d) fix(AppShell): a second shell on a page gets its own main id (#10199)
 
 ### v0.7.11
 
 - [ ] [`a9c911421`](https://github.com/meta/astryx/commit/a9c911421) fix(core): Overlay, AppShell and MobileNav work with no matchMedia (#10327)
 - [ ] [`1f88264ec`](https://github.com/meta/astryx/commit/1f88264ec) docs(core): Layout's fill height needs a container with a set height (#10348)
-- [ ] [`0ecd324bf`](https://github.com/meta/astryx/commit/0ecd324bf) fix(core): a block-edge reveal slides its parts on the glide's frames (#10296)
+- [x] [`0ecd324bf`](https://github.com/meta/astryx/commit/0ecd324bf) fix(core): a block-edge reveal slides its parts on the glide's frames (#10296)
+  - 已移植：[#574](https://github.com/astryx-vue/astryx-vue/pull/574)。边缘揭示按滑动的帧移动各部分（模块随 #572），Table 展开面板的分隔线偏移随 #574
 
 ### v0.7.12
 
@@ -6006,6 +6035,7 @@
 - [x] [`64ca3b715`](https://github.com/meta/astryx/commit/64ca3b715) docs(specs): Layout and LayoutContent records match the closed slot and inset gaps (#10557)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`46d181337`](https://github.com/meta/astryx/commit/46d181337) feat(Resizable): a resizable LayoutPanel slides closed and open under every pointer (#9989)
+  - 暂缓：本期已做 模块里的尺寸揭示；剩 可拖动调整的 LayoutPanel 开合滑动（Vue 版还没有 createResizable），归动效与手势引擎的组件接入阶段
 - [ ] [`916a8e2fa`](https://github.com/meta/astryx/commit/916a8e2fa) feat(Resizable): a pull past a limit rubber-bands and only the lift closes (#10292)
 - [ ] [`0c0f9515f`](https://github.com/meta/astryx/commit/0c0f9515f) fix(Toolbar): the three-lane row wraps instead of letting lanes overlap at large text (#10563)
 - [ ] [`1ffc0dac9`](https://github.com/meta/astryx/commit/1ffc0dac9) fix(BottomSheet): resting content starts below the grab bar, whatever the padding (#8558)
@@ -6109,7 +6139,8 @@
   - 不适用：上游组件规范文档（自动初筛）
 - [x] [`02c6cf34d`](https://github.com/meta/astryx/commit/02c6cf34d) spec(List): a touch row's press paint and the animated layout handle for row updates (FR11–FR12) (#8687)
   - 不适用：上游组件规范文档（自动初筛）
-- [ ] [`f8e0c9283`](https://github.com/meta/astryx/commit/f8e0c9283) feat(core): useAnimatedLayout, and Collapsible and TreeList glide the content after them (spec:AST-105) (#8568)
+- [x] [`f8e0c9283`](https://github.com/meta/astryx/commit/f8e0c9283) feat(core): useAnimatedLayout, and Collapsible and TreeList glide the content after them (spec:AST-105) (#8568)
+  - 已移植：[#572](https://github.com/astryx-vue/astryx-vue/pull/572)。公开 useAnimatedLayout（带中英文档页），Collapsible 与 TreeList 接入 animatedLayout
 - [x] [`640599c5a`](https://github.com/meta/astryx/commit/640599c5a) spec(ContextMenu, List): ContextMenu on the headless menu; ListItem row menus attach to the li (#8648)
   - 不适用：上游组件规范文档（自动初筛）
 - [x] [`84faa0d94`](https://github.com/meta/astryx/commit/84faa0d94) spec(List): a pressed row's dividers stay drawn (FR11, D41) (#8776)
@@ -6222,6 +6253,7 @@
 - [x] [`b1327c020`](https://github.com/meta/astryx/commit/b1327c020) test: watch before the action at 28 first-contact waits (#10286)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`36929ac92`](https://github.com/meta/astryx/commit/36929ac92) feat(List): animate row inserts, removals and moves through the animatedLayout handle (#8106)
+  - 暂缓：本期已做 animatedLayout 模块与句柄；剩 List 增删、移动行的滑动接入（listLayoutUpdates 等），归动效与手势引擎的组件接入阶段
 - [x] [`9b7ebc461`](https://github.com/meta/astryx/commit/9b7ebc461) test(interaction-harness): a hold sent from the test names the motion it judges (#10438)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`9eb962686`](https://github.com/meta/astryx/commit/9eb962686) test(List): the row press holds are armed before the press (#10477)
@@ -6233,6 +6265,7 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`17f6985ed`](https://github.com/meta/astryx/commit/17f6985ed) fix(Layout): a full-bleed Table or List row takes the rounded container corner it reaches (#10586)
 - [ ] [`a28d586eb`](https://github.com/meta/astryx/commit/a28d586eb) feat(core): createReorderable makes List rows reorderable (#8139)
+  - 暂缓：本期已做 animatedLayout 与 inertClone；剩 createReorderable 拖动重排（依赖手势），归动效与手势引擎的组件接入阶段
 - [ ] [`36b8f6ebc`](https://github.com/meta/astryx/commit/36b8f6ebc) feat(lab): TransferList reorders through core's createReorderable (#8143)
 - [x] [`df4c958ec`](https://github.com/meta/astryx/commit/df4c958ec) perf(core): motions one callback starts read stylesheets in one pass (#10728)
   - 不适用：上游内部规范和架构文档、只改上游测试（自动初筛）
@@ -6770,6 +6803,7 @@
 - [x] [`db165f86f`](https://github.com/meta/astryx/commit/db165f86f) spec(SideNav, AppShell): rail collapse by snap, clip and cross-fade (D38) (#8720)
   - 不适用：上游组件规范文档（自动初筛）
 - [ ] [`b8c5e4aee`](https://github.com/meta/astryx/commit/b8c5e4aee) feat(core): SideNav's rail collapses by snap, clip and cross-fade; AppShell's content moves on its clock (#8723)
+  - 暂缓：本期已做 animatedLayout 模块与句柄；剩 SideNav 折叠栏的收起动效和 AppShell 内容跟随，归动效与手势引擎的组件接入阶段
 - [x] [`7d23f0bb6`](https://github.com/meta/astryx/commit/7d23f0bb6) docs(SideNav, AppShell): the rail collapse motion is implemented (FR6, FR17) (#8790)
   - 不适用：上游组件规范文档（自动初筛）
 - [x] [`34d2513d8`](https://github.com/meta/astryx/commit/34d2513d8) test(SideNav, AppShell): real-browser frame evidence for the rail collapse (#8792)
@@ -6808,6 +6842,7 @@
 - [x] [`e0a03766d`](https://github.com/meta/astryx/commit/e0a03766d) docs(knowledge): every component spec lives in docs/specs/components, one folder per component (#9007)
   - 不适用：上游内部规范和架构文档、上游组件规范文档（自动初筛）
 - [ ] [`5909b939e`](https://github.com/meta/astryx/commit/5909b939e) feat(core): one shared edge reveal in the animated-layout module, which the SideNav rail moves onto (#8721)
+  - 暂缓：本期已做 模块里共用的边缘揭示（reportLayoutEdge/playLayoutEdge）；剩 SideNav 折叠栏改用它，归动效与手势引擎的组件接入阶段
 - [x] [`a9b974a46`](https://github.com/meta/astryx/commit/a9b974a46) test(SideNav): the rail proofs read the motion on its own clock, not on the frames and wall time a loaded page gets (#9289)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`372a0eae2`](https://github.com/meta/astryx/commit/372a0eae2) fix(SideNav): focus on a row the collapsed rail removes moves to the collapse toggle or the nearest rail row (#9249)
@@ -6846,6 +6881,7 @@
 - [x] [`7d768634e`](https://github.com/meta/astryx/commit/7d768634e) test(MobileNav): a native close of the drawer releases the page lock (#8119)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`73996f1b2`](https://github.com/meta/astryx/commit/73996f1b2) fix(core): a layout change made late in a long task plays its motion instead of skipping past it (#9274)
+  - 暂缓：本期已做 长任务末尾的布局变化照样播放（模块与 frameBlock 部分）；剩 SideNav、AppShell 接入，归动效与手势引擎的组件接入阶段
 - [ ] [`946211065`](https://github.com/meta/astryx/commit/946211065) perf(core): an overlay's eager import no longer carries the lazy BottomSheet's padding (#8550)
 - [x] [`e390c3c43`](https://github.com/meta/astryx/commit/e390c3c43) test(browser): keep every Playwright browser context off remote hosts (#9811)
   - 不适用：只改上游测试（自动初筛）
@@ -6854,6 +6890,7 @@
 
 - [ ] [`8ddcfe11c`](https://github.com/meta/astryx/commit/8ddcfe11c) fix(core): a layout motion's copy carries on the CSS animations and transitions running in it (#9534)
   - 暂缓：要还原上游动效，归动效与手势引擎任务
+  - 暂缓：本期已做 布局动效的副本带上 CSS 动画（transientCopy/carryAnimations）；剩 Layer 退场副本改用 carryAnimations，归动效与手势引擎的组件接入阶段
 - [ ] [`252b45bb1`](https://github.com/meta/astryx/commit/252b45bb1) feat(Layer): one input hold, first used by Dialog, Drawer and MobileNav (spec:AST-094 FR35) (#8342)
 - [x] [`a0c48b8d7`](https://github.com/meta/astryx/commit/a0c48b8d7) docs(AST-105, AST-108): glides and tap-to-expand play the theme's motion tokens (#9964)
   - 不适用：上游内部规范和架构文档（自动初筛）
@@ -6885,6 +6922,7 @@
 - [ ] [`d67a7848e`](https://github.com/meta/astryx/commit/d67a7848e) fix(MobileNav): the drawer's content region is a navigation landmark named like the dialog (#10130)
 - [ ] [`8bd8c6146`](https://github.com/meta/astryx/commit/8bd8c6146) fix(core): layout glides play the theme's move curve, not a spring (#10236)
   - 暂缓：内核部分已在 #563-#568；剩 AppShell 与 SideNav 侧栏收展动效，归动效与手势引擎的组件接入阶段
+  - 暂缓：本期已做 布局滑动走主题的移动曲线（模块与 Table 部分）；剩 SideNav 折叠栏、AppShell 接入，归动效与手势引擎的组件接入阶段
 
 ### v0.7.11
 
@@ -8771,9 +8809,10 @@
   - 不适用：上游组件规范文档（自动初筛）
 - [x] [`a7044525d`](https://github.com/meta/astryx/commit/a7044525d) fix(core): a pinned table column draws its own row dividers (#8654)
   - 已移植：[#539](https://github.com/astryx-vue/astryx-vue/pull/539)。固定列的 ::before 伸到边框区，用固定列底色盖住表格静态画的线，再按格子自己的边框样式和颜色画分隔线；读计算样式搬运应用自定义边框的部分没做
-- [ ] [`58fa49dfe`](https://github.com/meta/astryx/commit/58fa49dfe) feat(core): Table rows glide when a row's panel opens or closes, and their dividers move with them (#8656)
+- [x] [`58fa49dfe`](https://github.com/meta/astryx/commit/58fa49dfe) feat(core): Table rows glide when a row's panel opens or closes, and their dividers move with them (#8656)
   - 暂缓：行在展开面板开合时滑动依赖上游的 useAnimatedLayout 布局动画系统，Vue 版还没有
   - 暂缓：行展开时下方行滑动需要 Vue 版没有的 useAnimatedLayout 动画运行时（FLIP、分隔线替身、显露裁切），上游一个提交就 1500 多行
+  - 已移植：[#574](https://github.com/astryx-vue/astryx-vue/pull/574)。Table 行展开面板开合时下面的行滑动，合并边框的分隔线用替身线跟着行走
 - [x] [`b84bf77fa`](https://github.com/meta/astryx/commit/b84bf77fa) chore: move project links to meta/astryx (#8827)
   - 不适用：上游组件规范文档、只改上游测试（自动初筛）
 
@@ -8868,9 +8907,10 @@
   - 不适用：拷贝（swizzle）出的 React 文件没有 Node 类型时的 process 声明，Vue 版没有这条链路
 - [x] [`089f7a078`](https://github.com/meta/astryx/commit/089f7a078) test: cut the jsdom style work that times out UI suites under load (#10285)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`0ecd324bf`](https://github.com/meta/astryx/commit/0ecd324bf) fix(core): a block-edge reveal slides its parts on the glide's frames (#10296)
+- [x] [`0ecd324bf`](https://github.com/meta/astryx/commit/0ecd324bf) fix(core): a block-edge reveal slides its parts on the glide's frames (#10296)
   - 暂缓：块边缘揭示随布局动画滑动，依赖上游 useAnimatedLayout 动画系统，Vue 版还没有
   - 暂缓：依赖 58fa49dfe 的行滑动动画，前者暂缓所以一起暂缓
+  - 已移植：[#574](https://github.com/astryx-vue/astryx-vue/pull/574)。边缘揭示按滑动的帧移动各部分（模块随 #572），Table 展开面板的分隔线偏移随 #574
 - [x] [`20ab99287`](https://github.com/meta/astryx/commit/20ab99287) test(Table): hold the row glide before reading chevron timing (#10329)
   - 不适用：只改上游测试（自动初筛）
 
@@ -9497,6 +9537,7 @@
 - [ ] [`d0ab3cb26`](https://github.com/meta/astryx/commit/d0ab3cb26) feat(core): add the shared list-windowing module and Table's capability hook (#10656)
 - [ ] [`8f8b3db65`](https://github.com/meta/astryx/commit/8f8b3db65) perf(Text): take a new text's first truncation measurement from the shared observer (#10668)
 - [ ] [`a28d586eb`](https://github.com/meta/astryx/commit/a28d586eb) feat(core): createReorderable makes List rows reorderable (#8139)
+  - 暂缓：本期已做 animatedLayout 与 inertClone；剩 createReorderable 拖动重排（依赖手势），归动效与手势引擎的组件接入阶段
 - [ ] [`7f04a6c5a`](https://github.com/meta/astryx/commit/7f04a6c5a) fix(Table): an unbounded column's resize handle announces a range that holds its width (#10577)
 - [ ] [`bb0786673`](https://github.com/meta/astryx/commit/bb0786673) fix(TextInput): dispatch changeAction and update optimistic value on clear (#6425)
 - [x] [`f2a6332eb`](https://github.com/meta/astryx/commit/f2a6332eb) fix(List): a swizzled copy reads a package reorderable object (#10741)
@@ -9786,6 +9827,7 @@
 ### v0.7.12
 
 - [ ] [`36929ac92`](https://github.com/meta/astryx/commit/36929ac92) feat(List): animate row inserts, removals and moves through the animatedLayout handle (#8106)
+  - 暂缓：本期已做 animatedLayout 模块与句柄；剩 List 增删、移动行的滑动接入（listLayoutUpdates 等），归动效与手势引擎的组件接入阶段
 - [ ] [`6e0b60429`](https://github.com/meta/astryx/commit/6e0b60429) chore(core): one owner module turns scroll anchoring off (#10173)
 - [ ] [`422440a64`](https://github.com/meta/astryx/commit/422440a64) fix(core): two copies of Core's modules share one React context (#10233)
 - [ ] [`1c8292c42`](https://github.com/meta/astryx/commit/1c8292c42) fix(Layer): keep decorator portals outside renderer-managed DOM (#7633)
@@ -9796,6 +9838,7 @@
 - [ ] [`74f1fb96f`](https://github.com/meta/astryx/commit/74f1fb96f) fix(theme): a themed :active follows the touch press model (#10420)
 - [ ] [`7bdeb06d7`](https://github.com/meta/astryx/commit/7bdeb06d7) fix(theme): text follows the reader's text size in Safari on iPhone, in every theme (#10416)
 - [ ] [`a28d586eb`](https://github.com/meta/astryx/commit/a28d586eb) feat(core): createReorderable makes List rows reorderable (#8139)
+  - 暂缓：本期已做 animatedLayout 与 inertClone；剩 createReorderable 拖动重排（依赖手势），归动效与手势引擎的组件接入阶段
 - [x] [`0f6f37e6f`](https://github.com/meta/astryx/commit/0f6f37e6f) docs(records): new data attributes outside data-astryx-* are public surface; prefer a private CSS variable (#10937)
   - 不适用：上游内部规范和架构文档（自动初筛）
 
