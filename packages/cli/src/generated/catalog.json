@@ -67095,17 +67095,6 @@
             "zh": "不提供整份语言目录，在整个应用里替换少数几句 Astryx 文案。"
           },
           "code": "<script setup lang=\"ts\">\nimport { InternationalizationProvider } from '@astryx-vue/core/InternationalizationProvider'\nimport { Selector } from '@astryx-vue/core/Selector'\nimport { ref } from 'vue'\n\nconst selected = ref<string | null>(null)\n\nconst options = [\n  { value: 'americas', label: 'Americas' },\n  { value: 'emea', label: 'EMEA' },\n  { value: 'apac', label: 'APAC' },\n]\n\n// Only the Selector placeholder changes; every other string stays the built-in English.\nconst overrides = {\n  en: {\n    '@astryx.selector.placeholder': 'Choose...',\n  },\n}\n</script>\n\n<template>\n  <div class=\"internationalization-provider-preview\">\n    <InternationalizationProvider locale=\"en\" :overrides=\"overrides\">\n      <Selector\n        v-model=\"selected\"\n        label=\"Billing region\"\n        :options=\"options\"\n        :width=\"240\"\n        has-clear\n      />\n    </InternationalizationProvider>\n  </div>\n</template>"
-        },
-        {
-          "title": {
-            "en": "useLocaleDirection — Live Sparkline",
-            "zh": "useLocaleDirection —— 实时迷你折线"
-          },
-          "description": {
-            "en": "A canvas sparkline reads the writing direction with useLocaleDirection, because a canvas does not follow CSS direction. Switch the locale to Arabic and the oldest point moves to the right edge, with the latest value on the left.",
-            "zh": "canvas 不跟随 CSS 的书写方向，所以这条迷你折线用 useLocaleDirection 读出方向再画。切到阿拉伯语后，最早的点挪到右边，最新的值在左边。"
-          },
-          "code": "<script setup lang=\"ts\">\nimport { InternationalizationProvider, useLocaleDirection } from '@astryx-vue/core/InternationalizationProvider'\nimport { SegmentedControl, SegmentedControlItem } from '@astryx-vue/core/SegmentedControl'\nimport { VStack } from '@astryx-vue/core/Stack'\nimport { useTheme } from '@astryx-vue/core/Theme'\nimport { defineComponent, h, onMounted, ref, watch } from 'vue'\n\nconst DATA_POINTS = [10, 25, 18, 40, 32, 60, 48, 75]\n\n// A canvas has no CSS direction, so the drawing code reads it from the provider.\nconst Sparkline = defineComponent(() => {\n  const direction = useLocaleDirection()\n  const { token } = useTheme()\n  const canvas = ref<HTMLCanvasElement | null>(null)\n\n  function draw(): void {\n    const context = canvas.value?.getContext('2d')\n    if (!canvas.value || !context)\n      return\n    const { width, height } = canvas.value\n    const isRtl = direction.value === 'rtl'\n    const step = width / (DATA_POINTS.length - 1)\n    const max = Math.max(...DATA_POINTS)\n    const min = Math.min(...DATA_POINTS)\n    const yOf = (value: number): number => height - ((value - min) / (max - min || 1)) * (height - 10) - 5\n    const color = token('--color-accent') || 'currentColor'\n\n    context.clearRect(0, 0, width, height)\n    context.beginPath()\n    context.strokeStyle = color\n    context.lineWidth = 2\n    // Oldest point at the start edge, newest at the end edge.\n    DATA_POINTS.forEach((value, index) => {\n      const x = isRtl ? width - index * step : index * step\n      if (index === 0)\n        context.moveTo(x, yOf(value))\n      else\n        context.lineTo(x, yOf(value))\n    })\n    context.stroke()\n\n    context.beginPath()\n    context.arc(isRtl ? 0 : width, yOf(DATA_POINTS.at(-1)!), 4, 0, Math.PI * 2)\n    context.fillStyle = color\n    context.fill()\n  }\n\n  onMounted(draw)\n  watch(direction, draw)\n\n  return () => h('canvas', {\n    'ref': canvas,\n    'width': 200,\n    'height': 60,\n    'data-direction': direction.value,\n    'style': 'border: 1px solid var(--color-border, #e1e4e8); border-radius: 4px',\n  })\n})\n\nconst lang = ref<'en' | 'ar'>('en')\n</script>\n\n<template>\n  <InternationalizationProvider :locale=\"lang\" :dir=\"lang === 'ar' ? 'rtl' : 'ltr'\">\n    <VStack :gap=\"4\" h-align=\"center\" :dir=\"lang === 'ar' ? 'rtl' : 'ltr'\" width=\"100%\">\n      <SegmentedControl v-model=\"lang\" label=\"Locale\" size=\"sm\">\n        <SegmentedControlItem value=\"en\" label=\"English (LTR)\" />\n        <SegmentedControlItem value=\"ar\" label=\"العربية (RTL)\" />\n      </SegmentedControl>\n      <Sparkline />\n    </VStack>\n  </InternationalizationProvider>\n</template>"
         }
       ],
       "anatomy": {
@@ -82576,7 +82565,19 @@
           }
         ]
       },
-      "examples": [],
+      "examples": [
+        {
+          "title": {
+            "en": "useLocaleDirection — Live Sparkline",
+            "zh": "useLocaleDirection —— 实时迷你折线"
+          },
+          "description": {
+            "en": "A canvas sparkline reads the writing direction with useLocaleDirection, because a canvas does not follow CSS direction. Switch the locale to Arabic and the oldest point moves to the right edge, with the latest value on the left.",
+            "zh": "canvas 不跟随 CSS 的书写方向，所以这条迷你折线用 useLocaleDirection 读出方向再画。切到阿拉伯语后，最早的点挪到右边，最新的值在左边。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { InternationalizationProvider, useLocaleDirection } from '@astryx-vue/core/InternationalizationProvider'\nimport { SegmentedControl, SegmentedControlItem } from '@astryx-vue/core/SegmentedControl'\nimport { VStack } from '@astryx-vue/core/Stack'\nimport { useTheme } from '@astryx-vue/core/Theme'\nimport { defineComponent, h, onMounted, ref, watch } from 'vue'\n\nconst DATA_POINTS = [10, 25, 18, 40, 32, 60, 48, 75]\n\n// A canvas has no CSS direction, so the drawing code reads it from the provider.\nconst Sparkline = defineComponent(() => {\n  const direction = useLocaleDirection()\n  const { token } = useTheme()\n  const canvas = ref<HTMLCanvasElement | null>(null)\n\n  function draw(): void {\n    const context = canvas.value?.getContext('2d')\n    if (!canvas.value || !context)\n      return\n    const { width, height } = canvas.value\n    const isRtl = direction.value === 'rtl'\n    const step = width / (DATA_POINTS.length - 1)\n    const max = Math.max(...DATA_POINTS)\n    const min = Math.min(...DATA_POINTS)\n    const yOf = (value: number): number => height - ((value - min) / (max - min || 1)) * (height - 10) - 5\n    const color = token('--color-accent') || 'currentColor'\n\n    context.clearRect(0, 0, width, height)\n    context.beginPath()\n    context.strokeStyle = color\n    context.lineWidth = 2\n    // Oldest point at the start edge, newest at the end edge.\n    DATA_POINTS.forEach((value, index) => {\n      const x = isRtl ? width - index * step : index * step\n      if (index === 0)\n        context.moveTo(x, yOf(value))\n      else\n        context.lineTo(x, yOf(value))\n    })\n    context.stroke()\n\n    context.beginPath()\n    context.arc(isRtl ? 0 : width, yOf(DATA_POINTS.at(-1)!), 4, 0, Math.PI * 2)\n    context.fillStyle = color\n    context.fill()\n  }\n\n  onMounted(draw)\n  watch(direction, draw)\n\n  return () => h('canvas', {\n    'ref': canvas,\n    'width': 200,\n    'height': 60,\n    'data-direction': direction.value,\n    'style': 'border: 1px solid var(--color-border, #e1e4e8); border-radius: 4px',\n  })\n})\n\nconst lang = ref<'en' | 'ar'>('en')\n</script>\n\n<template>\n  <InternationalizationProvider :locale=\"lang\" :dir=\"lang === 'ar' ? 'rtl' : 'ltr'\">\n    <VStack :gap=\"4\" h-align=\"center\" :dir=\"lang === 'ar' ? 'rtl' : 'ltr'\" width=\"100%\">\n      <SegmentedControl v-model=\"lang\" label=\"Locale\" size=\"sm\">\n        <SegmentedControlItem value=\"en\" label=\"English (LTR)\" />\n        <SegmentedControlItem value=\"ar\" label=\"العربية (RTL)\" />\n      </SegmentedControl>\n      <Sparkline />\n    </VStack>\n  </InternationalizationProvider>\n</template>"
+        }
+      ],
       "anatomy": {
         "en": [],
         "zh": []
@@ -83765,6 +83766,94 @@
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/components/use-truncation",
         "zh": "https://astryx-vue.pages.dev/components/use-truncation"
+      }
+    },
+    {
+      "slug": "use-combobox",
+      "name": "UseCombobox",
+      "package": "@astryx-vue/core",
+      "kind": "composable",
+      "title": {
+        "en": "useCombobox",
+        "zh": "useCombobox"
+      },
+      "group": "Utility",
+      "groupTitle": {
+        "en": "Utility",
+        "zh": "工具"
+      },
+      "importPath": null,
+      "exportName": null,
+      "summary": {
+        "en": "Holds the interaction logic of a combobox: the open state, a highlighted option, search filtering, and keyboard navigation. It renders nothing, so you bring the input and the list. Disabled options are skipped when the highlight moves, and the list opens on the current value.",
+        "zh": "组合框的交互逻辑：展开状态、高亮的选项、搜索过滤和键盘导航。它不渲染任何东西，输入框和列表由你自己写。高亮移动时会跳过禁用项，打开时会停在当前选中的值上。"
+      },
+      "usage": {
+        "en": "Holds the interaction logic of a combobox: the open state, a highlighted option, search filtering, and keyboard navigation. It renders nothing, so you bring the input and the list. Disabled options are skipped when the highlight moves, and the list opens on the current value.\n\n```ts\nimport { useCombobox } from '@astryx-vue/core'\n```\n\nPass the options and the current value as refs, then bind `onKeyDown` to the input and render `filteredOptions`. Use `activeIndex` for `aria-activedescendant`, and call `select(value)` when an option is chosen. Selecting closes the list and clears the search.",
+        "zh": "组合框的交互逻辑：展开状态、高亮的选项、搜索过滤和键盘导航。它不渲染任何东西，输入框和列表由你自己写。高亮移动时会跳过禁用项，打开时会停在当前选中的值上。\n\n```ts\nimport { useCombobox } from '@astryx-vue/core'\n```\n\n把选项和当前值作为 ref 传进去，再把 `onKeyDown` 绑到输入框上，用 `filteredOptions` 渲染列表。`activeIndex` 用来填 `aria-activedescendant`，选中某项时调用 `select(value)`；选中后列表会关闭，搜索词也会清空。"
+      },
+      "practices": {
+        "en": [
+          {
+            "guidance": "Do",
+            "text": "Give the input `role=\"combobox\"`, `aria-expanded`, and `aria-activedescendant`, and give the list `role=\"listbox\"` with `role=\"option\"` rows."
+          },
+          {
+            "guidance": "Do",
+            "text": "Select on `mousedown` with `preventDefault`, so the input keeps focus and its blur handler does not close the list first."
+          },
+          {
+            "guidance": "Don't",
+            "text": "Rebuild the keyboard handling by hand. `onKeyDown` already covers arrows, Home, End, Enter, Escape, and type-to-jump."
+          }
+        ],
+        "zh": []
+      },
+      "props": {
+        "en": [],
+        "zh": []
+      },
+      "slots": {
+        "en": [],
+        "zh": []
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [],
+        "zh": [
+          {
+            "heading": "建议",
+            "text": "- 推荐: 输入框加 `role=\"combobox\"`、`aria-expanded` 和 `aria-activedescendant`，列表加 `role=\"listbox\"`，每行用 `role=\"option\"`。\n- 推荐: 在 `mousedown` 里选中并 `preventDefault`，输入框才不会失焦，blur 处理也不会抢在选中前把列表关掉。\n- 避免: 自己重写键盘处理。`onKeyDown` 已经覆盖方向键、Home、End、Enter、Escape 和按字母跳转。"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": {
+            "en": "useCombobox — Assign-to Field",
+            "zh": "useCombobox — 指派给字段"
+          },
+          "description": {
+            "en": "An assign-to field built on useCombobox: typing filters the people, the arrow keys skip the disabled name, and Enter assigns the highlighted person.",
+            "zh": "用 useCombobox 做的「指派给」字段：输入会过滤人名，方向键会跳过被禁用的名字，按 Enter 指派高亮的那个人。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport type { ComboboxOption } from '@astryx-vue/core'\nimport { useCombobox } from '@astryx-vue/core'\nimport { Card } from '@astryx-vue/core/Card'\nimport { computed, ref } from 'vue'\n\nconst PEOPLE: ComboboxOption[] = [\n  { value: 'ana', label: 'Ana Ortiz' },\n  { value: 'bo', label: 'Bo Lindqvist' },\n  { value: 'chen', label: 'Chen Wei' },\n  { value: 'dara', label: 'Dara Okafor', disabled: true },\n  { value: 'eli', label: 'Eli Katz' },\n]\n\nconst assignee = ref<string | number | null>(null)\nconst isSearchable = ref(true)\nconst options = ref(PEOPLE)\n\nconst combobox = useCombobox({\n  options,\n  modelValue: assignee,\n  isSearchable,\n  onChange: (value) => {\n    assignee.value = value\n  },\n})\n\nconst assigneeLabel = computed(() => PEOPLE.find(person => person.value === assignee.value)?.label ?? '')\nconst inputValue = computed(() => (combobox.isOpen.value ? combobox.searchQuery.value : assigneeLabel.value))\nconst activeId = computed(() => (combobox.isOpen.value && combobox.activeIndex.value >= 0 ? `assign-to-${combobox.activeIndex.value}` : undefined))\n\nfunction onInput(event: Event): void {\n  if (!combobox.isOpen.value)\n    combobox.open()\n  combobox.setSearchQuery((event.target as HTMLInputElement).value)\n}\n</script>\n\n<template>\n  <Card :width=\"320\" :padding=\"4\">\n    <div class=\"assign-to\">\n      <label class=\"assign-to__label\" for=\"assign-to-input\">Assign to</label>\n      <input\n        id=\"assign-to-input\"\n        class=\"assign-to__input\"\n        role=\"combobox\"\n        aria-controls=\"assign-to-list\"\n        aria-autocomplete=\"list\"\n        :aria-expanded=\"combobox.isOpen.value\"\n        :aria-activedescendant=\"activeId\"\n        autocomplete=\"off\"\n        placeholder=\"Search people\"\n        :value=\"inputValue\"\n        @click=\"combobox.open()\"\n        @input=\"onInput\"\n        @keydown=\"combobox.onKeyDown\"\n        @blur=\"combobox.close()\"\n      >\n      <ul v-if=\"combobox.isOpen.value\" id=\"assign-to-list\" class=\"assign-to__list\" role=\"listbox\" aria-label=\"People\">\n        <li\n          v-for=\"(option, index) in combobox.filteredOptions.value\"\n          :id=\"`assign-to-${index}`\"\n          :key=\"option.value\"\n          class=\"assign-to__option\"\n          role=\"option\"\n          :aria-selected=\"option.value === assignee\"\n          :aria-disabled=\"option.disabled || undefined\"\n          :data-active=\"index === combobox.activeIndex.value || undefined\"\n          @mousedown.prevent=\"!option.disabled && combobox.select(option.value)\"\n        >\n          {{ option.label }}\n        </li>\n        <li v-if=\"combobox.filteredOptions.value.length === 0\" class=\"assign-to__empty\">\n          No matches\n        </li>\n      </ul>\n    </div>\n  </Card>\n</template>\n\n<style scoped>\n.assign-to {\n  position: relative;\n  display: flex;\n  flex-direction: column;\n  gap: var(--astryx-spacing-1, 4px);\n}\n\n.assign-to__label {\n  font: var(--astryx-typography-label, inherit);\n  color: var(--astryx-color-text-secondary, inherit);\n}\n\n.assign-to__input {\n  box-sizing: border-box;\n  height: 36px;\n  padding: 0 var(--astryx-spacing-3, 12px);\n  font: inherit;\n  color: var(--astryx-color-text, inherit);\n  background: var(--astryx-color-surface, transparent);\n  border: 1px solid var(--astryx-color-border, currentColor);\n  border-radius: var(--astryx-radius-md, 8px);\n}\n\n.assign-to__list {\n  position: absolute;\n  inset-inline: 0;\n  top: 100%;\n  z-index: 1;\n  margin: var(--astryx-spacing-1, 4px) 0 0;\n  padding: var(--astryx-spacing-1, 4px);\n  list-style: none;\n  background: var(--astryx-color-surface, canvas);\n  border: 1px solid var(--astryx-color-border, currentColor);\n  border-radius: var(--astryx-radius-md, 8px);\n}\n\n.assign-to__option,\n.assign-to__empty {\n  padding: var(--astryx-spacing-2, 8px);\n  border-radius: var(--astryx-radius-sm, 6px);\n}\n\n.assign-to__option[data-active] {\n  background: var(--astryx-color-surface-hover, rgb(128 128 128 / 20%));\n}\n\n.assign-to__option[aria-selected='true'] {\n  font-weight: 600;\n}\n\n.assign-to__option[aria-disabled='true'] {\n  opacity: 0.5;\n}\n\n.assign-to__empty {\n  color: var(--astryx-color-text-secondary, inherit);\n}\n</style>"
+        }
+      ],
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/use-combobox",
+        "zh": "https://astryx-vue.pages.dev/components/use-combobox"
       }
     }
   ],

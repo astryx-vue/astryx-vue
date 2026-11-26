@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useLocaleDirectionSparkline } from '../../../../components/demos/use-locale-direction'
 </script>
 
 ## Usage
@@ -38,3 +39,14 @@ function drawSparkline(context: CanvasRenderingContext2D, values: number[], widt
 | <Badge variant="success">Do</Badge> | Prefer CSS logical properties and directional CSS mirroring before using `useLocaleDirection`. |
 | <Badge variant="success">Do</Badge> | Use it when drawing on a canvas or calculating non-CSS layout coordinates where the start edge depends on text direction. |
 | <Badge variant="error">Don't</Badge> | Use it to swap margins, paddings, or inline alignment that CSS logical properties already handle. |
+
+## Examples
+
+Common configurations, variations, and states.
+
+<DemoExample
+  :demo="useLocaleDirectionSparkline"
+  description="A canvas sparkline reads the writing direction with useLocaleDirection, because a canvas does not follow CSS direction. Switch the locale to Arabic and the oldest point moves to the right edge, with the latest value on the left."
+  locale="en"
+  title="useLocaleDirection — Live Sparkline"
+/>
