@@ -4,7 +4,11 @@ title: SVGIcon
 
 # SVGIcon
 
-Renders layered SVG definitions with variants, semantic colors, and optical stroke compensation. Unlike core's Iconify integration, this component exposes per-shape variant control.
+Renders layered SVG definitions with variants, semantic colors, and optical stroke compensation.
+
+::: tip Use Icon for everyday icons
+For regular interface icons, use core's [Icon](/en/components/icon) (the Iconify approach, see the [icons guide](/en/guide/icons)). SVGIcon is only needed when one shape must switch between variants such as linear, bold, and twotone, and the shape has to be written as an `SVGIconDef` that marks each path's role.
+:::
 
 <script setup lang="ts">
 import { labSvgIcon } from '../../../../components/lab-demos'
@@ -18,7 +22,7 @@ import { labSvgIcon } from '../../../../components/lab-demos'
 import { homeIcon, SVGIcon } from '@astryx-vue/lab'
 ```
 
-The package includes `starterIcons` and definitions such as `bellIcon` and `homeIcon`; custom `SVGIconDef` objects are also supported.
+The 16 shapes such as `homeIcon` and `bellIcon` (collected as `starterIcons`) are samples of this layered format, not a full icon set; pass your own `SVGIconDef` in real use.
 
 ## Props
 

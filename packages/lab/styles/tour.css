@@ -18,6 +18,12 @@
     line-height: var(--astryx-text-body-leading, 1.4286);
   }
 
+  /* 还没对齐到目标时不显示；用透明而不是隐藏，焦点照样能落进来。 */
+  .astryx-tour-callout.is-placing {
+    opacity: 0;
+    pointer-events: none;
+  }
+
   /* 步骤开始时说明框拿到焦点，键盘操作下显示焦点环。 */
   .astryx-tour-callout:focus {
     outline: none;

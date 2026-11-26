@@ -40,6 +40,8 @@ const layer = useLayer({
   isDefaultOpen: true,
 })
 const region = layer.contentRef
+// 高亮框量好、说明框按它算好位置之前，说明框还停在 (0, 0)，先透明着，免得闪到左上角。
+const isPlaced = shallowRef(false)
 
 // Escape 走共享的浮层关闭栈，只打最上面一层。
 useDismiss({
@@ -76,12 +78,17 @@ function stopMeasuring(): void {
 
 watch([isActiveStep, target], async ([active]) => {
   stopMeasuring()
+  isPlaced.value = false
   if (!active || tour == null) {
     rect.value = null
     return
   }
   await nextTick()
   measure()
+  // 等高亮框按新尺寸渲染好，再让说明框立刻对齐它。
+  await nextTick()
+  layer.reposition()
+  isPlaced.value = rect.value != null
   window.addEventListener('scroll', measure, true)
   window.addEventListener('resize', measure)
 }, { immediate: true, flush: 'post' })
@@ -145,6 +152,7 @@ onBeforeUnmount(() => {
         :id="layer.id"
         ref="region"
         class="astryx-tour-callout"
+        :class="{ 'is-placing': !isPlaced }"
         :data-placement="layer.resolvedPlacement.value"
         :style="layer.contentStyle.value"
         :aria-labelledby="headingId"
