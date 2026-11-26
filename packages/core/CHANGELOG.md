@@ -1,5 +1,15 @@
 # @astryx-vue/core
 
+## 0.16.0
+
+### Minor Changes
+
+- [#550](https://github.com/astryx-vue/astryx-vue/pull/550) [`d27092a`](https://github.com/astryx-vue/astryx-vue/commit/d27092a9f35a07901650fe9100b60dbdadbf86f4) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 读屏播报：同一帧里播报的多条消息按顺序连在一起念，一模一样的重复只念一次，空消息连同还没念的一起清掉；`useAnnounce` 新增 `hasReplace` 选项，让每次按键都重说一遍的状态（MultiSelector、CommandPalette 的搜索状态）只念最新一条；Selector、MultiSelector 的结果播报会收回还没念出去的「加载中」，TextInput、TextArea 的加载圈改为装饰、忙碌由输入框自己念一次；原生模态对话框打开时，播报写进那个对话框自己的区域；EmptyState 的根不再是 live 区域，页面加载后才出现或文字之后变了才播报一次。复制：`useClipboard` 新增 `isFailed`、`announceFailure`、`onError`，CodeBlock 新增 `copyFailedLabel` 和 `copyError` 事件，复制失败时按钮变叉并用 assertive 播报，Timestamp、评论链接和富文本代码块同样；`useOverflow` 新增 `gapToken`、`renderedGap`、`inlineBounds`。其余：可滚动的 LayoutContent、LayoutPanel、StackItem 溢出时是有名字的 group，AppShell 的 `fill` 主区域溢出时成为键盘停靠点；锁滚动在触屏上取消没人接的单指拖动并关掉页面回弹；TreeList 收起时焦点回到行；Selector、MultiSelector 键盘移到的高亮选项画焦点环；强制配色下聚焦的菜单行可见；`useImageMode` 在区域数值变化时重新采样；Calendar 今天在接管服务端 HTML 之后才读，服务端和浏览器不同日期也不再对不上；`useMediaQuery` 每条查询只挂一个监听。
+
+### Patch Changes
+
+- [#548](https://github.com/astryx-vue/astryx-vue/pull/548) [`9f4cd31`](https://github.com/astryx-vue/astryx-vue/commit/9f4cd3181d8e390437b3f23b766525e3395d0c22) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 焦点陷阱（Dialog、Popover、BottomSheet、MobileNav 和 `useFocusTrap`）按 Tab 更像浏览器：同名单选组只算一站，关着的 `<dialog>` 里的控件不算，嵌套时最里层接 Tab，Ctrl/Meta+Tab 留给浏览器，自己处理 Tab 的控件不被抢焦点，传送进 iframe 也能用；Popover 打开时焦点按文档顺序落在第一个可用控件上，跳过 `aria-disabled` 的；菜单里被指针点亮的行不再画键盘焦点环，shadow root 里的菜单也能按松手位置选行，手指松开选中一行后只取消它自己的 touchend，不会在慢页面上让迟到的 click 点中新出现的行；NavMenu、NavHeadingMenu 和 TabMenu 的选项支持按住滑过再松开选中；ContextMenu 和菜单触发器的长按按触摸事件自己的时钟计时，页面忙时晚到的触摸不会丢长按；子菜单关掉后不会被过期的悬停计时重新打开；`useEntryAnimation` 接管服务端 HTML 时不再对不上；复制在不允许异步剪贴板的框架里改用浏览器的复制命令。Calendar 按住 Shift 用 PageUp/PageDown 按年翻；SegmentedControl 禁用时仍保留选中分段的 Tab 停靠点，禁用原因同时描述每个分段；滚动区只靠盒子几何更新两头位置，祖先拖动 transform 时不再每帧重新测量；OverflowList 按主题实际排出的间距折叠，Toolbar 首部直接放 OverflowList 时会折叠给尾部让位。
+
 ## 0.15.0
 
 ### Minor Changes
