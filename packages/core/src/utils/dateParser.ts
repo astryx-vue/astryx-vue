@@ -19,6 +19,9 @@ export function isLocaleDayFirst(locale: string = 'en'): boolean {
   return dayIndex < monthIndex
 }
 
+const LETTER_FREE = /^\P{L}+$/u
+const YEAR_FIRST = /^\d{4}[^\p{L}\d]/u
+
 /**
  * Parses user input into a PlainDate.
  *
@@ -123,6 +126,18 @@ export function parseDateInput(
   // resolves to 0 — produces an out-of-range date that throws downstream.
   // Treat them as not-yet-a-valid-date instead.
   if (/^\d+$/.test(trimmed)) {
+    return null
+  }
+
+  // In a day-first locale, letter-free text that no form above matched is not
+  // a date: native `Date` reads `a/b/c` month first and accepts a year of one
+  // to three digits, so "12/01/2" would give a wrong date. A four-digit year
+  // written first is not ambiguous.
+  if (
+    isLocaleDayFirst(locale)
+    && LETTER_FREE.test(trimmed)
+    && !YEAR_FIRST.test(trimmed)
+  ) {
     return null
   }
 

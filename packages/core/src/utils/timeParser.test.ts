@@ -2,7 +2,9 @@ import type { ISOTimeString } from './timeParser.js'
 import { describe, expect, it } from 'vitest'
 import {
   adjustTime,
+  clampTime,
   compareTime,
+  createISOTimeString,
   formatDisplayTime12h,
   formatDisplayTime24h,
   formatISOTime,
@@ -278,5 +280,61 @@ describe('adjustTime whole minutes', () => {
     // `deltaMinutes` 是分钟数；小数写不回 `HH:MM`，原样返回而不是产出 "30.5"。
     expect(adjustTime('10:30' as ISOTimeString, 0.5)).toBe('10:30')
     expect(adjustTime('10:30:45' as ISOTimeString, -0.5, true)).toBe('10:30:45')
+  })
+})
+
+describe('createISOTimeString', () => {
+  it('normalizes a valid time', () => {
+    expect(createISOTimeString('14:30')).toBe('14:30')
+    expect(createISOTimeString('9:05')).toBe('09:05')
+    expect(createISOTimeString('14:30:45')).toBe('14:30:45')
+  })
+
+  it('accepts surrounding whitespace and drops a seconds fraction', () => {
+    expect(createISOTimeString(' 14:30 ')).toBe('14:30')
+    expect(createISOTimeString('14:30:15.250')).toBe('14:30:15')
+  })
+
+  it('rejects a 12-hour time instead of reading it 12 hours off', () => {
+    expect(createISOTimeString('2:30 PM')).toBeNull()
+    expect(createISOTimeString('2:30pm')).toBeNull()
+  })
+
+  it('rejects a field with anything but one or two digits', () => {
+    for (const text of ['14:30abc', '14.9:30', '1e1:30', '14:30:00Z', '14:30.5', '014:30']) {
+      expect(createISOTimeString(text)).toBeNull()
+    }
+  })
+
+  it('answers null for a value that is not a string, or out of range', () => {
+    expect(createISOTimeString(undefined as unknown as string)).toBeNull()
+    expect(createISOTimeString(null as unknown as string)).toBeNull()
+    expect(createISOTimeString('24:00')).toBeNull()
+    expect(createISOTimeString('14:60')).toBeNull()
+  })
+})
+
+describe('clampTime', () => {
+  const t = (value: string) => value as ISOTimeString
+
+  it('brings a time outside the bounds onto the bound', () => {
+    expect(clampTime(t('08:00'), t('09:00'))).toBe('09:00')
+    expect(clampTime(t('18:00'), undefined, t('17:00'))).toBe('17:00')
+    expect(clampTime(t('12:00'), t('09:00'), t('17:00'))).toBe('12:00')
+  })
+
+  it('keeps a bound with seconds when the time shows seconds', () => {
+    expect(clampTime(t('08:00:00'), t('09:00:30'), undefined, true)).toBe('09:00:30')
+  })
+
+  it('without seconds, gives the nearest whole minute inside a bound between minutes', () => {
+    expect(clampTime(t('08:00'), t('09:00:30'))).toBe('09:01')
+    expect(clampTime(t('18:00'), undefined, t('17:00:30'))).toBe('17:00')
+  })
+
+  it('keeps the bound itself when no whole minute lies inside the range', () => {
+    expect(clampTime(t('12:00'), t('23:59:30'))).toBe('23:59:30')
+    expect(clampTime(t('09:00:00'), t('10:00:10'), t('10:00:40'))).toBe('10:00:10')
+    expect(clampTime(t('23:59'), t('08:00:10'), t('08:00:30'))).toBe('08:00:30')
   })
 })
