@@ -1350,6 +1350,7 @@
 - [x] [`e423ffac5`](https://github.com/meta/astryx/commit/e423ffac5) test(cli): integration check's test warms its checks up once (#10074)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`ceefccdfc`](https://github.com/meta/astryx/commit/ceefccdfc) feat(core): the animator's springs follow the theme's tempo (#8677)
+  - 暂缓：内核部分已在 #563-#568；剩 Switch 触屏手势 useSwitchTouch、CLI 主题模板，归动效与手势引擎的组件接入阶段
 - [ ] [`98efdf183`](https://github.com/meta/astryx/commit/98efdf183) feat(Icon): a theme maps a component's own icon role by slot, starting with CodeBlock's copy button (#9828)
 - [x] [`7fb5cab36`](https://github.com/meta/astryx/commit/7fb5cab36) feat(cli): built themes keep componentIcons slot functions (#9829)
   - 不适用：上游 theme build 把 StyleX defineTheme 的 TS 主题模块编译成 CSS/JS；我们的主题是现成 CSS，CLI 的 theme 只打印接入文档，没有构建步骤
@@ -2858,6 +2859,7 @@
   - 已移植：[#546](https://github.com/astryx-vue/astryx-vue/pull/546)。日历在对话框里被点遮罩关掉时只关日历，对话框留着，补测试
 - [ ] [`c26fcd543`](https://github.com/meta/astryx/commit/c26fcd543) chore(lab): Lab's animator hook, over Core's internal touch entry (#9754)
   - 暂缓：要还原上游动效，归动效与手势引擎任务
+  - 暂缓：内核部分已在 #563-#568；剩 DateInput 滚轮、SegmentedControl、Slider、Switch 触屏控制器与 lab RefreshControl 的动效接入，归动效与手势引擎的组件接入阶段
 - [x] [`257573b22`](https://github.com/meta/astryx/commit/257573b22) docs(AST-094, AST-057): motion guidance; gesture springs; swipe-row returns (#9915)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`3b8d81fd0`](https://github.com/meta/astryx/commit/3b8d81fd0) spec: record component icon slots in CodeBlock, Timestamp, and Table (#10045)
@@ -2867,6 +2869,7 @@
 - [ ] [`17e36e748`](https://github.com/meta/astryx/commit/17e36e748) fix(DateTimeInput): a press's deferred-click watchers leave with the field (#10155)
 - [ ] [`ab7facf1e`](https://github.com/meta/astryx/commit/ab7facf1e) fix(core): spring roles register themselves when they load (#10138)
   - 暂缓：要还原上游动效，归动效与手势引擎任务
+  - 暂缓：内核部分已在 #563-#568；剩 DateInput PickerWheel 与 SegmentedControl 选中动效，归动效与手势引擎的组件接入阶段
 
 ### v0.7.10
 
@@ -4146,29 +4149,35 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`e36bd2e15`](https://github.com/meta/astryx/commit/e36bd2e15) spec(useMenuPress): a finger opens a sub-menu by lifting, and a handed-off finger is the opening press (DEC-8) (#8451)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`4abbc5265`](https://github.com/meta/astryx/commit/4abbc5265) chore(core): the UIKit constants table for touch presentations (#8053)
+- [x] [`4abbc5265`](https://github.com/meta/astryx/commit/4abbc5265) chore(core): the UIKit constants table for touch presentations (#8053)
   - 暂缓：依赖 UIKit 动效数值表与动效角色（motion/uikit），Vue 版没有这套设施
+  - 已移植：[#563](https://github.com/astryx-vue/astryx-vue/pull/563)。UIKit 触控动效常量表
 - [x] [`e1deabdfe`](https://github.com/meta/astryx/commit/e1deabdfe) spec(AST-094): a held finger does what the hold does, not a selection (FR41, DEC-9) (#8454)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`16770e300`](https://github.com/meta/astryx/commit/16770e300) perf(core): one export per UIKit gesture group (#8468)
+- [x] [`16770e300`](https://github.com/meta/astryx/commit/16770e300) perf(core): one export per UIKit gesture group (#8468)
   - 暂缓：依赖触屏手势与动画器基础设施（GestureArena、PressTracker、animator），Vue 版没有
+  - 已移植：[#563](https://github.com/astryx-vue/astryx-vue/pull/563)。每组 UIKit 手势常量单独导出
 - [ ] [`d8ffb8f09`](https://github.com/meta/astryx/commit/d8ffb8f09) feat(core): gesture recognizer core — UIKit's state machine and the arena (#8058)
-- [ ] [`b58ca635e`](https://github.com/meta/astryx/commit/b58ca635e) chore(core): UIKit's spring, decay, rubber-band and projection math (#8054)
+- [x] [`b58ca635e`](https://github.com/meta/astryx/commit/b58ca635e) chore(core): UIKit's spring, decay, rubber-band and projection math (#8054)
   - 暂缓：依赖 UIKit 动效数值表与动效角色（motion/uikit），Vue 版没有这套设施
+  - 已移植：[#563](https://github.com/astryx-vue/astryx-vue/pull/563)。UIKit 弹簧、惯性、橡皮筋和投射数学
 - [ ] [`19a7a463c`](https://github.com/meta/astryx/commit/19a7a463c) feat(core): tap and long-press recognizers with UIKit's measured thresholds (#8059)
 - [ ] [`cd4aca645`](https://github.com/meta/astryx/commit/cd4aca645) feat(core): pan gesture recognizer with UIKit's hysteresis and velocity (#8060)
 - [x] [`822e36423`](https://github.com/meta/astryx/commit/822e36423) spec(AST-094): touch motion roles stay internal until the public set is decided (#8488)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`3ab7f32db`](https://github.com/meta/astryx/commit/3ab7f32db) docs(core): the scroll-to-top note says what Reduce Motion does with a tap-started decay (#8494)
+- [x] [`3ab7f32db`](https://github.com/meta/astryx/commit/3ab7f32db) docs(core): the scroll-to-top note says what Reduce Motion does with a tap-started decay (#8494)
   - 暂缓：依赖动画器（animator）与主题时序/节奏的动效基础设施，Vue 版没有
-- [ ] [`61480b5c2`](https://github.com/meta/astryx/commit/61480b5c2) chore(core): the touch motion tables register FR4's roles as internal motion roles (#8257)
+  - 已移植：[#563](https://github.com/astryx-vue/astryx-vue/pull/563)。回到顶部惯性在减少动效下的说明注释
+- [x] [`61480b5c2`](https://github.com/meta/astryx/commit/61480b5c2) chore(core): the touch motion tables register FR4's roles as internal motion roles (#8257)
   - 暂缓：依赖 UIKit 动效数值表与动效角色（motion/uikit），Vue 版没有这套设施
+  - 已移植：[#563](https://github.com/astryx-vue/astryx-vue/pull/563)。触控动效表注册 FR4 的内部动效角色
 - [x] [`de3ba5e5c`](https://github.com/meta/astryx/commit/de3ba5e5c) spec(AST-094): a native scroll takes a touch after 10 px; touch-action never widens the author's (DEC-8) (#8453)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`c355ceba8`](https://github.com/meta/astryx/commit/c355ceba8) spec(AST-094): FR15 exempts watchers from recognizer exclusivity (DEC-7) (#8517)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`30a4a2b35`](https://github.com/meta/astryx/commit/30a4a2b35) chore(core): a compositor animator for touch presentations (#8055)
+- [x] [`30a4a2b35`](https://github.com/meta/astryx/commit/30a4a2b35) chore(core): a compositor animator for touch presentations (#8055)
   - 暂缓：依赖动画器（animator）与主题时序/节奏的动效基础设施，Vue 版没有
+  - 已移植：[#567](https://github.com/astryx-vue/astryx-vue/pull/567)。合成线程 Web Animations 动画器
 - [x] [`423aaab8f`](https://github.com/meta/astryx/commit/423aaab8f) spec(AST-105): animated layout; architecture(react-component-runtime): its mechanism (INV12) (#8463)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`f09d08332`](https://github.com/meta/astryx/commit/f09d08332) spec(AST-090): exits ship off, and a theme turns them on for dialogs and layers (#8003)
@@ -4181,12 +4190,14 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`c22cbe2fd`](https://github.com/meta/astryx/commit/c22cbe2fd) fix(core): useAnnounce delivers inside the open Astryx modal that encloses its caller (#8009)
   - 已移植：[#550](https://github.com/astryx-vue/astryx-vue/pull/550)。原生模态对话框打开时，播报写进对话框自己的区域；useBusyAnnouncement 原有的对话框路径并入共用通道，补测试
-- [ ] [`2c4f1728b`](https://github.com/meta/astryx/commit/2c4f1728b) chore(core): the animator plans Reduce Motion in its own module, shares a track per element and starts at the commit (#8056)
+- [x] [`2c4f1728b`](https://github.com/meta/astryx/commit/2c4f1728b) chore(core): the animator plans Reduce Motion in its own module, shares a track per element and starts at the commit (#8056)
   - 暂缓：依赖动画器（animator）与主题时序/节奏的动效基础设施，Vue 版没有
+  - 已移植：[#567](https://github.com/astryx-vue/astryx-vue/pull/567)。Reduce Motion 计划独立模块、每元素共享轨道、提交帧起步
 - [ ] [`7a530ccbf`](https://github.com/meta/astryx/commit/7a530ccbf) chore(core): the internal module for size-change glides (spec:AST-105, INV12) (#8482)
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
-- [ ] [`a00afee50`](https://github.com/meta/astryx/commit/a00afee50) chore(core): the animator plays any closed-form curve (#8521)
+- [x] [`a00afee50`](https://github.com/meta/astryx/commit/a00afee50) chore(core): the animator plays any closed-form curve (#8521)
   - 暂缓：依赖动画器（animator）与主题时序/节奏的动效基础设施，Vue 版没有
+  - 已移植：[#567](https://github.com/astryx-vue/astryx-vue/pull/567)。动画器播放任意闭式曲线
 - [x] [`167a3de8f`](https://github.com/meta/astryx/commit/167a3de8f) feat(core): one tracker for a held finger across any group of targets (#8346)
   - 已移植：[#509](https://github.com/astryx-vue/astryx-vue/pull/509)。一根手指跨一组目标的跟踪已在 internal/actionGroupTracker
 - [x] [`81eeb6afa`](https://github.com/meta/astryx/commit/81eeb6afa) fix(Popover): an open popover no longer pulls in a Tab pressed elsewhere on the page (#8611)
@@ -4211,8 +4222,9 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`7526d11c7`](https://github.com/meta/astryx/commit/7526d11c7) spec(AST-094): the default look grows nothing for touch; 44 px hit areas never overlap a neighbor (FR42) (#8633)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`6aea9bda0`](https://github.com/meta/astryx/commit/6aea9bda0) refactor(motion): one release policy, resolveSnapPoint, on selectSnapPoint (#8663)
+- [x] [`6aea9bda0`](https://github.com/meta/astryx/commit/6aea9bda0) refactor(motion): one release policy, resolveSnapPoint, on selectSnapPoint (#8663)
   - 暂缓：依赖动画器（animator）与主题时序/节奏的动效基础设施，Vue 版没有
+  - 已移植：[#563](https://github.com/astryx-vue/astryx-vue/pull/563)。统一的松手落点策略 resolveSnapPoint
 - [x] [`a73f0304b`](https://github.com/meta/astryx/commit/a73f0304b) spec(Table, AST-105): tables with column lines do not glide yet (FR15) (#8679)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`c01521cf9`](https://github.com/meta/astryx/commit/c01521cf9) spec(AST-094, AST-057): gestures work on the web for every pointer (FR43) (#8646)
@@ -4262,8 +4274,9 @@
 ### v0.7.6
 
 - [ ] [`cf71dcf07`](https://github.com/meta/astryx/commit/cf71dcf07) fix(Dialog): closing returns focus to the opener in a second document (#8381)
-- [ ] [`57d951bd4`](https://github.com/meta/astryx/commit/57d951bd4) chore(core): the animator drives a pseudo-element (#8522)
+- [x] [`57d951bd4`](https://github.com/meta/astryx/commit/57d951bd4) chore(core): the animator drives a pseudo-element (#8522)
   - 暂缓：依赖动画器（animator）与主题时序/节奏的动效基础设施，Vue 版没有
+  - 已移植：[#567](https://github.com/astryx-vue/astryx-vue/pull/567)。动画器驱动伪元素
 - [x] [`257380d6d`](https://github.com/meta/astryx/commit/257380d6d) fix(SideNavHeading, TopNavHeading): one arrow key moves one item in a NavHeadingMenu (#9019)
   - 已移植：[#548](https://github.com/astryx-vue/astryx-vue/pull/548)。useMenuHover 内容区的按键已被菜单自己处理时不再挪第二次焦点，补测试
 - [x] [`560c6664a`](https://github.com/meta/astryx/commit/560c6664a) spec(AST-107): useAnimator takes the element's ref (FR3) (#9084)
@@ -4288,8 +4301,9 @@
 - [ ] [`5dd4d2691`](https://github.com/meta/astryx/commit/5dd4d2691) feat(core): the internal touch foundation: press tracking and the animator (#8076)
   - 暂缓：依赖触屏手势与动画器基础设施（GestureArena、PressTracker、animator），Vue 版没有
 - [ ] [`be4573764`](https://github.com/meta/astryx/commit/be4573764) docs(core): the gesture arena's and host's doc comments sit on their declarations (#9114)
-- [ ] [`9d7cffe4f`](https://github.com/meta/astryx/commit/9d7cffe4f) docs(core): the role test's header and the motion README's files name the internal roles (#8502)
+- [x] [`9d7cffe4f`](https://github.com/meta/astryx/commit/9d7cffe4f) docs(core): the role test's header and the motion README's files name the internal roles (#8502)
   - 暂缓：依赖 UIKit 动效数值表与动效角色（motion/uikit），Vue 版没有这套设施
+  - 已移植：[#563](https://github.com/astryx-vue/astryx-vue/pull/563)。角色测试头注释和 README 文件清单
 - [x] [`37d88c036`](https://github.com/meta/astryx/commit/37d88c036) spec(AST-094): a cancelled moving touch stays with its recognizer (FR19) (#8978)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`932cfb963`](https://github.com/meta/astryx/commit/932cfb963) spec(interaction-modality): wrapper focus rings come from one shared owner module (#9183)
@@ -4316,8 +4330,9 @@
   - 不适用：上游内部重构：删私有选择器、合并重复属性写法，Vue 版没有对应代码
 - [x] [`dae84a757`](https://github.com/meta/astryx/commit/dae84a757) tooling(knowledge): records route the claims of shared concerns a change touches (#9145)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`d29d841f4`](https://github.com/meta/astryx/commit/d29d841f4) fix(core): a retarget before Chromium reports a call's start continues from the screen (#9255)
+- [x] [`d29d841f4`](https://github.com/meta/astryx/commit/d29d841f4) fix(core): a retarget before Chromium reports a call's start continues from the screen (#9255)
   - 暂缓：依赖动画器（animator）与主题时序/节奏的动效基础设施，Vue 版没有
+  - 已移植：[#567](https://github.com/astryx-vue/astryx-vue/pull/567)。Chromium 报告起点前的改目标从屏幕位置继续
 - [x] [`8f345cba4`](https://github.com/meta/astryx/commit/8f345cba4) feat(FieldStatus): deprecate the tooltip variant; field controls keep statusVariant="tooltip" (#9196)
   - 不适用：Vue 的 FieldStatus 只有 attached 和 detached，从来没有 tooltip 变体；字段控件的 statusVariant="tooltip" 已在 #544 保留
 - [x] [`acfa52701`](https://github.com/meta/astryx/commit/acfa52701) fix(useTypeahead): type-to-select ignores accents (#8864)
@@ -4329,8 +4344,9 @@
 - [x] [`8b78da84a`](https://github.com/meta/astryx/commit/8b78da84a) test(core): the inline-end edge reveal's reversal proof reads both sides on the animation's own clock (#9298)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`372a0eae2`](https://github.com/meta/astryx/commit/372a0eae2) fix(SideNav): focus on a row the collapsed rail removes moves to the collapse toggle or the nearest rail row (#9249)
-- [ ] [`70cef4580`](https://github.com/meta/astryx/commit/70cef4580) fix(core): the animator rechecks a finished animation's end in frame callbacks from a frame before it (#9285)
+- [x] [`70cef4580`](https://github.com/meta/astryx/commit/70cef4580) fix(core): the animator rechecks a finished animation's end in frame callbacks from a frame before it (#9285)
   - 暂缓：依赖动画器（animator）与主题时序/节奏的动效基础设施，Vue 版没有
+  - 已移植：[#567](https://github.com/astryx-vue/astryx-vue/pull/567)。帧回调里复查已结束动画的终点
 - [x] [`432d9577d`](https://github.com/meta/astryx/commit/432d9577d) fix(SegmentedControl): a disabled control, or a disabled selected segment, keeps the Tab stop (#9314)
   - 已移植：[#548](https://github.com/astryx-vue/astryx-vue/pull/548)。选中的分段始终拿 Tab 停靠点（禁用也一样），整个控件禁用后仍可聚焦、不再关掉指针，补测试和文档
 - [x] [`8c8f0dac6`](https://github.com/meta/astryx/commit/8c8f0dac6) fix(Collapsible): focus inside closing content moves to the trigger (#9250)
@@ -4350,13 +4366,15 @@
 - [ ] [`134afc4b3`](https://github.com/meta/astryx/commit/134afc4b3) fix(core): one click guard for the menu press model and the gesture host (#8360)
 - [x] [`16b95934f`](https://github.com/meta/astryx/commit/16b95934f) fix(Dialog, Drawer, BottomSheet): an overlay open on the server renders closed until hydration (#9360)
   - Vue 版已有：Dialog 在 onMounted 才 showModal，服务端渲染出来的是关着的；Drawer 就是 Dialog
-- [ ] [`5a4e8fa84`](https://github.com/meta/astryx/commit/5a4e8fa84) fix(core): each animation's end recheck in the animator is its own (#9325)
+- [x] [`5a4e8fa84`](https://github.com/meta/astryx/commit/5a4e8fa84) fix(core): each animation's end recheck in the animator is its own (#9325)
   - 暂缓：依赖动画器（animator）与主题时序/节奏的动效基础设施，Vue 版没有
+  - 已移植：[#567](https://github.com/astryx-vue/astryx-vue/pull/567)。每个动画的终点复查各自独立
 - [ ] [`38398cd22`](https://github.com/meta/astryx/commit/38398cd22) refactor(core): useAttachment moves to hooks/, and useFingerScroll keeps its watch through it (#9414)
 - [x] [`23c8cae98`](https://github.com/meta/astryx/commit/23c8cae98) spec(ContextMenu): touch-opened menus lift with a tint, grow from the finger, and use named springs (#9423)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`8d1864b67`](https://github.com/meta/astryx/commit/8d1864b67) chore(core): the touch motion tables register FR4's context-menu springs as roles (#9432)
+- [x] [`8d1864b67`](https://github.com/meta/astryx/commit/8d1864b67) chore(core): the touch motion tables register FR4's context-menu springs as roles (#9432)
   - 暂缓：依赖 UIKit 动效数值表与动效角色（motion/uikit），Vue 版没有这套设施
+  - 已移植：[#563](https://github.com/astryx-vue/astryx-vue/pull/563)。注册上下文菜单弹簧角色
 - [x] [`99cc6dc85`](https://github.com/meta/astryx/commit/99cc6dc85) fix(core): many components carry only the English for their own strings (#9429)
   - 已移植：[#515](https://github.com/astryx-vue/astryx-vue/pull/515)。组件只按自己的命名空间读内置文案
 - [x] [`30e97b303`](https://github.com/meta/astryx/commit/30e97b303) chore(core): the generated motion role table lists every registered role and the record that names it (#9454)
@@ -4373,15 +4391,18 @@
 
 ### v0.7.7
 
-- [ ] [`4a7a6f21e`](https://github.com/meta/astryx/commit/4a7a6f21e) fix(core): a retarget after a late first frame continues from the screen (#9401)
+- [x] [`4a7a6f21e`](https://github.com/meta/astryx/commit/4a7a6f21e) fix(core): a retarget after a late first frame continues from the screen (#9401)
   - 暂缓：依赖动画器（animator）与主题时序/节奏的动效基础设施，Vue 版没有
+  - 已移植：[#567](https://github.com/astryx-vue/astryx-vue/pull/567)。首帧迟到后的改目标从屏幕位置继续
 - [ ] [`5a455f5fd`](https://github.com/meta/astryx/commit/5a455f5fd) feat(core): a pan follows a trackpad where its owner allows it, never a mouse wheel; a pinch takes a ctrl-wheel (spec:AST-094 FR43) (#8676)
 - [ ] [`723e04539`](https://github.com/meta/astryx/commit/723e04539) feat(Slider): every pointer drags a thumb by its travel, as UISlider does (#8190)
   - 暂缓：Slider 按行程拖动依赖 uikit slider 数值表和触屏手势设施
-- [ ] [`240e8c54a`](https://github.com/meta/astryx/commit/240e8c54a) fix(core): a channel rebuilt after a late first frame carries on from the screen (#9637)
+- [x] [`240e8c54a`](https://github.com/meta/astryx/commit/240e8c54a) fix(core): a channel rebuilt after a late first frame carries on from the screen (#9637)
   - 暂缓：依赖动画器（animator）与主题时序/节奏的动效基础设施，Vue 版没有
-- [ ] [`d1118274b`](https://github.com/meta/astryx/commit/d1118274b) chore(core): UIKit's paging values and math, measured on iOS 26.2 (#8145)
+  - 已移植：[#567](https://github.com/astryx-vue/astryx-vue/pull/567)。首帧迟到后重建的通道从屏幕位置继续
+- [x] [`d1118274b`](https://github.com/meta/astryx/commit/d1118274b) chore(core): UIKit's paging values and math, measured on iOS 26.2 (#8145)
   - 暂缓：依赖 UIKit 动效数值表与动效角色（motion/uikit），Vue 版没有这套设施
+  - 已移植：[#563](https://github.com/astryx-vue/astryx-vue/pull/563)。UIKit 翻页常量与翻页数学
 - [x] [`0d1ddcd4e`](https://github.com/meta/astryx/commit/0d1ddcd4e) fix(harness): a main-thread block reports the span its own loop measured (#9652)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`3b3052a69`](https://github.com/meta/astryx/commit/3b3052a69) feat(ProgressBar): UIProgressView's timing under a finger (#8225)
@@ -4428,8 +4449,9 @@
 
 - [ ] [`30160f5ce`](https://github.com/meta/astryx/commit/30160f5ce) feat(core): PowerSearch touch sheet flow behind experimental.presentation (#8001)
   - 暂缓：PowerSearch 触屏弹层流程：依赖触屏呈现设施，Vue 版没有
-- [ ] [`49ac70d6b`](https://github.com/meta/astryx/commit/49ac70d6b) fix(motion): a call on a settle tail starts at the browser's commit (#9733)
+- [x] [`49ac70d6b`](https://github.com/meta/astryx/commit/49ac70d6b) fix(motion): a call on a settle tail starts at the browser's commit (#9733)
   - 暂缓：依赖动画器（animator）与主题时序/节奏的动效基础设施，Vue 版没有
+  - 已移植：[#567](https://github.com/astryx-vue/astryx-vue/pull/567)。收尾段上的调用在浏览器提交帧起步
 - [ ] [`871bc3d5e`](https://github.com/meta/astryx/commit/871bc3d5e) feat(core): createAnimator and useAnimator animate one element (#8653)
 - [x] [`d43f40785`](https://github.com/meta/astryx/commit/d43f40785) fix(AlertDialog): a press that slides between the actions runs the one it lifts on (#8083)
   - 已移植：[#509](https://github.com/astryx-vue/astryx-vue/pull/509)。AlertDialog 按住滑动，在松手的按钮上执行
@@ -4446,6 +4468,7 @@
   - Vue 版已有：CheckboxInput、Switch、CheckboxList 只由自己的 isRequired 决定 aria-required，不读 FormLayout 的必填默认
 - [ ] [`2c925f794`](https://github.com/meta/astryx/commit/2c925f794) refactor(core): a theme's reduced-motion mark, internal until 'always' ships (#9761)
   - 暂缓：依赖动画器（animator）与主题时序/节奏的动效基础设施，Vue 版没有
+  - 暂缓：内核部分已在 #563-#568；剩 Theme 组件写出减少动效标记（reducedMotionMark 已备好未接），归动效与手势引擎的组件接入阶段
 - [ ] [`19081d81a`](https://github.com/meta/astryx/commit/19081d81a) chore(lab): remove MobileTokenizer and MobilePowerSearch, whose flows Core ships behind experimental.presentation (#9790)
 - [ ] [`bb3838b6f`](https://github.com/meta/astryx/commit/bb3838b6f) fix(AlertDialog): a mouse press on the actions acts natively again (#9771)
 - [x] [`aa4bd1d3d`](https://github.com/meta/astryx/commit/aa4bd1d3d) refactor(core): useLongPress runs its long press through a detector with no React (#9642)
@@ -4544,6 +4567,7 @@
 - [ ] [`8fdf6be37`](https://github.com/meta/astryx/commit/8fdf6be37) fix(BottomSheet): a sheet removed while open returns focus where a close would (#10061)
 - [ ] [`c26fcd543`](https://github.com/meta/astryx/commit/c26fcd543) chore(lab): Lab's animator hook, over Core's internal touch entry (#9754)
   - 暂缓：Lab 的 animator hook 建在核心 createAnimator 上，Vue 版没有
+  - 暂缓：内核部分已在 #563-#568；剩 DateInput 滚轮、SegmentedControl、Slider、Switch 触屏控制器与 lab RefreshControl 的动效接入，归动效与手势引擎的组件接入阶段
 - [x] [`257573b22`](https://github.com/meta/astryx/commit/257573b22) docs(AST-094, AST-057): motion guidance; gesture springs; swipe-row returns (#9915)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`7d6481ef3`](https://github.com/meta/astryx/commit/7d6481ef3) feat(core): createPanGesture and usePanGesture report a drag as values (spec:AST-107 FR1, FR6) (#8655)
@@ -4551,14 +4575,17 @@
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`1dce31829`](https://github.com/meta/astryx/commit/1dce31829) refactor(motion): core's shared theme-timing reader (#10068)
   - 暂缓：依赖动画器（animator）与主题时序/节奏的动效基础设施，Vue 版没有
+  - 暂缓：内核部分已在 #563-#568；剩 SegmentedControl 选中动效，归动效与手势引擎的组件接入阶段
 - [x] [`87ed8d081`](https://github.com/meta/astryx/commit/87ed8d081) fix(cli): swizzle copies the private attribute owner modules a component imports (#10085)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`ecd652301`](https://github.com/meta/astryx/commit/ecd652301) fix(usePanGesture): write the onPan ref at commit (#10090)
 - [ ] [`ceefccdfc`](https://github.com/meta/astryx/commit/ceefccdfc) feat(core): the animator's springs follow the theme's tempo (#8677)
   - 暂缓：依赖动画器（animator）与主题时序/节奏的动效基础设施，Vue 版没有
+  - 暂缓：内核部分已在 #563-#568；剩 Switch 触屏手势 useSwitchTouch、CLI 主题模板，归动效与手势引擎的组件接入阶段
 - [ ] [`df15de7fc`](https://github.com/meta/astryx/commit/df15de7fc) docs(core): open the pan hook pages with a minimal draggable box (#9928)
-- [ ] [`d6c1f340b`](https://github.com/meta/astryx/commit/d6c1f340b) docs(core): a "Motion & gestures" hook category for the motion hooks (#10076)
+- [x] [`d6c1f340b`](https://github.com/meta/astryx/commit/d6c1f340b) docs(core): a "Motion & gestures" hook category for the motion hooks (#10076)
   - 暂缓：要还原上游动效，归动效与手势引擎任务
+  - 已移植：[#568](https://github.com/astryx-vue/astryx-vue/pull/568)。动效 hook 文档（createAnimator / useAnimator）
 - [x] [`b779b269c`](https://github.com/meta/astryx/commit/b779b269c) spec(Carousel): opt-in snap paging through useSnapPaging (#9666)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`5b54b834c`](https://github.com/meta/astryx/commit/5b54b834c) fix(DropdownMenu): on a phone or a tablet, a tap while the menu enters is ignored, as on iOS (#8458)
@@ -4576,6 +4603,7 @@
   - 暂缓：独立 Spinner 改为 progressbar 并统一经共用通道播报：需要逐个梳理把 Spinner 当装饰用的十几个组件（ComplexSelector、TimeField、TypeaheadMenu、CommandPaletteInput 等）并各自接忙碌播报；lab 的 Schedule 部分已在 #532
 - [ ] [`ab7facf1e`](https://github.com/meta/astryx/commit/ab7facf1e) fix(core): spring roles register themselves when they load (#10138)
   - 暂缓：依赖 UIKit 动效数值表与动效角色（motion/uikit），Vue 版没有这套设施
+  - 暂缓：内核部分已在 #563-#568；剩 DateInput PickerWheel 与 SegmentedControl 选中动效，归动效与手势引擎的组件接入阶段
 - [ ] [`5985abc13`](https://github.com/meta/astryx/commit/5985abc13) fix(core): no press scale or card color fade under reduced motion (#8326)
 - [x] [`e8957706b`](https://github.com/meta/astryx/commit/e8957706b) test(core): layout starts read back from the browser allow round-off (#10188)
   - 不适用：只改上游测试（自动初筛）
@@ -4602,6 +4630,7 @@
 - [ ] [`0081c1165`](https://github.com/meta/astryx/commit/0081c1165) feat(lab): under a finger, NavigationStack's bar takes the iOS 26 look (#8396)
 - [ ] [`8bd8c6146`](https://github.com/meta/astryx/commit/8bd8c6146) fix(core): layout glides play the theme's move curve, not a spring (#10236)
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
+  - 暂缓：内核部分已在 #563-#568；剩 AppShell 与 SideNav 侧栏收展动效，归动效与手势引擎的组件接入阶段
 - [x] [`0c168a374`](https://github.com/meta/astryx/commit/0c168a374) feat(Lightbox): touch zoom like the iOS Photos viewer (#8148)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`b8ae86f94`](https://github.com/meta/astryx/commit/b8ae86f94) fix(core): a BottomSheet touch drag's close keeps its speed, and its scrim fades with it (#8105)
@@ -4654,8 +4683,9 @@
 - [x] [`5a6ed906f`](https://github.com/meta/astryx/commit/5a6ed906f) chore(Layer): name the gap a still mouse leaves, exactly (#10317)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`0ad1e8d5e`](https://github.com/meta/astryx/commit/0ad1e8d5e) fix(core): a Tall sheet reads focus inside an open shadow root (#10388)
-- [ ] [`ed0adf308`](https://github.com/meta/astryx/commit/ed0adf308) fix(core): a Reduce Motion landing waits for a held fade (#10378)
+- [x] [`ed0adf308`](https://github.com/meta/astryx/commit/ed0adf308) fix(core): a Reduce Motion landing waits for a held fade (#10378)
   - 暂缓：依赖动画器（animator）与主题时序/节奏的动效基础设施，Vue 版没有
+  - 已移植：[#567](https://github.com/astryx-vue/astryx-vue/pull/567)。Reduce Motion 落位等待保持中的渐变
 - [ ] [`e10347c4e`](https://github.com/meta/astryx/commit/e10347c4e) fix(Button): under a finger, a Button's target grows toward 44 px through the shared touch band (#10216)
 - [x] [`67cf2afad`](https://github.com/meta/astryx/commit/67cf2afad) test(core): the swipe hand-on case reads the offset in the page (#10372)
   - 不适用：只改上游测试（自动初筛）
@@ -4717,8 +4747,9 @@
 - [x] [`9e86adb57`](https://github.com/meta/astryx/commit/9e86adb57) test(core): the edge rides count each phase on its own reads (#10578)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`f543ec7b3`](https://github.com/meta/astryx/commit/f543ec7b3) fix(gestures): read a finger's lift on the clock its moves came on (#10583)
-- [ ] [`7b8dc581a`](https://github.com/meta/astryx/commit/7b8dc581a) fix(core): the calls from rest that one frame commits start at one time (#10584)
+- [x] [`7b8dc581a`](https://github.com/meta/astryx/commit/7b8dc581a) fix(core): the calls from rest that one frame commits start at one time (#10584)
   - 暂缓：依赖动画器（animator）与主题时序/节奏的动效基础设施，Vue 版没有
+  - 已移植：[#567](https://github.com/astryx-vue/astryx-vue/pull/567)。同一帧提交的静止起步调用同时开始
 - [ ] [`dd09d678d`](https://github.com/meta/astryx/commit/dd09d678d) fix(menus): the keys and type-ahead reach a disabled row, which stays inert (#10160)
   - 暂缓：菜单的方向键、Home/End、翻页键和跳转要能走到禁用行（行仍然不可操作）：DropdownMenu、子菜单、ContextMenu、MoreMenu、NavHeadingMenu 各自有一套键盘逻辑和禁用行的 tabindex，要逐套改并重写对应用例，需要单独一个 PR
 - [ ] [`46d181337`](https://github.com/meta/astryx/commit/46d181337) feat(Resizable): a resizable LayoutPanel slides closed and open under every pointer (#9989)
@@ -4745,8 +4776,9 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`f75f0f2d3`](https://github.com/meta/astryx/commit/f75f0f2d3) feat(ToggleButtonGroup): a finger's slide toggles the one it lifts on (#8660)
   - 已移植：[#509](https://github.com/astryx-vue/astryx-vue/pull/509)。ToggleButtonGroup 只切换松手处的成员
-- [ ] [`fb2437f61`](https://github.com/meta/astryx/commit/fb2437f61) fix(Lightbox): the drag to close plays at the theme's tempo (#10630)
+- [x] [`fb2437f61`](https://github.com/meta/astryx/commit/fb2437f61) fix(Lightbox): the drag to close plays at the theme's tempo (#10630)
   - 暂缓：Lightbox 下拉关闭按主题节奏播放，依赖动效角色注册和手势设施
+  - 已移植：[#563](https://github.com/astryx-vue/astryx-vue/pull/563)。Lightbox 下拉关闭按主题 tempo 播放的常量
 - [x] [`db40c6b01`](https://github.com/meta/astryx/commit/db40c6b01) refactor(core): share per-instance warning dedupe and temporary focus targets (#10655)
   - 不适用：上游把 React StrictMode 下的每实例警告去重和临时焦点目标收进共用模块；Vue 的 useDevWarning 已集中，焦点归还已在 internal/focusReturn
 - [x] [`0d7557304`](https://github.com/meta/astryx/commit/0d7557304) feat(Table): add the window controller and Table's shared-geometry runtime (#10657)
@@ -4755,11 +4787,13 @@
 - [ ] [`a60baf519`](https://github.com/meta/astryx/commit/a60baf519) fix(core): ignore a pointerup with no pointerId when no press is held (#10695)
 - [ ] [`a28d586eb`](https://github.com/meta/astryx/commit/a28d586eb) feat(core): createReorderable makes List rows reorderable (#8139)
   - 暂缓：createReorderable 依赖 animatedLayout、animator 和 inertClone 这套动效设施
-- [ ] [`3fb73b3d4`](https://github.com/meta/astryx/commit/3fb73b3d4) fix(core): a spring retarget committed late starts at its frame (#10607)
+- [x] [`3fb73b3d4`](https://github.com/meta/astryx/commit/3fb73b3d4) fix(core): a spring retarget committed late starts at its frame (#10607)
   - 暂缓：依赖动画器（animator）与主题时序/节奏的动效基础设施，Vue 版没有
+  - 已移植：[#567](https://github.com/astryx-vue/astryx-vue/pull/567)。迟到提交的弹簧改目标从它那一帧开始
 - [ ] [`36b8f6ebc`](https://github.com/meta/astryx/commit/36b8f6ebc) feat(lab): TransferList reorders through core's createReorderable (#8143)
-- [ ] [`df4c958ec`](https://github.com/meta/astryx/commit/df4c958ec) perf(core): motions one callback starts read stylesheets in one pass (#10728)
+- [x] [`df4c958ec`](https://github.com/meta/astryx/commit/df4c958ec) perf(core): motions one callback starts read stylesheets in one pass (#10728)
   - 暂缓：依赖动画器（animator）与主题时序/节奏的动效基础设施，Vue 版没有
+  - 已移植：[#567](https://github.com/astryx-vue/astryx-vue/pull/567)。一次回调启动的动效只读一遍样式表
 - [ ] [`6103d36e9`](https://github.com/meta/astryx/commit/6103d36e9) feat(lab): ListInput reorders through core's createReorderable (#8163)
 - [x] [`74cb73c9f`](https://github.com/meta/astryx/commit/74cb73c9f) fix(useScrollableArea): an ancestor's transform no longer measures the scroll area again on every frame of a drag (#10034)
   - 已移植：[#548](https://github.com/astryx-vue/astryx-vue/pull/548)。祖先只改 transform 不再让滚动区每帧重新测量，只有方向、书写模式、显示、可见性变了才重量，补测试
@@ -4824,8 +4858,9 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`256998959`](https://github.com/meta/astryx/commit/256998959) test(SnapPaging): edge-move touches land on the scene's clock (#11068)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`894a2a0b2`](https://github.com/meta/astryx/commit/894a2a0b2) fix(motion): a carried pending animation runs in step with its original (#10983)
+- [x] [`894a2a0b2`](https://github.com/meta/astryx/commit/894a2a0b2) fix(motion): a carried pending animation runs in step with its original (#10983)
   - 暂缓：依赖动画器（animator）与主题时序/节奏的动效基础设施，Vue 版没有
+  - 已移植：[#567](https://github.com/astryx-vue/astryx-vue/pull/567)。搬运中的待播动画与原动画同步
 - [x] [`c7ba4dec1`](https://github.com/meta/astryx/commit/c7ba4dec1) spec(AST-094): the evidence-carry check lists motion/carryAnimations as a shared motion module (#11103)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`421678d14`](https://github.com/meta/astryx/commit/421678d14) fix(core): focus traps and the keyboard model are one per page across swizzled copies (AST-110 FR3) (#10831)
@@ -4891,8 +4926,9 @@
 ### v0.7.16
 
 - [ ] [`06b7e61f5`](https://github.com/meta/astryx/commit/06b7e61f5) feat(core): the shared drag path takes a component's own drag (#9720)
-- [ ] [`badd6984b`](https://github.com/meta/astryx/commit/badd6984b) chore(core): the animator takes start: 'next-frame' in an input event (#9261)
+- [x] [`badd6984b`](https://github.com/meta/astryx/commit/badd6984b) chore(core): the animator takes start: 'next-frame' in an input event (#9261)
   - 暂缓：依赖动画器（animator）与主题时序/节奏的动效基础设施，Vue 版没有
+  - 已移植：[#567](https://github.com/astryx-vue/astryx-vue/pull/567)。输入事件里支持 start: 'next-frame'
 - [x] [`a4595efa9`](https://github.com/meta/astryx/commit/a4595efa9) fix(menu press): cancel only the lifted finger's touchend (#11164)
   - 已移植：[#548](https://github.com/astryx-vue/astryx-vue/pull/548)。只取消挑选那根手指的 touchend，别的手指和浏览器当作滚动的 touchend 不碰，补测试
 - [x] [`2fa328089`](https://github.com/meta/astryx/commit/2fa328089) perf(cli): keep doctor's file-only docs checks between runs (#11394)
@@ -4940,6 +4976,7 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`4800d992e`](https://github.com/meta/astryx/commit/4800d992e) feat(AlertDialog): touch motion on the theme's timing (#8373)
   - 暂缓：AlertDialog 触屏动效按主题时序，依赖主题时序读取器和触屏呈现设施
+  - 暂缓：内核部分已在 #563-#568；剩 AlertDialog 触屏动效、Layer 输入遮挡、Popover 表面动效，归动效与手势引擎的组件接入阶段
 - [x] [`dc9b62a32`](https://github.com/meta/astryx/commit/dc9b62a32) perf(cli): docs keeps the CLI's own docs tree between runs (#11775)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`c3916438e`](https://github.com/meta/astryx/commit/c3916438e) chore(core): the swipe hook's and layer's prose moves to their JSDoc (#11677)
@@ -5365,6 +5402,7 @@
 ### v0.7.9
 
 - [ ] [`c26fcd543`](https://github.com/meta/astryx/commit/c26fcd543) chore(lab): Lab's animator hook, over Core's internal touch entry (#9754)
+  - 暂缓：内核部分已在 #563-#568；剩 DateInput 滚轮、SegmentedControl、Slider、Switch 触屏控制器与 lab RefreshControl 的动效接入，归动效与手势引擎的组件接入阶段
 
 ### v0.7.10
 
@@ -5757,6 +5795,7 @@
   - 不适用：上游内部规范和架构文档、只改上游测试（自动初筛）
 - [ ] [`4800d992e`](https://github.com/meta/astryx/commit/4800d992e) feat(AlertDialog): touch motion on the theme's timing (#8373)
   - 暂缓：AlertDialog 触屏动效：依赖触屏呈现，Vue 版没有
+  - 暂缓：内核部分已在 #563-#568；剩 AlertDialog 触屏动效、Layer 输入遮挡、Popover 表面动效，归动效与手势引擎的组件接入阶段
 - [ ] [`fb91b761f`](https://github.com/meta/astryx/commit/fb91b761f) fix(Layer): a released kept-inside hold never makes its layer inert (#11684)
   - 暂缓：已释放的保持内遮挡不再让浮层 inert：依赖输入遮挡
 - [x] [`762a65d60`](https://github.com/meta/astryx/commit/762a65d60) perf(Layer): keep the tap recognizer apart from the touch trigger, so Text's first load drops 9.6 KB (#11599)
@@ -5948,6 +5987,7 @@
 ### v0.7.10
 
 - [ ] [`8bd8c6146`](https://github.com/meta/astryx/commit/8bd8c6146) fix(core): layout glides play the theme's move curve, not a spring (#10236)
+  - 暂缓：内核部分已在 #563-#568；剩 AppShell 与 SideNav 侧栏收展动效，归动效与手势引擎的组件接入阶段
 - [ ] [`2151c883d`](https://github.com/meta/astryx/commit/2151c883d) fix(AppShell): a second shell on a page gets its own main id (#10199)
 
 ### v0.7.11
@@ -6844,6 +6884,7 @@
   - 不适用：上游内部规范和架构文档、只改上游测试（自动初筛）
 - [ ] [`d67a7848e`](https://github.com/meta/astryx/commit/d67a7848e) fix(MobileNav): the drawer's content region is a navigation landmark named like the dialog (#10130)
 - [ ] [`8bd8c6146`](https://github.com/meta/astryx/commit/8bd8c6146) fix(core): layout glides play the theme's move curve, not a spring (#10236)
+  - 暂缓：内核部分已在 #563-#568；剩 AppShell 与 SideNav 侧栏收展动效，归动效与手势引擎的组件接入阶段
 
 ### v0.7.11
 
@@ -7484,6 +7525,7 @@
   - 暂缓：Toast 测量前按主题 token 里的反色底预判文字深浅；Vue 有 parseColor 和 pickMediaMode 可做，归 theme-system 批次连同 8c52e3bba 一起做
 - [ ] [`4800d992e`](https://github.com/meta/astryx/commit/4800d992e) feat(AlertDialog): touch motion on the theme's timing (#8373)
   - 暂缓：AlertDialog 触屏动效读主题时长，依赖触屏呈现（presentation）与进场动效基础设施
+  - 暂缓：内核部分已在 #563-#568；剩 AlertDialog 触屏动效、Layer 输入遮挡、Popover 表面动效，归动效与手势引擎的组件接入阶段
 - [x] [`67379ec52`](https://github.com/meta/astryx/commit/67379ec52) fix(Popover): usePopover keeps its focus-return target when show() reruns (#11682)
   - Vue 版已有：usePopover 只在 isOpen 由关变开时记录焦点归还目标，show() 重复调用不会重记
 - [x] [`5628141f5`](https://github.com/meta/astryx/commit/5628141f5) fix(Lightbox): a caption ending in a wide image no longer grows when the window widens (#11740)
@@ -8131,13 +8173,16 @@
 - [x] [`5cb261b01`](https://github.com/meta/astryx/commit/5cb261b01) test(CheckboxList): a row adds no touch-query listener of its own (#10046)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`c26fcd543`](https://github.com/meta/astryx/commit/c26fcd543) chore(lab): Lab's animator hook, over Core's internal touch entry (#9754)
+  - 暂缓：内核部分已在 #563-#568；剩 DateInput 滚轮、SegmentedControl、Slider、Switch 触屏控制器与 lab RefreshControl 的动效接入，归动效与手势引擎的组件接入阶段
 - [x] [`8286740d1`](https://github.com/meta/astryx/commit/8286740d1) test(SegmentedControl): hold the keyed and app-change slides at birth (#10070)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`257573b22`](https://github.com/meta/astryx/commit/257573b22) docs(AST-094, AST-057): motion guidance; gesture springs; swipe-row returns (#9915)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`1dce31829`](https://github.com/meta/astryx/commit/1dce31829) refactor(motion): core's shared theme-timing reader (#10068)
+  - 暂缓：内核部分已在 #563-#568；剩 SegmentedControl 选中动效，归动效与手势引擎的组件接入阶段
 - [ ] [`7aaf2a1b9`](https://github.com/meta/astryx/commit/7aaf2a1b9) fix(core): a disabled CheckboxInput no longer runs a caller's handlers (#10092)
 - [ ] [`ceefccdfc`](https://github.com/meta/astryx/commit/ceefccdfc) feat(core): the animator's springs follow the theme's tempo (#8677)
+  - 暂缓：内核部分已在 #563-#568；剩 Switch 触屏手势 useSwitchTouch、CLI 主题模板，归动效与手势引擎的组件接入阶段
 - [x] [`db3451eee`](https://github.com/meta/astryx/commit/db3451eee) test(CheckboxList): the press-fade proof holds the release in its first frame (#10097)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`92947d98f`](https://github.com/meta/astryx/commit/92947d98f) test: three suites pass without the NODE_PATH pnpm's bin shim sets (#10088)
@@ -8148,6 +8193,7 @@
 - [x] [`1ef21f898`](https://github.com/meta/astryx/commit/1ef21f898) fix(Spinner): route standalone loading through the shared announcement channel (#7910)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`ab7facf1e`](https://github.com/meta/astryx/commit/ab7facf1e) fix(core): spring roles register themselves when they load (#10138)
+  - 暂缓：内核部分已在 #563-#568；剩 DateInput PickerWheel 与 SegmentedControl 选中动效，归动效与手势引擎的组件接入阶段
 - [x] [`097955952`](https://github.com/meta/astryx/commit/097955952) test(RadioList): the radio-group summary reads each state's result instead of checking every state again (#10206)
   - 不适用：只改上游测试（自动初筛）
 
@@ -9002,6 +9048,7 @@
 - [x] [`a81487737`](https://github.com/meta/astryx/commit/a81487737) feat(core): a first-party indicator can paint its own press (#9716)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`2c925f794`](https://github.com/meta/astryx/commit/2c925f794) refactor(core): a theme's reduced-motion mark, internal until 'always' ships (#9761)
+  - 暂缓：内核部分已在 #563-#568；剩 Theme 组件写出减少动效标记（reducedMotionMark 已备好未接），归动效与手势引擎的组件接入阶段
 - [ ] [`9889a3438`](https://github.com/meta/astryx/commit/9889a3438) chore(core): name the system that 88 kept Effects sync (#9787)
 - [ ] [`0d54fd3e7`](https://github.com/meta/astryx/commit/0d54fd3e7) fix(theme): add the --duration-exit token, defaulting to --duration-fast (#9798)
 - [x] [`e390c3c43`](https://github.com/meta/astryx/commit/e390c3c43) test(browser): keep every Playwright browser context off remote hosts (#9811)
@@ -9022,6 +9069,7 @@
 - [x] [`a6a9b9c50`](https://github.com/meta/astryx/commit/a6a9b9c50) fix(CheckboxListItem): a row answers a finger the same wherever it lands (#8212)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`ceefccdfc`](https://github.com/meta/astryx/commit/ceefccdfc) feat(core): the animator's springs follow the theme's tempo (#8677)
+  - 暂缓：内核部分已在 #563-#568；剩 Switch 触屏手势 useSwitchTouch、CLI 主题模板，归动效与手势引擎的组件接入阶段
 - [x] [`7e69f91dc`](https://github.com/meta/astryx/commit/7e69f91dc) fix(core): an anchored layer that would run under the software keyboard ends above it (#8208)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`98efdf183`](https://github.com/meta/astryx/commit/98efdf183) feat(Icon): a theme maps a component's own icon role by slot, starting with CodeBlock's copy button (#9828)
@@ -9603,6 +9651,7 @@
 - [x] [`a81487737`](https://github.com/meta/astryx/commit/a81487737) feat(core): a first-party indicator can paint its own press (#9716)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`2c925f794`](https://github.com/meta/astryx/commit/2c925f794) refactor(core): a theme's reduced-motion mark, internal until 'always' ships (#9761)
+  - 暂缓：内核部分已在 #563-#568；剩 Theme 组件写出减少动效标记（reducedMotionMark 已备好未接），归动效与手势引擎的组件接入阶段
 - [x] [`e797650e5`](https://github.com/meta/astryx/commit/e797650e5) spec(public-component-api): public props use the system's existing vocabulary (#9749)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`19081d81a`](https://github.com/meta/astryx/commit/19081d81a) chore(lab): remove MobileTokenizer and MobilePowerSearch, whose flows Core ships behind experimental.presentation (#9790)
@@ -9713,6 +9762,7 @@
 - [x] [`39eb83866`](https://github.com/meta/astryx/commit/39eb83866) docs(architecture): unused optional features cost almost nothing, and large behavior code lives in a shared engine (#11650)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`4800d992e`](https://github.com/meta/astryx/commit/4800d992e) feat(AlertDialog): touch motion on the theme's timing (#8373)
+  - 暂缓：内核部分已在 #563-#568；剩 AlertDialog 触屏动效、Layer 输入遮挡、Popover 表面动效，归动效与手势引擎的组件接入阶段
 - [x] [`935e25a3c`](https://github.com/meta/astryx/commit/935e25a3c) chore(import-boundaries): the check holds a "Must not reach" table for optional features (INV10) (#11676)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`762a65d60`](https://github.com/meta/astryx/commit/762a65d60) perf(Layer): keep the tap recognizer apart from the touch trigger, so Text's first load drops 9.6 KB (#11599)
@@ -9800,6 +9850,7 @@
   - 已移植：[#536](https://github.com/astryx-vue/astryx-vue/pull/536)。lab 新增 CircleCheckIndicator，可在主题里映射到 checkbox，中英文档和测试
 - [ ] [`c26fcd543`](https://github.com/meta/astryx/commit/c26fcd543) chore(lab): Lab's animator hook, over Core's internal touch entry (#9754)
   - 暂缓：RefreshControl 的动画钩子和触摸入口，随 RefreshControl 一起暂缓（缺手势识别器和动效引擎）
+  - 暂缓：内核部分已在 #563-#568；剩 DateInput 滚轮、SegmentedControl、Slider、Switch 触屏控制器与 lab RefreshControl 的动效接入，归动效与手势引擎的组件接入阶段
 - [x] [`1ef21f898`](https://github.com/meta/astryx/commit/1ef21f898) fix(Spinner): route standalone loading through the shared announcement channel (#7910)
   - 已移植：[#532](https://github.com/astryx-vue/astryx-vue/pull/532)。Schedule 不再自带 live 区域，加载开始改走 useAnnounce 播报，加载圈 aria-hidden，补测试
 - [ ] [`4e4cf84d2`](https://github.com/meta/astryx/commit/4e4cf84d2) feat(lab): NavigationStack, push/pop navigation that moves like UINavigationController (#9697)
