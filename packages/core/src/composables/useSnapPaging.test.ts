@@ -8,6 +8,31 @@ import { attachSnapPaging, isSnapPaging, moveHeldSnapPaging, moveSnapPaging, nea
 import { fakeRow, layOutRow, swipe, touch } from './testing/fakeSnapRow.js'
 import { useSnapPaging } from './useSnapPaging.js'
 
+// 记下每个元素的尺寸回调，测试里手动报一次「改了尺寸」。
+const resizeCallbacks = vi.hoisted(() => new Map<Element, Set<() => void>>())
+vi.mock('../utils/sharedResizeObserver', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../utils/sharedResizeObserver')>()
+  return {
+    ...actual,
+    observeResize(element: Element, callback: (entry: ResizeObserverEntry) => void) {
+      const notify = () => callback({ target: element } as ResizeObserverEntry)
+      const set = resizeCallbacks.get(element) ?? new Set()
+      set.add(notify)
+      resizeCallbacks.set(element, set)
+      const unobserve = actual.observeResize(element, callback)
+      return () => {
+        set.delete(notify)
+        unobserve()
+      }
+    },
+  }
+})
+
+function reportResize(element: Element): void {
+  for (const notify of resizeCallbacks.get(element) ?? [])
+    notify()
+}
+
 const advance = (ms: number) => vi.advanceTimersByTime(ms)
 // 十项、每项 100 像素，一屏 300 像素：停点是 0 到 700，每 100 一个。
 const TEN = { width: 300, items: Array.from({ length: 10 }).fill(100) as number[] }
@@ -251,6 +276,28 @@ describe('paging under a finger', () => {
     swipe(row, advance, [0, 50, 150, 250])
     advance(2000)
     expect(row.scrollLeft).toBe(-300)
+  })
+
+  it('follows a resize while held: the travel shrinks and the held position stays inside it', () => {
+    const { row, detach } = attach()
+    // 拖到接近末端再按住不放。
+    swipe(row, advance, [290, 200, 100, 10], { stepMs: 100, lift: false })
+    const held = row.scrollLeft
+    expect(held).toBeGreaterThan(200)
+    // 这一行的项变窄：可滚动距离从 700 变成 200。
+    Object.defineProperty(row, 'scrollWidth', { configurable: true, value: 500 })
+    reportResize(row)
+    expect(row.scrollLeft).toBe(200)
+    // 收进新范围以后照样跟手。
+    touch(row, 'pointermove', 60)
+    expect(row.scrollLeft).toBe(200)
+    touch(row, 'pointermove', 150)
+    expect(row.scrollLeft).toBeLessThan(200)
+    advance(100)
+    touch(row, 'pointerup', 150)
+    advance(2000)
+    detach()
+    expect(resizeCallbacks.get(row)?.size ?? 0).toBe(0)
   })
 
   it('hands a held row back where it is shown on detach', () => {

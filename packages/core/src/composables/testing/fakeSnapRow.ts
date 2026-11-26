@@ -87,6 +87,6 @@ export function swipe(
     element.dispatchEvent(pointer('pointerup', { clientX: xs[xs.length - 1], clientY: y(xs.length - 1), pointerType }))
 }
 
-export function touch(element: HTMLElement, type: 'pointerdown' | 'pointerup', x = 0): void {
+export function touch(element: HTMLElement, type: 'pointerdown' | 'pointermove' | 'pointerup', x = 0): void {
   element.dispatchEvent(pointer(type, { clientX: x }))
 }

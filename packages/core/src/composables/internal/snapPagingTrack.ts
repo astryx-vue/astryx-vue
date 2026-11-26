@@ -20,6 +20,8 @@ export interface SnapTrack {
   readonly place: (at: number) => void
   /** 把这一行交还给原生滚动。`beforeSnap` 在原生吸附恢复之前运行。 */
   readonly handBack: (beforeSnap?: () => void) => void
+  /** 按住期间这一行或它的项改了尺寸：重新量可滚动距离，按住的位置收进新的范围。 */
+  readonly remeasure: () => void
 }
 
 export function createSnapTrack(element: HTMLElement, onHeld?: HeldRowListener): SnapTrack {
@@ -73,6 +75,19 @@ export function createSnapTrack(element: HTMLElement, onHeld?: HeldRowListener):
         return
       heldAt = Math.min(Math.max(at, 0), heldTravel)
       write(heldAt)
+      report()
+    },
+    remeasure() {
+      if (!held)
+        return
+      const next = nativeTravel()
+      if (next === heldTravel)
+        return
+      heldTravel = next
+      if (heldAt > heldTravel) {
+        heldAt = heldTravel
+        write(heldAt)
+      }
       report()
     },
     handBack(beforeSnap) {

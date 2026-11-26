@@ -4,6 +4,7 @@ import { getGestureHost } from '../../gestures/GestureHost'
 import { PanGestureRecognizer } from '../../gestures/PanGestureRecognizer'
 import { paging } from '../../motion/uikit/paging'
 import { lockSelection, locksSelectionFor } from '../../utils/selectionLock'
+import { observeResize } from '../../utils/sharedResizeObserver'
 import { SettleCatcher } from './snapPagingCatcher.js'
 import { browserClock, nearestIndex, pickPage, springTo, viewPages } from './snapPagingMotion.js'
 import { followSkippedStops } from './snapPagingSkip.js'
@@ -213,6 +214,10 @@ export function attachPaging(
 
   const detachPan = host.attach(element, pan)
   const detachCatch = host.attach(element, catcher)
+  // 按住期间改了尺寸，可滚动距离跟着变。
+  const remeasure = (): void => track.remeasure()
+  const resized = [element, ...Array.from(element.children)]
+  const unobserveSizes = resized.map(node => observeResize(node, remeasure))
 
   function move(target: SnapTarget): void {
     // 手指在这一行上时，这一行归手指。触控板横扫则让给这次翻页，横扫余下的部分不再移动这一行。
@@ -232,6 +237,8 @@ export function attachPaging(
       holdSelection(false)
       detachCatch()
       detachPan()
+      for (const unobserve of unobserveSizes)
+        unobserve()
       motion?.stop()
       motion = null
       drag = null
