@@ -4313,9 +4313,10 @@
   - 已移植：[#572](https://github.com/astryx-vue/astryx-vue/pull/572)。transform 不改变位置的元素也会滑
 - [x] [`b39314411`](https://github.com/meta/astryx/commit/b39314411) spec(family): action groups — press, slide across, act on lift (AST-094 FR26–FR28) (#8622)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`b8c5e4aee`](https://github.com/meta/astryx/commit/b8c5e4aee) feat(core): SideNav's rail collapses by snap, clip and cross-fade; AppShell's content moves on its clock (#8723)
+- [x] [`b8c5e4aee`](https://github.com/meta/astryx/commit/b8c5e4aee) feat(core): SideNav's rail collapses by snap, clip and cross-fade; AppShell's content moves on its clock (#8723)
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
   - 暂缓：本期已做 animatedLayout 模块与句柄；剩 SideNav 折叠栏的收起动效和 AppShell 内容跟随，归动效与手势引擎的组件接入阶段
+  - 已移植：[#578](https://github.com/astryx-vue/astryx-vue/pull/578)。收起、展开一步落宽，旧轨道留副本并从行内结束边裁剪，文字、图标按 40%、60%、30% 淡入淡出；AppShell 内容区列滑动、新旧内容交叉淡入淡出，补测试
 - [x] [`58fa49dfe`](https://github.com/meta/astryx/commit/58fa49dfe) feat(core): Table rows glide when a row's panel opens or closes, and their dividers move with them (#8656)
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
   - 已移植：[#574](https://github.com/astryx-vue/astryx-vue/pull/574)。Table 行展开面板开合时下面的行滑动，合并边框的分隔线用替身线跟着行走
@@ -4397,9 +4398,10 @@
   - 不适用：Vue 的 FieldStatus 只有 attached 和 detached，从来没有 tooltip 变体；字段控件的 statusVariant="tooltip" 已在 #544 保留
 - [x] [`acfa52701`](https://github.com/meta/astryx/commit/acfa52701) fix(useTypeahead): type-to-select ignores accents (#8864)
   - 已移植：[#544](https://github.com/astryx-vue/astryx-vue/pull/544)。按字母跳转忽略重音、大小写、带斜杠字母，useTypeahead 和 useTreeFocus 共用 typeaheadMatch
-- [ ] [`5909b939e`](https://github.com/meta/astryx/commit/5909b939e) feat(core): one shared edge reveal in the animated-layout module, which the SideNav rail moves onto (#8721)
+- [x] [`5909b939e`](https://github.com/meta/astryx/commit/5909b939e) feat(core): one shared edge reveal in the animated-layout module, which the SideNav rail moves onto (#8721)
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
   - 暂缓：本期已做 模块里共用的边缘揭示（reportLayoutEdge/playLayoutEdge）；剩 SideNav 折叠栏改用它，归动效与手势引擎的组件接入阶段
+  - 已移植：[#578](https://github.com/astryx-vue/astryx-vue/pull/578)。轨道用布局动效模块里共用的两态边缘揭示（holdLayoutEdge、playLayoutEdge），不再手写裁剪
 - [x] [`48f6a067f`](https://github.com/meta/astryx/commit/48f6a067f) [Component Audit] DropdownMenu: keep the focused row visible in forced colors (#7517)
   - 已移植：[#550](https://github.com/astryx-vue/astryx-vue/pull/550)。强制配色下聚焦的菜单行用 Highlight/HighlightText 涂出来；指针关闭后的焦点环处理 Vue 版已有
 - [x] [`8b78da84a`](https://github.com/meta/astryx/commit/8b78da84a) test(core): the inline-end edge reveal's reversal proof reads both sides on the animation's own clock (#9298)
@@ -4547,9 +4549,10 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`aaacae935`](https://github.com/meta/astryx/commit/aaacae935) refactor(useScrollLock): the page hold asks the native-scroll probe's edge test (#9812)
   - 已移植：[#550](https://github.com/astryx-vue/astryx-vue/pull/550)。锁滚动的拖动判断读滚动链上各元素是否还能往这个方向滚（含边缘），补测试
-- [ ] [`73996f1b2`](https://github.com/meta/astryx/commit/73996f1b2) fix(core): a layout change made late in a long task plays its motion instead of skipping past it (#9274)
+- [x] [`73996f1b2`](https://github.com/meta/astryx/commit/73996f1b2) fix(core): a layout change made late in a long task plays its motion instead of skipping past it (#9274)
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
   - 暂缓：本期已做 长任务末尾的布局变化照样播放（模块与 frameBlock 部分）；剩 SideNav、AppShell 接入，归动效与手势引擎的组件接入阶段
+  - 已移植：[#578](https://github.com/astryx-vue/astryx-vue/pull/578)。初始状态不播（轨道首次绘制前的非自带开关变化直接落位）；长任务末尾的变化播放由 #563-#568 的模块已做，AppShell 的交换沿用 layoutStartFor
 - [x] [`61cf773c2`](https://github.com/meta/astryx/commit/61cf773c2) refactor(InfoTip): build on useTooltip's show() and hide(); remove the internal toggle path (#9756)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`946211065`](https://github.com/meta/astryx/commit/946211065) perf(core): an overlay's eager import no longer carries the lazy BottomSheet's padding (#8550)
@@ -4693,10 +4696,11 @@
 - [ ] [`07f8de58c`](https://github.com/meta/astryx/commit/07f8de58c) feat(core): Carousel's hasSnap takes useSnapPaging(), iOS paging on native snap's stops (#8153)
 - [ ] [`306051090`](https://github.com/meta/astryx/commit/306051090) fix(core): gestures read another window's nodes and touches (#10224)
 - [ ] [`0081c1165`](https://github.com/meta/astryx/commit/0081c1165) feat(lab): under a finger, NavigationStack's bar takes the iOS 26 look (#8396)
-- [ ] [`8bd8c6146`](https://github.com/meta/astryx/commit/8bd8c6146) fix(core): layout glides play the theme's move curve, not a spring (#10236)
+- [x] [`8bd8c6146`](https://github.com/meta/astryx/commit/8bd8c6146) fix(core): layout glides play the theme's move curve, not a spring (#10236)
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
   - 暂缓：内核部分已在 #563-#568；剩 AppShell 与 SideNav 侧栏收展动效，归动效与手势引擎的组件接入阶段
   - 暂缓：本期已做 布局滑动走主题的移动曲线（模块与 Table 部分）；剩 SideNav 折叠栏、AppShell 接入，归动效与手势引擎的组件接入阶段
+  - 已移植：[#578](https://github.com/astryx-vue/astryx-vue/pull/578)。轨道和 AppShell 内容区的滑动走主题的移动曲线（glide），和布局模块同一条时钟
 - [x] [`0c168a374`](https://github.com/meta/astryx/commit/0c168a374) feat(Lightbox): touch zoom like the iOS Photos viewer (#8148)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`b8ae86f94`](https://github.com/meta/astryx/commit/b8ae86f94) fix(core): a BottomSheet touch drag's close keeps its speed, and its scrim fades with it (#8105)
@@ -5954,8 +5958,9 @@
   - 不适用：上游组件规范文档（自动初筛）
 - [x] [`b39314411`](https://github.com/meta/astryx/commit/b39314411) spec(family): action groups — press, slide across, act on lift (AST-094 FR26–FR28) (#8622)
   - 不适用：上游内部规范和架构文档、上游组件规范文档（自动初筛）
-- [ ] [`b8c5e4aee`](https://github.com/meta/astryx/commit/b8c5e4aee) feat(core): SideNav's rail collapses by snap, clip and cross-fade; AppShell's content moves on its clock (#8723)
+- [x] [`b8c5e4aee`](https://github.com/meta/astryx/commit/b8c5e4aee) feat(core): SideNav's rail collapses by snap, clip and cross-fade; AppShell's content moves on its clock (#8723)
   - 暂缓：本期已做 animatedLayout 模块与句柄；剩 SideNav 折叠栏的收起动效和 AppShell 内容跟随，归动效与手势引擎的组件接入阶段
+  - 已移植：[#578](https://github.com/astryx-vue/astryx-vue/pull/578)。收起、展开一步落宽，旧轨道留副本并从行内结束边裁剪，文字、图标按 40%、60%、30% 淡入淡出；AppShell 内容区列滑动、新旧内容交叉淡入淡出，补测试
 - [x] [`0ebde5a9d`](https://github.com/meta/astryx/commit/0ebde5a9d) docs(spec): Center records its shipped contract as current (#8788)
   - 不适用：上游组件规范文档（自动初筛）
 - [x] [`7d23f0bb6`](https://github.com/meta/astryx/commit/7d23f0bb6) docs(SideNav, AppShell): the rail collapse motion is implemented (FR6, FR17) (#8790)
@@ -6035,8 +6040,9 @@
 - [ ] [`9136e28c7`](https://github.com/meta/astryx/commit/9136e28c7) feat: a single-choice set of selectable cards is a radio group (lab SelectableCardGroup) (#8260)
 - [ ] [`9889a3438`](https://github.com/meta/astryx/commit/9889a3438) chore(core): name the system that 88 kept Effects sync (#9787)
 - [ ] [`f9a696545`](https://github.com/meta/astryx/commit/f9a696545) refactor(Resizable): one internal createResizable factory, which useResizable's configuration-object form and ResizeHandle's resizable path go through (#9297)
-- [ ] [`73996f1b2`](https://github.com/meta/astryx/commit/73996f1b2) fix(core): a layout change made late in a long task plays its motion instead of skipping past it (#9274)
+- [x] [`73996f1b2`](https://github.com/meta/astryx/commit/73996f1b2) fix(core): a layout change made late in a long task plays its motion instead of skipping past it (#9274)
   - 暂缓：本期已做 长任务末尾的布局变化照样播放（模块与 frameBlock 部分）；剩 SideNav、AppShell 接入，归动效与手势引擎的组件接入阶段
+  - 已移植：[#578](https://github.com/astryx-vue/astryx-vue/pull/578)。初始状态不播（轨道首次绘制前的非自带开关变化直接落位）；长任务末尾的变化播放由 #563-#568 的模块已做，AppShell 的交换沿用 layoutStartFor
 - [ ] [`946211065`](https://github.com/meta/astryx/commit/946211065) perf(core): an overlay's eager import no longer carries the lazy BottomSheet's padding (#8550)
 - [ ] [`cfd120e4c`](https://github.com/meta/astryx/commit/cfd120e4c) feat(Resizable): createResizable drives a plain handle element, with one separator derivation (#9718)
 - [x] [`e390c3c43`](https://github.com/meta/astryx/commit/e390c3c43) test(browser): keep every Playwright browser context off remote hosts (#9811)
@@ -6063,9 +6069,10 @@
 
 ### v0.7.10
 
-- [ ] [`8bd8c6146`](https://github.com/meta/astryx/commit/8bd8c6146) fix(core): layout glides play the theme's move curve, not a spring (#10236)
+- [x] [`8bd8c6146`](https://github.com/meta/astryx/commit/8bd8c6146) fix(core): layout glides play the theme's move curve, not a spring (#10236)
   - 暂缓：内核部分已在 #563-#568；剩 AppShell 与 SideNav 侧栏收展动效，归动效与手势引擎的组件接入阶段
   - 暂缓：本期已做 布局滑动走主题的移动曲线（模块与 Table 部分）；剩 SideNav 折叠栏、AppShell 接入，归动效与手势引擎的组件接入阶段
+  - 已移植：[#578](https://github.com/astryx-vue/astryx-vue/pull/578)。轨道和 AppShell 内容区的滑动走主题的移动曲线（glide），和布局模块同一条时钟
 - [ ] [`2151c883d`](https://github.com/meta/astryx/commit/2151c883d) fix(AppShell): a second shell on a page gets its own main id (#10199)
 
 ### v0.7.11
