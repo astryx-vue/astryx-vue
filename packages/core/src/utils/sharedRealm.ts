@@ -64,3 +64,12 @@ export function sharedWeakSet<T extends WeakKey>(
 ): WeakSet<T> {
   return sharedState(name, version, () => new WeakSet<T>())
 }
+
+/** 按注册名共享的递增序号：每调一次返回下一个，从 1 开始。 */
+export function sharedSequence(name: string, version: number): () => number {
+  const counter = sharedState(name, version, () => ({ next: 0 }))
+  return () => {
+    counter.next += 1
+    return counter.next
+  }
+}

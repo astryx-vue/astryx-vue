@@ -11,17 +11,19 @@
  * DOM 那一半在 `pressFeedback.ts`。
  */
 
+import { UIKIT_PRESS } from '../../motion/uikit/gestures'
+
 /**
  * 滚动视图里，手指停多久才算真按。UIKit 的 `delaysContentTouches` 就是 0.15 秒。
  * 快速划一下在这之前就被滚动接管了，所以什么都不亮。从触摸本身的时间戳算起。
  */
-export const PRESS_ONSET_MS = 150
+export const PRESS_ONSET_MS = UIKIT_PRESS.contentTouchDelay.value
 
 /** 手指最多能挪多远还算按压，单位 CSS 像素。iOS 的滚动大约在这个距离接管手势。 */
-export const PRESS_SLOP_PX = 10
+export const PRESS_SLOP_PX = UIKIT_PRESS.slop.value
 
 /** 太快的轻点：抬手时补亮，满强度保持这么久再淡出。不然最常见的操作一点反馈都没有。 */
-export const PRESS_FLASH_MS = 100
+export const PRESS_FLASH_MS = UIKIT_PRESS.quickTapFlash.value
 
 /**
  * 主题没设 `--astryx-duration-exit` 时，抬手后淡出的时长：这个 token 的默认值（核心的 fast 档，175ms）。
@@ -30,7 +32,7 @@ export const PRESS_FLASH_MS = 100
 export const PRESS_FADE_MS = 175
 
 /** 滚动刚停不久就落下的手指是在「刹车」，不是按压。这个窗口内不亮。 */
-export const PRESS_SCROLL_BRAKE_MS = 150
+export const PRESS_SCROLL_BRAKE_MS = UIKIT_PRESS.scrollBrake.value
 
 /** 元素上该画的样子。`fading` 是抬手后的淡出。 */
 export type PressPaint = 'none' | 'on' | 'fading'

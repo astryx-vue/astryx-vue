@@ -1,5 +1,8 @@
 import type { PressGesture, PressPaint, PressStep, PressTimer } from './pressGesture.js'
-import { msSinceInput } from './inputAge.js'
+import { UIKIT_PRESS } from '../../motion/uikit/gestures'
+import { msSinceInput } from '../../utils/inputAge'
+import { subscribeInput } from '../../utils/inputStream'
+import { isInsideScrollView } from '../../utils/scrollView'
 import {
   idlePressGesture,
   PRESS_FADE_MS,
@@ -9,7 +12,6 @@ import {
   pressGestureStep,
 } from './pressGesture.js'
 import { isTrackedByGroup, pressSurfaceAt } from './pressSurface.js'
-import { isInsideScrollView } from './scrollView.js'
 
 export { PRESS_ACTION_ATTRIBUTE, PRESS_CONTAINER_ATTRIBUTE, PRESSABLE_ATTRIBUTE } from './pressSurface.js'
 
@@ -33,7 +35,7 @@ export { PRESS_ACTION_ATTRIBUTE, PRESS_CONTAINER_ATTRIBUTE, PRESSABLE_ATTRIBUTE 
 export const PRESSED_ATTRIBUTE = 'data-astryx-press'
 
 /** 手指离开后多久内的滚动还可能是那根手指甩出去的惯性。iOS 的惯性滚动会持续一两秒。 */
-export const PRESS_GESTURE_MEMORY_MS = 3000
+export const PRESS_GESTURE_MEMORY_MS = UIKIT_PRESS.momentumMemory.value
 
 interface LiveGesture {
   element: HTMLElement
@@ -278,30 +280,27 @@ function onVisibilityChange(): void {
     finish()
 }
 
-const PASSIVE_CAPTURE = { capture: true, passive: true } as const
-
-const WINDOW_LISTENERS: ReadonlyArray<[string, (event: never) => void]> = [
-  ['pointerdown', onPointerDown],
-  ['pointermove', onPointerMove],
-  ['pointerup', onPointerUp],
-  ['pointercancel', onCancel],
-  ['touchcancel', onCancel],
-  // 长按变成拖拽也算拿走手势。不听 contextmenu：右键是鼠标的事，这里从不跟踪鼠标。
-  ['dragstart', onCancel],
-]
+/** 控制器在共用输入流（utils/inputStream.ts）上的订阅，全都被动，只在有人持有时存在。 */
+let unsubscribers: (() => void)[] = []
 
 function addListeners(): void {
-  for (const [type, listener] of WINDOW_LISTENERS)
-    window.addEventListener(type, listener as EventListener, PASSIVE_CAPTURE)
-  document.addEventListener('scroll', onScroll, PASSIVE_CAPTURE)
-  document.addEventListener('visibilitychange', onVisibilityChange)
+  unsubscribers = [
+    subscribeInput(window, 'pointerdown', onPointerDown),
+    subscribeInput(window, 'pointermove', onPointerMove),
+    subscribeInput(window, 'pointerup', onPointerUp),
+    subscribeInput(window, 'pointercancel', onCancel),
+    subscribeInput(window, 'touchcancel', onCancel),
+    // 长按变成拖拽也算拿走手势。不听 contextmenu：右键是鼠标的事，这里从不跟踪鼠标。
+    subscribeInput(window, 'dragstart', onCancel),
+    subscribeInput(window, 'scroll', onScroll),
+    subscribeInput(window, 'visibilitychange', onVisibilityChange),
+  ]
 }
 
 function removeListeners(): void {
-  for (const [type, listener] of WINDOW_LISTENERS)
-    window.removeEventListener(type, listener as EventListener, PASSIVE_CAPTURE)
-  document.removeEventListener('scroll', onScroll, PASSIVE_CAPTURE)
-  document.removeEventListener('visibilitychange', onVisibilityChange)
+  for (const unsubscribe of unsubscribers)
+    unsubscribe()
+  unsubscribers = []
 }
 
 function resetClocks(): void {

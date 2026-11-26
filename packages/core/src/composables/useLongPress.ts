@@ -1,5 +1,7 @@
 import type { MaybeRefOrGetter } from 'vue'
 import { getCurrentScope, onScopeDispose, toValue } from 'vue'
+import { LONG_PRESS_ALLOWABLE_MOVEMENT_PX, LONG_PRESS_DURATION_MS } from '../motion/uikit/longPress'
+import { msSinceInput } from '../utils/inputAge'
 
 interface Point {
   x: number
@@ -35,18 +37,9 @@ export interface LongPressHandlers {
   }
 }
 
-const DEFAULT_DELAY_MS = 500
-const DEFAULT_MOVE_CANCEL_PX = 10
-/** 大于这个数的时间戳是 epoch 毫秒（测试环境常见），不是页面时钟上的毫秒。 */
-const EPOCH_STAMP_FLOOR = 1e11
-
-/** 把触摸事件的时间戳换成现在这一刻之前多久（毫秒）。读不出来按 0 算。 */
-function ageOf(stamp: number | undefined): number {
-  if (stamp == null || !Number.isFinite(stamp))
-    return 0
-  const now = stamp > EPOCH_STAMP_FLOOR ? Date.now() : (typeof performance === 'undefined' ? 0 : performance.now())
-  return Math.max(0, now - stamp)
-}
+// 长按的两个数只有一个出处，和手势识别器共用（motion/uikit/longPress.ts）。
+const DEFAULT_DELAY_MS = LONG_PRESS_DURATION_MS
+const DEFAULT_MOVE_CANCEL_PX = LONG_PRESS_ALLOWABLE_MOVEMENT_PX
 
 function touchPoint(event: TouchEvent): Point | null {
   const touch = event.touches?.[0] ?? event.changedTouches?.[0]
@@ -139,7 +132,8 @@ export function useLongPress(options: LongPressOptions): LongPressHandlers {
     const point = touchPoint(event)
     if (point == null)
       return
-    start(point, ageOf(event.timeStamp))
+    // 按触摸自己那个窗口的时钟算它晚到了多久（utils/inputAge.ts）。
+    start(point, msSinceInput(event.timeStamp, event))
     if (timer != null && Number.isFinite(event.timeStamp))
       deadline = event.timeStamp + delayMs
   }
