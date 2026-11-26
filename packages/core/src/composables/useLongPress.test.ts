@@ -121,4 +121,45 @@ describe('useLongPress', () => {
     vi.advanceTimersByTime(100)
     expect(onLongPress).not.toHaveBeenCalled()
   })
+
+  describe('按触摸事件自己的时钟计时', () => {
+    function stamped(points: Array<{ x: number, y: number }>, timeStamp: number): TouchEvent {
+      return { ...touchEvent(points), timeStamp } as unknown as TouchEvent
+    }
+
+    it('页面忙的时候，按住的触摸和抬起一起送到，按到期的长按先报出去', () => {
+      vi.useFakeTimers()
+      const onLongPress = vi.fn()
+      const { result } = mountComposable(() => useLongPress({ delayMs: 500, onLongPress }))
+
+      // 同一个任务里先后处理两个事件，中间没有计时器的机会；它们自己的时间说明手指按了 800 毫秒。
+      result.handlers.onTouchStart(stamped([{ x: 8, y: 9 }], 1000))
+      result.handlers.onTouchEnd(stamped([], 1800))
+      expect(onLongPress).toHaveBeenCalledExactlyOnceWith({ x: 8, y: 9 })
+    })
+
+    it('没按够的轻点即使晚到也不算长按', () => {
+      vi.useFakeTimers()
+      const onLongPress = vi.fn()
+      const { result } = mountComposable(() => useLongPress({ delayMs: 500, onLongPress }))
+
+      result.handlers.onTouchStart(stamped([{ x: 8, y: 9 }], 1000))
+      result.handlers.onTouchEnd(stamped([], 1100))
+      vi.advanceTimersByTime(1000)
+      expect(onLongPress).not.toHaveBeenCalled()
+    })
+
+    it('晚处理的触摸，计时器只等剩下的那一段', () => {
+      vi.useFakeTimers({ now: 1_800_000_000_000 })
+      const onLongPress = vi.fn()
+      const { result } = mountComposable(() => useLongPress({ delayMs: 500, onLongPress }))
+
+      // 时间戳是 epoch 毫秒，事件已经晚到 300 毫秒。
+      result.handlers.onTouchStart(stamped([{ x: 1, y: 2 }], 1_800_000_000_000 - 300))
+      vi.advanceTimersByTime(199)
+      expect(onLongPress).not.toHaveBeenCalled()
+      vi.advanceTimersByTime(1)
+      expect(onLongPress).toHaveBeenCalledExactlyOnceWith({ x: 1, y: 2 })
+    })
+  })
 })
