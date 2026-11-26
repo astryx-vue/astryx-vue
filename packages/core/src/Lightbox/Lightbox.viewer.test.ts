@@ -81,6 +81,9 @@ describe('lightbox viewer', () => {
 
   it('wraps Tab inside the open viewer', async () => {
     mount(Lightbox, { attachTo: document.body, props: { isOpen: true, media: gallery } })
+    await flushPromises()
+    // 测试环境的 showModal 不会真的打开，手动标成打开：关着且不显示的对话框里的控件不算 Tab 落脚点。
+    document.querySelector('dialog')!.open = true
     const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('dialog button:not([disabled])'))
     const last = buttons[buttons.length - 1]!
     last.focus()
