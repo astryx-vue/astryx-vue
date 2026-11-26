@@ -5,8 +5,9 @@ import type { DateInputMessages } from '../locale/messages/date-input.js'
 import type { CalendarSystem } from '../utils/calendarSystem.js'
 import type { DateBounds, DateEntryResult, DateInputEntryError } from './dateEntry.js'
 import type { DateInputFormat } from './types.js'
-import { computed, nextTick, onScopeDispose, ref, shallowRef, watch } from 'vue'
-import { dateEntryErrorKind, dateEntryMessage, isAcceptedEntry, parseDateEntry, sameEntryError, toEntryError } from './dateEntry.js'
+import { computed, nextTick, ref, watch } from 'vue'
+import { useEntryErrorReport } from '../Field/useEntryErrorReport.js'
+import { dateEntryErrorKind, dateEntryMessage, isAcceptedEntry, parseDateEntry, toEntryError } from './dateEntry.js'
 import { formatCommittedDate, toIsoDate } from './dateText.js'
 
 export interface TypedDateEntryOptions {
@@ -96,37 +97,14 @@ export function useTypedDateEntry(options: TypedDateEntryOptions): TypedDateEntr
     ? dateEntryMessage(shown.value.result, options.bounds(), options.format(), options.locale(), options.messages(), calendar())
     : null)
   const entryError = computed(() => shown.value ? toEntryError(shown.value.result, shown.value.text, options.bounds()) : null)
-  const callerError = computed(() => {
-    const status = options.status()
-    return options.hasEntryErrorListener() && status?.type === 'error' && status.message ? status.message : null
-  })
-
-  const fieldStatus = computed<FieldStatusInput | undefined>(() => message.value != null && callerError.value == null
-    ? { type: 'error', message: message.value }
-    : options.status())
-
-  // 拒绝开始时调用方的 error 说明没变，状态就不会变，也就没人念；字段的 alert 念一次。
-  // 拒绝期间调用方换了说明，Field 会念新的，这里不再重复。
-  const repeat = shallowRef<string | null>(null)
-  watch(() => message.value != null, (rejected) => {
-    repeat.value = rejected ? callerError.value : null
-  })
-  watch(callerError, (next) => {
-    if (repeat.value !== null && repeat.value !== next)
-      repeat.value = null
-  })
-  const alertMessage = computed(() => message.value != null && repeat.value != null && repeat.value === callerError.value ? repeat.value : '')
-
-  let lastReport: DateInputEntryError | null = null
-  watch(entryError, (next) => {
-    if (sameEntryError(next, lastReport))
-      return
-    lastReport = next
-    options.reportEntryError(next)
-  })
-  onScopeDispose(() => {
-    if (lastReport != null)
-      options.reportEntryError(null)
+  const { fieldStatus, alertMessage } = useEntryErrorReport<DateInputEntryError>({
+    entryError: () => entryError.value,
+    rejectionMessage: () => message.value,
+    status: options.status,
+    // 调用方监听了 `entryErrorChange`，它的 error 状态（带说明）才替字段措辞。
+    callerErrorPrecedence: 'withCallback',
+    hasListener: options.hasEntryErrorListener,
+    report: options.reportEntryError,
   })
 
   function reset(): void {

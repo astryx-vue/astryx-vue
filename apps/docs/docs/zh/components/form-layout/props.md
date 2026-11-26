@@ -29,7 +29,7 @@ footer: false
         <td><code>defaultEntryErrorBehavior</code></td>
         <td><code>'complete' | 'blur-or-enter'</code></td>
         <td>-</td>
-        <td>里面日期字段（DateInput、DateTimeInput）默认的 <code>entryErrorBehavior</code>。字段自己设了以字段为准，都没设时是 <code>complete</code>。</td>
+        <td>里面日期和时间字段（DateInput、DateTimeInput、TimeInput）默认的 <code>entryErrorBehavior</code>。NumberInput 也接受这个属性，但不读默认值：一个数只有回车或失焦才算打完。字段自己设了以字段为准，都没设时是 <code>complete</code>。</td>
       </tr>
     </tbody>
   </table>

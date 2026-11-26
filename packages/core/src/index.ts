@@ -980,7 +980,12 @@ export type {
   NavMenuSize,
 } from './NavMenu/index.js'
 export { NumberInput } from './NumberInput/index.js'
-export type { NumberInputEmits, NumberInputProps, NumberInputStatus } from './NumberInput/index.js'
+export type {
+  NumberInputEmits,
+  NumberInputEntryError,
+  NumberInputProps,
+  NumberInputStatus,
+} from './NumberInput/index.js'
 export { Outline, parseOutlineFromMarkdown, useOutlineFromDOM, useOutlineFromMarkdown } from './Outline/index.js'
 export type {
   OutlineDensity,

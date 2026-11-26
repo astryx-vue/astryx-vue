@@ -171,7 +171,3 @@ export function dateEntryMessage(
   }
   return messages.invalidDate
 }
-
-export function sameEntryError(a: DateInputEntryError | null, b: DateInputEntryError | null): boolean {
-  return a === b || (a != null && b != null && a.kind === b.kind && a.text === b.text && a.date === b.date)
-}

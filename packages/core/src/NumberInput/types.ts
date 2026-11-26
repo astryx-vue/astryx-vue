@@ -1,6 +1,11 @@
 import type { Component, VNode } from 'vue'
 import type { FieldPartStylingProps } from '../Field/fieldParts.js'
-import type { FieldStatusInput, FieldStatusType, FieldStatusVariant } from '../Field/types.js'
+import type { FieldStatusInput, FieldStatusPlacement, FieldStatusType } from '../Field/types.js'
+import type { EntryErrorBehavior } from '../FormLayout/context.js'
+import type { IconName } from '../Icon/types.js'
+import type { NumberInputEntryError } from './useTypedNumber.js'
+
+export type { NumberInputEntryError } from './useTypedNumber.js'
 
 /** 带说明的校验状态。仍接受单独的状态字符串。 */
 export type NumberInputStatus = FieldStatusInput | 'default' | FieldStatusType
@@ -44,8 +49,8 @@ export interface NumberInputProps extends FieldPartStylingProps {
   labelTooltip?: string
   /** 标签文字前的图标组件 */
   labelIcon?: Component
-  /** 输入框起始位置的图标组件 */
-  startIcon?: Component
+  /** 输入框起始位置的图标：语义图标名（如 `'search'`），或一个图标组件 */
+  startIcon?: IconName | Component
   /** 单位，显示在输入框末尾，例如 % */
   units?: string | null
   /** 有值时显示清除按钮 */
@@ -73,7 +78,13 @@ export interface NumberInputProps extends FieldPartStylingProps {
   /** 校验状态。对象形式会在字段下方显示说明。 */
   status?: NumberInputStatus
   /** 状态说明的呈现方式 */
-  statusVariant?: FieldStatusVariant | 'tooltip'
+  statusVariant?: FieldStatusPlacement
+  /**
+   * 被拒的输入什么时候亮出来。一个数只有 Enter 或失焦才算打完，所以 `'complete'` 和 `'blur-or-enter'`
+   * 对数字框的时机相同：打字时什么都不亮，Enter 或失焦时才亮。这个属性不会写到 input 上，
+   * 数字框也不读 FormLayout 的默认值；有它是为了让一个表单能把同一个值传给里面所有的日期、时间和数字字段。
+   */
+  entryErrorBehavior?: EntryErrorBehavior
 }
 
 export interface NumberInputEmits {
@@ -83,6 +94,8 @@ export interface NumberInputEmits {
   'blur': [event: FocusEvent]
   'enter': [event: KeyboardEvent]
   'keydown': [event: KeyboardEvent]
+  /** 字段对打进来的文字的拒绝变了：开始、改变、结束（`null`）。卸载时若还有拒绝，也会带 `null` 报一次。 */
+  'entryErrorChange': [error: NumberInputEntryError | null]
 }
 
 export interface NumberInputSlots {

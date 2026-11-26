@@ -29,7 +29,7 @@ footer: false
         <td><code>defaultEntryErrorBehavior</code></td>
         <td><code>'complete' | 'blur-or-enter'</code></td>
         <td>-</td>
-        <td>Default <code>entryErrorBehavior</code> for the date fields inside (DateInput, DateTimeInput). A field's own setting wins; without either, fields use <code>complete</code>.</td>
+        <td>Default <code>entryErrorBehavior</code> for the date and time fields inside (DateInput, DateTimeInput, TimeInput). NumberInput takes the prop too but reads no default, since a typed number is complete only at Enter or blur. A field's own setting wins; without either, fields use <code>complete</code>.</td>
       </tr>
     </tbody>
   </table>

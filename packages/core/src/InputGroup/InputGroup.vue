@@ -37,10 +37,7 @@ provide(INPUT_GROUP_KEY, {
 
 const groupClass = computed(() => [
   `size-${size.value}`,
-  {
-    'is-disabled': disabled.value,
-    [`status-${props.status?.type}`]: props.status != null,
-  },
+  { 'is-disabled': disabled.value },
 ])
 </script>
 
@@ -63,6 +60,7 @@ const groupClass = computed(() => [
     <div
       class="astryx-input-group"
       :class="groupClass"
+      :data-status="status?.type"
       role="group"
       :aria-disabled="disabled || undefined"
       :aria-labelledby="labelId"
@@ -79,7 +77,7 @@ const groupClass = computed(() => [
       </div>
     </div>
   </Field>
-  <div v-else class="astryx-input-group" :class="groupClass" :aria-disabled="disabled || undefined">
+  <div v-else class="astryx-input-group" :class="groupClass" :data-status="status?.type" :aria-disabled="disabled || undefined">
     <div v-if="$slots.before" class="astryx-input-group-addon before">
       <slot name="before" />
     </div>
