@@ -4,6 +4,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, useAttrs,
 import { useScrollLock } from '../composables/internal/scrollLock.js'
 import { useFocusTrap } from '../composables/useFocusTrap.js'
 import { useRestoreFocus } from '../composables/useRestoreFocus.js'
+import { holdEntranceInput } from '../layer/holdEntranceInput.js'
 import { provideLayerDepth } from '../layer/layerDepth.js'
 import { resetLayerScopedContext } from '../layer/scopedProvide.js'
 import { useComponentMessages } from '../locale/context.js'
@@ -50,6 +51,13 @@ const landmarkLabelledby = computed(() => (attrs['aria-labelledby'] as string | 
 const sideIsStart = computed(() => resolvedSide.value === 'start')
 const CLOSE_DELAY_MS = 300
 let closeTimer: ReturnType<typeof setTimeout> | undefined
+// 主指针是手指时，抽屉滑进来之前（最多 CLOSE_DELAY_MS）什么都点不到；关闭不挡。
+let releaseEntrance: (() => void) | null = null
+
+function releaseEntranceHold(): void {
+  releaseEntrance?.()
+  releaseEntrance = null
+}
 
 useScrollLock(isOpen)
 // 启用开关要一直开着。关掉时 shouldRestore 变 false，启用开关如果跟着一起关，焦点就回不去。
@@ -96,6 +104,7 @@ function syncDialog(open: boolean): void {
   const dialog = dialogRef.value
   if (!dialog)
     return
+  releaseEntranceHold()
   if (open) {
     clearCloseTimer()
     closing.value = false
@@ -103,6 +112,10 @@ function syncDialog(open: boolean): void {
       dialog.showModal()
     else
       dialog.setAttribute('open', '')
+    releaseEntrance = holdEntranceInput(dialog, {
+      entrance: dialog.querySelector('.astryx-mobile-nav__drawer'),
+      capMs: CLOSE_DELAY_MS,
+    })
     return
   }
   if (!dialog.open || reduceMotion()) {
@@ -154,6 +167,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  releaseEntranceHold()
   clearCloseTimer()
   const dialog = dialogRef.value
   if (dialog?.open && typeof dialog.close === 'function')

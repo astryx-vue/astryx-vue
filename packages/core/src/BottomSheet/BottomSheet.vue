@@ -6,6 +6,7 @@ import { focusForLastInput } from '../composables/internal/focusReturn.js'
 import { useFocusTrap } from '../composables/useFocusTrap.js'
 import { useRestoreFocus } from '../composables/useRestoreFocus.js'
 import { useScrollLock } from '../composables/useScrollLock.js'
+import { holdKeptInside } from '../layer/inputHold.js'
 import { createModalOutletHandle } from '../layer/modalOutlet.js'
 import { isImeKeyEvent } from '../utils/ime.js'
 import BottomSheetPanel from './BottomSheetPanel.vue'
@@ -229,6 +230,18 @@ watch(isOpen, (value) => {
   openSheet()
 }, { flush: 'post' })
 
+// 关闭中的抽屉交给浮层运行时的输入暂挡：页面照常可点；焦点还留在里面时内容不藏，
+// 只放行 Tab，焦点一离开就整个变成 inert。退场结束或重新打开时放开。
+const isExiting = computed(() => !hosted.value && !props.isInline && !isOpen.value && isPresented.value)
+let releaseExitHold: (() => void) | null = null
+watch(isExiting, (exiting) => {
+  releaseExitHold?.()
+  releaseExitHold = null
+  const element = dialog.value
+  if (exiting && element != null)
+    releaseExitHold = holdKeptInside(element, new Promise<never>(() => {}))
+}, { flush: 'post' })
+
 onMounted(() => {
   if (hosted.value && props.sheetId != null) {
     switcher?.register(props.sheetId, {
@@ -243,6 +256,8 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  releaseExitHold?.()
+  releaseExitHold = null
   modalOutlet.detach()
   if (props.sheetId != null)
     switcher?.unregister(props.sheetId)
@@ -300,6 +315,7 @@ defineExpose({
       </BottomSheetPanel>
     </div>
   </div>
+  <!-- eslint-disable-next-line vue-a11y/no-static-element-interactions -- 点在 dialog 自身上等于点遮罩；键盘走原生 cancel 和下面的 keydown。 -->
   <dialog
     v-else
     ref="dialog"
@@ -311,9 +327,7 @@ defineExpose({
     :aria-label="dialogLabel"
     :aria-labelledby="labelledBy"
     :aria-modal="hasScrim && isOpen ? 'true' : undefined"
-    :aria-hidden="!isOpen && isPresented ? 'true' : undefined"
     :role="purpose === 'required' ? 'alertdialog' : undefined"
-    :inert="!isOpen && isPresented ? true : undefined"
     :style="dialogStyle"
     @cancel="onCancel"
     @click="onDialogClick"
