@@ -1,5 +1,15 @@
 # @astryx-vue/core
 
+## 0.12.1
+
+### Patch Changes
+
+- [#541](https://github.com/astryx-vue/astryx-vue/pull/541) [`a059c14`](https://github.com/astryx-vue/astryx-vue/commit/a059c14bcde7d82367b5bf2f82e6e2b6d81d4b39) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Lightbox 修了一批看图时的问题：从右往左的页面里方向键朝按钮那一侧翻页；第一项还没到就打开的灯箱等它到了再打开；NaN 或小数下标显示最近的一项；`0` 回到适应大小；换页播报在打开的灯箱里也听得到；Tab 不再跑出灯箱；关闭或被移除时焦点回到打开者；关着时视频不自动播放，关闭时停下正在播的视频；单张照片的图注也坐在图注底色上；点照片旁边的空白会关闭；高度按手机实际露出的视口算，Safari 工具栏不再盖住图注。
+
+- [#542](https://github.com/astryx-vue/astryx-vue/pull/542) [`d74f8eb`](https://github.com/astryx-vue/astryx-vue/commit/d74f8eb77d168e27efbad72a49268dff795d3de5) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 浮层与提示的一批修正：Tooltip 在焦点到达时才判断它算不算触发焦点（漫游 tabindex 成员、可聚焦的包裹层都能用键盘打开，鼠标按下后脚本挪来的焦点不再打开提示），`isOpen` 为 false 时本该打开的焦点只发出 `openChange(true)`，禁用时收起已打开的提示；Popover 的高度跟随动态视口并避开刘海和主屏指示条，屏幕键盘弹出时锚定浮层落在键盘上方；触摸在浮层外按下后拖动不再关掉浮层；Dialog 与 Drawer 的遮罩不再模糊；InfoTip 在粗指针下的点击区域随邻居间距伸缩，补了「指标释义」和「权限说明」两个示例；LayoutContent 也带上 `data-container`，主题可以把对话框、卡片的正文和页眉页脚分开设计；新增 useLightbox 文档页。
+
+- [#541](https://github.com/astryx-vue/astryx-vue/pull/541) [`32ea195`](https://github.com/astryx-vue/astryx-vue/commit/32ea1954e3beea4936962d24d555582c8a859b9b) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Popover 和 Dialog 的焦点更稳：打开时焦点落在第一个可用的 Tab 停靠点（跳过 aria-disabled 控件，onShow 里自己放好的焦点不再被挪走）；关闭时只把困在里面的焦点送回打开者，打开者不在了就找它附近的停靠点，不再掉到 body，也不再抢走你在关闭回调里放好的焦点。关着的 Popover 不再带 dialog 角色和名称，关着的触发器不再写 aria-controls，aria-disabled 的触发器不会打开浮层。
+
 ## 0.12.0
 
 ### Minor Changes
