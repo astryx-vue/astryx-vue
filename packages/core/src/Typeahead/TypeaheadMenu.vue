@@ -93,14 +93,14 @@ function onOptionClick(id: string, disabled?: boolean): void {
     <div
       v-if="props.status === 'loading' && props.entries.length === 0"
       class="astryx-typeahead-state"
-      role="status"
+      aria-hidden="true"
     >
       <Spinner size="sm" :label="props.loadingText" />
     </div>
     <div v-else-if="props.status === 'error'" class="astryx-typeahead-state" role="alert">
       {{ props.errorText }}
     </div>
-    <div v-else-if="props.entries.length === 0" class="astryx-typeahead-state" :role="props.grid ? 'presentation' : 'option'" :aria-selected="props.grid ? undefined : 'false'" aria-disabled="true">
+    <div v-else-if="props.entries.length === 0 && props.status !== 'idle'" class="astryx-typeahead-state" :role="props.grid ? 'presentation' : 'option'" :aria-selected="props.grid ? undefined : 'false'" aria-disabled="true">
       <slot name="empty">
         {{ props.emptyText }}
       </slot>
@@ -131,6 +131,9 @@ function onOptionClick(id: string, disabled?: boolean): void {
           :aria-selected="row.entry.selected ? 'true' : 'false'"
           :aria-disabled="row.entry.disabled || undefined"
           :data-option-id="row.entry.id"
+          :data-highlighted="row.index === props.activeIndex ? 'highlighted' : undefined"
+          :data-selected="row.entry.selected ? 'selected' : undefined"
+          :data-disabled="row.entry.disabled ? 'disabled' : undefined"
           tabindex="-1"
           @mousedown.prevent
           @mouseenter="onRowEnter($event, row.index)"

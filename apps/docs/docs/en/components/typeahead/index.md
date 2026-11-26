@@ -36,7 +36,7 @@ const source = createStaticSource([
 
 An async source returns a Promise. `useAsyncSource` waits until typing pauses, 150 milliseconds by default, then starts the request. A newer search cancels the previous one, and a stale response is dropped. An empty query uses `bootstrap` when it exists. Loading, no results, and a failed request each get their own row in the menu.
 
-Arrow keys move the highlight, `Enter` selects it, and `Escape` closes the menu. While focus is in the input, `Home` and `End` move the caret. After a selection, the value collapses to a focusable token. Focusing it again returns to search.
+Arrow keys move the highlight, `Enter` selects it, and `Escape` closes the menu. While focus is in the input, `Home` and `End` move the caret. After a selection, the value collapses to a focusable token. Focusing it again returns to search. While the value is being edited, `Escape` closes the list first; a second `Escape` restores the token and puts focus on it. `Backspace` or `Delete` on the token clears the value the way the clear button does and announces it, or starts editing when the clear button is off. Choosing a result reports the emptied query through `changeQuery`. A focus list that has nothing to show, or fails to load, closes instead of staying open and empty.
 
 Built-in strings are English. Call `provideAstryxLocale('zh-CN')` for the Chinese strings.
 

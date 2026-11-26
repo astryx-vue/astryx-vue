@@ -1,14 +1,12 @@
 <script setup lang="ts" generic="T extends SearchableItem">
 import type { SearchableItem } from '../composables/useAsyncSource.js'
-import type { FieldStatusInput } from '../Field/types.js'
 import type { TokenizerChange, TokenizerEmits, TokenizerProps, TokenizerSlots } from './types.js'
 import { computed, nextTick, onMounted, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
-import { useButtonTooltip } from '../Button/useButtonTooltip.js'
+import { useBusyAnnouncement } from '../composables/internal/busyAnnouncement.js'
 import { devPropError, isDevBuild } from '../composables/internal/devBuild.js'
 import { useTokenRemoveTap } from '../composables/internal/useTokenRemoveTap.js'
 import { useAnnounce } from '../composables/useAnnounce.js'
-import { useInputStatusIcon } from '../composables/useInputStatusIcon.js'
 import { useOverflow } from '../composables/useOverflow.js'
 import { useResolvedLabelHidden } from '../composables/useResolvedLabelHidden.js'
 import Field from '../Field/Field.vue'
@@ -19,11 +17,14 @@ import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { useLatchedOptionGrid } from '../selectors/useLatchedOptionGrid.js'
 import { useSize } from '../SizeContext/SizeContext.js'
 import Token from '../Token/Token.vue'
-import TypeaheadMenu from '../Typeahead/TypeaheadMenu.vue'
+import TypeaheadPopup from '../Typeahead/TypeaheadPopup.vue'
 import { scrollOptionIntoView, useAnchoredListbox } from '../Typeahead/useAnchoredListbox.js'
 import { useTypeaheadAnnouncement } from '../Typeahead/useTypeaheadAnnouncement.js'
 import { useTypeaheadMenu } from '../Typeahead/useTypeaheadMenu.js'
+import { useTypeaheadMenuConfig } from '../Typeahead/useTypeaheadMenuConfig.js'
 import { pickInputAttrs } from './inputAttrs.js'
+import { useTokenizerDisabled } from './useTokenizerDisabled.js'
+import { useTokenizerFieldAria } from './useTokenizerFieldAria.js'
 import { useTokenizerKeys } from './useTokenizerKeys.js'
 import '../../styles/typeahead.css'
 import '../../styles/tokenizer.css'
@@ -87,22 +88,15 @@ const focused = ref(false)
 const placeholderHeight = ref(0)
 const announce = useAnnounce()
 const anchorRef = useTemplateRef<HTMLElement>('anchorRef')
-const listboxRef = useTemplateRef<HTMLElement>('listboxRef')
+const popupRef = useTemplateRef<{ el: HTMLElement | null }>('popupRef')
+const listboxRef = computed(() => popupRef.value?.el ?? null)
 useScrollbars(listboxRef)
 const inputRef = useTemplateRef<HTMLInputElement>('inputRef')
 const tokenEls = new Map<number, HTMLElement>()
 
 const placeholder = computed(() => props.placeholder ?? messages.value.tokenizer.placeholder)
 const emptyText = computed(() => props.emptySearchText ?? props.emptyText ?? messages.value.tokenizer.empty)
-/** 新名 disabledMessage 优先，旧名 disabledReason 继续可用。 */
-const disabledMessage = computed(() => {
-  const message = props.disabledMessage?.trim() ? props.disabledMessage : props.disabledReason
-  return message?.trim() ? message : undefined
-})
-const focusableDisabled = computed(() => Boolean(props.disabled && disabledMessage.value))
-/** 有禁用原因时鼠标悬停或键盘聚焦都能读到它。 */
-const showsDisabledMessage = computed(() => Boolean(props.disabled) && Boolean(disabledMessage.value))
-const disabledTooltip = useButtonTooltip(showsDisabledMessage)
+const { disabledMessage, showsDisabledMessage, focusableDisabled, disabledTooltip } = useTokenizerDisabled(props)
 /** 两个名字任一为真就画清除按钮。 */
 const showsClear = computed(() => props.hasClear || props.clearable)
 /** 两个名字任一为真就在聚焦时先展开。 */
@@ -114,24 +108,13 @@ const hiddenCarrierItems = computed(() => props.disabled ? [] : values.value)
 const atMax = computed(() => props.maxEntries != null && values.value.length >= props.maxEntries)
 const collapsed = computed(() => props.overflow !== 'none' && !focused.value)
 const floating = computed(() => props.overflow === 'unfocused-layer' && focused.value)
-const fieldStatus = computed<FieldStatusInput | undefined>(() => {
-  if (!props.statusMessage || props.status === 'default')
-    return undefined
-  return { type: props.status, message: props.statusMessage }
-})
-/** 调用方的 aria-labelledby 接在字段自己的标签后面，不取代它。 */
-const labelledBy = computed(() => {
-  const external = attrs['aria-labelledby']
-  return typeof external === 'string' && external !== '' ? `${fieldLabelId} ${external}` : undefined
-})
-const { statusIcon, statusIconProps } = useInputStatusIcon({
-  status: () => fieldStatus.value,
-  statusVariant: () => props.statusVariant,
-})
-const describedBy = computed(() => {
-  // 外面给的 aria-describedby 和自己算出来的说明都要读，不能二选一。
-  const external = typeof attrs['aria-describedby'] === 'string' ? attrs['aria-describedby'] : undefined
-  return [external, props.description ? `${inputId}-description` : undefined, props.statusMessage ? `${inputId}-status` : undefined, focusableDisabled.value ? disabledId : undefined].filter(Boolean).join(' ') || undefined
+const { fieldStatus, labelledBy, statusIcon, statusIconProps, describedBy } = useTokenizerFieldAria({
+  props,
+  attrs,
+  inputId,
+  fieldLabelId,
+  disabledId,
+  hasDisabledDescription: computed(() => focusableDisabled.value && Boolean(disabledMessage.value)),
 })
 
 function inputAttrs(): Record<string, unknown> {
@@ -144,7 +127,7 @@ const menu = useTypeaheadMenu<T>({
   showOnFocus: () => showsEntriesOnFocus.value && !atMax.value,
   minQueryLength: () => props.minQueryLength,
   maxItems: () => props.maxMenuItems,
-  disabled: () => props.disabled || atMax.value,
+  disabled: () => props.disabled || atMax.value || props.menu?.role === 'dialog',
   excludeIds: () => values.value.map(item => item.id),
   blockedLabels: () => values.value.map(item => item.label),
   creatable: () => isCreatable.value && !atMax.value,
@@ -156,19 +139,32 @@ const menu = useTypeaheadMenu<T>({
   },
 })
 
+/** 搜索忙碌时由输入框念一次「加载中」；列表里的转圈只是装饰。 */
+const settleBusy = useBusyAnnouncement(() => menu.status.value === 'loading', () => messages.value.tokenizer.loading, inputRef)
+
 useTypeaheadAnnouncement({
   menu,
+  settleBusy,
   emptyText: () => emptyText.value,
   emptySearchText: () => emptyText.value,
   resultCount: count => messages.value.tokenizer.resultCount(count),
 })
 
+const menuConfig = useTypeaheadMenuConfig({
+  config: () => props.menu,
+  popupEl: () => listboxRef.value,
+  inputEl: () => inputRef.value,
+  listbox: { isOpen: menu.combobox.isOpen, open: () => menu.open(), close: () => menu.close() },
+  isDisabled: () => props.disabled,
+  canOpenList: () => showsEntriesOnFocus.value || menu.query.value !== '',
+})
+
 const anchored = useAnchoredListbox({
   anchor: anchorRef,
   layer: listboxRef,
-  isOpen: menu.combobox.isOpen,
+  isOpen: menuConfig.popupOpen,
   menuWidth: () => props.menuWidth,
-  onDismiss: () => menu.close(),
+  onDismiss: () => menuConfig.isDialog.value ? menuConfig.dismiss() : menu.close(),
 })
 
 onMounted(() => {
@@ -184,13 +180,8 @@ const hiddenCount = computed(() => Math.max(0, tokenCount.value - visibleCount.v
 const measureMoreLabel = computed(() => messages.value.tokenizer.more(Math.max(hiddenCount.value, 1)))
 const visibleItems = computed(() => values.value.slice(0, visibleCount.value))
 
-watch(collapsed, () => {
-  void nextTick(() => overflow.remeasure())
-})
-
-watch(() => menu.combobox.isOpen.value, (isOpen) => {
-  emit('openChange', isOpen)
-})
+watch(collapsed, () => void nextTick(() => overflow.remeasure()))
+watch(menuConfig.popupOpen, isOpen => emit('openChange', isOpen))
 
 watch(() => menu.combobox.activeIndex.value, (index) => {
   if (!menu.combobox.isOpen.value || index < 0)
@@ -209,11 +200,12 @@ function add(item: T, type: 'add' | 'create'): void {
   // 从聚焦时展开的那张清单里选（还没输入过文字）：焦点和清单都留着，方便接着选下一个。
   const fromFocusList = showsEntriesOnFocus.value && type === 'add' && menu.query.value === ''
   const pickedIndex = Math.max(0, menu.entries.value.findIndex(entry => entry.item.id === item.id))
-  const next = [...values.value, item]
-  commit(next, { type, item })
+  menuConfig.beginPick()
+  commit([...values.value, item], { type, item })
   announce(messages.value.tokenizer.added(item.label))
-  menu.query.value = ''
-  if (!fromFocusList)
+  menu.resetQuery()
+  // 在 `change` 里调了 `open()` 的话，菜单跟着这次选择保持打开。
+  if (!fromFocusList && !menuConfig.endPick())
     menu.close()
   void nextTick(() => {
     inputRef.value?.focus()
@@ -281,8 +273,7 @@ function onFocusIn(event: FocusEvent): void {
 
 function onFocusOut(event: FocusEvent): void {
   disabledTooltip.onBlur()
-  const next = event.relatedTarget
-  if (next instanceof Node && (anchorRef.value?.contains(next) || listboxRef.value?.contains(next)))
+  if (isInsideTokenizer(event.relatedTarget))
     return
   focused.value = false
   menu.close()
@@ -303,7 +294,7 @@ const optionGrid = useLatchedOptionGrid({
   listboxId: () => listboxId,
 })
 
-const { onInputKeyDown, onTokenKeyDown } = useTokenizerKeys<T>({
+const { onInputKeyDown: onListKeyDown, onTokenKeyDown } = useTokenizerKeys<T>({
   values,
   disabled: () => props.disabled,
   menu,
@@ -312,6 +303,11 @@ const { onInputKeyDown, onTokenKeyDown } = useTokenizerKeys<T>({
   remove,
   focusToken,
 })
+
+function onInputKeyDown(event: KeyboardEvent): void {
+  if (!menuConfig.closeOnEscape(event))
+    onListKeyDown(event)
+}
 
 function onFieldClick(event: MouseEvent): void {
   if (props.disabled)
@@ -338,6 +334,8 @@ function onMenuSelect(id: string): void {
 defineExpose({
   focus: () => inputRef.value?.focus(),
   blur: () => inputRef.value?.blur(),
+  open: menuConfig.open,
+  close: menuConfig.close,
 })
 </script>
 
@@ -412,17 +410,19 @@ defineExpose({
         role="combobox"
         autocomplete="off"
         autocapitalize="off"
+        autocorrect="off"
+        enterkeyhint="search"
         :data-autofocus="props.hasAutoFocus || undefined"
         :placeholder="values.length === 0 ? placeholder : undefined"
         :value="menu.query.value"
         :disabled="props.disabled && !focusableDisabled"
         :readonly="focusableDisabled || atMax || undefined"
         :aria-disabled="focusableDisabled ? 'true' : undefined"
-        :aria-expanded="menu.combobox.isOpen.value"
-        :aria-haspopup="optionGrid.popupKind.value"
+        :aria-expanded="menuConfig.popupOpen.value"
+        :aria-haspopup="menuConfig.isDialog.value ? 'dialog' : optionGrid.popupKind.value"
         :aria-controls="listboxId"
         aria-autocomplete="list"
-        :aria-activedescendant="optionGrid.gridMode.value ? optionGrid.actionGrid.activeDescendant.value : (menu.activeId.value ? `${listboxId}-option-${menu.combobox.activeIndex.value}` : undefined)"
+        :aria-activedescendant="menuConfig.isDialog.value ? undefined : optionGrid.gridMode.value ? optionGrid.actionGrid.activeDescendant.value : (menu.activeId.value ? `${listboxId}-option-${menu.combobox.activeIndex.value}` : undefined)"
         :aria-labelledby="labelledBy"
         :aria-describedby="describedBy"
         :aria-required="props.required || undefined"
@@ -443,7 +443,7 @@ defineExpose({
         </svg>
       </button>
       <component :is="statusIcon" v-if="statusIcon" v-bind="statusIconProps" />
-      <span v-if="focusableDisabled" :id="disabledId" class="astryx-visually-hidden">{{ disabledMessage }}</span>
+      <span v-if="focusableDisabled && disabledMessage" :id="disabledId" class="astryx-visually-hidden">{{ disabledMessage }}</span>
       <input v-for="item in hiddenCarrierItems" :key="`${props.name}-${item.id}`" type="hidden" :name="props.name" :value="item.id" :disabled="!props.name">
     </div>
   </Field>
@@ -456,43 +456,42 @@ defineExpose({
     @pointer-enter="disabledTooltip.onTooltipPointerEnter"
     @pointer-leave="disabledTooltip.onTooltipPointerLeave"
   />
-  <Teleport to="body">
-    <div
-      v-show="menu.combobox.isOpen.value"
-      :id="listboxId"
-      ref="listboxRef"
-      class="astryx-typeahead-listbox astryx-layer"
-      :role="optionGrid.gridMode.value ? 'grid' : 'listbox'"
-      :aria-label="messages.tokenizer.results"
-      :data-placement="anchored.position.value.placement"
-      :style="anchored.style.value"
-      tabindex="-1"
-    >
-      <TypeaheadMenu
-        :entries="menu.entries.value.map(entry => ({ id: entry.id, label: entry.label, description: entry.description, disabled: entry.disabled, group: entry.group, action: entry.action, selected: values.some(item => item.id === entry.item.id) }))"
-        :active-index="menu.combobox.activeIndex.value"
-        :grid="optionGrid.gridMode.value"
-        :action-index="optionGrid.actionGrid.column.value === 'action' ? menu.combobox.activeIndex.value : -1"
-        :status="menu.status.value"
-        :listbox-id="listboxId"
-        :empty-text="emptyText"
-        :loading-text="messages.tokenizer.loading"
-        :error-text="messages.tokenizer.error"
-        @select="onMenuSelect"
-        @highlight="highlight"
-      >
-        <template v-if="$slots.item" #item="slotProps">
-          <slot
-            name="item"
-            :item="menu.entries.value.find(entry => entry.id === slotProps.entry.id)!.item"
-            :is-active="slotProps.isActive"
-            :is-selected="slotProps.isSelected"
-          />
-        </template>
-        <template v-if="$slots.empty" #empty>
-          <slot name="empty" />
-        </template>
-      </TypeaheadMenu>
-    </div>
-  </Teleport>
+  <TypeaheadPopup
+    :id="listboxId"
+    ref="popupRef"
+    :is-open="menuConfig.popupOpen.value"
+    :config="props.menu"
+    :label="messages.tokenizer.results"
+    :grid="optionGrid.gridMode.value"
+    :placement="anchored.position.value.placement"
+    :popup-style="anchored.style.value"
+    :entries="menu.entries.value.map(entry => ({ id: entry.id, label: entry.label, description: entry.description, disabled: entry.disabled, group: entry.group, action: entry.action, selected: values.some(item => item.id === entry.item.id) }))"
+    :active-index="menu.combobox.activeIndex.value"
+    :action-index="optionGrid.actionGrid.column.value === 'action' ? menu.combobox.activeIndex.value : -1"
+    :status="menu.menuStatus.value"
+    :empty-text="emptyText"
+    :loading-text="messages.tokenizer.loading"
+    :error-text="messages.tokenizer.error"
+    :query="menu.query.value"
+    :is-settled="menu.isSettled.value"
+    @select="onMenuSelect"
+    @highlight="highlight"
+    @close="menuConfig.close"
+    @keydown="menuConfig.closeOnEscape"
+  >
+    <template v-if="$slots.item" #item="slotProps">
+      <slot
+        name="item"
+        :item="menu.entries.value.find(entry => entry.id === slotProps.entry.id)!.item"
+        :is-active="slotProps.isActive"
+        :is-selected="slotProps.isSelected"
+      />
+    </template>
+    <template v-if="$slots.empty" #empty>
+      <slot name="empty" />
+    </template>
+    <template v-if="$slots.menu" #menu="menuProps">
+      <slot name="menu" v-bind="menuProps" />
+    </template>
+  </TypeaheadPopup>
 </template>

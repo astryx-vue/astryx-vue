@@ -106,7 +106,6 @@ export const UNPORTED_KEYS = {
   '@astryx.codeBlock.diffLabel': 'CodeBlock 显示 diff 时的「<语言> diff」标题还没移植',
   '@astryx.comments.errorAnnouncement': 'lab Comments 错误横幅通过共用播报通道读出还没移植',
   '@astryx.timestamp.relativeLabel': 'Timestamp 相对时间的无障碍名以显示的词开头还没移植',
-  '@astryx.typeahead.selectionCleared': 'Typeahead 用退格或删除键清掉已选值后的播报还没移植',
   '@astryx.step.status.unavailable': 'Stepper 紧凑布局里禁用步骤的读屏状态词还没移植',
   '@astryx.field.errorFallback': 'TextInput、TextArea 的错误状态没有文字时给读屏的兜底说明还没移植',
   '@astryx.richTextEditor.link.urlPlaceholder': 'RichTextEditor 的链接编辑还是对话框，换成锚定弹出层还没移植',

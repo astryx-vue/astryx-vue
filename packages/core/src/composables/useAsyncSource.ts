@@ -1,6 +1,7 @@
 import type { MaybeRefOrGetter, Ref, ShallowRef } from 'vue'
 import type { OptionActionNode } from '../selectors/optionAction.js'
 import { onScopeDispose, ref, shallowRef, toValue, watch } from 'vue'
+import { devWarn } from './useDevWarning.js'
 
 /**
  * 一条可搜索的候选项。`auxiliaryData` 用来挂业务数据，组件本身只读 `id` 和 `label`。
@@ -16,11 +17,27 @@ export interface SearchableItem<TAux = unknown> {
 }
 
 /**
+ * 一次搜索的上下文，作为 `search` 的第三个参数。
+ */
+export interface SearchContext<T extends SearchableItem = SearchableItem> {
+  /**
+   * 在 `search()` 落定之前先显示一份列表，比如页面上已经有的匹配项，服务端的答案随后追加。
+   *
+   * 每份列表都是数据源当时的完整答案。同一个查询的第一份列表可以换掉已有的行；
+   * 之后的每一份（包括 `search()` 的返回值）把已经显示的行留在最前面、顺序不变，
+   * 新行只加在它们后面，所以高亮的行不会被挤走。空列表不动已显示的行。
+   * 查询已经不是当前查询、或 `search()` 已经落定之后的调用会被忽略。
+   */
+  update: (items: T[]) => void
+}
+
+/**
  * 搜索数据源。同步数组和 Promise 都可以。
  * 新一次搜索开始时会调用 `cancel`，并传入 AbortSignal，用来丢掉过期请求。
+ * 搜索菜单还会传入 `context`，数据源可以用它先显示已有的匹配项。
  */
 export interface SearchSource<T extends SearchableItem = SearchableItem> {
-  search: (query: string, signal?: AbortSignal) => Promise<T[]> | T[]
+  search: (query: string, signal?: AbortSignal, context?: SearchContext<T>) => Promise<T[]> | T[]
   bootstrap?: (signal?: AbortSignal) => Promise<T[]> | T[]
   cancel?: () => void
 }
@@ -76,6 +93,8 @@ export interface AsyncSource<T extends SearchableItem = SearchableItem> {
   items: ShallowRef<T[]>
   status: Ref<AsyncSourceStatus>
   error: ShallowRef<unknown>
+  /** 当前的 items 和 status 是为哪个查询发出的请求得到的；请求还在防抖时它落后于 `query`。 */
+  searchedQuery: Ref<string | null>
   /** 忽略防抖，立刻再搜一次。 */
   reload: () => void
   cancel: () => void
@@ -83,6 +102,23 @@ export interface AsyncSource<T extends SearchableItem = SearchableItem> {
 
 function isPromise<T>(value: Promise<T> | T): value is Promise<T> {
   return typeof (value as Promise<T>)?.then === 'function'
+}
+
+/**
+ * 同一个查询的后一份列表接在前一份已显示的行后面：已显示的行留在最前面、顺序不变，
+ * 新行只加在后面。后一份列表移动或去掉了已显示的行时按它给的显示，并在开发期警告。
+ */
+function appendAfterShown<T extends SearchableItem>(shown: readonly T[], next: readonly T[]): T[] {
+  const nextById = new Map(next.map(item => [item.id, item]))
+  const kept = shown.filter(item => nextById.has(item.id))
+  const keepsShown = kept.length === shown.length
+    && next.filter(item => shown.some(row => row.id === item.id)).every((item, index) => item.id === shown[index]?.id)
+  if (!keepsShown) {
+    devWarn('SearchSource', 'a later list for the same query moved or removed rows that were already shown, so it is shown as given. Keep the shown rows first and in order, and add new rows after them.')
+    return [...next]
+  }
+  const shownIds = new Set(shown.map(item => item.id))
+  return [...shown.map(item => nextById.get(item.id) as T), ...next.filter(item => !shownIds.has(item.id))]
 }
 
 function isAbortError(error: unknown): boolean {
@@ -99,6 +135,7 @@ export function useAsyncSource<T extends SearchableItem = SearchableItem>(
   const items = shallowRef<T[]>([]) as ShallowRef<T[]>
   const status = ref<AsyncSourceStatus>('idle')
   const error = shallowRef<unknown>(null)
+  const searchedQuery = ref<string | null>(null)
   let requestId = 0
   let timer: ReturnType<typeof setTimeout> | undefined
   let controller: AbortController | undefined
@@ -121,9 +158,25 @@ export function useAsyncSource<T extends SearchableItem = SearchableItem>(
     const ac = new AbortController()
     controller = ac
     const query = options.query.value
-    const pending = query.trim() === '' && source.bootstrap
-      ? source.bootstrap(ac.signal)
-      : source.search(query, ac.signal)
+    searchedQuery.value = query
+    const isBootstrap = query.trim() === '' && source.bootstrap != null
+    // 同一个查询已经显示过的列表；新一份列表接在它的行后面。
+    let shown: T[] | null = null
+    let isSettled = false
+    const context: SearchContext<T> = {
+      update: (list) => {
+        if (isSettled || captured !== requestId || ac.signal.aborted)
+          return
+        if (list.length === 0 && shown != null)
+          return
+        shown = shown == null ? [...list] : appendAfterShown(shown, list)
+        items.value = shown
+        error.value = null
+      },
+    }
+    const pending = isBootstrap
+      ? source.bootstrap!(ac.signal)
+      : source.search(query, ac.signal, context)
 
     try {
       let resolved: T[]
@@ -134,13 +187,19 @@ export function useAsyncSource<T extends SearchableItem = SearchableItem>(
       else {
         resolved = pending
       }
+      isSettled = true
       if (captured !== requestId || ac.signal.aborted)
         return
+      if (!isBootstrap && shown != null && resolved.length > 0)
+        resolved = appendAfterShown(shown, resolved)
+      else if (!isBootstrap && shown != null)
+        resolved = shown
       items.value = resolved
       error.value = null
       status.value = resolved.length === 0 ? 'empty' : 'ready'
     }
     catch (caught) {
+      isSettled = true
       if (captured !== requestId || ac.signal.aborted || isAbortError(caught))
         return
       items.value = []
@@ -181,6 +240,7 @@ export function useAsyncSource<T extends SearchableItem = SearchableItem>(
     items,
     status,
     error,
+    searchedQuery,
     reload: () => schedule(true),
     cancel,
   }
