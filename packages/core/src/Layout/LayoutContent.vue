@@ -3,7 +3,7 @@ import type { StyleValue } from 'vue'
 import type { LayoutContentProps, LayoutContentSlots } from './types.js'
 import { computed, useAttrs, useTemplateRef } from 'vue'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
-import { useLayoutSlots } from './context.js'
+import { useLayoutContainer, useLayoutSlots } from './context.js'
 import { regionPaddingStyle } from './regionPadding.js'
 import '../../styles/layout.css'
 
@@ -22,6 +22,7 @@ const attrs = useAttrs()
 const root = useTemplateRef<HTMLDivElement>('root')
 useScrollbars(root, { enabled: () => props.isScrollable })
 const slots = useLayoutSlots()
+const container = useLayoutContainer()
 
 defineExpose({ element: root })
 
@@ -53,6 +54,7 @@ const rootStyle = computed<StyleValue>(() => [
     :style="rootStyle"
     :role="role"
     :aria-label="label"
+    :data-container="container ?? undefined"
     :data-panels="panels"
     :data-edge-start="!slots.hasStart || undefined"
     :data-edge-end="!slots.hasEnd || undefined"
