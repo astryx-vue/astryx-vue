@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
-import { nextTick } from 'vue'
+import { h, nextTick } from 'vue'
+import InternationalizationProvider from '../InternationalizationProvider/InternationalizationProvider.vue'
 import FileInput from './FileInput.vue'
 
 function file(name: string, type: string, size = 8): File {
@@ -135,5 +136,30 @@ describe('file input', () => {
     await nextTick()
     await Promise.resolve()
     expect(broken.emitted('actionError')?.[0]?.[0]).toMatchObject({ message: 'upload failed' })
+  })
+
+  it('names every rejected file and why in one status message, in the active locale', async () => {
+    const pick = async (wrapper: ReturnType<typeof mount>, files: File[]) => {
+      const input = wrapper.get('input[type="file"]')
+      const transfer = new DataTransfer()
+      for (const item of files)
+        transfer.items.add(item)
+      Object.defineProperty(input.element, 'files', { value: transfer.files, configurable: true })
+      await input.trigger('change')
+    }
+    const english = mount(FileInput, {
+      props: { 'label': 'Reports', 'modelValue': [], 'isMultiple': true, 'accept': '.pdf', 'maxSize': 1024, 'onUpdate:modelValue': () => {} },
+    })
+    await pick(english, [file('large.pdf', 'application/pdf', 4096), file('photo.png', 'image/png', 100), file('small.pdf', 'application/pdf', 100)])
+    expect(english.get('.astryx-field-status').text())
+      .toContain('"photo.png" is not an accepted file type, "large.pdf" exceeds 1.0 KB limit')
+    expect(english.emitted('update:modelValue')?.at(-1)?.[0]).toEqual([expect.objectContaining({ name: 'small.pdf' })])
+
+    const chinese = mount(InternationalizationProvider, {
+      props: { locale: 'zh-CN' },
+      slots: { default: () => h(FileInput, { 'label': '报告', 'modelValue': [], 'isMultiple': true, 'accept': '.pdf', 'maxSize': 1024, 'onUpdate:modelValue': () => {} }) },
+    })
+    await pick(chinese, [file('photo.png', 'image/png', 100), file('large.pdf', 'application/pdf', 4096)])
+    expect(chinese.get('.astryx-field-status').text()).toMatch(/“photo\.png”的文件类型、“large\.pdf”超过了/)
   })
 })
