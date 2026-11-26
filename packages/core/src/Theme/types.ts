@@ -8,6 +8,7 @@ import type { ColorScaleConfig } from './expandColorScale.js'
 import type { MotionScaleConfig } from './expandMotionScale.js'
 import type { RadiusScaleConfig } from './expandRadiusScale.js'
 import type { TypeScaleConfig } from './expandTypeScale.js'
+import type { MotionCharacter, ThemeMotionConfig, ThemeMotionKnobs } from './themeMotion.js'
 
 /** Color mode for a theme subtree. `system` follows the page and the OS. */
 export type ThemeMode = 'light' | 'dark' | 'system'
@@ -127,8 +128,14 @@ export interface DefineThemeInput<
   typography?: TypographyConfig
   /** Radius steps from a base pixel size and a multiplier. */
   radius?: RadiusScaleConfig
-  /** Duration steps from fast, medium, slow, and a ratio. */
-  motion?: MotionScaleConfig
+  /**
+   * Motion. `tempo` scales every duration (0.75–1.5, default 1) and the
+   * touch springs; `character` picks the entrance and move curves
+   * (`'crisp'`, `'standard'`, `'expressive'`). A duration scale (`fast`,
+   * `medium`, `slow`, `ratio`) sets durations itself and wins over `tempo`
+   * for them.
+   */
+  motion?: ThemeMotionConfig
   /**
    * Component style overrides, scoped to this theme name.
    * `Theme` injects the compiled sheet. `css` on the result is that sheet.
@@ -293,7 +300,10 @@ export interface MediaThemeProps {
 
 export type {
   ColorScaleConfig,
+  MotionCharacter,
   MotionScaleConfig,
   RadiusScaleConfig,
+  ThemeMotionConfig,
+  ThemeMotionKnobs,
   TypeScaleConfig,
 }

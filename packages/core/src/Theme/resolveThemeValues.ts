@@ -1,11 +1,12 @@
 import type { ColorScaleConfig } from './expandColorScale.js'
-import type { MotionScaleConfig } from './expandMotionScale.js'
 import type { RadiusScaleConfig } from './expandRadiusScale.js'
+import type { MotionLayerContext } from './motionLayerTokens.js'
+import type { ThemeMotionConfig } from './themeMotion.js'
 import type { ComponentStyleMap, ThemeTokens, ThemeTokenValue, TypographyConfig } from './types.js'
 import { checkDeclarationName, checkDeclarationValue, warnDroppedDeclaration } from './declarationBoundary.js'
 import { expandColorScale } from './expandColorScale.js'
-import { expandMotionScale } from './expandMotionScale.js'
 import { expandRadiusScale } from './expandRadiusScale.js'
+import { motionLayerTokens, settleMotionTokens } from './motionLayerTokens.js'
 import { normalizeTokenName, prefixTokenReferences } from './tokenName.js'
 import { resolveTypography } from './typography.js'
 
@@ -14,7 +15,7 @@ export interface ThemeValuesInput {
   color?: ColorScaleConfig
   typography?: TypographyConfig
   radius?: RadiusScaleConfig
-  motion?: MotionScaleConfig
+  motion?: ThemeMotionConfig
   tokens?: ThemeTokens
   components?: ComponentStyleMap
 }
@@ -95,21 +96,30 @@ export function mergeComponentMaps(
 /**
  * Expand the generator axes, then lay explicit `tokens` over the result.
  * Explicit tokens win token by token. Authored component styles win over
- * the generated type-scale rules property by property.
+ * the generated type-scale rules property by property. `motion` reads what
+ * lies beneath the layer from `context` (motionLayerTokens.ts).
  */
-export function resolveThemeValues(input: ThemeValuesInput, location: string): ResolvedThemeValues {
+export function resolveThemeValues(
+  input: ThemeValuesInput,
+  location: string,
+  context?: MotionLayerContext,
+): ResolvedThemeValues {
   const typography = resolveTypography(input.typography)
+  const motion = motionLayerTokens(input.motion)
   const generated: ThemeTokens = {
     ...(input.color ? expandColorScale(input.color) : {}),
     ...typography.tokens,
     ...(input.radius ? expandRadiusScale(input.radius) : {}),
-    ...(input.motion ? expandMotionScale(input.motion) : {}),
+    ...motion.shared,
   }
+  const tokens = {
+    ...resolveTokenMap(generated, `${location}generated`),
+    ...motion.private,
+    ...resolveTokenMap(input.tokens, `${location}tokens`),
+  }
+  settleMotionTokens(tokens, input, context)
   return {
-    tokens: {
-      ...resolveTokenMap(generated, `${location}generated`),
-      ...resolveTokenMap(input.tokens, `${location}tokens`),
-    },
+    tokens,
     components: mergeComponentMaps(typography.components, input.components),
   }
 }

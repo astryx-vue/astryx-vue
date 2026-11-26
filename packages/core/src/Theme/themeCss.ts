@@ -36,9 +36,29 @@ function scoped(themeName: string, rules: readonly string[]): string {
  */
 const TOKEN_SCOPE = ':scope.astryx-theme'
 
+const DURATION_FAST = '--astryx-duration-fast'
+const DURATION_EXIT = '--astryx-duration-exit'
+
+/**
+ * `--astryx-duration-exit` is a reference to `--astryx-duration-fast`, and a
+ * custom property's reference resolves where it is declared. A scope that
+ * sets its own fast duration (a `tempo`, a duration scale, or an explicit
+ * token) declares the reference again, so its dismissals follow that
+ * duration. A theme that sets the exit duration itself keeps its value, in
+ * its adaptation rules too.
+ */
+function withExitReference(
+  tokens: Readonly<Record<string, string>>,
+  theme: Readonly<Record<string, string>> = tokens,
+): Record<string, string> {
+  if (tokens[DURATION_FAST] === undefined || tokens[DURATION_EXIT] !== undefined || theme[DURATION_EXIT] !== undefined)
+    return { ...tokens }
+  return { ...tokens, [DURATION_EXIT]: `var(${DURATION_FAST})` }
+}
+
 /** Root token values: semantic tokens with their aliases, locals, syntax. */
 function rootTokens(source: ThemeCssSource): Record<string, string> {
-  const tokens = { ...bridgeComponentTokens(source.tokens), ...source.localTokens }
+  const tokens = { ...bridgeComponentTokens(withExitReference(source.tokens)), ...source.localTokens }
   if (source.syntax)
     Object.assign(tokens, syntaxThemeStyle(source.syntax))
   // Font sizes follow the reader's text size (see dynamicType.ts).
@@ -46,8 +66,8 @@ function rootTokens(source: ThemeCssSource): Record<string, string> {
 }
 
 /** Token values one adaptation rule rewrites. */
-function adaptedTokens(rule: ResolvedThemeAdaptationRule): Record<string, string> {
-  return readerTextSizeTokens({ ...bridgeComponentTokens(rule.tokens), ...rule.localTokens })
+function adaptedTokens(rule: ResolvedThemeAdaptationRule, source: ThemeCssSource): Record<string, string> {
+  return readerTextSizeTokens({ ...bridgeComponentTokens(withExitReference(rule.tokens, source.tokens)), ...rule.localTokens })
 }
 
 function rootRules(source: ThemeCssSource): string[] {
@@ -64,7 +84,7 @@ function adaptationBlocks(source: ThemeCssSource): string[] {
   for (const [index, rule] of rules.entries()) {
     const location = `adaptations[${index}].`
     const inner = [
-      ...tokenRule(TOKEN_SCOPE, adaptedTokens(rule), `${location}tokens`),
+      ...tokenRule(TOKEN_SCOPE, adaptedTokens(rule, source), `${location}tokens`),
       ...compileComponentRules(rule.components, location),
     ]
     if (inner.length > 0)
