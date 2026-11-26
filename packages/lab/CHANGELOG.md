@@ -1,5 +1,12 @@
 # @astryx-vue/lab
 
+## 0.6.6
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @astryx-vue/core@0.10.0
+
 ## 0.6.5
 
 ### Patch Changes

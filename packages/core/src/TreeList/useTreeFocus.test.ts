@@ -167,4 +167,39 @@ describe('useTreeFocus', () => {
     off.result.handleKeyDown(key('a'))
     expect(document.activeElement).toBe(item(tree, 'a'))
   })
+
+  it('folds accents and stroked letters, and a repeated letter cycles', () => {
+    vi.useFakeTimers()
+    item(tree, 'a').textContent = 'Ánh'
+    item(tree, 'd').textContent = 'Đào'
+    const { result } = mountComposable(() => {
+      const focus = useTreeFocus({})
+      focus.treeRef.value = tree
+      return focus
+    })
+
+    item(tree, 'd').focus()
+    result.handleKeyDown(key('a'))
+    expect(document.activeElement).toBe(item(tree, 'a'))
+    result.handleKeyDown(key('a'))
+    expect(document.activeElement).toBe(item(tree, 'b'))
+    vi.advanceTimersByTime(600)
+    result.handleKeyDown(key('d'))
+    expect(document.activeElement).toBe(item(tree, 'd'))
+  })
+
+  it('jumps on a letter typed with AltGr, which reports Control and Alt too', () => {
+    item(tree, 'd').textContent = 'Łódź'
+    const { result } = mountComposable(() => {
+      const focus = useTreeFocus({})
+      focus.treeRef.value = tree
+      return focus
+    })
+
+    item(tree, 'a').focus()
+    const altGr = new KeyboardEvent('keydown', { key: 'ł', ctrlKey: true, altKey: true, cancelable: true })
+    Object.defineProperty(altGr, 'getModifierState', { value: (name: string) => name === 'AltGraph' })
+    result.handleKeyDown(altGr)
+    expect(document.activeElement).toBe(item(tree, 'd'))
+  })
 })

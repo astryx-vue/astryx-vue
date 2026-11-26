@@ -15,7 +15,7 @@ Every decision in this library follows from four sentences.
 
 1. If a component covers it, don't hand-write it.
 2. Lay out from the outside in: pick the frame and the regions before writing content. See [Page layout](/en/guide/layout).
-3. Dense data renders as rows: `Table`, or a `List` with dividers, one item per row. `Card` is for self-contained widgets, galleries, and groups of settings.
+3. Dense data renders as rows: `Table`, or a `List` with dividers, one item per row. `Card` is for self-contained widgets, galleries, and discrete items; groups of settings use `Section`.
 4. Custom styles are plain CSS in `@layer astryx.overrides`. To mix in utility classes, see [Theme and styles](/en/guide/styling).
 5. Colors, spacing, and radii come from semantic variables: `var(--astryx-color-text-primary)`, `var(--astryx-spacing-4)`.
 6. Forms bind with `v-model`. `TextInput` and `CheckboxInput` require a value; there is no uncontrolled mode.

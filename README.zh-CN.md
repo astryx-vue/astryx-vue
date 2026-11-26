@@ -64,6 +64,12 @@ pnpm exec astryx-vue component Button
 npx astryx-vue search dialog
 ```
 
+装好之后，在动手写界面之前先运行一次 `init`。它不会问任何问题，会打印接入步骤（装哪些包、引主题、设语言），并把 astryx-vue 的使用指南存进 `AGENTS.md`/`CLAUDE.md`，让你和 AI Agent 先查组件再写代码，而不是靠猜：
+
+```sh
+pnpm exec astryx-vue init   # 或：npx astryx-vue init
+```
+
 不安装、只想临时用时，运行 `npx @astryx-vue/cli …`（注意：scope 不能省，因为 npm 上裸名 `astryx-vue` 不是这个包）。
 
 ```sh
