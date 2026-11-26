@@ -2952,16 +2952,24 @@
 
 ### v0.7.2
 
-- [ ] [`10dbc9dde`](https://github.com/meta/astryx/commit/10dbc9dde) docs: define bidirectionality design intent (#6047)
-- [ ] [`2d9221308`](https://github.com/meta/astryx/commit/2d9221308) docs(core): define the internationalization contract (#6048)
+- [x] [`10dbc9dde`](https://github.com/meta/astryx/commit/10dbc9dde) docs: define bidirectionality design intent (#6047)
+  - Vue 版已有：上游新增的是内部双向文字设计记录；Vue 文档 i18n 指南的「Right-to-left」一节已讲 dir、逻辑属性、镜像与测试方法
+- [x] [`2d9221308`](https://github.com/meta/astryx/commit/2d9221308) docs(core): define the internationalization contract (#6048)
+  - 已移植：[#534](https://github.com/astryx-vue/astryx-vue/pull/534)。InternationalizationProvider 文档补上「Provider boundary」结构说明（不渲染 DOM，向下提供语言、文案、覆盖和方向）；上游契约文档与测试属内部规范
 - [x] [`4f1b5c979`](https://github.com/meta/astryx/commit/4f1b5c979) docs: define RTL audit evidence policy (#6046)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`97a00379a`](https://github.com/meta/astryx/commit/97a00379a) feat(lab): DiffViewer — unified/split file diff for code review (#7536)
-- [ ] [`9fa22137e`](https://github.com/meta/astryx/commit/9fa22137e) feat(lab): add EmojiPicker (#7605)
-- [ ] [`5c208f6a4`](https://github.com/meta/astryx/commit/5c208f6a4) feat(lab): add CommentComposer (#7606)
-- [ ] [`fc12a1803`](https://github.com/meta/astryx/commit/fc12a1803) feat(lab): add CommentThread (#7607)
-- [ ] [`5c75a7550`](https://github.com/meta/astryx/commit/5c75a7550) feat(lab): add Comments (#7551)
-- [ ] [`493231799`](https://github.com/meta/astryx/commit/493231799) fix(cli): search finds compound names typed as words, other libraries' names, and verb forms (#7718)
+- [x] [`97a00379a`](https://github.com/meta/astryx/commit/97a00379a) feat(lab): DiffViewer — unified/split file diff for code review (#7536)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；DiffViewer 命名空间仍在 coverage.mjs 暂不接入名单
+- [x] [`9fa22137e`](https://github.com/meta/astryx/commit/9fa22137e) feat(lab): add EmojiPicker (#7605)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；EmojiPicker 的键早已接进 upstreamMap
+- [x] [`5c208f6a4`](https://github.com/meta/astryx/commit/5c208f6a4) feat(lab): add CommentComposer (#7606)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；CommentComposer 的键早已接进 upstreamMap
+- [x] [`fc12a1803`](https://github.com/meta/astryx/commit/fc12a1803) feat(lab): add CommentThread (#7607)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；CommentThread 的键早已接进 upstreamMap
+- [x] [`5c75a7550`](https://github.com/meta/astryx/commit/5c75a7550) feat(lab): add Comments (#7551)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；Comments 的键早已接进 upstreamMap
+- [x] [`493231799`](https://github.com/meta/astryx/commit/493231799) fix(cli): search finds compound names typed as words, other libraries' names, and verb forms (#7718)
+  - 已移植：[#514](https://github.com/astryx-vue/astryx-vue/pull/514)。按基础展示族结论：CLI 搜索收录别家叫法与常见图标名，Icon 文档关键词随之更新
 
 ### v0.7.3
 
@@ -2972,10 +2980,14 @@
 
 ### v0.7.4
 
-- [ ] [`2b60fa6fd`](https://github.com/meta/astryx/commit/2b60fa6fd) fix(inputs): silence the busy Spinner and announce the busy start once (TextInput, TextArea, Selector, MultiSelector) (#7920)
-- [ ] [`51ad2f40d`](https://github.com/meta/astryx/commit/51ad2f40d) fix(ChatComposerInput): announce the trigger menu's loading text through the shared channel (#7900)
-- [ ] [`9f3ab054c`](https://github.com/meta/astryx/commit/9f3ab054c) fix(ComplexSelector, Typeahead, Tokenizer): silence the busy Spinner and announce the busy start once (#7930)
-- [ ] [`a732e5c64`](https://github.com/meta/astryx/commit/a732e5c64) fix(DateInput, DateRangeInput): silence the busy Spinner and announce the busy start once (#7939)
+- [x] [`2b60fa6fd`](https://github.com/meta/astryx/commit/2b60fa6fd) fix(inputs): silence the busy Spinner and announce the busy start once (TextInput, TextArea, Selector, MultiSelector) (#7920)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐（只改了 spinner.loading 等键的说明，英文不变）；输入框忙碌播报属输入框族
+- [x] [`51ad2f40d`](https://github.com/meta/astryx/commit/51ad2f40d) fix(ChatComposerInput): announce the trigger menu's loading text through the shared channel (#7900)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。新键 chatTriggerMenu.searching 接入 chat.searching，ChatComposerInput 的搜索中文字可随目录翻译
+- [x] [`9f3ab054c`](https://github.com/meta/astryx/commit/9f3ab054c) fix(ComplexSelector, Typeahead, Tokenizer): silence the busy Spinner and announce the busy start once (#7930)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐（只改了 typeahead.loading 的说明）；组件忙碌播报属选择器族
+- [x] [`a732e5c64`](https://github.com/meta/astryx/commit/a732e5c64) fix(DateInput, DateRangeInput): silence the busy Spinner and announce the busy start once (#7939)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐（只改了键说明）；日期输入忙碌播报属日期族
 - [x] [`4fc0c4a48`](https://github.com/meta/astryx/commit/4fc0c4a48) feat(cli): experimental icon sets — icon definitions, `astryx experimental icon`, templates that use the installed set (#7759)
   - 不适用：上游内部规范和架构文档（自动初筛）
 
@@ -2993,36 +3005,55 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`47c4cbf19`](https://github.com/meta/astryx/commit/47c4cbf19) spec(AST-086): FR13 announces content revealed outside React on the owner's next render (#8325)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`b298b37d1`](https://github.com/meta/astryx/commit/b298b37d1) feat(theme): add surface-specific status color roles (#7657)
-- [ ] [`54fbccb27`](https://github.com/meta/astryx/commit/54fbccb27) feat(core): Tokenizer touch sheet behind experimental.presentation (#7977)
+- [x] [`b298b37d1`](https://github.com/meta/astryx/commit/b298b37d1) feat(theme): add surface-specific status color roles (#7657)
+  - 已移植：[#517](https://github.com/astryx-vue/astryx-vue/pull/517)。按基础展示族结论：状态色角色与 Icon 改读正确角色
+- [x] [`54fbccb27`](https://github.com/meta/astryx/commit/54fbccb27) feat(core): Tokenizer touch sheet behind experimental.presentation (#7977)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；Tokenizer 触屏弹层的新键在 Vue 版对应 lab MobileTokenizer，暂列 coverage.mjs 并写明缺口
 - [x] [`0472c4e07`](https://github.com/meta/astryx/commit/0472c4e07) test(rtl): enforce native touch target dimensions and remove centering exemption
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`fb36bba9f`](https://github.com/meta/astryx/commit/fb36bba9f) New Crowdin updates (#7626)
-- [ ] [`c86dc620c`](https://github.com/meta/astryx/commit/c86dc620c) fix(i18n): catch formatter returns and localize helper text (#7849)
-- [ ] [`05ead02aa`](https://github.com/meta/astryx/commit/05ead02aa) feat(Icon): a theme icon entry can be a function of the requested size (#8753)
-- [ ] [`db584bcb0`](https://github.com/meta/astryx/commit/db584bcb0) feat(Icon): a theme's width and height on an Icon size set its glyph dimension (#8759)
-- [ ] [`dae174730`](https://github.com/meta/astryx/commit/dae174730) feat(theme): a theme lists its icon variant names once (#8756)
-- [ ] [`33645a2d2`](https://github.com/meta/astryx/commit/33645a2d2) feat(Icon): request a theme's alternate icon artwork with variant (#8758)
+- [x] [`fb36bba9f`](https://github.com/meta/astryx/commit/fb36bba9f) New Crowdin updates (#7626)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。29 种语言目录随整体对齐到 v0.7.17 一并更新
+- [x] [`c86dc620c`](https://github.com/meta/astryx/commit/c86dc620c) fix(i18n): catch formatter returns and localize helper text (#7849)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。Kbd 键名、文件大小、粘贴计数的键接进 upstreamMap；icu.ts 认得数字骨架，文件大小按上游写成不分组、一位小数（组件部分见 #508）
+- [x] [`05ead02aa`](https://github.com/meta/astryx/commit/05ead02aa) feat(Icon): a theme icon entry can be a function of the requested size (#8753)
+  - 已移植：[#502](https://github.com/astryx-vue/astryx-vue/pull/502)。按基础展示族结论：主题图标条目可写成按尺寸取值的函数
+- [x] [`db584bcb0`](https://github.com/meta/astryx/commit/db584bcb0) feat(Icon): a theme's width and height on an Icon size set its glyph dimension (#8759)
+  - 已移植：[#502](https://github.com/astryx-vue/astryx-vue/pull/502)。按基础展示族结论：主题 Icon 尺寸的宽高决定字形尺寸
+- [x] [`dae174730`](https://github.com/meta/astryx/commit/dae174730) feat(theme): a theme lists its icon variant names once (#8756)
+  - 已移植：[#502](https://github.com/astryx-vue/astryx-vue/pull/502)。按基础展示族结论：defineTheme 的 iconVariants
+- [x] [`33645a2d2`](https://github.com/meta/astryx/commit/33645a2d2) feat(Icon): request a theme's alternate icon artwork with variant (#8758)
+  - 已移植：[#502](https://github.com/astryx-vue/astryx-vue/pull/502)。按基础展示族结论：Icon 的 variant 属性
 - [x] [`14fc58723`](https://github.com/meta/astryx/commit/14fc58723) ci: visual, accessibility and RTL run on main, not on pull request updates (#8877)
   - 不适用：上游内部规范和架构文档（自动初筛）
 
 ### v0.7.6
 
-- [ ] [`6700c2492`](https://github.com/meta/astryx/commit/6700c2492) fix(Tokenizer): label the inline create row from the catalog (#9029)
-- [ ] [`f277e2580`](https://github.com/meta/astryx/commit/f277e2580) fix(core): a single esbuild bundle renders Core: lazily imported modules import Core directly, not through barrels (#9055)
-- [ ] [`6beb2e55a`](https://github.com/meta/astryx/commit/6beb2e55a) fix(MultiSelector): the default count trigger text comes from the catalog (#9020)
+- [x] [`6700c2492`](https://github.com/meta/astryx/commit/6700c2492) fix(Tokenizer): label the inline create row from the catalog (#9029)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。新键 tokenizer.create 接入 tokenizer.create，Tokenizer 创建行改读自己的目录键
+- [x] [`f277e2580`](https://github.com/meta/astryx/commit/f277e2580) fix(core): a single esbuild bundle renders Core: lazily imported modules import Core directly, not through barrels (#9055)
+  - 不适用：React 版 esbuild 单文件打包与懒加载入口的问题
+- [x] [`6beb2e55a`](https://github.com/meta/astryx/commit/6beb2e55a) fix(MultiSelector): the default count trigger text comes from the catalog (#9020)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。新键 multiSelector.selectedCount 接入 MultiSelector 计数触发器文字
 - [x] [`94a2a8ee5`](https://github.com/meta/astryx/commit/94a2a8ee5) spec(AST-086): a status is replaced by its owner's next status, not joined (#9070)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`64caf1dd0`](https://github.com/meta/astryx/commit/64caf1dd0) fix(TextArea): the character counter comes from one catalog message (#9025)
-- [ ] [`bb18c817a`](https://github.com/meta/astryx/commit/bb18c817a) fix(Table): a column-resize handle is named by a node header's visible text (#9057)
-- [ ] [`faee47927`](https://github.com/meta/astryx/commit/faee47927) fix(TimeInput, DateTimeInput): time text follows the locale's hour cycle and day periods (#9022)
-- [ ] [`ec128c411`](https://github.com/meta/astryx/commit/ec128c411) fix(Slider): range thumb names come from the catalog (#9023)
-- [ ] [`b4b978da2`](https://github.com/meta/astryx/commit/b4b978da2) fix(Comments): announce error banners and progress labels through the shared channel (#7902)
+- [x] [`64caf1dd0`](https://github.com/meta/astryx/commit/64caf1dd0) fix(TextArea): the character counter comes from one catalog message (#9025)
+  - Vue 版已有：Vue 版 TextArea 计数在一处按当前语言数字格式写成「已输入/上限」；textArea.counter 没有要翻译的文字，在 coverage.mjs 写明
+- [x] [`bb18c817a`](https://github.com/meta/astryx/commit/bb18c817a) fix(Table): a column-resize handle is named by a node header's visible text (#9057)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；列宽拖柄名的键交给 Table 同步任务接入，暂列 coverage.mjs
+- [x] [`faee47927`](https://github.com/meta/astryx/commit/faee47927) fix(TimeInput, DateTimeInput): time text follows the locale's hour cycle and day periods (#9022)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐（时间提示键的说明更新）；时间按地区时制显示属日期族，上游架构文档属内部规范
+- [x] [`ec128c411`](https://github.com/meta/astryx/commit/ec128c411) fix(Slider): range thumb names come from the catalog (#9023)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。新增内置 slider 文案并接入目录，Slider 的两端滑块名和必填提示不传时跟随当前语言，补测试
+- [x] [`b4b978da2`](https://github.com/meta/astryx/commit/b4b978da2) fix(Comments): announce error banners and progress labels through the shared channel (#7902)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；Comments 错误横幅播报的新键暂列 coverage.mjs（组件行为不在本族清单）
 - [x] [`c8e1804d8`](https://github.com/meta/astryx/commit/c8e1804d8) ci: drop off-PR and informational checks (#8894)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`3b0a56a02`](https://github.com/meta/astryx/commit/3b0a56a02) fix(Tokenizer, PowerSearch): Clear all is announced, once, in each component's own words (#9038)
-- [ ] [`8ff38ab97`](https://github.com/meta/astryx/commit/8ff38ab97) fix(Table): sort buttons and the scroll region are named by what they belong to (#9047)
-- [ ] [`5b5ae2d79`](https://github.com/meta/astryx/commit/5b5ae2d79) fix(FileInput): every rejected file is named in the status message (#9043)
+- [x] [`3b0a56a02`](https://github.com/meta/astryx/commit/3b0a56a02) fix(Tokenizer, PowerSearch): Clear all is announced, once, in each component's own words (#9038)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；Tokenizer、PowerSearch 全部清除播报的新键暂列 coverage.mjs（组件行为不在本族清单）
+- [x] [`8ff38ab97`](https://github.com/meta/astryx/commit/8ff38ab97) fix(Table): sort buttons and the scroll region are named by what they belong to (#9047)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。Table 排序按钮改用列标题命名，方向看 aria-sort，多列排序用描述读优先级，序号对读屏隐藏；sortFor() 的 label 换成 description；滚动区本来就用 label 命名
+- [x] [`5b5ae2d79`](https://github.com/meta/astryx/commit/5b5ae2d79) fix(FileInput): every rejected file is named in the status message (#9043)
+  - 已移植：[#534](https://github.com/astryx-vue/astryx-vue/pull/534)。新增按当前语言连接列表的 useListFormatter，FileInput 一次列出所有被拒文件及原因，补测试
 - [x] [`4cb7f27aa`](https://github.com/meta/astryx/commit/4cb7f27aa) ci: per-suite ci:run-visual, ci:run-a11y and ci:run-rtl labels replace ci:heavy-lanes (#9165)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`e42836644`](https://github.com/meta/astryx/commit/e42836644) ci: main's release-check runs about once an hour, covering every merge (AST-030 FR12) (#9181)
@@ -3033,75 +3064,103 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`e0a03766d`](https://github.com/meta/astryx/commit/e0a03766d) docs(knowledge): every component spec lives in docs/specs/components, one folder per component (#9007)
   - 不适用：上游内部规范和架构文档、上游组件规范文档（自动初筛）
-- [ ] [`0df41f123`](https://github.com/meta/astryx/commit/0df41f123) fix(MobileTokenizer): refine touch sheet editing flow (#8742)
+- [x] [`0df41f123`](https://github.com/meta/astryx/commit/0df41f123) fix(MobileTokenizer): refine touch sheet editing flow (#8742)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；触屏弹层编辑流程的新键暂列 coverage.mjs（Vue 版对应 lab MobileTokenizer）
 - [x] [`6504e7066`](https://github.com/meta/astryx/commit/6504e7066) spec(internationalization): INV17 is implemented; record the shared fold and its tests (#9267)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`1315e7816`](https://github.com/meta/astryx/commit/1315e7816) ci: a touched-components check runs visual, a11y and RTL for the components a pull request changes (#9178)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`d51f57efa`](https://github.com/meta/astryx/commit/d51f57efa) fix(SideNavHeading, TopNavHeading): include headings in menu button names (#9329)
+- [x] [`d51f57efa`](https://github.com/meta/astryx/commit/d51f57efa) fix(SideNavHeading, TopNavHeading): include headings in menu button names (#9329)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。SideNavHeading、TopNavHeading 菜单按钮名带上标题，TopNav 无标题时仍为「Open menu」；checker 支持 select 后两条键都接入，补测试
 - [x] [`26a1b0989`](https://github.com/meta/astryx/commit/26a1b0989) fix(rtl-audit): D5 grades declared chart overlays as physical (DR5) (#9323)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`c3cbf38b4`](https://github.com/meta/astryx/commit/c3cbf38b4) ci: main's release-check every three hours, plus one before each weekday cut (AST-030 FR24) (#9216)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`c5fbecb8d`](https://github.com/meta/astryx/commit/c5fbecb8d) spec(i18n, Resizable, AST-103): factories take announcement and label options with a catalog default (#9395)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`99cc6dc85`](https://github.com/meta/astryx/commit/99cc6dc85) fix(core): many components carry only the English for their own strings (#9429)
-- [ ] [`16fe5f199`](https://github.com/meta/astryx/commit/16fe5f199) fix(core): Table, Chat, CommandPalette and the date and time inputs carry only their own English (#9452)
-- [ ] [`437f54847`](https://github.com/meta/astryx/commit/437f54847) fix(DiffViewer): a change too large to compare line by line is labeled and folded, not shown as a silent replace (#9462)
+- [x] [`99cc6dc85`](https://github.com/meta/astryx/commit/99cc6dc85) fix(core): many components carry only the English for their own strings (#9429)
+  - 已移植：[#515](https://github.com/astryx-vue/astryx-vue/pull/515)。按基础展示族结论：组件只按命名空间读内置文案
+- [x] [`16fe5f199`](https://github.com/meta/astryx/commit/16fe5f199) fix(core): Table, Chat, CommandPalette and the date and time inputs carry only their own English (#9452)
+  - Vue 版已有：Vue 版每个组件只通过 useComponentMessages 读自己命名空间的内置文案（#515），Table、Chat、日期输入本来只带自己的英文
+- [x] [`437f54847`](https://github.com/meta/astryx/commit/437f54847) fix(DiffViewer): a change too large to compare line by line is labeled and folded, not shown as a silent replace (#9462)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；DiffViewer 命名空间仍在 coverage.mjs 暂不接入名单
 - [x] [`eb282ba70`](https://github.com/meta/astryx/commit/eb282ba70) spec(internationalization): name the type-to-select fold in owning code (#9546)
   - 不适用：上游内部规范和架构文档（自动初筛）
 
 ### v0.7.7
 
-- [ ] [`449486fdc`](https://github.com/meta/astryx/commit/449486fdc) feat(core): promote InfoTip from Lab as the info preset over Tooltip's press toggle (#9238)
-- [ ] [`2c533501a`](https://github.com/meta/astryx/commit/2c533501a) fix(PowerSearch): Clear all keeps read-only filters (#9676)
+- [x] [`449486fdc`](https://github.com/meta/astryx/commit/449486fdc) feat(core): promote InfoTip from Lab as the info preset over Tooltip's press toggle (#9238)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。新键 infoTip.label 接入 InfoTip 默认名
+- [x] [`2c533501a`](https://github.com/meta/astryx/commit/2c533501a) fix(PowerSearch): Clear all keeps read-only filters (#9676)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；editableFiltersRemoved 暂列 coverage.mjs（PowerSearch 行为不在本族清单）
 
 ### v0.7.8
 
-- [ ] [`30160f5ce`](https://github.com/meta/astryx/commit/30160f5ce) feat(core): PowerSearch touch sheet flow behind experimental.presentation (#8001)
-- [ ] [`9ee4282db`](https://github.com/meta/astryx/commit/9ee4282db) [Component Audit] Icon: labelled icons from icon libraries reach screen readers (#9738)
+- [x] [`30160f5ce`](https://github.com/meta/astryx/commit/30160f5ce) feat(core): PowerSearch touch sheet flow behind experimental.presentation (#8001)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；PowerSearch 触屏弹层的键暂列 coverage.mjs，Vue 版还没有这个呈现方式
+- [x] [`9ee4282db`](https://github.com/meta/astryx/commit/9ee4282db) [Component Audit] Icon: labelled icons from icon libraries reach screen readers (#9738)
+  - Vue 版已有：按基础展示族结论：带 label 时 role=img 与 aria-label 落在外层
 - [x] [`cf8e4e04a`](https://github.com/meta/astryx/commit/cf8e4e04a) docs(specs): Icon and IconButton verification maps name their current tests and receipts (#9780)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`a7e7d4516`](https://github.com/meta/astryx/commit/a7e7d4516) docs(Icon): the color doc type lists the palette; native keeps the semantic set (#9821)
+- [x] [`a7e7d4516`](https://github.com/meta/astryx/commit/a7e7d4516) docs(Icon): the color doc type lists the palette; native keeps the semantic set (#9821)
+  - Vue 版已有：按基础展示族结论：IconColor 类型与文档已列完整调色板
 - [x] [`16a5397c9`](https://github.com/meta/astryx/commit/16a5397c9) feat(Calendar): weekday headers show abbreviated names where all seven fit in four characters (#9824)
   - 不适用：上游仓库脚本（自动初筛）
-- [ ] [`3090f9833`](https://github.com/meta/astryx/commit/3090f9833) fix(Icon): ref reaches the rendered svg for every name (#9782)
-- [ ] [`31ab2c3ef`](https://github.com/meta/astryx/commit/31ab2c3ef) feat(Table): add row-specific expansion labels (#6776)
+- [x] [`3090f9833`](https://github.com/meta/astryx/commit/3090f9833) fix(Icon): ref reaches the rendered svg for every name (#9782)
+  - 已移植：[#502](https://github.com/astryx-vue/astryx-vue/pull/502)。按基础展示族结论：Icon 暴露 element 与 svg
+- [x] [`31ab2c3ef`](https://github.com/meta/astryx/commit/31ab2c3ef) feat(Table): add row-specific expansion labels (#6776)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；按行名展开的键交给 Table 同步任务接入，暂列 coverage.mjs
 - [x] [`cfd120e4c`](https://github.com/meta/astryx/commit/cfd120e4c) feat(Resizable): createResizable drives a plain handle element, with one separator derivation (#9718)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`e390c3c43`](https://github.com/meta/astryx/commit/e390c3c43) test(browser): keep every Playwright browser context off remote hosts (#9811)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`4b8567003`](https://github.com/meta/astryx/commit/4b8567003) feat(PowerSearch): the sheet presentation edits a draft that Done applies, and asks before discarding a changed one (#9895)
+- [x] [`4b8567003`](https://github.com/meta/astryx/commit/4b8567003) feat(PowerSearch): the sheet presentation edits a draft that Done applies, and asks before discarding a changed one (#9895)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；PowerSearch 弹层草稿的键暂列 coverage.mjs
 
 ### v0.7.9
 
-- [ ] [`cb2a34a62`](https://github.com/meta/astryx/commit/cb2a34a62) fix(a11y): name a scrolling LayoutContent, LayoutPanel or StackItem (#9985)
+- [x] [`cb2a34a62`](https://github.com/meta/astryx/commit/cb2a34a62) fix(a11y): name a scrolling LayoutContent, LayoutPanel or StackItem (#9985)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；scrollRegion.label 暂列 coverage.mjs（布局组件行为不在本族清单）
 - [ ] [`4e7823a56`](https://github.com/meta/astryx/commit/4e7823a56) feat(i18n): InternationalizationProvider takes a calendar and exposes the resolved calendar (#9791)
+  - 暂缓：Vue 版没有日历系统设施：InternationalizationProvider 无 calendar，日期组件只按公历计算，需要 Temporal 或等价的历法换算
 - [ ] [`fe1cf0c6d`](https://github.com/meta/astryx/commit/fe1cf0c6d) feat(Calendar): show the months of the selected calendar system (#9622)
+  - 暂缓：依赖 provider 的 calendar 与非公历月份计算，Vue 版 Calendar 只支持公历
 - [ ] [`aa7c50176`](https://github.com/meta/astryx/commit/aa7c50176) feat(Calendar): useCalendarDays and useCalendarNavigation take an optional calendar (#10007)
+  - 暂缓：useCalendarSystem 依赖日历系统设施，Vue 版还没有
 - [ ] [`edf7128e3`](https://github.com/meta/astryx/commit/edf7128e3) feat(Timestamp, PowerSearch): write dates in the provider's calendar (#9639)
+  - 暂缓：Timestamp、PowerSearch 按 provider 日历写日期依赖日历系统设施
 - [x] [`7be6b4644`](https://github.com/meta/astryx/commit/7be6b4644) feat(core): read typed dates in every calendar (#9792)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`6e2e24293`](https://github.com/meta/astryx/commit/6e2e24293) feat(lab): Schedule writes dates in the provider's calendar (#9994)
+  - 暂缓：lab Schedule 按 provider 日历写日期依赖日历系统设施
 - [ ] [`189a730ce`](https://github.com/meta/astryx/commit/189a730ce) feat(DateInput, DateTimeInput, DateRangeInput): type, pick and show dates in the active calendar (#9643, #9842)
-- [ ] [`f384e62f5`](https://github.com/meta/astryx/commit/f384e62f5) docs(useIcon): add hook docs and a status row example block (#9900)
+  - 暂缓：日期输入按当前日历输入和显示依赖日历系统设施；en.json 部分已在 #533 对齐
+- [x] [`f384e62f5`](https://github.com/meta/astryx/commit/f384e62f5) docs(useIcon): add hook docs and a status row example block (#9900)
+  - Vue 版已有：按基础展示族结论：useSemanticIcon 已有文档
 - [x] [`08313899e`](https://github.com/meta/astryx/commit/08313899e) test(scripts): the i18n watcher's signal test runs the forwarding runner alone (#10063)
   - 不适用：上游仓库脚本（自动初筛）
 - [x] [`3b8d81fd0`](https://github.com/meta/astryx/commit/3b8d81fd0) spec: record component icon slots in CodeBlock, Timestamp, and Table (#10045)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`98efdf183`](https://github.com/meta/astryx/commit/98efdf183) feat(Icon): a theme maps a component's own icon role by slot, starting with CodeBlock's copy button (#9828)
-- [ ] [`d7a7dd3bb`](https://github.com/meta/astryx/commit/d7a7dd3bb) feat(Timestamp): the hover card's copy button resolves its glyph through the timestamp-copy icon slot (#9830)
-- [ ] [`f85b20173`](https://github.com/meta/astryx/commit/f85b20173) feat(Table): the sort indicator resolves its glyph through the table-sort-indicator icon slot (#9831)
-- [ ] [`c037450fc`](https://github.com/meta/astryx/commit/c037450fc) feat(Table): the row-expansion toggle resolves its glyph through the table-row-expand icon slot (#9834)
-- [ ] [`539326657`](https://github.com/meta/astryx/commit/539326657) chore(core): Core's internal touch entry names, for Lab, the screen-edge pan, spring solver, motion resolver, UIKit navigation springs and focus helpers (#9696)
+- [x] [`98efdf183`](https://github.com/meta/astryx/commit/98efdf183) feat(Icon): a theme maps a component's own icon role by slot, starting with CodeBlock's copy button (#9828)
+  - 已移植：[#502](https://github.com/astryx-vue/astryx-vue/pull/502)。按基础展示族结论：componentIcons 与 ComponentIcon
+- [x] [`d7a7dd3bb`](https://github.com/meta/astryx/commit/d7a7dd3bb) feat(Timestamp): the hover card's copy button resolves its glyph through the timestamp-copy icon slot (#9830)
+  - 已移植：[#502](https://github.com/astryx-vue/astryx-vue/pull/502)。按基础展示族结论：Timestamp 复制按钮走 timestamp-copy 槽位
+- [x] [`f85b20173`](https://github.com/meta/astryx/commit/f85b20173) feat(Table): the sort indicator resolves its glyph through the table-sort-indicator icon slot (#9831)
+  - 已移植：[#502](https://github.com/astryx-vue/astryx-vue/pull/502)。按基础展示族结论：Table 排序指示走 table-sort-indicator 槽位
+- [x] [`c037450fc`](https://github.com/meta/astryx/commit/c037450fc) feat(Table): the row-expansion toggle resolves its glyph through the table-row-expand icon slot (#9834)
+  - 已移植：[#502](https://github.com/astryx-vue/astryx-vue/pull/502)。按基础展示族结论：Table 行展开走 table-row-expand 槽位
+- [x] [`539326657`](https://github.com/meta/astryx/commit/539326657) chore(core): Core's internal touch entry names, for Lab, the screen-edge pan, spring solver, motion resolver, UIKit navigation springs and focus helpers (#9696)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；新键属于 lab 触屏组件，命名空间列入 coverage.mjs
 
 ### v0.7.10
 
-- [ ] [`711acc68b`](https://github.com/meta/astryx/commit/711acc68b) fix(FieldLabel): labelTooltip is an InfoTip button after the label, reachable by keyboard and screen readers (#6414)
+- [x] [`711acc68b`](https://github.com/meta/astryx/commit/711acc68b) fix(FieldLabel): labelTooltip is an InfoTip button after the label, reachable by keyboard and screen readers (#6414)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。新键 field.labelTooltip 接入字段标签旁说明按钮的名字
 
 ### v0.7.11
 
-- [ ] [`5a323635e`](https://github.com/meta/astryx/commit/5a323635e) fix(core): CodeBlock says when a copy fails (#10272)
+- [x] [`5a323635e`](https://github.com/meta/astryx/commit/5a323635e) fix(core): CodeBlock says when a copy fails (#10272)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；codeBlock.copyFailed 暂列 coverage.mjs（CodeBlock 行为不在本族清单）
 - [x] [`f8640a4ea`](https://github.com/meta/astryx/commit/f8640a4ea) fix(Banner): role="alert" covers the urgent message only; bind the urgent alert states (#6779)
   - 不适用：上游内部规范和架构文档（自动初筛）
 
@@ -3111,19 +3170,30 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`79150bc7d`](https://github.com/meta/astryx/commit/79150bc7d) fix(cli): experimental icon sets — name the license notice a library without one needs; a refresh moves per-file icons to the library root (#10458)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`422440a64`](https://github.com/meta/astryx/commit/422440a64) fix(core): two copies of Core's modules share one React context (#10233)
-- [ ] [`a8195e032`](https://github.com/meta/astryx/commit/a8195e032) chore(core): Core's internal touch entry re-exports the action-group tracking hook, extended for Lab's TabBar, and a tab-bar string joins the catalog (#9699)
+- [x] [`422440a64`](https://github.com/meta/astryx/commit/422440a64) fix(core): two copies of Core's modules share one React context (#10233)
+  - 不适用：React context 多副本问题
+- [x] [`a8195e032`](https://github.com/meta/astryx/commit/a8195e032) chore(core): Core's internal touch entry re-exports the action-group tracking hook, extended for Lab's TabBar, and a tab-bar string joins the catalog (#9699)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；tabBar 命名空间列入 coverage.mjs，lab TabBar 还没有 Vue 版
 - [ ] [`b8cc3f41e`](https://github.com/meta/astryx/commit/b8cc3f41e) fix(Markdown): each prose block lays out in its own text's direction (#10293)
-- [ ] [`fac363ee8`](https://github.com/meta/astryx/commit/fac363ee8) fix(Kbd): ctrl, alt, shift and meta show text off Apple platforms (#10524)
-- [ ] [`b47b33a43`](https://github.com/meta/astryx/commit/b47b33a43) fix(PowerSearch): a filter token's field, operator and value come from catalog messages (#10437)
-- [ ] [`a28d586eb`](https://github.com/meta/astryx/commit/a28d586eb) feat(core): createReorderable makes List rows reorderable (#8139)
-- [ ] [`6103d36e9`](https://github.com/meta/astryx/commit/6103d36e9) feat(lab): ListInput reorders through core's createReorderable (#8163)
+  - 暂缓：首强字符方向分类器只服务 Markdown 按块定方向，Vue 版 Markdown 还没有块方向功能，应随 Markdown 一起移植
+- [x] [`fac363ee8`](https://github.com/meta/astryx/commit/fac363ee8) fix(Kbd): ctrl, alt, shift and meta show text off Apple platforms (#10524)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。Kbd 非 Apple 平台的 Alt、Shift、Win 键帽改读内置文案并接入目录，补测试（显示规则见 #503）
+- [x] [`b47b33a43`](https://github.com/meta/astryx/commit/b47b33a43) fix(PowerSearch): a filter token's field, operator and value come from catalog messages (#10437)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；PowerSearch token 分段文案的键暂列 coverage.mjs
+- [x] [`a28d586eb`](https://github.com/meta/astryx/commit/a28d586eb) feat(core): createReorderable makes List rows reorderable (#8139)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；List 拖拽排序的键暂列 coverage.mjs，Vue 版 List 还没有 createReorderable
+- [x] [`6103d36e9`](https://github.com/meta/astryx/commit/6103d36e9) feat(lab): ListInput reorders through core's createReorderable (#8163)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；listInput.itemName 暂列 coverage.mjs，lab ListInput 尚未改用 createReorderable
 - [x] [`a04d2e6bf`](https://github.com/meta/astryx/commit/a04d2e6bf) fix(Toast): the viewport is each toast's only announcement owner (#7871)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`7f04a6c5a`](https://github.com/meta/astryx/commit/7f04a6c5a) fix(Table): an unbounded column's resize handle announces a range that holds its width (#10577)
-- [ ] [`06ebae229`](https://github.com/meta/astryx/commit/06ebae229) fix(List): a drag follows a scroll around the list's scroll box (#10742)
-- [ ] [`daa239e98`](https://github.com/meta/astryx/commit/daa239e98) feat(lab): experimental ChatVirtualizer (#5461)
-- [ ] [`d5b0bdaa1`](https://github.com/meta/astryx/commit/d5b0bdaa1) chore(core): re-export the scroll test and add the More tab's string (#10791)
+- [x] [`7f04a6c5a`](https://github.com/meta/astryx/commit/7f04a6c5a) fix(Table): an unbounded column's resize handle announces a range that holds its width (#10577)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；列宽读值的键交给 Table 同步任务接入，暂列 coverage.mjs
+- [x] [`06ebae229`](https://github.com/meta/astryx/commit/06ebae229) fix(List): a drag follows a scroll around the list's scroll box (#10742)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；List 拖拽键暂列 coverage.mjs
+- [x] [`daa239e98`](https://github.com/meta/astryx/commit/daa239e98) feat(lab): experimental ChatVirtualizer (#5461)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；chatVirtualizer 命名空间列入 coverage.mjs
+- [x] [`d5b0bdaa1`](https://github.com/meta/astryx/commit/d5b0bdaa1) chore(core): re-export the scroll test and add the More tab's string (#10791)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；tabBar.more 随 tabBar 命名空间列入 coverage.mjs
 - [x] [`c0327e060`](https://github.com/meta/astryx/commit/c0327e060) fix(cli): experimental icon sets — keep the library prefix on a name that starts with a digit (#10895)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`dc91a5b12`](https://github.com/meta/astryx/commit/dc91a5b12) fix(cli): experimental icon sets — add a look's variant from its own package, and skip pack exports (#10896)
@@ -3133,47 +3203,70 @@
 
 - [x] [`367229613`](https://github.com/meta/astryx/commit/367229613) feat(cli): experimental icon sets — one main set with backups, a local placeholder for missing icons, and a docs-site set choice (#10959)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`0a320be62`](https://github.com/meta/astryx/commit/0a320be62) Merge branch 'm3' into m4 (#10847)
-- [ ] [`6af6700c8`](https://github.com/meta/astryx/commit/6af6700c8) docs(useDirection): add hook docs and a live sparkline example block (#10547)
+- [x] [`0a320be62`](https://github.com/meta/astryx/commit/0a320be62) Merge branch 'm3' into m4 (#10847)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐
+- [x] [`6af6700c8`](https://github.com/meta/astryx/commit/6af6700c8) docs(useDirection): add hook docs and a live sparkline example block (#10547)
+  - 已移植：[#534](https://github.com/astryx-vue/astryx-vue/pull/534)。新增 useLocaleDirection 文档页（中英），对应上游 useDirection 的用法、建议和返回值
 - [ ] [`57009119a`](https://github.com/meta/astryx/commit/57009119a) docs(InternationalizationProvider): add a calendar example (#10135)
+  - 暂缓：日历示例依赖 provider 的 calendar，Vue 版还没有日历系统设施
 
 ### v0.7.14
 
 - [x] [`cfa1d6273`](https://github.com/meta/astryx/commit/cfa1d6273) feat(cli): experimental icon sets — show which template icon meanings a set does not map, and smoother set authoring (#11090)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`7882c6028`](https://github.com/meta/astryx/commit/7882c6028) docs(InternationalizationProvider): order the examples locale, RTL, overrides, calendar (#11094)
-- [ ] [`108f354ae`](https://github.com/meta/astryx/commit/108f354ae) fix(core): drop 'use client' from the package root and the component barrels (#11106)
-- [ ] [`fc9fb8ccc`](https://github.com/meta/astryx/commit/fc9fb8ccc) fix(core): registered icons reach swizzled copies; icon and theme registries are one per React (AST-110 FR3) (#11096)
+- [x] [`7882c6028`](https://github.com/meta/astryx/commit/7882c6028) docs(InternationalizationProvider): order the examples locale, RTL, overrides, calendar (#11094)
+  - 已移植：[#534](https://github.com/astryx-vue/astryx-vue/pull/534)。provider 文档示例按「载入语言目录、RTL、覆盖一条文案」排序并补齐前两个示例；日历示例随日历设施暂缓
+- [x] [`108f354ae`](https://github.com/meta/astryx/commit/108f354ae) fix(core): drop 'use client' from the package root and the component barrels (#11106)
+  - 不适用：React Server Components 的 'use client' 指令
+- [x] [`fc9fb8ccc`](https://github.com/meta/astryx/commit/fc9fb8ccc) fix(core): registered icons reach swizzled copies; icon and theme registries are one per React (AST-110 FR3) (#11096)
+  - 已移植：[#502](https://github.com/astryx-vue/astryx-vue/pull/502)。按基础展示族结论：图标注册表挂到 globalThis
 - [x] [`441e079d2`](https://github.com/meta/astryx/commit/441e079d2) fix(cli): experimental icon sets — distinct template icon meanings, keep a wrapped library's icons, docs-site icon-set build fixes (#11142)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`db3e8334f`](https://github.com/meta/astryx/commit/db3e8334f) fix(core): InputGroupText, Badge and Token keep caller text in its written order under RTL (#10114)
+- [x] [`db3e8334f`](https://github.com/meta/astryx/commit/db3e8334f) fix(core): InputGroupText, Badge and Token keep caller text in its written order under RTL (#10114)
+  - 已移植：[#500](https://github.com/astryx-vue/astryx-vue/pull/500)。按基础展示族结论：Token、Badge、InputGroupText 在 RTL 下保持书写顺序
 
 ### v0.7.15
 
-- [ ] [`4b24212ad`](https://github.com/meta/astryx/commit/4b24212ad) fix(DateInput, DateTimeInput): plain wording for a date the calendar does not have (#11309)
-- [ ] [`edb2de912`](https://github.com/meta/astryx/commit/edb2de912) fix(Timestamp): a hover-card copy button shows and announces a failed copy (#10434)
-- [ ] [`ca204372b`](https://github.com/meta/astryx/commit/ca204372b) chore(core): re-export UIKit's timing, add SearchField's cancel string (#10956)
+- [x] [`4b24212ad`](https://github.com/meta/astryx/commit/4b24212ad) fix(DateInput, DateTimeInput): plain wording for a date the calendar does not have (#11309)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；nonexistentDate 暂列 coverage.mjs（日期输入行为不在本族清单）
+- [x] [`edb2de912`](https://github.com/meta/astryx/commit/edb2de912) fix(Timestamp): a hover-card copy button shows and announces a failed copy (#10434)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；timestamp.copyFailed 暂列 coverage.mjs
+- [x] [`ca204372b`](https://github.com/meta/astryx/commit/ca204372b) chore(core): re-export UIKit's timing, add SearchField's cancel string (#10956)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；searchField 命名空间列入 coverage.mjs
 
 ### v0.7.16
 
-- [ ] [`a4fe0154f`](https://github.com/meta/astryx/commit/a4fe0154f) chore(core): the catalog gains the Comments copy-link failure message (#11376)
-- [ ] [`58b844d16`](https://github.com/meta/astryx/commit/58b844d16) feat(Table): Promise-based infinite loading with useTableInfiniteScroll (#10570)
-- [ ] [`dd702d0d2`](https://github.com/meta/astryx/commit/dd702d0d2) fix(DateInput, DateTimeInput): keep rejected date entries and show why (#11407)
-- [ ] [`b300313cb`](https://github.com/meta/astryx/commit/b300313cb) feat(Lightbox): a gallery's caption sits in a two-line band (#9810)
-- [ ] [`8d372ddec`](https://github.com/meta/astryx/commit/8d372ddec) feat(core): English strings for the Lab media player (#11438)
-- [ ] [`30da0a57b`](https://github.com/meta/astryx/commit/30da0a57b) fix(NumberInput): keep a rejected number entry and show why (#11415)
-- [ ] [`a32287bcb`](https://github.com/meta/astryx/commit/a32287bcb) fix(TimeInput, DateTimeInput): keep rejected time entries and show why (#11413)
-- [ ] [`d6caddef6`](https://github.com/meta/astryx/commit/d6caddef6) fix(Lightbox): a single photo's caption sits on the caption's backing (#10284)
-- [ ] [`b8904791a`](https://github.com/meta/astryx/commit/b8904791a) feat(RichTextEditor, RichTextEditorToolbar): replace the toolbar's link dialog with an anchored popover (#8717)
+- [x] [`a4fe0154f`](https://github.com/meta/astryx/commit/a4fe0154f) chore(core): the catalog gains the Comments copy-link failure message (#11376)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；comments.linkCopyFailed 暂列 coverage.mjs
+- [x] [`58b844d16`](https://github.com/meta/astryx/commit/58b844d16) feat(Table): Promise-based infinite loading with useTableInfiniteScroll (#10570)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；table.loadMore 交给 Table 同步任务接入
+- [x] [`dd702d0d2`](https://github.com/meta/astryx/commit/dd702d0d2) fix(DateInput, DateTimeInput): keep rejected date entries and show why (#11407)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；outOfRangeDate 等暂列 coverage.mjs
+- [x] [`b300313cb`](https://github.com/meta/astryx/commit/b300313cb) feat(Lightbox): a gallery's caption sits in a two-line band (#9810)
+  - 已移植：[#507](https://github.com/astryx-vue/astryx-vue/pull/507)。按基础展示族结论：Lightbox 图集图注占两行区域
+- [x] [`8d372ddec`](https://github.com/meta/astryx/commit/8d372ddec) feat(core): English strings for the Lab media player (#11438)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；mediaPlayer 命名空间列入 coverage.mjs
+- [x] [`30da0a57b`](https://github.com/meta/astryx/commit/30da0a57b) fix(NumberInput): keep a rejected number entry and show why (#11415)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐（numberInput.invalidNumber 说明更新）；保留被拒输入属输入框族
+- [x] [`a32287bcb`](https://github.com/meta/astryx/commit/a32287bcb) fix(TimeInput, DateTimeInput): keep rejected time entries and show why (#11413)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐（timeInput.invalidTime 说明更新）；保留被拒输入属日期族
+- [x] [`d6caddef6`](https://github.com/meta/astryx/commit/d6caddef6) fix(Lightbox): a single photo's caption sits on the caption's backing (#10284)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐（Lightbox 图注键说明更新）
+- [x] [`b8904791a`](https://github.com/meta/astryx/commit/b8904791a) feat(RichTextEditor, RichTextEditorToolbar): replace the toolbar's link dialog with an anchored popover (#8717)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；urlPlaceholder 暂列 coverage.mjs，RichTextEditor 链接编辑仍是对话框
 - [x] [`7e8a67000`](https://github.com/meta/astryx/commit/7e8a67000) feat(cli): experimental icon sets — a project picks one look (outline or filled) for every icon (#11499)
   - 不适用：上游内部规范和架构文档（自动初筛）
 
 ### v0.7.17
 
-- [ ] [`b9ef39954`](https://github.com/meta/astryx/commit/b9ef39954) fix(Icon): keep malformed slot diagnostics from interrupting rendering (#11502)
-- [ ] [`8439a1162`](https://github.com/meta/astryx/commit/8439a1162) fix(Icon): preserve the nearest theme for icon resolution (#11498)
-- [ ] [`16fe6a81a`](https://github.com/meta/astryx/commit/16fe6a81a) feat(core): catalog messages for the Lab media player's visible time readouts (#11649)
-- [ ] [`da710f6ed`](https://github.com/meta/astryx/commit/da710f6ed) fix(Stepper): a disabled step in the compact layout says it is unavailable (#11632)
+- [x] [`b9ef39954`](https://github.com/meta/astryx/commit/b9ef39954) fix(Icon): keep malformed slot diagnostics from interrupting rendering (#11502)
+  - 已移植：[#502](https://github.com/astryx-vue/astryx-vue/pull/502)。按基础展示族结论：槽位值写错只在开发环境提示一次
+- [x] [`8439a1162`](https://github.com/meta/astryx/commit/8439a1162) fix(Icon): preserve the nearest theme for icon resolution (#11498)
+  - Vue 版已有：按基础展示族结论：inject 直接拿最近的主题对象
+- [x] [`16fe6a81a`](https://github.com/meta/astryx/commit/16fe6a81a) feat(core): catalog messages for the Lab media player's visible time readouts (#11649)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；mediaPlayer 命名空间列入 coverage.mjs
+- [x] [`da710f6ed`](https://github.com/meta/astryx/commit/da710f6ed) fix(Stepper): a disabled step in the compact layout says it is unavailable (#11632)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；step.status.unavailable 暂列 coverage.mjs
 - [x] [`a3406b55c`](https://github.com/meta/astryx/commit/a3406b55c) chore(scripts): the CLDR weekday generator stops with a clear error on a Node without full locale data (#11902)
   - 不适用：上游仓库脚本（自动初筛）
 - [x] [`e80124133`](https://github.com/meta/astryx/commit/e80124133) fix(cli): icon finder answers with no icon set and honors the chosen look (#12131)
@@ -3185,6 +3278,7 @@
 - [x] [`86b073364`](https://github.com/meta/astryx/commit/86b073364) feat(cli): doctor names icon imports that no longer match the app's icon sets (#12194)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`2ff1afc9f`](https://github.com/meta/astryx/commit/2ff1afc9f) fix(richtext): text reads the way it is written, in either document direction (#7723)
+  - 暂缓：首强方向分类器的调整只服务 RichText 按块定方向，Vue 版 richtext 还没有块方向插件
 - [x] [`b2cf0a1ad`](https://github.com/meta/astryx/commit/b2cf0a1ad) feat(cli): search lists the installed icons that answer an icon ask (#12183)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`4f0a13a60`](https://github.com/meta/astryx/commit/4f0a13a60) feat(cli): where icon features are on, the agent block sends agents to the icon finder (#12210)
@@ -3195,24 +3289,34 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`8bd67fe30`](https://github.com/meta/astryx/commit/8bd67fe30) chore: land batch 1 (12 pull requests) (#12713)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`d6ac73ef3`](https://github.com/meta/astryx/commit/d6ac73ef3) chore: land batch 4 (12 pull requests) (#12738)
-- [ ] [`f672a82de`](https://github.com/meta/astryx/commit/f672a82de) chore(core): the internal touch entry exposes group press tracking to Lab (#11283)
+- [x] [`d6ac73ef3`](https://github.com/meta/astryx/commit/d6ac73ef3) chore: land batch 4 (12 pull requests) (#12738)
+  - 已移植：[#510](https://github.com/astryx-vue/astryx-vue/pull/510)。按基础展示族结论：Icon 等六处
+- [x] [`f672a82de`](https://github.com/meta/astryx/commit/f672a82de) chore(core): the internal touch entry exposes group press tracking to Lab (#11283)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐
 - [x] [`83424673c`](https://github.com/meta/astryx/commit/83424673c) chore: land batch 16 (6 pull requests) (#12881)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`9dacfbd03`](https://github.com/meta/astryx/commit/9dacfbd03) fix(TextInput, TextArea): an error without a message gives assistive technology text (#12468)
-- [ ] [`972102325`](https://github.com/meta/astryx/commit/972102325) fix(Timestamp): a relative name starts with the words it shows (#12222)
-- [ ] [`1f48950f9`](https://github.com/meta/astryx/commit/1f48950f9) chore: land batch 67 (7 pull requests) (#12957)
-- [ ] [`3344f149a`](https://github.com/meta/astryx/commit/3344f149a) fix(ChatComposerInput): the trigger menu's no-results message comes from the catalog (#12677)
-- [ ] [`4e35a9856`](https://github.com/meta/astryx/commit/4e35a9856) spec(internationalization): a component takes a prop for each string callers reword; provider overrides are an app-wide escape hatch (#12675)
+- [x] [`9dacfbd03`](https://github.com/meta/astryx/commit/9dacfbd03) fix(TextInput, TextArea): an error without a message gives assistive technology text (#12468)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；field.errorFallback 暂列 coverage.mjs（输入框行为不在本族清单）
+- [x] [`972102325`](https://github.com/meta/astryx/commit/972102325) fix(Timestamp): a relative name starts with the words it shows (#12222)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；timestamp.relativeLabel 暂列 coverage.mjs
+- [x] [`1f48950f9`](https://github.com/meta/astryx/commit/1f48950f9) chore: land batch 67 (7 pull requests) (#12957)
+  - 已移植：[#534](https://github.com/astryx-vue/astryx-vue/pull/534)。InternationalizationProvider 缺 locale 时开发期抛错并给出改法，补测试；AST-084 规格改动属上游 CLI
+- [x] [`3344f149a`](https://github.com/meta/astryx/commit/3344f149a) fix(ChatComposerInput): the trigger menu's no-results message comes from the catalog (#12677)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。新键 chatTriggerMenu.noResults 接入 chat.noResults
+- [x] [`4e35a9856`](https://github.com/meta/astryx/commit/4e35a9856) spec(internationalization): a component takes a prop for each string callers reword; provider overrides are an app-wide escape hatch (#12675)
+  - 已移植：[#534](https://github.com/astryx-vue/astryx-vue/pull/534)。provider 文档说明改一个组件的措辞用组件自己的属性，overrides 是全应用的兜底，覆盖示例改名为「Change one Astryx string across your app」
 - [x] [`8ecfe59a4`](https://github.com/meta/astryx/commit/8ecfe59a4) chore: land batch 61 (4 pull requests) (#12940)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`c1f52ff91`](https://github.com/meta/astryx/commit/c1f52ff91) perf(core): reading the locale or direction does not load the message parser (#12975)
+- [x] [`c1f52ff91`](https://github.com/meta/astryx/commit/c1f52ff91) perf(core): reading the locale or direction does not load the message parser (#12975)
+  - Vue 版已有：useLocale、useLocaleDirection 只读 provide 的语言和方向，不引入 ICU 解析器
 - [x] [`dacc31737`](https://github.com/meta/astryx/commit/dacc31737) chore: land batch 72 (9 pull requests) (#12965)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`e7f5815c3`](https://github.com/meta/astryx/commit/e7f5815c3) fix(core): six components' fixed-English built-in text follows the locale; the hardcoded-string lint config has no exemption list and reports a stale entry (#12721)
+- [x] [`e7f5815c3`](https://github.com/meta/astryx/commit/e7f5815c3) fix(core): six components' fixed-English built-in text follows the locale; the hardcoded-string lint config has no exemption list and reports a stale entry (#12721)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；useListFormatter 的注释改动无对应行为
 - [x] [`9d23a5e6e`](https://github.com/meta/astryx/commit/9d23a5e6e) chore: land batch 87 (2 pull requests) (#13021)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`66b2932af`](https://github.com/meta/astryx/commit/66b2932af) fix(Markdown): a heading copy link shows and announces a failed copy (#10424)
+- [x] [`66b2932af`](https://github.com/meta/astryx/commit/66b2932af) fix(Markdown): a heading copy link shows and announces a failed copy (#10424)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；markdownHeadingLinks.copyFailed 暂列 coverage.mjs
 
 ## 工程质量与同步基础设施（area:sync）
 
