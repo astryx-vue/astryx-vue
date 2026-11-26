@@ -22,7 +22,7 @@ footer: false
       <tr><td><code>isOptional</code></td><td><code>boolean</code></td><td><code>false</code></td><td>标成可选。</td></tr>
       <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td><code>false</code></td><td>标成必填。</td></tr>
       <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>触发器不再打开。它用 <code>aria-disabled</code> 留在 Tab 序里；禁用前已经开着的弹层里再提交也不会改值。</td></tr>
-      <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>-</td><td>为什么禁用。和 <code>isDisabled</code> 一起用时，鼠标悬停、键盘聚焦或手指点按触发器都会弹出这段说明，读屏也会把它当成触发器的说明。自定义触发器不显示它。</td></tr>
+      <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>-</td><td>为什么禁用。和 <code>isDisabled</code> 一起用时，鼠标悬停、键盘聚焦或手指点按触发器都会弹出这段说明，读屏也会把它当成触发器的说明。自定义触发器把拿到的触发器属性铺到自己的控件上就会显示提示并带上说明，控件自己的提示在禁用时请去掉。</td></tr>
       <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>触发器上显示加载指示。</td></tr>
       <tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>-</td><td>错误、警告或成功消息。</td></tr>
       <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'attached'</code></td><td>状态消息放在哪里。<code>attached</code> 和 <code>tooltip</code> 会在箭头的位置画状态图标；<code>tooltip</code> 时图标是能聚焦的按钮，说明收在它的提示里，点它不会打开弹层。</td></tr>

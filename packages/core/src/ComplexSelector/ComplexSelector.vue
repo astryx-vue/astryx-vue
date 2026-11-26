@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="Value">
 import type { Component } from 'vue'
 import type { ComplexSelectorEmits, ComplexSelectorHandle, ComplexSelectorProps, ComplexSelectorSlots, ComplexSelectorState, ComplexSelectorTriggerProps } from './types.js'
-import { computed, onBeforeUnmount, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
+import { computed, onBeforeUnmount, ref, shallowRef, useAttrs, useId, useTemplateRef, watch } from 'vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import { useDevWarning } from '../composables/useDevWarning.js'
@@ -10,6 +10,7 @@ import { useFieldPartStyling } from '../Field/fieldParts.js'
 import StatusGlyph from '../Field/StatusGlyph.vue'
 import { fieldStatusPlacement } from '../Field/statusPlacement.js'
 import Icon from '../Icon/Icon.vue'
+import { useLayerGutter } from '../LayerProvider/context.js'
 import { useComponentMessages } from '../locale/context.js'
 import { selectorMessages } from '../locale/messages/selector.js'
 import Popover from '../Popover/Popover.vue'
@@ -68,6 +69,9 @@ const contentId = `${triggerId}-content`
 const disabledId = `${triggerId}-disabled`
 const disabledTooltipId = `${triggerId}-disabled-tooltip`
 const triggerEl = useTemplateRef<HTMLElement>('triggerEl')
+/** 自制触发器的元素：它第一次收到聚焦或指针事件时记下来，禁用说明的提示挂在它上面。 */
+const customAnchor = shallowRef<HTMLElement | null>(null)
+const tooltipAnchor = computed(() => customAnchor.value ?? triggerEl.value)
 
 /** 有禁用原因时，悬停、键盘聚焦和点按都能读到它。 */
 const resolvedDisabledMessage = computed(() => props.disabledMessage?.trim() || undefined)
@@ -105,6 +109,16 @@ const describedBy = computed(() => {
     showsDisabledMessage.value ? disabledId : undefined,
   ].filter(Boolean).join(' ') || undefined
 })
+
+/**
+ * 内容自己的高度上限：480px 和视口扣掉上下空隙之后的高度取小。LayerProvider 的 `inset`
+ * 给应用底栏留的空隙也在里面，最后几行不会滚到底栏下面。
+ */
+const layerGutter = useLayerGutter()
+const contentStyles = computed(() => [
+  { '--_complex-selector-max-block': `min(480px, calc(100dvh - ${layerGutter.value.blockStart + layerGutter.value.blockEnd}px))` },
+  props.contentStyle,
+])
 
 const placeholder = computed(() => props.placeholder ?? messages.value.selector.placeholder)
 const isBusy = computed(() => props.isLoading || isPending.value)
@@ -219,11 +233,6 @@ useDevWarning(
 )
 useDevWarning(
   'ComplexSelector',
-  '`disabledMessage` has no effect on a custom trigger.',
-  () => hasCustomTrigger.value && props.disabledMessage != null,
-)
-useDevWarning(
-  'ComplexSelector',
   '`containerClass`/`containerStyle` have no effect on a custom trigger.',
   () => hasCustomTrigger.value && (props.containerClass != null || props.containerStyle != null),
 )
@@ -235,10 +244,26 @@ useDevWarning(
 // 自定义触发器也是这个字段的控件：和内置触发器一样是弹出对话框的 combobox，
 // 必填、禁用、忙碌状态都挂在它上面。combobox 不从内容取名字，所以用 label 命名，
 // 调用方给了 aria-label 用调用方的，给了 aria-labelledby 就不再加 aria-label。
+function rememberCustomTrigger(event: Event): void {
+  if (event.currentTarget instanceof HTMLElement)
+    customAnchor.value = event.currentTarget
+}
+
 const triggerProps = computed<ComplexSelectorTriggerProps>(() => ({
   'id': triggerId,
   'onClick': onCustomClick,
   'onKeydown': onCustomKeyDown,
+  'onFocus': (event: FocusEvent) => {
+    rememberCustomTrigger(event)
+    disabledTooltip.onFocus(event)
+  },
+  'onBlur': disabledTooltip.onBlur,
+  'onPointerenter': (event: PointerEvent) => {
+    rememberCustomTrigger(event)
+    disabledTooltip.onPointerEnter()
+  },
+  'onPointerleave': disabledTooltip.onPointerLeave,
+  'aria-describedby': showsDisabledMessage.value ? disabledId : undefined,
   'role': 'combobox',
   'aria-disabled': props.isDisabled ? 'true' : undefined,
   'aria-haspopup': 'dialog',
@@ -309,8 +334,9 @@ defineExpose(handle)
     <slot name="trigger" v-bind="triggerProps">
       <component :is="triggerView" />
     </slot>
+    <span v-if="showsDisabledMessage" :id="disabledId" class="astryx-visually-hidden">{{ resolvedDisabledMessage }}</span>
     <template #content>
-      <div :id="contentId" ref="contentEl" class="astryx-complex-selector-content" :class="contentClass" :style="contentStyle">
+      <div :id="contentId" ref="contentEl" class="astryx-complex-selector-content" :class="contentClass" :style="contentStyles">
         <slot
           :close="close"
           :commit="commit"
@@ -412,7 +438,7 @@ defineExpose(handle)
       />
       <span v-if="showsDisabledMessage" :id="disabledId" class="astryx-visually-hidden">{{ resolvedDisabledMessage }}</span>
       <template #content>
-        <div :id="contentId" ref="contentEl" class="astryx-complex-selector-content" :class="contentClass" :style="contentStyle">
+        <div :id="contentId" ref="contentEl" class="astryx-complex-selector-content" :class="contentClass" :style="contentStyles">
           <slot
             :close="close"
             :commit="commit"
@@ -424,9 +450,9 @@ defineExpose(handle)
     </Popover>
   </Field>
   <ButtonTooltip
-    v-if="showsDisabledMessage && !hasCustomTrigger"
+    v-if="showsDisabledMessage"
     :id="disabledTooltipId"
-    :anchor="triggerEl"
+    :anchor="tooltipAnchor"
     :open="disabledTooltip.isOpen.value"
     :text="resolvedDisabledMessage ?? ''"
     @pointer-enter="disabledTooltip.onTooltipPointerEnter"

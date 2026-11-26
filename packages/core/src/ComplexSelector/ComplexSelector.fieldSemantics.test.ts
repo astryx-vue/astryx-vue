@@ -1,6 +1,8 @@
+import type { ComplexSelectorTriggerProps } from './types.js'
 import { mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { h, nextTick } from 'vue'
+import LayerProvider from '../LayerProvider/LayerProvider.vue'
 import ComplexSelector from './ComplexSelector.vue'
 
 afterEach(() => {
@@ -8,7 +10,7 @@ afterEach(() => {
   vi.restoreAllMocks()
 })
 
-type Commit = (value: string) => Promise<void>
+type Commit = (value: unknown) => void
 
 function mountSelector(props: Record<string, unknown> = {}, attrs: Record<string, unknown> = {}) {
   let commitFromSlot: Commit | undefined
@@ -93,5 +95,43 @@ describe('complex selector field semantics', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
     mount(ComplexSelector, { props: { label: 'Fruit', modelValue: 'apple' } })
     expect(warn.mock.calls.some(call => String(call[0]).includes('default slot'))).toBe(true)
+  })
+})
+
+describe('complex selector custom trigger and popup cap', () => {
+  it('a tooltip status button carries the positioning class', () => {
+    const { wrapper } = mountSelector({ status: { type: 'warning', message: 'Check stock' }, statusVariant: 'tooltip' })
+    expect(wrapper.get('button.astryx-field-status-glyph').classes()).toContain('astryx-complex-selector-status-tip')
+  })
+
+  it('a disabledMessage reaches a caller-rendered trigger: description and focus tooltip', async () => {
+    const wrapper = mount(ComplexSelector, {
+      attachTo: document.body,
+      props: {
+        label: 'Fruit',
+        modelValue: 'apple',
+        isDisabled: true,
+        disabledMessage: 'Locked by admin',
+        renderTrigger: (props: ComplexSelectorTriggerProps) => h('button', { ...props, type: 'button' }, 'Pick'),
+      },
+      slots: { default: () => h('div', 'picker') },
+    })
+    const button = wrapper.get('button')
+    const ids = button.attributes('aria-describedby')?.split(' ') ?? []
+    expect(ids.map(id => document.getElementById(id)?.textContent)).toContain('Locked by admin')
+    ;(button.element as HTMLElement).focus()
+    await button.trigger('focus')
+    await nextTick()
+    expect(document.body.textContent).toContain('Locked by admin')
+  })
+
+  it('caps the popup content by the viewport minus the layer gutters, including a LayerProvider inset', async () => {
+    const wrapper = mount(() => h(LayerProvider, { inset: { blockEnd: 60 } }, () => h(ComplexSelector, { label: 'Fruit', modelValue: 'apple', triggerLabel: 'Apple' }, { default: () => h('div', 'picker') })), { attachTo: document.body })
+    await wrapper.get('button.astryx-complex-selector').trigger('click')
+    await nextTick()
+    const style = document.querySelector<HTMLElement>('.astryx-complex-selector-content')?.getAttribute('style') ?? ''
+    // 基础空隙 16 + 16，再加底栏的 60。
+    expect(style).toContain('calc(100dvh - 92px)')
+    wrapper.unmount()
   })
 })
