@@ -37,6 +37,7 @@ import { selectorTriggerLabelledBy } from './triggerName.js'
 import { useListboxOverlay } from './useListboxOverlay.js'
 import { useListboxStyle } from './useListboxStyle.js'
 import { useSelectorPopup } from './useSelectorPopup.js'
+import { useSelectorSheet } from './useSelectorSheet.js'
 import { useSelectorTexts } from './useSelectorTexts.js'
 import '../../styles/button.css'
 import '../../styles/layer.css'
@@ -107,7 +108,6 @@ const listboxRef = useTemplateRef<HTMLElement>('listboxRef')
 const panelRef = useTemplateRef<{ focusSearch: () => void }>('panelRef')
 const sheetSlot = useTemplateRef<HTMLElement>('sheetSlot')
 useScrollbars(listboxRef)
-const isSheet = computed(() => props.presentation === 'bottom-sheet')
 const sheetLabel = computed(() => props.label || resolvedPlaceholder.value)
 
 const isEnabled = control.canActivate
@@ -153,14 +153,7 @@ const combobox = useCombobox({
   },
 })
 const { isKeyboardHighlight } = useKeyboardHighlight(combobox.activeIndex)
-const sheetOpen = computed({
-  get: () => isSheet.value && combobox.isOpen.value,
-  set: (open: boolean) => {
-    if (!open && combobox.isOpen.value)
-      combobox.close()
-  },
-})
-const popoverOpen = computed(() => combobox.isOpen.value && !isSheet.value)
+const { isSheet, sheetOpen, popoverOpen, onSheetMotionComplete } = useSelectorSheet(() => props.presentation, combobox)
 
 const { position, teleportTarget } = usePositionedLayer({
   anchor: fieldRef,
@@ -424,6 +417,7 @@ const listboxStyle = useListboxStyle({ fieldRef, isOpen: combobox.isOpen, isShee
       height="hug"
       :label="sheetLabel"
       :padding="2"
+      @motion-complete="onSheetMotionComplete"
     >
       <div ref="sheetSlot" class="astryx-selector-sheet">
         <div class="astryx-selector-sheet-title">

@@ -24,6 +24,7 @@ import { useComponentMessages } from '../locale/context.js'
 import { multiSelectorMessages } from '../locale/messages/multi-selector.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { bindListboxEscape } from '../Selector/selectorEscape.js'
+import { useSelectorSheet } from '../Selector/useSelectorSheet.js'
 import { normalizeTriggerVariant } from '../selectors/triggerVariant.js'
 import { useSize } from '../SizeContext/SizeContext.js'
 import Spinner from '../Spinner/Spinner.vue'
@@ -156,14 +157,7 @@ const hiddenCarrierValues = computed(() => control.isDisabled.value ? [] : selec
 trackInteractionModality()
 const searchKeyboardFocus = ref(false)
 const sheetSlot = useTemplateRef<HTMLElement>('sheetSlot')
-const isSheet = computed(() => props.presentation === 'bottom-sheet')
-const sheetOpen = computed({
-  get: () => isSheet.value && combobox.isOpen.value,
-  set: (open: boolean) => {
-    if (!open && combobox.isOpen.value)
-      combobox.close()
-  },
-})
+const { isSheet, sheetOpen, popoverOpen, onSheetMotionComplete } = useSelectorSheet(() => props.presentation, combobox)
 const listboxTarget = computed(() => isSheet.value && sheetSlot.value ? sheetSlot.value : 'body')
 
 function onSearchFocus(): void {
@@ -177,7 +171,7 @@ function onSearchBlur(): void {
 const anchored = useAnchoredListbox({
   anchor,
   layer: listboxRef,
-  isOpen: computed(() => combobox.isOpen.value && !isSheet.value),
+  isOpen: popoverOpen,
   onDismiss: () => {
     combobox.close()
   },
@@ -416,6 +410,7 @@ defineExpose({
     height="hug"
     :label="props.label"
     :padding="2"
+    @motion-complete="onSheetMotionComplete"
   >
     <div ref="sheetSlot" class="astryx-multi-selector-sheet">
       <div class="astryx-multi-selector-sheet-title">

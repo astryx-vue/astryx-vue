@@ -46,6 +46,12 @@ footer: false
         <td>菜单的最大高度，单位为像素，用于必须放下所有行的菜单。它会抬高默认的 300px 上限，但视口仍然限住实际高度。</td>
       </tr>
       <tr>
+        <td><code>presentation</code></td>
+        <td><code>'popover' | 'bottom-sheet' | 'adaptive'</code></td>
+        <td><code>'popover'</code></td>
+        <td><code>popover</code> 是锚定在触发器旁的浮层。<code>bottom-sheet</code> 在任何屏幕上都用底部弹层。<code>adaptive</code> 在紧凑触屏上用底部弹层：主指针是粗略指针（手指），并且视口宽度小于主题的 <code>md</code> 断点（默认 768px）或高度小于 500px。打开那一刻定下用哪种，开着的时候转屏也不换，退场播完才重新判断。</td>
+      </tr>
+      <tr>
         <td><code>placement</code></td>
         <td><code>'above' | 'below' | 'start' | 'end'</code></td>
         <td><code>'below'</code></td>

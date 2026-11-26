@@ -4,7 +4,7 @@ import type { OptionActionNode } from '../selectors/optionAction.js'
 
 export type MultiSelectorSize = 'sm' | 'md' | 'lg'
 export type MultiSelectorVariant = 'input' | 'secondary' | 'ghost'
-export type MultiSelectorPresentation = 'popover' | 'bottom-sheet'
+export type MultiSelectorPresentation = 'popover' | 'bottom-sheet' | 'adaptive'
 export type MultiSelectorStatus = 'default' | 'success' | 'warning' | 'error'
 export type MultiSelectorStatusVariant = 'attached' | 'detached' | 'tooltip'
 export type MultiSelectorTriggerDisplay = 'count' | 'labels' | 'badges'
@@ -85,7 +85,7 @@ export interface MultiSelectorProps extends FieldPartStylingProps {
   size?: MultiSelectorSize
   /** input 是带边框的表单控件。secondary 对齐次要按钮。ghost 适合放在工具栏里。 */
   variant?: MultiSelectorVariant
-  /** popover 锚在触发器下，bottom-sheet 在底部弹层里展开。 */
+  /** popover 锚在触发器下，bottom-sheet 在底部弹层里展开，adaptive 在紧凑触屏上用底部弹层、其余用浮层。 */
   presentation?: MultiSelectorPresentation
   /** 是否可清除。和 hasClear 等价，两者任一为真即生效。 */
   clearable?: boolean

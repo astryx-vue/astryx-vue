@@ -26,6 +26,12 @@ footer: false
         <td>菜单面板宽度。数字按像素处理。不设置时面板至少 160px 并随内容伸缩；无论哪种方式都不会超出视口。</td>
       </tr>
       <tr>
+        <td><code>presentation</code></td>
+        <td><code>'popover' | 'bottom-sheet' | 'adaptive'</code></td>
+        <td><code>'popover'</code></td>
+        <td><code>popover</code> 是锚定在触发器旁的浮层。<code>bottom-sheet</code> 在任何屏幕上都用底部弹层。<code>adaptive</code> 在紧凑触屏上用底部弹层：主指针是粗略指针（手指），并且视口宽度小于主题的 <code>md</code> 断点（默认 768px）或高度小于 500px。打开那一刻定下用哪种，开着的时候转屏也不换，退场播完才重新判断。</td>
+      </tr>
+      <tr>
         <td><code>size</code></td>
         <td><code>'sm' | 'md' | 'lg'</code></td>
         <td><code>'md'</code></td>

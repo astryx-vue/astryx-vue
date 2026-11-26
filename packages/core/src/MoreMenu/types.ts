@@ -255,6 +255,8 @@ export interface MoreMenuSheetProps {
 export interface MoreMenuSheetEmits {
   /** The sheet asked to close, for example on Escape or a press on the scrim. */
   close: []
+  /** The sheet's exit finished playing: the menu may change how it presents. */
+  settled: []
 }
 
 /**
