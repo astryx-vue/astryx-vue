@@ -32,6 +32,12 @@ footer: false
         <td>Gap between items in pixels. Used in width calculations.</td>
       </tr>
       <tr>
+        <td><code>options.gapToken</code></td>
+        <td><code>MaybeRefOrGetter&lt;string&gt;</code></td>
+        <td>—</td>
+        <td>The theme value of the gap, such as <code>var(--astryx-spacing-2)</code>. When set, <code>gap</code> is ignored and the hook reads the gap the browser renders on the measurement copy, because a spacing step follows the theme and the root font size. A new value measures again.</td>
+      </tr>
+      <tr>
         <td><code>options.minVisibleItems</code></td>
         <td><code>number</code></td>
         <td><code>0</code></td>
@@ -102,6 +108,16 @@ footer: false
         <td><code>rowHeight</code></td>
         <td><code>Ref&lt;number&gt;</code></td>
         <td>Tallest measured item height, for giving a multi-row container its height.</td>
+      </tr>
+      <tr>
+        <td><code>renderedGap</code></td>
+        <td><code>Ref&lt;number&gt;</code></td>
+        <td>The gap in pixels the last measurement used: the rendered one with <code>gapToken</code>, otherwise <code>gap</code>.</td>
+      </tr>
+      <tr>
+        <td><code>inlineBounds</code></td>
+        <td><code>Ref&lt;{ collapsed, rendered, inFlexRow }&gt;</code></td>
+        <td>Single-row only. <code>collapsed</code> is the width with only the minimum items and the indicator, <code>rendered</code> the width with every item, and <code>inFlexRow</code> whether the parent lays the list out in a flex row. Zero or false until measured.</td>
       </tr>
       <tr>
         <td><code>remeasure</code></td>
