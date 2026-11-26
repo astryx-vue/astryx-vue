@@ -36,6 +36,7 @@ const scrolls = computed(() => props.overflow !== 'visible')
 const {
   bind: bindStrip,
   onFocusIn: onStripFocusIn,
+  onFocusOut: onStripFocusOut,
   overflowEnd,
   overflowStart,
   scrollByPage,
@@ -143,6 +144,7 @@ provide(tabListContextKey, {
     :role="role"
     :aria-label="defaultLabel"
     @focusin="onStripFocusIn"
+    @focusout="onStripFocusOut"
   >
     <div
       :ref="bindStrip"

@@ -36,4 +36,6 @@ import { SideNav, SideNavHeading } from '@astryx-vue/core/SideNav'
 ```
 
 
+上下方向键每次移动一行并循环，Home 和 End 到第一行和最后一行，输入字符跳到匹配的行，回车或空格激活当前行，Esc 关闭标题菜单。在标题的弹出层里，菜单用标题文字当名字；想换个名字就传 `label`，单独使用时一定要传。方向键只在 `NavHeadingMenuItem` 之间移动，所以不要在菜单里放别的控件。
+
 <ComponentAnatomy />

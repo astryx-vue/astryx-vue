@@ -16,6 +16,7 @@
   }
 
   .astryx-tab-menu-dropdown {
+    user-select: none;
     position: fixed;
     z-index: 50;
     display: flex;

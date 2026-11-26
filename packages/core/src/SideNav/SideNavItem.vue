@@ -6,6 +6,7 @@ import { hasSlotContent } from '../composables/internal/slotContent.js'
 import Icon from '../Icon/Icon.vue'
 import { useComponentMessages } from '../locale/context.js'
 import { navMessages } from '../locale/messages/nav.js'
+import { useCloseMobileDrawer } from '../MobileNav/closeOnActivate.js'
 import NavItem from '../NavItem/NavItem.vue'
 import NavDisclosure from '../NavMenu/NavDisclosure.vue'
 import { SizeProvider } from '../SizeContext/SizeContext.js'
@@ -33,6 +34,7 @@ const accessibleLabel = computed(() => {
     return given
   return props.label
 })
+const closeMobileDrawer = useCloseMobileDrawer()
 const collapse = useSideNavCollapse()
 const parentDepth = useSideNavDepth()
 const messages = useComponentMessages({ nav: navMessages })
@@ -102,8 +104,11 @@ function onActivate(event: MouseEvent): void {
   if (canNest.value && !splitToggle.value && !sidebarCollapsed.value) {
     event.preventDefault()
     toggleNested()
+    emit('click', event)
+    return
   }
   emit('click', event)
+  closeMobileDrawer()
 }
 
 const toggleLabel = computed(() =>

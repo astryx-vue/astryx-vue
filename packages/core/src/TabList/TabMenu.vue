@@ -208,6 +208,7 @@ onUnmounted(() => {
       icon="chevronDown"
       size="sm"
     />
+    <span v-if="hasSelectedOption" class="astryx-tab__indicator astryx-tab-indicator" aria-hidden="true" />
   </button>
   <Teleport :to="teleportTarget">
     <div

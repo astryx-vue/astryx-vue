@@ -13,3 +13,6 @@ export const navMenuKey = defineLayerScopedKey<NavMenuContextValue | null>('astr
 export const navMenuCloseKey: InjectionKey<() => void> = Symbol('astryx-nav-menu-close')
 /** 弹出层要求菜单把焦点放在哪一项。菜单可以自己收，调用方也可以用插槽参数盖过它。 */
 export const navMenuFocusKey: InjectionKey<Ref<NavMenuFocusRequest>> = Symbol('astryx-nav-menu-focus')
+
+/** 弹出层的名字（标题文字）。里面没有自己命名的菜单用它当名字，一个弹出层里只有这一个具名菜单。 */
+export const navMenuLabelKey: InjectionKey<Ref<string | undefined>> = Symbol('astryx-nav-menu-label')

@@ -40,7 +40,9 @@
   .astryx-nav-menu--md { min-width: 200px; }
   .astryx-nav-menu--lg { min-width: 240px; }
 
+  /* 按住滑过各行时不选中行里的文字；菜单旁边调用方的内容仍可选中。 */
   .astryx-nav-menu-item {
+    user-select: none;
     display: flex;
     align-items: center;
     gap: var(--astryx-spacing-2, 8px);
@@ -52,6 +54,7 @@
     background: transparent;
     color: var(--astryx-color-text-primary);
     font: inherit;
+    line-height: var(--astryx-text-label-leading, 1.4286);
     text-align: start;
     text-decoration: none;
     cursor: pointer;

@@ -34,12 +34,20 @@ const drawerItemsId = `astryx-top-nav-mega-items-${useId()}`
       <span>{{ label }}</span>
       <Icon icon="chevronDown" size="sm" :class="{ 'astryx-top-nav-menu__chevron--open': expanded }" />
     </button>
-    <div v-show="expanded" :id="drawerItemsId" class="astryx-top-nav-mega__drawer">
-      <div class="astryx-top-nav-mega__drawer-items">
-        <slot />
-      </div>
-      <div v-if="$slots.featured" class="astryx-top-nav-mega__featured">
-        <slot name="featured" />
+    <div
+      :id="drawerItemsId"
+      class="astryx-top-nav-drawer-section astryx-top-nav-mega__drawer"
+      :class="{ 'astryx-top-nav-drawer-section--collapsed': !expanded }"
+      :aria-hidden="expanded ? undefined : 'true'"
+      :inert="expanded ? undefined : true"
+    >
+      <div class="astryx-top-nav-drawer-section__inner">
+        <div class="astryx-top-nav-mega__drawer-items">
+          <slot />
+        </div>
+        <div v-if="$slots.featured" class="astryx-top-nav-mega__featured">
+          <slot name="featured" />
+        </div>
       </div>
     </div>
   </div>

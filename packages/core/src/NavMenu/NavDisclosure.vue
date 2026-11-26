@@ -5,7 +5,7 @@ import { computed, nextTick, provide, ref, useId, watch } from 'vue'
 import { MENU_HOVER_CLICK_GUARD_MS, MENU_HOVER_REOPEN_SUPPRESS_MS } from '../composables/internal/useMenuHover.js'
 import { useDismiss } from '../composables/useDismiss.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
-import { navMenuCloseKey, navMenuFocusKey } from './context.js'
+import { navMenuCloseKey, navMenuFocusKey, navMenuLabelKey } from './context.js'
 import '../../styles/nav-menu.css'
 import '../../styles/layer.css'
 
@@ -46,8 +46,10 @@ const { position } = usePositionedLayer({
 })
 
 const panelStyle = computed(() => ({
-  left: `${position.value.left}px`,
-  top: `${position.value.top}px`,
+  'left': `${position.value.left}px`,
+  'top': `${position.value.top}px`,
+  // 面板自己的最大高度要从这里算起，高的面板不会掉出视口底部。
+  '--astryx-nav-panel-top': `${position.value.top}px`,
 }))
 
 function clearTimers(): void {
@@ -163,6 +165,7 @@ useDismiss({
 
 provide(navMenuCloseKey, () => close(true))
 provide(navMenuFocusKey, focusRequest)
+provide(navMenuLabelKey, computed(() => props.label))
 
 watch(isOpen, (open) => {
   emit('openChange', open)

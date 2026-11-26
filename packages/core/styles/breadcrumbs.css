@@ -87,6 +87,7 @@
     display: inline-flex;
     align-items: center;
     flex-shrink: 0;
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
   }
 
   .astryx-breadcrumb-item__chevron {

@@ -25,6 +25,7 @@ footer: false
 <tr><td><code>href</code></td><td><code>string</code></td><td>—</td><td>有地址时这一项渲染成链接。没有地址就是一个普通的菜单项。</td></tr>
 <tr><td><code>iconClass</code></td><td><code>string</code></td><td>—</td><td>文字前面那个图标的 CSS class。</td></tr>
 <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>禁用这一项。方向键和首字母跳转会跳过它。</td></tr>
+<tr><td><code>hasCloseOnSelect</code></td><td><code>boolean</code></td><td><code>true</code></td><td>选中这一项后是否关闭菜单。设为 <code>false</code> 时菜单保持打开，适合把结果显示在项上的操作。</td></tr>
 <tr><td><code>id</code></td><td><code>string</code></td><td>—</td><td>这一项的固定 key。不填就用文字。</td></tr>
 </tbody></table>
 </div>

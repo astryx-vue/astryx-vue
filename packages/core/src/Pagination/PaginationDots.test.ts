@@ -46,7 +46,7 @@ describe('pagination dots 键盘与禁用状态', () => {
     await dots[0]!.trigger('keydown', { key: 'ArrowRight' })
 
     expect(wrapper.emitted('update:page')).toBeUndefined()
-    expect(dots[0]!.attributes('aria-current')).toBe('page')
+    expect(dots[0]!.attributes('aria-checked')).toBe('true')
     expect(dots.map(dot => dot.attributes('tabindex'))).toEqual(['0', '-1', '-1', '-1'])
     wrapper.unmount()
   })

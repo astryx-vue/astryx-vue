@@ -58,7 +58,7 @@ function onNavigate(): void {
         :to="customLink != null ? ctaHref : undefined"
         @click.stop="onNavigate"
       >
-        {{ linkLabel }} →
+        {{ linkLabel }}{{ ' ' }}<span class="astryx-top-nav-mega-card__link-arrow">→</span>
       </component>
       <slot />
     </span>

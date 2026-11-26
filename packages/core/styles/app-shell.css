@@ -173,4 +173,40 @@
     background-color: transparent;
     isolation: isolate;
   }
+
+  /* 脚本读到窗口之前（服务端渲染的页面），整条顶栏在手机上先藏起起始和中间内容；读完窗口后由 TopNav 自己收进抽屉。 */
+  @media (width < 640px) {
+    .astryx-app-shell[data-mobile-unread='sm'] .astryx-top-nav__items,
+    .astryx-app-shell[data-mobile-unread='sm'] .astryx-top-nav__center {
+      display: none;
+    }
+  }
+
+  @media (width < 768px) {
+    .astryx-app-shell[data-mobile-unread='md'] .astryx-top-nav__items,
+    .astryx-app-shell[data-mobile-unread='md'] .astryx-top-nav__center {
+      display: none;
+    }
+  }
+
+  @media (width < 1024px) {
+    .astryx-app-shell[data-mobile-unread='lg'] .astryx-top-nav__items,
+    .astryx-app-shell[data-mobile-unread='lg'] .astryx-top-nav__center {
+      display: none;
+    }
+  }
+
+  @media (width < 1280px) {
+    .astryx-app-shell[data-mobile-unread='xl'] .astryx-top-nav__items,
+    .astryx-app-shell[data-mobile-unread='xl'] .astryx-top-nav__center {
+      display: none;
+    }
+  }
+
+  @media (width < 1536px) {
+    .astryx-app-shell[data-mobile-unread='2xl'] .astryx-top-nav__items,
+    .astryx-app-shell[data-mobile-unread='2xl'] .astryx-top-nav__center {
+      display: none;
+    }
+  }
 }

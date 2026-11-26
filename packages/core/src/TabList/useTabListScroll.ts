@@ -15,6 +15,7 @@ export function useTabListScroll(options: {
 }): {
   bind: (node: unknown) => void
   onFocusIn: (event: FocusEvent) => void
+  onFocusOut: () => void
   overflowEnd: Ref<boolean>
   overflowStart: Ref<boolean>
   scrollByPage: (direction: -1 | 1) => void
@@ -22,6 +23,9 @@ export function useTabListScroll(options: {
   let strip: HTMLElement | null = null
   let resizeObserver: ResizeObserver | undefined
   let revealedValue: string | null = null
+  /** 因为获得焦点而被滚进可见区域、并且还握着焦点的那个标签。 */
+  let focusRevealedValue: string | null = null
+  let revealFrame = 0
   const { scrollRef, overflowStart, overflowEnd } = useScrollOverflow()
 
   function insetOf(node: HTMLElement): number {
@@ -89,7 +93,19 @@ export function useTabListScroll(options: {
     const target = event.target
     if (!(target instanceof Element) || strip == null || !strip.contains(target))
       return
-    revealStop(target.closest<HTMLElement>('[data-tab-value], [data-tab-menu]'))
+    const stop = target.closest<HTMLElement>('[data-tab-value], [data-tab-menu]')
+    revealStop(stop)
+    focusRevealedValue = stop?.dataset.tabValue ?? null
+  }
+
+  function onFocusOut(): void {
+    focusRevealedValue = null
+  }
+
+  function cancelRevealFrame(): void {
+    if (revealFrame !== 0)
+      cancelAnimationFrame(revealFrame)
+    revealFrame = 0
   }
 
   watch(options.enabled, (enabled) => {
@@ -106,6 +122,16 @@ export function useTabListScroll(options: {
     if (revealedValue === value)
       return
     revealedValue = value
+    cancelRevealFrame()
+    if (focusRevealedValue === value && typeof requestAnimationFrame === 'function') {
+      // 按下或方向键先聚焦了这个标签，聚焦时已经滚到可见。现在量会在按下的这一下里
+      // 强制算出新选中状态的样式和布局；下一帧本来就要布局，到那时再收尾：选中的字重可能让标签变宽。
+      revealFrame = requestAnimationFrame(() => {
+        revealFrame = 0
+        revealSelected()
+      })
+      return
+    }
     revealSelected()
   })
 
@@ -116,12 +142,14 @@ export function useTabListScroll(options: {
   })
 
   onScopeDispose(() => {
+    cancelRevealFrame()
     resizeObserver?.disconnect()
   })
 
   return {
     bind,
     onFocusIn,
+    onFocusOut,
     overflowEnd,
     overflowStart,
     scrollByPage,

@@ -14,6 +14,7 @@ footer: false
 <tr><td><code>href</code></td><td><code>string</code></td><td>—</td><td>点击后跳转的地址。不传这一项就渲染成按钮。</td></tr>
 <tr><td><code>as</code></td><td><code>NavLinkComponent</code></td><td>—</td><td>有链接时用来替换 <code>&lt;a&gt;</code> 的组件，优先于 <code>LinkProvider</code> 给的默认值。</td></tr>
 <tr><td><code>iconClass</code></td><td><code>string</code></td><td>—</td><td>左侧图标框里的 CSS 图标类名，例如 <code>i-carbon-flash</code>。同时有 <code>icon</code> 插槽时以插槽为准。</td></tr>
+<tr><td><code>hasCloseOnSelect</code></td><td><code>boolean</code></td><td><code>true</code></td><td>选中这一项后是否关闭面板。设为 <code>false</code> 时面板保持打开，适合把结果显示在项上的操作。</td></tr>
 </tbody></table>
 </div>
 

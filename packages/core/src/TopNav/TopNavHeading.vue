@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { TopNavHeadingProps, TopNavHeadingSlots } from './types.js'
 import { computed, useSlots } from 'vue'
+import { hasSlotContent } from '../composables/internal/slotContent.js'
 import NavHeadingSurface from '../NavMenu/NavHeadingSurface.vue'
 import '../../styles/top-nav.css'
 
@@ -25,11 +26,11 @@ const headingHref = computed(() => props.headingHref ?? props.href)
     :superheading="superheading"
     :superheading-href="superheadingHref"
   >
-    <template v-if="slots.logo || slots.icon" #icon>
+    <template v-if="hasSlotContent(slots.logo) || hasSlotContent(slots.icon)" #icon>
       <slot name="logo" />
-      <slot v-if="!slots.logo" name="icon" />
+      <slot v-if="!hasSlotContent(slots.logo)" name="icon" />
     </template>
-    <template v-if="slots.end" #end>
+    <template v-if="hasSlotContent(slots.end)" #end>
       <slot name="end" />
     </template>
     <template v-if="slots.menu" #menu="scope">

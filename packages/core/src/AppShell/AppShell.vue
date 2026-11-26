@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { StyleValue } from 'vue'
 import type { AppShellBreakpoint, AppShellEmits, AppShellProps, AppShellSlots } from './types.js'
-import { computed, provide, reactive, ref, useAttrs, useId, useSlots, useTemplateRef, watch } from 'vue'
+import { computed, onMounted, provide, reactive, ref, useAttrs, useId, useSlots, useTemplateRef, watch } from 'vue'
 import { observeMainOverflow } from '../composables/internal/mainOverflow.js'
 import { attachScrollKeyboardDelegation } from '../composables/internal/scrollKeyboardDelegation.js'
 import { appShellMobileKey } from '../composables/useAppShellMobile.js'
@@ -52,6 +52,11 @@ const BREAKPOINTS: Record<Exclude<AppShellBreakpoint, 'none'>, number> = {
 }
 
 const isBelow = ref(false)
+/** 脚本读到窗口之前为 false：服务端渲染出来的整条顶栏可能正显示在手机上。 */
+const windowRead = ref(false)
+onMounted(() => {
+  windowRead.value = true
+})
 
 const breakpoint = computed(() => (typeof props.mobileNav === 'object' ? props.mobileNav.breakpoint : undefined) ?? 'md')
 const query = computed(() => {
@@ -72,6 +77,12 @@ const hasTopNav = computed(() => slots.topNav != null)
 const hasSideNav = computed(() => slots.sideNav != null)
 const hasCustomDrawer = computed(() => slots.mobileNav != null)
 const mobileEnabled = computed(() => props.mobileNav !== false && (hasTopNav.value || hasSideNav.value) && !hasCustomDrawer.value)
+/** 读到窗口之前，标准断点下的顶栏用 CSS 先把起始和中间内容在手机上藏起来，和读完窗口后的手机条一致。 */
+const unreadBreakpoint = computed(() => {
+  if (windowRead.value || !hasTopNav.value || !mobileEnabled.value || breakpoint.value === 'none')
+    return undefined
+  return breakpoint.value
+})
 const hasAutoToggle = computed(() => (typeof props.mobileNav !== 'object' || props.mobileNav.hasToggle !== false) && !hasCustomDrawer.value)
 const showSideInline = computed(() => hasSideNav.value && !(isBelow.value && mobileEnabled.value))
 const elevate = computed(() => props.variant === 'elevated' && hasTopNav.value && showSideInline.value)
@@ -193,6 +204,7 @@ function onMainFocusOut(event: FocusEvent) {
     :style="rootStyle"
     :data-variant="variant"
     :data-height="height"
+    :data-mobile-unread="unreadBreakpoint"
   >
     <a class="astryx-app-shell__skip" :href="`#${mainId}`" @click="focusMain">
       {{ messages.layout.skipToContent }}
