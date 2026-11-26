@@ -277,6 +277,26 @@ describe('json envelopes', () => {
     expect(option.exitCode).toBe(2)
     expect(parseResponse(option.stdout)).toMatchObject({ code: 'ERR_INVALID_OPTION' })
   })
+
+  it('answers a confirm-style option with the run without it', async () => {
+    const json = await run(['template', 'login-card', './src/pages', '--yes', '--json'])
+    expect(json.exitCode).toBe(2)
+    expect(parseResponse(json.stdout)).toMatchObject({
+      code: 'ERR_INVALID_OPTION',
+      error: expect.stringContaining('never ask questions'),
+      suggestions: [{ name: 'astryx-vue template login-card ./src/pages --json', reason: 'do this instead' }],
+    })
+
+    // `-y` is read as the option, not as a positional the command would misread.
+    const short = await run(['search', 'date picker', '-y'])
+    expect(short.exitCode).toBe(2)
+    expect(short.stdout).toBe('')
+    expect(short.stderr).toBe('-y is not needed: astryx-vue commands never ask questions. Drop it and run: astryx-vue search \'date picker\'\n')
+
+    // A second mistake in the same run is the one to fix.
+    const other = await run(['component', 'Button', '--non-interactive', '--theme', '--json'])
+    expect(parseResponse(other.stdout)).toMatchObject({ code: 'ERR_INVALID_OPTION', error: 'Unknown option --theme.' })
+  })
 })
 
 describe('component text', () => {
