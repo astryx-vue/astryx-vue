@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * 节点工作区工具：建、列、删、rebase、复核加合入。约定见 SWARM.md「独立工作区与端口分配表」。
+ * 节点工作区工具：建、列、删、rebase、复核加合入。目录、分支和端口的约定见 worktree/workspaces.mjs。
  *
  *   node scripts/swarm/worktree.mjs new <节点ID> <简短名> [--slot N] [--no-install]
  *   node scripts/swarm/worktree.mjs ls
