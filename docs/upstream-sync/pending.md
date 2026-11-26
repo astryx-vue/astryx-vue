@@ -2204,8 +2204,8 @@
   - 已移植：[#537](https://github.com/astryx-vue/astryx-vue/pull/537)。#12780 init 的主题安装按项目 core 的版本；#12288 技能目录我们没有
 - [x] [`783e47029`](https://github.com/meta/astryx/commit/783e47029) chore: land batch 17 (2 pull requests) (#12866)
   - 不适用：上游实验性主题编辑器（experimental theme editor）的改动，我们的 CLI 没有这个命令
-- [x] [`8efb25a85`](https://github.com/meta/astryx/commit/8efb25a85) chore: land batch 23 (4 pull requests) (#12885)
-  - 不适用：上游实验性主题编辑器（experimental theme editor）的改动，我们的 CLI 没有这个命令
+- [ ] [`8efb25a85`](https://github.com/meta/astryx/commit/8efb25a85) chore: land batch 23 (4 pull requests) (#12885)
+  - 暂缓：要还原上游动效，归动效与手势引擎任务
 - [ ] [`e9b125444`](https://github.com/meta/astryx/commit/e9b125444) chore: land batch 24 (3 pull requests) (#12883)
 - [ ] [`b871bc6d1`](https://github.com/meta/astryx/commit/b871bc6d1) chore: land batch 28 (2 pull requests) (#12892)
 - [x] [`67a6a0694`](https://github.com/meta/astryx/commit/67a6a0694) chore: land batch 27 (1 pull requests) (#12899)
@@ -2759,22 +2759,22 @@
   - 不适用：上游组件规范文档（自动初筛）
 - [ ] [`f277e2580`](https://github.com/meta/astryx/commit/f277e2580) fix(core): a single esbuild bundle renders Core: lazily imported modules import Core directly, not through barrels (#9055)
 - [ ] [`377ab27fa`](https://github.com/meta/astryx/commit/377ab27fa) fix(Timestamp): keep a caller's aria-label and tabIndex (#8726)
-- [x] [`16a749404`](https://github.com/meta/astryx/commit/16a749404) fix(DateInput, DateTimeInput): after a month arrow, Safari's calendar rests on the month the title names (#8513)
-  - 不适用：Safari 月份滚动条的落点问题，Vue 面板用箭头翻月，没有月份滚动条
+- [ ] [`16a749404`](https://github.com/meta/astryx/commit/16a749404) fix(DateInput, DateTimeInput): after a month arrow, Safari's calendar rests on the month the title names (#8513)
+  - 暂缓：要还原上游动效，归动效与手势引擎任务
 - [x] [`d799afea8`](https://github.com/meta/astryx/commit/d799afea8) fix(DateInput, DateRangeInput, DateTimeInput): mount the calendar only while the popover is open (#8902)
   - 已移植：[#546](https://github.com/astryx-vue/astryx-vue/pull/546)。日历只在弹层打开时挂载（DateInput、DateRangeInput、DateTimeInput）
 - [ ] [`faee47927`](https://github.com/meta/astryx/commit/faee47927) fix(TimeInput, DateTimeInput): time text follows the locale's hour cycle and day periods (#9022)
 - [x] [`e770c8296`](https://github.com/meta/astryx/commit/e770c8296) fix(DateInput): block changes from disabled open pickers (#8813)
   - 已移植：[#546](https://github.com/astryx-vue/astryx-vue/pull/546)。禁用的字段在弹层开着时不再接受改动
-- [x] [`802da1a79`](https://github.com/meta/astryx/commit/802da1a79) fix(DateInput): a wheel commits at a mouse drag's release, not at every row it passes (#8483)
-  - 不适用：针对滚轮鼠标拖动的落点提交，Vue 滚轮是按钮列表，没有拖动滚动
+- [ ] [`802da1a79`](https://github.com/meta/astryx/commit/802da1a79) fix(DateInput): a wheel commits at a mouse drag's release, not at every row it passes (#8483)
+  - 暂缓：要还原上游动效，归动效与手势引擎任务
 - [x] [`32f9dc801`](https://github.com/meta/astryx/commit/32f9dc801) docs(spec): TimeInput's verification cites the format-hint test (#9103)
   - 不适用：上游组件规范文档（自动初筛）
 - [x] [`d29a10977`](https://github.com/meta/astryx/commit/d29a10977) docs(spec): DateInput records its shipped contract as current (#9128)
   - 不适用：上游组件规范文档（自动初筛）
 - [ ] [`2936b07e8`](https://github.com/meta/astryx/commit/2936b07e8) fix(DateRangeInput): reject commits after disabling open picker (#9155)
-- [x] [`67e293e0e`](https://github.com/meta/astryx/commit/67e293e0e) perf(DateInput): the month scroller adds and removes its input listeners directly, with one shared options object (#9146)
-  - 不适用：月份滚动条的监听器写法优化，Vue 没有月份滚动条
+- [ ] [`67e293e0e`](https://github.com/meta/astryx/commit/67e293e0e) perf(DateInput): the month scroller adds and removes its input listeners directly, with one shared options object (#9146)
+  - 暂缓：要还原上游动效，归动效与手势引擎任务
 - [x] [`f50374f51`](https://github.com/meta/astryx/commit/f50374f51) test(DateInput, DateTimeInput): MonthScroller's proofs hold on a loaded machine (#9177)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`8f345cba4`](https://github.com/meta/astryx/commit/8f345cba4) feat(FieldStatus): deprecate the tooltip variant; field controls keep statusVariant="tooltip" (#9196)
@@ -2795,10 +2795,10 @@
 
 ### v0.7.7
 
-- [x] [`aa8648760`](https://github.com/meta/astryx/commit/aa8648760) fix(DateInput, DateTimeInput): the month scroller's steps follow design:reduced-motion (#8496)
-  - 不适用：月份滚动条步进跟随减少动效，Vue 没有月份滚动条
-- [x] [`6658a4c8a`](https://github.com/meta/astryx/commit/6658a4c8a) fix(Wheel): a wheel that stops outside the bounds rests on the nearest value inside them (#8131)
-  - 不适用：滚轮停在范围外回到最近值，Vue 滚轮不可滚动，范围外的行直接禁用
+- [ ] [`aa8648760`](https://github.com/meta/astryx/commit/aa8648760) fix(DateInput, DateTimeInput): the month scroller's steps follow design:reduced-motion (#8496)
+  - 暂缓：要还原上游动效，归动效与手势引擎任务
+- [ ] [`6658a4c8a`](https://github.com/meta/astryx/commit/6658a4c8a) fix(Wheel): a wheel that stops outside the bounds rests on the nearest value inside them (#8131)
+  - 暂缓：要还原上游动效，归动效与手势引擎任务
 - [ ] [`546aaa0bc`](https://github.com/meta/astryx/commit/546aaa0bc) fix(DateRangeInput): presets stack above the calendar when they don't fit (#9588)
 - [x] [`443c7f83e`](https://github.com/meta/astryx/commit/443c7f83e) fix(DateInput, DateTimeInput): Enter submits the form when nothing is typed (#9678)
   - 已移植：[#546](https://github.com/astryx-vue/astryx-vue/pull/546)。没有打字时 Enter 照常提交表单（DateInput、DateTimeInput）
@@ -2806,8 +2806,8 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`867728fbb`](https://github.com/meta/astryx/commit/867728fbb) test(DateInput): the meridiem turn proof judges the frames a loaded page draws, not how many (#9730)
   - 不适用：只改上游测试（自动初筛）
-- [x] [`273ec4356`](https://github.com/meta/astryx/commit/273ec4356) fix(DateInput): a Reduce Motion step lands under its cross-fade, on the fade's own timeline (#9734)
-  - 不适用：减少动效下月份步进的渐变时间线，Vue 没有月份滚动条
+- [ ] [`273ec4356`](https://github.com/meta/astryx/commit/273ec4356) fix(DateInput): a Reduce Motion step lands under its cross-fade, on the fade's own timeline (#9734)
+  - 暂缓：要还原上游动效，归动效与手势引擎任务
 
 ### v0.7.8
 
@@ -2825,8 +2825,8 @@
 - [ ] [`c8f08f967`](https://github.com/meta/astryx/commit/c8f08f967) fix(core): PowerSearch gives `isDateOnly: false` the time of day it names (#9702)
 - [x] [`07ee4b5c4`](https://github.com/meta/astryx/commit/07ee4b5c4) docs(DateInput): FR14 says when a tapped row commits (#9838)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [x] [`42ccd7cfa`](https://github.com/meta/astryx/commit/42ccd7cfa) fix(DateInput): the scrolling picker column's rows keep AA contrast; the depth fade uses theme text colours (#9853)
-  - 不适用：滚轮景深渐隐的对比度，Vue 滚轮没有景深渐隐
+- [ ] [`42ccd7cfa`](https://github.com/meta/astryx/commit/42ccd7cfa) fix(DateInput): the scrolling picker column's rows keep AA contrast; the depth fade uses theme text colours (#9853)
+  - 暂缓：要还原上游动效，归动效与手势引擎任务
 - [x] [`e390c3c43`](https://github.com/meta/astryx/commit/e390c3c43) test(browser): keep every Playwright browser context off remote hosts (#9811)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`bd69bedcd`](https://github.com/meta/astryx/commit/bd69bedcd) test(DateInput): the wheel contrast proof imports the hermetic Playwright test (#9888)
@@ -2839,8 +2839,8 @@
 
 ### v0.7.9
 
-- [x] [`72e85200b`](https://github.com/meta/astryx/commit/72e85200b) fix(DateInput): the touch column's edge fade stops at 70% opacity, so every row keeps AA contrast (#9878)
-  - 不适用：触屏列边缘渐隐的不透明度，Vue 滚轮没有边缘渐隐
+- [ ] [`72e85200b`](https://github.com/meta/astryx/commit/72e85200b) fix(DateInput): the touch column's edge fade stops at 70% opacity, so every row keeps AA contrast (#9878)
+  - 暂缓：要还原上游动效，归动效与手势引擎任务
 - [x] [`d23d1fe43`](https://github.com/meta/astryx/commit/d23d1fe43) test(DateInput): the wheel activation proof waits on the sheet's own end, not on still frames before a deadline (#9942)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`504ee1863`](https://github.com/meta/astryx/commit/504ee1863) fix(theme): the stock theme's dark-mode accent is darker, so white button text meets 4.5:1 (#9818)
@@ -2856,8 +2856,8 @@
   - 暂缓：按当前历法输入、选择和显示日期，依赖非公历日历系统，Vue 版还没有
 - [x] [`a866c2ab0`](https://github.com/meta/astryx/commit/a866c2ab0) fix(Dialog, Drawer): a backdrop press that closes a popover inside closes only the popover (#9988)
   - 已移植：[#546](https://github.com/astryx-vue/astryx-vue/pull/546)。日历在对话框里被点遮罩关掉时只关日历，对话框留着，补测试
-- [x] [`c26fcd543`](https://github.com/meta/astryx/commit/c26fcd543) chore(lab): Lab's animator hook, over Core's internal touch entry (#9754)
-  - 不适用：Lab 动画钩子对接 Core 内部触摸入口，是 React 包内的搬运
+- [ ] [`c26fcd543`](https://github.com/meta/astryx/commit/c26fcd543) chore(lab): Lab's animator hook, over Core's internal touch entry (#9754)
+  - 暂缓：要还原上游动效，归动效与手势引擎任务
 - [x] [`257573b22`](https://github.com/meta/astryx/commit/257573b22) docs(AST-094, AST-057): motion guidance; gesture springs; swipe-row returns (#9915)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`3b8d81fd0`](https://github.com/meta/astryx/commit/3b8d81fd0) spec: record component icon slots in CodeBlock, Timestamp, and Table (#10045)
@@ -2865,8 +2865,8 @@
 - [ ] [`d7a7dd3bb`](https://github.com/meta/astryx/commit/d7a7dd3bb) feat(Timestamp): the hover card's copy button resolves its glyph through the timestamp-copy icon slot (#9830)
 - [ ] [`a4dd70eb1`](https://github.com/meta/astryx/commit/a4dd70eb1) docs(useCalendarDays): add hook docs and a month grid example block (#9905)
 - [ ] [`17e36e748`](https://github.com/meta/astryx/commit/17e36e748) fix(DateTimeInput): a press's deferred-click watchers leave with the field (#10155)
-- [x] [`ab7facf1e`](https://github.com/meta/astryx/commit/ab7facf1e) fix(core): spring roles register themselves when they load (#10138)
-  - 不适用：弹簧角色在加载时自注册，Vue 没有弹簧物理模块
+- [ ] [`ab7facf1e`](https://github.com/meta/astryx/commit/ab7facf1e) fix(core): spring roles register themselves when they load (#10138)
+  - 暂缓：要还原上游动效，归动效与手势引擎任务
 
 ### v0.7.10
 
@@ -2934,8 +2934,8 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`e9ae49934`](https://github.com/meta/astryx/commit/e9ae49934) test(Wheel): the coast proof lifts at the pointerup, as the pan does (#10854)
   - 不适用：只改上游测试（自动初筛）
-- [x] [`5b0eb0fb4`](https://github.com/meta/astryx/commit/5b0eb0fb4) fix(DateInput): a key that cannot scroll a wheel leaves its step running (#10924)
-  - 不适用：按键无法滚动滚轮时保留步进的滚动落点逻辑，Vue 滚轮不靠滚动
+- [ ] [`5b0eb0fb4`](https://github.com/meta/astryx/commit/5b0eb0fb4) fix(DateInput): a key that cannot scroll a wheel leaves its step running (#10924)
+  - 暂缓：要还原上游动效，归动效与手势引擎任务
 
 ### v0.7.14
 
@@ -2986,8 +2986,8 @@
   - 已移植：[#508](https://github.com/astryx-vue/astryx-vue/pull/508)。Pagination 首尾标记、文字角色行高由基础展示族完成，其余不适用
 - [ ] [`83424673c`](https://github.com/meta/astryx/commit/83424673c) chore: land batch 16 (6 pull requests) (#12881)
 - [ ] [`972102325`](https://github.com/meta/astryx/commit/972102325) fix(Timestamp): a relative name starts with the words it shows (#12222)
-- [x] [`230045ad2`](https://github.com/meta/astryx/commit/230045ad2) fix(DateInput): under Reduced Motion a wheel's mouse-drag release lands at once (#12522)
-  - 不适用：减少动效下鼠标拖动释放，Vue 滚轮没有拖动滚动
+- [ ] [`230045ad2`](https://github.com/meta/astryx/commit/230045ad2) fix(DateInput): under Reduced Motion a wheel's mouse-drag release lands at once (#12522)
+  - 暂缓：要还原上游动效，归动效与手势引擎任务
 - [ ] [`e7f5815c3`](https://github.com/meta/astryx/commit/e7f5815c3) fix(core): six components' fixed-English built-in text follows the locale; the hardcoded-string lint config has no exemption list and reports a stale entry (#12721)
 
 ## 状态反馈与加载（area:core）
@@ -4557,8 +4557,8 @@
 - [ ] [`ceefccdfc`](https://github.com/meta/astryx/commit/ceefccdfc) feat(core): the animator's springs follow the theme's tempo (#8677)
   - 暂缓：依赖动画器（animator）与主题时序/节奏的动效基础设施，Vue 版没有
 - [ ] [`df15de7fc`](https://github.com/meta/astryx/commit/df15de7fc) docs(core): open the pan hook pages with a minimal draggable box (#9928)
-- [x] [`d6c1f340b`](https://github.com/meta/astryx/commit/d6c1f340b) docs(core): a "Motion & gestures" hook category for the motion hooks (#10076)
-  - 不适用：上游给 hook 文档加「动效与手势」分类；Vue 版的组合式函数都归在同一个「工具」组，没有分类
+- [ ] [`d6c1f340b`](https://github.com/meta/astryx/commit/d6c1f340b) docs(core): a "Motion & gestures" hook category for the motion hooks (#10076)
+  - 暂缓：要还原上游动效，归动效与手势引擎任务
 - [x] [`b779b269c`](https://github.com/meta/astryx/commit/b779b269c) spec(Carousel): opt-in snap paging through useSnapPaging (#9666)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`5b54b834c`](https://github.com/meta/astryx/commit/5b54b834c) fix(DropdownMenu): on a phone or a tablet, a tap while the menu enters is ignored, as on iOS (#8458)
@@ -5570,8 +5570,8 @@
 
 ### v0.7.9
 
-- [x] [`8ddcfe11c`](https://github.com/meta/astryx/commit/8ddcfe11c) fix(core): a layout motion's copy carries on the CSS animations and transitions running in it (#9534)
-  - 不适用：React 布局动效的副本，Vue 没有这套布局动效运行时
+- [ ] [`8ddcfe11c`](https://github.com/meta/astryx/commit/8ddcfe11c) fix(core): a layout motion's copy carries on the CSS animations and transitions running in it (#9534)
+  - 暂缓：要还原上游动效，归动效与手势引擎任务
 - [ ] [`252b45bb1`](https://github.com/meta/astryx/commit/252b45bb1) feat(Layer): one input hold, first used by Dialog, Drawer and MobileNav (spec:AST-094 FR35) (#8342)
   - 暂缓：进场输入遮挡（Dialog、Drawer、MobileNav 进场时挡住点击）：依赖触屏呈现和进场运行时，Vue 版没有
 - [x] [`5c91e81ee`](https://github.com/meta/astryx/commit/5c91e81ee) fix(Layer): a closed layer's trigger is no CSS anchor (#9963)
@@ -6026,8 +6026,8 @@
 - [ ] [`472896d35`](https://github.com/meta/astryx/commit/472896d35) fix(Toolbar, OverflowList): a start lane's own OverflowList folds beside the end lane (#12238)
 - [ ] [`53615c1f4`](https://github.com/meta/astryx/commit/53615c1f4) chore: land batch 19 (3 pull requests) (#12875)
 - [ ] [`a16f2e4a4`](https://github.com/meta/astryx/commit/a16f2e4a4) chore: land batch 13 (2 pull requests) (#12854)
-- [x] [`8efb25a85`](https://github.com/meta/astryx/commit/8efb25a85) chore: land batch 23 (4 pull requests) (#12885)
-  - 不适用：上游内部规范和架构文档（自动初筛）
+- [ ] [`8efb25a85`](https://github.com/meta/astryx/commit/8efb25a85) chore: land batch 23 (4 pull requests) (#12885)
+  - 暂缓：要还原上游动效，归动效与手势引擎任务
 - [ ] [`904b58e64`](https://github.com/meta/astryx/commit/904b58e64) chore: land batch 29 (3 pull requests) (#12894)
 - [ ] [`476d9063f`](https://github.com/meta/astryx/commit/476d9063f) chore: land batch 63 (3 pull requests) (#12945)
 - [ ] [`8c5fa4736`](https://github.com/meta/astryx/commit/8c5fa4736) fix(Resizable): only the handle's own keys act; other modifier combinations pass through (#11995)
@@ -6811,8 +6811,8 @@
 
 ### v0.7.9
 
-- [x] [`8ddcfe11c`](https://github.com/meta/astryx/commit/8ddcfe11c) fix(core): a layout motion's copy carries on the CSS animations and transitions running in it (#9534)
-  - 不适用：只改上游测试（自动初筛）
+- [ ] [`8ddcfe11c`](https://github.com/meta/astryx/commit/8ddcfe11c) fix(core): a layout motion's copy carries on the CSS animations and transitions running in it (#9534)
+  - 暂缓：要还原上游动效，归动效与手势引擎任务
 - [ ] [`252b45bb1`](https://github.com/meta/astryx/commit/252b45bb1) feat(Layer): one input hold, first used by Dialog, Drawer and MobileNav (spec:AST-094 FR35) (#8342)
 - [x] [`a0c48b8d7`](https://github.com/meta/astryx/commit/a0c48b8d7) docs(AST-105, AST-108): glides and tap-to-expand play the theme's motion tokens (#9964)
   - 不适用：上游内部规范和架构文档（自动初筛）
@@ -8529,8 +8529,8 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`53615c1f4`](https://github.com/meta/astryx/commit/53615c1f4) chore: land batch 19 (3 pull requests) (#12875)
   - Vue 版已有：选择器的选项、空状态、溢出计数已用文字角色的行高令牌；Pagination 首尾标记和 doctor 见 #508、#514
-- [x] [`8efb25a85`](https://github.com/meta/astryx/commit/8efb25a85) chore: land batch 23 (4 pull requests) (#12885)
-  - 不适用：本范围是组内滚动轨道的边缘渐隐重构，Vue 版 Tokenizer 没有组内轨道（见 afa75c2e8）
+- [ ] [`8efb25a85`](https://github.com/meta/astryx/commit/8efb25a85) chore: land batch 23 (4 pull requests) (#12885)
+  - 暂缓：要还原上游动效，归动效与手势引擎任务
 - [x] [`1f48950f9`](https://github.com/meta/astryx/commit/1f48950f9) chore: land batch 67 (7 pull requests) (#12957)
   - 已移植：[#544](https://github.com/astryx-vue/astryx-vue/pull/544)。Tokenizer 的 modelValue 不是数组、TypeaheadItem 缺 item 时开发期报明确错误；ComplexSelector 缺默认插槽的提示在 #543
 - [x] [`ab9aaa5a2`](https://github.com/meta/astryx/commit/ab9aaa5a2) chore: land batch 70 (2 pull requests) (#12963)
@@ -9063,8 +9063,8 @@
 - [ ] [`a60f74251`](https://github.com/meta/astryx/commit/a60f74251) chore: land batch 12 (3 pull requests) (#12841)
 - [ ] [`4c309698d`](https://github.com/meta/astryx/commit/4c309698d) chore: land batch 22 (2 pull requests) (#12877)
 - [ ] [`53615c1f4`](https://github.com/meta/astryx/commit/53615c1f4) chore: land batch 19 (3 pull requests) (#12875)
-- [x] [`8efb25a85`](https://github.com/meta/astryx/commit/8efb25a85) chore: land batch 23 (4 pull requests) (#12885)
-  - 不适用：只改上游测试（自动初筛）
+- [ ] [`8efb25a85`](https://github.com/meta/astryx/commit/8efb25a85) chore: land batch 23 (4 pull requests) (#12885)
+  - 暂缓：要还原上游动效，归动效与手势引擎任务
 - [ ] [`904b58e64`](https://github.com/meta/astryx/commit/904b58e64) chore: land batch 29 (3 pull requests) (#12894)
 - [ ] [`31b52d0cb`](https://github.com/meta/astryx/commit/31b52d0cb) chore: land batch 34 (2 pull requests) (#12908)
 - [ ] [`0f67e76cb`](https://github.com/meta/astryx/commit/0f67e76cb) chore: land batch 35 (1 pull requests) (#12907)
