@@ -2,6 +2,7 @@
 
 @layer astryx.components {
   .astryx-segmented-control {
+    position: relative;
     --_segmented-control-padding: var(--astryx-segmented-control-padding, var(--astryx-spacing-0-5, 2px));
     --_segmented-control-radius: var(--astryx-segmented-control-radius, var(--astryx-radius-element, 0.625rem));
 
@@ -95,6 +96,41 @@
     flex-shrink: 0;
   }
 
+  /*
+   * 选中块是控件里独立的一块表面，选中的分段一变就滑到新位置，大小也跟着变。
+   * 量到位置之前（服务端渲染、还没有布局），选中的分段自己画这块底色，
+   * 量到以后由选中块画，分段只留文字的颜色和字重。
+   */
+  .astryx-segmented-control__selection {
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    width: var(--_selection-width);
+    height: var(--_selection-height);
+    border-radius: max(0px, calc(var(--_segmented-control-radius) - var(--_segmented-control-padding)));
+    background-color: var(--astryx-segmented-control-item-selected-background, light-dark(#fff, #262626));
+    box-shadow: var(--astryx-segmented-control-item-selected-shadow);
+    transform: translate(var(--_selection-x), var(--_selection-y));
+    pointer-events: none;
+    forced-color-adjust: none;
+  }
+
+  .astryx-segmented-control[data-selection='ready'] > .astryx-segmented-control__selection {
+    transition-property: transform, width, height;
+    transition-duration: var(--astryx-duration-fast-max, 165ms);
+    transition-timing-function: var(--astryx-ease-move, cubic-bezier(0.24, 1, 0.4, 1));
+  }
+
+  .astryx-segmented-control[data-selection] > .astryx-segmented-control-item {
+    z-index: 1;
+  }
+
+  .astryx-segmented-control[data-selection] > .astryx-segmented-control-item[data-selected='true'] {
+    background-color: transparent;
+    box-shadow: none;
+  }
+
   .astryx-segmented-control-item[data-selected='true'] {
     font-weight: var(--astryx-font-weight-semibold, 600);
     color: var(--astryx-segmented-control-item-selected-foreground, var(--astryx-color-text-primary, #171717));
@@ -167,10 +203,19 @@
       color: HighlightText;
       background-color: Highlight;
     }
+
+    .astryx-segmented-control__selection {
+      background-color: Highlight;
+    }
+
+    .astryx-segmented-control[data-selection] > .astryx-segmented-control-item[data-selected='true'] {
+      background-color: transparent;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .astryx-segmented-control-item {
+    .astryx-segmented-control-item,
+    .astryx-segmented-control[data-selection='ready'] > .astryx-segmented-control__selection {
       transition-duration: 0s;
     }
   }

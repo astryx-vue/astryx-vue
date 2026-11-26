@@ -6,6 +6,7 @@ import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { invokeNativeEventHandler } from '../Button/eventHandlers.js'
 import { useSize } from '../SizeContext/SizeContext.js'
 import { segmentedControlContextKey } from './context.js'
+import { useSegmentedSelection } from './useSegmentedSelection.js'
 import '../../styles/segmented-control.css'
 
 defineOptions({ name: 'AstryxSegmentedControl', inheritAttrs: false })
@@ -28,6 +29,7 @@ const attrs = useAttrs()
 const root = useTemplateRef<HTMLDivElement>('root')
 const tooltipId = `astryx-segmented-control-${useId()}-tooltip`
 const element = computed(() => root.value ?? null)
+const selection = useSegmentedSelection(root)
 
 defineExpose({ element })
 
@@ -305,7 +307,7 @@ const forwardedAttrs = computed(() => Object.fromEntries(
 ))
 
 const rootClass = computed(() => ['astryx-segmented-control', attrs.class])
-const rootStyle = computed(() => attrs.style as StyleValue)
+const rootStyle = computed<StyleValue>(() => [attrs.style as StyleValue, selection.style()])
 
 const describedBy = computed(() => [
   attrs['aria-describedby'],
@@ -324,6 +326,7 @@ const describedBy = computed(() => [
     :data-disabled="isDisabled || undefined"
     :data-disabled-message="showsDisabledMessage || undefined"
     :data-layout="layout"
+    :data-selection="selection.box.value != null ? (selection.isReady.value ? 'ready' : 'measured') : undefined"
     :data-size="size"
     :style="rootStyle"
     role="radiogroup"
@@ -332,6 +335,11 @@ const describedBy = computed(() => [
     @pointerenter="scheduleShowTooltip"
     @pointerleave="scheduleHideTooltip"
   >
+    <span
+      v-if="selection.box.value != null"
+      class="astryx-segmented-control__selection"
+      aria-hidden="true"
+    />
     <slot />
   </div>
   <ButtonTooltip
