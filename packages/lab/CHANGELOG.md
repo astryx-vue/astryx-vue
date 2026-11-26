@@ -1,5 +1,13 @@
 # @astryx-vue/lab
 
+## 0.7.8
+
+### Patch Changes
+
+- [#558](https://github.com/astryx-vue/astryx-vue/pull/558) [`cca2f63`](https://github.com/astryx-vue/astryx-vue/commit/cca2f63cb015d86a4b122ebc87d11c5958e940ec) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - TransferList and ListInput show a single drop indicator line while dragging, instead of two.
+- Updated dependencies [[`b9dc365`](https://github.com/astryx-vue/astryx-vue/commit/b9dc36576e535848f53b0f25f4602fe38a89c213)]:
+  - @astryx-vue/core@0.16.2
+
 ## 0.7.7
 
 ### Patch Changes

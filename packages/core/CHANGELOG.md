@@ -1,5 +1,11 @@
 # @astryx-vue/core
 
+## 0.16.2
+
+### Patch Changes
+
+- [#557](https://github.com/astryx-vue/astryx-vue/pull/557) [`b9dc365`](https://github.com/astryx-vue/astryx-vue/commit/b9dc36576e535848f53b0f25f4602fe38a89c213) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 触屏按压松手后的淡出时长，主题把退出时长写成 calc() 时也按实际算出的长度走，不再退回默认值。
+
 ## 0.16.1
 
 ### Patch Changes
