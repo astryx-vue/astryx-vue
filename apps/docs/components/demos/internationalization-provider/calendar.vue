@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { CalendarSystem } from '@astryx-vue/core'
 import { Calendar } from '@astryx-vue/core/Calendar'
+import { DateInput } from '@astryx-vue/core/DateInput'
 import { InternationalizationProvider } from '@astryx-vue/core/InternationalizationProvider'
 import { SegmentedControl, SegmentedControlItem } from '@astryx-vue/core/SegmentedControl'
 import { VStack } from '@astryx-vue/core/Stack'
@@ -24,6 +25,7 @@ function iso(date: Date): string {
         <SegmentedControlItem value="buddhist" label="Buddhist" />
         <SegmentedControlItem value="persian" label="Persian" />
       </SegmentedControl>
+      <DateInput v-model="value" label="Date" />
       <Calendar v-model="value" />
       <Text type="supporting" color="secondary">
         {{ value ? `Value: ${iso(value)}` : 'No date' }}

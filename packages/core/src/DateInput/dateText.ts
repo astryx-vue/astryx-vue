@@ -1,6 +1,10 @@
 import type { FieldStatusInput } from '../Field/types.js'
+import type { CalendarSystem } from '../utils/calendarSystem.js'
 import type { DateInputFormat, DateInputStatus } from './types.js'
 import { formatInstant } from '../Timestamp/formatInstant.js'
+import { textCalendar } from '../utils/calendarDateIntl.js'
+import { formatCalendarDateText } from '../utils/calendarDateText.js'
+import { plainDateFromDate } from '../utils/plainDate.js'
 
 /** 本地日期写成 `YYYY-MM-DD`。 */
 export function toIsoDate(date: Date): string {
@@ -22,8 +26,15 @@ export function parseTypedDate(text: string): Date | null {
   return date
 }
 
-/** 已提交日期的显示文字。 */
-export function formatCommittedDate(date: Date | null | undefined, format: DateInputFormat | undefined, locale: string): string {
+/**
+ * 已提交日期的显示文字。别的历法按那种历法写，带上纪元；自定义格式函数和 `system_date` 永远拿到公历 ISO 日期。
+ */
+export function formatCommittedDate(
+  date: Date | null | undefined,
+  format: DateInputFormat | undefined,
+  locale: string,
+  calendar: CalendarSystem = 'gregory',
+): string {
   if (!date)
     return ''
   const iso = toIsoDate(date)
@@ -31,6 +42,8 @@ export function formatCommittedDate(date: Date | null | undefined, format: DateI
     return format(iso)
   if (format === 'system_date')
     return iso
+  if (textCalendar(calendar) !== 'gregory')
+    return formatCalendarDateText(plainDateFromDate(date), format ?? 'date_long', locale, calendar)
   return formatInstant(date, format ?? 'date_long', locale)
 }
 

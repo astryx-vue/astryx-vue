@@ -113,8 +113,4 @@ export const UNPORTED_KEYS = {
     'nonexistentDate',
     'outOfRangeDate',
   ], 'DateInput、DateTimeInput 保留被拒绝的输入并说明原因还没移植'),
-  ...keys('@astryx.dateInput.', [
-    'formatHint',
-    'calendarDescription',
-  ], 'Vue 版日期组件只支持公历，还没有按 InternationalizationProvider 的 calendar 切换日历系统'),
 }

@@ -315,15 +315,20 @@ function commonMonthKey(key: string): string {
   return key.replace(/bis$/, '')
 }
 
-/** 在某一年里找名字相同的月份，找不到时找对应的平月。 */
-function sameMonthInYear(calendar: CalendarSystem, year: number, key: string): CalendarMonth {
+function monthsOfYear(calendar: CalendarSystem, year: number): CalendarMonth[] {
   const months: CalendarMonth[] = []
   let cursor = firstMonthOfYear(calendar, year)
   for (let index = 0; index < calendarMonthsInCalendarYear(calendar, year); index += 1) {
     months.push(cursor)
     cursor = nextMonth(calendar, cursor)
   }
-  const keyOf = (month: CalendarMonth): string => readFields(calendar, month.start).monthKey
+  return months
+}
+
+/** 在某一年里找名字相同的月份，找不到时找对应的平月。 */
+function sameMonthInYear(calendar: CalendarSystem, year: number, key: string): CalendarMonth {
+  const months = monthsOfYear(calendar, year)
+  const keyOf = (month: CalendarMonth): string => calendarMonthKey(calendar, month)
   return months.find(month => keyOf(month) === key)
     ?? months.find(month => commonMonthKey(keyOf(month)) === commonMonthKey(key))
     ?? months[months.length - 1]!
@@ -346,6 +351,33 @@ export function calendarDateFromFields(calendar: CalendarSystem, fields: Calenda
     return null
   const target = calendarMonthFromYearMonth(calendar, { year, month })
   return day > target.length ? null : plainDateAddDays(target.start, day - 1)
+}
+
+/**
+ * 历法月在这种历法里的名字（英文、拉丁数字），同一个月每年都一样：
+ * 波斯历是 "8"，希伯来历是 "Adar I"，农历闰六月是 "6bis"。月日跟公历一致的历法是公历月份数。
+ */
+export function calendarMonthKey(calendar: CalendarSystem, month: CalendarMonth): string {
+  return isGregorianAligned(calendar) ? String(month.start.month) : readFields(calendar, month.start).monthKey
+}
+
+/** 希伯来历闰年没有「亚达月」，写「亚达月」指的是闰年的亚达二月。 */
+const LEAP_YEAR_NAME: Readonly<Record<string, string>> = { Adar: 'Adar II' }
+
+/**
+ * 历法里某一年名字为 `monthKey` 的那个月的第 `day` 天对应的公历日期。
+ * 那一年没有这个月或这一天时返回 null。只用于月日跟公历不同的历法。
+ */
+export function calendarDateFromMonthKey(
+  calendar: CalendarSystem,
+  { year, monthKey, day }: { readonly year: number, readonly monthKey: string, readonly day: number },
+): PlainDate | null {
+  if (!Number.isInteger(year) || !Number.isInteger(day) || day < 1)
+    return null
+  const months = monthsOfYear(calendar, year)
+  const find = (key: string): CalendarMonth | undefined => months.find(month => calendarMonthKey(calendar, month) === key)
+  const target = find(monthKey) ?? (LEAP_YEAR_NAME[monthKey] == null ? undefined : find(LEAP_YEAR_NAME[monthKey]))
+  return target == null || day > target.length ? null : plainDateAddDays(target.start, day - 1)
 }
 
 /** 公历日期是否落在这个历法月里。 */

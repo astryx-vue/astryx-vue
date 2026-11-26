@@ -26463,6 +26463,12 @@
                 "description": "First day of the week in the calendar. The system date control cannot express this."
               },
               {
+                "name": "`calendar`",
+                "type": "`CalendarSystem`",
+                "default": "Follows the provider",
+                "description": "Calendar system the field displays, reads and picks dates in, for example `'persian'`. Falls back to the nearest `InternationalizationProvider`, then Gregorian. People can type dates in this calendar; outside Gregorian the system date control is replaced by the Astryx picker. The value is always a Gregorian date. See Calendars."
+              },
+              {
                 "name": "`disabled`",
                 "type": "`boolean`",
                 "default": "`false`",
@@ -26666,6 +26672,12 @@
                 "type": "`0-6 | 'sun' | 'mon' | ...`",
                 "default": "—",
                 "description": "弹出日历从哪一天开始一周。系统日期控件表达不了这项。"
+              },
+              {
+                "name": "`calendar`",
+                "type": "`CalendarSystem`",
+                "default": "跟随 provider",
+                "description": "按哪种历法显示、读取和选择日期，例如 `'persian'`。不传时跟随最近的 `InternationalizationProvider`，都没有时是公历。可以按这个历法打字；非公历下系统日期控件换成 Astryx 的选择器。值始终是公历日期。见历法。"
               },
               {
                 "name": "`disabled`",
@@ -27116,6 +27128,12 @@
                 "description": "First column of the calendar."
               },
               {
+                "name": "`calendar`",
+                "type": "`CalendarSystem`",
+                "default": "Follows the provider",
+                "description": "Calendar system the months and the range text use. Falls back to the nearest `InternationalizationProvider`. The range is always Gregorian ISO dates. See Calendars."
+              },
+              {
                 "name": "`hasClear`",
                 "type": "`boolean`",
                 "default": "`true`",
@@ -27277,6 +27295,12 @@
                 "type": "`0-6 | 'sun' | 'mon' | ...`",
                 "default": "周日，zh-CN 为周一",
                 "description": "日历的第一列。"
+              },
+              {
+                "name": "`calendar`",
+                "type": "`CalendarSystem`",
+                "default": "跟随 provider",
+                "description": "按哪种历法排月份和写范围。不传时跟随最近的 `InternationalizationProvider`。范围始终是公历 ISO 日期。见历法。"
               },
               {
                 "name": "`hasClear`",
@@ -27703,6 +27727,12 @@
                 "description": "First day of the week in the date calendar."
               },
               {
+                "name": "`calendar`",
+                "type": "`CalendarSystem`",
+                "default": "Follows the provider",
+                "description": "Calendar system for the date part. Falls back to the nearest `InternationalizationProvider`. Outside Gregorian the system date control is replaced by the Astryx picker. The value is always a Gregorian date-time. See Calendars."
+              },
+              {
                 "name": "`nativePicker`",
                 "type": "`'touch' | 'always' | 'never'`",
                 "default": "—",
@@ -27900,6 +27930,12 @@
                 "type": "`0-6 | 'sun' | 'mon' | ...`",
                 "default": "—",
                 "description": "日期月历从哪一天开始一周。"
+              },
+              {
+                "name": "`calendar`",
+                "type": "`CalendarSystem`",
+                "default": "跟随 provider",
+                "description": "日期部分按哪种历法显示、读取和选择。不传时跟随最近的 `InternationalizationProvider`。非公历下系统日期控件换成 Astryx 的选择器。值始终是公历日期时间。见历法。"
               },
               {
                 "name": "`nativePicker`",
@@ -67316,7 +67352,7 @@
             "en": "Switch the provider's calendar and Calendar changes its months and year labels, while the value stays a Gregorian date.",
             "zh": "切换 provider 的 calendar，Calendar 跟着换月份和年份写法，选中的值仍是公历日期。"
           },
-          "code": "<script setup lang=\"ts\">\nimport type { CalendarSystem } from '@astryx-vue/core'\nimport { Calendar } from '@astryx-vue/core/Calendar'\nimport { InternationalizationProvider } from '@astryx-vue/core/InternationalizationProvider'\nimport { SegmentedControl, SegmentedControlItem } from '@astryx-vue/core/SegmentedControl'\nimport { VStack } from '@astryx-vue/core/Stack'\nimport { Text } from '@astryx-vue/core/Text'\nimport { ref } from 'vue'\n\nconst calendar = ref<CalendarSystem>('japanese')\nconst value = ref<Date | null>(new Date(2026, 9, 30))\n\nfunction iso(date: Date): string {\n  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`\n}\n</script>\n\n<template>\n  <InternationalizationProvider locale=\"en\" :calendar=\"calendar\">\n    <VStack :gap=\"4\" h-align=\"center\">\n      <SegmentedControl v-model=\"calendar\" label=\"Calendar\" size=\"sm\">\n        <SegmentedControlItem value=\"gregory\" label=\"Gregorian\" />\n        <SegmentedControlItem value=\"japanese\" label=\"Japanese\" />\n        <SegmentedControlItem value=\"buddhist\" label=\"Buddhist\" />\n        <SegmentedControlItem value=\"persian\" label=\"Persian\" />\n      </SegmentedControl>\n      <Calendar v-model=\"value\" />\n      <Text type=\"supporting\" color=\"secondary\">\n        {{ value ? `Value: ${iso(value)}` : 'No date' }}\n      </Text>\n    </VStack>\n  </InternationalizationProvider>\n</template>"
+          "code": "<script setup lang=\"ts\">\nimport type { CalendarSystem } from '@astryx-vue/core'\nimport { Calendar } from '@astryx-vue/core/Calendar'\nimport { DateInput } from '@astryx-vue/core/DateInput'\nimport { InternationalizationProvider } from '@astryx-vue/core/InternationalizationProvider'\nimport { SegmentedControl, SegmentedControlItem } from '@astryx-vue/core/SegmentedControl'\nimport { VStack } from '@astryx-vue/core/Stack'\nimport { Text } from '@astryx-vue/core/Text'\nimport { ref } from 'vue'\n\nconst calendar = ref<CalendarSystem>('japanese')\nconst value = ref<Date | null>(new Date(2026, 9, 30))\n\nfunction iso(date: Date): string {\n  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`\n}\n</script>\n\n<template>\n  <InternationalizationProvider locale=\"en\" :calendar=\"calendar\">\n    <VStack :gap=\"4\" h-align=\"center\">\n      <SegmentedControl v-model=\"calendar\" label=\"Calendar\" size=\"sm\">\n        <SegmentedControlItem value=\"gregory\" label=\"Gregorian\" />\n        <SegmentedControlItem value=\"japanese\" label=\"Japanese\" />\n        <SegmentedControlItem value=\"buddhist\" label=\"Buddhist\" />\n        <SegmentedControlItem value=\"persian\" label=\"Persian\" />\n      </SegmentedControl>\n      <DateInput v-model=\"value\" label=\"Date\" />\n      <Calendar v-model=\"value\" />\n      <Text type=\"supporting\" color=\"secondary\">\n        {{ value ? `Value: ${iso(value)}` : 'No date' }}\n      </Text>\n    </VStack>\n  </InternationalizationProvider>\n</template>"
         },
         {
           "title": {
@@ -85050,12 +85086,14 @@
       "headings": {
         "en": [
           "Choose a calendar",
+          "Date inputs",
           "Supported calendars",
           "Server rendering",
           "Week numbers"
         ],
         "zh": [
           "选一种历法",
+          "日期输入",
           "支持的历法",
           "服务端渲染",
           "周数"
@@ -85094,8 +85132,8 @@
         ]
       },
       "body": {
-        "en": "# Calendars\n\nDate components show the Gregorian calendar by default. An application can switch to the Persian, Hebrew, Hijri, Buddhist, Japanese, Chinese, and other calendars. Whatever calendar is shown, **values stay Gregorian dates**: `v-model`, `min`, `max`, and events carry Gregorian `Date` objects, so your data, server code, and existing handlers keep working.\n\n## Choose a calendar\n\nSet `calendar` on `InternationalizationProvider` and the whole subtree shows it:\n\n```vue\n<script setup lang=\"ts\">\nimport { Calendar } from '@astryx-vue/core/Calendar'\nimport { InternationalizationProvider } from '@astryx-vue/core/InternationalizationProvider'\nimport { ref } from 'vue'\n\n// Shows Aban 1405 in the Persian calendar; the value stays 2026-10-30\nconst date = ref<Date | null>(new Date(2026, 9, 30))\n</script>\n\n<template>\n  <InternationalizationProvider locale=\"fa-IR\" calendar=\"persian\">\n    <Calendar v-model=\"date\" />\n  </InternationalizationProvider>\n</template>\n```\n\nThese follow `calendar`:\n\n- `Calendar`: the grid shows the calendar's months, and the header, day numbers, screen reader names, and month paging (including Page Up / Page Down and Shift + Page Up / Page Down) follow it.\n- `Timestamp`: date-bearing formats write the date in it; `system_*` and `unix_seconds` stay Gregorian ISO or plain numbers in every calendar.\n- `PowerSearch`: absolute date values are written in it.\n- Lab's `Schedule`: titles and dates are written in it, while the grid keeps Gregorian months and weeks.\n\nCalendar and language are independent: `locale=\"en\" calendar=\"hebrew\"` shows Hebrew dates in English. A locale never selects the calendar on its own: `fa-IR` without `calendar` shows Gregorian dates in Persian, and a `-u-ca-` keyword in the locale (such as `th-TH-u-ca-buddhist`) keeps Gregorian dates too. Set `calendar` to choose one.\n\n`Calendar` also takes its own `calendar`, which wins over the provider. Use it when one screen shows two calendars side by side.\n\nOutside a component, the `calendar` returned by `useLocale()` is the calendar in effect.\n\n## Supported calendars\n\n| Calendar | Identifiers |\n| --- | --- |\n| Gregorian | `gregory`, `iso8601` |\n| Buddhist | `buddhist` |\n| Minguo | `roc` |\n| Japanese | `japanese` |\n| Persian | `persian` |\n| Indian National | `indian` |\n| Hebrew | `hebrew` |\n| Hijri | `islamic-umalqura`, `islamic-civil`, `islamic-tbla` |\n| Chinese | `chinese` |\n| Dangi | `dangi` |\n| Coptic | `coptic` |\n| Ethiopic | `ethiopic`, `ethioaa` |\n\nAny other identifier, such as `islamic`, shows Gregorian dates and warns once in development.\n\nMonth lengths, leap months, and years come from the runtime's built-in `Intl`, so no extra library or polyfill is needed. Where a runtime's `Intl` cannot show a calendar, components show Gregorian dates and warn once in development.\n\n## Server rendering\n\nComponents resolve the calendar and its months during render, and the server and the browser each read their own `Intl`. When both have the same ICU data (Node.js ships full ICU by default), they render the same markup.\n\nIn the lunisolar calendars (Chinese and Dangi), months start on new moons computed from astronomy, and ICU versions occasionally disagree by a day on when one month starts. When a server and a browser disagree on that day, that month renders again in the browser. When identical markup matters, give the server an ICU version close to the browsers you target.\n\n## Week numbers\n\n`Calendar`'s `hasWeekNumbers` shows ISO 8601 week numbers in every calendar.",
-        "zh": "# 历法\n\n日期组件默认显示公历。应用可以换成波斯历、希伯来历、伊斯兰历、佛历、和历、农历等别的历法。不管显示哪种历法，**值始终是公历日期**：`v-model`、`min`、`max` 和事件拿到的都是公历的 `Date`，数据、服务端代码和现有的处理函数都不用改。\n\n## 选一种历法\n\n在 `InternationalizationProvider` 上设 `calendar`，整棵子树都按它显示：\n\n```vue\n<script setup lang=\"ts\">\nimport { Calendar } from '@astryx-vue/core/Calendar'\nimport { InternationalizationProvider } from '@astryx-vue/core/InternationalizationProvider'\nimport { ref } from 'vue'\n\n// 显示的是波斯历 1405 年阿班月，值仍然是公历 2026-10-30\nconst date = ref<Date | null>(new Date(2026, 9, 30))\n</script>\n\n<template>\n  <InternationalizationProvider locale=\"fa-IR\" calendar=\"persian\">\n    <Calendar v-model=\"date\" />\n  </InternationalizationProvider>\n</template>\n```\n\n跟着 `calendar` 变的有：\n\n- `Calendar`：格子按这个历法的月份排，标题、日子、读屏名字和翻月（包括 Page Up / Page Down、Shift + Page Up / Page Down）都按它走。\n- `Timestamp`：带日期的格式按它写；`system_*` 和 `unix_seconds` 在任何历法下都写公历 ISO 或纯数字。\n- `PowerSearch`：绝对日期的条件值按它写。\n- 实验室里的 `Schedule`：标题和日期按它写，格子仍按公历月和公历周排。\n\n语言和历法互不影响：`locale=\"en\" calendar=\"hebrew\"` 用英文显示希伯来历。语言本身从不决定历法，`fa-IR` 不设 `calendar` 时显示的是波斯语的公历；语言标签里的 `-u-ca-` 扩展（例如 `th-TH-u-ca-buddhist`）也不会改变历法，要换历法就设 `calendar`。\n\n`Calendar` 也有自己的 `calendar` 属性，优先于 provider。同一屏要并排显示两种历法时用它。\n\n在组件之外，`useLocale()` 返回的 `calendar` 是当前生效的历法。\n\n## 支持的历法\n\n| 历法 | 标识 |\n| --- | --- |\n| 公历 | `gregory`、`iso8601` |\n| 佛历 | `buddhist` |\n| 民国纪年 | `roc` |\n| 和历 | `japanese` |\n| 波斯历 | `persian` |\n| 印度国定历 | `indian` |\n| 希伯来历 | `hebrew` |\n| 伊斯兰历 | `islamic-umalqura`、`islamic-civil`、`islamic-tbla` |\n| 农历 | `chinese` |\n| 朝鲜历 | `dangi` |\n| 科普特历 | `coptic` |\n| 埃塞俄比亚历 | `ethiopic`、`ethioaa` |\n\n别的标识（例如 `islamic`）显示公历，开发期警告一次。\n\n月份的长度、闰月和年份都从浏览器自带的 `Intl` 读，不需要额外的库，也不需要 polyfill。运行环境的 `Intl` 显示不了某种历法时，组件显示公历，开发期警告一次。\n\n## 服务端渲染\n\n组件在渲染时就确定历法和月份，服务端和浏览器读的是各自的 `Intl`。两边的 ICU 数据一致时（Node.js 默认带完整的 ICU），渲染出的标记相同。\n\n农历和朝鲜历这类阴阳历的月份从新月的天文计算得来，不同版本的 ICU 偶尔会在某个月从哪天开始上有一天的差别。服务端和浏览器差了这一天时，那个月在浏览器里会重新渲染。需要两边逐字一致时，让服务端用和目标浏览器相近版本的 ICU。\n\n## 周数\n\n`Calendar` 的 `hasWeekNumbers` 在任何历法下都显示 ISO 8601 周数。"
+        "en": "# Calendars\n\nDate components show the Gregorian calendar by default. An application can switch to the Persian, Hebrew, Hijri, Buddhist, Japanese, Chinese, and other calendars. Whatever calendar is shown, **values stay Gregorian dates**: `v-model`, `min`, `max`, and events carry Gregorian `Date` objects, so your data, server code, and existing handlers keep working.\n\n## Choose a calendar\n\nSet `calendar` on `InternationalizationProvider` and the whole subtree shows it:\n\n```vue\n<script setup lang=\"ts\">\nimport { Calendar } from '@astryx-vue/core/Calendar'\nimport { InternationalizationProvider } from '@astryx-vue/core/InternationalizationProvider'\nimport { ref } from 'vue'\n\n// Shows Aban 1405 in the Persian calendar; the value stays 2026-10-30\nconst date = ref<Date | null>(new Date(2026, 9, 30))\n</script>\n\n<template>\n  <InternationalizationProvider locale=\"fa-IR\" calendar=\"persian\">\n    <Calendar v-model=\"date\" />\n  </InternationalizationProvider>\n</template>\n```\n\nThese follow `calendar`:\n\n- `Calendar`: the grid shows the calendar's months, and the header, day numbers, screen reader names, and month paging (including Page Up / Page Down and Shift + Page Up / Page Down) follow it.\n- `DateInput`, `DateTimeInput`, `DateRangeInput`: display, typing and picking follow it; see [Date inputs](#date-inputs) below.\n- `Timestamp`: date-bearing formats write the date in it; `system_*` and `unix_seconds` stay Gregorian ISO or plain numbers in every calendar.\n- `PowerSearch`: absolute date values are written in it.\n- Lab's `Schedule`: titles and dates are written in it, while the grid keeps Gregorian months and weeks.\n\nCalendar and language are independent: `locale=\"en\" calendar=\"hebrew\"` shows Hebrew dates in English. A locale never selects the calendar on its own: `fa-IR` without `calendar` shows Gregorian dates in Persian, and a `-u-ca-` keyword in the locale (such as `th-TH-u-ca-buddhist`) keeps Gregorian dates too. Set `calendar` to choose one.\n\n`Calendar` and the three date inputs also take their own `calendar`, which wins over the provider. Use it when one screen shows two calendars side by side.\n\nOutside a component, the `calendar` returned by `useLocale()` is the calendar in effect.\n\n## Date inputs\n\nDate inputs write their text in the calendar, such as `Aban 8, 1405 AP`, and read it back the same way:\n\n- People can type month names, numbers, or a year with its era, such as `Aban 8, 1405`. On blur the field commits the matching Gregorian `Date`.\n- A day the calendar does not have (such as `Esfand 31` in a common year) gets an explanation and is not committed. Out-of-range messages write the `min` and `max` dates in the calendar too.\n- When an empty non-Gregorian field is focused and no `placeholder` is set, the placeholder becomes an example date in the calendar, showing what to type.\n- When the field's calendar differs from the provider's (including a Gregorian field inside an app on another calendar), screen readers announce which calendar the field uses.\n- With a `format` function or `system_date`, the text stays a Gregorian ISO date.\n\nThe system date control only knows Gregorian, so outside Gregorian:\n\n- Without `presentation`, or with `adaptive-native`, coarse pointers get the bottom sheet and fine pointers get the popover calendar as usual.\n- An explicit `native` is also replaced by the Astryx picker, with a one-time warning in development.\n\nThe popover calendar and the bottom sheet both lay out the calendar's months. The sheet's month wheel uses the calendar's month names (a Hebrew leap year has 13 months) and its year wheel shows the era. `DateRangeInput` writes its button text and its two-month calendar in the calendar too; the range value stays Gregorian ISO dates.\n\nIn Gregorian all of this stays as before: the same text, the same parsing, the same system control.\n\n## Supported calendars\n\n| Calendar | Identifiers |\n| --- | --- |\n| Gregorian | `gregory`, `iso8601` |\n| Buddhist | `buddhist` |\n| Minguo | `roc` |\n| Japanese | `japanese` |\n| Persian | `persian` |\n| Indian National | `indian` |\n| Hebrew | `hebrew` |\n| Hijri | `islamic-umalqura`, `islamic-civil`, `islamic-tbla` |\n| Chinese | `chinese` |\n| Dangi | `dangi` |\n| Coptic | `coptic` |\n| Ethiopic | `ethiopic`, `ethioaa` |\n\nAny other identifier, such as `islamic`, shows Gregorian dates and warns once in development.\n\nMonth lengths, leap months, and years come from the runtime's built-in `Intl`, so no extra library or polyfill is needed. Where a runtime's `Intl` cannot show a calendar, components show Gregorian dates and warn once in development.\n\n## Server rendering\n\nComponents resolve the calendar and its months during render, and the server and the browser each read their own `Intl`. When both have the same ICU data (Node.js ships full ICU by default), they render the same markup.\n\nIn the lunisolar calendars (Chinese and Dangi), months start on new moons computed from astronomy, and ICU versions occasionally disagree by a day on when one month starts. When a server and a browser disagree on that day, that month renders again in the browser. When identical markup matters, give the server an ICU version close to the browsers you target.\n\n## Week numbers\n\n`Calendar`'s `hasWeekNumbers` shows ISO 8601 week numbers in every calendar.",
+        "zh": "# 历法\n\n日期组件默认显示公历。应用可以换成波斯历、希伯来历、伊斯兰历、佛历、和历、农历等别的历法。不管显示哪种历法，**值始终是公历日期**：`v-model`、`min`、`max` 和事件拿到的都是公历的 `Date`，数据、服务端代码和现有的处理函数都不用改。\n\n## 选一种历法\n\n在 `InternationalizationProvider` 上设 `calendar`，整棵子树都按它显示：\n\n```vue\n<script setup lang=\"ts\">\nimport { Calendar } from '@astryx-vue/core/Calendar'\nimport { InternationalizationProvider } from '@astryx-vue/core/InternationalizationProvider'\nimport { ref } from 'vue'\n\n// 显示的是波斯历 1405 年阿班月，值仍然是公历 2026-10-30\nconst date = ref<Date | null>(new Date(2026, 9, 30))\n</script>\n\n<template>\n  <InternationalizationProvider locale=\"fa-IR\" calendar=\"persian\">\n    <Calendar v-model=\"date\" />\n  </InternationalizationProvider>\n</template>\n```\n\n跟着 `calendar` 变的有：\n\n- `Calendar`：格子按这个历法的月份排，标题、日子、读屏名字和翻月（包括 Page Up / Page Down、Shift + Page Up / Page Down）都按它走。\n- `DateInput`、`DateTimeInput`、`DateRangeInput`：显示、打字和选择都按它走，见下面的[日期输入](#日期输入)。\n- `Timestamp`：带日期的格式按它写；`system_*` 和 `unix_seconds` 在任何历法下都写公历 ISO 或纯数字。\n- `PowerSearch`：绝对日期的条件值按它写。\n- 实验室里的 `Schedule`：标题和日期按它写，格子仍按公历月和公历周排。\n\n语言和历法互不影响：`locale=\"en\" calendar=\"hebrew\"` 用英文显示希伯来历。语言本身从不决定历法，`fa-IR` 不设 `calendar` 时显示的是波斯语的公历；语言标签里的 `-u-ca-` 扩展（例如 `th-TH-u-ca-buddhist`）也不会改变历法，要换历法就设 `calendar`。\n\n`Calendar` 和三个日期输入也有自己的 `calendar` 属性，优先于 provider。同一屏要并排显示两种历法时用它。\n\n在组件之外，`useLocale()` 返回的 `calendar` 是当前生效的历法。\n\n## 日期输入\n\n日期输入里的文字按历法写，例如 `Aban 8, 1405 AP`，也按历法读：\n\n- 可以打月份名、数字，或者带纪元的年份，例如 `Aban 8, 1405`。失焦时提交对应的公历 `Date`。\n- 历法里没有的日子（例如平年的 `Esfand 31`）会说明原因，不提交；超出 `min`、`max` 时，提示里的边界日期也按历法写。\n- 非公历的空字段聚焦、又没有传 `placeholder` 时，占位符换成一个按历法写的示例日期，告诉用户该怎么打。\n- 字段的历法和 provider 不同时（包括公历字段放在别的历法的应用里），读屏会念出这个字段用的是哪种历法。\n- `format` 传函数或 `system_date` 时，文字仍是公历 ISO 日期。\n\n系统日期控件只认公历，所以在非公历下：\n\n- 不传 `presentation`、或者传 `adaptive-native` 时，粗指针上改用底部面板，细指针上照常弹出日历。\n- 显式传 `native` 时同样换成 Astryx 的选择器，开发期警告一次。\n\n弹出的日历和底部面板都按历法排月份；底部面板的月份滚轮用历法的月份名（希伯来历闰年有 13 个月），年份滚轮带纪元。`DateRangeInput` 的按钮文字和两个月的日历也按历法写，范围的值仍是公历 ISO 日期。\n\n公历下这些都和以前一样：同样的文字、同样的读法、同样的系统控件。\n\n## 支持的历法\n\n| 历法 | 标识 |\n| --- | --- |\n| 公历 | `gregory`、`iso8601` |\n| 佛历 | `buddhist` |\n| 民国纪年 | `roc` |\n| 和历 | `japanese` |\n| 波斯历 | `persian` |\n| 印度国定历 | `indian` |\n| 希伯来历 | `hebrew` |\n| 伊斯兰历 | `islamic-umalqura`、`islamic-civil`、`islamic-tbla` |\n| 农历 | `chinese` |\n| 朝鲜历 | `dangi` |\n| 科普特历 | `coptic` |\n| 埃塞俄比亚历 | `ethiopic`、`ethioaa` |\n\n别的标识（例如 `islamic`）显示公历，开发期警告一次。\n\n月份的长度、闰月和年份都从浏览器自带的 `Intl` 读，不需要额外的库，也不需要 polyfill。运行环境的 `Intl` 显示不了某种历法时，组件显示公历，开发期警告一次。\n\n## 服务端渲染\n\n组件在渲染时就确定历法和月份，服务端和浏览器读的是各自的 `Intl`。两边的 ICU 数据一致时（Node.js 默认带完整的 ICU），渲染出的标记相同。\n\n农历和朝鲜历这类阴阳历的月份从新月的天文计算得来，不同版本的 ICU 偶尔会在某个月从哪天开始上有一天的差别。服务端和浏览器差了这一天时，那个月在浏览器里会重新渲染。需要两边逐字一致时，让服务端用和目标浏览器相近版本的 ICU。\n\n## 周数\n\n`Calendar` 的 `hasWeekNumbers` 在任何历法下都显示 ISO 8601 周数。"
       },
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/guide/calendars",

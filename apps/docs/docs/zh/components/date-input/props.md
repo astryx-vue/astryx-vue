@@ -29,6 +29,7 @@ footer: false
       <tr><td><code>nativePicker</code></td><td><code>'touch' | 'always' | 'never'</code></td><td>—</td><td>旧的打开方式。touch 跟随指针，always 用系统控件，never 按指针在弹出层和底部面板之间切换。同时传了 presentation 时以 presentation 为准。</td></tr>
       <tr><td><code>numberOfMonths</code></td><td><code>1 | 2</code></td><td><code>1</code></td><td>弹出日历并排的月份数。系统日期控件表达不了这项。</td></tr>
       <tr><td><code>weekStartsOn</code></td><td><code>0-6 | 'sun' | 'mon' | ...</code></td><td>—</td><td>弹出日历从哪一天开始一周。系统日期控件表达不了这项。</td></tr>
+      <tr><td><code>calendar</code></td><td><code>CalendarSystem</code></td><td>跟随 provider</td><td>按哪种历法显示、读取和选择日期，例如 <code>'persian'</code>。不传时跟随最近的 <code>InternationalizationProvider</code>，都没有时是公历。可以按这个历法打字；非公历下系统日期控件换成 Astryx 的选择器。值始终是公历日期。见<a href="/guide/calendars">历法</a>。</td></tr>
       <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否禁用。输入框和日历按钮仍可聚焦并带 <code>aria-disabled</code>，但不能输入或打开日历。</td></tr>
       <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>加载中。字段仍可聚焦，通过 <code>aria-busy</code> 和加载指示表示忙碌；加载结束前不能输入、选择或清除日期。进入忙碌时播报一次。</td></tr>
       <tr><td><code>changeAction</code></td><td><code>(value: Date | null) =&gt; void | Promise&lt;void&gt;</code></td><td>—</td><td>值提交之后再跑。返回 Promise 时，字段保持加载直到它结束。</td></tr>

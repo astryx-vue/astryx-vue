@@ -4,6 +4,7 @@ import type { DateInputEntryError } from '../DateInput/dateEntry.js'
 import type { FieldPartStylingProps } from '../Field/fieldParts.js'
 import type { FieldStatusInput, FieldStatusVariant } from '../Field/types.js'
 import type { EntryErrorBehavior } from '../FormLayout/context.js'
+import type { CalendarSystem } from '../utils/calendarSystem.js'
 
 export type DateTimeInputSize = 'sm' | 'md' | 'lg'
 
@@ -37,6 +38,11 @@ export interface DateTimeInputProps extends FieldPartStylingProps {
   dateConstraints?: ReadonlyArray<(date: Date) => boolean>
   numberOfMonths?: 1 | 2
   weekStartsOn?: WeekStartsOn
+  /**
+   * 日期那段读写和选择用的历法，例如 `persian`。值、`min`、`max` 仍是公历 ISO 日期时间。
+   * 别的历法里系统日期控件换成弹出层或底部面板。不传时用最近 `InternationalizationProvider` 的历法，再没有就是公历。
+   */
+  calendar?: CalendarSystem
   isDisabled?: boolean
   isLoading?: boolean
   /** 日期和时间都齐了之后再跑。返回 Promise 时，字段保持加载直到它结束。 */

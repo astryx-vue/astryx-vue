@@ -4,6 +4,7 @@ import type { NativePicker } from '../composables/useTimeValue.js'
 import type { FieldPartStylingProps } from '../Field/fieldParts.js'
 import type { FieldStatusInput, FieldStatusType, FieldStatusVariant } from '../Field/types.js'
 import type { EntryErrorBehavior } from '../FormLayout/context.js'
+import type { CalendarSystem } from '../utils/calendarSystem.js'
 import type { DateInputEntryError } from './dateEntry.js'
 
 export type { DateInputEntryError } from './dateEntry.js'
@@ -118,6 +119,11 @@ export interface DateInputProps extends FieldPartStylingProps {
   numberOfMonths?: 1 | 2
   /** 弹出日历从哪一天开始一周。系统日期控件表达不了这项。 */
   weekStartsOn?: WeekStartsOn
+  /**
+   * 字段读写和选择日期用的历法，例如 `persian`。值、`min`、`max` 仍是公历日期。
+   * 系统日期控件只显示公历，别的历法里改用弹出层或底部面板。不传时用最近 `InternationalizationProvider` 的历法，再没有就是公历。
+   */
+  calendar?: CalendarSystem
   /** 整段字段的宽度。数字按像素算。 */
   width?: number | string
   /**

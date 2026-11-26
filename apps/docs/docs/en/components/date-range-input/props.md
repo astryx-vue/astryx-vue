@@ -19,6 +19,7 @@ footer: false
 <tr><td><code>minRangeSpan</code></td><td><code>number</code></td><td><code>1</code></td><td>Shortest span in days, including both ends.</td></tr>
 <tr><td><code>maxRangeSpan</code></td><td><code>number</code></td><td>—</td><td>Longest span in days, including both ends.</td></tr>
 <tr><td><code>weekStartsOn</code></td><td><code>0-6 | 'sun' | 'mon' | ...</code></td><td>Sunday, Monday for zh-CN</td><td>First column of the calendar.</td></tr>
+<tr><td><code>calendar</code></td><td><code>CalendarSystem</code></td><td>Follows the provider</td><td>Calendar system the months and the range text use. Falls back to the nearest <code>InternationalizationProvider</code>. The range is always Gregorian ISO dates. See <a href="/en/guide/calendars">Calendars</a>.</td></tr>
 <tr><td><code>hasClear</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Shows a clear button. Keyboard activation returns focus to the trigger without scrolling the page.</td></tr>
 <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Hides the label visually while keeping it accessible. <code>labelHidden</code> is the older name; either one hides it. Playground templates use <code>is-label-hidden</code>.</td></tr>
 <tr><td><code>containerClass</code></td><td><code>string | object | array</code></td><td>—</td><td>Class for the field container. Has no effect, and warns in development, inside InputGroup and in a horizontal-labels FormLayout.</td></tr>
