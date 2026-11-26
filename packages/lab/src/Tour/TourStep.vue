@@ -141,12 +141,15 @@ onBeforeUnmount(() => {
 
 <template>
   <template v-if="tour && isActiveStep">
-    <TourHighlight
-      :highlight-ref="(element: HTMLElement | null) => { highlight = element }"
-      :rect="rect"
-      :has-backdrop="tour.hasBackdrop.value"
-      @backdrop-click="tour.onDismiss('backdrop')"
-    />
+    <!-- 高亮和遮罩跟说明框挂到同一处，排在说明框前面；留在原地的话，页面外层的层叠上下文（如文档站的顶栏）会盖在遮罩上面。 -->
+    <Teleport :to="teleportTarget">
+      <TourHighlight
+        :highlight-ref="(element: HTMLElement | null) => { highlight = element }"
+        :rect="rect"
+        :has-backdrop="tour.hasBackdrop.value"
+        @backdrop-click="tour.onDismiss('backdrop')"
+      />
+    </Teleport>
     <Teleport :to="teleportTarget">
       <section
         :id="layer.id"

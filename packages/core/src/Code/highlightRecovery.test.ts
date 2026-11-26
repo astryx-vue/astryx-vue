@@ -77,6 +77,21 @@ describe('highlight recovery', () => {
     cleanup()
   })
 
+  it('paints flat ranges across the text nodes an editable splits its content into', () => {
+    const code = document.createElement('code')
+    // 浏览器回车后常见的结构：一段文字被拆成几个文本节点，`return` 恰好横跨两个节点。
+    for (const part of ['const a = 1;\nret', 'urn a\n', '}'])
+      code.appendChild(document.createTextNode(part))
+    document.body.appendChild(code)
+
+    const cleanup = applyHighlightRangesFlat(code, tokenize(code.textContent, 'javascript'))
+    const words = painted.map(range => range.toString())
+    expect(words).toContain('const')
+    expect(words).toContain('return')
+    expect(words).toContain('}')
+    cleanup()
+  })
+
   it('stops watching after cleanup', async () => {
     const code = document.createElement('code')
     code.textContent = 'const x = 1;'
