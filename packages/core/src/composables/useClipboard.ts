@@ -29,7 +29,7 @@ export interface UseClipboardReturn {
 
 /**
  * 对应原版 Astryx 的 `hooks/useClipboard`。
- * 以前放在 Code 目录，名字是 `useCopyToClipboard`，旧名字仍可从原路径引用。
+ * `Code` 子路径和包的总入口还以 `useCopyToClipboard` 这个名字导出同一个函数。
  *
  * 连续复制会把倒计时重新算满，不会被上一次的定时器提前清掉。
  */

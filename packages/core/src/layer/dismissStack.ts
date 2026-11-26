@@ -3,9 +3,9 @@ import { isImeKeyEvent } from '../composables/internal/ime.js'
 /**
  * 全页面共用的「浮层关闭栈」。
  *
- * 以前每一个浮层各自在 document 上挂一套 pointerdown 和 keydown 监听，
- * 结果按一次 Escape 会把所有开着的层一起关掉：Dialog 里开一个下拉菜单，
- * 一次 Escape 连 Dialog 也关了。这里把这件事收成一处：
+ * 如果每个浮层各自在 document 上挂一套 pointerdown 和 keydown 监听，
+ * 按一次 Escape 就会把所有开着的层一起关掉：Dialog 里开一个下拉菜单，
+ * 一次 Escape 连 Dialog 也关了。所以这件事收在这一处：
  *
  * - document 上只有一套监听，栈里有层才挂上去，栈空了就摘掉。
  * - Escape 永远只看「最上面那一层」：`'close'` 关掉它，`'block'` 吃掉按键但不关，

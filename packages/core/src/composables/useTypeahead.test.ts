@@ -133,9 +133,4 @@ describe('useTypeahead', () => {
     }))
     expect(result.onKeyDown(key('z'))).toBe(true)
   })
-
-  it('旧名字 useMenuTypeahead 指向同一个函数', async () => {
-    const moved = await import('../DropdownMenu/useMenuTypeahead.js')
-    expect(moved.useMenuTypeahead).toBe(useTypeahead)
-  })
 })

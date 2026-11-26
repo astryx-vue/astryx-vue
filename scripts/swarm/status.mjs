@@ -7,11 +7,11 @@
  *   node scripts/swarm/status.mjs show
  *   node scripts/swarm/status.mjs set <节点> <状态> [--round N] [--impl 名字] [--verify 名字] [--result 文本] [--pr 文本] [--force] [--dry-run]
  *
- * 所有子命令都接受 --file <路径>，默认是本仓库的 .agents-work/upstream-sync-0.7.1/ROADMAP.md。
+ * 除 --help 外，所有子命令都必须用 --file <路径> 指定 ROADMAP 文件。
  * 退出码：0 正常；1 check 发现问题或 set 被拒绝；2 参数或文件格式不对。
  */
 import { readFileSync, realpathSync, renameSync, writeFileSync } from 'node:fs'
-import { dirname, resolve } from 'node:path'
+import { resolve } from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 import { parseArgs } from 'node:util'
@@ -19,9 +19,6 @@ import { EDITABLE_FIELDS, planSet, StatusEditError } from './status/edit.mjs'
 import { checkRoadmap, formatShow, readyNodes } from './status/model.mjs'
 import { parseRoadmap, RoadmapParseError } from './status/roadmap.mjs'
 import { describeStates, resolveState } from './status/states.mjs'
-
-const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
-export const DEFAULT_ROADMAP = resolve(ROOT, '.agents-work/upstream-sync-0.7.1/ROADMAP.md')
 
 export const USAGE = `用法: node scripts/swarm/status.mjs <子命令> [选项]
 
@@ -36,7 +33,7 @@ set 的选项：
   --dry-run    只打印会改哪些行，不写盘
 
 通用选项：
-  --file <路径>   ROADMAP 文件，默认 ${DEFAULT_ROADMAP}
+  --file <路径>   ROADMAP 文件，必填
 
 状态可以写中文、英文简写或 emoji：
 ${describeStates()}`
@@ -64,7 +61,9 @@ export function parseStatusArgs(argv) {
     return { command: 'help' }
   if (!['check', 'ready', 'show', 'set'].includes(command))
     throw new UsageError(`不认识的子命令：${command}`)
-  const file = resolve(values.file ?? DEFAULT_ROADMAP)
+  if (values.file === undefined)
+    throw new UsageError('需要用 --file <路径> 指定 ROADMAP 文件')
+  const file = resolve(values.file)
   if (command !== 'set') {
     if (rest.length > 0)
       throw new UsageError(`${command} 不需要位置参数，收到 ${rest.join(' ')}`)

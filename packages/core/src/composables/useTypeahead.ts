@@ -28,7 +28,6 @@ const DEFAULT_RESET_MS = 750
 
 /**
  * 对应原版 Astryx 的 `hooks/useTypeahead`。
- * 以前放在 DropdownMenu，名字是 `useMenuTypeahead`，旧名字仍可从原路径引用。
  *
  * 反复按同一个字母会在匹配项之间循环，而不是把查询收得更窄。
  * 空格留给激活；只有缓冲里已经有字时，空格才算查询的一部分。
