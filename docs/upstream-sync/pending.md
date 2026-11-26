@@ -7742,11 +7742,14 @@
 
 ### v0.7.2
 
-- [ ] [`40c469bf0`](https://github.com/meta/astryx/commit/40c469bf0) docs(MultiSelector): hook docs for useMultiCombobox (#7597)
-- [ ] [`b69b2df3f`](https://github.com/meta/astryx/commit/b69b2df3f) docs(MultiSelector): scope useMultiCombobox's opening notes; Home and End with search (#7604)
+- [x] [`40c469bf0`](https://github.com/meta/astryx/commit/40c469bf0) docs(MultiSelector): hook docs for useMultiCombobox (#7597)
+  - 不适用：Vue 版没有公开的 useMultiCombobox 钩子，多选面板的按键在内部模块里
+- [x] [`b69b2df3f`](https://github.com/meta/astryx/commit/b69b2df3f) docs(MultiSelector): scope useMultiCombobox's opening notes; Home and End with search (#7604)
+  - 不适用：同 40c469bf0，没有公开的 useMultiCombobox 钩子文档要写
 - [ ] [`b06a09363`](https://github.com/meta/astryx/commit/b06a09363) fix(Typeahead): clear loading state when search source is replaced (#7457) (#7487)
 - [ ] [`f16dc9f43`](https://github.com/meta/astryx/commit/f16dc9f43) docs(Selector): hook docs for useCombobox (#7596)
-- [ ] [`3aca324d4`](https://github.com/meta/astryx/commit/3aca324d4) fix(MultiSelector): the active action cell draws the standard focus ring (#7542)
+- [x] [`3aca324d4`](https://github.com/meta/astryx/commit/3aca324d4) fix(MultiSelector): the active action cell draws the standard focus ring (#7542)
+  - Vue 版已有：操作格 is-active 用焦点令牌画轮廓，只有键盘进入操作列才会落在操作格上
 - [x] [`db3a2e7fd`](https://github.com/meta/astryx/commit/db3a2e7fd) docs(spec): combobox over a caller-rendered field (AST-075) (#7353)
   - 不适用：上游内部规范和架构文档（自动初筛）
 
@@ -7757,51 +7760,65 @@
 - [x] [`7b6691327`](https://github.com/meta/astryx/commit/7b6691327) spec(AST-085): disabled controls stay focusable (#7793)
   - 不适用：上游内部规范和架构文档、上游组件规范文档（自动初筛）
 - [ ] [`ef184a721`](https://github.com/meta/astryx/commit/ef184a721) fix(Selector): a disabled Selector trigger keeps its tab stop (#7844)
-- [ ] [`1b3f66800`](https://github.com/meta/astryx/commit/1b3f66800) fix(ComplexSelector): a disabled trigger keeps its tab stop (#7845)
-- [ ] [`b2c4f180a`](https://github.com/meta/astryx/commit/b2c4f180a) fix(MultiSelector): a disabled trigger keeps its tab stop (#7852)
+- [x] [`1b3f66800`](https://github.com/meta/astryx/commit/1b3f66800) fix(ComplexSelector): a disabled trigger keeps its tab stop (#7845)
+  - Vue 版已有：ComplexSelector 禁用时触发器用 aria-disabled 不用原生 disabled，仍在 Tab 序里，指针和按键被拦下
+- [x] [`b2c4f180a`](https://github.com/meta/astryx/commit/b2c4f180a) fix(MultiSelector): a disabled trigger keeps its tab stop (#7852)
+  - 已移植：[#544](https://github.com/astryx-vue/astryx-vue/pull/544)。禁用触发器保留 Tab 停点本来就有，这次补上禁用时不渲染隐藏输入、不向表单交值，补测试
 - [x] [`7370328f6`](https://github.com/meta/astryx/commit/7370328f6) spec(AST-009): real-AT evidence never gates merge or release (#7915)
   - 不适用：上游内部规范和架构文档（自动初筛）
 
 ### v0.7.4
 
-- [ ] [`2b60fa6fd`](https://github.com/meta/astryx/commit/2b60fa6fd) fix(inputs): silence the busy Spinner and announce the busy start once (TextInput, TextArea, Selector, MultiSelector) (#7920)
+- [x] [`2b60fa6fd`](https://github.com/meta/astryx/commit/2b60fa6fd) fix(inputs): silence the busy Spinner and announce the busy start once (TextInput, TextArea, Selector, MultiSelector) (#7920)
+  - 已移植：[#544](https://github.com/astryx-vue/astryx-vue/pull/544)。Selector、MultiSelector 的忙碌图标对读屏隐藏，进入忙碌时只念一次「Loading」；输入框、文本域归输入框族
 - [ ] [`9f3ab054c`](https://github.com/meta/astryx/commit/9f3ab054c) fix(ComplexSelector, Typeahead, Tokenizer): silence the busy Spinner and announce the busy start once (#7930)
 
 ### v0.7.5
 
-- [ ] [`d8e3b386a`](https://github.com/meta/astryx/commit/d8e3b386a) fix(Tokenizer): wrap tokens before the clear-all lane (#7375)
-- [ ] [`ee74c1822`](https://github.com/meta/astryx/commit/ee74c1822) fix(Tokenizer): place the caret after the last token (#7922)
+- [x] [`d8e3b386a`](https://github.com/meta/astryx/commit/d8e3b386a) fix(Tokenizer): wrap tokens before the clear-all lane (#7375)
+  - Vue 版已有：清除按钮和 end 插槽在外框的弹性行里，不是绝对定位的末端区，标签本来就在它们前面换行，没有标签压到按钮下面的问题
+- [x] [`ee74c1822`](https://github.com/meta/astryx/commit/ee74c1822) fix(Tokenizer): place the caret after the last token (#7922)
+  - 已移植：[#544](https://github.com/astryx-vue/astryx-vue/pull/544)。展开时标签直接排进外框弹性行，输入框跟在最后一个标签后面，空着失焦或只读时不占位
 - [ ] [`db7e94503`](https://github.com/meta/astryx/commit/db7e94503) fix(core): a search's busy start is never announced after its outcome (#8235)
 - [ ] [`ad8af75ab`](https://github.com/meta/astryx/commit/ad8af75ab) fix(core): taps that start typing raise the touch keyboard (#8158)
 - [x] [`d794476b6`](https://github.com/meta/astryx/commit/d794476b6) fix(useAnnounce): messages announced in the same frame are joined, an identical repeat once (#8244)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`2597fa4fb`](https://github.com/meta/astryx/commit/2597fa4fb) fix(Typeahead): highlight follows pointer movement, not a resting pointer (#8247)
-- [ ] [`e52ef25f2`](https://github.com/meta/astryx/commit/e52ef25f2) [Component Audit] ComplexSelector: the trigger is a combobox field on both paths (#6991)
+- [x] [`e52ef25f2`](https://github.com/meta/astryx/commit/e52ef25f2) [Component Audit] ComplexSelector: the trigger is a combobox field on both paths (#6991)
+  - Vue 版已有：两种触发器都是弹出对话框的 combobox，带 aria-required 和 aria-disabled（#508）
 - [x] [`10ca8eaee`](https://github.com/meta/astryx/commit/10ca8eaee) spec(AST-012): compact is width below md or height below 500 on every platform (#8274)
   - 不适用：上游组件规范文档（自动初筛）
 - [x] [`174300fcb`](https://github.com/meta/astryx/commit/174300fcb) ci: discover PR browser accessibility specs, so a new spec needs no workflow edit (#8367)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`cc95dd0b8`](https://github.com/meta/astryx/commit/cc95dd0b8) fix(Tokenizer): block token changes while disabled (#8408)
+- [x] [`cc95dd0b8`](https://github.com/meta/astryx/commit/cc95dd0b8) fix(Tokenizer): block token changes while disabled (#8408)
+  - 已移植：[#544](https://github.com/astryx-vue/astryx-vue/pull/544)。添加、移除、全部清除在禁用时本来就拦着，这次补上禁用字段不再渲染隐藏输入、不向表单交值，补测试
 - [x] [`23de0923e`](https://github.com/meta/astryx/commit/23de0923e) spec(AST-094): touch presentations feel native by default (#8409)
   - 不适用：上游组件规范文档（自动初筛）
-- [ ] [`6b46afaa9`](https://github.com/meta/astryx/commit/6b46afaa9) fix(InputGroup): propagate disabled state to inputs and addons (#8414)
+- [x] [`6b46afaa9`](https://github.com/meta/astryx/commit/6b46afaa9) fix(InputGroup): propagate disabled state to inputs and addons (#8414)
+  - Vue 版已有：InputGroup 禁用传给输入框与附加件（#504）
 - [x] [`cd3787bac`](https://github.com/meta/astryx/commit/cd3787bac) feat(core): one touch presentation resolver (#8062)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`64b473d24`](https://github.com/meta/astryx/commit/64b473d24) fix(ComplexSelector): block commits from disabled open popups (#8399)
-- [ ] [`e9b3f3eda`](https://github.com/meta/astryx/commit/e9b3f3eda) fix(InputGroup): the group edge rules name members, not a universal selector (#8438)
+- [x] [`64b473d24`](https://github.com/meta/astryx/commit/64b473d24) fix(ComplexSelector): block commits from disabled open popups (#8399)
+  - 已移植：[#543](https://github.com/astryx-vue/astryx-vue/pull/543)。禁用后已打开的弹层里的提交不再改值、不跑 changeAction，补测试
+- [x] [`e9b3f3eda`](https://github.com/meta/astryx/commit/e9b3f3eda) fix(InputGroup): the group edge rules name members, not a universal selector (#8438)
+  - Vue 版已有：InputGroup 由外层容器画边框，没有通配选择器的边缘规则
 - [x] [`76b76bb4d`](https://github.com/meta/astryx/commit/76b76bb4d) spec(AST-058): the option's action cell is a named anatomy part (#8477)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`04b0e64ac`](https://github.com/meta/astryx/commit/04b0e64ac) test(Tokenizer): the end-lane contract sizes the story, not the lane's reserved Spinner (#8435)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`a81b3ad86`](https://github.com/meta/astryx/commit/a81b3ad86) fix(ComplexSelector): a caller's aria-label or aria-labelledby names the built-in trigger (#8540)
+- [x] [`a81b3ad86`](https://github.com/meta/astryx/commit/a81b3ad86) fix(ComplexSelector): a caller's aria-label or aria-labelledby names the built-in trigger (#8540)
+  - 已移植：[#543](https://github.com/astryx-vue/astryx-vue/pull/543)。调用方的 aria-label、aria-labelledby 给内置触发器命名，补测试
 - [x] [`8a13f3d2e`](https://github.com/meta/astryx/commit/8a13f3d2e) docs(spec): Tokenizer records the experimental touch sheet presentation (DEC-3) (#7976)
   - 不适用：上游组件规范文档（自动初筛）
 - [x] [`c01521cf9`](https://github.com/meta/astryx/commit/c01521cf9) spec(AST-094, AST-057): gestures work on the web for every pointer (FR43) (#8646)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`54fbccb27`](https://github.com/meta/astryx/commit/54fbccb27) feat(core): Tokenizer touch sheet behind experimental.presentation (#7977)
+  - 暂缓：Vue 版 Tokenizer 没有 presentation 属性和底部弹层；触屏弹层只在 lab MobileTokenizer 里，需要并进 core Tokenizer 并做 adaptive 解析
 - [ ] [`619e4a529`](https://github.com/meta/astryx/commit/619e4a529) fix(Selector): keep a caller aria-labelledby on the trigger (#8710)
-- [ ] [`e200d6f27`](https://github.com/meta/astryx/commit/e200d6f27) fix(MultiSelector): keep a caller aria-labelledby on the trigger (#8711)
+- [x] [`e200d6f27`](https://github.com/meta/astryx/commit/e200d6f27) fix(MultiSelector): keep a caller aria-labelledby on the trigger (#8711)
+  - 已移植：[#544](https://github.com/astryx-vue/astryx-vue/pull/544)。MultiSelector 触发器的 aria-labelledby 在字段标签（组内先是组标签）后面接调用方的 id，补测试
 - [ ] [`3ffb64647`](https://github.com/meta/astryx/commit/3ffb64647) fix(Tokenizer): hold back the touch sheet presentation until its UX pass finishes (#8735)
+  - 暂缓：属于 Tokenizer 触屏弹层的发布节奏调整，Vue 版没有该弹层，随 54fbccb27 一起做
 - [x] [`ad19aecd5`](https://github.com/meta/astryx/commit/ad19aecd5) test(Tokenizer): the SSR test loads Tokenizer at collection and finishes each case's sheet load (#8760)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`19d0a580a`](https://github.com/meta/astryx/commit/19d0a580a) test(Tokenizer): the SSR test asserts no console error instead of muting it (#8766)
@@ -7820,38 +7837,54 @@
 
 ### v0.7.6
 
-- [ ] [`6700c2492`](https://github.com/meta/astryx/commit/6700c2492) fix(Tokenizer): label the inline create row from the catalog (#9029)
-- [ ] [`f277e2580`](https://github.com/meta/astryx/commit/f277e2580) fix(core): a single esbuild bundle renders Core: lazily imported modules import Core directly, not through barrels (#9055)
-- [ ] [`6beb2e55a`](https://github.com/meta/astryx/commit/6beb2e55a) fix(MultiSelector): the default count trigger text comes from the catalog (#9020)
+- [x] [`6700c2492`](https://github.com/meta/astryx/commit/6700c2492) fix(Tokenizer): label the inline create row from the catalog (#9029)
+  - Vue 版已有：创建行文字走 messages.tokenizer.create，跟随当前语言
+- [x] [`f277e2580`](https://github.com/meta/astryx/commit/f277e2580) fix(core): a single esbuild bundle renders Core: lazily imported modules import Core directly, not through barrels (#9055)
+  - 不适用：React 版 esbuild 单文件打包下懒加载模块导入 Core 的问题
+- [x] [`6beb2e55a`](https://github.com/meta/astryx/commit/6beb2e55a) fix(MultiSelector): the default count trigger text comes from the catalog (#9020)
+  - Vue 版已有：计数文字走 multiSelector.selected 文案，语言目录的 selectedCount 已接入（#533）
 - [x] [`040393bc4`](https://github.com/meta/astryx/commit/040393bc4) test(Selector, MultiSelector): load the lazy BottomSheet before the sheet tests (#9082)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`0bdda320c`](https://github.com/meta/astryx/commit/0bdda320c) fix(Selector, MultiSelector): a light dismiss onto another field leaves focus there (#9018)
+- [x] [`0bdda320c`](https://github.com/meta/astryx/commit/0bdda320c) fix(Selector, MultiSelector): a light dismiss onto another field leaves focus there (#9018)
+  - Vue 版已有：点外面关闭时不动焦点（useDismiss 不抢焦点），Escape 和选中后才回到触发器
 - [x] [`94a2a8ee5`](https://github.com/meta/astryx/commit/94a2a8ee5) spec(AST-086): a status is replaced by its owner's next status, not joined (#9070)
   - 不适用：上游内部规范和架构文档、上游组件规范文档（自动初筛）
 - [x] [`f77252d11`](https://github.com/meta/astryx/commit/f77252d11) test(Selector, MultiSelector): wait for the on-demand sheet module before the first open (#8642)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`75001c5b4`](https://github.com/meta/astryx/commit/75001c5b4) fix(TextArea, Typeahead, Tokenizer): keep the field's label with a caller aria-labelledby (#8862)
+- [x] [`75001c5b4`](https://github.com/meta/astryx/commit/75001c5b4) fix(TextArea, Typeahead, Tokenizer): keep the field's label with a caller aria-labelledby (#8862)
+  - 已移植：[#544](https://github.com/astryx-vue/astryx-vue/pull/544)。Tokenizer、Typeahead 把调用方的 aria-labelledby 接在字段标签后面，补测试
 - [x] [`7a76092aa`](https://github.com/meta/astryx/commit/7a76092aa) test(ComplexSelector): cover trigger value and placeholder as content (#8499)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`db5a9936f`](https://github.com/meta/astryx/commit/db5a9936f) fix(MultiSelector): a search status the next keystroke replaces is withdrawn, not joined (#8640)
-- [ ] [`7544940f4`](https://github.com/meta/astryx/commit/7544940f4) fix(ComplexSelector): tooltip status placement keeps its message (#9026)
+- [x] [`db5a9936f`](https://github.com/meta/astryx/commit/db5a9936f) fix(MultiSelector): a search status the next keystroke replaces is withdrawn, not joined (#8640)
+  - Vue 版已有：useAnnounce 是单一播报区，后一条会替换还没念的前一条，不会拼在一起
+- [x] [`7544940f4`](https://github.com/meta/astryx/commit/7544940f4) fix(ComplexSelector): tooltip status placement keeps its message (#9026)
+  - 已移植：[#543](https://github.com/astryx-vue/astryx-vue/pull/543)。tooltip 状态的说明收进能聚焦的状态图标按钮，点它不开弹层，触发器带 aria-describedby，补测试
 - [ ] [`19ae6fc29`](https://github.com/meta/astryx/commit/19ae6fc29) fix(BaseTypeahead): a focusable-disabled field opens no list and picks nothing (spec:AST-085 FR2) (#9036)
-- [ ] [`3b0a56a02`](https://github.com/meta/astryx/commit/3b0a56a02) fix(Tokenizer, PowerSearch): Clear all is announced, once, in each component's own words (#9038)
-- [ ] [`f52dbbefb`](https://github.com/meta/astryx/commit/f52dbbefb) fix(Typeahead, Tokenizer): the combobox exposes its required and invalid state (#9034)
+- [x] [`3b0a56a02`](https://github.com/meta/astryx/commit/3b0a56a02) fix(Tokenizer, PowerSearch): Clear all is announced, once, in each component's own words (#9038)
+  - 已移植：[#544](https://github.com/astryx-vue/astryx-vue/pull/544)。Tokenizer 全部清除只念一次「All items removed」（新增 tokenizer.allRemoved 并接入语言目录）；PowerSearch 的部分在搜索族清单
+- [x] [`f52dbbefb`](https://github.com/meta/astryx/commit/f52dbbefb) fix(Typeahead, Tokenizer): the combobox exposes its required and invalid state (#9034)
+  - 已移植：[#544](https://github.com/astryx-vue/astryx-vue/pull/544)。Tokenizer、Typeahead 在 error 状态暴露 aria-invalid，aria-required 本来就有，补测试
 - [ ] [`b2e79c45d`](https://github.com/meta/astryx/commit/b2e79c45d) fix(Typeahead): the value token's button is named by the field label and the value (#9049)
 - [x] [`a58781354`](https://github.com/meta/astryx/commit/a58781354) docs(spec): MultiSelector records its shipped contract as current (#9133)
   - 不适用：上游组件规范文档（自动初筛）
 - [ ] [`b13f483f0`](https://github.com/meta/astryx/commit/b13f483f0) fix(Selector): block selection from disabled open popups (#9137)
-- [ ] [`4cdc3abf2`](https://github.com/meta/astryx/commit/4cdc3abf2) [Component Audit] ComplexSelector: tall popups keep their last rows clear of the app bar (#8551)
-- [ ] [`5ef8ecf2c`](https://github.com/meta/astryx/commit/5ef8ecf2c) fix(MultiSelector): block changes from disabled open panels (#9152)
+- [x] [`4cdc3abf2`](https://github.com/meta/astryx/commit/4cdc3abf2) [Component Audit] ComplexSelector: tall popups keep their last rows clear of the app bar (#8551)
+  - 已移植：[#543](https://github.com/astryx-vue/astryx-vue/pull/543)。弹层内容高度上限扣掉 LayerProvider 的 inset，最后几行不被底栏盖住；箭头减少动效下本来就不动画
+- [x] [`5ef8ecf2c`](https://github.com/meta/astryx/commit/5ef8ecf2c) fix(MultiSelector): block changes from disabled open panels (#9152)
+  - Vue 版已有：toggleValue、创建和键盘处理都先看 canActivate，禁用后已打开的面板不再改值；补了测试
 - [ ] [`f89931310`](https://github.com/meta/astryx/commit/f89931310) fix(Typeahead, Tokenizer): ArrowDown on the closed field loads a replaced search source instead of showing its old list (#9166)
 - [ ] [`b735ef052`](https://github.com/meta/astryx/commit/b735ef052) fix(Tokenizer): focus hand-offs live in the controls' callback refs and the confirmation's close handler (#9162)
-- [ ] [`b56b6d4fc`](https://github.com/meta/astryx/commit/b56b6d4fc) fix(core): one modality call per component, reading the component's own document (#9148)
+  - 暂缓：焦点交接在 Tokenizer 触屏弹层的控件回调和确认弹窗里，Vue 版没有该弹层
+- [x] [`b56b6d4fc`](https://github.com/meta/astryx/commit/b56b6d4fc) fix(core): one modality call per component, reading the component's own document (#9148)
+  - 不适用：React 版让每个组件读自己所在文档的输入方式（iframe、画中画）；Vue 版的输入方式跟踪是单文档模块
 - [ ] [`a03bffd8e`](https://github.com/meta/astryx/commit/a03bffd8e) feat(Typeahead): show local matches at once and append server results (spec:AST-092) (#7962)
-- [ ] [`c5c7deaf6`](https://github.com/meta/astryx/commit/c5c7deaf6) chore(MultiSelector): format the source with the repository's Prettier settings (#9247)
-- [ ] [`8f345cba4`](https://github.com/meta/astryx/commit/8f345cba4) feat(FieldStatus): deprecate the tooltip variant; field controls keep statusVariant="tooltip" (#9196)
+- [x] [`c5c7deaf6`](https://github.com/meta/astryx/commit/c5c7deaf6) chore(MultiSelector): format the source with the repository's Prettier settings (#9247)
+  - 不适用：按上游 Prettier 配置重排 React 源码
+- [x] [`8f345cba4`](https://github.com/meta/astryx/commit/8f345cba4) feat(FieldStatus): deprecate the tooltip variant; field controls keep statusVariant="tooltip" (#9196)
+  - 已移植：[#544](https://github.com/astryx-vue/astryx-vue/pull/544)。Tokenizer、Typeahead 新增 statusVariant 并保留 tooltip；ComplexSelector 部分在 #543；FieldStatus 的 tooltip 弃用不适用
 - [ ] [`e0a03766d`](https://github.com/meta/astryx/commit/e0a03766d) docs(knowledge): every component spec lives in docs/specs/components, one folder per component (#9007)
-- [ ] [`acfa52701`](https://github.com/meta/astryx/commit/acfa52701) fix(useTypeahead): type-to-select ignores accents (#8864)
+- [x] [`acfa52701`](https://github.com/meta/astryx/commit/acfa52701) fix(useTypeahead): type-to-select ignores accents (#8864)
+  - 已移植：[#544](https://github.com/astryx-vue/astryx-vue/pull/544)。按字母跳转忽略大小写、组合符号、带斜杠字母和土耳其语 i，带符号的字母先精确匹配；共用的 useCombobox，菜单和树的同类跳转归别族
 - [x] [`dc4dd03b8`](https://github.com/meta/astryx/commit/dc4dd03b8) docs(spec): SelectorOption records its shipped contract as current (#9144)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`1408785fd`](https://github.com/meta/astryx/commit/1408785fd) fix(Typeahead, Tokenizer): a disabled field keeps its tab stop (#9275)
@@ -7864,8 +7897,10 @@
 - [x] [`2406addf5`](https://github.com/meta/astryx/commit/2406addf5) test(rtl): RTL coverage for list, metadata, radio, selector and typeahead rows (#9308)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`a4226c9a2`](https://github.com/meta/astryx/commit/a4226c9a2) fix(Typeahead, Tokenizer): a press in the field's own input or buttons keeps the list open (#9367)
-- [ ] [`99cc6dc85`](https://github.com/meta/astryx/commit/99cc6dc85) fix(core): many components carry only the English for their own strings (#9429)
-- [ ] [`ce052bf0a`](https://github.com/meta/astryx/commit/ce052bf0a) fix(Field): a focusable disabled field shows its focus under forced colors (#9410)
+- [x] [`99cc6dc85`](https://github.com/meta/astryx/commit/99cc6dc85) fix(core): many components carry only the English for their own strings (#9429)
+  - Vue 版已有：组件只按自己的命名空间读内置文案（useComponentMessages），单独引入不带全部文案（#515）
+- [x] [`ce052bf0a`](https://github.com/meta/astryx/commit/ce052bf0a) fix(Field): a focusable disabled field shows its focus under forced colors (#9410)
+  - 已移植：[#544](https://github.com/astryx-vue/astryx-vue/pull/544)。Selector、MultiSelector、Typeahead、Tokenizer 在强制颜色下聚焦边框取 Highlight，禁用但可聚焦的字段也一样
 - [ ] [`346a3c330`](https://github.com/meta/astryx/commit/346a3c330) fix(Tokenizer): an open list reloads when the tokens change (#9416)
 - [ ] [`beb03f8bd`](https://github.com/meta/astryx/commit/beb03f8bd) fix(DateInput): a press in the field's own input, clear button or label keeps the calendar open (#9433)
 
@@ -7878,12 +7913,16 @@
 - [x] [`98f48789d`](https://github.com/meta/astryx/commit/98f48789d) spec(Tokenizer): the sheet presentation edits a draft that Save commits (#9630)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`8d809ad01`](https://github.com/meta/astryx/commit/8d809ad01) fix(Typeahead): Escape in edit mode hides the list first, then restores the token and focuses it (#9608)
-- [ ] [`322c0d6e6`](https://github.com/meta/astryx/commit/322c0d6e6) fix(Button, Tab, Tokenizer and more): slots follow isRenderable; no truthy-guard baseline (#9501)
-- [ ] [`7f1bace3c`](https://github.com/meta/astryx/commit/7f1bace3c) fix(PowerSearch): Backspace removes no filter of a read-only field (#9648)
+- [x] [`322c0d6e6`](https://github.com/meta/astryx/commit/322c0d6e6) fix(Button, Tab, Tokenizer and more): slots follow isRenderable; no truthy-guard baseline (#9501)
+  - 不适用：React 里 0 这类假值插槽的判断；Vue 插槽按是否传入决定渲染，没有这个问题（Button 等见 #508）
+- [x] [`7f1bace3c`](https://github.com/meta/astryx/commit/7f1bace3c) fix(PowerSearch): Backspace removes no filter of a read-only field (#9648)
+  - Vue 版已有：Vue 的 PowerSearch 是独立实现，退格走 usePowerSearchActions 的 canRemove，只读字段和只读筛选都不会被退格删掉
 - [ ] [`f4edef899`](https://github.com/meta/astryx/commit/f4edef899) perf(Selector): memoize option rows, so an open or a highlight move re-renders only the rows it changes (#9598)
-- [ ] [`2c533501a`](https://github.com/meta/astryx/commit/2c533501a) fix(PowerSearch): Clear all keeps read-only filters (#9676)
+- [x] [`2c533501a`](https://github.com/meta/astryx/commit/2c533501a) fix(PowerSearch): Clear all keeps read-only filters (#9676)
+  - 不适用：Tokenizer 的可移除谓词只服务 PowerSearch，Vue 的 PowerSearch 不基于 Tokenizer；PowerSearch 全部清除保留只读筛选归搜索族清单（目前 usePowerSearchActions.clearAll 仍会清掉只读筛选）
 - [ ] [`4f452f927`](https://github.com/meta/astryx/commit/4f452f927) feat(Tokenizer): the touch sheet presentation is public behind experimental.presentation, and the sheet edits a draft that Save commits (#9708)
-- [ ] [`b11e000b5`](https://github.com/meta/astryx/commit/b11e000b5) fix(Selector): a row that scrolls under a still mouse does not take the keyboard's highlight (#9671)
+- [x] [`b11e000b5`](https://github.com/meta/astryx/commit/b11e000b5) fix(Selector): a row that scrolls under a still mouse does not take the keyboard's highlight (#9671)
+  - 已移植：[#544](https://github.com/astryx-vue/astryx-vue/pull/544)。MultiSelector、Typeahead 的行只在鼠标真的移动时才拿走高亮；Selector 悬停只是 CSS，CommandPalette 等归别族
 - [x] [`4e495ec5e`](https://github.com/meta/astryx/commit/4e495ec5e) fix(BottomSheet): a standalone sheet closing with focus inside stays out of inert while focus stays (#9635)
   - 不适用：只改上游测试（自动初筛）
 
@@ -7897,17 +7936,23 @@
 - [ ] [`e70850f04`](https://github.com/meta/astryx/commit/e70850f04) fix(Selector): the listbox is named by the field label in every presentation (#9737)
 - [ ] [`19081d81a`](https://github.com/meta/astryx/commit/19081d81a) chore(lab): remove MobileTokenizer and MobilePowerSearch, whose flows Core ships behind experimental.presentation (#9790)
 - [ ] [`dcf3d6f86`](https://github.com/meta/astryx/commit/dcf3d6f86) feat(Tokenizer): presentation is a stable prop, and adaptive is its default (#9796)
+  - 暂缓：Tokenizer 的 presentation 属性和 adaptive 默认值依赖 Vue 版还没有的 core 触屏弹层，见 54fbccb27
 - [x] [`f50bc7400`](https://github.com/meta/astryx/commit/f50bc7400) feat(PowerSearch): presentation is a stable prop, and adaptive is its default (#9797)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`a5e334b49`](https://github.com/meta/astryx/commit/a5e334b49) refactor(Tokenizer): check sheet rows for action during render, not in an Effect (#9808)
+  - 暂缓：Tokenizer 触屏弹层内部的渲染期检查，Vue 版没有该弹层
 - [ ] [`b5ce149a8`](https://github.com/meta/astryx/commit/b5ce149a8) chore(Tokenizer): remove experimental.presentation; presentation is the only spelling (#9836)
+  - 暂缓：去掉 experimental.presentation、只留 presentation，依赖触屏弹层，见 54fbccb27
 - [x] [`b95497d2d`](https://github.com/meta/astryx/commit/b95497d2d) test: main is green again: Tokenizer's sheet-row test passes presentation, and the recorded module resolutions follow core (#9851)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`41cce0b0a`](https://github.com/meta/astryx/commit/41cce0b0a) fix(core): a disabled Slider no longer runs a caller's handlers (#9729)
-- [ ] [`946211065`](https://github.com/meta/astryx/commit/946211065) perf(core): an overlay's eager import no longer carries the lazy BottomSheet's padding (#8550)
+- [x] [`41cce0b0a`](https://github.com/meta/astryx/commit/41cce0b0a) fix(core): a disabled Slider no longer runs a caller's handlers (#9729)
+  - Vue 版已有：Selector、MultiSelector 禁用时用 consumeWhileDisabled 拦下点击和按键；Slider 归别族
+- [x] [`946211065`](https://github.com/meta/astryx/commit/946211065) perf(core): an overlay's eager import no longer carries the lazy BottomSheet's padding (#8550)
+  - 不适用：React 懒加载 BottomSheet 的引入体积问题
 - [x] [`e390c3c43`](https://github.com/meta/astryx/commit/e390c3c43) test(browser): keep every Playwright browser context off remote hosts (#9811)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`b4f383dec`](https://github.com/meta/astryx/commit/b4f383dec) fix(Tokenizer): a confirmed Clear all in the sheet keeps focus on Clear all, not the search field (#9882)
+  - 暂缓：触屏弹层里确认清除后的焦点，Vue 版没有该弹层
 
 ### v0.7.9
 
@@ -7916,21 +7961,26 @@
 - [x] [`3b44b43d9`](https://github.com/meta/astryx/commit/3b44b43d9) test(PowerSearch, Tokenizer): the sheet warm-ups load their modules before any test, not inside a 15 s wait (#9968)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`12f63f5d0`](https://github.com/meta/astryx/commit/12f63f5d0) fix(Tokenizer): the sheet presentation renders endContent and renderToken (#9902)
+  - 暂缓：触屏弹层渲染 endContent 和自定义标签，Vue 版没有该弹层
 - [x] [`70d6b46e5`](https://github.com/meta/astryx/commit/70d6b46e5) test(Selector): the sheet's active-option test waits for the sheet itself, not for a clock (#9960)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`2947be858`](https://github.com/meta/astryx/commit/2947be858) fix(Selector): the keyboard-active option draws the focus ring, so it reads at 3:1 against the list (#10024)
 - [ ] [`a866c2ab0`](https://github.com/meta/astryx/commit/a866c2ab0) fix(Dialog, Drawer): a backdrop press that closes a popover inside closes only the popover (#9988)
 - [ ] [`b988598bd`](https://github.com/meta/astryx/commit/b988598bd) fix(Selector): the option the mouse moves onto after keyboard input shows no focus ring (#10049)
 - [ ] [`97873156b`](https://github.com/meta/astryx/commit/97873156b) fix(Typeahead, Tokenizer): picking a result reports the emptied query to onChangeQuery (#8929) (#9993)
-- [ ] [`7e69f91dc`](https://github.com/meta/astryx/commit/7e69f91dc) fix(core): an anchored layer that would run under the software keyboard ends above it (#8208)
-- [ ] [`d5dd0ec26`](https://github.com/meta/astryx/commit/d5dd0ec26) fix(MultiSelector): type-to-select cycles on a repeated letter and searches from the next option (#9961)
-- [ ] [`95aa62dd1`](https://github.com/meta/astryx/commit/95aa62dd1) fix(ComplexSelector): attached status shows the status icon on the trigger row (#9731)
+- [x] [`7e69f91dc`](https://github.com/meta/astryx/commit/7e69f91dc) fix(core): an anchored layer that would run under the software keyboard ends above it (#8208)
+  - Vue 版已有：浮层定位的视口扣掉屏幕键盘盖住的部分（layer/visibleViewport），选择器和 Typeahead 的列表都走它，别族 #542 已移植
+- [x] [`d5dd0ec26`](https://github.com/meta/astryx/commit/d5dd0ec26) fix(MultiSelector): type-to-select cycles on a repeated letter and searches from the next option (#9961)
+  - Vue 版已有：useCombobox.jumpToMatch 重复字母会循环，单个字母从下一项开始找；空格切换选项
+- [x] [`95aa62dd1`](https://github.com/meta/astryx/commit/95aa62dd1) fix(ComplexSelector): attached status shows the status icon on the trigger row (#9731)
+  - 已移植：[#543](https://github.com/astryx-vue/astryx-vue/pull/543)。attached 状态在触发器行用状态图标顶替箭头，补测试
 - [ ] [`841bcb8da`](https://github.com/meta/astryx/commit/841bcb8da) fix(Selector): a ghost or secondary trigger's clear and status buttons ring themselves, not the trigger too (#8874)
 - [ ] [`1ef21f898`](https://github.com/meta/astryx/commit/1ef21f898) fix(Spinner): route standalone loading through the shared announcement channel (#7910)
 
 ### v0.7.11
 
-- [ ] [`66b09526b`](https://github.com/meta/astryx/commit/66b09526b) fix(core): a swizzled copy type-checks without Node's types (#10252)
+- [x] [`66b09526b`](https://github.com/meta/astryx/commit/66b09526b) fix(core): a swizzled copy type-checks without Node's types (#10252)
+  - 不适用：拷贝（swizzle）出的 React 文件没有 Node 类型时的 process 声明，Vue 版没有这条链路
 - [ ] [`b3bbc3856`](https://github.com/meta/astryx/commit/b3bbc3856) fix(Selector): a searchable trigger's name carries the selected value (#10170)
 - [ ] [`a5b485e92`](https://github.com/meta/astryx/commit/a5b485e92) fix(Layer, Selector): the overlay slides above the software keyboard and keeps its top (#10169)
 
@@ -7944,15 +7994,20 @@
 - [ ] [`9dca38629`](https://github.com/meta/astryx/commit/9dca38629) perf(Layer): anchored entrances play on the surface (#10561)
 - [x] [`6422a1db4`](https://github.com/meta/astryx/commit/6422a1db4) refactor(Layer): one presentation hold keeps a layer's chosen presentation until its close settles (#8587)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`462048e86`](https://github.com/meta/astryx/commit/462048e86) fix(Tokenizer): forward cancel to the search source (#8777)
-- [ ] [`619ffeb27`](https://github.com/meta/astryx/commit/619ffeb27) fix(core, richtext): no focus fade on text fields under a coarse pointer (#10611)
+- [x] [`462048e86`](https://github.com/meta/astryx/commit/462048e86) fix(Tokenizer): forward cancel to the search source (#8777)
+  - Vue 版已有：搜索源直接交给 useAsyncSource，它新一次搜索前会调用源自己的 cancel
+- [x] [`619ffeb27`](https://github.com/meta/astryx/commit/619ffeb27) fix(core, richtext): no focus fade on text fields under a coarse pointer (#10611)
+  - 已移植：[#544](https://github.com/astryx-vue/astryx-vue/pull/544)。Tokenizer、Typeahead 在粗指针下输入框焦点外观不再淡入；文本框、文本域归输入框族
 - [ ] [`1ffc0dac9`](https://github.com/meta/astryx/commit/1ffc0dac9) fix(BottomSheet): resting content starts below the grab bar, whatever the padding (#8558)
+  - 暂缓：只改 Tokenizer 触屏弹层里 BottomSheet 的内容起点，Vue 版没有该弹层
 - [ ] [`d69b6aa8d`](https://github.com/meta/astryx/commit/d69b6aa8d) fix(Selector): a closed list opens on the selected option, never a disabled one (#8868)
 - [ ] [`dd61bd53b`](https://github.com/meta/astryx/commit/dd61bd53b) fix(Selector, MultiSelector): a query change clears the highlight from the previous list (#8871)
 - [ ] [`27378eb57`](https://github.com/meta/astryx/commit/27378eb57) fix(Selector): keep the selected-item overlay on screen at the bottom edge (#10697)
 - [ ] [`15098bc9f`](https://github.com/meta/astryx/commit/15098bc9f) fix(Tokenizer): the bottom sheet cancels pending search work, as the inline field does (#10637)
+  - 暂缓：触屏弹层取消搜索，Vue 版没有该弹层
 - [ ] [`bb0786673`](https://github.com/meta/astryx/commit/bb0786673) fix(TextInput): dispatch changeAction and update optimistic value on clear (#6425)
-- [ ] [`2e6162c9a`](https://github.com/meta/astryx/commit/2e6162c9a) fix(MultiSelector): opening the closed list never highlights a disabled option (#10820)
+- [x] [`2e6162c9a`](https://github.com/meta/astryx/commit/2e6162c9a) fix(MultiSelector): opening the closed list never highlights a disabled option (#10820)
+  - 已移植：[#544](https://github.com/astryx-vue/astryx-vue/pull/544)。打开时落在第一个可用选项上，不再落在禁用项；带搜索时按压打开仍高亮第一项，与上游「不高亮」略有差别
 - [ ] [`aeb654c33`](https://github.com/meta/astryx/commit/aeb654c33) fix(Selector): the highlight follows its option by value when the options change (#10818)
 - [ ] [`630ae5efc`](https://github.com/meta/astryx/commit/630ae5efc) refactor(Selector): the presentation controller holds its choice through the layer runtime's presentation hold (#8591)
 - [ ] [`1f9217f0c`](https://github.com/meta/astryx/commit/1f9217f0c) fix(Selector): a required search Selector puts aria-required where it is allowed (#10878)
@@ -7971,17 +8026,22 @@
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`19eadab60`](https://github.com/meta/astryx/commit/19eadab60) feat(Layer): an entrance slides from the side its layer lands on (#10771)
 - [ ] [`108f354ae`](https://github.com/meta/astryx/commit/108f354ae) fix(core): drop 'use client' from the package root and the component barrels (#11106)
-- [ ] [`41d0d0faf`](https://github.com/meta/astryx/commit/41d0d0faf) fix(Tokenizer): a pick from the focus list keeps focus and the list open (#11031)
+- [x] [`41d0d0faf`](https://github.com/meta/astryx/commit/41d0d0faf) fix(Tokenizer): a pick from the focus list keeps focus and the list open (#11031)
+  - 已移植：[#544](https://github.com/astryx-vue/astryx-vue/pull/544)。聚焦清单里选一项后焦点和清单保留、下一项高亮，没有可选项或到上限就收起；顺带让 hasEntriesOnFocus 聚焦时真的展开，补测试
 - [ ] [`afa75c2e8`](https://github.com/meta/astryx/commit/afa75c2e8) feat(core): make Tokenizer InputGroup-compatible (#4405)
+  - 暂缓：Vue 版 Tokenizer 不读 InputGroup 上下文：缺组内由组画标签状态、跟随组尺寸、单行滚动轨道、边缘渐隐和禁用时的 Tab 停点，需要单独设计
 - [ ] [`410f9b627`](https://github.com/meta/astryx/commit/410f9b627) fix(Typeahead): keep dismissed menus closed for late results (#8778)
-- [ ] [`fa9e7f017`](https://github.com/meta/astryx/commit/fa9e7f017) feat(ComplexSelector): add disabledMessage (#5984)
+- [x] [`fa9e7f017`](https://github.com/meta/astryx/commit/fa9e7f017) feat(ComplexSelector): add disabledMessage (#5984)
+  - 已移植：[#543](https://github.com/astryx-vue/astryx-vue/pull/543)。ComplexSelector 新增 disabledMessage，内置和自定义触发器都支持，补测试和文档
 
 ### v0.7.15
 
-- [ ] [`ac1a569b2`](https://github.com/meta/astryx/commit/ac1a569b2) fix(Tokenizer): removing a token with a finger leaves the keyboard down (#8160)
+- [x] [`ac1a569b2`](https://github.com/meta/astryx/commit/ac1a569b2) fix(Tokenizer): removing a token with a finger leaves the keyboard down (#8160)
+  - 已移植：[#512](https://github.com/astryx-vue/astryx-vue/pull/512)。手指删除 token 时键盘不弹出
 - [x] [`548f26c7c`](https://github.com/meta/astryx/commit/548f26c7c) spec(BottomSheet): a changed sheet waits at a peek while the discard dialog asks (DEC-5) (#11095)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`451e0a656`](https://github.com/meta/astryx/commit/451e0a656) fix(Tokenizer): number searches and opens in state (#10886)
+  - 暂缓：触屏弹层里搜索和打开的计数，Vue 版没有该弹层
 
 ### v0.7.16
 
@@ -7992,13 +8052,17 @@
 
 ### v0.7.17
 
-- [ ] [`55e666665`](https://github.com/meta/astryx/commit/55e666665) fix(core): no press scale on a trigger whose own layer is open (#11062)
-- [ ] [`0a765b34c`](https://github.com/meta/astryx/commit/0a765b34c) fix(MultiSelector): guard disabled caller-rendered triggers (#11480)
+- [x] [`55e666665`](https://github.com/meta/astryx/commit/55e666665) fix(core): no press scale on a trigger whose own layer is open (#11062)
+  - Vue 版已有：选择器触发器没有按压缩放，Button 的部分见 #501
+- [x] [`0a765b34c`](https://github.com/meta/astryx/commit/0a765b34c) fix(MultiSelector): guard disabled caller-rendered triggers (#11480)
+  - 已移植：[#544](https://github.com/astryx-vue/astryx-vue/pull/544)。MultiSelector 的 trigger 插槽属性带 aria-disabled，禁用或只读时拦下同元素上调用方的点击和按键，补测试
 - [ ] [`76642a0ad`](https://github.com/meta/astryx/commit/76642a0ad) fix(core): keep disabled selectors closed on default open (#11488)
-- [ ] [`520e96392`](https://github.com/meta/astryx/commit/520e96392) fix(Tokenizer): show the caret in a focused empty input with no width (#11507)
+- [x] [`520e96392`](https://github.com/meta/astryx/commit/520e96392) fix(Tokenizer): show the caret in a focused empty input with no width (#11507)
+  - 已移植：[#544](https://github.com/astryx-vue/astryx-vue/pull/544)。聚焦的空输入框留出光标的宽度并把这点宽度还给这一行，字段没有余地时光标也画得出来
 - [x] [`87d9aef29`](https://github.com/meta/astryx/commit/87d9aef29) test(Tokenizer): a focused empty input with no field width has room for its caret (#11715)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`dcaa2cdf7`](https://github.com/meta/astryx/commit/dcaa2cdf7) fix(Typeahead): the result count names every match, not only the rows shown (#11629)
+- [x] [`dcaa2cdf7`](https://github.com/meta/astryx/commit/dcaa2cdf7) fix(Typeahead): the result count names every match, not only the rows shown (#11629)
+  - 已移植：[#544](https://github.com/astryx-vue/astryx-vue/pull/544)。Typeahead、Tokenizer 之前没有结果数播报，现在搜索落定后念匹配总数，包括超出 maxMenuItems 没画出来的
 - [x] [`49227ce68`](https://github.com/meta/astryx/commit/49227ce68) test(Typeahead): the FR8 count test does not count the busy start (#11764)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`3137fe0df`](https://github.com/meta/astryx/commit/3137fe0df) fix(core): the active option of select, multi-select and typeahead lists carries a highlighted theme state (#11887)
@@ -8010,19 +8074,28 @@
 - [ ] [`3b4c1993c`](https://github.com/meta/astryx/commit/3b4c1993c) fix(core): theme targets for parts that paint inside a component (#12081)
 - [ ] [`72f2d7caa`](https://github.com/meta/astryx/commit/72f2d7caa) docs: icon props take semantic names; Selector hasClear types; useTableSelectionState returns (#12583)
 - [ ] [`f939a6f90`](https://github.com/meta/astryx/commit/f939a6f90) fix(core): type-to-select takes a letter typed with AltGr (#12644)
-- [ ] [`8bd67fe30`](https://github.com/meta/astryx/commit/8bd67fe30) chore: land batch 1 (12 pull requests) (#12713)
+- [x] [`8bd67fe30`](https://github.com/meta/astryx/commit/8bd67fe30) chore: land batch 1 (12 pull requests) (#12713)
+  - Vue 版已有：选择器列表最小宽度走 clampInlineSize，被视口上限截住；批次里其余条目属别族
 - [ ] [`e5df607d2`](https://github.com/meta/astryx/commit/e5df607d2) fix(Selector, MultiSelector): inside an open shadow root, a press on a container that is no Tab stop returns focus to the trigger (#12204)
-- [ ] [`9e19fa47e`](https://github.com/meta/astryx/commit/9e19fa47e) chore: land batch 8 (11 pull requests) (#12827)
-- [ ] [`226afd33b`](https://github.com/meta/astryx/commit/226afd33b) chore: land batch 10 (3 pull requests) (#12844)
+- [x] [`9e19fa47e`](https://github.com/meta/astryx/commit/9e19fa47e) chore: land batch 8 (11 pull requests) (#12827)
+  - Vue 版已有：ComplexSelector 的 props 表已列出 isLabelHidden、description、labelTooltip、isOptional、isRequired；其余 PR 属别族
+- [x] [`226afd33b`](https://github.com/meta/astryx/commit/226afd33b) chore: land batch 10 (3 pull requests) (#12844)
+  - 已移植：[#544](https://github.com/astryx-vue/astryx-vue/pull/544)。带搜索的 MultiSelector 触发器不再带 aria-required，必填放到打开后的搜索框上，补测试；批次里的 CLI 条目不在本范围
 - [x] [`ddab5b7ce`](https://github.com/meta/astryx/commit/ddab5b7ce) test(Tokenizer): the group-scroll spec waits for the story's play function (#12017)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`53615c1f4`](https://github.com/meta/astryx/commit/53615c1f4) chore: land batch 19 (3 pull requests) (#12875)
-- [ ] [`8efb25a85`](https://github.com/meta/astryx/commit/8efb25a85) chore: land batch 23 (4 pull requests) (#12885)
-- [ ] [`1f48950f9`](https://github.com/meta/astryx/commit/1f48950f9) chore: land batch 67 (7 pull requests) (#12957)
-- [ ] [`ab9aaa5a2`](https://github.com/meta/astryx/commit/ab9aaa5a2) chore: land batch 70 (2 pull requests) (#12963)
+- [x] [`53615c1f4`](https://github.com/meta/astryx/commit/53615c1f4) chore: land batch 19 (3 pull requests) (#12875)
+  - Vue 版已有：选择器的选项、空状态、溢出计数已用文字角色的行高令牌；Pagination 首尾标记和 doctor 见 #508、#514
+- [x] [`8efb25a85`](https://github.com/meta/astryx/commit/8efb25a85) chore: land batch 23 (4 pull requests) (#12885)
+  - 不适用：本范围是组内滚动轨道的边缘渐隐重构，Vue 版 Tokenizer 没有组内轨道（见 afa75c2e8）
+- [x] [`1f48950f9`](https://github.com/meta/astryx/commit/1f48950f9) chore: land batch 67 (7 pull requests) (#12957)
+  - 已移植：[#544](https://github.com/astryx-vue/astryx-vue/pull/544)。Tokenizer 的 modelValue 不是数组、TypeaheadItem 缺 item 时开发期报明确错误；ComplexSelector 缺默认插槽的提示在 #543
+- [x] [`ab9aaa5a2`](https://github.com/meta/astryx/commit/ab9aaa5a2) chore: land batch 70 (2 pull requests) (#12963)
+  - 已移植：[#544](https://github.com/astryx-vue/astryx-vue/pull/544)。Tokenizer、Typeahead 新增 statusVariant，框内画状态图标，tooltip 时是能聚焦的按钮；PowerSearch 的部分在搜索族清单
 - [ ] [`8ecfe59a4`](https://github.com/meta/astryx/commit/8ecfe59a4) chore: land batch 61 (4 pull requests) (#12940)
-- [ ] [`e7f5815c3`](https://github.com/meta/astryx/commit/e7f5815c3) fix(core): six components' fixed-English built-in text follows the locale; the hardcoded-string lint config has no exemption list and reports a stale entry (#12721)
-- [ ] [`1f04ed3e3`](https://github.com/meta/astryx/commit/1f04ed3e3) fix(Tokenizer): a collapsed unfocusedLayer field keeps a tab stop on its placeholder (#12486)
+- [x] [`e7f5815c3`](https://github.com/meta/astryx/commit/e7f5815c3) fix(core): six components' fixed-English built-in text follows the locale; the hardcoded-string lint config has no exemption list and reports a stale entry (#12721)
+  - Vue 版已有：「+N more」走 tokenizer.more 文案并按语言分组数字
+- [x] [`1f04ed3e3`](https://github.com/meta/astryx/commit/1f04ed3e3) fix(Tokenizer): a collapsed unfocusedLayer field keeps a tab stop on its placeholder (#12486)
+  - Vue 版已有：收起时输入框仍在 Tab 序里，聚焦后展开；禁用且有说明时输入框只读加 aria-disabled，说明显示在提示里
 
 ## 数据表格（area:core）
 
