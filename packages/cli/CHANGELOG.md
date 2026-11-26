@@ -1,5 +1,13 @@
 # @astryx-vue/cli
 
+## 0.4.38
+
+### Patch Changes
+
+- [#543](https://github.com/astryx-vue/astryx-vue/pull/543) [`fe992ac`](https://github.com/astryx-vue/astryx-vue/commit/fe992ac67b9b112c3685be0b249ab42dfbb670fc) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - ComplexSelector 新增 `disabledMessage`（悬停、聚焦、点按触发器时弹出禁用原因，自定义触发器也能用），状态图标顶替箭头显示，`tooltip` 状态的说明收在能聚焦的图标按钮里，调用方的 `aria-label` / `aria-labelledby` 会给内置触发器命名，弹层在禁用前就开着时里面的提交不再改值，弹层内容的高度上限会扣掉 LayerProvider 为底栏留的空隙。
+
+- [#544](https://github.com/astryx-vue/astryx-vue/pull/544) [`d2849f1`](https://github.com/astryx-vue/astryx-vue/commit/d2849f15a3059c03dab71271bc64e5811fd766ec) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Tokenizer 和 Typeahead 新增 `statusVariant`（框内状态图标，`tooltip` 时是能聚焦的图标按钮）并暴露 `aria-invalid`、调用方的 `aria-labelledby` 接在字段标签后面，搜索结果数会念出全部匹配条数，Tokenizer 全部清除会播报一次、禁用时不再向表单交值、聚焦展开的清单里选一项后焦点和清单保留且下一项高亮、有标签时光标落在最后一个标签后面；MultiSelector 和 Selector 的忙碌图标不再对读屏暴露并只播报一次「加载中」，MultiSelector 的 `aria-labelledby` 接在字段标签后面、带搜索时必填标记挪到搜索框、自制触发器带 `aria-disabled` 且禁用时不再执行调用方的处理；选项列表打开时不再高亮禁用项、按字母跳转忽略重音、键盘滚动让行从静止的鼠标下冒出来时不抢高亮；强制颜色下可聚焦的禁用字段焦点边框取 Highlight，触屏上输入框焦点外观不再淡入。
+
 ## 0.4.37
 
 ### Patch Changes
