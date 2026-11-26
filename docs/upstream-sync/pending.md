@@ -7968,8 +7968,10 @@
   - 不适用：上游组件规范文档（自动初筛）
 - [x] [`a73f0304b`](https://github.com/meta/astryx/commit/a73f0304b) spec(Table, AST-105): tables with column lines do not glide yet (FR15) (#8679)
   - 不适用：上游组件规范文档（自动初筛）
-- [ ] [`a7044525d`](https://github.com/meta/astryx/commit/a7044525d) fix(core): a pinned table column draws its own row dividers (#8654)
+- [x] [`a7044525d`](https://github.com/meta/astryx/commit/a7044525d) fix(core): a pinned table column draws its own row dividers (#8654)
+  - 已移植：[#539](https://github.com/astryx-vue/astryx-vue/pull/539)。固定列的 ::before 伸到边框区，用固定列底色盖住表格静态画的线，再按格子自己的边框样式和颜色画分隔线；读计算样式搬运应用自定义边框的部分没做
 - [ ] [`58fa49dfe`](https://github.com/meta/astryx/commit/58fa49dfe) feat(core): Table rows glide when a row's panel opens or closes, and their dividers move with them (#8656)
+  - 暂缓：行在展开面板开合时滑动依赖上游的 useAnimatedLayout 布局动画系统，Vue 版还没有
 - [x] [`b84bf77fa`](https://github.com/meta/astryx/commit/b84bf77fa) chore: move project links to meta/astryx (#8827)
   - 不适用：上游组件规范文档、只改上游测试（自动初筛）
 
@@ -7977,11 +7979,16 @@
 
 - [x] [`9e07422c7`](https://github.com/meta/astryx/commit/9e07422c7) test(a11y): the coverage checks of 17 binding specs run as one serial part per state (#9071)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`bb18c817a`](https://github.com/meta/astryx/commit/bb18c817a) fix(Table): a column-resize handle is named by a node header's visible text (#9057)
-- [ ] [`8ff38ab97`](https://github.com/meta/astryx/commit/8ff38ab97) fix(Table): sort buttons and the scroll region are named by what they belong to (#9047)
-- [ ] [`891aa236c`](https://github.com/meta/astryx/commit/891aa236c) refactor(core): drop a dead private selector and collapse duplicate attribute spellings (INV23 step 4) (#9256)
-- [ ] [`0135af462`](https://github.com/meta/astryx/commit/0135af462) fix(core N–Z): slots use isRenderable; the remaining checks are allowed with a reason (#9206)
-- [ ] [`2babd6693`](https://github.com/meta/astryx/commit/2babd6693) perf(Table): a re-sort moves rows without re-rendering them in keyed tables with no row indexing or body-row plugin (#9234)
+- [x] [`bb18c817a`](https://github.com/meta/astryx/commit/bb18c817a) fix(Table): a column-resize handle is named by a node header's visible text (#9057)
+  - 已移植：[#539](https://github.com/astryx-vue/astryx-vue/pull/539)。列宽把手按列头可见文字命名，函数式列头读它渲染出的文字，读不到才用列 key，补测试
+- [x] [`8ff38ab97`](https://github.com/meta/astryx/commit/8ff38ab97) fix(Table): sort buttons and the scroll region are named by what they belong to (#9047)
+  - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。由 i18n-icons 任务的 PR 一并移植
+- [x] [`891aa236c`](https://github.com/meta/astryx/commit/891aa236c) refactor(core): drop a dead private selector and collapse duplicate attribute spellings (INV23 step 4) (#9256)
+  - 不适用：只删上游内部无用的私有选择器、合并重复的属性写法，Vue 版没有对应代码
+- [x] [`0135af462`](https://github.com/meta/astryx/commit/0135af462) fix(core N–Z): slots use isRenderable; the remaining checks are allowed with a reason (#9206)
+  - 不适用：上游 React 插槽改用 isRenderable 判断并给 lint 例外写理由，Vue 模板没有这套检查
+- [x] [`2babd6693`](https://github.com/meta/astryx/commit/2babd6693) perf(Table): a re-sort moves rows without re-rendering them in keyed tables with no row indexing or body-row plugin (#9234)
+  - 不适用：React memo 下重排不重渲染行的优化；Vue 带 key 的 v-for 重排时本来就只移动 DOM
 - [x] [`e0a03766d`](https://github.com/meta/astryx/commit/e0a03766d) docs(knowledge): every component spec lives in docs/specs/components, one folder per component (#9007)
   - 不适用：上游内部规范和架构文档、上游组件规范文档（自动初筛）
 - [x] [`a62ce8592`](https://github.com/meta/astryx/commit/a62ce8592) docs(spec): TableRow and the Table sections record their shipped contract as current (#9143)
@@ -7994,7 +8001,8 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`69fb25721`](https://github.com/meta/astryx/commit/69fb25721) test(rtl): RTL coverage for ContextMenu, TableHeaderCell, TableCell and TableSelectionToolbar (#9286)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`16fe5f199`](https://github.com/meta/astryx/commit/16fe5f199) fix(core): Table, Chat, CommandPalette and the date and time inputs carry only their own English (#9452)
+- [x] [`16fe5f199`](https://github.com/meta/astryx/commit/16fe5f199) fix(core): Table, Chat, CommandPalette and the date and time inputs carry only their own English (#9452)
+  - Vue 版已有：Vue 版每个组件只通过 useComponentMessages 按命名空间读自己的内置文案，check:i18n-catalog 第 8 条已在检查
 - [x] [`9728cd78b`](https://github.com/meta/astryx/commit/9728cd78b) spec(react-component-runtime, TreeList, Table, CommandPalette): record empty slots rendering nothing (backfill) (#9388)
   - 不适用：上游内部规范和架构文档（自动初筛）
 
@@ -8007,24 +8015,29 @@
 
 ### v0.7.8
 
-- [ ] [`6246298b4`](https://github.com/meta/astryx/commit/6246298b4) fix(Table): a resize handle never adds to its column header's name (#9736)
+- [x] [`6246298b4`](https://github.com/meta/astryx/commit/6246298b4) fix(Table): a resize handle never adds to its column header's name (#9736)
+  - 已移植：[#539](https://github.com/astryx-vue/astryx-vue/pull/539)。有拖动把手的列头用 aria-labelledby 指向标题块，把手的宽度值不再混进列头名字，补测试
 - [x] [`acca58968`](https://github.com/meta/astryx/commit/acca58968) fix(core): a long press held through a busy main thread still reports, on the touch events' clock (#9455)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`e70850f04`](https://github.com/meta/astryx/commit/e70850f04) fix(Selector): the listbox is named by the field label in every presentation (#9737)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`aa4bd1d3d`](https://github.com/meta/astryx/commit/aa4bd1d3d) refactor(core): useLongPress runs its long press through a detector with no React (#9642)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`9889a3438`](https://github.com/meta/astryx/commit/9889a3438) chore(core): name the system that 88 kept Effects sync (#9787)
-- [ ] [`dcf3d6f86`](https://github.com/meta/astryx/commit/dcf3d6f86) feat(Tokenizer): presentation is a stable prop, and adaptive is its default (#9796)
+- [x] [`9889a3438`](https://github.com/meta/astryx/commit/9889a3438) chore(core): name the system that 88 kept Effects sync (#9787)
+  - 不适用：只给 React useEffect 加注释
+- [x] [`dcf3d6f86`](https://github.com/meta/astryx/commit/dcf3d6f86) feat(Tokenizer): presentation is a stable prop, and adaptive is its default (#9796)
+  - 不适用：Tokenizer 的 presentation 属性；Vue 版表格的多选筛选用 MultiSelector，不用 Tokenizer
 - [x] [`246c51d46`](https://github.com/meta/astryx/commit/246c51d46) spec(Table): define row-specific expansion control names (#9859)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`31ab2c3ef`](https://github.com/meta/astryx/commit/31ab2c3ef) feat(Table): add row-specific expansion labels (#6776)
+- [x] [`31ab2c3ef`](https://github.com/meta/astryx/commit/31ab2c3ef) feat(Table): add row-specific expansion labels (#6776)
+  - 已移植：[#539](https://github.com/astryx-vue/astryx-vue/pull/539)。useTableRowExpansion 和 useTableTreeData 新增 getRowLabel，按钮名字带上行名，空白时退回通用文案，补文案、文档和测试
 - [x] [`e390c3c43`](https://github.com/meta/astryx/commit/e390c3c43) test(browser): keep every Playwright browser context off remote hosts (#9811)
   - 不适用：只改上游测试（自动初筛）
 
 ### v0.7.9
 
-- [ ] [`504ee1863`](https://github.com/meta/astryx/commit/504ee1863) fix(theme): the stock theme's dark-mode accent is darker, so white button text meets 4.5:1 (#9818)
+- [x] [`504ee1863`](https://github.com/meta/astryx/commit/504ee1863) fix(theme): the stock theme's dark-mode accent is darker, so white button text meets 4.5:1 (#9818)
+  - 已移植：[#506](https://github.com/astryx-vue/astryx-vue/pull/506)。排序优先级数字改用 text-accent（table.css 已是 --astryx-color-text-accent）；暗色 accent 默认值在主题包，不适用
 - [x] [`8daca9307`](https://github.com/meta/astryx/commit/8daca9307) test(Table): time the render benchmarks in CPU, not elapsed time (#8472)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`5c91e81ee`](https://github.com/meta/astryx/commit/5c91e81ee) fix(Layer): a closed layer's trigger is no CSS anchor (#9963)
@@ -8033,22 +8046,28 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`3b8d81fd0`](https://github.com/meta/astryx/commit/3b8d81fd0) spec: record component icon slots in CodeBlock, Timestamp, and Table (#10045)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`f85b20173`](https://github.com/meta/astryx/commit/f85b20173) feat(Table): the sort indicator resolves its glyph through the table-sort-indicator icon slot (#9831)
-- [ ] [`c037450fc`](https://github.com/meta/astryx/commit/c037450fc) feat(Table): the row-expansion toggle resolves its glyph through the table-row-expand icon slot (#9834)
-- [ ] [`5f8a80903`](https://github.com/meta/astryx/commit/5f8a80903) docs(useTableSortableState): add hook docs and a multi-sort orders example block (#9911)
+- [x] [`f85b20173`](https://github.com/meta/astryx/commit/f85b20173) feat(Table): the sort indicator resolves its glyph through the table-sort-indicator icon slot (#9831)
+  - 已移植：[#502](https://github.com/astryx-vue/astryx-vue/pull/502)。Table 排序指示走 table-sort-indicator 图标槽位
+- [x] [`c037450fc`](https://github.com/meta/astryx/commit/c037450fc) feat(Table): the row-expansion toggle resolves its glyph through the table-row-expand icon slot (#9834)
+  - 已移植：[#502](https://github.com/astryx-vue/astryx-vue/pull/502)。Table 行展开走 table-row-expand 图标槽位
+- [x] [`5f8a80903`](https://github.com/meta/astryx/commit/5f8a80903) docs(useTableSortableState): add hook docs and a multi-sort orders example block (#9911)
+  - 已移植：[#540](https://github.com/astryx-vue/astryx-vue/pull/540)。useTableSortable 文档补 useTableSortableState 的参数、返回值、缺失值排序规则和多列排序示例
 
 ### v0.7.10
 
-- [ ] [`6fc74f94a`](https://github.com/meta/astryx/commit/6fc74f94a) fix(Table): the state hooks' latest-value refs are written at commit (#10176)
+- [x] [`6fc74f94a`](https://github.com/meta/astryx/commit/6fc74f94a) fix(Table): the state hooks' latest-value refs are written at commit (#10176)
+  - 不适用：React 在挂起的 transition 里丢弃渲染时 ref 写早了的问题；Vue 回调在点击时读最新配置
 - [x] [`8bd8c6146`](https://github.com/meta/astryx/commit/8bd8c6146) fix(core): layout glides play the theme's move curve, not a spring (#10236)
   - 不适用：只改上游测试（自动初筛）
 
 ### v0.7.11
 
-- [ ] [`66b09526b`](https://github.com/meta/astryx/commit/66b09526b) fix(core): a swizzled copy type-checks without Node's types (#10252)
+- [x] [`66b09526b`](https://github.com/meta/astryx/commit/66b09526b) fix(core): a swizzled copy type-checks without Node's types (#10252)
+  - 不适用：拷贝（swizzle）出的 React 文件没有 Node 类型时的 process 声明，Vue 版没有这条链路
 - [x] [`089f7a078`](https://github.com/meta/astryx/commit/089f7a078) test: cut the jsdom style work that times out UI suites under load (#10285)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`0ecd324bf`](https://github.com/meta/astryx/commit/0ecd324bf) fix(core): a block-edge reveal slides its parts on the glide's frames (#10296)
+  - 暂缓：块边缘揭示随布局动画滑动，依赖上游 useAnimatedLayout 动画系统，Vue 版还没有
 - [x] [`20ab99287`](https://github.com/meta/astryx/commit/20ab99287) test(Table): hold the row glide before reading chevron timing (#10329)
   - 不适用：只改上游测试（自动初筛）
 
@@ -8056,35 +8075,55 @@
 
 - [x] [`4e6e67df6`](https://github.com/meta/astryx/commit/4e6e67df6) fix(core): make disabled Button focusable via aria-disabled per AST-085 (#7906)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`422440a64`](https://github.com/meta/astryx/commit/422440a64) fix(core): two copies of Core's modules share one React context (#10233)
-- [ ] [`5e0f3d3cb`](https://github.com/meta/astryx/commit/5e0f3d3cb) feat(Table): plugins get an immutable row and render context; useTableRowIndex numbers from it (#10171)
-- [ ] [`2497956e3`](https://github.com/meta/astryx/commit/2497956e3) fix(Table): a muted row-expansion panel slides in with its content (#10403)
-- [ ] [`7cb107c5b`](https://github.com/meta/astryx/commit/7cb107c5b) fix(Table): the scroll wrapper and tree toggles draw the shared focus ring (#8873)
-- [ ] [`22b0599b4`](https://github.com/meta/astryx/commit/22b0599b4) fix(TableTree): rows carry no aria-expanded; the expander button does (#10538)
+- [x] [`422440a64`](https://github.com/meta/astryx/commit/422440a64) fix(core): two copies of Core's modules share one React context (#10233)
+  - 不适用：React context 多副本问题
+- [x] [`5e0f3d3cb`](https://github.com/meta/astryx/commit/5e0f3d3cb) feat(Table): plugins get an immutable row and render context; useTableRowIndex numbers from it (#10171)
+  - 已移植：[#539](https://github.com/astryx-vue/astryx-vue/pull/539)。useTableRowIndex 的 data 改为可选，不传时按表格渲染出的位置编号；只读上下文的插件协议是 React memo 设施，不适用
+- [x] [`2497956e3`](https://github.com/meta/astryx/commit/2497956e3) fix(Table): a muted row-expansion panel slides in with its content (#10403)
+  - 已移植：[#539](https://github.com/astryx-vue/astryx-vue/pull/539)。弱化面板的底色从行挪到面板格子上，静止时外观不变
+- [x] [`7cb107c5b`](https://github.com/meta/astryx/commit/7cb107c5b) fix(Table): the scroll wrapper and tree toggles draw the shared focus ring (#8873)
+  - 已移植：[#539](https://github.com/astryx-vue/astryx-vue/pull/539)。滚动区和树形展开按钮画共用焦点环，滚动区的环收进框内让开 Card 边框，紧凑档树形按钮的环收进按钮
+- [x] [`22b0599b4`](https://github.com/meta/astryx/commit/22b0599b4) fix(TableTree): rows carry no aria-expanded; the expander button does (#10538)
+  - 已移植：[#539](https://github.com/astryx-vue/astryx-vue/pull/539)。树形表格的行不再带 aria-expanded，只在展开按钮上
 - [x] [`34a73b63d`](https://github.com/meta/astryx/commit/34a73b63d) test(Table): the focus-ring case finds the tree expander by its own state (#10605)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`289e7cf22`](https://github.com/meta/astryx/commit/289e7cf22) docs(specs): windowed Table row-number columns fit their last logical position (#10666)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`1378a95f8`](https://github.com/meta/astryx/commit/1378a95f8) perf(Table): build the row-index column once per plugin (#10654)
-- [ ] [`df5f6926e`](https://github.com/meta/astryx/commit/df5f6926e) docs(useTableColumnSettingsState): add hook docs and a column visibility picker example block (#10652)
+- [x] [`1378a95f8`](https://github.com/meta/astryx/commit/1378a95f8) perf(Table): build the row-index column once per plugin (#10654)
+  - 不适用：React 下每次渲染新建行号列导致整表重渲染的优化；Vue 按响应式依赖更新，不按列对象身份 memo
+- [x] [`df5f6926e`](https://github.com/meta/astryx/commit/df5f6926e) docs(useTableColumnSettingsState): add hook docs and a column visibility picker example block (#10652)
+  - Vue 版已有：use-table-column-settings 文档已有 useTableColumnSettingsState 的参数、返回值和列显隐示例
 - [ ] [`17f6985ed`](https://github.com/meta/astryx/commit/17f6985ed) fix(Layout): a full-bleed Table or List row takes the rounded container corner it reaches (#10586)
+  - 暂缓：需要 Card、Dialog 发布容器圆角（--_container-corner-*）的设施，属于布局族，Vue 版还没有；Table 一侧只是读取它
 - [ ] [`d0ab3cb26`](https://github.com/meta/astryx/commit/d0ab3cb26) feat(core): add the shared list-windowing module and Table's capability hook (#10656)
+  - 暂缓：共用的列表窗口化模块和 useTableRowsVirtualization，Vue 版没有行虚拟化设施
 - [ ] [`0d7557304`](https://github.com/meta/astryx/commit/0d7557304) feat(Table): add the window controller and Table's shared-geometry runtime (#10657)
+  - 暂缓：窗口控制器和表格共享几何运行时，属于行虚拟化设施，Vue 版没有
 - [ ] [`5b3e17bb2`](https://github.com/meta/astryx/commit/5b3e17bb2) feat(Table): window fixed-height flat tables through useTableRowsVirtualization (#8280)
+  - 暂缓：定高扁平表格的行窗口化，依赖还没有的虚拟化设施
 - [ ] [`90ebe00a2`](https://github.com/meta/astryx/commit/90ebe00a2) feat(Table): window tables that use selection and row index (#10658)
-- [ ] [`c5ad42fe0`](https://github.com/meta/astryx/commit/c5ad42fe0) fix(Table): a plugin's scroll-wrapper className reaches the scroll container (#10702)
-- [ ] [`7f04a6c5a`](https://github.com/meta/astryx/commit/7f04a6c5a) fix(Table): an unbounded column's resize handle announces a range that holds its width (#10577)
-- [ ] [`1785da1e7`](https://github.com/meta/astryx/commit/1785da1e7) fix(Table): a column resize handle announces the column's rendered width (#10593)
-- [ ] [`da3dbdc8b`](https://github.com/meta/astryx/commit/da3dbdc8b) fix(Table): a swizzled Table honors the package's virtualization capability (#10798)
-- [ ] [`a0a09f9c2`](https://github.com/meta/astryx/commit/a0a09f9c2) docs(TableSelectionToolbar): a recipe for selecting every matching row across server pages (#10271)
-- [ ] [`6c5c460d7`](https://github.com/meta/astryx/commit/6c5c460d7) fix(Table): keep column settings' active keys in state (#10911)
+  - 暂缓：选择列、行号列参与行窗口化，依赖还没有的虚拟化设施
+- [x] [`c5ad42fe0`](https://github.com/meta/astryx/commit/c5ad42fe0) fix(Table): a plugin's scroll-wrapper className reaches the scroll container (#10702)
+  - 不适用：插件的 transformScrollWrapper className 合并问题；Vue 版插件没有改滚动容器 props 的接口
+- [x] [`7f04a6c5a`](https://github.com/meta/astryx/commit/7f04a6c5a) fix(Table): an unbounded column's resize handle announces a range that holds its width (#10577)
+  - 已移植：[#539](https://github.com/astryx-vue/astryx-vue/pull/539)。没有最大宽度的列，把手以窗口宽度作替代 aria-valuemax（不低于当前值），并用 aria-valuetext 念出像素数，补文案和测试
+- [x] [`1785da1e7`](https://github.com/meta/astryx/commit/1785da1e7) fix(Table): a column resize handle announces the column's rendered width (#10593)
+  - 已移植：[#539](https://github.com/astryx-vue/astryx-vue/pull/539)。把手的 aria-valuenow 读表头格实际渲染宽度（共用尺寸观察器），范围放宽到能装下当前值，补测试
+- [x] [`da3dbdc8b`](https://github.com/meta/astryx/commit/da3dbdc8b) fix(Table): a swizzled Table honors the package's virtualization capability (#10798)
+  - 不适用：swizzle 出的 Table 读包里的虚拟化能力，Vue 版没有 swizzle 也没有虚拟化
+- [x] [`a0a09f9c2`](https://github.com/meta/astryx/commit/a0a09f9c2) docs(TableSelectionToolbar): a recipe for selecting every matching row across server pages (#10271)
+  - 已移植：[#540](https://github.com/astryx-vue/astryx-vue/pull/540)。TableSelectionToolbar 文档补跨服务端分页「选中全部匹配行」的做法
+- [x] [`6c5c460d7`](https://github.com/meta/astryx/commit/6c5c460d7) fix(Table): keep column settings' active keys in state (#10911)
+  - 不适用：React 丢弃渲染后列设置配置残留的问题；Vue 插件每次从 getter 读最新配置
 - [ ] [`52356e690`](https://github.com/meta/astryx/commit/52356e690) feat(Table): useTableRowsVirtualization's viewportHeight becomes initialViewportHeight, which no longer sizes the Table (#10894)
+  - 暂缓：useTableRowsVirtualization 的参数改名和表格高度规则，依赖还没有的虚拟化设施
 
 ### v0.7.13
 
 - [x] [`42f1a7615`](https://github.com/meta/astryx/commit/42f1a7615) test(Table): add Chromium accessibility and 1k/10k/100k release evidence for row windowing (#10659)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`1ac0c2464`](https://github.com/meta/astryx/commit/1ac0c2464) refactor(core): one shared list-windowing engine, with Table as its first consumer (#10810)
+  - 暂缓：共用列表窗口化引擎的重构，Vue 版没有虚拟化设施
 - [x] [`fcf92864d`](https://github.com/meta/astryx/commit/fcf92864d) test(Table): isolate the release timing proof and gate its timing on the release runner (#11055)
   - 不适用：上游内部规范和架构文档、只改上游测试（自动初筛）
 
@@ -8093,55 +8132,86 @@
 - [x] [`8f935dfd2`](https://github.com/meta/astryx/commit/8f935dfd2) spec(Table): windowing keeps going at a row height every mounted row shares (#10999)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`dcc88232c`](https://github.com/meta/astryx/commit/dcc88232c) fix(Table): windowing keeps going at a row height every mounted row shares (#11000)
+  - 暂缓：窗口化在所有行同高时继续，依赖还没有的虚拟化设施
 - [x] [`f26571e10`](https://github.com/meta/astryx/commit/f26571e10) spec(Table): column virtualization windows the unpinned columns (#11013)
   - 不适用：上游内部规范和架构文档（自动初筛）
 
 ### v0.7.15
 
-- [ ] [`f2293a53e`](https://github.com/meta/astryx/commit/f2293a53e) fix(Table): sort only when the data or the sort changes (#10942)
-- [ ] [`f89098368`](https://github.com/meta/astryx/commit/f89098368) fix(Table): key its column and plugin caches on identities (#10940)
-- [ ] [`8caa06274`](https://github.com/meta/astryx/commit/8caa06274) fix(Table): call the latest onSortChange; read sort and snap-point values directly in render (#11349)
+- [x] [`f2293a53e`](https://github.com/meta/astryx/commit/f2293a53e) fix(Table): sort only when the data or the sort changes (#10942)
+  - Vue 版已有：useTableSortableState 在 setup 里只建一次 collator，sortedData 是 computed，只在数据、排序或语言变化时重排
+- [x] [`f89098368`](https://github.com/meta/astryx/commit/f89098368) fix(Table): key its column and plugin caches on identities (#10940)
+  - 不适用：React 渲染期间写缓存被丢弃渲染污染的问题，Vue 用 computed 不存在
+- [x] [`8caa06274`](https://github.com/meta/astryx/commit/8caa06274) fix(Table): call the latest onSortChange; read sort and snap-point values directly in render (#11349)
+  - Vue 版已有：useTableSortable 点击时用 toValue(config) 读最新的 onSortChange 和排序状态
 
 ### v0.7.16
 
-- [ ] [`58b844d16`](https://github.com/meta/astryx/commit/58b844d16) feat(Table): Promise-based infinite loading with useTableInfiniteScroll (#10570)
+- [x] [`58b844d16`](https://github.com/meta/astryx/commit/58b844d16) feat(Table): Promise-based infinite loading with useTableInfiniteScroll (#10570)
+  - 已移植：[#540](https://github.com/astryx-vue/astryx-vue/pull/540)。新增 useTableInfiniteScroll：共用请求锁、IntersectionObserver 自动加载、常驻「加载更多」按钮、失败暂停自动加载、首批加载时不显示默认空状态、加载完把焦点交给滚动区
 - [ ] [`10bae0687`](https://github.com/meta/astryx/commit/10bae0687) feat(Table): useTableColumnsVirtualization windows the unpinned columns (#11014)
-- [ ] [`54dd64e1d`](https://github.com/meta/astryx/commit/54dd64e1d) fix(Table): useTableSortableState calls the committed onSortChange (#11433)
+  - 暂缓：列虚拟化 useTableColumnsVirtualization，依赖还没有的虚拟化设施
+- [x] [`54dd64e1d`](https://github.com/meta/astryx/commit/54dd64e1d) fix(Table): useTableSortableState calls the committed onSortChange (#11433)
+  - Vue 版已有：useTableSortableState 的 sortConfig.onSortChange 直接写当前的 sort ref，没有过期回调
 - [ ] [`ef87167d0`](https://github.com/meta/astryx/commit/ef87167d0) feat(Table): column windowing retains the focused column and anchors the first visible column (#11018)
+  - 暂缓：列窗口化保留焦点列和锚定首列，依赖还没有的虚拟化设施
 - [ ] [`51bc1857b`](https://github.com/meta/astryx/commit/51bc1857b) feat(Table): rows and columns window together (#11019)
-- [ ] [`130e5da2d`](https://github.com/meta/astryx/commit/130e5da2d) feat(DateInput, DateTimeInput, TimeInput, FormLayout): entryErrorBehavior and a form default (#11485)
+  - 暂缓：行列同时窗口化，依赖还没有的虚拟化设施
+- [x] [`130e5da2d`](https://github.com/meta/astryx/commit/130e5da2d) feat(DateInput, DateTimeInput, TimeInput, FormLayout): entryErrorBehavior and a form default (#11485)
+  - Vue 版已有：Vue 版 DateInput 还没有 entryErrorBehavior，表格筛选里的日期输入一直是 complete 行为
 
 ### v0.7.17
 
 - [x] [`e41a6d8e4`](https://github.com/meta/astryx/commit/e41a6d8e4) test(table): column windowing reads rows after the scroll area's frames, with boxes that move with the scroll (#11552)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`8931e819c`](https://github.com/meta/astryx/commit/8931e819c) fix(Table, ContextMenu): a sortable column's resize line sits on its column edge (#11576)
-- [ ] [`b36275ed0`](https://github.com/meta/astryx/commit/b36275ed0) feat(core): TableRow exposes a selected theme state (#11729)
+- [x] [`8931e819c`](https://github.com/meta/astryx/commit/8931e819c) fix(Table, ContextMenu): a sortable column's resize line sits on its column edge (#11576)
+  - Vue 版已有：Vue 版表头没有定位的右键菜单包裹层，拖动把手直接相对 th 定位在列边上
+- [x] [`b36275ed0`](https://github.com/meta/astryx/commit/b36275ed0) feat(core): TableRow exposes a selected theme state (#11729)
+  - 已移植：[#539](https://github.com/astryx-vue/astryx-vue/pull/539)。被 useTableSelection 选中的行带 table-row 主题目标的 selected 状态，选中底色读 --color-accent-muted
 - [ ] [`bf845a523`](https://github.com/meta/astryx/commit/bf845a523) fix(Table): a column range change renders only the cells that enter (#11481)
+  - 暂缓：列窗口范围变化只渲染新进入的格子，属于列虚拟化，Vue 版没有
 - [x] [`851cc902e`](https://github.com/meta/astryx/commit/851cc902e) test(Table): column windowing follows a right-to-left scroll and keeps its anchor there (#11823)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`ce0feb506`](https://github.com/meta/astryx/commit/ce0feb506) fix(core): a Table bleeds to a block edge only as its container's direct first or last child (#12068)
-- [ ] [`d3aa8079c`](https://github.com/meta/astryx/commit/d3aa8079c) fix(core): Table tree rows follow the disclosure pattern (#12127)
-- [ ] [`ab67aa1eb`](https://github.com/meta/astryx/commit/ab67aa1eb) feat(core): a table header cell shows its full heading in a tooltip on keyboard focus when the heading is cut short (#12175)
-- [ ] [`37db386f8`](https://github.com/meta/astryx/commit/37db386f8) fix(table): a narrow header truncates its label so its sort and filter controls stay in the cell (#12312)
-- [ ] [`771f5c51f`](https://github.com/meta/astryx/commit/771f5c51f) docs(useTableSortable): the plugin does not reorder rows; show how to sort data (#12493)
-- [ ] [`6ff24e4e5`](https://github.com/meta/astryx/commit/6ff24e4e5) docs(Table, useToast): row open, selection, plugin, empty-state and toast-option answers (#12344)
-- [ ] [`72f2d7caa`](https://github.com/meta/astryx/commit/72f2d7caa) docs: icon props take semantic names; Selector hasClear types; useTableSelectionState returns (#12583)
-- [ ] [`a2edb5300`](https://github.com/meta/astryx/commit/a2edb5300) chore: land batch 2 (16 pull requests) (#12718)
+- [x] [`ce0feb506`](https://github.com/meta/astryx/commit/ce0feb506) fix(core): a Table bleeds to a block edge only as its container's direct first or last child (#12068)
+  - Vue 版已有：table.css 只对容器的直接首个、末个子元素抵消上下内边距（tableBleedCss.test.ts 已覆盖）
+- [x] [`d3aa8079c`](https://github.com/meta/astryx/commit/d3aa8079c) fix(core): Table tree rows follow the disclosure pattern (#12127)
+  - 已移植：[#539](https://github.com/astryx-vue/astryx-vue/pull/539)。树形表格按披露模式：行不带 aria-level，展开按钮展开时用 aria-controls 指向直接子行，补测试
+- [x] [`ab67aa1eb`](https://github.com/meta/astryx/commit/ab67aa1eb) feat(core): a table header cell shows its full heading in a tooltip on keyboard focus when the heading is cut short (#12175)
+  - 已移植：[#505](https://github.com/astryx-vue/astryx-vue/pull/505)。表头标题被截短时聚焦显示完整标题
+- [x] [`37db386f8`](https://github.com/meta/astryx/commit/37db386f8) fix(table): a narrow header truncates its label so its sort and filter controls stay in the cell (#12312)
+  - 已移植：[#539](https://github.com/astryx-vue/astryx-vue/pull/539)。表头标题包一层 label，窄列里先省略，排序箭头和筛选按钮留在格子里
+- [x] [`771f5c51f`](https://github.com/meta/astryx/commit/771f5c51f) docs(useTableSortable): the plugin does not reorder rows; show how to sort data (#12493)
+  - 已移植：[#540](https://github.com/astryx-vue/astryx-vue/pull/540)。useTableSortable 文档说明插件不重排行，给出自己排和用 useTableSortableState 两种写法
+- [x] [`6ff24e4e5`](https://github.com/meta/astryx/commit/6ff24e4e5) docs(Table, useToast): row open, selection, plugin, empty-state and toast-option answers (#12344)
+  - 已移植：[#540](https://github.com/astryx-vue/astryx-vue/pull/540)。Table 文档补「用格子里的链接或按钮打开行」、自定义插件能改什么、空状态建议；筛选文档说明插件不删行
+- [x] [`72f2d7caa`](https://github.com/meta/astryx/commit/72f2d7caa) docs: icon props take semantic names; Selector hasClear types; useTableSelectionState returns (#12583)
+  - Vue 版已有：use-table-selection-state 文档已有 selectionConfig、selectionState 各字段的返回值说明
+- [x] [`a2edb5300`](https://github.com/meta/astryx/commit/a2edb5300) chore: land batch 2 (16 pull requests) (#12718)
+  - 已移植：[#539](https://github.com/astryx-vue/astryx-vue/pull/539)。滚动区内层内容盒加内联 overflow: visible，宿主给表格父元素写 overflow-x 时滚动区仍是唯一视口
 - [x] [`8c52e3bba`](https://github.com/meta/astryx/commit/8c52e3bba) chore: land batch 7 (3 pull requests) (#12811)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`9e445ba0d`](https://github.com/meta/astryx/commit/9e445ba0d) chore: land batch 15 (5 pull requests) (#12859)
-- [ ] [`53615c1f4`](https://github.com/meta/astryx/commit/53615c1f4) chore: land batch 19 (3 pull requests) (#12875)
-- [ ] [`8efb25a85`](https://github.com/meta/astryx/commit/8efb25a85) chore: land batch 23 (4 pull requests) (#12885)
-- [ ] [`904b58e64`](https://github.com/meta/astryx/commit/904b58e64) chore: land batch 29 (3 pull requests) (#12894)
-- [ ] [`b871bc6d1`](https://github.com/meta/astryx/commit/b871bc6d1) chore: land batch 28 (2 pull requests) (#12892)
-- [ ] [`31b52d0cb`](https://github.com/meta/astryx/commit/31b52d0cb) chore: land batch 34 (2 pull requests) (#12908)
-- [ ] [`476d9063f`](https://github.com/meta/astryx/commit/476d9063f) chore: land batch 63 (3 pull requests) (#12945)
-- [ ] [`08491e55c`](https://github.com/meta/astryx/commit/08491e55c) chore: land batch 77 (3 pull requests) (#12973)
-- [ ] [`59fd4151b`](https://github.com/meta/astryx/commit/59fd4151b) chore: land batch 82 (7 pull requests) (#12992)
+- [x] [`9e445ba0d`](https://github.com/meta/astryx/commit/9e445ba0d) chore: land batch 15 (5 pull requests) (#12859)
+  - 已移植：[#540](https://github.com/astryx-vue/astryx-vue/pull/540)。文档说明表格插件钩子要显式传行类型 T；其余几项属于 CLI 导出和 Markdown，不在本族
+- [x] [`53615c1f4`](https://github.com/meta/astryx/commit/53615c1f4) chore: land batch 19 (3 pull requests) (#12875)
+  - 已移植  #514：[#508](https://github.com/astryx-vue/astryx-vue/pull/508)。Pagination 首尾标记、文字角色行高；doctor 字体检查不适用
+- [x] [`8efb25a85`](https://github.com/meta/astryx/commit/8efb25a85) chore: land batch 23 (4 pull requests) (#12885)
+  - 已移植：[#539](https://github.com/astryx-vue/astryx-vue/pull/539)。粗指针设备上横向能滚时藏着内容的一侧淡出，固定列所在一侧关掉淡出
+- [x] [`904b58e64`](https://github.com/meta/astryx/commit/904b58e64) chore: land batch 29 (3 pull requests) (#12894)
+  - 已移植：[#539](https://github.com/astryx-vue/astryx-vue/pull/539)。数据模式表体行带 table-row 主题目标的 parity，斑马纹表格的行带 striped，手写行列的行只带 striped；主题给行设的底色经 --table-row-overlay 带到固定列
+- [x] [`b871bc6d1`](https://github.com/meta/astryx/commit/b871bc6d1) chore: land batch 28 (2 pull requests) (#12892)
+  - Vue 版已有：Vue 版 TableSelectionToolbar 的 selection 可选，没有时回落到 count，不会在组件内部报 TypeError
+- [x] [`31b52d0cb`](https://github.com/meta/astryx/commit/31b52d0cb) chore: land batch 34 (2 pull requests) (#12908)
+  - 已移植：[#539](https://github.com/astryx-vue/astryx-vue/pull/539)。手写行列的表格放不下时横向滚动，列跟着内容走，不再把单词压到一个字母宽
+- [x] [`476d9063f`](https://github.com/meta/astryx/commit/476d9063f) chore: land batch 63 (3 pull requests) (#12945)
+  - 已移植：[#539](https://github.com/astryx-vue/astryx-vue/pull/539)。排序把 NaN 和 Invalid Date 当缺失值，Date 按时间排，不再抛错
+- [x] [`08491e55c`](https://github.com/meta/astryx/commit/08491e55c) chore: land batch 77 (3 pull requests) (#12973)
+  - 已移植  #540：[#539](https://github.com/astryx-vue/astryx-vue/pull/539)。数据模式列标题跟着 textOverflow 折行，截短提示只在 truncate 下出现；文档补长单词换行说明
+- [x] [`59fd4151b`](https://github.com/meta/astryx/commit/59fd4151b) chore: land batch 82 (7 pull requests) (#12992)
+  - 已移植：[#539](https://github.com/astryx-vue/astryx-vue/pull/539)。默认单元格把 Invalid Date 显示为空格子，树形列同样生效
 - [x] [`fc40575d9`](https://github.com/meta/astryx/commit/fc40575d9) fix(Table): a column-windowed scroll that keeps its columns renders the table once (#11826)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`7fcbf026e`](https://github.com/meta/astryx/commit/7fcbf026e) chore: land batch 98 (1 pull requests) (#13059)
+- [x] [`7fcbf026e`](https://github.com/meta/astryx/commit/7fcbf026e) chore: land batch 98 (1 pull requests) (#13059)
+  - 已移植：[#540](https://github.com/astryx-vue/astryx-vue/pull/540)。文档补比较函数规则（数组、对象没有排序文字，Date 按时间）和 Table 没有行点击属性
 
 ## 主题系统与设计变量（area:core）
 
