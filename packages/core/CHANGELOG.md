@@ -1,5 +1,13 @@
 # @astryx-vue/core
 
+## 0.13.1
+
+### Patch Changes
+
+- [#545](https://github.com/astryx-vue/astryx-vue/pull/545) [`2ef57bb`](https://github.com/astryx-vue/astryx-vue/commit/2ef57bb652b19c3c320c339f641b9489afe18b1c) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - useKeyboardHint 的方向键提示默认不再自己消失，按 Escape 只关提示；Tooltip 内容比触发器四周的空地都高时不再盖住触发器；手指轻点聊天输入框里的粘贴文本令牌只打开预览，不再弹出键盘；独立的模态 BottomSheet 打开时，toast 显示在它上面并能点到。
+
+- [#545](https://github.com/astryx-vue/astryx-vue/pull/545) [`403286d`](https://github.com/astryx-vue/astryx-vue/commit/403286d491fec9a147fac31250e2a06f4963bbc1) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 触屏上 Tooltip、HoverCard 要等手指真的轻点才打开，滑动页面不再误开或误关 Popover 和选择列表，轻点禁用控件能看到禁用原因；Dialog 只有按下和松手都在遮罩上才关闭，按遮罩先关掉里面的弹出框时对话框留着；浮层在 iframe 里也能用 Escape 和 Tab。
+
 ## 0.13.0
 
 ### Minor Changes
