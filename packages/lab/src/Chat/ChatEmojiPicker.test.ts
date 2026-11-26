@@ -123,8 +123,11 @@ describe('chatEmojiPicker', () => {
     wrapper.unmount()
   })
 
-  it('uses a custom dialog label and search label', () => {
-    renderPicker({ label: 'Pick one', searchLabel: 'Filter' })
+  it('uses a custom dialog label and search label', async () => {
+    const wrapper = renderPicker({ label: 'Pick one', searchLabel: 'Filter' })
+    // 关着的浮层不带对话框的 role 和名称，要打开才有。
+    await wrapper.get('button').trigger('click')
+    await nextTick()
     expect(document.querySelector('[role="dialog"]')?.getAttribute('aria-label')).toBe('Pick one')
     expect(searchInput().getAttribute('placeholder')).toBe('Filter')
   })

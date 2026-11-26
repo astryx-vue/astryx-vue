@@ -1,5 +1,6 @@
 import type { Ref } from 'vue'
 import { computed, onScopeDispose, ref, watch } from 'vue'
+import { foldTypeaheadText, startsWithTypeahead } from './internal/typeaheadText.js'
 
 export interface ComboboxOption {
   value: string | number
@@ -101,15 +102,13 @@ export function useCombobox<T = string | number>(
       return
     isOpen.value = true
     onOpenChange?.(true)
-    // 打开时高亮当前选中项，如果没有选中则高亮第一项
+    // 打开时高亮当前选中项；没有可高亮的选中项就落在第一个可用选项上，不会落在禁用项上。
     const currentValue = modelValue.value
-    if (currentValue != null) {
-      const index = filteredOptions.value.findIndex(opt => opt.value === currentValue)
-      activeIndex.value = index >= 0 ? index : 0
-    }
-    else {
-      activeIndex.value = 0
-    }
+    const index = currentValue != null ? filteredOptions.value.findIndex(opt => opt.value === currentValue) : -1
+    if (index >= 0 && !filteredOptions.value[index]?.disabled)
+      activeIndex.value = index
+    else
+      activeIndex.value = Math.max(0, filteredOptions.value.findIndex(opt => !opt.disabled))
   }
 
   function close(): void {
@@ -219,7 +218,7 @@ export function useCombobox<T = string | number>(
       clearTimeout(typeaheadTimer)
     }
 
-    const lower = char.toLowerCase()
+    const lower = foldTypeaheadText(char)
     const isRepeat = typeaheadBuffer.length > 0 && [...typeaheadBuffer].every(c => c === lower)
     typeaheadBuffer = isRepeat ? lower : typeaheadBuffer + lower
 
@@ -231,12 +230,19 @@ export function useCombobox<T = string | number>(
     const start = activeIndex.value >= 0 ? activeIndex.value : 0
     const offset = typeaheadBuffer.length === 1 ? 1 : 0
 
-    for (let i = 0; i < options.length; i++) {
-      const index = (start + offset + i) % options.length
-      const option = options[index]
-      if (option && !option.disabled && option.label.toLowerCase().startsWith(typeaheadBuffer)) {
-        activeIndex.value = index
-        break
+    // 键入的字母本身带符号时，先找带同样符号的选项，找不到再忽略符号。
+    const exact = typeaheadBuffer.length === 1 && char.toLowerCase() !== lower ? char.toLowerCase() : null
+    for (const exactOnly of exact != null ? [true, false] : [false]) {
+      for (let i = 0; i < options.length; i++) {
+        const index = (start + offset + i) % options.length
+        const option = options[index]
+        if (!option || option.disabled)
+          continue
+        const matches = exactOnly ? option.label.toLowerCase().startsWith(exact!) : startsWithTypeahead(option.label, typeaheadBuffer)
+        if (matches) {
+          activeIndex.value = index
+          return
+        }
       }
     }
   }

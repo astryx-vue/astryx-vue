@@ -416,3 +416,13 @@
   outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, var(--astryx-color-accent));
   outline-offset: 1px;
 }
+
+/* 强制颜色下焦点只剩边框能表达：聚焦（含可聚焦的禁用字段）的边框取系统 Highlight 色。 */
+@layer astryx.components {
+  @media (forced-colors: active) {
+    .astryx-multi-selector-control:focus-within,
+    .astryx-multi-selector-control.is-open {
+      border-color: Highlight;
+    }
+  }
+}

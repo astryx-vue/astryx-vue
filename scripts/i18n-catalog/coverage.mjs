@@ -83,7 +83,6 @@ export const UNPORTED_KEYS = {
     'selectedCount',
     'clearSelection',
   ], 'Tokenizer 的触屏底部弹层在 Vue 版是 lab MobileTokenizer，它的草稿、确认弹窗和文案还没对齐'),
-  '@astryx.tokenizer.allRemoved': 'Tokenizer「全部清除」后的播报还没移植',
   ...keys('@astryx.list.', [
     'reorderHandle',
     'reorderHandleVerb',

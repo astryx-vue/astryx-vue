@@ -91,7 +91,10 @@ export const formsUpstreamMap: UpstreamMapPart = {
     { path: 'tokenizer.loading' },
   ],
   '@astryx.typeahead.clearSelection': [{ path: 'typeahead.clear' }],
-  '@astryx.typeahead.resultCount': [{ path: 'typeahead.resultCount', args: ['count'] }],
+  '@astryx.typeahead.resultCount': [
+    { path: 'typeahead.resultCount', args: ['count'] },
+    { path: 'tokenizer.resultCount', args: ['count'] },
+  ],
   '@astryx.typeahead.searchResults': [
     { path: 'typeahead.results' },
     { path: 'tokenizer.results' },
@@ -104,6 +107,7 @@ export const formsUpstreamMap: UpstreamMapPart = {
   ],
   '@astryx.tokenizer.tokenAdded': [{ path: 'tokenizer.added', args: ['label'] }],
   '@astryx.tokenizer.tokenRemoved': [{ path: 'tokenizer.removed', args: ['label'] }],
+  '@astryx.tokenizer.allRemoved': [{ path: 'tokenizer.allRemoved' }],
   '@astryx.tokenizer.overflowCount': [{ path: 'tokenizer.more', args: ['count'] }],
   '@astryx.tokenizer.create': [{ path: 'tokenizer.create', args: ['value'] }],
 
