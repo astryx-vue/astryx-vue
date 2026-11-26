@@ -1,6 +1,9 @@
 import type { EntryErrorBehavior } from '../FormLayout/context.js'
 import type { DateInputMessages } from '../locale/messages/date-input.js'
+import type { CalendarSystem } from '../utils/calendarSystem.js'
 import type { DateInputFormat } from './types.js'
+import { textCalendar } from '../utils/calendarDateIntl.js'
+import { getCalendarDateLexicon, parseCalendarDate } from '../utils/calendarDateParser.js'
 import { parseDateInput } from '../utils/dateParser.js'
 import { plainDateToDate } from '../utils/plainDate.js'
 import { formatCommittedDate, toIsoDate } from './dateText.js'
@@ -36,11 +39,46 @@ export type DateEntryErrorKind = 'unreadable' | 'nonexistent' | 'outOfRange'
 const ISO_DATE = /^(\d{4})-(\d{1,2})-(\d{1,2})$/
 const ISO_PREFIX = /^\d{1,4}(?:-(?:\d{1,2}(?:-\d?)?)?)?$/
 
+/** 按历法读：月份名、纪元和数字都按那种历法认，`system_date` 下 ISO 形状的文字仍是公历日期。 */
+function parseCalendarEntry(
+  text: string,
+  locale: string,
+  isBlocked: (date: Date) => boolean,
+  calendar: CalendarSystem,
+  format: DateInputFormat | undefined,
+): DateEntryResult {
+  const result = parseCalendarDate(text, getCalendarDateLexicon(locale, calendar), {
+    isoIsGregorian: format === 'system_date',
+    isDateDisabled: date => isBlocked(plainDateToDate(date)),
+  })
+  switch (result.kind) {
+    case 'empty':
+    case 'incomplete':
+      return { kind: 'incomplete' }
+    case 'unreadable':
+      return { kind: 'unreadable' }
+    case 'nonexistent':
+      // 还能接着打的文字（例如打到一半的年份）暂时不算错。
+      return result.isComplete ? { kind: 'nonexistent' } : { kind: 'incomplete' }
+    default:
+      return { kind: result.kind, date: plainDateToDate(result.date), isComplete: result.isComplete }
+  }
+}
+
 /**
- * 读打进来的文字。`YYYY-M-D` 打完整（日子是两位，或者一位但不会再变）就算完整；
+ * 读打进来的文字。公历下 `YYYY-M-D` 打完整（日子是两位，或者一位但不会再变）就算完整；
  * 还能接着打的 ISO 前缀算半截；其余文字交给 `parseDateInput`，读出来的日子只在 Enter 或失焦时提交。
+ * 别的历法按那种历法的写法读。
  */
-export function parseDateEntry(text: string, locale: string, isBlocked: (date: Date) => boolean): DateEntryResult {
+export function parseDateEntry(
+  text: string,
+  locale: string,
+  isBlocked: (date: Date) => boolean,
+  calendar: CalendarSystem = 'gregory',
+  format?: DateInputFormat,
+): DateEntryResult {
+  if (textCalendar(calendar) !== 'gregory')
+    return parseCalendarEntry(text, locale, isBlocked, calendar, format)
   const trimmed = text.trim()
   const iso = ISO_DATE.exec(trimmed)
   if (iso) {
@@ -110,19 +148,20 @@ export function toEntryError(result: DateEntryResult, text: string, bounds: Date
   }
 }
 
-/** 拒绝时字段下方显示的那句话。边界日期按字段的显示格式写，自定义格式函数时用长日期。 */
+/** 拒绝时字段下方显示的那句话。边界日期按字段的显示格式和历法写，自定义格式函数时用长日期。 */
 export function dateEntryMessage(
   result: DateEntryResult,
   bounds: DateBounds,
   format: DateInputFormat | undefined,
   locale: string,
   messages: DateInputMessages,
+  calendar: CalendarSystem = 'gregory',
 ): string {
   if (result.kind === 'nonexistent')
     return messages.nonexistentDate
   if (result.kind === 'outOfRange' || result.kind === 'value') {
     const boundFormat = typeof format === 'function' ? 'date_long' : format
-    const write = (date: Date | undefined): string => date ? formatCommittedDate(date, boundFormat, locale) : ''
+    const write = (date: Date | undefined): string => date ? formatCommittedDate(date, boundFormat, locale, calendar) : ''
     const which = !isOutsideBounds(result.date, bounds)
       ? 'other'
       : bounds.min != null && bounds.max != null

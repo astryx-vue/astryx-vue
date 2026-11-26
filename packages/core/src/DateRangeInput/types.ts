@@ -1,6 +1,7 @@
 import type { ISODateRange, WeekStartsOn } from '../composables/useDateRange.js'
 import type { FieldPartStylingProps } from '../Field/fieldParts.js'
 import type { FieldStatusInput, FieldStatusVariant } from '../Field/types.js'
+import type { CalendarSystem } from '../utils/calendarSystem.js'
 
 export type DateRange = ISODateRange
 
@@ -26,6 +27,11 @@ export interface DateRangeInputProps extends FieldPartStylingProps {
   minRangeSpan?: number
   maxRangeSpan?: number
   weekStartsOn?: WeekStartsOn
+  /**
+   * 按钮文字和弹出日历用的历法，例如 `persian`。值、`min`、`max` 和预设仍是公历 ISO 日期。
+   * 不传时用最近 `InternationalizationProvider` 的历法，再没有就是公历。
+   */
+  calendar?: CalendarSystem
   hasClear?: boolean
   clearLabel?: string
   size?: 'sm' | 'md' | 'lg'

@@ -1,19 +1,24 @@
 <script setup lang="ts">
 import type { CalendarDate } from '@internationalized/date'
 import type { WeekStartsOn } from '../composables/useDateRange.js'
-import { CalendarDate as CalendarDay } from '@internationalized/date'
+import type { CalendarMonth, CalendarSystem } from '../utils/calendarSystem.js'
+import type { PlainDate } from '../utils/plainDate.js'
 import { computed, shallowRef, watch } from 'vue'
 import { formatWeekdayDate, sameCalendarDay, toCalendarDate, weekStartIndex } from '../Calendar/calendarDate.js'
+import { toCalendarDay } from '../Calendar/calendarMonths.js'
 import { isCalendarDateDisabled, isOutsideCalendarBounds } from '../Calendar/useCalendarConstraints.js'
-import { buildCalendarWeeks } from '../Calendar/useCalendarGrid.js'
+import { buildMonthWeeks } from '../Calendar/useCalendarGrid.js'
 import { resolveCalendarKey } from '../Calendar/useCalendarKeyboard.js'
-import { formatCalendarMonth, formatDayNumber, standaloneShortWeekdayNames, weekdayNames } from '../locale/format.js'
+import { formatDayNumber, standaloneShortWeekdayNames, weekdayNames } from '../locale/format.js'
 import { useAstryxLocale } from '../locale/index.js'
+import { formatCalendarMonthLabel } from '../utils/calendarFormat.js'
+import { calendarDayOfMonth, isInCalendarMonth } from '../utils/calendarSystem.js'
 import '../../styles/calendar.css'
 
 const props = defineProps<{
-  year: number
-  month: number
+  calendar: CalendarSystem
+  /** 显示的历法月。 */
+  month: CalendarMonth
   selected?: Date | null
   min?: Date
   max?: Date
@@ -26,14 +31,15 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   'pick': [date: Date]
-  'update:view': [year: number, month: number]
+  /** 键盘把焦点挪出了这个月，参数是焦点落到的那天。 */
+  'update:view': [date: PlainDate]
 }>()
 
 const locale = useAstryxLocale()
 const weekStart = computed(() => weekStartIndex(props.weekStartsOn))
 const selectedDate = computed(() => props.selected ? toCalendarDate(props.selected) : null)
 const todayDate = computed(() => toCalendarDate(props.today))
-const focused = shallowRef<CalendarDate>(new CalendarDay(props.year, props.month, 1))
+const focused = shallowRef<CalendarDate>(toCalendarDay(props.month.start))
 
 const headers = computed(() => {
   const shorts = standaloneShortWeekdayNames(locale.value)
@@ -44,8 +50,8 @@ const headers = computed(() => {
   })
 })
 
-const weeks = computed(() => buildCalendarWeeks(props.year, props.month, weekStart.value, false))
-const label = computed(() => formatCalendarMonth(props.year, props.month, locale.value))
+const weeks = computed(() => buildMonthWeeks(props.calendar, props.month, weekStart.value, false))
+const label = computed(() => formatCalendarMonthLabel(props.calendar, props.month, locale.value))
 
 function blocked(date: CalendarDate): boolean {
   return isCalendarDateDisabled(date, {
@@ -56,11 +62,12 @@ function blocked(date: CalendarDate): boolean {
   })
 }
 
-watch(() => [props.year, props.month] as const, ([year, month]) => {
-  if (focused.value.year === year && focused.value.month === month)
+// 翻到别的月时焦点跟过去，保留第几天，那个月没有这一天就落在月底。
+watch(() => props.month, (month) => {
+  if (isInCalendarMonth(focused.value, month))
     return
-  const last = new CalendarDay(year, month, 1).add({ months: 1 }).subtract({ days: 1 }).day
-  focused.value = new CalendarDay(year, month, Math.min(focused.value.day, last))
+  const day = Math.min(calendarDayOfMonth(props.calendar, focused.value), month.length)
+  focused.value = toCalendarDay(month.start).add({ days: day - 1 })
 }, { immediate: true })
 
 function pick(date: CalendarDate, outside: boolean): void {
@@ -77,7 +84,8 @@ function onKeydown(event: KeyboardEvent): void {
     focused: focused.value,
     weekStartsOn: weekStart.value,
     numberOfMonths: 1,
-    viewStart: new CalendarDay(props.year, props.month, 1),
+    viewStart: toCalendarDay(props.month.start),
+    calendar: props.calendar,
     isOutOfBounds: date => isOutsideCalendarBounds(date, props.min, props.max),
     isDisabled: date => blocked(date),
   })
@@ -85,8 +93,8 @@ function onKeydown(event: KeyboardEvent): void {
     return
   event.preventDefault()
   focused.value = move.date
-  if (move.date.year !== props.year || move.date.month !== props.month)
-    emit('update:view', move.date.year, move.date.month)
+  if (!isInCalendarMonth(move.date, props.month))
+    emit('update:view', { year: move.date.year, month: move.date.month, day: move.date.day })
 }
 </script>
 
@@ -124,7 +132,7 @@ function onKeydown(event: KeyboardEvent): void {
           :tabindex="!day.outside && sameCalendarDay(day.date, focused) ? 0 : -1"
           :aria-disabled="day.outside || blocked(day.date) || undefined"
           :aria-current="!day.outside && sameCalendarDay(day.date, todayDate) ? 'date' : undefined"
-          :aria-label="formatWeekdayDate(day.date, locale)"
+          :aria-label="formatWeekdayDate(day.date, locale, calendar)"
           @click="pick(day.date, day.outside)"
         >
           <span class="astryx-calendar-day">{{ formatDayNumber(day.day, locale) }}</span>

@@ -34,6 +34,7 @@ footer: false
 <tr><td><code>dateConstraints</code></td><td><code>Array&lt;(date: Date) =&gt; boolean&gt;</code></td><td>—</td><td>On the date half, a day is disabled when any function returns false.</td></tr>
 <tr><td><code>numberOfMonths</code></td><td><code>1 | 2</code></td><td>—</td><td>Months shown side by side in the date calendar.</td></tr>
 <tr><td><code>weekStartsOn</code></td><td><code>0-6 | 'sun' | 'mon' | ...</code></td><td>—</td><td>First day of the week in the date calendar.</td></tr>
+<tr><td><code>calendar</code></td><td><code>CalendarSystem</code></td><td>Follows the provider</td><td>Calendar system for the date part. Falls back to the nearest <code>InternationalizationProvider</code>. Outside Gregorian the system date control is replaced by the Astryx picker. The value is always a Gregorian date-time. See <a href="/en/guide/calendars">Calendars</a>.</td></tr>
 <tr><td><code>nativePicker</code></td><td><code>'touch' | 'always' | 'never'</code></td><td>—</td><td>Older surface name, passed to both the date and the time.</td></tr>
 <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Neither field can be edited.</td></tr>
 <tr><td><code>changeAction</code></td><td><code>(value) =&gt; void | Promise&lt;void&gt;</code></td><td>—</td><td>Runs once both the date and the time exist. A promise keeps the pair busy. Clearing runs it too.</td></tr>

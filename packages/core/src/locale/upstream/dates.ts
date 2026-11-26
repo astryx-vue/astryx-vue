@@ -30,6 +30,8 @@ export const datesUpstreamMap: UpstreamMapPart = {
   '@astryx.dateInput.chooseMonthYear': [{ path: 'dateInput.chooseMonthYear', args: ['monthYear'] }],
   '@astryx.dateInput.monthWheel': [{ path: 'dateInput.monthWheel' }],
   '@astryx.dateInput.yearWheel': [{ path: 'dateInput.yearWheel' }],
+  '@astryx.dateInput.formatHint': [{ path: 'dateInput.formatHint', args: ['example'] }],
+  '@astryx.dateInput.calendarDescription': [{ path: 'dateInput.calendarDescription', args: ['calendar'] }],
 
   '@astryx.dateRangeInput.placeholder': [{ path: 'dateRangeInput.placeholder' }],
   '@astryx.dateRangeInput.dialogLabel': [{ path: 'dateRangeInput.dialogLabel' }],

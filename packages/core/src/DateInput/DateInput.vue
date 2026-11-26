@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { FieldStatusType } from '../Field/types.js'
 import type { DateInputEmits, DateInputProps, DateInputSlots } from './types.js'
-import { computed, defineComponent, getCurrentInstance, ref, useAttrs, useId, useTemplateRef } from 'vue'
+import { computed, getCurrentInstance, ref, useAttrs, useId, useTemplateRef } from 'vue'
 import BottomSheet from '../BottomSheet/BottomSheet.vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
@@ -9,7 +9,7 @@ import Calendar from '../Calendar/Calendar.vue'
 import { toCalendarDate } from '../Calendar/calendarDate.js'
 import { isCalendarDateDisabled } from '../Calendar/useCalendarConstraints.js'
 import { useBusyAnnouncement } from '../composables/internal/busyAnnouncement.js'
-import { resolveDatePresentation, resolveDateSurface } from '../composables/useDatePresentation.js'
+import { resolveDateSurface } from '../composables/useDatePresentation.js'
 import { useMediaQuery } from '../composables/useMediaQuery.js'
 import { usePendingChange } from '../composables/usePendingChange.js'
 import { useResolvedLabelHidden } from '../composables/useResolvedLabelHidden.js'
@@ -26,10 +26,12 @@ import { useSize } from '../SizeContext/SizeContext.js'
 import Spinner from '../Spinner/Spinner.vue'
 import { isImeKeyEvent } from '../utils/ime.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
+import PassThrough from './DateInputPassThrough.js'
 import { parseTypedDate, resolveDateStatus, toIsoDate } from './dateText.js'
 import NativeDateField from './NativeDateField.vue'
 import TouchDateSheet from './TouchDateSheet.vue'
 import { useCalendarDismiss } from './useCalendarDismiss.js'
+import { useCalendarFieldText, useCalendarPresentation } from './useCalendarPresentation.js'
 import { useTypedDateEntry } from './useTypedDateEntry.js'
 import '../../styles/date-input.css'
 
@@ -62,22 +64,12 @@ const parts = useFieldPartStyling({
 const hideLabel = useResolvedLabelHidden(() => props.isLabelHidden, () => props.labelHidden)
 const ariaRequired = useAriaRequired(props)
 
-const TOUCH_POINTER_QUERY = '(pointer: coarse)'
-
-const PassThrough = defineComponent({
-  name: 'DateInputPassThrough',
-  setup(_, { slots }) {
-    return () => slots.default?.({})
-  },
-})
-
 const generatedId = `astryx-date-input-${useId()}`
 const inputId = computed(() => props.id ?? generatedId)
 const popupId = computed(() => `${inputId.value}-popup`)
 const messages = useComponentMessages({ dateInput: dateInputMessages })
 const locale = useAstryxLocale()
-const isCoarsePointer = useMediaQuery(TOUCH_POINTER_QUERY)
-const resolvedPlaceholder = computed(() => props.placeholder ?? messages.value.dateInput.placeholder)
+const isCoarsePointer = useMediaQuery('(pointer: coarse)')
 const resolvedClearLabel = computed(() => props.clearLabel ?? messages.value.dateInput.clear(props.label))
 const dialogLabel = computed(() => props.label || messages.value.dateInput.dialogLabel)
 const inputRef = useTemplateRef<HTMLInputElement>('inputRef')
@@ -93,7 +85,12 @@ const disabledMessage = computed(() => (props.disabledMessage?.trim() || props.d
 const showsDisabledMessage = computed(() => locked.value && disabledMessage.value != null)
 const disabledTooltip = useButtonTooltip(showsDisabledMessage)
 const showsClear = computed(() => (props.hasClear || props.clearable) && Boolean(props.modelValue) && !locked.value)
-const policy = computed(() => resolveDatePresentation(props.presentation, props.nativePicker))
+const { calendar, presentation: policy } = useCalendarPresentation({
+  source: 'DateInput',
+  calendar: () => props.calendar,
+  presentation: () => props.presentation,
+  nativePicker: () => props.nativePicker,
+})
 const surface = computed(() => resolveDateSurface(policy.value, isCoarsePointer.value))
 const useSheet = computed(() => surface.value === 'sheet')
 const popupWidth = computed(() => props.numberOfMonths === 2 ? 'min(36rem, calc(100vw - 16px))' : 280)
@@ -156,6 +153,7 @@ const entry = useTypedDateEntry({
   value: () => props.modelValue,
   format: () => props.format,
   locale: () => locale.value,
+  calendar: () => calendar.value,
   bounds: () => ({ min: props.min, max: props.max }),
   isBlocked: date => !allowed(date),
   isLocked: () => locked.value,
@@ -167,6 +165,18 @@ const entry = useTypedDateEntry({
   reportEntryError: error => emit('entryErrorChange', error),
 })
 const inputValue = entry.displayValue
+const calendarText = useCalendarFieldText({
+  calendar,
+  locale: () => locale.value,
+  messages: () => messages.value.dateInput,
+  min: () => props.min,
+  max: () => props.max,
+  isBlocked: date => !allowed(date),
+})
+const calendarDescriptionId = `${generatedId}-calendar`
+// 非公历字段聚焦且为空时，占位符换成按那种历法写的示例日期；调用方的占位符优先。
+const resolvedPlaceholder = computed(() => props.placeholder
+  ?? ((entry.isFocused.value && !inputValue.value && calendarText.formatHint()) || messages.value.dateInput.placeholder))
 
 const statusValue = entry.fieldStatus
 const statusType = computed<FieldStatusType | undefined>(() => statusValue.value?.type)
@@ -192,7 +202,8 @@ const toggleLabel = computed(() => isOpen.value
   : messages.value.dateInput.openCalendar)
 
 function describedBy(fieldIds?: string): string | undefined {
-  return [attrs['aria-describedby'], props.describedBy, fieldIds, showsDisabledMessage.value ? disabledMessageId : undefined].filter(Boolean).join(' ') || undefined
+  const calendarId = calendarText.calendarDescription.value ? calendarDescriptionId : undefined
+  return [attrs['aria-describedby'], props.describedBy, fieldIds, calendarId, showsDisabledMessage.value ? disabledMessageId : undefined].filter(Boolean).join(' ') || undefined
 }
 
 function inputAttrs(): Record<string, unknown> {
@@ -432,6 +443,7 @@ defineExpose({
                 :date-constraints="props.dateConstraints"
                 :number-of-months="props.numberOfMonths"
                 :week-starts-on="props.weekStartsOn"
+                :calendar="calendar"
                 @update:model-value="onCalendarChange"
               />
             </div>
@@ -452,6 +464,7 @@ defineExpose({
               :is-date-disabled="props.isDateDisabled"
               :date-constraints="props.dateConstraints"
               :week-starts-on="props.weekStartsOn"
+              :calendar="calendar"
               :is-disabled="isDisabled"
               @pick="onCalendarChange"
               @save="onSheetSave"
@@ -472,6 +485,9 @@ defineExpose({
       </div>
     </template>
   </component>
+  <VisuallyHidden v-if="calendarText.calendarDescription.value && surface !== 'native'" :id="calendarDescriptionId">
+    {{ calendarText.calendarDescription.value }}
+  </VisuallyHidden>
   <VisuallyHidden v-if="showsDisabledMessage && surface !== 'native'" :id="disabledMessageId">
     {{ disabledMessage }}
   </VisuallyHidden>

@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import type { WeekStartsOn } from '../composables/useDateRange.js'
 import type { HourFormat } from '../composables/useTimeValue.js'
+import type { CalendarSystem } from '../utils/calendarSystem.js'
 import { computed, ref } from 'vue'
 import BottomSheet from '../BottomSheet/BottomSheet.vue'
 import { formatDisplayTime, formatISOTime, parseISOTime } from '../composables/useTimeValue.js'
+import { formatCommittedDate } from '../DateInput/dateText.js'
 import TouchDateSheet from '../DateInput/TouchDateSheet.vue'
 import Icon from '../Icon/Icon.vue'
 import { useAstryxLocale, useComponentMessages } from '../locale/context.js'
 import { dateInputMessages } from '../locale/messages/date-input.js'
 import { dateTimeInputMessages } from '../locale/messages/date-time-input.js'
 import TouchTimeWheels from '../TimeInput/TouchTimeWheels.vue'
-import { formatInstant } from '../Timestamp/formatInstant.js'
 import { resolveHourFormat } from '../utils/timeFormat.js'
 
 const props = withDefaults(defineProps<{
@@ -28,6 +29,7 @@ const props = withDefaults(defineProps<{
   max?: string
   dateConstraints?: ReadonlyArray<(date: Date) => boolean>
   weekStartsOn?: WeekStartsOn
+  calendar?: CalendarSystem
   isDisabled?: boolean
 }>(), {
   date: null,
@@ -53,7 +55,7 @@ function datePart(value: string | null): Date | null {
   return new Date(year!, month! - 1, day)
 }
 
-const dateText = computed(() => props.date ? formatInstant(props.date, 'date_long', locale.value) : '')
+const dateText = computed(() => formatCommittedDate(props.date, 'date_long', locale.value, props.calendar))
 const hourFormat = computed(() => resolveHourFormat(locale.value, props.hourFormat))
 const timeText = computed(() => props.time ? formatDisplayTime(props.time, hourFormat.value, props.hasSeconds, locale.value) : '')
 
@@ -144,6 +146,7 @@ function close(): void {
         :max="dateBound(max)"
         :date-constraints="dateConstraints"
         :week-starts-on="weekStartsOn"
+        :calendar="calendar"
         :save-label="messages.dateTimeInput.saveDatePicking"
         :save-disabled="!date"
         @pick="onDate"

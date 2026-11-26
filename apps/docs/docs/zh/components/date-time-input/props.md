@@ -34,6 +34,7 @@ footer: false
 <tr><td><code>dateConstraints</code></td><td><code>Array&lt;(date: Date) =&gt; boolean&gt;</code></td><td>—</td><td>日期那一半里，任一函数返回 false 时该日不可选。</td></tr>
 <tr><td><code>numberOfMonths</code></td><td><code>1 | 2</code></td><td>—</td><td>日期月历并排的月份数。</td></tr>
 <tr><td><code>weekStartsOn</code></td><td><code>0-6 | 'sun' | 'mon' | ...</code></td><td>—</td><td>日期月历从哪一天开始一周。</td></tr>
+<tr><td><code>calendar</code></td><td><code>CalendarSystem</code></td><td>跟随 provider</td><td>日期部分按哪种历法显示、读取和选择。不传时跟随最近的 <code>InternationalizationProvider</code>。非公历下系统日期控件换成 Astryx 的选择器。值始终是公历日期时间。见<a href="/guide/calendars">历法</a>。</td></tr>
 <tr><td><code>nativePicker</code></td><td><code>'touch' | 'always' | 'never'</code></td><td>—</td><td>旧的打开方式，同时传给日期和时间。</td></tr>
 <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>两个字段都不可改。</td></tr>
 <tr><td><code>changeAction</code></td><td><code>(value) =&gt; void | Promise&lt;void&gt;</code></td><td>—</td><td>日期和时间都齐了之后再跑。返回 Promise 时保持加载。清除也会跑。</td></tr>

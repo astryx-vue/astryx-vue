@@ -13,7 +13,8 @@ export function provideAstryxCalendar(calendar: MaybeRefOrGetter<string | undefi
 
 const warned = new Set<string>()
 
-function warnOnce(key: string, source: string, message: string): void {
+/** 历法相关的开发期警告，同一个 `key` 只警告一次。 */
+export function warnCalendarOnce(key: string, source: string, message: string): void {
   if (warned.has(key))
     return
   warned.add(key)
@@ -28,11 +29,11 @@ export function resolveCalendarSystem(id: string | undefined, source: string): C
   if (id == null)
     return 'gregory'
   if (!isCalendarSystem(id)) {
-    warnOnce(`unknown:${id}`, source, `The calendar "${id}" is not supported; showing Gregorian dates.`)
+    warnCalendarOnce(`unknown:${id}`, source, `The calendar "${id}" is not supported; showing Gregorian dates.`)
     return 'gregory'
   }
   if (!isCalendarSystemAvailable(id)) {
-    warnOnce(`unavailable:${id}`, source, `This runtime cannot show the "${id}" calendar; showing Gregorian dates.`)
+    warnCalendarOnce(`unavailable:${id}`, source, `This runtime cannot show the "${id}" calendar; showing Gregorian dates.`)
     return 'gregory'
   }
   return id

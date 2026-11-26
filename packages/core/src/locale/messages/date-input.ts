@@ -30,6 +30,10 @@ export interface DateInputMessages {
   chooseMonthYear: (monthYear: string) => string
   monthWheel: string
   yearWheel: string
+  /** 非公历日期字段聚焦且为空时的占位提示。`example` 是按那种历法数字写法写的示例日期。 */
+  formatHint: (example: string) => string
+  /** 字段的历法和应用的历法不同时，只给读屏的说明。`calendar` 是平台给的历法名，例如「波斯历」。 */
+  calendarDescription: (calendar: string) => string
 }
 
 export const dateInputMessages: Record<AstryxLocale, DateInputMessages> = {
@@ -56,6 +60,8 @@ export const dateInputMessages: Record<AstryxLocale, DateInputMessages> = {
     chooseMonthYear: monthYear => `${monthYear}, Choose month and year`,
     monthWheel: 'Month',
     yearWheel: 'Year',
+    formatHint: example => `e.g., ${example}`,
+    calendarDescription: calendar => `Dates use the ${calendar}`,
   },
   'zh-CN': {
     placeholder: '选择日期',
@@ -80,5 +86,7 @@ export const dateInputMessages: Record<AstryxLocale, DateInputMessages> = {
     chooseMonthYear: monthYear => `${monthYear}，切换月份和年份`,
     monthWheel: '月份',
     yearWheel: '年份',
+    formatHint: example => `例如 ${example}`,
+    calendarDescription: calendar => `日期使用${calendar}`,
   },
 }

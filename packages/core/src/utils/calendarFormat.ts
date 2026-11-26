@@ -1,7 +1,8 @@
 import type { CalendarMonth, CalendarSystem } from './calendarSystem.js'
 import type { PlainDate } from './plainDate.js'
 import { formatStandaloneMonthYear } from '../locale/format.js'
-import { calendarMonthLabelDay, isGregorianCalendar } from './calendarSystem.js'
+import { calendarMonthFromYearMonth, calendarMonthLabelDay, calendarMonthsInCalendarYear, isGregorianCalendar } from './calendarSystem.js'
+import { dateTimeFormatFor } from './dateTimeFormatCache.js'
 import { DATE_FORMAT_MONTH_ONLY, plainDateAddDays, plainDateFormat } from './plainDate.js'
 
 /** `Intl` 没有 `iso8601` 的月份名，标签用月日相同的 `gregory`。 */
@@ -98,4 +99,55 @@ export function calendarDisplayName(calendar: CalendarSystem, locale: string): s
   catch {
     return calendar
   }
+}
+
+const YEAR_PART_TYPES: ReadonlySet<string> = new Set(['era', 'year', 'relatedYear', 'yearName'])
+
+/** 长日期里纪元和年份那一段，按语言自己的顺序和数字，例如 "令和8年"、"1405 AP"。 */
+function eraYearAt(calendar: CalendarSystem, pd: PlainDate, locale: string): { era: string | undefined, label: string | null } {
+  const parts = dateTimeFormatFor(locale, { era: 'short', year: 'numeric', month: 'long', day: 'numeric', calendar: labelCalendar(calendar), timeZone: 'UTC' })
+    .formatToParts(utcDate(pd))
+  const isYearPart = (part: Intl.DateTimeFormatPart): boolean => YEAR_PART_TYPES.has(part.type)
+  const era = parts.find(part => part.type === 'era')?.value
+  const first = parts.findIndex(isYearPart)
+  if (first === -1)
+    return { era, label: null }
+  let last = first
+  parts.forEach((part, index) => {
+    if (isYearPart(part))
+      last = index
+  })
+  const label = parts
+    .slice(first, last + 1)
+    .filter(part => isYearPart(part) || part.type === 'literal')
+    .map(part => part.value)
+    .join('')
+    .replace(/\s+/g, ' ')
+    .trim()
+  return { era, label }
+}
+
+/** 历法里的一年是不是跨了年号，例如和历的 2019 年先是平成、后是令和。 */
+export function calendarYearSpansEras(calendar: CalendarSystem, year: number, locale: string): boolean {
+  if (isGregorianCalendar(calendar))
+    return false
+  const first = calendarMonthFromYearMonth(calendar, { year, month: 1 })
+  const last = calendarMonthFromYearMonth(calendar, { year, month: calendarMonthsInCalendarYear(calendar, year) })
+  const start = eraYearAt(calendar, first.start, locale)
+  const end = eraYearAt(calendar, last.end, locale)
+  return start.era !== end.era && start.label != null && end.label != null
+}
+
+/**
+ * 历法里一年的名字，带上语言在日期里写的纪元，例如 `ja-JP` 的 "令和8年"、英语的 "1405 AP"。
+ * 跨了年号的一年传 `at` 时按那个月起名，所以 2019 年在 1 月读作平成31年、在 5 月读作令和元年；
+ * 其余时候按年中那个月起名。公历年份就是数字。
+ */
+export function formatCalendarYearLabel(calendar: CalendarSystem, year: number, locale: string, at?: CalendarMonth): string {
+  if (isGregorianCalendar(calendar))
+    return String(year)
+  if (at != null && calendarYearSpansEras(calendar, year, locale))
+    return eraYearAt(calendar, at.start, locale).label ?? String(year)
+  const middle = calendarMonthFromYearMonth(calendar, { year, month: Math.floor(calendarMonthsInCalendarYear(calendar, year) / 2) + 1 })
+  return eraYearAt(calendar, middle.start, locale).label ?? String(year)
 }

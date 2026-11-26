@@ -10,6 +10,7 @@ import { usePendingChange } from '../composables/usePendingChange.js'
 import { useResolvedLabelHidden } from '../composables/useResolvedLabelHidden.js'
 import { formatISOTime, parseISOTime } from '../composables/useTimeValue.js'
 import DateInput from '../DateInput/DateInput.vue'
+import { useCalendarPresentation } from '../DateInput/useCalendarPresentation.js'
 import Field from '../Field/Field.vue'
 import FieldIcon from '../Field/FieldIcon.vue'
 import { useFieldPartStyling } from '../Field/fieldParts.js'
@@ -20,7 +21,7 @@ import { dateTimeInputMessages } from '../locale/messages/date-time-input.js'
 import { useSize } from '../SizeContext/SizeContext.js'
 import Spinner from '../Spinner/Spinner.vue'
 import TimeField from '../TimeInput/TimeField.vue'
-import { effectivePickerPresentation, resolvePickerPresentation } from '../utils/inputPresentation.js'
+import { resolvePickerPresentation } from '../utils/inputPresentation.js'
 import TouchDateTimeField from './TouchDateTimeField.vue'
 import '../../styles/date-time-input.css'
 
@@ -86,10 +87,14 @@ const datePresentation = computed<DatePresentation | undefined>(() => {
     return undefined
   return value
 })
-const useSheet = computed(() => resolvePickerPresentation(
-  effectivePickerPresentation(datePresentation.value, props.nativePicker),
-  coarse.value,
-) === 'sheet')
+// 日期那段的打开方式：系统日期控件只显示公历，别的历法里换成 Astryx 的弹出层或底部面板。
+const { calendar, presentation: datePolicy } = useCalendarPresentation({
+  source: 'DateTimeInput',
+  calendar: () => props.calendar,
+  presentation: () => datePresentation.value,
+  nativePicker: () => props.nativePicker,
+})
+const useSheet = computed(() => resolvePickerPresentation(datePolicy.value, coarse.value) === 'sheet')
 
 function parseDate(value: string | null): Date | null {
   const date = value?.slice(0, 10) ?? ''
@@ -217,6 +222,7 @@ watch(model, (value) => {
           :max="max"
           :date-constraints="dateConstraints"
           :week-starts-on="weekStartsOn"
+          :calendar="calendar"
           :is-disabled="sheetLocked"
           @pick-date="onSheetDate"
           @pick-time="onSheetTime"
@@ -228,7 +234,7 @@ watch(model, (value) => {
             is-label-hidden
             :placeholder="placeholder" :disabled="locked" :size="size" :described-by="[attrs['aria-describedby'], field.describedBy].filter(Boolean).join(' ') || undefined"
             :date-constraints="dateConstraints" :number-of-months="numberOfMonths" :week-starts-on="weekStartsOn"
-            :presentation="datePresentation" :native-picker="nativePicker"
+            :presentation="datePolicy" :native-picker="nativePicker" :calendar="calendar"
             :disabled-message="disabledMessage"
             :entry-error-behavior="entryErrorBehavior"
             @update:model-value="onDate"

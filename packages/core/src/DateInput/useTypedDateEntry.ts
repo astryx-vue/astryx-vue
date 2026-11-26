@@ -2,6 +2,7 @@ import type { ComputedRef } from 'vue'
 import type { FieldStatusInput } from '../Field/types.js'
 import type { EntryErrorBehavior } from '../FormLayout/context.js'
 import type { DateInputMessages } from '../locale/messages/date-input.js'
+import type { CalendarSystem } from '../utils/calendarSystem.js'
 import type { DateBounds, DateEntryResult, DateInputEntryError } from './dateEntry.js'
 import type { DateInputFormat } from './types.js'
 import { computed, nextTick, onScopeDispose, ref, shallowRef, watch } from 'vue'
@@ -12,6 +13,8 @@ export interface TypedDateEntryOptions {
   value: () => Date | null | undefined
   format: () => DateInputFormat | undefined
   locale: () => string
+  /** 读写文字用的历法，不传时是公历。 */
+  calendar?: () => CalendarSystem
   bounds: () => DateBounds
   /** 这一天能不能选（范围、`isDateDisabled`、`dateConstraints`）。 */
   isBlocked: (date: Date) => boolean
@@ -34,6 +37,8 @@ export interface TypedDateEntry {
   /** 还有等着提交的文字。Enter 要先收下它，不能直接提交表单。 */
   isPending: ComputedRef<boolean>
   isInvalid: ComputedRef<boolean>
+  /** 输入框聚焦着。 */
+  isFocused: ComputedRef<boolean>
   /** 字段要显示的状态：亮着的拒绝，或者调用方的状态。 */
   fieldStatus: ComputedRef<FieldStatusInput | undefined>
   /** 调用方的 error 说明替字段措辞、但说明没变时，由字段自己的 alert 念一次。 */
@@ -67,11 +72,13 @@ export function useTypedDateEntry(options: TypedDateEntryOptions): TypedDateEntr
   /** Enter 或失焦刚刚留下被拒的文字。这一刻传进来的新值不顶掉文字，调用方可以在这里恢复自己的值。 */
   let isRevealing = false
 
+  const calendar = (): CalendarSystem => options.calendar?.() ?? 'gregory'
+
   function parse(text: string): DateEntryResult {
-    return parseDateEntry(text, options.locale(), options.isBlocked)
+    return parseDateEntry(text, options.locale(), options.isBlocked, calendar(), options.format())
   }
 
-  const committedText = computed(() => formatCommittedDate(options.value(), options.format(), options.locale()))
+  const committedText = computed(() => formatCommittedDate(options.value(), options.format(), options.locale(), calendar()))
   const displayValue = computed(() => pending.value ?? committedText.value)
   const typed = computed(() => pending.value !== null && pending.value.trim() ? parse(pending.value) : null)
   const ownError = computed(() => dateEntryErrorKind(typed.value, isRejectionCommitted.value, options.behavior()))
@@ -86,7 +93,7 @@ export function useTypedDateEntry(options: TypedDateEntryOptions): TypedDateEntr
     return dateEntryErrorKind(kept, true, options.behavior()) != null ? { text: keptText.value, result: kept } : null
   })
   const message = computed(() => shown.value
-    ? dateEntryMessage(shown.value.result, options.bounds(), options.format(), options.locale(), options.messages())
+    ? dateEntryMessage(shown.value.result, options.bounds(), options.format(), options.locale(), options.messages(), calendar())
     : null)
   const entryError = computed(() => shown.value ? toEntryError(shown.value.result, shown.value.text, options.bounds()) : null)
   const callerError = computed(() => {
@@ -201,6 +208,7 @@ export function useTypedDateEntry(options: TypedDateEntryOptions): TypedDateEntr
     displayValue,
     isPending: computed(() => pending.value !== null && !(isRejectionCommitted.value && typed.value?.kind === 'unreadable')),
     isInvalid: computed(() => shown.value != null),
+    isFocused: computed(() => isFocused.value),
     fieldStatus,
     alertMessage,
     onInput,
