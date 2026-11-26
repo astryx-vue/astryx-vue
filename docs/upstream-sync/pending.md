@@ -460,8 +460,9 @@
   - 不适用：上游组件规范文档（自动初筛）
 - [x] [`b88081d9f`](https://github.com/meta/astryx/commit/b88081d9f) spec(core): BottomSheet stacks by open order and replaces on a same-update switch; BottomSheetSwitcher is deprecated (#8010)
   - 不适用：上游组件规范文档（自动初筛）
-- [ ] [`2af4d305a`](https://github.com/meta/astryx/commit/2af4d305a) feat(Popover): presentation — a BottomSheet on a phone when asked, as iOS presents a popover (#8229)
+- [x] [`2af4d305a`](https://github.com/meta/astryx/commit/2af4d305a) feat(Popover): presentation — a BottomSheet on a phone when asked, as iOS presents a popover (#8229)
   - 暂缓：Popover 的 presentation 属性（手机上以 BottomSheet 呈现）还没做：Vue 版 Popover 没有 presentation 属性，需要接呈现保持、BottomSheet 宿主和焦点交接，上游约 1700 行
+  - 已移植：[#596](https://github.com/astryx-vue/astryx-vue/pull/596)。Popover 新增 presentation 属性，adaptive 时手机上以 BottomSheet 呈现，接上呈现保持、BottomSheet 宿主和焦点交接
 - [ ] [`c22cbe2fd`](https://github.com/meta/astryx/commit/c22cbe2fd) fix(core): useAnnounce delivers inside the open Astryx modal that encloses its caller (#8009)
 - [ ] [`2a162e1b6`](https://github.com/meta/astryx/commit/2a162e1b6) feat(core): BottomSheet stacks by open order, replaces on a same-update switch, and BottomSheetSwitcher is deprecated (#7648)
 - [ ] [`54fbccb27`](https://github.com/meta/astryx/commit/54fbccb27) feat(core): Tokenizer touch sheet behind experimental.presentation (#7977)
@@ -4817,10 +4818,11 @@
 
 - [x] [`e3d2b4599`](https://github.com/meta/astryx/commit/e3d2b4599) docs(AST-099, input-fields): FR3 and FR13 point at FR9's app-bar rule (#9863)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`8ddcfe11c`](https://github.com/meta/astryx/commit/8ddcfe11c) fix(core): a layout motion's copy carries on the CSS animations and transitions running in it (#9534)
+- [x] [`8ddcfe11c`](https://github.com/meta/astryx/commit/8ddcfe11c) fix(core): a layout motion's copy carries on the CSS animations and transitions running in it (#9534)
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
   - 暂缓：本期已做 布局动效的副本带上 CSS 动画（transientCopy/carryAnimations）；剩 Layer 退场副本改用 carryAnimations，归动效与手势引擎的组件接入阶段
   - 暂缓：布局动效副本带上 CSS 动画的内核已在 main（transientCopy、carryAnimations）；剩浮层退场副本的接入，随 a19128275 暂缓
+  - Vue 版已有：副本延续正在运行的 CSS 动画，main 上 animatedLayout 的 transientCopy 和 carryAnimations 已经实现
 - [x] [`f59ffe155`](https://github.com/meta/astryx/commit/f59ffe155) fix(ClickableCard, SelectableCard): no touch pressed look for a finger press that starts on a control inside the card (#9801)
   - 已移植：[#501](https://github.com/astryx-vue/astryx-vue/pull/501)。手指按在卡片里的控件上，卡片不画触屏按压
 - [x] [`fbb81c6cc`](https://github.com/meta/astryx/commit/fbb81c6cc) DropdownMenu: under a finger, the opening finger picks only after UIMenu's handoff (AST-094 FR29) (#8627)
@@ -4898,9 +4900,10 @@
   - 已移植：[#568](https://github.com/astryx-vue/astryx-vue/pull/568)。动效 hook 文档（createAnimator / useAnimator）
 - [x] [`b779b269c`](https://github.com/meta/astryx/commit/b779b269c) spec(Carousel): opt-in snap paging through useSnapPaging (#9666)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`5b54b834c`](https://github.com/meta/astryx/commit/5b54b834c) fix(DropdownMenu): on a phone or a tablet, a tap while the menu enters is ignored, as on iOS (#8458)
+- [x] [`5b54b834c`](https://github.com/meta/astryx/commit/5b54b834c) fix(DropdownMenu): on a phone or a tablet, a tap while the menu enters is ignored, as on iOS (#8458)
   - 暂缓：手机和平板上菜单进场时的点击被忽略：依赖进场输入遮挡，Vue 版没有
   - 暂缓：DropdownMenu 进场期间不接点按还没接：Vue 版 DropdownMenu 没有进场动画，没有可等的进场；补上进场动画后用 holdEntranceInput 接入
+  - 已移植：[#601](https://github.com/astryx-vue/astryx-vue/pull/601)。DropdownMenu 改用锚定浮层的 CSS 进场，手机和平板上进场期间的点按被忽略，按压命中测试看穿挡板
 - [x] [`c33656a06`](https://github.com/meta/astryx/commit/c33656a06) test(motion): the busy spring proof reads every frame, with a second control half a leg ahead (#10099)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`6180af62e`](https://github.com/meta/astryx/commit/6180af62e) test(core): the adopters' edge proofs read the module's clock (#10150)
@@ -4965,12 +4968,14 @@
 
 - [x] [`94c87afc4`](https://github.com/meta/astryx/commit/94c87afc4) test(core): the edge reveal proofs hold the reveal at fixed times (#10259)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`a19128275`](https://github.com/meta/astryx/commit/a19128275) chore(core): the layer runtime's exit copy, for a touch presentation's close (#8186)
+- [x] [`a19128275`](https://github.com/meta/astryx/commit/a19128275) chore(core): the layer runtime's exit copy, for a touch presentation's close (#8186)
   - 暂缓：图层运行时的退出副本服务于触屏呈现的关闭动效，属于触屏呈现设施
   - 暂缓：浮层退场副本还没做：它只服务于 Popover 和 AlertDialog 的触屏关闭动效，这两个都暂缓，单独做没有调用方
-- [ ] [`5e67f0874`](https://github.com/meta/astryx/commit/5e67f0874) feat(Popover): under a finger, it grows out of its trigger and shrinks back into it (#8187)
+  - 已移植：[#597](https://github.com/astryx-vue/astryx-vue/pull/597)。新增浮层退场副本 layerExitCopy 和 settledBox，缩回播在副本上，副本落在浮层排版时的盒子上
+- [x] [`5e67f0874`](https://github.com/meta/astryx/commit/5e67f0874) feat(Popover): under a finger, it grows out of its trigger and shrinks back into it (#8187)
   - 暂缓：Popover 触屏从触发器长出来，属于触屏呈现设施
   - 暂缓：Popover 在手指下从触发器长出、缩回还没做：需要 Popover 的触屏呈现运行时（popoverSurfaceMotion）和退场副本
+  - 已移植：[#597](https://github.com/astryx-vue/astryx-vue/pull/597)。手指下 Popover 从触发器长出、缩回，长出期间挡住点按，中途折返从当前帧开始
 - [x] [`a26f7c452`](https://github.com/meta/astryx/commit/a26f7c452) fix(Calendar, DateRangeInput): today is read after hydration, so a server in another zone no longer causes a mismatch (#10226)
   - 已移植：[#550](https://github.com/astryx-vue/astryx-vue/pull/550)。Calendar 的今天在接管服务端 HTML 之后才读，服务端和浏览器不同日期也不再对不上，补水合测试
 - [x] [`e348759a9`](https://github.com/meta/astryx/commit/e348759a9) fix(core): a presentation resolves with no matchMedia, as in a test DOM (#10275)
@@ -5145,9 +5150,10 @@
   - 已移植：[#548](https://github.com/astryx-vue/astryx-vue/pull/548)。祖先只改 transform 不再让滚动区每帧重新测量，只有方向、书写模式、显示、可见性变了才重量，补测试
 - [x] [`bb576ef8f`](https://github.com/meta/astryx/commit/bb576ef8f) test(core): reveal-paint reads one moment and names starvation (#10556)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`b6509b179`](https://github.com/meta/astryx/commit/b6509b179) fix(Popover): the touch growth shows its content from its first frame (#10757)
+- [x] [`b6509b179`](https://github.com/meta/astryx/commit/b6509b179) fix(Popover): the touch growth shows its content from its first frame (#10757)
   - 暂缓：Popover 触屏生长的首帧内容可见，属于触屏呈现设施
   - 暂缓：Popover 触屏生长第一帧就显示内容：依赖 5e67f0874 的触屏生长
+  - 已移植：[#597](https://github.com/astryx-vue/astryx-vue/pull/597)。长出的淡入从很小的不透明度起步，第一帧就显示内容
 - [x] [`ff7e096ba`](https://github.com/meta/astryx/commit/ff7e096ba) fix(ScrollableArea): complete hardening audit (#6314)
   - Vue 版已有：useScrollableArea 已用 focusin/focusout 跟踪视口焦点、有尺寸为 0 就保留上次结果的保护、登记表按元素注销
 - [x] [`a1dabb30c`](https://github.com/meta/astryx/commit/a1dabb30c) fix(interaction-harness): WebKit busy proofs date frames on the controls (#10772)
@@ -5333,10 +5339,11 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`49a475fbd`](https://github.com/meta/astryx/commit/49a475fbd) test: split door-conformance, global-local and packed-gather-cache.records so the Node legs can spread them (#11699)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`4800d992e`](https://github.com/meta/astryx/commit/4800d992e) feat(AlertDialog): touch motion on the theme's timing (#8373)
+- [x] [`4800d992e`](https://github.com/meta/astryx/commit/4800d992e) feat(AlertDialog): touch motion on the theme's timing (#8373)
   - 暂缓：AlertDialog 触屏动效按主题时序，依赖主题时序读取器和触屏呈现设施
   - 暂缓：内核部分已在 #563-#568；剩 AlertDialog 触屏动效、Layer 输入遮挡、Popover 表面动效，归动效与手势引擎的组件接入阶段
   - 暂缓：AlertDialog 触屏动效还没做：需要 useAlertMotion（animator 驱动的进退场、layer+blur 退场暂挡），上游约 3000 行
+  - 已移植：[#599](https://github.com/astryx-vue/astryx-vue/pull/599)。手指下 AlertDialog 从 1.2 倍缩放淡入、淡出后才关闭，按主题时序；输入暂挡补上 layer 范围，退场期间内容 inert 并移走焦点
 - [x] [`dc9b62a32`](https://github.com/meta/astryx/commit/dc9b62a32) perf(cli): docs keeps the CLI's own docs tree between runs (#11775)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`c3916438e`](https://github.com/meta/astryx/commit/c3916438e) chore(core): the swipe hook's and layer's prose moves to their JSDoc (#11677)
@@ -5979,10 +5986,11 @@
 
 ### v0.7.9
 
-- [ ] [`8ddcfe11c`](https://github.com/meta/astryx/commit/8ddcfe11c) fix(core): a layout motion's copy carries on the CSS animations and transitions running in it (#9534)
+- [x] [`8ddcfe11c`](https://github.com/meta/astryx/commit/8ddcfe11c) fix(core): a layout motion's copy carries on the CSS animations and transitions running in it (#9534)
   - 暂缓：要还原上游动效，归动效与手势引擎任务
   - 暂缓：本期已做 布局动效的副本带上 CSS 动画（transientCopy/carryAnimations）；剩 Layer 退场副本改用 carryAnimations，归动效与手势引擎的组件接入阶段
   - 暂缓：布局动效副本带上 CSS 动画的内核已在 main（transientCopy、carryAnimations）；剩浮层退场副本的接入，随 a19128275 暂缓
+  - Vue 版已有：副本延续正在运行的 CSS 动画，main 上 animatedLayout 的 transientCopy 和 carryAnimations 已经实现
 - [x] [`252b45bb1`](https://github.com/meta/astryx/commit/252b45bb1) feat(Layer): one input hold, first used by Dialog, Drawer and MobileNav (spec:AST-094 FR35) (#8342)
   - 暂缓：进场输入遮挡（Dialog、Drawer、MobileNav 进场时挡住点击）：依赖触屏呈现和进场运行时，Vue 版没有
   - 暂缓：本期已做宿主的 pageHold 输入保持（#579）；剩 Layer、Dialog、Drawer、MobileNav 接入，归组件接入阶段
@@ -5995,9 +6003,10 @@
   - 不适用：React 打包拆分：LayerProvider 不加载 Toast
 - [x] [`7e69f91dc`](https://github.com/meta/astryx/commit/7e69f91dc) fix(core): an anchored layer that would run under the software keyboard ends above it (#8208)
   - 已移植：[#542](https://github.com/astryx-vue/astryx-vue/pull/542)。锚定浮层避开软键盘：getLayerViewport 扣掉键盘占的那一截
-- [ ] [`5b54b834c`](https://github.com/meta/astryx/commit/5b54b834c) fix(DropdownMenu): on a phone or a tablet, a tap while the menu enters is ignored, as on iOS (#8458)
+- [x] [`5b54b834c`](https://github.com/meta/astryx/commit/5b54b834c) fix(DropdownMenu): on a phone or a tablet, a tap while the menu enters is ignored, as on iOS (#8458)
   - 暂缓：手机和平板上菜单进场时的点击被忽略：依赖进场输入遮挡，Vue 版没有
   - 暂缓：DropdownMenu 进场期间不接点按还没接：Vue 版 DropdownMenu 没有进场动画，没有可等的进场；补上进场动画后用 holdEntranceInput 接入
+  - 已移植：[#601](https://github.com/astryx-vue/astryx-vue/pull/601)。DropdownMenu 改用锚定浮层的 CSS 进场，手机和平板上进场期间的点按被忽略，按压命中测试看穿挡板
 - [x] [`c8a172b4b`](https://github.com/meta/astryx/commit/c8a172b4b) docs(useOverlay): add hook docs and a product quick view example block (#9908)
   - Vue 版已有：useOverlay 已有文档页（apps/docs 的 overlay 组件目录）
 - [x] [`992e28c60`](https://github.com/meta/astryx/commit/992e28c60) docs(architecture): the layer runtime's keyboard cap in INV11 and INV12 (#10143)
@@ -6022,16 +6031,18 @@
 
 - [x] [`9a8d14d6d`](https://github.com/meta/astryx/commit/9a8d14d6d) fix(Layer): toasts leave a closing modal in the commit that closes it (#10251)
   - 不适用：React 提交时机：toast 随模态对话框关闭的同一次提交离开；Vue 的 modalOutlet 在 close 事件里撤销
-- [ ] [`a19128275`](https://github.com/meta/astryx/commit/a19128275) chore(core): the layer runtime's exit copy, for a touch presentation's close (#8186)
+- [x] [`a19128275`](https://github.com/meta/astryx/commit/a19128275) chore(core): the layer runtime's exit copy, for a touch presentation's close (#8186)
   - 暂缓：触屏呈现关闭用的退场副本：Vue 的浮层关闭即卸载，没有退场副本设施
   - 暂缓：浮层退场副本还没做：它只服务于 Popover 和 AlertDialog 的触屏关闭动效，这两个都暂缓，单独做没有调用方
+  - 已移植：[#597](https://github.com/astryx-vue/astryx-vue/pull/597)。新增浮层退场副本 layerExitCopy 和 settledBox，缩回播在副本上，副本落在浮层排版时的盒子上
 - [x] [`14b138763`](https://github.com/meta/astryx/commit/14b138763) docs(AST-059): anchored layers re-pick once after scrolling stops (#10289)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`445b2b7a8`](https://github.com/meta/astryx/commit/445b2b7a8) [Component Audit] LayerProvider: its docs reach editors and describe nested providers correctly (#10283)
   - Vue 版已有：LayerProvider 文档已写明嵌套的 LayerProvider 不会开第二个 toast 视口
-- [ ] [`5e67f0874`](https://github.com/meta/astryx/commit/5e67f0874) feat(Popover): under a finger, it grows out of its trigger and shrinks back into it (#8187)
+- [x] [`5e67f0874`](https://github.com/meta/astryx/commit/5e67f0874) feat(Popover): under a finger, it grows out of its trigger and shrinks back into it (#8187)
   - 暂缓：手指下 Popover 从触发器长出再缩回：依赖退场副本和触屏呈现，Vue 版没有
   - 暂缓：Popover 在手指下从触发器长出、缩回还没做：需要 Popover 的触屏呈现运行时（popoverSurfaceMotion）和退场副本
+  - 已移植：[#597](https://github.com/astryx-vue/astryx-vue/pull/597)。手指下 Popover 从触发器长出、缩回，长出期间挡住点按，中途折返从当前帧开始
 - [x] [`74eb2160c`](https://github.com/meta/astryx/commit/74eb2160c) docs(layer-runtime, Popover): name settledBox's readers; fix comments (#10300)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`3bd5a4c1b`](https://github.com/meta/astryx/commit/3bd5a4c1b) fix(Layer): a still mouse presses through an entrance's input hold (#10303)
@@ -6162,9 +6173,10 @@
   - Vue 版已有：按下已开浮层的另一个触发器：先关再开，由 dismissStack 只管栈顶自己的触发器
 - [x] [`1d48cc5e9`](https://github.com/meta/astryx/commit/1d48cc5e9) fix(useTouchTrigger): sync its callback refs at commit (#10892)
   - 不适用：React 里 useTouchTrigger 的回调 ref 在提交时同步；Vue 没有这个问题
-- [ ] [`e372e3979`](https://github.com/meta/astryx/commit/e372e3979) fix(Popover): touch growth starts where the popover meets its trigger (#10949)
+- [x] [`e372e3979`](https://github.com/meta/astryx/commit/e372e3979) fix(Popover): touch growth starts where the popover meets its trigger (#10949)
   - 暂缓：手指下 Popover 的长出起点：依赖触屏呈现，Vue 版没有
   - 暂缓：Popover 触屏生长从浮层和触发器相接处开始：依赖 5e67f0874 的触屏生长
+  - 已移植：[#597](https://github.com/astryx-vue/astryx-vue/pull/597)。长出和缩回的原点在浮层和触发器相接处
 - [x] [`248de60ab`](https://github.com/meta/astryx/commit/248de60ab) refactor(layer): a closing BottomSheet takes the shared input hold (#11447)
   - 暂缓：关闭中的 BottomSheet 使用共享输入遮挡：依赖输入遮挡
   - 已移植：[#594](https://github.com/astryx-vue/astryx-vue/pull/594)。关闭中的 BottomSheet 改用保留焦点的退场暂挡（holdKeptInside），不再一关就 inert
@@ -6179,18 +6191,20 @@
 
 - [x] [`55e666665`](https://github.com/meta/astryx/commit/55e666665) fix(core): no press scale on a trigger whose own layer is open (#11062)
   - 不适用：上游内部规范和架构文档、只改上游测试（自动初筛）
-- [ ] [`4800d992e`](https://github.com/meta/astryx/commit/4800d992e) feat(AlertDialog): touch motion on the theme's timing (#8373)
+- [x] [`4800d992e`](https://github.com/meta/astryx/commit/4800d992e) feat(AlertDialog): touch motion on the theme's timing (#8373)
   - 暂缓：AlertDialog 触屏动效：依赖触屏呈现，Vue 版没有
   - 暂缓：内核部分已在 #563-#568；剩 AlertDialog 触屏动效、Layer 输入遮挡、Popover 表面动效，归动效与手势引擎的组件接入阶段
   - 暂缓：AlertDialog 触屏动效还没做：需要 useAlertMotion（animator 驱动的进退场、layer+blur 退场暂挡），上游约 3000 行
+  - 已移植：[#599](https://github.com/astryx-vue/astryx-vue/pull/599)。手指下 AlertDialog 从 1.2 倍缩放淡入、淡出后才关闭，按主题时序；输入暂挡补上 layer 范围，退场期间内容 inert 并移走焦点
 - [x] [`fb91b761f`](https://github.com/meta/astryx/commit/fb91b761f) fix(Layer): a released kept-inside hold never makes its layer inert (#11684)
   - 暂缓：已释放的保持内遮挡不再让浮层 inert：依赖输入遮挡
   - 已移植：[#594](https://github.com/astryx-vue/astryx-vue/pull/594)。放开后的保留焦点暂挡不再让浮层变 inert（放开前排上的焦点检查不生效）
 - [x] [`762a65d60`](https://github.com/meta/astryx/commit/762a65d60) perf(Layer): keep the tap recognizer apart from the touch trigger, so Text's first load drops 9.6 KB (#11599)
   - 不适用：React 包体拆分
-- [ ] [`8c8dd0539`](https://github.com/meta/astryx/commit/8c8dd0539) fix(Layer): an exit copy keeps the padding and colors of what it copies (#11796)
+- [x] [`8c8dd0539`](https://github.com/meta/astryx/commit/8c8dd0539) fix(Layer): an exit copy keeps the padding and colors of what it copies (#11796)
   - 暂缓：退场副本保留内边距和颜色：依赖退场副本，Vue 版没有
   - 暂缓：退场副本保留内边距和颜色：依赖 a19128275 的浮层退场副本
+  - 已移植：[#597](https://github.com/astryx-vue/astryx-vue/pull/597)。退场副本保留浮层的内边距、边框和颜色，有 Popover API 时放进顶层
 - [x] [`6115f1130`](https://github.com/meta/astryx/commit/6115f1130) fix(Layer): open on a trigger in a closed <dialog> that renders (#11864)
   - Vue 版已有：同 #5398：锚点在还没渲染的 dialog 里时几何为零，渲染出来后轮询纠正位置
 - [x] [`bf8555451`](https://github.com/meta/astryx/commit/bf8555451) fix(useFocusTrap): Tab stops inside a closed dialog the page displays (#11892)
@@ -7141,8 +7155,9 @@
 - [x] [`257573b22`](https://github.com/meta/astryx/commit/257573b22) docs(AST-094, AST-057): motion guidance; gesture springs; swipe-row returns (#9915)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`7e69f91dc`](https://github.com/meta/astryx/commit/7e69f91dc) fix(core): an anchored layer that would run under the software keyboard ends above it (#8208)
-- [ ] [`5b54b834c`](https://github.com/meta/astryx/commit/5b54b834c) fix(DropdownMenu): on a phone or a tablet, a tap while the menu enters is ignored, as on iOS (#8458)
+- [x] [`5b54b834c`](https://github.com/meta/astryx/commit/5b54b834c) fix(DropdownMenu): on a phone or a tablet, a tap while the menu enters is ignored, as on iOS (#8458)
   - 暂缓：DropdownMenu 进场期间不接点按还没接：Vue 版 DropdownMenu 没有进场动画，没有可等的进场；补上进场动画后用 holdEntranceInput 接入
+  - 已移植：[#601](https://github.com/astryx-vue/astryx-vue/pull/601)。DropdownMenu 改用锚定浮层的 CSS 进场，手机和平板上进场期间的点按被忽略，按压命中测试看穿挡板
 - [ ] [`ddb8b3462`](https://github.com/meta/astryx/commit/ddb8b3462) feat(ButtonGroup): a finger's slide runs the button it lifts on (#8657)
 - [x] [`8c5de42d4`](https://github.com/meta/astryx/commit/8c5de42d4) docs(DropdownMenu): FR22 notes the still-mouse shield gap (#10148)
   - 不适用：上游内部规范和架构文档（自动初筛）
@@ -7425,10 +7440,11 @@
 
 ### v0.7.9
 
-- [ ] [`8ddcfe11c`](https://github.com/meta/astryx/commit/8ddcfe11c) fix(core): a layout motion's copy carries on the CSS animations and transitions running in it (#9534)
+- [x] [`8ddcfe11c`](https://github.com/meta/astryx/commit/8ddcfe11c) fix(core): a layout motion's copy carries on the CSS animations and transitions running in it (#9534)
   - 暂缓：要还原上游动效，归动效与手势引擎任务
   - 暂缓：本期已做 布局动效的副本带上 CSS 动画（transientCopy/carryAnimations）；剩 Layer 退场副本改用 carryAnimations，归动效与手势引擎的组件接入阶段
   - 暂缓：布局动效副本带上 CSS 动画的内核已在 main（transientCopy、carryAnimations）；剩浮层退场副本的接入，随 a19128275 暂缓
+  - Vue 版已有：副本延续正在运行的 CSS 动画，main 上 animatedLayout 的 transientCopy 和 carryAnimations 已经实现
 - [x] [`252b45bb1`](https://github.com/meta/astryx/commit/252b45bb1) feat(Layer): one input hold, first used by Dialog, Drawer and MobileNav (spec:AST-094 FR35) (#8342)
   - 暂缓：触屏进场期间的输入遮挡（Layer input hold）依赖触屏呈现基础设施，Vue 版还没有；归动效与手势引擎任务
   - 暂缓：本期已做宿主的 pageHold 输入保持（#579）；剩 Layer、Dialog、Drawer、MobileNav 接入，归组件接入阶段
@@ -7672,9 +7688,10 @@
   - 不适用：上游组件规范文档（自动初筛）
 - [x] [`17fead75b`](https://github.com/meta/astryx/commit/17fead75b) spec(Popover): presentation is popover, bottom-sheet, or adaptive, following the menus (#8440)
   - 不适用：上游组件规范文档（自动初筛）
-- [ ] [`2af4d305a`](https://github.com/meta/astryx/commit/2af4d305a) feat(Popover): presentation — a BottomSheet on a phone when asked, as iOS presents a popover (#8229)
+- [x] [`2af4d305a`](https://github.com/meta/astryx/commit/2af4d305a) feat(Popover): presentation — a BottomSheet on a phone when asked, as iOS presents a popover (#8229)
   - 暂缓：Popover 的 presentation（手机上改以 BottomSheet 呈现）需要「呈现方式保持」设施和 Popover 内的 BottomSheet 接入，Vue 版都没有
   - 暂缓：Popover 的 presentation 属性（手机上以 BottomSheet 呈现）还没做：Vue 版 Popover 没有 presentation 属性，需要接呈现保持、BottomSheet 宿主和焦点交接，上游约 1700 行
+  - 已移植：[#596](https://github.com/astryx-vue/astryx-vue/pull/596)。Popover 新增 presentation 属性，adaptive 时手机上以 BottomSheet 呈现，接上呈现保持、BottomSheet 宿主和焦点交接
 - [x] [`4e6bc19fb`](https://github.com/meta/astryx/commit/4e6bc19fb) spec(Popover): a Popover is a focus region, modal or not (DEC-9) (#8608)
   - 不适用：上游组件规范文档（自动初筛）
 - [x] [`c22cbe2fd`](https://github.com/meta/astryx/commit/c22cbe2fd) fix(core): useAnnounce delivers inside the open Astryx modal that encloses its caller (#8009)
@@ -7924,9 +7941,10 @@
 
 - [x] [`9a8d14d6d`](https://github.com/meta/astryx/commit/9a8d14d6d) fix(Layer): toasts leave a closing modal in the commit that closes it (#10251)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`5e67f0874`](https://github.com/meta/astryx/commit/5e67f0874) feat(Popover): under a finger, it grows out of its trigger and shrinks back into it (#8187)
+- [x] [`5e67f0874`](https://github.com/meta/astryx/commit/5e67f0874) feat(Popover): under a finger, it grows out of its trigger and shrinks back into it (#8187)
   - 暂缓：触摸下从触发器长出来再缩回去的动效，需要 surface 几何、帧和动效模块，Vue 版没有
   - 暂缓：Popover 在手指下从触发器长出、缩回还没做：需要 Popover 的触屏呈现运行时（popoverSurfaceMotion）和退场副本
+  - 已移植：[#597](https://github.com/astryx-vue/astryx-vue/pull/597)。手指下 Popover 从触发器长出、缩回，长出期间挡住点按，中途折返从当前帧开始
 - [x] [`bef866ece`](https://github.com/meta/astryx/commit/bef866ece) test(Popover): browser proofs of the touch presentation's grow and shrink (#9823)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`e348759a9`](https://github.com/meta/astryx/commit/e348759a9) fix(core): a presentation resolves with no matchMedia, as in a test DOM (#10275)
@@ -8058,9 +8076,10 @@
   - Vue 版已有：layer/dismissStack.ts 按层所在文档登记监听，触摸关闭和焦点判断读触发器的 ownerDocument
 - [x] [`9771949e0`](https://github.com/meta/astryx/commit/9771949e0) test(Lightbox): the dismissal's busy proof blocks as the fade starts (#10719)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`b6509b179`](https://github.com/meta/astryx/commit/b6509b179) fix(Popover): the touch growth shows its content from its first frame (#10757)
+- [x] [`b6509b179`](https://github.com/meta/astryx/commit/b6509b179) fix(Popover): the touch growth shows its content from its first frame (#10757)
   - 暂缓：触摸长出动效从第一帧就显示内容，依赖 5e67f0874 的 surface 动效模块
   - 暂缓：Popover 触屏生长第一帧就显示内容：依赖 5e67f0874 的触屏生长
+  - 已移植：[#597](https://github.com/astryx-vue/astryx-vue/pull/597)。长出的淡入从很小的不透明度起步，第一帧就显示内容
 - [x] [`7fefc8a66`](https://github.com/meta/astryx/commit/7fefc8a66) fix(Dialog): capture the opener only on the closed-to-open edge (#5642)
   - 已移植：[#565](https://github.com/astryx-vue/astryx-vue/pull/565)。打开者取对话框所在文档里持有焦点的元素；只在关到开的那一下记录由 openDialog 的 dialog.open 守卫保证
 - [x] [`14f038ca3`](https://github.com/meta/astryx/commit/14f038ca3) test(core): the Dialog barrel's cold import loads before the case (#10762)
@@ -8151,9 +8170,10 @@
   - Vue 版已有：dismissStack 用按压编号，按下那一次登记的层不会被这次按压自己关掉；Vue 不靠原生 popover 的松手关闭
 - [x] [`1d48cc5e9`](https://github.com/meta/astryx/commit/1d48cc5e9) fix(useTouchTrigger): sync its callback refs at commit (#10892)
   - 不适用：React 回调 ref 在提交时同步的问题，Vue 没有这类 ref 时序
-- [ ] [`e372e3979`](https://github.com/meta/astryx/commit/e372e3979) fix(Popover): touch growth starts where the popover meets its trigger (#10949)
+- [x] [`e372e3979`](https://github.com/meta/astryx/commit/e372e3979) fix(Popover): touch growth starts where the popover meets its trigger (#10949)
   - 暂缓：触摸长出动效从触发器与浮层交界处起步，依赖 5e67f0874 的 surface 动效模块
   - 暂缓：Popover 触屏生长从浮层和触发器相接处开始：依赖 5e67f0874 的触屏生长
+  - 已移植：[#597](https://github.com/astryx-vue/astryx-vue/pull/597)。长出和缩回的原点在浮层和触发器相接处
 - [x] [`d6caddef6`](https://github.com/meta/astryx/commit/d6caddef6) fix(Lightbox): a single photo's caption sits on the caption's backing (#10284)
   - 已移植：[#541](https://github.com/astryx-vue/astryx-vue/pull/541)。单张照片的图注坐在图注底色上
 - [x] [`1c0d390e4`](https://github.com/meta/astryx/commit/1c0d390e4) fix(Lightbox): a mouse click beside the shown photo closes the viewer (#11354)
@@ -8173,10 +8193,11 @@
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`335a17298`](https://github.com/meta/astryx/commit/335a17298) fix(core): Toast picks its text side from the theme's surface before it measures (#11752)
   - 暂缓：Toast 测量前按主题 token 里的反色底预判文字深浅；Vue 有 parseColor 和 pickMediaMode 可做，归 theme-system 批次连同 8c52e3bba 一起做
-- [ ] [`4800d992e`](https://github.com/meta/astryx/commit/4800d992e) feat(AlertDialog): touch motion on the theme's timing (#8373)
+- [x] [`4800d992e`](https://github.com/meta/astryx/commit/4800d992e) feat(AlertDialog): touch motion on the theme's timing (#8373)
   - 暂缓：AlertDialog 触屏动效读主题时长，依赖触屏呈现（presentation）与进场动效基础设施
   - 暂缓：内核部分已在 #563-#568；剩 AlertDialog 触屏动效、Layer 输入遮挡、Popover 表面动效，归动效与手势引擎的组件接入阶段
   - 暂缓：AlertDialog 触屏动效还没做：需要 useAlertMotion（animator 驱动的进退场、layer+blur 退场暂挡），上游约 3000 行
+  - 已移植：[#599](https://github.com/astryx-vue/astryx-vue/pull/599)。手指下 AlertDialog 从 1.2 倍缩放淡入、淡出后才关闭，按主题时序；输入暂挡补上 layer 范围，退场期间内容 inert 并移走焦点
 - [x] [`67379ec52`](https://github.com/meta/astryx/commit/67379ec52) fix(Popover): usePopover keeps its focus-return target when show() reruns (#11682)
   - Vue 版已有：usePopover 只在 isOpen 由关变开时记录焦点归还目标，show() 重复调用不会重记
 - [x] [`5628141f5`](https://github.com/meta/astryx/commit/5628141f5) fix(Lightbox): a caption ending in a wide image no longer grows when the window widens (#11740)
@@ -9857,8 +9878,9 @@
   - 已移植：[#517](https://github.com/astryx-vue/astryx-vue/pull/517)。core 新增默认状态色表，组件改读正确的状态角色
 - [x] [`61480b5c2`](https://github.com/meta/astryx/commit/61480b5c2) chore(core): the touch motion tables register FR4's roles as internal motion roles (#8257)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`2af4d305a`](https://github.com/meta/astryx/commit/2af4d305a) feat(Popover): presentation — a BottomSheet on a phone when asked, as iOS presents a popover (#8229)
+- [x] [`2af4d305a`](https://github.com/meta/astryx/commit/2af4d305a) feat(Popover): presentation — a BottomSheet on a phone when asked, as iOS presents a popover (#8229)
   - 暂缓：Popover 的 presentation 属性（手机上以 BottomSheet 呈现）还没做：Vue 版 Popover 没有 presentation 属性，需要接呈现保持、BottomSheet 宿主和焦点交接，上游约 1700 行
+  - 已移植：[#596](https://github.com/astryx-vue/astryx-vue/pull/596)。Popover 新增 presentation 属性，adaptive 时手机上以 BottomSheet 呈现，接上呈现保持、BottomSheet 宿主和焦点交接
 - [ ] [`ab0db1f73`](https://github.com/meta/astryx/commit/ab0db1f73) spec(AST-108): theme motion is three knobs — tempo, character, reducedMotion (#8613)
 - [x] [`a7044525d`](https://github.com/meta/astryx/commit/a7044525d) fix(core): a pinned table column draws its own row dividers (#8654)
   - 不适用：只改上游测试（自动初筛）
@@ -10721,8 +10743,9 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`2fbf3249f`](https://github.com/meta/astryx/commit/2fbf3249f) spec(AST-089): style the public ref element, otherwise the outermost root (#7931)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`5e67f0874`](https://github.com/meta/astryx/commit/5e67f0874) feat(Popover): under a finger, it grows out of its trigger and shrinks back into it (#8187)
+- [x] [`5e67f0874`](https://github.com/meta/astryx/commit/5e67f0874) feat(Popover): under a finger, it grows out of its trigger and shrinks back into it (#8187)
   - 暂缓：Popover 在手指下从触发器长出、缩回还没做：需要 Popover 的触屏呈现运行时（popoverSurfaceMotion）和退场副本
+  - 已移植：[#597](https://github.com/astryx-vue/astryx-vue/pull/597)。手指下 Popover 从触发器长出、缩回，长出期间挡住点按，中途折返从当前帧开始
 - [x] [`089f7a078`](https://github.com/meta/astryx/commit/089f7a078) test: cut the jsdom style work that times out UI suites under load (#10285)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`a9c911421`](https://github.com/meta/astryx/commit/a9c911421) fix(core): Overlay, AppShell and MobileNav work with no matchMedia (#10327)
@@ -10783,9 +10806,10 @@
 - [ ] [`1addd72da`](https://github.com/meta/astryx/commit/1addd72da) feat(core): swipe actions come from createSwipe on the shared drag path (#8690)
 - [x] [`39eb83866`](https://github.com/meta/astryx/commit/39eb83866) docs(architecture): unused optional features cost almost nothing, and large behavior code lives in a shared engine (#11650)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`4800d992e`](https://github.com/meta/astryx/commit/4800d992e) feat(AlertDialog): touch motion on the theme's timing (#8373)
+- [x] [`4800d992e`](https://github.com/meta/astryx/commit/4800d992e) feat(AlertDialog): touch motion on the theme's timing (#8373)
   - 暂缓：内核部分已在 #563-#568；剩 AlertDialog 触屏动效、Layer 输入遮挡、Popover 表面动效，归动效与手势引擎的组件接入阶段
   - 暂缓：AlertDialog 触屏动效还没做：需要 useAlertMotion（animator 驱动的进退场、layer+blur 退场暂挡），上游约 3000 行
+  - 已移植：[#599](https://github.com/astryx-vue/astryx-vue/pull/599)。手指下 AlertDialog 从 1.2 倍缩放淡入、淡出后才关闭，按主题时序；输入暂挡补上 layer 范围，退场期间内容 inert 并移走焦点
 - [x] [`935e25a3c`](https://github.com/meta/astryx/commit/935e25a3c) chore(import-boundaries): the check holds a "Must not reach" table for optional features (INV10) (#11676)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`762a65d60`](https://github.com/meta/astryx/commit/762a65d60) perf(Layer): keep the tap recognizer apart from the touch trigger, so Text's first load drops 9.6 KB (#11599)
