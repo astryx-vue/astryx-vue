@@ -9,7 +9,7 @@ footer: false
 
 <div class="component-api-table" role="region" aria-label="DateRangeInput props" tabindex="0">
 <table><thead><tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
-<tr><td><code>v-model</code></td><td><code>DateRange | null</code></td><td><code>null</code></td><td><code>{ start, end }</code> ISO dates.</td></tr>
+<tr><td><code>v-model</code></td><td><code>DateRange | null</code></td><td><code>null</code></td><td><code>{ start, end }</code> ISO date strings. Passing <code>Date</code> objects throws a development error that names the prop.</td></tr>
 <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>Required accessible name.</td></tr>
 <tr><td><code>presets</code></td><td><code>{ label, getRange }[]</code></td><td>—</td><td>Shortcut buttons. <code>getRange</code> returns a range.</td></tr>
 <tr><td><code>monthCount</code></td><td><code>number</code></td><td><code>2</code></td><td>How many months the popover shows.</td></tr>

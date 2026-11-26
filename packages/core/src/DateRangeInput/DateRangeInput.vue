@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { DateRange, DateRangeInputEmits, DateRangeInputProps, DateRangePreset } from './types.js'
-import { computed, shallowRef, useAttrs, useId, useTemplateRef } from 'vue'
+import { computed, getCurrentInstance, inject, onMounted, shallowRef, ssrContextKey, useAttrs, useId, useTemplateRef } from 'vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import { useBusyAnnouncement } from '../composables/internal/busyAnnouncement.js'
+import { devPropError, isDevBuild } from '../composables/internal/devBuild.js'
 import { applyRangeClick, formatDateRange, isRangeWithinSpan } from '../composables/useDateRange.js'
 import { addMonths, todayISODate } from '../composables/useMonthGrid.js'
 import { usePendingChange } from '../composables/usePendingChange.js'
@@ -43,6 +44,14 @@ const emit = defineEmits<DateRangeInputEmits>()
 const size = useSize(() => props.size, 'md')
 
 const model = defineModel<DateRange | null>({ default: null })
+
+if (isDevBuild() && model.value != null && (typeof model.value.start !== 'string' || typeof model.value.end !== 'string')) {
+  throw devPropError(
+    'DateRangeInput',
+    'modelValue',
+    'must be null or { start, end } with ISO date strings, for example v-model="{ start: \'2026-01-01\', end: \'2026-01-31\' }". Pass strings, not Date objects.',
+  )
+}
 const attrs = useAttrs()
 const parts = useFieldPartStyling({
   component: 'DateRangeInput',
@@ -74,7 +83,13 @@ const visibleMonths = computed(() => props.numberOfMonths ?? props.monthCount)
 
 useBusyAnnouncement(busy, () => messages.value.dateInput.loading, () => containerRef.value)
 
-const display = computed(() => formatDateRange(model.value, locale.value))
+// 服务端和水合那一趟不读时钟（服务端的时区可能跨年），今年还不知道时范围一律写出年份，挂载后再省掉今年的年份。
+const isServerOrHydrating = typeof document === 'undefined' || inject(ssrContextKey, undefined) !== undefined || getCurrentInstance()?.vnode.el != null
+const currentYear = shallowRef<number | null>(isServerOrHydrating ? null : new Date().getFullYear())
+onMounted(() => {
+  currentYear.value ??= new Date().getFullYear()
+})
+const display = computed(() => formatDateRange(model.value, locale.value, currentYear.value))
 const placeholder = computed(() => props.placeholder ?? messages.value.dateRangeInput.placeholder)
 const clearLabel = computed(() => props.clearLabel ?? messages.value.dateRangeInput.clear(props.label))
 
@@ -87,6 +102,8 @@ function commit(value: DateRange | null): void {
 }
 
 function onSelect(day: string): void {
+  if (locked.value)
+    return
   const result = applyRangeClick(pending.value, day, props.minRangeSpan, props.maxRangeSpan)
   pending.value = result.pending
   if (result.commit) {
@@ -110,7 +127,7 @@ function onOpenChange(next: boolean): void {
 }
 
 function applyPreset(preset: DateRangePreset): void {
-  if (presetDisabled(preset))
+  if (locked.value || presetDisabled(preset))
     return
   const range = preset.getRange()
   if (!isRangeWithinSpan(range, props.minRangeSpan, props.maxRangeSpan))
@@ -186,8 +203,8 @@ function onTriggerClick(event: MouseEvent): void {
           <FieldIcon v-else-if="status" :type="status.type" />
         </div>
         <template #content>
-          <div class="astryx-date-range-popover">
-            <div ref="panelEl" class="astryx-date-range-panel">
+          <div ref="panelEl" class="astryx-date-range-popover">
+            <div class="astryx-date-range-panel">
               <div v-if="presets?.length" class="astryx-date-range-presets">
                 <button
                   v-for="preset in presets" :key="preset.label" type="button" class="astryx-date-range-preset"

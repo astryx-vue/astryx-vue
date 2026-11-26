@@ -107,4 +107,25 @@ describe('date range input', () => {
     expect(committed.start <= committed.end).toBe(true)
     wrapper.unmount()
   })
+
+  it('ignores day and preset clicks once the field locks while the picker is open', async () => {
+    const wrapper = mount(DateRangeInput, {
+      props: {
+        label: 'Report period',
+        modelValue: null,
+        monthCount: 1,
+        presets: [{ label: 'Whole month', getRange: () => ({ start: '2030-01-01', end: '2030-01-31' }) }],
+      },
+      attachTo: document.body,
+    })
+    await wrapper.get('.astryx-date-range-trigger').trigger('click')
+    await wrapper.setProps({ isDisabled: true })
+    const days = [...document.querySelectorAll<HTMLButtonElement>('.astryx-calendar-cell:not(.is-disabled)')]
+    days[0]?.click()
+    days[2]?.click()
+    document.querySelector<HTMLButtonElement>('.astryx-date-range-preset')?.click()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+    wrapper.unmount()
+  })
 })
