@@ -1,6 +1,7 @@
 import type { SearchableItem, SearchSource } from '../composables/useAsyncSource.js'
 import type { InputStatusVariant } from '../composables/useInputStatusIcon.js'
 import type { FieldPartStylingProps } from '../Field/fieldParts.js'
+import type { TypeaheadDialogMenuSlotProps, TypeaheadListboxMenuSlotProps, TypeaheadMenuConfig } from '../Typeahead/types.js'
 
 export type TokenizerSize = 'sm' | 'md' | 'lg'
 export type TokenizerStatus = 'default' | 'success' | 'warning' | 'error'
@@ -20,6 +21,8 @@ export type TokenizerChange<T extends SearchableItem = SearchableItem>
 
 export interface TokenizerProps<T extends SearchableItem = SearchableItem> extends FieldPartStylingProps {
   modelValue?: readonly T[]
+  /** 菜单里放什么，默认是结果列表。见 {@link TypeaheadMenuConfig}。 */
+  menu?: TypeaheadMenuConfig
   searchSource: SearchSource<T>
   label: string
   /** 视觉上隐藏标签。读屏仍然读得到。 */
@@ -93,4 +96,6 @@ export interface TokenizerSlots<T extends SearchableItem = SearchableItem> {
   token?: (props: { item: T, remove: () => void }) => unknown
   item?: (props: { item: T, isActive: boolean, isSelected: boolean }) => unknown
   empty?: () => unknown
+  /** 菜单内容：listbox 角色在结果列表周围放信息，dialog 角色是菜单的全部内容。 */
+  menu?: (props: TypeaheadListboxMenuSlotProps & TypeaheadDialogMenuSlotProps) => unknown
 }

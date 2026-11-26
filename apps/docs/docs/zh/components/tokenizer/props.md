@@ -34,7 +34,7 @@ footer: false
       <tr><td><code>clearable</code></td><td><code>boolean</code></td><td><code>false</code></td><td><code>hasClear</code> 的旧名。两者任一为真即生效。</td></tr>
       <tr><td><code>emptySearchText</code></td><td><code>string | null</code></td><td><code>'No results found'</code> / <code>'未找到结果'</code></td><td>没有匹配结果时显示的文字。<code>null</code> 当作没给，退回默认；空字符串表示什么都不显示。要放链接这类富内容用 <code>empty</code> 插槽。</td></tr>
       <tr><td><code>emptyText</code></td><td><code>string | null</code></td><td>—</td><td><code>emptySearchText</code> 的旧名。</td></tr>
-      <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>禁用整个字段和所有标签交互。</td></tr>
+      <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>禁用整个字段和所有标签交互。禁用的字段仍是 Tab 停点：输入框带 <code>aria-disabled</code> 且只读，不开列表也不选。<code>overflow="unfocused-layer"</code> 且没有 <code>disabledMessage</code> 时，输入框改用原生 <code>disabled</code>。</td></tr>
       <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>说明为什么被禁用。和 <code>disabled</code> 一起用时，输入框改用 <code>aria-disabled</code> 加 <code>readonly</code>，因此仍然可聚焦，鼠标悬停或键盘聚焦都能读到这段说明。</td></tr>
       <tr><td><code>disabledReason</code></td><td><code>string</code></td><td>—</td><td><code>disabledMessage</code> 的旧名。</td></tr>
       <tr><td><code>status</code></td><td><code>'default' | 'success' | 'warning' | 'error'</code></td><td><code>'default'</code></td><td>状态样式。</td></tr>
@@ -77,8 +77,11 @@ footer: false
       <tr><td><code>token</code></td><td><code>{ item, remove }</code></td><td>自定义已选标签，替换默认的 <code>Token</code>。</td></tr>
       <tr><td><code>item</code></td><td><code>{ item, isActive, isSelected }</code></td><td>自定义下拉条目，替换默认的 <code>TypeaheadItem</code>。</td></tr>
       <tr><td><code>empty</code></td><td>—</td><td>自定义空状态。</td></tr>
+      <tr><td><code>menu</code></td><td><code>{ listbox, query, isBusy, isEmptySearch, close }</code> 或 <code>{ query, close }</code></td><td>菜单内容，和 <code>Typeahead</code> 一样：<code>listbox</code> 菜单在结果列表周围放信息，<code>dialog</code> 菜单的插槽就是全部内容。</td></tr>
     </tbody>
   </table>
 </div>
+
+模板 ref 暴露 <code>focus()</code>、<code>blur()</code>、<code>open()</code> 和 <code>close()</code>。<code>menu</code> 属性（<code>{ role: 'listbox' }</code> 或 <code>{ role: 'dialog', label }</code>）和 <code>openChange</code> 的用法与 <code>Typeahead</code> 相同。<code>search</code> 里调用 <code>context.update(items)</code> 会马上显示先拿到的匹配项（已选的标签不在其中），之后的列表只往后追加。
 
 上面没列出的原生属性和事件监听会落到输入框上，所以 `@keydown`、`@paste` 和 `aria-*` 的用法跟普通 `<input>` 一样。`keydown` 监听先于内部的标签间导航执行，调用 `event.preventDefault()` 就能跳过内部处理。

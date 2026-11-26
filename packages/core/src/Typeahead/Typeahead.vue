@@ -6,9 +6,10 @@ import { computed, provide, useAttrs, useId, useTemplateRef } from 'vue'
 import { useResolvedLabelHidden } from '../composables/useResolvedLabelHidden.js'
 import Field from '../Field/Field.vue'
 import { useFieldPartStyling } from '../Field/fieldParts.js'
+import Icon from '../Icon/Icon.vue'
 import { useInputGroupDisabled } from '../InputGroup/context.js'
 import BaseTypeahead from './BaseTypeahead.vue'
-import { typeaheadChromeKey } from './context.js'
+import { typeaheadChromeKey, typeaheadFocusKey } from './context.js'
 import '../../styles/typeahead.css'
 
 defineOptions({ name: 'AstryxTypeahead', inheritAttrs: false })
@@ -43,7 +44,11 @@ const parts = useFieldPartStyling({
 })
 provide(typeaheadChromeKey, true)
 const inputId = `astryx-typeahead-${useId()}`
-const base = useTemplateRef<{ focus: () => void, blur: () => void }>('base')
+// 值标签盖住输入框时，dialog 菜单关闭后焦点还给标签的按钮，而不是看不见的输入框。
+provide(typeaheadFocusKey, {
+  inputReturnTarget: () => document.getElementById(inputId)?.closest('.astryx-typeahead-control')?.querySelector<HTMLElement>('.astryx-token button') ?? null,
+})
+const base = useTemplateRef<{ focus: () => void, blur: () => void, open: () => void, close: () => void }>('base')
 
 /** 新名 disabledMessage 优先，旧名 disabledReason 继续可用。 */
 const disabledMessage = computed(() => {
@@ -74,6 +79,8 @@ function labelledBy(fieldLabelId: string): string | undefined {
 defineExpose({
   focus: () => base.value?.focus(),
   blur: () => base.value?.blur(),
+  open: () => base.value?.open(),
+  close: () => base.value?.close(),
 })
 </script>
 
@@ -119,6 +126,7 @@ defineExpose({
         :show-on-focus="showsEntriesOnFocus"
         :has-auto-focus="props.hasAutoFocus"
         :empty-search-text="emptySearchText"
+        :menu="props.menu"
         :required="props.required"
         :name="props.name"
         @update:model-value="emit('update:modelValue', $event)"
@@ -129,7 +137,8 @@ defineExpose({
       >
         <template v-if="$slots.icon || props.startIcon" #icon>
           <slot name="icon">
-            <component :is="props.startIcon" />
+            <Icon v-if="typeof props.startIcon === 'string'" :icon="props.startIcon" size="sm" />
+            <component :is="props.startIcon" v-else />
           </slot>
         </template>
         <template v-if="$slots.item" #item="slotProps">
@@ -137,6 +146,9 @@ defineExpose({
         </template>
         <template v-if="$slots.empty" #empty>
           <slot name="empty" />
+        </template>
+        <template v-if="$slots.menu" #menu="menuProps">
+          <slot name="menu" v-bind="menuProps" />
         </template>
       </BaseTypeahead>
     </template>

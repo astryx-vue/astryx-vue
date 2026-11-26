@@ -14,6 +14,7 @@ export type {
   AsyncSourceStatus,
   CreateStaticSourceOptions,
   SearchableItem,
+  SearchContext,
   SearchSource,
   UseAsyncSourceOptions,
 } from './useAsyncSource.js'

@@ -5,7 +5,9 @@ import { useAnnounce } from '../composables/useAnnounce.js'
 import { searchResultMessage } from '../Selector/searchResultMessage.js'
 
 export interface TypeaheadAnnouncementOptions {
-  menu: Pick<TypeaheadMenu, 'combobox' | 'status' | 'query' | 'matchCount' | 'entries'>
+  menu: Pick<TypeaheadMenu, 'combobox' | 'status' | 'query' | 'matchCount' | 'entries' | 'isSettled'>
+  /** 这次搜索的结果要播报了：还没念出去的「加载中」随即收回。 */
+  settleBusy?: () => void
   emptyText: MaybeRefOrGetter<string>
   emptySearchText: MaybeRefOrGetter<string>
   resultCount: (count: number) => string
@@ -22,7 +24,8 @@ export function useTypeaheadAnnouncement(options: TypeaheadAnnouncementOptions):
     const createRows = menu.entries.value.filter(entry => entry.create).length
     return searchResultMessage({
       isOpen: menu.combobox.isOpen.value,
-      isLoading: menu.status.value === 'loading',
+      // 防抖里的新输入还没有结果：旧查询的结果数或「没有结果」不属于它。
+      isLoading: !menu.isSettled.value,
       query: menu.query.value,
       matchCount: menu.matchCount.value,
       hasCreateRow: createRows > 0,
@@ -32,8 +35,10 @@ export function useTypeaheadAnnouncement(options: TypeaheadAnnouncementOptions):
     })
   })
   watch(message, (next) => {
-    if (next)
-      announce(next)
+    if (!next)
+      return
+    options.settleBusy?.()
+    announce(next)
   })
   return message
 }

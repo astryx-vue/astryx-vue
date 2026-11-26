@@ -80,7 +80,7 @@ describe('useAsyncSource', () => {
     expect(search).not.toHaveBeenCalled()
 
     await vi.advanceTimersByTimeAsync(150)
-    expect(search).toHaveBeenCalledWith('zzz', expect.any(AbortSignal))
+    expect(search).toHaveBeenCalledWith('zzz', expect.any(AbortSignal), expect.anything())
     expect(view.api.status.value).toBe('empty')
     expect(view.api.items.value).toEqual([])
     view.wrapper.unmount()

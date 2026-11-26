@@ -34,7 +34,7 @@ footer: false
       <tr><td><code>clearable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Legacy name for <code>hasClear</code>. Either one turns it on.</td></tr>
       <tr><td><code>emptySearchText</code></td><td><code>string | null</code></td><td><code>'No results found'</code> / <code>'未找到结果'</code></td><td>Text shown when the query matched nothing. <code>null</code> means "not given" and falls through to the default; an empty string renders nothing. For rich content use the <code>empty</code> slot.</td></tr>
       <tr><td><code>emptyText</code></td><td><code>string | null</code></td><td>—</td><td>Legacy name for <code>emptySearchText</code>.</td></tr>
-      <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disable the field and every token interaction.</td></tr>
+      <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disable the field and every token interaction. A disabled field keeps its tab stop: the input is <code>aria-disabled</code> and read-only, opens no list and picks nothing. With <code>overflow="unfocused-layer"</code> and no <code>disabledMessage</code>, the input is natively disabled instead.</td></tr>
       <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>Explains why the field is disabled. With <code>disabled</code>, the input stays focusable through <code>aria-disabled</code> and <code>readonly</code>, and the message shows as a tooltip on hover or keyboard focus.</td></tr>
       <tr><td><code>disabledReason</code></td><td><code>string</code></td><td>—</td><td>Legacy name for <code>disabledMessage</code>.</td></tr>
       <tr><td><code>status</code></td><td><code>'default' | 'success' | 'warning' | 'error'</code></td><td><code>'default'</code></td><td>Status style.</td></tr>
@@ -77,8 +77,11 @@ footer: false
       <tr><td><code>token</code></td><td><code>{ item, remove }</code></td><td>Custom selected token. Replaces the default <code>Token</code>.</td></tr>
       <tr><td><code>item</code></td><td><code>{ item, isActive, isSelected }</code></td><td>Custom menu row. Replaces the default <code>TypeaheadItem</code>.</td></tr>
       <tr><td><code>empty</code></td><td>—</td><td>Custom empty state.</td></tr>
+      <tr><td><code>menu</code></td><td><code>{ listbox, query, isBusy, isEmptySearch, close }</code> or <code>{ query, close }</code></td><td>Menu content, as on <code>Typeahead</code>: information around the result list for a <code>listbox</code> menu, or the whole content of a <code>dialog</code> menu.</td></tr>
     </tbody>
   </table>
 </div>
+
+A template ref exposes <code>focus()</code>, <code>blur()</code>, <code>open()</code> and <code>close()</code>. The <code>menu</code> prop (<code>{ role: 'listbox' }</code> or <code>{ role: 'dialog', label }</code>) and <code>openChange</code> work as they do on <code>Typeahead</code>. A <code>search</code> that calls <code>context.update(items)</code> shows its early matches at once, without the tokens already picked, and later lists only append.
 
 Native attributes and listeners that are not listed above land on the input element, so `@keydown`, `@paste` and `aria-*` work as they would on a plain `<input>`. A `keydown` listener runs before the internal token navigation; call `event.preventDefault()` to skip it.

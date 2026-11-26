@@ -89,7 +89,7 @@ describe('typeahead', () => {
     wrapper.unmount()
   })
 
-  it('shows a selected token and restores it on escape', async () => {
+  it('shows a selected token; escape closes the list first, then restores the token', async () => {
     const wrapper = mountTypeahead({ modelValue: fruits[1] })
     expect(wrapper.text()).toContain('Banana')
     const input = wrapper.get('input[role="combobox"]')
@@ -100,6 +100,10 @@ describe('typeahead', () => {
     await input.trigger('keydown', { key: 'Escape' })
     await flush()
     expect(input.attributes('aria-expanded')).toBe('false')
+    expect(wrapper.find('.astryx-token').exists()).toBe(false)
+
+    await input.trigger('keydown', { key: 'Escape' })
+    await flush()
     expect(wrapper.find('.astryx-token').exists()).toBe(true)
     wrapper.unmount()
   })
@@ -217,7 +221,7 @@ describe('typeahead minQueryLength', () => {
 
     await input.setValue('app')
     await flush()
-    expect(search).toHaveBeenCalledWith('app', expect.anything())
+    expect(search).toHaveBeenCalledWith('app', expect.anything(), expect.anything())
     expect(input.attributes('aria-expanded')).toBe('true')
     wrapper.unmount()
   })
