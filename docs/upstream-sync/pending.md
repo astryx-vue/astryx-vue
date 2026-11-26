@@ -8454,38 +8454,53 @@
 
 ### v0.7.2
 
-- [ ] [`2fc0a0db7`](https://github.com/meta/astryx/commit/2fc0a0db7) fix(Switch): compose a caller aria-describedby onto the switch control (#7595)
-- [ ] [`c5f72ea4d`](https://github.com/meta/astryx/commit/c5f72ea4d) fix(Switch): put a caller aria-labelledby on the switch control (#7615)
-- [ ] [`caec7cab6`](https://github.com/meta/astryx/commit/caec7cab6) feat(Item): align="first-line" centers start and end content on the label's first line (#7643)
-- [ ] [`c05e8d29e`](https://github.com/meta/astryx/commit/c05e8d29e) fix(CheckboxInput): preserve caller-provided IDs (#7242)
-- [ ] [`a61db6f03`](https://github.com/meta/astryx/commit/a61db6f03) fix(RadioList): keep a caller aria-labelledby on the radiogroup (#5656)
-- [ ] [`09492662b`](https://github.com/meta/astryx/commit/09492662b) fix(ToggleButton): a caller onClick runs first and no longer replaces the toggle request (#7656)
+- [x] [`2fc0a0db7`](https://github.com/meta/astryx/commit/2fc0a0db7) fix(Switch): compose a caller aria-describedby onto the switch control (#7595)
+  - Vue 版已有：Switch.vue 的 describedBy() 把调用方的 aria-describedby 排在自己的说明、状态、禁用原因之前
+- [x] [`c5f72ea4d`](https://github.com/meta/astryx/commit/c5f72ea4d) fix(Switch): put a caller aria-labelledby on the switch control (#7615)
+  - Vue 版已有：Switch.vue 的 labelledBy() 优先用调用方的 aria-labelledby 给开关命名
+- [x] [`caec7cab6`](https://github.com/meta/astryx/commit/caec7cab6) feat(Item): align="first-line" centers start and end content on the label's first line (#7643)
+  - 已移植：[#589](https://github.com/astryx-vue/astryx-vue/pull/589)。CheckboxListItem、RadioListItem 新增 align（center、start、first-line），复选框走 Item 的 data-align，单选圈用 radio.css 的首行对齐，文档和测试已补
+- [x] [`c05e8d29e`](https://github.com/meta/astryx/commit/c05e8d29e) fix(CheckboxInput): preserve caller-provided IDs (#7242)
+  - Vue 版已有：CheckboxInput.vue 的 inputId 取 props.id，说明和状态的 id 由它派生
+- [x] [`a61db6f03`](https://github.com/meta/astryx/commit/a61db6f03) fix(RadioList): keep a caller aria-labelledby on the radiogroup (#5656)
+  - Vue 版已有：RadioGroup.vue 把字段标签 id 和调用方的 aria-labelledby 拼在一起放到 radiogroup 上
+- [x] [`09492662b`](https://github.com/meta/astryx/commit/09492662b) fix(ToggleButton): a caller onClick runs first and no longer replaces the toggle request (#7656)
+  - Vue 版已有：ToggleButton.vue 的 handleClick 先 emit 调用方 click，被 preventDefault 就不切换，不替换切换请求
 - [x] [`fbc03f7b7`](https://github.com/meta/astryx/commit/fbc03f7b7) spec(Slider): onChangeEnd reports the value the owner renders (#7639)
   - 不适用：上游组件规范文档（自动初筛）
-- [ ] [`493231799`](https://github.com/meta/astryx/commit/493231799) fix(cli): search finds compound names typed as words, other libraries' names, and verb forms (#7718)
-- [ ] [`a32ce6b8a`](https://github.com/meta/astryx/commit/a32ce6b8a) fix(CheckboxList): keep a caller aria-labelledby on the group (#7717)
+- [x] [`493231799`](https://github.com/meta/astryx/commit/493231799) fix(cli): search finds compound names typed as words, other libraries' names, and verb forms (#7718)
+  - 已移植：[#514](https://github.com/astryx-vue/astryx-vue/pull/514)。CLI 搜索收录别家组件库叫法与常见图标名，动词只折叠进行时，由基础展示与动作按钮族落地
+- [x] [`a32ce6b8a`](https://github.com/meta/astryx/commit/a32ce6b8a) fix(CheckboxList): keep a caller aria-labelledby on the group (#7717)
+  - Vue 版已有：CheckboxList.vue 的 groupLabelledBy() 把字段标签 id 和调用方的 aria-labelledby 拼在一起
 
 ### v0.7.3
 
 - [x] [`7b6691327`](https://github.com/meta/astryx/commit/7b6691327) spec(AST-085): disabled controls stay focusable (#7793)
   - 不适用：上游组件规范文档（自动初筛）
-- [ ] [`4b0b8f656`](https://github.com/meta/astryx/commit/4b0b8f656) fix(core): choice controls stay focusable when disabled (#7824)
-- [ ] [`2d0692c7f`](https://github.com/meta/astryx/commit/2d0692c7f) fix(Switch): announce busy once per busy start (#7872)
+- [x] [`4b0b8f656`](https://github.com/meta/astryx/commit/4b0b8f656) fix(core): choice controls stay focusable when disabled (#7824)
+  - Vue 版已有：Switch、CheckboxInput、Slider、单选项、分段都改用 aria-disabled，禁用后仍可聚焦（提交 f0edcfec 等）
+- [x] [`2d0692c7f`](https://github.com/meta/astryx/commit/2d0692c7f) fix(Switch): announce busy once per busy start (#7872)
+  - Vue 版已有：Switch.vue 的 watch(busy) 只在忙碌开始时播报一次，SwitchBusy.test.ts 覆盖
 - [x] [`3317fb2a0`](https://github.com/meta/astryx/commit/3317fb2a0) test(a11y): align disabled card and checkbox oracles with focus contract (#7921)
   - 不适用：只改上游测试（自动初筛）
 
 ### v0.7.4
 
-- [ ] [`c9c991e3b`](https://github.com/meta/astryx/commit/c9c991e3b) fix(CheckboxInput): announce the busy start once (#7948)
+- [x] [`c9c991e3b`](https://github.com/meta/astryx/commit/c9c991e3b) fix(CheckboxInput): announce the busy start once (#7948)
+  - Vue 版已有：CheckboxInput.vue 只在忙碌期间渲染 role=status 的隐藏文字，开始时播报一次
 
 ### v0.7.5
 
-- [ ] [`655b54364`](https://github.com/meta/astryx/commit/655b54364) fix(Slider): a drag belongs to the pointer that started it (#8152)
-- [ ] [`bf806901b`](https://github.com/meta/astryx/commit/bf806901b) fix(Slider): hold the lost-capture document listener only during a drag (#8284)
+- [x] [`655b54364`](https://github.com/meta/astryx/commit/655b54364) fix(Slider): a drag belongs to the pointer that started it (#8152)
+  - Vue 版已有：useSlider.ts 记录 pointerId，其他指针的按下、移动、抬起都不接管拖动，Slider.test.ts 覆盖
+- [x] [`bf806901b`](https://github.com/meta/astryx/commit/bf806901b) fix(Slider): hold the lost-capture document listener only during a drag (#8284)
+  - Vue 版已有：Slider.vue 把 lostpointercapture 直接绑在轨道元素上，只在捕获期间触发，没有常驻的文档级监听
 - [x] [`174300fcb`](https://github.com/meta/astryx/commit/174300fcb) ci: discover PR browser accessibility specs, so a new spec needs no workflow edit (#8367)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`f57df1822`](https://github.com/meta/astryx/commit/f57df1822) fix(RadioList): the pressed circle reads the row's press through a custom property, not a :has() scan (#8424)
-- [ ] [`d695efb56`](https://github.com/meta/astryx/commit/d695efb56) fix(Switch): the focus ring follows the input through a sibling, not a :has() scan (#8415)
+- [x] [`f57df1822`](https://github.com/meta/astryx/commit/f57df1822) fix(RadioList): the pressed circle reads the row's press through a custom property, not a :has() scan (#8424)
+  - Vue 版已有：Radio 的按压画面由 radio.css 里行上的 data-astryx-press 加自定义属性提供，没有 :has() 扫描
+- [x] [`d695efb56`](https://github.com/meta/astryx/commit/d695efb56) fix(Switch): the focus ring follows the input through a sibling, not a :has() scan (#8415)
+  - Vue 版已有：switch.css 的焦点环用 .astryx-switch-native:focus-visible + .astryx-switch-track 兄弟选择器，没有 :has()
 - [x] [`d26cdf3b2`](https://github.com/meta/astryx/commit/d26cdf3b2) docs(spec): ToggleButton records its shipped contract as current (#8436)
   - 不适用：上游组件规范文档（自动初筛）
 - [x] [`174b1f16c`](https://github.com/meta/astryx/commit/174b1f16c) docs(spec): CheckboxInput records its shipped contract as current (#8754)
@@ -8500,112 +8515,160 @@
   - 不适用：上游组件规范文档（自动初筛）
 - [x] [`f48ad2a0a`](https://github.com/meta/astryx/commit/f48ad2a0a) docs(spec): SegmentedControl records its shipped contract as current (#8794)
   - 不适用：上游组件规范文档（自动初筛）
-- [ ] [`664877943`](https://github.com/meta/astryx/commit/664877943) fix(Slider): keep a caller aria-labelledby on the thumb and range group (#8781)
-- [ ] [`f3c78b28d`](https://github.com/meta/astryx/commit/f3c78b28d) fix(SegmentedControl): keep a caller aria-describedby on the radiogroup (#8784)
+- [x] [`664877943`](https://github.com/meta/astryx/commit/664877943) fix(Slider): keep a caller aria-labelledby on the thumb and range group (#8781)
+  - 已移植：[#589](https://github.com/astryx-vue/astryx-vue/pull/589)。范围 Slider 的组把调用方的 aria-labelledby 拼在自己的标签后面；单个滑块原本就保留
+- [x] [`f3c78b28d`](https://github.com/meta/astryx/commit/f3c78b28d) fix(SegmentedControl): keep a caller aria-describedby on the radiogroup (#8784)
+  - Vue 版已有：SegmentedControl.vue 的 describedBy 把调用方的 aria-describedby 放在禁用原因前面
 
 ### v0.7.6
 
 - [x] [`9e07422c7`](https://github.com/meta/astryx/commit/9e07422c7) test(a11y): the coverage checks of 17 binding specs run as one serial part per state (#9071)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`f277e2580`](https://github.com/meta/astryx/commit/f277e2580) fix(core): a single esbuild bundle renders Core: lazily imported modules import Core directly, not through barrels (#9055)
-- [ ] [`afcea1552`](https://github.com/meta/astryx/commit/afcea1552) fix(FileInput, Slider): convey required under FormLayout defaultOptionality (#9053)
-- [ ] [`070d574db`](https://github.com/meta/astryx/commit/070d574db) fix(core): a disabled SegmentedControlItem no longer runs a caller's onClick (#8989)
-- [ ] [`ec128c411`](https://github.com/meta/astryx/commit/ec128c411) fix(Slider): range thumb names come from the catalog (#9023)
-- [ ] [`a3eaa6d3b`](https://github.com/meta/astryx/commit/a3eaa6d3b) fix(RadioList, Switch): required inputs take their invalid state from status (#9042)
-- [ ] [`eecd9c1a5`](https://github.com/meta/astryx/commit/eecd9c1a5) fix(core): a disabled Switch no longer runs a caller's key handlers (#9122)
-- [ ] [`35063398d`](https://github.com/meta/astryx/commit/35063398d) fix(ToggleButtonGroup): className, style and other host props reach the group element (#9040)
-- [ ] [`18b5260b6`](https://github.com/meta/astryx/commit/18b5260b6) fix(core): a disabled RadioListItem no longer runs a caller's onClick (#9120)
-- [ ] [`6a79bfb74`](https://github.com/meta/astryx/commit/6a79bfb74) fix(Slider): two coincident range thumbs can be dragged apart (#8151)
-- [ ] [`dce0ccfd6`](https://github.com/meta/astryx/commit/dce0ccfd6) fix(Slider): a press on the mark label of coincident thumbs goes to the upper thumb, as a press on the thumbs does (#9184)
-- [ ] [`53c8c4a78`](https://github.com/meta/astryx/commit/53c8c4a78) fix(CheckboxList): a disabled group's reason describes each checkbox (#9168)
-- [ ] [`b56b6d4fc`](https://github.com/meta/astryx/commit/b56b6d4fc) fix(core): one modality call per component, reading the component's own document (#9148)
-- [ ] [`701c3b2ba`](https://github.com/meta/astryx/commit/701c3b2ba) fix(RadioList): a disabled group's reason describes each radio (#9169)
-- [ ] [`df6d16fea`](https://github.com/meta/astryx/commit/df6d16fea) fix(SegmentedControl): the disabled reason describes each segment, and one Tab stop remains when no enabled segment is selected (#9176)
+- [x] [`f277e2580`](https://github.com/meta/astryx/commit/f277e2580) fix(core): a single esbuild bundle renders Core: lazily imported modules import Core directly, not through barrels (#9055)
+  - 不适用：React 版 esbuild 打包入口的问题，已在基础展示与动作按钮族判过
+- [x] [`afcea1552`](https://github.com/meta/astryx/commit/afcea1552) fix(FileInput, Slider): convey required under FormLayout defaultOptionality (#9053)
+  - 已移植：[#589](https://github.com/astryx-vue/astryx-vue/pull/589)。Slider 用 useAriaRequired，外层 FormLayout 默认必填时滑块也带「必填」说明（FileInput 部分不在本范围）
+- [x] [`070d574db`](https://github.com/meta/astryx/commit/070d574db) fix(core): a disabled SegmentedControlItem no longer runs a caller's onClick (#8989)
+  - 已移植：[#589](https://github.com/astryx-vue/astryx-vue/pull/589)。禁用的 SegmentedControlItem（含带原因的禁用组里还能聚焦的选中分段）不再运行调用方的 onClick
+- [x] [`ec128c411`](https://github.com/meta/astryx/commit/ec128c411) fix(Slider): range thumb names come from the catalog (#9023)
+  - Vue 版已有：Slider.vue 的范围滑块名字取自 locale 的 slider.minimumThumb、maximumThumb，Slider.test.ts 覆盖
+- [x] [`a3eaa6d3b`](https://github.com/meta/astryx/commit/a3eaa6d3b) fix(RadioList, Switch): required inputs take their invalid state from status (#9042)
+  - 已移植：[#589](https://github.com/astryx-vue/astryx-vue/pull/589)。RadioList 整组带 aria-required 和 aria-invalid，必填的单选带 required、aria-invalid 跟 status；Switch 带 required，无错误时 aria-invalid 为 false
+- [x] [`eecd9c1a5`](https://github.com/meta/astryx/commit/eecd9c1a5) fix(core): a disabled Switch no longer runs a caller's key handlers (#9122)
+  - 已移植：[#589](https://github.com/astryx-vue/astryx-vue/pull/589)。新增 withholdCallerHandlers：禁用的 Switch 不运行调用方除聚焦、失焦外的处理函数
+- [x] [`35063398d`](https://github.com/meta/astryx/commit/35063398d) fix(ToggleButtonGroup): className, style and other host props reach the group element (#9040)
+  - Vue 版已有：ToggleButtonGroup 是单根元素，class、style、id、data-* 等调用方属性自动落在组元素上
+- [x] [`18b5260b6`](https://github.com/meta/astryx/commit/18b5260b6) fix(core): a disabled RadioListItem no longer runs a caller's onClick (#9120)
+  - 已移植：[#589](https://github.com/astryx-vue/astryx-vue/pull/589)。Radio 把调用方属性交给行并在禁用时去掉处理函数，禁用的 RadioListItem 不跑 onClick
+- [x] [`6a79bfb74`](https://github.com/meta/astryx/commit/6a79bfb74) fix(Slider): two coincident range thumbs can be dragged apart (#8151)
+  - 已移植：[#589](https://github.com/astryx-vue/astryx-vue/pull/589)。范围 Slider 两个滑块重合时按在滑块上不动，第一次移动的方向选滑块，越过另一个时由另一个接手，拖动中只有被拖的滑块显示数值
+- [x] [`dce0ccfd6`](https://github.com/meta/astryx/commit/dce0ccfd6) fix(Slider): a press on the mark label of coincident thumbs goes to the upper thumb, as a press on the thumbs does (#9184)
+  - 已移植：[#589](https://github.com/astryx-vue/astryx-vue/pull/589)。按在重合滑块的刻度文字上同样不动，由上面那个滑块扛着并拿到焦点
+- [x] [`53c8c4a78`](https://github.com/meta/astryx/commit/53c8c4a78) fix(CheckboxList): a disabled group's reason describes each checkbox (#9168)
+  - Vue 版已有：CheckboxListItem 把整组禁用原因传给每个复选框的 disabledMessage，写进各自的 aria-describedby
+- [x] [`b56b6d4fc`](https://github.com/meta/astryx/commit/b56b6d4fc) fix(core): one modality call per component, reading the component's own document (#9148)
+  - 不适用：每个组件只调一次交互方式探测的 React hook 调用约束；Vue 在 setup 里只装一次全局探测，读的是当前文档
+- [x] [`701c3b2ba`](https://github.com/meta/astryx/commit/701c3b2ba) fix(RadioList): a disabled group's reason describes each radio (#9169)
+  - Vue 版已有：RadioGroup 带 disabledMessage 时每个单选仍可聚焦并通过 messageDescriptionId 被原因描述，RadioList.test.ts 覆盖
+- [x] [`df6d16fea`](https://github.com/meta/astryx/commit/df6d16fea) fix(SegmentedControl): the disabled reason describes each segment, and one Tab stop remains when no enabled segment is selected (#9176)
+  - Vue 版已有：SegmentedControlItem 的 describedBy 含禁用原因；syncTabStops 保证没有选中分段时仍有一个 Tab 落脚点
 - [x] [`2a905bb85`](https://github.com/meta/astryx/commit/2a905bb85) test(CheckboxList): the group-disabled item's binding fact expects the reason as its description (#9248)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`a0464850d`](https://github.com/meta/astryx/commit/a0464850d) fix(core): ToggleButton keeps its reflected pressed state over a caller's (#9159)
-- [ ] [`0135af462`](https://github.com/meta/astryx/commit/0135af462) fix(core N–Z): slots use isRenderable; the remaining checks are allowed with a reason (#9206)
+- [x] [`a0464850d`](https://github.com/meta/astryx/commit/a0464850d) fix(core): ToggleButton keeps its reflected pressed state over a caller's (#9159)
+  - 已移植：[#589](https://github.com/astryx-vue/astryx-vue/pull/589)。ToggleButton 关掉属性自动继承，调用方的 aria-pressed、data-pressed 排在前面，由真实按下状态覆盖
+- [x] [`0135af462`](https://github.com/meta/astryx/commit/0135af462) fix(core N–Z): slots use isRenderable; the remaining checks are allowed with a reason (#9206)
+  - 不适用：React 的 isRenderable 渲染检查和 lint 例外清单，Vue 版用插槽是否有内容判断
 - [x] [`e0a03766d`](https://github.com/meta/astryx/commit/e0a03766d) docs(knowledge): every component spec lives in docs/specs/components, one folder per component (#9007)
   - 不适用：上游内部规范和架构文档、上游组件规范文档（自动初筛）
-- [ ] [`432d9577d`](https://github.com/meta/astryx/commit/432d9577d) fix(SegmentedControl): a disabled control, or a disabled selected segment, keeps the Tab stop (#9314)
+- [x] [`432d9577d`](https://github.com/meta/astryx/commit/432d9577d) fix(SegmentedControl): a disabled control, or a disabled selected segment, keeps the Tab stop (#9314)
+  - Vue 版已有：SegmentedControl.vue 的 syncTabStops 让选中的分段拿 Tab 落脚点，禁用与否一样；SegmentedControlItem 的 tabIndex 同理
 - [x] [`2406addf5`](https://github.com/meta/astryx/commit/2406addf5) test(rtl): RTL coverage for list, metadata, radio, selector and typeahead rows (#9308)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`df7ad1bd5`](https://github.com/meta/astryx/commit/df7ad1bd5) test(rtl): RTL coverage for Tab, TabMenu, SegmentedControlItem and ToggleButtonGroup (#9330)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`8a5524637`](https://github.com/meta/astryx/commit/8a5524637) spec(Slider): every pointer tracks from the grab point; a finger's release coasts (#9407)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`99cc6dc85`](https://github.com/meta/astryx/commit/99cc6dc85) fix(core): many components carry only the English for their own strings (#9429)
+- [x] [`99cc6dc85`](https://github.com/meta/astryx/commit/99cc6dc85) fix(core): many components carry only the English for their own strings (#9429)
+  - 已移植：[#515](https://github.com/astryx-vue/astryx-vue/pull/515)。组件只按自己的命名空间读内置文案，由基础展示与动作按钮族落地
 
 ### v0.7.7
 
 - [ ] [`723e04539`](https://github.com/meta/astryx/commit/723e04539) feat(Slider): every pointer drags a thumb by its travel, as UISlider does (#8190)
+  - 暂缓：Slider 按行程拖动、轨道点按在抬手时设值、惯性和橡皮筋依赖拖拽跟手手势与 UISlider 跟踪控制器；归动效与手势引擎任务（控件阶段）
 - [ ] [`1f47db9c8`](https://github.com/meta/astryx/commit/1f47db9c8) feat(Switch): the touch presentation, for every pointer (#9636)
   - 暂缓：本期已做宿主和 PressTracker 的改动（#579）；剩 Switch 的触屏呈现，归组件接入阶段
-- [ ] [`322c0d6e6`](https://github.com/meta/astryx/commit/322c0d6e6) fix(Button, Tab, Tokenizer and more): slots follow isRenderable; no truthy-guard baseline (#9501)
-- [ ] [`6690e3394`](https://github.com/meta/astryx/commit/6690e3394) fix(Switch): a mouse or pen press released away from the switch never toggles it (#9686)
+  - 暂缓：Switch 触屏呈现（拇指抬起、拖动跟手、弹簧落定、按住到翻转距离）依赖手势与弹簧设施里的开关角色和触屏呈现；归动效与手势引擎任务（控件阶段）
+- [x] [`322c0d6e6`](https://github.com/meta/astryx/commit/322c0d6e6) fix(Button, Tab, Tokenizer and more): slots follow isRenderable; no truthy-guard baseline (#9501)
+  - 已移植：[#508](https://github.com/astryx-vue/astryx-vue/pull/508)。SegmentedControlItem 的空插槽不画包裹元素，由基础展示与动作按钮族落地
+- [x] [`6690e3394`](https://github.com/meta/astryx/commit/6690e3394) fix(Switch): a mouse or pen press released away from the switch never toggles it (#9686)
+  - Vue 版已有：Switch 用原生 checkbox，鼠标或笔在开关外松手不会产生 click，不会切换；没有自己写的按压跟踪
 - [ ] [`95438ffaf`](https://github.com/meta/astryx/commit/95438ffaf) feat(SegmentedControl): the selection slides on every change and drags with any pointer (#9632)
-- [ ] [`c76b17b56`](https://github.com/meta/astryx/commit/c76b17b56) fix(CheckboxList): an error status makes every checkbox aria-invalid (#9634)
-- [ ] [`26f5e5d8c`](https://github.com/meta/astryx/commit/26f5e5d8c) fix(CheckboxList, RadioList): a disabled list marks its group aria-disabled (#9633)
+  - 暂缓：选中块每次切换滑过去已在 #590 用 CSS 过渡（主题时长和曲线）做出；剩上游的弹簧手感和任意指针拖动选中块，归动效与手势引擎任务（控件阶段 4d）
+- [x] [`c76b17b56`](https://github.com/meta/astryx/commit/c76b17b56) fix(CheckboxList): an error status makes every checkbox aria-invalid (#9634)
+  - 已移植：[#589](https://github.com/astryx-vue/astryx-vue/pull/589)。CheckboxList 的错误状态让每个复选框带 aria-invalid
+- [x] [`26f5e5d8c`](https://github.com/meta/astryx/commit/26f5e5d8c) fix(CheckboxList, RadioList): a disabled list marks its group aria-disabled (#9633)
+  - 已移植：[#589](https://github.com/astryx-vue/astryx-vue/pull/589)。禁用的 CheckboxList、RadioList 整组标 aria-disabled，启用时不写
 - [x] [`3615956e2`](https://github.com/meta/astryx/commit/3615956e2) fix(gestures): pens and pointer-read fingers get the blur refusal and the pinch rule of the Touch Events path (#8309)
   - 不适用：只改上游测试（自动初筛）
 
 ### v0.7.8
 
 - [ ] [`30160f5ce`](https://github.com/meta/astryx/commit/30160f5ce) feat(core): PowerSearch touch sheet flow behind experimental.presentation (#8001)
-- [ ] [`871bc3d5e`](https://github.com/meta/astryx/commit/871bc3d5e) feat(core): createAnimator and useAnimator animate one element (#8653)
-- [ ] [`a81487737`](https://github.com/meta/astryx/commit/a81487737) feat(core): a first-party indicator can paint its own press (#9716)
-- [ ] [`4b7546d3b`](https://github.com/meta/astryx/commit/4b7546d3b) fix(CheckboxInput, Switch): a form's required default no longer marks an unchecked box or off switch required (#9664)
-- [ ] [`cd1e42cec`](https://github.com/meta/astryx/commit/cd1e42cec) feat(CheckboxList): an optional checkbox group can say so with isOptional (#8770)
-- [ ] [`41cce0b0a`](https://github.com/meta/astryx/commit/41cce0b0a) fix(core): a disabled Slider no longer runs a caller's handlers (#9729)
+  - 暂缓：PowerSearch 触屏面板流程依赖触屏呈现（presentation）；本范围的 RadioList 文件只改了导入路径；归动效与手势引擎任务（控件阶段）
+- [x] [`871bc3d5e`](https://github.com/meta/astryx/commit/871bc3d5e) feat(core): createAnimator and useAnimator animate one element (#8653)
+  - Vue 版已有：composables/createAnimator.ts、useAnimator.ts 已在 main；SegmentedControl、Slider、Switch 里对它的消费随各自条目判断
+- [x] [`a81487737`](https://github.com/meta/astryx/commit/a81487737) feat(core): a first-party indicator can paint its own press (#9716)
+  - 不适用：上游为别的包里的替换指示器引入的内部标记，不是公开 API；Vue 版内置指示器已读行上的按压画面
+- [x] [`4b7546d3b`](https://github.com/meta/astryx/commit/4b7546d3b) fix(CheckboxInput, Switch): a form's required default no longer marks an unchecked box or off switch required (#9664)
+  - Vue 版已有：useAriaRequired 只把 FormLayout 的默认必填写成 aria-required，原生 required 只跟 isRequired
+- [x] [`cd1e42cec`](https://github.com/meta/astryx/commit/cd1e42cec) feat(CheckboxList): an optional checkbox group can say so with isOptional (#8770)
+  - Vue 版已有：CheckboxList 已有 isOptional，由 Field 显示「可选」标记，CheckboxList.required.test.ts 覆盖
+- [x] [`41cce0b0a`](https://github.com/meta/astryx/commit/41cce0b0a) fix(core): a disabled Slider no longer runs a caller's handlers (#9729)
+  - 已移植：[#589](https://github.com/astryx-vue/astryx-vue/pull/589)。禁用的 Slider 不运行调用方的指针和按键处理函数（单个滑块和范围组都一样），聚焦、失焦照常
 - [x] [`e390c3c43`](https://github.com/meta/astryx/commit/e390c3c43) test(browser): keep every Playwright browser context off remote hosts (#9811)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`f10bc9153`](https://github.com/meta/astryx/commit/f10bc9153) spec(AST-094): only a gesture's motion springs; other motion plays the theme's tokens (#9706)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`6255d3022`](https://github.com/meta/astryx/commit/6255d3022) feat(CheckboxList): a required checkbox group needs one checked box (isRequired) (#9854)
+- [x] [`6255d3022`](https://github.com/meta/astryx/commit/6255d3022) feat(CheckboxList): a required checkbox group needs one checked box (isRequired) (#9854)
+  - Vue 版已有：CheckboxList 的 isRequired 由 requiredGroup.ts 让一组里至少勾一个，CheckboxList.required.test.ts 覆盖
 
 ### v0.7.9
 
-- [ ] [`298bafbc1`](https://github.com/meta/astryx/commit/298bafbc1) fix(core): a list row's touch press release runs on the compositor (#9762)
-- [ ] [`9bd11b363`](https://github.com/meta/astryx/commit/9bd11b363) feat(core): a checkbox's or radio option's hit area grows toward 44 px (#8241)
-- [ ] [`7f8de290c`](https://github.com/meta/astryx/commit/7f8de290c) fix(core): a press's release fades on the theme's exit motion tokens (#9890)
-- [ ] [`7b71d71b4`](https://github.com/meta/astryx/commit/7b71d71b4) feat(List): a row's touch target grows toward 44 px where its neighbors leave room (#8085)
-- [ ] [`a6a9b9c50`](https://github.com/meta/astryx/commit/a6a9b9c50) fix(CheckboxListItem): a row answers a finger the same wherever it lands (#8212)
+- [x] [`298bafbc1`](https://github.com/meta/astryx/commit/298bafbc1) fix(core): a list row's touch press release runs on the compositor (#9762)
+  - 不适用：只是把行的触屏按压释放淡出改到合成器线程跑的性能实现；Vue 版按主题退出时长用 CSS 关键帧淡出，用户看到的时长和曲线一致
+- [x] [`9bd11b363`](https://github.com/meta/astryx/commit/9bd11b363) feat(core): a checkbox's or radio option's hit area grows toward 44 px (#8241)
+  - Vue 版已有：CheckboxInput、Radio 用 useTouchHitArea，粗指针下热区朝 44px 长（提交 21f37baa）
+- [x] [`7f8de290c`](https://github.com/meta/astryx/commit/7f8de290c) fix(core): a press's release fades on the theme's exit motion tokens (#9890)
+  - 已移植：[#501](https://github.com/astryx-vue/astryx-vue/pull/501)。按压释放按主题退出时长淡出，由基础展示与动作按钮族落地
+- [x] [`7b71d71b4`](https://github.com/meta/astryx/commit/7b71d71b4) feat(List): a row's touch target grows toward 44 px where its neighbors leave room (#8085)
+  - Vue 版已有：复选框行、单选行的触控热区夹紧到与邻居间距的一半，useTouchHitArea 已覆盖
+- [x] [`a6a9b9c50`](https://github.com/meta/astryx/commit/a6a9b9c50) fix(CheckboxListItem): a row answers a finger the same wherever it lands (#8212)
+  - 已移植：[#589](https://github.com/astryx-vue/astryx-vue/pull/589)。列表行里的复选框不再单独当按压表面，整行画按压，复选框读行上的按压画面；单独的复选框照旧
 - [x] [`195fcfd93`](https://github.com/meta/astryx/commit/195fcfd93) test(Slider): the busy-main-thread coast proof runs in WebKit on the paced touch play (#9694)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`5cb261b01`](https://github.com/meta/astryx/commit/5cb261b01) test(CheckboxList): a row adds no touch-query listener of its own (#10046)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`c26fcd543`](https://github.com/meta/astryx/commit/c26fcd543) chore(lab): Lab's animator hook, over Core's internal touch entry (#9754)
+- [x] [`c26fcd543`](https://github.com/meta/astryx/commit/c26fcd543) chore(lab): Lab's animator hook, over Core's internal touch entry (#9754)
   - 暂缓：内核部分已在 #563-#568；剩 DateInput 滚轮、SegmentedControl、Slider、Switch 触屏控制器与 lab RefreshControl 的动效接入，归动效与手势引擎的组件接入阶段
+  - 不适用：Lab 的动画器 hook 对 Core 内部触屏入口的改接，是上游内部包间的重构
 - [x] [`8286740d1`](https://github.com/meta/astryx/commit/8286740d1) test(SegmentedControl): hold the keyed and app-change slides at birth (#10070)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`257573b22`](https://github.com/meta/astryx/commit/257573b22) docs(AST-094, AST-057): motion guidance; gesture springs; swipe-row returns (#9915)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`1dce31829`](https://github.com/meta/astryx/commit/1dce31829) refactor(motion): core's shared theme-timing reader (#10068)
+- [x] [`1dce31829`](https://github.com/meta/astryx/commit/1dce31829) refactor(motion): core's shared theme-timing reader (#10068)
   - 暂缓：内核部分已在 #563-#568；剩 SegmentedControl 选中动效，归动效与手势引擎的组件接入阶段
-- [ ] [`7aaf2a1b9`](https://github.com/meta/astryx/commit/7aaf2a1b9) fix(core): a disabled CheckboxInput no longer runs a caller's handlers (#10092)
-- [ ] [`ceefccdfc`](https://github.com/meta/astryx/commit/ceefccdfc) feat(core): the animator's springs follow the theme's tempo (#8677)
+  - Vue 版已有：motion/themeTiming.ts 已是共用的主题时序读取器
+- [x] [`7aaf2a1b9`](https://github.com/meta/astryx/commit/7aaf2a1b9) fix(core): a disabled CheckboxInput no longer runs a caller's handlers (#10092)
+  - 已移植：[#589](https://github.com/astryx-vue/astryx-vue/pull/589)。禁用的 CheckboxInput 不运行调用方除聚焦、失焦外的处理函数
+- [x] [`ceefccdfc`](https://github.com/meta/astryx/commit/ceefccdfc) feat(core): the animator's springs follow the theme's tempo (#8677)
   - 暂缓：内核部分已在 #563-#568；剩 Switch 触屏手势 useSwitchTouch、CLI 主题模板，归动效与手势引擎的组件接入阶段
+  - Vue 版已有：motion/themeTempo.ts 已让弹簧跟随主题节奏；本范围里它的消费者（Switch 触屏）见 1f47db9c8
 - [x] [`db3451eee`](https://github.com/meta/astryx/commit/db3451eee) test(CheckboxList): the press-fade proof holds the release in its first frame (#10097)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`92947d98f`](https://github.com/meta/astryx/commit/92947d98f) test: three suites pass without the NODE_PATH pnpm's bin shim sets (#10088)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`40ab0ecf6`](https://github.com/meta/astryx/commit/40ab0ecf6) fix(Pagination): the dots expose the radio group they already behave as (#8859)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`de0bbc2ff`](https://github.com/meta/astryx/commit/de0bbc2ff) fix(CheckboxListItem): a checked row reflects selected on its row targets (#10146)
+- [x] [`de0bbc2ff`](https://github.com/meta/astryx/commit/de0bbc2ff) fix(CheckboxListItem): a checked row reflects selected on its row targets (#10146)
+  - Vue 版已有：CheckboxListItem 的 selected 计算让勾选的行把 isSelected 传给 ListItem，行上带 data-selected
 - [x] [`1ef21f898`](https://github.com/meta/astryx/commit/1ef21f898) fix(Spinner): route standalone loading through the shared announcement channel (#7910)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`ab7facf1e`](https://github.com/meta/astryx/commit/ab7facf1e) fix(core): spring roles register themselves when they load (#10138)
+- [x] [`ab7facf1e`](https://github.com/meta/astryx/commit/ab7facf1e) fix(core): spring roles register themselves when they load (#10138)
   - 暂缓：内核部分已在 #563-#568；剩 DateInput PickerWheel 与 SegmentedControl 选中动效，归动效与手势引擎的组件接入阶段
+  - 不适用：弹簧角色在加载时自注册，已在其他族判过
 - [x] [`097955952`](https://github.com/meta/astryx/commit/097955952) test(RadioList): the radio-group summary reads each state's result instead of checking every state again (#10206)
   - 不适用：只改上游测试（自动初筛）
 
 ### v0.7.10
 
 - [ ] [`add05168f`](https://github.com/meta/astryx/commit/add05168f) fix(core): a finger held on a control's box picks it, not the text (#10091)
-- [ ] [`2c66211e8`](https://github.com/meta/astryx/commit/2c66211e8) fix(SegmentedControl): a segment's touch target grows toward 44 px without growing its box (#10137)
+  - 暂缓：iOS 长按控件框时选中文字而不点击，上游靠按压控制器的 box-hold 扩展处理，Vue 版按压控制器还没有；归动效与手势引擎任务（控件阶段）
+- [x] [`2c66211e8`](https://github.com/meta/astryx/commit/2c66211e8) fix(SegmentedControl): a segment's touch target grows toward 44 px without growing its box (#10137)
+  - Vue 版已有：SegmentedControlItem 用 useTouchHitArea，分段目标朝 44px 长而盒子不变，SegmentedControl.touchTarget.test.ts 覆盖
 - [x] [`8bd8c6146`](https://github.com/meta/astryx/commit/8bd8c6146) fix(core): layout glides play the theme's move curve, not a spring (#10236)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`1bc28f349`](https://github.com/meta/astryx/commit/1bc28f349) fix(Slider): the value tooltip stays on its thumb through a drag (#10228)
+- [x] [`1bc28f349`](https://github.com/meta/astryx/commit/1bc28f349) fix(Slider): the value tooltip stays on its thumb through a drag (#10228)
+  - Vue 版已有：Slider 的数值提示直接锚在拇指上，拇指用 inset 定位，拖动中提示随拇指位置更新，Slider.test.ts 覆盖
 
 ### v0.7.11
 
@@ -8613,7 +8676,8 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`afeaf3226`](https://github.com/meta/astryx/commit/afeaf3226) test(Slider): read the lift in the page, not from onEvent (#10381)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`e10347c4e`](https://github.com/meta/astryx/commit/e10347c4e) fix(Button): under a finger, a Button's target grows toward 44 px through the shared touch band (#10216)
+- [x] [`e10347c4e`](https://github.com/meta/astryx/commit/e10347c4e) fix(Button): under a finger, a Button's target grows toward 44 px through the shared touch band (#10216)
+  - 已移植：[#516](https://github.com/astryx-vue/astryx-vue/pull/516)。触控热区设施，由基础展示与动作按钮族落地，复选框、单选、分段已接
 - [x] [`28270c143`](https://github.com/meta/astryx/commit/28270c143) test(interaction-harness): an armed hold names the motion it judges (#10386)
   - 不适用：只改上游测试（自动初筛）
 
@@ -8631,19 +8695,24 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`f1ad44ff0`](https://github.com/meta/astryx/commit/f1ad44ff0) test(core): the segmented slide's busy proof starts in time (#10315)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`422440a64`](https://github.com/meta/astryx/commit/422440a64) fix(core): two copies of Core's modules share one React context (#10233)
+- [x] [`422440a64`](https://github.com/meta/astryx/commit/422440a64) fix(core): two copies of Core's modules share one React context (#10233)
+  - 不适用：React context 多副本问题，已在基础展示与动作按钮族判过
 - [ ] [`39d5abc76`](https://github.com/meta/astryx/commit/39d5abc76) fix(core): a rebase toward the new rest shifts the curve whole (#10369)
+  - 暂缓：开关触屏呈现里弹簧朝新静止位重新计算的曲线，随 Switch 触屏呈现一起做；归动效与手势引擎任务（控件阶段）
 - [x] [`3d12633e4`](https://github.com/meta/astryx/commit/3d12633e4) test(core): the Switch's late-frames catch reads the turn on every frame (#10518)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`e1eca2070`](https://github.com/meta/astryx/commit/e1eca2070) test(SegmentedControl): a change mid-flight reads the tap's fade frozen (#10519)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`afcba3b79`](https://github.com/meta/astryx/commit/afcba3b79) fix(core): a Switch at rest holds no compositing layer (#10542)
+- [x] [`afcba3b79`](https://github.com/meta/astryx/commit/afcba3b79) fix(core): a Switch at rest holds no compositing layer (#10542)
+  - Vue 版已有：Switch 静止时没有 will-change、动画或合成层，拇指只用 CSS 过渡
 - [x] [`81d480b80`](https://github.com/meta/astryx/commit/81d480b80) test(Slider): three touch proofs read the page's own frames (#10562)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`f75f0f2d3`](https://github.com/meta/astryx/commit/f75f0f2d3) feat(ToggleButtonGroup): a finger's slide toggles the one it lifts on (#8660)
+- [x] [`f75f0f2d3`](https://github.com/meta/astryx/commit/f75f0f2d3) feat(ToggleButtonGroup): a finger's slide toggles the one it lifts on (#8660)
+  - 已移植：[#509](https://github.com/astryx-vue/astryx-vue/pull/509)。ToggleButtonGroup 只切换松手处的成员，由基础展示与动作按钮族落地
 - [x] [`241712bfc`](https://github.com/meta/astryx/commit/241712bfc) test(core): the Switch's late-lift catch holds its lift with the harness (#10614)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`aefb30d0c`](https://github.com/meta/astryx/commit/aefb30d0c) fix(PowerSearch): the sheet's choice lists are standard RadioList and CheckboxList (#10608)
+- [x] [`aefb30d0c`](https://github.com/meta/astryx/commit/aefb30d0c) fix(PowerSearch): the sheet's choice lists are standard RadioList and CheckboxList (#10608)
+  - 不适用：只是 PowerSearch 面板用的列表导入路径改为直接导入，React 打包问题
 - [x] [`3fb73b3d4`](https://github.com/meta/astryx/commit/3fb73b3d4) fix(core): a spring retarget committed late starts at its frame (#10607)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`0edaed861`](https://github.com/meta/astryx/commit/0edaed861) test(core): the Switch's busy-thread proofs judge against a control (#10511)
@@ -8656,7 +8725,8 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`f36bd72b8`](https://github.com/meta/astryx/commit/f36bd72b8) test(a11y): Slider (Multi-Thumb) contract and range Slider binding (#10830)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`5f1c1161b`](https://github.com/meta/astryx/commit/5f1c1161b) docs(SegmentedControl): label contrast depends on the background under the translucent track (#10882)
+- [x] [`5f1c1161b`](https://github.com/meta/astryx/commit/5f1c1161b) docs(SegmentedControl): label contrast depends on the background under the translucent track (#10882)
+  - 已移植：[#589](https://github.com/astryx-vue/astryx-vue/pull/589)。SegmentedControl 无障碍对比度条目补上「轨道半透明，文字对比度取决于背后的背景」（中英两套）
 - [x] [`0b5663f2b`](https://github.com/meta/astryx/commit/0b5663f2b) fix(theme-neutral): lift an unselected SegmentedControl label to 4.5:1 on the dark track (#10881)
   - 不适用：只改上游测试（自动初筛）
 
@@ -8664,8 +8734,10 @@
 
 - [x] [`8a8710cb3`](https://github.com/meta/astryx/commit/8a8710cb3) test: three Switch and Tooltip marker reads decode their frames once (#11074)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`108f354ae`](https://github.com/meta/astryx/commit/108f354ae) fix(core): drop 'use client' from the package root and the component barrels (#11106)
+- [x] [`108f354ae`](https://github.com/meta/astryx/commit/108f354ae) fix(core): drop 'use client' from the package root and the component barrels (#11106)
+  - 不适用：React Server Components 的 use client 指令，已在基础展示与动作按钮族判过
 - [ ] [`e01c68b9c`](https://github.com/meta/astryx/commit/e01c68b9c) feat(SegmentedControl): a drag that drifts off keeps choosing (#10978)
+  - 暂缓：拖出控件仍继续选择依赖 SegmentedControl 的任意指针拖动跟踪；归动效与手势引擎任务（控件阶段）
 - [x] [`179767d1c`](https://github.com/meta/astryx/commit/179767d1c) docs(buttons): a disabled Button renders aria-disabled, never native disabled (#11147)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`9a3f29608`](https://github.com/meta/astryx/commit/9a3f29608) fix(useKeyboardHint): the arrow-key hint stays until dismissed, and Escape closes it (#10564)
@@ -8676,41 +8748,65 @@
 ### v0.7.15
 
 - [ ] [`f8f9ce98a`](https://github.com/meta/astryx/commit/f8f9ce98a) feat(SegmentedControl): under a finger, the selected surface lifts (#9724)
+  - 暂缓：手指按下时选中面抬起依赖触屏呈现与弹簧角色；归动效与手势引擎任务（控件阶段）
 - [ ] [`e7e9af2f8`](https://github.com/meta/astryx/commit/e7e9af2f8) feat(core): a mouse or pen press on a checkbox or a radio option paints at once and fades on release (#8696)
-- [ ] [`807dc2ead`](https://github.com/meta/astryx/commit/807dc2ead) refactor(core): name the nested press rule for every pointer it covers (#11304)
+  - 暂缓：鼠标和笔按压复选框、单选项时按压控制器统一接管并淡出，Vue 版按压控制器只接管手指与笔，鼠标仍是 :active 立刻消失；归动效与手势引擎任务（控件阶段）
+- [x] [`807dc2ead`](https://github.com/meta/astryx/commit/807dc2ead) refactor(core): name the nested press rule for every pointer it covers (#11304)
+  - 不适用：上游只改名与挪样式，无行为变化，已在基础展示与动作按钮族判过
 
 ### v0.7.16
 
-- [ ] [`73584cf84`](https://github.com/meta/astryx/commit/73584cf84) fix(Slider): sync its handler refs at commit (#10913)
-- [ ] [`9d2ce46c7`](https://github.com/meta/astryx/commit/9d2ce46c7) docs(core): playground defaults for eight components and sample items for four group playgrounds (#11351)
+- [x] [`73584cf84`](https://github.com/meta/astryx/commit/73584cf84) fix(Slider): sync its handler refs at commit (#10913)
+  - 不适用：React 里在提交阶段同步处理函数 ref 的问题，Vue 没有这种 ref
+- [x] [`9d2ce46c7`](https://github.com/meta/astryx/commit/9d2ce46c7) docs(core): playground defaults for eight components and sample items for four group playgrounds (#11351)
+  - Vue 版已有：演练场初始值本就是真实示例，已在基础展示与动作按钮族判过
 - [x] [`0996af5e1`](https://github.com/meta/astryx/commit/0996af5e1) docs(CheckboxListItem): name the align prop that reaches the row (#11482)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`c78fa5ab4`](https://github.com/meta/astryx/commit/c78fa5ab4) fix(SegmentedControl): a click without layout keeps the clicked segment (#11487)
+- [x] [`c78fa5ab4`](https://github.com/meta/astryx/commit/c78fa5ab4) fix(SegmentedControl): a click without layout keeps the clicked segment (#11487)
+  - 不适用：SegmentedControl 的触屏命中跟踪层在没有布局时的兜底；Vue 版选中靠按钮自己的 click 事件，没有按坐标命中
 
 ### v0.7.17
 
 - [x] [`babdd8f15`](https://github.com/meta/astryx/commit/babdd8f15) test(Slider): the slow-release test runs on a fixed track length (#11547)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`f23df7df4`](https://github.com/meta/astryx/commit/f23df7df4) fix(CheckboxInput): a required box is not announced as invalid before an error (#11619)
-- [ ] [`1ac15daf3`](https://github.com/meta/astryx/commit/1ac15daf3) fix(Slider): a horizontal slider keeps room for its mark labels (#11586)
-- [ ] [`e4a11bb68`](https://github.com/meta/astryx/commit/e4a11bb68) fix(core): a radio's circle is drawn at 50%, not with the pill token (#11836)
-- [ ] [`12f81bd6b`](https://github.com/meta/astryx/commit/12f81bd6b) fix(core): ToggleButtonGroup wraps instead of cutting its labels on a narrow screen (#12172)
-- [ ] [`08c8f842c`](https://github.com/meta/astryx/commit/08c8f842c) feat(core): a Button shows its full label in a tooltip when the label is cut short (#12169)
-- [ ] [`dda98593d`](https://github.com/meta/astryx/commit/dda98593d) fix(core): the switch thumb stays round, and inherited text takes the theme's body size (#12236)
-- [ ] [`3b4c1993c`](https://github.com/meta/astryx/commit/3b4c1993c) fix(core): theme targets for parts that paint inside a component (#12081)
-- [ ] [`72f2d7caa`](https://github.com/meta/astryx/commit/72f2d7caa) docs: icon props take semantic names; Selector hasClear types; useTableSelectionState returns (#12583)
+- [x] [`f23df7df4`](https://github.com/meta/astryx/commit/f23df7df4) fix(CheckboxInput): a required box is not announced as invalid before an error (#11619)
+  - 已移植：[#589](https://github.com/astryx-vue/astryx-vue/pull/589)。必填的 CheckboxInput 出错前 aria-invalid 为 false，不让浏览器的无效状态提前被读出
+- [x] [`1ac15daf3`](https://github.com/meta/astryx/commit/1ac15daf3) fix(Slider): a horizontal slider keeps room for its mark labels (#11586)
+  - 已移植：[#589](https://github.com/astryx-vue/astryx-vue/pull/589)。横向 Slider 给刻度文字留的底部空间改按文字行高计算，粗指针下同步
+- [x] [`e4a11bb68`](https://github.com/meta/astryx/commit/e4a11bb68) fix(core): a radio's circle is drawn at 50%, not with the pill token (#11836)
+  - 已移植：[#589](https://github.com/astryx-vue/astryx-vue/pull/589)。单选圈用 50% 画圆，不再吃主题的胶囊半径
+- [x] [`12f81bd6b`](https://github.com/meta/astryx/commit/12f81bd6b) fix(core): ToggleButtonGroup wraps instead of cutting its labels on a narrow screen (#12172)
+  - 已移植：[#589](https://github.com/astryx-vue/astryx-vue/pull/589)。ToggleButtonGroup 横排时 flex-wrap，窄屏换行不截断标签，竖排不换行
+- [x] [`08c8f842c`](https://github.com/meta/astryx/commit/08c8f842c) feat(core): a Button shows its full label in a tooltip when the label is cut short (#12169)
+  - 已移植：[#505](https://github.com/astryx-vue/astryx-vue/pull/505)。Button 标签被截短时键盘聚焦显示完整标签，由基础展示与动作按钮族落地
+- [x] [`dda98593d`](https://github.com/meta/astryx/commit/dda98593d) fix(core): the switch thumb stays round, and inherited text takes the theme's body size (#12236)
+  - 已移植：[#589](https://github.com/astryx-vue/astryx-vue/pull/589)。Switch 拇指默认半径改为 50%，主题把胶囊半径改成方角时拇指仍是圆的；文字字号已读主题正文字号
+- [x] [`3b4c1993c`](https://github.com/meta/astryx/commit/3b4c1993c) fix(core): theme targets for parts that paint inside a component (#12081)
+  - 已移植：[#506](https://github.com/astryx-vue/astryx-vue/pull/506)。组件内部部位的主题挂点，由基础展示与动作按钮族落地；ToggleButton 的 grouped 状态已在 componentPartTargets.test.ts 里
+- [x] [`72f2d7caa`](https://github.com/meta/astryx/commit/72f2d7caa) docs: icon props take semantic names; Selector hasClear types; useTableSelectionState returns (#12583)
+  - 已移植：[#589](https://github.com/astryx-vue/astryx-vue/pull/589)。Switch 文档的 labelIcon 改成 IconName 或组件，可传语义图标名（中英两套）
 - [x] [`a2edb5300`](https://github.com/meta/astryx/commit/a2edb5300) chore: land batch 2 (16 pull requests) (#12718)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`5c887ba97`](https://github.com/meta/astryx/commit/5c887ba97) perf(Switch): measure the track at the first press, not at mount (#12700)
-- [ ] [`8bd67fe30`](https://github.com/meta/astryx/commit/8bd67fe30) chore: land batch 1 (12 pull requests) (#12713)
-- [ ] [`d9676b913`](https://github.com/meta/astryx/commit/d9676b913) perf(CheckboxInput): the disabled-message tooltip runs only while it can show (#12376)
-- [ ] [`9dbdcb950`](https://github.com/meta/astryx/commit/9dbdcb950) fix(RadioList): Tab from any radio leaves the group (#11626)
-- [ ] [`cf537d7aa`](https://github.com/meta/astryx/commit/cf537d7aa) chore: land batch 11 (3 pull requests) (#12848)
-- [ ] [`53615c1f4`](https://github.com/meta/astryx/commit/53615c1f4) chore: land batch 19 (3 pull requests) (#12875)
-- [ ] [`83424673c`](https://github.com/meta/astryx/commit/83424673c) chore: land batch 16 (6 pull requests) (#12881)
-- [ ] [`31b52d0cb`](https://github.com/meta/astryx/commit/31b52d0cb) chore: land batch 34 (2 pull requests) (#12908)
-- [ ] [`e7f5815c3`](https://github.com/meta/astryx/commit/e7f5815c3) fix(core): six components' fixed-English built-in text follows the locale; the hardcoded-string lint config has no exemption list and reports a stale entry (#12721)
-- [ ] [`3dbf8ca1f`](https://github.com/meta/astryx/commit/3dbf8ca1f) fix(SegmentedControl): a tap in a wrapped track selects the segment it lands on (#12358)
+- [x] [`5c887ba97`](https://github.com/meta/astryx/commit/5c887ba97) perf(Switch): measure the track at the first press, not at mount (#12700)
+  - 不适用：开关触屏呈现为了省性能改成第一次按下才量轨道；Vue 版开关不量轨道，没有挂载时的测量
+- [x] [`8bd67fe30`](https://github.com/meta/astryx/commit/8bd67fe30) chore: land batch 1 (12 pull requests) (#12713)
+  - 已移植：[#508](https://github.com/astryx-vue/astryx-vue/pull/508)。主题在字段目标上写的 gap 落到行上，Vue 版已有 --_switch-gap、--_checkbox-input-gap，由基础族落地
+- [x] [`d9676b913`](https://github.com/meta/astryx/commit/d9676b913) perf(CheckboxInput): the disabled-message tooltip runs only while it can show (#12376)
+  - Vue 版已有：CheckboxInput 的 useButtonTooltip 只在有禁用原因时才工作
+- [x] [`9dbdcb950`](https://github.com/meta/astryx/commit/9dbdcb950) fix(RadioList): Tab from any radio leaves the group (#11626)
+  - Vue 版已有：Vue 的单选组件是原生 input，没有脚本聚焦重定向，Tab 本就一次离开整组，不需要临时摘掉 tabindex
+- [x] [`cf537d7aa`](https://github.com/meta/astryx/commit/cf537d7aa) chore: land batch 11 (3 pull requests) (#12848)
+  - Vue 版已有：复选框、单选的占位盒子由指示器自身尺寸撑开，隐藏 input 保持满尺寸命中区
+- [x] [`53615c1f4`](https://github.com/meta/astryx/commit/53615c1f4) chore: land batch 19 (3 pull requests) (#12875)
+  - 已移植：[#508](https://github.com/astryx-vue/astryx-vue/pull/508)。文字角色行高，分段 sm、Slider 数值文字已带行高令牌，由基础展示与动作按钮族落地
+- [x] [`83424673c`](https://github.com/meta/astryx/commit/83424673c) chore: land batch 16 (6 pull requests) (#12881)
+  - 已移植：[#589](https://github.com/astryx-vue/astryx-vue/pull/589)。CheckboxList、CheckboxListItem 文档补上：字符串描述只显示一行，完整文字用描述插槽（中英两套）
+- [x] [`31b52d0cb`](https://github.com/meta/astryx/commit/31b52d0cb) chore: land batch 34 (2 pull requests) (#12908)
+  - 不适用：开关触屏呈现读主题在拇指目标上写的宽高来定静止位；Vue 版拇指由 CSS 直接按真实盒子画，主题的宽高写在覆盖层即可生效
+- [x] [`e7f5815c3`](https://github.com/meta/astryx/commit/e7f5815c3) fix(core): six components' fixed-English built-in text follows the locale; the hardcoded-string lint config has no exemption list and reports a stale entry (#12721)
+  - Vue 版已有：Slider 的「必填」说明读 locale 的 slider.required，不是固定英文
+- [x] [`3dbf8ca1f`](https://github.com/meta/astryx/commit/3dbf8ca1f) fix(SegmentedControl): a tap in a wrapped track selects the segment it lands on (#12358)
+  - 不适用：SegmentedControl 触屏跟踪层在换行轨道里按坐标命中的修复；Vue 版选中靠按钮自己的 click 事件，换行时落在哪个分段就选哪个
 - [x] [`fbbcd2cea`](https://github.com/meta/astryx/commit/fbbcd2cea) test(Switch): detach the touch controllers each test attaches (#13017)
   - 不适用：只改上游测试（自动初筛）
 
