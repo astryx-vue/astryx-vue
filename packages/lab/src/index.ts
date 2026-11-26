@@ -11,6 +11,9 @@ export type {
   ChatReactionBarProps,
 } from './Chat/index.js'
 
+export { CircleCheckIndicator } from './CircleCheckIndicator/index.js'
+export type { CircleCheckIndicatorProps } from './CircleCheckIndicator/index.js'
+
 export { CircularProgress } from './CircularProgress/index.js'
 export type {
   CircularProgressProps,
@@ -73,6 +76,9 @@ export type {
   CommentUser,
   CommentVersion,
 } from './Comments/index.js'
+
+export { DialogHeroHeader } from './DialogHeroHeader/index.js'
+export type { DialogHeroHeaderMediaMode, DialogHeroHeaderProps, DialogHeroHeaderSlots } from './DialogHeroHeader/index.js'
 
 export { createDiffFile, DiffViewer, parseUnifiedDiff } from './DiffViewer/index.js'
 export type {
