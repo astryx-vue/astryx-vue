@@ -210,8 +210,8 @@ catalogs:
       specifier: 1.2.147
       version: 1.2.147
     '@kawapress/plugin-shiki':
-      specifier: 0.8.2
-      version: 0.8.2
+      specifier: 0.8.3
+      version: 0.8.3
     '@monaco-editor/loader':
       specifier: 1.7.0
       version: 1.7.0
@@ -219,8 +219,8 @@ catalogs:
       specifier: 4.6.0
       version: 4.6.0
     kawapress:
-      specifier: 0.8.2
-      version: 0.8.2
+      specifier: 0.8.4
+      version: 0.8.4
     monaco-editor:
       specifier: 0.55.1
       version: 0.55.1
@@ -520,7 +520,7 @@ importers:
         version: 3.5.43
       kawapress:
         specifier: catalog:docs
-        version: 0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1)
+        version: 0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1)
       lexical:
         specifier: catalog:richtext
         version: 0.52.0(@typescript/typescript6@6.0.2)
@@ -545,7 +545,7 @@ importers:
         version: 1.2.147
       '@kawapress/plugin-shiki':
         specifier: catalog:docs
-        version: 0.8.2(kawapress@0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(supports-color@10.2.2)(vue@3.5.43(@typescript/typescript6@6.0.2))
+        version: 0.8.3(kawapress@0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(supports-color@10.2.2)(vue@3.5.43(@typescript/typescript6@6.0.2))
       '@shikijs/langs':
         specifier: catalog:docs
         version: 4.6.0
@@ -1500,88 +1500,88 @@ packages:
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
 
-  '@kawapress/plugin-badge@0.8.2':
-    resolution: {integrity: sha512-rpwKoF0EDbnvAvz+0uOuLGNCBhMlgahYMK18z7FAMCVG0OvMxga8ZpobaMTg3GmnMrbHWxiPgM/Piy6c87jNAA==}
+  '@kawapress/plugin-badge@0.8.3':
+    resolution: {integrity: sha512-RZmU5bhUDbSbvrDw1g/kwULAGMND2fHyTx1pdoteO09sj1RxmhiSkZDK5NnPFh9X57DHRDB33cg3LYn0NEGweA==}
     engines: {node: '>=22.12.0'}
     peerDependencies:
-      kawapress: ^0.8.2
+      kawapress: ^0.8.3
       vue: ^3.5.41
 
-  '@kawapress/plugin-code-block@0.8.2':
-    resolution: {integrity: sha512-Mpb6zC/2O5JNf5yKZ3Tw28ushimf9uLQ6BCjmSLTmCRbNhILjNAWR/ZisyjvhBKORBD07KWJGOcbn20XpfvlWA==}
+  '@kawapress/plugin-code-block@0.8.3':
+    resolution: {integrity: sha512-W+9xqRTZ0q1QARcHeTgLJk+ussBGEMJSYH9BEd5mOgNmkfdAqSGbJ1I2H8bvN/9IpUn4J8qM/ivP5fhCKM5tkA==}
     engines: {node: '>=22.12.0'}
     peerDependencies:
-      kawapress: ^0.8.2
+      kawapress: ^0.8.3
 
-  '@kawapress/plugin-code-group@0.8.2':
-    resolution: {integrity: sha512-siZQ/jlq4GuUIauEf56nAKHx0d9HDD86iUU+jRnIVie8f7/hpWRD4JG5oM1Y5wr+soTsU337QZoXjpNQqbm8pA==}
+  '@kawapress/plugin-code-group@0.8.3':
+    resolution: {integrity: sha512-fgndlbsuqHDENYhLVKQ1ud0/ivxK/+cZM0efKkFQmPIQvjCqgQI9owauPugcl5UQBXqF9L+INEmZAOicU6toug==}
     engines: {node: '>=22.12.0'}
     peerDependencies:
-      kawapress: ^0.8.2
+      kawapress: ^0.8.3
       vue: ^3.5.41
 
-  '@kawapress/plugin-container@0.8.2':
-    resolution: {integrity: sha512-xy3uWCrD56EcEwTCjYPBOfDQbX+FWXMHNY4OYBqTXUrj7ip/B74HavsGwanb3K0SyQvn5kLYfev4vyibYXknrA==}
+  '@kawapress/plugin-container@0.8.3':
+    resolution: {integrity: sha512-WxGZvNyMHyoUnek3nOZy2lGsEscfKsllIaNYQcgcKU5QEB3TDEVRYDbsuZV+58Kr4RMPehi9UJwkhfAa5gdW8A==}
     engines: {node: '>=22.12.0'}
     peerDependencies:
-      kawapress: ^0.8.2
+      kawapress: ^0.8.3
 
-  '@kawapress/plugin-emoji@0.8.2':
-    resolution: {integrity: sha512-FeG9Q9XotWSH5PF5aOpBQSxH0iu+v39f7rrIEmqw+WcKTJCle8ZDzB7SlXpA8TkpYlF0E4rweAolAEkdETQubw==}
+  '@kawapress/plugin-emoji@0.8.3':
+    resolution: {integrity: sha512-2kOXbmiIU3D3B3iLvudjZ16cnRt8KJQrPPTHPnd7JAVXSz/y9XWps+4gqqNpLGV1UFvSFBhHOxoT4kI8EpbdJg==}
     engines: {node: '>=22.12.0'}
     peerDependencies:
-      kawapress: ^0.8.2
+      kawapress: ^0.8.3
 
-  '@kawapress/plugin-github-alerts@0.8.2':
-    resolution: {integrity: sha512-/4tqTXOHGb5nnvFZzxcqzGpJqmtFvtV+BezvIW6kHv21Mp1LtnfFUwWGFJ11879+9hWsYq8CwNrcX30dMSg/sg==}
+  '@kawapress/plugin-github-alerts@0.8.3':
+    resolution: {integrity: sha512-74KkVWiZmwPPJoGjcnP0pR7gqGOcq4dCgSf9cBYZCRP3D2Th1oEGFRMW93mPIRG31szL4XFCThym3IF6YH5oXA==}
     engines: {node: '>=22.12.0'}
     peerDependencies:
-      kawapress: ^0.8.2
+      kawapress: ^0.8.3
 
-  '@kawapress/plugin-llms@0.8.2':
-    resolution: {integrity: sha512-dGLTBleQcrNMU6+FsjuiWDUIQ/zO2E2gYbjEYM6xKAY/zCmH/DMnfXuW1qGuDehr2RxoERbBIkiSVLDz77KHAw==}
+  '@kawapress/plugin-llms@0.8.3':
+    resolution: {integrity: sha512-jpwcMEt+OqMCQM79JKz1OqM+NpVq/ehVVnFQRZcBh0CAs6WVkkXja0AESaJwiBgcWtIaOoGHirlDhLRAxUNNHA==}
     engines: {node: '>=22.12.0'}
     peerDependencies:
-      kawapress: ^0.8.2
+      kawapress: ^0.8.3
       vue: ^3.5.41
 
-  '@kawapress/plugin-search@0.8.2':
-    resolution: {integrity: sha512-N8IS4E+ffSpM0h2A8Z8GAw7pX40/TJUh5KLywJW55oX4p3CqSIyT7diczyXeckNeCdt9H5i9jVbYlclGD9oCkg==}
+  '@kawapress/plugin-search@0.8.3':
+    resolution: {integrity: sha512-SPNPGfIi19Qlfnmtv+hN7whpC3x6XBUJbNBF/LR7xxlnLqq5Lx7yGl3y76KxzZKV2QNhsgTO3sZ7ZypPXRL9PQ==}
     engines: {node: '>=22.12.0'}
     peerDependencies:
-      kawapress: ^0.8.2
+      kawapress: ^0.8.3
       vue: ^3.5.41
 
-  '@kawapress/plugin-shiki@0.8.2':
-    resolution: {integrity: sha512-cq0h+uVuZ0p3DnSxU1l04HVnvaSZslZvyk5Zl4rd4+QGULhmAOBiklcN8wkKd0qGIr1YtLEZR7JLVKjIGwTAfw==}
+  '@kawapress/plugin-shiki@0.8.3':
+    resolution: {integrity: sha512-9jico1x3tFP7pKAXzxvBhHNO2mWiOCc5f9SMZVRNEbTrwSqtSVijZxzXhSyuwyoXTc3zIbnuw9CMZh6h0X86pg==}
     engines: {node: '>=22.12.0'}
     peerDependencies:
-      kawapress: ^0.8.2
+      kawapress: ^0.8.3
       vue: ^3.5.41
 
-  '@kawapress/plugin-sitemap@0.8.2':
-    resolution: {integrity: sha512-bOQuPbb3QBideOEZAQe+9bSiu1d8GyMeGPA2kArm3CE9RR86cZdS3Ibd3AlIBsw4bUmGycohMUKON8C1C1IHlw==}
+  '@kawapress/plugin-sitemap@0.8.3':
+    resolution: {integrity: sha512-I2n62R/Uk5+wPZcz4zt9yMm2avxvOhB2mTwT5HIXvsVEuKRFz7J1W+XdbDj7bPsJSQj6WEoSFTDT+p8YpEO+nw==}
     engines: {node: '>=22.12.0'}
     peerDependencies:
-      kawapress: ^0.8.2
+      kawapress: ^0.8.3
 
-  '@kawapress/plugin-toc@0.8.2':
-    resolution: {integrity: sha512-E0n25veBlhEXghgjzUqehEZn4ZfHmXyVhScUXtJivVzUBWkEDjvegcB60T/rE9QCJjGnQ+58yWTP1dEUEA+3FQ==}
+  '@kawapress/plugin-toc@0.8.3':
+    resolution: {integrity: sha512-HmIrqEDBwwEzmaVHH7QLpf67bojL/STCDKwCNiyuoUF75KUJzuGYDenOhCXLv6Ft+yzZDtTv9M3mpwaQIp8V0w==}
     engines: {node: '>=22.12.0'}
     peerDependencies:
-      kawapress: ^0.8.2
+      kawapress: ^0.8.3
 
-  '@kawapress/plugin-unocss@0.8.2':
-    resolution: {integrity: sha512-qe9hZNv11v5s6XN3menDrXRm+1kfMxJ8ZVbRyULLaT0i+/IoF2yJRHHnZoYDdh+adOeJbuXcL9Q8iCK9RXyEcg==}
+  '@kawapress/plugin-unocss@0.8.3':
+    resolution: {integrity: sha512-KM1BftJ4SwJoNP3Tx6RUKvQDl/4xDEctCMLAY6st4ava/FSQgiyK8GuPKVIwalBwTlQTqziDE39EOcGTvZAyNg==}
     engines: {node: '>=22.12.0'}
     peerDependencies:
-      kawapress: ^0.8.2
+      kawapress: ^0.8.3
 
-  '@kawapress/preset-nagi@0.8.2':
-    resolution: {integrity: sha512-kWhKGOCj5g8sZZiJcEt09NVxu+OY/+G2dwmPAVKwNa5K5bExoiwL3Oh4dukOvm+xpOP/6KYhHaLROgWvio/drw==}
+  '@kawapress/preset-nagi@0.8.4':
+    resolution: {integrity: sha512-sKBe5dVNTLlTi82XcN6FTOx0GznM2p3IQhB7I0SH3OTG7m+zpE6UCpAo1EIx3V0kE4vY30BlKy09vaTapNHrhA==}
     engines: {node: '>=22.12.0'}
     peerDependencies:
-      kawapress: ^0.8.2
+      kawapress: ^0.8.4
       vue: ^3.5.41
 
   '@keyv/bigmap@1.3.1':
@@ -3755,8 +3755,8 @@ packages:
     resolution: {integrity: sha512-Eeo8Ys1doU1z+x8AZsPpQu+p/QcZBI5PeOo7QGQdy2x2m0MU/hYagBbGOmXwr5KVbEfVuWv9LpnQWeehogurjg==}
     hasBin: true
 
-  kawapress@0.8.2:
-    resolution: {integrity: sha512-y6Zy3yxV766HnizizJd1dnLvIXYraQaVwoutWzEdBXL/1mTqksQfe8McN7QNu2jQY8olVrzDgZErSqsxckN+3A==}
+  kawapress@0.8.4:
+    resolution: {integrity: sha512-DEMGvkEizK0H8k4/ttjL109DKBxihdP/KdqeqZn2fziWa1D7EW+bfX8gbUJF1q5fcORMIqMk+xyMYThW4EldIA==}
     engines: {node: '>=22.12.0'}
     hasBin: true
 
@@ -5712,59 +5712,59 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.6.0
 
-  '@kawapress/plugin-badge@0.8.2(kawapress@0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(vue@3.5.43(@typescript/typescript6@6.0.2))':
+  '@kawapress/plugin-badge@0.8.3(kawapress@0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(vue@3.5.43(@typescript/typescript6@6.0.2))':
     dependencies:
-      kawapress: 0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1)
+      kawapress: 0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1)
       vue: 3.5.43(@typescript/typescript6@6.0.2)
 
-  '@kawapress/plugin-code-block@0.8.2(kawapress@0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))':
+  '@kawapress/plugin-code-block@0.8.3(kawapress@0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))':
     dependencies:
-      kawapress: 0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1)
+      kawapress: 0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1)
 
-  '@kawapress/plugin-code-group@0.8.2(kawapress@0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(markdown-it@14.3.3)(vue@3.5.43(@typescript/typescript6@6.0.2))':
+  '@kawapress/plugin-code-group@0.8.3(kawapress@0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(markdown-it@14.3.3)(vue@3.5.43(@typescript/typescript6@6.0.2))':
     dependencies:
       '@mdit/plugin-container': 1.0.2(markdown-it@14.3.3)
-      kawapress: 0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1)
+      kawapress: 0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1)
       vue: 3.5.43(@typescript/typescript6@6.0.2)
     transitivePeerDependencies:
       - markdown-it
 
-  '@kawapress/plugin-container@0.8.2(kawapress@0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(markdown-it@14.3.3)':
+  '@kawapress/plugin-container@0.8.3(kawapress@0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(markdown-it@14.3.3)':
     dependencies:
       '@mdit/plugin-container': 1.0.2(markdown-it@14.3.3)
-      kawapress: 0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1)
+      kawapress: 0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1)
     transitivePeerDependencies:
       - markdown-it
 
-  '@kawapress/plugin-emoji@0.8.2(kawapress@0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))':
+  '@kawapress/plugin-emoji@0.8.3(kawapress@0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))':
     dependencies:
       '@types/markdown-it-emoji': 3.0.1
-      kawapress: 0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1)
+      kawapress: 0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1)
       markdown-it-emoji: 3.1.0
 
-  '@kawapress/plugin-github-alerts@0.8.2(kawapress@0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(markdown-it@14.3.3)':
+  '@kawapress/plugin-github-alerts@0.8.3(kawapress@0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(markdown-it@14.3.3)':
     dependencies:
       '@mdit/plugin-alert': 1.0.3(markdown-it@14.3.3)
-      kawapress: 0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1)
+      kawapress: 0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1)
     transitivePeerDependencies:
       - markdown-it
 
-  '@kawapress/plugin-llms@0.8.2(kawapress@0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(vue@3.5.43(@typescript/typescript6@6.0.2))':
+  '@kawapress/plugin-llms@0.8.3(kawapress@0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(vue@3.5.43(@typescript/typescript6@6.0.2))':
     dependencies:
-      kawapress: 0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1)
+      kawapress: 0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1)
       markdown-exit: 1.3.0
       node-html-markdown: 2.0.0
       node-html-parser: 6.1.13
       vue: 3.5.43(@typescript/typescript6@6.0.2)
 
-  '@kawapress/plugin-search@0.8.2(@types/markdown-it@14.2.0)(kawapress@0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(markdown-it@14.3.3)(vue@3.5.43(@typescript/typescript6@6.0.2))':
+  '@kawapress/plugin-search@0.8.3(@types/markdown-it@14.2.0)(kawapress@0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(markdown-it@14.3.3)(vue@3.5.43(@typescript/typescript6@6.0.2))':
     dependencies:
-      '@kawapress/plugin-toc': 0.8.2(kawapress@0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))
+      '@kawapress/plugin-toc': 0.8.3(kawapress@0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))
       '@mdit-vue/plugin-frontmatter': 3.0.2
       '@mdit/plugin-alert': 1.0.3(markdown-it@14.3.3)
       '@mdit/plugin-attrs': 1.1.1(markdown-it@14.3.3)
       '@mdit/plugin-container': 1.0.2(markdown-it@14.3.3)
-      kawapress: 0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1)
+      kawapress: 0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1)
       markdown-exit: 1.3.0
       markdown-it-anchor: 9.2.1(@types/markdown-it@14.2.0)(markdown-it@14.3.3)
       minisearch: 7.2.0
@@ -5773,12 +5773,12 @@ snapshots:
       - '@types/markdown-it'
       - markdown-it
 
-  '@kawapress/plugin-shiki@0.8.2(kawapress@0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(supports-color@10.2.2)(vue@3.5.43(@typescript/typescript6@6.0.2))':
+  '@kawapress/plugin-shiki@0.8.3(kawapress@0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(supports-color@10.2.2)(vue@3.5.43(@typescript/typescript6@6.0.2))':
     dependencies:
       '@shikijs/transformers': 4.5.0
       '@shikijs/twoslash': 4.6.0(supports-color@10.2.2)(typescript@6.0.3)
       floating-vue: 5.4.0(vue@3.5.43(@typescript/typescript6@6.0.2))
-      kawapress: 0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1)
+      kawapress: 0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1)
       mdast-util-from-markdown: 2.1.0(supports-color@10.2.2)
       mdast-util-gfm: 3.1.0(supports-color@10.2.2)
       mdast-util-to-hast: 13.2.1
@@ -5790,20 +5790,20 @@ snapshots:
       - '@nuxt/kit'
       - supports-color
 
-  '@kawapress/plugin-sitemap@0.8.2(kawapress@0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))':
+  '@kawapress/plugin-sitemap@0.8.3(kawapress@0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))':
     dependencies:
       consola: 3.4.2
-      kawapress: 0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1)
+      kawapress: 0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1)
       sitemap: 9.0.1
 
-  '@kawapress/plugin-toc@0.8.2(kawapress@0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))':
+  '@kawapress/plugin-toc@0.8.3(kawapress@0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))':
     dependencies:
-      kawapress: 0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1)
+      kawapress: 0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1)
       markdown-exit: 1.3.0
 
-  '@kawapress/plugin-unocss@0.8.2(cac@7.0.0)(kawapress@0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(rolldown@1.2.12)(srvx@1.0.5)(vite@8.3.3(@types/node@26.6.4)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))':
+  '@kawapress/plugin-unocss@0.8.3(cac@7.0.0)(kawapress@0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(rolldown@1.2.12)(srvx@1.0.5)(vite@8.3.3(@types/node@26.6.4)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))':
     dependencies:
-      kawapress: 0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1)
+      kawapress: 0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1)
       unocss: 66.10.5(cac@7.0.0)(rolldown@1.2.12)(srvx@1.0.5)(vite@8.3.3(@types/node@26.6.4)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))
     transitivePeerDependencies:
       - '@devframes/agentic'
@@ -5817,23 +5817,23 @@ snapshots:
       - srvx
       - vite
 
-  '@kawapress/preset-nagi@0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(cac@7.0.0)(esbuild@0.28.2)(kawapress@0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(vite@8.3.3(@types/node@26.6.4)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))(vue@3.5.43(@typescript/typescript6@6.0.2))':
+  '@kawapress/preset-nagi@0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(cac@7.0.0)(esbuild@0.28.2)(kawapress@0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(vite@8.3.3(@types/node@26.6.4)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))(vue@3.5.43(@typescript/typescript6@6.0.2))':
     dependencies:
       '@iconify-json/simple-icons': 1.2.101
-      '@kawapress/plugin-badge': 0.8.2(kawapress@0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(vue@3.5.43(@typescript/typescript6@6.0.2))
-      '@kawapress/plugin-code-block': 0.8.2(kawapress@0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))
-      '@kawapress/plugin-code-group': 0.8.2(kawapress@0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(markdown-it@14.3.3)(vue@3.5.43(@typescript/typescript6@6.0.2))
-      '@kawapress/plugin-container': 0.8.2(kawapress@0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(markdown-it@14.3.3)
-      '@kawapress/plugin-emoji': 0.8.2(kawapress@0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))
-      '@kawapress/plugin-github-alerts': 0.8.2(kawapress@0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(markdown-it@14.3.3)
-      '@kawapress/plugin-llms': 0.8.2(kawapress@0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(vue@3.5.43(@typescript/typescript6@6.0.2))
-      '@kawapress/plugin-search': 0.8.2(@types/markdown-it@14.2.0)(kawapress@0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(markdown-it@14.3.3)(vue@3.5.43(@typescript/typescript6@6.0.2))
-      '@kawapress/plugin-shiki': 0.8.2(kawapress@0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(supports-color@10.2.2)(vue@3.5.43(@typescript/typescript6@6.0.2))
-      '@kawapress/plugin-sitemap': 0.8.2(kawapress@0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))
-      '@kawapress/plugin-toc': 0.8.2(kawapress@0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))
-      '@kawapress/plugin-unocss': 0.8.2(cac@7.0.0)(kawapress@0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(rolldown@1.2.12)(srvx@1.0.5)(vite@8.3.3(@types/node@26.6.4)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))
+      '@kawapress/plugin-badge': 0.8.3(kawapress@0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(vue@3.5.43(@typescript/typescript6@6.0.2))
+      '@kawapress/plugin-code-block': 0.8.3(kawapress@0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))
+      '@kawapress/plugin-code-group': 0.8.3(kawapress@0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(markdown-it@14.3.3)(vue@3.5.43(@typescript/typescript6@6.0.2))
+      '@kawapress/plugin-container': 0.8.3(kawapress@0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(markdown-it@14.3.3)
+      '@kawapress/plugin-emoji': 0.8.3(kawapress@0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))
+      '@kawapress/plugin-github-alerts': 0.8.3(kawapress@0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(markdown-it@14.3.3)
+      '@kawapress/plugin-llms': 0.8.3(kawapress@0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(vue@3.5.43(@typescript/typescript6@6.0.2))
+      '@kawapress/plugin-search': 0.8.3(@types/markdown-it@14.2.0)(kawapress@0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(markdown-it@14.3.3)(vue@3.5.43(@typescript/typescript6@6.0.2))
+      '@kawapress/plugin-shiki': 0.8.3(kawapress@0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(supports-color@10.2.2)(vue@3.5.43(@typescript/typescript6@6.0.2))
+      '@kawapress/plugin-sitemap': 0.8.3(kawapress@0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))
+      '@kawapress/plugin-toc': 0.8.3(kawapress@0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))
+      '@kawapress/plugin-unocss': 0.8.3(cac@7.0.0)(kawapress@0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(rolldown@1.2.12)(srvx@1.0.5)(vite@8.3.3(@types/node@26.6.4)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))
       '@unhead/vue': 3.4.3(@oxc-project/types@0.152.0)(esbuild@0.28.2)(lightningcss@1.33.0)(oxc-parser@0.150.0)(rolldown@1.2.12)(vite@8.3.3(@types/node@26.6.4)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))(vue@3.5.43(@typescript/typescript6@6.0.2))
-      kawapress: 0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1)
+      kawapress: 0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1)
       overlayscrollbars: 2.16.0
       vue: 3.5.43(@typescript/typescript6@6.0.2)
     transitivePeerDependencies:
@@ -7918,9 +7918,9 @@ snapshots:
     dependencies:
       commander: 8.3.0
 
-  kawapress@0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1):
+  kawapress@0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1):
     dependencies:
-      '@kawapress/preset-nagi': 0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(cac@7.0.0)(esbuild@0.28.2)(kawapress@0.8.2(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(vite@8.3.3(@types/node@26.6.4)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))(vue@3.5.43(@typescript/typescript6@6.0.2))
+      '@kawapress/preset-nagi': 0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(cac@7.0.0)(esbuild@0.28.2)(kawapress@0.8.4(@oxc-project/types@0.152.0)(@types/markdown-it@14.2.0)(@types/node@26.6.4)(@typescript/typescript6@6.0.2)(cac@7.0.0)(esbuild@0.28.2)(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(yaml@2.9.1))(lightningcss@1.33.0)(markdown-it@14.3.3)(oxc-parser@0.150.0)(rolldown@1.2.12)(srvx@1.0.5)(supports-color@10.2.2)(vite@8.3.3(@types/node@26.6.4)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))(vue@3.5.43(@typescript/typescript6@6.0.2))
       '@mdit-vue/plugin-component': 3.0.2
       '@mdit-vue/plugin-frontmatter': 3.0.2
       '@mdit-vue/plugin-headers': 3.0.2
