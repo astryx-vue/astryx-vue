@@ -32,6 +32,8 @@ export interface DropdownMenuFrameState {
   setHeader: (element: unknown) => void
   setFooter: (element: unknown) => void
   setHost: (element: unknown) => void
+  /** The sheet's exit finished playing: the menu may change how it presents. */
+  onSheetSettled: () => void
   onSurfaceKeydown: (event: KeyboardEvent) => void
   onSurfaceFocus: (event: FocusEvent) => void
 }

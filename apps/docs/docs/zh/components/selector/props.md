@@ -20,6 +20,7 @@ footer: false
       <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否禁用。</td></tr>
       <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>禁用原因。和 <code>disabled</code> 一起用时，鼠标悬停或键盘聚焦会弹出提示，触发器靠 <code>aria-disabled</code> 保持可聚焦，但仍然打不开列表。不用再在外面套 Tooltip：禁用的控件收不到悬停事件。旧名 <code>disabledReason</code> 等价。</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>选择器尺寸。</td></tr>
+      <tr><td><code>presentation</code></td><td><code>'popover' | 'bottom-sheet' | 'adaptive'</code></td><td><code>'popover'</code></td><td><code>popover</code> 是锚定在触发器旁的浮层。<code>bottom-sheet</code> 在任何屏幕上都用底部弹层。<code>adaptive</code> 在紧凑触屏上用底部弹层：主指针是粗略指针（手指），并且视口宽度小于主题的 <code>md</code> 断点（默认 768px）或高度小于 500px。打开那一刻定下用哪种，开着的时候转屏也不换，退场播完才重新判断。</td></tr>
       <tr><td><code>variant</code></td><td><code>'input' | 'secondary' | 'ghost' | 'default'</code></td><td><code>'default'</code></td><td><code>input</code> 和旧名 <code>default</code> 都是带边框的输入框。<code>secondary</code> 对齐次要按钮。<code>ghost</code> 去掉边框，适合工具栏。后两种上的 attached 状态会收成独立说明。</td></tr>
       <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>视觉上隐藏标签，读屏仍然读得到。</td></tr>
       <tr><td><code>containerClass</code> / <code>containerStyle</code></td><td><code>class</code> / <code>style</code></td><td>—</td><td>加到字段外壳。不会落到触发按钮上。</td></tr>

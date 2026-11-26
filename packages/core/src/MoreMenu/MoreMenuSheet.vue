@@ -210,7 +210,7 @@ function onKeydown(event: KeyboardEvent): void {
 
 <template>
   <Teleport :to="teleportTarget">
-    <Transition appear name="astryx-more-menu-sheet">
+    <Transition appear name="astryx-more-menu-sheet" @after-leave="emit('settled')">
       <div v-if="isOpen" class="astryx-more-menu__sheet-layer astryx-layer">
         <!-- eslint-disable-next-line vue-a11y/click-events-have-key-events, vue-a11y/no-static-element-interactions -- 按下遮罩关闭是纯指针的快捷方式；键盘用户走对话框自身的 Escape 路径。 -->
         <div class="astryx-more-menu__scrim" @click="onScrimClick" />

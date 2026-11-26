@@ -46,6 +46,12 @@ footer: false
         <td>Maximum height in pixels, for a menu that must fit all of its rows. This lifts the default 300px cap; the viewport still bounds the real height.</td>
       </tr>
       <tr>
+        <td><code>presentation</code></td>
+        <td><code>'popover' | 'bottom-sheet' | 'adaptive'</code></td>
+        <td><code>'popover'</code></td>
+        <td><code>popover</code> is the surface anchored to the trigger. <code>bottom-sheet</code> uses the BottomSheet on every screen. <code>adaptive</code> uses the BottomSheet on a compact touch screen: a coarse primary pointer, and a viewport narrower than the theme <code>md</code> breakpoint (768px by default) or shorter than 500px. The choice is made when the layer opens and held until its exit finishes, so turning the device while it is open does not swap it.</td>
+      </tr>
+      <tr>
         <td><code>placement</code></td>
         <td><code>'above' | 'below' | 'start' | 'end'</code></td>
         <td><code>'below'</code></td>

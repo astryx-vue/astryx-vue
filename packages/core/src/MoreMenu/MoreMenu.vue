@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import type { MoreMenuEmits, MoreMenuInitialFocus, MoreMenuProps, MoreMenuResolvedPresentation, MoreMenuSlots } from './types.js'
-import { computed, nextTick, onBeforeUnmount, onMounted, provide, shallowRef, useId, useTemplateRef, watch } from 'vue'
+import type { MoreMenuEmits, MoreMenuInitialFocus, MoreMenuProps, MoreMenuSlots } from './types.js'
+import { computed, nextTick, onBeforeUnmount, provide, shallowRef, useId, useTemplateRef, watch } from 'vue'
 import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
+import { useHeldPresentation } from '../layer/useHeldPresentation.js'
 import { useComponentMessages } from '../locale/context.js'
 import { moreMenuMessages } from '../locale/messages/more-menu.js'
 import { useSize } from '../SizeContext/SizeContext.js'
@@ -30,7 +31,6 @@ const messages = useComponentMessages({ moreMenu: moreMenuMessages })
 const size = useSize(() => props.size, 'md')
 const menuLabel = computed(() => props.label ?? messages.value.moreMenu.label)
 
-const ADAPTIVE_QUERY = '(max-width: 768px) and (pointer: coarse)'
 const SURFACE_SELECTOR = '[data-astryx-more-menu-surface]'
 
 const root = useTemplateRef<HTMLElement>('root')
@@ -41,7 +41,6 @@ const menuId = `astryx-more-menu-${useId()}`
 const sheetId = `${menuId}-sheet`
 const localIsOpen = shallowRef(false)
 const pendingFocus = shallowRef<MoreMenuInitialFocus>('none')
-const isCompactTouch = shallowRef(false)
 
 // Whether the caller owns the open state is decided once, at setup: a menu that
 // starts unbound keeps owning its state for its whole life.
@@ -49,17 +48,10 @@ const isControlled = openModel.value !== undefined
 const isOpen = computed(() => (isControlled ? openModel.value === true : localIsOpen.value))
 const triggerElement = computed<HTMLElement | null>(() => (trigger.value?.element as HTMLElement | undefined) ?? null)
 
-const resolvedPresentation = computed<MoreMenuResolvedPresentation>(() => {
-  if (props.isInline)
-    return 'popover'
-
-  if (props.presentation === 'adaptive')
-    return isCompactTouch.value ? 'bottom-sheet' : 'popover'
-
-  return props.presentation === 'bottom-sheet' ? 'bottom-sheet' : 'popover'
-})
-
-const isSheet = computed(() => resolvedPresentation.value === 'bottom-sheet')
+const { surface: resolvedPresentation, isSheet, settle: settlePresentation } = useHeldPresentation(
+  () => (props.isInline ? 'popover' : props.presentation),
+  isOpen,
+)
 const isInlinePreview = computed(() => props.isInline && isOpen.value)
 
 function setOpen(next: boolean): void {
@@ -236,23 +228,7 @@ provide(moreMenuContextKey, {
   menuSize: size,
 })
 
-let query: MediaQueryList | null = null
-
-function syncCompactTouch(event?: MediaQueryListEvent): void {
-  isCompactTouch.value = event?.matches ?? query?.matches ?? false
-}
-
-onMounted(() => {
-  if (typeof window.matchMedia !== 'function')
-    return
-
-  query = window.matchMedia(ADAPTIVE_QUERY)
-  syncCompactTouch()
-  query.addEventListener?.('change', syncCompactTouch)
-})
-
 onBeforeUnmount(() => {
-  query?.removeEventListener?.('change', syncCompactTouch)
   removeDocumentListeners()
 })
 
@@ -323,6 +299,7 @@ defineExpose({
       :items="items"
       :label="menuLabel"
       @close="closeMenu()"
+      @settled="settlePresentation"
     />
   </span>
 </template>

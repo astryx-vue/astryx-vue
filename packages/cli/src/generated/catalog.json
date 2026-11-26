@@ -1207,6 +1207,12 @@
                 "description": "Width of the menu panel. Numbers are interpreted as pixels. Without it the panel is at least 160px wide and sizes to its rows; either way it never overflows the viewport."
               },
               {
+                "name": "`presentation`",
+                "type": "`'popover' | 'bottom-sheet' | 'adaptive'`",
+                "default": "`'popover'`",
+                "description": "`popover` is the surface anchored to the trigger. `bottom-sheet` uses the BottomSheet on every screen. `adaptive` uses the BottomSheet on a compact touch screen: a coarse primary pointer, and a viewport narrower than the theme `md` breakpoint (768px by default) or shorter than 500px. The choice is made when the layer opens and held until its exit finishes, so turning the device while it is open does not swap it."
+              },
+              {
                 "name": "`size`",
                 "type": "`'sm' | 'md' | 'lg'`",
                 "default": "`'md'`",
@@ -1254,6 +1260,12 @@
                 "type": "`number | string`",
                 "default": "`undefined`",
                 "description": "菜单面板宽度。数字按像素处理。不设置时面板至少 160px 并随内容伸缩；无论哪种方式都不会超出视口。"
+              },
+              {
+                "name": "`presentation`",
+                "type": "`'popover' | 'bottom-sheet' | 'adaptive'`",
+                "default": "`'popover'`",
+                "description": "`popover` 是锚定在触发器旁的浮层。`bottom-sheet` 在任何屏幕上都用底部弹层。`adaptive` 在紧凑触屏上用底部弹层：主指针是粗略指针（手指），并且视口宽度小于主题的 `md` 断点（默认 768px）或高度小于 500px。打开那一刻定下用哪种，开着的时候转屏也不换，退场播完才重新判断。"
               },
               {
                 "name": "`size`",
@@ -1909,6 +1921,12 @@
                 "description": "Maximum height in pixels, for a menu that must fit all of its rows. This lifts the default 300px cap; the viewport still bounds the real height."
               },
               {
+                "name": "`presentation`",
+                "type": "`'popover' | 'bottom-sheet' | 'adaptive'`",
+                "default": "`'popover'`",
+                "description": "`popover` is the surface anchored to the trigger. `bottom-sheet` uses the BottomSheet on every screen. `adaptive` uses the BottomSheet on a compact touch screen: a coarse primary pointer, and a viewport narrower than the theme `md` breakpoint (768px by default) or shorter than 500px. The choice is made when the layer opens and held until its exit finishes, so turning the device while it is open does not swap it."
+              },
+              {
                 "name": "`placement`",
                 "type": "`'above' | 'below' | 'start' | 'end'`",
                 "default": "`'below'`",
@@ -2184,6 +2202,12 @@
                 "type": "`number`",
                 "default": "-",
                 "description": "菜单的最大高度，单位为像素，用于必须放下所有行的菜单。它会抬高默认的 300px 上限，但视口仍然限住实际高度。"
+              },
+              {
+                "name": "`presentation`",
+                "type": "`'popover' | 'bottom-sheet' | 'adaptive'`",
+                "default": "`'popover'`",
+                "description": "`popover` 是锚定在触发器旁的浮层。`bottom-sheet` 在任何屏幕上都用底部弹层。`adaptive` 在紧凑触屏上用底部弹层：主指针是粗略指针（手指），并且视口宽度小于主题的 `md` 断点（默认 768px）或高度小于 500px。打开那一刻定下用哪种，开着的时候转屏也不换，退场播完才重新判断。"
               },
               {
                 "name": "`placement`",
@@ -4378,8 +4402,8 @@
         "zh": "`MoreMenu` 是一个以 `⋯` 图标为触发器的溢出菜单，用来收纳那些不需要一直显示的操作：表格行、卡片标题、工具栏的次要动作。触发器本身只是一个纯图标按钮，动作都在它展开的菜单里。"
       },
       "usage": {
-        "en": "`MoreMenu` is an overflow menu behind a `⋯` trigger. It holds the actions that do not need to stay visible: secondary actions in a table row, a card header, or a toolbar. The trigger is an icon-only button; everything it offers lives in the menu it opens.\n\nThe menu's content is described by an `items` array. A plain entry is one action, `type: 'divider'` is a hairline between groups, and `type: 'section'` is a titled group:\n\n```vue\n<script setup lang=\"ts\">\nimport { MoreMenu } from '@astryx-vue/core/MoreMenu'\n\nconst items = [\n  { label: 'Rename', onClick: () => rename() },\n  { label: 'Duplicate', onClick: () => duplicate() },\n  { type: 'divider' },\n  { label: 'Move to trash', variant: 'destructive', onClick: () => remove() },\n]\n</script>\n\n<template>\n  <MoreMenu :items=\"items\" label=\"File actions\" />\n</template>\n```\n\nThe trigger is icon-only, so `label` is its accessible name, the name of the menu itself, and the text of its tooltip. When `label` is omitted it follows the active locale: `More options` in English, 「更多选项」 in Chinese. When the menu holds the actions of one specific thing, a more concrete phrase such as \"Project actions\" reads better. Use the `icon` slot to replace the three-dot artwork.\n\nWhere focus lands when the menu opens depends on how it was opened. A keyboard open (`Enter`, `Space`, `ArrowDown`, or `ArrowUp` on the trigger) lands on the first or the last row; a pointer open puts focus on the menu container and pre-highlights nothing, so no row reads as already selected. Once open, `ArrowDown` and `ArrowUp` move between rows and wrap at both ends, `Home` and `End` jump to the ends, typing a letter jumps to the next row starting with it, `Enter` and `Space` run the focused row, `Escape` closes the menu and returns focus to the trigger, and `Tab` closes the menu and lets the browser move on from the trigger. Disabled rows are skipped and stay out of the keyboard path.\n\nMouse and touch behave differently on purpose. With a mouse, the highlight follows the pointer while it is held and the release decides which row acts; releasing outside the menu dismisses it. With a finger, a release off the menu leaves it open, because the highlight is following the finger — the gesture ends when a row is picked, the trigger is tapped, or `Escape` is pressed. The `placement` and `alignment` props place the anchored menu beside the trigger and flip it when there is no room; an overflow menu usually wants `alignment=\"end\"`, so the menu lines up with the trigger's trailing edge.\n\n`presentation` decides the shape the actions arrive in. `popover` (the default) is the anchored surface; `bottom-sheet` is a modal panel at the bottom of the screen, sized for a thumb; `adaptive` keeps the anchored menu on pointer-driven layouts and uses the bottom panel at 768px and below when the primary pointer is coarse. Inside the bottom panel a submenu does not open a second panel: the view is replaced, its title becomes the submenu's own label, a back button appears, and `Escape` leaves the submenu before it closes the panel.\n\nThe open state can belong to the component or to you. Pass `isMenuOpen` to control it, usually with `v-model:isMenuOpen`; `openChange` fires every time an open or close is requested.",
-        "zh": "`MoreMenu` 是一个以 `⋯` 图标为触发器的溢出菜单，用来收纳那些不需要一直显示的操作：表格行、卡片标题、工具栏的次要动作。触发器本身只是一个纯图标按钮，动作都在它展开的菜单里。\n\n菜单的内容由 `items` 数组描述。普通项就是一次操作，`type: 'divider'` 是一条分隔线，`type: 'section'` 是一个带标题的分组：\n\n```vue\n<script setup lang=\"ts\">\nimport { MoreMenu } from '@astryx-vue/core/MoreMenu'\n\nconst items = [\n  { label: 'Rename', onClick: () => rename() },\n  { label: 'Duplicate', onClick: () => duplicate() },\n  { type: 'divider' },\n  { label: 'Move to trash', variant: 'destructive', onClick: () => remove() },\n]\n</script>\n\n<template>\n  <MoreMenu :items=\"items\" label=\"File actions\" />\n</template>\n```\n\n触发器只有图标，所以 `label` 就是它的无障碍名称，同时也是菜单本身的名字，以及悬停时的提示文字。不写 `label` 时跟着当前语言，中文是「更多选项」，英文是 `More options`。当菜单里装的是特定对象的操作时，换成更具体的说法（例如“项目操作”）会更好。想换掉三点图标，用 `icon` 插槽。\n\n菜单打开的瞬间，焦点落在哪里取决于你是用什么方式打开的：键盘打开（在触发器上按 `Enter`、`Space`、`ArrowDown`、`ArrowUp`）落在第一项或最后一项上；鼠标点击打开则挂在菜单容器上，不预先高亮任何一行，避免看起来像是已经选中了什么。打开之后 `ArrowDown` 和 `ArrowUp` 在各项之间移动并首尾相接，`Home` 和 `End` 跳到首尾，输入字母会跳转到以该字母开头的下一项，`Enter` 和 `Space` 执行当前项，`Escape` 关闭并把焦点交回触发器，`Tab` 关闭菜单后让浏览器继续往后移动焦点。禁用项会被跳过，也不会进入键盘路径。\n\n鼠标的按下与抬起是被区分的：按住鼠标时高亮跟着指针走，抬起的落点决定执行哪一项；如果抬起时指针在菜单之外，菜单就关闭。触摸设备上的行为不同——手指松开不会关闭菜单，因为高亮正在跟着手指移动，只有点中某一项、点中触发器或按下 `Escape` 才算结束。点开菜单时用的如果是鼠标，菜单与触发器之间的距离和方向由 `placement` 与 `alignment` 决定，空间不足时会自动翻到另一侧；溢出菜单通常希望 `alignment=\"end\"`，让菜单和触发器的尾部对齐。\n\n`presentation` 决定动作以什么形态出现：`popover`（默认）是锚定在触发器旁边的浮层；`bottom-sheet` 是从底部弹出的模态面板，适合手指操作；`adaptive` 在“主指针为粗略指针且宽度不超过 768px”时用底部面板，其余情况用浮层。底部面板里子菜单不是飞出的小面板，而是就地换一个视图，面板中间的标题会跟着变成该子菜单的名字，左上角出现返回按钮，`Escape` 先退出子菜单再关闭整个面板。\n\n打开状态既可以由组件自己管理，也可以由你管理。传入 `isMenuOpen` 就进入受控模式，配合 `v-model:isMenuOpen` 使用；`openChange` 在每次请求打开或关闭时触发。"
+        "en": "`MoreMenu` is an overflow menu behind a `⋯` trigger. It holds the actions that do not need to stay visible: secondary actions in a table row, a card header, or a toolbar. The trigger is an icon-only button; everything it offers lives in the menu it opens.\n\nThe menu's content is described by an `items` array. A plain entry is one action, `type: 'divider'` is a hairline between groups, and `type: 'section'` is a titled group:\n\n```vue\n<script setup lang=\"ts\">\nimport { MoreMenu } from '@astryx-vue/core/MoreMenu'\n\nconst items = [\n  { label: 'Rename', onClick: () => rename() },\n  { label: 'Duplicate', onClick: () => duplicate() },\n  { type: 'divider' },\n  { label: 'Move to trash', variant: 'destructive', onClick: () => remove() },\n]\n</script>\n\n<template>\n  <MoreMenu :items=\"items\" label=\"File actions\" />\n</template>\n```\n\nThe trigger is icon-only, so `label` is its accessible name, the name of the menu itself, and the text of its tooltip. When `label` is omitted it follows the active locale: `More options` in English, 「更多选项」 in Chinese. When the menu holds the actions of one specific thing, a more concrete phrase such as \"Project actions\" reads better. Use the `icon` slot to replace the three-dot artwork.\n\nWhere focus lands when the menu opens depends on how it was opened. A keyboard open (`Enter`, `Space`, `ArrowDown`, or `ArrowUp` on the trigger) lands on the first or the last row; a pointer open puts focus on the menu container and pre-highlights nothing, so no row reads as already selected. Once open, `ArrowDown` and `ArrowUp` move between rows and wrap at both ends, `Home` and `End` jump to the ends, typing a letter jumps to the next row starting with it, `Enter` and `Space` run the focused row, `Escape` closes the menu and returns focus to the trigger, and `Tab` closes the menu and lets the browser move on from the trigger. Disabled rows are skipped and stay out of the keyboard path.\n\nMouse and touch behave differently on purpose. With a mouse, the highlight follows the pointer while it is held and the release decides which row acts; releasing outside the menu dismisses it. With a finger, a release off the menu leaves it open, because the highlight is following the finger — the gesture ends when a row is picked, the trigger is tapped, or `Escape` is pressed. The `placement` and `alignment` props place the anchored menu beside the trigger and flip it when there is no room; an overflow menu usually wants `alignment=\"end\"`, so the menu lines up with the trigger's trailing edge.\n\n`presentation` decides the shape the actions arrive in. `popover` (the default) is the anchored surface; `bottom-sheet` is a modal panel at the bottom of the screen, sized for a thumb; `adaptive` keeps the anchored menu on pointer-driven layouts and uses the bottom panel on a compact touch screen: a coarse primary pointer, and a viewport narrower than the theme `md` breakpoint (768px by default) or shorter than 500px. The choice is made when the menu opens and held until it has closed. Inside the bottom panel a submenu does not open a second panel: the view is replaced, its title becomes the submenu's own label, a back button appears, and `Escape` leaves the submenu before it closes the panel.\n\nThe open state can belong to the component or to you. Pass `isMenuOpen` to control it, usually with `v-model:isMenuOpen`; `openChange` fires every time an open or close is requested.",
+        "zh": "`MoreMenu` 是一个以 `⋯` 图标为触发器的溢出菜单，用来收纳那些不需要一直显示的操作：表格行、卡片标题、工具栏的次要动作。触发器本身只是一个纯图标按钮，动作都在它展开的菜单里。\n\n菜单的内容由 `items` 数组描述。普通项就是一次操作，`type: 'divider'` 是一条分隔线，`type: 'section'` 是一个带标题的分组：\n\n```vue\n<script setup lang=\"ts\">\nimport { MoreMenu } from '@astryx-vue/core/MoreMenu'\n\nconst items = [\n  { label: 'Rename', onClick: () => rename() },\n  { label: 'Duplicate', onClick: () => duplicate() },\n  { type: 'divider' },\n  { label: 'Move to trash', variant: 'destructive', onClick: () => remove() },\n]\n</script>\n\n<template>\n  <MoreMenu :items=\"items\" label=\"File actions\" />\n</template>\n```\n\n触发器只有图标，所以 `label` 就是它的无障碍名称，同时也是菜单本身的名字，以及悬停时的提示文字。不写 `label` 时跟着当前语言，中文是「更多选项」，英文是 `More options`。当菜单里装的是特定对象的操作时，换成更具体的说法（例如“项目操作”）会更好。想换掉三点图标，用 `icon` 插槽。\n\n菜单打开的瞬间，焦点落在哪里取决于你是用什么方式打开的：键盘打开（在触发器上按 `Enter`、`Space`、`ArrowDown`、`ArrowUp`）落在第一项或最后一项上；鼠标点击打开则挂在菜单容器上，不预先高亮任何一行，避免看起来像是已经选中了什么。打开之后 `ArrowDown` 和 `ArrowUp` 在各项之间移动并首尾相接，`Home` 和 `End` 跳到首尾，输入字母会跳转到以该字母开头的下一项，`Enter` 和 `Space` 执行当前项，`Escape` 关闭并把焦点交回触发器，`Tab` 关闭菜单后让浏览器继续往后移动焦点。禁用项会被跳过，也不会进入键盘路径。\n\n鼠标的按下与抬起是被区分的：按住鼠标时高亮跟着指针走，抬起的落点决定执行哪一项；如果抬起时指针在菜单之外，菜单就关闭。触摸设备上的行为不同——手指松开不会关闭菜单，因为高亮正在跟着手指移动，只有点中某一项、点中触发器或按下 `Escape` 才算结束。点开菜单时用的如果是鼠标，菜单与触发器之间的距离和方向由 `placement` 与 `alignment` 决定，空间不足时会自动翻到另一侧；溢出菜单通常希望 `alignment=\"end\"`，让菜单和触发器的尾部对齐。\n\n`presentation` 决定动作以什么形态出现：`popover`（默认）是锚定在触发器旁边的浮层；`bottom-sheet` 是从底部弹出的模态面板，适合手指操作；`adaptive` 在紧凑触屏上用底部面板：主指针是粗略指针，并且视口宽度小于主题的 `md` 断点（默认 768px）或高度小于 500px；其余情况用浮层。打开那一刻定下用哪种，开着的时候转屏也不换。底部面板里子菜单不是飞出的小面板，而是就地换一个视图，面板中间的标题会跟着变成该子菜单的名字，左上角出现返回按钮，`Escape` 先退出子菜单再关闭整个面板。\n\n打开状态既可以由组件自己管理，也可以由你管理。传入 `isMenuOpen` 就进入受控模式，配合 `v-model:isMenuOpen` 使用；`openChange` 在每次请求打开或关闭时触发。"
       },
       "practices": {
         "en": [
@@ -4502,7 +4526,7 @@
                 "name": "`presentation`",
                 "type": "`'popover' | 'bottom-sheet' | 'adaptive'`",
                 "default": "`'popover'`",
-                "description": "Shape the actions arrive in. popover anchors the surface to the trigger; bottom-sheet is a modal panel at the bottom of the screen; adaptive uses the bottom panel at 768px and below when the primary pointer is coarse, and the anchored surface otherwise."
+                "description": "Shape the actions arrive in. popover anchors the surface to the trigger; bottom-sheet is a modal panel at the bottom of the screen; adaptive uses the bottom panel on a compact touch screen (a coarse primary pointer, and a viewport narrower than the theme `md` breakpoint, 768px by default, or shorter than 500px) and the anchored surface otherwise. The choice is made when the menu opens and held until it has closed."
               },
               {
                 "name": "`isMenuOpen`",
@@ -4672,7 +4696,7 @@
                 "name": "`presentation`",
                 "type": "`'popover' | 'bottom-sheet' | 'adaptive'`",
                 "default": "`'popover'`",
-                "description": "动作的呈现形态。popover 是锚定在触发器旁的浮层；bottom-sheet 是底部的模态面板；adaptive 在主指针为粗略指针且宽度不超过 768px 时使用底部面板，其余情况使用浮层。"
+                "description": "动作的呈现形态。popover 是锚定在触发器旁的浮层；bottom-sheet 是底部的模态面板；adaptive 在紧凑触屏上使用底部面板：主指针是粗略指针，并且视口宽度小于主题的 `md` 断点（默认 768px）或高度小于 500px；其余情况使用浮层。打开那一刻定下用哪种，关闭播完才重新判断。"
               },
               {
                 "name": "`isMenuOpen`",
@@ -30414,6 +30438,12 @@
                 "description": "Where the check mark sits."
               },
               {
+                "name": "`presentation`",
+                "type": "`'popover' | 'bottom-sheet' | 'adaptive'`",
+                "default": "`'popover'`",
+                "description": "`popover` is the surface anchored to the trigger. `bottom-sheet` uses the BottomSheet on every screen. `adaptive` uses the BottomSheet on a compact touch screen: a coarse primary pointer, and a viewport narrower than the theme `md` breakpoint (768px by default) or shorter than 500px. The choice is made when the layer opens and held until its exit finishes, so turning the device while it is open does not swap it."
+              },
+              {
                 "name": "`variant`",
                 "type": "`'input' | 'secondary' | 'ghost'`",
                 "default": "`'input'`",
@@ -30599,6 +30629,12 @@
                 "type": "`'start' | 'end'`",
                 "default": "`'start'`",
                 "description": "勾选标记的位置。"
+              },
+              {
+                "name": "`presentation`",
+                "type": "`'popover' | 'bottom-sheet' | 'adaptive'`",
+                "default": "`'popover'`",
+                "description": "`popover` 是锚定在触发器旁的浮层。`bottom-sheet` 在任何屏幕上都用底部弹层。`adaptive` 在紧凑触屏上用底部弹层：主指针是粗略指针（手指），并且视口宽度小于主题的 `md` 断点（默认 768px）或高度小于 500px。打开那一刻定下用哪种，开着的时候转屏也不换，退场播完才重新判断。"
               },
               {
                 "name": "`variant`",
@@ -33131,6 +33167,12 @@
                 "description": "Size."
               },
               {
+                "name": "`presentation`",
+                "type": "`'popover' | 'bottom-sheet' | 'adaptive'`",
+                "default": "`'popover'`",
+                "description": "`popover` is the surface anchored to the trigger. `bottom-sheet` uses the BottomSheet on every screen. `adaptive` uses the BottomSheet on a compact touch screen: a coarse primary pointer, and a viewport narrower than the theme `md` breakpoint (768px by default) or shorter than 500px. The choice is made when the layer opens and held until its exit finishes, so turning the device while it is open does not swap it."
+              },
+              {
                 "name": "`variant`",
                 "type": "`'input' | 'secondary' | 'ghost' | 'default'`",
                 "default": "`'default'`",
@@ -33274,6 +33316,12 @@
                 "type": "`'sm' | 'md' | 'lg'`",
                 "default": "`'md'`",
                 "description": "选择器尺寸。"
+              },
+              {
+                "name": "`presentation`",
+                "type": "`'popover' | 'bottom-sheet' | 'adaptive'`",
+                "default": "`'popover'`",
+                "description": "`popover` 是锚定在触发器旁的浮层。`bottom-sheet` 在任何屏幕上都用底部弹层。`adaptive` 在紧凑触屏上用底部弹层：主指针是粗略指针（手指），并且视口宽度小于主题的 `md` 断点（默认 768px）或高度小于 500px。打开那一刻定下用哪种，开着的时候转屏也不换，退场播完才重新判断。"
               },
               {
                 "name": "`variant`",

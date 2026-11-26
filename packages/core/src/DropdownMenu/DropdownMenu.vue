@@ -7,12 +7,12 @@ import { computed, markRaw, nextTick, onBeforeUnmount, onMounted, provide, react
 import Button from '../Button/Button.vue'
 import { useFocusReturnVisibility } from '../composables/internal/useFocusReturnVisibility.js'
 import { useDismiss } from '../composables/useDismiss.js'
-import { useMediaQuery } from '../composables/useMediaQuery.js'
 import { useMenuPress } from '../composables/useMenuPress.js'
 import { useOverflow } from '../composables/useOverflow.js'
 import { useTypeahead } from '../composables/useTypeahead.js'
 import Icon from '../Icon/Icon.vue'
 import { clampInlineSize, isIntrinsicInlineSize, LAYER_MAX_INLINE_SIZE } from '../layer/inlineSize.js'
+import { useHeldPresentation } from '../layer/useHeldPresentation.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import DropdownMenuFrame from './DropdownMenuFrame.vue'
@@ -67,12 +67,10 @@ const focusLastOnOpen = shallowRef(false)
 let openModality: 'keyboard' | 'pointer' = 'keyboard'
 let armedTriggerClickGuard = false
 
-const COMPACT_TOUCH_QUERY = '(max-width: 768px) and (pointer: coarse)'
-const isCompactTouch = useMediaQuery(COMPACT_TOUCH_QUERY)
 const hasRegions = computed(() => slots.header != null || slots.footer != null)
-const { drillIn, host, isDrilled } = useMenuDrillIn(isOpen, COMPACT_TOUCH_QUERY)
+const { drillIn, host, isDrilled } = useMenuDrillIn(isOpen)
 const positionedEl = computed(() => (hasRegions.value ? popoverRef.value : surfaceRef.value))
-const isSheet = computed(() => props.presentation === 'bottom-sheet' || (props.presentation === 'adaptive' && isCompactTouch.value))
+const { isSheet, settle: onSheetSettled } = useHeldPresentation(() => props.presentation, isOpen)
 const sheetOpen = computed({
   get: () => isSheet.value && isOpen.value,
   set: (open: boolean) => {
@@ -416,6 +414,7 @@ const menuBindings = computed(() => ({
 
 provide(dropdownMenuFrameKey, reactive({
   isSheet,
+  onSheetSettled,
   sheetOpen,
   sheetLabel,
   hasRegions,
