@@ -78,6 +78,8 @@ npm run astryx-vue -- component Button
 - `--zh`：当文档具备中文翻译时，优先输出简体中文内容。
 - `--cwd`：指定项目目录，`template` 和 `init` 只往这个目录下写文件，`upgrade` 和 `doctor` 只在这个目录里读。
 
+所有命令都不会停下来问问题，所以没有需要确认的地方。传了 `--yes`、`-y`、`--non-interactive` 或 `--no-input` 会以退出码 2 拒绝，报错里直接给出去掉它之后的同一条命令。
+
 ## 配合 AI Agent（生成上下文文件）
 
 项目里没有任何 agent 文件时，`init` 默认创建 `AGENTS.md`。不加 `--agent` 时会优先写项目里已有的配置文件，检测顺序为 `AGENTS.md`、`CLAUDE.md`、`.cursorrules`、`.hermes.md`、`HERMES.md`。`--agent claude` 写 `CLAUDE.md`，`hermes` 写 `.hermes.md`，`cursor` 和 `codex` 写 `AGENTS.md`，`all` 则写所有已存在的已知文件。通过 `--agent-docs-path <file>` 也可以指定输出到任意文件。
