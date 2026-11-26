@@ -7,7 +7,8 @@
     container-type: inline-size;
     overflow: clip;
     border-radius: var(--astryx-radius-element, 6px);
-    background-color: var(--astryx-color-background-inverted, #171717);
+    /* 画面还没出来时露出的底，和视频的黑边一样固定为黑色；上面的控件按深色底配色，不随页面主题翻转。 */
+    background-color: #000;
   }
 
   .astryx-video-player__surface {

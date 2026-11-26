@@ -23,6 +23,18 @@ describe('iconButton', () => {
     expect(wrapper.find('.astryx-button__label').exists()).toBe(false)
   })
 
+  it('renders a component passed through the icon prop', () => {
+    const Glyph = { render: () => h('svg', { 'data-testid': 'glyph' }) }
+    const wrapper = mount(IconButton, {
+      props: {
+        label: 'Play',
+        icon: Glyph,
+      },
+    })
+
+    expect(wrapper.find('.astryx-button__icon [data-testid="glyph"]').exists()).toBe(true)
+  })
+
   it('inherits size and disabled state from ButtonGroup', () => {
     const wrapper = mount(ButtonGroup, {
       props: {
