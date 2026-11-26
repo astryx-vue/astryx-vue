@@ -15,7 +15,7 @@ title: 设计原则
 
 1. 组件能覆盖的，就不要手写。
 2. 布局从外往里：先选外壳和区域，再写内容。见 [页面布局](/guide/layout)。
-3. 密集数据用行来排：`Table`、`List` 加分隔线，一条一行。`Card` 留给独立的小部件、图集和设置分组。
+3. 密集数据用行来排：`Table`、`List` 加分隔线，一条一行。`Card` 留给独立的小部件、图集和彼此分开的单项；设置分组用 `Section`。
 4. 自定义样式写普通 CSS，放在 `@layer astryx.overrides` 里。要和工具类一起用，见 [主题与样式](/guide/styling)。
 5. 颜色、间距、圆角用语义变量：`var(--astryx-color-text-primary)`、`var(--astryx-spacing-4)`。
 6. 表单用 `v-model` 双向绑定。`TextInput`、`CheckboxInput` 这些组件都要求传值，没有不受控模式。
