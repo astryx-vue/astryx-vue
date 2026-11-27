@@ -1,5 +1,11 @@
 # @astryx-vue/cli
 
+## 0.6.4
+
+### Patch Changes
+
+- [#602](https://github.com/astryx-vue/astryx-vue/pull/602) [`0253ff2`](https://github.com/astryx-vue/astryx-vue/commit/0253ff2970a2622d5dd50c3444fb208a59efd815) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - upgrade、init、doctor 在项目的任意子目录里运行，也会回到有 package.json 的项目根；项目的 core 比 CLI 新时，upgrade 说明是 CLI 太旧，不再说"已是最新"；扫描文件按固定顺序、不穿过符号链接。升级指南新增 List 的 `edgeCompensation="inline"` 改名 `edge="outset"`。
+
 ## 0.6.3
 
 ### Patch Changes
