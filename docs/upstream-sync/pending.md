@@ -5802,6 +5802,7 @@
 - [ ] [`85788840e`](https://github.com/meta/astryx/commit/85788840e) fix(DateInput): a wheel's turn from a tap, a key or the program plays the settle spring (#9924)
   - 暂缓：本期已做手势引擎；剩滚轮的程序转动弹簧，依赖滚轮设施和 DateInput 接入，归组件接入阶段
   - 暂缓：点按、按键或程序转动时播落定弹簧，要先有上面的滚轮物理
+  - 暂缓：等 #641 合并（motion-4f 勾）； 滚轮点按、按键、程序转动沿 settle 弹簧转到目标行（#641 仍开着，CI 通过后合并）
 - [x] [`9eee3c4c5`](https://github.com/meta/astryx/commit/9eee3c4c5) fix(core): a held finger stops a paging settle on a busy page too (#10330)
   - Vue 版已有：手指按在正在停靠的行上立即接住，没有等待延时，不存在忙页面把按住读成轻点的情况
 - [ ] [`e245db5fb`](https://github.com/meta/astryx/commit/e245db5fb) feat(core): the keyboard module's docked ride, the scroller's reveal and the tap route (#9776)
@@ -5892,8 +5893,9 @@
 - [ ] [`62bc7a2fe`](https://github.com/meta/astryx/commit/62bc7a2fe) fix(core): a swizzled copy shares the animated-layout, code-language and snap-paging brands (#10576)
 - [x] [`9a690d52b`](https://github.com/meta/astryx/commit/9a690d52b) fix(core): a finger stops a pager's goTo move at the touch (#10545)
   - 已移植：[#583](https://github.com/astryx-vue/astryx-vue/pull/583)。手指一碰就停住程序发起的翻页
-- [ ] [`33cf413d0`](https://github.com/meta/astryx/commit/33cf413d0) fix(NavigationStack): fade the veil for a late finger-scroll report (#10540)
+- [x] [`33cf413d0`](https://github.com/meta/astryx/commit/33cf413d0) fix(NavigationStack): fade the veil for a late finger-scroll report (#10540)
   - 暂缓：本期已做迟到的手指滚动报告（#579）；剩 NavigationStack 遮罩渐隐，归组件接入阶段
+  - 已移植：[#579](https://github.com/astryx-vue/astryx-vue/pull/579)。本清单范围内的改动（手指滚动按过去时间读）已在 #579；NavigationStack 遮罩那半属 lab 范围，Vue 版没有该组件，lab 清单已暂缓
 - [x] [`9e86adb57`](https://github.com/meta/astryx/commit/9e86adb57) test(core): the edge rides count each phase on its own reads (#10578)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`f543ec7b3`](https://github.com/meta/astryx/commit/f543ec7b3) fix(gestures): read a finger's lift on the clock its moves came on (#10583)
@@ -6051,6 +6053,7 @@
   - 不适用：上游是 React 里 setState 同值仍多渲染一次；Vue 的 ref 同值赋值不触发更新
 - [ ] [`f27380ab3`](https://github.com/meta/astryx/commit/f27380ab3) feat(TimeInput): the minute wheel loops under a finger, as on iOS (#10953)
   - 暂缓：本期已做手势引擎；剩分钟滚轮循环，依赖滚轮条带和 TimeInput 接入，归组件接入阶段
+  - 暂缓：分钟滚轮在手指下循环属 PickerWheel 的滚轮代码（另有代理在做，本任务不碰）；datePicker.ts 里 minuteSeamKeepsHour 常量已有
 - [x] [`c1a1ea82b`](https://github.com/meta/astryx/commit/c1a1ea82b) fix(core): a tap that wobbles at a scroll edge keeps its click (#10829)
   - 已移植：[#577](https://github.com/astryx-vue/astryx-vue/pull/577)。在滚动边缘晃了一下的轻点保留它的点击
 - [x] [`d9d7b105f`](https://github.com/meta/astryx/commit/d9d7b105f) feat(DropdownMenu): a finger or a pen opens the menu as it presses (#8078)
@@ -6098,16 +6101,18 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`ca204372b`](https://github.com/meta/astryx/commit/ca204372b) chore(core): re-export UIKit's timing, add SearchField's cancel string (#10956)
 - [ ] [`e5984b235`](https://github.com/meta/astryx/commit/e5984b235) fix(useMobileKeyboard): sync its option flags at commit (#10914)
-- [ ] [`17fcb15da`](https://github.com/meta/astryx/commit/17fcb15da) feat(core): one shared context request from a long press, a right click and Shift+F10 (#8670)
+- [x] [`17fcb15da`](https://github.com/meta/astryx/commit/17fcb15da) feat(core): one shared context request from a long press, a right click and Shift+F10 (#8670)
   - 暂缓：本期已做长按、右键、Shift+F10 共用的 contextRequest（#579）；剩各组件改用它，归组件接入阶段
+  - 已移植：[#579](https://github.com/astryx-vue/astryx-vue/pull/579)。上游该提交本身只新增 contextRequest 和宿主改动，Vue 版已有 gestures/contextRequest.ts 与测试
 - [ ] [`eec79323c`](https://github.com/meta/astryx/commit/eec79323c) fix(Text, Tooltip): on Android, the first tap on a button or link in truncated text opens its tooltip; a tap on a text field never does (#11213)
 - [x] [`a65ea05e5`](https://github.com/meta/astryx/commit/a65ea05e5) fix(useMenuPress): sync its gesture refs at commit (#10901)
   - 不适用：React 里把手势 ref 在提交时同步；Vue 的手势状态是普通变量
 
 ### v0.7.16
 
-- [ ] [`06b7e61f5`](https://github.com/meta/astryx/commit/06b7e61f5) feat(core): the shared drag path takes a component's own drag (#9720)
+- [x] [`06b7e61f5`](https://github.com/meta/astryx/commit/06b7e61f5) feat(core): the shared drag path takes a component's own drag (#9720)
   - 暂缓：本期已做 createSnapDrag 带 model、compositorParts、customProperty 的共享拖动通路；剩各组件改走它，归组件接入阶段
+  - 已移植：[#583](https://github.com/astryx-vue/astryx-vue/pull/583)。createPan、createSnapDrag（model、customProperty、settleTo、onPass）和动画器自定义属性都在 main 上
 - [x] [`badd6984b`](https://github.com/meta/astryx/commit/badd6984b) chore(core): the animator takes start: 'next-frame' in an input event (#9261)
   - 暂缓：依赖动画器（animator）与主题时序/节奏的动效基础设施，Vue 版没有
   - 已移植：[#567](https://github.com/astryx-vue/astryx-vue/pull/567)。输入事件里支持 start: 'next-frame'
