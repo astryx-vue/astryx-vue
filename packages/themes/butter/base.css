@@ -7,7 +7,11 @@
  * Tokens the theme does not set keep the shared default from Neutral's base.
  * Figtree and JetBrains Mono stay on the shared fonts.css stack.
  */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Sarina&display=swap');
+@import '@fontsource/outfit/400.css';
+@import '@fontsource/outfit/500.css';
+@import '@fontsource/outfit/600.css';
+@import '@fontsource/outfit/700.css';
+@import '@fontsource/sarina/400.css';
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 
 @layer astryx.tokens {

@@ -113,6 +113,13 @@ describe('reset.css structure', () => {
   })
 })
 
+describe('reset.css page font', () => {
+  it('gives html the body font token so loose text in the page body is not serif', () => {
+    const html = parseRuleBlocks(css).find(({ selector }) => selector === ':where(html)')
+    expect(html?.body).toContain('font-family: var(--astryx-font-family-body);')
+  })
+})
+
 describe('reset.css disabled cursor', () => {
   it('gives disabled and aria-disabled elements the default cursor', () => {
     const blocks = parseRuleBlocks(css)
@@ -158,6 +165,12 @@ describe('reset.css pseudo-element rules', () => {
     expect(endsWith('opacity: 1', '::placeholder')).toBe(true)
     expect(endsWith('-webkit-appearance: none', '::-webkit-search-decoration')).toBe(true)
     expect(endsWith('-webkit-appearance: none', '::-webkit-search-cancel-button')).toBe(true)
+  })
+
+  it('sets the dropdown marker of a field with a list on a single line', () => {
+    const marker = blocks.filter(({ selector }) =>
+      topLevelSelectors(selector).some(entry => entry.endsWith('::-webkit-calendar-picker-indicator')))
+    expect(marker.map(({ body }) => body).join('\n')).toMatch(/line-height:\s*1;/)
   })
 
   it('falls back to the neutral --astryx-color-text-secondary for placeholders', () => {

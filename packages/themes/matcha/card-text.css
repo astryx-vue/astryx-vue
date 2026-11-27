@@ -1,0 +1,49 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.overrides {
+  /* 卡片上的次要文字（以及灰底卡片的主文字）退到够 4.5:1 的色阶：落在卡片底色上，以及其上选中行、编号引用的强调色底纹上都读得清。 */
+  [data-astryx-theme='matcha'] .astryx-card[data-variant='blue'] {
+    --astryx-color-text-secondary: light-dark(#3e481d, #a8bf6a);
+  }
+
+  [data-astryx-theme='matcha'] .astryx-card[data-variant='cyan'] {
+    --astryx-color-text-secondary: light-dark(#4c5924, #a8bf6a);
+  }
+
+  [data-astryx-theme='matcha'] .astryx-card[data-variant='gray'] {
+    --astryx-color-text-secondary: light-dark(#4c5924, #a8bf6a);
+  }
+
+  [data-astryx-theme='matcha'] .astryx-card[data-variant='green'] {
+    --astryx-color-text-secondary: light-dark(#4c5924, #c0cba9);
+  }
+
+  [data-astryx-theme='matcha'] .astryx-card[data-variant='orange'] {
+    --astryx-color-text-secondary: light-dark(#4c5924, #a8bf6a);
+  }
+
+  [data-astryx-theme='matcha'] .astryx-card[data-variant='pink'] {
+    --astryx-color-text-secondary: light-dark(#4c5924, #a8bf6a);
+  }
+
+  [data-astryx-theme='matcha'] .astryx-card[data-variant='purple'] {
+    --astryx-color-text-secondary: light-dark(#3e481d, #a8bf6a);
+  }
+
+  [data-astryx-theme='matcha'] .astryx-card[data-variant='red'] {
+    --astryx-color-text-secondary: light-dark(#3e481d, #a8bf6a);
+  }
+
+  [data-astryx-theme='matcha'] .astryx-card[data-variant='teal'] {
+    --astryx-color-text-secondary: light-dark(#3e481d, #c0cba9);
+  }
+
+  [data-astryx-theme='matcha'] .astryx-card[data-variant='yellow'] {
+    --astryx-color-text-secondary: light-dark(#4c5924, #c0cba9);
+  }
+
+  [data-astryx-theme='matcha'] .astryx-card[data-variant='muted'] {
+    --astryx-color-text-primary: light-dark(#3e481d, #cdd8b9);
+    --astryx-color-text-secondary: light-dark(#5a6b2a, #cdd8b9);
+  }
+}

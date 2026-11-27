@@ -284,7 +284,7 @@ function onPointerUp(event: PointerEvent): void {
   lastTouchAt = Date.now()
   if (event.target instanceof Node)
     lastTouchTarget = event.target
-  if (contact?.pointerId === event.pointerId) {
+  if (contact != null && contact.pointerId === event.pointerId) {
     // 在抬起这一步之前读：移动过头或被滚动拿走的按压，这时已经死了或没了。
     const pressed = contact.live
     endContact(pressed != null && live === pressed && pressed.gesture.phase !== 'dead')

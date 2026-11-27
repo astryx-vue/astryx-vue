@@ -1,3 +1,4 @@
+import type { ChartValueFormat } from './types.js'
 import { describe, expect, it } from 'vitest'
 import { compactNumber, currency, monthYear, percent, shortDate } from './formatters.js'
 
@@ -94,6 +95,29 @@ describe('chart formatters', () => {
     expect(compactNumber(Number.POSITIVE_INFINITY, 'en-US')).toBe('Infinity')
     expect(percent('not-a-number', 'en-US')).toBe('not-a-number')
     expect(shortDate('not-a-date', 'en-US')).toBe('not-a-date')
-    expect(monthYear(null, 'en-US')).toBe('null')
+  })
+
+  it('returns undefined for null and undefined so the chart can fall back to its default text', () => {
+    expect(compactNumber(null, 'en-US')).toBeUndefined()
+    expect(compactNumber(undefined, 'en-US')).toBeUndefined()
+    expect(currency('$')(null)).toBeUndefined()
+    expect(percent(undefined, 'en-US')).toBeUndefined()
+    expect(shortDate(null, 'en-US')).toBeUndefined()
+    expect(monthYear(undefined, 'en-US')).toBeUndefined()
+    // 0 是有值的，照常格式化。
+    expect(compactNumber(0, 'en-US')).toBe('0')
+    expect(percent(0, 'en-US')).toBe('0%')
+    expect(currency('$')(0)).toBe('$0')
+  })
+
+  it('currency takes a call-time locale, and a factory locale wins over it', () => {
+    const callTime = currency('€')(1234.5, 'de-DE')
+    expect(callTime).toBe(currency('€', 'de-DE')(1234.5))
+    expect(currency('€', 'en-US')(1234.5, 'de-DE')).toBe(currency('€', 'en-US')(1234.5))
+  })
+
+  it('built-in formatters are assignable to ChartValueFormat', () => {
+    const formats: ChartValueFormat[] = [compactNumber, percent, shortDate, monthYear, currency('$')]
+    expect(formats.map(format => format(null, 'en-US', 'gregory'))).toEqual([undefined, undefined, undefined, undefined, undefined])
   })
 })

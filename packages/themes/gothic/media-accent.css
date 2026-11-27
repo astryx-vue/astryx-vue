@@ -1,0 +1,16 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.overrides {
+  /*
+   * Gothic 的强调文字和图标是同一个浅色。媒体表面（MediaTheme）重新声明了 accent，
+   * 但没有重新声明强调文字和图标，浅色表面上它们就停在近白色上。
+   * 这里让它们跟着各自表面的 accent；深色表面嵌在浅色表面里时也拿回自己的浅色强调。
+   */
+  [data-astryx-theme='gothic'] [data-astryx-media='dark'],
+  [data-astryx-theme='gothic'] [data-astryx-media='light'],
+  [data-astryx-theme='gothic'][data-astryx-media='dark'],
+  [data-astryx-theme='gothic'][data-astryx-media='light'] {
+    --astryx-color-text-accent: var(--astryx-color-accent);
+    --astryx-color-icon-accent: var(--astryx-color-accent);
+  }
+}

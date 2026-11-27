@@ -1,7 +1,7 @@
 {
   "name": "@astryx-vue/themes",
   "type": "module",
-  "version": "0.33.3",
+  "version": "0.33.4",
   "description": "CSS themes for the unofficial astryx-vue port of Astryx. Not affiliated with Meta.",
   "author": "ShenQingchuan",
   "license": "MIT",
@@ -60,8 +60,20 @@
     "build": "true"
   },
   "dependencies": {
+    "@fontsource-variable/fraunces": "catalog:runtime",
+    "@fontsource/albert-sans": "catalog:runtime",
+    "@fontsource/crimson-text": "catalog:runtime",
+    "@fontsource/dm-sans": "catalog:runtime",
     "@fontsource/figtree": "catalog:runtime",
-    "@fontsource/jetbrains-mono": "catalog:runtime"
+    "@fontsource/fustat": "catalog:runtime",
+    "@fontsource/jetbrains-mono": "catalog:runtime",
+    "@fontsource/manufacturing-consent": "catalog:runtime",
+    "@fontsource/montserrat": "catalog:runtime",
+    "@fontsource/outfit": "catalog:runtime",
+    "@fontsource/playwrite-us-trad": "catalog:runtime",
+    "@fontsource/poppins": "catalog:runtime",
+    "@fontsource/sarina": "catalog:runtime",
+    "@fontsource/unifrakturmaguntia": "catalog:runtime"
   },
   "publishConfig": {
     "access": "public"

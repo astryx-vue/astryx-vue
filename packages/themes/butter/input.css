@@ -10,14 +10,14 @@
     --astryx-input-height-sm: var(--astryx-size-element-sm);
     --astryx-input-height-md: var(--astryx-size-element-md);
     --astryx-input-height-lg: var(--astryx-size-element-lg);
-    /* 状态描边、状态图标和状态提示条都用状态条那套醒目色。 */
+    /* 状态提示条用状态条那套醒目色；描边和图标在浅色下取色阶中段，才能在输入框底色上达到 3:1。 */
     --astryx-input-error: #fc473b;
     --astryx-input-error-foreground: #ffffff;
     --astryx-input-error-background: #fc473b;
-    --astryx-input-warning: #ffc502;
+    --astryx-input-warning: light-dark(#958500, #ffc502);
     --astryx-input-warning-foreground: #1d1c11;
     --astryx-input-warning-background: #ffc502;
-    --astryx-input-success: #91d143;
+    --astryx-input-success: light-dark(#4a984a, #91d143);
     --astryx-input-success-foreground: #1d1c11;
     --astryx-input-success-background: #91d143;
   }

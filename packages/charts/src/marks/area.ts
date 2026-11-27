@@ -8,7 +8,7 @@ import {
   area as d3Area,
   line as d3Line,
 } from 'd3-shape'
-import { h } from 'vue'
+import { defineComponent, h, useId } from 'vue'
 import { seriesFill } from '../markColor.js'
 import { xPixel } from '../utils.js'
 
@@ -19,9 +19,36 @@ const CURVES: Record<string, CurveFactory> = {
   step: curveStep,
 }
 
+/**
+ * 渐变填充：渐变 id 取自 `useId()`，整页唯一。
+ * 同一页上两张图画同一个系列时，不会引用到对方的渐变。
+ */
+const GradientFill = defineComponent({
+  name: 'AreaGradientFill',
+  props: {
+    pathD: { type: String, required: true },
+    color: { type: String, required: true },
+    opacity: { type: Number, required: true },
+  },
+  setup(props) {
+    // `url(#id)` 里放不下冒号等字符，只留字母数字和连字符。
+    const gradientId = `area-grad-${useId().replace(/[^\w-]/g, '')}`
+    return () => [
+      h('defs', [
+        h('linearGradient', { id: gradientId, x1: 0, y1: 0, x2: 0, y2: 1 }, [
+          h('stop', { 'offset': '0%', 'stop-color': props.color, 'stop-opacity': props.opacity }),
+          h('stop', { 'offset': '100%', 'stop-color': props.color, 'stop-opacity': 0 }),
+        ]),
+      ]),
+      h('path', { 'd': props.pathD, 'fill': `url(#${gradientId})`, 'fill-opacity': 1, 'stroke': 'none' }),
+    ]
+  },
+})
+
 export interface AreaOptions {
   color?: string
   opacity?: number
+  /** 点怎么连。默认 `'linear'`：直线段 */
   curve?: 'linear' | 'monotone' | 'natural' | 'step'
   stack?: string
   gradient?: boolean
@@ -45,7 +72,7 @@ export function area(dataKey: string, options: AreaOptions = {}): SeriesDef {
   const opacity = typeof options.opacity === 'number' && Number.isFinite(options.opacity)
     ? Math.min(1, Math.max(0, options.opacity))
     : 0.3
-  const curve = options.curve ?? 'monotone'
+  const curve = options.curve ?? 'linear'
   const gradient = options.gradient ?? false
   const stroke = options.stroke ?? true
 
@@ -83,7 +110,7 @@ export function area(dataKey: string, options: AreaOptions = {}): SeriesDef {
     render(resolved) {
       if (resolved.length === 0)
         return null
-      const curveFactory = CURVES[curve] ?? curveMonotoneX
+      const curveFactory = CURVES[curve] ?? curveLinear
 
       const areaGen = d3Area<ResolvedPoint>()
         .defined(isFinitePoint)
@@ -100,26 +127,12 @@ export function area(dataKey: string, options: AreaOptions = {}): SeriesDef {
         .curve(curveFactory)
       const strokeD = lineGen(resolved) ?? ''
 
-      // 渐变 id 带上系列的 `_uid`：两个系列画同一个 dataKey 时不会共用一个渐变，
-      // 否则后画的会把先画的那份颜色抢走。
-      const gradientId = `area-grad-${(seriesDef._uid ?? dataKey).replace(/[^\w-]/g, '-')}`
       const fillColor = seriesFill(seriesDef, color)
 
       return h('g', [
         gradient
-          ? h('defs', [
-              h('linearGradient', { id: gradientId, x1: 0, y1: 0, x2: 0, y2: 1 }, [
-                h('stop', { 'offset': '0%', 'stop-color': fillColor, 'stop-opacity': opacity }),
-                h('stop', { 'offset': '100%', 'stop-color': fillColor, 'stop-opacity': 0 }),
-              ]),
-            ])
-          : null,
-        h('path', {
-          'd': pathD,
-          'fill': gradient ? `url(#${gradientId})` : fillColor,
-          'fill-opacity': gradient ? 1 : opacity,
-          'stroke': 'none',
-        }),
+          ? h(GradientFill, { pathD, color: fillColor, opacity })
+          : h('path', { 'd': pathD, 'fill': fillColor, 'fill-opacity': opacity, 'stroke': 'none' }),
         stroke
           ? h('path', { 'd': strokeD, 'fill': 'none', 'stroke': fillColor, 'stroke-width': 2 })
           : null,

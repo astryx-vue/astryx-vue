@@ -70,13 +70,25 @@ import '@astryx-vue/richtext/richtext.css'
 | 在表格单元格之间移动 | 方向键 |
 | 在代码块或表格末尾创建并进入下方段落 | <kbd>ArrowDown</kbd> |
 | 打开或关闭链接对话框 | <kbd>Cmd/Ctrl</kbd> + <kbd>K</kbd> |
+| 缩进或反缩进代码块里选区碰到的每一行 | <kbd>Tab</kbd> / <kbd>Shift</kbd> + <kbd>Tab</kbd> |
+| 把代码块变回段落 | 光标在代码块开头按 <kbd>Backspace</kbd> |
+| 先选中代码或单元格文字，再选中整篇文档 | 在代码块或表格单元格里按 <kbd>Cmd/Ctrl</kbd> + <kbd>A</kbd> |
 | 离开整个编辑器 | 先按 <kbd>Escape</kbd>，再按 <kbd>Tab</kbd>；反向移动使用 <kbd>Shift</kbd> + <kbd>Tab</kbd> |
 
 光标位于代码块或表格末尾时，<kbd>ArrowDown</kbd> 会在下方没有内容，或者下方紧邻另一个代码块或表格时插入段落。这样可以在这两类块之间补充正文；下方已经是普通内容时，方向键沿用 Lexical 的原生导航。
 
+## 粘贴、快捷输入与禁用时的链接
+
+- 往代码块里粘贴富文本时只插入纯文本，每个块一行，代码里不会混进加粗、链接或表格。
+- 往表格单元格里粘贴表格时，从选区左上角的单元格开始逐格写入，并补足需要的行和列。网页复制出的「段落加表格」这类混合内容，里面的表格按文字放进单元格，因为单元格里放不下表格。
+- 在列表项开头输入 Markdown 标记（`## `、`> `、`- `、`1. `、`[ ] `），这一项会改成对应的标题、引用、无序、有序或任务项，每次改动是一个撤销步。它跟随 `hasMarkdownShortcuts`。
+- 编辑器被禁用时，里面的链接不进入 Tab 顺序，也不会跳转。
+- 没写协议、带端口的地址（如 `localhost:3000`、`example.com:8080`）会按 `https://` 生成链接。
+- 没选中文字时点「插入链接」，会把输入的地址作为链接文字插在光标处；光标在链接里则更新这条链接。
+
 ## 自动链接与服务端转换
 
-将 `RichTextEditorAutoLinkPlugin` 放入编辑器默认插槽，可以把输入的网址和邮箱自动转换为链接；通过 `matchers` 可以扩展匹配规则。
+将 `RichTextEditorAutoLinkPlugin` 放入编辑器默认插槽，可以把输入的网址和邮箱自动转换为链接；通过 `matchers` 可以扩展匹配规则。代码块里的文字永远不会被自动链接。
 
 <DemoExample :demo="richtextAutoLink" description="在默认插槽中启用自动链接插件。" locale="zh" title="自动识别网址和邮箱" />
 

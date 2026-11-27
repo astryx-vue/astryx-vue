@@ -5,7 +5,7 @@
     {
       "name": "@astryx-vue/core",
       "directory": "packages/core",
-      "version": "0.33.3",
+      "version": "0.33.4",
       "description": "Vue 3 components for the unofficial astryx-vue port of Astryx. Not affiliated with Meta.",
       "canary": false,
       "published": true
@@ -29,7 +29,7 @@
     {
       "name": "@astryx-vue/richtext",
       "directory": "packages/richtext",
-      "version": "0.33.3",
+      "version": "0.33.4",
       "description": "Astryx rich text for Vue — Lexical nodes and lossless Markdown import/export. Not affiliated with Meta.",
       "canary": false,
       "published": true
@@ -37,7 +37,7 @@
     {
       "name": "@astryx-vue/themes",
       "directory": "packages/themes",
-      "version": "0.33.3",
+      "version": "0.33.4",
       "description": "CSS themes for the unofficial astryx-vue port of Astryx. Not affiliated with Meta.",
       "canary": false,
       "published": true
@@ -20475,8 +20475,8 @@
               {
                 "name": "`tickFormat`",
                 "description": "`tickFormat`",
-                "type": "`(value: unknown) => string`",
-                "default": "`undefined`"
+                "type": "`(value: unknown) => string \\",
+                "default": "null \\"
               },
               {
                 "name": "`truncate`",
@@ -21499,13 +21499,13 @@
                 "name": "`maxTicks`",
                 "type": "`number`",
                 "default": "`undefined`",
-                "description": "允许显示的最大刻度文字数量，超出时会等间隔跳过。"
+                "description": "允许显示的最大刻度文字数量，超出时会等间隔抽稀，首尾文字保留。不设时按轴的宽度自动抽稀；设了就压过这个自动值，窄图上文字可能挤在一起，所以一般别设。"
               },
               {
                 "name": "`tickFormat`",
-                "type": "`(value: unknown) => string`",
-                "default": "`undefined`",
-                "description": "自定义刻度文字的格式化函数。"
+                "type": "`(value: unknown) => string \\",
+                "default": "null \\",
+                "description": "undefined`"
               },
               {
                 "name": "`truncate`",
@@ -22339,7 +22339,7 @@
           },
           {
             "heading": "Formatting functions",
-            "text": "The library includes formatting helpers for common chart values. Formatting functions follow a safe fallback rule: if an input is `NaN`, `Infinity`, or cannot be parsed, the function returns the original string as-is instead of printing errors or throwing exceptions.\n\n- `compactNumber(value, locale)`: Abbreviates large numbers. For example, `1200` becomes \"1.2K\", `1500000` becomes \"1.5M\", and `1e12` becomes \"1T\".\n- `currency(symbol?, locale?)`: Creates a currency formatter. For example, `currency('$')` can be passed to `ChartAxis`'s `tickFormat`. Values over 1,000 are automatically abbreviated (such as \"$1.5K\").\n- `percent(value, locale)`: Formats a decimal ratio as a percentage. For example, `0.45` becomes \"45%\" and `0.005` becomes \"0.5%\".\n- `shortDate(value, locale, calendar?)`: Formats dates as a short month and day. For example, \"Jan 5\". Dates are Gregorian unless you pass an `Intl` calendar such as `'persian'`.\n- `monthYear(value, locale, calendar?)`: Formats dates as month and year. For example, \"Jan 2024\". Takes the same optional calendar.\n- `formatList(values, locale)`: Formats a list of words into a natural language string according to locale rules, such as \"A, B, and C\"."
+            "text": "The library includes formatting helpers for common chart values. Each one is a `ChartValueFormat`: it receives a value, a locale and a calendar, and returns text, or `null` or `undefined` to ask for the chart's default text. They assign to `ChartValueFormat` without a wrapper. Formatting functions follow a safe fallback rule: if an input is `NaN`, `Infinity`, or cannot be parsed, the function returns the original string as-is instead of printing errors or throwing exceptions. A `null` or `undefined` value returns `undefined` instead of \"0\", \"0%\", \"$0\" or \"null\".\n\n- `compactNumber(value, locale)`: Abbreviates large numbers. For example, `1200` becomes \"1.2K\", `1500000` becomes \"1.5M\", and `1e12` becomes \"1T\".\n- `currency(symbol?, locale?)`: Creates a currency formatter. For example, `currency('$')` can be passed to `ChartAxis`'s `tickFormat`. Values over 1,000 are automatically abbreviated (such as \"$1.5K\"). The returned function also takes a call-time locale; a locale given to the factory wins.\n- `percent(value, locale)`: Formats a decimal ratio as a percentage. For example, `0.45` becomes \"45%\" and `0.005` becomes \"0.5%\".\n- `shortDate(value, locale, calendar?)`: Formats dates as a short month and day. For example, \"Jan 5\". Dates are Gregorian unless you pass an `Intl` calendar such as `'persian'`.\n- `monthYear(value, locale, calendar?)`: Formats dates as month and year. For example, \"Jan 2024\". Takes the same optional calendar.\n- `formatList(values, locale)`: Formats a list of words into a natural language string according to locale rules, such as \"A, B, and C\"."
           },
           {
             "heading": "Reduce large line datasets",
@@ -22493,7 +22493,7 @@
           },
           {
             "heading": "格式化函数",
-            "text": "图表库内置了一组常用的格式化函数。所有格式化函数都遵循安全原则：如果遇到 `NaN`、`Infinity` 或无法解析的值，会原样返回原字符串，绝对不会在界面上打印出异常信息，也不会报错崩溃。\n\n- `compactNumber(value, locale)`：将大数字缩写。例如 `1200` 转为「1.2K」，`1500000` 转为「1.5M」，`1e12` 转为「1T」。\n- `currency(symbol?, locale?)`：创建货币格式化器。例如 `currency('¥')` 可以直接传给 `ChartAxis` 的 `tickFormat` 属性，数值大于一千时会自动应用缩写（如「¥1.5K」）。\n- `percent(value, locale)`：将小数比例转换为百分比。例如 `0.45` 转换为「45%」，`0.005` 转换为「0.5%」。\n- `shortDate(value, locale, calendar?)`：将日期格式化为简短的月日。例如「Jan 5」或「3月12日」。默认用格里高利历，传入 `Intl` 历法标识（如 `'persian'`）可以换成别的历法。\n- `monthYear(value, locale, calendar?)`：将日期格式化为年月。例如「Jan 2024」或「2025年3月」。历法参数同上。\n- `formatList(values, locale)`：按指定语言的语法规则把多个词汇拼接为自然语言列表，例如将数组拼成「甲、乙和丙」。"
+            "text": "图表库内置了一组常用的格式化函数，它们都是 `ChartValueFormat`：入参是值、语言和历法，返回文字，或返回 `null`、`undefined` 让图表用默认文字（可以直接赋给 `ChartValueFormat` 类型，不必再包一层）。所有格式化函数都遵循安全原则：如果遇到 `NaN`、`Infinity` 或无法解析的值，会原样返回原字符串，绝对不会在界面上打印出异常信息，也不会报错崩溃；值是 `null` 或 `undefined` 时返回 `undefined`，而不是「0」「0%」「$0」或「null」。\n\n- `compactNumber(value, locale)`：将大数字缩写。例如 `1200` 转为「1.2K」，`1500000` 转为「1.5M」，`1e12` 转为「1T」。\n- `currency(symbol?, locale?)`：创建货币格式化器。例如 `currency('¥')` 可以直接传给 `ChartAxis` 的 `tickFormat` 属性，数值大于一千时会自动应用缩写（如「¥1.5K」）。返回的函数还接受调用时给的语言，工厂里指定的语言优先。\n- `percent(value, locale)`：将小数比例转换为百分比。例如 `0.45` 转换为「45%」，`0.005` 转换为「0.5%」。\n- `shortDate(value, locale, calendar?)`：将日期格式化为简短的月日。例如「Jan 5」或「3月12日」。默认用格里高利历，传入 `Intl` 历法标识（如 `'persian'`）可以换成别的历法。\n- `monthYear(value, locale, calendar?)`：将日期格式化为年月。例如「Jan 2024」或「2025年3月」。历法参数同上。\n- `formatList(values, locale)`：按指定语言的语法规则把多个词汇拼接为自然语言列表，例如将数组拼成「甲、乙和丙」。"
           },
           {
             "heading": "大数据折线缩减",
@@ -42103,11 +42103,15 @@
           },
           {
             "heading": "Keyboard commands",
-            "text": "At the end of a code block or table, <kbd>ArrowDown</kbd> inserts a paragraph when no content follows or when another code block or table immediately follows. This lets you place prose between these blocks. When ordinary content already follows, the arrow keys retain Lexical's native navigation.\n\n- Insert a newline inside a code block: Insert a newline inside a code block\n- Move between table cells: Move between table cells\n- Create and move to a paragraph below a code block or table: Create and move to a paragraph below a code block or table\n- Open or close the link dialog: Open or close the link dialog\n- Leave the editor: Leave the editor"
+            "text": "At the end of a code block or table, <kbd>ArrowDown</kbd> inserts a paragraph when no content follows or when another code block or table immediately follows. This lets you place prose between these blocks. When ordinary content already follows, the arrow keys retain Lexical's native navigation.\n\n- Insert a newline inside a code block: Insert a newline inside a code block\n- Move between table cells: Move between table cells\n- Create and move to a paragraph below a code block or table: Create and move to a paragraph below a code block or table\n- Open or close the link dialog: Open or close the link dialog\n- Indent or outdent every line the selection touches in a code block: Indent or outdent every line the selection touches in a code block\n- Turn a code block into a paragraph: Turn a code block into a paragraph\n- Select the code or the cell text first, then the whole document: Select the code or the cell text first, then the whole document\n- Leave the editor: Leave the editor"
+          },
+          {
+            "heading": "Pasting, shortcuts and disabled links",
+            "text": "- Pasting rich content into a code block inserts plain text, one line per block, so code never picks up bold, links or tables.\n- Pasting a table into table cells writes it cell by cell from the top-left selected cell and adds the rows and columns it needs. A table that arrives with other content, such as a paragraph and a table copied from a web page, goes into the cell as text, since a cell cannot hold a table.\n- Typing a Markdown marker (`## `, `> `, `- `, `1. `, `[ ] `) at the start of a list item re-marks that item as a heading, quote, bullet, numbered or task item. Each change is one undo step. It follows `hasMarkdownShortcuts`.\n- In a disabled editor, links are not tab stops and never navigate.\n- A scheme-less address with a port, such as `localhost:3000` or `example.com:8080`, is linked with `https://`.\n- The Insert link button with nothing selected inserts the entered address as link text at the caret; with a caret inside a link it updates that link."
           },
           {
             "heading": "Automatic links and server-side conversion",
-            "text": "Place `RichTextEditorAutoLinkPlugin` in the editor's default slot to turn typed URLs and email addresses into links. Use `matchers` to add custom matching rules.\n\nTo convert Markdown on the server, import `markdownToEditorStateJSON` and `editorStateJSONToMarkdown` from `@astryx-vue/richtext/markdown`. Neither function requires a browser DOM.\n\nSee the [props documentation](/en/components/rich-text-editor/props) for all properties, events, and slots."
+            "text": "Place `RichTextEditorAutoLinkPlugin` in the editor's default slot to turn typed URLs and email addresses into links. Use `matchers` to add custom matching rules. Text inside a code block is never linked.\n\nTo convert Markdown on the server, import `markdownToEditorStateJSON` and `editorStateJSONToMarkdown` from `@astryx-vue/richtext/markdown`. Neither function requires a browser DOM.\n\nSee the [props documentation](/en/components/rich-text-editor/props) for all properties, events, and slots."
           },
           {
             "heading": "`<RichTextEditor>` props",
@@ -42141,11 +42145,15 @@
           },
           {
             "heading": "键盘操作",
-            "text": "光标位于代码块或表格末尾时，<kbd>ArrowDown</kbd> 会在下方没有内容，或者下方紧邻另一个代码块或表格时插入段落。这样可以在这两类块之间补充正文；下方已经是普通内容时，方向键沿用 Lexical 的原生导航。\n\n- 在代码块中换行: 在代码块中换行\n- 在表格单元格之间移动: 在表格单元格之间移动\n- 在代码块或表格末尾创建并进入下方段落: 在代码块或表格末尾创建并进入下方段落\n- 打开或关闭链接对话框: 打开或关闭链接对话框\n- 离开整个编辑器: 离开整个编辑器"
+            "text": "光标位于代码块或表格末尾时，<kbd>ArrowDown</kbd> 会在下方没有内容，或者下方紧邻另一个代码块或表格时插入段落。这样可以在这两类块之间补充正文；下方已经是普通内容时，方向键沿用 Lexical 的原生导航。\n\n- 在代码块中换行: 在代码块中换行\n- 在表格单元格之间移动: 在表格单元格之间移动\n- 在代码块或表格末尾创建并进入下方段落: 在代码块或表格末尾创建并进入下方段落\n- 打开或关闭链接对话框: 打开或关闭链接对话框\n- 缩进或反缩进代码块里选区碰到的每一行: 缩进或反缩进代码块里选区碰到的每一行\n- 把代码块变回段落: 把代码块变回段落\n- 先选中代码或单元格文字，再选中整篇文档: 先选中代码或单元格文字，再选中整篇文档\n- 离开整个编辑器: 离开整个编辑器"
+          },
+          {
+            "heading": "粘贴、快捷输入与禁用时的链接",
+            "text": "- 往代码块里粘贴富文本时只插入纯文本，每个块一行，代码里不会混进加粗、链接或表格。\n- 往表格单元格里粘贴表格时，从选区左上角的单元格开始逐格写入，并补足需要的行和列。网页复制出的「段落加表格」这类混合内容，里面的表格按文字放进单元格，因为单元格里放不下表格。\n- 在列表项开头输入 Markdown 标记（`## `、`> `、`- `、`1. `、`[ ] `），这一项会改成对应的标题、引用、无序、有序或任务项，每次改动是一个撤销步。它跟随 `hasMarkdownShortcuts`。\n- 编辑器被禁用时，里面的链接不进入 Tab 顺序，也不会跳转。\n- 没写协议、带端口的地址（如 `localhost:3000`、`example.com:8080`）会按 `https://` 生成链接。\n- 没选中文字时点「插入链接」，会把输入的地址作为链接文字插在光标处；光标在链接里则更新这条链接。"
           },
           {
             "heading": "自动链接与服务端转换",
-            "text": "将 `RichTextEditorAutoLinkPlugin` 放入编辑器默认插槽，可以把输入的网址和邮箱自动转换为链接；通过 `matchers` 可以扩展匹配规则。\n\n需要在服务端读写 Markdown 时，从 `@astryx-vue/richtext/markdown` 导入 `markdownToEditorStateJSON` 和 `editorStateJSONToMarkdown`。这两个函数不依赖浏览器 DOM。\n\n完整的属性、事件和插槽见[属性文档](/components/rich-text-editor/props)。"
+            "text": "将 `RichTextEditorAutoLinkPlugin` 放入编辑器默认插槽，可以把输入的网址和邮箱自动转换为链接；通过 `matchers` 可以扩展匹配规则。代码块里的文字永远不会被自动链接。\n\n需要在服务端读写 Markdown 时，从 `@astryx-vue/richtext/markdown` 导入 `markdownToEditorStateJSON` 和 `editorStateJSONToMarkdown`。这两个函数不依赖浏览器 DOM。\n\n完整的属性、事件和插槽见[属性文档](/components/rich-text-editor/props)。"
           },
           {
             "heading": "`<RichTextEditor>` 属性",

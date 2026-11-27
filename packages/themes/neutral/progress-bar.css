@@ -8,9 +8,8 @@
     --astryx-progress-bar-track-height-lg: 12px;
     --astryx-progress-bar-track-background: var(--astryx-color-border-emphasized);
     --astryx-progress-bar-fill-background: var(--astryx-color-accent);
-    --astryx-progress-bar-success-fill: var(--astryx-color-success);
-    --astryx-progress-bar-warning-fill: var(--astryx-color-warning);
-    --astryx-progress-bar-error-fill: var(--astryx-color-error);
     --astryx-progress-bar-info-fill: var(--astryx-color-info);
+    /* 次要文字色在暗色轨道上低于 3:1，中性和禁用的填充在暗色下取更亮的一档。 */
+    --astryx-progress-bar-neutral-fill: light-dark(var(--astryx-color-text-secondary), #b9b9b9);
   }
 }

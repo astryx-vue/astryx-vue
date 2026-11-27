@@ -53,6 +53,15 @@ describe('chartAxis bottom (band scale)', () => {
     expect(textOf(axis, 'Feb')).toBeUndefined()
   })
 
+  it('keeps the last label when thinning cannot land on it', () => {
+    const days = Array.from({ length: 14 }, (_, index) => ({ month: `Day ${index + 1}`, sales: index }))
+    const { container } = mountWithAxes(() => [h(ChartAxis, { position: 'bottom', maxTicks: 7 })], days)
+    const axis = byRole('group', 'bottom axis', container)
+    const labels = [...axis.querySelectorAll('text')].map(text => text.textContent)
+    // 14 个压到 7 个 → 步长 2。Day 13 本该是最后一个，但 Day 14 离它不足一个步长，顶替它。
+    expect(labels).toEqual(['Day 1', 'Day 3', 'Day 5', 'Day 7', 'Day 9', 'Day 11', 'Day 14'])
+  })
+
   it('automatically reduces categorical labels as the plot narrows', () => {
     const denseData = Array.from({ length: 20 }, (_, index) => ({
       month: `Period ${index + 1}`,
@@ -132,6 +141,15 @@ describe('chartAxis left (linear scale)', () => {
     ])
     const axis = byRole('group', 'left axis', container)
     expect(textOf(axis, '$0')).toBeTruthy()
+    expect(textOf(axis, '$10')).toBeTruthy()
+  })
+
+  it('falls back to the default tick text when tickFormat returns null or undefined', () => {
+    const { container } = mountWithAxes(() => [
+      h(ChartAxis, { position: 'left', tickFormat: (value: unknown) => (value === 0 ? undefined : `$${String(value)}`) }),
+    ])
+    const axis = byRole('group', 'left axis', container)
+    expect(textOf(axis, '0')).toBeTruthy()
     expect(textOf(axis, '$10')).toBeTruthy()
   })
 

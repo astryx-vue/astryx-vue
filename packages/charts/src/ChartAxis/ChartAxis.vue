@@ -60,7 +60,7 @@ const safeTickCount = computed(() => (Number.isFinite(props.tickCount) && props.
  */
 const autoFormat = computed<((value: unknown) => string) | null>(() => {
   const current = scale.value
-  if (props.tickFormat || isBandScale(current))
+  if (isBandScale(current))
     return null
   const tickFormat = (current as ScaleLinear<number, number> | ScaleTime<number, number>)
     .tickFormat(safeTickCount.value)
@@ -68,11 +68,28 @@ const autoFormat = computed<((value: unknown) => string) | null>(() => {
 })
 
 function format(value: unknown): string {
-  const str = (props.tickFormat ?? autoFormat.value ?? String)(value)
+  const str = props.tickFormat?.(value) ?? (autoFormat.value ?? String)(value)
   if (!props.truncate)
     return str
   const shortened = truncateCharacters(str, props.truncate, '')
   return shortened === str ? str : `${shortened}\u2026`
+}
+
+/**
+ * 最多留 `cap` 个刻度：从第一个起每隔 `step` 个留一个，再加上最后一个。
+ * 最后一个刻度是数据的末端（常常是最新的值），文字必须保住。
+ * 它距离前一个被留下的刻度不足一个 `step` 时，就顶替掉那一个，所以文字之间的距离不会比 `step` 更近。
+ */
+function thinTicks<T>(items: T[], cap: number): T[] {
+  if (items.length <= cap)
+    return items
+  if (cap < 2)
+    return items.slice(0, Math.max(0, cap))
+  const step = Math.ceil(items.length / cap)
+  const last = items.length - 1
+  const kept = items.filter((_, index) => index % step === 0 && last - index >= step)
+  kept.push(items[last]!)
+  return kept
 }
 
 interface Tick {
@@ -85,7 +102,7 @@ interface Tick {
  * 生成刻度：分类轴一个类一个刻度、对齐到带中心，连续轴用 d3 的 `ticks()`。
  *
  * 标签会按可用空间自动抽稀：横向按「宽度 ÷ 最宽标签」、纵向按「高度 ÷ 行高」估计上限，
- * 再按等间隔跳过。`maxTicks` 由调用方指定时优先用它。
+ * 再抽稀（首尾文字保留）。`maxTicks` 由调用方指定时优先用它。
  */
 const ticks = computed<Tick[]>(() => {
   const current = scale.value
@@ -119,10 +136,8 @@ const ticks = computed<Tick[]>(() => {
       cap = Math.max(1, Math.floor(chart.height / 18))
     }
   }
-  if (cap && allTicks.length > cap) {
-    const step = Math.ceil(allTicks.length / cap)
-    allTicks = allTicks.filter((_, index) => index % step === 0)
-  }
+  if (cap && allTicks.length > cap)
+    allTicks = thinTicks(allTicks, cap)
   return allTicks
 })
 
