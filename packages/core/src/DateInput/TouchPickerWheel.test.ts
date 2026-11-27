@@ -5,8 +5,9 @@
  * @output Holds the touch wheel to UIPickerView's motion: the rows follow the
  *   finger, a flick coasts onto the projected row and commits at rest, a slow
  *   release snaps, a drag past an end rubber-bands and springs back, a tap,
- *   a key or an outside value turns the wheel on the settle spring, and under
- *   Reduce Motion a turn lands under the shared dip
+ *   a key or an outside value turns the wheel on the settle spring, under
+ *   Reduce Motion a turn lands under the shared dip, and a looping wheel (the
+ *   time sheet's minutes) turns on past its seam
  * @position Unit tests of TouchPickerWheel.vue, useTouchWheel.ts and
  *   wheelStrip.ts
  */
@@ -20,6 +21,7 @@ import { nextTick } from 'vue'
 import { coarsePrimaryPointer } from '../gestures/__tests__/pointerQuery'
 import { exposeTouchEvents, touch } from '../gestures/__tests__/touchEvents'
 import { fakeAnimate } from '../motion/__tests__/fakeWebAnimation'
+import TouchTimeWheels from '../TimeInput/TouchTimeWheels.vue'
 import PickerWheel from './PickerWheel.vue'
 import { planRelease, WHEEL_ROW_HEIGHT } from './wheelPhysics'
 
@@ -88,13 +90,14 @@ function reduceMotion(): void {
   })
 }
 
-function renderWheel(modelValue = '20', options = MINUTES): VueWrapper {
+function renderWheel(modelValue = '20', options = MINUTES, looping = false): VueWrapper {
   const wrapper = mount(PickerWheel, {
     attachTo: document.body,
     props: {
       'label': 'Minute',
       options,
       modelValue,
+      looping,
       'onUpdate:modelValue': (value: string) => wrapper.setProps({ modelValue: value }),
     },
   })
@@ -317,5 +320,84 @@ describe('touchPickerWheel under Reduce Motion', () => {
     expect(emitted(wrapper)).toEqual([])
     await advance(4000)
     expect(Number(emitted(wrapper)[0])).toBeGreaterThan(24)
+  })
+})
+
+/** Sixty minutes, every one enabled. */
+const OPEN_MINUTES: PickerWheelOption[] = MINUTES.map(option => ({ ...option, disabled: false }))
+
+describe('touchPickerWheel looping under a finger', () => {
+  it('coasts a flick on past the last row, commits the row it rests on, and settles back onto its own rows', async () => {
+    stubAnimations()
+    const wrapper = renderWheel('50', OPEN_MINUTES, true)
+    await nextTick()
+    await drag(column(wrapper), 200, -120, { steps: 6 })
+    await advance(4000)
+    const values = emitted(wrapper)
+    expect(values).toHaveLength(1)
+    const rest = Number(values[0])
+    // Past :59 came :00 and on: the wheel never bounced at its last row.
+    expect(rest).toBeLessThan(50)
+    expect(shownOffset(wrapper)).toBe(rest * ROW)
+    expect(marked(wrapper)).toEqual([String(rest).padStart(2, '0')])
+  })
+
+  it('turns one row on across the seam for ArrowDown on :59, not back round the list', async () => {
+    stubAnimations()
+    const wrapper = renderWheel('59', OPEN_MINUTES, true)
+    await nextTick()
+    await wrapper.get('[role="listbox"]').trigger('keydown', { key: 'ArrowDown' })
+    expect(emitted(wrapper)).toEqual(['0'])
+    // The strip moves its lap onto the wheel's own rows first: :59 sits one row
+    // before :00, where the turn starts.
+    expect(shownOffset(wrapper)).toBe(-ROW)
+    await advance(1000)
+    expect(shownOffset(wrapper)).toBe(0)
+    expect(marked(wrapper)).toEqual(['00'])
+  })
+
+  it('turns onto a value set from outside the shorter way round', async () => {
+    const animations = stubAnimations()
+    const wrapper = renderWheel('58', OPEN_MINUTES, true)
+    await nextTick()
+    await wrapper.setProps({ modelValue: '2' })
+    await nextTick()
+    const turn = animations.at(-1)!
+    // :58 → :02 is four rows on, through :59 and :00, to the copy of :02 past the seam.
+    expect(String(turn.keyframes.at(-1)?.translate)).toContain(`${-62 * ROW}px`)
+    await advance(2000)
+    expect(shownOffset(wrapper)).toBe(2 * ROW)
+    expect(emitted(wrapper)).toEqual([])
+  })
+
+  it('meets assistive technology with each row once: the copies are hidden', async () => {
+    stubAnimations()
+    const wrapper = renderWheel('0', OPEN_MINUTES, true)
+    await nextTick()
+    expect(wrapper.findAll('[role="option"]')).toHaveLength(60)
+    const copies = wrapper.findAll('.astryx-picker-wheel-row:not([role="option"])')
+    expect(copies.length).toBeGreaterThan(0)
+    expect(copies.every(copy => copy.element.closest('[aria-hidden="true"]') != null)).toBe(true)
+    // The copies before :00 show the last minutes.
+    expect(copies[copies.length - 1]!.text()).not.toBe('')
+    expect(wrapper.findAll('.astryx-picker-wheel-row').map(row => row.text())).toContain('59')
+  })
+
+  it('does not loop without the switch: ArrowDown on the last row stays', async () => {
+    stubAnimations()
+    const wrapper = renderWheel('59', OPEN_MINUTES)
+    await nextTick()
+    await wrapper.get('[role="listbox"]').trigger('keydown', { key: 'ArrowDown' })
+    expect(emitted(wrapper)).toEqual([])
+    expect(wrapper.findAll('.astryx-picker-wheel-row')).toHaveLength(60)
+  })
+
+  it('loops the time sheet\'s minute wheel and keeps the hour across its seam', async () => {
+    stubAnimations()
+    const wrapper = mount(TouchTimeWheels, { attachTo: document.body, props: { modelValue: '14:59', hourFormat: '24h' } })
+    await nextTick()
+    const minute = wrapper.findAll('[role="listbox"]')[1]!
+    await minute.trigger('keydown', { key: 'ArrowDown' })
+    expect(wrapper.emitted<string[]>('update:modelValue')?.map(([value]) => value)).toEqual(['14:00'])
   })
 })
