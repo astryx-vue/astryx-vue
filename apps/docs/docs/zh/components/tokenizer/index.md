@@ -46,7 +46,7 @@ import { tokenizerClear, tokenizerCreatable, tokenizerEnd, tokenizerIcon, tokeni
 
 <DemoExample
   :demo="tokenizerClear"
-  description="选中之后出现全部清除按钮。"
+  description="选中之后出现全部清除按钮。触屏上在底部弹层里用「全部清除」。"
   locale="zh"
   title="全部清除"
 />
@@ -81,7 +81,7 @@ import { tokenizerClear, tokenizerCreatable, tokenizerEnd, tokenizerIcon, tokeni
 
 <DemoExample
   :demo="tokenizerOverflow"
-  description="失焦时收成一行。行内模式展开会把下面的内容往下推，浮层模式盖在字段上。"
+  description="失焦时收成一行。行内模式展开会把下面的内容往下推，浮层模式盖在字段上。这两种收起模式只作用于行内字段。"
   locale="zh"
   title="溢出"
 />

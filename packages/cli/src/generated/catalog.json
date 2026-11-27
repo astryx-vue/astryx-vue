@@ -38392,8 +38392,8 @@
             "zh": "全部清除"
           },
           "description": {
-            "en": "Tokenizer with a built-in clear-all button for bulk removal.",
-            "zh": "选中之后出现全部清除按钮。"
+            "en": "Tokenizer with a built-in clear-all button for bulk removal. On touch screens, clear through the sheet's Clear all.",
+            "zh": "选中之后出现全部清除按钮。触屏上在底部弹层里用「全部清除」。"
           },
           "code": "<script setup lang=\"ts\">\nimport type { SearchableItem } from '@astryx-vue/core'\nimport { createStaticSource } from '@astryx-vue/core'\nimport { Tokenizer } from '@astryx-vue/core/Tokenizer'\nimport { computed, ref } from 'vue'\n\nconst people = computed(() => [\n  { id: 'alice', label: 'Alice Johnson' },\n  { id: 'bob', label: 'Bob Smith' },\n  { id: 'charlie', label: 'Charlie Brown' },\n  { id: 'diana', label: 'Diana Prince' },\n  { id: 'eve', label: 'Eve Williams' },\n])\nconst source = computed(() => createStaticSource(people.value))\nconst selected = ref<SearchableItem[]>([])\nselected.value = people.value.slice(0, 2)\n</script>\n\n<template>\n  <div class=\"demo-container\">\n    <Tokenizer\n      v-model=\"selected\"\n      :search-source=\"source\"\n      label=\"Team Members\"\n      placeholder=\"Search people...\"\n      :debounce-ms=\"0\"\n      has-clear\n    />\n  </div>\n</template>\n\n<style scoped>\n.demo-container {\n  width: 20rem;\n  max-width: calc(100vw - 4rem);\n}\n</style>"
         },
@@ -38447,8 +38447,8 @@
             "zh": "溢出"
           },
           "description": {
-            "en": "On blur, tokens collapse to one line. Inline mode pushes content down on expand; layer mode overlays without shifting layout.",
-            "zh": "失焦时收成一行。行内模式展开会把下面的内容往下推，浮层模式盖在字段上。"
+            "en": "On blur, tokens collapse to one line. Inline mode pushes content down on expand; layer mode overlays without shifting layout. Overflow modes apply to the inline field.",
+            "zh": "失焦时收成一行。行内模式展开会把下面的内容往下推，浮层模式盖在字段上。这两种收起模式只作用于行内字段。"
           },
           "code": "<script setup lang=\"ts\">\nimport type { SearchableItem } from '@astryx-vue/core'\nimport { createStaticSource } from '@astryx-vue/core'\nimport { Tokenizer } from '@astryx-vue/core/Tokenizer'\nimport { computed, ref } from 'vue'\n\nconst people = computed<SearchableItem[]>(() => [\n  { id: 'alice', label: 'Alice Johnson' },\n  { id: 'bob', label: 'Bob Smith' },\n  { id: 'charlie', label: 'Charlie Brown' },\n  { id: 'diana', label: 'Diana Prince' },\n  { id: 'eve', label: 'Eve Williams' },\n  { id: 'frank', label: 'Frank Miller' },\n])\nconst source = computed(() => createStaticSource(people.value))\nconst inlineValue = ref<SearchableItem[]>([])\nconst layerValue = ref<SearchableItem[]>([])\ninlineValue.value = people.value.map(item => ({ ...item }))\nlayerValue.value = people.value.map(item => ({ ...item }))\n</script>\n\n<template>\n  <div class=\"demo-stack\">\n    <p class=\"demo-caption\">\n      Inline overflow — content shifts down on expand\n    </p>\n    <Tokenizer\n      v-model=\"inlineValue\"\n      :search-source=\"source\"\n      label=\"Inline Overflow\"\n      placeholder=\"Add more...\"\n      overflow=\"unfocused-inline\"\n      :debounce-ms=\"0\"\n    />\n    <p class=\"demo-caption\">\n      Layer overflow — expands as overlay, no layout shift\n    </p>\n    <Tokenizer\n      v-model=\"layerValue\"\n      :search-source=\"source\"\n      label=\"Layer Overflow\"\n      placeholder=\"Add more...\"\n      overflow=\"unfocused-layer\"\n      :debounce-ms=\"0\"\n    />\n  </div>\n</template>\n\n<style scoped>\n.demo-stack {\n  display: flex;\n  flex-direction: column;\n  gap: 0.75rem;\n  width: 25rem;\n  max-width: calc(100vw - 4rem);\n}\n.demo-caption {\n  margin: 0;\n  font-size: 0.875rem;\n  color: var(--docs-c-text-2);\n}\n</style>"
         },
