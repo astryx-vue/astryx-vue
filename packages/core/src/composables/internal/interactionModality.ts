@@ -95,9 +95,10 @@ export function trackInteractionModality(doc?: Document): void {
   target.addEventListener('keydown', store.onKeyDown, options)
 }
 
-/** 上一次的交互模态。没有 document 时答键盘。 */
-export function getInteractionModality(): InteractionModality {
-  return typeof document === 'undefined' ? 'keyboard' : getStore(document).modality
+/** 上一次的交互模态。不传 `doc` 就读页面自己的 document；没有 document 时答键盘。 */
+export function getInteractionModality(doc?: Document): InteractionModality {
+  const target = doc ?? (typeof document === 'undefined' ? null : document)
+  return target == null ? 'keyboard' : getStore(target).modality
 }
 
 /** 上一次指针按下的设备类型（mouse、touch、pen）；还没有指针输入时为 undefined。 */

@@ -16,6 +16,8 @@ export interface CommandPaletteContextValue {
   isInline: ComputedRef<boolean>
   selectItem: (item: SearchableItem) => void
   onKeyDown: (event: KeyboardEvent) => void
+  /** 输入框交出「收回还没念出去的忙碌开始」的函数；输入框卸载时交 `null`。 */
+  registerBusySettle: (settle: (() => void) | null) => void
 }
 
 export const commandPaletteKey: InjectionKey<CommandPaletteContextValue> = Symbol('commandPalette')

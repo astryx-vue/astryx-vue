@@ -14,6 +14,8 @@ import { commandPaletteItemBasic } from '../../../../components/demos/command-pa
 
 `CommandPaletteItem` 就是结果列表里的一行。它本身不带交互，放进 `CommandPaletteList` 或 `CommandPaletteGroup` 里用。键盘那一套由 `CommandPalette` 统一管；单独用的时候，它只负责你明确传进来的视觉状态和鼠标点击。
 
+主题可以通过 `command-palette-item` 这个部位，以及它的 `highlighted`、`selected`、`disabled` 三个状态给这一行换样式。
+
 ```ts
 import { CommandPaletteItem } from '@astryx-vue/core/CommandPalette'
 ```

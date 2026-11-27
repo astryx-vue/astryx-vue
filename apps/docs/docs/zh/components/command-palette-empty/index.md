@@ -11,7 +11,7 @@ import { commandPaletteEmptyBasic } from '../../../../components/demos/command-p
 
 ## 使用方法
 
-`CommandPaletteEmpty` 是结果区没东西可显示时的那块占位内容。`CommandPalette` 在「搜不到结果」和「还没开始搜」这两种情况下会自己把它渲染出来，通常不需要手动写。
+`CommandPaletteEmpty` 是结果区没东西可显示时的那块占位内容。`CommandPalette` 在搜索没有结果、或者没有查询且 `bootstrap()` 什么也没返回时，会自己把它渲染出来，通常不需要手动写。消息里回显的长路径、长网址这类没有空格的长串会折行，不会把居中的那一行撑宽。第一次搜索还在加载时，面板在这里只留一行空白的高度，不显示任何文字。
 
 ```ts
 import { CommandPaletteEmpty } from '@astryx-vue/core/CommandPalette'
