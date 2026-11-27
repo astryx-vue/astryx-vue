@@ -3,8 +3,8 @@ import type { CalendarDate } from '@internationalized/date'
 import type { WeekStartsOn } from '../composables/useDateRange.js'
 import type { CalendarMonth, CalendarSystem } from '../utils/calendarSystem.js'
 import type { PlainDate } from '../utils/plainDate.js'
-import { computed, shallowRef, watch } from 'vue'
-import { formatWeekdayDate, sameCalendarDay, toCalendarDate, weekStartIndex } from '../Calendar/calendarDate.js'
+import { computed, nextTick, shallowRef, useTemplateRef, watch } from 'vue'
+import { calendarISO, formatWeekdayDate, sameCalendarDay, toCalendarDate, weekStartIndex } from '../Calendar/calendarDate.js'
 import { toCalendarDay } from '../Calendar/calendarMonths.js'
 import { isCalendarDateDisabled, isOutsideCalendarBounds } from '../Calendar/useCalendarConstraints.js'
 import { buildMonthWeeks } from '../Calendar/useCalendarGrid.js'
@@ -15,7 +15,7 @@ import { formatCalendarMonthLabel } from '../utils/calendarFormat.js'
 import { calendarDayOfMonth, isInCalendarMonth } from '../utils/calendarSystem.js'
 import '../../styles/calendar.css'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   calendar: CalendarSystem
   /** 显示的历法月。 */
   month: CalendarMonth
@@ -27,7 +27,11 @@ const props = defineProps<{
   weekStartsOn?: WeekStartsOn
   /** 今天。由面板在挂载后读好传进来，服务端渲染和水合时不读时钟。 */
   today: Date
-}>()
+  /** 是否在格子上方画星期表头。月份滚动器把表头画在滚动区外面，每个月就不再画。 */
+  weekdays?: boolean
+  /** 键盘焦点所在的日子。落在这个月里时，这一天是这个月唯一能 Tab 到的格子。 */
+  focusDate?: PlainDate | null
+}>(), { weekdays: true, focusDate: null })
 
 const emit = defineEmits<{
   'pick': [date: Date]
@@ -39,6 +43,7 @@ const locale = useAstryxLocale()
 const weekStart = computed(() => weekStartIndex(props.weekStartsOn))
 const selectedDate = computed(() => props.selected ? toCalendarDate(props.selected) : null)
 const todayDate = computed(() => toCalendarDate(props.today))
+const root = useTemplateRef<HTMLElement>('root')
 const focused = shallowRef<CalendarDate>(toCalendarDay(props.month.start))
 
 const headers = computed(() => {
@@ -70,6 +75,11 @@ watch(() => props.month, (month) => {
   focused.value = toCalendarDay(month.start).add({ days: day - 1 })
 }, { immediate: true })
 
+watch(() => props.focusDate, (date) => {
+  if (date != null && isInCalendarMonth(date, props.month))
+    focused.value = toCalendarDay(date)
+}, { immediate: true })
+
 function pick(date: CalendarDate, outside: boolean): void {
   if (outside || blocked(date))
     return
@@ -93,20 +103,25 @@ function onKeydown(event: KeyboardEvent): void {
     return
   event.preventDefault()
   focused.value = move.date
-  if (!isInCalendarMonth(move.date, props.month))
+  if (!isInCalendarMonth(move.date, props.month)) {
     emit('update:view', { year: move.date.year, month: move.date.month, day: move.date.day })
+    return
+  }
+  const iso = calendarISO(move.date)
+  void nextTick(() => root.value?.querySelector<HTMLElement>(`[data-date="${iso}"]:not(.is-other-month)`)?.focus({ preventScroll: true }))
 }
 </script>
 
 <template>
   <div
+    ref="root"
     class="astryx-calendar-grid astryx-date-touch-grid"
     role="grid"
     :aria-label="label"
     tabindex="-1"
     @keydown="onKeydown"
   >
-    <div class="astryx-calendar-weekdays" role="row">
+    <div v-if="weekdays" class="astryx-calendar-weekdays" role="row">
       <div
         v-for="day in headers"
         :key="day.long"

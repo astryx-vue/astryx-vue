@@ -22,10 +22,11 @@ import {
   calendarShiftYears,
   calendarYearMonthOf,
 } from '../utils/calendarSystem.js'
-import { plainDateAddDays, plainDateFromDate, plainDateToDate } from '../utils/plainDate.js'
+import { plainDateAddDays, plainDateFromDate, plainDateToDate, plainDateToISO } from '../utils/plainDate.js'
+import { createMonthRows } from './monthRows.js'
 import PickerWheel from './PickerWheel.vue'
 import { clampMonth, isMonthAfter, isMonthBefore, isMonthOutside, reachableMonths } from './sheetMonths.js'
-import TouchMonthGrid from './TouchMonthGrid.vue'
+import TouchMonthScroller from './TouchMonthScroller.vue'
 
 const props = withDefaults(defineProps<{
   selected?: Date | null
@@ -56,17 +57,20 @@ const messages = useComponentMessages({ calendar: calendarMessages, dateInput: d
 const locale = useAstryxLocale()
 const calendar = useCalendarSystem(() => props.calendar, 'DateInput')
 const wheelsOpen = ref(false)
-const dragX = ref<number | null>(null)
 const coarse = useMediaQuery('(pointer: coarse)')
 const titleRef = useTemplateRef<HTMLButtonElement>('title')
 const prevRef = useTemplateRef<HTMLButtonElement>('prev')
 const nextRef = useTemplateRef<HTMLButtonElement>('next')
+const monthsRef = useTemplateRef<InstanceType<typeof TouchMonthScroller>>('months')
 // 今天在服务端和浏览器上可能不是同一天，所以挂载之后才读；在那之前面板什么都不画，
 // 服务端渲染出来的标记和水合时一致。
 const today = shallowRef<Date | null>(null)
 const range = computed(() => reachableMonths(calendar.value, props.min, props.max, today.value ?? new Date()))
 /** 面板显示的历法月，挂载后才有。 */
 const view = shallowRef<CalendarMonth | null>(null)
+/** 月份滚动器的一排排月份；能翻到的范围一变，滚动器按新的排号重新挂载。 */
+const rows = computed(() => createMonthRows(calendar.value, range.value))
+const rowsKey = computed(() => `${calendar.value}|${plainDateToISO(range.value.min.start)}|${plainDateToISO(range.value.max.start)}`)
 
 function monthContaining(date: Date | PlainDate): CalendarMonth {
   return clampMonth(calendarMonthOf(calendar.value, date instanceof Date ? plainDateFromDate(date) : date), range.value)
@@ -120,16 +124,19 @@ const yearOptions = computed<PickerWheelOption[]>(() => {
 })
 
 /**
- * 翻到 `target` 月。到了可选范围的头，那一头的箭头会消失，消失的元素会丢掉焦点：
+ * 翻到 `target` 月，`scroll` 时让月份滚动器平滑滚过去（滚动器自己滚到的月份不用再滚）。
+ * 到了可选范围的头，那一头的箭头会消失，消失的元素会丢掉焦点：
  * 焦点在它上面时，先等另一个箭头画出来，再把焦点交给它；两个箭头都消失就交给月份标题。
  */
-function showMonth(target: CalendarMonth): void {
+function showMonth(target: CalendarMonth, scroll = true): void {
   const prevHides = !isMonthAfter(target, range.value.min)
   const nextHides = !isMonthBefore(target, range.value.max)
   const active = typeof document === 'undefined' ? null : document.activeElement
   const onPrev = prevHides && active != null && active === prevRef.value
   const onNext = nextHides && active != null && active === nextRef.value
   view.value = target
+  if (scroll)
+    monthsRef.value?.scrollToMonth(rows.value.rowOf(target), 'smooth')
   if (!onPrev && !onNext)
     return
   const otherHides = onPrev ? nextHides : prevHides
@@ -195,28 +202,19 @@ function setYear(value: string): void {
 function onReset(): void {
   if (props.isDisabled)
     return
-  view.value = monthContaining(new Date())
+  const target = monthContaining(new Date())
+  if (wheelsOpen.value)
+    view.value = target
+  else
+    showMonth(target)
   wheelsOpen.value = false
   emit('reset')
 }
 
-function onPointerDown(event: PointerEvent): void {
-  dragX.value = event.clientX
-}
-
-function onPointerUp(event: PointerEvent): void {
-  if (dragX.value == null)
-    return
-  const delta = event.clientX - dragX.value
-  dragX.value = null
-  if (Math.abs(delta) < 48)
-    return
-  const towardNext = rtl.value ? delta > 0 : delta < 0
-  move(towardNext ? 1 : -1)
-}
-
-function onView(date: PlainDate): void {
-  showMonth(monthContaining(date))
+/** 手指或惯性把日历滚到了别的月。滚轮开着时滚轮说了算，滚动器只是被它引导。 */
+function onVisible(row: number): void {
+  if (!wheelsOpen.value)
+    showMonth(rows.value.monthAt(row), false)
 }
 </script>
 
@@ -259,21 +257,23 @@ function onView(date: PlainDate): void {
         @update:model-value="setYear"
       />
     </div>
-    <div v-else @pointerdown="onPointerDown" @pointerup="onPointerUp">
-      <TouchMonthGrid
-        :calendar="calendar"
-        :month="view"
-        :selected="selected"
-        :min="min"
-        :max="max"
-        :is-date-disabled="isDateDisabled"
-        :date-constraints="dateConstraints"
-        :week-starts-on="weekStartsOn"
-        :today="today"
-        @pick="emit('pick', $event)"
-        @update:view="onView"
-      />
-    </div>
+    <TouchMonthScroller
+      v-else
+      ref="months"
+      :key="rowsKey"
+      :calendar="calendar"
+      :rows="rows"
+      :initial-row="rows.rowOf(view)"
+      :selected="selected"
+      :min="min"
+      :max="max"
+      :is-date-disabled="isDateDisabled"
+      :date-constraints="dateConstraints"
+      :week-starts-on="weekStartsOn"
+      :today="today"
+      @pick="emit('pick', $event)"
+      @visible="onVisible"
+    />
     <button
       type="button"
       class="astryx-date-touch-save"
