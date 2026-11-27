@@ -1,5 +1,17 @@
 # @astryx-vue/core
 
+## 0.36.0
+
+### Minor Changes
+
+- [#646](https://github.com/astryx-vue/astryx-vue/pull/646) [`e31a91c`](https://github.com/astryx-vue/astryx-vue/commit/e31a91cbb23b0032eb60e2ff75895b246206af04) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增 `useLinkify`：把纯文字里的网址、邮箱和自定义格式（如 `[#123](https://github.com/astryx-vue/astryx-vue/issues/123)`）切成文字和链接片段，交给 `Link` 渲染。
+
+### Patch Changes
+
+- [#646](https://github.com/astryx-vue/astryx-vue/pull/646) [`e31a91c`](https://github.com/astryx-vue/astryx-vue/commit/e31a91cbb23b0032eb60e2ff75895b246206af04) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 触屏上 12 小时制的时间面板，上午下午跟着小时走：小时从 11 转到 12 是中午 12 点，从 12 点转到 1 点仍是下午，和 iOS 的时间滚轮一致。
+
+- [#646](https://github.com/astryx-vue/astryx-vue/pull/646) [`e31a91c`](https://github.com/astryx-vue/astryx-vue/commit/e31a91cbb23b0032eb60e2ff75895b246206af04) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Typeahead 的 `menu` 配置和 `open()`、`close()` 句柄的类型（`TypeaheadMenuConfig`、`TypeaheadHandle` 等）现在可以从包里导入，文档补了一个用 listbox 和 dialog 两种菜单做筛选字段的示例。
+
 ## 0.35.0
 
 ### Minor Changes

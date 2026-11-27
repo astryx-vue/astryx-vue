@@ -1,5 +1,13 @@
 # @astryx-vue/cli
 
+## 0.8.9
+
+### Patch Changes
+
+- [#646](https://github.com/astryx-vue/astryx-vue/pull/646) [`e31a91c`](https://github.com/astryx-vue/astryx-vue/commit/e31a91cbb23b0032eb60e2ff75895b246206af04) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Typeahead 的 `menu` 配置和 `open()`、`close()` 句柄的类型（`TypeaheadMenuConfig`、`TypeaheadHandle` 等）现在可以从包里导入，文档补了一个用 listbox 和 dialog 两种菜单做筛选字段的示例。
+
+- [#646](https://github.com/astryx-vue/astryx-vue/pull/646) [`e31a91c`](https://github.com/astryx-vue/astryx-vue/commit/e31a91cbb23b0032eb60e2ff75895b246206af04) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增 `useLinkify`：把纯文字里的网址、邮箱和自定义格式（如 `[#123](https://github.com/astryx-vue/astryx-vue/issues/123)`）切成文字和链接片段，交给 `Link` 渲染。
+
 ## 0.8.8
 
 ### Patch Changes
