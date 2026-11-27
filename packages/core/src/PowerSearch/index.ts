@@ -27,6 +27,7 @@ export type {
   PowerSearchItem,
   PowerSearchOperator,
   PowerSearchOverflow,
+  PowerSearchPresentation,
   PowerSearchProps,
   PowerSearchSize,
   PowerSearchSlots,

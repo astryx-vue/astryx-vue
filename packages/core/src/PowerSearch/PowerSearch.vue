@@ -18,18 +18,20 @@ import { useFieldPartStyling } from '../Field/fieldParts.js'
 import Icon from '../Icon/Icon.vue'
 import { useAstryxLocale, useComponentMessages } from '../locale/context.js'
 import { powerSearchMessages } from '../locale/messages/power-search.js'
-import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { useSize } from '../SizeContext/SizeContext.js'
 import Tooltip from '../Tooltip/Tooltip.vue'
-import { scrollOptionIntoView, useAnchoredListbox } from '../Typeahead/useAnchoredListbox.js'
+import { useAnchoredListbox } from '../Typeahead/useAnchoredListbox.js'
 import { useTypeaheadMenu } from '../Typeahead/useTypeaheadMenu.js'
 import { createPowerSearchLookup } from './config.js'
-import { powerSearchGroupLabel, powerSearchItemIcon } from './menuPresentation.js'
 import { menuStyleWithWidth, resultCountText } from './menuStyle.js'
+import PowerSearchFilterToken from './PowerSearchFilterToken.vue'
+import PowerSearchListbox from './PowerSearchListbox.vue'
+import PowerSearchSheetField from './PowerSearchSheetField.vue'
 import PowerSearchToken from './PowerSearchToken.vue'
 import { searchPowerSearchFields } from './source.js'
 import { useFilterTokenNaming } from './useFilterTokenNaming.js'
 import { usePowerSearchActions } from './usePowerSearchActions.js'
+import { usePowerSearchPresentation } from './usePowerSearchPresentation.js'
 import { useResultCountAnnouncement } from './useResultCountAnnouncement.js'
 import '../../styles/power-search.css'
 import '../../styles/typeahead.css'
@@ -49,6 +51,7 @@ const props = withDefaults(defineProps<PowerSearchProps>(), {
   maxTokenLength: 40,
   maxSearchResults: 10,
   overflow: 'none',
+  presentation: 'adaptive',
 })
 
 const emit = defineEmits<PowerSearchEmits>()
@@ -81,8 +84,9 @@ const focused = ref(false)
 const placeholderHeight = ref(0)
 const queryMirror = ref('')
 const anchorRef = useTemplateRef<HTMLElement>('anchorRef')
-const listboxRef = useTemplateRef<HTMLElement>('listboxRef')
-useScrollbars(listboxRef)
+const listboxRef = useTemplateRef<{ element: HTMLElement | null }>('listboxRef')
+const listboxElement = computed(() => listboxRef.value?.element ?? null)
+const sheetFieldRef = useTemplateRef<InstanceType<typeof PowerSearchSheetField>>('sheetFieldRef')
 const inputRef = useTemplateRef<HTMLInputElement>('inputRef')
 const editorRef = useTemplateRef<HTMLElement>('editorRef')
 const visibleCountOf = { current: () => 0 }
@@ -96,8 +100,6 @@ const focusableDisabled = computed(() => props.disabled && disabledMessage.value
 const showsClear = computed(() => props.hasClear && props.clearable)
 const resolvedSaveLabel = computed(() => props.popoverSaveButtonLabel ?? props.saveLabel)
 const resolvedTimeZone = computed(() => props.timezoneID ?? props.timeZone)
-const collapsed = computed(() => props.overflow !== 'none' && !focused.value)
-const floating = computed(() => props.overflow === 'unfocused-layer' && focused.value)
 const lookup = computed(() => createPowerSearchLookup(props.config))
 const fieldStatus = computed<FieldStatusInput | undefined>(() => !props.statusMessage || props.status === 'default' ? undefined : { type: props.status, message: props.statusMessage })
 const { statusIcon, statusIconProps } = useInputStatusIcon({ status: () => fieldStatus.value, statusVariant: () => props.statusVariant })
@@ -135,7 +137,7 @@ const menu = useTypeaheadMenu<PowerSearchItem>({
 
 const anchored = useAnchoredListbox({
   anchor: anchorRef,
-  layer: listboxRef,
+  layer: listboxElement,
   isOpen: menu.combobox.isOpen,
   onDismiss: () => menu.close(),
 })
@@ -146,6 +148,7 @@ const {
   canRemove,
   clearAll,
   closeEditor,
+  commit,
   editorComponent,
   editorOpen,
   editorStyle,
@@ -187,6 +190,18 @@ const naming = useFilterTokenNaming({ idPrefix: () => inputId.value, session, fi
 bridge.pick = pick
 bridge.sessionOpen = () => session.value != null
 bridge.closeEditor = closeEditor
+const sheet = usePowerSearchPresentation({
+  props,
+  root: () => anchorRef.value ?? sheetFieldRef.value?.element,
+  input: () => inputRef.value,
+  sheetTrigger: () => sheetFieldRef.value,
+  onEnterSheet: () => {
+    menu.close()
+    closeEditor(false)
+  },
+})
+const collapsed = computed(() => props.overflow !== 'none' && !focused.value && !sheet.isSheet.value)
+const floating = computed(() => props.overflow === 'unfocused-layer' && focused.value && !sheet.isSheet.value)
 
 useDismiss({
   container: editorRef,
@@ -206,12 +221,6 @@ watch(collapsed, () => {
   void nextTick(() => overflowState.remeasure())
 })
 
-watch(() => menu.combobox.activeIndex.value, (index) => {
-  if (!menu.combobox.isOpen.value || index < 0)
-    return
-  void nextTick(() => scrollOptionIntoView(listboxRef.value, menu.entries.value[index]?.id))
-})
-
 const visibleFilters = computed(() => filters.value.slice(0, visibleCount.value))
 // 全部清除只移除可编辑的条件，所以只有存在可编辑条件时才显示。
 const hasClearButton = computed(() => showsClear.value && filters.value.some(filter => filter.isReadOnly !== true) && !props.disabled && !props.readOnly)
@@ -219,6 +228,8 @@ const displayCount = computed(() => resultCountText(props.resultCount, text.valu
 const menuStyle = computed(() => menuStyleWithWidth(anchored.style.value, props.menuWidth))
 
 function onInputFocus(event: FocusEvent): void {
+  if (sheet.isHandingOffFocus())
+    return
   emit('focus', event)
   if (!props.disabled && !props.readOnly && session.value == null)
     menu.open()
@@ -232,7 +243,7 @@ function onFocusIn(): void {
 
 function onFocusOut(event: FocusEvent): void {
   const next = event.relatedTarget
-  if (next instanceof Node && (anchorRef.value?.contains(next) || listboxRef.value?.contains(next) || editorRef.value?.contains(next)))
+  if (next instanceof Node && (anchorRef.value?.contains(next) || listboxElement.value?.contains(next) || editorRef.value?.contains(next)))
     return
   focused.value = false
   if (session.value == null)
@@ -248,24 +259,14 @@ function onFieldClick(event: MouseEvent): void {
   inputRef.value?.focus()
 }
 
-function highlight(index: number): void {
-  const entry = menu.entries.value[index]
-  if (entry && !entry.disabled)
-    menu.combobox.activeIndex.value = index
-}
-
-function optionId(index: number): string {
-  return `${listboxId.value}-option-${index}`
-}
-
 onMounted(() => {
   if (props.autofocus)
-    inputRef.value?.focus()
+    sheet.focusControl()
 })
 
 defineExpose({
-  focusTypeahead: () => inputRef.value?.focus(),
-  blurTypeahead: () => inputRef.value?.blur(),
+  focusTypeahead: () => sheet.focusControl(),
+  blurTypeahead: () => sheet.blurControl(),
 })
 </script>
 
@@ -283,8 +284,56 @@ defineExpose({
   >
     <div v-if="floating" class="astryx-power-search-placeholder" :style="{ height: `${placeholderHeight}px` }" />
     <Tooltip :content="disabledMessage" :is-enabled="focusableDisabled">
+      <PowerSearchSheetField
+        v-if="sheet.isSheet.value"
+        ref="sheetFieldRef"
+        v-bind="parts.forwardedAttrs()"
+        v-model:is-open="sheet.sheetOpen.value"
+        :config="config"
+        :lookup="lookup"
+        :filters="filters"
+        :input-id="inputId"
+        :label-id="`${inputId}-label`"
+        :described-by="describedBy"
+        :placeholder="placeholder"
+        :size="size"
+        :is-disabled="disabled"
+        :is-focusable-when-disabled="focusableDisabled"
+        :is-read-only="readOnly"
+        :has-clear="showsClear"
+        :control-class="[parts.controlClass(), `status-${status}`]"
+        :control-style="parts.controlStyle()"
+        :status-icon="statusIcon"
+        :status-icon-props="statusIconProps"
+        :display-count="displayCount"
+        :messages="text"
+        :locale="locale"
+        :time-zone="resolvedTimeZone"
+        :max-token-length="maxTokenLength"
+        :max-operator-menu-items="maxOperatorMenuItems"
+        :save-label="resolvedSaveLabel"
+        :components="components"
+        :search="query => source.search(query)"
+        :token-component="tokenComponent"
+        @commit="commit"
+        @motion-complete="sheet.onSheetMotionComplete"
+        @focus="sheet.isHandingOffFocus() || emit('focus', $event)"
+        @blur="emit('blur', $event)"
+      >
+        <template v-if="slots.icon" #icon>
+          <slot name="icon" />
+        </template>
+        <template v-if="slots.endContent || slots.end" #end>
+          <slot v-if="slots.endContent" name="endContent" />
+          <slot v-else name="end" />
+        </template>
+        <template v-if="slots.token" #token="tokenProps">
+          <slot name="token" v-bind="tokenProps" />
+        </template>
+      </PowerSearchSheetField>
       <!-- eslint-disable-next-line vue-a11y/click-events-have-key-events, vue-a11y/no-static-element-interactions -- 点空白处把焦点交给输入框。 -->
       <div
+        v-else
         ref="anchorRef"
         class="astryx-power-search-control"
         :class="[parts.controlClass(), `status-${status}`, { 'is-open': menu.combobox.isOpen.value, 'is-disabled': disabled, 'is-floating': floating }]"
@@ -306,46 +355,26 @@ defineExpose({
             tabindex="-1"
             @keydown="onTokenKeyDown($event, index)"
           >
-            <slot
-              name="token"
+            <PowerSearchFilterToken
+              v-bind="naming.tokenProps(filter, index)"
               :config="config"
+              :lookup="lookup"
               :filter="filter"
-              :field="fieldFor(filter)!"
-              :operator="operatorFor(filter)!"
               :max-length="maxTokenLength"
+              :messages="text"
+              :locale="locale"
+              :time-zone="resolvedTimeZone"
+              :size="size"
               :disabled="disabled"
-              :on-click="() => activate(index)"
-              :on-remove="() => removeAt(index)"
+              :removable="canRemove(filter)"
+              :custom="tokenComponent(filter)"
+              @activate="activate(index)"
+              @remove="removeAt(index)"
             >
-              <component
-                :is="tokenComponent(filter)"
-                v-if="tokenComponent(filter)"
-                :config="config"
-                :filter="filter"
-                :field="fieldFor(filter)"
-                :operator="operatorFor(filter)"
-                :max-length="maxTokenLength"
-                :disabled="disabled"
-                :on-click="() => activate(index)"
-                :on-remove="() => removeAt(index)"
-              />
-              <PowerSearchToken
-                v-else-if="fieldFor(filter) && operatorFor(filter)"
-                :field-label="fieldFor(filter)!.label"
-                :operator="operatorFor(filter)!"
-                :filter="filter"
-                :max-length="maxTokenLength"
-                :messages="text"
-                :locale="locale"
-                :time-zone="resolvedTimeZone"
-                :size="size"
-                :disabled="disabled"
-                :removable="canRemove(filter)"
-                v-bind="naming.tokenProps(filter, index)"
-                @activate="activate(index)"
-                @remove="removeAt(index)"
-              />
-            </slot>
+              <template v-if="slots.token" #token="tokenProps">
+                <slot name="token" v-bind="tokenProps" />
+              </template>
+            </PowerSearchFilterToken>
           </span>
           <span v-if="collapsed && hiddenCount > 0" class="astryx-power-search-more">
             {{ text.more(hiddenCount) }}
@@ -386,7 +415,7 @@ defineExpose({
           :aria-expanded="menu.combobox.isOpen.value"
           :aria-controls="listboxId"
           aria-autocomplete="list"
-          :aria-activedescendant="menu.activeId.value ? optionId(menu.combobox.activeIndex.value) : undefined"
+          :aria-activedescendant="menu.activeId.value ? `${listboxId}-option-${menu.combobox.activeIndex.value}` : undefined"
           :aria-describedby="describedBy"
           @input="onInput"
           @keydown="onInputKeyDown"
@@ -409,55 +438,27 @@ defineExpose({
           </button>
           <component :is="statusIcon" v-if="statusIcon" v-bind="statusIconProps" />
         </span>
-        <span v-if="focusableDisabled" :id="disabledId" class="astryx-visually-hidden">{{ disabledMessage }}</span>
       </div>
     </Tooltip>
+    <span v-if="focusableDisabled" :id="disabledId" class="astryx-visually-hidden">{{ disabledMessage }}</span>
     <span class="astryx-visually-hidden" aria-live="polite">{{ liveText }}</span>
   </Field>
+  <PowerSearchListbox
+    v-if="!sheet.isSheet.value"
+    :id="listboxId"
+    ref="listboxRef"
+    :is-open="menu.combobox.isOpen.value"
+    :entries="menu.entries.value"
+    :active-index="menu.combobox.activeIndex.value"
+    :label="text.results"
+    :empty-text="text.empty"
+    :placement="anchored.position.value.placement"
+    :menu-style="menuStyle"
+    :lookup="lookup"
+    @highlight="menu.combobox.activeIndex.value = $event"
+    @pick="pick"
+  />
   <Teleport to="body">
-    <div
-      v-show="menu.combobox.isOpen.value"
-      :id="listboxId"
-      ref="listboxRef"
-      class="astryx-typeahead-listbox astryx-layer"
-      role="listbox"
-      :aria-label="text.results"
-      :data-placement="anchored.position.value.placement"
-      :style="menuStyle"
-      tabindex="-1"
-    >
-      <div class="astryx-typeahead-menu" role="presentation">
-        <div v-if="menu.entries.value.length === 0" class="astryx-typeahead-state">
-          {{ text.empty }}
-        </div>
-        <div v-else class="astryx-typeahead-options" role="presentation">
-          <template v-for="(entry, index) in menu.entries.value" :key="entry.id">
-            <div v-if="powerSearchGroupLabel(menu.entries.value, index)" class="astryx-power-search-menu-group">
-              {{ powerSearchGroupLabel(menu.entries.value, index) }}
-            </div>
-            <!-- eslint-disable-next-line vue-a11y/click-events-have-key-events, vue-a11y/mouse-events-have-key-events -- 选项不进 Tab 序。 -->
-            <div
-              :id="optionId(index)"
-              class="astryx-typeahead-option"
-              :class="{ 'is-active': index === menu.combobox.activeIndex.value, 'is-disabled': entry.disabled }"
-              role="option"
-              :aria-selected="index === menu.combobox.activeIndex.value ? 'true' : 'false'"
-              :data-option-id="entry.id"
-              tabindex="-1"
-              @mousedown.prevent
-              @mouseenter="highlight(index)"
-              @click="pick(entry.item)"
-            >
-              <Icon :icon="powerSearchItemIcon(entry.item, lookup)" size="sm" />
-              <span class="astryx-typeahead-option-copy">
-                <span class="astryx-typeahead-option-label">{{ entry.label }}</span>
-                <span v-if="entry.description" class="astryx-typeahead-option-description">{{ entry.description }}</span>
-              </span>
-            </div>
-          </template>
-        </div>
-      </div>
-    </div>
     <div
       v-if="session"
       ref="editorRef"

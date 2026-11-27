@@ -1,0 +1,205 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  /*
+   * 底部弹层呈现里的字段：沿用行内字段的框，不换行；按钮里不能放控件，所以触发器、标签、
+   * 末尾内容是兄弟元素。没有可输入的地方，光标表示「按」。
+   */
+  .astryx-power-search-control.astryx-power-search-sheet-field {
+    flex-wrap: nowrap;
+    cursor: pointer;
+  }
+
+  .astryx-power-search-control.astryx-power-search-sheet-field.has-tokens {
+    padding: calc(var(--astryx-spacing-1, 4px) - var(--astryx-border-width, 1px));
+  }
+
+  .astryx-power-search-control.astryx-power-search-sheet-field.is-disabled {
+    cursor: default;
+  }
+
+  .astryx-power-search-sheet-field__content {
+    display: flex;
+    flex: 1 1 auto;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--astryx-spacing-1, 4px);
+    min-width: 0;
+  }
+
+  /* 框负责聚焦描边，触发器自己不画。有标签时它铺满整个框，点标签或空白处都打开弹层。 */
+  .astryx-power-search-sheet-trigger {
+    appearance: none;
+    flex: 1 1 40px;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    min-width: 40px;
+    margin: 0;
+    padding: 0 var(--astryx-spacing-1, 4px);
+    border: 0;
+    background: transparent;
+    color: var(--astryx-color-text-secondary, #525252);
+    font: inherit;
+    text-align: start;
+    cursor: inherit;
+    outline: none;
+  }
+
+  .astryx-power-search-sheet-trigger.has-tokens {
+    position: absolute;
+    inset: 0;
+    padding: 0;
+  }
+
+  /* 占位文字太长时一行省略号收尾，不把字段撑高。 */
+  .astryx-power-search-sheet-trigger__placeholder {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* 标签只是展示，点击穿到下面的触发器；自定义标签里的控件仍能点。 */
+  .astryx-power-search-sheet-field .astryx-power-search-token,
+  .astryx-power-search-sheet-field .astryx-power-search-icon {
+    position: relative;
+    pointer-events: none;
+  }
+
+  .astryx-power-search-sheet-field .astryx-power-search-token :is(button, a, input, [tabindex]) {
+    pointer-events: auto;
+  }
+
+  .astryx-power-search-sheet-field__end {
+    position: relative;
+  }
+
+  .astryx-power-search-sheet-field__status {
+    display: inline-flex;
+    color: var(--astryx-input-status-color, var(--astryx-color-text-secondary, #525252));
+  }
+
+  .astryx-power-search-sheet-field__status:empty {
+    display: none;
+  }
+
+  /* 弹层内容：标题吸顶、底栏吸底，中间滚动。 */
+  .astryx-power-search-sheet {
+    --astryx-power-search-sheet-surface: var(--astryx-bottom-sheet-background, var(--astryx-color-background-surface, #fff));
+
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    isolation: isolate;
+  }
+
+  .astryx-power-search-sheet--fixed-footer {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  /* 弹层自己在抓手下面留出 24px，「筛选条件」和「添加筛选条件」的标题靠这一段就够了。 */
+  .astryx-power-search-sheet__header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--astryx-spacing-3, 12px);
+    padding: 0 var(--astryx-spacing-4, 16px) var(--astryx-spacing-3, 12px);
+    background: var(--astryx-power-search-sheet-surface);
+  }
+
+  /*
+   * 值那一步整页一起滚，吸顶的标题会碰到弹层顶边。标题往上伸进抓手下面那一段，
+   * 再用自己的内边距把那一段补回来，停着和吸住时都不被抓手挡住。
+   */
+  .astryx-power-search-sheet__header--scrolls-to-top {
+    margin-block-start: calc(-1 * var(--astryx-spacing-6, 24px));
+    padding-block-start: var(--astryx-spacing-6, 24px);
+  }
+
+  .astryx-power-search-sheet__header-row {
+    display: flex;
+    align-items: center;
+    gap: var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-power-search-sheet__title {
+    flex-grow: 1;
+    min-width: 0;
+  }
+
+  .astryx-power-search-sheet__body {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: var(--astryx-spacing-4, 16px);
+    padding: 0 var(--astryx-spacing-4, 16px) var(--astryx-spacing-4, 16px);
+  }
+
+  .astryx-power-search-sheet__scroll {
+    flex-grow: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .astryx-power-search-sheet__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--astryx-spacing-4, 16px);
+    min-height: 100%;
+    padding: 0 var(--astryx-spacing-4, 16px) var(--astryx-spacing-4, 16px);
+    box-sizing: border-box;
+  }
+
+  .astryx-power-search-sheet__empty {
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .astryx-power-search-sheet__section {
+    padding: var(--astryx-spacing-3, 12px);
+    border-radius: var(--astryx-radius-container, 12px);
+    background: var(--astryx-color-background-muted, #f1f1f1);
+  }
+
+  .astryx-power-search-sheet__row-value {
+    font-weight: var(--astryx-font-weight-bold, 700);
+  }
+
+  .astryx-power-search-sheet__choice {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-power-search-sheet__chevron:dir(rtl) {
+    transform: scaleX(-1);
+  }
+
+  .astryx-power-search-sheet__footer {
+    position: sticky;
+    bottom: 0;
+    display: flex;
+    justify-content: space-between;
+    gap: var(--astryx-spacing-2, 8px);
+    padding: var(--astryx-spacing-3, 12px) var(--astryx-spacing-4, 16px);
+    background: var(--astryx-power-search-sheet-surface);
+  }
+
+  .astryx-power-search-sheet--fixed-footer .astryx-power-search-sheet__footer {
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .astryx-power-search-sheet__footer-action {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 44px;
+  }
+}

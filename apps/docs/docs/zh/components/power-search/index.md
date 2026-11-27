@@ -24,6 +24,8 @@ import { powerSearchDisabled, powerSearchNested, powerSearchOverflow, powerSearc
 
 失焦时标签可以收成一行。`unfocused-inline` 在原处展开，`unfocused-layer` 浮在字段上，不把下面的内容往下推。结果数量是数字时会按单复数读出来，是字符串时原样显示。数量变化会礼貌地播报，第一次出现不播。
 
+紧凑触屏上，字段默认打开底部弹层（`presentation="adaptive"`）。字段变成一个显示标签的触发器，占位文字太长时以省略号收尾；没有条件时直接进「添加筛选条件」，有条件时先看到「筛选条件」列表。选字段之后进值那一步：有多个运算符时先列一组单选，枚举和相对日期列成单选或复选的行，日期区间是一个行内的范围日历，多值的列表用底部弹层的 Tokenizer，名字就是字段名。所有改动只改草稿，按「完成」才按顺序提交，每一步各触发一次 `change`；字段在这期间变成只读或禁用，「完成」什么都不报。草稿改过之后下滑弹层、点遮罩或按 Escape，会先问要不要放弃；「全部清除」也会先确认，只读的条件照样留下。想在所有设备上保留行内字段就传 `presentation="popover"`。
+
 禁用原因和禁用一起用时，输入框仍然可以聚焦，悬停或键盘聚焦能看到原因。不要再在外面套一层提示，原生禁用会把悬停吃掉。
 
 ```vue
@@ -54,6 +56,7 @@ const matched = computed(() => applyFilters(filters.value, people))
 | --- | --- |
 | <Badge variant="success">推荐</Badge> | 字段很多时给它们分组，并给常用字段加上别名，方便搜到。 |
 | <Badge variant="success">推荐</Badge> | 全文搜索单独指定一个字符串字段，不要让每个字段都吃掉用户随手打的字。 |
+| <Badge variant="success">推荐</Badge> | 字段本身已经在浮层或底部弹层里时，固定传 `presentation="popover"`。 |
 | <Badge variant="error">避免</Badge> | 把结构化搜索塞进表格列上的过滤。列过滤仍然只做包含和枚举匹配。 |
 | <Badge variant="error">避免</Badge> | 在嵌套条件还没填完时允许保存。没填完的子条件不能变成一条真正的筛选。 |
 
