@@ -166,4 +166,5 @@ export const ssrFixtures: Record<string, SsrFixture> = {
   BaseTypeahead: { props: { searchSource, label: 'Fruit' } },
   Typeahead: { props: { searchSource, label: 'Fruit' } },
   TypeaheadItem: { props: { item: { id: 'apple', label: 'Apple' } } },
+  unstable_ListReorderScope: { props: { reorder: null }, slots: { default: text('Rows') } },
 }

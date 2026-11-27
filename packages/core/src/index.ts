@@ -689,7 +689,17 @@ export { Link } from './Link/index.js'
 export type { LinkColor, LinkProps, LinkRoot, LinkSize, LinkType, LinkWeight } from './Link/index.js'
 export { LinkProvider, useLinkComponent } from './LinkProvider/index.js'
 export type { LinkComponentType, LinkProviderProps, LinkProviderSlots } from './LinkProvider/index.js'
-export { Item, List, ListItem, useItemDescriptionId, useListContext } from './List/index.js'
+export {
+  Item,
+  List,
+  ListItem,
+  unstable_adaptReorderable,
+  unstable_ListReorderScope,
+  unstable_reorderableOptions,
+  unstable_useListReorderScope,
+  useItemDescriptionId,
+  useListContext,
+} from './List/index.js'
 export type {
   ItemAlign,
   ItemDensity,
@@ -712,6 +722,7 @@ export type {
   ListMarkerStyle,
   ListProps,
   ListSlots,
+  unstable_ListReorderContextValue,
 } from './List/index.js'
 export {
   alertDialogMessages,

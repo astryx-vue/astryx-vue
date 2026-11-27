@@ -8,6 +8,7 @@ export const labUpstreamMap: UpstreamMapPart = {
   '@astryx.listInput.removeItem': [{ path: 'listInput.removeItem', args: ['itemName', 'position'] }],
   '@astryx.listInput.removeUnavailable': [{ path: 'listInput.removeUnavailable' }],
   '@astryx.listInput.reorderItem': [{ path: 'listInput.reorderItem', args: ['itemName', 'position'] }],
+  '@astryx.listInput.itemName': [{ path: 'listInput.itemName', args: ['itemName', 'position'] }],
   '@astryx.listInput.fieldLabelWithPosition': [
     { path: 'listInput.fieldLabelWithPosition', args: ['header', 'itemName', 'position', 'total'] },
   ],
