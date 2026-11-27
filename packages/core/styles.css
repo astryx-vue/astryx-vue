@@ -74,6 +74,7 @@
 @import './styles/scrollable-area.css';
 @import './styles/section.css';
 @import './styles/segmented-control.css';
+@import './styles/sheet-confirmation.css';
 @import './styles/side-nav.css';
 @import './styles/skeleton.css';
 @import './styles/slider.css';
@@ -98,6 +99,7 @@
 @import './styles/toggle-button.css';
 @import './styles/token.css';
 @import './styles/tokenizer.css';
+@import './styles/tokenizer-sheet.css';
 @import './styles/toolbar.css';
 @import './styles/tooltip.css';
 @import './styles/top-nav.css';
