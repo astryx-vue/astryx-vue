@@ -14,6 +14,8 @@ import { switchDescription, switchDisabled, switchSettings, switchStatus } from 
 
 `Switch` 用于切换单个布尔状态。
 
+在触屏上，它的手感和 iOS 的开关一样：按下时圆钮微微鼓起、带一层淡淡的阴影；横着拖动，圆钮跟着手指走，拖过大半条轨道就翻到另一边，松手才算数。轻点照常切换，按住不动或短距离拖动在松手时切换；竖着拖是滚动页面，开关会放手。用鼠标或触控笔也能拖动切换，规则相同，外观保持桌面样式；按着拖出开关再松开，开关不会变。粗指针下点击区域会悄悄放大到接近 44 × 44 px。开启“减少动态效果”后，触屏上改成淡入淡出，鼠标下直接切换。
+
 ```vue
 <script setup lang="ts">
 import { Switch } from '@astryx-vue/core/Switch'
