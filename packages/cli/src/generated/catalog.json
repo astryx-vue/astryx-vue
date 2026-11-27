@@ -17215,6 +17215,12 @@
                 "description": "Whether a citation chip shows the source title or a numbered badge."
               },
               {
+                "name": "`codeLanguages`",
+                "type": "`ReadonlyArray<CodeLanguage>`",
+                "default": "—",
+                "description": "Language values a fence may name, imported from `@astryx-vue/core/Code/languages/<name>` or made with `createCodeLanguage`. A fence whose language word is one of a value's identifiers renders with that value, ahead of a built-in with the same identifier; a later entry wins."
+              },
+              {
                 "name": "`sources`",
                 "type": "`Record<string, MarkdownSource>`",
                 "default": "—",
@@ -17314,6 +17320,12 @@
                 "type": "`'label' | 'number'`",
                 "default": "`'label'`",
                 "description": "引用来源芯片是标题，还是序号徽章。"
+              },
+              {
+                "name": "`codeLanguages`",
+                "type": "`ReadonlyArray<CodeLanguage>`",
+                "default": "—",
+                "description": "围栏可以写的语言值，从 `@astryx-vue/core/Code/languages/<name>` 引入，或用 `createCodeLanguage` 做的。围栏的语言词是某个值的标识符时，用这个值渲染，优先于同名的内置语言；后面的条目优先。"
               },
               {
                 "name": "`sources`",
@@ -19006,9 +19018,9 @@
               },
               {
                 "name": "`language`",
-                "type": "`string`",
+                "type": "`string | CodeLanguage`",
                 "default": "`'plaintext'`",
-                "description": "Tokenizer language. `plaintext` hides the language label."
+                "description": "Tokenizer language: a built-in identifier such as `'ts'`, or a language value imported from `@astryx-vue/core/Code/languages/<name>` or made with `createCodeLanguage`. A value is labelled with its `name`, and `data-language` carries its first identifier. `plaintext` hides the language label."
               },
               {
                 "name": "`syntaxTheme`",
@@ -19104,7 +19116,7 @@
                 "name": "`tokenizer`",
                 "type": "`(code, language) => SyntaxToken[]`",
                 "default": "—",
-                "description": "Custom tokenizer. Tokens use absolute offsets and do not replace the copied text."
+                "description": "Deprecated: pass `language` a value made with `createCodeLanguage` instead. Still works as before. Custom tokenizer; tokens use absolute offsets and do not replace the copied text."
               },
               {
                 "name": "`highlightMode`",
@@ -19161,9 +19173,9 @@
               },
               {
                 "name": "`language`",
-                "type": "`string`",
+                "type": "`string | CodeLanguage`",
                 "default": "`'plaintext'`",
-                "description": "分词用的语言。`plaintext` 不显示语言名。"
+                "description": "分词用的语言：内置标识符（如 `'ts'`），或者从 `@astryx-vue/core/Code/languages/<name>` 引入、用 `createCodeLanguage` 做出来的语言值。语言值显示它的 `name`，`data-language` 取它的第一个标识符。`plaintext` 不显示语言标签。"
               },
               {
                 "name": "`syntaxTheme`",
@@ -19259,7 +19271,7 @@
                 "name": "`tokenizer`",
                 "type": "`(code, language) => SyntaxToken[]`",
                 "default": "—",
-                "description": "自定义分词器。token 用绝对偏移，不替换被复制的文本。"
+                "description": "已弃用：改给 `language` 传一个 `createCodeLanguage` 做的值。仍然照原样工作。自定义分词器，token 用绝对偏移，不替换被复制的文本。"
               },
               {
                 "name": "`highlightMode`",
@@ -19316,6 +19328,10 @@
       "notes": {
         "en": [
           {
+            "heading": "Languages",
+            "text": "The built-in identifiers cover TypeScript and JavaScript, JSON, HTML, CSS, Python, Bash, PHP, Hack, YAML, Markdown, and now C (`c`, `h`), C++ (`cpp`, `c++`, `cc`, `cxx`, `hpp`, `hh`), SQL (`sql`), Rust (`rust`, `rs`), Kotlin (`kotlin`, `kt`, `kts`), Swift (`swift`), and Go (`go`, `golang`).\n\nLess common languages are modules you import and pass as `language`, so a page that does not use one does not ship it: `dockerfile`, `graphql`, `java`, `lua`, `objective-c`, `powershell`, `ruby`, `thrift`, and `toml`, each at `@astryx-vue/core/Code/languages/<name>`. A language string never reaches a module; pass the value itself. `createCodeLanguage({ name, identifiers, fileExtensions, fileNames, tokenize })` makes your own from a tokenize function. It paints synchronously at any length, and `Markdown` and `RichTextEditor` accept it in `codeLanguages`.\n\n```vue\n<script setup lang=\"ts\">\nimport { CodeBlock } from '@astryx-vue/core/Code'\nimport { graphql } from '@astryx-vue/core/Code/languages/graphql'\n</script>\n\n<template>\n  <CodeBlock :language=\"graphql\" code=\"query { viewer { name } }\" />\n</template>\n```"
+          },
+          {
             "heading": "CodeBlock slots",
             "text": "- `endContent`: your own controls, shown just before Copy. In the header when the block has one; otherwise in a column beside the code, centred on the first line and never over it. It never creates a header, and it sits outside the collapse control, so using it never collapses the block."
           },
@@ -19332,6 +19348,10 @@
           {
             "heading": "建议",
             "text": "- 推荐: 推荐\n- 推荐: 推荐\n- 推荐: 推荐\n- 推荐: 推荐\n- 避免: 避免\n- 避免: 避免"
+          },
+          {
+            "heading": "语言",
+            "text": "内置标识符覆盖 TypeScript 和 JavaScript、JSON、HTML、CSS、Python、Bash、PHP、Hack、YAML、Markdown，以及新增的 C（`c`、`h`）、C++（`cpp`、`c++`、`cc`、`cxx`、`hpp`、`hh`）、SQL（`sql`）、Rust（`rust`、`rs`）、Kotlin（`kotlin`、`kt`、`kts`）、Swift（`swift`）和 Go（`go`、`golang`）。\n\n不常用的语言是单独引入、再传给 `language` 的模块，没用到的页面不会带上它们：`dockerfile`、`graphql`、`java`、`lua`、`objective-c`、`powershell`、`ruby`、`thrift`、`toml`，路径是 `@astryx-vue/core/Code/languages/<name>`。语言字符串不会去找模块，要传值本身。`createCodeLanguage({ name, identifiers, fileExtensions, fileNames, tokenize })` 用一个分词函数做出你自己的语言，它在任意长度下都同步上色，`Markdown` 和 `RichTextEditor` 的 `codeLanguages` 也接受它。\n\n```vue\n<script setup lang=\"ts\">\nimport { CodeBlock } from '@astryx-vue/core/Code'\nimport { graphql } from '@astryx-vue/core/Code/languages/graphql'\n</script>\n\n<template>\n  <CodeBlock :language=\"graphql\" code=\"query { viewer { name } }\" />\n</template>\n```"
           },
           {
             "heading": "CodeBlock 插槽",
@@ -41747,6 +41767,12 @@
                 "default": "-"
               },
               {
+                "name": "`codeLanguages`",
+                "description": "`codeLanguages`",
+                "type": "`ReadonlyArray`",
+                "default": "-"
+              },
+              {
                 "name": "`hasMarkdownShortcuts`",
                 "description": "`hasMarkdownShortcuts`",
                 "type": "`boolean`",
@@ -41843,6 +41869,12 @@
               {
                 "name": "`markdownExtensions`",
                 "description": "`markdownExtensions`",
+                "type": "`ReadonlyArray`",
+                "default": "-"
+              },
+              {
+                "name": "`codeLanguages`",
+                "description": "`codeLanguages`",
                 "type": "`ReadonlyArray`",
                 "default": "-"
               },
@@ -41979,6 +42011,12 @@
                 "default": "-"
               },
               {
+                "name": "`codeLanguages`",
+                "description": "`codeLanguages`",
+                "type": "`ReadonlyArray`",
+                "default": "-"
+              },
+              {
                 "name": "`hasMarkdownShortcuts`",
                 "description": "`hasMarkdownShortcuts`",
                 "type": "`boolean`",
@@ -42075,6 +42113,12 @@
               {
                 "name": "`markdownExtensions`",
                 "description": "`markdownExtensions`",
+                "type": "`ReadonlyArray`",
+                "default": "-"
+              },
+              {
+                "name": "`codeLanguages`",
+                "description": "`codeLanguages`",
                 "type": "`ReadonlyArray`",
                 "default": "-"
               },

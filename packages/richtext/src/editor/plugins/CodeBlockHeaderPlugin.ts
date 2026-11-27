@@ -1,9 +1,11 @@
-import type { VNodeChild } from 'vue'
+import type { CodeLanguage } from '@astryx-vue/core'
+import type { PropType, VNodeChild } from 'vue'
 import { codeBlockMessages, Icon, IconButton, useComponentMessages, useCopyToClipboard } from '@astryx-vue/core'
 import { $isCodeNode } from '@lexical/code'
 import { $getNodeByKey, $getRoot } from 'lexical'
 import { defineComponent, h } from 'vue'
 import { useLexicalEditor } from '../context.js'
+import { listedLanguage } from './codeLanguages.js'
 import { useOverlayPlacements } from './useOverlayPlacements.js'
 
 /** 一个代码块的标题栏要画在哪里：相对编辑区容器的像素坐标。 */
@@ -39,7 +41,11 @@ function positionStyle(p: HeaderPlacement): Record<string, string> {
 
 const CodeBlockHeader = defineComponent({
   name: 'AstryxRichTextCodeBlockHeader',
-  props: { placement: { type: Object as () => HeaderPlacement, required: true } },
+  props: {
+    placement: { type: Object as () => HeaderPlacement, required: true },
+    /** 围栏匹配到列出的语言值时，标题栏显示这个值的名字。 */
+    label: { type: String, default: undefined },
+  },
   setup(props) {
     const editor = useLexicalEditor()
     const messages = useComponentMessages({ codeBlock: codeBlockMessages })
@@ -72,7 +78,7 @@ const CodeBlockHeader = defineComponent({
         return h('div', { 'class': 'astryx-richtext-code-header astryx-richtext-code-header--corner', 'data-richtext-code-header': '', 'style': positionStyle(placement) }, [button])
       }
       return h('div', { 'class': 'astryx-richtext-code-header', 'data-richtext-code-header': '', 'style': positionStyle(placement) }, [
-        h('span', { class: 'astryx-richtext-code-header__title' }, placement.language),
+        h('span', { class: 'astryx-richtext-code-header__title' }, props.label ?? placement.language),
         button,
       ])
     }
@@ -85,7 +91,11 @@ const CodeBlockHeader = defineComponent({
  */
 export const CodeBlockHeaderPlugin = defineComponent({
   name: 'AstryxRichTextCodeBlockHeaderPlugin',
-  setup() {
+  props: {
+    /** 围栏可以写的语言值；匹配到的围栏在标题栏显示这个值的名字。 */
+    codeLanguages: { type: Array as PropType<ReadonlyArray<CodeLanguage>>, default: undefined },
+  },
+  setup(props) {
     const editor = useLexicalEditor()
     const placements = useOverlayPlacements<HeaderPlacement>(editor, (origin) => {
       return $getRoot().getChildren().filter($isCodeNode).flatMap((node): HeaderPlacement[] => {
@@ -103,6 +113,10 @@ export const CodeBlockHeaderPlugin = defineComponent({
         }]
       })
     }, samePlacements)
-    return () => placements.value.map(p => h(CodeBlockHeader, { key: p.key, placement: p }))
+    return () => placements.value.map(p => h(CodeBlockHeader, {
+      key: p.key,
+      placement: p,
+      label: p.language == null ? undefined : listedLanguage(props.codeLanguages, p.language)?.name,
+    }))
   },
 })

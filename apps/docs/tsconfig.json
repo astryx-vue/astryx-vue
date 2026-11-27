@@ -77,6 +77,33 @@
       "@astryx-vue/core/Code": [
         "../../packages/core/src/Code/index.ts"
       ],
+      "@astryx-vue/core/Code/languages/dockerfile": [
+        "../../packages/core/src/Code/languages/dockerfile/index.ts"
+      ],
+      "@astryx-vue/core/Code/languages/graphql": [
+        "../../packages/core/src/Code/languages/graphql/index.ts"
+      ],
+      "@astryx-vue/core/Code/languages/java": [
+        "../../packages/core/src/Code/languages/java/index.ts"
+      ],
+      "@astryx-vue/core/Code/languages/lua": [
+        "../../packages/core/src/Code/languages/lua/index.ts"
+      ],
+      "@astryx-vue/core/Code/languages/objective-c": [
+        "../../packages/core/src/Code/languages/objective-c/index.ts"
+      ],
+      "@astryx-vue/core/Code/languages/powershell": [
+        "../../packages/core/src/Code/languages/powershell/index.ts"
+      ],
+      "@astryx-vue/core/Code/languages/ruby": [
+        "../../packages/core/src/Code/languages/ruby/index.ts"
+      ],
+      "@astryx-vue/core/Code/languages/thrift": [
+        "../../packages/core/src/Code/languages/thrift/index.ts"
+      ],
+      "@astryx-vue/core/Code/languages/toml": [
+        "../../packages/core/src/Code/languages/toml/index.ts"
+      ],
       "@astryx-vue/core/Collapsible": [
         "../../packages/core/src/Collapsible/index.ts"
       ],

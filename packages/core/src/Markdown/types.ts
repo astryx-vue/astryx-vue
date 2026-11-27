@@ -1,4 +1,5 @@
 import type { Component, VNodeChild } from 'vue'
+import type { CodeLanguage } from '../Code/grammar.js'
 import type { MarkdownPluginEntry } from './plugin-protocol/protocol.js'
 import type { MarkdownInlinePlugin, MarkdownPlugin } from './plugins.js'
 
@@ -132,6 +133,15 @@ export interface MarkdownProps {
    * `label` is a chip with the source title. `number` is a compact badge.
    * @default 'label'
    */
+  /**
+   * CodeBlock language values a fence may name: each one imported on its own,
+   * such as `graphql` from `@astryx-vue/core/Code/languages/graphql`, or made
+   * with `createCodeLanguage`. A fence whose language word is one of a listed
+   * value's identifiers renders with that value, ahead of a built-in with the
+   * same identifier; a later entry wins. Without it, fences render as they do
+   * today.
+   */
+  codeLanguages?: ReadonlyArray<CodeLanguage>
   citationStyle?: MarkdownCitationStyle
   /**
    * Citation sources keyed by id. `[id]` and `【id】` that match a key render

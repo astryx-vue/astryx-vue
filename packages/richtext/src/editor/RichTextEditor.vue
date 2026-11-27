@@ -292,8 +292,8 @@ const restAttrs = computed(() => {
               所以要和编辑区同级放在这个定位元素里，不能放到外面去。
             -->
             <TaskCheckboxPlugin :is-read-only="!editable" />
-            <CodeBlockHeaderPlugin />
-            <CodeSyntaxPlugin />
+            <CodeBlockHeaderPlugin :code-languages="codeLanguages" />
+            <CodeSyntaxPlugin :code-languages="codeLanguages" />
             <MarkdownExtensionsPlugin v-if="markdownExtensions && markdownExtensions.length > 0" :extensions="markdownExtensions" :transformers="transformers" />
           </div>
         </div>

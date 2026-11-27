@@ -1,4 +1,12 @@
+import type { CodeLanguage, CodeLanguageTokenize, Grammar } from './grammar.js'
 import type { SyntaxToken, TokenLine } from './types.js'
+import { buildSystemLanguagePatterns } from './builtinGrammars.js'
+import { codeLanguagePainter } from './grammar.js'
+
+export type { CodeLanguage } from './grammar.js'
+
+/** A language identifier string or a language value. */
+export type CodeLanguageInput = string | CodeLanguage
 
 declare const scheduler: { yield?: () => Promise<void> } | undefined
 
@@ -12,9 +20,6 @@ interface LanguageDefinition {
   defaultType: string
 }
 
-/** Token offsets are relative to the start of their line. */
-interface LanguagePatterns { patterns: LanguagePattern[], defaultType: string }
-
 const langCache = new Map<string, LanguageDefinition | null>()
 
 const JS_KEYWORDS = /\b(const|let|var|function|class|if|else|for|while|return|import|export|from|default|async|await|try|catch|throw|new|typeof|instanceof|interface|type|enum|extends|implements|switch|case|break|continue|do|in|of|void|null|undefined|true|false|this|super|yield|delete|static|public|private|protected|readonly|abstract|as|is|keyof|declare|module|namespace|require)\b/
@@ -24,7 +29,7 @@ const CSS_KEYWORDS = /\b(important|inherit|initial|unset|revert|auto|none)\b/
 const PHP_KEYWORDS = /\b(function|class|if|else|elseif|for|foreach|while|return|echo|public|private|protected|static|new|try|catch|throw|namespace|use|require|require_once|include|include_once|extends|implements|interface|abstract|final|const|var|true|false|null|array|isset|unset|empty|list|match|enum|switch|case|break|continue|do|yield|fn)\b/
 const HACK_KEYWORDS = /\b(function|class|if|else|for|foreach|while|return|echo|public|private|protected|static|new|try|catch|throw|namespace|use|require|include|extends|implements|interface|abstract|final|const|shape|vec|dict|keyset|async|await|concurrent|enum|type|newtype|tuple|inout)\b/
 
-function buildLanguagePatterns(lang: string): LanguagePatterns | null {
+function buildLanguagePatterns(lang: string): Grammar | null {
   switch (lang) {
     case 'typescript':
     case 'javascript':
@@ -238,30 +243,76 @@ function buildLanguagePatterns(lang: string): LanguagePatterns | null {
       }
 
     default:
-      return null
+      return buildSystemLanguagePatterns(lang)
   }
 }
 
-function buildLanguage(lang: string): LanguageDefinition | null {
-  const cached = langCache.get(lang)
+/** How each language value paints, compiled once per value. */
+const valueCache = new WeakMap<CodeLanguage, LanguageDefinition | CustomPainter | null>()
+
+interface CustomPainter { tokenize: CodeLanguageTokenize, name: string }
+
+function compile(raw: Grammar): LanguageDefinition {
+  return {
+    defaultType: raw.defaultType,
+    patterns: raw.patterns.map(pattern => ({
+      ...pattern,
+      anchored: new RegExp(pattern.regex.source, `${pattern.regex.flags.replace(/[gy]/g, '')}y`),
+    })),
+  }
+}
+
+/**
+ * How `language` paints: a compiled grammar (a built-in identifier, or an
+ * Astryx module), a custom tokenize function, or null (plain code). An
+ * identifier string selects only a built-in grammar.
+ */
+function resolveLanguage(language: CodeLanguageInput): LanguageDefinition | CustomPainter | null {
+  if (typeof language !== 'string') {
+    const cachedValue = valueCache.get(language)
+
+    if (cachedValue !== undefined)
+      return cachedValue
+
+    const painter = codeLanguagePainter(language)
+    const resolved = painter == null
+      ? null
+      : painter.kind === 'grammar'
+        ? compile(painter.grammar)
+        : { tokenize: painter.tokenize, name: language.name }
+
+    valueCache.set(language, resolved)
+
+    return resolved
+  }
+
+  const cached = langCache.get(language)
 
   if (cached !== undefined)
     return cached
 
-  const raw = buildLanguagePatterns(lang)
-  const definition = raw == null
-    ? null
-    : {
-        defaultType: raw.defaultType,
-        patterns: raw.patterns.map(pattern => ({
-          ...pattern,
-          anchored: new RegExp(pattern.regex.source, `${pattern.regex.flags.replace(/[gy]/g, '')}y`),
-        })),
-      }
+  const raw = buildLanguagePatterns(language)
+  const definition = raw == null ? null : compile(raw)
 
-  langCache.set(lang, definition)
+  langCache.set(language, definition)
 
   return definition
+}
+
+/** A compiled grammar for `language`, or null for a custom or plain one. */
+function buildLanguage(language: CodeLanguageInput): LanguageDefinition | null {
+  const resolved = resolveLanguage(language)
+
+  return resolved != null && 'patterns' in resolved ? resolved : null
+}
+
+/** The tokens of a custom language, or null when `language` is not one. */
+function customTokens(code: string, language: CodeLanguageInput): TokenLine[] | null {
+  const resolved = resolveLanguage(language)
+
+  return resolved != null && 'tokenize' in resolved
+    ? flatTokensToLines(resolved.tokenize(code, resolved.name), code)
+    : null
 }
 
 /** Code shorter than this is tokenized synchronously instead of in chunks. */
@@ -314,7 +365,12 @@ function tokenizeLine(code: string, definition: LanguageDefinition, lineStart: n
  * Tokenize a code string into one token array per line, with offsets relative
  * to the start of the line.
  */
-export function tokenize(code: string, language: string): TokenLine[] {
+export function tokenize(code: string, language: CodeLanguageInput): TokenLine[] {
+  const custom = customTokens(code, language)
+
+  if (custom != null)
+    return custom
+
   const definition = buildLanguage(language)
 
   if (definition == null)
@@ -338,7 +394,13 @@ export function tokenize(code: string, language: string): TokenLine[] {
  * chunks so a long file does not block rendering. An aborted signal stops the
  * work and returns the lines tokenized so far.
  */
-export async function tokenizeAsync(code: string, language: string, signal?: AbortSignal): Promise<TokenLine[]> {
+export async function tokenizeAsync(code: string, language: CodeLanguageInput, signal?: AbortSignal): Promise<TokenLine[]> {
+  // A custom language runs synchronously, as the `tokenizer` prop does.
+  const custom = customTokens(code, language)
+
+  if (custom != null)
+    return custom
+
   const definition = buildLanguage(language)
 
   if (definition == null)
