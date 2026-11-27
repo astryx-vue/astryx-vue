@@ -251,6 +251,8 @@ export type PowerSearchStatus = 'default' | 'success' | 'warning' | 'error'
 export type PowerSearchStatusVariant = FieldStatusPlacement
 export type PowerSearchOverflow = 'none' | 'unfocused-inline' | 'unfocused-layer'
 
+export type PowerSearchPresentation = 'popover' | 'bottom-sheet' | 'adaptive'
+
 export interface PowerSearchTokenProps {
   config: PowerSearchConfig
   filter: PowerSearchFilter
@@ -320,6 +322,15 @@ export interface PowerSearchProps extends FieldPartStylingProps {
   resultCount?: number | string
   size?: PowerSearchSize
   components?: PowerSearchComponents
+  /**
+   * 筛选条件在哪里编辑。`popover` 是行内输入框加锚定菜单和编辑浮层；`bottom-sheet` 让字段变成
+   * 触发器，在触屏底部弹层里编辑一份草稿：「筛选条件」列出现有条件，「添加筛选条件」挑字段，
+   * 再在值那一步编辑，按「完成」才把改动按顺序交出，草稿改过时下滑、点遮罩、Escape 会先确认
+   * 要不要放弃；`adaptive` 在紧凑触屏上用底部弹层，其余用浮层。底部弹层里 `menuWidth`、`overflow`
+   * 没有地方生效，开发期会提示一次；想在所有设备上保留行内字段就传 `popover`。
+   * @default 'adaptive'
+   */
+  presentation?: PowerSearchPresentation
 }
 
 export interface PowerSearchEmits {

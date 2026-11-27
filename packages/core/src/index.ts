@@ -1071,6 +1071,7 @@ export type {
   PowerSearchLookup,
   PowerSearchOperator,
   PowerSearchOverflow,
+  PowerSearchPresentation,
   PowerSearchProps,
   PowerSearchSize,
   PowerSearchSlots,

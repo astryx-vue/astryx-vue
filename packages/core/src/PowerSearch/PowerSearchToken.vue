@@ -29,6 +29,8 @@ const props = defineProps<{
   expanded?: boolean
   /** 给编辑器对话框引用的名称元素 id。量宽用的副本不传。 */
   nameId?: string
+  /** 只展示、不能按（底部弹层呈现的字段里，整个框交给触发器）。 */
+  displayOnly?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -59,7 +61,7 @@ provide(tokenNamingKey, computed(() => ({ actionName: visibleText.value, removeN
     :removable="removable"
     :aria-haspopup="opensEditor ? 'dialog' : undefined"
     :aria-expanded="opensEditor ? Boolean(expanded) : undefined"
-    @click="emit('activate')"
+    v-on="displayOnly ? {} : { click: () => emit('activate') }"
     @remove="emit('remove')"
   >
     <template v-if="(showsParts && valueText) || nameId" #end>
