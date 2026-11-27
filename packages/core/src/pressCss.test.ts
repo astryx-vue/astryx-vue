@@ -73,4 +73,43 @@ describe('共用的按压淡出', () => {
   it('减少动态效果时最多 200ms', () => {
     expect(reducedMotionBlocks(read('pressable.css'))).toContain('animation-duration: min(var(--astryx-duration-exit, 175ms), 200ms)')
   })
+
+  it('列表行的按压层淡出只动 opacity', () => {
+    expect(read('pressable.css')).toMatch(/@keyframes astryx-press-layer-release \{\s*from \{\s*opacity: 1;\s*\}\s*to \{\s*opacity: 0;/)
+  })
+})
+
+/** 写着 `layer` 这条按压层规则的那个 `@media (pointer: coarse)` 块，从块开头到文件末尾。 */
+function coarseBlock(css: string, layer: string): string {
+  const start = css.lastIndexOf('@media (pointer: coarse)', css.indexOf(layer))
+  expect(start, '找不到粗指针分支').toBeGreaterThanOrEqual(0)
+  return css.slice(start)
+}
+
+describe('列表行的触屏按压在合成层上淡出', () => {
+  const RELEASE = 'astryx-press-layer-release var(--astryx-duration-exit, 175ms) var(--astryx-ease-exit'
+
+  it('list 的行在按压期间把按压色画在自己的 ::before 上，抬手淡出这一层', () => {
+    const row = '.astryx-item[data-astryx-press]:not([data-disabled=\'true\'])'
+    const coarse = coarseBlock(read('list.css'), `${row}::before`)
+    const host = ruleBody(coarse, row)
+    expect(host).toContain('isolation: isolate')
+    expect(host).toContain('background-image: none')
+    const layer = ruleBody(coarse, `${row}::before`)
+    expect(layer).toContain('z-index: -1')
+    expect(layer).toContain('background-color: var(--astryx-list-item-pressed-background')
+    const fading = ruleBody(coarse, '.astryx-item[data-astryx-press=\'fading\']:not([data-disabled=\'true\'])::before')
+    expect(fading).toContain(RELEASE)
+    expect(reducedMotionBlocks(coarse)).toContain('animation-duration: min(var(--astryx-duration-exit, 175ms), 200ms)')
+  })
+
+  it('treeList 的行把按压层的图片换成底色，抬手淡出这一层', () => {
+    const row = '.astryx-tree-list__content.astryx-pressable:not([data-disabled=\'true\'])'
+    const coarse = coarseBlock(read('tree-list.css'), `${row}[data-astryx-press]::after`)
+    const layer = ruleBody(coarse, `${row}[data-astryx-press]::after`)
+    expect(layer).toContain('background-image: none')
+    expect(layer).toContain('background-color: var(--astryx-color-overlay-pressed')
+    expect(ruleBody(coarse, `${row}[data-astryx-press='fading']::after`)).toContain(RELEASE)
+    expect(reducedMotionBlocks(coarse)).toContain('animation-duration: min(var(--astryx-duration-exit, 175ms), 200ms)')
+  })
 })

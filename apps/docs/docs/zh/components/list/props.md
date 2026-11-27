@@ -16,6 +16,12 @@ footer: false
     </thead>
     <tbody>
       <tr>
+        <td><code>animatedLayout</code></td>
+        <td><code>AnimatedLayout</code></td>
+        <td>—</td>
+        <td><code>useAnimatedLayout({ containerRef })</code> 返回的句柄。传了它，列表的行变化走同一套动效，鼠标和手指都一样：新插入的行入场，移除的行原地收起，和反向移动的行交叉的那一行从它们上方滑过。变化后面的行，以及列表后面直到那个容器的内容，都滑到新位置。行靠 <code>itemKey</code> 认身份，没有它的行直接变。不传句柄时列表直接变。</td>
+      </tr>
+      <tr>
         <td><code>density</code></td>
         <td><code>ListDensity</code></td>
         <td><code>'balanced'</code></td>

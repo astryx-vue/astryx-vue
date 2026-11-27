@@ -4,6 +4,7 @@ import type { ListEdge, ListProps, ListSlots } from './types.js'
 import { computed, provide, useAttrs, useId, useSlots, useTemplateRef } from 'vue'
 import { useDevWarning } from '../composables/useDevWarning.js'
 import { listContextKey } from './context.js'
+import { useListLayoutUpdates } from './listLayoutUpdates.js'
 import '../../styles/list.css'
 
 defineOptions({ name: 'AstryxList', inheritAttrs: false })
@@ -22,6 +23,7 @@ const CONTROLLED_ATTRS = new Set(['class', 'style', 'role', 'start'])
 const attrs = useAttrs()
 const slots = useSlots()
 const listElement = useTemplateRef<HTMLUListElement | HTMLOListElement>('list')
+useListLayoutUpdates(() => listElement.value, () => props.animatedLayout)
 
 const headerId = `astryx-list-header-${useId()}`
 const hasHeader = computed(() => slots.header != null || props.header != null)

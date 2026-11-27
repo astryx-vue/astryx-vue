@@ -45,6 +45,8 @@ import { List, ListItem } from '@astryx-vue/core/List'
 
 `outset` 和 `bleed` 读取最近的、共享内边距的容器公布的数值：Card、Section、BottomSheet、带内边距的 ScrollableArea，或 Layout 区域。列表要直接放在这个容器的内边距里；Stack、Center 或你自己的样式在中间加的内边距不计入。没有这样的容器时（单独的列表、Popover 里的列表），它们和 `padded` 表现一样。`edgeCompensation="inline"` 仍然可用，是 `edge="outset"` 的弃用别名；新代码请写 `edge`。
 
+想让行的变化有动效，就把 `useAnimatedLayout` 返回的句柄传给 `animatedLayout`，再给每个 `ListItem` 一个来自数据的 `itemKey`。新插入的行入场，移除的行在原位收起，和反向移动的行交叉的那一行从它们上方滑过，变化后面的行和内容滑到新位置。没有 `itemKey` 的行直接变。
+
 包里同时导出了更通用的原语 `Item`。`ListItem` 就是它在 `<li>` 上的一层封装，加上来自 `List` 的密度和标记；需要在非列表结构里复用同一套行布局时，可以直接使用 `Item`，它能通过 `as` 决定根元素，并提供 `align`、`labelLines`、`descriptionLines`、`layout` 等额外控制。大多数界面只需要 `List` 和 `ListItem`。
 
 

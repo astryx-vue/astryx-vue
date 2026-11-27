@@ -16,6 +16,12 @@ footer: false
     </thead>
     <tbody>
       <tr>
+        <td><code>animatedLayout</code></td>
+        <td><code>AnimatedLayout</code></td>
+        <td>—</td>
+        <td>The handle from <code>useAnimatedLayout({ containerRef })</code>. With it, the list animates its row changes on one shared motion, under every pointer: an inserted row enters, a removed row collapses in place, and a row that crosses rows moving the other way rides above them. The rows after a change, and the content after the list up to that container, glide to their new places. A row's identity is its <code>itemKey</code>, so a row without one changes at once. Without a handle the list changes at once.</td>
+      </tr>
+      <tr>
         <td><code>density</code></td>
         <td><code>ListDensity</code></td>
         <td><code>'balanced'</code></td>
