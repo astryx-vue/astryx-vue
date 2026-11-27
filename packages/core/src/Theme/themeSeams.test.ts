@@ -1,7 +1,11 @@
+import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
+import { defineComponent, h } from 'vue'
 import { defineTheme } from './defineTheme.js'
 import { compactDefinition, DEFAULT_COMPACT_DEFINITION } from './index.js'
+import Theme from './Theme.vue'
 import { resolveTypography } from './typography.js'
+import { useTheme } from './useTheme.js'
 
 describe('compact definition', () => {
   it('is exported with the standard points and follows a theme md point', () => {
@@ -76,5 +80,38 @@ describe('typography font lists', () => {
     const { tokens } = resolveTypography({ scale: { base: 14, ratio: 1.2 }, heading: { weight: 700 }, body: { weight: 500 } })
     expect(tokens['--text-heading-1-weight']).toBe('700')
     expect(tokens['--text-body-weight']).toBe('500')
+  })
+})
+
+describe('a styled accent link', () => {
+  it('keeps the hover color a container or theme sets', () => {
+    const out = defineTheme({ name: 'link-hover-pin', components: { link: { base: { textDecoration: 'underline' } } } }).css ?? ''
+    expect(out).toContain(':where(:hover):where(:not(:disabled, [aria-disabled="true"])) { color: var(--astryx-link-hover-color, var(--astryx-link-accent-foreground, #0074e2)); }')
+    // Only the accent link has a hover color of its own.
+    expect(out).not.toContain('data-color="primary"]:where(:hover)')
+  })
+
+  it('falls back to the theme\'s own accent link color on hover', () => {
+    const out = defineTheme({ name: 'link-hover-own', components: { link: { 'color:accent': { color: '#0000ff' } } } }).css ?? ''
+    expect(out).toContain('{ color: var(--astryx-link-hover-color, #0000ff); }')
+  })
+})
+
+describe('useTheme mode', () => {
+  it('is always light or dark: a mode outside light|dark|system resolves like system', () => {
+    const Probe = defineComponent({
+      setup() {
+        const theme = useTheme()
+        return () => h('span', theme.mode.value)
+      },
+    })
+    const theme = defineTheme({ name: 'odd-mode' })
+    const wrapper = mount(Theme, { props: { theme, mode: 'banana' as never }, slots: { default: () => h(Probe) } })
+    expect(['light', 'dark']).toContain(wrapper.text())
+    expect(wrapper.attributes('data-astryx-color-mode')).toBe('banana')
+    const light = mount(Theme, { props: { theme, mode: 'light' }, slots: { default: () => h(Probe) } })
+    expect(light.text()).toBe('light')
+    wrapper.unmount()
+    light.unmount()
   })
 })

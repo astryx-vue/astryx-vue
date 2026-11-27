@@ -87183,6 +87183,155 @@
         "en": "https://astryx-vue.pages.dev/en/components/use-outline-from-dom",
         "zh": "https://astryx-vue.pages.dev/components/use-outline-from-dom"
       }
+    },
+    {
+      "slug": "use-syntax-theme",
+      "name": "UseSyntaxTheme",
+      "package": "@astryx-vue/core",
+      "kind": "composable",
+      "title": {
+        "en": "useSyntaxTheme",
+        "zh": "useSyntaxTheme"
+      },
+      "group": "Utility",
+      "groupTitle": {
+        "en": "Utility",
+        "zh": "工具"
+      },
+      "importPath": null,
+      "exportName": null,
+      "summary": {
+        "en": "Reads syntax colors for a canvas, SVG, or other drawing that cannot use the CSS variables `SyntaxTheme` sets. Call it under a `SyntaxTheme`, or under a `Theme` whose `defineTheme({ syntax })` sets one. It returns `null` when neither is present, so the caller can skip drawing.",
+        "zh": "给 canvas、SVG 这类用不了 `SyntaxTheme` 所设 CSS 变量的绘制读代码高亮的颜色。在 `SyntaxTheme` 里调用，或者在 `defineTheme({ syntax })` 设了语法主题的 `Theme` 里调用。两者都没有时返回 `null`，调用方可以跳过绘制。"
+      },
+      "usage": {
+        "en": "Reads syntax colors for a canvas, SVG, or other drawing that cannot use the CSS variables `SyntaxTheme` sets. Call it under a `SyntaxTheme`, or under a `Theme` whose `defineTheme({ syntax })` sets one. It returns `null` when neither is present, so the caller can skip drawing.\n\n```ts\nimport { useSyntaxTheme } from '@astryx-vue/core/Code'\n```\n\n```ts\nconst syntax = useSyntaxTheme()\n\nconst keyword = syntax?.token('keyword')\n```",
+        "zh": "给 canvas、SVG 这类用不了 `SyntaxTheme` 所设 CSS 变量的绘制读代码高亮的颜色。在 `SyntaxTheme` 里调用，或者在 `defineTheme({ syntax })` 设了语法主题的 `Theme` 里调用。两者都没有时返回 `null`，调用方可以跳过绘制。\n\n```ts\nimport { useSyntaxTheme } from '@astryx-vue/core/Code'\n```\n\n```ts\nconst syntax = useSyntaxTheme()\n\nconst keyword = syntax?.token('keyword')\n```"
+      },
+      "practices": {
+        "en": [
+          {
+            "guidance": "Do",
+            "text": "Render the drawing under the same `SyntaxTheme` that colors the surrounding code."
+          },
+          {
+            "guidance": "Do",
+            "text": "Check for `null` before reading `token`. The hook returns `null` with no syntax theme above it."
+          },
+          {
+            "guidance": "Don't",
+            "text": "Copy syntax colors into the canvas by hand. They drift from the active syntax theme."
+          }
+        ],
+        "zh": []
+      },
+      "props": {
+        "en": [
+          {
+            "heading": "Returns",
+            "rows": [
+              {
+                "name": "`name`",
+                "type": "`ComputedRef<string>`",
+                "description": "Name of the syntax theme from the nearest `SyntaxTheme`."
+              },
+              {
+                "name": "`mode`",
+                "type": "`ComputedRef<'light' | 'dark'>`",
+                "description": "The mode used to resolve tokens: the nearest `Theme`'s effective mode."
+              },
+              {
+                "name": "`token`",
+                "type": "`(name: SyntaxTokenKey) => string`",
+                "description": "The CSS color for one syntax token in the current mode, such as `keyword`."
+              },
+              {
+                "name": "`tokens`",
+                "type": "`ComputedRef<SyntaxThemeTokens | null>`",
+                "description": "Every syntax token resolved for the current mode."
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "返回值",
+            "rows": [
+              {
+                "name": "`name`",
+                "type": "`ComputedRef<string>`",
+                "description": "最近一层 `SyntaxTheme` 的语法主题名。"
+              },
+              {
+                "name": "`mode`",
+                "type": "`ComputedRef<'light' | 'dark'>`",
+                "description": "解析令牌用的模式：最近一层 `Theme` 的有效模式。"
+              },
+              {
+                "name": "`token`",
+                "type": "`(name: SyntaxTokenKey) => string`",
+                "description": "当前模式下某个语法令牌的 CSS 颜色，比如 `keyword`。"
+              },
+              {
+                "name": "`tokens`",
+                "type": "`ComputedRef<SyntaxThemeTokens | null>`",
+                "description": "当前模式下解析好的全部语法令牌。"
+              }
+            ]
+          }
+        ]
+      },
+      "slots": {
+        "en": [],
+        "zh": []
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [
+          {
+            "heading": "Returns",
+            "text": "The hook itself returns <code>null</code> when no syntax theme is above it."
+          }
+        ],
+        "zh": [
+          {
+            "heading": "建议",
+            "text": "- 推荐: 把绘制放在给周围代码上色的同一个 `SyntaxTheme` 下面。\n- 推荐: 读 `token` 之前先判断是不是 `null`。上面没有语法主题时 hook 返回 `null`。\n- 避免: 把语法颜色手抄进 canvas。它们会和当前的语法主题慢慢对不上。"
+          },
+          {
+            "heading": "返回值",
+            "text": "上面没有语法主题时，hook 本身返回 <code>null</code>。"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": {
+            "en": "useSyntaxTheme — Keyword Color",
+            "zh": "useSyntaxTheme — 关键字颜色"
+          },
+          "description": {
+            "en": "Read the keyword color of the nearest SyntaxTheme with useSyntaxTheme, for drawing that cannot use CSS variables.",
+            "zh": "用 useSyntaxTheme 读最近一层 SyntaxTheme 的关键字颜色，给用不了 CSS 变量的绘制用。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { oneDarkPro, SyntaxTheme, useSyntaxTheme } from '@astryx-vue/core/Code'\nimport { HStack } from '@astryx-vue/core/Stack'\nimport { Text } from '@astryx-vue/core/Text'\nimport { defineComponent, h } from 'vue'\n\n// A canvas or SVG cannot read the CSS variables SyntaxTheme sets, so it asks\n// the hook for the keyword color. Outside a SyntaxTheme the hook returns null.\nconst KeywordSwatch = defineComponent(() => {\n  const syntax = useSyntaxTheme()\n  return () => {\n    if (syntax === null)\n      return null\n    return h(HStack, { gap: 2, align: 'center' }, () => [\n      h('span', {\n        'aria-hidden': 'true',\n        'style': { width: '16px', height: '16px', borderRadius: '4px', background: syntax.token('keyword') },\n      }),\n      h(Text, { type: 'supporting' }, () => `keyword ${syntax.token('keyword')}`),\n    ])\n  }\n})\n</script>\n\n<template>\n  <SyntaxTheme :theme=\"oneDarkPro\">\n    <KeywordSwatch />\n  </SyntaxTheme>\n</template>"
+        }
+      ],
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/use-syntax-theme",
+        "zh": "https://astryx-vue.pages.dev/components/use-syntax-theme"
+      }
     }
   ],
   "topics": [
