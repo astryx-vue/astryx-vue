@@ -4755,9 +4755,10 @@
 
 ### v0.7.8
 
-- [ ] [`30160f5ce`](https://github.com/meta/astryx/commit/30160f5ce) feat(core): PowerSearch touch sheet flow behind experimental.presentation (#8001)
+- [x] [`30160f5ce`](https://github.com/meta/astryx/commit/30160f5ce) feat(core): PowerSearch touch sheet flow behind experimental.presentation (#8001)
   - 暂缓：PowerSearch 触屏弹层流程还没做：上游约 9500 行，Vue 版 PowerSearch 没有 presentation 属性和弹层内的编辑流程
   - 暂缓：PowerSearch 触屏弹层流程依赖触屏呈现；归动效 4a 触屏呈现任务
+  - 已移植：[#618](https://github.com/astryx-vue/astryx-vue/pull/618)。PowerSearch 触屏底部弹层三步流程（筛选条件、添加筛选条件、值），触发器显示标签并按标签加内容命名
 - [x] [`4b7546d3b`](https://github.com/meta/astryx/commit/4b7546d3b) fix(CheckboxInput, Switch): a form's required default no longer marks an unchecked box or off switch required (#9664)
   - 已移植：[#593](https://github.com/astryx-vue/astryx-vue/pull/593)。表单默认必填不再让没勾的复选框、关着的开关变成必填，只由自己的 isRequired 决定；改正了先前相反的测试，补文档
 - [x] [`9889a3438`](https://github.com/meta/astryx/commit/9889a3438) chore(core): name the system that 88 kept Effects sync (#9787)
@@ -5309,10 +5310,11 @@
 
 ### v0.7.8
 
-- [ ] [`30160f5ce`](https://github.com/meta/astryx/commit/30160f5ce) feat(core): PowerSearch touch sheet flow behind experimental.presentation (#8001)
+- [x] [`30160f5ce`](https://github.com/meta/astryx/commit/30160f5ce) feat(core): PowerSearch touch sheet flow behind experimental.presentation (#8001)
   - 暂缓：PowerSearch 触屏弹层流程：依赖触屏呈现设施，Vue 版没有
   - 暂缓：PowerSearch 触屏弹层流程还没做：上游约 9500 行，Vue 版 PowerSearch 没有 presentation 属性和弹层内的编辑流程
   - 暂缓：PowerSearch 触屏弹层流程依赖触屏呈现；归动效 4a 触屏呈现任务
+  - 已移植：[#618](https://github.com/astryx-vue/astryx-vue/pull/618)。PowerSearch 触屏底部弹层三步流程（筛选条件、添加筛选条件、值），触发器显示标签并按标签加内容命名
 - [x] [`49ac70d6b`](https://github.com/meta/astryx/commit/49ac70d6b) fix(motion): a call on a settle tail starts at the browser's commit (#9733)
   - 暂缓：依赖动画器（animator）与主题时序/节奏的动效基础设施，Vue 版没有
   - 已移植：[#567](https://github.com/astryx-vue/astryx-vue/pull/567)。收尾段上的调用在浏览器提交帧起步
@@ -5334,7 +5336,8 @@
 - [ ] [`2c925f794`](https://github.com/meta/astryx/commit/2c925f794) refactor(core): a theme's reduced-motion mark, internal until 'always' ships (#9761)
   - 暂缓：依赖动画器（animator）与主题时序/节奏的动效基础设施，Vue 版没有
   - 暂缓：内核部分已在 #563-#568；剩 Theme 组件写出减少动效标记（reducedMotionMark 已备好未接），归动效与手势引擎的组件接入阶段
-- [ ] [`19081d81a`](https://github.com/meta/astryx/commit/19081d81a) chore(lab): remove MobileTokenizer and MobilePowerSearch, whose flows Core ships behind experimental.presentation (#9790)
+- [x] [`19081d81a`](https://github.com/meta/astryx/commit/19081d81a) chore(lab): remove MobileTokenizer and MobilePowerSearch, whose flows Core ships behind experimental.presentation (#9790)
+  - 已移植：[#612](https://github.com/astryx-vue/astryx-vue/pull/612)。移除 lab 的 MobileTokenizer，触屏多值输入改用 core Tokenizer 的底部弹层呈现
 - [ ] [`bb3838b6f`](https://github.com/meta/astryx/commit/bb3838b6f) fix(AlertDialog): a mouse press on the actions acts natively again (#9771)
 - [x] [`aa4bd1d3d`](https://github.com/meta/astryx/commit/aa4bd1d3d) refactor(core): useLongPress runs its long press through a detector with no React (#9642)
   - 不适用：上游把长按从 React hook 抽成无 React 的检测器；Vue 的 useLongPress 本来就是纯函数加计时器
@@ -6215,7 +6218,8 @@
 ### v0.7.8
 
 - [ ] [`9136e28c7`](https://github.com/meta/astryx/commit/9136e28c7) feat: a single-choice set of selectable cards is a radio group (lab SelectableCardGroup) (#8260)
-- [ ] [`19081d81a`](https://github.com/meta/astryx/commit/19081d81a) chore(lab): remove MobileTokenizer and MobilePowerSearch, whose flows Core ships behind experimental.presentation (#9790)
+- [x] [`19081d81a`](https://github.com/meta/astryx/commit/19081d81a) chore(lab): remove MobileTokenizer and MobilePowerSearch, whose flows Core ships behind experimental.presentation (#9790)
+  - 已移植：[#612](https://github.com/astryx-vue/astryx-vue/pull/612)。移除 lab 的 MobileTokenizer，触屏多值输入改用 core Tokenizer 的底部弹层呈现
 - [x] [`e390c3c43`](https://github.com/meta/astryx/commit/e390c3c43) test(browser): keep every Playwright browser context off remote hosts (#9811)
   - 不适用：只改上游测试（自动初筛）
 
@@ -6336,7 +6340,8 @@
 ### v0.7.8
 
 - [ ] [`9136e28c7`](https://github.com/meta/astryx/commit/9136e28c7) feat: a single-choice set of selectable cards is a radio group (lab SelectableCardGroup) (#8260)
-- [ ] [`19081d81a`](https://github.com/meta/astryx/commit/19081d81a) chore(lab): remove MobileTokenizer and MobilePowerSearch, whose flows Core ships behind experimental.presentation (#9790)
+- [x] [`19081d81a`](https://github.com/meta/astryx/commit/19081d81a) chore(lab): remove MobileTokenizer and MobilePowerSearch, whose flows Core ships behind experimental.presentation (#9790)
+  - 已移植：[#612](https://github.com/astryx-vue/astryx-vue/pull/612)。移除 lab 的 MobileTokenizer，触屏多值输入改用 core Tokenizer 的底部弹层呈现
 - [x] [`e390c3c43`](https://github.com/meta/astryx/commit/e390c3c43) test(browser): keep every Playwright browser context off remote hosts (#9811)
   - 不适用：只改上游测试（自动初筛）
 
@@ -7632,7 +7637,8 @@
 - [ ] [`31b52d0cb`](https://github.com/meta/astryx/commit/31b52d0cb) chore: land batch 34 (2 pull requests) (#12908)
 - [ ] [`81458c4b1`](https://github.com/meta/astryx/commit/81458c4b1) chore: land batch 60 (4 pull requests) (#12939)
 - [ ] [`1f48950f9`](https://github.com/meta/astryx/commit/1f48950f9) chore: land batch 67 (7 pull requests) (#12957)
-- [ ] [`e7f5815c3`](https://github.com/meta/astryx/commit/e7f5815c3) fix(core): six components' fixed-English built-in text follows the locale; the hardcoded-string lint config has no exemption list and reports a stale entry (#12721)
+- [x] [`e7f5815c3`](https://github.com/meta/astryx/commit/e7f5815c3) fix(core): six components' fixed-English built-in text follows the locale; the hardcoded-string lint config has no exemption list and reports a stale entry (#12721)
+  - 已移植：[#610](https://github.com/astryx-vue/astryx-vue/pull/610)。相对日期改为固定选项（桌面编辑器改用 Selector），新增 powerSearchSheet 文案命名空间
 - [x] [`d8ed55621`](https://github.com/meta/astryx/commit/d8ed55621) spec(AST-017): Charts may import Core's internal subpaths (#12779)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`66b2932af`](https://github.com/meta/astryx/commit/66b2932af) fix(Markdown): a heading copy link shows and announces a failed copy (#10424)
@@ -7822,7 +7828,8 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`c99ad4aa2`](https://github.com/meta/astryx/commit/c99ad4aa2) test(DropdownMenu): radio-item and sub-menu audits expect a disabled row in the roving order (#10622)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`1ffc0dac9`](https://github.com/meta/astryx/commit/1ffc0dac9) fix(BottomSheet): resting content starts below the grab bar, whatever the padding (#8558)
+- [x] [`1ffc0dac9`](https://github.com/meta/astryx/commit/1ffc0dac9) fix(BottomSheet): resting content starts below the grab bar, whatever the padding (#8558)
+  - 已移植：[#618](https://github.com/astryx-vue/astryx-vue/pull/618)。BottomSheet 部分已由 #615 移植，#618 补上 PowerSearch 弹层这一半：标题不再补第二段，只有值那一步的吸顶标题伸进抓手下面那一段
 - [ ] [`71450dd2c`](https://github.com/meta/astryx/commit/71450dd2c) fix(DropdownMenu): the press that opens the menu does not close it (#10689)
 - [ ] [`2309691db`](https://github.com/meta/astryx/commit/2309691db) fix(DropdownMenu): a finger's hold-slide-lift no longer flashes the focus outline on the menu button (#10079)
 
@@ -9266,16 +9273,18 @@
 
 ### v0.7.8
 
-- [ ] [`30160f5ce`](https://github.com/meta/astryx/commit/30160f5ce) feat(core): PowerSearch touch sheet flow behind experimental.presentation (#8001)
+- [x] [`30160f5ce`](https://github.com/meta/astryx/commit/30160f5ce) feat(core): PowerSearch touch sheet flow behind experimental.presentation (#8001)
   - 暂缓：PowerSearch 触屏弹层流程还没做：上游约 9500 行，Vue 版 PowerSearch 没有 presentation 属性和弹层内的编辑流程
   - 暂缓：PowerSearch 触屏弹层流程依赖触屏呈现；归动效 4a 触屏呈现任务
   - 暂缓：归动效 4a 触屏呈现任务（PowerSearch 段）：experimental.presentation 的触屏弹层流程
+  - 已移植：[#618](https://github.com/astryx-vue/astryx-vue/pull/618)。PowerSearch 触屏底部弹层三步流程（筛选条件、添加筛选条件、值），触发器显示标签并按标签加内容命名
 - [x] [`fa3295a50`](https://github.com/meta/astryx/commit/fa3295a50) fix(Spinner): the ring keeps turning while JavaScript runs (#8177)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`3f39a18bf`](https://github.com/meta/astryx/commit/3f39a18bf) fix(Typeahead): a source replacement that React discards no longer leaves the field busy (#9713)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`19081d81a`](https://github.com/meta/astryx/commit/19081d81a) chore(lab): remove MobileTokenizer and MobilePowerSearch, whose flows Core ships behind experimental.presentation (#9790)
+- [x] [`19081d81a`](https://github.com/meta/astryx/commit/19081d81a) chore(lab): remove MobileTokenizer and MobilePowerSearch, whose flows Core ships behind experimental.presentation (#9790)
   - 暂缓：上游因核心已带触屏弹层而删掉 lab 的 MobileTokenizer 与 MobilePowerSearch；Vue 的触屏弹层未做，lab 的 MobileTokenizer 仍要保留，归动效 4a 触屏呈现任务（PowerSearch 段）
+  - 已移植：[#612](https://github.com/astryx-vue/astryx-vue/pull/612)。移除 lab 的 MobileTokenizer，触屏多值输入改用 core Tokenizer 的底部弹层呈现
 - [x] [`252751794`](https://github.com/meta/astryx/commit/252751794) docs(spec): PowerSearch reads a date-only value as one day in one zone (DEC-5, FR25) (#9803)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`9889a3438`](https://github.com/meta/astryx/commit/9889a3438) chore(core): name the system that 88 kept Effects sync (#9787)
@@ -9288,8 +9297,9 @@
   - 已移植：[#604](https://github.com/astryx-vue/astryx-vue/pull/604)。presentation 成为稳定属性且默认 adaptive，PowerSearch 的列表值 Tokenizer 固定 popover
 - [x] [`d46da3991`](https://github.com/meta/astryx/commit/d46da3991) test(PowerSearch): open one Tokenizer sheet before the sheet tests (#9817)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`f50bc7400`](https://github.com/meta/astryx/commit/f50bc7400) feat(PowerSearch): presentation is a stable prop, and adaptive is its default (#9797)
+- [x] [`f50bc7400`](https://github.com/meta/astryx/commit/f50bc7400) feat(PowerSearch): presentation is a stable prop, and adaptive is its default (#9797)
   - 暂缓：归动效 4a 触屏呈现任务（PowerSearch 段）：PowerSearch presentation 稳定 prop 与 adaptive 默认
+  - 已移植：[#618](https://github.com/astryx-vue/astryx-vue/pull/618)。presentation 成为正式 prop 默认 adaptive，判断和焦点交接抽成 useSheetPresentation 与 Tokenizer 共用，弹层里不生效的 menuWidth 和 overflow 开发期提示一次
 - [x] [`15a98a187`](https://github.com/meta/astryx/commit/15a98a187) fix(cli): a re-cased component name never resolves through a module (#8350)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`c8f08f967`](https://github.com/meta/astryx/commit/c8f08f967) fix(core): PowerSearch gives `isDateOnly: false` the time of day it names (#9702)
@@ -9298,10 +9308,12 @@
   - 不适用：只是把 React 的 isFocusDetached 换到更小的模块，避免急切导入连带懒加载的 BottomSheet 样式；Vue 没有这个包体问题
 - [x] [`e390c3c43`](https://github.com/meta/astryx/commit/e390c3c43) test(browser): keep every Playwright browser context off remote hosts (#9811)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`4b8567003`](https://github.com/meta/astryx/commit/4b8567003) feat(PowerSearch): the sheet presentation edits a draft that Done applies, and asks before discarding a changed one (#9895)
+- [x] [`4b8567003`](https://github.com/meta/astryx/commit/4b8567003) feat(PowerSearch): the sheet presentation edits a draft that Done applies, and asks before discarding a changed one (#9895)
   - 暂缓：归动效 4a 触屏呈现任务（PowerSearch 段）：弹层里编辑草稿、完成时应用、丢弃前确认
-- [ ] [`cc034edb7`](https://github.com/meta/astryx/commit/cc034edb7) fix(PowerSearch): Done on a field that became read-only while the sheet was open reports nothing (#9914)
+  - 已移植：[#618](https://github.com/astryx-vue/astryx-vue/pull/618)。弹层所有改动只改草稿，按完成按顺序提交，草稿改过时下滑、点遮罩或 Escape 先确认，全部清除先确认并保留只读条件
+- [x] [`cc034edb7`](https://github.com/meta/astryx/commit/cc034edb7) fix(PowerSearch): Done on a field that became read-only while the sheet was open reports nothing (#9914)
   - 暂缓：归动效 4a 触屏呈现任务（PowerSearch 段）：弹层里字段变只读后点完成的处理
+  - 已移植：[#618](https://github.com/astryx-vue/astryx-vue/pull/618)。字段在弹层开着时变成只读或禁用，完成什么都不报
 - [x] [`75cc95196`](https://github.com/meta/astryx/commit/75cc95196) test(PowerSearch): load the module graphs before the timed waits that do not test the load (#9866)
   - 不适用：只改上游测试（自动初筛）
 
@@ -9313,8 +9325,9 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`7eee90594`](https://github.com/meta/astryx/commit/7eee90594) fix(Dialog, AlertDialog, CommandPalette, BottomSheet, Lightbox): Tab wraps inside the open modal through the shared focus-region module (#8883)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`380defeb5`](https://github.com/meta/astryx/commit/380defeb5) fix(PowerSearch): the docs examples fit a phone, and a long sheet-trigger placeholder ends in an ellipsis (#9898)
+- [x] [`380defeb5`](https://github.com/meta/astryx/commit/380defeb5) fix(PowerSearch): the docs examples fit a phone, and a long sheet-trigger placeholder ends in an ellipsis (#9898)
   - 暂缓：归动效 4a 触屏呈现任务（PowerSearch 段）：弹层触发器的长占位文字省略号与文档示例适配手机
+  - 已移植：[#618](https://github.com/astryx-vue/astryx-vue/pull/618)。触发器的长占位文字一行省略号收尾，文档示例宽度本来就放得进手机
 - [x] [`edf7128e3`](https://github.com/meta/astryx/commit/edf7128e3) feat(Timestamp, PowerSearch): write dates in the provider's calendar (#9639)
   - 已移植：[#585](https://github.com/astryx-vue/astryx-vue/pull/585)。Timestamp 和 PowerSearch 按 provider 的历法写日期，charts 部分 Vue 版早已支持 calendar
 - [x] [`189a730ce`](https://github.com/meta/astryx/commit/189a730ce) feat(DateInput, DateTimeInput, DateRangeInput): type, pick and show dates in the active calendar (#9643, #9842)
@@ -9336,16 +9349,19 @@
   - 已移植：[#603](https://github.com/astryx-vue/astryx-vue/pull/603)。条件标签的「字段: 运算符」「标签 值」走 token.fieldOperator、token.labelValue 文案，语言改了顺序时整句显示
 - [x] [`619ffeb27`](https://github.com/meta/astryx/commit/619ffeb27) fix(core, richtext): no focus fade on text fields under a coarse pointer (#10611)
   - 不适用：本清单范围里只改上游 docs/design/user-states.md 设计文档
-- [ ] [`1ffc0dac9`](https://github.com/meta/astryx/commit/1ffc0dac9) fix(BottomSheet): resting content starts below the grab bar, whatever the padding (#8558)
+- [x] [`1ffc0dac9`](https://github.com/meta/astryx/commit/1ffc0dac9) fix(BottomSheet): resting content starts below the grab bar, whatever the padding (#8558)
   - 暂缓：归动效 4a 触屏呈现任务（PowerSearch 段）：BottomSheet 抓取条下内容起点，只用于 PowerSearchBottomSheet
+  - 已移植：[#618](https://github.com/astryx-vue/astryx-vue/pull/618)。BottomSheet 部分已由 #615 移植，#618 补上 PowerSearch 弹层这一半：标题不再补第二段，只有值那一步的吸顶标题伸进抓手下面那一段
 - [x] [`824e71ea0`](https://github.com/meta/astryx/commit/824e71ea0) fix(CommandPalette): handle rejected search and bootstrap (#10675)
   - 已移植：[#605](https://github.com/astryx-vue/astryx-vue/pull/605)。被拒绝的搜索按空结果收尾：显示无结果并念出，补测试
 - [x] [`06db960c9`](https://github.com/meta/astryx/commit/06db960c9) docs(CommandPalette): a rejected search settles as an empty answer, never at an error boundary (#10682)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`aefb30d0c`](https://github.com/meta/astryx/commit/aefb30d0c) fix(PowerSearch): the sheet's choice lists are standard RadioList and CheckboxList (#10608)
+- [x] [`aefb30d0c`](https://github.com/meta/astryx/commit/aefb30d0c) fix(PowerSearch): the sheet's choice lists are standard RadioList and CheckboxList (#10608)
   - 暂缓：归动效 4a 触屏呈现任务（PowerSearch 段）：弹层里的选择列表用标准 RadioList、CheckboxList
-- [ ] [`fece34c7d`](https://github.com/meta/astryx/commit/fece34c7d) fix(PowerSearch): a date range edits on an inline calendar in the sheet (#10618)
+  - 已移植：[#618](https://github.com/astryx-vue/astryx-vue/pull/618)。弹层里运算符、枚举和相对日期的选择列表用标准 RadioList 和 CheckboxList
+- [x] [`fece34c7d`](https://github.com/meta/astryx/commit/fece34c7d) fix(PowerSearch): a date range edits on an inline calendar in the sheet (#10618)
   - 暂缓：归动效 4a 触屏呈现任务（PowerSearch 段）：弹层里日期范围用内联日历
+  - 已移植：[#618](https://github.com/astryx-vue/astryx-vue/pull/618)。弹层里日期区间用行内 Calendar 范围模式，只读或禁用时不可操作
 - [x] [`d84658f7d`](https://github.com/meta/astryx/commit/d84658f7d) docs(usePowerSearchConfig): add hook docs and a filtered directory table example block (#10660)
   - Vue 版已有：use-power-search-config 文档页和「筛选目录表格」示例已有（apps/docs 的 use-power-search-config）
 
@@ -9418,8 +9434,9 @@
   - 已移植：[#603](https://github.com/astryx-vue/astryx-vue/pull/603)。PowerSearch、PowerSearchEditor 缺 config 时开发构建抛出点名的错误；filters 在 Vue 版可省略，不检查
 - [x] [`ab9aaa5a2`](https://github.com/meta/astryx/commit/ab9aaa5a2) chore: land batch 70 (2 pull requests) (#12963)
   - 已移植：[#603](https://github.com/astryx-vue/astryx-vue/pull/603)。statusVariant 的 tooltip 是信息按钮；触屏触发器的状态图标不适用
-- [ ] [`e7f5815c3`](https://github.com/meta/astryx/commit/e7f5815c3) fix(core): six components' fixed-English built-in text follows the locale; the hardcoded-string lint config has no exemption list and reports a stale entry (#12721)
+- [x] [`e7f5815c3`](https://github.com/meta/astryx/commit/e7f5815c3) fix(core): six components' fixed-English built-in text follows the locale; the hardcoded-string lint config has no exemption list and reports a stale entry (#12721)
   - 暂缓：上游把相对日期选项的标签改走 sheet.relativeDaysAgo 等文案并新增 buildRelativeDateOptions；Vue 的 date_relative 编辑器只有文本框，没有这组选项，这批文案还挂在触屏弹层任务下，等相对日期选项落地再接
+  - 已移植：[#610](https://github.com/astryx-vue/astryx-vue/pull/610)。相对日期改为固定选项（桌面编辑器改用 Selector），新增 powerSearchSheet 文案命名空间
 - [x] [`e1dfebf35`](https://github.com/meta/astryx/commit/e1dfebf35) chore: land batch 93 (1 pull requests) (#13041)
   - 不适用：上游内部规范和架构文档（自动初筛）
 
@@ -9567,10 +9584,11 @@
 
 ### v0.7.8
 
-- [ ] [`30160f5ce`](https://github.com/meta/astryx/commit/30160f5ce) feat(core): PowerSearch touch sheet flow behind experimental.presentation (#8001)
+- [x] [`30160f5ce`](https://github.com/meta/astryx/commit/30160f5ce) feat(core): PowerSearch touch sheet flow behind experimental.presentation (#8001)
   - 暂缓：PowerSearch 触屏面板流程依赖触屏呈现（presentation）；本范围的 RadioList 文件只改了导入路径；归动效与手势引擎任务（控件阶段）
   - 暂缓：PowerSearch 触屏弹层流程还没做：上游约 9500 行，Vue 版 PowerSearch 没有 presentation 属性和弹层内的编辑流程
   - 暂缓：PowerSearch 触屏弹层流程依赖触屏呈现；归动效 4a 触屏呈现任务
+  - 已移植：[#618](https://github.com/astryx-vue/astryx-vue/pull/618)。PowerSearch 触屏底部弹层三步流程（筛选条件、添加筛选条件、值），触发器显示标签并按标签加内容命名
 - [x] [`871bc3d5e`](https://github.com/meta/astryx/commit/871bc3d5e) feat(core): createAnimator and useAnimator animate one element (#8653)
   - Vue 版已有：composables/createAnimator.ts、useAnimator.ts 已在 main；SegmentedControl、Slider、Switch 里对它的消费随各自条目判断
 - [x] [`a81487737`](https://github.com/meta/astryx/commit/a81487737) feat(core): a first-party indicator can paint its own press (#9716)
@@ -10022,8 +10040,9 @@
   - 不适用：React 丢弃一次渲染里的搜索源替换后留下忙碌状态；Vue 没有被丢弃的渲染
 - [x] [`e70850f04`](https://github.com/meta/astryx/commit/e70850f04) fix(Selector): the listbox is named by the field label in every presentation (#9737)
   - 已移植：[#569](https://github.com/astryx-vue/astryx-vue/pull/569)。列表在弹层和底部弹层里都用字段标签（没有标签时用占位文字）命名，补测试
-- [ ] [`19081d81a`](https://github.com/meta/astryx/commit/19081d81a) chore(lab): remove MobileTokenizer and MobilePowerSearch, whose flows Core ships behind experimental.presentation (#9790)
+- [x] [`19081d81a`](https://github.com/meta/astryx/commit/19081d81a) chore(lab): remove MobileTokenizer and MobilePowerSearch, whose flows Core ships behind experimental.presentation (#9790)
   - 暂缓：lab 的 MobileTokenizer、MobilePowerSearch 要等 core 的 Tokenizer 有触屏弹层之后才能删，见 selectors-1 的 54fbccb27
+  - 已移植：[#612](https://github.com/astryx-vue/astryx-vue/pull/612)。移除 lab 的 MobileTokenizer，触屏多值输入改用 core Tokenizer 的底部弹层呈现
 - [x] [`dcf3d6f86`](https://github.com/meta/astryx/commit/dcf3d6f86) feat(Tokenizer): presentation is a stable prop, and adaptive is its default (#9796)
   - 暂缓：Tokenizer 的 presentation 属性和 adaptive 默认值依赖 Vue 版还没有的 core 触屏弹层，见 54fbccb27
   - 暂缓：Tokenizer 的 presentation 属性和 adaptive 默认值：依赖 54fbccb27 的触屏弹层
@@ -10101,8 +10120,9 @@
   - Vue 版已有：搜索源直接交给 useAsyncSource，它新一次搜索前会调用源自己的 cancel
 - [x] [`619ffeb27`](https://github.com/meta/astryx/commit/619ffeb27) fix(core, richtext): no focus fade on text fields under a coarse pointer (#10611)
   - 已移植：[#544](https://github.com/astryx-vue/astryx-vue/pull/544)。Tokenizer、Typeahead 在粗指针下输入框焦点外观不再淡入；文本框、文本域归输入框族
-- [ ] [`1ffc0dac9`](https://github.com/meta/astryx/commit/1ffc0dac9) fix(BottomSheet): resting content starts below the grab bar, whatever the padding (#8558)
+- [x] [`1ffc0dac9`](https://github.com/meta/astryx/commit/1ffc0dac9) fix(BottomSheet): resting content starts below the grab bar, whatever the padding (#8558)
   - 暂缓：只改 Tokenizer 触屏弹层里 BottomSheet 的内容起点，Vue 版没有该弹层
+  - 已移植：[#618](https://github.com/astryx-vue/astryx-vue/pull/618)。BottomSheet 部分已由 #615 移植，#618 补上 PowerSearch 弹层这一半：标题不再补第二段，只有值那一步的吸顶标题伸进抓手下面那一段
 - [x] [`d69b6aa8d`](https://github.com/meta/astryx/commit/d69b6aa8d) fix(Selector): a closed list opens on the selected option, never a disabled one (#8868)
   - Vue 版已有：打开时落在所选项上，所选项禁用或没有选中就落在第一个可用选项（useCombobox.open），selectors-1 已移植（#544）
 - [x] [`dd61bd53b`](https://github.com/meta/astryx/commit/dd61bd53b) fix(Selector, MultiSelector): a query change clears the highlight from the previous list (#8871)
