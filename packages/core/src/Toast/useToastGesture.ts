@@ -1,9 +1,13 @@
 import { onScopeDispose, shallowRef, watch } from 'vue'
 import { hasInteractiveAncestor } from '../composables/useClickableContainer.js'
+import { PanGestureRecognizer } from '../gestures/PanGestureRecognizer'
+import { useGestureRecognizer } from '../gestures/useGestureRecognizer'
 
 const DRAG_PROMOTION_SLOP = 8
 const SWIPE_DISMISS_RATIO = 0.4
-const FLICK_MIN_DISTANCE = 48
+/** 卡片太矮、40% 高度不到这个距离时，拖过这么远才算关闭。 */
+const SWIPE_DISMISS_MIN_DISTANCE = 48
+/** 松手时的平均速度（px/ms）到这个值就关闭，不看拖了多远。 */
 const FLICK_VELOCITY = 1.2
 const VERTICAL_INTENT_RATIO = 1.2
 const SWIPE_EXIT_DISTANCE = '120%'
@@ -19,6 +23,8 @@ interface GesturePoint {
   pointerId: number
   clientX: number
   clientY: number
+  /** 输入事件自带的 timeStamp，也就是手指真正在那儿的时刻；处理函数可能晚一两帧才跑。 */
+  time: number
 }
 
 interface GestureState {
@@ -110,17 +116,17 @@ export function useToastGesture(options: UseToastGestureOptions): {
       pointerId: point.pointerId,
       startX: point.clientX,
       startY: point.clientY,
-      startTime: Date.now(),
+      startTime: point.time,
       direction: options.direction(),
       intent: 'pending',
       pausedTimer,
       surfaceSize,
-      dismissThreshold: Math.max(surfaceSize * SWIPE_DISMISS_RATIO, FLICK_MIN_DISTANCE),
+      dismissThreshold: Math.max(surfaceSize * SWIPE_DISMISS_RATIO, SWIPE_DISMISS_MIN_DISTANCE),
     }
     return true
   }
 
-  function moveGesture(point: GesturePoint, preventDefault: () => void, releaseCapture?: () => void): void {
+  function moveGesture(point: GesturePoint, preventDefault?: () => void, releaseCapture?: () => void): void {
     const state = gesture
     const root = rootRef.value
     if (!state || !root || point.source !== state.source || point.pointerId !== state.pointerId)
@@ -145,7 +151,7 @@ export function useToastGesture(options: UseToastGestureOptions): {
       }
       root.style.setProperty('transition-duration', '0s')
     }
-    preventDefault()
+    preventDefault?.()
     const travel = Math.max(0, deltaY * state.direction)
     const progress = swipeProgress(travel, state.surfaceSize)
     root.style.setProperty('--_toast-swipe-y', `${travel * state.direction}px`)
@@ -159,9 +165,10 @@ export function useToastGesture(options: UseToastGestureOptions): {
     if (!state || !root || point.source !== state.source || point.pointerId !== state.pointerId)
       return
     const travel = Math.max(0, (point.clientY - state.startY) * state.direction)
-    const elapsed = Math.max(1, Date.now() - state.startTime)
+    const elapsed = Math.max(1, point.time - state.startTime)
+    // 甩动不设距离下限：方向只有越过 8px 判定、朝边缘走时才会变成 vertical。
     const isDismissed = state.intent === 'vertical'
-      && (travel >= state.dismissThreshold || (travel >= FLICK_MIN_DISTANCE && travel / elapsed > FLICK_VELOCITY))
+      && (travel >= state.dismissThreshold || travel / elapsed > FLICK_VELOCITY)
 
     gesture = null
     root.style.removeProperty('transition-duration')
@@ -187,6 +194,7 @@ export function useToastGesture(options: UseToastGestureOptions): {
       pointerId: event.pointerId,
       clientX: event.clientX,
       clientY: event.clientY,
+      time: event.timeStamp,
     }, event.target)
     if (started)
       rootRef.value?.setPointerCapture?.(event.pointerId)
@@ -200,6 +208,7 @@ export function useToastGesture(options: UseToastGestureOptions): {
       pointerId: event.pointerId,
       clientX: event.clientX,
       clientY: event.clientY,
+      time: event.timeStamp,
     }, () => event.preventDefault(), () => rootRef.value?.releasePointerCapture?.(event.pointerId))
   }
 
@@ -212,6 +221,7 @@ export function useToastGesture(options: UseToastGestureOptions): {
       pointerId: event.pointerId,
       clientX: event.clientX,
       clientY: event.clientY,
+      time: event.timeStamp,
     })
   }
 
@@ -220,12 +230,36 @@ export function useToastGesture(options: UseToastGestureOptions): {
       resetGesture(true)
   }
 
+  // 手势宿主里的单向拖动只负责认领这次触摸，自己从不开始；滑动的样子由这里画。
+  // 第一下移动朝着边缘，这次触摸就归滑动；第一下往别处走，页面照常滚动。
+  const claim = useGestureRecognizer(
+    () => rootRef.value,
+    () => new PanGestureRecognizer({
+      name: 'toast-swipe',
+      direction: options.direction() === 1 ? 'down' : 'up',
+      firstMoveDecides: true,
+      maximumNumberOfTouches: 1,
+      hysteresis: Number.POSITIVE_INFINITY,
+      cancelsTouchesInView: false,
+      shouldReceiveTouch: (_recognizer, touch) => {
+        const root = rootRef.value
+        return touch.pointerType === 'touch' && root != null && !shouldIgnoreTarget(touch.target as EventTarget | null, root)
+      },
+    }),
+    undefined,
+    { isEnabled: options.enabled, manageStyle: false },
+  )
+  watch(options.direction, (direction) => {
+    claim.setDirection(direction === 1 ? 'down' : 'up')
+  })
+
   function bindTouch(root: HTMLElement): () => void {
-    const point = (touch: Touch): GesturePoint => ({
+    const point = (touch: Touch, event: TouchEvent): GesturePoint => ({
       source: 'touch',
       pointerId: touch.identifier,
       clientX: touch.clientX,
       clientY: touch.clientY,
+      time: event.timeStamp,
     })
     const changedTouch = (event: TouchEvent): Touch | undefined => {
       const pointerId = gesture?.source === 'touch' ? gesture.pointerId : null
@@ -240,20 +274,21 @@ export function useToastGesture(options: UseToastGestureOptions): {
       }
       const touch = event.changedTouches[0]
       if (touch != null)
-        beginGesture(point(touch), event.target)
+        beginGesture(point(touch, event), event.target)
     }
     const handleTouchMove = (event: TouchEvent): void => {
       if (event.touches.length !== 1) {
         resetGesture(true)
         return
       }
-      const touch = changedTouch(event)
-      if (touch) {
-        moveGesture(point(touch), () => {
-          if (event.cancelable)
-            event.preventDefault()
-        })
+      // 宿主的拖动在第一下移动时就判定了这次触摸；它一放手，触摸归页面，滑动也跟着结束。
+      if (gesture != null && claim.state === 'failed') {
+        resetGesture(true)
+        return
       }
+      const touch = changedTouch(event)
+      if (touch)
+        moveGesture(point(touch, event))
     }
     const handleTouchEnd = (event: TouchEvent): void => {
       if (event.touches.length > 0) {
@@ -262,14 +297,14 @@ export function useToastGesture(options: UseToastGestureOptions): {
       }
       const touch = changedTouch(event)
       if (touch)
-        endGesture(point(touch))
-      else if (event.touches.length === 0)
+        endGesture(point(touch, event))
+      else
         resetGesture(true)
     }
     const handleTouchCancel = (): void => resetGesture(true)
 
     root.addEventListener('touchstart', handleTouchStart, { passive: true })
-    root.addEventListener('touchmove', handleTouchMove, { passive: false })
+    root.addEventListener('touchmove', handleTouchMove, { passive: true })
     root.addEventListener('touchend', handleTouchEnd, { passive: true })
     root.addEventListener('touchcancel', handleTouchCancel, { passive: true })
     return () => {
