@@ -1,5 +1,29 @@
 # @astryx-vue/core
 
+## 0.36.0
+
+### Minor Changes
+
+- [#646](https://github.com/astryx-vue/astryx-vue/pull/646) [`e31a91c`](https://github.com/astryx-vue/astryx-vue/commit/e31a91cbb23b0032eb60e2ff75895b246206af04) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增 `useLinkify`：把纯文字里的网址、邮箱和自定义格式（如 `[#123](https://github.com/astryx-vue/astryx-vue/issues/123)`）切成文字和链接片段，交给 `Link` 渲染。
+
+### Patch Changes
+
+- [#646](https://github.com/astryx-vue/astryx-vue/pull/646) [`e31a91c`](https://github.com/astryx-vue/astryx-vue/commit/e31a91cbb23b0032eb60e2ff75895b246206af04) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 触屏上 12 小时制的时间面板，上午下午跟着小时走：小时从 11 转到 12 是中午 12 点，从 12 点转到 1 点仍是下午，和 iOS 的时间滚轮一致。
+
+- [#646](https://github.com/astryx-vue/astryx-vue/pull/646) [`e31a91c`](https://github.com/astryx-vue/astryx-vue/commit/e31a91cbb23b0032eb60e2ff75895b246206af04) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Typeahead 的 `menu` 配置和 `open()`、`close()` 句柄的类型（`TypeaheadMenuConfig`、`TypeaheadHandle` 等）现在可以从包里导入，文档补了一个用 listbox 和 dialog 两种菜单做筛选字段的示例。
+
+## 0.35.0
+
+### Minor Changes
+
+- [#645](https://github.com/astryx-vue/astryx-vue/pull/645) [`0911d08`](https://github.com/astryx-vue/astryx-vue/commit/0911d088d7f71af5fd7f5bf48b63104d430372c6) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 富文本里每个段落、标题、引用和列表项按自己文字的方向排版（编辑器和只读视图一致），没有强方向字符的块跟着文档；列表缩进改放在每一项上，围栏代码块每行各按自己的方向读。代码块标题栏的长标签改为折行，代码块按标题栏画出来的高度留位置、按它的宽度定最小宽度。core 导出 `firstStrongDirection`，并补全了阿拉伯文标记、印度系数字等字符的强弱判定（Markdown 同步受益）。
+
+- [#642](https://github.com/astryx-vue/astryx-vue/pull/642) [`0d0e09b`](https://github.com/astryx-vue/astryx-vue/commit/0d0e09b647f4a538d85896ab78c1bb9550b90e37) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 富文本编辑器里的代码块在编辑时只重新分词被改动的行；core 新增 `CodeLineTokens`，按行缓存代码高亮的分词结果。
+
+### Patch Changes
+
+- [#644](https://github.com/astryx-vue/astryx-vue/pull/644) [`9a902a4`](https://github.com/astryx-vue/astryx-vue/commit/9a902a4ec8cd9f176ce1d93d862af6f7eb820f61) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 富文本工具栏的链接按钮和 Cmd/Ctrl+K 改为打开锚定在按钮上的非模态弹出层（开在工具栏上方，放不下才翻到下方）：一个网址输入框，回车应用，Escape 或取消会把焦点和选区还给编辑器；光标在链接里时多一个移除按钮。网址框默认留空并显示占位文字。
+
 ## 0.34.1
 
 ### Patch Changes

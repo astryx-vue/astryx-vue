@@ -5,7 +5,7 @@
     {
       "name": "@astryx-vue/core",
       "directory": "packages/core",
-      "version": "0.34.1",
+      "version": "0.36.0",
       "description": "Vue 3 components for the unofficial astryx-vue port of Astryx. Not affiliated with Meta.",
       "canary": false,
       "published": true
@@ -13,7 +13,7 @@
     {
       "name": "@astryx-vue/charts",
       "directory": "packages/charts",
-      "version": "0.10.0",
+      "version": "0.10.2",
       "description": "Astryx charts for Vue — a config-model data visualization layer (d3-based).",
       "canary": false,
       "published": true
@@ -21,7 +21,7 @@
     {
       "name": "@astryx-vue/lab",
       "directory": "packages/lab",
-      "version": "0.11.1",
+      "version": "0.11.3",
       "description": "Astryx lab components for Vue 3 — experimental components that may change. Ships only under the canary dist-tag.",
       "canary": true,
       "published": true
@@ -29,7 +29,7 @@
     {
       "name": "@astryx-vue/richtext",
       "directory": "packages/richtext",
-      "version": "0.34.1",
+      "version": "0.36.0",
       "description": "Astryx rich text for Vue — Lexical nodes and lossless Markdown import/export. Not affiliated with Meta.",
       "canary": false,
       "published": true
@@ -37,7 +37,7 @@
     {
       "name": "@astryx-vue/themes",
       "directory": "packages/themes",
-      "version": "0.34.1",
+      "version": "0.36.0",
       "description": "CSS themes for the unofficial astryx-vue port of Astryx. Not affiliated with Meta.",
       "canary": false,
       "published": true
@@ -39768,6 +39768,17 @@
             "zh": "BaseTypeahead 没有字段标签和说明。命令面板这类已经有自己标题的地方用它，输入框的无障碍名用 label 传入。"
           },
           "code": "<script setup lang=\"ts\">\nimport { createStaticSource } from '@astryx-vue/core'\nimport { BaseTypeahead } from '@astryx-vue/core/Typeahead'\nimport { computed, ref } from 'vue'\n\nconst selected = ref(null)\nconst source = computed(() => createStaticSource([\n  { id: 'files', label: 'Search files', description: 'Jump to a file' },\n  { id: 'settings', label: 'Open settings', description: 'Preferences' },\n  { id: 'theme', label: 'Toggle theme', description: 'Light or dark' },\n]))\n</script>\n\n<template>\n  <div class=\"demo-container\">\n    <BaseTypeahead\n      v-model=\"selected\"\n      :search-source=\"source\"\n      label=\"Command\"\n      placeholder=\"Type a command\"\n      :debounce-ms=\"0\"\n      has-entries-on-focus\n    />\n  </div>\n</template>\n\n<style scoped>\n.demo-container {\n  width: 20rem;\n  max-width: calc(100vw - 4rem);\n}\n</style>"
+        },
+        {
+          "title": {
+            "en": "Menu with listbox and dialog roles",
+            "zh": "listbox 与 dialog 角色的菜单"
+          },
+          "description": {
+            "en": "A filter field built on the menu config. Typing lists the fields with a heading and a key hint around the list. Picking a field switches the same menu to a dialog that edits its value; a filter button reopens that dialog.",
+            "zh": "用 menu 配置做的筛选字段。输入时列出字段，列表上下有标题和按键提示；选中一个字段后，同一个菜单换成编辑它取值的对话框；已加的筛选按钮可以重新打开这个对话框。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport type { SearchableItem, TypeaheadHandle, TypeaheadMenuConfig } from '@astryx-vue/core'\nimport { createStaticSource } from '@astryx-vue/core'\nimport { Button } from '@astryx-vue/core/Button'\nimport { HStack, VStack } from '@astryx-vue/core/Stack'\nimport { Text } from '@astryx-vue/core/Text'\nimport { Typeahead } from '@astryx-vue/core/Typeahead'\nimport { computed, ref, useTemplateRef } from 'vue'\n\ntype Field = SearchableItem & { values: string[] }\ninterface Filter { field: Field, value: string }\n\nconst fields: Field[] = [\n  { id: 'status', label: 'Status', values: ['Open', 'In review', 'Closed'] },\n  { id: 'priority', label: 'Priority', values: ['High', 'Medium', 'Low'] },\n  { id: 'owner', label: 'Owner', values: ['Me', 'My team', 'Anyone'] },\n]\nconst source = createStaticSource<Field>(fields)\n\nconst typeahead = useTemplateRef<TypeaheadHandle>('typeahead')\nconst picked = ref<Field | null>(null)\nconst filters = ref<Filter[]>([])\nconst editing = ref<Filter | null>(null)\n\n// Picking a field switches the same menu from the result list to a dialog that edits its value.\nconst menu = computed<TypeaheadMenuConfig>(() => editing.value == null\n  ? { role: 'listbox' }\n  : { role: 'dialog', label: `${editing.value.field.label} filter` })\n\nfunction edit(filter: Filter): void {\n  editing.value = filter\n  typeahead.value?.open()\n}\n\nfunction onPick(field: Field | null): void {\n  if (field == null)\n    return\n  picked.value = null\n  edit(filters.value.find(filter => filter.field.id === field.id) ?? { field, value: field.values[0]! })\n}\n\nfunction apply(value: string, close: () => void): void {\n  const filter = editing.value\n  if (filter == null)\n    return\n  filters.value = [...filters.value.filter(each => each.field.id !== filter.field.id), { field: filter.field, value }]\n  close()\n}\n</script>\n\n<template>\n  <VStack :gap=\"3\" class=\"demo-container\">\n    <Typeahead\n      ref=\"typeahead\"\n      v-model=\"picked\"\n      :search-source=\"source\"\n      :menu=\"menu\"\n      label=\"Add a filter\"\n      placeholder=\"Add a filter...\"\n      :debounce-ms=\"0\"\n      has-entries-on-focus\n      @change=\"onPick\"\n      @open-change=\"open => { if (!open) editing = null }\"\n    >\n      <template #menu=\"{ listbox, query, close }\">\n        <template v-if=\"editing == null\">\n          <Text type=\"supporting\" color=\"secondary\" class=\"menu-note\">\n            {{ query === '' ? 'Filter by' : `Fields matching \"${query}\"` }}\n          </Text>\n          <component :is=\"listbox\" />\n          <Text type=\"supporting\" color=\"secondary\" class=\"menu-note\">\n            Arrow keys move, Enter picks\n          </Text>\n        </template>\n        <VStack v-else :gap=\"2\" class=\"menu-editor\">\n          <Button\n            v-for=\"value in editing.field.values\"\n            :key=\"value\"\n            :label=\"value\"\n            :variant=\"value === editing.value ? 'primary' : 'secondary'\"\n            @click=\"apply(value, close)\"\n          />\n        </VStack>\n      </template>\n    </Typeahead>\n    <HStack :gap=\"2\" wrap=\"wrap\">\n      <Text v-if=\"filters.length === 0\" type=\"supporting\" color=\"secondary\">\n        No filters\n      </Text>\n      <Button\n        v-for=\"filter in filters\"\n        :key=\"filter.field.id\"\n        :label=\"`${filter.field.label}: ${filter.value}`\"\n        variant=\"secondary\"\n        size=\"sm\"\n        @click=\"edit(filter)\"\n      />\n    </HStack>\n  </VStack>\n</template>\n\n<style scoped>\n.demo-container {\n  width: 20rem;\n  max-width: calc(100vw - 4rem);\n}\n.menu-note {\n  padding: var(--astryx-spacing-1, 4px) var(--astryx-spacing-3, 12px);\n}\n.menu-editor {\n  min-width: 14rem;\n  padding: var(--astryx-spacing-3, 12px);\n}\n</style>"
         }
       ],
       "anatomy": {
@@ -42166,8 +42177,12 @@
             "text": "The editor and read-only view use the same Lexical state JSON:\n\n1. Listen to the editor's `@change` event and save `editorState.toJSON()` to your backend.\n2. To edit the content again, pass the saved JSON string to `defaultValue`. This prop is read only when the editor mounts.\n3. For read-only display, pass the same string to `RichTextView` through `value` instead of rendering a read-only editor.\n\nWhen you register custom nodes through `nodes`, register the same set on both the editor and the read-only view so content round-trips without data loss."
           },
           {
+            "heading": "Text direction",
+            "text": "Each paragraph, heading, quote and list item reads in the direction of its own text (its first strongly directional character), in the editor and in `RichTextView` alike, so a Hebrew or Arabic block in an English document reads right to left and the reverse. A block with no such character, such as digits, an image or an empty paragraph, follows the document. The direction is written onto the block in the same update as the edit, so it is saved with the content. Lists, tables and code blocks take the direction around them, and each line of a code block reads in its own direction."
+          },
+          {
             "heading": "Keyboard commands",
-            "text": "At the end of a code block or table, <kbd>ArrowDown</kbd> inserts a paragraph when no content follows or when another code block or table immediately follows. This lets you place prose between these blocks. When ordinary content already follows, the arrow keys retain Lexical's native navigation.\n\n- Insert a newline inside a code block: Insert a newline inside a code block\n- Move between table cells: Move between table cells\n- Create and move to a paragraph below a code block or table: Create and move to a paragraph below a code block or table\n- Open or close the link dialog: Open or close the link dialog\n- Indent or outdent every line the selection touches in a code block: Indent or outdent every line the selection touches in a code block\n- Turn a code block into a paragraph: Turn a code block into a paragraph\n- Select the code or the cell text first, then the whole document: Select the code or the cell text first, then the whole document\n- Leave the editor: Leave the editor"
+            "text": "At the end of a code block or table, <kbd>ArrowDown</kbd> inserts a paragraph when no content follows or when another code block or table immediately follows. This lets you place prose between these blocks. When ordinary content already follows, the arrow keys retain Lexical's native navigation.\n\n- Insert a newline inside a code block: Insert a newline inside a code block\n- Move between table cells: Move between table cells\n- Create and move to a paragraph below a code block or table: Create and move to a paragraph below a code block or table\n- Open the link popover: Open the link popover\n- Indent or outdent every line the selection touches in a code block: Indent or outdent every line the selection touches in a code block\n- Turn a code block into a paragraph: Turn a code block into a paragraph\n- Select the code or the cell text first, then the whole document: Select the code or the cell text first, then the whole document\n- Leave the editor: Leave the editor"
           },
           {
             "heading": "Pasting, shortcuts and disabled links",
@@ -42208,8 +42223,12 @@
             "text": "编辑器和只读视图使用同一份 Lexical 状态 JSON：\n\n1. 监听编辑器的 `@change`，将 `editorState.toJSON()` 保存到后端。\n2. 再次编辑时，把保存的 JSON 字符串传给 `defaultValue`。该属性只在挂载时读取。\n3. 只读展示时，把同一个字符串传给 `RichTextView` 的 `value`，不要再渲染一个只读编辑器。\n\n如果通过 `nodes` 注册自定义节点，编辑器和只读视图必须注册同一组节点，否则内容无法完整往返。"
           },
           {
+            "heading": "文字方向",
+            "text": "编辑器和 `RichTextView` 里的每个段落、标题、引用和列表项都按自己文字的方向排版（取第一个有明确方向的字符），所以英文文档里的希伯来文或阿拉伯文块从右往左读，反过来也一样。只有数字、标点、图片或空段落这类没有明确方向字符的块，沿用文档的方向。方向会在编辑的同一次更新里写到块上，随内容一起保存。列表、表格和代码块沿用外面的方向，代码块里的每一行各按自己的方向读。"
+          },
+          {
             "heading": "键盘操作",
-            "text": "光标位于代码块或表格末尾时，<kbd>ArrowDown</kbd> 会在下方没有内容，或者下方紧邻另一个代码块或表格时插入段落。这样可以在这两类块之间补充正文；下方已经是普通内容时，方向键沿用 Lexical 的原生导航。\n\n- 在代码块中换行: 在代码块中换行\n- 在表格单元格之间移动: 在表格单元格之间移动\n- 在代码块或表格末尾创建并进入下方段落: 在代码块或表格末尾创建并进入下方段落\n- 打开或关闭链接对话框: 打开或关闭链接对话框\n- 缩进或反缩进代码块里选区碰到的每一行: 缩进或反缩进代码块里选区碰到的每一行\n- 把代码块变回段落: 把代码块变回段落\n- 先选中代码或单元格文字，再选中整篇文档: 先选中代码或单元格文字，再选中整篇文档\n- 离开整个编辑器: 离开整个编辑器"
+            "text": "光标位于代码块或表格末尾时，<kbd>ArrowDown</kbd> 会在下方没有内容，或者下方紧邻另一个代码块或表格时插入段落。这样可以在这两类块之间补充正文；下方已经是普通内容时，方向键沿用 Lexical 的原生导航。\n\n- 在代码块中换行: 在代码块中换行\n- 在表格单元格之间移动: 在表格单元格之间移动\n- 在代码块或表格末尾创建并进入下方段落: 在代码块或表格末尾创建并进入下方段落\n- 打开链接弹出层: 打开链接弹出层\n- 缩进或反缩进代码块里选区碰到的每一行: 缩进或反缩进代码块里选区碰到的每一行\n- 把代码块变回段落: 把代码块变回段落\n- 先选中代码或单元格文字，再选中整篇文档: 先选中代码或单元格文字，再选中整篇文档\n- 离开整个编辑器: 离开整个编辑器"
           },
           {
             "heading": "粘贴、快捷输入与禁用时的链接",
@@ -87522,6 +87541,174 @@
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/components/use-syntax-theme",
         "zh": "https://astryx-vue.pages.dev/components/use-syntax-theme"
+      }
+    },
+    {
+      "slug": "use-linkify",
+      "name": "UseLinkify",
+      "package": "@astryx-vue/core",
+      "kind": "composable",
+      "title": {
+        "en": "useLinkify",
+        "zh": "useLinkify"
+      },
+      "group": "Utility",
+      "groupTitle": {
+        "en": "Utility",
+        "zh": "工具"
+      },
+      "importPath": null,
+      "exportName": null,
+      "summary": {
+        "en": "`useLinkify` finds URLs, email addresses and custom patterns in plain text and cuts the text into segments: plain text and links. Use it wherever user-written or tool-written text should grow safe, styled links without being turned into markup first, such as activity feeds, comment threads and description fields.",
+        "zh": "`useLinkify` 在纯文字里找出网址、邮箱和自定义格式，把文字切成「纯文字」和「链接」两种片段。用户或工具写下的文字想长出安全、有样式的链接，又不想先转成标记语言时就用它，比如动态流、评论串、描述字段。"
+      },
+      "usage": {
+        "en": "`useLinkify` finds URLs, email addresses and custom patterns in plain text and cuts the text into segments: plain text and links. Use it wherever user-written or tool-written text should grow safe, styled links without being turned into markup first, such as activity feeds, comment threads and description fields.\n\nEach segment is either `{ type: 'text', text }` or `{ type: 'link', text, href, isExternal }`. Render text as it is and links with `Link`. URLs open in a new tab (`isExternal`), emails link as `mailto:`.\n\n```ts\nimport { useLinkify } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useLinkify } from '@astryx-vue/core'\nimport { Link } from '@astryx-vue/core/Link'\n\nconst segments = useLinkify('Visit https://example.com or write hi@example.com')\n</script>\n\n<template>\n  <p>\n    <template v-for=\"(segment, index) in segments\" :key=\"index\">\n      <Link v-if=\"segment.type === 'link'\" :href=\"segment.href\" :is-external-link=\"segment.isExternal\">\n        {{ segment.text }}\n      </Link>\n      <template v-else>\n        {{ segment.text }}\n      </template>\n    </template>\n  </p>\n</template>\n```\n\nPass a ref or a getter and the segments follow it. Custom patterns turn project references such as `#123` or ticket IDs into links: give a regex with the global flag and an `href` builder that reads its capture groups. When matches overlap, the earliest one wins, and at the same start a custom pattern wins over the built-in ones, so a `#123` pattern lives next to URL detection in the same text.",
+        "zh": "`useLinkify` 在纯文字里找出网址、邮箱和自定义格式，把文字切成「纯文字」和「链接」两种片段。用户或工具写下的文字想长出安全、有样式的链接，又不想先转成标记语言时就用它，比如动态流、评论串、描述字段。\n\n每个片段要么是 `{ type: 'text', text }`，要么是 `{ type: 'link', text, href, isExternal }`。文字原样输出，链接交给 `Link`。网址会在新标签页打开（`isExternal`），邮箱链接成 `mailto:`。\n\n```ts\nimport { useLinkify } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useLinkify } from '@astryx-vue/core'\nimport { Link } from '@astryx-vue/core/Link'\n\nconst segments = useLinkify('Visit https://example.com or write hi@example.com')\n</script>\n\n<template>\n  <p>\n    <template v-for=\"(segment, index) in segments\" :key=\"index\">\n      <Link v-if=\"segment.type === 'link'\" :href=\"segment.href\" :is-external-link=\"segment.isExternal\">\n        {{ segment.text }}\n      </Link>\n      <template v-else>\n        {{ segment.text }}\n      </template>\n    </template>\n  </p>\n</template>\n```\n\n文字可以传 ref 或 getter，片段会跟着变。自定义格式能把 `#123`、工单号这类项目内的引用变成链接：给一个带全局标志的正则，再给一个读取捕获组的 `href` 生成函数。多处匹配重叠时先出现的赢，起点相同则自定义格式赢过内置格式，所以 `#123` 的规则可以和网址识别用在同一段文字里。"
+      },
+      "practices": {
+        "en": [
+          {
+            "guidance": "Do",
+            "text": "Render the text segments as they are; the segments already interleave the unmatched text."
+          },
+          {
+            "guidance": "Do",
+            "text": "Give every custom pattern the global flag (`g`); without it the scan only sees the first match."
+          },
+          {
+            "guidance": "Don't",
+            "text": "Pre-parse the text into your own markup before linkifying."
+          }
+        ],
+        "zh": []
+      },
+      "props": {
+        "en": [
+          {
+            "heading": "Parameters",
+            "rows": [
+              {
+                "name": "`text`",
+                "type": "`MaybeRefOrGetter<string>`",
+                "default": "—",
+                "description": "The plain text to scan. Empty text gives one text segment of itself."
+              },
+              {
+                "name": "`options`",
+                "type": "`MaybeRefOrGetter<UseLinkifyOptions>`",
+                "default": "—",
+                "description": "Configuration object."
+              },
+              {
+                "name": "`options.patterns`",
+                "type": "`LinkifyPattern[]`",
+                "default": "—",
+                "description": "Custom patterns, in addition to (or, with `hasBuiltins` false, instead of) the built-in URL and email detection. Each has a global-flag regex `pattern`, an `href(match)` builder, an optional `label(match)` and an optional `isExternal` (default `false`)."
+              },
+              {
+                "name": "`options.hasBuiltins`",
+                "type": "`boolean`",
+                "default": "`true`",
+                "description": "Include the built-in http(s) URL and email detection. Set it to `false` when `patterns` should define everything that links."
+              }
+            ]
+          },
+          {
+            "heading": "Returns",
+            "rows": [
+              {
+                "name": "(return value)",
+                "type": "`ComputedRef<LinkifySegment[]>`",
+                "description": "The text as an ordered list of `{ type: 'text', text }` and `{ type: 'link', text, href, isExternal }` segments. It follows the text and options it was given."
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "参数",
+            "rows": [
+              {
+                "name": "`text`",
+                "type": "`MaybeRefOrGetter<string>`",
+                "default": "—",
+                "description": "要扫描的纯文字。空文字得到只有它自己的一段文字。"
+              },
+              {
+                "name": "`options`",
+                "type": "`MaybeRefOrGetter<UseLinkifyOptions>`",
+                "default": "—",
+                "description": "配置对象。"
+              },
+              {
+                "name": "`options.patterns`",
+                "type": "`LinkifyPattern[]`",
+                "default": "—",
+                "description": "自定义格式，加在内置的网址和邮箱识别之外（`hasBuiltins` 为 false 时取代它们）。每条有带全局标志的正则 `pattern`、生成地址的 `href(match)`、可选的 `label(match)` 和可选的 `isExternal`（默认 `false`）。"
+              },
+              {
+                "name": "`options.hasBuiltins`",
+                "type": "`boolean`",
+                "default": "`true`",
+                "description": "是否带上内置的 http(s) 网址和邮箱识别。想让 `patterns` 完全决定哪些会变成链接时设为 `false`。"
+              }
+            ]
+          },
+          {
+            "heading": "返回值",
+            "rows": [
+              {
+                "name": "（返回值）",
+                "type": "`ComputedRef<LinkifySegment[]>`",
+                "description": "按顺序排列的 `{ type: 'text', text }` 和 `{ type: 'link', text, href, isExternal }` 片段，跟着传入的文字和选项变化。"
+              }
+            ]
+          }
+        ]
+      },
+      "slots": {
+        "en": [],
+        "zh": []
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [],
+        "zh": [
+          {
+            "heading": "建议",
+            "text": "- 推荐: 文字片段原样渲染；没命中的文字已经按顺序穿插在片段里。\n- 推荐: 每条自定义格式都带全局标志（`g`），否则只会看到第一处匹配。\n- 避免: 先把文字转成自己的标记，再去找链接。"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": {
+            "en": "useLinkify — comment thread",
+            "zh": "useLinkify — 评论串"
+          },
+          "description": {
+            "en": "A short comment thread in plain text: the URL and the email address become links, a custom pattern turns #123 and #456 into tracker links, and a comment without matches stays plain.",
+            "zh": "一串纯文字评论：网址和邮箱变成链接，自定义格式把 #123、#456 变成工单链接，没有命中的评论保持原样。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport type { LinkifyPattern } from '@astryx-vue/core'\nimport { useLinkify } from '@astryx-vue/core'\nimport { Link } from '@astryx-vue/core/Link'\nimport { VStack } from '@astryx-vue/core/Stack'\nimport { Text } from '@astryx-vue/core/Text'\n\nconst issue: LinkifyPattern = {\n  pattern: /#(\\d+)/g,\n  href: match => `https://tracker.example.com/issues/${match[1]}`,\n}\nconst options = { patterns: [issue] }\n\nconst comments = [\n  'Repro steps are at https://example.com/repro, mail dana@example.com for the build.',\n  'Probably the same root cause as #123 and #456.',\n  'No links in this one.',\n]\nconst threads = comments.map(comment => useLinkify(comment, options))\n</script>\n\n<template>\n  <VStack :gap=\"2\">\n    <Text v-for=\"(segments, index) in threads\" :key=\"index\" as=\"p\">\n      <template v-for=\"(segment, at) in segments.value\" :key=\"at\">\n        <Link v-if=\"segment.type === 'link'\" :href=\"segment.href\" :is-external-link=\"segment.isExternal\">\n          {{ segment.text }}\n        </Link>\n        <template v-else>\n          {{ segment.text }}\n        </template>\n      </template>\n    </Text>\n  </VStack>\n</template>"
+        }
+      ],
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/use-linkify",
+        "zh": "https://astryx-vue.pages.dev/components/use-linkify"
       }
     }
   ],

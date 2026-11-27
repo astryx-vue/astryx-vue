@@ -7,6 +7,7 @@ import PickerWheel from '../DateInput/PickerWheel.vue'
 import { useAstryxLocale, useComponentMessages } from '../locale/context.js'
 import { dateTimeInputMessages } from '../locale/messages/date-time-input.js'
 import { resolveHourFormat } from '../utils/timeFormat.js'
+import { hour24From12, hourAfterTurn } from './timeWheelRules.js'
 
 const props = withDefaults(defineProps<{
   modelValue?: string | null
@@ -62,10 +63,11 @@ function commit(hours: number, minutes: number, seconds: number): void {
   }
 }
 
-function from12(hour: number, pm: boolean): number {
-  if (hour === 12)
-    return pm ? 12 : 0
-  return pm ? hour + 12 : hour
+/**
+ * 12 小时制的行代表转到它之后的那个钟点：上下午跟着小时走，只在经过 11 和 12 之间时翻面。
+ */
+function hourOfRow(row: number): number {
+  return hourFormat.value === '24h' ? row : hourAfterTurn(hour24.value, row)
 }
 
 const hourOptions = computed<PickerWheelOption[]>(() => {
@@ -81,7 +83,7 @@ const hourOptions = computed<PickerWheelOption[]>(() => {
     return {
       value: String(hour),
       label: String(hour),
-      disabled: !hourAllowed(from12(hour, isPm.value)),
+      disabled: !hourAllowed(hourOfRow(hour)),
     }
   })
 })
@@ -99,17 +101,16 @@ const secondOptions = computed<PickerWheelOption[]>(() => Array.from({ length: 6
 })))
 
 const meridiemOptions = computed<PickerWheelOption[]>(() => [
-  { value: 'am', label: messages.value.dateTimeInput.meridiemAM, disabled: !hourAllowed(from12(hour12.value, false)) },
-  { value: 'pm', label: messages.value.dateTimeInput.meridiemPM, disabled: !hourAllowed(from12(hour12.value, true)) },
+  { value: 'am', label: messages.value.dateTimeInput.meridiemAM, disabled: !hourAllowed(hour24From12(hour12.value, false)) },
+  { value: 'pm', label: messages.value.dateTimeInput.meridiemPM, disabled: !hourAllowed(hour24From12(hour12.value, true)) },
 ])
 
 function onHour(value: string): void {
-  const hour = hourFormat.value === '24h' ? Number(value) : from12(Number(value), isPm.value)
-  commit(hour, minute.value, second.value)
+  commit(hourOfRow(Number(value)), minute.value, second.value)
 }
 
 function onMeridiem(value: string): void {
-  commit(from12(hour12.value, value === 'pm'), minute.value, second.value)
+  commit(hour24From12(hour12.value, value === 'pm'), minute.value, second.value)
 }
 </script>
 

@@ -247,6 +247,7 @@ export {
   catppuccinMocha,
   Code,
   CodeBlock,
+  CodeLineTokens,
   createCodeLanguage,
   darkSyntaxPresets,
   defineSyntaxTheme,
@@ -868,6 +869,7 @@ export {
   createIncrementalState,
   decodeMarkdownCharacterReferences,
   defineMarkdownPlugin,
+  firstStrongDirection,
   isMarkdownExtensionNode,
   Markdown,
   parseInline,
@@ -1582,8 +1584,12 @@ export type {
 export { BaseTypeahead, Typeahead, TypeaheadItem } from './Typeahead/index.js'
 export type {
   BaseTypeaheadProps,
+  TypeaheadDialogMenuSlotProps,
   TypeaheadEmits,
+  TypeaheadHandle,
   TypeaheadItemProps,
+  TypeaheadListboxMenuSlotProps,
+  TypeaheadMenuConfig,
   TypeaheadProps,
   TypeaheadSize,
   TypeaheadSlots,

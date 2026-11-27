@@ -62,6 +62,10 @@ import '@astryx-vue/richtext/richtext.css'
 
 <DemoExample :demo="richtextView" description="将保存的 Lexical 状态 JSON 交给 RichTextView 进行只读渲染。" locale="zh" title="只读展示已保存的内容" />
 
+## 文字方向
+
+编辑器和 `RichTextView` 里的每个段落、标题、引用和列表项都按自己文字的方向排版（取第一个有明确方向的字符），所以英文文档里的希伯来文或阿拉伯文块从右往左读，反过来也一样。只有数字、标点、图片或空段落这类没有明确方向字符的块，沿用文档的方向。方向会在编辑的同一次更新里写到块上，随内容一起保存。列表、表格和代码块沿用外面的方向，代码块里的每一行各按自己的方向读。
+
 ## 键盘操作
 
 | 操作 | 按键 |
@@ -69,7 +73,7 @@ import '@astryx-vue/richtext/richtext.css'
 | 在代码块中换行 | <kbd>Enter</kbd> |
 | 在表格单元格之间移动 | 方向键 |
 | 在代码块或表格末尾创建并进入下方段落 | <kbd>ArrowDown</kbd> |
-| 打开或关闭链接对话框 | <kbd>Cmd/Ctrl</kbd> + <kbd>K</kbd> |
+| 打开链接弹出层 | <kbd>Cmd/Ctrl</kbd> + <kbd>K</kbd> |
 | 缩进或反缩进代码块里选区碰到的每一行 | <kbd>Tab</kbd> / <kbd>Shift</kbd> + <kbd>Tab</kbd> |
 | 把代码块变回段落 | 光标在代码块开头按 <kbd>Backspace</kbd> |
 | 先选中代码或单元格文字，再选中整篇文档 | 在代码块或表格单元格里按 <kbd>Cmd/Ctrl</kbd> + <kbd>A</kbd> |

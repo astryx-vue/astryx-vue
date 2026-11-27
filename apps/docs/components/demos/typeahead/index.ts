@@ -5,6 +5,8 @@ import helperDemo from './helper.vue'
 import helperSource from './helper.vue?raw&highlighted'
 import limitedDemo from './limited.vue'
 import limitedSource from './limited.vue?raw&highlighted'
+import menuDemo from './menu.vue'
+import menuSource from './menu.vue?raw&highlighted'
 import overviewDemo from './overview.vue'
 import overviewSource from './overview.vue?raw&highlighted'
 import searchDemo from './search.vue'
@@ -18,3 +20,4 @@ export const typeaheadSearch = defineDemo(searchDemo, searchSource)
 export const typeaheadHelper = defineDemo(helperDemo, helperSource)
 export const typeaheadValidation = defineDemo(validationDemo, validationSource)
 export const typeaheadBare = defineDemo(bareDemo, bareSource)
+export const typeaheadMenu = defineDemo(menuDemo, menuSource)
