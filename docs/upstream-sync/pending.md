@@ -9035,9 +9035,10 @@
   - 不适用：getNodeText 是 React 节点转文本的工具，Vue 版 toast 正文是字符串
 - [x] [`743906fa9`](https://github.com/meta/astryx/commit/743906fa9) fix(Toast): each auto-hide pause condition holds the timer on its own (#9016)
   - 已移植：[#564](https://github.com/astryx-vue/astryx-vue/pull/564)。悬停、焦点、手势、窗口失焦各自按住计时，全部放开才继续，补测试
-- [ ] [`e48299813`](https://github.com/meta/astryx/commit/e48299813) fix(Drawer): under a finger, the page beside a non-modal drawer scrolls (#8636)
+- [x] [`e48299813`](https://github.com/meta/astryx/commit/e48299813) fix(Drawer): under a finger, the page beside a non-modal drawer scrolls (#8636)
   - 暂缓：非模态（无遮罩）Drawer 形态，Vue 的 Drawer 只有模态，需先做该形态
   - 暂缓：[Drawer非模态与退场] 非模态 Drawer 还没有
+  - 已移植：[#651](https://github.com/astryx-vue/astryx-vue/pull/651)。面板用 overflow clip 不再是滚动容器，内容区负责滚动，非模态抽屉旁边的页面能用手指滚
 - [x] [`f233ad6b2`](https://github.com/meta/astryx/commit/f233ad6b2) fix(Popover): in a Picture-in-Picture window, it scrolls once its window is too short (#9098)
   - 不适用：画中画窗口里 Popover 随窗口变矮而滚动，依赖第二个 document，同 4b05772a2
 - [x] [`cebf4a952`](https://github.com/meta/astryx/commit/cebf4a952) fix(Toast): focus entering by Tab or a click is remembered, so dismissing the last toast returns it (#9039)
@@ -9117,9 +9118,10 @@
   - Vue 版已有：InfoTip 已是核心组件，建在 Tooltip 的按压钉住之上
 - [x] [`ce667be4d`](https://github.com/meta/astryx/commit/ce667be4d) fix(Dialog, Drawer): a backdrop press dismisses only when it starts and ends on the backdrop (#9613)
   - Vue 版已有：layer/useBackdropPress.ts 要求按下和松手都在遮罩上才关，Dialog 和 Drawer 共用
-- [ ] [`35f558e74`](https://github.com/meta/astryx/commit/35f558e74) fix(Drawer): a scrimless drawer's keyboard open lets its first control's tooltip show (#9685)
+- [x] [`35f558e74`](https://github.com/meta/astryx/commit/35f558e74) fix(Drawer): a scrimless drawer's keyboard open lets its first control's tooltip show (#9685)
   - 暂缓：无遮罩 Drawer 的键盘打开，Vue 的 Drawer 只有模态，需先做非模态形态
   - 暂缓：[Drawer非模态与退场] Drawer 目前只是模态的 Dialog，没有无遮罩形态
+  - 已移植：[#651](https://github.com/astryx-vue/astryx-vue/pull/651)。抽屉里的浮层挂在抽屉内部的顶层，键盘打开无遮罩抽屉时第一个控件的提示能显示，toast 保持在抽屉之上
 - [x] [`1821fb3fa`](https://github.com/meta/astryx/commit/1821fb3fa) fix(Tooltip): remove the unreleased triggerBehavior prop before 0.7.7 (#9711)
   - 不适用：撤回未发布的 triggerBehavior 属性，Vue 版从没有这个属性；InfoTip 的按压钉住由 show 和 hide 实现
 - [x] [`bf14580b0`](https://github.com/meta/astryx/commit/bf14580b0) feat(core): Dialog, Drawer and MobileNav drop the backdrop blur (#8120)
@@ -9366,9 +9368,10 @@
 - [x] [`5a907b8ba`](https://github.com/meta/astryx/commit/5a907b8ba) perf(Popover): the touch growth plays on the surface (#10717)
   - 暂缓：触摸长出动效改在 surface 上播放，依赖 5e67f0874 的 surface 动效模块
   - 不适用：修的是 Chromium 对 CSS anchor 定位层逐帧重排；Vue 浮层用 JS 算坐标，Popover 触屏长出动效不挂在 anchor 层上
-- [ ] [`b1a6f16c6`](https://github.com/meta/astryx/commit/b1a6f16c6) fix(Drawer): a non-modal drawer that unmounts while open returns focus to its opener (#9672)
+- [x] [`b1a6f16c6`](https://github.com/meta/astryx/commit/b1a6f16c6) fix(Drawer): a non-modal drawer that unmounts while open returns focus to its opener (#9672)
   - 暂缓：非模态 Drawer 卸载时的焦点归还，Vue 的 Drawer 只有模态，需先做非模态形态
   - 暂缓：[Drawer非模态与退场] 非模态 Drawer 还没有
+  - 已移植：[#651](https://github.com/astryx-vue/astryx-vue/pull/651)。抽屉打开着被卸载时把焦点还给打开者，模态和非模态都覆盖，焦点已挪走时不动
 - [x] [`b01b7ee1c`](https://github.com/meta/astryx/commit/b01b7ee1c) fix(HoverCard): Escape and focus work in the card's own document, such as an iframe (#9592)
   - Vue 版已有：layer/dismissStack.ts 按层所在文档登记监听，触摸关闭和焦点判断读触发器的 ownerDocument
 - [x] [`9771949e0`](https://github.com/meta/astryx/commit/9771949e0) test(Lightbox): the dismissal's busy proof blocks as the fade starts (#10719)
@@ -9447,10 +9450,11 @@
 
 - [x] [`16d7f397a`](https://github.com/meta/astryx/commit/16d7f397a) fix(focus region): leave Ctrl+Tab and Meta+Tab to the page (#11247)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`a8c985322`](https://github.com/meta/astryx/commit/a8c985322) fix(Drawer): keep the exit side in state, not a render-time ref (#10859)
+- [x] [`a8c985322`](https://github.com/meta/astryx/commit/a8c985322) fix(Drawer): keep the exit side in state, not a render-time ref (#10859)
   - 暂缓：Drawer 退场时保持滑出的一侧，Vue 的 Drawer 没有退场滑出（presence），归动效与手势引擎任务
   - 暂缓：React 渲染时机部分不适用；Vue 版 Drawer 缺退场滑出（presence），补上退场滑出时要锁住退场边，归 Drawer 动效任务（连同非模态 Drawer）
   - 暂缓：[Drawer非模态与退场] Drawer 没有退场滑出
+  - 已移植：[#651](https://github.com/astryx-vue/astryx-vue/pull/651)。退场等 transform 过渡播完再离开宿主，方向锁在状态里从进场一侧滑出，时长曲线照上游 duration-medium 和 ease-standard
 - [x] [`38521acb9`](https://github.com/meta/astryx/commit/38521acb9) chore(core): remove the same-press leftovers: an unread dismissal field and stale comments (#11332)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`eec79323c`](https://github.com/meta/astryx/commit/eec79323c) fix(Text, Tooltip): on Android, the first tap on a button or link in truncated text opens its tooltip; a tap on a text field never does (#11213)
