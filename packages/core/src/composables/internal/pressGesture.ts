@@ -40,10 +40,13 @@ export type PressPaint = 'none' | 'on' | 'fading'
 /**
  * 手势走到哪一步了。
  *
+ * `buttonHeld` 是鼠标键或空格键按下的按压：没有滚动能把它抢走，所以立刻亮，
+ * 位移不会结束它，只有松开才结束，淡出和手指的一样。
+ *
  * `dead` 最要紧：变成滚动的手势一直是 dead，直到手指抬起、下一次按下才重新开始。
  * 所以手指停下来、或者滑回原来的控件，都不会再亮。这正是它和 `:active` 的区别。
  */
-export type PressPhase = 'idle' | 'armed' | 'pressed' | 'flash' | 'fading' | 'dead'
+export type PressPhase = 'idle' | 'armed' | 'pressed' | 'buttonHeld' | 'flash' | 'fading' | 'dead'
 
 export interface PressGesture {
   readonly phase: PressPhase
@@ -60,6 +63,8 @@ export type PressEvent
     /** 这次触摸要不要先等 {@link PRESS_ONSET_MS}：落在滚动视图里才等。默认等。 */
     delayed?: boolean
   }
+  /** 鼠标键或空格键落在可按元素上。控制器只在样式丢掉 `:active` 的粗指针主设备上发它。 */
+  | { kind: 'buttonDown' }
   | { kind: 'move', x: number, y: number }
   | { kind: 'up' }
   /** 平台把手势拿走了：pointercancel、touchcancel、滚动、拖拽。 */
@@ -68,7 +73,7 @@ export type PressEvent
   | { kind: 'onset' }
   /** 轻点的满强度保持结束。 */
   | { kind: 'flashEnd' }
-  /** 淡出结束。 */
+  /** 释放结束：淡出动画播完，或没有动画时它的钟走完。 */
   | { kind: 'fadeEnd' }
 
 export type PressTimer = 'onset' | 'flash' | 'fade'
@@ -141,11 +146,22 @@ export function pressGestureStep(gesture: PressGesture, event: PressEvent): Pres
     return { gesture: { originX: event.x, originY: event.y, phase: 'armed' }, paint: 'none', timer: 'onset' }
   }
 
+  if (event.kind === 'buttonDown')
+    return { gesture: { originX: 0, originY: 0, phase: 'buttonHeld' }, paint: 'on', timer: null }
+
   switch (gesture.phase) {
     case 'armed':
       return stepArmed(gesture, event)
     case 'pressed':
       return stepPressed(gesture, event)
+    case 'buttonHeld':
+      // 鼠标拖出按钮，`:active` 也会一直留到松开，所以位移不算滚动，只有松开才淡出。
+      if (event.kind === 'up')
+        return to(gesture, 'fading', 'fading', 'fade')
+      // 平台拿走了它（开始拖拽、指针被取消）：立刻擦掉，和手指一样。
+      if (event.kind === 'cancel')
+        return to(gesture, 'dead', 'none', null)
+      return stay(gesture, 'on')
     case 'flash':
       // 手指已经抬起。这时的 cancel 是平台在收尾（iOS 在 scrollend 才发 pointercancel），不能剪掉这次轻点该得的反馈。
       return event.kind === 'flashEnd' ? to(gesture, 'fading', 'fading', 'fade') : stay(gesture, 'on')
