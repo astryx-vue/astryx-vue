@@ -197,4 +197,16 @@ describe('progressBar', () => {
     expect(root.attributes('data-variant')).toBe('success')
     expect(disabled.get('.astryx-progress-bar-value').text()).toBe('50%')
   })
+
+  it('draws fills in roles that reach 3:1 on the track, and dims a disabled bar at half opacity', () => {
+    const css = readFileSync(resolve(__dirname, '../../styles/progress-bar.css'), 'utf8')
+    const fill = (selector: string) => css.match(new RegExp(`${selector}[^{]*\\{([^}]*)\\}`))![1]
+    // 状态填充读状态文字角色，neutral 读次要文字角色，不再读禁用文字色（它在有些主题里就是暗色轨道的颜色）。
+    expect(fill("\\[data-variant='success'\\] \\.astryx-progress-bar-fill")).toContain('--astryx-color-text-success')
+    expect(fill("\\[data-variant='warning'\\] \\.astryx-progress-bar-fill")).toContain('--astryx-color-text-warning')
+    expect(fill("\\[data-variant='error'\\] \\.astryx-progress-bar-fill")).toContain('--astryx-color-text-error')
+    expect(fill("\\[data-variant='neutral'\\] \\.astryx-progress-bar-fill")).toContain('--astryx-color-text-secondary')
+    expect(fill("\\[data-disabled\\] \\.astryx-progress-bar-fill")).toContain('--astryx-color-text-secondary')
+    expect(fill("\\[data-disabled\\] \\.astryx-progress-bar-track")).toMatch(/opacity:\s*0\.5/)
+  })
 })

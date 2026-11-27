@@ -137,7 +137,7 @@
     --astryx-color-text-accent: light-dark(#2d241b, #edeffc);
   }
 
-  [data-astryx-theme='y2k'] .astryx-table tbody tr:nth-child(even of :not([data-expansion-panel])) {
+  [data-astryx-theme='y2k'] .astryx-table[data-striped='true'] tbody tr:nth-child(even of :not([data-expansion-panel])) {
     --astryx-color-text-primary: light-dark(#2d241b, #edeffc);
     --astryx-color-text-secondary: light-dark(#5a5146, #a6acd6);
     --astryx-color-text-accent: light-dark(#2d241b, #edeffc);

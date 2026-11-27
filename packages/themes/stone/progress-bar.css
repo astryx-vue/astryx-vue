@@ -7,11 +7,33 @@
     --astryx-progress-bar-track-height-lg: 12px;
     --astryx-progress-bar-track-background: var(--astryx-color-skeleton);
     --astryx-progress-bar-fill-background: var(--astryx-color-accent);
-    /* 填充在浅色下取各自色阶的 T90，深色下取 T70，和状态底同族。 */
-    --astryx-progress-bar-accent-fill: light-dark(#d7e4f5, #a0acbc);
-    --astryx-progress-bar-success-fill: light-dark(#d0e9ce, #9ab298);
-    --astryx-progress-bar-warning-fill: light-dark(#f4e1b7, #bbaa82);
-    --astryx-progress-bar-error-fill: light-dark(#f9dcd7, #c0a5a0);
+    /* accent 填充取蓝色阶，状态填充取主题的状态色，在 skeleton 轨道上两种模式都够 3:1。 */
+    --astryx-progress-bar-accent-fill: light-dark(#516074, #b6c8e1);
+    --astryx-progress-bar-success-fill: var(--astryx-color-success);
+    --astryx-progress-bar-warning-fill: var(--astryx-color-warning);
+    --astryx-progress-bar-error-fill: var(--astryx-color-error);
+    /* 次要文字色在暗色轨道上低于 3:1，中性和禁用的填充在暗色下取更亮的一档。 */
+    --astryx-progress-bar-neutral-fill: light-dark(var(--astryx-color-text-secondary), #c6c6cf);
     --astryx-progress-bar-info-fill: var(--astryx-color-background-blue);
+  }
+}
+
+@layer astryx.overrides {
+  /* 浅色下 accent 填充是深色阶，标记取白；深色下填充是浅色阶，标记取深墨。 */
+  [data-astryx-theme='stone'] .astryx-progress-bar[data-variant='accent']:not([data-disabled]) .astryx-progress-bar-mark[data-placement='fill'] {
+    background: light-dark(#ffffff, var(--astryx-color-on-light));
+  }
+
+  /* 状态填充就是状态色，填充里的标记取那个状态的 on 色。 */
+  [data-astryx-theme='stone'] .astryx-progress-bar[data-variant='success']:not([data-disabled]) .astryx-progress-bar-mark[data-placement='fill'] {
+    background: var(--astryx-color-on-success);
+  }
+
+  [data-astryx-theme='stone'] .astryx-progress-bar[data-variant='warning']:not([data-disabled]) .astryx-progress-bar-mark[data-placement='fill'] {
+    background: var(--astryx-color-on-warning);
+  }
+
+  [data-astryx-theme='stone'] .astryx-progress-bar[data-variant='error']:not([data-disabled]) .astryx-progress-bar-mark[data-placement='fill'] {
+    background: var(--astryx-color-on-error);
   }
 }
