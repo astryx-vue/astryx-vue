@@ -456,7 +456,7 @@ describe('first-party themes', () => {
     expect(read('butter')).toContain('--astryx-font-family-body: Outfit,')
     expect(readFileSync(join(root, 'packages/themes/butter/text.css'), 'utf8')).toContain('Sarina')
     expect(read('chocolate')).toContain('--astryx-font-family-body: \'Albert Sans\'')
-    expect(read('chocolate')).toContain("--astryx-font-family-heading: 'Fraunces Variable', Fraunces,")
+    expect(read('chocolate')).toContain('--astryx-font-family-heading: \'Fraunces Variable\', Fraunces,')
     expect(read('gothic')).toContain('color-scheme: dark;')
     expect(read('gothic')).toContain('--astryx-color-accent: #E8F1F6;')
     expect(read('gothic')).not.toContain('--astryx-color-accent: light-dark(')

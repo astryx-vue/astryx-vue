@@ -26,7 +26,7 @@ function declarations(theme: string): Map<string, string> {
   for (const file of ['base.css', 'progress-bar.css']) {
     const css = readFileSync(join(root, theme, file), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '')
     const tokens = css.slice(css.indexOf('@layer astryx.tokens'), css.includes('@layer astryx.overrides {') ? css.indexOf('@layer astryx.overrides {') : undefined)
-    for (const [, name, value] of tokens.matchAll(/(--astryx-[\w-]+):\s*([^;]+);/g))
+    for (const [, name, value] of tokens.matchAll(/(--astryx-[\w-]+):\s*([^;\s][^;]*);/g))
       map.set(name!, value!.trim())
   }
   return map
@@ -37,10 +37,12 @@ function splitTop(value: string): string[] {
   let depth = 0
   let start = 0
   for (let index = 0; index < value.length; index += 1) {
-    if (value[index] === '(')
+    if (value[index] === '(') {
       depth += 1
-    else if (value[index] === ')')
+    }
+    else if (value[index] === ')') {
       depth -= 1
+    }
     else if (value[index] === ',' && depth === 0) {
       parts.push(value.slice(start, index).trim())
       start = index + 1

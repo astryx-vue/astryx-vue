@@ -39,13 +39,13 @@ describe('gothic accent text and icons on media surfaces', () => {
   })
 
   it('reach 4.5:1 on a light surface', () => {
-    expect(declared(mediaTheme.slice(mediaTheme.indexOf("[data-astryx-media='light']")), '--astryx-color-accent')).toBe('var(--astryx-color-on-light, #171717)')
+    expect(declared(mediaTheme.slice(mediaTheme.indexOf('[data-astryx-media=\'light\']')), '--astryx-color-accent')).toBe('var(--astryx-color-on-light, #171717)')
     const accent = color(declared(base, '--astryx-color-on-light'))
     expect(contrastRatio(accent, color('#ffffff'))).toBeGreaterThanOrEqual(4.5)
   })
 
   it('reach 4.5:1 on a dark surface', () => {
-    expect(declared(mediaTheme.slice(mediaTheme.indexOf("[data-astryx-media='dark']")), '--astryx-color-accent')).toBe('var(--astryx-color-on-dark, #ffffff)')
+    expect(declared(mediaTheme.slice(mediaTheme.indexOf('[data-astryx-media=\'dark\']')), '--astryx-color-accent')).toBe('var(--astryx-color-on-dark, #ffffff)')
     const accent = color(declared(base, '--astryx-color-on-dark'))
     expect(contrastRatio(accent, color(declared(base, '--astryx-color-background-surface')))).toBeGreaterThanOrEqual(4.5)
   })
