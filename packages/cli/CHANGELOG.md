@@ -1,5 +1,17 @@
 # @astryx-vue/cli
 
+## 0.6.6
+
+### Patch Changes
+
+- [#607](https://github.com/astryx-vue/astryx-vue/pull/607) [`89336db`](https://github.com/astryx-vue/astryx-vue/commit/89336db6111042c8304e548fd913d55ada404b05) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - MoreMenu 的锚定菜单改用和 DropdownMenu 一样的 CSS 进场：从触发器那一侧滑进来，以菜单和触发器相接的那一点为原点放大，减少动态效果时手指下只淡入。在手机和平板上，顶层菜单还在进场时落下的点按和拖动会被忽略，和 iOS 一样：菜单照常打开、保持打开、焦点不动，下面的东西也不会有反应；飞出的子菜单不挡。键盘、辅助技术和鼠标不受影响。上游 MoreMenu 包着 DropdownMenu，本来就是这样，这里对齐。
+
+- [#604](https://github.com/astryx-vue/astryx-vue/pull/604) [`8890c87`](https://github.com/astryx-vue/astryx-vue/commit/8890c87dff026c5e2d883fec12ee3db97335ad96) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Tokenizer 新增 `presentation` 属性（`'popover' | 'bottom-sheet' | 'adaptive'`），默认 `'adaptive'`：紧凑触屏上，字段变成一个显示标签的触发器，点开触屏底部弹层编辑。弹层里有搜索框、每条结果一行复选框，底部钉着「全部清除」和「保存」。勾选、新建、全部清除都只改一份草稿，按「保存」才提交一次（只触发一次 `change`）；草稿改过之后下滑、点遮罩或按 Escape 会先问要不要放弃，「全部清除」也会先确认。关上后焦点回到触发器；字段在弹层开着时被禁用会把弹层关上。桌面和非触屏设备照旧是行内输入框。
+  
+  默认值变了：以前在手机上也是行内输入框，现在是底部弹层。想在所有设备上保留行内字段就传 `presentation="popover"`；PowerSearch 的列表值输入已经这样固定。底部弹层里 `item` 插槽、`hasClear`、`hasEntriesOnFocus`、`menuWidth`、`menu`、`overflow`、`hasAutoFocus` 没有地方生效，开发期会提示一次。
+
+- [#606](https://github.com/astryx-vue/astryx-vue/pull/606) [`5327d7b`](https://github.com/astryx-vue/astryx-vue/commit/5327d7b2eea029f9a0415e725de1c85fc2586aef) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Tokenizer 文档的「全部清除」和「溢出」示例说明跟上 `adaptive` 默认值：触屏上在底部弹层里用「全部清除」；溢出的收起模式只作用于行内字段。
+
 ## 0.6.5
 
 ### Patch Changes
