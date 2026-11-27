@@ -13,34 +13,62 @@
     min-width: 20px;
     height: 20px;
     touch-action: none;
+    -webkit-user-select: none;
     user-select: none;
     isolation: isolate;
     cursor: pointer;
   }
+  /* 控件的各部分都在这个盒子里，它铺满控件的内边距盒：给控件加内边距不会挪动任何部分。
+     滑块和填充按它的容器单位（cqi / cqb）走，所以移动它们只重绘、不重新布局。 */
+  .astryx-slider-travel { position: absolute; inset: 0; container-type: size; }
   .astryx-slider-track,
-  .astryx-slider-fill {
+  .astryx-slider-fill-clip {
     position: absolute;
     top: 50%;
+    inset-inline: 0;
     height: 4px;
     border-radius: var(--astryx-radius-full, 9999px);
     transform: translateY(-50%);
   }
-  .astryx-slider-track { inset-inline: 0; background: var(--astryx-slider-track, #e5e5e5); }
-  .astryx-slider-fill { background: var(--astryx-slider-accent, #262626); }
+  .astryx-slider-track { background: var(--astryx-slider-track, #e5e5e5); }
+  /* 填充是一整条轨道长的色条，在两层裁剪里平移到位：外层裁剪和轨道同形，
+     中间层（range 的起点）的起始边切出起点，色条自己的末端落在终点，两端都藏在滑块下面。 */
+  .astryx-slider-fill-clip { overflow: hidden; pointer-events: none; }
+  .astryx-slider-fill-mover { position: absolute; inset: 0; overflow: hidden; }
+  .astryx-slider-fill {
+    position: absolute;
+    inset: 0;
+    background: var(--astryx-slider-accent, #262626);
+    border-start-end-radius: var(--astryx-radius-full, 9999px);
+    border-end-end-radius: var(--astryx-radius-full, 9999px);
+    translate: calc(10px + var(--_slider-fill-end) * (100cqi - 20px) - 100cqi) 0;
+  }
+  .astryx-slider-fill:dir(rtl) { translate: calc(100cqi - 10px - var(--_slider-fill-end) * (100cqi - 20px)) 0; }
+  .astryx-slider-control[data-range] .astryx-slider-fill-mover {
+    border-start-start-radius: var(--astryx-radius-full, 9999px);
+    border-end-start-radius: var(--astryx-radius-full, 9999px);
+    translate: calc(10px + var(--_slider-fill-start) * (100cqi - 20px)) 0;
+  }
+  .astryx-slider-control[data-range] .astryx-slider-fill-mover:dir(rtl) { translate: calc(-10px - var(--_slider-fill-start) * (100cqi - 20px)) 0; }
+  .astryx-slider-control[data-range] .astryx-slider-fill { translate: calc((var(--_slider-fill-end) - var(--_slider-fill-start)) * (100cqi - 20px) - 100cqi) 0; }
+  .astryx-slider-control[data-range] .astryx-slider-fill:dir(rtl) { translate: calc(100cqi - (var(--_slider-fill-end) - var(--_slider-fill-start)) * (100cqi - 20px)) 0; }
   .astryx-slider-thumb {
     position: absolute;
     z-index: 1;
-    top: 50%;
+    /* 用偏移居中而不是 transform：手指按住时滑块按 scale 放大，transform 会跟着放大，把滑块抬离轨道。 */
+    top: calc(50% - 10px);
+    inset-inline-start: 0;
     width: 20px;
     height: 20px;
     border-radius: var(--astryx-radius-full, 9999px);
     background: var(--astryx-slider-accent, #262626);
-    transform: translate(-50%, -50%);
+    /* 从轨道起点出发，走过「进度 ×（轨道长 − 滑块）」；translate 是物理方向，RTL 下取反。 */
+    translate: calc(var(--_slider-progress, 0) * (100cqi - 20px)) 0;
     outline: none;
     cursor: grab;
     transition: background-color 130ms ease-out;
   }
-  .astryx-slider-thumb:dir(rtl) { transform: translate(50%, -50%); }
+  .astryx-slider-thumb:dir(rtl) { translate: calc(var(--_slider-progress, 0) * (20px - 100cqi)) 0; }
   .astryx-slider-thumb[data-keyboard-focus='true']:focus-visible:not([data-dragging='true']) {
     outline: 2px solid var(--astryx-slider-focus, #262626);
     outline-offset: 3px;
@@ -96,16 +124,35 @@
     padding-block-end: calc(4px + var(--astryx-text-supporting-size, 0.75rem) * var(--astryx-text-supporting-leading, 1.6667));
   }
   .astryx-slider[data-orientation='vertical'] .astryx-slider-control { flex: none; width: 20px; height: var(--astryx-slider-height, 160px); }
-  .astryx-slider[data-orientation='vertical'] :is(.astryx-slider-track, .astryx-slider-fill) { top: auto; left: 50%; width: 4px; height: auto; transform: translateX(-50%); }
-  .astryx-slider[data-orientation='vertical'] .astryx-slider-track { top: 0; bottom: 0; inset-inline-end: auto; }
-  .astryx-slider[data-orientation='vertical'] .astryx-slider-thumb { top: auto; left: 50%; transform: translate(-50%, 50%); }
+  .astryx-slider[data-orientation='vertical'] :is(.astryx-slider-track, .astryx-slider-fill-clip) { top: 0; bottom: 0; inset-inline: auto; left: 50%; width: 4px; height: auto; transform: translateX(-50%); }
+  .astryx-slider[data-orientation='vertical'] .astryx-slider-fill {
+    border-radius: var(--astryx-radius-full, 9999px) var(--astryx-radius-full, 9999px) 0 0;
+    translate: 0 calc(100cqb - 10px - var(--_slider-fill-end) * (100cqb - 20px));
+  }
+  .astryx-slider[data-orientation='vertical'] .astryx-slider-control[data-range] .astryx-slider-fill-mover {
+    border-radius: 0 0 var(--astryx-radius-full, 9999px) var(--astryx-radius-full, 9999px);
+    translate: 0 calc(-10px - var(--_slider-fill-start) * (100cqb - 20px));
+  }
+  .astryx-slider[data-orientation='vertical'] .astryx-slider-control[data-range] .astryx-slider-fill { translate: 0 calc(100cqb - (var(--_slider-fill-end) - var(--_slider-fill-start)) * (100cqb - 20px)); }
+  .astryx-slider[data-orientation='vertical'] .astryx-slider-thumb { top: auto; bottom: 0; inset-inline-start: calc(50% - 10px); translate: 0 calc(var(--_slider-progress, 0) * (20px - 100cqb)); }
   .astryx-slider[data-orientation='vertical'] .astryx-slider-mark { top: auto; left: 50%; width: 8px; height: 2px; transform: translate(-50%, 50%); }
   .astryx-slider[data-orientation='vertical'] .astryx-slider-mark-label { top: 50%; inset-inline-start: 18px; transform: translateY(-50%); }
   .astryx-slider[data-mark-labels='true'][data-orientation='vertical'] .astryx-slider-control { margin-inline-end: 4rem; }
   @media (pointer: coarse) {
-    .astryx-slider-thumb::before { content: ''; position: absolute; inset: -2px; }
-    /* 控件和滑块一样高（20px），手指点按时把可点区域撑到 WCAG 2.5.8 的 24px，轨道和滑块都居中不动。 */
-    .astryx-slider-control { min-height: 24px; }
+    /* 手指下每个滑块的触控区是它自己的 ::before：以滑块为中心的 48px 方块（UISlider 的热区），
+       range 两个滑块之间各占一半，谁近归谁。 */
+    .astryx-slider-thumb::before {
+      content: '';
+      position: absolute;
+      top: var(--_slider-hit-top);
+      bottom: var(--_slider-hit-bottom);
+      inset-inline-start: var(--_slider-hit-start);
+      inset-inline-end: var(--_slider-hit-end);
+    }
+    /* 手指下控件把平移留给浏览器：从轨道或横穿滑块的滑动照样滚动页面；
+       手势宿主再按挂在元素上的识别器收窄（滑块的拖动保留自己的轴）。
+       控件和滑块一样高（20px），手指点按时把可点区域撑到 WCAG 2.5.8 的 24px，轨道和滑块都居中不动。 */
+    .astryx-slider-control { min-height: 24px; touch-action: manipulation; }
     .astryx-slider[data-mark-labels='true'][data-orientation='horizontal'] .astryx-slider-row {
       padding-block-end: calc(2px + var(--astryx-text-supporting-size, 0.75rem) * var(--astryx-text-supporting-leading, 1.6667));
     }
