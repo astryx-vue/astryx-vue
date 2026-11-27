@@ -23,6 +23,7 @@ const slots = useSlots()
 const {
   controlSize,
   density,
+  forwardedAttrs,
   handleClick,
   handlePointerMove,
   inContextMenu,
@@ -54,6 +55,7 @@ const hasEnd = computed(() => slots.endContent != null)
     :data-disabled="isDisabled || undefined"
     :data-size="menuSize"
     tabindex="-1"
+    v-bind="forwardedAttrs"
     @click="handleClick"
     @mousedown="isDisabled && keepDisabledRowUnfocused($event)"
     @pointermove="handlePointerMove"
@@ -90,6 +92,7 @@ const hasEnd = computed(() => slots.endContent != null)
     :label="label"
     :on-click="handleClick"
     tabindex="-1"
+    v-bind="forwardedAttrs"
     @mousedown="isDisabled && keepDisabledRowUnfocused($event)"
     @pointermove="handlePointerMove"
   >

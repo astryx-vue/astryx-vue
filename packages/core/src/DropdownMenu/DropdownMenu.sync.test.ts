@@ -5,6 +5,8 @@ import { resetMenuPress } from '../composables/useMenuPress.js'
 import DropdownMenu from './DropdownMenu.vue'
 import DropdownMenuGroup from './DropdownMenuGroup.vue'
 import DropdownMenuItem from './DropdownMenuItem.vue'
+import DropdownMenuRadioGroup from './DropdownMenuRadioGroup.vue'
+import DropdownMenuRadioItem from './DropdownMenuRadioItem.vue'
 
 enableAutoUnmount(afterEach)
 
@@ -138,5 +140,42 @@ describe('dropdownMenuItem 悬停聚焦', () => {
     second.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, pointerType: 'mouse' }))
 
     expect(focus).toHaveBeenCalledWith({ preventScroll: true, focusVisible: false })
+  })
+})
+
+describe('dropdownMenuRadioItem 宿主属性与事件', () => {
+  it('调用方的 click 和 pointermove 都会运行，行照常选中；禁用的行不运行 click', async () => {
+    const calls: string[] = []
+    const Host = defineComponent({
+      components: { DropdownMenu, DropdownMenuRadioGroup, DropdownMenuRadioItem },
+      setup() {
+        return {
+          pick: () => calls.push('click'),
+          move: () => calls.push('move'),
+        }
+      },
+      template: `
+        <DropdownMenu>
+          <DropdownMenuRadioGroup label="Sort" model-value="a">
+            <DropdownMenuRadioItem value="b" label="B" data-testid="b" @click="pick" @pointermove="move" />
+            <DropdownMenuRadioItem value="c" label="C" is-disabled data-testid="c" @click="pick" />
+          </DropdownMenuRadioGroup>
+        </DropdownMenu>
+      `,
+    })
+    mount(Host, { attachTo: document.body })
+    document.querySelector<HTMLButtonElement>('.astryx-dropdown-menu-trigger > .astryx-button')!.click()
+    await flushPromises()
+
+    const b = document.querySelector<HTMLElement>('[data-testid="b"]')!
+    const c = document.querySelector<HTMLElement>('[data-testid="c"]')!
+    expect(b.getAttribute('role')).toBe('menuitemradio')
+    b.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, pointerType: 'mouse' }))
+    b.click()
+    c.click()
+    await flushPromises()
+
+    expect(calls).toEqual(['move', 'click'])
+    expect(b.getAttribute('aria-checked')).toBe('true')
   })
 })
