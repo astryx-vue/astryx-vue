@@ -60,6 +60,9 @@ export interface BottomSheetProps {
   /**
    * 放进 `BottomSheetSwitcher` 时的名字。切换器靠它决定哪一张是当前页。
    * 单独使用时可以不传。
+   * @deprecated `BottomSheetSwitcher` is deprecated; give each step its own
+   * standalone sheet with `isOpen` instead. Keeps working until a future
+   * minor release removes the switcher.
    */
   sheetId?: string
   /**

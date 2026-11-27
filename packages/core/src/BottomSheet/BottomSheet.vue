@@ -1,21 +1,21 @@
 <script setup lang="ts">
 import type { DismissEscape } from '../layer/dismissStack.js'
-import type { LayerFocusRecord } from '../layer/layerFocusReturn.js'
-import type { ScrimFade } from './sheetDragExit.js'
-import type { BottomSheetEmits, BottomSheetMotion, BottomSheetProps, BottomSheetSlots, BottomSheetState } from './types.js'
+import type { BottomSheetPanelMotion, BottomSheetPanelState } from './panelState.js'
+import type { BottomSheetEmits, BottomSheetProps, BottomSheetSlots } from './types.js'
 import { computed, getCurrentInstance, inject, onBeforeUnmount, onMounted, provide, ref, toValue, useAttrs, useTemplateRef, watch } from 'vue'
-import { focusForLastInput } from '../composables/internal/focusReturn.js'
-import { useFocusTrap } from '../composables/useFocusTrap.js'
-import { useRestoreFocus } from '../composables/useRestoreFocus.js'
 import { useScrollLock } from '../composables/useScrollLock.js'
 import { holdKeptInside } from '../layer/inputHold.js'
-import { isLayerFocusStranded, restoreLayerFocus, trackLayerFocus } from '../layer/layerFocusReturn.js'
-import { createModalOutletHandle } from '../layer/modalOutlet.js'
 import { provideNestedLayerMountTarget } from '../layer/mount.js'
 import { isImeKeyEvent } from '../utils/ime.js'
 import BottomSheetPanel from './BottomSheetPanel.vue'
+import BottomSheetStep from './BottomSheetStep.vue'
 import { bottomSheetEscapeKey } from './escape.js'
-import { focusSheetOnOpen } from './focusSheetPanel.js'
+import { isPublicMotion } from './panelState.js'
+import { bottomSheetHostKey } from './sheetHostContext.js'
+import { isSheetHostPresented } from './stack/sheetHost.js'
+import { stackRecedeClasses, stackStateAttribute } from './stack/stackPresentation.js'
+import { useModalOutletWhile } from './stack/useModalOutletWhile.js'
+import { useStandaloneSheetStack } from './stack/useStandaloneSheetStack.js'
 import { bottomSheetSwitcherKey } from './switcher.js'
 import { useSheetLayerDismiss } from './useSheetLayerDismiss.js'
 import '../../styles/bottom-sheet.css'
@@ -37,63 +37,63 @@ defineSlots<BottomSheetSlots>()
 
 const isOpen = defineModel<boolean>('isOpen', { default: false })
 const switcher = inject(bottomSheetSwitcherKey, null)
+const host = inject(bottomSheetHostKey, null)
 const isEscapeAllowed = inject(bottomSheetEscapeKey, () => true)
 provide(bottomSheetEscapeKey, () => true)
 const hosted = computed(() => switcher != null && props.sheetId != null)
-const retained = computed(() => {
-  if (!hosted.value || switcher == null)
-    return false
-  return switcher.retainedId.value === props.sheetId && switcher.activeId.value !== props.sheetId
-})
-const open = computed(() => {
-  if (!hosted.value || props.sheetId == null)
-    return isOpen.value
-  return switcher?.activeId.value === props.sheetId || switcher?.retainedId.value === props.sheetId
-})
+// 写在另一张面板内容里的面板只在外面那张打开时呈现；自己的 isOpen 从不被改写。
+const effectiveOpen = computed(() => !hosted.value && isOpen.value && (host?.isOpen.value ?? true))
+provide(bottomSheetHostKey, { isOpen: effectiveOpen })
+
 const attrs = useAttrs()
 const dialog = useTemplateRef<HTMLDialogElement>('dialog')
 provideNestedLayerMountTarget(useTemplateRef<HTMLElement>('layerHost'))
 const panel = useTemplateRef<InstanceType<typeof BottomSheetPanel>>('panel')
-const isPresented = ref(false)
-const scrimOpacity = ref(1)
-// 只有真正以模态打开之后才对外说自己是模态：服务端渲染出来、还没水合的抽屉不能带 aria-modal。
-const isModalShown = ref(false)
-// 服务端渲染时就开着的抽屉，水合后直接以静止状态呈现，不播进场；第一次关闭后恢复动效。
+const step = useTemplateRef<InstanceType<typeof BottomSheetStep>>('step')
+const isMounted = ref(false)
+// 服务端渲染时就开着的面板，水合后直接以静止状态呈现，不播进场；第一次关闭后恢复动效。
 const isSettled = ref(getCurrentInstance()?.vnode.el != null && isOpen.value && !hosted.value && !props.isInline)
 
-const panelState = computed<BottomSheetState>(() => {
-  if (retained.value)
-    return 'exiting'
-  if (open.value)
+function panelElement(): HTMLElement | null {
+  if (hosted.value)
+    return step.value?.element ?? null
+  return panel.value?.element ?? null
+}
+
+const stack = useStandaloneSheetStack({
+  isOpen: effectiveOpen,
+  hasScrim: () => props.hasScrim,
+  isEnabled: () => !hosted.value && !props.isInline && typeof document !== 'undefined',
+  getDialog: () => dialog.value ?? null,
+  getPanel: panelElement,
+  getFinalFocus: () => toValue(props.finalFocusRef) ?? null,
+})
+const view = stack.view
+
+const panelState = computed<BottomSheetPanelState>(() => {
+  if (props.isInline)
+    return isOpen.value ? 'open' : 'hidden'
+  if (effectiveOpen.value)
     return 'open'
-  if (props.isInline || hosted.value)
-    return 'hidden'
-  return isPresented.value ? 'exiting' : 'hidden'
+  if (stack.isReplaced.value)
+    return 'retained'
+  if (stack.isPresented.value)
+    return stack.isCloseSettled.value ? 'exiting' : 'open'
+  return 'hidden'
 })
 
 const isDismissible = computed(() => props.purpose === 'info')
-const isSwipeDismissAllowed = computed(() => props.purpose === 'info' && !props.isInline)
+const isExiting = computed(() => !hosted.value && !props.isInline && !effectiveOpen.value && stack.isPresented.value)
+// 被盖住、里面也没有正在呈现的面板时整个对话框 inert；被替换的面板在交接期间也是。
+const isInert = computed(() => (isExiting.value && stack.isReplaced.value) || view.value.isBlocked)
 
-// A swipe's close paces the scrim's fade on its spring.
-const scrimFade = ref<ScrimFade | null>(null)
-const isClosing = computed(() => !isOpen.value && isPresented.value)
-// The scrim follows the drag while open and fades out through the exit.
-const dialogStyle = computed(() => ({
-  '--_sheet-scrim-opacity': isClosing.value ? '0' : String(scrimOpacity.value),
-  '--_sheet-scrim-duration': scrimFade.value == null ? undefined : `${scrimFade.value.durationMs}ms`,
-  '--_sheet-scrim-easing': scrimFade.value?.easing,
-}))
+useScrollLock(computed(() => isMounted.value && !hosted.value && !props.isInline && props.hasScrim && stack.shouldPresent.value))
 
-useFocusTrap({
-  container: computed(() => panelElement()),
-  isEnabled: computed(() => !hosted.value && isOpen.value && props.hasScrim),
-})
-
-useRestoreFocus({
-  isEnabled: computed(() => !props.isInline && !hosted.value),
-  shouldRestore: isOpen,
-  preventScroll: true,
-})
+// 打开着、带遮罩、在叠放的最上面时，这个对话框是全局 toast 的挂载点。
+useModalOutletWhile(
+  () => dialog.value ?? null,
+  () => effectiveOpen.value && props.hasScrim && (view.value.isTop || !view.value.isStacked),
+)
 
 /** The dialog carries the accessible name; the panel keeps every other attribute. */
 const dialogLabel = computed(() => {
@@ -109,78 +109,9 @@ function panelAttrs(): Record<string, unknown> {
   return rest
 }
 
-const isScrollLocked = ref(false)
-useScrollLock(isScrollLocked)
-
-function lockScroll(): void {
-  if (typeof document === 'undefined')
-    return
-  isScrollLocked.value = true
-}
-
-function unlockScroll(): void {
-  if (typeof document === 'undefined')
-    return
-  isScrollLocked.value = false
-}
-
-function panelElement(): HTMLElement | null {
-  return panel.value?.element ?? null
-}
-
-function focusPanel(): void {
-  if (typeof document === 'undefined')
-    return
-  focusSheetOnOpen(panelElement(), props.hasScrim)
-}
-
-// 打开期间跟着焦点：抽屉被直接卸载（没有关闭动作）时，靠它把被困住的焦点送回打开者。
-let focusRecord: LayerFocusRecord | null = null
-
-// 独立的模态抽屉打开期间充当全局 toast 的挂载点，toast 才不会被它盖住、点不到。
-const modalOutlet = createModalOutletHandle()
-
-function openSheet(): void {
-  if (props.isInline || typeof document === 'undefined')
-    return
-  const dialogElement = dialog.value
-  if (!dialogElement)
-    return
-  isPresented.value = true
-  if (!dialogElement.open) {
-    focusRecord?.stop()
-    focusRecord = trackLayerFocus({ getLayer: () => dialog.value })
-    if (props.hasScrim) {
-      dialogElement.showModal()
-      isModalShown.value = true
-      if (!hosted.value)
-        modalOutlet.attach(dialogElement)
-    }
-    else {
-      dialogElement.show()
-    }
-  }
-  if (props.hasScrim)
-    lockScroll()
-  focusPanel()
-}
-
-function closeSheet(): void {
-  modalOutlet.detach()
-  dialog.value?.close()
-  unlockScroll()
-  isPresented.value = false
-  isModalShown.value = false
-  focusRecord?.stop()
-  focusRecord = null
-  const target = toValue(props.finalFocusRef)
-  if (target?.isConnected)
-    focusForLastInput(target, { preventScroll: true })
-}
-
-const layerActive = computed(() => !hosted.value && !props.isInline && (isOpen.value || isPresented.value))
+const layerActive = computed(() => !hosted.value && !props.isInline && stack.shouldPresent.value)
 const layerEscape = computed<DismissEscape>(() => {
-  if (!isOpen.value || props.purpose === 'required' || !isEscapeAllowed())
+  if (!effectiveOpen.value || props.purpose === 'required' || !isEscapeAllowed())
     return 'block'
   if (!props.hasScrim)
     return 'ignore'
@@ -190,27 +121,22 @@ const layer = useSheetLayerDismiss({
   isActive: layerActive,
   escape: layerEscape,
   getContainer: () => dialog.value ?? null,
-  isPresent: () => dialog.value?.open ?? false,
+  // 被盖住或被替换的面板还在屏幕上，但按键从来不是给它的：交给最上面那张。
+  isPresent: () => isSheetHostPresented(dialog.value) && !view.value.isCovered && view.value.replacedMotion == null,
   onDismiss: () => {
-    if (!isOpen.value || props.purpose === 'required')
+    if (!effectiveOpen.value || props.purpose === 'required')
       return
     requestClose()
   },
 })
 
 function requestClose(): void {
-  if (hosted.value && props.sheetId != null) {
-    if (switcher?.activeId.value === props.sheetId)
-      switcher.setActive(null)
-    emit('openChange', false)
-    return
-  }
   isOpen.value = false
   emit('openChange', false)
 }
 
 function dismissOnEscape(): void {
-  if (props.purpose === 'required' || !isEscapeAllowed())
+  if (!effectiveOpen.value || props.purpose === 'required' || !isEscapeAllowed())
     return
   requestClose()
 }
@@ -237,74 +163,47 @@ function onCancel(event: Event): void {
 function onDialogClick(event: MouseEvent): void {
   if (event.target !== event.currentTarget)
     return
-  if (props.hasScrim && isDismissible.value)
+  if (props.hasScrim && isDismissible.value && effectiveOpen.value)
     requestClose()
 }
 
-function onPanelMotionComplete(motion: BottomSheetMotion): void {
-  emit('motionComplete', motion)
-  if (motion === 'exiting')
-    closeSheet()
+function onPanelMotionStart(motion: BottomSheetPanelMotion): void {
+  if (isPublicMotion(motion))
+    emit('motionStart', motion)
+  stack.onMotionStart(motion)
+}
+
+function onPanelMotionComplete(motion: BottomSheetPanelMotion): void {
+  if (isPublicMotion(motion))
+    emit('motionComplete', motion)
+  stack.onMotionComplete(motion)
 }
 
 watch(isOpen, (value) => {
-  if (hosted.value || !value)
-    return
-  openSheet()
-}, { flush: 'post' })
-
-watch(isOpen, (value) => {
-  if (value) {
-    scrimOpacity.value = 1
-    return
-  }
-  isSettled.value = false
-  isModalShown.value = false
+  if (!value)
+    isSettled.value = false
 })
 
-// 关闭中的抽屉交给浮层运行时的输入暂挡：页面照常可点；焦点还留在里面时内容不藏，
-// 只放行 Tab，焦点一离开就整个变成 inert。退场结束或重新打开时放开。
-const isExiting = computed(() => !hosted.value && !props.isInline && !isOpen.value && isPresented.value)
+// 关闭中的面板交给浮层运行时的输入暂挡：页面照常可点；焦点还留在里面时内容不藏，
+// 只放行 Tab，焦点一离开就整个变成 inert。关闭配成替换的不暂挡（交接期间它整个 inert）；
+// 关闭是不是替换要等这一批答复，答复之前也不暂挡，免得第一下就把焦点藏起来。
+const isExitHeld = computed(() => isExiting.value && !stack.isReplaced.value && stack.isCloseSettled.value)
 let releaseExitHold: (() => void) | null = null
-watch(isExiting, (exiting) => {
+watch(isExitHeld, (held) => {
   releaseExitHold?.()
   releaseExitHold = null
   const element = dialog.value
-  if (exiting && element != null)
+  if (held && element != null)
     releaseExitHold = holdKeptInside(element, new Promise<never>(() => {}))
 }, { flush: 'post' })
 
 onMounted(() => {
-  if (hosted.value && props.sheetId != null) {
-    switcher?.register(props.sheetId, {
-      getElement: () => panelElement(),
-      label: () => props.label,
-      purpose: () => props.purpose,
-    })
-    return
-  }
-  if (isOpen.value)
-    openSheet()
+  isMounted.value = true
 })
 
 onBeforeUnmount(() => {
-  // 打开着就被卸载：等它离开文档后，把被困住的焦点按共用的候选链送出去。
-  const record = focusRecord
-  focusRecord = null
-  if (record != null) {
-    const wasStranded = isLayerFocusStranded(record, dialog.value)
-    queueMicrotask(() => {
-      if (wasStranded)
-        restoreLayerFocus(record, { layer: null, name: 'BottomSheet' })
-      record.stop()
-    })
-  }
   releaseExitHold?.()
   releaseExitHold = null
-  modalOutlet.detach()
-  if (props.sheetId != null)
-    switcher?.unregister(props.sheetId)
-  unlockScroll()
 })
 
 defineExpose({
@@ -315,33 +214,23 @@ defineExpose({
 </script>
 
 <template>
-  <template v-if="hosted">
-    <div
-      v-if="open"
-      class="astryx-bottom-sheet__positioner"
-      :class="retained ? 'astryx-bottom-sheet__positioner--retained' : 'astryx-bottom-sheet__positioner--active'"
-      :style="retained ? { '--_sheet-align': `${switcher?.alignmentOffset.value ?? 0}px` } : undefined"
-      :inert="retained || undefined"
-    >
-      <BottomSheetPanel
-        ref="panel"
-        v-bind="panelAttrs()"
-        :state="panelState"
-        :label="label"
-        :height="height"
-        :padding="padding"
-        :snap-points="snapPoints"
-        :is-swipe-dismiss-allowed="purpose === 'info'"
-        :is-page-scroll-locked="hasScrim"
-        @dismiss="requestClose"
-        @snap="emit('snap', $event)"
-        @motion-start="emit('motionStart', $event)"
-        @motion-complete="emit('motionComplete', $event)"
-      >
-        <slot />
-      </BottomSheetPanel>
-    </div>
-  </template>
+  <BottomSheetStep
+    v-if="hosted && switcher != null && sheetId != null"
+    ref="step"
+    v-bind="attrs"
+    :switcher="switcher"
+    :sheet-id="sheetId"
+    :label="label"
+    :height="height"
+    :padding="padding"
+    :snap-points="snapPoints"
+    :purpose="purpose"
+    @snap="emit('snap', $event)"
+    @motion-start="emit('motionStart', $event)"
+    @motion-complete="emit('motionComplete', $event)"
+  >
+    <slot />
+  </BottomSheetStep>
   <div v-else-if="isInline" class="astryx-bottom-sheet-inline">
     <div v-if="isOpen" class="astryx-bottom-sheet__positioner astryx-bottom-sheet__positioner--inline">
       <BottomSheetPanel
@@ -364,16 +253,23 @@ defineExpose({
     v-else
     ref="dialog"
     class="astryx-bottom-sheet-dialog"
-    :class="{
-      'astryx-bottom-sheet-dialog--scrim': hasScrim,
-      'astryx-bottom-sheet-dialog--closing': isClosing,
-    }"
+    :class="[
+      stackRecedeClasses(view),
+      {
+        'astryx-bottom-sheet-dialog--scrim': hasScrim,
+        'astryx-bottom-sheet-dialog--closing': isExiting,
+        'astryx-bottom-sheet-dialog--replacing': !hasScrim && view.isReplacing,
+      },
+    ]"
     :data-settled="isSettled || undefined"
+    :data-sheet-stack="hasScrim ? stackStateAttribute(view, effectiveOpen) : undefined"
+    :data-sheet-stack-depth="hasScrim && view.depth > 0 ? view.depth : undefined"
     :aria-label="dialogLabel"
     :aria-labelledby="labelledBy"
-    :aria-modal="hasScrim && isModalShown ? 'true' : undefined"
+    :aria-modal="hasScrim && effectiveOpen && stack.isModalShown.value ? 'true' : undefined"
+    :aria-hidden="isInert ? 'true' : undefined"
+    :inert="isInert || undefined"
     :role="purpose === 'required' ? 'alertdialog' : undefined"
-    :style="dialogStyle"
     @cancel="onCancel"
     @click="onDialogClick"
     @keydown="onKeydown"
@@ -383,17 +279,19 @@ defineExpose({
         ref="panel"
         v-bind="panelAttrs()"
         :state="panelState"
+        :retained-motion="view.replacedMotion ?? 'covered'"
+        :alignment-offset="view.alignmentOffset"
         :label="label"
         :height="height"
         :padding="padding"
         :snap-points="snapPoints"
-        :is-swipe-dismiss-allowed="isSwipeDismissAllowed"
-        :is-page-scroll-locked="isScrollLocked"
+        :is-swipe-dismiss-allowed="purpose === 'info'"
+        :is-page-scroll-locked="hasScrim && stack.shouldPresent.value"
         @dismiss="requestClose"
-        @scrim-opacity="scrimOpacity = $event"
-        @scrim-fade="scrimFade = $event"
+        @scrim-opacity="stack.onScrimOpacity"
+        @scrim-fade="stack.onScrimFade"
         @snap="emit('snap', $event)"
-        @motion-start="emit('motionStart', $event)"
+        @motion-start="onPanelMotionStart"
         @motion-complete="onPanelMotionComplete"
       >
         <slot />

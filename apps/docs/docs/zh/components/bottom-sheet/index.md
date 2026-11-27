@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { bottomSheetAdaptiveDialog, bottomSheetAdaptiveMenu, bottomSheetHeights, bottomSheetKeyboard, bottomSheetMultiSelector, bottomSheetNoScrim, bottomSheetSelector, bottomSheetSnapPoints, bottomSheetSwitcher } from '../../../../components/demos/bottom-sheet'
+import { bottomSheetAdaptiveDialog, bottomSheetAdaptiveMenu, bottomSheetHeights, bottomSheetKeyboard, bottomSheetMultiSelector, bottomSheetMultiStep, bottomSheetNoScrim, bottomSheetSelector, bottomSheetSnapPoints } from '../../../../components/demos/bottom-sheet'
 </script>
 
 ## 使用方法
@@ -46,6 +46,50 @@ const isOpen = ref(false)
 
 `padding` 设置内容区的内边距，取值来自全局间距刻度。不设置时使用主题为底部弹窗定义的内边距，主题没有定义时取 `--spacing-4`（16px），四个逻辑边相同；传入 `0` 可以让内容紧贴面板边缘。内容区会把实际用上的边距发布给里面的内容：唯一子元素如果是自带内边距的区块，会顶掉这层边距；表格和分隔线会伸到这条边上，不会再缩一圈。顶部不管内边距是多少（包括 `0`），内容都从抓手条下方 24px 的区域之后开始：这一段不算内边距，子元素顶不掉它，所以第一行不会压在抓手条下面，滚动起来的内容仍会从抓手条底下经过。
 
+
+### 叠放
+
+每张面板各管各的 `isOpen`。一张带遮罩的面板开着时再打开另一张，新的会叠在上面：下面那张不卸载，滚动位置和填好的内容都留着，只是往后退一点（紧挨着的那张缩到 0.96、上移 8px，更深的缩到 0.92、上移 16px），并被上面那张的模态对话框挡住，点不到、按键也到不了。几张面板可以是兄弟、分在不同组件里，也可以写在另一张面板的内容里；整段 `BottomSheetSwitcher` 算一层。DOM 不会挪动，也不需要额外的包裹组件。
+
+谁在上面看打开顺序：最近打开、还开着的那张在最上面，关掉再打开的会回到最上面。同一次更新里一起打开的几张没有先后，就按模板里的先后排：外面的面板在它内容里的面板下面，兄弟按写的顺序。
+
+整叠只有一层遮罩：只有最底下那张压暗页面，上面几张的遮罩是透明的，所以叠得再多也不会越来越暗。Escape、点遮罩、下滑和平台的返回手势只作用于最上面那张，按它自己的 `purpose` 判断；没有一下关掉整叠的操作，流程结束时在同一次更新里把每张都设成关闭，它们会一起离开。写在某张面板内容里的面板只在那张开着时呈现，那张关掉时跟着离开，但它自己的 `isOpen` 不会被改动，那张再打开时如果它还开着，会重新出现在最上面。
+
+### 替换
+
+多步流程不需要切换器：每一步写成一张独立的面板，用一个状态值说明哪一步开着。在同一次更新里关掉最上面那张、打开另一张，新的那张会替换它，而不是叠上去：新面板从下面升到被替换那张的上面；被替换的那张比它高时，同时往下移到新面板停下的顶边；两边都走完后，被替换的那张才淡出，它从一开始就不能操作、也不会被读屏读到。整个过程遮罩一直稳着、不闪；焦点进到新面板里；流程关掉时，焦点回到最初打开第一张的那个控件。
+
+只有这几个条件都满足才算替换：这次更新里正好一张关、一张开；关的那张是它那一叠最上面的；而且这一步是从关的那张里面发起的（最近按下的控件，或者没有最近按下时获得焦点的元素，在关的那张里，比如这一步自己的「下一步」「上一步」按钮）。从两张面板外面的控件同时关一张开一张、在不同的更新里先关后开，都还是普通的叠放进出。
+
+```vue
+<script setup lang="ts">
+import { BottomSheet } from '@astryx-vue/core/BottomSheet'
+import { ref } from 'vue'
+
+const step = ref<'details' | 'pay' | null>(null)
+
+function onOpenChange(open: boolean): void {
+  if (!open)
+    step.value = null
+}
+</script>
+
+<template>
+  <button type="button" @click="step = 'details'">
+    开始结账
+  </button>
+  <BottomSheet :is-open="step === 'details'" label="订单信息" @open-change="onOpenChange">
+    <button type="button" @click="step = 'pay'">
+      下一步
+    </button>
+  </BottomSheet>
+  <BottomSheet :is-open="step === 'pay'" label="付款" @open-change="onOpenChange">
+    <button type="button" @click="step = 'details'">
+      上一步
+    </button>
+  </BottomSheet>
+</template>
+```
 
 <ComponentAnatomy />
 
@@ -120,10 +164,10 @@ const isOpen = ref(false)
 />
 
 <DemoExample
-  :demo="bottomSheetSwitcher"
-  description="结账分成两张底栏，共用一个对话框。换页时遮罩不闪。"
+  :demo="bottomSheetMultiStep"
+  description="结账分成两张独立的底栏，由一个状态值切换；在开着的那张里点下一步，新的一张原地替换它，遮罩不闪。"
   locale="zh"
-  title="多步切换"
+  title="多步流程"
 />
 
 ## 无障碍

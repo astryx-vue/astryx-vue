@@ -4,6 +4,7 @@ import { h } from 'vue'
 import { touch } from '../gestures/__tests__/touchEvents'
 import { resetDismissStackForTests } from '../layer/dismissStack.js'
 import BottomSheet from './BottomSheet.vue'
+import { resetBottomSheetStackForTests } from './stack/bottomSheetStack.js'
 
 enableAutoUnmount(afterEach)
 
@@ -16,6 +17,7 @@ afterEach(() => {
   document.body.innerHTML = ''
   document.body.style.overflow = ''
   resetDismissStackForTests()
+  resetBottomSheetStackForTests()
   vi.restoreAllMocks()
 })
 

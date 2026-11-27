@@ -1036,6 +1036,30 @@ export type {
   PaginationSlots,
   PaginationVariant,
 } from './Pagination/index.js'
+export {
+  COMPACT_11_STOPS,
+  DEFAULT_21_STOPS,
+  generateTonalPalette,
+  PALETTE_BLACK,
+  PALETTE_RECIPE,
+  PALETTE_RECIPE_V2,
+  PALETTE_RECIPES,
+  PALETTE_WHITE,
+  themePalette,
+} from './palette/index.js'
+export type {
+  PaletteLift,
+  ThemePalette,
+  ThemePaletteInput,
+  TonalPaletteAnchor,
+  TonalPaletteCandidate,
+  TonalPaletteCoordinationDiagnostics,
+  TonalPaletteDarkChromaTaper,
+  TonalPaletteFamilyInput,
+  TonalPaletteGenerationInput,
+  TonalPaletteNormalizedRequest,
+  TonalPaletteRampDiagnostics,
+} from './palette/index.js'
 export { Popover, usePopover } from './Popover/index.js'
 export type {
   PopoverAlignment,

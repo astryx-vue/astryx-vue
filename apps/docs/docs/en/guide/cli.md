@@ -51,7 +51,7 @@ npm run astryx-vue -- component Button
 
 ## Commands
 
-`astryx-vue component --list` lists the documented components. `astryx-vue component Button` prints one component's usage, props, slots, events, and examples. Several names (`astryx-vue component Button Card Badge`) print each component in turn, and `--json` answers one `component.details` envelope, so an agent reads a page's components in one call.
+`astryx-vue component --list` lists the documented components. `astryx-vue component Button` prints a short answer: what the component is, its import, a usage line, its accessibility requirements, every prop on one line (name, type, default, required, and the first sentence of its description), and its slots and events. `--props` prints only the props, each with its whole description, and `--detail full` prints the whole doc: best practices, every example, anatomy, and notes. `--json` always carries everything, and `--dense` keeps its one-line form. Several names (`astryx-vue component Button Card Badge`) print each component in turn, and `--json` answers one `component.details` envelope, so an agent reads a page's components in one call.
 
 `astryx-vue composable --list` lists the composables, and `astryx-vue composable useClipboard` prints one composable's parameters and return values. Vue calls these functions composables, so the CLI never says hook. `component useClipboard` still finds it and points at the `composable` command.
 

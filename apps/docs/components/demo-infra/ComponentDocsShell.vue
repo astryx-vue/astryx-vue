@@ -5,8 +5,10 @@ import { ToastViewport } from '@astryx-vue/core/Toast'
 import { useRoute } from 'kawapress/client'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { componentDemos } from '../demos/registry'
-import { sidebarItems } from './componentCatalog'
+import { componentDeprecation, sidebarItems } from './componentCatalog'
 import { UPSTREAM_PACKAGE, UPSTREAM_VERSION } from './componentDocsRoute'
+import DeprecationBadge from './DeprecationBadge.vue'
+import DeprecationNotice from './DeprecationNotice.vue'
 import { componentDocsCopy, localePath } from './docs-i18n'
 import PropsPlayground from './PropsPlayground.vue'
 import { hasAccessibility } from './reference/loadReference'
@@ -21,6 +23,7 @@ const showAccessibility = computed(() => props.route.kind === 'detail' && hasAcc
 // 顶部演示用的是总览卡片那份 demo：它展示的是组件最基础的形态。
 const stageDemo = computed(() => (props.route.kind === 'detail' ? componentDemos[props.route.slug] : undefined))
 const sidebar = computed(() => sidebarItems(props.route.locale))
+const deprecation = computed(() => props.route.kind === 'detail' ? componentDeprecation(props.route.slug) : undefined)
 // 页面共用一个 Toast 视口，示例里的按钮用 useToast 弹演示提示就够了。
 const showToastViewport = computed(() => props.route.kind === 'catalog' || !ownsToastViewport(props.route.slug))
 const routePath = useRoute()
@@ -211,7 +214,11 @@ watch(() => routePath.value.path, () => {
                   :is-selected="route.kind === 'detail' && route.slug === entry.slug"
                   :label="entry[route.locale]"
                   @click="closeSidebar(false)"
-                />
+                >
+                  <template v-if="entry.deprecated" #end>
+                    <DeprecationBadge :locale="route.locale" />
+                  </template>
+                </SideNavItem>
               </SideNavItem>
               <SideNavItem
                 v-else
@@ -219,7 +226,11 @@ watch(() => routePath.value.path, () => {
                 :is-selected="route.kind === 'detail' && route.slug === item.entry.slug"
                 :label="item.entry[route.locale]"
                 @click="closeSidebar(false)"
-              />
+              >
+                <template v-if="item.entry.deprecated" #end>
+                  <DeprecationBadge :locale="route.locale" />
+                </template>
+              </SideNavItem>
             </template>
           </SideNavSection>
         </SideNav>
@@ -229,11 +240,15 @@ watch(() => routePath.value.path, () => {
       <slot v-if="route.kind === 'catalog'" />
       <article v-else class="component-detail__content">
         <header class="component-detail__header">
-          <h1>{{ route.name }}</h1>
+          <div class="component-detail__title">
+            <h1>{{ route.name }}</h1>
+            <DeprecationBadge v-if="deprecation" :locale="route.locale" />
+          </div>
           <p v-if="exportName" class="component-detail__version">
             {{ text.alignmentTarget }}：{{ packageName }} v{{ packageVersion }} · {{ exportName }}
           </p>
         </header>
+        <DeprecationNotice v-if="deprecation" :locale="route.locale" :deprecation="deprecation" />
         <nav class="component-detail__tabs" :aria-label="`${route.name} ${text.documentation}`">
           <a :href="path(`/components/${route.slug}`)" :aria-current="route.tab === 'overview' ? 'page' : undefined">{{ text.overview }}</a>
           <a :href="path(`/components/${route.slug}/props`)" :aria-current="route.tab === 'props' ? 'page' : undefined">{{ text.props }}</a>
