@@ -9,7 +9,11 @@ import { useButtonTooltip } from '../Button/useButtonTooltip.js'
  * 例外是 `overflow="unfocused-layer"` 且没有说明：输入框在失焦时才展开的浮层里，
  * 禁用的字段打不开那层，此时仍用原生 disabled。
  */
-export function useTokenizerDisabled(props: Pick<TokenizerProps, 'disabled' | 'disabledMessage' | 'disabledReason' | 'overflow'>): {
+export function useTokenizerDisabled(
+  props: Pick<TokenizerProps, 'disabledMessage' | 'disabledReason' | 'overflow'>,
+  /** 自己禁用，或所在的 InputGroup 禁用。 */
+  isDisabled: ComputedRef<boolean>,
+): {
   disabledMessage: ComputedRef<string | undefined>
   showsDisabledMessage: ComputedRef<boolean>
   focusableDisabled: ComputedRef<boolean>
@@ -20,8 +24,8 @@ export function useTokenizerDisabled(props: Pick<TokenizerProps, 'disabled' | 'd
     const message = props.disabledMessage?.trim() ? props.disabledMessage : props.disabledReason
     return message?.trim() ? message : undefined
   })
-  const showsDisabledMessage = computed(() => Boolean(props.disabled) && Boolean(disabledMessage.value))
-  const focusableDisabled = computed(() => Boolean(props.disabled) && (showsDisabledMessage.value || props.overflow !== 'unfocused-layer'))
+  const showsDisabledMessage = computed(() => isDisabled.value && Boolean(disabledMessage.value))
+  const focusableDisabled = computed(() => isDisabled.value && (showsDisabledMessage.value || props.overflow !== 'unfocused-layer'))
   const disabledTooltip = useButtonTooltip(showsDisabledMessage)
   return { disabledMessage, showsDisabledMessage, focusableDisabled, disabledTooltip }
 }

@@ -74,7 +74,7 @@ function onKeydown(event: KeyboardEvent): void {
       tabindex="-1"
       @click="choose(option.value, option.disabled)"
     >
-      {{ option.label }}
+      <span class="astryx-picker-wheel-option-label">{{ option.label }}</span>
     </button>
   </div>
 </template>
