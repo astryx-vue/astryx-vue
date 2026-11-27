@@ -19,6 +19,9 @@ export type { DragToSnapPoints, DragToSnapPointsOptions } from './createDragToSn
 export { createPanGesture } from './createPanGesture.js'
 export type { PanGesture, PanGestureEvent, PanGestureOptions, PanGestureState } from './createPanGesture.js'
 
+export { createReorderable } from './createReorderable.js'
+export type { Reorderable, ReorderableOptions, ReorderMove } from './createReorderable.js'
+
 export { useAnimatedLayout } from './useAnimatedLayout.js'
 export type { AnimatedLayout, UseAnimatedLayoutOptions } from './useAnimatedLayout.js'
 
@@ -171,7 +174,7 @@ export type { ListFocus, ListFocusOrientation, UseListFocusOptions } from './use
 export { useLongPress } from './useLongPress.js'
 export type { LongPressHandlers, LongPressOptions } from './useLongPress.js'
 
-export { useMediaQuery } from './useMediaQuery.js'
+export { useMediaQuery, watchMediaQuery } from './useMediaQuery.js'
 
 export {
   isMenuPressActivation,
@@ -217,6 +220,8 @@ export type { PendingChange } from './usePendingChange.js'
 
 export { usePressFeedback } from './usePressFeedback.js'
 export type { UsePressFeedbackOptions, UsePressFeedbackReturn } from './usePressFeedback.js'
+
+export { useReorderable } from './useReorderable.js'
 
 export { percent, useResizable } from './useResizable.js'
 export type {

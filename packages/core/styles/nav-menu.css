@@ -22,6 +22,11 @@
     animation: astryx-scale-in var(--astryx-duration-fast-max) var(--astryx-ease-standard) both;
   }
 
+  /* 盖在触发区原位上的弹出层直接出现：它的第一行就是触发区本身，缩放进场会让这一行跳一下。 */
+  .astryx-nav-disclosure__panel--overlap {
+    animation: none;
+  }
+
   .astryx-nav-menu {
     display: flex;
     flex-direction: column;

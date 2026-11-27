@@ -1,6 +1,6 @@
 import type { UpstreamMapPart } from './types.js'
 
-/** 表格。 */
+/** 表格与列表。 */
 export const dataUpstreamMap: UpstreamMapPart = {
   '@astryx.table.label': [{ path: 'table.label' }],
   '@astryx.table.noData': [{ path: 'table.noData' }],
@@ -40,4 +40,20 @@ export const dataUpstreamMap: UpstreamMapPart = {
   '@astryx.tableTree.collapseRowNamed': [{ path: 'table.treeCollapseRowNamed', args: ['label'] }],
   '@astryx.tableTree.expandAllRows': [{ path: 'table.treeExpandAllRows' }],
   '@astryx.tableTree.collapseAllRows': [{ path: 'table.treeCollapseAllRows' }],
+  '@astryx.list.reorderHandle': [{ path: 'list.reorderHandle', args: ['label'] }],
+  '@astryx.list.reorderHandleVerb': [{ path: 'list.reorderHandleVerb' }],
+  '@astryx.list.reorderHandleAt': [{ path: 'list.reorderHandleAt', args: ['position'] }],
+  '@astryx.list.reorderHint': [{ path: 'list.reorderHint' }],
+  '@astryx.list.reorderPlace': [{ path: 'list.reorderPlace', args: ['label', 'position', 'total', 'previous', 'next'] }],
+  '@astryx.list.reorderPlaceTop': [{ path: 'list.reorderPlaceTop', args: ['label', 'position', 'total', 'next'] }],
+  '@astryx.list.reorderPlaceEnd': [{ path: 'list.reorderPlaceEnd', args: ['label', 'position', 'total', 'previous'] }],
+  '@astryx.list.reorderRefused': [{ path: 'list.reorderRefused', args: ['label'] }],
+  '@astryx.list.reorderItemAt': [{ path: 'list.reorderItemAt', args: ['position'] }],
+  '@astryx.list.reorderMoveUp': [{ path: 'list.reorderMoveUp' }],
+  '@astryx.list.reorderMoveDown': [{ path: 'list.reorderMoveDown' }],
+  '@astryx.list.reorderDone': [{ path: 'list.reorderDone' }],
+  '@astryx.list.reorderModeDone': [{ path: 'list.reorderModeDone', args: ['label', 'position', 'total'] }],
+  '@astryx.list.reorderPickedUp': [{ path: 'list.reorderPickedUp', args: ['position', 'total'] }],
+  '@astryx.list.reorderDropped': [{ path: 'list.reorderDropped', args: ['position', 'total'] }],
+  '@astryx.list.reorderCancelled': [{ path: 'list.reorderCancelled', args: ['position', 'total'] }],
 }

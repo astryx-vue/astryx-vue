@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { bottomSheetAdaptiveDialog, bottomSheetAdaptiveMenu, bottomSheetHeights, bottomSheetKeyboard, bottomSheetMultiSelector, bottomSheetNoScrim, bottomSheetSelector, bottomSheetSnapPoints, bottomSheetSwitcher } from '../../../../components/demos/bottom-sheet'
+import { bottomSheetAdaptiveDialog, bottomSheetAdaptiveMenu, bottomSheetHeights, bottomSheetKeyboard, bottomSheetMultiSelector, bottomSheetMultiStep, bottomSheetNoScrim, bottomSheetSelector, bottomSheetSnapPoints } from '../../../../components/demos/bottom-sheet'
 </script>
 
 ## Usage
@@ -46,6 +46,50 @@ A downward drag closes the sheet, and a fast upward flick expands it to a taller
 
 `padding` sets the content area's inset on the spacing scale. When omitted, the theme decides, falling back to the `--spacing-4` step (16px) on every logical edge; pass `0` for a content box flush with the panel. The content area publishes the inset it applies: a lone child region that carries its own inset escapes it, and bleed children such as a table or a divider line up with that edge instead of sitting inside it twice. At the top, the content always starts below the grab handle's 24px band, whatever the padding (`0` included): the band is not padding a child escapes, so the first row never sits under the handle, and scrolled content still passes beneath it.
 
+
+### Stacking
+
+Every sheet keeps its own `isOpen`. Open a sheet while another scrim sheet is open and it stacks on top: the sheet beneath stays mounted with its scroll position and inputs, recedes behind the new one (the nearest covered sheet shrinks to 0.96 and lifts 8px, deeper ones to 0.92 and 16px), and is blocked from pointer, keyboard, and assistive technology by the top sheet's modal dialog. The sheets can be siblings, live in separate components, or sit inside another sheet's content; a whole `BottomSheetSwitcher` is one level. Nothing moves in the DOM, and no wrapper component is needed.
+
+Order is open order: the top sheet is the one opened most recently that is still open, and a sheet that closes and reopens comes back on top. Sheets that open in the same update have no open order between them, so template order decides: a sheet sits below the sheets rendered in its content, and siblings follow the order they are written.
+
+A stack has one scrim. Only the bottom sheet dims the page; the scrims of the sheets above it are transparent, so a stack never darkens per level. Escape, a tap on the scrim, a downward swipe, and a platform close request reach only the top sheet, and that sheet's `purpose` applies. Nothing closes a whole stack at once; set every sheet closed in one update when a flow is done and they leave together. Sheets rendered inside a sheet's content are presented only while it is open and leave with it. Their `isOpen` stays yours: nothing is written to it, and a nested sheet that is still open when its host reopens comes back on top.
+
+### Replacing a sheet
+
+A multi-step flow needs no switcher: give each step its own sheet and one state value that names the open step. Close the top sheet and open another in the same update and the new sheet replaces it instead of stacking on it: the new sheet rises above the one it replaces; if the replaced sheet is taller, it moves down to meet the new sheet's top edge at the same time; the replaced sheet fades only after both motions finish, and is inert and hidden from assistive technology from the start. The scrim holds steady throughout, focus moves into the new sheet, and when the flow closes, focus returns to the element that opened its first sheet.
+
+A replace happens only when exactly one sheet closes and one opens in the update, the closing sheet was the top sheet of its stack, and the move was made from inside it (the control last pressed, or with no recent press the focused element, was in the closing sheet, as a step's own Continue or Back button is). A close and an open driven from a control outside both sheets, or made in different updates, keep the ordinary stacking motion.
+
+```vue
+<script setup lang="ts">
+import { BottomSheet } from '@astryx-vue/core/BottomSheet'
+import { ref } from 'vue'
+
+const step = ref<'details' | 'pay' | null>(null)
+
+function onOpenChange(open: boolean): void {
+  if (!open)
+    step.value = null
+}
+</script>
+
+<template>
+  <button type="button" @click="step = 'details'">
+    Start checkout
+  </button>
+  <BottomSheet :is-open="step === 'details'" label="Details" @open-change="onOpenChange">
+    <button type="button" @click="step = 'pay'">
+      Continue
+    </button>
+  </BottomSheet>
+  <BottomSheet :is-open="step === 'pay'" label="Payment" @open-change="onOpenChange">
+    <button type="button" @click="step = 'details'">
+      Back
+    </button>
+  </BottomSheet>
+</template>
+```
 
 <ComponentAnatomy />
 
@@ -120,10 +164,10 @@ A downward drag closes the sheet, and a fast upward flick expands it to a taller
 />
 
 <DemoExample
-  :demo="bottomSheetSwitcher"
-  description="Checkout is two sheets in one dialog. The scrim stays up while the page changes."
+  :demo="bottomSheetMultiStep"
+  description="Checkout is two standalone sheets driven by one state value. Continuing from inside the open sheet replaces it in place, and the scrim stays up."
   locale="en"
-  title="Multi-step switcher"
+  title="Multi-step flow"
 />
 
 ## Accessibility

@@ -38,12 +38,15 @@ import {
   Slider,
   StackItem,
   StatusDot,
+  Tab,
   Table,
+  TabList,
   Text,
   TextInput,
   Token,
   ToggleButton,
   useAnnounce,
+  useMediaQuery,
   usePowerSearchConfig,
   useResizable,
   useTableGroupedRows,
@@ -728,6 +731,20 @@ const INITIAL_VIEW: ViewState = {
 
 const view = ref<ViewState>({ ...INITIAL_VIEW, columnKeys: [...INITIAL_VIEW.columnKeys] })
 const viewSection = ref<ViewSectionKey>('columns')
+
+/**
+ * 弹层放不下的界面：窄于 768px，或者窄于 1024px 的触屏。660px 宽的「左侧栏加右侧面板」
+ * 挤进手机会把两个列表压到比单词还窄，所以这里视图选项改成底部弹层，
+ * 左侧栏变成顶部可以滚动的标签条，面板拿到整个宽度。
+ */
+const COMPACT_SURFACE_QUERY = '(max-width: 768px), (max-width: 1024px) and (pointer: coarse) and (hover: none)'
+const isCompactSurface = useMediaQuery(COMPACT_SURFACE_QUERY)
+
+/**
+ * 标签条下面那块共用的面板。每个 Tab 自带 `astryx-tab-<值>` 的 id，
+ * 面板用选中的那一个给自己命名，标签和面板两个方向都能对上。
+ */
+const VIEW_PANEL_ID = 'tf-view-panel'
 
 function updateView(patch: (current: ViewState) => ViewState): void {
   view.value = patch(view.value)
@@ -1935,11 +1952,37 @@ function SearchIcon() {
                     alignment="end"
                     :width="660"
                     :padding="0"
+                    :presentation="isCompactSurface ? 'bottom-sheet' : 'popover'"
                     label="View options"
                   >
                     <template #content>
-                      <HStack :gap="0" class="tf-view-popover">
-                        <Section variant="transparent" :padding="1" :dividers="['end']" class="tf-view-rail">
+                      <component
+                        :is="isCompactSurface ? VStack : HStack"
+                        :gap="0"
+                        class="tf-view-popover"
+                        :class="{ 'tf-view-popover--sheet': isCompactSurface }"
+                      >
+                        <!-- 窄屏：左侧栏变成顶部的标签条，放不下时可以滚动，选中的那个保持在视野里。 -->
+                        <TabList
+                          v-if="isCompactSurface"
+                          :value="viewSection"
+                          role="tablist"
+                          has-divider
+                          @change="viewSection = $event as ViewSectionKey"
+                        >
+                          <Tab
+                            v-for="section in VIEW_SECTIONS"
+                            :key="section.key"
+                            :value="section.key"
+                            :label="section.label"
+                            :panel-id="VIEW_PANEL_ID"
+                          >
+                            <template #icon>
+                              <Icon :name="section.icon" size="sm" />
+                            </template>
+                          </Tab>
+                        </TabList>
+                        <Section v-else variant="transparent" :padding="1" :dividers="['end']" class="tf-view-rail">
                           <VStack :gap="1">
                             <Button
                               v-for="section in VIEW_SECTIONS"
@@ -1956,15 +1999,22 @@ function SearchIcon() {
                           </VStack>
                         </Section>
 
-                        <StackItem size="fill" class="tf-view-pane">
-                          <VStack :gap="0" :padding="4" :padding-block-end="3">
+                        <StackItem
+                          size="fill"
+                          class="tf-view-pane"
+                          :id="isCompactSurface ? VIEW_PANEL_ID : undefined"
+                          :role="isCompactSurface ? 'tabpanel' : undefined"
+                          :aria-labelledby="isCompactSurface ? `astryx-tab-${viewSection}` : undefined"
+                        >
+                          <!-- 标签条已经标出了选中的分区，窄屏不再重复写一遍标题；面板的名字由选中的标签给。 -->
+                          <VStack v-if="!isCompactSurface" :gap="0" :padding="4" :padding-block-end="3">
                             <Heading :level="3">
                               {{ VIEW_SECTIONS.find(s => s.key === viewSection)?.title }}
                             </Heading>
                           </VStack>
 
                           <!-- Columns：两栏穿梭列表，拖动把手排序。 -->
-                          <VStack v-if="viewSection === 'columns'" :gap="0" :min-height="0" class="tf-transfer">
+                          <VStack v-if="viewSection === 'columns'" :gap="0" :min-height="0" class="tf-transfer" :padding-block-start="isCompactSurface ? 3 : undefined">
                             <VisuallyHidden id="tf-columns-reorder-hint">
                               Press Space or Enter to pick up a column. Use the arrow keys to move it, Space or Enter to drop, or Escape to cancel.
                             </VisuallyHidden>
@@ -2158,7 +2208,7 @@ function SearchIcon() {
                             </RadioList>
                           </VStack>
                         </StackItem>
-                      </HStack>
+                      </component>
                     </template>
                     <Button label="View options" variant="ghost" size="sm">
                       <template #end>
@@ -2515,6 +2565,11 @@ function SearchIcon() {
 /* 视图选项弹层：左侧栏 + 右侧面板。高度固定，四个分区不随内容跳动。 */
 .tf-view-popover {
   height: 448px;
+}
+
+/* 窄屏的底部弹层：标签条在上，面板在下，高度跟屏幕走。 */
+.tf-view-popover--sheet {
+  height: min(448px, 60dvh);
 }
 
 .tf-view-rail {

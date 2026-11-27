@@ -40,7 +40,7 @@ footer: false
       <tr><td><code>status</code></td><td><code>'default' | 'success' | 'warning' | 'error'</code></td><td><code>'default'</code></td><td>Status style.</td></tr>
       <tr><td><code>statusMessage</code></td><td><code>string</code></td><td>—</td><td>Status text under the field.</td></tr>
       <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'attached'</code></td><td>Where the status message sits. <code>attached</code> draws a status icon at the end of the field with the message below; <code>detached</code> keeps only the message; with <code>tooltip</code> the icon is a focusable button that holds the message.</td></tr>
-      <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>Input and token size.</td></tr>
+      <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>Input and token size. Inside an <code>InputGroup</code> the group's size applies.</td></tr>
       <tr><td><code>required</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Marks the field as required.</td></tr>
       <tr><td><code>optional</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows an optional indicator on the label.</td></tr>
       <tr><td><code>name</code></td><td><code>string</code></td><td>—</td><td>Form field name. Each selected id is submitted once. A disabled field submits nothing.</td></tr>

@@ -12,6 +12,7 @@ import { isCoarsePointer } from '../utils/coarsePointer.js'
 import { disabledInteractionProps } from '../utils/disabledInteraction.js'
 import { isSafeUrl } from '../utils/safeUrl.js'
 import { itemDescriptionContextKey, itemListRowKey } from './context.js'
+import { useItemSlotsFromWrapper } from './itemSlots.js'
 import ItemSwipePanel from './ItemSwipePanel.vue'
 import { useDelegatedControl } from './useDelegatedControl.js'
 import { useItemSwipe } from './useItemSwipe.js'
@@ -93,6 +94,8 @@ const element = computed<HTMLElement | null>(() => toElement(root.value))
 const descriptionIdBase = `astryx-item-description-${useId()}`
 const hasDescription = computed(() => slots.description != null || isRenderable(props.description))
 const hasLabel = computed(() => slots.label != null || isRenderable(props.label))
+// 包着这一行的 ListItem 可以给行末加一个子元素（重排手柄），也可以要求标签带 id 好让别人借它命名。
+const { trailing, shownLabelId } = useItemSlotsFromWrapper(`astryx-item-label-${useId()}`, hasLabel)
 
 const listRow = readLayerScoped(itemListRowKey)
 const isListRow = listRow != null
@@ -456,6 +459,7 @@ defineExpose({ element, focus, blur })
         >
           <span
             v-if="hasLabel"
+            :id="shownLabelId ?? undefined"
             class="astryx-item__label"
             :class="labelClasses"
             :style="labelStyle"
@@ -475,6 +479,7 @@ defineExpose({ element, focus, blur })
         <span v-if="$slots.endContent" class="astryx-item__end">
           <slot name="endContent" />
         </span>
+        <component :is="trailing" v-if="trailing" />
       </MarkerCell>
     </Surface>
   </component>

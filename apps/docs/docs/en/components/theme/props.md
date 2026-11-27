@@ -23,7 +23,7 @@ footer: false
         <td><code>mode</code></td>
         <td><code>'light' | 'dark' | 'system'</code></td>
         <td><code>'system'</code></td>
-        <td>Color mode. <code>system</code> follows the page and the OS.</td>
+        <td>Color mode. <code>system</code> takes the page root's scheme, and the OS setting when the root names both schemes.</td>
       </tr>
     </tbody>
   </table>

@@ -4,6 +4,14 @@ import type { DemoModule } from './types'
 import { COMPONENT_FAMILIES } from './families'
 import { COMPONENT_GROUPS } from './groups'
 
+/** 文档里声明的废弃：改用哪个组件、怎么迁移。侧栏、总览卡片和文档页标题据此标出「已废弃」。 */
+export interface ComponentDeprecation {
+  /** 替代组件的 slug，必须是目录里已有的组件。 */
+  replacement: string
+  /** 迁移说明，显示在文档页顶部的提示里。 */
+  description: { en: string, zh: string }
+}
+
 export interface DemoMeta {
   slug: string
   group: ComponentGroup
@@ -17,6 +25,9 @@ export interface DemoMeta {
   demo?: DemoModule
   /** 总览卡片的专用静态构图；不写时复用 `demo`。 */
   cardDemo?: DemoModule
+  deprecated?: ComponentDeprecation
+  /** 只在侧栏和直接链接里出现、不放进组件总览的页面（对应上游 doc 的 `isHiddenFromOverview`）。 */
+  isHiddenFromOverview?: boolean
 }
 
 export interface CatalogEntry {
@@ -25,6 +36,9 @@ export interface CatalogEntry {
   family?: ComponentFamily
   en: string
   zh: string
+  deprecated?: ComponentDeprecation
+  /** 只在侧栏和直接链接里出现、不放进组件总览的页面（对应上游 doc 的 `isHiddenFromOverview`）。 */
+  isHiddenFromOverview?: boolean
 }
 
 export interface CatalogMetaInput {
@@ -34,6 +48,8 @@ export interface CatalogMetaInput {
   order: number
   en: string
   zh: string
+  deprecated?: ComponentDeprecation
+  isHiddenFromOverview?: boolean
 }
 
 const GROUP_INDEX = new Map(COMPONENT_GROUPS.map((group, index) => [group, index]))
@@ -55,6 +71,11 @@ export function assembleCatalog(metas: readonly CatalogMetaInput[]): CatalogEntr
       throw new Error(`duplicate sidebar order ${meta.order} in group "${meta.group}": ${previous} and ${meta.slug}`)
     seenOrder.set(orderKey, meta.slug)
   }
+  for (const meta of metas) {
+    const replacement = meta.deprecated?.replacement
+    if (replacement !== undefined && (replacement === meta.slug || !slugs.has(replacement)))
+      throw new Error(`deprecated ${meta.slug} names an unknown replacement "${replacement}"`)
+  }
 
   return [...metas].sort((a, b) => {
     const groupOrder = (GROUP_INDEX.get(a.group as ComponentGroup) ?? 0) - (GROUP_INDEX.get(b.group as ComponentGroup) ?? 0)
@@ -69,6 +90,8 @@ export function assembleCatalog(metas: readonly CatalogMetaInput[]): CatalogEntr
     ...(meta.family === undefined ? {} : { family: meta.family as ComponentFamily }),
     en: meta.en,
     zh: meta.zh,
+    ...(meta.deprecated === undefined ? {} : { deprecated: meta.deprecated }),
+    ...(meta.isHiddenFromOverview === true ? { isHiddenFromOverview: true } : {}),
   }))
 }
 
@@ -86,6 +109,7 @@ export function parseDemoMetaFields(source: string): CatalogMetaInput {
     throw new Error('meta.ts is missing order')
 
   const family = source.match(/\bfamily:\s*'((?:\\'|[^'])*)'/)
+  const isHiddenFromOverview = /\bisHiddenFromOverview:\s*true\b/.test(source)
 
   return {
     slug: readString('slug'),
@@ -94,5 +118,6 @@ export function parseDemoMetaFields(source: string): CatalogMetaInput {
     order: Number(order[1]),
     en: readString('en'),
     zh: readString('zh'),
+    ...(isHiddenFromOverview ? { isHiddenFromOverview } : {}),
   }
 }

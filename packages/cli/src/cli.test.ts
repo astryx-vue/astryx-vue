@@ -156,7 +156,7 @@ describe('json envelopes', () => {
     }
     expect(data.locale).toBe('en')
     const all = Object.values(data.composables).flat()
-    expect(all).toHaveLength(81)
+    expect(all).toHaveLength(82)
     expect(all.map(item => item.name).every(name => name.startsWith('use'))).toBe(true)
     expect(all.find(item => item.name === 'useClipboard')).toMatchObject({ slug: 'use-clipboard', import: null })
   })
@@ -311,7 +311,7 @@ describe('component text', () => {
     expect(detail.stdout).toContain('@astryx-vue/core/ButtonGroup')
 
     const dense = await run(['component', 'Button', '--dense'])
-    const full = await run(['component', 'Button'])
+    const full = await run(['component', 'Button', '--detail', 'full'])
     expect(dense.stdout.length).toBeLessThan(full.stdout.length)
     expect(dense.stdout).toContain('props:')
     expect(dense.stdout).toContain('examples: Floating')
@@ -587,7 +587,7 @@ describe('catalog source', () => {
   })
 
   it('marks composables and stores topic bodies without frontmatter', async () => {
-    expect(catalog.components.filter(component => component.kind === 'composable')).toHaveLength(81)
+    expect(catalog.components.filter(component => component.kind === 'composable')).toHaveLength(82)
     expect(catalog.components.filter(component => component.kind === 'component')).toHaveLength(193)
     const clipboard = catalog.components.find(component => component.slug === 'use-clipboard')
     expect(clipboard?.kind).toBe('composable')

@@ -5,9 +5,10 @@ import { computed, inject, provide, useAttrs, useTemplateRef, watch } from 'vue'
 import { syntaxThemeKey } from '../Code/syntaxContext.js'
 import { devWarn } from '../composables/useDevWarning.js'
 import { reducedMotionMarkProps } from '../motion/reducedMotionMark.js'
-import { themeContextKey, themeNestingKey } from './context.js'
+import { systemSchemeKey, themeContextKey, themeNestingKey } from './context.js'
 import { isDefinedTheme, neutralTheme } from './defineTheme.js'
 import { resolveKnobs } from './motionKnobs.js'
+import { useRootScheme } from './rootScheme.js'
 import { ThemeStyle } from './themeStyleTag.js'
 import { useThemeRootSync } from './useThemeRootSync.js'
 import '../../styles/theme.css'
@@ -66,19 +67,31 @@ if (parentSyntax || ownTheme.value?.syntax)
 // No public theme resolves to `'always'` yet, so the mark is never written.
 const reducesMotion = computed(() => resolveKnobs(applied.value?.axes?.motion).reducedMotion === 'always')
 
-useThemeRootSync(isNested, () => appliedName.value, () => props.mode, () => reducesMotion.value)
+// A system Theme takes the scheme around it: the page root's, or a system
+// Theme's above it. Under a Theme that forces light or dark it declares
+// `light dark`, which follows the reader's preference again.
+const parentForces = computed(() => parent?.value.mode === 'light' || parent?.value.mode === 'dark')
+const aroundScheme = inject(systemSchemeKey, null)
+provide(systemSchemeKey, computed(() => parentForces.value ? 'preference' : aroundScheme?.value ?? 'root'))
 
-const colorScheme = computed(() => {
+const forcesScheme = computed(() => props.mode === 'light' || props.mode === 'dark')
+const pageScheme = useRootScheme(() => !isNested && !forcesScheme.value)
+
+useThemeRootSync(
+  isNested,
+  () => appliedName.value,
+  () => props.mode,
+  () => reducesMotion.value,
+  () => pageScheme.value,
+)
+
+const rootStyle = computed<CSSProperties>(() => {
   if (props.mode === 'dark')
-    return 'dark'
+    return { colorScheme: 'dark' }
   if (props.mode === 'light')
-    return 'light'
-  return 'light dark'
+    return { colorScheme: 'light' }
+  return parentForces.value ? { colorScheme: 'light dark' } : {}
 })
-
-const rootStyle = computed<CSSProperties>(() => ({
-  colorScheme: colorScheme.value,
-}))
 
 defineExpose({ element: root })
 </script>

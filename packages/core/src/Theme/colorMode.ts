@@ -44,10 +44,11 @@ export function resolveLightDark(value: string, mode: ResolvedColorMode): string
  * The mode `light-dark()` is using on the page.
  *
  * An explicit theme mode is handled by the caller. This reads the document
- * attribute, the docs site's `dark` class, then the OS preference that was
- * already measured.
+ * attribute, the docs site's `dark` class, then the scheme the page root
+ * draws in (`pageScheme`, see `rootScheme.ts`), and last the OS preference
+ * that was already measured, which decides when the root names both schemes.
  */
-export function readColorMode(prefersDark: boolean): ResolvedColorMode {
+export function readColorMode(prefersDark: boolean, pageScheme: ResolvedColorMode | null = null): ResolvedColorMode {
   if (typeof document !== 'undefined') {
     const attr = document.documentElement.getAttribute('data-astryx-color-mode')
     if (attr === 'light' || attr === 'dark')
@@ -55,5 +56,5 @@ export function readColorMode(prefersDark: boolean): ResolvedColorMode {
     if (document.documentElement.classList.contains('dark'))
       return 'dark'
   }
-  return prefersDark ? 'dark' : 'light'
+  return pageScheme ?? (prefersDark ? 'dark' : 'light')
 }

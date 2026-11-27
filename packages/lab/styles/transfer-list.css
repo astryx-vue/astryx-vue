@@ -174,13 +174,14 @@
   }
 
   /*
-   * 手柄给出抓取手势，并且吃掉触摸滚动，否则手机上竖着拖会变成滚动页面。
+   * 手柄给出抓取手势，并且吃掉单指滚动，否则手机上竖着拖会变成滚动页面。
+   * 双指捏合仍然交给浏览器缩放页面：捏合开始时浏览器取消这次指针，拖动按取消收尾，顺序不变。
    * 禁用时回到普通指针。
    */
   .astryx-transfer-list-reorder-handle {
     margin-inline-start: calc(-1 * var(--astryx-spacing-1-5, 6px));
     cursor: grab;
-    touch-action: none;
+    touch-action: pinch-zoom;
   }
 
   .astryx-transfer-list-reorder-handle[aria-pressed='true'] {

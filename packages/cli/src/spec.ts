@@ -11,6 +11,8 @@ export const CORE_PACKAGE = '@astryx-vue/core'
 export const DOCS_PACKAGE = '@astryx-vue/docs'
 
 /** Values `search --type` accepts. Each one names a search domain. */
+export const COMPONENT_DETAILS = ['compact', 'full'] as const
+
 export const SEARCH_TYPES = ['component', 'composable', 'doc', 'template'] as const
 
 export type SearchType = typeof SEARCH_TYPES[number]
@@ -110,12 +112,16 @@ export const COMMANDS: readonly CommandSpec[] = [
     ],
     options: [
       { name: 'list', flag: '--list', type: 'boolean', description: 'List every documented component.' },
+      { name: 'detail', flag: '--detail', type: 'string', description: 'How much to print: compact (the default) is a short answer with every prop on one line; full adds best practices, every example, anatomy and notes. --json always returns everything.', choices: COMPONENT_DETAILS },
+      { name: 'props', flag: '--props', type: 'boolean', description: 'Print only the props, each with its whole description.' },
     ],
     json: true,
     responseTypes: ['component.list', 'component.detail', 'component.details'],
     examples: [
       `${BINARY} component --list`,
       `${BINARY} component Button`,
+      `${BINARY} component Button --props`,
+      `${BINARY} component Button --detail full`,
       `${BINARY} component Button Card Badge`,
       `${BINARY} component Button --json`,
       `${BINARY} component Button --zh --dense`,

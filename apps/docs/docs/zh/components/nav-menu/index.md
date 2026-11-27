@@ -7,16 +7,16 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { navMenuHeading } from '../../../../components/demos/nav-menu'
+import { navMenuBasic, navMenuDescriptions, navMenuDisabled, navMenuIcons, navMenuSizes } from '../../../../components/demos/nav-menu'
 </script>
 
 ## 使用方法
 
 `NavMenu` 是 `role="menu"` 的菜单。`NavMenuItem` 是其中一项，有 `href` 时是链接。`NavDisclosure` 负责触发按钮、定位和关闭：点击、悬停、点击外部和 Escape 都会关掉。ArrowDown 打开并聚焦第一项，ArrowUp 聚焦最后一项。菜单内部方向键移动，单字符会按前缀匹配。
 
-顶栏和溢出列表已经包好了这组零件。需要自己做账号菜单时直接用它们。
+这组零件是 Vue 版自己的，上游 `@astryxdesign/core` 没有同名组件。顶栏菜单、溢出列表和侧栏条目的弹出层都是用它们搭的；需要自己做账号菜单这类导航弹出菜单时，也可以直接用。
 
-挂在侧栏或顶栏标题上的菜单用 `NavHeadingMenu` 和 `NavHeadingMenuItem`。把它放进标题的 `menu` 插槽即可，关闭和打开后的焦点由标题负责。有地址的项是链接，没有地址的项是 `menuitem`。方向键移动，Enter 或 Space 激活当前项。
+挂在侧栏或顶栏标题上的切换菜单不用这组零件，改用[导航标题菜单](/components/nav-heading-menu)。
 
 ```vue
 <script setup lang="ts">
@@ -49,4 +49,12 @@ import { NavDisclosure, NavMenu, NavMenuItem } from '@astryx-vue/core/NavMenu'
 
 ## 示例
 
-<DemoExample :demo="navMenuHeading" description="侧栏标题打开产品切换菜单，里面是 Dashboard、Analytics 和 Settings。" locale="zh" title="产品切换" />
+<DemoExample :demo="navMenuBasic" description="点按钮打开账号菜单，每一项都是链接。" locale="zh" title="基础" />
+
+<DemoExample :demo="navMenuIcons" description="用 iconClass 在文字前面放图标。" locale="zh" title="图标" />
+
+<DemoExample :demo="navMenuDescriptions" description="用 description 在文字下面加一行说明。" locale="zh" title="说明文字" />
+
+<DemoExample :demo="navMenuSizes" description="size 决定菜单的最小宽度和每一项的内边距。" locale="zh" title="尺寸" />
+
+<DemoExample :demo="navMenuDisabled" description="禁用的项点了没反应，方向键也会跳过它。" locale="zh" title="禁用项" />

@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { ItemDensity, ListItemProps, ListItemSlots } from './types.js'
-import { computed, onBeforeUnmount, provide, useTemplateRef } from 'vue'
+import { computed, h, onBeforeUnmount, provide, useAttrs, useSlots, useTemplateRef } from 'vue'
 import { useTouchHitArea } from '../composables/internal/useTouchHitArea.js'
 import { itemListRowKey, useListContext } from './context.js'
 import Item from './Item.vue'
+import { itemLabelNeededKey, itemTrailingKey } from './itemSlots.js'
 import { isReportedRow, keepPresentation } from './listPresentation.js'
 import { itemKeyAttrs } from './listRowMarks.js'
 import '../../styles/list.css'
@@ -39,6 +40,40 @@ const marker = computed(() => {
 })
 provide(itemListRowKey, { isNumbered: computed(() => marker.value === 'decimal') })
 const isBullet = computed(() => marker.value === 'disc' || marker.value === 'circle')
+
+// 可重排的列表里，带 itemKey 且允许移动的行在末尾有一个重排手柄。行有 endContent 时手柄跟在它后面；
+// 没有时手柄是行自己的最后一个子元素（itemTrailingKey），免得为它多出一个 end 槽位。
+// 不能动的行没有手柄，只给播报留一个名字。
+const attrs = useAttrs()
+const slots = useSlots()
+const reorder = computed(() => list?.reorder.value ?? null)
+const hasHandle = computed(() => {
+  const key = props.itemKey
+  return reorder.value != null && key != null && (reorder.value.options.isReorderable?.(key) ?? true)
+})
+const isHandleInRow = computed(() => hasHandle.value && slots.endContent == null)
+function renderHandle(): ReturnType<typeof h> | null {
+  const session = reorder.value?.session
+  if (session == null || !hasHandle.value || props.itemKey == null)
+    return null
+  return h(session.Handle, {
+    label: props.label == null ? undefined : String(props.label),
+    itemKey: props.itemKey,
+    isDisabled: props.isDisabled,
+    rowLabel: attrs['aria-label'] as string | undefined,
+    rowLabelledBy: attrs['aria-labelledby'] as string | undefined,
+    rowAlign: isHandleInRow.value ? (props.align ?? 'center') : undefined,
+  })
+}
+provide(itemLabelNeededKey, hasHandle)
+provide(itemTrailingKey, computed(() => {
+  const session = reorder.value?.session
+  if (session == null)
+    return null
+  if (hasHandle.value)
+    return isHandleInRow.value ? renderHandle : null
+  return () => h(session.RowName, { row: () => item.value?.element ?? null, label: props.label == null ? '' : String(props.label) })
+}))
 </script>
 
 <template>
@@ -79,6 +114,7 @@ const isBullet = computed(() => marker.value === 'disc' || marker.value === 'cir
     </template>
     <template v-if="$slots.endContent" #endContent>
       <slot name="endContent" />
+      <component :is="renderHandle" v-if="hasHandle" />
     </template>
   </Item>
 </template>

@@ -131,14 +131,17 @@
     grid-template-columns: auto minmax(calc(var(--astryx-spacing-7, 28px) + var(--astryx-spacing-1, 4px)), 1fr);
   }
 
-  .astryx-top-nav-heading--link:hover,
-  .astryx-top-nav-heading--echo:hover {
+  .astryx-top-nav-heading--link:hover {
     background: var(--astryx-color-overlay-hover);
   }
 
+  /*
+   * 弹出层里重复的标题行：弹出层盖在标题原位上、四周外扩 8px，
+   * 这一行再从弹出层内边距往里缩 4px，文字和图标就落在原来标题的位置上。
+   */
   .astryx-top-nav-heading--echo {
-    width: 100%;
-    margin: 0 0 var(--astryx-spacing-1, 4px);
+    width: calc(100% - 2 * var(--astryx-spacing-1, 4px));
+    margin: var(--astryx-spacing-1, 4px) var(--astryx-spacing-1, 4px) var(--astryx-spacing-2, 8px);
     border: 0;
     background: transparent;
     color: inherit;
