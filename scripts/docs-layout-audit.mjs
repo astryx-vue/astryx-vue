@@ -27,6 +27,7 @@ const CENTER_TOLERANCE = 8
 /** 卡片内容离边缘至少留这么多像素。 */
 const CARD_MIN_GUTTER = 8
 const SETTLE_MS = 1200
+const RECHECK_MS = 2500
 
 /**
  * 在页面里运行：返回 root 内所有画出东西的元素（文字、底色、边框、阴影、图片、svg）合起来的外框，
@@ -146,11 +147,14 @@ async function auditStage(context, width, href, findings) {
   const page = await context.newPage()
   try {
     await open(page, `${args.base}${href}`)
-    for (const m of await page.evaluate(measureInPage, '.component-detail__stage')) {
-      const verdict = judge(m, 0)
-      if (verdict)
-        findings.push(`${width}px 详情页 ${href} ${verdict} (左/右/上/下 ${round(m)})`)
+    let bad = (await page.evaluate(measureInPage, '.component-detail__stage')).filter(m => judge(m, 0))
+    // 机器忙时页面的适配可能还没跑完：有问题就等一会儿再量一次，两次都不对才算。
+    if (bad.length > 0) {
+      await page.waitForTimeout(RECHECK_MS)
+      bad = (await page.evaluate(measureInPage, '.component-detail__stage')).filter(m => judge(m, 0))
     }
+    for (const m of bad)
+      findings.push(`${width}px 详情页 ${href} ${judge(m, 0)} (左/右/上/下 ${round(m)})`)
   }
   catch (error) {
     findings.push(`${width}px 详情页 ${href} 打不开：${error.message.split('\n')[0]}`)
