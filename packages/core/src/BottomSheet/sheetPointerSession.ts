@@ -5,7 +5,8 @@ export interface SheetPointerHandlers {
   onTouchStart: (event: TouchEvent) => void
   onTouchMove: (event: TouchEvent) => void
   onTouchEnd: (event: TouchEvent) => void
-  onWindowBlur: () => void
+  /** A blurred window or a hidden page interrupts the drag. */
+  onInterrupt: () => void
 }
 
 export interface SheetPointerSession {
@@ -15,7 +16,7 @@ export interface SheetPointerSession {
   destroy: () => void
 }
 
-/** Window pointer listeners plus the body's non-passive touch listeners. */
+/** Window pointer listeners, the body's non-passive touch listeners, and the interruptions that cancel a drag. */
 export function createSheetPointerSession(handlers: SheetPointerHandlers): SheetPointerSession {
   let body: HTMLElement | null = null
   let listening = false
@@ -57,15 +58,24 @@ export function createSheetPointerSession(handlers: SheetPointerHandlers): Sheet
     element.addEventListener('touchcancel', handlers.onTouchEnd)
   }
 
+  function onVisibilityChange(): void {
+    if (document.visibilityState === 'hidden')
+      handlers.onInterrupt()
+  }
+
   function destroy(): void {
     detach()
     setBody(null)
-    if (typeof window !== 'undefined')
-      window.removeEventListener('blur', handlers.onWindowBlur)
+    if (typeof window === 'undefined')
+      return
+    window.removeEventListener('blur', handlers.onInterrupt)
+    document.removeEventListener('visibilitychange', onVisibilityChange)
   }
 
-  if (typeof window !== 'undefined')
-    window.addEventListener('blur', handlers.onWindowBlur)
+  if (typeof window !== 'undefined') {
+    window.addEventListener('blur', handlers.onInterrupt)
+    document.addEventListener('visibilitychange', onVisibilityChange)
+  }
 
   return { attach, detach, setBody, destroy }
 }
