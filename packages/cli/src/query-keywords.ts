@@ -86,3 +86,15 @@ export function componentKeywordScore(query: string, slug: string): number | nul
   }
   return best === 0 ? null : best
 }
+
+/** Slugs of the components that list the whole query, joined into one word, as a keyword. */
+export function keywordOwners(query: string): string[] {
+  const words = splitWords(query)
+  if (words.length === 0)
+    return []
+  const joined = words.join('')
+  const stemmed = words.slice(0, -1).join('') + stemWord(words.at(-1)!)
+  return Object.entries(COMPONENT_KEYWORDS)
+    .filter(([, keywords]) => keywords.some(keyword => keyword === joined || keyword === stemmed || stemWord(keyword) === stemmed))
+    .map(([slug]) => slug)
+}

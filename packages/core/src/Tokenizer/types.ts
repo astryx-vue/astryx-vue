@@ -13,6 +13,13 @@ export type TokenizerStatus = 'default' | 'success' | 'warning' | 'error'
  */
 export type TokenizerOverflow = 'none' | 'unfocused-inline' | 'unfocused-layer'
 
+/**
+ * popover：行内输入框加锚定的结果菜单。
+ * bottom-sheet：字段是一个打开触屏底部弹层的触发器，在弹层里搜索、勾选，按「保存」提交。
+ * adaptive：紧凑触屏上用底部弹层，其余用浮层；服务端渲染和水合时是浮层。
+ */
+export type TokenizerPresentation = 'popover' | 'bottom-sheet' | 'adaptive'
+
 export type TokenizerChange<T extends SearchableItem = SearchableItem>
   = | { type: 'add', item: T }
     | { type: 'create', item: T }
@@ -75,6 +82,16 @@ export interface TokenizerProps<T extends SearchableItem = SearchableItem> exten
   /** 表单字段名。每个选中项提交一个 id。 */
   name?: string
   width?: number | string
+  /**
+   * 结果在哪里呈现。`popover` 是行内输入框加锚定菜单；`bottom-sheet` 让字段变成触发器，
+   * 在触屏底部弹层里编辑一份草稿：勾选行、新建、全部清除都只改草稿，按「保存」才提交一次，
+   * 草稿改过时下滑、点遮罩、Escape 会先确认要不要放弃；`adaptive` 在紧凑触屏上用底部弹层，
+   * 其余用浮层。底部弹层里，`item` 插槽、`hasClear`、`hasEntriesOnFocus`、`menuWidth`、`menu`、
+   * `overflow`、`hasAutoFocus` 没有地方生效，开发期会提示一次；想在所有设备上保留行内字段就传
+   * `popover`。
+   * @default 'adaptive'
+   */
+  presentation?: TokenizerPresentation
 }
 
 export interface TokenizerEmits<T extends SearchableItem = SearchableItem> {

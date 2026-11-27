@@ -26,6 +26,8 @@ On a touch screen, a finger tap on a token's remove button while the input is un
 | `unfocused-inline` | On blur, they collapse to one line ending in `+N`, then expand in place on focus. |
 | `unfocused-layer` | On blur they also collapse to one line. On focus they expand over the field and do not push the content below. |
 
+On a compact touch screen the field opens a bottom sheet by default (`presentation="adaptive"`). The field becomes a trigger that shows the tokens; the sheet has a search field, a checkbox row per result, and a pinned footer with Clear all and Save. Checking rows, creating a value and Clear all only edit a draft. Save commits it once, with a single `change`. Swiping the sheet down, tapping the scrim or pressing Escape after the draft changed asks before discarding, and Clear all asks before clearing. Pass `presentation="popover"` to keep the inline field on every device, for example inside another popover.
+
 Width measurement uses `useOverflow`. The `#icon` slot sits at the start of the field. `#token` can replace each selected chip with a custom `Token`.
 
 ## Best Practices
@@ -34,6 +36,7 @@ Width measurement uses `useOverflow`. The `#icon` slot sits at the start of the 
 | --- | --- |
 | <Badge variant="success">Do</Badge> | Use `unfocused-inline` when there may be many tags and the field should stay on one line. |
 | <Badge variant="success">Do</Badge> | Turn on `hasCreate` when people can mint a value, and tell `add` from `create` in the change event. |
+| <Badge variant="success">Do</Badge> | Pin `presentation="popover"` when the field already sits inside a popover or sheet. |
 | <Badge variant="error">Don't</Badge> | Use Tokenizer for a short fixed list. Use Multi Selector for that. |
 
 
@@ -43,7 +46,7 @@ Width measurement uses `useOverflow`. The `#icon` slot sits at the start of the 
 
 <DemoExample
   :demo="tokenizerClear"
-  description="Tokenizer with a built-in clear-all button for bulk removal."
+  description="Tokenizer with a built-in clear-all button for bulk removal. On touch screens, clear through the sheet's Clear all."
   locale="en"
   title="Clear"
 />
@@ -78,7 +81,7 @@ Width measurement uses `useOverflow`. The `#icon` slot sits at the start of the 
 
 <DemoExample
   :demo="tokenizerOverflow"
-  description="On blur, tokens collapse to one line. Inline mode pushes content down on expand; layer mode overlays without shifting layout."
+  description="On blur, tokens collapse to one line. Inline mode pushes content down on expand; layer mode overlays without shifting layout. Overflow modes apply to the inline field."
   locale="en"
   title="Overflow"
 />

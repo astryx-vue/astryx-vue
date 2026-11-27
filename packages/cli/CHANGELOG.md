@@ -1,5 +1,31 @@
 # @astryx-vue/cli
 
+## 0.6.7
+
+### Patch Changes
+
+- [#608](https://github.com/astryx-vue/astryx-vue/pull/608) [`1c998c8`](https://github.com/astryx-vue/astryx-vue/commit/1c998c8aa213acec397b2d923b1b8864195d1a91) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 命令行 search 在得分相同时让回答了更多查询词的条目排前面，复数的家族词（如 tabs）会列出它的各个部分，用 PascalCase 写的名字也能在文档正文里按词找到；查不到名字时会指向有这个名字的命令（docs、template、component、composable 互相提示），别的库的叫法不再直接打开组件而是作为第一条建议。
+
+## 0.6.6
+
+### Patch Changes
+
+- [#607](https://github.com/astryx-vue/astryx-vue/pull/607) [`89336db`](https://github.com/astryx-vue/astryx-vue/commit/89336db6111042c8304e548fd913d55ada404b05) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - MoreMenu 的锚定菜单改用和 DropdownMenu 一样的 CSS 进场：从触发器那一侧滑进来，以菜单和触发器相接的那一点为原点放大，减少动态效果时手指下只淡入。在手机和平板上，顶层菜单还在进场时落下的点按和拖动会被忽略，和 iOS 一样：菜单照常打开、保持打开、焦点不动，下面的东西也不会有反应；飞出的子菜单不挡。键盘、辅助技术和鼠标不受影响。上游 MoreMenu 包着 DropdownMenu，本来就是这样，这里对齐。
+
+- [#604](https://github.com/astryx-vue/astryx-vue/pull/604) [`8890c87`](https://github.com/astryx-vue/astryx-vue/commit/8890c87dff026c5e2d883fec12ee3db97335ad96) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Tokenizer 新增 `presentation` 属性（`'popover' | 'bottom-sheet' | 'adaptive'`），默认 `'adaptive'`：紧凑触屏上，字段变成一个显示标签的触发器，点开触屏底部弹层编辑。弹层里有搜索框、每条结果一行复选框，底部钉着「全部清除」和「保存」。勾选、新建、全部清除都只改一份草稿，按「保存」才提交一次（只触发一次 `change`）；草稿改过之后下滑、点遮罩或按 Escape 会先问要不要放弃，「全部清除」也会先确认。关上后焦点回到触发器；字段在弹层开着时被禁用会把弹层关上。桌面和非触屏设备照旧是行内输入框。
+  
+  默认值变了：以前在手机上也是行内输入框，现在是底部弹层。想在所有设备上保留行内字段就传 `presentation="popover"`；PowerSearch 的列表值输入已经这样固定。底部弹层里 `item` 插槽、`hasClear`、`hasEntriesOnFocus`、`menuWidth`、`menu`、`overflow`、`hasAutoFocus` 没有地方生效，开发期会提示一次。
+
+- [#606](https://github.com/astryx-vue/astryx-vue/pull/606) [`5327d7b`](https://github.com/astryx-vue/astryx-vue/commit/5327d7b2eea029f9a0415e725de1c85fc2586aef) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Tokenizer 文档的「全部清除」和「溢出」示例说明跟上 `adaptive` 默认值：触屏上在底部弹层里用「全部清除」；溢出的收起模式只作用于行内字段。
+
+## 0.6.5
+
+### Patch Changes
+
+- [#605](https://github.com/astryx-vue/astryx-vue/pull/605) [`15692e1`](https://github.com/astryx-vue/astryx-vue/commit/15692e198d58b8aee74f9d2f54aeaf7db50d4342) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - CommandPalette：搜索开始时由输入框在对话框里念一次「加载中」，结果念出前先收回没念出去的那一次；第一次搜索还没落定时不再在敲了字的输入框下显示「输入以搜索」；搜索被拒绝按没有结果处理；列表项的 `data-highlighted`、`data-selected`、`data-disabled` 取值改为状态名，主题可以按 `highlighted`、`selected`、`disabled` 给 `command-palette-item` 挂样式；空状态里的长串会折行；输入框带手机键盘的 Search 键并关闭自动纠错，焦点环按输入框自己所在的 document 判断键盘还是指针。
+
+- [#603](https://github.com/astryx-vue/astryx-vue/pull/603) [`0accd29`](https://github.com/astryx-vue/astryx-vue/commit/0accd29fc042d6c314224c73863b5f7a07a1ffd2) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - PowerSearch：「全部清除」只移除可编辑的条件、保留只读条件，并用自己的话念出结果；没写 `isDateOnly` 的绝对日期按 `timezoneID` 里的那一天读写（没设时区是 UTC 的那一天），`isDateOnly: false` 才带时刻；`statusVariant` 新增 `tooltip`；条件标签的文字由文案拼成，各语言可调换顺序；输入框带手机键盘的 Search 键并关闭自动纠错；缺 `config` 时报出点名的错误。
+
 ## 0.6.4
 
 ### Patch Changes

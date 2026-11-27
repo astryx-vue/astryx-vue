@@ -43,7 +43,7 @@ export function splitWords(value: string): string[] {
     .filter(Boolean)
 }
 
-function nameWords(value: string): string[] {
+export function nameWords(value: string): string[] {
   return splitWords(value).map(stemWord)
 }
 

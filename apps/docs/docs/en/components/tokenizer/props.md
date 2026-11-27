@@ -45,6 +45,7 @@ footer: false
       <tr><td><code>optional</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows an optional indicator on the label.</td></tr>
       <tr><td><code>name</code></td><td><code>string</code></td><td>—</td><td>Form field name. Each selected id is submitted once. A disabled field submits nothing.</td></tr>
       <tr><td><code>width</code></td><td><code>number | string</code></td><td>—</td><td>Width of the whole field (number = pixels, string used as-is).</td></tr>
+      <tr><td><code>presentation</code></td><td><code>'popover' | 'bottom-sheet' | 'adaptive'</code></td><td><code>'adaptive'</code></td><td>Where results open. <code>popover</code> is the inline input with an anchored menu. <code>bottom-sheet</code> turns the field into a trigger that opens a touch sheet: search, check rows, and press Save to commit the draft once. <code>adaptive</code> uses the sheet on a compact touch screen (a coarse primary pointer, and a viewport narrower than the theme's <code>md</code> breakpoint or shorter than 500px) and the popover elsewhere; server rendering and hydration use the popover. The choice is made when the sheet opens and held until its exit finishes. In the sheet, the <code>item</code> slot, <code>hasClear</code>, <code>hasEntriesOnFocus</code>, <code>menuWidth</code>, <code>menu</code>, <code>overflow</code> and <code>hasAutoFocus</code> have nothing to act on and warn once in development; pass <code>popover</code> to keep the inline field on every device.</td></tr>
     </tbody>
   </table>
 </div>
@@ -59,7 +60,7 @@ footer: false
       <tr><td><code>change</code></td><td><code>value: T[]</code>, <code>change: TokenizerChange</code></td><td>Includes the change type: <code>add</code>, <code>create</code>, <code>remove</code>, or <code>clear</code>.</td></tr>
       <tr><td><code>changeQuery</code></td><td><code>query: string</code></td><td>Emitted when the query text changes.</td></tr>
       <tr><td><code>search</code></td><td><code>query: string</code></td><td>Legacy name for <code>changeQuery</code>. Both fire.</td></tr>
-      <tr><td><code>openChange</code></td><td><code>isOpen: boolean</code></td><td>Emitted when the menu opens or closes.</td></tr>
+      <tr><td><code>openChange</code></td><td><code>isOpen: boolean</code></td><td>Emitted when the inline menu opens or closes. The bottom sheet does not report it.</td></tr>
       <tr><td><code>focus</code></td><td><code>event: FocusEvent</code></td><td>Emitted when focus enters the field from outside.</td></tr>
       <tr><td><code>blur</code></td><td><code>event: FocusEvent</code></td><td>Emitted when focus leaves the whole field, not just the input.</td></tr>
     </tbody>
@@ -82,6 +83,6 @@ footer: false
   </table>
 </div>
 
-A template ref exposes <code>focus()</code>, <code>blur()</code>, <code>open()</code> and <code>close()</code>. The <code>menu</code> prop (<code>{ role: 'listbox' }</code> or <code>{ role: 'dialog', label }</code>) and <code>openChange</code> work as they do on <code>Typeahead</code>. A <code>search</code> that calls <code>context.update(items)</code> shows its early matches at once, without the tokens already picked, and later lists only append.
+A template ref exposes <code>focus()</code>, <code>blur()</code>, <code>open()</code> and <code>close()</code>; in the sheet presentation they act on the trigger and the sheet. The <code>menu</code> prop (<code>{ role: 'listbox' }</code> or <code>{ role: 'dialog', label }</code>) and <code>openChange</code> work as they do on <code>Typeahead</code>. A <code>search</code> that calls <code>context.update(items)</code> shows its early matches at once, without the tokens already picked, and later lists only append.
 
 Native attributes and listeners that are not listed above land on the input element, so `@keydown`, `@paste` and `aria-*` work as they would on a plain `<input>`. A `keydown` listener runs before the internal token navigation; call `event.preventDefault()` to skip it.

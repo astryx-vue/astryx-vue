@@ -6,6 +6,7 @@ import { catalog, text } from './catalog.ts'
 import { CliError } from './error.ts'
 import { pascalCase } from './generate/markdown.ts'
 import { assertWithinProject, toPosix } from './paths.ts'
+import { otherCommandHints } from './query-hints.ts'
 import { suggestByNames } from './query.ts'
 import { BINARY } from './spec.ts'
 
@@ -55,7 +56,7 @@ export function resolveTemplate(query: string, kind?: TemplateKind): TemplateRec
     1,
     partial.length > 1
       ? partial.slice(0, 8).map(template => ({ name: template.slug, reason: 'similar name' }))
-      : suggestTemplates(query, pool),
+      : [...otherCommandHints(query, 'template'), ...suggestTemplates(query, pool)].slice(0, 5),
   )
 }
 

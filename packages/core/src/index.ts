@@ -1511,6 +1511,7 @@ export type {
   TokenizerChange,
   TokenizerEmits,
   TokenizerOverflow,
+  TokenizerPresentation,
   TokenizerProps,
   TokenizerSize,
   TokenizerSlots,
