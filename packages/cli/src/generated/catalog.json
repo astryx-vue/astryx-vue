@@ -63678,20 +63678,174 @@
       "importPath": "@astryx-vue/core/Drawer",
       "exportName": "Drawer",
       "summary": {
-        "en": "`Drawer` is a panel that slides in from one side of the screen, for filters, details, or a short form. It shares the dialog's modal machinery: page scrolling is locked, focus stays inside, and closing returns focus to whatever opened it.",
-        "zh": "`Drawer` 是从屏幕一侧滑出的面板，用来放筛选、详情或一小段表单。它和弹窗共用同一套模态机制：打开时锁住页面滚动、把焦点关在面板里、关闭后把焦点还给打开它的元素。"
+        "en": "`Drawer` is a panel that slides in from one side of the screen, for filters, details, or a short form. By default it has a scrim and is modal: page scrolling is locked, focus stays inside, and closing returns focus to whatever opened it.",
+        "zh": "`Drawer` 是从屏幕一侧滑出的面板，用来放筛选、详情或一小段表单。默认带遮罩，是模态的：打开时锁住页面滚动、把焦点关在面板里、关闭后把焦点还给打开它的元素。"
       },
       "usage": {
-        "en": "`Drawer` is a panel that slides in from one side of the screen, for filters, details, or a short form. It shares the dialog's modal machinery: page scrolling is locked, focus stays inside, and closing returns focus to whatever opened it.\n\n`placement` picks the edge, `end` by default. `purpose` decides how it closes: `info` allows Escape and a scrim click, `form` allows only Escape, `required` allows neither.\n\n```vue\n<script setup lang=\"ts\">\nimport { Button } from '@astryx-vue/core/Button'\nimport { Drawer, DrawerHeader } from '@astryx-vue/core/Drawer'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\n</script>\n\n<template>\n  <Button @click=\"isOpen = true\">\n    Open filters\n  </Button>\n  <Drawer :is-open=\"isOpen\" label=\"Filters\" @open-change=\"isOpen = $event\">\n    <DrawerHeader title=\"Filters\" subtitle=\"Narrow the list\" @open-change=\"isOpen = false\" />\n    <p>Category, price range and availability go here.</p>\n  </Drawer>\n</template>\n```\n\n<drawerOverview />",
-        "zh": "`Drawer` 是从屏幕一侧滑出的面板，用来放筛选、详情或一小段表单。它和弹窗共用同一套模态机制：打开时锁住页面滚动、把焦点关在面板里、关闭后把焦点还给打开它的元素。\n\n`placement` 决定贴哪一边，默认 `end`（中文界面是右边）。`purpose` 决定怎么关：`info` 允许 Escape 和点遮罩，`form` 只允许 Escape，`required` 两者都不允许。\n\n```vue\n<script setup lang=\"ts\">\nimport { Button } from '@astryx-vue/core/Button'\nimport { Drawer, DrawerHeader } from '@astryx-vue/core/Drawer'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\n</script>\n\n<template>\n  <Button @click=\"isOpen = true\">\n    打开筛选\n  </Button>\n  <Drawer :is-open=\"isOpen\" label=\"筛选\" @open-change=\"isOpen = $event\">\n    <DrawerHeader title=\"筛选\" subtitle=\"缩小列表范围\" @open-change=\"isOpen = false\" />\n    <p>分类、价格区间和是否有货放在这里。</p>\n  </Drawer>\n</template>\n```\n\n<drawerOverview />"
+        "en": "`Drawer` is a panel that slides in from one side of the screen, for filters, details, or a short form. By default it has a scrim and is modal: page scrolling is locked, focus stays inside, and closing returns focus to whatever opened it.\n\n`placement` picks the edge, `end` by default. On close the panel slides out the side it came in from; a `placement` change while open takes effect on the next open. `purpose` decides how it closes: `info` allows Escape and a scrim click, `form` allows only Escape, `required` allows neither.\n\n```vue\n<script setup lang=\"ts\">\nimport { Button } from '@astryx-vue/core/Button'\nimport { Drawer, DrawerHeader } from '@astryx-vue/core/Drawer'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\n</script>\n\n<template>\n  <Button @click=\"isOpen = true\">\n    Open filters\n  </Button>\n  <Drawer :is-open=\"isOpen\" label=\"Filters\" @open-change=\"isOpen = $event\">\n    <DrawerHeader title=\"Filters\" subtitle=\"Narrow the list\" @open-change=\"isOpen = false\" />\n    <p>Category, price range and availability go here.</p>\n  </Drawer>\n</template>\n```\n\n<drawerOverview />",
+        "zh": "`Drawer` 是从屏幕一侧滑出的面板，用来放筛选、详情或一小段表单。默认带遮罩，是模态的：打开时锁住页面滚动、把焦点关在面板里、关闭后把焦点还给打开它的元素。\n\n`placement` 决定贴哪一边，默认 `end`（中文界面是右边）。关闭时面板从进场的那一侧滑出去；打开期间改了 `placement`，要等关上之后下一次打开才换边。`purpose` 决定怎么关：`info` 允许 Escape 和点遮罩，`form` 只允许 Escape，`required` 两者都不允许。\n\n```vue\n<script setup lang=\"ts\">\nimport { Button } from '@astryx-vue/core/Button'\nimport { Drawer, DrawerHeader } from '@astryx-vue/core/Drawer'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\n</script>\n\n<template>\n  <Button @click=\"isOpen = true\">\n    打开筛选\n  </Button>\n  <Drawer :is-open=\"isOpen\" label=\"筛选\" @open-change=\"isOpen = $event\">\n    <DrawerHeader title=\"筛选\" subtitle=\"缩小列表范围\" @open-change=\"isOpen = false\" />\n    <p>分类、价格区间和是否有货放在这里。</p>\n  </Drawer>\n</template>\n```\n\n<drawerOverview />"
       },
       "practices": {
         "en": [],
         "zh": []
       },
       "props": {
-        "en": [],
-        "zh": []
+        "en": [
+          {
+            "heading": "Drawer props",
+            "rows": [
+              {
+                "name": "`isOpen`",
+                "type": "`boolean`",
+                "default": "—",
+                "description": "Whether the drawer is open. The caller owns this state. Required."
+              },
+              {
+                "name": "`label`",
+                "type": "`string`",
+                "default": "—",
+                "description": "Accessible name of the drawer. Required."
+              },
+              {
+                "name": "`placement`",
+                "type": "`'start' | 'end'`",
+                "default": "`'end'`",
+                "description": "Logical edge, mirrored under RTL. The exit always slides out the side it entered; a change while open takes effect on the next open."
+              },
+              {
+                "name": "`width`",
+                "type": "`number | string`",
+                "default": "`400`",
+                "description": "Preferred width. Numbers are pixels. On phones it leaves at least 56px of the page showing."
+              },
+              {
+                "name": "`padding`",
+                "type": "`0 | 0.5 | 1 | 1.5 | 2 | 3 | 4 | 5 | 6 | 8 | 10`",
+                "default": "Theme default (16px)",
+                "description": "Content padding, mapped to the `--astryx-spacing-*` tokens."
+              },
+              {
+                "name": "`purpose`",
+                "type": "`'required' | 'form' | 'info'`",
+                "default": "`'info'`",
+                "description": "`required` disables Escape and scrim dismissal. `form` allows Escape only. `info` allows both."
+              },
+              {
+                "name": "`hasScrim`",
+                "type": "`boolean`",
+                "default": "`true`",
+                "description": "`true` is modal: scroll lock and a focus trap. `false` is non-modal: the page beside it stays clickable and scrollable, Escape still closes it, and you should include a visible close button."
+              }
+            ]
+          },
+          {
+            "heading": "DrawerHeader props",
+            "rows": [
+              {
+                "name": "`title`",
+                "type": "`string`",
+                "default": "—",
+                "description": "Title. Also names the drawer. Required."
+              },
+              {
+                "name": "`subtitle`",
+                "type": "`string`",
+                "default": "—",
+                "description": "Secondary text below the title. Not rendered when empty and no `subtitle` slot is set."
+              },
+              {
+                "name": "`hasCloseButton`",
+                "type": "`boolean`",
+                "default": "Shown when `openChange` has a listener",
+                "description": "Shows a close button that emits `openChange(false)`."
+              },
+              {
+                "name": "`closeButtonLabel`",
+                "type": "`string`",
+                "default": "Active language",
+                "description": "Accessible name of the close button. Defaults to Close in English and 关闭 in Chinese."
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "Drawer 属性",
+            "rows": [
+              {
+                "name": "`isOpen`",
+                "type": "`boolean`",
+                "default": "—",
+                "description": "抽屉是否打开，打开状态由调用方持有。必填。"
+              },
+              {
+                "name": "`label`",
+                "type": "`string`",
+                "default": "—",
+                "description": "抽屉的无障碍名称。必填。"
+              },
+              {
+                "name": "`placement`",
+                "type": "`'start' | 'end'`",
+                "default": "`'end'`",
+                "description": "贴哪一边，逻辑方向，RTL 下自动镜像。退场总是从进场的那一侧滑出；打开期间改了它，下一次打开才换边。"
+              },
+              {
+                "name": "`width`",
+                "type": "`number | string`",
+                "default": "`400`",
+                "description": "首选宽度，数字单位为像素，字符串原样使用。手机上至少给页面留出 56px。"
+              },
+              {
+                "name": "`padding`",
+                "type": "`0 | 0.5 | 1 | 1.5 | 2 | 3 | 4 | 5 | 6 | 8 | 10`",
+                "default": "主题默认值（16px）",
+                "description": "内容区内边距，取值对应 `--astryx-spacing-*` 令牌。"
+              },
+              {
+                "name": "`purpose`",
+                "type": "`'required' | 'form' | 'info'`",
+                "default": "`'info'`",
+                "description": "允许的关闭方式：`required` 禁用 Escape 与点击遮罩；`form` 仅允许 Escape；`info` 两者都允许。"
+              },
+              {
+                "name": "`hasScrim`",
+                "type": "`boolean`",
+                "default": "`true`",
+                "description": "是否带遮罩。`true` 为模态：锁住页面滚动、焦点关在面板里。`false` 为非模态：旁边的页面照常能点、能滚，Escape 照样关闭，记得放一个看得见的关闭按钮。"
+              }
+            ]
+          },
+          {
+            "heading": "DrawerHeader 属性",
+            "rows": [
+              {
+                "name": "`title`",
+                "type": "`string`",
+                "default": "—",
+                "description": "标题，同时为抽屉命名。必填。"
+              },
+              {
+                "name": "`subtitle`",
+                "type": "`string`",
+                "default": "—",
+                "description": "标题下方的副标题。为空且没有 `subtitle` 插槽时不渲染。"
+              },
+              {
+                "name": "`hasCloseButton`",
+                "type": "`boolean`",
+                "default": "有人监听 `openChange` 时显示",
+                "description": "是否显示关闭按钮，点击时发出 `openChange(false)`。"
+              },
+              {
+                "name": "`closeButtonLabel`",
+                "type": "`string`",
+                "default": "跟界面语言",
+                "description": "关闭按钮的无障碍名称。不传时英文 Close、中文「关闭」。"
+              }
+            ]
+          }
+        ]
       },
       "slots": {
         "en": [],
@@ -63704,14 +63858,46 @@
       "notes": {
         "en": [
           {
+            "heading": "Without a scrim",
+            "text": "Pass `:has-scrim=\"false\"` for a non-modal drawer: no scrim, no scroll lock, and focus is not trapped, so the page beside it stays clickable and scrolls under a finger. Focus still moves into the panel on open, and a keyboard-opened first control shows its tooltip. Escape still closes it, unless `purpose` is `required`. With no scrim to click, include a visible close button.\n\n```vue\n<Drawer :is-open=\"isOpen\" label=\"Details\" :has-scrim=\"false\" @open-change=\"isOpen = $event\">\n  <DrawerHeader title=\"Details\" has-close-button @open-change=\"isOpen = $event\" />\n  <p>The page beside it stays usable.</p>\n</Drawer>\n```\n\n<drawerNonModal />\n\nWith or without a scrim, a drawer that unmounts while open (a route change, say) returns focus to its opener, unless focus has already moved elsewhere on the page."
+          },
+          {
             "heading": "Title row",
             "text": "`DrawerHeader` gives you a title, a subtitle, and start/end slots. The close button appears when someone listens for `open-change`; pass `has-close-button` to decide it yourself."
+          },
+          {
+            "heading": "Events",
+            "text": "- `openChange(isOpen: boolean)`: fires with `false` when the user requests dismissal through Escape or a scrim click, depending on `purpose`. The parent sets `isOpen` to close."
+          },
+          {
+            "heading": "Slots",
+            "text": "- `default`: drawer body, scrollable. Usually starts with a `DrawerHeader`.\n- `footer`: bottom content, such as actions."
+          },
+          {
+            "heading": "DrawerHeader Events and Slots",
+            "text": "- `openChange(isOpen: boolean)`: fires with `false` when the close button is clicked.\n- `title`: inline content replacing the title text.\n- `subtitle`: inline content for the subtitle.\n- `startContent`: content before the title, such as a back button.\n- `endContent`: content after the title, before the close button."
           }
         ],
         "zh": [
           {
+            "heading": "不带遮罩",
+            "text": "传 `:has-scrim=\"false\"` 就是非模态抽屉：没有遮罩，不锁页面滚动，焦点也不关在面板里，旁边的页面照常能点、能用手指滚。打开时焦点照样进到面板里，键盘打开时第一个控件的提示能正常显示；Escape 照样能关（`purpose` 为 `required` 时除外）。没有遮罩可点，记得放一个看得见的关闭按钮。\n\n```vue\n<Drawer :is-open=\"isOpen\" label=\"详情\" :has-scrim=\"false\" @open-change=\"isOpen = $event\">\n  <DrawerHeader title=\"详情\" has-close-button @open-change=\"isOpen = $event\" />\n  <p>旁边的页面还能用。</p>\n</Drawer>\n```\n\n<drawerNonModal />\n\n不管带不带遮罩，抽屉开着时被卸载（比如切走路由），焦点都会还给打开它的元素；焦点已经被挪到页面别处时就不去动它。"
+          },
+          {
             "heading": "标题行",
             "text": "`DrawerHeader` 提供标题、副标题、行首和行尾插槽。关闭按钮默认在有人监听 `open-change` 时出现；想写死就传 `has-close-button`。"
+          },
+          {
+            "heading": "事件",
+            "text": "- `openChange(isOpen: boolean)`：用户通过 Escape 或点击遮罩请求关闭时以 `false` 触发，是否触发取决于 `purpose`。父组件通过设置 `isOpen` 来关闭。"
+          },
+          {
+            "heading": "插槽",
+            "text": "- `default`：抽屉主体，可滚动。通常以 `DrawerHeader` 开头。\n- `footer`：底部内容，例如操作按钮。"
+          },
+          {
+            "heading": "DrawerHeader 事件与插槽",
+            "text": "- `openChange(isOpen: boolean)`：点击关闭按钮时以 `false` 触发。\n- `title`：替换标题文字的行内内容。\n- `subtitle`：副标题的行内内容。\n- `startContent`：标题之前的内容，例如返回按钮。\n- `endContent`：标题之后、关闭按钮之前的内容。"
           }
         ]
       },

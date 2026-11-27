@@ -3,7 +3,7 @@ import type { CSSProperties } from 'vue'
 import type { ResolvedLayerInset } from '../LayerProvider/context.js'
 import type { ToastDismissReason, ToastPlacement } from './types.js'
 import { computed, onMounted, provide, reactive, ref, watch } from 'vue'
-import { useActiveModalOutlet, whenModalSettled } from '../layer/modalOutlet.js'
+import { useActiveModalOutlet, useTopLayerEntries, whenModalSettled } from '../layer/modalOutlet.js'
 import { resetLayerScopedContext } from '../layer/scopedProvide.js'
 import { useLayerConfig } from '../LayerProvider/context.js'
 import { TOAST_VIEWPORT_KEY } from './context.js'
@@ -97,22 +97,34 @@ watch(mountTarget, () => {
  * 元素的参照物，toast 会被按对话框的位置摆一次，动画结束才弹回原来的角落。等的
  * 这段时间视口留在原处，先把顶层顺序放到对话框上面，用户看到的位置就不变。
  */
+/** 视口重新进一次顶层，排到此刻所有顶层元素的最上面。 */
+function reenterTopLayer(): void {
+  const element = viewportRef.value
+  if (element == null || typeof element.hidePopover !== 'function')
+    return
+  try {
+    element.hidePopover()
+    element.showPopover()
+  }
+  catch {
+    // 引擎不支持顶层，保持原样。
+  }
+}
+
+// 无遮罩的抽屉这类非模态顶层元素后进顶层，会盖住视口。它们进去后视口跟着重进一次。
+// 视口已经搬进模态层里时不用管：它跟着那个模态层排。
+watch(useTopLayerEntries(), () => {
+  if (mountTarget.value === 'body')
+    reenterTopLayer()
+})
+
 watch(activeModal, async (modal) => {
   if (modal == null) {
     mountTarget.value = 'body'
     return
   }
 
-  const element = viewportRef.value
-  if (element != null && typeof element.hidePopover === 'function') {
-    try {
-      element.hidePopover()
-      element.showPopover()
-    }
-    catch {
-      // 引擎不支持顶层，保持原样。
-    }
-  }
+  reenterTopLayer()
 
   await whenModalSettled(modal)
   // 动画刚结束的那一帧浏览器还没把 `transform` 算掉，再等两帧才搬。
