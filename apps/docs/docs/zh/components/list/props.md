@@ -52,6 +52,12 @@ footer: false
         <td>每行前面的标记：none、disc（实心圆点）、circle（空心圆点）、decimal（序号）。<code>decimal</code> 会改用 <code>&lt;ol&gt;</code> 渲染。</td>
       </tr>
       <tr>
+        <td><code>reorderable</code></td>
+        <td><code>Reorderable</code></td>
+        <td>—</td>
+        <td><code>useReorderable</code> 或 <code>createReorderable</code> 返回的对象。传了它，每个带 <code>itemKey</code>、且对象允许移动的 <code>ListItem</code> 末尾都有一个重排手柄：手指按住再拖，鼠标直接拖，或者点一下再用方向键挪。不传时列表一点重排代码都不加载。</td>
+      </tr>
+      <tr>
         <td><code>start</code></td>
         <td><code>number</code></td>
         <td><code>1</code></td>

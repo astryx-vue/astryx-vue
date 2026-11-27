@@ -52,6 +52,7 @@
 @import './styles/lightbox.css';
 @import './styles/link.css';
 @import './styles/list.css';
+@import './styles/list-reorder.css';
 @import './styles/markdown.css';
 @import './styles/media-theme.css';
 @import './styles/metadata-list.css';

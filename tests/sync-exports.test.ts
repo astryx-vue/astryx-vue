@@ -282,6 +282,7 @@ const expectedCatalog = [
   { slug: 'use-outline-from-dom', group: 'Utility', family: 'Utilities', en: 'useOutlineFromDOM', zh: 'useOutlineFromDOM' },
   { slug: 'use-syntax-theme', group: 'Utility', family: 'Utilities', en: 'useSyntaxTheme', zh: 'useSyntaxTheme' },
   { slug: 'use-linkify', group: 'Utility', family: 'Utilities', en: 'useLinkify', zh: 'useLinkify' },
+  { slug: 'use-reorderable', group: 'Utility', family: 'Utilities', en: 'useReorderable', zh: 'useReorderable' },
 ]
 
 describe('component catalog meta', () => {
