@@ -98,28 +98,38 @@
 
   /*
    * 选中块是控件里独立的一块表面，选中的分段一变就滑到新位置，大小也跟着变。
-   * 量到位置之前（服务端渲染、还没有布局），选中的分段自己画这块底色，
-   * 量到以后由选中块画，分段只留文字的颜色和字重。
+   * 脚本把它的位置和大小写在行内（left、top、width、height），动画只改
+   * translate、scale 和 opacity。量到位置之前（服务端渲染、还没有布局），
+   * 选中块藏着，选中的分段自己画这块底色；量到以后控件带上 data-selection，
+   * 由选中块画，分段只留文字的颜色和字重。
    */
   .astryx-segmented-control__selection {
     position: absolute;
     z-index: 0;
     top: 0;
     left: 0;
-    width: var(--_selection-width);
-    height: var(--_selection-height);
+    display: none;
+    box-sizing: border-box;
     border-radius: max(0px, calc(var(--_segmented-control-radius) - var(--_segmented-control-padding)));
     background-color: var(--astryx-segmented-control-item-selected-background, light-dark(#fff, #262626));
     box-shadow: var(--astryx-segmented-control-item-selected-shadow);
-    transform: translate(var(--_selection-x), var(--_selection-y));
     pointer-events: none;
     forced-color-adjust: none;
   }
 
-  .astryx-segmented-control[data-selection='ready'] > .astryx-segmented-control__selection {
-    transition-property: transform, width, height;
-    transition-duration: var(--astryx-duration-fast-max, 165ms);
-    transition-timing-function: var(--astryx-ease-move, cubic-bezier(0.24, 1, 0.4, 1));
+  .astryx-segmented-control[data-selection] > .astryx-segmented-control__selection:not(.astryx-segmented-control__selection--leaving),
+  .astryx-segmented-control__selection--leaving[data-shown] {
+    display: block;
+  }
+
+  /* 手指按住选中的分段时，选中块抬起来，带上主题的低层级投影。 */
+  .astryx-segmented-control__selection[data-lifted] {
+    box-shadow: var(--astryx-shadow-low, 0 1px 2px rgb(0 0 0 / 12%));
+  }
+
+  /* 触屏呈现下文字颜色跟着选中块走，不再自己过渡。 */
+  .astryx-segmented-control[data-touch] > .astryx-segmented-control-item {
+    transition-property: none;
   }
 
   .astryx-segmented-control[data-selection] > .astryx-segmented-control-item {
@@ -214,8 +224,7 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .astryx-segmented-control-item,
-    .astryx-segmented-control[data-selection='ready'] > .astryx-segmented-control__selection {
+    .astryx-segmented-control-item {
       transition-duration: 0s;
     }
   }

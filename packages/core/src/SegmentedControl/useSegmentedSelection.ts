@@ -1,70 +1,100 @@
-import type { CSSProperties, Ref, ShallowRef } from 'vue'
-import { onBeforeUnmount, onMounted, onUpdated, shallowRef } from 'vue'
+/**
+ * @file useSegmentedSelection.ts
+ * @input SegmentedControl's radiogroup, its lens and leaving layers, the
+ *   selected value and whether the control takes a press
+ * @output useSegmentedSelection: the selection motion and press tracking of
+ *   one SegmentedControl, and the press state its focus handling reads
+ * @position Vue face of segmentedSelectionMotion.ts and segmentedTracking.ts,
+ *   used by SegmentedControl.vue
+ */
 
-interface SelectionBox {
-  x: number
-  y: number
-  width: number
-  height: number
+import type { Ref } from 'vue'
+import type { SegmentedPressState, SegmentedTracking } from './segmentedTracking'
+import { onBeforeUnmount, onMounted, onUpdated, watch } from 'vue'
+import { useCoarsePointer } from '../composables/useCoarsePointer'
+import { observeResize } from '../utils/sharedResizeObserver'
+import { SEGMENT_SELECTOR } from './segmentedGeometry'
+import { SegmentedSelectionMotion } from './segmentedSelectionMotion'
+import { attachSegmentedTracking } from './segmentedTracking'
+
+export interface SegmentedSelectionParts {
+  readonly track: Readonly<Ref<HTMLElement | null>>
+  /** The selection surface. */
+  readonly lens: Readonly<Ref<HTMLElement | null>>
+  /** The old surface, fading out in place under Reduce Motion. */
+  readonly leaving: Readonly<Ref<HTMLElement | null>>
 }
 
-export interface SegmentedSelection {
-  /** 选中块的盒子。还没量到（服务端、没有布局、没有选中）时为空，选中的分段自己画底色。 */
-  box: ShallowRef<SelectionBox | null>
-  /** 第一次量完之后才为真：首屏直接落在选中的分段上，不从角落滑过来。 */
-  isReady: ShallowRef<boolean>
-  style: () => CSSProperties | undefined
+export interface SegmentedSelectionOptions {
+  readonly value: () => string | undefined
+  /** False while the control is disabled: no press is tracked. */
+  readonly isEnabled: () => boolean
+}
+
+export interface SegmentedSelection extends SegmentedPressState {
+  /** The touch presentation applies (a coarse primary pointer). */
+  readonly isTouch: Readonly<Ref<boolean>>
 }
 
 /**
- * 选中块是控件里的一块独立表面，每次选中的分段变了都滑到新位置，大小也跟着变。
- * 位置和大小从选中的分段量出来：分段变宽、换行、字体加载完、控件被缩放，都会重新量。
+ * Lays the lens on the selected segment once there is layout (before that,
+ * and on the server, the selected segment paints its own surface), moves it
+ * on every change, and tracks presses of every pointer.
  */
-export function useSegmentedSelection(root: Readonly<Ref<HTMLElement | null>>): SegmentedSelection {
-  const box = shallowRef<SelectionBox | null>(null)
-  const isReady = shallowRef(false)
-  let observer: ResizeObserver | undefined
-  let frame: number | undefined
+export function useSegmentedSelection(parts: SegmentedSelectionParts, options: SegmentedSelectionOptions): SegmentedSelection {
+  const isTouch = useCoarsePointer()
+  const motion = new SegmentedSelectionMotion()
+  let tracking: SegmentedTracking | null = null
+  const observed = new Map<Element, () => void>()
 
-  function measure(): void {
-    const element = root.value
-    const selected = element?.querySelector<HTMLElement>('[role="radio"][aria-checked="true"]')
-    if (element == null || selected == null || selected.offsetWidth === 0 || selected.offsetHeight === 0) {
-      box.value = null
-      return
-    }
-    const next = { x: selected.offsetLeft, y: selected.offsetTop, width: selected.offsetWidth, height: selected.offsetHeight }
-    const current = box.value
-    if (current == null || current.x !== next.x || current.y !== next.y || current.width !== next.width || current.height !== next.height)
-      box.value = next
+  function onResize(): void {
+    motion.resized()
   }
 
-  onMounted(() => {
-    measure()
-    if (box.value != null && typeof requestAnimationFrame === 'function')
-      frame = requestAnimationFrame(() => { isReady.value = true })
-    if (typeof ResizeObserver !== 'undefined' && root.value != null) {
-      observer = new ResizeObserver(measure)
-      observer.observe(root.value)
-      for (const item of root.value.querySelectorAll('[role="radio"]'))
-        observer.observe(item)
+  /** Every segment and the track: a segment that grows, wraps or loads a font moves the lens's box. */
+  function syncObserved(): void {
+    const track = parts.track.value
+    const elements = new Set<Element>(track == null ? [] : [track, ...track.querySelectorAll(SEGMENT_SELECTOR)])
+    for (const [element, unobserve] of observed) {
+      if (!elements.has(element)) {
+        unobserve()
+        observed.delete(element)
+      }
     }
+    for (const element of elements) {
+      if (!observed.has(element))
+        observed.set(element, observeResize(element, onResize))
+    }
+  }
+
+  // The value: after the DOM shows it, so the segments' boxes are the new ones.
+  watch(options.value, (to, from) => motion.select(from ?? '', to ?? ''), { flush: 'post' })
+  watch(isTouch, touch => motion.present(touch), { flush: 'post' })
+
+  onMounted(() => {
+    const track = parts.track.value
+    const lens = parts.lens.value
+    const leaving = parts.leaving.value
+    if (track == null || lens == null || leaving == null)
+      return
+    motion.present(isTouch.value)
+    motion.attach(track, lens, leaving)
+    tracking = attachSegmentedTracking(track, motion, options.isEnabled)
+    syncObserved()
   })
-  onUpdated(measure)
+  onUpdated(syncObserved)
   onBeforeUnmount(() => {
-    observer?.disconnect()
-    if (frame != null && typeof cancelAnimationFrame === 'function')
-      cancelAnimationFrame(frame)
+    for (const unobserve of observed.values())
+      unobserve()
+    observed.clear()
+    tracking?.detach()
+    tracking = null
+    motion.detach()
   })
 
   return {
-    box,
-    isReady,
-    style: () => {
-      const current = box.value
-      return current == null
-        ? undefined
-        : { '--_selection-x': `${current.x}px`, '--_selection-y': `${current.y}px`, '--_selection-width': `${current.width}px`, '--_selection-height': `${current.height}px` } as CSSProperties
-    },
+    isTouch,
+    isPressing: () => tracking?.isPressing() ?? false,
+    keyPressed: () => tracking?.keyPressed(),
   }
 }
