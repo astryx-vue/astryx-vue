@@ -45,6 +45,10 @@ function hourAllowed(hours: number): boolean {
   return false
 }
 
+/**
+ * Each column sets only its own part of the time. So the minute column, which
+ * loops under a finger as UIDatePicker's does, keeps the hour across its seam.
+ */
 function commit(hours: number, minutes: number, seconds: number): void {
   if (inRange(hours, minutes, seconds)) {
     emit('update:modelValue', formatISOTime({ hours, minutes, seconds }, props.hasSeconds))
@@ -121,6 +125,7 @@ function onMeridiem(value: string): void {
       :label="messages.dateTimeInput.minuteWheel"
       :options="minuteOptions"
       :model-value="String(minute)"
+      looping
       @update:model-value="commit(hour24, Number($event), second)"
     />
     <PickerWheel

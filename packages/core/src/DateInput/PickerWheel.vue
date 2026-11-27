@@ -1,37 +1,29 @@
 <script setup lang="ts">
-export interface PickerWheelOption {
-  value: string
-  label: string
-  disabled?: boolean
-}
+import type { PickerWheelOption as WheelOption } from './wheelOptions'
+import { useMediaQuery } from '../composables/useMediaQuery.js'
+import TouchPickerWheel from './TouchPickerWheel.vue'
+import { steppedRow, wheelKeyOf } from './wheelOptions'
+
+export type PickerWheelOption = WheelOption
 
 const props = defineProps<{
   label: string
   options: readonly PickerWheelOption[]
   modelValue?: string
+  /** Under a finger the rows repeat without end, as UIDatePicker's minutes do. The mouse column does not loop. */
+  looping?: boolean
 }>()
 
 const emit = defineEmits<{
   'update:modelValue': [value: string]
 }>()
 
-function enabled(): PickerWheelOption[] {
-  return props.options.filter(option => !option.disabled)
-}
+/** 主指针是手指时换成 UIPickerView 的滚轮；鼠标下保留可滚动的列。 */
+const coarse = useMediaQuery('(pointer: coarse)')
 
 function choose(value: string, disabled?: boolean): void {
   if (!disabled)
     emit('update:modelValue', value)
-}
-
-/** Page Up / Page Down 一次走的行数。 */
-const PAGE_ROWS = 10
-
-const STEPS: Record<string, number> = {
-  ArrowUp: -1,
-  ArrowDown: 1,
-  PageUp: -PAGE_ROWS,
-  PageDown: PAGE_ROWS,
 }
 
 /**
@@ -39,32 +31,29 @@ const STEPS: Record<string, number> = {
  * 只在可选的行之间走，走到头就停在头上，不绕回另一头。
  */
 function onKeydown(event: KeyboardEvent): void {
-  const step = STEPS[event.key]
-  if (step == null && event.key !== 'Home' && event.key !== 'End')
+  const key = wheelKeyOf(event.key)
+  if (key == null)
     return
   event.preventDefault()
-  const options = enabled()
-  if (options.length === 0)
-    return
-  const last = options.length - 1
-  const current = options.findIndex(option => option.value === props.modelValue)
-  let next: number
-  if (event.key === 'Home')
-    next = 0
-  else if (event.key === 'End')
-    next = last
-  else if (current < 0)
-    next = (step ?? 0) > 0 ? 0 : last
-  else
-    next = Math.min(Math.max(current + (step ?? 0), 0), last)
-  const option = options[next]
+  const from = props.options.findIndex(option => option.value === props.modelValue)
+  const row = steppedRow(props.options, from, key)
+  const option = row == null ? undefined : props.options[row]
   if (option && option.value !== props.modelValue)
     emit('update:modelValue', option.value)
 }
 </script>
 
 <template>
+  <TouchPickerWheel
+    v-if="coarse"
+    :label="label"
+    :options="options"
+    :model-value="modelValue"
+    :looping="looping"
+    @update:model-value="emit('update:modelValue', $event)"
+  />
   <div
+    v-else
     class="astryx-picker-wheel"
     role="listbox"
     tabindex="0"

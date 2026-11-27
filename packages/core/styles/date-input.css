@@ -294,6 +294,75 @@
     background: var(--astryx-color-background-selected, #eef2ff);
   }
 
+  /*
+   * 手指下的滚轮（UIPickerView）：列不原生滚动，只有一条装着所有行的
+   * 长条在动，由动画器写它的 translate。行平排、28px 一行，往列的上下边渐隐。
+   */
+  .astryx-picker-wheel-touch {
+    position: relative;
+    min-width: 0;
+    height: calc(6 * 44px);
+    overflow: hidden;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .astryx-picker-wheel-touch:focus-visible {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, #0074e2);
+    outline-offset: var(--astryx-focus-outline-offset, 2px);
+  }
+
+  /* 渐隐层在列里面，遮罩不会裁掉列的焦点框。行离选择带四行仍保有足够对比度。 */
+  .astryx-picker-wheel-fade {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    mask-image: linear-gradient(to bottom, rgb(0 0 0 / 0.7), rgb(0 0 0) 50%, rgb(0 0 0 / 0.7));
+  }
+
+  .astryx-picker-wheel-band,
+  .astryx-picker-wheel-strip {
+    position: absolute;
+    inset-inline: 0;
+    top: calc(50% - 14px);
+  }
+
+  .astryx-picker-wheel-band {
+    height: 28px;
+    border-radius: var(--astryx-radius-element, 0.625rem);
+    background: var(--astryx-color-neutral, #0000000f);
+  }
+
+  .astryx-picker-wheel-row {
+    position: absolute;
+    inset-inline: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    height: 28px;
+    padding-inline: var(--astryx-spacing-2, 8px);
+    overflow: hidden;
+    color: var(--astryx-color-text-primary, light-dark(#171717, #fafafa));
+    font-size: var(--astryx-text-large-size, 1.0625rem);
+    font-weight: var(--astryx-font-weight-normal, 400);
+    line-height: var(--astryx-text-large-leading, 1.5rem);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    user-select: none;
+    pointer-events: auto;
+  }
+
+  /* 选择带上的行。标记不做过渡：动画中的颜色或字重每帧都要重排重绘。 */
+  .astryx-picker-wheel-row[data-marked] {
+    color: var(--astryx-color-text-accent, #0074e2);
+    font-weight: var(--astryx-font-weight-semibold, 600);
+  }
+
+  .astryx-picker-wheel-row[data-disabled] {
+    color: var(--astryx-color-text-disabled, #a3a3a3);
+  }
+
   .astryx-date-touch-save {
     width: 100%;
     border-radius: var(--astryx-radius-element, 0.625rem);
