@@ -5830,9 +5830,10 @@
 - [x] [`dc6dadbb7`](https://github.com/meta/astryx/commit/dc6dadbb7) fix(Toast): a quick flick dismisses a toast of any height (#8047)
   - 暂缓：本期已做拖动识别器的速度部分（#577、#579）；剩 Toast 快速甩开关闭，归组件接入阶段
   - 已移植：[#621](https://github.com/astryx-vue/astryx-vue/pull/621)。Toast 甩动关闭不再要求最小拖动距离（任意高度都能甩走），首次移动决定这次触摸归谁；安全区和空视口部分 Vue 版已有，LayerProvider 打包不适用。
-- [ ] [`09a9bf337`](https://github.com/meta/astryx/commit/09a9bf337) feat(core): UIScrollView zoom constants and the zoom stage geometry (#8147)
+- [x] [`09a9bf337`](https://github.com/meta/astryx/commit/09a9bf337) feat(core): UIScrollView zoom constants and the zoom stage geometry (#8147)
   - 暂缓：依赖 UIKit 动效数值表与动效角色（motion/uikit），Vue 版没有这套设施
   - 暂缓：[Lightbox缩放翻页] 缩放舞台几何（useZoomStage）还没有，main 只有 uikit/zoomMedia 数值表
+  - 已移植：[#661](https://github.com/astryx-vue/astryx-vue/pull/661)。缩放舞台几何纯函数和测试移到 zoomStage.ts，UIScrollView 缩放常量复用 Vue 版已有的 zoomMedia
 - [x] [`add05168f`](https://github.com/meta/astryx/commit/add05168f) fix(core): a finger held on a control's box picks it, not the text (#10091)
   - 暂缓：手指按住控件盒子时选中控件而不是文字，缺按压控制器的 box-hold 扩展（长按守卫加选择锁，上游近 2000 行），Vue 版按压控制器还没有
   - 已移植：[#638](https://github.com/astryx-vue/astryx-vue/pull/638)。按压控制器加框按住扩展，复选框和单选的框被手指按住时锁住整行选区，停着长按抬手照常激活，长按已起作用时不再多点
@@ -6028,10 +6029,11 @@
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
   - 暂缓：本期已做 模块里的尺寸揭示；剩 可拖动调整的 LayoutPanel 开合滑动（Vue 版还没有 createResizable），归动效与手势引擎的组件接入阶段
   - 已移植：[#624](https://github.com/astryx-vue/astryx-vue/pull/624)。可调整的 LayoutPanel 收起和展开改为滑动，鼠标、触屏、键盘都一样
-- [ ] [`88ba27908`](https://github.com/meta/astryx/commit/88ba27908) feat(Lightbox): swipe between gallery photos like Photos (#8197)
+- [x] [`88ba27908`](https://github.com/meta/astryx/commit/88ba27908) feat(Lightbox): swipe between gallery photos like Photos (#8197)
   - 暂缓：Lightbox 滑动翻页依赖 paging 数值、usePager 和手势设施
   - 暂缓：归动效与手势引擎任务：图库横滑翻页需要 usePager、paging 投射接入和 zoom stage 的分页（约 3600 行改动），Vue 版 Lightbox 只有按钮和方向键翻页。
   - 暂缓：[Lightbox缩放翻页] 横滑翻页需要 usePager 与缩放舞台分页
+  - 已移植：[#661](https://github.com/astryx-vue/astryx-vue/pull/661)。图集触屏横扫翻页（页距 40、主题节奏），受控 index 拒绝时弹回，鼠标下直接到位，视频底边 48px 不翻页
 - [x] [`92784f658`](https://github.com/meta/astryx/commit/92784f658) fix(core): a swizzled copy shares the package's per-page touch state (#10599)
   - 已移植：[#579](https://github.com/astryx-vue/astryx-vue/pull/579)。每页的触摸状态挂在共享注册表上，多份包拷贝共用
 - [x] [`9218a4598`](https://github.com/meta/astryx/commit/9218a4598) fix(SnapPaging): a stop within half a step of the end is the end page (#10591)
@@ -6051,10 +6053,11 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`74f1fb96f`](https://github.com/meta/astryx/commit/74f1fb96f) fix(theme): a themed :active follows the touch press model (#10420)
   - 不适用：上游内部规范和架构文档、只改上游测试（自动初筛）
-- [ ] [`4043d65e5`](https://github.com/meta/astryx/commit/4043d65e5) feat(Lightbox): drag a photo down to close, like Photos (#8215)
+- [x] [`4043d65e5`](https://github.com/meta/astryx/commit/4043d65e5) feat(Lightbox): drag a photo down to close, like Photos (#8215)
   - 暂缓：Lightbox 下拉关闭依赖 UIKit 缩放媒体数值和手势设施
   - 暂缓：归动效与手势引擎任务：Vue 版 Lightbox 没有 zoom stage（useZoomStage/useZoomCore/zoomStage），下拉关闭需要先搭这套舞台和双弹簧退出（约 2600 行改动）。
   - 暂缓：[Lightbox缩放翻页] 下拉关闭需要缩放舞台和双弹簧退出
+  - 已移植：[#661](https://github.com/astryx-vue/astryx-vue/pull/661)。触屏往下拖照片关闭，背景和控件随位移变淡，没拖够按 settle 弹簧弹回
 - [x] [`3b8eb80d1`](https://github.com/meta/astryx/commit/3b8eb80d1) fix(RefreshControl): the end plays UIKit's curve over the duration token (#10582)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`f75f0f2d3`](https://github.com/meta/astryx/commit/f75f0f2d3) feat(ToggleButtonGroup): a finger's slide toggles the one it lifts on (#8660)
@@ -9257,14 +9260,16 @@
   - 已移植：[#565](https://github.com/astryx-vue/astryx-vue/pull/565)。初始焦点请求不可用（hidden、inert、禁用）时顺延给下一个，明确请求优先于标题的默认请求，补测试
 - [x] [`dc6dadbb7`](https://github.com/meta/astryx/commit/dc6dadbb7) fix(Toast): a quick flick dismisses a toast of any height (#8047)
   - 已移植：[#564](https://github.com/astryx-vue/astryx-vue/pull/564)。下沿让开底部安全区（触屏至少 34px），没有提示时视口不占盒子；快速甩动关闭由 useToastGesture 的速度判定已覆盖
-- [ ] [`09a9bf337`](https://github.com/meta/astryx/commit/09a9bf337) feat(core): UIScrollView zoom constants and the zoom stage geometry (#8147)
+- [x] [`09a9bf337`](https://github.com/meta/astryx/commit/09a9bf337) feat(core): UIScrollView zoom constants and the zoom stage geometry (#8147)
   - 暂缓：UIScrollView 缩放常量与缩放舞台几何，是触摸缩放、翻页、下拉关闭手势设施的底座，Vue 版灯箱只有按钮、键盘和双击缩放
   - 暂缓：[Lightbox缩放翻页] 缩放舞台几何（useZoomStage）还没有，main 只有 uikit/zoomMedia 数值表
+  - 已移植：[#661](https://github.com/astryx-vue/astryx-vue/pull/661)。缩放舞台几何纯函数和测试移到 zoomStage.ts，UIScrollView 缩放常量复用 Vue 版已有的 zoomMedia
 - [x] [`6d8e4c309`](https://github.com/meta/astryx/commit/6d8e4c309) fix(Toast): a moved toast's card starts no transition (#10223)
   - Vue 版已有：搬进或搬出模态时视口加 rehosting 类关掉卡片过渡并等动画时长（toast.css、ToastViewport.vue）
-- [ ] [`0c168a374`](https://github.com/meta/astryx/commit/0c168a374) feat(Lightbox): touch zoom like the iOS Photos viewer (#8148)
+- [x] [`0c168a374`](https://github.com/meta/astryx/commit/0c168a374) feat(Lightbox): touch zoom like the iOS Photos viewer (#8148)
   - 暂缓：触摸缩放像 iOS 照片，依赖 09a9bf337 的缩放舞台
   - 暂缓：[Lightbox缩放翻页] 触摸缩放依赖缩放舞台
+  - 已移植：[#661](https://github.com/astryx-vue/astryx-vue/pull/661)。捏合、双击、Ctrl 滚轮缩放，放大后带惯性和橡皮筋的平移，键盘以中心放大和到边停的平移，控件半透明底色
 - [x] [`332cc3bef`](https://github.com/meta/astryx/commit/332cc3bef) chore(core): split two long comments in LayerProvider and ToastViewport (#10244)
   - 不适用：只拆分 React 源码里的长注释
 
@@ -9356,10 +9361,11 @@
   - 不适用：修的是 Chromium 对 CSS anchor 定位元素逐帧重排，Vue 浮层用 JS 定位
 - [x] [`1c8292c42`](https://github.com/meta/astryx/commit/1c8292c42) fix(Layer): keep decorator portals outside renderer-managed DOM (#7633)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`88ba27908`](https://github.com/meta/astryx/commit/88ba27908) feat(Lightbox): swipe between gallery photos like Photos (#8197)
+- [x] [`88ba27908`](https://github.com/meta/astryx/commit/88ba27908) feat(Lightbox): swipe between gallery photos like Photos (#8197)
   - 暂缓：横滑翻页像 iOS 照片，依赖 09a9bf337 的缩放舞台
   - 暂缓：归动效与手势引擎任务：图库横滑翻页需要 usePager、paging 投射接入和 zoom stage 的分页（约 3600 行改动），Vue 版 Lightbox 只有按钮和方向键翻页。
   - 暂缓：[Lightbox缩放翻页] 横滑翻页需要 usePager 与缩放舞台分页
+  - 已移植：[#661](https://github.com/astryx-vue/astryx-vue/pull/661)。图集触屏横扫翻页（页距 40、主题节奏），受控 index 拒绝时弹回，鼠标下直接到位，视频底边 48px 不翻页
 - [x] [`7432d40a7`](https://github.com/meta/astryx/commit/7432d40a7) test(Lightbox): the Reduce Motion plus-minus proof freezes on the key (#10609)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`6422a1db4`](https://github.com/meta/astryx/commit/6422a1db4) refactor(Layer): one presentation hold keeps a layer's chosen presentation until its close settles (#8587)
@@ -9376,10 +9382,11 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`f0ede8b0c`](https://github.com/meta/astryx/commit/f0ede8b0c) docs(spec): DialogHeader records the open endContentEdge mapping question (#10566)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`4043d65e5`](https://github.com/meta/astryx/commit/4043d65e5) feat(Lightbox): drag a photo down to close, like Photos (#8215)
+- [x] [`4043d65e5`](https://github.com/meta/astryx/commit/4043d65e5) feat(Lightbox): drag a photo down to close, like Photos (#8215)
   - 暂缓：下拉关闭像 iOS 照片，依赖 09a9bf337 的缩放舞台
   - 暂缓：归动效与手势引擎任务：Vue 版 Lightbox 没有 zoom stage（useZoomStage/useZoomCore/zoomStage），下拉关闭需要先搭这套舞台和双弹簧退出（约 2600 行改动）。
   - 暂缓：[Lightbox缩放翻页] 下拉关闭需要缩放舞台和双弹簧退出
+  - 已移植：[#661](https://github.com/astryx-vue/astryx-vue/pull/661)。触屏往下拖照片关闭，背景和控件随位移变淡，没拖够按 settle 弹簧弹回
 - [x] [`4d513699b`](https://github.com/meta/astryx/commit/4d513699b) docs(specs): Popover records that it has no viewport-rectangle anchor (#10491)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`fb2437f61`](https://github.com/meta/astryx/commit/fb2437f61) fix(Lightbox): the drag to close plays at the theme's tempo (#10630)
