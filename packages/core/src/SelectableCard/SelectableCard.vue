@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import type { SelectableCardEmits, SelectableCardProps, SelectableCardSlots } from './types.js'
-import { computed, useTemplateRef } from 'vue'
+import { computed, inject, useTemplateRef } from 'vue'
 import Card from '../Card/Card.vue'
 import { useClickableContainer } from '../composables/useClickableContainer.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
+import { isImeKeyEvent } from '../utils/ime.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
+import { selectableCardInputKey } from './selectableCardInput.js'
 import '../../styles/clickable-card.css'
 
 defineOptions({ name: 'AstryxSelectableCard' })
@@ -30,15 +32,26 @@ function commit(next: boolean): void {
   emit('change', next)
 }
 
+/** 卡片组可以把输入换成单选框：单选框只会选中，再点已选的那张什么都不发生。 */
+const groupInput = inject(selectableCardInputKey, null)
+const isRadio = computed(() => groupInput?.value.type === 'radio')
+const groupName = computed(() => groupInput?.value.name)
+const groupValue = computed(() => groupInput?.value.value)
+
+function requestChange(): void {
+  if (!isRadio.value)
+    commit(!isSelected.value)
+  else if (!isSelected.value)
+    commit(true)
+}
+
 const handlers = useClickableContainer({
   containerRef,
   interactiveRef: controlRef,
   get disabled() {
     return props.isDisabled
   },
-  onClick() {
-    commit(!isSelected.value)
-  },
+  onClick: requestChange,
 })
 
 function onSurfaceClick(event: MouseEvent): void {
@@ -51,6 +64,8 @@ function onSurfaceClick(event: MouseEvent): void {
 const { pressableProps, pressActionProps } = usePressFeedback({ hasOverlay: false, isContainer: true })
 
 function onKeyDown(event: KeyboardEvent): void {
+  if (isImeKeyEvent(event))
+    return
   if (props.isDisabled) {
     if (event.key === ' ' || event.key === 'Enter')
       event.preventDefault()
@@ -59,8 +74,26 @@ function onKeyDown(event: KeyboardEvent): void {
   if (event.key !== 'Enter')
     return
   event.preventDefault()
-  commit(!isSelected.value)
+  requestChange()
 }
+
+function onInputChange(event: Event): void {
+  if (!isRadio.value) {
+    commit((event.target as HTMLInputElement).checked)
+    return
+  }
+  requestChange()
+}
+
+/**
+ * 同组的单选框都不进表单：每张卡都离开表单，这一组才只占一个 Tab 停靠点；
+ * 被禁用的复选框卡片也不提交任何东西。
+ */
+const formOwner = computed(() => {
+  if (groupInput == null)
+    return undefined
+  return groupInput.value.type === 'radio' || props.isDisabled ? '' : undefined
+})
 </script>
 
 <template>
@@ -84,9 +117,12 @@ function onKeyDown(event: KeyboardEvent): void {
       :aria-disabled="isDisabled || undefined"
       :aria-label="label"
       :checked="isSelected"
-      type="checkbox"
+      :type="isRadio ? 'radio' : 'checkbox'"
+      :name="groupName"
+      :value="groupValue"
+      :form="formOwner"
       v-bind="pressActionProps"
-      @change="commit(($event.target as HTMLInputElement).checked)"
+      @change="onInputChange"
       @keydown="onKeyDown"
     />
     <slot />

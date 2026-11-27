@@ -43,7 +43,7 @@ function toggle(id: string, isSelected: boolean) {
 </template>
 ```
 
-`SelectableCard` 适合多选：筛选标签、功能附加项、可以同时选几个的选项网格，选中的 ID 用 `Set` 记录。不要拿它做单选组：每张卡片都是一个复选框，辅助技术会把它读成多选组，而且每张卡片各占一个 Tab 停靠点。几个里选一个，用 `RadioList`。
+`SelectableCard` 适合多选：筛选标签、功能附加项、可以同时选几个的选项网格，选中的 ID 用 `Set` 记录。不要拿它做单选组：每张卡片都是一个复选框，辅助技术会把它读成多选组，而且每张卡片各占一个 Tab 停靠点。几个里选一个，用 `RadioList`；想让选项长成卡片，用 `@astryx-vue/lab` 的 `SelectableCardGroup`，它把这些卡片渲染成一个单选组。
 
 
 <ComponentAnatomy />

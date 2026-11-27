@@ -248,7 +248,10 @@ describe('transferListSelector', () => {
     await harness.update({ isDisabled: true })
     const fieldset = popover().querySelector('fieldset')
     expect(fieldset).not.toBeNull()
-    expect(fieldset?.hasAttribute('disabled')).toBe(true)
+    // 禁用的字段区不带原生 disabled（会让正聚焦的控件失焦），用 aria-disabled 标记。
+    expect(fieldset?.hasAttribute('disabled')).toBe(false)
+    expect(fieldset?.getAttribute('aria-disabled')).toBe('true')
+    expect(buttonInPopover('Add Status')?.getAttribute('aria-disabled')).toBe('true')
 
     const cancel = buttonInPopover('Cancel')
     const apply = buttonInPopover('Apply')

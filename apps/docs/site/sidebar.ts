@@ -107,6 +107,7 @@ export function labSidebar(english: boolean): Sidebar {
         item('CommentPin', `${prefix}/lab/comment-pin`),
         item('CircularProgress', `${prefix}/lab/circular-progress`),
         item('CircleCheckIndicator', `${prefix}/lab/circle-check-indicator`),
+        item('SelectableCardGroup', `${prefix}/lab/selectable-card-group`),
         item('DialogHeroHeader', `${prefix}/lab/dialog-hero-header`),
         item('DiffViewer', `${prefix}/lab/diff-viewer`),
         item('InfoTip', `${prefix}/lab/info-tip`),

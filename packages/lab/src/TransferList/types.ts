@@ -25,6 +25,8 @@ export interface TransferListProps<T extends string = string> {
   description?: string
   /** 完整的选项表，`value` 不能重复。 */
   options: readonly TransferListOption<T>[]
+  /** 禁用所有搬运、排序、清空、全部添加和搜索。行上的按钮与搜索框仍可聚焦。 */
+  isDisabled?: boolean
   /** 已选项的顺序，同时是唯一的真相来源。 */
   modelValue?: readonly T[]
   /** 已选面板的标题。默认取文案表。 */

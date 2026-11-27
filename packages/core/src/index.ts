@@ -1131,7 +1131,12 @@ export type {
   SegmentedControlSlots,
 } from './SegmentedControl/index.js'
 export { SelectableCard } from './SelectableCard/index.js'
-export type { SelectableCardEmits, SelectableCardProps, SelectableCardSlots } from './SelectableCard/index.js'
+export type {
+  SelectableCardEmits,
+  SelectableCardInput,
+  SelectableCardProps,
+  SelectableCardSlots,
+} from './SelectableCard/index.js'
 export { Selector } from './Selector/index.js'
 export type {
   SelectorEmits,

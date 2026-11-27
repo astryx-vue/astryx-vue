@@ -7,10 +7,16 @@ title: ListInput
 Edits a list of records with a consistent shape. Each column supplies an input through `renderInput`, with add, remove, validation, drag, and keyboard-reorder support.
 
 <script setup lang="ts">
-import { labListInput } from '../../../../components/lab-demos'
+import { labListInput, labListInputBudgetAllocation, labListInputFamilyMembers, labListInputMailingList } from '../../../../components/lab-demos'
 </script>
 
 <ClientOnly><DemoExample :demo="labListInput" description="Each guest has editable name and role fields; records can be added, removed, or reordered." locale="en" title="Reorderable records" /></ClientOnly>
+
+<ClientOnly><DemoExample :demo="labListInputFamilyMembers" description="Three simple fields per record, the recommended ceiling. Order is immaterial, so the list is not reorderable. At 640px or narrower each record stacks its fields with repeated labels." locale="en" title="Family members" /></ClientOnly>
+
+<ClientOnly><DemoExample :demo="labListInputBudgetAllocation" description="A team Selector beside a percentage NumberInput. Each team can appear once (a record error), the rows must total 100% (a list error), and Add stops at four teams." locale="en" title="Budget allocation" /></ClientOnly>
+
+<ClientOnly><DemoExample :demo="labListInputMailingList" description="A one-column list that starts empty and stops adding at six addresses. A repeated address is a record error, a malformed address is a field error after blur, and removing the last address shows the required-list error." locale="en" title="Mailing list" /></ClientOnly>
 
 ## Import
 

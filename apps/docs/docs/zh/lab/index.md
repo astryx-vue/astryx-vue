@@ -46,6 +46,7 @@ import '@astryx-vue/lab/lab.css'
 | [CommentPin](/lab/comment-pin) | 头像优先的批注锚点：打开一条线程，或一组线程。 |
 | [CircularProgress](/lab/circular-progress) | 显示确定或不确定的圆环进度。 |
 | [CircleCheckIndicator](/lab/circle-check-indicator) | iOS 的多选圆圈，在主题里映射到 checkbox。 |
+| [SelectableCardGroup](/lab/selectable-card-group) | 一组可选卡片，按单选组或复选框组的语义读出。 |
 | [DialogHeroHeader](/lab/dialog-hero-header) | 标题上方铺满媒体的对话框页头。 |
 | [DiffViewer](/lab/diff-viewer) | 展示单个文件的统一或分栏 diff。 |
 | [InfoTip](/lab/info-tip) | 为术语和指标提供补充解释。 |

@@ -46,6 +46,7 @@ import '@astryx-vue/lab/lab.css'
 | [CommentPin](/en/lab/comment-pin) | Avatar-first annotation marker for one thread or a grouped set of threads. |
 | [CircularProgress](/en/lab/circular-progress) | Determinate and indeterminate ring progress. |
 | [CircleCheckIndicator](/en/lab/circle-check-indicator) | The iOS multiple-selection circle, mapped to checkbox in a theme. |
+| [SelectableCardGroup](/en/lab/selectable-card-group) | A set of selectable cards with radio-group or checkbox-group semantics. |
 | [DialogHeroHeader](/en/lab/dialog-hero-header) | A Dialog header with full-bleed media above the title. |
 | [DiffViewer](/en/lab/diff-viewer) | Unified or split diff for one file. |
 | [InfoTip](/en/lab/info-tip) | Supplementary explanations for terms and metrics. |

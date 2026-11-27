@@ -110,7 +110,7 @@ function onOpenChange(next: boolean): void {
 
 function handleTransferChange(nextValue: readonly T[], commit: (value: readonly T[]) => void, isBusy: boolean): void {
   // 提交中不接收新的搬运：一次待处理的动作不该叠第二次。
-  if (isBusy)
+  if (isBusy || props.isDisabled)
     return
   if (props.commitBehavior === 'staged') {
     draftValue.value = [...nextValue]
@@ -146,9 +146,9 @@ function cancelStaged(close: () => void): void {
   >
     <template #default="{ value: appliedValue, commit, close, state }">
       <div :aria-busy="state.isBusy || undefined" :data-busy="state.isBusy || undefined" class="astryx-transfer-list-selector__surface">
-        <fieldset class="astryx-transfer-list-selector__fieldset" :disabled="isDisabled">
+        <fieldset class="astryx-transfer-list-selector__fieldset" :aria-disabled="isDisabled ? 'true' : undefined">
           <TransferList
-            :label="label" is-label-hidden :options="options"
+            :label="label" is-label-hidden :options="options" :is-disabled="isDisabled"
             :model-value="commitBehavior === 'staged' ? draftValue : appliedValue"
             :selected-label="selectedLabel" :available-label="availableLabel" :has-search="hasSearch"
             :search-label="searchLabel" :search-placeholder="searchPlaceholder"
