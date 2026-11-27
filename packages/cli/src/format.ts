@@ -1,8 +1,9 @@
 import type { BuildKit, KitComponent, TemplateMatch } from './build.ts'
-import type { ComponentRecord, TableGroup, TableRow, TemplateRecord, TopicRecord } from './catalog-types.ts'
+import type { ComponentRecord, TableRow, TemplateRecord, TopicRecord } from './catalog-types.ts'
 import type { SearchHit } from './query.ts'
 import type { CopyReceipt } from './templates.ts'
 import { examplesFor, text } from './catalog.ts'
+import { formatPractices, formatPropsList, formatTable, propColumns } from './format-sections.ts'
 import { firstSentence } from './generate/markdown.ts'
 import { displayName } from './query.ts'
 import { BINARY, CORE_PACKAGE } from './spec.ts'
@@ -110,8 +111,7 @@ function formatDetail(record: ComponentRecord, locale: 'en' | 'zh', dense: boole
   const practices = record.practices[locale]
   if (practices.length > 0) {
     lines.push('', '## Best practices', '')
-    for (const practice of practices)
-      lines.push(`- ${practice.guidance}: ${practice.text}`)
+    lines.push(...formatPractices(practices))
   }
   const examples = examplesFor(record, locale)
   if (examples.length > 0) {
@@ -127,7 +127,7 @@ function formatDetail(record: ComponentRecord, locale: 'en' | 'zh', dense: boole
     }
   }
   for (const group of record.props[locale])
-    lines.push('', `## ${group.heading}`, '', formatTable(group, propColumns(group)))
+    lines.push('', `## ${group.heading}`, '', record.kind === 'composable' ? formatTable(group, propColumns(group)) : formatPropsList(group, locale === 'zh'))
   for (const group of record.slots[locale])
     lines.push('', `## ${group.heading}`, '', formatTable(group, ['name', 'description']))
   for (const group of record.events[locale])
@@ -207,21 +207,6 @@ function importStatement(component: ComponentRecord): string {
 function propBrief(row: TableRow): string {
   const value = row.default && !/^[—-]$/.test(row.default) ? `=${row.default}` : ''
   return `${row.name}${value}`
-}
-
-/** Drops the Default column when the rows do not use it, which is the common case for return values. */
-function propColumns(group: TableGroup): (keyof TableRow)[] {
-  return group.rows.some(row => row.default !== undefined)
-    ? ['name', 'type', 'default', 'description']
-    : ['name', 'type', 'description']
-}
-
-function formatTable(group: TableGroup, columns: (keyof TableRow)[]): string {
-  const header = columns.map(column => column === 'name' ? 'Name' : column === 'type' ? 'Type' : column === 'default' ? 'Default' : column === 'payload' ? 'Payload' : 'Description')
-  const rows = group.rows.map(row => columns.map(column => row[column] ?? ''))
-  const widths = header.map((label, index) => Math.max(label.length, ...rows.map(row => row[index]?.length ?? 0)))
-  const render = (cells: string[]): string => `| ${cells.map((cell, index) => cell.padEnd(widths[index] ?? cell.length)).join(' | ')} |`
-  return [render(header), `| ${widths.map(width => '-'.repeat(width)).join(' | ')} |`, ...rows.map(render)].join('\n')
 }
 
 export function formatTemplateList(templates: readonly TemplateRecord[], locale: 'en' | 'zh', dense: boolean): string {

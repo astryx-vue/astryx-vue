@@ -41,6 +41,12 @@ export function formatUpgradeReport(report: UpgradeReport, dense: boolean): stri
   }
 
   lines.push(zh ? `升级指南：${report.guideUrl}` : `Upgrade guide: ${report.guideUrl}`, '')
+  if (report.commands.length > 0) {
+    lines.push(zh ? '把和 core 同一版发布的包一起升到这一版：' : 'Upgrade every package released with core to this version:')
+    for (const command of report.commands)
+      lines.push(`  ${command}`)
+    lines.push('')
+  }
 
   if (!dense) {
     for (const [index, section] of report.sections.entries()) {

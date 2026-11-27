@@ -1,6 +1,7 @@
 import type { Suggestion } from './error.ts'
 import { catalog, componentNames } from './catalog.ts'
 import { keywordOwners } from './query-keywords.ts'
+import { suggestByNames } from './query.ts'
 import { BINARY } from './spec.ts'
 
 /** The lookup commands that read one kind of entry each. */
@@ -72,7 +73,20 @@ export function otherCommandHints(query: string, from: LookupCommand): Suggestio
     else if (entry.names.some(name => folded(name) === fold || (entry.command === 'composable' && folded(name).replace(/^use/, '') === fold.replace(/^use/, ''))))
       foldedHits.push(hint)
   }
-  return [...exactHits, ...foldedHits].slice(0, MAX_HINTS)
+  return [...exactHits, ...foldedHits, ...nearHookHints(query, from, exactHits.length + foldedHits.length)].slice(0, MAX_HINTS)
+}
+
+/**
+ * A `use…` name that a template or docs lookup does not know but that is a
+ * slip or two from a composable's name points to that composable, unless the
+ * name already matches an entry another command reads.
+ */
+function nearHookHints(query: string, from: LookupCommand, found: number): Suggestion[] {
+  if (found > 0 || (from !== 'template' && from !== 'docs') || !/^use/i.test(query.trim()))
+    return []
+  const hooks = catalog.components.filter(component => component.kind === 'composable')
+  return suggestByNames(query, hooks, hook => componentNames(hook), hook => hook.title.en)
+    .map(hint => ({ name: `${BINARY} composable ${hint.name}`, reason: 'do this instead' }))
 }
 
 /**

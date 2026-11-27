@@ -1,5 +1,17 @@
 # @astryx-vue/cli
 
+## 0.7.1
+
+### Patch Changes
+
+- [#610](https://github.com/astryx-vue/astryx-vue/pull/610) [`ab1fac0`](https://github.com/astryx-vue/astryx-vue/commit/ab1fac025296f8cf7718c4fa9fd16b6bd30b1453) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - PowerSearch 的相对日期条件改成从一组固定选项里挑（1、3、7、14、30 天，1、2、4 周，1、3、6、12 个月，前后两个方向），选中就保存，不再给一个自由输入框；`isPastAllowed`、`isFutureAllowed` 设成 false 会去掉对应方向。新增 `powerSearchSheet` 文案命名空间（中英文），包含触屏底部弹层流程和相对日期选项的文字，原版对应的 `@astryx.powersearch.sheet.*` 翻译也接上了。
+
+## 0.7.0
+
+### Minor Changes
+
+- [#617](https://github.com/astryx-vue/astryx-vue/pull/617) [`7efda4e`](https://github.com/astryx-vue/astryx-vue/commit/7efda4e0c265e33a46ec1aec6974119210136bf7) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 查不到名字或命令写错时，文本输出会在报错下面给出 Did you mean / Run 建议；component 的 props 改成一行一个、Do 与 Don't 各标一次、表格分隔线缩短；新增 `init --remove-agents`，`upgrade` 会给出把同版发布的包一起升级的命令。
+
 ## 0.6.11
 
 ### Patch Changes

@@ -45,10 +45,6 @@ import logStreamDemo from './log-stream.vue'
 import logStreamSource from './log-stream.vue?raw&highlighted'
 import mediaPlayerDemo from './media-player.vue'
 import mediaPlayerSource from './media-player.vue?raw&highlighted'
-import mobileTokenizerOverviewDemo from './mobile-tokenizer-overview.vue'
-import mobileTokenizerOverviewSource from './mobile-tokenizer-overview.vue?raw&highlighted'
-import mobileTokenizerDemo from './mobile-tokenizer.vue'
-import mobileTokenizerSource from './mobile-tokenizer.vue?raw&highlighted'
 import scheduleDemo from './schedule.vue'
 import scheduleSource from './schedule.vue?raw&highlighted'
 import statDemo from './stat.vue'
@@ -92,8 +88,6 @@ export const labLogStreamOverview = defineDemo(logStreamOverviewDemo, logStreamO
 export const labMediaPlayer = defineDemo(mediaPlayerDemo, mediaPlayerSource, options)
 export const labVideoPlayer = defineDemo(videoPlayerDemo, videoPlayerSource, options)
 export const labAudioPlayer = defineDemo(audioPlayerDemo, audioPlayerSource, options)
-export const labMobileTokenizer = defineDemo(mobileTokenizerDemo, mobileTokenizerSource, options)
-export const labMobileTokenizerOverview = defineDemo(mobileTokenizerOverviewDemo, mobileTokenizerOverviewSource, options)
 export const labSchedule = defineDemo(scheduleDemo, scheduleSource, options)
 export const labStat = defineDemo(statDemo, statSource, options)
 export const labSvgIcon = defineDemo(svgIconDemo, svgIconSource, options)
