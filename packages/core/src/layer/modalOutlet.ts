@@ -38,6 +38,22 @@ export function removeModalOutlet(element: HTMLDialogElement): void {
   sync()
 }
 
+/** 有新的顶层元素进场的次数。全局浮层看到它变了，就重新进一次顶层，好留在最上面。 */
+const topLayerEntries = shallowRef(0)
+
+/**
+ * 有对话框被重新放进了顶层（底部面板叠放时为保顺序关了又开）。之前挂在它里面、或者挂在页面上的
+ * 全局浮层（toast）这时被压在下面，要重新进一次顶层。
+ */
+export function notifyTopLayerEntry(): void {
+  topLayerEntries.value += 1
+}
+
+/** 顶层进场计数，见 `notifyTopLayerEntry`。 */
+export function useTopLayerEntries(): Readonly<Ref<number>> {
+  return topLayerEntries
+}
+
 /** 最新打开的模态对话框。没有时是 `null`，调用方退回挂到 `body`。 */
 export function useActiveModalOutlet(): Readonly<Ref<HTMLDialogElement | null>> {
   return activeOutlet

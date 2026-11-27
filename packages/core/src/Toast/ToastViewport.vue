@@ -3,7 +3,7 @@ import type { CSSProperties } from 'vue'
 import type { ResolvedLayerInset } from '../LayerProvider/context.js'
 import type { ToastDismissReason, ToastPlacement } from './types.js'
 import { computed, onMounted, provide, reactive, ref, watch } from 'vue'
-import { useActiveModalOutlet, whenModalSettled } from '../layer/modalOutlet.js'
+import { useActiveModalOutlet, useTopLayerEntries, whenModalSettled } from '../layer/modalOutlet.js'
 import { resetLayerScopedContext } from '../layer/scopedProvide.js'
 import { useLayerConfig } from '../LayerProvider/context.js'
 import { TOAST_VIEWPORT_KEY } from './context.js'
@@ -120,6 +120,20 @@ watch(activeModal, async (modal) => {
   if (activeModal.value === modal)
     mountTarget.value = modal
 }, { immediate: true })
+
+// 有对话框被重新放进顶层时，视口原地重新进一次顶层，才能留在它上面。
+watch(useTopLayerEntries(), () => {
+  const element = viewportRef.value
+  if (element == null || typeof element.hidePopover !== 'function')
+    return
+  try {
+    element.hidePopover()
+    element.showPopover()
+  }
+  catch {
+    // 引擎不支持顶层，保持原样。
+  }
+})
 
 const placement = computed(() => props.placement ?? layer?.value.toast.position ?? 'bottom-end')
 

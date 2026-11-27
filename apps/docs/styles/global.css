@@ -491,8 +491,14 @@ html.dark .component-card__frame {
   transform: translateY(-2px);
 }
 
-.component-card__name {
+.component-card__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin-top: 10px;
+}
+
+.component-card__name {
   color: inherit;
   font-size: 14px;
   text-decoration: none;
@@ -552,6 +558,13 @@ html.dark .component-card__frame {
   padding-bottom: 16px;
 }
 
+.component-detail__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
 .component-detail__header h1 {
   margin: 0;
   /* 原版标题 42px / 600 / 行高 52px，桌面和 390px 屏都一样。 */
@@ -567,6 +580,11 @@ html.dark .component-card__frame {
   color: var(--astryx-text-muted);
   font-size: 12px;
   line-height: 20px;
+}
+
+/* 废弃提示在标题下、tab 条上面，和 tab 条隔开。 */
+.docs-deprecation-notice {
+  margin-bottom: 16px;
 }
 
 .component-detail__tabs {
