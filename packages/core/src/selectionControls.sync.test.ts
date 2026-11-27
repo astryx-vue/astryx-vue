@@ -243,34 +243,35 @@ describe('slider 的 aria-labelledby 和重合的滑块', () => {
     expect(labelled.split(' ').length).toBe(2)
   })
 
+  // 按在滑块上的拖动归滑块的手势：越过 10px 的门槛后，数值跟着指针走过的距离变，不跳到指针处。
   it('两个滑块重合时，按在滑块上不动，向左拖的是下面那个', async () => {
     const wrapper = rangeSlider([50, 50])
     const track = wrapper.get('.astryx-slider-control')
-    await wrapper.findAll('[role="slider"]')[1]!.trigger('pointerdown', { button: 0, pointerId: 1, clientX: 110 })
+    await wrapper.findAll('[role="slider"]')[1]!.trigger('pointerdown', { button: 0, pointerId: 21, pointerType: 'mouse', clientX: 110 })
     expect(wrapper.emitted('update:modelValue')).toBeUndefined()
-    await track.trigger('pointermove', { pointerId: 1, clientX: 70 })
-    await track.trigger('pointerup', { pointerId: 1 })
-    expect(wrapper.emitted('changeEnd')?.at(-1)).toEqual([[30, 50]])
+    await track.trigger('pointermove', { pointerId: 21, pointerType: 'mouse', buttons: 1, clientX: 70 })
+    await track.trigger('pointerup', { pointerId: 21, pointerType: 'mouse' })
+    expect(wrapper.emitted('changeEnd')?.at(-1)).toEqual([[36, 50]])
   })
 
   it('两个滑块重合时，向右拖的是上面那个', async () => {
     const wrapper = rangeSlider([50, 50])
     const track = wrapper.get('.astryx-slider-control')
-    await wrapper.findAll('[role="slider"]')[0]!.trigger('pointerdown', { button: 0, pointerId: 1, clientX: 110 })
-    await track.trigger('pointermove', { pointerId: 1, clientX: 150 })
-    await track.trigger('pointerup', { pointerId: 1 })
-    expect(wrapper.emitted('changeEnd')?.at(-1)).toEqual([[50, 70]])
+    await wrapper.findAll('[role="slider"]')[0]!.trigger('pointerdown', { button: 0, pointerId: 22, pointerType: 'mouse', clientX: 110 })
+    await track.trigger('pointermove', { pointerId: 22, pointerType: 'mouse', buttons: 1, clientX: 150 })
+    await track.trigger('pointerup', { pointerId: 22, pointerType: 'mouse' })
+    expect(wrapper.emitted('changeEnd')?.at(-1)).toEqual([[50, 64]])
   })
 
   it('重合滑块上的拖动越过另一个滑块时，另一个接手继续跟着指针', async () => {
     const wrapper = rangeSlider([50, 50])
     const track = wrapper.get('.astryx-slider-control')
-    await wrapper.findAll('[role="slider"]')[1]!.trigger('pointerdown', { button: 0, pointerId: 1, clientX: 110 })
-    await track.trigger('pointermove', { pointerId: 1, clientX: 150 })
-    expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([[50, 70]])
-    await track.trigger('pointermove', { pointerId: 1, clientX: 70 })
-    expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([[30, 50]])
-    await track.trigger('pointerup', { pointerId: 1 })
+    await wrapper.findAll('[role="slider"]')[1]!.trigger('pointerdown', { button: 0, pointerId: 23, pointerType: 'mouse', clientX: 110 })
+    await track.trigger('pointermove', { pointerId: 23, pointerType: 'mouse', buttons: 1, clientX: 150 })
+    expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([[50, 64]])
+    await track.trigger('pointermove', { pointerId: 23, pointerType: 'mouse', buttons: 1, clientX: 70 })
+    expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([[27, 50]])
+    await track.trigger('pointerup', { pointerId: 23, pointerType: 'mouse' })
   })
 
   it('按在重合滑块的刻度文字上，同样没有变化，由上面那个滑块扛着', async () => {
@@ -300,7 +301,7 @@ describe('slider 的 aria-labelledby 和重合的滑块', () => {
     const thumbs = wrapper.findAll('[role="slider"]')
     await thumbs[0]!.trigger('pointerenter')
     await thumbs[1]!.trigger('pointerenter')
-    await thumbs[1]!.trigger('pointerdown', { button: 0, pointerId: 1, clientX: 180 })
+    await thumbs[1]!.trigger('pointerdown', { button: 0, pointerId: 1, pointerType: 'mouse', clientX: 180 })
     const tooltips = Array.from(document.querySelectorAll<HTMLElement>('[role="tooltip"]'))
     expect(tooltips.map(tooltip => tooltip.style.display !== 'none')).toEqual([false, true])
   })

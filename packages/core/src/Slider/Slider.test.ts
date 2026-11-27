@@ -120,7 +120,7 @@ describe('slider', () => {
     await wrapper.setProps({ modelValue: [50, 50] })
     const high = wrapper.findAll('[role="slider"]')[1]!
     await high.trigger('pointerdown', { button: 0, pointerId: 2, pointerType: 'mouse', clientX: 110 })
-    await track.trigger('pointermove', { pointerId: 2, clientX: 150 })
+    await track.trigger('pointermove', { pointerId: 2, pointerType: 'mouse', buttons: 1, clientX: 150 })
     await track.trigger('pointerup', { pointerId: 2 })
     // The press focuses the thumb and jumps nowhere: its pan moves it by the travel past the 10 px threshold.
     expect(document.activeElement).toBe(high.element)
