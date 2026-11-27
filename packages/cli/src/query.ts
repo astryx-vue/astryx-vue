@@ -7,6 +7,7 @@ import { CliError } from './error.ts'
 import { keywordSuggestions, otherCommandHints } from './query-hints.ts'
 import { componentKeywordScore } from './query-keywords.ts'
 import { compareText, queryFit } from './query-order.ts'
+import { topicByWords, topicsByWords } from './query-topics.ts'
 import { compoundNameScore, nameWords, splitWords, stemWord } from './query-words.ts'
 import { BINARY, DOCS_PACKAGE } from './spec.ts'
 
@@ -88,13 +89,18 @@ export function resolveComposable(query: string): ComponentRecord {
 
 export function resolveTopic(query: string): TopicRecord {
   ensureNamed(query, 'topic')
+  const key = normalize(query)
+  const typedAsName = catalog.topics.some(topic => names(TOPIC_LOOKUP, topic).includes(key))
+  const spelled = typedAsName ? null : topicByWords(query, catalog.topics)
+  if (spelled)
+    return spelled
   return resolveRecord(query, catalog.topics, TOPIC_LOOKUP, matches => matches.length > 0
     ? ambiguous('topic', query, matches, TOPIC_LOOKUP)
     : new CliError(
         `No topic named "${query}".`,
         'ERR_UNKNOWN_TOPIC',
         1,
-        missSuggestions(query, catalog.topics, TOPIC_LOOKUP, 'docs'),
+        missSuggestions(query, catalog.topics, TOPIC_LOOKUP, 'docs', topicsByWords(query, catalog.topics)),
       ))
 }
 
@@ -209,13 +215,13 @@ const MAX_SUGGESTIONS = 5
 /**
  * What a lookup that found no entry points to, best first: components whose
  * keywords are the typed name, the command that does read the name, then the
- * names close to it.
+ * names close to it, then pages that share a word with it.
  */
-export function missSuggestions<T>(query: string, candidates: readonly T[], lookup: Lookup<T>, command: LookupCommand): Suggestion[] {
+export function missSuggestions<T>(query: string, candidates: readonly T[], lookup: Lookup<T>, command: LookupCommand, sharedWords: Suggestion[] = []): Suggestion[] {
   const keyword = command === 'component' || command === 'composable' ? keywordSuggestions(query, command) : []
   const close = suggestRecords(query, candidates, lookup)
   const seen = new Set<string>()
-  return [...keyword, ...otherCommandHints(query, command), ...close]
+  return [...keyword, ...otherCommandHints(query, command), ...close, ...sharedWords]
     .filter(suggestion => !seen.has(suggestion.name) && seen.add(suggestion.name))
     .slice(0, MAX_SUGGESTIONS)
 }
