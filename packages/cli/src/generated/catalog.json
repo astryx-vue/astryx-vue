@@ -42862,13 +42862,13 @@
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "禁用。这一行不动了，内容变淡。"
+                "description": "禁用。这一行不动了，内容变淡；禁用的按钮或链接仍能用键盘聚焦，但不会触发。"
               },
               {
                 "name": "`isSelected`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "选中状态。行的角色支持时写成 `aria-selected=\"true\"`，不支持时写成 `aria-current=\"true\"`。"
+                "description": "选中状态。行的角色支持时写成 `aria-selected=\"true\"`，不支持时写成 `aria-current=\"true\"`。在可点的行（有 `onClick`、`href` 或 `interactiveRef`）里，标记写在拿到焦点的那个元素上，读屏器就在那里念出来。"
               },
               {
                 "name": "`isHighlighted`",
@@ -57395,6 +57395,10 @@
             "text": "Use `density=\"compact\"` in a narrow sidebar, and `default` beside a long article."
           },
           {
+            "guidance": "Do",
+            "text": "Give each Outline a distinct `label` when a page has more than one navigation landmark, so screen reader users can tell them apart."
+          },
+          {
             "guidance": "Don't",
             "text": "Pass `activeId` and also expect the built-in scroll-spy to keep updating it. A provided id turns the spy off."
           },
@@ -57426,7 +57430,7 @@
                 "name": "`label`",
                 "type": "`string`",
                 "default": "`Table of contents`",
-                "description": "Accessible name of the nav landmark. The default is localized."
+                "description": "Accessible name of the nav landmark. The default is localized, and an `aria-label` you pass wins over it."
               },
               {
                 "name": "`density`",
@@ -57450,7 +57454,7 @@
                 "name": "`hasScrollOnClick`",
                 "type": "`boolean`",
                 "default": "`true`",
-                "description": "Whether activating an item smooth-scrolls to it."
+                "description": "Whether activating an item scrolls to it: smoothly, or at once under reduced motion. Following the link also moves focus to the heading, so the next Tab continues inside that section."
               }
             ]
           }
@@ -57475,7 +57479,7 @@
                 "name": "`label`",
                 "type": "`string`",
                 "default": "`Table of contents`",
-                "description": "导航地标的无障碍名称。默认文案随语言变化，中文为「目录」。"
+                "description": "导航地标的无障碍名称。默认文案随语言变化，中文为「目录」；你传的 `aria-label` 优先于它。"
               },
               {
                 "name": "`density`",
@@ -57499,7 +57503,7 @@
                 "name": "`hasScrollOnClick`",
                 "type": "`boolean`",
                 "default": "`true`",
-                "description": "激活一项时是否平滑滚到对应标题。"
+                "description": "激活一项时是否滚到对应标题：平滑滚动，减弱动效时立即到达。跟随链接后焦点也会移到那个标题，下一次 Tab 从那一节里继续。"
               }
             ]
           }
@@ -57565,7 +57569,7 @@
         "zh": [
           {
             "heading": "建议",
-            "text": "- 推荐: 推荐\n- 推荐: 推荐\n- 推荐: 推荐\n- 避免: 避免\n- 避免: 避免"
+            "text": "- 推荐: 推荐\n- 推荐: 推荐\n- 推荐: 推荐\n- 推荐: 推荐\n- 避免: 避免\n- 避免: 避免"
           },
           {
             "heading": "主题",
@@ -63659,7 +63663,7 @@
                 "name": "`density`",
                 "type": "`ListDensity`",
                 "default": "`'balanced'`",
-                "description": "Spacing density for the rows: compact (4px of block padding), balanced (8px), or spacious (12px, which also widens the inline padding by one step). A single row can override it with its own `density`."
+                "description": "Spacing density for the rows: compact (4px of block padding), balanced (8px), or spacious (12px, which also widens the inline padding by one step). A single row can override it with its own `density`. Under a finger, an interactive row's hit target reaches 44px where its neighbours leave room, with no change to how rows look or lay out."
               },
               {
                 "name": "`hasDividers`",
@@ -63671,7 +63675,7 @@
                 "name": "`edge`",
                 "type": "`'padded' | 'flush' | 'outset' | 'bleed'`",
                 "default": "`'padded'`",
-                "description": "Where each row's text, dividers, and hover and selection backgrounds sit relative to the list's edges and the padding of the container around it. `padded` keeps the row's own inline padding. `flush` removes it, so text starts on the line of a heading above the list and lines and backgrounds stop at the text. `outset` keeps text on that line and lets lines and backgrounds reach into the container's padding. `bleed` puts text on the container's padding line and runs lines and backgrounds to its edges with square corners, like table rows. A row's first content — its marker, icon, or avatar, otherwise its label — is what lines up with the heading. `outset` and `bleed` read the padding published by the nearest container that shares it (Card, Section, BottomSheet, a padded ScrollableArea, or a Layout region) and look like `padded` when there is none."
+                "description": "Where each row's text, dividers, and hover and selection backgrounds sit relative to the list's edges and the padding of the container around it. `padded` keeps the row's own inline padding. `flush` removes it, so text starts on the line of a heading above the list and lines and backgrounds stop at the text. `outset` keeps text on that line and lets lines and backgrounds reach into the container's padding. `bleed` puts text on the container's padding line and runs lines and backgrounds to its edges, like table rows. Rows are square, except that the first or last row of a list that is the first or last child of a rounded Card or Dialog takes that corner. A row's first content — its marker, icon, or avatar, otherwise its label — is what lines up with the heading. `outset` and `bleed` read the padding published by the nearest container that shares it (Card, Section, BottomSheet, a padded ScrollableArea, or a Layout region) and look like `padded` when there is none."
               },
               {
                 "name": "`edgeCompensation`",
@@ -63760,7 +63764,7 @@
                 "name": "`isSelected`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Selected state. Written as `aria-selected=\"true\"` when the role permits it, and as `aria-current=\"true\"` otherwise. An `aria-current` you pass yourself wins."
+                "description": "Selected state. Written as `aria-selected=\"true\"` when the role permits it, and as `aria-current=\"true\"` otherwise. An `aria-current` you pass yourself wins. On an interactive row (`onClick`, `href` or `interactiveRef`) the marker sits on the element that takes focus, so a screen reader announces it there."
               }
             ]
           },
@@ -63814,7 +63818,7 @@
                 "name": "`density`",
                 "type": "`ListDensity`",
                 "default": "`'balanced'`",
-                "description": "行的间距密度：compact（4px 上下内边距）、balanced（8px）、spacious（12px，左右内边距也放宽一档）。单行可以用自己的 `density` 覆盖它。"
+                "description": "行的间距密度：compact（4px 上下内边距）、balanced（8px）、spacious（12px，左右内边距也放宽一档）。单行可以用自己的 `density` 覆盖它；手指操作时，可点的行的触控范围会朝相邻行留出的空隙长到 44px，行的外观和布局不变。"
               },
               {
                 "name": "`hasDividers`",
@@ -63826,7 +63830,7 @@
                 "name": "`edge`",
                 "type": "`'padded' | 'flush' | 'outset' | 'bleed'`",
                 "default": "`'padded'`",
-                "description": "每行文字、分隔线以及悬停和选中背景相对列表边缘与外围容器的位置。`padded` 保留行自身的内边距；`flush` 去掉这段内边距，文字顶到列表上方标题的竖线，分隔线和背景也止于文字；`outset` 把文字放在这条线上，让分隔线和背景伸进容器的内边距；`bleed` 让文字落在容器的内边距线上，分隔线和背景铺到容器边缘、四角为直角，像表格行。与标题对齐的是行里的第一块内容：有标记、图标或头像时就是它，否则是标签。`outset` 和 `bleed` 读取最近的、共享内边距的容器公布的数值（Card、Section、BottomSheet、带内边距的 ScrollableArea，或 Layout 区域）；没有这样的容器时和 `padded` 表现一样。"
+                "description": "每行文字、分隔线以及悬停和选中背景相对列表边缘与外围容器的位置。`padded` 保留行自身的内边距；`flush` 去掉这段内边距，文字顶到列表上方标题的竖线，分隔线和背景也止于文字；`outset` 把文字放在这条线上，让分隔线和背景伸进容器的内边距；`bleed` 让文字落在容器的内边距线上，分隔线和背景铺到容器边缘、像表格行，行是直角；只有当列表是圆角 Card 或 Dialog 的第一个或最后一个子元素时，首行或末行取容器的圆角。与标题对齐的是行里的第一块内容：有标记、图标或头像时就是它，否则是标签。`outset` 和 `bleed` 读取最近的、共享内边距的容器公布的数值（Card、Section、BottomSheet、带内边距的 ScrollableArea，或 Layout 区域）；没有这样的容器时和 `padded` 表现一样。"
               },
               {
                 "name": "`edgeCompensation`",
@@ -63915,7 +63919,7 @@
                 "name": "`isSelected`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "选中状态。角色允许时写入 `aria-selected=\"true\"`，否则写入 `aria-current=\"true\"`；使用方自己传入的 `aria-current` 优先。"
+                "description": "选中状态。角色允许时写入 `aria-selected=\"true\"`，否则写入 `aria-current=\"true\"`；使用方自己传入的 `aria-current` 优先。在可点的行（有 `onClick`、`href` 或 `interactiveRef`）里，标记写在拿到焦点的那个元素上，读屏器就在那里念出来。"
               }
             ]
           },
@@ -64168,12 +64172,8 @@
       "anatomy": {
         "en": [
           {
-            "name": "List title",
-            "description": "Heading that labels the list."
-          },
-          {
-            "name": "Description",
-            "description": "Supplementary text below the title."
+            "name": "Header",
+            "description": "Optional content above the rows, from the header prop. It labels the list, and screen readers announce it as the list name."
           },
           {
             "name": "List items",
@@ -64186,12 +64186,8 @@
         ],
         "zh": [
           {
-            "name": "列表标题",
-            "description": "给列表命名的标题。"
-          },
-          {
-            "name": "说明",
-            "description": "标题下面的补充文字。"
+            "name": "标题",
+            "description": "行上方的可选内容，来自 header。它给列表命名，读屏器把它念成列表的名字。"
           },
           {
             "name": "列表项",
@@ -64376,13 +64372,13 @@
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "禁用。这一行不动了，内容变淡，同时写上 `aria-disabled=\"true\"`。"
+                "description": "禁用。这一行不动了，内容变淡，同时写上 `aria-disabled=\"true\"`。禁用的按钮或链接仍能用键盘聚焦，但不会触发。"
               },
               {
                 "name": "`isSelected`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "选中状态。行的角色支持时写成 `aria-selected=\"true\"`，不支持时写成 `aria-current=\"true\"`。你自己传的 `aria-current` 优先。"
+                "description": "选中状态。行的角色支持时写成 `aria-selected=\"true\"`，不支持时写成 `aria-current=\"true\"`。你自己传的 `aria-current` 优先。在可点的行（有 `onClick`、`href` 或 `interactiveRef`）里，标记写在拿到焦点的那个元素上，读屏器就在那里念出来。"
               },
               {
                 "name": "`swipeActions`",
@@ -64517,6 +64513,14 @@
             "text": "Set `maxNumOfItems` when a record has more fields than the page should show at once."
           },
           {
+            "guidance": "Do",
+            "text": "Give each `MetadataListItem` a short label that names its value. Assistive technology reads each label with its value as a term and its definition."
+          },
+          {
+            "guidance": "Do",
+            "text": "Pass a heading element as the title when the list needs a place in the page outline. The title does not name the list or add a heading."
+          },
+          {
             "guidance": "Don't",
             "text": "Put a long sentence in a label. The label track is sized for a short name."
           },
@@ -64647,7 +64651,7 @@
         "zh": [
           {
             "heading": "建议",
-            "text": "- 推荐: 推荐\n- 推荐: 推荐\n- 推荐: 推荐\n- 避免: 避免\n- 避免: 避免"
+            "text": "- 推荐: 推荐\n- 推荐: 推荐\n- 推荐: 推荐\n- 推荐: 推荐\n- 推荐: 推荐\n- 避免: 避免\n- 避免: 避免"
           },
           {
             "heading": "主题",
@@ -64820,13 +64824,13 @@
         "en": [
           {
             "heading": "Slots",
-            "text": "- default: the value. Any content works: a string, a badge, a link, or markup of your own.\n- `icon`: a leading icon drawn before the label.\n\nThe pair renders as a `<dt>` and a `<dd>`, or as one stacked block when the list puts labels above values. Either way the label is announced before the value."
+            "text": "- default: the value. Any content works: a string, a badge, a link, or markup of your own.\n- `icon`: a leading icon drawn before the label.\n\nThe pair renders as a `<dt>` and a `<dd>`, or as one stacked block when the list puts labels above values. Either way the label is announced before the value.\n\nAttributes you pass (`class`, `style`, `id`, `data-*`) land on the item element: the label `<dt>` when labels sit beside values, or the wrapper that holds the label and value when stacked."
           }
         ],
         "zh": [
           {
             "heading": "插槽",
-            "text": "- 默认插槽：这一项的值。放什么都行：文字、徽章、链接，或者自己写的一段结构。\n- `icon`：名字前面的图标。\n\n名字和值会渲染成 <code>&lt;dt&gt;</code> 和 <code>&lt;dd&gt;</code>；列表把名字放到上面时，会变成一个上下叠的小块。两种情况下读屏都是先念名字再念值。"
+            "text": "- 默认插槽：这一项的值。放什么都行：文字、徽章、链接，或者自己写的一段结构。\n- `icon`：名字前面的图标。\n\n名字和值会渲染成 <code>&lt;dt&gt;</code> 和 <code>&lt;dd&gt;</code>；列表把名字放到上面时，会变成一个上下叠的小块。两种情况下读屏都是先念名字再念值。\n\n你传入的属性（`class`、`style`、`id`、`data-*`）落在这一项自己的元素上：名字在值旁边时是名字的 `<dt>`，名字在上面时是包着名字和值的外层小块。"
           }
         ]
       },
@@ -64892,6 +64896,10 @@
           },
           {
             "guidance": "Avoid",
+            "text": "Do not render a count-only indicator when people need the collapsed items. Make the indicator a control, such as a dropdown menu, so keyboard and screen reader users can reach them."
+          },
+          {
+            "guidance": "Avoid",
             "text": "Do not render the same item again outside the menu. Visible items and overflow items are two slices."
           }
         ],
@@ -64903,6 +64911,10 @@
           {
             "guidance": "推荐",
             "text": "需要至少留下几项时设置 `minVisibleItems`。"
+          },
+          {
+            "guidance": "避免",
+            "text": "人们需要被收起的项时，不要只画一个数字的指示器。让指示器成为一个控件，比如下拉菜单，键盘和读屏用户才够得着它们。"
           },
           {
             "guidance": "避免",
@@ -67126,7 +67138,7 @@
                 "name": "`animatedLayout`",
                 "type": "`AnimatedLayout`",
                 "default": "-",
-                "description": "The handle from `useAnimatedLayout({ containerRef })`. With it, expanding or collapsing a row glides the rows and content after it, up to that container, instead of jumping, and the chevron turns on the same timing."
+                "description": "The handle from `useAnimatedLayout({ containerRef })`. With it, expanding or collapsing a row glides the rows and content after it, up to that container, instead of jumping, and the chevron turns on the same timing. Without a handle, a tree under a finger glides its own rows and fades the opened or closed group on that timing; the content after the tree then takes its place at once."
               },
               {
                 "name": "`header`",
@@ -67244,7 +67256,7 @@
                 "name": "`animatedLayout`",
                 "type": "`AnimatedLayout`",
                 "default": "-",
-                "description": "`useAnimatedLayout({ containerRef })` 返回的句柄。传了以后，展开、收起一行时它后面、直到那个容器为止的行和内容会滑到新位置，而不是一下子跳过去，箭头也按同样的节奏转动。"
+                "description": "`useAnimatedLayout({ containerRef })` 返回的句柄。传了以后，展开、收起一行时它后面、直到那个容器为止的行和内容会滑到新位置，而不是一下子跳过去，箭头也按同样的节奏转动。没传句柄时，手指操作下的树自己带动行的滑动，展开或收起的子组按同样的节奏淡入淡出；树后面的内容当场就位。"
               },
               {
                 "name": "`header`",
@@ -87004,6 +87016,142 @@
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/components/use-chat-paste-as-token",
         "zh": "https://astryx-vue.pages.dev/components/use-chat-paste-as-token"
+      }
+    },
+    {
+      "slug": "use-outline-from-dom",
+      "name": "UseOutlineFromDom",
+      "package": "@astryx-vue/core",
+      "kind": "composable",
+      "title": {
+        "en": "useOutlineFromDOM",
+        "zh": "useOutlineFromDOM"
+      },
+      "group": "Utility",
+      "groupTitle": {
+        "en": "Utility",
+        "zh": "工具"
+      },
+      "importPath": null,
+      "exportName": null,
+      "summary": {
+        "en": "Builds outline items from the headings already in the page. Use it when the article is not a Markdown string, and pass the items to an [Outline](/en/components/outline). The list updates when headings are added, removed, renamed, or given a new id.",
+        "zh": "从页面里已有的标题生成大纲项。正文不是 Markdown 字符串时用它，把结果交给 [大纲](/components/outline)。标题增删、改字、换 id 时列表会跟着更新。"
+      },
+      "usage": {
+        "en": "Builds outline items from the headings already in the page. Use it when the article is not a Markdown string, and pass the items to an [Outline](/en/components/outline). The list updates when headings are added, removed, renamed, or given a new id.\n\n```ts\nimport { useOutlineFromDOM } from '@astryx-vue/core/Outline'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { Outline, useOutlineFromDOM } from '@astryx-vue/core/Outline'\nimport { ref } from 'vue'\n\nconst article = ref<HTMLElement | null>(null)\nconst items = useOutlineFromDOM(article)\n</script>\n\n<template>\n  <article ref=\"article\">\n    <h2 id=\"install\">\n      Install\n    </h2>\n    <h2 id=\"configure\">\n      Configure\n    </h2>\n  </article>\n  <Outline :items=\"items\" />\n</template>\n```",
+        "zh": "从页面里已有的标题生成大纲项。正文不是 Markdown 字符串时用它，把结果交给 [大纲](/components/outline)。标题增删、改字、换 id 时列表会跟着更新。\n\n```ts\nimport { useOutlineFromDOM } from '@astryx-vue/core/Outline'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { Outline, useOutlineFromDOM } from '@astryx-vue/core/Outline'\nimport { ref } from 'vue'\n\nconst article = ref<HTMLElement | null>(null)\nconst items = useOutlineFromDOM(article)\n</script>\n\n<template>\n  <article ref=\"article\">\n    <h2 id=\"install\">\n      安装\n    </h2>\n    <h2 id=\"configure\">\n      配置\n    </h2>\n  </article>\n  <Outline :items=\"items\" />\n</template>\n```"
+      },
+      "practices": {
+        "en": [
+          {
+            "guidance": "Do",
+            "text": "Put an id on every heading the outline should list. A heading with no id, or with no text, is omitted."
+          },
+          {
+            "guidance": "Do",
+            "text": "Point the ref at the article, not the page, so headings outside the article stay out of the outline."
+          },
+          {
+            "guidance": "Don't",
+            "text": "Expect the hook to invent ids. It only reads the ids the headings already have."
+          },
+          {
+            "guidance": "Don't",
+            "text": "Use it for a Markdown string. `useOutlineFromMarkdown` follows the same parser and slugs as `Markdown`."
+          }
+        ],
+        "zh": []
+      },
+      "props": {
+        "en": [
+          {
+            "heading": "Parameters",
+            "rows": [
+              {
+                "name": "`container`",
+                "type": "`Ref<HTMLElement | null | undefined>`",
+                "default": "required",
+                "description": "The element that holds the headings. The hook reads `h1` through `h6` inside it."
+              }
+            ]
+          },
+          {
+            "heading": "Returns",
+            "rows": [
+              {
+                "name": "`items`",
+                "type": "`Ref<OutlineItem[]>`",
+                "description": "One item per heading that has both an id and text, in document order, ready for `Outline`'s `items`. `id` is the heading's id, `label` is its trimmed text, and `level` is its depth from 1 to 6."
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "参数",
+            "rows": [
+              {
+                "name": "`container`",
+                "type": "`Ref<HTMLElement | null | undefined>`",
+                "default": "必填",
+                "description": "装着标题的元素。hook 读取它里面的 `h1` 到 `h6`。"
+              }
+            ]
+          },
+          {
+            "heading": "返回值",
+            "rows": [
+              {
+                "name": "`items`",
+                "type": "`Ref<OutlineItem[]>`",
+                "description": "每个既有 id 又有文字的标题一项，按文档顺序排列，可以直接交给 `Outline` 的 `items`。`id` 是标题的 id，`label` 是去掉首尾空白的文字，`level` 是 1 到 6 的级别。"
+              }
+            ]
+          }
+        ]
+      },
+      "slots": {
+        "en": [],
+        "zh": []
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [],
+        "zh": [
+          {
+            "heading": "建议",
+            "text": "- 推荐: 给每个要进目录的标题写上 id。没有 id 或没有文字的标题会被略过。\n- 推荐: 把 ref 指向文章本身而不是整个页面，文章外面的标题就不会混进目录。\n- 避免: 指望 hook 帮标题生成 id。它只读标题上已有的 id。\n- 避免: 拿它处理 Markdown 字符串。`useOutlineFromMarkdown` 和 `Markdown` 用同一个解析器和同一套 id。"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": {
+            "en": "useOutlineFromDOM — Docs Article",
+            "zh": "useOutlineFromDOM —— 文档文章"
+          },
+          "description": {
+            "en": "An article with an Outline next to it, built from the headings in the page through useOutlineFromDOM. Add section appends a heading with an id, and a new entry that links to it appears in the outline.",
+            "zh": "一篇文章，旁边是大纲，大纲经由 useOutlineFromDOM 从页面里的标题得到。点 Add section 往文章里加一个带 id 的标题，大纲里会多出一项，点它就跳过去。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport type { ComponentPublicInstance } from 'vue'\nimport { Button } from '@astryx-vue/core/Button'\nimport { Outline, useOutlineFromDOM } from '@astryx-vue/core/Outline'\nimport { ScrollableArea } from '@astryx-vue/core/ScrollableArea'\nimport { HStack, VStack } from '@astryx-vue/core/Stack'\nimport { computed, ref } from 'vue'\n\nconst sections = ref(['Before you start', 'Run the upgrade', 'Check the result'])\nconst articleBody = ref<HTMLElement | null>(null)\nconst items = useOutlineFromDOM(articleBody)\nconst article = ref<ComponentPublicInstance | null>(null)\nconst scrollContainer = computed(() => (article.value?.$el as HTMLElement | undefined) ?? null)\n\nfunction slug(title: string): string {\n  return `dom-${title.toLowerCase().replace(/\\s+/g, '-')}`\n}\n\nfunction addSection(): void {\n  sections.value = [...sections.value, `New section ${sections.value.length - 2}`]\n}\n</script>\n\n<template>\n  <HStack :gap=\"6\" align=\"start\" width=\"100%\">\n    <ScrollableArea ref=\"article\" label=\"Article\" :height=\"320\" width=\"100%\">\n      <article ref=\"articleBody\">\n        <section v-for=\"title in sections\" :key=\"title\">\n          <h2 :id=\"slug(title)\">\n            {{ title }}\n          </h2>\n          <p>Each heading has an id, so the outline can link to it. A heading without an id is left out.</p>\n          <p>The outline follows the article as headings are added, renamed, or removed.</p>\n        </section>\n      </article>\n    </ScrollableArea>\n    <VStack :gap=\"3\" align=\"start\" :width=\"220\">\n      <!-- A non-zero offset moves only the article. With 0, a click also moves the page around it. -->\n      <Outline :items=\"items\" :scroll-container=\"scrollContainer\" :offset=\"8\" />\n      <Button label=\"Add section\" variant=\"secondary\" size=\"sm\" @click=\"addSection\" />\n    </VStack>\n  </HStack>\n</template>"
+        }
+      ],
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/use-outline-from-dom",
+        "zh": "https://astryx-vue.pages.dev/components/use-outline-from-dom"
       }
     }
   ],

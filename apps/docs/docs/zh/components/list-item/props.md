@@ -17,8 +17,8 @@ footer: false
 <tr><td><code>href</code></td><td><code>string</code></td><td>—</td><td>链接地址。行里会渲染一个链接元素。</td></tr>
 <tr><td><code>target</code></td><td><code>'_blank' | '_self'</code></td><td>—</td><td>链接在哪打开，只有写了 <code>href</code> 才有用。<code>_blank</code> 会自动补上 <code>noopener</code> 和 <code>noreferrer</code>。</td></tr>
 <tr><td><code>rel</code></td><td><code>string</code></td><td>—</td><td>链接的 rel 值，会和自动补的那些合在一起。</td></tr>
-<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>禁用。这一行不动了，内容变淡，同时写上 <code>aria-disabled="true"</code>。</td></tr>
-<tr><td><code>isSelected</code></td><td><code>boolean</code></td><td><code>false</code></td><td>选中状态。行的角色支持时写成 <code>aria-selected="true"</code>，不支持时写成 <code>aria-current="true"</code>。你自己传的 <code>aria-current</code> 优先。</td></tr>
+<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>禁用。这一行不动了，内容变淡，同时写上 <code>aria-disabled="true"</code>。禁用的按钮或链接仍能用键盘聚焦，但不会触发。</td></tr>
+<tr><td><code>isSelected</code></td><td><code>boolean</code></td><td><code>false</code></td><td>选中状态。行的角色支持时写成 <code>aria-selected="true"</code>，不支持时写成 <code>aria-current="true"</code>。你自己传的 <code>aria-current</code> 优先。在可点的行（有 <code>onClick</code>、<code>href</code> 或 <code>interactiveRef</code>）里，标记写在拿到焦点的那个元素上，读屏器就在那里念出来。</td></tr>
 <tr><td><code>swipeActions</code></td><td><code>ItemSwipeActions</code></td><td>—</td><td>手指横滑能露出哪些操作，左右各一组，每项是 <code>{ label, icon?, onActivate, isDisabled?, variant?, hasRemoval? }</code>。鼠标不会触发这次拖动。每个操作都要在行里再有个入口，否则键盘和鼠标用户够不着。</td></tr>
 <tr><td><code>swipeBehavior</code></td><td><code>'reveal' | 'commit'</code></td><td><code>'reveal'</code></td><td><code>reveal</code> 松手后行停在滑开的位置，拖得够远就触发最外面那个操作；<code>commit</code> 直接把行滑出去，松手就触发，什么都不留在屏幕上。</td></tr>
 </tbody></table>

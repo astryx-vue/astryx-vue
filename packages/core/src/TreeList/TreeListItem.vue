@@ -6,6 +6,7 @@ import { useFocusAcrossSwap } from '../composables/internal/focusAcrossSwap.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { isIconGlyph } from '../Icon/glyphs.js'
 import Icon from '../Icon/Icon.vue'
+import { useIndicator } from '../Indicator/useIndicator.js'
 import { isInLayerSurface } from '../layer/layerSurfacePress.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
 import { useComponentMessages } from '../locale/context.js'
@@ -61,7 +62,8 @@ const indent = computed(() => reservesChevron.value
   : `calc(${props.nestedLevel} * var(--tree-list-indent))`)
 const childAncestors = computed(() => [...props.ancestorsIsLast, props.isLast])
 
-const branchMargin = 'calc(var(--astryx-spacing-2, 8px) + var(--astryx-spacing-0-5, 2px))'
+/** 引导线列的起点：以 16px 箭头的中心为中线，让 20px 的列居中，再加上行 8px 的内边距。 */
+const branchMargin = 'calc(var(--astryx-spacing-2, 8px) + var(--astryx-spacing-4, 16px) / 2 - var(--astryx-spacing-5, 20px) / 2)'
 
 function branchOffset(level: number) {
   return `calc(${branchMargin} + ${level} * var(--tree-list-indent))`
@@ -102,6 +104,9 @@ function onLinkClick(event: MouseEvent) {
     event.preventDefault()
   consumeWhileDisabled(event, props.item.isDisabled === true)
 }
+
+// 主题可以用名为 `tree-disclosure` 的指示图形换掉展开箭头；它自己画展开和收起两种状态，所以不再旋转。
+const ThemeDisclosure = useIndicator('tree-disclosure')
 
 const press = usePressFeedback({ isContainer: true })
 /** 整行点下去是展开收起（没有自己的点击）：这时箭头按钮做的是同一件事，按它也算按这一行。 */
@@ -176,7 +181,8 @@ const rowPress = computed(() => {
             @click="onToggle"
             @keydown="consumeWhileDisabled($event, item.isDisabled === true)"
           >
-            <Icon icon="chevronRight" size="sm" color="inherit" />
+            <component :is="ThemeDisclosure" v-if="ThemeDisclosure" :state="isExpanded ? 'expanded' : 'collapsed'" />
+            <Icon v-else icon="chevronRight" size="sm" color="inherit" />
           </button>
           <span v-if="item.startContent" class="astryx-tree-list__start">
             <component :is="item.startContent" />

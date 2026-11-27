@@ -42,6 +42,7 @@ const items = [
 | --- | --- |
 | <Badge variant="success">推荐</Badge> | 让列表宽度跟着父级走。项一多，组件会自己把放不下的收进菜单。 |
 | <Badge variant="success">推荐</Badge> | 需要至少留下几项时设置 <code>minVisibleItems</code>。 |
+| <Badge variant="error">避免</Badge> | 人们需要被收起的项时，不要只画一个数字的指示器。让指示器成为一个控件，比如下拉菜单，键盘和读屏用户才够得着它们。 |
 | <Badge variant="error">避免</Badge> | 不要同时用插槽把同一项再画一遍到菜单外面。可见项和溢出项是切开的两段。 |
 
 ## 示例

@@ -1025,12 +1025,8 @@
   ],
   "list": [
     {
-      "name": "List title",
-      "description": "Heading that labels the list."
-    },
-    {
-      "name": "Description",
-      "description": "Supplementary text below the title."
+      "name": "Header",
+      "description": "Optional content above the rows, from the header prop. It labels the list, and screen readers announce it as the list name."
     },
     {
       "name": "List items",
