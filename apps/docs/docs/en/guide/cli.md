@@ -57,7 +57,7 @@ npm run astryx-vue -- component Button
 
 `astryx-vue docs` lists the guide and theme topics. `astryx-vue docs guide/dark-mode` prints one page's text, and `astryx-vue docs themes/tokens` works too.
 
-`astryx-vue search dialog` ranks components, composables, docs topics, and page templates. `--type` narrows the domain to `component`, `composable`, `doc`, or `template`. Other libraries' names find the matching component (`ScrollArea`, `side sheet`, `toggle group`), and glyph names such as `cog` find `Icon`. `astryx-vue manifest --json` describes the commands, options, response types, error codes, and exit codes. `astryx-vue init --features agents` writes the agent context file.
+`astryx-vue search dialog` ranks components, composables, docs topics, and page templates. `--type` narrows the domain to `component`, `composable`, `doc`, or `template`. Other libraries' names find the matching component (`ScrollArea`, `side sheet`, `toggle group`), and glyph names such as `cog` find `Icon`. Among results with the same score, the one that answers more of the query comes first, and a word that starts a family (`tabs`) lists `Tab` and then its parts. A lookup that finds nothing (`astryx-vue docs Button`) points to the command that has the name (`astryx-vue component Button`); a keyword such as `ScrollArea` never opens a component, it comes back as the first suggestion. `astryx-vue manifest --json` describes the commands, options, response types, error codes, and exit codes. `astryx-vue init --features agents` writes the agent context file.
 
 ## Templates
 
