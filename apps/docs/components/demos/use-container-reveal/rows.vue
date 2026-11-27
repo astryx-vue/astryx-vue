@@ -2,7 +2,14 @@
 import { useContainerReveal } from '@astryx-vue/core'
 import { Icon } from '@astryx-vue/core/Icon'
 import { IconButton } from '@astryx-vue/core/IconButton'
+import { useToast } from '@astryx-vue/core/Toast'
 import { ref } from 'vue'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 
 const files = ref([
   { name: 'report.pdf', meta: 'Edited 2 hours ago' },
@@ -33,7 +40,7 @@ function remove(name: string): void {
         <span class="reveal-preview__meta">{{ file.meta }}</span>
       </span>
       <span class="reveal-preview__actions" :class="content.class">
-        <IconButton label="Edit" size="sm" variant="ghost">
+        <IconButton label="Edit" size="sm" variant="ghost" @click="demo('Edit')">
           <Icon icon="i-heroicons-pencil-square" />
         </IconButton>
         <IconButton label="Delete" size="sm" variant="ghost" @click="remove(file.name)">

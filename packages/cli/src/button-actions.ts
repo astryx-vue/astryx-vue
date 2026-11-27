@@ -2,6 +2,7 @@ import type { SourceFile } from './project.ts'
 import type { TemplateElement } from './vue-template.ts'
 import { attrKind, coreImports, isTestPath, isTrustedElement, scriptsOf, trustedAround } from './button-context.ts'
 import { createReach } from './button-reach.ts'
+import { compareText } from './query-order.ts'
 import { isElement, parseTemplate, templateBlock } from './vue-template.ts'
 
 export interface ButtonFinding {
@@ -102,7 +103,7 @@ export function findButtonsWithoutAction(files: readonly SourceFile[]): ButtonSc
     if (candidates.length > 0 && reach.nothingAround(file.path))
       found.push(...candidates.map(candidate => candidate.finding))
   }
-  return { found: found.sort((a, b) => a.file.localeCompare(b.file) || a.line - b.line), files: files.length }
+  return { found: found.sort((a, b) => compareText(a.file, b.file) || a.line - b.line), files: files.length }
 }
 
 /** Null when the button acts, or when it cannot be judged; otherwise why it does nothing. */

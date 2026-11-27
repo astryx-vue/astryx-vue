@@ -3,6 +3,13 @@ import { Badge } from '@astryx-vue/core/Badge'
 import { Button } from '@astryx-vue/core/Button'
 import { Stack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
+import { useToast } from '@astryx-vue/core/Toast'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 </script>
 
 <template>
@@ -11,21 +18,21 @@ import { Text } from '@astryx-vue/core/Text'
       Trailing badges for counts or status
     </Text>
     <Stack align="center" direction="horizontal" :gap="3">
-      <Button label="Messages" variant="primary">
+      <Button label="Messages" variant="primary" @click="demo('Messages')">
         <template #end>
           <Badge variant="info">
             3
           </Badge>
         </template>
       </Button>
-      <Button label="Notifications" variant="secondary">
+      <Button label="Notifications" variant="secondary" @click="demo('Notifications')">
         <template #end>
           <Badge variant="warning">
             12
           </Badge>
         </template>
       </Button>
-      <Button label="Updates" variant="ghost">
+      <Button label="Updates" variant="ghost" @click="demo('Updates')">
         <template #end>
           <Badge variant="neutral">
             New

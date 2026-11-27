@@ -2,7 +2,14 @@
 import { Button } from '@astryx-vue/core/Button'
 import { Step, Stepper } from '@astryx-vue/core/Stepper'
 import { TextInput } from '@astryx-vue/core/TextInput'
+import { useToast } from '@astryx-vue/core/Toast'
 import { ref } from 'vue'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 
 const street = ref('')
 const city = ref('')
@@ -20,7 +27,7 @@ const city = ref('')
           <TextInput v-model="street" label="Street" placeholder="1 Hacker Way" />
           <TextInput v-model="city" label="City" placeholder="Menlo Park" />
           <div>
-            <Button label="Save address" variant="primary" />
+            <Button label="Save address" variant="primary" @click="demo('Save address')" />
           </div>
         </div>
       </Step>

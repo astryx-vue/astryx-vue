@@ -3,6 +3,13 @@ import { Button } from '@astryx-vue/core/Button'
 import { Icon } from '@astryx-vue/core/Icon'
 import { Stack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
+import { useToast } from '@astryx-vue/core/Toast'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 
 const variants = [
   { variant: 'primary' as const, label: 'Primary' },
@@ -18,7 +25,7 @@ const variants = [
       Floating action buttons — raised above content with `elevation="med"`
     </Text>
     <Stack align="center" direction="horizontal" :gap="3">
-      <Button v-for="item in variants" :key="item.variant" :label="item.label" :variant="item.variant" elevation="med">
+      <Button v-for="item in variants" :key="item.variant" :label="item.label" :variant="item.variant" elevation="med" @click="demo(item.label)">
         <template #icon>
           <Icon icon="i-heroicons-plus" />
         </template>

@@ -2,6 +2,7 @@ import type { ThemeRecord } from '../catalog-types.ts'
 import { readdir, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { themePagePath } from '../../../../apps/docs/site/themeRoutes.ts'
+import { compareText } from '../query-order.ts'
 import { cleanMarkdown, extractTopic, paragraphContaining } from './markdown.ts'
 import { DOCS_ORIGIN } from './site.ts'
 
@@ -26,7 +27,7 @@ export async function discoverThemes(repoRoot: string): Promise<ThemeSource[]> {
   return entries
     .filter(name => name.endsWith('.css') && !NOT_A_THEME.has(name))
     .map(name => ({ slug: name.slice(0, -'.css'.length) }))
-    .sort((a, b) => a.slug.localeCompare(b.slug))
+    .sort((a, b) => compareText(a.slug, b.slug))
 }
 
 export async function buildThemes(repoRoot: string): Promise<ThemeRecord[]> {

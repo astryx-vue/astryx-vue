@@ -2,8 +2,15 @@
 import { Badge } from '@astryx-vue/core/Badge'
 import { Button } from '@astryx-vue/core/Button'
 import { CheckboxInput } from '@astryx-vue/core/CheckboxInput'
+import { useToast } from '@astryx-vue/core/Toast'
 import { Toolbar } from '@astryx-vue/core/Toolbar'
 import { computed, ref } from 'vue'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 
 const rows = [
   { id: '1', name: 'Alex Johnson', role: 'Admin', status: 'Active' },
@@ -45,12 +52,12 @@ function clear(): void {
     <Toolbar v-if="count > 0" :dividers="['bottom']" label="Bulk actions" size="sm" variant="muted">
       <template #start>
         <Badge>{{ count }} selected</Badge>
-        <Button is-icon-only label="Delete" size="sm" variant="ghost">
+        <Button is-icon-only label="Delete" size="sm" variant="ghost" @click="demo('Delete')">
           <template #icon>
             <span class="i-carbon-trash-can" />
           </template>
         </Button>
-        <Button is-icon-only label="Archive" size="sm" variant="ghost">
+        <Button is-icon-only label="Archive" size="sm" variant="ghost" @click="demo('Archive')">
           <template #icon>
             <span class="i-carbon-archive" />
           </template>

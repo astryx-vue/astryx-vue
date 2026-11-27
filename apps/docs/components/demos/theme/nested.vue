@@ -6,6 +6,13 @@ import { Section } from '@astryx-vue/core/Section'
 import { Stack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
 import { defineTheme, Theme } from '@astryx-vue/core/Theme'
+import { useToast } from '@astryx-vue/core/Toast'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 
 const warmTheme = defineTheme({
   name: 'warm-docs',
@@ -53,7 +60,7 @@ const forestTheme = defineTheme({
                 <Text type="body" weight="bold">
                   Nested Forest section
                 </Text>
-                <Button label="Nested action" variant="primary" size="sm" />
+                <Button label="Nested action" variant="primary" size="sm" @click="demo('Nested action')" />
               </Stack>
             </Card>
           </Theme>

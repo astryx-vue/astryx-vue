@@ -2,7 +2,7 @@
 import { Button } from '@astryx-vue/core/Button'
 import { Icon } from '@astryx-vue/core/Icon'
 import { NavIcon } from '@astryx-vue/core/NavItem'
-import { ToastViewport, useToast } from '@astryx-vue/core/Toast'
+import { useToast } from '@astryx-vue/core/Toast'
 import { TopNav, TopNavHeading, TopNavItem } from '@astryx-vue/core/TopNav'
 
 const showToast = useToast()
@@ -57,7 +57,6 @@ const showToast = useToast()
       </template>
     </TopNav>
   </div>
-  <ToastViewport />
 </template>
 
 <style scoped>

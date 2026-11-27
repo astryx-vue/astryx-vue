@@ -5,6 +5,13 @@ import { Layout, LayoutContent, LayoutFooter, LayoutHeader, LayoutPanel } from '
 import { List, ListItem } from '@astryx-vue/core/List'
 import { HStack, VStack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
+import { useToast } from '@astryx-vue/core/Toast'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 </script>
 
 <template>
@@ -41,8 +48,8 @@ import { Text } from '@astryx-vue/core/Text'
       <template #footer>
         <LayoutFooter has-divider>
           <HStack :gap="2" h-align="end">
-            <Button label="Reset" variant="secondary" />
-            <Button label="Save Changes" variant="primary" />
+            <Button label="Reset" variant="secondary" @click="demo('Reset')" />
+            <Button label="Save Changes" variant="primary" @click="demo('Save Changes')" />
           </HStack>
         </LayoutFooter>
       </template>

@@ -23,6 +23,8 @@ export interface SearchHit {
   import?: string
   title: string
   docsUrl: string
+  /** Only on a template hit: false when the page can be read but not copied. */
+  isReady?: boolean
 }
 
 /** How one kind of record answers to names on the command line. */
@@ -340,6 +342,7 @@ function scoreTemplate(query: string, template: TemplateRecord, locale: 'en' | '
     command: `${BINARY} template ${template.slug}`,
     title: text(template.title, locale),
     docsUrl: text(template.docsUrl, locale),
+    isReady: template.isReady,
   }
 }
 

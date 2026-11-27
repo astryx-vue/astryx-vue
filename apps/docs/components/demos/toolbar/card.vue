@@ -2,7 +2,14 @@
 import { Button } from '@astryx-vue/core/Button'
 import { Card } from '@astryx-vue/core/Card'
 import { Heading } from '@astryx-vue/core/Heading'
+import { useToast } from '@astryx-vue/core/Toast'
 import { Toolbar } from '@astryx-vue/core/Toolbar'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 </script>
 
 <template>
@@ -14,12 +21,12 @@ import { Toolbar } from '@astryx-vue/core/Toolbar'
         </Heading>
       </template>
       <template #end>
-        <Button is-icon-only label="Filter" size="sm" variant="ghost">
+        <Button is-icon-only label="Filter" size="sm" variant="ghost" @click="demo('Filter')">
           <template #icon>
             <span class="i-carbon-filter" />
           </template>
         </Button>
-        <Button is-icon-only label="Add user" size="sm">
+        <Button is-icon-only label="Add user" size="sm" @click="demo('Add user')">
           <template #icon>
             <span class="i-carbon-add" />
           </template>

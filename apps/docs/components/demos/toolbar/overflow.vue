@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import { Button } from '@astryx-vue/core/Button'
 import { OverflowList } from '@astryx-vue/core/OverflowList'
+import { useToast } from '@astryx-vue/core/Toast'
 import { Toolbar } from '@astryx-vue/core/Toolbar'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 
 const items = [
   { href: '#bold', iconClass: 'i-carbon-text-bold', id: 'bold', label: 'Bold' },
@@ -20,7 +27,7 @@ const items = [
         <OverflowList :items="items" />
       </template>
       <template #end>
-        <Button label="Share" size="sm" variant="primary" />
+        <Button label="Share" size="sm" variant="primary" @click="demo('Share')" />
       </template>
     </Toolbar>
   </div>

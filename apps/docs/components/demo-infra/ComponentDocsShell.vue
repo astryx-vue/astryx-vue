@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { ComponentDocsRoute } from './componentDocsRoute'
 import { SideNav, SideNavItem, SideNavSection } from '@astryx-vue/core/SideNav'
+import { ToastViewport } from '@astryx-vue/core/Toast'
 import { useRoute } from 'kawapress/client'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { componentDemos } from '../demos/registry'
@@ -10,6 +11,7 @@ import { componentDocsCopy, localePath } from './docs-i18n'
 import PropsPlayground from './PropsPlayground.vue'
 import { hasAccessibility } from './reference/loadReference'
 import StageFit from './StageFit.vue'
+import { ownsToastViewport } from './toastDemos'
 import VueDemoHost from './VueDemoHost.vue'
 
 const props = defineProps<{ route: ComponentDocsRoute }>()
@@ -18,6 +20,8 @@ const showAccessibility = computed(() => props.route.kind === 'detail' && hasAcc
 // 顶部演示用的是总览卡片那份 demo：它展示的是组件最基础的形态。
 const stageDemo = computed(() => (props.route.kind === 'detail' ? componentDemos[props.route.slug] : undefined))
 const sidebar = computed(() => sidebarItems(props.route.locale))
+// 页面共用一个 Toast 视口，示例里的按钮用 useToast 弹演示提示就够了。
+const showToastViewport = computed(() => props.route.kind === 'catalog' || !ownsToastViewport(props.route.slug))
 const routePath = useRoute()
 // 当前页所在的家族默认展开，其余收起。
 const activeFamilyId = computed(() => {
@@ -161,6 +165,7 @@ watch(() => routePath.value.path, () => {
         {{ text.returnToTop }}
       </button>
     </div>
+    <ToastViewport v-if="showToastViewport" />
     <Teleport to="body" :disabled="!isNarrow">
       <button
         ref="backdropEl"

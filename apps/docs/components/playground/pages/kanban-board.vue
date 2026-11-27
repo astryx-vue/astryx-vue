@@ -19,6 +19,7 @@ import {
   StatusDot,
   Text,
   Toolbar,
+  useLongPress,
   useToast,
   VStack,
 } from '@astryx-vue/core'
@@ -193,6 +194,8 @@ const drag = ref<DragState | null>(null)
 const columnEls = new Map<ColumnId, HTMLElement>()
 const cardEls = new Map<string, HTMLElement>()
 let teardownDrag: (() => void) | null = null
+let liftCard: (() => void) | null = null
+const longPress = useLongPress({ onLongPress: () => liftCard?.() })
 
 const itemsByColumn = computed(() => {
   const map: Record<ColumnId, WorkItem[]> = {
@@ -208,18 +211,41 @@ const itemsByColumn = computed(() => {
 
 const draggedItem = computed(() => drag.value ? items.value.find(it => it.id === drag.value!.id) : undefined)
 
-function setColumnEl(id: ColumnId, el: HTMLElement | null): void {
+function setColumnEl(id: ColumnId, target: unknown): void {
+  const el = rootElement(target)
   if (el)
     columnEls.set(id, el)
   else
     columnEls.delete(id)
 }
 
-function setCardEl(id: string, el: HTMLElement | null): void {
-  if (el)
+/** 手指或笔搬着卡片时，卡片上的触摸移动归搬运，不能再滚动看板。 */
+let isCarrying = false
+
+function holdScroll(event: TouchEvent): void {
+  if (isCarrying)
+    event.preventDefault()
+}
+
+/** 组件实例换成它的根元素；卸载时拿到的是 null。 */
+function rootElement(target: unknown): HTMLElement | null {
+  if (target == null)
+    return null
+  return target instanceof HTMLElement ? target : ((target as { $el?: HTMLElement }).$el ?? null)
+}
+
+function setCardEl(id: string, target: unknown): void {
+  cardEls.get(id)?.removeEventListener('touchmove', holdScroll)
+  const el = rootElement(target)
+  if (el) {
     cardEls.set(id, el)
-  else
+    // 触摸的后续移动都送给最初按下的那个元素，所以拦截放在每张卡片上；
+    // 必须是非被动监听，才能取消滚动。
+    el.addEventListener('touchmove', holdScroll, { passive: false })
+  }
+  else {
     cardEls.delete(id)
+  }
 }
 
 function moveItem(id: string, to: ColumnId): void {
@@ -299,22 +325,45 @@ function onCardPointerDown(event: PointerEvent, id: string): void {
   const { width, height } = rect
   let started = false
   let dropTarget: DropTarget | null = null
+  // 手指按在卡片上要长按才拎起卡片，所以从卡片上开始的滑动仍然滚动看板。
+  const byLongPress = event.pointerType === 'touch'
 
-  function onMove(ev: PointerEvent): void {
-    if (!started && Math.abs(ev.clientX - startX) + Math.abs(ev.clientY - startY) < DRAG_THRESHOLD)
-      return
+  function follow(x: number, y: number): void {
     started = true
-    dropTarget = computeTarget(ev.clientX, ev.clientY, id)
+    isCarrying = event.pointerType !== 'mouse'
+    dropTarget = computeTarget(x, y, id)
     drag.value = {
       id,
       width,
       height,
       offsetX,
       offsetY,
-      pointerX: ev.clientX,
-      pointerY: ev.clientY,
+      pointerX: x,
+      pointerY: y,
       target: dropTarget,
     }
+  }
+
+  if (byLongPress) {
+    liftCard = () => follow(startX, startY)
+    longPress.start({ x: startX, y: startY })
+  }
+
+  function onMove(ev: PointerEvent): void {
+    if (!started && byLongPress) {
+      // 长按之前手指就动了：这是一次滚动。
+      if (!longPress.moveTo({ x: ev.clientX, y: ev.clientY }))
+        teardownDrag?.()
+      return
+    }
+    if (!started && Math.abs(ev.clientX - startX) + Math.abs(ev.clientY - startY) < DRAG_THRESHOLD)
+      return
+    follow(ev.clientX, ev.clientY)
+  }
+
+  function onCancel(): void {
+    teardownDrag?.()
+    drag.value = null
   }
 
   function onUp(): void {
@@ -325,18 +374,36 @@ function onCardPointerDown(event: PointerEvent, id: string): void {
   }
 
   function teardown(): void {
+    longPress.cancel()
+    liftCard = null
     window.removeEventListener('pointermove', onMove)
     window.removeEventListener('pointerup', onUp)
+    window.removeEventListener('pointercancel', onCancel)
+    isCarrying = false
     teardownDrag = null
   }
   teardownDrag = teardown
   window.addEventListener('pointermove', onMove)
   window.addEventListener('pointerup', onUp)
+  window.addEventListener('pointercancel', onCancel)
 }
 
 function columnCards(colId: ColumnId): WorkItem[] {
   const colItems = itemsByColumn.value[colId]
   return drag.value ? colItems.filter(it => it.id !== drag.value!.id) : colItems
+}
+
+/** 被搬着的卡片留在原来那一列里，只是藏起来：触摸的后续移动只送给最初按下的元素，卸载它搬运就断了。 */
+function columnRows(colId: ColumnId): { item: WorkItem, index: number, isCarried: boolean }[] {
+  let visibleIndex = 0
+  return itemsByColumn.value[colId].map((item) => {
+    const isCarried = drag.value?.id === item.id
+    return { item, index: isCarried ? -1 : visibleIndex++, isCarried }
+  })
+}
+
+function isColumnEmpty(colId: ColumnId): boolean {
+  return columnCards(colId).length === 0 && ghostIndex(colId) == null
 }
 
 function ghostIndex(colId: ColumnId): number | null {
@@ -437,10 +504,10 @@ onBeforeUnmount(() => {
                 </LayoutHeader>
               </template>
               <LayoutContent
-                :ref="(el) => setColumnEl(meta.id, el as HTMLElement | null)"
+                :ref="(el) => setColumnEl(meta.id, el)"
                 :padding="2"
               >
-                <template v-if="columnCards(meta.id).length === 0 && ghostIndex(meta.id) == null">
+                <template v-if="isColumnEmpty(meta.id)">
                   <EmptyState
                     is-compact
                     class="column-empty-state"
@@ -452,20 +519,21 @@ onBeforeUnmount(() => {
                     </template>
                   </EmptyState>
                 </template>
-                <VStack v-else :gap="2">
+                <VStack :gap="2">
                   <template
-                    v-for="(item, index) in columnCards(meta.id)"
+                    v-for="{ item, index, isCarried } in columnRows(meta.id)"
                     :key="item.id"
                   >
                     <div
-                      v-if="ghostIndex(meta.id) === index"
+                      v-if="!isCarried && ghostIndex(meta.id) === index"
                       class="drag-ghost"
                       :style="{ height: `${drag?.height ?? 0}px` }"
                     />
                     <Card
-                      :ref="(el) => setCardEl(item.id, el as HTMLElement | null)"
+                      :ref="(el) => setCardEl(item.id, el)"
                       :padding="3"
                       class="board-card"
+                      :class="{ 'board-card--carried': isCarried }"
                       @pointerdown="onCardPointerDown($event, item.id)"
                     >
                       <VStack :gap="2">
@@ -536,24 +604,45 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+/* 窄屏上各列从上到下排满整行宽度，手机上看到的是完整的几列，而不是一列加半截。 */
 .board-columns {
-  overflow-x: auto;
-  overflow-y: hidden;
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: auto;
   height: 100%;
   padding: var(--astryx-spacing-4);
 }
 
 .column-shell {
   flex-shrink: 0;
-  flex-basis: 300px;
-  height: 100%;
+  flex-basis: auto;
+  width: 100%;
+  height: auto;
+}
+
+@media (min-width: 768px) {
+  .board-columns {
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .column-shell {
+    flex-basis: 300px;
+    width: auto;
+    height: 100%;
+  }
 }
 
 .board-card {
   cursor: grab;
   user-select: none;
-  touch-action: none;
+  touch-action: manipulation;
   transition: box-shadow 120ms ease;
+}
+
+.board-card--carried {
+  display: none;
 }
 
 .board-card:hover {

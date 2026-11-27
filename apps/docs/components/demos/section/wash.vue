@@ -3,6 +3,13 @@ import { Button } from '@astryx-vue/core/Button'
 import { Section } from '@astryx-vue/core/Section'
 import { HStack, VStack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
+import { useToast } from '@astryx-vue/core/Toast'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 
 const features = [
   '10 team members',
@@ -44,7 +51,7 @@ const features = [
             / month
           </Text>
         </HStack>
-        <Button label="Upgrade" variant="primary" />
+        <Button label="Upgrade" variant="primary" @click="demo('Upgrade')" />
       </VStack>
     </Section>
   </VStack>
