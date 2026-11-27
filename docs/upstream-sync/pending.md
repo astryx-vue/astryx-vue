@@ -3067,10 +3067,11 @@
   - 已移植：[#542](https://github.com/astryx-vue/astryx-vue/pull/542)。InfoTip 页补指标释义、权限说明两个示例；浏览器验证属上游测试设施
 - [x] [`380defeb5`](https://github.com/meta/astryx/commit/380defeb5) fix(PowerSearch): the docs examples fit a phone, and a long sheet-trigger placeholder ends in an ellipsis (#9898)
   - Vue 版已有：PowerSearch 的输入框用原生 placeholder，过长自带省略；Vue 示例没有写死宽度，也没有触屏 sheet 触发器
-- [ ] [`da771b3e5`](https://github.com/meta/astryx/commit/da771b3e5) chore(Tokenizer): docs examples, blocks and templates follow the adaptive default (#9883)
+- [x] [`da771b3e5`](https://github.com/meta/astryx/commit/da771b3e5) chore(Tokenizer): docs examples, blocks and templates follow the adaptive default (#9883)
   - 暂缓：Tokenizer 示例、块和模板跟 adaptive 默认值走，随 presentation 属性一起暂缓
   - 暂缓：Tokenizer 示例、块和模板跟 adaptive 默认值走：随 Tokenizer 的 presentation 属性一起暂缓
   - 暂缓：Tokenizer 示例说明已在 #606 跟上 adaptive 默认值；剩 table-inbox、work-item-detail 页面模板的返回箭头在 RTL 下镜像，归 cli-templates-2
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。table-inbox 回复箭头、work-item-detail 返回箭头在从右往左排版时镜像（Tokenizer 部分已在 #606 完成）
 - [x] [`b1f604c9f`](https://github.com/meta/astryx/commit/b1f604c9f) fix(OverflowList): a resize shows the new visible set in the same frame (height-changing folds stay one frame late) (#9926)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`f384e62f5`](https://github.com/meta/astryx/commit/f384e62f5) docs(useIcon): add hook docs and a status row example block (#9900)
@@ -3211,143 +3212,226 @@
 
 - [x] [`58b844d16`](https://github.com/meta/astryx/commit/58b844d16) feat(Table): Promise-based infinite loading with useTableInfiniteScroll (#10570)
   - 已移植：[#540](https://github.com/astryx-vue/astryx-vue/pull/540)。新增 useTableInfiniteScroll 并配加载更多示例
-- [ ] [`10bae0687`](https://github.com/meta/astryx/commit/10bae0687) feat(Table): useTableColumnsVirtualization windows the unpinned columns (#11014)
+- [x] [`10bae0687`](https://github.com/meta/astryx/commit/10bae0687) feat(Table): useTableColumnsVirtualization windows the unpinned columns (#11014)
+  - Vue 版已有：use-table-columns-virtualization 文档页已有宽表示例，hook 只挂载未固定列的视口附近
 - [ ] [`56680f6a7`](https://github.com/meta/astryx/commit/56680f6a7) fix(cli): themeBuild no longer takes the watch and private-var hand-off callbacks, and the dashboard page template typechecks with noUncheckedIndexedAccess (#11420)
 - [x] [`723a112c3`](https://github.com/meta/astryx/commit/723a112c3) test: split the heaviest Node test files so the legs can spread them (#11436)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`9b1e4893a`](https://github.com/meta/astryx/commit/9b1e4893a) perf(cli): keep template discovery's records between runs (#11393)
 - [ ] [`685728b42`](https://github.com/meta/astryx/commit/685728b42) perf(cli): load Babel, recast and jscodeshift on first use, not with the API (#11432)
 - [ ] [`07c77c008`](https://github.com/meta/astryx/commit/07c77c008) fix(cli): a kept entry with no value, a failing decode or the wrong shape is a miss, and is stored over (#11474)
-- [ ] [`22cb7e405`](https://github.com/meta/astryx/commit/22cb7e405) fix(cli): the AI Chat template's artifact-card chevron mirrors in right-to-left (#11477)
+- [x] [`22cb7e405`](https://github.com/meta/astryx/commit/22cb7e405) fix(cli): the AI Chat template's artifact-card chevron mirrors in right-to-left (#11477)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。ai-chat 产物卡片的展开箭头在从右往左排版时镜像
 - [ ] [`7e8a67000`](https://github.com/meta/astryx/commit/7e8a67000) feat(cli): experimental icon sets — a project picks one look (outline or filled) for every icon (#11499)
-- [ ] [`c8ddb4ae3`](https://github.com/meta/astryx/commit/c8ddb4ae3) fix(cli): the AI Chat template's message scrollbar stays clear of the resize handle (#11473)
-- [ ] [`f5b5f9660`](https://github.com/meta/astryx/commit/f5b5f9660) docs(useOutlineFromDOM): add hook docs and an article example block (#11234)
+- [x] [`c8ddb4ae3`](https://github.com/meta/astryx/commit/c8ddb4ae3) fix(cli): the AI Chat template's message scrollbar stays clear of the resize handle (#11473)
+  - Vue 版已有：ai-chat.vue 产物面板打开时聊天列加 ai-chat-column-beside-handle，滚动条不被缩放把手盖住
+- [x] [`f5b5f9660`](https://github.com/meta/astryx/commit/f5b5f9660) docs(useOutlineFromDOM): add hook docs and an article example block (#11234)
+  - Vue 版已有：use-outline-from-dom 文档页已有文档文章示例
 
 ### v0.7.17
 
-- [ ] [`4da09b8d6`](https://github.com/meta/astryx/commit/4da09b8d6) docs(useSyntaxTheme): add hook docs and a keyword color example block (#11236)
-- [ ] [`6f0fbce2d`](https://github.com/meta/astryx/commit/6f0fbce2d) fix(cli): the IDE template's editor scrollbar stays clear of the properties panel handle (#11529)
-- [ ] [`538e297e5`](https://github.com/meta/astryx/commit/538e297e5) docs(useChatDictation): add hook docs and a voice input example block (#11237)
+- [x] [`4da09b8d6`](https://github.com/meta/astryx/commit/4da09b8d6) docs(useSyntaxTheme): add hook docs and a keyword color example block (#11236)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。syntax-theme 文档页补 useSyntaxTheme 关键字颜色示例（hook 在这页讲）
+- [x] [`6f0fbce2d`](https://github.com/meta/astryx/commit/6f0fbce2d) fix(cli): the IDE template's editor scrollbar stays clear of the properties panel handle (#11529)
+  - Vue 版已有：ide.vue 编辑区和终端区在宽屏下带 beside-end-handle，滚动条让出把手
+- [x] [`538e297e5`](https://github.com/meta/astryx/commit/538e297e5) docs(useChatDictation): add hook docs and a voice input example block (#11237)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。use-chat-dictation 文档页补语音输入示例
 - [ ] [`8e39a4a42`](https://github.com/meta/astryx/commit/8e39a4a42) feat(cli): docs points to the command that reads a component, hook or template (#11553)
 - [ ] [`8a4d0fb71`](https://github.com/meta/astryx/commit/8a4d0fb71) feat(cli): template --list prints the first sentence of each description (#11601)
-- [ ] [`c4df91cbb`](https://github.com/meta/astryx/commit/c4df91cbb) fix(cli): one template keyword means one concept, and build matches it as a phrase (#11685)
-- [ ] [`44043bcce`](https://github.com/meta/astryx/commit/44043bcce) docs(templates): describe Content pages in their users' words (#11656)
+- [x] [`c4df91cbb`](https://github.com/meta/astryx/commit/c4df91cbb) fix(cli): one template keyword means one concept, and build matches it as a phrase (#11685)
+  - 不适用：上游模板作者文档和 build 的短语匹配引擎；我们的 build 把关键词拼成一段词袋打分，关键词表是自己写的，短语与否不影响排序
+- [x] [`44043bcce`](https://github.com/meta/astryx/commit/44043bcce) docs(templates): describe Content pages in their users' words (#11656)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。详情页、文档三页、素材库、工作项详情的关键词按使用者的说法补全（中英）
 - [ ] [`fd36ff22a`](https://github.com/meta/astryx/commit/fd36ff22a) perf(cli): a hosted run keeps its catalog, keyed on what the host passed (#11719)
-- [ ] [`847c3f112`](https://github.com/meta/astryx/commit/847c3f112) fix(cli): remove page-template keywords that the template doesn't render (#11717)
+- [x] [`847c3f112`](https://github.com/meta/astryx/commit/847c3f112) fix(cli): remove page-template keywords that the template doesn't render (#11717)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。editor 描述和关键词改成页面实际有的区块与属性面板，kanban 去掉没有的泳道，theme-showcase 描述和关键词改成样例产品界面
 - [x] [`91ffe9fde`](https://github.com/meta/astryx/commit/91ffe9fde) test(cli): take every page template round trip, and every hostile copy of a rendered file, in CI (#11710)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`43445a643`](https://github.com/meta/astryx/commit/43445a643) fix(cli): the CLI orders names the same way on every machine (#11683)
-- [ ] [`eeb3d7c53`](https://github.com/meta/astryx/commit/eeb3d7c53) docs(cli): the useContainerReveal usage block says a coarse primary pointer, not touch (#11516)
-- [ ] [`0135e032b`](https://github.com/meta/astryx/commit/0135e032b) docs(cli): AI Chat Landing keywords name its greeting, suggestions and composer (#11780)
-- [ ] [`b31d8b327`](https://github.com/meta/astryx/commit/b31d8b327) docs(useSpeechRecognition): add hook docs and a transcript example block (#11238)
+- [x] [`eeb3d7c53`](https://github.com/meta/astryx/commit/eeb3d7c53) docs(cli): the useContainerReveal usage block says a coarse primary pointer, not touch (#11516)
+  - Vue 版已有：use-container-reveal 文档页本来就写「粗指针上不靠悬停」，示例没有触屏说明
+- [x] [`0135e032b`](https://github.com/meta/astryx/commit/0135e032b) docs(cli): AI Chat Landing keywords name its greeting, suggestions and composer (#11780)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。ai-chat-landing 关键词补问候语和建议
+- [x] [`b31d8b327`](https://github.com/meta/astryx/commit/b31d8b327) docs(useSpeechRecognition): add hook docs and a transcript example block (#11238)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。use-speech-recognition 文档页补转写文本示例
 - [ ] [`e126007e2`](https://github.com/meta/astryx/commit/e126007e2) fix(build): a template kept off the gallery is never the app shell (#11808)
 - [ ] [`b18f5d6dd`](https://github.com/meta/astryx/commit/b18f5d6dd) fix(cli): template accepts an absolute path inside the project; outside, it names the command that works (#11793)
 - [ ] [`bac58372c`](https://github.com/meta/astryx/commit/bac58372c) feat(cli): one did-you-mean rule points every lookup to the command that has the name (#11707)
 - [x] [`178cd8019`](https://github.com/meta/astryx/commit/178cd8019) perf(OverflowList): lists in one commit measure together after it, before paint (#10392)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`fc15988df`](https://github.com/meta/astryx/commit/fc15988df) fix(templates): dead action buttons confirm with a toast (#11842)
-- [ ] [`db3f616ff`](https://github.com/meta/astryx/commit/db3f616ff) fix(templates): page templates fit a 390 px phone screen, with a check (#11838)
-- [ ] [`b2c47d262`](https://github.com/meta/astryx/commit/b2c47d262) fix(templates): dead action buttons in eleven more page templates name their demo action (#11852)
-- [ ] [`3e92ca00d`](https://github.com/meta/astryx/commit/3e92ca00d) fix(templates): dead menu items in the grouped table and kanban board respond (#11867)
-- [ ] [`c1ef47d57`](https://github.com/meta/astryx/commit/c1ef47d57) test(cli): pin build's default app shell when a ready Shell variant exists (#11875)
+- [x] [`fc15988df`](https://github.com/meta/astryx/commit/fc15988df) fix(templates): dead action buttons confirm with a toast (#11842)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。detail-page 的补货、履约、建标签、发票和 ide 的格式化等按钮弹演示提示；table-filter、table-page 本来就有
+- [x] [`db3f616ff`](https://github.com/meta/astryx/commit/db3f616ff) fix(templates): page templates fit a 390 px phone screen, with a check (#11838)
+  - Vue 版已有：kanban、dashboard 各页头部和按钮行已经 wrap=wrap；写好模板指南和切片渲染脚本是上游测试设施
+- [x] [`b2c47d262`](https://github.com/meta/astryx/commit/b2c47d262) fix(templates): dead action buttons in eleven more page templates name their demo action (#11852)
+  - Vue 版已有：11 个页面的演示提示（登录、付款、设置对话框、shell 会话菜单等）在 Vue 页面里都已经接了
+- [x] [`3e92ca00d`](https://github.com/meta/astryx/commit/3e92ca00d) fix(templates): dead menu items in the grouped table and kanban board respond (#11867)
+  - Vue 版已有：table-grouped 和 kanban-board 的菜单项已有演示提示和确认
+- [x] [`c1ef47d57`](https://github.com/meta/astryx/commit/c1ef47d57) test(cli): pin build's default app shell when a ready Shell variant exists (#11875)
+  - 不适用：只是 messaging-shell 元数据里关于 build 起点测试的注释
 - [ ] [`1b6eeb3f6`](https://github.com/meta/astryx/commit/1b6eeb3f6) fix(cli): template's refusal names a path the project builds and serves (#11858)
-- [ ] [`dfaf71bae`](https://github.com/meta/astryx/commit/dfaf71bae) fix(templates): the technical docs template teaches the real setup (#11876)
+- [x] [`dfaf71bae`](https://github.com/meta/astryx/commit/dfaf71bae) fix(templates): the technical docs template teaches the real setup (#11876)
+  - Vue 版已有：documentation-technical.vue 已按 reset.css、Theme、theme 包的真实步骤写
 - [ ] [`c0b2a7887`](https://github.com/meta/astryx/commit/c0b2a7887) fix(cli): errors name a run that works (#11874)
 - [ ] [`c828a75dc`](https://github.com/meta/astryx/commit/c828a75dc) fix(cli): build names where its start goes in the project, so the command runs as printed (#11881)
-- [ ] [`27ba2010f`](https://github.com/meta/astryx/commit/27ba2010f) docs(useChatPasteAsToken): add hook docs and a long paste example block (#11239)
+- [x] [`27ba2010f`](https://github.com/meta/astryx/commit/27ba2010f) docs(useChatPasteAsToken): add hook docs and a long paste example block (#11239)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。use-chat-paste-as-token 文档页补长文本粘贴示例
 - [ ] [`27bb774ac`](https://github.com/meta/astryx/commit/27bb774ac) feat(cli): astryx template writes a scratch copy to a path in the system temp folder (#11915)
-- [ ] [`d389935c2`](https://github.com/meta/astryx/commit/d389935c2) docs(templates): the IDE template's description names its single read-only code pane (#11918)
-- [ ] [`6919cd34a`](https://github.com/meta/astryx/commit/6919cd34a) fix(templates): the incident console works on a phone and its buttons act (#11924)
-- [ ] [`a79b45451`](https://github.com/meta/astryx/commit/a79b45451) feat(templates): a run console page template (not ready yet) (#11952)
-- [ ] [`af509ad91`](https://github.com/meta/astryx/commit/af509ad91) feat(cli): the table page template builds what its description promises (#11914)
-- [ ] [`76869ae15`](https://github.com/meta/astryx/commit/76869ae15) fix(templates): the messaging shell works as an app: AppShell side navigation, live conversations and threads, phone access (#11919)
-- [ ] [`f7e46c828`](https://github.com/meta/astryx/commit/f7e46c828) feat(templates): add a Review Workspace page template (not ready yet) (#11945)
-- [ ] [`88c4e0a8a`](https://github.com/meta/astryx/commit/88c4e0a8a) feat(templates): add a Welcome portal page template for an employee intranet home (not ready yet) (#11928)
-- [ ] [`5113c38bf`](https://github.com/meta/astryx/commit/5113c38bf) feat(templates): not-found, access-denied and error page templates (not yet ready) (#11944)
-- [ ] [`1649f6888`](https://github.com/meta/astryx/commit/1649f6888) fix(templates): the technical docs template reads correctly with no script (#11974)
+- [x] [`d389935c2`](https://github.com/meta/astryx/commit/d389935c2) docs(templates): the IDE template's description names its single read-only code pane (#11918)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。ide 描述改成一块只读代码区加终端抽屉
+- [x] [`6919cd34a`](https://github.com/meta/astryx/commit/6919cd34a) fix(templates): the incident console works on a phone and its buttons act (#11924)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。incident-console.vue 已在手机上用底部抽屉，按钮也有动作；描述补上这点
+- [x] [`a79b45451`](https://github.com/meta/astryx/commit/a79b45451) feat(templates): a run console page template (not ready yet) (#11952)
+  - 不适用：上游加了 run-console 模板（未就绪），随后在 9427cc695 整个移除，净结果没有这个模板
+- [x] [`af509ad91`](https://github.com/meta/astryx/commit/af509ad91) feat(cli): the table page template builds what its description promises (#11914)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。table.vue 已是成员表格；元数据描述改成页面实际内容
+- [x] [`76869ae15`](https://github.com/meta/astryx/commit/76869ae15) fix(templates): the messaging shell works as an app: AppShell side navigation, live conversations and threads, phone access (#11919)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。messaging-shell.vue 已是 AppShell 侧栏加抽屉线程；元数据描述和关键词改成这个形态，仍标未就绪
+- [x] [`f7e46c828`](https://github.com/meta/astryx/commit/f7e46c828) feat(templates): add a Review Workspace page template (not ready yet) (#11945)
+  - 不适用：上游加了 Review Workspace 模板（未就绪），随后在 9427cc695 移除，净结果没有这个模板
+- [x] [`88c4e0a8a`](https://github.com/meta/astryx/commit/88c4e0a8a) feat(templates): add a Welcome portal page template for an employee intranet home (not ready yet) (#11928)
+  - 不适用：上游加了 Welcome portal 模板（未就绪），随后在 9427cc695 移除，净结果没有这个模板
+- [x] [`5113c38bf`](https://github.com/meta/astryx/commit/5113c38bf) feat(templates): not-found, access-denied and error page templates (not yet ready) (#11944)
+  - 不适用：上游加了 not-found、access-denied、error-page 模板（未就绪），随后在 9427cc695 移除，净结果没有这些模板
+- [x] [`1649f6888`](https://github.com/meta/astryx/commit/1649f6888) fix(templates): the technical docs template reads correctly with no script (#11974)
+  - Vue 版已有：documentation-technical.vue 窄屏用 Outline 做目录而不是下拉，复制按钮是普通按钮；上游的无脚本首帧处理是 React 服务端渲染细节
 - [ ] [`2005ab380`](https://github.com/meta/astryx/commit/2005ab380) experimental theme: twelfth round of fixes (FINAL-43/44 hunts, review follow-ups) (#11965)
-- [ ] [`aad0d3683`](https://github.com/meta/astryx/commit/aad0d3683) chore(templates): documentation-technical copies with Core's useClipboard (#12024)
+- [x] [`aad0d3683`](https://github.com/meta/astryx/commit/aad0d3683) chore(templates): documentation-technical copies with Core's useClipboard (#12024)
+  - Vue 版已有：documentation-technical.vue 用 useClipboard 复制提示词
 - [ ] [`5e5ddde56`](https://github.com/meta/astryx/commit/5e5ddde56) feat(cli): template results carry isReady, and text says (not ready) (#11931)
-- [ ] [`4ea41ce48`](https://github.com/meta/astryx/commit/4ea41ce48) chore(templates): editor sizes its sidebar with LayoutPanel's width prop (#12027)
-- [ ] [`115f41873`](https://github.com/meta/astryx/commit/115f41873) chore(templates): shell-nav opens its command palette with Core's useHotkeys (#12026)
-- [ ] [`ad7e7343a`](https://github.com/meta/astryx/commit/ad7e7343a) fix(templates): make the hero and gallery call-to-action buttons links (#12036)
-- [ ] [`9407524f5`](https://github.com/meta/astryx/commit/9407524f5) fix(templates): give the dead controls in the ai-chat template a behavior (#12033)
-- [ ] [`12b6045f7`](https://github.com/meta/astryx/commit/12b6045f7) fix(templates): five top and side nav examples get working links and actions (#12049)
-- [ ] [`f58f3041f`](https://github.com/meta/astryx/commit/f58f3041f) fix(templates): order detail, work item detail and component docs read correctly with no script (#12012)
-- [ ] [`312604ada`](https://github.com/meta/astryx/commit/312604ada) fix(templates): six chat example blocks' copy, feedback and composer buttons respond (#12045)
-- [ ] [`b78ca36b1`](https://github.com/meta/astryx/commit/b78ca36b1) fix(templates): layout header and footer, card and empty state example buttons respond (#12047)
-- [ ] [`9eab1432b`](https://github.com/meta/astryx/commit/9eab1432b) fix(templates): dashboard controls that did nothing show what they would do (#12040)
-- [ ] [`10f9ef4fc`](https://github.com/meta/astryx/commit/10f9ef4fc) fix(templates): settings controls that did nothing show what they would do (#12042)
+- [x] [`4ea41ce48`](https://github.com/meta/astryx/commit/4ea41ce48) chore(templates): editor sizes its sidebar with LayoutPanel's width prop (#12027)
+  - 不适用：上游把 editor 侧栏宽度从 style 改成 LayoutPanel 的 width 属性；Vue 页面侧栏宽度写在 CSS 类里，没有对应写法
+- [x] [`115f41873`](https://github.com/meta/astryx/commit/115f41873) chore(templates): shell-nav opens its command palette with Core's useHotkeys (#12026)
+  - Vue 版已有：shell-nav.vue 用 useHotkeys 绑 meta+k 和 ctrl+k
+- [x] [`ad7e7343a`](https://github.com/meta/astryx/commit/ad7e7343a) fix(templates): make the hero and gallery call-to-action buttons links (#12036)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。centered-hero 和 product-gallery 的箭头在从右往左排版时镜像；各页 CTA 本来就是链接按钮
+- [x] [`9407524f5`](https://github.com/meta/astryx/commit/9407524f5) fix(templates): give the dead controls in the ai-chat template a behavior (#12033)
+  - Vue 版已有：ai-chat.vue 的版本菜单、复制、分享、发送、提及、附件都已经有响应
+- [x] [`12b6045f7`](https://github.com/meta/astryx/commit/12b6045f7) fix(templates): five top and side nav examples get working links and actions (#12049)
+  - 不适用：上游五个顶栏、侧栏示例块的链接；Vue 示例是文档站里独立编写的静态展示，没有模板块
+- [x] [`f58f3041f`](https://github.com/meta/astryx/commit/f58f3041f) fix(templates): order detail, work item detail and component docs read correctly with no script (#12012)
+  - Vue 版已有：detail-page、work-item-detail、documentation-design 窄屏已把详情接在主栏后面、目录用 Outline，不再开全屏对话框；useMediaQuery 的服务端默认值参数是 React 服务端渲染用的
+- [x] [`312604ada`](https://github.com/meta/astryx/commit/312604ada) fix(templates): six chat example blocks' copy, feedback and composer buttons respond (#12045)
+  - 不适用：上游聊天示例块里的复制、反馈、输入框按钮演示提示；Vue 文档示例是静态展示，示例里的演示 toast 需要每个示例自带 ToastViewport，同页多个示例会重复显示
+- [x] [`b78ca36b1`](https://github.com/meta/astryx/commit/b78ca36b1) fix(templates): layout header and footer, card and empty state example buttons respond (#12047)
+  - 不适用：同上：卡片、空状态、布局页眉页脚示例块的演示 toast
+- [x] [`9eab1432b`](https://github.com/meta/astryx/commit/9eab1432b) fix(templates): dashboard controls that did nothing show what they would do (#12040)
+  - Vue 版已有：各仪表盘的导出、查看更多、刷新按钮已有演示提示
+- [x] [`10f9ef4fc`](https://github.com/meta/astryx/commit/10f9ef4fc) fix(templates): settings controls that did nothing show what they would do (#12042)
+  - Vue 版已有：settings.vue 和 settings-sidebar.vue 的保存、托管工具按钮已有演示提示
 - [x] [`8e719d15d`](https://github.com/meta/astryx/commit/8e719d15d) fix(cli): build reads search without page templates that are not ready (#12031)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`047f1a95a`](https://github.com/meta/astryx/commit/047f1a95a) fix(templates): toolbar, selector, table, tab and popover example buttons respond (#12048)
-- [ ] [`54bf5ed70`](https://github.com/meta/astryx/commit/54bf5ed70) fix(templates): give the dead controls in the tool templates a behavior (#12022)
-- [ ] [`0c0a4c512`](https://github.com/meta/astryx/commit/0c0a4c512) fix(templates): CommandPaletteGroup basic, CommandPaletteList and DropdownMenuGroup showcase examples respond when picked (#12046)
-- [ ] [`29ec3af53`](https://github.com/meta/astryx/commit/29ec3af53) fix(templates): form buttons that did nothing show what they would do (#12041)
-- [ ] [`f3fce450a`](https://github.com/meta/astryx/commit/f3fce450a) fix(templates): two page templates no longer leave an empty column on wide screens (#12051)
-- [ ] [`28f8e9c8c`](https://github.com/meta/astryx/commit/28f8e9c8c) fix(templates): give listed dead controls in the app shell templates a demo toast (#12030)
-- [ ] [`3a5f600cb`](https://github.com/meta/astryx/commit/3a5f600cb) fix(templates): the technical docs next steps wrap on a narrow screen (#12063)
-- [ ] [`a699e26e3`](https://github.com/meta/astryx/commit/a699e26e3) fix(templates): the payment form asks before removing a cart item (#12077)
-- [ ] [`c0b12795d`](https://github.com/meta/astryx/commit/c0b12795d) feat(templates): table and incident-console are ready; build hosts parts on a family base and starts shell variants only by their own words (#12003)
-- [ ] [`d95d6ad38`](https://github.com/meta/astryx/commit/d95d6ad38) fix(templates): text area, text input, switch, segmented control and tab list example blocks fit narrow columns (#12085)
-- [ ] [`ce0feb506`](https://github.com/meta/astryx/commit/ce0feb506) fix(core): a Table bleeds to a block edge only as its container's direct first or last child (#12068)
-- [ ] [`86fa8f0c7`](https://github.com/meta/astryx/commit/86fa8f0c7) fix(templates): the settings dialog asks before deleting the account (#12076)
-- [ ] [`b21d033ea`](https://github.com/meta/astryx/commit/b21d033ea) fix(templates): card, center, collapsible, divider and blockquote example blocks fit narrow columns (#12083)
-- [ ] [`05fea3739`](https://github.com/meta/astryx/commit/05fea3739) fix(templates): give the dead controls in the table templates a behavior, except deletes (#12020)
-- [ ] [`55674f90c`](https://github.com/meta/astryx/commit/55674f90c) fix(templates): shell templates ask before deleting (#12089)
-- [ ] [`e67bb66bb`](https://github.com/meta/astryx/commit/e67bb66bb) fix(templates): give the dead controls in the content templates a behavior (#12023)
-- [ ] [`d57f21691`](https://github.com/meta/astryx/commit/d57f21691) fix(templates): layout and chat layout example blocks fit narrow columns (#12082)
-- [ ] [`9427cc695`](https://github.com/meta/astryx/commit/9427cc695) revert(templates): remove six page templates that were never marked ready (#12016)
-- [ ] [`88fe0ebd8`](https://github.com/meta/astryx/commit/88fe0ebd8) fix(templates): content templates ask before refunding or deleting (#12110)
-- [ ] [`c7497cb34`](https://github.com/meta/astryx/commit/c7497cb34) fix(templates): the canvas artboard and the milestone timeline keep left-to-right in right-to-left pages (#12113)
-- [ ] [`e83fd87dd`](https://github.com/meta/astryx/commit/e83fd87dd) fix(templates): demo frames and targets in example blocks use theme colors (#12135)
+- [x] [`047f1a95a`](https://github.com/meta/astryx/commit/047f1a95a) fix(templates): toolbar, selector, table, tab and popover example buttons respond (#12048)
+  - 不适用：上游工具栏、选择器、表格批量操作示例块的演示 toast，理由同 b78ca36b1
+- [x] [`54bf5ed70`](https://github.com/meta/astryx/commit/54bf5ed70) fix(templates): give the dead controls in the tool templates a behavior (#12022)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。canvas-editor 撤销重做图标在从右往左排版时镜像；其余工具页的演示提示 Vue 里本来就有
+- [x] [`0c0a4c512`](https://github.com/meta/astryx/commit/0c0a4c512) fix(templates): CommandPaletteGroup basic, CommandPaletteList and DropdownMenuGroup showcase examples respond when picked (#12046)
+  - 不适用：上游命令面板、下拉菜单示例块选中后的演示提示，理由同 b78ca36b1
+- [x] [`29ec3af53`](https://github.com/meta/astryx/commit/29ec3af53) fix(templates): form buttons that did nothing show what they would do (#12041)
+  - Vue 版已有：表单页的提交校验、取消、创建都已有演示提示
+- [x] [`f3fce450a`](https://github.com/meta/astryx/commit/f3fce450a) fix(templates): two page templates no longer leave an empty column on wide screens (#12051)
+  - Vue 版已有：form-two-column 用 repeat fit，product-gallery 的网格已限制列数
+- [x] [`28f8e9c8c`](https://github.com/meta/astryx/commit/28f8e9c8c) fix(templates): give listed dead controls in the app shell templates a demo toast (#12030)
+  - Vue 版已有：shell-nav、shell-top-nav、theme-showcase 的演示提示都已接上
+- [x] [`3a5f600cb`](https://github.com/meta/astryx/commit/3a5f600cb) fix(templates): the technical docs next steps wrap on a narrow screen (#12063)
+  - Vue 版已有：documentation-technical.vue 的列表项用节点形式 label，窄屏换行
+- [x] [`a699e26e3`](https://github.com/meta/astryx/commit/a699e26e3) fix(templates): the payment form asks before removing a cart item (#12077)
+  - Vue 版已有：payment-form.vue 移除购物车商品先走确认对话框
+- [x] [`c0b12795d`](https://github.com/meta/astryx/commit/c0b12795d) feat(templates): table and incident-console are ready; build hosts parts on a family base and starts shell variants only by their own words (#12003)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。table 和 incident-console 转为就绪，check:templates 落地后通过；列表里的未就绪数改成 6
+- [x] [`d95d6ad38`](https://github.com/meta/astryx/commit/d95d6ad38) fix(templates): text area, text input, switch, segmented control and tab list example blocks fit narrow columns (#12085)
+  - 不适用：上游文本框、开关、分段控件等示例块在窄列里的排版；Vue 示例在预览框里自适应宽度
+- [x] [`ce0feb506`](https://github.com/meta/astryx/commit/ce0feb506) fix(core): a Table bleeds to a block edge only as its container's direct first or last child (#12068)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。table 文档示例里的表格改成卡片的直接末个子元素才贴底边；各页面 Vue 里已是这个结构，core 的规则也已有
+- [x] [`86fa8f0c7`](https://github.com/meta/astryx/commit/86fa8f0c7) fix(templates): the settings dialog asks before deleting the account (#12076)
+  - Vue 版已有：settings-dialog.vue 删除账号先弹确认对话框
+- [x] [`b21d033ea`](https://github.com/meta/astryx/commit/b21d033ea) fix(templates): card, center, collapsible, divider and blockquote example blocks fit narrow columns (#12083)
+  - 不适用：上游卡片、居中、折叠等示例块在窄列里的排版，理由同 d95d6ad38
+- [x] [`05fea3739`](https://github.com/meta/astryx/commit/05fea3739) fix(templates): give the dead controls in the table templates a behavior, except deletes (#12020)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。table-inbox 的刷新、写信、回复、线程工具条和 table-tree 的话题、分支、文件、统计按钮补上演示提示；其余表格页本来就有
+- [x] [`55674f90c`](https://github.com/meta/astryx/commit/55674f90c) fix(templates): shell templates ask before deleting (#12089)
+  - Vue 版已有：shell-side-nav 和 theme-showcase 的删除先确认
+- [x] [`e67bb66bb`](https://github.com/meta/astryx/commit/e67bb66bb) fix(templates): give the dead controls in the content templates a behavior (#12023)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。work-item-detail 头部三个图标按钮、添加子任务和附件、取消和评论接上演示提示；其余内容页 Vue 里本来就有
+- [x] [`d57f21691`](https://github.com/meta/astryx/commit/d57f21691) fix(templates): layout and chat layout example blocks fit narrow columns (#12082)
+  - 不适用：上游布局、聊天布局示例块在窄列里的排版，理由同 d95d6ad38
+- [x] [`9427cc695`](https://github.com/meta/astryx/commit/9427cc695) revert(templates): remove six page templates that were never marked ready (#12016)
+  - 不适用：上游移除六个从未就绪的页面模板；Vue 没有这六个
+- [x] [`88fe0ebd8`](https://github.com/meta/astryx/commit/88fe0ebd8) fix(templates): content templates ask before refunding or deleting (#12110)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。detail-page 退款、work-item-detail 附件删除先弹确认对话框
+- [x] [`c7497cb34`](https://github.com/meta/astryx/commit/c7497cb34) fix(templates): the canvas artboard and the milestone timeline keep left-to-right in right-to-left pages (#12113)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。dashboard-progress 的甘特图和燃尽图固定从左往右；canvas-editor 画板本来就是 dir=ltr
+- [x] [`e83fd87dd`](https://github.com/meta/astryx/commit/e83fd87dd) fix(templates): demo frames and targets in example blocks use theme colors (#12135)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。右键菜单、更多菜单、方向图等示例的硬编码灰色改用主题边框和文字色
 - [ ] [`c44a63778`](https://github.com/meta/astryx/commit/c44a63778) feat(cli): bases, first step — a run reads one base; steps it does not serve are hidden and refused (#11111)
-- [ ] [`597701be7`](https://github.com/meta/astryx/commit/597701be7) fix(templates): example blocks hydrate cleanly and name repeated landmarks (#12126)
-- [ ] [`5a3fd3948`](https://github.com/meta/astryx/commit/5a3fd3948) fix(templates): table templates get main landmarks, column names and heading levels (#12141)
+- [x] [`597701be7`](https://github.com/meta/astryx/commit/597701be7) fix(templates): example blocks hydrate cleanly and name repeated landmarks (#12126)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。面包屑、大纲、侧栏标题示例给重复的导航地标补上名字；Timestamp 示例本来就在挂载后取时间
+- [x] [`5a3fd3948`](https://github.com/meta/astryx/commit/5a3fd3948) fix(templates): table templates get main landmarks, column names and heading levels (#12141)
+  - Vue 版已有：各表格页已有 main 地标、隐藏的列名和标题层级
 - [ ] [`d6f6295da`](https://github.com/meta/astryx/commit/d6f6295da) perf(cli): keep each shipped doc's parse, and build doc schemas on first parse (#12166)
 - [ ] [`e80124133`](https://github.com/meta/astryx/commit/e80124133) fix(cli): icon finder answers with no icon set and honors the chosen look (#12131)
-- [ ] [`817efe895`](https://github.com/meta/astryx/commit/817efe895) fix(templates): dashboard templates get main landmarks, one h1 and an ordered outline (#12133)
-- [ ] [`47be1465c`](https://github.com/meta/astryx/commit/47be1465c) fix(templates): table templates ask before deleting (#12109)
-- [ ] [`d61c951d4`](https://github.com/meta/astryx/commit/d61c951d4) feat(cli): init says what it did to each agent-doc file (#12200)
+- [x] [`817efe895`](https://github.com/meta/astryx/commit/817efe895) fix(templates): dashboard templates get main landmarks, one h1 and an ordered outline (#12133)
+  - Vue 版已有：各仪表盘已有 main 地标、一个 h1 和 accessibility-level 的标题层级
+- [x] [`47be1465c`](https://github.com/meta/astryx/commit/47be1465c) fix(templates): table templates ask before deleting (#12109)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。table-inbox 线程工具条的删除也走确认；table-grouped 和行内删除本来就有
+- [x] [`d61c951d4`](https://github.com/meta/astryx/commit/d61c951d4) feat(cli): init says what it did to each agent-doc file (#12200)
+  - 不适用：上游 init 输出和 CodeBlockTerminal 示例块；init 输出已由 CLI 杂项任务处理
 - [ ] [`27af5191c`](https://github.com/meta/astryx/commit/27af5191c) fix(cli): init next steps and the doctor theme hint use the project's install command (#12199)
 - [ ] [`35fbc1120`](https://github.com/meta/astryx/commit/35fbc1120) experimental theme: fourteenth round of fixes (neutral variants, readable role text, one-browser pictures) (#12097)
 - [ ] [`f39ed0207`](https://github.com/meta/astryx/commit/f39ed0207) fix(cli): template docs never print a raw {@command} or {@pm} token; build and search text show doc commands with the project's command (#12214)
 - [ ] [`2c80ffc20`](https://github.com/meta/astryx/commit/2c80ffc20) feat(cli): an installed icon-set package turns on the experimental icon features (one gate) (#12176)
 - [ ] [`86b073364`](https://github.com/meta/astryx/commit/86b073364) feat(cli): doctor names icon imports that no longer match the app's icon sets (#12194)
-- [ ] [`476a31534`](https://github.com/meta/astryx/commit/476a31534) fix(templates): demo actions show a toast instead of alert(), so they respond in frames that block dialogs (#12304)
-- [ ] [`09d704517`](https://github.com/meta/astryx/commit/09d704517) fix(templates): the editor transactions table keeps names readable on a phone (#12315)
+- [x] [`476a31534`](https://github.com/meta/astryx/commit/476a31534) fix(templates): demo actions show a toast instead of alert(), so they respond in frames that block dialogs (#12304)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。avatar 的按钮示例不再用 window.alert，改成演示提示；页面里本来就没有 alert
+- [x] [`09d704517`](https://github.com/meta/astryx/commit/09d704517) fix(templates): the editor transactions table keeps names readable on a phone (#12315)
+  - Vue 版已有：editor.vue 事务表名字列用 proportional 宽度，手机上名字保持可读
 - [ ] [`3a1165f91`](https://github.com/meta/astryx/commit/3a1165f91) fix(cli): the named scaffold path is the file the copy writes (#12294)
-- [ ] [`66a16258f`](https://github.com/meta/astryx/commit/66a16258f) fix(templates): page templates get main landmarks, one h1 and ordered outlines (#12160)
+- [x] [`66a16258f`](https://github.com/meta/astryx/commit/66a16258f) fix(templates): page templates get main landmarks, one h1 and ordered outlines (#12160)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。blank 页补 main 地标和 h1；其余页面 Vue 里已有
 - [ ] [`b7f61b795`](https://github.com/meta/astryx/commit/b7f61b795) fix(cli): outside a project, a page takes the packages its host's set lists (#12057)
 - [ ] [`be5d290db`](https://github.com/meta/astryx/commit/be5d290db) fix(cli): a kept template icon from a library subpath names the library the set wraps (#12412)
 - [ ] [`a6538f27a`](https://github.com/meta/astryx/commit/a6538f27a) feat(cli): an integration can say how its apps add a dependency (installGuidance) (#12218)
-- [ ] [`5cf5d6997`](https://github.com/meta/astryx/commit/5cf5d6997) fix(cli): dashboard templates draw trend lines as straight segments (#12413)
+- [x] [`5cf5d6997`](https://github.com/meta/astryx/commit/5cf5d6997) fix(cli): dashboard templates draw trend lines as straight segments (#12413)
+  - Vue 版已有：自绘折线图默认直线连接，不用平滑曲线
 - [ ] [`7cb595c9a`](https://github.com/meta/astryx/commit/7cb595c9a) [experimental] render: the missing-package refusal offers no install line that would install in the wrong place (#12429)
-- [ ] [`d06d2349f`](https://github.com/meta/astryx/commit/d06d2349f) fix(templates): page templates fit a 320 px phone without sideways scroll or cut text (#12444)
+- [x] [`d06d2349f`](https://github.com/meta/astryx/commit/d06d2349f) fix(templates): page templates fit a 320 px phone without sideways scroll or cut text (#12444)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。仪表盘、素材库、设置、商品详情、画廊等页的网格加上列数上限，向导的选项节点化换行
 - [ ] [`39e859a30`](https://github.com/meta/astryx/commit/39e859a30) fix(cli): outside a project, template counts the integrations a host approves, as render serves them (#12370)
 - [ ] [`4a8df8bca`](https://github.com/meta/astryx/commit/4a8df8bca) fix(cli): template help names only what the base serves (#12419)
 - [ ] [`227a9deb6`](https://github.com/meta/astryx/commit/227a9deb6) fix(cli): search reads another entry's name as that entry's evidence (#12433)
-- [ ] [`02c02700f`](https://github.com/meta/astryx/commit/02c02700f) fix(templates): keyboard reach for the kanban board's info icons and the side-nav shell's conversation options (#12152)
+- [x] [`02c02700f`](https://github.com/meta/astryx/commit/02c02700f) fix(templates): keyboard reach for the kanban board's info icons and the side-nav shell's conversation options (#12152)
+  - Vue 版已有：kanban-board 用 InfoTip，shell-side-nav 的会话菜单用 useContainerReveal 且键盘可达
 - [ ] [`bbc0435e2`](https://github.com/meta/astryx/commit/bbc0435e2) feat(cli): name a template's components for one component read (#12389)
-- [ ] [`e434325ed`](https://github.com/meta/astryx/commit/e434325ed) fix(templates): toolbar, top nav, table and stepper example blocks fit narrow columns (#12084)
-- [ ] [`d7c7e7014`](https://github.com/meta/astryx/commit/d7c7e7014) fix(TopNav): the phone bar keeps wide end content inside it, so the Shell Nav menu button stays in view (#12300)
+- [x] [`e434325ed`](https://github.com/meta/astryx/commit/e434325ed) fix(templates): toolbar, top nav, table and stepper example blocks fit narrow columns (#12084)
+  - 不适用：上游工具栏、顶栏、表格、步骤条示例块在窄列里的排版，理由同 d95d6ad38
+- [x] [`d7c7e7014`](https://github.com/meta/astryx/commit/d7c7e7014) fix(TopNav): the phone bar keeps wide end content inside it, so the Shell Nav menu button stays in view (#12300)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。shell-nav 顶栏的搜索框最宽 240px 并随窄屏收缩，分享按钮不被挤出
 - [x] [`a2edb5300`](https://github.com/meta/astryx/commit/a2edb5300) chore: land batch 2 (16 pull requests) (#12718)
   - 已移植：[#579](https://github.com/astryx-vue/astryx-vue/pull/579)。批量合入里宿主的改动随宿主一起移植
-- [ ] [`8bd67fe30`](https://github.com/meta/astryx/commit/8bd67fe30) chore: land batch 1 (12 pull requests) (#12713)
-- [ ] [`daf5e2cb3`](https://github.com/meta/astryx/commit/daf5e2cb3) chore: land batch 3 (13 pull requests) (#12722)
+- [x] [`8bd67fe30`](https://github.com/meta/astryx/commit/8bd67fe30) chore: land batch 1 (12 pull requests) (#12713)
+  - Vue 版已有：payment-form 和 checkout-wizard 表单列最小宽度、两个仪表盘页区块不套卡片，已在先前的同步里做过
+- [x] [`daf5e2cb3`](https://github.com/meta/astryx/commit/daf5e2cb3) chore: land batch 3 (13 pull requests) (#12722)
+  - Vue 版已有：payment-form 商品名和价格换行写法已有
 - [ ] [`d6ac73ef3`](https://github.com/meta/astryx/commit/d6ac73ef3) chore: land batch 4 (12 pull requests) (#12738)
-- [ ] [`8688c1885`](https://github.com/meta/astryx/commit/8688c1885) chore: land batch 6 (11 pull requests) (#12812)
+- [x] [`8688c1885`](https://github.com/meta/astryx/commit/8688c1885) chore: land batch 6 (11 pull requests) (#12812)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。settings 页头窄屏换行、contact-form 的区块撑满宽度、settings-dialog 的撤销箭头镜像；其余页面 Vue 里已有，块示例不适用
 - [x] [`9e19fa47e`](https://github.com/meta/astryx/commit/9e19fa47e) chore: land batch 8 (11 pull requests) (#12827)
   - Vue 版已有：field.css 的标签已用主文字色，说明和可选标记仍用次要文字色
-- [ ] [`cf537d7aa`](https://github.com/meta/astryx/commit/cf537d7aa) chore: land batch 11 (3 pull requests) (#12848)
-- [ ] [`4f5390649`](https://github.com/meta/astryx/commit/4f5390649) chore: land batch 14 (2 pull requests) (#12874)
-- [ ] [`2ab167954`](https://github.com/meta/astryx/commit/2ab167954) chore: land batch 25 (2 pull requests) (#12879)
+- [x] [`cf537d7aa`](https://github.com/meta/astryx/commit/cf537d7aa) chore: land batch 11 (3 pull requests) (#12848)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。settings 和 settings-sidebar 的导航标当前页、其余分类点了给演示提示
+- [x] [`4f5390649`](https://github.com/meta/astryx/commit/4f5390649) chore: land batch 14 (2 pull requests) (#12874)
+  - 不适用：上游批量落地的块示例（纵横比、头像、网格、滚动区、hook 用法）窄列排版，理由同 d95d6ad38
+- [x] [`2ab167954`](https://github.com/meta/astryx/commit/2ab167954) chore: land batch 25 (2 pull requests) (#12879)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。documentation 窄屏卡片收紧、work-item-detail 和 form-wizard 选项用节点形式 label 换行、editor 和 dashboard-composition 的按钮不被拉伸
 - [ ] [`83424673c`](https://github.com/meta/astryx/commit/83424673c) chore: land batch 16 (6 pull requests) (#12881)
 - [ ] [`d60793cbc`](https://github.com/meta/astryx/commit/d60793cbc) chore: land batch 18 (2 pull requests) (#12882)
-- [ ] [`8efb25a85`](https://github.com/meta/astryx/commit/8efb25a85) chore: land batch 23 (4 pull requests) (#12885)
+- [x] [`8efb25a85`](https://github.com/meta/astryx/commit/8efb25a85) chore: land batch 23 (4 pull requests) (#12885)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。checkout-wizard 竖排时不换行、应用按钮不被压缩
 - [ ] [`e9b125444`](https://github.com/meta/astryx/commit/e9b125444) chore: land batch 24 (3 pull requests) (#12883)
-- [ ] [`788018029`](https://github.com/meta/astryx/commit/788018029) chore: land batch 40 (4 pull requests) (#12914)
-- [ ] [`6c12793c1`](https://github.com/meta/astryx/commit/6c12793c1) chore: land batch 41 (1 pull requests) (#12916)
+- [x] [`788018029`](https://github.com/meta/astryx/commit/788018029) chore: land batch 40 (4 pull requests) (#12914)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。canvas-editor 标签条最窄 96px、保存提示在页眉窄时让位、按画布宽度挑缩放；dashboard-scorecard 纵轴用压缩刻度
+- [x] [`6c12793c1`](https://github.com/meta/astryx/commit/6c12793c1) chore: land batch 41 (1 pull requests) (#12916)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。三个仪表盘图表刻度文字的回退色换成对比度更高的值
 - [ ] [`215925cc0`](https://github.com/meta/astryx/commit/215925cc0) chore: land batch 59 (8 pull requests) (#12938)
 - [ ] [`0c4cfbadd`](https://github.com/meta/astryx/commit/0c4cfbadd) chore: land batch 66 (1 pull requests) (#12952)
 - [ ] [`d1b5532bb`](https://github.com/meta/astryx/commit/d1b5532bb) chore: land batch 75 (1 pull requests) (#12969)
