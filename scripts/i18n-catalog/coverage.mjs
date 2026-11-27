@@ -56,14 +56,6 @@ export const UNPORTED_KEYS = {
     'fieldOperator',
     'labelValue',
   ], 'PowerSearch 的触屏底部弹层（experimental.presentation）还没有 Vue 版'),
-  ...keys('@astryx.powersearch.', [
-    'token.fieldOperator',
-    'token.labelValue',
-  ], 'PowerSearch 筛选 token 按字段、运算符、值分段取文案还没移植'),
-  ...keys('@astryx.powersearch.', [
-    'allFiltersRemoved',
-    'editableFiltersRemoved',
-  ], 'PowerSearch「全部清除」用自己的话播报一次（并保留只读筛选）还没移植'),
   '@astryx.tokenizer.done': 'Tokenizer 底部弹层编辑草稿、按「保存」提交，没有立即生效、用「完成」收尾的流程',
   ...keys('@astryx.list.', [
     'reorderHandle',

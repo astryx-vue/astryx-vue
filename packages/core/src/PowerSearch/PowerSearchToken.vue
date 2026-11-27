@@ -7,6 +7,7 @@ import { tokenNamingKey } from '../Token/namingContext.js'
 import Token from '../Token/Token.vue'
 import { characterCount } from '../utils/characters.js'
 import { formatFilterValue } from './format.js'
+import { formatTokenLabel, formatTokenText, tokenTextKeepsParts } from './formatTokenText.js'
 import { resolveOperatorLabel } from './operators.js'
 
 defineOptions({ name: 'AstryxPowerSearchToken' })
@@ -37,20 +38,22 @@ const emit = defineEmits<{
 
 const calendar = useCalendarSystem(undefined, 'PowerSearch')
 const operatorLabel = computed(() => resolveOperatorLabel(props.operator, props.messages))
-const tokenLabel = computed(() => `${props.fieldLabel}: ${operatorLabel.value}`)
+const tokenLabel = computed(() => formatTokenLabel(props.messages, props.fieldLabel, operatorLabel.value))
 const valueText = computed(() => {
   const room = Math.max(props.maxLength - characterCount(props.fieldLabel) - characterCount(operatorLabel.value), 10)
   return formatFilterValue(props.operator.value, props.filter.value, room, props.messages, props.locale, props.timeZone, calendar.value)
 })
 /** 标签的全部可见文字：字段、运算符和值。按钮、删除按钮和编辑器都按它命名，同一字段的两个条件读出来不再一样。 */
-const visibleText = computed(() => valueText.value ? `${tokenLabel.value} ${valueText.value}` : tokenLabel.value)
+const visibleText = computed(() => valueText.value ? formatTokenText(props.messages, tokenLabel.value, valueText.value) : tokenLabel.value)
+/** 语言把全文写成「标签 值」以外的形状时，标签上不再把值单独加粗，整句作为一段文字显示。 */
+const showsParts = computed(() => !valueText.value || tokenTextKeepsParts(props.messages))
 
 provide(tokenNamingKey, computed(() => ({ actionName: visibleText.value, removeName: visibleText.value })))
 </script>
 
 <template>
   <Token
-    :label="tokenLabel"
+    :label="showsParts ? tokenLabel : visibleText"
     :size="size"
     :disabled="disabled"
     :removable="removable"
@@ -59,8 +62,8 @@ provide(tokenNamingKey, computed(() => ({ actionName: visibleText.value, removeN
     @click="emit('activate')"
     @remove="emit('remove')"
   >
-    <template v-if="valueText || nameId" #end>
-      <span v-if="valueText" class="astryx-power-search-token-value">{{ valueText }}</span>
+    <template v-if="(showsParts && valueText) || nameId" #end>
+      <span v-if="showsParts && valueText" class="astryx-power-search-token-value">{{ valueText }}</span>
       <span v-if="nameId" :id="nameId" hidden>{{ visibleText }}</span>
     </template>
   </Token>

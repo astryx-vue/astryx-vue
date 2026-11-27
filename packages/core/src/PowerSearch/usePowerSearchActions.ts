@@ -264,10 +264,15 @@ export function usePowerSearchActions(options: {
 
   function clearAll(event?: Event): void {
     event?.stopPropagation()
-    if (props.disabled || filters.value.length === 0)
+    if (props.disabled || props.readOnly)
       return
-    commit([], 'remove', 0)
-    announce(text.value.clear)
+    // 只读条件按约定不能被移除，「全部」指所有能移除的条件；变更报告第一个被移除的位置。
+    const firstRemoved = filters.value.findIndex(filter => filter.isReadOnly !== true)
+    if (firstRemoved < 0)
+      return
+    const kept = filters.value.filter(filter => filter.isReadOnly === true)
+    commit(kept, 'remove', firstRemoved)
+    announce(kept.length > 0 ? text.value.editableFiltersRemoved : text.value.allFiltersRemoved)
     menu.close()
     options.inputRef.value?.focus()
   }

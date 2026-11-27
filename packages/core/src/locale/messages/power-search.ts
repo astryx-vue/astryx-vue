@@ -29,6 +29,10 @@ export interface PowerSearchMessages {
   label: string
   placeholder: string
   clear: string
+  /** 全部清除后念出的话：没有只读条件留下时。 */
+  allFiltersRemoved: string
+  /** 全部清除后念出的话：还有只读条件留下时。 */
+  editableFiltersRemoved: string
   results: string
   empty: string
   removeFilter: (label: string) => string
@@ -38,6 +42,13 @@ export interface PowerSearchMessages {
   filtersCount: (count: number) => string
   more: (count: number) => string
   dateRange: string
+  /** 筛选标签的文字怎么拼：语言可以调换两部分的顺序和标点。 */
+  token: {
+    /** 字段和运算符，例如「Status: is」。 */
+    fieldOperator: (field: string, operator: string) => string
+    /** 「字段: 运算符」和值，例如「Status: is Open」。 */
+    labelValue: (label: string, value: string) => string
+  }
   operators: PowerSearchOperatorMessages
   editor: {
     field: string
@@ -123,6 +134,8 @@ export const powerSearchMessages: Record<AstryxLocale, PowerSearchMessages> = {
     label: 'Search',
     placeholder: 'Search…',
     clear: 'Clear all',
+    allFiltersRemoved: 'All filters removed',
+    editableFiltersRemoved: 'Editable filters removed',
     results: 'Search results',
     empty: 'No results',
     removeFilter: label => `Remove ${label}`,
@@ -132,6 +145,10 @@ export const powerSearchMessages: Record<AstryxLocale, PowerSearchMessages> = {
     filtersCount: count => `${formatCount(count, 'en')} ${englishPlural(count, 'filter', 'filters')}`,
     more: count => `${formatCount(count, 'en')} more`,
     dateRange: 'date range',
+    token: {
+      fieldOperator: (field, operator) => `${field}: ${operator}`,
+      labelValue: (label, value) => `${label} ${value}`,
+    },
     operators: operatorsEn,
     editor: {
       field: 'Field',
@@ -166,6 +183,8 @@ export const powerSearchMessages: Record<AstryxLocale, PowerSearchMessages> = {
     label: '搜索',
     placeholder: '搜索……',
     clear: '全部清除',
+    allFiltersRemoved: '已移除全部筛选条件',
+    editableFiltersRemoved: '已移除可编辑的筛选条件',
     results: '搜索结果',
     empty: '没有结果',
     removeFilter: label => `移除${label}`,
@@ -175,6 +194,10 @@ export const powerSearchMessages: Record<AstryxLocale, PowerSearchMessages> = {
     filtersCount: count => `${formatCount(count, 'zh-CN')} 个筛选条件`,
     more: count => `另外 ${formatCount(count, 'zh-CN')} 个`,
     dateRange: '日期范围',
+    token: {
+      fieldOperator: (field, operator) => `${field}: ${operator}`,
+      labelValue: (label, value) => `${label} ${value}`,
+    },
     operators: operatorsZh,
     editor: {
       field: '字段',
