@@ -202,6 +202,16 @@ describe('keywords are words to find a component by, never names', () => {
   })
 })
 
+describe('search match count', () => {
+  it.each(['tabs', 'date picker', 'dark mode', 'RightToLeft', 'table header cell', 'qqzz_no_match_here'])('counts every match of %s whatever the limit', (query) => {
+    const everything = searchCatalog(query, 'en', { limit: 10_000 })
+    const few = searchCatalog(query, 'en', { limit: 3 })
+    expect(everything.results.length).toBe(everything.matchCount)
+    expect(few.matchCount).toBe(everything.matchCount)
+    expect(few.results.map(result => result.name)).toEqual(everything.results.slice(0, 3).map(result => result.name))
+  })
+})
+
 describe('a failed lookup points to the command that has the name', () => {
   async function failure(argv: string[]): Promise<{ code: string, names: string[] }> {
     const result = await runCli([...argv, '--json'])
