@@ -7,8 +7,10 @@ import type {
   PowerSearchSlots,
 } from './types.js'
 import { computed, nextTick, onMounted, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
+import { devPropError, isDevBuild } from '../composables/internal/devBuild.js'
 import { useAnnounce } from '../composables/useAnnounce.js'
 import { useDismiss } from '../composables/useDismiss.js'
+import { useInputStatusIcon } from '../composables/useInputStatusIcon.js'
 import { useOverflow } from '../composables/useOverflow.js'
 import { useResolvedLabelHidden } from '../composables/useResolvedLabelHidden.js'
 import Field from '../Field/Field.vue'
@@ -28,6 +30,7 @@ import PowerSearchToken from './PowerSearchToken.vue'
 import { searchPowerSearchFields } from './source.js'
 import { useFilterTokenNaming } from './useFilterTokenNaming.js'
 import { usePowerSearchActions } from './usePowerSearchActions.js'
+import { useResultCountAnnouncement } from './useResultCountAnnouncement.js'
 import '../../styles/power-search.css'
 import '../../styles/typeahead.css'
 import '../../styles/visually-hidden-utility.css'
@@ -51,6 +54,9 @@ const props = withDefaults(defineProps<PowerSearchProps>(), {
 const emit = defineEmits<PowerSearchEmits>()
 
 const slots = defineSlots<PowerSearchSlots>()
+
+if (isDevBuild() && props.config == null)
+  throw devPropError('PowerSearch', 'config', 'is required: the fields people can filter by, for example :config="{ fields: [...] }".')
 
 // 显式 size > 外层 SizeContext（Toolbar、InputGroup 等）> 'md'。
 const size = useSize(() => props.size, 'md')
@@ -79,11 +85,10 @@ const listboxRef = useTemplateRef<HTMLElement>('listboxRef')
 useScrollbars(listboxRef)
 const inputRef = useTemplateRef<HTMLInputElement>('inputRef')
 const editorRef = useTemplateRef<HTMLElement>('editorRef')
-const sawCount = ref(false)
-const liveText = ref('')
 const visibleCountOf = { current: () => 0 }
 
 const text = computed(() => messages.value.powerSearch)
+const liveText = useResultCountAnnouncement(() => props.resultCount, count => text.value.resultCount(count))
 const label = computed(() => props.label ?? text.value.label)
 const placeholder = computed(() => props.placeholder ?? text.value.placeholder)
 const disabledMessage = computed(() => (props.disabledMessage ?? props.disabledReason)?.trim() || undefined)
@@ -94,11 +99,8 @@ const resolvedTimeZone = computed(() => props.timezoneID ?? props.timeZone)
 const collapsed = computed(() => props.overflow !== 'none' && !focused.value)
 const floating = computed(() => props.overflow === 'unfocused-layer' && focused.value)
 const lookup = computed(() => createPowerSearchLookup(props.config))
-const fieldStatus = computed<FieldStatusInput | undefined>(() => {
-  if (!props.statusMessage || props.status === 'default')
-    return undefined
-  return { type: props.status, message: props.statusMessage }
-})
+const fieldStatus = computed<FieldStatusInput | undefined>(() => !props.statusMessage || props.status === 'default' ? undefined : { type: props.status, message: props.statusMessage })
+const { statusIcon, statusIconProps } = useInputStatusIcon({ status: () => fieldStatus.value, statusVariant: () => props.statusVariant })
 const externalDescribedBy = computed(() => typeof attrs['aria-describedby'] === 'string' ? attrs['aria-describedby'] : undefined)
 const describedBy = computed(() => [
   externalDescribedBy.value,
@@ -210,18 +212,9 @@ watch(() => menu.combobox.activeIndex.value, (index) => {
   void nextTick(() => scrollOptionIntoView(listboxRef.value, menu.entries.value[index]?.id))
 })
 
-watch(() => props.resultCount, (value) => {
-  if (!sawCount.value) {
-    sawCount.value = true
-    return
-  }
-  if (typeof value === 'number')
-    liveText.value = text.value.resultCount(value)
-  else if (typeof value === 'string')
-    liveText.value = value
-}, { immediate: true })
 const visibleFilters = computed(() => filters.value.slice(0, visibleCount.value))
-const hasClearButton = computed(() => showsClear.value && filters.value.length > 0 && !props.disabled && !props.readOnly)
+// 全部清除只移除可编辑的条件，所以只有存在可编辑条件时才显示。
+const hasClearButton = computed(() => showsClear.value && filters.value.some(filter => filter.isReadOnly !== true) && !props.disabled && !props.readOnly)
 const displayCount = computed(() => resultCountText(props.resultCount, text.value.resultCount))
 const menuStyle = computed(() => menuStyleWithWidth(anchored.style.value, props.menuWidth))
 
@@ -383,6 +376,8 @@ defineExpose({
           role="combobox"
           autocomplete="off"
           autocapitalize="off"
+          autocorrect="off"
+          enterkeyhint="search"
           :placeholder="filters.length === 0 ? placeholder : undefined"
           :value="menu.query.value"
           :disabled="disabled && !focusableDisabled"
@@ -399,7 +394,7 @@ defineExpose({
           @blur="emit('blur', $event)"
         >
         <!-- 同上游 Tokenizer 的 endSection：计数、endContent、清除按钮并成一组，距边框 8px、间距 8px。 -->
-        <span v-if="displayCount || slots.endContent || slots.end || hasClearButton" class="astryx-power-search-end">
+        <span v-if="displayCount || slots.endContent || slots.end || hasClearButton || statusIcon" class="astryx-power-search-end">
           <span v-if="displayCount" class="astryx-power-search-count">{{ displayCount }}</span>
           <slot v-if="slots.endContent" name="endContent" />
           <slot v-else name="end" />
@@ -412,6 +407,7 @@ defineExpose({
           >
             <Icon icon="close" size="sm" />
           </button>
+          <component :is="statusIcon" v-if="statusIcon" v-bind="statusIconProps" />
         </span>
         <span v-if="focusableDisabled" :id="disabledId" class="astryx-visually-hidden">{{ disabledMessage }}</span>
       </div>

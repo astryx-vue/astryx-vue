@@ -3,6 +3,7 @@ import type { CalendarSystem } from '../utils/calendarSystem.js'
 import type { EnumItem, FilterValue, OperatorValue } from './types.js'
 import { formatCalendarInstant } from '../utils/calendarFormat.js'
 import { characterCount, truncateCharacters } from '../utils/characters.js'
+import { isDateOnlyOperator, resolveDateZone } from './dateZone.js'
 
 function truncate(value: string, maxLength: number): string {
   return truncateCharacters(value, maxLength)
@@ -82,8 +83,8 @@ export function formatFilterValue(
       return filterValue.value
     case 'date_absolute':
       return truncate(
-        operatorValue.type === 'date_absolute' && operatorValue.isDateOnly
-          ? formatDateAbsoluteCompact(filterValue.unixSeconds, locale, timeZone, calendar)
+        isDateOnlyOperator(operatorValue)
+          ? formatDateAbsoluteCompact(filterValue.unixSeconds, locale, resolveDateZone(timeZone, true), calendar)
           : formatDateAbsolute(filterValue.unixSeconds, locale, timeZone, calendar),
         maxLength,
       )
