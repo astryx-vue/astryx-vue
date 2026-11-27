@@ -4451,8 +4451,9 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`86b073364`](https://github.com/meta/astryx/commit/86b073364) feat(cli): doctor names icon imports that no longer match the app's icon sets (#12194)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`2ff1afc9f`](https://github.com/meta/astryx/commit/2ff1afc9f) fix(richtext): text reads the way it is written, in either document direction (#7723)
+- [x] [`2ff1afc9f`](https://github.com/meta/astryx/commit/2ff1afc9f) fix(richtext): text reads the way it is written, in either document direction (#7723)
   - 暂缓：首强方向分类器的调整只服务 RichText 按块定方向，Vue 版 richtext 还没有块方向插件
+  - 已移植：[#645](https://github.com/astryx-vue/astryx-vue/pull/645)。新增 BlockDirectionPlugin 按块写 dir，复用并补全 core 首强方向判定，列表缩进与代码块每行方向样式照上游，补测试和文档
 - [x] [`b2cf0a1ad`](https://github.com/meta/astryx/commit/b2cf0a1ad) feat(cli): search lists the installed icons that answer an icon ask (#12183)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`4f0a13a60`](https://github.com/meta/astryx/commit/4f0a13a60) feat(cli): where icon features are on, the agent block sends agents to the icon finder (#12210)
@@ -9645,8 +9646,9 @@
 
 ### v0.7.7
 
-- [ ] [`540e9dfdf`](https://github.com/meta/astryx/commit/540e9dfdf) perf(richtext): code highlighting re-tokenizes only the lines an edit changes (#8585)
+- [x] [`540e9dfdf`](https://github.com/meta/astryx/commit/540e9dfdf) perf(richtext): code highlighting re-tokenizes only the lines an edit changes (#8585)
   - 暂缓：代码高亮只重新分词改动的那几行（CodeLineTokens 加增量上色）属纯性能优化，本轮没做；Vue 版目前每次改动重新分词整个代码块，行为正确
+  - 已移植：[#642](https://github.com/astryx-vue/astryx-vue/pull/642)。core Code 新增 CodeLineTokens 按行缓存分词，富文本代码块编辑时只重新分词改动的行，测试证明未改动行的 token 不重算
 - [x] [`653624f84`](https://github.com/meta/astryx/commit/653624f84) feat(build): build Astryx from source under Turbopack (#7754)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`1c7150d78`](https://github.com/meta/astryx/commit/1c7150d78) fix(RichTextEditorToolbar): Insert link with nothing selected inserts the link at the caret (#9668)
@@ -9722,13 +9724,15 @@
   - 已移植：[#631](https://github.com/astryx-vue/astryx-vue/pull/631)。往单元格里粘贴表格逐格写入并补行补列，带其他内容的表格按文字放进单元格，补测试
 - [x] [`d08000e44`](https://github.com/meta/astryx/commit/d08000e44) fix(richtext): default a scheme-less dotted or localhost host with a port to https (#11042)
   - 已移植：[#631](https://github.com/astryx-vue/astryx-vue/pull/631)。没写协议、带端口的点分主机或 localhost 地址按 https 处理，tel:911 仍是 tel，补测试
-- [ ] [`b8904791a`](https://github.com/meta/astryx/commit/b8904791a) feat(RichTextEditor, RichTextEditorToolbar): replace the toolbar's link dialog with an anchored popover (#8717)
+- [x] [`b8904791a`](https://github.com/meta/astryx/commit/b8904791a) feat(RichTextEditor, RichTextEditorToolbar): replace the toolbar's link dialog with an anchored popover (#8717)
   - 暂缓：把工具栏链接对话框换成锚定在按钮上的弹出层，是整套链接编辑界面的重做（弹出层表单、键盘和焦点归还），本轮没做；Vue 版仍是对话框，功能完整
+  - 已移植：[#644](https://github.com/astryx-vue/astryx-vue/pull/644)。工具栏链接按钮和 Cmd/Ctrl+K 改为锚在按钮包装元素上的非模态 Popover，单个网址框加应用/移除/取消图标按钮，键盘与焦点归还照上游
 
 ### v0.7.17
 
-- [ ] [`5c44304f9`](https://github.com/meta/astryx/commit/5c44304f9) refactor(richtext): share the toolbar's link popover and format helpers (#11189)
+- [x] [`5c44304f9`](https://github.com/meta/astryx/commit/5c44304f9) refactor(richtext): share the toolbar's link popover and format helpers (#11189)
   - 暂缓：只是给上面的弹出层抽出共享的链接表单和格式 helper，随弹出层一起做（见 b8904791a）
+  - 已移植：[#644](https://github.com/astryx-vue/astryx-vue/pull/644)。抽出 LinkForm、ToolbarLinkPopover、linkEditing(toLinkHref)、useToolbarLink，补测试
 - [x] [`4e39f9c64`](https://github.com/meta/astryx/commit/4e39f9c64) feat(richtext): Markdown shortcuts typed at the start of a list item re-mark it (#8582)
   - 已移植：[#631](https://github.com/astryx-vue/astryx-vue/pull/631)。列表项开头输入 ##、>、-、1.、[ ] 等标记会改写该项为标题、引用、列表或任务项，一次一个撤销步，跟随 hasMarkdownShortcuts，补测试
 - [x] [`7672da046`](https://github.com/meta/astryx/commit/7672da046) [fix] richtext: no integration-issue warning in apps that install it (#11628)
@@ -9739,8 +9743,9 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`e8c6cc05e`](https://github.com/meta/astryx/commit/e8c6cc05e) fix(Theme): the page root follows the reader only through reset.css, so Core's stylesheet leaves a host's scheme alone (#12247)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`2ff1afc9f`](https://github.com/meta/astryx/commit/2ff1afc9f) fix(richtext): text reads the way it is written, in either document direction (#7723)
+- [x] [`2ff1afc9f`](https://github.com/meta/astryx/commit/2ff1afc9f) fix(richtext): text reads the way it is written, in either document direction (#7723)
   - 暂缓：富文本按块写 dir（BlockDirectionPlugin、首强字符分类、editorTheme 的方向变量与容器方向重排）本轮没做；core Markdown 的块方向已由 #634 移植
+  - 已移植：[#645](https://github.com/astryx-vue/astryx-vue/pull/645)。新增 BlockDirectionPlugin 按块写 dir，复用并补全 core 首强方向判定，列表缩进与代码块每行方向样式照上游，补测试和文档
 - [x] [`676f276f2`](https://github.com/meta/astryx/commit/676f276f2) docs(richtext): the README says what server rendering outputs (#12531)
   - 已移植：[#634](https://github.com/astryx-vue/astryx-vue/pull/634)。README 补服务端渲染只输出外框、不输出文档内容的说明
 - [x] [`81458c4b1`](https://github.com/meta/astryx/commit/81458c4b1) chore: land batch 60 (4 pull requests) (#12939)
