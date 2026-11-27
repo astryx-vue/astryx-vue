@@ -282,6 +282,22 @@
   }
 
   /*
+   * The inset the on-screen keyboard takes at the end of a Tall sheet's
+   * content (useMobileKeyboard writes --_keyboard-inset), so its last control
+   * can scroll above the keyboard. It is the content box's last in-flow box,
+   * after the content's own children, not a box after the content: Firefox
+   * resolves the content's `min-height` as `auto` in the block axis, so the
+   * content box keeps the body's height while its children overflow it, and
+   * an inset after that box would add no scroll range.
+   */
+  .astryx-bottom-sheet__body[data-keyboard='tall'] > .astryx-bottom-sheet__content::after {
+    content: '';
+    display: block;
+    block-size: var(--_keyboard-inset, 0px);
+    pointer-events: none;
+  }
+
+  /*
    * The content box is a container. It keeps the body's block formatting and
    * its percentage-height basis, and it publishes the inset it applies.
    * Omitted `padding` reads the theme's bottom-sheet padding, then spacing 4.
