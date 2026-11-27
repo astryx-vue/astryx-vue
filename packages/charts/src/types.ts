@@ -19,6 +19,26 @@ export type ColorAccessor
     | ((datum: Record<string, unknown>, index: number) => string)
 
 /**
+ * 把一个值变成显示文字。
+ *
+ * 入参是值、语言和历法；返回这个值的文字（空值也可以返回文字），或者返回 `null`、
+ * `undefined` 让图表用默认文字。格式化函数可以不理会 `locale` 和 `calendar`。
+ * 内置的 `compactNumber`、`percent`、`shortDate`、`monthYear` 和 `currency()` 的返回值
+ * 都能直接赋给它。
+ *
+ * @example
+ * ```
+ * const format: ChartValueFormat = compactNumber
+ * const custom: ChartValueFormat = value => `${String(value)} ms`
+ * ```
+ */
+export type ChartValueFormat = (
+  value: unknown,
+  locale: string,
+  calendar: string,
+) => string | null | undefined
+
+/**
  * 既没有显式颜色、也没有被图表根分配调色板颜色时，最后兜底用的颜色。
  *
  * 用 core 真正输出的 `--color-accent`：数据配色的 `--color-data-*` 是 JS 里算出来的
@@ -120,6 +140,12 @@ export interface SeriesDef {
      * 分类对齐到每一行。热力图还应该写 `dataKeys: []`，免得喂给（已经用不上的）线性 y 轴范围。
      */
     yBandKey?: string
+    /**
+     * 标记在点的 x 位置之外还要画出去多远，单位 CSS 像素（比如圆点的半径）。
+     * 布局会把线性 x 范围往里收最大的那个值，这样落在首尾 x 上的标记
+     * 在被裁切的绘图区里也能画完整。分类比例尺本来就把点放在带的中央，不需要。
+     */
+    xOverhang?: number
   }
   /**
    * 算出每个数据点的像素位置。布局阶段由图表根调用。

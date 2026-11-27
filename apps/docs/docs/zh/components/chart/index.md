@@ -134,7 +134,7 @@ declare function line(dataKey: string, options?: LineOptions): SeriesDef
 | 选项 | 类型 | 默认值 | 说明 |
 | :--- | :--- | :--- | :--- |
 | `color` | `string` | 自动取色 | 折线颜色。 |
-| `curve` | `'linear' \| 'monotone' \| 'natural' \| 'step'` | `'monotone'` | 曲线插值方式。分别代表折线、单调三次样条、自然样条和阶梯线。 |
+| `curve` | `'linear' \| 'monotone' \| 'natural' \| 'step'` | `'linear'` | 曲线插值方式。分别代表折线（直线段）、单调三次样条、自然样条和阶梯线。度量数据保持默认的直线段，每个值读作一个点连向下一个点；平滑曲线读起来更像装饰。 |
 | `strokeWidth` | `number` | `2` | 线条粗细（像素）。 |
 | `dots` | `boolean` | `false` | 是否在每个数据点上画出实体小圆点。 |
 | `label` | `string` | `dataKey` | 图例和提示框中展示的可读名称。 |
@@ -175,7 +175,7 @@ declare function area(dataKey: string, options?: AreaOptions): SeriesDef
 | :--- | :--- | :--- | :--- |
 | `color` | `string` | 自动取色 | 面积填充色。 |
 | `opacity` | `number` | `0.3` | 面积填充透明度。 |
-| `curve` | `'linear' \| 'monotone' \| 'natural' \| 'step'` | `'monotone'` | 曲线插值算法。 |
+| `curve` | `'linear' \| 'monotone' \| 'natural' \| 'step'` | `'linear'` | 曲线插值算法，默认直线段。 |
 | `stack` | `string` | `undefined` | 堆叠分组名称。相同 `stack` 的面积会依次堆叠。 |
 | `gradient` | `boolean` | `false` | 是否使用垂直渐变填充。 |
 | `stroke` | `boolean` | `true` | 是否在面积顶部画出边缘描边。 |
@@ -312,8 +312,8 @@ declare function candlestick(options: CandlestickOptions): SeriesDef
 | :--- | :--- | :--- | :--- |
 | `position` | `'top' \| 'right' \| 'bottom' \| 'left'` | **必填** | 绘制在哪一条边上。 |
 | `tickCount` | `number` | `5` | 期望显示的刻度数量（该值为参考值，d3 会计算出最工整的步长）。 |
-| `maxTicks` | `number` | `undefined` | 允许显示的最大刻度文字数量，超出时会等间隔跳过。 |
-| `tickFormat` | `(value: unknown) => string` | `undefined` | 自定义刻度文字的格式化函数。 |
+| `maxTicks` | `number` | `undefined` | 允许显示的最大刻度文字数量，超出时会等间隔抽稀，首尾文字保留。不设时按轴的宽度自动抽稀；设了就压过这个自动值，窄图上文字可能挤在一起，所以一般别设。 |
+| `tickFormat` | `(value: unknown) => string \| null \| undefined` | `undefined` | 自定义刻度文字的格式化函数。返回 `null` 或 `undefined` 时显示默认刻度文字。 |
 | `truncate` | `number` | `undefined` | 刻度文字最大字符数，超出截断并追加省略号。 |
 | `animated` | `boolean` | `true` | 刻度位置发生变化时是否开启平滑过渡动画。 |
 | `showAxisLine` | `boolean` | 仅底轴为 `true` | 是否绘制轴线。如果设置了 `showTicks`，无论哪条轴都会强制画出轴线。 |
@@ -403,10 +403,10 @@ declare function candlestick(options: CandlestickOptions): SeriesDef
 
 ## 格式化函数
 
-图表库内置了一组常用的格式化函数。所有格式化函数都遵循安全原则：如果遇到 `NaN`、`Infinity` 或无法解析的值，会原样返回原字符串，绝对不会在界面上打印出异常信息，也不会报错崩溃。
+图表库内置了一组常用的格式化函数，它们都是 `ChartValueFormat`：入参是值、语言和历法，返回文字，或返回 `null`、`undefined` 让图表用默认文字（可以直接赋给 `ChartValueFormat` 类型，不必再包一层）。所有格式化函数都遵循安全原则：如果遇到 `NaN`、`Infinity` 或无法解析的值，会原样返回原字符串，绝对不会在界面上打印出异常信息，也不会报错崩溃；值是 `null` 或 `undefined` 时返回 `undefined`，而不是「0」「0%」「$0」或「null」。
 
 - `compactNumber(value, locale)`：将大数字缩写。例如 `1200` 转为「1.2K」，`1500000` 转为「1.5M」，`1e12` 转为「1T」。
-- `currency(symbol?, locale?)`：创建货币格式化器。例如 `currency('¥')` 可以直接传给 `ChartAxis` 的 `tickFormat` 属性，数值大于一千时会自动应用缩写（如「¥1.5K」）。
+- `currency(symbol?, locale?)`：创建货币格式化器。例如 `currency('¥')` 可以直接传给 `ChartAxis` 的 `tickFormat` 属性，数值大于一千时会自动应用缩写（如「¥1.5K」）。返回的函数还接受调用时给的语言，工厂里指定的语言优先。
 - `percent(value, locale)`：将小数比例转换为百分比。例如 `0.45` 转换为「45%」，`0.005` 转换为「0.5%」。
 - `shortDate(value, locale, calendar?)`：将日期格式化为简短的月日。例如「Jan 5」或「3月12日」。默认用格里高利历，传入 `Intl` 历法标识（如 `'persian'`）可以换成别的历法。
 - `monthYear(value, locale, calendar?)`：将日期格式化为年月。例如「Jan 2024」或「2025年3月」。历法参数同上。
