@@ -1,5 +1,11 @@
 # @astryx-vue/charts
 
+## 0.9.31
+
+### Patch Changes
+
+- [#629](https://github.com/astryx-vue/astryx-vue/pull/629) [`e5a6438`](https://github.com/astryx-vue/astryx-vue/commit/e5a6438c9fce3b10d92f34ba58be07e8d2efb0cd) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 图表包的类型声明用到了 d3-scale 和 d3-shape 的类型，现在随包一起安装对应的 `@types`，没开 `skipLibCheck` 的项目不再报找不到类型。
+
 ## 0.9.30
 
 ### Patch Changes
