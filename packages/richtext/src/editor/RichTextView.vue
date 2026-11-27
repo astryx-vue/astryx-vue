@@ -6,7 +6,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, provide, shallowRef, us
 import { editorKey } from './context.js'
 import { createRichTextEditor } from './createEditor.js'
 import { DecoratorTeleports } from './DecoratorTeleports.js'
-import { CodeBlockHeaderPlugin, CodeSyntaxPlugin, MarkdownExtensionsPlugin, TaskCheckboxPlugin } from './plugins/index.js'
+import { BlockDirectionPlugin, CodeBlockHeaderPlugin, CodeSyntaxPlugin, MarkdownExtensionsPlugin, TaskCheckboxPlugin } from './plugins/index.js'
 import { registerTableScrollRegion } from './plugins/tableScrollRegion.js'
 import '../../styles/richtext-document.css'
 import '../../styles/richtext-view.css'
@@ -148,6 +148,7 @@ const restAttrs = computed(() => {
         <!-- 放在内容后面，复制按钮和勾选框在 Tab 顺序里才跟在内容后面。 -->
         <CodeBlockHeaderPlugin :code-languages="codeLanguages" />
         <CodeSyntaxPlugin :code-languages="codeLanguages" />
+        <BlockDirectionPlugin />
         <MarkdownExtensionsPlugin v-if="markdownExtensions && markdownExtensions.length > 0" :extensions="markdownExtensions" :transformers="[]" />
         <TaskCheckboxPlugin is-read-only />
         <slot />

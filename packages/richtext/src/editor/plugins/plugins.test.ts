@@ -130,6 +130,14 @@ describe('code block header', () => {
     expect(header.find('button[aria-label="Copy code"]').exists()).toBe(true)
   })
 
+  it('writes the drawn header height on its code block, and takes it off for a block with no header', async () => {
+    const wrapper = mountEditor('```js\nconst a = 1\n```\n\n```\nplain\n```\n')
+    await settle()
+    const [withHeader, withoutHeader] = wrapper.findAll('[data-lexical-editor] code, [data-lexical-editor] pre').map(node => node.element as HTMLElement)
+    expect(withHeader!.style.getPropertyValue('--_richtext-code-header-block-size')).toMatch(/^\d+(\.\d+)?px$/)
+    expect(withoutHeader!.style.getPropertyValue('--_richtext-code-header-block-size')).toBe('')
+  })
+
   it('shows only the copy button, in the corner, for a block with no language', async () => {
     const wrapper = mountEditor('```\nplain\n```\n')
     await settle()

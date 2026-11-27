@@ -1,5 +1,6 @@
 export { DEFAULT_LINK_MATCHERS, NEW_TAB_LINK_ATTRIBUTES, registerRichTextAutoLink } from './autoLink.js'
 export type { AutoLinkOptions } from './autoLink.js'
+export { BlockDirectionPlugin, registerBlockDirection } from './BlockDirectionPlugin.js'
 export { CodeBlockHeaderPlugin, displayLanguageOf } from './CodeBlockHeaderPlugin.js'
 export { CodeSyntaxPlugin, renderedTokens } from './CodeSyntaxPlugin.js'
 export { deriveExtensionNode, MarkdownExtensionsPlugin, registerMarkdownExtensions } from './MarkdownExtensionsPlugin.js'

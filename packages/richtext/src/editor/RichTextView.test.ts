@@ -159,3 +159,15 @@ describe('richTextView plugins', () => {
     expect(wrapper.get('.astryx-richtext-view').classes()).toContain('mine')
   })
 })
+
+describe('richTextView block direction', () => {
+  it('gives each block the direction of its own text, and follows a replaced value', async () => {
+    const wrapper = mountView('שלום עולם\n\nHello there\n')
+    await settle()
+    const dirs = () => wrapper.findAll('p').map(node => node.attributes('dir'))
+    expect(dirs()).toEqual(['rtl', 'ltr'])
+    await wrapper.setProps({ value: markdownToEditorStateJSON('Hello there\n\nשלום עולם\n') })
+    await settle()
+    expect(dirs()).toEqual(['ltr', 'rtl'])
+  })
+})

@@ -868,6 +868,7 @@ export {
   createIncrementalState,
   decodeMarkdownCharacterReferences,
   defineMarkdownPlugin,
+  firstStrongDirection,
   isMarkdownExtensionNode,
   Markdown,
   parseInline,
