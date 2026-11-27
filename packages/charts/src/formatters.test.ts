@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest'
 import type { ChartValueFormat } from './types.js'
+import { describe, expect, it } from 'vitest'
 import { compactNumber, currency, monthYear, percent, shortDate } from './formatters.js'
 
 describe('chart formatters', () => {
