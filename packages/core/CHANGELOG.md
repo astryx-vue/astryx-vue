@@ -1,5 +1,13 @@
 # @astryx-vue/core
 
+## 0.28.1
+
+### Patch Changes
+
+- [#616](https://github.com/astryx-vue/astryx-vue/pull/616) [`6348961`](https://github.com/astryx-vue/astryx-vue/commit/63489612a962d36776dc4bbf9904bf2b63d0f8a7) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - BottomSheet 打开时第一个可用的 `data-autofocus` 字段在所有浏览器里都拿到焦点（盖过原生对话框落在面板或第一个控件上的焦点），关闭后归还焦点不再滚动页面；打开着就被移除的抽屉会把被困住的焦点送回打开者，BottomSheetSwitcher 关闭或被移除时也把焦点还给打开者（无遮罩的流程同样）；服务端渲染就开着的抽屉和流程在水合前不带 `aria-modal`，水合后直接以静止状态打开、不播进场动画（上游 [#10156](https://github.com/astryx-vue/astryx-vue/issues/10156) [#12487](https://github.com/astryx-vue/astryx-vue/issues/12487) [#10022](https://github.com/astryx-vue/astryx-vue/issues/10022) [#10061](https://github.com/astryx-vue/astryx-vue/issues/10061) [#11982](https://github.com/astryx-vue/astryx-vue/issues/11982) [#9360](https://github.com/astryx-vue/astryx-vue/issues/9360)）
+
+- [#615](https://github.com/astryx-vue/astryx-vue/pull/615) [`51e74e9`](https://github.com/astryx-vue/astryx-vue/commit/51e74e9220406e2e36ff40eb3e13694abbbb9638) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - BottomSheet 的内容不管内边距多少，静止时都从抓手条下方开始（`padding` 为 0 也一样，选择面板里的日期、时间面板同步去掉自己补的那一段）；内容区在 WebKit 里也保留底部内边距，抓手条在 iOS 上换挡位时不再消失，退场动画被引擎中途改道时不再提前结束，面板里再开的底部弹层或对话框拖动时不会连带拖动外面那一层（上游 [#8558](https://github.com/astryx-vue/astryx-vue/issues/8558) [#8557](https://github.com/astryx-vue/astryx-vue/issues/8557) [#9760](https://github.com/astryx-vue/astryx-vue/issues/9760) [#8349](https://github.com/astryx-vue/astryx-vue/issues/8349) [#8820](https://github.com/astryx-vue/astryx-vue/issues/8820)）
+
 ## 0.28.0
 
 ### Minor Changes
