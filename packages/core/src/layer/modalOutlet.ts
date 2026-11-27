@@ -38,22 +38,6 @@ export function removeModalOutlet(element: HTMLDialogElement): void {
   sync()
 }
 
-/** 有新的顶层元素进场的次数。全局浮层看到它变了，就重新进一次顶层，好留在最上面。 */
-const topLayerEntries = shallowRef(0)
-
-/**
- * 有对话框被重新放进了顶层（底部面板叠放时为保顺序关了又开）。之前挂在它里面、或者挂在页面上的
- * 全局浮层（toast）这时被压在下面，要重新进一次顶层。
- */
-export function notifyTopLayerEntry(): void {
-  topLayerEntries.value += 1
-}
-
-/** 顶层进场计数，见 `notifyTopLayerEntry`。 */
-export function useTopLayerEntries(): Readonly<Ref<number>> {
-  return topLayerEntries
-}
-
 /** 最新打开的模态对话框。没有时是 `null`，调用方退回挂到 `body`。 */
 export function useActiveModalOutlet(): Readonly<Ref<HTMLDialogElement | null>> {
   return activeOutlet
@@ -84,6 +68,25 @@ export function createModalOutletHandle(): { attach: (dialog: HTMLDialogElement)
   }
 
   return { attach, detach }
+}
+
+/**
+ * 不经过挂载点清单就进入顶层的次数：无遮罩的抽屉进入顶层，或者底部面板叠放时为保住顺序把对话框
+ * 关了又重新呈现，都加一。
+ *
+ * 顶层里后进去的画在上面。toast 视口比它们先进顶层时会被盖住（包括视口挂在那个被重新呈现的对话框
+ * 里的时候），所以它们进去后报一声，视口重新进一次顶层，又排回最上面。
+ */
+const topLayerEntries = shallowRef(0)
+
+/** 有元素不经过挂载点清单进入顶层时调用。 */
+export function notifyTopLayerEntry(): void {
+  topLayerEntries.value++
+}
+
+/** 顶层进入的计数。只用来监听变化。 */
+export function useTopLayerEntries(): Readonly<Ref<number>> {
+  return topLayerEntries
 }
 
 /** 只给测试用：清空清单。 */

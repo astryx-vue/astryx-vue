@@ -26,6 +26,8 @@ export interface DemoMeta {
   /** 总览卡片的专用静态构图；不写时复用 `demo`。 */
   cardDemo?: DemoModule
   deprecated?: ComponentDeprecation
+  /** 只在侧栏和直接链接里出现、不放进组件总览的页面（对应上游 doc 的 `isHiddenFromOverview`）。 */
+  isHiddenFromOverview?: boolean
 }
 
 export interface CatalogEntry {
@@ -35,6 +37,8 @@ export interface CatalogEntry {
   en: string
   zh: string
   deprecated?: ComponentDeprecation
+  /** 只在侧栏和直接链接里出现、不放进组件总览的页面（对应上游 doc 的 `isHiddenFromOverview`）。 */
+  isHiddenFromOverview?: boolean
 }
 
 export interface CatalogMetaInput {
@@ -45,6 +49,7 @@ export interface CatalogMetaInput {
   en: string
   zh: string
   deprecated?: ComponentDeprecation
+  isHiddenFromOverview?: boolean
 }
 
 const GROUP_INDEX = new Map(COMPONENT_GROUPS.map((group, index) => [group, index]))
@@ -86,6 +91,7 @@ export function assembleCatalog(metas: readonly CatalogMetaInput[]): CatalogEntr
     en: meta.en,
     zh: meta.zh,
     ...(meta.deprecated === undefined ? {} : { deprecated: meta.deprecated }),
+    ...(meta.isHiddenFromOverview === true ? { isHiddenFromOverview: true } : {}),
   }))
 }
 
@@ -103,6 +109,7 @@ export function parseDemoMetaFields(source: string): CatalogMetaInput {
     throw new Error('meta.ts is missing order')
 
   const family = source.match(/\bfamily:\s*'((?:\\'|[^'])*)'/)
+  const isHiddenFromOverview = /\bisHiddenFromOverview:\s*true\b/.test(source)
 
   return {
     slug: readString('slug'),
@@ -111,5 +118,6 @@ export function parseDemoMetaFields(source: string): CatalogMetaInput {
     order: Number(order[1]),
     en: readString('en'),
     zh: readString('zh'),
+    ...(isHiddenFromOverview ? { isHiddenFromOverview } : {}),
   }
 }

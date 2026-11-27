@@ -5,7 +5,7 @@ import { useLayerTeleportTarget } from '../composables/useLayerMountTarget.js'
 import { useLayerGutter } from '../LayerProvider/context.js'
 import { keepClearOfAnchor } from './anchorClear.js'
 import { layerEntranceSide, writeLayerEntranceSide } from './layerEntranceSide.js'
-import { computeLayerPosition } from './position.js'
+import { computeLayerPosition, computeOverlapPosition } from './position.js'
 import { getLayerViewport } from './visibleViewport.js'
 
 const GEOMETRY_POLL_INTERVAL = 100
@@ -19,6 +19,8 @@ export interface PositionedLayerOptions {
   gap: number
   /** 浮层比四周空地都高时也不盖住锚点：改放到锚点旁边，或限高后在浮层里滚动。 */
   keepAnchorClear?: boolean
+  /** 浮层盖在锚点原位上（见 `computeOverlapPosition`），不再放到锚点旁边。 */
+  overlap?: Ref<boolean>
 }
 
 /**
@@ -57,6 +59,10 @@ export function usePositionedLayer(options: PositionedLayerOptions): PositionedL
     const box = {
       width: layerEl.offsetWidth,
       height: options.keepAnchorClear === true ? Math.max(layerEl.offsetHeight, layerEl.scrollHeight) : layerEl.offsetHeight,
+    }
+    if (options.overlap?.value === true) {
+      position.value = computeOverlapPosition(anchorRect, box, viewport, gutter.value)
+      return
     }
     const placed = computeLayerPosition(anchorRect, box, viewport, placement.value, alignment.value, gap, gutter.value)
     const next = options.keepAnchorClear === true
@@ -118,7 +124,7 @@ export function usePositionedLayer(options: PositionedLayerOptions): PositionedL
 
   // 外部锚点和内容元素都可能在挂载后才写入；变化时要重新定位。
   watch([anchor, layer], update)
-  watch([placement, alignment], update)
+  watch([placement, alignment, () => options.overlap?.value], update)
   watch(gutter, update)
 
   // 只在 isOpen 变成 false 时拆监听的话，调用方不调 detach、组件直接卸载，轮询还会继续。

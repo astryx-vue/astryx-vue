@@ -5,7 +5,7 @@
     {
       "name": "@astryx-vue/core",
       "directory": "packages/core",
-      "version": "0.36.1",
+      "version": "0.38.0",
       "description": "Vue 3 components for the unofficial astryx-vue port of Astryx. Not affiliated with Meta.",
       "canary": false,
       "published": true
@@ -13,7 +13,7 @@
     {
       "name": "@astryx-vue/charts",
       "directory": "packages/charts",
-      "version": "0.10.2",
+      "version": "0.10.4",
       "description": "Astryx charts for Vue — a config-model data visualization layer (d3-based).",
       "canary": false,
       "published": true
@@ -21,7 +21,7 @@
     {
       "name": "@astryx-vue/lab",
       "directory": "packages/lab",
-      "version": "0.11.3",
+      "version": "0.11.5",
       "description": "Astryx lab components for Vue 3 — experimental components that may change. Ships only under the canary dist-tag.",
       "canary": true,
       "published": true
@@ -29,7 +29,7 @@
     {
       "name": "@astryx-vue/richtext",
       "directory": "packages/richtext",
-      "version": "0.36.1",
+      "version": "0.38.0",
       "description": "Astryx rich text for Vue — Lexical nodes and lossless Markdown import/export. Not affiliated with Meta.",
       "canary": false,
       "published": true
@@ -37,7 +37,7 @@
     {
       "name": "@astryx-vue/themes",
       "directory": "packages/themes",
-      "version": "0.36.1",
+      "version": "0.38.0",
       "description": "CSS themes for the unofficial astryx-vue port of Astryx. Not affiliated with Meta.",
       "canary": false,
       "published": true
@@ -51313,12 +51313,46 @@
         "zh": "导航标题旁边那个弹出菜单的容器和条目。`NavHeadingMenu` 提供 `role=\"menu\"` 和键盘导航，`NavHeadingMenuItem` 画里面的每一个可选条目。把它放进 `SideNavHeading` 或 `TopNavHeading` 的 `menu` 插槽即可。"
       },
       "usage": {
-        "en": "Accessible menu container and items for nav heading popovers. `NavHeadingMenu` provides `role=\"menu\"` with keyboard navigation; `NavHeadingMenuItem` renders individual selectable items. Pass it to the `menu` slot of `SideNavHeading` or `TopNavHeading`.\n\n```ts\nimport { NavHeadingMenu } from '@astryx-vue/core/NavMenu'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { NavHeadingMenu, NavHeadingMenuItem } from '@astryx-vue/core/NavMenu'\nimport { SideNav, SideNavHeading } from '@astryx-vue/core/SideNav'\n</script>\n\n<template>\n  <SideNav>\n    <template #header>\n      <SideNavHeading heading=\"Acme Platform\">\n        <template #menu>\n          <NavHeadingMenu label=\"Acme Platform\" size=\"lg\">\n            <NavHeadingMenuItem href=\"/dashboard\" label=\"Dashboard\" />\n            <NavHeadingMenuItem href=\"/analytics\" label=\"Analytics\" />\n          </NavHeadingMenu>\n        </template>\n      </SideNavHeading>\n    </template>\n  </SideNav>\n</template>\n```\n\nArrow Down and Arrow Up move one row and wrap, Home and End go to the first and last row, typing a character moves to the matching row, Enter or Space activates the row, and Escape closes the heading menu. Inside a heading's popover the menu takes the heading text as its name; pass `label` to name it differently, and always pass one when the menu is used on its own. Arrow keys move only between `NavHeadingMenuItem` rows, so do not put other controls in the menu.",
-        "zh": "导航标题旁边那个弹出菜单的容器和条目。`NavHeadingMenu` 提供 `role=\"menu\"` 和键盘导航，`NavHeadingMenuItem` 画里面的每一个可选条目。把它放进 `SideNavHeading` 或 `TopNavHeading` 的 `menu` 插槽即可。\n\n```ts\nimport { NavHeadingMenu } from '@astryx-vue/core/NavMenu'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { NavHeadingMenu, NavHeadingMenuItem } from '@astryx-vue/core/NavMenu'\nimport { SideNav, SideNavHeading } from '@astryx-vue/core/SideNav'\n</script>\n\n<template>\n  <SideNav>\n    <template #header>\n      <SideNavHeading heading=\"Acme Platform\">\n        <template #menu>\n          <NavHeadingMenu label=\"Acme Platform\" size=\"lg\">\n            <NavHeadingMenuItem href=\"/dashboard\" label=\"控制台\" />\n            <NavHeadingMenuItem href=\"/analytics\" label=\"数据分析\" />\n          </NavHeadingMenu>\n        </template>\n      </SideNavHeading>\n    </template>\n  </SideNav>\n</template>\n```\n\n上下方向键每次移动一行并循环，Home 和 End 到第一行和最后一行，输入字符跳到匹配的行，回车或空格激活当前行，Esc 关闭标题菜单。在标题的弹出层里，菜单用标题文字当名字；想换个名字就传 `label`，单独使用时一定要传。方向键只在 `NavHeadingMenuItem` 之间移动，所以不要在菜单里放别的控件。"
+        "en": "Accessible menu container and items for nav heading popovers. `NavHeadingMenu` provides `role=\"menu\"` with keyboard navigation; `NavHeadingMenuItem` renders individual selectable items. Pass it to the `menu` slot of `SideNavHeading` or `TopNavHeading`.\n\nThe menu opens in place: the popover covers the heading, its first row is the heading itself (chevron pointing up, press it to close), and the items follow below, all on one rounded card. Choosing an enabled item runs its link or `click` and closes the menu.\n\n```ts\nimport { NavHeadingMenu, NavHeadingMenuItem } from '@astryx-vue/core/NavMenu'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { NavHeadingMenu, NavHeadingMenuItem } from '@astryx-vue/core/NavMenu'\nimport { SideNav, SideNavHeading } from '@astryx-vue/core/SideNav'\n</script>\n\n<template>\n  <SideNav>\n    <template #header>\n      <SideNavHeading heading=\"Acme Platform\">\n        <template #menu>\n          <NavHeadingMenu size=\"lg\">\n            <NavHeadingMenuItem href=\"/dashboard\" label=\"Dashboard\" />\n            <NavHeadingMenuItem href=\"/analytics\" label=\"Analytics\" />\n          </NavHeadingMenu>\n        </template>\n      </SideNavHeading>\n    </template>\n  </SideNav>\n</template>\n```",
+        "zh": "导航标题旁边那个弹出菜单的容器和条目。`NavHeadingMenu` 提供 `role=\"menu\"` 和键盘导航，`NavHeadingMenuItem` 画里面的每一个可选条目。把它放进 `SideNavHeading` 或 `TopNavHeading` 的 `menu` 插槽即可。\n\n菜单在标题原位打开：弹出面板正好盖住标题，第一行就是标题本身（箭头朝上，点它收起菜单），下面才是各个条目，整块是一张圆角卡片。选中一个可用的条目会执行它的链接或 `click`，然后收起菜单。\n\n```ts\nimport { NavHeadingMenu, NavHeadingMenuItem } from '@astryx-vue/core/NavMenu'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { NavHeadingMenu, NavHeadingMenuItem } from '@astryx-vue/core/NavMenu'\nimport { SideNav, SideNavHeading } from '@astryx-vue/core/SideNav'\n</script>\n\n<template>\n  <SideNav>\n    <template #header>\n      <SideNavHeading heading=\"Acme Platform\">\n        <template #menu>\n          <NavHeadingMenu size=\"lg\">\n            <NavHeadingMenuItem href=\"/dashboard\" label=\"控制台\" />\n            <NavHeadingMenuItem href=\"/analytics\" label=\"数据分析\" />\n          </NavHeadingMenu>\n        </template>\n      </SideNavHeading>\n    </template>\n  </SideNav>\n</template>\n```"
       },
       "practices": {
-        "en": [],
-        "zh": []
+        "en": [
+          {
+            "guidance": "Do",
+            "text": "Put `NavHeadingMenu` in the `menu` slot of `SideNavHeading` or `TopNavHeading`, and let the heading handle closing and focus."
+          },
+          {
+            "guidance": "Do",
+            "text": "Give a menu used on its own a `label`."
+          },
+          {
+            "guidance": "Avoid",
+            "text": "Do not put other interactive controls in the menu. The arrow keys move only between `NavHeadingMenuItem` rows, so another control is skipped."
+          },
+          {
+            "guidance": "Avoid",
+            "text": "Do not remove a destination the user cannot use right now when knowing it exists helps them. Set `isDisabled` instead."
+          }
+        ],
+        "zh": [
+          {
+            "guidance": "推荐",
+            "text": "把 `NavHeadingMenu` 放进 `SideNavHeading` 或 `TopNavHeading` 的 `menu` 插槽，收起和焦点交给标题处理。"
+          },
+          {
+            "guidance": "推荐",
+            "text": "单独使用时给菜单传 `label`。"
+          },
+          {
+            "guidance": "避免",
+            "text": "不要在菜单里放别的控件。方向键只在 `NavHeadingMenuItem` 之间移动，别的控件会被跳过。"
+          },
+          {
+            "guidance": "避免",
+            "text": "用户暂时不能去、但知道它存在有帮助的目的地，不要直接删掉，改成 `isDisabled`。"
+          }
+        ]
       },
       "props": {
         "en": [
@@ -51563,18 +51597,57 @@
       "notes": {
         "en": [
           {
+            "heading": "Keyboard",
+            "text": "The keyboard follows the [WAI-ARIA APG Menu pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/):\n\n- ↓ / ↑: ↓ / ↑\n- Home / End: Home / End\n- Character keys: Character keys\n- Enter / Space: Enter / Space\n- Esc: Esc"
+          },
+          {
+            "heading": "Accessibility",
+            "text": "- The heading's chevron button carries `aria-haspopup=\"menu\"`, `aria-expanded`, and `aria-controls`, and its name includes the heading text, so a screen reader says which product or space the menu belongs to.\n- Inside the popover, `role=\"menu\"` wraps only the items. The repeated heading row above them is a plain button, not part of the menu.\n- Inside a heading's popover the menu takes the heading text as its name; pass `label` to name it differently. Always pass `label` when `NavHeadingMenu` is used on its own, or the menu has no name.\n- An item with `href` renders as a link and one without renders as a `div` with `role=\"menuitem\"`. A disabled item carries `aria-disabled`."
+          },
+          {
             "heading": "NavHeadingMenuItem slots",
             "text": "The whole menu is one `role=\"menu\"`: arrow keys move between items and wrap at both ends, typing a letter jumps to the next item that starts with it, and Escape closes the popover and returns focus to the heading."
           }
         ],
         "zh": [
           {
+            "heading": "键盘",
+            "text": "键盘操作照 [WAI-ARIA APG 菜单模式](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/)：\n\n- ↓ / ↑: ↓ / ↑\n- Home / End: Home / End\n- 字母键: 字母键\n- Enter / Space: Enter / Space\n- Esc: Esc"
+          },
+          {
+            "heading": "无障碍",
+            "text": "- 标题的箭头按钮带 `aria-haspopup=\"menu\"`、`aria-expanded` 和 `aria-controls`，名字里含标题文字，读屏时知道打开的是哪个产品或空间的菜单。\n- 弹出面板里，`role=\"menu\"` 只包住条目；第一行重复的标题是一个普通按钮，不算菜单的一部分。\n- 在标题的弹出层里，菜单用标题文字当名字；想换个名字就传 `label`。单独使用 `NavHeadingMenu` 时一定要传 `label`，否则菜单没有名字。\n- 有 `href` 的条目渲染成链接，没有的是 `role=\"menuitem\"` 的 `div`；禁用的条目带 `aria-disabled`。"
+          },
+          {
             "heading": "NavHeadingMenuItem 插槽",
             "text": "整个菜单是一个 `role=\"menu\"`：方向键在条目之间移动并循环，直接按字母会跳到以该字母开头的下一个条目，Escape 关掉面板并把焦点还给标题。"
           }
         ]
       },
-      "examples": [],
+      "examples": [
+        {
+          "title": {
+            "en": "Product switcher",
+            "zh": "产品切换"
+          },
+          "description": {
+            "en": "The side nav heading opens a product switcher over the heading. Dashboard, Analytics, and Settings are the destinations.",
+            "zh": "侧栏标题打开产品切换菜单，面板盖在标题原位上，里面是 Dashboard、Analytics 和 Settings。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { NavHeadingMenu, NavHeadingMenuItem } from '@astryx-vue/core/NavMenu'\nimport { SideNav, SideNavHeading } from '@astryx-vue/core/SideNav'\n</script>\n\n<template>\n  <div style=\"height: 100px\">\n    <SideNav>\n      <template #header>\n        <SideNavHeading heading=\"Acme Platform\">\n          <template #icon>\n            <span class=\"i-carbon-grid css-icon css-icon--sm\" />\n          </template>\n          <template #menu>\n            <NavHeadingMenu label=\"Acme Platform\" size=\"lg\">\n              <NavHeadingMenuItem href=\"/dashboard\" label=\"Dashboard\" />\n              <NavHeadingMenuItem href=\"/analytics\" label=\"Analytics\" />\n              <NavHeadingMenuItem href=\"/settings\" label=\"Settings\" />\n            </NavHeadingMenu>\n          </template>\n        </SideNavHeading>\n      </template>\n    </SideNav>\n  </div>\n</template>"
+        },
+        {
+          "title": {
+            "en": "Environment switcher in a top nav",
+            "zh": "顶栏切换环境"
+          },
+          "description": {
+            "en": "The top nav heading switches environments. Items carry an icon and a description, and an environment that is not available yet is disabled.",
+            "zh": "顶栏标题切换环境。条目带图标和说明，暂时不能用的环境设成禁用。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { NavIcon } from '@astryx-vue/core/NavItem'\nimport { NavHeadingMenu, NavHeadingMenuItem } from '@astryx-vue/core/NavMenu'\nimport { TopNav, TopNavHeading } from '@astryx-vue/core/TopNav'\n</script>\n\n<template>\n  <TopNav label=\"Workspace navigation\">\n    <template #heading>\n      <TopNavHeading heading=\"Acme Platform\" subheading=\"Production\">\n        <template #logo>\n          <NavIcon icon-class=\"i-carbon-cube\" />\n        </template>\n        <template #menu>\n          <NavHeadingMenu size=\"lg\">\n            <NavHeadingMenuItem description=\"Live traffic\" href=\"#production\" icon-class=\"i-carbon-earth\" label=\"Production\" />\n            <NavHeadingMenuItem description=\"Release candidates\" href=\"#staging\" icon-class=\"i-carbon-development\" label=\"Staging\" />\n            <NavHeadingMenuItem description=\"Ask an admin for access\" icon-class=\"i-carbon-locked\" is-disabled label=\"Sandbox\" />\n          </NavHeadingMenu>\n        </template>\n      </TopNavHeading>\n    </template>\n  </TopNav>\n</template>"
+        }
+      ],
       "anatomy": {
         "en": [
           {
@@ -51659,8 +51732,8 @@
         "zh": "`NavMenu` 是 `role=\"menu\"` 的菜单。`NavMenuItem` 是其中一项，有 `href` 时是链接。`NavDisclosure` 负责触发按钮、定位和关闭：点击、悬停、点击外部和 Escape 都会关掉。ArrowDown 打开并聚焦第一项，ArrowUp 聚焦最后一项。菜单内部方向键移动，单字符会按前缀匹配。"
       },
       "usage": {
-        "en": "`NavMenu` is a `role=\"menu\"`. `NavMenuItem` is one entry and becomes a link when `href` is set. `NavDisclosure` owns the trigger, positioning, and dismissal: click, hover, outside press, and Escape all close it. ArrowDown opens on the first item, ArrowUp on the last. Inside the menu, arrows move and a typed character jumps to a matching prefix.\n\nThe top nav and overflow list already compose these parts. Use them directly for an account menu.\n\nMenus attached to a side or top heading use `NavHeadingMenu` and `NavHeadingMenuItem`. Put the menu in the heading `menu` slot. The heading owns closing and where focus goes after open. An item with an address is a link. An item without one is a `menuitem`. Arrows move, and Enter or Space activates the current item.\n\n```vue\n<script setup lang=\"ts\">\nimport { NavDisclosure, NavMenu, NavMenuItem } from '@astryx-vue/core/NavMenu'\n</script>\n\n<template>\n  <NavDisclosure label=\"Account\">\n    <template #trigger=\"{ isOpen, panelId }\">\n      <button type=\"button\" :aria-controls=\"panelId\" :aria-expanded=\"isOpen\">\n        Account\n      </button>\n    </template>\n    <template #default=\"{ close, focusRequest }\">\n      <NavMenu label=\"Account\" :focus-request=\"focusRequest\" @close=\"close\">\n        <NavMenuItem href=\"/profile\" label=\"Profile\" />\n      </NavMenu>\n    </template>\n  </NavDisclosure>\n</template>\n```",
-        "zh": "`NavMenu` 是 `role=\"menu\"` 的菜单。`NavMenuItem` 是其中一项，有 `href` 时是链接。`NavDisclosure` 负责触发按钮、定位和关闭：点击、悬停、点击外部和 Escape 都会关掉。ArrowDown 打开并聚焦第一项，ArrowUp 聚焦最后一项。菜单内部方向键移动，单字符会按前缀匹配。\n\n顶栏和溢出列表已经包好了这组零件。需要自己做账号菜单时直接用它们。\n\n挂在侧栏或顶栏标题上的菜单用 `NavHeadingMenu` 和 `NavHeadingMenuItem`。把它放进标题的 `menu` 插槽即可，关闭和打开后的焦点由标题负责。有地址的项是链接，没有地址的项是 `menuitem`。方向键移动，Enter 或 Space 激活当前项。\n\n```vue\n<script setup lang=\"ts\">\nimport { NavDisclosure, NavMenu, NavMenuItem } from '@astryx-vue/core/NavMenu'\n</script>\n\n<template>\n  <NavDisclosure label=\"账号\">\n    <template #trigger=\"{ isOpen, panelId }\">\n      <button type=\"button\" :aria-controls=\"panelId\" :aria-expanded=\"isOpen\">\n        账号\n      </button>\n    </template>\n    <template #default=\"{ close, focusRequest }\">\n      <NavMenu label=\"账号\" :focus-request=\"focusRequest\" @close=\"close\">\n        <NavMenuItem href=\"/profile\" label=\"个人资料\" />\n      </NavMenu>\n    </template>\n  </NavDisclosure>\n</template>\n```"
+        "en": "`NavMenu` is a `role=\"menu\"`. `NavMenuItem` is one entry and becomes a link when `href` is set. `NavDisclosure` owns the trigger, positioning, and dismissal: click, hover, outside press, and Escape all close it. ArrowDown opens on the first item, ArrowUp on the last. Inside the menu, arrows move and a typed character jumps to a matching prefix.\n\nThese parts are specific to the Vue edition; upstream `@astryxdesign/core` has no component of this name. The top nav menus, the overflow list, and side nav item flyouts are built from them, and you can use them directly for a navigation popup such as an account menu.\n\nA switcher menu attached to a side or top nav heading does not use these parts. Use [Nav Heading Menu](/en/components/nav-heading-menu) instead.\n\n```vue\n<script setup lang=\"ts\">\nimport { NavDisclosure, NavMenu, NavMenuItem } from '@astryx-vue/core/NavMenu'\n</script>\n\n<template>\n  <NavDisclosure label=\"Account\">\n    <template #trigger=\"{ isOpen, panelId }\">\n      <button type=\"button\" :aria-controls=\"panelId\" :aria-expanded=\"isOpen\">\n        Account\n      </button>\n    </template>\n    <template #default=\"{ close, focusRequest }\">\n      <NavMenu label=\"Account\" :focus-request=\"focusRequest\" @close=\"close\">\n        <NavMenuItem href=\"/profile\" label=\"Profile\" />\n      </NavMenu>\n    </template>\n  </NavDisclosure>\n</template>\n```",
+        "zh": "`NavMenu` 是 `role=\"menu\"` 的菜单。`NavMenuItem` 是其中一项，有 `href` 时是链接。`NavDisclosure` 负责触发按钮、定位和关闭：点击、悬停、点击外部和 Escape 都会关掉。ArrowDown 打开并聚焦第一项，ArrowUp 聚焦最后一项。菜单内部方向键移动，单字符会按前缀匹配。\n\n这组零件是 Vue 版自己的，上游 `@astryxdesign/core` 没有同名组件。顶栏菜单、溢出列表和侧栏条目的弹出层都是用它们搭的；需要自己做账号菜单这类导航弹出菜单时，也可以直接用。\n\n挂在侧栏或顶栏标题上的切换菜单不用这组零件，改用[导航标题菜单](/components/nav-heading-menu)。\n\n```vue\n<script setup lang=\"ts\">\nimport { NavDisclosure, NavMenu, NavMenuItem } from '@astryx-vue/core/NavMenu'\n</script>\n\n<template>\n  <NavDisclosure label=\"账号\">\n    <template #trigger=\"{ isOpen, panelId }\">\n      <button type=\"button\" :aria-controls=\"panelId\" :aria-expanded=\"isOpen\">\n        账号\n      </button>\n    </template>\n    <template #default=\"{ close, focusRequest }\">\n      <NavMenu label=\"账号\" :focus-request=\"focusRequest\" @close=\"close\">\n        <NavMenuItem href=\"/profile\" label=\"个人资料\" />\n      </NavMenu>\n    </template>\n  </NavDisclosure>\n</template>\n```"
       },
       "practices": {
         "en": [
@@ -51808,76 +51881,18 @@
                 "type": "`number`",
                 "default": "`200`",
                 "description": "Pointer-leave close delay, in milliseconds."
-              }
-            ]
-          },
-          {
-            "heading": "NavHeadingMenu Props",
-            "rows": [
+              },
               {
-                "name": "`label`",
+                "name": "`panelClass`",
                 "type": "`string`",
                 "default": "-",
-                "description": "Accessible name of the menu."
+                "description": "Class added to the popup panel."
               },
               {
-                "name": "`size`",
-                "type": "`'sm' | 'md' | 'lg'`",
-                "default": "`'md'`",
-                "description": "Menu width, also passed through as item padding."
-              },
-              {
-                "name": "`minWidth`",
-                "type": "`number | string`",
-                "default": "-",
-                "description": "Overrides the width that comes from the size. A number is pixels."
-              },
-              {
-                "name": "`focusRequest`",
-                "type": "`'first' | 'last' | null`",
-                "default": "-",
-                "description": "Moves focus to the first or last item after open. A heading menu slot passes this in."
-              }
-            ]
-          },
-          {
-            "heading": "NavHeadingMenuItem Props",
-            "rows": [
-              {
-                "name": "`label`",
-                "type": "`string`",
-                "default": "-",
-                "description": "Primary text. The default slot wins when it is set."
-              },
-              {
-                "name": "`description`",
-                "type": "`string`",
-                "default": "-",
-                "description": "Supporting line under the text."
-              },
-              {
-                "name": "`href`",
-                "type": "`string`",
-                "default": "-",
-                "description": "Renders a link when set."
-              },
-              {
-                "name": "`as`",
-                "type": "`NavLinkComponent`",
-                "default": "`'a'`",
-                "description": "Link root."
-              },
-              {
-                "name": "`iconClass`",
-                "type": "`string`",
-                "default": "-",
-                "description": "CSS icon class."
-              },
-              {
-                "name": "`isDisabled`",
+                "name": "`overlap`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Disabled. Arrow keys and typeahead skip it."
+                "description": "The panel covers the trigger in place instead of opening beside it: 8px out past its start and top edges, at least 16px wider than the trigger, shown at once without an entrance animation. For a panel whose first row repeats the trigger. `placement` and `alignment` are ignored."
               }
             ]
           }
@@ -51997,76 +52012,18 @@
                 "type": "`number`",
                 "default": "`200`",
                 "description": "指针离开后的关闭等待，毫秒。"
-              }
-            ]
-          },
-          {
-            "heading": "NavHeadingMenu Props",
-            "rows": [
+              },
               {
-                "name": "`label`",
+                "name": "`panelClass`",
                 "type": "`string`",
                 "default": "-",
-                "description": "菜单的无障碍名称。"
+                "description": "加在弹出层上的 class。"
               },
               {
-                "name": "`size`",
-                "type": "`'sm' | 'md' | 'lg'`",
-                "default": "`'md'`",
-                "description": "菜单宽度档，也会传给每一项的内边距。"
-              },
-              {
-                "name": "`minWidth`",
-                "type": "`number | string`",
-                "default": "-",
-                "description": "覆盖按档位算出的最小宽度。数字按像素。"
-              },
-              {
-                "name": "`focusRequest`",
-                "type": "`'first' | 'last' | null`",
-                "default": "-",
-                "description": "打开后聚焦第一项或最后一项。放在标题菜单插槽里时，标题会传入这个值。"
-              }
-            ]
-          },
-          {
-            "heading": "NavHeadingMenuItem Props",
-            "rows": [
-              {
-                "name": "`label`",
-                "type": "`string`",
-                "default": "-",
-                "description": "主文字。默认插槽优先。"
-              },
-              {
-                "name": "`description`",
-                "type": "`string`",
-                "default": "-",
-                "description": "主文字下面的辅助说明。"
-              },
-              {
-                "name": "`href`",
-                "type": "`string`",
-                "default": "-",
-                "description": "有地址时渲染成链接。"
-              },
-              {
-                "name": "`as`",
-                "type": "`NavLinkComponent`",
-                "default": "`'a'`",
-                "description": "链接根组件。"
-              },
-              {
-                "name": "`iconClass`",
-                "type": "`string`",
-                "default": "-",
-                "description": "图标 CSS class。"
-              },
-              {
-                "name": "`isDisabled`",
+                "name": "`overlap`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "禁用。方向键和首字母查找会跳过。"
+                "description": "弹出层盖在触发区原位上，而不是出现在它旁边：左边和上边各多出 8px，宽度至少比触发区宽 16px，直接出现、没有进场动画。适合第一行重复触发区内容的弹出层。打开后忽略 `placement` 和 `alignment`。"
               }
             ]
           }
@@ -52086,15 +52043,6 @@
                 "description": "Fired on Escape. `NavDisclosure` listens and closes the panel."
               }
             ]
-          },
-          {
-            "heading": "NavHeadingMenu events",
-            "rows": [
-              {
-                "name": "`close`",
-                "description": "Fired on Escape."
-              }
-            ]
           }
         ],
         "zh": [
@@ -52104,15 +52052,6 @@
               {
                 "name": "`close`",
                 "description": "按下 Escape 时触发。由 `NavDisclosure` 接住并关闭面板。"
-              }
-            ]
-          },
-          {
-            "heading": "NavHeadingMenu 事件",
-            "rows": [
-              {
-                "name": "`close`",
-                "description": "按下 Escape 时触发。"
               }
             ]
           }
@@ -52125,14 +52064,58 @@
       "examples": [
         {
           "title": {
-            "en": "Product switcher",
-            "zh": "产品切换"
+            "en": "Basic",
+            "zh": "基础"
           },
           "description": {
-            "en": "The side nav heading opens a product switcher. Dashboard, Analytics, and Settings are the destinations.",
-            "zh": "侧栏标题打开产品切换菜单，里面是 Dashboard、Analytics 和 Settings。"
+            "en": "A button opens an account menu. Every item is a link.",
+            "zh": "点按钮打开账号菜单，每一项都是链接。"
           },
-          "code": "<script setup lang=\"ts\">\nimport { NavHeadingMenu, NavHeadingMenuItem } from '@astryx-vue/core/NavMenu'\nimport { SideNav, SideNavHeading } from '@astryx-vue/core/SideNav'\n</script>\n\n<template>\n  <div style=\"height: 100px\">\n    <SideNav>\n      <template #header>\n        <SideNavHeading heading=\"Acme Platform\">\n          <template #icon>\n            <span class=\"i-carbon-grid css-icon css-icon--sm\" />\n          </template>\n          <template #menu>\n            <NavHeadingMenu label=\"Acme Platform\" size=\"lg\">\n              <NavHeadingMenuItem href=\"/dashboard\" label=\"Dashboard\" />\n              <NavHeadingMenuItem href=\"/analytics\" label=\"Analytics\" />\n              <NavHeadingMenuItem href=\"/settings\" label=\"Settings\" />\n            </NavHeadingMenu>\n          </template>\n        </SideNavHeading>\n      </template>\n    </SideNav>\n  </div>\n</template>"
+          "code": "<script setup lang=\"ts\">\nimport { NavDisclosure, NavMenu, NavMenuItem } from '@astryx-vue/core/NavMenu'\n</script>\n\n<template>\n  <NavDisclosure label=\"Account menu\">\n    <template #trigger=\"{ isOpen, panelId }\">\n      <button\n        type=\"button\"\n        class=\"nav-menu-preview__trigger\"\n        :aria-controls=\"panelId\"\n        :aria-expanded=\"isOpen ? 'true' : 'false'\"\n        aria-haspopup=\"menu\"\n      >\n        Account\n      </button>\n    </template>\n    <template #default=\"{ close, focusRequest }\">\n      <NavMenu label=\"Account menu\" :focus-request=\"focusRequest\" @close=\"close\">\n        <NavMenuItem href=\"#profile\" label=\"Profile\" />\n        <NavMenuItem href=\"#notifications\" label=\"Notifications\" />\n        <NavMenuItem href=\"#settings\" label=\"Settings\" />\n      </NavMenu>\n    </template>\n  </NavDisclosure>\n</template>"
+        },
+        {
+          "title": {
+            "en": "Icons",
+            "zh": "图标"
+          },
+          "description": {
+            "en": "iconClass puts an icon before the label.",
+            "zh": "用 iconClass 在文字前面放图标。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { NavDisclosure, NavMenu, NavMenuItem } from '@astryx-vue/core/NavMenu'\n</script>\n\n<template>\n  <NavDisclosure label=\"Account menu\">\n    <template #trigger=\"{ isOpen, panelId }\">\n      <button\n        type=\"button\"\n        class=\"nav-menu-preview__trigger\"\n        :aria-controls=\"panelId\"\n        :aria-expanded=\"isOpen ? 'true' : 'false'\"\n        aria-haspopup=\"menu\"\n      >\n        Account\n      </button>\n    </template>\n    <template #default=\"{ close, focusRequest }\">\n      <NavMenu label=\"Account menu\" :focus-request=\"focusRequest\" @close=\"close\">\n        <NavMenuItem href=\"#profile\" icon-class=\"i-carbon-user\" label=\"Profile\" />\n        <NavMenuItem href=\"#notifications\" icon-class=\"i-carbon-notification\" label=\"Notifications\" />\n        <NavMenuItem href=\"#settings\" icon-class=\"i-carbon-settings\" label=\"Settings\" />\n      </NavMenu>\n    </template>\n  </NavDisclosure>\n</template>"
+        },
+        {
+          "title": {
+            "en": "Descriptions",
+            "zh": "说明文字"
+          },
+          "description": {
+            "en": "description adds a supporting line under the label.",
+            "zh": "用 description 在文字下面加一行说明。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { NavDisclosure, NavMenu, NavMenuItem } from '@astryx-vue/core/NavMenu'\n</script>\n\n<template>\n  <NavDisclosure label=\"Account menu\">\n    <template #trigger=\"{ isOpen, panelId }\">\n      <button\n        type=\"button\"\n        class=\"nav-menu-preview__trigger\"\n        :aria-controls=\"panelId\"\n        :aria-expanded=\"isOpen ? 'true' : 'false'\"\n        aria-haspopup=\"menu\"\n      >\n        Account\n      </button>\n    </template>\n    <template #default=\"{ close, focusRequest }\">\n      <NavMenu label=\"Account menu\" :focus-request=\"focusRequest\" @close=\"close\">\n        <NavMenuItem description=\"Name, photo, and email\" href=\"#profile\" label=\"Profile\" />\n        <NavMenuItem description=\"Email and push\" href=\"#notifications\" label=\"Notifications\" />\n        <NavMenuItem description=\"Preferences for this workspace\" href=\"#settings\" label=\"Settings\" />\n      </NavMenu>\n    </template>\n  </NavDisclosure>\n</template>"
+        },
+        {
+          "title": {
+            "en": "Sizes",
+            "zh": "尺寸"
+          },
+          "description": {
+            "en": "size sets the menu's minimum width and the padding of each item.",
+            "zh": "size 决定菜单的最小宽度和每一项的内边距。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { NavDisclosure, NavMenu, NavMenuItem } from '@astryx-vue/core/NavMenu'\n</script>\n\n<template>\n  <div class=\"nav-overview--row\">\n    <NavDisclosure label=\"Small menu\">\n      <template #trigger=\"{ isOpen, panelId }\">\n        <button\n          type=\"button\"\n          class=\"nav-menu-preview__trigger\"\n          :aria-controls=\"panelId\"\n          :aria-expanded=\"isOpen ? 'true' : 'false'\"\n          aria-haspopup=\"menu\"\n        >\n          Small\n        </button>\n      </template>\n      <template #default=\"{ close, focusRequest }\">\n        <NavMenu label=\"Small\" size=\"sm\" :focus-request=\"focusRequest\" @close=\"close\">\n          <NavMenuItem href=\"#profile\" label=\"Profile\" />\n          <NavMenuItem href=\"#settings\" label=\"Settings\" />\n        </NavMenu>\n      </template>\n    </NavDisclosure>\n    <NavDisclosure label=\"Large menu\">\n      <template #trigger=\"{ isOpen, panelId }\">\n        <button\n          type=\"button\"\n          class=\"nav-menu-preview__trigger\"\n          :aria-controls=\"panelId\"\n          :aria-expanded=\"isOpen ? 'true' : 'false'\"\n          aria-haspopup=\"menu\"\n        >\n          Large\n        </button>\n      </template>\n      <template #default=\"{ close, focusRequest }\">\n        <NavMenu label=\"Large\" size=\"lg\" :focus-request=\"focusRequest\" @close=\"close\">\n          <NavMenuItem href=\"#profile\" label=\"Profile\" />\n          <NavMenuItem href=\"#settings\" label=\"Settings\" />\n        </NavMenu>\n      </template>\n    </NavDisclosure>\n  </div>\n</template>"
+        },
+        {
+          "title": {
+            "en": "Disabled item",
+            "zh": "禁用项"
+          },
+          "description": {
+            "en": "A disabled item ignores clicks, and the arrow keys skip it.",
+            "zh": "禁用的项点了没反应，方向键也会跳过它。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { NavDisclosure, NavMenu, NavMenuItem } from '@astryx-vue/core/NavMenu'\n</script>\n\n<template>\n  <NavDisclosure label=\"Account menu\">\n    <template #trigger=\"{ isOpen, panelId }\">\n      <button\n        type=\"button\"\n        class=\"nav-menu-preview__trigger\"\n        :aria-controls=\"panelId\"\n        :aria-expanded=\"isOpen ? 'true' : 'false'\"\n        aria-haspopup=\"menu\"\n      >\n        Account\n      </button>\n    </template>\n    <template #default=\"{ close, focusRequest }\">\n      <NavMenu label=\"Account menu\" :focus-request=\"focusRequest\" @close=\"close\">\n        <NavMenuItem href=\"#profile\" label=\"Profile\" />\n        <NavMenuItem href=\"#billing\" is-disabled label=\"Billing\" />\n        <NavMenuItem href=\"#settings\" label=\"Settings\" />\n      </NavMenu>\n    </template>\n  </NavDisclosure>\n</template>"
         }
       ],
       "anatomy": {
@@ -63694,20 +63677,174 @@
       "importPath": "@astryx-vue/core/Drawer",
       "exportName": "Drawer",
       "summary": {
-        "en": "`Drawer` is a panel that slides in from one side of the screen, for filters, details, or a short form. It shares the dialog's modal machinery: page scrolling is locked, focus stays inside, and closing returns focus to whatever opened it.",
-        "zh": "`Drawer` 是从屏幕一侧滑出的面板，用来放筛选、详情或一小段表单。它和弹窗共用同一套模态机制：打开时锁住页面滚动、把焦点关在面板里、关闭后把焦点还给打开它的元素。"
+        "en": "`Drawer` is a panel that slides in from one side of the screen, for filters, details, or a short form. By default it has a scrim and is modal: page scrolling is locked, focus stays inside, and closing returns focus to whatever opened it.",
+        "zh": "`Drawer` 是从屏幕一侧滑出的面板，用来放筛选、详情或一小段表单。默认带遮罩，是模态的：打开时锁住页面滚动、把焦点关在面板里、关闭后把焦点还给打开它的元素。"
       },
       "usage": {
-        "en": "`Drawer` is a panel that slides in from one side of the screen, for filters, details, or a short form. It shares the dialog's modal machinery: page scrolling is locked, focus stays inside, and closing returns focus to whatever opened it.\n\n`placement` picks the edge, `end` by default. `purpose` decides how it closes: `info` allows Escape and a scrim click, `form` allows only Escape, `required` allows neither.\n\n```vue\n<script setup lang=\"ts\">\nimport { Button } from '@astryx-vue/core/Button'\nimport { Drawer, DrawerHeader } from '@astryx-vue/core/Drawer'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\n</script>\n\n<template>\n  <Button @click=\"isOpen = true\">\n    Open filters\n  </Button>\n  <Drawer :is-open=\"isOpen\" label=\"Filters\" @open-change=\"isOpen = $event\">\n    <DrawerHeader title=\"Filters\" subtitle=\"Narrow the list\" @open-change=\"isOpen = false\" />\n    <p>Category, price range and availability go here.</p>\n  </Drawer>\n</template>\n```\n\n<drawerOverview />",
-        "zh": "`Drawer` 是从屏幕一侧滑出的面板，用来放筛选、详情或一小段表单。它和弹窗共用同一套模态机制：打开时锁住页面滚动、把焦点关在面板里、关闭后把焦点还给打开它的元素。\n\n`placement` 决定贴哪一边，默认 `end`（中文界面是右边）。`purpose` 决定怎么关：`info` 允许 Escape 和点遮罩，`form` 只允许 Escape，`required` 两者都不允许。\n\n```vue\n<script setup lang=\"ts\">\nimport { Button } from '@astryx-vue/core/Button'\nimport { Drawer, DrawerHeader } from '@astryx-vue/core/Drawer'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\n</script>\n\n<template>\n  <Button @click=\"isOpen = true\">\n    打开筛选\n  </Button>\n  <Drawer :is-open=\"isOpen\" label=\"筛选\" @open-change=\"isOpen = $event\">\n    <DrawerHeader title=\"筛选\" subtitle=\"缩小列表范围\" @open-change=\"isOpen = false\" />\n    <p>分类、价格区间和是否有货放在这里。</p>\n  </Drawer>\n</template>\n```\n\n<drawerOverview />"
+        "en": "`Drawer` is a panel that slides in from one side of the screen, for filters, details, or a short form. By default it has a scrim and is modal: page scrolling is locked, focus stays inside, and closing returns focus to whatever opened it.\n\n`placement` picks the edge, `end` by default. On close the panel slides out the side it came in from; a `placement` change while open takes effect on the next open. `purpose` decides how it closes: `info` allows Escape and a scrim click, `form` allows only Escape, `required` allows neither.\n\n```vue\n<script setup lang=\"ts\">\nimport { Button } from '@astryx-vue/core/Button'\nimport { Drawer, DrawerHeader } from '@astryx-vue/core/Drawer'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\n</script>\n\n<template>\n  <Button @click=\"isOpen = true\">\n    Open filters\n  </Button>\n  <Drawer :is-open=\"isOpen\" label=\"Filters\" @open-change=\"isOpen = $event\">\n    <DrawerHeader title=\"Filters\" subtitle=\"Narrow the list\" @open-change=\"isOpen = false\" />\n    <p>Category, price range and availability go here.</p>\n  </Drawer>\n</template>\n```\n\n<drawerOverview />",
+        "zh": "`Drawer` 是从屏幕一侧滑出的面板，用来放筛选、详情或一小段表单。默认带遮罩，是模态的：打开时锁住页面滚动、把焦点关在面板里、关闭后把焦点还给打开它的元素。\n\n`placement` 决定贴哪一边，默认 `end`（中文界面是右边）。关闭时面板从进场的那一侧滑出去；打开期间改了 `placement`，要等关上之后下一次打开才换边。`purpose` 决定怎么关：`info` 允许 Escape 和点遮罩，`form` 只允许 Escape，`required` 两者都不允许。\n\n```vue\n<script setup lang=\"ts\">\nimport { Button } from '@astryx-vue/core/Button'\nimport { Drawer, DrawerHeader } from '@astryx-vue/core/Drawer'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\n</script>\n\n<template>\n  <Button @click=\"isOpen = true\">\n    打开筛选\n  </Button>\n  <Drawer :is-open=\"isOpen\" label=\"筛选\" @open-change=\"isOpen = $event\">\n    <DrawerHeader title=\"筛选\" subtitle=\"缩小列表范围\" @open-change=\"isOpen = false\" />\n    <p>分类、价格区间和是否有货放在这里。</p>\n  </Drawer>\n</template>\n```\n\n<drawerOverview />"
       },
       "practices": {
         "en": [],
         "zh": []
       },
       "props": {
-        "en": [],
-        "zh": []
+        "en": [
+          {
+            "heading": "Drawer props",
+            "rows": [
+              {
+                "name": "`isOpen`",
+                "type": "`boolean`",
+                "default": "—",
+                "description": "Whether the drawer is open. The caller owns this state. Required."
+              },
+              {
+                "name": "`label`",
+                "type": "`string`",
+                "default": "—",
+                "description": "Accessible name of the drawer. Required."
+              },
+              {
+                "name": "`placement`",
+                "type": "`'start' | 'end'`",
+                "default": "`'end'`",
+                "description": "Logical edge, mirrored under RTL. The exit always slides out the side it entered; a change while open takes effect on the next open."
+              },
+              {
+                "name": "`width`",
+                "type": "`number | string`",
+                "default": "`400`",
+                "description": "Preferred width. Numbers are pixels. On phones it leaves at least 56px of the page showing."
+              },
+              {
+                "name": "`padding`",
+                "type": "`0 | 0.5 | 1 | 1.5 | 2 | 3 | 4 | 5 | 6 | 8 | 10`",
+                "default": "Theme default (16px)",
+                "description": "Content padding, mapped to the `--astryx-spacing-*` tokens."
+              },
+              {
+                "name": "`purpose`",
+                "type": "`'required' | 'form' | 'info'`",
+                "default": "`'info'`",
+                "description": "`required` disables Escape and scrim dismissal. `form` allows Escape only. `info` allows both."
+              },
+              {
+                "name": "`hasScrim`",
+                "type": "`boolean`",
+                "default": "`true`",
+                "description": "`true` is modal: scroll lock and a focus trap. `false` is non-modal: the page beside it stays clickable and scrollable, Escape still closes it, and you should include a visible close button."
+              }
+            ]
+          },
+          {
+            "heading": "DrawerHeader props",
+            "rows": [
+              {
+                "name": "`title`",
+                "type": "`string`",
+                "default": "—",
+                "description": "Title. Also names the drawer. Required."
+              },
+              {
+                "name": "`subtitle`",
+                "type": "`string`",
+                "default": "—",
+                "description": "Secondary text below the title. Not rendered when empty and no `subtitle` slot is set."
+              },
+              {
+                "name": "`hasCloseButton`",
+                "type": "`boolean`",
+                "default": "Shown when `openChange` has a listener",
+                "description": "Shows a close button that emits `openChange(false)`."
+              },
+              {
+                "name": "`closeButtonLabel`",
+                "type": "`string`",
+                "default": "Active language",
+                "description": "Accessible name of the close button. Defaults to Close in English and 关闭 in Chinese."
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "Drawer 属性",
+            "rows": [
+              {
+                "name": "`isOpen`",
+                "type": "`boolean`",
+                "default": "—",
+                "description": "抽屉是否打开，打开状态由调用方持有。必填。"
+              },
+              {
+                "name": "`label`",
+                "type": "`string`",
+                "default": "—",
+                "description": "抽屉的无障碍名称。必填。"
+              },
+              {
+                "name": "`placement`",
+                "type": "`'start' | 'end'`",
+                "default": "`'end'`",
+                "description": "贴哪一边，逻辑方向，RTL 下自动镜像。退场总是从进场的那一侧滑出；打开期间改了它，下一次打开才换边。"
+              },
+              {
+                "name": "`width`",
+                "type": "`number | string`",
+                "default": "`400`",
+                "description": "首选宽度，数字单位为像素，字符串原样使用。手机上至少给页面留出 56px。"
+              },
+              {
+                "name": "`padding`",
+                "type": "`0 | 0.5 | 1 | 1.5 | 2 | 3 | 4 | 5 | 6 | 8 | 10`",
+                "default": "主题默认值（16px）",
+                "description": "内容区内边距，取值对应 `--astryx-spacing-*` 令牌。"
+              },
+              {
+                "name": "`purpose`",
+                "type": "`'required' | 'form' | 'info'`",
+                "default": "`'info'`",
+                "description": "允许的关闭方式：`required` 禁用 Escape 与点击遮罩；`form` 仅允许 Escape；`info` 两者都允许。"
+              },
+              {
+                "name": "`hasScrim`",
+                "type": "`boolean`",
+                "default": "`true`",
+                "description": "是否带遮罩。`true` 为模态：锁住页面滚动、焦点关在面板里。`false` 为非模态：旁边的页面照常能点、能滚，Escape 照样关闭，记得放一个看得见的关闭按钮。"
+              }
+            ]
+          },
+          {
+            "heading": "DrawerHeader 属性",
+            "rows": [
+              {
+                "name": "`title`",
+                "type": "`string`",
+                "default": "—",
+                "description": "标题，同时为抽屉命名。必填。"
+              },
+              {
+                "name": "`subtitle`",
+                "type": "`string`",
+                "default": "—",
+                "description": "标题下方的副标题。为空且没有 `subtitle` 插槽时不渲染。"
+              },
+              {
+                "name": "`hasCloseButton`",
+                "type": "`boolean`",
+                "default": "有人监听 `openChange` 时显示",
+                "description": "是否显示关闭按钮，点击时发出 `openChange(false)`。"
+              },
+              {
+                "name": "`closeButtonLabel`",
+                "type": "`string`",
+                "default": "跟界面语言",
+                "description": "关闭按钮的无障碍名称。不传时英文 Close、中文「关闭」。"
+              }
+            ]
+          }
+        ]
       },
       "slots": {
         "en": [],
@@ -63720,14 +63857,46 @@
       "notes": {
         "en": [
           {
+            "heading": "Without a scrim",
+            "text": "Pass `:has-scrim=\"false\"` for a non-modal drawer: no scrim, no scroll lock, and focus is not trapped, so the page beside it stays clickable and scrolls under a finger. Focus still moves into the panel on open, and a keyboard-opened first control shows its tooltip. Escape still closes it, unless `purpose` is `required`. With no scrim to click, include a visible close button.\n\n```vue\n<Drawer :is-open=\"isOpen\" label=\"Details\" :has-scrim=\"false\" @open-change=\"isOpen = $event\">\n  <DrawerHeader title=\"Details\" has-close-button @open-change=\"isOpen = $event\" />\n  <p>The page beside it stays usable.</p>\n</Drawer>\n```\n\n<drawerNonModal />\n\nWith or without a scrim, a drawer that unmounts while open (a route change, say) returns focus to its opener, unless focus has already moved elsewhere on the page."
+          },
+          {
             "heading": "Title row",
             "text": "`DrawerHeader` gives you a title, a subtitle, and start/end slots. The close button appears when someone listens for `open-change`; pass `has-close-button` to decide it yourself."
+          },
+          {
+            "heading": "Events",
+            "text": "- `openChange(isOpen: boolean)`: fires with `false` when the user requests dismissal through Escape or a scrim click, depending on `purpose`. The parent sets `isOpen` to close."
+          },
+          {
+            "heading": "Slots",
+            "text": "- `default`: drawer body, scrollable. Usually starts with a `DrawerHeader`.\n- `footer`: bottom content, such as actions."
+          },
+          {
+            "heading": "DrawerHeader Events and Slots",
+            "text": "- `openChange(isOpen: boolean)`: fires with `false` when the close button is clicked.\n- `title`: inline content replacing the title text.\n- `subtitle`: inline content for the subtitle.\n- `startContent`: content before the title, such as a back button.\n- `endContent`: content after the title, before the close button."
           }
         ],
         "zh": [
           {
+            "heading": "不带遮罩",
+            "text": "传 `:has-scrim=\"false\"` 就是非模态抽屉：没有遮罩，不锁页面滚动，焦点也不关在面板里，旁边的页面照常能点、能用手指滚。打开时焦点照样进到面板里，键盘打开时第一个控件的提示能正常显示；Escape 照样能关（`purpose` 为 `required` 时除外）。没有遮罩可点，记得放一个看得见的关闭按钮。\n\n```vue\n<Drawer :is-open=\"isOpen\" label=\"详情\" :has-scrim=\"false\" @open-change=\"isOpen = $event\">\n  <DrawerHeader title=\"详情\" has-close-button @open-change=\"isOpen = $event\" />\n  <p>旁边的页面还能用。</p>\n</Drawer>\n```\n\n<drawerNonModal />\n\n不管带不带遮罩，抽屉开着时被卸载（比如切走路由），焦点都会还给打开它的元素；焦点已经被挪到页面别处时就不去动它。"
+          },
+          {
             "heading": "标题行",
             "text": "`DrawerHeader` 提供标题、副标题、行首和行尾插槽。关闭按钮默认在有人监听 `open-change` 时出现；想写死就传 `has-close-button`。"
+          },
+          {
+            "heading": "事件",
+            "text": "- `openChange(isOpen: boolean)`：用户通过 Escape 或点击遮罩请求关闭时以 `false` 触发，是否触发取决于 `purpose`。父组件通过设置 `isOpen` 来关闭。"
+          },
+          {
+            "heading": "插槽",
+            "text": "- `default`：抽屉主体，可滚动。通常以 `DrawerHeader` 开头。\n- `footer`：底部内容，例如操作按钮。"
+          },
+          {
+            "heading": "DrawerHeader 事件与插槽",
+            "text": "- `openChange(isOpen: boolean)`：点击关闭按钮时以 `false` 触发。\n- `title`：替换标题文字的行内内容。\n- `subtitle`：副标题的行内内容。\n- `startContent`：标题之前的内容，例如返回按钮。\n- `endContent`：标题之后、关闭按钮之前的内容。"
           }
         ]
       },
@@ -63879,6 +64048,12 @@
                 "type": "`ListMarkerStyle`",
                 "default": "`'none'`",
                 "description": "The marker drawn in front of each row: none, disc (filled bullet), circle (outlined bullet), or decimal (numbers). `decimal` renders the list as an `<ol>`."
+              },
+              {
+                "name": "`reorderable`",
+                "type": "`Reorderable`",
+                "default": "—",
+                "description": "The object from `useReorderable` or `createReorderable`. With it, each `ListItem` with an `itemKey` that the object lets move ends with a reorder handle: hold then drag under a finger, drag under a mouse, or press it and use the arrow keys. Without it the list loads none of the reorder code."
               },
               {
                 "name": "`start`",
@@ -64040,6 +64215,12 @@
                 "type": "`ListMarkerStyle`",
                 "default": "`'none'`",
                 "description": "每行前面的标记：none、disc（实心圆点）、circle（空心圆点）、decimal（序号）。`decimal` 会改用 `<ol>` 渲染。"
+              },
+              {
+                "name": "`reorderable`",
+                "type": "`Reorderable`",
+                "default": "—",
+                "description": "`useReorderable` 或 `createReorderable` 返回的对象。传了它，每个带 `itemKey`、且对象允许移动的 `ListItem` 末尾都有一个重排手柄：手指按住再拖，鼠标直接拖，或者点一下再用方向键挪。不传时列表一点重排代码都不加载。"
               },
               {
                 "name": "`start`",
@@ -64587,7 +64768,7 @@
                 "name": "`itemKey`",
                 "type": "`string | number`",
                 "default": "—",
-                "description": "行在数据里的键，是列表 `animatedLayout` 认这一行的身份，没有它的行直接变。它和 Vue 自己的 `key` 是两回事。"
+                "description": "行在数据里的键，是列表 `animatedLayout` 认这一行的身份，没有它的行直接变。在可重排的列表里，它就是 `onReorder` 报出来、`isReorderable` 被问到的那个键；没有它的行没有重排手柄。它和 Vue 自己的 `key` 是两回事。"
               },
               {
                 "name": "`swipeActions`",
@@ -87725,6 +87906,166 @@
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/components/use-linkify",
         "zh": "https://astryx-vue.pages.dev/components/use-linkify"
+      }
+    },
+    {
+      "slug": "use-reorderable",
+      "name": "UseReorderable",
+      "package": "@astryx-vue/core",
+      "kind": "composable",
+      "title": {
+        "en": "useReorderable",
+        "zh": "useReorderable"
+      },
+      "group": "Utility",
+      "groupTitle": {
+        "en": "Utility",
+        "zh": "工具"
+      },
+      "importPath": null,
+      "exportName": null,
+      "summary": {
+        "en": "`useReorderable` makes a list's rows reorderable. Call it once in `setup`, pass the result to `List`'s `reorderable`, and give each `ListItem` an `itemKey` from your data. Each row with a key then ends with a handle.",
+        "zh": "`useReorderable` 让列表的行可以调整顺序。在 `setup` 里调用一次，把结果交给 `List` 的 `reorderable`，再给每个 `ListItem` 一个来自数据的 `itemKey`。带键的行末尾就会出现一个拖动手柄。"
+      },
+      "usage": {
+        "en": "`useReorderable` makes a list's rows reorderable. Call it once in `setup`, pass the result to `List`'s `reorderable`, and give each `ListItem` an `itemKey` from your data. Each row with a key then ends with a handle.\n\n```ts\nimport { useReorderable } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useReorderable } from '@astryx-vue/core'\nimport { List, ListItem } from '@astryx-vue/core/List'\nimport { ref } from 'vue'\n\nconst items = ref([{ id: 'a', label: 'Inbox' }, { id: 'b', label: 'Sent' }])\n\nconst reorderable = useReorderable<string>({\n  onReorder: ({ key, to }) => {\n    const moved = items.value.find(item => item.id === key)!\n    const next = items.value.filter(item => item.id !== key)\n    next.splice(to, 0, moved)\n    items.value = next\n  },\n})\n</script>\n\n<template>\n  <List :reorderable=\"reorderable\">\n    <ListItem v-for=\"item in items\" :key=\"item.id\" :item-key=\"item.id\" :label=\"item.label\" />\n  </List>\n</template>\n```\n\n`onReorder` is called once per committed move with the moved row's key and its index after the move. Apply it by rendering the items in the new order. An order you keep sends the rows back to their places.\n\n- **Finger**: hold a handle still for a moment, then drag. A flick on the handle still scrolls. The row stays in its place, dimmed, while a copy follows the finger and an accent line marks where it would land. The other rows stay still, the page scrolls near its edges, and on release the rows glide to their new places. A pen held still where the primary pointer is coarse does the same.\n- **Mouse**: drag a handle once it moves 4 px. The rows take their places without motion. A cancelled drag puts everything back at once.\n- **Keyboard and taps**: without a drag, the handle toggles reorder mode for its row (a click, Space or Enter). Each arrow key moves the row one place at once, and Escape or Done ends the mode, keeping the moves. A hint below the handle shows Move up, Move down and Done as buttons, so taps alone reorder too.\n- **Screen readers**: each move is announced with the row's place and its neighbours once it lands. A move into a row that keeps its place is refused and announced.\n\nA row that `isReorderable` rejects shows no handle. Rows it rejects at either end of the list also bound the others: nothing drops beyond them.\n\nTo start reorder mode from your own UI, such as a Move item in a row's menu, call `reorderable.start(key)`. The focus moves to that row's handle. A key that cannot move or is not mounted does nothing and warns in development.\n\n`options` may be a ref or a getter: each move reads its latest value, so a new `onReorder` needs no new object. Outside a component, use `createReorderable(options)`, which takes the same plain options and returns the same object.\n\nThe reorder code ships with this function: a list without `reorderable` loads none of it.",
+        "zh": "`useReorderable` 让列表的行可以调整顺序。在 `setup` 里调用一次，把结果交给 `List` 的 `reorderable`，再给每个 `ListItem` 一个来自数据的 `itemKey`。带键的行末尾就会出现一个拖动手柄。\n\n```ts\nimport { useReorderable } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useReorderable } from '@astryx-vue/core'\nimport { List, ListItem } from '@astryx-vue/core/List'\nimport { ref } from 'vue'\n\nconst items = ref([{ id: 'a', label: '收件箱' }, { id: 'b', label: '已发送' }])\n\nconst reorderable = useReorderable<string>({\n  onReorder: ({ key, to }) => {\n    const moved = items.value.find(item => item.id === key)!\n    const next = items.value.filter(item => item.id !== key)\n    next.splice(to, 0, moved)\n    items.value = next\n  },\n})\n</script>\n\n<template>\n  <List :reorderable=\"reorderable\">\n    <ListItem v-for=\"item in items\" :key=\"item.id\" :item-key=\"item.id\" :label=\"item.label\" />\n  </List>\n</template>\n```\n\n每完成一次移动，`onReorder` 被调用一次，告诉你被挪的那一行的键，和它挪完以后的位置（下标）。你按新顺序把数据渲染出来就行。如果你不改顺序，行会回到原位。\n\n- **手指**：在手柄上按住不动一小会儿，再拖。在手柄上快速一划还是滚动页面。被拿起的行留在原位、变淡，一份副本跟着手指走，一条强调色的线标出它会落在哪。其他行不动；拖到页面边缘附近会自动滚动；松手后各行滑到新位置。主指针是粗指针（触屏）时，手写笔按住不动也一样。\n- **鼠标**：按住手柄移动超过 4 像素就开始拖。各行直接落到新位置，不带动画。拖动被取消时一切立刻复原。\n- **键盘和点按**：不拖的话，点一下手柄（或按空格、回车）就进入这一行的重排模式。每按一次方向键，行立刻挪一格；按 Escape 或点「完成」退出，挪过的都保留。手柄下方会出现一个提示条，上面有「上移」「下移」「完成」三个按钮，光靠点按也能排。\n- **读屏**：每次挪动落定后，会播报这一行现在排第几、前后是谁。往一个不能动的行挪会被拒绝，也会播报。\n\n`isReorderable` 不允许移动的行没有手柄。位于列表两头的这种行还会框住别的行：谁也不能越过它们落下。\n\n想从你自己的界面进入重排模式（比如行菜单里的「移动」），调用 `reorderable.start(key)`，焦点会移到那一行的手柄上。键对应的行不能动或者没挂载时什么也不做，开发环境下会给警告。\n\n`options` 可以是 ref 或 getter：每次移动都读它的最新值，换一个 `onReorder` 不需要重建对象。在组件外面用 `createReorderable(options)`，它接受同样的普通配置，返回同样的对象。\n\n重排的代码跟着这个函数走：没传 `reorderable` 的列表一点都不加载。"
+      },
+      "practices": {
+        "en": [
+          {
+            "guidance": "Do",
+            "text": "Give each row a stable key from your data, a string or a number (`:item-key=\"item.id\"`), and apply each move at once."
+          },
+          {
+            "guidance": "Do",
+            "text": "Use `isReorderable` for rows that must stay put, such as a pinned first row."
+          },
+          {
+            "guidance": "Do",
+            "text": "Offer reorder mode from your own UI too, such as a row's menu, with `reorderable.start(item.id)`."
+          },
+          {
+            "guidance": "Don't",
+            "text": "Use list indexes as keys: a move changes every index after it."
+          }
+        ],
+        "zh": []
+      },
+      "props": {
+        "en": [
+          {
+            "heading": "Parameters",
+            "rows": [
+              {
+                "name": "`options`",
+                "type": "`MaybeRefOrGetter<ReorderableOptions>`",
+                "default": "—",
+                "description": "Configuration object. Each move reads its latest value. `createReorderable` takes the same fields as a plain object."
+              },
+              {
+                "name": "`options.onReorder`",
+                "type": "`(move: { key: TKey, to: number }) => void`",
+                "default": "—",
+                "description": "Called once per committed move (a drop, or each move in reorder mode) with the moved item's key and its index after the move, in the full order of the list's items. Apply it by rendering the items in their new order. A cancelled move calls nothing."
+              },
+              {
+                "name": "`options.isReorderable`",
+                "type": "`(key: TKey) => boolean`",
+                "default": "—",
+                "description": "Whether the item with this key can move. An item it rejects shows no handle and cannot be picked up; one at either end of the list also bounds the others, so nothing drops beyond it and a keyboard move into it is refused. Every item moves without it."
+              }
+            ]
+          },
+          {
+            "heading": "Returns",
+            "rows": [
+              {
+                "name": "(return value)",
+                "type": "`Reorderable<TKey>`",
+                "description": "The list's reorder behavior: pass it as `List`'s `reorderable`, with an `itemKey` on each `ListItem`. Its one method, `start(key)`, enters reorder mode for that item from your own UI: the focus moves to its handle. One object may serve several lists, each reordering on its own; `start` then uses the one mounted last."
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "参数",
+            "rows": [
+              {
+                "name": "`options`",
+                "type": "`MaybeRefOrGetter<ReorderableOptions>`",
+                "default": "—",
+                "description": "配置对象。每次移动都读它的最新值。`createReorderable` 接受同样的字段，只是传普通对象。"
+              },
+              {
+                "name": "`options.onReorder`",
+                "type": "`(move: { key: TKey, to: number }) => void`",
+                "default": "—",
+                "description": "每完成一次移动（一次松手，或重排模式里的每一步）调用一次，带上被挪那一项的键，和它挪完后在整个列表里的下标。按新顺序渲染数据就算应用了。被取消的移动不会调用。"
+              },
+              {
+                "name": "`options.isReorderable`",
+                "type": "`(key: TKey) => boolean`",
+                "default": "—",
+                "description": "这个键对应的项能不能动。不能动的项没有手柄，也拿不起来；它在列表两头时还会框住别的项，谁也不能越过它落下，键盘往它那里挪会被拒绝。不传时每一项都能动。"
+              }
+            ]
+          },
+          {
+            "heading": "返回值",
+            "rows": [
+              {
+                "name": "（返回值）",
+                "type": "`Reorderable<TKey>`",
+                "description": "列表的重排能力：传给 `List` 的 `reorderable`，每个 `ListItem` 带上 `itemKey`。它唯一的方法 `start(key)` 从你自己的界面进入那一项的重排模式，焦点移到它的手柄上。一个对象可以同时给几个列表用，各排各的；这时 `start` 用最后挂载的那个。"
+              }
+            ]
+          }
+        ]
+      },
+      "slots": {
+        "en": [],
+        "zh": []
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [],
+        "zh": [
+          {
+            "heading": "建议",
+            "text": "- 推荐: 每一行用数据里稳定的键（字符串或数字，`:item-key=\"item.id\"`），每次移动都马上应用。\n- 推荐: 必须固定的行（比如置顶的第一行）用 `isReorderable` 排除。\n- 推荐: 在你自己的界面里也给一个入口，比如行菜单，用 `reorderable.start(item.id)` 进入重排模式。\n- 避免: 用列表下标当键：挪一行，后面每一行的下标都变了。"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": {
+            "en": "useReorderable — playlist",
+            "zh": "useReorderable — 播放列表"
+          },
+          "description": {
+            "en": "Drag a handle, or press it and use the arrow keys. Intro is pinned: it has no handle, and nothing moves above it.",
+            "zh": "拖动手柄，或者点一下手柄再用方向键。Intro 被固定：它没有手柄，谁也不能挪到它上面。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { useReorderable } from '@astryx-vue/core'\nimport { List, ListItem } from '@astryx-vue/core/List'\nimport { ref } from 'vue'\n\ninterface Track {\n  id: string\n  title: string\n  artist: string\n}\n\nconst tracks = ref<Track[]>([\n  { id: 'intro', title: 'Intro', artist: 'Pinned' },\n  { id: 'harbor', title: 'Harbor Lights', artist: 'June Avenue' },\n  { id: 'paper', title: 'Paper Planes', artist: 'The Lanterns' },\n  { id: 'north', title: 'Northbound', artist: 'Mira Hale' },\n  { id: 'static', title: 'Static Bloom', artist: 'Cobalt Rooms' },\n])\n\nconst reorderable = useReorderable<string>({\n  onReorder: ({ key, to }) => {\n    const moved = tracks.value.find(track => track.id === key)\n    if (moved == null)\n      return\n    const next = tracks.value.filter(track => track.id !== key)\n    next.splice(to, 0, moved)\n    tracks.value = next\n  },\n  isReorderable: key => key !== 'intro',\n})\n</script>\n\n<template>\n  <List :reorderable=\"reorderable\" list-style=\"decimal\">\n    <ListItem\n      v-for=\"track in tracks\"\n      :key=\"track.id\"\n      :item-key=\"track.id\"\n      :label=\"track.title\"\n      :description=\"track.artist\"\n    />\n  </List>\n</template>"
+        }
+      ],
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/use-reorderable",
+        "zh": "https://astryx-vue.pages.dev/components/use-reorderable"
       }
     }
   ],

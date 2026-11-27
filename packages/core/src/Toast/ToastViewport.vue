@@ -97,32 +97,8 @@ watch(mountTarget, () => {
  * 元素的参照物，toast 会被按对话框的位置摆一次，动画结束才弹回原来的角落。等的
  * 这段时间视口留在原处，先把顶层顺序放到对话框上面，用户看到的位置就不变。
  */
-watch(activeModal, async (modal) => {
-  if (modal == null) {
-    mountTarget.value = 'body'
-    return
-  }
-
-  const element = viewportRef.value
-  if (element != null && typeof element.hidePopover === 'function') {
-    try {
-      element.hidePopover()
-      element.showPopover()
-    }
-    catch {
-      // 引擎不支持顶层，保持原样。
-    }
-  }
-
-  await whenModalSettled(modal)
-  // 动画刚结束的那一帧浏览器还没把 `transform` 算掉，再等两帧才搬。
-  await afterTwoFrames()
-  if (activeModal.value === modal)
-    mountTarget.value = modal
-}, { immediate: true })
-
-// 有对话框被重新放进顶层时，视口原地重新进一次顶层，才能留在它上面。
-watch(useTopLayerEntries(), () => {
+/** 视口重新进一次顶层，排到此刻所有顶层元素的最上面。 */
+function reenterTopLayer(): void {
   const element = viewportRef.value
   if (element == null || typeof element.hidePopover !== 'function')
     return
@@ -133,7 +109,26 @@ watch(useTopLayerEntries(), () => {
   catch {
     // 引擎不支持顶层，保持原样。
   }
-})
+}
+
+// 无遮罩的抽屉这类非模态顶层元素后进顶层，或者底部面板叠放时有对话框被重新呈现，都会盖住视口。
+// 视口挂在那个被重新呈现的对话框里时也一样，所以不管挂在哪里都跟着重进一次。
+watch(useTopLayerEntries(), reenterTopLayer)
+
+watch(activeModal, async (modal) => {
+  if (modal == null) {
+    mountTarget.value = 'body'
+    return
+  }
+
+  reenterTopLayer()
+
+  await whenModalSettled(modal)
+  // 动画刚结束的那一帧浏览器还没把 `transform` 算掉，再等两帧才搬。
+  await afterTwoFrames()
+  if (activeModal.value === modal)
+    mountTarget.value = modal
+}, { immediate: true })
 
 const placement = computed(() => props.placement ?? layer?.value.toast.position ?? 'bottom-end')
 

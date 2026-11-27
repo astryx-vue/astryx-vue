@@ -1,4 +1,5 @@
 import type { ComputedRef, InjectionKey } from 'vue'
+import type { ListReorderContextValue } from './reorder/reorderTypes.js'
 import type { ListDensity, ListEdge, ListEdgeCompensation, ListMarkerStyle } from './types.js'
 import { computed, inject } from 'vue'
 import { defineLayerScopedKey, readLayerScoped } from '../layer/scopedProvide.js'
@@ -18,6 +19,8 @@ export interface ListContextValue {
   listStyle: ComputedRef<ListMarkerStyle>
   /** @deprecated Use `edge`, which it resolves into. */
   edgeCompensation: ComputedRef<ListEdgeCompensation | undefined>
+  /** The list's reorder session and options, or `null` when it has no `reorderable`. */
+  reorder: ComputedRef<ListReorderContextValue | null>
 }
 
 export const listContextKey = defineLayerScopedKey<ListContextValue | undefined>('astryx-list-context', undefined)

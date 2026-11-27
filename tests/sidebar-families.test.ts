@@ -22,6 +22,15 @@ describe('sidebar families', () => {
     expect(slugs.toSorted()).toEqual(COMPONENT_CATALOG.map(entry => entry.slug).toSorted())
   })
 
+  it('keeps a page hidden from the overview in the sidebar', () => {
+    // 同上游 NavMenu.doc.mjs 的 isHiddenFromOverview：总览里没有卡片，侧栏照常列出。
+    const entry = COMPONENT_CATALOG.find(item => item.slug === 'nav-heading-menu')
+    expect(entry?.isHiddenFromOverview).toBe(true)
+    expect(COMPONENT_CATALOG.find(item => item.slug === 'nav-menu')?.isHiddenFromOverview).toBeUndefined()
+    const navigation = families.find(item => item.id === 'Navigation')
+    expect(navigation?.entries.map(item => item.slug)).toContain('nav-heading-menu')
+  })
+
   it('nests sub-components and hooks under their parent, components before hooks', () => {
     const dialog = families.find(item => item.id === 'Dialog')
     expect(dialog?.entries.map(entry => entry.slug)).toEqual([
