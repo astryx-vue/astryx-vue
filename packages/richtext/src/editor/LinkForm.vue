@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { HStack, IconButton, isImeKeyEvent, StackItem, TextInput } from '@astryx-vue/core'
+import { HStack, IconButton, StackItem, TextInput } from '@astryx-vue/core'
 import { computed, useTemplateRef } from 'vue'
 import { useRichTextMessages } from './messages.js'
 
@@ -24,6 +24,11 @@ const emit = defineEmits<{
   'cancel': []
 }>()
 
+/** 这个按键属于输入法正在进行的拼字（Enter 是上屏，Escape 是取消拼字），不能当命令。 */
+function isComposingKey(event: KeyboardEvent): boolean {
+  return event.isComposing || event.keyCode === 229 || event.key === 'Process'
+}
+
 const t = useRichTextMessages()
 const field = useTemplateRef<{ focus: () => void }>('field')
 
@@ -36,7 +41,7 @@ function apply(): void {
 
 function onFieldKeydown(event: KeyboardEvent): void {
   // 应用之后焦点会回到编辑器，这次回车的后半截不能再在选中的文字上敲出一个换行。
-  if (event.key === 'Enter' && !isImeKeyEvent(event)) {
+  if (event.key === 'Enter' && !isComposingKey(event)) {
     event.preventDefault()
     apply()
   }
@@ -44,7 +49,7 @@ function onFieldKeydown(event: KeyboardEvent): void {
 
 function onFormKeydown(event: KeyboardEvent): void {
   // 输入法拼字时的 Escape 归输入法。
-  if (event.key !== 'Escape' || isImeKeyEvent(event))
+  if (event.key !== 'Escape' || isComposingKey(event))
     return
   // 在这里认领，外层浮层的 Escape 处理就会让开；取消还会把选区还给编辑器。
   event.preventDefault()
