@@ -1,7 +1,7 @@
 import type { CodeLanguage, SyntaxToken } from '@astryx-vue/core'
 import type { NodeKey } from 'lexical'
 import type { PropType } from 'vue'
-import { tokenize } from '@astryx-vue/core'
+import { CodeLineTokens } from '@astryx-vue/core'
 import { $isCodeNode, CodeNode } from '@lexical/code'
 import { $getNodeByKey } from 'lexical'
 import { defineComponent, onBeforeUnmount, watch } from 'vue'
@@ -20,9 +20,13 @@ type TokenLine = SyntaxToken[]
  * （正在更新的瞬间）返回 null，这样不会把颜色涂在错的位置上。
  */
 export function renderedTokens(code: string, language: string | CodeLanguage, rendered: string): TokenLine[] | null {
-  const lines = tokenize(code, language)
+  return flattenForRendered(code, new CodeLineTokens(code, language).tokens, rendered)
+}
+
+/** 按画出来的文字，把每行的 token 排成可以直接上色的样子，规则见 `renderedTokens`。 */
+function flattenForRendered(code: string, lines: readonly TokenLine[], rendered: string): TokenLine[] | null {
   if (rendered === code)
-    return lines
+    return [...lines]
   if (rendered !== code.replaceAll('\n', ''))
     return null
   const flat: TokenLine = []
@@ -33,6 +37,27 @@ export function renderedTokens(code: string, language: string | CodeLanguage, re
     offset += line.length
   })
   return [flat]
+}
+
+/**
+ * 让按行存着的 token 跟上新的代码。语言没变时，只把前后相同的部分之外的那一段当作一次替换交给
+ * `CodeLineTokens.replace`，没被这次编辑碰到的行不会重新分词；语言变了就整块重新分。
+ */
+export function syncLineTokens(previous: CodeLineTokens | undefined, code: string, language: string | CodeLanguage): CodeLineTokens {
+  if (previous === undefined || previous.language !== language)
+    return new CodeLineTokens(code, language)
+  const before = previous.text
+  if (before === code)
+    return previous
+  let head = 0
+  const shared = Math.min(before.length, code.length)
+  while (head < shared && before[head] === code[head])
+    head++
+  let tail = 0
+  while (tail < shared - head && before[before.length - 1 - tail] === code[code.length - 1 - tail])
+    tail++
+  previous.replace(head, before.length - head - tail, code.slice(head, code.length - tail))
+  return previous
 }
 
 interface Colored {
@@ -60,8 +85,10 @@ export const CodeSyntaxPlugin = defineComponent({
 
     const blocks = new Set<NodeKey>()
     const colored = new Map<NodeKey, Colored>()
+    const lineTokens = new Map<NodeKey, CodeLineTokens>()
 
     function uncolor(key: NodeKey): void {
+      lineTokens.delete(key)
       colored.get(key)?.cleanup()
       colored.delete(key)
     }
@@ -83,7 +110,9 @@ export const CodeSyntaxPlugin = defineComponent({
       if (previous !== undefined && previous.element === element && previous.code === block.code && previous.language === block.language)
         return
       previous?.cleanup()
-      const tokens = renderedTokens(block.code, block.language, element.textContent ?? '')
+      const cached = syncLineTokens(lineTokens.get(key), block.code, block.language)
+      lineTokens.set(key, cached)
+      const tokens = flattenForRendered(block.code, cached.tokens, element.textContent ?? '')
       if (tokens === null) {
         // 还没画好，下一次更新再试。
         colored.delete(key)
