@@ -1,0 +1,260 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  /*
+   * 没有页面级的层级：透镜和角标在栏自己的层叠上下文里排序。`--_tab-bar-*` 是 TabBar.vue 按
+   * UIKit 实测值（uikitTabBar.ts）写在根元素上的尺寸。
+   */
+  .astryx-tab-bar {
+    position: fixed;
+    inset-inline: 0;
+    bottom: 0;
+    isolation: isolate;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+    padding-inline: var(--_tab-bar-inset);
+    padding-bottom: var(--_tab-bar-inset);
+    pointer-events: none;
+  }
+
+  .astryx-tab-bar__capsule {
+    position: relative;
+    flex-grow: 1;
+    min-width: 0;
+    container-type: inline-size;
+    pointer-events: auto;
+    border-radius: var(--astryx-radius-full);
+    background-color: color-mix(in srgb, var(--astryx-color-background-popover) 78%, transparent);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    box-shadow: var(--astryx-shadow-med);
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .astryx-tab-bar-item {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background-color: transparent;
+    color: var(--astryx-color-text-primary);
+    font: inherit;
+    cursor: pointer;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .astryx-tab-bar-item[aria-disabled='true'] {
+    cursor: default;
+  }
+
+  /* 按钮铺满到邻居的中点，焦点环画在里面那个项上。 */
+  .astryx-tab-bar__item-box {
+    position: absolute;
+    display: block;
+    border-radius: var(--astryx-radius-full);
+    outline-width: var(--astryx-focus-outline-width);
+    outline-color: var(--astryx-focus-outline-color);
+    outline-offset: var(--astryx-focus-outline-offset);
+  }
+
+  .astryx-tab-bar-item:focus-visible .astryx-tab-bar__item-box {
+    outline-style: var(--astryx-focus-outline-style);
+  }
+
+  /*
+   * 没有选中的标签时，手指按住的标签立刻上底色（useTabBarLens.ts 写这个属性）。底色是单独一层，
+   * 松手后只淡出它的不透明度，交给合成器跑；用主题的退出时长和曲线。「减少动态效果」下淡出不超过
+   * 200ms，不管主题节奏多慢。
+   */
+  .astryx-tab-bar__item-box::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-color: var(--astryx-color-overlay-pressed);
+    pointer-events: none;
+    opacity: 0;
+    transition-property: opacity;
+    transition-duration: var(--astryx-duration-exit);
+    transition-timing-function: var(--astryx-ease-exit);
+  }
+
+  .astryx-tab-bar-item[data-tab-bar-pressed] .astryx-tab-bar__item-box::before {
+    opacity: 1;
+    transition-duration: 0s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-tab-bar__item-box::before {
+      transition-duration: min(var(--astryx-duration-exit), 200ms);
+    }
+
+    .astryx-tab-bar-item[data-tab-bar-pressed] .astryx-tab-bar__item-box::before {
+      transition-duration: 0s;
+    }
+  }
+
+  /* 静止时选中的标签画自己的选中样子，和副本一样的强调色。 */
+  .astryx-tab-bar__item-box--selected {
+    color: var(--astryx-color-accent);
+  }
+
+  .astryx-tab-bar__item-box--disabled,
+  .astryx-tab-bar__copy-item.astryx-tab-bar__item-box--disabled {
+    color: var(--astryx-color-text-disabled);
+  }
+
+  .astryx-tab-bar__icon {
+    position: absolute;
+    inset-inline-start: var(--_tab-bar-icon-start);
+    top: var(--_tab-bar-icon-top);
+    width: var(--_tab-bar-icon-size);
+    height: var(--_tab-bar-icon-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .astryx-tab-bar__label {
+    position: absolute;
+    inset-inline: 0;
+    top: var(--_tab-bar-label-top);
+    height: var(--_tab-bar-label-height);
+    overflow: hidden;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: var(--astryx-font-family-body);
+    font-weight: var(--astryx-font-weight-medium);
+    font-size: var(--_tab-bar-label-size);
+    line-height: var(--_tab-bar-label-height);
+  }
+
+  .astryx-tab-bar__label--selected {
+    font-weight: var(--astryx-font-weight-semibold);
+  }
+
+  /*
+   * 透镜静止在选中项下面的那颗药丸上，选中项自己画选中样子；滑动时它带着副本盖在项上。
+   * 用手指时由动效引擎移动它（useTabBarLens.ts）；「减少动态效果」下触屏是淡入淡出，鼠标直接跳过去。
+   */
+  .astryx-tab-bar__lens {
+    position: absolute;
+    pointer-events: none;
+    translate: var(--_tab-bar-lens-offset) 0;
+    transition-property: translate;
+    transition-duration: var(--astryx-duration-medium);
+    transition-timing-function: var(--astryx-ease-standard);
+  }
+
+  [dir='rtl'] .astryx-tab-bar__lens {
+    translate: calc(-1 * var(--_tab-bar-lens-offset)) 0;
+  }
+
+  @media (pointer: coarse), (prefers-reduced-motion: reduce) {
+    .astryx-tab-bar__lens {
+      transition-duration: 0s;
+    }
+  }
+
+  .astryx-tab-bar__lens--under {
+    z-index: -1;
+  }
+
+  /* 抬起的透镜的阴影，在裁切之外，由动效引擎淡入。 */
+  .astryx-tab-bar__lens-body {
+    position: absolute;
+    inset: 0;
+  }
+
+  .astryx-tab-bar__lens-body::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--astryx-radius-full);
+    box-shadow: var(--astryx-shadow-med);
+    opacity: 0;
+    will-change: var(--astryx-motion-will-change-before, auto);
+  }
+
+  /* 不透明：滑动时盖住副本下面的普通项。 */
+  .astryx-tab-bar__lens-clip {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-radius: var(--astryx-radius-full);
+    background-color: color-mix(in srgb, var(--astryx-color-text-primary) 9%, var(--astryx-color-background-popover));
+  }
+
+  /* 抬起的透镜：胶囊自己的底色加一圈淡淡的边，不透明，由动效引擎淡入。 */
+  .astryx-tab-bar__lens-clip::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--astryx-radius-full);
+    background-color: var(--astryx-color-background-popover);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--astryx-color-text-primary) 10%, transparent);
+    opacity: 0;
+    will-change: var(--astryx-motion-will-change-before, auto);
+  }
+
+  .astryx-tab-bar__copy {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* 只在手指下透镜滑动时挂载，由动效引擎移动，自己没有过渡。 */
+  .astryx-tab-bar__copy-outer {
+    position: absolute;
+    width: 100cqw;
+    inset-inline-start: calc(-1 * var(--_tab-bar-item-inset));
+    top: calc(-1 * var(--_tab-bar-item-inset));
+    translate: calc(-1 * var(--_tab-bar-lens-offset)) 0;
+  }
+
+  [dir='rtl'] .astryx-tab-bar__copy-outer {
+    translate: var(--_tab-bar-lens-offset) 0;
+  }
+
+  .astryx-tab-bar__copy-item {
+    position: absolute;
+    color: var(--astryx-color-accent);
+  }
+
+  .astryx-tab-bar__badges {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .astryx-tab-bar__badge {
+    position: absolute;
+    top: var(--_tab-bar-badge-top);
+    height: var(--_tab-bar-badge-height);
+    min-width: var(--_tab-bar-badge-height);
+    padding-inline: var(--_tab-bar-badge-padding);
+    border-radius: calc(var(--_tab-bar-badge-height) / 2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    white-space: nowrap;
+    font-family: var(--astryx-font-family-body);
+    font-weight: var(--astryx-font-weight-medium);
+    font-size: var(--_tab-bar-badge-font-size);
+    line-height: var(--_tab-bar-badge-height);
+    font-variant-numeric: tabular-nums;
+    background-color: var(--astryx-color-error);
+    color: var(--astryx-color-on-error);
+  }
+
+  /* 「更多」列表每行末尾的箭头指向里面一层，从右往左时翻过来。 */
+  [dir='rtl'] .astryx-tab-bar-more-list__chevron {
+    transform: scaleX(-1);
+  }
+}

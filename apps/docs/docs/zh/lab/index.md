@@ -58,6 +58,7 @@ import '@astryx-vue/lab/lab.css'
 | [AudioPlayer](/lab/audio-player) | 现成的音频播放器：封面、标题、时间轴、快退快进和速度。 |
 | [Stat](/lab/stat) | 展示关键指标及趋势。 |
 | [SVGIcon](/lab/svg-icon) | 按路径角色渲染多变体 SVG 图标。 |
+| [TabBar](/lab/tab-bar) | 手机应用底部的标签栏，带 iOS 26 式的浮动胶囊和跟着手指走的选中透镜。 |
 | [EmojiPicker](/lab/emoji-picker) | 按分组搜索全部表情并选中，可内嵌或放进弹出层。 |
 | [ChatEmojiPicker](/lab/chat-emoji-picker) | 在弹出层里按短名过滤并选择表情。 |
 | [ChatReactionBar](/lab/chat-reaction-bar) | 在消息下展示表情回应，并可继续添加。 |

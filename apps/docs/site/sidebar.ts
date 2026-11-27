@@ -119,6 +119,7 @@ export function labSidebar(english: boolean): Sidebar {
         item('AudioPlayer', `${prefix}/lab/audio-player`),
         item('Stat', `${prefix}/lab/stat`),
         item('SVGIcon', `${prefix}/lab/svg-icon`),
+        item('TabBar', `${prefix}/lab/tab-bar`),
         item('EmojiPicker', `${prefix}/lab/emoji-picker`),
         item('ChatEmojiPicker', `${prefix}/lab/chat-emoji-picker`),
         item('ChatReactionBar', `${prefix}/lab/chat-reaction-bar`),

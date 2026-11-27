@@ -114,6 +114,19 @@ export function measureScrollAxis(
   }
 }
 
+/**
+ * 读计算样式后量一条逻辑轴的滚动状态。量不了（没连在文档上、`display: none`、宽高为 0）时
+ * 返回 null。
+ */
+export function measureLogicalScrollAxis(
+  element: HTMLElement,
+  axis: LogicalScrollAxis,
+  mapping: LogicalAxisMapping,
+): MeasuredScrollAxisState | null {
+  const style = getComputedStyle(element)
+  return isMeasurable(element, style) ? measureScrollAxis(element, axis, mapping, true, style) : null
+}
+
 /** 一次滚动之后某条逻辑轴的位置，只靠盒子几何读出来。 */
 export interface LogicalScrollPosition {
   /** 内容比视口大出的部分超过了公共容差。 */

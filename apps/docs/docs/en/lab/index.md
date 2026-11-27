@@ -58,6 +58,7 @@ import '@astryx-vue/lab/lab.css'
 | [AudioPlayer](/en/lab/audio-player) | A ready-made audio player with artwork, title, timeline, skip buttons, and speed. |
 | [Stat](/en/lab/stat) | Key metrics and trends. |
 | [SVGIcon](/en/lab/svg-icon) | Multi-variant SVG icons with per-shape roles. |
+| [TabBar](/en/lab/tab-bar) | A phone app's bottom tab bar, with iOS 26's floating capsule and a selection lens that follows the finger. |
 | [EmojiPicker](/en/lab/emoji-picker) | Search every emoji by group and pick one, inline or in a popover. |
 | [ChatEmojiPicker](/en/lab/chat-emoji-picker) | Filter and pick an emoji from a popover grid. |
 | [ChatReactionBar](/en/lab/chat-reaction-bar) | Show emoji reactions under a message and add more. |

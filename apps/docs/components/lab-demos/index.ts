@@ -61,6 +61,8 @@ import statDemo from './stat.vue'
 import statSource from './stat.vue?raw&highlighted'
 import svgIconDemo from './svg-icon.vue'
 import svgIconSource from './svg-icon.vue?raw&highlighted'
+import tabBarDemo from './tab-bar.vue'
+import tabBarSource from './tab-bar.vue?raw&highlighted'
 import tourOverviewDemo from './tour-overview.vue'
 import tourOverviewSource from './tour-overview.vue?raw&highlighted'
 import tourDemo from './tour.vue'
@@ -106,6 +108,7 @@ export const labNavigationStack = defineDemo(navigationStackDemo, navigationStac
 export const labSchedule = defineDemo(scheduleDemo, scheduleSource, options)
 export const labStat = defineDemo(statDemo, statSource, options)
 export const labSvgIcon = defineDemo(svgIconDemo, svgIconSource, options)
+export const labTabBar = defineDemo(tabBarDemo, tabBarSource, options)
 export const labTransferList = defineDemo(transferListDemo, transferListSource, options)
 export const labTransferListOverview = defineDemo(transferListOverviewDemo, transferListOverviewSource, options)
 export const labTour = defineDemo(tourDemo, tourSource, options)

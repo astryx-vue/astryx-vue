@@ -12,6 +12,8 @@
 
 export { isFocusLost } from '../composables/internal/focusLeaving'
 export { focusForLastInput } from '../composables/internal/focusReturn'
+export { measureLogicalScrollAxis } from '../composables/internal/scrollGeometry'
+export type { LogicalAxisMapping } from '../composables/internal/scrollGeometry'
 export { getGestureHost } from '../gestures/GestureHost'
 export { PanGestureRecognizer } from '../gestures/PanGestureRecognizer'
 export type { PanGestureRecognizerOptions } from '../gestures/PanGestureRecognizer'

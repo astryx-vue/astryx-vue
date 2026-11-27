@@ -283,6 +283,12 @@ export type {
   XIFSlot,
 } from './SVGIcon/index.js'
 
+export { TabBar, TabBarItem } from './TabBar/index.js'
+export type { TabBarEmits, TabBarIcon, TabBarItemProps, TabBarProps, TabBarSlots } from './TabBar/index.js'
+
+export { TabBarMoreList } from './TabBarMoreList/index.js'
+export type { TabBarMoreListEmits, TabBarMoreListProps, TabBarMoreListSlots } from './TabBarMoreList/index.js'
+
 export { Tour, TourStep, useTour } from './Tour/index.js'
 export type {
   TourDismissSource,
