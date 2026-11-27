@@ -14,6 +14,7 @@ import { useComponentMessages } from '../../locale/context.js'
 import { listMessages } from '../../locale/messages/list.js'
 import ListReorderHintButton from './ListReorderHintButton.vue'
 import '../../../styles/keyboard-hint.css'
+import '../../../styles/layer.css'
 import '../../../styles/list-reorder.css'
 
 const props = defineProps<{ controller: ListReorderController }>()
@@ -96,7 +97,7 @@ function step(delta: -1 | 1): void {
   <Teleport v-if="target" :to="teleportTarget">
     <span
       ref="hint"
-      class="astryx-keyboard-hint astryx-list-reorder-hint"
+      class="astryx-layer astryx-keyboard-hint astryx-list-reorder-hint"
       :style="style"
     >
       <span class="astryx-keyboard-hint__keys">
