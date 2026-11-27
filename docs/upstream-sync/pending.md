@@ -465,9 +465,10 @@
   - 已移植：[#596](https://github.com/astryx-vue/astryx-vue/pull/596)。Popover 新增 presentation 属性，adaptive 时手机上以 BottomSheet 呈现，接上呈现保持、BottomSheet 宿主和焦点交接
 - [ ] [`c22cbe2fd`](https://github.com/meta/astryx/commit/c22cbe2fd) fix(core): useAnnounce delivers inside the open Astryx modal that encloses its caller (#8009)
 - [ ] [`2a162e1b6`](https://github.com/meta/astryx/commit/2a162e1b6) feat(core): BottomSheet stacks by open order, replaces on a same-update switch, and BottomSheetSwitcher is deprecated (#7648)
-- [ ] [`54fbccb27`](https://github.com/meta/astryx/commit/54fbccb27) feat(core): Tokenizer touch sheet behind experimental.presentation (#7977)
+- [x] [`54fbccb27`](https://github.com/meta/astryx/commit/54fbccb27) feat(core): Tokenizer touch sheet behind experimental.presentation (#7977)
   - 暂缓：Tokenizer 触屏弹层还没做：Vue 版 Tokenizer 没有 presentation 属性和弹层编辑界面，上游约 4800 行
   - 暂缓：Tokenizer 触屏弹层依赖 presentation 属性和触屏呈现；归动效 4a 触屏呈现任务
+  - 已移植：[#604](https://github.com/astryx-vue/astryx-vue/pull/604)。Tokenizer 在紧凑触屏上换成触发器加底部弹层，有搜索、复选行、全部清除确认和焦点交接
 - [x] [`7e8d78d17`](https://github.com/meta/astryx/commit/7e8d78d17) spec(BottomSheetSwitcher): no maintained surface uses the switcher once MobilePowerSearch is migrated (#8716)
   - 不适用：上游组件规范文档（自动初筛）
 - [x] [`d27b54502`](https://github.com/meta/astryx/commit/d27b54502) test(BottomSheet): find a non-modal sheet as an open manual popover (#8647)
@@ -996,12 +997,14 @@
 
 ### v0.7.8
 
-- [ ] [`dcf3d6f86`](https://github.com/meta/astryx/commit/dcf3d6f86) feat(Tokenizer): presentation is a stable prop, and adaptive is its default (#9796)
+- [x] [`dcf3d6f86`](https://github.com/meta/astryx/commit/dcf3d6f86) feat(Tokenizer): presentation is a stable prop, and adaptive is its default (#9796)
   - 暂缓：Tokenizer 的 presentation 属性和 adaptive 默认值：依赖 54fbccb27 的触屏弹层
   - 暂缓：Tokenizer 的 presentation 属性依赖 Vue 还没有的触屏弹层，归动效与手势引擎任务（见 54fbccb27）；Vue 没有该属性，也就没有升级说明可写
-- [ ] [`b5ce149a8`](https://github.com/meta/astryx/commit/b5ce149a8) chore(Tokenizer): remove experimental.presentation; presentation is the only spelling (#9836)
+  - 已移植：[#604](https://github.com/astryx-vue/astryx-vue/pull/604)。presentation 成为稳定属性且默认 adaptive，PowerSearch 的列表值 Tokenizer 固定 popover
+- [x] [`b5ce149a8`](https://github.com/meta/astryx/commit/b5ce149a8) chore(Tokenizer): remove experimental.presentation; presentation is the only spelling (#9836)
   - 暂缓：去掉 experimental.presentation 只留 presentation：随 Tokenizer 触屏弹层（54fbccb27）一起暂缓
   - 暂缓：去掉 experimental.presentation 随 Tokenizer 触屏弹层一起，归动效与手势引擎任务
+  - 已移植：[#604](https://github.com/astryx-vue/astryx-vue/pull/604)。Vue 版从一开始就不提供 experimental.presentation，直接以稳定属性落地，没有旧开关要删
 - [x] [`2b12c1522`](https://github.com/meta/astryx/commit/2b12c1522) chore: version packages for v0.7.8 (#9981)
   - 不适用：v0.7.8 发布产物：Tokenizer presentation codemod 归档，组件部分暂缓见 dcf3d6f86
 
@@ -2512,9 +2515,10 @@
   - 暂缓：createAnimator/useAnimator、createPanGesture/usePanGesture、createDragToSnapPoints 这批动效与手势 hook 在 Vue 版还没有（由交互族任务落地），示例块等它们落地后再补
 - [x] [`dc90b5031`](https://github.com/meta/astryx/commit/dc90b5031) docs(useAnnounce): add a filter result count example block (#9509)
   - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。useAnnounce 页补筛选结果数播报示例
-- [ ] [`dcf3d6f86`](https://github.com/meta/astryx/commit/dcf3d6f86) feat(Tokenizer): presentation is a stable prop, and adaptive is its default (#9796)
+- [x] [`dcf3d6f86`](https://github.com/meta/astryx/commit/dcf3d6f86) feat(Tokenizer): presentation is a stable prop, and adaptive is its default (#9796)
   - 暂缓：Tokenizer 的 presentation 属性和 adaptive 默认值依赖 Vue 版还没有的触屏弹层
   - 暂缓：Tokenizer 的 presentation 属性和 adaptive 默认值：依赖 54fbccb27 的触屏弹层
+  - 已移植：[#604](https://github.com/astryx-vue/astryx-vue/pull/604)。presentation 成为稳定属性且默认 adaptive，PowerSearch 的列表值 Tokenizer 固定 popover
 - [x] [`1404bf84e`](https://github.com/meta/astryx/commit/1404bf84e) docs(useFocusTrap): add a quick edit panel example block (#9513)
   - 已移植：[#553](https://github.com/astryx-vue/astryx-vue/pull/553)。useFocusTrap 页补快速编辑面板示例
 - [x] [`96066d710`](https://github.com/meta/astryx/commit/96066d710) docs(useLocale): add an invoice summary example block (#9511)
@@ -2550,6 +2554,7 @@
 - [ ] [`da771b3e5`](https://github.com/meta/astryx/commit/da771b3e5) chore(Tokenizer): docs examples, blocks and templates follow the adaptive default (#9883)
   - 暂缓：Tokenizer 示例、块和模板跟 adaptive 默认值走，随 presentation 属性一起暂缓
   - 暂缓：Tokenizer 示例、块和模板跟 adaptive 默认值走：随 Tokenizer 的 presentation 属性一起暂缓
+  - 暂缓：Tokenizer 示例说明已在 #606 跟上 adaptive 默认值；剩 table-inbox、work-item-detail 页面模板的返回箭头在 RTL 下镜像，归 cli-templates-2
 - [x] [`b1f604c9f`](https://github.com/meta/astryx/commit/b1f604c9f) fix(OverflowList): a resize shows the new visible set in the same frame (height-changing folds stay one frame late) (#9926)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`f384e62f5`](https://github.com/meta/astryx/commit/f384e62f5) docs(useIcon): add hook docs and a status row example block (#9900)
@@ -4123,9 +4128,10 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`b4b5faefd`](https://github.com/meta/astryx/commit/b4b5faefd) docs(spec): TimeInput records its shipped contract as current (#8541)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`54fbccb27`](https://github.com/meta/astryx/commit/54fbccb27) feat(core): Tokenizer touch sheet behind experimental.presentation (#7977)
+- [x] [`54fbccb27`](https://github.com/meta/astryx/commit/54fbccb27) feat(core): Tokenizer touch sheet behind experimental.presentation (#7977)
   - 暂缓：Tokenizer 触屏弹层还没做：Vue 版 Tokenizer 没有 presentation 属性和弹层编辑界面，上游约 4800 行
   - 暂缓：Tokenizer 触屏弹层依赖 presentation 属性和触屏呈现；归动效 4a 触屏呈现任务
+  - 已移植：[#604](https://github.com/astryx-vue/astryx-vue/pull/604)。Tokenizer 在紧凑触屏上换成触发器加底部弹层，有搜索、复选行、全部清除确认和焦点交接
 - [x] [`f30564c28`](https://github.com/meta/astryx/commit/f30564c28) fix(NumberInput): keep a caller aria-labelledby on the input (#8708)
   - Vue 版已有：NumberInput.vue 的 labelledBy 把标签 id 和调用方 aria-labelledby 拼在一起，aria-labelledby 在保留属性里不被覆盖
 - [x] [`b8fd8615d`](https://github.com/meta/astryx/commit/b8fd8615d) docs(spec): InputGroup records its shipped contract as current (#8668)
@@ -4238,9 +4244,10 @@
 
 - [x] [`d0b6e0f77`](https://github.com/meta/astryx/commit/d0b6e0f77) feat(core): search fields ask a touch keyboard for its Search key and no autocorrection (#8157)
   - 已移植  #593：[#570](https://github.com/astryx-vue/astryx-vue/pull/570)。搜索输入框请求 Search 键、不自动纠正：Typeahead、Tokenizer 在 #570，TextInput 的 search 类型和 enterKeyHint 在 #593
-- [ ] [`4f452f927`](https://github.com/meta/astryx/commit/4f452f927) feat(Tokenizer): the touch sheet presentation is public behind experimental.presentation, and the sheet edits a draft that Save commits (#9708)
+- [x] [`4f452f927`](https://github.com/meta/astryx/commit/4f452f927) feat(Tokenizer): the touch sheet presentation is public behind experimental.presentation, and the sheet edits a draft that Save commits (#9708)
   - 暂缓：Tokenizer 触屏弹层（草稿、保存提交）还没做：依赖 54fbccb27 的弹层本体
   - 暂缓：Tokenizer 触屏弹层公开成 experimental.presentation：依赖触屏呈现；归动效 4a 触屏呈现任务
+  - 已移植：[#604](https://github.com/astryx-vue/astryx-vue/pull/604)。弹层里的勾选新建清除只改草稿，按保存才提交一次，改过的草稿关闭前先确认放弃
 
 ### v0.7.8
 
@@ -4545,10 +4552,11 @@
 - [x] [`a73f0304b`](https://github.com/meta/astryx/commit/a73f0304b) spec(Table, AST-105): tables with column lines do not glide yet (FR15) (#8679)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`c01521cf9`](https://github.com/meta/astryx/commit/c01521cf9) spec(AST-094, AST-057): gestures work on the web for every pointer (FR43) (#8646)
-- [ ] [`54fbccb27`](https://github.com/meta/astryx/commit/54fbccb27) feat(core): Tokenizer touch sheet behind experimental.presentation (#7977)
+- [x] [`54fbccb27`](https://github.com/meta/astryx/commit/54fbccb27) feat(core): Tokenizer touch sheet behind experimental.presentation (#7977)
   - 暂缓：Tokenizer 触屏弹层：依赖 presentation 属性和触屏呈现，Vue 版没有
   - 暂缓：Tokenizer 触屏弹层还没做：Vue 版 Tokenizer 没有 presentation 属性和弹层编辑界面，上游约 4800 行
   - 暂缓：Tokenizer 触屏弹层依赖 presentation 属性和触屏呈现；归动效 4a 触屏呈现任务
+  - 已移植：[#604](https://github.com/astryx-vue/astryx-vue/pull/604)。Tokenizer 在紧凑触屏上换成触发器加底部弹层，有搜索、复选行、全部清除确认和焦点交接
 - [ ] [`ab0db1f73`](https://github.com/meta/astryx/commit/ab0db1f73) spec(AST-108): theme motion is three knobs — tempo, character, reducedMotion (#8613)
 - [x] [`3ffb64647`](https://github.com/meta/astryx/commit/3ffb64647) fix(Tokenizer): hold back the touch sheet presentation until its UX pass finishes (#8735)
   - 不适用：只改上游测试（自动初筛）
@@ -4777,10 +4785,11 @@
   - 已移植：[#579](https://github.com/astryx-vue/astryx-vue/pull/579)。卡顿后迟到的滚轮和随后那一串共用卡顿的间隔
 - [x] [`1821fb3fa`](https://github.com/meta/astryx/commit/1821fb3fa) fix(Tooltip): remove the unreleased triggerBehavior prop before 0.7.7 (#9711)
   - 不适用：上游内部规范和架构文档、只改上游测试（自动初筛）
-- [ ] [`4f452f927`](https://github.com/meta/astryx/commit/4f452f927) feat(Tokenizer): the touch sheet presentation is public behind experimental.presentation, and the sheet edits a draft that Save commits (#9708)
+- [x] [`4f452f927`](https://github.com/meta/astryx/commit/4f452f927) feat(Tokenizer): the touch sheet presentation is public behind experimental.presentation, and the sheet edits a draft that Save commits (#9708)
   - 暂缓：Tokenizer 触屏弹层公开成 experimental.presentation：依赖触屏呈现设施，Vue 版没有
   - 暂缓：Tokenizer 触屏弹层（草稿、保存提交）还没做：依赖 54fbccb27 的弹层本体
   - 暂缓：Tokenizer 触屏弹层公开成 experimental.presentation：依赖触屏呈现；归动效 4a 触屏呈现任务
+  - 已移植：[#604](https://github.com/astryx-vue/astryx-vue/pull/604)。弹层里的勾选新建清除只改草稿，按保存才提交一次，改过的草稿关闭前先确认放弃
 - [x] [`b11e000b5`](https://github.com/meta/astryx/commit/b11e000b5) fix(Selector): a row that scrolls under a still mouse does not take the keyboard's highlight (#9671)
   - 已移植：[#544](https://github.com/astryx-vue/astryx-vue/pull/544)。行只在鼠标真的移动时才拿走高亮
 - [x] [`cec65f35f`](https://github.com/meta/astryx/commit/cec65f35f) fix(DropdownMenu): a late native click after a touch drill-in no longer picks a row (#8275)
@@ -5813,9 +5822,10 @@
 
 - [x] [`ce667be4d`](https://github.com/meta/astryx/commit/ce667be4d) fix(Dialog, Drawer): a backdrop press dismisses only when it starts and ends on the backdrop (#9613)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`4f452f927`](https://github.com/meta/astryx/commit/4f452f927) feat(Tokenizer): the touch sheet presentation is public behind experimental.presentation, and the sheet edits a draft that Save commits (#9708)
+- [x] [`4f452f927`](https://github.com/meta/astryx/commit/4f452f927) feat(Tokenizer): the touch sheet presentation is public behind experimental.presentation, and the sheet edits a draft that Save commits (#9708)
   - 暂缓：Tokenizer 触屏弹层（草稿、保存提交）还没做：依赖 54fbccb27 的弹层本体
   - 暂缓：Tokenizer 触屏弹层公开成 experimental.presentation：依赖触屏呈现；归动效 4a 触屏呈现任务
+  - 已移植：[#604](https://github.com/astryx-vue/astryx-vue/pull/604)。弹层里的勾选新建清除只改草稿，按保存才提交一次，改过的草稿关闭前先确认放弃
 - [x] [`4e495ec5e`](https://github.com/meta/astryx/commit/4e495ec5e) fix(BottomSheet): a standalone sheet closing with focus inside stays out of inert while focus stays (#9635)
   - 不适用：只改上游测试（自动初筛）
 
@@ -7753,10 +7763,11 @@
   - 暂缓：BottomSheet 按打开顺序叠放、同次更新替换（含入场、对齐、淡出编排）和非模态 popover 托管，Vue 版没有叠放登记表和 sheet 转场编排，归动效与手势引擎任务
 - [x] [`81eeb6afa`](https://github.com/meta/astryx/commit/81eeb6afa) fix(Popover): an open popover no longer pulls in a Tab pressed elsewhere on the page (#8611)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`54fbccb27`](https://github.com/meta/astryx/commit/54fbccb27) feat(core): Tokenizer touch sheet behind experimental.presentation (#7977)
+- [x] [`54fbccb27`](https://github.com/meta/astryx/commit/54fbccb27) feat(core): Tokenizer touch sheet behind experimental.presentation (#7977)
   - 暂缓：Tokenizer 触屏 sheet 在 experimental.presentation 之后，属于触屏呈现基础设施
   - 暂缓：Tokenizer 触屏弹层还没做：Vue 版 Tokenizer 没有 presentation 属性和弹层编辑界面，上游约 4800 行
   - 暂缓：Tokenizer 触屏弹层依赖 presentation 属性和触屏呈现；归动效 4a 触屏呈现任务
+  - 已移植：[#604](https://github.com/astryx-vue/astryx-vue/pull/604)。Tokenizer 在紧凑触屏上换成触发器加底部弹层，有搜索、复选行、全部清除确认和焦点交接
 - [x] [`343fddd2c`](https://github.com/meta/astryx/commit/343fddd2c) fix(Lightbox): the viewer fits the visible viewport, so Safari's toolbar no longer covers its caption (#8732)
   - 已移植：[#541](https://github.com/astryx-vue/astryx-vue/pull/541)。Lightbox 高度按手机实际露出的视口算
 - [x] [`1ffd3234b`](https://github.com/meta/astryx/commit/1ffd3234b) fix(Lightbox): a viewer opened before its first item arrives opens when it does (#8741)
@@ -8673,10 +8684,11 @@
   - 已移植：[#603](https://github.com/astryx-vue/astryx-vue/pull/603)。全部清除保留只读条件，change 报告第一个被移除的位置，只有存在可编辑条件才显示按钮，文档补说明
 - [x] [`65b7ab69e`](https://github.com/meta/astryx/commit/65b7ab69e) docs(spec): PowerSearch's sheet presentation follows the Lab touch flow (DEC-3) (#9631)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`4f452f927`](https://github.com/meta/astryx/commit/4f452f927) feat(Tokenizer): the touch sheet presentation is public behind experimental.presentation, and the sheet edits a draft that Save commits (#9708)
+- [x] [`4f452f927`](https://github.com/meta/astryx/commit/4f452f927) feat(Tokenizer): the touch sheet presentation is public behind experimental.presentation, and the sheet edits a draft that Save commits (#9708)
   - 暂缓：Tokenizer 触屏弹层（草稿、保存提交）还没做：依赖 54fbccb27 的弹层本体
   - 暂缓：Tokenizer 触屏弹层公开成 experimental.presentation：依赖触屏呈现；归动效 4a 触屏呈现任务
   - 暂缓：Tokenizer 的触屏弹层呈现（草稿由保存提交）及其内部文件；归动效 4a 触屏呈现任务，且 Tokenizer 由另一个代理在改
+  - 已移植：[#604](https://github.com/astryx-vue/astryx-vue/pull/604)。弹层里的勾选新建清除只改草稿，按保存才提交一次，改过的草稿关闭前先确认放弃
 - [x] [`b11e000b5`](https://github.com/meta/astryx/commit/b11e000b5) fix(Selector): a row that scrolls under a still mouse does not take the keyboard's highlight (#9671)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`e68774f5b`](https://github.com/meta/astryx/commit/e68774f5b) fix(PowerSearch): name a filter token by its visible text and expose its editor (#9687)
@@ -8700,9 +8712,10 @@
   - 不适用：只给 React useEffect 加注释
 - [x] [`40c6e418c`](https://github.com/meta/astryx/commit/40c6e418c) fix(core): PowerSearch reads a date-only value as one day in one zone, and edits it there (#9655)
   - 已移植：[#603](https://github.com/astryx-vue/astryx-vue/pull/603)。只有日期的绝对日期值与日期范围按 timezoneID 里的那一天读、写、显示，没设时区是 UTC 的那一天，新增 dateZone.ts
-- [ ] [`dcf3d6f86`](https://github.com/meta/astryx/commit/dcf3d6f86) feat(Tokenizer): presentation is a stable prop, and adaptive is its default (#9796)
+- [x] [`dcf3d6f86`](https://github.com/meta/astryx/commit/dcf3d6f86) feat(Tokenizer): presentation is a stable prop, and adaptive is its default (#9796)
   - 暂缓：Tokenizer 的 presentation 属性和 adaptive 默认值：依赖 54fbccb27 的触屏弹层
   - 暂缓：Tokenizer 与 PowerSearch 值编辑器的 presentation 稳定 prop 与 adaptive 默认值；属触屏呈现，归动效 4a 触屏呈现任务（PowerSearch 段），Tokenizer 另有代理
+  - 已移植：[#604](https://github.com/astryx-vue/astryx-vue/pull/604)。presentation 成为稳定属性且默认 adaptive，PowerSearch 的列表值 Tokenizer 固定 popover
 - [x] [`d46da3991`](https://github.com/meta/astryx/commit/d46da3991) test(PowerSearch): open one Tokenizer sheet before the sheet tests (#9817)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`f50bc7400`](https://github.com/meta/astryx/commit/f50bc7400) feat(PowerSearch): presentation is a stable prop, and adaptive is its default (#9797)
@@ -9286,10 +9299,11 @@
   - 不适用：上游组件规范文档（自动初筛）
 - [x] [`c01521cf9`](https://github.com/meta/astryx/commit/c01521cf9) spec(AST-094, AST-057): gestures work on the web for every pointer (FR43) (#8646)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`54fbccb27`](https://github.com/meta/astryx/commit/54fbccb27) feat(core): Tokenizer touch sheet behind experimental.presentation (#7977)
+- [x] [`54fbccb27`](https://github.com/meta/astryx/commit/54fbccb27) feat(core): Tokenizer touch sheet behind experimental.presentation (#7977)
   - 暂缓：Vue 版 Tokenizer 没有 presentation 属性和底部弹层；触屏弹层只在 lab MobileTokenizer 里，需要并进 core Tokenizer 并做 adaptive 解析
   - 暂缓：Tokenizer 触屏弹层还没做：Vue 版 Tokenizer 没有 presentation 属性和弹层编辑界面，上游约 4800 行
   - 暂缓：Tokenizer 触屏弹层依赖 presentation 属性和触屏呈现；归动效 4a 触屏呈现任务
+  - 已移植：[#604](https://github.com/astryx-vue/astryx-vue/pull/604)。Tokenizer 在紧凑触屏上换成触发器加底部弹层，有搜索、复选行、全部清除确认和焦点交接
 - [x] [`619e4a529`](https://github.com/meta/astryx/commit/619e4a529) fix(Selector): keep a caller aria-labelledby on the trigger (#8710)
   - 已移植：[#569](https://github.com/astryx-vue/astryx-vue/pull/569)。调用方的 aria-labelledby 接在字段标签（组内先是组标签）后面，补测试
 - [x] [`e200d6f27`](https://github.com/meta/astryx/commit/e200d6f27) fix(MultiSelector): keep a caller aria-labelledby on the trigger (#8711)
@@ -9416,10 +9430,11 @@
   - 不适用：React 对选项行做 memo 以减少重渲染，Vue 的响应式按需更新，没有对应问题
 - [x] [`2c533501a`](https://github.com/meta/astryx/commit/2c533501a) fix(PowerSearch): Clear all keeps read-only filters (#9676)
   - 不适用：Tokenizer 的可移除谓词只服务 PowerSearch，Vue 的 PowerSearch 不基于 Tokenizer；PowerSearch 全部清除保留只读筛选归搜索族清单（目前 usePowerSearchActions.clearAll 仍会清掉只读筛选）
-- [ ] [`4f452f927`](https://github.com/meta/astryx/commit/4f452f927) feat(Tokenizer): the touch sheet presentation is public behind experimental.presentation, and the sheet edits a draft that Save commits (#9708)
+- [x] [`4f452f927`](https://github.com/meta/astryx/commit/4f452f927) feat(Tokenizer): the touch sheet presentation is public behind experimental.presentation, and the sheet edits a draft that Save commits (#9708)
   - 暂缓：Vue 版 Tokenizer 没有 presentation 和触屏底部弹层，要并进 core 做 adaptive 解析，见 selectors-1 的 54fbccb27
   - 暂缓：Tokenizer 触屏弹层（草稿、保存提交）还没做：依赖 54fbccb27 的弹层本体
   - 暂缓：Tokenizer 触屏弹层公开成 experimental.presentation：依赖触屏呈现；归动效 4a 触屏呈现任务
+  - 已移植：[#604](https://github.com/astryx-vue/astryx-vue/pull/604)。弹层里的勾选新建清除只改草稿，按保存才提交一次，改过的草稿关闭前先确认放弃
 - [x] [`b11e000b5`](https://github.com/meta/astryx/commit/b11e000b5) fix(Selector): a row that scrolls under a still mouse does not take the keyboard's highlight (#9671)
   - 已移植：[#544](https://github.com/astryx-vue/astryx-vue/pull/544)。MultiSelector、Typeahead 的行只在鼠标真的移动时才拿走高亮；Selector 悬停只是 CSS，CommandPalette 等归别族
 - [x] [`4e495ec5e`](https://github.com/meta/astryx/commit/4e495ec5e) fix(BottomSheet): a standalone sheet closing with focus inside stays out of inert while focus stays (#9635)
@@ -9439,16 +9454,18 @@
   - 已移植：[#569](https://github.com/astryx-vue/astryx-vue/pull/569)。列表在弹层和底部弹层里都用字段标签（没有标签时用占位文字）命名，补测试
 - [ ] [`19081d81a`](https://github.com/meta/astryx/commit/19081d81a) chore(lab): remove MobileTokenizer and MobilePowerSearch, whose flows Core ships behind experimental.presentation (#9790)
   - 暂缓：lab 的 MobileTokenizer、MobilePowerSearch 要等 core 的 Tokenizer 有触屏弹层之后才能删，见 selectors-1 的 54fbccb27
-- [ ] [`dcf3d6f86`](https://github.com/meta/astryx/commit/dcf3d6f86) feat(Tokenizer): presentation is a stable prop, and adaptive is its default (#9796)
+- [x] [`dcf3d6f86`](https://github.com/meta/astryx/commit/dcf3d6f86) feat(Tokenizer): presentation is a stable prop, and adaptive is its default (#9796)
   - 暂缓：Tokenizer 的 presentation 属性和 adaptive 默认值依赖 Vue 版还没有的 core 触屏弹层，见 54fbccb27
   - 暂缓：Tokenizer 的 presentation 属性和 adaptive 默认值：依赖 54fbccb27 的触屏弹层
+  - 已移植：[#604](https://github.com/astryx-vue/astryx-vue/pull/604)。presentation 成为稳定属性且默认 adaptive，PowerSearch 的列表值 Tokenizer 固定 popover
 - [x] [`f50bc7400`](https://github.com/meta/astryx/commit/f50bc7400) feat(PowerSearch): presentation is a stable prop, and adaptive is its default (#9797)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`a5e334b49`](https://github.com/meta/astryx/commit/a5e334b49) refactor(Tokenizer): check sheet rows for action during render, not in an Effect (#9808)
   - 暂缓：Tokenizer 触屏弹层内部的渲染期检查，Vue 版没有该弹层
-- [ ] [`b5ce149a8`](https://github.com/meta/astryx/commit/b5ce149a8) chore(Tokenizer): remove experimental.presentation; presentation is the only spelling (#9836)
+- [x] [`b5ce149a8`](https://github.com/meta/astryx/commit/b5ce149a8) chore(Tokenizer): remove experimental.presentation; presentation is the only spelling (#9836)
   - 暂缓：去掉 experimental.presentation、只留 presentation，依赖触屏弹层，见 54fbccb27
   - 暂缓：去掉 experimental.presentation 只留 presentation：随 Tokenizer 触屏弹层（54fbccb27）一起暂缓
+  - 已移植：[#604](https://github.com/astryx-vue/astryx-vue/pull/604)。Vue 版从一开始就不提供 experimental.presentation，直接以稳定属性落地，没有旧开关要删
 - [x] [`b95497d2d`](https://github.com/meta/astryx/commit/b95497d2d) test: main is green again: Tokenizer's sheet-row test passes presentation, and the recorded module resolutions follow core (#9851)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`41cce0b0a`](https://github.com/meta/astryx/commit/41cce0b0a) fix(core): a disabled Slider no longer runs a caller's handlers (#9729)
