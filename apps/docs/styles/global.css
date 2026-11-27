@@ -775,6 +775,32 @@ html.dark .component-detail__stage {
   line-height: 1.7;
 }
 
+/* 组件页不在 .nagi-doc 里，列表拿不到文档正文的样式，会被全局重置去掉圆点和缩进。 */
+.component-detail__body > :is(ul, ol) {
+  margin: 10px 0;
+  padding-inline-start: 1.5em;
+  color: var(--astryx-text-muted);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.component-detail__body > ul {
+  list-style: disc;
+}
+
+.component-detail__body > ol {
+  list-style: decimal;
+}
+
+.component-detail__body > :is(ul, ol) :is(ul, ol) {
+  margin: 0;
+  padding-inline-start: 1.5em;
+}
+
+.component-detail__body > ul ul {
+  list-style: circle;
+}
+
 /*
  * 组件页不在 .nagi-doc 里，行内代码没有底色，所以也不留内外边距：没有底色时 7px 内边距
  * 看起来就是多打了空格，「打开 `hasSnap`。」会在句号前空出一截。源文里中英文之间本来就写了空格。
