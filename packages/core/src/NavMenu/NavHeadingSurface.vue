@@ -127,6 +127,8 @@ const textProps = computed(() => ({
   <NavDisclosure
     v-else-if="mode === 'trigger' || mode === 'mixed'"
     hover
+    overlap
+    :show-delay="0"
     :label="heading || logoName"
     :panel-class="`${block}__panel`"
   >

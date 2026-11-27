@@ -8,5 +8,6 @@ export const meta = {
   order: 6,
   en: 'Nav Heading Menu',
   zh: '导航标题菜单',
+  isHiddenFromOverview: true,
   demo,
 } satisfies DemoMeta

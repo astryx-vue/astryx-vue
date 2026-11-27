@@ -51313,12 +51313,46 @@
         "zh": "导航标题旁边那个弹出菜单的容器和条目。`NavHeadingMenu` 提供 `role=\"menu\"` 和键盘导航，`NavHeadingMenuItem` 画里面的每一个可选条目。把它放进 `SideNavHeading` 或 `TopNavHeading` 的 `menu` 插槽即可。"
       },
       "usage": {
-        "en": "Accessible menu container and items for nav heading popovers. `NavHeadingMenu` provides `role=\"menu\"` with keyboard navigation; `NavHeadingMenuItem` renders individual selectable items. Pass it to the `menu` slot of `SideNavHeading` or `TopNavHeading`.\n\n```ts\nimport { NavHeadingMenu } from '@astryx-vue/core/NavMenu'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { NavHeadingMenu, NavHeadingMenuItem } from '@astryx-vue/core/NavMenu'\nimport { SideNav, SideNavHeading } from '@astryx-vue/core/SideNav'\n</script>\n\n<template>\n  <SideNav>\n    <template #header>\n      <SideNavHeading heading=\"Acme Platform\">\n        <template #menu>\n          <NavHeadingMenu label=\"Acme Platform\" size=\"lg\">\n            <NavHeadingMenuItem href=\"/dashboard\" label=\"Dashboard\" />\n            <NavHeadingMenuItem href=\"/analytics\" label=\"Analytics\" />\n          </NavHeadingMenu>\n        </template>\n      </SideNavHeading>\n    </template>\n  </SideNav>\n</template>\n```\n\nArrow Down and Arrow Up move one row and wrap, Home and End go to the first and last row, typing a character moves to the matching row, Enter or Space activates the row, and Escape closes the heading menu. Inside a heading's popover the menu takes the heading text as its name; pass `label` to name it differently, and always pass one when the menu is used on its own. Arrow keys move only between `NavHeadingMenuItem` rows, so do not put other controls in the menu.",
-        "zh": "导航标题旁边那个弹出菜单的容器和条目。`NavHeadingMenu` 提供 `role=\"menu\"` 和键盘导航，`NavHeadingMenuItem` 画里面的每一个可选条目。把它放进 `SideNavHeading` 或 `TopNavHeading` 的 `menu` 插槽即可。\n\n```ts\nimport { NavHeadingMenu } from '@astryx-vue/core/NavMenu'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { NavHeadingMenu, NavHeadingMenuItem } from '@astryx-vue/core/NavMenu'\nimport { SideNav, SideNavHeading } from '@astryx-vue/core/SideNav'\n</script>\n\n<template>\n  <SideNav>\n    <template #header>\n      <SideNavHeading heading=\"Acme Platform\">\n        <template #menu>\n          <NavHeadingMenu label=\"Acme Platform\" size=\"lg\">\n            <NavHeadingMenuItem href=\"/dashboard\" label=\"控制台\" />\n            <NavHeadingMenuItem href=\"/analytics\" label=\"数据分析\" />\n          </NavHeadingMenu>\n        </template>\n      </SideNavHeading>\n    </template>\n  </SideNav>\n</template>\n```\n\n上下方向键每次移动一行并循环，Home 和 End 到第一行和最后一行，输入字符跳到匹配的行，回车或空格激活当前行，Esc 关闭标题菜单。在标题的弹出层里，菜单用标题文字当名字；想换个名字就传 `label`，单独使用时一定要传。方向键只在 `NavHeadingMenuItem` 之间移动，所以不要在菜单里放别的控件。"
+        "en": "Accessible menu container and items for nav heading popovers. `NavHeadingMenu` provides `role=\"menu\"` with keyboard navigation; `NavHeadingMenuItem` renders individual selectable items. Pass it to the `menu` slot of `SideNavHeading` or `TopNavHeading`.\n\nThe menu opens in place: the popover covers the heading, its first row is the heading itself (chevron pointing up, press it to close), and the items follow below, all on one rounded card. Choosing an enabled item runs its link or `click` and closes the menu.\n\n```ts\nimport { NavHeadingMenu, NavHeadingMenuItem } from '@astryx-vue/core/NavMenu'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { NavHeadingMenu, NavHeadingMenuItem } from '@astryx-vue/core/NavMenu'\nimport { SideNav, SideNavHeading } from '@astryx-vue/core/SideNav'\n</script>\n\n<template>\n  <SideNav>\n    <template #header>\n      <SideNavHeading heading=\"Acme Platform\">\n        <template #menu>\n          <NavHeadingMenu size=\"lg\">\n            <NavHeadingMenuItem href=\"/dashboard\" label=\"Dashboard\" />\n            <NavHeadingMenuItem href=\"/analytics\" label=\"Analytics\" />\n          </NavHeadingMenu>\n        </template>\n      </SideNavHeading>\n    </template>\n  </SideNav>\n</template>\n```",
+        "zh": "导航标题旁边那个弹出菜单的容器和条目。`NavHeadingMenu` 提供 `role=\"menu\"` 和键盘导航，`NavHeadingMenuItem` 画里面的每一个可选条目。把它放进 `SideNavHeading` 或 `TopNavHeading` 的 `menu` 插槽即可。\n\n菜单在标题原位打开：弹出面板正好盖住标题，第一行就是标题本身（箭头朝上，点它收起菜单），下面才是各个条目，整块是一张圆角卡片。选中一个可用的条目会执行它的链接或 `click`，然后收起菜单。\n\n```ts\nimport { NavHeadingMenu, NavHeadingMenuItem } from '@astryx-vue/core/NavMenu'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { NavHeadingMenu, NavHeadingMenuItem } from '@astryx-vue/core/NavMenu'\nimport { SideNav, SideNavHeading } from '@astryx-vue/core/SideNav'\n</script>\n\n<template>\n  <SideNav>\n    <template #header>\n      <SideNavHeading heading=\"Acme Platform\">\n        <template #menu>\n          <NavHeadingMenu size=\"lg\">\n            <NavHeadingMenuItem href=\"/dashboard\" label=\"控制台\" />\n            <NavHeadingMenuItem href=\"/analytics\" label=\"数据分析\" />\n          </NavHeadingMenu>\n        </template>\n      </SideNavHeading>\n    </template>\n  </SideNav>\n</template>\n```"
       },
       "practices": {
-        "en": [],
-        "zh": []
+        "en": [
+          {
+            "guidance": "Do",
+            "text": "Put `NavHeadingMenu` in the `menu` slot of `SideNavHeading` or `TopNavHeading`, and let the heading handle closing and focus."
+          },
+          {
+            "guidance": "Do",
+            "text": "Give a menu used on its own a `label`."
+          },
+          {
+            "guidance": "Avoid",
+            "text": "Do not put other interactive controls in the menu. The arrow keys move only between `NavHeadingMenuItem` rows, so another control is skipped."
+          },
+          {
+            "guidance": "Avoid",
+            "text": "Do not remove a destination the user cannot use right now when knowing it exists helps them. Set `isDisabled` instead."
+          }
+        ],
+        "zh": [
+          {
+            "guidance": "推荐",
+            "text": "把 `NavHeadingMenu` 放进 `SideNavHeading` 或 `TopNavHeading` 的 `menu` 插槽，收起和焦点交给标题处理。"
+          },
+          {
+            "guidance": "推荐",
+            "text": "单独使用时给菜单传 `label`。"
+          },
+          {
+            "guidance": "避免",
+            "text": "不要在菜单里放别的控件。方向键只在 `NavHeadingMenuItem` 之间移动，别的控件会被跳过。"
+          },
+          {
+            "guidance": "避免",
+            "text": "用户暂时不能去、但知道它存在有帮助的目的地，不要直接删掉，改成 `isDisabled`。"
+          }
+        ]
       },
       "props": {
         "en": [
@@ -51563,18 +51597,57 @@
       "notes": {
         "en": [
           {
+            "heading": "Keyboard",
+            "text": "The keyboard follows the [WAI-ARIA APG Menu pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/):\n\n- ↓ / ↑: ↓ / ↑\n- Home / End: Home / End\n- Character keys: Character keys\n- Enter / Space: Enter / Space\n- Esc: Esc"
+          },
+          {
+            "heading": "Accessibility",
+            "text": "- The heading's chevron button carries `aria-haspopup=\"menu\"`, `aria-expanded`, and `aria-controls`, and its name includes the heading text, so a screen reader says which product or space the menu belongs to.\n- Inside the popover, `role=\"menu\"` wraps only the items. The repeated heading row above them is a plain button, not part of the menu.\n- Inside a heading's popover the menu takes the heading text as its name; pass `label` to name it differently. Always pass `label` when `NavHeadingMenu` is used on its own, or the menu has no name.\n- An item with `href` renders as a link and one without renders as a `div` with `role=\"menuitem\"`. A disabled item carries `aria-disabled`."
+          },
+          {
             "heading": "NavHeadingMenuItem slots",
             "text": "The whole menu is one `role=\"menu\"`: arrow keys move between items and wrap at both ends, typing a letter jumps to the next item that starts with it, and Escape closes the popover and returns focus to the heading."
           }
         ],
         "zh": [
           {
+            "heading": "键盘",
+            "text": "键盘操作照 [WAI-ARIA APG 菜单模式](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/)：\n\n- ↓ / ↑: ↓ / ↑\n- Home / End: Home / End\n- 字母键: 字母键\n- Enter / Space: Enter / Space\n- Esc: Esc"
+          },
+          {
+            "heading": "无障碍",
+            "text": "- 标题的箭头按钮带 `aria-haspopup=\"menu\"`、`aria-expanded` 和 `aria-controls`，名字里含标题文字，读屏时知道打开的是哪个产品或空间的菜单。\n- 弹出面板里，`role=\"menu\"` 只包住条目；第一行重复的标题是一个普通按钮，不算菜单的一部分。\n- 在标题的弹出层里，菜单用标题文字当名字；想换个名字就传 `label`。单独使用 `NavHeadingMenu` 时一定要传 `label`，否则菜单没有名字。\n- 有 `href` 的条目渲染成链接，没有的是 `role=\"menuitem\"` 的 `div`；禁用的条目带 `aria-disabled`。"
+          },
+          {
             "heading": "NavHeadingMenuItem 插槽",
             "text": "整个菜单是一个 `role=\"menu\"`：方向键在条目之间移动并循环，直接按字母会跳到以该字母开头的下一个条目，Escape 关掉面板并把焦点还给标题。"
           }
         ]
       },
-      "examples": [],
+      "examples": [
+        {
+          "title": {
+            "en": "Product switcher",
+            "zh": "产品切换"
+          },
+          "description": {
+            "en": "The side nav heading opens a product switcher over the heading. Dashboard, Analytics, and Settings are the destinations.",
+            "zh": "侧栏标题打开产品切换菜单，面板盖在标题原位上，里面是 Dashboard、Analytics 和 Settings。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { NavHeadingMenu, NavHeadingMenuItem } from '@astryx-vue/core/NavMenu'\nimport { SideNav, SideNavHeading } from '@astryx-vue/core/SideNav'\n</script>\n\n<template>\n  <div style=\"height: 100px\">\n    <SideNav>\n      <template #header>\n        <SideNavHeading heading=\"Acme Platform\">\n          <template #icon>\n            <span class=\"i-carbon-grid css-icon css-icon--sm\" />\n          </template>\n          <template #menu>\n            <NavHeadingMenu label=\"Acme Platform\" size=\"lg\">\n              <NavHeadingMenuItem href=\"/dashboard\" label=\"Dashboard\" />\n              <NavHeadingMenuItem href=\"/analytics\" label=\"Analytics\" />\n              <NavHeadingMenuItem href=\"/settings\" label=\"Settings\" />\n            </NavHeadingMenu>\n          </template>\n        </SideNavHeading>\n      </template>\n    </SideNav>\n  </div>\n</template>"
+        },
+        {
+          "title": {
+            "en": "Environment switcher in a top nav",
+            "zh": "顶栏切换环境"
+          },
+          "description": {
+            "en": "The top nav heading switches environments. Items carry an icon and a description, and an environment that is not available yet is disabled.",
+            "zh": "顶栏标题切换环境。条目带图标和说明，暂时不能用的环境设成禁用。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { NavIcon } from '@astryx-vue/core/NavItem'\nimport { NavHeadingMenu, NavHeadingMenuItem } from '@astryx-vue/core/NavMenu'\nimport { TopNav, TopNavHeading } from '@astryx-vue/core/TopNav'\n</script>\n\n<template>\n  <TopNav label=\"Workspace navigation\">\n    <template #heading>\n      <TopNavHeading heading=\"Acme Platform\" subheading=\"Production\">\n        <template #logo>\n          <NavIcon icon-class=\"i-carbon-cube\" />\n        </template>\n        <template #menu>\n          <NavHeadingMenu size=\"lg\">\n            <NavHeadingMenuItem description=\"Live traffic\" href=\"#production\" icon-class=\"i-carbon-earth\" label=\"Production\" />\n            <NavHeadingMenuItem description=\"Release candidates\" href=\"#staging\" icon-class=\"i-carbon-development\" label=\"Staging\" />\n            <NavHeadingMenuItem description=\"Ask an admin for access\" icon-class=\"i-carbon-locked\" is-disabled label=\"Sandbox\" />\n          </NavHeadingMenu>\n        </template>\n      </TopNavHeading>\n    </template>\n  </TopNav>\n</template>"
+        }
+      ],
       "anatomy": {
         "en": [
           {
@@ -51659,8 +51732,8 @@
         "zh": "`NavMenu` 是 `role=\"menu\"` 的菜单。`NavMenuItem` 是其中一项，有 `href` 时是链接。`NavDisclosure` 负责触发按钮、定位和关闭：点击、悬停、点击外部和 Escape 都会关掉。ArrowDown 打开并聚焦第一项，ArrowUp 聚焦最后一项。菜单内部方向键移动，单字符会按前缀匹配。"
       },
       "usage": {
-        "en": "`NavMenu` is a `role=\"menu\"`. `NavMenuItem` is one entry and becomes a link when `href` is set. `NavDisclosure` owns the trigger, positioning, and dismissal: click, hover, outside press, and Escape all close it. ArrowDown opens on the first item, ArrowUp on the last. Inside the menu, arrows move and a typed character jumps to a matching prefix.\n\nThe top nav and overflow list already compose these parts. Use them directly for an account menu.\n\nMenus attached to a side or top heading use `NavHeadingMenu` and `NavHeadingMenuItem`. Put the menu in the heading `menu` slot. The heading owns closing and where focus goes after open. An item with an address is a link. An item without one is a `menuitem`. Arrows move, and Enter or Space activates the current item.\n\n```vue\n<script setup lang=\"ts\">\nimport { NavDisclosure, NavMenu, NavMenuItem } from '@astryx-vue/core/NavMenu'\n</script>\n\n<template>\n  <NavDisclosure label=\"Account\">\n    <template #trigger=\"{ isOpen, panelId }\">\n      <button type=\"button\" :aria-controls=\"panelId\" :aria-expanded=\"isOpen\">\n        Account\n      </button>\n    </template>\n    <template #default=\"{ close, focusRequest }\">\n      <NavMenu label=\"Account\" :focus-request=\"focusRequest\" @close=\"close\">\n        <NavMenuItem href=\"/profile\" label=\"Profile\" />\n      </NavMenu>\n    </template>\n  </NavDisclosure>\n</template>\n```",
-        "zh": "`NavMenu` 是 `role=\"menu\"` 的菜单。`NavMenuItem` 是其中一项，有 `href` 时是链接。`NavDisclosure` 负责触发按钮、定位和关闭：点击、悬停、点击外部和 Escape 都会关掉。ArrowDown 打开并聚焦第一项，ArrowUp 聚焦最后一项。菜单内部方向键移动，单字符会按前缀匹配。\n\n顶栏和溢出列表已经包好了这组零件。需要自己做账号菜单时直接用它们。\n\n挂在侧栏或顶栏标题上的菜单用 `NavHeadingMenu` 和 `NavHeadingMenuItem`。把它放进标题的 `menu` 插槽即可，关闭和打开后的焦点由标题负责。有地址的项是链接，没有地址的项是 `menuitem`。方向键移动，Enter 或 Space 激活当前项。\n\n```vue\n<script setup lang=\"ts\">\nimport { NavDisclosure, NavMenu, NavMenuItem } from '@astryx-vue/core/NavMenu'\n</script>\n\n<template>\n  <NavDisclosure label=\"账号\">\n    <template #trigger=\"{ isOpen, panelId }\">\n      <button type=\"button\" :aria-controls=\"panelId\" :aria-expanded=\"isOpen\">\n        账号\n      </button>\n    </template>\n    <template #default=\"{ close, focusRequest }\">\n      <NavMenu label=\"账号\" :focus-request=\"focusRequest\" @close=\"close\">\n        <NavMenuItem href=\"/profile\" label=\"个人资料\" />\n      </NavMenu>\n    </template>\n  </NavDisclosure>\n</template>\n```"
+        "en": "`NavMenu` is a `role=\"menu\"`. `NavMenuItem` is one entry and becomes a link when `href` is set. `NavDisclosure` owns the trigger, positioning, and dismissal: click, hover, outside press, and Escape all close it. ArrowDown opens on the first item, ArrowUp on the last. Inside the menu, arrows move and a typed character jumps to a matching prefix.\n\nThese parts are specific to the Vue edition; upstream `@astryxdesign/core` has no component of this name. The top nav menus, the overflow list, and side nav item flyouts are built from them, and you can use them directly for a navigation popup such as an account menu.\n\nA switcher menu attached to a side or top nav heading does not use these parts. Use [Nav Heading Menu](/en/components/nav-heading-menu) instead.\n\n```vue\n<script setup lang=\"ts\">\nimport { NavDisclosure, NavMenu, NavMenuItem } from '@astryx-vue/core/NavMenu'\n</script>\n\n<template>\n  <NavDisclosure label=\"Account\">\n    <template #trigger=\"{ isOpen, panelId }\">\n      <button type=\"button\" :aria-controls=\"panelId\" :aria-expanded=\"isOpen\">\n        Account\n      </button>\n    </template>\n    <template #default=\"{ close, focusRequest }\">\n      <NavMenu label=\"Account\" :focus-request=\"focusRequest\" @close=\"close\">\n        <NavMenuItem href=\"/profile\" label=\"Profile\" />\n      </NavMenu>\n    </template>\n  </NavDisclosure>\n</template>\n```",
+        "zh": "`NavMenu` 是 `role=\"menu\"` 的菜单。`NavMenuItem` 是其中一项，有 `href` 时是链接。`NavDisclosure` 负责触发按钮、定位和关闭：点击、悬停、点击外部和 Escape 都会关掉。ArrowDown 打开并聚焦第一项，ArrowUp 聚焦最后一项。菜单内部方向键移动，单字符会按前缀匹配。\n\n这组零件是 Vue 版自己的，上游 `@astryxdesign/core` 没有同名组件。顶栏菜单、溢出列表和侧栏条目的弹出层都是用它们搭的；需要自己做账号菜单这类导航弹出菜单时，也可以直接用。\n\n挂在侧栏或顶栏标题上的切换菜单不用这组零件，改用[导航标题菜单](/components/nav-heading-menu)。\n\n```vue\n<script setup lang=\"ts\">\nimport { NavDisclosure, NavMenu, NavMenuItem } from '@astryx-vue/core/NavMenu'\n</script>\n\n<template>\n  <NavDisclosure label=\"账号\">\n    <template #trigger=\"{ isOpen, panelId }\">\n      <button type=\"button\" :aria-controls=\"panelId\" :aria-expanded=\"isOpen\">\n        账号\n      </button>\n    </template>\n    <template #default=\"{ close, focusRequest }\">\n      <NavMenu label=\"账号\" :focus-request=\"focusRequest\" @close=\"close\">\n        <NavMenuItem href=\"/profile\" label=\"个人资料\" />\n      </NavMenu>\n    </template>\n  </NavDisclosure>\n</template>\n```"
       },
       "practices": {
         "en": [
@@ -51808,76 +51881,18 @@
                 "type": "`number`",
                 "default": "`200`",
                 "description": "Pointer-leave close delay, in milliseconds."
-              }
-            ]
-          },
-          {
-            "heading": "NavHeadingMenu Props",
-            "rows": [
+              },
               {
-                "name": "`label`",
+                "name": "`panelClass`",
                 "type": "`string`",
                 "default": "-",
-                "description": "Accessible name of the menu."
+                "description": "Class added to the popup panel."
               },
               {
-                "name": "`size`",
-                "type": "`'sm' | 'md' | 'lg'`",
-                "default": "`'md'`",
-                "description": "Menu width, also passed through as item padding."
-              },
-              {
-                "name": "`minWidth`",
-                "type": "`number | string`",
-                "default": "-",
-                "description": "Overrides the width that comes from the size. A number is pixels."
-              },
-              {
-                "name": "`focusRequest`",
-                "type": "`'first' | 'last' | null`",
-                "default": "-",
-                "description": "Moves focus to the first or last item after open. A heading menu slot passes this in."
-              }
-            ]
-          },
-          {
-            "heading": "NavHeadingMenuItem Props",
-            "rows": [
-              {
-                "name": "`label`",
-                "type": "`string`",
-                "default": "-",
-                "description": "Primary text. The default slot wins when it is set."
-              },
-              {
-                "name": "`description`",
-                "type": "`string`",
-                "default": "-",
-                "description": "Supporting line under the text."
-              },
-              {
-                "name": "`href`",
-                "type": "`string`",
-                "default": "-",
-                "description": "Renders a link when set."
-              },
-              {
-                "name": "`as`",
-                "type": "`NavLinkComponent`",
-                "default": "`'a'`",
-                "description": "Link root."
-              },
-              {
-                "name": "`iconClass`",
-                "type": "`string`",
-                "default": "-",
-                "description": "CSS icon class."
-              },
-              {
-                "name": "`isDisabled`",
+                "name": "`overlap`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Disabled. Arrow keys and typeahead skip it."
+                "description": "The panel covers the trigger in place instead of opening beside it: 8px out past its start and top edges, at least 16px wider than the trigger, shown at once without an entrance animation. For a panel whose first row repeats the trigger. `placement` and `alignment` are ignored."
               }
             ]
           }
@@ -51997,76 +52012,18 @@
                 "type": "`number`",
                 "default": "`200`",
                 "description": "指针离开后的关闭等待，毫秒。"
-              }
-            ]
-          },
-          {
-            "heading": "NavHeadingMenu Props",
-            "rows": [
+              },
               {
-                "name": "`label`",
+                "name": "`panelClass`",
                 "type": "`string`",
                 "default": "-",
-                "description": "菜单的无障碍名称。"
+                "description": "加在弹出层上的 class。"
               },
               {
-                "name": "`size`",
-                "type": "`'sm' | 'md' | 'lg'`",
-                "default": "`'md'`",
-                "description": "菜单宽度档，也会传给每一项的内边距。"
-              },
-              {
-                "name": "`minWidth`",
-                "type": "`number | string`",
-                "default": "-",
-                "description": "覆盖按档位算出的最小宽度。数字按像素。"
-              },
-              {
-                "name": "`focusRequest`",
-                "type": "`'first' | 'last' | null`",
-                "default": "-",
-                "description": "打开后聚焦第一项或最后一项。放在标题菜单插槽里时，标题会传入这个值。"
-              }
-            ]
-          },
-          {
-            "heading": "NavHeadingMenuItem Props",
-            "rows": [
-              {
-                "name": "`label`",
-                "type": "`string`",
-                "default": "-",
-                "description": "主文字。默认插槽优先。"
-              },
-              {
-                "name": "`description`",
-                "type": "`string`",
-                "default": "-",
-                "description": "主文字下面的辅助说明。"
-              },
-              {
-                "name": "`href`",
-                "type": "`string`",
-                "default": "-",
-                "description": "有地址时渲染成链接。"
-              },
-              {
-                "name": "`as`",
-                "type": "`NavLinkComponent`",
-                "default": "`'a'`",
-                "description": "链接根组件。"
-              },
-              {
-                "name": "`iconClass`",
-                "type": "`string`",
-                "default": "-",
-                "description": "图标 CSS class。"
-              },
-              {
-                "name": "`isDisabled`",
+                "name": "`overlap`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "禁用。方向键和首字母查找会跳过。"
+                "description": "弹出层盖在触发区原位上，而不是出现在它旁边：左边和上边各多出 8px，宽度至少比触发区宽 16px，直接出现、没有进场动画。适合第一行重复触发区内容的弹出层。打开后忽略 `placement` 和 `alignment`。"
               }
             ]
           }
@@ -52086,15 +52043,6 @@
                 "description": "Fired on Escape. `NavDisclosure` listens and closes the panel."
               }
             ]
-          },
-          {
-            "heading": "NavHeadingMenu events",
-            "rows": [
-              {
-                "name": "`close`",
-                "description": "Fired on Escape."
-              }
-            ]
           }
         ],
         "zh": [
@@ -52104,15 +52052,6 @@
               {
                 "name": "`close`",
                 "description": "按下 Escape 时触发。由 `NavDisclosure` 接住并关闭面板。"
-              }
-            ]
-          },
-          {
-            "heading": "NavHeadingMenu 事件",
-            "rows": [
-              {
-                "name": "`close`",
-                "description": "按下 Escape 时触发。"
               }
             ]
           }
@@ -52125,14 +52064,58 @@
       "examples": [
         {
           "title": {
-            "en": "Product switcher",
-            "zh": "产品切换"
+            "en": "Basic",
+            "zh": "基础"
           },
           "description": {
-            "en": "The side nav heading opens a product switcher. Dashboard, Analytics, and Settings are the destinations.",
-            "zh": "侧栏标题打开产品切换菜单，里面是 Dashboard、Analytics 和 Settings。"
+            "en": "A button opens an account menu. Every item is a link.",
+            "zh": "点按钮打开账号菜单，每一项都是链接。"
           },
-          "code": "<script setup lang=\"ts\">\nimport { NavHeadingMenu, NavHeadingMenuItem } from '@astryx-vue/core/NavMenu'\nimport { SideNav, SideNavHeading } from '@astryx-vue/core/SideNav'\n</script>\n\n<template>\n  <div style=\"height: 100px\">\n    <SideNav>\n      <template #header>\n        <SideNavHeading heading=\"Acme Platform\">\n          <template #icon>\n            <span class=\"i-carbon-grid css-icon css-icon--sm\" />\n          </template>\n          <template #menu>\n            <NavHeadingMenu label=\"Acme Platform\" size=\"lg\">\n              <NavHeadingMenuItem href=\"/dashboard\" label=\"Dashboard\" />\n              <NavHeadingMenuItem href=\"/analytics\" label=\"Analytics\" />\n              <NavHeadingMenuItem href=\"/settings\" label=\"Settings\" />\n            </NavHeadingMenu>\n          </template>\n        </SideNavHeading>\n      </template>\n    </SideNav>\n  </div>\n</template>"
+          "code": "<script setup lang=\"ts\">\nimport { NavDisclosure, NavMenu, NavMenuItem } from '@astryx-vue/core/NavMenu'\n</script>\n\n<template>\n  <NavDisclosure label=\"Account menu\">\n    <template #trigger=\"{ isOpen, panelId }\">\n      <button\n        type=\"button\"\n        class=\"nav-menu-preview__trigger\"\n        :aria-controls=\"panelId\"\n        :aria-expanded=\"isOpen ? 'true' : 'false'\"\n        aria-haspopup=\"menu\"\n      >\n        Account\n      </button>\n    </template>\n    <template #default=\"{ close, focusRequest }\">\n      <NavMenu label=\"Account menu\" :focus-request=\"focusRequest\" @close=\"close\">\n        <NavMenuItem href=\"#profile\" label=\"Profile\" />\n        <NavMenuItem href=\"#notifications\" label=\"Notifications\" />\n        <NavMenuItem href=\"#settings\" label=\"Settings\" />\n      </NavMenu>\n    </template>\n  </NavDisclosure>\n</template>"
+        },
+        {
+          "title": {
+            "en": "Icons",
+            "zh": "图标"
+          },
+          "description": {
+            "en": "iconClass puts an icon before the label.",
+            "zh": "用 iconClass 在文字前面放图标。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { NavDisclosure, NavMenu, NavMenuItem } from '@astryx-vue/core/NavMenu'\n</script>\n\n<template>\n  <NavDisclosure label=\"Account menu\">\n    <template #trigger=\"{ isOpen, panelId }\">\n      <button\n        type=\"button\"\n        class=\"nav-menu-preview__trigger\"\n        :aria-controls=\"panelId\"\n        :aria-expanded=\"isOpen ? 'true' : 'false'\"\n        aria-haspopup=\"menu\"\n      >\n        Account\n      </button>\n    </template>\n    <template #default=\"{ close, focusRequest }\">\n      <NavMenu label=\"Account menu\" :focus-request=\"focusRequest\" @close=\"close\">\n        <NavMenuItem href=\"#profile\" icon-class=\"i-carbon-user\" label=\"Profile\" />\n        <NavMenuItem href=\"#notifications\" icon-class=\"i-carbon-notification\" label=\"Notifications\" />\n        <NavMenuItem href=\"#settings\" icon-class=\"i-carbon-settings\" label=\"Settings\" />\n      </NavMenu>\n    </template>\n  </NavDisclosure>\n</template>"
+        },
+        {
+          "title": {
+            "en": "Descriptions",
+            "zh": "说明文字"
+          },
+          "description": {
+            "en": "description adds a supporting line under the label.",
+            "zh": "用 description 在文字下面加一行说明。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { NavDisclosure, NavMenu, NavMenuItem } from '@astryx-vue/core/NavMenu'\n</script>\n\n<template>\n  <NavDisclosure label=\"Account menu\">\n    <template #trigger=\"{ isOpen, panelId }\">\n      <button\n        type=\"button\"\n        class=\"nav-menu-preview__trigger\"\n        :aria-controls=\"panelId\"\n        :aria-expanded=\"isOpen ? 'true' : 'false'\"\n        aria-haspopup=\"menu\"\n      >\n        Account\n      </button>\n    </template>\n    <template #default=\"{ close, focusRequest }\">\n      <NavMenu label=\"Account menu\" :focus-request=\"focusRequest\" @close=\"close\">\n        <NavMenuItem description=\"Name, photo, and email\" href=\"#profile\" label=\"Profile\" />\n        <NavMenuItem description=\"Email and push\" href=\"#notifications\" label=\"Notifications\" />\n        <NavMenuItem description=\"Preferences for this workspace\" href=\"#settings\" label=\"Settings\" />\n      </NavMenu>\n    </template>\n  </NavDisclosure>\n</template>"
+        },
+        {
+          "title": {
+            "en": "Sizes",
+            "zh": "尺寸"
+          },
+          "description": {
+            "en": "size sets the menu's minimum width and the padding of each item.",
+            "zh": "size 决定菜单的最小宽度和每一项的内边距。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { NavDisclosure, NavMenu, NavMenuItem } from '@astryx-vue/core/NavMenu'\n</script>\n\n<template>\n  <div class=\"nav-overview--row\">\n    <NavDisclosure label=\"Small menu\">\n      <template #trigger=\"{ isOpen, panelId }\">\n        <button\n          type=\"button\"\n          class=\"nav-menu-preview__trigger\"\n          :aria-controls=\"panelId\"\n          :aria-expanded=\"isOpen ? 'true' : 'false'\"\n          aria-haspopup=\"menu\"\n        >\n          Small\n        </button>\n      </template>\n      <template #default=\"{ close, focusRequest }\">\n        <NavMenu label=\"Small\" size=\"sm\" :focus-request=\"focusRequest\" @close=\"close\">\n          <NavMenuItem href=\"#profile\" label=\"Profile\" />\n          <NavMenuItem href=\"#settings\" label=\"Settings\" />\n        </NavMenu>\n      </template>\n    </NavDisclosure>\n    <NavDisclosure label=\"Large menu\">\n      <template #trigger=\"{ isOpen, panelId }\">\n        <button\n          type=\"button\"\n          class=\"nav-menu-preview__trigger\"\n          :aria-controls=\"panelId\"\n          :aria-expanded=\"isOpen ? 'true' : 'false'\"\n          aria-haspopup=\"menu\"\n        >\n          Large\n        </button>\n      </template>\n      <template #default=\"{ close, focusRequest }\">\n        <NavMenu label=\"Large\" size=\"lg\" :focus-request=\"focusRequest\" @close=\"close\">\n          <NavMenuItem href=\"#profile\" label=\"Profile\" />\n          <NavMenuItem href=\"#settings\" label=\"Settings\" />\n        </NavMenu>\n      </template>\n    </NavDisclosure>\n  </div>\n</template>"
+        },
+        {
+          "title": {
+            "en": "Disabled item",
+            "zh": "禁用项"
+          },
+          "description": {
+            "en": "A disabled item ignores clicks, and the arrow keys skip it.",
+            "zh": "禁用的项点了没反应，方向键也会跳过它。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { NavDisclosure, NavMenu, NavMenuItem } from '@astryx-vue/core/NavMenu'\n</script>\n\n<template>\n  <NavDisclosure label=\"Account menu\">\n    <template #trigger=\"{ isOpen, panelId }\">\n      <button\n        type=\"button\"\n        class=\"nav-menu-preview__trigger\"\n        :aria-controls=\"panelId\"\n        :aria-expanded=\"isOpen ? 'true' : 'false'\"\n        aria-haspopup=\"menu\"\n      >\n        Account\n      </button>\n    </template>\n    <template #default=\"{ close, focusRequest }\">\n      <NavMenu label=\"Account menu\" :focus-request=\"focusRequest\" @close=\"close\">\n        <NavMenuItem href=\"#profile\" label=\"Profile\" />\n        <NavMenuItem href=\"#billing\" is-disabled label=\"Billing\" />\n        <NavMenuItem href=\"#settings\" label=\"Settings\" />\n      </NavMenu>\n    </template>\n  </NavDisclosure>\n</template>"
         }
       ],
       "anatomy": {

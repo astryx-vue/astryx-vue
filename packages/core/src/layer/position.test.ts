@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { computeLayerPosition } from './position.js'
+import { computeLayerPosition, computeOverlapPosition } from './position.js'
 
 const viewport = { width: 1024, height: 768 }
 const layer = { width: 120, height: 28 }
@@ -51,5 +51,23 @@ describe('computeLayerPosition', () => {
 
     expect(position.top).toBe(anchor.bottom + 4)
     expect(position.top).toBeLessThan(0)
+  })
+})
+
+describe('computeOverlapPosition', () => {
+  it('covers the anchor, outset by 8px on the start and top edges and 16px wider', () => {
+    const anchor = rect(20, 40, 180, 32)
+    const position = computeOverlapPosition(anchor, { width: 120, height: 200 }, viewport)
+
+    expect(position).toEqual({ top: 12, left: 32, placement: 'below', minWidth: 196 })
+  })
+
+  it('keeps the covering layer inside the viewport', () => {
+    const position = computeOverlapPosition(rect(2, 4, 100, 32), { width: 400, height: 200 }, viewport)
+    expect(position.top).toBe(0)
+    expect(position.left).toBe(0)
+
+    const nearEnd = computeOverlapPosition(rect(100, viewport.width - 60, 50, 32), { width: 300, height: 200 }, viewport)
+    expect(nearEnd.left + 300).toBeLessThanOrEqual(viewport.width)
   })
 })
