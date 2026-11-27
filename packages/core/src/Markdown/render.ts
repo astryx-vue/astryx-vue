@@ -14,6 +14,7 @@ import Heading from '../Heading/Heading.vue'
 import Link from '../Link/Link.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { plainText } from './ast.js'
+import { markdownBlockDirection } from './blockDirection.js'
 import { fadeClass, renderLink, renderText } from './renderInline.js'
 import { assignHeadingSlugs, collectDefinitions, measureNode, slotText } from './renderTree.js'
 import { slugify, uniqueSlug } from './slug.js'
@@ -194,7 +195,7 @@ function renderInline(node: MdNode, key: string, ctx: RenderContext): VNodeChild
       const src = rawUrl == null ? null : sanitizeMarkdownImageUrl(rawUrl)
       ctx.fade.offset += alt.length
       if (src == null)
-        return alt === '' ? null : h('span', { key }, alt)
+        return alt === '' ? null : h('span', { key }, `[${alt}]`)
       const override = ctx.components?.image
       if (override != null)
         return h(override, { key, src, alt })
@@ -307,14 +308,14 @@ function renderItemBody(node: MdNode, key: string, ctx: RenderContext): VNodeChi
 function renderListItem(node: MdNode, key: string, taskList: boolean, marker: ListMarker, ctx: RenderContext): VNode {
   const body = renderItemBody(node, key, ctx)
   if (!taskList && !isTaskItem(node)) {
-    return h('li', { key, class: 'astryx-markdown__item', ...sourceLineAttrs(node, ctx) }, [
+    return h('li', { key, class: 'astryx-markdown__item', dir: markdownBlockDirection(node), ...sourceLineAttrs(node, ctx) }, [
       renderMarker(marker),
       h('div', { class: 'astryx-markdown__item-body' }, body),
     ])
   }
 
   const checked = node.checked === true
-  return h('li', { key, class: 'astryx-markdown__task', ...sourceLineAttrs(node, ctx) }, [
+  return h('li', { key, class: 'astryx-markdown__task', dir: markdownBlockDirection(node), ...sourceLineAttrs(node, ctx) }, [
     h('span', { class: 'astryx-markdown__task-check' }, [
       h(ctx.checkboxIndicator ?? CheckboxIndicator, { state: checked ? 'checked' : 'unchecked', size: 'sm' }),
       h(VisuallyHidden, () => checked ? ctx.messages.taskDone : ctx.messages.taskPending),
@@ -343,6 +344,7 @@ export function renderBlock(node: MdNode, key: string, ctx: RenderContext): VNod
         id,
         'class': 'astryx-markdown__heading astryx-markdown__prose',
         'data-depth': node.depth ?? 1,
+        'dir': markdownBlockDirection(node),
         'tabindex': -1,
         ...sourceLineAttrs(node, ctx),
       }, () => [...children, anchor])
@@ -358,6 +360,7 @@ export function renderBlock(node: MdNode, key: string, ctx: RenderContext): VNod
       return h('div', {
         key,
         role: 'paragraph',
+        dir: markdownBlockDirection(node),
         class: ['astryx-markdown__paragraph', 'astryx-markdown__prose', imageOnly ? 'astryx-markdown__paragraph--image' : null],
         ...sourceLineAttrs(node, ctx),
       }, children)
@@ -393,6 +396,7 @@ export function renderBlock(node: MdNode, key: string, ctx: RenderContext): VNod
       return h(Blockquote, {
         key,
         class: 'astryx-markdown__blockquote astryx-markdown__prose',
+        dir: markdownBlockDirection(node),
         ...sourceLineAttrs(node, ctx),
       }, () => children)
     }
@@ -413,6 +417,7 @@ export function renderBlock(node: MdNode, key: string, ctx: RenderContext): VNod
           'class': 'astryx-markdown__cell',
           'scope': cellTag === 'th' ? 'col' : undefined,
           'data-align': marked,
+          'dir': markdownBlockDirection(cell),
           'style': floor == null ? undefined : { minWidth: `${floor}ch` },
         }, renderChildren(cell.children, `${rowKey}-${index}`, ctx))
       }))

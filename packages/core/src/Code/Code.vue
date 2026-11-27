@@ -19,7 +19,7 @@ defineExpose({ element })
 </script>
 
 <template>
-  <code ref="root" class="astryx-code" :data-color="color" :data-size="size">
+  <code ref="root" dir="ltr" class="astryx-code" :data-color="color" :data-size="size">
     <slot />
   </code>
 </template>

@@ -279,6 +279,7 @@ export type {
   CodeBlockEmits,
   CodeBlockProps,
   CodeBlockSize,
+  CodeBlockSlots,
   CodeBlockTokenizer,
   CodeColor,
   CodeHighlightMode,

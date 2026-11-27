@@ -15,7 +15,7 @@ function comparableUrl(normalized: string): string {
 }
 
 function isBlockedNavigation(url: string): boolean {
-  return url.startsWith('javascript:') || url.startsWith('vbscript:') || url.startsWith('data:text/html')
+  return url.startsWith('javascript:') || url.startsWith('vbscript:') || url.startsWith('data:')
 }
 
 /**
@@ -28,7 +28,7 @@ export function isSafeMarkdownParserUrl(url: string): boolean {
 
 /**
  * Navigation target with control characters removed.
- * `javascript:`, `vbscript:`, and HTML `data:` URLs are dropped.
+ * `javascript:`, `vbscript:`, and every `data:` URL are dropped.
  */
 export function sanitizeMarkdownLinkUrl(url: string): string | null {
   const normalized = normalizeUrl(url)

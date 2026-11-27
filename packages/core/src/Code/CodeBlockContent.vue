@@ -2,7 +2,8 @@
 import type { CSSProperties, StyleValue } from 'vue'
 import type { DiffLines } from './diff.js'
 import type { CodeBlockSize, SyntaxToken, TokenLine } from './types.js'
-import { computed, nextTick, onBeforeUnmount, onMounted, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, shallowRef, useTemplateRef, watch } from 'vue'
+import { useScrollableArea } from '../composables/useScrollableArea.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { applyHighlightRanges } from './highlightRanges.js'
 
@@ -19,6 +20,7 @@ const props = defineProps<{
   mode: 'ranges' | 'spans'
   scrollLabel: string
   size: CodeBlockSize
+  startLineNumber: number
   tokenLines: TokenLine[]
 }>()
 
@@ -36,8 +38,25 @@ const CHUNK_SIZE = 20
 const CHUNK_THRESHOLD = 100
 
 const code = useTemplateRef<HTMLElement>('code')
-const scrollEl = useTemplateRef<HTMLElement>('scroll')
+const scrollEl = shallowRef<HTMLElement | null>(null)
 useScrollbars(scrollEl)
+
+// 视口自己的键盘停靠点和名字仍由模板写；这里只读横向滚动状态，给手机上藏着内容的那一侧淡出。
+const scrollArea = useScrollableArea({ axis: 'inline', keyboardAccess: { owner: 'content' } })
+
+function bindScroll(element: unknown): void {
+  scrollEl.value = element instanceof HTMLElement ? element : null
+  scrollArea.viewport(element)
+}
+
+const fadeAttrs = computed(() => {
+  const { inline } = scrollArea.state.value
+  return {
+    'data-scrollable-inline': inline.isScrollable ? 'true' : undefined,
+    'data-scroll-inline-start': inline.atStart ? 'true' : undefined,
+    'data-scroll-inline-end': inline.atEnd ? 'true' : undefined,
+  }
+})
 
 const chunks = computed<LineChunk[]>(() => {
   const lines = props.lines
@@ -120,7 +139,7 @@ const codeStyle = computed<StyleValue>(() => {
   const style: CSSProperties = {}
 
   if (props.hasLineNumbers)
-    style['--astryx-code-block-gutter-width'] = `${String(props.lines.length).length}ch`
+    style['--astryx-code-block-gutter-width'] = `${String(props.startLineNumber + props.lines.length - 1).length}ch`
 
   return style
 })
@@ -132,7 +151,7 @@ const scrollStyle = computed<StyleValue>(() => (
 ))
 
 function isHighlighted(index: number): boolean {
-  return props.highlightSet?.has(index + 1) ?? false
+  return props.highlightSet?.has(props.startLineNumber + index) ?? false
 }
 
 let removeRanges: (() => void) | null = null
@@ -164,12 +183,14 @@ onBeforeUnmount(() => removeRanges?.())
 
 <template>
   <div
-    ref="scroll"
+    :ref="bindScroll"
     class="astryx-code-block__scroll"
+    dir="ltr"
     role="group"
     tabindex="0"
     :aria-label="scrollLabel"
     :style="scrollStyle"
+    v-bind="fadeAttrs"
   >
     <div class="astryx-code-block__wrap" :class="{ 'astryx-code-block__wrap--compact': isCompact }">
       <code
@@ -196,14 +217,14 @@ onBeforeUnmount(() => removeRanges?.())
               'astryx-code-block__line--numbered': hasLineNumbers,
             }"
             :data-diff="diffKind(chunk.start + offset)"
-            :data-line="chunk.start + offset + 1"
+            :data-line="startLineNumber + chunk.start + offset"
           >
             <span
               v-if="diff != null"
               class="astryx-code-block__diff-marker"
               data-diff-marker
             >{{ glyph(chunk.start + offset) }}</span>
-            <span v-if="mode === 'spans' || diff != null" class="astryx-code-block__line-content">
+            <span v-if="mode === 'spans' || diff != null" class="astryx-code-block__line-content" dir="auto">
               <template v-for="(part, index) in lineParts[chunk.start + offset]" :key="index">
                 <span v-if="part.type != null" :class="`astryx-token-${part.type}`">{{ part.text }}</span>
                 <template v-else>{{ part.text }}</template>

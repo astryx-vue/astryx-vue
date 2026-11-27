@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import type { CSSProperties, StyleValue } from 'vue'
-import type { CodeBlockEmits, CodeBlockProps, TokenLine } from './types.js'
-import { computed, onBeforeUnmount, onMounted, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
+import type { CodeBlockEmits, CodeBlockProps, CodeBlockSlots, TokenLine } from './types.js'
+import { computed, onBeforeUnmount, onMounted, ref, useAttrs, useId, useSlots, useTemplateRef, watch } from 'vue'
 import { devPropError, isDevBuild } from '../composables/internal/devBuild.js'
+import { hasSlotContent } from '../composables/internal/slotContent.js'
 import { useClipboard } from '../composables/useClipboard.js'
 import ComponentIcon from '../Icon/ComponentIcon.vue'
 import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
+import { useComponentMessages } from '../locale/context.js'
+import { codeBlockMessages } from '../locale/messages/code-block.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import CodeBlockContent from './CodeBlockContent.vue'
 import { splitDiffLines } from './diff.js'
@@ -32,10 +35,14 @@ const props = withDefaults(defineProps<CodeBlockProps>(), {
   isWrapped: false,
   language: 'plaintext',
   size: 'md',
+  startLineNumber: 1,
   width: 'fit-content',
 })
 
 const emit = defineEmits<CodeBlockEmits>()
+defineSlots<CodeBlockSlots>()
+const slots = useSlots()
+const messages = useComponentMessages({ codeBlock: codeBlockMessages })
 
 if (isDevBuild() && typeof props.code !== 'string') {
   throw devPropError(
@@ -172,6 +179,11 @@ const paintMode = computed<'ranges' | 'spans'>(() => {
   return isSafariBrowser.value ? 'spans' : 'ranges'
 })
 
+/** 第一行的行号（文件里的真实行号）。小于 1 或不是有限数都按 1 算。 */
+const firstLineNumber = computed(() =>
+  Number.isFinite(props.startLineNumber) && props.startLineNumber > 1 ? Math.floor(props.startLineNumber) : 1,
+)
+
 const highlightSet = computed<Set<number> | null>(() =>
   props.highlightLines == null ? null : new Set(props.highlightLines),
 )
@@ -181,7 +193,7 @@ const languageLabel = computed(() => {
     return null
 
   if (props.isDiff)
-    return props.language === 'plaintext' ? 'diff' : `${props.language} diff`
+    return props.language === 'plaintext' ? 'diff' : messages.value.codeBlock.diffLabel(props.language)
 
   return props.language === 'plaintext' ? null : props.language
 })
@@ -192,6 +204,12 @@ const headerText = computed(() => [props.title, languageLabel.value]
   .join(' — '))
 
 const showHeader = computed(() => headerText.value !== '')
+
+/** 调用方放在复制按钮前面的控件。它不会让代码块长出标题栏。 */
+const hasEndContent = computed(() => hasSlotContent(slots.endContent))
+
+/** 没有标题栏时，控件排在代码右边自己的一列里，不盖住代码。 */
+const hasCorner = computed(() => !showHeader.value && (props.hasCopyButton || hasEndContent.value))
 
 const canCollapse = computed(() =>
   showHeader.value && props.isCollapsible && lines.value.length >= props.collapsibleThreshold,
@@ -284,6 +302,7 @@ const forwardedAttrs = computed(() => Object.fromEntries(
     class="astryx-code-block"
     :class="attrs.class"
     :data-container="container"
+    :data-corner="hasCorner || undefined"
     :data-language="language"
     :data-size="size"
     :style="rootStyle"
@@ -320,6 +339,67 @@ const forwardedAttrs = computed(() => Object.fromEntries(
           </span>{{ headerText }}
         </span>
       </div>
+      <div v-if="hasCopyButton || hasEndContent" class="astryx-code-block__controls">
+        <slot name="endContent" />
+        <IconButton
+          v-if="hasCopyButton"
+          class="astryx-code-block-copy-button"
+          variant="ghost"
+          size="sm"
+          :label="copyButtonLabel"
+          :tooltip="copyTooltip"
+          @click.stop="onCopy"
+        >
+          <ComponentIcon
+            icon-slot="code-block-copy"
+            :state="{ copied: isCopied }"
+            :fallback="{ icon: copyIcon, size: 'sm' }"
+            color="inherit"
+          />
+        </IconButton>
+      </div>
+    </div>
+    <div
+      v-if="canCollapse"
+      :id="regionId"
+      class="astryx-code-block__collapse"
+      :class="{ 'astryx-code-block__collapse--collapsed': isCollapsed }"
+      :inert="isCollapsed || undefined"
+    >
+      <div class="astryx-code-block__collapse-inner">
+        <CodeBlockContent
+          :diff="diffLines"
+          :has-line-numbers="hasLineNumbers"
+          :highlight-set="highlightSet"
+          :start-line-number="firstLineNumber"
+          :is-compact="showHeader && !hasLineNumbers"
+          :is-wrapped="isWrapped"
+          :lines="lines"
+          :max-height="maxHeight"
+          :mode="paintMode"
+          :scroll-label="languageLabel ?? codeLabel"
+          :size="size"
+          :token-lines="tokenLines"
+        />
+      </div>
+    </div>
+    <CodeBlockContent
+      v-else
+      :diff="diffLines"
+      :has-line-numbers="hasLineNumbers"
+      :highlight-set="highlightSet"
+          :start-line-number="firstLineNumber"
+      :is-compact="showHeader && !hasLineNumbers"
+      :is-wrapped="isWrapped"
+      :lines="lines"
+      :max-height="maxHeight"
+      :mode="paintMode"
+      :scroll-label="languageLabel ?? codeLabel"
+      :size="size"
+      :token-lines="tokenLines"
+    />
+    <div v-if="hasCorner" class="astryx-code-block__corner" :data-size="size">
+      <slot name="endContent" />
       <IconButton
         v-if="hasCopyButton"
         class="astryx-code-block-copy-button"
@@ -337,59 +417,6 @@ const forwardedAttrs = computed(() => Object.fromEntries(
         />
       </IconButton>
     </div>
-    <div
-      v-if="canCollapse"
-      :id="regionId"
-      class="astryx-code-block__collapse"
-      :class="{ 'astryx-code-block__collapse--collapsed': isCollapsed }"
-      :inert="isCollapsed || undefined"
-    >
-      <div class="astryx-code-block__collapse-inner">
-        <CodeBlockContent
-          :diff="diffLines"
-          :has-line-numbers="hasLineNumbers"
-          :highlight-set="highlightSet"
-          :is-compact="showHeader && !hasLineNumbers"
-          :is-wrapped="isWrapped"
-          :lines="lines"
-          :max-height="maxHeight"
-          :mode="paintMode"
-          :scroll-label="languageLabel ?? codeLabel"
-          :size="size"
-          :token-lines="tokenLines"
-        />
-      </div>
-    </div>
-    <CodeBlockContent
-      v-else
-      :diff="diffLines"
-      :has-line-numbers="hasLineNumbers"
-      :highlight-set="highlightSet"
-      :is-compact="showHeader && !hasLineNumbers"
-      :is-wrapped="isWrapped"
-      :lines="lines"
-      :max-height="maxHeight"
-      :mode="paintMode"
-      :scroll-label="languageLabel ?? codeLabel"
-      :size="size"
-      :token-lines="tokenLines"
-    />
-    <IconButton
-      v-if="!showHeader && hasCopyButton"
-      class="astryx-code-block-copy-button astryx-code-block-copy-button--floating"
-      variant="ghost"
-      size="sm"
-      :label="copyButtonLabel"
-      :tooltip="copyTooltip"
-      @click.stop="onCopy"
-    >
-      <ComponentIcon
-        icon-slot="code-block-copy"
-        :state="{ copied: isCopied }"
-        :fallback="{ icon: copyIcon, size: 'sm' }"
-        color="inherit"
-      />
-    </IconButton>
   </pre>
   <VisuallyHidden role="status" aria-live="polite">
     {{ isCopied ? copiedLabel : '' }}

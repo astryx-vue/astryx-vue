@@ -17,7 +17,8 @@ footer: false
 <tr><td><code>title</code></td><td><code>string</code></td><td>—</td><td>Filename or label in the header.</td></tr>
 <tr><td><code>hasLanguageLabel</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Whether the language name appears in the header.</td></tr>
 <tr><td><code>hasLineNumbers</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Whether to draw a line number gutter.</td></tr>
-<tr><td><code>highlightLines</code></td><td><code>number[]</code></td><td>—</td><td>One-indexed lines to emphasize. On a diff row, the highlight replaces the diff tint.</td></tr>
+<tr><td><code>startLineNumber</code></td><td><code>number</code></td><td><code>1</code></td><td>The number of the first line, so an excerpt reads with its real file line numbers. The gutter shows <code>startLineNumber + index</code>. A value below 1 counts as 1.</td></tr>
+<tr><td><code>highlightLines</code></td><td><code>number[]</code></td><td>—</td><td>Lines to emphasize, in the same file line numbers as the gutter (see <code>startLineNumber</code>). A number outside the code highlights nothing. On a diff row, the highlight replaces the diff tint.</td></tr>
 <tr><td><code>isDiff</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Paint the snippet as a unified diff. Text after the glyph keeps the <code>language</code> syntax colors. Copy still writes the original string.</td></tr>
 <tr><td><code>hasCopyButton</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Whether to show the copy button.</td></tr>
 <tr><td><code>isWrapped</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Whether long lines wrap instead of scrolling sideways.</td></tr>
@@ -35,6 +36,10 @@ footer: false
 <tr><td><code>codeLabel</code></td><td><code>string</code></td><td><code>'Code'</code></td><td>Accessible name of the code viewport.</td></tr>
 </tbody></table>
 </div>
+
+## CodeBlock slots
+
+- `endContent`: your own controls, shown just before Copy. In the header when the block has one; otherwise in a column beside the code, centred on the first line and never over it. It never creates a header, and it sits outside the collapse control, so using it never collapses the block.
 
 ## CodeBlock events
 

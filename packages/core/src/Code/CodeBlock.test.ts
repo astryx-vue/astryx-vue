@@ -2,7 +2,7 @@ import type { VueWrapper } from '@vue/test-utils'
 import type { CodeBlockProps } from './types.js'
 import { enableAutoUnmount, mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { nextTick } from 'vue'
+import { h, nextTick } from 'vue'
 import CodeBlock from './CodeBlock.vue'
 
 enableAutoUnmount(afterEach)
@@ -23,10 +23,12 @@ afterEach(() => {
 function renderCodeBlock(
   props: Partial<CodeBlockProps> & { code: string },
   attrs: Record<string, string> = {},
+  slots: Record<string, () => unknown> = {},
 ): VueWrapper<InstanceType<typeof CodeBlock>> {
   return mount(CodeBlock, {
     attachTo: document.body,
     attrs,
+    slots: slots as never,
     props: { language: 'javascript', ...props },
   })
 }
@@ -103,13 +105,17 @@ describe('codeBlock', () => {
     expect(title.text()).toBe('example.ts — typescript')
   })
 
-  it('renders no header for plaintext without a title, and floats the copy button', () => {
+  it('renders no header for plaintext without a title, and puts the copy button in its own corner column', () => {
     const wrapper = renderCodeBlock({ code: 'const x = 1;', language: 'plaintext' })
 
     expect(wrapper.find('.astryx-code-block-header').exists()).toBe(false)
     const button = copyButton(wrapper)
-    expect(button.classes()).toContain('astryx-code-block-copy-button--floating')
-    expect(button.element.parentElement).toBe(wrapper.get('pre').element)
+    const corner = button.element.parentElement
+    expect(corner?.classList.contains('astryx-code-block__corner')).toBe(true)
+    expect(corner?.parentElement).toBe(wrapper.get('pre').element)
+    expect(wrapper.get('pre').attributes('data-corner')).toBeDefined()
+    // 复制按钮和代码是兄弟列，按钮不在代码视口里面。
+    expect(wrapper.get('.astryx-code-block__scroll').element.contains(button.element)).toBe(false)
   })
 
   it('renders line numbers and highlighted lines', async () => {
@@ -383,5 +389,93 @@ describe('codeBlock collapse', () => {
     expect(rows[0]?.get('.astryx-code-block__line-content').text()).toBe('diff --git a/x b/x')
     expect(rows[2]?.get('.astryx-code-block__line-content').text()).toBe('context')
     expect(rows[2]?.get('[data-diff-marker]').element.textContent).toBe(' ')
+  })
+
+  describe('startLineNumber', () => {
+    const code = 'a\nb\nc'
+
+    it('numbers the gutter from the given file line', () => {
+      const wrapper = renderCodeBlock({ code, hasLineNumbers: true, startLineNumber: 41 })
+
+      expect(wrapper.findAll('[data-line]').map(row => row.attributes('data-line'))).toEqual(['41', '42', '43'])
+    })
+
+    it('reads highlightLines in the same file line numbers', () => {
+      const wrapper = renderCodeBlock({ code, hasLineNumbers: true, startLineNumber: 41, highlightLines: [43, 2, 99] })
+
+      const classes = wrapper.findAll('[data-line]').map(row => row.classes().includes('astryx-code-block__line--highlighted'))
+      expect(classes).toEqual([false, false, true])
+    })
+
+    it('sizes the gutter for the widest visible number', () => {
+      const wrapper = renderCodeBlock({ code, hasLineNumbers: true, startLineNumber: 99 })
+
+      expect(wrapper.get('.astryx-code-block__code').attributes('style')).toContain('--astryx-code-block-gutter-width: 3ch')
+    })
+
+    it.each([0, -5, Number.NaN, Number.POSITIVE_INFINITY])('counts %s as 1', (value) => {
+      const wrapper = renderCodeBlock({ code, hasLineNumbers: true, startLineNumber: value })
+
+      expect(wrapper.findAll('[data-line]').map(row => row.attributes('data-line'))).toEqual(['1', '2', '3'])
+    })
+  })
+
+  describe('endContent', () => {
+    const run = (): ReturnType<typeof h> => h('button', { type: 'button', class: 'run' }, 'Run in terminal')
+
+    it('puts caller controls before Copy in the header', () => {
+      const wrapper = renderCodeBlock({ code: 'npm test', language: 'bash' }, {}, { endContent: run })
+
+      const action = wrapper.get('.run')
+      const copy = copyButton(wrapper)
+      expect(action.element.parentElement).toBe(copy.element.parentElement)
+      expect(action.element.compareDocumentPosition(copy.element) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+      expect(wrapper.get('.astryx-code-block-header').element.contains(action.element)).toBe(true)
+    })
+
+    it('never creates a header: with no title or label the controls sit in the corner', () => {
+      const wrapper = renderCodeBlock({ code: 'npm test', language: 'bash', hasLanguageLabel: false }, {}, { endContent: run })
+
+      expect(wrapper.find('.astryx-code-block-header').exists()).toBe(false)
+      const action = wrapper.get('.run')
+      expect(action.element.parentElement).toBe(copyButton(wrapper).element.parentElement)
+      expect(action.element.parentElement?.classList.contains('astryx-code-block__corner')).toBe(true)
+      expect(action.element.parentElement?.parentElement).toBe(wrapper.get('pre').element)
+    })
+
+    it('keeps its place when Copy is hidden', () => {
+      const wrapper = renderCodeBlock({ code: 'npm test', language: 'plaintext', hasCopyButton: false }, {}, { endContent: run })
+
+      expect(wrapper.find('.astryx-code-block-copy-button').exists()).toBe(false)
+      expect(wrapper.get('.run').element.parentElement?.classList.contains('astryx-code-block__corner')).toBe(true)
+    })
+
+    it('treats an empty slot as absent: no corner column without Copy', () => {
+      const wrapper = renderCodeBlock({ code: 'npm test', language: 'plaintext', hasCopyButton: false }, {}, { endContent: () => null })
+
+      expect(wrapper.find('.astryx-code-block__corner').exists()).toBe(false)
+      expect(wrapper.get('pre').attributes('data-corner')).toBeUndefined()
+    })
+
+    it('sits outside the disclosure and never toggles it', async () => {
+      const wrapper = renderCodeBlock({ code: LONG_CODE, title: 'example', isCollapsible: true }, {}, { endContent: run })
+
+      const disclosure = wrapper.get('[aria-expanded]')
+      const action = wrapper.get('.run')
+      expect(disclosure.element.contains(action.element)).toBe(false)
+      await action.trigger('click')
+      await action.trigger('keydown', { key: 'Enter' })
+      await action.trigger('keydown', { key: ' ' })
+      expect(disclosure.attributes('aria-expanded')).toBe('true')
+    })
+  })
+
+  describe('direction', () => {
+    it('keeps the code viewport left to right and lets each line pick its own direction', () => {
+      const wrapper = renderCodeBlock({ code: 'a\nb', highlightMode: 'spans' })
+
+      expect(wrapper.get('.astryx-code-block__scroll').attributes('dir')).toBe('ltr')
+      expect(wrapper.findAll('.astryx-code-block__line-content').every(line => line.attributes('dir') === 'auto')).toBe(true)
+    })
   })
 })

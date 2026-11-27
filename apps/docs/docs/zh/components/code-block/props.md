@@ -17,7 +17,8 @@ footer: false
 <tr><td><code>title</code></td><td><code>string</code></td><td>—</td><td>顶栏里的文件名或标签。</td></tr>
 <tr><td><code>hasLanguageLabel</code></td><td><code>boolean</code></td><td><code>true</code></td><td>顶栏是否显示语言名。</td></tr>
 <tr><td><code>hasLineNumbers</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否画行号槽。</td></tr>
-<tr><td><code>highlightLines</code></td><td><code>number[]</code></td><td>—</td><td>要强调的行，从 1 开始。和差异行叠在一起时，高亮盖住差异底色。</td></tr>
+<tr><td><code>startLineNumber</code></td><td><code>number</code></td><td><code>1</code></td><td>第一行的行号，让摘录显示文件里的真实行号。行号槽显示 <code>startLineNumber + 序号</code>。小于 1 按 1 算。</td></tr>
+<tr><td><code>highlightLines</code></td><td><code>number[]</code></td><td>—</td><td>要强调的行，行号和行号槽一致（见 <code>startLineNumber</code>），超出范围的不会高亮任何行。和差异行叠在一起时，高亮盖住差异底色。</td></tr>
 <tr><td><code>isDiff</code></td><td><code>boolean</code></td><td><code>false</code></td><td>按 unified diff 给整行上色，符号后面的文本仍按 <code>language</code> 高亮。复制内容不变。</td></tr>
 <tr><td><code>hasCopyButton</code></td><td><code>boolean</code></td><td><code>true</code></td><td>是否显示复制按钮。</td></tr>
 <tr><td><code>isWrapped</code></td><td><code>boolean</code></td><td><code>false</code></td><td>长行是换行，还是横向滚动。</td></tr>
@@ -35,6 +36,10 @@ footer: false
 <tr><td><code>codeLabel</code></td><td><code>string</code></td><td><code>'Code'</code></td><td>代码视口的无障碍名称。</td></tr>
 </tbody></table>
 </div>
+
+## CodeBlock 插槽
+
+- `endContent`：放在复制按钮前面的自定义控件。有顶栏时在顶栏里；没有顶栏时在代码右边自己的一列里，与第一行居中对齐，不会盖住代码。它不会让代码块长出顶栏，也在折叠控件之外，用它不会折叠代码块。
 
 ## CodeBlock 事件
 
