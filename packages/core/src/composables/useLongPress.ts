@@ -2,6 +2,7 @@ import type { MaybeRefOrGetter } from 'vue'
 import { getCurrentScope, onScopeDispose, toValue } from 'vue'
 import { LONG_PRESS_ALLOWABLE_MOVEMENT_PX, LONG_PRESS_DURATION_MS } from '../motion/uikit/longPress'
 import { msSinceInput } from '../utils/inputAge'
+import { claimPress } from '../utils/pressClaim'
 
 interface Point {
   x: number
@@ -88,6 +89,8 @@ export function useLongPress(options: LongPressOptions): LongPressHandlers {
     deadline = null
     if (from == null)
       return
+    // 这次按压已经起了作用，抬手不算轻点：手指下的控件框不再自己补一次点击。
+    claimPress()
     options.onLongPress({ x: from.x, y: from.y })
   }
 
