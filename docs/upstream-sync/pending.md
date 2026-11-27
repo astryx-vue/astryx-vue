@@ -6301,57 +6301,78 @@
 
 ### v0.7.2
 
-- [ ] [`9fa22137e`](https://github.com/meta/astryx/commit/9fa22137e) feat(lab): add EmojiPicker (#7605)
-- [ ] [`428444239`](https://github.com/meta/astryx/commit/428444239) feat(lab): add CommentPin (#7614)
-- [ ] [`5c208f6a4`](https://github.com/meta/astryx/commit/5c208f6a4) feat(lab): add CommentComposer (#7606)
-- [ ] [`fc12a1803`](https://github.com/meta/astryx/commit/fc12a1803) feat(lab): add CommentThread (#7607)
-- [ ] [`5c75a7550`](https://github.com/meta/astryx/commit/5c75a7550) feat(lab): add Comments (#7551)
+- [x] [`9fa22137e`](https://github.com/meta/astryx/commit/9fa22137e) feat(lab): add EmojiPicker (#7605)
+  - Vue 版已有：EmojiPicker 已有（packages/lab/src/EmojiPicker），表情数据直接带 emoji-data.json，没有上游的生成脚本；示例在文档站 emoji-picker 与 emoji-picker-popover
+- [x] [`428444239`](https://github.com/meta/astryx/commit/428444239) feat(lab): add CommentPin (#7614)
+  - Vue 版已有：CommentPin 已有（packages/lab/src/CommentPin），文档站 comment-pin 页有示例
+- [x] [`5c208f6a4`](https://github.com/meta/astryx/commit/5c208f6a4) feat(lab): add CommentComposer (#7606)
+  - Vue 版已有：CommentComposer 已有（packages/lab/src/Comments），图标、i18n、markdown 等部件都在
+- [x] [`fc12a1803`](https://github.com/meta/astryx/commit/fc12a1803) feat(lab): add CommentThread (#7607)
+  - Vue 版已有：CommentThread 已有，含 useCommentThreadDismissal、行与操作部件；ChatTypingIndicator 在 core 里已有
+- [x] [`5c75a7550`](https://github.com/meta/astryx/commit/5c75a7550) feat(lab): add Comments (#7551)
+  - Vue 版已有：Comments 已有，文档页与示例都在
 
 ### v0.7.3
 
-- [ ] [`8a801f70a`](https://github.com/meta/astryx/commit/8a801f70a) fix(ChatTypingIndicator): announce through the shared channel, not a live region born with its text (#7867)
-- [ ] [`79fd9740d`](https://github.com/meta/astryx/commit/79fd9740d) fix(lab): MobileTokenizer and CommentComposer stay focusable when disabled (#7903)
-- [ ] [`02f5fe490`](https://github.com/meta/astryx/commit/02f5fe490) fix(lab): a busy comment editor's Cancel link stays in the tab order (#7909)
+- [x] [`8a801f70a`](https://github.com/meta/astryx/commit/8a801f70a) fix(ChatTypingIndicator): announce through the shared channel, not a live region born with its text (#7867)
+  - Vue 版已有：core 的 ChatTypingIndicator 根元素带 role=status，只经这一个区域播报（ChatTypingIndicator.test.ts 覆盖）
+- [x] [`79fd9740d`](https://github.com/meta/astryx/commit/79fd9740d) fix(lab): MobileTokenizer and CommentComposer stay focusable when disabled (#7903)
+  - Vue 版已有：CommentComposerBase 的文件输入不带原生 disabled、忙碌时拒收文件、错误条的选图按钮忙碌时不开选择器（CommentComposer.test.ts 覆盖）；MobileTokenizer 部分随 lab 版移除，core 的 Tokenizer 用 useTokenizerDisabled 保持可聚焦
+- [x] [`02f5fe490`](https://github.com/meta/astryx/commit/02f5fe490) fix(lab): a busy comment editor's Cancel link stays in the tab order (#7909)
+  - Vue 版已有：MetadataActionLink 用 Link 的 is-disabled，忙碌时取消链接留在 Tab 顺序里但不响应（CommentComposer.test.ts 覆盖）
 
 ### v0.7.5
 
-- [ ] [`c60f57133`](https://github.com/meta/astryx/commit/c60f57133) feat(CommentPin): sizes, equal padding, ellipsis overflow, unread dot, hidden resolved pins (#8023)
+- [x] [`c60f57133`](https://github.com/meta/astryx/commit/c60f57133) feat(CommentPin): sizes, equal padding, ellipsis overflow, unread dot, hidden resolved pins (#8023)
+  - Vue 版已有：CommentPin 已有 sm/md/lg 尺寸、等边距、省略号溢出圈、未读点和隐藏已解决的图钉（CommentPin.test.ts 覆盖）
 - [x] [`8b7491193`](https://github.com/meta/astryx/commit/8b7491193) fix(EmptyState): announce once when it appears after load, not as a live root (#8294)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`174300fcb`](https://github.com/meta/astryx/commit/174300fcb) ci: discover PR browser accessibility specs, so a new spec needs no workflow edit (#8367)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`b298b37d1`](https://github.com/meta/astryx/commit/b298b37d1) feat(theme): add surface-specific status color roles (#7657)
   - 已移植：[#517](https://github.com/astryx-vue/astryx-vue/pull/517)。core 新增默认状态色表，组件改读正确的状态角色
-- [ ] [`6a751f7b7`](https://github.com/meta/astryx/commit/6a751f7b7) fix(lab): announce EmojiPicker load failures (#7809)
-- [ ] [`05ead02aa`](https://github.com/meta/astryx/commit/05ead02aa) feat(Icon): a theme icon entry can be a function of the requested size (#8753)
+- [x] [`6a751f7b7`](https://github.com/meta/astryx/commit/6a751f7b7) fix(lab): announce EmojiPicker load failures (#7809)
+  - Vue 版已有：EmojiPicker 的加载失败文字放在 role=status 区域里（EmojiPicker.vue 的搜索状态行）
+- [x] [`05ead02aa`](https://github.com/meta/astryx/commit/05ead02aa) feat(Icon): a theme icon entry can be a function of the requested size (#8753)
+  - Vue 版已有：主题图标条目可写成按尺寸取值的函数已由 #502 移植，Comments 的图标沿用
 
 ### v0.7.6
 
 - [x] [`9e07422c7`](https://github.com/meta/astryx/commit/9e07422c7) test(a11y): the coverage checks of 17 binding specs run as one serial part per state (#9071)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`5ef9ab630`](https://github.com/meta/astryx/commit/5ef9ab630) fix(lab): CommentPin stays focusable when disabled (#8816)
-- [ ] [`b4b978da2`](https://github.com/meta/astryx/commit/b4b978da2) fix(Comments): announce error banners and progress labels through the shared channel (#7902)
-- [ ] [`afcbd477f`](https://github.com/meta/astryx/commit/afcbd477f) fix(lab): CommentComposerBase reads the latest onActionPendingChange instead of re-running its cleanup when it changes (#9149)
-- [ ] [`e0a03766d`](https://github.com/meta/astryx/commit/e0a03766d) docs(knowledge): every component spec lives in docs/specs/components, one folder per component (#9007)
+- [x] [`5ef9ab630`](https://github.com/meta/astryx/commit/5ef9ab630) fix(lab): CommentPin stays focusable when disabled (#8816)
+  - Vue 版已有：CommentPin 禁用时保留 Tab 位置、用 aria-disabled，挡住点击与 Enter、Space，禁用时焦点不丢（CommentPin.test.ts 覆盖）
+- [x] [`b4b978da2`](https://github.com/meta/astryx/commit/b4b978da2) fix(Comments): announce error banners and progress labels through the shared channel (#7902)
+  - Vue 版已有：Comments 的错误横幅经 useAnnounce 播报（ErrorBanner.vue），进度文字经 CommentProgressStatus.vue 播报
+- [x] [`afcbd477f`](https://github.com/meta/astryx/commit/afcbd477f) fix(lab): CommentComposerBase reads the latest onActionPendingChange instead of re-running its cleanup when it changes (#9149)
+  - 不适用：React 里最新的 onActionPendingChange 不要让清理逻辑重跑；Vue 直接 emit，不存在这个问题
+- [x] [`e0a03766d`](https://github.com/meta/astryx/commit/e0a03766d) docs(knowledge): every component spec lives in docs/specs/components, one folder per component (#9007)
+  - 不适用：上游把规范文档搬到 docs/specs/components 的目录调整
 
 ### v0.7.8
 
-- [ ] [`830f87528`](https://github.com/meta/astryx/commit/830f87528) refactor(Comments): the copy press owns the link-copied reset, through useClipboard, not an Effect (#9864)
+- [x] [`830f87528`](https://github.com/meta/astryx/commit/830f87528) refactor(Comments): the copy press owns the link-copied reset, through useClipboard, not an Effect (#9864)
+  - 不适用：上游把复制后重置交给 useClipboard 来处理、不靠 Effect，是 React 写法；Vue 版复制按钮的状态已由 #550 一并处理
 - [x] [`e390c3c43`](https://github.com/meta/astryx/commit/e390c3c43) test(browser): keep every Playwright browser context off remote hosts (#9811)
   - 不适用：只改上游测试（自动初筛）
 
 ### v0.7.9
 
-- [ ] [`1ef21f898`](https://github.com/meta/astryx/commit/1ef21f898) fix(Spinner): route standalone loading through the shared announcement channel (#7910)
+- [x] [`1ef21f898`](https://github.com/meta/astryx/commit/1ef21f898) fix(Spinner): route standalone loading through the shared announcement channel (#7910)
+  - Vue 版已有：Comments 与 EmojiPicker 的加载转圈静音，由 useAnnounce 经共用通道念一次（Comments.vue、CommentProgressStatus.vue、EmojiPicker.vue）；独立 Spinner 本身归基础族
 
 ### v0.7.12
 
 - [x] [`4e6e67df6`](https://github.com/meta/astryx/commit/4e6e67df6) fix(core): make disabled Button focusable via aria-disabled per AST-085 (#7906)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`6a4bc478e`](https://github.com/meta/astryx/commit/6a4bc478e) fix(CommentComposer): a busy composer refuses pasted and dropped images (#10498)
-- [ ] [`642cc2de1`](https://github.com/meta/astryx/commit/642cc2de1) fix(lab): write latest-value refs at commit, not during render (#10780)
+- [x] [`6a4bc478e`](https://github.com/meta/astryx/commit/6a4bc478e) fix(CommentComposer): a busy composer refuses pasted and dropped images (#10498)
+  - Vue 版已有：CommentComposerBase 的 beginImageUpload 忙碌时拒收粘贴与拖放的图片（CommentComposer.test.ts 覆盖）
+- [x] [`642cc2de1`](https://github.com/meta/astryx/commit/642cc2de1) fix(lab): write latest-value refs at commit, not during render (#10780)
+  - 不适用：React 在提交阶段写最新值 ref 的规范；Vue 的 ref 没有渲染期写入的问题
 - [ ] [`daa239e98`](https://github.com/meta/astryx/commit/daa239e98) feat(lab): experimental ChatVirtualizer (#5461)
-- [ ] [`b5de1a82f`](https://github.com/meta/astryx/commit/b5de1a82f) refactor(lab): one-line ref effects in Comments and Schedule (#10805)
+  - 暂缓：Vue 的 lab 没有 ChatVirtualizer（约 1600 行实现加 900 行测试的聊天虚拟滚动），本轮没排上
+- [x] [`b5de1a82f`](https://github.com/meta/astryx/commit/b5de1a82f) refactor(lab): one-line ref effects in Comments and Schedule (#10805)
+  - 不适用：React 的 ref 回调写法重构，行为不变
 - [x] [`bf13b026e`](https://github.com/meta/astryx/commit/bf13b026e) fix(Avatar): an interactive initials avatar passes Label in Name (#10816)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`00e031a31`](https://github.com/meta/astryx/commit/00e031a31) fix(Avatar): no public data-initials attribute; the initials come from a private StyleX dynamic style (#10944)
@@ -6360,10 +6381,12 @@
 ### v0.7.14
 
 - [ ] [`a3a6f1c85`](https://github.com/meta/astryx/commit/a3a6f1c85) fix(ChatVirtualizer): attach mode works on the page's own scroller (#10879)
+  - 暂缓：ChatVirtualizer 在页面自己的滚动容器上用 attach 模式，随 ChatVirtualizer 整体暂缓
 
 ### v0.7.15
 
 - [ ] [`3fed77b37`](https://github.com/meta/astryx/commit/3fed77b37) fix(ChatVirtualizer): a rotation keeps the row at the top of the view in place (#11219)
+  - 暂缓：ChatVirtualizer 旋转屏幕后保持顶部那一行不动，随 ChatVirtualizer 整体暂缓
 - [x] [`95127f655`](https://github.com/meta/astryx/commit/95127f655) test(ChatVirtualizer): a reply that arrives in history is read out once, and no history as the reader scrolls down (#11365)
   - 不适用：只改上游测试（自动初筛）
 
@@ -6374,44 +6397,61 @@
 
 ### v0.7.17
 
-- [ ] [`c3d24e124`](https://github.com/meta/astryx/commit/c3d24e124) fix(Comments): a failed comment-link copy shows and announces itself (#10435)
-- [ ] [`9d23a5e6e`](https://github.com/meta/astryx/commit/9d23a5e6e) chore: land batch 87 (2 pull requests) (#13021)
+- [x] [`c3d24e124`](https://github.com/meta/astryx/commit/c3d24e124) fix(Comments): a failed comment-link copy shows and announces itself (#10435)
+  - Vue 版已有：评论链接复制失败时按钮变叉、名字提示播报失败，已由 #550 移植
+- [x] [`9d23a5e6e`](https://github.com/meta/astryx/commit/9d23a5e6e) chore: land batch 87 (2 pull requests) (#13021)
+  - 不适用：上游只是把 LoadingMessage 文件挪进 internal 目录，改了几处 import
 
 ## 实验包：使用文档（area:lab）
 
 ### v0.7.2
 
-- [ ] [`97a00379a`](https://github.com/meta/astryx/commit/97a00379a) feat(lab): DiffViewer — unified/split file diff for code review (#7536)
-- [ ] [`280c48a82`](https://github.com/meta/astryx/commit/280c48a82) feat(lab): createDiffFile builds a DiffViewer file from two versions of a text (#7565)
-- [ ] [`a09889314`](https://github.com/meta/astryx/commit/a09889314) feat(lab): DiffViewer display options — change bars, inline highlight, row tint toggle, fixed split with synced scrolling (#7589)
-- [ ] [`9fa22137e`](https://github.com/meta/astryx/commit/9fa22137e) feat(lab): add EmojiPicker (#7605)
-- [ ] [`428444239`](https://github.com/meta/astryx/commit/428444239) feat(lab): add CommentPin (#7614)
-- [ ] [`5c208f6a4`](https://github.com/meta/astryx/commit/5c208f6a4) feat(lab): add CommentComposer (#7606)
-- [ ] [`fc12a1803`](https://github.com/meta/astryx/commit/fc12a1803) feat(lab): add CommentThread (#7607)
-- [ ] [`5c75a7550`](https://github.com/meta/astryx/commit/5c75a7550) feat(lab): add Comments (#7551)
-- [ ] [`86e839219`](https://github.com/meta/astryx/commit/86e839219) feat(core): promote Drawer and DrawerHeader from Lab (#6071)
+- [x] [`97a00379a`](https://github.com/meta/astryx/commit/97a00379a) feat(lab): DiffViewer — unified/split file diff for code review (#7536)
+  - Vue 版已有：DiffViewer 已在 packages/lab/src/DiffViewer，示例在文档站 diff-viewer 页
+- [x] [`280c48a82`](https://github.com/meta/astryx/commit/280c48a82) feat(lab): createDiffFile builds a DiffViewer file from two versions of a text (#7565)
+  - Vue 版已有：createDiffFile 已有并从 lab 入口导出
+- [x] [`a09889314`](https://github.com/meta/astryx/commit/a09889314) feat(lab): DiffViewer display options — change bars, inline highlight, row tint toggle, fixed split with synced scrolling (#7589)
+  - Vue 版已有：DiffViewer 的变更条、行内高亮、行底色开关和固定分栏同步滚动已有
+- [x] [`9fa22137e`](https://github.com/meta/astryx/commit/9fa22137e) feat(lab): add EmojiPicker (#7605)
+  - Vue 版已有：EmojiPicker 已有（packages/lab/src/EmojiPicker），表情数据直接带 emoji-data.json，没有上游的生成脚本；示例在文档站 emoji-picker 与 emoji-picker-popover
+- [x] [`428444239`](https://github.com/meta/astryx/commit/428444239) feat(lab): add CommentPin (#7614)
+  - Vue 版已有：CommentPin 已有（packages/lab/src/CommentPin），文档站 comment-pin 页有示例
+- [x] [`5c208f6a4`](https://github.com/meta/astryx/commit/5c208f6a4) feat(lab): add CommentComposer (#7606)
+  - Vue 版已有：CommentComposer 已有（packages/lab/src/Comments），图标、i18n、markdown 等部件都在
+- [x] [`fc12a1803`](https://github.com/meta/astryx/commit/fc12a1803) feat(lab): add CommentThread (#7607)
+  - Vue 版已有：CommentThread 已有，含 useCommentThreadDismissal、行与操作部件；ChatTypingIndicator 在 core 里已有
+- [x] [`5c75a7550`](https://github.com/meta/astryx/commit/5c75a7550) feat(lab): add Comments (#7551)
+  - Vue 版已有：Comments 已有，文档页与示例都在
+- [x] [`86e839219`](https://github.com/meta/astryx/commit/86e839219) feat(core): promote Drawer and DrawerHeader from Lab (#6071)
+  - Vue 版已有：Drawer 与 DrawerHeader 本来就在 core，Vue 的 lab 没有 Drawer；drawer 主题挂点已由 #620 补上
 
 ### v0.7.4
 
-- [ ] [`faa934f8c`](https://github.com/meta/astryx/commit/faa934f8c) docs(ListInput): add a docsite showcase and three example blocks (#7953)
+- [x] [`faa934f8c`](https://github.com/meta/astryx/commit/faa934f8c) docs(ListInput): add a docsite showcase and three example blocks (#7953)
+  - 已移植：[#628](https://github.com/astryx-vue/astryx-vue/pull/628)。ListInput 文档页补了家庭成员、预算分配、邮件列表三个示例（中英）；上游的 discover 清单部分我们没有
 
 ### v0.7.5
 
-- [ ] [`77d435192`](https://github.com/meta/astryx/commit/77d435192) feat(lab): MobilePowerSearch — touch PowerSearch prototype (#7402)
-- [ ] [`c60f57133`](https://github.com/meta/astryx/commit/c60f57133) feat(CommentPin): sizes, equal padding, ellipsis overflow, unread dot, hidden resolved pins (#8023)
+- [x] [`77d435192`](https://github.com/meta/astryx/commit/77d435192) feat(lab): MobilePowerSearch — touch PowerSearch prototype (#7402)
+  - 不适用：上游临时加入的 lab MobilePowerSearch，Vue 的 lab 已移除（#612），触屏筛选弹层由 core 的 PowerSearch 承担（PowerSearchBottomSheet.vue）
+- [x] [`c60f57133`](https://github.com/meta/astryx/commit/c60f57133) feat(CommentPin): sizes, equal padding, ellipsis overflow, unread dot, hidden resolved pins (#8023)
+  - Vue 版已有：CommentPin 已有 sm/md/lg 尺寸、等边距、省略号溢出圈、未读点和隐藏已解决的图钉（CommentPin.test.ts 覆盖）
 - [x] [`9effa5cb5`](https://github.com/meta/astryx/commit/9effa5cb5) fix(lab): a pinch that starts on a reorder grip zooms the page (#8126)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`174300fcb`](https://github.com/meta/astryx/commit/174300fcb) ci: discover PR browser accessibility specs, so a new spec needs no workflow edit (#8367)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`b84bf77fa`](https://github.com/meta/astryx/commit/b84bf77fa) chore: move project links to meta/astryx (#8827)
+- [x] [`b84bf77fa`](https://github.com/meta/astryx/commit/b84bf77fa) chore: move project links to meta/astryx (#8827)
+  - 不适用：上游项目链接改到 meta/astryx 的注释与 README 改动，Vue 仓库的链接不同
 
 ### v0.7.6
 
-- [ ] [`c8e1804d8`](https://github.com/meta/astryx/commit/c8e1804d8) ci: drop off-PR and informational checks (#8894)
+- [x] [`c8e1804d8`](https://github.com/meta/astryx/commit/c8e1804d8) ci: drop off-PR and informational checks (#8894)
+  - 不适用：上游 CI 与 README 改动，Vue 的 lab README 不含这部分
 
 ### v0.7.8
 
-- [ ] [`9136e28c7`](https://github.com/meta/astryx/commit/9136e28c7) feat: a single-choice set of selectable cards is a radio group (lab SelectableCardGroup) (#8260)
+- [x] [`9136e28c7`](https://github.com/meta/astryx/commit/9136e28c7) feat: a single-choice set of selectable cards is a radio group (lab SelectableCardGroup) (#8260)
+  - 已移植：[#628](https://github.com/astryx-vue/astryx-vue/pull/628)。新增 lab 的 SelectableCardGroup 与 SelectableCardGroupItem：单选是单选组，多选是复选框组；core 的 SelectableCard 在组里改用单选框，只选中不取消，补测试和中英文档
 - [x] [`19081d81a`](https://github.com/meta/astryx/commit/19081d81a) chore(lab): remove MobileTokenizer and MobilePowerSearch, whose flows Core ships behind experimental.presentation (#9790)
   - 已移植：[#612](https://github.com/astryx-vue/astryx-vue/pull/612)。移除 lab 的 MobileTokenizer，触屏多值输入改用 core Tokenizer 的底部弹层呈现
 - [x] [`e390c3c43`](https://github.com/meta/astryx/commit/e390c3c43) test(browser): keep every Playwright browser context off remote hosts (#9811)
@@ -6420,25 +6460,37 @@
 ### v0.7.9
 
 - [ ] [`9d068fc89`](https://github.com/meta/astryx/commit/9d068fc89) feat(lab): useRefreshControl, UIKit's pull to refresh for an app's scroll container (#9865)
-- [ ] [`38f1a1d40`](https://github.com/meta/astryx/commit/38f1a1d40) fix(docsite): a fluid Overview showcase keeps an inset from its card's edges (#10027)
-- [ ] [`6f3befa82`](https://github.com/meta/astryx/commit/6f3befa82) feat(lab): CircleCheckIndicator, the iOS multiple-selection circle (#9723)
+  - 暂缓：useRefreshControl 要的 RefreshControl 组件在 Vue 还没有，归 lab 的触屏组件接入阶段
+- [x] [`38f1a1d40`](https://github.com/meta/astryx/commit/38f1a1d40) fix(docsite): a fluid Overview showcase keeps an inset from its card's edges (#10027)
+  - 不适用：上游文档站 Overview 里流式展示框与卡片边缘的间距，Vue 文档站演示容器自己带内边距
+- [x] [`6f3befa82`](https://github.com/meta/astryx/commit/6f3befa82) feat(lab): CircleCheckIndicator, the iOS multiple-selection circle (#9723)
+  - Vue 版已有：CircleCheckIndicator 已由 #536 加入
 - [ ] [`4e4cf84d2`](https://github.com/meta/astryx/commit/4e4cf84d2) feat(lab): NavigationStack, push/pop navigation that moves like UINavigationController (#9697)
+  - 暂缓：NavigationStack 在 Vue 还没有（推入弹出动画和侧滑返回），归 lab 的触屏组件接入阶段
 
 ### v0.7.10
 
-- [ ] [`cbda0753d`](https://github.com/meta/astryx/commit/cbda0753d) ci(release): publish canaries at most hourly from main's tip, plus an on-demand canary dispatch (#9659)
+- [x] [`cbda0753d`](https://github.com/meta/astryx/commit/cbda0753d) ci(release): publish canaries at most hourly from main's tip, plus an on-demand canary dispatch (#9659)
+  - 不适用：上游发布金丝雀版本的 CI 与 lab README 说明，Vue 仓库的发布流程不同
 - [ ] [`0cc540700`](https://github.com/meta/astryx/commit/0cc540700) feat(lab): PageControl, UIPageControl's indicators: a tap steps a page, a finger scrubs, every pointer pages (#9684)
+  - 暂缓：PageControl 在 Vue 还没有（点按翻页、手指拖动），归 lab 的触屏组件接入阶段
 
 ### v0.7.12
 
 - [ ] [`c18bc584c`](https://github.com/meta/astryx/commit/c18bc584c) feat(lab): TabBar, iOS 26's floating tab bar, with its selection lens and press tracking (#9700)
-- [ ] [`611382ee1`](https://github.com/meta/astryx/commit/611382ee1) feat(lab): add LineClamp — clamp arbitrary content to N lines (#4259)
-- [ ] [`848bbe7c7`](https://github.com/meta/astryx/commit/848bbe7c7) feat(lab): DialogHeroHeader (#10108)
-- [ ] [`f9cd81f14`](https://github.com/meta/astryx/commit/f9cd81f14) feat(lab): DialogHeroHeader showcase, and astryx discover lists it (#10109)
+  - 暂缓：TabBar 在 Vue 还没有（选择镜片与按压跟踪），归 lab 的触屏组件接入阶段
+- [x] [`611382ee1`](https://github.com/meta/astryx/commit/611382ee1) feat(lab): add LineClamp — clamp arbitrary content to N lines (#4259)
+  - Vue 版已有：LineClamp 已由 #511 加入
+- [x] [`848bbe7c7`](https://github.com/meta/astryx/commit/848bbe7c7) feat(lab): DialogHeroHeader (#10108)
+  - Vue 版已有：DialogHeroHeader 已由 #536 加入
+- [x] [`f9cd81f14`](https://github.com/meta/astryx/commit/f9cd81f14) feat(lab): DialogHeroHeader showcase, and astryx discover lists it (#10109)
+  - Vue 版已有：DialogHeroHeader 的文档站示例已在 #536 补上
 - [x] [`36b8f6ebc`](https://github.com/meta/astryx/commit/36b8f6ebc) feat(lab): TransferList reorders through core's createReorderable (#8143)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`6103d36e9`](https://github.com/meta/astryx/commit/6103d36e9) feat(lab): ListInput reorders through core's createReorderable (#8163)
   - 暂缓：lab ListInput 改用 createReorderable 与 ListReorderScope，Vue 版目前用自带的 useListReorder，等 createReorderable 移植后再迁
+  - 暂缓：ListInput 改用 createReorderable 属拖动重排任务，由另一代理负责
+  - 暂缓：ListInputShowcase 示例与抓手捏合缩放的浏览器用例随 ListInput 改用 createReorderable，归拖动重排任务
 - [x] [`4fbef8a6b`](https://github.com/meta/astryx/commit/4fbef8a6b) test(lab): the reorder-grip pinch spec runs for the grips it renders (#10736)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`349d3a8e6`](https://github.com/meta/astryx/commit/349d3a8e6) test(lab): the reorder-grip spec's scope no longer names a deleted file (#10864)
@@ -6447,10 +6499,12 @@
 ### v0.7.13
 
 - [ ] [`0085c0f2b`](https://github.com/meta/astryx/commit/0085c0f2b) feat(lab): TabBar shows a More tab past five tabs (#10619)
+  - 暂缓：TabBar 的更多标签页在 Vue 还没有，随 TabBar 一起
 
 ### v0.7.14
 
 - [ ] [`7deca3313`](https://github.com/meta/astryx/commit/7deca3313) feat(lab): SVG icons that follow the surrounding font-weight (#7918)
+  - 暂缓：随字重变化的 SVG 图标要用字重探测字体和按字重生成图标数据的构建脚本，Vue 仓库还没有这套资产流水线
 
 ### v0.7.17
 
@@ -6468,22 +6522,30 @@
 
 - [x] [`1b3f66800`](https://github.com/meta/astryx/commit/1b3f66800) fix(ComplexSelector): a disabled trigger keeps its tab stop (#7845)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`79fd9740d`](https://github.com/meta/astryx/commit/79fd9740d) fix(lab): MobileTokenizer and CommentComposer stay focusable when disabled (#7903)
+- [x] [`79fd9740d`](https://github.com/meta/astryx/commit/79fd9740d) fix(lab): MobileTokenizer and CommentComposer stay focusable when disabled (#7903)
+  - Vue 版已有：CommentComposerBase 的文件输入不带原生 disabled、忙碌时拒收文件、错误条的选图按钮忙碌时不开选择器（CommentComposer.test.ts 覆盖）；MobileTokenizer 部分随 lab 版移除，core 的 Tokenizer 用 useTokenizerDisabled 保持可聚焦
 
 ### v0.7.4
 
 - [ ] [`31e54e473`](https://github.com/meta/astryx/commit/31e54e473) feat(ListInput): reveal row actions with their record and hang the grip beside the first field (#7949)
-- [ ] [`faa934f8c`](https://github.com/meta/astryx/commit/faa934f8c) docs(ListInput): add a docsite showcase and three example blocks (#7953)
+  - 暂缓：ListInput 的行内操作随记录显现、抓手挂在首字段旁，和 ListInput 改用 createReorderable 的抓手与行结构是同一处改动（ListInputRow.vue、list-input.css），等拖动重排任务合并后再接（core 的 useContainerReveal 已有）
+- [x] [`faa934f8c`](https://github.com/meta/astryx/commit/faa934f8c) docs(ListInput): add a docsite showcase and three example blocks (#7953)
+  - 已移植：[#628](https://github.com/astryx-vue/astryx-vue/pull/628)。ListInput 文档页补了家庭成员、预算分配、邮件列表三个示例（中英）；上游的 discover 清单部分我们没有
 
 ### v0.7.5
 
-- [ ] [`77d435192`](https://github.com/meta/astryx/commit/77d435192) feat(lab): MobilePowerSearch — touch PowerSearch prototype (#7402)
+- [x] [`77d435192`](https://github.com/meta/astryx/commit/77d435192) feat(lab): MobilePowerSearch — touch PowerSearch prototype (#7402)
+  - 不适用：上游临时加入的 lab MobilePowerSearch，Vue 的 lab 已移除（#612），触屏筛选弹层由 core 的 PowerSearch 承担（PowerSearchBottomSheet.vue）
 - [x] [`509557499`](https://github.com/meta/astryx/commit/509557499) fix(cli): finish MobilePowerSearch discovery integration (#7983)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`100a7fe3b`](https://github.com/meta/astryx/commit/100a7fe3b) feat(lab): MobilePowerSearch edits list values through MobileTokenizer (#7979)
-- [ ] [`ae842c82a`](https://github.com/meta/astryx/commit/ae842c82a) fix(lab): MobilePowerSearch's sticky sheet header stays above the rows scrolling under it (#8005)
-- [ ] [`f0a5ceac7`](https://github.com/meta/astryx/commit/f0a5ceac7) fix(lab): MobilePowerSearch names its trigger by what it shows and announces inside its sheets (#8007)
+- [x] [`100a7fe3b`](https://github.com/meta/astryx/commit/100a7fe3b) feat(lab): MobilePowerSearch edits list values through MobileTokenizer (#7979)
+  - 不适用：lab MobilePowerSearch 与 MobileTokenizer 之间的列表值编辑，两个组件在 Vue 已移除，core 的 PowerSearch 弹层有对应的列表值编辑
+- [x] [`ae842c82a`](https://github.com/meta/astryx/commit/ae842c82a) fix(lab): MobilePowerSearch's sticky sheet header stays above the rows scrolling under it (#8005)
+  - 不适用：lab MobilePowerSearch 的粘性弹层页头，组件在 Vue 已移除；core 的弹层页头由弹层族负责
+- [x] [`f0a5ceac7`](https://github.com/meta/astryx/commit/f0a5ceac7) fix(lab): MobilePowerSearch names its trigger by what it shows and announces inside its sheets (#8007)
+  - 不适用：lab MobilePowerSearch 的触发器命名与播报，组件在 Vue 已移除；core 的 PowerSearch 弹层由搜索族负责
 - [ ] [`9effa5cb5`](https://github.com/meta/astryx/commit/9effa5cb5) fix(lab): a pinch that starts on a reorder grip zooms the page (#8126)
+  - 暂缓：抓手上起手的捏合缩放属于 ListInput 和 TransferList 的拖动抓手，随这两个组件改用 createReorderable 一起接，归拖动重排任务
 - [x] [`d794476b6`](https://github.com/meta/astryx/commit/d794476b6) fix(useAnnounce): messages announced in the same frame are joined, an identical repeat once (#8244)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`e52ef25f2`](https://github.com/meta/astryx/commit/e52ef25f2) [Component Audit] ComplexSelector: the trigger is a combobox field on both paths (#6991)
@@ -6496,26 +6558,37 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`b1a18b116`](https://github.com/meta/astryx/commit/b1a18b116) spec(AST-103): itemKey and the reported key are a string or a number (#8592)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`2a162e1b6`](https://github.com/meta/astryx/commit/2a162e1b6) feat(core): BottomSheet stacks by open order, replaces on a same-update switch, and BottomSheetSwitcher is deprecated (#7648)
-- [ ] [`a1a512d9e`](https://github.com/meta/astryx/commit/a1a512d9e) design(ordered-collection-reordering): current — insertion line, stable rows, commit on drop (AST-103 reorder mode) (#8625)
+- [x] [`2a162e1b6`](https://github.com/meta/astryx/commit/2a162e1b6) feat(core): BottomSheet stacks by open order, replaces on a same-update switch, and BottomSheetSwitcher is deprecated (#7648)
+  - 不适用：这里只涉及 lab 的 MobileTokenizer（已移除）；BottomSheet 按打开顺序叠放和 Switcher 弃用归底部弹层任务
+- [x] [`a1a512d9e`](https://github.com/meta/astryx/commit/a1a512d9e) design(ordered-collection-reordering): current — insertion line, stable rows, commit on drop (AST-103 reorder mode) (#8625)
+  - 不适用：上游内部设计文档和规范（docs/design、docs/specs），不是用户可见行为
 - [x] [`c01521cf9`](https://github.com/meta/astryx/commit/c01521cf9) spec(AST-094, AST-057): gestures work on the web for every pointer (FR43) (#8646)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`2002602b7`](https://github.com/meta/astryx/commit/2002602b7) spec(AST-103): optional positions() for grid and fan drops, and attach() for plain elements (#8601)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`b02fac607`](https://github.com/meta/astryx/commit/b02fac607) feat(lab): MobilePowerSearch's steps are standalone sheets that replace one another (#8476)
-- [ ] [`9d1ef5a40`](https://github.com/meta/astryx/commit/9d1ef5a40) feat(lab): MobileTokenizer at parity with Core's sheet presentation (#8739)
-- [ ] [`7681363c5`](https://github.com/meta/astryx/commit/7681363c5) feat(lab): MobilePowerSearch takes the Core sheet flow's behaviors (#8740)
-- [ ] [`d9da59f6e`](https://github.com/meta/astryx/commit/d9da59f6e) fix(lab): MobileTokenizer reports the sheet's focus hand-back as the entry when the trigger never had focus (#8768)
-- [ ] [`075fb3b94`](https://github.com/meta/astryx/commit/075fb3b94) fix(lab): MobilePowerSearch speaks a sheet's empty-result and unavailable messages only while that step is open (#8769)
-- [ ] [`70ea85903`](https://github.com/meta/astryx/commit/70ea85903) fix(lab): MobileTokenizer's closed trigger is the inline Tokenizer field's box (#8818)
-- [ ] [`0720bfaac`](https://github.com/meta/astryx/commit/0720bfaac) fix(MobilePowerSearch): refine touch filter flow (#8749)
-- [ ] [`b84bf77fa`](https://github.com/meta/astryx/commit/b84bf77fa) chore: move project links to meta/astryx (#8827)
+- [x] [`b02fac607`](https://github.com/meta/astryx/commit/b02fac607) feat(lab): MobilePowerSearch's steps are standalone sheets that replace one another (#8476)
+  - 不适用：lab MobilePowerSearch 的步骤改成各自独立的弹层，组件在 Vue 已移除；core 的 PowerSearch 弹层流程由搜索族负责
+- [x] [`9d1ef5a40`](https://github.com/meta/astryx/commit/9d1ef5a40) feat(lab): MobileTokenizer at parity with Core's sheet presentation (#8739)
+  - 不适用：lab MobileTokenizer 对齐 core 弹层，组件在 Vue 已移除，core 的 Tokenizer 弹层本来就是这个形态（TokenizerBottomSheet.vue）
+- [x] [`7681363c5`](https://github.com/meta/astryx/commit/7681363c5) feat(lab): MobilePowerSearch takes the Core sheet flow's behaviors (#8740)
+  - 不适用：lab MobilePowerSearch 吸收 core 弹层流程的行为，组件在 Vue 已移除
+- [x] [`d9da59f6e`](https://github.com/meta/astryx/commit/d9da59f6e) fix(lab): MobileTokenizer reports the sheet's focus hand-back as the entry when the trigger never had focus (#8768)
+  - 不适用：lab MobileTokenizer 弹层交还焦点的入口上报，组件在 Vue 已移除；core 弹层的焦点交还由弹层族负责
+- [x] [`075fb3b94`](https://github.com/meta/astryx/commit/075fb3b94) fix(lab): MobilePowerSearch speaks a sheet's empty-result and unavailable messages only while that step is open (#8769)
+  - 不适用：lab MobilePowerSearch 只在该步骤打开时播报空结果，组件在 Vue 已移除
+- [x] [`70ea85903`](https://github.com/meta/astryx/commit/70ea85903) fix(lab): MobileTokenizer's closed trigger is the inline Tokenizer field's box (#8818)
+  - 不适用：lab MobileTokenizer 的闭合触发器外观，组件在 Vue 已移除，core 的 Tokenizer 本身就是行内字段盒子
+- [x] [`0720bfaac`](https://github.com/meta/astryx/commit/0720bfaac) fix(MobilePowerSearch): refine touch filter flow (#8749)
+  - 不适用：lab MobilePowerSearch 触屏筛选流程微调，组件在 Vue 已移除
+- [x] [`b84bf77fa`](https://github.com/meta/astryx/commit/b84bf77fa) chore: move project links to meta/astryx (#8827)
+  - 不适用：上游项目链接改到 meta/astryx 的注释与 README 改动，Vue 仓库的链接不同
 
 ### v0.7.6
 
 - [x] [`8f345cba4`](https://github.com/meta/astryx/commit/8f345cba4) feat(FieldStatus): deprecate the tooltip variant; field controls keep statusVariant="tooltip" (#9196)
   - 已移植：[#593](https://github.com/astryx-vue/astryx-vue/pull/593)。导出 FieldStatusPlacement，字段控件的 statusVariant 改用它；Vue 版 FieldStatus 本来就没有 tooltip 变体
-- [ ] [`0df41f123`](https://github.com/meta/astryx/commit/0df41f123) fix(MobileTokenizer): refine touch sheet editing flow (#8742)
+- [x] [`0df41f123`](https://github.com/meta/astryx/commit/0df41f123) fix(MobileTokenizer): refine touch sheet editing flow (#8742)
+  - 不适用：lab MobileTokenizer 的触屏编辑流程以及 MobileSheetConfirmation、useDismissSearchOnTouchDrag 两个内部件，Vue 已移除；core 有对应的 SheetConfirmation.vue 与 dismissSearchOnTouchDrag.ts
 - [x] [`c5fbecb8d`](https://github.com/meta/astryx/commit/c5fbecb8d) spec(i18n, Resizable, AST-103): factories take announcement and label options with a catalog default (#9395)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`dabf6a125`](https://github.com/meta/astryx/commit/dabf6a125) lint: no-border-shorthand reaches lab and charts; ChartTooltip's card draws its border in prebuilt CSS (#9442)
@@ -6534,7 +6607,8 @@
 
 ### v0.7.8
 
-- [ ] [`9136e28c7`](https://github.com/meta/astryx/commit/9136e28c7) feat: a single-choice set of selectable cards is a radio group (lab SelectableCardGroup) (#8260)
+- [x] [`9136e28c7`](https://github.com/meta/astryx/commit/9136e28c7) feat: a single-choice set of selectable cards is a radio group (lab SelectableCardGroup) (#8260)
+  - 已移植：[#628](https://github.com/astryx-vue/astryx-vue/pull/628)。新增 lab 的 SelectableCardGroup 与 SelectableCardGroupItem：单选是单选组，多选是复选框组；core 的 SelectableCard 在组里改用单选框，只选中不取消，补测试和中英文档
 - [x] [`19081d81a`](https://github.com/meta/astryx/commit/19081d81a) chore(lab): remove MobileTokenizer and MobilePowerSearch, whose flows Core ships behind experimental.presentation (#9790)
   - 已移植：[#612](https://github.com/astryx-vue/astryx-vue/pull/612)。移除 lab 的 MobileTokenizer，触屏多值输入改用 core Tokenizer 的底部弹层呈现
 - [x] [`e390c3c43`](https://github.com/meta/astryx/commit/e390c3c43) test(browser): keep every Playwright browser context off remote hosts (#9811)
@@ -6542,42 +6616,54 @@
 
 ### v0.7.9
 
-- [ ] [`c26fcd543`](https://github.com/meta/astryx/commit/c26fcd543) chore(lab): Lab's animator hook, over Core's internal touch entry (#9754)
+- [x] [`c26fcd543`](https://github.com/meta/astryx/commit/c26fcd543) chore(lab): Lab's animator hook, over Core's internal touch entry (#9754)
   - 暂缓：内核部分已在 #563-#568；剩 DateInput 滚轮、SegmentedControl、Slider、Switch 触屏控制器与 lab RefreshControl 的动效接入，归动效与手势引擎的组件接入阶段
+  - 不适用：Lab 的动画钩子对接 Core 内部触屏入口，是 React 包之间的搬运；Vue 的 lab 组件直接用 core 的动效设施
 
 ### v0.7.10
 
 - [ ] [`0081c1165`](https://github.com/meta/astryx/commit/0081c1165) feat(lab): under a finger, NavigationStack's bar takes the iOS 26 look (#8396)
+  - 暂缓：NavigationStack 在 Vue 还没有，iOS 26 风格的栏和 useScrollEdgeEffect 随它一起做
 
 ### v0.7.11
 
-- [ ] [`1ab067962`](https://github.com/meta/astryx/commit/1ab067962) fix(TransferListSelector): a disabled selector keeps its row controls and search focusable (#10192)
+- [x] [`1ab067962`](https://github.com/meta/astryx/commit/1ab067962) fix(TransferListSelector): a disabled selector keeps its row controls and search focusable (#10192)
+  - 已移植：[#628](https://github.com/astryx-vue/astryx-vue/pull/628)。TransferList 新增 isDisabled，禁用后行按钮与搜索框仍可聚焦（aria-disabled），选项自己的限制说明不再出现；TransferListSelector 的 fieldset 改用 aria-disabled 并拒收改动。拖动中途被禁用时的收尾属拖动重排部分，随重排任务
 
 ### v0.7.12
 
 - [x] [`4e6e67df6`](https://github.com/meta/astryx/commit/4e6e67df6) fix(core): make disabled Button focusable via aria-disabled per AST-085 (#7906)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`5eb6b2137`](https://github.com/meta/astryx/commit/5eb6b2137) fix(lab): a swizzled ListInput type-checks without Node's types (#10574)
+- [x] [`5eb6b2137`](https://github.com/meta/astryx/commit/5eb6b2137) fix(lab): a swizzled ListInput type-checks without Node's types (#10574)
+  - 不适用：上游 swizzle 拷贝出去的 ListInput 在没有 Node 类型时的类型检查，Vue 版没有源码拷贝机制
 - [ ] [`33cf413d0`](https://github.com/meta/astryx/commit/33cf413d0) fix(NavigationStack): fade the veil for a late finger-scroll report (#10540)
   - 暂缓：本期已做迟到的手指滚动报告（#579）；剩 NavigationStack 遮罩渐隐，归组件接入阶段
+  - 暂缓：NavigationStack 遮罩对迟到的手指滚动报告渐隐，归 NavigationStack 组件接入
 - [x] [`a28d586eb`](https://github.com/meta/astryx/commit/a28d586eb) feat(core): createReorderable makes List rows reorderable (#8139)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`36b8f6ebc`](https://github.com/meta/astryx/commit/36b8f6ebc) feat(lab): TransferList reorders through core's createReorderable (#8143)
   - 暂缓：lab TransferList 改用 createReorderable，Vue 版目前用自带的 useTransferReorder，等 createReorderable 移植后再迁
+  - 暂缓：TransferList 改用 createReorderable 属拖动重排任务，由另一代理负责
 - [ ] [`6103d36e9`](https://github.com/meta/astryx/commit/6103d36e9) feat(lab): ListInput reorders through core's createReorderable (#8163)
   - 暂缓：lab ListInput 改用 createReorderable 与 ListReorderScope，Vue 版目前用自带的 useListReorder，等 createReorderable 移植后再迁
+  - 暂缓：ListInput 改用 createReorderable 属拖动重排任务，由另一代理负责
+  - 暂缓：ListInputShowcase 示例与抓手捏合缩放的浏览器用例随 ListInput 改用 createReorderable，归拖动重排任务
 - [x] [`f2a6332eb`](https://github.com/meta/astryx/commit/f2a6332eb) fix(List): a swizzled copy reads a package reorderable object (#10741)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`06ebae229`](https://github.com/meta/astryx/commit/06ebae229) fix(List): a drag follows a scroll around the list's scroll box (#10742)
   - 暂缓：拖动跟随列表滚动盒滚动，依赖重排引擎和 edgeAutoscroll、nearestScroller，均未移植
-- [ ] [`642cc2de1`](https://github.com/meta/astryx/commit/642cc2de1) fix(lab): write latest-value refs at commit, not during render (#10780)
+  - 暂缓：拖动跟随滚动盒的滚动，随 createReorderable 一起，归拖动重排任务
+- [x] [`642cc2de1`](https://github.com/meta/astryx/commit/642cc2de1) fix(lab): write latest-value refs at commit, not during render (#10780)
+  - 不适用：React 在提交阶段写最新值 ref 的规范；Vue 的 ref 没有渲染期写入的问题
 
 ### v0.7.17
 
-- [ ] [`0ed056cd0`](https://github.com/meta/astryx/commit/0ed056cd0) docs(TransferListSelector): dense text names the control props (#11922)
+- [x] [`0ed056cd0`](https://github.com/meta/astryx/commit/0ed056cd0) docs(TransferListSelector): dense text names the control props (#11922)
+  - 已移植：[#628](https://github.com/astryx-vue/astryx-vue/pull/628)。TransferList 中英文档的属性表补上 isDisabled；上游的文档测试文件我们没有对应物
 - [x] [`8ecfe59a4`](https://github.com/meta/astryx/commit/8ecfe59a4) chore: land batch 61 (4 pull requests) (#12940)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`9d23a5e6e`](https://github.com/meta/astryx/commit/9d23a5e6e) chore: land batch 87 (2 pull requests) (#13021)
+- [x] [`9d23a5e6e`](https://github.com/meta/astryx/commit/9d23a5e6e) chore: land batch 87 (2 pull requests) (#13021)
+  - 不适用：上游只是把 LoadingMessage 文件挪进 internal 目录，改了几处 import
 
 ## 实验包：浮层与引导（area:lab）
 
