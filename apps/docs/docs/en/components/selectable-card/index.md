@@ -43,7 +43,7 @@ function toggle(id: string, isSelected: boolean) {
 </template>
 ```
 
-Use `SelectableCard` for multi-select choices, such as filter chips, feature add-ons, or option grids where several can be on, and track the selected IDs in a `Set`. Do not use it for a single-select group: each card is a checkbox, so assistive technology announces a multi-select group with one tab stop per card. For one choice among several, use `RadioList`.
+Use `SelectableCard` for multi-select choices, such as filter chips, feature add-ons, or option grids where several can be on, and track the selected IDs in a `Set`. Do not use it for a single-select group: each card is a checkbox, so assistive technology announces a multi-select group with one tab stop per card. For one choice among several, use `RadioList`, or `SelectableCardGroup` from `@astryx-vue/lab` when the choices should look like cards: it renders the cards as one radio group.
 
 
 <ComponentAnatomy />

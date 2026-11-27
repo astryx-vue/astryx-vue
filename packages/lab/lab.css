@@ -20,6 +20,7 @@
 @import './styles/comment-pin.css';
 @import './styles/emoji-picker.css';
 @import './styles/schedule.css';
+@import './styles/selectable-card-group.css';
 @import './styles/media-player.css';
 @import './styles/video-player.css';
 @import './styles/audio-player.css';

@@ -28,6 +28,7 @@ import { TransferList } from '@astryx-vue/lab'
 | `selectedLabel` / `availableLabel` | `string` | 内置文案 | 两个面板的标题。 |
 | `description` | `string` | `undefined` | 标签下方的说明。 |
 | `isLabelHidden` | `boolean` | `false` | 是否视觉隐藏标签。 |
+| `isDisabled` | `boolean` | `false` | 禁用所有搬运、排序、清空、全部添加和搜索，行上的按钮和搜索框仍可聚焦。 |
 | `hasSearch` | `boolean` | `false` | 是否显示共用搜索框。 |
 | `searchLabel` / `searchPlaceholder` | `string` | 内置文案 | 搜索框名称和提示。 |
 | `isReorderable` | `boolean` | `true` | 已选项是否可排序。 |

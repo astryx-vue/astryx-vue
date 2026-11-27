@@ -212,6 +212,17 @@ export type {
   ZonedDateTimeRange,
 } from './Schedule/index.js'
 
+export { SelectableCardGroup, SelectableCardGroupItem } from './SelectableCardGroup/index.js'
+export type {
+  SelectableCardGroupEmits,
+  SelectableCardGroupItemProps,
+  SelectableCardGroupItemSlots,
+  SelectableCardGroupOrientation,
+  SelectableCardGroupProps,
+  SelectableCardGroupSelectionMode,
+  SelectableCardGroupSlots,
+} from './SelectableCardGroup/index.js'
+
 export { Stat } from './Stat/index.js'
 export type { StatDelta, StatDeltaDirection, StatDeltaSentiment, StatProps, StatSize } from './Stat/index.js'
 

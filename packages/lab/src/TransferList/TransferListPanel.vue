@@ -73,8 +73,8 @@ function rowState(option: TransferListOption<T>): 'disabled' | 'reordering' | 'e
       </Text>
       <button
         v-if="showAction" type="button" class="astryx-transfer-list-header-action"
-        data-transfer-list-header-action="true" :disabled="isActionDisabled"
-        @click="emit('action')"
+        data-transfer-list-header-action="true" :aria-disabled="isActionDisabled ? 'true' : undefined"
+        @click="!isActionDisabled && emit('action')"
       >
         {{ actionLabel }}
       </button>

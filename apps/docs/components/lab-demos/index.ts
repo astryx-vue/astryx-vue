@@ -37,6 +37,12 @@ import infoTipDemo from './info-tip.vue'
 import infoTipSource from './info-tip.vue?raw&highlighted'
 import lineClampDemo from './line-clamp.vue'
 import lineClampSource from './line-clamp.vue?raw&highlighted'
+import listInputBudgetAllocationDemo from './list-input-budget-allocation.vue'
+import listInputBudgetAllocationSource from './list-input-budget-allocation.vue?raw&highlighted'
+import listInputFamilyMembersDemo from './list-input-family-members.vue'
+import listInputFamilyMembersSource from './list-input-family-members.vue?raw&highlighted'
+import listInputMailingListDemo from './list-input-mailing-list.vue'
+import listInputMailingListSource from './list-input-mailing-list.vue?raw&highlighted'
 import listInputDemo from './list-input.vue'
 import listInputSource from './list-input.vue?raw&highlighted'
 import logStreamOverviewDemo from './log-stream-overview.vue'
@@ -47,6 +53,8 @@ import mediaPlayerDemo from './media-player.vue'
 import mediaPlayerSource from './media-player.vue?raw&highlighted'
 import scheduleDemo from './schedule.vue'
 import scheduleSource from './schedule.vue?raw&highlighted'
+import selectableCardGroupDemo from './selectable-card-group.vue'
+import selectableCardGroupSource from './selectable-card-group.vue?raw&highlighted'
 import statDemo from './stat.vue'
 import statSource from './stat.vue?raw&highlighted'
 import svgIconDemo from './svg-icon.vue'
@@ -66,6 +74,7 @@ const options = { className: 'lab-demo' }
 
 export const labChatEmojiPicker = defineDemo(chatEmojiPickerDemo, chatEmojiPickerSource, options)
 export const labChatReactionBar = defineDemo(chatReactionBarDemo, chatReactionBarSource, options)
+export const labSelectableCardGroup = defineDemo(selectableCardGroupDemo, selectableCardGroupSource, options)
 export const labCircleCheckIndicator = defineDemo(circleCheckIndicatorDemo, circleCheckIndicatorSource, options)
 export const labDialogHeroHeader = defineDemo(dialogHeroHeaderDemo, dialogHeroHeaderSource, options)
 export const labCircularProgress = defineDemo(circularProgressDemo, circularProgressSource, options)
@@ -83,6 +92,9 @@ export const labDiffViewerOverview = defineDemo(diffViewerOverviewDemo, diffView
 export const labInfoTip = defineDemo(infoTipDemo, infoTipSource, options)
 export const labLineClamp = defineDemo(lineClampDemo, lineClampSource, options)
 export const labListInput = defineDemo(listInputDemo, listInputSource, options)
+export const labListInputBudgetAllocation = defineDemo(listInputBudgetAllocationDemo, listInputBudgetAllocationSource, options)
+export const labListInputFamilyMembers = defineDemo(listInputFamilyMembersDemo, listInputFamilyMembersSource, options)
+export const labListInputMailingList = defineDemo(listInputMailingListDemo, listInputMailingListSource, options)
 export const labLogStream = defineDemo(logStreamDemo, logStreamSource, options)
 export const labLogStreamOverview = defineDemo(logStreamOverviewDemo, logStreamOverviewSource, options)
 export const labMediaPlayer = defineDemo(mediaPlayerDemo, mediaPlayerSource, options)

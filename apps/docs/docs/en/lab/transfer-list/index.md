@@ -28,6 +28,7 @@ import { TransferList } from '@astryx-vue/lab'
 | `selectedLabel` / `availableLabel` | `string` | Built-in text | Panel headings. |
 | `description` | `string` | `undefined` | Supporting text below the label. |
 | `isLabelHidden` | `boolean` | `false` | Hides the label visually. |
+| `isDisabled` | `boolean` | `false` | Disables every transfer, reorder, Clear, Add all and search control. Row controls and the search field stay focusable. |
 | `hasSearch` | `boolean` | `false` | Shows shared search. |
 | `searchLabel` / `searchPlaceholder` | `string` | Built-in text | Search label and placeholder. |
 | `isReorderable` | `boolean` | `true` | Allows selected-option reordering. |

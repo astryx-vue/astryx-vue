@@ -14,6 +14,7 @@ defineOptions({ name: 'AstryxTransferList', inheritAttrs: false })
 const props = withDefaults(defineProps<TransferListProps<T>>(), {
   modelValue: () => [],
   isLabelHidden: false,
+  isDisabled: false,
   hasSearch: false,
   isReorderable: true,
   hasSelectAll: false,
@@ -58,9 +59,16 @@ const selectedEmptyText = computed(() => props.selectedEmptyText ?? messages.val
 const availableEmptyText = computed(() => props.availableEmptyText ?? messages.value.transferList.availableEmpty)
 const noResultsText = computed(() => props.noResultsText ?? messages.value.transferList.noResults)
 
+/** 整个列表禁用时，每个选项都搬不动、调不了顺序，选项自己的说明不再适用。 */
+const options = computed<readonly TransferListOption<T>[]>(() =>
+  props.isDisabled
+    ? props.options.map(option => ({ ...option, isTransferDisabled: true, isReorderDisabled: true, disabledMessage: undefined }))
+    : props.options,
+)
+
 const optionByValue = computed(() => {
   const map = new Map<T, TransferListOption<T>>()
-  for (const option of props.options)
+  for (const option of options.value)
     map.set(option.value, option)
   return map
 })
@@ -75,7 +83,7 @@ const selectedOptions = computed<TransferListOption<T>[]>(() =>
 
 const availableOptions = computed<TransferListOption<T>[]>(() => {
   const selectedValues = new Set(props.modelValue)
-  return props.options.filter(option => !selectedValues.has(option.value) && matchesQuery(option, normalizedQuery.value))
+  return options.value.filter(option => !selectedValues.has(option.value) && matchesQuery(option, normalizedQuery.value))
 })
 
 const selectedGroups = computed<PanelGroup<T>[]>(() => [{
@@ -157,7 +165,7 @@ function removeOption(option: TransferListOption<T>, index: number): void {
 }
 
 function addAll(): void {
-  const additions = props.options
+  const additions = options.value
     .filter(option => !option.isTransferDisabled && !liveValue.value.includes(option.value))
     .map(option => option.value)
   if (additions.length === 0)
@@ -185,16 +193,16 @@ function handleSearch(nextQuery: string): void {
     announce('')
     return
   }
-  const count = props.options.filter(option => matchesQuery(option, normalized)).length
+  const count = options.value.filter(option => matchesQuery(option, normalized)).length
   announce(messages.value.transferList.announceSearchResults(count))
 }
 
 const isClearDisabled = computed(() =>
-  !props.modelValue.some(optionValue => !optionByValue.value.get(optionValue)?.isTransferDisabled),
+  props.isDisabled || !props.modelValue.some(optionValue => !optionByValue.value.get(optionValue)?.isTransferDisabled),
 )
 
 const isAddAllDisabled = computed(() =>
-  !props.options.some(option => !option.isTransferDisabled && !props.modelValue.includes(option.value)),
+  !options.value.some(option => !option.isTransferDisabled && !props.modelValue.includes(option.value)),
 )
 
 const describedBy = computed(() => {
@@ -246,7 +254,7 @@ const handlers = {
     <div v-if="hasSearch" class="astryx-transfer-list__controls">
       <TextInput
         :model-value="query" role="searchbox" :label="searchLabel" is-label-hidden :placeholder="searchPlaceholder"
-        :start-icon="SearchIcon" has-clear width="100%"
+        :start-icon="SearchIcon" has-clear width="100%" :is-disabled="isDisabled"
         control-class="astryx-transfer-list__search" @update:model-value="handleSearch"
       />
     </div>

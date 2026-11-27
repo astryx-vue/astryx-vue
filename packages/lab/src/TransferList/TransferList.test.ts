@@ -290,6 +290,29 @@ describe('transferList', () => {
   })
 
   describe('option constraints and bulk actions', () => {
+    it('disables every control while keeping them focusable, without option-specific messages', async () => {
+      const spy = vi.fn()
+      const wrapper = mountList({
+        options: LOCKED_OPTIONS,
+        initialValue: ['name', 'owner'],
+        spy,
+        extra: { hasSearch: true, hasClear: true, hasSelectAll: true, isDisabled: true },
+      })
+      const remove = buttonByName(wrapper, 'Remove Name')
+      expect(remove.attributes('aria-disabled')).toBe('true')
+      expect(remove.attributes('disabled')).toBeUndefined()
+      ;(remove.element as HTMLElement).focus()
+      expect(document.activeElement).toBe(remove.element)
+      ;(remove.element as HTMLElement).click()
+      expect(spy).not.toHaveBeenCalled()
+      expect(buttonByName(wrapper, 'Reorder Name').attributes('aria-disabled')).toBe('true')
+      expect(buttonByName(wrapper, 'Clear').attributes('aria-disabled')).toBe('true')
+      expect(buttonByName(wrapper, 'Add all').attributes('aria-disabled')).toBe('true')
+      expect(wrapper.get('[role="searchbox"]').attributes('aria-disabled')).toBe('true')
+      expect(wrapper.text()).not.toContain('Owner is required and fixed in position.')
+      wrapper.unmount()
+    })
+
     it('keeps locked controls visible and disabled', () => {
       const wrapper = mountList({ options: LOCKED_OPTIONS, initialValue: ['owner', 'status'] })
 
