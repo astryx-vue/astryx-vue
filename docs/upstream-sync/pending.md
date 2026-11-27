@@ -9340,7 +9340,8 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`d52db364d`](https://github.com/meta/astryx/commit/d52db364d) [Release] Exempt translations from Changeset coverage (#7644)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`a44ebd55a`](https://github.com/meta/astryx/commit/a44ebd55a) feat(cli): install once, run anywhere — every copy hands a project's run to the release its Core matches (#7649)
+- [x] [`a44ebd55a`](https://github.com/meta/astryx/commit/a44ebd55a) feat(cli): install once, run anywhere — every copy hands a project's run to the release its Core matches (#7649)
+  - 不适用：上游把项目的运行交给与 Core 对应版本发布的机制，涉及上游 CLI 与 README，Vue 的 upgrade 只读
 
 ### v0.7.5
 
@@ -9360,7 +9361,8 @@
   - 已移植：[#517](https://github.com/astryx-vue/astryx-vue/pull/517)。core 新增默认状态色表，组件改读正确的状态角色
 - [x] [`c115ceeea`](https://github.com/meta/astryx/commit/c115ceeea) architecture: touch behavior comes from shared internal modules; Core and Lab reach them through ./internal/* (INV13) (#8464)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`b84bf77fa`](https://github.com/meta/astryx/commit/b84bf77fa) chore: move project links to meta/astryx (#8827)
+- [x] [`b84bf77fa`](https://github.com/meta/astryx/commit/b84bf77fa) chore: move project links to meta/astryx (#8827)
+  - 不适用：上游把项目链接改到 meta/astryx，只涉及上游 README、博客、规格和语法主题文件头注释，Vue 版有自己的链接
 
 ### v0.7.6
 
@@ -9374,10 +9376,12 @@
 
 ### v0.7.12
 
-- [ ] [`3bbab18c8`](https://github.com/meta/astryx/commit/3bbab18c8) Align Theme Showcase with Astryx template conventions (#10404)
+- [x] [`3bbab18c8`](https://github.com/meta/astryx/commit/3bbab18c8) Align Theme Showcase with Astryx template conventions (#10404)
+  - Vue 版已有：theme-showcase 模板已按 Vue 模板约定写，每个区块用 core 组件和令牌
 - [x] [`72968acd8`](https://github.com/meta/astryx/commit/72968acd8) fix(cli): swizzle carries another Astryx package's internal modules, except exported StyleX modules (#10595)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`3eeda1b1d`](https://github.com/meta/astryx/commit/3eeda1b1d) docs(tailwind): a recipe for an app that already uses Tailwind, and what a misplaced @layer line does (#10532)
+- [x] [`3eeda1b1d`](https://github.com/meta/astryx/commit/3eeda1b1d) docs(tailwind): a recipe for an app that already uses Tailwind, and what a misplaced @layer line does (#10532)
+  - 已移植：[#614](https://github.com/astryx-vue/astryx-vue/pull/614)。样式指南补 @layer 语句写在 @import 'tailwindcss' 之后的后果
 - [x] [`18f7f84f0`](https://github.com/meta/astryx/commit/18f7f84f0) fix(release): admit proven test repairs (#10850)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`73c1a4917`](https://github.com/meta/astryx/commit/73c1a4917) fix: bound the final v0.7.12 policy carry (#10923)
@@ -9385,7 +9389,8 @@
 
 ### v0.7.16
 
-- [ ] [`77c3d25d7`](https://github.com/meta/astryx/commit/77c3d25d7) docs(themes): fix theme README usage examples for Theme provider (#11016)
+- [x] [`77c3d25d7`](https://github.com/meta/astryx/commit/77c3d25d7) docs(themes): fix theme README usage examples for Theme provider (#11016)
+  - Vue 版已有：主题 README 写的是 data-astryx-theme 加 import css 的用法，没有 XDSTheme 别名
 - [x] [`6bf031ae9`](https://github.com/meta/astryx/commit/6bf031ae9) docs(cli): help and docs point at the experimental theme editor for making and changing a theme (#11500)
   - 不适用：上游内部规范和架构文档（自动初筛）
 
@@ -9405,14 +9410,16 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`ce3eb6270`](https://github.com/meta/astryx/commit/ce3eb6270) [experimental] cli: discover lists icon packs before an app picks one (#12220)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`daf5e2cb3`](https://github.com/meta/astryx/commit/daf5e2cb3) chore: land batch 3 (13 pull requests) (#12722)
+- [x] [`daf5e2cb3`](https://github.com/meta/astryx/commit/daf5e2cb3) chore: land batch 3 (13 pull requests) (#12722)
+  - 已移植  #503 #530：[#637](https://github.com/astryx-vue/astryx-vue/pull/637)。Chocolate 浅色分类文字色加深到上游值（#637）；其余是 CLI 与 Kbd 等别族条目
 - [x] [`a60f74251`](https://github.com/meta/astryx/commit/a60f74251) chore: land batch 12 (3 pull requests) (#12841)
   - 不适用：只改上游 gestures/README.md，Vue 版的说明写在源码注释和文档页里
 - [x] [`a8001d84f`](https://github.com/meta/astryx/commit/a8001d84f) chore: land batch 44 (1 pull requests) (#12919)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`1f48950f9`](https://github.com/meta/astryx/commit/1f48950f9) chore: land batch 67 (7 pull requests) (#12957)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`59fd4151b`](https://github.com/meta/astryx/commit/59fd4151b) chore: land batch 82 (7 pull requests) (#12992)
+- [x] [`59fd4151b`](https://github.com/meta/astryx/commit/59fd4151b) chore: land batch 82 (7 pull requests) (#12992)
+  - 已移植  #539：[#537](https://github.com/astryx-vue/astryx-vue/pull/537)。样式指南补自己写样式的守则；默认单元格把 Invalid Date 显示为空格子
 - [x] [`d8ed55621`](https://github.com/meta/astryx/commit/d8ed55621) spec(AST-017): Charts may import Core's internal subpaths (#12779)
   - 不适用：上游内部规范和架构文档（自动初筛）
 
@@ -9427,7 +9434,8 @@
 
 - [x] [`23de0923e`](https://github.com/meta/astryx/commit/23de0923e) spec(AST-094): touch presentations feel native by default (#8409)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`b84bf77fa`](https://github.com/meta/astryx/commit/b84bf77fa) chore: move project links to meta/astryx (#8827)
+- [x] [`b84bf77fa`](https://github.com/meta/astryx/commit/b84bf77fa) chore: move project links to meta/astryx (#8827)
+  - 不适用：上游把项目链接改到 meta/astryx，只涉及上游 README、博客、规格和语法主题文件头注释，Vue 版有自己的链接
 
 ### v0.7.6
 
@@ -9438,8 +9446,10 @@
 
 ### v0.7.2
 
-- [ ] [`d3ec0b25c`](https://github.com/meta/astryx/commit/d3ec0b25c) fix(AspectRatio): fit fills the box on the documented Tailwind setups (#7521)
-- [ ] [`1a2f1dc05`](https://github.com/meta/astryx/commit/1a2f1dc05) feat(core): the dropdown marker of a field with a list sits in its middle (#7526)
+- [x] [`d3ec0b25c`](https://github.com/meta/astryx/commit/d3ec0b25c) fix(AspectRatio): fit fills the box on the documented Tailwind setups (#7521)
+  - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。AspectRatio 的 fit 子元素尺寸从 reset 层挪到 base 层
+- [x] [`1a2f1dc05`](https://github.com/meta/astryx/commit/1a2f1dc05) feat(core): the dropdown marker of a field with a list sits in its middle (#7526)
+  - 已移植：[#637](https://github.com/astryx-vue/astryx-vue/pull/637)。reset.css 加 :where([list])::-webkit-calendar-picker-indicator { line-height: 1 }，带 list 的输入框下拉标记回到中线，补测试
 
 ### v0.7.5
 
@@ -9453,11 +9463,14 @@
 
 ### v0.7.17
 
-- [ ] [`f6584cd42`](https://github.com/meta/astryx/commit/f6584cd42) fix(core): text in the page body no longer falls back to the browser's serif font (#11794)
+- [x] [`f6584cd42`](https://github.com/meta/astryx/commit/f6584cd42) fix(core): text in the page body no longer falls back to the browser's serif font (#11794)
+  - 已移植：[#637](https://github.com/astryx-vue/astryx-vue/pull/637)。reset.css 的 html 取 --astryx-font-family-body，页面里不在主题包装元素内的文字不再退回衬线体，补测试；Chromium a11y 规格属上游测试设施
 - [x] [`dda98593d`](https://github.com/meta/astryx/commit/dda98593d) fix(core): the switch thumb stays round, and inherited text takes the theme's body size (#12236)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`8688c1885`](https://github.com/meta/astryx/commit/8688c1885) chore: land batch 6 (11 pull requests) (#12812)
-- [ ] [`6c12793c1`](https://github.com/meta/astryx/commit/6c12793c1) chore: land batch 41 (1 pull requests) (#12916)
+- [x] [`8688c1885`](https://github.com/meta/astryx/commit/8688c1885) chore: land batch 6 (11 pull requests) (#12812)
+  - 已移植  #620：[#600](https://github.com/astryx-vue/astryx-vue/pull/600)。页脚操作换行、Neutral 暗色次要文字 #a8a8a8；reset 占位文字回退色 Vue 取中性主题默认值并有测试，Chromium a11y 规格与别的批内条目不适用
+- [x] [`6c12793c1`](https://github.com/meta/astryx/commit/6c12793c1) chore: land batch 41 (1 pull requests) (#12916)
+  - 已移植：[#623](https://github.com/astryx-vue/astryx-vue/pull/623)。仪表盘图表刻度文字回退色；reset 占位文字回退色 Vue 取中性主题默认值，Chromium a11y 规格不适用
 
 ## 富文本编辑器（area:richtext）
 
@@ -11297,27 +11310,35 @@
 
 ### v0.7.2
 
-- [ ] [`86e839219`](https://github.com/meta/astryx/commit/86e839219) feat(core): promote Drawer and DrawerHeader from Lab (#6071)
+- [x] [`86e839219`](https://github.com/meta/astryx/commit/86e839219) feat(core): promote Drawer and DrawerHeader from Lab (#6071)
+  - Vue 版已有：Drawer 和 DrawerHeader 本来就在 core，本范围只有上游 probe 主题（私有的视觉闸门夹具）的改动，Vue 没有
 
 ### v0.7.3
 
-- [ ] [`06872b48b`](https://github.com/meta/astryx/commit/06872b48b) fix(themes): keep the secondary ComplexSelector hover off an aria-disabled trigger (#7846)
+- [x] [`06872b48b`](https://github.com/meta/astryx/commit/06872b48b) fix(themes): keep the secondary ComplexSelector hover off an aria-disabled trigger (#7846)
+  - Vue 版已有：core/styles/complex-selector.css 的 secondary 悬停写作 :not(:disabled, [aria-disabled='true'])，禁用的触发器不亮；Vue 主题 CSS 里没有这条主题侧的悬停规则
 
 ### v0.7.4
 
 - [x] [`813c1d59e`](https://github.com/meta/astryx/commit/813c1d59e) Share theme palette reference generation (#7678)
   - 不适用：上游仓库脚本（自动初筛）
-- [ ] [`e5c5a8738`](https://github.com/meta/astryx/commit/e5c5a8738) Adopt reviewed Stone palette (#7669)
-- [ ] [`3f6ea7d78`](https://github.com/meta/astryx/commit/3f6ea7d78) Adopt reviewed Gothic palette (#7670)
-- [ ] [`28b1cd457`](https://github.com/meta/astryx/commit/28b1cd457) Adopt reviewed Matcha palette (#7671)
-- [ ] [`39f715386`](https://github.com/meta/astryx/commit/39f715386) Adopt reviewed Butter palette (#7672)
-- [ ] [`3c4005ec2`](https://github.com/meta/astryx/commit/3c4005ec2) Adopt reviewed Y2K palette (#7675)
+- [x] [`e5c5a8738`](https://github.com/meta/astryx/commit/e5c5a8738) Adopt reviewed Stone palette (#7669)
+  - 已移植：[#637](https://github.com/astryx-vue/astryx-vue/pull/637)。Stone 的主题 token 已与审定后的调色板逐项一致（脚本对照上游主题源码），补上输入框状态描边与图标的审定色阶并更新 theme-parity 测试；调色板生成链、receipt、spec 属上游工具不适用
+- [x] [`3f6ea7d78`](https://github.com/meta/astryx/commit/3f6ea7d78) Adopt reviewed Gothic palette (#7670)
+  - Vue 版已有：Gothic 的 base.css 与审定后的调色板逐项一致（脚本对照上游主题源码）；生成的调色板文件与 receipt 属上游工具不适用
+- [x] [`28b1cd457`](https://github.com/meta/astryx/commit/28b1cd457) Adopt reviewed Matcha palette (#7671)
+  - Vue 版已有：Matcha 的 base.css 与审定后的调色板逐项一致；生成的调色板文件与 receipt 属上游工具不适用
+- [x] [`39f715386`](https://github.com/meta/astryx/commit/39f715386) Adopt reviewed Butter palette (#7672)
+  - Vue 版已有：Butter 的 base.css 与审定后的调色板逐项一致；生成的调色板文件与 receipt 属上游工具不适用
+- [x] [`3c4005ec2`](https://github.com/meta/astryx/commit/3c4005ec2) Adopt reviewed Y2K palette (#7675)
+  - Vue 版已有：Y2K 的 base.css 与审定后的调色板逐项一致；生成的调色板文件与 receipt 属上游工具不适用
 
 ### v0.7.5
 
 - [x] [`b298b37d1`](https://github.com/meta/astryx/commit/b298b37d1) feat(theme): add surface-specific status color roles (#7657)
   - 已移植：[#517](https://github.com/astryx-vue/astryx-vue/pull/517)。core 新增默认状态色表，组件改读正确的状态角色
-- [ ] [`b84bf77fa`](https://github.com/meta/astryx/commit/b84bf77fa) chore: move project links to meta/astryx (#8827)
+- [x] [`b84bf77fa`](https://github.com/meta/astryx/commit/b84bf77fa) chore: move project links to meta/astryx (#8827)
+  - 不适用：上游把项目链接改到 meta/astryx，只涉及上游 README、博客、规格和语法主题文件头注释，Vue 版有自己的链接
 
 ### v0.7.6
 
@@ -11328,23 +11349,32 @@
 
 - [x] [`2defb18b6`](https://github.com/meta/astryx/commit/2defb18b6) chore(api): regenerate the API reports for CheckboxList isOptional, CodeBlock startLineNumber and --duration-exit (#9868)
   - 不适用：上游 API 报告（自动初筛）
-- [ ] [`eb5e49661`](https://github.com/meta/astryx/commit/eb5e49661) fix(visual-gate): probe backgrounds keep their distance from the fixed probe text colour (#10125)
-- [ ] [`7f296f17e`](https://github.com/meta/astryx/commit/7f296f17e) fix(theme-neutral): the selected fill is visible on every surface in both modes (#10093)
+- [x] [`eb5e49661`](https://github.com/meta/astryx/commit/eb5e49661) fix(visual-gate): probe backgrounds keep their distance from the fixed probe text colour (#10125)
+  - 不适用：上游视觉闸门探针主题（私有夹具）的背景距离调整，Vue 没有探针主题和视觉闸门
+- [x] [`7f296f17e`](https://github.com/meta/astryx/commit/7f296f17e) fix(theme-neutral): the selected fill is visible on every surface in both modes (#10093)
+  - Vue 版已有：neutral/base.css 的 accent-muted 是 #d4d4d4 / #474747，代码注释与标点是 #525252 / #b9b9b9，selected-text.css 把选中行、树节点、拖放区、数字角标的次要文字提到 #c6c6c6
 
 ### v0.7.11
 
-- [ ] [`028e6ca19`](https://github.com/meta/astryx/commit/028e6ca19) test(visual-gate): regenerate the probe theme from the current component docs (#10227)
+- [x] [`028e6ca19`](https://github.com/meta/astryx/commit/028e6ca19) test(visual-gate): regenerate the probe theme from the current component docs (#10227)
+  - 不适用：上游视觉闸门探针主题由组件文档重新生成，Vue 没有探针主题
 
 ### v0.7.12
 
-- [ ] [`732c33874`](https://github.com/meta/astryx/commit/732c33874) fix(themes): Butter, Stone and Y2K set supporting text in rem (#10320)
-- [ ] [`7bc8230f8`](https://github.com/meta/astryx/commit/7bc8230f8) fix(Button): a labelled button grows with its label (#10588)
-- [ ] [`544442239`](https://github.com/meta/astryx/commit/544442239) fix(Button): at the default text size a labelled button renders exactly as before (#10678)
+- [x] [`732c33874`](https://github.com/meta/astryx/commit/732c33874) fix(themes): Butter, Stone and Y2K set supporting text in rem (#10320)
+  - Vue 版已有：butter、stone、y2k 的 base.css 补充文字大小已是 0.75rem（乘以动态字号系数）
+- [x] [`7bc8230f8`](https://github.com/meta/astryx/commit/7bc8230f8) fix(Button): a labelled button grows with its label (#10588)
+  - Vue 版已有：button.css 的 height 取尺寸与 1lh 的较大值，带文字的按钮随文字长高
+- [x] [`544442239`](https://github.com/meta/astryx/commit/544442239) fix(Button): at the default text size a labelled button renders exactly as before (#10678)
+  - Vue 版已有：同 button.css，默认字号下渲染不变
 - [x] [`462c0e975`](https://github.com/meta/astryx/commit/462c0e975) chore(api-report): refresh butter and y2k reports for the press-marker selector (#10885)
   - 不适用：上游 API 报告（自动初筛）
-- [ ] [`971d57533`](https://github.com/meta/astryx/commit/971d57533) fix(theme-gothic): accent text and icons stay readable on a light media surface (#10852)
-- [ ] [`0b5663f2b`](https://github.com/meta/astryx/commit/0b5663f2b) fix(theme-neutral): lift an unselected SegmentedControl label to 4.5:1 on the dark track (#10881)
-- [ ] [`5d0a07467`](https://github.com/meta/astryx/commit/5d0a07467) fix(themes): secondary text meets 4.5:1 in Matcha and Y2K light mode (#10932)
+- [x] [`971d57533`](https://github.com/meta/astryx/commit/971d57533) fix(theme-gothic): accent text and icons stay readable on a light media surface (#10852)
+  - 已移植：[#637](https://github.com/astryx-vue/astryx-vue/pull/637)。新增 gothic/media-accent.css：媒体表面里强调文字和图标跟着该表面的 accent，深色表面嵌在浅色表面里也拿回浅色强调；补测试
+- [x] [`0b5663f2b`](https://github.com/meta/astryx/commit/0b5663f2b) fix(theme-neutral): lift an unselected SegmentedControl label to 4.5:1 on the dark track (#10881)
+  - Vue 版已有：neutral 的次要文字暗色整体提到 #a8a8a8，selected-text.css 里未选中的分段标签前景取 #c6c6c6，neutral-contrast.test.ts 在 surface、card、body 上测 4.5:1
+- [x] [`5d0a07467`](https://github.com/meta/astryx/commit/5d0a07467) fix(themes): secondary text meets 4.5:1 in Matcha and Y2K light mode (#10932)
+  - Vue 版已有：Matcha、Y2K 浅色的次要文字色与上游一致；新增 card-text-contrast.test.ts 钉住卡片上的 4.5:1
 
 ### v0.7.14
 
@@ -11358,35 +11388,55 @@
 
 ### v0.7.16
 
-- [ ] [`77c3d25d7`](https://github.com/meta/astryx/commit/77c3d25d7) docs(themes): fix theme README usage examples for Theme provider (#11016)
-- [ ] [`f628ba44b`](https://github.com/meta/astryx/commit/f628ba44b) fix(cli): the palette generator honors darkChromaTaper, so every official palette regenerates as committed (#11491)
+- [x] [`77c3d25d7`](https://github.com/meta/astryx/commit/77c3d25d7) docs(themes): fix theme README usage examples for Theme provider (#11016)
+  - Vue 版已有：主题 README 写的是 data-astryx-theme 加 import css 的用法，没有 XDSTheme 别名
+- [x] [`f628ba44b`](https://github.com/meta/astryx/commit/f628ba44b) fix(cli): the palette generator honors darkChromaTaper, so every official palette regenerates as committed (#11491)
+  - 不适用：上游调色板生成器的 darkChromaTaper，Vue 没有调色板生成命令，官方主题配色由 CSS 直接给出
 
 ### v0.7.17
 
-- [ ] [`b36275ed0`](https://github.com/meta/astryx/commit/b36275ed0) feat(core): TableRow exposes a selected theme state (#11729)
-- [ ] [`3137fe0df`](https://github.com/meta/astryx/commit/3137fe0df) fix(core): the active option of select, multi-select and typeahead lists carries a highlighted theme state (#11887)
-- [ ] [`ad1fb5089`](https://github.com/meta/astryx/commit/ad1fb5089) fix(themes): neutral and y2k skeletons show on their light page (#12014)
-- [ ] [`34e3d212f`](https://github.com/meta/astryx/commit/34e3d212f) fix(core): dialog text reads the theme, and toast text reaches AA on its card (#12095)
-- [ ] [`c9fdaecf5`](https://github.com/meta/astryx/commit/c9fdaecf5) fix(themes): text meets WCAG AA by role on every official theme (#12093)
-- [ ] [`782b392ce`](https://github.com/meta/astryx/commit/782b392ce) fix(MobileNav): the painted drawer panel carries its own theme target (#12382)
-- [ ] [`3b4c1993c`](https://github.com/meta/astryx/commit/3b4c1993c) fix(core): theme targets for parts that paint inside a component (#12081)
-- [ ] [`ea92bc042`](https://github.com/meta/astryx/commit/ea92bc042) fix(core): theme targets for Pagination's control row, cells and ellipsis (#12253)
+- [x] [`b36275ed0`](https://github.com/meta/astryx/commit/b36275ed0) feat(core): TableRow exposes a selected theme state (#11729)
+  - 已移植：[#539](https://github.com/astryx-vue/astryx-vue/pull/539)。选中的表格行带 selected 主题状态；本范围只有上游探针主题的跟进，Vue 没有
+- [x] [`3137fe0df`](https://github.com/meta/astryx/commit/3137fe0df) fix(core): the active option of select, multi-select and typeahead lists carries a highlighted theme state (#11887)
+  - 已移植：[#569](https://github.com/astryx-vue/astryx-vue/pull/569)。选择器、多选的选项带 highlighted 状态（Typeahead 见 #570）；本范围只有探针主题的跟进
+- [x] [`ad1fb5089`](https://github.com/meta/astryx/commit/ad1fb5089) fix(themes): neutral and y2k skeletons show on their light page (#12014)
+  - Vue 版已有：neutral 的 skeleton 是 #d4d4d4 / #525252，y2k 是 #c4b8a9 / #2c3048，与上游一致
+- [x] [`34e3d212f`](https://github.com/meta/astryx/commit/34e3d212f) fix(core): dialog text reads the theme, and toast text reaches AA on its card (#12095)
+  - Vue 版已有：gothic/base.css 的 background-error-inverted 已是 #825e59（暗色下错误提示卡文字 4.97:1）；对话框与提示卡文字读主题的部分见别族
+- [x] [`c9fdaecf5`](https://github.com/meta/astryx/commit/c9fdaecf5) fix(themes): text meets WCAG AA by role on every official theme (#12093)
+  - 已移植：[#637](https://github.com/astryx-vue/astryx-vue/pull/637)。Stone、Matcha、Neutral、Chocolate、Y2K 补上分类色卡片与灰底卡片的次要文字色阶（新增各主题 card-text.css，Y2K 深色下用深色墨水），Chocolate 的次要文字、代码注释色已有；补 card-text-contrast.test.ts
+- [x] [`782b392ce`](https://github.com/meta/astryx/commit/782b392ce) fix(MobileNav): the painted drawer panel carries its own theme target (#12382)
+  - 已移植：[#578](https://github.com/astryx-vue/astryx-vue/pull/578)。MobileNav 抽屉面板加主题挂点 mobile-nav-drawer，本范围只有探针主题的跟进
+- [x] [`3b4c1993c`](https://github.com/meta/astryx/commit/3b4c1993c) fix(core): theme targets for parts that paint inside a component (#12081)
+  - 已移植：[#506](https://github.com/astryx-vue/astryx-vue/pull/506)。组件内部部位的主题挂点（kbd-key、typeahead-popup、calendar-range 等）
+- [x] [`ea92bc042`](https://github.com/meta/astryx/commit/ea92bc042) fix(core): theme targets for Pagination's control row, cells and ellipsis (#12253)
+  - 已移植：[#584](https://github.com/astryx-vue/astryx-vue/pull/584)。Pagination 的控制行、单元格、省略号带主题挂点
 - [x] [`3deff9de7`](https://github.com/meta/astryx/commit/3deff9de7) feat(core): theme seams for the spinner, tree disclosure, number steppers and close buttons (#12156)
   - 已移植：[#595](https://github.com/astryx-vue/astryx-vue/pull/595)。NumberInput 步进按钮带 astryx-number-input-stepper 与 data-direction；Spinner 等其他挂点不在本范围
-- [ ] [`b22f53568`](https://github.com/meta/astryx/commit/b22f53568) chore(visual-gate): the generated probe theme merges cleanly when two branches add targets (#12647)
+- [x] [`b22f53568`](https://github.com/meta/astryx/commit/b22f53568) chore(visual-gate): the generated probe theme merges cleanly when two branches add targets (#12647)
+  - 不适用：上游探针主题的生成合并方式，Vue 没有探针主题
 - [x] [`a2edb5300`](https://github.com/meta/astryx/commit/a2edb5300) chore: land batch 2 (16 pull requests) (#12718)
   - 已移植：[#579](https://github.com/astryx-vue/astryx-vue/pull/579)。批量合入里宿主的改动随宿主一起移植
-- [ ] [`daf5e2cb3`](https://github.com/meta/astryx/commit/daf5e2cb3) chore: land batch 3 (13 pull requests) (#12722)
-- [ ] [`3b21ca666`](https://github.com/meta/astryx/commit/3b21ca666) feat(theme): chat surfaces default to the container radius (#12794)
-- [ ] [`910b80d5f`](https://github.com/meta/astryx/commit/910b80d5f) chore: land batch 9 (4 pull requests) (#12825)
-- [ ] [`53615c1f4`](https://github.com/meta/astryx/commit/53615c1f4) chore: land batch 19 (3 pull requests) (#12875)
-- [ ] [`783e47029`](https://github.com/meta/astryx/commit/783e47029) chore: land batch 17 (2 pull requests) (#12866)
-- [ ] [`8efb25a85`](https://github.com/meta/astryx/commit/8efb25a85) chore: land batch 23 (4 pull requests) (#12885)
-- [ ] [`904b58e64`](https://github.com/meta/astryx/commit/904b58e64) chore: land batch 29 (3 pull requests) (#12894)
+- [x] [`daf5e2cb3`](https://github.com/meta/astryx/commit/daf5e2cb3) chore: land batch 3 (13 pull requests) (#12722)
+  - 已移植  #503 #530：[#637](https://github.com/astryx-vue/astryx-vue/pull/637)。Chocolate 浅色分类文字色加深到上游值（#637）；其余是 CLI 与 Kbd 等别族条目
+- [x] [`3b21ca666`](https://github.com/meta/astryx/commit/3b21ca666) feat(theme): chat surfaces default to the container radius (#12794)
+  - 已移植  #620：[#600](https://github.com/astryx-vue/astryx-vue/pull/600)。聊天圆角默认跟随容器圆角，主题包不再钉死 28px
+- [x] [`910b80d5f`](https://github.com/meta/astryx/commit/910b80d5f) chore: land batch 9 (4 pull requests) (#12825)
+  - 已移植：[#632](https://github.com/astryx-vue/astryx-vue/pull/632)。当前步骤带 selected 状态；主题包导出 colorModes 是上游主题对象的 API，Vue 主题是现成 CSS，没有对应导出，不适用；探针主题与 render、export 等属上游独有
+- [x] [`53615c1f4`](https://github.com/meta/astryx/commit/53615c1f4) chore: land batch 19 (3 pull requests) (#12875)
+  - 已移植  #508：[#600](https://github.com/astryx-vue/astryx-vue/pull/600)。Pagination 首尾标记、文字角色行高、系统消息行高读辅助文字行高；探针主题的跟进不适用
+- [x] [`783e47029`](https://github.com/meta/astryx/commit/783e47029) chore: land batch 17 (2 pull requests) (#12866)
+  - 不适用：上游实验性主题编辑器与探针主题的改动，Vue 没有；TopNav 的 drawer 模式目标见别族结论
+- [x] [`8efb25a85`](https://github.com/meta/astryx/commit/8efb25a85) chore: land batch 23 (4 pull requests) (#12885)
+  - 已移植  #623：[#632](https://github.com/astryx-vue/astryx-vue/pull/632)。Banner 无图标时不留空图标框、标题与描述间留空格；checkout-wizard 竖排不换行；探针主题的跟进不适用
+- [x] [`904b58e64`](https://github.com/meta/astryx/commit/904b58e64) chore: land batch 29 (3 pull requests) (#12894)
+  - 已移植  #587 #539：[#637](https://github.com/astryx-vue/astryx-vue/pull/637)。Butter、Gothic、Y2K 的自带填充文字色规则只作用于斑马纹表格的行（.astryx-table[data-striped='true']），补测试；其余见别族
 - [x] [`0f67e76cb`](https://github.com/meta/astryx/commit/0f67e76cb) chore: land batch 35 (1 pull requests) (#12907)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`82af9164d`](https://github.com/meta/astryx/commit/82af9164d) fix(ProgressBar, CircularProgress, themes): every enabled progress fill reaches 3:1 against its track (#12398)
-- [ ] [`1f48950f9`](https://github.com/meta/astryx/commit/1f48950f9) chore: land batch 67 (7 pull requests) (#12957)
+- [x] [`82af9164d`](https://github.com/meta/astryx/commit/82af9164d) fix(ProgressBar, CircularProgress, themes): every enabled progress fill reaches 3:1 against its track (#12398)
+  - 已移植  #532：[#637](https://github.com/astryx-vue/astryx-vue/pull/637)。进度条核心 CSS：状态填充读状态文字角色，neutral 与禁用填充读次要文字角色，禁用轨道半透明、强制颜色模式用 GrayText 描边，填充里标记取表面色；Butter、Stone、Neutral 主题的填充与标记按上游调；新增 progress-fill-contrast.test.ts 测每个主题 3:1；CircularProgress 见 #532
+- [x] [`1f48950f9`](https://github.com/meta/astryx/commit/1f48950f9) chore: land batch 67 (7 pull requests) (#12957)
+  - 已移植  #534：[#637](https://github.com/astryx-vue/astryx-vue/pull/637)。六个自带字体的主题改用 @fontsource 包随包安装字体，不再请求 Google Fonts；Chocolate 的 Fraunces 用 @fontsource-variable/fraunces，标题字体写成 'Fraunces Variable'；font-display 是 swap（上游本地 woff2 是 fallback），未把 woff2 抄进仓库；补 theme-fonts-offline.test.ts；InternationalizationProvider 缺 locale 报错见 #534；其余是上游 CLI 与 AST-084 规格不适用
 
 ## 常用工具函数（area:core）
 
@@ -11729,21 +11779,25 @@
 
 ### v0.7.3
 
-- [ ] [`b1e1936bb`](https://github.com/meta/astryx/commit/b1e1936bb) fix(core): provide dataVars defaults in prebuilt CSS (#7694)
+- [x] [`b1e1936bb`](https://github.com/meta/astryx/commit/b1e1936bb) fix(core): provide dataVars defaults in prebuilt CSS (#7694)
+  - 不适用：上游 dataVars 默认值预构建 CSS 与 data-token 归属 codemod，Vue 版没有 dataVars 机制；candlestick 与 CHARTV2_READINESS 只是文档注释
 
 ### v0.7.4
 
-- [ ] [`ccdb1b8b5`](https://github.com/meta/astryx/commit/ccdb1b8b5) docs: tidy six guide titles and fix two broken links (#7934)
+- [x] [`ccdb1b8b5`](https://github.com/meta/astryx/commit/ccdb1b8b5) docs: tidy six guide titles and fix two broken links (#7934)
+  - 不适用：上游 CLI 指南标题与死链整理，涉及的 charts README 只是上游仓库链接
 
 ### v0.7.5
 
-- [ ] [`b84bf77fa`](https://github.com/meta/astryx/commit/b84bf77fa) chore: move project links to meta/astryx (#8827)
+- [x] [`b84bf77fa`](https://github.com/meta/astryx/commit/b84bf77fa) chore: move project links to meta/astryx (#8827)
+  - 不适用：上游把项目链接改到 meta/astryx，只涉及上游 README、博客、规格和语法主题文件头注释，Vue 版有自己的链接
 
 ### v0.7.6
 
 - [x] [`e0a03766d`](https://github.com/meta/astryx/commit/e0a03766d) docs(knowledge): every component spec lives in docs/specs/components, one folder per component (#9007)
   - 不适用：上游内部规范和架构文档、上游组件规范文档（自动初筛）
-- [ ] [`dabf6a125`](https://github.com/meta/astryx/commit/dabf6a125) lint: no-border-shorthand reaches lab and charts; ChartTooltip's card draws its border in prebuilt CSS (#9442)
+- [x] [`dabf6a125`](https://github.com/meta/astryx/commit/dabf6a125) lint: no-border-shorthand reaches lab and charts; ChartTooltip's card draws its border in prebuilt CSS (#9442)
+  - Vue 版已有：chart-tooltip.css 用普通 CSS 写边框与内边距，本来就在已发布的样式表里，没有 StyleX 简写问题
 
 ### v0.7.9
 
@@ -11752,29 +11806,37 @@
 
 ### v0.7.10
 
-- [ ] [`cbda0753d`](https://github.com/meta/astryx/commit/cbda0753d) ci(release): publish canaries at most hourly from main's tip, plus an on-demand canary dispatch (#9659)
+- [x] [`cbda0753d`](https://github.com/meta/astryx/commit/cbda0753d) ci(release): publish canaries at most hourly from main's tip, plus an on-demand canary dispatch (#9659)
+  - 不适用：上游金丝雀版本的发布流水线说明，Vue 仓库的发布流程不同
 
 ### v0.7.12
 
-- [ ] [`3fc5e0d70`](https://github.com/meta/astryx/commit/3fc5e0d70) fix(charts): ignore xDomain for categorical x (#10182)
+- [x] [`3fc5e0d70`](https://github.com/meta/astryx/commit/3fc5e0d70) fix(charts): ignore xDomain for categorical x (#10182)
+  - 已移植：[#639](https://github.com/astryx-vue/astryx-vue/pull/639)。只有分类名字符串的 x 才忽略 xDomain，Date 与数字字符串保留线性窗口，补测试
 
 ### v0.7.14
 
-- [ ] [`a8a4664d8`](https://github.com/meta/astryx/commit/a8a4664d8) fix(ChartTooltip): keep the card padding in the published stylesheet (#11114)
+- [x] [`a8a4664d8`](https://github.com/meta/astryx/commit/a8a4664d8) fix(ChartTooltip): keep the card padding in the published stylesheet (#11114)
+  - Vue 版已有：chart-tooltip.css 已写 padding-block 与 padding-inline，是普通样式表，没有被构建丢掉内边距的问题
 
 ### v0.7.17
 
-- [ ] [`a4b8609ec`](https://github.com/meta/astryx/commit/a4b8609ec) fix(charts): WebGL marks draw again after their effects re-run (#11816)
+- [x] [`a4b8609ec`](https://github.com/meta/astryx/commit/a4b8609ec) fix(charts): WebGL marks draw again after their effects re-run (#11816)
+  - 不适用：修的是 dotGL、heatmapGL、streamGL 这几个 WebGL 标记在 React 重跑副作用后不再绘制的问题，Vue 版 charts 没有 WebGL 标记
 - [x] [`2614a653f`](https://github.com/meta/astryx/commit/2614a653f) spec(AST-115): one format type for chart values, x values, and axis ticks (#11124)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`8d375af8d`](https://github.com/meta/astryx/commit/8d375af8d) test(charts): pin the chart color API contract in unit tests (#12604)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`a2edb5300`](https://github.com/meta/astryx/commit/a2edb5300) chore: land batch 2 (16 pull requests) (#12718)
   - 已移植：[#579](https://github.com/astryx-vue/astryx-vue/pull/579)。批量合入里宿主的改动随宿主一起移植
-- [ ] [`d6ac73ef3`](https://github.com/meta/astryx/commit/d6ac73ef3) chore: land batch 4 (12 pull requests) (#12738)
-- [ ] [`124bc3904`](https://github.com/meta/astryx/commit/124bc3904) fix(charts): each area gradient's id is unique on the page (#12230)
-- [ ] [`b168b50bd`](https://github.com/meta/astryx/commit/b168b50bd) chore: land batch 90 (1 pull requests) (#13032)
-- [ ] [`3ce9e5531`](https://github.com/meta/astryx/commit/3ce9e5531) feat(charts): add ChartValueFormat and defer empty values in built-in formatters (#12777)
+- [x] [`d6ac73ef3`](https://github.com/meta/astryx/commit/d6ac73ef3) chore: land batch 4 (12 pull requests) (#12738)
+  - 已移植：[#639](https://github.com/astryx-vue/astryx-vue/pull/639)。line()、area()、band() 默认改为直线段连点，要平滑曲线写 curve: 'monotone'，补测试和文档；其余是别族条目
+- [x] [`124bc3904`](https://github.com/meta/astryx/commit/124bc3904) fix(charts): each area gradient's id is unique on the page (#12230)
+  - 已移植：[#639](https://github.com/astryx-vue/astryx-vue/pull/639)。面积渐变填充改成带 useId() 的小组件，id 整页唯一，补两张图同页的测试
+- [x] [`b168b50bd`](https://github.com/meta/astryx/commit/b168b50bd) chore: land batch 90 (1 pull requests) (#13032)
+  - 已移植：[#639](https://github.com/astryx-vue/astryx-vue/pull/639)。ChartAxis 文档：maxTicks 不设时按轴宽自动抽稀，设了会压过这个值
+- [x] [`3ce9e5531`](https://github.com/meta/astryx/commit/3ce9e5531) feat(charts): add ChartValueFormat and defer empty values in built-in formatters (#12777)
+  - 已移植：[#639](https://github.com/astryx-vue/astryx-vue/pull/639)。新增 ChartValueFormat 类型，内置格式化函数空值返回 undefined，currency() 接受调用时语言，ChartAxis 的 tickFormat 可返回空值回退默认
 
 ## 属性规则与样式分层（area:core）
 
@@ -12314,8 +12376,10 @@
 
 ### v0.7.5
 
-- [ ] [`43d9b88c3`](https://github.com/meta/astryx/commit/43d9b88c3) feat(docsite): offer internal docs after network reachability check (#6785)
+- [x] [`43d9b88c3`](https://github.com/meta/astryx/commit/43d9b88c3) feat(docsite): offer internal docs after network reachability check (#6785)
+  - 不适用：上游 Next.js 文档站的内部文档探测，Vue 文档站是 VitePress 风格的 KawaPress，没有这个功能
 
 ### v0.7.6
 
-- [ ] [`3b42f85e0`](https://github.com/meta/astryx/commit/3b42f85e0) feat(docsite): blog posts run tsx live blocks in the playground preview frame (#9436)
+- [x] [`3b42f85e0`](https://github.com/meta/astryx/commit/3b42f85e0) feat(docsite): blog posts run tsx live blocks in the playground preview frame (#9436)
+  - 不适用：上游 Next.js 文档站 playground 里博客文章运行 tsx 实时块，Vue 文档站没有博客与 React playground
