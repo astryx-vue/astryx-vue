@@ -27,7 +27,7 @@ const time = shallowRef<string | null>('14:30')
 </template>
 ```
 
-The default hour format is 12-hour. Arrow keys step by `increment` minutes. A fine pointer gets a typed field. `adaptive-native` uses the platform time control on a coarse pointer. `adaptive-bottom-sheet` uses hour and minute wheels on a coarse pointer. `bottom-sheet` uses those wheels on every pointer. Seconds, a step other than one minute, or a preset interval send the platform control back to typed text; the wheels still show seconds. Placeholder and clear text follow the locale.
+The default hour format is 12-hour. Arrow keys step by `increment` minutes. A fine pointer gets a typed field. `adaptive-native` uses the platform time control on a coarse pointer. `adaptive-bottom-sheet` uses hour and minute wheels on a coarse pointer. `bottom-sheet` uses those wheels on every pointer. Seconds, a step other than one minute, or a preset interval send the platform control back to typed text; the wheels still show seconds. Under a finger the rows follow the drag, a flick coasts on and springs onto a row, and a drag past either end stretches and springs back; with Reduce Motion on, a tap or a key changes rows with a quick fade instead. Placeholder and clear text follow the locale.
 
 
 <ComponentAnatomy />

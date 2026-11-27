@@ -38,6 +38,10 @@ export function sheetReserve(viewportHeight: number): number {
  * descendant of the host's body, so its pointer and touch events bubble
  * through the host's listeners. That gesture is the layer's own: the host
  * neither arms a drag on it nor takes the pointer for it.
+ *
+ * A control that pans vertically on its own (a picker wheel, marked
+ * `data-astryx-owns-pan`) keeps its gesture the same way: a downward drag on
+ * it turns its rows and never pulls the sheet.
  */
 export function isInsideNestedLayer(target: EventTarget | null, body: HTMLElement): boolean {
   for (
@@ -45,7 +49,7 @@ export function isInsideNestedLayer(target: EventTarget | null, body: HTMLElemen
     element != null && element !== body;
     element = element.parentElement
   ) {
-    if (element.localName === 'dialog')
+    if (element.localName === 'dialog' || element.hasAttribute('data-astryx-owns-pan'))
       return true
   }
   return false
