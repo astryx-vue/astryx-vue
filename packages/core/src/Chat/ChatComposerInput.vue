@@ -5,6 +5,7 @@ import { useComponentMessages } from '../locale/context.js'
 import { chatMessages } from '../locale/messages/chat.js'
 import { withholdCallerHandlers } from '../utils/disabledInteraction.js'
 import { isImeKeyEvent } from '../utils/ime.js'
+import { focusInKeyboardSurface } from './chatKeyboardFocus.js'
 import ChatPastedTextToken from './ChatPastedTextToken.vue'
 import ChatTokenContent from './ChatTokenContent.vue'
 import ChatTriggerMenu from './ChatTriggerMenu.vue'
@@ -103,7 +104,7 @@ function focusEditable(): void {
   if (!editable)
     return
   const existing = getSelectionRangeInside(editable)
-  editable.focus()
+  focusInKeyboardSurface(editable)
   if (existing) {
     restoreSelectionRange(existing)
     return
@@ -115,7 +116,7 @@ function focusAtEnd(): void {
   const editable = editableRef.value
   if (!editable)
     return
-  editable.focus()
+  focusInKeyboardSurface(editable)
   placeCaretAtEnd(editable)
 }
 

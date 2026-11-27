@@ -1,3 +1,5 @@
+import type { InteractionModality } from './interactionModality.js'
+import { FOCUSABLE_SELECTOR } from '../../layer/focus.js'
 import { getInteractionModality, trackInteractionModality } from './interactionModality.js'
 
 /**
@@ -30,10 +32,15 @@ function isTextEntry(element: HTMLElement): boolean {
  * 用鼠标或手指关掉浮层后，焦点回到触发器上，但触发器不会突然亮起一圈焦点环。
  * 文本输入类元素例外：它们本来就要画出「打字会落在这里」，多一次 blur 还可能触发校验，
  * 所以一律直接聚焦。`options` 原样交给 `focus()`，例如 `preventScroll`。
+ * `modality` 是调用方已经读到的上一次输入，不传就读页面当前的。
  */
-export function focusForLastInput(element: HTMLElement, options?: FocusOptions): void {
+export function focusForLastInput(
+  element: HTMLElement,
+  options?: FocusOptions,
+  modality?: InteractionModality,
+): void {
   trackInteractionModality()
-  if (isTextEntry(element) || getInteractionModality() !== 'pointer') {
+  if (isTextEntry(element) || (modality ?? getInteractionModality()) !== 'pointer') {
     element.focus(options)
     return
   }
@@ -42,4 +49,50 @@ export function focusForLastInput(element: HTMLElement, options?: FocusOptions):
   if (element.matches(':focus-visible'))
     element.blur()
   element.focus({ ...options, focusVisible: false } as FocusOptions)
+}
+
+// 临时可聚焦的元素和各自的撤销函数：焦点离开时撤掉临时加的 tabindex。
+const temporaryFocus = new WeakMap<HTMLElement, () => void>()
+
+/** 撤掉本模块给 `element` 临时加的焦点停靠位；没有就什么都不做。 */
+export function releaseTemporaryFocus(element: HTMLElement): void {
+  temporaryFocus.get(element)?.()
+}
+
+/**
+ * 像 `focusForLastInput` 一样聚焦 `element`。它本来不可聚焦时，临时给一个
+ * `tabindex="-1"`，焦点一离开就撤掉，所以点击或 Tab 平时都落不到它身上。
+ * 返回撤销函数。
+ */
+export function focusForLastInputTemporarily(
+  element: HTMLElement,
+  options?: FocusOptions,
+  modality: InteractionModality = getInteractionModality(element.ownerDocument),
+): () => void {
+  releaseTemporaryFocus(element)
+  const needsTabIndex = !element.hasAttribute('tabindex')
+    && element.tabIndex < 0
+    && !element.isContentEditable
+    && !element.matches(FOCUSABLE_SELECTOR)
+  if (!needsTabIndex) {
+    focusForLastInput(element, options, modality)
+    return () => {}
+  }
+  element.setAttribute('tabindex', '-1')
+  const dispose = (): void => {
+    if (temporaryFocus.get(element) !== dispose)
+      return
+    temporaryFocus.delete(element)
+    element.removeEventListener('blur', dispose)
+    if (element.getAttribute('tabindex') === '-1')
+      element.removeAttribute('tabindex')
+  }
+  temporaryFocus.set(element, dispose)
+  focusForLastInput(element, options, modality)
+  // 指针模态下重新聚焦可能先 blur 一次，所以聚焦完再挂撤销。
+  if (element.ownerDocument.activeElement === element)
+    element.addEventListener('blur', dispose, { once: true })
+  else
+    dispose()
+  return dispose
 }

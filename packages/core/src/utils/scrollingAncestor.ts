@@ -3,11 +3,11 @@
  * @input An element, and an optional ancestor where the walk stops.
  * @output The element's nearest ancestor that scrolls on the block axis, and
  *   `nearestScroller`, which falls back to the document's scroller.
- * @position Shared helper; the List reorder's edge autoscroll
- *   reads its scroller through it.
+ * @position Shared by the keyboard module's reveals, Outline's scroll spy
+ *   and the List reorder's edge autoscroll.
  */
 
-import { SCROLLABLE_OVERFLOW } from './scrollView.js'
+import { SCROLLABLE_OVERFLOW } from './scrollView'
 
 /**
  * The nearest ancestor of `element` that scrolls on the block axis: its

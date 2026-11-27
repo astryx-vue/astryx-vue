@@ -16,6 +16,7 @@ import { textEntryTraitAttributes } from '../Field/textEntryTraits.js'
 import { useAriaRequired } from '../FormLayout/context.js'
 import Icon from '../Icon/Icon.vue'
 import { useInputGroupContext, useInputGroupDisabled } from '../InputGroup/context.js'
+import { useMobileKeyboard } from '../keyboard/useMobileKeyboard.js'
 import { useComponentMessages } from '../locale/context.js'
 import { fieldMessages } from '../locale/messages/field.js'
 import { textInputMessages } from '../locale/messages/text-input.js'
@@ -45,6 +46,8 @@ const inputGroup = useInputGroupContext()
 const model = defineModel<string>({ required: true })
 const attrs = useAttrs()
 const input = useTemplateRef<HTMLInputElement>('input')
+// 手机上获得焦点时，输入框自己停到屏幕键盘上方。
+useMobileKeyboard(input)
 const container = useTemplateRef<HTMLDivElement>('container')
 const generatedId = `astryx-text-input-${useId()}`
 const inputId = computed(() => props.id ?? generatedId)

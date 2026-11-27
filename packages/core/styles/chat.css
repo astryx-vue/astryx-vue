@@ -95,6 +95,12 @@
     padding-inline: var(--astryx-spacing-4, 16px);
   }
 
+  /* Done 键把焦点停在输入区上，键盘操作后才画环；环画在输入区边缘以内，因为它的边可能和视口的边重合。 */
+  .astryx-chat-layout__composer:focus-visible {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, currentcolor);
+    outline-offset: calc(-1 * var(--astryx-focus-outline-width, 2px));
+  }
+
   .astryx-chat-layout__composer-inner {
     width: 100%;
     max-width: 100%;
