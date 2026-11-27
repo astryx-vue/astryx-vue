@@ -63151,8 +63151,8 @@
         "zh": "`Lightbox` 用原生 `<dialog>` 打开媒体。`isOpen` 用 `v-model:is-open` 绑定。`media` 传一个对象就是单张图片或一段视频。传数组就是图库：上一张、下一张和计数一直留在页面上，到头时禁用，而不是消失。方向键跟着书写方向走：从右往左的页面里 ArrowLeft 去下一张，和左边的「下一张」按钮一致。下标越界时显示最近的一项；小数四舍五入到最近的一项，`NaN` 显示第一项。第一项还没到就打开的灯箱，等它到了再打开。"
       },
       "usage": {
-        "en": "`Lightbox` opens media in a native `<dialog>`. Bind `isOpen` with `v-model:is-open`. A single `media` object is one image or video. An array is a gallery: previous, next, and a counter stay mounted, and the ends disable instead of disappearing. The arrow keys follow the writing direction: in a right-to-left page ArrowLeft goes to the next item, like the Next button on the left. An index past either end shows the nearest item; a fraction rounds to the nearest one and `NaN` shows the first. A viewer opened before its first item arrives opens when that item does.\n\n`useLightbox({ media })` owns the open state and the index. Bind `bindings` onto `Lightbox`, and call `open(index)` from a thumbnail.\n\nA caption sits in a two-line band under the photo, on a backing that keeps it readable over any picture; a longer one ends in \"more\". A single photo with a caption uses the same band, and a photo with no caption has none.\n\n`hasZoom` turns an image into a button. Double-click, Enter, Space, `+`, and `-` toggle between 1× and 2×, and `0` returns to the fitted size (Ctrl or Cmd with `0` stays the browser's page zoom). While zoomed, drag or the arrow keys pan; each arrow moves 50px. A drag does not also close the dialog. Video items keep the browser controls and do not zoom. `hasAutoPlay` starts a video when that item is shown in an open viewer; closing the viewer stops a playing video.\n\nEscape and the close button emit `update:isOpen` with `false`. A click anywhere outside the photo and the caption band does the same, including the space beside a photo narrower than the viewer. Tab stays inside the open viewer, and a screen reader hears the item changes from inside it. When the viewer closes, or is removed while open, focus goes back to the element that opened it.\n\n```vue\n<script setup lang=\"ts\">\nimport { Lightbox, useLightbox } from '@astryx-vue/core/Lightbox'\nimport { Thumbnail } from '@astryx-vue/core/Thumbnail'\n\nconst photo = {\n  src: '/template-assets/light-scene-horizontal-1.png',\n  alt: 'Coastal shoreline with ocean waves',\n  caption: 'A scenic coastline with waves rolling onto a sandy beach beneath a clear sky.',\n}\nconst { bindings, open } = useLightbox({ media: photo })\n</script>\n\n<template>\n  <Thumbnail :src=\"photo.src\" :alt=\"photo.alt\" :label=\"photo.alt\" @click=\"open()\" />\n  <Lightbox v-bind=\"bindings\" />\n</template>\n```",
-        "zh": "`Lightbox` 用原生 `<dialog>` 打开媒体。`isOpen` 用 `v-model:is-open` 绑定。`media` 传一个对象就是单张图片或一段视频。传数组就是图库：上一张、下一张和计数一直留在页面上，到头时禁用，而不是消失。方向键跟着书写方向走：从右往左的页面里 ArrowLeft 去下一张，和左边的「下一张」按钮一致。下标越界时显示最近的一项；小数四舍五入到最近的一项，`NaN` 显示第一项。第一项还没到就打开的灯箱，等它到了再打开。\n\n`useLightbox({ media })` 管打开状态和下标。把 `bindings` 绑到 `Lightbox` 上，缩略图里调用 `open(index)`。\n\n图注放在照片下面一条两行高的区域里，垫着一块底色，压在什么照片上都看得清；更长的图注末尾有「更多」。单张照片有图注时用同样的区域，没有图注就没有这条区域。\n\n`hasZoom` 把图片变成按钮。双击、Enter、Space、`+`、`-` 在 1 倍和 2 倍之间切换，`0` 回到适应大小（Ctrl 或 Cmd 加 `0` 仍是浏览器自己的页面缩放）。放大后可以拖动，方向键每次平移 50px。拖动结束时的那一下点击不会把对话框关掉。视频用浏览器自己的控件，不能缩放。`hasAutoPlay` 在打开的灯箱里显示出视频时开始播放；关闭灯箱会停下正在播放的视频。\n\nEscape 和关闭按钮都会发出 `update:isOpen`，值为 `false`。点在照片和图注区域以外的任何地方也一样，包括比灯箱窄的照片两旁的空白。Tab 只在打开的灯箱里循环，读屏在灯箱里面就能听到换页的播报。灯箱关闭、或打开着就被移除时，焦点回到打开它的那个元素。\n\n```vue\n<script setup lang=\"ts\">\nimport { Lightbox, useLightbox } from '@astryx-vue/core/Lightbox'\nimport { Thumbnail } from '@astryx-vue/core/Thumbnail'\n\nconst photo = {\n  src: '/template-assets/light-scene-horizontal-1.png',\n  alt: 'Coastal shoreline with ocean waves',\n  caption: 'A scenic coastline with waves rolling onto a sandy beach beneath a clear sky.',\n}\nconst { bindings, open } = useLightbox({ media: photo })\n</script>\n\n<template>\n  <Thumbnail :src=\"photo.src\" :alt=\"photo.alt\" :label=\"photo.alt\" @click=\"open()\" />\n  <Lightbox v-bind=\"bindings\" />\n</template>\n```"
+        "en": "`Lightbox` opens media in a native `<dialog>`. Bind `isOpen` with `v-model:is-open`. A single `media` object is one image or video. An array is a gallery: previous, next, and a counter stay mounted, and the ends disable instead of disappearing. The arrow keys follow the writing direction: in a right-to-left page ArrowLeft goes to the next item, like the Next button on the left. An index past either end shows the nearest item; a fraction rounds to the nearest one and `NaN` shows the first. A viewer opened before its first item arrives opens when that item does.\n\n`useLightbox({ media })` owns the open state and the index. Bind `bindings` onto `Lightbox`, and call `open(index)` from a thumbnail.\n\nA caption sits in a two-line band under the photo, on a backing that keeps it readable over any picture; a longer one ends in \"more\". A single photo with a caption uses the same band, and a photo with no caption has none.\n\n`hasZoom` turns an image into a button. A mouse double-click zooms 2× about that point and the next goes back; Enter, Space, `+`, and `-` zoom 2× about the centre and back, and `0` returns to the fitted size (Ctrl or Cmd with `0` stays the browser's page zoom). While zoomed, drag, scroll a trackpad or press the arrow keys to pan; each arrow moves 50px and stops at the edge. A drag does not also close the dialog. With zoom the controls sit on a translucent backing, so they stay readable over a zoomed photo. Video items keep the browser controls and do not zoom. `hasAutoPlay` starts a video when that item is shown in an open viewer; closing the viewer stops a playing video.",
+        "zh": "`Lightbox` 用原生 `<dialog>` 打开媒体。`isOpen` 用 `v-model:is-open` 绑定。`media` 传一个对象就是单张图片或一段视频。传数组就是图库：上一张、下一张和计数一直留在页面上，到头时禁用，而不是消失。方向键跟着书写方向走：从右往左的页面里 ArrowLeft 去下一张，和左边的「下一张」按钮一致。下标越界时显示最近的一项；小数四舍五入到最近的一项，`NaN` 显示第一项。第一项还没到就打开的灯箱，等它到了再打开。\n\n`useLightbox({ media })` 管打开状态和下标。把 `bindings` 绑到 `Lightbox` 上，缩略图里调用 `open(index)`。\n\n图注放在照片下面一条两行高的区域里，垫着一块底色，压在什么照片上都看得清；更长的图注末尾有「更多」。单张照片有图注时用同样的区域，没有图注就没有这条区域。\n\n`hasZoom` 把图片变成按钮。鼠标双击在点到的地方放大到 2 倍，再双击回去；Enter、Space、`+`、`-` 以中心放大 2 倍和还原，`0` 回到适应大小（Ctrl 或 Cmd 加 `0` 仍是浏览器自己的页面缩放）。放大后可以拖动、用触控板滚动平移，方向键每次平移 50px，到边就停。拖动结束时的那一下点击不会把对话框关掉。能缩放时控件垫着一层半透明底色，放大的照片跑到控件下面也看得清。视频用浏览器自己的控件，不能缩放。`hasAutoPlay` 在打开的灯箱里显示出视频时开始播放；关闭灯箱会停下正在播放的视频。"
       },
       "practices": {
         "en": [
@@ -63212,7 +63212,7 @@
                 "name": "`hasZoom`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Double-click, Enter, Space, `+`, and `-` zoom images, and `0` returns to the fitted size. Arrow keys pan while zoomed."
+                "description": "Enable zoom (images only). A pinch or a ctrl-wheel zooms about the fingers or the pointer. A double tap fills the viewer and a double-click zooms 2×, about that point, and the next goes back. Enter, Space, `+`, and `-` zoom 2× about the centre and back, and `0` returns to the fitted size. When zoomed, drag, scroll a trackpad, or press the arrow keys to pan; on a phone or a tablet the pan has momentum."
               },
               {
                 "name": "`hasAutoPlay`",
@@ -63255,7 +63255,7 @@
                 "name": "`hasZoom`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "双击、Enter、Space、`+`、`-` 缩放图片，`0` 回到适应大小。放大后方向键平移。"
+                "description": "让图片能缩放。捏合或 Ctrl + 滚轮以手指或指针为中心缩放；手指双击铺满灯箱，鼠标双击在点上放大 2 倍，再一次回去。Enter、Space、`+`、`-` 以中心放大 2 倍和还原，`0` 回到适应大小。放大后拖动、触控板滚动或方向键平移；手机和平板上平移带惯性。"
               },
               {
                 "name": "`hasAutoPlay`",
@@ -63279,12 +63279,12 @@
               {
                 "name": "`update:isOpen`",
                 "payload": "`boolean`",
-                "description": "Close, Escape, or a backdrop click asks to change the open state."
+                "description": "Close, Escape, a backdrop click, or a drag down on a touch screen asks to change the open state."
               },
               {
                 "name": "`update:index`",
                 "payload": "`number`",
-                "description": "Previous, next, or an arrow key while zoomed out asks for a new gallery index."
+                "description": "Previous, next, an arrow key while zoomed out, or a swipe on a touch screen asks for a new gallery index."
               }
             ]
           }
@@ -63310,6 +63310,10 @@
       "notes": {
         "en": [
           {
+            "heading": "Gestures",
+            "text": "The feel follows the Photos app on iPhone: durations, curves, springs and the rubber band's coefficient come from upstream.\n\n- **Pinch to zoom** (with `hasZoom`): two fingers zoom about their midpoint, and so do a trackpad pinch and Ctrl + wheel. Past the limits the photo resists like a rubber band and springs back to the largest or the fitted size.\n- **Double tap** (with `hasZoom`): a finger's double tap zooms about that point to fill the viewer, and the next goes back.\n- **Pan while zoomed**: the photo follows the drag and coasts after the release; past an edge it resists and springs back.\n- **Swipe to page** (gallery, touch): pages one at a time like Photos, 40 pt apart. A drag past half a page or a flick turns it, one page at most; the ends hold with a rubber band. A zoomed photo pans to its edge first, and the next drag pages; the photo left behind returns to the fitted size. When a controlled `index` keeps the old page, the track springs back to it. A drag that starts in a video's bottom 48px, where its controls are, stays the video's. With a fine pointer (a mouse), the buttons and arrow keys page and the track moves at once.\n- **Drag down to close** (touch, fitted photo): the photo follows the finger and shrinks, and the backdrop and controls fade. A long enough drag or a flick down closes the viewer and the photo slides off the screen; a shorter one springs back.\n- **Tap beside the photo**: a finger's tap beside the photo and caption closes the viewer, like a click on the backdrop.\n\nWith reduced motion, a finger's release cross-fades in place instead of springing back or sliding away. A pan keeps its momentum, since that motion is the person's own.\n\nEscape and the close button emit `update:isOpen` with `false`. A click anywhere outside the photo and the caption band does the same, including the space beside a photo narrower than the viewer. Tab stays inside the open viewer, and a screen reader hears the item changes from inside it. When the viewer closes, or is removed while open, focus goes back to the element that opened it.\n\n```vue\n<script setup lang=\"ts\">\nimport { Lightbox, useLightbox } from '@astryx-vue/core/Lightbox'\nimport { Thumbnail } from '@astryx-vue/core/Thumbnail'\n\nconst photo = {\n  src: '/template-assets/light-scene-horizontal-1.png',\n  alt: 'Coastal shoreline with ocean waves',\n  caption: 'A scenic coastline with waves rolling onto a sandy beach beneath a clear sky.',\n}\nconst { bindings, open } = useLightbox({ media: photo })\n</script>\n\n<template>\n  <Thumbnail :src=\"photo.src\" :alt=\"photo.alt\" :label=\"photo.alt\" @click=\"open()\" />\n  <Lightbox v-bind=\"bindings\" />\n</template>\n```"
+          },
+          {
             "heading": "Props",
             "text": "`LightboxMedia` is `{ src, alt, caption?, type? }`. `type` is `image` or `video`, and defaults to `image`. The whole caption is always the viewer's accessible description. In a gallery every page has a caption band two lines tall under its photo, so the photo keeps one size from page to page; a page without a caption keeps the band's space without its backing. A longer caption shows two lines and ends in an inline \"more\" that opens it in full over the photo; \"less\" and paging close it."
           },
@@ -63323,6 +63327,10 @@
           }
         ],
         "zh": [
+          {
+            "heading": "手势",
+            "text": "手感照着 iPhone 的照片 App 做，时长、曲线、弹簧和橡皮筋系数都取自上游。\n\n- **捏合缩放**（要 `hasZoom`）：两根手指在手指中间缩放，触控板捏合和 Ctrl + 滚轮也一样。缩过头会有橡皮筋的阻力，松手弹回最大或适应大小。\n- **双击放大**（要 `hasZoom`）：手指双击在点到的地方放大到铺满灯箱，再双击回去。\n- **放大后平移**：拖到哪儿照片跟到哪儿，松手带惯性滑一段；拖出边缘有橡皮筋阻力，松手弹回。\n- **横扫翻页**（图集，触屏）：像照片 App 一样一页一页翻，页和页之间隔 40pt。拖过一半或轻扫一下就翻过去，一次最多一页；两头拖不动，会被橡皮筋拉住。放大的照片先拖到边，下一下才翻页，翻走之后留在身后的照片回到适应大小。受控的 `index` 没有接受新的一页时，轨道弹回原来那一页。视频底边 48px 是播放控件那一条，从那里开始的拖动留给视频。精细指针（鼠标）下用按钮和方向键翻页，换页直接到位。\n- **往下拖关闭**（触屏，照片在适应大小时）：照片跟着手指走、越拖越小，背景和控件跟着变淡。拖得够远或往下甩一下就关闭，照片继续往下滑出屏幕；不够就弹回原位。\n- **点空白关闭**：手指点在照片和图注旁边，和点遮罩一样关闭。\n\n系统打开「减少动效」时，手指松手后的弹回和离场改成就地淡入淡出；平移的惯性保留，因为那是人自己的动作。\n\nEscape 和关闭按钮都会发出 `update:isOpen`，值为 `false`。点在照片和图注区域以外的任何地方也一样，包括比灯箱窄的照片两旁的空白。Tab 只在打开的灯箱里循环，读屏在灯箱里面就能听到换页的播报。灯箱关闭、或打开着就被移除时，焦点回到打开它的那个元素。\n\n```vue\n<script setup lang=\"ts\">\nimport { Lightbox, useLightbox } from '@astryx-vue/core/Lightbox'\nimport { Thumbnail } from '@astryx-vue/core/Thumbnail'\n\nconst photo = {\n  src: '/template-assets/light-scene-horizontal-1.png',\n  alt: 'Coastal shoreline with ocean waves',\n  caption: 'A scenic coastline with waves rolling onto a sandy beach beneath a clear sky.',\n}\nconst { bindings, open } = useLightbox({ media: photo })\n</script>\n\n<template>\n  <Thumbnail :src=\"photo.src\" :alt=\"photo.alt\" :label=\"photo.alt\" @click=\"open()\" />\n  <Lightbox v-bind=\"bindings\" />\n</template>\n```"
+          },
           {
             "heading": "建议",
             "text": "- 推荐: 推荐\n- 推荐: 推荐\n- 推荐: 推荐\n- 避免: 避免\n- 避免: 避免"
@@ -63370,8 +63378,8 @@
             "zh": "缩放"
           },
           "description": {
-            "en": "Double-click the image to zoom in, then drag to pan. Double-click again, or close, to leave zoom.",
-            "zh": "打开缩放和平移。双击图片放大，拖动查看。再双击一次，或点关闭，回到原大小并退出。"
+            "en": "Double-click or pinch the image to zoom in, then drag to pan. Double-click again, or close, to leave zoom.",
+            "zh": "打开缩放和平移。双击或捏合放大，拖动查看。再双击一次，或点关闭，回到原大小并退出。"
           },
           "code": "<script setup lang=\"ts\">\nimport { Lightbox } from '@astryx-vue/core/Lightbox'\nimport { Thumbnail } from '@astryx-vue/core/Thumbnail'\nimport { ref } from 'vue'\n\nconst isOpen = ref(false)\n</script>\n\n<template>\n  <Thumbnail\n    src=\"/template-assets/light-scene-horizontal-1.png\"\n    alt=\"Coastal shoreline with ocean waves\"\n    label=\"Coastal shoreline with ocean waves\"\n    @click=\"isOpen = true\"\n  />\n  <Lightbox\n    :is-open=\"isOpen\"\n    has-zoom\n    :media=\"{\n      src: '/template-assets/light-scene-horizontal-1.png',\n      alt: 'Coastal shoreline with ocean waves',\n      caption: 'A scenic coastline. Double-click to zoom in and drag to pan.',\n    }\"\n    @update:is-open=\"isOpen = $event\"\n  />\n</template>"
         },

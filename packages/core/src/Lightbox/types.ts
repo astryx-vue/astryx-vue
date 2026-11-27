@@ -28,7 +28,10 @@ export interface LightboxProps {
    */
   defaultIndex?: number
   /**
-   * Double-click, Enter, Space, `+`, and `-` zoom images, and `0` returns to the fitted size. Arrow keys pan while zoomed.
+   * Enable zoom (images only). A pinch or a ctrl-wheel zooms about the fingers or the pointer. A double tap fills the
+   * viewer and a double-click zooms 2×, about that point, and the next goes back. Enter, Space, `+`, and `-` zoom 2×
+   * about the centre and back, and `0` returns to the fitted size. When zoomed, drag or scroll a trackpad to pan, or use
+   * the arrow keys. On a phone or a tablet, the pan has momentum.
    * @default false
    */
   hasZoom?: boolean
