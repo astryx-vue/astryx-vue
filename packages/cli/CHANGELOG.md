@@ -1,5 +1,25 @@
 # @astryx-vue/cli
 
+## 0.8.6
+
+### Patch Changes
+
+- [#636](https://github.com/astryx-vue/astryx-vue/pull/636) [`2243356`](https://github.com/astryx-vue/astryx-vue/commit/22433567c3f9e208c9891c602cc4a3fcebfb7c5c) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - CodeBlock 内置新增 C、C++、SQL、Rust、Kotlin、Swift、Go 的高亮；不常用的语言做成单独引入的语言值（`@astryx-vue/core/Code/languages/` 下的 dockerfile、graphql、java、lua、objective-c、powershell、ruby、thrift、toml），传给 `language`；新增 `createCodeLanguage` 用分词函数做自己的语言。`language` 接受语言值（标签显示它的名字，`data-language` 取第一个标识符），`tokenizer` 标为已弃用但行为不变。`Markdown` 和 `RichTextEditor`、`RichTextView` 新增 `codeLanguages`：围栏的语言词是某个语言值的标识符时，按这个值渲染。
+
+- [#634](https://github.com/astryx-vue/astryx-vue/pull/634) [`3da104c`](https://github.com/astryx-vue/astryx-vue/commit/3da104caa55b576f143ce968f729152b2aee78ff) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - CodeBlock 新增 `startLineNumber`（行号和 `highlightLines` 按文件里的真实行号）和 `endContent` 插槽（自定义控件排在复制按钮前面）；没有标题栏时复制按钮改排在代码右边自己的一列，不再盖住代码；折叠箭头在 RTL 下镜像，代码在 RTL 页面里仍从左到右，长标题会换行，diff 标题跟随语言，手机上横向能滚时藏着内容的一侧淡出；自定义 token 的高亮规则放进样式层，主题和应用的语法色能覆盖它。Markdown 的列表不再向两侧外扩；每个段落、标题、引用、列表项和表格单元格按自己文字的方向排；空地址图片显示方括号里的替代文字；解析器把所有 `data:` 链接和图片留作源码文字。富文本：工具栏和结尾插槽渲染不出内容时不再画空外框和分隔线；粗指针下聚焦外观不再淡入；没写语言的代码块给复制按钮留出一列。
+
+- [#631](https://github.com/astryx-vue/astryx-vue/pull/631) [`02c75df`](https://github.com/astryx-vue/astryx-vue/commit/02c75dfd26b68666885ea6040728a7b88b8d23a9) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 富文本编辑器：代码块里 Tab 缩进、开头 Backspace 变回段落、粘贴只留纯文本、全选先选代码块或单元格；表格内粘贴表格逐格写入；列表项开头输入 Markdown 标记会改写该项；禁用时链接不再可聚焦或跳转；自动链接不再链接代码块里的网址；带端口的无协议地址按 https 链接；没选文字时「插入链接」把地址插在光标处；行尾换行不再回读成反斜杠；表格分隔行检查改为线性时间。
+
+- [#640](https://github.com/astryx-vue/astryx-vue/pull/640) [`904fc94`](https://github.com/astryx-vue/astryx-vue/commit/904fc94225b5ff44537aba1a63b055c5d3dfc557) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 富文本里编辑图片旁边或周围的文字，不再把图片的 Markdown 转义成普通文字：图片作为一整块源码进来，导出时原样写回，光标进不去，自动链接不碰它的网址；紧跟链接的简写引用图片写成折叠形式，字面的 `!` 不会把后面的链接变成图片。
+
+- [#639](https://github.com/astryx-vue/astryx-vue/pull/639) [`1f7dee0`](https://github.com/astryx-vue/astryx-vue/commit/1f7dee0a241d9dbb9c03d16a67b10bd306593aa7) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 图表对齐上游：
+  - `line()`、`area()`、`band()` 默认用直线段连点，要平滑曲线自己写 `curve: 'monotone'`。
+  - 新增 `ChartValueFormat` 类型；内置的 `compactNumber`、`percent`、`shortDate`、`monthYear` 和 `currency()` 的返回值都能直接赋给它，值是 `null` 或 `undefined` 时返回 `undefined`（不再写成「0」「0%」「$0」或「null」）；`currency()` 返回的函数还接受调用时给的语言，工厂里指定的语言优先。
+  - `ChartAxis` 的 `tickFormat` 可以返回 `null` 或 `undefined`，此时显示默认刻度文字；刻度抽稀后一定保留最后一个，距离前一个不足一个步长时顶替它。
+  - 带圆点的折线和散点图把线性 x 范围往里收圆点半径，首尾的圆点不再被绘图区裁掉一半。
+  - 分类 x 轴忽略 `xDomain`，柱子和其他标记不再因为线性比例尺放不下分类名而画不出来。
+  - 面积图的渐变 id 整页唯一，同一页上两张画同一个系列的图不再互相引用渐变。
+
 ## 0.8.5
 
 ### Patch Changes

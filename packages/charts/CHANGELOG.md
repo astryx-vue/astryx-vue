@@ -1,5 +1,22 @@
 # @astryx-vue/charts
 
+## 0.10.0
+
+### Minor Changes
+
+- [#639](https://github.com/astryx-vue/astryx-vue/pull/639) [`1f7dee0`](https://github.com/astryx-vue/astryx-vue/commit/1f7dee0a241d9dbb9c03d16a67b10bd306593aa7) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 图表对齐上游：
+  - `line()`、`area()`、`band()` 默认用直线段连点，要平滑曲线自己写 `curve: 'monotone'`。
+  - 新增 `ChartValueFormat` 类型；内置的 `compactNumber`、`percent`、`shortDate`、`monthYear` 和 `currency()` 的返回值都能直接赋给它，值是 `null` 或 `undefined` 时返回 `undefined`（不再写成「0」「0%」「$0」或「null」）；`currency()` 返回的函数还接受调用时给的语言，工厂里指定的语言优先。
+  - `ChartAxis` 的 `tickFormat` 可以返回 `null` 或 `undefined`，此时显示默认刻度文字；刻度抽稀后一定保留最后一个，距离前一个不足一个步长时顶替它。
+  - 带圆点的折线和散点图把线性 x 范围往里收圆点半径，首尾的圆点不再被绘图区裁掉一半。
+  - 分类 x 轴忽略 `xDomain`，柱子和其他标记不再因为线性比例尺放不下分类名而画不出来。
+  - 面积图的渐变 id 整页唯一，同一页上两张画同一个系列的图不再互相引用渐变。
+
+### Patch Changes
+
+- Updated dependencies [[`2243356`](https://github.com/astryx-vue/astryx-vue/commit/22433567c3f9e208c9891c602cc4a3fcebfb7c5c), [`3da104c`](https://github.com/astryx-vue/astryx-vue/commit/3da104caa55b576f143ce968f729152b2aee78ff), [`d446b57`](https://github.com/astryx-vue/astryx-vue/commit/d446b570465a4175a84e3b2094e5d35c03c3a049), [`818a388`](https://github.com/astryx-vue/astryx-vue/commit/818a38871c0afc3e78ccb487f8d737a33ec3af49), [`ec357d0`](https://github.com/astryx-vue/astryx-vue/commit/ec357d061efa91437a1ed9a852108164a92255f7)]:
+  - @astryx-vue/core@0.34.0
+
 ## 0.9.31
 
 ### Patch Changes

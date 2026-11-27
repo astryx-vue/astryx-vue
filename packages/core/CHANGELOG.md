@@ -1,5 +1,31 @@
 # @astryx-vue/core
 
+## 0.34.0
+
+### Minor Changes
+
+- [#636](https://github.com/astryx-vue/astryx-vue/pull/636) [`2243356`](https://github.com/astryx-vue/astryx-vue/commit/22433567c3f9e208c9891c602cc4a3fcebfb7c5c) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - CodeBlock 内置新增 C、C++、SQL、Rust、Kotlin、Swift、Go 的高亮；不常用的语言做成单独引入的语言值（`@astryx-vue/core/Code/languages/` 下的 dockerfile、graphql、java、lua、objective-c、powershell、ruby、thrift、toml），传给 `language`；新增 `createCodeLanguage` 用分词函数做自己的语言。`language` 接受语言值（标签显示它的名字，`data-language` 取第一个标识符），`tokenizer` 标为已弃用但行为不变。`Markdown` 和 `RichTextEditor`、`RichTextView` 新增 `codeLanguages`：围栏的语言词是某个语言值的标识符时，按这个值渲染。
+
+- [#634](https://github.com/astryx-vue/astryx-vue/pull/634) [`3da104c`](https://github.com/astryx-vue/astryx-vue/commit/3da104caa55b576f143ce968f729152b2aee78ff) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - CodeBlock 新增 `startLineNumber`（行号和 `highlightLines` 按文件里的真实行号）和 `endContent` 插槽（自定义控件排在复制按钮前面）；没有标题栏时复制按钮改排在代码右边自己的一列，不再盖住代码；折叠箭头在 RTL 下镜像，代码在 RTL 页面里仍从左到右，长标题会换行，diff 标题跟随语言，手机上横向能滚时藏着内容的一侧淡出；自定义 token 的高亮规则放进样式层，主题和应用的语法色能覆盖它。Markdown 的列表不再向两侧外扩；每个段落、标题、引用、列表项和表格单元格按自己文字的方向排；空地址图片显示方括号里的替代文字；解析器把所有 `data:` 链接和图片留作源码文字。富文本：工具栏和结尾插槽渲染不出内容时不再画空外框和分隔线；粗指针下聚焦外观不再淡入；没写语言的代码块给复制按钮留出一列。
+
+### Patch Changes
+
+- [#640](https://github.com/astryx-vue/astryx-vue/pull/640) [`d446b57`](https://github.com/astryx-vue/astryx-vue/commit/d446b570465a4175a84e3b2094e5d35c03c3a049) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 按压反馈在没有正在按的接触、且抬起事件没带 `pointerId` 时不再抛出 `Cannot read properties of null`。
+
+- [#639](https://github.com/astryx-vue/astryx-vue/pull/639) [`818a388`](https://github.com/astryx-vue/astryx-vue/commit/818a38871c0afc3e78ccb487f8d737a33ec3af49) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 按压反馈：没有按压时收到没带指针 id 的触屏抬起事件，不再抛出「读 null 的 live」的错误。
+
+- [#637](https://github.com/astryx-vue/astryx-vue/pull/637) [`ec357d0`](https://github.com/astryx-vue/astryx-vue/commit/ec357d061efa91437a1ed9a852108164a92255f7) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 主题与进度条对齐上游：
+  - 主题字体随包安装：Butter、Chocolate、Gothic、Matcha、Stone、Y2K 不再从 Google Fonts 加载自己的字体，改用 `@fontsource` 包，页面从自己的源站取字体。
+  - Stone 的 accent 进度条填充改取蓝色阶，Butter 和 Stone 的状态填充与标记取主题的状态色和对应的 on 色，Neutral、Butter、Stone 暗色下的中性和禁用填充取更亮的一档，所有启用的进度条填充在轨道上都够 3:1；其余主题的状态填充走核心的状态文字角色。
+  - ProgressBar：状态填充读状态文字角色，neutral 和禁用的填充读次要文字角色（不再读在有些主题里就是暗色轨道本身的禁用文字色）；禁用的进度条轨道和填充降到半透明，强制颜色模式下用 GrayText 描一圈；填充里的标记（accent 除外）取表面色。
+  - Stone、Matcha、Neutral、Chocolate、Y2K 的分类色卡片与灰底卡片上，次要文字（Y2K 深色下还有主文字和链接）退到够 4.5:1 的色阶；Y2K 深色下分类色卡片用深色墨水。
+  - Chocolate 浅色下的分类文字色（青、绿、橙、粉、红、黄）取更深的色阶；Matcha 暗色下的灰底和浮层底色取主题的深灰中性色。
+  - Butter 和 Stone 输入框的状态描边和图标用色阶中段（Butter 浅色下达到 3:1），Stone 随审定后的调色板更新。
+  - Butter、Gothic、Y2K 的「自带填充文字色」规则只作用于斑马纹表格的行，普通表格的行保持周围的文字色。
+  - Gothic 的强调文字和图标跟着媒体表面的强调色走，浅色表面上不再停在近白色。
+  - `reset.css`：`html` 取 `--astryx-font-family-body`，页面里不在主题包装元素内的文字不再退回浏览器的衬线体；带 `list` 的输入框，下拉标记回到输入框中线。
+  - 按压反馈：没有按压时收到没带指针 id 的触屏抬起事件，不再抛出「读 null 的 live」的错误。
+
 ## 0.33.4
 
 ### Patch Changes
