@@ -119,3 +119,23 @@ describe('抬手后淡出', () => {
     expect(pressGestureStep(run([down(), onset]).gesture, up).timer).toBe('fade')
   })
 })
+
+describe('鼠标键或空格键的按压', () => {
+  const buttonDown: PressEvent = { kind: 'buttonDown' }
+
+  it('按下立刻亮，没有等待计时器', () => {
+    const step = pressGestureStep(idlePressGesture(), buttonDown)
+    expect(step.paint).toBe('on')
+    expect(step.timer).toBeNull()
+  })
+
+  it('位移不算滚动，一直亮到松开，松开后淡出', () => {
+    const { paints, gesture } = run([buttonDown, move(500, 500), up, { kind: 'fadeEnd' }])
+    expect(paints).toEqual(['on', 'on', 'fading', 'none'])
+    expect(gesture.phase).toBe('idle')
+  })
+
+  it('平台拿走它时立刻擦掉', () => {
+    expect(run([buttonDown, cancel]).paints).toEqual(['on', 'none'])
+  })
+})
