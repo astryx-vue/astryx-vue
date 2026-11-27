@@ -46,6 +46,11 @@ export interface WheelLayout {
   /** Row height, px. */
   readonly rowHeight: number
   readonly rowCount: number
+  /**
+   * The rows repeat without end: the last row is followed by the first. The
+   * offset is then unbounded.
+   */
+  readonly looping?: boolean
 }
 
 /** The row pitch of the touch wheel, px: 28 px, as a platform picker packs its rows. */
@@ -68,8 +73,10 @@ export function scaleFor(rowHeight: number): number {
   return rowHeight / UIKIT_ROW_HEIGHT
 }
 
-/** The offsets of the first and last rows. */
-export function offsetBounds({ rowHeight, rowCount }: WheelLayout): { min: number, max: number } {
+/** The offsets of the first and last rows: unbounded when looping. */
+export function offsetBounds({ rowHeight, rowCount, looping }: WheelLayout): { min: number, max: number } {
+  if (looping)
+    return { min: -Infinity, max: Infinity }
   return { min: 0, max: Math.max(0, rowCount - 1) * rowHeight }
 }
 
@@ -105,16 +112,27 @@ export function fingerOffset(shown: number, layout: WheelLayout): number {
   return shown
 }
 
-/** The row nearest `offset`, clamped to the rows. */
+/**
+ * The position of the row nearest `offset`, clamped to the rows. When looping
+ * it is any integer, and the row it shows is that integer folded into the
+ * rows (`mod` in wheelLoop.ts).
+ */
 export function nearestIndex(offset: number, layout: WheelLayout): number {
   const index = Math.round(offset / layout.rowHeight)
+  if (layout.looping)
+    return index
   return Math.min(Math.max(index, 0), Math.max(0, layout.rowCount - 1))
 }
 
-/** The row under a point `dy` px below the band's centre; null past either end. */
+/**
+ * The position of the row under a point `dy` px below the band's centre. It is
+ * null past either end of a list that does not loop.
+ */
 export function rowAtPoint(dy: number, offset: number, layout: WheelLayout): number | null {
   const position = Math.round((offset + dy) / layout.rowHeight)
-  return position < 0 || position >= layout.rowCount ? null : position
+  if (!layout.looping && (position < 0 || position >= layout.rowCount))
+    return null
+  return position
 }
 
 /** The wheel at rest on `offset`: a curve that does not move. */

@@ -2,7 +2,7 @@
  * @file wheelOptions.ts
  * @input Nothing; the option type and pure functions over a wheel's rows
  * @output PickerWheelOption, the keys a wheel answers (wheelKeyOf), the row a
- *   key moves to (steppedRow) and the enabled row nearest a rest
+ *   key moves to (steppedRow, endRow) and the enabled row nearest a rest
  *   (nearestEnabledIndex): what both wheel columns share
  * @position Internal; read by PickerWheel.vue, TouchPickerWheel.vue and
  *   useTouchWheel.ts
@@ -47,6 +47,8 @@ export function wheelKeyOf(key: string): WheelKey | null {
  * nowhere new, or no row is enabled.
  */
 export function steppedRow(options: ReadonlyArray<PickerWheelOption>, from: number, key: WheelKey): number | null {
+  if ('end' in key)
+    return endRow(options, key.end, from)
   const enabled: number[] = []
   options.forEach((option, index) => {
     if (!option.disabled)
@@ -56,15 +58,21 @@ export function steppedRow(options: ReadonlyArray<PickerWheelOption>, from: numb
     return null
   const last = enabled.length - 1
   const current = enabled.indexOf(from)
-  let next: number
-  if ('end' in key)
-    next = key.end === 'first' ? 0 : last
-  else if (current < 0)
-    next = key.step > 0 ? 0 : last
-  else
-    next = Math.min(Math.max(current + key.step, 0), last)
+  const next = current < 0
+    ? (key.step > 0 ? 0 : last)
+    : Math.min(Math.max(current + key.step, 0), last)
   const row = enabled[next] ?? null
   return row === from ? null : row
+}
+
+/** The first or the last enabled row: where Home or End moves a wheel. Null when it is `from`, or no row is enabled. */
+export function endRow(options: ReadonlyArray<PickerWheelOption>, end: 'first' | 'last', from?: number): number | null {
+  let row = -1
+  options.forEach((option, index) => {
+    if (!option.disabled && (row < 0 || end === 'last'))
+      row = index
+  })
+  return row < 0 || row === from ? null : row
 }
 
 /**

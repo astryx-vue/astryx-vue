@@ -10,13 +10,19 @@
  * The wheel does not scroll natively: a scroller's momentum can be neither
  * caught nor measured. It pans through the gesture system, and the strip
  * plays every motion on the shared animator.
+ *
+ * A looping wheel (UIDatePicker's minutes) has no ends: its offset is
+ * unbounded and it draws copies of its rows over the span any motion covers.
+ * At rest the offset moves back onto the wheel's own rows, where the strip
+ * shows the same rows, and the span shrinks again.
  */
 
 import type { MaybeRefOrGetter, Ref } from 'vue'
+import type { LoopSpan } from './wheelLoop'
 import type { PickerWheelOption, WheelKey } from './wheelOptions'
 import type { WheelCurve, WheelLayout } from './wheelPhysics'
 import type { PlayOptions } from './wheelStrip'
-import { computed, onScopeDispose, ref, toValue, watch } from 'vue'
+import { computed, onScopeDispose, ref, shallowRef, toValue, watch } from 'vue'
 import { scrollTypeOf } from '../gestures/GestureHost'
 import { PanGestureRecognizer } from '../gestures/PanGestureRecognizer'
 import { TapGestureRecognizer } from '../gestures/TapGestureRecognizer'
@@ -25,7 +31,8 @@ import { resolveMotion } from '../motion/resolveMotion'
 import { registerScrollTable, scroll } from '../motion/uikit/scroll'
 import { springs } from '../motion/uikit/springs'
 import { lockSelection } from '../utils/selectionLock'
-import { nearestEnabledIndex, steppedRow } from './wheelOptions'
+import { coveringSpan, lapPosition, loopedStep, mod, nearestLoopCopy, restingLoopStep, restingSpan } from './wheelLoop'
+import { endRow, nearestEnabledIndex, steppedRow } from './wheelOptions'
 import { bounceCurve, dragOffset, fingerOffset, nearestIndex, planRelease, rowAtPoint, scaleFor, WHEEL_ROW_HEIGHT } from './wheelPhysics'
 import { createWheelStrip } from './wheelStrip'
 
@@ -34,12 +41,22 @@ export interface TouchWheelOptions {
   strip: Readonly<Ref<HTMLElement | null>>
   options: MaybeRefOrGetter<ReadonlyArray<PickerWheelOption>>
   value: MaybeRefOrGetter<string | undefined>
+  /** The rows repeat without end, as UIDatePicker's minutes do. A single row never loops. */
+  looping?: MaybeRefOrGetter<boolean | undefined>
   onChange: (value: string) => void
 }
 
+/** A copy of a row that a looping wheel draws past its own rows. */
+export interface WheelCopy {
+  readonly position: number
+  readonly option: PickerWheelOption
+}
+
 export interface TouchWheel {
-  /** The row the band marks: null while the wheel moves. */
+  /** The position the band marks (a copy's on a loop): null while the wheel moves. */
   readonly marked: Readonly<Ref<number | null>>
+  /** The copies a looping wheel draws; none for a wheel with ends. */
+  readonly copies: Readonly<Ref<ReadonlyArray<WheelCopy>>>
   /** The committed row, or 0 when the value names none. */
   readonly selectedIndex: Readonly<Ref<number>>
   readonly onKey: (key: WheelKey) => void
@@ -54,9 +71,12 @@ function turnCurve(column: Element | null, from: number, to: number): WheelCurve
   return bounceCurve(from, 0, to, SCALE, resolveMotion(column, springs.settle))
 }
 
-export function useTouchWheel({ column, strip, options, value, onChange }: TouchWheelOptions): TouchWheel {
+const isEnabled = (option: PickerWheelOption | undefined): boolean => option != null && !option.disabled
+
+export function useTouchWheel({ column, strip, options, value, looping, onChange }: TouchWheelOptions): TouchWheel {
   const rows = computed(() => toValue(options))
-  const layout = computed<WheelLayout>(() => ({ rowHeight: WHEEL_ROW_HEIGHT, rowCount: rows.value.length }))
+  const loops = computed(() => toValue(looping) === true && rows.value.length > 1)
+  const layout = computed<WheelLayout>(() => ({ rowHeight: WHEEL_ROW_HEIGHT, rowCount: rows.value.length, looping: loops.value }))
   const selectedIndex = computed(() => Math.max(0, rows.value.findIndex(option => option.value === toValue(value))))
   const motion = createWheelStrip(layout.value)
   const marked = ref<number | null>(selectedIndex.value)
@@ -64,6 +84,66 @@ export function useTouchWheel({ column, strip, options, value, onChange }: Touch
   let dragStart: number | null = null
   /** A finger landed on a moving wheel and stopped it. */
   let caught = false
+  /** Where the committed row sits on the strip: on a loop, the copy the wheel rests on. */
+  let committed = selectedIndex.value
+
+  /** The positions a looping wheel draws rows at; null for a wheel with ends. */
+  const span = shallowRef<LoopSpan | null>(null)
+  watch([loops, () => rows.value.length], ([on, count]) => {
+    span.value = on ? restingSpan(count) : null
+  }, { immediate: true })
+  const copies = computed<WheelCopy[]>(() => {
+    const drawn = span.value
+    const count = rows.value.length
+    const list: WheelCopy[] = []
+    if (drawn == null)
+      return list
+    for (let position = drawn.from; position <= drawn.to; position++) {
+      if (position < 0 || position >= count)
+        list.push({ position, option: rows.value[mod(position, count)]! })
+    }
+    return list
+  })
+
+  /** The option a position shows: on a loop, a copy shows the row it copies. */
+  function optionAt(position: number): PickerWheelOption | undefined {
+    const count = rows.value.length
+    return loops.value && count > 0 ? rows.value[mod(position, count)] : rows.value[position]
+  }
+
+  /** The position of row `row` nearest `offset`: on a loop, the copy nearest it. */
+  function nearestPosition(row: number, offset: number): number {
+    return loops.value ? nearestLoopCopy(row, offset / WHEEL_ROW_HEIGHT, rows.value.length) : row
+  }
+
+  /** On a loop, the drawn span grows to cover positions `a` to `b` and the band's surroundings. */
+  function cover(a: number, b: number): void {
+    if (span.value != null)
+      span.value = coveringSpan(span.value, a, b)
+  }
+
+  /**
+   * At rest on a copy, the offset moves onto the wheel's own row, where the
+   * strip shows the same rows, and the drawn span shrinks back. Returns the
+   * offset there.
+   */
+  function settle(offset: number): number {
+    const count = rows.value.length
+    if (!loops.value)
+      return offset
+    const position = nearestIndex(offset, layout.value)
+    const shift = position - mod(position, count)
+    if (shift !== 0) {
+      motion.setOffset(offset - shift * WHEEL_ROW_HEIGHT)
+      committed -= shift
+    }
+    span.value = restingSpan(count)
+    return offset - shift * WHEEL_ROW_HEIGHT
+  }
+
+  function shownOffset(): number {
+    return motion.isMoving() ? motion.stop() : motion.offset()
+  }
 
   motion.onNearestChange((position) => {
     marked.value = position
@@ -78,25 +158,39 @@ export function useTouchWheel({ column, strip, options, value, onChange }: Touch
     motion.play(curve, playOptions)
   }
 
-  function commit(index: number): void {
-    const option = rows.value[index]
+  function commit(option: PickerWheelOption | undefined): void {
     if (option != null && !option.disabled && option.value !== toValue(value))
       onChange(option.value)
+  }
+
+  /** Signed rows from a rest at `position` to the row the rest rule names: 0 to commit where it is. */
+  function restStep(position: number): number {
+    const count = rows.value.length
+    if (loops.value) {
+      // Measured around the seam; the committed row counts at its copy nearest
+      // the rest, so a rest whole laps away is on it.
+      const committedCopy = nearestLoopCopy(committed, position, count)
+      return position === committedCopy ? 0 : restingLoopStep(at => isEnabled(optionAt(at)), position, committedCopy, count)
+    }
+    const committedRow = rows.value.findIndex(option => option.value === toValue(value))
+    return position === committedRow ? 0 : nearestEnabledIndex(rows.value, position, Math.max(0, committedRow)) - position
   }
 
   // At rest: commit the row, or turn on to the nearest enabled row first. A
   // rest on the committed row commits nothing, even outside the bounds.
   function arrive(offset: number): void {
     const position = nearestIndex(offset, layout.value)
-    const committed = rows.value.findIndex(option => option.value === toValue(value))
-    if (position !== committed) {
-      const target = nearestEnabledIndex(rows.value, position, Math.max(0, committed))
-      if (target !== position) {
-        move(turnCurve(column.value, offset, target * WHEEL_ROW_HEIGHT), { kind: 'release', onEnd: onArrive })
-        return
-      }
+    const step = restStep(position)
+    if (step !== 0) {
+      cover(position, position + step)
+      move(turnCurve(column.value, offset, (position + step) * WHEEL_ROW_HEIGHT), { kind: 'release', onEnd: onArrive })
+      return
     }
-    commit(position)
+    const option = optionAt(position)
+    // The offset moves onto the wheel's own rows before the commit, so a
+    // value the owner clamps turns the wheel on from there.
+    committed = nearestIndex(settle(offset), layout.value)
+    commit(option)
   }
 
   function onArrive(outcome: 'arrived' | 'stopped', offset: number): void {
@@ -106,7 +200,9 @@ export function useTouchWheel({ column, strip, options, value, onChange }: Touch
 
   function release(velocity: number): void {
     registerScrollTable()
-    const plan = planRelease(motion.offset(), velocity, layout.value, resolveMotion(column.value, scroll.bounce))
+    const offset = motion.offset()
+    const plan = planRelease(offset, velocity, layout.value, resolveMotion(column.value, scroll.bounce))
+    cover(nearestIndex(offset, layout.value), plan.index)
     move(plan.curve, {
       kind: 'release',
       ticks: true,
@@ -116,45 +212,84 @@ export function useTouchWheel({ column, strip, options, value, onChange }: Touch
     })
   }
 
-  // A key or a click turns the wheel onto `row` and commits it at once.
-  function turnTo(row: number): void {
-    const offset = motion.isMoving() ? motion.stop() : motion.offset()
-    move(turnCurve(column.value, offset, row * WHEEL_ROW_HEIGHT))
-    commit(row)
+  // A key or a click turns the wheel onto `position` and commits that row at
+  // once. On a loop the strip first moves the target's lap onto its own rows,
+  // as a rest does.
+  function turnTo(position: number): void {
+    const offset = shownOffset()
+    const count = rows.value.length
+    const option = optionAt(position)
+    const shift = loops.value ? position - mod(position, count) : 0
+    const from = offset - shift * WHEEL_ROW_HEIGHT
+    const to = position - shift
+    if (shift !== 0)
+      motion.setOffset(from)
+    committed = to
+    cover(nearestIndex(from, layout.value), to)
+    move(turnCurve(column.value, from, to * WHEEL_ROW_HEIGHT))
+    commit(option)
+  }
+
+  /** Where `key` turns the wheel from the position it is heading to, or null to stay. */
+  function keyTarget(key: WheelKey, heading: number): number | null {
+    if (!loops.value)
+      return steppedRow(rows.value, heading, key)
+    // On a loop an end key stays in the committed row's lap, and a step
+    // crosses the seam.
+    if ('end' in key) {
+      const row = endRow(rows.value, key.end)
+      return row == null ? null : lapPosition(row, committed, rows.value.length)
+    }
+    const travel = loopedStep(at => isEnabled(optionAt(at)), heading, key.step, rows.value.length)
+    return travel == null ? null : heading + travel
   }
 
   // Keys step from the row the wheel is heading to, so two quick presses move
   // two rows. A key with nowhere to go leaves a turn in flight to finish.
   function onKey(key: WheelKey): void {
-    const row = steppedRow(rows.value, nearestIndex(motion.target(), layout.value), key)
-    if (row != null)
-      turnTo(row)
+    const position = keyTarget(key, nearestIndex(motion.target(), layout.value))
+    if (position != null)
+      turnTo(position)
   }
 
+  // A click names a value: on a loop, the row in the committed row's lap.
   function activateRow(index: number): void {
-    const option = rows.value[index]
-    if (option != null && !option.disabled)
-      turnTo(index)
+    const position = loops.value ? lapPosition(index, committed, rows.value.length) : index
+    if (isEnabled(optionAt(position)))
+      turnTo(position)
   }
 
   // Park the committed row under the band when the wheel mounts, at once. A
   // value that changes from outside turns the wheel onto its row instead, as
   // UIDatePicker does: from where the wheel is drawn, even mid-turn. Never
   // while a finger or a release owns the wheel; its rest commits and parks.
+  // On a loop it turns the shorter way round, and its rest settles onto the
+  // wheel's own rows.
   let isParked = false
   watch([selectedIndex, strip], ([index, element]) => {
     if (element == null || dragStart != null || motion.movingKind() === 'release')
       return
-    const target = index * WHEEL_ROW_HEIGHT
     if (!isParked) {
       isParked = true
-      motion.setOffset(target)
+      committed = index
+      motion.setOffset(index * WHEEL_ROW_HEIGHT)
       return
     }
-    if (Math.abs(motion.target() - target) <= 0.01)
+    const heading = nearestPosition(index, motion.target())
+    if (Math.abs(motion.target() - heading * WHEEL_ROW_HEIGHT) <= 0.01) {
+      committed = heading
       return
-    const shown = motion.isMoving() ? motion.stop() : motion.offset()
-    move(turnCurve(column.value, shown, target))
+    }
+    const shown = shownOffset()
+    const position = nearestPosition(index, shown)
+    committed = position
+    cover(nearestIndex(shown, layout.value), position)
+    move(turnCurve(column.value, shown, position * WHEEL_ROW_HEIGHT), {
+      onEnd: (outcome, end) => {
+        if (outcome === 'arrived')
+          settle(end)
+      },
+    })
   }, { immediate: true, flush: 'post' })
 
   const pan = useGestureRecognizer(column, () => new PanGestureRecognizer({
@@ -175,16 +310,21 @@ export function useTouchWheel({ column, strip, options, value, onChange }: Touch
   }), (recognizer) => {
     switch (recognizer.state) {
       case 'began': {
-        const shown = motion.isMoving() ? motion.stop() : motion.offset()
+        const shown = shownOffset()
         dragStart = fingerOffset(shown, layout.value)
         motion.resetDrag()
         motion.setOffset(dragOffset(dragStart - recognizer.translation().y, layout.value), { ticks: true })
         break
       }
-      case 'changed':
-        if (dragStart != null)
-          motion.setOffset(dragOffset(dragStart - recognizer.translation().y, layout.value), { ticks: true })
+      case 'changed': {
+        if (dragStart == null)
+          break
+        const offset = dragOffset(dragStart - recognizer.translation().y, layout.value)
+        const position = nearestIndex(offset, layout.value)
+        cover(position, position)
+        motion.setOffset(offset, { ticks: true })
         break
+      }
       case 'ended': {
         const wasDragging = dragStart != null
         dragStart = null
@@ -219,6 +359,8 @@ export function useTouchWheel({ column, strip, options, value, onChange }: Touch
     const target = rowAtPoint(recognizer.location().y - (box.top + box.height / 2), offset, layout.value)
     if (target == null || target === nearestIndex(offset, layout.value))
       return
+    // On a loop the tapped row can be a copy: the wheel turns onto it.
+    cover(nearestIndex(offset, layout.value), target)
     move(turnCurve(element, offset, target * WHEEL_ROW_HEIGHT), { onEnd: onArrive })
   })
 
@@ -248,5 +390,5 @@ export function useTouchWheel({ column, strip, options, value, onChange }: Touch
     motion.dispose()
   })
 
-  return { marked, selectedIndex, onKey, activateRow }
+  return { marked, copies, selectedIndex, onKey, activateRow }
 }

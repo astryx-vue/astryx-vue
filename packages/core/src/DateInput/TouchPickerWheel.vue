@@ -4,7 +4,9 @@
  * A finger drags the rows, a flick coasts onto the row UIKit's projection
  * picks, a drag past either end rubber-bands, and a tap, a key or a value set
  * from outside turns the wheel on the settle spring. The rows lie flat at a
- * 28 px pitch and fade toward the column's edges.
+ * 28 px pitch and fade toward the column's edges. A looping wheel repeats its
+ * rows without end; the copies are hidden from assistive technology, which
+ * meets each row once.
  */
 import type { PickerWheelOption, WheelKey } from './wheelOptions'
 import { useId, useTemplateRef } from 'vue'
@@ -16,6 +18,7 @@ const props = defineProps<{
   label: string
   options: readonly PickerWheelOption[]
   modelValue?: string
+  looping?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -30,9 +33,10 @@ const wheel = useTouchWheel({
   strip,
   options: () => props.options,
   value: () => props.modelValue,
+  looping: () => props.looping,
   onChange: value => emit('update:modelValue', value),
 })
-const { marked, selectedIndex } = wheel
+const { marked, copies, selectedIndex } = wheel
 
 function onKeydown(event: KeyboardEvent): void {
   const key: WheelKey | null = wheelKeyOf(event.key)
@@ -72,6 +76,18 @@ function onKeydown(event: KeyboardEvent): void {
           @click="wheel.activateRow(index)"
         >
           {{ option.label }}
+        </div>
+        <div v-if="copies.length > 0" aria-hidden="true">
+          <div
+            v-for="copy in copies"
+            :key="copy.position"
+            class="astryx-picker-wheel-row"
+            :data-marked="copy.position === marked || undefined"
+            :data-disabled="copy.option.disabled || undefined"
+            :style="{ insetBlockStart: `${copy.position * WHEEL_ROW_HEIGHT}px` }"
+          >
+            {{ copy.option.label }}
+          </div>
         </div>
       </div>
     </div>

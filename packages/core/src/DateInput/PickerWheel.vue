@@ -10,6 +10,8 @@ const props = defineProps<{
   label: string
   options: readonly PickerWheelOption[]
   modelValue?: string
+  /** Under a finger the rows repeat without end, as UIDatePicker's minutes do. The mouse column does not loop. */
+  looping?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -47,6 +49,7 @@ function onKeydown(event: KeyboardEvent): void {
     :label="label"
     :options="options"
     :model-value="modelValue"
+    :looping="looping"
     @update:model-value="emit('update:modelValue', $event)"
   />
   <div
