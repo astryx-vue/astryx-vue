@@ -36,6 +36,19 @@
   }
 }
 
+/*
+ * 列表行的触屏按压层抬手淡出：只动这一层的 opacity，浏览器放在合成线程上播，
+ * 页面脚本再忙，淡出也照常走完，不重绘。时长和曲线和上面的强度淡出一样。
+ */
+@keyframes astryx-press-layer-release {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
 @layer astryx.components {
   [data-astryx-pressable] {
     --_press-paint: color-mix(

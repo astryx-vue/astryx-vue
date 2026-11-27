@@ -1,4 +1,5 @@
 import type { Component, MaybeRefOrGetter, VNodeChild } from 'vue'
+import type { AnimatedLayout } from '../composables/useAnimatedLayout.js'
 
 /** 滑动露出的一侧。`leading` 是往行内末尾拖，`trailing` 是往行内开头拖。 */
 export type ItemSwipeSide = 'leading' | 'trailing'
@@ -76,6 +77,16 @@ export type ItemText = string | number
 export type ItemLabel = ItemText
 
 export interface ListProps {
+  /**
+   * The handle from `useAnimatedLayout({ containerRef })`. With it, the list
+   * animates its row changes on one shared motion, under every pointer. An
+   * inserted row enters, and a removed row collapses in place. A row that
+   * crosses rows moving the other way rides above them. The rows after a
+   * change, and the content after the list up to that container, glide to
+   * their new places. A row's identity is its `itemKey`, so a row without one
+   * changes at once. Without a handle the list changes at once.
+   */
+  animatedLayout?: AnimatedLayout
   /**
    * Spacing density for the rows. Each `ListItem` inherits it unless the item
    * sets its own.
@@ -198,6 +209,12 @@ export interface ListItemProps {
    * @default false
    */
   isSelected?: boolean
+  /**
+   * The row's item key, a string or a number from the data. It is the row's
+   * identity for the list's `animatedLayout`, so a row without one changes at
+   * once. It is separate from Vue's `key`, which stays Vue's own.
+   */
+  itemKey?: string | number
   /**
    * 触摸横滑露出的操作。鼠标不会开始这次拖动。
    * 每个操作还要在行自己的内容里能点到，否则键盘和鼠标够不着。

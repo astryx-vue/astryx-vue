@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import type { ItemDensity, ListItemProps, ListItemSlots } from './types.js'
-import { computed, provide, useTemplateRef } from 'vue'
+import { computed, onBeforeUnmount, provide, useTemplateRef } from 'vue'
 import { useTouchHitArea } from '../composables/internal/useTouchHitArea.js'
 import { itemListRowKey, useListContext } from './context.js'
 import Item from './Item.vue'
+import { isReportedRow, keepPresentation } from './listPresentation.js'
+import { itemKeyAttrs } from './listRowMarks.js'
 import '../../styles/list.css'
 
 defineOptions({ name: 'AstryxListItem' })
@@ -20,6 +22,14 @@ const isTouchTarget = computed(() =>
   (props.onClick != null || props.href != null || props.interactiveRef != null) && props.isDisabled !== true,
 )
 useTouchHitArea(() => item.value?.element, isTouchTarget)
+
+// 列表的 `animatedLayout` 报告过这一行时，行离开文档前记下它此刻的样子（比如横滑停住的位置），
+// 移除的行退场时就显示离开那一刻屏幕上的样子。
+onBeforeUnmount(() => {
+  const row = item.value?.element
+  if (row != null && isReportedRow(row))
+    keepPresentation(row)
+})
 
 const density = computed<ItemDensity>(() => props.density ?? list?.density.value ?? 'balanced')
 const marker = computed(() => {
@@ -50,6 +60,7 @@ const isBullet = computed(() => marker.value === 'disc' || marker.value === 'cir
     :swipe-behavior="swipeBehavior"
     :rel="rel"
     :target="target"
+    v-bind="itemKeyAttrs(itemKey)"
   >
     <template v-if="marker" #marker>
       <span v-if="isBullet" class="astryx-list-marker">

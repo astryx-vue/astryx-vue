@@ -83,6 +83,19 @@
   }
 
   /*
+   * `animatedLayout` 下从反向移动的行上方滑过的行：滑动期间抬到上面，背后垫一层表面色，
+   * 像 UIKit 不透明的 cell 从邻居上方经过。表面是铺满内边距盒的内阴影，在按压层和内容下面，
+   * 分隔线和按压都还看得见。选中的行保留自己的底色。z-index 2 高过粗指针下热区的 1。
+   */
+  .astryx-list > .astryx-list-item[data-astryx-travelling] {
+    z-index: 2;
+  }
+
+  .astryx-list > .astryx-list-item[data-astryx-travelling]:not([data-selected='true']) {
+    box-shadow: inset 0 0 0 100vmax var(--astryx-color-background-surface, light-dark(#fff, #262626));
+  }
+
+  /*
    * Row edge treatment. `outset` and `bleed` rows reach into the padding of
    * the container around the list. The list reaches that padding's edge
    * first, so its content box moves out with the rows; each row then places
@@ -297,6 +310,38 @@
 
   .astryx-item[data-astryx-press]:not([data-disabled='true']) {
     background-image: var(--_press-paint-image);
+  }
+
+  /*
+   * 手指按下时，按压色画在行自己的 `::before` 上（底色之上、内容之下），
+   * 抬手淡出的是这一层的 opacity，浏览器在合成线程上播。颜色、时长和曲线和按压强度一样。
+   * 这一层只在按压期间存在，平时行的 `::before` 原样不动；鼠标不受影响。
+   */
+  @media (pointer: coarse) {
+    .astryx-item[data-astryx-press]:not([data-disabled='true']) {
+      isolation: isolate;
+      background-image: none;
+    }
+
+    .astryx-item[data-astryx-press]:not([data-disabled='true'])::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      border-radius: inherit;
+      background-color: var(--astryx-list-item-pressed-background, light-dark(#05365919, #ffffff19));
+      pointer-events: none;
+    }
+
+    .astryx-item[data-astryx-press='fading']:not([data-disabled='true'])::before {
+      animation: astryx-press-layer-release var(--astryx-duration-exit, 175ms) var(--astryx-ease-exit, cubic-bezier(0.3, 0, 0.6, 0.6)) both;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .astryx-item[data-astryx-press='fading']:not([data-disabled='true'])::before {
+        animation-duration: min(var(--astryx-duration-exit, 175ms), 200ms);
+      }
+    }
   }
 
   /*
