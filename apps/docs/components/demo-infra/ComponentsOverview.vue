@@ -2,10 +2,10 @@
 import type { DocsLocale } from './docs-i18n'
 import { computed } from 'vue'
 import { componentCardDemos } from '../demos/registry'
+import { vCardFit } from './cardFit'
 import { catalogGroups } from './componentCatalog'
 import { localePath } from './docs-i18n'
 import { LAB_COMPONENTS } from './labCatalog'
-import LabPreviewFit from './LabPreviewFit.vue'
 import VueDemoHost from './VueDemoHost.vue'
 
 const props = defineProps<{ locale: DocsLocale }>()
@@ -32,7 +32,7 @@ const groups = computed(() => catalogGroups(props.locale).map(group => ({
       </h2>
       <div class="component-overview__grid">
         <article v-for="card in group.cards" :key="card.slug" class="component-card">
-          <div aria-hidden="true" class="component-card__frame" inert>
+          <div v-card-fit aria-hidden="true" class="component-card__frame" inert>
             <div class="component-card__preview">
               <VueDemoHost :class-name="card.demo.className" :component="card.demo.component" :data-kind="card.demo.dataKind" />
             </div>
@@ -55,11 +55,9 @@ const groups = computed(() => catalogGroups(props.locale).map(group => ({
       </p>
       <div class="component-overview__grid">
         <article v-for="card in labComponents" :key="card.slug" class="component-card component-card--lab" :data-lab-component="card.slug">
-          <div aria-hidden="true" class="component-card__frame" inert>
+          <div v-card-fit aria-hidden="true" class="component-card__frame" inert>
             <div class="component-card__preview">
-              <LabPreviewFit>
-                <VueDemoHost :class-name="card.demo.className" :component="card.demo.component" :data-kind="card.demo.dataKind" />
-              </LabPreviewFit>
+              <VueDemoHost :class-name="card.demo.className" :component="card.demo.component" :data-kind="card.demo.dataKind" />
             </div>
           </div>
           <a class="component-card__name" :href="localePath(locale, `/lab/${card.slug}/`)">{{ card.name }}</a>

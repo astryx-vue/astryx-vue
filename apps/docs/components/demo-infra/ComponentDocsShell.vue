@@ -10,6 +10,7 @@ import { UPSTREAM_PACKAGE, UPSTREAM_VERSION } from './componentDocsRoute'
 import { componentDocsCopy, localePath } from './docs-i18n'
 import PropsPlayground from './PropsPlayground.vue'
 import { hasAccessibility } from './reference/loadReference'
+import { vStageCenter } from './stageCenter'
 import StageFit from './StageFit.vue'
 import { ownsToastViewport } from './toastDemos'
 import VueDemoHost from './VueDemoHost.vue'
@@ -238,7 +239,7 @@ watch(() => routePath.value.path, () => {
           <a :href="path(`/components/${route.slug}/props`)" :aria-current="route.tab === 'props' ? 'page' : undefined">{{ text.props }}</a>
           <a v-if="showAccessibility" :href="path(`/components/${route.slug}/accessibility`)" :aria-current="route.tab === 'accessibility' ? 'page' : undefined">{{ text.accessibility }}</a>
         </nav>
-        <div v-if="route.tab === 'overview' && stageDemo" class="component-detail__stage">
+        <div v-if="route.tab === 'overview' && stageDemo" v-stage-center class="component-detail__stage">
           <StageFit :min-scale="route.slug === 'rich-text-editor' ? 1 : 0.5">
             <VueDemoHost
               :class-name="stageDemo.className"
