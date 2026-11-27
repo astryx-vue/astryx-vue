@@ -1,5 +1,16 @@
 # @astryx-vue/lab
 
+## 0.10.0
+
+### Minor Changes
+
+- [#612](https://github.com/astryx-vue/astryx-vue/pull/612) [`6fbb2b5`](https://github.com/astryx-vue/astryx-vue/commit/6fbb2b5fb62da1ee0f38d021d0b090f5cad52381) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 移除 lab 的 `MobileTokenizer`（连同它的样式、文档和示例）。手机上的多选输入请改用 core 的 `Tokenizer`：它默认 `presentation="adaptive"`，在紧凑触屏上自动换成底部弹层，草稿编辑、放弃确认、拖动收起搜索都已经内置。`MobileTokenizer` 顺带导出的 `SearchableItem`、`SearchSource` 类型也一并移除，请从 `@astryx-vue/core` 引入。
+
+### Patch Changes
+
+- Updated dependencies [[`ab1fac0`](https://github.com/astryx-vue/astryx-vue/commit/ab1fac025296f8cf7718c4fa9fd16b6bd30b1453)]:
+  - @astryx-vue/core@0.29.0
+
 ## 0.9.5
 
 ### Patch Changes
