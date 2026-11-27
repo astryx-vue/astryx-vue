@@ -9,8 +9,10 @@ import { useComponentMessages } from '../locale/context.js'
 import { chatMessages } from '../locale/messages/chat.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { observeResize } from '../utils/sharedResizeObserver.js'
+import { KEYBOARD_SURFACE_ATTRIBUTE } from './chatKeyboardFocus.js'
 import ChatLayoutScrollButton from './ChatLayoutScrollButton.vue'
 import { chatLayoutContextKey } from './context.js'
+import { useChatKeyboard } from './useChatKeyboard.js'
 import '../../styles/chat.css'
 
 defineOptions({ name: 'AstryxChatLayout', inheritAttrs: false })
@@ -41,12 +43,29 @@ watch([dock, isSelfScrolling], ([el, isSelf], _, onCleanup) => {
   })
   onCleanup(stop)
 }, { immediate: true, flush: 'post' })
-const messagesStyle = computed(() => dockHeight.value > 0
-  ? { paddingBlockEnd: `calc(var(--astryx-spacing-6, 24px) + ${dockHeight.value}px)` }
-  : undefined)
 useScrollbars(root, { enabled: isSelfScrolling })
 
 const scroll = useChatStreamScroll({ scrollRef: scrollTarget })
+
+// 手机屏幕键盘：输入区停在键盘上方，消息区底部留白多出键盘盖住的那段，最新一条消息能滚到它上面。
+const messagesElement = useTemplateRef<HTMLDivElement>('messages')
+const composerRegion = useTemplateRef<HTMLDivElement>('composer')
+const keyboard = useChatKeyboard({
+  root,
+  scrollRef: scrollTarget,
+  dock,
+  messages: messagesElement,
+  composer: composerRegion,
+  isSelfScrolling,
+  scrollToBottom: scroll.scrollToBottom,
+})
+const messagesStyle = computed(() => {
+  const endRoom = keyboard.lift.value + dockHeight.value
+  return endRoom > 0
+    ? { paddingBlockEnd: `calc(var(--astryx-spacing-6, 24px) + ${endRoom}px)` }
+    : undefined
+})
+const dockStyle = computed(() => keyboard.lift.value > 0 ? { bottom: `${keyboard.lift.value}px` } : undefined)
 const newMessages = useChatNewMessages({
   isLocked: scroll.isLocked,
   onResize: scroll.scrollIfLocked,
@@ -81,14 +100,14 @@ defineExpose({ element: root, scrollToBottom })
     :data-density="density"
     :data-scroll="isSelfScrolling ? 'self' : 'external'"
   >
-    <div class="astryx-chat-layout__messages" :data-density="density" :style="messagesStyle">
+    <div ref="messages" class="astryx-chat-layout__messages" :data-density="density" :style="messagesStyle">
       <div v-if="!hasSlotContent(slots.default) && $slots.empty" class="astryx-chat-layout__empty">
         <slot name="empty" />
       </div>
       <slot v-else />
     </div>
 
-    <div ref="dock" class="astryx-chat-layout__dock" :data-density="density">
+    <div ref="dock" class="astryx-chat-layout__dock" :data-density="density" :style="dockStyle">
       <slot
         name="scrollButton"
         :is-visible="buttonVisible"
@@ -103,7 +122,12 @@ defineExpose({ element: root, scrollToBottom })
         />
       </slot>
       <div class="astryx-chat-layout__blur" :data-density="density" />
-      <div class="astryx-chat-layout__composer" :data-density="density">
+      <div
+        ref="composer"
+        class="astryx-chat-layout__composer"
+        :data-density="density"
+        v-bind="{ [KEYBOARD_SURFACE_ATTRIBUTE]: '' }"
+      >
         <div class="astryx-chat-layout__composer-inner" :data-density="density">
           <slot name="composer" />
         </div>

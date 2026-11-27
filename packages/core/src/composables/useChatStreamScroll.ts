@@ -2,7 +2,7 @@ import type { MaybeRefOrGetter, Ref } from 'vue'
 import { ref, toValue, watch } from 'vue'
 import { subscribeInput } from '../utils/inputStream.js'
 import { scrollEventTarget, scrollportTop, scrollsPage } from '../utils/pageScroller.js'
-import { setScrollAnchoringOff } from './internal/scrollAnchoring.js'
+import { markFollowing } from './internal/streamFollowing.js'
 import { useMediaQuery } from './useMediaQuery.js'
 
 /** How `scrollToBottom` moves. `instant` skips the spring. */
@@ -106,7 +106,7 @@ export function useChatStreamScroll(options: UseChatStreamScrollOptions): UseCha
     isLocked.value = next
     const el = scrollRef.value
     if (el)
-      setScrollAnchoringOff(el, next)
+      markFollowing(el, next)
     if (!next)
       cancelFrame()
   }
@@ -246,7 +246,7 @@ export function useChatStreamScroll(options: UseChatStreamScrollOptions): UseCha
       lastScrollTop = el.scrollTop
       lastScrollHeight = el.scrollHeight
       lastOffsetHeight = shownHeight()
-      setScrollAnchoringOff(el, locked)
+      markFollowing(el, locked)
 
       const onScroll = (): void => {
         const { scrollTop, scrollHeight } = el
@@ -325,7 +325,7 @@ export function useChatStreamScroll(options: UseChatStreamScrollOptions): UseCha
         el.removeEventListener('scrollend', onScrollEnd)
         el.removeEventListener('wheel', onWheel)
         el.removeEventListener('touchmove', onTouchMove)
-        setScrollAnchoringOff(el, false)
+        markFollowing(el, false)
       })
     },
     { immediate: true },

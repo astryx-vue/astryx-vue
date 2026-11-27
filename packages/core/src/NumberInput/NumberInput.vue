@@ -14,6 +14,7 @@ import InputClearButton from '../Field/InputClearButton.vue'
 import { useAriaRequired } from '../FormLayout/context.js'
 import Icon from '../Icon/Icon.vue'
 import { useInputGroupDisabled } from '../InputGroup/context.js'
+import { useMobileKeyboard } from '../keyboard/useMobileKeyboard.js'
 import { useAstryxLocale, useComponentMessages } from '../locale/context.js'
 import { numberInputMessages } from '../locale/messages/number-input.js'
 import { useSize } from '../SizeContext/SizeContext.js'
@@ -45,6 +46,8 @@ const size = useSize(() => props.size, 'md')
 const instance = getCurrentInstance()
 const attrs = useAttrs()
 const inputElement = useTemplateRef<HTMLInputElement>('input')
+// 手机上获得焦点时，输入框自己停到屏幕键盘上方。
+useMobileKeyboard(inputElement)
 const container = useTemplateRef<HTMLDivElement>('container')
 const generatedId = `astryx-number-input-${useId()}`
 const unitsId = `${generatedId}-units`
