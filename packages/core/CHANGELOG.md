@@ -1,5 +1,15 @@
 # @astryx-vue/core
 
+## 0.30.1
+
+### Patch Changes
+
+- [#622](https://github.com/astryx-vue/astryx-vue/pull/622) [`5f7d0ab`](https://github.com/astryx-vue/astryx-vue/commit/5f7d0ab18669a8baec5dd919ca3ada5f15b1871c) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - List 行的横滑只在手指自己拖过触发点时才触发操作：甩一下只会把行停在打开的位置，一侧有两个操作时要先停在打开位置再拖才会触发最外侧。
+
+- [#619](https://github.com/astryx-vue/astryx-vue/pull/619) [`d63be11`](https://github.com/astryx-vue/astryx-vue/commit/d63be11fa4c63a1823202943b6b428c5986c9080) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - BottomSheet 的手指拖拽对齐 iOS：松手按 UIKit 规则判断去处、往回拉回到起点档、拉过顶部有橡皮筋、内容滚到头后接手滑动，甩下关闭用弹簧滑出且遮罩同曲线淡去，减少动态效果时原地淡出。
+
+- [#621](https://github.com/astryx-vue/astryx-vue/pull/621) [`a7215e2`](https://github.com/astryx-vue/astryx-vue/commit/a7215e2a0381554594b62677569cc40a4d942045) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Toast 轻快一甩就能关闭，不管多高；甩动速度按输入事件自带的时间戳计算；手指的第一下移动交给手势宿主判定，朝边缘才是滑动，往别处走留给页面滚动。
+
 ## 0.30.0
 
 ### Minor Changes

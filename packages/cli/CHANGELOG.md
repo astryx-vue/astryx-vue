@@ -1,5 +1,15 @@
 # @astryx-vue/cli
 
+## 0.7.3
+
+### Patch Changes
+
+- [#619](https://github.com/astryx-vue/astryx-vue/pull/619) [`d63be11`](https://github.com/astryx-vue/astryx-vue/commit/d63be11fa4c63a1823202943b6b428c5986c9080) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - BottomSheet 的手指拖拽对齐 iOS：松手按 UIKit 规则判断去处、往回拉回到起点档、拉过顶部有橡皮筋、内容滚到头后接手滑动，甩下关闭用弹簧滑出且遮罩同曲线淡去，减少动态效果时原地淡出。
+
+- [#623](https://github.com/astryx-vue/astryx-vue/pull/623) [`56c0321`](https://github.com/astryx-vue/astryx-vue/commit/56c0321d23a4b7c08fd5e0703b2e4f5444981cda) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 页面模板跟上游一批修正：详情页、工作项、仓库树、收件箱、IDE 等页面里原本点了没反应的按钮现在会弹演示提示，退款和删除先确认；窄屏下网格有列数上限、卡片头和表单页脚会换行、画布编辑器按宽度挑缩放，返回和撤销箭头在从右往左排版时镜像；`table` 和 `incident-console` 转为就绪（`template` 可以复制），模板的描述和关键词按页面实际内容校正。语法主题、语音输入、语音识别和长文本粘贴的文档页补上示例。
+
+- [#621](https://github.com/astryx-vue/astryx-vue/pull/621) [`a7215e2`](https://github.com/astryx-vue/astryx-vue/commit/a7215e2a0381554594b62677569cc40a4d942045) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Toast 轻快一甩就能关闭，不管多高；甩动速度按输入事件自带的时间戳计算；手指的第一下移动交给手势宿主判定，朝边缘才是滑动，往别处走留给页面滚动。
+
 ## 0.7.2
 
 ### Patch Changes
