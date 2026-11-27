@@ -1,5 +1,13 @@
 # @astryx-vue/cli
 
+## 0.8.4
+
+### Patch Changes
+
+- [#633](https://github.com/astryx-vue/astryx-vue/pull/633) [`4fd8950`](https://github.com/astryx-vue/astryx-vue/commit/4fd8950ac8a4d4989b8f3f76b5624edec7d5e6f8) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Slider 的滑块改按 UISlider 的方式跟随指针：拖动不再先跳到按下的位置，手指按住会放大、松手带速度滑行后才触发 changeEnd，手指或触控笔轻点轨道在抬起时设值，触屏上每个滑块有 48px 的可点区域。
+
+- [#630](https://github.com/astryx-vue/astryx-vue/pull/630) [`b1ae642`](https://github.com/astryx-vue/astryx-vue/commit/b1ae64222b2cf6a24ff38ff39daa300bc58d401b) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Switch 在触屏上像 iOS 开关一样跟手：按下圆钮微微鼓起，横向拖过大半条轨道就翻面、松手生效，按住不动也能切换；鼠标和触控笔也能拖动切换，拖出开关再松开则不变。
+
 ## 0.8.3
 
 ### Patch Changes
