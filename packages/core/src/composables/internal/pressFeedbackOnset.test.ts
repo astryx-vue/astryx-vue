@@ -143,3 +143,19 @@ describe('calc() 写的退出时长', () => {
     expect(element.childElementCount).toBe(0)
   })
 })
+
+describe('没有按着的接触时的抬起事件', () => {
+  it('抬起事件没有 pointerId、也没有正在按的接触，不会报错', () => {
+    const errors: unknown[] = []
+    const onError = (event: ErrorEvent): void => {
+      errors.push(event.error)
+    }
+    window.addEventListener('error', onError)
+    const event = new MouseEvent('pointerup', { bubbles: true, cancelable: true })
+    Object.defineProperty(event, 'pointerType', { value: 'touch' })
+    window.dispatchEvent(event)
+    window.removeEventListener('error', onError)
+    expect(errors).toEqual([])
+  })
+})
+
