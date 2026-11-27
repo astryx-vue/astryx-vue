@@ -134,7 +134,7 @@ declare function line(dataKey: string, options?: LineOptions): SeriesDef
 | Option | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `color` | `string` | Auto from theme palette | Line color. |
-| `curve` | `'linear' \| 'monotone' \| 'natural' \| 'step'` | `'monotone'` | Curve interpolation method. Options are linear, monotone cubic spline, natural spline, and step. |
+| `curve` | `'linear' \| 'monotone' \| 'natural' \| 'step'` | `'linear'` | Curve interpolation method. Options are linear (straight segments), monotone cubic spline, natural spline, and step. Keep the default straight segments for measured data, so each value reads as a point joined to the next one; a smoothed curve reads as decoration. |
 | `strokeWidth` | `number` | `2` | Line stroke width in pixels. |
 | `dots` | `boolean` | `false` | Whether to render solid circular dots at each data point. |
 | `label` | `string` | `dataKey` | Human-readable name shown in legends and tooltips. |
@@ -175,7 +175,7 @@ declare function area(dataKey: string, options?: AreaOptions): SeriesDef
 | :--- | :--- | :--- | :--- |
 | `color` | `string` | Auto from theme palette | Area fill color. |
 | `opacity` | `number` | `0.3` | Area fill opacity. |
-| `curve` | `'linear' \| 'monotone' \| 'natural' \| 'step'` | `'monotone'` | Curve interpolation algorithm. |
+| `curve` | `'linear' \| 'monotone' \| 'natural' \| 'step'` | `'linear'` | Curve interpolation algorithm. Straight segments by default. |
 | `stack` | `string` | `undefined` | Stack group name. Areas sharing a `stack` stack sequentially. |
 | `gradient` | `boolean` | `false` | Whether to apply a vertical gradient fill. |
 | `stroke` | `boolean` | `true` | Whether to draw a stroke line along the top edge of the area. |
@@ -312,8 +312,8 @@ Axes render along chart edges to display ticks and label text.
 | :--- | :--- | :--- | :--- |
 | `position` | `'top' \| 'right' \| 'bottom' \| 'left'` | **Required** | Edge to place the axis on. |
 | `tickCount` | `number` | `5` | Desired number of ticks. d3 uses this as a hint to find clean intervals. |
-| `maxTicks` | `number` | `undefined` | Maximum number of tick labels to render. Excess ticks are skipped at uniform intervals. |
-| `tickFormat` | `(value: unknown) => string` | `undefined` | Custom tick label formatting function. |
+| `maxTicks` | `number` | `undefined` | Maximum number of tick labels to render. Excess ticks are thinned at uniform intervals; the first and last labels stay. Leave it unset to thin labels to fit the axis width. A set value wins over that fit, so its labels can overlap on a narrow chart. |
+| `tickFormat` | `(value: unknown) => string \| null \| undefined` | `undefined` | Custom tick label formatting function. A `null` or `undefined` result shows the default tick text. |
 | `truncate` | `number` | `undefined` | Maximum characters for tick labels before truncating with an ellipsis. |
 | `animated` | `boolean` | `true` | Whether to smoothly animate tick transitions when positions change. |
 | `showAxisLine` | `boolean` | `true` on bottom axis only | Whether to render the axis baseline. If `showTicks` is true, the baseline is always drawn regardless of position. |
@@ -403,10 +403,10 @@ To inspect or use the current chart palette programmatically, call `useChartColo
 
 ## Formatting functions
 
-The library includes formatting helpers for common chart values. Formatting functions follow a safe fallback rule: if an input is `NaN`, `Infinity`, or cannot be parsed, the function returns the original string as-is instead of printing errors or throwing exceptions.
+The library includes formatting helpers for common chart values. Each one is a `ChartValueFormat`: it receives a value, a locale and a calendar, and returns text, or `null` or `undefined` to ask for the chart's default text. They assign to `ChartValueFormat` without a wrapper. Formatting functions follow a safe fallback rule: if an input is `NaN`, `Infinity`, or cannot be parsed, the function returns the original string as-is instead of printing errors or throwing exceptions. A `null` or `undefined` value returns `undefined` instead of "0", "0%", "$0" or "null".
 
 - `compactNumber(value, locale)`: Abbreviates large numbers. For example, `1200` becomes "1.2K", `1500000` becomes "1.5M", and `1e12` becomes "1T".
-- `currency(symbol?, locale?)`: Creates a currency formatter. For example, `currency('$')` can be passed to `ChartAxis`'s `tickFormat`. Values over 1,000 are automatically abbreviated (such as "$1.5K").
+- `currency(symbol?, locale?)`: Creates a currency formatter. For example, `currency('$')` can be passed to `ChartAxis`'s `tickFormat`. Values over 1,000 are automatically abbreviated (such as "$1.5K"). The returned function also takes a call-time locale; a locale given to the factory wins.
 - `percent(value, locale)`: Formats a decimal ratio as a percentage. For example, `0.45` becomes "45%" and `0.005` becomes "0.5%".
 - `shortDate(value, locale, calendar?)`: Formats dates as a short month and day. For example, "Jan 5". Dates are Gregorian unless you pass an `Intl` calendar such as `'persian'`.
 - `monthYear(value, locale, calendar?)`: Formats dates as month and year. For example, "Jan 2024". Takes the same optional calendar.

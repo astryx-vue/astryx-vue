@@ -35,7 +35,7 @@ export function dot(dataKey: string, options: DotOptions = {}): SeriesDef {
     dataKeys: [dataKey],
     color: typeof color === 'string' ? color : undefined,
     label: options.label ?? dataKey,
-    layout: {},
+    layout: { xOverhang: radius },
 
     resolve(ctx): ResolvedPoint[] {
       const { data, xKey, xScale, yScale } = ctx

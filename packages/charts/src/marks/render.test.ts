@@ -1,4 +1,7 @@
+import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
+import { defineComponent, h } from 'vue'
+import Chart from '../Chart/Chart.vue'
 import { mountChart } from '../../test-support/chart.js'
 import { area } from './area.js'
 import { band } from './band.js'
@@ -175,6 +178,49 @@ describe('area', () => {
     expect(gradient.querySelectorAll('stop')).toHaveLength(2)
     const fillPath = plot.querySelector('path')!
     expect(fillPath.getAttribute('fill')).toBe(`url(#${gradient.id})`)
+  })
+
+  it('gives every gradient an id that is unique across charts on the page', () => {
+    const Page = defineComponent({
+      setup: () => () => [0, 1].map(() =>
+        h(Chart, { series: [area('v', { gradient: true })], data: DATA, xKey: 'm', width: 600 })),
+    })
+    const host = document.createElement('div')
+    document.body.append(host)
+    const wrapper = mount(Page, { attachTo: host })
+    const ids = [...host.querySelectorAll('linearGradient')].map(g => g.id)
+    wrapper.unmount()
+    host.remove()
+    expect(ids).toHaveLength(2)
+    expect(new Set(ids).size).toBe(2)
+  })
+})
+
+describe('default curve', () => {
+  // 默认直线段；要平滑曲线得自己写。三次曲线段在路径里表现为 `C` 命令。
+  it('joins line points with straight segments', () => {
+    const { plot } = mountChart({ series: [line('v')], data: DATA, xKey: 'm' })
+    const d = plot.querySelector('path')!.getAttribute('d')!
+    expect(d).toMatch(/^M/)
+    expect(d).not.toMatch(/C/)
+  })
+
+  it('joins area points with straight segments', () => {
+    const { plot } = mountChart({ series: [area('v')], data: DATA, xKey: 'm' })
+    const paths = [...plot.querySelectorAll('path')]
+    expect(paths.length).toBeGreaterThan(0)
+    for (const path of paths)
+      expect(path.getAttribute('d')).not.toMatch(/C/)
+  })
+
+  it('joins band bounds with straight segments', () => {
+    const { plot } = mountChart({ series: [band({ upper: 'hi', lower: 'lo' })], data: BOUNDS, xKey: 'm' })
+    expect(plot.querySelector('path')!.getAttribute('d')).not.toMatch(/C/)
+  })
+
+  it('still smooths a line when asked', () => {
+    const { plot } = mountChart({ series: [line('v', { curve: 'monotone' })], data: DATA, xKey: 'm' })
+    expect(plot.querySelector('path')!.getAttribute('d')).toMatch(/C/)
   })
 })
 

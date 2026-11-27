@@ -92,16 +92,31 @@ export function computeLayout({
   const xValues = data.map(d => d[xKey])
   const isNumericX = xValues.length > 0 && xValues.every(v => typeof v === 'number')
 
+  // 标记会被裁切在绘图区里，落在首尾 x 上的圆点会被切掉伸出边缘的那一半。
+  // 线性 x 范围往里收最宽的伸出量；范围（domain）不变，所以显式范围依然精确。
+  const xInset = Math.min(
+    width / 2,
+    series.reduce((max, s) => {
+      const overhang = s.layout.xOverhang
+      return overhang != null && Number.isFinite(overhang) && overhang > max ? overhang : max
+    }, 0),
+  )
+  const xRange: [number, number] = [xInset, width - xInset]
+
+  // 不是数字的字符串是分类名；Date 和数字字符串仍走线性比例尺。
+  const isCategoricalX = xValues.some(v => typeof v === 'string' && Number.isNaN(Number(v)))
+
   let xScale: ChartScale
-  if (xDomain && isFiniteDomain(xDomain)) {
+  if (xDomain && isFiniteDomain(xDomain) && !isCategoricalX) {
     // 显式范围说了算（不 `nice()`）：流式窗口能稳定，`data` 为空时比例尺也有效。
     // 只在两头都有限时才信它，NaN/Infinity 会把比例尺弄塌。
-    xScale = scaleLinear().domain(xDomain).range([0, width])
+    // 线性比例尺放不下分类名（柱子画不出来、其他标记没有 x 位置），所以分类 x 忽略它。
+    xScale = scaleLinear().domain(xDomain).range(xRange)
   }
   else if (isNumericX) {
     // NaN 也满足 `typeof === 'number'`，所以范围要防御性地算。
     const [lo, hi] = finiteExtent(xValues as number[])
-    xScale = scaleLinear().domain([lo, hi]).range([0, width]).nice()
+    xScale = scaleLinear().domain([lo, hi]).range(xRange).nice()
   }
   else {
     xScale = scaleBand<string>()

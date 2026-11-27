@@ -52,6 +52,7 @@ export type {
   ChartMargin,
   ChartPointerEvent,
   ChartScale,
+  ChartValueFormat,
   ColorAccessor,
   ResolvedPoint,
   ResolvedPositions,

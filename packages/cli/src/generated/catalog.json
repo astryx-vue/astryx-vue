@@ -20475,8 +20475,8 @@
               {
                 "name": "`tickFormat`",
                 "description": "`tickFormat`",
-                "type": "`(value: unknown) => string`",
-                "default": "`undefined`"
+                "type": "`(value: unknown) => string \\",
+                "default": "null \\"
               },
               {
                 "name": "`truncate`",
@@ -21499,13 +21499,13 @@
                 "name": "`maxTicks`",
                 "type": "`number`",
                 "default": "`undefined`",
-                "description": "允许显示的最大刻度文字数量，超出时会等间隔跳过。"
+                "description": "允许显示的最大刻度文字数量，超出时会等间隔抽稀，首尾文字保留。不设时按轴的宽度自动抽稀；设了就压过这个自动值，窄图上文字可能挤在一起，所以一般别设。"
               },
               {
                 "name": "`tickFormat`",
-                "type": "`(value: unknown) => string`",
-                "default": "`undefined`",
-                "description": "自定义刻度文字的格式化函数。"
+                "type": "`(value: unknown) => string \\",
+                "default": "null \\",
+                "description": "undefined`"
               },
               {
                 "name": "`truncate`",
@@ -22339,7 +22339,7 @@
           },
           {
             "heading": "Formatting functions",
-            "text": "The library includes formatting helpers for common chart values. Formatting functions follow a safe fallback rule: if an input is `NaN`, `Infinity`, or cannot be parsed, the function returns the original string as-is instead of printing errors or throwing exceptions.\n\n- `compactNumber(value, locale)`: Abbreviates large numbers. For example, `1200` becomes \"1.2K\", `1500000` becomes \"1.5M\", and `1e12` becomes \"1T\".\n- `currency(symbol?, locale?)`: Creates a currency formatter. For example, `currency('$')` can be passed to `ChartAxis`'s `tickFormat`. Values over 1,000 are automatically abbreviated (such as \"$1.5K\").\n- `percent(value, locale)`: Formats a decimal ratio as a percentage. For example, `0.45` becomes \"45%\" and `0.005` becomes \"0.5%\".\n- `shortDate(value, locale, calendar?)`: Formats dates as a short month and day. For example, \"Jan 5\". Dates are Gregorian unless you pass an `Intl` calendar such as `'persian'`.\n- `monthYear(value, locale, calendar?)`: Formats dates as month and year. For example, \"Jan 2024\". Takes the same optional calendar.\n- `formatList(values, locale)`: Formats a list of words into a natural language string according to locale rules, such as \"A, B, and C\"."
+            "text": "The library includes formatting helpers for common chart values. Each one is a `ChartValueFormat`: it receives a value, a locale and a calendar, and returns text, or `null` or `undefined` to ask for the chart's default text. They assign to `ChartValueFormat` without a wrapper. Formatting functions follow a safe fallback rule: if an input is `NaN`, `Infinity`, or cannot be parsed, the function returns the original string as-is instead of printing errors or throwing exceptions. A `null` or `undefined` value returns `undefined` instead of \"0\", \"0%\", \"$0\" or \"null\".\n\n- `compactNumber(value, locale)`: Abbreviates large numbers. For example, `1200` becomes \"1.2K\", `1500000` becomes \"1.5M\", and `1e12` becomes \"1T\".\n- `currency(symbol?, locale?)`: Creates a currency formatter. For example, `currency('$')` can be passed to `ChartAxis`'s `tickFormat`. Values over 1,000 are automatically abbreviated (such as \"$1.5K\"). The returned function also takes a call-time locale; a locale given to the factory wins.\n- `percent(value, locale)`: Formats a decimal ratio as a percentage. For example, `0.45` becomes \"45%\" and `0.005` becomes \"0.5%\".\n- `shortDate(value, locale, calendar?)`: Formats dates as a short month and day. For example, \"Jan 5\". Dates are Gregorian unless you pass an `Intl` calendar such as `'persian'`.\n- `monthYear(value, locale, calendar?)`: Formats dates as month and year. For example, \"Jan 2024\". Takes the same optional calendar.\n- `formatList(values, locale)`: Formats a list of words into a natural language string according to locale rules, such as \"A, B, and C\"."
           },
           {
             "heading": "Reduce large line datasets",
@@ -22493,7 +22493,7 @@
           },
           {
             "heading": "格式化函数",
-            "text": "图表库内置了一组常用的格式化函数。所有格式化函数都遵循安全原则：如果遇到 `NaN`、`Infinity` 或无法解析的值，会原样返回原字符串，绝对不会在界面上打印出异常信息，也不会报错崩溃。\n\n- `compactNumber(value, locale)`：将大数字缩写。例如 `1200` 转为「1.2K」，`1500000` 转为「1.5M」，`1e12` 转为「1T」。\n- `currency(symbol?, locale?)`：创建货币格式化器。例如 `currency('¥')` 可以直接传给 `ChartAxis` 的 `tickFormat` 属性，数值大于一千时会自动应用缩写（如「¥1.5K」）。\n- `percent(value, locale)`：将小数比例转换为百分比。例如 `0.45` 转换为「45%」，`0.005` 转换为「0.5%」。\n- `shortDate(value, locale, calendar?)`：将日期格式化为简短的月日。例如「Jan 5」或「3月12日」。默认用格里高利历，传入 `Intl` 历法标识（如 `'persian'`）可以换成别的历法。\n- `monthYear(value, locale, calendar?)`：将日期格式化为年月。例如「Jan 2024」或「2025年3月」。历法参数同上。\n- `formatList(values, locale)`：按指定语言的语法规则把多个词汇拼接为自然语言列表，例如将数组拼成「甲、乙和丙」。"
+            "text": "图表库内置了一组常用的格式化函数，它们都是 `ChartValueFormat`：入参是值、语言和历法，返回文字，或返回 `null`、`undefined` 让图表用默认文字（可以直接赋给 `ChartValueFormat` 类型，不必再包一层）。所有格式化函数都遵循安全原则：如果遇到 `NaN`、`Infinity` 或无法解析的值，会原样返回原字符串，绝对不会在界面上打印出异常信息，也不会报错崩溃；值是 `null` 或 `undefined` 时返回 `undefined`，而不是「0」「0%」「$0」或「null」。\n\n- `compactNumber(value, locale)`：将大数字缩写。例如 `1200` 转为「1.2K」，`1500000` 转为「1.5M」，`1e12` 转为「1T」。\n- `currency(symbol?, locale?)`：创建货币格式化器。例如 `currency('¥')` 可以直接传给 `ChartAxis` 的 `tickFormat` 属性，数值大于一千时会自动应用缩写（如「¥1.5K」）。返回的函数还接受调用时给的语言，工厂里指定的语言优先。\n- `percent(value, locale)`：将小数比例转换为百分比。例如 `0.45` 转换为「45%」，`0.005` 转换为「0.5%」。\n- `shortDate(value, locale, calendar?)`：将日期格式化为简短的月日。例如「Jan 5」或「3月12日」。默认用格里高利历，传入 `Intl` 历法标识（如 `'persian'`）可以换成别的历法。\n- `monthYear(value, locale, calendar?)`：将日期格式化为年月。例如「Jan 2024」或「2025年3月」。历法参数同上。\n- `formatList(values, locale)`：按指定语言的语法规则把多个词汇拼接为自然语言列表，例如将数组拼成「甲、乙和丙」。"
           },
           {
             "heading": "大数据折线缩减",
