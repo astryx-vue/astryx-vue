@@ -107,7 +107,7 @@ function onOverrideSave(saved: PowerSearchFilter | null): void {
 
 <template>
   <div class="astryx-power-search-sheet" data-sheet-step="value">
-    <div class="astryx-power-search-sheet__header">
+    <div class="astryx-power-search-sheet__header astryx-power-search-sheet__header--scrolls-to-top">
       <div class="astryx-power-search-sheet__header-row">
         <Heading :level="3" :max-lines="1" class="astryx-power-search-sheet__title">
           {{ title }}

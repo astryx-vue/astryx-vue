@@ -99,7 +99,7 @@
     overflow: hidden;
   }
 
-  /* 弹层内边距为 0，抓手浮在内容上方 24px 高；标题从抓手下面开始。 */
+  /* 弹层自己在抓手下面留出 24px，「筛选条件」和「添加筛选条件」的标题靠这一段就够了。 */
   .astryx-power-search-sheet__header {
     position: sticky;
     top: 0;
@@ -107,8 +107,17 @@
     display: flex;
     flex-direction: column;
     gap: var(--astryx-spacing-3, 12px);
-    padding: var(--astryx-spacing-6, 24px) var(--astryx-spacing-4, 16px) var(--astryx-spacing-3, 12px);
+    padding: 0 var(--astryx-spacing-4, 16px) var(--astryx-spacing-3, 12px);
     background: var(--astryx-power-search-sheet-surface);
+  }
+
+  /*
+   * 值那一步整页一起滚，吸顶的标题会碰到弹层顶边。标题往上伸进抓手下面那一段，
+   * 再用自己的内边距把那一段补回来，停着和吸住时都不被抓手挡住。
+   */
+  .astryx-power-search-sheet__header--scrolls-to-top {
+    margin-block-start: calc(-1 * var(--astryx-spacing-6, 24px));
+    padding-block-start: var(--astryx-spacing-6, 24px);
   }
 
   .astryx-power-search-sheet__header-row {

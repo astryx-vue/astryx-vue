@@ -70,8 +70,21 @@ describe('power search presentation', () => {
     expect(placeholder).toContain('white-space: nowrap')
   })
 
-  it('starts sheet content below the floating grab bar', () => {
-    expect(rule('.astryx-power-search-sheet__header')).toMatch(/padding: var\(--astryx-spacing-6, 24px\)/)
+  it('leaves the grab bar band to the sheet, and lifts only the scrolling value header into it', async () => {
+    // BottomSheet 自己在抓手下面留出 24px，标题不再补第二段。
+    expect(rule('.astryx-power-search-sheet__header')).toContain('padding: 0 var(--astryx-spacing-4, 16px)')
+    const lifted = rule('.astryx-power-search-sheet__header--scrolls-to-top')
+    expect(lifted).toContain('margin-block-start: calc(-1 * var(--astryx-spacing-6, 24px))')
+    expect(lifted).toContain('padding-block-start: var(--astryx-spacing-6, 24px)')
+
+    phone()
+    renderPowerSearch({ filters: [nameFilter('ada')] })
+    await openSheet()
+    expect(step('manage')!.querySelector('.astryx-power-search-sheet__header--scrolls-to-top')).toBeNull()
+    await click(step('manage')!.querySelector<HTMLElement>('[data-sheet-add]'))
+    expect(step('fields')!.querySelector('.astryx-power-search-sheet__header--scrolls-to-top')).toBeNull()
+    await pickField('role')
+    expect(step('value')!.querySelector('.astryx-power-search-sheet__header--scrolls-to-top')).not.toBeNull()
   })
 
   it('warns once in development about props that have no surface in the sheet', () => {
