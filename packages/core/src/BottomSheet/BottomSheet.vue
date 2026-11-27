@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import type { DismissEscape } from '../layer/dismissStack.js'
+import type { LayerFocusRecord } from '../layer/layerFocusReturn.js'
 import type { BottomSheetEmits, BottomSheetMotion, BottomSheetProps, BottomSheetSlots, BottomSheetState } from './types.js'
-import { computed, inject, onBeforeUnmount, onMounted, provide, ref, toValue, useAttrs, useTemplateRef, watch } from 'vue'
+import { computed, getCurrentInstance, inject, onBeforeUnmount, onMounted, provide, ref, toValue, useAttrs, useTemplateRef, watch } from 'vue'
 import { focusForLastInput } from '../composables/internal/focusReturn.js'
 import { useFocusTrap } from '../composables/useFocusTrap.js'
 import { useRestoreFocus } from '../composables/useRestoreFocus.js'
 import { useScrollLock } from '../composables/useScrollLock.js'
 import { holdKeptInside } from '../layer/inputHold.js'
+import { isLayerFocusStranded, restoreLayerFocus, trackLayerFocus } from '../layer/layerFocusReturn.js'
 import { createModalOutletHandle } from '../layer/modalOutlet.js'
 import { isImeKeyEvent } from '../utils/ime.js'
 import BottomSheetPanel from './BottomSheetPanel.vue'
 import { bottomSheetEscapeKey } from './escape.js'
+import { focusSheetOnOpen } from './focusSheetPanel.js'
 import { bottomSheetSwitcherKey } from './switcher.js'
 import { useSheetLayerDismiss } from './useSheetLayerDismiss.js'
 import '../../styles/bottom-sheet.css'
@@ -50,6 +53,10 @@ const dialog = useTemplateRef<HTMLDialogElement>('dialog')
 const panel = useTemplateRef<InstanceType<typeof BottomSheetPanel>>('panel')
 const isPresented = ref(false)
 const scrimOpacity = ref(1)
+// 只有真正以模态打开之后才对外说自己是模态：服务端渲染出来、还没水合的抽屉不能带 aria-modal。
+const isModalShown = ref(false)
+// 服务端渲染时就开着的抽屉，水合后直接以静止状态呈现，不播进场；第一次关闭后恢复动效。
+const isSettled = ref(getCurrentInstance()?.vnode.el != null && isOpen.value && !hosted.value && !props.isInline)
 
 const panelState = computed<BottomSheetState>(() => {
   if (retained.value)
@@ -74,6 +81,7 @@ useFocusTrap({
 useRestoreFocus({
   isEnabled: computed(() => !props.isInline && !hosted.value),
   shouldRestore: isOpen,
+  preventScroll: true,
 })
 
 /** The dialog carries the accessible name; the panel keeps every other attribute. */
@@ -110,18 +118,13 @@ function panelElement(): HTMLElement | null {
 }
 
 function focusPanel(): void {
-  const element = panelElement()
-  if (!element || typeof document === 'undefined')
+  if (typeof document === 'undefined')
     return
-  const active = document.activeElement
-  if (active != null && element.contains(active))
-    return
-  const autofocus = element.querySelector<HTMLElement>('[data-autofocus]')
-  if (autofocus != null)
-    autofocus.focus({ preventScroll: true })
-  else if (props.hasScrim)
-    element.focus({ preventScroll: true })
+  focusSheetOnOpen(panelElement(), props.hasScrim)
 }
+
+// 打开期间跟着焦点：抽屉被直接卸载（没有关闭动作）时，靠它把被困住的焦点送回打开者。
+let focusRecord: LayerFocusRecord | null = null
 
 // 独立的模态抽屉打开期间充当全局 toast 的挂载点，toast 才不会被它盖住、点不到。
 const modalOutlet = createModalOutletHandle()
@@ -134,8 +137,11 @@ function openSheet(): void {
     return
   isPresented.value = true
   if (!dialogElement.open) {
+    focusRecord?.stop()
+    focusRecord = trackLayerFocus({ getLayer: () => dialog.value })
     if (props.hasScrim) {
       dialogElement.showModal()
+      isModalShown.value = true
       if (!hosted.value)
         modalOutlet.attach(dialogElement)
     }
@@ -153,9 +159,12 @@ function closeSheet(): void {
   dialog.value?.close()
   unlockScroll()
   isPresented.value = false
+  isModalShown.value = false
+  focusRecord?.stop()
+  focusRecord = null
   const target = toValue(props.finalFocusRef)
   if (target?.isConnected)
-    focusForLastInput(target)
+    focusForLastInput(target, { preventScroll: true })
 }
 
 const layerActive = computed(() => !hosted.value && !props.isInline && (isOpen.value || isPresented.value))
@@ -233,6 +242,13 @@ watch(isOpen, (value) => {
   openSheet()
 }, { flush: 'post' })
 
+watch(isOpen, (value) => {
+  if (value)
+    return
+  isSettled.value = false
+  isModalShown.value = false
+})
+
 // 关闭中的抽屉交给浮层运行时的输入暂挡：页面照常可点；焦点还留在里面时内容不藏，
 // 只放行 Tab，焦点一离开就整个变成 inert。退场结束或重新打开时放开。
 const isExiting = computed(() => !hosted.value && !props.isInline && !isOpen.value && isPresented.value)
@@ -259,6 +275,17 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  // 打开着就被卸载：等它离开文档后，把被困住的焦点按共用的候选链送出去。
+  const record = focusRecord
+  focusRecord = null
+  if (record != null) {
+    const wasStranded = isLayerFocusStranded(record, dialog.value)
+    queueMicrotask(() => {
+      if (wasStranded)
+        restoreLayerFocus(record, { layer: null, name: 'BottomSheet' })
+      record.stop()
+    })
+  }
   releaseExitHold?.()
   releaseExitHold = null
   modalOutlet.detach()
@@ -327,9 +354,10 @@ defineExpose({
       'astryx-bottom-sheet-dialog--scrim': hasScrim,
       'astryx-bottom-sheet-dialog--closing': !isOpen && isPresented,
     }"
+    :data-settled="isSettled || undefined"
     :aria-label="dialogLabel"
     :aria-labelledby="labelledBy"
-    :aria-modal="hasScrim && isOpen ? 'true' : undefined"
+    :aria-modal="hasScrim && isModalShown ? 'true' : undefined"
     :role="purpose === 'required' ? 'alertdialog' : undefined"
     :style="dialogStyle"
     @cancel="onCancel"

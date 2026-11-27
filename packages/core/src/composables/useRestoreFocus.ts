@@ -8,6 +8,13 @@ export interface UseRestoreFocusOptions {
   isEnabled: Ref<boolean>
   /** 是否应该恢复焦点（例如，对话框是否已打开） */
   shouldRestore: Ref<boolean>
+  /**
+   * 归还焦点时不滚动页面。打开者在浮层打开时就在屏幕上，页面之后没动过，归还不该再露出任何东西。
+   * WebKit 会把轻点按钮时落到的最近可聚焦祖先（如 `tabindex="-1"` 的主区域）记成打开者，
+   * 带滚动的聚焦会把页面卷回那个区域的顶边。
+   * @default false
+   */
+  preventScroll?: boolean
 }
 
 export interface RestoreFocus {
@@ -42,7 +49,7 @@ export function useRestoreFocus(options: UseRestoreFocusOptions): RestoreFocus {
       return
     // 只在元素仍在文档中且可聚焦时恢复焦点
     if (savedElement.isConnected && !savedElement.hasAttribute('disabled')) {
-      focusForLastInput(savedElement)
+      focusForLastInput(savedElement, options.preventScroll === true ? { preventScroll: true } : undefined)
     }
     savedElement = null
   }

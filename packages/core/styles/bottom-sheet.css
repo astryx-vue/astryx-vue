@@ -358,6 +358,16 @@
     -webkit-mask-image: linear-gradient(transparent, transparent);
   }
 
+  /*
+   * A sheet that was open in the server markup opens settled after hydration:
+   * the rise and the dim collapse to the near-zero duration reduced motion
+   * uses, so their transitions still end. The first close restores the motion.
+   */
+  .astryx-bottom-sheet-dialog[data-settled] .astryx-bottom-sheet,
+  .astryx-bottom-sheet-dialog[data-settled]::backdrop {
+    transition-duration: 0.01s;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .astryx-bottom-sheet {
       transition-duration: 0.01s;
