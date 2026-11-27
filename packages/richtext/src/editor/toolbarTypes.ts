@@ -17,14 +17,16 @@ export interface RichTextEditorToolbarProps {
    */
   size?: RichTextToolbarSize
   /**
-   * 是否显示插入、编辑链接的按钮。默认点开一个对话框，里面可以添加、更新、移除链接，
-   * 选区不会丢。写进去的网址会先过 `sanitizeUrl`，只放行 http、https、mailto、tel。
+   * 是否显示插入、编辑链接的按钮。默认点开一个锚定在按钮上的弹出层：不是模态，开在工具栏上方，
+   * 上方放不下才翻到下方；里面一个网址输入框，回车应用，光标在链接里时还有「移除」；
+   * Escape 或取消会关掉它，并把焦点和选区还给编辑器。光标在链接外时，应用会把网址本身插成链接文字。
+   * 写进去的网址会先过 `sanitizeUrl`，只放行 http、https、mailto、tel。
    * @default true
    */
   hasLink?: boolean
   /**
    * 自己提供网址输入界面时用：在没有链接的选区上按链接按钮，会带着选中的文字调用它；
-   * 返回网址就加链接，返回空就取消。不传就用内置的对话框。
+   * 返回网址就加链接，返回空就取消。不传就用内置的弹出层。
    */
   promptForUrl?: (selectedText: string) => string | null | undefined
   /**

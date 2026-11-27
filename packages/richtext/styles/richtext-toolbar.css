@@ -29,6 +29,12 @@
     flex-shrink: 0;
   }
 
+  /* 链接弹出层的锚点：只是包住链接按钮的一层，自己不占空间，也不许被挤扁。 */
+  .astryx-richtext-toolbar__link-anchor {
+    display: inline-flex;
+    flex-shrink: 0;
+  }
+
   /* 竖分隔线默认高度是 100%，要父元素有确定高度；这里让它拉伸到整行高度。 */
   .astryx-richtext-toolbar__divider {
     align-self: stretch;

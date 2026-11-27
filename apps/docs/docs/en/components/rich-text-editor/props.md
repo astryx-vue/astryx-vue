@@ -46,7 +46,7 @@ footer: false
 | `label` | `string` | Localized text | Accessible name for the toolbar. |
 | `headingLevels` | `ReadonlyArray<'h1' \| 'h2' \| 'h3'>` | `['h1', 'h2', 'h3']` | Heading levels included in the block format dropdown. |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'sm'` | Toolbar size. |
-| `hasLink` | `boolean` | `true` | Whether to show the link button and enable Cmd/Ctrl+K shortcut. |
+| `hasLink` | `boolean` | `true` | Whether to show the link button and enable Cmd/Ctrl+K shortcut. They open a non-modal popover anchored to the button with one URL field. |
 | `promptForUrl` | `(selectedText: string) => string \| null \| undefined` | - | Custom callback function to prompt for a URL. |
 | `hasNewTabLinks` | `boolean` | `true` | Whether inserted links open in a new tab. |
 

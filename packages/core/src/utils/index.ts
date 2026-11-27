@@ -10,6 +10,9 @@ export { getItemGroup, groupItems } from './groupItems.js'
 
 export type { GroupableItem, GroupItemsOptions, ItemGroup } from './groupItems.js'
 
+export { isImeKeyEvent } from './ime.js'
+export type { ImeKeyEventLike } from './ime.js'
+
 export { getInputARIA, joinAriaIDs } from './inputAria.js'
 export type { InputARIA, InputARIAInputGroup } from './inputAria.js'
 

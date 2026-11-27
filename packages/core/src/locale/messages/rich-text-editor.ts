@@ -30,6 +30,7 @@ export interface RichTextEditorMessages {
     insertTitle: string
     editTitle: string
     url: string
+    urlPlaceholder: string
     invalidUrl: string
     remove: string
     cancel: string
@@ -67,6 +68,7 @@ export const richTextEditorMessages: Record<AstryxLocale, RichTextEditorMessages
       insertTitle: 'Insert link',
       editTitle: 'Edit link',
       url: 'URL',
+      urlPlaceholder: 'example.com',
       invalidUrl: 'Enter a valid http, https, mailto, or tel URL.',
       remove: 'Remove link',
       cancel: 'Cancel',
@@ -102,6 +104,7 @@ export const richTextEditorMessages: Record<AstryxLocale, RichTextEditorMessages
       insertTitle: '插入链接',
       editTitle: '编辑链接',
       url: '网址',
+      urlPlaceholder: 'example.com',
       invalidUrl: '请输入有效的 http、https、mailto 或 tel 网址。',
       remove: '移除链接',
       cancel: '取消',
