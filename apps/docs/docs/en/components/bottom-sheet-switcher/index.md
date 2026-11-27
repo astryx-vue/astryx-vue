@@ -43,6 +43,8 @@ Every child needs its own `sheet-id` and a non-empty `label`. The switcher names
 
 Escape asks the switcher to close. `cancel` fires first with the native cancel event, so calling `event.preventDefault()` on it keeps the flow open.
 
+When the flow closes, or the switcher is removed while a step is open, focus that was inside it returns to the element that was focused when the flow opened, with or without a scrim. Each step opens on its first eligible `data-autofocus` field, else on the step's panel. A flow already open in the server markup appears settled after hydration, with no entrance motion.
+
 ```ts
 import { BottomSheet, BottomSheetSwitcher } from '@astryx-vue/core/BottomSheet'
 ```

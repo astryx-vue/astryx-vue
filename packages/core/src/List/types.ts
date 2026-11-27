@@ -211,13 +211,13 @@ export interface ListItemProps {
 }
 
 export interface ListItemSlots {
-  /** Leading content before the label: an icon, an avatar, a checkbox. */
+  /** Content before the label, inside the row: an icon, an avatar, a checkbox. */
   startContent?: () => VNodeChild
   /** Rich content replacing the `label` prop. */
   label?: () => VNodeChild
   /** Rich content replacing the `description` prop. */
   description?: () => VNodeChild
-  /** Trailing content after the label area: a badge, a timestamp, a chevron. */
+  /** Content after the label and description, inside the row: a badge, a timestamp, a chevron. */
   endContent?: () => VNodeChild
 }
 

@@ -1,5 +1,6 @@
 import type { TemplateRecord } from './catalog-types.ts'
 import type { SearchHit } from './query.ts'
+import { repairTerms } from './build-repair.ts'
 import { catalog, text } from './catalog.ts'
 import { CliError } from './error.ts'
 import { searchCatalog } from './query.ts'
@@ -229,7 +230,7 @@ function fieldMatches(target: TemplateField, term: string): number {
  */
 export function rankTemplates(idea: string): TemplateMatch[] {
   const docs = catalog.templates.map(documentFor)
-  const terms = ideaTerms(idea)
+  const terms = repairTerms(ideaTerms(idea), idea, templateVocabulary(docs), joinedSlugs())
   if (terms.length === 0)
     return []
 
@@ -279,6 +280,30 @@ export function rankTemplates(idea: string): TemplateMatch[] {
       || hyphenCount(a.doc.template.slug) - hyphenCount(b.doc.template.slug)
       || a.doc.template.slug.localeCompare(b.doc.template.slug))
     .map(entry => toMatch(entry.doc.template, entry.matched, usable.length))
+}
+
+/** Every English word the templates use, for reading a slightly misspelled idea. */
+function templateVocabulary(docs: TemplateDoc[]): Set<string> {
+  const vocabulary = new Set<string>()
+  for (const doc of docs) {
+    for (const target of doc.fields) {
+      for (const word of target.words) {
+        if (/^[a-z0-9]+$/.test(word))
+          vocabulary.add(word)
+      }
+    }
+  }
+  return vocabulary
+}
+
+/** A multi-word template name written without its hyphens, mapped to its words. */
+function joinedSlugs(): Map<string, string[]> {
+  const joined = new Map<string, string[]>()
+  for (const { slug } of catalog.templates) {
+    if (slug.includes('-'))
+      joined.set(slug.replaceAll('-', ''), slug.split('-'))
+  }
+  return joined
 }
 
 function toMatch(template: TemplateRecord, matchedTerms: string[], termCount: number): TemplateMatch {

@@ -7,6 +7,7 @@ import { CliError } from './error.ts'
 import { keywordSuggestions, otherCommandHints } from './query-hints.ts'
 import { componentKeywordScore } from './query-keywords.ts'
 import { compareText, queryFit } from './query-order.ts'
+import { topicByWords, topicsByWords } from './query-topics.ts'
 import { compoundNameScore, nameWords, splitWords, stemWord } from './query-words.ts'
 import { BINARY, DOCS_PACKAGE } from './spec.ts'
 
@@ -88,13 +89,18 @@ export function resolveComposable(query: string): ComponentRecord {
 
 export function resolveTopic(query: string): TopicRecord {
   ensureNamed(query, 'topic')
+  const key = normalize(query)
+  const typedAsName = catalog.topics.some(topic => names(TOPIC_LOOKUP, topic).includes(key))
+  const spelled = typedAsName ? null : topicByWords(query, catalog.topics)
+  if (spelled)
+    return spelled
   return resolveRecord(query, catalog.topics, TOPIC_LOOKUP, matches => matches.length > 0
     ? ambiguous('topic', query, matches, TOPIC_LOOKUP)
     : new CliError(
         `No topic named "${query}".`,
         'ERR_UNKNOWN_TOPIC',
         1,
-        missSuggestions(query, catalog.topics, TOPIC_LOOKUP, 'docs'),
+        missSuggestions(query, catalog.topics, TOPIC_LOOKUP, 'docs', topicsByWords(query, catalog.topics)),
       ))
 }
 
@@ -209,13 +215,13 @@ const MAX_SUGGESTIONS = 5
 /**
  * What a lookup that found no entry points to, best first: components whose
  * keywords are the typed name, the command that does read the name, then the
- * names close to it.
+ * names close to it, then pages that share a word with it.
  */
-export function missSuggestions<T>(query: string, candidates: readonly T[], lookup: Lookup<T>, command: LookupCommand): Suggestion[] {
+export function missSuggestions<T>(query: string, candidates: readonly T[], lookup: Lookup<T>, command: LookupCommand, sharedWords: Suggestion[] = []): Suggestion[] {
   const keyword = command === 'component' || command === 'composable' ? keywordSuggestions(query, command) : []
   const close = suggestRecords(query, candidates, lookup)
   const seen = new Set<string>()
-  return [...keyword, ...otherCommandHints(query, command), ...close]
+  return [...keyword, ...otherCommandHints(query, command), ...close, ...sharedWords]
     .filter(suggestion => !seen.has(suggestion.name) && seen.add(suggestion.name))
     .slice(0, MAX_SUGGESTIONS)
 }
@@ -232,7 +238,7 @@ export function suggestByNames<T>(query: string, candidates: readonly T[], names
   return candidates
     .map((candidate) => {
       const values = [...new Set(namesOf(candidate).map(normalize))].filter(Boolean)
-      const distance = Math.min(...values.map(value => levenshtein(key, value)))
+      const distance = Math.min(...values.map(value => levenshtein(key, value, true)))
       const included = values.some(value => value.includes(key) || key.includes(value))
       const compound = compoundNameScore(query, namesOf(candidate)) ?? 0
       return { candidate, distance, included, compound }
@@ -424,21 +430,28 @@ function normalize(value: string): string {
   return value.trim().toLowerCase().replace(/[\s_]+/g, '-')
 }
 
-function levenshtein(a: string, b: string): number {
+/**
+ * Edit distance. With `swaps`, two adjacent letters swapped count as one edit,
+ * which is how a slip of the fingers (`dasbhoard`) reads to the person who made it.
+ */
+function levenshtein(a: string, b: string, swaps = false): number {
   if (a === b)
     return 0
   if (Math.abs(a.length - b.length) > 4)
     return 99
-  const previous = Array.from({ length: b.length + 1 }, (_, index) => index)
+  let beforePrevious: number[] = []
+  let previous = Array.from({ length: b.length + 1 }, (_, index) => index)
   for (let i = 1; i <= a.length; i++) {
-    let diagonal = previous[0]!
-    previous[0] = i
+    const current = [i]
     for (let j = 1; j <= b.length; j++) {
-      const saved = previous[j]!
       const cost = a[i - 1] === b[j - 1] ? 0 : 1
-      previous[j] = Math.min(previous[j]! + 1, previous[j - 1]! + 1, diagonal + cost)
-      diagonal = saved
+      let value = Math.min(previous[j]! + 1, current[j - 1]! + 1, previous[j - 1]! + cost)
+      if (swaps && i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1])
+        value = Math.min(value, beforePrevious[j - 2]! + 1)
+      current[j] = value
     }
+    beforePrevious = previous
+    previous = current
   }
   return previous[b.length]!
 }

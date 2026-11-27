@@ -51,7 +51,7 @@ npm run astryx-vue -- component Button
 | `astryx-vue component <Name>` | Usage, props, slots, events, examples, and notes for one component |
 | `astryx-vue composable --list` | Every documented composable, the `use*` functions |
 | `astryx-vue composable <Name>` | Parameters, return values, usage, and examples for one composable |
-| `astryx-vue docs` | Every guide and theme topic |
+| `astryx-vue docs` or `docs --list` | Every guide and theme topic |
 | `astryx-vue docs <topic>` | One topic's page text, such as `docs guide/dark-mode` or `docs themes/tokens` |
 | `astryx-vue docs <topic> --depth <n>` | The same page, cut off below heading level `n` |
 | `astryx-vue search <query>` | Ranked components, composables, docs topics, and templates |

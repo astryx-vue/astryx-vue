@@ -224,6 +224,8 @@
     justify-content: center;
     height: var(--astryx-spacing-6, 24px);
     background-image: linear-gradient(to bottom, var(--astryx-bottom-sheet-background, var(--astryx-color-background-surface, #fff)) 60%, transparent);
+    /* WebKit can draw the bar under the body's layer while the panel's transform animates; a layer of its own keeps the pill above it. */
+    will-change: transform;
     touch-action: pinch-zoom;
     cursor: grab;
   }
@@ -265,28 +267,37 @@
    * Omitted `padding` reads the theme's bottom-sheet padding, then spacing 4.
    * An explicit step replaces that chain on every edge. Bleed children read
    * the same variables they sit inside.
+   *
+   * At the block start the box always leaves the grab bar's band (spacing 6)
+   * clear: it applies the band on top of the padding past it, and publishes
+   * only the padding past the band. A child escapes the padding, never the
+   * band, so the first row never sits under the bar; scrolled content still
+   * passes beneath it.
    */
   .astryx-bottom-sheet__content {
     box-sizing: border-box;
     display: flow-root;
     height: 100%;
-    min-height: min-content;
+    /* fit-content, not min-content: WebKit ignores min-content on a block's min-height. */
+    min-height: fit-content;
     --_sheet-pad-inline-start: var(--astryx-bottom-sheet-padding-inline-start, var(--astryx-bottom-sheet-padding-inline, var(--astryx-bottom-sheet-padding, var(--astryx-spacing-4, 1rem))));
     --_sheet-pad-inline-end: var(--astryx-bottom-sheet-padding-inline-end, var(--astryx-bottom-sheet-padding-inline, var(--astryx-bottom-sheet-padding, var(--astryx-spacing-4, 1rem))));
     --_sheet-pad-block-start: var(--astryx-bottom-sheet-padding-block-start, var(--astryx-bottom-sheet-padding, var(--astryx-spacing-4, 1rem)));
     --_sheet-pad-block-end: var(--astryx-bottom-sheet-padding-block-end, var(--astryx-bottom-sheet-padding, var(--astryx-spacing-4, 1rem)));
+    --_sheet-grab-band: var(--astryx-spacing-6, 24px);
+    --_sheet-pad-block-start-past-band: max(calc(var(--_sheet-pad-block-start) - var(--_sheet-grab-band)), 0px);
     --container-padding-inline-start: var(--_sheet-pad-inline-start);
     --container-padding-inline-end: var(--_sheet-pad-inline-end);
-    --container-padding-block-start: var(--_sheet-pad-block-start);
+    --container-padding-block-start: var(--_sheet-pad-block-start-past-band);
     --container-padding-block-end: var(--_sheet-pad-block-end);
     padding-inline: var(--container-padding-inline-start) var(--container-padding-inline-end);
-    padding-block: var(--container-padding-block-start) var(--container-padding-block-end);
+    padding-block: calc(var(--container-padding-block-start) + var(--_sheet-grab-band)) var(--container-padding-block-end);
     --layout-padding-own-outer-x: initial;
     --layout-padding-own-outer-y: initial;
     --layout-padding-outer-x: var(--_sheet-pad-inline-start);
-    --layout-padding-outer-y: var(--_sheet-pad-block-start);
+    --layout-padding-outer-y: var(--container-padding-block-start);
     --layout-padding-inner-x: var(--_sheet-pad-inline-start);
-    --layout-padding-inner-y: var(--_sheet-pad-block-start);
+    --layout-padding-inner-y: var(--container-padding-block-start);
   }
 
   .astryx-bottom-sheet__content[data-padding] {
@@ -356,6 +367,16 @@
     pointer-events: none;
     mask-image: linear-gradient(transparent, transparent);
     -webkit-mask-image: linear-gradient(transparent, transparent);
+  }
+
+  /*
+   * A sheet that was open in the server markup opens settled after hydration:
+   * the rise and the dim collapse to the near-zero duration reduced motion
+   * uses, so their transitions still end. The first close restores the motion.
+   */
+  .astryx-bottom-sheet-dialog[data-settled] .astryx-bottom-sheet,
+  .astryx-bottom-sheet-dialog[data-settled]::backdrop {
+    transition-duration: 0.01s;
   }
 
   @media (prefers-reduced-motion: reduce) {

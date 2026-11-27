@@ -279,6 +279,7 @@ const expectedCatalog = [
   { slug: 'use-speech-recognition', group: 'Utility', family: 'Utilities', en: 'useSpeechRecognition', zh: 'useSpeechRecognition' },
   { slug: 'use-chat-dictation', group: 'Utility', family: 'Utilities', en: 'useChatDictation', zh: 'useChatDictation' },
   { slug: 'use-chat-paste-as-token', group: 'Utility', family: 'Utilities', en: 'useChatPasteAsToken', zh: 'useChatPasteAsToken' },
+  { slug: 'use-outline-from-dom', group: 'Utility', family: 'Utilities', en: 'useOutlineFromDOM', zh: 'useOutlineFromDOM' },
 ]
 
 describe('component catalog meta', () => {

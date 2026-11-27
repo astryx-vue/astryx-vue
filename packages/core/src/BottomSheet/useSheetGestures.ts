@@ -2,7 +2,7 @@ import type { ComputedRef, Ref } from 'vue'
 import type { SheetPointerSession } from './sheetPointerSession.js'
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import {
-  blockScrollEdges,
+  armingEdges,
   dismissTravelFor,
   DRAG_PROMOTION_SLOP,
   dragOffsetFrom,
@@ -318,7 +318,12 @@ export function useSheetGestures(options: UseSheetGesturesOptions): SheetGesture
     const element = body.value
     if (!element)
       return
-    const edges = blockScrollEdges(element, event.target)
+    // 这一层里面再开的浮层有自己的手势，外面的面板不跟着拖。
+    const edges = armingEdges(element, event.target)
+    if (edges == null) {
+      pendingBody = null
+      return
+    }
     pendingBody = {
       pointerId: event.pointerId,
       startY: event.clientY,
@@ -336,17 +341,8 @@ export function useSheetGestures(options: UseSheetGesturesOptions): SheetGesture
     }
     const touch = event.changedTouches[0]
     const element = body.value
-    if (!touch || !element) {
-      touchArming = null
-      return
-    }
-    const edges = blockScrollEdges(element, event.target)
-    touchArming = {
-      identifier: touch.identifier,
-      startY: touch.clientY,
-      atTop: edges.atTop,
-      atBottom: edges.atBottom,
-    }
+    const edges = touch && element ? armingEdges(element, event.target) : null
+    touchArming = touch && edges ? { identifier: touch.identifier, startY: touch.clientY, ...edges } : null
   }
 
   function onTouchMove(event: TouchEvent): void {

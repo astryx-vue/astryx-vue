@@ -19,7 +19,7 @@ footer: false
         <td><code>density</code></td>
         <td><code>ListDensity</code></td>
         <td><code>'balanced'</code></td>
-        <td>Spacing density for the rows: compact (4px of block padding), balanced (8px), or spacious (12px, which also widens the inline padding by one step). A single row can override it with its own <code>density</code>.</td>
+        <td>Spacing density for the rows: compact (4px of block padding), balanced (8px), or spacious (12px, which also widens the inline padding by one step). A single row can override it with its own <code>density</code>. Under a finger, an interactive row's hit target reaches 44px where its neighbours leave room, with no change to how rows look or lay out.</td>
       </tr>
       <tr>
         <td><code>hasDividers</code></td>
@@ -31,7 +31,7 @@ footer: false
         <td><code>edge</code></td>
         <td><code>'padded' | 'flush' | 'outset' | 'bleed'</code></td>
         <td><code>'padded'</code></td>
-        <td>Where each row's text, dividers, and hover and selection backgrounds sit relative to the list's edges and the padding of the container around it. <code>padded</code> keeps the row's own inline padding. <code>flush</code> removes it, so text starts on the line of a heading above the list and lines and backgrounds stop at the text. <code>outset</code> keeps text on that line and lets lines and backgrounds reach into the container's padding. <code>bleed</code> puts text on the container's padding line and runs lines and backgrounds to its edges with square corners, like table rows. A row's first content — its marker, icon, or avatar, otherwise its label — is what lines up with the heading. <code>outset</code> and <code>bleed</code> read the padding published by the nearest container that shares it (Card, Section, BottomSheet, a padded ScrollableArea, or a Layout region) and look like <code>padded</code> when there is none.</td>
+        <td>Where each row's text, dividers, and hover and selection backgrounds sit relative to the list's edges and the padding of the container around it. <code>padded</code> keeps the row's own inline padding. <code>flush</code> removes it, so text starts on the line of a heading above the list and lines and backgrounds stop at the text. <code>outset</code> keeps text on that line and lets lines and backgrounds reach into the container's padding. <code>bleed</code> puts text on the container's padding line and runs lines and backgrounds to its edges, like table rows. Rows are square, except that the first or last row of a list that is the first or last child of a rounded Card or Dialog takes that corner. A row's first content — its marker, icon, or avatar, otherwise its label — is what lines up with the heading. <code>outset</code> and <code>bleed</code> read the padding published by the nearest container that shares it (Card, Section, BottomSheet, a padded ScrollableArea, or a Layout region) and look like <code>padded</code> when there is none.</td>
       </tr>
       <tr>
         <td><code>edgeCompensation</code></td>
@@ -127,7 +127,7 @@ footer: false
         <td><code>isSelected</code></td>
         <td><code>boolean</code></td>
         <td><code>false</code></td>
-        <td>Selected state. Written as <code>aria-selected="true"</code> when the role permits it, and as <code>aria-current="true"</code> otherwise. An <code>aria-current</code> you pass yourself wins.</td>
+        <td>Selected state. Written as <code>aria-selected="true"</code> when the role permits it, and as <code>aria-current="true"</code> otherwise. An <code>aria-current</code> you pass yourself wins. On an interactive row (<code>onClick</code>, <code>href</code> or <code>interactiveRef</code>) the marker sits on the element that takes focus, so a screen reader announces it there.</td>
       </tr>
     </tbody>
   </table>

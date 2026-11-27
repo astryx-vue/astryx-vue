@@ -12,6 +12,8 @@ import { DOCS_PACKAGE } from '../spec.ts'
 /** `astryx-vue docs [<topic>]`: the guide and theme pages of the docs site. */
 export function docsCommand(args: CommandArgs): string {
   const query = args.positionals.join(' ').trim()
+  if (args.options.list === true && query)
+    throw new CliError('Do not pass a topic together with --list.', 'ERR_INVALID_ARGUMENT', 2)
   const depth = parseDepth(args.options.depth)
   if (depth !== null && !Number.isInteger(depth))
     throw new CliError('--depth must be a positive integer.', 'ERR_INVALID_ARGUMENT', 2)

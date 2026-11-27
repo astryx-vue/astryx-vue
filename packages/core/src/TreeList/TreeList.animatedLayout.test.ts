@@ -137,3 +137,34 @@ describe('treeList without a handle', () => {
     wrapper.unmount()
   })
 })
+
+describe('treeList under a finger with no handle', () => {
+  function stubPointer(isCoarse: boolean): void {
+    vi.stubGlobal('matchMedia', (query: string) => ({
+      matches: isCoarse && query.includes('pointer: coarse'),
+      media: query,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    }))
+  }
+
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
+  it('animates inside itself under a coarse pointer', async () => {
+    stubPointer(true)
+    const wrapper = mount(TreeList, { props: { items, label: 'Files' }, attachTo: document.body })
+    await nextTick()
+    await toggle(wrapper as never, 'src')
+    expect(layout.reportLayoutChange).toHaveBeenCalled()
+  })
+
+  it('changes at once under a fine pointer', async () => {
+    stubPointer(false)
+    const wrapper = mount(TreeList, { props: { items, label: 'Files' }, attachTo: document.body })
+    await nextTick()
+    await toggle(wrapper as never, 'src')
+    expect(layout.reportLayoutChange).not.toHaveBeenCalled()
+  })
+})

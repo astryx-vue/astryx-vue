@@ -11,11 +11,11 @@ footer: false
 <table><thead><tr><th>属性</th><th>类型</th><th>默认值</th><th>说明</th></tr></thead><tbody>
 <tr><td><code>items</code></td><td><code>OutlineItem[]</code></td><td>—</td><td>按顺序排列的标题。每一项是 <code>{ id, label, level }</code>。<code>level</code> 为 1–6。</td></tr>
 <tr><td><code>activeId</code></td><td><code>string</code></td><td>—</td><td>受控的当前标题。一旦传入，内置滚动侦测关闭。用 <code>v-model:active-id</code> 绑定。</td></tr>
-<tr><td><code>label</code></td><td><code>string</code></td><td><code>Table of contents</code></td><td>导航地标的无障碍名称。默认文案随语言变化，中文为「目录」。</td></tr>
+<tr><td><code>label</code></td><td><code>string</code></td><td><code>Table of contents</code></td><td>导航地标的无障碍名称。默认文案随语言变化，中文为「目录」；你传的 <code>aria-label</code> 优先于它。</td></tr>
 <tr><td><code>density</code></td><td><code>'default' | 'compact'</code></td><td><code>'default'</code></td><td>条目内边距。<code>compact</code> 用于密集侧栏。</td></tr>
 <tr><td><code>offset</code></td><td><code>number</code></td><td><code>0</code></td><td>盖住滚动容器顶部的固定头高度，单位像素。停留线和滚动落点一起下移。</td></tr>
 <tr><td><code>scrollContainer</code></td><td><code>HTMLElement | null</code></td><td>—</td><td>要跟踪的滚动容器。不传则用最近的可滚动祖先，没有就用视口。</td></tr>
-<tr><td><code>hasScrollOnClick</code></td><td><code>boolean</code></td><td><code>true</code></td><td>激活一项时是否平滑滚到对应标题。</td></tr>
+<tr><td><code>hasScrollOnClick</code></td><td><code>boolean</code></td><td><code>true</code></td><td>激活一项时是否滚到对应标题：平滑滚动，减弱动效时立即到达。跟随链接后焦点也会移到那个标题，下一次 Tab 从那一节里继续。</td></tr>
 </tbody></table>
 </div>
 

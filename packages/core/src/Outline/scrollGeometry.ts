@@ -1,4 +1,5 @@
 import type { OutlineItem } from './types.js'
+import { reducedMotionFade } from '../motion/reducedMotion.js'
 
 export function getScrollableAncestor(element: HTMLElement | null): HTMLElement | null {
   let current = element?.parentElement ?? null
@@ -31,10 +32,8 @@ export function scrollToTarget(
   scrollTarget: HTMLElement | Window,
   offset: number,
 ): void {
-  const behavior = typeof window !== 'undefined'
-    && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
-    ? 'auto'
-    : 'smooth'
+  // 减弱动效时直接到达，页面自己写了 smooth 的 scroll-behavior 也一样。
+  const behavior: ScrollBehavior = reducedMotionFade(target) == null ? 'smooth' : 'instant'
   if (offset === 0) {
     target.scrollIntoView({ behavior, block: 'start' })
     return

@@ -144,9 +144,10 @@ export const COMMANDS: readonly CommandSpec[] = [
     name: 'docs',
     summary: 'List guide and theme topics, or print one topic\'s page.',
     arguments: [
-      { name: 'topic', required: false, variadic: false, description: 'Topic id such as guide/dark-mode or themes/tokens, or a unique bare name such as dark-mode. Omit to list every topic.' },
+      { name: 'topic', required: false, variadic: false, description: 'Topic id such as guide/dark-mode or themes/tokens, or a unique bare name such as dark-mode. Omit to list every topic. Words may be separated by spaces, dashes, slashes, or dots, in any order.' },
     ],
     options: [
+      { name: 'list', flag: '--list', type: 'boolean', description: 'List every topic, the same as passing no topic.' },
       { name: 'depth', flag: '--depth', type: 'string', description: 'Print headings down to this level. 2 keeps `#` and `##` and drops deeper subsections with their body. Default: every level.' },
     ],
     json: true,
@@ -159,7 +160,7 @@ export const COMMANDS: readonly CommandSpec[] = [
       `${BINARY} docs dark-mode --zh --dense`,
     ],
     exitCodes: USAGE_EXIT,
-    errors: [{ code: 'ERR_INVALID_ARGUMENT', when: '--depth is not a positive whole number, or is passed without a topic.' }],
+    errors: [{ code: 'ERR_INVALID_ARGUMENT', when: '--depth is not a positive whole number, or is passed without a topic, or a topic is passed together with --list.' }],
   },
   {
     name: 'search',

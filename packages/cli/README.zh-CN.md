@@ -51,7 +51,7 @@ npm run astryx-vue -- component Button
 | `astryx-vue component <Name>` | 一个组件的用法、props、插槽、事件、示例和备注 |
 | `astryx-vue composable --list` | 全部有文档的组合式函数，即 `use*` 函数 |
 | `astryx-vue composable <Name>` | 一个组合式函数的参数、返回值、用法和示例 |
-| `astryx-vue docs` | 全部指南和主题 |
+| `astryx-vue docs` 或 `docs --list` | 全部指南和主题 |
 | `astryx-vue docs <topic>` | 一篇正文，例如 `docs guide/dark-mode` 或 `docs themes/tokens` |
 | `astryx-vue docs <topic> --depth <n>` | 同一篇正文，只留到第 n 层标题 |
 | `astryx-vue search <query>` | 排好序的组件、组合式函数、文档主题和模板 |

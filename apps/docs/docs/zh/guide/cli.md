@@ -56,7 +56,7 @@ npm run astryx-vue -- component Button
 - `astryx-vue component --list`：列出当前所有可用组件。
 - `astryx-vue component Button`：快速查看指定组件的基本用法、Props 属性、插槽、事件以及代码示例。
 - `astryx-vue composable --list`：列出组合式函数，`astryx-vue composable useClipboard` 打印其参数和返回值。Vue 里这类函数叫组合式函数（composable），所以命令与文档中统一不使用 hook 这个词。若误输入 `component useClipboard` 仍然能查到，并会友好提示改用 `composable` 命令。
-- `astryx-vue docs`：列出指南与主题文档。`astryx-vue docs guide/dark-mode` 或 `astryx-vue docs themes/tokens` 可直接在终端阅读正文。
+- `astryx-vue docs`（也可写 `astryx-vue docs --list`）：列出指南与主题文档。`astryx-vue docs guide/dark-mode` 或 `astryx-vue docs themes/tokens` 可直接在终端阅读正文。名字里的词用空格、短横线、斜杠或点隔开都行，顺序也不限，`docs mode dark` 打开的是同一页。名字打不开任何页面时，会建议名字或关键词里带这些词的页面。
 - `astryx-vue search dialog`：在组件、组合式函数、文档主题和页面模板里按相关度搜索。`--type` 可以限定为 `component`、`composable`、`doc` 或 `template`。用别的组件库的叫法也能找到对应组件（`ScrollArea`、`side sheet`、`toggle group`），`cog` 这类图标名会找到 `Icon`。得分相同的结果里，回答了更多查询词的排前面；一个词是某个家族的开头（比如 `tabs`），会先列 `Tab` 再列它的各部分。查不到时，如果别的命令有这个名字（比如 `astryx-vue docs Button`），会提示改用那条命令（`astryx-vue component Button`）；`ScrollArea` 这类别名不会直接打开组件，而是作为第一条建议返回。
 - `astryx-vue manifest --json`：输出 CLI 自身的接口定义清单（命令、选项、响应结构、错误码及退出码），方便被上层工具或脚本消费。
 - `astryx-vue theme`：列出全部内置主题；`astryx-vue theme butter` 输出这套主题的接入四步（引哪个样式表、`data-astryx-theme` 写什么、怎么换主题或同时用两套、改完怎么验证）。

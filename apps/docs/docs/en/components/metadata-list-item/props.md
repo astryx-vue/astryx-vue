@@ -19,3 +19,5 @@ footer: false
 - `icon`: a leading icon drawn before the label.
 
 The pair renders as a `<dt>` and a `<dd>`, or as one stacked block when the list puts labels above values. Either way the label is announced before the value.
+
+Attributes you pass (`class`, `style`, `id`, `data-*`) land on the item element: the label `<dt>` when labels sit beside values, or the wrapper that holds the label and value when stacked.

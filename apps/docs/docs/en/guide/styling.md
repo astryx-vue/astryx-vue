@@ -57,6 +57,8 @@ Earlier layers are weaker and later layers win. The utilities layer sits after `
 
 One note on syntax: an `@layer` statement may come before `@import`. That is one of the few orders CSS allows; the other way round the whole block is discarded as invalid.
 
+Put the `@layer` statement above `@import 'tailwindcss'` in an app that already uses Tailwind, too. Written below the Tailwind import, it is still valid CSS, but Tailwind's own layers have already taken their places, so every `astryx.*` layer lands after `utilities`. The Astryx reset then outranks every utility class, and nothing reports it.
+
 ### Use our variables in utility classes
 
 No config needed; arbitrary values work as they are.
