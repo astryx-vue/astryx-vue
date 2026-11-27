@@ -506,6 +506,7 @@
   - 不适用：上游规范文档换目录
 - [ ] [`0df41f123`](https://github.com/meta/astryx/commit/0df41f123) fix(MobileTokenizer): refine touch sheet editing flow (#8742)
   - 暂缓：触屏令牌编辑流程依赖 useMobileKeyboard，归屏幕键盘模块
+  - 暂缓：Tall 面板键盘恢复部分已随 #648 移植；Tokenizer 触屏面板的草稿加保存、未保存确认、拖动收键盘是一整套新交互且要新增多语言文案，需单独做
 - [x] [`16b95934f`](https://github.com/meta/astryx/commit/16b95934f) fix(Dialog, Drawer, BottomSheet): an overlay open on the server renders closed until hydration (#9360)
   - 已移植：[#616](https://github.com/astryx-vue/astryx-vue/pull/616)。服务端渲染就开着的抽屉和流程水合前不带 aria-modal，水合后静止打开不播进场，补 SSR 与水合测试
 - [x] [`a986306fa`](https://github.com/meta/astryx/commit/a986306fa) spec(container-padding): AppShell is a boundary owner (#9461)
@@ -550,8 +551,9 @@
 - [ ] [`ea33dafd5`](https://github.com/meta/astryx/commit/ea33dafd5) feat(docsite): label deprecated components from their doc (#9046)
   - 暂缓：文档站按文档标记废弃组件，随 BottomSheetSwitcher 废弃一起做，归 BottomSheet 打开顺序任务
   - 暂缓：[BottomSheet打开顺序栈] 文档站废弃徽标随 BottomSheetSwitcher 废弃一起做，目前没有已弃用的组件
-- [ ] [`0588a1342`](https://github.com/meta/astryx/commit/0588a1342) feat(core): one on-screen keyboard module; a Tall BottomSheet reads it and rides Gboard's slides (#8559)
+- [x] [`0588a1342`](https://github.com/meta/astryx/commit/0588a1342) feat(core): one on-screen keyboard module; a Tall BottomSheet reads it and rides Gboard's slides (#8559)
   - 暂缓：统一的屏幕键盘模块与 Tall 抽屉跟随 Gboard 滑动，归屏幕键盘模块
+  - 已移植：[#648](https://github.com/astryx-vue/astryx-vue/pull/648)。键盘模块（高度测量、Chromium 布局向导、键盘模型、rideKeyboard、useMobileKeyboard）和 Tall 底部面板让出键盘位置并跟着 Gboard 滑动
 
 ### v0.7.9
 
@@ -699,9 +701,10 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`34e3d212f`](https://github.com/meta/astryx/commit/34e3d212f) fix(core): dialog text reads the theme, and toast text reaches AA on its card (#12095)
   - Vue 版已有：bottom-sheet.css 的面板已设 color 为主题主文字色，不用浏览器 dialog 默认色
-- [ ] [`d504f0094`](https://github.com/meta/astryx/commit/d504f0094) feat(TextInput, TextArea, NumberInput): fields stay above the keyboard (#9777)
+- [x] [`d504f0094`](https://github.com/meta/astryx/commit/d504f0094) feat(TextInput, TextArea, NumberInput): fields stay above the keyboard (#9777)
   - 暂缓：依赖 Vue 版还没有的屏幕键盘避让模块（useMobileKeyboard：docked 栏跟随键盘、滚动容器避让、视觉视口平移与回滚）；归动效与手势引擎任务
   - 暂缓：输入框停在键盘之上，归屏幕键盘模块
+  - 已移植：[#649](https://github.com/astryx-vue/astryx-vue/pull/649)。TextInput、TextArea、NumberInput 获得焦点时自己停到屏幕键盘上方
 - [x] [`3b4c1993c`](https://github.com/meta/astryx/commit/3b4c1993c) fix(core): theme targets for parts that paint inside a component (#12081)
   - Vue 版已有：组件内部部位的主题挂点已移植（45b95b5f）
 - [x] [`9e19fa47e`](https://github.com/meta/astryx/commit/9e19fa47e) chore: land batch 8 (11 pull requests) (#12827)
@@ -920,16 +923,18 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`a3f795c57`](https://github.com/meta/astryx/commit/a3f795c57) test(ChatSendButton): the a11y audit checks a disabled send stays focusable (#10517)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`695653f5d`](https://github.com/meta/astryx/commit/695653f5d) feat(ChatLayout): the composer rides the software keyboard (#8176)
+- [x] [`695653f5d`](https://github.com/meta/astryx/commit/695653f5d) feat(ChatLayout): the composer rides the software keyboard (#8176)
   - 暂缓：缺屏幕键盘模块（上游 keyboard/ 的键盘高度、useMobileKeyboard、rideKeyboard，对应 #8559）；ChatLayout 的 useChatKeyboard、输入区骑软键盘、Done 键停靠都建在它上面，归键盘与底部面板任务
+  - 已移植：[#649](https://github.com/astryx-vue/astryx-vue/pull/649)。ChatLayout 输入区停在键盘上方并跟着 Gboard 滑动，消息区留白跟着变，触屏聚焦不让浏览器滚页面，完成键后焦点停在输入区
 - [x] [`619ffeb27`](https://github.com/meta/astryx/commit/619ffeb27) fix(core, richtext): no focus fade on text fields under a coarse pointer (#10611)
   - 不适用：本清单范围里只改上游 docs/design/user-states.md 设计文档
 - [x] [`c08de542e`](https://github.com/meta/astryx/commit/c08de542e) test(ChatLayout): the rise proof keeps the caret out and names a starved start (#10489)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`1b06024be`](https://github.com/meta/astryx/commit/1b06024be) fix(ChatLayout): the newest message rests above a fixed dock (#10676)
   - 已移植：[#600](https://github.com/astryx-vue/astryx-vue/pull/600)。外部 scrollRef 时消息区底部留白加上固定输入区的高度，最新消息落在输入区上面，补测试
-- [ ] [`db40c6b01`](https://github.com/meta/astryx/commit/db40c6b01) refactor(core): share per-instance warning dedupe and temporary focus targets (#10655)
+- [x] [`db40c6b01`](https://github.com/meta/astryx/commit/db40c6b01) refactor(core): share per-instance warning dedupe and temporary focus targets (#10655)
   - 暂缓：改的是 useChatKeyboard 的 Done 键停靠实现，Vue 版没有 useChatKeyboard，随 695653f5d 的屏幕键盘模块一起做
+  - 已移植：[#649](https://github.com/astryx-vue/astryx-vue/pull/649)。新增 focusForLastInputTemporarily 和 releaseTemporaryFocus，完成键停靠改用它；devWarning 去重部分与键盘无关不在本任务
 - [x] [`1e95e11ad`](https://github.com/meta/astryx/commit/1e95e11ad) fix(ChatComposerInput): anchor programmatic carets into trailing text nodes for IME composition (#6411) (#6423)
   - 已移植：[#598](https://github.com/astryx-vue/astryx-vue/pull/598)。光标落进文本节点才能让输入法组字：placeCaretAtEnd、插入文字与令牌、删令牌后的光标位置，补测试
 - [x] [`d49271d81`](https://github.com/meta/astryx/commit/d49271d81) fix(ChatLayout): the scroll button follows a page that scrolls (#10779)
@@ -1585,8 +1590,9 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`b31575d73`](https://github.com/meta/astryx/commit/b31575d73) test(cli): doctor --built's file-limit case reads a 50-file limit (#9897)
   - 不适用：doctor --built 文件上限的测试调整，我们没有 --built
-- [ ] [`0588a1342`](https://github.com/meta/astryx/commit/0588a1342) feat(core): one on-screen keyboard module; a Tall BottomSheet reads it and rides Gboard's slides (#8559)
+- [x] [`0588a1342`](https://github.com/meta/astryx/commit/0588a1342) feat(core): one on-screen keyboard module; a Tall BottomSheet reads it and rides Gboard's slides (#8559)
   - 暂缓：屏幕键盘模块（视觉视口、Gboard 滑动跟随、Tall BottomSheet 读它）Vue 版没有，归动效与手势引擎任务
+  - 已移植：[#648](https://github.com/astryx-vue/astryx-vue/pull/648)。键盘模块（高度测量、Chromium 布局向导、键盘模型、rideKeyboard、useMobileKeyboard）和 Tall 底部面板让出键盘位置并跟着 Gboard 滑动
 
 ### v0.7.9
 
@@ -1802,8 +1808,9 @@
   - 不适用：只改上游 discover 的官方包清单或 discover 接入；我们没有 discover 命令，组件文档加入后 search 从 catalog 自动收录，结果里的 package 字段已标出所属包
 - [x] [`227855776`](https://github.com/meta/astryx/commit/227855776) [Component Audit] Layout: a region hidden with && lays out like an omitted one (#10500)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`695653f5d`](https://github.com/meta/astryx/commit/695653f5d) feat(ChatLayout): the composer rides the software keyboard (#8176)
+- [x] [`695653f5d`](https://github.com/meta/astryx/commit/695653f5d) feat(ChatLayout): the composer rides the software keyboard (#8176)
   - 暂缓：缺屏幕键盘模块（键盘高度、useMobileKeyboard、输入区骑软键盘），归键盘与底部面板任务；浏览器支持页的说明随它补
+  - 已移植：[#649](https://github.com/astryx-vue/astryx-vue/pull/649)。ChatLayout 输入区停在键盘上方并跟着 Gboard 滑动，消息区留白跟着变，触屏聚焦不让浏览器滚页面，完成键后焦点停在输入区
 - [x] [`44b9aa57d`](https://github.com/meta/astryx/commit/44b9aa57d) fix(cli): swizzle marks its output folder so the copy compiles below the theme (#10483)
   - 不适用：上游 swizzle 给输出目录做标记，我们没有源码拷贝命令
 - [x] [`8091fbc64`](https://github.com/meta/astryx/commit/8091fbc64) docs(useCalendarNavigation): add hook docs and a month pager example block (#10154)
@@ -5130,8 +5137,9 @@
 
 ### v0.7.17
 
-- [ ] [`d504f0094`](https://github.com/meta/astryx/commit/d504f0094) feat(TextInput, TextArea, NumberInput): fields stay above the keyboard (#9777)
+- [x] [`d504f0094`](https://github.com/meta/astryx/commit/d504f0094) feat(TextInput, TextArea, NumberInput): fields stay above the keyboard (#9777)
   - 暂缓：依赖 Vue 版还没有的屏幕键盘避让模块（useMobileKeyboard：docked 栏跟随键盘、滚动容器避让、视觉视口平移与回滚）；归动效与手势引擎任务
+  - 已移植：[#649](https://github.com/astryx-vue/astryx-vue/pull/649)。TextInput、TextArea、NumberInput 获得焦点时自己停到屏幕键盘上方
 - [x] [`50275d955`](https://github.com/meta/astryx/commit/50275d955) fix(core): fields with a status keep their keyboard focus ring (and the theme editor follows) (#12139)
   - Vue 版已有：状态不会替换整条阴影：TextInput 的 :focus-within 仍按状态色画聚焦环，NumberInput 同样保留环
 - [x] [`72f2d7caa`](https://github.com/meta/astryx/commit/72f2d7caa) docs: icon props take semantic names; Selector hasClear types; useTableSelectionState returns (#12583)
@@ -5673,8 +5681,9 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`7b87c5c1d`](https://github.com/meta/astryx/commit/7b87c5c1d) fix(gestures): a selection a claimed lift's own handlers make stays (#9848)
   - 已移植：[#579](https://github.com/astryx-vue/astryx-vue/pull/579)。被认领的抬起由自己的处理函数做出的选区保留
-- [ ] [`0588a1342`](https://github.com/meta/astryx/commit/0588a1342) feat(core): one on-screen keyboard module; a Tall BottomSheet reads it and rides Gboard's slides (#8559)
+- [x] [`0588a1342`](https://github.com/meta/astryx/commit/0588a1342) feat(core): one on-screen keyboard module; a Tall BottomSheet reads it and rides Gboard's slides (#8559)
   - 暂缓：屏幕键盘模块（上游 keyboard/：键盘高度测量与共享监听、布局向导、揭示平移回放、点按路径、useMobileKeyboard，时序与取值按 Gboard、iOS Safari、Firefox 实机测量），Vue 版没有，无设备无法验证；归动效与手势引擎任务（键盘与底部面板）；含 Tall BottomSheet 读键盘高度并跟随 Gboard 滑动
+  - 已移植：[#648](https://github.com/astryx-vue/astryx-vue/pull/648)。键盘模块（高度测量、Chromium 布局向导、键盘模型、rideKeyboard、useMobileKeyboard）和 Tall 底部面板让出键盘位置并跟着 Gboard 滑动
 
 ### v0.7.9
 
@@ -5890,8 +5899,9 @@
   - 已移植：[#641](https://github.com/astryx-vue/astryx-vue/pull/641)。点按、按键、程序转动都沿 springs.settle 弹簧转到目标行
 - [x] [`9eee3c4c5`](https://github.com/meta/astryx/commit/9eee3c4c5) fix(core): a held finger stops a paging settle on a busy page too (#10330)
   - Vue 版已有：手指按在正在停靠的行上立即接住，没有等待延时，不存在忙页面把按住读成轻点的情况
-- [ ] [`e245db5fb`](https://github.com/meta/astryx/commit/e245db5fb) feat(core): the keyboard module's docked ride, the scroller's reveal and the tap route (#9776)
+- [x] [`e245db5fb`](https://github.com/meta/astryx/commit/e245db5fb) feat(core): the keyboard module's docked ride, the scroller's reveal and the tap route (#9776)
   - 暂缓：屏幕键盘模块（上游 keyboard/：键盘高度测量与共享监听、布局向导、揭示平移回放、点按路径、useMobileKeyboard，时序与取值按 Gboard、iOS Safari、Firefox 实机测量），Vue 版没有，无设备无法验证；归动效与手势引擎任务（键盘与底部面板）；含停靠栏跟随键盘、滚动容器揭示和点按路径（Outline 改用共用滚动祖先工具的部分 Vue 已等价）
+  - 已移植：[#648](https://github.com/astryx-vue/astryx-vue/pull/648)。停靠目标跟随、滚动容器揭示、点按聚焦路径等模块部分随 #648 移植，输入框接入方随 #649
 - [x] [`dad210217`](https://github.com/meta/astryx/commit/dad210217) test(core): the pager's busy-block proof judges against a control (#10291)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`b07a83228`](https://github.com/meta/astryx/commit/b07a83228) test(core): the glide keeps advancing through a blocked main thread (#10229)
@@ -5901,14 +5911,16 @@
 - [x] [`0ecd324bf`](https://github.com/meta/astryx/commit/0ecd324bf) fix(core): a block-edge reveal slides its parts on the glide's frames (#10296)
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
   - 已移植：[#574](https://github.com/astryx-vue/astryx-vue/pull/574)。边缘揭示按滑动的帧移动各部分（模块随 #572），Table 展开面板的分隔线偏移随 #574
-- [ ] [`2d91b990f`](https://github.com/meta/astryx/commit/2d91b990f) chore(core): the tap route reads the shared press slop (#10389)
+- [x] [`2d91b990f`](https://github.com/meta/astryx/commit/2d91b990f) chore(core): the tap route reads the shared press slop (#10389)
   - 暂缓：点按路径读共用的按压容差，随屏幕键盘模块一起做；Vue 的按压容差已是 UIKIT_PRESS.slop 共用常量
+  - 已移植：[#648](https://github.com/astryx-vue/astryx-vue/pull/648)。点按路径读共用按压容差 PRESS_SLOP_PX
 - [x] [`27aba94e8`](https://github.com/meta/astryx/commit/27aba94e8) test(core): the busy glide proof reads each glide on its own timeline (#10396)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`5a6ed906f`](https://github.com/meta/astryx/commit/5a6ed906f) chore(Layer): name the gap a still mouse leaves, exactly (#10317)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`0ad1e8d5e`](https://github.com/meta/astryx/commit/0ad1e8d5e) fix(core): a Tall sheet reads focus inside an open shadow root (#10388)
+- [x] [`0ad1e8d5e`](https://github.com/meta/astryx/commit/0ad1e8d5e) fix(core): a Tall sheet reads focus inside an open shadow root (#10388)
   - 暂缓：Tall 抽屉读开放 shadow root 里的焦点，随屏幕键盘模块（useMobileKeyboard）一起做
+  - 已移植：[#648](https://github.com/astryx-vue/astryx-vue/pull/648)。Tall 面板用 deepActiveElement 读开放 shadow root 里的焦点
 - [x] [`ed0adf308`](https://github.com/meta/astryx/commit/ed0adf308) fix(core): a Reduce Motion landing waits for a held fade (#10378)
   - 暂缓：依赖动画器（animator）与主题时序/节奏的动效基础设施，Vue 版没有
   - 已移植：[#567](https://github.com/astryx-vue/astryx-vue/pull/567)。Reduce Motion 落位等待保持中的渐变
@@ -5975,8 +5987,9 @@
   - 已移植：[#518](https://github.com/astryx-vue/astryx-vue/pull/518)。边缘按钮在行离开边缘的同一帧切换
 - [x] [`6a8338b40`](https://github.com/meta/astryx/commit/6a8338b40) test(core): the edge rides judge their curves at fixed times (#10514)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`695653f5d`](https://github.com/meta/astryx/commit/695653f5d) feat(ChatLayout): the composer rides the software keyboard (#8176)
+- [x] [`695653f5d`](https://github.com/meta/astryx/commit/695653f5d) feat(ChatLayout): the composer rides the software keyboard (#8176)
   - 暂缓：ChatLayout 输入区骑软键盘、Done 键停靠建在屏幕键盘模块上，随该模块一起做；归动效与手势引擎任务（键盘与底部面板）
+  - 已移植：[#649](https://github.com/astryx-vue/astryx-vue/pull/649)。ChatLayout 输入区停在键盘上方并跟着 Gboard 滑动，消息区留白跟着变，触屏聚焦不让浏览器滚页面，完成键后焦点停在输入区
 - [x] [`521cfb483`](https://github.com/meta/astryx/commit/521cfb483) test(core): read the cross-fade landing at its write; pace snap releases (#10548)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`62bc7a2fe`](https://github.com/meta/astryx/commit/62bc7a2fe) fix(core): a swizzled copy shares the animated-layout, code-language and snap-paging brands (#10576)
@@ -6140,8 +6153,9 @@
   - 已移植：[#567](https://github.com/astryx-vue/astryx-vue/pull/567)。搬运中的待播动画与原动画同步
 - [x] [`c7ba4dec1`](https://github.com/meta/astryx/commit/c7ba4dec1) spec(AST-094): the evidence-carry check lists motion/carryAnimations as a shared motion module (#11103)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`421678d14`](https://github.com/meta/astryx/commit/421678d14) fix(core): focus traps and the keyboard model are one per page across swizzled copies (AST-110 FR3) (#10831)
+- [x] [`421678d14`](https://github.com/meta/astryx/commit/421678d14) fix(core): focus traps and the keyboard model are one per page across swizzled copies (AST-110 FR3) (#10831)
   - 暂缓：焦点陷阱和键盘模型每页一份属于拷贝组件共享，不适用；键盘模型部分随屏幕键盘模块一起做
+  - 已移植：[#648](https://github.com/astryx-vue/astryx-vue/pull/648)。键盘模型按窗口共用一份已移植；跨拷贝组件每页一份的部分不适用
 - [x] [`108f354ae`](https://github.com/meta/astryx/commit/108f354ae) fix(core): drop 'use client' from the package root and the component barrels (#11106)
   - 不适用：React Server Components 的 use client 指令
 - [x] [`e01c68b9c`](https://github.com/meta/astryx/commit/e01c68b9c) feat(SegmentedControl): a drag that drifts off keeps choosing (#10978)
@@ -6207,8 +6221,9 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`ca204372b`](https://github.com/meta/astryx/commit/ca204372b) chore(core): re-export UIKit's timing, add SearchField's cancel string (#10956)
   - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；searchField 命名空间列入 coverage.mjs
-- [ ] [`e5984b235`](https://github.com/meta/astryx/commit/e5984b235) fix(useMobileKeyboard): sync its option flags at commit (#10914)
+- [x] [`e5984b235`](https://github.com/meta/astryx/commit/e5984b235) fix(useMobileKeyboard): sync its option flags at commit (#10914)
   - 暂缓：useMobileKeyboard 选项在提交时同步，随屏幕键盘模块一起做
+  - 已移植：[#648](https://github.com/astryx-vue/astryx-vue/pull/648)。Vue 版选项都是 getter，监听器每次读当前值，等价于提交时同步
 - [x] [`17fcb15da`](https://github.com/meta/astryx/commit/17fcb15da) feat(core): one shared context request from a long press, a right click and Shift+F10 (#8670)
   - 暂缓：本期已做长按、右键、Shift+F10 共用的 contextRequest（#579）；剩各组件改用它，归组件接入阶段
   - 已移植：[#579](https://github.com/astryx-vue/astryx-vue/pull/579)。上游该提交本身只新增 contextRequest 和宿主改动，Vue 版已有 gestures/contextRequest.ts 与测试
@@ -6338,9 +6353,10 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`cb315c6ae`](https://github.com/meta/astryx/commit/cb315c6ae) docs(architecture): press feedback has one engine and three recipes (#12115)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`d504f0094`](https://github.com/meta/astryx/commit/d504f0094) feat(TextInput, TextArea, NumberInput): fields stay above the keyboard (#9777)
+- [x] [`d504f0094`](https://github.com/meta/astryx/commit/d504f0094) feat(TextInput, TextArea, NumberInput): fields stay above the keyboard (#9777)
   - 暂缓：依赖 Vue 版还没有的屏幕键盘避让模块（useMobileKeyboard：docked 栏跟随键盘、滚动容器避让、视觉视口平移与回滚）；归动效与手势引擎任务
   - 暂缓：TextInput、TextArea、NumberInput 停在键盘之上（揭示、停靠栏上浮、滚动回位）依赖屏幕键盘模块；归动效与手势引擎任务（键盘与底部面板）
+  - 已移植：[#649](https://github.com/astryx-vue/astryx-vue/pull/649)。TextInput、TextArea、NumberInput 获得焦点时自己停到屏幕键盘上方
 - [x] [`1939759f5`](https://github.com/meta/astryx/commit/1939759f5) [feat] cli: discover matches word by word, names Core's match on a miss (#12219)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`da1d07b4d`](https://github.com/meta/astryx/commit/da1d07b4d) test(SnapPaging): a held row's stops hold through a retarget (#10927)
@@ -11828,8 +11844,9 @@
 - [x] [`f5a315249`](https://github.com/meta/astryx/commit/f5a315249) fix(TimeInput, DateTimeInput): under a finger the AM/PM wheel follows the hour (#8179)
   - 暂缓：手指下上午下午滚轮跟着小时走依赖滚轮的手指滚动和 spinTo，归动效与手势引擎任务；其中 clampTime 取整分钟的纯函数部分已随 #580 移植
   - 已移植：[#646](https://github.com/astryx-vue/astryx-vue/pull/646)。触屏 12 小时制时间滚轮的上午下午跟着小时走，补测试
-- [ ] [`0588a1342`](https://github.com/meta/astryx/commit/0588a1342) feat(core): one on-screen keyboard module; a Tall BottomSheet reads it and rides Gboard's slides (#8559)
+- [x] [`0588a1342`](https://github.com/meta/astryx/commit/0588a1342) feat(core): one on-screen keyboard module; a Tall BottomSheet reads it and rides Gboard's slides (#8559)
   - 暂缓：屏幕键盘模块（视觉视口、Gboard 滑动跟随、Tall BottomSheet 读它）Vue 版没有，归动效与手势引擎任务
+  - 已移植：[#648](https://github.com/astryx-vue/astryx-vue/pull/648)。键盘模块（高度测量、Chromium 布局向导、键盘模型、rideKeyboard、useMobileKeyboard）和 Tall 底部面板让出键盘位置并跟着 Gboard 滑动
 
 ### v0.7.9
 
@@ -11908,8 +11925,9 @@
 - [x] [`3bd5a4c1b`](https://github.com/meta/astryx/commit/3bd5a4c1b) fix(Layer): a still mouse presses through an entrance's input hold (#10303)
   - 暂缓：静止鼠标穿过进场输入遮挡：依赖进场输入遮挡，归动效与手势引擎任务
   - 已移植：[#594](https://github.com/astryx-vue/astryx-vue/pull/594)。静止的鼠标从进场暂挡穿过：鼠标最后动过时挡板不接点击，否则在鼠标所在点留口子
-- [ ] [`e245db5fb`](https://github.com/meta/astryx/commit/e245db5fb) feat(core): the keyboard module's docked ride, the scroller's reveal and the tap route (#9776)
+- [x] [`e245db5fb`](https://github.com/meta/astryx/commit/e245db5fb) feat(core): the keyboard module's docked ride, the scroller's reveal and the tap route (#9776)
   - 暂缓：屏幕键盘模块的贴靠、滚动容器露出和点按路由，依赖键盘模块与手势宿主，归动效与手势引擎任务
+  - 已移植：[#648](https://github.com/astryx-vue/astryx-vue/pull/648)。停靠目标跟随、滚动容器揭示、点按聚焦路径等模块部分随 #648 移植，输入框接入方随 #649
 - [x] [`e10347c4e`](https://github.com/meta/astryx/commit/e10347c4e) fix(Button): under a finger, a Button's target grows toward 44 px through the shared touch band (#10216)
   - 已移植：[#516](https://github.com/astryx-vue/astryx-vue/pull/516)。粗指针下按钮热区朝 44px 扩大，夹紧到与邻居间距的一半；ButtonGroup、ToggleButtonGroup 成员共用组热区
 
@@ -12025,9 +12043,10 @@
   - 已移植：[#581](https://github.com/astryx-vue/astryx-vue/pull/581)。子菜单标签用 label 插槽写成富内容时，展开的视图用标签命名，嵌套视图的返回行按这个标签的文字写，补测试；底部面板随层级改名 Vue 版本来就不做
 - [x] [`bf8555451`](https://github.com/meta/astryx/commit/bf8555451) fix(useFocusTrap): Tab stops inside a closed dialog the page displays (#11892)
   - 已移植：[#548](https://github.com/astryx-vue/astryx-vue/pull/548)。焦点陷阱不算页面不显示的关着的 dialog 里的控件，显示着的关着的 dialog 里的照算，补测试
-- [ ] [`d504f0094`](https://github.com/meta/astryx/commit/d504f0094) feat(TextInput, TextArea, NumberInput): fields stay above the keyboard (#9777)
+- [x] [`d504f0094`](https://github.com/meta/astryx/commit/d504f0094) feat(TextInput, TextArea, NumberInput): fields stay above the keyboard (#9777)
   - 暂缓：输入框停在屏幕键盘上方依赖屏幕键盘模块，归动效与手势引擎任务
   - 暂缓：依赖 Vue 版还没有的屏幕键盘避让模块（useMobileKeyboard：docked 栏跟随键盘、滚动容器避让、视觉视口平移与回滚）；归动效与手势引擎任务
+  - 已移植：[#649](https://github.com/astryx-vue/astryx-vue/pull/649)。TextInput、TextArea、NumberInput 获得焦点时自己停到屏幕键盘上方
 - [x] [`c3b7f32fb`](https://github.com/meta/astryx/commit/c3b7f32fb) fix(Selector): without options, Selector and MultiSelector name the prop and the fix in development (#12386)
   - 已移植：[#569](https://github.com/astryx-vue/astryx-vue/pull/569)。Selector、MultiSelector 缺 options 时开发期报错，点名组件、属性和改法，补测试
 - [x] [`56d3546d5`](https://github.com/meta/astryx/commit/56d3546d5) fix(core): a TreeList row with no action shows its keyboard focus ring (#12153)
