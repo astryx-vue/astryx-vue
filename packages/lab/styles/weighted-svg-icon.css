@@ -1,0 +1,142 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  /*
+   * 随字重变化的图标。盒子的尺寸和颜色沿用 SVGIcon 的 data-size、data-color。
+   *
+   * 读字重：图标里的探针元素在探针字体里宽 1ch，宽度是 (1000 + 字重) / 1000 em；
+   * 对这个宽度做容器查询，把 300-700 写进 svg 的 --astryx-icon-weight-read。
+   * 只用容器查询，不做长度相除，Safari 也能用。
+   *
+   * 显示哪张图：每一层自己算当前字重，所以 <use> 精灵实例里规则照样有效——
+   * 页面选择器穿不过实例边界，继承来的属性可以。
+   * 当前字重取到 300-700：祖先设了 --astryx-icon-weight 就用它（显式覆盖），否则用探针读数，再不行 400。
+   * 覆盖 [from, to] 的一层在 from <= 字重 <= to 时不透明；字重都是 100 的倍数，所以结果恰好是 0 或 1。
+   * 下面 15 条是五个字重所有的连续区间。
+   */
+  .astryx-weighted-svg-icon {
+    /* 探针必须是第一个字体，1ch 才反映字重；图标不画文字，所以看不出变化。 */
+    font-family: AstryxWeightProbe;
+    font-synthesis: none;
+    /* 基线由探针文字决定，居中后图标和 SVGIcon 在行内文字里的位置一样。 */
+    vertical-align: middle;
+    /* 探针可能比盒子宽，不能给页面添上可滚动的溢出。 */
+    overflow: clip;
+  }
+
+  /* 宽度是 (1000 + 字重) / 1000 em，不能缩到图标盒子里。 */
+  .astryx-weighted-svg-icon__probe {
+    container-name: astryx-icon-weight;
+    container-type: inline-size;
+    flex-shrink: 0;
+    width: 1ch;
+    height: 100%;
+  }
+
+  .astryx-weighted-svg-icon__svg {
+    display: block;
+    flex-shrink: 0;
+    width: var(--astryx-icon-size, 24px);
+    height: var(--astryx-icon-size, 24px);
+    fill: currentcolor;
+  }
+
+  /* 300 以下（1.0-1.25em）也画 300 那一层；后备字体（约 0.55em）在范围之外，保持 400。 */
+  @container astryx-icon-weight (width > 1em) and (width < 1.35em) {
+    .astryx-weighted-svg-icon__svg {
+      --astryx-icon-weight-read: 300;
+    }
+  }
+
+  @container astryx-icon-weight (width >= 1.35em) and (width < 1.45em) {
+    .astryx-weighted-svg-icon__svg {
+      --astryx-icon-weight-read: 400;
+    }
+  }
+
+  @container astryx-icon-weight (width >= 1.45em) and (width < 1.55em) {
+    .astryx-weighted-svg-icon__svg {
+      --astryx-icon-weight-read: 500;
+    }
+  }
+
+  @container astryx-icon-weight (width >= 1.55em) and (width < 1.65em) {
+    .astryx-weighted-svg-icon__svg {
+      --astryx-icon-weight-read: 600;
+    }
+  }
+
+  @container astryx-icon-weight (width >= 1.65em) and (width < 2.1em) {
+    .astryx-weighted-svg-icon__svg {
+      --astryx-icon-weight-read: 700;
+    }
+  }
+
+  /* 精灵：隐藏的 <symbol> 集合。 */
+  .astryx-weighted-icon-sprite {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+
+  .astryx-weight-r300_300 {
+    opacity: clamp(0, min(clamp(300, round(var(--astryx-icon-weight, var(--astryx-icon-weight-read, 400)), 100), 700) - 200, 400 - clamp(300, round(var(--astryx-icon-weight, var(--astryx-icon-weight-read, 400)), 100), 700)) / 100, 1);
+  }
+
+  .astryx-weight-r300_400 {
+    opacity: clamp(0, min(clamp(300, round(var(--astryx-icon-weight, var(--astryx-icon-weight-read, 400)), 100), 700) - 200, 500 - clamp(300, round(var(--astryx-icon-weight, var(--astryx-icon-weight-read, 400)), 100), 700)) / 100, 1);
+  }
+
+  .astryx-weight-r300_500 {
+    opacity: clamp(0, min(clamp(300, round(var(--astryx-icon-weight, var(--astryx-icon-weight-read, 400)), 100), 700) - 200, 600 - clamp(300, round(var(--astryx-icon-weight, var(--astryx-icon-weight-read, 400)), 100), 700)) / 100, 1);
+  }
+
+  .astryx-weight-r300_600 {
+    opacity: clamp(0, min(clamp(300, round(var(--astryx-icon-weight, var(--astryx-icon-weight-read, 400)), 100), 700) - 200, 700 - clamp(300, round(var(--astryx-icon-weight, var(--astryx-icon-weight-read, 400)), 100), 700)) / 100, 1);
+  }
+
+  .astryx-weight-r300_700 {
+    opacity: clamp(0, min(clamp(300, round(var(--astryx-icon-weight, var(--astryx-icon-weight-read, 400)), 100), 700) - 200, 800 - clamp(300, round(var(--astryx-icon-weight, var(--astryx-icon-weight-read, 400)), 100), 700)) / 100, 1);
+  }
+
+  .astryx-weight-r400_400 {
+    opacity: clamp(0, min(clamp(300, round(var(--astryx-icon-weight, var(--astryx-icon-weight-read, 400)), 100), 700) - 300, 500 - clamp(300, round(var(--astryx-icon-weight, var(--astryx-icon-weight-read, 400)), 100), 700)) / 100, 1);
+  }
+
+  .astryx-weight-r400_500 {
+    opacity: clamp(0, min(clamp(300, round(var(--astryx-icon-weight, var(--astryx-icon-weight-read, 400)), 100), 700) - 300, 600 - clamp(300, round(var(--astryx-icon-weight, var(--astryx-icon-weight-read, 400)), 100), 700)) / 100, 1);
+  }
+
+  .astryx-weight-r400_600 {
+    opacity: clamp(0, min(clamp(300, round(var(--astryx-icon-weight, var(--astryx-icon-weight-read, 400)), 100), 700) - 300, 700 - clamp(300, round(var(--astryx-icon-weight, var(--astryx-icon-weight-read, 400)), 100), 700)) / 100, 1);
+  }
+
+  .astryx-weight-r400_700 {
+    opacity: clamp(0, min(clamp(300, round(var(--astryx-icon-weight, var(--astryx-icon-weight-read, 400)), 100), 700) - 300, 800 - clamp(300, round(var(--astryx-icon-weight, var(--astryx-icon-weight-read, 400)), 100), 700)) / 100, 1);
+  }
+
+  .astryx-weight-r500_500 {
+    opacity: clamp(0, min(clamp(300, round(var(--astryx-icon-weight, var(--astryx-icon-weight-read, 400)), 100), 700) - 400, 600 - clamp(300, round(var(--astryx-icon-weight, var(--astryx-icon-weight-read, 400)), 100), 700)) / 100, 1);
+  }
+
+  .astryx-weight-r500_600 {
+    opacity: clamp(0, min(clamp(300, round(var(--astryx-icon-weight, var(--astryx-icon-weight-read, 400)), 100), 700) - 400, 700 - clamp(300, round(var(--astryx-icon-weight, var(--astryx-icon-weight-read, 400)), 100), 700)) / 100, 1);
+  }
+
+  .astryx-weight-r500_700 {
+    opacity: clamp(0, min(clamp(300, round(var(--astryx-icon-weight, var(--astryx-icon-weight-read, 400)), 100), 700) - 400, 800 - clamp(300, round(var(--astryx-icon-weight, var(--astryx-icon-weight-read, 400)), 100), 700)) / 100, 1);
+  }
+
+  .astryx-weight-r600_600 {
+    opacity: clamp(0, min(clamp(300, round(var(--astryx-icon-weight, var(--astryx-icon-weight-read, 400)), 100), 700) - 500, 700 - clamp(300, round(var(--astryx-icon-weight, var(--astryx-icon-weight-read, 400)), 100), 700)) / 100, 1);
+  }
+
+  .astryx-weight-r600_700 {
+    opacity: clamp(0, min(clamp(300, round(var(--astryx-icon-weight, var(--astryx-icon-weight-read, 400)), 100), 700) - 500, 800 - clamp(300, round(var(--astryx-icon-weight, var(--astryx-icon-weight-read, 400)), 100), 700)) / 100, 1);
+  }
+
+  .astryx-weight-r700_700 {
+    opacity: clamp(0, min(clamp(300, round(var(--astryx-icon-weight, var(--astryx-icon-weight-read, 400)), 100), 700) - 600, 800 - clamp(300, round(var(--astryx-icon-weight, var(--astryx-icon-weight-read, 400)), 100), 700)) / 100, 1);
+  }
+}

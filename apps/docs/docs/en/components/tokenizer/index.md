@@ -28,6 +28,8 @@ On a touch screen, a finger tap on a token's remove button while the input is un
 
 On a compact touch screen the field opens a bottom sheet by default (`presentation="adaptive"`). The field becomes a trigger that shows the tokens; the sheet has a search field, a checkbox row per result, and a pinned footer with Clear all and Save. Checking rows, creating a value and Clear all only edit a draft. Save commits it once, with a single `change`. Swiping the sheet down, tapping the scrim or pressing Escape after the draft changed asks before discarding, and Clear all asks before clearing. Pass `presentation="popover"` to keep the inline field on every device, for example inside another popover.
 
+Inside an `InputGroup`, the `Tokenizer` stops drawing its own label, description and status: the group owns them, and the input is named by the group label plus its own. The group sets the size and the disabled state, so a `size` on the `Tokenizer` is ignored there. The group is a fixed-height, single-line control, so the tokens and the input stay on one row that scrolls sideways, with a fade over the edge that hides tokens; the end controls (`#end`, clear, status icon) stay in place beside it.
+
 Width measurement uses `useOverflow`. The `#icon` slot sits at the start of the field. `#token` can replace each selected chip with a custom `Token`.
 
 ## Best Practices
