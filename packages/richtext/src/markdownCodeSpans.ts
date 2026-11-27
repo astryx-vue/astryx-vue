@@ -31,12 +31,20 @@ function hasUnescapedPipe(text: string): boolean {
 }
 
 /**
- * A GFM table's delimiter row: cells of hyphens with optional colons. The
- * group is the repeated cell pattern, which the rule needs to repeat; only
- * whether the row matches matters, not what it captured.
+ * A GFM table's delimiter row: cells of hyphens with optional colons. Each
+ * cell is tested on its own: one regex over the whole row backtracks in
+ * quadratic time on a long run of spaces.
  */
-// eslint-disable-next-line regexp/no-super-linear-backtracking, regexp/no-unused-capturing-group -- 单行、空格与竖线的定长串，见上。
-const TABLE_DELIMITER_ROW = /^\s*(?:\|\s*)?:?-+:?\s*(\|\s*:?-+:?\s*)*\|?\s*$/
+function isTableDelimiterRow(line: string): boolean {
+  let body = line.trim()
+  if (body.startsWith('|')) {
+    body = body.slice(1)
+  }
+  if (body.endsWith('|')) {
+    body = body.slice(0, -1)
+  }
+  return body.split('|').every(cell => /^:?-+:?$/.test(cell.trim()))
+}
 
 /**
  * The ranges of `markdown` a code span must not start in: inline link
@@ -83,7 +91,7 @@ function tableRowRanges(markdown: string): Array<readonly [number, number]> {
     const line = lines[index]
     if (
       line.includes('|')
-      && TABLE_DELIMITER_ROW.test(line)
+      && isTableDelimiterRow(line)
       && lines[index - 1].includes('|')
     ) {
       let end = index + 1

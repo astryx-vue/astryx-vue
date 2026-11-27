@@ -2,7 +2,7 @@ import type { LexicalEditor } from 'lexical'
 import type { Ref } from 'vue'
 import type { RichTextTranslator } from './messages.js'
 import type { ToolbarState } from './useToolbarState.js'
-import { $createLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link'
+import { $createLinkNode, $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link'
 import { $createTextNode, $getSelection, $isRangeSelection, $setSelection } from 'lexical'
 import { shallowRef } from 'vue'
 import { sanitizeUrl } from '../linkUtils.js'
@@ -61,20 +61,27 @@ export function useLinkDialog(options: LinkDialogOptions): LinkDialog {
     if (safe === 'about:blank')
       return false
 
-    restoreSelection()
     const attributes = options.hasNewTabLinks() ? { target: '_blank', rel: 'noopener noreferrer' } : {}
-    const handled = editor.dispatchCommand(TOGGLE_LINK_COMMAND, { url: safe, ...attributes })
-    if (!handled) {
-      // 选区是光标（没选文字）时，指令不会生效；这时把网址本身当链接文字插进去。
-      editor.update(() => {
-        const selection = $getSelection()
-        if ($isRangeSelection(selection) && selection.isCollapsed()) {
-          const node = $createLinkNode(safe, attributes)
-          node.append($createTextNode(trimmed))
-          selection.insertNodes([node])
+    const saved = state.savedSelection.value
+    // 放回选区、判断、写入都在同一次 update 里：在指令监听器内（Cmd/Ctrl+K）Lexical 会把 update 排队，
+    // 前一次 update 里设的标记管不到后面的代码。
+    editor.update(() => {
+      if (saved !== null)
+        $setSelection(saved.clone())
+      const selection = $getSelection()
+      if ($isRangeSelection(selection) && selection.isCollapsed()) {
+        const node = selection.anchor.getNode()
+        // 光标在链接外：没有文字可链，网址本身就是链接文字。
+        // 切换指令会把光标所在的整段文字都链起来。光标在链接里则交给切换指令去更新那条链接。
+        if (!$isLinkNode(node) && !$isLinkNode(node.getParent())) {
+          const link = $createLinkNode(safe, attributes)
+          link.append($createTextNode(trimmed))
+          selection.insertNodes([link])
+          return
         }
-      })
-    }
+      }
+      editor.dispatchCommand(TOGGLE_LINK_COMMAND, { url: safe, ...attributes })
+    })
     return true
   }
 

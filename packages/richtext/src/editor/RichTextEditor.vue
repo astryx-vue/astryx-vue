@@ -11,6 +11,7 @@ import { editorKey } from './context.js'
 import { createRichTextEditor } from './createEditor.js'
 import { DecoratorTeleports } from './DecoratorTeleports.js'
 import { useRichTextMessages } from './messages.js'
+import { registerDisabledLinkGuard } from './plugins/disabledLinkGuard.js'
 import { CodeBlockHeaderPlugin, CodeSyntaxPlugin, MarkdownExtensionsPlugin, TaskCheckboxPlugin } from './plugins/index.js'
 import '../../styles/richtext-document.css'
 import '../../styles/richtext-editor.css'
@@ -170,6 +171,7 @@ const instance = createRichTextEditor({
 editor.value = instance
 
 let stopListening: (() => void) | undefined
+let releaseLinkGuard: (() => void) | undefined
 onMounted(() => {
   const root = surface.value
   if (root === null)
@@ -193,10 +195,17 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  releaseLinkGuard?.()
   stopListening?.()
   instance.setRootElement(null)
   instance.dispose()
 })
+
+// 禁用期间，编辑器里的链接不进 Tab 顺序，点击和回车也不跳转。
+watch(() => props.isDisabled, (disabled) => {
+  releaseLinkGuard?.()
+  releaseLinkGuard = disabled ? registerDisabledLinkGuard(instance) : undefined
+}, { immediate: true })
 
 // 只读和禁用改变后要立刻生效；挂载时的值已经在建编辑器时用过了。
 watch(editable, (next) => {
