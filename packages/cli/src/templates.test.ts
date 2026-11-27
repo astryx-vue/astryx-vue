@@ -69,12 +69,12 @@ describe('template catalog', () => {
     const mention = catalog.templates.find(template => template.slug === 'documentation-technical')
     expect(mention?.source).toContain('@astryxdesign/core')
     expect(mention?.isReady).toBe(true)
-    // 5 个引用了演练场图表包，3 个是原版自己标为未完成的页面。
+    // 5 个引用了演练场图表包，1 个是原版自己标为未完成的页面。
     const unready = catalog.templates.filter(template => !template.isReady)
     expect(unready.filter(template => template.notReadyReason?.en.includes('playground-charts'))).toHaveLength(5)
     expect(unready.filter(template => template.notReadyReason?.en.includes('work in progress')).map(template => template.slug).sort())
-      .toEqual(['incident-console', 'messaging-shell', 'table'])
-    expect(unready).toHaveLength(8)
+      .toEqual(['messaging-shell'])
+    expect(unready).toHaveLength(6)
   })
 })
 
@@ -85,7 +85,7 @@ describe('template --list', () => {
     expect(result.stdout).toContain('login-card')
     expect(result.stdout).toContain('A sign-in card')
     expect(result.stdout).toContain('(not ready)')
-    expect(result.stdout).toContain('8 template(s) are marked not ready')
+    expect(result.stdout).toContain('6 template(s) are marked not ready')
     // 可复制的模板只要两个包，这件事得在列表里就说清楚。
     expect(result.stdout).toContain('vue and @astryx-vue/core')
 
@@ -115,9 +115,9 @@ describe('template --list', () => {
     expect(data.templates[0]?.command).toBe(`astryx-vue template ${data.templates[0]?.slug}`)
     expect(data.templates[0]?.docsUrl).toContain('https://astryx-vue.pages.dev/en/playground/?template=')
     expect(data.templates.find(template => template.slug === 'dashboard-alert-rail')?.notReadyReason).toContain('playground-charts')
-    const incident = data.templates.find(template => template.slug === 'incident-console')
-    expect(incident?.isReady).toBe(false)
-    expect(incident?.notReadyReason).toContain('work in progress')
+    const messaging = data.templates.find(template => template.slug === 'messaging-shell')
+    expect(messaging?.isReady).toBe(false)
+    expect(messaging?.notReadyReason).toContain('work in progress')
 
     const blocks = await run(['template', '--list', '--type', 'block', '--json'])
     expect(blocks.exitCode).toBe(0)

@@ -4,7 +4,7 @@ import { SideNav, SideNavHeading } from '@astryx-vue/core/SideNav'
 
 <template>
   <div class="side-nav-heading-overview">
-    <SideNav>
+    <SideNav label="Side navigation with a heading">
       <template #header>
         <SideNavHeading heading="Analytics" heading-href="#home">
           <template #icon>
@@ -13,7 +13,7 @@ import { SideNav, SideNavHeading } from '@astryx-vue/core/SideNav'
         </SideNavHeading>
       </template>
     </SideNav>
-    <SideNav>
+    <SideNav label="Side navigation with a heading, superheading and subheading">
       <template #header>
         <SideNavHeading
           heading="Analytics"

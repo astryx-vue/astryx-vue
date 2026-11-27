@@ -179,13 +179,14 @@ function setTab(index: number, value: string): void {
         <VStack :gap="8">
           <Card v-for="(example, i) in EXAMPLES" :key="i" :padding="0">
             <Section variant="transparent" :padding="3">
-              <HStack :gap="3" vAlign="center">
+              <!-- 窄屏时操作按钮换到标题下面，不超出卡片。 -->
+              <HStack :gap="3" vAlign="center" wrap="wrap">
                 <StackItem size="fill">
                   <Text type="body" weight="medium">
                     {{ example.title }}
                   </Text>
                 </StackItem>
-                <HStack :gap="1" vAlign="center">
+                <HStack :gap="1" vAlign="center" wrap="wrap">
                   <Button label="Open in Craft" variant="ghost" size="sm">
                     <template #icon>
                       <Icon name="heroicons:arrow-top-right-on-square" />

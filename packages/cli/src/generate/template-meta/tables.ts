@@ -4,14 +4,13 @@ import type { TemplateMeta } from './types.ts'
 export const TABLE_TEMPLATES: Record<string, TemplateMeta> = {
   'table': {
     description: {
-      en: 'A plain table of rows with a status badge, an updated date, and a per-row action.',
-      zh: '基础表格：状态徽章、更新时间和行操作。',
+      en: 'A members table with role and status columns, sortable headers, row selection with bulk actions, per-row menus, and a confirm step before removing.',
+      zh: '成员表格：头像、角色和状态列、可排序表头、行选择加批量操作、行菜单，以及移除前的确认。',
     },
     keywords: {
       en: ['table', 'list', 'rows', 'records', 'grid', 'spreadsheet', 'roster'],
       zh: ['表格', '列表', '行', '记录', '表格页'],
     },
-    upstreamNotReady: true,
   },
   'table-collapsible': {
     description: {

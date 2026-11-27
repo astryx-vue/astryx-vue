@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useChatDictationVoiceInput } from '../../../../components/demos/use-chat-dictation'
 </script>
 
 ## 使用方法
@@ -44,3 +45,12 @@ const dictation = useChatDictation({
 | <Badge variant="success">建议</Badge> | `isSupported` 为假时禁用控件，并说明这个浏览器不能语音输入。 |
 | <Badge variant="success">建议</Badge> | 处理 `onError`。麦克风权限被拒绝，只有它能告诉你。 |
 | <Badge variant="error">避免</Badge> | 在这个 hook 旁边再去调用浏览器的 `SpeechRecognition`。不需要输入框配合时才用 `useSpeechRecognition`。 |
+
+## 示例
+
+<DemoExample
+  :demo="useChatDictationVoiceInput"
+  description="用 useChatDictation 填充的输入框。还没说完的词以灰色提示显示在输入框里，说完的每一句只插入一次。Start 和 Stop 切换收听，没有语音识别的浏览器里 Start 不可用。"
+  locale="zh"
+  title="useChatDictation —— 语音输入"
+/>

@@ -55,12 +55,12 @@ function fmt(n: number) {
             </Text>
             <Button label="Get started" variant="primary" href="#">
               <template #end>
-                <Icon name="heroicons:arrow-right-20-solid" color="inherit" />
+                <Icon class="mirror-rtl" name="heroicons:arrow-right-20-solid" color="inherit" />
               </template>
             </Button>
           </VStack>
         </Grid>
-        <Grid :columns="{ minWidth: 300 }" :gap="6">
+        <Grid :columns="{ minWidth: 300, max: 3 }" :gap="6">
           <VStack v-for="product in PRODUCTS" :key="product.id" :gap="3">
             <Card :padding="0">
               <AspectRatio :ratio="1">
@@ -84,3 +84,9 @@ function fmt(n: number) {
     </LayoutContent>
   </Layout>
 </template>
+
+<style scoped>
+:global([dir='rtl'] .mirror-rtl) {
+  transform: scaleX(-1);
+}
+</style>

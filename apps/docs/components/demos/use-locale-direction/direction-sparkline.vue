@@ -53,7 +53,7 @@ const Sparkline = defineComponent(() => {
     'width': 200,
     'height': 60,
     'data-direction': direction.value,
-    'style': 'border: 1px solid var(--color-border, #e1e4e8); border-radius: 4px',
+    'style': 'border: 1px solid var(--astryx-color-border); border-radius: 4px',
   })
 })
 

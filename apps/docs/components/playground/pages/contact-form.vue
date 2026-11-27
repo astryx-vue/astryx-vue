@@ -103,7 +103,7 @@ function toggleGoal(goal: string) {
 <template>
   <Center role="main" axis="horizontal">
     <VStack h-align="center" width="100%">
-      <Section :max-width="800" :padding="6" :padding-block="10" variant="section">
+      <Section width="100%" :max-width="800" :padding="6" :padding-block="10" variant="section">
         <VStack :gap="6">
           <VStack :gap="2" h-align="center">
             <Text as="h1" type="display-1" weight="bold">

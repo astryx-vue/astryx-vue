@@ -24,8 +24,8 @@ export const TOOL_TEMPLATES: Record<string, TemplateMeta> = {
   },
   'ide': {
     description: {
-      en: 'An IDE layout with a file tree, tabbed code stacks, and an inspector panel.',
-      zh: 'IDE 布局：文件树、代码标签页和检查器面板。',
+      en: 'An IDE layout with a file tree, a single read-only code pane, a terminal drawer, and an inspector panel.',
+      zh: 'IDE 布局：文件树、一块只读代码区、终端抽屉和检查器面板。',
     },
     keywords: {
       en: ['ide', 'code editor', 'developer', 'code', 'tabs', 'inspector', 'workspace'],
@@ -39,29 +39,28 @@ export const TOOL_TEMPLATES: Record<string, TemplateMeta> = {
     },
     keywords: {
       en: ['kanban', 'board', 'cards', 'columns', 'tasks', 'project', 'drag', 'sprint'],
-      zh: ['任务看板', '看板', '卡片', '列', '任务', '项目', '拖拽', '迭代', '泳道'],
+      zh: ['任务看板', '看板', '卡片', '列', '任务', '项目', '拖拽', '迭代'],
     },
   },
   'editor': {
     description: {
-      en: 'A document editor with panels, a toolbar, and formatting controls.',
-      zh: '文档编辑器：面板、工具栏和排版控件。',
+      en: 'A page builder with a side panel of Blocks and Properties tabs beside a live canvas: add blocks, edit the selected one, and reorder with move up and move down.',
+      zh: '页面搭建器：侧栏的「区块」和「属性」标签页加实时画布，添加区块、编辑选中项，用上移下移调整顺序。',
     },
     keywords: {
-      en: ['editor', 'document', 'writing', 'toolbar', 'rich text', 'compose', 'word processor'],
-      zh: ['编辑器', '文档', '写作', '工具栏', '富文本', '撰写'],
+      en: ['editor', 'builder', 'page builder', 'blocks', 'properties', 'canvas', 'wysiwyg'],
+      zh: ['编辑器', '页面搭建', '区块', '属性', '画布', '所见即所得'],
     },
   },
 
   'incident-console': {
     description: {
-      en: 'An incident queue grouped by status, with a search bar, a status control, and a resizable detail inspector.',
-      zh: '事件控制台：按状态分组的队列、搜索栏、状态切换和可调整大小的详情面板。',
+      en: 'An incident queue grouped by status, with a search bar, a status control, and a resizable detail inspector that opens as a bottom sheet on a phone.',
+      zh: '事件控制台：按状态分组的队列、搜索栏、状态切换和可调整大小的详情面板，手机上详情以底部抽屉打开。',
     },
     keywords: {
       en: ['incident', 'alert', 'on-call', 'outage', 'ticket', 'triage console'],
       zh: ['事件', '告警', '值班', '故障', '工单', '控制台'],
     },
-    upstreamNotReady: true,
   },
 }

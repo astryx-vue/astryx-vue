@@ -16,7 +16,7 @@ const separators = [
       <Text color="secondary" type="supporting">
         {{ item.label }}
       </Text>
-      <Breadcrumbs :separator="item.char">
+      <Breadcrumbs :label="`Breadcrumb, ${item.label} separator`" :separator="item.char">
         <BreadcrumbItem href="/">
           Home
         </BreadcrumbItem>

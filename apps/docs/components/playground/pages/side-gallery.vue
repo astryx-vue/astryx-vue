@@ -39,7 +39,7 @@ const IMAGES = [
 <template>
   <Layout height="fill" :content-width="1400">
     <LayoutContent role="main" :padding="6">
-      <Grid :columns="{ minWidth: 360, repeat: 'fit' }" :gap="8" align="center">
+      <Grid :columns="{ minWidth: 360, max: 2, repeat: 'fit' }" :gap="8" align="center">
         <VStack :gap="6" vAlign="center">
           <VStack :gap="3">
             <Text type="supporting" color="secondary" weight="semibold">

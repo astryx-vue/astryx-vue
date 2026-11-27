@@ -184,6 +184,11 @@ const showServices = ref(true)
 const aiFeatures = ref(true)
 
 function selectNav(label: string) {
+  // 只有四个分类做了详情页，其余的点了只给演示提示。
+  if (!(label in SECTION_TITLES)) {
+    showToast({ body: `Demo: ${label} settings would open here`, uniqueID: `nav-${label}` })
+    return
+  }
   activeNav.value = label
   mobileView.value = 'detail'
 }
@@ -254,6 +259,7 @@ function personalValue(key: string) {
               :key="item.label"
               :label="item.label"
               :is-selected="activeNav === item.label"
+              :aria-current="!isNarrow && activeNav === item.label ? 'page' : undefined"
               @click="selectNav(item.label)"
             >
               <template #startContent>

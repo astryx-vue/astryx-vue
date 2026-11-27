@@ -4,12 +4,12 @@ import type { TemplateMeta } from './types.ts'
 export const CONTENT_TEMPLATES: Record<string, TemplateMeta> = {
   'theme-showcase': {
     description: {
-      en: 'A sampler page that shows tokens, colors, typography, inputs, and cards under the active theme.',
-      zh: '一页看全当前主题的令牌、颜色、字体、输入框和卡片。',
+      en: 'A sampler page of sample product screens (a storefront with an account dialog, checkout, chat, activity, and inventory) rendered in the active theme.',
+      zh: '一页样例产品界面（带账号对话框的商店、结账、聊天、动态和库存），用当前主题渲染。',
     },
     keywords: {
-      en: ['theme', 'themes', 'tokens', 'colors', 'typography', 'swatches', 'style guide', 'design system'],
-      zh: ['主题', '令牌', '颜色', '字体', '色板', '样式指南', '设计系统'],
+      en: ['theme', 'themes', 'styling', 'design system', 'preview'],
+      zh: ['主题', '样式', '设计系统', '预览'],
     },
     category: { en: 'Theme', zh: '主题' },
   },
@@ -29,8 +29,8 @@ export const CONTENT_TEMPLATES: Record<string, TemplateMeta> = {
       zh: '带标题和输入框的落地页，输入一句话就开始 AI 对话。',
     },
     keywords: {
-      en: ['ai', 'landing', 'hero', 'prompt', 'composer', 'start chat', 'marketing', 'home'],
-      zh: ['AI', '落地页', '首页', '提示词', '输入框', '营销'],
+      en: ['ai', 'landing', 'hero', 'prompt', 'composer', 'greeting', 'suggestions', 'start chat', 'marketing', 'home'],
+      zh: ['AI', '落地页', '首页', '提示词', '输入框', '问候语', '建议', '营销'],
     },
   },
   'library': {
@@ -39,8 +39,8 @@ export const CONTENT_TEMPLATES: Record<string, TemplateMeta> = {
       zh: '用卡片网格浏览素材和文档，带搜索、筛选、排序和分组。',
     },
     keywords: {
-      en: ['library', 'cards', 'grid', 'gallery', 'media', 'browse', 'catalog', 'content', 'assets', 'files'],
-      zh: ['素材库', '卡片', '网格', '媒体', '浏览', '目录', '内容', '文件'],
+      en: ['library', 'cards', 'grid', 'gallery', 'media', 'browse', 'catalog', 'content', 'assets', 'files', 'collection', 'categories'],
+      zh: ['素材库', '卡片', '网格', '媒体', '浏览', '目录', '内容', '文件', '合集', '分类'],
     },
   },
   'documentation': {
@@ -49,8 +49,8 @@ export const CONTENT_TEMPLATES: Record<string, TemplateMeta> = {
       zh: '文档目录页：用卡片进入文档站的各个部分。',
     },
     keywords: {
-      en: ['docs', 'documentation', 'catalog', 'help center', 'knowledge base', 'articles', 'guides', 'support'],
-      zh: ['文档', '帮助中心', '知识库', '文章', '指南', '支持'],
+      en: ['docs', 'documentation', 'catalog', 'help center', 'knowledge base', 'articles', 'guides', 'support', 'docs home', 'component catalog'],
+      zh: ['文档', '帮助中心', '知识库', '文章', '指南', '支持', '文档首页', '组件目录'],
     },
   },
   'documentation-design': {
@@ -59,8 +59,8 @@ export const CONTENT_TEMPLATES: Record<string, TemplateMeta> = {
       zh: '文档正文页：侧边目录、正文、代码块和图片弹窗。',
     },
     keywords: {
-      en: ['documentation', 'docs', 'article', 'guide', 'sidebar', 'outline', 'content page', 'prose'],
-      zh: ['文档', '文章', '指南', '侧边栏', '目录', '正文'],
+      en: ['documentation', 'docs', 'article', 'guide', 'sidebar', 'outline', 'content page', 'prose', 'component documentation', 'usage guidelines', 'best practices', 'examples', 'table of contents'],
+      zh: ['文档', '文章', '指南', '侧边栏', '目录', '正文', '组件文档', '使用规范', '最佳实践', '示例'],
     },
   },
   'documentation-technical': {
@@ -69,8 +69,8 @@ export const CONTENT_TEMPLATES: Record<string, TemplateMeta> = {
       zh: '技术参考页：侧边目录、API 说明、列表和代码示例。',
     },
     keywords: {
-      en: ['documentation', 'technical', 'reference', 'api docs', 'code samples', 'developer', 'manual'],
-      zh: ['文档', '技术', '参考', 'API 文档', '代码示例', '开发者', '手册'],
+      en: ['documentation', 'technical', 'reference', 'api docs', 'code samples', 'developer', 'manual', 'article', 'walkthrough', 'developer guide', 'table of contents'],
+      zh: ['文档', '技术', '参考', 'API 文档', '代码示例', '开发者', '手册', '上手指南', '开发者指南', '目录'],
     },
   },
   'detail-page': {
@@ -79,8 +79,8 @@ export const CONTENT_TEMPLATES: Record<string, TemplateMeta> = {
       zh: '订单详情页：头部信息、联系人信息、商品行和金额汇总。',
     },
     keywords: {
-      en: ['order', 'detail', 'invoice', 'receipt', 'summary', 'purchase', 'transaction', 'billing'],
-      zh: ['订单', '详情', '发票', '收据', '汇总', '交易', '账单'],
+      en: ['order', 'detail', 'invoice', 'receipt', 'summary', 'purchase', 'transaction', 'billing', 'detail view', 'record view', 'fulfillment'],
+      zh: ['订单', '详情', '发票', '收据', '汇总', '交易', '账单', '记录详情', '履约'],
     },
   },
   'product-detail': {
@@ -99,8 +99,8 @@ export const CONTENT_TEMPLATES: Record<string, TemplateMeta> = {
       zh: '工作项详情页：状态、负责人、描述和活动时间线。',
     },
     keywords: {
-      en: ['work item', 'task', 'issue', 'ticket', 'detail', 'project', 'assignee', 'activity'],
-      zh: ['工作项', '任务', '问题', '工单', '详情', '项目', '负责人'],
+      en: ['work item', 'task', 'issue', 'ticket', 'detail', 'project', 'assignee', 'activity', 'subtasks'],
+      zh: ['工作项', '任务', '问题', '工单', '详情', '项目', '负责人', '子任务'],
     },
   },
   'course-detail': {

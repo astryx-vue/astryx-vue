@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { syntaxThemeDark, syntaxThemeLight } from '../../../../components/demos/syntax-theme'
+import { syntaxThemeDark, syntaxThemeHookKeywordColor, syntaxThemeLight } from '../../../../components/demos/syntax-theme'
 </script>
 
 ## Usage
@@ -56,4 +56,11 @@ const code = `const status = response.ok ? 'success' : 'error'`
   description="Use a light syntax preset for code examples that need to sit on light documentation surfaces."
   locale="en"
   title="SyntaxTheme — Light Preset"
+/>
+
+<DemoExample
+  :demo="syntaxThemeHookKeywordColor"
+  description="The word const painted with the keyword color from useSyntaxTheme, inside the GitHub Light syntax theme."
+  locale="en"
+  title="useSyntaxTheme — Keyword color"
 />

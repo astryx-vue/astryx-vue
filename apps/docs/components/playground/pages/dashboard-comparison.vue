@@ -364,7 +364,7 @@ function directionColor(metric: Metric) {
               Change vs. prior day, week, month, and year
             </Text>
           </HStack>
-          <Grid :columns="{ minWidth: 240, repeat: 'fit' }" :gap="3" class="metrics-grid">
+          <Grid :columns="{ minWidth: 240, max: 4, repeat: 'fit' }" :gap="3" class="metrics-grid">
             <Card v-for="(metric, index) in OVERVIEW_METRICS" :key="metric.key" :padding="4">
               <VStack :gap="4">
                 <VStack :gap="1">
@@ -500,7 +500,7 @@ function directionColor(metric: Metric) {
               Share of active users
             </Text>
           </HStack>
-          <Grid :columns="{ minWidth: 320, repeat: 'fit' }" :gap="4">
+          <Grid :columns="{ minWidth: 320, max: 3, repeat: 'fit' }" :gap="4">
             <Card v-for="breakdown in BREAKDOWNS" :key="breakdown.title" :padding="3">
               <VStack :gap="4">
                 <Heading :level="4" :accessibility-level="3">
@@ -571,7 +571,7 @@ function directionColor(metric: Metric) {
 .spark { width: 100%; height: 48px; display: block; }
 .trend-chart { width: 100%; height: 280px; display: block; overflow: visible; }
 .chart-grid { stroke: var(--astryx-color-border, rgb(5 54 89 / 10%)); stroke-width: 1; }
-.chart-tick { fill: var(--astryx-color-text-secondary, #4E606F); font-size: 12px; }
+.chart-tick { fill: var(--astryx-color-text-secondary, #445564); font-size: 12px; }
 .breakdown-bar { display: flex; width: 100%; height: 24px; border-radius: 4px; overflow: hidden; }
 .breakdown-bar__seg { height: 100%; }
 </style>
