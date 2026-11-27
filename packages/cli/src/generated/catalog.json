@@ -47657,7 +47657,7 @@
                 "name": "`resizable`",
                 "type": "`LayoutResizable`",
                 "default": "—",
-                "description": "`useResizable()` 的返回值，或它的 `props`。传了它宽度就由那个 hook 说了算，`width` 不再生效。旁边要放一个 `ResizeHandle`，并把同一个对象交给它。对象里带着这块区域的轴 `_direction`（`'horizontal' | 'vertical'`），要和把手的 `direction` 一致。只有 `_size` 是必填的，手写 `{ _size: 250 }` 依然可用。区域收起时，面板里的焦点会移到它的 `ResizeHandle`，收起期间面板为 inert 并对读屏隐藏。宽度为 0 的面板不占位，也不露出任何子元素。"
+                "description": "`useResizable()` 的返回值，或它的 `props`。传了它宽度就由那个 hook 说了算，`width` 不再生效。旁边要放一个 `ResizeHandle`，并把同一个对象交给它。对象里带着这块区域的轴 `_direction`（`'horizontal' | 'vertical'`），要和把手的 `direction` 一致。只有 `_size` 是必填的，手写 `{ _size: 250 }` 依然可用。区域收起时，面板里的焦点会移到它的 `ResizeHandle`，收起期间面板为 inert 并对读屏隐藏。宽度为 0 的面板不占位，也不露出任何子元素。拿到 hook 自己返回值的面板，收起和展开时从朝 `ResizeHandle` 的那条边滑合滑开；手写的对象不滑。"
               },
               {
                 "name": "`role`",
@@ -48296,8 +48296,8 @@
         "zh": "`ResizeHandle` 是两个区域之间的分隔条。尺寸由 `useResizable` 管理。把 `sidebar.props` 同时传给分隔条和面板。"
       },
       "usage": {
-        "en": "`ResizeHandle` is the separator between two regions. `useResizable` owns the size. Pass `sidebar.props` to both the handle and the panel.\n\n```vue\n<script setup lang=\"ts\">\nimport { useResizable } from '@astryx-vue/core'\nimport { Layout, LayoutPanel } from '@astryx-vue/core/Layout'\nimport { ResizeHandle } from '@astryx-vue/core/Resizable'\n\nconst sidebar = useResizable({\n  defaultSize: 240,\n  minSize: 160,\n  maxSize: 360,\n})\n</script>\n\n<template>\n  <Layout>\n    <template #start>\n      <LayoutPanel :has-divider=\"false\" :width=\"sidebar.size\" />\n      <ResizeHandle direction=\"horizontal\" has-divider :resizable=\"sidebar.props\" />\n    </template>\n  </Layout>\n</template>\n```\n\n`direction` is `horizontal` (width) or `vertical` (height). `position` is `inline` or `overlay`. `isReversed` flips the drag when the panel sits on the end edge. `hasDivider` draws the 1px line; the line is the handle. `isAlwaysVisible` keeps the grip visible at rest. `pillPlacement` is `auto`, `start`, `end`, or `center`.\n\nThe handle is `role=\"separator\"`. A horizontal handle sets `aria-orientation=\"vertical\"`. Arrow keys move 10px, and Shift moves 50px. With snap points, an arrow jumps to the next point and Shift jumps two. Home and End jump to the limits. End does nothing when no maximum is set; the separator then reports the window or container size as its maximum. While collapsed, only the arrow that grows the pane reopens it. Enter and double-click restore the size from before the collapse.\n\n`useResizable` accepts one region, or a `regions` map. `snaps` keeps the size on the nearest listed point. An equal distance stays on the earlier point. A drag below `collapsedSize` (default 40) collapses a collapsible region to 0. `autoSaveId` stores the size under `astryx-resizable:` in `localStorage`. `percent()` builds a percentage size with a pixel minimum or maximum.",
-        "zh": "`ResizeHandle` 是两个区域之间的分隔条。尺寸由 `useResizable` 管理。把 `sidebar.props` 同时传给分隔条和面板。\n\n```vue\n<script setup lang=\"ts\">\nimport { useResizable } from '@astryx-vue/core'\nimport { Layout, LayoutPanel } from '@astryx-vue/core/Layout'\nimport { ResizeHandle } from '@astryx-vue/core/Resizable'\n\nconst sidebar = useResizable({\n  defaultSize: 240,\n  minSize: 160,\n  maxSize: 360,\n})\n</script>\n\n<template>\n  <Layout>\n    <template #start>\n      <LayoutPanel :has-divider=\"false\" :width=\"sidebar.size\" />\n      <ResizeHandle direction=\"horizontal\" has-divider :resizable=\"sidebar.props\" />\n    </template>\n  </Layout>\n</template>\n```\n\n`direction` 取 `horizontal`（改宽度）或 `vertical`（改高度）。`position` 取 `inline` 或 `overlay`。面板在结束边时用 `isReversed` 把拖拽方向反过来。`hasDivider` 画出 1px 的线，线本身就是把手。`isAlwaysVisible` 让握把在静止时也可见。`pillPlacement` 取 `auto`、`start`、`end` 或 `center`。\n\n分隔条的角色是 `separator`。横向分隔条的 `aria-orientation` 是 `vertical`。方向键每次移动 10px，按住 Shift 移动 50px。有吸附点时，方向键改成跳到相邻的点，Shift 跳两个。Home 和 End 跳到边界；没写最大尺寸时 End 不动，读屏用的最大值改报窗口或容器尺寸。折叠后只有让面板变大的方向键会展开。Enter 和双击恢复折叠前的尺寸。\n\n`useResizable` 可以管一个区域，也可以用 `regions` 一次管多个。`snaps` 让尺寸只停在列出的点上。离两个点一样远时，留在更靠前的那个。可收起的区域被拖到低于 `collapsedSize`（默认 40）时，尺寸变成 0。`autoSaveId` 把尺寸存在 `localStorage`，键名以 `astryx-resizable:` 开头。`percent()` 用来写带像素上下限的百分比尺寸。"
+        "en": "`ResizeHandle` is the separator between two regions. `useResizable` owns the size. Pass `sidebar.props` to both the handle and the panel.\n\n```vue\n<script setup lang=\"ts\">\nimport { useResizable } from '@astryx-vue/core'\nimport { Layout, LayoutPanel } from '@astryx-vue/core/Layout'\nimport { ResizeHandle } from '@astryx-vue/core/Resizable'\n\nconst sidebar = useResizable({\n  defaultSize: 240,\n  minSize: 160,\n  maxSize: 360,\n})\n</script>\n\n<template>\n  <Layout>\n    <template #start>\n      <LayoutPanel :has-divider=\"false\" :width=\"sidebar.size\" />\n      <ResizeHandle direction=\"horizontal\" has-divider :resizable=\"sidebar.props\" />\n    </template>\n  </Layout>\n</template>\n```\n\n`direction` is `horizontal` (width) or `vertical` (height). `position` is `inline` or `overlay`. `isReversed` flips the drag when the panel sits on the end edge. `hasDivider` draws the 1px line; the line is the handle. `isAlwaysVisible` keeps the grip visible at rest. `pillPlacement` is `auto`, `start`, `end`, or `center`.\n\nThe handle is `role=\"separator\"`. A horizontal handle sets `aria-orientation=\"vertical\"`. Arrow keys move 10px, and Shift moves 50px. With snap points, an arrow jumps to the next point and Shift jumps two. Home and End jump to the limits. End does nothing when no maximum is set; the separator then reports the window or container size as its maximum. While collapsed, only the arrow that grows the pane reopens it. Enter and double-click restore the size from before the collapse.\n\n`useResizable` accepts one region, or a `regions` map. `snaps` keeps the size on the nearest listed point. An equal distance stays on the earlier point. A collapsible region stays at its minimum while dragged, and collapses to 0 when the lift lands below `collapsedSize` (default 40) or a quick flick heads that way. Past a limit the handle stretches a few pixels like a rubber band and springs back on release. `autoSaveId` stores the size under `astryx-resizable:` in `localStorage`. `percent()` builds a percentage size with a pixel minimum or maximum.",
+        "zh": "`ResizeHandle` 是两个区域之间的分隔条。尺寸由 `useResizable` 管理。把 `sidebar.props` 同时传给分隔条和面板。\n\n```vue\n<script setup lang=\"ts\">\nimport { useResizable } from '@astryx-vue/core'\nimport { Layout, LayoutPanel } from '@astryx-vue/core/Layout'\nimport { ResizeHandle } from '@astryx-vue/core/Resizable'\n\nconst sidebar = useResizable({\n  defaultSize: 240,\n  minSize: 160,\n  maxSize: 360,\n})\n</script>\n\n<template>\n  <Layout>\n    <template #start>\n      <LayoutPanel :has-divider=\"false\" :width=\"sidebar.size\" />\n      <ResizeHandle direction=\"horizontal\" has-divider :resizable=\"sidebar.props\" />\n    </template>\n  </Layout>\n</template>\n```\n\n`direction` 取 `horizontal`（改宽度）或 `vertical`（改高度）。`position` 取 `inline` 或 `overlay`。面板在结束边时用 `isReversed` 把拖拽方向反过来。`hasDivider` 画出 1px 的线，线本身就是把手。`isAlwaysVisible` 让握把在静止时也可见。`pillPlacement` 取 `auto`、`start`、`end` 或 `center`。\n\n分隔条的角色是 `separator`。横向分隔条的 `aria-orientation` 是 `vertical`。方向键每次移动 10px，按住 Shift 移动 50px。有吸附点时，方向键改成跳到相邻的点，Shift 跳两个。Home 和 End 跳到边界；没写最大尺寸时 End 不动，读屏用的最大值改报窗口或容器尺寸。折叠后只有让面板变大的方向键会展开。Enter 和双击恢复折叠前的尺寸。\n\n`useResizable` 可以管一个区域，也可以用 `regions` 一次管多个。`snaps` 让尺寸只停在列出的点上。离两个点一样远时，留在更靠前的那个。可收起的区域拖动途中停在最小尺寸，松手时低于 `collapsedSize`（默认 40），或朝收起方向快速一甩，尺寸才变成 0。拖过上下限时，分隔条像橡皮筋一样多走几像素，松手弹回。`autoSaveId` 把尺寸存在 `localStorage`，键名以 `astryx-resizable:` 开头。`percent()` 用来写带像素上下限的百分比尺寸。"
       },
       "practices": {
         "en": [
@@ -48421,7 +48421,7 @@
                 "name": "`collapsedSize`",
                 "type": "`number`",
                 "default": "`40`",
-                "description": "A drag below this pixel value collapses the region."
+                "description": "A lift or a key step below this pixel value collapses the region."
               },
               {
                 "name": "`snaps`",
@@ -48463,7 +48463,7 @@
                 "name": "`isCollapsed`",
                 "type": "`boolean`",
                 "default": "-",
-                "description": "Controlled collapsed state. Changes are reported through `onCollapseChange`."
+                "description": "Controlled collapsed state. A lift, a key step, or a drag that reopens the region is reported through `onCollapseChange`."
               },
               {
                 "name": "`onSizeChange`",
@@ -48577,7 +48577,7 @@
                 "name": "`collapsedSize`",
                 "type": "`number`",
                 "default": "`40`",
-                "description": "拖拽低于这个像素值时收起。"
+                "description": "松手或按键一步低于这个像素值时收起。"
               },
               {
                 "name": "`snaps`",
@@ -48619,7 +48619,7 @@
                 "name": "`isCollapsed`",
                 "type": "`boolean`",
                 "default": "-",
-                "description": "受控的收起状态。变化通过 `onCollapseChange` 报出。"
+                "description": "受控的收起状态。松手、按键一步或拖动重新打开区域，都通过 `onCollapseChange` 报出。"
               },
               {
                 "name": "`onSizeChange`",
@@ -76695,13 +76695,13 @@
                 "name": "`collapsible`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Whether dragging below the collapsed threshold collapses the region to zero."
+                "description": "Whether a lift or a key step below the collapsed threshold collapses the region to zero."
               },
               {
                 "name": "`collapsedSize`",
                 "type": "`number`",
                 "default": "`40`",
-                "description": "Pixel threshold below which a collapsible region snaps to zero."
+                "description": "Pixel threshold under which a lift or a key step collapses the region. Mid-drag the region stays at its minimum, and a quick flick toward closing also collapses it."
               },
               {
                 "name": "`snaps`",
@@ -76725,7 +76725,7 @@
                 "name": "`isCollapsed`",
                 "type": "`boolean`",
                 "default": "—",
-                "description": "Controlled collapse state. `collapse()`, `expand()` and a drag past the threshold then report through `onCollapseChange` instead of changing state internally."
+                "description": "Controlled collapse state. `collapse()`, `expand()`, a lift or a key step past the threshold, and a drag that reopens the region then report through `onCollapseChange` instead of changing state internally."
               },
               {
                 "name": "`onSizeChange`",
@@ -76737,7 +76737,7 @@
                 "name": "`onCollapseChange`",
                 "type": "`(isCollapsed: boolean) => void`",
                 "default": "—",
-                "description": "Called once per collapse state change, via drag or programmatically."
+                "description": "Called once per collapse state change: a lift or a key step that closes the region, a drag or a key that reopens it, Enter, a double-click, or a call to `collapse()`, `expand()` or `resize()`."
               }
             ]
           },
@@ -76815,13 +76815,13 @@
                 "name": "`collapsible`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "拖到收起阈值以下时，是否把区域收成 0。"
+                "description": "松手或按键一步落在收起阈值以下时，是否把区域收成 0。"
               },
               {
                 "name": "`collapsedSize`",
                 "type": "`number`",
                 "default": "`40`",
-                "description": "可收起的区域低于这个像素阈值就吸到 0。"
+                "description": "松手或按键一步低于这个像素阈值时收起区域。拖动途中区域停在最小尺寸，朝收起方向快速一甩也会收起。"
               },
               {
                 "name": "`snaps`",
@@ -76845,7 +76845,7 @@
                 "name": "`isCollapsed`",
                 "type": "`boolean`",
                 "default": "—",
-                "description": "受控的收起状态。传了它，`collapse()`、`expand()` 和拖过阈值都不再自己改状态，而是通过 `onCollapseChange` 报给你。"
+                "description": "受控的收起状态。传了它，`collapse()`、`expand()`、松手或按键越过阈值、拖动重新打开区域，都不再自己改状态，而是通过 `onCollapseChange` 报给你。"
               },
               {
                 "name": "`onSizeChange`",
@@ -76857,7 +76857,7 @@
                 "name": "`onCollapseChange`",
                 "type": "`(isCollapsed: boolean) => void`",
                 "default": "—",
-                "description": "收起状态每变一次调用一次，拖动或代码触发都算。"
+                "description": "收起状态每变一次调用一次：松手或按键把区域收起、拖动或按键把它打开、Enter、双击，或调用 `collapse()`、`expand()`、`resize()`，都算。"
               }
             ]
           },

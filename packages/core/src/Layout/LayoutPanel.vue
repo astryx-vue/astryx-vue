@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import type { CSSProperties, StyleValue } from 'vue'
 import type { LayoutPanelProps, LayoutPanelSlots } from './types.js'
-import { computed, useAttrs, useTemplateRef } from 'vue'
+import { computed, onBeforeUnmount, onMounted, useAttrs, useTemplateRef, watch } from 'vue'
 import { moveFocusLeftBehind, noteFocusWithin, useFocusLeavingChange } from '../composables/internal/focusLeaving.js'
 import { resizablePropsOf, resizeHandleBeside } from '../composables/internal/resizableChannel.js'
 import { useScrollRegionProps } from '../composables/internal/useScrollRegionProps.js'
 import { useComponentMessages } from '../locale/context.js'
 import { layoutMessages } from '../locale/messages/layout.js'
+import { regionOfProps } from '../Resizable/resizablePane.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { useLayoutArea, useLayoutSlots } from './context.js'
 import { regionPaddingStyle } from './regionPadding.js'
@@ -45,6 +46,31 @@ const area = useLayoutArea()
 const slots = useLayoutSlots()
 
 defineExpose({ element: root })
+
+// 拿到 `useResizable` 自己的 props 时，面板把元素交给那个区域：区域收起、展开时面板从朝内容的边滑开滑合。
+// 手写的 props 对象没有区域，什么都不借，也不滑动。
+const paneRegion = computed(() => resizable.value == null ? undefined : regionOfProps(resizable.value))
+let committedWidth = effectiveWidth.value
+const pane = {
+  get element() {
+    return root.value as HTMLElement
+  },
+  renderedWidth: () => committedWidth,
+  contentFacingEdge: () => (area.value === 'end' ? 'inline-start' : 'inline-end') as 'inline-start' | 'inline-end',
+}
+onMounted(() => paneRegion.value?.attach(pane))
+watch(paneRegion, (next, previous) => {
+  previous?.attach(null)
+  next?.attach(pane)
+}, { flush: 'post' })
+onBeforeUnmount(() => paneRegion.value?.attach(null))
+// DOM 变化之前告诉区域：它在这一刻量好面板和旁边的内容。
+watch(isZeroWidth, toCollapsed => paneRegion.value?.beforeChange(toCollapsed), { flush: 'pre' })
+// 渲染出新宽度之后：量过的那次变化开始播。
+watch(effectiveWidth, (width) => {
+  committedWidth = width
+  paneRegion.value?.committed()
+}, { flush: 'post' })
 
 const width = computed(() => formatSize(effectiveWidth.value))
 const collapse = computed(() => !props.hasDivider && props.padding == null && !isZeroWidth.value)

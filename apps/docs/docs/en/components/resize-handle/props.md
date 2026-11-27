@@ -125,7 +125,7 @@ Import it from <code>@astryx-vue/core</code>. A single region returns <code>{ si
         <td><code>collapsedSize</code></td>
         <td><code>number</code></td>
         <td><code>40</code></td>
-        <td>A drag below this pixel value collapses the region.</td>
+        <td>A lift or a key step below this pixel value collapses the region.</td>
       </tr>
       <tr>
         <td><code>snaps</code></td>
@@ -167,7 +167,7 @@ Import it from <code>@astryx-vue/core</code>. A single region returns <code>{ si
         <td><code>isCollapsed</code></td>
         <td><code>boolean</code></td>
         <td>-</td>
-        <td>Controlled collapsed state. Changes are reported through <code>onCollapseChange</code>.</td>
+        <td>Controlled collapsed state. A lift, a key step, or a drag that reopens the region is reported through <code>onCollapseChange</code>.</td>
       </tr>
       <tr>
         <td><code>onSizeChange</code></td>
