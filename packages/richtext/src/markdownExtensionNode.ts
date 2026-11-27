@@ -163,7 +163,9 @@ export class RichTextExtensionNode extends DecoratorNode<unknown> {
     return { span: importExtensionElement, div: importExtensionElement }
   }
 
-  constructor(facts: RichTextExtensionNodeFacts, format = 0, key?: NodeKey) {
+  // 协同编辑（Yjs）绑定和 `$create` 会不带参数地调用构造函数，绑定靠这个节点读各个类的默认属性。
+  // 没有 facts 时，节点拿到和损坏的存档一样的默认值。
+  constructor(facts: RichTextExtensionNodeFacts = factsFrom({}), format = 0, key?: NodeKey) {
     super(key)
     this.__facts = facts
     this.__format = facts.display === 'inline' ? format : 0

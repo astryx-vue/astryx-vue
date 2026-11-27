@@ -253,6 +253,51 @@ describe('richTextEditorToolbar link dialog', () => {
     expect(anchor.attributes('rel')).toBe('noopener noreferrer')
   })
 
+  it('inserts the URL as link text at a caret in an empty paragraph', async () => {
+    const wrapper = mountEditor()
+    await nextTick()
+    await seed(wrapper, '', [0, 0])
+    await nextTick()
+    await openLinkDialog(wrapper)
+    await submit('https://example.com')
+    const anchor = wrapper.get('[role="textbox"] a')
+    expect(anchor.attributes('href')).toBe('https://example.com/')
+    expect(anchor.text()).toBe('https://example.com')
+  })
+
+  it('inserts a link at a caret inside text without linking the whole text', async () => {
+    const wrapper = mountEditor()
+    await nextTick()
+    await seed(wrapper, 'hello world', [5, 5])
+    await nextTick()
+    await openLinkDialog(wrapper)
+    await submit('https://example.com')
+    const anchor = wrapper.get('[role="textbox"] a')
+    expect(anchor.text()).toBe('https://example.com')
+    expect(wrapper.get('[role="textbox"]').text()).toContain('hello')
+    expect(wrapper.get('[role="textbox"]').text()).toContain('world')
+  })
+
+  it('updates the link when the caret is inside one', async () => {
+    const wrapper = mountEditor()
+    await nextTick()
+    await seed(wrapper, 'site', [0, 4])
+    await nextTick()
+    await openLinkDialog(wrapper)
+    await submit('https://example.com')
+    const editor = editorOf(wrapper)
+    await new Promise<void>(resolve => editor.update(() => {
+      $getRoot().getAllTextNodes()[0]?.select(2, 2)
+    }, { onUpdate: resolve }))
+    await nextTick()
+    await openLinkDialog(wrapper)
+    await submit('https://example.org')
+    const anchors = wrapper.findAll('[role="textbox"] a')
+    expect(anchors).toHaveLength(1)
+    expect(anchors[0]!.attributes('href')).toBe('https://example.org/')
+    expect(anchors[0]!.text()).toBe('site')
+  })
+
   it('omits target and rel when hasNewTabLinks is false', async () => {
     const wrapper = mountEditor({ hasNewTabLinks: false })
     await nextTick()
