@@ -34,6 +34,18 @@ interface InitData {
 }
 
 describe('init guide', () => {
+  it('writes agent docs at the project root when run from a subfolder', async () => {
+    const cwd = await project({ 'package.json': JSON.stringify({ name: 'demo' }), 'src/pages/.keep': '' })
+    try {
+      const data = assertResponse((await run(['init', '--features', 'agents', '--json'], join(cwd, 'src/pages'))).stdout, 'init.run').data as InitData
+      expect(data.files.map(file => file.path)).toEqual(['AGENTS.md'])
+      expect(await readFile(join(cwd, 'AGENTS.md'), 'utf8')).toContain('astryx')
+    }
+    finally {
+      await rm(cwd, { recursive: true, force: true })
+    }
+  })
+
   it('reads the package manager from the packageManager field', async () => {
     const cwd = await project({ 'package.json': JSON.stringify({ name: 'demo', packageManager: 'pnpm@9.12.0' }) })
     try {

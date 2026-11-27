@@ -16,6 +16,7 @@ import { themeCommand } from './commands/theme.ts'
 import { upgradeCommand } from './commands/upgrade.ts'
 import { errorEnvelope } from './envelope.ts'
 import { CliError } from './error.ts'
+import { findProjectRoot } from './project.ts'
 import { commandByName, COMMANDS } from './spec.ts'
 
 export type { CliIO, CliResult } from './cli/context.ts'
@@ -36,6 +37,9 @@ const HANDLERS: Record<string, (args: CommandArgs) => CommandResult | Promise<Co
   upgrade: upgradeCommand,
 }
 
+/** Commands that read or write the project, so run from any of its folders they work at its root. */
+const PROJECT_ROOT_COMMANDS = new Set(['doctor', 'init', 'upgrade'])
+
 export async function runCli(argv: readonly string[], io: CliIO = {}): Promise<CliResult> {
   try {
     const parsed = parseArgv(argv)
@@ -47,7 +51,8 @@ export async function runCli(argv: readonly string[], io: CliIO = {}): Promise<C
       return ok(printHelp(parsed.command, parsed.options.json === true))
     if (parsed.command === null && parsed.options.json === true)
       return ok(printJson(helpEnvelope()))
-    const output = await dispatch(parsed.command, commandArgs(parsed, cwd, localeOf))
+    const root = parsed.command !== null && PROJECT_ROOT_COMMANDS.has(parsed.command) ? await findProjectRoot(cwd) : cwd
+    const output = await dispatch(parsed.command, commandArgs(parsed, root, localeOf))
     return typeof output === 'string' ? ok(output) : { exitCode: output.exitCode, stdout: output.stdout, stderr: '' }
   }
   catch (error) {
