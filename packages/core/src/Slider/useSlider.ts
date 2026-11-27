@@ -25,6 +25,22 @@ interface SliderControl {
   keydown: (index: number, event: KeyboardEvent) => void
   thumbFocus: (index: number) => void
   thumbBlur: () => void
+  /** The values the slider shows now: the last one reported, before the owner renders it. */
+  current: () => number[]
+  /** What thumb `index` becomes for `raw`: snapped, clamped, kept apart. */
+  constrain: (index: number, raw: number) => number
+  /** The range thumb `index` may cover, from the values shown now. */
+  currentBounds: (index: number) => [number, number]
+  /** Reports thumb `index` at `value`, from `base` (the values shown now by default). */
+  setValue: (index: number, value: number, base?: readonly number[]) => void
+  /** Thumb `index` is held by a gesture (pressed paint, focus, tooltip), or none. */
+  hold: (index: number | null) => void
+  /** `changeEnd` with the values shown now. */
+  reportEnd: () => void
+  /** The value a press at client point (`x`, `y`) means: a mark's own, else the point along the travel. */
+  valueAt: (x: number, y: number) => number
+  /** The thumb a track press at `value` moves. */
+  thumbFor: (value: number) => number
 }
 
 export function useSlider(options: SliderOptions): SliderControl {
@@ -85,12 +101,50 @@ export function useSlider(options: SliderOptions): SliderControl {
     return value
   }
 
-  function pointerValue(event: PointerEvent): number {
+  function current(): number[] {
+    if (latest === undefined)
+      return values.value
+    return Array.isArray(latest) ? [...latest] : [latest]
+  }
+
+  function constrain(index: number, raw: number): number {
+    const [lower, upper] = boundsFor(index, current())
+    return clamp(snap(raw, min.value, step.value), lower, upper)
+  }
+
+  function thumbFor(value: number): number {
+    const [low, high] = values.value
+    if (low === undefined || high === undefined)
+      return 0
+    if (low === high)
+      return value > low ? 1 : 0
+    return Math.abs(value - high) < Math.abs(value - low) ? 1 : 0
+  }
+
+  function focusThumb(index: number): void {
+    options.track.value?.querySelectorAll<HTMLElement>('[role="slider"]')[index]?.focus({ preventScroll: true })
+    keyboardFocus.value = null
+  }
+
+  function hold(index: number | null): void {
+    // 拖动交给另一个滑块时，焦点在这个滑块组里就跟着过去。
+    const active = options.track.value?.ownerDocument.activeElement
+    if (index !== null && index !== dragging.value && active != null && options.track.value?.contains(active))
+      focusThumb(index)
+    dragging.value = index
+  }
+
+  function valueAt(x: number, y: number): number {
+    const mark = options.track.value?.ownerDocument.elementFromPoint?.(x, y)?.closest<HTMLElement>('[data-mark-value]')
+    return mark ? Number(mark.dataset.markValue) : pointerValue(x, y)
+  }
+
+  function pointerValue(clientX: number, clientY: number): number {
     const track = options.track.value!
     const rect = track.getBoundingClientRect()
     const vertical = p.orientation === 'vertical'
     const size = vertical ? rect.height : rect.width
-    const offset = vertical ? rect.bottom - event.clientY : getComputedStyle(track).direction === 'rtl' ? rect.right - event.clientX : event.clientX - rect.left
+    const offset = vertical ? rect.bottom - clientY : getComputedStyle(track).direction === 'rtl' ? rect.right - clientX : clientX - rect.left
     const fraction = size > THUMB_SIZE ? (offset - THUMB_SIZE / 2) / (size - THUMB_SIZE) : size > 0 ? offset / size : 0
     return min.value + clamp(fraction, 0, 1) * (max.value - min.value)
   }
@@ -99,27 +153,31 @@ export function useSlider(options: SliderOptions): SliderControl {
     if (p.isDisabled || event.defaultPrevented || event.button !== 0 || pointerId !== null || !options.track.value)
       return
     const target = event.target as HTMLElement
-    const mark = target.closest<HTMLElement>('[data-mark-value]')
+    // 按在滑块上的拖动归滑块的手势（useSliderTouch），任何指针都一样；这里只让它拿到焦点。
+    // 手指和触控笔点轨道，抬起时才设值。所以接着往下走的只有鼠标按在轨道上。
     const thumb = target.closest<HTMLElement>('[data-thumb-index]')
-    const raw = mark ? Number(mark.dataset.markValue) : pointerValue(event)
+    if (thumb) {
+      thumb.focus({ preventScroll: true })
+      keyboardFocus.value = null
+      return
+    }
+    if (event.pointerType === 'touch' || event.pointerType === 'pen')
+      return
+    const mark = target.closest<HTMLElement>('[data-mark-value]')
+    const raw = mark ? Number(mark.dataset.markValue) : pointerValue(event.clientX, event.clientY)
     const isCoincident = values.value.length === 2 && values.value[0] === values.value[1]
     // 两个滑块在同一个值上时，只有一个能朝指针去的方向走：
-    // 按在滑块上（或它们共同的值上，比如那个刻度的文字）什么都不动，由第一次移动的方向选滑块；
-    // 按在旁边的轨道上，直接选那一侧的滑块。停着的按下由盖在上面的滑块（下标 1）扛着。
-    const parks = isCoincident && (thumb != null || raw === values.value[0])
-    let index = thumb ? Number(thumb.dataset.thumbIndex) : values.value.length === 2 && Math.abs(raw - values.value[1]!) < Math.abs(raw - values.value[0]!) ? 1 : 0
-    if (parks && thumb == null)
-      index = 1
-    if (isCoincident && !parks)
-      index = raw > values.value[0]! ? 1 : 0
+    // 按在它们共同的值上（比如那个刻度的文字）什么都不动，由第一次移动的方向选滑块，停着时由盖在上面的滑块（下标 1）扛着；
+    // 按在旁边的轨道上，直接选那一侧的滑块。
+    const parks = isCoincident && raw === values.value[0]
+    const index = parks ? 1 : thumbFor(raw)
     event.preventDefault()
     dragging.value = index
     pointerId = event.pointerId
     // 第一次移动从指针自己量起，不是从按下的刻度量起（宽文字离它的刻度有一段距离）。
-    coincidentPress = parks ? pointerValue(event) : null
+    coincidentPress = parks ? pointerValue(event.clientX, event.clientY) : null
     coincidentOrigin = parks
-    options.track.value.querySelectorAll<HTMLElement>('[role="slider"]')[index]?.focus({ preventScroll: true })
-    keyboardFocus.value = null
+    focusThumb(index)
     update(index, parks ? values.value[index]! : raw)
     options.track.value.setPointerCapture?.(event.pointerId)
   }
@@ -128,14 +186,13 @@ export function useSlider(options: SliderOptions): SliderControl {
     if (index === dragging.value)
       return
     dragging.value = index
-    options.track.value?.querySelectorAll<HTMLElement>('[role="slider"]')[index]?.focus({ preventScroll: true })
-    keyboardFocus.value = null
+    focusThumb(index)
   }
 
   function pointerMove(event: PointerEvent): void {
     if (p.isDisabled || pointerId !== event.pointerId || dragging.value === null)
       return
-    const value = pointerValue(event)
+    const value = pointerValue(event.clientX, event.clientY)
     if (coincidentPress !== null) {
       if (value === coincidentPress)
         return
@@ -163,12 +220,17 @@ export function useSlider(options: SliderOptions): SliderControl {
   function pointerEnd(event: PointerEvent): void {
     if (pointerId !== event.pointerId || dragging.value === null)
       return
-    const value = latest ?? (values.value.length === 2 ? [values.value[0]!, values.value[1]!] : values.value[0]!) as SliderValue
+    const value = shown()
     resetDrag()
     if (options.track.value?.hasPointerCapture?.(event.pointerId))
       options.track.value.releasePointerCapture(event.pointerId)
     if (!p.isDisabled)
       options.end(value)
+  }
+
+  function shown(): SliderValue {
+    const now = current()
+    return now.length === 2 ? [now[0]!, now[1]!] : now[0]!
   }
 
   function thumbFocus(index: number): void {
@@ -203,5 +265,29 @@ export function useSlider(options: SliderOptions): SliderControl {
     options.end(update(index, value, !toBound))
   }
 
-  return { min, max, gap, values, bounds, dragging, keyboardFocus, pointerDown, pointerMove, pointerEnd, keydown, thumbFocus, thumbBlur }
+  return {
+    min,
+    max,
+    gap,
+    values,
+    bounds,
+    dragging,
+    keyboardFocus,
+    pointerDown,
+    pointerMove,
+    pointerEnd,
+    keydown,
+    thumbFocus,
+    thumbBlur,
+    current,
+    constrain,
+    currentBounds: index => boundsFor(index, current()),
+    setValue: (index, value, base = current()) => {
+      update(index, value, true, base)
+    },
+    hold,
+    reportEnd: () => options.end(shown()),
+    valueAt,
+    thumbFor,
+  }
 }

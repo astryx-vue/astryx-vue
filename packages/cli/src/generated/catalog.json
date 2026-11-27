@@ -34581,6 +34581,10 @@
       "notes": {
         "en": [
           {
+            "heading": "Pointer and touch",
+            "text": "A dragged thumb moves by the distance the pointer travels instead of jumping to where the press began, for a mouse, a finger and a pen alike. A thumb under a finger grows, and on release it coasts a short way with the finger's speed before it settles; `changeEnd` fires once it stops. A mouse or a pen ends the drag where it lets go. A finger or pen tap on the track springs the thumb to that value when it lifts, while a mouse press on the track still jumps there. On a touch screen each thumb's touch target is a 48 px square around it, and a swipe across the slider still scrolls the page."
+          },
+          {
             "heading": "Keyboard controls",
             "text": "The slider is fully operable with the keyboard, so users never have to drag. Once a thumb has focus, these keys change its value:\n\n- Tab moves focus to each thumb in turn.\n- Left / Right move one step in the horizontal direction; the direction is reversed in right-to-left layouts.\n- Up / Down increase or decrease the value by one step.\n- PageUp / PageDown increase or decrease the value by ten steps.\n- Home / End move to the allowed minimum or maximum.\n- Escape closes the value tooltip or the disabled reason tooltip.\n\nIn range mode each thumb has its own name, taken from `minLabel` and `maxLabel`, so assistive technology can tell which bound is being adjusted. Each thumb's ARIA bounds also update when its sibling changes, so the range that is announced always matches the values the thumb can actually take."
           },
@@ -34610,6 +34614,10 @@
           }
         ],
         "zh": [
+          {
+            "heading": "指针与触屏操作",
+            "text": "按住滑块拖动时，它跟着指针走过的距离移动，不会先跳到按下的位置；鼠标、手指和触控笔都一样。手指按住的滑块会放大，松手后带着速度滑行一小段再停下，停稳后才触发 `changeEnd`；鼠标和触控笔在松开的位置停下。手指或触控笔轻点轨道，抬起时滑块弹到那个值；鼠标按在轨道上仍然直接跳到那里。在触屏上，每个滑块的可点区域是以它为中心的 48px 方块，横着划过滑块会照常滚动页面。"
+          },
           {
             "heading": "键盘操作",
             "text": "滑块完全可以用键盘操作，不必依赖拖动。焦点落到滑块上之后，下面的按键会调整它的数值：\n\n- Tab 依次把焦点移到每个滑块上。\n- 左右方向键沿水平方向移动一步；在从右到左的布局里方向相反。\n- 上下方向键增加或减少一步。\n- PageUp / PageDown 增加或减少十步。\n- Home / End 移动到允许的最小值或最大值。\n- Escape 关闭数值提示或禁用原因提示。\n\n区间模式下，每个滑块有独立名称，名称分别来自 `minLabel` 和 `maxLabel`，辅助技术据此分辨当前调整的是下限还是上限。每个滑块的 ARIA 边界也会随另一个滑块的值更新，所以读出的可调范围始终和实际可选取的值一致。"

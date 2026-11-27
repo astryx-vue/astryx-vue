@@ -81,6 +81,10 @@ import '@astryx-vue/themes/neutral.css'
   title="Validation states"
 />
 
+## Pointer and touch
+
+A dragged thumb moves by the distance the pointer travels instead of jumping to where the press began, for a mouse, a finger and a pen alike. A thumb under a finger grows, and on release it coasts a short way with the finger's speed before it settles; `changeEnd` fires once it stops. A mouse or a pen ends the drag where it lets go. A finger or pen tap on the track springs the thumb to that value when it lifts, while a mouse press on the track still jumps there. On a touch screen each thumb's touch target is a 48 px square around it, and a swipe across the slider still scrolls the page.
+
 ## Keyboard controls
 
 The slider is fully operable with the keyboard, so users never have to drag. Once a thumb has focus, these keys change its value:
