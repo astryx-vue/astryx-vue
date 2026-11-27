@@ -287,7 +287,8 @@ function isFreeDelivery(optionValue: string) {
           </HStack>
         </HStack>
 
-        <Stack :direction="isNarrow ? 'vertical' : 'horizontal'" :gap="6" align="start" wrap="wrap">
+        <!-- 只有并排的那一行换行：竖排时换行的列按最宽内容定宽，在手机上会撞到页面两侧的内边距。 -->
+        <Stack :direction="isNarrow ? 'vertical' : 'horizontal'" :gap="6" align="start" :wrap="isNarrow ? undefined : 'wrap'">
           <StackItem size="fill" :cross-align-self="isNarrow ? 'stretch' : undefined" :class="isNarrow ? undefined : 'form-column'">
             <VStack :gap="6">
               <Banner
@@ -388,7 +389,9 @@ function isFreeDelivery(optionValue: string) {
                       @update:model-value="onPromoInput($event)"
                     />
                   </StackItem>
-                  <Button label="Apply" variant="secondary" @click="applyPromo" />
+                  <StackItem size="static">
+                    <Button label="Apply" variant="secondary" @click="applyPromo" />
+                  </StackItem>
                 </HStack>
               </VStack>
 

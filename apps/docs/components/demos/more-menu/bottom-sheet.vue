@@ -11,7 +11,7 @@ const items: MoreMenuOption[] = [
 </script>
 
 <template>
-  <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; width: min(100%, 360px); padding: 16px; border: 1px solid #d1d5db; border-radius: 12px;">
+  <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; width: min(100%, 360px); padding: 16px; border: 1px solid var(--astryx-color-border); border-radius: 12px;">
     <div style="display: flex; flex-direction: column; gap: 4px;">
       <strong>Quarterly plan</strong>
       <span>Updated a few minutes ago</span>

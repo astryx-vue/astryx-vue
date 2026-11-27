@@ -44,6 +44,7 @@ interface PowerSearchActions {
   canRemove: (filter: PowerSearchFilter) => boolean
   clearAll: (event?: Event) => void
   closeEditor: (restore: boolean) => void
+  commit: (next: PowerSearchFilter[], changeType: PowerSearchChangeType, index: number) => void
   editorComponent: ComputedRef<Component>
   editorOpen: ComputedRef<boolean>
   editorStyle: ComputedRef<{ top: string, left: string, width: string } | undefined>
@@ -365,6 +366,7 @@ export function usePowerSearchActions(options: {
     canRemove,
     clearAll,
     closeEditor,
+    commit,
     editorComponent,
     editorOpen,
     editorStyle,

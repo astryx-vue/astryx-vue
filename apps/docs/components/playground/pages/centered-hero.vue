@@ -49,7 +49,7 @@ const heroFrame: CSSProperties = {
                 variant="primary"
               >
                 <template #end>
-                  <Icon name="heroicons:arrow-right-20-solid" size="sm" color="inherit" />
+                  <Icon class="mirror-rtl" name="heroicons:arrow-right-20-solid" size="sm" color="inherit" />
                 </template>
               </Button>
               <Button label="Learn more" variant="secondary" href="#" />
@@ -69,3 +69,9 @@ const heroFrame: CSSProperties = {
     </template>
   </Layout>
 </template>
+
+<style scoped>
+:global([dir='rtl'] .mirror-rtl) {
+  transform: scaleX(-1);
+}
+</style>

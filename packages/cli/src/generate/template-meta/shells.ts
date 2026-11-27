@@ -45,11 +45,11 @@ export const SHELL_TEMPLATES: Record<string, TemplateMeta> = {
 
   'messaging-shell': {
     description: {
-      en: 'A four-column messaging frame: workspace rail, channel list, message stream, and a thread panel.',
-      zh: '消息框架：工作区导航、频道列表、消息流和会话线程四栏。',
+      en: 'A team messaging app frame: an AppShell side navigation of channels and direct messages with presence and unread counts, a message stream with a composer, and a thread panel that opens from a message\'s replies.',
+      zh: '团队消息应用框架：AppShell 侧边导航（频道和私信，带在线状态和未读数）、带输入框的消息流，以及点开消息回复的线程面板。',
     },
     keywords: {
-      en: ['team messaging', 'chat', 'channels', 'threads', 'inbox', 'direct message', 'conversation workspace'],
+      en: ['team messaging', 'chat', 'channels', 'threads', 'direct message', 'conversation workspace'],
       zh: ['消息', '聊天', '频道', '会话', '私信', '团队沟通'],
     },
     upstreamNotReady: true,

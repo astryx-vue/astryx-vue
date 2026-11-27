@@ -37,7 +37,6 @@ import '@astryx-vue/lab/lab.css'
 | Component | Purpose |
 | --- | --- |
 | [ListInput](/en/lab/list-input) | Edit, validate, and reorder structured records. |
-| [MobileTokenizer](/en/lab/mobile-tokenizer) | Search and select in a bottom sheet. |
 | [TransferList](/en/lab/transfer-list) | Move and reorder options between two panels. |
 | [Tour](/en/lab/tour) | Guide users with target highlights and step callouts. |
 | [CodeEditor](/en/lab/code-editor) | Edit code with syntax highlighting and line numbers. |

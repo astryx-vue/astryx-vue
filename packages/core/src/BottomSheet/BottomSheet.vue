@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { DismissEscape } from '../layer/dismissStack.js'
 import type { LayerFocusRecord } from '../layer/layerFocusReturn.js'
+import type { ScrimFade } from './sheetDragExit.js'
 import type { BottomSheetEmits, BottomSheetMotion, BottomSheetProps, BottomSheetSlots, BottomSheetState } from './types.js'
 import { computed, getCurrentInstance, inject, onBeforeUnmount, onMounted, provide, ref, toValue, useAttrs, useTemplateRef, watch } from 'vue'
 import { focusForLastInput } from '../composables/internal/focusReturn.js'
@@ -10,6 +11,7 @@ import { useScrollLock } from '../composables/useScrollLock.js'
 import { holdKeptInside } from '../layer/inputHold.js'
 import { isLayerFocusStranded, restoreLayerFocus, trackLayerFocus } from '../layer/layerFocusReturn.js'
 import { createModalOutletHandle } from '../layer/modalOutlet.js'
+import { provideNestedLayerMountTarget } from '../layer/mount.js'
 import { isImeKeyEvent } from '../utils/ime.js'
 import BottomSheetPanel from './BottomSheetPanel.vue'
 import { bottomSheetEscapeKey } from './escape.js'
@@ -50,6 +52,7 @@ const open = computed(() => {
 })
 const attrs = useAttrs()
 const dialog = useTemplateRef<HTMLDialogElement>('dialog')
+provideNestedLayerMountTarget(useTemplateRef<HTMLElement>('layerHost'))
 const panel = useTemplateRef<InstanceType<typeof BottomSheetPanel>>('panel')
 const isPresented = ref(false)
 const scrimOpacity = ref(1)
@@ -71,7 +74,15 @@ const panelState = computed<BottomSheetState>(() => {
 const isDismissible = computed(() => props.purpose === 'info')
 const isSwipeDismissAllowed = computed(() => props.purpose === 'info' && !props.isInline)
 
-const dialogStyle = computed(() => ({ '--_sheet-scrim-opacity': String(scrimOpacity.value) }))
+// A swipe's close paces the scrim's fade on its spring.
+const scrimFade = ref<ScrimFade | null>(null)
+const isClosing = computed(() => !isOpen.value && isPresented.value)
+// The scrim follows the drag while open and fades out through the exit.
+const dialogStyle = computed(() => ({
+  '--_sheet-scrim-opacity': isClosing.value ? '0' : String(scrimOpacity.value),
+  '--_sheet-scrim-duration': scrimFade.value == null ? undefined : `${scrimFade.value.durationMs}ms`,
+  '--_sheet-scrim-easing': scrimFade.value?.easing,
+}))
 
 useFocusTrap({
   container: computed(() => panelElement()),
@@ -243,8 +254,10 @@ watch(isOpen, (value) => {
 }, { flush: 'post' })
 
 watch(isOpen, (value) => {
-  if (value)
+  if (value) {
+    scrimOpacity.value = 1
     return
+  }
   isSettled.value = false
   isModalShown.value = false
 })
@@ -352,7 +365,7 @@ defineExpose({
     class="astryx-bottom-sheet-dialog"
     :class="{
       'astryx-bottom-sheet-dialog--scrim': hasScrim,
-      'astryx-bottom-sheet-dialog--closing': !isOpen && isPresented,
+      'astryx-bottom-sheet-dialog--closing': isClosing,
     }"
     :data-settled="isSettled || undefined"
     :aria-label="dialogLabel"
@@ -376,6 +389,7 @@ defineExpose({
         :is-swipe-dismiss-allowed="isSwipeDismissAllowed"
         @dismiss="requestClose"
         @scrim-opacity="scrimOpacity = $event"
+        @scrim-fade="scrimFade = $event"
         @snap="emit('snap', $event)"
         @motion-start="emit('motionStart', $event)"
         @motion-complete="onPanelMotionComplete"
@@ -384,5 +398,6 @@ defineExpose({
       </BottomSheetPanel>
     </div>
     <div class="astryx-bottom-sheet__edge-tint" aria-hidden="true" />
+    <div ref="layerHost" class="astryx-bottom-sheet__layer-host" />
   </dialog>
 </template>

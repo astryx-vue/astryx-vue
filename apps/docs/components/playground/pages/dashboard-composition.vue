@@ -19,6 +19,7 @@ import {
   List,
   ListItem,
   Table,
+  StackItem,
   Text,
   useToast,
   VStack,
@@ -346,8 +347,8 @@ const timeRange = ref('1 year')
             />
           </HStack>
 
-          <Grid :columns="{ minWidth: 280, repeat: 'fit' }" :gap="4">
-            <Grid v-for="group in [0, 1]" :key="group" :columns="{ minWidth: 280, repeat: 'fit' }" :gap="4">
+          <Grid :columns="{ minWidth: 280, max: 2, repeat: 'fit' }" :gap="4">
+            <Grid v-for="group in [0, 1]" :key="group" :columns="{ minWidth: 280, max: 2, repeat: 'fit' }" :gap="4">
               <Card v-for="m in metrics.slice(group * 2, group * 2 + 2)" :key="m.label">
                 <VStack :gap="1">
                   <HStack :gap="3" align="center">
@@ -435,10 +436,12 @@ const timeRange = ref('1 year')
               <Text type="body" color="secondary">Past 24 hours</Text>
             </VStack>
             <!-- 演示：换成真正打开市场总览的调用 -->
-            <Button label="View more" variant="secondary" size="lg" @click="showToast({ body: 'Demo: the full market overview would open here', uniqueID: 'more-market' })" />
+            <StackItem>
+              <Button label="View more" variant="secondary" size="lg" @click="showToast({ body: 'Demo: the full market overview would open here', uniqueID: 'more-market' })" />
+            </StackItem>
           </HStack>
 
-          <Grid :columns="{ minWidth: 320, repeat: 'fit' }" :gap="4">
+          <Grid :columns="{ minWidth: 320, max: 8, repeat: 'fit' }" :gap="4">
             <Card v-for="m in marketIndices" :key="m.ticker">
               <VStack :gap="4">
                 <VStack :gap="0">

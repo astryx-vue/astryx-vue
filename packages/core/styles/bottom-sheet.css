@@ -34,7 +34,7 @@
     background: var(--astryx-bottom-sheet-scrim, var(--astryx-color-overlay, rgb(0 0 0 / 50%)));
     opacity: var(--_sheet-scrim-opacity, 1);
     transition-property: opacity, display;
-    transition-duration: var(--astryx-duration-medium-max, 400ms);
+    transition-duration: var(--_sheet-scrim-duration, var(--astryx-duration-medium-max, 400ms));
     transition-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
     transition-behavior: allow-discrete;
   }
@@ -42,10 +42,12 @@
   /*
    * The dim leaves with the sheet on a linear curve: a fade covers no distance,
    * so a decelerate token would front-load its progress and leave an undimmed
-   * page under a sheet that is still sliding across it.
+   * page under a sheet that is still sliding across it. A swipe's close writes
+   * its spring's progress as the easing instead, so the dim clears as the
+   * sheet slides out.
    */
   .astryx-bottom-sheet-dialog--closing::backdrop {
-    transition-timing-function: linear;
+    transition-timing-function: var(--_sheet-scrim-easing, linear);
   }
 
   @starting-style {
@@ -144,8 +146,8 @@
     min-width: 0;
     min-height: 0;
     flex-direction: column;
-    margin-block-end: -48px;
-    padding-block-end: calc(env(safe-area-inset-bottom, 0px) + 48px);
+    margin-block-end: calc(-1 * var(--_sheet-reserve, 48px));
+    padding-block-end: calc(env(safe-area-inset-bottom, 0px) + var(--_sheet-reserve, 48px));
     border-block-start: var(--astryx-border-width, 1px) solid var(--_sheet-border);
     border-inline-start: var(--astryx-border-width, 1px) solid var(--_sheet-border);
     border-inline-end: var(--astryx-border-width, 1px) solid var(--_sheet-border);
@@ -165,6 +167,15 @@
     transition-duration: var(--astryx-duration-medium-max, 400ms);
     transition-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
     will-change: transform, opacity;
+
+    /*
+     * The dialog writes the scrim's values on itself for each move of a drag,
+     * and only its backdrop reads them. The panel ends their inheritance, so
+     * each write restyles nothing inside the sheet.
+     */
+    --_sheet-scrim-opacity: initial;
+    --_sheet-scrim-duration: initial;
+    --_sheet-scrim-easing: initial;
   }
 
   /*
@@ -194,6 +205,15 @@
     }
   }
 
+  /*
+   * A finger's swipe close under reduced motion does not travel: the sheet
+   * holds where the finger left it and fades out there, within 200ms.
+   */
+  .astryx-bottom-sheet[data-state='exiting'][data-exit='fade'] {
+    opacity: 0;
+    transition-duration: 0.01s, 200ms;
+  }
+
   .astryx-bottom-sheet[data-dragging],
   .astryx-bottom-sheet[data-reconciling] {
     transition: none;
@@ -201,13 +221,13 @@
 
   .astryx-bottom-sheet[data-height='hug'] {
     height: fit-content;
-    max-height: calc(92dvh + 48px);
+    max-height: calc(92dvh + var(--_sheet-reserve, 48px));
   }
 
   .astryx-bottom-sheet[data-height='capped'],
   .astryx-bottom-sheet[data-height='tall'],
   .astryx-bottom-sheet[data-height='custom'] {
-    height: calc(var(--_sheet-budget, 62dvh) + 48px);
+    height: calc(var(--_sheet-budget, 62dvh) + var(--_sheet-reserve, 48px));
   }
 
   /*
@@ -357,6 +377,11 @@
    * the sheet's own surface colour: fixed, full width, flush with the bottom
    * edge, above the panel, and masked out so it is never visible.
    */
+  /* 浮层挂载点：自己不占地方，里面的浮层都是 fixed 定位，挂在拖动的面板外面不跟着位移。 */
+  .astryx-bottom-sheet__layer-host {
+    display: contents;
+  }
+
   .astryx-bottom-sheet__edge-tint {
     position: fixed;
     inset-inline: 0;
@@ -385,7 +410,7 @@
     }
 
     .astryx-bottom-sheet-dialog--scrim::backdrop {
-      transition-duration: 0.01s;
+      transition-duration: var(--_sheet-scrim-duration, 0.01s);
     }
   }
 }

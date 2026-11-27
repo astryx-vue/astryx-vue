@@ -31,6 +31,7 @@ footer: false
       <tr><td><code>popoverSaveButtonLabel</code></td><td><code>string</code></td><td>应用</td><td>筛选编辑器里保存按钮的文字。旧名 <code>saveLabel</code> 同样可用。</td></tr>
       <tr><td><code>timezoneID</code></td><td><code>string</code></td><td>-</td><td>日期读写所用的时区 ID，例如 America/New_York。只有日期的值按它里面的那一天显示、编辑，并以那天的零点存储；没设置时是 UTC 的那一天。<code>isDateOnly: false</code> 的值在这个时区里保留时刻，没设置时用查看者的时区。旧名 <code>timeZone</code> 同样可用。绝对日期按 provider 的 <code>calendar</code> 写。</td></tr>
       <tr><td><code>overflow</code></td><td><code>'none' | 'unfocused-inline' | 'unfocused-layer'</code></td><td><code>none</code></td><td>标签放不下时换行、失焦收成一行，或失焦后浮层展开。</td></tr>
+      <tr><td><code>presentation</code></td><td><code>'popover' | 'bottom-sheet' | 'adaptive'</code></td><td><code>'adaptive'</code></td><td>条件在哪里编辑。<code>popover</code> 是行内输入框加字段菜单和浮层编辑器。<code>bottom-sheet</code> 让字段变成触发器，点开触屏底部弹层：在「筛选条件」里看、改、删条件，在「添加筛选条件」里挑字段，在值那一步选运算符和值，全部改动按「完成」一次提交。<code>adaptive</code> 在紧凑触屏上用底部弹层（主指针是手指这类粗略指针，并且视口宽度小于主题的 <code>md</code> 断点或高度小于 500px），其余用浮层；服务端渲染和水合时是浮层。打开那一刻定下用哪种，退场播完才重新判断。底部弹层里 <code>menuWidth</code> 和 <code>overflow</code> 没有地方生效，开发期会提示一次；<code>editor</code> 插槽也不用，值那一步只认 <code>components[type].editor</code>。想在所有设备上保留行内字段就传 <code>popover</code>。</td></tr>
       <tr><td><code>resultCount</code></td><td><code>number | string</code></td><td>-</td><td>匹配数量。数字会按结果的单复数格式化。</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>md</code></td><td>输入框和标签的尺寸。</td></tr>
       <tr><td><code>components</code></td><td><code>PowerSearchComponents</code></td><td>-</td><td>按值的类型替换标签或编辑器。</td></tr>
@@ -66,4 +67,4 @@ footer: false
 
 `createPowerSearchConfig` 接受字符串、数字、布尔、日期、枚举、枚举列表和字符串列表。字符串有包含、开头、结尾和等于。数字有大小比较。日期有早于、晚于和介于。布尔值不需要再填值。
 
-手写配置时还可以使用时间、相对日期、实体列表、自定义编辑器和嵌套条件。自定义编辑器要同时提供怎么把值读成文字。
+手写配置时还可以使用时间、相对日期、实体列表、自定义编辑器和嵌套条件。相对日期从一组固定选项里挑：1、3、7、14、30 天，1、2、4 周，1、3、6、12 个月，前后两个方向都有，值写成 `3d_ago`、`2w_from_now` 这样；把 `isPastAllowed` 或 `isFutureAllowed` 设成 false 就去掉对应方向。自定义编辑器要同时提供怎么把值读成文字。

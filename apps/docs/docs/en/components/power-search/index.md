@@ -24,6 +24,8 @@ The editor follows the width of the search field, from about 400 to 720, and sta
 
 Tokens can collapse to one line when the field loses focus. The inline mode expands in place. The layer mode floats over the field and leaves the content below where it is. A numeric result count is read with plural wording. A string is shown as given. Changes are announced politely, and the first paint is silent.
 
+On a compact touch screen the field opens a bottom sheet by default (`presentation="adaptive"`). The field becomes a trigger that shows the tokens, and a long placeholder ends in an ellipsis. With no filters the sheet opens straight on Add filter; otherwise it opens on the Filters list. Picking a field opens the value step: several operators come first as a radio group, enum choices and relative dates are radio or checkbox rows, a date range is an inline range calendar, and list values use a bottom-sheet Tokenizer named after the field. Every change only edits a draft. Done applies the changes in order, with one `change` per step; if the field turned read-only or disabled meanwhile, Done reports nothing. Swiping the sheet down, tapping the scrim or pressing Escape after the draft changed asks before discarding, and Clear all asks before clearing and keeps read-only filters. Pass `presentation="popover"` to keep the inline field on every device.
+
 Pass a disabled reason together with the disabled state. The input stays focusable, and the reason appears on hover and keyboard focus. Do not wrap the field in another tooltip. A natively disabled control swallows the hover.
 
 ```vue
@@ -54,6 +56,7 @@ const matched = computed(() => applyFilters(filters.value, people))
 | --- | --- |
 | <Badge variant="success">Do</Badge> | Group a long field list, and add aliases for the fields people actually type. |
 | <Badge variant="success">Do</Badge> | Point content search at one string field instead of letting every field consume free text. |
+| <Badge variant="success">Do</Badge> | Pin `presentation="popover"` when the field already sits in a popover or a bottom sheet. |
 | <Badge variant="error">Don’t</Badge> | Fold Power Search into a table column filter. Column filters stay substring and enum matches. |
 | <Badge variant="error">Don’t</Badge> | Save a nested filter while a child is unfinished. An unfinished child is not a filter yet. |
 

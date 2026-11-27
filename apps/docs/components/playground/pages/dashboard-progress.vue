@@ -257,13 +257,16 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
             />
             <template v-else>
               <VStack :gap="3">
-                <PlaygroundGanttChart
-                  :items="ganttItems"
-                  :domain-max="TIMELINE_DAYS"
-                  :today="PROJECT_DAY"
-                  :ticks="TIMELINE_TICKS"
-                  is-recharts-layout
-                />
+                <!-- 图表在任何阅读方向下都从左到右：时间向右走，行标签留在条形旁边。 -->
+                <div dir="ltr">
+                  <PlaygroundGanttChart
+                    :items="ganttItems"
+                    :domain-max="TIMELINE_DAYS"
+                    :today="PROJECT_DAY"
+                    :ticks="TIMELINE_TICKS"
+                    is-recharts-layout
+                  />
+                </div>
                 <HStack :gap="4" align="center" wrap="wrap">
                   <HStack v-for="status in RAG_ORDER" :key="status" :gap="2" align="center">
                     <Icon name="stop" size="xsm" color="inherit" :style="{ color: RAG_FILL[status] }" />
@@ -309,7 +312,7 @@ const WORKSTREAM_COLUMNS: TableColumn<Workstream>[] = [
                 </Text>
               </VStack>
               <VStack :gap="3">
-              <PlaygroundResponsive :height="208">
+              <PlaygroundResponsive :height="208" dir="ltr">
                 <PlaygroundLineChart
                   :data="BURNDOWN"
                   x-key="week"

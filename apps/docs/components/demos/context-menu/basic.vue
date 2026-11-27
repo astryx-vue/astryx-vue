@@ -14,7 +14,7 @@ const items: ContextMenuOption[] = [
 <template>
   <ContextMenu presentation="adaptive" :items="items">
     <div
-      style="padding: 48px; border-width: 2px; border-style: dashed; border-color: #d1d5db; border-radius: 8px; text-align: center; color: #6b7280; user-select: none;"
+      style="padding: 48px; border-width: 2px; border-style: dashed; border-color: var(--astryx-color-border); border-radius: 8px; text-align: center; color: var(--astryx-color-text-secondary); user-select: none;"
     >
       Long-press or right-click this area
     </div>

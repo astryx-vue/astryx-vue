@@ -1,5 +1,33 @@
 # @astryx-vue/cli
 
+## 0.7.2
+
+### Patch Changes
+
+- [#618](https://github.com/astryx-vue/astryx-vue/pull/618) [`7b1e341`](https://github.com/astryx-vue/astryx-vue/commit/7b1e3418e31dcafd7574ab8f895877ce49fe8ca3) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - PowerSearch 新增 `presentation`（`'popover' | 'bottom-sheet' | 'adaptive'`，默认 `'adaptive'`）。紧凑触屏上字段默认变成触发器，点开底部弹层编辑条件：「筛选条件」列表里看、改、删，「添加筛选条件」里挑字段，值那一步用单选组选运算符，枚举和相对日期列成单选或复选的行，日期区间是行内的范围日历，多值列表用底部弹层的 Tokenizer。所有改动先记在草稿里，按「完成」才按顺序提交；草稿改过时关闭会先确认，字段在这期间变成只读或禁用时「完成」什么都不报。占位文字太长时以省略号收尾，弹层内容从抓手下面开始。想在所有设备上保留行内字段就传 `presentation="popover"`；底部弹层里 `menuWidth` 和 `overflow` 不生效，开发期会提示一次。
+  
+  BottomSheet 和 BottomSheetSwitcher 像 Dialog 一样，在自己的 `<dialog>` 里留出浮层挂载点：弹层内容里按钮的提示等浮层挂到这里，不再插进内容区里由 Vue 管着的元素，列表换成空状态时也不会因为插入位置丢失而报错。
+
+## 0.7.1
+
+### Patch Changes
+
+- [#610](https://github.com/astryx-vue/astryx-vue/pull/610) [`ab1fac0`](https://github.com/astryx-vue/astryx-vue/commit/ab1fac025296f8cf7718c4fa9fd16b6bd30b1453) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - PowerSearch 的相对日期条件改成从一组固定选项里挑（1、3、7、14、30 天，1、2、4 周，1、3、6、12 个月，前后两个方向），选中就保存，不再给一个自由输入框；`isPastAllowed`、`isFutureAllowed` 设成 false 会去掉对应方向。新增 `powerSearchSheet` 文案命名空间（中英文），包含触屏底部弹层流程和相对日期选项的文字，原版对应的 `@astryx.powersearch.sheet.*` 翻译也接上了。
+
+## 0.7.0
+
+### Minor Changes
+
+- [#617](https://github.com/astryx-vue/astryx-vue/pull/617) [`7efda4e`](https://github.com/astryx-vue/astryx-vue/commit/7efda4e0c265e33a46ec1aec6974119210136bf7) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 查不到名字或命令写错时，文本输出会在报错下面给出 Did you mean / Run 建议；component 的 props 改成一行一个、Do 与 Don't 各标一次、表格分隔线缩短；新增 `init --remove-agents`，`upgrade` 会给出把同版发布的包一起升级的命令。
+
+## 0.6.11
+
+### Patch Changes
+
+- [#616](https://github.com/astryx-vue/astryx-vue/pull/616) [`6348961`](https://github.com/astryx-vue/astryx-vue/commit/63489612a962d36776dc4bbf9904bf2b63d0f8a7) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - BottomSheet 打开时第一个可用的 `data-autofocus` 字段在所有浏览器里都拿到焦点（盖过原生对话框落在面板或第一个控件上的焦点），关闭后归还焦点不再滚动页面；打开着就被移除的抽屉会把被困住的焦点送回打开者，BottomSheetSwitcher 关闭或被移除时也把焦点还给打开者（无遮罩的流程同样）；服务端渲染就开着的抽屉和流程在水合前不带 `aria-modal`，水合后直接以静止状态打开、不播进场动画（上游 [#10156](https://github.com/astryx-vue/astryx-vue/issues/10156) [#12487](https://github.com/astryx-vue/astryx-vue/issues/12487) [#10022](https://github.com/astryx-vue/astryx-vue/issues/10022) [#10061](https://github.com/astryx-vue/astryx-vue/issues/10061) [#11982](https://github.com/astryx-vue/astryx-vue/issues/11982) [#9360](https://github.com/astryx-vue/astryx-vue/issues/9360)）
+
+- [#615](https://github.com/astryx-vue/astryx-vue/pull/615) [`51e74e9`](https://github.com/astryx-vue/astryx-vue/commit/51e74e9220406e2e36ff40eb3e13694abbbb9638) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - BottomSheet 的内容不管内边距多少，静止时都从抓手条下方开始（`padding` 为 0 也一样，选择面板里的日期、时间面板同步去掉自己补的那一段）；内容区在 WebKit 里也保留底部内边距，抓手条在 iOS 上换挡位时不再消失，退场动画被引擎中途改道时不再提前结束，面板里再开的底部弹层或对话框拖动时不会连带拖动外面那一层（上游 [#8558](https://github.com/astryx-vue/astryx-vue/issues/8558) [#8557](https://github.com/astryx-vue/astryx-vue/issues/8557) [#9760](https://github.com/astryx-vue/astryx-vue/issues/9760) [#8349](https://github.com/astryx-vue/astryx-vue/issues/8349) [#8820](https://github.com/astryx-vue/astryx-vue/issues/8820)）
+
 ## 0.6.10
 
 ### Patch Changes

@@ -33,6 +33,24 @@ export function compoundNameScore(query: string, names: readonly string[]): numb
   return best
 }
 
+/**
+ * How many words a name carries beyond the query's, when it holds every word
+ * of the query (`TimeInput` holds `time` with one extra word). Null when no
+ * name holds them all, so `Timestamp` does not hold `time`.
+ */
+export function extraWordCount(query: string, names: readonly string[]): number | null {
+  const queryWords = nameWords(query)
+  if (queryWords.length === 0)
+    return null
+  let fewest: number | null = null
+  for (const name of names) {
+    const words = nameWords(name)
+    if (queryWords.every(word => words.includes(word)))
+      fewest = Math.min(fewest ?? Infinity, words.length - queryWords.length)
+  }
+  return fewest
+}
+
 /** The words of a name or query, lowercased: PascalCase, spaces, and dashes all split. */
 export function splitWords(value: string): string[] {
   return value

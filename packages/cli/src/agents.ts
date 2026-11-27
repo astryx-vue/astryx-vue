@@ -75,6 +75,20 @@ export function applyManagedBlock(existing: string | null, inner: string): { con
   return { content: ensureTrailingNewline(`${existing}${separator}${block}`), action: 'appended' }
 }
 
+/**
+ * The file's text without the managed block, or null when it holds none. The
+ * blank line that set the block apart goes with it.
+ */
+export function removeManagedBlock(existing: string): string | null {
+  const start = existing.indexOf(MANAGED_BLOCK_START)
+  const end = existing.indexOf(MANAGED_BLOCK_END)
+  if (start === -1 || end < start)
+    return null
+  const before = existing.slice(0, start).replace(/\n+$/, '')
+  const after = existing.slice(end + MANAGED_BLOCK_END.length).replace(/^\n+/, '')
+  return [before, after].filter(Boolean).join('\n\n').replace(/\s*$/, '\n').replace(/^\n$/, '')
+}
+
 function ensureTrailingNewline(value: string): string {
   return value.endsWith('\n') ? value : `${value}\n`
 }
@@ -140,7 +154,7 @@ function renderEnglish(catalog: Catalog, conventions: string[]): string {
     for (const paragraph of conventions)
       lines.push(paragraph, '')
   }
-  lines.push(`Refresh this block with \`${BINARY} init --features agents\`. The command replaces only the managed block.`)
+  lines.push(`Refresh this block with \`${BINARY} init --features agents\`. The command replaces only the managed block. To remove it, run \`${BINARY} init --remove-agents\`; it takes the block out of the agent files at the project root, and any other copy between the markers is yours to delete.`)
   return lines.join('\n').replace(/\n{3,}/g, '\n\n').trim()
 }
 
@@ -180,6 +194,6 @@ function renderChinese(catalog: Catalog, conventions: string[]): string {
     for (const paragraph of conventions)
       lines.push(paragraph, '')
   }
-  lines.push(`用 \`${BINARY} init --features agents\` 刷新这段。命令只替换受管理的区块。`)
+  lines.push(`用 \`${BINARY} init --features agents\` 刷新这段。命令只替换受管理的区块。要移除它，运行 \`${BINARY} init --remove-agents\`：它会把项目根目录里各个 agent 文件中的这段拿掉；别处如果还有一份，请自己删掉两个标记之间的内容。`)
   return lines.join('\n').replace(/\n{3,}/g, '\n\n').trim()
 }

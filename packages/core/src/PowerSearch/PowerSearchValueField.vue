@@ -4,11 +4,13 @@ import type { PowerSearchMessages } from '../locale/messages/power-search.js'
 import type { NumberInputCommitDecision } from '../NumberInput/numberInputCommit.js'
 import type { DateTimeRange, FilterValue, OperatorValue, PowerSearchEntity } from './types.js'
 import { computed, ref } from 'vue'
+import Calendar from '../Calendar/Calendar.vue'
 import { createStaticSource } from '../composables/useAsyncSource.js'
 import DateInput from '../DateInput/DateInput.vue'
 import DateRangeInput from '../DateRangeInput/DateRangeInput.vue'
 import DateTimeInput from '../DateTimeInput/DateTimeInput.vue'
-import { useAstryxLocale } from '../locale/context.js'
+import { useAstryxLocale, useComponentMessages } from '../locale/context.js'
+import { powerSearchSheetMessages } from '../locale/messages/power-search-sheet.js'
 import MultiSelector from '../MultiSelector/MultiSelector.vue'
 import NumberInput from '../NumberInput/NumberInput.vue'
 import { resolveNumberInputCommit } from '../NumberInput/numberInputCommit.js'
@@ -18,8 +20,13 @@ import TimeInput from '../TimeInput/TimeInput.vue'
 import Tokenizer from '../Tokenizer/Tokenizer.vue'
 import Typeahead from '../Typeahead/Typeahead.vue'
 import { dateTimeLocalToUnix, rangePartToIso, unixToDateTimeLocal } from './dates.js'
-import { absoluteRange, isDateOnlyOperator, pickerDateToUnix, resolveDateZone, unixToPickerDate } from './dateZone.js'
+import { absoluteRange, isDateOnlyOperator, pickerDateToUnix, pickerRangeToRange, rangeToPickerRange, resolveDateZone, unixToPickerDate } from './dateZone.js'
+import { buildRelativeDateOptions } from './relativeDates.js'
 
+/**
+ * 一个条件的值输入。`presentation="bottom-sheet"` 是触屏底部弹层的值那一步：里面的 Tokenizer 也用
+ * 底部弹层呈现、以字段标签为名，日期区间换成行内的范围日历，值被清空时发 `unstage`（草稿回到没有值）。
+ */
 defineOptions({ name: 'AstryxPowerSearchValueField' })
 
 const props = defineProps<{
@@ -29,14 +36,30 @@ const props = defineProps<{
   disabled?: boolean
   timeZone?: string
   maxMenuItems?: number
+  presentation?: 'popover' | 'bottom-sheet'
+  /** 底部弹层呈现里给 Tokenizer 和日历用的名字。 */
+  fieldLabel?: string
 }>()
 
 const emit = defineEmits<{
   change: [value: FilterValue, shouldSave?: boolean]
+  unstage: []
 }>()
+
+const isSheet = computed(() => props.presentation === 'bottom-sheet')
+const tokenizerPresentation = computed(() => isSheet.value ? 'bottom-sheet' : 'popover')
+
+/** 底部弹层呈现里清空了值就退回「没有值」，保存不可点；浮层编辑器照常记下空值。 */
+function changeOrUnstage(value: FilterValue, isEmpty: boolean, shouldSave?: boolean): void {
+  if (isEmpty && isSheet.value)
+    emit('unstage')
+  else
+    emit('change', value, shouldSave)
+}
 
 const text = computed(() => props.messages.value)
 const locale = useAstryxLocale()
+const sheetMessages = useComponentMessages({ powerSearchSheet: powerSearchSheetMessages })
 const numberDecision = ref<NumberInputCommitDecision | null>(null)
 
 function rememberNumberDraft(event: Event): void {
@@ -95,10 +118,8 @@ const enumOptions = computed(() => {
 })
 
 const relativeOptions = computed(() => props.operatorValue.type === 'date_relative'
-  ? []
-  : props.operatorValue.type === 'date_range'
-    ? (props.operatorValue.relativeDatePresets ?? []).map(preset => ({ value: preset.value, label: preset.label }))
-    : [])
+  ? buildRelativeDateOptions(props.operatorValue, sheetMessages.value.powerSearchSheet)
+  : [])
 
 const dateOnly = computed(() => isDateOnlyOperator(props.operatorValue))
 /** 日历日按 `timeZone` 里的那一天读写；没给时区就是 UTC 的那一天。 */
@@ -110,6 +131,10 @@ const absoluteDate = computed(() => {
 })
 const absoluteLocal = computed(() => props.filterValue?.type === 'date_absolute'
   ? unixToDateTimeLocal(props.filterValue.unixSeconds, props.timeZone)
+  : null)
+
+const calendarRange = computed(() => props.filterValue?.type === 'date_range'
+  ? rangeToPickerRange(props.filterValue.value, dayZone.value)
   : null)
 
 const rangeModel = computed(() => {
@@ -137,7 +162,7 @@ const stringCreatable = computed(() => {
 })
 
 function commitStringList(items: readonly SearchableItem[]): void {
-  emit('change', { type: 'string_list', value: items.map(item => item.label) })
+  changeOrUnstage({ type: 'string_list', value: items.map(item => item.label) }, items.length === 0)
 }
 
 function commitEntities(items: readonly SearchableItem[]): void {
@@ -148,7 +173,7 @@ function commitEntities(items: readonly SearchableItem[]): void {
       ? String((item.auxiliaryData as { photo?: string }).photo ?? '')
       : undefined,
   }))
-  emit('change', { type: 'entity_list', value: entities })
+  changeOrUnstage({ type: 'entity_list', value: entities }, entities.length === 0)
 }
 
 function onPaste(event: ClipboardEvent): void {
@@ -195,21 +220,44 @@ function onRange(value: unknown): void {
   emit('change', { type: 'date_range', value: absoluteRange(start, end, dayZone.value) })
 }
 
+function onCalendarRange(value: { start: Date | null, end: Date | null }): void {
+  if (value.start != null && value.end != null)
+    emit('change', { type: 'date_range', value: pickerRangeToRange(value.start, value.end, dayZone.value) })
+  else if (isSheet.value)
+    emit('unstage')
+}
+
+function onString(value: unknown): void {
+  const next = String(value ?? '')
+  changeOrUnstage({ type: 'string', value: next }, next.trim() === '')
+}
+
+function onNumber(value: number | null): void {
+  if (value != null)
+    emit('change', { type: props.operatorValue.type === 'integer' ? 'integer' : 'float', value })
+  else if (isSheet.value)
+    emit('unstage')
+}
+
 function onTime(value: unknown): void {
   if (typeof value === 'string' && value !== '')
     emit('change', { type: 'time', value })
+  else if (isSheet.value)
+    emit('unstage')
 }
 
 function onAbsoluteDate(value: unknown): void {
-  if (!(value instanceof Date))
-    return
-  emit('change', { type: 'date_absolute', unixSeconds: pickerDateToUnix(value, dayZone.value) })
+  if (value instanceof Date)
+    emit('change', { type: 'date_absolute', unixSeconds: pickerDateToUnix(value, dayZone.value) })
+  else if (isSheet.value)
+    emit('unstage')
 }
 
 function onAbsoluteDateTime(value: unknown): void {
-  if (typeof value !== 'string' || value === '')
-    return
-  emit('change', { type: 'date_absolute', unixSeconds: dateTimeLocalToUnix(value, props.timeZone) })
+  if (typeof value === 'string' && value !== '')
+    emit('change', { type: 'date_absolute', unixSeconds: dateTimeLocalToUnix(value, props.timeZone) })
+  else if (isSheet.value)
+    emit('unstage')
 }
 
 function onCustomValue(value: unknown): void {
@@ -222,7 +270,7 @@ function applyPreset(range: DateTimeRange): void {
 </script>
 
 <template>
-  <div class="astryx-power-search-value" @paste="onPaste">
+  <div class="astryx-power-search-value" :class="{ 'is-sheet': isSheet }" @paste="onPaste">
     <Typeahead
       v-if="operatorValue.type === 'string' && operatorValue.searchSource"
       :label="text.value"
@@ -232,7 +280,7 @@ function applyPreset(range: DateTimeRange): void {
       :placeholder="text.searchPlaceholder"
       :disabled="disabled"
       :max-menu-items="maxMenuItems"
-      @update:model-value="item => emit('change', { type: 'string', value: item?.label ?? '' }, Boolean(item))"
+      @update:model-value="item => changeOrUnstage({ type: 'string', value: item?.label ?? '' }, item == null, Boolean(item))"
     />
     <TextInput
       v-else-if="operatorValue.type === 'string'"
@@ -241,12 +289,12 @@ function applyPreset(range: DateTimeRange): void {
       :model-value="stringValue"
       :placeholder="text.enterValuePlaceholder"
       :disabled="disabled"
-      @update:model-value="value => emit('change', { type: 'string', value: String(value ?? '') })"
+      @update:model-value="onString"
     />
     <Tokenizer
       v-else-if="operatorValue.type === 'string_list'"
-      presentation="popover"
-      :label="text.values"
+      :presentation="tokenizerPresentation"
+      :label="isSheet && fieldLabel ? fieldLabel : text.values"
       label-hidden
       :search-source="stringSource"
       :model-value="stringItems"
@@ -274,7 +322,7 @@ function applyPreset(range: DateTimeRange): void {
         :max="operatorValue.maxValue"
         :step="operatorValue.type === 'integer' ? 1 : undefined"
         :units="operatorValue.units"
-        @update:model-value="value => value != null && emit('change', { type: operatorValue.type === 'integer' ? 'integer' : 'float', value })"
+        @update:model-value="onNumber"
       />
     </div>
     <TimeInput
@@ -306,26 +354,16 @@ function applyPreset(range: DateTimeRange): void {
       entry-error-behavior="complete"
       @update:model-value="onAbsoluteDateTime"
     />
-    <div v-else-if="operatorValue.type === 'date_relative'" class="astryx-power-search-value__stack">
-      <Selector
-        v-if="relativeOptions.length > 0"
-        :label="text.relativeDate"
-        is-label-hidden
-        :options="relativeOptions"
-        :model-value="relativeValue"
-        :placeholder="text.selectPlaceholder"
-        :disabled="disabled"
-        @update:model-value="value => emit('change', { type: 'date_relative', value: String(value ?? '') }, true)"
-      />
-      <TextInput
-        :label="text.relativeDate"
-        is-label-hidden
-        :model-value="relativeValue"
-        :placeholder="text.enterValuePlaceholder"
-        :disabled="disabled"
-        @update:model-value="value => emit('change', { type: 'date_relative', value: String(value ?? '') })"
-      />
-    </div>
+    <Selector
+      v-else-if="operatorValue.type === 'date_relative'"
+      :label="text.relativeDate"
+      is-label-hidden
+      :options="relativeOptions"
+      :model-value="relativeValue || null"
+      :placeholder="text.selectPlaceholder"
+      :disabled="disabled"
+      @update:model-value="value => emit('change', { type: 'date_relative', value: String(value ?? '') }, true)"
+    />
     <div v-else-if="operatorValue.type === 'date_range'" class="astryx-power-search-value__stack">
       <div v-if="operatorValue.intervalDatePresets?.length" class="astryx-power-search-presets" role="group" :aria-label="text.date">
         <button
@@ -339,7 +377,16 @@ function applyPreset(range: DateTimeRange): void {
           {{ preset.label }}
         </button>
       </div>
+      <Calendar
+        v-if="isSheet"
+        mode="range"
+        :label="fieldLabel ?? text.date"
+        :range="calendarRange"
+        :disabled="disabled"
+        @update:range="onCalendarRange"
+      />
       <DateRangeInput
+        v-else
         :label="text.date"
         is-label-hidden
         :model-value="rangeModel"
@@ -369,8 +416,8 @@ function applyPreset(range: DateTimeRange): void {
     />
     <Tokenizer
       v-else-if="operatorValue.type === 'entity_list'"
-      presentation="popover"
-      :label="text.entities"
+      :presentation="tokenizerPresentation"
+      :label="isSheet && fieldLabel ? fieldLabel : text.entities"
       label-hidden
       :search-source="entitySource"
       :model-value="entityItems"

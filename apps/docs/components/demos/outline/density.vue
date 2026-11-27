@@ -19,13 +19,13 @@ const items: OutlineItem[] = [
       <Text type="supporting" color="secondary" weight="medium">
         Default
       </Text>
-      <Outline :items="items" density="default" active-id="density-configuration" />
+      <Outline label="Table of contents, default density" :items="items" density="default" active-id="density-configuration" />
     </VStack>
     <VStack :gap="3" :width="200">
       <Text type="supporting" color="secondary" weight="medium">
         Compact
       </Text>
-      <Outline :items="items" density="compact" active-id="density-configuration" />
+      <Outline label="Table of contents, compact density" :items="items" density="compact" active-id="density-configuration" />
     </VStack>
   </HStack>
 </template>

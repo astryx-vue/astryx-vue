@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useChatDictationVoiceInput } from '../../../../components/demos/use-chat-dictation'
 </script>
 
 ## Usage
@@ -44,3 +45,12 @@ const dictation = useChatDictation({
 | <Badge variant="success">Do</Badge> | Disable the control when `isSupported` is false, and say that this browser cannot take voice input. |
 | <Badge variant="success">Do</Badge> | Handle `onError`. It is the only signal that microphone permission was refused. |
 | <Badge variant="error">Don't</Badge> | Call the browser `SpeechRecognition` API beside this hook. Use `useSpeechRecognition` only when the composer behavior is not wanted. |
+
+## Examples
+
+<DemoExample
+  :demo="useChatDictationVoiceInput"
+  description="A composer filled by useChatDictation. Partial words show in the composer as ghost text, and each finished phrase is inserted there once. Start and Stop toggle listening, and Start is disabled in a browser with no speech recognition."
+  locale="en"
+  title="useChatDictation — Voice input"
+/>

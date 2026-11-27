@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useSpeechRecognitionTranscript } from '../../../../components/demos/use-speech-recognition'
 </script>
 
 ## 使用方法
@@ -44,3 +45,12 @@ const speech = useSpeechRecognition({
 | <Badge variant="success">建议</Badge> | 只在 `isSupported` 为真时提供控件；或者让控件保留但禁用，并说明这个浏览器不能语音输入。 |
 | <Badge variant="success">建议</Badge> | 处理 `onError`。麦克风权限被拒绝，只有它能告诉你。 |
 | <Badge variant="error">避免</Badge> | 在这个 hook 旁边再去调用浏览器的 `SpeechRecognition`。想让文字进 `ChatComposerInput` 就用 `useChatDictation`。 |
+
+## 示例
+
+<DemoExample
+  :demo="useSpeechRecognitionTranscript"
+  description="一个不带界面的 useSpeechRecognition 控件。它显示浏览器能不能收听、还在识别中的词，以及 onResult 给出的每一句完整的话。"
+  locale="zh"
+  title="useSpeechRecognition —— 转写文本"
+/>

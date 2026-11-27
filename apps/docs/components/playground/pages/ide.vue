@@ -24,6 +24,7 @@ import {
   TreeList,
   useMediaQuery,
   useResizable,
+  useToast,
   VisuallyHidden,
   VStack,
 } from '@astryx-vue/core'
@@ -132,6 +133,7 @@ const bottomPanel = useResizable({
 })
 
 const isMobile = useMediaQuery('(max-width: 768px)')
+const showToast = useToast()
 
 function buildFileTree(onFileClick: (name: string) => void): TreeListItemData[] {
   const file = (id: string): TreeListItemData => ({
@@ -318,9 +320,9 @@ const fileTree = computed(() => buildFileTree((name) => {
                         </MetadataListItem>
                       </MetadataList>
                       <VStack class="property-actions" :gap="2">
-                        <Button label="Format Document" size="sm" variant="secondary" />
-                        <Button label="Go to Definition" size="sm" variant="secondary" />
-                        <Button label="Find References" size="sm" variant="secondary" />
+                        <Button label="Format Document" size="sm" variant="secondary" @click="showToast({ body: `Demo: ${activeFile} would be formatted here`, uniqueID: 'format' })" />
+                        <Button label="Go to Definition" size="sm" variant="secondary" @click="showToast({ body: 'Demo: the definition would open here', uniqueID: 'go-to-definition' })" />
+                        <Button label="Find References" size="sm" variant="secondary" @click="showToast({ body: 'Demo: references would be listed here', uniqueID: 'find-references' })" />
                       </VStack>
                     </VStack>
                   </template>

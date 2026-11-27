@@ -1423,7 +1423,7 @@ const SearchIcon = defineComponent({
                               size="sm"
                               @click="clearShortcutOverride(def.id)"
                             >
-                              <Icon :name="ICONS.arrowUturnLeft" size="sm" />
+                              <Icon class="mirror-rtl" :name="ICONS.arrowUturnLeft" size="sm" />
                             </IconButton>
                             <TextInput
                               v-if="recordingShortcut === def.id"
@@ -1469,7 +1469,7 @@ const SearchIcon = defineComponent({
                         <HStack>
                           <Button label="Reset all to defaults" variant="ghost" size="sm" @click="shortcutOverrides = {}">
                             <template #icon>
-                              <Icon :name="ICONS.arrowUturnLeft" size="sm" />
+                              <Icon class="mirror-rtl" :name="ICONS.arrowUturnLeft" size="sm" />
                             </template>
                           </Button>
                         </HStack>
@@ -1910,6 +1910,10 @@ const SearchIcon = defineComponent({
 </template>
 
 <style>
+[dir='rtl'] .mirror-rtl {
+  transform: scaleX(-1);
+}
+
 /* 待 core 修复后去掉：原版 Dialog 的最大宽度是 min(100%, 100dvw - 2 × 16px)，两侧各留 16px。 */
 .settings-dialog-frame {
   max-width: min(100%, calc(100dvw - 2rem));

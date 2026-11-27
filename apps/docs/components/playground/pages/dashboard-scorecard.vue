@@ -197,9 +197,17 @@ function trendDelta(trend: TrendSeries): number {
 }
 
 /** 图表画布高度 200，左侧留给 y 轴刻度，底部留给 x 轴标签。 */
-const CHART = { h: 200, padLeft: 40, padRight: 8, padTop: 5, padBottom: 30 }
+const CHART = { h: 200, padLeft: 52, padRight: 8, padTop: 5, padBottom: 30 }
 const CHART_INNER_H = CHART.h - CHART.padTop - CHART.padBottom
 const X_TICKS = [0, 3, 7, 11]
+
+// 以千、百万为单位存的序列先换算，纵轴刻度才和旁边的标题、数值一致；
+// 压缩后的短标签（「6M」「350K」）放得进固定宽度的刻度栏。
+const UNIT_SCALE: Record<string, number> = { k: 1_000, M: 1_000_000 }
+const compactTick = new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 })
+function formatYTick(value: number, unit: string): string {
+  return compactTick.format(value * (UNIT_SCALE[unit] ?? 1))
+}
 
 /** 四张卡片宽度相同，只量第一张；viewBox 和像素一比一，图撑满卡片也不会被拉伸。 */
 const chartWidth = ref(360)
@@ -263,17 +271,20 @@ function trendGeometry(trend: TrendSeries) {
             <Heading :level="1">
               Weekly Business Review
             </Heading>
-            <HStack :gap="2" align="center">
+            <!-- 窄屏时生成日期整体换到下一行，不挤成细条。 -->
+            <HStack :gap="2" align="center" wrap="wrap">
               <Text type="body" color="secondary">
                 {{ subtitle }}
               </Text>
-              <Text type="body" color="secondary">
-                · Generated
-              </Text>
-              <Timestamp value="2026-06-30T08:00:00Z" format="date" type="body" color="secondary" />
+              <HStack :gap="2" align="center">
+                <Text type="body" color="secondary">
+                  · Generated
+                </Text>
+                <Timestamp value="2026-06-30T08:00:00Z" format="date" type="body" color="secondary" />
+              </HStack>
             </HStack>
           </VStack>
-          <HStack :gap="3" align="center">
+          <HStack :gap="3" align="center" wrap="wrap">
             <SegmentedControl v-model="period" label="Comparison period">
               <SegmentedControlItem label="WoW" value="WoW" />
               <SegmentedControlItem label="MoM" value="MoM" />
@@ -415,10 +426,12 @@ function trendGeometry(trend: TrendSeries) {
               Current vs. prior period · trailing 12 weeks
             </Text>
           </HStack>
-          <Grid :columns="{ minWidth: 330, repeat: 'fit' }" :gap="3">
+          <!-- max 取图表数量：宽屏布局不变，窄手机上单张图可以缩小而不是溢出。 -->
+          <Grid :columns="{ minWidth: 330, repeat: 'fit', max: TRENDS.length }" :gap="3">
             <Card v-for="(trend, index) in TRENDS" :key="trend.key" :padding="5">
               <VStack :gap="6">
-                <HStack h-align="between" align="center">
+                <!-- 窄卡片上变化量换到标题下面，不把两边挤成细条。 -->
+                <HStack h-align="between" align="center" :gap="2" wrap="wrap">
                   <HStack :gap="2">
                     <Heading :level="3">
                       {{ trend.title }}
@@ -446,7 +459,7 @@ function trendGeometry(trend: TrendSeries) {
                   </defs>
                   <g v-for="tick in trendGeometry(trend).yTicks" :key="tick.value">
                     <line :x1="CHART.padLeft" :x2="chartWidth - CHART.padRight" :y1="tick.y" :y2="tick.y" class="chart-grid" />
-                    <text :x="CHART.padLeft - 8" :y="tick.y" text-anchor="end" dominant-baseline="middle" class="chart-tick">{{ tick.value }}</text>
+                    <text :x="CHART.padLeft - 8" :y="tick.y" text-anchor="end" dominant-baseline="middle" class="chart-tick">{{ formatYTick(tick.value, trend.unit) }}</text>
                   </g>
                   <text
                     v-for="(tick, tickIndex) in trendGeometry(trend).xTicks"
@@ -551,7 +564,7 @@ function trendGeometry(trend: TrendSeries) {
   stroke-width: 1;
 }
 .chart-tick {
-  fill: var(--astryx-color-text-secondary, #4E606F);
+  fill: var(--astryx-color-text-secondary, #445564);
   font-size: 12px;
 }
 </style>

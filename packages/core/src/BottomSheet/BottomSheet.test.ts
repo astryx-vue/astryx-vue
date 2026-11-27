@@ -532,7 +532,7 @@ describe('bottom sheet', () => {
 
   it('does not drag the sheet while a nested scroller can still move', async () => {
     const wrapper = renderSheet({ height: 'tall' }, {
-      default: () => h('div', { class: 'nested' }, [h('div', { style: 'height: 200px' }, 'tall')]),
+      default: () => h('div', { class: 'nested', style: 'overflow-y: auto' }, [h('div', { style: 'height: 200px' }, 'tall')]),
     })
     await wrapper.setProps({ isOpen: true })
     await flushPromises()

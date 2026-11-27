@@ -7,6 +7,7 @@ import { computed, getCurrentInstance, nextTick, onBeforeUnmount, onMounted, pro
 import { useFocusTrap } from '../composables/useFocusTrap.js'
 import { useScrollLock } from '../composables/useScrollLock.js'
 import { isLayerFocusStranded, restoreLayerFocus, trackLayerFocus } from '../layer/layerFocusReturn.js'
+import { provideNestedLayerMountTarget } from '../layer/mount.js'
 import { isImeKeyEvent } from '../utils/ime.js'
 import { focusSheetOnOpen } from './focusSheetPanel.js'
 import { bottomSheetSwitcherKey } from './switcher.js'
@@ -44,6 +45,7 @@ const retainedId = ref<string | null>(null)
 const alignmentOffset = ref(0)
 const sheets = shallowRef(new Map<string, BottomSheetRegistration>())
 const dialog = useTemplateRef<HTMLDialogElement>('dialog')
+provideNestedLayerMountTarget(useTemplateRef<HTMLElement>('layerHost'))
 const isScrollLocked = ref(false)
 // 服务端渲染时就有一步开着的流程，水合后直接以静止状态呈现；换过一次步骤后恢复动效。
 const isSettled = ref(getCurrentInstance()?.vnode.el != null && activeSheet.value != null)
@@ -248,5 +250,6 @@ onBeforeUnmount(() => {
     @keydown="onKeydown"
   >
     <slot />
+    <div ref="layerHost" class="astryx-bottom-sheet__layer-host" />
   </dialog>
 </template>

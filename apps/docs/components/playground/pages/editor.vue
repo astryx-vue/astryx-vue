@@ -23,6 +23,7 @@ import {
   Spinner,
   Tab,
   TabList,
+  StackItem,
   Table,
   Text,
   TextArea,
@@ -599,7 +600,9 @@ function preview() {
                     {{ block.props.description }}
                   </Text>
                 </VStack>
-                <Button label="View All" variant="secondary" size="sm" />
+                <StackItem>
+                  <Button label="View All" variant="secondary" size="sm" />
+                </StackItem>
               </HStack>
               <Table
                 :data="itemsOf(block)"

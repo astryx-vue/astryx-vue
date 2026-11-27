@@ -182,7 +182,7 @@ const displaySections = computed(() =>
               <Heading :level="2">
                 {{ section.category }}
               </Heading>
-              <Grid :columns="{ minWidth: 320 }" :gap="4">
+              <Grid :columns="{ minWidth: 320, max: 6 }" :gap="4">
                 <Card v-for="item in section.items" :key="item.id" :padding="0">
                   <div class="thumbnail-wrap">
                     <img class="thumbnail-img" :src="item.imageUrl" :alt="item.name">

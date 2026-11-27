@@ -10,7 +10,7 @@ import { Text } from '@astryx-vue/core/Text'
       <Text color="secondary" type="supporting">
         Default
       </Text>
-      <Breadcrumbs>
+      <Breadcrumbs label="Default breadcrumb">
         <BreadcrumbItem href="/">
           Home
         </BreadcrumbItem>
@@ -26,7 +26,7 @@ import { Text } from '@astryx-vue/core/Text'
       <Text color="secondary" type="supporting">
         Supporting
       </Text>
-      <Breadcrumbs variant="supporting">
+      <Breadcrumbs label="Supporting breadcrumb" variant="supporting">
         <BreadcrumbItem href="/">
           Home
         </BreadcrumbItem>

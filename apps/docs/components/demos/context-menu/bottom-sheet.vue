@@ -12,7 +12,7 @@ const items: ContextMenuOption[] = [
 
 <template>
   <ContextMenu presentation="bottom-sheet" label="Document actions" :items="items">
-    <div style="display: flex; flex-direction: column; gap: 8px; padding: 32px; border: 1px solid #d1d5db; border-radius: 12px;">
+    <div style="display: flex; flex-direction: column; gap: 8px; padding: 32px; border: 1px solid var(--astryx-color-border); border-radius: 12px;">
       <strong>Quarterly plan</strong>
       <span>Long-press on touch or right-click for document actions.</span>
     </div>

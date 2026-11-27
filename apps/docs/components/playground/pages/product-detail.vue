@@ -112,7 +112,7 @@ function buyNow() {
 <template>
   <Layout height="fill" :content-width="1200">
     <LayoutContent role="main" :padding="6">
-      <Grid :columns="{ minWidth: 320, repeat: 'fit' }" :gap="5">
+      <Grid :columns="{ minWidth: 320, max: 2, repeat: 'fit' }" :gap="5">
         <VStack :gap="3">
           <AspectRatio :ratio="4 / 5">
             <img class="hero-image" :src="heroSrc" :alt="PRODUCT.name">

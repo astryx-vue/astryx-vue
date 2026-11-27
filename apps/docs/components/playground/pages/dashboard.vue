@@ -302,8 +302,8 @@ function sparklinePoints(values: number[]): string {
           </VStack>
         </VStack>
 
-        <Grid :columns="{ minWidth: 320, repeat: 'fit' }" :gap="4">
-          <Grid v-for="(start, group) in [0, 2]" :key="group" :columns="{ minWidth: 240, repeat: 'fit' }" :gap="4">
+        <Grid :columns="{ minWidth: 320, max: 2, repeat: 'fit' }" :gap="4">
+          <Grid v-for="(start, group) in [0, 2]" :key="group" :columns="{ minWidth: 240, max: 2, repeat: 'fit' }" :gap="4">
             <Card v-for="(metric, i) in METRICS.slice(start, start + 2)" :key="metric.label">
               <VStack :gap="2">
                 <Heading :level="4" :accessibility-level="3">
@@ -339,7 +339,7 @@ function sparklinePoints(values: number[]): string {
           </Heading>
           <Button label="View more" variant="secondary" @click="showToast({ body: 'Demo: the full demographics breakdown would open here', uniqueID: 'more-demographics' })" />
         </HStack>
-        <Grid :columns="{ minWidth: 320, repeat: 'fit' }" :gap="4">
+        <Grid :columns="{ minWidth: 320, max: 2, repeat: 'fit' }" :gap="4">
           <Card v-for="group in [{ title: 'Region', data: REGION_DATA }, { title: 'Role', data: ROLE_DATA }]" :key="group.title">
             <VStack :gap="4">
               <Heading :level="4" :accessibility-level="3">
@@ -378,7 +378,7 @@ function sparklinePoints(values: number[]): string {
           </Heading>
           <Button label="View more" variant="secondary" @click="showToast({ body: 'Demo: the full engagement report would open here', uniqueID: 'more-engagement' })" />
         </HStack>
-        <Grid :columns="{ minWidth: 320, repeat: 'fit' }" :gap="4">
+        <Grid :columns="{ minWidth: 320, max: 2, repeat: 'fit' }" :gap="4">
           <Card>
             <HStack h-align="between" align="center" :padding-block-end="6">
               <Heading :level="4" :accessibility-level="3">

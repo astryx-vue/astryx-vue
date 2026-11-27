@@ -351,7 +351,7 @@ const mobileActions = [
                             </Text>
                           </VStack>
                         </StackItem>
-                        <Icon name="heroicons:chevron-right" size="sm" color="secondary" />
+                        <Icon class="mirror-rtl" name="heroicons:chevron-right" size="sm" color="secondary" />
                       </HStack>
                     </ClickableCard>
                     <template #metadata>
@@ -519,6 +519,10 @@ const mobileActions = [
 </template>
 
 <style scoped>
+:global([dir='rtl'] .mirror-rtl) {
+  transform: scaleX(-1);
+}
+
 .ai-chat-root {
   position: relative;
   height: 100dvh;

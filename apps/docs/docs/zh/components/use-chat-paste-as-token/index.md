@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useChatPasteAsTokenLongPaste } from '../../../../components/demos/use-chat-paste-as-token'
 </script>
 
 ## 使用方法
@@ -43,3 +44,12 @@ const pasteAsToken = useChatPasteAsToken({
 | <Badge variant="success">建议</Badge> | 输入框的句柄和这个 hook 用同一个 ref，`insertToken` 才会落到这个输入框里。 |
 | <Badge variant="success">建议</Badge> | 想让每次粘贴都保持成文字，传 `:paste-as-token="false"`。 |
 | <Badge variant="error">避免</Badge> | 把已经处理的粘贴既当文字又当标签再插一遍。`onPaste` 返回 `true` 就是在告诉输入框这次粘贴已经处理完了。 |
+
+## 示例
+
+<DemoExample
+  :demo="useChatPasteAsTokenLongPaste"
+  description="输入框的 pasteAsToken 来自 useChatPasteAsToken，阈值 40，标签是 Pasted note。超过 40 个字符的粘贴会变成这个小块，更短的粘贴仍是文本。"
+  locale="zh"
+  title="useChatPasteAsToken —— 长文本粘贴"
+/>
