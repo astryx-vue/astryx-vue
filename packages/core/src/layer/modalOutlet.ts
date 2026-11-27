@@ -70,6 +70,24 @@ export function createModalOutletHandle(): { attach: (dialog: HTMLDialogElement)
   return { attach, detach }
 }
 
+/**
+ * 非模态的顶层元素（无遮罩的抽屉）每进入一次顶层就加一。
+ *
+ * 顶层里后进去的画在上面。toast 视口比抽屉先进顶层时会被它盖住，所以抽屉进去后
+ * 报一声，视口重新进一次顶层，又排回最上面。模态层不用报：它们走上面的挂载点清单。
+ */
+const topLayerEntries = shallowRef(0)
+
+/** 非模态的顶层元素刚进入顶层时调用。 */
+export function notifyTopLayerEntry(): void {
+  topLayerEntries.value++
+}
+
+/** 非模态顶层进入的计数。只用来监听变化。 */
+export function useTopLayerEntries(): Readonly<Ref<number>> {
+  return topLayerEntries
+}
+
 /** 只给测试用：清空清单。 */
 export function resetModalOutletsForTests(): void {
   outlets.length = 0
