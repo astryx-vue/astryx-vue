@@ -28,6 +28,8 @@ import { tokenizerClear, tokenizerCreatable, tokenizerEnd, tokenizerIcon, tokeni
 
 紧凑触屏上，字段默认打开底部弹层（`presentation="adaptive"`）。字段变成一个显示标签的触发器；弹层里有搜索框、每条结果一行复选框，以及钉在底部的「全部清除」和「保存」。勾选、新建、全部清除都只改草稿，按「保存」才提交一次，只触发一次 `change`。草稿改过之后下滑弹层、点遮罩或按 Escape，会先问要不要放弃；「全部清除」也会先确认。想在所有设备上保留行内字段就传 `presentation="popover"`，比如字段本身已经在另一个浮层里。
 
+放进 `InputGroup` 时，`Tokenizer` 不再画自己的标签、说明和状态，由组统一负责，输入框的名字是组标签加自己的标签。尺寸和禁用都跟着组走，所以这里写在 `Tokenizer` 上的 `size` 不生效。组是固定行高的单行控件，标签和输入框留在同一行里横向滚动，藏着标签的那一侧淡出；结尾的控件（`#end`、清除按钮、状态图标）留在原位。
+
 宽度测量复用 `useOverflow`。`#icon` 插槽放在输入区开头，每条标签也可以用 `#token` 换成自己的 `Token`。
 
 

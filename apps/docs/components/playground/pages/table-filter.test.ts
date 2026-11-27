@@ -56,3 +56,54 @@ describe('table-filter column reordering by keyboard', () => {
     wrapper.unmount()
   })
 })
+
+function stubMatchMedia(compact: boolean) {
+  window.matchMedia = ((query: string) => ({
+    matches: compact && query.includes('max-width: 768px'),
+    media: query,
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    addListener: () => {},
+    removeListener: () => {},
+    onchange: null,
+    dispatchEvent: () => false,
+  })) as unknown as typeof window.matchMedia
+}
+
+describe('table-filter view options layout', () => {
+  afterEach(() => {
+    document.body.innerHTML = ''
+  })
+
+  it('keeps the rail beside the pane on a wide screen', async () => {
+    stubMatchMedia(false)
+    const wrapper = await openColumns()
+    expect(document.querySelector('[role="tablist"]')).toBeNull()
+    expect(document.querySelector('.tf-view-rail')).not.toBeNull()
+    expect(document.querySelector('[role="tabpanel"]')).toBeNull()
+    wrapper.unmount()
+  })
+
+  it('turns the rail into a tab strip over one shared panel on a narrow screen', async () => {
+    stubMatchMedia(true)
+    const wrapper = await openColumns()
+    const tabs = [...document.querySelectorAll<HTMLElement>('[role="tab"]')]
+    expect(tabs.map(tab => tab.dataset.tabValue)).toEqual(['columns', 'density', 'sticky', 'grouping'])
+    expect(document.querySelector('.tf-view-rail')).toBeNull()
+
+    const panel = document.querySelector<HTMLElement>('[role="tabpanel"]')!
+    expect(panel.id).toBe('tf-view-panel')
+    // Each tab says it controls the panel, and the panel is named by the selected tab.
+    expect(tabs.every(tab => tab.getAttribute('aria-controls') === panel.id)).toBe(true)
+    expect(panel.getAttribute('aria-labelledby')).toBe(tabs[0]!.id)
+    expect(panel.getAttribute('aria-label')).toBeNull()
+
+    tabs[1]!.click()
+    await new Promise(resolve => setTimeout(resolve, 0))
+    expect(panel.getAttribute('aria-labelledby')).toBe(tabs[1]!.id)
+    expect(document.getElementById(panel.getAttribute('aria-labelledby')!)?.textContent).toContain('Density')
+    // The strip already marks the section, so the pane drops its own heading.
+    expect(panel.querySelector('h3')).toBeNull()
+    wrapper.unmount()
+  })
+})

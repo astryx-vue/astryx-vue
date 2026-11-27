@@ -1,5 +1,19 @@
 # @astryx-vue/core
 
+## 0.40.0
+
+### Minor Changes
+
+- [#658](https://github.com/astryx-vue/astryx-vue/pull/658) [`21f1c19`](https://github.com/astryx-vue/astryx-vue/commit/21f1c19715b8b7a9400ea089826e6c5fb1b8fef2) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - BottomSheet 按打开顺序叠放，后打开的盖在上面、下面那张往后退，整叠只有一层遮罩；在开着的那张里关掉它、同时打开另一张时，新的一张原地替换它（上一张比新的高时先往下移对齐，再淡出），BottomSheetSwitcher 的每一步改用各自的原生对话框并标为已废弃，文档站在侧栏、总览卡片和文档页标题旁标出「已废弃」。
+
+- [#657](https://github.com/astryx-vue/astryx-vue/pull/657) [`c88c676`](https://github.com/astryx-vue/astryx-vue/commit/c88c6761b00d2b98a23215a1308b02e618fbbdca) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `Tokenizer` 可以放进 `InputGroup`：在组里它不再画自己的标签、说明和状态，由组统一负责，输入框的名字是组标签加自己的标签，说明读组的；尺寸和禁用都跟着组走（组里的 `size` 盖过自己的）；组是固定行高的单行控件，所以标签和输入框留在同一行里横向滚动，藏着标签的那一侧淡出，结尾的控件留在原位。
+
+### Patch Changes
+
+- [#657](https://github.com/astryx-vue/astryx-vue/pull/657) [`c88c676`](https://github.com/astryx-vue/astryx-vue/commit/c88c6761b00d2b98a23215a1308b02e618fbbdca) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 触控热区的测量不再抢在手指前面读布局：手指按下时不读任何矩形，只挂上对点击的复查（滚动不会产生点击，所以滚动里什么都不读），复查只读不写，按压动效结束后的那次测量才写热区；页面滚动时不测量，到 `scrollend` 或 150ms 没有滚动事件再测；祖先在播会挪盒子的动画（比如一层界面滑进来）时先不测，播完再量；页面结构变化只匹配新增的子树，不再对整页重新查询。点击行为不变。
+
+- [#657](https://github.com/astryx-vue/astryx-vue/pull/657) [`c88c676`](https://github.com/astryx-vue/astryx-vue/commit/c88c6761b00d2b98a23215a1308b02e618fbbdca) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `DateInput` 的时间和月份列在鼠标下有了景深：行滚向列的两端时往里倾倒、缩小。深度提示淡的是文字颜色（从主文字色渐变到主、次文字色的正中）而不是不透明度，所以每一行在每个滚动位置都够 WCAG AA 对比度；选中和禁用的行保留自己的颜色，禁用的行按不透明度淡出，开了「减少动态效果」时行不再倾倒、仍保留颜色渐变，不支持滚动驱动动画的浏览器就是一列平的行。
+
 ## 0.39.0
 
 ### Minor Changes
