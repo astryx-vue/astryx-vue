@@ -1,11 +1,13 @@
-import type { SyntaxToken } from '@astryx-vue/core'
+import type { CodeLanguage, SyntaxToken } from '@astryx-vue/core'
 import type { NodeKey } from 'lexical'
+import type { PropType } from 'vue'
 import { tokenize } from '@astryx-vue/core'
 import { $isCodeNode, CodeNode } from '@lexical/code'
 import { $getNodeByKey } from 'lexical'
-import { defineComponent, onBeforeUnmount } from 'vue'
+import { defineComponent, onBeforeUnmount, watch } from 'vue'
 import { useLexicalEditor } from '../context.js'
 import { ensureSyntaxRules, supportsHighlights } from './codeHighlightRules.js'
+import { listedLanguage } from './codeLanguages.js'
 import { applyFlatHighlightRanges } from './flatHighlight.js'
 
 type TokenLine = SyntaxToken[]
@@ -17,7 +19,7 @@ type TokenLine = SyntaxToken[]
  * 前者按行给 token，后者要把所有行的偏移接成一整行。画出来的文字对不上代码时
  * （正在更新的瞬间）返回 null，这样不会把颜色涂在错的位置上。
  */
-export function renderedTokens(code: string, language: string, rendered: string): TokenLine[] | null {
+export function renderedTokens(code: string, language: string | CodeLanguage, rendered: string): TokenLine[] | null {
   const lines = tokenize(code, language)
   if (rendered === code)
     return lines
@@ -36,7 +38,7 @@ export function renderedTokens(code: string, language: string, rendered: string)
 interface Colored {
   element: HTMLElement
   code: string
-  language: string
+  language: string | CodeLanguage
   cleanup: () => void
 }
 
@@ -46,7 +48,11 @@ interface Colored {
  */
 export const CodeSyntaxPlugin = defineComponent({
   name: 'AstryxRichTextCodeSyntaxPlugin',
-  setup() {
+  props: {
+    /** 围栏可以写的语言值；围栏的语言词是其中某个值的标识符时，用这个值上色。 */
+    codeLanguages: { type: Array as PropType<ReadonlyArray<CodeLanguage>>, default: undefined },
+  },
+  setup(props) {
     const editor = useLexicalEditor()
     if (!supportsHighlights())
       return () => null
@@ -63,7 +69,10 @@ export const CodeSyntaxPlugin = defineComponent({
     function color(key: NodeKey): void {
       const block = editor.getEditorState().read(() => {
         const node = $getNodeByKey(key)
-        return $isCodeNode(node) ? { code: node.getTextContent(), language: node.getLanguage() ?? '' } : null
+        if (!$isCodeNode(node))
+          return null
+        const word = node.getLanguage() ?? ''
+        return { code: node.getTextContent(), language: listedLanguage(props.codeLanguages, word) ?? word }
       })
       const element = editor.getElementByKey(key)
       if (block === null || element === null) {
@@ -97,6 +106,11 @@ export const CodeSyntaxPlugin = defineComponent({
     }, { skipInitialization: false })
     // 在代码块里打字改的是文字节点，不一定算代码块自己变了：每次更新后都查一遍，没变的在上面的比较处就返回。
     const stopUpdates = editor.registerUpdateListener(() => {
+      for (const key of blocks)
+        color(key)
+    })
+    // 列出的语言值换了，已经画好的代码块要按新的重画。
+    watch(() => props.codeLanguages, () => {
       for (const key of blocks)
         color(key)
     })

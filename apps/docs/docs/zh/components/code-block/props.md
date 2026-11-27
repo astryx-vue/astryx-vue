@@ -12,7 +12,7 @@ footer: false
 <div class="component-api-table" role="region" aria-label="CodeBlock 属性" tabindex="0">
 <table><thead><tr><th>属性</th><th>类型</th><th>默认值</th><th>说明</th></tr></thead><tbody>
 <tr><td><code>code</code></td><td><code>string</code></td><td>—</td><td>只读代码。复制按钮写下的就是这个字符串。</td></tr>
-<tr><td><code>language</code></td><td><code>string</code></td><td><code>'plaintext'</code></td><td>分词用的语言。<code>plaintext</code> 不显示语言名。</td></tr>
+<tr><td><code>language</code></td><td><code>string | CodeLanguage</code></td><td><code>'plaintext'</code></td><td>分词用的语言：内置标识符（如 <code>'ts'</code>），或者从 <code>@astryx-vue/core/Code/languages/&lt;name&gt;</code> 引入、用 <code>createCodeLanguage</code> 做出来的语言值。语言值显示它的 <code>name</code>，<code>data-language</code> 取它的第一个标识符。<code>plaintext</code> 不显示语言标签。</td></tr>
 <tr><td><code>syntaxTheme</code></td><td><code>SyntaxThemeDefinition</code></td><td>—</td><td>这一块的语法颜色。相当于在外面套一层 <code>SyntaxTheme</code>。</td></tr>
 <tr><td><code>title</code></td><td><code>string</code></td><td>—</td><td>顶栏里的文件名或标签。</td></tr>
 <tr><td><code>hasLanguageLabel</code></td><td><code>boolean</code></td><td><code>true</code></td><td>顶栏是否显示语言名。</td></tr>
@@ -28,7 +28,7 @@ footer: false
 <tr><td><code>size</code></td><td><code>'sm' | 'md'</code></td><td><code>'md'</code></td><td>字号。</td></tr>
 <tr><td><code>width</code></td><td><code>string</code></td><td><code>'fit-content'</code></td><td>CSS 宽度。<code>100%</code> 铺满父级。</td></tr>
 <tr><td><code>container</code></td><td><code>'card' | 'section'</code></td><td><code>'card'</code></td><td><code>section</code> 去掉边框、圆角和背景。</td></tr>
-<tr><td><code>tokenizer</code></td><td><code>(code, language) =&gt; SyntaxToken[]</code></td><td>—</td><td>自定义分词器。token 用绝对偏移，不替换被复制的文本。</td></tr>
+<tr><td><code>tokenizer</code></td><td><code>(code, language) =&gt; SyntaxToken[]</code></td><td>—</td><td>已弃用：改给 <code>language</code> 传一个 <code>createCodeLanguage</code> 做的值。仍然照原样工作。自定义分词器，token 用绝对偏移，不替换被复制的文本。</td></tr>
 <tr><td><code>highlightMode</code></td><td><code>'auto' | 'ranges' | 'spans'</code></td><td><code>'auto'</code></td><td>token 的绘制方式。</td></tr>
 <tr><td><code>copyLabel</code></td><td><code>string</code></td><td><code>'Copy code'</code></td><td>复制前，复制控件的无障碍名称。</td></tr>
 <tr><td><code>copiedLabel</code></td><td><code>string</code></td><td><code>'Copied'</code></td><td>复制成功后的名称和播报。</td></tr>
@@ -36,6 +36,23 @@ footer: false
 <tr><td><code>codeLabel</code></td><td><code>string</code></td><td><code>'Code'</code></td><td>代码视口的无障碍名称。</td></tr>
 </tbody></table>
 </div>
+
+## 语言
+
+内置标识符覆盖 TypeScript 和 JavaScript、JSON、HTML、CSS、Python、Bash、PHP、Hack、YAML、Markdown，以及新增的 C（`c`、`h`）、C++（`cpp`、`c++`、`cc`、`cxx`、`hpp`、`hh`）、SQL（`sql`）、Rust（`rust`、`rs`）、Kotlin（`kotlin`、`kt`、`kts`）、Swift（`swift`）和 Go（`go`、`golang`）。
+
+不常用的语言是单独引入、再传给 `language` 的模块，没用到的页面不会带上它们：`dockerfile`、`graphql`、`java`、`lua`、`objective-c`、`powershell`、`ruby`、`thrift`、`toml`，路径是 `@astryx-vue/core/Code/languages/<name>`。语言字符串不会去找模块，要传值本身。`createCodeLanguage({ name, identifiers, fileExtensions, fileNames, tokenize })` 用一个分词函数做出你自己的语言，它在任意长度下都同步上色，`Markdown` 和 `RichTextEditor` 的 `codeLanguages` 也接受它。
+
+```vue
+<script setup lang="ts">
+import { CodeBlock } from '@astryx-vue/core/Code'
+import { graphql } from '@astryx-vue/core/Code/languages/graphql'
+</script>
+
+<template>
+  <CodeBlock :language="graphql" code="query { viewer { name } }" />
+</template>
+```
 
 ## CodeBlock 插槽
 

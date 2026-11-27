@@ -146,8 +146,8 @@ const restAttrs = computed(() => {
       <template v-if="attached">
         <DecoratorTeleports :editor="attached" />
         <!-- 放在内容后面，复制按钮和勾选框在 Tab 顺序里才跟在内容后面。 -->
-        <CodeBlockHeaderPlugin />
-        <CodeSyntaxPlugin />
+        <CodeBlockHeaderPlugin :code-languages="codeLanguages" />
+        <CodeSyntaxPlugin :code-languages="codeLanguages" />
         <MarkdownExtensionsPlugin v-if="markdownExtensions && markdownExtensions.length > 0" :extensions="markdownExtensions" :transformers="[]" />
         <TaskCheckboxPlugin is-read-only />
         <slot />

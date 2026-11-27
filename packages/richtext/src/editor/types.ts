@@ -1,3 +1,4 @@
+import type { CodeLanguage } from '@astryx-vue/core'
 import type { Transformer } from '@lexical/markdown'
 import type { AnyLexicalExtensionArgument, EditorState, Klass, LexicalEditor, LexicalNode } from 'lexical'
 import type { RichTextMarkdownExtension } from '../markdownExtensions.js'
@@ -85,6 +86,12 @@ export interface RichTextEditorProps {
    * 传内容转换时用的那些扩展。要在客户端模块里创建：它们带着插件的函数，不是能序列化的 props。
    */
   markdownExtensions?: ReadonlyArray<RichTextMarkdownExtension>
+  /**
+   * 围栏代码块可以写的语言值：每个都单独引入，例如 `@astryx-vue/core/Code/languages/graphql` 里的 `graphql`，
+   * 或者用 `createCodeLanguage` 做的。围栏的语言词是某个值的标识符时，用这个值上色，标题栏显示它的名字，
+   * 优先于同名的内置语言；后面的条目优先。不传就和以前一样。
+   */
+  codeLanguages?: ReadonlyArray<CodeLanguage>
   /**
    * 是否开启 Markdown 快捷输入（输入 `# ` 变标题、`- ` 变列表）。
    * @default true

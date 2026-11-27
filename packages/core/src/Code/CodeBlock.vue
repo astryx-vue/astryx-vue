@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { CSSProperties, StyleValue } from 'vue'
+import type { CodeLanguage } from './grammar.js'
 import type { CodeBlockEmits, CodeBlockProps, CodeBlockSlots, TokenLine } from './types.js'
 import { computed, onBeforeUnmount, onMounted, ref, useAttrs, useId, useSlots, useTemplateRef, watch } from 'vue'
 import { devPropError, isDevBuild } from '../composables/internal/devBuild.js'
@@ -13,6 +14,7 @@ import { codeBlockMessages } from '../locale/messages/code-block.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import CodeBlockContent from './CodeBlockContent.vue'
 import { splitDiffLines } from './diff.js'
+import { isCustomCodeLanguage, languageKey, languageLabel as nameOfLanguage } from './grammar.js'
 import { syntaxThemeStyle } from './syntaxTheme.js'
 import { flatTokensToLines, SYNC_TOKENIZE_THRESHOLD, tokenize, tokenizeAsync } from './tokenizer.js'
 import '../../styles/code.css'
@@ -67,7 +69,7 @@ const lines = computed<string[]>(() => {
   return split
 })
 
-const asyncTokens = ref<{ code: string, language: string, tokens: TokenLine[] } | null>(null)
+const asyncTokens = ref<{ code: string, language: string | CodeLanguage, tokens: TokenLine[] } | null>(null)
 let pendingLoad: AbortController | null = null
 
 /**
@@ -83,9 +85,10 @@ const syncTokenLines = computed<TokenLine[] | null>(() => {
   const source = tokenSource.value
 
   if (props.tokenizer != null)
-    return flatTokensToLines(props.tokenizer(source, props.language), source)
+    return flatTokensToLines(props.tokenizer(source, nameOfLanguage(props.language)), source)
 
-  if (source.length >= SYNC_TOKENIZE_THRESHOLD)
+  // 自定义语言（createCodeLanguage）和 `tokenizer` 一样，任意长度都同步上色。
+  if (source.length >= SYNC_TOKENIZE_THRESHOLD && !isCustomCodeLanguage(props.language))
     return null
 
   return tokenize(source, props.language)
@@ -108,7 +111,7 @@ const tokenLines = computed<TokenLine[]>(() => {
 async function loadTokens(): Promise<void> {
   const source = tokenSource.value
 
-  if (props.tokenizer != null || source.length < SYNC_TOKENIZE_THRESHOLD)
+  if (props.tokenizer != null || source.length < SYNC_TOKENIZE_THRESHOLD || isCustomCodeLanguage(props.language))
     return
 
   const code = source
@@ -188,14 +191,20 @@ const highlightSet = computed<Set<number> | null>(() =>
   props.highlightLines == null ? null : new Set(props.highlightLines),
 )
 
+/** 语言值显示它自己的名字，字符串显示它本身。 */
+const languageName = computed(() => nameOfLanguage(props.language))
+
+/** `data-language`：字符串本身，语言值取第一个标识符。 */
+const dataLanguage = computed(() => languageKey(props.language))
+
 const languageLabel = computed(() => {
   if (!props.hasLanguageLabel)
     return null
 
   if (props.isDiff)
-    return props.language === 'plaintext' ? 'diff' : messages.value.codeBlock.diffLabel(props.language)
+    return languageName.value === 'plaintext' ? 'diff' : messages.value.codeBlock.diffLabel(languageName.value)
 
-  return props.language === 'plaintext' ? null : props.language
+  return languageName.value === 'plaintext' ? null : languageName.value
 })
 
 /** `filename — language`, omitting whichever half is missing. */
@@ -303,7 +312,7 @@ const forwardedAttrs = computed(() => Object.fromEntries(
     :class="attrs.class"
     :data-container="container"
     :data-corner="hasCorner || undefined"
-    :data-language="language"
+    :data-language="dataLanguage"
     :data-size="size"
     :style="rootStyle"
   >
@@ -312,7 +321,7 @@ const forwardedAttrs = computed(() => Object.fromEntries(
       class="astryx-code-block__header astryx-code-block-header"
       :class="{ 'astryx-code-block__header--divided': hasLineNumbers }"
       :data-container="container"
-      :data-language="language"
+      :data-language="dataLanguage"
       :data-size="size"
     >
       <!-- eslint-disable-next-line vue-a11y/no-static-element-interactions -- the interactive role, tabindex, and aria state are bound from `titleControlAttrs`, which the rule cannot see; it is the disclosure control when collapsing is available. -->
@@ -325,7 +334,7 @@ const forwardedAttrs = computed(() => Object.fromEntries(
       >
         <span
           class="astryx-code-block__title astryx-code-block-title"
-          :data-language="language"
+          :data-language="dataLanguage"
           :data-size="size"
         >
           <span v-if="canCollapse" class="astryx-code-block__chevron">

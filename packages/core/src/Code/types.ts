@@ -1,4 +1,5 @@
 import type { VNodeChild } from 'vue'
+import type { CodeLanguage } from './grammar.js'
 import type { SyntaxThemeDefinition } from './syntaxTheme.js'
 
 /**
@@ -96,11 +97,15 @@ export interface CodeBlockProps {
   /** The read-only code to display. */
   code: string
   /**
-   * The language used for syntax highlighting. An unknown language renders as
-   * plaintext. `plaintext` also hides the language label in the header.
+   * The language used for syntax highlighting: a built-in identifier such as
+   * `'ts'`, or a language value, either one imported from
+   * `@astryx-vue/core/Code/languages/<name>` (such as `graphql`) or made with
+   * `createCodeLanguage`. An unknown identifier renders as plaintext, and
+   * `plaintext` also hides the language label in the header. A value is
+   * labelled with its `name`, and `data-language` carries its first identifier.
    * @default 'plaintext'
    */
-  language?: string
+  language?: string | CodeLanguage
   /**
    * Syntax colors for this block.
    *
@@ -198,6 +203,9 @@ export interface CodeBlockProps {
    * A custom tokenizer, for a language the built-in tokenizer does not know.
    * Its return value paints tokens but never replaces the displayed or copied
    * code text.
+   * @deprecated Pass `language={createCodeLanguage({ name, identifiers, tokenize })}`
+   * instead; it keeps the label and `data-language` and paints at any length.
+   * `tokenizer` still works as it did.
    */
   tokenizer?: CodeBlockTokenizer
   /**

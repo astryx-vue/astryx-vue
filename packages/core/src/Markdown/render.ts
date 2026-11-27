@@ -1,4 +1,5 @@
 import type { Component, VNode, VNodeChild } from 'vue'
+import type { CodeLanguage } from '../Code/grammar.js'
 import type { MarkdownMessages } from '../locale/messages/markdown.js'
 import type { MdNode } from './ast.js'
 import type { MarkdownExtensionNode, MarkdownExtensionRenderer } from './plugin-protocol/protocol.js'
@@ -10,6 +11,7 @@ import CheckboxIndicator from '../CheckboxIndicator/CheckboxIndicator.vue'
 import Code from '../Code/Code.vue'
 import CodeBlock from '../Code/CodeBlock.vue'
 import { parseFenceLanguage } from '../Code/diff.js'
+import { listedLanguage } from '../Code/grammar.js'
 import Heading from '../Heading/Heading.vue'
 import Link from '../Link/Link.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
@@ -44,6 +46,8 @@ export interface RenderContext {
   /** First-seen order of citation ids, so chips number stably in one render. */
   citationOrder: Map<string, number>
   citationStyle: MarkdownCitationStyle
+  /** CodeBlock 语言值：围栏的语言词是其中某个值的标识符时，用这个值渲染。 */
+  codeLanguages?: ReadonlyArray<CodeLanguage>
   citationLabel: (number: number, title: string) => string
   plugins?: readonly MarkdownPlugin[]
   inlinePlugins?: readonly MarkdownInlinePlugin[]
@@ -374,6 +378,8 @@ export function renderBlock(node: MdNode, key: string, ctx: RenderContext): VNod
       if (override != null)
         return h(override, { key, code: value, language, ...sourceLineFields(node, ctx) }, () => value)
       const fence = parseFenceLanguage(language)
+      // 列出的语言值先于同名的内置语言认领这个词；后面的条目优先。
+      const fenceLanguage = listedLanguage(ctx.codeLanguages, fence.language) ?? fence.language
       return h('div', {
         key,
         class: ['astryx-markdown__code', fadeClass(start, ctx.fade)],
@@ -381,7 +387,7 @@ export function renderBlock(node: MdNode, key: string, ctx: RenderContext): VNod
       }, [
         h(CodeBlock, {
           code: value,
-          language: fence.language,
+          language: fenceLanguage,
           isDiff: fence.isDiff,
           isCollapsible: true,
           isWrapped: true,

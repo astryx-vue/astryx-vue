@@ -5,6 +5,7 @@ import type { MarkdownPluginEntry } from './plugin-protocol/protocol.js'
 import type { MarkdownPlugin } from './plugins.js'
 import type { MarkdownProps } from './types.js'
 import { computed, defineComponent, h, ref } from 'vue'
+import { sameCodeLanguageList } from '../Code/grammar.js'
 import { useIndicator } from '../Indicator/useIndicator.js'
 import { useComponentMessages } from '../locale/context.js'
 import { citationMessages } from '../locale/messages/citation.js'
@@ -54,6 +55,7 @@ export default defineComponent({
     inlinePlugins: { type: Array as PropType<MarkdownProps['inlinePlugins']>, default: undefined },
     autolink: { type: String as PropType<MarkdownProps['autolink']>, default: undefined },
     citationStyle: { type: String as PropType<MarkdownProps['citationStyle']>, default: 'label' },
+    codeLanguages: { type: Array as PropType<MarkdownProps['codeLanguages']>, default: undefined },
     sources: { type: Object as PropType<MarkdownProps['sources']>, default: undefined },
   },
   setup(props, { attrs, slots, expose }) {
@@ -69,6 +71,8 @@ export default defineComponent({
     let boundaries: number[] = []
     let previousLength = 0
     let seenAutolink = props.autolink
+    // 内联写的 `[a, b]` 每次渲染都是新数组；列出的语言值没变就沿用原来那份，免得每一块都重画。
+    let codeLanguages = props.codeLanguages
     let previousInputs: unknown[] = []
     let renderedChildren: VNode[] = []
     let hasRendered = false
@@ -104,6 +108,9 @@ export default defineComponent({
           slotSource.value = text
       }
 
+      if (!sameCodeLanguageList(codeLanguages, props.codeLanguages))
+        codeLanguages = props.codeLanguages
+
       const inputs = [
         source.value,
         props.isStreaming,
@@ -117,6 +124,7 @@ export default defineComponent({
         props.onLinkClick,
         props.sources,
         props.citationStyle,
+        codeLanguages,
         messages.value.markdown,
         messages.value.citation.label,
         checkboxIndicator.value,
@@ -179,6 +187,7 @@ export default defineComponent({
         sources: props.sources,
         citationOrder: new Map(),
         citationStyle: props.citationStyle ?? 'label',
+        codeLanguages,
         citationLabel: messages.value.citation.label,
         plugins: vuePlugins,
         inlinePlugins: props.inlinePlugins,

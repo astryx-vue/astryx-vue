@@ -1,3 +1,4 @@
+import { createCodeLanguage } from '@astryx-vue/core'
 import { describe, expect, it } from 'vitest'
 import { renderedTokens } from './CodeSyntaxPlugin.js'
 
@@ -25,5 +26,11 @@ describe('renderedTokens', () => {
 
   it('returns no tokens for a language it does not know', () => {
     expect(renderedTokens('x', 'no-such-language', 'x')).toEqual([])
+  })
+
+  it('paints with a language value, and a value\'s own function runs on the code', () => {
+    const zig = createCodeLanguage({ name: 'zig', identifiers: ['zig'], tokenize: () => [{ type: 'keyword', start: 0, end: 3 }] })
+    const lines = renderedTokens('pub fn', zig, 'pub fn')
+    expect(lines).toEqual([[{ type: 'keyword', start: 0, end: 3 }]])
   })
 })

@@ -1,4 +1,5 @@
 import type { LexicalEditor } from 'lexical'
+import { createCodeLanguage } from '@astryx-vue/core'
 import { mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { h, nextTick } from 'vue'
@@ -145,6 +146,17 @@ describe('code block header', () => {
     await wrapper.get('[data-richtext-code-header] button').trigger('click')
     await settle()
     expect(writeText).toHaveBeenCalledWith('const a = 1')
+  })
+
+  it('shows the name of a listed language value that claims the fence word', async () => {
+    const idl = createCodeLanguage({ name: 'Thrift IDL', identifiers: ['thrift'], tokenize: () => [] })
+    const wrapper = mountEditor('```thrift\nstruct A {}\n```\n', { codeLanguages: [idl] })
+    await settle()
+    expect(wrapper.get('[data-richtext-code-header]').text()).toContain('Thrift IDL')
+    await wrapper.setProps({ codeLanguages: undefined })
+    await settle()
+    expect(wrapper.get('[data-richtext-code-header]').text()).toContain('thrift')
+    expect(wrapper.get('[data-richtext-code-header]').text()).not.toContain('Thrift IDL')
   })
 
   it('draws one header per code block', async () => {
