@@ -57,10 +57,10 @@ npm run astryx-vue -- component Button
 - `astryx-vue component Button`：快速查看指定组件的基本用法、Props 属性、插槽、事件以及代码示例。
 - `astryx-vue composable --list`：列出组合式函数，`astryx-vue composable useClipboard` 打印其参数和返回值。Vue 里这类函数叫组合式函数（composable），所以命令与文档中统一不使用 hook 这个词。若误输入 `component useClipboard` 仍然能查到，并会友好提示改用 `composable` 命令。
 - `astryx-vue docs`（也可写 `astryx-vue docs --list`）：列出指南与主题文档。`astryx-vue docs guide/dark-mode` 或 `astryx-vue docs themes/tokens` 可直接在终端阅读正文。名字里的词用空格、短横线、斜杠或点隔开都行，顺序也不限，`docs mode dark` 打开的是同一页。名字打不开任何页面时，会建议名字或关键词里带这些词的页面。
-- `astryx-vue search dialog`：在组件、组合式函数、文档主题和页面模板里按相关度搜索。`--type` 可以限定为 `component`、`composable`、`doc` 或 `template`。用别的组件库的叫法也能找到对应组件（`ScrollArea`、`side sheet`、`toggle group`），`cog` 这类图标名会找到 `Icon`。得分相同的结果里，回答了更多查询词的排前面；一个词是某个家族的开头（比如 `tabs`），会先列 `Tab` 再列它的各部分。查不到时，如果别的命令有这个名字（比如 `astryx-vue docs Button`），会提示改用那条命令（`astryx-vue component Button`）；`ScrollArea` 这类别名不会直接打开组件，而是作为第一条建议返回。
+- `astryx-vue search dialog`：在组件、组合式函数、文档主题和页面模板里按相关度搜索。`--type` 可以限定为 `component`、`composable`、`doc` 或 `template`。用别的组件库的叫法也能找到对应组件（`ScrollArea`、`side sheet`、`toggle group`），`cog` 这类图标名会找到 `Icon`。得分相同的结果里，回答了更多查询词的排前面；一个词是某个家族的开头（比如 `tabs`），会先列 `Tab` 再列它的各部分。查不到时，如果别的命令有这个名字（比如 `astryx-vue docs Button`），会提示改用那条命令（`astryx-vue component Button`）；`ScrollArea` 这类别名不会直接打开组件，而是作为第一条建议返回。文本输出里，查不到时会在报错下面打印建议：名字相近的写在 `Did you mean:` 后，能直接解决问题的命令写在 `Run:` 后，和 `--json` 里的 `suggestions` 一致。别的工具的命令词（`components`、`list`、`props Button`、`migrate`）和 `--format json` 这类输出选项，会指出这里对应的写法；`template`、`docs` 里查一个几乎拼成某个组合式函数名的词，会指向 `astryx-vue composable <name>`。
 - `astryx-vue manifest --json`：输出 CLI 自身的接口定义清单（命令、选项、响应结构、错误码及退出码），方便被上层工具或脚本消费。
 - `astryx-vue theme`：列出全部内置主题；`astryx-vue theme butter` 输出这套主题的接入四步（引哪个样式表、`data-astryx-theme` 写什么、怎么换主题或同时用两套、改完怎么验证）。
-- `astryx-vue upgrade`：读项目里 `@astryx-vue/core` 的版本，和这个 CLI 对应版本比较，打印[升级指南](/guide/migration)里要做的每一件事，再在项目源码里指出旧名字所在文件和行号。不联网，不改文件。
+- `astryx-vue upgrade`：读项目里 `@astryx-vue/core` 的版本，和这个 CLI 对应版本比较，打印[升级指南](/guide/migration)里要做的每一件事，再在项目源码里指出旧名字所在文件和行号。项目落后时还会打印一条命令，把项目里的 `@astryx-vue/core` 和其它与 core 同一版发布的包（例如 themes）一起升到 CLI 对应的版本。不联网，不改文件。
 - `astryx-vue doctor`：检查依赖装没装、版本对不对、主题样式引没引、主题设没设（写了 `data-astryx-theme` 属性、在脚本里设了 `dataset.astryxTheme`，或用了 core 的 `<Theme>`，最外层的 `<Theme>` 会自己写这个属性），只报告不改文件；有失败时退出码是 1。包没装好时，它会用项目自己的包管理器给出修复命令：缺 themes 就按项目 core 的版本装（两个包一起发版），项目把 core 钉死在一个版本时还会加 `-E` 精确保存；`package.json` 写了但 `node_modules` 里没有（比如刚 clone 下来），就让你运行项目自己的安装（如 `pnpm install`），不会再 add 一遍把项目写好的版本换掉。
   项目写了 core 时还有第六项 `button-actions`：读项目自己 `.vue` 文件的模板，列出按下后什么都不做的 core `Button` 或 `IconButton`，也就是没有 `@click`、`click-action`、`href` 或 `submit`/`reset` 类型，处理函数是空的（如 `@click="() => {}"`），或者链接哪儿也不去（空、`#`、`javascript:`；用 hash 路由的应用里 `#` 不算）。只有周围没有东西能接管按下时才判：它所在文件里、以及渲染这个组件的每个文件里，外面套的都是没有事件处理的普通 HTML、`Stack`、`Card` 这类 core 布局组件，或 `Transition` 这类 Vue 自带包装。看不全的按钮一律不报：展开传入 props、写了 `ref`、`id`、`tooltip`、禁用或加载状态、放了插槽内容，或者所在组件追不到（路由表、懒加载、自动导入的标签）。测试、story 和 fixture 文件不看。这一项只警告，从不让 doctor 失败；应用自己通过 DOM 监听按下时（`addEventListener('click', …)`、`useEventListener`、`onclick` 属性）它报 `info`，不判任何按钮。
 - `astryx-vue init`：打印给 AI 助手的接入说明（装哪些包、主题样式引哪一行、语言怎么提供），并在项目根目录维护 agent 上下文文件。
@@ -83,7 +83,7 @@ npm run astryx-vue -- component Button
 
 ## 配合 AI Agent（生成上下文文件）
 
-项目里没有任何 agent 文件时，`init` 默认创建 `AGENTS.md`。不加 `--agent` 时会优先写项目里已有的配置文件，检测顺序为 `AGENTS.md`、`CLAUDE.md`、`.cursorrules`、`.hermes.md`、`HERMES.md`。`--agent claude` 写 `CLAUDE.md`，`hermes` 写 `.hermes.md`，`cursor` 和 `codex` 写 `AGENTS.md`，`all` 则写所有已存在的已知文件。通过 `--agent-docs-path <file>` 也可以指定输出到任意文件。
+项目里没有任何 agent 文件时，`init` 默认创建 `AGENTS.md`。不加 `--agent` 时会优先写项目里已有的配置文件，检测顺序为 `AGENTS.md`、`CLAUDE.md`、`.cursorrules`、`.hermes.md`、`HERMES.md`。`--agent claude` 写 `CLAUDE.md`，`hermes` 写 `.hermes.md`，`cursor` 和 `codex` 写 `AGENTS.md`，`all` 则写所有已存在的已知文件。通过 `--agent-docs-path <file>` 也可以指定输出到任意文件。`astryx-vue init --remove-agents` 把项目根目录里各个 agent 文件中的受管理区块拿掉（或只处理 `--agent-docs-path` 指定的那个文件），整份文件只剩这个区块时会删掉文件；它不能和 `--features`、`--agent` 一起用。
 
 命令行工具在维护这些文件时，只会在以下固定的起止标记之间更新内容：
 

@@ -304,9 +304,10 @@ export const COMMANDS: readonly CommandSpec[] = [
       { name: 'features', flag: '--features', type: 'string', description: 'Comma-separated features. agents writes the managed block; leaving the flag out is the same as passing it. Any other feature is an error.' },
       { name: 'agent', flag: '--agent', type: 'string', description: 'Which file to write. cursor and codex use AGENTS.md, claude uses CLAUDE.md, hermes uses .hermes.md (or an existing HERMES.md), all writes every agent file the project already has. Without it, an existing agent file is reused.', choices: ['cursor', 'claude', 'codex', 'hermes', 'all'] },
       { name: 'agent-docs-path', flag: '--agent-docs-path', type: 'string', description: 'Write the managed block to this file instead. Relative paths resolve against the project directory.' },
+      { name: 'remove-agents', flag: '--remove-agents', type: 'boolean', description: 'Take the managed block out of the agent files at the project root, or out of the file --agent-docs-path names. A file the block was all of is deleted. Does not combine with --features or --agent.' },
     ],
     json: true,
-    responseTypes: ['init.run'],
+    responseTypes: ['init.run', 'init.remove'],
     examples: [
       `${BINARY} init`,
       `${BINARY} init --json`,
@@ -314,6 +315,7 @@ export const COMMANDS: readonly CommandSpec[] = [
       `${BINARY} init --features agents --agent hermes`,
       `${BINARY} init --features agents --agent all`,
       `${BINARY} init --features agents --agent-docs-path docs/AGENTS.md`,
+      `${BINARY} init --remove-agents`,
     ],
     exitCodes: USAGE_EXIT,
     errors: [

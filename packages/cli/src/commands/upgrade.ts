@@ -42,6 +42,8 @@ export interface UpgradeReport {
   /** True when more places matched than the report lists. */
   truncated: boolean
   notes: string[]
+  /** For an outdated project, the command that moves every listed package released with Core to its version. */
+  commands: string[]
 }
 
 /**
@@ -94,7 +96,20 @@ async function buildReport(project: Project, args: CommandArgs): Promise<Upgrade
     hits,
     truncated,
     notes,
+    commands: status === 'outdated' ? upgradeCommands(project, latest) : [],
   }
+}
+
+/**
+ * One command for the project's Core and every other package it lists that is
+ * released with Core (the same version, such as the themes), so following it
+ * leaves none of them on the old release.
+ */
+function upgradeCommands(project: Project, latest: string): string[] {
+  const released = catalog.packages
+    .filter(pkg => pkg.published && pkg.version === latest && project.dependencies[pkg.name] !== undefined)
+    .map(pkg => `${pkg.name}@${pkg.version}`)
+  return installCommands(project.packageManager, released)
 }
 
 /**
