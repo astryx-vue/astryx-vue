@@ -107,6 +107,6 @@ The `status` prop sets the tone of a banner, and picking the wrong one makes rea
 - Set `:collapsible="false"` for details that users must read, so those details stay visible and no click is needed to open them. Keep the default toggle when the detail is long enough to bury the banner's own message.
 - Announce an async outcome from the transition that produced it, with `useAnnounce`.
 
-`status` controls color and icon only. It does not create a live region. Add `role="status"` only when the visible banner should stay a persistent semantic mirror, and reserve `role="alert"` for genuinely urgent content that should interrupt current speech. Content already on the page at first render is not guaranteed to be announced again.
+`status` controls color and icon only. It does not create a live region. Pass `role="alert"` only for an urgent message the person must act on now: Banner puts it on the title and description, so controls, `end` content and supporting content are not read as part of the alert, and any `aria-*` attributes you pass travel with it. Do not also announce that message with `useAnnounce`. Content already on the page at first render is not guaranteed to be announced again.
 
 For a single field validation message, use [FieldStatus](/en/components/field-status).

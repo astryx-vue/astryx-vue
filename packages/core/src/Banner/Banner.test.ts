@@ -32,9 +32,34 @@ describe('banner', () => {
     expect(wrapper.get('.mine').classes()).not.toContain('astryx-banner-control')
   })
 
-  it('keeps an explicit role the caller asked for', () => {
-    const wrapper = mount(Banner, { props: { status: 'error', title: 'Failed' }, attrs: { role: 'alert' } })
-    expect(wrapper.attributes('role')).toBe('alert')
+  it('puts an urgent role="alert" on the message only, with its aria attributes', () => {
+    const wrapper = mount(Banner, {
+      props: { status: 'error', title: 'Upload failed', description: 'Retry.', isDismissable: true },
+      attrs: { 'role': 'alert', 'aria-label': 'Upload problem', 'data-testid': 'banner' },
+      slots: { default: 'Supporting detail', end: '<button>Retry now</button>' },
+    })
+    const alert = wrapper.get('[role="alert"]')
+    expect(alert.classes()).toContain('astryx-banner-message')
+    expect(alert.attributes('aria-label')).toBe('Upload problem')
+    expect(alert.text()).toBe('Upload failed Retry.')
+    expect(wrapper.attributes('role')).toBeUndefined()
+    expect(wrapper.attributes('aria-label')).toBeUndefined()
+    expect(wrapper.attributes('data-testid')).toBe('banner')
+    expect(alert.element.contains(wrapper.get('button').element)).toBe(false)
+  })
+
+  it('leaves any other role on the frame and separates title and description by a space', () => {
+    const wrapper = mount(Banner, { props: { status: 'info', title: 'Saved', description: 'All set.' }, attrs: { role: 'status' } })
+    expect(wrapper.attributes('role')).toBe('status')
+    expect(wrapper.get('.astryx-banner-message').attributes('role')).toBeUndefined()
+    expect(wrapper.get('.astryx-banner-message').text()).toBe('Saved All set.')
+  })
+
+  it('draws no icon box when nothing supplies a glyph, and marks the dismiss control as the close target', () => {
+    const plain = mount(Banner, { props: { status: 'neutral' as never, title: 'Plain', isDismissable: true } })
+    expect(plain.find('.astryx-banner-icon').exists()).toBe(false)
+    expect(plain.get('.astryx-banner-close').attributes('aria-label')).toBe('Dismiss Plain')
+    expect(plain.get('.astryx-banner-header').element.firstElementChild?.classList.contains('astryx-banner-message')).toBe(true)
   })
 
   it('names the dismiss control after the banner, and localizes both surfaces', () => {

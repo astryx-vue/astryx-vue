@@ -1,12 +1,12 @@
-const pending = new Set<SVGSVGElement>()
+const pending = new Set<Element>()
 let scheduled = false
 
 function pinPendingRings(): void {
   scheduled = false
   const animations: Animation[] = []
-  for (const svg of pending) {
-    if (typeof svg.getAnimations === 'function')
-      animations.push(...svg.getAnimations({ subtree: true }))
+  for (const rotor of pending) {
+    if (typeof rotor.getAnimations === 'function')
+      animations.push(...rotor.getAnimations())
   }
   pending.clear()
   for (const animation of animations)
@@ -14,18 +14,18 @@ function pinPendingRings(): void {
 }
 
 /**
- * 把这条弧的动画起点钉在文档时间线的 0。
+ * 把转子的动画起点钉在文档时间线的 0。
  * 后出现的加载圈因此和先出现的停在同一相位，而不是各自从挂载的那一帧开始。
  */
-export function bindSpinnerPhase(svg: SVGSVGElement): () => void {
-  if (typeof svg.getAnimations !== 'function')
+export function bindSpinnerPhase(rotor: Element): () => void {
+  if (typeof rotor.getAnimations !== 'function')
     return () => {}
-  pending.add(svg)
+  pending.add(rotor)
   if (!scheduled) {
     scheduled = true
     requestAnimationFrame(pinPendingRings)
   }
   return () => {
-    pending.delete(svg)
+    pending.delete(rotor)
   }
 }

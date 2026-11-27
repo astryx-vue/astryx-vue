@@ -13,7 +13,7 @@ footer: false
     <tbody>
       <tr><td><code>width</code></td><td><code>number | string</code></td><td><code>'100%'</code></td><td>Placeholder width. Numbers are interpreted as pixels. Strings are preserved as CSS dimensions.</td></tr>
       <tr><td><code>height</code></td><td><code>number | string</code></td><td><code>'100%'</code></td><td>Placeholder height. Numbers are interpreted as pixels. Strings are preserved as CSS dimensions.</td></tr>
-      <tr><td><code>radius</code></td><td><code>'none' | 0 | 1 | 2 | 3 | 4 | 'rounded'</code></td><td><code>3</code></td><td>Design-token radius step. Use <code>none</code> for square corners and <code>rounded</code> for a fully rounded shape.</td></tr>
+      <tr><td><code>radius</code></td><td><code>'none' | 0 | 1 | 2 | 3 | 4 | 'rounded'</code></td><td><code>3</code></td><td>Design-token radius step. <code>4</code> maps to the same container radius as <code>3</code>. Use <code>none</code> for square corners and <code>rounded</code> for a fully rounded shape.</td></tr>
       <tr><td><code>index</code></td><td><code>number</code></td><td><code>0</code></td><td>Stagger index. Each increment delays the animation by 100ms.</td></tr>
     </tbody>
   </table>

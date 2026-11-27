@@ -15,7 +15,7 @@ footer: false
     <tbody>
       <tr><td><code>activeStep</code></td><td><code>number</code></td><td>-</td><td>当前步骤，从 0 开始。</td></tr>
       <tr><td><code>orientation</code></td><td><code>'horizontal' | 'vertical'</code></td><td><code>'horizontal'</code></td><td>排列方向。</td></tr>
-      <tr><td><code>onStepClick</code></td><td><code>(index: number) =&gt; void</code></td><td>-</td><td>传入后步骤变成按钮。<code>@step-click</code> 填的就是这个属性。</td></tr>
+      <tr><td><code>onStepClick</code></td><td><code>(index: number) =&gt; void</code></td><td>-</td><td>传入后每个步骤都是按钮，直到水平步骤条收起。可用步骤可以激活；禁用步骤仍可聚焦、读屏会说它不可用，但不会激活。<code>@step-click</code> 填的就是这个属性。</td></tr>
       <tr><td><code>label</code></td><td><code>string</code></td><td>进度</td><td>列表的无障碍名称。</td></tr>
       <tr><td><code>density</code></td><td><code>'compact' | 'balanced' | 'spacious'</code></td><td><code>'balanced'</code></td><td>每一步周围的间距。</td></tr>
       <tr><td><code>indicatorPosition</code></td><td><code>'separated' | 'on-track'</code></td><td><code>'separated'</code></td><td>标记落在连接线上，还是和一条单独的进度条分开。</td></tr>

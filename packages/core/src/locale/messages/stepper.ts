@@ -15,6 +15,8 @@ export interface StepperMessages {
     completed: string
     warning: string
     error: string
+    /** 紧凑布局里禁用步骤的读屏状态词。 */
+    unavailable: string
   }
 }
 
@@ -30,6 +32,7 @@ export const stepperMessages: Record<AstryxLocale, StepperMessages> = {
       completed: 'completed',
       warning: 'warning',
       error: 'error',
+      unavailable: 'unavailable',
     },
   },
   'zh-CN': {
@@ -43,6 +46,7 @@ export const stepperMessages: Record<AstryxLocale, StepperMessages> = {
       completed: '已完成',
       warning: '警告',
       error: '错误',
+      unavailable: '不可用',
     },
   },
 }
