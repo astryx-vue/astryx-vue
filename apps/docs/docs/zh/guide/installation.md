@@ -52,6 +52,32 @@ bun add @astryx-vue/core @astryx-vue/themes
 
 虽然子路径和包根导出的是同一批组件，但在文档和日常开发中，建议使用子路径（例如 `@astryx-vue/core/Button`）。这样引用意图清晰，而且打包器只会按需打包该组件独有的结构样式。如果你从包根引入 `useClipboard` 这类通用函数，在部分未能精细摇树（Tree-shaking）的打包配置下，可能会把其余组件也一同打包进来。所以仅仅使用组件时，请优先写子路径。
 
-核心包与主题包保持相同的版本号节奏。版本演进记录可参阅 [更新日志](/guide/changelog)，升级注意事项见 [升级指南](/guide/migration)。
+版本演进记录可参阅 [更新日志](/guide/changelog)。
 
 如果你希望在本地终端或借助 AI Agent 快速检索组件文档，可以了解我们的 [命令行工具](/guide/cli)。
+
+## 升级
+
+升级时，把项目里用到的所有 Astryx 包一条命令升到同一个版本。主题包是照着某个具体的核心版本做的，主题留在旧版本，就和新核心对不上了。
+
+::: code-group
+```sh [pnpm]
+pnpm add @astryx-vue/core@latest @astryx-vue/themes@latest
+```
+
+```sh [npm]
+npm install @astryx-vue/core@latest @astryx-vue/themes@latest
+```
+
+```sh [yarn]
+yarn add @astryx-vue/core@latest @astryx-vue/themes@latest
+```
+
+```sh [bun]
+bun add @astryx-vue/core@latest @astryx-vue/themes@latest
+```
+:::
+
+项目里用到的其他 `@astryx-vue/*` 包（`@astryx-vue/lab`、`@astryx-vue/richtext`、`@astryx-vue/charts`）也写进同一条命令。如果包管理器会把新发布的版本压住几天，请把整个 `@astryx-vue/*` 范围都排除掉，pnpm 里是 `minimumReleaseAgeExclude: ['@astryx-vue/*']`。只排除其中几个包，会装出来不同版本的包混在一起。
+
+然后运行 `npx @astryx-vue/cli upgrade`，它会按 [升级指南](/guide/migration) 告诉你项目要改什么，并列出旧名字还出现在哪里。

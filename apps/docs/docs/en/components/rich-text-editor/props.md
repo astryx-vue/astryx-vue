@@ -62,3 +62,13 @@ footer: false
 
 - **Events**: `@parseError="(error: Error) => void"` fires when parsing content fails.
 - **Slots**: `#errorFallback` fallback content when parsing fails; `#default` internal extension slot.
+
+### `<RichTextEditorAutoLinkPlugin>` props and events
+
+Render it in the default slot of `<RichTextEditor>`. It turns typed and pasted URLs and email addresses into links, and it must live inside the editor because it reaches the editor through the editor's context. Its links open in a new tab, with `target="_blank"` and `rel="noopener noreferrer"` written into the link node.
+
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `matchers` | `LinkMatcher[]` | `DEFAULT_LINK_MATCHERS` | Link matchers to use. The default recognizes URLs and email addresses. Build extra matchers with `createLinkMatcherWithRegExp` from `@lexical/link`. |
+
+- **Events**: `@change="(url: string | null, prevUrl: string | null) => void"` fires when auto-linking creates, updates or removes a link. It gets the new URL, or `null` when the link is removed, and the previous URL.

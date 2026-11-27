@@ -62,3 +62,13 @@ footer: false
 
 - **事件**：`@parseError="(error: Error) => void"` 在内容解析失败时触发。
 - **插槽**：`#errorFallback` 解析失败时的降级显示内容；`#default` 内部扩展插槽。
+
+### `<RichTextEditorAutoLinkPlugin>` 属性与事件
+
+放在 `<RichTextEditor>` 的默认插槽里，输入或粘贴的网址、邮箱会自动变成链接。它要通过编辑器的上下文找到编辑器，所以必须放在编辑器里面。生成的链接在新标签页打开，链接节点里写入了 `target="_blank"` 和 `rel="noopener noreferrer"`。
+
+| 属性名 | 类型 | 默认值 | 说明 |
+| :--- | :--- | :--- | :--- |
+| `matchers` | `LinkMatcher[]` | `DEFAULT_LINK_MATCHERS` | 要识别哪些写法，默认识别网址和邮箱。用 `@lexical/link` 的 `createLinkMatcherWithRegExp` 可以加自己的。 |
+
+- **事件**：`@change="(url: string | null, prevUrl: string | null) => void"` 在自动创建、更新或去掉链接时触发，参数是新网址（去掉链接时为 `null`）和原来的网址。
