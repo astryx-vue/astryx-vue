@@ -28,6 +28,9 @@ export type {
   MenuPressStep,
 } from './internal/menuPressGesture.js'
 
+/** 手指或笔按住时点亮的那一行带这个标记，行按「按下」的颜色画。鼠标保持悬停的颜色。 */
+export const MENU_PRESS_LIT_ATTRIBUTE = 'data-astryx-menu-press-lit'
+
 /** 手指在触发器上按多久菜单才打开。 */
 const MENU_PRESS_LONG_PRESS_MS = 500
 
@@ -107,6 +110,7 @@ export function useMenuPress(options: MenuPressOptions): MenuPress {
   let stopTouchPrevent: (() => void) | null = null
   let lastPointerEvent: PointerEvent | null = null
   let triggerGesture: number | null = null
+  let litRow: HTMLElement | null = null
   /** 结束了上一次手势的那根「第二根手指」不能开始下一次。 */
   let ignoredPointerId: number | null = null
 
@@ -145,7 +149,16 @@ export function useMenuPress(options: MenuPressOptions): MenuPress {
     armClickGuard(doc, { staysInstalled: true, cancelsTouchEnd: isTouch, touchIdentifier: touchIdentifier ?? undefined })
   }
 
+  function setLit(row: HTMLElement | null): void {
+    if (litRow === row)
+      return
+    litRow?.removeAttribute(MENU_PRESS_LIT_ATTRIBUTE)
+    litRow = row
+    litRow?.setAttribute(MENU_PRESS_LIT_ATTRIBUTE, '')
+  }
+
   function endGesture(): void {
+    setLit(null)
     touchTracker?.stop()
     touchTracker = null
     longPress.cancel()
@@ -160,6 +173,7 @@ export function useMenuPress(options: MenuPressOptions): MenuPress {
   }
 
   function highlight(row: HTMLElement | null): void {
+    setLit(gesture.phase !== 'idle' && gesture.pointerType !== 'mouse' ? row : null)
     if (options.onHighlight != null)
       options.onHighlight(row)
     else

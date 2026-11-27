@@ -7,7 +7,7 @@ footer: false
 
 ## 使用方法
 
-`DropdownMenuGroup` 是复合菜单里一组带标题的行。它渲染成 `role="group"`，并用标题作为这一组的无障碍名称；标题只是普通文字，不是 `menuitem`，所以方向键和首字母查找都会跳过它。数据数组里的等价写法是在 `items` 里放一条 `{type: "section", title, items}`；两种写法的标题用同一套字号和主题。
+`DropdownMenuGroup` 是复合菜单里一组带标题的行。它渲染成 `role="group"`，并用标题作为这一组的无障碍名称；标题只是普通文字，不是 `menuitem`，所以方向键和首字母查找都会跳过它。标题里不要放可交互的内容：控件请放进菜单的 `header` 或 `footer`，这样每个可用的操作都留在方向键的顺序里。有标题时以标题命名这一组；没有标题时，传入的 `aria-labelledby` 来命名。数据数组里的等价写法是在 `items` 里放一条 `{type: "section", title, items}`；两种写法的标题用同一套字号和主题。
 
 ```ts
 import { DropdownMenuGroup } from '@astryx-vue/core/DropdownMenu'
