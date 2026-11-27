@@ -26,6 +26,8 @@ interface DragState extends SheetDetents {
   /** The contact's positions on the timestamps their events carry. */
   tracker: VelocityTracker
   baseOffset: number
+  /** Whether the drag has moved the sheet off its detent. */
+  hasTraveled: boolean
 }
 
 /** Where a close holds the sheet: the drag's last transform, until the exit takes over. */
@@ -63,12 +65,16 @@ export interface UseSheetGesturesOptions {
   onSnap: (visibleHeight: number) => void
   /** Called when a gesture asks the sheet to close. */
   onDismiss: () => void
+  /** Called once a drag first moves the sheet off its detent. */
+  onTravelStart?: () => void
 }
 
 export interface SheetGestures {
   isDragging: Ref<boolean>
   isReconciling: Ref<boolean>
   isOverflowing: Ref<boolean>
+  /** Whether the sheet rests at its full height, its first detent. */
+  isAtFullHeight: ComputedRef<boolean>
   panelTransform: ComputedRef<string | undefined>
   panelHeight: ComputedRef<string | undefined>
   scrollPreservationInset: Ref<number>
@@ -84,7 +90,7 @@ export interface SheetGestures {
 
 /** Drag, snap, and settle behavior of the sheet panel. */
 export function useSheetGestures(options: UseSheetGesturesOptions): SheetGestures {
-  const { panel, body, isOpen, canDismiss, reserve, getSnapHeights, onScrimOpacity, onSnap, onDismiss } = options
+  const { panel, body, isOpen, canDismiss, reserve, getSnapHeights, onScrimOpacity, onSnap, onDismiss, onTravelStart } = options
 
   const isDragging = ref(false)
   const isReconciling = ref(false)
@@ -219,6 +225,7 @@ export function useSheetGestures(options: UseSheetGesturesOptions): SheetGesture
       ...resolveDetents(),
       ...start,
       baseOffset: settledOffset.value,
+      hasTraveled: false,
     }
     // Seeded at the resting stop, so flipping isDragging never jumps the sheet.
     dragOffset.value = settledOffset.value
@@ -235,6 +242,10 @@ export function useSheetGestures(options: UseSheetGesturesOptions): SheetGesture
     const raw = state.baseOffset + clientY - state.startY
     const shown = stretchedOffset(raw, state.offsets, state)
     dragOffset.value = shown
+    if (!state.hasTraveled && shown !== state.baseOffset) {
+      state.hasTraveled = true
+      onTravelStart?.()
+    }
     reportScrim(scrimFor(shown, state))
   }
 
@@ -404,6 +415,7 @@ export function useSheetGestures(options: UseSheetGesturesOptions): SheetGesture
     isDragging,
     isReconciling,
     isOverflowing,
+    isAtFullHeight: computed(() => settledOffset.value === 0),
     panelTransform,
     panelHeight,
     scrollPreservationInset,
