@@ -444,9 +444,10 @@
 
 ### v0.7.4
 
-- [ ] [`36515dccd`](https://github.com/meta/astryx/commit/36515dccd) feat(core): BottomSheetSwitcher presents each sheet in its own native dialog (#7720)
+- [x] [`36515dccd`](https://github.com/meta/astryx/commit/36515dccd) feat(core): BottomSheetSwitcher presents each sheet in its own native dialog (#7720)
   - 暂缓：切换器改成每一步一个原生对话框，要建立在 BottomSheet 打开顺序栈上，归 BottomSheet 打开顺序任务
   - 暂缓：[BottomSheet打开顺序栈] Switcher 仍是一个共用 dialog，每一步各自一个原生 dialog 要建立在打开顺序栈上
+  - 已移植：[#658](https://github.com/astryx-vue/astryx-vue/pull/658)。BottomSheetSwitcher 每一步各用一个原生 dialog，换步走同样的交接，整段流程在叠放里算一层，id 和 data-testid 只落在当前那步上
 - [x] [`0d2cb4b62`](https://github.com/meta/astryx/commit/0d2cb4b62) test(core): browser evidence for per-sheet switcher dialogs (#7757)
   - 不适用：上游组件规范文档、只改上游测试（自动初筛）
 
@@ -469,9 +470,10 @@
   - 已移植：[#596](https://github.com/astryx-vue/astryx-vue/pull/596)。Popover 新增 presentation 属性，adaptive 时手机上以 BottomSheet 呈现，接上呈现保持、BottomSheet 宿主和焦点交接
 - [x] [`c22cbe2fd`](https://github.com/meta/astryx/commit/c22cbe2fd) fix(core): useAnnounce delivers inside the open Astryx modal that encloses its caller (#8009)
   - Vue 版已有：announceChannel 按 :modal 对话框找播报区域，BottomSheet 的原生 dialog 里调用 useAnnounce 就写进它里面
-- [ ] [`2a162e1b6`](https://github.com/meta/astryx/commit/2a162e1b6) feat(core): BottomSheet stacks by open order, replaces on a same-update switch, and BottomSheetSwitcher is deprecated (#7648)
+- [x] [`2a162e1b6`](https://github.com/meta/astryx/commit/2a162e1b6) feat(core): BottomSheet stacks by open order, replaces on a same-update switch, and BottomSheetSwitcher is deprecated (#7648)
   - 暂缓：按打开顺序叠放、同次更新替换、BottomSheetSwitcher 废弃，归 BottomSheet 打开顺序任务
   - 暂缓：[BottomSheet打开顺序栈] 没有按打开顺序叠放、同一次更新替换的登记表
+  - 已移植：[#658](https://github.com/astryx-vue/astryx-vue/pull/658)。BottomSheet 按打开顺序叠放（被盖住的往后退、只有一层遮罩、关闭只作用于最上面那张），同一次更新里从开着的那张内部一关一开算替换交接，BottomSheetSwitcher 用 JSDoc 标为已废弃
 - [x] [`54fbccb27`](https://github.com/meta/astryx/commit/54fbccb27) feat(core): Tokenizer touch sheet behind experimental.presentation (#7977)
   - 暂缓：Tokenizer 触屏弹层还没做：Vue 版 Tokenizer 没有 presentation 属性和弹层编辑界面，上游约 4800 行
   - 暂缓：Tokenizer 触屏弹层依赖 presentation 属性和触屏呈现；归动效 4a 触屏呈现任务
@@ -482,9 +484,10 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`248380ebd`](https://github.com/meta/astryx/commit/248380ebd) spec(Dialog): every modal presentation is a focus region through one module (DEC-2) (#8882)
   - 不适用：上游组件规范文档（自动初筛）
-- [ ] [`8e1e4405b`](https://github.com/meta/astryx/commit/8e1e4405b) fix(BottomSheet): a replaced sheet moves down to a shorter entering sheet again (#8920)
+- [x] [`8e1e4405b`](https://github.com/meta/astryx/commit/8e1e4405b) fix(BottomSheet): a replaced sheet moves down to a shorter entering sheet again (#8920)
   - 暂缓：替换交接的量取在打开顺序栈里，归 BottomSheet 打开顺序任务
   - 暂缓：[BottomSheet打开顺序栈] 替换交接的量取在打开顺序栈里
+  - 已移植：[#658](https://github.com/astryx-vue/astryx-vue/pull/658)。替换时被替换的面板比新面板高就同时向下移到新面板顶边，两边动画都走完后才淡出
 - [x] [`c9066fe8b`](https://github.com/meta/astryx/commit/c9066fe8b) feat(tokens): add --ease-exit, the curve BottomSheet already closes on (#8004)
   - Vue 版已有：bottom-sheet.css 的退场曲线已用 --astryx-ease-exit，触屏固定同一条曲线，主题 token 已有
 
@@ -551,6 +554,7 @@
 - [ ] [`ea33dafd5`](https://github.com/meta/astryx/commit/ea33dafd5) feat(docsite): label deprecated components from their doc (#9046)
   - 暂缓：文档站按文档标记废弃组件，随 BottomSheetSwitcher 废弃一起做，归 BottomSheet 打开顺序任务
   - 暂缓：[BottomSheet打开顺序栈] 文档站废弃徽标随 BottomSheetSwitcher 废弃一起做，目前没有已弃用的组件
+  - 暂缓：文档站废弃徽标和提示已在 #658 完成；剩 CLI 搜索结果的 deprecated 字段和站内搜索行的废弃标记
 - [x] [`0588a1342`](https://github.com/meta/astryx/commit/0588a1342) feat(core): one on-screen keyboard module; a Tall BottomSheet reads it and rides Gboard's slides (#8559)
   - 暂缓：统一的屏幕键盘模块与 Tall 抽屉跟随 Gboard 滑动，归屏幕键盘模块
   - 已移植：[#648](https://github.com/astryx-vue/astryx-vue/pull/648)。键盘模块（高度测量、Chromium 布局向导、键盘模型、rideKeyboard、useMobileKeyboard）和 Tall 底部面板让出键盘位置并跟着 Gboard 滑动
@@ -1582,6 +1586,7 @@
 - [ ] [`ea33dafd5`](https://github.com/meta/astryx/commit/ea33dafd5) feat(docsite): label deprecated components from their doc (#9046)
   - 暂缓：需要文档 frontmatter 的 deprecated 字段、catalog 字段、文档站徽标和 search 结果字段一整套；目前没有已弃用的组件，出现时再做
   - 暂缓：[BottomSheet打开顺序栈] 文档站废弃徽标随 BottomSheetSwitcher 废弃一起做，目前没有已弃用的组件
+  - 暂缓：文档站废弃徽标和提示已在 #658 完成；剩 CLI 搜索结果的 deprecated 字段和站内搜索行的废弃标记
 - [x] [`8c2262460`](https://github.com/meta/astryx/commit/8c2262460) docs(useTreeFocus): add a keyboard file tree example block (#9617)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`510f96d5f`](https://github.com/meta/astryx/commit/510f96d5f) test(cli): build.family's fixtures live in the OS temp directory, not in the CLI's source tree (#9875)
@@ -3039,9 +3044,10 @@
   - 已移植：[#554](https://github.com/astryx-vue/astryx-vue/pull/554)。表格对比、告警栏仪表盘页的状态文字改读 text 状态色；状态色角色本身见 #517
 - [x] [`bb12cfbd6`](https://github.com/meta/astryx/commit/bb12cfbd6) fix(Thumbnail): Open and Remove stay mounted while they cannot act (#8542)
   - 已移植：[#503](https://github.com/astryx-vue/astryx-vue/pull/503)。按基础展示族结论：Thumbnail 的 Open/Remove 不能操作时仍挂载并标 aria-disabled
-- [ ] [`2a162e1b6`](https://github.com/meta/astryx/commit/2a162e1b6) feat(core): BottomSheet stacks by open order, replaces on a same-update switch, and BottomSheetSwitcher is deprecated (#7648)
+- [x] [`2a162e1b6`](https://github.com/meta/astryx/commit/2a162e1b6) feat(core): BottomSheet stacks by open order, replaces on a same-update switch, and BottomSheetSwitcher is deprecated (#7648)
   - 暂缓：BottomSheet 按打开顺序叠放、同一次更新里切换替换：Vue 没有等价的打开顺序栈，Switcher 弃用说明待单独处理
   - 暂缓：[BottomSheet打开顺序栈] 没有按打开顺序叠放、同一次更新替换的登记表
+  - 已移植：[#658](https://github.com/astryx-vue/astryx-vue/pull/658)。BottomSheet 按打开顺序叠放（被盖住的往后退、只有一层遮罩、关闭只作用于最上面那张），同一次更新里从开着的那张内部一关一开算替换交接，BottomSheetSwitcher 用 JSDoc 标为已废弃
 - [x] [`dbb2d527e`](https://github.com/meta/astryx/commit/dbb2d527e) fix(cli): the Tokenizer showcase block searches its tags (#8737)
   - Vue 版已有：tokenizer 文档页的 overview 示例本来就带 6 个标签的搜索源，输入能筛到结果
 - [x] [`b84bf77fa`](https://github.com/meta/astryx/commit/b84bf77fa) chore: move project links to meta/astryx (#8827)
@@ -6983,9 +6989,10 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`87a9e776c`](https://github.com/meta/astryx/commit/87a9e776c) perf(useLayer): placing a context layer re-renders its slot, not its host (#8519)
   - 不适用：React 重渲染性能：Vue 的 ref 不会让宿主重渲染
-- [ ] [`2a162e1b6`](https://github.com/meta/astryx/commit/2a162e1b6) feat(core): BottomSheet stacks by open order, replaces on a same-update switch, and BottomSheetSwitcher is deprecated (#7648)
+- [x] [`2a162e1b6`](https://github.com/meta/astryx/commit/2a162e1b6) feat(core): BottomSheet stacks by open order, replaces on a same-update switch, and BottomSheetSwitcher is deprecated (#7648)
   - 暂缓：BottomSheet 按打开顺序叠放、同一次更新里切换替换：Vue 的抽屉叠放用切换器管理，没有等价的打开顺序栈；Switcher 弃用说明待单独处理
   - 暂缓：[BottomSheet打开顺序栈] 没有按打开顺序叠放、同一次更新替换的登记表
+  - 已移植：[#658](https://github.com/astryx-vue/astryx-vue/pull/658)。BottomSheet 按打开顺序叠放（被盖住的往后退、只有一层遮罩、关闭只作用于最上面那张），同一次更新里从开着的那张内部一关一开算替换交接，BottomSheetSwitcher 用 JSDoc 标为已废弃
 - [x] [`6752d03da`](https://github.com/meta/astryx/commit/6752d03da) spec(AST-059): proposed — the software keyboard caps an anchored layer (FR9, FR10, DEC-6) (#8506)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`2bae302a6`](https://github.com/meta/astryx/commit/2bae302a6) docs(spec): Layer records its shipped contract as current (#8815)
@@ -9011,9 +9018,10 @@
   - 不适用：上游组件规范文档（自动初筛）
 - [x] [`c22cbe2fd`](https://github.com/meta/astryx/commit/c22cbe2fd) fix(core): useAnnounce delivers inside the open Astryx modal that encloses its caller (#8009)
   - Vue 版已有：composables/internal/announce.ts 在原生模态打开时把播报写进模态里的区域，toast 也会被搬进模态
-- [ ] [`2a162e1b6`](https://github.com/meta/astryx/commit/2a162e1b6) feat(core): BottomSheet stacks by open order, replaces on a same-update switch, and BottomSheetSwitcher is deprecated (#7648)
+- [x] [`2a162e1b6`](https://github.com/meta/astryx/commit/2a162e1b6) feat(core): BottomSheet stacks by open order, replaces on a same-update switch, and BottomSheetSwitcher is deprecated (#7648)
   - 暂缓：BottomSheet 按打开顺序叠放、同次更新替换（含入场、对齐、淡出编排）和非模态 popover 托管，Vue 版没有叠放登记表和 sheet 转场编排，归动效与手势引擎任务
   - 暂缓：[BottomSheet打开顺序栈] 没有按打开顺序叠放、同一次更新替换的登记表
+  - 已移植：[#658](https://github.com/astryx-vue/astryx-vue/pull/658)。BottomSheet 按打开顺序叠放（被盖住的往后退、只有一层遮罩、关闭只作用于最上面那张），同一次更新里从开着的那张内部一关一开算替换交接，BottomSheetSwitcher 用 JSDoc 标为已废弃
 - [x] [`81eeb6afa`](https://github.com/meta/astryx/commit/81eeb6afa) fix(Popover): an open popover no longer pulls in a Tab pressed elsewhere on the page (#8611)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`54fbccb27`](https://github.com/meta/astryx/commit/54fbccb27) feat(core): Tokenizer touch sheet behind experimental.presentation (#7977)
