@@ -610,6 +610,11 @@
       "import": "./dist/locale/index.js"
     },
     "./locales/*.json": "./locales/*.json",
+    "./palette": {
+      "source": "./src/palette/index.ts",
+      "types": "./dist/palette/index.d.ts",
+      "import": "./dist/palette/index.js"
+    },
     "./package.json": "./package.json",
     "./reset.css": {
       "types": "./css.d.ts",
@@ -1146,6 +1151,10 @@
         "import": "./dist/locale/index.js"
       },
       "./locales/*.json": "./locales/*.json",
+      "./palette": {
+        "types": "./dist/palette/index.d.ts",
+        "import": "./dist/palette/index.js"
+      },
       "./package.json": "./package.json",
       "./reset.css": {
         "types": "./css.d.ts",

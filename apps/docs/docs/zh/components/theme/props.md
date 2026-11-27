@@ -23,7 +23,7 @@ footer: false
         <td><code>mode</code></td>
         <td><code>'light' | 'dark' | 'system'</code></td>
         <td><code>'system'</code></td>
-        <td>颜色模式。<code>system</code> 跟随页面和系统。</td>
+        <td>颜色模式。<code>system</code> 取页面根的明暗；根上两种都写了时跟随系统。</td>
       </tr>
     </tbody>
   </table>

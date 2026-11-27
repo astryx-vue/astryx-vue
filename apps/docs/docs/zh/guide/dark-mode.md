@@ -6,7 +6,7 @@ title: 深色模式
 
 Neutral 主题不需要单独引入一份额外的深色 CSS 样式表。所有颜色变量在底层均直接采用现代 CSS 标准的 `light-dark(浅色值, 深色值)` 语法，浏览器会根据元素当前所处的 `color-scheme` 状态，自动决定显示浅色还是深色。
 
-当你引入 `@astryx-vue/themes/neutral.css` 之后，`:root` 根节点以及 `[data-astryx-theme='neutral']` 元素上的 `color-scheme` 默认被声明为 `light dark`。这意味着组件默认就能自适应操作系统的外观偏好，也能继承祖先节点已经设定的明暗模式。
+当你引入 `@astryx-vue/themes/neutral.css` 之后，`:root` 根节点上的 `color-scheme` 默认被声明为 `light dark`。页面默认自适应操作系统的外观偏好，你自己的 CSS 写在 `html` 上的 `color-scheme` 优先。主题的包装元素不声明配色，取外面的那一种。
 
 ## 手动强制指定浅色或深色
 
@@ -29,6 +29,10 @@ Neutral 主题不需要单独引入一份额外的深色 CSS 样式表。所有�
 文档站右上角的明暗切换开关，依托的是 VitePress 自带的 `appearance` 配置。当切换到深色模式时，VitePress 会在 `<html>` 上添加 `class="dark"`，并同步将 `color-scheme` 置为 `dark`，此时 Neutral 的 `light-dark()` 就会自然取深色那一档的色值。
 
 这属于文档站本身的接入方式，组件库自身并不强制绑定必须叫 `.dark` 的类名。在你的实际业务项目中，推荐使用上面提到的 `data-astryx-color-mode` 属性，或者直接设置 CSS `color-scheme`。
+
+## system 的 Theme 跟随页面
+
+`mode="system"` 的 `Theme` 取外面页面的明暗，而不是直接看设备设置。页面根的 `color-scheme` 说了算：写成 `light` 或 `dark`，`Theme` 里就是那一种；写成 `light dark`（`reset.css` 和 Neutral 的 `:root` 规则都是这样写的）才跟随读者的系统设置。根上没有 `color-scheme`、也没有 `<meta name="color-scheme">` 时，页面按浅色算。所以宿主把页面画成深色时，`Theme` 里面也是深色主题，`useTheme().mode` 报告的也是同一种。主题自己写的 `@dark`、`@light` 组件样式同样跟着走：根 `Theme` 会把它画的明暗写在 `<html data-astryx-scheme>` 上。被强制了浅色或深色的 `Theme` 包着时，里面的 `system` `Theme` 回到跟随读者的系统设置。
 
 ## 局部区域独立切换明暗
 
