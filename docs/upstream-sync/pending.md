@@ -931,99 +931,152 @@
 
 ### v0.7.2
 
-- [ ] [`7c206edbb`](https://github.com/meta/astryx/commit/7c206edbb) feat(List): one edge prop for padded, flush, outset, and bleed rows (#7592)
-- [ ] [`e4bdd7026`](https://github.com/meta/astryx/commit/e4bdd7026) docs(cli): make the integration guides and Authoring Reference match the CLI (#7263)
-- [ ] [`822261231`](https://github.com/meta/astryx/commit/822261231) fix(cli): upgrade no longer says "up to date" when the CLI is older than Core (#7491)
-- [ ] [`40b21e570`](https://github.com/meta/astryx/commit/40b21e570) feat(cli): list passages two integration topics repeat word for word (#7735)
-- [ ] [`a44ebd55a`](https://github.com/meta/astryx/commit/a44ebd55a) feat(cli): install once, run anywhere — every copy hands a project's run to the release its Core matches (#7649)
-- [ ] [`14c0ec650`](https://github.com/meta/astryx/commit/14c0ec650) chore: version packages for v0.7.2 (#7798)
+- [x] [`7c206edbb`](https://github.com/meta/astryx/commit/7c206edbb) feat(List): one edge prop for padded, flush, outset, and bleed rows (#7592)
+  - 已移植：[#602](https://github.com/astryx-vue/astryx-vue/pull/602)。Vue 版 List 早有 edge 属性并保留 edgeCompensation 别名；升级指南补一节 edgeCompensation="inline" 改 edge="outset"，upgrade 会据此在项目里查旧写法；上游的源码改写脚本本身不适用，upgrade 只读
+- [x] [`e4bdd7026`](https://github.com/meta/astryx/commit/e4bdd7026) docs(cli): make the integration guides and Authoring Reference match the CLI (#7263)
+  - 不适用：上游 integration 指南和 Authoring Reference 文档，Vue CLI 没有 codemod 和 integration 编写能力
+- [x] [`822261231`](https://github.com/meta/astryx/commit/822261231) fix(cli): upgrade no longer says "up to date" when the CLI is older than Core (#7491)
+  - 已移植：[#602](https://github.com/astryx-vue/astryx-vue/pull/602)。项目的 core 比 CLI 认的版本新时，upgrade 新增 cli-older 状态并提示先升级 CLI，不再说已是最新，补测试
+- [x] [`40b21e570`](https://github.com/meta/astryx/commit/40b21e570) feat(cli): list passages two integration topics repeat word for word (#7735)
+  - 不适用：上游 integration 文档重复段落的检查，Vue CLI 没有这批文档
+- [x] [`a44ebd55a`](https://github.com/meta/astryx/commit/a44ebd55a) feat(cli): install once, run anywhere — every copy hands a project's run to the release its Core matches (#7649)
+  - 不适用：上游把运行交给项目 Core 对应版本发布的机制，Vue 的 upgrade 只读、不跑 codemod
+- [x] [`14c0ec650`](https://github.com/meta/astryx/commit/14c0ec650) chore: version packages for v0.7.2 (#7798)
+  - 不适用：v0.7.2 发布产物：codemod 注册表和脚本归档；List edge 的 Vue 侧升级说明见 7c206edbb
 
 ### v0.7.3
 
-- [ ] [`863e167ba`](https://github.com/meta/astryx/commit/863e167ba) chore: merge v0.7.2 release outputs to main (#7807)
-- [ ] [`b1e1936bb`](https://github.com/meta/astryx/commit/b1e1936bb) fix(core): provide dataVars defaults in prebuilt CSS (#7694)
-- [ ] [`b74cf213e`](https://github.com/meta/astryx/commit/b74cf213e) fix(cli): init writes agent docs every agent reads, at the project root, never in the home folder (#7497)
-- [ ] [`cb489ffbc`](https://github.com/meta/astryx/commit/cb489ffbc) fix(cli): find Core and configured integrations from any folder in a project (#7492)
-- [ ] [`641d08e46`](https://github.com/meta/astryx/commit/641d08e46) docs(cli): give every doc a named home; authoring owns integration authoring (#7835)
+- [x] [`863e167ba`](https://github.com/meta/astryx/commit/863e167ba) chore: merge v0.7.2 release outputs to main (#7807)
+  - 不适用：v0.7.2 发布产物合并，同 14c0ec650
+- [x] [`b1e1936bb`](https://github.com/meta/astryx/commit/b1e1936bb) fix(core): provide dataVars defaults in prebuilt CSS (#7694)
+  - 不适用：上游 data-token 归属校验 codemod 与预构建 CSS 默认值，Vue 版没有 dataVars 机制
+- [x] [`b74cf213e`](https://github.com/meta/astryx/commit/b74cf213e) fix(cli): init writes agent docs every agent reads, at the project root, never in the home folder (#7497)
+  - 已移植：[#602](https://github.com/astryx-vue/astryx-vue/pull/602)。init 写 agent 文档本来只在项目内、不写 home；现在从子目录运行也写到项目根，补测试
+- [x] [`cb489ffbc`](https://github.com/meta/astryx/commit/cb489ffbc) fix(cli): find Core and configured integrations from any folder in a project (#7492)
+  - 已移植：[#602](https://github.com/astryx-vue/astryx-vue/pull/602)。upgrade、init、doctor 从项目任意子目录运行都回到最近的 package.json 所在目录，不越过 home 往上找，补测试
+- [x] [`641d08e46`](https://github.com/meta/astryx/commit/641d08e46) docs(cli): give every doc a named home; authoring owns integration authoring (#7835)
+  - 不适用：上游 CLI 文档树归属调整，Vue CLI 没有对应文档树
 
 ### v0.7.4
 
-- [ ] [`1a552f29b`](https://github.com/meta/astryx/commit/1a552f29b) [CLI] Doc syntax: {@command}, {@pm}, {@pm-only} tokens, and integration check --next (#7868)
-- [ ] [`4fc0c4a48`](https://github.com/meta/astryx/commit/4fc0c4a48) feat(cli): experimental icon sets — icon definitions, `astryx experimental icon`, templates that use the installed set (#7759)
+- [x] [`1a552f29b`](https://github.com/meta/astryx/commit/1a552f29b) [CLI] Doc syntax: {@command}, {@pm}, {@pm-only} tokens, and integration check --next (#7868)
+  - 不适用：上游文档语法令牌和 integration check --next，Vue CLI 没有
+- [x] [`4fc0c4a48`](https://github.com/meta/astryx/commit/4fc0c4a48) feat(cli): experimental icon sets — icon definitions, `astryx experimental icon`, templates that use the installed set (#7759)
+  - 不适用：上游实验性图标集命令，Vue 版没有该能力
 
 ### v0.7.5
 
-- [ ] [`1f3559072`](https://github.com/meta/astryx/commit/1f3559072) fix(cli): stop requiring fallbacks for raw data-token uses in astryx upgrade (#7912)
-- [ ] [`3dd95a046`](https://github.com/meta/astryx/commit/3dd95a046) fix(cli): only migrate theme-shaped objects proven to be Astryx themes (#7980)
-- [ ] [`9114234a7`](https://github.com/meta/astryx/commit/9114234a7) fix(cli): keep app classes on MetadataList out of data-columns selectors (#7982)
-- [ ] [`384f1851b`](https://github.com/meta/astryx/commit/384f1851b) fix(cli): do not scan through symlinks into dependency or VCS trees (#7994)
-- [ ] [`04434e7de`](https://github.com/meta/astryx/commit/04434e7de) fix(cli): add the upgrade receipt to the codemod failure error (#7993)
-- [ ] [`339779097`](https://github.com/meta/astryx/commit/339779097) fix(cli): skip protected files that do not parse instead of failing upgrade (#7991)
-- [ ] [`4f9bdd782`](https://github.com/meta/astryx/commit/4f9bdd782) fix(cli): layout.components codemod reads a const-bound default-exported config (#8250)
-- [ ] [`e8ef708e7`](https://github.com/meta/astryx/commit/e8ef708e7) feat(cli): report manual migrations and regeneration apart from codemod failures (#7995)
+- [x] [`1f3559072`](https://github.com/meta/astryx/commit/1f3559072) fix(cli): stop requiring fallbacks for raw data-token uses in astryx upgrade (#7912)
+  - 不适用：上游 data-token 备用值校验 codemod，Vue 版没有
+- [x] [`3dd95a046`](https://github.com/meta/astryx/commit/3dd95a046) fix(cli): only migrate theme-shaped objects proven to be Astryx themes (#7980)
+  - 不适用：上游识别 React 里主题对象写法的 codemod，Vue 的 upgrade 不改写源码
+- [x] [`9114234a7`](https://github.com/meta/astryx/commit/9114234a7) fix(cli): keep app classes on MetadataList out of data-columns selectors (#7982)
+  - 不适用：上游 MetadataList 主题选择器 codemod，针对 React 源码
+- [x] [`384f1851b`](https://github.com/meta/astryx/commit/384f1851b) fix(cli): do not scan through symlinks into dependency or VCS trees (#7994)
+  - 已移植：[#602](https://github.com/astryx-vue/astryx-vue/pull/602)。upgrade 扫描不再穿过符号链接（文件和目录都跳过），补测试
+- [x] [`04434e7de`](https://github.com/meta/astryx/commit/04434e7de) fix(cli): add the upgrade receipt to the codemod failure error (#7993)
+  - 不适用：codemod 失败时附回执，Vue 的 upgrade 只读、不改文件
+- [x] [`339779097`](https://github.com/meta/astryx/commit/339779097) fix(cli): skip protected files that do not parse instead of failing upgrade (#7991)
+  - 不适用：跳过不能解析的受保护文件，Vue 的 upgrade 只按文本查旧名字，不解析语法
+- [x] [`4f9bdd782`](https://github.com/meta/astryx/commit/4f9bdd782) fix(cli): layout.components codemod reads a const-bound default-exported config (#8250)
+  - 不适用：上游 layout.components 配置 codemod，针对 React 项目的配置写法
+- [x] [`e8ef708e7`](https://github.com/meta/astryx/commit/e8ef708e7) feat(cli): report manual migrations and regeneration apart from codemod failures (#7995)
+  - 不适用：手工迁移与 codemod 失败分开汇报，Vue 的 upgrade 没有 codemod
 - [ ] [`79a7a902b`](https://github.com/meta/astryx/commit/79a7a902b) feat(CodeBlock, cli): deprecate tokenizer in favour of a custom language value; astryx upgrade rewrites it (#8490)
-- [ ] [`b84bf77fa`](https://github.com/meta/astryx/commit/b84bf77fa) chore: move project links to meta/astryx (#8827)
-- [ ] [`776dfd37e`](https://github.com/meta/astryx/commit/776dfd37e) chore: prepare v0.7.5 release outputs (#9079)
+  - 暂缓：Vue 的 CodeBlock 没有 createCodeLanguage 和自定义语言值，tokenizer 仍是唯一入口；要先在 core 的 Code 组件补这块，不在本任务范围
+- [x] [`b84bf77fa`](https://github.com/meta/astryx/commit/b84bf77fa) chore: move project links to meta/astryx (#8827)
+  - 不适用：上游项目链接改到 meta/astryx 的注释改动，只涉及 codemod 脚本
+- [x] [`776dfd37e`](https://github.com/meta/astryx/commit/776dfd37e) chore: prepare v0.7.5 release outputs (#9079)
+  - 不适用：v0.7.5 发布产物：CodeBlock tokenizer codemod 归档，见 79a7a902b
 
 ### v0.7.6
 
-- [ ] [`3ec1c8beb`](https://github.com/meta/astryx/commit/3ec1c8beb) chore: merge v0.7.5 release outputs to main (#9086)
+- [x] [`3ec1c8beb`](https://github.com/meta/astryx/commit/3ec1c8beb) chore: merge v0.7.5 release outputs to main (#9086)
+  - 不适用：v0.7.5 发布产物合并，同 776dfd37e
 
 ### v0.7.8
 
 - [ ] [`dcf3d6f86`](https://github.com/meta/astryx/commit/dcf3d6f86) feat(Tokenizer): presentation is a stable prop, and adaptive is its default (#9796)
   - 暂缓：Tokenizer 的 presentation 属性和 adaptive 默认值：依赖 54fbccb27 的触屏弹层
+  - 暂缓：Tokenizer 的 presentation 属性依赖 Vue 还没有的触屏弹层，归动效与手势引擎任务（见 54fbccb27）；Vue 没有该属性，也就没有升级说明可写
 - [ ] [`b5ce149a8`](https://github.com/meta/astryx/commit/b5ce149a8) chore(Tokenizer): remove experimental.presentation; presentation is the only spelling (#9836)
   - 暂缓：去掉 experimental.presentation 只留 presentation：随 Tokenizer 触屏弹层（54fbccb27）一起暂缓
-- [ ] [`2b12c1522`](https://github.com/meta/astryx/commit/2b12c1522) chore: version packages for v0.7.8 (#9981)
+  - 暂缓：去掉 experimental.presentation 随 Tokenizer 触屏弹层一起，归动效与手势引擎任务
+- [x] [`2b12c1522`](https://github.com/meta/astryx/commit/2b12c1522) chore: version packages for v0.7.8 (#9981)
+  - 不适用：v0.7.8 发布产物：Tokenizer presentation codemod 归档，组件部分暂缓见 dcf3d6f86
 
 ### v0.7.9
 
 - [x] [`4d84e2d1b`](https://github.com/meta/astryx/commit/4d84e2d1b) test(cli): render, codemod and doctor fixtures live in the OS temp directory (#9899)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`db17b8a96`](https://github.com/meta/astryx/commit/db17b8a96) chore: merge v0.7.8 release outputs to main (#9995)
+- [x] [`db17b8a96`](https://github.com/meta/astryx/commit/db17b8a96) chore: merge v0.7.8 release outputs to main (#9995)
+  - 不适用：v0.7.8 发布产物合并，同 2b12c1522
 
 ### v0.7.12
 
 - [x] [`3cd23eafb`](https://github.com/meta/astryx/commit/3cd23eafb) test(cli): node tests no longer time out under load (#10740)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`4b6ad11c0`](https://github.com/meta/astryx/commit/4b6ad11c0) fix(cli): remove internal-format identifiers from comments and sample data (#10958)
+- [x] [`4b6ad11c0`](https://github.com/meta/astryx/commit/4b6ad11c0) fix(cli): remove internal-format identifiers from comments and sample data (#10958)
+  - 不适用：上游 codemod 注释与示例数据里的内部标识清理
 
 ### v0.7.15
 
-- [ ] [`2cf170ac7`](https://github.com/meta/astryx/commit/2cf170ac7) perf(cli): skip codemods on files they cannot change (#11249)
-- [ ] [`938558ab7`](https://github.com/meta/astryx/commit/938558ab7) perf(cli): skip the theme-alias codemod on files that name no removed target (#11265)
+- [x] [`2cf170ac7`](https://github.com/meta/astryx/commit/2cf170ac7) perf(cli): skip codemods on files they cannot change (#11249)
+  - 不适用：codemod 性能优化，Vue 的 upgrade 没有 codemod
+- [x] [`938558ab7`](https://github.com/meta/astryx/commit/938558ab7) perf(cli): skip the theme-alias codemod on files that name no removed target (#11265)
+  - 不适用：codemod 性能优化，同 2cf170ac7
 - [x] [`bc018a8be`](https://github.com/meta/astryx/commit/bc018a8be) test(cli): run the authoring migration's tsc check with node (#11261)
   - 不适用：只改上游测试（自动初筛）
 
 ### v0.7.16
 
-- [ ] [`ee44fb041`](https://github.com/meta/astryx/commit/ee44fb041) Dry-run upgrade no longer points to an unwritten .astryx-conflict file (#11356)
-- [ ] [`685728b42`](https://github.com/meta/astryx/commit/685728b42) perf(cli): load Babel, recast and jscodeshift on first use, not with the API (#11432)
+- [x] [`ee44fb041`](https://github.com/meta/astryx/commit/ee44fb041) Dry-run upgrade no longer points to an unwritten .astryx-conflict file (#11356)
+  - 不适用：dry-run 提示 .astryx-conflict 文件，Vue 的 upgrade 不写文件也没有 dry-run
+- [x] [`685728b42`](https://github.com/meta/astryx/commit/685728b42) perf(cli): load Babel, recast and jscodeshift on first use, not with the API (#11432)
+  - 不适用：懒加载 Babel、recast、jscodeshift，Vue CLI 没有这些依赖
 
 ### v0.7.17
 
 - [ ] [`1addd72da`](https://github.com/meta/astryx/commit/1addd72da) feat(core): swipe actions come from createSwipe on the shared drag path (#8690)
-- [ ] [`d48e1d66b`](https://github.com/meta/astryx/commit/d48e1d66b) feat(cli): upgrade --list prints one line per codemod under its version (#11661)
-- [ ] [`949c5ce69`](https://github.com/meta/astryx/commit/949c5ce69) perf(cli): upgrade skips a codemod for a file whose escapes spell none of its words (#11653)
-- [ ] [`6fe368b08`](https://github.com/meta/astryx/commit/6fe368b08) perf(cli): upgrade binds jscodeshift to each parser once per codemod (#11721)
-- [ ] [`43445a643`](https://github.com/meta/astryx/commit/43445a643) fix(cli): the CLI orders names the same way on every machine (#11683)
-- [ ] [`ca9fee580`](https://github.com/meta/astryx/commit/ca9fee580) fix(cli): upgrade reads each TypeScript file in its own grammar (#11863)
-- [ ] [`c0b2a7887`](https://github.com/meta/astryx/commit/c0b2a7887) fix(cli): errors name a run that works (#11874)
-- [ ] [`cf7e3d604`](https://github.com/meta/astryx/commit/cf7e3d604) fix(cli): a run that exits 1 after its output records the code it carries (#11865)
-- [ ] [`dc58f1979`](https://github.com/meta/astryx/commit/dc58f1979) perf(cli): doctor's theme checks and the codemods' parser load postcss only when they read a stylesheet (#11925)
-- [ ] [`c44a63778`](https://github.com/meta/astryx/commit/c44a63778) feat(cli): bases, first step — a run reads one base; steps it does not serve are hidden and refused (#11111)
-- [ ] [`68609edee`](https://github.com/meta/astryx/commit/68609edee) fix(cli): bases — a non-Core base shows no Core in build, list envelopes, upgrade, and doctor (#11593)
-- [ ] [`d6f6295da`](https://github.com/meta/astryx/commit/d6f6295da) perf(cli): keep each shipped doc's parse, and build doc schemas on first parse (#12166)
-- [ ] [`2c80ffc20`](https://github.com/meta/astryx/commit/2c80ffc20) feat(cli): an installed icon-set package turns on the experimental icon features (one gate) (#12176)
+  - 暂缓：滑动操作改走 createSwipe 与共享拖动通道：Vue 的 Item 仍是 swipeActions，缺手势引擎，归动效与手势引擎任务；升级说明等 API 变了再写
+- [x] [`d48e1d66b`](https://github.com/meta/astryx/commit/d48e1d66b) feat(cli): upgrade --list prints one line per codemod under its version (#11661)
+  - 不适用：upgrade --list 列出 codemod，Vue 的 upgrade 没有 codemod 也没有 --list
+- [x] [`949c5ce69`](https://github.com/meta/astryx/commit/949c5ce69) perf(cli): upgrade skips a codemod for a file whose escapes spell none of its words (#11653)
+  - 不适用：codemod 性能优化，同 2cf170ac7
+- [x] [`6fe368b08`](https://github.com/meta/astryx/commit/6fe368b08) perf(cli): upgrade binds jscodeshift to each parser once per codemod (#11721)
+  - 不适用：codemod 性能优化，同 2cf170ac7
+- [x] [`43445a643`](https://github.com/meta/astryx/commit/43445a643) fix(cli): the CLI orders names the same way on every machine (#11683)
+  - 已移植：[#602](https://github.com/astryx-vue/astryx-vue/pull/602)。扫描文件和命中列表按代码点排序，不再依赖本机语言环境，补测试
+- [x] [`ca9fee580`](https://github.com/meta/astryx/commit/ca9fee580) fix(cli): upgrade reads each TypeScript file in its own grammar (#11863)
+  - 不适用：按各自语法读 TypeScript 文件的解析，Vue 版不解析源码
+- [x] [`c0b2a7887`](https://github.com/meta/astryx/commit/c0b2a7887) fix(cli): errors name a run that works (#11874)
+  - 不适用：错误里给出可运行的命令，针对上游 upgrade --from 流程
+- [x] [`cf7e3d604`](https://github.com/meta/astryx/commit/cf7e3d604) fix(cli): a run that exits 1 after its output records the code it carries (#11865)
+  - 不适用：输出后以退出码 1 结束时记录退出码，针对上游 upgrade 流程
+- [x] [`dc58f1979`](https://github.com/meta/astryx/commit/dc58f1979) perf(cli): doctor's theme checks and the codemods' parser load postcss only when they read a stylesheet (#11925)
+  - 不适用：postcss 懒加载，Vue 的 doctor 不依赖 postcss
+- [x] [`c44a63778`](https://github.com/meta/astryx/commit/c44a63778) feat(cli): bases, first step — a run reads one base; steps it does not serve are hidden and refused (#11111)
+  - 不适用：上游 bases 机制，Vue CLI 没有
+- [x] [`68609edee`](https://github.com/meta/astryx/commit/68609edee) fix(cli): bases — a non-Core base shows no Core in build, list envelopes, upgrade, and doctor (#11593)
+  - 不适用：上游 bases 机制，Vue CLI 没有
+- [x] [`d6f6295da`](https://github.com/meta/astryx/commit/d6f6295da) perf(cli): keep each shipped doc's parse, and build doc schemas on first parse (#12166)
+  - 不适用：上游文档解析缓存，Vue 的 catalog 是预先生成的
+- [x] [`2c80ffc20`](https://github.com/meta/astryx/commit/2c80ffc20) feat(cli): an installed icon-set package turns on the experimental icon features (one gate) (#12176)
+  - 不适用：已安装图标集包打开实验性图标功能，Vue 版没有
 - [ ] [`ee8a33a7c`](https://github.com/meta/astryx/commit/ee8a33a7c) feat(cli): the swipe codemod defines each swipe once (#11670)
+  - 暂缓：swipe codemod 只定义一次滑动：随 createSwipe 一起，归动效与手势引擎任务
 - [x] [`a2edb5300`](https://github.com/meta/astryx/commit/a2edb5300) chore: land batch 2 (16 pull requests) (#12718)
   - 已移植：[#579](https://github.com/astryx-vue/astryx-vue/pull/579)。批量合入里宿主的改动随宿主一起移植
-- [ ] [`3b21ca666`](https://github.com/meta/astryx/commit/3b21ca666) feat(theme): chat surfaces default to the container radius (#12794)
-- [ ] [`d60793cbc`](https://github.com/meta/astryx/commit/d60793cbc) chore: land batch 18 (2 pull requests) (#12882)
-- [ ] [`75649f57f`](https://github.com/meta/astryx/commit/75649f57f) chore: land batch 30 (4 pull requests) (#12901)
-- [ ] [`2535488bf`](https://github.com/meta/astryx/commit/2535488bf) chore: land batch 50 (1 pull requests) (#12928)
-- [ ] [`0b48882df`](https://github.com/meta/astryx/commit/0b48882df) chore: version packages for v0.7.17 (#13108)
+- [x] [`3b21ca666`](https://github.com/meta/astryx/commit/3b21ca666) feat(theme): chat surfaces default to the container radius (#12794)
+  - 不适用：聊天圆角默认值已由 #600 处理；保留 28px 的 codemod 针对 React 主题对象，Vue 的 upgrade 不改写源码
+- [x] [`d60793cbc`](https://github.com/meta/astryx/commit/d60793cbc) chore: land batch 18 (2 pull requests) (#12882)
+  - 不适用：upgrade 刷新 agent 文档块和技能文件，Vue 的 upgrade 只读，agent 文档由 init 写
+- [x] [`75649f57f`](https://github.com/meta/astryx/commit/75649f57f) chore: land batch 30 (4 pull requests) (#12901)
+  - 不适用：upgrade 刷新 agent 技能位置，同 d60793cbc
+- [x] [`2535488bf`](https://github.com/meta/astryx/commit/2535488bf) chore: land batch 50 (1 pull requests) (#12928)
+  - 不适用：upgrade 刷新 agent 技能位置，同 d60793cbc
+- [x] [`0b48882df`](https://github.com/meta/astryx/commit/0b48882df) chore: version packages for v0.7.17 (#13108)
+  - 不适用：v0.7.17 发布产物：swipe 与聊天圆角 codemod 归档；组件部分见 1addd72da 和 3b21ca666
 
 ## 命令行搜索与更新（area:cli）
 
