@@ -8,6 +8,7 @@ import { isInLayerSurface } from '../layer/layerSurfacePress.js'
 import { useComponentMessages } from '../locale/context.js'
 import { chatMessages } from '../locale/messages/chat.js'
 import ChatComposerInput from './ChatComposerInput.vue'
+import { focusInKeyboardSurface } from './chatKeyboardFocus.js'
 import ChatSendButton from './ChatSendButton.vue'
 import { chatComposerContextKey } from './context.js'
 import '../../styles/chat.css'
@@ -84,7 +85,9 @@ function onBodyClick(event: MouseEvent): void {
     inputControl.value.focus()
     return
   }
-  body.value?.querySelector<HTMLElement>('[contenteditable="true"], textarea')?.focus()
+  const editable = body.value?.querySelector<HTMLElement>('[contenteditable="true"], textarea')
+  if (editable)
+    focusInKeyboardSurface(editable)
 }
 
 function onPointerDown(): void {

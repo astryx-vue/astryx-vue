@@ -62,6 +62,28 @@ export interface UseChatStreamScrollReturn {
 const SIXTY_FPS_MS = 1000 / 60
 const CHAT_MESSAGE_CLASS = 'astryx-chat-message'
 
+// The scrollers whose stream scroll follows the newest message now, kept in
+// step with each hook's lock.
+const following = new WeakSet<Element>()
+
+/**
+ * Whether the stream scroll on `scroller` follows its newest message now, as
+ * its lock says. Internal to Chat.
+ */
+export function isFollowingNewest(scroller: Element): boolean {
+  return following.has(scroller)
+}
+
+// The lock's marks on the scroller: anchoring off while the hook follows, and
+// the state `isFollowingNewest` reads.
+function markFollowing(el: Element, locked: boolean): void {
+  setScrollAnchoringOff(el, locked)
+  if (locked)
+    following.add(el)
+  else
+    following.delete(el)
+}
+
 /**
  * Keeps a chat transcript pinned to the bottom while text streams in, and lets
  * go as soon as the reader scrolls up.
@@ -106,7 +128,7 @@ export function useChatStreamScroll(options: UseChatStreamScrollOptions): UseCha
     isLocked.value = next
     const el = scrollRef.value
     if (el)
-      setScrollAnchoringOff(el, next)
+      markFollowing(el, next)
     if (!next)
       cancelFrame()
   }
@@ -246,7 +268,7 @@ export function useChatStreamScroll(options: UseChatStreamScrollOptions): UseCha
       lastScrollTop = el.scrollTop
       lastScrollHeight = el.scrollHeight
       lastOffsetHeight = shownHeight()
-      setScrollAnchoringOff(el, locked)
+      markFollowing(el, locked)
 
       const onScroll = (): void => {
         const { scrollTop, scrollHeight } = el
@@ -325,7 +347,7 @@ export function useChatStreamScroll(options: UseChatStreamScrollOptions): UseCha
         el.removeEventListener('scrollend', onScrollEnd)
         el.removeEventListener('wheel', onWheel)
         el.removeEventListener('touchmove', onTouchMove)
-        setScrollAnchoringOff(el, false)
+        markFollowing(el, false)
       })
     },
     { immediate: true },
