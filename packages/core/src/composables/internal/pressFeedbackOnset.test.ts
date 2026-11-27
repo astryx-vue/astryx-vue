@@ -158,4 +158,3 @@ describe('没有按着的接触时的抬起事件', () => {
     expect(errors).toEqual([])
   })
 })
-
