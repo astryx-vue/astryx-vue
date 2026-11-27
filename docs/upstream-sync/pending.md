@@ -529,8 +529,9 @@
 
 - [x] [`ba5866a50`](https://github.com/meta/astryx/commit/ba5866a50) fix(core): a BottomSheet exit the engine retargets mid-flight keeps sliding off (#8349)
   - 已移植：[#615](https://github.com/astryx-vue/astryx-vue/pull/615)。waitForTransition 遇到被引擎改道的 transitioncancel 且有接替过渡在跑时继续等，补测试
-- [ ] [`199fa9bb0`](https://github.com/meta/astryx/commit/199fa9bb0) perf(BottomSheet): take the sheet's open height from the ResizeObserver, not a forced measure (#9747)
+- [x] [`199fa9bb0`](https://github.com/meta/astryx/commit/199fa9bb0) perf(BottomSheet): take the sheet's open height from the ResizeObserver, not a forced measure (#9747)
   - 暂缓：拖动开始时从 ResizeObserver 取高度而不强制测量，属 useSheetGestures 拖拽内核，归 4b 拖拽
+  - 已移植：[#619](https://github.com/astryx-vue/astryx-vue/pull/619)。BottomSheet 打开时的高度取自 ResizeObserver 的 borderBoxSize，不再强制量一次布局。
 - [x] [`fc681230d`](https://github.com/meta/astryx/commit/fc681230d) fix(BottomSheet): the grabber stays drawn while the sheet moves between detents on iOS (#9760)
   - 已移植：[#615](https://github.com/astryx-vue/astryx-vue/pull/615)。抓手条加 will-change: transform，iOS 上换挡位时圆点不再消失
 - [x] [`2188aa9ff`](https://github.com/meta/astryx/commit/2188aa9ff) fix(useScrollLock): keep the page where it is while an overlay is open (#8098)
@@ -554,8 +555,9 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`7eee90594`](https://github.com/meta/astryx/commit/7eee90594) fix(Dialog, AlertDialog, CommandPalette, BottomSheet, Lightbox): Tab wraps inside the open modal through the shared focus-region module (#8883)
   - Vue 版已有：BottomSheet 与切换器都用 useFocusTrap，Tab 在打开的模态里环绕
-- [ ] [`63592ed62`](https://github.com/meta/astryx/commit/63592ed62) fix(core): a BottomSheet pulled past its top stretches on every pull, on the iOS rubber band (#8109)
+- [x] [`63592ed62`](https://github.com/meta/astryx/commit/63592ed62) fix(core): a BottomSheet pulled past its top stretches on every pull, on the iOS rubber band (#8109)
   - 暂缓：拉过顶部时每次都按 iOS 橡皮筋拉伸，属拖拽内核，归 4b 拖拽
+  - 已移植：[#619](https://github.com/astryx-vue/astryx-vue/pull/619)。拉过最高档走 iOS 橡皮筋，触屏设备面板向下多留 40% 视口（调用方自定尺寸时不留）。
 - [x] [`5db61cc9b`](https://github.com/meta/astryx/commit/5db61cc9b) fix(BottomSheet, Dialog): returning focus after an overlay closes no longer scrolls the page (#10022)
   - 已移植：[#616](https://github.com/astryx-vue/astryx-vue/pull/616)。BottomSheet 归还焦点（含 finalFocusRef）带 preventScroll，useRestoreFocus 加 preventScroll 选项
 - [x] [`5f81c3f39`](https://github.com/meta/astryx/commit/5f81c3f39) docs(BottomSheet): AST-094 names FR18's caller-sized exception; a comment names the pen (#10023)
@@ -573,15 +575,17 @@
 
 - [x] [`d9ea17921`](https://github.com/meta/astryx/commit/d9ea17921) fix(BottomSheet): a lone sheet focuses its data-autofocus field on open in every browser (#10156)
   - 已移植：[#616](https://github.com/astryx-vue/astryx-vue/pull/616)。第一个可用的 data-autofocus 字段在所有浏览器拿到焦点，盖过原生落点，抽屉和切换器都一样，补测试与文档
-- [ ] [`b8ae86f94`](https://github.com/meta/astryx/commit/b8ae86f94) fix(core): a BottomSheet touch drag's close keeps its speed, and its scrim fades with it (#8105)
+- [x] [`b8ae86f94`](https://github.com/meta/astryx/commit/b8ae86f94) fix(core): a BottomSheet touch drag's close keeps its speed, and its scrim fades with it (#8105)
   - 暂缓：归 4b 拖拽阶段
   - 暂缓：触屏拖拽关闭保持速度、遮罩同步淡出，归 4b 拖拽
+  - 已移植：[#619](https://github.com/astryx-vue/astryx-vue/pull/619)。手指甩下关闭用 sheetDismissSwipe 弹簧从松手速度滑出，遮罩沿同一曲线淡去。
 
 ### v0.7.11
 
-- [ ] [`6309b0b38`](https://github.com/meta/astryx/commit/6309b0b38) fix(core): a BottomSheet touch release takes UIKit's sheet values, and turning back cancels (#10234)
+- [x] [`6309b0b38`](https://github.com/meta/astryx/commit/6309b0b38) fix(core): a BottomSheet touch release takes UIKit's sheet values, and turning back cancels (#10234)
   - 暂缓：归 4b 拖拽阶段
   - 暂缓：触屏松手采用 UIKit 的取值、掉头取消，归 4b 拖拽
+  - 已移植：[#619](https://github.com/astryx-vue/astryx-vue/pull/619)。手指松手改走 UIKit sheet 参数（sheet.release），关闭算最后一档，往回拉回到起点档。
 - [x] [`959c094e3`](https://github.com/meta/astryx/commit/959c094e3) test(BottomSheet): read the viewport height without a non-null assertion (#10310)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`21599169a`](https://github.com/meta/astryx/commit/21599169a) test(BottomSheet): the keyboard proofs hold the scene at the report (#10279)
@@ -601,8 +605,9 @@
   - 不适用：修的是 React 渲染读视口高度的时机
 - [x] [`9b7ebc461`](https://github.com/meta/astryx/commit/9b7ebc461) test(interaction-harness): a hold sent from the test names the motion it judges (#10438)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`0a656fe4e`](https://github.com/meta/astryx/commit/0a656fe4e) fix(BottomSheet): a drag reads its release from Core's tracker (#10463)
+- [x] [`0a656fe4e`](https://github.com/meta/astryx/commit/0a656fe4e) fix(BottomSheet): a drag reads its release from Core's tracker (#10463)
   - 暂缓：拖拽松手改读 Core 的 tracker，属手势引擎对接，归 4b 拖拽
+  - 已移植：[#619](https://github.com/astryx-vue/astryx-vue/pull/619)。拖拽速度统一改读共享的 VelocityTracker，按事件时间戳采样。
 - [x] [`4e6e67df6`](https://github.com/meta/astryx/commit/4e6e67df6) fix(core): make disabled Button focusable via aria-disabled per AST-085 (#7906)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`131b9c1ae`](https://github.com/meta/astryx/commit/131b9c1ae) test(BottomSheet): hold the native modal handoff as it starts (#10478)
@@ -631,24 +636,28 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`b3d177f06`](https://github.com/meta/astryx/commit/b3d177f06) test(BottomSheet): a soft flick's play fails by name below half's speed (#10841)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`9624a0b37`](https://github.com/meta/astryx/commit/9624a0b37) fix(BottomSheet): a reduced-motion swipe close fades out in place (#10925)
+- [x] [`9624a0b37`](https://github.com/meta/astryx/commit/9624a0b37) fix(BottomSheet): a reduced-motion swipe close fades out in place (#10925)
   - 暂缓：减弱动效时滑动关闭原地淡出，属拖拽退场，归 4b 拖拽
+  - 已移植：[#619](https://github.com/astryx-vue/astryx-vue/pull/619)。开启减少动态效果时，手指甩下关闭在原地淡出。
 
 ### v0.7.13
 
-- [ ] [`7e1aab38b`](https://github.com/meta/astryx/commit/7e1aab38b) fix(BottomSheet): a slow swipe down on the sheet's content no longer rubber-bands the content under the finger on iOS (#10033)
+- [x] [`7e1aab38b`](https://github.com/meta/astryx/commit/7e1aab38b) fix(BottomSheet): a slow swipe down on the sheet's content no longer rubber-bands the content under the finger on iOS (#10033)
   - 暂缓：内容上慢速下滑不再让 iOS 橡皮筋拖动内容，属拖拽内核，归 4b 拖拽
+  - 已移植：[#619](https://github.com/astryx-vue/astryx-vue/pull/619)。竖向拉动越过 tap 抖动就取消原生滚动，内容不再在手指下回弹。
 
 ### v0.7.14
 
 - [x] [`108f354ae`](https://github.com/meta/astryx/commit/108f354ae) fix(core): drop 'use client' from the package root and the component barrels (#11106)
   - 不适用：React Server Components 的 use client 指令
-- [ ] [`39819bfc5`](https://github.com/meta/astryx/commit/39819bfc5) fix(BottomSheet): a swipe that starts slowly on the sheet's content moves the sheet (#11140)
+- [x] [`39819bfc5`](https://github.com/meta/astryx/commit/39819bfc5) fix(BottomSheet): a swipe that starts slowly on the sheet's content moves the sheet (#11140)
   - 暂缓：内容上起步慢的下滑也带动抽屉，属拖拽内核，归 4b 拖拽
+  - 已移植：[#619](https://github.com/astryx-vue/astryx-vue/pull/619)。内容放得下时两端都保持武装，起步很慢的滑动也能拖动面板。
 - [x] [`230d1b4b9`](https://github.com/meta/astryx/commit/230d1b4b9) fix(BottomSheet): a move of a touch drag no longer restyles the sheet's content (#11154)
   - 不适用：修的是 React 里拖动每一步重绘内容；Vue 拖动只改 transform 与高度
-- [ ] [`6d89442f6`](https://github.com/meta/astryx/commit/6d89442f6) fix(BottomSheet): a finger's pull on the sheet's content is one touch drag from its touch-down, so a short flick closes the sheet (#11145)
+- [x] [`6d89442f6`](https://github.com/meta/astryx/commit/6d89442f6) fix(BottomSheet): a finger's pull on the sheet's content is one touch drag from its touch-down, so a short flick closes the sheet (#11145)
   - 暂缓：手指在内容上的下拉从落下起算一次触屏拖拽，短促一甩就关，归 4b 拖拽
+  - 已移植：[#619](https://github.com/astryx-vue/astryx-vue/pull/619)。内容区的拉动从触摸落下起就是一次拖拽，短促一甩就能关闭或换档。
 - [x] [`c1a1ea82b`](https://github.com/meta/astryx/commit/c1a1ea82b) fix(core): a tap that wobbles at a scroll edge keeps its click (#10829)
   - 已移植：[#577](https://github.com/astryx-vue/astryx-vue/pull/577)。在滚动边缘晃了一下的轻点保留它的点击
 - [x] [`c6614a5e8`](https://github.com/meta/astryx/commit/c6614a5e8) ci: release-specs (changed) adds tagged specs, visited components and Lab-only pull requests, in shards (#11171)
@@ -673,9 +682,10 @@
   - 已移植：[#594](https://github.com/astryx-vue/astryx-vue/pull/594)。关闭中的 BottomSheet 改用保留焦点的退场暂挡（holdKeptInside），不再一关就 inert
 - [x] [`3b80f85be`](https://github.com/meta/astryx/commit/3b80f85be) test(BottomSheet): wait for the pinch story to render before the check (#11412)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`22213fd97`](https://github.com/meta/astryx/commit/22213fd97) fix(BottomSheet): a flick's close clears the scrim along the same spring (#11400)
+- [x] [`22213fd97`](https://github.com/meta/astryx/commit/22213fd97) fix(BottomSheet): a flick's close clears the scrim along the same spring (#11400)
   - 暂缓：归 4b 拖拽阶段
   - 暂缓：甩动关闭时遮罩沿同一条弹簧淡出，归 4b 拖拽
+  - 已移植：[#619](https://github.com/astryx-vue/astryx-vue/pull/619)。甩下关闭时遮罩的 CSS 淡出接过弹簧的起始时间和缓动，两者同时结束。
 
 ### v0.7.17
 
@@ -1096,6 +1106,7 @@
 
 - [ ] [`1addd72da`](https://github.com/meta/astryx/commit/1addd72da) feat(core): swipe actions come from createSwipe on the shared drag path (#8690)
   - 暂缓：滑动操作改走 createSwipe 与共享拖动通道：Vue 的 Item 仍是 swipeActions，缺手势引擎，归动效与手势引擎任务；升级说明等 API 变了再写
+  - 暂缓：归动效与手势引擎任务：缺 createSwipe 公共 API、swipeHost、SwipeActionsLayer、约 1400 行的 useSwipeAction 和 dragToSnapPoints 的 compositorSettle，Vue 版 Item 横滑还没走共享拖拽路径。
 - [x] [`d48e1d66b`](https://github.com/meta/astryx/commit/d48e1d66b) feat(cli): upgrade --list prints one line per codemod under its version (#11661)
   - 不适用：upgrade --list 列出 codemod，Vue 的 upgrade 没有 codemod 也没有 --list
 - [x] [`949c5ce69`](https://github.com/meta/astryx/commit/949c5ce69) perf(cli): upgrade skips a codemod for a file whose escapes spell none of its words (#11653)
@@ -1122,6 +1133,7 @@
   - 不适用：已安装图标集包打开实验性图标功能，Vue 版没有
 - [ ] [`ee8a33a7c`](https://github.com/meta/astryx/commit/ee8a33a7c) feat(cli): the swipe codemod defines each swipe once (#11670)
   - 暂缓：swipe codemod 只定义一次滑动：随 createSwipe 一起，归动效与手势引擎任务
+  - 暂缓：codemod 是 React 工具链（不适用），其中 useSwipeAction 的调整要等 Swipe 模块落地。
 - [x] [`a2edb5300`](https://github.com/meta/astryx/commit/a2edb5300) chore: land batch 2 (16 pull requests) (#12718)
   - 已移植：[#579](https://github.com/astryx-vue/astryx-vue/pull/579)。批量合入里宿主的改动随宿主一起移植
 - [x] [`3b21ca666`](https://github.com/meta/astryx/commit/3b21ca666) feat(theme): chat surfaces default to the container radius (#12794)
@@ -5497,8 +5509,9 @@
   - 已移植：[#550](https://github.com/astryx-vue/astryx-vue/pull/550)。useImageMode 按区域和阈值的数值重新采样，不按对象身份，补测试
 - [x] [`e8ecde4ff`](https://github.com/meta/astryx/commit/e8ecde4ff) fix(core): a button's touch press release runs on the compositor (#9783)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`dc6dadbb7`](https://github.com/meta/astryx/commit/dc6dadbb7) fix(Toast): a quick flick dismisses a toast of any height (#8047)
+- [x] [`dc6dadbb7`](https://github.com/meta/astryx/commit/dc6dadbb7) fix(Toast): a quick flick dismisses a toast of any height (#8047)
   - 暂缓：本期已做拖动识别器的速度部分（#577、#579）；剩 Toast 快速甩开关闭，归组件接入阶段
+  - 已移植：[#621](https://github.com/astryx-vue/astryx-vue/pull/621)。Toast 甩动关闭不再要求最小拖动距离（任意高度都能甩走），首次移动决定这次触摸归谁；安全区和空视口部分 Vue 版已有，LayerProvider 打包不适用。
 - [ ] [`09a9bf337`](https://github.com/meta/astryx/commit/09a9bf337) feat(core): UIScrollView zoom constants and the zoom stage geometry (#8147)
   - 暂缓：依赖 UIKit 动效数值表与动效角色（motion/uikit），Vue 版没有这套设施
 - [ ] [`add05168f`](https://github.com/meta/astryx/commit/add05168f) fix(core): a finger held on a control's box picks it, not the text (#10091)
@@ -5525,9 +5538,10 @@
   - 已移植：[#578](https://github.com/astryx-vue/astryx-vue/pull/578)。轨道和 AppShell 内容区的滑动走主题的移动曲线（glide），和布局模块同一条时钟
 - [x] [`0c168a374`](https://github.com/meta/astryx/commit/0c168a374) feat(Lightbox): touch zoom like the iOS Photos viewer (#8148)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`b8ae86f94`](https://github.com/meta/astryx/commit/b8ae86f94) fix(core): a BottomSheet touch drag's close keeps its speed, and its scrim fades with it (#8105)
+- [x] [`b8ae86f94`](https://github.com/meta/astryx/commit/b8ae86f94) fix(core): a BottomSheet touch drag's close keeps its speed, and its scrim fades with it (#8105)
   - 暂缓：BottomSheet 触屏拖动关闭依赖弹簧、animator 和触屏呈现设施
   - 暂缓：归 4b 拖拽阶段
+  - 已移植：[#619](https://github.com/astryx-vue/astryx-vue/pull/619)。手指甩下关闭用 sheetDismissSwipe 弹簧从松手速度滑出，遮罩沿同一曲线淡去。
 - [ ] [`6750b6688`](https://github.com/meta/astryx/commit/6750b6688) chore(core): Lab's PageControl reaches the shared animator, the Reduce Motion cross-fade and the touch hit area through Core's internal touch entry (#9669)
 - [x] [`79cc4ac77`](https://github.com/meta/astryx/commit/79cc4ac77) fix(core): a gesture on a gliding element lands where it is drawn (#10239)
   - 暂缓：依赖触屏手势与动画器基础设施（GestureArena、PressTracker、animator），Vue 版没有
@@ -5552,9 +5566,10 @@
 - [x] [`3c63e6e18`](https://github.com/meta/astryx/commit/3c63e6e18) fix(core): the layout glide takes --duration-medium (#10261)
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
   - 已移植：[#572](https://github.com/astryx-vue/astryx-vue/pull/572)。滑动用主题的 --duration-medium
-- [ ] [`6309b0b38`](https://github.com/meta/astryx/commit/6309b0b38) fix(core): a BottomSheet touch release takes UIKit's sheet values, and turning back cancels (#10234)
+- [x] [`6309b0b38`](https://github.com/meta/astryx/commit/6309b0b38) fix(core): a BottomSheet touch release takes UIKit's sheet values, and turning back cancels (#10234)
   - 暂缓：BottomSheet 触屏松手取 UIKit 数值，依赖 resolveSnapPoint 和触屏呈现设施
   - 暂缓：归 4b 拖拽阶段
+  - 已移植：[#619](https://github.com/astryx-vue/astryx-vue/pull/619)。手指松手改走 UIKit sheet 参数（sheet.release），关闭算最后一档，往回拉回到起点档。
 - [ ] [`74eb2160c`](https://github.com/meta/astryx/commit/74eb2160c) docs(layer-runtime, Popover): name settledBox's readers; fix comments (#10300)
   - 暂缓：依赖动画器（animator）与主题时序/节奏的动效基础设施，Vue 版没有
 - [x] [`3bd5a4c1b`](https://github.com/meta/astryx/commit/3bd5a4c1b) fix(Layer): a still mouse presses through an entrance's input hold (#10303)
@@ -5670,6 +5685,7 @@
   - 暂缓：本期已做 模块里的尺寸揭示；剩 可拖动调整的 LayoutPanel 开合滑动（Vue 版还没有 createResizable），归动效与手势引擎的组件接入阶段
 - [ ] [`88ba27908`](https://github.com/meta/astryx/commit/88ba27908) feat(Lightbox): swipe between gallery photos like Photos (#8197)
   - 暂缓：Lightbox 滑动翻页依赖 paging 数值、usePager 和手势设施
+  - 暂缓：归动效与手势引擎任务：图库横滑翻页需要 usePager、paging 投射接入和 zoom stage 的分页（约 3600 行改动），Vue 版 Lightbox 只有按钮和方向键翻页。
 - [x] [`92784f658`](https://github.com/meta/astryx/commit/92784f658) fix(core): a swizzled copy shares the package's per-page touch state (#10599)
   - 已移植：[#579](https://github.com/astryx-vue/astryx-vue/pull/579)。每页的触摸状态挂在共享注册表上，多份包拷贝共用
 - [x] [`9218a4598`](https://github.com/meta/astryx/commit/9218a4598) fix(SnapPaging): a stop within half a step of the end is the end page (#10591)
@@ -5690,6 +5706,7 @@
   - 不适用：上游内部规范和架构文档、只改上游测试（自动初筛）
 - [ ] [`4043d65e5`](https://github.com/meta/astryx/commit/4043d65e5) feat(Lightbox): drag a photo down to close, like Photos (#8215)
   - 暂缓：Lightbox 下拉关闭依赖 UIKit 缩放媒体数值和手势设施
+  - 暂缓：归动效与手势引擎任务：Vue 版 Lightbox 没有 zoom stage（useZoomStage/useZoomCore/zoomStage），下拉关闭需要先搭这套舞台和双弹簧退出（约 2600 行改动）。
 - [x] [`3b8eb80d1`](https://github.com/meta/astryx/commit/3b8eb80d1) fix(RefreshControl): the end plays UIKit's curve over the duration token (#10582)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`f75f0f2d3`](https://github.com/meta/astryx/commit/f75f0f2d3) feat(ToggleButtonGroup): a finger's slide toggles the one it lifts on (#8660)
@@ -5879,9 +5896,10 @@
   - Vue 版已有：useContainerReveal 用 (pointer: coarse) 判断，有测试
 - [x] [`12a96e4eb`](https://github.com/meta/astryx/commit/12a96e4eb) fix(Toast): announce rendered message text (#11175)
   - Vue 版已有：Toast 卡片自带 role 和 aria-live 且在常驻的 aria-live 视口里渲染，读屏念的就是渲染出来的内容，没有从节点取文字的路径
-- [ ] [`22213fd97`](https://github.com/meta/astryx/commit/22213fd97) fix(BottomSheet): a flick's close clears the scrim along the same spring (#11400)
+- [x] [`22213fd97`](https://github.com/meta/astryx/commit/22213fd97) fix(BottomSheet): a flick's close clears the scrim along the same spring (#11400)
   - 暂缓：BottomSheet 轻扫关闭的遮罩跟弹簧走，依赖 animator 和触屏呈现设施
   - 暂缓：归 4b 拖拽阶段
+  - 已移植：[#619](https://github.com/astryx-vue/astryx-vue/pull/619)。甩下关闭时遮罩的 CSS 淡出接过弹簧的起始时间和缓动，两者同时结束。
 
 ### v0.7.17
 
@@ -5896,6 +5914,7 @@
 - [x] [`bb105e57d`](https://github.com/meta/astryx/commit/bb105e57d) [fix] useHotkeys docs: register shifted punctuation as the produced character (#11622)
   - 已移植：[#548](https://github.com/astryx-vue/astryx-vue/pull/548)。useHotkeys 文档说明带 Shift 的标点按产生的字符登记（中英）
 - [ ] [`1addd72da`](https://github.com/meta/astryx/commit/1addd72da) feat(core): swipe actions come from createSwipe on the shared drag path (#8690)
+  - 暂缓：归动效与手势引擎任务：缺 createSwipe 公共 API、swipeHost、SwipeActionsLayer、约 1400 行的 useSwipeAction 和 dragToSnapPoints 的 compositorSettle，Vue 版 Item 横滑还没走共享拖拽路径。
 - [x] [`24d82491d`](https://github.com/meta/astryx/commit/24d82491d) spec(AST-094): DEC-31 states the owner's test-only and records-only carry (#11602)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`6da757802`](https://github.com/meta/astryx/commit/6da757802) perf(cli): keep gathers and the compile cache from a machine's first run (#11668)
@@ -5981,6 +6000,7 @@
 - [x] [`a6538f27a`](https://github.com/meta/astryx/commit/a6538f27a) feat(cli): an integration can say how its apps add a dependency (installGuidance) (#12218)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`ee8a33a7c`](https://github.com/meta/astryx/commit/ee8a33a7c) feat(cli): the swipe codemod defines each swipe once (#11670)
+  - 暂缓：codemod 是 React 工具链（不适用），其中 useSwipeAction 的调整要等 Swipe 模块落地。
 - [x] [`8b176db24`](https://github.com/meta/astryx/commit/8b176db24) perf(cli): a lookup miss reads the component matcher's Core inputs from a kept summary instead of every Core doc (#12538)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`286e4db56`](https://github.com/meta/astryx/commit/286e4db56) fix(cli): the transpile cache names copies for their source text and trims one subfolder per write, so it stays small and no run reads all of it (#12385)
@@ -7418,6 +7438,7 @@
   - 已移植：[#611](https://github.com/astryx-vue/astryx-vue/pull/611)。List 示意图的结构说明改为可选的 Header（中英），ref 落点在 props 文档里本来就写了
 - [ ] [`5398a993c`](https://github.com/meta/astryx/commit/5398a993c) fix(Item): a flick reveals swipe actions; only a deliberate drag fires (#11054)
   - 暂缓：轻甩露出、只有刻意拖动才触发要改走 createSwipe，归动效与手势引擎任务（4b 拖拽）
+  - 暂缓：行为部分已在 #622 移植（甩动只打开、拖过触发点才触发、两项一侧需从打开状态起拖），还差操作项长满面板、触发项盖住面板的视觉，要等共享 Swipe 模块。
 - [x] [`807dc2ead`](https://github.com/meta/astryx/commit/807dc2ead) refactor(core): name the nested press rule for every pointer it covers (#11304)
   - 不适用：上游只改名与挪样式，无行为变化，基础展示族已判
 - [x] [`061b2fa8d`](https://github.com/meta/astryx/commit/061b2fa8d) test(List): the reorder busy proof decodes its cast once (#11075)
@@ -7446,6 +7467,7 @@
   - 已移植：[#611](https://github.com/astryx-vue/astryx-vue/pull/611)。MetadataListItem 文档补充传入属性落在 dt 或叠放外层元素上，已有测试守着
 - [ ] [`1addd72da`](https://github.com/meta/astryx/commit/1addd72da) feat(core): swipe actions come from createSwipe on the shared drag path (#8690)
   - 暂缓：横滑操作改走 createSwipe 共用拖动路径，归动效与手势引擎任务（4b 拖拽）
+  - 暂缓：归动效与手势引擎任务：缺 createSwipe 公共 API、swipeHost、SwipeActionsLayer、约 1400 行的 useSwipeAction 和 dragToSnapPoints 的 compositorSettle，Vue 版 Item 横滑还没走共享拖拽路径。
 - [x] [`178cd8019`](https://github.com/meta/astryx/commit/178cd8019) perf(OverflowList): lists in one commit measure together after it, before paint (#10392)
   - 不适用：React 提交内批量测量的时序优化，Vue 版用自己的测量与 ResizeObserver
 - [x] [`30b12dd5a`](https://github.com/meta/astryx/commit/30b12dd5a) fix(Item, Token): a control inside a row with its own action, or a token's Remove, rings itself (#8869)
@@ -8667,6 +8689,7 @@
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`88ba27908`](https://github.com/meta/astryx/commit/88ba27908) feat(Lightbox): swipe between gallery photos like Photos (#8197)
   - 暂缓：横滑翻页像 iOS 照片，依赖 09a9bf337 的缩放舞台
+  - 暂缓：归动效与手势引擎任务：图库横滑翻页需要 usePager、paging 投射接入和 zoom stage 的分页（约 3600 行改动），Vue 版 Lightbox 只有按钮和方向键翻页。
 - [x] [`7432d40a7`](https://github.com/meta/astryx/commit/7432d40a7) test(Lightbox): the Reduce Motion plus-minus proof freezes on the key (#10609)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`6422a1db4`](https://github.com/meta/astryx/commit/6422a1db4) refactor(Layer): one presentation hold keeps a layer's chosen presentation until its close settles (#8587)
@@ -8685,6 +8708,7 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`4043d65e5`](https://github.com/meta/astryx/commit/4043d65e5) feat(Lightbox): drag a photo down to close, like Photos (#8215)
   - 暂缓：下拉关闭像 iOS 照片，依赖 09a9bf337 的缩放舞台
+  - 暂缓：归动效与手势引擎任务：Vue 版 Lightbox 没有 zoom stage（useZoomStage/useZoomCore/zoomStage），下拉关闭需要先搭这套舞台和双弹簧退出（约 2600 行改动）。
 - [x] [`4d513699b`](https://github.com/meta/astryx/commit/4d513699b) docs(specs): Popover records that it has no viewport-rectangle anchor (#10491)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`fb2437f61`](https://github.com/meta/astryx/commit/fb2437f61) fix(Lightbox): the drag to close plays at the theme's tempo (#10630)
@@ -8792,6 +8816,7 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`a8c985322`](https://github.com/meta/astryx/commit/a8c985322) fix(Drawer): keep the exit side in state, not a render-time ref (#10859)
   - 暂缓：Drawer 退场时保持滑出的一侧，Vue 的 Drawer 没有退场滑出（presence），归动效与手势引擎任务
+  - 暂缓：React 渲染时机部分不适用；Vue 版 Drawer 缺退场滑出（presence），补上退场滑出时要锁住退场边，归 Drawer 动效任务（连同非模态 Drawer）
 - [x] [`38521acb9`](https://github.com/meta/astryx/commit/38521acb9) chore(core): remove the same-press leftovers: an unread dismissal field and stale comments (#11332)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`eec79323c`](https://github.com/meta/astryx/commit/eec79323c) fix(Text, Tooltip): on Android, the first tap on a button or link in truncated text opens its tooltip; a tap on a text field never does (#11213)
@@ -11504,6 +11529,7 @@
 - [x] [`337ae5002`](https://github.com/meta/astryx/commit/337ae5002) docs(architecture): tooltip and hover-card code loads after first paint on every page (#11597)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`1addd72da`](https://github.com/meta/astryx/commit/1addd72da) feat(core): swipe actions come from createSwipe on the shared drag path (#8690)
+  - 暂缓：归动效与手势引擎任务：缺 createSwipe 公共 API、swipeHost、SwipeActionsLayer、约 1400 行的 useSwipeAction 和 dragToSnapPoints 的 compositorSettle，Vue 版 Item 横滑还没走共享拖拽路径。
 - [x] [`39eb83866`](https://github.com/meta/astryx/commit/39eb83866) docs(architecture): unused optional features cost almost nothing, and large behavior code lives in a shared engine (#11650)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`4800d992e`](https://github.com/meta/astryx/commit/4800d992e) feat(AlertDialog): touch motion on the theme's timing (#8373)
