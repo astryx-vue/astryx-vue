@@ -98,7 +98,6 @@ export function labSidebar(english: boolean): Sidebar {
       items: [
         item(english ? 'Overview' : '概览', `${prefix}/lab/`),
         item('ListInput', `${prefix}/lab/list-input`),
-        item('MobileTokenizer', `${prefix}/lab/mobile-tokenizer`),
         item('TransferList', `${prefix}/lab/transfer-list`),
         item('Tour', `${prefix}/lab/tour`),
         item('CodeEditor', `${prefix}/lab/code-editor`),

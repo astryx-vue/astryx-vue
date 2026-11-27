@@ -1,5 +1,9 @@
 import type { Component } from 'vue'
+import { Icon } from '@astryx-vue/core'
 import { h } from 'vue'
+
+/** 搜索框前面的放大镜。core 的 `TextInput.startIcon` 要的是组件，不是名字。 */
+export const SearchIcon: Component = () => h(Icon, { icon: 'search' })
 
 /**
  * 加号。语义图标表里没有 `add`，所以自己画一个，
