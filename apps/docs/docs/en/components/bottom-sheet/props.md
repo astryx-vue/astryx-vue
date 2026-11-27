@@ -41,7 +41,7 @@ footer: false
         <td><code>padding</code></td>
         <td><code>BottomSheetPadding</code></td>
         <td>-</td>
-        <td>Inner padding of the content box using the spacing scale. When omitted, the theme decides, falling back to the <code>--spacing-4</code> step (16px) on every logical edge; pass <code>0</code> for a flush content box. The content box is a container, so a lone child that carries its own inset escapes the padding.</td>
+        <td>Inner padding of the content box using the spacing scale. When omitted, the theme decides, falling back to the <code>--spacing-4</code> step (16px) on every logical edge; pass <code>0</code> for a flush content box. The content box is a container, so a lone child that carries its own inset escapes the padding. Whatever the padding, the block-start inset is never less than the grab handle's height (<code>--spacing-6</code>), so resting content starts below the handle.</td>
       </tr>
       <tr>
         <td><code>purpose</code></td>

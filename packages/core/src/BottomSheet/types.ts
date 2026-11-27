@@ -85,7 +85,9 @@ export interface BottomSheetProps {
    * theme decides, falling back to the `--spacing-4` step (16px) on every
    * logical edge. Pass `0` for a flush content box. The content box publishes
    * that inset: a lone `Section` escapes it, and bleed children such as
-   * `Table` and `Divider` line up with it.
+   * `Table` and `Divider` line up with it. Whatever the padding, the
+   * block-start inset is never less than the grab handle's height
+   * (`--spacing-6`), so resting content starts below the handle.
    * @default undefined
    */
   padding?: BottomSheetPadding

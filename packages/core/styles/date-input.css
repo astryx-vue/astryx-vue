@@ -218,12 +218,11 @@
     padding: var(--astryx-spacing-3, 12px);
   }
 
-  /* 底部面板的抓手条浮在内容上方、高 24px。静止时面板第一行要落在它下面：
-     面板自己的上内边距不够 24px 时，差多少这里补多少。 */
+  /* 底部面板自己在内容上方留出抓手条的 24px，选择面板的第一行已经落在它下面，不再自己补。 */
   .astryx-date-touch,
   .astryx-time-touch,
   .astryx-date-time-touch-tabs {
-    padding-block-start: max(var(--astryx-spacing-3, 12px), calc(var(--astryx-spacing-6, 24px) - var(--container-padding-block-start, 0px)));
+    padding-block-start: 0;
   }
 
   .astryx-date-time-touch .astryx-date-touch {

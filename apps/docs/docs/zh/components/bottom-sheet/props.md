@@ -41,7 +41,7 @@ footer: false
         <td><code>padding</code></td>
         <td><code>BottomSheetPadding</code></td>
         <td>-</td>
-        <td>内容区的内边距，取值来自间距刻度。不设置时使用主题为底部弹窗定义的内边距，主题没有定义时取 <code>--spacing-4</code>（16px），四个逻辑边相同；传入 <code>0</code> 可以让内容紧贴面板边缘。内容区是容器，唯一子元素是自带内边距的区块时该区块会顶掉这层内边距。</td>
+        <td>内容区的内边距，取值来自间距刻度。不设置时使用主题为底部弹窗定义的内边距，主题没有定义时取 <code>--spacing-4</code>（16px），四个逻辑边相同；传入 <code>0</code> 可以让内容紧贴面板边缘。内容区是容器，唯一子元素是自带内边距的区块时该区块会顶掉这层内边距。不管内边距是多少，顶部留白都不会小于抓手条的高度（<code>--spacing-6</code>），静止时内容从抓手条下方开始。</td>
       </tr>
       <tr>
         <td><code>purpose</code></td>
