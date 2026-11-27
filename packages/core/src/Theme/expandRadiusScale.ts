@@ -1,6 +1,7 @@
 /**
  * Radius scale. `none` stays 0 and `full` stays 9999px.
- * The steps are inner ×1, element ×2, container ×3, page and chat ×7.
+ * The steps are inner ×1, element ×2, container ×3, page ×7. `--radius-chat`
+ * is not on the scale: it follows `--radius-container`.
  */
 export interface RadiusScaleConfig {
   /** Base unit in px. */
@@ -29,7 +30,18 @@ export function expandRadiusScale(config: RadiusScaleConfig): RadiusScaleTokens 
     '--radius-element': step(2),
     '--radius-container': step(3),
     '--radius-page': step(7),
-    '--radius-chat': step(7),
     '--radius-full': '9999px',
   }
+}
+
+/**
+ * The chat radius a theme that sets `--astryx-radius-container` declares in
+ * its own scope: `--astryx-radius-chat` follows the container radius, so a
+ * nested theme with a different container reads its own. A theme that sets or
+ * inherits a chat radius keeps it, and a theme with no container sets nothing.
+ */
+export function deriveChatRadius(tokens: Readonly<Record<string, string>>): Record<string, string> {
+  if (tokens['--astryx-radius-container'] === undefined || tokens['--astryx-radius-chat'] !== undefined)
+    return {}
+  return { '--astryx-radius-chat': 'var(--astryx-radius-container)' }
 }

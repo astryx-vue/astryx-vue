@@ -1,6 +1,9 @@
-import type { ComponentStyleMap, StyleOverrides } from './types.js'
+import type { ColorMode } from './colorModeBlocks.js'
+import type { ComponentStyleMap, StyleBlock, StyleOverrides } from './types.js'
+import { COLOR_MODES, isColorModeKey, modeConditions } from './colorModeBlocks.js'
 import { checkDeclarationName, checkDeclarationValue, warnDroppedDeclaration } from './declarationBoundary.js'
 import { applyDerivedVars } from './derivedVars.js'
+import { COARSE_POINTER_QUERY, hasActivePseudo, pressedPseudo } from './pressSelector.js'
 import { normalizeTokenName, prefixTokenReferences } from './tokenName.js'
 
 /** A theme target: `<component-kebab>` or `<component-kebab>-<part>`. */
@@ -130,24 +133,96 @@ function declarationBlock(
   return lines.join('\n')
 }
 
-function splitOverrides(overrides: StyleOverrides, location: string): {
+interface SplitOverrides {
   base: [string, string][]
   pseudos: [string, Record<string, string>][]
-} {
+  modes: Partial<Record<ColorMode, StyleBlock>>
+}
+
+/**
+ * Sort one style block into declarations, pseudo-class blocks and, for a style
+ * key, its `@light` and `@dark` blocks. A value left undefined is not set.
+ */
+function splitOverrides(overrides: StyleOverrides, location: string, withModes: boolean): SplitOverrides {
   const base: [string, string][] = []
   const pseudos: [string, Record<string, string>][] = []
+  const modes: Partial<Record<ColorMode, StyleBlock>> = {}
   for (const [key, value] of Object.entries(overrides)) {
+    if (value === undefined)
+      continue
+    if (withModes && isColorModeKey(key)) {
+      if (value === null || typeof value !== 'object')
+        throw new Error(`${location}: theme style block "${key}" must be an object of CSS declarations.`)
+      modes[key === '@dark' ? 'dark' : 'light'] = value as StyleBlock
+      continue
+    }
     if (key.startsWith(':')) {
       if (!PSEUDO.has(key) || typeof value === 'string')
         throw new Error(`${location}: theme style pseudo "${key}" is not supported.`)
-      pseudos.push([key, value])
+      pseudos.push([key, value as Record<string, string>])
       continue
     }
     if (typeof value !== 'string')
       throw new Error(`${location}: theme style property "${key}" must be a CSS value.`)
     base.push([key, value])
   }
-  return { base, pseudos }
+  return { base, pseudos, modes }
+}
+
+/**
+ * One themed `:active` follows the touch press model: the `:active` rule
+ * applies off a coarse pointer, and under one the press attribute takes its
+ * place, so a finger paints the press only while the press is believed.
+ */
+function pseudoRules(selectors: readonly string[], pseudo: string, body: string): string[] {
+  if (!hasActivePseudo(pseudo))
+    return [`${withPseudo(selectors, pseudo)} {\n${body}\n}`]
+  return [
+    `@media not all and ${COARSE_POINTER_QUERY} {\n${withPseudo(selectors, pseudo)} {\n${body}\n}\n}`,
+    `@media ${COARSE_POINTER_QUERY} {\n${withPseudo(selectors, pressedPseudo(pseudo))} {\n${body}\n}\n}`,
+  ]
+}
+
+/** Rules for one style block on `selectors`, each passed through `wrap`. */
+function blockRules(
+  target: string,
+  overrides: StyleOverrides,
+  selectors: readonly string[],
+  where: string,
+  wrap: (rule: string) => string,
+  surface: MediaSurface | undefined,
+  withModes: boolean,
+): string[] {
+  const rules: string[] = []
+  const { base, pseudos, modes } = splitOverrides(overrides, where, withModes)
+  const body = declarationBlock(applyDerivedVars(target, base), where)
+  if (body)
+    rules.push(wrap(`${selectors.join(', ')} {\n${body}\n}`))
+  for (const [pseudo, block] of pseudos) {
+    const pseudoBody = declarationBlock(applyDerivedVars(target, Object.entries(block)), `${where}["${pseudo}"]`)
+    if (pseudoBody)
+      rules.push(...pseudoRules(selectors, pseudo, pseudoBody).map(wrap))
+  }
+  // Color-mode blocks follow the rules they refine at the same weight, so in
+  // their own mode they win by order, and in the other they write nothing.
+  for (const mode of COLOR_MODES) {
+    const block = modes[mode]
+    if (block === undefined)
+      continue
+    const modeWhere = `${where}["@${mode}"]`
+    if (surface !== undefined) {
+      // A media surface fixes the mode: only its own block applies.
+      if (surface === mode)
+        rules.push(...blockRules(target, block, selectors, modeWhere, wrap, surface, false))
+      continue
+    }
+    for (const { suffix, media } of modeConditions(mode)) {
+      const modeSelector = `:is(${selectors.join(', ')})${suffix}`
+      const modeWrap = media === undefined ? wrap : (rule: string) => wrap(`@media ${media} {\n${rule}\n}`)
+      rules.push(...blockRules(target, block, [modeSelector], modeWhere, modeWrap, surface, false))
+    }
+  }
+  return rules
 }
 
 /**
@@ -164,18 +239,13 @@ export function compileComponentRules(
 ): string[] {
   const rules: string[] = []
   for (const [target, styles] of Object.entries(components ?? {})) {
+    if (styles === undefined)
+      continue
     for (const [key, overrides] of Object.entries(styles)) {
+      if (overrides === undefined)
+        continue
       const where = `${location}components.${target}["${key}"]`
-      const selectors = targetSelectors(target, key, surface)
-      const { base, pseudos } = splitOverrides(overrides, where)
-      const body = declarationBlock(applyDerivedVars(target, base), where)
-      if (body)
-        rules.push(`${selectors.join(', ')} {\n${body}\n}`)
-      for (const [pseudo, block] of pseudos) {
-        const pseudoBody = declarationBlock(applyDerivedVars(target, Object.entries(block)), `${where}["${pseudo}"]`)
-        if (pseudoBody)
-          rules.push(`${withPseudo(selectors, pseudo)} {\n${pseudoBody}\n}`)
-      }
+      rules.push(...blockRules(target, overrides, targetSelectors(target, key, surface), where, rule => rule, surface, true))
     }
   }
   return rules

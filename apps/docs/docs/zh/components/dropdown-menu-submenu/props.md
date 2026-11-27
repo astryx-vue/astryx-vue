@@ -16,6 +16,8 @@ footer: false
 <tr><td><code>hasSpinner</code></td><td><code>boolean</code></td><td><code>false</code></td><td>用转圈代替行尾箭头，表示下一级还在加载。转圈是装饰，不阻止打开。</td></tr>
 <tr><td><code>menuWidth</code></td><td><code>number | string</code></td><td>—</td><td>飞出面板的宽度。数字按像素处理，作为最小宽度并限制在视口内。固有尺寸关键字则作为首选宽度。钻入时不使用。</td></tr>
 <tr><td><code>presentation</code></td><td><code>'flyout' | 'drill-in' | 'adaptive'</code></td><td><code>'adaptive'</code></td><td>下一级怎么出现。旁边飞出、在原菜单里替换当前行，或在菜单打开时按是否为紧凑触控界面决定。</td></tr>
+<tr><td><code>delay</code></td><td><code>number</code></td><td><code>150</code></td><td>指针悬停多久后飞出层才打开，单位毫秒。键盘聚焦和触摸不用等。</td></tr>
+<tr><td><code>hideDelay</code></td><td><code>number</code></td><td><code>200</code></td><td>指针离开后飞出层再保持多久才关闭，单位毫秒。</td></tr>
 </tbody></table>
 </div>
 

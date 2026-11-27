@@ -10,7 +10,7 @@ These tokens used to be fixed px. Nothing looks different at the default root. A
 
 Control heights are `--astryx-size-element-sm` (28px), `md` (32px), and `lg` (36px). They stay px.
 
-Radii run from `--astryx-radius-none` to `--astryx-radius-full`. `--astryx-radius-none` stays `0` in this package. It does not adopt upstream Neutral's `0.25rem`. `--astryx-radius-chat` is 28px. Neutral does not override it. At a 16px root that equals the `1.75rem` page radius.
+Radii run from `--astryx-radius-none` to `--astryx-radius-full`. `--astryx-radius-none` stays `0` in this package. It does not adopt upstream Neutral's `0.25rem`. `--astryx-radius-chat` follows the container radius (`var(--astryx-radius-container)`, `0.75rem` by default); chat bubbles and the composer read it. It is not a step of the radius scale: a theme that changes the container radius changes the chat radius with it. Set `--radius-chat` in a theme for rounder chat surfaces, for example `28px`.
 
 Shadows have three elevations, `low`, `med`, and `high`, plus inset shadows for hover, selected, success, warning, and error. The outer shadows use offset and blur, and the light and dark stops differ.
 

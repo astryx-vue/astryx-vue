@@ -36,8 +36,26 @@ export interface ThemeSurfaceInput {
  *
  * A key that starts with `:` is a pseudo-class, for example `:hover`.
  * `:hover` is the enabled control: disabled and `aria-disabled` elements skip it.
+ * `:active` follows the touch press model: it applies to a mouse press, and
+ * under a coarse primary pointer it applies while Astryx believes the press,
+ * not on the touch or through a scroll.
+ *
+ * The `@light` and `@dark` keys hold a style block (properties and
+ * pseudo-class overrides) that applies only where the element's color mode is
+ * that mode: the mode a `Theme` sets with `light` or `dark`, the reader's
+ * preference under a `system` Theme, or the nearest `MediaTheme` surface
+ * (up to five surfaces of alternating modes nested one in another). Where no
+ * enclosing mode matches, the block writes nothing. Use it for a value that is
+ * not a color, or to leave the other mode untouched; a color that differs per
+ * mode can also be one `light-dark()` value.
  */
-export type StyleOverrides = Record<string, string | Record<string, string>>
+export type StyleOverrides = Record<string, string | Record<string, string> | StyleBlock>
+
+/**
+ * A style block: CSS properties and pseudo-class overrides, as in a style
+ * key's value. A style key's `@light` and `@dark` keys each hold one.
+ */
+export type StyleBlock = Record<string, string | Record<string, string>>
 
 /**
  * Per-component style overrides.
@@ -50,16 +68,20 @@ export type StyleOverrides = Record<string, string | Record<string, string>>
  */
 export type ComponentStyleMap = Record<string, Record<string, StyleOverrides>>
 
-/** One font role. Heading inherits body family and fallbacks when it omits them. */
+/**
+ * One font role. A heading with no `family` takes the body's whole font
+ * list; with its own `family`, only its own `fallbacks`. `fallbacks` with no
+ * `family` build nothing.
+ */
 export interface TypographyRole {
   /** Primary family name. A name with spaces is quoted. */
   family?: string
   /** Fallback stack, already written as CSS. */
   fallbacks?: string
   /** Default weight name (`semibold`) or a CSS font-weight value. */
-  weight?: string
+  weight?: string | number
   /** Heading levels 1–6. Ignored on body and code. */
-  weights?: Partial<Record<1 | 2 | 3 | 4 | 5 | 6, string>>
+  weights?: Partial<Record<1 | 2 | 3 | 4 | 5 | 6, string | number>>
 }
 
 /**

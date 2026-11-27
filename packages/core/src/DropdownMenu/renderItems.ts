@@ -14,6 +14,7 @@ import DropdownMenuGroup from './DropdownMenuGroup.vue'
 import DropdownMenuItem from './DropdownMenuItem.vue'
 import DropdownMenuRadioGroup from './DropdownMenuRadioGroup.vue'
 import DropdownMenuRadioItem from './DropdownMenuRadioItem.vue'
+import DropdownMenuSubMenu from './DropdownMenuSubMenu.vue'
 
 function endSlot(endContent: VNodeChild | undefined): { endContent: () => VNodeChild } | undefined {
   return endContent == null ? undefined : { endContent: () => endContent }
@@ -60,7 +61,15 @@ function renderRadio(item: DropdownMenuRadioData, index: number): VNode {
 }
 
 function renderItem(item: DropdownMenuItemData, index: number): VNode {
-  const { endContent, id, ...itemProps } = item
+  const { endContent, id, items: nested, ...itemProps } = item
+  // 带嵌套 `items` 的行是子菜单，放在分组里也一样。
+  if (nested != null && nested.length > 0) {
+    return h(
+      DropdownMenuSubMenu,
+      { key: id ?? `submenu-${index}`, description: item.description, icon: item.icon, isDisabled: item.isDisabled, label: item.label },
+      { default: () => nested.map((option, optionIndex) => renderOption(option, optionIndex)) },
+    )
+  }
   return h(
     DropdownMenuItem,
     { key: id ?? `item-${index}`, ...itemProps },

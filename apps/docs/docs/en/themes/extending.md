@@ -88,9 +88,29 @@ Run-together and camelCase names are not targets. `defineTheme()` throws for `bu
 
 Components also do not render bare value classes such as `.primary` or `.sm`. A selector like `.astryx-button.primary` in your own CSS becomes `.astryx-button[data-variant="primary"]`.
 
-A `:hover` style applies to the enabled control only. Disabled and `aria-disabled` elements skip it. For `card`, `dialog`, `bottom-sheet`, `dropdown-menu`, `context-menu`, and `segmented-control`, a themed `borderRadius` or `padding` also reaches the inner parts that follow it, such as a card's header corners. On `chat` a themed `borderRadius` and `padding` land on the composer, and on `progress-bar-mark` a themed `width` and `height` land on the tick itself. On `checkbox-input` and `switch` a themed `gap` sets the room between the control and its label, and leaves the room above the status message alone.
+A `:hover` style applies to the enabled control only. Disabled and `aria-disabled` elements skip it. An `:active` style follows the touch press model: it applies to a mouse press, and under a coarse primary pointer it applies while Astryx believes the press, not on the touch or through a scroll. For `card`, `dialog`, `drawer`, `bottom-sheet`, `dropdown-menu`, `context-menu`, and `segmented-control`, a themed `borderRadius` or `padding` also reaches the inner parts that follow it, such as a card's header corners. On `chat-composer` a themed `borderRadius` and `padding` land on the composer, and on `progress-bar-mark` a themed `width` and `height` land on the tick itself. On `checkbox-input` and `switch` a themed `gap` sets the room between the control and its label, and leaves the room above the status message alone.
 
 Some parts that paint inside a component have targets of their own: `kbd-key` on each key badge in Kbd, `typeahead-popup` on Typeahead's result popup, `calendar-range` and `calendar-range-preview` on Calendar's range band and its hover preview (with `start` and `end` on the band's first and last day), `bottom-sheet-handle` on BottomSheet's grab bar, `mobile-nav-drawer` on MobileNav's drawer panel (reflecting `side`: `start` or `end`, so a theme can paint the panel without the overlay behind it), and `alert-dialog-title` and `alert-dialog-description` on AlertDialog's title and description. Pagination exposes `pagination-list` on its control row (reflecting `variant` and `size`), `pagination-item` on every button cell (the current page's cell reflects `selected`), and `pagination-ellipsis` on the gap marker. The selected tab's underline is the `tab-indicator` target, so a nested theme can run it edge to edge with `insetInline: '0'`. `top-nav` reflects `mode` (`mobile-bar` on the phone bar) and `top-nav-item` reflects `mode` (`drawer` inside the phone menu). `layout-header` and `layout-footer` reflect `container` (`card`, `dialog`, or `bottom-sheet`), so `'container:dialog'` styles a dialog's header without a card's. `toggle-button` reflects `grouped` inside a ToggleButtonGroup. An accent Link takes `--link-hover-color` on hover when a container or theme sets it.
+
+#### Color-mode blocks
+
+A style key can hold `@light` and `@dark` blocks. Each takes the same properties and pseudo-class overrides as the key itself, and applies only where the element's color mode is that mode: the mode a `Theme` sets with `light` or `dark`, the reader's preference under a `system` Theme, or the nearest `MediaTheme` surface (up to five surfaces of alternating modes nested one in another; deeper, the block writes nothing). Where no mode matches, the block writes nothing, so every other rule applies as it would without it.
+
+```ts
+defineTheme({
+  name: 'glass',
+  components: {
+    card: {
+      base: {
+        'borderRadius': '16px',
+        '@dark': { 'backgroundImage': 'linear-gradient(#141821, #1d2533)', ':hover': { borderColor: '#5b6b8c' } },
+      },
+    },
+  },
+})
+```
+
+Use a block for a value that is not a color, or to leave the other mode untouched. A color that differs per mode can also be one `light-dark()` value. A block weighs the same as the rule it refines and follows it, so in its mode it wins over the key's own values. A `MediaTheme` surface decides inside it: a light surface inside a dark one takes only the light block. Restating one property of a block in a theme that extends yours keeps the block's other properties. A value left `undefined` in a block, a style key, or a target is not set and does not hide an inherited one.
 
 ### Status colors
 

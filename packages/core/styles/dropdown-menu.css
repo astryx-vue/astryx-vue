@@ -157,6 +157,11 @@
     background-color: var(--astryx-dropdown-menu-hover-background, light-dark(#0536590c, #ffffff0c));
   }
 
+  /* A row a held finger or pen lights paints as pressed; a held mouse keeps the hover tint. */
+  .astryx-dropdown-menu .astryx-item.astryx-dropdown-menu-item[data-astryx-menu-press-lit]:focus {
+    background-color: var(--astryx-dropdown-menu-pressed-background, light-dark(#05365919, #ffffff19));
+  }
+
   .astryx-dropdown-menu .astryx-item.astryx-dropdown-menu-item[data-disabled='true'] {
     cursor: default;
   }

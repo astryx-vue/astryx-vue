@@ -43,8 +43,8 @@ describe('chat.css 输入区', () => {
 
   it('抽屉的圆角和塞入量跟着输入区自己的圆角，单独使用时取聊天圆角', () => {
     const drawer = rule('.astryx-chat-drawer')
-    expect(drawer).toContain('border-start-start-radius: var(--_chat-composer-radius, var(--astryx-radius-chat, 28px))')
-    expect(drawer).toContain('margin-block-end: calc(-1 * var(--_chat-composer-radius, var(--astryx-radius-chat, 28px)))')
+    expect(drawer).toContain('border-start-start-radius: var(--_chat-composer-radius, var(--astryx-radius-chat, var(--astryx-radius-container, 0.75rem)))')
+    expect(drawer).toContain('margin-block-end: calc(-1 * var(--_chat-composer-radius, var(--astryx-radius-chat, var(--astryx-radius-container, 0.75rem))))')
   })
 
   it('发送键自己声明按钮圆角，在输入区里保持圆形', () => {

@@ -47,6 +47,28 @@ function scanTopLevel(input: string, visit: (index: number) => boolean): void {
 }
 
 /**
+ * Split a CSS value on the whitespace between its components. Whitespace
+ * inside parentheses or quotes belongs to one component, so
+ * `clamp(8px, 2vw, 16px)` and `var(--gap, 1px 2px)` each stay whole. An
+ * empty value has no components.
+ */
+export function splitTopLevelWhitespace(input: string): string[] {
+  const parts: string[] = []
+  let start = 0
+  scanTopLevel(input, (i) => {
+    if (/\s/.test(input[i] ?? '')) {
+      if (i > start)
+        parts.push(input.slice(start, i))
+      start = i + 1
+    }
+    return false
+  })
+  if (input.length > start)
+    parts.push(input.slice(start))
+  return parts
+}
+
+/**
  * Split the arguments of a CSS function body on the first top-level comma.
  * Handles nested functions such as rgba(), color-mix(), var(), and quoted strings.
  */

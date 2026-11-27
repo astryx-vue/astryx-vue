@@ -23,6 +23,19 @@ interface RenderOptions {
   slots?: Record<string, () => unknown>
 }
 
+/** 面板在第一次打开时才挂上：每次读都按当前页面找，没挂上时当作隐藏。 */
+function livePanel(): HTMLElement {
+  return new Proxy({} as HTMLElement, {
+    get(_, key) {
+      const element = document.querySelector<HTMLElement>('.astryx-context-menu')
+      if (element == null)
+        return key === 'style' ? { display: 'none' } : undefined
+      const value = Reflect.get(element, key)
+      return typeof value === 'function' ? value.bind(element) : value
+    },
+  })
+}
+
 function renderMenu(options: RenderOptions = {}) {
   const wrapper = mount(ContextMenu, {
     attachTo: document.body,
@@ -40,7 +53,7 @@ function renderMenu(options: RenderOptions = {}) {
   const trigger = document.querySelector('.astryx-context-menu-trigger') as HTMLElement
   trigger.getBoundingClientRect = () => RECT as DOMRect
   const anchor = trigger.querySelector('.astryx-context-menu-anchor') as HTMLElement
-  const panel = document.querySelector('.astryx-context-menu') as HTMLElement
+  const panel = livePanel()
   return { anchor, panel, trigger, wrapper }
 }
 
@@ -65,12 +78,18 @@ function keydownOn(target: HTMLElement, key: string): KeyboardEvent {
 }
 
 describe('contextMenu', () => {
-  it('renders a block trigger with a hidden menu surface and no trigger aria wiring', () => {
+  it('renders a block trigger whose menu mounts at its first open, with no trigger aria wiring', async () => {
     const { panel, trigger } = renderMenu({ items: [{ label: 'Edit' }] })
 
     expect(trigger.tagName).toBe('DIV')
     expect(trigger.classList.contains('astryx-context-menu-trigger')).toBe(true)
+    // A menu that was never opened adds nothing to the page.
+    expect(document.querySelector('.astryx-context-menu')).toBeNull()
     expect(isShown(panel)).toBe(false)
+
+    contextMenu(trigger)
+    await flushPromises()
+    expect(isShown(panel)).toBe(true)
     expect(panel.getAttribute('role')).toBe('menu')
     expect(panel.getAttribute('aria-label')).toBe('Row actions')
     expect(panel.hasAttribute('data-astryx-menu-press')).toBe(true)
@@ -82,7 +101,7 @@ describe('contextMenu', () => {
     expect(trigger.hasAttribute('role')).toBe(false)
   })
 
-  it('names an unlabelled menu from the active locale', () => {
+  it('names an unlabelled menu from the active locale', async () => {
     const Host = defineComponent({
       components: { ContextMenu },
       setup() {
@@ -92,6 +111,8 @@ describe('contextMenu', () => {
       template: '<ContextMenu :items="items" />',
     })
     mount(Host, { attachTo: document.body })
+    contextMenu(document.querySelector('.astryx-context-menu-trigger') as HTMLElement)
+    await flushPromises()
     expect(document.querySelector('.astryx-context-menu')?.getAttribute('aria-label')).toBe('快捷菜单')
   })
 
@@ -161,7 +182,7 @@ describe('contextMenu', () => {
     expect(rows()[1]!.getAttribute('data-variant')).toBe('destructive')
   })
 
-  it('keeps disabled rows out of the arrow order and unactivatable', async () => {
+  it('reaches disabled rows with the keys and keeps them unactivatable', async () => {
     const onClick = vi.fn()
     const { trigger } = renderMenu({
       items: [{ label: 'Edit', isDisabled: true, onClick }, { label: 'Delete' }],
@@ -171,10 +192,14 @@ describe('contextMenu', () => {
 
     const disabled = rows()[0]!
     expect(disabled.getAttribute('aria-disabled')).toBe('true')
-    expect(disabled.hasAttribute('tabindex')).toBe(false)
+    expect(disabled.getAttribute('tabindex')).toBe('-1')
 
-    keydownOn(disabled, 'ArrowDown')
+    // Opening lands on the first enabled row; the keys reach the disabled one.
     expect(document.activeElement).toBe(rows()[1])
+    keydownOn(rows()[1]!, 'ArrowDown')
+    expect(document.activeElement).toBe(disabled)
+    disabled.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    expect(onClick).not.toHaveBeenCalled()
   })
 
   it('moves the highlight with the arrows, Home/End, wrapping at both ends', async () => {
@@ -345,10 +370,11 @@ describe('contextMenu', () => {
   })
 
   it('keeps reading the menu props through the provided context', async () => {
-    const { wrapper } = renderMenu({
+    const { trigger, wrapper } = renderMenu({
       props: { size: 'sm' },
       slots: { content: () => h(ContextMenuItem, { label: 'Edit' }) },
     })
+    contextMenu(trigger)
     await flushPromises()
 
     expect(rows()[0]!.getAttribute('data-size')).toBe('sm')
@@ -444,7 +470,7 @@ describe('contextMenu', () => {
       slots: { default: () => h('button', { type: 'button' }, 'Right-click me') },
     })
     const trigger = document.querySelector('.astryx-context-menu-trigger') as HTMLElement
-    const panel = document.querySelector('.astryx-context-menu') as HTMLElement
+    const panel = livePanel()
     trigger.getBoundingClientRect = () => RECT as DOMRect
 
     contextMenu(trigger)
@@ -492,8 +518,8 @@ describe('contextMenu', () => {
     await nextTick()
     await flushPromises()
 
-    const sheet = document.querySelector('.astryx-bottom-sheet-dialog')
-    expect(sheet).not.toBeNull()
+    // The sheet's code loads on demand, the first time a menu shows it.
+    await vi.waitFor(() => expect(document.querySelector('.astryx-bottom-sheet-dialog')).not.toBeNull())
     expect(document.body.textContent).toContain('Rename document')
     expect(document.querySelector<HTMLElement>('.astryx-context-menu')!.style.display).toBe('none')
   })

@@ -1,5 +1,27 @@
 # @astryx-vue/core
 
+## 0.32.0
+
+### Minor Changes
+
+- [#625](https://github.com/astryx-vue/astryx-vue/pull/625) [`e502448`](https://github.com/astryx-vue/astryx-vue/commit/e502448b10848a3752c9f5f41fd3f3af79e69e72) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 菜单对齐上游：方向键、Home/End 和字母跳转能走到禁用的行（行仍不可操作，打开菜单也不会落在它上面）；子菜单里按 Tab 关掉整个菜单；DropdownMenuSubMenu 新增 `delay`、`hideDelay`，忙碌转圈只播报一次加载；数据模式的行带 `items` 就是子菜单，放在分组里也一样；自定义触发器打开的底部弹层以触发器的名称命名；悬停点亮的行不再出现键盘焦点环；指针打开菜单时保留按住期间已点亮的行；手指打开菜单后要走过一小段距离才开始挑行（`presentation` 不写时），MoreMenu 也支持按住滑动再松手选行；手指或笔按住时点亮的行按「按下」的颜色画；底部弹层预加载失败不再留下没人接的拒绝；ContextMenu 的面板在第一次打开时才挂上、触屏底部弹层按需加载，节点标签的子菜单视图也以标签命名；单选行和勾选行不再丢掉调用方放上去的属性和 click、pointermove 处理函数；shadow root 里的浮层按在自己身上不再被当成点外面。
+
+## 0.31.0
+
+### Minor Changes
+
+- [#620](https://github.com/astryx-vue/astryx-vue/pull/620) [`a23cb50`](https://github.com/astryx-vue/astryx-vue/commit/a23cb50279f130df2b3ef4fb83cdaa5b9dfb3663) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 主题系统对齐上游：组件样式的每个样式键可写 `@light` 和 `@dark` 块，只在元素处于对应颜色模式时生效（主题强制的模式、system 主题下读者的偏好、最近一层 MediaTheme 表面）；主题里写的 `:active` 跟随触屏按压模型，手指下只在按压成立时才亮；值为 `undefined` 的组件样式、局部令牌和字体权重视为没写，根部 `localTokens: undefined` 会点名报错；用函数写的内边距（如 `clamp(...)`）按顶层空白拆开；抽屉可经 `drawer` 挂点设置内边距；`--radius-chat` 默认跟随容器圆角（各主题包不再钉死 28px，需要饱满圆角的主题自己写）；只写 `fallbacks` 没有 `family` 的字体角色不再生成字体列表；`Theme` 的 `theme` 传了不是 `defineTheme()` 产物的值时给出开发期提示并沿用外层主题；Chat 输入区的圆角和内边距改挂 `chat-composer` 目标；SyntaxTheme 缺 `theme` 时开发期点名报错；Neutral 暗色辅助文字色提亮到 #a8a8a8，压在半透明中性底色上也达到 4.5:1；样式过的 accent 链接悬停时保留容器或主题给的 `--link-hover-color`；提示卡片在量到底色前按主题给的底色选内容深浅；导出 `compactDefinition` 与 `DEFAULT_COMPACT_DEFINITION`（上游 [#6071](https://github.com/astryx-vue/astryx-vue/issues/6071) [#8301](https://github.com/astryx-vue/astryx-vue/issues/8301) [#9254](https://github.com/astryx-vue/astryx-vue/issues/9254) [#9761](https://github.com/astryx-vue/astryx-vue/issues/9761) [#10420](https://github.com/astryx-vue/astryx-vue/issues/10420) [#11347](https://github.com/astryx-vue/astryx-vue/issues/11347) [#11679](https://github.com/astryx-vue/astryx-vue/issues/11679) [#11759](https://github.com/astryx-vue/astryx-vue/issues/11759) [#11760](https://github.com/astryx-vue/astryx-vue/issues/11760) [#11786](https://github.com/astryx-vue/astryx-vue/issues/11786) [#11802](https://github.com/astryx-vue/astryx-vue/issues/11802) [#11973](https://github.com/astryx-vue/astryx-vue/issues/11973) [#12270](https://github.com/astryx-vue/astryx-vue/issues/12270) [#12794](https://github.com/astryx-vue/astryx-vue/issues/12794) [#11752](https://github.com/astryx-vue/astryx-vue/issues/11752)）
+
+## 0.30.1
+
+### Patch Changes
+
+- [#622](https://github.com/astryx-vue/astryx-vue/pull/622) [`5f7d0ab`](https://github.com/astryx-vue/astryx-vue/commit/5f7d0ab18669a8baec5dd919ca3ada5f15b1871c) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - List 行的横滑只在手指自己拖过触发点时才触发操作：甩一下只会把行停在打开的位置，一侧有两个操作时要先停在打开位置再拖才会触发最外侧。
+
+- [#619](https://github.com/astryx-vue/astryx-vue/pull/619) [`d63be11`](https://github.com/astryx-vue/astryx-vue/commit/d63be11fa4c63a1823202943b6b428c5986c9080) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - BottomSheet 的手指拖拽对齐 iOS：松手按 UIKit 规则判断去处、往回拉回到起点档、拉过顶部有橡皮筋、内容滚到头后接手滑动，甩下关闭用弹簧滑出且遮罩同曲线淡去，减少动态效果时原地淡出。
+
+- [#621](https://github.com/astryx-vue/astryx-vue/pull/621) [`a7215e2`](https://github.com/astryx-vue/astryx-vue/commit/a7215e2a0381554594b62677569cc40a4d942045) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Toast 轻快一甩就能关闭，不管多高；甩动速度按输入事件自带的时间戳计算；手指的第一下移动交给手势宿主判定，朝边缘才是滑动，往别处走留给页面滚动。
+
 ## 0.30.0
 
 ### Minor Changes

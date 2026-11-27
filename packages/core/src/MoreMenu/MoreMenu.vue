@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { MoreMenuEmits, MoreMenuInitialFocus, MoreMenuProps, MoreMenuSlots } from './types.js'
 import { computed, nextTick, onBeforeUnmount, provide, shallowRef, useId, useTemplateRef, watch } from 'vue'
+import { useMenuPress } from '../composables/useMenuPress.js'
 import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
 import { useHeldPresentation } from '../layer/useHeldPresentation.js'
@@ -83,11 +84,29 @@ function isOnTrigger(target: EventTarget | null): boolean {
   return element != null && target instanceof Node && element.contains(target)
 }
 
+const press = useMenuPress({
+  menuRef: computed(() => panel.value?.surface ?? null),
+  triggerRef: root,
+  isEnabled: () => !isSheet.value && !props.isDisabled,
+  // 手指按住触发器才开，鼠标按下就开；按住的指针直接滑进菜单挑行，松开时执行。
+  touchModel: 'uikit',
+  onTriggerPress: () => {
+    if (isOpen.value) {
+      closeMenu()
+      return false
+    }
+    openMenu({ modality: 'pointer' })
+    return true
+  },
+  onDismiss: () => closeMenu({ restoreFocus: false }),
+})
+
 function closeMenu(options: { restoreFocus?: boolean } = {}): void {
   const { restoreFocus = true } = options
   if (!isOpen.value)
     return
 
+  press.cancel()
   const active = document.activeElement
   // Focus that already moved to a control of its own keeps it; anywhere else —
   // the trigger, the menu itself, a press on nothing — the trigger takes focus
@@ -116,7 +135,8 @@ function openMenu(options: { modality: 'keyboard' | 'pointer', focusLast?: boole
 }
 
 function onTriggerClick(event: MouseEvent): void {
-  if (props.isDisabled)
+  // 已经由按压打开（或关掉）菜单的那次手势，它的 click 不再切换。
+  if (props.isDisabled || press.isTriggerClickFromPress())
     return
 
   if (isOpen.value) {
@@ -257,6 +277,8 @@ defineExpose({
     :data-presentation="resolvedPresentation"
     :data-size="size"
     :data-variant="variant"
+    @contextmenu="press.triggerProps.onContextmenu"
+    @pointerdown="press.triggerProps.onPointerdown"
   >
     <IconButton
       ref="trigger"
@@ -288,6 +310,7 @@ defineExpose({
       :items="items"
       :label="menuLabel"
       :placement="placement"
+      :surface-pointerdown="press.onPointerDown"
       @close="closeMenu()"
     />
 

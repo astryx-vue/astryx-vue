@@ -25,7 +25,7 @@ footer: false
         <td><code>items</code></td>
         <td><code>DropdownMenuOption[]</code></td>
         <td>-</td>
-        <td>Data-mode menu content. Each entry is an action, a divider, a titled group, a checkbox row (<code>type: 'checkbox'</code>, with <code>checked</code> and <code>onChange</code>), or a radio group (<code>type: 'radio'</code>, with <code>value</code>, <code>label</code>, <code>items</code>, and <code>onChange</code>). Mutually exclusive with the default slot; <code>items</code> wins when both are given.</td>
+        <td>Data-mode menu content. Each entry is an action, a divider, a titled group, a checkbox row (<code>type: 'checkbox'</code>, with <code>checked</code> and <code>onChange</code>), or a radio group (<code>type: 'radio'</code>, with <code>value</code>, <code>label</code>, <code>items</code>, and <code>onChange</code>). An action entry that declares its own <code>items</code> becomes a submenu, at the top level and inside a group alike. Mutually exclusive with the default slot; <code>items</code> wins when both are given.</td>
       </tr>
       <tr>
         <td><code>isMenuOpen</code></td>
@@ -48,8 +48,8 @@ footer: false
       <tr>
         <td><code>presentation</code></td>
         <td><code>'popover' | 'bottom-sheet' | 'adaptive'</code></td>
-        <td><code>'popover'</code></td>
-        <td><code>popover</code> is the surface anchored to the trigger. <code>bottom-sheet</code> uses the BottomSheet on every screen. <code>adaptive</code> uses the BottomSheet on a compact touch screen: a coarse primary pointer, and a viewport narrower than the theme <code>md</code> breakpoint (768px by default) or shorter than 500px. The choice is made when the layer opens and held until its exit finishes, so turning the device while it is open does not swap it.</td>
+        <td>anchored popover</td>
+        <td>Left out, the menu is the surface anchored to the trigger, and the finger that opened it starts picking rows only after it has moved a short distance, as on iOS. <code>popover</code> pins the anchored surface with the plain pointer behavior on every device: the opening press follows the settle rule. <code>popover</code> is the surface anchored to the trigger. <code>bottom-sheet</code> uses the BottomSheet on every screen. <code>adaptive</code> uses the BottomSheet on a compact touch screen: a coarse primary pointer, and a viewport narrower than the theme <code>md</code> breakpoint (768px by default) or shorter than 500px. The choice is made when the layer opens and held until its exit finishes, so turning the device while it is open does not swap it.</td>
       </tr>
       <tr>
         <td><code>placement</code></td>
@@ -103,7 +103,7 @@ footer: false
         <td><code>isDisabled</code></td>
         <td><code>boolean</code></td>
         <td><code>false</code></td>
-        <td>Disables the row. A disabled row is skipped by the arrow keys and by typeahead, and it does not respond to clicks.</td>
+        <td>Disables the row. A disabled row stays in the accessibility tree as disabled. The arrow keys and typeahead reach it so a keyboard user finds it, the pointer highlight skips it, and it does not respond to clicks.</td>
       </tr>
       <tr>
         <td><code>variant</code></td>

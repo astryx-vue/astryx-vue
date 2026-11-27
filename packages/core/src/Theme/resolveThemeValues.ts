@@ -6,6 +6,7 @@ import type { ComponentStyleMap, ThemeTokens, ThemeTokenValue, TypographyConfig 
 import { checkDeclarationName, checkDeclarationValue, warnDroppedDeclaration } from './declarationBoundary.js'
 import { expandColorScale } from './expandColorScale.js'
 import { expandRadiusScale } from './expandRadiusScale.js'
+import { mergeComponentMaps, withoutUnsetComponents } from './mergeComponents.js'
 import { motionLayerTokens, settleMotionTokens } from './motionLayerTokens.js'
 import { normalizeTokenName, prefixTokenReferences } from './tokenName.js'
 import { resolveTypography } from './typography.js'
@@ -70,30 +71,6 @@ export function resolveTokenMap(tokens: ThemeTokens | undefined, location: strin
 }
 
 /**
- * Merge component maps. `next` wins per style key and per property, so a
- * child that restates one property of `button.base` keeps the rest.
- */
-export function mergeComponentMaps(
-  base: ComponentStyleMap | undefined,
-  next: ComponentStyleMap | undefined,
-): ComponentStyleMap | undefined {
-  if (base == null)
-    return next
-  if (next == null)
-    return base
-  const merged: ComponentStyleMap = {}
-  for (const [component, rules] of Object.entries(base))
-    merged[component] = { ...rules }
-  for (const [component, rules] of Object.entries(next)) {
-    const target = merged[component] ?? {}
-    for (const [key, styles] of Object.entries(rules))
-      target[key] = { ...target[key], ...styles }
-    merged[component] = target
-  }
-  return merged
-}
-
-/**
  * Expand the generator axes, then lay explicit `tokens` over the result.
  * Explicit tokens win token by token. Authored component styles win over
  * the generated type-scale rules property by property. `motion` reads what
@@ -120,6 +97,6 @@ export function resolveThemeValues(
   settleMotionTokens(tokens, input, context)
   return {
     tokens,
-    components: mergeComponentMaps(typography.components, input.components),
+    components: mergeComponentMaps(typography.components, withoutUnsetComponents(input.components)),
   }
 }

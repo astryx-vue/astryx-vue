@@ -41,7 +41,7 @@ footer: false
         <td><code>isDisabled</code></td>
         <td><code>boolean</code></td>
         <td><code>false</code></td>
-        <td>禁用这一行。行仍留在无障碍树里，方向键会跳过它，点击不会切换。</td>
+        <td>禁用这一行。行仍留在无障碍树里，方向键和字母跳转能走到它，指针悬停不会点亮它，点击不会切换。</td>
       </tr>
       <tr>
         <td><code>hasCloseOnSelect</code></td>

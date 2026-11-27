@@ -377,4 +377,37 @@ describe('关闭栈：边界情况', () => {
     pressDown(document.body)
     expect(onDismiss).toHaveBeenCalledOnce()
   })
+
+  it('shadow root 里的层：按在层自己身上不算点外面，按在 shadow 外面才关', () => {
+    const host = document.createElement('div')
+    document.body.append(host)
+    const shadow = host.attachShadow({ mode: 'open' })
+    const el = document.createElement('div')
+    const inner = document.createElement('button')
+    el.append(inner)
+    shadow.append(el)
+    const outside = document.createElement('button')
+    document.body.append(outside)
+    const onDismiss = vi.fn()
+    const remove = pushLayer({
+      token: {},
+      getContainer: () => el,
+      dismissOnPointerOutside: true,
+      dismissOnEscape: 'close',
+      onDismiss,
+    })
+
+    // 文档上看到的 target 是被重定向的 shadow host，真正按到的元素只在 composedPath 里。
+    const retargeted = new PointerEvent('pointerdown', { bubbles: true, composed: true, cancelable: true })
+    Object.defineProperty(retargeted, 'composedPath', { value: () => [inner, el, shadow, host, document.body, document] })
+    host.dispatchEvent(retargeted)
+    expect(onDismiss).not.toHaveBeenCalled()
+
+    outside.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true, cancelable: true }))
+    expect(onDismiss).toHaveBeenCalledTimes(1)
+
+    remove()
+    host.remove()
+    outside.remove()
+  })
 })

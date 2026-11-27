@@ -16,6 +16,9 @@ title: 排版与字体
 - `--astryx-font-family-body` 与 `--astryx-font-family-heading` 回退至苹果 PingFang、Windows Segoe UI、Roboto 等。
 - `--astryx-font-family-code` 回退至 SFMono、Menlo、Consolas 等等宽字体。
 
+
+`defineTheme({ typography })` 里，每个角色的字体列表由它的 `family` 加上 `fallbacks` 拼成。标题没写 `family` 时直接用正文的整份字体列表；写了自己的 `family`，只带自己的 `fallbacks`。只写 `fallbacks` 而没有 `family`，什么也不生成。
+
 ## 字重标准（Font Weight）
 
 系统规范了 4 个清晰的字重阶梯：

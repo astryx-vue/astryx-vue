@@ -10,6 +10,9 @@
  * - `open`：菜单在按住的指针下面打开了（鼠标按下，或手指按满长按时间），指针还没进菜单。
  * - `tracking`：指针按着，高亮跟着它。
  *
+ * 手指或笔打开菜单后，走过 `MENU_PRESS_HANDOFF_PX` 才开始挑行，没走够就松开什么都不执行
+ * （事件带了位置才这样）。
+ *
  * 落定规则：打开菜单的那次按压，只有指针进过菜单、或者按满 `MENU_PRESS_SETTLE_MS`，
  * 松开时才执行；否则什么都不执行，菜单保持打开。没有这条，一个在指针下面弹出的菜单
  * 会替用户挑一行谁都没选的。
@@ -21,12 +24,24 @@
 /** 打开菜单的那次按压至少要按多久，松开时才能执行。 */
 export const MENU_PRESS_SETTLE_MS = 300
 
+/**
+ * 手指打开菜单后要从菜单看到的第一个位置再走多远才开始挑行（UIMenu 的交接距离，pt）。
+ * 只有带位置的事件才用它：调用方不给位置，就仍按上面的落定规则。
+ */
+export const MENU_PRESS_HANDOFF_PX = 10
+
 export type MenuPressPointerType = 'mouse' | 'touch' | 'pen'
 
 export type MenuPressGesture<T>
   = | { phase: 'idle' }
     | { phase: 'triggerPress', pointerType: MenuPressPointerType, startedAt: number }
-    | { phase: 'open', pointerType: MenuPressPointerType, openedAt: number }
+    | {
+      phase: 'open'
+      pointerType: MenuPressPointerType
+      openedAt: number
+      /** 手指的交接：打开后菜单看到的第一个位置，走过的距离从这里数。 */
+      handoffFrom?: { x: number, y: number }
+    }
     | {
       phase: 'tracking'
       pointerType: MenuPressPointerType
@@ -47,8 +62,9 @@ export type MenuPressEvent<T>
   }
   /** 触发器上的按压还按着，菜单开了。 */
   | { type: 'opened', time: number }
-  | { type: 'move', row: T | null, isInMenu: boolean, time: number }
-  | { type: 'up', row: T | null, isInMenu: boolean, isOnTrigger: boolean, time: number }
+  /** `x`、`y` 是视口坐标，只用于手指的交接距离。 */
+  | { type: 'move', row: T | null, isInMenu: boolean, time: number, x?: number, y?: number }
+  | { type: 'up', row: T | null, isInMenu: boolean, isOnTrigger: boolean, time: number, x?: number, y?: number }
   /** 浏览器拿走了手势：pointercancel、第二根手指、滚动。 */
   | { type: 'cancel' }
 
@@ -94,6 +110,19 @@ function release<T>(pointerType: MenuPressPointerType, event: Extract<MenuPressE
   return idle({ type: 'settle', stray: true, dismiss: pointerType === 'mouse' })
 }
 
+/** 手指或笔：UIKit 的触屏规则。 */
+function isFinger(pointerType: MenuPressPointerType): boolean {
+  return pointerType !== 'mouse'
+}
+
+function hasPosition(event: { x?: number, y?: number }): event is { x: number, y: number } {
+  return event.x != null && event.y != null
+}
+
+function hasPassedHandoff(from: { x: number, y: number }, to: { x: number, y: number }): boolean {
+  return Math.hypot(to.x - from.x, to.y - from.y) >= MENU_PRESS_HANDOFF_PX
+}
+
 function stepIdle<T>(gesture: MenuPressGesture<T>, event: MenuPressEvent<T>): MenuPressStep<T> {
   if (event.type !== 'down')
     return { gesture, effect: NONE }
@@ -131,14 +160,31 @@ function stepOpen<T>(
   event: MenuPressEvent<T>,
 ): MenuPressStep<T> {
   switch (event.type) {
-    case 'move':
+    case 'move': {
+      if (isFinger(gesture.pointerType) && hasPosition(event)) {
+        // 交接距离从打开之后菜单看到的第一个位置数起，不是从打开的那一点。
+        const from = gesture.handoffFrom
+        if (from == null)
+          return { gesture: { ...gesture, handoffFrom: { x: event.x, y: event.y } }, effect: NONE }
+        if (!hasPassedHandoff(from, event))
+          return { gesture, effect: NONE }
+        return {
+          gesture: { phase: 'tracking', pointerType: gesture.pointerType, origin: 'trigger', row: event.row },
+          effect: highlightEffect(event.row),
+        }
+      }
       if (!event.isInMenu)
         return { gesture, effect: NONE }
       return {
         gesture: { phase: 'tracking', pointerType: gesture.pointerType, origin: 'trigger', row: event.row },
         effect: highlightEffect(event.row),
       }
+    }
     case 'up':
+      // 手指没走够交接距离：它底下的行是在没人挪动的按压下冒出来的。什么都不执行，
+      // 菜单留着，触发器为这次按压收到的 click 也要吞掉。
+      if (isFinger(gesture.pointerType) && hasPosition(event))
+        return idle({ type: 'settle', stray: true, dismiss: false })
       // 没进过菜单、按得又短：菜单开着，什么都不执行，触发器为这次手势收到的 click 也不能把它关掉。
       if (event.time - gesture.openedAt < MENU_PRESS_SETTLE_MS)
         return idle({ type: 'settle', stray: true, dismiss: false })

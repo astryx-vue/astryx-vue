@@ -16,7 +16,7 @@ footer: false
 <tr><td><code>href</code></td><td><code>string</code></td><td>—</td><td>Address the row navigates to; the row then renders as an anchor.</td></tr>
 <tr><td><code>target</code></td><td><code>'_blank' | '_self'</code></td><td>—</td><td>Link target, only used with <code>href</code>.</td></tr>
 <tr><td><code>rel</code></td><td><code>string</code></td><td>—</td><td>Link relationship, only used with <code>href</code>.</td></tr>
-<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Whether the row is disabled. A disabled row is dimmed, skipped by arrow keys and typeahead, and cannot be activated.</td></tr>
+<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Whether the row is disabled. A disabled row is dimmed and cannot be activated. Arrow keys and typeahead still reach it, so a keyboard user finds it.</td></tr>
 <tr><td><code>hasCloseOnSelect</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Whether activating the row closes the menu.</td></tr>
 <tr><td><code>variant</code></td><td><code>'default' | 'destructive'</code></td><td><code>'default'</code></td><td>Visual variant of the row.</td></tr>
 </tbody></table>

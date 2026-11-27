@@ -109,7 +109,6 @@ describe('expandRadiusScale', () => {
       '--radius-element': '8px',
       '--radius-container': '12px',
       '--radius-page': '28px',
-      '--radius-chat': '28px',
       '--radius-full': '9999px',
     })
     expect(expandRadiusScale({ base: 4, multiplier: 0 })['--radius-element']).toBe('0px')

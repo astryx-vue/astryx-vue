@@ -12,7 +12,7 @@ footer: false
 <tr><td><code>label</code></td><td><code>string | number</code></td><td>—</td><td>行内的主要文字。需要富文本时改用 <code>label</code> 插槽。</td></tr>
 <tr><td><code>description</code></td><td><code>string | number</code></td><td>—</td><td>标签下方的次要说明文字。需要富文本时改用 <code>description</code> 插槽。</td></tr>
 <tr><td><code>icon</code></td><td><code>string | Component</code></td><td>—</td><td>标签前的图标：一个 CSS 图标类（例如 UnoCSS 的 <code>i-carbon-copy</code>，也可以是你自己的类名），或一个绘制 SVG 的组件。astryx-vue 不自带图标。想放任意内容时改用 <code>icon</code> 插槽。</td></tr>
-<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>禁用这一行。禁用的行会被方向键和字母跳转跳过，并且不响应点击。</td></tr>
+<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>禁用这一行。禁用的行仍留在无障碍树里，宣告为禁用。方向键和字母跳转能走到它，键盘用户才找得到；指针悬停不会点亮它，也不响应点击。</td></tr>
 <tr><td><code>variant</code></td><td><code>'default' | 'destructive'</code></td><td><code>'default'</code></td><td>视觉变体。<code>destructive</code> 会把标签、说明和图标一起换成错误色，用于删除这类危险动作。悬停底色仍是共用的中性色，与其他行一致。</td></tr>
 <tr><td><code>hasCloseOnSelect</code></td><td><code>boolean</code></td><td><code>true</code></td><td>激活这一行后是否收起菜单。像“复制”这种在行内回报结果的动作可以设为 <code>false</code>。</td></tr>
 <tr><td><code>href</code></td><td><code>string</code></td><td>—</td><td>这一行要跳转的地址。给出后整行就是一个带 <code>role="menuitem"</code> 的链接，所以 ⌘/Ctrl 点击和中键点击仍然保持浏览器原本的含义。</td></tr>

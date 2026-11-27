@@ -134,6 +134,9 @@ export function resolveLocalTokens(
   const localTokens: Record<string, string> = { ...base?.localTokens }
   const owners: Record<string, string> = { ...base?.localTokenOwners }
   for (const [name, value] of Object.entries(declarations ?? {})) {
+    // A token left undefined is not set.
+    if (value === undefined)
+      continue
     const path = `defineTheme("${themeName}").localTokens["${name}"]`
     if (!CUSTOM_PROPERTY_NAME.test(name))
       throw new Error(`${path}: a local token name must be a CSS custom property such as --brand-ink.`)
@@ -170,6 +173,8 @@ export function resolveAdaptationLocalTokens(
     return undefined
   const resolved: Record<string, string> = {}
   for (const [name, value] of Object.entries(declarations)) {
+    if (value === undefined)
+      continue
     if (!rootLocalTokens || !Object.hasOwn(rootLocalTokens, name))
       throw new Error(`${path}["${name}"] cannot add a theme-local token. Declare it in the root theme or a theme it extends first.`)
     const css = tokenValueToCss(value, `${path}["${name}"]`)

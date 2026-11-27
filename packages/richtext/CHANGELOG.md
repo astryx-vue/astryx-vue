@@ -1,5 +1,26 @@
 # @astryx-vue/richtext
 
+## 0.32.0
+
+### Patch Changes
+
+- Updated dependencies [[`e502448`](https://github.com/astryx-vue/astryx-vue/commit/e502448b10848a3752c9f5f41fd3f3af79e69e72)]:
+  - @astryx-vue/core@0.32.0
+
+## 0.31.0
+
+### Patch Changes
+
+- Updated dependencies [[`a23cb50`](https://github.com/astryx-vue/astryx-vue/commit/a23cb50279f130df2b3ef4fb83cdaa5b9dfb3663)]:
+  - @astryx-vue/core@0.31.0
+
+## 0.30.1
+
+### Patch Changes
+
+- Updated dependencies [[`5f7d0ab`](https://github.com/astryx-vue/astryx-vue/commit/5f7d0ab18669a8baec5dd919ca3ada5f15b1871c), [`d63be11`](https://github.com/astryx-vue/astryx-vue/commit/d63be11fa4c63a1823202943b6b428c5986c9080), [`a7215e2`](https://github.com/astryx-vue/astryx-vue/commit/a7215e2a0381554594b62677569cc40a4d942045)]:
+  - @astryx-vue/core@0.30.1
+
 ## 0.30.0
 
 ### Patch Changes
