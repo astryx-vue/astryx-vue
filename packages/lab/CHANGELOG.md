@@ -1,5 +1,13 @@
 # @astryx-vue/lab
 
+## 0.11.5
+
+### Patch Changes
+
+- [#654](https://github.com/astryx-vue/astryx-vue/pull/654) [`dff2d91`](https://github.com/astryx-vue/astryx-vue/commit/dff2d9152f247971094d989cce222ceb91701d33) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `ListInput` 和 `TransferList` 的重排手柄上，双指捏合现在也能缩放页面；单指拖动照旧是重排。
+- Updated dependencies [[`7334333`](https://github.com/astryx-vue/astryx-vue/commit/73343337fa497d3bf4b9f813e1c89f9921ffd5f0), [`a8ff6f5`](https://github.com/astryx-vue/astryx-vue/commit/a8ff6f57ef576333c7b547fc29d9da6b54c4e66d)]:
+  - @astryx-vue/core@0.38.0
+
 ## 0.11.4
 
 ### Patch Changes

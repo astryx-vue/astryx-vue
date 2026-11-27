@@ -1,5 +1,13 @@
 # @astryx-vue/cli
 
+## 0.8.11
+
+### Patch Changes
+
+- [#653](https://github.com/astryx-vue/astryx-vue/pull/653) [`7334333`](https://github.com/astryx-vue/astryx-vue/commit/73343337fa497d3bf4b9f813e1c89f9921ffd5f0) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增 `useReorderable` / `createReorderable`：传给 `List` 的 `reorderable` 后，带 `itemKey` 的行末尾出现拖动手柄，手指按住再拖、鼠标直接拖，或点一下手柄用方向键挪，读屏会播报每次移动。
+
+- [#655](https://github.com/astryx-vue/astryx-vue/pull/655) [`a8ff6f5`](https://github.com/astryx-vue/astryx-vue/commit/a8ff6f57ef576333c7b547fc29d9da6b54c4e66d) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 侧栏和顶栏标题的菜单改为盖在标题原位上打开，第一行就是标题本身，标题不再出现两份；NavDisclosure 新增 `overlap` 属性。
+
 ## 0.8.10
 
 ### Patch Changes
