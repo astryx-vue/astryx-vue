@@ -450,6 +450,11 @@ html.dark .component-card__frame {
   transform-origin: 0 0;
 }
 
+/* cardFit 量出示例实际画出的范围后，把它平移到卡片正中。 */
+.component-card__preview > * {
+  translate: var(--component-card-shift-x, 0) var(--component-card-shift-y, 0);
+}
+
 /* 预览子元素默认 min-width: auto，内容一宽就会撑出格子。允许收缩后，分页才能按容器宽度收起。 */
 .component-card__preview > *,
 .component-example__preview > * {
@@ -657,6 +662,11 @@ html.dark .component-detail__stage {
   background: #1b1b1b;
 }
 
+/* stageCenter 量出示例实际画出的范围后，把它平移到画布正中。 */
+.component-detail__stage .astryx-demo {
+  translate: var(--component-stage-shift-x, 0) var(--component-stage-shift-y, 0);
+}
+
 /* StageFit 的两层外壳是 display: contents，demo 根节点仍要受这条限制。 */
 .component-detail__stage > *,
 .component-detail__stage > .stage-fit > .stage-fit__inner > * {
@@ -691,7 +701,7 @@ html.dark .component-detail__stage {
 }
 
 /*
- * 窄屏照原版 ShowcasePreview 的小屏分支：画布至少 160px 高，随内容长高，不缩放；
+ * 窄屏参照原版 ShowcasePreview 的小屏分支：画布至少 160px 高，随内容长高，不缩放；
  * 左右两条 16px 的空隙在内容放不下时先让出位置，内容比画布还宽就横向滚动，
  * 放得下时居中（safe center 保证溢出时从左边开始，不会把开头裁掉）。
  */
@@ -702,7 +712,8 @@ html.dark .component-detail__stage {
     justify-content: safe center;
     aspect-ratio: auto;
     min-height: 160px;
-    padding: 0;
+    /* 上下留白，内容不贴着画布边。 */
+    padding: 24px 0;
     overflow: auto;
   }
 
@@ -2513,13 +2524,12 @@ div.component-detail__body > .nagi-table > table {
   max-width: 100% !important;
 }
 
-/* 代码块有 13 行、最长一行 50 多个字符，按卡片默认比例放不下。单独再缩小一点，
-   宽度仍取整个画布，这样每行都完整、上下也不被截。 */
+/* 代码块这类宽示例按自身内容宽度居中，放不下时由 cardFit 整体缩小。 */
 .component-card__preview > .overview-wide {
   box-sizing: border-box;
-  width: 100% !important;
-  max-width: 100% !important;
-  zoom: 0.72;
+  justify-self: center;
+  width: fit-content !important;
+  max-width: none !important;
 }
 
 /* 头像状态点的示例用 128px 大头像，放进卡片要再缩小，和其他卡片大小接近。 */
@@ -2607,11 +2617,13 @@ div.component-detail__body > .nagi-table > table {
   height: auto;
 }
 
+/* 宽度贴合菜单本身，不沿用 .nav-overview 的 20rem，否则菜单偏在盒子左边。 */
 .nav-overview--menu {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 8px;
+  width: fit-content;
 }
 
 .nav-overview--menu .astryx-nav-disclosure__panel,
@@ -2934,6 +2946,14 @@ div.component-detail__body > .nagi-table > table {
   overflow-x: auto;
 }
 
+/* 总览卡片里的 lab 示例不滚动，放不下由 cardFit 整体缩小。 */
+.component-card__preview > .astryx-demo.lab-demo {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+}
+
 
 .lab-demo-row {
   display: flex;
@@ -3016,9 +3036,12 @@ html.dark {
   color: var(--docs-c-brand-1);
 }
 
+/* 宽度跟着内容走：快捷键在苹果设备上是「⌘ K」，其他平台是更宽的「Ctrl K」。 */
 .kawa-search-button {
-  width: 131px;
+  width: auto;
+  min-width: 131px;
   height: 38px;
+  white-space: nowrap;
   margin-left: 32px;
   padding: 8px 12px;
   gap: 8px;
@@ -3116,6 +3139,7 @@ html.dark {
 
   .kawa-search-button {
     width: 36px;
+    min-width: 0;
     height: 36px;
     margin-left: 0;
     padding: 0;
