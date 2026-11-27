@@ -7,7 +7,7 @@ footer: false
 
 ## Usage
 
-Helper component for custom item rendering with consistent styling. Host attributes and DOM event handlers (`aria-`, `data-`, `id`, drag and drop) reach the row root, the element carrying `role="menuitem"`.
+One action or destination row of a compound `DropdownMenu`. The parent menu owns keyboard navigation; the row owns activation, disabled state, destination behavior, and content layout. Keep `label`, `description`, `icon`, and `endContent` non-interactive: each row is one interactive target, and controls belong in separate rows or the menu `header` or `footer`. Use `href` for a destination so link providers, modified clicks, and middle clicks keep working, and `hasCloseOnSelect=false` only when activation reports a result in place on the same row. Host attributes and DOM event handlers (`aria-`, `data-`, `id`, drag and drop) reach the row root, the element carrying `role="menuitem"`.
 
 ```ts
 import { DropdownMenuItem } from '@astryx-vue/core/DropdownMenu'

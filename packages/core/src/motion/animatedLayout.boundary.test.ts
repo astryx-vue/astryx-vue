@@ -25,6 +25,7 @@ const coreSrc = join(here, '..')
 const ADOPTERS = [
   'AppShell/useAppShellRail.ts',
   'List/listLayoutUpdates.ts',
+  'Resizable/resizablePane.ts',
   'SideNav/railMotion.ts',
   'Table/plugins/rowExpansionGlide.ts',
   'TreeList/useTreeLayoutMotion.ts',

@@ -51,7 +51,7 @@ npm run astryx-vue -- component Button
 
 ## Commands
 
-`astryx-vue component --list` lists the documented components. `astryx-vue component Button` prints one component's usage, props, slots, events, and examples.
+`astryx-vue component --list` lists the documented components. `astryx-vue component Button` prints one component's usage, props, slots, events, and examples. Several names (`astryx-vue component Button Card Badge`) print each component in turn, and `--json` answers one `component.details` envelope, so an agent reads a page's components in one call.
 
 `astryx-vue composable --list` lists the composables, and `astryx-vue composable useClipboard` prints one composable's parameters and return values. Vue calls these functions composables, so the CLI never says hook. `component useClipboard` still finds it and points at the `composable` command.
 
@@ -61,11 +61,11 @@ npm run astryx-vue -- component Button
 
 ## Templates
 
-`astryx-vue template --list` lists the 57 playground pages, grouped by category. Every template is a page today; `--type block` answers with a note rather than an error. Each line says what the page needs: a ready template names only `vue` and `@astryx-vue/core`, so copying one leaves no install step.
+`astryx-vue template --list` lists the 57 playground pages, grouped by category. Every template is a page today; `--type block` answers with a note rather than an error. The text prints the first sentence of each description; `--json` keeps it whole. Each line says what the page needs: a ready template names only `vue` and `@astryx-vue/core`, so copying one leaves no install step.
 
 `astryx-vue template login-card` prints one template's description, the components it uses, the packages it needs, and its source. `--skeleton` prints only the layout skeleton: component tags with layout attributes such as `gap`, `padding`, and `columns`, without text, handlers, or native HTML wrappers.
 
-`astryx-vue template login-card ./src/pages` writes `src/pages/LoginCard.vue`. A path that ends in a file name is the file itself. An existing file is only replaced with `--overwrite` (or `-f`), and a path outside the project is refused. Copying rewrites the playground's demo photo paths to an inline grey placeholder and reports how many it replaced; it does not copy assets and does not install anything, it only names the packages the project is missing.
+`astryx-vue template login-card ./src/pages` writes `src/pages/LoginCard.vue`. A path that ends in a file name is the file itself. An existing file is only replaced with `--overwrite` (or `-f`), and a path outside the project is refused with the commands that do work: the same page written inside the project, the same path run from its own folder, and the print that writes nothing. An absolute path inside the project is written as its relative path and reported as `givenPath`; an absolute path in the system temp folder writes a scratch copy (`outputPath` is then absolute and `scratch` is true); `~/` means the home folder, never a folder named `~`. The text after a copy, and `template <slug>`, name every component the page uses on one line, `astryx-vue component A B C`, which `--json` carries as `components` and `componentsToRead`. Which packages a copy still needs comes from the imports in the page's `<script>`, never from a code sample in its text. Copying rewrites the playground's demo photo paths to an inline grey placeholder and reports how many it replaced; it does not copy assets and does not install anything, it only names the packages the project is missing.
 
 A few templates import something a project cannot install, such as the playground-only `@astryx-vue/playground-charts` alias. They are marked not ready: you can read them, and copying is refused with the reason.
 

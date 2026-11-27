@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import { Button } from '@astryx-vue/core/Button'
 import { NavIcon } from '@astryx-vue/core/NavItem'
+import { useToast } from '@astryx-vue/core/Toast'
 import { TopNav, TopNavHeading, TopNavItem, TopNavMegaMenu, TopNavMegaMenuFeaturedCard, TopNavMegaMenuItem } from '@astryx-vue/core/TopNav'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 </script>
 
 <template>
@@ -33,8 +40,8 @@ import { TopNav, TopNavHeading, TopNavItem, TopNavMegaMenu, TopNavMegaMenuFeatur
       <TopNavItem href="#pricing" label="Pricing" />
       <TopNavItem href="#docs" label="Docs" />
       <template #end>
-        <Button label="Sign in" variant="ghost" />
-        <Button label="Get started" variant="primary" />
+        <Button label="Sign in" variant="ghost" @click="demo('Sign in')" />
+        <Button label="Get started" variant="primary" @click="demo('Get started')" />
       </template>
     </TopNav>
   </div>

@@ -7,6 +7,7 @@ import { formatPractices, formatPropsList, formatTable, propColumns } from './fo
 import { firstSentence } from './generate/markdown.ts'
 import { displayName } from './query.ts'
 import { BINARY, CORE_PACKAGE } from './spec.ts'
+import { componentsToRead } from './templates.ts'
 
 interface Listing {
   name: string
@@ -187,7 +188,8 @@ export function formatSearch(query: string, matchCount: number, results: readonl
     return locale === 'zh' ? `没有匹配「${query}」的结果。\n` : `No matches for "${query}".\n`
   const lines = results.map((hit) => {
     // The package says what to install, so every result carries it.
-    const head = `[${hit.domain}] ${hit.name}  ${hit.package}`
+    const unready = hit.isReady === false ? (locale === 'zh' ? '（不可用）' : ' (not ready)') : ''
+    const head = `[${hit.domain}] ${hit.name}${unready}  ${hit.package}`
     const follow = `→ ${hit.command}`
     if (dense)
       return `${head}  ${follow}`
@@ -223,7 +225,7 @@ export function formatTemplateList(templates: readonly TemplateRecord[], locale:
       const status = template.isReady ? '' : (locale === 'zh' ? '（不可用）' : ' (not ready)')
       return dense
         ? `  ${template.slug}${status}`
-        : `  ${template.slug}  ${text(template.title, locale)}${status} — ${text(template.description, locale)}`
+        : `  ${template.slug}  ${text(template.title, locale)}${status} — ${firstSentence(text(template.description, locale))}`
     })
     blocks.push([title, ...lines].join('\n'))
   }
@@ -273,10 +275,24 @@ export function formatTemplateDetail(template: TemplateRecord, locale: 'en' | 'z
         dependencyLine(template, locale),
         '',
         `Components: ${template.componentsUsed.join(', ')}`,
+        ...readComponentsLines(template, locale),
       ]
   if (dense)
     return `${head.join('\n')}\n\n${source.trim()}\n`
   return `${head.join('\n')}\n\n## Source\n\n\`\`\`vue\n${source.trim()}\n\`\`\`\n`
+}
+
+/** The one command that reads every component a page uses, so an agent does not look them up one at a time. */
+export function readComponentsLine(components: readonly string[], locale: 'en' | 'zh'): string {
+  if (components.length === 0)
+    return ''
+  const command = `${BINARY} component ${components.join(' ')}`
+  return locale === 'zh' ? `一次读完它用到的组件：${command}` : `Read the components it uses in one call: ${command}`
+}
+
+function readComponentsLines(template: TemplateRecord, locale: 'en' | 'zh'): string[] {
+  const line = readComponentsLine(componentsToRead(template), locale)
+  return line ? [line] : []
 }
 
 export function formatTemplateSkeleton(template: TemplateRecord, locale: 'en' | 'zh', skeleton: string): string {
@@ -308,6 +324,9 @@ export function formatTemplateCopy(receipt: CopyReceipt, locale: 'en' | 'zh'): s
   }
   for (const note of receipt.notes)
     lines.push(note)
+  const read = readComponentsLine(receipt.components, locale)
+  if (read)
+    lines.push(read)
   return `${lines.join('\n')}\n`
 }
 

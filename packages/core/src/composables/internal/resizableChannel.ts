@@ -3,6 +3,8 @@ import type { ResizableProps, ResizableRegion } from '../useResizable.js'
 export interface CollapseControls {
   collapse: () => void
   expand: () => void
+  /** 带着松手速度（px/s，正负和拖动的位移一致）结束拖动。 */
+  release?: (velocity: number) => void
 }
 
 /**
@@ -26,6 +28,15 @@ export function registerResizableChannel(
 
 export function getCollapseControls(props: ResizableProps): CollapseControls | undefined {
   return collapseControls.get(props)
+}
+
+/** 带着松手速度结束 `props` 跟着的拖动；手写的 props 不带速度地结束。 */
+export function endResizeAt(props: ResizableProps, velocity: number): void {
+  const release = collapseControls.get(props)?.release
+  if (release == null)
+    props._onResizeEnd()
+  else
+    release(velocity)
 }
 
 export function getEffectiveMaxPx(props: ResizableProps): number | undefined {

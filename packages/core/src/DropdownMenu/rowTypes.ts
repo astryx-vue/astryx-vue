@@ -130,6 +130,17 @@ export interface DropdownMenuSubMenuProps {
    * @default 'adaptive'
    */
   presentation?: DropdownMenuSubMenuPresentation
+  /**
+   * How long a hovering pointer waits before the flyout opens, in
+   * milliseconds. Keyboard focus and touch never wait.
+   * @default 150
+   */
+  delay?: number
+  /**
+   * How long the flyout stays open after the pointer leaves, in milliseconds.
+   * @default 200
+   */
+  hideDelay?: number
 }
 
 export interface DropdownMenuSubMenuEmits {

@@ -3,7 +3,14 @@ import { Button } from '@astryx-vue/core/Button'
 import { ChatComposer, ChatComposerDrawer } from '@astryx-vue/core/Chat'
 import { Icon } from '@astryx-vue/core/Icon'
 import { Stack } from '@astryx-vue/core/Stack'
+import { useToast } from '@astryx-vue/core/Toast'
 import { Token } from '@astryx-vue/core/Token'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 
 const files = ['design-spec.pdf', 'api-schema.json', 'screenshot.png', 'meeting-notes.md']
 </script>
@@ -17,7 +24,7 @@ const files = ['design-spec.pdf', 'api-schema.json', 'screenshot.png', 'meeting-
         </ChatComposerDrawer>
       </template>
       <template #headerActions>
-        <Button label="Attach" variant="ghost" size="sm" is-icon-only>
+        <Button label="Attach" variant="ghost" size="sm" is-icon-only @click="demo('Attach')">
           <template #icon>
             <Icon icon="i-heroicons-paper-clip" size="sm" />
           </template>

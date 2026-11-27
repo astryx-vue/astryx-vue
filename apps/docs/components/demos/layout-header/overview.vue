@@ -5,6 +5,13 @@ import { Center } from '@astryx-vue/core/Center'
 import { Heading } from '@astryx-vue/core/Heading'
 import { Layout, LayoutContent, LayoutFooter, LayoutHeader, LayoutPanel } from '@astryx-vue/core/Layout'
 import { HStack } from '@astryx-vue/core/Stack'
+import { useToast } from '@astryx-vue/core/Toast'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 </script>
 
 <template>
@@ -17,8 +24,8 @@ import { HStack } from '@astryx-vue/core/Stack'
               Dashboard
             </Heading>
             <HStack :gap="2">
-              <Button label="Export" variant="secondary" />
-              <Button label="New Item" variant="primary" />
+              <Button label="Export" variant="secondary" @click="demo('Export')" />
+              <Button label="New Item" variant="primary" @click="demo('New Item')" />
             </HStack>
           </HStack>
         </LayoutHeader>

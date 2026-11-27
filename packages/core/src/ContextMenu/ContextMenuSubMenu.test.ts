@@ -20,6 +20,19 @@ const ITEMS: ContextMenuOption[] = [
   { label: 'After' },
 ]
 
+/** 面板在第一次打开时才挂上：每次读都按当前页面找，没挂上时当作隐藏。 */
+function livePanel(): HTMLElement {
+  return new Proxy({} as HTMLElement, {
+    get(_, key) {
+      const element = document.querySelector<HTMLElement>('.astryx-context-menu')
+      if (element == null)
+        return key === 'style' ? { display: 'none' } : undefined
+      const value = Reflect.get(element, key)
+      return typeof value === 'function' ? value.bind(element) : value
+    },
+  })
+}
+
 function renderMenu(items: ContextMenuOption[] = ITEMS) {
   const wrapper = mount(ContextMenu, {
     attachTo: document.body,
@@ -28,7 +41,7 @@ function renderMenu(items: ContextMenuOption[] = ITEMS) {
   })
   const trigger = document.querySelector('.astryx-context-menu-trigger') as HTMLElement
   trigger.getBoundingClientRect = () => ({ bottom: 70, height: 20, left: 100, right: 140, top: 50, width: 40, x: 100, y: 50 }) as DOMRect
-  const panel = document.querySelector('.astryx-context-menu') as HTMLElement
+  const panel = livePanel()
   return { panel, trigger, wrapper }
 }
 

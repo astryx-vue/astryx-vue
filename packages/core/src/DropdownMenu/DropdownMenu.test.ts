@@ -169,29 +169,24 @@ describe('dropdownMenu', () => {
     expect(document.activeElement).toBe(enabledRows()[0])
   })
 
-  it('walks the rows with ArrowDown and ArrowUp, skipping the disabled row and wrapping', async () => {
+  it('walks every row with ArrowDown and ArrowUp, a disabled one included, and wraps', async () => {
     const { trigger, surface } = renderMenu()
 
     trigger.click()
     await flushPromises()
     // A click with no pointer detail is a synthesized (assistive) activation,
-    // so the menu opens the way a keyboard open does.
+    // so the menu opens the way a keyboard open does: on the first enabled row.
     expect(document.activeElement).toBe(enabledRows()[0])
 
-    await press(surface, 'ArrowDown')
-    expect(document.activeElement).toBe(enabledRows()[1])
-
-    await press(surface, 'ArrowDown')
-    expect(document.activeElement).toBe(enabledRows()[2])
-
-    await press(surface, 'ArrowDown')
-    expect(document.activeElement).toBe(enabledRows()[3])
-
-    await press(surface, 'ArrowDown')
-    expect(document.activeElement).toBe(enabledRows()[0])
+    const all = rows()
+    const start = all.indexOf(document.activeElement as HTMLElement)
+    for (let step = 1; step <= all.length; step++) {
+      await press(surface, 'ArrowDown')
+      expect(document.activeElement).toBe(all[(start + step) % all.length])
+    }
 
     await press(surface, 'ArrowUp')
-    expect(document.activeElement).toBe(enabledRows()[3])
+    expect(document.activeElement).toBe(all[(start - 1 + all.length) % all.length])
   })
 
   it('jumps to the first and last enabled row with Home and End', async () => {
@@ -246,7 +241,7 @@ describe('dropdownMenu', () => {
     expect(document.activeElement?.textContent?.trim()).toContain('Edit')
   })
 
-  it('never types ahead to a disabled row', async () => {
+  it('types ahead to a disabled row, which a keyboard user then finds', async () => {
     const { trigger, surface } = renderMenu({
       items: [
         { label: 'Duplicate' },
@@ -259,10 +254,10 @@ describe('dropdownMenu', () => {
     await flushPromises()
 
     await press(surface, 'd')
-    expect(document.activeElement?.textContent?.trim()).toBe('Download')
+    expect(document.activeElement?.textContent?.trim()).toBe('Delete')
 
     await press(surface, 'd')
-    expect(document.activeElement?.textContent?.trim()).toBe('Duplicate')
+    expect(document.activeElement?.textContent?.trim()).toBe('Download')
   })
 
   it('activates the focused row with Enter and Space, then closes', async () => {
@@ -359,7 +354,7 @@ describe('dropdownMenu', () => {
     expect(document.activeElement).toBe(outside)
   })
 
-  it('skips a disabled row: inert, never focused, never activating', async () => {
+  it('keeps a disabled row inert: reachable by keys, never activating', async () => {
     const onClick = vi.fn()
     const { trigger, surface } = renderMenu({ items: [{ label: 'Archive', isDisabled: true, onClick }] })
 
@@ -368,13 +363,19 @@ describe('dropdownMenu', () => {
 
     const row = rows()[0]!
     expect(row.getAttribute('aria-disabled')).toBe('true')
-    expect(row.getAttribute('tabindex')).toBeNull()
+    expect(row.getAttribute('tabindex')).toBe('-1')
 
+    row.focus()
+    await press(surface, 'Enter')
     row.dispatchEvent(new MouseEvent('click', { bubbles: true }))
     await flushPromises()
 
     expect(onClick).not.toHaveBeenCalled()
     expect(isShown(surface)).toBe(true)
+
+    const mouseDown = new MouseEvent('mousedown', { bubbles: true, cancelable: true })
+    row.dispatchEvent(mouseDown)
+    expect(mouseDown.defaultPrevented).toBe(true)
   })
 
   it('keeps the menu open when a row opts out of closing', async () => {

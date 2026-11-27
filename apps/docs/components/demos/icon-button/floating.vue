@@ -3,6 +3,13 @@ import { Icon } from '@astryx-vue/core/Icon'
 import { IconButton } from '@astryx-vue/core/IconButton'
 import { Stack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
+import { useToast } from '@astryx-vue/core/Toast'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 
 const variants = [
   { variant: 'primary' as const, label: 'Primary' },
@@ -18,7 +25,7 @@ const variants = [
       FABs are usually icon-only — raise one with `elevation="high"`
     </Text>
     <Stack align="center" direction="horizontal" :gap="3">
-      <IconButton v-for="item in variants" :key="item.variant" :label="item.label" :variant="item.variant" elevation="high">
+      <IconButton v-for="item in variants" :key="item.variant" :label="item.label" :variant="item.variant" elevation="high" @click="demo(item.label)">
         <Icon icon="i-heroicons-plus" />
       </IconButton>
     </Stack>

@@ -1,6 +1,7 @@
 import type { ComputedRef, Ref } from 'vue'
 import type { DropdownMenuSize } from './types.js'
-import { computed } from 'vue'
+import { computed, useAttrs } from 'vue'
+import { focusForLastInput } from '../composables/internal/focusReturn.js'
 import { useContextMenu } from '../ContextMenu/context.js'
 import { useDropdownMenuContext } from './context.js'
 
@@ -15,6 +16,8 @@ export interface MenuSelectableRow {
   controlSize: ComputedRef<'sm' | 'md'>
   density: ComputedRef<'compact' | 'balanced'>
   inContextMenu: ComputedRef<boolean>
+  /** 调用方放在行上的属性，去掉已经由行自己接管的 `onClick`。 */
+  forwardedAttrs: ComputedRef<Record<string, unknown>>
   handleClick: (event: MouseEvent) => void
   handlePointerMove: (event: PointerEvent) => void
 }
@@ -28,6 +31,7 @@ export interface MenuSelectableRow {
  */
 export function useMenuSelectableRow(options: UseMenuSelectableRowOptions): MenuSelectableRow {
   const dropdown = useDropdownMenuContext()
+  const attrs = useAttrs()
   const contextMenu = useContextMenu()
 
   const menuSize = computed<DropdownMenuSize>(() => contextMenu?.menuSize.value ?? dropdown?.menuSize.value ?? 'md')
@@ -45,6 +49,9 @@ export function useMenuSelectableRow(options: UseMenuSelectableRowOptions): Menu
       dropdown?.closeMenu()
   }
 
+  const forwardedAttrs = computed(() => Object.fromEntries(Object.entries(attrs).filter(([key]) => key !== 'onClick')))
+
+  /** 调用方的 `onClick` 排在行自己的选择和关闭之后；禁用的行在它之前就停下。 */
   function handleClick(event: MouseEvent): void {
     if (options.isDisabled.value) {
       event.preventDefault()
@@ -52,6 +59,11 @@ export function useMenuSelectableRow(options: UseMenuSelectableRowOptions): Menu
     }
     options.onActivate()
     closeHost()
+    const callerClick = attrs.onClick
+    for (const handler of Array.isArray(callerClick) ? callerClick : [callerClick]) {
+      if (typeof handler === 'function')
+        handler(event)
+    }
   }
 
   function handlePointerMove(event: PointerEvent): void {
@@ -59,8 +71,8 @@ export function useMenuSelectableRow(options: UseMenuSelectableRowOptions): Menu
       return
     const row = event.currentTarget
     if (row instanceof HTMLElement && row !== row.ownerDocument.activeElement)
-      row.focus({ preventScroll: true })
+      focusForLastInput(row, { preventScroll: true })
   }
 
-  return { controlSize, density, handleClick, handlePointerMove, inContextMenu, menuSize }
+  return { controlSize, density, forwardedAttrs, handleClick, handlePointerMove, inContextMenu, menuSize }
 }

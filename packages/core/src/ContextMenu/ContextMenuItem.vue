@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { ContextMenuItemEmits, ContextMenuItemProps, ContextMenuItemSlots } from './types.js'
 import { computed, toRaw, useTemplateRef } from 'vue'
-import { isModifiedClick } from '../composables/internal/menuActivation.js'
+import { focusForLastInput } from '../composables/internal/focusReturn.js'
+import { isModifiedClick, keepDisabledRowUnfocused } from '../composables/internal/menuActivation.js'
 import Icon from '../Icon/Icon.vue'
 import { useLinkComponent } from '../LinkProvider/context.js'
 import { useContextMenu, useContextMenuSize } from './context.js'
@@ -67,7 +68,7 @@ function handlePointerMove(event: PointerEvent): void {
     return
   // Not scrolling: focusing an off-screen row scrolls it under a stationary
   // pointer, whose next move focuses it again.
-  element.focus({ preventScroll: true })
+  focusForLastInput(element, { preventScroll: true })
 }
 </script>
 
@@ -85,10 +86,11 @@ function handlePointerMove(event: PointerEvent): void {
     :to="href != null && linkRoot !== 'a' ? href : undefined"
     :rel="rel"
     role="menuitem"
-    :tabindex="isDisabled ? undefined : -1"
+    tabindex="-1"
     :target="target"
     @auxclick="handleAuxClick"
     @click="handleClick"
+    @mousedown="isDisabled && keepDisabledRowUnfocused($event)"
     @pointermove="handlePointerMove"
   >
     <span v-if="icon != null || $slots.icon" class="astryx-context-menu-item__start">

@@ -6,6 +6,13 @@ import { Icon } from '@astryx-vue/core/Icon'
 import { Stack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
 import { MediaTheme } from '@astryx-vue/core/Theme'
+import { useToast } from '@astryx-vue/core/Toast'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 
 const stage: CSSProperties = {
   width: '360px',
@@ -37,9 +44,9 @@ const stage: CSSProperties = {
           Text, icons, badges, and button variants inherit legible colors on top of the dark image treatment.
         </Text>
         <Stack direction="horizontal" :gap="2" wrap="wrap">
-          <Button label="Primary" variant="primary" size="sm" />
-          <Button label="Secondary" variant="secondary" size="sm" />
-          <Button label="Ghost" variant="ghost" size="sm" />
+          <Button label="Primary" variant="primary" size="sm" @click="demo('Primary')" />
+          <Button label="Secondary" variant="secondary" size="sm" @click="demo('Secondary')" />
+          <Button label="Ghost" variant="ghost" size="sm" @click="demo('Ghost')" />
         </Stack>
       </Stack>
     </MediaTheme>

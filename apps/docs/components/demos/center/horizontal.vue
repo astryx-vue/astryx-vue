@@ -3,6 +3,13 @@ import { Card } from '@astryx-vue/core/Card'
 import { Center } from '@astryx-vue/core/Center'
 import { IconButton } from '@astryx-vue/core/IconButton'
 import { HStack } from '@astryx-vue/core/Stack'
+import { useToast } from '@astryx-vue/core/Toast'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 
 const tools = [
   { label: 'Bold', icon: 'i-carbon-text-bold' },
@@ -24,6 +31,7 @@ const tools = [
           :label="tool.label"
           size="sm"
           variant="ghost"
+          @click="demo(tool.label)"
         >
           <span class="css-icon css-icon--sm" :class="tool.icon" />
         </IconButton>

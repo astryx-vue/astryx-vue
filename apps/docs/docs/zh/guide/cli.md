@@ -54,7 +54,7 @@ npm run astryx-vue -- component Button
 ## 核心命令
 
 - `astryx-vue component --list`：列出当前所有可用组件。
-- `astryx-vue component Button`：快速查看指定组件的基本用法、Props 属性、插槽、事件以及代码示例。
+- `astryx-vue component Button`：快速查看指定组件的基本用法、Props 属性、插槽、事件以及代码示例。一次给几个名字（`astryx-vue component Button Card Badge`）会依次打印每个组件，`--json` 返回一个 `component.details`，所以 agent 可以一次读完一个页面用到的所有组件。
 - `astryx-vue composable --list`：列出组合式函数，`astryx-vue composable useClipboard` 打印其参数和返回值。Vue 里这类函数叫组合式函数（composable），所以命令与文档中统一不使用 hook 这个词。若误输入 `component useClipboard` 仍然能查到，并会友好提示改用 `composable` 命令。
 - `astryx-vue docs`（也可写 `astryx-vue docs --list`）：列出指南与主题文档。`astryx-vue docs guide/dark-mode` 或 `astryx-vue docs themes/tokens` 可直接在终端阅读正文。名字里的词用空格、短横线、斜杠或点隔开都行，顺序也不限，`docs mode dark` 打开的是同一页。名字打不开任何页面时，会建议名字或关键词里带这些词的页面。
 - `astryx-vue search dialog`：在组件、组合式函数、文档主题和页面模板里按相关度搜索。`--type` 可以限定为 `component`、`composable`、`doc` 或 `template`。用别的组件库的叫法也能找到对应组件（`ScrollArea`、`side sheet`、`toggle group`），`cog` 这类图标名会找到 `Icon`。得分相同的结果里，回答了更多查询词的排前面；一个词是某个家族的开头（比如 `tabs`），会先列 `Tab` 再列它的各部分。查不到时，如果别的命令有这个名字（比如 `astryx-vue docs Button`），会提示改用那条命令（`astryx-vue component Button`）；`ScrollArea` 这类别名不会直接打开组件，而是作为第一条建议返回。文本输出里，查不到时会在报错下面打印建议：名字相近的写在 `Did you mean:` 后，能直接解决问题的命令写在 `Run:` 后，和 `--json` 里的 `suggestions` 一致。别的工具的命令词（`components`、`list`、`props Button`、`migrate`）和 `--format json` 这类输出选项，会指出这里对应的写法；`template`、`docs` 里查一个几乎拼成某个组合式函数名的词，会指向 `astryx-vue composable <name>`。
@@ -67,9 +67,9 @@ npm run astryx-vue -- component Button
 
 ## 页面模板与代码生成
 
-- `astryx-vue template --list`：列出 57 个演练场页面模板，按分类分组。目前所有模板都是页面；`--type block` 会给出一句说明，不报错。每行还会说明这个页面要什么：可复制的模板只依赖 `vue` 和 `@astryx-vue/core`，落地后不用再装别的包。
+- `astryx-vue template --list`：列出 57 个演练场页面模板，按分类分组。目前所有模板都是页面；`--type block` 会给出一句说明，不报错。文字输出每个模板只打印描述的第一句，`--json` 保留完整描述。每行还会说明这个页面要什么：可复制的模板只依赖 `vue` 和 `@astryx-vue/core`，落地后不用再装别的包。
 - `astryx-vue template login-card`：打印一个模板的说明、用到的组件、要装的包和完整源码。`--skeleton` 只打印布局骨架（组件标签加上 `gap`、`padding`、`columns` 这类布局属性，不含文字、事件处理和原生 HTML 包裹层）。
-- `astryx-vue template login-card ./src/pages`：将模板代码生成并写出到 `src/pages/LoginCard.vue`。如果文件已存在，需要加上 `--overwrite`（或 `-f`）才会覆盖，避免误冲掉已有代码。复制时会自动把演示图片替换为内联的灰色占位图，不依赖额外的静态图片资源。
+- `astryx-vue template login-card ./src/pages`：将模板代码生成并写出到 `src/pages/LoginCard.vue`。如果文件已存在，需要加上 `--overwrite`（或 `-f`）才会覆盖，避免误冲掉已有代码。复制时会自动把演示图片替换为内联的灰色占位图，不依赖额外的静态图片资源。路径落在项目外会被拒绝，并告诉你能用的命令：写进项目里的同一个页面、从那个路径所在的目录运行的同一条命令、只打印不写文件的命令。项目里的绝对路径按相对路径写入，并在 `givenPath` 里报出你给的原样；系统临时目录里的绝对路径会写一份临时副本（`outputPath` 是绝对路径，`scratch` 为 true）；`~/` 指家目录，不会变成项目里一个叫 `~` 的文件夹。复制之后以及 `template <slug>` 会用一行 `astryx-vue component A B C` 列出页面用到的全部组件，`--json` 里是 `components` 和 `componentsToRead`。复制后还缺哪些包，只看页面 `<script>` 里真正的 import，不看文字里的代码示例。
 - `astryx-vue build "<想法>"`：把一句话需求变成开发起点，在本地匹配出最接近的页面模板、备选方案以及需要搭配使用的组件与函数。打分完全在本地完成，无网络开销也无需调用外部大模型。
 
 ## 常用参数

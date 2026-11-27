@@ -7,8 +7,15 @@ import { IconButton } from '@astryx-vue/core/IconButton'
 import { ProgressBar } from '@astryx-vue/core/ProgressBar'
 import { VStack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
+import { useToast } from '@astryx-vue/core/Toast'
 import { Token } from '@astryx-vue/core/Token'
 import { ref } from 'vue'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 
 const files = ref([
   'design-spec.pdf',
@@ -77,10 +84,10 @@ function onStop(): void {
         <ChatComposerInput style="min-height: 44px" />
       </template>
       <template #headerActions>
-        <IconButton label="Mention" variant="ghost" size="sm">
+        <IconButton label="Mention" variant="ghost" size="sm" @click="demo('Mention')">
           <Icon name="heroicons:at-symbol" />
         </IconButton>
-        <IconButton label="Attach file" variant="ghost" size="sm">
+        <IconButton label="Attach file" variant="ghost" size="sm" @click="demo('Attach file')">
           <Icon name="heroicons:paper-clip" />
         </IconButton>
       </template>
@@ -108,7 +115,7 @@ function onStop(): void {
         </DropdownMenu>
       </template>
       <template #sendActions>
-        <IconButton label="Microphone" variant="ghost" size="md">
+        <IconButton label="Microphone" variant="ghost" size="md" @click="demo('Microphone')">
           <Icon name="heroicons:microphone" />
         </IconButton>
       </template>

@@ -35,7 +35,7 @@ footer: false
         <td><code>size</code></td>
         <td><code>ButtonSize</code></td>
         <td><code>'md'</code></td>
-        <td>Size of the trigger button: sm, md, or lg. The density of every menu row follows it.</td>
+        <td>Size of the trigger button: sm, md, or lg. Without it, the trigger takes the surrounding size (from a size provider, a ButtonGroup, or a Toolbar), else md. The density of every menu row follows it.</td>
       </tr>
       <tr>
         <td><code>isDisabled</code></td>

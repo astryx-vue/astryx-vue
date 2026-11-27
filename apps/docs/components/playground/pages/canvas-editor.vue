@@ -1175,9 +1175,9 @@ const Shortcut = defineComponent({
 
                 <InspectorSection title="Styles">
                   <InspectorRow label="Radius">
-                    <AxisInput :icon="lucide('scan')" label="Corner radius" :value="selected.radius" @change="next => updateSelected({ radius: next })" />
+                    <AxisInput :icon="lucide('square-round-corner')" label="Corner radius" :value="selected.radius" @change="next => updateSelected({ radius: next })" />
                     <IconButton label="Set radius per corner" tooltip="Per corner" size="sm" variant="ghost" @click="demo('Demo: radius fields for each corner would open here', 'set-radius-per-corner')">
-                      <Icon name="lucide:square-round-corner" size="sm" />
+                      <Icon name="lucide:scan" size="sm" />
                     </IconButton>
                   </InspectorRow>
                   <StyleRow
@@ -1218,10 +1218,10 @@ const Shortcut = defineComponent({
                   </InspectorRow>
                   <InspectorRow label="Flip" h-align="end">
                     <IconButton label="Flip horizontally" tooltip="Flip horizontally" size="sm" variant="ghost" @click="demo('Demo: the layer would flip horizontally here', 'flip-horizontally')">
-                      <Icon name="lucide:flip-horizontal-2" size="sm" />
+                      <Icon name="lucide:triangles-centerline-dashed-vertical" size="sm" />
                     </IconButton>
                     <IconButton label="Flip vertically" tooltip="Flip vertically" size="sm" variant="ghost" @click="demo('Demo: the layer would flip vertically here', 'flip-vertically')">
-                      <Icon name="lucide:flip-vertical-2" size="sm" />
+                      <Icon name="lucide:triangles-centerline-dashed-horizontal" size="sm" />
                     </IconButton>
                   </InspectorRow>
                 </InspectorSection>

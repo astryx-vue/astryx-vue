@@ -2,7 +2,7 @@ import type { MenuPressOptions } from './useMenuPress.js'
 import { mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { defineComponent, h, ref } from 'vue'
-import { MENU_PRESS_SETTLE_MS, resetMenuPress, useMenuPress } from './useMenuPress.js'
+import { MENU_PRESS_LIT_ATTRIBUTE, MENU_PRESS_SETTLE_MS, resetMenuPress, useMenuPress } from './useMenuPress.js'
 
 interface HarnessOptions extends Partial<MenuPressOptions> {
   onSelect?: (label: string) => void
@@ -116,6 +116,20 @@ describe('useMenuPress：菜单里的跟踪', () => {
     pointer(mounted.el('A'), 'pointerdown', { pointerType: 'mouse' })
     pointer(mounted.el('B'), 'pointermove', { pointerType: 'mouse' })
     expect(focus).toHaveBeenCalledWith({ preventScroll: true, focusVisible: false })
+  })
+
+  it('手指或笔按住时点亮的行带「按下」标记，换行、松开后清掉；鼠标不带', () => {
+    mounted = mountHarness()
+    pointer(mounted.el('A'), 'pointerdown')
+    expect(mounted.el('A').hasAttribute(MENU_PRESS_LIT_ATTRIBUTE)).toBe(true)
+    pointer(mounted.el('B'), 'pointermove')
+    expect(mounted.el('A').hasAttribute(MENU_PRESS_LIT_ATTRIBUTE)).toBe(false)
+    expect(mounted.el('B').hasAttribute(MENU_PRESS_LIT_ATTRIBUTE)).toBe(true)
+    pointer(mounted.el('B'), 'pointerup')
+    expect(mounted.el('B').hasAttribute(MENU_PRESS_LIT_ATTRIBUTE)).toBe(false)
+
+    pointer(mounted.el('A'), 'pointerdown', { pointerId: 2, pointerType: 'mouse' })
+    expect(mounted.el('A').hasAttribute(MENU_PRESS_LIT_ATTRIBUTE)).toBe(false)
   })
 
   it('菜单在 shadow root 里时，在菜单自己的根上做命中测试', () => {

@@ -312,7 +312,7 @@ describe('template copy', () => {
       for (const argv of [
         ['template', '../../etc'],
         ['template', 'login-card', '../outside.vue'],
-        ['template', 'login-card', '/tmp/elsewhere/Login.vue'],
+        ['template', 'login-card', '/etc/elsewhere/Login.vue'],
       ]) {
         const result = await run([...argv, '--json'], cwd)
         expect(result.exitCode).toBe(2)

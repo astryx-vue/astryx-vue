@@ -48,7 +48,7 @@ npm run astryx-vue -- component Button
 | `astryx-vue template <slug> --skeleton` | 只输出骨架：组件标签和布局属性 |
 | `astryx-vue template <slug> <path>` | 把模板写到文件，或写到目录下的 `<Name>.vue` |
 | `astryx-vue component --list` | 全部有文档的组件 |
-| `astryx-vue component <Name>` | 一个组件的用法、props、插槽、事件、示例和备注 |
+| `astryx-vue component <Name> [<Name> ...]` | 一个或几个组件的用法、props、插槽、事件、示例和备注 |
 | `astryx-vue composable --list` | 全部有文档的组合式函数，即 `use*` 函数 |
 | `astryx-vue composable <Name>` | 一个组合式函数的参数、返回值、用法和示例 |
 | `astryx-vue docs` 或 `docs --list` | 全部指南和主题 |

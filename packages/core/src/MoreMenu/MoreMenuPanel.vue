@@ -30,6 +30,7 @@ const props = withDefaults(defineProps<MoreMenuPanelProps>(), {
   label: undefined,
   level: 0,
   placement: 'below',
+  surfacePointerdown: undefined,
 })
 
 const emit = defineEmits<MoreMenuPanelEmits>()
@@ -312,6 +313,7 @@ function onPointerMove(event: PointerEvent): void {
 }
 
 defineExpose({
+  surface: panel,
   focusContainer: nav.focusContainer,
   focusFirst: nav.focusFirst,
   focusLast: nav.focusLast,
@@ -337,6 +339,7 @@ defineExpose({
           ref="panel"
           class="astryx-more-menu__panel"
           data-astryx-more-menu-surface=""
+          :data-astryx-menu-press="surfacePointerdown != null ? '' : undefined"
           :data-overflow="hasOverflow || undefined"
           :data-size="size"
           :aria-label="ariaLabelledby == null ? label : undefined"
@@ -344,6 +347,7 @@ defineExpose({
           role="menu"
           tabindex="-1"
           @keydown="onKeydown"
+          @pointerdown="surfacePointerdown?.($event)"
           @pointermove="onPointerMove"
         >
           <LayerContentBoundary>

@@ -96,6 +96,11 @@ export interface DropdownMenuItemData {
   rel?: string
   /** Called when the row is activated. */
   onClick?: (event: MouseEvent) => void
+  /**
+   * Nested entries. A row that declares them becomes a submenu, at the top
+   * level and inside a section alike.
+   */
+  items?: DropdownMenuOption[]
 }
 
 /**

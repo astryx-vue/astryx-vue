@@ -36,3 +36,11 @@ export function activateMenuItem(row: HTMLElement, key: MenuClickModifiers): voi
     shiftKey: key.shiftKey,
   }))
 }
+
+/**
+ * 禁用行的 `mousedown` 处理：行有 `tabindex="-1"`，方向键能走到它，
+ * 鼠标按下若不拦就会把它聚焦点亮。取消默认行为，焦点留在原处。
+ */
+export function keepDisabledRowUnfocused(event: { preventDefault: () => void }): void {
+  event.preventDefault()
+}

@@ -1,14 +1,15 @@
 import type { TemplateKind, TemplateRecord } from './catalog-types.ts'
 import type { Suggestion } from './error.ts'
-import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
-import { basename, dirname, join, relative, resolve } from 'node:path'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { basename, dirname, isAbsolute, join, relative } from 'node:path'
 import { catalog, text } from './catalog.ts'
 import { CliError } from './error.ts'
-import { pascalCase } from './generate/markdown.ts'
 import { assertWithinProject, toPosix } from './paths.ts'
 import { otherCommandHints } from './query-hints.ts'
 import { suggestByNames } from './query.ts'
 import { BINARY } from './spec.ts'
+import { importedSpecifiers } from './template-imports.ts'
+import { homeRelativePath, outsideProjectRefusal, scratchFolderFor, targetFileFor } from './template-paths.ts'
 
 /**
  * A grey rectangle at low opacity, so it takes its tone from the surface behind
@@ -106,8 +107,7 @@ export function analyzeTemplateNeeds(source: string, cwd: string): {
 
 export function importedPackages(source: string): string[] {
   const names = new Set<string>()
-  for (const match of source.matchAll(/from\s+['"]([^'"]+)['"]/g)) {
-    const specifier = match[1] ?? ''
+  for (const specifier of importedSpecifiers(source)) {
     if (specifier.startsWith('.') || specifier.startsWith('node:'))
       continue
     names.add(packageRoot(specifier))
@@ -158,6 +158,13 @@ export interface CopyReceipt {
   notes: string[]
   missingPackages: string[]
   installCommand: string | null
+  /** The absolute path as typed, present only when it named a place inside the project. */
+  givenPath?: string
+  /** True for a scratch copy written to the system temp folder; `outputPath` is then absolute. */
+  scratch?: boolean
+  isReady: boolean
+  /** The components the written file uses, which `component <A> <B> ...` reads in one call. */
+  components: string[]
 }
 
 /**
@@ -176,10 +183,30 @@ export function copyTemplate(template: TemplateRecord, options: { cwd: string, t
       1,
     )
   }
-  const outputFile = targetFileFor(options.targetPath, options.cwd, template.slug)
-  assertWithinProject(outputFile, options.cwd)
+  const given = options.targetPath
+  const outputFile = targetFileFor(given, options.cwd, template.slug)
+  // An absolute path in the system temp folder is a scratch copy; every other
+  // write lands inside the project.
+  let scratch = false
+  try {
+    assertWithinProject(outputFile, options.cwd)
+  }
+  catch (error) {
+    if (!(error instanceof CliError) || !isAbsolute(homeRelativePath(given)))
+      throw error
+    if (scratchFolderFor(outputFile, given) === null) {
+      throw outsideProjectRefusal({
+        given,
+        file: outputFile,
+        cwd: options.cwd,
+        command: `${BINARY} template ${template.slug}`,
+        overwrite: options.overwrite,
+      }, template.slug)
+    }
+    scratch = true
+  }
+  const shown = scratch ? outputFile : toPosix(relative(options.cwd, outputFile))
   if (!options.overwrite && existsSync(outputFile)) {
-    const shown = toPosix(relative(options.cwd, outputFile))
     throw new CliError(
       options.locale === 'zh'
         ? `${shown} 已存在。加 --overwrite（或 -f）才会覆盖。`
@@ -195,7 +222,7 @@ export function copyTemplate(template: TemplateRecord, options: { cwd: string, t
   }
   catch (error) {
     throw new CliError(
-      `Could not write ${toPosix(relative(options.cwd, outputFile))}: ${error instanceof Error ? error.message : 'unknown error'}`,
+      `Could not write ${shown}: ${error instanceof Error ? error.message : 'unknown error'}`,
       'ERR_WRITE_FAILED',
       1,
     )
@@ -204,50 +231,27 @@ export function copyTemplate(template: TemplateRecord, options: { cwd: string, t
   const locale = options.locale
   return {
     template: template.slug,
-    outputPath: toPosix(relative(options.cwd, outputFile)),
+    outputPath: scratch ? toPosix(outputFile) : toPosix(relative(options.cwd, outputFile)),
     fileName: basename(outputFile),
     filesCopied: 1,
     demoMediaReplaced,
     notes: locale === 'zh' ? needs.notesZh : needs.notes,
     missingPackages: needs.missingPackages,
     installCommand: needs.installCommand,
+    ...(isAbsolute(given) && !scratch ? { givenPath: given } : {}),
+    ...(scratch ? { scratch } : {}),
+    isReady: template.isReady,
+    components: componentsToRead(template),
   }
 }
 
 /**
- * Where a copy lands. A path that ends in a file extension, or that already
- * names a file, is the file itself; anything else is a directory that receives
- * `<PascalCaseSlug>.vue`.
+ * The components a template uses that `component` answers, each once, in the
+ * order the page lists them. A name no component page documents is left out.
  */
-export function targetFileFor(input: string, cwd: string, slug: string): string {
-  if (!input.trim())
-    throw new CliError('Pass a file or directory to write the template into.', 'ERR_MISSING_ARGUMENT', 2)
-  const resolved = resolve(cwd, input)
-  const directoryLike = input.endsWith('/') || input.endsWith('\\') || (existsSync(resolved) && statSync(resolved).isDirectory())
-  if (directoryLike)
-    return join(resolved, `${pascalCase(slug)}.vue`)
-  const fileName = basename(resolved)
-  if (existsSync(resolved) && statSync(resolved).isFile())
-    return resolved
-  if (/\.[A-Z0-9]+$/i.test(fileName))
-    return resolved
-  return join(resolved, `${pascalCase(slug)}.vue`)
-}
-
-/**
- * Guards every argument that looks like a path before a template lookup runs, so
- * `template ../../etc` reports the traversal instead of an unknown slug.
- */
-export function guardPathArguments(positionals: readonly string[], cwd: string): void {
-  for (const value of positionals) {
-    if (!looksLikePath(value))
-      continue
-    assertWithinProject(resolve(cwd, value), cwd)
-  }
-}
-
-function looksLikePath(value: string): boolean {
-  return value.includes('/') || value.includes('\\') || value === '.' || value === '..' || value.startsWith('..')
+export function componentsToRead(template: TemplateRecord): string[] {
+  const known = new Set(catalog.components.filter(record => record.kind === 'component').map(record => record.name))
+  return template.componentsUsed.filter(name => known.has(name))
 }
 
 function normalize(value: string): string {

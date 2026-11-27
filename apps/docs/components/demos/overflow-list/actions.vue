@@ -3,6 +3,13 @@ import { Button } from '@astryx-vue/core/Button'
 import { Card } from '@astryx-vue/core/Card'
 import { NavDisclosure, NavMenu, NavMenuItem } from '@astryx-vue/core/NavMenu'
 import { OverflowList } from '@astryx-vue/core/OverflowList'
+import { useToast } from '@astryx-vue/core/Toast'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 
 const items = [
   { id: 'save', label: 'Save' },
@@ -18,7 +25,7 @@ const items = [
   <Card :padding="2" :width="360">
     <OverflowList :items="items" :max-visible-items="3">
       <template #item="{ item }">
-        <Button :label="item.label" size="sm" :variant="item.id === 'save' ? 'primary' : undefined" />
+        <Button :label="item.label" size="sm" :variant="item.id === 'save' ? 'primary' : undefined" @click="demo(item.label)" />
       </template>
       <template #overflow="{ items: hidden }">
         <NavDisclosure label="More actions">
@@ -30,6 +37,7 @@ const items = [
               :aria-controls="panelId"
               :aria-expanded="isOpen ? 'true' : 'false'"
               aria-haspopup="menu"
+              @click="demo('the overflow menu')"
             >
               <template #end>
                 <span class="nav-overflow-chevron i-carbon-chevron-down" />

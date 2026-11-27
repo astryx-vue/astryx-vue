@@ -48,7 +48,7 @@ npm run astryx-vue -- component Button
 | `astryx-vue template <slug> --skeleton` | Only the layout skeleton: component tags and layout attributes |
 | `astryx-vue template <slug> <path>` | Writes the template to a file, or to `<path>/<Name>.vue` for a directory |
 | `astryx-vue component --list` | Every documented component |
-| `astryx-vue component <Name>` | Usage, props, slots, events, examples, and notes for one component |
+| `astryx-vue component <Name> [<Name> ...]` | Usage, props, slots, events, examples, and notes for one or several components |
 | `astryx-vue composable --list` | Every documented composable, the `use*` functions |
 | `astryx-vue composable <Name>` | Parameters, return values, usage, and examples for one composable |
 | `astryx-vue docs` or `docs --list` | Every guide and theme topic |

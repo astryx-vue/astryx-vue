@@ -104,18 +104,19 @@ const USAGE_EXIT: readonly ExitSpec[] = [
 export const COMMANDS: readonly CommandSpec[] = [
   {
     name: 'component',
-    summary: 'List components or print one component\'s docs.',
+    summary: 'List components or print the docs of one or several components.',
     arguments: [
-      { name: 'name', required: false, variadic: false, description: 'Component name, such as Button or button-group. Omit with --list.' },
+      { name: 'name', required: false, variadic: true, description: 'Component name, such as Button or button-group. Several names print each component in turn. Omit with --list.' },
     ],
     options: [
       { name: 'list', flag: '--list', type: 'boolean', description: 'List every documented component.' },
     ],
     json: true,
-    responseTypes: ['component.list', 'component.detail'],
+    responseTypes: ['component.list', 'component.detail', 'component.details'],
     examples: [
       `${BINARY} component --list`,
       `${BINARY} component Button`,
+      `${BINARY} component Button Card Badge`,
       `${BINARY} component Button --json`,
       `${BINARY} component Button --zh --dense`,
     ],
@@ -123,15 +124,15 @@ export const COMMANDS: readonly CommandSpec[] = [
   },
   {
     name: 'composable',
-    summary: 'List composables or print one composable\'s parameters and returns.',
+    summary: 'List composables or print the parameters and returns of one or several composables.',
     arguments: [
-      { name: 'name', required: false, variadic: false, description: 'Composable name, such as useClipboard or use-clipboard. Omit with --list.' },
+      { name: 'name', required: false, variadic: true, description: 'Composable name, such as useClipboard or use-clipboard. Several names print each composable in turn. Omit with --list.' },
     ],
     options: [
       { name: 'list', flag: '--list', type: 'boolean', description: 'List every documented composable.' },
     ],
     json: true,
-    responseTypes: ['composable.list', 'composable.detail'],
+    responseTypes: ['composable.list', 'composable.detail', 'composable.details'],
     examples: [
       `${BINARY} composable --list`,
       `${BINARY} composable useClipboard`,

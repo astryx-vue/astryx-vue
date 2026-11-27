@@ -3,7 +3,9 @@ import type { CSSProperties } from 'vue'
 import type { DropdownMenuContextValue } from './context.js'
 import type { DropdownMenuSubMenuEmits, DropdownMenuSubMenuProps, DropdownMenuSubMenuSlots } from './types.js'
 import type { MenuDrillIn } from './useMenuDrillIn.js'
+import type { MenuFocus } from './useMenuFocus.js'
 import { computed, nextTick, ref, useId, useSlots, watch } from 'vue'
+import { useBusyAnnouncement } from '../composables/internal/busyAnnouncement.js'
 import { isMenuPressActivation } from '../composables/internal/menuPressActivation.js'
 import { useMenuHover } from '../composables/internal/useMenuHover.js'
 import { useDismiss } from '../composables/useDismiss.js'
@@ -13,6 +15,8 @@ import { clampInlineSize, isIntrinsicInlineSize } from '../layer/inlineSize.js'
 import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import Item from '../List/Item.vue'
+import { useComponentMessages } from '../locale/context.js'
+import { spinnerMessages } from '../locale/messages/spinner.js'
 import Spinner from '../Spinner/Spinner.vue'
 import { useDropdownMenuContext } from './context.js'
 import DropdownMenuBranch from './DropdownMenuBranch.vue'
@@ -29,6 +33,8 @@ const props = withDefaults(defineProps<DropdownMenuSubMenuProps>(), {
   isDisabled: false,
   hasSpinner: false,
   presentation: 'adaptive',
+  delay: 150,
+  hideDelay: 200,
 })
 
 const emit = defineEmits<DropdownMenuSubMenuEmits>()
@@ -37,6 +43,7 @@ defineSlots<DropdownMenuSubMenuSlots>()
 
 const slots = useSlots()
 const messages = useDropdownMenuMessages()
+const spinnerText = useComponentMessages({ spinner: spinnerMessages })
 const menu = useDropdownMenuContext()
 const rowComponent = ref<{ element: HTMLElement | null, focus: () => void } | null>(null)
 const rowRef = computed(() => rowComponent.value?.element ?? null)
@@ -142,11 +149,23 @@ const flyoutStyle = computed<CSSProperties>(() => {
   return style
 })
 
+// 行尾的转圈只是装饰；忙碌由子菜单自己播报一次。收起的菜单仍然挂着，所以要等它这一层显示出来才念。
+useBusyAnnouncement(
+  () => props.hasSpinner && (menu?.isOpen.value ?? true),
+  () => spinnerText.value.spinner.loading,
+  rowRef,
+)
+
 const drillHost = computed(() => isDrill.value ? menu?.drillIn.value.host ?? null : null)
 
 async function focusDrillFirst(): Promise<void> {
   await nextTick()
-  if (!drillFocus.focusFirst())
+  // 返回行是第一行；打开后落在它后面第一个可用的行，键盘能走到禁用行，但打开不从那里开始。
+  const rows = drillFocus.getItems()
+  const target = rows.findIndex((row, index) => index > 0 && row.getAttribute('aria-disabled') !== 'true')
+  if (target !== -1)
+    drillFocus.focusItem(target)
+  else if (!drillFocus.focusFirst())
     drillRef.value?.focus({ preventScroll: true })
 }
 
@@ -201,37 +220,14 @@ function closeFlyout(focusRow = true): void {
     focusRowElement()
 }
 
-function onDrillKeydown(event: KeyboardEvent): void {
-  if (event.key === 'Tab' && hasRegions.value) {
-    regions.moveDialogTab(event)
-    return
-  }
-  if (event.key === 'Tab' && menu?.hasRegions.value) {
-    event.preventDefault()
-    event.stopPropagation()
-    closeFlyout(false)
-    menu.moveDialogTab(event, true)
-    return
-  }
-  if (event.key === 'ArrowLeft' || event.key === 'Escape') {
-    event.preventDefault()
-    event.stopPropagation()
-    closeFlyout(true)
-    return
-  }
-  if (event.key === 'Enter' || event.key === ' ') {
-    event.preventDefault()
-    event.stopPropagation()
-    if (event.repeat)
-      return
-    activateFocusedMenuItem(event)
-    return
-  }
-  event.stopPropagation()
-  drillFocus.handleKeyDown(event)
+/** 关掉这一层，再让上面各层一路关到根菜单。 */
+function closeWholeMenu(): void {
+  closeFlyout(false)
+  menu?.closeMenu()
 }
 
-function onFlyoutKeydown(event: KeyboardEvent): void {
+/** 抽屉视图和飞出层共用的按键：Tab、返回、激活，其余交给这一层自己的行焦点。 */
+function handleLevelKeydown(event: KeyboardEvent, rows: MenuFocus): void {
   if (event.key === 'Tab' && hasRegions.value) {
     regions.moveDialogTab(event)
     return
@@ -241,6 +237,12 @@ function onFlyoutKeydown(event: KeyboardEvent): void {
     event.stopPropagation()
     closeFlyout(false)
     menu.moveDialogTab(event, true)
+    return
+  }
+  // Tab 离开整个菜单，不只是这一层：不拦默认行为，焦点回到触发器后由浏览器接着走。
+  if (event.key === 'Tab') {
+    event.stopPropagation()
+    closeWholeMenu()
     return
   }
   if (event.key === 'ArrowLeft' || event.key === 'Escape') {
@@ -258,8 +260,11 @@ function onFlyoutKeydown(event: KeyboardEvent): void {
     return
   }
   event.stopPropagation()
-  focus.handleKeyDown(event)
+  rows.handleKeyDown(event)
 }
+
+const onDrillKeydown = (event: KeyboardEvent): void => handleLevelKeydown(event, drillFocus)
+const onFlyoutKeydown = (event: KeyboardEvent): void => handleLevelKeydown(event, focus)
 
 const emptyDrill: MenuDrillIn = {
   host: null,
@@ -270,10 +275,7 @@ const emptyDrill: MenuDrillIn = {
 }
 
 const nestedContext: DropdownMenuContextValue = {
-  closeMenu: () => {
-    closeFlyout(false)
-    menu?.closeMenu()
-  },
+  closeMenu: closeWholeMenu,
   drillIn: computed(() => menu?.drillIn.value ?? emptyDrill),
   focusRegion: direction => menu?.focusRegion(direction) ?? false,
   moveDialogTab: (event, fromFlyout) => menu?.moveDialogTab(event, fromFlyout),
@@ -293,6 +295,8 @@ const hover = useMenuHover({
   },
   isOpen: flyoutOpen,
   isEnabled: () => !props.isDisabled && !isDrill.value,
+  showDelay: () => props.delay,
+  hideDelay: () => props.hideDelay,
   flyoutRef,
   ownsFocus: false,
 })

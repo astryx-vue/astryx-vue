@@ -35,7 +35,7 @@ footer: false
         <td><code>size</code></td>
         <td><code>ButtonSize</code></td>
         <td><code>'md'</code></td>
-        <td>触发按钮的尺寸：sm、md、lg。菜单里每一行的密度跟随这个值。</td>
+        <td>触发按钮的尺寸：sm、md、lg。不设置时，触发按钮使用外层尺寸（来自尺寸上下文、ButtonGroup 或 Toolbar），否则为 md。菜单里每一行的密度跟随这个值。</td>
       </tr>
       <tr>
         <td><code>isDisabled</code></td>

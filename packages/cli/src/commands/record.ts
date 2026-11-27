@@ -32,7 +32,57 @@ export function recordCommand(args: CommandArgs, kind: RecordKind): string {
   }
   if (!name)
     throw new CliError(`Pass a ${kind} name, or use --list.`, 'ERR_MISSING_ARGUMENT', 2)
-  const record = kind === 'component' ? resolveComponent(name) : resolveComposable(name)
+  const several = separateNames(args.positionals, kind)
+  if (several)
+    return readSeveral(several, kind, args)
+  return readOne(resolveRecord(name, kind), kind, args)
+}
+
+function resolveRecord(name: string, kind: RecordKind): ComponentRecord {
+  return kind === 'component' ? resolveComponent(name) : resolveComposable(name)
+}
+
+/**
+ * Several names in one call read each record in turn, so an agent can take in
+ * a page's components together. Words that only make one name when joined
+ * ("Side Sheet") still read as that one name: the names are separate only when
+ * the joined words match nothing and every word is a record on its own.
+ */
+function separateNames(positionals: readonly string[], kind: RecordKind): ComponentRecord[] | null {
+  if (positionals.length < 2)
+    return null
+  try {
+    resolveRecord(positionals.join(' ').trim(), kind)
+    return null
+  }
+  catch {
+    // The joined words are not one name; try them one by one.
+  }
+  const records: ComponentRecord[] = []
+  for (const word of positionals) {
+    try {
+      const record = resolveRecord(word, kind)
+      if (!records.includes(record))
+        records.push(record)
+    }
+    catch {
+      return null
+    }
+  }
+  return records
+}
+
+function readSeveral(records: readonly ComponentRecord[], kind: RecordKind, args: CommandArgs): string {
+  if (args.json) {
+    return printJson(successEnvelope(`${kind}.details`, {
+      locale: args.locale,
+      [COLLECTION[kind]]: records.map(record => recordDetail(record, args.locale)),
+    }))
+  }
+  return records.map(record => readOne(record, kind, { ...args, json: false })).join('\n---\n\n')
+}
+
+function readOne(record: ComponentRecord, kind: RecordKind, args: CommandArgs): string {
   const hint = record.kind === 'composable' && kind === 'component' ? composableHint(record, args.locale) : ''
   if (args.json) {
     const data = recordDetail(record, args.locale)

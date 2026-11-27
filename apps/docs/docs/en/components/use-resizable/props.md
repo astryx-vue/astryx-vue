@@ -47,13 +47,13 @@ footer: false
         <td><code>collapsible</code></td>
         <td><code>boolean</code></td>
         <td><code>false</code></td>
-        <td>Whether dragging below the collapsed threshold collapses the region to zero.</td>
+        <td>Whether a lift or a key step below the collapsed threshold collapses the region to zero.</td>
       </tr>
       <tr>
         <td><code>collapsedSize</code></td>
         <td><code>number</code></td>
         <td><code>40</code></td>
-        <td>Pixel threshold below which a collapsible region snaps to zero.</td>
+        <td>Pixel threshold under which a lift or a key step collapses the region. Mid-drag the region stays at its minimum, and a quick flick toward closing also collapses it.</td>
       </tr>
       <tr>
         <td><code>snaps</code></td>
@@ -77,7 +77,7 @@ footer: false
         <td><code>isCollapsed</code></td>
         <td><code>boolean</code></td>
         <td>—</td>
-        <td>Controlled collapse state. <code>collapse()</code>, <code>expand()</code> and a drag past the threshold then report through <code>onCollapseChange</code> instead of changing state internally.</td>
+        <td>Controlled collapse state. <code>collapse()</code>, <code>expand()</code>, a lift or a key step past the threshold, and a drag that reopens the region then report through <code>onCollapseChange</code> instead of changing state internally.</td>
       </tr>
       <tr>
         <td><code>onSizeChange</code></td>
@@ -89,7 +89,7 @@ footer: false
         <td><code>onCollapseChange</code></td>
         <td><code>(isCollapsed: boolean) =&gt; void</code></td>
         <td>—</td>
-        <td>Called once per collapse state change, via drag or programmatically.</td>
+        <td>Called once per collapse state change: a lift or a key step that closes the region, a drag or a key that reopens it, Enter, a double-click, or a call to <code>collapse()</code>, <code>expand()</code> or <code>resize()</code>.</td>
       </tr>
     </tbody>
   </table>

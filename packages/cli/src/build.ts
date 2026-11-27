@@ -3,6 +3,7 @@ import type { SearchHit } from './query.ts'
 import { repairTerms } from './build-repair.ts'
 import { catalog, text } from './catalog.ts'
 import { CliError } from './error.ts'
+import { compareText } from './query-order.ts'
 import { searchCatalog } from './query.ts'
 import { BINARY } from './spec.ts'
 
@@ -267,7 +268,7 @@ export function rankTemplates(idea: string): TemplateMatch[] {
       continue
     if (!doc.template.isReady)
       score *= NOT_READY_SHARE
-    matched.sort((a, b) => b.value - a.value || a.term.localeCompare(b.term))
+    matched.sort((a, b) => b.value - a.value || compareText(a.term, b.term))
     matches.push({ doc, score, matched: matched.map(entry => entry.term) })
   }
 
@@ -278,7 +279,7 @@ export function rankTemplates(idea: string): TemplateMatch[] {
       || Number(b.doc.template.isReady) - Number(a.doc.template.isReady)
       // The family's own name is its default page; a variant needs its own edge.
       || hyphenCount(a.doc.template.slug) - hyphenCount(b.doc.template.slug)
-      || a.doc.template.slug.localeCompare(b.doc.template.slug))
+      || compareText(a.doc.template.slug, b.doc.template.slug))
     .map(entry => toMatch(entry.doc.template, entry.matched, usable.length))
 }
 

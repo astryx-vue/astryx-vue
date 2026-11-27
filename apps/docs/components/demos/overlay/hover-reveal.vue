@@ -2,6 +2,13 @@
 import { AspectRatio } from '@astryx-vue/core/AspectRatio'
 import { Button } from '@astryx-vue/core/Button'
 import { Overlay } from '@astryx-vue/core/Overlay'
+import { useToast } from '@astryx-vue/core/Toast'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 </script>
 
 <template>
@@ -17,7 +24,7 @@ import { Overlay } from '@astryx-vue/core/Overlay'
       >
     </AspectRatio>
     <template #content>
-      <Button label="Quick view" variant="secondary" size="sm" />
+      <Button label="Quick view" variant="secondary" size="sm" @click="demo('Quick view')" />
     </template>
   </Overlay>
 </template>

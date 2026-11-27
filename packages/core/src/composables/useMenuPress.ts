@@ -19,7 +19,7 @@ import { useLongPress } from './useLongPress.js'
 
 export { isMenuPressActivation, resetMenuPress } from './internal/menuPressActivation.js'
 export { MENU_PRESS_MARKER } from './internal/menuPressDom.js'
-export { MENU_PRESS_SETTLE_MS, menuPressStep } from './internal/menuPressGesture.js'
+export { MENU_PRESS_HANDOFF_PX, MENU_PRESS_SETTLE_MS, menuPressStep } from './internal/menuPressGesture.js'
 export type {
   MenuPressEffect,
   MenuPressEvent,
@@ -27,6 +27,9 @@ export type {
   MenuPressPointerType,
   MenuPressStep,
 } from './internal/menuPressGesture.js'
+
+/** 手指或笔按住时点亮的那一行带这个标记，行按「按下」的颜色画。鼠标保持悬停的颜色。 */
+export const MENU_PRESS_LIT_ATTRIBUTE = 'data-astryx-menu-press-lit'
 
 /** 手指在触发器上按多久菜单才打开。 */
 const MENU_PRESS_LONG_PRESS_MS = 500
@@ -59,6 +62,13 @@ export interface MenuPressOptions {
   hitTest?: (x: number, y: number) => Element | null
   /** @default 500 */
   longPressDelayMs?: number
+  /**
+   * 打开菜单的那根手指怎么挑行。`'pointer'`：打开的那次按压按落定规则。
+   * `'uikit'`：手指走过 UIMenu 的交接距离才开始挑，松开时没走够就什么都不执行，
+   * 在手指底下冒出来的行不会被误选。鼠标不受影响。
+   * @default 'pointer'
+   */
+  touchModel?: 'pointer' | 'uikit'
   /** 这套模型当前是否生效，每次按下时读。@default true */
   isEnabled?: MaybeRefOrGetter<boolean>
 }
@@ -100,10 +110,14 @@ export function useMenuPress(options: MenuPressOptions): MenuPress {
   let stopTouchPrevent: (() => void) | null = null
   let lastPointerEvent: PointerEvent | null = null
   let triggerGesture: number | null = null
+  let litRow: HTMLElement | null = null
   /** 结束了上一次手势的那根「第二根手指」不能开始下一次。 */
   let ignoredPointerId: number | null = null
 
   const isEnabled = (): boolean => toValue(options.isEnabled) ?? true
+  /** 手指交接要看位置；只有 `touchModel: 'uikit'` 才把位置交给状态机。 */
+  const handoffPosition = (event: PointerEvent): { x?: number, y?: number } =>
+    options.touchModel === 'uikit' ? { x: event.clientX, y: event.clientY } : {}
   const getDocument = (): Document =>
     options.menuRef.value?.ownerDocument ?? options.triggerRef?.value?.ownerDocument ?? document
 
@@ -135,7 +149,16 @@ export function useMenuPress(options: MenuPressOptions): MenuPress {
     armClickGuard(doc, { staysInstalled: true, cancelsTouchEnd: isTouch, touchIdentifier: touchIdentifier ?? undefined })
   }
 
+  function setLit(row: HTMLElement | null): void {
+    if (litRow === row)
+      return
+    litRow?.removeAttribute(MENU_PRESS_LIT_ATTRIBUTE)
+    litRow = row
+    litRow?.setAttribute(MENU_PRESS_LIT_ATTRIBUTE, '')
+  }
+
   function endGesture(): void {
+    setLit(null)
     touchTracker?.stop()
     touchTracker = null
     longPress.cancel()
@@ -150,6 +173,7 @@ export function useMenuPress(options: MenuPressOptions): MenuPress {
   }
 
   function highlight(row: HTMLElement | null): void {
+    setLit(gesture.phase !== 'idle' && gesture.pointerType !== 'mouse' ? row : null)
     if (options.onHighlight != null)
       options.onHighlight(row)
     else
@@ -209,7 +233,7 @@ export function useMenuPress(options: MenuPressOptions): MenuPress {
 
   function stepMove(event: PointerEvent): void {
     const point = pointAt(event)
-    step({ type: 'move', row: point.row, isInMenu: point.isInMenu, time: Date.now() }, event)
+    step({ type: 'move', row: point.row, isInMenu: point.isInMenu, time: Date.now(), ...handoffPosition(event) }, event)
   }
 
   function onDocumentMove(event: PointerEvent): void {
@@ -233,7 +257,7 @@ export function useMenuPress(options: MenuPressOptions): MenuPress {
     if (event.pointerId !== pointerId)
       return
     const point = pointAt(event)
-    step({ type: 'up', row: point.row, isInMenu: point.isInMenu, isOnTrigger: point.isOnTrigger, time: Date.now() }, event)
+    step({ type: 'up', row: point.row, isInMenu: point.isInMenu, isOnTrigger: point.isOnTrigger, time: Date.now(), ...handoffPosition(event) }, event)
   }
 
   function onDocumentCancel(event: PointerEvent): void {

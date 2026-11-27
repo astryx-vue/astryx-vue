@@ -1,6 +1,13 @@
 <script setup lang="ts">
 import { ChatMessage, ChatMessageBubble, ChatMessageList, ChatMessageMetadata } from '@astryx-vue/core/Chat'
 import { IconButton } from '@astryx-vue/core/IconButton'
+import { useToast } from '@astryx-vue/core/Toast'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 </script>
 
 <template>
@@ -20,16 +27,16 @@ import { IconButton } from '@astryx-vue/core/IconButton'
           <ChatMessageMetadata timestamp="9:42 AM">
             <template #footer>
               <span class="chat-preview__actions">
-                <IconButton label="Copy" variant="ghost" size="sm">
+                <IconButton label="Copy" variant="ghost" size="sm" @click="demo('Copy')">
                   <span class="i-carbon-copy" />
                 </IconButton>
-                <IconButton label="Retry" variant="ghost" size="sm">
+                <IconButton label="Retry" variant="ghost" size="sm" @click="demo('Retry')">
                   <span class="i-carbon-renew" />
                 </IconButton>
-                <IconButton label="Thumbs up" variant="ghost" size="sm">
+                <IconButton label="Thumbs up" variant="ghost" size="sm" @click="demo('Thumbs up')">
                   <span class="i-carbon-thumbs-up" />
                 </IconButton>
-                <IconButton label="Thumbs down" variant="ghost" size="sm">
+                <IconButton label="Thumbs down" variant="ghost" size="sm" @click="demo('Thumbs down')">
                   <span class="i-carbon-thumbs-down" />
                 </IconButton>
                 <span>GPT-4o</span>

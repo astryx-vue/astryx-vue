@@ -2,7 +2,8 @@
 import type { StyleValue } from 'vue'
 import type { DropdownMenuItemEmits, DropdownMenuItemProps, DropdownMenuItemSlots } from './types.js'
 import { computed, toRaw, useAttrs, useSlots } from 'vue'
-import { isModifiedClick } from '../composables/internal/menuActivation.js'
+import { focusForLastInput } from '../composables/internal/focusReturn.js'
+import { isModifiedClick, keepDisabledRowUnfocused } from '../composables/internal/menuActivation.js'
 import { isMenuPressActivation } from '../composables/internal/menuPressActivation.js'
 import Icon from '../Icon/Icon.vue'
 import { useLinkComponent } from '../LinkProvider/context.js'
@@ -102,7 +103,7 @@ function handlePointerMove(event: PointerEvent): void {
     return
   const row = event.currentTarget
   if (row instanceof HTMLElement && row !== row.ownerDocument.activeElement)
-    row.focus({ preventScroll: true })
+    focusForLastInput(row, { preventScroll: true })
 }
 </script>
 
@@ -131,10 +132,11 @@ function handlePointerMove(event: PointerEvent): void {
     :to="linkRoot !== 'a' && !isDisabled ? linkHref : undefined"
     :rel="resolvedRel"
     :style="attrs.style as StyleValue"
-    :tabindex="isDisabled ? undefined : -1"
+    tabindex="-1"
     :target="target"
     @auxclick="handleAuxClick"
     @click="handleClick"
+    @mousedown="isDisabled && keepDisabledRowUnfocused($event)"
     @pointermove="handlePointerMove"
   >
     <span v-if="hasStart" class="astryx-item__start">
@@ -171,8 +173,9 @@ function handlePointerMove(event: PointerEvent): void {
     :is-disabled="isDisabled"
     :label="label"
     :on-click="handleClick"
-    :tabindex="isDisabled ? undefined : -1"
+    tabindex="-1"
     @auxclick="handleAuxClick"
+    @mousedown="isDisabled && keepDisabledRowUnfocused($event)"
     @pointermove="handlePointerMove"
   >
     <template v-if="hasStart" #startContent>
