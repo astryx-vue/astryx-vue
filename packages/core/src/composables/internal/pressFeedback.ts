@@ -46,6 +46,38 @@ interface LiveGesture {
 }
 
 let live: LiveGesture | null = null
+
+/**
+ * 手指或笔落在控件框上的这次接触（utils/boxHold.ts）：记着它的指针、它开始的那次按压
+ * （刹车时没有）和框按住的收尾。刹车的接触也算，被滚动取消的也算，各自在自己的抬起或取消时结束。
+ * 只有抬起时按压还活着，才算「停着抬起」。
+ */
+let contact: { pointerId: number, live: LiveGesture | null, end: (isStillLift: boolean) => void } | null = null
+
+/** 结束这次框上的接触，并且只告诉框按住一次。 */
+function endContact(isStillLift: boolean): void {
+  const ended = contact
+  contact = null
+  ended?.end(isStillLift)
+}
+
+/** 框组件装进来的框按住（utils/boxHold.ts）。 */
+export interface BoxHold {
+  /** 开始一次接触的按住。不在框上时返回 null，否则返回接触结束时要调的函数。 */
+  readonly start: (surface: HTMLElement, target: EventTarget | null) => ((isStillLift: boolean) => void) | null
+  /** 控制器拆掉时，结束所有还在等的点击。 */
+  readonly endWaits: () => void
+}
+
+let boxHold: BoxHold | null = null
+
+/**
+ * 装上框按住。只有用到框组件（复选框、单选）的页面才加载它，
+ * 只有按钮和链接的页面不带这段代码。
+ */
+export function installBoxHold(hold: BoxHold): void {
+  boxHold = hold
+}
 /** 有几个调用方装着控制器。大于 0 时监听才在。 */
 let holders = 0
 /** 上一次「被手指带动」的滚动发生在什么时候、在哪个滚动容器里。只记手指带动的，程序滚动不算。 */
@@ -203,6 +235,8 @@ function finish(): void {
 function onPointerDown(event: PointerEvent): void {
   if (event.pointerType === 'mouse')
     return
+  // 第二根手指或新的一次按压结束上一次框上的接触，它的抬起不算停着抬起。
+  endContact(false)
   if (live != null) {
     const fingerIsUp = live.gesture.phase === 'fading' || live.gesture.phase === 'flash'
     // 手指还按着又来一根：双指捏合或双指滚动都不是按压，两根都不画。
@@ -217,9 +251,16 @@ function onPointerDown(event: PointerEvent): void {
   const braking = element != null && scrollerIsBraking(element)
   lastTouchAt = Date.now()
   lastTouchTarget = event.target instanceof Node ? event.target : null
-  if (element == null || braking)
+  if (element == null)
     return
-  live = { element, gesture: idlePressGesture(), pointerId: event.pointerId, timer: null }
+  // 刹车的手指什么都不按，但框按住照样跟着它。
+  const end = boxHold?.start(element, event.target) ?? null
+  const pressed: LiveGesture | null = braking ? null : { element, gesture: idlePressGesture(), pointerId: event.pointerId, timer: null }
+  if (end != null)
+    contact = { pointerId: event.pointerId, live: pressed, end }
+  if (pressed == null)
+    return
+  live = pressed
   apply(
     pressGestureStep(live.gesture, { kind: 'down', x: event.clientX, y: event.clientY, delayed: isInsideScrollView(element) }),
     msSinceInput(event.timeStamp, event),
@@ -243,6 +284,11 @@ function onPointerUp(event: PointerEvent): void {
   lastTouchAt = Date.now()
   if (event.target instanceof Node)
     lastTouchTarget = event.target
+  if (contact?.pointerId === event.pointerId) {
+    // 在抬起这一步之前读：移动过头或被滚动拿走的按压，这时已经死了或没了。
+    const pressed = contact.live
+    endContact(pressed != null && live === pressed && pressed.gesture.phase !== 'dead')
+  }
   if (isOtherPointer(event))
     return
   apply(pressGestureStep(live!.gesture, { kind: 'up' }))
@@ -250,7 +296,11 @@ function onPointerUp(event: PointerEvent): void {
 }
 
 /** 滚动接管了手势，或者平台拿走了它。iOS 上 pointercancel 比第一个 scroll 事件还早到。 */
-function onCancel(): void {
+function onCancel(event?: Event): void {
+  // 只有这根指针自己的取消才结束它的接触。滚动带来的取消不算：手指还按着。
+  const pointerId = (event as Partial<PointerEvent> | undefined)?.pointerId
+  if (pointerId != null && contact?.pointerId === pointerId)
+    endContact(false)
   if (live == null)
     return
   apply(pressGestureStep(live.gesture, { kind: 'cancel' }))
@@ -276,8 +326,10 @@ function onScroll(event: Event): void {
 
 /** 兜底：页面被切到后台时，不留下亮着的元素。 */
 function onVisibilityChange(): void {
-  if (document.visibilityState === 'hidden')
+  if (document.visibilityState === 'hidden') {
+    endContact(false)
     finish()
+  }
 }
 
 /** 控制器在共用输入流（utils/inputStream.ts）上的订阅，全都被动，只在有人持有时存在。 */
@@ -298,6 +350,8 @@ function addListeners(): void {
 }
 
 function removeListeners(): void {
+  endContact(false)
+  boxHold?.endWaits()
   for (const unsubscribe of unsubscribers)
     unsubscribe()
   unsubscribers = []
@@ -339,6 +393,7 @@ export function installPressFeedback(): () => void {
 export function resetPressFeedbackForTest(): void {
   if (holders > 0 && typeof window !== 'undefined')
     removeListeners()
+  endContact(false)
   holders = 0
   finish()
   resetClocks()

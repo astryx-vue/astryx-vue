@@ -1,5 +1,13 @@
 # @astryx-vue/core
 
+## 0.33.4
+
+### Patch Changes
+
+- [#638](https://github.com/astryx-vue/astryx-vue/pull/638) [`47a6c5b`](https://github.com/astryx-vue/astryx-vue/commit/47a6c5b398876ef136c860bab8bb4b482b992307) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 手指按住复选框的框或单选的圆圈时不再选中旁边的文字，停着长按后抬手会照常勾选或选中，长按已经起了作用（比如弹出菜单）时则不再多点一次。
+
+- [#635](https://github.com/astryx-vue/astryx-vue/pull/635) [`87784b4`](https://github.com/astryx-vue/astryx-vue/commit/87784b4ef1b7aca3bbf54efdba316f020185573a) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - SegmentedControl 的选中底色每次换选都滑到新分段（鼠标按主题时序，触屏按 iOS 弹簧），鼠标、手指和笔都能按住选中的分段拖着走、松手处即选中，拖出控件上下方仍按左右位置选择，手指按住时底色浮起；减少动态效果时触屏改为原地淡入淡出、鼠标直接落位。
+
 ## 0.33.3
 
 ### Patch Changes

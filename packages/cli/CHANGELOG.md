@@ -1,5 +1,11 @@
 # @astryx-vue/cli
 
+## 0.8.5
+
+### Patch Changes
+
+- [#635](https://github.com/astryx-vue/astryx-vue/pull/635) [`87784b4`](https://github.com/astryx-vue/astryx-vue/commit/87784b4ef1b7aca3bbf54efdba316f020185573a) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - SegmentedControl 的选中底色每次换选都滑到新分段（鼠标按主题时序，触屏按 iOS 弹簧），鼠标、手指和笔都能按住选中的分段拖着走、松手处即选中，拖出控件上下方仍按左右位置选择，手指按住时底色浮起；减少动态效果时触屏改为原地淡入淡出、鼠标直接落位。
+
 ## 0.8.4
 
 ### Patch Changes
