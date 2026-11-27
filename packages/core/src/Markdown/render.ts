@@ -2,6 +2,7 @@ import type { Component, VNode, VNodeChild } from 'vue'
 import type { CodeLanguage } from '../Code/grammar.js'
 import type { MarkdownMessages } from '../locale/messages/markdown.js'
 import type { MdNode } from './ast.js'
+import type { BlockDirectionScope } from './blockDirection.js'
 import type { MarkdownExtensionNode, MarkdownExtensionRenderer } from './plugin-protocol/protocol.js'
 import type { MarkdownInlinePlugin, MarkdownPlugin, MarkdownPluginRenderContext } from './plugins.js'
 import type { MarkdownCitationStyle, MarkdownComponents, MarkdownHeadingLevel } from './types.js'
@@ -16,8 +17,9 @@ import Heading from '../Heading/Heading.vue'
 import Link from '../Link/Link.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { plainText } from './ast.js'
-import { markdownBlockDirection } from './blockDirection.js'
+import { blockDirection, innerDirectionScope } from './blockDirection.js'
 import { fadeClass, renderLink, renderText } from './renderInline.js'
+import { renderMarkdownTable } from './renderTable.js'
 import { assignHeadingSlugs, collectDefinitions, measureNode, slotText } from './renderTree.js'
 import { slugify, uniqueSlug } from './slug.js'
 import { sanitizeMarkdownImageUrl, sanitizeMarkdownLinkUrl } from './url.js'
@@ -56,6 +58,8 @@ export interface RenderContext {
   /** Set when `markdownSourceLinesPlugin` is in the plugin list. */
   sourceLines?: boolean
   protocolRenderers?: ReadonlyMap<string, MarkdownExtensionRenderer<MarkdownExtensionNode>>
+  /** 各块定方向用的范围：外层 provider 的方向和包着当前块的那一块的方向。 */
+  direction?: BlockDirectionScope
 }
 
 function headingLevel(depth: number, start: number): MarkdownHeadingLevel {
@@ -232,29 +236,6 @@ function isTaskItem(node: MdNode): boolean {
   return node.checked === true || node.checked === false
 }
 
-const TABLE_COLUMN_MIN_CH = 4
-const TABLE_COLUMN_MAX_CH = 24
-const TABLE_HEADER_ONE_LINE_MAX_CH = 20
-
-function columnMinCh(node: MdNode): number[] {
-  const rows = node.children ?? []
-  const header = rows[0]
-  if (header == null)
-    return []
-  return (header.children ?? []).map((cell, index) => {
-    const headerLen = measureNode(cell)
-    let maxLen = headerLen
-    for (const row of rows.slice(1)) {
-      const body = row.children?.[index]
-      if (body != null)
-        maxLen = Math.max(maxLen, measureNode(body))
-    }
-    const bodyFloor = Math.ceil(maxLen / 2)
-    const headerFloor = Math.min(headerLen, TABLE_HEADER_ONE_LINE_MAX_CH)
-    return Math.min(TABLE_COLUMN_MAX_CH, Math.max(TABLE_COLUMN_MIN_CH, bodyFloor, headerFloor))
-  })
-}
-
 const BULLET_MARKERS = ['disc', 'circle', 'square'] as const
 const NUMBER_MARKERS = ['decimal', 'lower-alpha', 'lower-roman'] as const
 type ListMarker = typeof BULLET_MARKERS[number] | typeof NUMBER_MARKERS[number]
@@ -310,16 +291,17 @@ function renderItemBody(node: MdNode, key: string, ctx: RenderContext): VNodeChi
 }
 
 function renderListItem(node: MdNode, key: string, taskList: boolean, marker: ListMarker, ctx: RenderContext): VNode {
-  const body = renderItemBody(node, key, ctx)
+  const dir = blockDirection(node, ctx.direction)
+  const body = renderItemBody(node, key, { ...ctx, direction: innerDirectionScope(node, ctx.direction) })
   if (!taskList && !isTaskItem(node)) {
-    return h('li', { key, class: 'astryx-markdown__item', dir: markdownBlockDirection(node), ...sourceLineAttrs(node, ctx) }, [
+    return h('li', { key, class: 'astryx-markdown__item', dir, ...sourceLineAttrs(node, ctx) }, [
       renderMarker(marker),
       h('div', { class: 'astryx-markdown__item-body' }, body),
     ])
   }
 
   const checked = node.checked === true
-  return h('li', { key, class: 'astryx-markdown__task', dir: markdownBlockDirection(node), ...sourceLineAttrs(node, ctx) }, [
+  return h('li', { key, class: 'astryx-markdown__task', dir, ...sourceLineAttrs(node, ctx) }, [
     h('span', { class: 'astryx-markdown__task-check' }, [
       h(ctx.checkboxIndicator ?? CheckboxIndicator, { state: checked ? 'checked' : 'unchecked', size: 'sm' }),
       h(VisuallyHidden, () => checked ? ctx.messages.taskDone : ctx.messages.taskPending),
@@ -348,7 +330,7 @@ export function renderBlock(node: MdNode, key: string, ctx: RenderContext): VNod
         id,
         'class': 'astryx-markdown__heading astryx-markdown__prose',
         'data-depth': node.depth ?? 1,
-        'dir': markdownBlockDirection(node),
+        'dir': blockDirection(node, ctx.direction),
         'tabindex': -1,
         ...sourceLineAttrs(node, ctx),
       }, () => [...children, anchor])
@@ -364,7 +346,7 @@ export function renderBlock(node: MdNode, key: string, ctx: RenderContext): VNod
       return h('div', {
         key,
         role: 'paragraph',
-        dir: markdownBlockDirection(node),
+        dir: blockDirection(node, ctx.direction),
         class: ['astryx-markdown__paragraph', 'astryx-markdown__prose', imageOnly ? 'astryx-markdown__paragraph--image' : null],
         ...sourceLineAttrs(node, ctx),
       }, children)
@@ -395,49 +377,28 @@ export function renderBlock(node: MdNode, key: string, ctx: RenderContext): VNod
       ])
     }
     case 'blockquote': {
-      const children = (node.children ?? []).map((child, index) => renderBlock(child, `${key}-${index}`, ctx)).filter(child => child != null)
+      const inner = { ...ctx, direction: innerDirectionScope(node, ctx.direction) }
+      const children = (node.children ?? []).map((child, index) => renderBlock(child, `${key}-${index}`, inner)).filter(child => child != null)
       const override = ctx.components?.blockquote
       if (override != null)
         return h(override, { key, ...sourceLineFields(node, ctx) }, () => children)
       return h(Blockquote, {
         key,
         class: 'astryx-markdown__blockquote astryx-markdown__prose',
-        dir: markdownBlockDirection(node),
+        dir: blockDirection(node, ctx.direction),
         ...sourceLineAttrs(node, ctx),
       }, () => children)
     }
     case 'list':
       return renderList(node, key, ctx)
-    case 'table': {
-      const rows = node.children ?? []
-      const header = rows[0]
-      const body = rows.slice(1)
-      const align = node.align ?? []
-      const floors = columnMinCh(node)
-      const renderRow = (row: MdNode, rowKey: string, cellTag: 'th' | 'td'): VNode => h('tr', { key: rowKey }, (row.children ?? []).map((cell, index) => {
-        const alignment = align[index]
-        const marked = alignment === 'center' || alignment === 'right' ? alignment : undefined
-        const floor = floors[index]
-        return h(cellTag, {
-          'key': `${rowKey}-${index}`,
-          'class': 'astryx-markdown__cell',
-          'scope': cellTag === 'th' ? 'col' : undefined,
-          'data-align': marked,
-          'dir': markdownBlockDirection(cell),
-          'style': floor == null ? undefined : { minWidth: `${floor}ch` },
-        }, renderChildren(cell.children, `${rowKey}-${index}`, ctx))
-      }))
-      const content = [
-        header == null ? null : h('thead', { key: `${key}-head` }, [renderRow(header, `${key}-head-row`, 'th')]),
-        body.length === 0 ? null : h('tbody', { key: `${key}-body` }, body.map((row, index) => renderRow(row, `${key}-body-${index}`, 'td'))),
-      ].filter(child => child != null)
-      const override = ctx.components?.table
-      if (override != null)
-        return h(override, { key, ...sourceLineFields(node, ctx) }, () => content)
-      return h('div', { key, class: 'astryx-markdown__table-wrap', ...sourceLineAttrs(node, ctx) }, [
-        h('table', { class: 'astryx-markdown__table' }, content),
-      ])
-    }
+    case 'table':
+      return renderMarkdownTable(node, key, {
+        direction: ctx.direction,
+        renderCell: (cell, cellKey) => renderChildren(cell.children, cellKey, ctx),
+        override: ctx.components?.table,
+        attrs: sourceLineAttrs(node, ctx),
+        fields: sourceLineFields(node, ctx),
+      })
     case 'thematicBreak': {
       const override = ctx.components?.hr
       if (override != null)

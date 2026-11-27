@@ -476,6 +476,23 @@
     text-align: end;
   }
 
+  /* 读向和表格相反的单元格：表格的终点在它自己的起点一侧，列线和显式对齐都按表格的方向摆。 */
+  .astryx-markdown__cell[data-against-table] {
+    border-inline-end: 0;
+  }
+
+  .astryx-markdown__cell[data-against-table]:not(:last-child) {
+    border-inline-start: var(--astryx-border-width, 1px) solid var(--astryx-color-border, #ebebeb);
+  }
+
+  .astryx-markdown__cell[data-against-table][data-align='right'] {
+    text-align: start;
+  }
+
+  .astryx-markdown__cell[data-against-table][data-align='left'] {
+    text-align: end;
+  }
+
   .astryx-markdown__image {
     display: block;
     max-width: 100%;
