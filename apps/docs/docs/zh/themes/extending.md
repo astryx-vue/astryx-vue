@@ -93,10 +93,30 @@ const brand = defineTheme({
 
 几点细节：
 
-- `:hover` 只对能点的控件生效，禁用的按钮不会因为鼠标悬停而变色。
-- `card`、`dialog`、`bottom-sheet`、`dropdown-menu`、`context-menu`、`segmented-control` 这几个组件，主题里改了 `borderRadius` 或 `padding`，里面跟着它走的部位也会一起变，比如卡片头部的圆角。`chat` 的 `borderRadius` 和 `padding` 会写到输入区的圆角和内边距上，`progress-bar-mark` 的 `width` 和 `height` 会写到那根刻度线上。`checkbox-input` 和 `switch` 的 `gap` 只改控件和标签之间的距离，不动状态消息上方的间距。
+- `:hover` 只对能点的控件生效，禁用的按钮不会因为鼠标悬停而变色。`:active` 跟随触屏按压模型：鼠标按下时照旧生效，粗指针（手指）下只在 Astryx 认定这是一次按压时才生效，手指刚落下或在滚动时不会亮。
+- `card`、`dialog`、`drawer`、`bottom-sheet`、`dropdown-menu`、`context-menu`、`segmented-control` 这几个组件，主题里改了 `borderRadius` 或 `padding`，里面跟着它走的部位也会一起变，比如卡片头部的圆角。`chat-composer` 的 `borderRadius` 和 `padding` 会写到输入区的圆角和内边距上，`progress-bar-mark` 的 `width` 和 `height` 会写到那根刻度线上。`checkbox-input` 和 `switch` 的 `gap` 只改控件和标签之间的距离，不动状态消息上方的间距。
 - 有些画在组件内部的部位有自己的挂点：Kbd 每个按键徽章是 `kbd-key`，Typeahead 的结果弹层是 `typeahead-popup`，Calendar 的区间色带和悬停预览色带是 `calendar-range` 和 `calendar-range-preview`（色带第一天和最后一天带 `start`、`end`），BottomSheet 的拖拽条是 `bottom-sheet-handle`，MobileNav 的抽屉面板是 `mobile-nav-drawer`（带 `side`：`start` 或 `end`，主题可以只给面板上色而不碰后面的遮罩），AlertDialog 的标题和说明是 `alert-dialog-title`、`alert-dialog-description`，分页的控制行是 `pagination-list`（反映 `variant` 和 `size`），每个按钮单元格是 `pagination-item`（当前页的单元格反映 `selected`），省略号是 `pagination-ellipsis`，选中标签的下划线是 `tab-indicator`（嵌套主题可以用 `insetInline: '0'` 把它拉满整个标签宽度）。`top-nav` 反映 `mode`（手机条上是 `mobile-bar`），`top-nav-item` 反映 `mode`（手机菜单里是 `drawer`）。
 - `layout-header` 和 `layout-footer` 会标出 `container`（`card`、`dialog` 或 `bottom-sheet`），用 `'container:dialog'` 就能只改对话框的头部、不动卡片的。`toggle-button` 在 ToggleButtonGroup 里会带上 `grouped`。容器或主题设置了 `--link-hover-color` 时，accent 颜色的 Link 悬停时用这个颜色。
+
+#### 深浅色块
+
+样式键里可以写 `@light` 和 `@dark` 两个块。块里能写的属性和伪类覆盖与样式键本身一样，只在元素处于对应颜色模式时生效：`Theme` 用 `light` 或 `dark` 指定的模式；`system` 主题下读者的系统偏好；或者最近一层 `MediaTheme` 表面（最多识别五层深浅交替嵌套的表面，更深时这个块什么也不写）。没有任何模式匹配时块不写任何规则，其余规则照旧生效。
+
+```ts
+defineTheme({
+  name: 'glass',
+  components: {
+    card: {
+      base: {
+        'borderRadius': '16px',
+        '@dark': { 'backgroundImage': 'linear-gradient(#141821, #1d2533)', ':hover': { borderColor: '#5b6b8c' } },
+      },
+    },
+  },
+})
+```
+
+不是颜色的值，或者想让另一种模式保持不动时，用块最合适；随模式变化的颜色也可以直接写成一个 `light-dark()`。块和它所细化的规则一样重，并且写在它后面，所以在自己的模式里会盖过样式键本身的值。深色表面里再嵌一块浅色表面时，里面只取浅色块；两个块同时写了同一个属性时，浅色块赢。继承别的主题时，只重写块里的一个属性，块里其余属性保留。块、样式键或挂点里值为 `undefined` 的属性视为没写，不会盖掉继承来的值。
 
 ### 旧写法已经不再支持
 

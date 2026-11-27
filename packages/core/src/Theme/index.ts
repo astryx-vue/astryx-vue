@@ -9,6 +9,8 @@ export type {
   WidthBreakpointName,
   WidthBreakpoints,
 } from './adaptationTypes.js'
+export { compactDefinition, DEFAULT_COMPACT_DEFINITION } from './compactDefinition.js'
+export type { CompactDefinition } from './compactDefinition.js'
 export { DATA_TOKEN_DEFAULTS } from './dataTokens.js'
 export type { DataTokenName } from './dataTokens.js'
 export { defineTheme, isDefinedTheme, neutralTheme, normalizeTokenName } from './defineTheme.js'
@@ -28,6 +30,7 @@ export type {
   MotionCharacter,
   MotionScaleConfig,
   RadiusScaleConfig,
+  StyleBlock,
   StyleOverrides,
   ThemeDefinition,
   ThemeMode,

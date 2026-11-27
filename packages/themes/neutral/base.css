@@ -173,7 +173,7 @@
     --astryx-radius-element: 0.625rem;
     --astryx-radius-container: 0.75rem;
     --astryx-radius-page: 1.75rem;
-    --astryx-radius-chat: 28px;
+    --astryx-radius-chat: var(--astryx-radius-container);
     --astryx-radius-full: 9999px;
 
     /*

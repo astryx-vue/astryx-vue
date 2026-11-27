@@ -872,7 +872,7 @@
     box-sizing: border-box;
     width: 100%;
     min-width: 0;
-    --_chat-composer-radius: var(--astryx-radius-chat, 28px);
+    --_chat-composer-radius: var(--astryx-radius-chat, var(--astryx-radius-container, 0.75rem));
     --_chat-composer-padding: var(--astryx-spacing-3, 12px);
     --astryx-button-radius: max(
       var(--astryx-radius-element, 0.625rem),
@@ -1151,12 +1151,12 @@
     padding-inline: var(--astryx-spacing-4, 16px);
     padding-block-start: var(--astryx-spacing-3, 12px);
     /* 抽屉塞在输入区正文后面一个圆角的高度，顶部圆角和这段塞入量都跟着输入区自己的圆角；单独使用时取聊天圆角。 */
-    padding-block-end: calc(var(--astryx-spacing-3, 12px) + var(--_chat-composer-radius, var(--astryx-radius-chat, 28px)));
-    margin-block-end: calc(-1 * var(--_chat-composer-radius, var(--astryx-radius-chat, 28px)));
+    padding-block-end: calc(var(--astryx-spacing-3, 12px) + var(--_chat-composer-radius, var(--astryx-radius-chat, var(--astryx-radius-container, 0.75rem))));
+    margin-block-end: calc(-1 * var(--_chat-composer-radius, var(--astryx-radius-chat, var(--astryx-radius-container, 0.75rem))));
     background-color: var(--astryx-color-background-surface);
     background-image: linear-gradient(var(--astryx-color-background-muted), var(--astryx-color-background-muted));
-    border-start-start-radius: var(--_chat-composer-radius, var(--astryx-radius-chat, 28px));
-    border-start-end-radius: var(--_chat-composer-radius, var(--astryx-radius-chat, 28px));
+    border-start-start-radius: var(--_chat-composer-radius, var(--astryx-radius-chat, var(--astryx-radius-container, 0.75rem)));
+    border-start-end-radius: var(--_chat-composer-radius, var(--astryx-radius-chat, var(--astryx-radius-container, 0.75rem)));
   }
 
   .astryx-chat-drawer__toggle {

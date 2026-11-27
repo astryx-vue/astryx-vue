@@ -10,7 +10,13 @@ const NAMED_WEIGHTS: Record<string, string> = {
   bold: 'var(--font-weight-bold)',
 }
 
-function weightToken(value: string): string {
+/**
+ * A named weight as its token, any other value as written. A theme written in
+ * JavaScript or read from JSON may give a number: it is written as its text.
+ */
+function weightToken(value: string | number): string {
+  if (typeof value === 'number')
+    return String(value)
   return NAMED_WEIGHTS[value.trim()] ?? value
 }
 
@@ -23,13 +29,12 @@ function quoteFamily(family: string): string {
   return trimmed
 }
 
+/** A role's font list: its family and fallbacks. Fallbacks with no family build nothing. */
 function fontStack(role: TypographyConfig['body']): string | undefined {
-  if (!role?.family && !role?.fallbacks)
+  if (!role?.family)
     return undefined
-  const family = role.family ? quoteFamily(role.family) : undefined
-  if (family && role.fallbacks)
-    return `${family}, ${role.fallbacks}`
-  return family ?? role.fallbacks
+  const family = quoteFamily(role.family)
+  return role.fallbacks ? `${family}, ${role.fallbacks}` : family
 }
 
 function headingSizeAliases(tokens: Record<string, string>): Record<string, string> {
@@ -47,7 +52,7 @@ function headingSizeAliases(tokens: Record<string, string>): Record<string, stri
   return aliases
 }
 
-function assignHeadingWeight(heading: HeadingWeightOverrides, level: number, weight: string): void {
+function assignHeadingWeight(heading: HeadingWeightOverrides, level: number, weight: string | number): void {
   if (level >= 1 && level <= 6)
     heading[level as 1 | 2 | 3 | 4 | 5 | 6] = weightToken(weight)
 }
@@ -91,7 +96,8 @@ function scaleConfig(config: TypographyConfig): TypeScaleConfig {
 
 /**
  * Font stacks, the type scale, and the heading size aliases Heading reads.
- * Heading inherits the body stack when it does not name its own.
+ * A heading with no `family` takes the body's whole font list; with its own
+ * `family`, only its own `fallbacks`.
  */
 export function resolveTypography(config: TypographyConfig | undefined): {
   tokens: Record<string, string>

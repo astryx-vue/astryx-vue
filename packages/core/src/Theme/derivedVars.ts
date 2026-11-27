@@ -1,3 +1,5 @@
+import { splitTopLevelWhitespace } from './tokenReferences.js'
+
 /**
  * Theme properties that a component reads through its own variables.
  *
@@ -38,7 +40,7 @@ export const DERIVED_VARS: Readonly<Record<string, readonly DerivedVarEntry[]>> 
   // The room between the box and its label. The target is the outer field,
   // whose own gap is the room above the status message.
   'checkbox-input': [{ property: 'gap', vars: ['--_checkbox-input-gap'], replaces: true }],
-  'chat': [
+  'chat-composer': [
     { property: 'borderRadius', vars: ['--_chat-composer-radius'] },
     { property: 'padding', vars: ['--_chat-composer-padding'] },
   ],
@@ -50,6 +52,7 @@ export const DERIVED_VARS: Readonly<Record<string, readonly DerivedVarEntry[]>> 
     { property: 'borderRadius', vars: ['--_dialog-radius'] },
     { property: 'padding', expand: 'container' },
   ],
+  'drawer': [{ property: 'padding', expand: 'container' }],
   'dropdown-menu': [
     { property: 'borderRadius', vars: ['--_dropdown-menu-radius'] },
     { property: 'padding', vars: ['--_dropdown-menu-padding'] },
@@ -72,6 +75,8 @@ export const DERIVED_VARS: Readonly<Record<string, readonly DerivedVarEntry[]>> 
   // The room between the track and its label, as on `checkbox-input`.
   'switch': [{ property: 'gap', vars: ['--_switch-gap'], replaces: true }],
 }
+
+const PADDING_SHORTHANDS = new Set(['padding', 'paddingBlock', 'paddingInline'])
 
 const PADDING_PROPS = new Set([
   'padding',
@@ -101,8 +106,9 @@ interface ParsedPadding {
   inlineEnd?: string
 }
 
+/** Split a value on the whitespace between its components; `clamp(8px, 2vw)` stays whole. */
 function words(value: string): string[] {
-  return value.trim().split(/\s+/)
+  return splitTopLevelWhitespace(value)
 }
 
 function parsePadding(entries: readonly (readonly [string, string])[]): ParsedPadding {
@@ -110,6 +116,9 @@ function parsePadding(entries: readonly (readonly [string, string])[]): ParsedPa
   for (const [raw, value] of entries) {
     const prop = PHYSICAL_BLOCK_PADDING[raw] ?? raw
     const parts = words(value)
+    // An empty shorthand sets nothing and keeps the longhands before it.
+    if (parts.length === 0 && PADDING_SHORTHANDS.has(prop))
+      continue
     if (prop === 'padding') {
       parsed.blockStart = parts[0]
       parsed.inline = parts[1] ?? parts[0]

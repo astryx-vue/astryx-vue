@@ -9,8 +9,10 @@ import { mergeComponentIcons, staticComponentIcons } from '../Icon/componentIcon
 import { readThemeIconIds, resolveIconEntryVariants } from '../Icon/themeIcons.js'
 import { normalizeThemeAdaptations, resolveThemeAdaptationRules } from './adaptations.js'
 import { assertTargetName } from './componentStyles.js'
+import { deriveChatRadius } from './expandRadiusScale.js'
 import { resolveLocalTokens } from './localTokens.js'
-import { mergeComponentMaps, resolveThemeValues, resolveTokenMap } from './resolveThemeValues.js'
+import { mergeComponentMaps } from './mergeComponents.js'
+import { resolveThemeValues, resolveTokenMap } from './resolveThemeValues.js'
 import { resolveRootMotion } from './rootMotion.js'
 import { deriveStatusRoleTokens } from './statusRoleDerivation.js'
 import { resolveGenerativeAxes } from './themeAxes.js'
@@ -93,6 +95,10 @@ export function defineTheme<
   // build without everything it meant to inherit.
   if ('extends' in input && !isDefinedTheme(input.extends))
     throw new Error(`defineTheme("${input.name}"): \`extends\` must be a theme from defineTheme(), got ${describeBadBase(input.extends)}. Check that the import naming the base theme resolves to it.`)
+  // A root `localTokens` left undefined is usually a failed import. It is
+  // refused by name, not read as no local tokens.
+  if ('localTokens' in input && input.localTokens === undefined)
+    throw new Error(`defineTheme("${input.name}"): localTokens is undefined: omit the field or pass an object.`)
   assertTargets(input.components)
   assertTargets(input.onDark?.components)
   assertTargets(input.onLight?.components)
@@ -106,9 +112,10 @@ export function defineTheme<
   })
   const authoredTokens = { ...authoredBaseTokens(base), ...own.tokens }
   // Status roles this theme leaves unset are computed from its own colors.
-  const derivedStatusRoles = deriveStatusRoleTokens(authoredTokens)
-  const tokens = { ...authoredTokens, ...derivedStatusRoles }
-  const derivedTokens = Object.keys(derivedStatusRoles)
+  // Chat surfaces default to the container radius.
+  const derivedRoles = { ...deriveStatusRoleTokens(authoredTokens), ...deriveChatRadius(authoredTokens) }
+  const tokens = { ...authoredTokens, ...derivedRoles }
+  const derivedTokens = Object.keys(derivedRoles)
   const components = mergeComponentMaps(base?.components, own.components)
   const local = resolveLocalTokens(input.name, input.localTokens, base, tokens)
 

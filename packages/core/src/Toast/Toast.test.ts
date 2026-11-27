@@ -1,6 +1,8 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
-import { nextTick } from 'vue'
+import { h, nextTick } from 'vue'
+import { defineTheme } from '../Theme/defineTheme.js'
+import Theme from '../Theme/Theme.vue'
 import { TOAST_VIEWPORT_KEY } from './context.js'
 import Toast from './Toast.vue'
 
@@ -233,5 +235,36 @@ describe('toast', () => {
     vi.advanceTimersByTime(200)
     expect(wrapper.emitted('dismiss')).toBeUndefined()
     vi.useRealTimers()
+  })
+
+  describe('first-paint content side', () => {
+    const sideOf = (theme: ReturnType<typeof defineTheme>, mode: 'light' | 'dark', type: 'info' | 'error' = 'info') => {
+      const wrapper = mount(Theme, {
+        props: { theme, mode },
+        slots: { default: () => h(Toast, { body: 'Saved', type }) },
+      })
+      const side = wrapper.get('.astryx-toast__surface').attributes('data-astryx-media')
+      wrapper.unmount()
+      return side
+    }
+
+    it('follows the fill the theme gives the card, not the color mode', () => {
+      const light = defineTheme({ name: 'toast-light-fill', tokens: { '--toast-info-background': '#f4f0e8' } })
+      expect(sideOf(light, 'dark')).toBe('light')
+      expect(sideOf(light, 'light')).toBe('light')
+    })
+
+    it('takes the dark side for the standard dark fills in both modes', () => {
+      const plain = defineTheme({ name: 'toast-plain-fill' })
+      expect(sideOf(plain, 'dark')).toBe('dark')
+      expect(sideOf(plain, 'light')).toBe('dark')
+      expect(sideOf(plain, 'dark', 'error')).toBe('dark')
+    })
+
+    it('guesses from the color mode when the fill cannot be read', () => {
+      const unreadable = defineTheme({ name: 'toast-unreadable-fill', tokens: { '--toast-info-background': 'var(--some-other-token)' } })
+      expect(sideOf(unreadable, 'dark')).toBe('light')
+      expect(sideOf(unreadable, 'light')).toBe('dark')
+    })
   })
 })

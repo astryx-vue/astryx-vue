@@ -125,7 +125,7 @@ describe('theme targets', () => {
       components: {
         'dialog': { base: { padding: '24px' } },
         'bottom-sheet': { base: { paddingBlock: '12px', paddingInline: '20px' } },
-        'chat': { base: { borderRadius: '18px', padding: '10px' } },
+        'chat-composer': { base: { borderRadius: '18px', padding: '10px' } },
         'progress-bar-mark': { base: { width: '4px', height: '12px' } },
       },
     })
