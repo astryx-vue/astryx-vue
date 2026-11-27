@@ -129,6 +129,25 @@ describe('failed lookup suggestion order', () => {
   })
 })
 
+describe('failed lookup suggestions for two swapped letters', () => {
+  async function suggested(argv: string[]): Promise<string[]> {
+    const result = await runCli([...argv, '--json'])
+    const envelope = parseResponse(result.stdout)
+    if (!isError(envelope))
+      throw new Error('expected an error')
+    return (envelope.suggestions ?? []).map(item => item.name)
+  }
+
+  it('counts two adjacent letters swapped as one slip, so a short name still finds its near name', async () => {
+    // Five letters allow one slip; a swap costs two edits unless it counts as one.
+    expect(await suggested(['component', 'Bagde'])).toContain('Badge')
+  })
+
+  it('finds a template and a topic from swapped letters', async () => {
+    expect((await suggested(['template', 'dasbhoard']))[0]).toBe('dashboard')
+  })
+})
+
 describe('search order among equal scores', () => {
   it('lists a family word\'s own entry, then the members that start with it', () => {
     const { results } = searchCatalog('tabs', 'en', { limit: 4, type: 'component' })

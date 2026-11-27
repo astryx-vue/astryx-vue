@@ -59,6 +59,8 @@ import '@astryx-vue/themes/neutral.css'
 
 顺带说一句：`@layer` 语句可以写在 `@import` 前面，这是 CSS 里少数允许的顺序。反过来的话整段会被当成无效内容丢掉。
 
+已经在用 Tailwind 的项目也一样，要把 `@layer` 语句写在 `@import 'tailwindcss'` 上面。写在它下面时，语句本身仍是合法的 CSS，但 Tailwind 自己的层已经先占好了位置，所有 `astryx.*` 层就排到了 `utilities` 后面。这样 Astryx 的重置样式会压过所有工具类，而且不会有任何报错。
+
 ### 在工具类里直接用我们的变量
 
 不用改配置，任意值写法就能用：

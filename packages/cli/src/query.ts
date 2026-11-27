@@ -238,7 +238,7 @@ export function suggestByNames<T>(query: string, candidates: readonly T[], names
   return candidates
     .map((candidate) => {
       const values = [...new Set(namesOf(candidate).map(normalize))].filter(Boolean)
-      const distance = Math.min(...values.map(value => levenshtein(key, value)))
+      const distance = Math.min(...values.map(value => levenshtein(key, value, true)))
       const included = values.some(value => value.includes(key) || key.includes(value))
       const compound = compoundNameScore(query, namesOf(candidate)) ?? 0
       return { candidate, distance, included, compound }
@@ -430,21 +430,28 @@ function normalize(value: string): string {
   return value.trim().toLowerCase().replace(/[\s_]+/g, '-')
 }
 
-function levenshtein(a: string, b: string): number {
+/**
+ * Edit distance. With `swaps`, two adjacent letters swapped count as one edit,
+ * which is how a slip of the fingers (`dasbhoard`) reads to the person who made it.
+ */
+function levenshtein(a: string, b: string, swaps = false): number {
   if (a === b)
     return 0
   if (Math.abs(a.length - b.length) > 4)
     return 99
-  const previous = Array.from({ length: b.length + 1 }, (_, index) => index)
+  let beforePrevious: number[] = []
+  let previous = Array.from({ length: b.length + 1 }, (_, index) => index)
   for (let i = 1; i <= a.length; i++) {
-    let diagonal = previous[0]!
-    previous[0] = i
+    const current = [i]
     for (let j = 1; j <= b.length; j++) {
-      const saved = previous[j]!
       const cost = a[i - 1] === b[j - 1] ? 0 : 1
-      previous[j] = Math.min(previous[j]! + 1, previous[j - 1]! + 1, diagonal + cost)
-      diagonal = saved
+      let value = Math.min(previous[j]! + 1, current[j - 1]! + 1, previous[j - 1]! + cost)
+      if (swaps && i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1])
+        value = Math.min(value, beforePrevious[j - 2]! + 1)
+      current[j] = value
     }
+    beforePrevious = previous
+    previous = current
   }
   return previous[b.length]!
 }
