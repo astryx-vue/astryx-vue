@@ -1,7 +1,7 @@
 {
   "name": "@astryx-vue/core",
   "type": "module",
-  "version": "0.37.0",
+  "version": "0.40.0",
   "description": "Vue 3 components for the unofficial astryx-vue port of Astryx. Not affiliated with Meta.",
   "author": "ShenQingchuan",
   "license": "MIT",
@@ -610,6 +610,11 @@
       "import": "./dist/locale/index.js"
     },
     "./locales/*.json": "./locales/*.json",
+    "./palette": {
+      "source": "./src/palette/index.ts",
+      "types": "./dist/palette/index.d.ts",
+      "import": "./dist/palette/index.js"
+    },
     "./package.json": "./package.json",
     "./reset.css": {
       "types": "./css.d.ts",
@@ -1146,6 +1151,10 @@
         "import": "./dist/locale/index.js"
       },
       "./locales/*.json": "./locales/*.json",
+      "./palette": {
+        "types": "./dist/palette/index.d.ts",
+        "import": "./dist/palette/index.js"
+      },
       "./package.json": "./package.json",
       "./reset.css": {
         "types": "./css.d.ts",

@@ -12,7 +12,9 @@ import { bottomSheetSwitcherReviewFlow } from '../../../../components/demos/bott
 
 ## Usage
 
-Coordinates a multi-step bottom-sheet flow in one shared dialog; bind `v-model:active-sheet` to a nested `BottomSheet`'s `sheet-id` to open or switch steps, and to `null` to close.
+`BottomSheetSwitcher` is deprecated. Write each step as its own `BottomSheet` with `isOpen`, driven by one state value that names the open step; moving on from inside the open step replaces it in place with the same handoff (see [Bottom Sheet](/en/components/bottom-sheet), Replacing a sheet). The switcher keeps working until a future minor release removes it.
+
+It coordinates a multi-step bottom-sheet flow in which each step presents its own native dialog; bind `v-model:active-sheet` to a nested `BottomSheet`'s `sheet-id` to open or switch steps, and to `null` to close.
 
 ```vue
 <script setup lang="ts">
@@ -37,7 +39,7 @@ const activeSheet = ref<string | null>(null)
 </template>
 ```
 
-Every child needs its own `sheet-id` and a non-empty `label`. The switcher names the dialog from its own `label`, falling back to the active sheet's label, so the flow keeps one accessible name the whole way through. Only the sheet whose `sheet-id` matches `active-sheet` is interactive; during a handoff the previous panel stays painted underneath, inert, until the new step has settled, so changing steps does not flash the scrim.
+Every child needs its own `sheet-id` and a non-empty `label`. The switcher names every step's dialog from its own `label`, falling back to that step's label. Only the sheet whose `sheet-id` matches `active-sheet` is interactive. When the step changes, the new step rises in its own dialog above the previous one; if the previous step is taller, it moves down to meet the new step's top edge at the same time, and it fades and closes only after both motions finish. The previous step is inert from the start, and its scrim holds the dim during the handoff, so changing steps does not flash the scrim. `id` and `data-testid` land on the dialog of the step that is showing. A scrim flow is one level of the bottom-sheet stack: a standalone sheet opened over it stacks on top, and switching steps keeps the flow's place.
 
 `purpose` sets how the whole flow can be dismissed, matching `Dialog`. Leave it out and the step that is showing decides: `info` allows Escape, a scrim click, and a swipe, `form` allows Escape only so typed input is not thrown away, and `required` blocks every implicit path. `hasScrim` defaults to `true` and draws one scrim for the entire flow; it stays up while steps change and only goes away when the flow closes, which is what makes a multi-step flow feel like one surface instead of several dialogs.
 

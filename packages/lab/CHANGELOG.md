@@ -1,5 +1,31 @@
 # @astryx-vue/lab
 
+## 0.12.0
+
+### Minor Changes
+
+- [#657](https://github.com/astryx-vue/astryx-vue/pull/657) [`c88c676`](https://github.com/astryx-vue/astryx-vue/commit/c88c6761b00d2b98a23215a1308b02e618fbbdca) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增 `WeightedSVGIcon`：每个字重（300-700）带一张图的 SVG 图标，显示和周围文字字重对得上的那一张，粗体文字里的图标自己画粗的版本，不用传属性；`weight` 可以固定字重，`WeightedIconSprite` 加 `sprite` 让重复的图标只在页面上出现一次。附带 `buildWeightedIcon()`（相邻字重相同的图合成一层、只保留用得到的字重）、`registerWeightProbe()` 和 15 个演示图标 `weightedStarterIcons`。
+
+### Patch Changes
+
+- Updated dependencies [[`21f1c19`](https://github.com/astryx-vue/astryx-vue/commit/21f1c19715b8b7a9400ea089826e6c5fb1b8fef2), [`c88c676`](https://github.com/astryx-vue/astryx-vue/commit/c88c6761b00d2b98a23215a1308b02e618fbbdca), [`c88c676`](https://github.com/astryx-vue/astryx-vue/commit/c88c6761b00d2b98a23215a1308b02e618fbbdca), [`c88c676`](https://github.com/astryx-vue/astryx-vue/commit/c88c6761b00d2b98a23215a1308b02e618fbbdca)]:
+  - @astryx-vue/core@0.40.0
+
+## 0.11.6
+
+### Patch Changes
+
+- Updated dependencies [[`80d3280`](https://github.com/astryx-vue/astryx-vue/commit/80d3280dbb0aafafce7a4c22a9797c3573661f13), [`80d3280`](https://github.com/astryx-vue/astryx-vue/commit/80d3280dbb0aafafce7a4c22a9797c3573661f13)]:
+  - @astryx-vue/core@0.39.0
+
+## 0.11.5
+
+### Patch Changes
+
+- [#654](https://github.com/astryx-vue/astryx-vue/pull/654) [`dff2d91`](https://github.com/astryx-vue/astryx-vue/commit/dff2d9152f247971094d989cce222ceb91701d33) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `ListInput` 和 `TransferList` 的重排手柄上，双指捏合现在也能缩放页面；单指拖动照旧是重排。
+- Updated dependencies [[`7334333`](https://github.com/astryx-vue/astryx-vue/commit/73343337fa497d3bf4b9f813e1c89f9921ffd5f0), [`a8ff6f5`](https://github.com/astryx-vue/astryx-vue/commit/a8ff6f57ef576333c7b547fc29d9da6b54c4e66d)]:
+  - @astryx-vue/core@0.38.0
+
 ## 0.11.4
 
 ### Patch Changes

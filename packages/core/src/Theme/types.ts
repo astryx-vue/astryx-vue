@@ -3,6 +3,7 @@ import type { ComponentIconMap, ComponentIconStaticMap, StoredComponentIconValue
 import type { SemanticIconMap } from '../Icon/semantic.js'
 import type { StoredIconEntry, ThemeIconEntries } from '../Icon/themeIcons.js'
 import type { IndicatorRegistry } from '../Indicator/types.js'
+import type { ThemePalette } from '../palette/types'
 import type { NormalizedThemeAdaptations, ResolvedThemeAdaptationRule, ThemeAdaptations, ThemeGenerativeAxes } from './adaptationTypes.js'
 import type { ColorScaleConfig } from './expandColorScale.js'
 import type { MotionScaleConfig } from './expandMotionScale.js'
@@ -132,6 +133,14 @@ export interface DefineThemeInput<
   name: string
   /** Semantic token overrides. These win over generated values, token by token. */
   tokens?: ThemeTokens
+  /**
+   * Colors made from a few seeds by `themePalette()` from
+   * `@astryx-vue/core/palette`: the color tokens the theme editor maps for its
+   * color settings, and the part styles that keep secondary text readable on
+   * the accent tint, the neutral track and the colored cards. `tokens` and
+   * `components` still win, one by one.
+   */
+  palette?: ThemePalette
   /**
    * Values only this theme family uses, keyed by their exact custom-property
    * name, such as `--brand-ink`. No prefix is added or required.

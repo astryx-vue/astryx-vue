@@ -137,7 +137,7 @@ const expectedCatalog = [
   { slug: 'mobile-nav-toggle', group: 'Navigation', family: 'Navigation', en: 'Mobile Nav Toggle', zh: '移动端导航开关' },
   { slug: 'nav-item', group: 'Navigation', family: 'Navigation', en: 'Nav Item', zh: '导航项' },
   { slug: 'nav-icon', group: 'Navigation', family: 'Navigation', en: 'Nav Icon', zh: '导航图标' },
-  { slug: 'nav-heading-menu', group: 'Navigation', family: 'Navigation', en: 'Nav Heading Menu', zh: '导航标题菜单' },
+  { slug: 'nav-heading-menu', group: 'Navigation', family: 'Navigation', en: 'Nav Heading Menu', zh: '导航标题菜单', isHiddenFromOverview: true },
   { slug: 'nav-menu', group: 'Navigation', family: 'Navigation', en: 'Nav Menu', zh: '导航菜单' },
   { slug: 'pagination', group: 'Navigation', en: 'Pagination', zh: '分页' },
   { slug: 'side-nav', group: 'Navigation', family: 'Navigation', en: 'Side Nav', zh: '侧边导航' },

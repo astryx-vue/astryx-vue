@@ -10,6 +10,17 @@ function press(key: string, modelValue: string): string[][] | undefined {
   return wrapper.emitted<string[]>('update:modelValue')
 }
 
+describe('pickerWheel 的行', () => {
+  it('每行的文字包在自己的元素里：渐隐的倾倒画在它上面，行本身保持不动', () => {
+    const wrapper = mount(PickerWheel, { props: { label: 'Day', options, modelValue: '2' } })
+    const rows = wrapper.findAll('[role="option"]')
+    expect(rows).toHaveLength(30)
+    expect(rows[2]!.get('.astryx-picker-wheel-option-label').text()).toBe('2')
+    expect(rows[2]!.element.children).toHaveLength(1)
+    expect(rows[3]!.attributes('aria-disabled')).toBe('true')
+  })
+})
+
 describe('pickerWheel 的按键', () => {
   it('方向键在可选的行之间走一行，跳过不可选的行', () => {
     expect(press('ArrowDown', '2')).toEqual([['4']])

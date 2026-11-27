@@ -1,4 +1,4 @@
-import type { CatalogEntry, DemoMeta } from './demoMeta'
+import type { CatalogEntry, ComponentDeprecation, DemoMeta } from './demoMeta'
 import type { DocsLocale } from './docs-i18n'
 import type { ComponentGroup } from './groups'
 import type { SidebarItem } from './sidebarTree'
@@ -35,6 +35,11 @@ export function componentName(locale: DocsLocale, slug: ComponentSlug): string {
   return entry === undefined ? slug : entry[locale]
 }
 
+/** 文档里声明了废弃的组件返回它的废弃信息，其余返回 undefined。 */
+export function componentDeprecation(slug: string): ComponentDeprecation | undefined {
+  return COMPONENT_CATALOG.find(item => item.slug === slug)?.deprecated
+}
+
 export interface CatalogGroup {
   id: ComponentGroup
   title: string
@@ -42,15 +47,15 @@ export interface CatalogGroup {
 }
 
 /**
- * The catalog split into the groups it displays, in display order. Empty groups
- * are dropped.
+ * The catalog split into the groups it displays, in display order. Pages marked
+ * `isHiddenFromOverview` and empty groups are dropped.
  */
 export function catalogGroups(locale: DocsLocale): CatalogGroup[] {
   return COMPONENT_GROUPS
     .map(group => ({
       id: group,
       title: GROUP_TITLES[locale][group],
-      entries: COMPONENT_CATALOG.filter(entry => entry.group === group),
+      entries: COMPONENT_CATALOG.filter(entry => entry.group === group && entry.isHiddenFromOverview !== true),
     }))
     .filter(group => group.entries.length > 0)
 }

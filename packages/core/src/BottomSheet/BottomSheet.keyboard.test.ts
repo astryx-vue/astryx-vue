@@ -12,6 +12,7 @@ import { __focusTakeoverCallersForTest } from '../keyboard/focusReveal'
 import { __resetRevealsAtReportForTest } from '../keyboard/sheetKeyboard'
 import { resetDismissStackForTests } from '../layer/dismissStack.js'
 import BottomSheet from './BottomSheet.vue'
+import { resetBottomSheetStackForTests } from './stack/bottomSheetStack.js'
 
 enableAutoUnmount(afterEach)
 
@@ -49,6 +50,7 @@ beforeEach(() => {
 afterEach(() => {
   document.body.innerHTML = ''
   resetDismissStackForTests()
+  resetBottomSheetStackForTests()
   __resetRevealsAtReportForTest()
   vi.unstubAllGlobals()
   vi.restoreAllMocks()
