@@ -24,6 +24,14 @@ function transitionMsFor(element: HTMLElement, property: string): number {
   }, 0)
 }
 
+/** Whether a CSS transition of `property` still runs on `element`. */
+function hasRunningTransition(element: HTMLElement, property: string): boolean {
+  return (element.getAnimations?.() ?? []).some(
+    animation => (animation as Animation & { transitionProperty?: string }).transitionProperty === property
+      && (animation.playState === 'running' || animation.playState === 'paused'),
+  )
+}
+
 /**
  * Calls `complete` when `element` finishes transitioning `property`: on the
  * matching `transitionend`/`transitioncancel`, or on a timer backstop so a
@@ -38,6 +46,7 @@ export function waitForTransition(element: HTMLElement | null, property: 'transf
 
   let done = false
   let timer: ReturnType<typeof setTimeout> | null = null
+  let backstopMs = 0
   let onTransitionEnd: (event: TransitionEvent) => void = () => {}
   const finish = (): void => {
     if (done)
@@ -50,8 +59,18 @@ export function waitForTransition(element: HTMLElement | null, property: 'transf
     complete()
   }
   onTransitionEnd = (event: TransitionEvent): void => {
-    if (event.target === element && event.propertyName === property)
-      finish()
+    if (event.target !== element || event.propertyName !== property)
+      return
+    // 引擎会取消终点在途中改变的过渡：百分比 transform 遇到收尾那一帧让高度差零点几像素就是这样。
+    // 接替它的过渡会从当前位置接着滑，那是同一段运动没结束，不是被取消。
+    if (event.type === 'transitioncancel' && hasRunningTransition(element, property)) {
+      if (timer != null) {
+        clearTimeout(timer)
+        timer = setTimeout(finish, backstopMs)
+      }
+      return
+    }
+    finish()
   }
 
   const duration = transitionMsFor(element, property)
@@ -62,7 +81,8 @@ export function waitForTransition(element: HTMLElement | null, property: 'transf
 
   element.addEventListener('transitionend', onTransitionEnd)
   element.addEventListener('transitioncancel', onTransitionEnd)
-  timer = setTimeout(finish, duration + BACKSTOP_BUFFER_MS)
+  backstopMs = duration + BACKSTOP_BUFFER_MS
+  timer = setTimeout(finish, backstopMs)
   return () => {
     if (timer != null)
       clearTimeout(timer)

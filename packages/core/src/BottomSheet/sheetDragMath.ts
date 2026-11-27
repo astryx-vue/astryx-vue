@@ -18,6 +18,31 @@ const OVERSCROLL_RESISTANCE = 0.35
 const OVERSCROLL_MAX = 48
 const VELOCITY_WINDOW_MS = 100
 
+/**
+ * Whether a gesture that lands on `target` began inside another layer rendered
+ * in this sheet's content: a `<dialog>` between the target and the body.
+ * A sheet or Dialog opened from inside a sheet renders its dialog as a
+ * descendant of the host's body, so its pointer and touch events bubble
+ * through the host's listeners. That gesture is the layer's own: the host
+ * neither arms a drag on it nor takes the pointer for it.
+ */
+export function isInsideNestedLayer(target: EventTarget | null, body: HTMLElement): boolean {
+  for (
+    let element = target instanceof Element ? target : null;
+    element != null && element !== body;
+    element = element.parentElement
+  ) {
+    if (element.localName === 'dialog')
+      return true
+  }
+  return false
+}
+
+/** Scroll edges a body gesture may arm on, or `null` when the gesture belongs to a nested layer. */
+export function armingEdges(body: HTMLElement, target: EventTarget | null): ReturnType<typeof blockScrollEdges> | null {
+  return isInsideNestedLayer(target, body) ? null : blockScrollEdges(body, target)
+}
+
 export interface VelocitySample {
   y: number
   t: number

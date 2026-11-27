@@ -35,7 +35,8 @@ describe('date-input.css', () => {
     expect(Math.max(media, combined)).toBeGreaterThanOrEqual(0)
   })
 
-  it('底部面板第一行落在抓手条下面', () => {
-    expect(css).toContain('calc(var(--astryx-spacing-6, 24px) - var(--container-padding-block-start, 0px))')
+  it('抓手条下面的 24px 由底部面板自己留，选择面板不再补', () => {
+    expect(css).not.toContain('calc(var(--astryx-spacing-6, 24px) - var(--container-padding-block-start, 0px))')
+    expect(block('.astryx-date-time-touch-tabs', css.indexOf('.astryx-date-touch,\n  .astryx-time-touch,\n  .astryx-date-time-touch-tabs {'))).toContain('padding-block-start: 0')
   })
 })
