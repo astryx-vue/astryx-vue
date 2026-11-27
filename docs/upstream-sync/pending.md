@@ -7859,17 +7859,23 @@
 
 ### v0.7.2
 
-- [ ] [`59c4ef79b`](https://github.com/meta/astryx/commit/59c4ef79b) fix(Markdown): give the frontmatter parser a plain fields record (#7620)
-- [ ] [`962800ced`](https://github.com/meta/astryx/commit/962800ced) feat(Markdown): tables draw a line on every cell edge (#7576)
-- [ ] [`493231799`](https://github.com/meta/astryx/commit/493231799) fix(cli): search finds compound names typed as words, other libraries' names, and verb forms (#7718)
-- [ ] [`5fb597d93`](https://github.com/meta/astryx/commit/5fb597d93) fix(core): build Unicode property regexes at runtime (#7767)
+- [x] [`59c4ef79b`](https://github.com/meta/astryx/commit/59c4ef79b) fix(Markdown): give the frontmatter parser a plain fields record (#7620)
+  - Vue 版已有：frontmatter 读取已用 Object.fromEntries 造普通对象，parserPublic.test.ts 有「原样接受解码后的字段记录」的测试
+- [x] [`962800ced`](https://github.com/meta/astryx/commit/962800ced) feat(Markdown): tables draw a line on every cell edge (#7576)
+  - Vue 版已有：Markdown 表格行线、列线加外沿已在 markdown.css，tableBorders.test.ts 守着；富文本表格同样由 richtext-document.css 和 tableBorders.test.ts 覆盖
+- [x] [`493231799`](https://github.com/meta/astryx/commit/493231799) fix(cli): search finds compound names typed as words, other libraries' names, and verb forms (#7718)
+  - 已移植：[#514](https://github.com/astryx-vue/astryx-vue/pull/514)。CLI 搜索收录别家叫法与常见图标名，动词只折叠进行时
+- [x] [`5fb597d93`](https://github.com/meta/astryx/commit/5fb597d93) fix(core): build Unicode property regexes at runtime (#7767)
+  - 已移植：[#508](https://github.com/astryx-vue/astryx-vue/pull/508)。Unicode 属性正则改在运行时构造，有扫描测试守住；#634 新增的块方向分类器也用 unicodeRegExp
 
 ### v0.7.3
 
 - [x] [`b0981237c`](https://github.com/meta/astryx/commit/b0981237c) spec(Markdown): clarify per-list counter indentation (#7760)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`a4e3f131a`](https://github.com/meta/astryx/commit/a4e3f131a) perf(Markdown): reuse the rendered document when a re-render changes nothing it reads (#7873)
-- [ ] [`29f09ee06`](https://github.com/meta/astryx/commit/29f09ee06) perf(CodeBlock): insert ::highlight() rules before the commit's layout reads (#7875)
+- [x] [`a4e3f131a`](https://github.com/meta/astryx/commit/a4e3f131a) perf(Markdown): reuse the rendered document when a re-render changes nothing it reads (#7873)
+  - Vue 版已有：Markdown.vue 输入没变就复用上次渲染的节点（sameInputs），Markdown.rerender.test.ts 守着
+- [x] [`29f09ee06`](https://github.com/meta/astryx/commit/29f09ee06) perf(CodeBlock): insert ::highlight() rules before the commit's layout reads (#7875)
+  - 不适用：上游是 React 提交前插入 ::highlight() 样式的时机；Vue 版静态规则在 code.css 里，只有自定义 token 类型才运行时插规则
 - [x] [`da1020b26`](https://github.com/meta/astryx/commit/da1020b26) test(markdown): alternate the range-scaling benchmark's two sides (#7916)
   - 不适用：只改上游测试（自动初筛）
 
@@ -7877,22 +7883,30 @@
 
 - [x] [`524564aed`](https://github.com/meta/astryx/commit/524564aed) docs(spec): CodeBlock caller controls beside Copy (endContent); controls never cover code; one-line blocks are one row (#8112)
   - 不适用：上游内部规范和架构文档、上游组件规范文档（自动初筛）
-- [ ] [`c19b5e326`](https://github.com/meta/astryx/commit/c19b5e326) fix(CodeBlock): the headerless Copy button never covers code (#8101)
-- [ ] [`01e47f5d0`](https://github.com/meta/astryx/commit/01e47f5d0) feat(CodeBlock): endContent places caller controls beside Copy (#8285)
+- [x] [`c19b5e326`](https://github.com/meta/astryx/commit/c19b5e326) fix(CodeBlock): the headerless Copy button never covers code (#8101)
+  - 已移植：[#634](https://github.com/astryx-vue/astryx-vue/pull/634)。没有标题栏时复制按钮排在代码右边自己的一列、与第一行居中；富文本没写语言的代码块在右边留出同宽的一列，补测试
+- [x] [`01e47f5d0`](https://github.com/meta/astryx/commit/01e47f5d0) feat(CodeBlock): endContent places caller controls beside Copy (#8285)
+  - 已移植：[#634](https://github.com/astryx-vue/astryx-vue/pull/634)。CodeBlock 新增 endContent 插槽，控件在复制按钮前面，不创建标题栏、在折叠控件之外，空插槽按没有算，补测试
 - [x] [`39b598191`](https://github.com/meta/astryx/commit/39b598191) docs(spec): CodeBlock native language set by use, plus importable language modules under one provider (#8286)
   - 不适用：上游内部规范和架构文档、上游组件规范文档（自动初筛）
-- [ ] [`76d9634e3`](https://github.com/meta/astryx/commit/76d9634e3) test(Markdown): time FR23 windows on the main thread's CPU clock (#8278)
+- [x] [`76d9634e3`](https://github.com/meta/astryx/commit/76d9634e3) test(Markdown): time FR23 windows on the main thread's CPU clock (#8278)
+  - 不适用：上游给 Markdown 性能窗口计时用的 CPU 时钟测试设施，Vue 版没有这套基准
 - [x] [`174300fcb`](https://github.com/meta/astryx/commit/174300fcb) ci: discover PR browser accessibility specs, so a new spec needs no workflow edit (#8367)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`6322d94db`](https://github.com/meta/astryx/commit/6322d94db) docs(spec): CodeBlock languages are per-language modules passed as the language; no provider (#8429)
   - 不适用：上游内部规范和架构文档、上游组件规范文档（自动初筛）
-- [ ] [`4adaeda93`](https://github.com/meta/astryx/commit/4adaeda93) feat(CodeBlock): built-in C, C++, SQL, Rust, Kotlin, Swift, Go; per-language values passed as language; createCodeLanguage (#8333)
-- [ ] [`fabf5e699`](https://github.com/meta/astryx/commit/fabf5e699) feat(Markdown, RichText, DiffViewer): codeLanguages lists CodeBlock language values (#8489)
-- [ ] [`79a7a902b`](https://github.com/meta/astryx/commit/79a7a902b) feat(CodeBlock, cli): deprecate tokenizer in favour of a custom language value; astryx upgrade rewrites it (#8490)
+- [x] [`4adaeda93`](https://github.com/meta/astryx/commit/4adaeda93) feat(CodeBlock): built-in C, C++, SQL, Rust, Kotlin, Swift, Go; per-language values passed as language; createCodeLanguage (#8333)
+  - 已移植：[#636](https://github.com/astryx-vue/astryx-vue/pull/636)。CodeBlock 新增 C、C++、SQL、Rust、Kotlin、Swift、Go，按需引入的 9 个语言模块，createCodeLanguage，language 接受语言值，补测试；上游打包体积预算测试没搬
+- [x] [`fabf5e699`](https://github.com/meta/astryx/commit/fabf5e699) feat(Markdown, RichText, DiffViewer): codeLanguages lists CodeBlock language values (#8489)
+  - 已移植：[#636](https://github.com/astryx-vue/astryx-vue/pull/636)。Markdown、RichTextEditor、RichTextView 新增 codeLanguages，围栏词命中语言值时按它渲染、标题栏显示它的名字；DiffViewer 部分不适用（Vue 的 lab 没有 DiffViewer）
+- [x] [`79a7a902b`](https://github.com/meta/astryx/commit/79a7a902b) feat(CodeBlock, cli): deprecate tokenizer in favour of a custom language value; astryx upgrade rewrites it (#8490)
+  - 已移植：[#636](https://github.com/astryx-vue/astryx-vue/pull/636)。tokenizer 标为已弃用并指向 createCodeLanguage，文档同步；随它发的改写代码的 codemod 不适用，Vue 的 upgrade 只读不改写
 - [x] [`423ebd18d`](https://github.com/meta/astryx/commit/423ebd18d) docs(spec): Code records its shipped contract as current (#8573)
   - 不适用：上游组件规范文档（自动初筛）
-- [ ] [`b84bf77fa`](https://github.com/meta/astryx/commit/b84bf77fa) chore: move project links to meta/astryx (#8827)
-- [ ] [`76cd3b89e`](https://github.com/meta/astryx/commit/76cd3b89e) fix(List): keep numbered markers whole and sibling text aligned (#7650)
+- [x] [`b84bf77fa`](https://github.com/meta/astryx/commit/b84bf77fa) chore: move project links to meta/astryx (#8827)
+  - 不适用：上游把项目链接迁到 meta/astryx 的 README 和集成脚本改动，Vue 仓库的链接不同
+- [x] [`76cd3b89e`](https://github.com/meta/astryx/commit/76cd3b89e) fix(List): keep numbered markers whole and sibling text aligned (#7650)
+  - 已移植：[#611](https://github.com/astryx-vue/astryx-vue/pull/611)。有序列表标记保持完整、同级文字对齐，由列表族完成
 
 ### v0.7.6
 
@@ -7900,9 +7914,12 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`71199c40f`](https://github.com/meta/astryx/commit/71199c40f) test(CodeBlock): the copy-clearance contract measures only after the story re-renders with its args (#9119)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`3e735de86`](https://github.com/meta/astryx/commit/3e735de86) fix(core A–M): slots use isRenderable; the remaining checks are allowed with a reason (#9204)
-- [ ] [`e0a03766d`](https://github.com/meta/astryx/commit/e0a03766d) docs(knowledge): every component spec lives in docs/specs/components, one folder per component (#9007)
-- [ ] [`c9f16ef38`](https://github.com/meta/astryx/commit/c9f16ef38) fix(CodeBlock): the collapsed disclosure chevron mirrors in RTL (#9294)
+- [x] [`3e735de86`](https://github.com/meta/astryx/commit/3e735de86) fix(core A–M): slots use isRenderable; the remaining checks are allowed with a reason (#9204)
+  - 不适用：上游在 Markdown.tsx 只加了一条 eslint 注释（React 的判空规则），其余在别的组件
+- [x] [`e0a03766d`](https://github.com/meta/astryx/commit/e0a03766d) docs(knowledge): every component spec lives in docs/specs/components, one folder per component (#9007)
+  - 不适用：上游规范文档搬目录，不是用户可见行为
+- [x] [`c9f16ef38`](https://github.com/meta/astryx/commit/c9f16ef38) fix(CodeBlock): the collapsed disclosure chevron mirrors in RTL (#9294)
+  - 已移植：[#634](https://github.com/astryx-vue/astryx-vue/pull/634)。折叠箭头在 RTL 下镜像，镜像放在外层盒子上让图标自己的旋转动画不受影响，补样式测试
 - [x] [`99cc6dc85`](https://github.com/meta/astryx/commit/99cc6dc85) fix(core): many components carry only the English for their own strings (#9429)
   - 已移植：[#515](https://github.com/astryx-vue/astryx-vue/pull/515)。组件只按自己的命名空间读内置文案
 
@@ -7913,7 +7930,8 @@
 
 ### v0.7.8
 
-- [ ] [`a3dab7afd`](https://github.com/meta/astryx/commit/a3dab7afd) feat(codeblock): add startLineNumber prop for excerpts (#8854)
+- [x] [`a3dab7afd`](https://github.com/meta/astryx/commit/a3dab7afd) feat(codeblock): add startLineNumber prop for excerpts (#8854)
+  - 已移植：[#634](https://github.com/astryx-vue/astryx-vue/pull/634)。CodeBlock 新增 startLineNumber，行号槽和 highlightLines 按文件里的真实行号，小于 1 按 1，补测试
 - [x] [`9889a3438`](https://github.com/meta/astryx/commit/9889a3438) chore(core): name the system that 88 kept Effects sync (#9787)
   - 不适用：只给 React useEffect 加注释
 - [x] [`e390c3c43`](https://github.com/meta/astryx/commit/e390c3c43) test(browser): keep every Playwright browser context off remote hosts (#9811)
@@ -7929,20 +7947,26 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`76298e415`](https://github.com/meta/astryx/commit/76298e415) test(vitest): run the FR23 benchmark alone in a later project group (#9948)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`bf743545e`](https://github.com/meta/astryx/commit/bf743545e) fix(Markdown): GFM autolink parses long text in linear time (#9990)
+- [x] [`bf743545e`](https://github.com/meta/astryx/commit/bf743545e) fix(Markdown): GFM autolink parses long text in linear time (#9990)
+  - Vue 版已有：Markdown 的 GFM 自动链接解析本来就是线性（10 万字符约 60 毫秒）；#634 补了防退化的性能测试
 - [x] [`3b8d81fd0`](https://github.com/meta/astryx/commit/3b8d81fd0) spec: record component icon slots in CodeBlock, Timestamp, and Table (#10045)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`98efdf183`](https://github.com/meta/astryx/commit/98efdf183) feat(Icon): a theme maps a component's own icon role by slot, starting with CodeBlock's copy button (#9828)
+- [x] [`98efdf183`](https://github.com/meta/astryx/commit/98efdf183) feat(Icon): a theme maps a component's own icon role by slot, starting with CodeBlock's copy button (#9828)
+  - 已移植：[#502](https://github.com/astryx-vue/astryx-vue/pull/502)。defineTheme({componentIcons}) 与 ComponentIcon，CodeBlock 复制按钮走图标槽位
 
 ### v0.7.10
 
-- [ ] [`27211b797`](https://github.com/meta/astryx/commit/27211b797) fix(Code): reflect size on the code theme target (#10186)
-- [ ] [`f81f09df3`](https://github.com/meta/astryx/commit/f81f09df3) fix(CodeBlock, Carousel): the code viewport and the scroller draw the shared focus ring (#8875)
+- [x] [`27211b797`](https://github.com/meta/astryx/commit/27211b797) fix(Code): reflect size on the code theme target (#10186)
+  - Vue 版已有：Code.vue 的 data-size 在 size 为 inherit 时反映到元素上，没传时不写，Code.test.ts 有测试
+- [x] [`f81f09df3`](https://github.com/meta/astryx/commit/f81f09df3) fix(CodeBlock, Carousel): the code viewport and the scroller draw the shared focus ring (#8875)
+  - 已移植：[#498](https://github.com/astryx-vue/astryx-vue/pull/498)。CodeBlock 视口用共享焦点环
 
 ### v0.7.11
 
-- [ ] [`66b09526b`](https://github.com/meta/astryx/commit/66b09526b) fix(core): a swizzled copy type-checks without Node's types (#10252)
-- [ ] [`5a323635e`](https://github.com/meta/astryx/commit/5a323635e) fix(core): CodeBlock says when a copy fails (#10272)
+- [x] [`66b09526b`](https://github.com/meta/astryx/commit/66b09526b) fix(core): a swizzled copy type-checks without Node's types (#10252)
+  - 不适用：给拷贝（swizzle）出的 React 源文件补 Node 类型声明，Vue 版没有这条链路
+- [x] [`5a323635e`](https://github.com/meta/astryx/commit/5a323635e) fix(core): CodeBlock says when a copy fails (#10272)
+  - 已移植：[#550](https://github.com/astryx-vue/astryx-vue/pull/550)。CodeBlock 复制失败时按钮变叉、名字和播报说明失败，新增 copyFailedLabel、copyError
 - [x] [`652f51e19`](https://github.com/meta/astryx/commit/652f51e19) spec(AST-061): a prose block reads the way its own text reads, on Markdown and RichText (#9860)
   - 不适用：上游内部规范和架构文档（自动初筛）
 
@@ -7950,9 +7974,12 @@
 
 - [x] [`422440a64`](https://github.com/meta/astryx/commit/422440a64) fix(core): two copies of Core's modules share one React context (#10233)
   - 不适用：React context 多副本问题
-- [ ] [`b8cc3f41e`](https://github.com/meta/astryx/commit/b8cc3f41e) fix(Markdown): each prose block lays out in its own text's direction (#10293)
-- [ ] [`62bc7a2fe`](https://github.com/meta/astryx/commit/62bc7a2fe) fix(core): a swizzled copy shares the animated-layout, code-language and snap-paging brands (#10576)
-- [ ] [`f09230814`](https://github.com/meta/astryx/commit/f09230814) fix(core): a swizzled Outline type-checks against the package's Markdown plugins (#10641)
+- [x] [`b8cc3f41e`](https://github.com/meta/astryx/commit/b8cc3f41e) fix(Markdown): each prose block lays out in its own text's direction (#10293)
+  - 已移植：[#634](https://github.com/astryx-vue/astryx-vue/pull/634)。core Markdown 的块方向已移植；这条在富文本里只涉及 editorTheme 的方向注释和浏览器规格，富文本按块写方向见 2ff1afc9f（暂缓）
+- [x] [`62bc7a2fe`](https://github.com/meta/astryx/commit/62bc7a2fe) fix(core): a swizzled copy shares the animated-layout, code-language and snap-paging brands (#10576)
+  - 不适用：拷贝（swizzle）出的组件共享品牌值（animated-layout、code-language、snap-paging），Vue 版没有这条链路
+- [x] [`f09230814`](https://github.com/meta/astryx/commit/f09230814) fix(core): a swizzled Outline type-checks against the package's Markdown plugins (#10641)
+  - 不适用：拷贝出的 Outline 对 Markdown 插件的类型检查，Vue 版没有这条链路
 - [x] [`1ff81c7a9`](https://github.com/meta/astryx/commit/1ff81c7a9) docs(richtext): in-place editing keeps the reading width, so the switch does not reflow (#10429)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`6caeec86c`](https://github.com/meta/astryx/commit/6caeec86c) fix(useClipboard): a failed copy is announced assertively (#10448)
@@ -7962,7 +7989,8 @@
 
 ### v0.7.13
 
-- [ ] [`d130dffdc`](https://github.com/meta/astryx/commit/d130dffdc) fix(Markdown): the public parser drops every data: URL; <Markdown> renders data: links and images as source text (#11020)
+- [x] [`d130dffdc`](https://github.com/meta/astryx/commit/d130dffdc) fix(Markdown): the public parser drops every data: URL; <Markdown> renders data: links and images as source text (#11020)
+  - 已移植：[#634](https://github.com/astryx-vue/astryx-vue/pull/634)。解析器把所有 data: 链接和图片留作源码文字，补测试；textTransform 和 Remark 适配部分 Vue 版没有这两套 API
 
 ### v0.7.14
 
@@ -7970,40 +7998,60 @@
   - 不适用：React Server Components 的 use client 指令
 - [x] [`61b537db5`](https://github.com/meta/astryx/commit/61b537db5) docs(spec): RichText offers opt-in document affordances (AST-106) (#8576)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`64b8d1411`](https://github.com/meta/astryx/commit/64b8d1411) fix(core): a package fence plugin renders its node in a swizzled Markdown (AST-110 FR3) (#11167)
+- [x] [`64b8d1411`](https://github.com/meta/astryx/commit/64b8d1411) fix(core): a package fence plugin renders its node in a swizzled Markdown (AST-110 FR3) (#11167)
+  - 不适用：拷贝出的 Markdown 里包内围栏插件的渲染，Vue 版没有拷贝（swizzle）
 
 ### v0.7.15
 
-- [ ] [`6fcf17c3e`](https://github.com/meta/astryx/commit/6fcf17c3e) test(Markdown): pin why the streaming fade refs are harmless (#10939)
+- [x] [`6fcf17c3e`](https://github.com/meta/astryx/commit/6fcf17c3e) test(Markdown): pin why the streaming fade refs are harmless (#10939)
+  - 不适用：上游是 React 流式淡入 ref 的测试和说明，Vue 版渲染机制不同
 
 ### v0.7.16
 
-- [ ] [`aeefe4be3`](https://github.com/meta/astryx/commit/aeefe4be3) perf(core): Markdown checks required substrings in one pass (#11403)
-- [ ] [`3913454f1`](https://github.com/meta/astryx/commit/3913454f1) test(Markdown): a discarded streamed render never shows its text (#10909)
+- [x] [`aeefe4be3`](https://github.com/meta/astryx/commit/aeefe4be3) perf(core): Markdown checks required substrings in one pass (#11403)
+  - 不适用：createMarkdownTextTransform 的 requiredSubstrings 一次扫描优化；Vue 版没有文字转换插件 API
+- [x] [`3913454f1`](https://github.com/meta/astryx/commit/3913454f1) test(Markdown): a discarded streamed render never shows its text (#10909)
+  - 不适用：上游是 React 并发渲染丢弃一次流式渲染后不露出文字的测试
 
 ### v0.7.17
 
-- [ ] [`4da09b8d6`](https://github.com/meta/astryx/commit/4da09b8d6) docs(useSyntaxTheme): add hook docs and a keyword color example block (#11236)
-- [ ] [`8d68f1b8a`](https://github.com/meta/astryx/commit/8d68f1b8a) [Component Audit] Markdown: docs say when an image shows its alt text and what renderers must sanitize (#11383)
-- [ ] [`a2b5fe486`](https://github.com/meta/astryx/commit/a2b5fe486) fix(CodeBlock): the run-time highlight stylesheet sits in the astryx-base layer, so theme and app syntax colours win (#11691)
-- [ ] [`cd3ed29d0`](https://github.com/meta/astryx/commit/cd3ed29d0) fix(CodeBlock): a long line, or code past maxHeight, scrolls before script runs and in a page that runs none (#11970)
-- [ ] [`e51ed92f6`](https://github.com/meta/astryx/commit/e51ed92f6) fix(Theme): a system Theme takes the page's color scheme, and Core's stylesheet sets the root to follow the reader (#12102)
-- [ ] [`0b4760560`](https://github.com/meta/astryx/commit/0b4760560) fix(core): CodeBlock and Code keep code in its own direction on right-to-left pages (#12130)
+- [x] [`4da09b8d6`](https://github.com/meta/astryx/commit/4da09b8d6) docs(useSyntaxTheme): add hook docs and a keyword color example block (#11236)
+  - 已移植  #623：[#620](https://github.com/astryx-vue/astryx-vue/pull/620)。useSyntaxTheme 文档页和关键字颜色示例
+- [x] [`8d68f1b8a`](https://github.com/meta/astryx/commit/8d68f1b8a) [Component Audit] Markdown: docs say when an image shows its alt text and what renderers must sanitize (#11383)
+  - 已移植：[#634](https://github.com/astryx-vue/astryx-vue/pull/634)。Markdown 文档补空地址图片、不净化自定义渲染器输出、link 渲染器不收 onLinkClick 的说明；空地址图片显示方括号里的替代文字，补测试
+- [x] [`a2b5fe486`](https://github.com/meta/astryx/commit/a2b5fe486) fix(CodeBlock): the run-time highlight stylesheet sits in the astryx-base layer, so theme and app syntax colours win (#11691)
+  - 已移植：[#634](https://github.com/astryx-vue/astryx-vue/pull/634)。运行时为自定义 token 类型插入的高亮规则放进 astryx.components 层，主题和应用的语法色能覆盖，补测试
+- [x] [`cd3ed29d0`](https://github.com/meta/astryx/commit/cd3ed29d0) fix(CodeBlock): a long line, or code past maxHeight, scrolls before script runs and in a page that runs none (#11970)
+  - Vue 版已有：CodeBlock 的滚动区靠 code.css 的 overflow: auto，没有脚本也能滚动长行和 maxHeight 之外的代码
+- [x] [`e51ed92f6`](https://github.com/meta/astryx/commit/e51ed92f6) fix(Theme): a system Theme takes the page's color scheme, and Core's stylesheet sets the root to follow the reader (#12102)
+  - 不适用：Vue 的 SyntaxTheme 用 CSS light-dark() 跟随所在元素的 color-scheme，不读 prefers-color-scheme，没有这条判断可改
+- [x] [`0b4760560`](https://github.com/meta/astryx/commit/0b4760560) fix(core): CodeBlock and Code keep code in its own direction on right-to-left pages (#12130)
+  - 已移植：[#634](https://github.com/astryx-vue/astryx-vue/pull/634)。代码在 RTL 页面保持自己的方向：视口固定 ltr、每行 dir=auto、行号栏跟页面方向，行内 Code 默认 dir=ltr 可被覆盖，补测试
 - [x] [`2ff1afc9f`](https://github.com/meta/astryx/commit/2ff1afc9f) fix(richtext): text reads the way it is written, in either document direction (#7723)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`d6ac73ef3`](https://github.com/meta/astryx/commit/d6ac73ef3) chore: land batch 4 (12 pull requests) (#12738)
-- [ ] [`8688c1885`](https://github.com/meta/astryx/commit/8688c1885) chore: land batch 6 (11 pull requests) (#12812)
-- [ ] [`9e445ba0d`](https://github.com/meta/astryx/commit/9e445ba0d) chore: land batch 15 (5 pull requests) (#12859)
-- [ ] [`53615c1f4`](https://github.com/meta/astryx/commit/53615c1f4) chore: land batch 19 (3 pull requests) (#12875)
-- [ ] [`8efb25a85`](https://github.com/meta/astryx/commit/8efb25a85) chore: land batch 23 (4 pull requests) (#12885)
-- [ ] [`31b52d0cb`](https://github.com/meta/astryx/commit/31b52d0cb) chore: land batch 34 (2 pull requests) (#12908)
-- [ ] [`81458c4b1`](https://github.com/meta/astryx/commit/81458c4b1) chore: land batch 60 (4 pull requests) (#12939)
-- [ ] [`1f48950f9`](https://github.com/meta/astryx/commit/1f48950f9) chore: land batch 67 (7 pull requests) (#12957)
+- [x] [`d6ac73ef3`](https://github.com/meta/astryx/commit/d6ac73ef3) chore: land batch 4 (12 pull requests) (#12738)
+  - 已移植：[#510](https://github.com/astryx-vue/astryx-vue/pull/510)。CodeBlock 缺 code 报错等六处
+- [x] [`8688c1885`](https://github.com/meta/astryx/commit/8688c1885) chore: land batch 6 (11 pull requests) (#12812)
+  - 已移植：[#634](https://github.com/astryx-vue/astryx-vue/pull/634)。Markdown 列表不再向两侧外扩 8px，行内不留左右边距，补样式测试；批次里其他条目属别族
+- [x] [`9e445ba0d`](https://github.com/meta/astryx/commit/9e445ba0d) chore: land batch 15 (5 pull requests) (#12859)
+  - 已移植：[#634](https://github.com/astryx-vue/astryx-vue/pull/634)。Markdown 任务列表同样待在正文这一栏里（与上一条同一处样式）；批次里其他条目属别族
+- [x] [`53615c1f4`](https://github.com/meta/astryx/commit/53615c1f4) chore: land batch 19 (3 pull requests) (#12875)
+  - Vue 版已有：CodeBlock 代码区本来就按字号角色取行高（code.css 的 __code 与 sm 档），文字角色行高由 #508 #584 #587 做完
+- [x] [`8efb25a85`](https://github.com/meta/astryx/commit/8efb25a85) chore: land batch 23 (4 pull requests) (#12885)
+  - 已移植：[#634](https://github.com/astryx-vue/astryx-vue/pull/634)。手机（粗指针）上 CodeBlock 横向能滚时藏着内容的一侧淡出，接入 useScrollableArea 的滚动状态，补样式测试；批次里其他条目属别族
+- [x] [`31b52d0cb`](https://github.com/meta/astryx/commit/31b52d0cb) chore: land batch 34 (2 pull requests) (#12908)
+  - Vue 版已有：Markdown 表格单元格本来不压缩列宽、不拆单词（markdown.css 的列宽下限），Table 的手写行列滚动由 #539 做完
+- [x] [`81458c4b1`](https://github.com/meta/astryx/commit/81458c4b1) chore: land batch 60 (4 pull requests) (#12939)
+  - 暂缓：富文本代码块标题栏的长标签换行并量出标题栏自己的高度（observeResize 写 CSS 变量）本轮没做；CodeBlock 部分见下方 #634 的那一行
+  - 已移植：[#634](https://github.com/astryx-vue/astryx-vue/pull/634)。CodeBlock 长标题在标题栏里换行，不压到右边的控件底下，补样式测试；批次里其他条目属别族，富文本标题栏部分见上方暂缓那一行
+- [x] [`1f48950f9`](https://github.com/meta/astryx/commit/1f48950f9) chore: land batch 67 (7 pull requests) (#12957)
+  - 已移植：[#620](https://github.com/astryx-vue/astryx-vue/pull/620)。SyntaxTheme 缺 theme 时开发期点名报错；Markdown 的内容可来自 content 或默认插槽、没有必填 children，不适用
 - [x] [`e7f5815c3`](https://github.com/meta/astryx/commit/e7f5815c3) fix(core): six components' fixed-English built-in text follows the locale; the hardcoded-string lint config has no exemption list and reports a stale entry (#12721)
   - 已移植：[#610](https://github.com/astryx-vue/astryx-vue/pull/610)。相对日期改为固定选项（桌面编辑器改用 Selector），新增 powerSearchSheet 文案命名空间
 - [x] [`d8ed55621`](https://github.com/meta/astryx/commit/d8ed55621) spec(AST-017): Charts may import Core's internal subpaths (#12779)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`66b2932af`](https://github.com/meta/astryx/commit/66b2932af) fix(Markdown): a heading copy link shows and announces a failed copy (#10424)
+- [x] [`66b2932af`](https://github.com/meta/astryx/commit/66b2932af) fix(Markdown): a heading copy link shows and announces a failed copy (#10424)
+  - 不适用：Vue 的 Markdown 标题锚点是普通页内链接（#），没有复制链接按钮和剪贴板写入，没有失败提示可改
 
 ## 菜单家族（area:core）
 
@@ -9481,12 +9529,14 @@
 
 ### v0.7.2
 
-- [ ] [`bf9132726`](https://github.com/meta/astryx/commit/bf9132726) fix(richtext): document the four RichTextEditor props its doc file omitted (#7610)
+- [x] [`bf9132726`](https://github.com/meta/astryx/commit/bf9132726) fix(richtext): document the four RichTextEditor props its doc file omitted (#7610)
+  - Vue 版已有：RichTextEditor 属性页（apps/docs 中英 props.md）本来就写了 isOptional、isRequired、labelTooltip、namespace
 - [x] [`ccf1a1cfc`](https://github.com/meta/astryx/commit/ccf1a1cfc) spec(AST-080): prebuilt stylesheets stay the default; a source build compiles the same way (#7624)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`1279007eb`](https://github.com/meta/astryx/commit/1279007eb) test(richtext): give the playground an image plugin (#7579)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`962800ced`](https://github.com/meta/astryx/commit/962800ced) feat(Markdown): tables draw a line on every cell edge (#7576)
+- [x] [`962800ced`](https://github.com/meta/astryx/commit/962800ced) feat(Markdown): tables draw a line on every cell edge (#7576)
+  - Vue 版已有：Markdown 表格行线、列线加外沿已在 markdown.css，tableBorders.test.ts 守着；富文本表格同样由 richtext-document.css 和 tableBorders.test.ts 覆盖
 
 ### v0.7.3
 
@@ -9497,7 +9547,8 @@
 
 - [x] [`f574bd001`](https://github.com/meta/astryx/commit/f574bd001) spec(AST-080): every PR reports component size; touch-only JS and CSS have a budget (#8271)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`c19b5e326`](https://github.com/meta/astryx/commit/c19b5e326) fix(CodeBlock): the headerless Copy button never covers code (#8101)
+- [x] [`c19b5e326`](https://github.com/meta/astryx/commit/c19b5e326) fix(CodeBlock): the headerless Copy button never covers code (#8101)
+  - 已移植：[#634](https://github.com/astryx-vue/astryx-vue/pull/634)。没有标题栏时复制按钮排在代码右边自己的一列、与第一行居中；富文本没写语言的代码块在右边留出同宽的一列，补测试
 - [x] [`01e47f5d0`](https://github.com/meta/astryx/commit/01e47f5d0) feat(CodeBlock): endContent places caller controls beside Copy (#8285)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`174300fcb`](https://github.com/meta/astryx/commit/174300fcb) ci: discover PR browser accessibility specs, so a new spec needs no workflow edit (#8367)
@@ -9506,10 +9557,12 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`b298b37d1`](https://github.com/meta/astryx/commit/b298b37d1) feat(theme): add surface-specific status color roles (#7657)
   - 已移植：[#517](https://github.com/astryx-vue/astryx-vue/pull/517)。core 新增默认状态色表，组件改读正确的状态角色
-- [ ] [`fabf5e699`](https://github.com/meta/astryx/commit/fabf5e699) feat(Markdown, RichText, DiffViewer): codeLanguages lists CodeBlock language values (#8489)
+- [x] [`fabf5e699`](https://github.com/meta/astryx/commit/fabf5e699) feat(Markdown, RichText, DiffViewer): codeLanguages lists CodeBlock language values (#8489)
+  - 已移植：[#636](https://github.com/astryx-vue/astryx-vue/pull/636)。Markdown、RichTextEditor、RichTextView 新增 codeLanguages，围栏词命中语言值时按它渲染、标题栏显示它的名字；DiffViewer 部分不适用（Vue 的 lab 没有 DiffViewer）
 - [x] [`c115ceeea`](https://github.com/meta/astryx/commit/c115ceeea) architecture: touch behavior comes from shared internal modules; Core and Lab reach them through ./internal/* (INV13) (#8464)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`b84bf77fa`](https://github.com/meta/astryx/commit/b84bf77fa) chore: move project links to meta/astryx (#8827)
+- [x] [`b84bf77fa`](https://github.com/meta/astryx/commit/b84bf77fa) chore: move project links to meta/astryx (#8827)
+  - 不适用：上游把项目链接迁到 meta/astryx 的 README 和集成脚本改动，Vue 仓库的链接不同
 - [x] [`76cd3b89e`](https://github.com/meta/astryx/commit/76cd3b89e) fix(List): keep numbered markers whole and sibling text aligned (#7650)
   - 不适用：只改上游测试（自动初筛）
 
@@ -9521,7 +9574,8 @@
   - 不适用：上游 API 报告（自动初筛）
 - [x] [`8f345cba4`](https://github.com/meta/astryx/commit/8f345cba4) feat(FieldStatus): deprecate the tooltip variant; field controls keep statusVariant="tooltip" (#9196)
   - 已移植：[#593](https://github.com/astryx-vue/astryx-vue/pull/593)。导出 FieldStatusPlacement，字段控件的 statusVariant 改用它；Vue 版 FieldStatus 本来就没有 tooltip 变体
-- [ ] [`66d66876e`](https://github.com/meta/astryx/commit/66d66876e) fix(richtext): toolbar slots use isRenderable; the nullish-guard baseline is deleted (#9265)
+- [x] [`66d66876e`](https://github.com/meta/astryx/commit/66d66876e) fix(richtext): toolbar slots use isRenderable; the nullish-guard baseline is deleted (#9265)
+  - 已移植：[#634](https://github.com/astryx-vue/astryx-vue/pull/634)。工具栏插槽和结尾插槽渲染不出内容（v-if 落空、空串、false）时不再画空外框和分隔线，用 isRenderable 判断，补测试
 - [x] [`cdc5ec0c7`](https://github.com/meta/astryx/commit/cdc5ec0c7) test(richtext): the table-selection mark contract runs one test per theme and mode (#9321)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`2ad112af2`](https://github.com/meta/astryx/commit/2ad112af2) chore(api-report): regenerate the core and richtext API reports (#9344)
@@ -9532,45 +9586,59 @@
 ### v0.7.7
 
 - [ ] [`540e9dfdf`](https://github.com/meta/astryx/commit/540e9dfdf) perf(richtext): code highlighting re-tokenizes only the lines an edit changes (#8585)
+  - 暂缓：代码高亮只重新分词改动的那几行（CodeLineTokens 加增量上色）属纯性能优化，本轮没做；Vue 版目前每次改动重新分词整个代码块，行为正确
 - [x] [`653624f84`](https://github.com/meta/astryx/commit/653624f84) feat(build): build Astryx from source under Turbopack (#7754)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`1c7150d78`](https://github.com/meta/astryx/commit/1c7150d78) fix(RichTextEditorToolbar): Insert link with nothing selected inserts the link at the caret (#9668)
+- [x] [`1c7150d78`](https://github.com/meta/astryx/commit/1c7150d78) fix(RichTextEditorToolbar): Insert link with nothing selected inserts the link at the caret (#9668)
+  - 已移植：[#631](https://github.com/astryx-vue/astryx-vue/pull/631)。工具栏「插入链接」没选文字时把地址作为链接文字插在光标处，光标在链接里则更新该链接，放回选区、判断和写入在同一次 update 里，补测试
 
 ### v0.7.8
 
-- [ ] [`a3976f623`](https://github.com/meta/astryx/commit/a3976f623) feat(richtext): Cmd+A selects the code block or table cell first (#8584)
+- [x] [`a3976f623`](https://github.com/meta/astryx/commit/a3976f623) feat(richtext): Cmd+A selects the code block or table cell first (#8584)
+  - 已移植：[#631](https://github.com/astryx-vue/astryx-vue/pull/631)。Cmd/Ctrl+A 在代码块或表格单元格里先选这一块，再按一次选整篇文档，补测试
 - [x] [`e390c3c43`](https://github.com/meta/astryx/commit/e390c3c43) test(browser): keep every Playwright browser context off remote hosts (#9811)
   - 不适用：只改上游测试（自动初筛）
 
 ### v0.7.9
 
-- [ ] [`626845fcc`](https://github.com/meta/astryx/commit/626845fcc) fix(richtext): RichTextExtensionNode is constructible with no arguments (#9690)
+- [x] [`626845fcc`](https://github.com/meta/astryx/commit/626845fcc) fix(richtext): RichTextExtensionNode is constructible with no arguments (#9690)
+  - 已移植：[#631](https://github.com/astryx-vue/astryx-vue/pull/631)。RichTextExtensionNode 可以不带参数构造（facts 默认空值），补测试
 
 ### v0.7.11
 
-- [ ] [`d75edc130`](https://github.com/meta/astryx/commit/d75edc130) fix(richtext): an image's Markdown comes back as written through an edit (#10356)
-- [ ] [`c5c1f5275`](https://github.com/meta/astryx/commit/c5c1f5275) fix(richtext): turn a code block into a paragraph on Backspace at its start (#8581)
+- [x] [`d75edc130`](https://github.com/meta/astryx/commit/d75edc130) fix(richtext): an image's Markdown comes back as written through an edit (#10356)
+  - 已移植：[#640](https://github.com/astryx-vue/astryx-vue/pull/640)。图片 Markdown 作为一整块源码进来、导出原样写回，光标进不了源码，紧跟链接的简写引用图片写成折叠形式，补测试
+- [x] [`c5c1f5275`](https://github.com/meta/astryx/commit/c5c1f5275) fix(richtext): turn a code block into a paragraph on Backspace at its start (#8581)
+  - 已移植：[#631](https://github.com/astryx-vue/astryx-vue/pull/631)。光标在代码块开头按 Backspace 变回段落，补测试
 
 ### v0.7.12
 
 - [x] [`c909db9ce`](https://github.com/meta/astryx/commit/c909db9ce) fix(build): a swizzled copy compiles in the library pass, below the theme (#10334)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`a646669ab`](https://github.com/meta/astryx/commit/a646669ab) docs(richtext): RichTextView, RichTextEditorToolbar and RichTextEditorAutoLinkPlugin get their own doc files (#10407)
+- [x] [`a646669ab`](https://github.com/meta/astryx/commit/a646669ab) docs(richtext): RichTextView, RichTextEditorToolbar and RichTextEditorAutoLinkPlugin get their own doc files (#10407)
+  - 已移植：[#614](https://github.com/astryx-vue/astryx-vue/pull/614)。富文本编辑器属性页（中英）补了 RichTextEditorAutoLinkPlugin 的属性与事件；工具栏和 RichTextView 在同一页
 - [x] [`4e6e67df6`](https://github.com/meta/astryx/commit/4e6e67df6) fix(core): make disabled Button focusable via aria-disabled per AST-085 (#7906)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`b8cc3f41e`](https://github.com/meta/astryx/commit/b8cc3f41e) fix(Markdown): each prose block lays out in its own text's direction (#10293)
+- [x] [`b8cc3f41e`](https://github.com/meta/astryx/commit/b8cc3f41e) fix(Markdown): each prose block lays out in its own text's direction (#10293)
+  - 已移植：[#634](https://github.com/astryx-vue/astryx-vue/pull/634)。core Markdown 的块方向已移植；这条在富文本里只涉及 editorTheme 的方向注释和浏览器规格，富文本按块写方向见 2ff1afc9f（暂缓）
 - [x] [`44b9aa57d`](https://github.com/meta/astryx/commit/44b9aa57d) fix(cli): swizzle marks its output folder so the copy compiles below the theme (#10483)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`1c8292c42`](https://github.com/meta/astryx/commit/1c8292c42) fix(Layer): keep decorator portals outside renderer-managed DOM (#7633)
-- [ ] [`47cad7412`](https://github.com/meta/astryx/commit/47cad7412) fix(richtext): paste rich content into a code block as plain text (#8580)
+- [x] [`1c8292c42`](https://github.com/meta/astryx/commit/1c8292c42) fix(Layer): keep decorator portals outside renderer-managed DOM (#7633)
+  - 不适用：上游 React 渲染器托管的 DOM 与装饰器门户问题；Vue 版装饰器走 Teleport，不在渲染器托管的 DOM 里
+- [x] [`47cad7412`](https://github.com/meta/astryx/commit/47cad7412) fix(richtext): paste rich content into a code block as plain text (#8580)
+  - 已移植：[#631](https://github.com/astryx-vue/astryx-vue/pull/631)。往代码块里粘贴富内容只留纯文本（含没有纯文本时的块粘贴和拖放），补测试
 - [x] [`619ffeb27`](https://github.com/meta/astryx/commit/619ffeb27) fix(core, richtext): no focus fade on text fields under a coarse pointer (#10611)
   - 不适用：本清单范围里只改上游 docs/design/user-states.md 设计文档
-- [ ] [`1ff81c7a9`](https://github.com/meta/astryx/commit/1ff81c7a9) docs(richtext): in-place editing keeps the reading width, so the switch does not reflow (#10429)
-- [ ] [`590d90164`](https://github.com/meta/astryx/commit/590d90164) fix(richtext): the auto-link plugin never links text inside a code block (#10664)
+- [x] [`1ff81c7a9`](https://github.com/meta/astryx/commit/1ff81c7a9) docs(richtext): in-place editing keeps the reading width, so the switch does not reflow (#10429)
+  - 不适用：上游文档说的是用 stylex.create 写原位编辑的外框，Vue 版不用 StyleX
+- [x] [`590d90164`](https://github.com/meta/astryx/commit/590d90164) fix(richtext): the auto-link plugin never links text inside a code block (#10664)
+  - 已移植：[#631](https://github.com/astryx-vue/astryx-vue/pull/631)。自动链接不再链接代码块里的网址（excludeParents 用 $isCodeNode），补测试
 - [x] [`4962d932d`](https://github.com/meta/astryx/commit/4962d932d) spec(AST-062): a rich paste into a code block lands as plain text (#10417)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`e25a6dc2a`](https://github.com/meta/astryx/commit/e25a6dc2a) fix(richtext): links in a disabled editor do not navigate and add no tab stop (#10679)
-- [ ] [`8fa403c98`](https://github.com/meta/astryx/commit/8fa403c98) feat(richtext): indent and outdent code block lines with Tab (#8579)
+- [x] [`e25a6dc2a`](https://github.com/meta/astryx/commit/e25a6dc2a) fix(richtext): links in a disabled editor do not navigate and add no tab stop (#10679)
+  - 已移植：[#631](https://github.com/astryx-vue/astryx-vue/pull/631)。禁用的编辑器里链接不进 Tab 顺序、不跳转，启用后恢复，补测试
+- [x] [`8fa403c98`](https://github.com/meta/astryx/commit/8fa403c98) feat(richtext): indent and outdent code block lines with Tab (#8579)
+  - 已移植：[#631](https://github.com/astryx-vue/astryx-vue/pull/631)。代码块里 Tab 和 Shift+Tab 按块自己的缩进缩进、反缩进选区碰到的每一行，一次按键一个撤销步，补测试
 
 ### v0.7.14
 
@@ -9583,28 +9651,41 @@
 
 ### v0.7.15
 
-- [ ] [`2e205e4d9`](https://github.com/meta/astryx/commit/2e205e4d9) fix(Link, richtext): linear-time email autolink matching (#11306)
-- [ ] [`6ab0c2ea1`](https://github.com/meta/astryx/commit/6ab0c2ea1) fix(richtext): a table delimiter row check in linear time (#11338)
+- [x] [`2e205e4d9`](https://github.com/meta/astryx/commit/2e205e4d9) fix(Link, richtext): linear-time email autolink matching (#11306)
+  - 已移植：[#499](https://github.com/astryx-vue/astryx-vue/pull/499)。邮箱匹配改为线性时间；Vue 版没有 useLinkify
+- [x] [`6ab0c2ea1`](https://github.com/meta/astryx/commit/6ab0c2ea1) fix(richtext): a table delimiter row check in linear time (#11338)
+  - 已移植：[#631](https://github.com/astryx-vue/astryx-vue/pull/631)。表格分隔行检查改为逐格测试的线性时间，10 万空格的行从约 6 秒降到毫秒级，补测试
 
 ### v0.7.16
 
-- [ ] [`31aacff05`](https://github.com/meta/astryx/commit/31aacff05) fix(richtext): pasting into table cells no longer drops content (#8577)
-- [ ] [`d08000e44`](https://github.com/meta/astryx/commit/d08000e44) fix(richtext): default a scheme-less dotted or localhost host with a port to https (#11042)
+- [x] [`31aacff05`](https://github.com/meta/astryx/commit/31aacff05) fix(richtext): pasting into table cells no longer drops content (#8577)
+  - 已移植：[#631](https://github.com/astryx-vue/astryx-vue/pull/631)。往单元格里粘贴表格逐格写入并补行补列，带其他内容的表格按文字放进单元格，补测试
+- [x] [`d08000e44`](https://github.com/meta/astryx/commit/d08000e44) fix(richtext): default a scheme-less dotted or localhost host with a port to https (#11042)
+  - 已移植：[#631](https://github.com/astryx-vue/astryx-vue/pull/631)。没写协议、带端口的点分主机或 localhost 地址按 https 处理，tel:911 仍是 tel，补测试
 - [ ] [`b8904791a`](https://github.com/meta/astryx/commit/b8904791a) feat(RichTextEditor, RichTextEditorToolbar): replace the toolbar's link dialog with an anchored popover (#8717)
+  - 暂缓：把工具栏链接对话框换成锚定在按钮上的弹出层，是整套链接编辑界面的重做（弹出层表单、键盘和焦点归还），本轮没做；Vue 版仍是对话框，功能完整
 
 ### v0.7.17
 
 - [ ] [`5c44304f9`](https://github.com/meta/astryx/commit/5c44304f9) refactor(richtext): share the toolbar's link popover and format helpers (#11189)
-- [ ] [`4e39f9c64`](https://github.com/meta/astryx/commit/4e39f9c64) feat(richtext): Markdown shortcuts typed at the start of a list item re-mark it (#8582)
-- [ ] [`7672da046`](https://github.com/meta/astryx/commit/7672da046) [fix] richtext: no integration-issue warning in apps that install it (#11628)
-- [ ] [`8d3e0107b`](https://github.com/meta/astryx/commit/8d3e0107b) fix(richtext): a line break typed at the end of a block no longer reloads as a literal backslash (#11758)
+  - 暂缓：只是给上面的弹出层抽出共享的链接表单和格式 helper，随弹出层一起做（见 b8904791a）
+- [x] [`4e39f9c64`](https://github.com/meta/astryx/commit/4e39f9c64) feat(richtext): Markdown shortcuts typed at the start of a list item re-mark it (#8582)
+  - 已移植：[#631](https://github.com/astryx-vue/astryx-vue/pull/631)。列表项开头输入 ##、>、-、1.、[ ] 等标记会改写该项为标题、引用、列表或任务项，一次一个撤销步，跟随 hasMarkdownShortcuts，补测试
+- [x] [`7672da046`](https://github.com/meta/astryx/commit/7672da046) [fix] richtext: no integration-issue warning in apps that install it (#11628)
+  - 不适用：上游给各插件补的是 React 集成问题（use client、集成检查）警告，Vue 版没有这条链路
+- [x] [`8d3e0107b`](https://github.com/meta/astryx/commit/8d3e0107b) fix(richtext): a line break typed at the end of a block no longer reloads as a literal backslash (#11758)
+  - 已移植：[#631](https://github.com/astryx-vue/astryx-vue/pull/631)。块尾的换行不再导出成会读回字面反斜杠的 \，补测试
 - [x] [`e51ed92f6`](https://github.com/meta/astryx/commit/e51ed92f6) fix(Theme): a system Theme takes the page's color scheme, and Core's stylesheet sets the root to follow the reader (#12102)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`e8c6cc05e`](https://github.com/meta/astryx/commit/e8c6cc05e) fix(Theme): the page root follows the reader only through reset.css, so Core's stylesheet leaves a host's scheme alone (#12247)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`2ff1afc9f`](https://github.com/meta/astryx/commit/2ff1afc9f) fix(richtext): text reads the way it is written, in either document direction (#7723)
-- [ ] [`676f276f2`](https://github.com/meta/astryx/commit/676f276f2) docs(richtext): the README says what server rendering outputs (#12531)
-- [ ] [`81458c4b1`](https://github.com/meta/astryx/commit/81458c4b1) chore: land batch 60 (4 pull requests) (#12939)
+  - 暂缓：富文本按块写 dir（BlockDirectionPlugin、首强字符分类、editorTheme 的方向变量与容器方向重排）本轮没做；core Markdown 的块方向已由 #634 移植
+- [x] [`676f276f2`](https://github.com/meta/astryx/commit/676f276f2) docs(richtext): the README says what server rendering outputs (#12531)
+  - 已移植：[#634](https://github.com/astryx-vue/astryx-vue/pull/634)。README 补服务端渲染只输出外框、不输出文档内容的说明
+- [x] [`81458c4b1`](https://github.com/meta/astryx/commit/81458c4b1) chore: land batch 60 (4 pull requests) (#12939)
+  - 暂缓：富文本代码块标题栏的长标签换行并量出标题栏自己的高度（observeResize 写 CSS 变量）本轮没做；CodeBlock 部分见下方 #634 的那一行
+  - 已移植：[#634](https://github.com/astryx-vue/astryx-vue/pull/634)。CodeBlock 长标题在标题栏里换行，不压到右边的控件底下，补样式测试；批次里其他条目属别族，富文本标题栏部分见上方暂缓那一行
 
 ## 快捷搜索与命令面板（area:core）
 
