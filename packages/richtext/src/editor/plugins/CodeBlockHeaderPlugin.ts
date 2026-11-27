@@ -1,10 +1,12 @@
 import type { CodeLanguage } from '@astryx-vue/core'
 import type { PropType, VNodeChild } from 'vue'
-import { codeBlockMessages, Icon, IconButton, useComponentMessages, useCopyToClipboard } from '@astryx-vue/core'
+import type { CanvasHolder } from './codeHeaderSize.js'
+import { codeBlockMessages, Icon, IconButton, observeResize, useComponentMessages, useCopyToClipboard } from '@astryx-vue/core'
 import { $isCodeNode } from '@lexical/code'
 import { $getNodeByKey, $getRoot } from 'lexical'
-import { defineComponent, h } from 'vue'
+import { defineComponent, h, onBeforeUnmount, onMounted, onUpdated } from 'vue'
 import { useLexicalEditor } from '../context.js'
+import { clearHeaderSize, writeHeaderSize } from './codeHeaderSize.js'
 import { listedLanguage } from './codeLanguages.js'
 import { useOverlayPlacements } from './useOverlayPlacements.js'
 
@@ -54,6 +56,48 @@ const CodeBlockHeader = defineComponent({
       announceFailure: () => messages.value.codeBlock.copyFailed,
     })
 
+    // 画出来的标题栏和它的标签：代码块按它的高度留位置、按它的宽度定最小宽度。
+    // 长标签会折行，标题栏随之变高，所以盯着标题栏自己的尺寸，变了就重新量一次。
+    const canvas: CanvasHolder = { current: undefined }
+    let header: HTMLElement | null = null
+    let title: HTMLElement | null = null
+    let observed: HTMLElement | null = null
+    let unobserve: (() => void) | null = null
+    const setHeader = (element: unknown): void => {
+      header = element instanceof HTMLElement ? element : null
+    }
+    const setTitle = (element: unknown): void => {
+      title = element instanceof HTMLElement ? element : null
+    }
+
+    function block(): HTMLElement | null {
+      return editor.getElementByKey(props.placement.key)
+    }
+
+    function sync(): void {
+      const element = block()
+      if (header !== null && title !== null && element !== null)
+        writeHeaderSize(element, { header, title }, canvas)
+    }
+
+    function track(): void {
+      if (header !== observed) {
+        unobserve?.()
+        unobserve = header === null ? null : observeResize(header, sync)
+        if (header === null)
+          clearHeaderSize(block())
+        observed = header
+      }
+      sync()
+    }
+
+    onMounted(track)
+    onUpdated(track)
+    onBeforeUnmount(() => {
+      unobserve?.()
+      clearHeaderSize(block())
+    })
+
     function copyCode(): void {
       const code = editor.getEditorState().read(() => $getNodeByKey(props.placement.key)?.getTextContent() ?? '')
       void copy(code)
@@ -77,8 +121,8 @@ const CodeBlockHeader = defineComponent({
       if (placement.language === null) {
         return h('div', { 'class': 'astryx-richtext-code-header astryx-richtext-code-header--corner', 'data-richtext-code-header': '', 'style': positionStyle(placement) }, [button])
       }
-      return h('div', { 'class': 'astryx-richtext-code-header', 'data-richtext-code-header': '', 'style': positionStyle(placement) }, [
-        h('span', { class: 'astryx-richtext-code-header__title' }, props.label ?? placement.language),
+      return h('div', { 'ref': setHeader, 'class': 'astryx-richtext-code-header', 'data-richtext-code-header': '', 'style': positionStyle(placement) }, [
+        h('span', { ref: setTitle, class: 'astryx-richtext-code-header__title' }, props.label ?? placement.language),
         button,
       ])
     }

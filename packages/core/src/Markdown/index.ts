@@ -1,4 +1,5 @@
 export { isMarkdownExtensionNode } from './ast.js'
+export { firstStrongDirection } from './blockDirection.js'
 export { visitMarkdownNodes } from './canonicalAst.js'
 export type {
   MarkdownAstPhrasingContent,

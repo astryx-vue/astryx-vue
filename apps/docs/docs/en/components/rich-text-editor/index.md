@@ -62,6 +62,10 @@ When you register custom nodes through `nodes`, register the same set on both th
 
 <DemoExample :demo="richtextView" description="Render saved Lexical state JSON with RichTextView." locale="en" title="Display saved content" />
 
+## Text direction
+
+Each paragraph, heading, quote and list item reads in the direction of its own text (its first strongly directional character), in the editor and in `RichTextView` alike, so a Hebrew or Arabic block in an English document reads right to left and the reverse. A block with no such character, such as digits, an image or an empty paragraph, follows the document. The direction is written onto the block in the same update as the edit, so it is saved with the content. Lists, tables and code blocks take the direction around them, and each line of a code block reads in its own direction.
+
 ## Keyboard commands
 
 | Action | Keys |

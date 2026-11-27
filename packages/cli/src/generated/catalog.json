@@ -42166,6 +42166,10 @@
             "text": "The editor and read-only view use the same Lexical state JSON:\n\n1. Listen to the editor's `@change` event and save `editorState.toJSON()` to your backend.\n2. To edit the content again, pass the saved JSON string to `defaultValue`. This prop is read only when the editor mounts.\n3. For read-only display, pass the same string to `RichTextView` through `value` instead of rendering a read-only editor.\n\nWhen you register custom nodes through `nodes`, register the same set on both the editor and the read-only view so content round-trips without data loss."
           },
           {
+            "heading": "Text direction",
+            "text": "Each paragraph, heading, quote and list item reads in the direction of its own text (its first strongly directional character), in the editor and in `RichTextView` alike, so a Hebrew or Arabic block in an English document reads right to left and the reverse. A block with no such character, such as digits, an image or an empty paragraph, follows the document. The direction is written onto the block in the same update as the edit, so it is saved with the content. Lists, tables and code blocks take the direction around them, and each line of a code block reads in its own direction."
+          },
+          {
             "heading": "Keyboard commands",
             "text": "At the end of a code block or table, <kbd>ArrowDown</kbd> inserts a paragraph when no content follows or when another code block or table immediately follows. This lets you place prose between these blocks. When ordinary content already follows, the arrow keys retain Lexical's native navigation.\n\n- Insert a newline inside a code block: Insert a newline inside a code block\n- Move between table cells: Move between table cells\n- Create and move to a paragraph below a code block or table: Create and move to a paragraph below a code block or table\n- Open the link popover: Open the link popover\n- Indent or outdent every line the selection touches in a code block: Indent or outdent every line the selection touches in a code block\n- Turn a code block into a paragraph: Turn a code block into a paragraph\n- Select the code or the cell text first, then the whole document: Select the code or the cell text first, then the whole document\n- Leave the editor: Leave the editor"
           },
@@ -42206,6 +42210,10 @@
           {
             "heading": "保存并展示内容",
             "text": "编辑器和只读视图使用同一份 Lexical 状态 JSON：\n\n1. 监听编辑器的 `@change`，将 `editorState.toJSON()` 保存到后端。\n2. 再次编辑时，把保存的 JSON 字符串传给 `defaultValue`。该属性只在挂载时读取。\n3. 只读展示时，把同一个字符串传给 `RichTextView` 的 `value`，不要再渲染一个只读编辑器。\n\n如果通过 `nodes` 注册自定义节点，编辑器和只读视图必须注册同一组节点，否则内容无法完整往返。"
+          },
+          {
+            "heading": "文字方向",
+            "text": "编辑器和 `RichTextView` 里的每个段落、标题、引用和列表项都按自己文字的方向排版（取第一个有明确方向的字符），所以英文文档里的希伯来文或阿拉伯文块从右往左读，反过来也一样。只有数字、标点、图片或空段落这类没有明确方向字符的块，沿用文档的方向。方向会在编辑的同一次更新里写到块上，随内容一起保存。列表、表格和代码块沿用外面的方向，代码块里的每一行各按自己的方向读。"
           },
           {
             "heading": "键盘操作",

@@ -62,6 +62,10 @@ import '@astryx-vue/richtext/richtext.css'
 
 <DemoExample :demo="richtextView" description="将保存的 Lexical 状态 JSON 交给 RichTextView 进行只读渲染。" locale="zh" title="只读展示已保存的内容" />
 
+## 文字方向
+
+编辑器和 `RichTextView` 里的每个段落、标题、引用和列表项都按自己文字的方向排版（取第一个有明确方向的字符），所以英文文档里的希伯来文或阿拉伯文块从右往左读，反过来也一样。只有数字、标点、图片或空段落这类没有明确方向字符的块，沿用文档的方向。方向会在编辑的同一次更新里写到块上，随内容一起保存。列表、表格和代码块沿用外面的方向，代码块里的每一行各按自己的方向读。
+
 ## 键盘操作
 
 | 操作 | 按键 |
