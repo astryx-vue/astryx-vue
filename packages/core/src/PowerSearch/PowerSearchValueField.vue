@@ -245,6 +245,7 @@ function applyPreset(range: DateTimeRange): void {
     />
     <Tokenizer
       v-else-if="operatorValue.type === 'string_list'"
+      presentation="popover"
       :label="text.values"
       label-hidden
       :search-source="stringSource"
@@ -368,6 +369,7 @@ function applyPreset(range: DateTimeRange): void {
     />
     <Tokenizer
       v-else-if="operatorValue.type === 'entity_list'"
+      presentation="popover"
       :label="text.entities"
       label-hidden
       :search-source="entitySource"

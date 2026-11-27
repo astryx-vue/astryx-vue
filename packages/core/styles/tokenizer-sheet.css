@@ -1,0 +1,203 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  /*
+   * 底部弹层呈现里的字段：沿用行内字段的框。按钮里不能放控件，所以触发器、标签、
+   * 末尾内容是兄弟元素；没有可输入的地方，光标表示「按」。
+   */
+  .astryx-tokenizer-control.astryx-tokenizer-sheet-field {
+    cursor: pointer;
+  }
+
+  .astryx-tokenizer-control.astryx-tokenizer-sheet-field.is-disabled {
+    cursor: default;
+  }
+
+  /* 框负责聚焦描边，触发器自己不画。有标签时它铺满整个框，点标签或空白处都打开弹层。 */
+  .astryx-tokenizer-sheet-trigger {
+    appearance: none;
+    flex-grow: 1;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: start;
+    cursor: inherit;
+    outline: none;
+  }
+
+  .astryx-tokenizer-sheet-trigger.has-tokens {
+    position: absolute;
+    inset: 0;
+  }
+
+  .astryx-tokenizer-sheet-trigger__placeholder {
+    padding-inline: var(--astryx-spacing-1, 4px);
+    color: var(--astryx-color-text-secondary, #525252);
+  }
+
+  /* 标签只是展示，点击穿到下面的触发器；自定义标签里的控件仍能点。 */
+  .astryx-tokenizer-sheet-field .astryx-tokenizer-token {
+    pointer-events: none;
+  }
+
+  .astryx-tokenizer-sheet-field .astryx-tokenizer-token :is(button, a, input, [tabindex]) {
+    position: relative;
+    pointer-events: auto;
+  }
+
+  .astryx-tokenizer-sheet-field__end {
+    position: relative;
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: var(--astryx-spacing-1, 4px);
+    margin-inline-start: auto;
+  }
+
+  .astryx-tokenizer-sheet-field__status {
+    display: inline-flex;
+    color: var(--astryx-input-status-color, var(--astryx-color-text-secondary, #525252));
+  }
+
+  .astryx-tokenizer-sheet-field__status:empty {
+    display: none;
+  }
+
+  /* 弹层内容自己撑满高度并自己管滚动，底栏贴着底部；和抓手下的留白合起来，第一行离顶边 32px。 */
+  .astryx-tokenizer-sheet {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    padding-inline: var(--astryx-spacing-3, 12px);
+    padding-block: var(--astryx-spacing-2, 8px) var(--astryx-spacing-3, 12px);
+  }
+
+  .astryx-tokenizer-sheet__search {
+    display: flex;
+    padding-block-end: var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-tokenizer-sheet__search > * {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .astryx-tokenizer-sheet__list {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  .astryx-tokenizer-sheet__rows {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .astryx-tokenizer-sheet__row-item {
+    display: contents;
+  }
+
+  /* 一行既是一个复选框，也是整块可点的区域。 */
+  .astryx-tokenizer-sheet__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--astryx-spacing-2, 8px);
+    width: 100%;
+    min-height: 44px;
+    padding-block: var(--astryx-spacing-2, 8px);
+    padding-inline: var(--astryx-spacing-1, 4px);
+    border: 0;
+    border-radius: var(--astryx-radius-element, 0.625rem);
+    background-color: transparent;
+    color: var(--astryx-color-text-primary, light-dark(#171717, #fafafa));
+    font-family: inherit;
+    text-align: start;
+    cursor: pointer;
+  }
+
+  .astryx-tokenizer-sheet__row[aria-disabled='true'] {
+    cursor: default;
+  }
+
+  .astryx-tokenizer-sheet__row[aria-disabled='true'] .astryx-tokenizer-sheet__row-label {
+    color: var(--astryx-color-text-disabled, var(--astryx-color-text-secondary, #525252));
+  }
+
+  @media (hover: hover) {
+    .astryx-tokenizer-sheet__row:hover:not([aria-disabled='true']) {
+      background-color: var(--astryx-color-overlay-hover, light-dark(#0000000a, #ffffff12));
+    }
+  }
+
+  .astryx-tokenizer-sheet__row:focus-visible {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, currentcolor);
+    outline-offset: calc(-1 * var(--astryx-focus-outline-width, 2px));
+  }
+
+  .astryx-tokenizer-sheet__row-label,
+  .astryx-tokenizer-sheet__create-label {
+    flex-grow: 1;
+    min-width: 0;
+  }
+
+  .astryx-tokenizer-sheet__create-row {
+    display: flex;
+    align-items: center;
+    gap: var(--astryx-spacing-2, 8px);
+    width: 100%;
+    min-height: 44px;
+    padding-block: var(--astryx-spacing-2, 8px);
+    padding-inline: var(--astryx-spacing-1, 4px);
+  }
+
+  .astryx-tokenizer-sheet__pending {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding-block: var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-tokenizer-sheet__empty {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: center;
+  }
+
+  /* 底栏在每种状态下都钉在底部，两个按钮等宽。 */
+  .astryx-tokenizer-sheet__footer {
+    display: flex;
+    align-items: center;
+    gap: var(--astryx-spacing-2, 8px);
+    margin-top: auto;
+    padding-block-start: var(--astryx-spacing-3, 12px);
+  }
+
+  .astryx-tokenizer-sheet__footer-action {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  @media (forced-colors: active) {
+    .astryx-tokenizer-sheet-field.is-disabled,
+    .astryx-tokenizer-sheet-field.is-disabled .astryx-tokenizer-sheet-trigger__placeholder,
+    .astryx-tokenizer-sheet-field.is-disabled .astryx-token,
+    .astryx-tokenizer-sheet__row[aria-disabled='true'],
+    .astryx-tokenizer-sheet__row[aria-disabled='true'] .astryx-text {
+      border-color: GrayText;
+      color: GrayText;
+    }
+  }
+}

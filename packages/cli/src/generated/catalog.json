@@ -37745,11 +37745,15 @@
         "zh": "`Tokenizer` 把多条搜索结果收成可删除的标签。数据源和自动补全相同，本地用 `createStaticSource`，远程实现 `search`。已选条目不会再次出现在列表里。"
       },
       "usage": {
-        "en": "`Tokenizer` collects search results into removable tokens. The source matches Typeahead: `createStaticSource` for local data, or a `search` function for a remote source. Selected items stay out of the menu.\n\n`hasCreate` turns the current text into a new token. `hasClear` removes every token. When the input is empty, `Backspace` removes the last token. Arrow keys move focus between tokens, and `Backspace` or `Delete` removes the focused one.\n\nOn a touch screen, a finger tap on a token's remove button while the input is unfocused removes the token and leaves focus where it was, so the on-screen keyboard stays down. A mouse click, a pen tap, a key press, or a tap made while typing still moves focus to the input.\n\n`overflow` controls what happens when the tokens do not fit:\n\nWidth measurement uses `useOverflow`. The `#icon` slot sits at the start of the field. `#token` can replace each selected chip with a custom `Token`.",
-        "zh": "`Tokenizer` 把多条搜索结果收成可删除的标签。数据源和自动补全相同，本地用 `createStaticSource`，远程实现 `search`。已选条目不会再次出现在列表里。\n\n`hasCreate` 允许把当前输入收成一条新标签。`hasClear` 一次清空。输入框为空时，`Backspace` 删掉最后一条。方向键可以在标签之间移动焦点，`Backspace` 或 `Delete` 删除当前标签。\n\n触屏上，输入框没有焦点时用手指点标签的删除按钮，标签删掉后焦点留在原处，屏幕键盘不会弹起来。鼠标点击、笔、按键删除，或者正在输入时的点按，仍然把焦点交回输入框。\n\n`overflow` 控制放不下时的表现：\n\n宽度测量复用 `useOverflow`。`#icon` 插槽放在输入区开头，每条标签也可以用 `#token` 换成自己的 `Token`。"
+        "en": "`Tokenizer` collects search results into removable tokens. The source matches Typeahead: `createStaticSource` for local data, or a `search` function for a remote source. Selected items stay out of the menu.\n\n`hasCreate` turns the current text into a new token. `hasClear` removes every token. When the input is empty, `Backspace` removes the last token. Arrow keys move focus between tokens, and `Backspace` or `Delete` removes the focused one.\n\nOn a touch screen, a finger tap on a token's remove button while the input is unfocused removes the token and leaves focus where it was, so the on-screen keyboard stays down. A mouse click, a pen tap, a key press, or a tap made while typing still moves focus to the input.\n\n`overflow` controls what happens when the tokens do not fit:\n\nOn a compact touch screen the field opens a bottom sheet by default (`presentation=\"adaptive\"`). The field becomes a trigger that shows the tokens; the sheet has a search field, a checkbox row per result, and a pinned footer with Clear all and Save. Checking rows, creating a value and Clear all only edit a draft. Save commits it once, with a single `change`. Swiping the sheet down, tapping the scrim or pressing Escape after the draft changed asks before discarding, and Clear all asks before clearing. Pass `presentation=\"popover\"` to keep the inline field on every device, for example inside another popover.\n\nWidth measurement uses `useOverflow`. The `#icon` slot sits at the start of the field. `#token` can replace each selected chip with a custom `Token`.",
+        "zh": "`Tokenizer` 把多条搜索结果收成可删除的标签。数据源和自动补全相同，本地用 `createStaticSource`，远程实现 `search`。已选条目不会再次出现在列表里。\n\n`hasCreate` 允许把当前输入收成一条新标签。`hasClear` 一次清空。输入框为空时，`Backspace` 删掉最后一条。方向键可以在标签之间移动焦点，`Backspace` 或 `Delete` 删除当前标签。\n\n触屏上，输入框没有焦点时用手指点标签的删除按钮，标签删掉后焦点留在原处，屏幕键盘不会弹起来。鼠标点击、笔、按键删除，或者正在输入时的点按，仍然把焦点交回输入框。\n\n`overflow` 控制放不下时的表现：\n\n紧凑触屏上，字段默认打开底部弹层（`presentation=\"adaptive\"`）。字段变成一个显示标签的触发器；弹层里有搜索框、每条结果一行复选框，以及钉在底部的「全部清除」和「保存」。勾选、新建、全部清除都只改草稿，按「保存」才提交一次，只触发一次 `change`。草稿改过之后下滑弹层、点遮罩或按 Escape，会先问要不要放弃；「全部清除」也会先确认。想在所有设备上保留行内字段就传 `presentation=\"popover\"`，比如字段本身已经在另一个浮层里。\n\n宽度测量复用 `useOverflow`。`#icon` 插槽放在输入区开头，每条标签也可以用 `#token` 换成自己的 `Token`。"
       },
       "practices": {
         "en": [
+          {
+            "guidance": "Do",
+            "text": "Do"
+          },
           {
             "guidance": "Do",
             "text": "Do"
@@ -37771,6 +37775,10 @@
           {
             "guidance": "推荐",
             "text": "允许用户自造条目时打开 `hasCreate`，并在变更事件里区分 `add` 和 `create`。"
+          },
+          {
+            "guidance": "推荐",
+            "text": "字段本身已经在浮层或底部弹层里时，固定传 `presentation=\"popover\"`。"
           },
           {
             "guidance": "避免",
@@ -37986,6 +37994,12 @@
                 "type": "`number | string`",
                 "default": "—",
                 "description": "Width of the whole field (number = pixels, string used as-is)."
+              },
+              {
+                "name": "`presentation`",
+                "type": "`'popover' | 'bottom-sheet' | 'adaptive'`",
+                "default": "`'adaptive'`",
+                "description": "Where results open. `popover` is the inline input with an anchored menu. `bottom-sheet` turns the field into a trigger that opens a touch sheet: search, check rows, and press Save to commit the draft once. `adaptive` uses the sheet on a compact touch screen (a coarse primary pointer, and a viewport narrower than the theme's `md` breakpoint or shorter than 500px) and the popover elsewhere; server rendering and hydration use the popover. The choice is made when the sheet opens and held until its exit finishes. In the sheet, the `item` slot, `hasClear`, `hasEntriesOnFocus`, `menuWidth`, `menu`, `overflow` and `hasAutoFocus` have nothing to act on and warn once in development; pass `popover` to keep the inline field on every device."
               }
             ]
           }
@@ -38197,6 +38211,12 @@
                 "type": "`number | string`",
                 "default": "—",
                 "description": "整个字段的宽度（数字按像素算，字符串原样使用）。"
+              },
+              {
+                "name": "`presentation`",
+                "type": "`'popover' | 'bottom-sheet' | 'adaptive'`",
+                "default": "`'adaptive'`",
+                "description": "结果在哪里打开。`popover` 是行内输入框加锚定菜单。`bottom-sheet` 让字段变成触发器，点开触屏底部弹层：在里面搜索、勾选，按「保存」把草稿一次提交。`adaptive` 在紧凑触屏上用底部弹层（主指针是手指这类粗略指针，并且视口宽度小于主题的 `md` 断点或高度小于 500px），其余用浮层；服务端渲染和水合时是浮层。打开那一刻定下用哪种，退场播完才重新判断。底部弹层里，`item` 插槽、`hasClear`、`hasEntriesOnFocus`、`menuWidth`、`menu`、`overflow`、`hasAutoFocus` 没有地方生效，开发期会提示一次；想在所有设备上保留行内字段就传 `popover`。"
               }
             ]
           }
@@ -38335,7 +38355,7 @@
               {
                 "name": "`openChange`",
                 "payload": "`isOpen: boolean`",
-                "description": "列表打开或关闭时触发。"
+                "description": "行内列表打开或关闭时触发。底部弹层不报这个事件。"
               },
               {
                 "name": "`focus`",
@@ -38355,13 +38375,13 @@
         "en": [
           {
             "heading": "Tokenizer Slots",
-            "text": "A template ref exposes <code>focus()</code>, <code>blur()</code>, <code>open()</code> and <code>close()</code>. The <code>menu</code> prop (<code>{ role: 'listbox' }</code> or <code>{ role: 'dialog', label }</code>) and <code>openChange</code> work as they do on <code>Typeahead</code>. A <code>search</code> that calls <code>context.update(items)</code> shows its early matches at once, without the tokens already picked, and later lists only append.\n\nNative attributes and listeners that are not listed above land on the input element, so `@keydown`, `@paste` and `aria-*` work as they would on a plain `<input>`. A `keydown` listener runs before the internal token navigation; call `event.preventDefault()` to skip it."
+            "text": "A template ref exposes <code>focus()</code>, <code>blur()</code>, <code>open()</code> and <code>close()</code>; in the sheet presentation they act on the trigger and the sheet. The <code>menu</code> prop (<code>{ role: 'listbox' }</code> or <code>{ role: 'dialog', label }</code>) and <code>openChange</code> work as they do on <code>Typeahead</code>. A <code>search</code> that calls <code>context.update(items)</code> shows its early matches at once, without the tokens already picked, and later lists only append.\n\nNative attributes and listeners that are not listed above land on the input element, so `@keydown`, `@paste` and `aria-*` work as they would on a plain `<input>`. A `keydown` listener runs before the internal token navigation; call `event.preventDefault()` to skip it."
           }
         ],
         "zh": [
           {
             "heading": "Tokenizer Slots",
-            "text": "模板 ref 暴露 <code>focus()</code>、<code>blur()</code>、<code>open()</code> 和 <code>close()</code>。<code>menu</code> 属性（<code>{ role: 'listbox' }</code> 或 <code>{ role: 'dialog', label }</code>）和 <code>openChange</code> 的用法与 <code>Typeahead</code> 相同。<code>search</code> 里调用 <code>context.update(items)</code> 会马上显示先拿到的匹配项（已选的标签不在其中），之后的列表只往后追加。\n\n上面没列出的原生属性和事件监听会落到输入框上，所以 `@keydown`、`@paste` 和 `aria-*` 的用法跟普通 `<input>` 一样。`keydown` 监听先于内部的标签间导航执行，调用 `event.preventDefault()` 就能跳过内部处理。"
+            "text": "模板 ref 暴露 <code>focus()</code>、<code>blur()</code>、<code>open()</code> 和 <code>close()</code>；底部弹层呈现里它们作用在触发器和弹层上。<code>menu</code> 属性（<code>{ role: 'listbox' }</code> 或 <code>{ role: 'dialog', label }</code>）和 <code>openChange</code> 的用法与 <code>Typeahead</code> 相同。<code>search</code> 里调用 <code>context.update(items)</code> 会马上显示先拿到的匹配项（已选的标签不在其中），之后的列表只往后追加。\n\n上面没列出的原生属性和事件监听会落到输入框上，所以 `@keydown`、`@paste` 和 `aria-*` 的用法跟普通 `<input>` 一样。`keydown` 监听先于内部的标签间导航执行，调用 `event.preventDefault()` 就能跳过内部处理。"
           }
         ]
       },

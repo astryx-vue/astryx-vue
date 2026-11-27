@@ -26,6 +26,8 @@ import { tokenizerClear, tokenizerCreatable, tokenizerEnd, tokenizerIcon, tokeni
 | `unfocused-inline` | 失焦时收成一行，末尾显示 `+N`，聚焦后在原处展开。 |
 | `unfocused-layer` | 失焦时同样收成一行，聚焦后浮在字段上展开，不把下面的内容往下推。 |
 
+紧凑触屏上，字段默认打开底部弹层（`presentation="adaptive"`）。字段变成一个显示标签的触发器；弹层里有搜索框、每条结果一行复选框，以及钉在底部的「全部清除」和「保存」。勾选、新建、全部清除都只改草稿，按「保存」才提交一次，只触发一次 `change`。草稿改过之后下滑弹层、点遮罩或按 Escape，会先问要不要放弃；「全部清除」也会先确认。想在所有设备上保留行内字段就传 `presentation="popover"`，比如字段本身已经在另一个浮层里。
+
 宽度测量复用 `useOverflow`。`#icon` 插槽放在输入区开头，每条标签也可以用 `#token` 换成自己的 `Token`。
 
 
@@ -37,6 +39,7 @@ import { tokenizerClear, tokenizerCreatable, tokenizerEnd, tokenizerIcon, tokeni
 | --- | --- |
 | <Badge variant="success">推荐</Badge> | 标签会很多、字段又要保持一行时，用 `unfocused-inline`。 |
 | <Badge variant="success">推荐</Badge> | 允许用户自造条目时打开 `hasCreate`，并在变更事件里区分 `add` 和 `create`。 |
+| <Badge variant="success">推荐</Badge> | 字段本身已经在浮层或底部弹层里时，固定传 `presentation="popover"`。 |
 | <Badge variant="error">避免</Badge> | 选项是短小的固定清单时用标签输入框。那种场景用多选器。 |
 
 ## 示例

@@ -45,6 +45,7 @@ footer: false
       <tr><td><code>optional</code></td><td><code>boolean</code></td><td><code>false</code></td><td>标签上显示「可选」标记。</td></tr>
       <tr><td><code>name</code></td><td><code>string</code></td><td>—</td><td>表单字段名。每个已选 id 提交一次；字段禁用时不提交。</td></tr>
       <tr><td><code>width</code></td><td><code>number | string</code></td><td>—</td><td>整个字段的宽度（数字按像素算，字符串原样使用）。</td></tr>
+      <tr><td><code>presentation</code></td><td><code>'popover' | 'bottom-sheet' | 'adaptive'</code></td><td><code>'adaptive'</code></td><td>结果在哪里打开。<code>popover</code> 是行内输入框加锚定菜单。<code>bottom-sheet</code> 让字段变成触发器，点开触屏底部弹层：在里面搜索、勾选，按「保存」把草稿一次提交。<code>adaptive</code> 在紧凑触屏上用底部弹层（主指针是手指这类粗略指针，并且视口宽度小于主题的 <code>md</code> 断点或高度小于 500px），其余用浮层；服务端渲染和水合时是浮层。打开那一刻定下用哪种，退场播完才重新判断。底部弹层里，<code>item</code> 插槽、<code>hasClear</code>、<code>hasEntriesOnFocus</code>、<code>menuWidth</code>、<code>menu</code>、<code>overflow</code>、<code>hasAutoFocus</code> 没有地方生效，开发期会提示一次；想在所有设备上保留行内字段就传 <code>popover</code>。</td></tr>
     </tbody>
   </table>
 </div>
@@ -59,7 +60,7 @@ footer: false
       <tr><td><code>change</code></td><td><code>value: T[]</code>、<code>change: TokenizerChange</code></td><td>带上这次变化的类型：<code>add</code>、<code>create</code>、<code>remove</code>、<code>clear</code>。</td></tr>
       <tr><td><code>changeQuery</code></td><td><code>query: string</code></td><td>查询文字变化时触发。</td></tr>
       <tr><td><code>search</code></td><td><code>query: string</code></td><td><code>changeQuery</code> 的旧名。两个都会触发。</td></tr>
-      <tr><td><code>openChange</code></td><td><code>isOpen: boolean</code></td><td>列表打开或关闭时触发。</td></tr>
+      <tr><td><code>openChange</code></td><td><code>isOpen: boolean</code></td><td>行内列表打开或关闭时触发。底部弹层不报这个事件。</td></tr>
       <tr><td><code>focus</code></td><td><code>event: FocusEvent</code></td><td>焦点从外面进入整个字段时触发。</td></tr>
       <tr><td><code>blur</code></td><td><code>event: FocusEvent</code></td><td>焦点离开整个字段时触发，不只是离开输入框。</td></tr>
     </tbody>
@@ -82,6 +83,6 @@ footer: false
   </table>
 </div>
 
-模板 ref 暴露 <code>focus()</code>、<code>blur()</code>、<code>open()</code> 和 <code>close()</code>。<code>menu</code> 属性（<code>{ role: 'listbox' }</code> 或 <code>{ role: 'dialog', label }</code>）和 <code>openChange</code> 的用法与 <code>Typeahead</code> 相同。<code>search</code> 里调用 <code>context.update(items)</code> 会马上显示先拿到的匹配项（已选的标签不在其中），之后的列表只往后追加。
+模板 ref 暴露 <code>focus()</code>、<code>blur()</code>、<code>open()</code> 和 <code>close()</code>；底部弹层呈现里它们作用在触发器和弹层上。<code>menu</code> 属性（<code>{ role: 'listbox' }</code> 或 <code>{ role: 'dialog', label }</code>）和 <code>openChange</code> 的用法与 <code>Typeahead</code> 相同。<code>search</code> 里调用 <code>context.update(items)</code> 会马上显示先拿到的匹配项（已选的标签不在其中），之后的列表只往后追加。
 
 上面没列出的原生属性和事件监听会落到输入框上，所以 `@keydown`、`@paste` 和 `aria-*` 的用法跟普通 `<input>` 一样。`keydown` 监听先于内部的标签间导航执行，调用 `event.preventDefault()` 就能跳过内部处理。
