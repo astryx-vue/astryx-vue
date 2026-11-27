@@ -7753,50 +7753,69 @@
 
 ### v0.7.2
 
-- [ ] [`81b8df40f`](https://github.com/meta/astryx/commit/81b8df40f) fix(Layer): ship the dynamic-viewport cap and safe-area gutter, not only their fallbacks (#7622)
+- [x] [`81b8df40f`](https://github.com/meta/astryx/commit/81b8df40f) fix(Layer): ship the dynamic-viewport cap and safe-area gutter, not only their fallbacks (#7622)
+  - Vue 版已有：菜单表面宽度走 clampInlineSize、高度走 min(…, 100dvh - 16px)，飞出层共用 .astryx-dropdown-menu 的同一套样式
 - [x] [`198a7e3ff`](https://github.com/meta/astryx/commit/198a7e3ff) test(a11y): add Menu contract and bind the DropdownMenu pointer menu (#7636)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`9da2d0b39`](https://github.com/meta/astryx/commit/9da2d0b39) fix(DropdownMenuDivider): forward host attributes to the separator (#7645)
-- [ ] [`e40ce5a06`](https://github.com/meta/astryx/commit/e40ce5a06) fix(DropdownMenu): close submenu flyouts when the menu is light-dismissed (#6912)
-- [ ] [`9b8b7232f`](https://github.com/meta/astryx/commit/9b8b7232f) [Component Audit] ContextMenu: make pointer and touch evidence trustworthy (#7691)
+- [x] [`9da2d0b39`](https://github.com/meta/astryx/commit/9da2d0b39) fix(DropdownMenuDivider): forward host attributes to the separator (#7645)
+  - Vue 版已有：DropdownMenuDivider 是单根组件，宿主属性（id、data-*、aria-*、事件）经 Vue 属性透传直接落到 Divider 的分隔线上
+- [x] [`e40ce5a06`](https://github.com/meta/astryx/commit/e40ce5a06) fix(DropdownMenu): close submenu flyouts when the menu is light-dismissed (#6912)
+  - Vue 版已有：DropdownMenuSubMenu 监听根菜单 isOpen，关闭时取消等待中的悬停并收起所有飞出层，DropdownMenuSubMenu.dismiss.test 守着
+- [x] [`9b8b7232f`](https://github.com/meta/astryx/commit/9b8b7232f) [Component Audit] ContextMenu: make pointer and touch evidence trustworthy (#7691)
+  - 不适用：只是 ContextMenu 的 Chromium 无障碍审计 spec 与文档证据，属上游测试设施
 - [x] [`6d4f178a2`](https://github.com/meta/astryx/commit/6d4f178a2) Audit DropdownMenuDivider evidence and contract (#7693)
   - 不适用：只改上游测试、上游组件规范文档（自动初筛）
-- [ ] [`e868278e0`](https://github.com/meta/astryx/commit/e868278e0) fix(DropdownMenu): load the touch bottom sheet only when a menu shows it (#7709)
-- [ ] [`22c592a7a`](https://github.com/meta/astryx/commit/22c592a7a) Audit DropdownMenuGroup (#7729)
+- [x] [`e868278e0`](https://github.com/meta/astryx/commit/e868278e0) fix(DropdownMenu): load the touch bottom sheet only when a menu shows it (#7709)
+  - Vue 版已有：菜单的底部弹层经 lazyMenuBottomSheet 走 defineAsyncComponent，只在弹层真正进入组件树时才加载，DropdownMenuLazySheet.test 守着
+- [x] [`22c592a7a`](https://github.com/meta/astryx/commit/22c592a7a) Audit DropdownMenuGroup (#7729)
+  - 已移植：[#625](https://github.com/astryx-vue/astryx-vue/pull/625)。DropdownMenuGroup 标题不放可交互内容的使用说明补进中英文档
 - [x] [`25548b9e7`](https://github.com/meta/astryx/commit/25548b9e7) test(ContextMenu): resolve the lazy touch sheet once before the sheet cases (#7758)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`a44ebd55a`](https://github.com/meta/astryx/commit/a44ebd55a) feat(cli): install once, run anywhere — every copy hands a project's run to the release its Core matches (#7649)
-- [ ] [`684ca57bd`](https://github.com/meta/astryx/commit/684ca57bd) refactor(DropdownMenu): the header and footer Tab walk moves to a module of its own (#7737)
+- [x] [`a44ebd55a`](https://github.com/meta/astryx/commit/a44ebd55a) feat(cli): install once, run anywhere — every copy hands a project's run to the release its Core matches (#7649)
+  - 不适用：只是把文档里的 CLI 命令名从 npx @astryxdesign/cli 改成 astryx，属上游 CLI 发布机制
+- [x] [`684ca57bd`](https://github.com/meta/astryx/commit/684ca57bd) refactor(DropdownMenu): the header and footer Tab walk moves to a module of its own (#7737)
+  - 不适用：纯重构：把头尾 Tab 循环抽成模块；Vue 版早已把它放在 useMenuRegions 里
 - [x] [`ecb046872`](https://github.com/meta/astryx/commit/ecb046872) test(ContextMenu): the nested bottom-sheet case waits for its first row (#7761)
   - 不适用：只改上游测试（自动初筛）
 
 ### v0.7.3
 
-- [ ] [`b7860bcbb`](https://github.com/meta/astryx/commit/b7860bcbb) feat(DropdownMenuSubMenu): header and footer around a sub-menu's rows (#7530)
-- [ ] [`948e75d36`](https://github.com/meta/astryx/commit/948e75d36) [Component Audit] DropdownMenuItem: make action states reviewable (#7907)
-- [ ] [`2f47a4afe`](https://github.com/meta/astryx/commit/2f47a4afe) [Component Audit] DropdownMenuRadioGroup: let builders reach the group root (#7911)
+- [x] [`b7860bcbb`](https://github.com/meta/astryx/commit/b7860bcbb) feat(DropdownMenuSubMenu): header and footer around a sub-menu's rows (#7530)
+  - Vue 版已有：DropdownMenuSubMenu 的 header 和 footer 插槽、对话框语义和 Tab 循环已在（useMenuRegions）
+- [x] [`948e75d36`](https://github.com/meta/astryx/commit/948e75d36) [Component Audit] DropdownMenuItem: make action states reviewable (#7907)
+  - 已移植：[#625](https://github.com/astryx-vue/astryx-vue/pull/625)。DropdownMenuItem 的用法说明（一行一个交互目标、href、hasCloseOnSelect=false 的用法）补进中英文档
+- [x] [`2f47a4afe`](https://github.com/meta/astryx/commit/2f47a4afe) [Component Audit] DropdownMenuRadioGroup: let builders reach the group root (#7911)
+  - Vue 版已有：DropdownMenuRadioGroup 关掉 inheritAttrs 并把宿主属性摊到 role="group" 的根上，label 仍是兜底名称；Vue 没有 ref 属性这一说
 
 ### v0.7.4
 
-- [ ] [`97dda3cb4`](https://github.com/meta/astryx/commit/97dda3cb4) fix(useMenuPress): hit-test in the menu's own shadow root (#7914)
-- [ ] [`10b832e02`](https://github.com/meta/astryx/commit/10b832e02) fix(DropdownMenuSubMenu, Thumbnail, ChatMessageList): silence the busy Spinner and announce the busy start once (#7950)
+- [x] [`97dda3cb4`](https://github.com/meta/astryx/commit/97dda3cb4) fix(useMenuPress): hit-test in the menu's own shadow root (#7914)
+  - 已移植：[#625](https://github.com/astryx-vue/astryx-vue/pull/625)。关闭栈按 composedPath 的第一个节点判断按在哪，shadow root 里的菜单按在自己身上不再算点外面，补测试；菜单按压的命中测试已由 #548 处理
+- [x] [`10b832e02`](https://github.com/meta/astryx/commit/10b832e02) fix(DropdownMenuSubMenu, Thumbnail, ChatMessageList): silence the busy Spinner and announce the busy start once (#7950)
+  - 已移植：[#625](https://github.com/astryx-vue/astryx-vue/pull/625)。DropdownMenuSubMenu 的转圈保持装饰，菜单这一层显示出来后播报一次加载中，补测试
 
 ### v0.7.5
 
-- [ ] [`a8ef89f26`](https://github.com/meta/astryx/commit/a8ef89f26) [Component Audit] DropdownMenuRadioItem: caller click and hover handlers now run on radio rows (#8191)
-- [ ] [`a8b78c5e5`](https://github.com/meta/astryx/commit/a8b78c5e5) [Component Audit] DropdownMenuSubMenu: docs match the shipped props and RTL flyout placement is measured (#8227)
-- [ ] [`785e42ad9`](https://github.com/meta/astryx/commit/785e42ad9) fix(DropdownMenu): a row the pointer lights takes focus without :focus-visible (#8221)
+- [x] [`a8ef89f26`](https://github.com/meta/astryx/commit/a8ef89f26) [Component Audit] DropdownMenuRadioItem: caller click and hover handlers now run on radio rows (#8191)
+  - 已移植：[#625](https://github.com/astryx-vue/astryx-vue/pull/625)。单选行和勾选行把宿主属性与事件摊到行上，调用方的 click 排在行自己的选择之后、禁用的行不运行它，补测试
+- [x] [`a8b78c5e5`](https://github.com/meta/astryx/commit/a8b78c5e5) [Component Audit] DropdownMenuSubMenu: docs match the shipped props and RTL flyout placement is measured (#8227)
+  - 不适用：文档只是补 menuDataTestId（上游给飞出层的测试 id 属性）；Vue 里 data-testid 直接透传到行，飞出层的 RTL 摆放由 usePositionedLayer 的逻辑方位负责
+- [x] [`785e42ad9`](https://github.com/meta/astryx/commit/785e42ad9) fix(DropdownMenu): a row the pointer lights takes focus without :focus-visible (#8221)
+  - 已移植：[#625](https://github.com/astryx-vue/astryx-vue/pull/625)。悬停点亮的菜单行经 focusForLastInput 聚焦，指针按过后不匹配 :focus-visible，补测试
 - [x] [`174300fcb`](https://github.com/meta/astryx/commit/174300fcb) ci: discover PR browser accessibility specs, so a new spec needs no workflow edit (#8367)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`23de0923e`](https://github.com/meta/astryx/commit/23de0923e) spec(AST-094): touch presentations feel native by default (#8409)
   - 不适用：上游组件规范文档（自动初筛）
 - [x] [`cd3787bac`](https://github.com/meta/astryx/commit/cd3787bac) feat(core): one touch presentation resolver (#8062)
   - 已移植：[#591](https://github.com/astryx-vue/astryx-vue/pull/591)。呈现解析器按主题紧凑定义判断，接入 MoreMenu、ContextMenu、DropdownMenu、Selector、MultiSelector
-- [ ] [`caa1f04fe`](https://github.com/meta/astryx/commit/caa1f04fe) fix(ContextMenu): the long press that opens the menu no longer closes it (#7308)
+- [x] [`caa1f04fe`](https://github.com/meta/astryx/commit/caa1f04fe) fix(ContextMenu): the long press that opens the menu no longer closes it (#7308)
+  - Vue 版已有：关闭栈的 bornPress 让「登记在这次按压里」的层不被同一次按压关掉，长按打开的 ContextMenu 不会被自己的抬手关闭
 - [x] [`e36bd2e15`](https://github.com/meta/astryx/commit/e36bd2e15) spec(useMenuPress): a finger opens a sub-menu by lifting, and a handed-off finger is the opening press (DEC-8) (#8451)
   - 不适用：上游组件规范文档（自动初筛）
-- [ ] [`f85473ed5`](https://github.com/meta/astryx/commit/f85473ed5) fix(DropdownMenu): the step-aside rule names the surface host, not a universal selector (#8411)
-- [ ] [`7d4898956`](https://github.com/meta/astryx/commit/7d4898956) fix(DropdownMenu): a menu's sheet renders nothing at rest and drops two wrappers (#8392)
+- [x] [`f85473ed5`](https://github.com/meta/astryx/commit/f85473ed5) fix(DropdownMenu): the step-aside rule names the surface host, not a universal selector (#8411)
+  - 不适用：上游用 CSS :has 选择器让菜单给下钻视图让位；Vue 由 isDrilled 状态直接隐藏菜单树，没有这条选择器
+- [x] [`7d4898956`](https://github.com/meta/astryx/commit/7d4898956) fix(DropdownMenu): a menu's sheet renders nothing at rest and drops two wrappers (#8392)
+  - Vue 版已有：关着的菜单底部弹层不渲染（v-if isSheet、异步组件），上游的包裹层数是 React/StyleX 结构
 - [x] [`b298b37d1`](https://github.com/meta/astryx/commit/b298b37d1) feat(theme): add surface-specific status color roles (#7657)
   - 已移植：[#517](https://github.com/astryx-vue/astryx-vue/pull/517)。core 新增默认状态色表，组件改读正确的状态角色
 - [x] [`d484045d5`](https://github.com/meta/astryx/commit/d484045d5) test(DropdownMenu): the SSR test waits for the on-demand sheet before it ends (#8492)
@@ -7811,36 +7830,47 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`640599c5a`](https://github.com/meta/astryx/commit/640599c5a) spec(ContextMenu, List): ContextMenu on the headless menu; ListItem row menus attach to the li (#8648)
   - 不适用：上游组件规范文档（自动初筛）
-- [ ] [`7bcb81cbe`](https://github.com/meta/astryx/commit/7bcb81cbe) feat(core): the nav, breadcrumb and tab menus track a held pointer across their items (#8791)
-- [ ] [`249501fb0`](https://github.com/meta/astryx/commit/249501fb0) fix(Overlay, DropdownMenuGroup, MobileNavToggle): forward host attributes to the element each owns (#8755)
+- [x] [`7bcb81cbe`](https://github.com/meta/astryx/commit/7bcb81cbe) feat(core): the nav, breadcrumb and tab menus track a held pointer across their items (#8791)
+  - Vue 版已有：菜单表面按是否溢出切 touch-action（pinch-zoom 与 pan-y pinch-zoom），CSS 在 dropdown-menu.css 和 context-menu.css；导航与标签菜单的按压滑选由 #548 处理
+- [x] [`249501fb0`](https://github.com/meta/astryx/commit/249501fb0) fix(Overlay, DropdownMenuGroup, MobileNavToggle): forward host attributes to the element each owns (#8755)
+  - 已移植：[#625](https://github.com/astryx-vue/astryx-vue/pull/625)。DropdownMenuGroup 有标题时名字归标题，没标题才用调用方的 aria-labelledby，其余属性透传，补测试
 
 ### v0.7.6
 
-- [ ] [`fd0aba82b`](https://github.com/meta/astryx/commit/fd0aba82b) fix(DropdownMenu): a failed sheet preload is handled and retried, never an unhandled rejection (#8478)
+- [x] [`fd0aba82b`](https://github.com/meta/astryx/commit/fd0aba82b) fix(DropdownMenu): a failed sheet preload is handled and retried, never an unhandled rejection (#8478)
+  - 已移植：[#625](https://github.com/astryx-vue/astryx-vue/pull/625)。preloadBottomSheet 自己吞掉加载失败并返回 false，下次调用重新请求，不再有未处理的拒绝，补测试
 - [x] [`bb8291ba3`](https://github.com/meta/astryx/commit/bb8291ba3) test(DropdownMenu): the menu-button coverage check runs as one serial part per state (#9068)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`9e07422c7`](https://github.com/meta/astryx/commit/9e07422c7) test(a11y): the coverage checks of 17 binding specs run as one serial part per state (#9071)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`f277e2580`](https://github.com/meta/astryx/commit/f277e2580) fix(core): a single esbuild bundle renders Core: lazily imported modules import Core directly, not through barrels (#9055)
   - 不适用：React 版 esbuild 打包入口的问题
-- [ ] [`1d462afd3`](https://github.com/meta/astryx/commit/1d462afd3) fix(DropdownMenu): a data item with nested items inside a section renders its submenu (#8858)
-- [ ] [`13f3867ed`](https://github.com/meta/astryx/commit/13f3867ed) fix(core): DropdownMenu bottom-sheet trigger forwards the caller's ref (#8898)
-- [ ] [`3a25c59c0`](https://github.com/meta/astryx/commit/3a25c59c0) refactor(DropdownMenu): a failed sheet preload is the preload's result, not an empty catch (#9069)
+- [x] [`1d462afd3`](https://github.com/meta/astryx/commit/1d462afd3) fix(DropdownMenu): a data item with nested items inside a section renders its submenu (#8858)
+  - 已移植：[#625](https://github.com/astryx-vue/astryx-vue/pull/625)。数据模式里带嵌套 items 的行渲染成子菜单（顶层和分组里都行，可再嵌套），补测试
+- [x] [`13f3867ed`](https://github.com/meta/astryx/commit/13f3867ed) fix(core): DropdownMenu bottom-sheet trigger forwards the caller's ref (#8898)
+  - 不适用：React 的 button.ref 要合并进触发器 ref；Vue 的 ref 是模板引用，底部弹层和浮层共用同一个触发按钮节点
+- [x] [`3a25c59c0`](https://github.com/meta/astryx/commit/3a25c59c0) refactor(DropdownMenu): a failed sheet preload is the preload's result, not an empty catch (#9069)
+  - 已移植：[#625](https://github.com/astryx-vue/astryx-vue/pull/625)。同 fd0aba82b：预加载失败是预加载自己的结果，不再留下空的 catch 或未处理的拒绝
 - [x] [`133fb8099`](https://github.com/meta/astryx/commit/133fb8099) docs(spec): DropdownMenu records its shipped contract as current (#9113)
   - 不适用：上游组件规范文档（自动初筛）
 - [x] [`6b63e75d5`](https://github.com/meta/astryx/commit/6b63e75d5) docs(spec): ContextMenu records its shipped contract as current (#9125)
   - 不适用：上游组件规范文档（自动初筛）
-- [ ] [`8bc9ab9b2`](https://github.com/meta/astryx/commit/8bc9ab9b2) fix(usePopover): its trigger ref stays the same function across renders (#9130)
-- [ ] [`7ef23f2c3`](https://github.com/meta/astryx/commit/7ef23f2c3) fix(core): ReactNode slots use isRenderable for 'renders nothing' (#9160)
+- [x] [`8bc9ab9b2`](https://github.com/meta/astryx/commit/8bc9ab9b2) fix(usePopover): its trigger ref stays the same function across renders (#9130)
+  - 不适用：React 内联 ref 函数每次渲染换新、反复挂载的问题
+- [x] [`7ef23f2c3`](https://github.com/meta/astryx/commit/7ef23f2c3) fix(core): ReactNode slots use isRenderable for 'renders nothing' (#9160)
+  - 已移植：[#508](https://github.com/astryx-vue/astryx-vue/pull/508)。基础展示族已移植：hasSlotContent 判空，DropdownMenuGroup 标题插槽为空时不画
 - [x] [`b56b6d4fc`](https://github.com/meta/astryx/commit/b56b6d4fc) fix(core): one modality call per component, reading the component's own document (#9148)
   - 不适用：React 每个组件只调一次交互方式 hook 的整理；Vue 版交互方式按文档统一跟踪
 - [x] [`e0a03766d`](https://github.com/meta/astryx/commit/e0a03766d) docs(knowledge): every component spec lives in docs/specs/components, one folder per component (#9007)
   - 不适用：上游内部规范和架构文档、上游组件规范文档（自动初筛）
 - [x] [`acfa52701`](https://github.com/meta/astryx/commit/acfa52701) fix(useTypeahead): type-to-select ignores accents (#8864)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`eb6d2cc12`](https://github.com/meta/astryx/commit/eb6d2cc12) fix(ContextMenu): a context menu mounts its layer at its first open, so a large Table shows its rows in seconds in Safari (#9278)
-- [ ] [`48f6a067f`](https://github.com/meta/astryx/commit/48f6a067f) [Component Audit] DropdownMenu: keep the focused row visible in forced colors (#7517)
-- [ ] [`372a0eae2`](https://github.com/meta/astryx/commit/372a0eae2) fix(SideNav): focus on a row the collapsed rail removes moves to the collapse toggle or the nearest rail row (#9249)
+- [x] [`eb6d2cc12`](https://github.com/meta/astryx/commit/eb6d2cc12) fix(ContextMenu): a context menu mounts its layer at its first open, so a large Table shows its rows in seconds in Safari (#9278)
+  - 已移植：[#625](https://github.com/astryx-vue/astryx-vue/pull/625)。ContextMenu 的面板在第一次打开时才挂上并保留，从没打开的菜单不往页面加节点，补测试
+- [x] [`48f6a067f`](https://github.com/meta/astryx/commit/48f6a067f) [Component Audit] DropdownMenu: keep the focused row visible in forced colors (#7517)
+  - Vue 版已有：dropdown-menu.css 的强制配色下聚焦行用 Highlight/HighlightText 涂出来；ContextMenu 的行用 DOM 焦点点亮，右键打开不画键盘焦点环
+- [x] [`372a0eae2`](https://github.com/meta/astryx/commit/372a0eae2) fix(SideNav): focus on a row the collapsed rail removes moves to the collapse toggle or the nearest rail row (#9249)
+  - 已移植：[#625](https://github.com/astryx-vue/astryx-vue/pull/625)。读元素可访问名称的工具抽成 utils/accessibleName，菜单用它给自定义触发器打开的菜单命名；SideNav 的焦点转移部分不在本族
 - [x] [`69fb25721`](https://github.com/meta/astryx/commit/69fb25721) test(rtl): RTL coverage for ContextMenu, TableHeaderCell, TableCell and TableSelectionToolbar (#9286)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`e7530dbb4`](https://github.com/meta/astryx/commit/e7530dbb4) test(rtl): RTL coverage for seven Core parts (Step, OverflowList, dialogs, MobileNav, menus) (#9332)
@@ -7854,8 +7884,10 @@
 
 ### v0.7.7
 
-- [ ] [`4d56e6b9b`](https://github.com/meta/astryx/commit/4d56e6b9b) perf(Selector): a long list has its scrolling touch-action before the first open (#9591)
-- [ ] [`7d1179aa9`](https://github.com/meta/astryx/commit/7d1179aa9) fix(DropdownMenu): a bottom sheet opened from renderTrigger is named after the menu, not "Menu" (#9604)
+- [x] [`4d56e6b9b`](https://github.com/meta/astryx/commit/4d56e6b9b) perf(Selector): a long list has its scrolling touch-action before the first open (#9591)
+  - 不适用：为避免 React 在首次打开测量后把长列表整个重绘一遍而预判溢出；Vue 的 useOverflow 只改一个 data 属性
+- [x] [`7d1179aa9`](https://github.com/meta/astryx/commit/7d1179aa9) fix(DropdownMenu): a bottom sheet opened from renderTrigger is named after the menu, not "Menu" (#9604)
+  - 已移植：[#625](https://github.com/astryx-vue/astryx-vue/pull/625)。自定义触发器打开的底部弹层以调用方 aria-label 或触发器自己的可访问名称命名，不再一律叫 Menu，补测试
 - [x] [`b53bec615`](https://github.com/meta/astryx/commit/b53bec615) test: module loads are awaited, not raced against test clocks (#9447)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`941c69e0b`](https://github.com/meta/astryx/commit/941c69e0b) spec(DropdownMenu): open question on rich sheet headings for custom triggers (#9674)
@@ -7871,7 +7903,8 @@
 
 ### v0.7.8
 
-- [ ] [`acca58968`](https://github.com/meta/astryx/commit/acca58968) fix(core): a long press held through a busy main thread still reports, on the touch events' clock (#9455)
+- [x] [`acca58968`](https://github.com/meta/astryx/commit/acca58968) fix(core): a long press held through a busy main thread still reports, on the touch events' clock (#9455)
+  - Vue 版已有：useLongPress 记着触摸事件时钟上的到期时刻，页面忙时晚到的事件仍先报出长按
 - [x] [`9889a3438`](https://github.com/meta/astryx/commit/9889a3438) chore(core): name the system that 88 kept Effects sync (#9787)
   - 不适用：只给 React useEffect 加注释
 - [x] [`e390c3c43`](https://github.com/meta/astryx/commit/e390c3c43) test(browser): keep every Playwright browser context off remote hosts (#9811)
@@ -7881,74 +7914,92 @@
 
 ### v0.7.9
 
-- [ ] [`fbb81c6cc`](https://github.com/meta/astryx/commit/fbb81c6cc) DropdownMenu: under a finger, the opening finger picks only after UIMenu's handoff (AST-094 FR29) (#8627)
+- [x] [`fbb81c6cc`](https://github.com/meta/astryx/commit/fbb81c6cc) DropdownMenu: under a finger, the opening finger picks only after UIMenu's handoff (AST-094 FR29) (#8627)
+  - 已移植：[#625](https://github.com/astryx-vue/astryx-vue/pull/625)。手指或笔打开菜单后走过 10px 交接距离才开始挑行（presentation 不写时；写死 popover 仍按落定规则），按住点亮的行按「按下」颜色画，补测试
 - [x] [`5083ead48`](https://github.com/meta/astryx/commit/5083ead48) fix(DropdownMenu): prevent stale trigger tooltips after selection (#9280)
   - 不适用：上游内部规范和架构文档、只改上游测试（自动初筛）
 - [x] [`35985f2bd`](https://github.com/meta/astryx/commit/35985f2bd) test: each --repeat-each copy of an audit keeps its own evidence folder (#9515)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`82d20c7b1`](https://github.com/meta/astryx/commit/82d20c7b1) docs(DropdownMenu): DEC-6 and the design relationships name the held finger's pressed paint (#9955)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`8b2883998`](https://github.com/meta/astryx/commit/8b2883998) chore(core): split long comment sentences in some menu press sources and tests (#9954)
+- [x] [`8b2883998`](https://github.com/meta/astryx/commit/8b2883998) chore(core): split long comment sentences in some menu press sources and tests (#9954)
+  - 不适用：只是拆分注释里的长句
 - [x] [`b215c3e2f`](https://github.com/meta/astryx/commit/b215c3e2f) test(DropdownMenu): a footer stays reachable by Tab when the React root is the document (#9815)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`5c91e81ee`](https://github.com/meta/astryx/commit/5c91e81ee) fix(Layer): a closed layer's trigger is no CSS anchor (#9963)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`5db61cc9b`](https://github.com/meta/astryx/commit/5db61cc9b) fix(BottomSheet, Dialog): returning focus after an overlay closes no longer scrolls the page (#10022)
-- [ ] [`a866c2ab0`](https://github.com/meta/astryx/commit/a866c2ab0) fix(Dialog, Drawer): a backdrop press that closes a popover inside closes only the popover (#9988)
+- [x] [`5db61cc9b`](https://github.com/meta/astryx/commit/5db61cc9b) fix(BottomSheet, Dialog): returning focus after an overlay closes no longer scrolls the page (#10022)
+  - Vue 版已有：菜单关闭后把焦点还给触发器用 focus({ preventScroll: true })，页面不会被滚动
+- [x] [`a866c2ab0`](https://github.com/meta/astryx/commit/a866c2ab0) fix(Dialog, Drawer): a backdrop press that closes a popover inside closes only the popover (#9988)
+  - Vue 版已有：关闭栈 runDismissals 每次关闭都登记 noteOutsideDismissal，同一手势里后面的层据此知道外面的按压已经被收下
 - [x] [`a96269ed3`](https://github.com/meta/astryx/commit/a96269ed3) spec(DropdownMenu): a disabled menu row is reached by the keyboard and stays inert (DEC-11) (#9008)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`257573b22`](https://github.com/meta/astryx/commit/257573b22) docs(AST-094, AST-057): motion guidance; gesture springs; swipe-row returns (#9915)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`7e69f91dc`](https://github.com/meta/astryx/commit/7e69f91dc) fix(core): an anchored layer that would run under the software keyboard ends above it (#8208)
+- [x] [`7e69f91dc`](https://github.com/meta/astryx/commit/7e69f91dc) fix(core): an anchored layer that would run under the software keyboard ends above it (#8208)
+  - Vue 版已有：usePositionedLayer 用 getLayerViewport 扣掉被屏幕键盘盖住的部分来翻转和夹紧，菜单落在键盘上方
 - [x] [`5b54b834c`](https://github.com/meta/astryx/commit/5b54b834c) fix(DropdownMenu): on a phone or a tablet, a tap while the menu enters is ignored, as on iOS (#8458)
   - 暂缓：DropdownMenu 进场期间不接点按还没接：Vue 版 DropdownMenu 没有进场动画，没有可等的进场；补上进场动画后用 holdEntranceInput 接入
   - 已移植：[#601](https://github.com/astryx-vue/astryx-vue/pull/601)。DropdownMenu 改用锚定浮层的 CSS 进场，手机和平板上进场期间的点按被忽略，按压命中测试看穿挡板
-- [ ] [`ddb8b3462`](https://github.com/meta/astryx/commit/ddb8b3462) feat(ButtonGroup): a finger's slide runs the button it lifts on (#8657)
+- [x] [`ddb8b3462`](https://github.com/meta/astryx/commit/ddb8b3462) feat(ButtonGroup): a finger's slide runs the button it lifts on (#8657)
+  - 已移植：[#509](https://github.com/astryx-vue/astryx-vue/pull/509)。基础展示族已移植：ButtonGroup 手指滑动在松手处执行
 - [x] [`8c5de42d4`](https://github.com/meta/astryx/commit/8c5de42d4) docs(DropdownMenu): FR22 notes the still-mouse shield gap (#10148)
   - 不适用：上游内部规范和架构文档（自动初筛）
 
 ### v0.7.10
 
-- [ ] [`70597367f`](https://github.com/meta/astryx/commit/70597367f) fix(DropdownMenu, ContextMenu): Tab from any sub-menu level closes the whole menu (#8870)
+- [x] [`70597367f`](https://github.com/meta/astryx/commit/70597367f) fix(DropdownMenu, ContextMenu): Tab from any sub-menu level closes the whole menu (#8870)
+  - 已移植：[#625](https://github.com/astryx-vue/astryx-vue/pull/625)。DropdownMenu 子菜单任一层按 Tab 关掉整个菜单（飞出层与下钻视图），补测试；ContextMenu 子菜单本来就是这个行为
 
 ### v0.7.11
 
 - [x] [`3bd5a4c1b`](https://github.com/meta/astryx/commit/3bd5a4c1b) fix(Layer): a still mouse presses through an entrance's input hold (#10303)
   - 不适用：上游内部规范和架构文档、只改上游测试（自动初筛）
-- [ ] [`68e8d6d43`](https://github.com/meta/astryx/commit/68e8d6d43) feat(DropdownMenuSubMenu): delay and hideDelay set the hover timing (#10298)
+- [x] [`68e8d6d43`](https://github.com/meta/astryx/commit/68e8d6d43) feat(DropdownMenuSubMenu): delay and hideDelay set the hover timing (#10298)
+  - 已移植：[#625](https://github.com/astryx-vue/astryx-vue/pull/625)。DropdownMenuSubMenu 新增 delay、hideDelay 控制悬停打开和关闭的时机，补测试和文档
 - [x] [`5a6ed906f`](https://github.com/meta/astryx/commit/5a6ed906f) chore(Layer): name the gap a still mouse leaves, exactly (#10317)
   - 不适用：上游内部规范和架构文档（自动初筛）
 
 ### v0.7.12
 
-- [ ] [`360701de7`](https://github.com/meta/astryx/commit/360701de7) fix(Text, Heading): the truncation tooltip mounts on the first hover, tap or focus (#10290)
+- [x] [`360701de7`](https://github.com/meta/astryx/commit/360701de7) fix(Text, Heading): the truncation tooltip mounts on the first hover, tap or focus (#10290)
+  - 已移植：[#505](https://github.com/astryx-vue/astryx-vue/pull/505)。基础展示族已移植：截断提示在第一次悬停、轻点或聚焦时才挂载
 - [x] [`4e6e67df6`](https://github.com/meta/astryx/commit/4e6e67df6) fix(core): make disabled Button focusable via aria-disabled per AST-085 (#7906)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`bd6df76da`](https://github.com/meta/astryx/commit/bd6df76da) fix(useFocusTrap): a modal's first and last Tab stops count a radio group once, as the browser does (#10304)
+- [x] [`bd6df76da`](https://github.com/meta/astryx/commit/bd6df76da) fix(useFocusTrap): a modal's first and last Tab stops count a radio group once, as the browser does (#10304)
+  - 已移植：[#548](https://github.com/astryx-vue/astryx-vue/pull/548)。焦点陷阱把同名单选组算一站，补测试
 - [x] [`422440a64`](https://github.com/meta/astryx/commit/422440a64) fix(core): two copies of Core's modules share one React context (#10233)
   - 不适用：React context 多副本问题
-- [ ] [`9dca38629`](https://github.com/meta/astryx/commit/9dca38629) perf(Layer): anchored entrances play on the surface (#10561)
-- [ ] [`dd09d678d`](https://github.com/meta/astryx/commit/dd09d678d) fix(menus): the keys and type-ahead reach a disabled row, which stays inert (#10160)
-- [ ] [`73eb8cb64`](https://github.com/meta/astryx/commit/73eb8cb64) fix(DropdownMenu): a pointer open keeps the row a drag already lit (#10590)
+- [x] [`9dca38629`](https://github.com/meta/astryx/commit/9dca38629) perf(Layer): anchored entrances play on the surface (#10561)
+  - 不适用：修的是 Chromium 对 CSS anchor 定位元素逐帧重排；Vue 菜单的进场动画挂在唯一的表面元素上，没有 React Layer 的两层结构
+- [x] [`dd09d678d`](https://github.com/meta/astryx/commit/dd09d678d) fix(menus): the keys and type-ahead reach a disabled row, which stays inert (#10160)
+  - 已移植：[#625](https://github.com/astryx-vue/astryx-vue/pull/625)。DropdownMenu 与 ContextMenu 的方向键、Home/End、翻页键和字母跳转能走到禁用行（行仍不可操作、悬停不点亮），打开不落在禁用行上，补测试和文档；MoreMenu 的键盘逻辑不在这条的文件清单里
+- [x] [`73eb8cb64`](https://github.com/meta/astryx/commit/73eb8cb64) fix(DropdownMenu): a pointer open keeps the row a drag already lit (#10590)
+  - 已移植：[#625](https://github.com/astryx-vue/astryx-vue/pull/625)。指针打开菜单时，按住期间已点亮的行保持聚焦，没有点亮的才聚焦菜单本身，补测试
 - [x] [`7e8266361`](https://github.com/meta/astryx/commit/7e8266361) test(DropdownMenu): the lazy sheet case waits for its rows by frames (#10643)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`c99ad4aa2`](https://github.com/meta/astryx/commit/c99ad4aa2) test(DropdownMenu): radio-item and sub-menu audits expect a disabled row in the roving order (#10622)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`1ffc0dac9`](https://github.com/meta/astryx/commit/1ffc0dac9) fix(BottomSheet): resting content starts below the grab bar, whatever the padding (#8558)
   - 已移植：[#618](https://github.com/astryx-vue/astryx-vue/pull/618)。BottomSheet 部分已由 #615 移植，#618 补上 PowerSearch 弹层这一半：标题不再补第二段，只有值那一步的吸顶标题伸进抓手下面那一段
-- [ ] [`71450dd2c`](https://github.com/meta/astryx/commit/71450dd2c) fix(DropdownMenu): the press that opens the menu does not close it (#10689)
-- [ ] [`2309691db`](https://github.com/meta/astryx/commit/2309691db) fix(DropdownMenu): a finger's hold-slide-lift no longer flashes the focus outline on the menu button (#10079)
+- [x] [`71450dd2c`](https://github.com/meta/astryx/commit/71450dd2c) fix(DropdownMenu): the press that opens the menu does not close it (#10689)
+  - Vue 版已有：关闭栈的 bornPress 与 useMenuPress 的 isTriggerClickFromPress 一起保证打开菜单的那次按压不会把它关掉
+- [x] [`2309691db`](https://github.com/meta/astryx/commit/2309691db) fix(DropdownMenu): a finger's hold-slide-lift no longer flashes the focus outline on the menu button (#10079)
+  - Vue 版已有：菜单关闭还焦点时 useFocusReturnVisibility 按最后输入方式把触发器的焦点环关掉，手指的按住滑动松手不会闪一下
 
 ### v0.7.14
 
 - [x] [`108f354ae`](https://github.com/meta/astryx/commit/108f354ae) fix(core): drop 'use client' from the package root and the component barrels (#11106)
   - 不适用：React Server Components 的 use client 指令
-- [ ] [`09479d9c7`](https://github.com/meta/astryx/commit/09479d9c7) fix(Popover): a touch that pans is not an outside press, even without pointercancel (#11038)
-- [ ] [`d9d7b105f`](https://github.com/meta/astryx/commit/d9d7b105f) feat(DropdownMenu): a finger or a pen opens the menu as it presses (#8078)
+- [x] [`09479d9c7`](https://github.com/meta/astryx/commit/09479d9c7) fix(Popover): a touch that pans is not an outside press, even without pointercancel (#11038)
+  - 已移植：[#542](https://github.com/astryx-vue/astryx-vue/pull/542)。触摸在层外平移不算点外面，哪怕没有 pointercancel，由关闭栈统一处理
+- [x] [`d9d7b105f`](https://github.com/meta/astryx/commit/d9d7b105f) feat(DropdownMenu): a finger or a pen opens the menu as it presses (#8078)
+  - 已移植：[#625](https://github.com/astryx-vue/astryx-vue/pull/625)。DropdownMenu 的手指或笔按住打开已有；MoreMenu 补上按压模型：鼠标按下就开、手指按满长按时间才开，按住滑到行上松开执行，补测试
 
 ### v0.7.15
 
-- [ ] [`5770e5b19`](https://github.com/meta/astryx/commit/5770e5b19) fix(DropdownMenu): a cancelled touch clears the row a finger lit (#8508)
+- [x] [`5770e5b19`](https://github.com/meta/astryx/commit/5770e5b19) fix(DropdownMenu): a cancelled touch clears the row a finger lit (#8508)
+  - Vue 版已有：菜单按压的 cancel 走 settle 清掉被点亮的行，菜单表面是 tabindex=-1 的焦点停泊处
 - [x] [`92e660acb`](https://github.com/meta/astryx/commit/92e660acb) docs(spec): useMenuPress states its boundary with core's group tracker (#8572)
   - 不适用：上游内部规范和架构文档（自动初筛）
 
@@ -7956,38 +8007,53 @@
 
 - [x] [`50beab961`](https://github.com/meta/astryx/commit/50beab961) fix(core): pass host data-* attributes to the component's own element (#11406)
   - Vue 版已有：InputClearButton 关掉 inheritAttrs 并把透传属性（含 data-*）绑在自己的按钮上
-- [ ] [`344916163`](https://github.com/meta/astryx/commit/344916163) fix(DropdownMenu): sync its show and hide refs at commit (#10905)
+- [x] [`344916163`](https://github.com/meta/astryx/commit/344916163) fix(DropdownMenu): sync its show and hide refs at commit (#10905)
+  - 不适用：React 里同步 show 与 hide 引用的提交时机问题
 - [x] [`cfc431d7a`](https://github.com/meta/astryx/commit/cfc431d7a) fix(layer): a release does not dismiss the layer it opened (#11258)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`9bdbcb16f`](https://github.com/meta/astryx/commit/9bdbcb16f) fix(Button, Popover, Dialog): keep an edge in forced-colors mode (#7677)
+- [x] [`9bdbcb16f`](https://github.com/meta/astryx/commit/9bdbcb16f) fix(Button, Popover, Dialog): keep an edge in forced-colors mode (#7677)
+  - 已移植：[#504](https://github.com/astryx-vue/astryx-vue/pull/504)。基础展示族已移植：强制配色下危险按钮、按钮组接缝、Popover、菜单、Dialog 的边补齐
 
 ### v0.7.17
 
-- [ ] [`8931e819c`](https://github.com/meta/astryx/commit/8931e819c) fix(Table, ContextMenu): a sortable column's resize line sits on its column edge (#11576)
-- [ ] [`54f211658`](https://github.com/meta/astryx/commit/54f211658) feat(Pagination): page links through getPageHref (#11578)
-- [ ] [`2566fd73a`](https://github.com/meta/astryx/commit/2566fd73a) perf(ContextMenu): load the touch sheet's action list only for the sheet presentation (#11616)
-- [ ] [`9ad5a1d2f`](https://github.com/meta/astryx/commit/9ad5a1d2f) [Component Audit] MoreMenu: docs list the controlled open prop and the inherited size, and tests guard both (#11742)
+- [x] [`8931e819c`](https://github.com/meta/astryx/commit/8931e819c) fix(Table, ContextMenu): a sortable column's resize line sits on its column edge (#11576)
+  - Vue 版已有：Vue 的光标锚点就在触发器里（触发器本身是定位基准），没有 triggerXstyle 让触发器不定位的情形；键盘打开落在触发器左下角
+- [x] [`54f211658`](https://github.com/meta/astryx/commit/54f211658) feat(Pagination): page links through getPageHref (#11578)
+  - 不适用：给模块级选择器常量加 /* @__PURE__ */ 以便打包器摇树；Pagination 的 getPageHref 不在本族
+- [x] [`2566fd73a`](https://github.com/meta/astryx/commit/2566fd73a) perf(ContextMenu): load the touch sheet's action list only for the sheet presentation (#11616)
+  - 已移植：[#625](https://github.com/astryx-vue/astryx-vue/pull/625)。ContextMenu 的触屏底部弹层改走按需加载的 MenuBottomSheet，没用到弹层的页面不加载它，补测试
+- [x] [`9ad5a1d2f`](https://github.com/meta/astryx/commit/9ad5a1d2f) [Component Audit] MoreMenu: docs list the controlled open prop and the inherited size, and tests guard both (#11742)
+  - 已移植：[#625](https://github.com/astryx-vue/astryx-vue/pull/625)。MoreMenu 文档补上 size 未设置时取外层尺寸的说明；isMenuOpen 受控属性文档已有
 - [x] [`e4a11bb68`](https://github.com/meta/astryx/commit/e4a11bb68) fix(core): a radio's circle is drawn at 50%, not with the pill token (#11836)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`1d2d6299d`](https://github.com/meta/astryx/commit/1d2d6299d) fix(DropdownMenu): a sub-menu whose label is not a string names its view, its Back row and its sheet (#11594)
-- [ ] [`5a24fc0cf`](https://github.com/meta/astryx/commit/5a24fc0cf) fix(DropdownMenu): a waiting open still takes focus and fires onClick (#11905)
-- [ ] [`120629d82`](https://github.com/meta/astryx/commit/120629d82) fix(DropdownMenu): a mouse press opens a menu in another document (#11938)
+- [x] [`1d2d6299d`](https://github.com/meta/astryx/commit/1d2d6299d) fix(DropdownMenu): a sub-menu whose label is not a string names its view, its Back row and its sheet (#11594)
+  - Vue 版已有：DropdownMenuSubMenu 的标签是节点时用 aria-labelledby 命名视图，返回行用打开时读到的文字，DropdownMenuSubMenu.nodeLabel.test 守着
+- [x] [`5a24fc0cf`](https://github.com/meta/astryx/commit/5a24fc0cf) fix(DropdownMenu): a waiting open still takes focus and fires onClick (#11905)
+  - 不适用：上游 useLayer 会把打开挂起到触发器成为有效锚点，要处理挂起中的打开；Vue 的触发器一直在，打开不挂起
+- [x] [`120629d82`](https://github.com/meta/astryx/commit/120629d82) fix(DropdownMenu): a mouse press opens a menu in another document (#11938)
+  - Vue 版已有：关闭栈在每个有层的 document 上各挂监听，useMenuPress 取菜单或触发器所在的 document，另一个文档里的鼠标按下也能打开
 - [x] [`816ae394e`](https://github.com/meta/astryx/commit/816ae394e) test(DropdownMenu): capture geometry after its frame samples settle (#12343)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`72f2d7caa`](https://github.com/meta/astryx/commit/72f2d7caa) docs: icon props take semantic names; Selector hasClear types; useTableSelectionState returns (#12583)
   - 已移植  #595：[#593](https://github.com/astryx-vue/astryx-vue/pull/593)。图标属性接语义图标名并更新文档：TextInput、TextArea 在 #593，NumberInput 在 #595；其余属性的文档已有
-- [ ] [`25bedb999`](https://github.com/meta/astryx/commit/25bedb999) fix(DropdownMenu): a sheet opened before its code loads shows its rows with it (#12619)
+- [x] [`25bedb999`](https://github.com/meta/astryx/commit/25bedb999) fix(DropdownMenu): a sheet opened before its code loads shows its rows with it (#12619)
+  - Vue 版已有：菜单底部弹层是一个异步组件，加载完才整体显示，行和弹层一起出现
 - [x] [`0c52d0454`](https://github.com/meta/astryx/commit/0c52d0454) docs(spec): AST-116 Popover anchoring, modality and layer focus return (draft) (#11112)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`9a199615b`](https://github.com/meta/astryx/commit/9a199615b) fix(DropdownMenu): a keyboard-opened sheet keeps focus where it is when its items change (#12573)
+- [x] [`9a199615b`](https://github.com/meta/astryx/commit/9a199615b) fix(DropdownMenu): a keyboard-opened sheet keeps focus where it is when its items change (#12573)
+  - Vue 版已有：底部弹层的键盘聚焦只在打开和展开子菜单时发生（watch isOpen、surfaceRef），items 换新数组不会挪焦点
 - [x] [`9e19fa47e`](https://github.com/meta/astryx/commit/9e19fa47e) chore: land batch 8 (11 pull requests) (#12827)
   - Vue 版已有：field.css 的标签已用主文字色，说明和可选标记仍用次要文字色
-- [ ] [`53615c1f4`](https://github.com/meta/astryx/commit/53615c1f4) chore: land batch 19 (3 pull requests) (#12875)
-- [ ] [`476d9063f`](https://github.com/meta/astryx/commit/476d9063f) chore: land batch 63 (3 pull requests) (#12945)
+- [x] [`53615c1f4`](https://github.com/meta/astryx/commit/53615c1f4) chore: land batch 19 (3 pull requests) (#12875)
+  - 已移植 、#514：[#508](https://github.com/astryx-vue/astryx-vue/pull/508)。基础展示族已移植：文字角色行高等
+- [x] [`476d9063f`](https://github.com/meta/astryx/commit/476d9063f) chore: land batch 63 (3 pull requests) (#12945)
+  - Vue 版已有：每个菜单表面（含嵌套的飞出层）都在自己的类上重设 --_dropdown-menu-radius，行圆角由它推出，不会继承外层主题的圆角变量
 - [x] [`8ecfe59a4`](https://github.com/meta/astryx/commit/8ecfe59a4) chore: land batch 61 (4 pull requests) (#12940)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`416b167cf`](https://github.com/meta/astryx/commit/416b167cf) fix(core): one focus return for Popover and DropdownMenu (popover presentation) and Dialog that never strands focus (AST-116 FR17–FR21, AR1) (#11121)
-- [ ] [`ddc5dd15d`](https://github.com/meta/astryx/commit/ddc5dd15d) fix(ContextMenu): a node-label sub-menu level names the bottom sheet (#11936)
+- [x] [`416b167cf`](https://github.com/meta/astryx/commit/416b167cf) fix(core): one focus return for Popover and DropdownMenu (popover presentation) and Dialog that never strands focus (AST-116 FR17–FR21, AR1) (#11121)
+  - Vue 版已有：菜单关闭后只有焦点丢了或还在菜单里才还给触发器，焦点已落到别处的不抢；focusReturn 统一处理
+- [x] [`ddc5dd15d`](https://github.com/meta/astryx/commit/ddc5dd15d) fix(ContextMenu): a node-label sub-menu level names the bottom sheet (#11936)
+  - 已移植：[#625](https://github.com/astryx-vue/astryx-vue/pull/625)。ContextMenu 子菜单的标签是节点时，视图用它命名，嵌套视图的返回行用这个标签的文字，补测试
 
 ## 页面导航（area:core）
 
