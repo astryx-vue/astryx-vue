@@ -1,5 +1,5 @@
 import type { DemoMeta } from '../../demo-infra/demoMeta'
-import { chatMessageMetadataOverview as demo } from './index'
+import { chatMessageMetadataCard, chatMessageMetadataOverview as demo } from './index'
 
 export const meta = {
   slug: 'chat-message-metadata',
@@ -9,4 +9,5 @@ export const meta = {
   en: 'Chat Message Metadata',
   zh: '对话消息元信息',
   demo,
+  cardDemo: chatMessageMetadataCard,
 } satisfies DemoMeta
