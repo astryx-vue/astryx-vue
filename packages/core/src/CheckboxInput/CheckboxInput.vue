@@ -4,6 +4,7 @@ import type { CheckboxInputEmits, CheckboxInputProps, CheckboxInputSlots, Checkb
 import { computed, nextTick, onBeforeUnmount, onMounted, onUpdated, useAttrs, useId, useTemplateRef } from 'vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
+import { pressBoxProps } from '../composables/internal/pressBox.js'
 import { useTouchHitArea } from '../composables/internal/useTouchHitArea.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import FieldLabel from '../Field/FieldLabel.vue'
@@ -11,6 +12,7 @@ import FieldStatus from '../Field/FieldStatus.vue'
 import { ariaRequired as resolveAriaRequired } from '../FormLayout/context.js'
 import { useIndicator } from '../Indicator/useIndicator.js'
 import { readLayerScoped } from '../layer/scopedProvide.js'
+import { registerBoxHold } from '../utils/boxHold.js'
 import { withholdCallerHandlers } from '../utils/disabledInteraction.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { checkboxRowPressKey } from './rowPress.js'
@@ -42,6 +44,8 @@ const blocked = computed(() => props.isDisabled || props.isReadOnly || busy.valu
 const state = computed(() => action.value.value === 'indeterminate' ? 'indeterminate' : action.value.value ? 'checked' : 'unchecked')
 const CheckboxMark = useIndicator('checkbox')
 const press = usePressFeedback({ hasOverlay: false })
+// 只有用到框的组件才装框按住，只有按钮和链接的页面不带这段代码。
+registerBoxHold()
 // 外面有整行在回应按压（列表行）时，按压由那一行画，这一行不再单独当按压表面。
 const rowOwnsPress = readLayerScoped(checkboxRowPressKey)
 // 有标签的复选框，粗指针下整行朝 44px 长出一圈看不见的热区，行自己的大小不变。
@@ -131,7 +135,8 @@ onBeforeUnmount(() => ownerDocument?.removeEventListener('reset', reset, true))
   <div class="astryx-checkbox-input" :class="attrs.class" :style="[widthStyle, attrs.style as CSSProperties]" :data-size="size" :data-status="status?.type" :data-blocked="blocked || undefined">
     <!-- eslint-disable-next-line vue-a11y/click-events-have-key-events, vue-a11y/no-static-element-interactions -- 点击只用来把热区上的点按交给里面的复选框，键盘由复选框自己处理。 -->
     <div ref="row" class="astryx-checkbox-row" :class="{ 'astryx-indicator-scope': !blocked, 'astryx-touch-hit-area-band': hasHitArea }" v-bind="blocked || rowOwnsPress ? undefined : press.pressableProps" @pointerenter="tooltip.onPointerEnter" @pointerleave="tooltip.onPointerLeave" @pointerdown="hasHitArea ? rowPointerDown($event) : undefined" @click="hasHitArea ? rowClick($event) : undefined">
-      <span class="astryx-checkbox-control">
+      <!-- iOS 对按住复选框的手指只给文字选区、不给点击。按压控制器在手指按住标记过的框时锁住整行的选区，没等到点击就替它勾选。 -->
+      <span class="astryx-checkbox-control" v-bind="isDisabled ? undefined : pressBoxProps">
         <input
           v-bind="inputAttrs()" :id="inputId" ref="input" class="astryx-checkbox-native" type="checkbox"
           :checked="action.value.value === true"

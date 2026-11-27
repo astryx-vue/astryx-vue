@@ -291,12 +291,28 @@ jobs:
 
       # 先把版本提交推回 main，再发布：发布中途出错时，下一次运行没有 changeset 了，
       # 会直接补发这几个版本，不需要人再点一次批准。
+      # 这次运行期间 main 又进了新合并时，推送会被拒。新合并自己触发的那次运行排在
+      # 同一个 concurrency 组里，会把这里没推上去的 changeset 一并消费掉，所以这次直接让位。
       - name: Push the version commit
+        id: push
         if: steps.apply.outputs.applied == 'true'
-        run: git push origin HEAD:main
+        run: |
+          set -eu
+          if git push origin HEAD:main; then
+            echo "superseded=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git fetch origin main
+          if [ "$(git rev-parse origin/main)" = "${GITHUB_SHA}" ]; then
+            echo "::error::main 没有新提交，推送仍被拒绝。"
+            exit 1
+          fi
+          echo "::notice::main 在这次运行期间有了新合并，版本提交和发布交给后面那次运行。"
+          echo "superseded=true" >> "$GITHUB_OUTPUT"
 
       - name: Version packages or publish
         id: changesets
+        if: steps.push.outputs.superseded != 'true'
         uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
         with:
           publish-script: pnpm release
@@ -322,7 +338,7 @@ jobs:
       # 这里补齐缺的 tag 和 GitHub Release，再用 after-publish.mjs 核对 npm 并补 npm 链接。
       - name: Backfill tags and GitHub Releases
         id: backfill
-        if: steps.changesets.outputs.published != 'true' && steps.changesets.outputs.hasChangesets != 'true'
+        if: steps.push.outputs.superseded != 'true' && steps.changesets.outputs.published != 'true' && steps.changesets.outputs.hasChangesets != 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

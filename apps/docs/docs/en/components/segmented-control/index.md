@@ -41,6 +41,8 @@ Keyboard behavior follows the radio group convention: the left and right arrows 
 
 A segment can show an icon before its label by putting it in the `#icon` slot; the icon follows the size of the control. Set `isLabelHidden` to show the icon alone, and the `label` becomes the segment's `aria-label` so its name is not lost.
 
+The selected surface is a separate layer that slides to the new segment on every change, whether from a click, a key or the program. With a mouse it slides on the theme's duration and easing; on a touch device such as a phone it uses the iOS segmented control's spring, and a finger held on the selected segment lifts the surface slightly. Press the selected segment and drag sideways to carry the surface along; the segment under the pointer when it lets go is selected, a drag that drifts above or below the control keeps choosing by its horizontal position, and `Esc` cancels the drag. A mouse, a finger and a pen all drag the same way. With Reduce Motion on, the surface no longer slides or grows: on touch it cross-fades in place, and a mouse click lands at once.
+
 
 <ComponentAnatomy />
 

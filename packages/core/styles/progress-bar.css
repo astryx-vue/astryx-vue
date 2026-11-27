@@ -107,11 +107,22 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 0;
+
+    /* 确定进度的填充铺满整条轨道，用 transform 滑到当前份额：值变化走合成器，
+       页面忙的时候也继续动；动 width 会每帧在主线程布局重绘，跟着卡住。
+       --_progress-bar-fill 是已填份额（行内写入），前沿正好落在那里，
+       右到左时按条自己的方向（:dir(rtl)）镜像。 */
+    width: 100%;
     height: 100%;
     border-radius: inherit;
     background: var(--astryx-progress-bar-fill-background, var(--astryx-color-text-primary, #fff));
-    transition: width 200ms cubic-bezier(0.24, 1, 0.4, 1);
+    transform: translateX(calc(var(--_progress-bar-fill, 0%) - 100%));
+    transition: transform 200ms cubic-bezier(0.24, 1, 0.4, 1);
+    will-change: transform;
+  }
+
+  .astryx-progress-bar-fill:dir(rtl) {
+    transform: translateX(calc(100% - var(--_progress-bar-fill, 0%)));
   }
 
   .astryx-progress-bar[data-variant='success'] .astryx-progress-bar-fill {
@@ -159,6 +170,7 @@
 
   .astryx-progress-bar[data-indeterminate='true'] .astryx-progress-bar-fill {
     width: 40%;
+    will-change: auto;
     animation: astryx-progress-bar-indeterminate 1.5s ease-in-out infinite;
   }
 
@@ -184,21 +196,73 @@
     }
   }
 
+  /* 手指下，数值变化按 UIProgressView 的 setProgress(_:animated:) 走：
+     线性，时长是整条轨道的时长乘以这次移动的份额（--_progress-bar-move），
+     再乘主题节奏，曲线是 --_progress-bar-curve，从填充当前画出的位置起步。
+     大于 0 时填充不短于 --_progress-bar-min（两倍轨道高度），等于 0 时什么都不画。
+     --_progress-bar-flip 在 0、1、2 间轮转，把填充错开百分之一像素，
+     让「回到刚离开的值」不会被 CSS 当成过渡的起点而缩短。 */
+  @media (pointer: coarse) {
+    .astryx-progress-bar-fill {
+      transform: translateX(calc(max(var(--_progress-bar-fill, 0%), var(--_progress-bar-min, 0px)) - 100% + var(--_progress-bar-flip, 0) * 0.01px));
+      transition-duration: calc(var(--_progress-bar-move, 0ms) * var(--_astryx-motion-tempo, 1));
+      transition-timing-function: var(--_progress-bar-curve, linear);
+    }
+
+    .astryx-progress-bar-fill:dir(rtl) {
+      transform: translateX(calc(min(calc(100% - var(--_progress-bar-fill, 0%)), calc(100% - var(--_progress-bar-min, 0px))) - var(--_progress-bar-flip, 0) * 0.01px));
+    }
+
+    .astryx-progress-bar-fill[data-empty] {
+      opacity: 0;
+    }
+  }
+
+  /* 减少动态效果：数值立刻落定；不确定进度条不再滑动，铺满轨道只让不透明度呼吸。 */
   @media (prefers-reduced-motion: reduce) {
     .astryx-progress-bar-fill {
       transition: none;
     }
 
-    .astryx-progress-bar[data-indeterminate='true'] .astryx-progress-bar-fill {
-      animation-duration: 3s;
+    .astryx-progress-bar[data-indeterminate='true'] .astryx-progress-bar-fill,
+    :is([dir='rtl'] .astryx-progress-bar[data-indeterminate='true']) .astryx-progress-bar-fill {
+      width: 100%;
+      transform: none;
+      animation-name: astryx-progress-bar-pulse;
+      animation-duration: var(--_progress-bar-pulse, 2s);
+      animation-timing-function: var(--_progress-bar-pulse-curve, ease-in-out);
+      animation-direction: alternate;
+    }
+  }
+
+  @keyframes astryx-progress-bar-pulse {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: var(--_progress-bar-pulse-floor, 0.84);
     }
   }
 
   /* 强制配色会把填充色换成 Canvas，补一圈边让进度还看得见。 */
   @media (forced-colors: active) {
-    .astryx-progress-bar-fill {
+    /* 强制配色下填充按值定宽、不滑动：轨道的裁剪会切掉滑入的填充的轮廓起点。 */
+    .astryx-progress-bar-fill,
+    .astryx-progress-bar-fill:dir(rtl) {
+      width: var(--_progress-bar-fill, 0%);
+      transform: none;
+      transition-property: width;
+      will-change: auto;
       outline: 1px solid CanvasText;
       outline-offset: -1px;
+    }
+  }
+
+  /* 强制配色加手指：填充按值定宽，布局属性不走触屏动效，新尺寸立刻落定。 */
+  @media (forced-colors: active) and (pointer: coarse) {
+    .astryx-progress-bar-fill {
+      width: calc(max(var(--_progress-bar-fill, 0%), var(--_progress-bar-min, 0px)) + var(--_progress-bar-flip, 0) * 0.01px);
+      transition-duration: 0s;
     }
   }
 }

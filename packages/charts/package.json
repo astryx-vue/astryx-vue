@@ -1,7 +1,7 @@
 {
   "name": "@astryx-vue/charts",
   "type": "module",
-  "version": "0.9.30",
+  "version": "0.9.31",
   "description": "Astryx charts for Vue — a config-model data visualization layer (d3-based).",
   "author": "ShenQingchuan",
   "license": "MIT",
@@ -70,13 +70,13 @@
     "vue": "catalog:peer"
   },
   "dependencies": {
+    "@types/d3-scale": "catalog:charts",
+    "@types/d3-shape": "catalog:charts",
     "d3-scale": "catalog:charts",
     "d3-shape": "catalog:charts"
   },
   "devDependencies": {
     "@astryx-vue/core": "workspace:^",
-    "@types/d3-scale": "catalog:charts",
-    "@types/d3-shape": "catalog:charts",
     "@types/node": "catalog:language",
     "@vue/compiler-sfc": "catalog:vue",
     "@vue/test-utils": "catalog:testing",

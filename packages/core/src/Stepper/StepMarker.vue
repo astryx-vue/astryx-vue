@@ -11,12 +11,13 @@ defineProps<{
   numberLabel: string
   status?: StepStatus
   isDisabled?: boolean
+  selected?: boolean
   progress?: string
 }>()
 </script>
 
 <template>
-  <span v-if="$slots.icon || glyph !== 'none'" class="astryx-step-indicator" :data-glyph="glyph" :data-progress="progress" :data-status="status" :data-disabled="isDisabled || undefined" aria-hidden="true">
+  <span v-if="$slots.icon || glyph !== 'none'" class="astryx-step-indicator" :data-glyph="glyph" :data-progress="progress" :data-status="status" :data-disabled="isDisabled || undefined" :data-selected="selected ? 'selected' : undefined" aria-hidden="true">
     <slot v-if="$slots.icon" name="icon" />
     <Icon v-else-if="glyph === 'warning' || glyph === 'error'" :icon="glyph" size="sm" :color="isDisabled ? 'disabled' : glyph" />
     <Icon v-else-if="glyph === 'check' && status === 'success'" icon="success" size="sm" :color="isDisabled ? 'disabled' : 'success'" />

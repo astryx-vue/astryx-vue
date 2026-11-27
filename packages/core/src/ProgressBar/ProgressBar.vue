@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
 import type { ProgressBarProps } from './types.js'
-import { computed, useAttrs, useId } from 'vue'
+import { computed, useAttrs, useId, useTemplateRef } from 'vue'
+import { useCoarsePointer } from '../composables/useCoarsePointer.js'
 import Tooltip from '../Tooltip/Tooltip.vue'
+import { reducedMotionPulseVars, useProgressBarTouch } from './progressBarMotion.js'
 import '../../styles/progress-bar.css'
 import '../../styles/visually-hidden.css'
 
@@ -34,7 +36,15 @@ const percentage = computed(() => {
     return 0
   return ((clamped.value - min.value) / (max.value - min.value)) * 100
 })
-const fillWidth = computed<CSSProperties>(() => ({ width: `${percentage.value}%` }))
+const coarse = useCoarsePointer()
+const trackRef = useTemplateRef<HTMLElement>('track')
+const hasMarks = computed(() => !props.isIndeterminate && (props.marks?.length ?? 0) > 0)
+const touch = useProgressBarTouch(percentage, hasMarks, coarse, trackRef)
+const fillShare = computed<CSSProperties>(() => ({
+  '--_progress-bar-fill': `${percentage.value}%`,
+  ...touch.fillVars.value,
+}))
+const pulseVars = reducedMotionPulseVars() as CSSProperties
 const widthStyle = computed<CSSProperties>(() => ({ width: typeof props.width === 'number' ? `${props.width}px` : props.width }))
 const showsValue = computed(() => Boolean(props.showValue || props.hasValueLabel))
 const displayValue = computed(() => {
@@ -60,7 +70,7 @@ const resolvedMarks = computed(() => {
       key: `${mark.value}:${mark.label}:${index}`,
       label: mark.label,
       pct,
-      onFill: percentage.value > 0 && pct <= percentage.value,
+      onFill: percentage.value > 0 && pct <= touch.drawnPercentage.value,
     }]
   })
 })
@@ -84,10 +94,10 @@ const resolvedMarks = computed(() => {
     <span v-else-if="label" :id="labelId" class="astryx-visually-hidden">{{ label }}</span>
     <div class="astryx-progress-bar-rail">
       <div
-        class="astryx-progress-bar-track" role="progressbar" :aria-labelledby="labelledBy" :aria-describedby="describedBy"
+        ref="track" class="astryx-progress-bar-track" role="progressbar" :aria-labelledby="labelledBy" :aria-describedby="describedBy"
         :aria-valuemin="isIndeterminate ? undefined : min" :aria-valuemax="isIndeterminate ? undefined : max" :aria-valuenow="isIndeterminate ? undefined : clamped" :aria-valuetext="isIndeterminate ? undefined : displayValue"
       >
-        <div class="astryx-progress-bar-fill" :style="isIndeterminate ? undefined : fillWidth" />
+        <div class="astryx-progress-bar-fill" :data-empty="!isIndeterminate && percentage === 0 ? '' : undefined" :style="isIndeterminate ? pulseVars : fillShare" />
       </div>
       <Tooltip
         v-for="mark in resolvedMarks"
@@ -98,6 +108,7 @@ const resolvedMarks = computed(() => {
       >
         <span
           class="astryx-progress-bar-mark"
+          role="img"
           tabindex="0"
           :aria-label="mark.label"
           :data-placement="mark.onFill ? 'fill' : 'track'"

@@ -13,7 +13,7 @@ footer: false
     <tbody>
       <tr><td><code>width</code></td><td><code>number | string</code></td><td><code>'100%'</code></td><td>占位块的宽度。传入数字时按像素处理，字符串则保留为 CSS 尺寸。</td></tr>
       <tr><td><code>height</code></td><td><code>number | string</code></td><td><code>'100%'</code></td><td>占位块的高度。传入数字时按像素处理，字符串则保留为 CSS 尺寸。</td></tr>
-      <tr><td><code>radius</code></td><td><code>'none' | 0 | 1 | 2 | 3 | 4 | 'rounded'</code></td><td><code>3</code></td><td>圆角使用设计令牌等级，<code>none</code> 为直角，<code>rounded</code> 为完全圆角。</td></tr>
+      <tr><td><code>radius</code></td><td><code>'none' | 0 | 1 | 2 | 3 | 4 | 'rounded'</code></td><td><code>3</code></td><td>圆角使用设计令牌等级，<code>4</code> 和 <code>3</code> 对应同一个容器圆角，<code>none</code> 为直角，<code>rounded</code> 为完全圆角。</td></tr>
       <tr><td><code>index</code></td><td><code>number</code></td><td><code>0</code></td><td>交错动画的索引，每增加 1，动画延后 100ms，让多个占位块依次闪烁。</td></tr>
     </tbody>
   </table>

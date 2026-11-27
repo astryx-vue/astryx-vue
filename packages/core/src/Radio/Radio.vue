@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import type { RadioEmits, RadioProps, RadioSlots } from './types.js'
 import { computed, mergeProps, useAttrs, useId, useSlots, useTemplateRef } from 'vue'
+import { pressBoxProps } from '../composables/internal/pressBox.js'
 import { useTouchHitArea } from '../composables/internal/useTouchHitArea.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { useIndicator } from '../Indicator/useIndicator.js'
 import { readLayerScoped } from '../layer/scopedProvide.js'
+import { registerBoxHold } from '../utils/boxHold.js'
 import { withholdCallerHandlers } from '../utils/disabledInteraction.js'
 import { radioContextKey } from './types.js'
 
@@ -15,6 +17,8 @@ defineSlots<RadioSlots>()
 const attrs = useAttrs()
 const slots = useSlots()
 const press = usePressFeedback({ hasOverlay: false })
+// 只有用到框的组件才装框按住，只有按钮和链接的页面不带这段代码。
+registerBoxHold()
 const context = readLayerScoped(radioContextKey)
 const generatedId = `astryx-radio-option-${useId()}`
 const inputId = computed(() => props.id ?? generatedId)
@@ -73,8 +77,10 @@ function rowClick(event: MouseEvent): void {
       :aria-describedby="describedBy()"
       @click="click" @change="change"
     >
+    <!-- iOS 对按住圆圈的手指只给文字选区、不给点击。按压控制器在手指按住标记过的圆圈时锁住整行的选区，没等到点击就替它选中。 -->
     <component
       :is="RadioMark"
+      v-bind="isDisabled ? undefined : pressBoxProps"
       :state="isSelected ? 'checked' : 'unchecked'"
       :size="indicatorSize"
       :is-disabled="isDisabled"

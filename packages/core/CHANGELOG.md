@@ -1,5 +1,32 @@
 # @astryx-vue/core
 
+## 0.33.4
+
+### Patch Changes
+
+- [#638](https://github.com/astryx-vue/astryx-vue/pull/638) [`47a6c5b`](https://github.com/astryx-vue/astryx-vue/commit/47a6c5b398876ef136c860bab8bb4b482b992307) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 手指按住复选框的框或单选的圆圈时不再选中旁边的文字，停着长按后抬手会照常勾选或选中，长按已经起了作用（比如弹出菜单）时则不再多点一次。
+
+- [#635](https://github.com/astryx-vue/astryx-vue/pull/635) [`87784b4`](https://github.com/astryx-vue/astryx-vue/commit/87784b4ef1b7aca3bbf54efdba316f020185573a) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - SegmentedControl 的选中底色每次换选都滑到新分段（鼠标按主题时序，触屏按 iOS 弹簧），鼠标、手指和笔都能按住选中的分段拖着走、松手处即选中，拖出控件上下方仍按左右位置选择，手指按住时底色浮起；减少动态效果时触屏改为原地淡入淡出、鼠标直接落位。
+
+## 0.33.3
+
+### Patch Changes
+
+- [#633](https://github.com/astryx-vue/astryx-vue/pull/633) [`4fd8950`](https://github.com/astryx-vue/astryx-vue/commit/4fd8950ac8a4d4989b8f3f76b5624edec7d5e6f8) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Slider 的滑块改按 UISlider 的方式跟随指针：拖动不再先跳到按下的位置，手指按住会放大、松手带速度滑行后才触发 changeEnd，手指或触控笔轻点轨道在抬起时设值，触屏上每个滑块有 48px 的可点区域。
+
+- [#630](https://github.com/astryx-vue/astryx-vue/pull/630) [`b1ae642`](https://github.com/astryx-vue/astryx-vue/commit/b1ae64222b2cf6a24ff38ff39daa300bc58d401b) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Switch 在触屏上像 iOS 开关一样跟手：按下圆钮微微鼓起，横向拖过大半条轨道就翻面、松手生效，按住不动也能切换；鼠标和触控笔也能拖动切换，拖出开关再松开则不变。
+
+## 0.33.2
+
+### Patch Changes
+
+- [#632](https://github.com/astryx-vue/astryx-vue/pull/632) [`2e2c05b`](https://github.com/astryx-vue/astryx-vue/commit/2e2c05b2b30685665d760530a1de28a17bfdcf09) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 加载与进度类组件对齐上游：
+  - Spinner 的圆弧放进自带合成层的转子里转（一次迭代 100 圈），脚本跑着的时候也照转；圆环改为 `role="progressbar"`，独立使用的加载圈在页面加载后出现时通过共用播报通道把名称读一次，带 `aria-hidden`、别的 `role` 或处在拥有任务的组件里（如 Tokenizer 底部抽屉）时保持安静；主题可用名为 `spinner` 的指示图形换掉整圈。
+  - ProgressBar 的确定进度填充改用 transform 滑动，页面忙时也继续动；手指下按 UIProgressView 的时长和曲线移动，大于 0 时至少画 16px，等于 0 时不画，刻度标记按画出的长度判断在填充上还是轨道上；减少动态效果下，不确定进度条铺满轨道只让不透明度呼吸；刻度标记带 `role="img"`。
+  - Skeleton 的脉动改用线性时间函数加分级关键帧，Safari 在脚本运行时也继续脉动；`radius` 取 4 与 3 对应同一个容器圆角，已写进文档。
+  - Stepper：可点步骤的描述挂到按钮的 `aria-describedby`；序号与标签在文本读法里分开；调用方传的 `aria-current` 不再盖过步骤自己的；当前步骤的步骤、指示点和标签带 `data-selected`；收起的紧凑布局里每个步骤带读屏名称，禁用步骤多读「不可用」。
+  - Banner：`role="alert"` 只罩住标题和描述，连同传入的 `aria-*` 落在消息元素上，控件和内容区不再算警报的一部分；标题与描述之间留一个空格；没有图标时不再留空图标框；关闭按钮带 `astryx-banner-close`。
+
 ## 0.33.1
 
 ### Patch Changes
