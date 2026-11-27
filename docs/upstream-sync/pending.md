@@ -437,19 +437,22 @@
 
 - [x] [`0d5d64e97`](https://github.com/meta/astryx/commit/0d5d64e97) spec(core): each BottomSheetSwitcher step owns its native dialog (#7744)
   - 不适用：上游组件规范文档（自动初筛）
-- [ ] [`79f4fc70d`](https://github.com/meta/astryx/commit/79f4fc70d) fix(Dialog, BottomSheet): a dismissed file picker inside no longer closes them (#7851)
+- [x] [`79f4fc70d`](https://github.com/meta/astryx/commit/79f4fc70d) fix(Dialog, BottomSheet): a dismissed file picker inside no longer closes them (#7851)
+  - Vue 版已有：BottomSheet 与 BottomSheetSwitcher 的 onCancel 只认 dialog 自己发出的 cancel，内部文件选择器取消不会关闭（be92e397）
 - [x] [`3133fb04b`](https://github.com/meta/astryx/commit/3133fb04b) docs(spec): promote component:BottomSheet and component:BottomSheetSwitcher to current (#7822)
   - 不适用：上游组件规范文档（自动初筛）
 
 ### v0.7.4
 
 - [ ] [`36515dccd`](https://github.com/meta/astryx/commit/36515dccd) feat(core): BottomSheetSwitcher presents each sheet in its own native dialog (#7720)
+  - 暂缓：切换器改成每一步一个原生对话框，要建立在 BottomSheet 打开顺序栈上，归 BottomSheet 打开顺序任务
 - [x] [`0d2cb4b62`](https://github.com/meta/astryx/commit/0d2cb4b62) test(core): browser evidence for per-sheet switcher dialogs (#7757)
   - 不适用：上游组件规范文档、只改上游测试（自动初筛）
 
 ### v0.7.5
 
-- [ ] [`7cb897b4e`](https://github.com/meta/astryx/commit/7cb897b4e) fix(BottomSheet): keep toasts visible and clickable above an open sheet (#7781)
+- [x] [`7cb897b4e`](https://github.com/meta/astryx/commit/7cb897b4e) fix(BottomSheet): keep toasts visible and clickable above an open sheet (#7781)
+  - Vue 版已有：BottomSheet.vue 用 createModalOutletHandle 把全局 toast 挂进模态抽屉，toast 可见可点（2ef57bb6）
 - [x] [`c743ae000`](https://github.com/meta/astryx/commit/c743ae000) spec(design): under reduced motion, touch cross-fades and other pointers change at once (#8272)
   - 不适用：上游组件规范文档（自动初筛）
 - [x] [`c899f0bb6`](https://github.com/meta/astryx/commit/c899f0bb6) spec(AST-099): one shared on-screen keyboard module (#8304)
@@ -463,8 +466,10 @@
 - [x] [`2af4d305a`](https://github.com/meta/astryx/commit/2af4d305a) feat(Popover): presentation — a BottomSheet on a phone when asked, as iOS presents a popover (#8229)
   - 暂缓：Popover 的 presentation 属性（手机上以 BottomSheet 呈现）还没做：Vue 版 Popover 没有 presentation 属性，需要接呈现保持、BottomSheet 宿主和焦点交接，上游约 1700 行
   - 已移植：[#596](https://github.com/astryx-vue/astryx-vue/pull/596)。Popover 新增 presentation 属性，adaptive 时手机上以 BottomSheet 呈现，接上呈现保持、BottomSheet 宿主和焦点交接
-- [ ] [`c22cbe2fd`](https://github.com/meta/astryx/commit/c22cbe2fd) fix(core): useAnnounce delivers inside the open Astryx modal that encloses its caller (#8009)
+- [x] [`c22cbe2fd`](https://github.com/meta/astryx/commit/c22cbe2fd) fix(core): useAnnounce delivers inside the open Astryx modal that encloses its caller (#8009)
+  - Vue 版已有：announceChannel 按 :modal 对话框找播报区域，BottomSheet 的原生 dialog 里调用 useAnnounce 就写进它里面
 - [ ] [`2a162e1b6`](https://github.com/meta/astryx/commit/2a162e1b6) feat(core): BottomSheet stacks by open order, replaces on a same-update switch, and BottomSheetSwitcher is deprecated (#7648)
+  - 暂缓：按打开顺序叠放、同次更新替换、BottomSheetSwitcher 废弃，归 BottomSheet 打开顺序任务
 - [x] [`54fbccb27`](https://github.com/meta/astryx/commit/54fbccb27) feat(core): Tokenizer touch sheet behind experimental.presentation (#7977)
   - 暂缓：Tokenizer 触屏弹层还没做：Vue 版 Tokenizer 没有 presentation 属性和弹层编辑界面，上游约 4800 行
   - 暂缓：Tokenizer 触屏弹层依赖 presentation 属性和触屏呈现；归动效 4a 触屏呈现任务
@@ -476,11 +481,14 @@
 - [x] [`248380ebd`](https://github.com/meta/astryx/commit/248380ebd) spec(Dialog): every modal presentation is a focus region through one module (DEC-2) (#8882)
   - 不适用：上游组件规范文档（自动初筛）
 - [ ] [`8e1e4405b`](https://github.com/meta/astryx/commit/8e1e4405b) fix(BottomSheet): a replaced sheet moves down to a shorter entering sheet again (#8920)
-- [ ] [`c9066fe8b`](https://github.com/meta/astryx/commit/c9066fe8b) feat(tokens): add --ease-exit, the curve BottomSheet already closes on (#8004)
+  - 暂缓：替换交接的量取在打开顺序栈里，归 BottomSheet 打开顺序任务
+- [x] [`c9066fe8b`](https://github.com/meta/astryx/commit/c9066fe8b) feat(tokens): add --ease-exit, the curve BottomSheet already closes on (#8004)
+  - Vue 版已有：bottom-sheet.css 的退场曲线已用 --astryx-ease-exit，触屏固定同一条曲线，主题 token 已有
 
 ### v0.7.6
 
-- [ ] [`d73908f67`](https://github.com/meta/astryx/commit/d73908f67) fix(core): a sheet hosting another sheet in its content leaves that sheet's gestures alone (#8820)
+- [x] [`d73908f67`](https://github.com/meta/astryx/commit/d73908f67) fix(core): a sheet hosting another sheet in its content leaves that sheet's gestures alone (#8820)
+  - 已移植：[#615](https://github.com/astryx-vue/astryx-vue/pull/615)。抽屉内容里再开的抽屉或对话框，手势不再被外层内容区接管，补测试
 - [x] [`f277e2580`](https://github.com/meta/astryx/commit/f277e2580) fix(core): a single esbuild bundle renders Core: lazily imported modules import Core directly, not through barrels (#9055)
   - 不适用：React 版 esbuild 打包入口的问题
 - [x] [`48f3699cf`](https://github.com/meta/astryx/commit/48f3699cf) docs(spec): Layout records its shipped contract as current (#8822)
@@ -489,28 +497,42 @@
   - 不适用：React 每个组件只调一次交互方式 hook 的整理；Vue 版交互方式按文档统一跟踪
 - [x] [`efb6b3044`](https://github.com/meta/astryx/commit/efb6b3044) test(BottomSheet): check the handoff's scrim and focus with the handoff held (#9235)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`10bdc28f6`](https://github.com/meta/astryx/commit/10bdc28f6) fix(BottomSheet): a drag across the resting detent no longer flashes the sheet away from the finger (#9193)
-- [ ] [`e0a03766d`](https://github.com/meta/astryx/commit/e0a03766d) docs(knowledge): every component spec lives in docs/specs/components, one folder per component (#9007)
+- [x] [`10bdc28f6`](https://github.com/meta/astryx/commit/10bdc28f6) fix(BottomSheet): a drag across the resting detent no longer flashes the sheet away from the finger (#9193)
+  - 不适用：修的是 React 渲染比 transform 晚一帧；Vue 的 panelTransform 与 panelHeight 来自同一份响应式状态，同一次更新里一起提交
+- [x] [`e0a03766d`](https://github.com/meta/astryx/commit/e0a03766d) docs(knowledge): every component spec lives in docs/specs/components, one folder per component (#9007)
+  - 不适用：上游规范文档换目录
 - [ ] [`0df41f123`](https://github.com/meta/astryx/commit/0df41f123) fix(MobileTokenizer): refine touch sheet editing flow (#8742)
-- [ ] [`16b95934f`](https://github.com/meta/astryx/commit/16b95934f) fix(Dialog, Drawer, BottomSheet): an overlay open on the server renders closed until hydration (#9360)
+  - 暂缓：触屏令牌编辑流程依赖 useMobileKeyboard，归屏幕键盘模块
+- [x] [`16b95934f`](https://github.com/meta/astryx/commit/16b95934f) fix(Dialog, Drawer, BottomSheet): an overlay open on the server renders closed until hydration (#9360)
+  - 已移植：[#616](https://github.com/astryx-vue/astryx-vue/pull/616)。服务端渲染就开着的抽屉和流程水合前不带 aria-modal，水合后静止打开不播进场，补 SSR 与水合测试
 - [x] [`a986306fa`](https://github.com/meta/astryx/commit/a986306fa) spec(container-padding): AppShell is a boundary owner (#9461)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`09a482eaf`](https://github.com/meta/astryx/commit/09a482eaf) fix(Layer): a press inside a layer stops at the layer root in the React tree (#9497)
-- [ ] [`3684425d7`](https://github.com/meta/astryx/commit/3684425d7) chore(BottomSheet): source comments explain only non-obvious reasons (1 of 2) (#9523)
-- [ ] [`c3566269f`](https://github.com/meta/astryx/commit/c3566269f) chore(BottomSheet): trim gesture and keyboard comments (#9524)
+- [x] [`09a482eaf`](https://github.com/meta/astryx/commit/09a482eaf) fix(Layer): a press inside a layer stops at the layer root in the React tree (#9497)
+  - 不适用：修的是 React 合成事件沿 React 树穿过 portal；Vue 事件走 DOM 树，到 layer 根自然停下
+- [x] [`3684425d7`](https://github.com/meta/astryx/commit/3684425d7) chore(BottomSheet): source comments explain only non-obvious reasons (1 of 2) (#9523)
+  - 不适用：只整理源码注释
+- [x] [`c3566269f`](https://github.com/meta/astryx/commit/c3566269f) chore(BottomSheet): trim gesture and keyboard comments (#9524)
+  - 不适用：只整理手势与键盘注释
 
 ### v0.7.7
 
-- [ ] [`fb2dd8019`](https://github.com/meta/astryx/commit/fb2dd8019) fix(BottomSheet): a sheet Suspense hid while closing finishes closing when shown again (#9620)
-- [ ] [`15f97c44f`](https://github.com/meta/astryx/commit/15f97c44f) fix(BottomSheet): the open sheet's dialog places its panel with a flex row, not a grid (#8534)
-- [ ] [`6cb8b4a97`](https://github.com/meta/astryx/commit/6cb8b4a97) fix(BottomSheet): a set-height sheet keeps its content padding in WebKit's scroll range (#8557)
-- [ ] [`4e495ec5e`](https://github.com/meta/astryx/commit/4e495ec5e) fix(BottomSheet): a standalone sheet closing with focus inside stays out of inert while focus stays (#9635)
+- [x] [`fb2dd8019`](https://github.com/meta/astryx/commit/fb2dd8019) fix(BottomSheet): a sheet Suspense hid while closing finishes closing when shown again (#9620)
+  - 不适用：React Suspense 隐藏又显示的抽屉，Vue 没有对应机制
+- [x] [`15f97c44f`](https://github.com/meta/astryx/commit/15f97c44f) fix(BottomSheet): the open sheet's dialog places its panel with a flex row, not a grid (#8534)
+  - Vue 版已有：抽屉定位容器 .astryx-bottom-sheet__positioner 本来就是 flex 行
+- [x] [`6cb8b4a97`](https://github.com/meta/astryx/commit/6cb8b4a97) fix(BottomSheet): a set-height sheet keeps its content padding in WebKit's scroll range (#8557)
+  - 已移植：[#615](https://github.com/astryx-vue/astryx-vue/pull/615)。内容盒 min-height 改 fit-content，WebKit 固定高度抽屉保留底部内边距
+- [x] [`4e495ec5e`](https://github.com/meta/astryx/commit/4e495ec5e) fix(BottomSheet): a standalone sheet closing with focus inside stays out of inert while focus stays (#9635)
+  - Vue 版已有：BottomSheet.vue 的 holdKeptInside 让关闭中且焦点留在里面的抽屉只放行 Tab、焦点离开才整体 inert（9c998223）
 
 ### v0.7.8
 
-- [ ] [`ba5866a50`](https://github.com/meta/astryx/commit/ba5866a50) fix(core): a BottomSheet exit the engine retargets mid-flight keeps sliding off (#8349)
+- [x] [`ba5866a50`](https://github.com/meta/astryx/commit/ba5866a50) fix(core): a BottomSheet exit the engine retargets mid-flight keeps sliding off (#8349)
+  - 已移植：[#615](https://github.com/astryx-vue/astryx-vue/pull/615)。waitForTransition 遇到被引擎改道的 transitioncancel 且有接替过渡在跑时继续等，补测试
 - [ ] [`199fa9bb0`](https://github.com/meta/astryx/commit/199fa9bb0) perf(BottomSheet): take the sheet's open height from the ResizeObserver, not a forced measure (#9747)
-- [ ] [`fc681230d`](https://github.com/meta/astryx/commit/fc681230d) fix(BottomSheet): the grabber stays drawn while the sheet moves between detents on iOS (#9760)
+  - 暂缓：拖动开始时从 ResizeObserver 取高度而不强制测量，属 useSheetGestures 拖拽内核，归 4b 拖拽
+- [x] [`fc681230d`](https://github.com/meta/astryx/commit/fc681230d) fix(BottomSheet): the grabber stays drawn while the sheet moves between detents on iOS (#9760)
+  - 已移植：[#615](https://github.com/astryx-vue/astryx-vue/pull/615)。抓手条加 will-change: transform，iOS 上换挡位时圆点不再消失
 - [x] [`2188aa9ff`](https://github.com/meta/astryx/commit/2188aa9ff) fix(useScrollLock): keep the page where it is while an overlay is open (#8098)
   - 不适用：上游内部规范和架构文档、只改上游测试（自动初筛）
 - [x] [`19081d81a`](https://github.com/meta/astryx/commit/19081d81a) chore(lab): remove MobileTokenizer and MobilePowerSearch, whose flows Core ships behind experimental.presentation (#9790)
@@ -522,33 +544,44 @@
 - [x] [`e390c3c43`](https://github.com/meta/astryx/commit/e390c3c43) test(browser): keep every Playwright browser context off remote hosts (#9811)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`ea33dafd5`](https://github.com/meta/astryx/commit/ea33dafd5) feat(docsite): label deprecated components from their doc (#9046)
+  - 暂缓：文档站按文档标记废弃组件，随 BottomSheetSwitcher 废弃一起做，归 BottomSheet 打开顺序任务
 - [ ] [`0588a1342`](https://github.com/meta/astryx/commit/0588a1342) feat(core): one on-screen keyboard module; a Tall BottomSheet reads it and rides Gboard's slides (#8559)
+  - 暂缓：统一的屏幕键盘模块与 Tall 抽屉跟随 Gboard 滑动，归屏幕键盘模块
 
 ### v0.7.9
 
 - [x] [`cb44b33c3`](https://github.com/meta/astryx/commit/cb44b33c3) spec(Dialog): the deprecated BottomSheetSwitcher's steps are the one exception to DEC-2 (#9054)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`7eee90594`](https://github.com/meta/astryx/commit/7eee90594) fix(Dialog, AlertDialog, CommandPalette, BottomSheet, Lightbox): Tab wraps inside the open modal through the shared focus-region module (#8883)
+- [x] [`7eee90594`](https://github.com/meta/astryx/commit/7eee90594) fix(Dialog, AlertDialog, CommandPalette, BottomSheet, Lightbox): Tab wraps inside the open modal through the shared focus-region module (#8883)
+  - Vue 版已有：BottomSheet 与切换器都用 useFocusTrap，Tab 在打开的模态里环绕
 - [ ] [`63592ed62`](https://github.com/meta/astryx/commit/63592ed62) fix(core): a BottomSheet pulled past its top stretches on every pull, on the iOS rubber band (#8109)
-- [ ] [`5db61cc9b`](https://github.com/meta/astryx/commit/5db61cc9b) fix(BottomSheet, Dialog): returning focus after an overlay closes no longer scrolls the page (#10022)
-- [ ] [`5f81c3f39`](https://github.com/meta/astryx/commit/5f81c3f39) docs(BottomSheet): AST-094 names FR18's caller-sized exception; a comment names the pen (#10023)
-- [ ] [`8fdf6be37`](https://github.com/meta/astryx/commit/8fdf6be37) fix(BottomSheet): a sheet removed while open returns focus where a close would (#10061)
+  - 暂缓：拉过顶部时每次都按 iOS 橡皮筋拉伸，属拖拽内核，归 4b 拖拽
+- [x] [`5db61cc9b`](https://github.com/meta/astryx/commit/5db61cc9b) fix(BottomSheet, Dialog): returning focus after an overlay closes no longer scrolls the page (#10022)
+  - 已移植：[#616](https://github.com/astryx-vue/astryx-vue/pull/616)。BottomSheet 归还焦点（含 finalFocusRef）带 preventScroll，useRestoreFocus 加 preventScroll 选项
+- [x] [`5f81c3f39`](https://github.com/meta/astryx/commit/5f81c3f39) docs(BottomSheet): AST-094 names FR18's caller-sized exception; a comment names the pen (#10023)
+  - 不适用：只改规格记录和手势里的一句注释
+- [x] [`8fdf6be37`](https://github.com/meta/astryx/commit/8fdf6be37) fix(BottomSheet): a sheet removed while open returns focus where a close would (#10061)
+  - 已移植：[#616](https://github.com/astryx-vue/astryx-vue/pull/616)。打开着就被移除的抽屉沿共用候选链送出被困住的焦点，补测试
 - [x] [`0200dfe0f`](https://github.com/meta/astryx/commit/0200dfe0f) test(core): BottomSheet detents, proven with the interaction harness (#10055)
   - 不适用：上游内部规范和架构文档、只改上游测试（自动初筛）
-- [ ] [`dd5ca2957`](https://github.com/meta/astryx/commit/dd5ca2957) fix(BottomSheet, Tokenizer, PowerSearch): the scrim returns with a sheet whose swipe dismissal the owner refuses (#10141)
+- [x] [`dd5ca2957`](https://github.com/meta/astryx/commit/dd5ca2957) fix(BottomSheet, Tokenizer, PowerSearch): the scrim returns with a sheet whose swipe dismissal the owner refuses (#10141)
+  - Vue 版已有：dismissOrSettleShortest 在调 onDismiss 前先把遮罩恢复为 1，宿主拒绝关闭时遮罩不丢
 - [x] [`d6efbde0f`](https://github.com/meta/astryx/commit/d6efbde0f) test(BottomSheet): the settle proofs freeze the scene at the lift (#10098)
   - 不适用：只改上游测试（自动初筛）
 
 ### v0.7.10
 
-- [ ] [`d9ea17921`](https://github.com/meta/astryx/commit/d9ea17921) fix(BottomSheet): a lone sheet focuses its data-autofocus field on open in every browser (#10156)
+- [x] [`d9ea17921`](https://github.com/meta/astryx/commit/d9ea17921) fix(BottomSheet): a lone sheet focuses its data-autofocus field on open in every browser (#10156)
+  - 已移植：[#616](https://github.com/astryx-vue/astryx-vue/pull/616)。第一个可用的 data-autofocus 字段在所有浏览器拿到焦点，盖过原生落点，抽屉和切换器都一样，补测试与文档
 - [ ] [`b8ae86f94`](https://github.com/meta/astryx/commit/b8ae86f94) fix(core): a BottomSheet touch drag's close keeps its speed, and its scrim fades with it (#8105)
   - 暂缓：归 4b 拖拽阶段
+  - 暂缓：触屏拖拽关闭保持速度、遮罩同步淡出，归 4b 拖拽
 
 ### v0.7.11
 
 - [ ] [`6309b0b38`](https://github.com/meta/astryx/commit/6309b0b38) fix(core): a BottomSheet touch release takes UIKit's sheet values, and turning back cancels (#10234)
   - 暂缓：归 4b 拖拽阶段
+  - 暂缓：触屏松手采用 UIKit 的取值、掉头取消，归 4b 拖拽
 - [x] [`959c094e3`](https://github.com/meta/astryx/commit/959c094e3) test(BottomSheet): read the viewport height without a non-null assertion (#10310)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`21599169a`](https://github.com/meta/astryx/commit/21599169a) test(BottomSheet): the keyboard proofs hold the scene at the report (#10279)
@@ -559,14 +592,17 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`0ad1e8d5e`](https://github.com/meta/astryx/commit/0ad1e8d5e) fix(core): a Tall sheet reads focus inside an open shadow root (#10388)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`8ba5bbcc3`](https://github.com/meta/astryx/commit/8ba5bbcc3) refactor(Layer): modals hand toasts back through a callback ref (#10351)
+- [x] [`8ba5bbcc3`](https://github.com/meta/astryx/commit/8ba5bbcc3) refactor(Layer): modals hand toasts back through a callback ref (#10351)
+  - 不适用：React 里模态通过回调 ref 交还 toast；Vue 已用 createModalOutletHandle
 
 ### v0.7.12
 
-- [ ] [`3c1f7b217`](https://github.com/meta/astryx/commit/3c1f7b217) fix(BottomSheet): a render reads the stored viewport height (#10363)
+- [x] [`3c1f7b217`](https://github.com/meta/astryx/commit/3c1f7b217) fix(BottomSheet): a render reads the stored viewport height (#10363)
+  - 不适用：修的是 React 渲染读视口高度的时机
 - [x] [`9b7ebc461`](https://github.com/meta/astryx/commit/9b7ebc461) test(interaction-harness): a hold sent from the test names the motion it judges (#10438)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`0a656fe4e`](https://github.com/meta/astryx/commit/0a656fe4e) fix(BottomSheet): a drag reads its release from Core's tracker (#10463)
+  - 暂缓：拖拽松手改读 Core 的 tracker，属手势引擎对接，归 4b 拖拽
 - [x] [`4e6e67df6`](https://github.com/meta/astryx/commit/4e6e67df6) fix(core): make disabled Button focusable via aria-disabled per AST-085 (#7906)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`131b9c1ae`](https://github.com/meta/astryx/commit/131b9c1ae) test(BottomSheet): hold the native modal handoff as it starts (#10478)
@@ -579,12 +615,14 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`d6ad12b61`](https://github.com/meta/astryx/commit/d6ad12b61) test(BottomSheet): judge a soft flick by the release the page read (#10661)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`1ffc0dac9`](https://github.com/meta/astryx/commit/1ffc0dac9) fix(BottomSheet): resting content starts below the grab bar, whatever the padding (#8558)
+- [x] [`1ffc0dac9`](https://github.com/meta/astryx/commit/1ffc0dac9) fix(BottomSheet): resting content starts below the grab bar, whatever the padding (#8558)
+  - 已移植：[#615](https://github.com/astryx-vue/astryx-vue/pull/615)。内容静止时从抓手条 24px 之后开始，只发布超出的内边距，日期时间触屏面板同步去掉自补，文档同步
 - [x] [`17f6985ed`](https://github.com/meta/astryx/commit/17f6985ed) fix(Layout): a full-bleed Table or List row takes the rounded container corner it reaches (#10586)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`5baebb01d`](https://github.com/meta/astryx/commit/5baebb01d) test(BottomSheet): name the drag spec's list marker plainly (#10767)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`7f45363bd`](https://github.com/meta/astryx/commit/7f45363bd) fix(BottomSheet): a sheet whose close is suspended takes the scrim (#10776)
+- [x] [`7f45363bd`](https://github.com/meta/astryx/commit/7f45363bd) fix(BottomSheet): a sheet whose close is suspended takes the scrim (#10776)
+  - 不适用：修的是 React 渲染期写 ref 与 Suspense 下的遮罩归属；Vue 没有抽屉栈
 - [x] [`a0f2a2da8`](https://github.com/meta/astryx/commit/a0f2a2da8) test(BottomSheet): timestamp the reduced-motion mouse close (#10756)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`cb0973b2c`](https://github.com/meta/astryx/commit/cb0973b2c) test(BottomSheet): name the failure when a mouse release does not ask the sheet to close (#10823)
@@ -594,18 +632,23 @@
 - [x] [`b3d177f06`](https://github.com/meta/astryx/commit/b3d177f06) test(BottomSheet): a soft flick's play fails by name below half's speed (#10841)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`9624a0b37`](https://github.com/meta/astryx/commit/9624a0b37) fix(BottomSheet): a reduced-motion swipe close fades out in place (#10925)
+  - 暂缓：减弱动效时滑动关闭原地淡出，属拖拽退场，归 4b 拖拽
 
 ### v0.7.13
 
 - [ ] [`7e1aab38b`](https://github.com/meta/astryx/commit/7e1aab38b) fix(BottomSheet): a slow swipe down on the sheet's content no longer rubber-bands the content under the finger on iOS (#10033)
+  - 暂缓：内容上慢速下滑不再让 iOS 橡皮筋拖动内容，属拖拽内核，归 4b 拖拽
 
 ### v0.7.14
 
 - [x] [`108f354ae`](https://github.com/meta/astryx/commit/108f354ae) fix(core): drop 'use client' from the package root and the component barrels (#11106)
   - 不适用：React Server Components 的 use client 指令
 - [ ] [`39819bfc5`](https://github.com/meta/astryx/commit/39819bfc5) fix(BottomSheet): a swipe that starts slowly on the sheet's content moves the sheet (#11140)
-- [ ] [`230d1b4b9`](https://github.com/meta/astryx/commit/230d1b4b9) fix(BottomSheet): a move of a touch drag no longer restyles the sheet's content (#11154)
+  - 暂缓：内容上起步慢的下滑也带动抽屉，属拖拽内核，归 4b 拖拽
+- [x] [`230d1b4b9`](https://github.com/meta/astryx/commit/230d1b4b9) fix(BottomSheet): a move of a touch drag no longer restyles the sheet's content (#11154)
+  - 不适用：修的是 React 里拖动每一步重绘内容；Vue 拖动只改 transform 与高度
 - [ ] [`6d89442f6`](https://github.com/meta/astryx/commit/6d89442f6) fix(BottomSheet): a finger's pull on the sheet's content is one touch drag from its touch-down, so a short flick closes the sheet (#11145)
+  - 暂缓：手指在内容上的下拉从落下起算一次触屏拖拽，短促一甩就关，归 4b 拖拽
 - [x] [`c1a1ea82b`](https://github.com/meta/astryx/commit/c1a1ea82b) fix(core): a tap that wobbles at a scroll edge keeps its click (#10829)
   - 已移植：[#577](https://github.com/astryx-vue/astryx-vue/pull/577)。在滚动边缘晃了一下的轻点保留它的点击
 - [x] [`c6614a5e8`](https://github.com/meta/astryx/commit/c6614a5e8) ci: release-specs (changed) adds tagged specs, visited components and Lab-only pull requests, in shards (#11171)
@@ -617,18 +660,22 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`20e7aec47`](https://github.com/meta/astryx/commit/20e7aec47) test(BottomSheet): a slow drag's long tasks come from a trace (#10971)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`8caa06274`](https://github.com/meta/astryx/commit/8caa06274) fix(Table): call the latest onSortChange; read sort and snap-point values directly in render (#11349)
+- [x] [`8caa06274`](https://github.com/meta/astryx/commit/8caa06274) fix(Table): call the latest onSortChange; read sort and snap-point values directly in render (#11349)
+  - 不适用：修的是 React 里读取最新的回调和吸附点
 
 ### v0.7.16
 
-- [ ] [`1bb7828b9`](https://github.com/meta/astryx/commit/1bb7828b9) fix(BottomSheet): sync its return target at commit (#10918)
-- [ ] [`5072eb6ff`](https://github.com/meta/astryx/commit/5072eb6ff) fix(BottomSheet): keep snap points and the reentry in state (#10873)
+- [x] [`1bb7828b9`](https://github.com/meta/astryx/commit/1bb7828b9) fix(BottomSheet): sync its return target at commit (#10918)
+  - 不适用：React 在提交阶段同步返回目标；Vue 打开前记录打开者，关闭时取用
+- [x] [`5072eb6ff`](https://github.com/meta/astryx/commit/5072eb6ff) fix(BottomSheet): keep snap points and the reentry in state (#10873)
+  - 不适用：把吸附点和重入放进 React state
 - [x] [`248de60ab`](https://github.com/meta/astryx/commit/248de60ab) refactor(layer): a closing BottomSheet takes the shared input hold (#11447)
   - 已移植：[#594](https://github.com/astryx-vue/astryx-vue/pull/594)。关闭中的 BottomSheet 改用保留焦点的退场暂挡（holdKeptInside），不再一关就 inert
 - [x] [`3b80f85be`](https://github.com/meta/astryx/commit/3b80f85be) test(BottomSheet): wait for the pinch story to render before the check (#11412)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`22213fd97`](https://github.com/meta/astryx/commit/22213fd97) fix(BottomSheet): a flick's close clears the scrim along the same spring (#11400)
   - 暂缓：归 4b 拖拽阶段
+  - 暂缓：甩动关闭时遮罩沿同一条弹簧淡出，归 4b 拖拽
 
 ### v0.7.17
 
@@ -636,16 +683,23 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`ce0feb506`](https://github.com/meta/astryx/commit/ce0feb506) fix(core): a Table bleeds to a block edge only as its container's direct first or last child (#12068)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`34e3d212f`](https://github.com/meta/astryx/commit/34e3d212f) fix(core): dialog text reads the theme, and toast text reaches AA on its card (#12095)
+- [x] [`34e3d212f`](https://github.com/meta/astryx/commit/34e3d212f) fix(core): dialog text reads the theme, and toast text reaches AA on its card (#12095)
+  - Vue 版已有：bottom-sheet.css 的面板已设 color 为主题主文字色，不用浏览器 dialog 默认色
 - [ ] [`d504f0094`](https://github.com/meta/astryx/commit/d504f0094) feat(TextInput, TextArea, NumberInput): fields stay above the keyboard (#9777)
   - 暂缓：依赖 Vue 版还没有的屏幕键盘避让模块（useMobileKeyboard：docked 栏跟随键盘、滚动容器避让、视觉视口平移与回滚）；归动效与手势引擎任务
-- [ ] [`3b4c1993c`](https://github.com/meta/astryx/commit/3b4c1993c) fix(core): theme targets for parts that paint inside a component (#12081)
+  - 暂缓：输入框停在键盘之上，归屏幕键盘模块
+- [x] [`3b4c1993c`](https://github.com/meta/astryx/commit/3b4c1993c) fix(core): theme targets for parts that paint inside a component (#12081)
+  - Vue 版已有：组件内部部位的主题挂点已移植（45b95b5f）
 - [x] [`9e19fa47e`](https://github.com/meta/astryx/commit/9e19fa47e) chore: land batch 8 (11 pull requests) (#12827)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`e7f5815c3`](https://github.com/meta/astryx/commit/e7f5815c3) fix(core): six components' fixed-English built-in text follows the locale; the hardcoded-string lint config has no exemption list and reports a stale entry (#12721)
-- [ ] [`416b167cf`](https://github.com/meta/astryx/commit/416b167cf) fix(core): one focus return for Popover and DropdownMenu (popover presentation) and Dialog that never strands focus (AST-116 FR17–FR21, AR1) (#11121)
-- [ ] [`e9baa35e2`](https://github.com/meta/astryx/commit/e9baa35e2) fix(BottomSheetSwitcher): a flow without its scrim, or a removed switcher, returns focus to its opener (#11982)
-- [ ] [`6df984a76`](https://github.com/meta/astryx/commit/6df984a76) docs(BottomSheet): where focus lands on open in WebKit, and data-autofocus for a field (#12487)
+- [x] [`e7f5815c3`](https://github.com/meta/astryx/commit/e7f5815c3) fix(core): six components' fixed-English built-in text follows the locale; the hardcoded-string lint config has no exemption list and reports a stale entry (#12721)
+  - 不适用：BottomSheet 里只是把开发期警告变量改名，其余五个组件的本地化各归各的任务
+- [x] [`416b167cf`](https://github.com/meta/astryx/commit/416b167cf) fix(core): one focus return for Popover and DropdownMenu (popover presentation) and Dialog that never strands focus (AST-116 FR17–FR21, AR1) (#11121)
+  - 不适用：只重构抽屉栈里 isModalDialog 的位置；Popover 与 Dialog 的焦点归还已在 32ea1954
+- [x] [`e9baa35e2`](https://github.com/meta/astryx/commit/e9baa35e2) fix(BottomSheetSwitcher): a flow without its scrim, or a removed switcher, returns focus to its opener (#11982)
+  - 已移植：[#616](https://github.com/astryx-vue/astryx-vue/pull/616)。切换器关闭或被移除时把焦点还给打开者，无遮罩的流程同样，补测试
+- [x] [`6df984a76`](https://github.com/meta/astryx/commit/6df984a76) docs(BottomSheet): where focus lands on open in WebKit, and data-autofocus for a field (#12487)
+  - 已移植：[#616](https://github.com/astryx-vue/astryx-vue/pull/616)。文档写明初始焦点落点与 data-autofocus
 
 ## build 构建插件（area:core）
 
