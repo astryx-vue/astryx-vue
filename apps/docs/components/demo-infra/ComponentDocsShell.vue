@@ -34,8 +34,8 @@ const activeFamilyId = computed(() => {
   }
   return undefined
 })
-/** 上游没有同名导出、标题下不显示版本行的页面（Chat 是一组组件的概览）。 */
-const NO_EXPORT_SLUGS: ReadonlySet<string> = new Set(['chat'])
+/** 上游没有同名导出、标题下不显示版本行的页面（Chat 是一组组件的概览，NavMenu 是 Vue 版独有的组件）。 */
+const NO_EXPORT_SLUGS: ReadonlySet<string> = new Set(['chat', 'nav-menu'])
 
 /** 导出名不是 slug 驼峰形式的少数组件。 */
 const EXPORT_NAME_EXCEPTIONS: Readonly<Record<string, string>> = {

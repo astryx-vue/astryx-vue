@@ -15,6 +15,7 @@ const props = withDefaults(defineProps<NavDisclosureProps>(), {
   alignment: 'start',
   hideDelay: 200,
   hover: false,
+  overlap: false,
   placement: 'below',
   showDelay: 150,
 })
@@ -35,6 +36,7 @@ let closedAt = 0
 const placement = computed(() => props.placement)
 const alignment = computed(() => props.alignment)
 const dismissEnabled = computed(() => isOpen.value)
+const overlap = computed(() => props.overlap)
 
 const { position } = usePositionedLayer({
   alignment,
@@ -42,12 +44,14 @@ const { position } = usePositionedLayer({
   gap: 4,
   isOpen,
   layer: surfaceRef,
+  overlap,
   placement,
 })
 
 const panelStyle = computed(() => ({
   'left': `${position.value.left}px`,
   'top': `${position.value.top}px`,
+  'minWidth': position.value.minWidth == null ? undefined : `${position.value.minWidth}px`,
   // 面板自己的最大高度要从这里算起，高的面板不会掉出视口底部。
   '--astryx-nav-panel-top': `${position.value.top}px`,
 }))
@@ -190,7 +194,7 @@ watch(isOpen, (open) => {
       :id="panelId"
       ref="surfaceRef"
       class="astryx-nav-disclosure__panel astryx-layer"
-      :class="panelClass"
+      :class="[panelClass, { 'astryx-nav-disclosure__panel--overlap': overlap }]"
       :style="panelStyle"
       :data-placement="position.placement"
       @pointerenter="onPointerEnter"
