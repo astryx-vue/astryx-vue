@@ -24,6 +24,7 @@ const coreSrc = join(here, '..')
 /** Every source file that takes a handle or reports to the module. */
 const ADOPTERS = [
   'AppShell/useAppShellRail.ts',
+  'Resizable/resizablePane.ts',
   'SideNav/railMotion.ts',
   'Table/plugins/rowExpansionGlide.ts',
   'TreeList/useTreeLayoutMotion.ts',

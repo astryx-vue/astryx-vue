@@ -2,10 +2,12 @@
 import type { CSSProperties, StyleValue } from 'vue'
 import type { ResizeHandleProps, ResizeHandleSlots, ResizePillPlacement } from './types.js'
 import { computed, onBeforeUnmount, ref, useAttrs, useTemplateRef, watch } from 'vue'
-import { getEffectiveMaxPx, resizablePropsOf } from '../composables/internal/resizableChannel.js'
+import { endResizeAt, getEffectiveMaxPx, resizablePropsOf } from '../composables/internal/resizableChannel.js'
 import { devWarn } from '../composables/useDevWarning.js'
+import { VelocityTracker } from '../gestures/VelocityTracker.js'
 import { useComponentMessages } from '../locale/context.js'
 import { layoutMessages } from '../locale/messages/layout.js'
+import { regionOfProps } from './resizablePane.js'
 import { handleResizeKey, toggleCollapse } from './resizeKeyboard.js'
 import '../../styles/resize-handle.css'
 
@@ -33,6 +35,8 @@ const dragging = ref(false)
 const hovered = ref(false)
 const focused = ref(false)
 let drag: { pointerId: number, start: number, rtl: number } | null = null
+// 松手那一刻指针沿拖动轴的速度，交给区域决定收不收起、怎么弹回。
+const tracker = new VelocityTracker()
 
 defineExpose({ element: root })
 
@@ -59,11 +63,12 @@ const rootStyle = computed<StyleValue>(() => [
   attrs.style as StyleValue,
 ])
 
+/** 数值始终落在 aria-valuemin 和 aria-valuemax 之间；收起时报最小值。 */
 const ariaNow = computed(() => {
   const resizable = resizableProps.value
   if (resizable == null)
     return undefined
-  return collapsed.value ? Math.max(resizable._size, resizable._minSizePx) : resizable._size
+  return Math.min(Math.max(resizable._size, resizable._minSizePx), resizable._maxSizePx ?? Number.POSITIVE_INFINITY)
 })
 
 const ariaMax = computed(() => {
@@ -130,7 +135,16 @@ function rtlMultiplier(): number {
   return getComputedStyle(root.value).direction === 'rtl' ? -1 : 1
 }
 
+/** 区域的指针拖动标记：指针拖开收起的面板时跟手不滑，方向键的一步照常滑。 */
+function setPointerDragging(isDragging: boolean): void {
+  const resizable = resizableProps.value
+  if (resizable != null)
+    regionOfProps(resizable)?.setPointerDragging(isDragging)
+}
+
 function clearDrag() {
+  if (drag != null)
+    setPointerDragging(false)
   drag = null
   dragging.value = false
   document.body.style.cursor = ''
@@ -163,6 +177,9 @@ function pointerDown(event: PointerEvent) {
   }
   dragging.value = true
   pendingDelta = 0
+  tracker.reset()
+  tracker.add(event.clientX, event.clientY, event.timeStamp)
+  setPointerDragging(true)
   document.body.style.cursor = props.direction === 'horizontal' ? 'col-resize' : 'row-resize'
   document.body.style.userSelect = 'none'
   resizableProps.value._onResizeStart()
@@ -172,6 +189,7 @@ function pointerMove(event: PointerEvent) {
   if (drag == null || drag.pointerId !== event.pointerId || resizableProps.value == null)
     return
   const current = props.direction === 'horizontal' ? event.clientX : event.clientY
+  tracker.add(event.clientX, event.clientY, event.timeStamp)
   pendingDelta = (current - drag.start) * drag.rtl * sign.value
   if (frame)
     return
@@ -185,8 +203,12 @@ function pointerUp(event: PointerEvent) {
   if (drag?.pointerId !== event.pointerId)
     return
   flushMove()
+  const { x, y } = tracker.velocity(event.timeStamp)
+  const velocity = (props.direction === 'horizontal' ? x : y) * drag.rtl * sign.value
   clearDrag()
-  resizableProps.value?._onResizeEnd()
+  const resizable = resizableProps.value
+  if (resizable != null)
+    endResizeAt(resizable, velocity)
 }
 
 function pointerCancel(event: PointerEvent) {

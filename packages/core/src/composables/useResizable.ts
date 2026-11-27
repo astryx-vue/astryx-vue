@@ -1,7 +1,11 @@
 import type { Ref } from 'vue'
 import type { PixelWidth } from '../Table/types.js'
+import type { Basis } from './internal/resizableSize.js'
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
-import { registerResizableChannel } from './internal/resizableChannel.js'
+import { createRegionMotion } from '../Resizable/regionMotion.js'
+import { registerPropsRegion } from '../Resizable/resizablePane.js'
+import { registerResizableChannel, resizeHandleBeside } from './internal/resizableChannel.js'
+import { clampSize, contentBox, parseSize, readBasis, sizeDependsOnBasis } from './internal/resizableSize.js'
 import { loadPersistedState, savePersistedState } from './internal/resizableStorage.js'
 
 export type ResizableDirection = 'horizontal' | 'vertical'
@@ -84,88 +88,8 @@ interface CascadeLink {
 const DEFAULT_SIZE = 250
 const DEFAULT_MIN = 50
 const DEFAULT_COLLAPSED_SIZE = 40
-const UNMEASURED_BASIS = 1200
 
-export function percent(
-  value: number,
-  options: { min: PixelWidth, max?: never } | { min?: never, max: PixelWidth },
-): ResizablePercentSize {
-  return { type: 'percent', value, ...options }
-}
-
-interface Basis {
-  px: number
-  measured: boolean
-}
-
-function readBasis(container: HTMLElement | null | undefined, direction: ResizableDirection): Basis {
-  if (container) {
-    const px = direction === 'horizontal' ? container.clientWidth : container.clientHeight
-    if (px > 0)
-      return { px, measured: true }
-    return { px: UNMEASURED_BASIS, measured: false }
-  }
-  if (typeof window === 'undefined')
-    return { px: UNMEASURED_BASIS, measured: false }
-  const px = direction === 'horizontal' ? window.innerWidth : window.innerHeight
-  return { px: px > 0 ? px : UNMEASURED_BASIS, measured: px > 0 }
-}
-
-function parseSize(value: ResizableSize | string | undefined, basis: number, fallback: number): number {
-  if (value == null)
-    return fallback
-  if (typeof value === 'number')
-    return value
-  if (typeof value === 'string') {
-    const text = value.trim()
-    if (text.endsWith('%'))
-      return (Number(text.slice(0, -1)) / 100) * basis
-    if (text.endsWith('px'))
-      return Number(text.slice(0, -2))
-    const asNumber = Number(text)
-    return Number.isFinite(asNumber) ? asNumber : fallback
-  }
-  if (value.type === 'pixel')
-    return value.value
-  const px = (value.value / 100) * basis
-  if (value.min)
-    return Math.max(px, value.min.value)
-  if (value.max)
-    return Math.min(px, value.max.value)
-  return px
-}
-
-function clampSize(size: number, min: number, max: number, snaps: number[]): number {
-  const clamped = Math.min(max, Math.max(min, size))
-  if (snaps.length === 0)
-    return clamped
-  let nearest = snaps[0] ?? clamped
-  let nearestDist = Math.abs(clamped - nearest)
-  for (let index = 1; index < snaps.length; index += 1) {
-    const snap = snaps[index] ?? nearest
-    const dist = Math.abs(clamped - snap)
-    if (dist < nearestDist) {
-      nearest = snap
-      nearestDist = dist
-    }
-  }
-  return Math.min(max, Math.max(min, nearest))
-}
-
-function sizeDependsOnBasis(value: ResizableSize | string | undefined): boolean {
-  if (typeof value === 'string')
-    return value.trim().endsWith('%')
-  return typeof value === 'object' && value != null && value.type === 'percent'
-}
-
-function contentBox(element: HTMLElement, direction: ResizableDirection): number | null {
-  const style = getComputedStyle(element)
-  const size = direction === 'vertical'
-    ? element.clientHeight - Number.parseFloat(style.paddingTop) - Number.parseFloat(style.paddingBottom)
-    : element.clientWidth - Number.parseFloat(style.paddingLeft) - Number.parseFloat(style.paddingRight)
-  return Number.isFinite(size) ? size : null
-}
-
+export { percent } from './internal/resizableSize.js'
 function useSingleRegion(options: UseResizableSingleOptions, cascade?: CascadeLink): ResizableRegion {
   const direction = options.direction ?? 'horizontal'
   const collapsible = options.collapsible ?? false
@@ -177,7 +101,6 @@ function useSingleRegion(options: UseResizableSingleOptions, cascade?: CascadeLi
   const basisMeasured = ref(true)
   const controlledCollapse = computed(() => options.isCollapsed)
   const clientExtent = ref<number | null>(null)
-  let origin = DEFAULT_SIZE
   let settledDefault = false
   let dragging = false
   let dragLimits: { min: number, max: number } | null = null
@@ -221,17 +144,59 @@ function useSingleRegion(options: UseResizableSingleOptions, cascade?: CascadeLi
     }
   }
 
-  function applySize(next: number, collapsed: boolean): void {
-    const { min, max } = limits()
+  const motion = createRegionMotion({
+    isCollapsed: () => isCollapsed.value,
+    size: () => size.value,
+    limits: () => limits(),
+    collapsible,
+    collapsedSize,
+    handleOf: pane => resizeHandleBeside(pane.element, pane.contentFacingEdge() === 'inline-start' ? 'end' : 'start'),
+    paint(raw, useSnaps) {
+      const wasCollapsed = isCollapsed.value
+      // 受控时拖开收起的区域只报告，由调用方决定展开；展开后用拖到的尺寸。
+      if (wasCollapsed && options.isCollapsed != null) {
+        const bounds = dragLimits ?? limits()
+        expandedSize.value = clampSize(raw, bounds.min, bounds.max, useSnaps ? snaps : [])
+        options.onCollapseChange?.(false)
+        return expandedSize.value
+      }
+      applySize(raw, false, dragLimits ?? limits(), useSnaps)
+      if (wasCollapsed)
+        options.onCollapseChange?.(false)
+      options.onSizeChange?.(size.value)
+      return size.value
+    },
+    close(expandTo) {
+      if (expandTo != null)
+        expandedSize.value = expandTo
+      setCollapsed(true)
+      options.onSizeChange?.(0)
+    },
+    endGesture() {
+      dragging = false
+      dragLimits = null
+      persist()
+      cascade?.settle()
+    },
+  })
+
+  function commitState(nextSize: number, collapsed: boolean): void {
+    const wasCollapsed = isCollapsed.value
+    const previous = size.value
+    isCollapsed.value = collapsed
+    size.value = nextSize
+    if (!collapsed)
+      expandedSize.value = nextSize
+    if (wasCollapsed !== collapsed || previous !== nextSize)
+      motion.noteChange(wasCollapsed, collapsed)
+  }
+
+  function applySize(next: number, collapsed: boolean, bounds = limits(), useSnaps = true): void {
     if (collapsed && collapsible) {
-      isCollapsed.value = true
-      size.value = 0
+      commitState(0, true)
       return
     }
-    const clamped = clampSize(next, min, max, snaps)
-    isCollapsed.value = false
-    size.value = clamped
-    expandedSize.value = clamped
+    commitState(clampSize(next, bounds.min, bounds.max, useSnaps ? snaps : []), false)
   }
 
   function restore(): void {
@@ -279,53 +244,19 @@ function useSingleRegion(options: UseResizableSingleOptions, cascade?: CascadeLi
     persist()
   }
 
-  function paintDrag(next: number, collapsed: boolean): void {
-    const bounds = dragLimits ?? limits()
-    if (collapsed && collapsible) {
-      isCollapsed.value = true
-      size.value = 0
-      return
-    }
-    const clamped = clampSize(next, bounds.min, bounds.max, snaps)
-    isCollapsed.value = false
-    size.value = clamped
-    expandedSize.value = clamped
-  }
-
   function onResizeStart(): void {
     dragging = true
-    origin = isCollapsed.value ? 0 : size.value
     dragLimits = limits()
-  }
-
-  function onResizeMove(delta: number): void {
-    const raw = origin + delta
-    if (collapsible && raw < collapsedSize) {
-      if (!isCollapsed.value) {
-        paintDrag(0, true)
-        options.onCollapseChange?.(true)
-        options.onSizeChange?.(0)
-      }
-      return
-    }
-    const wasCollapsed = isCollapsed.value
-    paintDrag(raw, false)
-    if (wasCollapsed)
-      options.onCollapseChange?.(false)
-    options.onSizeChange?.(size.value)
-  }
-
-  function onResizeEnd(): void {
-    dragging = false
-    dragLimits = null
-    persist()
-    cascade?.settle()
+    motion.start()
   }
 
   function applyDisplay(next: number): void {
     if (isCollapsed.value)
       return
+    const previous = size.value
     size.value = next
+    if (previous !== next)
+      motion.noteChange(false, false)
   }
 
   const props = computed<ResizableProps>(() => {
@@ -334,9 +265,9 @@ function useSingleRegion(options: UseResizableSingleOptions, cascade?: CascadeLi
       _size: size.value,
       _isCollapsed: isCollapsed.value,
       _onResizeStart: onResizeStart,
-      _onResizeMove: onResizeMove,
-      _onResizeEnd: onResizeEnd,
-      _onResizeCancel: onResizeEnd,
+      _onResizeMove: motion.move,
+      _onResizeEnd: () => motion.end(),
+      _onResizeCancel: motion.cancel,
       _minSizePx: min,
       _maxSizePx: max,
       _snaps: snaps,
@@ -348,7 +279,9 @@ function useSingleRegion(options: UseResizableSingleOptions, cascade?: CascadeLi
     registerResizableChannel(value, {
       collapse: () => setCollapsed(true),
       expand: () => setCollapsed(false),
+      release: motion.end,
     }, reportedMax(min, max))
+    registerPropsRegion(value, motion.slot)
     return value
   })
 
@@ -382,6 +315,7 @@ function useSingleRegion(options: UseResizableSingleOptions, cascade?: CascadeLi
   })
   onBeforeUnmount(() => {
     observer?.disconnect()
+    motion.dispose()
     // 拖动中卸载时没有松手事件，把拖到的尺寸写在退场时。
     if (dragging)
       persist()

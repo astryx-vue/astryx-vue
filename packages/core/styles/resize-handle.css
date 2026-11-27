@@ -3,6 +3,8 @@
 @layer astryx.components {
   .astryx-resize-handle {
     position: relative;
+    /* 抓取区和握把留在旁边内容的上面：滑动时的 translate 让分隔条自成层叠上下文，会把它们自己的 z-index 关在里面。 */
+    z-index: 2;
     flex-shrink: 0;
     display: flex;
     align-items: center;

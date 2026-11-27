@@ -125,7 +125,7 @@ footer: false
         <td><code>collapsedSize</code></td>
         <td><code>number</code></td>
         <td><code>40</code></td>
-        <td>拖拽低于这个像素值时收起。</td>
+        <td>松手或按键一步低于这个像素值时收起。</td>
       </tr>
       <tr>
         <td><code>snaps</code></td>
@@ -167,7 +167,7 @@ footer: false
         <td><code>isCollapsed</code></td>
         <td><code>boolean</code></td>
         <td>-</td>
-        <td>受控的收起状态。变化通过 <code>onCollapseChange</code> 报出。</td>
+        <td>受控的收起状态。松手、按键一步或拖动重新打开区域，都通过 <code>onCollapseChange</code> 报出。</td>
       </tr>
       <tr>
         <td><code>onSizeChange</code></td>
