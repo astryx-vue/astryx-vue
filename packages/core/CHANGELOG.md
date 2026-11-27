@@ -1,5 +1,11 @@
 # @astryx-vue/core
 
+## 0.31.0
+
+### Minor Changes
+
+- [#620](https://github.com/astryx-vue/astryx-vue/pull/620) [`a23cb50`](https://github.com/astryx-vue/astryx-vue/commit/a23cb50279f130df2b3ef4fb83cdaa5b9dfb3663) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 主题系统对齐上游：组件样式的每个样式键可写 `@light` 和 `@dark` 块，只在元素处于对应颜色模式时生效（主题强制的模式、system 主题下读者的偏好、最近一层 MediaTheme 表面）；主题里写的 `:active` 跟随触屏按压模型，手指下只在按压成立时才亮；值为 `undefined` 的组件样式、局部令牌和字体权重视为没写，根部 `localTokens: undefined` 会点名报错；用函数写的内边距（如 `clamp(...)`）按顶层空白拆开；抽屉可经 `drawer` 挂点设置内边距；`--radius-chat` 默认跟随容器圆角（各主题包不再钉死 28px，需要饱满圆角的主题自己写）；只写 `fallbacks` 没有 `family` 的字体角色不再生成字体列表；`Theme` 的 `theme` 传了不是 `defineTheme()` 产物的值时给出开发期提示并沿用外层主题；Chat 输入区的圆角和内边距改挂 `chat-composer` 目标；SyntaxTheme 缺 `theme` 时开发期点名报错；Neutral 暗色辅助文字色提亮到 #a8a8a8，压在半透明中性底色上也达到 4.5:1；样式过的 accent 链接悬停时保留容器或主题给的 `--link-hover-color`；提示卡片在量到底色前按主题给的底色选内容深浅；导出 `compactDefinition` 与 `DEFAULT_COMPACT_DEFINITION`（上游 [#6071](https://github.com/astryx-vue/astryx-vue/issues/6071) [#8301](https://github.com/astryx-vue/astryx-vue/issues/8301) [#9254](https://github.com/astryx-vue/astryx-vue/issues/9254) [#9761](https://github.com/astryx-vue/astryx-vue/issues/9761) [#10420](https://github.com/astryx-vue/astryx-vue/issues/10420) [#11347](https://github.com/astryx-vue/astryx-vue/issues/11347) [#11679](https://github.com/astryx-vue/astryx-vue/issues/11679) [#11759](https://github.com/astryx-vue/astryx-vue/issues/11759) [#11760](https://github.com/astryx-vue/astryx-vue/issues/11760) [#11786](https://github.com/astryx-vue/astryx-vue/issues/11786) [#11802](https://github.com/astryx-vue/astryx-vue/issues/11802) [#11973](https://github.com/astryx-vue/astryx-vue/issues/11973) [#12270](https://github.com/astryx-vue/astryx-vue/issues/12270) [#12794](https://github.com/astryx-vue/astryx-vue/issues/12794) [#11752](https://github.com/astryx-vue/astryx-vue/issues/11752)）
+
 ## 0.30.1
 
 ### Patch Changes
