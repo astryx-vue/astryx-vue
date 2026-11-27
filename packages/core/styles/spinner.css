@@ -1,12 +1,14 @@
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 
-@keyframes astryx-spinner-dash {
+/* 一次迭代转 100 圈：浏览器在迭代边界会唤醒主线程，这样每 100 圈才唤醒一次。
+   每圈 360 度，看上去还是同一个圈。 */
+@keyframes astryx-spinner-rotate {
   from {
-    stroke-dashoffset: 0;
+    transform: rotate(0deg);
   }
 
   to {
-    stroke-dashoffset: calc(var(--_spinner-ring-diameter) * -3.141592653589793);
+    transform: rotate(36000deg);
   }
 }
 
@@ -92,9 +94,18 @@
 
   .astryx-spinner__ring {
     display: block;
+    grid-area: 1 / 1;
     width: var(--_spinner-box-size, 100%);
     height: var(--_spinner-box-size, 100%);
     overflow: visible;
+  }
+
+  /* 主题的 spinner 指示图形占满加载圈的盒子，和圆环在同一个网格格子里。 */
+  .astryx-spinner__themed {
+    display: block;
+    grid-area: 1 / 1;
+    width: 100%;
+    height: 100%;
   }
 
   .astryx-spinner__track,
@@ -118,15 +129,27 @@
     stroke-dasharray:
       calc(var(--_spinner-ring-diameter) * 3.141592653589793 * var(--astryx-spinner-arc-fraction))
       calc(var(--_spinner-ring-diameter) * 3.141592653589793 * (1 - var(--astryx-spinner-arc-fraction)));
-    animation-name: astryx-spinner-dash;
-    animation-duration: var(--astryx-duration-slow-min, 525ms);
+  }
+
+  /* 转子是和圆环框同大的 HTML 盒子，绕圆环中心转。只动 transform，走合成器，
+     脚本跑着的时候也照转；动 stroke-dashoffset 会每帧在主线程重绘，跟着卡住。
+     提前声明合成层，Safari 重设起点后才不会退回主线程。 */
+  .astryx-spinner__rotor {
+    display: block;
+    grid-area: 1 / 1;
+    width: var(--_spinner-box-size, 100%);
+    height: var(--_spinner-box-size, 100%);
+    will-change: transform;
+    animation-name: astryx-spinner-rotate;
+    animation-duration: calc(var(--_astryx-pre-tempo-duration-slow-min, var(--astryx-duration-slow-min, 525ms)) * 100);
     animation-timing-function: linear;
     animation-iteration-count: infinite;
   }
 
+  /* 减少动态效果只放慢、不停下：不动的圈看起来像坏了。 */
   @media (prefers-reduced-motion: reduce) {
-    .astryx-spinner__arc {
-      animation-duration: 3s;
+    .astryx-spinner__rotor {
+      animation-duration: calc(3s * 100);
     }
   }
 }

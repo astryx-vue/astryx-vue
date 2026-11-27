@@ -23325,7 +23325,7 @@
         "en": [
           {
             "heading": "Usage guidance",
-            "text": "The `status` prop sets the tone of a banner, and picking the wrong one makes readers misjudge how urgent the message is. The list below covers which status fits which kind of message, plus two usages that are easy to overlook.\n\n- Use `info` for general information and updates.\n- Use `success` for the result of a successful action.\n- Use `warning` for situations that call for caution.\n- Use `error` for problems that block progress.\n- Set `:collapsible=\"false\"` for details that users must read, so those details stay visible and no click is needed to open them. Keep the default toggle when the detail is long enough to bury the banner's own message.\n- Announce an async outcome from the transition that produced it, with `useAnnounce`.\n\n`status` controls color and icon only. It does not create a live region. Add `role=\"status\"` only when the visible banner should stay a persistent semantic mirror, and reserve `role=\"alert\"` for genuinely urgent content that should interrupt current speech. Content already on the page at first render is not guaranteed to be announced again.\n\nFor a single field validation message, use [FieldStatus](/en/components/field-status)."
+            "text": "The `status` prop sets the tone of a banner, and picking the wrong one makes readers misjudge how urgent the message is. The list below covers which status fits which kind of message, plus two usages that are easy to overlook.\n\n- Use `info` for general information and updates.\n- Use `success` for the result of a successful action.\n- Use `warning` for situations that call for caution.\n- Use `error` for problems that block progress.\n- Set `:collapsible=\"false\"` for details that users must read, so those details stay visible and no click is needed to open them. Keep the default toggle when the detail is long enough to bury the banner's own message.\n- Announce an async outcome from the transition that produced it, with `useAnnounce`.\n\n`status` controls color and icon only. It does not create a live region. Pass `role=\"alert\"` only for an urgent message the person must act on now: Banner puts it on the title and description, so controls, `end` content and supporting content are not read as part of the alert, and any `aria-*` attributes you pass travel with it. Do not also announce that message with `useAnnounce`. Content already on the page at first render is not guaranteed to be announced again.\n\nFor a single field validation message, use [FieldStatus](/en/components/field-status)."
           },
           {
             "heading": "Slots",
@@ -23355,7 +23355,7 @@
         "zh": [
           {
             "heading": "使用建议",
-            "text": "提示条的语气由 `status` 决定，选错状态会让用户误判消息的紧迫程度。下面按消息的性质说明该选哪个状态，以及两个容易忽略的用法。\n\n- 一般的信息和更新使用 `info`。\n- 操作成功的结果使用 `success`。\n- 需要提醒用户注意的情况使用 `warning`。\n- 阻止用户继续操作的问题使用 `error`。\n- 用户必须读到的详情传入 `:collapsible=\"false\"`，这样详情会始终显示，不需要再点开。详情很长、会把提示本身盖住时，保持默认可折叠。\n- 用户操作之后才出现的结果，在这次操作的处理函数里用 `useAnnounce` 播报。\n\n`status` 只决定颜色和图标，不会自己变成实时区域。需要一直被读屏当成状态时，显式写上 `role=\"status\"`。只有真正紧急、必须打断当前朗读的内容才写 `role=\"alert\"`。页面初次渲染时就已经在的内容，读屏不一定会再念一遍。\n\n如果只是单个字段的校验消息，应改用 [FieldStatus](/components/field-status)。"
+            "text": "提示条的语气由 `status` 决定，选错状态会让用户误判消息的紧迫程度。下面按消息的性质说明该选哪个状态，以及两个容易忽略的用法。\n\n- 一般的信息和更新使用 `info`。\n- 操作成功的结果使用 `success`。\n- 需要提醒用户注意的情况使用 `warning`。\n- 阻止用户继续操作的问题使用 `error`。\n- 用户必须读到的详情传入 `:collapsible=\"false\"`，这样详情会始终显示，不需要再点开。详情很长、会把提示本身盖住时，保持默认可折叠。\n- 用户操作之后才出现的结果，在这次操作的处理函数里用 `useAnnounce` 播报。\n\n`status` 只决定颜色和图标，不会自己变成实时区域。只有紧急、用户必须立即处理的消息才传 `role=\"alert\"`：Banner 会把它放在标题和描述上，所以控件、`end` 内容和补充内容不会被当成警报的一部分读出，你传的 `aria-*` 属性也跟着它走。不要再用 `useAnnounce` 重复播报同一条消息。页面初次渲染时就已经在的内容，读屏不一定会再念一遍。\n\n如果只是单个字段的校验消息，应改用 [FieldStatus](/components/field-status)。"
           },
           {
             "heading": "插槽",
@@ -23997,7 +23997,7 @@
                 "name": "`radius`",
                 "type": "`'none' | 0 | 1 | 2 | 3 | 4 | 'rounded'`",
                 "default": "`3`",
-                "description": "Design-token radius step. Use `none` for square corners and `rounded` for a fully rounded shape."
+                "description": "Design-token radius step. `4` maps to the same container radius as `3`. Use `none` for square corners and `rounded` for a fully rounded shape."
               },
               {
                 "name": "`index`",
@@ -24028,7 +24028,7 @@
                 "name": "`radius`",
                 "type": "`'none' | 0 | 1 | 2 | 3 | 4 | 'rounded'`",
                 "default": "`3`",
-                "description": "圆角使用设计令牌等级，`none` 为直角，`rounded` 为完全圆角。"
+                "description": "圆角使用设计令牌等级，`4` 和 `3` 对应同一个容器圆角，`none` 为直角，`rounded` 为完全圆角。"
               },
               {
                 "name": "`index`",
@@ -24254,7 +24254,7 @@
         "en": [
           {
             "heading": "Accessibility",
-            "text": "A `Spinner` has no visible text of its own, so its loading state reaches assistive technology entirely through ARIA attributes. The component sets these for you, and you normally do not need to manage them yourself; the list below covers the attributes it actually uses and what each one does.\n\n- The root element carries `role=\"status\"`, so assistive technology treats it as a status region.\n- When you pass a string `label`, it shows as visible text below the spinner and provides the accessible name through `aria-labelledby`.\n- Without a `label`, the accessible name defaults to `Loading`; pass `aria-label` to change it to something more specific to the context.\n- The ring is `aria-hidden` and carries no text of its own, so it is not read out separately.\n- With reduced motion enabled, the arc slows to a 3-second cycle."
+            "text": "A `Spinner` has no visible text of its own, so its loading state reaches assistive technology entirely through ARIA attributes. The component sets these for you, and you normally do not need to manage them yourself; the list below covers the attributes it actually uses and what each one does.\n\n- The ring carries `role=\"progressbar\"` and no value, so assistive technology reads it as busy work in progress.\n- A standalone `Spinner` announces its name once through the shared announcement channel when it appears after the page has loaded. A `Spinner` that a component or your own code composes into a larger loading state stays silent when it has `aria-hidden` or a `role` other than `progressbar`; the owner announces the task instead.\n- When you pass a string `label`, it shows as visible text below the spinner and provides the accessible name through `aria-labelledby`.\n- Without a `label`, the accessible name defaults to `Loading`; pass `aria-label` to change it to something more specific to the context.\n- The ring is `aria-hidden` and carries no text of its own, so it is not read out separately.\n- With reduced motion enabled, the arc slows to a 3-second cycle."
           },
           {
             "heading": "Slots",
@@ -24268,7 +24268,7 @@
         "zh": [
           {
             "heading": "无障碍",
-            "text": "`Spinner` 本身没有可见文字，加载状态要依靠 ARIA 属性才能被辅助技术理解。这些属性都由组件自动设置，通常不需要你手动维护，下面说明组件实际用到的属性和它们各自的作用。\n\n- 根元素带有 `role=\"status\"`，辅助技术会把这块区域当作状态提示来处理。\n- 传入字符串类型的 `label` 时，它会显示为加载态下方的可见文字，并通过 `aria-labelledby` 成为无障碍名称。\n- 不传 `label` 时，无障碍名称默认为 `Loading`；这时传入 `aria-label` 就可以改成更贴合场景的说法。\n- 圆环带有 `aria-hidden`，自身不含任何文字，因此它不会被单独读出。\n- 开启「减少动态效果」时，圆弧放慢为 3 秒一圈。"
+            "text": "`Spinner` 本身没有可见文字，加载状态要依靠 ARIA 属性才能被辅助技术理解。这些属性都由组件自动设置，通常不需要你手动维护，下面说明组件实际用到的属性和它们各自的作用。\n\n- 圆环带有 `role=\"progressbar\"`，不带数值，辅助技术会把它读作正在进行的忙碌状态。\n- 独立使用的 `Spinner` 在页面加载完成之后出现时，会通过共用的播报通道把自己的名称读一次。被组件或你自己的代码组合进更大加载状态的 `Spinner`，写上 `aria-hidden` 或 `progressbar` 以外的 `role` 就保持安静，由拥有这个任务的一方负责播报。\n- 传入字符串类型的 `label` 时，它会显示为加载态下方的可见文字，并通过 `aria-labelledby` 成为无障碍名称。\n- 不传 `label` 时，无障碍名称默认为 `Loading`；这时传入 `aria-label` 就可以改成更贴合场景的说法。\n- 圆环带有 `aria-hidden`，自身不含任何文字，因此它不会被单独读出。\n- 开启「减少动态效果」时，圆弧放慢为 3 秒一圈。"
           },
           {
             "heading": "插槽",
@@ -56660,7 +56660,7 @@
                 "name": "`onStepClick`",
                 "type": "`(index: number) => void`",
                 "default": "-",
-                "description": "When set, steps are buttons. `@step-click` fills this prop."
+                "description": "When set, every step is a button until the horizontal stepper collapses. Enabled steps activate; disabled steps stay focusable and are announced as unavailable, but do not activate. `@step-click` fills this prop."
               },
               {
                 "name": "`label`",
@@ -56768,7 +56768,7 @@
                 "name": "`onStepClick`",
                 "type": "`(index: number) => void`",
                 "default": "-",
-                "description": "传入后步骤变成按钮。`@step-click` 填的就是这个属性。"
+                "description": "传入后每个步骤都是按钮，直到水平步骤条收起。可用步骤可以激活；禁用步骤仍可聚焦、读屏会说它不可用，但不会激活。`@step-click` 填的就是这个属性。"
               },
               {
                 "name": "`label`",

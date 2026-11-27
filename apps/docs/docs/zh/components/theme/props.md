@@ -58,7 +58,7 @@ footer: false
 | <code>onDark</code> | 深色 <code>MediaTheme</code> 表面上的额外 token 和组件样式。 |
 | <code>onLight</code> | 浅色 <code>MediaTheme</code> 表面上的额外 token 和组件样式。 |
 | <code>icons</code> | 语义图标名到 Iconify id。按名字覆盖，和被扩展的主题浅合并。 |
-| <code>indicators</code> | 指示器图形，按 check、checkbox、radio 替换。一处替换，所有使用处一起变。 |
+| <code>indicators</code> | 指示器图形，按 check、checkbox、radio 替换。一处替换，所有使用处一起变。另有两个没有内置图形的名字：<code>spinner</code>（状态 <code>busy</code>）替换加载圈转的那一圈，<code>tree-disclosure</code>（状态 <code>collapsed</code>、<code>expanded</code>）替换 TreeList 行的展开箭头。 |
 
 ## useTheme
 

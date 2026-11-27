@@ -275,3 +275,82 @@ describe('stepper logic', () => {
     expect(connectorFillTiming(1, 1, 0, 0, 1)).toEqual({ duration: '0s', delay: '0s' })
   })
 })
+
+describe('stepper step semantics', () => {
+  const stubWidth = (width: number) => vi.stubGlobal('ResizeObserver', class {
+    constructor(private readonly callback: ResizeObserverCallback) {}
+
+    observe() {
+      this.callback([{ contentRect: { width } } as ResizeObserverEntry], this)
+    }
+
+    disconnect() {}
+
+    unobserve() {}
+  })
+
+  it('describes a clickable step by its description, disabled ones included', () => {
+    const wrapper = mount(Stepper, {
+      props: { activeStep: 0, onStepClick: () => {} },
+      slots: { default: '<Step :step="0" label="Account" description="Your details" /><Step :step="1" label="Plan" description="Pick one" is-disabled />' },
+      global: { components: { Step } },
+    })
+    const buttons = wrapper.findAll('button.astryx-step-control')
+    for (const [index, text] of ['Your details', 'Pick one'].entries()) {
+      const id = buttons[index].attributes('aria-describedby')!
+      expect(id).toBeTruthy()
+      expect(wrapper.get(`[id="${id}"]`).text()).toBe(text)
+    }
+  })
+
+  it('keeps the number and the label apart in the text reading', () => {
+    const wrapper = mount(Stepper, {
+      props: { activeStep: 0, onStepClick: () => {} },
+      slots: { default: '<Step :step="0" label="Account" indicator="number" />' },
+      global: { components: { Step } },
+    })
+    expect(wrapper.get('button.astryx-step-control').element.textContent).toMatch(/1\s+Account/)
+  })
+
+  it('keeps its own aria-current over a caller attribute', () => {
+    const wrapper = mount(Stepper, {
+      props: { activeStep: 1 },
+      slots: { default: '<Step :step="0" label="A" aria-current="true" /><Step :step="1" label="B" aria-current="false" data-testid="b" />' },
+      global: { components: { Step } },
+    })
+    const items = wrapper.findAll('.astryx-step')
+    expect(items[0].attributes('aria-current')).toBeUndefined()
+    expect(items[1].attributes('aria-current')).toBe('step')
+    expect(items[1].attributes('data-testid')).toBe('b')
+  })
+
+  it('marks the current step, its indicator and its label as selected', () => {
+    const wrapper = mount(Stepper, {
+      props: { activeStep: 1 },
+      slots: { default: '<Step :step="0" label="A" /><Step :step="1" label="B" />' },
+      global: { components: { Step } },
+    })
+    const items = wrapper.findAll('.astryx-step')
+    expect(items[0].attributes('data-selected')).toBeUndefined()
+    expect(items[1].attributes('data-selected')).toBe('selected')
+    expect(items[1].get('.astryx-step-indicator').attributes('data-selected')).toBe('selected')
+    expect(items[1].get('.astryx-step-label').attributes('data-selected')).toBe('selected')
+    expect(items[0].get('.astryx-step-indicator').attributes('data-selected')).toBeUndefined()
+  })
+
+  it('names a collapsed step and says a disabled one is unavailable', async () => {
+    stubWidth(200)
+    const wrapper = mount(Stepper, {
+      props: { activeStep: 0, onStepClick: () => {} },
+      slots: { default: '<Step :step="0" label="Cart" /><Step :step="1" label="Pay" is-disabled /><Step :step="2" label="Done" />' },
+      global: { components: { Step } },
+    })
+    await wrapper.vm.$nextTick()
+    expect(wrapper.get('.astryx-stepper-root').attributes('data-collapsed')).toBe('true')
+    const items = wrapper.findAll('.astryx-step')
+    expect(items[1].text()).toContain('Pay')
+    expect(items[1].text()).toContain('unavailable')
+    expect(items[0].text()).not.toContain('unavailable')
+    vi.unstubAllGlobals()
+  })
+})

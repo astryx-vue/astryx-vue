@@ -85,4 +85,5 @@ export const navigationUpstreamMap: UpstreamMapPart = {
   '@astryx.step.status.completed': [{ path: 'stepper.status.completed' }],
   '@astryx.step.status.warning': [{ path: 'stepper.status.warning' }],
   '@astryx.step.status.error': [{ path: 'stepper.status.error' }],
+  '@astryx.step.status.unavailable': [{ path: 'stepper.status.unavailable' }],
 }

@@ -10,7 +10,7 @@ import type { SheetDraftChange } from '../composables/internal/sheetDraft.js'
  * 禁用而强制关上时查询留着。草稿改过时，下滑、点遮罩、Escape 先问要不要放弃。
  */
 import type { SearchableItem, SearchSource } from '../composables/useAsyncSource.js'
-import { computed, nextTick, ref, shallowRef, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, provide, ref, shallowRef, useTemplateRef, watch } from 'vue'
 import { LazyBottomSheet } from '../BottomSheet/lazyBottomSheet.js'
 import Button from '../Button/Button.vue'
 import CheckboxIndicator from '../CheckboxIndicator/CheckboxIndicator.vue'
@@ -25,6 +25,7 @@ import { useComponentMessages } from '../locale/context.js'
 import { alertDialogMessages } from '../locale/messages/alert-dialog.js'
 import { tokenizerMessages } from '../locale/messages/tokenizer.js'
 import Spinner from '../Spinner/Spinner.vue'
+import { spinnerOwnerKey } from '../Spinner/SpinnerOwnerContext.js'
 import Text from '../Text/Text.vue'
 import TextInput from '../TextInput/TextInput.vue'
 import { useTokenizerSheetSearch } from './useTokenizerSheetSearch.js'
@@ -67,6 +68,8 @@ const CREATABLE_ID_PREFIX = '__xds_create__'
 
 const messages = useComponentMessages({ tokenizer: tokenizerMessages, alertDialog: alertDialogMessages })
 const announce = useAnnounce()
+// 面板自己播报搜索，里面的加载圈保持安静。
+provide(spinnerOwnerKey, true)
 const searchInput = useTemplateRef<{ element: HTMLInputElement | null, focus: (options?: FocusOptions) => void }>('searchInput')
 const listRef = useTemplateRef<HTMLElement>('listRef')
 const clearAllButton = useTemplateRef<{ element: HTMLElement | null }>('clearAllButton')
