@@ -570,6 +570,12 @@ importers:
 
   packages/charts:
     dependencies:
+      '@types/d3-scale':
+        specifier: catalog:charts
+        version: 4.0.9
+      '@types/d3-shape':
+        specifier: catalog:charts
+        version: 3.1.8
       d3-scale:
         specifier: catalog:charts
         version: 4.0.2
@@ -580,12 +586,6 @@ importers:
       '@astryx-vue/core':
         specifier: workspace:^
         version: link:../core
-      '@types/d3-scale':
-        specifier: catalog:charts
-        version: 4.0.9
-      '@types/d3-shape':
-        specifier: catalog:charts
-        version: 3.1.8
       '@types/node':
         specifier: catalog:language
         version: 26.6.4
