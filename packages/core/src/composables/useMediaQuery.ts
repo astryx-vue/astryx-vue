@@ -17,7 +17,7 @@ interface SharedQuery {
 /** 按 `window.matchMedia` 这个函数分开存：换了实现（测试里常见）就是另一套，不会拿到旧的监听。 */
 const sharedByMatcher = new WeakMap<object, Map<string, SharedQuery>>()
 
-function watchMediaQuery(query: string, listener: (matches: boolean) => void): () => void {
+export function watchMediaQuery(query: string, listener: (matches: boolean) => void): () => void {
   let sharedQueries = sharedByMatcher.get(window.matchMedia)
   if (sharedQueries == null) {
     sharedQueries = new Map()
