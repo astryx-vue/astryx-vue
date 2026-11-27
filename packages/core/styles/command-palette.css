@@ -118,7 +118,7 @@
     background: transparent;
     color: var(--astryx-color-text-primary, #171717);
     font-size: var(--astryx-text-label-size, 0.875rem);
-    line-height: var(--astryx-text-body-leading, 1.4286);
+    line-height: var(--astryx-text-label-leading, 1.4286);
     text-align: start;
     cursor: pointer;
   }
@@ -129,11 +129,11 @@
     }
   }
 
-  .astryx-command-palette-item[data-highlighted='true'] {
+  .astryx-command-palette-item[data-highlighted='highlighted'] {
     background: var(--astryx-color-overlay-hover, light-dark(#0536590c, #ffffff0c));
   }
 
-  .astryx-command-palette-item[data-selected='true'] {
+  .astryx-command-palette-item[data-selected='selected'] {
     background: var(--astryx-color-accent-muted, light-dark(#0082fb33, #0082fb3f));
   }
 
@@ -147,11 +147,11 @@
       background: transparent;
     }
 
-    .astryx-command-palette-item[data-highlighted='true']:active:not([data-disabled]) {
+    .astryx-command-palette-item[data-highlighted='highlighted']:active:not([data-disabled]) {
       background: var(--astryx-color-overlay-hover, light-dark(#0536590c, #ffffff0c));
     }
 
-    .astryx-command-palette-item[data-selected='true']:active:not([data-disabled]) {
+    .astryx-command-palette-item[data-selected='selected']:active:not([data-disabled]) {
       background: var(--astryx-color-accent-muted, light-dark(#0082fb33, #0082fb3f));
     }
 
@@ -160,7 +160,7 @@
     }
   }
 
-  .astryx-command-palette-item[data-disabled='true'] {
+  .astryx-command-palette-item[data-disabled='disabled'] {
     opacity: 0.5;
     cursor: default;
   }
@@ -175,6 +175,9 @@
     font-size: var(--astryx-text-supporting-size, 0.75rem);
     line-height: var(--astryx-text-supporting-leading, 1.6667);
     text-align: center;
+    /* 回显进消息里的路径、网址这类长串要能折行，不然会把居中的行撑宽，两头都滚不到。 */
+    overflow-wrap: anywhere;
+    --_astryx-text-overflow-wrap: anywhere;
   }
 
   .astryx-command-palette-footer {

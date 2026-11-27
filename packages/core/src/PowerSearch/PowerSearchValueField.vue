@@ -17,7 +17,8 @@ import TextInput from '../TextInput/TextInput.vue'
 import TimeInput from '../TimeInput/TimeInput.vue'
 import Tokenizer from '../Tokenizer/Tokenizer.vue'
 import Typeahead from '../Typeahead/Typeahead.vue'
-import { absoluteRange, dateTimeLocalToUnix, isoDateToUnix, rangePartToIso, unixToDateTimeLocal, unixToIsoDate } from './dates.js'
+import { dateTimeLocalToUnix, rangePartToIso, unixToDateTimeLocal } from './dates.js'
+import { absoluteRange, isDateOnlyOperator, pickerDateToUnix, resolveDateZone, unixToPickerDate } from './dateZone.js'
 
 defineOptions({ name: 'AstryxPowerSearchValueField' })
 
@@ -99,11 +100,13 @@ const relativeOptions = computed(() => props.operatorValue.type === 'date_relati
     ? (props.operatorValue.relativeDatePresets ?? []).map(preset => ({ value: preset.value, label: preset.label }))
     : [])
 
-const dateOnly = computed(() => props.operatorValue.type === 'date_absolute' && props.operatorValue.isDateOnly === true)
+const dateOnly = computed(() => isDateOnlyOperator(props.operatorValue))
+/** 日历日按 `timeZone` 里的那一天读写；没给时区就是 UTC 的那一天。 */
+const dayZone = computed(() => resolveDateZone(props.timeZone, true))
 const absoluteDate = computed(() => {
   if (props.filterValue?.type !== 'date_absolute')
     return null
-  return new Date(props.filterValue.unixSeconds * 1000)
+  return unixToPickerDate(props.filterValue.unixSeconds, dayZone.value)
 })
 const absoluteLocal = computed(() => props.filterValue?.type === 'date_absolute'
   ? unixToDateTimeLocal(props.filterValue.unixSeconds, props.timeZone)
@@ -113,8 +116,8 @@ const rangeModel = computed(() => {
   if (props.filterValue?.type !== 'date_range')
     return null
   return {
-    start: rangePartToIso(props.filterValue.value.start, props.timeZone),
-    end: rangePartToIso(props.filterValue.value.end, props.timeZone),
+    start: rangePartToIso(props.filterValue.value.start, dayZone.value),
+    end: rangePartToIso(props.filterValue.value.end, dayZone.value),
   }
 })
 
@@ -189,7 +192,7 @@ function onRange(value: unknown): void {
   const end = value.end
   if (typeof start !== 'string' || typeof end !== 'string')
     return
-  emit('change', { type: 'date_range', value: absoluteRange(start, end) })
+  emit('change', { type: 'date_range', value: absoluteRange(start, end, dayZone.value) })
 }
 
 function onTime(value: unknown): void {
@@ -200,7 +203,7 @@ function onTime(value: unknown): void {
 function onAbsoluteDate(value: unknown): void {
   if (!(value instanceof Date))
     return
-  emit('change', { type: 'date_absolute', unixSeconds: isoDateToUnix(unixToIsoDate(Math.floor(value.getTime() / 1000), props.timeZone)) })
+  emit('change', { type: 'date_absolute', unixSeconds: pickerDateToUnix(value, dayZone.value) })
 }
 
 function onAbsoluteDateTime(value: unknown): void {
@@ -282,6 +285,7 @@ function applyPreset(range: DateTimeRange): void {
       :min="operatorValue.minValue"
       :max="operatorValue.maxValue"
       :is-disabled="disabled"
+      entry-error-behavior="complete"
       @update:model-value="onTime"
     />
     <DateInput
@@ -290,6 +294,7 @@ function applyPreset(range: DateTimeRange): void {
       is-label-hidden
       :model-value="absoluteDate"
       :is-disabled="disabled"
+      entry-error-behavior="complete"
       @update:model-value="onAbsoluteDate"
     />
     <DateTimeInput
@@ -298,6 +303,7 @@ function applyPreset(range: DateTimeRange): void {
       is-label-hidden
       :model-value="absoluteLocal"
       :is-disabled="disabled"
+      entry-error-behavior="complete"
       @update:model-value="onAbsoluteDateTime"
     />
     <div v-else-if="operatorValue.type === 'date_relative'" class="astryx-power-search-value__stack">
