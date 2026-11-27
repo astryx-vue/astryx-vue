@@ -1,5 +1,11 @@
 # @astryx-vue/core
 
+## 0.36.1
+
+### Patch Changes
+
+- [#648](https://github.com/astryx-vue/astryx-vue/pull/648) [`ec76b23`](https://github.com/astryx-vue/astryx-vue/commit/ec76b23d0f5cbecc146a257226edc969d5064777) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 手机上高度为 tall 的底部面板里点开输入框时，面板内容会让出屏幕键盘占的位置并把输入框滚到键盘上方，在安卓 Chrome 上跟着 Gboard 的滑动一起走，往下拖面板时键盘随之收起。
+
 ## 0.36.0
 
 ### Minor Changes
