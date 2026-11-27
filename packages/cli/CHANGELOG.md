@@ -1,5 +1,11 @@
 # @astryx-vue/cli
 
+## 0.6.8
+
+### Patch Changes
+
+- [#609](https://github.com/astryx-vue/astryx-vue/pull/609) [`d4feea8`](https://github.com/astryx-vue/astryx-vue/commit/d4feea8074958489c84b6c3399a717fde2efc1d7) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `docs` 新增 `--list`，和不带主题时一样列出全部主题；主题名里的词用空格、短横线、斜杠或点隔开、顺序颠倒（如 `docs mode dark`）也能打开同一页；查不到时会建议名字或关键词里带这些词的页面。
+
 ## 0.6.7
 
 ### Patch Changes
