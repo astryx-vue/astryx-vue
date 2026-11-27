@@ -609,6 +609,11 @@
       "types": "./dist/locale/index.d.ts",
       "import": "./dist/locale/index.js"
     },
+    "./internal/touch": {
+      "source": "./src/internal/touch.ts",
+      "types": "./dist/internal/touch.d.ts",
+      "import": "./dist/internal/touch.js"
+    },
     "./locales/*.json": "./locales/*.json",
     "./package.json": "./package.json",
     "./reset.css": {
@@ -1144,6 +1149,10 @@
       "./locale": {
         "types": "./dist/locale/index.d.ts",
         "import": "./dist/locale/index.js"
+      },
+      "./internal/touch": {
+        "types": "./dist/internal/touch.d.ts",
+        "import": "./dist/internal/touch.js"
       },
       "./locales/*.json": "./locales/*.json",
       "./package.json": "./package.json",

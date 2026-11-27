@@ -9,6 +9,7 @@ export default defineConfig({
     'src/index.ts',
     'src/*/index.ts',
     'src/Icon/plugin.ts',
+    'src/internal/touch.ts',
     'src/Code/languages/*/index.ts',
     'src/Markdown/parser/index.ts',
     'src/Markdown/plugin-protocol/index.ts',

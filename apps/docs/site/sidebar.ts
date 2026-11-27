@@ -114,6 +114,7 @@ export function labSidebar(english: boolean): Sidebar {
         item('LineClamp', `${prefix}/lab/line-clamp`),
         item('LogStream', `${prefix}/lab/log-stream`),
         item('MediaPlayer', `${prefix}/lab/media-player`),
+        item('NavigationStack', `${prefix}/lab/navigation-stack`),
         item('VideoPlayer', `${prefix}/lab/video-player`),
         item('AudioPlayer', `${prefix}/lab/audio-player`),
         item('Stat', `${prefix}/lab/stat`),

@@ -51,6 +51,8 @@ import logStreamDemo from './log-stream.vue'
 import logStreamSource from './log-stream.vue?raw&highlighted'
 import mediaPlayerDemo from './media-player.vue'
 import mediaPlayerSource from './media-player.vue?raw&highlighted'
+import navigationStackDemo from './navigation-stack.vue'
+import navigationStackSource from './navigation-stack.vue?raw&highlighted'
 import scheduleDemo from './schedule.vue'
 import scheduleSource from './schedule.vue?raw&highlighted'
 import selectableCardGroupDemo from './selectable-card-group.vue'
@@ -100,6 +102,7 @@ export const labLogStreamOverview = defineDemo(logStreamOverviewDemo, logStreamO
 export const labMediaPlayer = defineDemo(mediaPlayerDemo, mediaPlayerSource, options)
 export const labVideoPlayer = defineDemo(videoPlayerDemo, videoPlayerSource, options)
 export const labAudioPlayer = defineDemo(audioPlayerDemo, audioPlayerSource, options)
+export const labNavigationStack = defineDemo(navigationStackDemo, navigationStackSource, options)
 export const labSchedule = defineDemo(scheduleDemo, scheduleSource, options)
 export const labStat = defineDemo(statDemo, statSource, options)
 export const labSvgIcon = defineDemo(svgIconDemo, svgIconSource, options)

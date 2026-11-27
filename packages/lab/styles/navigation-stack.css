@@ -1,0 +1,295 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-navigation-stack {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--astryx-color-background-body, light-dark(#fff, #0a0a0a));
+  }
+
+  /* 栏盖在各屏上面，各屏从它下面滚过去，和 UIKit 的内容延伸到栏下一样。 */
+  .astryx-navigation-stack__bar {
+    position: absolute;
+    top: 0;
+    inset-inline: 0;
+    isolation: isolate;
+    height: 44px;
+    z-index: 1;
+  }
+
+  /*
+   * 栏自己的背景和细线，在每屏的栏层下面。iOS 26.2 的栏两样都不画：手指下内容透出来，
+   * 直到这一屏的滚动边缘遮罩把它盖住。鼠标下两样都保留。
+   */
+  .astryx-navigation-stack__bar-background {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background-color: var(--astryx-color-background-surface, #fff);
+    border-bottom: 1px solid var(--astryx-color-border, light-dark(#ebebeb, #ffffff1a));
+  }
+
+  /*
+   * 每屏的栏跟着自己的屏幕走，和 UIKit 每屏一份栏一样。鼠标下它有自己的不透明背景，
+   * 进来的栏盖住出去的标题；手指下栏是透明的，被盖住的栏由裁切框在上面卡片的前沿处切掉。
+   * 层级在返回按钮下面：WebKit 不提升移动层经过的静态兄弟元素，移动的那层得在下面。
+   */
+  .astryx-navigation-stack__bar-layer {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+
+  .astryx-navigation-stack__bar-layer--covered {
+    pointer-events: none;
+  }
+
+  /* 栈移动这个框来切栏；框里的行反向移动同样的距离，所以只有切口在动。 */
+  .astryx-navigation-stack__bar-clip {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  .astryx-navigation-stack__bar-row {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding-inline: var(--astryx-spacing-4, 16px);
+  }
+
+  /* 栏层的背景，在栏的细线上面。手指下和栏自己的背景一样透明。 */
+  .astryx-navigation-stack__bar-layer-background {
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    bottom: 1px;
+    z-index: -1;
+    background-color: var(--astryx-color-background-surface, #fff);
+  }
+
+  .astryx-navigation-stack__bar-start {
+    display: flex;
+    justify-content: flex-start;
+    min-width: 0;
+  }
+
+  .astryx-navigation-stack__bar-title {
+    margin: 0;
+    min-width: 0;
+    font-size: var(--astryx-font-size-lg, 1.125rem);
+    font-weight: var(--astryx-font-weight-semibold, 600);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .astryx-navigation-stack__bar-end {
+    display: flex;
+    justify-content: flex-end;
+    min-width: 0;
+  }
+
+  /* 唯一的返回按钮：栏在它下面移动时它不动。 */
+  .astryx-navigation-stack__back-control {
+    position: absolute;
+    inset-inline-start: var(--astryx-spacing-4, 16px);
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  /* iOS 26：一个 44pt 的圆，里面只有小箭头；前一屏的标题是它的无障碍名称，不显示成文字。 */
+  .astryx-navigation-stack__back {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid var(--astryx-color-border, light-dark(#ebebeb, #ffffff1a));
+    background-color: var(--astryx-color-background-surface, #fff);
+    color: var(--astryx-color-text-accent, light-dark(#0064e0, #4a9eff));
+    cursor: pointer;
+  }
+
+  .astryx-navigation-stack__back:is(:disabled, [aria-disabled='true']) {
+    cursor: default;
+  }
+
+  .astryx-navigation-stack__back:focus-visible,
+  .astryx-navigation-stack__bar-title:focus-visible {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid)
+      var(--astryx-focus-outline-color, #0064e0);
+    outline-offset: var(--astryx-focus-outline-offset, 2px);
+  }
+
+  .astryx-navigation-stack__back-icon {
+    display: inline-flex;
+  }
+
+  [dir='rtl'] .astryx-navigation-stack__back-icon {
+    transform: scaleX(-1);
+  }
+
+  .astryx-navigation-stack__cards {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* 静止时每张卡片也是一个层叠上下文，和转场时 transform 造成的一样：屏幕内容的 z-index 再大也在栏下面。 */
+  .astryx-navigation-stack__card {
+    position: absolute;
+    inset: 0;
+    isolation: isolate;
+    overflow: hidden;
+    background-color: var(--astryx-color-background-body, light-dark(#fff, #0a0a0a));
+  }
+
+  .astryx-navigation-stack__card--hidden {
+    content-visibility: hidden;
+  }
+
+  /*
+   * 屏幕竖着滚；横向拖动归滑动返回。内容里的横向滚动容器是它自己的滚动容器，保留原生的横向滚动。
+   * 卡片裁掉滚动区外面的部分，焦点环画在里面。
+   */
+  .astryx-navigation-stack__scroller {
+    position: absolute;
+    inset: 0;
+    box-sizing: border-box;
+    padding-top: 44px;
+    scroll-padding-top: 44px;
+    touch-action: pan-y pinch-zoom;
+  }
+
+  .astryx-navigation-stack__scroller:focus-visible,
+  .astryx-navigation-stack__large-title:focus-visible {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid)
+      var(--astryx-focus-outline-color, #0064e0);
+    outline-offset: calc(-1 * var(--astryx-focus-outline-width, 2px));
+  }
+
+  .astryx-navigation-stack__large-title {
+    margin: 0;
+    padding: var(--astryx-spacing-1, 4px) var(--astryx-spacing-4, 16px) var(--astryx-spacing-2, 8px);
+    font-size: var(--astryx-font-size-4xl, 2.1875rem);
+    font-weight: var(--astryx-font-weight-bold, 700);
+    line-height: var(--astryx-text-display-2-leading, 1.2);
+  }
+
+  /*
+   * 滚动边缘哨兵停在静态位置，就在内容上方；滚动区是它的包含块，不用定位包裹层也随内容滚动。
+   * 普通标题的屏幕里它在内容外面，屏幕的第一个元素还是 :first-child。
+   */
+  .astryx-scroll-edge-sentinel.astryx-navigation-stack__edge-sentinel {
+    inset-block-start: auto;
+    inset-inline-start: auto;
+  }
+
+  /*
+   * 大标题屏幕里哨兵跟在内容里的大标题后面，和标题同时结束：栏标题接手时遮罩打开。
+   * iOS 的遮罩不盖展开的大标题。负外边距是哨兵自己 10px 的高度。
+   */
+  .astryx-navigation-stack__edge-sentinel--after-large-title {
+    margin-block-start: -10px;
+  }
+
+  /* 遮罩的高度：栏底（44px）往下再延伸 54.8px 的柔和区；「减少透明度」下是一条到栏底为止的实色带。 */
+  .astryx-scroll-edge.astryx-navigation-stack__scroll-edge {
+    height: calc(44px + 54.8px);
+    background-color: var(--astryx-color-background-body, light-dark(#fff, #0a0a0a));
+  }
+
+  .astryx-navigation-stack__dim {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* 栏的遮暗和它的背景一样止于细线上方：不然被盖住的栏会把下面的细线也压暗。 */
+  .astryx-navigation-stack__bar-dim {
+    bottom: 1px;
+  }
+
+  /*
+   * 滚动边缘遮罩：单一颜色，从不模糊。遮罩曲线是 0.95 × (1 − Φ((y − 栏底) / 18px))，
+   * 栏底处半强度，在 ±3σ 范围里每 6px 取一个点。它比 UIKit 的 0.85 更浓，栏标题在亮色内容上
+   * 也保持 4.5:1 的对比度。只在手指下显示。
+   */
+  .astryx-scroll-edge {
+    display: none;
+    position: absolute;
+    inset-inline: 0;
+    inset-block-start: 0;
+    pointer-events: none;
+    opacity: 0;
+    /* 只在手指操作滚动区时进合成层：iOS 26.2 上粘性栏下的合成层会在程序滚回顶部时把栏里的内容涂白。 */
+    will-change: var(--_scroll-edge-will-change, auto);
+    mask-image: linear-gradient(
+      to bottom,
+      rgb(0 0 0 / 0.95) calc(100% - 118.8px),
+      rgb(0 0 0 / 0.949) calc(100% - 112.8px),
+      rgb(0 0 0 / 0.948) calc(100% - 106.8px),
+      rgb(0 0 0 / 0.945) calc(100% - 100.8px),
+      rgb(0 0 0 / 0.938) calc(100% - 94.8px),
+      rgb(0 0 0 / 0.922) calc(100% - 88.8px),
+      rgb(0 0 0 / 0.893) calc(100% - 82.8px),
+      rgb(0 0 0 / 0.845) calc(100% - 76.8px),
+      rgb(0 0 0 / 0.772) calc(100% - 70.8px),
+      rgb(0 0 0 / 0.675) calc(100% - 64.8px),
+      rgb(0 0 0 / 0.559) calc(100% - 58.8px),
+      rgb(0 0 0 / 0.433) calc(100% - 52.8px),
+      rgb(0 0 0 / 0.312) calc(100% - 46.8px),
+      rgb(0 0 0 / 0.207) calc(100% - 40.8px),
+      rgb(0 0 0 / 0.127) calc(100% - 34.8px),
+      rgb(0 0 0 / 0.071) calc(100% - 28.8px),
+      rgb(0 0 0 / 0.036) calc(100% - 22.8px),
+      rgb(0 0 0 / 0.017) calc(100% - 16.8px),
+      rgb(0 0 0 / 0.007) calc(100% - 10.8px)
+    );
+  }
+
+  /* 高 10px（`bars.scrollEdgeEffect.switchPt`），在内容顶部。 */
+  .astryx-scroll-edge-sentinel {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    width: 1px;
+    height: 10px;
+    pointer-events: none;
+    visibility: hidden;
+  }
+
+  @media (pointer: coarse) {
+    .astryx-navigation-stack__bar-background {
+      background-color: transparent;
+      border-bottom-width: 0;
+    }
+
+    .astryx-navigation-stack__bar-layer-background {
+      background-color: transparent;
+    }
+
+    .astryx-scroll-edge {
+      display: block;
+    }
+  }
+
+  @media (prefers-reduced-transparency: reduce) {
+    .astryx-scroll-edge {
+      mask-image: none;
+    }
+
+    .astryx-scroll-edge.astryx-navigation-stack__scroll-edge {
+      height: 44px;
+    }
+  }
+}
