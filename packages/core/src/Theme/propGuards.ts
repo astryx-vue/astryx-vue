@@ -92,7 +92,17 @@ export function propGuardRules(components: ComponentStyleMap | undefined, option
         const written = safeValue(authored?.[property]) ?? safeValue(fallback?.[property])
         return `${PROPERTY_CSS[property]}: ${written ?? value};`
       }).join(' ')
-      rules.push(`${targetSelectors(target, key, options.surface).join(', ')} { ${body} }`)
+      const selectors = targetSelectors(target, key, options.surface)
+      rules.push(`${selectors.join(', ')} { ${body} }`)
+      // Core's hover color for an accent link sits in a lower layer, so the
+      // pin above would hide it. Restating it on hover keeps a container's or
+      // theme's `--link-hover-color` working on a styled link, at no added
+      // weight: a theme's own `:hover` color for the key still wins.
+      if (target === 'link' && key === 'color:accent') {
+        const rest = safeValue(authored?.color) ?? safeValue(fallback?.color) ?? 'var(--astryx-link-accent-foreground, #0074e2)'
+        const hover = selectors.map(selector => `${selector}:where(:hover):where(:not(:disabled, [aria-disabled="true"]))`).join(', ')
+        rules.push(`${hover} { color: var(--astryx-link-hover-color, ${rest}); }`)
+      }
     }
   }
   return rules

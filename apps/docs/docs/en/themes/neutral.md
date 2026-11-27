@@ -18,7 +18,7 @@ Override those three variables to use your own fonts. You can also skip the bund
 
 Semantic tokens live in `packages/themes/neutral/base.css`. Names follow upstream `tokens.stylex.ts` and add an `--astryx-` prefix. Each token writes its light and dark stops with `light-dark()`. A value comes from the Neutral theme when that theme overrides it, and from the upstream default otherwise.
 
-Every color, radius, and shadow matches upstream v0.7.1 `neutralTheme.ts`. Palettes come from the approved grey, text, icon, border, background, status, and categorical stops. `--astryx-radius-none` is `0px` and the light stop of `--astryx-color-text-secondary` is `#474747`, as upstream ships them.
+Every color, radius, and shadow matches upstream v0.7.1 `neutralTheme.ts`. Palettes come from the approved grey, text, icon, border, background, status, and categorical stops. `--astryx-radius-none` is `0px` and the light stop of `--astryx-color-text-secondary` is `#474747`, as upstream ships them. The dark stop of `--astryx-color-text-secondary` is `#a8a8a8`, a little lighter than upstream Neutral's `#9e9e9e`, so secondary text stays at 4.5:1 on the translucent neutral fill over the dark surface and card.
 
 Component colors reference the semantic variables instead of repeating hex values. `--astryx-badge-info-background` points at the approved status fill, for example, so changing one semantic variable updates every component that reads it.
 

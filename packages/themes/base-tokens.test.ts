@@ -304,7 +304,7 @@ describe('neutral base.css semantic tokens', () => {
 
   it('keeps the reviewed palette values that components read', () => {
     expect(declared.get('--astryx-color-text-primary')).toBe('light-dark(#000000, #ffffff)')
-    expect(declared.get('--astryx-color-text-secondary')).toBe('light-dark(#474747, #9e9e9e)')
+    expect(declared.get('--astryx-color-text-secondary')).toBe('light-dark(#474747, #a8a8a8)')
     expect(declared.get('--astryx-color-border-emphasized')).toBe('light-dark(#d4d4d4, #525252)')
     expect(declared.get('--astryx-radius-none')).toBe('0px')
     expect(declared.get('--astryx-radius-inner')).toBe('0.375rem')

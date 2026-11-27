@@ -1410,7 +1410,9 @@ export type {
   TextInputType,
 } from './TextInput/index.js'
 export {
+  compactDefinition,
   DATA_TOKEN_DEFAULTS,
+  DEFAULT_COMPACT_DEFINITION,
   DEFAULT_WIDTH_BREAKPOINTS,
   defineTheme,
   expandColorScale,
@@ -1429,6 +1431,7 @@ export {
 } from './Theme/index.js'
 export type {
   ColorScaleConfig,
+  CompactDefinition,
   ComponentStyleMap,
   DataTokenName,
   DefineThemeInput,
@@ -1437,6 +1440,7 @@ export type {
   MotionCharacter,
   MotionScaleConfig,
   RadiusScaleConfig,
+  StyleBlock,
   StyleOverrides,
   ThemeAdaptationCondition,
   ThemeAdaptationRule,

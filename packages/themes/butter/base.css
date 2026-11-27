@@ -167,7 +167,7 @@
     --astryx-radius-element: 0.5rem;
     --astryx-radius-container: 0.75rem;
     --astryx-radius-page: 1.5rem;
-    --astryx-radius-chat: 28px;
+    --astryx-radius-chat: var(--astryx-radius-container);
     --astryx-radius-full: 9999px;
 
     --astryx-shadow-low: 0 2px 4px #1d1c110D, 0 4px 8px #1d1c111A;

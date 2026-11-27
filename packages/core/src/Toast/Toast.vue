@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import type { ToastContentScope, ToastDismissReason, ToastOptions, ToastSlots } from './types.js'
+import type { ToastContentScope, ToastDismissReason, ToastOptions, ToastSlots, ToastType } from './types.js'
 import type { ToastGestureDirection } from './useToastGesture.js'
 import { computed, inject, onMounted, onUnmounted, ref, watch } from 'vue'
 import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
 import { useComponentMessages } from '../locale/context.js'
 import { toastMessages } from '../locale/messages/toast.js'
+import { surfaceSideOf } from '../Theme/invertedSurfaceSide.js'
 import MediaTheme from '../Theme/MediaTheme.vue'
 import { useTheme } from '../Theme/useTheme.js'
 import { TOAST_VIEWPORT_KEY } from './context.js'
@@ -47,6 +48,14 @@ const emit = defineEmits<{
 
 defineSlots<ToastSlots>()
 
+/** 各类型提示卡片的标准底色，和 toast.css 里的回退值一致。 */
+const DEFAULT_FILLS: Record<ToastType, string> = {
+  info: '#171717',
+  success: '#0a7b3e',
+  warning: '#9a6700',
+  error: '#c52626',
+}
+
 const duration = computed(() => resolveAutoHideDuration(props))
 const autoHide = computed(() => resolveAutoHide(props))
 const remaining = ref(duration.value)
@@ -64,7 +73,12 @@ const role = computed(() => isInViewport ? (isAlert.value ? 'alert' : 'status') 
 const ariaLive = computed(() => isInViewport ? (isAlert.value ? 'assertive' : 'polite') : undefined)
 const messages = useComponentMessages({ toast: toastMessages })
 const theme = useTheme()
-const mediaFallback = computed(() => isAlert.value || theme.mode.value === 'light' ? 'dark' : 'light')
+// 量到真实底色之前，内容先取主题里这种提示底色上读得清的那一边；
+// 底色读不出来（半透明、引用别的变量）才按颜色模式猜。
+const mediaFallback = computed(() => {
+  const fill = theme.tokens.value[`--astryx-toast-${props.type}-background`] ?? DEFAULT_FILLS[props.type]
+  return surfaceSideOf(theme.tokens.value, fill) ?? (isAlert.value || theme.mode.value === 'light' ? 'dark' : 'light')
+})
 const dismissLabel = computed(() => messages.value.toast.dismiss)
 
 const classes = computed(() => [

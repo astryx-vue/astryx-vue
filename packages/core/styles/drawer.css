@@ -22,6 +22,15 @@
     padding-block-end: env(safe-area-inset-bottom, 0px);
   }
 
+  /*
+   * 主题给抽屉写的内边距走 `--astryx-drawer-padding`，没写就沿用对话框的。
+   * 对话框内层读的是 `--_dialog-padding`（组件自己的 padding 属性）和
+   * `--astryx-dialog-padding`，这里在它们之间插入抽屉自己的那一层。
+   */
+  .astryx-drawer .astryx-dialog__inner {
+    --_dialog-pad-block-start: var(--_dialog-padding, var(--astryx-drawer-padding, var(--astryx-dialog-padding, var(--astryx-spacing-4, 1rem))));
+  }
+
   .astryx-drawer[open] {
     animation: astryx-drawer-slide-in var(--astryx-duration-medium, 200ms) var(--astryx-ease-standard, ease-out) both;
   }

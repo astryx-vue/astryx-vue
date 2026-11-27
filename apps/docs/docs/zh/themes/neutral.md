@@ -36,7 +36,7 @@ Neutral 的每一个颜色、圆角和阴影值都和上游 v0.7.1 的 `neutralT
 
 - **色板：** 灰阶、文字、图标、边框、背景、状态色和十种分类色都取自上游审定色板（`neutralPaletteRefs.generated.ts`）。
 - **直角定义 `--astryx-radius-none`：** 和上游一样是 `0px`，方形头像和骨架屏保持直角。
-- **辅助文本色 `--astryx-color-text-secondary`：** 浅色 `#474747`、深色 `#9e9e9e`，与上游一致。
+- **辅助文本色 `--astryx-color-text-secondary`：** 浅色 `#474747`、深色 `#a8a8a8`（比上游 Neutral 包的 `#9e9e9e` 略亮，使它压在半透明中性底色上也达到 4.5:1 的对比度）。
 
 组件级配色不再各写一份十六进制值，而是引用语义变量（例如 `--astryx-badge-info-background` 指向上游审定的状态色）。改一个语义变量，用到它的组件会一起更新。
 

@@ -1,15 +1,18 @@
 import type { ThemeMode } from './types.js'
 import { onBeforeUnmount, onMounted, watch } from 'vue'
+import { setRootReducedMotionMark } from '../motion/reducedMotionMark.js'
 import { syncReaderTextSize } from './textSizeSync.js'
 
 interface RootEntry {
-  name: () => string
+  name: () => string | null
   mode: () => ThemeMode
+  reducesMotion: () => boolean
 }
 
 interface RootSnapshot {
   theme: string | null
   mode: string | null
+  reducedMotion: boolean
 }
 
 const entries: RootEntry[] = []
@@ -20,6 +23,7 @@ function capture(): RootSnapshot {
   return {
     theme: root.getAttribute('data-astryx-theme'),
     mode: root.getAttribute('data-astryx-color-mode'),
+    reducedMotion: root.hasAttribute('data-astryx-reduced-motion'),
   }
 }
 
@@ -33,12 +37,13 @@ function writeAttribute(name: string, value: string | null): void {
 
 function apply(entry: RootEntry): void {
   const root = document.documentElement
-  root.setAttribute('data-astryx-theme', entry.name())
+  writeAttribute('data-astryx-theme', entry.name())
   const mode = entry.mode()
   if (mode === 'light' || mode === 'dark')
     root.setAttribute('data-astryx-color-mode', mode)
   else
     root.removeAttribute('data-astryx-color-mode')
+  setRootReducedMotionMark(root, entry.reducesMotion())
 }
 
 function restoreBase(): void {
@@ -46,6 +51,7 @@ function restoreBase(): void {
     return
   writeAttribute('data-astryx-theme', baseSnapshot.theme)
   writeAttribute('data-astryx-color-mode', baseSnapshot.mode)
+  setRootReducedMotionMark(document.documentElement, baseSnapshot.reducedMotion)
   baseSnapshot = null
 }
 
@@ -55,13 +61,14 @@ function restoreBase(): void {
  */
 export function useThemeRootSync(
   isNested: boolean,
-  themeName: () => string,
+  themeName: () => string | null,
   mode: () => ThemeMode,
+  reducesMotion: () => boolean = () => false,
 ): void {
   if (isNested || typeof document === 'undefined')
     return
 
-  const entry: RootEntry = { name: themeName, mode }
+  const entry: RootEntry = { name: themeName, mode, reducesMotion }
   let stopTextSizeSync: (() => void) | undefined
 
   onMounted(() => {
@@ -73,7 +80,7 @@ export function useThemeRootSync(
     apply(entry)
   })
 
-  watch(() => [themeName(), mode()] as const, () => {
+  watch(() => [themeName(), mode(), reducesMotion()] as const, () => {
     if (entries[entries.length - 1] === entry)
       apply(entry)
   })
