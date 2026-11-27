@@ -19,7 +19,7 @@ footer: false
         <td><code>density</code></td>
         <td><code>ListDensity</code></td>
         <td><code>'balanced'</code></td>
-        <td>行的间距密度：compact（4px 上下内边距）、balanced（8px）、spacious（12px，左右内边距也放宽一档）。单行可以用自己的 <code>density</code> 覆盖它。</td>
+        <td>行的间距密度：compact（4px 上下内边距）、balanced（8px）、spacious（12px，左右内边距也放宽一档）。单行可以用自己的 <code>density</code> 覆盖它；手指操作时，可点的行的触控范围会朝相邻行留出的空隙长到 44px，行的外观和布局不变。</td>
       </tr>
       <tr>
         <td><code>hasDividers</code></td>
@@ -31,7 +31,7 @@ footer: false
         <td><code>edge</code></td>
         <td><code>'padded' | 'flush' | 'outset' | 'bleed'</code></td>
         <td><code>'padded'</code></td>
-        <td>每行文字、分隔线以及悬停和选中背景相对列表边缘与外围容器的位置。<code>padded</code> 保留行自身的内边距；<code>flush</code> 去掉这段内边距，文字顶到列表上方标题的竖线，分隔线和背景也止于文字；<code>outset</code> 把文字放在这条线上，让分隔线和背景伸进容器的内边距；<code>bleed</code> 让文字落在容器的内边距线上，分隔线和背景铺到容器边缘、四角为直角，像表格行。与标题对齐的是行里的第一块内容：有标记、图标或头像时就是它，否则是标签。<code>outset</code> 和 <code>bleed</code> 读取最近的、共享内边距的容器公布的数值（Card、Section、BottomSheet、带内边距的 ScrollableArea，或 Layout 区域）；没有这样的容器时和 <code>padded</code> 表现一样。</td>
+        <td>每行文字、分隔线以及悬停和选中背景相对列表边缘与外围容器的位置。<code>padded</code> 保留行自身的内边距；<code>flush</code> 去掉这段内边距，文字顶到列表上方标题的竖线，分隔线和背景也止于文字；<code>outset</code> 把文字放在这条线上，让分隔线和背景伸进容器的内边距；<code>bleed</code> 让文字落在容器的内边距线上，分隔线和背景铺到容器边缘、像表格行，行是直角；只有当列表是圆角 Card 或 Dialog 的第一个或最后一个子元素时，首行或末行取容器的圆角。与标题对齐的是行里的第一块内容：有标记、图标或头像时就是它，否则是标签。<code>outset</code> 和 <code>bleed</code> 读取最近的、共享内边距的容器公布的数值（Card、Section、BottomSheet、带内边距的 ScrollableArea，或 Layout 区域）；没有这样的容器时和 <code>padded</code> 表现一样。</td>
       </tr>
       <tr>
         <td><code>edgeCompensation</code></td>
@@ -127,7 +127,7 @@ footer: false
         <td><code>isSelected</code></td>
         <td><code>boolean</code></td>
         <td><code>false</code></td>
-        <td>选中状态。角色允许时写入 <code>aria-selected="true"</code>，否则写入 <code>aria-current="true"</code>；使用方自己传入的 <code>aria-current</code> 优先。</td>
+        <td>选中状态。角色允许时写入 <code>aria-selected="true"</code>，否则写入 <code>aria-current="true"</code>；使用方自己传入的 <code>aria-current</code> 优先。在可点的行（有 <code>onClick</code>、<code>href</code> 或 <code>interactiveRef</code>）里，标记写在拿到焦点的那个元素上，读屏器就在那里念出来。</td>
       </tr>
     </tbody>
   </table>

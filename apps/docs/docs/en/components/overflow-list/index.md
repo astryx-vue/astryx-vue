@@ -42,6 +42,7 @@ const items = [
 | --- | --- |
 | <Badge variant="success">Do</Badge> | Let the list take its width from the parent. Extra items move into the menu on their own. |
 | <Badge variant="success">Do</Badge> | Set <code>minVisibleItems</code> when a few items must stay visible. |
+| <Badge variant="error">Avoid</Badge> | Do not render a count-only indicator when people need the collapsed items. Make the indicator a control, such as a dropdown menu, so keyboard and screen reader users can reach them. |
 | <Badge variant="error">Avoid</Badge> | Do not render the same item again outside the menu. Visible items and overflow items are two slices. |
 
 ## Examples

@@ -1,14 +1,19 @@
 <script setup lang="ts">
-import type { Component, ComponentPublicInstance, CSSProperties, StyleValue } from 'vue'
+import type { Component, ComponentPublicInstance, CSSProperties, FunctionalComponent, StyleValue } from 'vue'
 import type { ItemProps, ItemSlots } from './types.js'
-import { computed, provide, toRaw, toValue, useAttrs, useId, useSlots, useTemplateRef, watchEffect } from 'vue'
+import { computed, h, provide, toRaw, toValue, useAttrs, useId, useSlots, useTemplateRef } from 'vue'
 import { useFocusAcrossSwap } from '../composables/internal/focusAcrossSwap.js'
 import { useInteractiveRole } from '../composables/useInteractiveRole.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { isInLayerSurface, isLayerSurface } from '../layer/layerSurfacePress.js'
+import { readLayerScoped } from '../layer/scopedProvide.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
+import { isCoarsePointer } from '../utils/coarsePointer.js'
+import { disabledInteractionProps } from '../utils/disabledInteraction.js'
 import { isSafeUrl } from '../utils/safeUrl.js'
-import { itemDescriptionContextKey } from './context.js'
+import { itemDescriptionContextKey, itemListRowKey } from './context.js'
+import ItemSwipePanel from './ItemSwipePanel.vue'
+import { useDelegatedControl } from './useDelegatedControl.js'
 import { useItemSwipe } from './useItemSwipe.js'
 import '../../styles/list.css'
 
@@ -89,6 +94,9 @@ const descriptionIdBase = `astryx-item-description-${useId()}`
 const hasDescription = computed(() => slots.description != null || isRenderable(props.description))
 const hasLabel = computed(() => slots.label != null || isRenderable(props.label))
 
+const listRow = readLayerScoped(itemListRowKey)
+const isListRow = listRow != null
+provide(itemListRowKey, null)
 provide(itemDescriptionContextKey, computed(() => (hasDescription.value ? descriptionIdBase : null)))
 
 const role = computed(() => attrs.role as string | undefined)
@@ -107,6 +115,18 @@ const safeHref = computed(() => {
 })
 const isInteractive = computed(() => props.onClick != null || safeHref.value != null || isDelegate.value)
 /** 链接内容用的根组件：`as` 写了组件就用它，否则用 LinkProvider 给的默认值。 */
+/**
+ * 读屏器在拿到焦点的元素上念「当前」标记。可点的行里那是行自己的按钮、链接，
+ * 或它转发点击的控件；根元素自己拿焦点的行（带父级角色）把标记留在根上。
+ */
+const currentOnFocusTarget = computed(() =>
+  !hasParentRole.value && (isDelegate.value || safeHref.value != null || props.onClick != null),
+)
+/** 控件上不写 `false`。 */
+const controlCurrent = computed(() => {
+  const value = ariaCurrent.value
+  return value === false || value === 'false' ? undefined : value
+})
 const customLink = computed(() => (typeof props.as === 'string' ? linkComponent.value : props.as))
 const isLinkContent = computed(() => safeHref.value != null && customLink.value != null)
 const { pressActionProps } = usePressFeedback({ hasOverlay: false, isContainer: true })
@@ -173,7 +193,7 @@ function handleContentClick(event: MouseEvent): void {
   props.onClick?.(event)
 }
 
-const contentAttrs = computed<Record<string, unknown>>(() => {
+const baseContentAttrs = computed<Record<string, unknown>>(() => {
   const href = safeHref.value
   if (href != null && !hasParentRole.value && !isDelegate.value) {
     // 禁用的链接行没有去处：屏幕阅读器的点击、回车、链接菜单都无处可去，
@@ -182,7 +202,7 @@ const contentAttrs = computed<Record<string, unknown>>(() => {
       return {
         'role': 'link',
         'aria-disabled': true,
-        'tabindex': -1,
+        'tabindex': 0,
         ...pressActionProps,
       }
     }
@@ -196,15 +216,28 @@ const contentAttrs = computed<Record<string, unknown>>(() => {
   }
 
   if (contentTag.value === 'button') {
+    // 禁用的按钮仍可聚焦（读屏和键盘够得着），但不触发任何动作。
+    if (props.isDisabled) {
+      return {
+        'type': 'button',
+        'aria-disabled': true,
+        ...disabledInteractionProps(),
+        ...pressActionProps,
+      }
+    }
     return {
       type: 'button',
-      disabled: props.isDisabled,
       onClick: handleContentClick,
       ...pressActionProps,
     }
   }
 
   return {}
+})
+
+const contentAttrs = computed<Record<string, unknown>>(() => {
+  const current = currentOnFocusTarget.value && !isDelegate.value ? { 'aria-current': controlCurrent.value } : {}
+  return { ...baseContentAttrs.value, ...current }
 })
 
 function hasTextSelection(node: HTMLElement): boolean {
@@ -231,11 +264,38 @@ function hasInteractiveAncestor(target: Element, container: HTMLElement): boolea
   return false
 }
 
+/** 点按落在行的内边距或粗指针的热区上时，转给行里的链接（带着修饰键，Cmd/Ctrl 点击照样新开标签页）。 */
+function followRowLink(event: MouseEvent): void {
+  const row = event.currentTarget as HTMLElement
+  const anchor = row.querySelector<HTMLElement>('a.astryx-item__content, .astryx-item__content[role="link"]')
+  if (anchor == null || event.target !== row || event.detail === 0)
+    return
+  // 主指针是手指时整行都跟着走；鼠标只有点在盒子外的热区才算（盒子里的内边距不算）。
+  const box = row.getBoundingClientRect()
+  const isInBand = event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom
+  if (!isInBand && !isCoarsePointer(row.ownerDocument.defaultView))
+    return
+  anchor.dispatchEvent(new MouseEvent('click', {
+    altKey: event.altKey,
+    bubbles: true,
+    button: event.button,
+    cancelable: true,
+    ctrlKey: event.ctrlKey,
+    metaKey: event.metaKey,
+    shiftKey: event.shiftKey,
+  }))
+}
+
 function handleContainerClick(event: MouseEvent): void {
   if (props.isDisabled)
     return
 
   const target = event.target
+
+  if (isListRow && props.onClick == null && safeHref.value != null) {
+    followRowLink(event)
+    return
+  }
 
   if (target instanceof HTMLElement && target.closest(NATIVE_CONTROL_SELECTOR) != null)
     return
@@ -280,17 +340,10 @@ function handleDelegatedClick(event: MouseEvent): void {
   event.stopPropagation()
 }
 
-// 转发点击的行：被转发的那个控件就是行自己的动作，按它照样是按这一行。
-watchEffect((onCleanup) => {
-  const control = isDelegate.value ? toValue(props.interactiveRef) : null
-  if (control == null)
-    return
-  for (const [name, value] of Object.entries(pressActionProps))
-    control.setAttribute(name, value)
-  onCleanup(() => {
-    for (const name of Object.keys(pressActionProps))
-      control.removeAttribute(name)
-  })
+useDelegatedControl({
+  control: () => (isDelegate.value ? toValue(props.interactiveRef) : null),
+  current: () => (currentOnFocusTarget.value ? controlCurrent.value as string | boolean | undefined : undefined),
+  pressAttributes: pressActionProps,
 })
 
 const SWIPE_BLOCKED_ROLES = new Set(['option', 'menuitem', 'menuitemcheckbox', 'menuitemradio'])
@@ -317,6 +370,16 @@ const swipe = useItemSwipe({
   leading: leadingActions,
   trailing: trailingActions,
 })
+
+/** 横滑的行把内容放进一块会跟手平移的表面里。 */
+const Surface: FunctionalComponent = (_, { slots: inner }) =>
+  swipeEnabled.value ? h('div', { class: 'astryx-item__surface' }, inner.default?.()) : inner.default?.()
+
+/** 有序列表的行把标记之外的内容收进同一格，列表据此让所有行共用一列标记。 */
+const MarkerCell: FunctionalComponent = (_, { slots: inner }) =>
+  listRow?.isNumbered.value === true && slots.marker != null
+    ? h('span', { class: 'astryx-item__marker-content' }, inner.default?.())
+    : inner.default?.()
 
 const rootClick = computed(() => {
   if (isDelegate.value)
@@ -354,7 +417,7 @@ defineExpose({ element, focus, blur })
     :is="as"
     ref="root"
     v-bind="forwardedAttrs"
-    :aria-current="ariaCurrent"
+    :aria-current="currentOnFocusTarget ? undefined : ariaCurrent"
     :aria-disabled="isDisabled || undefined"
     :aria-selected="allowsAriaSelected && isSelected ? true : undefined"
     :class="rootClass"
@@ -376,100 +439,43 @@ defineExpose({ element, focus, blur })
     @click="rootClick"
   >
     <template v-if="swipeEnabled">
-      <div v-if="leadingActions.length" class="astryx-item__swipe-panel" data-side="leading" :inert="swipe.phase.value === 'resting' ? undefined : true">
-        <button
-          v-for="action in leadingActions"
-          :key="action.id ?? action.label"
-          type="button"
-          class="astryx-item__swipe-action"
-          :data-variant="action.variant ?? 'neutral'"
-          :disabled="action.isDisabled"
-          @click.stop="swipe.activate(action)"
-        >
-          <component :is="action.icon" v-if="action.icon" aria-hidden="true" />
-          <span>{{ action.label }}</span>
-        </button>
-      </div>
-      <div v-if="trailingActions.length" class="astryx-item__swipe-panel" data-side="trailing" :inert="swipe.phase.value === 'resting' ? undefined : true">
-        <button
-          v-for="action in trailingActions"
-          :key="action.id ?? action.label"
-          type="button"
-          class="astryx-item__swipe-action"
-          :data-variant="action.variant ?? 'neutral'"
-          :disabled="action.isDisabled"
-          @click.stop="swipe.activate(action)"
-        >
-          <component :is="action.icon" v-if="action.icon" aria-hidden="true" />
-          <span>{{ action.label }}</span>
-        </button>
-      </div>
+      <ItemSwipePanel v-if="leadingActions.length" side="leading" :actions="leadingActions" :phase="swipe.phase.value" @activate="swipe.activate" />
+      <ItemSwipePanel v-if="trailingActions.length" side="trailing" :actions="trailingActions" :phase="swipe.phase.value" @activate="swipe.activate" />
     </template>
-    <div v-if="swipeEnabled" class="astryx-item__surface">
+    <Surface>
       <slot name="marker" />
-      <span v-if="$slots.startContent" class="astryx-item__start">
-        <slot name="startContent" />
-      </span>
-      <component
-        :is="contentTag"
-        v-bind="contentAttrs"
-        class="astryx-item__content"
-        :class="{ 'astryx-item__content--inline': isInline }"
-      >
-        <span
-          v-if="hasLabel"
-          class="astryx-item__label"
-          :class="labelClasses"
-          :style="labelStyle"
-        >
-          <slot name="label">{{ label }}</slot>
+      <MarkerCell>
+        <span v-if="$slots.startContent" class="astryx-item__start">
+          <slot name="startContent" />
         </span>
-        <span
-          v-if="hasDescription"
-          :id="descriptionIdBase"
-          class="astryx-item__description"
-          :class="descriptionClasses"
-          :style="descriptionStyle"
+        <component
+          :is="contentTag"
+          v-bind="contentAttrs"
+          class="astryx-item__content"
+          :class="{ 'astryx-item__content--inline': isInline }"
         >
-          <slot name="description">{{ description }}</slot>
+          <span
+            v-if="hasLabel"
+            class="astryx-item__label"
+            :class="labelClasses"
+            :style="labelStyle"
+          >
+            <slot name="label">{{ label }}</slot>
+          </span>
+          <span
+            v-if="hasDescription"
+            :id="descriptionIdBase"
+            class="astryx-item__description"
+            :class="descriptionClasses"
+            :style="descriptionStyle"
+          >
+            <slot name="description">{{ description }}</slot>
+          </span>
+        </component>
+        <span v-if="$slots.endContent" class="astryx-item__end">
+          <slot name="endContent" />
         </span>
-      </component>
-      <span v-if="$slots.endContent" class="astryx-item__end">
-        <slot name="endContent" />
-      </span>
-    </div>
-    <template v-else>
-      <slot name="marker" />
-      <span v-if="$slots.startContent" class="astryx-item__start">
-        <slot name="startContent" />
-      </span>
-      <component
-        :is="contentTag"
-        v-bind="contentAttrs"
-        class="astryx-item__content"
-        :class="{ 'astryx-item__content--inline': isInline }"
-      >
-        <span
-          v-if="hasLabel"
-          class="astryx-item__label"
-          :class="labelClasses"
-          :style="labelStyle"
-        >
-          <slot name="label">{{ label }}</slot>
-        </span>
-        <span
-          v-if="hasDescription"
-          :id="descriptionIdBase"
-          class="astryx-item__description"
-          :class="descriptionClasses"
-          :style="descriptionStyle"
-        >
-          <slot name="description">{{ description }}</slot>
-        </span>
-      </component>
-      <span v-if="$slots.endContent" class="astryx-item__end">
-        <slot name="endContent" />
-      </span>
-    </template>
+      </MarkerCell>
+    </Surface>
   </component>
 </template>

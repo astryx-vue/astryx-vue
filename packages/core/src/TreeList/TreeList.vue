@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { TreeListItemData, TreeListProps, TreeListSlots } from './types.js'
 import { computed, reactive, useAttrs, useId, useSlots } from 'vue'
+import { useAnimatedLayout } from '../composables/useAnimatedLayout.js'
+import { useCoarsePointer } from '../composables/useCoarsePointer.js'
 import TreeListItem from './TreeListItem.vue'
 import { useTreeFocus } from './useTreeFocus.js'
 import { useTreeLayoutMotion } from './useTreeLayoutMotion.js'
@@ -148,8 +150,14 @@ const { treeRef, focusRow, handleKeyDown, handleFocus } = useTreeFocus({
     return false
   },
 })
+// 手指操作时，没有传句柄的树自己带动效：展开收起的行后面的行一起滑动，子组同步淡入淡出；
+// 树后面的内容当场就位，因为只有调用方自己的句柄才会带动它。
+const isTouch = useCoarsePointer()
+const ownLayout = useAnimatedLayout({ containerRef: () => treeRef.value })
+const layout = computed(() => props.animatedLayout ?? (isTouch.value ? ownLayout : undefined))
 const { exitingIds } = useTreeLayoutMotion({
-  animatedLayout: () => props.animatedLayout,
+  animatedLayout: () => layout.value,
+  shouldClip: () => layout.value === ownLayout,
   expandedIds: () => expandedIds.value,
   tree: () => treeRef.value ?? null,
 })

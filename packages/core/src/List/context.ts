@@ -37,3 +37,14 @@ export const itemDescriptionContextKey: InjectionKey<ComputedRef<string | null>>
 export function useItemDescriptionId(): ComputedRef<string | null> {
   return inject(itemDescriptionContextKey, computed(() => null))
 }
+
+/**
+ * `ListItem` 直接渲染的那一行读到它。链接行的内边距和热区点按转给里面的链接，
+ * 行里的内容（插槽里的嵌套行）读到的是 `null`。
+ */
+export const itemListRowKey = defineLayerScopedKey<ItemListRow | null>('astryx-item-list-row', null)
+
+export interface ItemListRow {
+  /** 行在有序列表里，标记是数字。 */
+  isNumbered: ComputedRef<boolean>
+}

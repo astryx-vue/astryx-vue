@@ -261,3 +261,11 @@ describe('tree list', () => {
     wrapper.unmount()
   })
 })
+
+describe('tree list guide alignment', () => {
+  it('centers a nested row\'s guide column on its parent\'s chevron', () => {
+    const wrapper = mount(TreeList, { props: { items, label: 'Files', variant: 'lineGuides' } })
+    const guide = wrapper.get('.astryx-tree-list__guide')
+    expect(guide.attributes('style')).toContain('var(--astryx-spacing-4, 16px) / 2 - var(--astryx-spacing-5, 20px) / 2')
+  })
+})

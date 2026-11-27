@@ -79,10 +79,17 @@ export function useItemSwipe(options: {
     pointerId = null
     claimed = null
     if (typeof document !== 'undefined') {
+      document.removeEventListener('pointerdown', onPinchWatch, true)
       document.removeEventListener('pointermove', onPointerMove)
       document.removeEventListener('pointerup', onPointerUp)
       document.removeEventListener('pointercancel', onPointerCancel)
     }
+  }
+
+  /** 方向还没定时，页面上任何位置落下第二根手指都是双指缩放：行放手，什么都不取消。 */
+  function onPinchWatch(event: PointerEvent): void {
+    if (event.pointerType === 'touch' && event.pointerId !== pointerId && claimed == null)
+      stopTracking()
   }
 
   function onPointerMove(event: PointerEvent): void {
@@ -98,6 +105,7 @@ export function useItemSwipe(options: {
         return
       }
       claimed = true
+      document.removeEventListener('pointerdown', onPinchWatch, true)
       phase.value = 'dragging'
       write(0, '0s')
     }
@@ -198,7 +206,7 @@ export function useItemSwipe(options: {
   })
 
   function onPointerDown(event: PointerEvent): void {
-    if (!options.enabled.value || event.pointerType !== 'touch' || phase.value === 'held')
+    if (!options.enabled.value || event.pointerType !== 'touch' || pointerId != null || phase.value === 'held')
       return
     const target = event.target
     if (target instanceof Element && target.closest('button, a, input, textarea, select'))
@@ -211,6 +219,7 @@ export function useItemSwipe(options: {
     velocity = 0
     claimed = null
     direction = getComputedStyle(options.root.value ?? document.documentElement).direction === 'rtl' ? -1 : 1
+    document.addEventListener('pointerdown', onPinchWatch, true)
     document.addEventListener('pointermove', onPointerMove)
     document.addEventListener('pointerup', onPointerUp)
     document.addEventListener('pointercancel', onPointerCancel)

@@ -37,6 +37,34 @@ describe('outline', () => {
     expect(wrapper.get('a').attributes('data-astryx-pressable')).toBe('')
   })
 
+  it('keeps every link in the normal Tab order with no roving tabindex or arrow movement', async () => {
+    const wrapper = mount(Outline, { attachTo: document.body, props: { items, activeId: 'tokens' } })
+    for (const link of wrapper.findAll('a'))
+      expect(link.attributes('tabindex')).toBeUndefined()
+    await wrapper.get('[href="#overview"]').trigger('focus')
+    await wrapper.get('[href="#overview"]').trigger('keydown', { key: 'ArrowDown' })
+    for (const link of wrapper.findAll('a'))
+      expect(link.attributes('tabindex')).toBeUndefined()
+    wrapper.unmount()
+  })
+
+  it('lets a caller aria-label win over label', () => {
+    const wrapper = mount(Outline, { props: { items, label: 'On this page' }, attrs: { 'aria-label': 'Page sections' } })
+    expect(wrapper.get('nav').attributes('aria-label')).toBe('Page sections')
+  })
+
+  it('moves focus to the chosen section after following a link', async () => {
+    const section = document.createElement('section')
+    section.id = 'tokens'
+    document.body.append(section)
+    section.scrollIntoView = () => {}
+    const wrapper = mount(Outline, { attachTo: document.body, props: { items } })
+    await wrapper.get('[href="#tokens"]').trigger('click')
+    expect(document.activeElement).toBe(section)
+    wrapper.unmount()
+    section.remove()
+  })
+
   it('maps heading levels onto four indents', () => {
     expect(indentLevel(1)).toBe(1)
     expect(indentLevel(2)).toBe(1)

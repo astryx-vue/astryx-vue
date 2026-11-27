@@ -20,11 +20,49 @@
     margin: 0;
     padding-inline-start: 0;
     overflow-inline: clip;
+    /* 行的热区只在列表里抬高，不会盖过页面上吸顶的头部。 */
+    isolation: isolate;
     list-style-type: none;
   }
 
   .astryx-list[data-dividers='true'] {
-    gap: 0;
+    row-gap: 0;
+  }
+
+  /*
+   * 有序列表的行共用一列标记：列表是两列的网格（标记按内容宽度，其余占满），
+   * 每行用子网格接上这两列，数字位数变了，别的行的文字和嵌套列表也不动。
+   * 不支持子网格时保持弹性布局。
+   */
+  @supports (grid-template-columns: subgrid) {
+    .astryx-list[data-list-style='decimal'] {
+      display: grid;
+      grid-template-columns: max-content minmax(0, 1fr);
+      column-gap: var(--astryx-spacing-2, 8px);
+    }
+
+    .astryx-list[data-list-style='decimal'] > .astryx-list-item {
+      grid-column: 1 / -1;
+    }
+
+    .astryx-list[data-list-style='decimal'] > .astryx-list-item:not(.astryx-item--swipe):has(> .astryx-item__marker-content) {
+      display: grid;
+      grid-template-columns: subgrid;
+    }
+  }
+
+  /* 标记之外的内容在同一格里，仍沿用行的对齐和间距。 */
+  .astryx-item__marker-content {
+    display: flex;
+    flex: 1;
+    align-items: inherit;
+    align-self: stretch;
+    gap: inherit;
+    min-width: 0;
+  }
+
+  .astryx-item[data-align='first-line'] > .astryx-item__marker-content {
+    align-self: baseline;
   }
 
   .astryx-list:not([data-list-style='none']) {
@@ -92,6 +130,36 @@
     padding-inline-end: max(var(--container-padding-inline-end, 0px), var(--astryx-item-inset-inline));
   }
 
+  /*
+   * 粗指针下，可点的行朝相邻行留出的空隙长出热区。后面的行是没有 z-index 的定位元素，
+   * 会盖住前面行的热区，所以热区抬高一层。有分隔线时热区从分隔线外缘起算（最后一行没有分隔线）。
+   */
+  @media (pointer: coarse) {
+    .astryx-list > .astryx-list-item.astryx-touch-hit-area-band::after {
+      z-index: 1;
+    }
+
+    .astryx-list[data-dividers='true'] > .astryx-list-item.astryx-touch-hit-area-band:not(:last-child)::after {
+      margin-block-end: calc(var(--astryx-border-width, 1px) * -1);
+    }
+  }
+
+  /*
+   * 圆角卡片、对话框里，作为它第一个或最后一个子元素的 `bleed` 列表：首行、末行取容器
+   * 发布的圆角，减去自己保留的块方向内边距（行的底色和焦点环不被容器的弧线裁掉）。
+   * 有标题时列表的根是容器的子元素，头部在首行上面，所以只有末行取角。其余的角保持直角。
+   */
+  :is(.astryx-card, .astryx-dialog__inner) > .astryx-list[data-edge='bleed']:first-child > .astryx-list-item:first-child {
+    border-start-start-radius: max(0px, var(--_container-corner-block-start, 0px) - var(--container-padding-block-start, 0px));
+    border-start-end-radius: max(0px, var(--_container-corner-block-start, 0px) - var(--container-padding-block-start, 0px));
+  }
+
+  :is(.astryx-card, .astryx-dialog__inner) > .astryx-list[data-edge='bleed']:last-child > .astryx-list-item:last-child,
+  :is(.astryx-card, .astryx-dialog__inner) > .astryx-list-root:last-child > .astryx-list[data-edge='bleed'] > .astryx-list-item:last-child {
+    border-end-start-radius: max(0px, var(--_container-corner-block-end, 0px) - var(--container-padding-block-end, 0px));
+    border-end-end-radius: max(0px, var(--_container-corner-block-end, 0px) - var(--container-padding-block-end, 0px));
+  }
+
   .astryx-list-marker {
     box-sizing: border-box;
     display: flex;
@@ -123,13 +191,19 @@
   .astryx-list-marker__number {
     flex-shrink: 0;
     align-self: baseline;
-    width: var(--astryx-spacing-4, 16px);
+    /* 数字右对齐、等宽，每个句点都在一条线上；比这一列更宽的数字先挂进行的内边距，再撑宽整列。 */
+    min-width: var(--astryx-spacing-4, 16px);
     color: var(--astryx-list-marker-foreground, light-dark(#171717, #fafafa));
     font-size: var(--astryx-text-body-size, 0.875rem);
+    font-variant-numeric: tabular-nums;
     line-height: var(--astryx-text-body-leading, 1.4286);
     display: flex;
     justify-content: flex-end;
     white-space: nowrap;
+  }
+
+  .astryx-list-marker__number::before {
+    margin-inline-start: calc(-1 * var(--astryx-item-inset-inline, 8px));
   }
 
   .astryx-list-marker__number[data-style='decimal']::before {
@@ -221,8 +295,30 @@
     }
   }
 
-  .astryx-item[data-astryx-press]:not([data-disabled='true']):not([data-selected='true']) {
+  .astryx-item[data-astryx-press]:not([data-disabled='true']) {
     background-image: var(--_press-paint-image);
+  }
+
+  /*
+   * 选中行保留自己的底色，悬停和按下的色调作为图片层叠在上面。
+   * 高亮行的底色本来就是悬停色，只表现按下。
+   */
+  @media (hover: hover) {
+    .astryx-item[data-interactive='true'][data-selected='true']:not([data-disabled='true']):hover {
+      background-image: linear-gradient(
+        var(--astryx-list-item-hover-background, light-dark(#0536590c, #ffffff0c)),
+        var(--astryx-list-item-hover-background, light-dark(#0536590c, #ffffff0c))
+      );
+    }
+  }
+
+  @media not all and (pointer: coarse) {
+    .astryx-item[data-interactive='true'][data-selected='true']:not([data-disabled='true']):active {
+      background-image: linear-gradient(
+        var(--astryx-list-item-pressed-background, light-dark(#05365919, #ffffff19)),
+        var(--astryx-list-item-pressed-background, light-dark(#05365919, #ffffff19))
+      );
+    }
   }
 
   /*
@@ -314,7 +410,8 @@
     position: relative;
     overflow: clip;
     padding: 0;
-    touch-action: pan-y;
+    /* pan-y 让浏览器继续滚动列表；pinch-zoom 把双指缩放留给浏览器，页面仍可缩放。 */
+    touch-action: pan-y pinch-zoom;
     --_item-swipe-dir: 1;
     --_item-swipe-travel: 0;
     --_item-swipe-duration: 0s;
@@ -394,7 +491,7 @@
     color: var(--astryx-color-on-error, #fff);
   }
 
-  .astryx-item__swipe-action:disabled {
+  .astryx-item__swipe-action[aria-disabled='true'] {
     opacity: 0.5;
     cursor: default;
   }

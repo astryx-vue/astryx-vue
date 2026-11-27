@@ -17,6 +17,7 @@ import {
   releaseLayoutExit,
   reportLayoutChange,
 } from '../motion/layout/index.js'
+import { clipWhileMoving } from './clipWhileMoving.js'
 
 const CHEVRON = '[data-tree-toggle] > .astryx-icon'
 
@@ -33,6 +34,8 @@ export interface TreeLayoutMotionOptions {
   /** 当前展开着的行（只算祖先也展开着的）。 */
   expandedIds: () => ReadonlySet<string>
   tree: () => HTMLElement | null
+  /** 句柄是树自己的（不是调用方传的）：滑动期间把树的下沿裁住。 */
+  shouldClip?: () => boolean
 }
 
 export interface TreeLayoutMotion {
@@ -133,6 +136,9 @@ export function useTreeLayoutMotion(options: TreeLayoutMotionOptions): TreeLayou
       if (!isHeld)
         endAll()
     }
+    const tree = options.tree()
+    if (changes.length > 0 && tree != null && options.shouldClip?.() === true)
+      clipWhileMoving(tree)
   }, { flush: 'post' })
 
   // 没有句柄时箭头用主题自己的过渡：句柄设过的行内值只在传着句柄时保留。

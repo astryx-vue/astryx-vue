@@ -11,11 +11,11 @@ footer: false
 <table><thead><tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>items</code></td><td><code>OutlineItem[]</code></td><td>—</td><td>Ordered headings. Each item is <code>{ id, label, level }</code>. <code>level</code> is 1–6.</td></tr>
 <tr><td><code>activeId</code></td><td><code>string</code></td><td>—</td><td>Controlled active heading. When set, built-in scroll-spy stays off. Bind with <code>v-model:active-id</code>.</td></tr>
-<tr><td><code>label</code></td><td><code>string</code></td><td><code>Table of contents</code></td><td>Accessible name of the nav landmark. The default is localized.</td></tr>
+<tr><td><code>label</code></td><td><code>string</code></td><td><code>Table of contents</code></td><td>Accessible name of the nav landmark. The default is localized, and an <code>aria-label</code> you pass wins over it.</td></tr>
 <tr><td><code>density</code></td><td><code>'default' | 'compact'</code></td><td><code>'default'</code></td><td>Item padding. <code>compact</code> is for dense sidebars.</td></tr>
 <tr><td><code>offset</code></td><td><code>number</code></td><td><code>0</code></td><td>Pixels of a fixed header covering the scroll root. Shifts the activation line and the scroll landing together.</td></tr>
 <tr><td><code>scrollContainer</code></td><td><code>HTMLElement | null</code></td><td>—</td><td>Scroll container to track. Omit it to use the nearest scrollable ancestor, or the viewport.</td></tr>
-<tr><td><code>hasScrollOnClick</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Whether activating an item smooth-scrolls to it.</td></tr>
+<tr><td><code>hasScrollOnClick</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Whether activating an item scrolls to it: smoothly, or at once under reduced motion. Following the link also moves focus to the heading, so the next Tab continues inside that section.</td></tr>
 </tbody></table>
 </div>
 

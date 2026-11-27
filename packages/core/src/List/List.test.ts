@@ -349,10 +349,25 @@ describe('list item', () => {
     expect(row.attributes('aria-disabled')).toBe('true')
     expect(row.attributes('data-disabled')).toBe('true')
     expect(row.attributes('data-inert')).toBe('true')
-    expect(wrapper.find('button.astryx-item__content').attributes('disabled')).toBeDefined()
+    const button = wrapper.find('button.astryx-item__content')
+    expect(button.attributes('disabled')).toBeUndefined()
+    expect(button.attributes('aria-disabled')).toBe('true')
 
     await row.trigger('click')
+    await button.trigger('click')
+    await button.trigger('keydown', { key: 'Enter' })
     expect(onClick).not.toHaveBeenCalled()
+  })
+
+  it('keeps a disabled row\'s button and link reachable by keyboard', () => {
+    const wrapper = listOf([
+      { isDisabled: true, label: 'Action', onClick: () => {} },
+      { isDisabled: true, label: 'Link', href: '/a' },
+    ])
+    const [button, link] = wrapper.findAll<HTMLElement>('.astryx-item__content')
+    expect(button!.element.tabIndex).toBe(0)
+    expect(link!.attributes('tabindex')).toBe('0')
+    expect(link!.attributes('href')).toBeUndefined()
   })
 
   it('keeps the row inert only while it has no parent role', () => {
@@ -550,6 +565,39 @@ describe('item swipe actions', () => {
     expect(onActivate).toHaveBeenCalledTimes(1)
     wrapper.unmount()
     vi.useRealTimers()
+  })
+
+  it('leaves a two-finger pinch to the browser', async () => {
+    const wrapper = mount(Item, {
+      attachTo: document.body,
+      props: {
+        label: 'Invoice 1042',
+        swipeActions: { trailing: [{ label: 'Archive', onActivate: vi.fn() }] },
+      },
+    })
+    const row = wrapper.get('.astryx-item')
+    await row.trigger('pointerdown', { pointerType: 'touch', pointerId: 7, clientX: 200, clientY: 20 })
+    document.body.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerType: 'touch', pointerId: 8, clientX: 260, clientY: 20 }))
+    document.dispatchEvent(new PointerEvent('pointermove', { pointerId: 7, clientX: 100, clientY: 20, bubbles: true }))
+    expect(row.attributes('data-swipe')).toBe('idle')
+    expect(listCss).toMatch(/touch-action: pan-y pinch-zoom;/)
+    wrapper.unmount()
+  })
+
+  it('keeps a disabled swipe action focusable but inert', async () => {
+    const onActivate = vi.fn()
+    const wrapper = mount(Item, {
+      props: {
+        label: 'Invoice 1042',
+        swipeActions: { trailing: [{ label: 'Archive', onActivate, isDisabled: true }] },
+      },
+    })
+    const action = wrapper.get<HTMLButtonElement>('.astryx-item__swipe-action')
+    expect(action.attributes('disabled')).toBeUndefined()
+    expect(action.attributes('aria-disabled')).toBe('true')
+    await action.trigger('click')
+    await action.trigger('keydown', { key: 'Enter' })
+    expect(onActivate).not.toHaveBeenCalled()
   })
 
   it('closes a resting row when the pointer goes down outside it', async () => {

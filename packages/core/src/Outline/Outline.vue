@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { OutlineEmits, OutlineProps } from './types.js'
-import { computed, nextTick, ref, toRef, watch } from 'vue'
-import { useListFocus } from '../composables/useListFocus.js'
+import { computed, ref, toRef, useAttrs } from 'vue'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { useComponentMessages } from '../locale/context.js'
 import { outlineMessages } from '../locale/messages/outline.js'
@@ -23,7 +22,9 @@ const emit = defineEmits<OutlineEmits>()
 const messages = useComponentMessages({ outline: outlineMessages })
 const press = usePressFeedback()
 const root = ref<HTMLElement | null>(null)
-const regionLabel = computed(() => props.label ?? messages.value.outline.label)
+const attrs = useAttrs()
+/** 调用方写的 `aria-label` 优先于 `label`。 */
+const regionLabel = computed(() => (attrs['aria-label'] as string | undefined) ?? props.label ?? messages.value.outline.label)
 
 const { resolvedId, scrollTo } = useScrollSpy({
   activeId: toRef(props, 'activeId'),
@@ -37,37 +38,33 @@ const { resolvedId, scrollTo } = useScrollSpy({
   onNavigateEnd: id => emit('navigateEnd', id),
 })
 
-const { handleFocus, handleKeyDown, listRef } = useListFocus({
-  hasRovingTabIndex: true,
-  itemSelector: 'a[href]',
-  orientation: 'vertical',
-})
-
-function seatTabStop(): void {
-  const list = listRef.value
-  if (list == null || (document.activeElement != null && list.contains(document.activeElement)))
-    return
-  const links = [...list.querySelectorAll<HTMLElement>('a[href]')]
-  const active = links.find(link => link.getAttribute('aria-current') === 'location')
-  if (active == null)
-    return
-  for (const link of links)
-    link.tabIndex = link === active ? 0 : -1
-}
-
-watch(resolvedId, () => {
-  void nextTick(seatTabStop)
-})
-
 useOutlineIndicator(root, resolvedId)
 
 function hasModifier(event: MouseEvent | KeyboardEvent): boolean {
   return event.metaKey || event.altKey || event.ctrlKey || event.shiftKey
 }
 
+/**
+ * 跟随页内链接后，顺序焦点的起点移到目标，下一次 Tab 从那一节里继续（WCAG 2.4.3）。
+ * Outline 取消了链接的默认行为自己滚动，所以这里补上：聚焦目标但不滚动。
+ * 本来不能聚焦的目标只设成可由脚本聚焦。
+ */
+function moveFocusTo(id: string): void {
+  const target = document.getElementById(id)
+  if (target == null)
+    return
+  target.focus({ preventScroll: true })
+  if (document.activeElement !== target && !target.hasAttribute('tabindex')) {
+    target.setAttribute('tabindex', '-1')
+    target.focus({ preventScroll: true })
+  }
+}
+
 function navigate(id: string): void {
-  if (scrollTo(id))
+  if (scrollTo(id)) {
     window.history.pushState(null, '', `#${id}`)
+    moveFocusTo(id)
+  }
 }
 
 function onClick(id: string, event: MouseEvent): void {
@@ -99,13 +96,7 @@ function onItemKeyDown(id: string, event: KeyboardEvent): void {
     :data-density="density"
     data-component="outline"
   >
-    <!-- eslint-disable-next-line vue-a11y/no-static-element-interactions -- 方向键在链接之间移动焦点，列表本身不是另一个控件。 -->
-    <ul
-      ref="listRef"
-      class="astryx-outline__list"
-      @keydown="handleKeyDown"
-      @focus="handleFocus"
-    >
+    <ul class="astryx-outline__list">
       <li v-for="item in items" :key="item.id" class="astryx-outline__item">
         <a
           v-bind="press.pressableProps"

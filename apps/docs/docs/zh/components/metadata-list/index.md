@@ -40,6 +40,8 @@ import { MetadataList, MetadataListItem } from '@astryx-vue/core/MetadataList'
 | <Badge variant="success">推荐</Badge> | 标签写短。读者要看的是值。 |
 | <Badge variant="success">推荐</Badge> | 窄的详情栏用单列，宽度够放好几对时用 `multi`。 |
 | <Badge variant="success">推荐</Badge> | 字段比页面一次能放下的多时，设置 `maxNumOfItems`。 |
+| <Badge variant="success">推荐</Badge> | 每个 `MetadataListItem` 的标签写短，点出它的值是什么。辅助技术把标签当作术语、值当作它的定义一起读出。 |
+| <Badge variant="success">推荐</Badge> | 列表需要在页面大纲里占一个位置时，把标题元素传给标题。标题本身既不给列表命名，也不会变成标题级别。 |
 | <Badge variant="error">避免</Badge> | 把一整句放进标签。标签轨道是按短名字留的。 |
 | <Badge variant="error">避免</Badge> | 水平排列时还指望列数生效。水平布局会忽略列数。 |
 

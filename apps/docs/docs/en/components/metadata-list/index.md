@@ -43,6 +43,8 @@ import { MetadataList, MetadataListItem } from '@astryx-vue/core/MetadataList'
 | <Badge variant="success">Do</Badge> | Keep labels short. The value is the thing a person came to read. |
 | <Badge variant="success">Do</Badge> | Use one column for a narrow details pane, and `multi` when the pane is wide enough for several pairs. |
 | <Badge variant="success">Do</Badge> | Set `maxNumOfItems` when a record has more fields than the page should show at once. |
+| <Badge variant="success">Do</Badge> | Give each `MetadataListItem` a short label that names its value. Assistive technology reads each label with its value as a term and its definition. |
+| <Badge variant="success">Do</Badge> | Pass a heading element as the title when the list needs a place in the page outline. The title does not name the list or add a heading. |
 | <Badge variant="error">Don't</Badge> | Put a long sentence in a label. The label track is sized for a short name. |
 | <Badge variant="error">Don't</Badge> | Combine `orientation="horizontal"` with a column count and expect the count to apply. Horizontal layout ignores it. |
 
