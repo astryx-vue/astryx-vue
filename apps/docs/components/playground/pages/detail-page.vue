@@ -26,7 +26,9 @@ import {
   TabMenu,
   Text,
   Thumbnail,
+  useImperativeAlertDialog,
   useMediaQuery,
+  useToast,
   VStack,
 } from '@astryx-vue/core'
 import { defineComponent, h, ref } from 'vue'
@@ -81,6 +83,28 @@ const activeTab = ref('details')
 const isNarrow = useMediaQuery('(max-width: 1024px)')
 const showSidePanel = ref(true)
 
+const showToast = useToast()
+const confirm = useImperativeAlertDialog()
+const ConfirmHost = confirm.Host
+
+// 演示：换成真正执行操作的调用。
+function demo(body: string, uniqueID: string) {
+  showToast({ body, uniqueID })
+}
+
+// 退款不能撤销，先确认再执行。
+function refund() {
+  confirm.show({
+    title: 'Refund this order?',
+    description: 'This demo won\'t refund anything.',
+    actionLabel: 'Refund',
+    onAction: () => {
+      confirm.hide()
+      demo('Demo: the refund would be issued here', 'refund')
+    },
+  })
+}
+
 /** 订单详情的三段折叠内容。窄屏放在「Order details」标题下，各段标题再降一级。 */
 const PanelContent = defineComponent({
   props: { sectionLevel: { type: Number as () => 2 | 3, default: 2 } },
@@ -127,7 +151,7 @@ const PanelContent = defineComponent({
               <VStack :gap="0">
                 <Link href="#" color="secondary">
                   <HStack :gap="1" align="center">
-                    <Icon name="heroicons:arrow-left" size="sm" color="inherit" />
+                    <Icon class="mirror-rtl" name="heroicons:arrow-left" size="sm" color="inherit" />
                     All orders
                   </HStack>
                 </Link>
@@ -185,20 +209,20 @@ const PanelContent = defineComponent({
               </VStack>
             </StackItem>
             <HStack v-if="!isNarrow" :gap="2">
-              <Button label="Restock" variant="secondary" />
-              <Button label="Edit" variant="secondary" />
+              <Button label="Restock" variant="secondary" @click="demo('Demo: a restock would be requested for order #1001 here', 'restock')" />
+              <Button label="Edit" variant="secondary" @click="demo('Demo: the order editor would open here', 'edit')" />
             </HStack>
           </HStack>
 
           <HStack v-if="isNarrow" :gap="2">
             <StackItem size="fill">
               <VStack h-align="stretch">
-                <Button label="Restock" variant="secondary" />
+                <Button label="Restock" variant="secondary" @click="demo('Demo: a restock would be requested for order #1001 here', 'restock')" />
               </VStack>
             </StackItem>
             <StackItem size="fill">
               <VStack h-align="stretch">
-                <Button label="Edit" variant="secondary" />
+                <Button label="Edit" variant="secondary" @click="demo('Demo: the order editor would open here', 'edit')" />
               </VStack>
             </StackItem>
           </HStack>
@@ -255,8 +279,8 @@ const PanelContent = defineComponent({
                 </HStack>
               </StackItem>
               <HStack :gap="2">
-                <Button label="Fulfill item" variant="ghost" />
-                <Button label="Create label" variant="secondary" />
+                <Button label="Fulfill item" variant="ghost" @click="demo(`Demo: fulfillment would start for ${PRODUCTS.length} items here`, 'fulfill')" />
+                <Button label="Create label" variant="secondary" @click="demo('Demo: a shipping label would be created for order #1001 here', 'label')" />
               </HStack>
             </HStack>
             <List density="spacious" class="items-list">
@@ -264,7 +288,7 @@ const PanelContent = defineComponent({
                 v-for="(product, i) in PRODUCTS"
                 :key="i"
                 :label="product.name"
-                @click="() => {}"
+                @click="demo(`Demo: ${product.name} would open here`, `product-${i}`)"
               >
                 <template #description>
                   <VStack :gap="0">
@@ -303,8 +327,8 @@ const PanelContent = defineComponent({
                 </HStack>
               </StackItem>
               <HStack :gap="2">
-                <Button label="Refund" variant="ghost" />
-                <Button label="Send Invoice" variant="secondary" />
+                <Button label="Refund" variant="ghost" @click="refund" />
+                <Button label="Send Invoice" variant="secondary" @click="demo('Demo: the invoice would be sent to janedoe@email.com here', 'invoice')" />
               </HStack>
             </HStack>
             <MetadataList>
@@ -328,7 +352,7 @@ const PanelContent = defineComponent({
                     </Text>
                   </StackItem>
                   <Text type="body">
-                    – {{ fmt(DISCOUNT) }}
+                    −&nbsp;{{ fmt(DISCOUNT) }}
                   </Text>
                 </HStack>
               </MetadataListItem>
@@ -391,7 +415,7 @@ const PanelContent = defineComponent({
                   Timeline
                 </Heading>
               </StackItem>
-              <Button label="Filters" variant="ghost" is-icon-only>
+              <Button label="Filters" variant="ghost" is-icon-only @click="demo('Demo: timeline filters would open here', 'timeline-filters')">
                 <template #icon>
                   <Icon name="heroicons:funnel" />
                 </template>
@@ -459,6 +483,7 @@ const PanelContent = defineComponent({
           </Heading>
           <PanelContent :section-level="3" />
         </VStack>
+        <ConfirmHost />
       </VStack>
     </LayoutContent>
 
@@ -471,5 +496,9 @@ const PanelContent = defineComponent({
 </template>
 
 <style scoped>
+:global([dir='rtl'] .mirror-rtl) {
+  transform: scaleX(-1);
+}
+
 .items-list { margin-inline: -8px; }
 </style>

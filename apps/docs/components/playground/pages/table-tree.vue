@@ -35,6 +35,7 @@ import {
   useTableSortable,
   useTableSortableState,
   useTableTreeState,
+  useToast,
   VisuallyHidden,
   VStack,
 } from '@astryx-vue/core'
@@ -383,6 +384,22 @@ const REPO_STATS = [
 
 /** 侧栏在视口 ≥1024 时占右边 296px，窄了就挪到 README 下面。 */
 const isSidebarInline = useMediaQuery('(min-width: 1024px)')
+const showToast = useToast()
+
+// 演示：换成真正处理这个操作的调用。
+function demo(body: string, uniqueID: string) {
+  showToast({ body, uniqueID })
+}
+
+const STAT_DEMO: Record<string, string> = {
+  stars: 'Demo: the repository would be starred here',
+  watching: 'Demo: you would watch the repository here',
+  forks: 'Demo: a fork would be created here',
+}
+
+function openRefs(label: string) {
+  demo(`Demo: the list of ${label.toLowerCase()} would open here`, label)
+}
 
 /** 表头和正文各自量宽，≤720 时按钮收成图标、搜索框收成图标按钮。 */
 const NARROW_WIDTH = 720
@@ -460,7 +477,7 @@ const AboutPanel = defineComponent({
         h(Heading, { level: 3, accessibilityLevel: 2 }, () => 'About'),
         h(Text, { color: 'secondary' }, () => REPO_DESCRIPTION),
         h(Link, { href: '#', isExternalLink: true }, () => 'canvas-editor.dev'),
-        h(HStack, { gap: 1, wrap: 'wrap' }, () => TOPICS.map(topic => h(Token, { key: topic, size: 'sm', label: topic, onClick: () => {} }))),
+        h(HStack, { gap: 1, wrap: 'wrap' }, () => TOPICS.map(topic => h(Token, { key: topic, size: 'sm', label: topic, onClick: () => demo(`Demo: repositories tagged ${topic} would open here`, `topic-${topic}`) }))),
         h(VStack, { gap: 2 }, () => ABOUT_LINKS.map(link => row(link.icon, 'secondary', link.label, link.label))),
         h(VStack, { gap: 2 }, () => REPO_STATS.map(stat => row(stat.icon, 'secondary', `${stat.value} ${stat.label}`, stat.label))),
       ]),
@@ -615,15 +632,15 @@ const columns: TableColumn<RepoEntry>[] = [
 const BranchIcon = () => h(Icon, { name: 'carbon:branch', size: 'sm' })
 
 const branchItems = [
-  { label: 'main', onClick: () => {} },
-  { label: 'next', onClick: () => {} },
+  { label: 'main', onClick: () => demo('Demo: switching to main would happen here', 'main') },
+  { label: 'next', onClick: () => demo('Demo: switching to next would happen here', 'next') },
   { type: 'divider' as const },
-  { label: 'View all branches', onClick: () => {} },
+  { label: 'View all branches', onClick: () => demo('Demo: the branch list would open here', 'view-all-branches') },
 ]
 
 const addFileItems = [
-  { label: 'Create new file', onClick: () => {} },
-  { label: 'Upload files', onClick: () => {} },
+  { label: 'Create new file', onClick: () => demo('Demo: a new file would open here', 'create-new-file') },
+  { label: 'Upload files', onClick: () => demo('Demo: the file upload would open here', 'upload-files') },
 ]
 const README = `## canvas-editor
 
@@ -726,10 +743,11 @@ const READMES: Record<string, string> = {
               variant="secondary"
               size="sm"
               :label="`${stat.label}: ${stat.value}`"
+              @click="demo(STAT_DEMO[stat.label]!, `stat-${stat.label}`)"
             >
               <Icon :name="stat.icon" size="sm" />
             </IconButton>
-            <Button v-else size="sm" :label="STAT_ACTION[stat.label]">
+            <Button v-else size="sm" :label="STAT_ACTION[stat.label]" @click="demo(STAT_DEMO[stat.label]!, `stat-${stat.label}`)">
               <template #icon>
                 <Icon :name="stat.icon" size="sm" />
               </template>
@@ -760,10 +778,10 @@ const READMES: Record<string, string> = {
             <DropdownMenu has-chevron :items="branchItems" :button="{ label: 'main', size: 'sm', icon: BranchIcon }" />
             <HStack :gap="1" align="center">
               <template v-for="ref in REF_COUNTS" :key="ref.label">
-                <IconButton v-if="isNarrowBody" :label="ref.label" variant="ghost" size="sm">
+                <IconButton v-if="isNarrowBody" :label="ref.label" variant="ghost" size="sm" @click="openRefs(ref.label)">
                   <Icon :name="ref.icon" size="sm" />
                 </IconButton>
-                <Button v-else :label="ref.label" variant="ghost" size="sm" />
+                <Button v-else :label="ref.label" variant="ghost" size="sm" @click="openRefs(ref.label)" />
               </template>
             </HStack>
             <StackItem size="fill">
@@ -785,7 +803,7 @@ const READMES: Record<string, string> = {
                   :start-icon="SearchIcon"
                 />
                 <DropdownMenu has-chevron :items="addFileItems" :button="{ label: 'Add file', size: 'sm' }" />
-                <Button label="Code" variant="primary">
+                <Button label="Code" variant="primary" @click="demo('Demo: clone and download options would open here', 'code')">
                   <template #icon>
                     <Icon name="heroicons:code-bracket" size="sm" />
                   </template>

@@ -10,11 +10,14 @@ import {
   LayoutContent,
   StackItem,
   Text,
+  useMediaQuery,
   useToast,
   VStack,
 } from '@astryx-vue/core'
 
 const showToast = useToast()
+// 窄屏时卡片收紧内边距，右侧留白也不再占位。
+const isNarrow = useMediaQuery('(max-width: 640px)')
 
 const COMPONENT_CATEGORIES = [
   {
@@ -75,7 +78,7 @@ const COMPONENT_CATEGORIES = [
   <Layout height="fill" :content-width="1200">
     <LayoutContent role="main" :padding="8">
       <VStack :gap="10">
-        <Card variant="gray" :padding="10">
+        <Card variant="gray" :padding="isNarrow ? 6 : 10">
           <HStack :gap="8" :align="'center'">
             <StackItem size="fill">
               <VStack :gap="4">
@@ -91,7 +94,7 @@ const COMPONENT_CATEGORIES = [
                 </HStack>
               </VStack>
             </StackItem>
-            <StackItem size="fill" />
+            <StackItem v-if="!isNarrow" size="fill" />
           </HStack>
         </Card>
 

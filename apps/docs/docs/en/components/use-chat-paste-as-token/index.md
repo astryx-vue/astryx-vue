@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useChatPasteAsTokenLongPaste } from '../../../../components/demos/use-chat-paste-as-token'
 </script>
 
 ## Usage
@@ -43,3 +44,12 @@ const pasteAsToken = useChatPasteAsToken({
 | <Badge variant="success">Do</Badge> | Use one ref for the composer handle and for this hook, so `insertToken` reaches that input. |
 | <Badge variant="success">Do</Badge> | Pass `:paste-as-token="false"` when every paste should stay inline text. |
 | <Badge variant="error">Don't</Badge> | Insert a handled paste as both text and a token. Returning `true` tells the composer the paste is already handled. |
+
+## Examples
+
+<DemoExample
+  :demo="useChatPasteAsTokenLongPaste"
+  description="A composer whose pasteAsToken comes from useChatPasteAsToken with a threshold of 40 and a Pasted note label. A paste longer than 40 characters becomes that token, and a shorter paste stays as text."
+  locale="en"
+  title="useChatPasteAsToken — Long paste"
+/>

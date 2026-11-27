@@ -483,7 +483,7 @@ const ServiceBreakdown = defineComponent({
       <LayoutContent role="main" :padding="6">
         <VStack :gap="10">
           <VStack :gap="6">
-            <Grid :columns="{ minWidth: 240, repeat: 'fit' }" :gap="3">
+            <Grid :columns="{ minWidth: 240, max: 4, repeat: 'fit' }" :gap="3">
               <Card v-for="kpi in kpis" :key="kpi.key" :padding="4">
                 <VStack :gap="2">
                   <HStack :gap="2" align="center">
@@ -507,7 +507,7 @@ const ServiceBreakdown = defineComponent({
                 </VStack>
               </Card>
             </Grid>
-            <Grid :columns="{ minWidth: 320, repeat: 'fit' }" :gap="3">
+            <Grid :columns="{ minWidth: 320, max: 2, repeat: 'fit' }" :gap="3">
               <Card :padding="6">
                 <VStack :gap="4">
                   <VStack :gap="1">
@@ -718,7 +718,7 @@ const ServiceBreakdown = defineComponent({
 }
 .rail-chart { width: 100%; height: 280px; display: block; }
 .chart-grid { stroke: var(--astryx-color-border, rgb(5 54 89 / 10%)); stroke-width: 1; }
-.chart-tick { fill: var(--astryx-color-text-secondary, #4E606F); font-size: 12px; }
+.chart-tick { fill: var(--astryx-color-text-secondary, #445564); font-size: 12px; }
 .uptime-strip {
   display: flex;
   gap: 2px;

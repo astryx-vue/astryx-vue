@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useSpeechRecognitionTranscript } from '../../../../components/demos/use-speech-recognition'
 </script>
 
 ## Usage
@@ -44,3 +45,12 @@ const speech = useSpeechRecognition({
 | <Badge variant="success">Do</Badge> | Offer the control only when `isSupported` is true, or keep it visible but disabled and say that this browser cannot take voice input. |
 | <Badge variant="success">Do</Badge> | Handle `onError`. It is the only signal that microphone permission was refused. |
 | <Badge variant="error">Don't</Badge> | Call the browser `SpeechRecognition` API beside this hook. Use `useChatDictation` when the words should go into a `ChatComposerInput`. |
+
+## Examples
+
+<DemoExample
+  :demo="useSpeechRecognitionTranscript"
+  description="A headless useSpeechRecognition control. It shows whether the browser can listen, the words still being recognized, and each finished phrase from onResult."
+  locale="en"
+  title="useSpeechRecognition — Transcript"
+/>
