@@ -6,6 +6,13 @@ import { Section } from '@astryx-vue/core/Section'
 import { Stack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
 import { defineTheme, Theme } from '@astryx-vue/core/Theme'
+import { useToast } from '@astryx-vue/core/Toast'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 
 const forestTheme = defineTheme({
   name: 'forest-docs',
@@ -30,7 +37,7 @@ const forestTheme = defineTheme({
           <Text type="body" color="secondary">
             Wrap any subtree to apply a theme locally.
           </Text>
-          <Button label="Create project" variant="primary" />
+          <Button label="Create project" variant="primary" @click="demo('Create project')" />
         </Stack>
       </Card>
     </Theme>

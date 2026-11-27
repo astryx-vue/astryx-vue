@@ -4,7 +4,14 @@ import { useOverflow } from '@astryx-vue/core'
 import { Button } from '@astryx-vue/core/Button'
 import { Card } from '@astryx-vue/core/Card'
 import { DropdownMenu } from '@astryx-vue/core/DropdownMenu'
+import { useToast } from '@astryx-vue/core/Toast'
 import { computed } from 'vue'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 
 const actions = [
   'Bold',
@@ -45,7 +52,7 @@ const hiddenItems = computed(() => actions.slice(visibleCount.value).map(label =
       </div>
     </div>
     <div :ref="bindContainer" class="overflow-toolbar-demo__row" role="group" aria-label="Text formatting">
-      <Button v-for="label in actions.slice(0, visibleCount)" :key="label" :label="label" variant="ghost" size="sm" />
+      <Button v-for="label in actions.slice(0, visibleCount)" :key="label" :label="label" variant="ghost" size="sm" @click="demo(label)" />
       <DropdownMenu v-if="hasOverflow" :button="moreButton" :items="hiddenItems" />
     </div>
   </Card>

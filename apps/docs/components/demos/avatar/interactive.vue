@@ -2,7 +2,7 @@
 import { Avatar } from '@astryx-vue/core/Avatar'
 import { Stack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
-import { ToastViewport, useToast } from '@astryx-vue/core/Toast'
+import { useToast } from '@astryx-vue/core/Toast'
 
 const showToast = useToast()
 
@@ -36,6 +36,5 @@ function openProfile() {
         Button (onClick)
       </Text>
     </Stack>
-    <ToastViewport />
   </Stack>
 </template>

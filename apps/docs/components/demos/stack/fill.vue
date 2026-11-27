@@ -3,6 +3,13 @@ import { Avatar } from '@astryx-vue/core/Avatar'
 import { Button } from '@astryx-vue/core/Button'
 import { HStack, StackItem, VStack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
+import { useToast } from '@astryx-vue/core/Toast'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 
 const users = [
   { name: 'Olivia Chen', role: 'Engineering Lead' },
@@ -28,7 +35,7 @@ const users = [
         </VStack>
       </StackItem>
       <StackItem size="static">
-        <Button label="View" size="sm" variant="secondary" />
+        <Button label="View" size="sm" variant="secondary" @click="demo('View')" />
       </StackItem>
     </HStack>
   </VStack>

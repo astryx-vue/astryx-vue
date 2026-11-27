@@ -7,6 +7,13 @@ import { List, ListItem } from '@astryx-vue/core/List'
 import { Section } from '@astryx-vue/core/Section'
 import { HStack, VStack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
+import { useToast } from '@astryx-vue/core/Toast'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 </script>
 
 <template>
@@ -44,7 +51,7 @@ import { Text } from '@astryx-vue/core/Text'
       <template #footer>
         <LayoutFooter has-divider>
           <HStack :gap="2" h-align="end">
-            <Button label="New Project" variant="primary" />
+            <Button label="New Project" variant="primary" @click="demo('New Project')" />
           </HStack>
         </LayoutFooter>
       </template>

@@ -34,6 +34,12 @@ describe('findButtonsWithoutAction', () => {
     ])
   })
 
+  it('lists files in code point order, the same on every machine', () => {
+    const dead = sfc('  <Button label="Save" />')
+    const result = scan({ 'src/a.vue': dead, 'src/B.vue': dead })
+    expect(result.found.map(item => item.file)).toEqual(['src/B.vue', 'src/a.vue'])
+  })
+
   it('leaves a button that acts, and one it cannot judge', () => {
     const result = scan({
       'src/Form.vue': sfc([

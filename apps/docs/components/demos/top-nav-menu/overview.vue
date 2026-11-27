@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import { Button } from '@astryx-vue/core/Button'
 import { Icon } from '@astryx-vue/core/Icon'
+import { useToast } from '@astryx-vue/core/Toast'
 import { TopNav, TopNavHeading, TopNavItem, TopNavMenu } from '@astryx-vue/core/TopNav'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 </script>
 
 <template>
@@ -20,7 +27,7 @@ import { TopNav, TopNavHeading, TopNavItem, TopNavMenu } from '@astryx-vue/core/
         ]"
       />
       <template #end>
-        <Button label="Search" variant="ghost" is-icon-only>
+        <Button label="Search" variant="ghost" is-icon-only @click="demo('Search')">
           <template #icon>
             <Icon icon="i-heroicons-magnifying-glass" />
           </template>

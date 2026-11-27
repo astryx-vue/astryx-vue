@@ -2,6 +2,13 @@
 import { Button } from '@astryx-vue/core/Button'
 import { Stack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
+import { useToast } from '@astryx-vue/core/Toast'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 
 const variants = [
   { variant: 'primary' as const, label: 'Primary' },
@@ -18,7 +25,7 @@ const variants = [
         Default
       </Text>
       <Stack align="center" direction="horizontal" :gap="3">
-        <Button v-for="item in variants" :key="item.variant" :label="item.label" :variant="item.variant" />
+        <Button v-for="item in variants" :key="item.variant" :label="item.label" :variant="item.variant" @click="demo(item.label)" />
       </Stack>
     </Stack>
     <Stack direction="vertical" :gap="1">

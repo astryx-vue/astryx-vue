@@ -186,6 +186,8 @@ const ACTIVITY = [
 const SECTION_PADDING = 6
 
 const isNarrow = useMediaQuery('(max-width: 1024px)')
+// 手机上子任务的到期日和负责人挪到标题下面
+const isPhone = useMediaQuery('(max-width: 640px)')
 
 const status = ref('in_progress')
 const assignee = ref('priya-shah')
@@ -427,16 +429,23 @@ function setSubtaskDone(id: number, isDone: boolean) {
                 :key="task.id"
                 :label="task.title"
                 :is-checked="task.isDone"
+                :align="isPhone ? 'first-line' : undefined"
                 @check="setSubtaskDone(task.id, $event)"
               >
-                <template #end>
+                <!-- 节点形式的标签会换行，字符串标签被截成一行，手机上只剩几个字 -->
+                <template #label>
+                  {{ task.title }}
+                </template>
+                <!-- 手机上到期日和负责人挪到标题下面，标题拿到整行宽度 -->
+                <template v-if="isPhone" #description>
                   <HStack :gap="2" align="center">
-                    <Timestamp
-                      :value="task.due"
-                      format="date"
-                      type="supporting"
-                      color="secondary"
-                    />
+                    <Timestamp :value="task.due" format="date" type="supporting" color="secondary" />
+                    <Avatar :name="task.assignee" size="sm" />
+                  </HStack>
+                </template>
+                <template v-else #end>
+                  <HStack :gap="2" align="center">
+                    <Timestamp :value="task.due" format="date" type="supporting" color="secondary" />
                     <Avatar :name="task.assignee" size="sm" />
                   </HStack>
                 </template>

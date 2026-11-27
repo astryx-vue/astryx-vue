@@ -3,7 +3,14 @@ import { Badge } from '@astryx-vue/core/Badge'
 import { ChatComposer, ChatComposerDrawer, ChatDictationButton } from '@astryx-vue/core/Chat'
 import { Icon } from '@astryx-vue/core/Icon'
 import { IconButton } from '@astryx-vue/core/IconButton'
+import { useToast } from '@astryx-vue/core/Toast'
 import { reactive, ref } from 'vue'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 
 const listening = ref(false)
 const dictation = reactive({
@@ -34,7 +41,7 @@ function onSubmit(value: string): void {
         </ChatComposerDrawer>
       </template>
       <template #headerActions>
-        <IconButton label="Add attachment" size="sm" variant="ghost">
+        <IconButton label="Add attachment" size="sm" variant="ghost" @click="demo('Add attachment')">
           <Icon name="carbon:attachment" />
         </IconButton>
       </template>

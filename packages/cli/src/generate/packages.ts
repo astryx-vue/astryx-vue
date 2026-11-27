@@ -1,5 +1,6 @@
 import { readdir, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
+import { compareText } from '../query-order.ts'
 import { CORE_PACKAGE, PACKAGE_NAME } from '../spec.ts'
 
 /**
@@ -58,7 +59,7 @@ export async function discoverPackages(repoRoot: string): Promise<WorkspacePacka
     })
   }
   // Core defines the design system, so it heads every list a reader scans.
-  return packages.sort((a, b) => Number(b.name === CORE_PACKAGE) - Number(a.name === CORE_PACKAGE) || a.name.localeCompare(b.name))
+  return packages.sort((a, b) => Number(b.name === CORE_PACKAGE) - Number(a.name === CORE_PACKAGE) || compareText(a.name, b.name))
 }
 
 /** The package an import specifier points into, or null when it is not ours. */

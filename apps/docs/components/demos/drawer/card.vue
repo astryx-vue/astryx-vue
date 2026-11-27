@@ -1,6 +1,13 @@
 <script setup lang="ts">
 import { Button } from '@astryx-vue/core/Button'
 import { CheckboxIndicator } from '@astryx-vue/core/CheckboxIndicator'
+import { useToast } from '@astryx-vue/core/Toast'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 </script>
 
 <template>
@@ -27,7 +34,7 @@ import { CheckboxIndicator } from '@astryx-vue/core/CheckboxIndicator'
         <span>On sale</span>
         <CheckboxIndicator state="unchecked" />
       </div>
-      <Button label="Apply filters" variant="primary" size="sm" width="100%" tabindex="-1" />
+      <Button label="Apply filters" variant="primary" size="sm" width="100%" tabindex="-1" @click="demo('Apply filters')" />
     </div>
   </div>
 </template>

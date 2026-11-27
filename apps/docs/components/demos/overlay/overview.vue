@@ -4,6 +4,13 @@ import { Button } from '@astryx-vue/core/Button'
 import { Overlay } from '@astryx-vue/core/Overlay'
 import { VStack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
+import { useToast } from '@astryx-vue/core/Toast'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 </script>
 
 <template>
@@ -16,7 +23,7 @@ import { Text } from '@astryx-vue/core/Text'
         <Text type="supporting" weight="bold" color="inherit">
           Design system foundations
         </Text>
-        <Button label="Open gallery" variant="secondary" size="sm" />
+        <Button label="Open gallery" variant="secondary" size="sm" @click="demo('Open gallery')" />
       </VStack>
     </template>
   </Overlay>

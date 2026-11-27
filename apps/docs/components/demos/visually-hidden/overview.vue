@@ -4,7 +4,14 @@ import { Icon } from '@astryx-vue/core/Icon'
 import { IconButton } from '@astryx-vue/core/IconButton'
 import { HStack, VStack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
+import { useToast } from '@astryx-vue/core/Toast'
 import { VisuallyHidden } from '@astryx-vue/core/VisuallyHidden'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 
 const actions = [
   { label: 'Download', icon: 'i-heroicons-arrow-down-tray' },
@@ -27,6 +34,7 @@ const actions = [
               :key="action.label"
               :label="action.label"
               variant="ghost"
+              @click="demo(action.label)"
             >
               <Icon :icon="action.icon" />
             </IconButton>

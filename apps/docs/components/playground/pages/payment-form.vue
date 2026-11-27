@@ -412,7 +412,9 @@ function confirmRemove(name: string) {
                         <StackItem size="fill">
                           <TextInput v-model="promo" size="lg" label="Promo code" is-label-hidden placeholder="Enter promo code" :style="fullWidth" />
                         </StackItem>
-                        <Button label="Apply" variant="secondary" size="lg" @click="showToast({ body: 'Demo: the promo code would be applied here', uniqueID: 'apply-promo' })" />
+                        <StackItem>
+                          <Button label="Apply" variant="secondary" size="lg" @click="showToast({ body: 'Demo: the promo code would be applied here', uniqueID: 'apply-promo' })" />
+                        </StackItem>
                       </HStack>
                     </VStack>
                     <VStack :gap="3">

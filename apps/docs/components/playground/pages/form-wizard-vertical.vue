@@ -206,8 +206,9 @@ const COVER_WIDTH = 140
 const COVER_HEIGHT = COVER_WIDTH * 1.5 // 下方 2:3 竖版封面
 const CONTROL_ROW = 28 // 一行 size="sm" 按钮
 const COLUMN_GAP = 12 // 列内 gap=3
-// 缩略图旁边的拖放列：flexBasis 0 让它能比自身内容更窄，不把整行撑出表单宽度
-const coverColumn: CSSProperties = { flexBasis: 0, minWidth: `${COVER_WIDTH}px` }
+// 缩略图旁边的拖放列：flexBasis 0 让它能比自身内容更窄，不把整行撑出表单宽度。
+// 下限取这一列自己的最小内容宽度（最宽的那颗按钮），按钮不用丢掉文字，整列就先换到封面下面
+const coverColumn: CSSProperties = { flexBasis: 0, minWidth: 'min-content' }
 // 拖放区填满按钮行以外的高度，让这一列与封面底边对齐
 const dropzoneFill: CSSProperties = { height: `${COVER_HEIGHT - CONTROL_ROW - COLUMN_GAP}px` }
 

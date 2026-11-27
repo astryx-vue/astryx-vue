@@ -5,9 +5,16 @@ import { ComplexSelector } from '@astryx-vue/core/ComplexSelector'
 import { HStack, VStack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
 import { TextInput } from '@astryx-vue/core/TextInput'
+import { useToast } from '@astryx-vue/core/Toast'
 import { Token } from '@astryx-vue/core/Token'
 import { TreeList } from '@astryx-vue/core/TreeList'
 import { computed, ref } from 'vue'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 
 interface Category {
   id: string
@@ -113,6 +120,6 @@ const visible = computed(() => filterTree(tree, query.value))
         </VStack>
       </template>
     </ComplexSelector>
-    <Button label="Save category" variant="primary" />
+    <Button label="Save category" variant="primary" @click="demo('Save category')" />
   </VStack>
 </template>

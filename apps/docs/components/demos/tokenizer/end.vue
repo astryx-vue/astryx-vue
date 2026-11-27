@@ -2,8 +2,15 @@
 import type { SearchableItem } from '@astryx-vue/core'
 import { createStaticSource } from '@astryx-vue/core'
 import { Button } from '@astryx-vue/core/Button'
+import { useToast } from '@astryx-vue/core/Toast'
 import { Tokenizer } from '@astryx-vue/core/Tokenizer'
 import { computed, ref } from 'vue'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 
 const people = computed(() => [
   { id: 'alice', label: 'Alice Johnson' },
@@ -30,7 +37,7 @@ selected.value = [people.value[0]!, people.value[2]!]
       :debounce-ms="0"
     >
       <template #end>
-        <Button label="Apply" variant="primary" size="sm" />
+        <Button label="Apply" variant="primary" size="sm" @click="demo('Apply')" />
       </template>
     </Tokenizer>
   </div>
