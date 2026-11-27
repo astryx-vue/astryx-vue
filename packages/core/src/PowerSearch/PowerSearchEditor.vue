@@ -3,6 +3,7 @@ import type { EditableFilter } from './complete.js'
 import type { FilterValue, PartialFilter, PowerSearchConfig, PowerSearchFilter } from './types.js'
 import { computed, nextTick, onMounted, ref, useTemplateRef, watch } from 'vue'
 import Button from '../Button/Button.vue'
+import { devPropError, isDevBuild } from '../composables/internal/devBuild.js'
 import { useComponentMessages } from '../locale/context.js'
 import { powerSearchMessages } from '../locale/messages/power-search.js'
 import Selector from '../Selector/Selector.vue'
@@ -25,6 +26,9 @@ const props = defineProps<{
   onSave: (filter: PowerSearchFilter | null) => void
   onCancel: () => void
 }>()
+
+if (isDevBuild() && props.config == null)
+  throw devPropError('PowerSearchEditor', 'config', 'is required: the same config as the PowerSearch it edits.')
 
 const messages = useComponentMessages({ powerSearch: powerSearchMessages })
 const lookup = computed(() => createPowerSearchLookup(props.config))

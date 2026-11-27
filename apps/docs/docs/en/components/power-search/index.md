@@ -14,7 +14,7 @@ import { powerSearchDisabled, powerSearchNested, powerSearchOverflow, powerSearc
 
 Power Search splits a query into a field, an operator, and a value. Focusing the input lists the fields. Choosing one opens an editor when the operator still needs a value. A boolean field, an empty operator, and a content search become a filter immediately: the editor closes and focus returns to the search field. Clicking an existing empty-operator token does not open the built-in editor. It commits one edit. A consumer editor registered as `components.empty.editor`, or the editor slot, still opens.
 
-Backspace on an empty input removes the last token. The arrow keys move between tokens, Enter opens the focused one, and Backspace or Delete removes it. A read-only token cannot be edited or removed. Escape cancels the editor and returns focus.
+Backspace on an empty input removes the last token. The arrow keys move between tokens, Enter opens the focused one, and Backspace or Delete removes it. A read-only token cannot be edited or removed, and clear all keeps it: the button removes every editable filter, shows only while one exists, and reports the first removed position in `change`. Escape cancels the editor and returns focus.
 
 A built-in filter token is named by all its visible text, such as `Name: is Ada`, and so is its remove button (`Remove Name: is Ada`). When a press opens the editor, the token says so with `aria-haspopup="dialog"` and `aria-expanded`, and the editor is a dialog with the same name. A finger tap on a remove button while the input is unfocused leaves the on-screen keyboard down.
 

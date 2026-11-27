@@ -32,6 +32,7 @@ const messages = useComponentMessages({ commandPalette: commandPaletteMessages }
 // 每次搜索状态都重新说一遍：快速输入时，后一条取代还没念出去的前一条，结果也取代还没念出去的「加载中」。
 const announce = useAnnounce({ hasReplace: true })
 const search = ref('')
+let busySettle: (() => void) | null = null
 const highlightedIndex = ref(-1)
 const highlightCause = ref<'keyboard' | 'pointer' | 'sync'>('sync')
 const listId = `astryx-command-palette-${useId()}`
@@ -76,12 +77,26 @@ const sections = computed(() => {
   return { groups, loose, grouped: groups.length > 0 }
 })
 
-const showEmpty = computed(() => items.value.length === 0 && results.status.value !== 'loading' && results.status.value !== 'idle')
-const emptyText = computed(() => {
-  if (search.value.trim() === '')
-    return props.emptyBootstrapText ?? messages.value.commandPalette.emptyBootstrap
-  return props.emptySearchText ?? messages.value.commandPalette.emptySearch
+// 空状态文字属于「已经落定的那次查询」：第一次搜索还在等的时候，字段里敲了字也不显示「输入以搜索」。
+// 落定之后的空状态在后续按键里一直留着，不会闪。
+const settledQuery = ref<string | null>(null)
+const emptyKind = computed<'bootstrap' | 'search' | 'pending' | null>(() => {
+  const status = results.status.value
+  if (items.value.length > 0 || status === 'idle')
+    return null
+  const hasQuery = search.value.trim() !== ''
+  const wasSearch = settledQuery.value?.trim() !== ''
+  if (status !== 'loading')
+    return hasQuery ? 'search' : 'bootstrap'
+  if (settledQuery.value == null)
+    return 'pending'
+  if (hasQuery && wasSearch)
+    return 'search'
+  return !hasQuery && !wasSearch ? 'bootstrap' : 'pending'
 })
+const emptyText = computed(() => emptyKind.value === 'bootstrap'
+  ? props.emptyBootstrapText ?? messages.value.commandPalette.emptyBootstrap
+  : props.emptySearchText ?? messages.value.commandPalette.emptySearch)
 
 function setSearch(next: string): void {
   search.value = next
@@ -95,6 +110,7 @@ function setHighlightedIndex(index: number, cause: 'keyboard' | 'pointer' | 'syn
 function close(): void {
   results.cancel()
   search.value = ''
+  settledQuery.value = null
   highlightedIndex.value = -1
   announce('')
   emit('openChange', false)
@@ -163,21 +179,29 @@ watch(items, (list) => {
   highlightedIndex.value = -1
 })
 
+watch(() => results.status.value, (status) => {
+  if (status === 'ready' || status === 'empty' || status === 'error')
+    settledQuery.value = results.searchedQuery.value
+})
+
+// 「加载中」由输入框在对话框里念；这里只念搜索的结果，并先收回还没念出去的「加载中」。
 watch([() => results.status.value, items, search], () => {
   if (!props.isOpen || search.value.trim() === '')
     return
-  if (results.status.value === 'loading') {
-    announce(messages.value.commandPalette.loading)
-    return
-  }
-  if (results.status.value === 'empty')
+  const status = results.status.value
+  if (status === 'empty' || status === 'error') {
+    busySettle?.()
     announce(messages.value.commandPalette.noResultsFor(search.value))
-  else if (results.status.value === 'ready')
+  }
+  else if (status === 'ready') {
+    busySettle?.()
     announce(messages.value.commandPalette.resultCount(items.value.length))
+  }
 })
 
 watch(() => props.isOpen, (open) => {
   if (!open) {
+    settledQuery.value = null
     results.cancel()
     search.value = ''
     highlightCause.value = 'sync'
@@ -193,6 +217,9 @@ provide(commandPaletteKey, {
   items,
   listId,
   onKeyDown,
+  registerBusySettle: (settle) => {
+    busySettle = settle
+  },
   search,
   selectItem,
   setHighlightedIndex,
@@ -220,8 +247,9 @@ provide(commandPaletteKey, {
         </slot>
       </div>
       <CommandPaletteList>
-        <CommandPaletteEmpty v-if="showEmpty">
-          {{ emptyText }}
+        <!-- 第一次搜索还没落定时用一个看不见的空格撑住一行高，对话框不会跳；读屏听到的是输入框念的「加载中」。 -->
+        <CommandPaletteEmpty v-if="emptyKind != null" :aria-hidden="emptyKind === 'pending' ? 'true' : undefined">
+          {{ emptyKind === 'pending' ? '\u00a0' : emptyText }}
         </CommandPaletteEmpty>
         <template v-else>
           <CommandPaletteGroup
