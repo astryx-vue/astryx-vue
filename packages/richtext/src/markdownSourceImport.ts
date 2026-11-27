@@ -35,6 +35,7 @@ import {
   shieldExtensionSources,
 } from './markdownExtensions.js'
 import { isMarkedHardLineBreak } from './markdownHardLineBreak.js'
+import { $restoreImages, protectImages } from './markdownImages.js'
 import { normalizeListIndentation } from './markdownListIndentation.js'
 import { $canonicalMarkdown } from './markdownSourceCanonical.js'
 import {
@@ -94,10 +95,13 @@ export function importMarkdownKeepingSource(
           withoutCarriageReturns(importChunks[index]?.content ?? chunk.content),
           plugins,
         )
-        // Links core refuses go first, on the source as written, so one whose
-        // text holds code (`[`x`](javascript:y)`) shows whole as core shows
-        // it; code spans next, so a safe link's code still reads as code.
-        const refused = protectRefusedLinks(shielded.markdown)
+        // Images go first: RichText has no image node, so each comes back as
+        // its source, whole. Links core refuses go next, on the source as
+        // written, so one whose text holds code (`[`x`](javascript:y)`) shows
+        // whole as core shows it; code spans next, so a safe link's code
+        // still reads as code.
+        const images = protectImages(shielded.markdown)
+        const refused = protectRefusedLinks(images.markdown)
         const code = protectCodeSpans(refused.markdown)
         const escaped = protectBackslashEscapes(code.markdown)
         const destinations = protectLinkDestinationParentheses(
@@ -116,6 +120,7 @@ export function importMarkdownKeepingSource(
           ]),
         )
         $restoreCodeSpans(holder, code.spans)
+        $restoreImages(holder, images.images)
         $unwrapRefusedLinks(holder)
         $restoreExtensionSources(holder, shielded.standIns)
         $joinSoftLineBreaks(holder)

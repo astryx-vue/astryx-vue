@@ -4,10 +4,12 @@
 import type { Transformer } from '@lexical/markdown'
 import type { ElementNode, LexicalNode, NodeKey } from 'lexical'
 import { $isCodeNode } from '@lexical/code'
+import { $isLinkNode } from '@lexical/link'
 import { $isElementNode, $isLineBreakNode, $isTextNode } from 'lexical'
 import { absentCharacters } from './markdownCharacterReferences.js'
 import { $isRichTextExtensionNode } from './markdownExtensionNode.js'
 import { extensionTextView, withExtensionExport } from './markdownExtensions.js'
+import { $imageSourceForExport, $isImageSource } from './markdownImages.js'
 import { hashOf } from './markdownSourceText.js'
 import { $convertToMarkdownKeepingTimeLinear } from './markdownSpaceRuns.js'
 /**
@@ -158,6 +160,12 @@ function markedView(
   if (placeholder != null && $isRichTextExtensionNode(node)) {
     return extensionTextView(node, placeholder)
   }
+  // An image's source reads as its placeholder, so no mark lands inside it.
+  if (placeholder != null && $isTextNode(node)) {
+    const view = Object.create(node) as typeof node
+    view.getTextContent = () => placeholder
+    return view
+  }
   if ($isTextNode(node)) {
     if (node.hasFormat('code') || $isCodeNode(node.getParent())) {
       return node
@@ -168,6 +176,20 @@ function markedView(
     let text = node
       .getTextContent()
       .replace(INLINE_SYNTAX, match => token + match)
+    // A `!` right before a link would make the link an image.
+    if (text.endsWith('!') && $isLinkNode(node.getNextSibling())) {
+      text = `${text.slice(0, -1)}${token}!`
+    }
+    // A `(` right after an image that ends in `]` would become its destination.
+    const before = node.getPreviousSibling()
+    if (
+      text.startsWith('(')
+      && before != null
+      && $isImageSource(before)
+      && before.getTextContent().endsWith(']')
+    ) {
+      text = token + text
+    }
     const previous = node.getPreviousSibling()
     if (previous == null || $isLineBreakNode(previous)) {
       const ordered = ORDERED_LIST_START.exec(text)
@@ -222,13 +244,18 @@ function extensionPlaceholders(
   const sources = new Map<string, string>()
   const free = absentCharacters(text)
   for (const node of nodes) {
-    if ($isRichTextExtensionNode(node) && node.isInline()) {
+    const source = $isRichTextExtensionNode(node) && node.isInline()
+      ? node.getSource()
+      : $isImageSource(node)
+        ? $imageSourceForExport(node, $isLinkNode(node.getNextSibling()))
+        : null
+    if (source != null) {
       const placeholder = free.next().value
       if (placeholder == null) {
         break
       }
       placeholders.set(node.getKey(), placeholder)
-      sources.set(placeholder, node.getSource())
+      sources.set(placeholder, source)
     }
   }
   return { placeholders, sources }
