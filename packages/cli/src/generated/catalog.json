@@ -87523,6 +87523,174 @@
         "en": "https://astryx-vue.pages.dev/en/components/use-syntax-theme",
         "zh": "https://astryx-vue.pages.dev/components/use-syntax-theme"
       }
+    },
+    {
+      "slug": "use-linkify",
+      "name": "UseLinkify",
+      "package": "@astryx-vue/core",
+      "kind": "composable",
+      "title": {
+        "en": "useLinkify",
+        "zh": "useLinkify"
+      },
+      "group": "Utility",
+      "groupTitle": {
+        "en": "Utility",
+        "zh": "工具"
+      },
+      "importPath": null,
+      "exportName": null,
+      "summary": {
+        "en": "`useLinkify` finds URLs, email addresses and custom patterns in plain text and cuts the text into segments: plain text and links. Use it wherever user-written or tool-written text should grow safe, styled links without being turned into markup first, such as activity feeds, comment threads and description fields.",
+        "zh": "`useLinkify` 在纯文字里找出网址、邮箱和自定义格式，把文字切成「纯文字」和「链接」两种片段。用户或工具写下的文字想长出安全、有样式的链接，又不想先转成标记语言时就用它，比如动态流、评论串、描述字段。"
+      },
+      "usage": {
+        "en": "`useLinkify` finds URLs, email addresses and custom patterns in plain text and cuts the text into segments: plain text and links. Use it wherever user-written or tool-written text should grow safe, styled links without being turned into markup first, such as activity feeds, comment threads and description fields.\n\nEach segment is either `{ type: 'text', text }` or `{ type: 'link', text, href, isExternal }`. Render text as it is and links with `Link`. URLs open in a new tab (`isExternal`), emails link as `mailto:`.\n\n```ts\nimport { useLinkify } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useLinkify } from '@astryx-vue/core'\nimport { Link } from '@astryx-vue/core/Link'\n\nconst segments = useLinkify('Visit https://example.com or write hi@example.com')\n</script>\n\n<template>\n  <p>\n    <template v-for=\"(segment, index) in segments\" :key=\"index\">\n      <Link v-if=\"segment.type === 'link'\" :href=\"segment.href\" :is-external-link=\"segment.isExternal\">\n        {{ segment.text }}\n      </Link>\n      <template v-else>\n        {{ segment.text }}\n      </template>\n    </template>\n  </p>\n</template>\n```\n\nPass a ref or a getter and the segments follow it. Custom patterns turn project references such as `#123` or ticket IDs into links: give a regex with the global flag and an `href` builder that reads its capture groups. When matches overlap, the earliest one wins, and at the same start a custom pattern wins over the built-in ones, so a `#123` pattern lives next to URL detection in the same text.",
+        "zh": "`useLinkify` 在纯文字里找出网址、邮箱和自定义格式，把文字切成「纯文字」和「链接」两种片段。用户或工具写下的文字想长出安全、有样式的链接，又不想先转成标记语言时就用它，比如动态流、评论串、描述字段。\n\n每个片段要么是 `{ type: 'text', text }`，要么是 `{ type: 'link', text, href, isExternal }`。文字原样输出，链接交给 `Link`。网址会在新标签页打开（`isExternal`），邮箱链接成 `mailto:`。\n\n```ts\nimport { useLinkify } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useLinkify } from '@astryx-vue/core'\nimport { Link } from '@astryx-vue/core/Link'\n\nconst segments = useLinkify('Visit https://example.com or write hi@example.com')\n</script>\n\n<template>\n  <p>\n    <template v-for=\"(segment, index) in segments\" :key=\"index\">\n      <Link v-if=\"segment.type === 'link'\" :href=\"segment.href\" :is-external-link=\"segment.isExternal\">\n        {{ segment.text }}\n      </Link>\n      <template v-else>\n        {{ segment.text }}\n      </template>\n    </template>\n  </p>\n</template>\n```\n\n文字可以传 ref 或 getter，片段会跟着变。自定义格式能把 `#123`、工单号这类项目内的引用变成链接：给一个带全局标志的正则，再给一个读取捕获组的 `href` 生成函数。多处匹配重叠时先出现的赢，起点相同则自定义格式赢过内置格式，所以 `#123` 的规则可以和网址识别用在同一段文字里。"
+      },
+      "practices": {
+        "en": [
+          {
+            "guidance": "Do",
+            "text": "Render the text segments as they are; the segments already interleave the unmatched text."
+          },
+          {
+            "guidance": "Do",
+            "text": "Give every custom pattern the global flag (`g`); without it the scan only sees the first match."
+          },
+          {
+            "guidance": "Don't",
+            "text": "Pre-parse the text into your own markup before linkifying."
+          }
+        ],
+        "zh": []
+      },
+      "props": {
+        "en": [
+          {
+            "heading": "Parameters",
+            "rows": [
+              {
+                "name": "`text`",
+                "type": "`MaybeRefOrGetter<string>`",
+                "default": "—",
+                "description": "The plain text to scan. Empty text gives one text segment of itself."
+              },
+              {
+                "name": "`options`",
+                "type": "`MaybeRefOrGetter<UseLinkifyOptions>`",
+                "default": "—",
+                "description": "Configuration object."
+              },
+              {
+                "name": "`options.patterns`",
+                "type": "`LinkifyPattern[]`",
+                "default": "—",
+                "description": "Custom patterns, in addition to (or, with `hasBuiltins` false, instead of) the built-in URL and email detection. Each has a global-flag regex `pattern`, an `href(match)` builder, an optional `label(match)` and an optional `isExternal` (default `false`)."
+              },
+              {
+                "name": "`options.hasBuiltins`",
+                "type": "`boolean`",
+                "default": "`true`",
+                "description": "Include the built-in http(s) URL and email detection. Set it to `false` when `patterns` should define everything that links."
+              }
+            ]
+          },
+          {
+            "heading": "Returns",
+            "rows": [
+              {
+                "name": "(return value)",
+                "type": "`ComputedRef<LinkifySegment[]>`",
+                "description": "The text as an ordered list of `{ type: 'text', text }` and `{ type: 'link', text, href, isExternal }` segments. It follows the text and options it was given."
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "参数",
+            "rows": [
+              {
+                "name": "`text`",
+                "type": "`MaybeRefOrGetter<string>`",
+                "default": "—",
+                "description": "要扫描的纯文字。空文字得到只有它自己的一段文字。"
+              },
+              {
+                "name": "`options`",
+                "type": "`MaybeRefOrGetter<UseLinkifyOptions>`",
+                "default": "—",
+                "description": "配置对象。"
+              },
+              {
+                "name": "`options.patterns`",
+                "type": "`LinkifyPattern[]`",
+                "default": "—",
+                "description": "自定义格式，加在内置的网址和邮箱识别之外（`hasBuiltins` 为 false 时取代它们）。每条有带全局标志的正则 `pattern`、生成地址的 `href(match)`、可选的 `label(match)` 和可选的 `isExternal`（默认 `false`）。"
+              },
+              {
+                "name": "`options.hasBuiltins`",
+                "type": "`boolean`",
+                "default": "`true`",
+                "description": "是否带上内置的 http(s) 网址和邮箱识别。想让 `patterns` 完全决定哪些会变成链接时设为 `false`。"
+              }
+            ]
+          },
+          {
+            "heading": "返回值",
+            "rows": [
+              {
+                "name": "（返回值）",
+                "type": "`ComputedRef<LinkifySegment[]>`",
+                "description": "按顺序排列的 `{ type: 'text', text }` 和 `{ type: 'link', text, href, isExternal }` 片段，跟着传入的文字和选项变化。"
+              }
+            ]
+          }
+        ]
+      },
+      "slots": {
+        "en": [],
+        "zh": []
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [],
+        "zh": [
+          {
+            "heading": "建议",
+            "text": "- 推荐: 文字片段原样渲染；没命中的文字已经按顺序穿插在片段里。\n- 推荐: 每条自定义格式都带全局标志（`g`），否则只会看到第一处匹配。\n- 避免: 先把文字转成自己的标记，再去找链接。"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": {
+            "en": "useLinkify — comment thread",
+            "zh": "useLinkify — 评论串"
+          },
+          "description": {
+            "en": "A short comment thread in plain text: the URL and the email address become links, a custom pattern turns #123 and #456 into tracker links, and a comment without matches stays plain.",
+            "zh": "一串纯文字评论：网址和邮箱变成链接，自定义格式把 #123、#456 变成工单链接，没有命中的评论保持原样。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport type { LinkifyPattern } from '@astryx-vue/core'\nimport { useLinkify } from '@astryx-vue/core'\nimport { Link } from '@astryx-vue/core/Link'\nimport { VStack } from '@astryx-vue/core/Stack'\nimport { Text } from '@astryx-vue/core/Text'\n\nconst issue: LinkifyPattern = {\n  pattern: /#(\\d+)/g,\n  href: match => `https://tracker.example.com/issues/${match[1]}`,\n}\nconst options = { patterns: [issue] }\n\nconst comments = [\n  'Repro steps are at https://example.com/repro, mail dana@example.com for the build.',\n  'Probably the same root cause as #123 and #456.',\n  'No links in this one.',\n]\nconst threads = comments.map(comment => useLinkify(comment, options))\n</script>\n\n<template>\n  <VStack :gap=\"2\">\n    <Text v-for=\"(segments, index) in threads\" :key=\"index\" as=\"p\">\n      <template v-for=\"(segment, at) in segments.value\" :key=\"at\">\n        <Link v-if=\"segment.type === 'link'\" :href=\"segment.href\" :is-external-link=\"segment.isExternal\">\n          {{ segment.text }}\n        </Link>\n        <template v-else>\n          {{ segment.text }}\n        </template>\n      </template>\n    </Text>\n  </VStack>\n</template>"
+        }
+      ],
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/use-linkify",
+        "zh": "https://astryx-vue.pages.dev/components/use-linkify"
+      }
     }
   ],
   "topics": [

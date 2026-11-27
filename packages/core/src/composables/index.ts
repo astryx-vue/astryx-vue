@@ -156,6 +156,15 @@ export type { LayerMode, UseLayerOptions, UseLayerReturn } from './useLayer.js'
 
 export { useLayerMountTarget, useLayerTeleportTarget, useResolvedLayerTeleport } from './useLayerMountTarget.js'
 
+export { useLinkify } from './useLinkify.js'
+export type {
+  LinkifyLinkSegment,
+  LinkifyPattern,
+  LinkifySegment,
+  LinkifyTextSegment,
+  UseLinkifyOptions,
+} from './useLinkify.js'
+
 export { useListFocus } from './useListFocus.js'
 export type { ListFocus, ListFocusOrientation, UseListFocusOptions } from './useListFocus.js'
 
