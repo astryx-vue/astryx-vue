@@ -37,13 +37,13 @@ describe('lightbox', () => {
     const dialog = wrapper.get('dialog')
     expect(dialog.attributes('aria-label')).toBe(photo.alt)
     expect(dialog.classes()).toContain('astryx-layer')
-    expect(wrapper.get('img').attributes('alt')).toBe(photo.alt)
-    expect(wrapper.get('.astryx-lightbox__caption').text()).toBe(photo.caption)
+    expect(wrapper.get('[data-current] img').attributes('alt')).toBe(photo.alt)
+    expect(wrapper.get('[data-current] .astryx-lightbox__caption').text()).toBe(photo.caption)
     expect(wrapper.get('.astryx-lightbox__counter').text()).toBe('1 / 2')
     expect(wrapper.get('[aria-label="Zoom"]').attributes('aria-pressed')).toBe('false')
 
     await wrapper.get('[aria-label="Next"]').trigger('click')
-    expect(wrapper.get('img').attributes('alt')).toBe('Modern building')
+    expect(wrapper.get('[data-current] img').attributes('alt')).toBe('Modern building')
     expect(wrapper.get('.astryx-lightbox__counter').text()).toBe('2 / 2')
   })
 
