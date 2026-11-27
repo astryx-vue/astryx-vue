@@ -2,7 +2,7 @@ import type { MaybeRefOrGetter, Ref } from 'vue'
 import { ref, toValue, watch } from 'vue'
 import { subscribeInput } from '../utils/inputStream.js'
 import { scrollEventTarget, scrollportTop, scrollsPage } from '../utils/pageScroller.js'
-import { setScrollAnchoringOff } from './internal/scrollAnchoring.js'
+import { markFollowing } from './internal/streamFollowing.js'
 import { useMediaQuery } from './useMediaQuery.js'
 
 /** How `scrollToBottom` moves. `instant` skips the spring. */
@@ -61,28 +61,6 @@ export interface UseChatStreamScrollReturn {
 
 const SIXTY_FPS_MS = 1000 / 60
 const CHAT_MESSAGE_CLASS = 'astryx-chat-message'
-
-// The scrollers whose stream scroll follows the newest message now, kept in
-// step with each hook's lock.
-const following = new WeakSet<Element>()
-
-/**
- * Whether the stream scroll on `scroller` follows its newest message now, as
- * its lock says. Internal to Chat.
- */
-export function isFollowingNewest(scroller: Element): boolean {
-  return following.has(scroller)
-}
-
-// The lock's marks on the scroller: anchoring off while the hook follows, and
-// the state `isFollowingNewest` reads.
-function markFollowing(el: Element, locked: boolean): void {
-  setScrollAnchoringOff(el, locked)
-  if (locked)
-    following.add(el)
-  else
-    following.delete(el)
-}
 
 /**
  * Keeps a chat transcript pinned to the bottom while text streams in, and lets
