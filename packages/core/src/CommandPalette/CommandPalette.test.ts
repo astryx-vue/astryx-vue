@@ -119,8 +119,8 @@ describe('command palette item and input overrides', () => {
       props: { isHighlighted: true, isSelected: true, value: 'a' },
       slots: { default: () => 'Item A' },
     })
-    expect(marked.attributes('data-highlighted')).toBe('true')
-    expect(marked.attributes('data-selected')).toBe('true')
+    expect(marked.attributes('data-highlighted')).toBe('highlighted')
+    expect(marked.attributes('data-selected')).toBe('selected')
     expect(marked.attributes('aria-selected')).toBe('true')
   })
 
@@ -201,7 +201,7 @@ describe('command palette keyboard and standalone parts', () => {
       await items[1]!.trigger('mouseenter')
       await new Promise(resolve => requestAnimationFrame(resolve))
       expect(seen).toEqual([])
-      expect(items[1]!.attributes('data-highlighted')).toBe('true')
+      expect(items[1]!.attributes('data-highlighted')).toBe('highlighted')
       await wrapper.get('[role="combobox"]').trigger('keydown', { key: 'ArrowDown' })
       await new Promise(resolve => requestAnimationFrame(resolve))
       expect(seen.length).toBeGreaterThan(0)
@@ -218,10 +218,10 @@ describe('command palette keyboard and standalone parts', () => {
       props: { isDisabled: true, value: 'a' },
       slots: { default: () => 'Item A' },
     })
-    expect(wrapper.attributes('data-disabled')).toBe('true')
+    expect(wrapper.attributes('data-disabled')).toBe('disabled')
     expect(wrapper.classes()).toContain('astryx-command-palette-item')
     const css = readFileSync(resolve('packages/core/styles/command-palette.css'), 'utf8')
-    expect(css).toMatch(/\[data-disabled='true'\]\s*\{[^}]*cursor:\s*default/)
+    expect(css).toMatch(/\[data-disabled='disabled'\]\s*\{[^}]*cursor:\s*default/)
     expect(css).not.toContain('not-allowed')
   })
 

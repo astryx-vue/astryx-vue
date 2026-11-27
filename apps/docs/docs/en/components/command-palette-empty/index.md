@@ -11,7 +11,7 @@ import { commandPaletteEmptyBasic } from '../../../../components/demos/command-p
 
 ## Usage
 
-Empty state display for the results area. Rendered automatically by `CommandPalette` for no-results and no-query states.
+Empty state display for the results area. `CommandPalette` renders it automatically when a search returns no results, or when there is no query and `bootstrap()` returns nothing. A long unbroken token, such as a path echoed into the message, wraps instead of widening the centered line. While the first search is still loading, the palette keeps one blank line of height here instead of a message.
 
 ```ts
 import { CommandPaletteEmpty } from '@astryx-vue/core/CommandPalette'

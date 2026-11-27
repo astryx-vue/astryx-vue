@@ -14,6 +14,8 @@ import { commandPaletteItemBasic } from '../../../../components/demos/command-pa
 
 Use `CommandPaletteItem` for one non-interactive result row inside `CommandPaletteList` or `CommandPaletteGroup`. `CommandPalette` owns the composite keyboard model; standalone items expose only their explicit visual state and pointer activation.
 
+Themes can style the item through the `command-palette-item` target, and through its `highlighted`, `selected` and `disabled` states.
+
 ```ts
 import { CommandPaletteItem } from '@astryx-vue/core/CommandPalette'
 ```

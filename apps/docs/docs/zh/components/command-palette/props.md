@@ -23,7 +23,7 @@ footer: false
         <td><code>searchSource</code></td>
         <td><code>SearchSource</code></td>
         <td>-</td>
-        <td>命令从哪来。空查询会调用 <code>bootstrap</code>。</td>
+        <td>命令从哪来。空查询会调用 <code>bootstrap</code>。面板打开时换了搜索源，会用当前查询重新搜一次，所以请让它保持稳定。</td>
       </tr>
       <tr>
         <td><code>isInline</code></td>

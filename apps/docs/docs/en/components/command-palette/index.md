@@ -51,7 +51,7 @@ useHotkeys([{ keys: 'mod+k', onPress: openPalette }])
 
 `v-model:value` turns the palette into a picker: the matching row stays selected, and choosing a row writes that id. `auxiliaryData.group` splits the list into groups in first-seen order. The `item` slot replaces the row label; `footer` replaces the hint row.
 
-Arrow keys move the highlight and do not wrap. Home and End stay in the input and leave the highlight where it is. Page Up jumps to the first enabled row, and Page Down jumps to the last. Enter selects the highlighted row. Escape closes the palette and drops an in-flight search. Moving the pointer highlights a row without scrolling the list. The highlight stays empty until the pointer or the keyboard moves it.
+Arrow keys move the highlight and do not wrap. Home and End stay in the input and leave the highlight where it is. Page Up jumps to the first enabled row, and Page Down jumps to the last. Enter selects the highlighted row. Escape closes the palette and drops an in-flight search. Moving the pointer highlights a row without scrolling the list. The highlight stays empty until the pointer or the keyboard moves it. A search source that is replaced while the palette is open runs the shown query again, so keep the source stable. The field is announced as busy once per search, from inside the dialog. A search that rejects counts as an empty answer.
 
 
 <ComponentAnatomy />
