@@ -2230,9 +2230,10 @@
   - 不适用：上游实验性 render/export 命令（把 React 页面打成单文件 HTML 及 --reverse 还原，依赖 StyleX 与 React 页面打包）；我们没有这个命令，Vue 页面也没有对应的静态化流程，不属于我们 CLI 的定位
 - [x] [`558aa967b`](https://github.com/meta/astryx/commit/558aa967b) perf(cli): search lowercases each candidate once per run and scores a one-word query once (#11620)
   - 不适用：上游为文件系统扫描、索引缓存、懒加载做的性能优化；我们的 catalog 是构建期生成的静态 JSON，搜索只在内存里逐条打分，没有可优化的环节
-- [ ] [`b9ca2a2a7`](https://github.com/meta/astryx/commit/b9ca2a2a7) feat(cli): component reads print each prop description's first sentence (#11634)
+- [x] [`b9ca2a2a7`](https://github.com/meta/astryx/commit/b9ca2a2a7) feat(cli): component reads print each prop description's first sentence (#11634)
   - 暂缓：component 默认改为简短回答（props 只打第一句、--props 看完整说明、--detail 分档）需要先设计输出分档和 --props 视图；目前默认就是完整文档，要短的用 --dense
   - 暂缓：[CLI输出分级] component 默认简短回答，prop 描述只打第一句，要先设计输出分档和 --props 视图
+  - 已移植：[#652](https://github.com/astryx-vue/astryx-vue/pull/652)。component 简短回答里每个属性描述只留第一句并写明 --props 命令，截断省不下字数时保持完整；--props 打印每个属性的完整描述
 - [x] [`c18bfffab`](https://github.com/meta/astryx/commit/c18bfffab) fix(cli): theme editor undo refuses a themes file by name on Node 22.13; core-on-demand checks what Node 22.13 can show (#11581)
   - 不适用：上游实验性主题编辑器（experimental theme editor）的改动，我们的 CLI 没有这个命令
 - [x] [`7b3154197`](https://github.com/meta/astryx/commit/7b3154197) test(cli): theme-real-bases renders in the pinned Playwright Chromium, launched once, failing by name; the theme-family contract runs inside the job's limit (#11592)
@@ -2732,9 +2733,10 @@
   - 不适用：上游 CLI 生成的计算机级或项目级 agent 技能文本；我们的 init 只写一段项目 agent 文档，没有全局技能和这些工作流
 - [x] [`d0d712165`](https://github.com/meta/astryx/commit/d0d712165) test(cli): the kept-value cases that read a value back skip on a Node without module hooks (#12353)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`f63cf9f7f`](https://github.com/meta/astryx/commit/f63cf9f7f) feat(cli): component reads print a short answer by default (#12291)
+- [x] [`f63cf9f7f`](https://github.com/meta/astryx/commit/f63cf9f7f) feat(cli): component reads print a short answer by default (#12291)
   - 暂缓：component 默认改为简短回答（props 只打第一句、--props 看完整说明、--detail 分档）需要先设计输出分档和 --props 视图；目前默认就是完整文档，要短的用 --dense
   - 暂缓：[CLI输出分级] component 默认简短回答与 --detail 分档
+  - 已移植：[#652](https://github.com/astryx-vue/astryx-vue/pull/652)。component 默认给简短回答，新增 --detail compact | full 和 --props；--json 与 --dense 不变，agents 说明文字同步
 - [x] [`21d736bb0`](https://github.com/meta/astryx/commit/21d736bb0) feat(cli): doctor's kept-cache row prints a short brief; --json keeps the whole message (#12607)
   - 不适用：doctor 缓存行的简短说明，我们没有缓存
 - [x] [`f6d900c1c`](https://github.com/meta/astryx/commit/f6d900c1c) test(cli): make browser timeout cleanup independent of child startup (#12254)
@@ -2867,9 +2869,10 @@
   - 不适用：上游 theme build 把 StyleX defineTheme 的 TS 主题模块编译成 CSS/JS；我们的主题是现成 CSS，CLI 的 theme 只打印接入文档，没有构建步骤
 - [x] [`cb58ce756`](https://github.com/meta/astryx/commit/cb58ce756) chore: land batch 31 (1 pull requests) (#12902)
   - 不适用：上游为文件系统扫描、索引缓存、懒加载做的性能优化；我们的 catalog 是构建期生成的静态 JSON，搜索只在内存里逐条打分，没有可优化的环节
-- [ ] [`0f67e76cb`](https://github.com/meta/astryx/commit/0f67e76cb) chore: land batch 35 (1 pull requests) (#12907)
+- [x] [`0f67e76cb`](https://github.com/meta/astryx/commit/0f67e76cb) chore: land batch 35 (1 pull requests) (#12907)
   - 暂缓：由 theme-system 判定；CLI 侧：上游批量合入；涉及 CLI 的部分是图标集、集成包、缓存与搜索内部实现，我们没有；组件与文档改动由对应族处理
   - 暂缓：[主题引擎] defineTheme 调色板引擎（palette 生成器与映射表）还没有
+  - 已移植：[#650](https://github.com/astryx-vue/astryx-vue/pull/650)。新入口 core/palette 的 themePalette() 生成调色板并映射成颜色 token，defineTheme({palette}) 接收它，显式 tokens 和 components 仍优先；补测试和中英文档
 - [x] [`5825a9d56`](https://github.com/meta/astryx/commit/5825a9d56) chore: land batch 38 (2 pull requests) (#12912)
   - 不适用：上游批量合并提交，涉及 render/export、swizzle、搜索索引与文件缓存、doctor 集成检查等上游独有设施；其中 build 相关调参同样不适用
 - [x] [`75649f57f`](https://github.com/meta/astryx/commit/75649f57f) chore: land batch 30 (4 pull requests) (#12901)
@@ -2967,9 +2970,10 @@
 
 ### v0.7.2
 
-- [ ] [`4eaefd464`](https://github.com/meta/astryx/commit/4eaefd464) fix(templates): label the table-filter view-options panel by its selected tab (#7591)
+- [x] [`4eaefd464`](https://github.com/meta/astryx/commit/4eaefd464) fix(templates): label the table-filter view-options panel by its selected tab (#7591)
   - 暂缓：Vue 的 table-filter 视图选项只有宽屏的侧栏加标题弹层，没有窄屏的标签条和面板布局（含单列的列设置），标签与面板的 aria-labelledby 无处可挂；缺窄屏布局本体，待表格族单独做
   - 暂缓：[CLI模板] Vue 的 table-filter 模板视图选项只有 Popover 宽屏形态，没有窄屏标签条加共用面板的布局
+  - 已移植：[#652](https://github.com/astryx-vue/astryx-vue/pull/652)。table-filter 模板视图选项窄屏改底部弹层，左侧栏变成顶部标签条加共用面板，面板由选中标签命名，用 Vue SFC 写并补测试
 - [x] [`86e839219`](https://github.com/meta/astryx/commit/86e839219) feat(core): promote Drawer and DrawerHeader from Lab (#6071)
   - Vue 版已有：Drawer 和 DrawerHeader 本来就在 core，Vue 的 lab 没有 Drawer；块示例对应 Vue 文档里已有的 drawer 页示例
 - [x] [`52c42390c`](https://github.com/meta/astryx/commit/52c42390c) fix(cli): exclude template-local helpers from extractComponents (#7641)
@@ -3716,9 +3720,10 @@
   - 不适用：本范围只是把 wall-clock 读数抽成共享函数给 PowerSearch 用，PowerSearch 的 isDateOnly 行为归搜索族
 - [x] [`07ee4b5c4`](https://github.com/meta/astryx/commit/07ee4b5c4) docs(DateInput): FR14 says when a tapped row commits (#9838)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`42ccd7cfa`](https://github.com/meta/astryx/commit/42ccd7cfa) fix(DateInput): the scrolling picker column's rows keep AA contrast; the depth fade uses theme text colours (#9853)
+- [x] [`42ccd7cfa`](https://github.com/meta/astryx/commit/42ccd7cfa) fix(DateInput): the scrolling picker column's rows keep AA contrast; the depth fade uses theme text colours (#9853)
   - 暂缓：要还原上游动效，归动效与手势引擎任务
   - 暂缓：[其他:桌面滚轮景深渐隐] Vue 桌面时间滚轮还没有上游的景深渐隐，补上渐隐时一并用这条的对比度
+  - 已移植：[#657](https://github.com/astryx-vue/astryx-vue/pull/657)。DateInput 鼠标列加景深倾倒，颜色渐隐取主次文字色的中点保持 AA，选中和禁用行保留自己的颜色，减少动态效果时保留颜色渐变，七个主题的对比度有测试
 - [x] [`e390c3c43`](https://github.com/meta/astryx/commit/e390c3c43) test(browser): keep every Playwright browser context off remote hosts (#9811)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`bd69bedcd`](https://github.com/meta/astryx/commit/bd69bedcd) test(DateInput): the wheel contrast proof imports the hermetic Playwright test (#9888)
@@ -5097,9 +5102,10 @@
 
 - [x] [`108f354ae`](https://github.com/meta/astryx/commit/108f354ae) fix(core): drop 'use client' from the package root and the component barrels (#11106)
   - 不适用：React Server Components 的 use client 指令
-- [ ] [`afa75c2e8`](https://github.com/meta/astryx/commit/afa75c2e8) feat(core): make Tokenizer InputGroup-compatible (#4405)
+- [x] [`afa75c2e8`](https://github.com/meta/astryx/commit/afa75c2e8) feat(core): make Tokenizer InputGroup-compatible (#4405)
   - 暂缓：Tokenizer 放进 InputGroup 要先让 Vue 版 Tokenizer 读 InputGroup 上下文（组内不画自己的 Field、跟组尺寸、单行滚动轨道），与 selectors-1 同一缺口
   - 暂缓：[其他:Tokenizer 读 InputGroup 上下文] 缺组内不画自己的 Field、跟组尺寸、单行滚动轨道和边缘渐隐
+  - 已移植：[#657](https://github.com/astryx-vue/astryx-vue/pull/657)。Tokenizer 放进 InputGroup 时不画自己的 Field，跟组的尺寸和禁用，标签和输入留在可横向滚动的单行轨道里并在藏着标签的一侧渐隐
 - [x] [`db3e8334f`](https://github.com/meta/astryx/commit/db3e8334f) fix(core): InputGroupText, Badge and Token keep caller text in its written order under RTL (#10114)
   - 已移植：[#500](https://github.com/astryx-vue/astryx-vue/pull/500)。Token、Badge、InputGroupText 的文字在 RTL 下保持书写顺序
 - [x] [`1ab211682`](https://github.com/meta/astryx/commit/1ab211682) fix(FileInput): a dropzone shows its status below the drop area by default (#11195)
@@ -5830,10 +5836,11 @@
   - 已移植：[#579](https://github.com/astryx-vue/astryx-vue/pull/579)。useFingerScroll 在手指滚动结束时通知调用方
 - [x] [`a789c8cd7`](https://github.com/meta/astryx/commit/a789c8cd7) feat(core): createDragToSnapPoints and useDragToSnapPoints settle an element on snap points (#8658)
   - 已移植：[#583](https://github.com/astryx-vue/astryx-vue/pull/583)。新增 createDragToSnapPoints、useDragToSnapPoints，沿一条轴拖动后停到吸附点
-- [ ] [`a0fcc977c`](https://github.com/meta/astryx/commit/a0fcc977c) fix(SideNav): the collapse copy paints at the rail's own level, with no z-index escalation (#10145)
+- [x] [`a0fcc977c`](https://github.com/meta/astryx/commit/a0fcc977c) fix(SideNav): the collapse copy paints at the rail's own level, with no z-index escalation (#10145)
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
   - 暂缓：本期已做 模块与 transientCopy 的副本层级；剩 SideNav 收起副本的层级接入，归动效与手势引擎的组件接入阶段
   - 暂缓：[其他:SideNav 收起动效接入 animatedLayout] SideNav 目前没有用 animatedLayout 和 transientCopy 做收起动效，副本层级无从谈起
+  - Vue 版已有：SideNav 收展动效已接布局动效（SideNav/railMotion.ts、useRailMotion.ts），收起副本由 motion/layout/edgeHold.ts 放在轨道自己那一层不写 z-index，animatedLayout.edge.test.ts 已断言
 - [x] [`f81f09df3`](https://github.com/meta/astryx/commit/f81f09df3) fix(CodeBlock, Carousel): the code viewport and the scroller draw the shared focus ring (#8875)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`07f8de58c`](https://github.com/meta/astryx/commit/07f8de58c) feat(core): Carousel's hasSnap takes useSnapPaging(), iOS paging on native snap's stops (#8153)
@@ -6720,9 +6727,10 @@
 
 ### v0.7.14
 
-- [ ] [`7deca3313`](https://github.com/meta/astryx/commit/7deca3313) feat(lab): SVG icons that follow the surrounding font-weight (#7918)
+- [x] [`7deca3313`](https://github.com/meta/astryx/commit/7deca3313) feat(lab): SVG icons that follow the surrounding font-weight (#7918)
   - 暂缓：随字重变化的 SVG 图标要用字重探测字体和按字重生成图标数据的构建脚本，Vue 仓库还没有这套资产流水线
   - 暂缓：[其他:字重图标资产流水线] 随字重变化的 SVG 图标需要字重探测字体和按字重生成图标数据的构建脚本
+  - 已移植：[#657](https://github.com/astryx-vue/astryx-vue/pull/657)。lab 新增 WeightedSVGIcon、WeightedIconSprite、buildWeightedIcon、registerWeightProbe 和 15 个演示图标，探针字体按上游字节内置，上游的 Python 生成脚本不搬
 
 ### v0.7.17
 
@@ -10921,10 +10929,11 @@
   - 不适用：React Server Components 的 'use client' 指令
 - [x] [`41d0d0faf`](https://github.com/meta/astryx/commit/41d0d0faf) fix(Tokenizer): a pick from the focus list keeps focus and the list open (#11031)
   - 已移植：[#544](https://github.com/astryx-vue/astryx-vue/pull/544)。聚焦清单里选一项后焦点和清单保留、下一项高亮，没有可选项或到上限就收起；顺带让 hasEntriesOnFocus 聚焦时真的展开，补测试
-- [ ] [`afa75c2e8`](https://github.com/meta/astryx/commit/afa75c2e8) feat(core): make Tokenizer InputGroup-compatible (#4405)
+- [x] [`afa75c2e8`](https://github.com/meta/astryx/commit/afa75c2e8) feat(core): make Tokenizer InputGroup-compatible (#4405)
   - 暂缓：Vue 版 Tokenizer 不读 InputGroup 上下文：缺组内由组画标签状态、跟随组尺寸、单行滚动轨道、边缘渐隐和禁用时的 Tab 停点，需要单独设计
   - 暂缓：Tokenizer 放进 InputGroup 要先让 Vue 版 Tokenizer 读 InputGroup 上下文（组内不画自己的 Field、跟组尺寸、单行滚动轨道），与 selectors-1 同一缺口
   - 暂缓：[其他:Tokenizer 读 InputGroup 上下文] 缺组内不画自己的 Field、跟组尺寸、单行滚动轨道和边缘渐隐
+  - 已移植：[#657](https://github.com/astryx-vue/astryx-vue/pull/657)。Tokenizer 放进 InputGroup 时不画自己的 Field，跟组的尺寸和禁用，标签和输入留在可横向滚动的单行轨道里并在藏着标签的一侧渐隐
 - [x] [`410f9b627`](https://github.com/meta/astryx/commit/410f9b627) fix(Typeahead): keep dismissed menus closed for late results (#8778)
   - Vue 版已有：关闭列表就让 useAsyncSource 的 enabled 变假，取消防抖和进行中的请求，迟到的结果被丢弃，不会再把关掉的菜单打开
 - [x] [`fa9e7f017`](https://github.com/meta/astryx/commit/fa9e7f017) feat(ComplexSelector): add disabledMessage (#5984)
@@ -11556,19 +11565,22 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`13f199859`](https://github.com/meta/astryx/commit/13f199859) fix(core): defineTheme names where a self-referencing token map is written (#12111)
   - Vue 版已有：同 75ddfd4e8：令牌值不收对象，报错带路径；适配规则用 structuredClone
-- [ ] [`e51ed92f6`](https://github.com/meta/astryx/commit/e51ed92f6) fix(Theme): a system Theme takes the page's color scheme, and Core's stylesheet sets the root to follow the reader (#12102)
+- [x] [`e51ed92f6`](https://github.com/meta/astryx/commit/e51ed92f6) fix(Theme): a system Theme takes the page's color scheme, and Core's stylesheet sets the root to follow the reader (#12102)
   - 暂缓：system 主题跟随页面根 color-scheme：Vue 的 system 固定声明 color-scheme: light dark，并按 OS 偏好或 .dark 类解析；改成跟随页面需要页面根 scheme 的读取与监听设施（含 meta color-scheme），并影响没有引入 reset.css 的现有页面，需单独一批
   - 暂缓：[主题引擎] system 主题跟随页面根 color-scheme，需要页面根 scheme 设施
+  - 已移植：[#650](https://github.com/astryx-vue/astryx-vue/pull/650)。system 的 Theme 不再自己声明 color-scheme，取页面根的配色；useTheme 与 useSyntaxTheme 报告同一种，被强制模式的 Theme 包着时回到跟随读者；主题样式表不再给包装元素写 light dark
 - [x] [`0b4760560`](https://github.com/meta/astryx/commit/0b4760560) fix(core): CodeBlock and Code keep code in its own direction on right-to-left pages (#12130)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`e8c6cc05e`](https://github.com/meta/astryx/commit/e8c6cc05e) fix(Theme): the page root follows the reader only through reset.css, so Core's stylesheet leaves a host's scheme alone (#12247)
+- [x] [`e8c6cc05e`](https://github.com/meta/astryx/commit/e8c6cc05e) fix(Theme): the page root follows the reader only through reset.css, so Core's stylesheet leaves a host's scheme alone (#12247)
   - 暂缓：页面根只经 reset.css 跟随读者，同 e51ed92f6，依赖页面根 scheme 设施
   - 暂缓：[主题引擎] 页面根只经 reset.css 跟随读者，同上
+  - 已移植：[#650](https://github.com/astryx-vue/astryx-vue/pull/650)。页面根只靠 reset.css 和主题样式表的 :root 规则跟随读者，Core 样式表不给根设配色；没有 color-scheme 的页面按浅色算，补文档
 - [x] [`37db386f8`](https://github.com/meta/astryx/commit/37db386f8) fix(table): a narrow header truncates its label so its sort and filter controls stay in the cell (#12312)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`3e58ae0f8`](https://github.com/meta/astryx/commit/3e58ae0f8) fix(Theme): a theme's color-mode blocks under a system Theme that no Theme forces follow the page root's scheme (#12270)
+- [x] [`3e58ae0f8`](https://github.com/meta/astryx/commit/3e58ae0f8) fix(Theme): a theme's color-mode blocks under a system Theme that no Theme forces follow the page root's scheme (#12270)
   - 暂缓：深浅色块在 system 主题下已跟随读者偏好、强制模式与表面（#620）；剩下「跟随页面根 scheme」依赖 e51ed92f6 的页面 scheme 设施
   - 暂缓：[主题引擎] system 主题的深浅色块跟随页面根 scheme，需要页面根 scheme 设施
+  - 已移植：[#650](https://github.com/astryx-vue/astryx-vue/pull/650)。主题的 @dark、@light 组件样式块在 system 根下按页面根画的配色走，根 Theme 把它写在 html 的 data-astryx-scheme 上，没写时仍跟随 prefers-color-scheme
 - [x] [`dda98593d`](https://github.com/meta/astryx/commit/dda98593d) fix(core): the switch thumb stays round, and inherited text takes the theme's body size (#12236)
   - 已移植：[#589](https://github.com/astryx-vue/astryx-vue/pull/589)。Switch 拇指保持圆形；Theme 包装元素的正文字号 theme.css 已有
 - [x] [`7658fcff5`](https://github.com/meta/astryx/commit/7658fcff5) fix(cli): theme build leaves the page's color scheme to the page (#12250)
@@ -11608,9 +11620,10 @@
   - Vue 版已有：table-row 的 backgroundColor 派生变量已在 derivedVars；伪类块与静止规则一样走派生变量展开（componentStyles 的 blockRules）
 - [x] [`31b52d0cb`](https://github.com/meta/astryx/commit/31b52d0cb) chore: land batch 34 (2 pull requests) (#12908)
   - 不适用：开关拇指的宽高派生变量服务上游触屏呈现的静止位；Vue 的拇指由 CSS 按真实盒子画
-- [ ] [`0f67e76cb`](https://github.com/meta/astryx/commit/0f67e76cb) chore: land batch 35 (1 pull requests) (#12907)
+- [x] [`0f67e76cb`](https://github.com/meta/astryx/commit/0f67e76cb) chore: land batch 35 (1 pull requests) (#12907)
   - 暂缓：defineTheme({palette}) 调色板引擎（palette 生成器与映射表约 3400 行）Vue 版没有，需整套移植，单独一个 PR
   - 暂缓：[主题引擎] defineTheme 调色板引擎（palette 生成器与映射表）还没有
+  - 已移植：[#650](https://github.com/astryx-vue/astryx-vue/pull/650)。新入口 core/palette 的 themePalette() 生成调色板并映射成颜色 token，defineTheme({palette}) 接收它，显式 tokens 和 components 仍优先；补测试和中英文档
 - [x] [`6c12793c1`](https://github.com/meta/astryx/commit/6c12793c1) chore: land batch 41 (1 pull requests) (#12916)
   - Vue 版已有：状态色表与说明已由 #517 处理
 - [x] [`476d9063f`](https://github.com/meta/astryx/commit/476d9063f) chore: land batch 63 (3 pull requests) (#12945)
@@ -12032,9 +12045,10 @@
   - 已移植：[#502](https://github.com/astryx-vue/astryx-vue/pull/502)。图标注册表挂到 globalThis，多份副本共享
 - [x] [`09479d9c7`](https://github.com/meta/astryx/commit/09479d9c7) fix(Popover): a touch that pans is not an outside press, even without pointercancel (#11038)
   - 已移植：[#542](https://github.com/astryx-vue/astryx-vue/pull/542)。触摸在层外按下后抬起才关，拖动超过平移距离或被取消就不关；鼠标和笔仍按下即关，补用例
-- [ ] [`08b74222f`](https://github.com/meta/astryx/commit/08b74222f) perf(core): hit areas read no layout during a scroll or a press at rest (#11083)
+- [x] [`08b74222f`](https://github.com/meta/astryx/commit/08b74222f) perf(core): hit areas read no layout during a scroll or a press at rest (#11083)
   - 暂缓：热区的性能重写（滚动时不测量、按压只武装点击后复查、等祖先动画结束再量、子树就地重新分组），只关系到性能、行为不变，留给触屏设施的后续
   - 暂缓：[其他:热区性能重写] 热区的滚动时不测量、按压只武装点击后复查、等祖先动画结束再量，属 hitArea 约 500 行的性能重写，行为不变
+  - 已移植：[#657](https://github.com/astryx-vue/astryx-vue/pull/657)。热区按下时不读矩形只挂点击复查，滚动时不测量，祖先挪盒子的动画播完再量，页面变化只匹配新增子树，点击行为不变
 - [x] [`db3e8334f`](https://github.com/meta/astryx/commit/db3e8334f) fix(core): InputGroupText, Badge and Token keep caller text in its written order under RTL (#10114)
   - 已移植：[#500](https://github.com/astryx-vue/astryx-vue/pull/500)。Token、Badge、InputGroupText 的文字在 RTL 下保持书写顺序
 - [x] [`9600e3500`](https://github.com/meta/astryx/commit/9600e3500) refactor(core): useChatStreamScroll's page-scroller rules move to one owner module (#11160)
@@ -12446,9 +12460,10 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`30b12dd5a`](https://github.com/meta/astryx/commit/30b12dd5a) fix(Item, Token): a control inside a row with its own action, or a token's Remove, rings itself (#8869)
   - 已移植：[#500](https://github.com/astryx-vue/astryx-vue/pull/500)。Token 与 List Item 的焦点环只画一个
-- [ ] [`3e58ae0f8`](https://github.com/meta/astryx/commit/3e58ae0f8) fix(Theme): a theme's color-mode blocks under a system Theme that no Theme forces follow the page root's scheme (#12270)
+- [x] [`3e58ae0f8`](https://github.com/meta/astryx/commit/3e58ae0f8) fix(Theme): a theme's color-mode blocks under a system Theme that no Theme forces follow the page root's scheme (#12270)
   - 暂缓：深浅色块在 system 主题下已跟随读者偏好与表面（#620）；「跟随页面根 scheme」依赖 e51ed92f6 的页面 scheme 设施
   - 暂缓：[主题引擎] system 主题的深浅色块跟随页面根 scheme，需要页面根 scheme 设施
+  - 已移植：[#650](https://github.com/astryx-vue/astryx-vue/pull/650)。主题的 @dark、@light 组件样式块在 system 根下按页面根画的配色走，根 Theme 把它写在 html 的 data-astryx-scheme 上，没写时仍跟随 prefers-color-scheme
 - [x] [`f7ebe6734`](https://github.com/meta/astryx/commit/f7ebe6734) fix(Thumbnail): focusing Open shows one ring, not two (#11613)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`3deff9de7`](https://github.com/meta/astryx/commit/3deff9de7) feat(core): theme seams for the spinner, tree disclosure, number steppers and close buttons (#12156)
@@ -12652,9 +12667,10 @@
 
 ### v0.7.14
 
-- [ ] [`7deca3313`](https://github.com/meta/astryx/commit/7deca3313) feat(lab): SVG icons that follow the surrounding font-weight (#7918)
+- [x] [`7deca3313`](https://github.com/meta/astryx/commit/7deca3313) feat(lab): SVG icons that follow the surrounding font-weight (#7918)
   - 暂缓：WeightedSVGIcon 依赖上游的字重探测字体（generate-weight-probe-font.py 生成）和按字重生成图标数据的构建脚本，Vue 仓库还没有这套资产流水线
   - 暂缓：[其他:字重图标资产流水线] 随字重变化的 SVG 图标需要字重探测字体和按字重生成图标数据的构建脚本
+  - 已移植：[#657](https://github.com/astryx-vue/astryx-vue/pull/657)。lab 新增 WeightedSVGIcon、WeightedIconSprite、buildWeightedIcon、registerWeightProbe 和 15 个演示图标，探针字体按上游字节内置，上游的 Python 生成脚本不搬
 - [x] [`c1a1ea82b`](https://github.com/meta/astryx/commit/c1a1ea82b) fix(core): a tap that wobbles at a scroll edge keeps its click (#10829)
   - 不适用：只改上游测试（自动初筛）
 
