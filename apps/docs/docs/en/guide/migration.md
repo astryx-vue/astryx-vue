@@ -241,6 +241,24 @@ Three values:
 
 **What to do:** `true` becomes nothing or `'close'`. `false` needs a choice: `'block'` stops Escape at this layer, `'ignore'` lets the key travel on.
 
+### List `edgeCompensation="inline"` is now `edge="outset"`
+
+**What changed:** `List` gained one `edge` property for where rows sit against the list's edges: `padded`, `flush`, `outset` and `bleed` (upstream #7592). `edgeCompensation="inline"` is the same thing as `edge="outset"`.
+
+**Before:**
+
+```vue
+<List edge-compensation="inline" />
+```
+
+**Now:**
+
+```vue
+<List edge="outset" />
+```
+
+**What to do:** replace `edgeCompensation="inline"` with `edge="outset"`. The old property still works and sets `edge="outset"`; when both are written, `edge` wins and a development warning appears.
+
 ## Behavior
 
 ### Tab and TabMenu must sit inside TabList, Step must sit inside Stepper

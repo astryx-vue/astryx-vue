@@ -1,5 +1,6 @@
 import type { Dirent } from 'node:fs'
 import { readdir, readFile, stat } from 'node:fs/promises'
+import { homedir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 
 /**
@@ -41,6 +42,28 @@ const LOCKFILES: readonly { file: string, manager: PackageManager }[] = [
 ]
 
 const MANAGERS = new Set<PackageManager>(['pnpm', 'npm', 'yarn', 'bun'])
+
+/**
+ * The folder a project command should work in: the nearest folder at or above
+ * `cwd` that has a package.json. Run from `src/components`, the command still
+ * finds the project's dependencies and writes next to its package.json. The
+ * search stops before the home folder, and falls back to `cwd` when no
+ * package.json is found.
+ */
+export async function findProjectRoot(cwd: string): Promise<string> {
+  const start = resolve(cwd)
+  const home = resolve(homedir())
+  let dir = start
+  while (dir !== home) {
+    if (await exists(join(dir, 'package.json')))
+      return dir
+    const parent = dirname(dir)
+    if (parent === dir)
+      break
+    dir = parent
+  }
+  return start
+}
 
 export async function readProject(cwd: string): Promise<Project> {
   const packageJson = await readPackageJson(cwd)
@@ -169,8 +192,11 @@ export async function readSourceFiles(cwd: string, options: { limit?: number } =
     catch {
       continue
     }
-    for (const entry of entries.sort((a, b) => a.name.localeCompare(b.name))) {
+    for (const entry of entries.sort(compareNames)) {
       if (entry.name.startsWith('.') && entry.name !== '.env')
+        continue
+      // A link can lead into a dependency or VCS tree the walk skips by name.
+      if (entry.isSymbolicLink())
         continue
       const child = relative ? `${relative}/${entry.name}` : entry.name
       if (entry.isDirectory()) {
@@ -188,6 +214,13 @@ export async function readSourceFiles(cwd: string, options: { limit?: number } =
     }
   }
   return files
+}
+
+/** Orders names by code point, so every machine and locale lists files the same way. */
+export function compareNames(a: string | { name: string }, b: string | { name: string }): number {
+  const left = typeof a === 'string' ? a : a.name
+  const right = typeof b === 'string' ? b : b.name
+  return left < right ? -1 : left > right ? 1 : 0
 }
 
 /** Lines of a file that match, one-based, for a report a reader can act on. */

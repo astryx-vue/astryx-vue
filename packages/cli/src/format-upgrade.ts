@@ -22,13 +22,17 @@ export function formatUpgradeReport(report: UpgradeReport, dense: boolean): stri
     ? (zh
         ? `${report.package} ${report.current} → ${report.latest}`
         : `${report.package} ${report.current} → ${report.latest}`)
-    : report.status === 'up-to-date'
+    : report.status === 'cli-older'
       ? (zh
-          ? `${report.package} ${report.current} 已经是最新（这个 CLI 认的版本是 ${report.latest}），不用升级。`
-          : `${report.package} ${report.current} is the latest this CLI knows (${report.latest}). Nothing to upgrade.`)
-      : (zh
-          ? `${report.package} 的版本写法是 ${JSON.stringify(report.current)}，看不出是不是最新。`
-          : `This CLI cannot read the ${report.package} version as a number, so it cannot say whether it is current.`)
+          ? `这个 CLI（认的版本是 ${report.latest}）比项目里的 ${report.package} ${report.current} 旧，没法判断要不要升级。请先把 CLI 升到最新再运行。`
+          : `This CLI (it knows ${report.latest}) is older than the project's ${report.package} ${report.current}, so it cannot say what to upgrade. Update the CLI, then run this again.`)
+      : report.status === 'up-to-date'
+        ? (zh
+            ? `${report.package} ${report.current} 已经是最新（这个 CLI 认的版本是 ${report.latest}），不用升级。`
+            : `${report.package} ${report.current} is the latest this CLI knows (${report.latest}). Nothing to upgrade.`)
+        : (zh
+            ? `${report.package} 的版本写法是 ${JSON.stringify(report.current)}，看不出是不是最新。`
+            : `This CLI cannot read the ${report.package} version as a number, so it cannot say whether it is current.`)
   lines.push(head, '')
 
   if (report.status !== 'outdated') {

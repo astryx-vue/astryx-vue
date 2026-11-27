@@ -1,5 +1,31 @@
 # @astryx-vue/cli
 
+## 0.6.4
+
+### Patch Changes
+
+- [#602](https://github.com/astryx-vue/astryx-vue/pull/602) [`0253ff2`](https://github.com/astryx-vue/astryx-vue/commit/0253ff2970a2622d5dd50c3444fb208a59efd815) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - upgrade、init、doctor 在项目的任意子目录里运行，也会回到有 package.json 的项目根；项目的 core 比 CLI 新时，upgrade 说明是 CLI 太旧，不再说"已是最新"；扫描文件按固定顺序、不穿过符号链接。升级指南新增 List 的 `edgeCompensation="inline"` 改名 `edge="outset"`。
+
+## 0.6.3
+
+### Patch Changes
+
+- [#598](https://github.com/astryx-vue/astryx-vue/pull/598) [`ec208da`](https://github.com/astryx-vue/astryx-vue/commit/ec208dae73420d8a2d053b238b5b6dde01c8c960) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 聊天输入对齐上游：ChatComposerInput 新增 `enterKeyHint`（默认 `send`，触屏键盘的回车键显示“发送”）；禁用后编辑区仍留在 Tab 顺序里、不丢焦点，打字、粘贴、拖入文件、命令式句柄和调用方回调都不再生效，触发菜单随之收起；点进编辑区不再把打开的触发菜单关掉，点击把光标挪出查询时菜单会跟着关；触发菜单的“Searching…”不再靠没有 live 角色的加载行，改走共用忙碌播报，每次搜索只念一次；ChatComposer 的状态条改由渲染文字播报，类型变化算新的一次，页面加载前已显示的状态保持安静，点在打开着的 Tooltip 或 HoverCard 里不再抢走输入框焦点；ChatMessageList 顶部加载的转圈静音，由列表播报一次；长文本粘贴成令牌只触发一次 `change`；输入法组字时光标落进文本节点，不再把第一个拼音字母直接上屏；ChatSystemMessage、ChatMessageList、ChatLayout 的空插槽判断改为看是否真的渲染出内容。
+
+- [#600](https://github.com/astryx-vue/astryx-vue/pull/600) [`33cec03`](https://github.com/astryx-vue/astryx-vue/commit/33cec037092f04970b22a9265f365660f88c95a7) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 聊天布局和样式对齐上游：ChatLayout 用外部 `scrollRef` 时，消息区底部留白加上固定输入区的高度，最新一条消息滚到底时落在输入区上面；`scrollRef` 是整页滚动者时，滚动按钮能正确出现、读者上滑会停止跟随、`scrollToMessage` 从视口顶部量起；跟随末尾期间关掉浏览器的滚动锚定，不再靠隐藏滚动条的属性。头像顶部偏移只看消息自己的内容，嵌套消息不再继承外层的偏移；消息列表的键盘焦点环画在列表盒子里面，用共享焦点环令牌；输入区页脚里调用方的操作换行、发送操作始终留在输入区内；抽屉的圆角跟着输入区自己的圆角；发送键在输入区里保持圆形；空的编辑区不会再塌成 0 高度；粗指针下输入区的聚焦外观立刻显示。新增 `useChatDictation`、`useSpeechRecognition`、`useChatPasteAsToken` 的文档页。
+
+- [#593](https://github.com/astryx-vue/astryx-vue/pull/593) [`57250a9`](https://github.com/astryx-vue/astryx-vue/commit/57250a95eac0080bc86f795d96e5daf2b50dc0b0) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 文字输入框对齐上游：TextInput、TextArea、FileInput 禁用后仍留在 Tab 顺序里（`aria-disabled`、只读），除聚焦和失焦外不运行调用方的处理函数，键盘聚焦时画聚焦环；TextInput、TextArea 新增 `enterKeyHint`、`inputMode`、`autoCapitalize`、`hasAutoCorrect`（TextInput 另有 `hasSpellCheck`，类型新增 `search`、`tel`、`url`），`startIcon` 可传语义图标名；TextArea 新增 `htmlMaxLength`；只写 error 不写说明时给读屏一句兜底文字；点清除按钮在点按里聚焦（iOS 弹出键盘）；加载圈排在清除按钮里侧；放大字号时 TextInput 跟着长高；粗指针下聚焦外观立刻显示。FileInput 忙碌时不再接受新的选择，忙碌只播报一次，清除后焦点回触发按钮，调用方的 `aria-describedby` 接到触发按钮，表单默认必填也念出「必填」，提示气泡状态在拖放模式和上传中都保留，拖放区默认把状态放到下面。表单的默认必填不再让没勾的复选框和关着的开关变成必填。导出 `FieldStatusPlacement`、`EnterKeyHint`、`InputMode`、`AutoCapitalize` 类型。
+
+- [#595](https://github.com/astryx-vue/astryx-vue/pull/595) [`500b7bb`](https://github.com/astryx-vue/astryx-vue/commit/500b7bb7ccab6c36627ae837180dbbe8f75b0f5c) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - NumberInput 对齐上游：回车或失焦时，读不成数字、整数字段里的小数、`min` 大于 `max` 时的任何数不再被悄悄丢掉，而是留在框里，字段显示「Invalid number」并只念一次；打字过程中什么都不标。新增 `entryErrorChange` 事件（带 `kind`、`text`、`value`）和 `entryErrorBehavior`（数字框两个值时机相同，不读 FormLayout 默认值）。禁用的 NumberInput 仍留在 Tab 顺序里（`aria-disabled`、只读、不运行调用方处理函数），加减按钮用 `aria-disabled`；用鼠标或笔按住按钮会重复步进、松手只提交一次；触屏上加减按钮隐藏；有 `formatValue` 时 Tab 进来仍是全选；`startIcon` 可传语义图标名；步进按钮带 `astryx-number-input-stepper` 主题挂点和 `data-direction`；强制颜色下聚焦可见。Pagination 的页码框改用 NumberInput：超过最后一页收到最后一页，被拒的输入留在框里，说明显示在状态图标上，框会变宽装下图标。TimeInput、DateInput 与 NumberInput 共用同一份拒绝状态与汇报逻辑。 InputGroup 的状态说明显示在整组下面，整组边框不再随状态变色（和上游一致），主题可按 `data-status` 给这一行上样式。
+
+- [#596](https://github.com/astryx-vue/astryx-vue/pull/596) [`d4a40a6`](https://github.com/astryx-vue/astryx-vue/commit/d4a40a6b1c2dc0bf5b3073f1786c2f2eb6a41a9c) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `Popover` 新增 `presentation` 属性：`'popover'`（默认，照旧锚在触发器旁）、`'bottom-sheet'`（放进模态底部弹层）和 `'adaptive'`（手机这类紧凑触屏上用底部弹层，其余用浮层）。底部弹层由 `label` 命名，没写时用触发器的文字；总能轻点外面或下滑关闭，Escape 跟着 `hasEscapeDismiss`；每次打开焦点落到第一个内容控件，界面在打开时选定、保持到关闭，并且只在可能用到时才加载。
+
+- [#597](https://github.com/astryx-vue/astryx-vue/pull/597) [`c66168c`](https://github.com/astryx-vue/astryx-vue/commit/c66168c00e9f06435ae85cf4e170e7d178ca54bb) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 用手指打开的 Popover 像 iOS 一样从触发器里长出来：从浮层和触发器相接的那一点放大，第一帧就能看到内容，长出期间的点按会被忽略；关闭时缩回触发器。缩回播在浮层的一份静态副本上，副本保留浮层的内边距、边框和颜色。用鼠标打开时保持原来的滑入。
+
+- [#599](https://github.com/astryx-vue/astryx-vue/pull/599) [`627d55a`](https://github.com/astryx-vue/astryx-vue/commit/627d55a2bd93c04b03009fbf92783f5de983d615) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 手指下打开的 AlertDialog 像 iOS 系统弹窗一样从 1.2 倍大小缩到原大，弹窗和遮罩一起淡入，按主题的对话框进场时序播放，进场结束前的点按会被忽略。关闭时先按退场时序淡出，淡出期间内容不接收输入和焦点，淡出播完才真正关闭；途中重新打开从当前的样子折返。用鼠标时保持原来的 CSS 进场和立即关闭。
+
+- [#601](https://github.com/astryx-vue/astryx-vue/pull/601) [`ee32ea2`](https://github.com/astryx-vue/astryx-vue/commit/ee32ea2a72a6a69f76fee6b511bdea0c5ff29793) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - DropdownMenu 的进场换成锚定浮层共用的 CSS 进场：从触发器那一侧滑进来，以菜单和触发器相接的那一点为原点放大，减少动态效果时手指下只淡入。在手机和平板上，菜单还在进场时落下的点按和拖动会被忽略，和 iOS 一样：菜单照常打开、保持打开、焦点不动，下面的东西也不会有反应；打开菜单的那根手指照样能选中一行。键盘、辅助技术和鼠标不受影响。
+
 ## 0.6.2
 
 ### Patch Changes
