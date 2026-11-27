@@ -66,4 +66,4 @@ The component also exposes focus and blur methods, so a button outside the field
 
 `createPowerSearchConfig` accepts string, number, boolean, date, enum, enum list, and string list. Strings can contain, start with, end with, or equal a value. Numbers compare magnitude. Dates can be before, after, or between. A boolean does not ask for another value.
 
-A hand-written config can also use time, a relative date, an entity list, a custom editor, and nested filters. A custom editor needs a way to read the value back as text.
+A hand-written config can also use time, a relative date, an entity list, a custom editor, and nested filters. A relative date is picked from a fixed set: 1, 3, 7, 14, or 30 days, 1, 2, or 4 weeks, and 1, 3, 6, or 12 months, in both directions. Values look like `3d_ago` and `2w_from_now`. Set `isPastAllowed` or `isFutureAllowed` to false to drop that direction. A custom editor needs a way to read the value back as text.

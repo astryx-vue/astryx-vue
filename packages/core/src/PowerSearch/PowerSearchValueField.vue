@@ -8,7 +8,8 @@ import { createStaticSource } from '../composables/useAsyncSource.js'
 import DateInput from '../DateInput/DateInput.vue'
 import DateRangeInput from '../DateRangeInput/DateRangeInput.vue'
 import DateTimeInput from '../DateTimeInput/DateTimeInput.vue'
-import { useAstryxLocale } from '../locale/context.js'
+import { useAstryxLocale, useComponentMessages } from '../locale/context.js'
+import { powerSearchSheetMessages } from '../locale/messages/power-search-sheet.js'
 import MultiSelector from '../MultiSelector/MultiSelector.vue'
 import NumberInput from '../NumberInput/NumberInput.vue'
 import { resolveNumberInputCommit } from '../NumberInput/numberInputCommit.js'
@@ -19,6 +20,7 @@ import Tokenizer from '../Tokenizer/Tokenizer.vue'
 import Typeahead from '../Typeahead/Typeahead.vue'
 import { dateTimeLocalToUnix, rangePartToIso, unixToDateTimeLocal } from './dates.js'
 import { absoluteRange, isDateOnlyOperator, pickerDateToUnix, resolveDateZone, unixToPickerDate } from './dateZone.js'
+import { buildRelativeDateOptions } from './relativeDates.js'
 
 defineOptions({ name: 'AstryxPowerSearchValueField' })
 
@@ -37,6 +39,7 @@ const emit = defineEmits<{
 
 const text = computed(() => props.messages.value)
 const locale = useAstryxLocale()
+const sheetMessages = useComponentMessages({ powerSearchSheet: powerSearchSheetMessages })
 const numberDecision = ref<NumberInputCommitDecision | null>(null)
 
 function rememberNumberDraft(event: Event): void {
@@ -95,10 +98,8 @@ const enumOptions = computed(() => {
 })
 
 const relativeOptions = computed(() => props.operatorValue.type === 'date_relative'
-  ? []
-  : props.operatorValue.type === 'date_range'
-    ? (props.operatorValue.relativeDatePresets ?? []).map(preset => ({ value: preset.value, label: preset.label }))
-    : [])
+  ? buildRelativeDateOptions(props.operatorValue, sheetMessages.value.powerSearchSheet)
+  : [])
 
 const dateOnly = computed(() => isDateOnlyOperator(props.operatorValue))
 /** 日历日按 `timeZone` 里的那一天读写；没给时区就是 UTC 的那一天。 */
@@ -306,26 +307,16 @@ function applyPreset(range: DateTimeRange): void {
       entry-error-behavior="complete"
       @update:model-value="onAbsoluteDateTime"
     />
-    <div v-else-if="operatorValue.type === 'date_relative'" class="astryx-power-search-value__stack">
-      <Selector
-        v-if="relativeOptions.length > 0"
-        :label="text.relativeDate"
-        is-label-hidden
-        :options="relativeOptions"
-        :model-value="relativeValue"
-        :placeholder="text.selectPlaceholder"
-        :disabled="disabled"
-        @update:model-value="value => emit('change', { type: 'date_relative', value: String(value ?? '') }, true)"
-      />
-      <TextInput
-        :label="text.relativeDate"
-        is-label-hidden
-        :model-value="relativeValue"
-        :placeholder="text.enterValuePlaceholder"
-        :disabled="disabled"
-        @update:model-value="value => emit('change', { type: 'date_relative', value: String(value ?? '') })"
-      />
-    </div>
+    <Selector
+      v-else-if="operatorValue.type === 'date_relative'"
+      :label="text.relativeDate"
+      is-label-hidden
+      :options="relativeOptions"
+      :model-value="relativeValue || null"
+      :placeholder="text.selectPlaceholder"
+      :disabled="disabled"
+      @update:model-value="value => emit('change', { type: 'date_relative', value: String(value ?? '') }, true)"
+    />
     <div v-else-if="operatorValue.type === 'date_range'" class="astryx-power-search-value__stack">
       <div v-if="operatorValue.intervalDatePresets?.length" class="astryx-power-search-presets" role="group" :aria-label="text.date">
         <button

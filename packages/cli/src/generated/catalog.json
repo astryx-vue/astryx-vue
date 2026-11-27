@@ -41460,7 +41460,7 @@
           },
           {
             "heading": "Field definitions",
-            "text": "`createPowerSearchConfig` accepts string, number, boolean, date, enum, enum list, and string list. Strings can contain, start with, end with, or equal a value. Numbers compare magnitude. Dates can be before, after, or between. A boolean does not ask for another value.\n\nA hand-written config can also use time, a relative date, an entity list, a custom editor, and nested filters. A custom editor needs a way to read the value back as text."
+            "text": "`createPowerSearchConfig` accepts string, number, boolean, date, enum, enum list, and string list. Strings can contain, start with, end with, or equal a value. Numbers compare magnitude. Dates can be before, after, or between. A boolean does not ask for another value.\n\nA hand-written config can also use time, a relative date, an entity list, a custom editor, and nested filters. A relative date is picked from a fixed set: 1, 3, 7, 14, or 30 days, 1, 2, or 4 weeks, and 1, 3, 6, or 12 months, in both directions. Values look like `3d_ago` and `2w_from_now`. Set `isPastAllowed` or `isFutureAllowed` to false to drop that direction. A custom editor needs a way to read the value back as text."
           }
         ],
         "zh": [
@@ -41474,7 +41474,7 @@
           },
           {
             "heading": "字段定义",
-            "text": "`createPowerSearchConfig` 接受字符串、数字、布尔、日期、枚举、枚举列表和字符串列表。字符串有包含、开头、结尾和等于。数字有大小比较。日期有早于、晚于和介于。布尔值不需要再填值。\n\n手写配置时还可以使用时间、相对日期、实体列表、自定义编辑器和嵌套条件。自定义编辑器要同时提供怎么把值读成文字。"
+            "text": "`createPowerSearchConfig` 接受字符串、数字、布尔、日期、枚举、枚举列表和字符串列表。字符串有包含、开头、结尾和等于。数字有大小比较。日期有早于、晚于和介于。布尔值不需要再填值。\n\n手写配置时还可以使用时间、相对日期、实体列表、自定义编辑器和嵌套条件。相对日期从一组固定选项里挑：1、3、7、14、30 天，1、2、4 周，1、3、6、12 个月，前后两个方向都有，值写成 `3d_ago`、`2w_from_now` 这样；把 `isPastAllowed` 或 `isFutureAllowed` 设成 false 就去掉对应方向。自定义编辑器要同时提供怎么把值读成文字。"
           }
         ]
       },

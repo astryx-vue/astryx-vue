@@ -52,6 +52,42 @@ const editorNames = [
   'apply',
 ] as const
 
+const sheetNames = [
+  'filtersTitle',
+  'addFilter',
+  'noFilters',
+  'noFiltersInDraft',
+  'noFiltersDescription',
+  'clearAll',
+  'clearAllTitle',
+  'clearAllDescription',
+  'clearAllConfirm',
+  'clearAllCancel',
+  'done',
+  'discardTitle',
+  'discardDescription',
+  'keepEditing',
+  'discardConfirm',
+  'search',
+  'searchResults',
+  'searchFields',
+  'searchFieldsPlaceholder',
+  'ungroupedFields',
+  'noMatchingFields',
+  'tryDifferentSearch',
+  'noResults',
+  'filterUnavailable',
+] as const
+
+const sheetRelativeNames = [
+  'relativeDaysAgo',
+  'relativeDaysFromNow',
+  'relativeWeeksAgo',
+  'relativeWeeksFromNow',
+  'relativeMonthsAgo',
+  'relativeMonthsFromNow',
+] as const
+
 function namedTargets(keyPrefix: string, pathPrefix: string, names: readonly string[]): UpstreamMapPart {
   return Object.fromEntries(names.map(name => [`${keyPrefix}.${name}`, [{ path: `${pathPrefix}.${name}` }]]))
 }
@@ -72,6 +108,14 @@ export const searchUpstreamMap: UpstreamMapPart = {
   ...namedTargets('@astryx.powersearch.editor', 'powerSearch.editor', editorNames),
   ...namedTargets('@astryx.powersearch.operator', 'powerSearch.operators', operatorNames),
   ...namedTargets('@astryx.powersearch.valueEditor', 'powerSearch.value', valueNames),
+  ...namedTargets('@astryx.powersearch.sheet', 'powerSearchSheet', sheetNames),
+  ...Object.fromEntries(sheetRelativeNames.map(name => [
+    `@astryx.powersearch.sheet.${name}`,
+    [{ path: `powerSearchSheet.${name}`, args: ['count'] }],
+  ])),
+  '@astryx.powersearch.sheet.removeFilter': [{ path: 'powerSearchSheet.removeFilter', args: ['field'] }],
+  '@astryx.powersearch.sheet.fieldOperator': [{ path: 'powerSearchSheet.fieldOperator', args: ['field', 'operator'] }],
+  '@astryx.powersearch.sheet.labelValue': [{ path: 'powerSearchSheet.labelValue', args: ['label', 'value'] }],
 
   '@astryx.commandPalette.label': [{ path: 'commandPalette.label' }],
   '@astryx.commandPalette.emptySearch': [

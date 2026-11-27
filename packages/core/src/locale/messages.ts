@@ -39,6 +39,7 @@ import type { NumberInputMessages } from './messages/number-input.js'
 import type { OutlineMessages } from './messages/outline.js'
 import type { PaginationMessages } from './messages/pagination.js'
 import type { PopoverMessages } from './messages/popover.js'
+import type { PowerSearchSheetMessages } from './messages/power-search-sheet.js'
 import type { PowerSearchMessages } from './messages/power-search.js'
 import type { RichTextEditorMessages } from './messages/rich-text-editor.js'
 import type { SelectorMessages } from './messages/selector.js'
@@ -100,6 +101,7 @@ import { numberInputMessages } from './messages/number-input.js'
 import { outlineMessages } from './messages/outline.js'
 import { paginationMessages } from './messages/pagination.js'
 import { popoverMessages } from './messages/popover.js'
+import { powerSearchSheetMessages } from './messages/power-search-sheet.js'
 import { powerSearchMessages } from './messages/power-search.js'
 import { richTextEditorMessages } from './messages/rich-text-editor.js'
 import { selectorMessages } from './messages/selector.js'
@@ -162,6 +164,7 @@ export interface AstryxMessages {
   outline: OutlineMessages
   pagination: PaginationMessages
   popover: PopoverMessages
+  powerSearchSheet: PowerSearchSheetMessages
   powerSearch: PowerSearchMessages
   richTextEditor: RichTextEditorMessages
   selector: SelectorMessages
@@ -226,6 +229,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     outline: outlineMessages.en,
     pagination: paginationMessages.en,
     popover: popoverMessages.en,
+    powerSearchSheet: powerSearchSheetMessages.en,
     powerSearch: powerSearchMessages.en,
     richTextEditor: richTextEditorMessages.en,
     selector: selectorMessages.en,
@@ -288,6 +292,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     outline: outlineMessages['zh-CN'],
     pagination: paginationMessages['zh-CN'],
     popover: popoverMessages['zh-CN'],
+    powerSearchSheet: powerSearchSheetMessages['zh-CN'],
     powerSearch: powerSearchMessages['zh-CN'],
     richTextEditor: richTextEditorMessages['zh-CN'],
     selector: selectorMessages['zh-CN'],
