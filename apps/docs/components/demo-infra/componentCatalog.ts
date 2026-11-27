@@ -1,4 +1,4 @@
-import type { CatalogEntry, DemoMeta } from './demoMeta'
+import type { CatalogEntry, ComponentDeprecation, DemoMeta } from './demoMeta'
 import type { DocsLocale } from './docs-i18n'
 import type { ComponentGroup } from './groups'
 import type { SidebarItem } from './sidebarTree'
@@ -33,6 +33,11 @@ export function isComponentSlug(value: string): value is ComponentSlug {
 export function componentName(locale: DocsLocale, slug: ComponentSlug): string {
   const entry = COMPONENT_CATALOG.find(item => item.slug === slug)
   return entry === undefined ? slug : entry[locale]
+}
+
+/** 文档里声明了废弃的组件返回它的废弃信息，其余返回 undefined。 */
+export function componentDeprecation(slug: string): ComponentDeprecation | undefined {
+  return COMPONENT_CATALOG.find(item => item.slug === slug)?.deprecated
 }
 
 export interface CatalogGroup {

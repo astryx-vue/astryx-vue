@@ -3,6 +3,7 @@ import type { DocsLocale } from './docs-i18n'
 import { computed } from 'vue'
 import { componentCardDemos } from '../demos/registry'
 import { catalogGroups } from './componentCatalog'
+import DeprecationBadge from './DeprecationBadge.vue'
 import { localePath } from './docs-i18n'
 import { LAB_COMPONENTS } from './labCatalog'
 import LabPreviewFit from './LabPreviewFit.vue'
@@ -15,7 +16,7 @@ const groups = computed(() => catalogGroups(props.locale).map(group => ({
   id: group.id,
   title: group.title,
   cards: group.entries.flatMap(entry => componentCardDemos[entry.slug]
-    ? [{ demo: componentCardDemos[entry.slug], name: entry[props.locale], slug: entry.slug }]
+    ? [{ demo: componentCardDemos[entry.slug], name: entry[props.locale], slug: entry.slug, isDeprecated: entry.deprecated !== undefined }]
     : []),
 })).filter(group => group.cards.length > 0))
 </script>
@@ -37,7 +38,10 @@ const groups = computed(() => catalogGroups(props.locale).map(group => ({
               <VueDemoHost :class-name="card.demo.className" :component="card.demo.component" :data-kind="card.demo.dataKind" />
             </div>
           </div>
-          <a class="component-card__name" :href="localePath(locale, `/components/${card.slug}`)">{{ card.name }}</a>
+          <div class="component-card__title">
+            <a class="component-card__name" :href="localePath(locale, `/components/${card.slug}`)">{{ card.name }}</a>
+            <DeprecationBadge v-if="card.isDeprecated" :locale="locale" />
+          </div>
         </article>
       </div>
     </section>
@@ -62,7 +66,9 @@ const groups = computed(() => catalogGroups(props.locale).map(group => ({
               </LabPreviewFit>
             </div>
           </div>
-          <a class="component-card__name" :href="localePath(locale, `/lab/${card.slug}/`)">{{ card.name }}</a>
+          <div class="component-card__title">
+            <a class="component-card__name" :href="localePath(locale, `/lab/${card.slug}/`)">{{ card.name }}</a>
+          </div>
         </article>
       </div>
     </section>

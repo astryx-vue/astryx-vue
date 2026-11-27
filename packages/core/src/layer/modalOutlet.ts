@@ -71,19 +71,20 @@ export function createModalOutletHandle(): { attach: (dialog: HTMLDialogElement)
 }
 
 /**
- * 非模态的顶层元素（无遮罩的抽屉）每进入一次顶层就加一。
+ * 不经过挂载点清单就进入顶层的次数：无遮罩的抽屉进入顶层，或者底部面板叠放时为保住顺序把对话框
+ * 关了又重新呈现，都加一。
  *
- * 顶层里后进去的画在上面。toast 视口比抽屉先进顶层时会被它盖住，所以抽屉进去后
- * 报一声，视口重新进一次顶层，又排回最上面。模态层不用报：它们走上面的挂载点清单。
+ * 顶层里后进去的画在上面。toast 视口比它们先进顶层时会被盖住（包括视口挂在那个被重新呈现的对话框
+ * 里的时候），所以它们进去后报一声，视口重新进一次顶层，又排回最上面。
  */
 const topLayerEntries = shallowRef(0)
 
-/** 非模态的顶层元素刚进入顶层时调用。 */
+/** 有元素不经过挂载点清单进入顶层时调用。 */
 export function notifyTopLayerEntry(): void {
   topLayerEntries.value++
 }
 
-/** 非模态顶层进入的计数。只用来监听变化。 */
+/** 顶层进入的计数。只用来监听变化。 */
 export function useTopLayerEntries(): Readonly<Ref<number>> {
   return topLayerEntries
 }

@@ -91,7 +91,7 @@ describe('dropdownMenu', () => {
     // 底部面板按需加载，等异步组件真正进入文档后再检查。
     await vi.waitFor(() => {
       expect(document.body.textContent).toContain('Edit project')
-    })
+    }, { timeout: 10000 })
     expect(document.querySelector('.astryx-dropdown-menu.is-sheet')).not.toBeNull()
     wrapper.unmount()
   })

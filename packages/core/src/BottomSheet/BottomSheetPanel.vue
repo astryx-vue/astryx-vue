@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import type { VNode } from 'vue'
+import type { BottomSheetPanelMotion, BottomSheetPanelState } from './panelState.js'
 import type { ScrimFade } from './sheetDragExit.js'
-import type { BottomSheetHeight, BottomSheetMotion, BottomSheetPadding, BottomSheetSnapPoint, BottomSheetState } from './types.js'
+import type { BottomSheetReplacedMotion } from './stack/stackState.js'
+import type { BottomSheetHeight, BottomSheetPadding, BottomSheetSnapPoint } from './types.js'
 import { computed, onMounted, onUpdated, useAttrs, useTemplateRef, watch } from 'vue'
 import { attachScrollKeyboardDelegation } from '../composables/internal/scrollKeyboardDelegation.js'
 import { useMobileKeyboard } from '../keyboard/useMobileKeyboard.js'
@@ -10,6 +12,7 @@ import { resetLayerScopedContext } from '../layer/scopedProvide.js'
 import { provideLayoutContainer } from '../Layout/context.js'
 import { defaultPrefersReducedMotion } from '../motion/animator'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
+import { motionForPanelState } from './panelState.js'
 import { dragExitFade, playDragExit, resetDragExit, supportsWebAnimations } from './sheetDragExit.js'
 import { waitForTransition } from './sheetTransition.js'
 import { resolveSnapPoints } from './snapOffsets.js'
@@ -19,7 +22,11 @@ import { isSizedByCaller, useSheetReserve } from './useSheetReserve.js'
 defineOptions({ name: 'AstryxBottomSheetPanel' })
 
 const props = withDefaults(defineProps<{
-  state: BottomSheetState
+  state: BottomSheetPanelState
+  /** 被替换的面板（`retained`）正在走的交接动作。 */
+  retainedMotion?: BottomSheetReplacedMotion
+  /** 被替换的面板向下对齐的像素。 */
+  alignmentOffset?: number
   label: string
   height?: BottomSheetHeight | number | string
   padding?: BottomSheetPadding
@@ -28,6 +35,8 @@ const props = withDefaults(defineProps<{
   /** Whether the host has locked page scrolling (a modal, scrim-backed sheet). */
   isPageScrollLocked?: boolean
 }>(), {
+  retainedMotion: 'covered',
+  alignmentOffset: 0,
   height: 'capped',
   padding: undefined,
   snapPoints: undefined,
@@ -38,8 +47,8 @@ const props = withDefaults(defineProps<{
 const emit = defineEmits<{
   dismiss: []
   scrimOpacity: [opacity: number]
-  motionStart: [motion: BottomSheetMotion]
-  motionComplete: [motion: BottomSheetMotion]
+  motionStart: [motion: BottomSheetPanelMotion]
+  motionComplete: [motion: BottomSheetPanelMotion]
   snap: [visibleHeight: number]
   scrimFade: [fade: ScrimFade | null]
 }>()
@@ -68,6 +77,10 @@ const body = useTemplateRef<HTMLElement>('body')
 const content = useTemplateRef<HTMLElement>('content')
 useScrollbars(body)
 const isInteractive = computed(() => props.state === 'open')
+const isRetained = computed(() => props.state === 'retained')
+const motion = computed(() => motionForPanelState(props.state, props.retainedMotion))
+// 减弱动效时被替换的面板不往下对齐（那是位移），原地淡出。
+const retainedOffset = computed(() => isRetained.value && !defaultPrefersReducedMotion() ? props.alignmentOffset : 0)
 const attrs = useAttrs()
 const reserve = useSheetReserve(computed(() => props.state !== 'hidden'), () => isSizedByCaller(attrs))
 
@@ -146,6 +159,14 @@ const panelStyle = computed<Record<string, string | undefined>>(() => {
     style.transform = gestures.panelTransform.value
     style.height = gestures.panelHeight.value
   }
+  else if (isRetained.value) {
+    style.height = gestures.panelHeight.value
+    const offset = retainedOffset.value
+    if (offset > 0)
+      style.transform = [gestures.panelTransform.value, `translateY(${offset}px)`].filter(Boolean).join(' ')
+    else
+      style.transform = gestures.panelTransform.value
+  }
   else if (props.state === 'exiting') {
     style.height = gestures.panelHeight.value
     if (holdsDragClose.value)
@@ -165,12 +186,18 @@ let cancelMotionWait: (() => void) | null = null
 /** The element a swipe's close moved on the animator, until the sheet is hidden. */
 let dragExitElement: HTMLElement | null = null
 
-function waitForMotion(motion: BottomSheetMotion): void {
+function waitForMotion(motion: BottomSheetPanelMotion, isReactivated: boolean): void {
   cancelMotionWait?.()
   emit('motionStart', motion)
   const complete = (): void => {
     cancelMotionWait = null
     emit('motionComplete', motion)
+  }
+  // 淡出途中又打开的面板就在该在的位置，进场一开始就走完了。
+  if (motion === 'entering' && isReactivated) {
+    cancelMotionWait = null
+    complete()
+    return
   }
   const element = panel.value
   const exit = playedDragExit.value
@@ -179,19 +206,20 @@ function waitForMotion(motion: BottomSheetMotion): void {
     cancelMotionWait = playDragExit(element, exit, { onSettled: () => emit('scrimFade', null), complete })
     return
   }
-  // A reduced-motion swipe close fades where it is, so its end is the fade's.
-  const property = motion === 'exiting' && isCrossFade.value ? 'opacity' : 'transform'
+  // 淡出看透明度，进场、对齐、退场看位移。减弱动效下手指拖走的退场原地淡出，也看透明度。
+  const property = motion === 'fading' || (motion === 'exiting' && isCrossFade.value) ? 'opacity' : 'transform'
   cancelMotionWait = waitForTransition(element, property, complete)
 }
 
-watch(() => props.state, (state) => {
-  if (state === 'open' || state === 'exiting') {
-    waitForMotion(state === 'open' ? 'entering' : 'exiting')
+watch(() => [motion.value, props.state] as const, ([next, state], [previous, previousState]) => {
+  if (next != null) {
+    if (next !== previous)
+      waitForMotion(next, previousState === 'retained')
     return
   }
   cancelMotionWait?.()
   cancelMotionWait = null
-  if (dragExitElement != null) {
+  if (state === 'hidden' && dragExitElement != null) {
     resetDragExit(dragExitElement)
     dragExitElement = null
   }
@@ -223,6 +251,7 @@ defineExpose({
     ref="panel"
     class="astryx-bottom-sheet astryx-layer"
     :data-state="state"
+    :data-motion="isRetained ? retainedMotion : undefined"
     :data-height="heightKind"
     :data-dragging="gestures.isDragging.value || undefined"
     :data-reconciling="gestures.isReconciling.value || undefined"
