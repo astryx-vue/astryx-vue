@@ -37,6 +37,7 @@ const LAYERS = [
   ['typeahead.css', '.astryx-typeahead-listbox'],
   ['dropdown-menu.css', '.astryx-dropdown-menu'],
   ['dropdown-menu.css', '.astryx-dropdown-menu-popover'],
+  ['more-menu.css', '.astryx-more-menu__layer'],
 ] as const
 
 describe('the anchored layer entrance', () => {

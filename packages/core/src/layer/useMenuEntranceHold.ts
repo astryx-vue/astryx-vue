@@ -2,13 +2,13 @@
  * @file useMenuEntranceHold.ts
  * @input 菜单浮层元素、浮层是否显示着
  * @output useMenuEntranceHold：手机和平板上，菜单进场期间手指的点按和拖动被忽略
- * @position DropdownMenu 的进场暂挡（对应上游 DropdownMenu 的 holdEntrance），
- *   建在 `layer/holdEntranceInput.ts` 上
+ * @position DropdownMenu 和 MoreMenu 锚定浮层的进场暂挡（对应上游 DropdownMenu 的
+ *   holdEntrance，上游 MoreMenu 包着 DropdownMenu 所以同样有），建在 `holdEntranceInput.ts` 上
  */
 
 import type { Ref } from 'vue'
 import { nextTick, onBeforeUnmount, watch } from 'vue'
-import { holdEntranceInput } from '../layer/holdEntranceInput.js'
+import { holdEntranceInput } from './holdEntranceInput.js'
 
 /**
  * 浮层一显示就开始暂挡，直到它的 CSS 进场播完，和 UIMenu 一样：这期间落下的手指
@@ -31,7 +31,7 @@ export function useMenuEntranceHold(layer: Readonly<Ref<HTMLElement | null>>, is
     if (element == null || (wasShown && element === previous))
       return
     stop()
-    // 浮层的 v-show 在菜单框架这一轮的更新里才生效：等它显示出来，进场动画才列得出来。
+    // 浮层的显示（v-show）可能在这一轮更新里才生效：等它显示出来，进场动画才列得出来。
     void nextTick(() => {
       if (!isUnmounted && release == null && isShown.value && layer.value === element)
         release = holdEntranceInput(element)
