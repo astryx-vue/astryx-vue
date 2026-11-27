@@ -168,6 +168,13 @@
 
   /* 标出了语言的代码块，顶部给标题栏留位置：标题栏上下各 8px 加一个小号控件，再加正文的 12px。
      不写进 padding 简写里，是为了让「标题栏占多高」这一件事只在这里出现一次。 */
+  /* 没写语言的代码块没有标题栏，复制按钮在右上角：右边留出和 core CodeBlock 一样宽的一列（8px、小号控件、8px），
+     长行折在按钮左边，不从按钮底下穿过。 */
+  .astryx-richtext__code:not([data-language]),
+  .astryx-richtext__code[data-language='plaintext'] {
+    padding-inline-end: calc(var(--astryx-spacing-4, 16px) + var(--astryx-size-element-sm, 24px) + 2 * var(--astryx-spacing-2, 8px));
+  }
+
   .astryx-richtext__code[data-language]:not([data-language='plaintext']) {
     padding-block-start: calc(var(--astryx-spacing-2, 8px) + var(--astryx-size-element-sm, 24px) + var(--astryx-spacing-2, 8px) + var(--astryx-spacing-3, 12px));
   }

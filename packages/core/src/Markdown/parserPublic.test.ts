@@ -245,3 +245,39 @@ describe('parseInlineAst offsets', () => {
     expect(parseInlineAst('a\n@{ada}', { plugins: [mention] }).map(node => node.type)).toContain('extension')
   })
 })
+
+describe('the public parser and data: URLs', () => {
+  it('keeps a data: link as source text, whatever its media type', () => {
+    for (const url of ['data:text/plain,hi', 'data:text/html,hi', 'DATA:image/png;base64,aaaa']) {
+      const nodes = parseInline(`[x](${url})`)
+      expect(nodes.some(node => node.type === 'link'), url).toBe(false)
+      expect(nodes).toEqual([{ type: 'text', content: `[x](${url})` }])
+    }
+  })
+
+  it('keeps a data: image as source text, inline and as a block', () => {
+    const inline = parseInline('![a](data:image/png;base64,xx)')
+    expect(inline.some(node => node.type === 'image')).toBe(false)
+    const blocks = parseMarkdown('![a](data:image/png;base64,xx)')
+    expect(findNode({ children: blocks }, node => node.type === 'image')).toBeUndefined()
+  })
+
+  it('still links and shows ordinary destinations', () => {
+    expect(parseInline('[x](https://example.com)').some(node => node.type === 'link')).toBe(true)
+    expect(parseInline('![a](https://example.com/a.png)').some(node => node.type === 'image')).toBe(true)
+  })
+})
+
+describe('gFM autolink scanning is linear in the input length', () => {
+  it.each([
+    ['a long plain word', 'a'.repeat(100_000)],
+    ['a long word with an @ and no dotted domain', `${'a'.repeat(50_000)}@${'b'.repeat(50_000)}`],
+    ['a long word, then an email and a URL', `${'a'.repeat(100_000)} me@example.com https://example.com`],
+    ['a URL closed by a long run of )', `https://a${')'.repeat(100_000)}`],
+  ])('parses %s within the budget', (_label, text) => {
+    const startedAt = performance.now()
+    const nodes = parseInline(text, { autolink: 'gfm' })
+    expect(performance.now() - startedAt).toBeLessThan(1000)
+    expect(nodes.length).toBeGreaterThan(0)
+  })
+})

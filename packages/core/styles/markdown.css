@@ -244,10 +244,10 @@
     flex-direction: column;
     gap: var(--astryx-spacing-0-5, 2px);
     margin-block: var(--astryx-spacing-3, 12px);
-    margin-inline: calc(-1 * var(--astryx-spacing-2, 8px));
-    /* 原版是 contentWidth 宽的外层里套一个两侧各外扩 8px 的列表；这里宽度也算成外扩后的，居中时才对得上。 */
-    width: calc(100% + var(--astryx-spacing-4, 16px));
-    max-width: calc(var(--astryx-markdown-measure, 100%) + var(--astryx-spacing-4, 16px));
+    /* 列表待在正文这一栏里：不向两侧外扩，窄屏上也不会把页面撑宽。 */
+    margin-inline: 0;
+    width: 100%;
+    max-width: var(--astryx-markdown-measure, 100%);
     padding: 0;
     list-style: none;
   }
@@ -275,7 +275,8 @@
     gap: var(--astryx-spacing-2, 8px);
     margin: 0;
     padding-block: var(--astryx-spacing-1, 4px);
-    padding-inline: var(--astryx-spacing-2, 8px);
+    /* 行内不留左右边距，序号、勾选框和文字都落在正文这一栏的边上。 */
+    padding-inline: 0;
     list-style: none;
   }
 

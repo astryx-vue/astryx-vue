@@ -67,10 +67,15 @@ describe('unsafe destinations are read as text, not as links', () => {
       'link:',
       'text:mail',
     ])
-    expect(blocks('![a](data:image/png;base64,aa)')).toEqual([
+    expect(blocks('![a](https://example.com/a.png)')).toEqual([
       'root',
       'paragraph:',
       'image:',
     ])
+  })
+
+  it('reads a data: destination as text, link or image', () => {
+    expect(blocks('![a](data:image/png;base64,aa)')).not.toContain('image:')
+    expect(blocks('[a](data:text/plain,hi)')).not.toContain('link:')
   })
 })

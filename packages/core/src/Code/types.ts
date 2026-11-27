@@ -35,6 +35,26 @@ export interface CodeSlots {
   default?: () => VNodeChild
 }
 
+export interface CodeBlockSlots {
+  /**
+   * Your own controls, shown just before Copy: in the header when the block
+   * has one, otherwise beside the code in the top inline-end corner, never over
+   * it. The slot never creates a header, and it sits outside the collapse
+   * control, so using it never collapses the block.
+   */
+  endContent?: () => VNodeChild
+}
+
+export interface CodeBlockSlots {
+  /**
+   * Your own controls, shown just before Copy: in the header when the block
+   * has one, otherwise beside the code in the top inline-end corner, never over
+   * it. The slot never creates a header, and it sits outside the collapse
+   * control, so using it never collapses the block.
+   */
+  endContent?: () => VNodeChild
+}
+
 /** The text size of a CodeBlock, which also selects its line height. */
 export type CodeBlockSize = 'sm' | 'md'
 
@@ -103,7 +123,19 @@ export interface CodeBlockProps {
    * @default false
    */
   hasLineNumbers?: boolean
-  /** One-indexed line numbers to emphasize with an accent background. */
+  /**
+   * The number of the first line, so a code excerpt reads with its real file
+   * line numbers. The gutter shows `startLineNumber + index`, and
+   * `highlightLines` uses the same file line numbers. A value below 1, or one
+   * that is not a finite number, counts as 1.
+   * @default 1
+   */
+  startLineNumber?: number
+  /**
+   * File line numbers to emphasize with an accent background, in the same
+   * numbering as the gutter (see `startLineNumber`). A number outside the code
+   * highlights nothing.
+   */
   highlightLines?: number[]
   /**
    * Paint the code as a unified diff over `language`.

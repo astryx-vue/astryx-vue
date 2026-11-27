@@ -4,7 +4,7 @@ import type { VNodeChild } from 'vue'
 import type { RichTextIconName } from './icons.js'
 import type { RichTextEditorToolbarProps, RichTextEditorToolbarSlots } from './toolbarTypes.js'
 import type { BlockType, InlineFormat } from './useToolbarState.js'
-import { Button, Dialog, DialogHeader, Divider, HStack, IconButton, Layout, LayoutContent, LayoutFooter, Selector, TextInput, ToggleButton, Toolbar } from '@astryx-vue/core'
+import { Button, Dialog, DialogHeader, Divider, HStack, IconButton, isRenderable, Layout, LayoutContent, LayoutFooter, Selector, TextInput, ToggleButton, Toolbar } from '@astryx-vue/core'
 import { INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERED_LIST_COMMAND } from '@lexical/list'
 import { $createHeadingNode, $createQuoteNode } from '@lexical/rich-text'
 import { $setBlocksType } from '@lexical/selection'
@@ -20,7 +20,7 @@ import {
   REDO_COMMAND,
   UNDO_COMMAND,
 } from 'lexical'
-import { computed, h, onBeforeUnmount, watchEffect } from 'vue'
+import { computed, h, onBeforeUnmount, useSlots, watchEffect } from 'vue'
 import { useLexicalEditor } from './context.js'
 import { useRichTextMessages } from './messages.js'
 import ToolbarIcon from './ToolbarIcon.vue'
@@ -37,6 +37,9 @@ const props = withDefaults(defineProps<RichTextEditorToolbarProps>(), {
   hasNewTabLinks: true,
 })
 defineSlots<RichTextEditorToolbarSlots>()
+const slots = useSlots()
+// 结尾插槽渲染出了内容才画分隔线和它：`v-if` 落空留下的注释、空字符串、`false` 都不算。
+const hasEnd = computed(() => isRenderable(slots.end?.() as VNodeChild))
 
 const editor = useLexicalEditor()
 const t = useRichTextMessages()
@@ -182,7 +185,7 @@ const blockOptions = computed<SelectorOption[]>(() => [
             <ToolbarIcon name="link" />
           </template>
         </ToggleButton>
-        <template v-if="$slots.end">
+        <template v-if="hasEnd">
           <Divider orientation="vertical" class="astryx-richtext-toolbar__divider" />
           <slot name="end" />
         </template>

@@ -11,6 +11,12 @@ describe('markdown urls', () => {
     expect(sanitizeMarkdownLinkUrl('data:text/html,hi')).toBeNull()
   })
 
+  it('drops a data link of any media type', () => {
+    expect(sanitizeMarkdownLinkUrl('data:text/plain,hi')).toBeNull()
+    expect(sanitizeMarkdownLinkUrl('DATA:image/png;base64,aaaa')).toBeNull()
+    expect(sanitizeMarkdownLinkUrl('data: text/plain,hi')).toBeNull()
+  })
+
   it('keeps ordinary navigation targets', () => {
     expect(sanitizeMarkdownLinkUrl('  https://example.com  ')).toBe('https://example.com')
     expect(sanitizeMarkdownLinkUrl('/docs')).toBe('/docs')

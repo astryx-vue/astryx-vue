@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import type { LexicalEditor } from 'lexical'
+import type { VNodeChild } from 'vue'
 import type { RichTextEditorEmits, RichTextEditorExposed, RichTextEditorProps, RichTextEditorSlots } from './types.js'
-import { Field, textAreaMessages, useComponentMessages, VisuallyHidden } from '@astryx-vue/core'
+import { Field, isRenderable, textAreaMessages, useComponentMessages, VisuallyHidden } from '@astryx-vue/core'
 import { $generateHtmlFromNodes } from '@lexical/html'
 import { $getRoot, $isParagraphNode } from 'lexical'
-import { computed, onBeforeUnmount, onMounted, provide, shallowRef, useAttrs, useId, useTemplateRef, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, provide, shallowRef, useAttrs, useId, useSlots, useTemplateRef, watch } from 'vue'
 import { $exportMarkdownKeepingSource } from '../markdownSource.js'
 import { DEFAULT_TRANSFORMERS } from '../markdownTable.js'
 import { editorKey } from './context.js'
@@ -27,6 +28,7 @@ const props = withDefaults(defineProps<RichTextEditorProps>(), {
 const emit = defineEmits<RichTextEditorEmits>()
 defineSlots<RichTextEditorSlots>()
 const attrs = useAttrs()
+const slots = useSlots()
 const t = useRichTextMessages()
 const coreMessages = useComponentMessages({ textArea: textAreaMessages })
 
@@ -55,6 +57,9 @@ const surface = useTemplateRef<HTMLDivElement>('surface')
 const editor = shallowRef<LexicalEditor>()
 const isEmpty = shallowRef(true)
 const charCount = shallowRef(0)
+
+// 工具栏插槽渲染出了内容才算有工具栏：`v-if` 落空留下的注释、空字符串、`false` 都不算。
+const hasToolbar = computed(() => isRenderable(slots.toolbar?.() as VNodeChild))
 
 // 编辑器的外框属性：只读和禁用要分开表达。只读仍可聚焦、读作只读；禁用不在 Tab 顺序里、读作禁用。
 const editable = computed(() => !props.isReadOnly && !props.isDisabled)
@@ -254,7 +259,7 @@ const restAttrs = computed(() => {
       <div
         class="astryx-richtext-editor"
         :data-size="size" :data-status="status?.type" :data-disabled="isDisabled || undefined" :data-readonly="isReadOnly || undefined"
-        :data-with-toolbar="$slots.toolbar ? '' : undefined"
+        :data-with-toolbar="hasToolbar ? '' : undefined"
       >
         <slot name="toolbar" />
         <div class="astryx-richtext-editor__body">

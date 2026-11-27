@@ -43,6 +43,8 @@ import { RichTextEditor, RichTextEditorToolbar } from '@astryx-vue/richtext'
 
 `@astryx-vue/richtext/markdown` 不引入 Vue 组件、不碰 DOM，在 Node、Worker 或者服务端渲染里都能用。
 
+服务端渲染只输出外框，不输出文档内容：`RichTextView` 和 `RichTextEditor` 在浏览器里才把各个块填进去。内容必须出现在服务端 HTML 里时，用 core 的 `Markdown` 渲染同一份 Markdown（只有富文本才画的辅助控件在那里以 Markdown 的形式出现），或者用上面的转换函数先转成 Markdown。
+
 ```ts
 import { editorStateJSONToMarkdown, markdownToEditorStateJSON } from '@astryx-vue/richtext/markdown'
 
