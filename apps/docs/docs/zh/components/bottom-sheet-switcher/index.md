@@ -43,6 +43,8 @@ const activeSheet = ref<string | null>(null)
 
 按 Escape 会请求关闭。在此之前先发 `cancel` 事件，参数就是原生的 cancel 事件；在它上面调 `event.preventDefault()` 就能留住这段流程。
 
+流程关闭时，或者切换器在某一步打开着时被移除，原本在里面的焦点会回到流程打开时的那个元素，带不带遮罩都一样。每一步打开时先落到它第一个可用的 `data-autofocus` 字段上，没有就落在这一步的面板上。服务端渲染时就开着的流程在水合后直接呈现静止状态，没有进场动画。
+
 ```ts
 import { BottomSheet, BottomSheetSwitcher } from '@astryx-vue/core/BottomSheet'
 ```

@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import type { DismissEscape } from '../layer/dismissStack.js'
+import type { LayerFocusRecord } from '../layer/layerFocusReturn.js'
 import type { BottomSheetRegistration } from './switcher.js'
 import type { BottomSheetPurpose } from './types.js'
-import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, shallowRef, useTemplateRef, watch } from 'vue'
+import { computed, getCurrentInstance, nextTick, onBeforeUnmount, onMounted, provide, ref, shallowRef, useTemplateRef, watch } from 'vue'
 import { useFocusTrap } from '../composables/useFocusTrap.js'
 import { useScrollLock } from '../composables/useScrollLock.js'
+import { isLayerFocusStranded, restoreLayerFocus, trackLayerFocus } from '../layer/layerFocusReturn.js'
 import { isImeKeyEvent } from '../utils/ime.js'
+import { focusSheetOnOpen } from './focusSheetPanel.js'
 import { bottomSheetSwitcherKey } from './switcher.js'
 import { useSheetLayerDismiss } from './useSheetLayerDismiss.js'
 import '../../styles/bottom-sheet.css'
@@ -42,6 +45,10 @@ const alignmentOffset = ref(0)
 const sheets = shallowRef(new Map<string, BottomSheetRegistration>())
 const dialog = useTemplateRef<HTMLDialogElement>('dialog')
 const isScrollLocked = ref(false)
+// 服务端渲染时就有一步开着的流程，水合后直接以静止状态呈现；换过一次步骤后恢复动效。
+const isSettled = ref(getCurrentInstance()?.vnode.el != null && activeSheet.value != null)
+// 打开期间跟着焦点：关闭或被直接卸载时，把被困住的焦点送回打开者。
+let focusRecord: LayerFocusRecord | null = null
 let handoffTimer: ReturnType<typeof setTimeout> | undefined
 
 useScrollLock(isScrollLocked)
@@ -113,23 +120,31 @@ function openDialog(): void {
   if (!element)
     return
   if (!element.open) {
+    focusRecord?.stop()
+    focusRecord = trackLayerFocus({ getLayer: () => dialog.value })
     if (props.hasScrim)
       element.showModal()
     else
       element.show()
   }
   isScrollLocked.value = props.hasScrim
-  void nextTick(() => {
-    const panel = activeElement.value
-    if (!panel)
-      return
-    const autofocus = panel.querySelector<HTMLElement>('[data-autofocus]')
-    ;(autofocus ?? panel).focus({ preventScroll: true })
-  })
+  void nextTick(() => focusSheetOnOpen(activeElement.value, true))
+}
+
+function returnFocus(record: LayerFocusRecord, wasStranded: boolean): void {
+  if (wasStranded)
+    restoreLayerFocus(record, { layer: null, name: 'BottomSheetSwitcher' })
+  record.stop()
 }
 
 function closeDialog(): void {
+  // 关闭之前先看焦点是否被困住：原生 close() 自己也会挪焦点。
+  const record = focusRecord
+  focusRecord = null
+  const wasStranded = record != null && isLayerFocusStranded(record, dialog.value)
   dialog.value?.close()
+  if (record != null)
+    returnFocus(record, wasStranded)
   isScrollLocked.value = false
   retainedId.value = null
   alignmentOffset.value = 0
@@ -188,7 +203,9 @@ function onDialogClick(event: MouseEvent): void {
     setActive(null)
 }
 
-watch(activeSheet, (id) => {
+watch(activeSheet, (id, previous) => {
+  if (previous != null)
+    isSettled.value = false
   if (id)
     openDialog()
   else
@@ -201,6 +218,12 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  const record = focusRecord
+  focusRecord = null
+  if (record != null) {
+    const wasStranded = isLayerFocusStranded(record, dialog.value)
+    queueMicrotask(() => returnFocus(record, wasStranded))
+  }
   if (handoffTimer != null)
     clearTimeout(handoffTimer)
   isScrollLocked.value = false
@@ -217,8 +240,9 @@ onBeforeUnmount(() => {
       'astryx-bottom-sheet-dialog--scrim': hasScrim,
       'astryx-bottom-sheet-dialog--closing': activeSheet == null,
     }"
+    :data-settled="isSettled || undefined"
     :aria-label="dialogLabel"
-    :aria-modal="hasScrim && activeSheet != null ? 'true' : undefined"
+    :aria-modal="isScrollLocked && activeSheet != null ? 'true' : undefined"
     @cancel="onCancel"
     @click="onDialogClick"
     @keydown="onKeydown"
