@@ -5,6 +5,7 @@ import { computed, provide, useAttrs, useId, useSlots, useTemplateRef } from 'vu
 import { useDevWarning } from '../composables/useDevWarning.js'
 import { listContextKey } from './context.js'
 import { useListLayoutUpdates } from './listLayoutUpdates.js'
+import { useReorderCommit, useReorderSession } from './reorder/useReorderSession.js'
 import '../../styles/list.css'
 
 defineOptions({ name: 'AstryxList', inheritAttrs: false })
@@ -23,7 +24,11 @@ const CONTROLLED_ATTRS = new Set(['class', 'style', 'role', 'start'])
 const attrs = useAttrs()
 const slots = useSlots()
 const listElement = useTemplateRef<HTMLUListElement | HTMLOListElement>('list')
-useListLayoutUpdates(() => listElement.value, () => props.animatedLayout)
+// 重排会话跟着 `reorderable` 对象来；拖动或重排模式的一步拥有的提交，布局更新不量。
+const reorder = useReorderSession(() => props.reorderable, () => listElement.value, `astryx-list-reorder-hint-${useId()}`)
+useListLayoutUpdates(() => listElement.value, () => props.animatedLayout, () => reorder.value?.session.ownsCommit() === true)
+// 在布局更新之后：放下那一次提交归重排来动。
+useReorderCommit(reorder)
 
 const headerId = `astryx-list-header-${useId()}`
 const hasHeader = computed(() => slots.header != null || props.header != null)
@@ -46,6 +51,7 @@ provide(listContextKey, {
   edgeCompensation: computed(() => props.edgeCompensation),
   hasDividers: computed(() => props.hasDividers),
   listStyle: computed(() => props.listStyle),
+  reorder,
 })
 
 const listStyleValue = computed<StyleValue>(() => [
@@ -93,6 +99,7 @@ defineExpose({ element })
     >
       <slot />
     </component>
+    <component :is="reorder.session.Host" v-if="reorder" :reorder="reorder" />
   </div>
   <component
     :is="tag"
@@ -105,4 +112,5 @@ defineExpose({ element })
   >
     <slot />
   </component>
+  <component :is="reorder.session.Host" v-if="!hasHeader && reorder" :reorder="reorder" />
 </template>

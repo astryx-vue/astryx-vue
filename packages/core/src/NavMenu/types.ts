@@ -59,6 +59,14 @@ export interface NavDisclosureProps {
   hideDelay?: number
   /** 加在弹出层上的 class。 */
   panelClass?: string
+  /**
+   * 弹出层盖在触发区原位上，而不是出现在它旁边：左上角各外扩 8px，
+   * 宽度至少比触发区宽 16px，直接出现、没有进场动画。
+   * 适合弹出层第一行重复触发区内容的场景，例如导航标题的切换菜单。
+   * 打开后忽略 `placement` 和 `alignment`。
+   * @default false
+   */
+  overlap?: boolean
 }
 
 export interface NavDisclosureSlots {

@@ -6,14 +6,14 @@ footer: false
 ---
 
 <script setup lang="ts">
-import { drawerOverview } from '../../../../components/demos/drawer'
+import { drawerNonModal, drawerOverview } from '../../../../components/demos/drawer'
 </script>
 
 ## 使用方法
 
-`Drawer` 是从屏幕一侧滑出的面板，用来放筛选、详情或一小段表单。它和弹窗共用同一套模态机制：打开时锁住页面滚动、把焦点关在面板里、关闭后把焦点还给打开它的元素。
+`Drawer` 是从屏幕一侧滑出的面板，用来放筛选、详情或一小段表单。默认带遮罩，是模态的：打开时锁住页面滚动、把焦点关在面板里、关闭后把焦点还给打开它的元素。
 
-`placement` 决定贴哪一边，默认 `end`（中文界面是右边）。`purpose` 决定怎么关：`info` 允许 Escape 和点遮罩，`form` 只允许 Escape，`required` 两者都不允许。
+`placement` 决定贴哪一边，默认 `end`（中文界面是右边）。关闭时面板从进场的那一侧滑出去；打开期间改了 `placement`，要等关上之后下一次打开才换边。`purpose` 决定怎么关：`info` 允许 Escape 和点遮罩，`form` 只允许 Escape，`required` 两者都不允许。
 
 ```vue
 <script setup lang="ts">
@@ -36,6 +36,21 @@ const isOpen = ref(false)
 ```
 
 <drawerOverview />
+
+## 不带遮罩
+
+传 `:has-scrim="false"` 就是非模态抽屉：没有遮罩，不锁页面滚动，焦点也不关在面板里，旁边的页面照常能点、能用手指滚。打开时焦点照样进到面板里，键盘打开时第一个控件的提示能正常显示；Escape 照样能关（`purpose` 为 `required` 时除外）。没有遮罩可点，记得放一个看得见的关闭按钮。
+
+```vue
+<Drawer :is-open="isOpen" label="详情" :has-scrim="false" @open-change="isOpen = $event">
+  <DrawerHeader title="详情" has-close-button @open-change="isOpen = $event" />
+  <p>旁边的页面还能用。</p>
+</Drawer>
+```
+
+<drawerNonModal />
+
+不管带不带遮罩，抽屉开着时被卸载（比如切走路由），焦点都会还给打开它的元素；焦点已经被挪到页面别处时就不去动它。
 
 ## 标题行
 

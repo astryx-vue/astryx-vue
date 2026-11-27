@@ -213,6 +213,7 @@ function play(list: HTMLElement, handle: AnimatedLayout, measured: Measured): vo
 export function useListLayoutUpdates(
   list: () => HTMLElement | null,
   animatedLayout: () => AnimatedLayout | null | undefined,
+  skips: () => boolean = () => false,
 ): void {
   let measured: Measured | null = null
 
@@ -220,7 +221,8 @@ export function useListLayoutUpdates(
     measured = null
     const element = list()
     const handle = animatedLayout()
-    if (element == null || handle == null)
+    // 拖动重排或重排模式的一步拥有这次提交，行的滑动由重排自己来做。
+    if (element == null || handle == null || skips())
       return
     measured = measure(element, handle)
     // 卸载的行在离开文档前读这张表，决定要不要记下自己离开时的样子。
