@@ -18,6 +18,7 @@ interface UpgradeData {
   hits: { file: string, line: number, text: string, from: string, to: string }[]
   truncated: boolean
   notes: string[]
+  commands: string[]
 }
 
 async function project(files: Record<string, string>): Promise<string> {
@@ -43,6 +44,22 @@ const OUTDATED_SOURCE = [
 ].join('\n')
 
 describe('upgrade', () => {
+  it('names one command for every listed package released with core', async () => {
+    const version = catalog.packages.find(pkg => pkg.name === '@astryx-vue/core')?.version
+    const cwd = await project({
+      'package.json': JSON.stringify({ name: 'demo', packageManager: 'pnpm@9.0.0', dependencies: { '@astryx-vue/core': '^0.3.0', '@astryx-vue/themes': '^0.3.0', 'vue': '^3.5.0' } }),
+    })
+    try {
+      const data = await report(cwd)
+      expect(data.commands).toEqual([`pnpm add @astryx-vue/core@${version} @astryx-vue/themes@${version}`])
+      const text = (await runCli(['upgrade'], { cwd })).stdout
+      expect(text).toContain(`pnpm add @astryx-vue/core@${version} @astryx-vue/themes@${version}`)
+    }
+    finally {
+      await rm(cwd, { recursive: true, force: true })
+    }
+  })
+
   it('reads the installed version and compares it with the catalog', async () => {
     const cwd = await project({
       'package.json': JSON.stringify({ name: 'demo', dependencies: { '@astryx-vue/core': '^0.3.0' } }),

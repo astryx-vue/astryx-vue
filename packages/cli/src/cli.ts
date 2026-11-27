@@ -1,6 +1,7 @@
 import type { CliIO, CliResult, CommandArgs, CommandResult } from './cli/context.ts'
 import { localeOf } from './catalog.ts'
 import { parseArgv, projectDirectory, validateOptions, workingDirectory } from './cli/args.ts'
+import { unknownCommandHints } from './cli/command-hints.ts'
 import { commandArgs, ok, printJson, wantsJson } from './cli/context.ts'
 import { helpEnvelope, printHelp, printVersion } from './cli/help.ts'
 import { buildCommand } from './commands/build.ts'
@@ -17,7 +18,7 @@ import { upgradeCommand } from './commands/upgrade.ts'
 import { errorEnvelope } from './envelope.ts'
 import { CliError } from './error.ts'
 import { findProjectRoot } from './project.ts'
-import { commandByName, COMMANDS } from './spec.ts'
+import { commandByName } from './spec.ts'
 
 export type { CliIO, CliResult } from './cli/context.ts'
 export { cliVersion } from './cli/help.ts'
@@ -63,21 +64,30 @@ export async function runCli(argv: readonly string[], io: CliIO = {}): Promise<C
     return {
       exitCode: cliError.exitCode,
       stdout: json ? printJson(errorEnvelope(cliError)) : '',
-      stderr: json ? '' : `${cliError.message}\n`,
+      stderr: json ? '' : errorText(cliError),
     }
   }
+}
+
+/**
+ * The text form of a failure: the message, then the runs that work (`Run:`)
+ * and the names that nearly match (`Did you mean:`), the same suggestions the
+ * JSON envelope carries.
+ */
+function errorText(error: CliError): string {
+  const runs = error.suggestions.filter(suggestion => suggestion.reason === 'do this instead' && !error.message.includes(suggestion.name))
+  const names = error.suggestions.filter(suggestion => suggestion.reason !== 'do this instead')
+  return [
+    error.message,
+    ...runs.map(suggestion => `Run: ${suggestion.name}`),
+    ...(names.length > 0 ? [`Did you mean: ${names.map(suggestion => suggestion.name).join(', ')}`] : []),
+  ].join('\n').concat('\n')
 }
 
 async function dispatch(name: string | null, args: CommandArgs): Promise<CommandResult> {
   const handler = name === null ? undefined : HANDLERS[name]
   if (name === null || handler === undefined || commandByName(name) === undefined) {
-    const suggestion = COMMANDS.find(command => command.name.startsWith(name ?? ''))
-    throw new CliError(
-      `Unknown command "${name}".`,
-      'ERR_UNKNOWN_COMMAND',
-      2,
-      suggestion ? [{ name: suggestion.name, reason: 'similar name' }] : COMMANDS.map(command => ({ name: command.name, reason: 'similar name' })),
-    )
+    throw new CliError(`Unknown command "${name}".`, 'ERR_UNKNOWN_COMMAND', 2, unknownCommandHints(name ?? '', args.positionals))
   }
   return handler(args)
 }

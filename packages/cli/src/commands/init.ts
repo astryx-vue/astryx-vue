@@ -15,6 +15,7 @@ import { assertWithinProject, toPosix } from '../paths.ts'
 import { installAllCommands, installCommands, isInstalledOnDisk, readProject } from '../project.ts'
 import { BINARY } from '../spec.ts'
 import { missingStarterPackages, starterInstallCommands } from '../starter-install.ts'
+import { removeAgentBlocks } from './init-remove.ts'
 
 const AGENT_NAMES: readonly AgentName[] = ['cursor', 'claude', 'codex', 'hermes', 'all']
 
@@ -68,6 +69,8 @@ export interface InitGuide {
 export async function initCommand(args: CommandArgs): Promise<string> {
   if (args.positionals.length > 0)
     throw new CliError('init does not take a positional argument.', 'ERR_INVALID_ARGUMENT', 2)
+  if (args.options['remove-agents'] === true)
+    return removeAgentBlocks(args)
   const features = readFeatures(args.options.features)
   const requestedAgent = args.options.agent === undefined ? null : String(args.options.agent)
   const agent = requestedAgent === null ? null : AGENT_NAMES.find(name => name === requestedAgent) ?? null

@@ -8,7 +8,7 @@ import { keywordSuggestions, otherCommandHints } from './query-hints.ts'
 import { componentKeywordScore } from './query-keywords.ts'
 import { compareText, queryFit } from './query-order.ts'
 import { topicByWords, topicsByWords } from './query-topics.ts'
-import { compoundNameScore, nameWords, splitWords, stemWord } from './query-words.ts'
+import { compoundNameScore, extraWordCount, nameWords, splitWords, stemWord } from './query-words.ts'
 import { BINARY, DOCS_PACKAGE } from './spec.ts'
 
 export interface SearchHit {
@@ -194,7 +194,12 @@ function ambiguous<T>(what: 'component' | 'composable' | 'topic', query: string,
     `More than one ${what} matches "${query}".`,
     what === 'component' ? 'ERR_AMBIGUOUS_COMPONENT' : what === 'composable' ? 'ERR_AMBIGUOUS_COMPOSABLE' : 'ERR_AMBIGUOUS_TOPIC',
     1,
-    matches.slice(0, 8).map(match => ({ name: lookup.label(match), reason: 'similar name' })),
+    // A name that holds every typed word comes first, the one with the fewest extra words before the rest.
+    matches
+      .map(match => ({ match, extra: extraWordCount(query, lookup.names(match)) ?? 99 }))
+      .sort((a, b) => a.extra - b.extra)
+      .slice(0, 8)
+      .map(({ match }) => ({ name: lookup.label(match), reason: 'similar name' })),
   )
 }
 
@@ -241,10 +246,12 @@ export function suggestByNames<T>(query: string, candidates: readonly T[], names
       const distance = Math.min(...values.map(value => levenshtein(key, value, true)))
       const included = values.some(value => value.includes(key) || key.includes(value))
       const compound = compoundNameScore(query, namesOf(candidate)) ?? 0
-      return { candidate, distance, included, compound }
+      // Among names that hold every typed word, the one with the fewest extra words comes first.
+      const extra = extraWordCount(query, namesOf(candidate)) ?? 99
+      return { candidate, distance, included, compound, extra }
     })
     .filter(entry => entry.included || entry.distance <= nameDistanceLimit(key.length))
-    .sort((a, b) => b.compound - a.compound || a.distance - b.distance || compareText(labelOf(a.candidate), labelOf(b.candidate)))
+    .sort((a, b) => b.compound - a.compound || a.extra - b.extra || a.distance - b.distance || compareText(labelOf(a.candidate), labelOf(b.candidate)))
     .slice(0, 5)
     .map(entry => ({ name: labelOf(entry.candidate), reason: 'similar name' }))
 }

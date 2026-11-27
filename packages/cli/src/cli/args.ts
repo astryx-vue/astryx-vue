@@ -55,7 +55,7 @@ export function parseArgv(argv: readonly string[]): ParsedArgs {
     if (!spec && CONFIRM_OPTIONS.has(flag))
       throw confirmOptionError(flag, argv)
     if (!spec)
-      throw new CliError(`Unknown option ${flag}.`, 'ERR_INVALID_OPTION', 2)
+      throw strayOptionError(flag, inline, argv[index + 1], argv)
     if (spec.type === 'boolean') {
       if (inline !== undefined)
         throw new CliError(`${flag} does not take a value.`, 'ERR_INVALID_ARGUMENT', 2)
@@ -106,6 +106,24 @@ function confirmOptionError(flag: string, argv: readonly string[]): CliError {
     2,
     [{ name: line, reason: 'do this instead' }],
   )
+}
+
+/** Output-format options from other tools, whose `json` value is this CLI's `--json`. */
+const FORMAT_OPTIONS = new Set(['--format', '--output', '--output-format'])
+
+/**
+ * An option no command takes. One that asks for JSON output names the run with
+ * `--json`.
+ */
+function strayOptionError(flag: string, inline: string | undefined, next: string | undefined, argv: readonly string[]): CliError {
+  const value = inline ?? next
+  if (FORMAT_OPTIONS.has(flag) && value === 'json') {
+    const skip = inline === undefined ? new Set([argv.indexOf(flag), argv.indexOf(flag) + 1]) : new Set([argv.indexOf(`${flag}=${inline}`)])
+    const run = [...argv.filter((_, index) => !skip.has(index)), '--json']
+    const line = [BINARY, ...run.map(quoteArgument)].join(' ')
+    return new CliError(`Unknown option ${flag}.`, 'ERR_INVALID_OPTION', 2, [{ name: line, reason: 'do this instead' }])
+  }
+  return new CliError(`Unknown option ${flag}.`, 'ERR_INVALID_OPTION', 2)
 }
 
 function quoteArgument(arg: string): string {
