@@ -1,5 +1,11 @@
 # @astryx-vue/cli
 
+## 0.9.1
+
+### Patch Changes
+
+- [#661](https://github.com/astryx-vue/astryx-vue/pull/661) [`612e54b`](https://github.com/astryx-vue/astryx-vue/commit/612e54bb3e77845545a81ed2b18142b6039d1aef) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Lightbox 按 iPhone 照片 App 的手感加上触摸手势：`hasZoom` 时能捏合、双击、Ctrl + 滚轮缩放，放大后拖动带惯性和橡皮筋；触屏上图集能横扫翻页（受控 `index` 不接受时弹回），照片往下拖就能关闭灯箱。
+
 ## 0.9.0
 
 ### Minor Changes
