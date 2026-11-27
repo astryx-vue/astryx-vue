@@ -69,7 +69,7 @@ When you register custom nodes through `nodes`, register the same set on both th
 | Insert a newline inside a code block | <kbd>Enter</kbd> |
 | Move between table cells | Arrow keys |
 | Create and move to a paragraph below a code block or table | <kbd>ArrowDown</kbd> at the block's end |
-| Open or close the link dialog | <kbd>Cmd/Ctrl</kbd> + <kbd>K</kbd> |
+| Open the link popover | <kbd>Cmd/Ctrl</kbd> + <kbd>K</kbd> |
 | Indent or outdent every line the selection touches in a code block | <kbd>Tab</kbd> / <kbd>Shift</kbd> + <kbd>Tab</kbd> |
 | Turn a code block into a paragraph | <kbd>Backspace</kbd> at the start of the block |
 | Select the code or the cell text first, then the whole document | <kbd>Cmd/Ctrl</kbd> + <kbd>A</kbd> in a code block or a table cell |

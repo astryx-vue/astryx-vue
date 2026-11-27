@@ -5,9 +5,9 @@ import type { ToolbarState } from './useToolbarState.js'
 import { $createLinkNode, $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link'
 import { $createTextNode, $getSelection, $isRangeSelection, $setSelection } from 'lexical'
 import { shallowRef } from 'vue'
-import { sanitizeUrl } from '../linkUtils.js'
+import { toLinkHref } from './linkEditing.js'
 
-export interface LinkDialogOptions {
+export interface ToolbarLinkOptions {
   editor: LexicalEditor
   state: ToolbarState
   t: RichTextTranslator
@@ -15,30 +15,38 @@ export interface LinkDialogOptions {
   hasNewTabLinks: () => boolean
   /**
    * 自己提供网址输入界面时用：选中的文字作为提示传进来，返回网址就加链接，
-   * 返回空就取消。不传就用内置的对话框。
+   * 返回空就取消。不传就用内置的弹出层。
    */
   promptForUrl: () => ((selectedText: string) => string | null | undefined) | undefined
+  /** 链接按钮外面的那层元素；弹出层从 Cmd/Ctrl+K 打开前，先把它滚进视野。 */
+  getAnchor: () => HTMLElement | null
 }
 
-export interface LinkDialog {
+export interface ToolbarLink {
   isOpen: Ref<boolean>
   /** 当前是在编辑已有的链接，还是新插入。 */
   isEditing: Ref<boolean>
   url: Ref<string>
   error: Ref<string>
-  /** 链接按钮和 Cmd/Ctrl+K 调用：打开对话框，或者走 `promptForUrl`。 */
+  /** 打开弹出层；设了 `promptForUrl` 就改走它，选区已在链接里则直接取消链接。Cmd/Ctrl+K 调用。 */
+  open: () => void
+  /** 链接按钮调用：开着就取消，关着就打开。 */
   toggle: () => void
-  setOpen: (open: boolean) => void
-  /** 对话框提交。返回是否成功关闭。 */
-  submit: () => boolean
+  /** 弹出层自己报告的开合：点外面、Escape 关掉它时会走到这里。 */
+  onOpenChange: (open: boolean) => void
+  onUrlChange: (url: string) => void
+  /** 把输入的网址链到选区；网址被拒绝时返回 false。 */
+  apply: () => boolean
   remove: () => void
+  /** 关掉弹出层，把焦点和选区还给编辑器。 */
+  cancel: () => void
 }
 
 /**
- * 链接对话框的状态和动作。对话框一打开编辑器就失焦、选区没了，
- * 所以打开前先存下选区，提交时放回去，再下指令。
+ * 工具栏链接弹出层的状态和动作。焦点进了网址输入框，页面的选区就离开了编辑器，
+ * 所以打开前先存下选区，链接、取消链接、把焦点还给编辑器之前都先把它放回去。
  */
-export function useLinkDialog(options: LinkDialogOptions): LinkDialog {
+export function useToolbarLink(options: ToolbarLinkOptions): ToolbarLink {
   const { editor, state, t } = options
   const isOpen = shallowRef(false)
   const isEditing = shallowRef(false)
@@ -55,10 +63,10 @@ export function useLinkDialog(options: LinkDialogOptions): LinkDialog {
   }
 
   /** 把网址写进选区。网址不安全时什么也不做并返回 false。 */
-  function apply(entered: string): boolean {
+  function write(entered: string): boolean {
     const trimmed = entered.trim()
-    const safe = sanitizeUrl(trimmed)
-    if (safe === 'about:blank')
+    const safe = toLinkHref(trimmed)
+    if (safe === null)
       return false
 
     const attributes = options.hasNewTabLinks() ? { target: '_blank', rel: 'noopener noreferrer' } : {}
@@ -85,14 +93,19 @@ export function useLinkDialog(options: LinkDialogOptions): LinkDialog {
     return true
   }
 
-  function closeToEditor(): void {
+  function close(): void {
     isOpen.value = false
     error.value = ''
-    // 等对话框收起、焦点还回去之后再聚焦，不然会被对话框抢走。
-    requestAnimationFrame(() => editor.focus())
   }
 
-  function toggle(): void {
+  /** 先让可编辑的根元素拿到焦点，Lexical 再把选区画回去，输入框占过页面选区也不碍事。 */
+  function closeToEditor(): void {
+    editor.getRootElement()?.focus({ preventScroll: true })
+    editor.focus()
+    close()
+  }
+
+  function open(): void {
     if (!editor.isEditable())
       return
     const context = state.readLinkContext()
@@ -105,22 +118,44 @@ export function useLinkDialog(options: LinkDialogOptions): LinkDialog {
       }
       const entered = prompt(context.selectedText)
       if (entered != null && entered.trim() !== '')
-        apply(entered)
+        write(entered)
       return
     }
-    url.value = context.url || (context.selectedText.startsWith('http') ? context.selectedText : 'https://')
+    // 输入框从链接原来的地址开始，或者从本来就像网址的选中文字开始；否则留空，显示占位文字。
+    url.value = context.url || (context.selectedText.startsWith('http') ? context.selectedText : '')
     isEditing.value = context.isLink
     error.value = ''
+    // Cmd/Ctrl+K 打开时链接按钮可能已经滚出页面或工具栏那一行，先拉回来，弹出层才开在它旁边。
+    options.getAnchor()?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' })
     isOpen.value = true
   }
 
-  function setOpen(open: boolean): void {
-    isOpen.value = open
+  function cancel(): void {
+    restoreSelection()
+    closeToEditor()
+  }
+
+  function toggle(): void {
+    if (isOpen.value)
+      cancel()
+    else
+      open()
+  }
+
+  function onOpenChange(next: boolean): void {
+    if (next)
+      open()
+    else
+      close()
+  }
+
+  function onUrlChange(value: string): void {
+    url.value = value
     error.value = ''
   }
 
-  function submit(): boolean {
-    if (!apply(url.value)) {
+  function apply(): boolean {
+    if (!write(url.value)) {
       error.value = t('link.invalidUrl')
       return false
     }
@@ -134,5 +169,5 @@ export function useLinkDialog(options: LinkDialogOptions): LinkDialog {
     closeToEditor()
   }
 
-  return { isOpen, isEditing, url, error, toggle, setOpen, submit, remove }
+  return { isOpen, isEditing, url, error, open, toggle, onOpenChange, onUrlChange, apply, remove, cancel }
 }

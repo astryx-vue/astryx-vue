@@ -42167,7 +42167,7 @@
           },
           {
             "heading": "Keyboard commands",
-            "text": "At the end of a code block or table, <kbd>ArrowDown</kbd> inserts a paragraph when no content follows or when another code block or table immediately follows. This lets you place prose between these blocks. When ordinary content already follows, the arrow keys retain Lexical's native navigation.\n\n- Insert a newline inside a code block: Insert a newline inside a code block\n- Move between table cells: Move between table cells\n- Create and move to a paragraph below a code block or table: Create and move to a paragraph below a code block or table\n- Open or close the link dialog: Open or close the link dialog\n- Indent or outdent every line the selection touches in a code block: Indent or outdent every line the selection touches in a code block\n- Turn a code block into a paragraph: Turn a code block into a paragraph\n- Select the code or the cell text first, then the whole document: Select the code or the cell text first, then the whole document\n- Leave the editor: Leave the editor"
+            "text": "At the end of a code block or table, <kbd>ArrowDown</kbd> inserts a paragraph when no content follows or when another code block or table immediately follows. This lets you place prose between these blocks. When ordinary content already follows, the arrow keys retain Lexical's native navigation.\n\n- Insert a newline inside a code block: Insert a newline inside a code block\n- Move between table cells: Move between table cells\n- Create and move to a paragraph below a code block or table: Create and move to a paragraph below a code block or table\n- Open the link popover: Open the link popover\n- Indent or outdent every line the selection touches in a code block: Indent or outdent every line the selection touches in a code block\n- Turn a code block into a paragraph: Turn a code block into a paragraph\n- Select the code or the cell text first, then the whole document: Select the code or the cell text first, then the whole document\n- Leave the editor: Leave the editor"
           },
           {
             "heading": "Pasting, shortcuts and disabled links",
@@ -42209,7 +42209,7 @@
           },
           {
             "heading": "键盘操作",
-            "text": "光标位于代码块或表格末尾时，<kbd>ArrowDown</kbd> 会在下方没有内容，或者下方紧邻另一个代码块或表格时插入段落。这样可以在这两类块之间补充正文；下方已经是普通内容时，方向键沿用 Lexical 的原生导航。\n\n- 在代码块中换行: 在代码块中换行\n- 在表格单元格之间移动: 在表格单元格之间移动\n- 在代码块或表格末尾创建并进入下方段落: 在代码块或表格末尾创建并进入下方段落\n- 打开或关闭链接对话框: 打开或关闭链接对话框\n- 缩进或反缩进代码块里选区碰到的每一行: 缩进或反缩进代码块里选区碰到的每一行\n- 把代码块变回段落: 把代码块变回段落\n- 先选中代码或单元格文字，再选中整篇文档: 先选中代码或单元格文字，再选中整篇文档\n- 离开整个编辑器: 离开整个编辑器"
+            "text": "光标位于代码块或表格末尾时，<kbd>ArrowDown</kbd> 会在下方没有内容，或者下方紧邻另一个代码块或表格时插入段落。这样可以在这两类块之间补充正文；下方已经是普通内容时，方向键沿用 Lexical 的原生导航。\n\n- 在代码块中换行: 在代码块中换行\n- 在表格单元格之间移动: 在表格单元格之间移动\n- 在代码块或表格末尾创建并进入下方段落: 在代码块或表格末尾创建并进入下方段落\n- 打开链接弹出层: 打开链接弹出层\n- 缩进或反缩进代码块里选区碰到的每一行: 缩进或反缩进代码块里选区碰到的每一行\n- 把代码块变回段落: 把代码块变回段落\n- 先选中代码或单元格文字，再选中整篇文档: 先选中代码或单元格文字，再选中整篇文档\n- 离开整个编辑器: 离开整个编辑器"
           },
           {
             "heading": "粘贴、快捷输入与禁用时的链接",

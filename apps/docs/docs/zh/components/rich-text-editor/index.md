@@ -69,7 +69,7 @@ import '@astryx-vue/richtext/richtext.css'
 | 在代码块中换行 | <kbd>Enter</kbd> |
 | 在表格单元格之间移动 | 方向键 |
 | 在代码块或表格末尾创建并进入下方段落 | <kbd>ArrowDown</kbd> |
-| 打开或关闭链接对话框 | <kbd>Cmd/Ctrl</kbd> + <kbd>K</kbd> |
+| 打开链接弹出层 | <kbd>Cmd/Ctrl</kbd> + <kbd>K</kbd> |
 | 缩进或反缩进代码块里选区碰到的每一行 | <kbd>Tab</kbd> / <kbd>Shift</kbd> + <kbd>Tab</kbd> |
 | 把代码块变回段落 | 光标在代码块开头按 <kbd>Backspace</kbd> |
 | 先选中代码或单元格文字，再选中整篇文档 | 在代码块或表格单元格里按 <kbd>Cmd/Ctrl</kbd> + <kbd>A</kbd> |

@@ -46,7 +46,7 @@ footer: false
 | `label` | `string` | 本地化文案 | 工具栏无障碍名称。 |
 | `headingLevels` | `ReadonlyArray<'h1' \| 'h2' \| 'h3'>` | `['h1', 'h2', 'h3']` | 块格式下拉中包含的标题级别。 |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'sm'` | 工具栏尺寸。 |
-| `hasLink` | `boolean` | `true` | 是否显示链接按钮及启用 Cmd/Ctrl+K 快捷键。 |
+| `hasLink` | `boolean` | `true` | 是否显示链接按钮及启用 Cmd/Ctrl+K 快捷键。它们会打开锚定在按钮上的非模态弹出层，里面一个网址输入框。 |
 | `promptForUrl` | `(selectedText: string) => string \| null \| undefined` | - | 自定义获取网址的回调函数。 |
 | `hasNewTabLinks` | `boolean` | `true` | 插入的链接是否在新标签页打开。 |
 
