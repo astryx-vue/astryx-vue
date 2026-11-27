@@ -46,12 +46,13 @@ describe('modifier rules keep winning over base rules (D12 alignment)', () => {
     expect(block).not.toContain('padding-inline')
   })
 
-  it('progressBar neutral fill uses the disabled gray, not the foreground ink', () => {
+  it('progressBar neutral fill uses the secondary text role, not the foreground ink or the disabled gray', () => {
     const source = css('progress-bar.css')
     const neutral = source.indexOf('.astryx-progress-bar[data-variant=\'neutral\'] .astryx-progress-bar-fill {')
     expect(neutral).toBeGreaterThan(-1)
     const block = source.slice(neutral, source.indexOf('}', neutral))
-    expect(block).toContain('--astryx-color-text-disabled')
+    expect(block).toContain('--astryx-color-text-secondary')
+    expect(block).not.toContain('--astryx-color-text-disabled')
   })
 
   it('table sets the body cell font size without shrinking group headers', () => {

@@ -1,0 +1,64 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.overrides {
+  /* 分类色卡片在深色模式下保持粉彩底色，所以文字取深色墨水：最近的、够 4.5:1 的中性色阶。 */
+  [data-astryx-theme='y2k'] .astryx-card[data-variant='blue'] {
+    --astryx-color-text-accent: light-dark(#2d241b, #1a1d31);
+    --astryx-color-text-primary: light-dark(#2d241b, #1a1d31);
+    --astryx-color-text-secondary: light-dark(#5a5146, #4a4f6b);
+  }
+
+  [data-astryx-theme='y2k'] .astryx-card[data-variant='cyan'] {
+    --astryx-color-text-accent: light-dark(#2d241b, #1a1d31);
+    --astryx-color-text-primary: light-dark(#2d241b, #1a1d31);
+    --astryx-color-text-secondary: light-dark(#5a5146, #4a4f6b);
+  }
+
+  [data-astryx-theme='y2k'] .astryx-card[data-variant='gray'] {
+    --astryx-color-text-accent: light-dark(#2d241b, #1a1d31);
+    --astryx-color-text-primary: light-dark(#2d241b, #1a1d31);
+    --astryx-color-text-secondary: light-dark(#5a5146, #4a4f6b);
+  }
+
+  [data-astryx-theme='y2k'] .astryx-card[data-variant='green'] {
+    --astryx-color-text-accent: light-dark(#2d241b, #1a1d31);
+    --astryx-color-text-primary: light-dark(#2d241b, #1a1d31);
+    --astryx-color-text-secondary: light-dark(#5a5146, #4a4f6b);
+  }
+
+  [data-astryx-theme='y2k'] .astryx-card[data-variant='orange'] {
+    --astryx-color-text-accent: light-dark(#2d241b, #1a1d31);
+    --astryx-color-text-primary: light-dark(#2d241b, #1a1d31);
+    --astryx-color-text-secondary: light-dark(#5a5146, #4a4f6b);
+  }
+
+  [data-astryx-theme='y2k'] .astryx-card[data-variant='pink'] {
+    --astryx-color-text-accent: light-dark(#2d241b, #1a1d31);
+    --astryx-color-text-primary: light-dark(#2d241b, #1a1d31);
+    --astryx-color-text-secondary: light-dark(#5a5146, #4a4f6b);
+  }
+
+  [data-astryx-theme='y2k'] .astryx-card[data-variant='purple'] {
+    --astryx-color-text-accent: light-dark(#2d241b, #1a1d31);
+    --astryx-color-text-primary: light-dark(#2d241b, #1a1d31);
+    --astryx-color-text-secondary: light-dark(#5a5146, #4a4f6b);
+  }
+
+  [data-astryx-theme='y2k'] .astryx-card[data-variant='red'] {
+    --astryx-color-text-accent: light-dark(#2d241b, #1a1d31);
+    --astryx-color-text-primary: light-dark(#2d241b, #1a1d31);
+    --astryx-color-text-secondary: light-dark(#5a5146, #4a4f6b);
+  }
+
+  [data-astryx-theme='y2k'] .astryx-card[data-variant='teal'] {
+    --astryx-color-text-accent: light-dark(#2d241b, #1a1d31);
+    --astryx-color-text-primary: light-dark(#2d241b, #1a1d31);
+    --astryx-color-text-secondary: light-dark(#5a5146, #4a4f6b);
+  }
+
+  [data-astryx-theme='y2k'] .astryx-card[data-variant='yellow'] {
+    --astryx-color-text-accent: light-dark(#2d241b, #1a1d31);
+    --astryx-color-text-primary: light-dark(#2d241b, #1a1d31);
+    --astryx-color-text-secondary: light-dark(#5a5146, #4a4f6b);
+  }
+}
