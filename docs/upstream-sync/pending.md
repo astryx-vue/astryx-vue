@@ -1087,7 +1087,8 @@
 
 - [x] [`05daead8a`](https://github.com/meta/astryx/commit/05daead8a) perf(cli): import Core only when a theme build needs it (#7493)
   - 不适用：上游 theme build 把 StyleX defineTheme 的 TS 主题模块编译成 CSS/JS；我们的主题是现成 CSS，CLI 的 theme 只打印接入文档，没有构建步骤
-- [ ] [`86e839219`](https://github.com/meta/astryx/commit/86e839219) feat(core): promote Drawer and DrawerHeader from Lab (#6071)
+- [x] [`86e839219`](https://github.com/meta/astryx/commit/86e839219) feat(core): promote Drawer and DrawerHeader from Lab (#6071)
+  - Vue 版已有：Drawer 和 DrawerHeader 本来就在 core，Vue 的 lab 没有 Drawer；块示例对应 Vue 文档里已有的 drawer 页示例
 - [x] [`52c42390c`](https://github.com/meta/astryx/commit/52c42390c) fix(cli): exclude template-local helpers from extractComponents (#7641)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`e3ba63175`](https://github.com/meta/astryx/commit/e3ba63175) docs: correct the MCP setup instructions in working-with-ai (#6216)
@@ -1120,15 +1121,18 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`dd769fe1d`](https://github.com/meta/astryx/commit/dd769fe1d) feat(cli): read two written TypeScript types as one when they differ only in how they are written (#7684)
   - 不适用：上游 integration 作者的 doctor 检查和 TypeScript 项目读取，我们没有集成包体系，CLI 也不读 TS 类型
-- [ ] [`a3f5dbf1e`](https://github.com/meta/astryx/commit/a3f5dbf1e) feat(cli): the integration manifest accepts an optional docsiteUrl link (#7704)
+- [x] [`a3f5dbf1e`](https://github.com/meta/astryx/commit/a3f5dbf1e) feat(cli): the integration manifest accepts an optional docsiteUrl link (#7704)
+  - 不适用：上游集成包清单的 docsiteUrl 字段，我们没有集成包（integration）体系和相关命令
 - [x] [`17e56d8ad`](https://github.com/meta/astryx/commit/17e56d8ad) feat(cli): check each authored doc against its published authoring type (#7664)
   - 不适用：上游 integration 作者的 doctor 检查和 TypeScript 项目读取，我们没有集成包体系，CLI 也不读 TS 类型
 - [x] [`e26723dcf`](https://github.com/meta/astryx/commit/e26723dcf) docs(cli): import each Core export from the path `astryx component` prints (#7623)
   - 不适用：上游 CLI 打印的组件导入路径文档措辞；Vue 版文档和 CLI 已按组件子路径给出导入
-- [ ] [`d698109f9`](https://github.com/meta/astryx/commit/d698109f9) feat(cli): doctor integration components judges documented prop types against the code (#7667)
+- [x] [`d698109f9`](https://github.com/meta/astryx/commit/d698109f9) feat(cli): doctor integration components judges documented prop types against the code (#7667)
+  - 不适用：doctor integration components 对比集成包文档与代码的 props，我们没有集成包（integration）体系和相关命令
 - [x] [`c2e0a594e`](https://github.com/meta/astryx/commit/c2e0a594e) feat(cli): doctor integration validate checks each doc against its published authoring type (#7673)
   - 不适用：doctor integration validate 按发布的作者类型校验集成包文档，我们没有集成包体系
-- [ ] [`621784ff7`](https://github.com/meta/astryx/commit/621784ff7) feat(cli): integration check runs every source check for a package's build, with --strict (#7665)
+- [x] [`621784ff7`](https://github.com/meta/astryx/commit/621784ff7) feat(cli): integration check runs every source check for a package's build, with --strict (#7665)
+  - 不适用：integration check 的源码检查与 --strict，我们没有集成包（integration）体系和相关命令
 - [x] [`f8f7cf1bd`](https://github.com/meta/astryx/commit/f8f7cf1bd) fix(cli): theme build --check compares outputs outside the working directory read-only (#7652)
   - 不适用：上游 theme build 把 StyleX defineTheme 的 TS 主题模块编译成 CSS/JS；我们的主题是现成 CSS，CLI 的 theme 只打印接入文档，没有构建步骤
 - [x] [`fdd384faa`](https://github.com/meta/astryx/commit/fdd384faa) spec(cli-surface): integration authoring guidance requires the strict check in every build (#7713)
@@ -1141,7 +1145,8 @@
   - 不适用：上游 integration 作者的指南、检查或文档语法，我们没有集成包体系
 - [x] [`a2f0c93df`](https://github.com/meta/astryx/commit/a2f0c93df) docs(cli): keep declared keywords to what each doc answers (#7714)
   - 不适用：上游文档页的 keywords 声明规范；我们的主题关键词取自表格首列，没有手写声明字段
-- [ ] [`2bb6c7447`](https://github.com/meta/astryx/commit/2bb6c7447) fix(cli): the setup reminder, the swizzle StyleX note, and a doctor line say only what is true (#7262)
+- [x] [`2bb6c7447`](https://github.com/meta/astryx/commit/2bb6c7447) fix(cli): the setup reminder, the swizzle StyleX note, and a doctor line say only what is true (#7262)
+  - 不适用：上游「运行 init 收尾」提醒、swizzle 的 StyleX 提示、集成包 doctor 提示的措辞；我们没有这些提醒、swizzle 和集成包
 - [x] [`f2b60a009`](https://github.com/meta/astryx/commit/f2b60a009) spec(cli-surface): the integration check reports only what the code contradicts (#7715)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`892421dd1`](https://github.com/meta/astryx/commit/892421dd1) spec(AST-031): a gap report also reaches the package it is about (#7722)
@@ -1170,9 +1175,12 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`b0a6f6234`](https://github.com/meta/astryx/commit/b0a6f6234) spec(AST-081): global mode, so the CLI answers in any folder and a project's own release answers inside it (#7601)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`f1e22eed8`](https://github.com/meta/astryx/commit/f1e22eed8) fix(cli): integration check --strict prints each finding once (#7751)
-- [ ] [`822261231`](https://github.com/meta/astryx/commit/822261231) fix(cli): upgrade no longer says "up to date" when the CLI is older than Core (#7491)
-- [ ] [`6a3ff0fe1`](https://github.com/meta/astryx/commit/6a3ff0fe1) feat(cli): gap-report --to files a report where the person chose (#7724)
+- [x] [`f1e22eed8`](https://github.com/meta/astryx/commit/f1e22eed8) fix(cli): integration check --strict prints each finding once (#7751)
+  - 不适用：integration check --strict 去重输出，我们没有集成包（integration）体系和相关命令
+- [x] [`822261231`](https://github.com/meta/astryx/commit/822261231) fix(cli): upgrade no longer says "up to date" when the CLI is older than Core (#7491)
+  - 已移植：[#602](https://github.com/astryx-vue/astryx-vue/pull/602)。项目的 core 比 CLI 认的版本新时，upgrade 新增 cli-older 状态并提示先升级 CLI，不再说已是最新，补测试
+- [x] [`6a3ff0fe1`](https://github.com/meta/astryx/commit/6a3ff0fe1) feat(cli): gap-report --to files a report where the person chose (#7724)
+  - 不适用：上游 gap-report 命令把缺口报告写到指定位置，我们的 CLI 没有这个命令
 - [x] [`80d2f411c`](https://github.com/meta/astryx/commit/80d2f411c) [Spec] AST-050: a theme module may load its own styles (#7707)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`9e97808d9`](https://github.com/meta/astryx/commit/9e97808d9) feat(cli): discover lists the official Astryx packages first, from a list built into each release (#7495)
@@ -1193,7 +1201,8 @@
   - 不适用：集成包文档里手写 astryx docs 指针改用 {@link} 的作者告警，我们的文档取自文档站 Markdown，没有这套作者语法
 - [x] [`8e723b06c`](https://github.com/meta/astryx/commit/8e723b06c) feat(cli): resolve {@link} in component docs and topic descriptions (#7756)
   - 不适用：解析组件文档和主题描述里的 {@link} 语法；我们的 catalog 文本直接取自文档站 Markdown，链接本来就是 Markdown 链接
-- [ ] [`a44ebd55a`](https://github.com/meta/astryx/commit/a44ebd55a) feat(cli): install once, run anywhere — every copy hands a project's run to the release its Core matches (#7649)
+- [x] [`a44ebd55a`](https://github.com/meta/astryx/commit/a44ebd55a) feat(cli): install once, run anywhere — every copy hands a project's run to the release its Core matches (#7649)
+  - 不适用：上游把运行交给项目 Core 对应版本发布的机制，Vue 的 upgrade 只读、不跑 codemod
 - [x] [`577a62e59`](https://github.com/meta/astryx/commit/577a62e59) [Component Audit] Grid: make responsive track behavior and evidence trustworthy (#7789)
   - 不适用：只改上游测试（自动初筛）
 
@@ -1201,7 +1210,8 @@
 
 - [x] [`1d247e4cc`](https://github.com/meta/astryx/commit/1d247e4cc) fix(cli): integration checks catch pairing, root and package.json mistakes, and stop crashing on them (#7777)
   - 不适用：integration check 的配对、根目录、package.json 检查，我们没有集成包体系
-- [ ] [`2e9add0c9`](https://github.com/meta/astryx/commit/2e9add0c9) feat(cli): host entry for a tool that carries the CLI (#7420)
+- [x] [`2e9add0c9`](https://github.com/meta/astryx/commit/2e9add0c9) feat(cli): host entry for a tool that carries the CLI (#7420)
+  - 不适用：上游给携带 CLI 的宿主工具用的入口，我们没有宿主嵌入场景
 - [x] [`d4ade4a04`](https://github.com/meta/astryx/commit/d4ade4a04) spec(knowledge): every current record is reachable from a path; records declare paths no other link reaches (#7794)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`b3c7554ec`](https://github.com/meta/astryx/commit/b3c7554ec) fix(test-utils): decode this CLI's folder from its file URL, not its URI path (#7805)
@@ -1214,12 +1224,14 @@
   - 不适用：integration check 检查集成包文档里的组件名能否解析，我们没有集成包体系
 - [x] [`b1e1936bb`](https://github.com/meta/astryx/commit/b1e1936bb) fix(core): provide dataVars defaults in prebuilt CSS (#7694)
   - 不适用：上游 dataVars 默认值预构建 CSS；Vue 版没有 dataVars 机制
-- [ ] [`b74cf213e`](https://github.com/meta/astryx/commit/b74cf213e) fix(cli): init writes agent docs every agent reads, at the project root, never in the home folder (#7497)
+- [x] [`b74cf213e`](https://github.com/meta/astryx/commit/b74cf213e) fix(cli): init writes agent docs every agent reads, at the project root, never in the home folder (#7497)
+  - 已移植：[#602](https://github.com/astryx-vue/astryx-vue/pull/602)。init 写 agent 文档本来只在项目内、不写 home；现在从子目录运行也写到项目根，补测试
 - [x] [`2583fe68e`](https://github.com/meta/astryx/commit/2583fe68e) docs(cli): add the is-my-code-good guide (#7259)
   - 不适用：上游 is-my-code-good 指南，讲上游 doctor --built 和作者检查；我们没有这些
 - [x] [`e9694dcf8`](https://github.com/meta/astryx/commit/e9694dcf8) fix(cli): integration check findings say plainly what is wrong and how to fix it (#7787)
   - 不适用：integration check 报错措辞，我们没有集成包体系
-- [ ] [`cb489ffbc`](https://github.com/meta/astryx/commit/cb489ffbc) fix(cli): find Core and configured integrations from any folder in a project (#7492)
+- [x] [`cb489ffbc`](https://github.com/meta/astryx/commit/cb489ffbc) fix(cli): find Core and configured integrations from any folder in a project (#7492)
+  - 已移植：[#602](https://github.com/astryx-vue/astryx-vue/pull/602)。upgrade、init、doctor 从项目任意子目录运行都回到最近的 package.json 所在目录，不越过 home 往上找，补测试
 - [x] [`cab6e9031`](https://github.com/meta/astryx/commit/cab6e9031) fix(cli): a Core-scoped lookup of a family member answers with that member (#7838)
   - 不适用：上游按包范围（Core-scoped）查组件，我们的 component 只有一个 catalog，没有包范围查找
 - [x] [`968130fb0`](https://github.com/meta/astryx/commit/968130fb0) feat(cli): validate notes each Astryx command a topic writes with a package runner (#7746)
@@ -1228,7 +1240,8 @@
   - 不适用：上游为文件系统扫描、索引缓存、懒加载做的性能优化；我们的 catalog 是构建期生成的静态 JSON，搜索只在内存里逐条打分，没有可优化的环节
 - [x] [`641d08e46`](https://github.com/meta/astryx/commit/641d08e46) docs(cli): give every doc a named home; authoring owns integration authoring (#7835)
   - 不适用：上游 integration 作者的指南、检查或文档语法，我们没有集成包体系
-- [ ] [`c5e01c026`](https://github.com/meta/astryx/commit/c5e01c026) fix(cli): make check:cli-structure enforce the command file layout (#6515)
+- [x] [`c5e01c026`](https://github.com/meta/astryx/commit/c5e01c026) fix(cli): make check:cli-structure enforce the command file layout (#6515)
+  - 不适用：上游 check:cli-structure 约束其命令文件布局的脚本，我们的 CLI 结构不同、没有这条检查
 - [x] [`d6ee72b79`](https://github.com/meta/astryx/commit/d6ee72b79) feat(docsite): search panel runs the CLI's own search (#7830)
   - 不适用：上游文档站搜索接入 CLI 搜索；我们的文档站用 kawapress 自带的站内搜索，不跑 CLI
 - [x] [`0bf23bdbf`](https://github.com/meta/astryx/commit/0bf23bdbf) docs(cli): a Use integrations guide, so consumer queries find consumer docs first (#7153)
@@ -1249,7 +1262,8 @@
   - 不适用：上游每日提示、更新通知在非 Astryx 子目录里指向上层项目；我们没有这些提示，doctor 只读 --cwd 指定的目录
 - [x] [`be423330b`](https://github.com/meta/astryx/commit/be423330b) fix(cli): the global skill gives a concrete build workflow (#7893)
   - 不适用：上游 CLI 生成的计算机级或项目级 agent 技能文本；我们的 init 只写一段项目 agent 文档，没有全局技能和这些工作流
-- [ ] [`296edaf9e`](https://github.com/meta/astryx/commit/296edaf9e) feat(cli): put the likely entry first in failed-lookup suggestions (#7876)
+- [x] [`296edaf9e`](https://github.com/meta/astryx/commit/296edaf9e) feat(cli): put the likely entry first in failed-lookup suggestions (#7876)
+  - Vue 版已有：[#608](https://github.com/astryx-vue/astryx-vue/pull/608)。查不到时先给最可能的条目：同分按词贴合度排序、别的命令有这个名字就指路、复合名找到真正的部分或家族（missSuggestions、compoundNameScore、query-order.ts）
 - [x] [`6856cfa4e`](https://github.com/meta/astryx/commit/6856cfa4e) build: rank every block by what the request means, from its own docs (#7897)
   - 不适用：上游 build 的页面或区块挑选模型（训练出的词权重表、区块排序、平局裁决等）的调参；我们的 build 是对 catalog 模板按字段加权加稀有度的确定性关键词排序，没有区块挑选器和权重表
 - [x] [`d421aed20`](https://github.com/meta/astryx/commit/d421aed20) build: refit the block picker on more varied example requests (#7904)
@@ -1295,7 +1309,8 @@
   - 已移植：[#608](https://github.com/astryx-vue/astryx-vue/pull/608)。一个家族词（tabs）先列 Tab 再列 TabList、TabMenu 等部分，补测试；顺序按名字而不是文档里的成员顺序
 - [x] [`78641f811`](https://github.com/meta/astryx/commit/78641f811) [CLI] Integration checks for component examples, showcases, template categories and packed assets (#7891)
   - 不适用：集成包的示例、展示、模板分类检查和 {@command}/{@pm} 文档语法，我们没有集成包体系和这套语法
-- [ ] [`4fc0c4a48`](https://github.com/meta/astryx/commit/4fc0c4a48) feat(cli): experimental icon sets — icon definitions, `astryx experimental icon`, templates that use the installed set (#7759)
+- [x] [`4fc0c4a48`](https://github.com/meta/astryx/commit/4fc0c4a48) feat(cli): experimental icon sets — icon definitions, `astryx experimental icon`, templates that use the installed set (#7759)
+  - 不适用：上游实验性图标集（icon set 定义、experimental icon 命令、模板按图标集换图标），我们的 CLI 没有图标集配置，模板直接用 core 的 Icon
 - [x] [`1a3162220`](https://github.com/meta/astryx/commit/1a3162220) search: order tied results below the first by fit, not by name (#7959)
   - 已移植：[#608](https://github.com/astryx-vue/astryx-vue/pull/608)。同分结果按名字里的词、标题摘要、正文依次计入的贴合度排序，分数、原因和总数不变，补测试
 - [x] [`768c2f0f6`](https://github.com/meta/astryx/commit/768c2f0f6) [Component Audit] CommandPaletteItem: let themes style highlighted, selected, and disabled items (#7967)
@@ -1309,8 +1324,10 @@
   - 不适用：只改上游 discover 的官方包清单或 discover 接入；我们没有 discover 命令，组件文档加入后 search 从 catalog 自动收录，结果里的 package 字段已标出所属包
 - [x] [`557ee8f46`](https://github.com/meta/astryx/commit/557ee8f46) fix(cli): read family members from the source condition so the official list does not depend on a build (#7996)
   - 不适用：只改上游 discover 的官方包清单或 discover 接入；我们没有 discover 命令，组件文档加入后 search 从 catalog 自动收录，结果里的 package 字段已标出所属包
-- [ ] [`6e4e335fa`](https://github.com/meta/astryx/commit/6e4e335fa) cli: suggest a component named inside a longer name (#7975)
-- [ ] [`2a50a8064`](https://github.com/meta/astryx/commit/2a50a8064) feat(cli): experimental icon sets — authoring fixes from fresh-agent Heroicons and Lucide runs (#7964)
+- [x] [`6e4e335fa`](https://github.com/meta/astryx/commit/6e4e335fa) cli: suggest a component named inside a longer name (#7975)
+  - Vue 版已有：suggestByNames 里查询名包含某个组件的完整名时就列为建议（key.includes(value)），再按复合名分和编辑距离排序，search.test.ts 有 TableHeaderCellFooter 的用例
+- [x] [`2a50a8064`](https://github.com/meta/astryx/commit/2a50a8064) feat(cli): experimental icon sets — authoring fixes from fresh-agent Heroicons and Lucide runs (#7964)
+  - 不适用：上游实验性图标集（icon set 定义、experimental icon 命令、模板按图标集换图标），我们的 CLI 没有图标集配置，模板直接用 core 的 Icon
 - [x] [`7b32a9306`](https://github.com/meta/astryx/commit/7b32a9306) feat(cli): experimental `astryx experimental render` — a page to one self-contained HTML file, and back (#7958)
   - 不适用：上游实验性 render/export 命令（把 React 页面打成单文件 HTML 及 --reverse 还原，依赖 StyleX 与 React 页面打包）；我们没有这个命令，Vue 页面也没有对应的静态化流程，不属于我们 CLI 的定位
 - [x] [`10930261f`](https://github.com/meta/astryx/commit/10930261f) docs(Badge): mark label as required, as its props type is (#8008)
@@ -1327,10 +1344,12 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`3dd95a046`](https://github.com/meta/astryx/commit/3dd95a046) fix(cli): only migrate theme-shaped objects proven to be Astryx themes (#7980)
   - 不适用：上游识别 React 里主题对象写法的 codemod 文档；Vue 的 upgrade 不改写源码
-- [ ] [`04434e7de`](https://github.com/meta/astryx/commit/04434e7de) fix(cli): add the upgrade receipt to the codemod failure error (#7993)
+- [x] [`04434e7de`](https://github.com/meta/astryx/commit/04434e7de) fix(cli): add the upgrade receipt to the codemod failure error (#7993)
+  - 不适用：codemod 失败时附回执，Vue 的 upgrade 只读、不改文件
 - [x] [`a8b78c5e5`](https://github.com/meta/astryx/commit/a8b78c5e5) [Component Audit] DropdownMenuSubMenu: docs match the shipped props and RTL flyout placement is measured (#8227)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`e8ef708e7`](https://github.com/meta/astryx/commit/e8ef708e7) feat(cli): report manual migrations and regeneration apart from codemod failures (#7995)
+- [x] [`e8ef708e7`](https://github.com/meta/astryx/commit/e8ef708e7) feat(cli): report manual migrations and regeneration apart from codemod failures (#7995)
+  - 不适用：手工迁移与 codemod 失败分开汇报，Vue 的 upgrade 没有 codemod
 - [x] [`b298b37d1`](https://github.com/meta/astryx/commit/b298b37d1) feat(theme): add surface-specific status color roles (#7657)
   - 已移植：[#517](https://github.com/astryx-vue/astryx-vue/pull/517)。core 新增默认状态色表，组件改读正确的状态角色
 - [x] [`9600039ee`](https://github.com/meta/astryx/commit/9600039ee) [Component Audit] CommandPaletteEmpty: keep long empty messages readable inside the palette (#8516)
@@ -1341,10 +1360,14 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`1b8e9103f`](https://github.com/meta/astryx/commit/1b8e9103f) docs(theme): an extending theme's motion inherits field by field (#8748)
   - Vue 版已有：主题 motion 的 extending 按字段继承已写在 themes/motion.md，extending.md 说明子主题保留未写的字段
-- [ ] [`05ead02aa`](https://github.com/meta/astryx/commit/05ead02aa) feat(Icon): a theme icon entry can be a function of the requested size (#8753)
-- [ ] [`db584bcb0`](https://github.com/meta/astryx/commit/db584bcb0) feat(Icon): a theme's width and height on an Icon size set its glyph dimension (#8759)
-- [ ] [`dae174730`](https://github.com/meta/astryx/commit/dae174730) feat(theme): a theme lists its icon variant names once (#8756)
-- [ ] [`33645a2d2`](https://github.com/meta/astryx/commit/33645a2d2) feat(Icon): request a theme's alternate icon artwork with variant (#8758)
+- [x] [`05ead02aa`](https://github.com/meta/astryx/commit/05ead02aa) feat(Icon): a theme icon entry can be a function of the requested size (#8753)
+  - 已移植：[#502](https://github.com/astryx-vue/astryx-vue/pull/502)。按基础展示族结论：主题图标条目可写成按尺寸取值的函数
+- [x] [`db584bcb0`](https://github.com/meta/astryx/commit/db584bcb0) feat(Icon): a theme's width and height on an Icon size set its glyph dimension (#8759)
+  - 已移植：[#502](https://github.com/astryx-vue/astryx-vue/pull/502)。按基础展示族结论：主题 Icon 尺寸的宽高决定字形尺寸
+- [x] [`dae174730`](https://github.com/meta/astryx/commit/dae174730) feat(theme): a theme lists its icon variant names once (#8756)
+  - 已移植：[#502](https://github.com/astryx-vue/astryx-vue/pull/502)。按基础展示族结论：defineTheme 的 iconVariants
+- [x] [`33645a2d2`](https://github.com/meta/astryx/commit/33645a2d2) feat(Icon): request a theme's alternate icon artwork with variant (#8758)
+  - 已移植：[#502](https://github.com/astryx-vue/astryx-vue/pull/502)。按基础展示族结论：Icon 的 variant 属性
 - [x] [`031a63980`](https://github.com/meta/astryx/commit/031a63980) fix(cli): theme build reports a theme module that fails to load instead of reading its text (#8767)
   - 不适用：上游 theme build 把 StyleX defineTheme 的 TS 主题模块编译成 CSS/JS；我们的主题是现成 CSS，CLI 的 theme 只打印接入文档，没有构建步骤
 - [x] [`f01c61d53`](https://github.com/meta/astryx/commit/f01c61d53) fix(cli): theme build names the Core that failed to load instead of building with the CLI's own (#8786)
@@ -1415,7 +1438,8 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`637d2352c`](https://github.com/meta/astryx/commit/637d2352c) docs(useCombobox): add an assign-to field example block (#9576)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`449486fdc`](https://github.com/meta/astryx/commit/449486fdc) feat(core): promote InfoTip from Lab as the info preset over Tooltip's press toggle (#9238)
+- [x] [`449486fdc`](https://github.com/meta/astryx/commit/449486fdc) feat(core): promote InfoTip from Lab as the info preset over Tooltip's press toggle (#9238)
+  - Vue 版已有：InfoTip 已在 core，lab 的 InfoTip/index.ts 只是带 @deprecated 的转发，测试覆盖
 - [x] [`dfa7ae023`](https://github.com/meta/astryx/commit/dfa7ae023) test(cli): six CLI test files leave nothing in the system temp directory (#9468)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`df81eb489`](https://github.com/meta/astryx/commit/df81eb489) test(cli): G58 reads the project CLI's pid only once it is whole, and waits for it on the run, not a clock (#9552)
@@ -1433,7 +1457,8 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`58c5b8ab4`](https://github.com/meta/astryx/commit/58c5b8ab4) test(cli): global-local's heaviest tests are split by case (#9746)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`df92fb83c`](https://github.com/meta/astryx/commit/df92fb83c) fix(cli): sync:api-types emits into a temp directory of its own (#8412)
+- [x] [`df92fb83c`](https://github.com/meta/astryx/commit/df92fb83c) fix(cli): sync:api-types emits into a temp directory of its own (#8412)
+  - 不适用：上游 sync:api-types 脚本写临时目录，我们没有这个脚本
 - [x] [`89255718a`](https://github.com/meta/astryx/commit/89255718a) [Component Audit] IconButton: every prop is documented, and square targets are proven in a browser (#9757)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`9136e28c7`](https://github.com/meta/astryx/commit/9136e28c7) feat: a single-choice set of selectable cards is a radio group (lab SelectableCardGroup) (#8260)
@@ -1448,7 +1473,8 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`626361d41`](https://github.com/meta/astryx/commit/626361d41) test(cli): experimental-isolation reads every docs topic in one process (#9806)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`36cde5e8c`](https://github.com/meta/astryx/commit/36cde5e8c) chore(cli): a gap-report handler's budget starts after its module loads (#9804)
+- [x] [`36cde5e8c`](https://github.com/meta/astryx/commit/36cde5e8c) chore(cli): a gap-report handler's budget starts after its module loads (#9804)
+  - 不适用：上游 gap-report 处理器的耗时预算，我们没有 gap-report
 - [x] [`5a373dfa0`](https://github.com/meta/astryx/commit/5a373dfa0) test(cli): integration-block-exports bundles its consumer outside the system temp directory (#9449)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`15a98a187`](https://github.com/meta/astryx/commit/15a98a187) fix(cli): a re-cased component name never resolves through a module (#8350)
@@ -1469,7 +1495,8 @@
   - Vue 版已有：--ease-exit 与 --duration-exit 已在 themes 包 base.css、core 的 motionTokenDefaults.ts 和 themes/motion.md
 - [x] [`859df5f49`](https://github.com/meta/astryx/commit/859df5f49) test(cli): door-conformance removes each run's folder once it has read it (#9453)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`1800b47b3`](https://github.com/meta/astryx/commit/1800b47b3) perf(cli): a run of astryx loads only the command it names (#9822)
+- [x] [`1800b47b3`](https://github.com/meta/astryx/commit/1800b47b3) perf(cli): a run of astryx loads only the command it names (#9822)
+  - 不适用：上游按命令懒加载模块的启动优化；我们的 CLI 没有可优化的运行时依赖，catalog 是预生成的 JSON
 - [x] [`ffd29c58b`](https://github.com/meta/astryx/commit/ffd29c58b) docs(useInputStatusIcon): add a minimal live example (#9714)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`ea33dafd5`](https://github.com/meta/astryx/commit/ea33dafd5) feat(docsite): label deprecated components from their doc (#9046)
@@ -1485,6 +1512,7 @@
 - [x] [`b31575d73`](https://github.com/meta/astryx/commit/b31575d73) test(cli): doctor --built's file-limit case reads a 50-file limit (#9897)
   - 不适用：doctor --built 文件上限的测试调整，我们没有 --built
 - [ ] [`0588a1342`](https://github.com/meta/astryx/commit/0588a1342) feat(core): one on-screen keyboard module; a Tall BottomSheet reads it and rides Gboard's slides (#8559)
+  - 暂缓：屏幕键盘模块（视觉视口、Gboard 滑动跟随、Tall BottomSheet 读它）Vue 版没有，归动效与手势引擎任务
 
 ### v0.7.9
 
@@ -1516,15 +1544,18 @@
   - 不适用：上游按需加载 jscodeshift/zod 等重模块的启动优化；我们的 CLI 没有运行时依赖
 - [x] [`f8a309da0`](https://github.com/meta/astryx/commit/f8a309da0) test(cli): the main searcher's test checks the count contract per query (#9996)
   - 已移植：[#608](https://github.com/astryx-vue/astryx-vue/pull/608)。补了匹配总数不随 limit 变化的逐查询测试
-- [ ] [`45f77d085`](https://github.com/meta/astryx/commit/45f77d085) fix(cli): a crashed run's release install is recognized by the Node it ran on, whatever its name (#8520)
+- [x] [`45f77d085`](https://github.com/meta/astryx/commit/45f77d085) fix(cli): a crashed run's release install is recognized by the Node it ran on, whatever its name (#8520)
+  - 不适用：上游「安装一次、到处运行」的发布缓存与崩溃恢复，我们没有这套机制
 - [x] [`bb7702ce0`](https://github.com/meta/astryx/commit/bb7702ce0) perf(cli): findComponentReadme probes only folders that hold the name (#9904)
   - 不适用：上游为文件系统扫描、索引缓存、懒加载做的性能优化；我们的 catalog 是构建期生成的静态 JSON，搜索只在内存里逐条打分，没有可优化的环节
 - [x] [`9cba0a867`](https://github.com/meta/astryx/commit/9cba0a867) docs(i18n): a Calendars guide page for other calendar systems (#10017)
   - 已移植：[#585](https://github.com/astryx-vue/astryx-vue/pull/585)。新增中英文「历法」指南
 - [x] [`68507bbe5`](https://github.com/meta/astryx/commit/68507bbe5) fix(cli): theme build scans the icon import from the source it loaded (#8598)
   - 不适用：上游 theme build 把 StyleX defineTheme 的 TS 主题模块编译成 CSS/JS；我们的主题是现成 CSS，CLI 的 theme 只打印接入文档，没有构建步骤
-- [ ] [`3139560ab`](https://github.com/meta/astryx/commit/3139560ab) test(cli): the node suites rebuild a Core build older than its sources (#8567)
-- [ ] [`e2b522f83`](https://github.com/meta/astryx/commit/e2b522f83) perf(cli): a project with no integration skips its issue passes (#9965)
+- [x] [`3139560ab`](https://github.com/meta/astryx/commit/3139560ab) test(cli): the node suites rebuild a Core build older than its sources (#8567)
+  - 不适用：上游 node 测试套件在 Core 构建过期时自动重建的测试设施
+- [x] [`e2b522f83`](https://github.com/meta/astryx/commit/e2b522f83) perf(cli): a project with no integration skips its issue passes (#9965)
+  - 不适用：没有集成包的项目跳过集成包问题检查的性能优化，我们没有集成包（integration）体系和相关命令
 - [x] [`086a500b3`](https://github.com/meta/astryx/commit/086a500b3) fix(cli): swizzle finds gh on PATH instead of running gh auth status (#8626)
   - 不适用：上游 swizzle（把 Core 组件源码拷进项目）；我们没有这个命令，Vue 用户直接从 npm 包使用组件
 - [x] [`46803c55c`](https://github.com/meta/astryx/commit/46803c55c) test(cli): the doctor golden's project installs Core's peers itself, so where the checkout lives cannot change the result (#10001)
@@ -1535,7 +1566,8 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`189a730ce`](https://github.com/meta/astryx/commit/189a730ce) feat(DateInput, DateTimeInput, DateRangeInput): type, pick and show dates in the active calendar (#9643, #9842)
   - 已移植：[#586](https://github.com/astryx-vue/astryx-vue/pull/586)。DateInput、DateTimeInput、DateRangeInput 按历法显示、打字和选择，非公历换掉系统控件；#9842 的保留输入 Vue 版已有
-- [ ] [`e657e2e6a`](https://github.com/meta/astryx/commit/e657e2e6a) perf(cli): issues() reads Core templates only for integration templates (#10008)
+- [x] [`e657e2e6a`](https://github.com/meta/astryx/commit/e657e2e6a) perf(cli): issues() reads Core templates only for integration templates (#10008)
+  - 不适用：issues() 只为集成包模板读 Core 模板的性能优化，我们没有集成包（integration）体系和相关命令
 - [x] [`f1f92c3cb`](https://github.com/meta/astryx/commit/f1f92c3cb) perf(cli): search computes a typo's distance only within its cap (#10030)
   - 不适用：上游为文件系统扫描、索引缓存、懒加载做的性能优化；我们的 catalog 是构建期生成的静态 JSON，搜索只在内存里逐条打分，没有可优化的环节
 - [x] [`6f3befa82`](https://github.com/meta/astryx/commit/6f3befa82) feat(lab): CircleCheckIndicator, the iOS multiple-selection circle (#9723)
@@ -1544,7 +1576,8 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`159aceb8e`](https://github.com/meta/astryx/commit/159aceb8e) test(cli): the docs-scan case reads the scan's walk, not every doc (#10060)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`35bbaee4f`](https://github.com/meta/astryx/commit/35bbaee4f) perf(cli): the manifest writer loads jscodeshift only to patch (#10051)
+- [x] [`35bbaee4f`](https://github.com/meta/astryx/commit/35bbaee4f) perf(cli): the manifest writer loads jscodeshift only to patch (#10051)
+  - 不适用：manifest 写入器按需加载 jscodeshift 的启动优化，我们没有 jscodeshift 依赖
 - [x] [`0236bb8fc`](https://github.com/meta/astryx/commit/0236bb8fc) perf(cli): search works out a term's forms once per entry (#10036)
   - 不适用：上游为文件系统扫描、索引缓存、懒加载做的性能优化；我们的 catalog 是构建期生成的静态 JSON，搜索只在内存里逐条打分，没有可优化的环节
 - [x] [`5876379c7`](https://github.com/meta/astryx/commit/5876379c7) perf(cli): resolveImportPath reads Core's exports once per operation (#9886)
@@ -1562,7 +1595,8 @@
 - [x] [`ceefccdfc`](https://github.com/meta/astryx/commit/ceefccdfc) feat(core): the animator's springs follow the theme's tempo (#8677)
   - 暂缓：内核部分已在 #563-#568；剩 Switch 触屏手势 useSwitchTouch、CLI 主题模板，归动效与手势引擎的组件接入阶段
   - Vue 版已有：主题 motion 的 tempo、character 以及弹簧跟随 tempo 已在 core 的 themeMotion.ts、motion/themeTempo.ts 和 themes/motion.md
-- [ ] [`98efdf183`](https://github.com/meta/astryx/commit/98efdf183) feat(Icon): a theme maps a component's own icon role by slot, starting with CodeBlock's copy button (#9828)
+- [x] [`98efdf183`](https://github.com/meta/astryx/commit/98efdf183) feat(Icon): a theme maps a component's own icon role by slot, starting with CodeBlock's copy button (#9828)
+  - 已移植：[#502](https://github.com/astryx-vue/astryx-vue/pull/502)。按基础展示族结论：componentIcons 与 ComponentIcon
 - [x] [`7fb5cab36`](https://github.com/meta/astryx/commit/7fb5cab36) feat(cli): built themes keep componentIcons slot functions (#9829)
   - 不适用：上游 theme build 把 StyleX defineTheme 的 TS 主题模块编译成 CSS/JS；我们的主题是现成 CSS，CLI 的 theme 只打印接入文档，没有构建步骤
 - [x] [`5d7503bc2`](https://github.com/meta/astryx/commit/5d7503bc2) fix(theme): support CustomTextTypes module augmentation (#5013) (#5029)
@@ -1599,7 +1633,8 @@
 
 ### v0.7.11
 
-- [ ] [`032679288`](https://github.com/meta/astryx/commit/032679288) docs(cli): upgrade every Astryx package together (#10241)
+- [x] [`032679288`](https://github.com/meta/astryx/commit/032679288) docs(cli): upgrade every Astryx package together (#10241)
+  - 已移植：[#614](https://github.com/astryx-vue/astryx-vue/pull/614)。安装页（中英）新增「升级」一节：所有 Astryx 包一条命令升到同一版本、包管理器压住新版本时排除整个 @astryx-vue/* 范围，再运行 upgrade
 - [x] [`6f2f02f3b`](https://github.com/meta/astryx/commit/6f2f02f3b) test(cli): two agent-docs tests remove their links with unlinkSync (#10263)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`88e223205`](https://github.com/meta/astryx/commit/88e223205) docs(architecture): stage CLN-0029, the CLI's Core peer at its own release, for 0.8.0 (#10253)
@@ -1618,7 +1653,8 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`6b9f734dc`](https://github.com/meta/astryx/commit/6b9f734dc) test(cli): template show and icon pairs keep fixtures in the run folder (#10325)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`9ee9c06ad`](https://github.com/meta/astryx/commit/9ee9c06ad) perf(cli): a hook read lists each folder once (#10324)
+- [x] [`9ee9c06ad`](https://github.com/meta/astryx/commit/9ee9c06ad) perf(cli): a hook read lists each folder once (#10324)
+  - 不适用：上游读取 hook 文件时每个目录只列一次的性能优化，我们的组合式函数来自预生成的 catalog
 - [x] [`755206df2`](https://github.com/meta/astryx/commit/755206df2) test(cli): catalog-heavy tests load their code under test natively (#10328)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`8f479887d`](https://github.com/meta/astryx/commit/8f479887d) fix(cli): links to a topic an integration replaces under the same name open the replacement (#10342)
@@ -1633,7 +1669,8 @@
   - 不适用：上游自定义主题指南说明本地主题文件的位置；我们没有 theme add 生成本地主题文件
 - [x] [`dcafd9610`](https://github.com/meta/astryx/commit/dcafd9610) build: name the alternatives in the order the start is chosen from (#10357)
   - Vue 版已有：build 的 otherTemplates 就按挑选所用的排名顺序给出，build.test.ts 有用例
-- [ ] [`1a348eefa`](https://github.com/meta/astryx/commit/1a348eefa) docs(cli): build --type lists every domain it accepts (#10361)
+- [x] [`1a348eefa`](https://github.com/meta/astryx/commit/1a348eefa) docs(cli): build --type lists every domain it accepts (#10361)
+  - 不适用：上游 build --type 的领域列表文档，我们的 build 只做模板检索、没有 --type
 - [x] [`aaa33dfff`](https://github.com/meta/astryx/commit/aaa33dfff) test(cli): build's tree and the no-npm checks load their code natively (#10337)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`457c870a0`](https://github.com/meta/astryx/commit/457c870a0) build: refit the block picker's doc-side weights from source-written paraphrases (#10355)
@@ -1648,20 +1685,25 @@
   - 已移植：[#537](https://github.com/astryx-vue/astryx-vue/pull/537)。doctor 的主题检查也认 core 的 <Theme>（主题经变量传入也算）和脚本里的 dataset.astryxTheme，补测试和文档
 - [x] [`a888b3d93`](https://github.com/meta/astryx/commit/a888b3d93) test(cli): provider-ledger loads through requireNatively (#10364)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`b66434e90`](https://github.com/meta/astryx/commit/b66434e90) fix(cli): the setup reminder names the project's release and prints at most once a day (#10343)
+- [x] [`b66434e90`](https://github.com/meta/astryx/commit/b66434e90) fix(cli): the setup reminder names the project's release and prints at most once a day (#10343)
+  - 不适用：上游「运行 init 收尾」提醒按项目发布版本、每天最多一次，我们没有这类提醒
 - [x] [`fed78ba24`](https://github.com/meta/astryx/commit/fed78ba24) docs(Table): a block that puts row selection in each row's leading mark (#10395)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`b3fb292b4`](https://github.com/meta/astryx/commit/b3fb292b4) fix(cli): build --type doc|theme points to search (#10401)
+- [x] [`b3fb292b4`](https://github.com/meta/astryx/commit/b3fb292b4) fix(cli): build --type doc|theme points to search (#10401)
+  - 不适用：上游 build --type doc | theme 指向 search 的提示，我们的 build 没有 --type
 - [x] [`8b16f6d4d`](https://github.com/meta/astryx/commit/8b16f6d4d) feat(cli): the export reader reports type-only exports on request, in one pass (#10365)
   - 不适用：上游对 TypeScript 文件解析、导出读取、文件缓存的内部实现，我们的 catalog 是构建期生成的静态 JSON，没有对应环节
-- [ ] [`8b836a3fc`](https://github.com/meta/astryx/commit/8b836a3fc) fix(cli): satisfy partial caret and hyphen semver ranges (#10184)
+- [x] [`8b836a3fc`](https://github.com/meta/astryx/commit/8b836a3fc) fix(cli): satisfy partial caret and hyphen semver ranges (#10184)
+  - 不适用：上游 CLI 内置 semver 范围判断的修正（^0、连字符区间）；我们只从 package.json 取出版本数字再比较，不解析范围
 
 ### v0.7.12
 
-- [ ] [`05e3cb0e1`](https://github.com/meta/astryx/commit/05e3cb0e1) feat(cli): experimental icon sets — wrapping a large real icon library (#8013)
+- [x] [`05e3cb0e1`](https://github.com/meta/astryx/commit/05e3cb0e1) feat(cli): experimental icon sets — wrapping a large real icon library (#8013)
+  - 不适用：上游实验性图标集（包装大型图标库），我们的 CLI 没有图标集
 - [x] [`b6c103808`](https://github.com/meta/astryx/commit/b6c103808) fix(cli): build keeps a leading variant when its family base matches only the family word (#10431)
   - 不适用：上游 build 的页面或区块挑选模型（训练出的词权重表、区块排序、平局裁决等）的调参；我们的 build 是对 catalog 模板按字段加权加稀有度的确定性关键词排序，没有区块挑选器和权重表
-- [ ] [`3df65bfa2`](https://github.com/meta/astryx/commit/3df65bfa2) Icon sets: reuse topLevel for module declarations; shorten the look-refresh comment (#10449)
+- [x] [`3df65bfa2`](https://github.com/meta/astryx/commit/3df65bfa2) Icon sets: reuse topLevel for module declarations; shorten the look-refresh comment (#10449)
+  - 不适用：上游图标集模块声明的整理，我们没有图标集
 - [x] [`c909db9ce`](https://github.com/meta/astryx/commit/c909db9ce) fix(build): a swizzled copy compiles in the library pass, below the theme (#10334)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`3bbab18c8`](https://github.com/meta/astryx/commit/3bbab18c8) Align Theme Showcase with Astryx template conventions (#10404)
@@ -1672,8 +1714,10 @@
   - 不适用：上游对 TypeScript 文件解析、导出读取、文件缓存的内部实现，我们的 catalog 是构建期生成的静态 JSON，没有对应环节
 - [x] [`3c69236c1`](https://github.com/meta/astryx/commit/3c69236c1) fix(cli): swizzle copies the module graph a component reaches (#10197)
   - 不适用：上游 swizzle（把 Core 组件源码拷进项目）；我们没有这个命令，Vue 用户直接从 npm 包使用组件
-- [ ] [`2fde70956`](https://github.com/meta/astryx/commit/2fde70956) fix(cli): list only component directories for swizzle (#10185)
-- [ ] [`a646669ab`](https://github.com/meta/astryx/commit/a646669ab) docs(richtext): RichTextView, RichTextEditorToolbar and RichTextEditorAutoLinkPlugin get their own doc files (#10407)
+- [x] [`2fde70956`](https://github.com/meta/astryx/commit/2fde70956) fix(cli): list only component directories for swizzle (#10185)
+  - 不适用：上游 swizzle 只列组件目录，我们没有源码拷贝命令
+- [x] [`a646669ab`](https://github.com/meta/astryx/commit/a646669ab) docs(richtext): RichTextView, RichTextEditorToolbar and RichTextEditorAutoLinkPlugin get their own doc files (#10407)
+  - 已移植：[#614](https://github.com/astryx-vue/astryx-vue/pull/614)。富文本编辑器属性页（中英）补 RichTextEditorAutoLinkPlugin 的属性与事件；工具栏、RichTextView 本来就在同一页
 - [x] [`99ab16da2`](https://github.com/meta/astryx/commit/99ab16da2) test(swizzle): cover destination symlinks (#10484)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`422440a64`](https://github.com/meta/astryx/commit/422440a64) fix(core): two copies of Core's modules share one React context (#10233)
@@ -1686,7 +1730,8 @@
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`695653f5d`](https://github.com/meta/astryx/commit/695653f5d) feat(ChatLayout): the composer rides the software keyboard (#8176)
   - 暂缓：缺屏幕键盘模块（键盘高度、useMobileKeyboard、输入区骑软键盘），归键盘与底部面板任务；浏览器支持页的说明随它补
-- [ ] [`44b9aa57d`](https://github.com/meta/astryx/commit/44b9aa57d) fix(cli): swizzle marks its output folder so the copy compiles below the theme (#10483)
+- [x] [`44b9aa57d`](https://github.com/meta/astryx/commit/44b9aa57d) fix(cli): swizzle marks its output folder so the copy compiles below the theme (#10483)
+  - 不适用：上游 swizzle 给输出目录做标记，我们没有源码拷贝命令
 - [x] [`8091fbc64`](https://github.com/meta/astryx/commit/8091fbc64) docs(useCalendarNavigation): add hook docs and a month pager example block (#10154)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`62c7802e8`](https://github.com/meta/astryx/commit/62c7802e8) docs(useCalendarConstraints): add hook docs and a hotel booking range example block (#10151)
@@ -1728,30 +1773,38 @@
   - 不适用：上游 CLI 扫描源码发现 hook 的实现；我们的组合式函数来自文档生成的 catalog
 - [x] [`44862e54e`](https://github.com/meta/astryx/commit/44862e54e) [Component Audit] LayoutHeader: spacing below the header always follows its divider (#10686)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`31ae99075`](https://github.com/meta/astryx/commit/31ae99075) fix(cli): template — a typo's near name comes first in the suggestions (#10712)
+- [x] [`31ae99075`](https://github.com/meta/astryx/commit/31ae99075) fix(cli): template — a typo's near name comes first in the suggestions (#10712)
+  - 已移植：[#614](https://github.com/astryx-vue/astryx-vue/pull/614)。建议里的编辑距离把相邻两个字母写反算一次笔误（Bagde 找到 Badge），component、composable、docs、template 共用，补测试
 - [x] [`7bd08bbe5`](https://github.com/meta/astryx/commit/7bd08bbe5) fix(theme): Android text follows the system font scale with no setup (#10727)
   - Vue 版已有：root Theme 按系统文字大小缩放（iOS 的 -apple-system-body 探针和 env(preferred-text-scale)）已在 core 的 Theme/dynamicType.ts、textSizeSync.ts
 - [x] [`3cd23eafb`](https://github.com/meta/astryx/commit/3cd23eafb) test(cli): node tests no longer time out under load (#10740)
   - 不适用：上游 node 测试负载下超时的测试设施调整
-- [ ] [`1a4a85dad`](https://github.com/meta/astryx/commit/1a4a85dad) fix(cli): importUserModule's fresh read sees an edited ES module .js (#10745)
+- [x] [`1a4a85dad`](https://github.com/meta/astryx/commit/1a4a85dad) fix(cli): importUserModule's fresh read sees an edited ES module .js (#10745)
+  - 不适用：上游 importUserModule 读 ES 模块 .js 的缓存修正，我们的 CLI 不加载用户模块
 - [x] [`c5cc8f4c4`](https://github.com/meta/astryx/commit/c5cc8f4c4) docs(useLinkify): add hook docs and a comment-thread example block (#9969)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`16436bee4`](https://github.com/meta/astryx/commit/16436bee4) fix(cli): a theme warning prints as one line without control characters (#10764)
+- [x] [`16436bee4`](https://github.com/meta/astryx/commit/16436bee4) fix(cli): a theme warning prints as one line without control characters (#10764)
+  - 不适用：上游 theme 命令的警告输出整理，我们的 theme 命令只打印接入文档，没有警告
 - [x] [`09b4ff94d`](https://github.com/meta/astryx/commit/09b4ff94d) fix(cli): the doc importers read an edited CommonJS doc again (#10760)
   - 不适用：上游 integration 作者的指南、检查或文档语法，我们没有集成包体系
 - [x] [`3f1678204`](https://github.com/meta/astryx/commit/3f1678204) fix(cli): a .doc.ts topic loads through jiti, installed or linked, on every supported Node (#10763)
   - 不适用：上游 integration 作者的指南、检查或文档语法，我们没有集成包体系
-- [ ] [`3eeda1b1d`](https://github.com/meta/astryx/commit/3eeda1b1d) docs(tailwind): a recipe for an app that already uses Tailwind, and what a misplaced @layer line does (#10532)
+- [x] [`3eeda1b1d`](https://github.com/meta/astryx/commit/3eeda1b1d) docs(tailwind): a recipe for an app that already uses Tailwind, and what a misplaced @layer line does (#10532)
+  - 已移植：[#614](https://github.com/astryx-vue/astryx-vue/pull/614)。样式指南（中英）补 @layer 语句写在 @import 'tailwindcss' 之后会让 Astryx 层排到 utilities 之后的后果；Tailwind 配方本来就有，token 带 --astryx- 前缀不会与应用变量重名
 - [x] [`d84658f7d`](https://github.com/meta/astryx/commit/d84658f7d) docs(usePowerSearchConfig): add hook docs and a filtered directory table example block (#10660)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`daa239e98`](https://github.com/meta/astryx/commit/daa239e98) feat(lab): experimental ChatVirtualizer (#5461)
   - 不适用：只改上游 discover 的官方包清单或 discover 接入；我们没有 discover 命令，组件文档加入后 search 从 catalog 自动收录，结果里的 package 字段已标出所属包
-- [ ] [`ec8a19e41`](https://github.com/meta/astryx/commit/ec8a19e41) fix(cli): experimental icon sets — accept a generated declaration file a formatter rewrote (#10898)
-- [ ] [`c0327e060`](https://github.com/meta/astryx/commit/c0327e060) fix(cli): experimental icon sets — keep the library prefix on a name that starts with a digit (#10895)
-- [ ] [`dc91a5b12`](https://github.com/meta/astryx/commit/dc91a5b12) fix(cli): experimental icon sets — add a look's variant from its own package, and skip pack exports (#10896)
+- [x] [`ec8a19e41`](https://github.com/meta/astryx/commit/ec8a19e41) fix(cli): experimental icon sets — accept a generated declaration file a formatter rewrote (#10898)
+  - 不适用：上游实验性图标集的声明文件处理，我们没有图标集
+- [x] [`c0327e060`](https://github.com/meta/astryx/commit/c0327e060) fix(cli): experimental icon sets — keep the library prefix on a name that starts with a digit (#10895)
+  - 不适用：上游实验性图标集的名字处理，我们没有图标集
+- [x] [`dc91a5b12`](https://github.com/meta/astryx/commit/dc91a5b12) fix(cli): experimental icon sets — add a look's variant from its own package, and skip pack exports (#10896)
+  - 不适用：上游实验性图标集的外观变体，我们没有图标集
 - [x] [`971d57533`](https://github.com/meta/astryx/commit/971d57533) fix(theme-gothic): accent text and icons stay readable on a light media surface (#10852)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`90f8b7e74`](https://github.com/meta/astryx/commit/90f8b7e74) fix(cli): experimental icon sets — write the current package name after a package rename (#10897)
+- [x] [`90f8b7e74`](https://github.com/meta/astryx/commit/90f8b7e74) fix(cli): experimental icon sets — write the current package name after a package rename (#10897)
+  - 不适用：上游实验性图标集的包名更新，我们没有图标集
 - [x] [`dfd75a6ab`](https://github.com/meta/astryx/commit/dfd75a6ab) [fix] [experimental] render: a Node crash fails with a message, and Avatar pages render on Node builds that crash in Intl.Segmenter (#10915)
   - 不适用：上游实验性 render/export 命令（把 React 页面打成单文件 HTML 及 --reverse 还原，依赖 StyleX 与 React 页面打包）；我们没有这个命令，Vue 页面也没有对应的静态化流程，不属于我们 CLI 的定位
 - [x] [`b75cbf56d`](https://github.com/meta/astryx/commit/b75cbf56d) feat(docsite): nest docs pages under a parent page in the sidebar (#9786)
@@ -1768,13 +1821,15 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`a9265f169`](https://github.com/meta/astryx/commit/a9265f169) style(cli): format doctor.mjs and template.mjs with Prettier (#10988)
   - 不适用：上游 doctor.mjs/template.mjs 的 Prettier 格式化，无行为变化
-- [ ] [`4b6ad11c0`](https://github.com/meta/astryx/commit/4b6ad11c0) fix(cli): remove internal-format identifiers from comments and sample data (#10958)
+- [x] [`4b6ad11c0`](https://github.com/meta/astryx/commit/4b6ad11c0) fix(cli): remove internal-format identifiers from comments and sample data (#10958)
+  - 不适用：上游 codemod 注释与示例数据里的内部标识清理
 
 ### v0.7.13
 
 - [x] [`0085c0f2b`](https://github.com/meta/astryx/commit/0085c0f2b) feat(lab): TabBar shows a More tab past five tabs (#10619)
   - 不适用：只改上游 discover 的官方包清单或 discover 接入；我们没有 discover 命令，组件文档加入后 search 从 catalog 自动收录，结果里的 package 字段已标出所属包
-- [ ] [`367229613`](https://github.com/meta/astryx/commit/367229613) feat(cli): experimental icon sets — one main set with backups, a local placeholder for missing icons, and a docs-site set choice (#10959)
+- [x] [`367229613`](https://github.com/meta/astryx/commit/367229613) feat(cli): experimental icon sets — one main set with backups, a local placeholder for missing icons, and a docs-site set choice (#10959)
+  - 不适用：上游实验性图标集（icon set 定义、experimental icon 命令、模板按图标集换图标），我们的 CLI 没有图标集配置，模板直接用 core 的 Icon
 - [x] [`653c03bf6`](https://github.com/meta/astryx/commit/653c03bf6) fix(core): a swizzled component and the package announce through one pair of live regions (AST-110 FR3) (#10996)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`e6dec3bfc`](https://github.com/meta/astryx/commit/e6dec3bfc) spec(AST-110): the layer stack and modal outlet gap is closed (#11026)
@@ -1798,8 +1853,10 @@
   - 不适用：上游为文件系统扫描、索引缓存、懒加载做的性能优化；我们的 catalog 是构建期生成的静态 JSON，搜索只在内存里逐条打分，没有可优化的环节
 - [x] [`3e59cc8ec`](https://github.com/meta/astryx/commit/3e59cc8ec) docs(cli): token tables say their values are Core's defaults (#11089)
   - 不适用：上游 token 表格注明数值是 Core 默认值，对应上游主题包里的 TS 输入；我们的主题页是文档站同一份，数值就是 CSS 里的
-- [ ] [`cfa1d6273`](https://github.com/meta/astryx/commit/cfa1d6273) feat(cli): experimental icon sets — show which template icon meanings a set does not map, and smoother set authoring (#11090)
-- [ ] [`18af3dc36`](https://github.com/meta/astryx/commit/18af3dc36) feat(cli): `astryx experimental theme` — checked theme editing, plus experimental copies of the theme commands (#11101)
+- [x] [`cfa1d6273`](https://github.com/meta/astryx/commit/cfa1d6273) feat(cli): experimental icon sets — show which template icon meanings a set does not map, and smoother set authoring (#11090)
+  - 不适用：上游实验性图标集的映射报告，我们没有图标集
+- [x] [`18af3dc36`](https://github.com/meta/astryx/commit/18af3dc36) feat(cli): `astryx experimental theme` — checked theme editing, plus experimental copies of the theme commands (#11101)
+  - 不适用：上游 experimental theme 对 TS 主题的受检编辑，我们的主题是现成 CSS，CLI 的 theme 只打印接入文档
 - [x] [`d08ce652e`](https://github.com/meta/astryx/commit/d08ce652e) test(cli): build Neutral before theme-edit fixtures (#11115)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`a21f2ee3d`](https://github.com/meta/astryx/commit/a21f2ee3d) feat(cli): experimental theme: fix unknown flags, color checks and undo recovery; editor group, how, preview pages and a starter app (#11113)
@@ -1808,10 +1865,12 @@
   - Vue 版已有：calendars 指南已按 CLDR 标识符（islamic-umalqura、ethiopic 等）写出，非法标识符回退公历并提示
 - [x] [`8e99c64fe`](https://github.com/meta/astryx/commit/8e99c64fe) feat(cli): experimental theme: check before writing, palette colors, cleaner output, shared tests and preview fixes (#11134)
   - 不适用：上游实验性主题编辑器（experimental theme editor）的改动，我们的 CLI 没有这个命令
-- [ ] [`d25d532df`](https://github.com/meta/astryx/commit/d25d532df) test(cli): theme build doc reads no longer time out under load (#11119)
+- [x] [`d25d532df`](https://github.com/meta/astryx/commit/d25d532df) test(cli): theme build doc reads no longer time out under load (#11119)
+  - 不适用：上游 theme build 文档读取测试的超时调整，我们没有 theme build
 - [x] [`5311a8533`](https://github.com/meta/astryx/commit/5311a8533) test(cli): child scripts import their modules by file URL (#11063)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`441e079d2`](https://github.com/meta/astryx/commit/441e079d2) fix(cli): experimental icon sets — distinct template icon meanings, keep a wrapped library's icons, docs-site icon-set build fixes (#11142)
+- [x] [`441e079d2`](https://github.com/meta/astryx/commit/441e079d2) fix(cli): experimental icon sets — distinct template icon meanings, keep a wrapped library's icons, docs-site icon-set build fixes (#11142)
+  - 不适用：上游实验性图标集（icon set 定义、experimental icon 命令、模板按图标集换图标），我们的 CLI 没有图标集配置，模板直接用 core 的 Icon
 - [x] [`153482eb4`](https://github.com/meta/astryx/commit/153482eb4) feat(cli): experimental theme: colors without palette commands, fixes from a real theming round, and a fully themed preview (#11149)
   - 不适用：上游实验性主题编辑器（experimental theme editor）的改动，我们的 CLI 没有这个命令
 - [x] [`9a3f29608`](https://github.com/meta/astryx/commit/9a3f29608) fix(useKeyboardHint): the arrow-key hint stays until dismissed, and Escape closes it (#10564)
@@ -1844,11 +1903,14 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`37f1da95c`](https://github.com/meta/astryx/commit/37f1da95c) feat(cli): experimental theme: preview safety, how answers that are safe and right, colors the generator's way (#11209)
   - 不适用：上游实验性主题编辑器（experimental theme editor）的改动，我们的 CLI 没有这个命令
-- [ ] [`dd4952ab7`](https://github.com/meta/astryx/commit/dd4952ab7) perf(cli): read shipped templates' components from a stored list (#11190)
+- [x] [`dd4952ab7`](https://github.com/meta/astryx/commit/dd4952ab7) perf(cli): read shipped templates' components from a stored list (#11190)
+  - 不适用：上游从存好的列表读模板组件的性能优化；我们的模板元数据本来就在预生成的 catalog 里
 - [x] [`a2eebf415`](https://github.com/meta/astryx/commit/a2eebf415) feat(cli): experimental theme: settings that do what they say, and colors second pass (#11222)
   - 不适用：上游实验性主题编辑器（experimental theme editor）的改动，我们的 CLI 没有这个命令
-- [ ] [`d73f2ba51`](https://github.com/meta/astryx/commit/d73f2ba51) perf(cli): keep compiled modules between runs in the user's own cache folder (#11217)
-- [ ] [`a728ac04a`](https://github.com/meta/astryx/commit/a728ac04a) perf(cli): print root help from a stored command list (#11194)
+- [x] [`d73f2ba51`](https://github.com/meta/astryx/commit/d73f2ba51) perf(cli): keep compiled modules between runs in the user's own cache folder (#11217)
+  - 不适用：上游把编译过的模块缓存到用户目录，我们的 CLI 不编译用户模块
+- [x] [`a728ac04a`](https://github.com/meta/astryx/commit/a728ac04a) perf(cli): print root help from a stored command list (#11194)
+  - 不适用：上游从存好的命令列表打印根帮助，我们的帮助直接读静态定义，没有可优化的加载
 - [x] [`3c8dab548`](https://github.com/meta/astryx/commit/3c8dab548) fix(cli): theme commands refuse overwrites they should not make, and report the right errors (#11210)
   - 不适用：上游 theme add/remove/list/eject/template 管理主题包和主题模块；我们的主题都在 @astryx-vue/themes 一个包里，引一个 CSS 即可，doctor 负责检查安装
 - [x] [`147891410`](https://github.com/meta/astryx/commit/147891410) perf(cli): read shipped docs from a store written at publish (#11191)
@@ -1868,17 +1930,20 @@
   - 不适用：上游为文件系统扫描、索引缓存、懒加载做的性能优化；我们的 catalog 是构建期生成的静态 JSON，搜索只在内存里逐条打分，没有可优化的环节
 - [x] [`55b19ae2b`](https://github.com/meta/astryx/commit/55b19ae2b) feat(cli): experimental theme: colors third pass — undo keeps a hand-edited palette, one-mode focus colors, fonts (#11244)
   - 不适用：上游实验性主题编辑器（experimental theme editor）的改动，我们的 CLI 没有这个命令
-- [ ] [`56c05cc48`](https://github.com/meta/astryx/commit/56c05cc48) test(cli): run the Core rebuild through cmd.exe on Windows (#11051)
+- [x] [`56c05cc48`](https://github.com/meta/astryx/commit/56c05cc48) test(cli): run the Core rebuild through cmd.exe on Windows (#11051)
+  - 不适用：上游测试在 Windows 上用 cmd.exe 重建 Core，属测试设施
 - [x] [`c68e54a04`](https://github.com/meta/astryx/commit/c68e54a04) perf(cli): store Core's docs too, and parse only the stored docs a read needs (#11240)
   - 不适用：上游 CLI 的文档读取缓存、懒加载或模块加载性能优化；我们的 catalog 是构建期生成的静态 JSON，没有对应环节
-- [ ] [`94fc7f00a`](https://github.com/meta/astryx/commit/94fc7f00a) perf(cli): print the manifest from a copy stored at publish (#11233)
+- [x] [`94fc7f00a`](https://github.com/meta/astryx/commit/94fc7f00a) perf(cli): print the manifest from a copy stored at publish (#11233)
+  - 不适用：上游发布时存一份 manifest 以加快打印，我们的 manifest 是静态数据，没有可优化的加载
 - [x] [`7e7fbae0f`](https://github.com/meta/astryx/commit/7e7fbae0f) perf(cli): load @babel/parser on first use in contribution validation (#11256)
   - 不适用：上游 integration 作者的指南、检查或文档语法，我们没有集成包体系
 - [x] [`94321e2e8`](https://github.com/meta/astryx/commit/94321e2e8) docs(i18n): show Calendars under Internationalization in the docsite sidebar (#11269)
   - 不适用：上游文档站侧栏手写分组把 Calendars 挪进 Internationalization；我们的 Calendars 是 guide 页，侧栏跟目录走
 - [x] [`0c8edac99`](https://github.com/meta/astryx/commit/0c8edac99) feat(cli): experimental theme: editor core third pass, preview route groups and crash recovery, how swaps, official accent tint (#11262)
   - 不适用：上游实验性主题编辑器（experimental theme editor）的改动，我们的 CLI 没有这个命令
-- [ ] [`3d19fc8cc`](https://github.com/meta/astryx/commit/3d19fc8cc) perf(cli): keep search's gathered catalog between runs while its inputs are unchanged (#11251)
+- [x] [`3d19fc8cc`](https://github.com/meta/astryx/commit/3d19fc8cc) perf(cli): keep search's gathered catalog between runs while its inputs are unchanged (#11251)
+  - 不适用：上游缓存 search 收集到的目录，我们的 catalog 是构建期生成的静态 JSON
 - [x] [`1710578c5`](https://github.com/meta/astryx/commit/1710578c5) test(cli): record startup imports on minimum Node (#11259)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`d038e8928`](https://github.com/meta/astryx/commit/d038e8928) fix(cli): preserve swizzle write failures on minimum Node (#11186)
@@ -1891,41 +1956,51 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`ed609ac6f`](https://github.com/meta/astryx/commit/ed609ac6f) perf(cli): keep search's entry table beside its kept catalog (#11300)
   - 不适用：上游为文件系统扫描、索引缓存、懒加载做的性能优化；我们的 catalog 是构建期生成的静态 JSON，搜索只在内存里逐条打分，没有可优化的环节
-- [ ] [`319528c5b`](https://github.com/meta/astryx/commit/319528c5b) fix(cli): a release-cache lock takeover checks it moved the lock it judged stale (#11313)
-- [ ] [`523aae129`](https://github.com/meta/astryx/commit/523aae129) fix(cli): use a kept catalog only for the inputs it records (#11301)
+- [x] [`319528c5b`](https://github.com/meta/astryx/commit/319528c5b) fix(cli): a release-cache lock takeover checks it moved the lock it judged stale (#11313)
+  - 不适用：上游发布缓存锁的接管校验，我们没有发布缓存
+- [x] [`523aae129`](https://github.com/meta/astryx/commit/523aae129) fix(cli): use a kept catalog only for the inputs it records (#11301)
+  - 不适用：上游已缓存目录的输入校验，我们没有这类缓存
 - [x] [`1a5784e50`](https://github.com/meta/astryx/commit/1a5784e50) feat(cli): experimental theme: fourth and fifth passes (renewed lock, corners by what parts show, css-tree values, other-mode base values), how/preview follow-ups, faster theme-edit tests (#11303)
   - 不适用：上游实验性主题编辑器（experimental theme editor）的改动，我们的 CLI 没有这个命令
 - [x] [`b5b920726`](https://github.com/meta/astryx/commit/b5b920726) fix(cli): doctor says a run under Plug'n'Play keeps no catalogs (#11299)
   - 不适用：doctor 的搜索缓存行在 Plug'n'Play 下的说明，我们没有缓存目录
 - [x] [`dfe6944ee`](https://github.com/meta/astryx/commit/dfe6944ee) fix(cli): theme build names the source for its outputs and bare names; eject forks into the project root; targets reads class selectors; typed text stays as typed (#11323)
   - 不适用：上游 theme add/remove/list/eject/template 管理主题包和主题模块；我们的主题都在 @astryx-vue/themes 一个包里，引一个 CSS 即可，doctor 负责检查安装
-- [ ] [`4ae4d23ee`](https://github.com/meta/astryx/commit/4ae4d23ee) fix(cli): a run under Plug'n'Play reads no kept catalog (#11344)
-- [ ] [`ea16e8df7`](https://github.com/meta/astryx/commit/ea16e8df7) perf(cli): check absent paths of a kept catalog without building errors (#11316)
+- [x] [`4ae4d23ee`](https://github.com/meta/astryx/commit/4ae4d23ee) fix(cli): a run under Plug'n'Play reads no kept catalog (#11344)
+  - 不适用：上游在 Plug'n'Play 下不读缓存目录，我们没有这类缓存
+- [x] [`ea16e8df7`](https://github.com/meta/astryx/commit/ea16e8df7) perf(cli): check absent paths of a kept catalog without building errors (#11316)
+  - 不适用：上游缓存目录对缺失路径的检查优化，我们没有这类缓存
 - [x] [`47f884afe`](https://github.com/meta/astryx/commit/47f884afe) perf(cli): keep build's block picker vectors beside the kept catalog (#11342)
   - 不适用：上游 build 的页面或区块挑选模型（训练出的词权重表、区块排序、平局裁决等）的调参；我们的 build 是对 catalog 模板按字段加权加稀有度的确定性关键词排序，没有区块挑选器和权重表
 - [x] [`318ab8029`](https://github.com/meta/astryx/commit/318ab8029) feat(cli): the integration file takes an optional logo; integration check notes what a listing needs (#11278)
   - 不适用：集成包文件的 logo 和上架检查，我们没有集成包体系
 - [x] [`17ec53564`](https://github.com/meta/astryx/commit/17ec53564) test(cli): the packed kept-catalog test reads its own user config, not the run's shared one (#11357)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`2605d994d`](https://github.com/meta/astryx/commit/2605d994d) fix(cli): keep jiti's transpiled code in the per-user cache folder (#11360)
+- [x] [`2605d994d`](https://github.com/meta/astryx/commit/2605d994d) fix(cli): keep jiti's transpiled code in the per-user cache folder (#11360)
+  - 不适用：上游把 jiti 转译结果放到用户缓存目录，我们不用 jiti
 - [x] [`08b751a6d`](https://github.com/meta/astryx/commit/08b751a6d) fix(cli): theme refusals name commands that work; missing packages name their install; build headers from the project root; --out warns when it replaces another source's output or lacks .css (#11346)
   - 不适用：上游 theme add/remove/list/eject/template 管理主题包和主题模块；我们的主题都在 @astryx-vue/themes 一个包里，引一个 CSS 即可，doctor 负责检查安装
 - [x] [`c46c9c86f`](https://github.com/meta/astryx/commit/c46c9c86f) feat(cli): experimental theme: sixth to eighth passes, and lists derived from css-tree, Core docs and the stable font list (#11350)
   - 不适用：上游实验性主题编辑器（experimental theme editor）的改动，我们的 CLI 没有这个命令
-- [ ] [`6ef8ba1d4`](https://github.com/meta/astryx/commit/6ef8ba1d4) perf(cli): keep each integration's contribution-check results between runs (#11367)
+- [x] [`6ef8ba1d4`](https://github.com/meta/astryx/commit/6ef8ba1d4) perf(cli): keep each integration's contribution-check results between runs (#11367)
+  - 不适用：缓存集成包贡献检查结果，我们没有集成包（integration）体系和相关命令
 - [x] [`231157756`](https://github.com/meta/astryx/commit/231157756) docs(cli): recommend publishing JavaScript files for what the CLI loads (#11364)
   - 不适用：上游 integration 作者的指南、检查或文档语法，我们没有集成包体系
-- [ ] [`746f03ba1`](https://github.com/meta/astryx/commit/746f03ba1) feat(cli): integration verify notes a TypeScript manifest (#11382)
+- [x] [`746f03ba1`](https://github.com/meta/astryx/commit/746f03ba1) feat(cli): integration verify notes a TypeScript manifest (#11382)
+  - 不适用：integration verify 提示 TypeScript 清单，我们没有集成包（integration）体系和相关命令
 - [x] [`082ac048b`](https://github.com/meta/astryx/commit/082ac048b) perf(cli): record no run for kept integration checks in a project with no integration (#11380)
   - 不适用：没有集成包时不记录集成检查缓存的性能优化，我们没有这套缓存
-- [ ] [`930c90660`](https://github.com/meta/astryx/commit/930c90660) fix(cli): theme watch follows local imports, eject keeps the local themes folder readable, --check ignores line endings, refusals point at commands that run (#11375)
+- [x] [`930c90660`](https://github.com/meta/astryx/commit/930c90660) fix(cli): theme watch follows local imports, eject keeps the local themes folder readable, --check ignores line endings, refusals point at commands that run (#11375)
+  - 不适用：上游 theme watch、eject、--check 等针对 TS 主题的行为，我们的主题是现成 CSS，没有这些命令
 
 ### v0.7.16
 
-- [ ] [`cf95ae8f9`](https://github.com/meta/astryx/commit/cf95ae8f9) docs(next): keep a webpack Server Component from shipping every Core component (#11305)
+- [x] [`cf95ae8f9`](https://github.com/meta/astryx/commit/cf95ae8f9) docs(next): keep a webpack Server Component from shipping every Core component (#11305)
+  - 不适用：上游 Next.js webpack 下 optimizePackageImports 的配置说明；Vue 版安装页已建议用子路径引入组件避免整包打入
 - [x] [`82adf3dca`](https://github.com/meta/astryx/commit/82adf3dca) fix(cli): integration validate names unreachable metadata with forward slashes (#11084)
   - 不适用：integration validate 的 Windows 路径斜杠，我们没有集成包体系
-- [ ] [`15209237d`](https://github.com/meta/astryx/commit/15209237d) perf(cli): keep the project's whole integration issue list between runs (#11384)
+- [x] [`15209237d`](https://github.com/meta/astryx/commit/15209237d) perf(cli): keep the project's whole integration issue list between runs (#11384)
+  - 不适用：缓存整个集成包问题列表，我们没有集成包（integration）体系和相关命令
 - [x] [`8b87622e7`](https://github.com/meta/astryx/commit/8b87622e7) fix(cli): theme template finds the project root, stale --check names its code, and --out warns before writing another theme's outputs into an editor folder (#11389)
   - 不适用：上游 theme add/remove/list/eject/template 管理主题包和主题模块；我们的主题都在 @astryx-vue/themes 一个包里，引一个 CSS 即可，doctor 负责检查安装
 - [x] [`bef2f834a`](https://github.com/meta/astryx/commit/bef2f834a) fix(cli): experimental theme: undo, show, how, colors and preview fixes from the next chaos rounds (#11378)
@@ -1936,7 +2011,8 @@
   - 不适用：上游 theme add/remove/list/eject/template 管理主题包和主题模块；我们的主题都在 @astryx-vue/themes 一个包里，引一个 CSS 即可，doctor 负责检查安装
 - [x] [`67780ce71`](https://github.com/meta/astryx/commit/67780ce71) fix(cli): experimental theme: safer recovery, exact card sides, checked suggestions, a faster show and a stricter how, from the next chaos rounds (#11419)
   - 不适用：上游实验性主题编辑器（experimental theme editor）的改动，我们的 CLI 没有这个命令
-- [ ] [`5d51aa55a`](https://github.com/meta/astryx/commit/5d51aa55a) feat(cli): examples take kind 'demo' | 'setup'; setup examples are code only (#11434)
+- [x] [`5d51aa55a`](https://github.com/meta/astryx/commit/5d51aa55a) feat(cli): examples take kind 'demo' | 'setup'; setup examples are code only (#11434)
+  - 不适用：上游文档作者给示例标 demo 或 setup 的字段；我们的文档是 Markdown，示例就是文档里的代码块，没有这套作者字段
 - [x] [`8514aaeea`](https://github.com/meta/astryx/commit/8514aaeea) fix(cli): a page that ends without an answer says why (#11398)
   - 不适用：上游 render 子进程无应答时的说明，我们没有 render
 - [x] [`5fa178523`](https://github.com/meta/astryx/commit/5fa178523) test: a Node test worker resolves no package through pnpm's NODE_PATH (#11431)
@@ -1945,8 +2021,10 @@
   - 不适用：上游 theme build 把 StyleX defineTheme 的 TS 主题模块编译成 CSS/JS；我们的主题是现成 CSS，CLI 的 theme 只打印接入文档，没有构建步骤
 - [x] [`b90511145`](https://github.com/meta/astryx/commit/b90511145) experimental theme: rounds 17–18 (own source from the build, one padding model, app detection, preview placement) (#11440)
   - 不适用：上游实验性主题编辑器（experimental theme editor）的改动，我们的 CLI 没有这个命令
-- [ ] [`77fef2371`](https://github.com/meta/astryx/commit/77fef2371) fix(cli): a kept gather depends on a variable's value only when it reads it (#11427)
-- [ ] [`c1a208a96`](https://github.com/meta/astryx/commit/c1a208a96) fix(cli): theme commands print steps that work from a subfolder, warn of a replace only when it happens, and name an editor theme or a linked theme file (#11422)
+- [x] [`77fef2371`](https://github.com/meta/astryx/commit/77fef2371) fix(cli): a kept gather depends on a variable's value only when it reads it (#11427)
+  - 不适用：上游缓存的收集结果按用到的环境变量失效，我们没有这类缓存
+- [x] [`c1a208a96`](https://github.com/meta/astryx/commit/c1a208a96) fix(cli): theme commands print steps that work from a subfolder, warn of a replace only when it happens, and name an editor theme or a linked theme file (#11422)
+  - 不适用：上游 theme 命令从子目录给出可运行步骤、替换警告等，我们的 theme 命令只打印接入文档
 - [x] [`ff6607bf1`](https://github.com/meta/astryx/commit/ff6607bf1) fix(cli): theme build prints its install import with forward slashes (#11288)
   - 不适用：上游 theme build 把 StyleX defineTheme 的 TS 主题模块编译成 CSS/JS；我们的主题是现成 CSS，CLI 的 theme 只打印接入文档，没有构建步骤
 - [x] [`723a112c3`](https://github.com/meta/astryx/commit/723a112c3) test: split the heaviest Node test files so the legs can spread them (#11436)
@@ -1957,7 +2035,8 @@
   - 不适用：上游实验性主题编辑器（experimental theme editor）的改动，我们的 CLI 没有这个命令
 - [x] [`3f518471d`](https://github.com/meta/astryx/commit/3f518471d) experimental theme: rounds 19–20 (padding scopes, own file wins everywhere, values read as meant, user files kept, preview focus) (#11453)
   - 不适用：上游实验性主题编辑器（experimental theme editor）的改动，我们的 CLI 没有这个命令
-- [ ] [`9b1e4893a`](https://github.com/meta/astryx/commit/9b1e4893a) perf(cli): keep template discovery's records between runs (#11393)
+- [x] [`9b1e4893a`](https://github.com/meta/astryx/commit/9b1e4893a) perf(cli): keep template discovery's records between runs (#11393)
+  - 不适用：上游缓存模板发现记录；我们的模板在预生成的 catalog 里
 - [x] [`75e0dcd3c`](https://github.com/meta/astryx/commit/75e0dcd3c) test(cli): kept-cache stale tests assert the warm path hit (#11467)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`7245e6a67`](https://github.com/meta/astryx/commit/7245e6a67) fix(cli): theme build's import lines are relative to src/ as they say (#11471)
@@ -1970,23 +2049,28 @@
   - 不适用：上游对 TypeScript 文件解析、导出读取、文件缓存的内部实现，我们的 catalog 是构建期生成的静态 JSON，没有对应环节
 - [x] [`8e4cc9efa`](https://github.com/meta/astryx/commit/8e4cc9efa) feat(cli): doctor warns when an integration's Core range excludes the project's Core (#10350)
   - 不适用：集成包的 Core peer 范围不含项目 Core 时告警，我们没有集成包体系
-- [ ] [`717762759`](https://github.com/meta/astryx/commit/717762759) perf(cli): keep each integration's discovered themes between runs (#11469)
+- [x] [`717762759`](https://github.com/meta/astryx/commit/717762759) perf(cli): keep each integration's discovered themes between runs (#11469)
+  - 不适用：缓存集成包发现的主题，我们没有集成包（integration）体系和相关命令
 - [x] [`3b855b3ef`](https://github.com/meta/astryx/commit/3b855b3ef) experimental theme: editor themes plug into theme add, one entry step for every value, one-mode themes, accent shade, wiring steps (#11468)
   - 不适用：上游实验性主题编辑器（experimental theme editor）的改动，我们的 CLI 没有这个命令
 - [x] [`3aa244b69`](https://github.com/meta/astryx/commit/3aa244b69) perf(cli): docs reads the kept integration checks (#11483)
   - 不适用：docs 读缓存的集成检查结果，我们没有集成包体系
-- [ ] [`c03b37a27`](https://github.com/meta/astryx/commit/c03b37a27) fix(cli): a theme that sets a private variable is refused, not built with an error (#11475)
+- [x] [`c03b37a27`](https://github.com/meta/astryx/commit/c03b37a27) fix(cli): a theme that sets a private variable is refused, not built with an error (#11475)
+  - 不适用：上游 theme build 拒绝设置私有变量的主题，我们没有 theme build
 - [x] [`f628ba44b`](https://github.com/meta/astryx/commit/f628ba44b) fix(cli): the palette generator honors darkChromaTaper, so every official palette regenerates as committed (#11491)
   - 不适用：调色板生成器的 darkChromaTaper，我们没有 palette generate；官方主题配色由主题族处理
-- [ ] [`9f9b803a2`](https://github.com/meta/astryx/commit/9f9b803a2) perf(cli): skip the project load before help and commands where no integration can load (#11495)
+- [x] [`9f9b803a2`](https://github.com/meta/astryx/commit/9f9b803a2) perf(cli): skip the project load before help and commands where no integration can load (#11495)
+  - 不适用：上游在帮助和不会加载集成包的命令前跳过项目加载的启动优化，我们没有集成包加载
 - [x] [`2680926f9`](https://github.com/meta/astryx/commit/2680926f9) perf(cli): read shipped icon definitions and built-in theme descriptors from values stored at publish (#11496)
   - 不适用：上游为文件系统扫描、索引缓存、懒加载做的性能优化；我们的 catalog 是构建期生成的静态 JSON，搜索只在内存里逐条打分，没有可优化的环节
-- [ ] [`7e8a67000`](https://github.com/meta/astryx/commit/7e8a67000) feat(cli): experimental icon sets — a project picks one look (outline or filled) for every icon (#11499)
+- [x] [`7e8a67000`](https://github.com/meta/astryx/commit/7e8a67000) feat(cli): experimental icon sets — a project picks one look (outline or filled) for every icon (#11499)
+  - 不适用：上游实验性图标集的整体外观（描边或填充）选择，我们没有图标集
 - [x] [`7e46208b6`](https://github.com/meta/astryx/commit/7e46208b6) perf(cli): find a component under a parent folder from one index of Core's folders (#11504)
   - 不适用：上游为文件系统扫描、索引缓存、懒加载做的性能优化；我们的 catalog 是构建期生成的静态 JSON，搜索只在内存里逐条打分，没有可优化的环节
 - [x] [`cb9cf3b35`](https://github.com/meta/astryx/commit/cb9cf3b35) fix(cli): an installed dependency whose manifest cannot load for want of a package it requires is reported as its issue (#11486)
   - 不适用：集成包清单因缺依赖加载失败时归为该包问题，我们没有集成包体系
-- [ ] [`6bf031ae9`](https://github.com/meta/astryx/commit/6bf031ae9) docs(cli): help and docs point at the experimental theme editor for making and changing a theme (#11500)
+- [x] [`6bf031ae9`](https://github.com/meta/astryx/commit/6bf031ae9) docs(cli): help and docs point at the experimental theme editor for making and changing a theme (#11500)
+  - 不适用：上游帮助和文档指向 experimental theme 编辑器，我们没有这个命令
 - [x] [`80295b973`](https://github.com/meta/astryx/commit/80295b973) fix(cli): doctor's theme stylesheet check skips files that only extend a theme (#11506)
   - 不适用：主题样式表检查跳过只 extend 主题的文件，属 theme add/build 生成的主题模块，我们没有
 - [x] [`e7926fed6`](https://github.com/meta/astryx/commit/e7926fed6) fix(cli): a base theme counts as installed only when the project installs it (node_modules or Plug'n'Play) (#11444)
@@ -2024,7 +2108,8 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`8e39a4a42`](https://github.com/meta/astryx/commit/8e39a4a42) feat(cli): docs points to the command that reads a component, hook or template (#11553)
   - Vue 版已有：docs 查不到而名字是组件、composable 或模板时第一条建议指向对应命令（query-hints.ts 的 otherCommandHints）
-- [ ] [`dbb0e4021`](https://github.com/meta/astryx/commit/dbb0e4021) fix(cli): theme build and doctor leave generated files to the command that made them; local font imports; doctor names the theme (#11554)
+- [x] [`dbb0e4021`](https://github.com/meta/astryx/commit/dbb0e4021) fix(cli): theme build and doctor leave generated files to the command that made them; local font imports; doctor names the theme (#11554)
+  - 不适用：上游 theme build 与 doctor 对生成文件、本地字体导入的处理，我们没有 theme build
 - [x] [`cc149789f`](https://github.com/meta/astryx/commit/cc149789f) test(cli): theme build --watch tests wait for the edited color, not a count of rebuilds (#11555)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`a7ce61d3b`](https://github.com/meta/astryx/commit/a7ce61d3b) experimental theme: exact how amounts and parts, app copy said behind everywhere, per-variant one-mode colors, input and preview follow-through (#11546)
