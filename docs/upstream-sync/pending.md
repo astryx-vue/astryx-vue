@@ -1118,6 +1118,7 @@
   - 暂缓：滑动操作改走 createSwipe 与共享拖动通道：Vue 的 Item 仍是 swipeActions，缺手势引擎，归动效与手势引擎任务；升级说明等 API 变了再写
   - 暂缓：归动效与手势引擎任务：缺 createSwipe 公共 API、swipeHost、SwipeActionsLayer、约 1400 行的 useSwipeAction 和 dragToSnapPoints 的 compositorSettle，Vue 版 Item 横滑还没走共享拖拽路径。
   - 暂缓：[createSwipe] 缺 createSwipe、swipeHost、SwipeActionsLayer，Item 横滑还没走共用拖动路径
+  - 暂缓：Vue 版还没有 createSwipe、swipeHost、SwipeActionsLayer、useSwipeAction 这套横滑模块，上游约 76 个文件近万行，本轮只建了重排设施
 - [x] [`d48e1d66b`](https://github.com/meta/astryx/commit/d48e1d66b) feat(cli): upgrade --list prints one line per codemod under its version (#11661)
   - 不适用：upgrade --list 列出 codemod，Vue 的 upgrade 没有 codemod 也没有 --list
 - [x] [`949c5ce69`](https://github.com/meta/astryx/commit/949c5ce69) perf(cli): upgrade skips a codemod for a file whose escapes spell none of its words (#11653)
@@ -1146,6 +1147,7 @@
   - 暂缓：swipe codemod 只定义一次滑动：随 createSwipe 一起，归动效与手势引擎任务
   - 暂缓：codemod 是 React 工具链（不适用），其中 useSwipeAction 的调整要等 Swipe 模块落地。
   - 暂缓：[createSwipe] 滑动 codemod 随 createSwipe
+  - 暂缓：滑动 codemod 针对 createSwipe 的写法，模块未建前无对象可改
 - [x] [`a2edb5300`](https://github.com/meta/astryx/commit/a2edb5300) chore: land batch 2 (16 pull requests) (#12718)
   - 已移植：[#579](https://github.com/astryx-vue/astryx-vue/pull/579)。批量合入里宿主的改动随宿主一起移植
 - [x] [`3b21ca666`](https://github.com/meta/astryx/commit/3b21ca666) feat(theme): chat surfaces default to the container radius (#12794)
@@ -6055,11 +6057,12 @@
   - Vue 版已有：Vue 版翻页只滚动这一行、一条弹簧，没有逐项曲线；动画器的曲线复用在动效内核里已有
 - [x] [`a60baf519`](https://github.com/meta/astryx/commit/a60baf519) fix(core): ignore a pointerup with no pointerId when no press is held (#10695)
   - Vue 版已有：composables/internal/pressFeedback.ts 的 onPointerUp 已先判 contact != null 再比 pointerId，无 pointerId 的抬起不会误结束按压
-- [ ] [`a28d586eb`](https://github.com/meta/astryx/commit/a28d586eb) feat(core): createReorderable makes List rows reorderable (#8139)
+- [x] [`a28d586eb`](https://github.com/meta/astryx/commit/a28d586eb) feat(core): createReorderable makes List rows reorderable (#8139)
   - 暂缓：createReorderable 依赖 animatedLayout、animator 和 inertClone 这套动效设施
   - 暂缓：本期已做 animatedLayout 与 inertClone；剩 createReorderable 拖动重排（依赖手势），归动效与手势引擎的组件接入阶段
   - 暂缓：createReorderable 与 List 重排手柄：上游重排引擎约 4000 行（listReorderEngine 2616、ListReorderHandle 425、ListReorderTouch 219、listReorderContext、reorderModel、uikit/reorder 接入），Vue 版还缺 edgeAutoscroll 拖到边缘自动滚动、nearestScroller 滚动祖先、rowMotion 行位移、anchoredHint 锚定提示、touchHitArea 触控热区这几块底层设施，Item 也还没有 label/trailing 上下文，需单独立项先补设施再移植
   - 暂缓：[createReorderable] 重排引擎与 List 重排手柄
+  - 已移植：[#653](https://github.com/astryx-vue/astryx-vue/pull/653)。新增 useReorderable/createReorderable 重排引擎，List 传 reorderable 后带 itemKey 的行有拖动手柄，支持手指按住拖、鼠标拖、键盘重排模式和读屏播报
 - [x] [`3fb73b3d4`](https://github.com/meta/astryx/commit/3fb73b3d4) fix(core): a spring retarget committed late starts at its frame (#10607)
   - 暂缓：依赖动画器（animator）与主题时序/节奏的动效基础设施，Vue 版没有
   - 已移植：[#567](https://github.com/astryx-vue/astryx-vue/pull/567)。迟到提交的弹簧改目标从它那一帧开始
@@ -6067,6 +6070,7 @@
   - 暂缓：lab TransferList 改用 createReorderable，Vue 版目前用自带的 useTransferReorder，等 createReorderable 移植后再迁
   - 暂缓：lab TransferList 改用 createReorderable，Vue 版 createReorderable（约 4000 行重排引擎）未移植，目前用自带的 useTransferReorder；归动效与手势引擎任务（拖动重排）
   - 暂缓：[createReorderable] TransferList 改用 createReorderable，目前用自带的 useTransferReorder
+  - 暂缓：TransferList 改用 createReorderable 需要 adaptReorderable 和 core 导出的重排作用域，替换现有 useTransferReorder，约 1.5k 行，本轮未做
 - [x] [`df4c958ec`](https://github.com/meta/astryx/commit/df4c958ec) perf(core): motions one callback starts read stylesheets in one pass (#10728)
   - 暂缓：依赖动画器（animator）与主题时序/节奏的动效基础设施，Vue 版没有
   - 已移植：[#567](https://github.com/astryx-vue/astryx-vue/pull/567)。一次回调启动的动效只读一遍样式表
@@ -6074,6 +6078,7 @@
   - 暂缓：lab ListInput 改用 createReorderable 与 ListReorderScope，Vue 版目前用自带的 useListReorder，等 createReorderable 移植后再迁
   - 暂缓：lab ListInput 改用 createReorderable，同样缺重排引擎，目前用自带的 useListReorder；归动效与手势引擎任务（拖动重排）
   - 暂缓：[createReorderable] ListInput 改用 createReorderable
+  - 暂缓：ListInput 改走 core 的重排引擎需要 core 给 lab 导出内部重排作用域入口，并把 isReorderable 布尔改成 reorderable 对象，属破坏性 API 调整，约 1.3k 行，本轮未做
 - [x] [`74cb73c9f`](https://github.com/meta/astryx/commit/74cb73c9f) fix(useScrollableArea): an ancestor's transform no longer measures the scroll area again on every frame of a drag (#10034)
   - 已移植：[#548](https://github.com/astryx-vue/astryx-vue/pull/548)。祖先只改 transform 不再让滚动区每帧重新测量，只有方向、书写模式、显示、可见性变了才重量，补测试
 - [x] [`bb576ef8f`](https://github.com/meta/astryx/commit/bb576ef8f) test(core): reveal-paint reads one moment and names starvation (#10556)
@@ -6279,6 +6284,7 @@
   - 暂缓：归动效与手势引擎任务：缺 createSwipe 公共 API、swipeHost、SwipeActionsLayer、约 1400 行的 useSwipeAction 和 dragToSnapPoints 的 compositorSettle，Vue 版 Item 横滑还没走共享拖拽路径。
   - 暂缓：滑动操作改走 createSwipe 与共享拖动通道，缺 createSwipe 公共 API、swipeHost、SwipeActionsLayer、约 1400 行 useSwipeAction 和 dragToSnapPoints 的合成器收尾；归动效与手势引擎任务
   - 暂缓：[createSwipe] 缺 createSwipe、swipeHost、SwipeActionsLayer，Item 横滑还没走共用拖动路径
+  - 暂缓：Vue 版还没有 createSwipe、swipeHost、SwipeActionsLayer、useSwipeAction 这套横滑模块，上游约 76 个文件近万行，本轮只建了重排设施
 - [x] [`24d82491d`](https://github.com/meta/astryx/commit/24d82491d) spec(AST-094): DEC-31 states the owner's test-only and records-only carry (#11602)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`6da757802`](https://github.com/meta/astryx/commit/6da757802) perf(cli): keep gathers and the compile cache from a machine's first run (#11668)
@@ -6301,6 +6307,7 @@
 - [ ] [`c3916438e`](https://github.com/meta/astryx/commit/c3916438e) chore(core): the swipe hook's and layer's prose moves to their JSDoc (#11677)
   - 暂缓：只把滑动钩子和层的说明搬到 JSDoc，Swipe 模块未移植；随 createSwipe 一起做
   - 暂缓：[createSwipe] 只是把说明搬到 JSDoc，Swipe 模块还没有
+  - 暂缓：只是把横滑钩子和图层的说明搬进 JSDoc，Vue 版还没有对应的 createSwipe 模块
 - [x] [`bac58372c`](https://github.com/meta/astryx/commit/bac58372c) feat(cli): one did-you-mean rule points every lookup to the command that has the name (#11707)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`178cd8019`](https://github.com/meta/astryx/commit/178cd8019) perf(OverflowList): lists in one commit measure together after it, before paint (#10392)
@@ -6371,6 +6378,7 @@
   - 暂缓：codemod 是 React 工具链（不适用），其中 useSwipeAction 的调整要等 Swipe 模块落地。
   - 暂缓：swipe codemod 是 React 工具链（不适用），其中 useSwipeAction 的调整随 createSwipe 一起做
   - 暂缓：[createSwipe] 滑动 codemod 随 createSwipe
+  - 暂缓：滑动 codemod 针对 createSwipe 的写法，模块未建前无对象可改
 - [x] [`8b176db24`](https://github.com/meta/astryx/commit/8b176db24) perf(cli): a lookup miss reads the component matcher's Core inputs from a kept summary instead of every Core doc (#12538)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`286e4db56`](https://github.com/meta/astryx/commit/286e4db56) fix(cli): the transpile cache names copies for their source text and trims one subfolder per write, so it stays small and no run reads all of it (#12385)
@@ -6698,6 +6706,7 @@
   - 暂缓：ListInput 改用 createReorderable 属拖动重排任务，由另一代理负责
   - 暂缓：ListInputShowcase 示例与抓手捏合缩放的浏览器用例随 ListInput 改用 createReorderable，归拖动重排任务
   - 暂缓：[createReorderable] ListInput 改用 createReorderable
+  - 暂缓：ListInput 改走 core 的重排引擎需要 core 给 lab 导出内部重排作用域入口，并把 isReorderable 布尔改成 reorderable 对象，属破坏性 API 调整，约 1.3k 行，本轮未做
 - [x] [`4fbef8a6b`](https://github.com/meta/astryx/commit/4fbef8a6b) test(lab): the reorder-grip pinch spec runs for the grips it renders (#10736)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`349d3a8e6`](https://github.com/meta/astryx/commit/349d3a8e6) test(lab): the reorder-grip spec's scope no longer names a deleted file (#10864)
@@ -6739,6 +6748,7 @@
 - [ ] [`31e54e473`](https://github.com/meta/astryx/commit/31e54e473) feat(ListInput): reveal row actions with their record and hang the grip beside the first field (#7949)
   - 暂缓：ListInput 的行内操作随记录显现、抓手挂在首字段旁，和 ListInput 改用 createReorderable 的抓手与行结构是同一处改动（ListInputRow.vue、list-input.css），等拖动重排任务合并后再接（core 的 useContainerReveal 已有）
   - 暂缓：[createReorderable] ListInput 行内操作随记录显现、抓手挂首字段旁，与改用 createReorderable 同一处改动
+  - 暂缓：依赖 6103d36e9 的 ListInput 新重排接入（抓手挂首字段旁、行操作随记录显现），约 1.6k 行，随它一起做
 - [x] [`faa934f8c`](https://github.com/meta/astryx/commit/faa934f8c) docs(ListInput): add a docsite showcase and three example blocks (#7953)
   - 已移植：[#628](https://github.com/astryx-vue/astryx-vue/pull/628)。ListInput 文档页补了家庭成员、预算分配、邮件列表三个示例（中英）；上游的 discover 清单部分我们没有
 
@@ -6754,9 +6764,10 @@
   - 不适用：lab MobilePowerSearch 的粘性弹层页头，组件在 Vue 已移除；core 的弹层页头由弹层族负责
 - [x] [`f0a5ceac7`](https://github.com/meta/astryx/commit/f0a5ceac7) fix(lab): MobilePowerSearch names its trigger by what it shows and announces inside its sheets (#8007)
   - 不适用：lab MobilePowerSearch 的触发器命名与播报，组件在 Vue 已移除；core 的 PowerSearch 弹层由搜索族负责
-- [ ] [`9effa5cb5`](https://github.com/meta/astryx/commit/9effa5cb5) fix(lab): a pinch that starts on a reorder grip zooms the page (#8126)
+- [x] [`9effa5cb5`](https://github.com/meta/astryx/commit/9effa5cb5) fix(lab): a pinch that starts on a reorder grip zooms the page (#8126)
   - 暂缓：抓手上起手的捏合缩放属于 ListInput 和 TransferList 的拖动抓手，随这两个组件改用 createReorderable 一起接，归拖动重排任务
   - 暂缓：[createReorderable] 抓手上起手的捏合缩放随 ListInput、TransferList 的抓手一起
+  - 已移植：[#654](https://github.com/astryx-vue/astryx-vue/pull/654)。ListInput 和 TransferList 的重排手柄改为 touch-action pinch-zoom，双指捏合能缩放页面
 - [x] [`d794476b6`](https://github.com/meta/astryx/commit/d794476b6) fix(useAnnounce): messages announced in the same frame are joined, an identical repeat once (#8244)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`e52ef25f2`](https://github.com/meta/astryx/commit/e52ef25f2) [Component Audit] ComplexSelector: the trigger is a combobox field on both paths (#6991)
@@ -6858,17 +6869,20 @@
   - 暂缓：lab TransferList 改用 createReorderable，Vue 版目前用自带的 useTransferReorder，等 createReorderable 移植后再迁
   - 暂缓：TransferList 改用 createReorderable 属拖动重排任务，由另一代理负责
   - 暂缓：[createReorderable] TransferList 改用 createReorderable，目前用自带的 useTransferReorder
+  - 暂缓：TransferList 改用 createReorderable 需要 adaptReorderable 和 core 导出的重排作用域，替换现有 useTransferReorder，约 1.5k 行，本轮未做
 - [ ] [`6103d36e9`](https://github.com/meta/astryx/commit/6103d36e9) feat(lab): ListInput reorders through core's createReorderable (#8163)
   - 暂缓：lab ListInput 改用 createReorderable 与 ListReorderScope，Vue 版目前用自带的 useListReorder，等 createReorderable 移植后再迁
   - 暂缓：ListInput 改用 createReorderable 属拖动重排任务，由另一代理负责
   - 暂缓：ListInputShowcase 示例与抓手捏合缩放的浏览器用例随 ListInput 改用 createReorderable，归拖动重排任务
   - 暂缓：[createReorderable] ListInput 改用 createReorderable
+  - 暂缓：ListInput 改走 core 的重排引擎需要 core 给 lab 导出内部重排作用域入口，并把 isReorderable 布尔改成 reorderable 对象，属破坏性 API 调整，约 1.3k 行，本轮未做
 - [x] [`f2a6332eb`](https://github.com/meta/astryx/commit/f2a6332eb) fix(List): a swizzled copy reads a package reorderable object (#10741)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`06ebae229`](https://github.com/meta/astryx/commit/06ebae229) fix(List): a drag follows a scroll around the list's scroll box (#10742)
+- [x] [`06ebae229`](https://github.com/meta/astryx/commit/06ebae229) fix(List): a drag follows a scroll around the list's scroll box (#10742)
   - 暂缓：拖动跟随列表滚动盒滚动，依赖重排引擎和 edgeAutoscroll、nearestScroller，均未移植
   - 暂缓：拖动跟随滚动盒的滚动，随 createReorderable 一起，归拖动重排任务
   - 暂缓：[createReorderable] List 拖动跟随滚动盒滚动，依赖重排引擎和边缘自动滚动
+  - 已移植：[#653](https://github.com/astryx-vue/astryx-vue/pull/653)。拖动中列表外层滚动盒滚动时，预览和落点跟着走，靠边自动滚动
 - [x] [`642cc2de1`](https://github.com/meta/astryx/commit/642cc2de1) fix(lab): write latest-value refs at commit, not during render (#10780)
   - 不适用：React 在提交阶段写最新值 ref 的规范；Vue 的 ref 没有渲染期写入的问题
 
@@ -7861,31 +7875,36 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`17f6985ed`](https://github.com/meta/astryx/commit/17f6985ed) fix(Layout): a full-bleed Table or List row takes the rounded container corner it reaches (#10586)
   - 已移植：[#611](https://github.com/astryx-vue/astryx-vue/pull/611)。bleed 列表在圆角 Card、Dialog 里作为首个或末个子元素时，首行末行取容器圆角减块内边距（Table 部分已有），补测试
-- [ ] [`a28d586eb`](https://github.com/meta/astryx/commit/a28d586eb) feat(core): createReorderable makes List rows reorderable (#8139)
+- [x] [`a28d586eb`](https://github.com/meta/astryx/commit/a28d586eb) feat(core): createReorderable makes List rows reorderable (#8139)
   - 暂缓：本期已做 animatedLayout 与 inertClone；剩 createReorderable 拖动重排（依赖手势），归动效与手势引擎的组件接入阶段
   - 暂缓：createReorderable 拖动重排，归动效与手势引擎任务（4c 拖动重排）
   - 暂缓：createReorderable 与 List 重排手柄：上游重排引擎约 4000 行（listReorderEngine 2616、ListReorderHandle 425、ListReorderTouch 219、listReorderContext、reorderModel、uikit/reorder 接入），Vue 版还缺 edgeAutoscroll 拖到边缘自动滚动、nearestScroller 滚动祖先、rowMotion 行位移、anchoredHint 锚定提示、touchHitArea 触控热区这几块底层设施，Item 也还没有 label/trailing 上下文，需单独立项先补设施再移植
   - 暂缓：[createReorderable] 重排引擎与 List 重排手柄
+  - 已移植：[#653](https://github.com/astryx-vue/astryx-vue/pull/653)。新增 useReorderable/createReorderable 重排引擎，List 传 reorderable 后带 itemKey 的行有拖动手柄，支持手指按住拖、鼠标拖、键盘重排模式和读屏播报
 - [ ] [`36b8f6ebc`](https://github.com/meta/astryx/commit/36b8f6ebc) feat(lab): TransferList reorders through core's createReorderable (#8143)
   - 暂缓：lab TransferList 改用 createReorderable，依赖拖动重排，归动效与手势引擎任务（4c 拖动重排）
   - 暂缓：lab TransferList 改用 createReorderable，Vue 版目前用自带的 useTransferReorder，等 createReorderable 移植后再迁
   - 暂缓：[createReorderable] TransferList 改用 createReorderable，目前用自带的 useTransferReorder
+  - 暂缓：TransferList 改用 createReorderable 需要 adaptReorderable 和 core 导出的重排作用域，替换现有 useTransferReorder，约 1.5k 行，本轮未做
 - [x] [`df4c958ec`](https://github.com/meta/astryx/commit/df4c958ec) perf(core): motions one callback starts read stylesheets in one pass (#10728)
   - 不适用：上游内部规范和架构文档、只改上游测试（自动初筛）
 - [ ] [`6103d36e9`](https://github.com/meta/astryx/commit/6103d36e9) feat(lab): ListInput reorders through core's createReorderable (#8163)
   - 暂缓：lab ListInput 改用 createReorderable，依赖拖动重排，归动效与手势引擎任务（4c 拖动重排）
   - 暂缓：lab ListInput 改用 createReorderable 与 ListReorderScope，Vue 版目前用自带的 useListReorder，等 createReorderable 移植后再迁
   - 暂缓：[createReorderable] ListInput 改用 createReorderable
+  - 暂缓：ListInput 改走 core 的重排引擎需要 core 给 lab 导出内部重排作用域入口，并把 isReorderable 布尔改成 reorderable 对象，属破坏性 API 调整，约 1.3k 行，本轮未做
 - [x] [`5f1e4dd68`](https://github.com/meta/astryx/commit/5f1e4dd68) test(List): proofs of the reorder's preview, glides, handle and ring (#10748)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`f2a6332eb`](https://github.com/meta/astryx/commit/f2a6332eb) fix(List): a swizzled copy reads a package reorderable object (#10741)
+- [x] [`f2a6332eb`](https://github.com/meta/astryx/commit/f2a6332eb) fix(List): a swizzled copy reads a package reorderable object (#10741)
   - 暂缓：重排对象的包内读取，随 createReorderable 一起，归动效与手势引擎任务（4c 拖动重排）
   - 暂缓：拷贝组件读包里的重排对象（共享键），随 createReorderable 一起，createReorderable 未移植
   - 暂缓：[createReorderable] 拷贝组件读包里的重排对象
-- [ ] [`06ebae229`](https://github.com/meta/astryx/commit/06ebae229) fix(List): a drag follows a scroll around the list's scroll box (#10742)
+  - 已移植：[#653](https://github.com/astryx-vue/astryx-vue/pull/653)。引擎挂在共享键上，拷贝出来的 List 也能读包里的 reorderable 对象
+- [x] [`06ebae229`](https://github.com/meta/astryx/commit/06ebae229) fix(List): a drag follows a scroll around the list's scroll box (#10742)
   - 暂缓：拖动跟随列表滚动盒的滚动，随 createReorderable 一起，归动效与手势引擎任务（4c 拖动重排）
   - 暂缓：拖动跟随列表滚动盒滚动，依赖重排引擎和 edgeAutoscroll、nearestScroller，均未移植
   - 暂缓：[createReorderable] List 拖动跟随滚动盒滚动，依赖重排引擎和边缘自动滚动
+  - 已移植：[#653](https://github.com/astryx-vue/astryx-vue/pull/653)。拖动中列表外层滚动盒滚动时，预览和落点跟着走，靠边自动滚动
 - [x] [`f8a426486`](https://github.com/meta/astryx/commit/f8a426486) docs(List): FR11's divider rule holds for every pointer (#10769)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`42081ef30`](https://github.com/meta/astryx/commit/42081ef30) docs(windowing): restore the owner's approval lines and drop adoption order (#10795)
@@ -7920,10 +7939,11 @@
   - 不适用：React Server Components 的 use client 指令
 - [x] [`f26571e10`](https://github.com/meta/astryx/commit/f26571e10) spec(Table): column virtualization windows the unpinned columns (#11013)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`36bf4fc9d`](https://github.com/meta/astryx/commit/36bf4fc9d) refactor(reorder): the controller reads a collection's rows through a reader (#11199)
+- [x] [`36bf4fc9d`](https://github.com/meta/astryx/commit/36bf4fc9d) refactor(reorder): the controller reads a collection's rows through a reader (#11199)
   - 暂缓：重排控制器经读取器读集合行，随 createReorderable 一起，归动效与手势引擎任务（4c 拖动重排）
   - 暂缓：重排控制器经读取器读集合行，随 createReorderable 一起，重排引擎未移植
   - 暂缓：[createReorderable] 重排控制器经读取器读集合行，重排引擎还没有
+  - 已移植：[#653](https://github.com/astryx-vue/astryx-vue/pull/653)。重排控制器通过读取器 ReorderRows 读集合的行
 - [x] [`93300ef29`](https://github.com/meta/astryx/commit/93300ef29) fix(core): a List and a swizzled ListItem share reported rows and kept presentation (AST-110 FR3) (#11214)
   - 暂缓：依赖 36929ac92 的行级布局更新设施（共享已报告行与保留表现），Vue 没有 swizzle 拷贝但设施本身未做，归动效与手势引擎任务
   - 已移植：[#627](https://github.com/astryx-vue/astryx-vue/pull/627)。报告过的行与离开时的样子放进跨副本共享的 WeakMap，包里 List 与拷贝的 ListItem 混用也能退场
@@ -7942,6 +7962,7 @@
   - 暂缓：轻甩露出、只有刻意拖动才触发要改走 createSwipe，归动效与手势引擎任务（4b 拖拽）
   - 暂缓：行为部分已在 #622 移植（甩动只打开、拖过触发点才触发、两项一侧需从打开状态起拖），还差操作项长满面板、触发项盖住面板的视觉，要等共享 Swipe 模块。
   - 暂缓：[createSwipe] 甩动只露出、刻意拖动才触发的行为已在 #622，剩操作项长满面板的展示要走 createSwipe
+  - 暂缓：甩动只露出已在 #622，剩下的操作项长满面板依赖 createSwipe 模块
 - [x] [`807dc2ead`](https://github.com/meta/astryx/commit/807dc2ead) refactor(core): name the nested press rule for every pointer it covers (#11304)
   - 不适用：上游只改名与挪样式，无行为变化，基础展示族已判
 - [x] [`061b2fa8d`](https://github.com/meta/astryx/commit/061b2fa8d) test(List): the reorder busy proof decodes its cast once (#11075)
@@ -7953,10 +7974,11 @@
 
 - [x] [`8677612c5`](https://github.com/meta/astryx/commit/8677612c5) [Component Audit] ListItem: slot docs say where content sits, and right-to-left chevrons point the right way (#11336)
   - 已移植：[#611](https://github.com/astryx-vue/astryx-vue/pull/611)。ListItem 起止内容插槽说明改为行内位置；Vue 版 ListItem 没有会反向的链接箭头，RTL 箭头不适用
-- [ ] [`4d1cb828f`](https://github.com/meta/astryx/commit/4d1cb828f) fix(List): a reorder handle's name follows its row's place and label (#10815)
+- [x] [`4d1cb828f`](https://github.com/meta/astryx/commit/4d1cb828f) fix(List): a reorder handle's name follows its row's place and label (#10815)
   - 暂缓：重排手柄名称随行位置与标签变化：Vue 的 List 还没有重排手柄，随 createReorderable 一起，归动效与手势引擎任务（4c 拖动重排）
   - 暂缓：重排手柄名称随行位置与标签变化，Vue 的 List 还没有重排手柄，随 createReorderable 一起
   - 暂缓：[createReorderable] List 还没有重排手柄
+  - 已移植：[#653](https://github.com/astryx-vue/astryx-vue/pull/653)。手柄名字跟着行的位置和标签变，无名字的行只警告一次
 - [x] [`10bae0687`](https://github.com/meta/astryx/commit/10bae0687) feat(Table): useTableColumnsVirtualization windows the unpinned columns (#11014)
   - 已移植：[#547](https://github.com/astryx-vue/astryx-vue/pull/547)。useTableColumnsVirtualization 由表格任务完成
 - [x] [`ef87167d0`](https://github.com/meta/astryx/commit/ef87167d0) feat(Table): column windowing retains the focused column and anchors the first visible column (#11018)
@@ -7974,6 +7996,7 @@
   - 暂缓：横滑操作改走 createSwipe 共用拖动路径，归动效与手势引擎任务（4b 拖拽）
   - 暂缓：归动效与手势引擎任务：缺 createSwipe 公共 API、swipeHost、SwipeActionsLayer、约 1400 行的 useSwipeAction 和 dragToSnapPoints 的 compositorSettle，Vue 版 Item 横滑还没走共享拖拽路径。
   - 暂缓：[createSwipe] 缺 createSwipe、swipeHost、SwipeActionsLayer，Item 横滑还没走共用拖动路径
+  - 暂缓：Vue 版还没有 createSwipe、swipeHost、SwipeActionsLayer、useSwipeAction 这套横滑模块，上游约 76 个文件近万行，本轮只建了重排设施
 - [x] [`178cd8019`](https://github.com/meta/astryx/commit/178cd8019) perf(OverflowList): lists in one commit measure together after it, before paint (#10392)
   - 不适用：React 提交内批量测量的时序优化，Vue 版用自己的测量与 ResizeObserver
 - [x] [`30b12dd5a`](https://github.com/meta/astryx/commit/30b12dd5a) fix(Item, Token): a control inside a row with its own action, or a token's Remove, rings itself (#8869)
@@ -11971,11 +11994,12 @@
   - 已移植：[#547](https://github.com/astryx-vue/astryx-vue/pull/547)。共用列表窗口模块放在 composables/internal/listWindow，表格按插件声明判断能否窗口化
 - [x] [`8f8b3db65`](https://github.com/meta/astryx/commit/8f8b3db65) perf(Text): take a new text's first truncation measurement from the shared observer (#10668)
   - 已移植：[#505](https://github.com/astryx-vue/astryx-vue/pull/505)。第一次测量取自共享 ResizeObserver 的首次通知
-- [ ] [`a28d586eb`](https://github.com/meta/astryx/commit/a28d586eb) feat(core): createReorderable makes List rows reorderable (#8139)
+- [x] [`a28d586eb`](https://github.com/meta/astryx/commit/a28d586eb) feat(core): createReorderable makes List rows reorderable (#8139)
   - 暂缓：本期已做 animatedLayout 与 inertClone；剩 createReorderable 拖动重排（依赖手势），归动效与手势引擎的组件接入阶段
   - 暂缓：createReorderable 依赖 animatedLayout、animator 和 inertClone 这套动效设施，归动效与手势引擎任务；en.json 的键已在 #533 对齐
   - 暂缓：createReorderable 与 List 重排手柄：上游重排引擎约 4000 行（listReorderEngine 2616、ListReorderHandle 425、ListReorderTouch 219、listReorderContext、reorderModel、uikit/reorder 接入），Vue 版还缺 edgeAutoscroll 拖到边缘自动滚动、nearestScroller 滚动祖先、rowMotion 行位移、anchoredHint 锚定提示、touchHitArea 触控热区这几块底层设施，Item 也还没有 label/trailing 上下文，需单独立项先补设施再移植
   - 暂缓：[createReorderable] 重排引擎与 List 重排手柄
+  - 已移植：[#653](https://github.com/astryx-vue/astryx-vue/pull/653)。新增 useReorderable/createReorderable 重排引擎，List 传 reorderable 后带 itemKey 的行有拖动手柄，支持手指按住拖、鼠标拖、键盘重排模式和读屏播报
 - [x] [`7f04a6c5a`](https://github.com/meta/astryx/commit/7f04a6c5a) fix(Table): an unbounded column's resize handle announces a range that holds its width (#10577)
   - 已移植：[#539](https://github.com/astryx-vue/astryx-vue/pull/539)。没有最大宽度的列，拖柄以窗口宽度作替代 aria-valuemax（不低于当前值），并用 aria-valuetext 念出像素数
 - [x] [`bb0786673`](https://github.com/meta/astryx/commit/bb0786673) fix(TextInput): dispatch changeAction and update optimistic value on clear (#6425)
@@ -12361,11 +12385,12 @@
   - 已移植：[#620](https://github.com/astryx-vue/astryx-vue/pull/620)。主题里写的 :active 跟随触屏按压模型：鼠标保留 :active，粗指针下改看 data-astryx-press
 - [x] [`7bdeb06d7`](https://github.com/meta/astryx/commit/7bdeb06d7) fix(theme): text follows the reader's text size in Safari on iPhone, in every theme (#10416)
   - Vue 版已有：root Theme 按系统文字大小缩放，已在 Theme/dynamicType.ts、textSizeSync.ts
-- [ ] [`a28d586eb`](https://github.com/meta/astryx/commit/a28d586eb) feat(core): createReorderable makes List rows reorderable (#8139)
+- [x] [`a28d586eb`](https://github.com/meta/astryx/commit/a28d586eb) feat(core): createReorderable makes List rows reorderable (#8139)
   - 暂缓：本期已做 animatedLayout 与 inertClone；剩 createReorderable 拖动重排（依赖手势），归动效与手势引擎的组件接入阶段
   - 暂缓：createReorderable 与 List 重排手柄：上游重排引擎约 4000 行（listReorderEngine 2616、ListReorderHandle 425、ListReorderTouch 219、listReorderContext、reorderModel、uikit/reorder 接入），Vue 版还缺 edgeAutoscroll 拖到边缘自动滚动、nearestScroller 滚动祖先、rowMotion 行位移、anchoredHint 锚定提示、touchHitArea 触控热区这几块底层设施，Item 也还没有 label/trailing 上下文，需单独立项先补设施再移植
   - 暂缓：createReorderable 拖动重排依赖 animatedLayout 之上的重排引擎与手势，归动效与手势引擎任务；en.json 的键已在 #533 对齐
   - 暂缓：[createReorderable] 重排引擎与 List 重排手柄
+  - 已移植：[#653](https://github.com/astryx-vue/astryx-vue/pull/653)。新增 useReorderable/createReorderable 重排引擎，List 传 reorderable 后带 itemKey 的行有拖动手柄，支持手指按住拖、鼠标拖、键盘重排模式和读屏播报
 - [x] [`0f6f37e6f`](https://github.com/meta/astryx/commit/0f6f37e6f) docs(records): new data attributes outside data-astryx-* are public surface; prefer a private CSS variable (#10937)
   - 不适用：上游内部规范和架构文档（自动初筛）
 
@@ -12406,6 +12431,7 @@
   - 暂缓：归动效与手势引擎任务：缺 createSwipe 公共 API、swipeHost、SwipeActionsLayer、约 1400 行的 useSwipeAction 和 dragToSnapPoints 的 compositorSettle，Vue 版 Item 横滑还没走共享拖拽路径。
   - 暂缓：滑动操作改走 createSwipe 与共享拖动通道，缺手势引擎，归动效与手势引擎任务
   - 暂缓：[createSwipe] 缺 createSwipe、swipeHost、SwipeActionsLayer，Item 横滑还没走共用拖动路径
+  - 暂缓：Vue 版还没有 createSwipe、swipeHost、SwipeActionsLayer、useSwipeAction 这套横滑模块，上游约 76 个文件近万行，本轮只建了重排设施
 - [x] [`39eb83866`](https://github.com/meta/astryx/commit/39eb83866) docs(architecture): unused optional features cost almost nothing, and large behavior code lives in a shared engine (#11650)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`4800d992e`](https://github.com/meta/astryx/commit/4800d992e) feat(AlertDialog): touch motion on the theme's timing (#8373)
