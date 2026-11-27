@@ -247,6 +247,7 @@ export {
   catppuccinMocha,
   Code,
   CodeBlock,
+  CodeLineTokens,
   createCodeLanguage,
   darkSyntaxPresets,
   defineSyntaxTheme,
