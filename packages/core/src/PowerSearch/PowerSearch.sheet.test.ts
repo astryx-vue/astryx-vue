@@ -129,6 +129,16 @@ describe('power search sheet flow', () => {
     expect(trigger().getAttribute('aria-expanded')).toBe('false')
   })
 
+  it('gives each remove button a tooltip named like the button', async () => {
+    phone()
+    renderPowerSearch({ filters: [nameFilter('ada')] })
+    await openSheet()
+    const remove = step('manage')!.querySelector<HTMLElement>('[data-sheet-filter="0"] [data-sheet-remove]')!
+    const label = remove.getAttribute('aria-label')
+    expect(label).toBeTruthy()
+    expect([...document.querySelectorAll('[role="tooltip"]')].map(tip => tip.textContent?.trim())).toContain(label)
+  })
+
   it('asks before discarding a changed draft and keeps the filters when discarded', async () => {
     phone()
     const { changes, filters } = renderPowerSearch({ filters: [nameFilter('ada'), nameFilter('bob')] })

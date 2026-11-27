@@ -357,6 +357,11 @@
    * the sheet's own surface colour: fixed, full width, flush with the bottom
    * edge, above the panel, and masked out so it is never visible.
    */
+  /* 浮层挂载点：自己不占地方，里面的浮层都是 fixed 定位，挂在拖动的面板外面不跟着位移。 */
+  .astryx-bottom-sheet__layer-host {
+    display: contents;
+  }
+
   .astryx-bottom-sheet__edge-tint {
     position: fixed;
     inset-inline: 0;

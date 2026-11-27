@@ -119,6 +119,7 @@ function onRowClick(row: { index: number, isOneTap: boolean }): void {
               <IconButton
                 data-sheet-remove=""
                 :label="row.removeLabel"
+                :tooltip="row.removeLabel"
                 icon="close"
                 variant="ghost"
                 size="md"

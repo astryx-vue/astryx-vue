@@ -10,6 +10,7 @@ import { useScrollLock } from '../composables/useScrollLock.js'
 import { holdKeptInside } from '../layer/inputHold.js'
 import { isLayerFocusStranded, restoreLayerFocus, trackLayerFocus } from '../layer/layerFocusReturn.js'
 import { createModalOutletHandle } from '../layer/modalOutlet.js'
+import { provideNestedLayerMountTarget } from '../layer/mount.js'
 import { isImeKeyEvent } from '../utils/ime.js'
 import BottomSheetPanel from './BottomSheetPanel.vue'
 import { bottomSheetEscapeKey } from './escape.js'
@@ -50,6 +51,7 @@ const open = computed(() => {
 })
 const attrs = useAttrs()
 const dialog = useTemplateRef<HTMLDialogElement>('dialog')
+provideNestedLayerMountTarget(useTemplateRef<HTMLElement>('layerHost'))
 const panel = useTemplateRef<InstanceType<typeof BottomSheetPanel>>('panel')
 const isPresented = ref(false)
 const scrimOpacity = ref(1)
@@ -384,5 +386,6 @@ defineExpose({
       </BottomSheetPanel>
     </div>
     <div class="astryx-bottom-sheet__edge-tint" aria-hidden="true" />
+    <div ref="layerHost" class="astryx-bottom-sheet__layer-host" />
   </dialog>
 </template>
