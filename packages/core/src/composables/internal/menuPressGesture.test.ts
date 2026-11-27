@@ -1,6 +1,6 @@
 import type { MenuPressEvent, MenuPressGesture } from './menuPressGesture.js'
 import { describe, expect, it } from 'vitest'
-import { IDLE_MENU_PRESS, MENU_PRESS_SETTLE_MS, menuPressStep } from './menuPressGesture.js'
+import { IDLE_MENU_PRESS, MENU_PRESS_HANDOFF_PX, MENU_PRESS_SETTLE_MS, menuPressStep } from './menuPressGesture.js'
 
 // 菜单按压状态图，一条转移一个用例。
 
@@ -113,5 +113,46 @@ describe('menuPressStep：从触发器开始', () => {
 
   it('打开后取消：结束手势，菜单留着', () => {
     expect(run([downOnTrigger('mouse'), { type: 'cancel' }]).last).toEqual({ type: 'settle', stray: false, dismiss: false })
+  })
+})
+
+describe('menuPressStep：手指的交接（UIMenu）', () => {
+  const opened = { type: 'opened', time: 0 } as const
+  const at = (x: number, y: number, row: Row | null = 'A', time = 10) =>
+    ({ type: 'move', row, isInMenu: true, time, x, y }) as const
+  const liftAt = (x: number, y: number, row: Row | null = 'A', time = 1000) =>
+    ({ type: 'up', row, isInMenu: true, isOnTrigger: false, time, x, y }) as const
+
+  it('打开后菜单看到的第一个位置只是起点，走够交接距离才开始挑行', () => {
+    const start = run([downOnTrigger('touch'), opened, at(100, 100)])
+    expect(start.last).toEqual({ type: 'none' })
+    expect(start.gesture.phase).toBe('open')
+
+    const short = run([downOnTrigger('touch'), opened, at(100, 100), at(100 + MENU_PRESS_HANDOFF_PX - 1, 100)])
+    expect(short.gesture.phase).toBe('open')
+
+    const passed = run([downOnTrigger('touch'), opened, at(100, 100), at(100 + MENU_PRESS_HANDOFF_PX, 100, 'B')])
+    expect(passed.gesture.phase).toBe('tracking')
+    expect(passed.last).toEqual({ type: 'highlight', row: 'B' })
+  })
+
+  it('交接距离按直线算：斜着各走 7 不够，各走 9 才够', () => {
+    expect(run([downOnTrigger('touch'), opened, at(0, 0), at(7, 7)]).gesture.phase).toBe('open')
+    expect(run([downOnTrigger('touch'), opened, at(0, 0), at(9, 9)]).gesture.phase).toBe('tracking')
+  })
+
+  it('没走够就松开，即使按了很久也什么都不执行，菜单留着，触发器的 click 要吞掉', () => {
+    const result = run([downOnTrigger('touch'), opened, at(100, 100), liftAt(100, 102, 'A', MENU_PRESS_SETTLE_MS * 10)])
+    expect(result.last).toEqual({ type: 'settle', stray: true, dismiss: false })
+  })
+
+  it('走够以后在行上松开就执行那一行', () => {
+    const result = run([downOnTrigger('touch'), opened, at(100, 100), at(120, 100, 'B'), liftAt(120, 100, 'B')])
+    expect(result.last).toEqual({ type: 'act', row: 'B' })
+  })
+
+  it('鼠标和不带位置的事件仍按落定规则', () => {
+    expect(run([downOnTrigger('mouse'), move('A')]).gesture.phase).toBe('tracking')
+    expect(run([downOnTrigger('touch'), opened, up('A', { time: MENU_PRESS_SETTLE_MS })]).last).toEqual({ type: 'act', row: 'A' })
   })
 })

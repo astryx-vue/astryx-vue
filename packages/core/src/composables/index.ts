@@ -166,6 +166,8 @@ export { useMediaQuery } from './useMediaQuery.js'
 
 export {
   isMenuPressActivation,
+  MENU_PRESS_HANDOFF_PX,
+  MENU_PRESS_LIT_ATTRIBUTE,
   MENU_PRESS_MARKER,
   MENU_PRESS_SETTLE_MS,
   menuPressStep,

@@ -10,7 +10,17 @@ function loadBottomSheet(): Promise<typeof import('./BottomSheet.vue')> {
  */
 export const LazyBottomSheet = defineAsyncComponent(loadBottomSheet)
 
-/** 先把模块加载好、什么都不渲染：底部弹层可能成为呈现方式时调用，打开时立刻就有。 */
-export function preloadBottomSheet(): void {
-  void loadBottomSheet()
+/**
+ * 先把模块加载好、什么都不渲染：底部弹层可能成为呈现方式时调用，打开时立刻就有。
+ * 加载失败是预加载自己的结果（返回 `false`），不会变成没人接的 Promise 拒绝；
+ * 下次调用会重新请求，真正打开时的加载也不受这次失败影响。
+ */
+export async function preloadBottomSheet(): Promise<boolean> {
+  try {
+    await loadBottomSheet()
+    return true
+  }
+  catch {
+    return false
+  }
 }

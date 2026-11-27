@@ -16,7 +16,7 @@ footer: false
 <tr><td><code>href</code></td><td><code>string</code></td><td>—</td><td>这一行要跳转的地址；给出后整行渲染成链接。</td></tr>
 <tr><td><code>target</code></td><td><code>'_blank' | '_self'</code></td><td>—</td><td>链接的打开方式，仅在给出 <code>href</code> 时使用。</td></tr>
 <tr><td><code>rel</code></td><td><code>string</code></td><td>—</td><td>链接关系，仅在给出 <code>href</code> 时使用。</td></tr>
-<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否禁用这一行。禁用的行会变淡，方向键和首字母查找都会跳过它，也不能被激活。</td></tr>
+<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否禁用这一行。禁用的行会变淡，不能被激活；方向键和首字母查找仍能走到它，键盘用户才找得到。</td></tr>
 <tr><td><code>hasCloseOnSelect</code></td><td><code>boolean</code></td><td><code>true</code></td><td>激活这一行后是否收起菜单。</td></tr>
 <tr><td><code>variant</code></td><td><code>'default' | 'destructive'</code></td><td><code>'default'</code></td><td>这一行的视觉变体。</td></tr>
 </tbody></table>

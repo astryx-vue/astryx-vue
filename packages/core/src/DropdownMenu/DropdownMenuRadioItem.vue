@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { DropdownMenuRadioItemProps, DropdownMenuRadioItemSlots } from './types.js'
 import { computed, useSlots } from 'vue'
+import { keepDisabledRowUnfocused } from '../composables/internal/menuActivation.js'
 import Icon from '../Icon/Icon.vue'
 import Item from '../List/Item.vue'
 import { useDropdownMenuRadioGroup } from './context.js'
@@ -25,6 +26,7 @@ const isChecked = computed(() => group.value.value === props.value)
 const {
   controlSize,
   density,
+  forwardedAttrs,
   handleClick,
   handlePointerMove,
   inContextMenu,
@@ -42,7 +44,7 @@ const hasEnd = computed(() => slots.endContent != null)
 </script>
 
 <template>
-  <!-- eslint-disable-next-line vue-a11y/click-events-have-key-events, vue-a11y/interactive-supports-focus -- The menu owns Enter, Space, and the arrows. tabindex is -1 while the row is enabled and removed while disabled. -->
+  <!-- eslint-disable-next-line vue-a11y/click-events-have-key-events, vue-a11y/interactive-supports-focus -- The menu owns Enter, Space, and the arrows. -->
   <div
     v-if="inContextMenu"
     class="astryx-context-menu-item"
@@ -51,8 +53,10 @@ const hasEnd = computed(() => slots.endContent != null)
     :aria-disabled="isDisabled || undefined"
     :data-disabled="isDisabled || undefined"
     :data-size="menuSize"
-    :tabindex="isDisabled ? undefined : -1"
+    tabindex="-1"
+    v-bind="forwardedAttrs"
     @click="handleClick"
+    @mousedown="isDisabled && keepDisabledRowUnfocused($event)"
     @pointermove="handlePointerMove"
   >
     <MenuSelectionMark kind="radio" :checked="isChecked" :is-disabled="isDisabled" :size="controlSize" />
@@ -86,7 +90,9 @@ const hasEnd = computed(() => slots.endContent != null)
     :is-disabled="isDisabled"
     :label="label"
     :on-click="handleClick"
-    :tabindex="isDisabled ? undefined : -1"
+    tabindex="-1"
+    v-bind="forwardedAttrs"
+    @mousedown="isDisabled && keepDisabledRowUnfocused($event)"
     @pointermove="handlePointerMove"
   >
     <template #marker>

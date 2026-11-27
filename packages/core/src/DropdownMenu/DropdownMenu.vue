@@ -22,6 +22,7 @@ import { activateFocusedMenuItem } from './menuItemRoles.js'
 import { useDropdownMenuMessages } from './useDropdownMenuMessages.js'
 import { useMenuDrillIn } from './useMenuDrillIn.js'
 import { useMenuFocus } from './useMenuFocus.js'
+import { useMenuNaming } from './useMenuNaming.js'
 import { useMenuRegions } from './useMenuRegions.js'
 import '../../styles/dropdown-menu.css'
 
@@ -30,7 +31,6 @@ const props = withDefaults(defineProps<DropdownMenuProps>(), {
   alignment: 'start',
   hasChevron: true,
   placement: 'below',
-  presentation: 'popover',
 })
 
 const emit = defineEmits<DropdownMenuEmits>()
@@ -71,7 +71,7 @@ let armedTriggerClickGuard = false
 const hasRegions = computed(() => slots.header != null || slots.footer != null)
 const { drillIn, host, isDrilled } = useMenuDrillIn(isOpen)
 const positionedEl = computed(() => (hasRegions.value ? popoverRef.value : surfaceRef.value))
-const { isSheet, settle: onSheetSettled } = useHeldPresentation(() => props.presentation, isOpen)
+const { isSheet, settle: onSheetSettled } = useHeldPresentation(() => props.presentation ?? 'popover', isOpen)
 const sheetOpen = computed({
   get: () => isSheet.value && isOpen.value,
   set: (open: boolean) => {
@@ -84,30 +84,18 @@ const buttonProps = computed(() => ({
   label: messages.value.dropdownMenu.label,
   ...props.button,
 }))
-const sheetLabel = computed(() => typeof buttonProps.value.label === 'string' ? buttonProps.value.label : messages.value.dropdownMenu.label)
 const menuSize = computed(() => buttonProps.value.size ?? 'md')
 const isIconOnly = computed(() => buttonProps.value.isIconOnly === true)
 const hasChevron = computed(() => props.hasChevron && !isIconOnly.value)
 
-const surfaceId = computed(() => {
-  const provided = attrs.id
-  return typeof provided === 'string' && provided.length > 0 ? provided : menuId
-})
-
-const menuLabel = computed(() => {
-  const explicit = attrs['aria-label']
-  if (typeof explicit === 'string' && explicit.length > 0)
-    return explicit
-  return typeof buttonProps.value.label === 'string' ? buttonProps.value.label : undefined
-})
-
-const menuAriaLabel = computed(() => {
-  const explicit = attrs['aria-label']
-  if (typeof explicit === 'string')
-    return explicit
-  if (slots.trigger != null)
-    return undefined
-  return typeof buttonProps.value.label === 'string' ? buttonProps.value.label : undefined
+const { captureTriggerName, menuAriaLabel, menuAriaLabelledBy, menuLabel, sheetLabel, surfaceId } = useMenuNaming({
+  attrs: () => attrs,
+  buttonLabel: () => buttonProps.value.label,
+  fallback: () => messages.value.dropdownMenu.label,
+  getTriggerControl: () => getTriggerControl(),
+  hasCustomTrigger: () => slots.trigger != null,
+  menuId,
+  triggerId,
 })
 
 const dialogLabel = computed(() => menuLabel.value ?? messages.value.dropdownMenu.label)
@@ -116,15 +104,6 @@ const popupKind = computed(() => (hasRegions.value ? 'dialog' : 'menu'))
 const controlsId = computed(() => (hasRegions.value ? dialogId : surfaceId.value))
 const focusRing = computed(() => (focusReturn.isFocusRingSuppressed.value ? 'off' : undefined))
 const hasOverflow = useOverflow(surfaceRef, isOpen)
-
-const menuAriaLabelledBy = computed(() => {
-  const explicit = attrs['aria-labelledby']
-  if (typeof explicit === 'string')
-    return explicit
-  if (menuAriaLabel.value != null)
-    return undefined
-  return slots.trigger != null ? triggerId : undefined
-})
 
 const forwardedAttrs = computed(() => Object.fromEntries(
   Object.entries(attrs).filter(([key]) => !['class', 'style', 'id', 'aria-label', 'aria-labelledby'].includes(key)),
@@ -246,6 +225,8 @@ function openMenu(modality: 'keyboard' | 'pointer'): boolean {
 const press = useMenuPress({
   menuRef: surfaceRef,
   triggerRef: anchorRef,
+  // 没写 presentation 时，打开菜单的手指按 UIMenu 的方式挑行；写死 'popover' 才按指针的规则。
+  touchModel: props.presentation === 'popover' ? 'pointer' : 'uikit',
   isEnabled: () => !isSheet.value && !isTriggerDisabled(),
   onTriggerPress: () => {
     if (isOpen.value) {
@@ -282,9 +263,13 @@ async function focusMenuOnOpen(): Promise<void> {
   if (surfaceRef.value == null)
     return
   shouldFocusOnOpen.value = false
-  const hasFocusedRow = focusLastOnOpen.value ? focusNav.focusLast() : focusNav.focusFirst()
+  const isPointerOpen = openModality === 'pointer'
+  // 按住的指针在这一帧之前已经点亮了某一行：那一行留着，它就是指针底下的行。
+  const active = surfaceRef.value.ownerDocument.activeElement
+  const isRowLit = isPointerOpen && active !== surfaceRef.value && surfaceRef.value.contains(active)
+  const hasFocusedRow = isRowLit || (!isPointerOpen && (focusLastOnOpen.value ? focusNav.focusLast() : focusNav.focusFirst()))
   focusLastOnOpen.value = false
-  if (openModality === 'pointer' || !hasFocusedRow)
+  if (!isRowLit && (isPointerOpen || !hasFocusedRow))
     focusSurface()
   openModality = 'keyboard'
 }
@@ -292,6 +277,7 @@ async function focusMenuOnOpen(): Promise<void> {
 watch(isOpen, async (nowOpen) => {
   layerIsOpen.value = nowOpen && !isSheet.value
   if (nowOpen) {
+    captureTriggerName()
     anchorWidth.value = anchorRef.value?.getBoundingClientRect().width ?? 0
     await focusMenuOnOpen()
     return
@@ -451,6 +437,7 @@ onMounted(() => {
   if (!isOpen.value)
     return
   layerIsOpen.value = true
+  captureTriggerName()
   anchorWidth.value = anchorRef.value?.getBoundingClientRect().width ?? 0
 })
 

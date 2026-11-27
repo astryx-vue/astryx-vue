@@ -2,10 +2,10 @@
 import type { StyleValue } from 'vue'
 import type { ContextMenuEmits, ContextMenuItemData, ContextMenuProps, ContextMenuSlots } from './types.js'
 import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
-import BottomSheet from '../BottomSheet/BottomSheet.vue'
 import { useDismiss } from '../composables/useDismiss.js'
 import { useLongPress } from '../composables/useLongPress.js'
 import { useOverflow } from '../composables/useOverflow.js'
+import { MenuBottomSheet } from '../DropdownMenu/lazyMenuBottomSheet.js'
 import { useMenuDrillIn } from '../DropdownMenu/useMenuDrillIn.js'
 import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
 import { useHeldPresentation } from '../layer/useHeldPresentation.js'
@@ -225,6 +225,13 @@ function applyOpenState(next: boolean): void {
   nav.resetTypeahead()
 }
 
+// 面板在第一次打开时才挂上，之后一直留着（退场动画照常播）：从没打开过的菜单不往页面加节点，
+// 每个单元格都带菜单的大表格因此不用为它们付出代价。
+const hasOpened = ref(isOpen.value)
+watch(isOpen, (open) => {
+  if (open)
+    hasOpened.value = true
+})
 watch(isOpen, applyOpenState)
 
 onMounted(() => {
@@ -275,7 +282,7 @@ defineExpose({
     />
   </component>
 
-  <Teleport :to="teleportTarget">
+  <Teleport v-if="hasOpened" :to="teleportTarget">
     <Transition name="astryx-context-menu">
       <div
         v-show="isOpen && !isSheet"
@@ -310,7 +317,7 @@ defineExpose({
       </div>
     </Transition>
   </Teleport>
-  <BottomSheet
+  <MenuBottomSheet
     v-if="isSheet"
     :is-open="isOpen"
     :label="menuName"
@@ -328,5 +335,5 @@ defineExpose({
       </div>
       <div :ref="assignHost" class="astryx-dropdown-menu-tree" />
     </div>
-  </BottomSheet>
+  </MenuBottomSheet>
 </template>

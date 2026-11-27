@@ -24,4 +24,4 @@ const archived = ref(false)
 </template>
 ```
 
-The mark is decorative. The whole row is the control, and the checked state is `aria-checked`. A disabled row stays in the menu, the arrow keys skip it, and a click does not toggle it.
+The mark is decorative. The whole row is the control, and the checked state is `aria-checked`. A disabled row stays in the menu, the arrow keys and typeahead reach it, and a click does not toggle it.
