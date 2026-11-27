@@ -1,4 +1,4 @@
-import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
+import { mkdir, mkdtemp, rm, symlink, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
@@ -101,6 +101,54 @@ describe('upgrade', () => {
       const text = await runCli(['upgrade'], { cwd })
       expect(text.stdout).toContain('Nothing to upgrade.')
       expect(text.stdout).toContain(data.changelogUrl)
+    }
+    finally {
+      await rm(cwd, { recursive: true, force: true })
+    }
+  })
+
+  it('says the CLI is older when the project already has a newer core', async () => {
+    const cwd = await project({ 'package.json': JSON.stringify({ name: 'demo', dependencies: { '@astryx-vue/core': '^99.0.0' } }) })
+    try {
+      const data = await report(cwd)
+      expect(data.status).toBe('cli-older')
+      expect(data.sections).toEqual([])
+      const text = await runCli(['upgrade'], { cwd })
+      expect(text.stdout).toContain('older than')
+      expect(text.stdout).not.toContain('Nothing to upgrade')
+    }
+    finally {
+      await rm(cwd, { recursive: true, force: true })
+    }
+  })
+
+  it('finds the project from any folder inside it', async () => {
+    const cwd = await project({
+      'package.json': JSON.stringify({ name: 'demo', dependencies: { '@astryx-vue/core': '0.3.0' } }),
+      'src/components/App.vue': OUTDATED_SOURCE,
+    })
+    try {
+      const data = await report(join(cwd, 'src/components'))
+      expect(data.status).toBe('outdated')
+      expect(data.hits.map(hit => hit.file)).toContain('src/components/App.vue')
+    }
+    finally {
+      await rm(cwd, { recursive: true, force: true })
+    }
+  })
+
+  it('lists hits in the same order on every machine and does not follow links', async () => {
+    const cwd = await project({
+      'package.json': JSON.stringify({ name: 'demo', dependencies: { '@astryx-vue/core': '0.3.0' } }),
+      'src/Z.vue': 'labelHidden\n',
+      'src/a.vue': 'labelHidden\n',
+      'node_modules/pkg/index.js': 'labelHidden\n',
+    })
+    try {
+      await symlink(join(cwd, 'node_modules/pkg'), join(cwd, 'src/linked'))
+      await symlink(join(cwd, 'node_modules/pkg/index.js'), join(cwd, 'src/linked.js'))
+      const data = await report(cwd)
+      expect(data.hits.map(hit => hit.file)).toEqual(['src/Z.vue', 'src/a.vue'])
     }
     finally {
       await rm(cwd, { recursive: true, force: true })
