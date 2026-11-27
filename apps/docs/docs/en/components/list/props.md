@@ -52,6 +52,12 @@ footer: false
         <td>The marker drawn in front of each row: none, disc (filled bullet), circle (outlined bullet), or decimal (numbers). <code>decimal</code> renders the list as an <code>&lt;ol&gt;</code>.</td>
       </tr>
       <tr>
+        <td><code>reorderable</code></td>
+        <td><code>Reorderable</code></td>
+        <td>—</td>
+        <td>The object from <code>useReorderable</code> or <code>createReorderable</code>. With it, each <code>ListItem</code> with an <code>itemKey</code> that the object lets move ends with a reorder handle: hold then drag under a finger, drag under a mouse, or press it and use the arrow keys. Without it the list loads none of the reorder code.</td>
+      </tr>
+      <tr>
         <td><code>start</code></td>
         <td><code>number</code></td>
         <td><code>1</code></td>

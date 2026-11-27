@@ -42,15 +42,15 @@ export interface CatalogGroup {
 }
 
 /**
- * The catalog split into the groups it displays, in display order. Empty groups
- * are dropped.
+ * The catalog split into the groups it displays, in display order. Pages marked
+ * `isHiddenFromOverview` and empty groups are dropped.
  */
 export function catalogGroups(locale: DocsLocale): CatalogGroup[] {
   return COMPONENT_GROUPS
     .map(group => ({
       id: group,
       title: GROUP_TITLES[locale][group],
-      entries: COMPONENT_CATALOG.filter(entry => entry.group === group),
+      entries: COMPONENT_CATALOG.filter(entry => entry.group === group && entry.isHiddenFromOverview !== true),
     }))
     .filter(group => group.entries.length > 0)
 }

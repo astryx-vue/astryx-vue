@@ -1,0 +1,137 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+/*
+ * List 拖动重排（createReorderable）：行末的手柄、列表的插入线、重排模式提示里的按钮。
+ * 标记属性由 List/reorder/reorderMarks.ts 写。
+ */
+@layer astryx.components {
+  /* 手柄 28px 见方，里面三条 20×2 的横线（::before 加上下两道投影），行距 6px。 */
+  .astryx-list-reorder-handle {
+    position: relative;
+    align-self: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    margin-block: -7px;
+    margin-inline-end: calc(-1 * min(8px, var(--astryx-item-inset-inline, 8px)));
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    background-color: transparent;
+    color: var(--astryx-color-icon-secondary, #737373);
+    font: inherit;
+    cursor: grab;
+  }
+
+  .astryx-list-reorder-handle::before {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 2px;
+    border-radius: 1px;
+    background-color: currentcolor;
+    box-shadow: 0 -6px currentcolor, 0 6px currentcolor;
+    forced-color-adjust: none;
+    pointer-events: none;
+  }
+
+  .astryx-list-reorder-handle:focus-visible {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, currentcolor);
+    outline-offset: calc(-1 * var(--astryx-focus-outline-width, 2px));
+  }
+
+  .astryx-list-reorder-handle[aria-pressed='true'] {
+    background-color: var(--astryx-color-overlay-pressed, light-dark(#05365919, #ffffff19));
+    forced-color-adjust: none;
+  }
+
+  .astryx-list-reorder-handle[aria-disabled='true'] {
+    color: var(--astryx-color-icon-disabled, #a3a3a3);
+    cursor: default;
+  }
+
+  [data-astryx-reordering] .astryx-list-reorder-handle:not([aria-disabled='true']) {
+    cursor: grabbing;
+  }
+
+  @media (pointer: coarse) {
+    .astryx-list-reorder-handle {
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .astryx-list-reorder-handle[aria-pressed='true'] {
+      background-color: Highlight;
+      color: HighlightText;
+    }
+  }
+
+  /* 没有尾部内容的行里，手柄是行自己的最后一个子元素，靠到末端并跟着行的对齐方式。 */
+  .astryx-list-reorder-handle[data-row-align] {
+    margin-inline-start: auto;
+  }
+
+  .astryx-list-reorder-handle[data-row-align='start'] {
+    align-self: flex-start;
+  }
+
+  .astryx-list-reorder-handle[data-row-align='first-line'] {
+    align-self: flex-start;
+    margin-block-start: calc((var(--astryx-text-body-leading, 1.4286) * var(--astryx-text-body-size, 0.875rem) - 28px) / 2);
+  }
+
+  /* 插入线：列表的 ::after，位置由 --astryx-reorder-line-* 给出，只在拖动和重排模式里显示。 */
+  .astryx-list[data-astryx-reorder-line]::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    inset-inline-start: var(--astryx-reorder-line-start, 0px);
+    inline-size: var(--astryx-reorder-line-size, 0px);
+    block-size: 2px;
+    border-radius: 1px;
+    background-color: var(--astryx-color-accent, #0082fb);
+    forced-color-adjust: none;
+    translate: 0 var(--astryx-reorder-line-y, 0px);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  @media (forced-colors: active) {
+    .astryx-list[data-astryx-reorder-line]::after {
+      background-color: Highlight;
+    }
+  }
+
+  /* 重排模式提示：键盘提示的外观，挂在手柄下方，可以点。 */
+  .astryx-list-reorder-hint {
+    pointer-events: auto;
+  }
+
+  .astryx-list-reorder-hint__button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    background-color: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .astryx-list-reorder-hint__button[data-text] {
+    padding-inline: var(--astryx-spacing-1, 4px);
+  }
+
+  .astryx-list-reorder-hint__button:focus-visible {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, currentcolor);
+  }
+}

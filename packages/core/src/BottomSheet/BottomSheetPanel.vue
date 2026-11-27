@@ -4,6 +4,7 @@ import type { ScrimFade } from './sheetDragExit.js'
 import type { BottomSheetHeight, BottomSheetMotion, BottomSheetPadding, BottomSheetSnapPoint, BottomSheetState } from './types.js'
 import { computed, onMounted, onUpdated, useAttrs, useTemplateRef, watch } from 'vue'
 import { attachScrollKeyboardDelegation } from '../composables/internal/scrollKeyboardDelegation.js'
+import { useMobileKeyboard } from '../keyboard/useMobileKeyboard.js'
 import { provideLayerDepth } from '../layer/layerDepth.js'
 import { resetLayerScopedContext } from '../layer/scopedProvide.js'
 import { provideLayoutContainer } from '../Layout/context.js'
@@ -24,11 +25,14 @@ const props = withDefaults(defineProps<{
   padding?: BottomSheetPadding
   snapPoints?: readonly BottomSheetSnapPoint[]
   isSwipeDismissAllowed?: boolean
+  /** Whether the host has locked page scrolling (a modal, scrim-backed sheet). */
+  isPageScrollLocked?: boolean
 }>(), {
   height: 'capped',
   padding: undefined,
   snapPoints: undefined,
   isSwipeDismissAllowed: true,
+  isPageScrollLocked: false,
 })
 
 const emit = defineEmits<{
@@ -47,6 +51,11 @@ defineSlots<{ default?: () => VNode[] }>()
 resetLayerScopedContext()
 provideLayerDepth()
 provideLayoutContainer('bottom-sheet')
+
+// The gap a Tall sheet keeps between its focused field and the keyboard, CSS
+// px: room for the keyboard's suggestion strip. The body's scroll padding
+// keeps the same gap.
+const MOBILE_KEYBOARD_BOTTOM_CLEARANCE = 48
 
 const HEIGHT_BUDGETS: Record<BottomSheetHeight, string> = {
   hug: '92dvh',
@@ -74,6 +83,10 @@ const budget = computed(() => {
   return typeof height === 'number' ? `${height}px` : height
 })
 
+// The drag's own callback dismisses the keyboard as the sheet starts to move.
+// The keyboard reads the gestures' full height, so it is created after them.
+let dismissKeyboard: (focusTarget?: HTMLElement) => void = () => {}
+
 const gestures = useSheetGestures({
   panel,
   body,
@@ -89,7 +102,21 @@ const gestures = useSheetGestures({
   onScrimOpacity: opacity => emit('scrimOpacity', opacity),
   onSnap: visibleHeight => emit('snap', visibleHeight),
   onDismiss: () => emit('dismiss'),
+  // Focusing the sheet dismisses the keyboard as the sheet starts to move.
+  onTravelStart: () => dismissKeyboard(panel.value ?? undefined),
 })
+
+const keyboard = useMobileKeyboard(panel, {
+  move: 'ride',
+  inset: true,
+  body,
+  offset: MOBILE_KEYBOARD_BOTTOM_CLEARANCE,
+  isEnabled: () => props.height === 'tall' && props.state !== 'hidden',
+  isExpanded: gestures.isAtFullHeight,
+  isOpen: isInteractive,
+  isPageScrollLocked: () => props.isPageScrollLocked,
+})
+dismissKeyboard = keyboard.dismiss
 
 // A finger's swipe close under reduced motion fades out where the finger left the sheet.
 const isCrossFade = computed(() => gestures.isDismissedByTouchDrag.value && defaultPrefersReducedMotion())

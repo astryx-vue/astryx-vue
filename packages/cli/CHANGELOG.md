@@ -1,5 +1,11 @@
 # @astryx-vue/cli
 
+## 0.8.10
+
+### Patch Changes
+
+- [#651](https://github.com/astryx-vue/astryx-vue/pull/651) [`ab6ebe1`](https://github.com/astryx-vue/astryx-vue/commit/ab6ebe14956ea4157041898935efd65bf0cce9ac) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Drawer 新增 `hasScrim` 属性，设为 `false` 就是不挡页面的非模态抽屉；关闭时面板会从进场的那一侧滑出去，开着时被卸载也会把焦点还给打开它的元素。
+
 ## 0.8.9
 
 ### Patch Changes

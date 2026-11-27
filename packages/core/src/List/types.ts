@@ -1,5 +1,6 @@
 import type { Component, MaybeRefOrGetter, VNodeChild } from 'vue'
 import type { AnimatedLayout } from '../composables/useAnimatedLayout.js'
+import type { Reorderable } from '../reorderable/createReorderable.js'
 
 /** 滑动露出的一侧。`leading` 是往行内末尾拖，`trailing` 是往行内开头拖。 */
 export type ItemSwipeSide = 'leading' | 'trailing'
@@ -87,6 +88,30 @@ export interface ListProps {
    * changes at once. Without a handle the list changes at once.
    */
   animatedLayout?: AnimatedLayout
+  /**
+   * Makes the rows reorderable, with the object `createReorderable` makes.
+   * Each ListItem with an `itemKey` gets a reorder handle at its end. One the
+   * object's `isReorderable` rejects keeps its place. Each committed move
+   * calls its `onReorder` once with the row's key and its index after the
+   * move. Apply it by rendering the rows in their new order. A drop on the
+   * starting place, a cancel, or a move the order does not take changes
+   * nothing.
+   *
+   * On a touch screen, a finger held still on a handle for a moment picks up
+   * its row. A flick on it still scrolls. The row stays in its place, dimmed,
+   * while a copy of it follows the finger. An accent line marks where it
+   * would land. The other rows stay still, the list scrolls near the edges,
+   * and on release the rows rearrange. A mouse drags a handle at once, the
+   * same way.
+   *
+   * Without a drag, activating a handle (a click, Space or Enter) turns on
+   * reorder mode for its row. Each arrow key moves it a place at once,
+   * reported and announced with its place and neighbours. Escape or another
+   * activation ends the mode, keeping the moves. While it is on, a hint
+   * anchored to the handle shows the moves and Done as buttons, so taps alone
+   * can reorder.
+   */
+  reorderable?: Reorderable
   /**
    * Spacing density for the rows. Each `ListItem` inherits it unless the item
    * sets its own.

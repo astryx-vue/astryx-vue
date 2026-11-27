@@ -8,7 +8,10 @@ export interface DrawerProps {
   isOpen: boolean
   /** 抽屉的无障碍名称。 */
   label: string
-  /** 贴哪一边。@default 'end' */
+  /**
+   * 贴哪一边。打开期间改了它，面板等关上之后才换边：退场总是从进场的那一侧滑出。
+   * @default 'end'
+   */
   placement?: DrawerPlacement
   /** 首选宽度。数字为像素，字符串原样使用。@default 400 */
   width?: number | string
@@ -20,6 +23,14 @@ export interface DrawerProps {
    * @default 'info'
    */
   purpose?: DialogPurpose
+  /**
+   * 是否带遮罩。
+   * - `true`：模态。遮罩挡住页面，焦点关在面板里，页面不能滚动，点遮罩按 `purpose` 关闭。
+   * - `false`：非模态。没有遮罩，焦点不关在面板里，旁边的页面照常能点、能滚。
+   *   Escape 照样关闭（`purpose` 为 `required` 时除外）。没有遮罩可点，记得放一个看得见的关闭按钮。
+   * @default true
+   */
+  hasScrim?: boolean
 }
 
 export interface DrawerHeaderProps {
@@ -27,7 +38,7 @@ export interface DrawerHeaderProps {
   title: string
   /** 标题下方的副标题。为空字符串时不渲染。 */
   subtitle?: string
-  /** 是否显示关闭按钮。默认跟随是否监听 `close`。 */
+  /** 是否显示关闭按钮。默认跟随是否监听 `openChange`。 */
   hasCloseButton?: boolean
   /** 关闭按钮的无障碍名称。不传时跟界面语言走。 */
   closeButtonLabel?: string
