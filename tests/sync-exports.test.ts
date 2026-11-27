@@ -281,6 +281,7 @@ const expectedCatalog = [
   { slug: 'use-chat-paste-as-token', group: 'Utility', family: 'Utilities', en: 'useChatPasteAsToken', zh: 'useChatPasteAsToken' },
   { slug: 'use-outline-from-dom', group: 'Utility', family: 'Utilities', en: 'useOutlineFromDOM', zh: 'useOutlineFromDOM' },
   { slug: 'use-syntax-theme', group: 'Utility', family: 'Utilities', en: 'useSyntaxTheme', zh: 'useSyntaxTheme' },
+  { slug: 'use-linkify', group: 'Utility', family: 'Utilities', en: 'useLinkify', zh: 'useLinkify' },
 ]
 
 describe('component catalog meta', () => {
