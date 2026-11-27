@@ -6,6 +6,7 @@ const AXIS_LOCK_PX = 10
 const REST_FRACTION = 0.5
 const COMMIT_PAST_PX = 48
 const COMMIT_FRACTION = 0.5
+/** `reveal` 下松手速度到这个值（px/ms）、拖过 FLING_MIN_PX，行就停在打开的位置。 */
 const FLING_VELOCITY = 0.6
 const FLING_MIN_PX = 44
 const OVERSHOOT_PX = 24
@@ -21,8 +22,9 @@ export interface ItemSwipeBindings {
 
 /**
  * 触摸横滑露出行内操作。鼠标不开始拖动；竖着拖留给外面的滚动。
- * `reveal` 松手后停在打开的位置，长拖或甩动触发最外侧。
- * `commit` 松手越过阈值就滑出并触发最外侧，没有停住的状态。
+ * `reveal` 松手过半个面板或甩一下，行停在打开的位置；手指自己拖过触发点才触发最外侧。
+ * `commit` 松手越过触发点就滑出并触发最外侧，没有停住的状态。
+ * 只靠速度永远不触发操作。一侧有两个及以上操作时，只有从已经停在打开位置的行开始的拖动才会触发。
  */
 export function useItemSwipe(options: {
   root: Ref<HTMLElement | null>
@@ -41,6 +43,8 @@ export function useItemSwipe(options: {
   let lastTime = 0
   let velocity = 0
   let suppressClick = false
+  /** 手指落下时行是否停在打开的位置。 */
+  let fromRest = false
   let settleTimer: ReturnType<typeof setTimeout> | undefined
 
   function write(travel: number, duration: string): void {
@@ -156,22 +160,18 @@ export function useItemSwipe(options: {
     const rowWidth = options.root.value?.offsetWidth ?? width
     const logicalVelocity = velocity * direction
     const flung = Math.sign(logicalVelocity) === Math.sign(travel) && Math.abs(logicalVelocity) > FLING_VELOCITY && distance > FLING_MIN_PX
-    if (options.behavior.value === 'commit') {
-      const commitAt = Math.max(width + COMMIT_PAST_PX, rowWidth * COMMIT_FRACTION)
-      if ((distance >= commitAt || flung) && outermost && !outermost.isDisabled) {
-        outermost.onActivate()
-        springTo(Math.sign(travel || 1) * (rowWidth + OVERSHOOT_PX), outermost.hasRemoval ? 'held' : 'idle')
-        return
-      }
-      springTo(0, 'idle')
-      return
-    }
-    if (flung && outermost && !outermost.isDisabled && distance > width) {
+    const commitAt = Math.max(width + COMMIT_PAST_PX, rowWidth * COMMIT_FRACTION)
+    const canConfirm = actions.length < 2 || fromRest
+    if (canConfirm && distance >= commitAt && outermost && !outermost.isDisabled) {
       outermost.onActivate()
       springTo(Math.sign(travel || 1) * (rowWidth + OVERSHOOT_PX), outermost.hasRemoval ? 'held' : 'idle')
       return
     }
-    if (distance >= width * REST_FRACTION)
+    if (options.behavior.value === 'commit') {
+      springTo(0, 'idle')
+      return
+    }
+    if (flung || distance >= width * REST_FRACTION)
       springTo(Math.sign(travel || 1) * width, 'resting')
     else
       springTo(0, 'idle')
@@ -211,6 +211,7 @@ export function useItemSwipe(options: {
     const target = event.target
     if (target instanceof Element && target.closest('button, a, input, textarea, select'))
       return
+    fromRest = phase.value === 'resting'
     pointerId = event.pointerId
     originX = event.clientX
     originY = event.clientY
