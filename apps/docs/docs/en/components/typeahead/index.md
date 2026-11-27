@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { typeaheadBare, typeaheadHelper, typeaheadLimited, typeaheadSearch, typeaheadValidation } from '../../../../components/demos/typeahead'
+import { typeaheadBare, typeaheadHelper, typeaheadLimited, typeaheadMenu, typeaheadSearch, typeaheadValidation } from '../../../../components/demos/typeahead'
 </script>
 
 ## Usage
@@ -86,4 +86,11 @@ Built-in strings are English. Call `provideAstryxLocale('zh-CN')` for the Chines
   description="BaseTypeahead has no field label or description. Use it where the page already names the control, such as a command palette, and pass label as the input's accessible name."
   locale="en"
   title="Without field chrome"
+/>
+
+<DemoExample
+  :demo="typeaheadMenu"
+  description="A filter field built on the menu config. Typing lists the fields with a heading and a key hint around the list. Picking a field switches the same menu to a dialog that edits its value; a filter button reopens that dialog."
+  locale="en"
+  title="Menu with listbox and dialog roles"
 />

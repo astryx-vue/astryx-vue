@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { typeaheadBare, typeaheadHelper, typeaheadLimited, typeaheadSearch, typeaheadValidation } from '../../../../components/demos/typeahead'
+import { typeaheadBare, typeaheadHelper, typeaheadLimited, typeaheadMenu, typeaheadSearch, typeaheadValidation } from '../../../../components/demos/typeahead'
 </script>
 
 ## 使用方法
@@ -86,4 +86,11 @@ const source = createStaticSource([
   description="BaseTypeahead 没有字段标签和说明。命令面板这类已经有自己标题的地方用它，输入框的无障碍名用 label 传入。"
   locale="zh"
   title="无字段外壳"
+/>
+
+<DemoExample
+  :demo="typeaheadMenu"
+  description="用 menu 配置做的筛选字段。输入时列出字段，列表上下有标题和按键提示；选中一个字段后，同一个菜单换成编辑它取值的对话框；已加的筛选按钮可以重新打开这个对话框。"
+  locale="zh"
+  title="listbox 与 dialog 角色的菜单"
 />
