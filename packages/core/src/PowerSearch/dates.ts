@@ -1,4 +1,4 @@
-import type { DateTimeRange, DateTimeRangePart } from './types.js'
+import type { DateTimeRangePart } from './types.js'
 import { resolveDateTimeRangePart } from './range.js'
 
 function pad(value: number): string {
@@ -40,11 +40,6 @@ export function unixToDateTimeLocal(unixSeconds: number, timeZone?: string): str
   return `${read('year')}-${read('month')}-${read('day')}T${read('hour')}:${read('minute')}`
 }
 
-export function isoDateToUnix(value: string): number {
-  const [year, month, day] = value.split('-').map(Number)
-  return Math.floor(Date.UTC(year ?? 1970, (month ?? 1) - 1, day ?? 1) / 1000)
-}
-
 export function dateTimeLocalToUnix(value: string, timeZone?: string): number {
   if (!timeZone)
     return Math.floor(new Date(value).getTime() / 1000)
@@ -74,11 +69,4 @@ function timeZoneOffset(date: Date, timeZone: string): number {
 
 export function rangePartToIso(part: DateTimeRangePart, timeZone?: string, nowSeconds = Date.now() / 1000): string {
   return unixToIsoDate(resolveDateTimeRangePart(part, nowSeconds), timeZone)
-}
-
-export function absoluteRange(start: string, end: string): DateTimeRange {
-  return {
-    start: { type: 'ABSOLUTE', unixSeconds: isoDateToUnix(start) },
-    end: { type: 'ABSOLUTE', unixSeconds: isoDateToUnix(end) + 86399 },
-  }
 }

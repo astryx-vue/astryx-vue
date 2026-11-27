@@ -60,6 +60,10 @@ function namedTargets(keyPrefix: string, pathPrefix: string, names: readonly str
 export const searchUpstreamMap: UpstreamMapPart = {
   '@astryx.powersearch.label': [{ path: 'powerSearch.label' }],
   '@astryx.powersearch.placeholder': [{ path: 'powerSearch.placeholder' }],
+  '@astryx.powersearch.token.fieldOperator': [{ path: 'powerSearch.token.fieldOperator', args: ['field', 'operator'] }],
+  '@astryx.powersearch.token.labelValue': [{ path: 'powerSearch.token.labelValue', args: ['label', 'value'] }],
+  '@astryx.powersearch.allFiltersRemoved': [{ path: 'powerSearch.allFiltersRemoved' }],
+  '@astryx.powersearch.editableFiltersRemoved': [{ path: 'powerSearch.editableFiltersRemoved' }],
   '@astryx.powersearch.resultCount': [{ path: 'powerSearch.resultCount', args: ['count'] }],
   '@astryx.powersearch.valueEditor.itemsCount': [{ path: 'powerSearch.itemsCount', args: ['count'] }],
   '@astryx.powersearch.valueEditor.entitiesCount': [{ path: 'powerSearch.entitiesCount', args: ['count'] }],

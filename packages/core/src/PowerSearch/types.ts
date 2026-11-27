@@ -1,6 +1,7 @@
 import type { Component, VNodeChild } from 'vue'
 import type { SearchableItem, SearchSource } from '../composables/useAsyncSource.js'
 import type { FieldPartStylingProps } from '../Field/fieldParts.js'
+import type { FieldStatusPlacement } from '../Field/types.js'
 
 export interface EmptyOperatorValue {
   readonly type: 'empty'
@@ -46,6 +47,10 @@ export interface TimeOperatorValue {
 
 export interface DateAbsoluteOperatorValue {
   readonly type: 'date_absolute'
+  /**
+   * 不写或为 true：值是一个日历日，用日期选择框编辑，按 `timezoneID` 里的那一天显示。
+   * false：值是带时刻的时间点，用日期时间输入框编辑，按 `timezoneID`（没给就用查看者的时区）显示日期和时间。
+   */
   readonly isDateOnly?: boolean
 }
 
@@ -243,7 +248,7 @@ export type PowerSearchItem = SearchableItem<PowerSearchAuxData>
 
 export type PowerSearchSize = 'sm' | 'md' | 'lg'
 export type PowerSearchStatus = 'default' | 'success' | 'warning' | 'error'
-export type PowerSearchStatusVariant = 'attached' | 'detached'
+export type PowerSearchStatusVariant = FieldStatusPlacement
 export type PowerSearchOverflow = 'none' | 'unfocused-inline' | 'unfocused-layer'
 
 export interface PowerSearchTokenProps {
@@ -286,7 +291,7 @@ export interface PowerSearchProps extends FieldPartStylingProps {
   labelHidden?: boolean
   placeholder?: string
   autofocus?: boolean
-  /** 有筛选条件时显示全部清空按钮。默认 true。 */
+  /** 有可编辑的筛选条件时显示全部清空按钮；点它移除所有可编辑的条件，只读条件保留。默认 true。 */
   hasClear?: boolean
   /** 有筛选条件时显示全部清空按钮。等同于 hasClear。 */
   clearable?: boolean

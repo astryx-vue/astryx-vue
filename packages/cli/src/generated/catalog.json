@@ -41008,8 +41008,8 @@
         "zh": "结构化搜索把一条查询拆成字段、运算符和值。聚焦输入框会列出字段。选中之后，如果这个运算符还要填值，就打开编辑器；布尔值、空运算符和全文搜索会直接变成一条条件，编辑器不留在页面上，焦点回到搜索框。再点一条已经存在的空条件，内置编辑器不会打开，只会再提交一次修改。如果调用方用 `components.empty.editor` 或编辑器插槽换了空运算符的编辑器，点这条条件仍会打开那个编辑器。"
       },
       "usage": {
-        "en": "Power Search splits a query into a field, an operator, and a value. Focusing the input lists the fields. Choosing one opens an editor when the operator still needs a value. A boolean field, an empty operator, and a content search become a filter immediately: the editor closes and focus returns to the search field. Clicking an existing empty-operator token does not open the built-in editor. It commits one edit. A consumer editor registered as `components.empty.editor`, or the editor slot, still opens.\n\nBackspace on an empty input removes the last token. The arrow keys move between tokens, Enter opens the focused one, and Backspace or Delete removes it. A read-only token cannot be edited or removed. Escape cancels the editor and returns focus.\n\nA built-in filter token is named by all its visible text, such as `Name: is Ada`, and so is its remove button (`Remove Name: is Ada`). When a press opens the editor, the token says so with `aria-haspopup=\"dialog\"` and `aria-expanded`, and the editor is a dialog with the same name. A finger tap on a remove button while the input is unfocused leaves the on-screen keyboard down.\n\nThe editor follows the width of the search field, from about 400 to 720, and stays inside the layer gutter (16 on each side of the viewport). When the viewport cannot hold the minimum, the floor gives way to that gutter. The editor hugs the side that opened it only after the maximum has squeezed it. The position is taken once, while it is open. When the editor itself is narrower than 400, the fields stack. That follows the editor’s width, not the window’s.\n\n`createPowerSearchConfig` builds the operators from field definitions and returns `applyFilters`. That function filters rows on its own. It does not go through a table’s column filters. Time, relative dates, entities, and custom values keep every row unless the caller interprets them. A nested filter requires every child by default. An operator named or, or one whose name contains any, requires only one child.\n\nTokens can collapse to one line when the field loses focus. The inline mode expands in place. The layer mode floats over the field and leaves the content below where it is. A numeric result count is read with plural wording. A string is shown as given. Changes are announced politely, and the first paint is silent.\n\nPass a disabled reason together with the disabled state. The input stays focusable, and the reason appears on hover and keyboard focus. Do not wrap the field in another tooltip. A natively disabled control swallows the hover.\n\n```vue\n<script setup lang=\"ts\">\nimport { createPowerSearchConfig, PowerSearch } from '@astryx-vue/core/PowerSearch'\nimport { computed, ref } from 'vue'\n\nconst people = [\n  { name: 'Alice', active: true },\n  { name: 'Bob', active: false },\n]\nconst { config, applyFilters } = createPowerSearchConfig([\n  { key: 'name', type: 'string', label: 'Name' },\n  { key: 'active', type: 'boolean', label: 'Active' },\n])\nconst filters = ref([])\nconst matched = computed(() => applyFilters(filters.value, people))\n</script>\n\n<template>\n  <PowerSearch v-model:filters=\"filters\" :config=\"config\" :result-count=\"matched.length\" />\n</template>\n```",
-        "zh": "结构化搜索把一条查询拆成字段、运算符和值。聚焦输入框会列出字段。选中之后，如果这个运算符还要填值，就打开编辑器；布尔值、空运算符和全文搜索会直接变成一条条件，编辑器不留在页面上，焦点回到搜索框。再点一条已经存在的空条件，内置编辑器不会打开，只会再提交一次修改。如果调用方用 `components.empty.editor` 或编辑器插槽换了空运算符的编辑器，点这条条件仍会打开那个编辑器。\n\n输入为空时，退格键删掉最后一条。左右方向键在标签之间移动，回车打开当前标签，退格或删除键去掉它。只读的条件不能改，也不能删。按 Esc 会取消编辑并把焦点还回去。\n\n内置的条件标签按全部可见文字命名，例如 `Name: is Ada`，删除按钮也是（`Remove Name: is Ada`）。点它会打开编辑器时，标签带 `aria-haspopup=\"dialog\"` 和 `aria-expanded`，编辑器是一个同名的对话框。输入框没有焦点时用手指点删除按钮，屏幕键盘不会弹起来。\n\n编辑器的宽度跟搜索条走，最窄大约 400，最宽 720，并且不越过浮层留白（视口两侧各 16）。窗口放不下一个最小宽度时，下限让给这道留白。只有被最大宽度压窄时，编辑器才贴向打开它的那一侧。位置在打开时定住，关掉以后不再跟着搜索条挪。编辑器自己窄于 400 时，字段上下排列，不看整个窗口有多宽。\n\n`createPowerSearchConfig` 根据字段定义生成运算符，并返回一个独立的 `applyFilters`。它只负责把行滤出来，不经过表格自己的列过滤。时间、相对日期、实体和自定义值默认全部保留，调用方要自己解释。嵌套条件默认每一条都要满足；运算符名字里带 any，或者就是 or，则满足任意一条即可。\n\n失焦时标签可以收成一行。`unfocused-inline` 在原处展开，`unfocused-layer` 浮在字段上，不把下面的内容往下推。结果数量是数字时会按单复数读出来，是字符串时原样显示。数量变化会礼貌地播报，第一次出现不播。\n\n禁用原因和禁用一起用时，输入框仍然可以聚焦，悬停或键盘聚焦能看到原因。不要再在外面套一层提示，原生禁用会把悬停吃掉。\n\n```vue\n<script setup lang=\"ts\">\nimport { createPowerSearchConfig, PowerSearch } from '@astryx-vue/core/PowerSearch'\nimport { computed, ref } from 'vue'\n\nconst people = [\n  { name: 'Alice', active: true },\n  { name: 'Bob', active: false },\n]\nconst { config, applyFilters } = createPowerSearchConfig([\n  { key: 'name', type: 'string', label: 'Name' },\n  { key: 'active', type: 'boolean', label: 'Active' },\n])\nconst filters = ref([])\nconst matched = computed(() => applyFilters(filters.value, people))\n</script>\n\n<template>\n  <PowerSearch v-model:filters=\"filters\" :config=\"config\" :result-count=\"matched.length\" />\n</template>\n```"
+        "en": "Power Search splits a query into a field, an operator, and a value. Focusing the input lists the fields. Choosing one opens an editor when the operator still needs a value. A boolean field, an empty operator, and a content search become a filter immediately: the editor closes and focus returns to the search field. Clicking an existing empty-operator token does not open the built-in editor. It commits one edit. A consumer editor registered as `components.empty.editor`, or the editor slot, still opens.\n\nBackspace on an empty input removes the last token. The arrow keys move between tokens, Enter opens the focused one, and Backspace or Delete removes it. A read-only token cannot be edited or removed, and clear all keeps it: the button removes every editable filter, shows only while one exists, and reports the first removed position in `change`. Escape cancels the editor and returns focus.\n\nA built-in filter token is named by all its visible text, such as `Name: is Ada`, and so is its remove button (`Remove Name: is Ada`). When a press opens the editor, the token says so with `aria-haspopup=\"dialog\"` and `aria-expanded`, and the editor is a dialog with the same name. A finger tap on a remove button while the input is unfocused leaves the on-screen keyboard down.\n\nThe editor follows the width of the search field, from about 400 to 720, and stays inside the layer gutter (16 on each side of the viewport). When the viewport cannot hold the minimum, the floor gives way to that gutter. The editor hugs the side that opened it only after the maximum has squeezed it. The position is taken once, while it is open. When the editor itself is narrower than 400, the fields stack. That follows the editor’s width, not the window’s.\n\n`createPowerSearchConfig` builds the operators from field definitions and returns `applyFilters`. That function filters rows on its own. It does not go through a table’s column filters. Time, relative dates, entities, and custom values keep every row unless the caller interprets them. A nested filter requires every child by default. An operator named or, or one whose name contains any, requires only one child.\n\nTokens can collapse to one line when the field loses focus. The inline mode expands in place. The layer mode floats over the field and leaves the content below where it is. A numeric result count is read with plural wording. A string is shown as given. Changes are announced politely, and the first paint is silent.\n\nPass a disabled reason together with the disabled state. The input stays focusable, and the reason appears on hover and keyboard focus. Do not wrap the field in another tooltip. A natively disabled control swallows the hover.\n\n```vue\n<script setup lang=\"ts\">\nimport { createPowerSearchConfig, PowerSearch } from '@astryx-vue/core/PowerSearch'\nimport { computed, ref } from 'vue'\n\nconst people = [\n  { name: 'Alice', active: true },\n  { name: 'Bob', active: false },\n]\nconst { config, applyFilters } = createPowerSearchConfig([\n  { key: 'name', type: 'string', label: 'Name' },\n  { key: 'active', type: 'boolean', label: 'Active' },\n])\nconst filters = ref([])\nconst matched = computed(() => applyFilters(filters.value, people))\n</script>\n\n<template>\n  <PowerSearch v-model:filters=\"filters\" :config=\"config\" :result-count=\"matched.length\" />\n</template>\n```",
+        "zh": "结构化搜索把一条查询拆成字段、运算符和值。聚焦输入框会列出字段。选中之后，如果这个运算符还要填值，就打开编辑器；布尔值、空运算符和全文搜索会直接变成一条条件，编辑器不留在页面上，焦点回到搜索框。再点一条已经存在的空条件，内置编辑器不会打开，只会再提交一次修改。如果调用方用 `components.empty.editor` 或编辑器插槽换了空运算符的编辑器，点这条条件仍会打开那个编辑器。\n\n输入为空时，退格键删掉最后一条。左右方向键在标签之间移动，回车打开当前标签，退格或删除键去掉它。只读的条件不能改，也不能删，全部清除也会留下它：这个按钮移除所有可编辑的条件，只在还有可编辑条件时出现，`change` 报告的是第一个被移除的位置。按 Esc 会取消编辑并把焦点还回去。\n\n内置的条件标签按全部可见文字命名，例如 `Name: is Ada`，删除按钮也是（`Remove Name: is Ada`）。点它会打开编辑器时，标签带 `aria-haspopup=\"dialog\"` 和 `aria-expanded`，编辑器是一个同名的对话框。输入框没有焦点时用手指点删除按钮，屏幕键盘不会弹起来。\n\n编辑器的宽度跟搜索条走，最窄大约 400，最宽 720，并且不越过浮层留白（视口两侧各 16）。窗口放不下一个最小宽度时，下限让给这道留白。只有被最大宽度压窄时，编辑器才贴向打开它的那一侧。位置在打开时定住，关掉以后不再跟着搜索条挪。编辑器自己窄于 400 时，字段上下排列，不看整个窗口有多宽。\n\n`createPowerSearchConfig` 根据字段定义生成运算符，并返回一个独立的 `applyFilters`。它只负责把行滤出来，不经过表格自己的列过滤。时间、相对日期、实体和自定义值默认全部保留，调用方要自己解释。嵌套条件默认每一条都要满足；运算符名字里带 any，或者就是 or，则满足任意一条即可。\n\n失焦时标签可以收成一行。`unfocused-inline` 在原处展开，`unfocused-layer` 浮在字段上，不把下面的内容往下推。结果数量是数字时会按单复数读出来，是字符串时原样显示。数量变化会礼貌地播报，第一次出现不播。\n\n禁用原因和禁用一起用时，输入框仍然可以聚焦，悬停或键盘聚焦能看到原因。不要再在外面套一层提示，原生禁用会把悬停吃掉。\n\n```vue\n<script setup lang=\"ts\">\nimport { createPowerSearchConfig, PowerSearch } from '@astryx-vue/core/PowerSearch'\nimport { computed, ref } from 'vue'\n\nconst people = [\n  { name: 'Alice', active: true },\n  { name: 'Bob', active: false },\n]\nconst { config, applyFilters } = createPowerSearchConfig([\n  { key: 'name', type: 'string', label: 'Name' },\n  { key: 'active', type: 'boolean', label: 'Active' },\n])\nconst filters = ref([])\nconst matched = computed(() => applyFilters(filters.value, people))\n</script>\n\n<template>\n  <PowerSearch v-model:filters=\"filters\" :config=\"config\" :result-count=\"matched.length\" />\n</template>\n```"
       },
       "practices": {
         "en": [
@@ -41077,7 +41077,7 @@
                 "name": "`hasClear`",
                 "type": "`boolean`",
                 "default": "`true`",
-                "description": "Shows clear all once a filter exists. The older `clearable` name works too."
+                "description": "Shows clear all while an editable filter exists. It removes every editable filter and keeps the read-only ones. The older `clearable` name works too."
               },
               {
                 "name": "`readOnly`",
@@ -41111,9 +41111,9 @@
               },
               {
                 "name": "`statusVariant`",
-                "type": "`'attached' | 'detached'`",
+                "type": "`'attached' | 'detached' | 'tooltip'`",
                 "default": "`attached`",
-                "description": "Places the message against the field, or with a gap."
+                "description": "Places the message against the field, with a gap, or behind an info button in the field. All variants describe the input accessibly."
               },
               {
                 "name": "`maxTokenLength`",
@@ -41149,7 +41149,7 @@
                 "name": "`timezoneID`",
                 "type": "`string`",
                 "default": "-",
-                "description": "Time zone used when a date is shown, such as America/New_York. The older `timeZone` name works too. Absolute dates are written in the provider's `calendar`."
+                "description": "Time zone a date is read and written in, such as America/New_York. A date-only value shows, edits and stores as that day's midnight in it; unset, it is the UTC day. A value with `isDateOnly: false` keeps its time of day in this zone, or the viewer's zone when unset. The older `timeZone` name works too. Absolute dates are written in the provider's `calendar`."
               },
               {
                 "name": "`overflow`",
@@ -41246,7 +41246,7 @@
                 "name": "`hasClear`",
                 "type": "`boolean`",
                 "default": "`true`",
-                "description": "有筛选条件时显示全部清除。旧名 `clearable` 同样可用。"
+                "description": "有可编辑的筛选条件时显示全部清除；它移除所有可编辑的条件，只读条件保留。旧名 `clearable` 同样可用。"
               },
               {
                 "name": "`readOnly`",
@@ -41280,9 +41280,9 @@
               },
               {
                 "name": "`statusVariant`",
-                "type": "`'attached' | 'detached'`",
+                "type": "`'attached' | 'detached' | 'tooltip'`",
                 "default": "`attached`",
-                "description": "说明贴在输入框下面，或隔开一段。"
+                "description": "说明贴在输入框下面、隔开一段，或收进输入框里的信息按钮。三种都会正确描述输入框。"
               },
               {
                 "name": "`maxTokenLength`",
@@ -41318,7 +41318,7 @@
                 "name": "`timezoneID`",
                 "type": "`string`",
                 "default": "-",
-                "description": "日期怎么显示所用的时区 ID，例如 America/New_York。旧名 `timeZone` 同样可用。绝对日期按 provider 的 `calendar` 写。"
+                "description": "日期读写所用的时区 ID，例如 America/New_York。只有日期的值按它里面的那一天显示、编辑，并以那天的零点存储；没设置时是 UTC 的那一天。`isDateOnly: false` 的值在这个时区里保留时刻，没设置时用查看者的时区。旧名 `timeZone` 同样可用。绝对日期按 provider 的 `calendar` 写。"
               },
               {
                 "name": "`overflow`",
