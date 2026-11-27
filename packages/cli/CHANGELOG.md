@@ -1,5 +1,11 @@
 # @astryx-vue/cli
 
+## 0.6.10
+
+### Patch Changes
+
+- [#614](https://github.com/astryx-vue/astryx-vue/pull/614) [`75f5e10`](https://github.com/astryx-vue/astryx-vue/commit/75f5e101775bf2935adc0152b2085b8c6a2ab17a) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 查不到名字时，打错两个相邻字母（例如把 Badge 打成 Bagde）也能在建议里找到原来的名字；文档补了升级时一起升级所有包、Tailwind 的 `@layer` 写错位置的后果，以及自动链接插件的属性说明。
+
 ## 0.6.9
 
 ### Patch Changes
