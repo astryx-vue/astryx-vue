@@ -1,5 +1,6 @@
 import type { DateTimeRange, OperatorValue } from './types.js'
 import { dateTimeLocalToUnix, unixToIsoDate } from './dates.js'
+import { resolveDateTimeRangePart } from './range.js'
 
 /**
  * 日期值读写用的时区。
@@ -32,6 +33,19 @@ function pad(value: number): string {
 
 function localIsoDate(date: Date): string {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`
+}
+
+/** 区间两端在 `zone` 里各是哪一天，读成日历上的本地日期。 */
+export function rangeToPickerRange(range: DateTimeRange, zone: string | undefined, nowSeconds = Date.now() / 1000): { start: Date, end: Date } {
+  return {
+    start: unixToPickerDate(resolveDateTimeRangePart(range.start, nowSeconds), zone),
+    end: unixToPickerDate(resolveDateTimeRangePart(range.end, nowSeconds), zone),
+  }
+}
+
+/** 日历上选的一段日子：`zone` 里起始日零点到结束日最后一刻。 */
+export function pickerRangeToRange(start: Date, end: Date, zone: string | undefined): DateTimeRange {
+  return absoluteRange(localIsoDate(start), localIsoDate(end), zone)
 }
 
 /** 选择框选中的那一天，在 `zone` 里零点的时刻。 */
