@@ -8578,13 +8578,18 @@
 
 ### v0.7.2
 
-- [ ] [`855cc9562`](https://github.com/meta/astryx/commit/855cc9562) fix(PowerSearch): clear all filters with one press (#6417)
-- [ ] [`f986eb6f0`](https://github.com/meta/astryx/commit/f986eb6f0) [Component Audit] CommandPaletteInput: restore visible keyboard focus (#7682)
+- [x] [`855cc9562`](https://github.com/meta/astryx/commit/855cc9562) fix(PowerSearch): clear all filters with one press (#6417)
+  - Vue 版已有：usePowerSearchActions 的 clearAll 一次提交清空，PowerSearch.test.ts 已有「一次点击清空」测试
+- [x] [`f986eb6f0`](https://github.com/meta/astryx/commit/f986eb6f0) [Component Audit] CommandPaletteInput: restore visible keyboard focus (#7682)
+  - Vue 版已有：CommandPaletteInput 用 data-keyboard-focus 只在键盘获得焦点时画环，CommandPaletteInputFocus.test.ts 覆盖
 - [x] [`4d200b246`](https://github.com/meta/astryx/commit/4d200b246) [Component Audit] CommandPaletteItem: verify option states across themes (#7683)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`493231799`](https://github.com/meta/astryx/commit/493231799) fix(cli): search finds compound names typed as words, other libraries' names, and verb forms (#7718)
-- [ ] [`be9a4c5d9`](https://github.com/meta/astryx/commit/be9a4c5d9) fix(PowerSearch): forward disabled state to built-in value editors (#7734)
-- [ ] [`5720ad59f`](https://github.com/meta/astryx/commit/5720ad59f) fix(PowerSearch): keep token presses from opening search suggestions (#7739)
+- [x] [`493231799`](https://github.com/meta/astryx/commit/493231799) fix(cli): search finds compound names typed as words, other libraries' names, and verb forms (#7718)
+  - 已移植：[#514](https://github.com/astryx-vue/astryx-vue/pull/514)。别的族已做：CLI 搜索收录别家组件库叫法与常见图标名，动词只折叠进行时
+- [x] [`be9a4c5d9`](https://github.com/meta/astryx/commit/be9a4c5d9) fix(PowerSearch): forward disabled state to built-in value editors (#7734)
+  - Vue 版已有：PowerSearchEditor 的 readOnly 作为 disabled 传给 PowerSearchValueField，再传给每一种值编辑器
+- [x] [`5720ad59f`](https://github.com/meta/astryx/commit/5720ad59f) fix(PowerSearch): keep token presses from opening search suggestions (#7739)
+  - Vue 版已有：标签按钮的点击在 onFieldClick 里被 button 判断拦下，不会走输入框聚焦去开建议；本 PR 补了回归测试
 
 ### v0.7.3
 
@@ -8603,20 +8608,25 @@
 
 ### v0.7.4
 
-- [ ] [`eccc6eee0`](https://github.com/meta/astryx/commit/eccc6eee0) fix(CommandPalette): announce each busy start from inside its dialog (#7956)
-- [ ] [`768c2f0f6`](https://github.com/meta/astryx/commit/768c2f0f6) [Component Audit] CommandPaletteItem: let themes style highlighted, selected, and disabled items (#7967)
+- [x] [`eccc6eee0`](https://github.com/meta/astryx/commit/eccc6eee0) fix(CommandPalette): announce each busy start from inside its dialog (#7956)
+  - 已移植：[#605](https://github.com/astryx-vue/astryx-vue/pull/605)。搜索忙碌由 CommandPaletteInput 经 useBusyAnnouncement 在对话框内念「加载中」，面板不再自己念；转圈 aria-hidden
+- [x] [`768c2f0f6`](https://github.com/meta/astryx/commit/768c2f0f6) [Component Audit] CommandPaletteItem: let themes style highlighted, selected, and disabled items (#7967)
+  - 已移植：[#605](https://github.com/astryx-vue/astryx-vue/pull/605)。CommandPaletteItem 的 data-highlighted、data-selected、data-disabled 取值改为状态名，主题可按这三个状态挂样式，文档补说明
 
 ### v0.7.5
 
-- [ ] [`db7e94503`](https://github.com/meta/astryx/commit/db7e94503) fix(core): a search's busy start is never announced after its outcome (#8235)
+- [x] [`db7e94503`](https://github.com/meta/astryx/commit/db7e94503) fix(core): a search's busy start is never announced after its outcome (#8235)
+  - 已移植：[#605](https://github.com/astryx-vue/astryx-vue/pull/605)。输入框把「收回未念出的忙碌开始」交给面板，结果念出前先收回，不会在结果后补念「加载中」
 - [x] [`2597fa4fb`](https://github.com/meta/astryx/commit/2597fa4fb) fix(Typeahead): highlight follows pointer movement, not a resting pointer (#8247)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`174300fcb`](https://github.com/meta/astryx/commit/174300fcb) ci: discover PR browser accessibility specs, so a new spec needs no workflow edit (#8367)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`9600039ee`](https://github.com/meta/astryx/commit/9600039ee) [Component Audit] CommandPaletteEmpty: keep long empty messages readable inside the palette (#8516)
+- [x] [`9600039ee`](https://github.com/meta/astryx/commit/9600039ee) [Component Audit] CommandPaletteEmpty: keep long empty messages readable inside the palette (#8516)
+  - 已移植：[#605](https://github.com/astryx-vue/astryx-vue/pull/605)。CommandPaletteEmpty 加 overflow-wrap: anywhere，文档说明何时出现
 - [x] [`de36681d7`](https://github.com/meta/astryx/commit/de36681d7) docs(spec): PowerSearch records the experimental touch sheet presentation (DEC-3) (#8000)
   - 不适用：上游组件规范文档（自动初筛）
-- [ ] [`cf17cf2d6`](https://github.com/meta/astryx/commit/cf17cf2d6) fix(core): PowerSearch does not announce its initial resultCount under StrictMode (#8650)
+- [x] [`cf17cf2d6`](https://github.com/meta/astryx/commit/cf17cf2d6) fix(core): PowerSearch does not announce its initial resultCount under StrictMode (#8650)
+  - Vue 版已有：Vue 没有 StrictMode；useResultCountAnnouncement 跳过挂载时的初始值，只念之后的变化
 - [x] [`ad427c274`](https://github.com/meta/astryx/commit/ad427c274) spec(AST-092): a typeahead shows local matches first, then merges remote results for the same query (#7960)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`f3e48f197`](https://github.com/meta/astryx/commit/f3e48f197) test(CommandPalette): the lookup-work test finds its options without a visibility check per option (#8725)
@@ -8626,7 +8636,8 @@
 
 ### v0.7.6
 
-- [ ] [`3b0a56a02`](https://github.com/meta/astryx/commit/3b0a56a02) fix(Tokenizer, PowerSearch): Clear all is announced, once, in each component's own words (#9038)
+- [x] [`3b0a56a02`](https://github.com/meta/astryx/commit/3b0a56a02) fix(Tokenizer, PowerSearch): Clear all is announced, once, in each component's own words (#9038)
+  - 已移植：[#603](https://github.com/astryx-vue/astryx-vue/pull/603)。PowerSearch 一半：全部清除用自己的话念一次（All filters removed）；Tokenizer 一半归 Tokenizer 任务
 - [x] [`b56b6d4fc`](https://github.com/meta/astryx/commit/b56b6d4fc) fix(core): one modality call per component, reading the component's own document (#9148)
   - 不适用：React 每个组件只调一次交互方式 hook 的整理；Vue 版交互方式按文档统一跟踪
 - [x] [`8f345cba4`](https://github.com/meta/astryx/commit/8f345cba4) feat(FieldStatus): deprecate the tooltip variant; field controls keep statusVariant="tooltip" (#9196)
@@ -8645,8 +8656,10 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`99cc6dc85`](https://github.com/meta/astryx/commit/99cc6dc85) fix(core): many components carry only the English for their own strings (#9429)
   - 已移植：[#515](https://github.com/astryx-vue/astryx-vue/pull/515)。组件只按自己的命名空间读内置文案
-- [ ] [`3dec8e7d9`](https://github.com/meta/astryx/commit/3dec8e7d9) fix(CommandPalette): no 'Type to search' over a query you've typed while the first search loads (#9420)
-- [ ] [`16fe5f199`](https://github.com/meta/astryx/commit/16fe5f199) fix(core): Table, Chat, CommandPalette and the date and time inputs carry only their own English (#9452)
+- [x] [`3dec8e7d9`](https://github.com/meta/astryx/commit/3dec8e7d9) fix(CommandPalette): no 'Type to search' over a query you've typed while the first search loads (#9420)
+  - 已移植：[#605](https://github.com/astryx-vue/astryx-vue/pull/605)。第一次搜索没落定时，敲了字也不显示「输入以搜索」，只留一行隐藏的空白撑高；落定后的无结果文案在后续按键里保持挂载
+- [x] [`16fe5f199`](https://github.com/meta/astryx/commit/16fe5f199) fix(core): Table, Chat, CommandPalette and the date and time inputs carry only their own English (#9452)
+  - Vue 版已有：CommandPalette、PowerSearch 都用 useComponentMessages 只取自己的命名空间，check:i18n-catalog 第 8 条守住（#515）
 - [x] [`9728cd78b`](https://github.com/meta/astryx/commit/9728cd78b) spec(react-component-runtime, TreeList, Table, CommandPalette): record empty slots rendering nothing (backfill) (#9388)
   - 不适用：上游内部规范和架构文档（自动初筛）
 
@@ -8654,45 +8667,58 @@
 
 - [x] [`d0b6e0f77`](https://github.com/meta/astryx/commit/d0b6e0f77) feat(core): search fields ask a touch keyboard for its Search key and no autocorrection (#8157)
   - 已移植  #593：[#570](https://github.com/astryx-vue/astryx-vue/pull/570)。搜索输入框请求 Search 键、不自动纠正：Typeahead、Tokenizer 在 #570，TextInput 的 search 类型和 enterKeyHint 在 #593
-- [ ] [`7f1bace3c`](https://github.com/meta/astryx/commit/7f1bace3c) fix(PowerSearch): Backspace removes no filter of a read-only field (#9648)
-- [ ] [`2c533501a`](https://github.com/meta/astryx/commit/2c533501a) fix(PowerSearch): Clear all keeps read-only filters (#9676)
+- [x] [`7f1bace3c`](https://github.com/meta/astryx/commit/7f1bace3c) fix(PowerSearch): Backspace removes no filter of a read-only field (#9648)
+  - Vue 版已有：canRemove 在只读字段或最后一条是只读时退格不删，本 PR 补了测试
+- [x] [`2c533501a`](https://github.com/meta/astryx/commit/2c533501a) fix(PowerSearch): Clear all keeps read-only filters (#9676)
+  - 已移植：[#603](https://github.com/astryx-vue/astryx-vue/pull/603)。全部清除保留只读条件，change 报告第一个被移除的位置，只有存在可编辑条件才显示按钮，文档补说明
 - [x] [`65b7ab69e`](https://github.com/meta/astryx/commit/65b7ab69e) docs(spec): PowerSearch's sheet presentation follows the Lab touch flow (DEC-3) (#9631)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`4f452f927`](https://github.com/meta/astryx/commit/4f452f927) feat(Tokenizer): the touch sheet presentation is public behind experimental.presentation, and the sheet edits a draft that Save commits (#9708)
   - 暂缓：Tokenizer 触屏弹层（草稿、保存提交）还没做：依赖 54fbccb27 的弹层本体
   - 暂缓：Tokenizer 触屏弹层公开成 experimental.presentation：依赖触屏呈现；归动效 4a 触屏呈现任务
+  - 暂缓：Tokenizer 的触屏弹层呈现（草稿由保存提交）及其内部文件；归动效 4a 触屏呈现任务，且 Tokenizer 由另一个代理在改
 - [x] [`b11e000b5`](https://github.com/meta/astryx/commit/b11e000b5) fix(Selector): a row that scrolls under a still mouse does not take the keyboard's highlight (#9671)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`e68774f5b`](https://github.com/meta/astryx/commit/e68774f5b) fix(PowerSearch): name a filter token by its visible text and expose its editor (#9687)
+- [x] [`e68774f5b`](https://github.com/meta/astryx/commit/e68774f5b) fix(PowerSearch): name a filter token by its visible text and expose its editor (#9687)
+  - 已移植：[#512](https://github.com/astryx-vue/astryx-vue/pull/512)。别的族已做：PowerSearch 筛选标签按可见文字命名并暴露编辑器
 
 ### v0.7.8
 
 - [ ] [`30160f5ce`](https://github.com/meta/astryx/commit/30160f5ce) feat(core): PowerSearch touch sheet flow behind experimental.presentation (#8001)
   - 暂缓：PowerSearch 触屏弹层流程还没做：上游约 9500 行，Vue 版 PowerSearch 没有 presentation 属性和弹层内的编辑流程
   - 暂缓：PowerSearch 触屏弹层流程依赖触屏呈现；归动效 4a 触屏呈现任务
+  - 暂缓：归动效 4a 触屏呈现任务（PowerSearch 段）：experimental.presentation 的触屏弹层流程
 - [x] [`fa3295a50`](https://github.com/meta/astryx/commit/fa3295a50) fix(Spinner): the ring keeps turning while JavaScript runs (#8177)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`3f39a18bf`](https://github.com/meta/astryx/commit/3f39a18bf) fix(Typeahead): a source replacement that React discards no longer leaves the field busy (#9713)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`19081d81a`](https://github.com/meta/astryx/commit/19081d81a) chore(lab): remove MobileTokenizer and MobilePowerSearch, whose flows Core ships behind experimental.presentation (#9790)
+  - 暂缓：上游因核心已带触屏弹层而删掉 lab 的 MobileTokenizer 与 MobilePowerSearch；Vue 的触屏弹层未做，lab 的 MobileTokenizer 仍要保留，归动效 4a 触屏呈现任务（PowerSearch 段）
 - [x] [`252751794`](https://github.com/meta/astryx/commit/252751794) docs(spec): PowerSearch reads a date-only value as one day in one zone (DEC-5, FR25) (#9803)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`9889a3438`](https://github.com/meta/astryx/commit/9889a3438) chore(core): name the system that 88 kept Effects sync (#9787)
   - 不适用：只给 React useEffect 加注释
-- [ ] [`40c6e418c`](https://github.com/meta/astryx/commit/40c6e418c) fix(core): PowerSearch reads a date-only value as one day in one zone, and edits it there (#9655)
+- [x] [`40c6e418c`](https://github.com/meta/astryx/commit/40c6e418c) fix(core): PowerSearch reads a date-only value as one day in one zone, and edits it there (#9655)
+  - 已移植：[#603](https://github.com/astryx-vue/astryx-vue/pull/603)。只有日期的绝对日期值与日期范围按 timezoneID 里的那一天读、写、显示，没设时区是 UTC 的那一天，新增 dateZone.ts
 - [ ] [`dcf3d6f86`](https://github.com/meta/astryx/commit/dcf3d6f86) feat(Tokenizer): presentation is a stable prop, and adaptive is its default (#9796)
   - 暂缓：Tokenizer 的 presentation 属性和 adaptive 默认值：依赖 54fbccb27 的触屏弹层
+  - 暂缓：Tokenizer 与 PowerSearch 值编辑器的 presentation 稳定 prop 与 adaptive 默认值；属触屏呈现，归动效 4a 触屏呈现任务（PowerSearch 段），Tokenizer 另有代理
 - [x] [`d46da3991`](https://github.com/meta/astryx/commit/d46da3991) test(PowerSearch): open one Tokenizer sheet before the sheet tests (#9817)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`f50bc7400`](https://github.com/meta/astryx/commit/f50bc7400) feat(PowerSearch): presentation is a stable prop, and adaptive is its default (#9797)
+  - 暂缓：归动效 4a 触屏呈现任务（PowerSearch 段）：PowerSearch presentation 稳定 prop 与 adaptive 默认
 - [x] [`15a98a187`](https://github.com/meta/astryx/commit/15a98a187) fix(cli): a re-cased component name never resolves through a module (#8350)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`c8f08f967`](https://github.com/meta/astryx/commit/c8f08f967) fix(core): PowerSearch gives `isDateOnly: false` the time of day it names (#9702)
-- [ ] [`946211065`](https://github.com/meta/astryx/commit/946211065) perf(core): an overlay's eager import no longer carries the lazy BottomSheet's padding (#8550)
+- [x] [`c8f08f967`](https://github.com/meta/astryx/commit/c8f08f967) fix(core): PowerSearch gives `isDateOnly: false` the time of day it names (#9702)
+  - 已移植：[#603](https://github.com/astryx-vue/astryx-vue/pull/603)。isDateOnly: false 才带时刻（日期时间输入框，按时区读写）；没写 isDateOnly 与 true 都是日期选择框
+- [x] [`946211065`](https://github.com/meta/astryx/commit/946211065) perf(core): an overlay's eager import no longer carries the lazy BottomSheet's padding (#8550)
+  - 不适用：只是把 React 的 isFocusDetached 换到更小的模块，避免急切导入连带懒加载的 BottomSheet 样式；Vue 没有这个包体问题
 - [x] [`e390c3c43`](https://github.com/meta/astryx/commit/e390c3c43) test(browser): keep every Playwright browser context off remote hosts (#9811)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`4b8567003`](https://github.com/meta/astryx/commit/4b8567003) feat(PowerSearch): the sheet presentation edits a draft that Done applies, and asks before discarding a changed one (#9895)
+  - 暂缓：归动效 4a 触屏呈现任务（PowerSearch 段）：弹层里编辑草稿、完成时应用、丢弃前确认
 - [ ] [`cc034edb7`](https://github.com/meta/astryx/commit/cc034edb7) fix(PowerSearch): Done on a field that became read-only while the sheet was open reports nothing (#9914)
+  - 暂缓：归动效 4a 触屏呈现任务（PowerSearch 段）：弹层里字段变只读后点完成的处理
 - [x] [`75cc95196`](https://github.com/meta/astryx/commit/75cc95196) test(PowerSearch): load the module graphs before the timed waits that do not test the load (#9866)
   - 不适用：只改上游测试（自动初筛）
 
@@ -8705,6 +8731,7 @@
 - [x] [`7eee90594`](https://github.com/meta/astryx/commit/7eee90594) fix(Dialog, AlertDialog, CommandPalette, BottomSheet, Lightbox): Tab wraps inside the open modal through the shared focus-region module (#8883)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`380defeb5`](https://github.com/meta/astryx/commit/380defeb5) fix(PowerSearch): the docs examples fit a phone, and a long sheet-trigger placeholder ends in an ellipsis (#9898)
+  - 暂缓：归动效 4a 触屏呈现任务（PowerSearch 段）：弹层触发器的长占位文字省略号与文档示例适配手机
 - [x] [`edf7128e3`](https://github.com/meta/astryx/commit/edf7128e3) feat(Timestamp, PowerSearch): write dates in the provider's calendar (#9639)
   - 已移植：[#585](https://github.com/astryx-vue/astryx-vue/pull/585)。Timestamp 和 PowerSearch 按 provider 的历法写日期，charts 部分 Vue 版早已支持 calendar
 - [x] [`189a730ce`](https://github.com/meta/astryx/commit/189a730ce) feat(DateInput, DateTimeInput, DateRangeInput): type, pick and show dates in the active calendar (#9643, #9842)
@@ -8718,19 +8745,26 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`422440a64`](https://github.com/meta/astryx/commit/422440a64) fix(core): two copies of Core's modules share one React context (#10233)
   - 不适用：React context 多副本问题
-- [ ] [`9dca38629`](https://github.com/meta/astryx/commit/9dca38629) perf(Layer): anchored entrances play on the surface (#10561)
+- [x] [`9dca38629`](https://github.com/meta/astryx/commit/9dca38629) perf(Layer): anchored entrances play on the surface (#10561)
+  - 不适用：React Layer 的进场动画从浮层根挪到表面以免锚定层逐帧重排；Vue 的 PowerSearch 浮层是普通 CSS 层，没有这个问题
 - [x] [`6422a1db4`](https://github.com/meta/astryx/commit/6422a1db4) refactor(Layer): one presentation hold keeps a layer's chosen presentation until its close settles (#8587)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`b47b33a43`](https://github.com/meta/astryx/commit/b47b33a43) fix(PowerSearch): a filter token's field, operator and value come from catalog messages (#10437)
+- [x] [`b47b33a43`](https://github.com/meta/astryx/commit/b47b33a43) fix(PowerSearch): a filter token's field, operator and value come from catalog messages (#10437)
+  - 已移植：[#603](https://github.com/astryx-vue/astryx-vue/pull/603)。条件标签的「字段: 运算符」「标签 值」走 token.fieldOperator、token.labelValue 文案，语言改了顺序时整句显示
 - [x] [`619ffeb27`](https://github.com/meta/astryx/commit/619ffeb27) fix(core, richtext): no focus fade on text fields under a coarse pointer (#10611)
   - 不适用：本清单范围里只改上游 docs/design/user-states.md 设计文档
 - [ ] [`1ffc0dac9`](https://github.com/meta/astryx/commit/1ffc0dac9) fix(BottomSheet): resting content starts below the grab bar, whatever the padding (#8558)
-- [ ] [`824e71ea0`](https://github.com/meta/astryx/commit/824e71ea0) fix(CommandPalette): handle rejected search and bootstrap (#10675)
+  - 暂缓：归动效 4a 触屏呈现任务（PowerSearch 段）：BottomSheet 抓取条下内容起点，只用于 PowerSearchBottomSheet
+- [x] [`824e71ea0`](https://github.com/meta/astryx/commit/824e71ea0) fix(CommandPalette): handle rejected search and bootstrap (#10675)
+  - 已移植：[#605](https://github.com/astryx-vue/astryx-vue/pull/605)。被拒绝的搜索按空结果收尾：显示无结果并念出，补测试
 - [x] [`06db960c9`](https://github.com/meta/astryx/commit/06db960c9) docs(CommandPalette): a rejected search settles as an empty answer, never at an error boundary (#10682)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`aefb30d0c`](https://github.com/meta/astryx/commit/aefb30d0c) fix(PowerSearch): the sheet's choice lists are standard RadioList and CheckboxList (#10608)
+  - 暂缓：归动效 4a 触屏呈现任务（PowerSearch 段）：弹层里的选择列表用标准 RadioList、CheckboxList
 - [ ] [`fece34c7d`](https://github.com/meta/astryx/commit/fece34c7d) fix(PowerSearch): a date range edits on an inline calendar in the sheet (#10618)
-- [ ] [`d84658f7d`](https://github.com/meta/astryx/commit/d84658f7d) docs(usePowerSearchConfig): add hook docs and a filtered directory table example block (#10660)
+  - 暂缓：归动效 4a 触屏呈现任务（PowerSearch 段）：弹层里日期范围用内联日历
+- [x] [`d84658f7d`](https://github.com/meta/astryx/commit/d84658f7d) docs(usePowerSearchConfig): add hook docs and a filtered directory table example block (#10660)
+  - Vue 版已有：use-power-search-config 文档页和「筛选目录表格」示例已有（apps/docs 的 use-power-search-config）
 
 ### v0.7.14
 
@@ -8740,7 +8774,8 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`41d0d0faf`](https://github.com/meta/astryx/commit/41d0d0faf) fix(Tokenizer): a pick from the focus list keeps focus and the list open (#11031)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`7238fed14`](https://github.com/meta/astryx/commit/7238fed14) fix(CommandPalette): refresh results after source changes (#9679)
+- [x] [`7238fed14`](https://github.com/meta/astryx/commit/7238fed14) fix(CommandPalette): refresh results after source changes (#9679)
+  - Vue 版已有：useAsyncSource 监听 source，面板打开时换搜索源会用当前查询重搜；本 PR 补测试与文档
 - [x] [`410f9b627`](https://github.com/meta/astryx/commit/410f9b627) fix(Typeahead): keep dismissed menus closed for late results (#8778)
   - 不适用：上游内部规范和架构文档（自动初筛）
 
@@ -8792,11 +8827,16 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`a2edb5300`](https://github.com/meta/astryx/commit/a2edb5300) chore: land batch 2 (16 pull requests) (#12718)
   - 已移植：[#579](https://github.com/astryx-vue/astryx-vue/pull/579)。批量合入里宿主的改动随宿主一起移植
-- [ ] [`8bd67fe30`](https://github.com/meta/astryx/commit/8bd67fe30) chore: land batch 1 (12 pull requests) (#12713)
-- [ ] [`53615c1f4`](https://github.com/meta/astryx/commit/53615c1f4) chore: land batch 19 (3 pull requests) (#12875)
-- [ ] [`1f48950f9`](https://github.com/meta/astryx/commit/1f48950f9) chore: land batch 67 (7 pull requests) (#12957)
-- [ ] [`ab9aaa5a2`](https://github.com/meta/astryx/commit/ab9aaa5a2) chore: land batch 70 (2 pull requests) (#12963)
+- [x] [`8bd67fe30`](https://github.com/meta/astryx/commit/8bd67fe30) chore: land batch 1 (12 pull requests) (#12713)
+  - 已移植：[#603](https://github.com/astryx-vue/astryx-vue/pull/603)。statusVariant 新增 tooltip 并在文档中说明，PowerSearch 画状态信息按钮；上游 CLI 部分另归 #508 #514
+- [x] [`53615c1f4`](https://github.com/meta/astryx/commit/53615c1f4) chore: land batch 19 (3 pull requests) (#12875)
+  - 已移植  #605：[#508](https://github.com/astryx-vue/astryx-vue/pull/508)。别的族已做 Pagination 首尾标记等；CommandPaletteItem 的行高改取 label 文字角色（#605）；PowerSearch 编辑器嵌套根标签在 Vue 不走文字角色，无对应改动
+- [x] [`1f48950f9`](https://github.com/meta/astryx/commit/1f48950f9) chore: land batch 67 (7 pull requests) (#12957)
+  - 已移植：[#603](https://github.com/astryx-vue/astryx-vue/pull/603)。PowerSearch、PowerSearchEditor 缺 config 时开发构建抛出点名的错误；filters 在 Vue 版可省略，不检查
+- [x] [`ab9aaa5a2`](https://github.com/meta/astryx/commit/ab9aaa5a2) chore: land batch 70 (2 pull requests) (#12963)
+  - 已移植：[#603](https://github.com/astryx-vue/astryx-vue/pull/603)。statusVariant 的 tooltip 是信息按钮；触屏触发器的状态图标不适用
 - [ ] [`e7f5815c3`](https://github.com/meta/astryx/commit/e7f5815c3) fix(core): six components' fixed-English built-in text follows the locale; the hardcoded-string lint config has no exemption list and reports a stale entry (#12721)
+  - 暂缓：上游把相对日期选项的标签改走 sheet.relativeDaysAgo 等文案并新增 buildRelativeDateOptions；Vue 的 date_relative 编辑器只有文本框，没有这组选项，这批文案还挂在触屏弹层任务下，等相对日期选项落地再接
 - [x] [`e1dfebf35`](https://github.com/meta/astryx/commit/e1dfebf35) chore: land batch 93 (1 pull requests) (#13041)
   - 不适用：上游内部规范和架构文档（自动初筛）
 
