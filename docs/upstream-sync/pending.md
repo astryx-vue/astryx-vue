@@ -5577,7 +5577,8 @@
   - Vue 版已有：菜单按压状态机有 MENU_PRESS_SETTLE_MS：打开菜单的那次按压没进过菜单、按得又短，松开什么都不执行
 - [x] [`e968a7b86`](https://github.com/meta/astryx/commit/e968a7b86) test(gestures): the release cross-check pins the stillness interval (#9939)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`298bafbc1`](https://github.com/meta/astryx/commit/298bafbc1) fix(core): a list row's touch press release runs on the compositor (#9762)
+- [x] [`298bafbc1`](https://github.com/meta/astryx/commit/298bafbc1) fix(core): a list row's touch press release runs on the compositor (#9762)
+  - 已移植：[#627](https://github.com/astryx-vue/astryx-vue/pull/627)。触屏上列表行与 TreeList 行的按压底色改由独立伪元素层只淡出 opacity，交给合成器
 - [x] [`252b45bb1`](https://github.com/meta/astryx/commit/252b45bb1) feat(Layer): one input hold, first used by Dialog, Drawer and MobileNav (spec:AST-094 FR35) (#8342)
   - 暂缓：本期已做宿主的 pageHold 输入保持（#579）；剩 Layer、Dialog、Drawer、MobileNav 接入，归组件接入阶段
   - 已移植：[#594](https://github.com/astryx-vue/astryx-vue/pull/594)。浮层运行时的输入暂挡（挡板、按压暂挡、手势宿主接缝）和进场暂挡，接入 Dialog、Drawer、MobileNav；退场用的 layer+blur 范围随 AlertDialog、Popover 退场一起暂缓
@@ -5785,9 +5786,10 @@
   - 已移植：[#579](https://github.com/astryx-vue/astryx-vue/pull/579)。滚动视图里按下 150ms 后才高亮，按压跟踪接上这条规则
 - [x] [`480c30c83`](https://github.com/meta/astryx/commit/480c30c83) test(core): an edge press in a pager settle stops the scene to press (#10428)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`36929ac92`](https://github.com/meta/astryx/commit/36929ac92) feat(List): animate row inserts, removals and moves through the animatedLayout handle (#8106)
+- [x] [`36929ac92`](https://github.com/meta/astryx/commit/36929ac92) feat(List): animate row inserts, removals and moves through the animatedLayout handle (#8106)
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
   - 暂缓：本期已做 animatedLayout 模块与句柄；剩 List 增删、移动行的滑动接入（listLayoutUpdates 等），归动效与手势引擎的组件接入阶段
+  - 已移植：[#627](https://github.com/astryx-vue/astryx-vue/pull/627)。List 新增 animatedLayout、ListItem 新增 itemKey，行插入入场、移除原位收起、交叉行上方滑过、后续内容滑到新位置
 - [x] [`95572ae80`](https://github.com/meta/astryx/commit/95572ae80) fix(Layer): a press that went down before an input hold lifts through the hold's shield (#10398)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`72a355851`](https://github.com/meta/astryx/commit/72a355851) fix(Carousel): under snap paging, the edge buttons follow the held row (#10359)
@@ -5847,9 +5849,10 @@
   - 已移植：[#567](https://github.com/astryx-vue/astryx-vue/pull/567)。同一帧提交的静止起步调用同时开始
 - [ ] [`dd09d678d`](https://github.com/meta/astryx/commit/dd09d678d) fix(menus): the keys and type-ahead reach a disabled row, which stays inert (#10160)
   - 暂缓：菜单的方向键、Home/End、翻页键和跳转要能走到禁用行（行仍然不可操作）：DropdownMenu、子菜单、ContextMenu、MoreMenu、NavHeadingMenu 各自有一套键盘逻辑和禁用行的 tabindex，要逐套改并重写对应用例，需要单独一个 PR
-- [ ] [`46d181337`](https://github.com/meta/astryx/commit/46d181337) feat(Resizable): a resizable LayoutPanel slides closed and open under every pointer (#9989)
+- [x] [`46d181337`](https://github.com/meta/astryx/commit/46d181337) feat(Resizable): a resizable LayoutPanel slides closed and open under every pointer (#9989)
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
   - 暂缓：本期已做 模块里的尺寸揭示；剩 可拖动调整的 LayoutPanel 开合滑动（Vue 版还没有 createResizable），归动效与手势引擎的组件接入阶段
+  - 已移植：[#624](https://github.com/astryx-vue/astryx-vue/pull/624)。可调整的 LayoutPanel 收起和展开改为滑动，鼠标、触屏、键盘都一样
 - [ ] [`88ba27908`](https://github.com/meta/astryx/commit/88ba27908) feat(Lightbox): swipe between gallery photos like Photos (#8197)
   - 暂缓：Lightbox 滑动翻页依赖 paging 数值、usePager 和手势设施
   - 暂缓：归动效与手势引擎任务：图库横滑翻页需要 usePager、paging 投射接入和 zoom stage 的分页（约 3600 行改动），Vue 版 Lightbox 只有按钮和方向键翻页。
@@ -5859,8 +5862,9 @@
   - Vue 版已有：#518 已有：离末端不到半步的停点并入末页
 - [x] [`c73b9e4f2`](https://github.com/meta/astryx/commit/c73b9e4f2) test(SnapPaging): the split-end cases wait for the skip before acting (#10627)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`916a8e2fa`](https://github.com/meta/astryx/commit/916a8e2fa) feat(Resizable): a pull past a limit rubber-bands and only the lift closes (#10292)
+- [x] [`916a8e2fa`](https://github.com/meta/astryx/commit/916a8e2fa) feat(Resizable): a pull past a limit rubber-bands and only the lift closes (#10292)
   - 暂缓：本期已做拖动识别器；剩 Resizable 拉过限位的橡皮筋，归组件接入阶段
+  - 已移植：[#624](https://github.com/astryx-vue/astryx-vue/pull/624)。拉过限位时橡皮筋回弹，拖到收起阈值以下不立刻收起，松手才决定收起
 - [x] [`e89bdc881`](https://github.com/meta/astryx/commit/e89bdc881) feat(TreeList): the expand moves as one under a finger (#8088)
   - 不适用：上游内部规范和架构文档、只改上游测试（自动初筛）
 - [x] [`619ffeb27`](https://github.com/meta/astryx/commit/619ffeb27) fix(core, richtext): no focus fade on text fields under a coarse pointer (#10611)
@@ -5891,14 +5895,17 @@
 - [ ] [`a28d586eb`](https://github.com/meta/astryx/commit/a28d586eb) feat(core): createReorderable makes List rows reorderable (#8139)
   - 暂缓：createReorderable 依赖 animatedLayout、animator 和 inertClone 这套动效设施
   - 暂缓：本期已做 animatedLayout 与 inertClone；剩 createReorderable 拖动重排（依赖手势），归动效与手势引擎的组件接入阶段
+  - 暂缓：createReorderable 与 List 重排手柄：上游重排引擎约 4000 行（listReorderEngine 2616、ListReorderHandle 425、ListReorderTouch 219、listReorderContext、reorderModel、uikit/reorder 接入），Vue 版还缺 edgeAutoscroll 拖到边缘自动滚动、nearestScroller 滚动祖先、rowMotion 行位移、anchoredHint 锚定提示、touchHitArea 触控热区这几块底层设施，Item 也还没有 label/trailing 上下文，需单独立项先补设施再移植
 - [x] [`3fb73b3d4`](https://github.com/meta/astryx/commit/3fb73b3d4) fix(core): a spring retarget committed late starts at its frame (#10607)
   - 暂缓：依赖动画器（animator）与主题时序/节奏的动效基础设施，Vue 版没有
   - 已移植：[#567](https://github.com/astryx-vue/astryx-vue/pull/567)。迟到提交的弹簧改目标从它那一帧开始
 - [ ] [`36b8f6ebc`](https://github.com/meta/astryx/commit/36b8f6ebc) feat(lab): TransferList reorders through core's createReorderable (#8143)
+  - 暂缓：lab TransferList 改用 createReorderable，Vue 版目前用自带的 useTransferReorder，等 createReorderable 移植后再迁
 - [x] [`df4c958ec`](https://github.com/meta/astryx/commit/df4c958ec) perf(core): motions one callback starts read stylesheets in one pass (#10728)
   - 暂缓：依赖动画器（animator）与主题时序/节奏的动效基础设施，Vue 版没有
   - 已移植：[#567](https://github.com/astryx-vue/astryx-vue/pull/567)。一次回调启动的动效只读一遍样式表
 - [ ] [`6103d36e9`](https://github.com/meta/astryx/commit/6103d36e9) feat(lab): ListInput reorders through core's createReorderable (#8163)
+  - 暂缓：lab ListInput 改用 createReorderable 与 ListReorderScope，Vue 版目前用自带的 useListReorder，等 createReorderable 移植后再迁
 - [x] [`74cb73c9f`](https://github.com/meta/astryx/commit/74cb73c9f) fix(useScrollableArea): an ancestor's transform no longer measures the scroll area again on every frame of a drag (#10034)
   - 已移植：[#548](https://github.com/astryx-vue/astryx-vue/pull/548)。祖先只改 transform 不再让滚动区每帧重新测量，只有方向、书写模式、显示、可见性变了才重量，补测试
 - [x] [`bb576ef8f`](https://github.com/meta/astryx/commit/bb576ef8f) test(core): reveal-paint reads one moment and names starvation (#10556)
@@ -6431,6 +6438,7 @@
 - [x] [`36b8f6ebc`](https://github.com/meta/astryx/commit/36b8f6ebc) feat(lab): TransferList reorders through core's createReorderable (#8143)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`6103d36e9`](https://github.com/meta/astryx/commit/6103d36e9) feat(lab): ListInput reorders through core's createReorderable (#8163)
+  - 暂缓：lab ListInput 改用 createReorderable 与 ListReorderScope，Vue 版目前用自带的 useListReorder，等 createReorderable 移植后再迁
 - [x] [`4fbef8a6b`](https://github.com/meta/astryx/commit/4fbef8a6b) test(lab): the reorder-grip pinch spec runs for the grips it renders (#10736)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`349d3a8e6`](https://github.com/meta/astryx/commit/349d3a8e6) test(lab): the reorder-grip spec's scope no longer names a deleted file (#10864)
@@ -6555,10 +6563,13 @@
 - [x] [`a28d586eb`](https://github.com/meta/astryx/commit/a28d586eb) feat(core): createReorderable makes List rows reorderable (#8139)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`36b8f6ebc`](https://github.com/meta/astryx/commit/36b8f6ebc) feat(lab): TransferList reorders through core's createReorderable (#8143)
+  - 暂缓：lab TransferList 改用 createReorderable，Vue 版目前用自带的 useTransferReorder，等 createReorderable 移植后再迁
 - [ ] [`6103d36e9`](https://github.com/meta/astryx/commit/6103d36e9) feat(lab): ListInput reorders through core's createReorderable (#8163)
+  - 暂缓：lab ListInput 改用 createReorderable 与 ListReorderScope，Vue 版目前用自带的 useListReorder，等 createReorderable 移植后再迁
 - [x] [`f2a6332eb`](https://github.com/meta/astryx/commit/f2a6332eb) fix(List): a swizzled copy reads a package reorderable object (#10741)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`06ebae229`](https://github.com/meta/astryx/commit/06ebae229) fix(List): a drag follows a scroll around the list's scroll box (#10742)
+  - 暂缓：拖动跟随列表滚动盒滚动，依赖重排引擎和 edgeAutoscroll、nearestScroller，均未移植
 - [ ] [`642cc2de1`](https://github.com/meta/astryx/commit/642cc2de1) fix(lab): write latest-value refs at commit, not during render (#10780)
 
 ### v0.7.17
@@ -7230,18 +7241,21 @@
   - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。内容区收拢上下内边距时同步归零发布给贴边子元素的容器内边距，行内结束边的内边距只由结束边发布
 - [x] [`64ca3b715`](https://github.com/meta/astryx/commit/64ca3b715) docs(specs): Layout and LayoutContent records match the closed slot and inset gaps (#10557)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`46d181337`](https://github.com/meta/astryx/commit/46d181337) feat(Resizable): a resizable LayoutPanel slides closed and open under every pointer (#9989)
+- [x] [`46d181337`](https://github.com/meta/astryx/commit/46d181337) feat(Resizable): a resizable LayoutPanel slides closed and open under every pointer (#9989)
   - 暂缓：本期已做 模块里的尺寸揭示；剩 可拖动调整的 LayoutPanel 开合滑动（Vue 版还没有 createResizable），归动效与手势引擎的组件接入阶段
   - 暂缓：可调整面板在所有指针下滑动收起与展开：归动效与手势引擎任务，Vue 版缺面板滑动与跟手设施
-- [ ] [`916a8e2fa`](https://github.com/meta/astryx/commit/916a8e2fa) feat(Resizable): a pull past a limit rubber-bands and only the lift closes (#10292)
+  - 已移植：[#624](https://github.com/astryx-vue/astryx-vue/pull/624)。可调整的 LayoutPanel 收起和展开改为滑动，鼠标、触屏、键盘都一样
+- [x] [`916a8e2fa`](https://github.com/meta/astryx/commit/916a8e2fa) feat(Resizable): a pull past a limit rubber-bands and only the lift closes (#10292)
   - 暂缓：本期已做拖动识别器；剩 Resizable 拉过限位的橡皮筋，归组件接入阶段
   - 暂缓：拖过界限橡皮筋回弹、松手才关闭：归动效与手势引擎任务，Vue 版缺橡皮筋与松手关闭设施
+  - 已移植：[#624](https://github.com/astryx-vue/astryx-vue/pull/624)。拉过限位时橡皮筋回弹，拖到收起阈值以下不立刻收起，松手才决定收起
 - [x] [`0c0f9515f`](https://github.com/meta/astryx/commit/0c0f9515f) fix(Toolbar): the three-lane row wraps instead of letting lanes overlap at large text (#10563)
   - 已移植：[#587](https://github.com/astryx-vue/astryx-vue/pull/587)。带中间区的工具栏改为可换行的三条道，大字号下不再重叠；换行后选中标签的指示条留在标签上
 - [x] [`1ffc0dac9`](https://github.com/meta/astryx/commit/1ffc0dac9) fix(BottomSheet): resting content starts below the grab bar, whatever the padding (#8558)
   - Vue 版已有：BottomSheet 面板静止内容从抓手条下面开始已由 #546 移植，布局容器文件只有注释变化
-- [ ] [`7c3d28a62`](https://github.com/meta/astryx/commit/7c3d28a62) docs(Resizable): the close-on-lift docs name every pointer and the key step (#10635)
+- [x] [`7c3d28a62`](https://github.com/meta/astryx/commit/7c3d28a62) docs(Resizable): the close-on-lift docs name every pointer and the key step (#10635)
   - 暂缓：松手关闭的文档依赖 916a8e2fa 的松手关闭行为，随之暂缓
+  - 已移植：[#624](https://github.com/astryx-vue/astryx-vue/pull/624)。松手才收起的文档写明每种指针和按键步进，中英文档已同步
 - [x] [`db40c6b01`](https://github.com/meta/astryx/commit/db40c6b01) refactor(core): share per-instance warning dedupe and temporary focus targets (#10655)
   - 不适用：每实例告警去重与临时焦点目标的内部共享重构
 - [x] [`17f6985ed`](https://github.com/meta/astryx/commit/17f6985ed) fix(Layout): a full-bleed Table or List row takes the rounded container corner it reaches (#10586)
@@ -7467,8 +7481,9 @@
 
 - [x] [`f59ffe155`](https://github.com/meta/astryx/commit/f59ffe155) fix(ClickableCard, SelectableCard): no touch pressed look for a finger press that starts on a control inside the card (#9801)
   - Vue 版已有：Item 的 isPressContainer 与 data-astryx-press-container：行自己有动作时手指落在里面的控件上，行不亮（#501 同一机制）
-- [ ] [`298bafbc1`](https://github.com/meta/astryx/commit/298bafbc1) fix(core): a list row's touch press release runs on the compositor (#9762)
+- [x] [`298bafbc1`](https://github.com/meta/astryx/commit/298bafbc1) fix(core): a list row's touch press release runs on the compositor (#9762)
   - 暂缓：触屏下行按压释放改成合成器上的 opacity 动画：Vue 行的按压用 background-image 画，缺这个独立按压层，归动效与手势引擎任务
+  - 已移植：[#627](https://github.com/astryx-vue/astryx-vue/pull/627)。触屏上列表行与 TreeList 行的按压底色改由独立伪元素层只淡出 opacity，交给合成器
 - [x] [`67ad50980`](https://github.com/meta/astryx/commit/67ad50980) fix(core): a finger press on a control inside a list row, TreeList row or Token shows no press on it (#9959)
   - 已移植：[#501](https://github.com/astryx-vue/astryx-vue/pull/501)。基础展示族已做：手指按在行、Token、卡片里的控件上时，外层容器不亮
 - [x] [`3d225c35b`](https://github.com/meta/astryx/commit/3d225c35b) feat(core): under a finger a pressable highlights at touch-down outside scroll views (#9765)
@@ -7522,9 +7537,10 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`b1327c020`](https://github.com/meta/astryx/commit/b1327c020) test: watch before the action at 28 first-contact waits (#10286)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`36929ac92`](https://github.com/meta/astryx/commit/36929ac92) feat(List): animate row inserts, removals and moves through the animatedLayout handle (#8106)
+- [x] [`36929ac92`](https://github.com/meta/astryx/commit/36929ac92) feat(List): animate row inserts, removals and moves through the animatedLayout handle (#8106)
   - 暂缓：本期已做 animatedLayout 模块与句柄；剩 List 增删、移动行的滑动接入（listLayoutUpdates 等），归动效与手势引擎的组件接入阶段
   - 暂缓：List 的 animatedLayout 逐行报告插入、移除、移动（itemKey、退场保留表现、交叉行抬升）需要按行报告与保留退场的列表设施，归动效与手势引擎任务
+  - 已移植：[#627](https://github.com/astryx-vue/astryx-vue/pull/627)。List 新增 animatedLayout、ListItem 新增 itemKey，行插入入场、移除原位收起、交叉行上方滑过、后续内容滑到新位置
 - [x] [`9b7ebc461`](https://github.com/meta/astryx/commit/9b7ebc461) test(interaction-harness): a hold sent from the test names the motion it judges (#10438)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`9eb962686`](https://github.com/meta/astryx/commit/9eb962686) test(List): the row press holds are armed before the press (#10477)
@@ -7542,18 +7558,23 @@
 - [ ] [`a28d586eb`](https://github.com/meta/astryx/commit/a28d586eb) feat(core): createReorderable makes List rows reorderable (#8139)
   - 暂缓：本期已做 animatedLayout 与 inertClone；剩 createReorderable 拖动重排（依赖手势），归动效与手势引擎的组件接入阶段
   - 暂缓：createReorderable 拖动重排，归动效与手势引擎任务（4c 拖动重排）
+  - 暂缓：createReorderable 与 List 重排手柄：上游重排引擎约 4000 行（listReorderEngine 2616、ListReorderHandle 425、ListReorderTouch 219、listReorderContext、reorderModel、uikit/reorder 接入），Vue 版还缺 edgeAutoscroll 拖到边缘自动滚动、nearestScroller 滚动祖先、rowMotion 行位移、anchoredHint 锚定提示、touchHitArea 触控热区这几块底层设施，Item 也还没有 label/trailing 上下文，需单独立项先补设施再移植
 - [ ] [`36b8f6ebc`](https://github.com/meta/astryx/commit/36b8f6ebc) feat(lab): TransferList reorders through core's createReorderable (#8143)
   - 暂缓：lab TransferList 改用 createReorderable，依赖拖动重排，归动效与手势引擎任务（4c 拖动重排）
+  - 暂缓：lab TransferList 改用 createReorderable，Vue 版目前用自带的 useTransferReorder，等 createReorderable 移植后再迁
 - [x] [`df4c958ec`](https://github.com/meta/astryx/commit/df4c958ec) perf(core): motions one callback starts read stylesheets in one pass (#10728)
   - 不适用：上游内部规范和架构文档、只改上游测试（自动初筛）
 - [ ] [`6103d36e9`](https://github.com/meta/astryx/commit/6103d36e9) feat(lab): ListInput reorders through core's createReorderable (#8163)
   - 暂缓：lab ListInput 改用 createReorderable，依赖拖动重排，归动效与手势引擎任务（4c 拖动重排）
+  - 暂缓：lab ListInput 改用 createReorderable 与 ListReorderScope，Vue 版目前用自带的 useListReorder，等 createReorderable 移植后再迁
 - [x] [`5f1e4dd68`](https://github.com/meta/astryx/commit/5f1e4dd68) test(List): proofs of the reorder's preview, glides, handle and ring (#10748)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`f2a6332eb`](https://github.com/meta/astryx/commit/f2a6332eb) fix(List): a swizzled copy reads a package reorderable object (#10741)
   - 暂缓：重排对象的包内读取，随 createReorderable 一起，归动效与手势引擎任务（4c 拖动重排）
+  - 暂缓：拷贝组件读包里的重排对象（共享键），随 createReorderable 一起，createReorderable 未移植
 - [ ] [`06ebae229`](https://github.com/meta/astryx/commit/06ebae229) fix(List): a drag follows a scroll around the list's scroll box (#10742)
   - 暂缓：拖动跟随列表滚动盒的滚动，随 createReorderable 一起，归动效与手势引擎任务（4c 拖动重排）
+  - 暂缓：拖动跟随列表滚动盒滚动，依赖重排引擎和 edgeAutoscroll、nearestScroller，均未移植
 - [x] [`f8a426486`](https://github.com/meta/astryx/commit/f8a426486) docs(List): FR11's divider rule holds for every pointer (#10769)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`42081ef30`](https://github.com/meta/astryx/commit/42081ef30) docs(windowing): restore the owner's approval lines and drop adoption order (#10795)
@@ -7590,8 +7611,10 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`36bf4fc9d`](https://github.com/meta/astryx/commit/36bf4fc9d) refactor(reorder): the controller reads a collection's rows through a reader (#11199)
   - 暂缓：重排控制器经读取器读集合行，随 createReorderable 一起，归动效与手势引擎任务（4c 拖动重排）
-- [ ] [`93300ef29`](https://github.com/meta/astryx/commit/93300ef29) fix(core): a List and a swizzled ListItem share reported rows and kept presentation (AST-110 FR3) (#11214)
+  - 暂缓：重排控制器经读取器读集合行，随 createReorderable 一起，重排引擎未移植
+- [x] [`93300ef29`](https://github.com/meta/astryx/commit/93300ef29) fix(core): a List and a swizzled ListItem share reported rows and kept presentation (AST-110 FR3) (#11214)
   - 暂缓：依赖 36929ac92 的行级布局更新设施（共享已报告行与保留表现），Vue 没有 swizzle 拷贝但设施本身未做，归动效与手势引擎任务
+  - 已移植：[#627](https://github.com/astryx-vue/astryx-vue/pull/627)。报告过的行与离开时的样子放进跨副本共享的 WeakMap，包里 List 与拷贝的 ListItem 混用也能退场
 
 ### v0.7.15
 
@@ -7619,6 +7642,7 @@
   - 已移植：[#611](https://github.com/astryx-vue/astryx-vue/pull/611)。ListItem 起止内容插槽说明改为行内位置；Vue 版 ListItem 没有会反向的链接箭头，RTL 箭头不适用
 - [ ] [`4d1cb828f`](https://github.com/meta/astryx/commit/4d1cb828f) fix(List): a reorder handle's name follows its row's place and label (#10815)
   - 暂缓：重排手柄名称随行位置与标签变化：Vue 的 List 还没有重排手柄，随 createReorderable 一起，归动效与手势引擎任务（4c 拖动重排）
+  - 暂缓：重排手柄名称随行位置与标签变化，Vue 的 List 还没有重排手柄，随 createReorderable 一起
 - [x] [`10bae0687`](https://github.com/meta/astryx/commit/10bae0687) feat(Table): useTableColumnsVirtualization windows the unpinned columns (#11014)
   - 已移植：[#547](https://github.com/astryx-vue/astryx-vue/pull/547)。useTableColumnsVirtualization 由表格任务完成
 - [x] [`ef87167d0`](https://github.com/meta/astryx/commit/ef87167d0) feat(Table): column windowing retains the focused column and anchors the first visible column (#11018)
@@ -11330,8 +11354,9 @@
 
 - [x] [`5083ead48`](https://github.com/meta/astryx/commit/5083ead48) fix(DropdownMenu): prevent stale trigger tooltips after selection (#9280)
   - 已移植：[#542](https://github.com/astryx-vue/astryx-vue/pull/542)。isEnabled 变 false 时收起已打开的提示；重新启用时焦点已在触发器里且会打开提示就再打开，补用例
-- [ ] [`298bafbc1`](https://github.com/meta/astryx/commit/298bafbc1) fix(core): a list row's touch press release runs on the compositor (#9762)
+- [x] [`298bafbc1`](https://github.com/meta/astryx/commit/298bafbc1) fix(core): a list row's touch press release runs on the compositor (#9762)
   - 暂缓：触屏下列表行按压释放改成合成器上的 opacity 动画：Vue 行的按压用 background-image 绘制，缺这个独立按压层，归动效与手势引擎任务
+  - 已移植：[#627](https://github.com/astryx-vue/astryx-vue/pull/627)。触屏上列表行与 TreeList 行的按压底色改由独立伪元素层只淡出 opacity，交给合成器
 - [x] [`252b45bb1`](https://github.com/meta/astryx/commit/252b45bb1) feat(Layer): one input hold, first used by Dialog, Drawer and MobileNav (spec:AST-094 FR35) (#8342)
   - 暂缓：Dialog、Drawer、MobileNav 进场时的输入遮挡依赖触屏呈现和进场运行时，归动效与手势引擎任务
   - 暂缓：本期已做宿主的 pageHold 输入保持（#579）；剩 Layer、Dialog、Drawer、MobileNav 接入，归组件接入阶段
@@ -11444,6 +11469,7 @@
 - [ ] [`a28d586eb`](https://github.com/meta/astryx/commit/a28d586eb) feat(core): createReorderable makes List rows reorderable (#8139)
   - 暂缓：本期已做 animatedLayout 与 inertClone；剩 createReorderable 拖动重排（依赖手势），归动效与手势引擎的组件接入阶段
   - 暂缓：createReorderable 依赖 animatedLayout、animator 和 inertClone 这套动效设施，归动效与手势引擎任务；en.json 的键已在 #533 对齐
+  - 暂缓：createReorderable 与 List 重排手柄：上游重排引擎约 4000 行（listReorderEngine 2616、ListReorderHandle 425、ListReorderTouch 219、listReorderContext、reorderModel、uikit/reorder 接入），Vue 版还缺 edgeAutoscroll 拖到边缘自动滚动、nearestScroller 滚动祖先、rowMotion 行位移、anchoredHint 锚定提示、touchHitArea 触控热区这几块底层设施，Item 也还没有 label/trailing 上下文，需单独立项先补设施再移植
 - [x] [`7f04a6c5a`](https://github.com/meta/astryx/commit/7f04a6c5a) fix(Table): an unbounded column's resize handle announces a range that holds its width (#10577)
   - 已移植：[#539](https://github.com/astryx-vue/astryx-vue/pull/539)。没有最大宽度的列，拖柄以窗口宽度作替代 aria-valuemax（不低于当前值），并用 aria-valuetext 念出像素数
 - [x] [`bb0786673`](https://github.com/meta/astryx/commit/bb0786673) fix(TextInput): dispatch changeAction and update optimistic value on clear (#6425)
@@ -11723,7 +11749,8 @@
 ### v0.7.9
 
 - [ ] [`fbb81c6cc`](https://github.com/meta/astryx/commit/fbb81c6cc) DropdownMenu: under a finger, the opening finger picks only after UIMenu's handoff (AST-094 FR29) (#8627)
-- [ ] [`298bafbc1`](https://github.com/meta/astryx/commit/298bafbc1) fix(core): a list row's touch press release runs on the compositor (#9762)
+- [x] [`298bafbc1`](https://github.com/meta/astryx/commit/298bafbc1) fix(core): a list row's touch press release runs on the compositor (#9762)
+  - 已移植：[#627](https://github.com/astryx-vue/astryx-vue/pull/627)。触屏上列表行与 TreeList 行的按压底色改由独立伪元素层只淡出 opacity，交给合成器
 - [x] [`3d225c35b`](https://github.com/meta/astryx/commit/3d225c35b) feat(core): under a finger a pressable highlights at touch-down outside scroll views (#9765)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`8b2883998`](https://github.com/meta/astryx/commit/8b2883998) chore(core): split long comment sentences in some menu press sources and tests (#9954)
@@ -11773,8 +11800,9 @@
 
 ### v0.7.12
 
-- [ ] [`36929ac92`](https://github.com/meta/astryx/commit/36929ac92) feat(List): animate row inserts, removals and moves through the animatedLayout handle (#8106)
+- [x] [`36929ac92`](https://github.com/meta/astryx/commit/36929ac92) feat(List): animate row inserts, removals and moves through the animatedLayout handle (#8106)
   - 暂缓：本期已做 animatedLayout 模块与句柄；剩 List 增删、移动行的滑动接入（listLayoutUpdates 等），归动效与手势引擎的组件接入阶段
+  - 已移植：[#627](https://github.com/astryx-vue/astryx-vue/pull/627)。List 新增 animatedLayout、ListItem 新增 itemKey，行插入入场、移除原位收起、交叉行上方滑过、后续内容滑到新位置
 - [ ] [`6e0b60429`](https://github.com/meta/astryx/commit/6e0b60429) chore(core): one owner module turns scroll anchoring off (#10173)
 - [x] [`422440a64`](https://github.com/meta/astryx/commit/422440a64) fix(core): two copies of Core's modules share one React context (#10233)
   - 不适用：React context 多副本问题
@@ -11787,6 +11815,7 @@
 - [ ] [`7bdeb06d7`](https://github.com/meta/astryx/commit/7bdeb06d7) fix(theme): text follows the reader's text size in Safari on iPhone, in every theme (#10416)
 - [ ] [`a28d586eb`](https://github.com/meta/astryx/commit/a28d586eb) feat(core): createReorderable makes List rows reorderable (#8139)
   - 暂缓：本期已做 animatedLayout 与 inertClone；剩 createReorderable 拖动重排（依赖手势），归动效与手势引擎的组件接入阶段
+  - 暂缓：createReorderable 与 List 重排手柄：上游重排引擎约 4000 行（listReorderEngine 2616、ListReorderHandle 425、ListReorderTouch 219、listReorderContext、reorderModel、uikit/reorder 接入），Vue 版还缺 edgeAutoscroll 拖到边缘自动滚动、nearestScroller 滚动祖先、rowMotion 行位移、anchoredHint 锚定提示、touchHitArea 触控热区这几块底层设施，Item 也还没有 label/trailing 上下文，需单独立项先补设施再移植
 - [x] [`0f6f37e6f`](https://github.com/meta/astryx/commit/0f6f37e6f) docs(records): new data attributes outside data-astryx-* are public surface; prefer a private CSS variable (#10937)
   - 不适用：上游内部规范和架构文档（自动初筛）
 
