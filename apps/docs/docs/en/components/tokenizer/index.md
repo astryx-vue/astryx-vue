@@ -46,7 +46,7 @@ Width measurement uses `useOverflow`. The `#icon` slot sits at the start of the 
 
 <DemoExample
   :demo="tokenizerClear"
-  description="Tokenizer with a built-in clear-all button for bulk removal."
+  description="Tokenizer with a built-in clear-all button for bulk removal. On touch screens, clear through the sheet's Clear all."
   locale="en"
   title="Clear"
 />
@@ -81,7 +81,7 @@ Width measurement uses `useOverflow`. The `#icon` slot sits at the start of the 
 
 <DemoExample
   :demo="tokenizerOverflow"
-  description="On blur, tokens collapse to one line. Inline mode pushes content down on expand; layer mode overlays without shifting layout."
+  description="On blur, tokens collapse to one line. Inline mode pushes content down on expand; layer mode overlays without shifting layout. Overflow modes apply to the inline field."
   locale="en"
   title="Overflow"
 />
