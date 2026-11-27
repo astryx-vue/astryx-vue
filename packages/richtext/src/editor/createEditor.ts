@@ -14,6 +14,7 @@ import { registerBlockExit } from './blockExit.js'
 import { registerCodeBackspace } from './plugins/codeBackspace.js'
 import { registerCodePaste } from './plugins/codePaste.js'
 import { registerCodeTab } from './plugins/codeTab.js'
+import { registerImageSourceCaret } from './plugins/imageSourceCaret.js'
 import { registerListItemShortcuts } from './plugins/listItemShortcuts.js'
 import { registerSelectAllScope } from './plugins/selectAllScope.js'
 import { registerTableColumnFloor } from './plugins/tableColumnFloor.js'
@@ -92,6 +93,7 @@ export function createRichTextEditor(options: CreateRichTextEditorOptions = {}):
       registerCodePaste(editor),
       registerTablePaste(editor),
       registerSelectAllScope(editor),
+      registerImageSourceCaret(editor),
       hasMarkdownShortcuts ? registerMarkdownShortcuts(editor, [...transformers]) : () => {},
       hasMarkdownShortcuts ? registerListItemShortcuts(editor, transformers) : () => {},
     ),

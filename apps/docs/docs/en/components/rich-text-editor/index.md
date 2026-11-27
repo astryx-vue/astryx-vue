@@ -83,6 +83,7 @@ At the end of a code block or table, <kbd>ArrowDown</kbd> inserts a paragraph wh
 - Pasting a table into table cells writes it cell by cell from the top-left selected cell and adds the rows and columns it needs. A table that arrives with other content, such as a paragraph and a table copied from a web page, goes into the cell as text, since a cell cannot hold a table.
 - Typing a Markdown marker (`## `, `> `, `- `, `1. `, `[ ] `) at the start of a list item re-marks that item as a heading, quote, bullet, numbered or task item. Each change is one undo step. It follows `hasMarkdownShortcuts`.
 - In a disabled editor, links are not tab stops and never navigate.
+- An image in Markdown (`![alt](url)`, or a reference image) comes in as one block of source text: it is deleted whole, the caret cannot enter it, and automatic links leave its URL alone. Editing beside or around it writes the source back exactly as written, so another reader still sees an image.
 - A scheme-less address with a port, such as `localhost:3000` or `example.com:8080`, is linked with `https://`.
 - The Insert link button with nothing selected inserts the entered address as link text at the caret; with a caret inside a link it updates that link.
 
