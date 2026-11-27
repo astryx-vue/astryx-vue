@@ -2,6 +2,8 @@
 import type { StyleValue } from 'vue'
 import type { ContextMenuItemData, ContextMenuSubMenuEmits, ContextMenuSubMenuProps, ContextMenuSubMenuSlots } from './types.js'
 import { computed, inject, nextTick, provide, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
+import { focusForLastInput } from '../composables/internal/focusReturn.js'
+import { keepDisabledRowUnfocused } from '../composables/internal/menuActivation.js'
 import { useDismiss } from '../composables/useDismiss.js'
 import { useOverflow } from '../composables/useOverflow.js'
 import { useDropdownMenuMessages } from '../DropdownMenu/useDropdownMenuMessages.js'
@@ -211,7 +213,7 @@ function onRowPointerMove(event: PointerEvent): void {
   if (element == null || element === element.ownerDocument.activeElement)
     return
   // Same single highlight as a plain row: hover moves focus onto the row.
-  element.focus({ preventScroll: true })
+  focusForLastInput(element, { preventScroll: true })
 }
 
 function onFlyoutKeyDown(event: KeyboardEvent): void {
@@ -252,7 +254,6 @@ watch(ancestorOpen, (visible) => {
 </script>
 
 <template>
-  <!-- eslint-disable-next-line vue-a11y/interactive-supports-focus -- The dynamic tabindex is -1 while enabled, the only state that is focusable, and is removed while disabled. -->
   <div
     ref="row"
     v-bind="attrs"
@@ -266,9 +267,10 @@ watch(ancestorOpen, (visible) => {
     :data-size="size"
     role="menuitem"
     :style="attrs.style as StyleValue"
-    :tabindex="isDisabled ? undefined : -1"
+    tabindex="-1"
     @click="onRowClick"
     @focusout="onRowFocusOut"
+    @mousedown="isDisabled && keepDisabledRowUnfocused($event)"
     @keydown="onRowKeyDown"
     @pointerenter="onRowPointerEnter"
     @pointerleave="hover.onTriggerPointerLeave"

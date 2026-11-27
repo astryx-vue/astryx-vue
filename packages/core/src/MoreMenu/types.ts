@@ -220,6 +220,12 @@ export interface MoreMenuPanelProps {
    * @default 'none'
    */
   initialFocus?: MoreMenuInitialFocus
+  /**
+   * Press model's `pointerdown` handler for the menu's root surface. Only the
+   * root level takes it; a nested flyout's rows stay plain clicks.
+   * @internal
+   */
+  surfacePointerdown?: (event: PointerEvent) => void
 }
 
 /**

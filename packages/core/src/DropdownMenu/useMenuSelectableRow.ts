@@ -1,6 +1,7 @@
 import type { ComputedRef, Ref } from 'vue'
 import type { DropdownMenuSize } from './types.js'
 import { computed } from 'vue'
+import { focusForLastInput } from '../composables/internal/focusReturn.js'
 import { useContextMenu } from '../ContextMenu/context.js'
 import { useDropdownMenuContext } from './context.js'
 
@@ -59,7 +60,7 @@ export function useMenuSelectableRow(options: UseMenuSelectableRowOptions): Menu
       return
     const row = event.currentTarget
     if (row instanceof HTMLElement && row !== row.ownerDocument.activeElement)
-      row.focus({ preventScroll: true })
+      focusForLastInput(row, { preventScroll: true })
   }
 
   return { controlSize, density, handleClick, handlePointerMove, inContextMenu, menuSize }

@@ -257,7 +257,9 @@ function settlePendingTouch(asPan: boolean): void {
 function handlePointerDown(event: PointerEvent): void {
   pressSerial += 1
   const serial = pressSerial
-  const target = event.target
+  // 事件在文档上看到的 target 会被重定向成最外层的 shadow host：层若在 shadow root 里，
+  // 点在它自己身上也像点在外面。取路径上最里面的节点才是真正按到的元素。
+  const target = event.composedPath()[0] ?? event.target
   // 前一次手指按压没收尾（丢了抬起事件），按平移处理，不当轻点。
   settlePendingTouch(true)
   if (!(target instanceof Node))

@@ -1116,8 +1116,8 @@
         "zh": "`ContextMenu` 为某一块界面提供上下文操作：用户在触发器区域内点右键（或按下键盘的菜单键、在触屏上长按），菜单就在指针位置展开。不写 `label` 时，菜单名字跟着当前语言，中文是「快捷菜单」。它适合列表行、画布、文件节点、表格单元格这类「操作属于某个具体对象、又不想为每个对象摆一排按钮」的场景。菜单里的每一行和普通菜单一样可以带图标、说明、快捷键位和禁用状态。"
       },
       "usage": {
-        "en": "`ContextMenu` gives one region of the interface its own actions: a right-click inside the trigger area — or the keyboard's context-menu key, or a long press on touch — opens a menu at the pointer. When `label` is omitted, the menu's name follows the active locale (`Context menu` in English). It fits list rows, canvases, file nodes, and table cells: places where the actions belong to a specific object and a permanent row of buttons would only add clutter. Each row behaves like a menu row, with an icon, a description, a shortcut hint, or a disabled state.\n\nThe pointer position is converted into the trigger's own coordinates and materialized as a zero-size anchor, so the panel is positioned relative to the trigger rather than the viewport. It follows the content when the page scrolls, flips above the pointer near the bottom edge, and never leaves the screen.\n\nThere are two ways to describe the content. The data-driven one hands the rows to `items`:\n\n```vue\n<script setup lang=\"ts\">\nimport type { ContextMenuOption } from '@astryx-vue/core/ContextMenu'\nimport { ContextMenu } from '@astryx-vue/core/ContextMenu'\n\nconst items: ContextMenuOption[] = [\n  { label: 'Rename', icon: 'i-carbon-tools' },\n  { label: 'Copy link', icon: 'i-carbon-copy' },\n  { type: 'divider' },\n  { label: 'Delete', variant: 'destructive' },\n]\n</script>\n\n<template>\n  <ContextMenu :items=\"items\" label=\"File actions\">\n    <div>Right-click here</div>\n  </ContextMenu>\n</template>\n```\n\nAn entry can be an action, a divider, a section, a checkbox row, or a radio group. An action that also carries nested entries becomes a submenu. A checkbox row carries whether it is on and a change callback, and toggling it leaves the menu open. A radio group carries the current value and its options, and choosing one closes the menu. When the menu is composed by hand, those rows go in the content slot under the context menu's own names, and they behave like the dropdown menu's rows. Put the built-in icon in the icon slot and pass its name.\n\nWhen the menu needs to be composed by hand, use the `content` slot with the exported menu components instead. Both styles share one keyboard model:\n\n```vue\n<template>\n  <ContextMenu label=\"File actions\">\n    <div>Right-click here</div>\n    <template #content>\n      <ContextMenuItem icon=\"i-carbon-tools\" label=\"Rename\" />\n      <ContextMenuDivider />\n      <ContextMenuGroup title=\"Danger zone\">\n        <ContextMenuItem label=\"Delete\" variant=\"destructive\" />\n      </ContextMenuGroup>\n    </template>\n  </ContextMenu>\n</template>\n```\n\nOpen state is managed for you: a right-click opens the menu, and a click outside, Escape, or Tab closes it. Every change is reported through the `openChange` event. Bind `v-model:is-open` when something outside the component should decide, and the menu renders exactly the bound value.\n\nFocus lands on the first available row when the menu opens. The arrow keys move between rows and wrap at both ends, Home and End jump to the first and last row, PageDown and PageUp move by a screenful, and typing letters jumps to the next row whose label starts with them — pressing the same letter again cycles through the matches. Enter and Space activate the focused row, Escape closes the menu and returns focus to whatever was focused before it opened, and Tab closes the menu while letting the browser move focus on from there. A disabled row is marked `aria-disabled`, leaves the tab order, and is skipped by both the arrow keys and typeahead. The surface is `role=\"menu\"`, rows are `role=\"menuitem\"`, sections are `role=\"group\"`, and dividers are `role=\"separator\"`.\n\nA submenu flies out beside its row on a wide screen. On a compact touch surface the next level replaces the current rows and adds a Back row. It can also be forced to always fly out or always replace the rows. While the next level is loading, the caret can become a spinner.\n\n`isDisabled` stops the component intercepting the right-click, so the browser's own menu still appears and people keep their spell-check, copy, and inspect tools. `triggerAs` decides whether the trigger renders as a block `div` or an inline `span`; the inline form lets a word inside running prose own a context menu without breaking the layout.\n\nThe panel is at least 160px wide and grows with its rows unless `menuWidth` pins a width; either way it is capped to the viewport, and content taller than 300px scrolls inside it. `size` changes only the rows' block padding, from `sm` to `lg`.",
-        "zh": "`ContextMenu` 为某一块界面提供上下文操作：用户在触发器区域内点右键（或按下键盘的菜单键、在触屏上长按），菜单就在指针位置展开。不写 `label` 时，菜单名字跟着当前语言，中文是「快捷菜单」。它适合列表行、画布、文件节点、表格单元格这类「操作属于某个具体对象、又不想为每个对象摆一排按钮」的场景。菜单里的每一行和普通菜单一样可以带图标、说明、快捷键位和禁用状态。\n\n指针位置会被换算成触发器内部的坐标，并落在一个零尺寸的锚点上，因此菜单是相对触发器定位而不是相对视口定位的：页面滚动时它跟着内容走，靠近视口下缘时会自动翻到上方，而不会跑出屏幕。\n\n内容有两种写法。数据驱动的方式把菜单项交给 `items`：\n\n```vue\n<script setup lang=\"ts\">\nimport type { ContextMenuOption } from '@astryx-vue/core/ContextMenu'\nimport { ContextMenu } from '@astryx-vue/core/ContextMenu'\n\nconst items: ContextMenuOption[] = [\n  { label: '重命名', icon: 'i-carbon-tools' },\n  { label: '复制链接', icon: 'i-carbon-copy' },\n  { type: 'divider' },\n  { label: '删除', variant: 'destructive' },\n]\n</script>\n\n<template>\n  <ContextMenu :items=\"items\" label=\"文件操作\">\n    <div>在这里点右键</div>\n  </ContextMenu>\n</template>\n```\n\n数组里的元素可以是动作、分隔线、分组、勾选行或单选组。动作再带上下一级条目就会变成子菜单。勾选行用当前是否选中和变更回调描述，点一下默认不关闭菜单；单选组用当前值和选项列表描述，选中一项后默认关闭。自己组合菜单时，这些行写进内容插槽，组件名是上下文菜单自己的，行为和上面的下拉菜单相同。图标放进图标插槽，使用内置图标并传入图标名。\n\n菜单内容需要自己组合时，改用 `content` 插槽，并用导出的菜单组件搭出结构。两种写法共用同一套键盘行为：\n\n```vue\n<template>\n  <ContextMenu label=\"文件操作\">\n    <div>在这里点右键</div>\n    <template #content>\n      <ContextMenuItem icon=\"i-carbon-tools\" label=\"重命名\" />\n      <ContextMenuDivider />\n      <ContextMenuGroup title=\"危险操作\">\n        <ContextMenuItem label=\"删除\" variant=\"destructive\" />\n      </ContextMenuGroup>\n    </template>\n  </ContextMenu>\n</template>\n```\n\n开关状态默认由组件自己管理：右键打开，点击菜单外部、按 Escape、按 Tab 都会关闭。每次开关都会通过 `openChange` 事件报告新状态。需要由外部决定是否展开时，用 `v-model:is-open` 绑定状态，此时组件完全跟随绑定的值。\n\n打开后焦点会落到第一个可用的条目上。上下方向键在条目之间移动并在两端循环，Home/End 跳到首尾，PageDown/PageUp 按一屏翻动，直接键入字母会跳到标签以这些字母开头的条目（反复按同一个字母会在匹配项之间轮转）。Enter 和空格执行当前条目，Escape 关闭菜单并把焦点交还给打开菜单前聚焦的元素，Tab 则关闭菜单并让浏览器继续从那里往后移动焦点。被禁用的条目会带 `aria-disabled`、退出 Tab 顺序，同时被方向键和键入跳转跳过。菜单本身是 `role=\"menu\"`，条目是 `role=\"menuitem\"`，分组是 `role=\"group\"`，分隔线是 `role=\"separator\"`。\n\n子菜单在宽屏上向旁边展开。在紧凑触控界面上，下一级会换掉当前面板里的行，并在顶部给出返回。也可以强制始终飞出或始终钻入。行还在加载时，箭头可以换成转圈。\n\n`isDisabled` 会让组件不再拦截右键：原生浏览器菜单照常出现，这样用户可以复制文字或使用浏览器自带的功能。`triggerAs` 决定触发器渲染成块级 `div` 还是行内 `span`，后者让一段行文中的词也能拥有自己的上下文菜单而不破坏排版。\n\n菜单面板的宽度默认至少 160px 并随内容伸缩，`menuWidth` 可以给出确定宽度；无论哪种方式，面板都不会超出视口，超长内容会换行并被限制在最高 300px 的滚动区域内。`size` 只改变条目的上下内边距，`sm`、`md`、`lg` 依次更宽松。"
+        "en": "`ContextMenu` gives one region of the interface its own actions: a right-click inside the trigger area — or the keyboard's context-menu key, or a long press on touch — opens a menu at the pointer. When `label` is omitted, the menu's name follows the active locale (`Context menu` in English). It fits list rows, canvases, file nodes, and table cells: places where the actions belong to a specific object and a permanent row of buttons would only add clutter. Each row behaves like a menu row, with an icon, a description, a shortcut hint, or a disabled state.\n\nThe pointer position is converted into the trigger's own coordinates and materialized as a zero-size anchor, so the panel is positioned relative to the trigger rather than the viewport. It follows the content when the page scrolls, flips above the pointer near the bottom edge, and never leaves the screen.\n\nThere are two ways to describe the content. The data-driven one hands the rows to `items`:\n\n```vue\n<script setup lang=\"ts\">\nimport type { ContextMenuOption } from '@astryx-vue/core/ContextMenu'\nimport { ContextMenu } from '@astryx-vue/core/ContextMenu'\n\nconst items: ContextMenuOption[] = [\n  { label: 'Rename', icon: 'i-carbon-tools' },\n  { label: 'Copy link', icon: 'i-carbon-copy' },\n  { type: 'divider' },\n  { label: 'Delete', variant: 'destructive' },\n]\n</script>\n\n<template>\n  <ContextMenu :items=\"items\" label=\"File actions\">\n    <div>Right-click here</div>\n  </ContextMenu>\n</template>\n```\n\nAn entry can be an action, a divider, a section, a checkbox row, or a radio group. An action that also carries nested entries becomes a submenu. A checkbox row carries whether it is on and a change callback, and toggling it leaves the menu open. A radio group carries the current value and its options, and choosing one closes the menu. When the menu is composed by hand, those rows go in the content slot under the context menu's own names, and they behave like the dropdown menu's rows. Put the built-in icon in the icon slot and pass its name.\n\nWhen the menu needs to be composed by hand, use the `content` slot with the exported menu components instead. Both styles share one keyboard model:\n\n```vue\n<template>\n  <ContextMenu label=\"File actions\">\n    <div>Right-click here</div>\n    <template #content>\n      <ContextMenuItem icon=\"i-carbon-tools\" label=\"Rename\" />\n      <ContextMenuDivider />\n      <ContextMenuGroup title=\"Danger zone\">\n        <ContextMenuItem label=\"Delete\" variant=\"destructive\" />\n      </ContextMenuGroup>\n    </template>\n  </ContextMenu>\n</template>\n```\n\nOpen state is managed for you: a right-click opens the menu, and a click outside, Escape, or Tab closes it. Every change is reported through the `openChange` event. Bind `v-model:is-open` when something outside the component should decide, and the menu renders exactly the bound value.\n\nFocus lands on the first available row when the menu opens. The arrow keys move between rows and wrap at both ends, Home and End jump to the first and last row, PageDown and PageUp move by a screenful, and typing letters jumps to the next row whose label starts with them — pressing the same letter again cycles through the matches. Enter and Space activate the focused row, Escape closes the menu and returns focus to whatever was focused before it opened, and Tab closes the menu while letting the browser move focus on from there. A disabled row is marked `aria-disabled` and cannot be activated; the arrow keys and typeahead still reach it so a keyboard user finds it, while the pointer highlight skips it. Opening the menu never starts on a disabled row. The surface is `role=\"menu\"`, rows are `role=\"menuitem\"`, sections are `role=\"group\"`, and dividers are `role=\"separator\"`.\n\nA submenu flies out beside its row on a wide screen. On a compact touch surface the next level replaces the current rows and adds a Back row. It can also be forced to always fly out or always replace the rows. While the next level is loading, the caret can become a spinner.\n\n`isDisabled` stops the component intercepting the right-click, so the browser's own menu still appears and people keep their spell-check, copy, and inspect tools. `triggerAs` decides whether the trigger renders as a block `div` or an inline `span`; the inline form lets a word inside running prose own a context menu without breaking the layout.\n\nThe panel is at least 160px wide and grows with its rows unless `menuWidth` pins a width; either way it is capped to the viewport, and content taller than 300px scrolls inside it. `size` changes only the rows' block padding, from `sm` to `lg`.",
+        "zh": "`ContextMenu` 为某一块界面提供上下文操作：用户在触发器区域内点右键（或按下键盘的菜单键、在触屏上长按），菜单就在指针位置展开。不写 `label` 时，菜单名字跟着当前语言，中文是「快捷菜单」。它适合列表行、画布、文件节点、表格单元格这类「操作属于某个具体对象、又不想为每个对象摆一排按钮」的场景。菜单里的每一行和普通菜单一样可以带图标、说明、快捷键位和禁用状态。\n\n指针位置会被换算成触发器内部的坐标，并落在一个零尺寸的锚点上，因此菜单是相对触发器定位而不是相对视口定位的：页面滚动时它跟着内容走，靠近视口下缘时会自动翻到上方，而不会跑出屏幕。\n\n内容有两种写法。数据驱动的方式把菜单项交给 `items`：\n\n```vue\n<script setup lang=\"ts\">\nimport type { ContextMenuOption } from '@astryx-vue/core/ContextMenu'\nimport { ContextMenu } from '@astryx-vue/core/ContextMenu'\n\nconst items: ContextMenuOption[] = [\n  { label: '重命名', icon: 'i-carbon-tools' },\n  { label: '复制链接', icon: 'i-carbon-copy' },\n  { type: 'divider' },\n  { label: '删除', variant: 'destructive' },\n]\n</script>\n\n<template>\n  <ContextMenu :items=\"items\" label=\"文件操作\">\n    <div>在这里点右键</div>\n  </ContextMenu>\n</template>\n```\n\n数组里的元素可以是动作、分隔线、分组、勾选行或单选组。动作再带上下一级条目就会变成子菜单。勾选行用当前是否选中和变更回调描述，点一下默认不关闭菜单；单选组用当前值和选项列表描述，选中一项后默认关闭。自己组合菜单时，这些行写进内容插槽，组件名是上下文菜单自己的，行为和上面的下拉菜单相同。图标放进图标插槽，使用内置图标并传入图标名。\n\n菜单内容需要自己组合时，改用 `content` 插槽，并用导出的菜单组件搭出结构。两种写法共用同一套键盘行为：\n\n```vue\n<template>\n  <ContextMenu label=\"文件操作\">\n    <div>在这里点右键</div>\n    <template #content>\n      <ContextMenuItem icon=\"i-carbon-tools\" label=\"重命名\" />\n      <ContextMenuDivider />\n      <ContextMenuGroup title=\"危险操作\">\n        <ContextMenuItem label=\"删除\" variant=\"destructive\" />\n      </ContextMenuGroup>\n    </template>\n  </ContextMenu>\n</template>\n```\n\n开关状态默认由组件自己管理：右键打开，点击菜单外部、按 Escape、按 Tab 都会关闭。每次开关都会通过 `openChange` 事件报告新状态。需要由外部决定是否展开时，用 `v-model:is-open` 绑定状态，此时组件完全跟随绑定的值。\n\n打开后焦点会落到第一个可用的条目上。上下方向键在条目之间移动并在两端循环，Home/End 跳到首尾，PageDown/PageUp 按一屏翻动，直接键入字母会跳到标签以这些字母开头的条目（反复按同一个字母会在匹配项之间轮转）。Enter 和空格执行当前条目，Escape 关闭菜单并把焦点交还给打开菜单前聚焦的元素，Tab 则关闭菜单并让浏览器继续从那里往后移动焦点。被禁用的条目会带 `aria-disabled`，不能被激活；方向键和键入跳转仍能走到它，键盘用户才找得到，指针悬停不会点亮它。打开菜单时不会落在禁用的条目上。菜单本身是 `role=\"menu\"`，条目是 `role=\"menuitem\"`，分组是 `role=\"group\"`，分隔线是 `role=\"separator\"`。\n\n子菜单在宽屏上向旁边展开。在紧凑触控界面上，下一级会换掉当前面板里的行，并在顶部给出返回。也可以强制始终飞出或始终钻入。行还在加载时，箭头可以换成转圈。\n\n`isDisabled` 会让组件不再拦截右键：原生浏览器菜单照常出现，这样用户可以复制文字或使用浏览器自带的功能。`triggerAs` 决定触发器渲染成块级 `div` 还是行内 `span`，后者让一段行文中的词也能拥有自己的上下文菜单而不破坏排版。\n\n菜单面板的宽度默认至少 160px 并随内容伸缩，`menuWidth` 可以给出确定宽度；无论哪种方式，面板都不会超出视口，超长内容会换行并被限制在最高 300px 的滚动区域内。`size` 只改变条目的上下内边距，`sm`、`md`、`lg` 依次更宽松。"
       },
       "practices": {
         "en": [
@@ -1620,7 +1620,7 @@
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Whether the row is disabled. A disabled row is dimmed, skipped by arrow keys and typeahead, and cannot be activated."
+                "description": "Whether the row is disabled. A disabled row is dimmed and cannot be activated. Arrow keys and typeahead still reach it, so a keyboard user finds it."
               },
               {
                 "name": "`hasCloseOnSelect`",
@@ -1687,7 +1687,7 @@
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "是否禁用这一行。禁用的行会变淡，方向键和首字母查找都会跳过它，也不能被激活。"
+                "description": "是否禁用这一行。禁用的行会变淡，不能被激活；方向键和首字母查找仍能走到它，键盘用户才找得到。"
               },
               {
                 "name": "`hasCloseOnSelect`",
@@ -1900,7 +1900,7 @@
                 "name": "`items`",
                 "type": "`DropdownMenuOption[]`",
                 "default": "-",
-                "description": "Data-mode menu content. Each entry is an action, a divider, a titled group, a checkbox row (`type: 'checkbox'`, with `checked` and `onChange`), or a radio group (`type: 'radio'`, with `value`, `label`, `items`, and `onChange`). Mutually exclusive with the default slot; `items` wins when both are given."
+                "description": "Data-mode menu content. Each entry is an action, a divider, a titled group, a checkbox row (`type: 'checkbox'`, with `checked` and `onChange`), or a radio group (`type: 'radio'`, with `value`, `label`, `items`, and `onChange`). An action entry that declares its own `items` becomes a submenu, at the top level and inside a group alike. Mutually exclusive with the default slot; `items` wins when both are given."
               },
               {
                 "name": "`isMenuOpen`",
@@ -1923,8 +1923,8 @@
               {
                 "name": "`presentation`",
                 "type": "`'popover' | 'bottom-sheet' | 'adaptive'`",
-                "default": "`'popover'`",
-                "description": "`popover` is the surface anchored to the trigger. `bottom-sheet` uses the BottomSheet on every screen. `adaptive` uses the BottomSheet on a compact touch screen: a coarse primary pointer, and a viewport narrower than the theme `md` breakpoint (768px by default) or shorter than 500px. The choice is made when the layer opens and held until its exit finishes, so turning the device while it is open does not swap it."
+                "default": "anchored popover",
+                "description": "Left out, the menu is the surface anchored to the trigger, and the finger that opened it starts picking rows only after it has moved a short distance, as on iOS. `popover` pins the anchored surface with the plain pointer behavior on every device: the opening press follows the settle rule. `popover` is the surface anchored to the trigger. `bottom-sheet` uses the BottomSheet on every screen. `adaptive` uses the BottomSheet on a compact touch screen: a coarse primary pointer, and a viewport narrower than the theme `md` breakpoint (768px by default) or shorter than 500px. The choice is made when the layer opens and held until its exit finishes, so turning the device while it is open does not swap it."
               },
               {
                 "name": "`placement`",
@@ -1971,7 +1971,7 @@
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Disables the row. A disabled row is skipped by the arrow keys and by typeahead, and it does not respond to clicks."
+                "description": "Disables the row. A disabled row stays in the accessibility tree as disabled. The arrow keys and typeahead reach it so a keyboard user finds it, the pointer highlight skips it, and it does not respond to clicks."
               },
               {
                 "name": "`variant`",
@@ -2183,7 +2183,7 @@
                 "name": "`items`",
                 "type": "`DropdownMenuOption[]`",
                 "default": "-",
-                "description": "数据式菜单内容。每条可以是一条动作、一条分隔线、一个分组、一条勾选行（`type: 'checkbox'`，用 `checked` 和 `onChange`），或一组单选（`type: 'radio'`，用 `value`、`label`、`items` 和 `onChange`）。与默认插槽互斥，同时给出时以 `items` 为准。"
+                "description": "数据式菜单内容。每条可以是一条动作、一条分隔线、一个分组、一条勾选行（`type: 'checkbox'`，用 `checked` 和 `onChange`），或一组单选（`type: 'radio'`，用 `value`、`label`、`items` 和 `onChange`）。动作条目自己带 `items` 就成为子菜单，放在顶层或分组里都一样。与默认插槽互斥，同时给出时以 `items` 为准。"
               },
               {
                 "name": "`isMenuOpen`",
@@ -2206,8 +2206,8 @@
               {
                 "name": "`presentation`",
                 "type": "`'popover' | 'bottom-sheet' | 'adaptive'`",
-                "default": "`'popover'`",
-                "description": "`popover` 是锚定在触发器旁的浮层。`bottom-sheet` 在任何屏幕上都用底部弹层。`adaptive` 在紧凑触屏上用底部弹层：主指针是粗略指针（手指），并且视口宽度小于主题的 `md` 断点（默认 768px）或高度小于 500px。打开那一刻定下用哪种，开着的时候转屏也不换，退场播完才重新判断。"
+                "default": "锚定浮层",
+                "description": "不写时是锚定在触发器旁的浮层，并且打开菜单的那根手指要挪动一小段距离才开始挑行，和 iOS 一样。写 `popover` 则在所有设备上都按普通指针的规则：打开的那次按压按落定规则处理。`popover` 是锚定在触发器旁的浮层。`bottom-sheet` 在任何屏幕上都用底部弹层。`adaptive` 在紧凑触屏上用底部弹层：主指针是粗略指针（手指），并且视口宽度小于主题的 `md` 断点（默认 768px）或高度小于 500px。打开那一刻定下用哪种，开着的时候转屏也不换，退场播完才重新判断。"
               },
               {
                 "name": "`placement`",
@@ -2254,7 +2254,7 @@
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "禁用这一行。禁用的行会被方向键和字母跳转跳过，并且不响应点击。"
+                "description": "禁用这一行。禁用的行仍留在无障碍树里，宣告为禁用。方向键和字母跳转能走到它，键盘用户才找得到；指针悬停不会点亮它，也不响应点击。"
               },
               {
                 "name": "`variant`",
@@ -2336,7 +2336,7 @@
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "禁用这一行。行仍留在无障碍树里，方向键会跳过它，点击不会切换。"
+                "description": "禁用这一行。行仍留在无障碍树里，方向键和字母跳转能走到它，指针悬停不会点亮它，点击不会切换。"
               },
               {
                 "name": "`hasCloseOnSelect`",
@@ -2970,7 +2970,7 @@
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Disables the row. A disabled row is skipped by the arrow keys and by typeahead, and it does not respond to clicks."
+                "description": "Disables the row. A disabled row stays in the accessibility tree as disabled. The arrow keys and typeahead reach it so a keyboard user finds it, the pointer highlight skips it, and it does not respond to clicks."
               },
               {
                 "name": "`variant`",
@@ -3037,7 +3037,7 @@
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "禁用这一行。禁用的行会被方向键和字母跳转跳过，并且不响应点击。"
+                "description": "禁用这一行。禁用的行仍留在无障碍树里，宣告为禁用。方向键和字母跳转能走到它，键盘用户才找得到；指针悬停不会点亮它，也不响应点击。"
               },
               {
                 "name": "`variant`",
@@ -3374,7 +3374,7 @@
                 "name": "`hasSpinner`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "Replaces the caret with a spinner while the next level is loading. The spinner is decorative and does not block opening."
+                "description": "Replaces the caret with a spinner while the next level is loading. The spinner is decorative and does not block opening; once the menu shows, the row announces the loading state once."
               },
               {
                 "name": "`menuWidth`",
@@ -3387,6 +3387,18 @@
                 "type": "`'flyout' | 'drill-in' | 'adaptive'`",
                 "default": "`'adaptive'`",
                 "description": "How the next level appears: beside the row, in place of the current rows, or chosen when the menu opens from whether the surface is a compact touch screen."
+              },
+              {
+                "name": "`delay`",
+                "type": "`number`",
+                "default": "`150`",
+                "description": "How long a hovering pointer waits before the flyout opens, in milliseconds. Keyboard focus and touch never wait."
+              },
+              {
+                "name": "`hideDelay`",
+                "type": "`number`",
+                "default": "`200`",
+                "description": "How long the flyout stays open after the pointer leaves, in milliseconds."
               }
             ]
           }
@@ -3436,6 +3448,18 @@
                 "type": "`'flyout' | 'drill-in' | 'adaptive'`",
                 "default": "`'adaptive'`",
                 "description": "下一级怎么出现。旁边飞出、在原菜单里替换当前行，或在菜单打开时按是否为紧凑触控界面决定。"
+              },
+              {
+                "name": "`delay`",
+                "type": "`number`",
+                "default": "`150`",
+                "description": "指针悬停多久后飞出层才打开，单位毫秒。键盘聚焦和触摸不用等。"
+              },
+              {
+                "name": "`hideDelay`",
+                "type": "`number`",
+                "default": "`200`",
+                "description": "指针离开后飞出层再保持多久才关闭，单位毫秒。"
               }
             ]
           }
@@ -6858,8 +6882,8 @@
         "zh": "`DropdownMenuCheckboxItem` 是 [下拉菜单](/components/dropdown-menu) 里的一行可勾选操作，角色是 `menuitemcheckbox`。它切换自己的布尔值，并保持菜单打开，方便一次改好几项设置。多选一的场景用 [下拉菜单单选组](/components/dropdown-menu-radio-group)。"
       },
       "usage": {
-        "en": "`DropdownMenuCheckboxItem` is one checkable row inside a [Dropdown Menu](/en/components/dropdown-menu). Its role is `menuitemcheckbox`. It toggles its own boolean and leaves the menu open, so several settings can change in one visit. A one-of-N choice belongs in a [Dropdown Menu Radio Group](/en/components/dropdown-menu-radio-group).\n\n```vue\n<script setup lang=\"ts\">\nimport { DropdownMenu, DropdownMenuCheckboxItem } from '@astryx-vue/core/DropdownMenu'\nimport { ref } from 'vue'\n\nconst archived = ref(false)\n</script>\n\n<template>\n  <DropdownMenu :button=\"{ label: 'View' }\">\n    <DropdownMenuCheckboxItem v-model=\"archived\" label=\"Show archived\" />\n  </DropdownMenu>\n</template>\n```\n\nThe mark is decorative. The whole row is the control, and the checked state is `aria-checked`. A disabled row stays in the menu, the arrow keys skip it, and a click does not toggle it.",
-        "zh": "`DropdownMenuCheckboxItem` 是 [下拉菜单](/components/dropdown-menu) 里的一行可勾选操作，角色是 `menuitemcheckbox`。它切换自己的布尔值，并保持菜单打开，方便一次改好几项设置。多选一的场景用 [下拉菜单单选组](/components/dropdown-menu-radio-group)。\n\n```vue\n<script setup lang=\"ts\">\nimport { DropdownMenu, DropdownMenuCheckboxItem } from '@astryx-vue/core/DropdownMenu'\nimport { ref } from 'vue'\n\nconst archived = ref(false)\n</script>\n\n<template>\n  <DropdownMenu :button=\"{ label: '视图' }\">\n    <DropdownMenuCheckboxItem v-model=\"archived\" label=\"显示已归档\" />\n  </DropdownMenu>\n</template>\n```\n\n勾选标记是装饰，整行才是控件，选中状态写在 `aria-checked` 上。禁用的行仍留在菜单里，方向键会跳过它，点击也不会切换。"
+        "en": "`DropdownMenuCheckboxItem` is one checkable row inside a [Dropdown Menu](/en/components/dropdown-menu). Its role is `menuitemcheckbox`. It toggles its own boolean and leaves the menu open, so several settings can change in one visit. A one-of-N choice belongs in a [Dropdown Menu Radio Group](/en/components/dropdown-menu-radio-group).\n\n```vue\n<script setup lang=\"ts\">\nimport { DropdownMenu, DropdownMenuCheckboxItem } from '@astryx-vue/core/DropdownMenu'\nimport { ref } from 'vue'\n\nconst archived = ref(false)\n</script>\n\n<template>\n  <DropdownMenu :button=\"{ label: 'View' }\">\n    <DropdownMenuCheckboxItem v-model=\"archived\" label=\"Show archived\" />\n  </DropdownMenu>\n</template>\n```\n\nThe mark is decorative. The whole row is the control, and the checked state is `aria-checked`. A disabled row stays in the menu, the arrow keys and typeahead reach it, and a click does not toggle it.",
+        "zh": "`DropdownMenuCheckboxItem` 是 [下拉菜单](/components/dropdown-menu) 里的一行可勾选操作，角色是 `menuitemcheckbox`。它切换自己的布尔值，并保持菜单打开，方便一次改好几项设置。多选一的场景用 [下拉菜单单选组](/components/dropdown-menu-radio-group)。\n\n```vue\n<script setup lang=\"ts\">\nimport { DropdownMenu, DropdownMenuCheckboxItem } from '@astryx-vue/core/DropdownMenu'\nimport { ref } from 'vue'\n\nconst archived = ref(false)\n</script>\n\n<template>\n  <DropdownMenu :button=\"{ label: '视图' }\">\n    <DropdownMenuCheckboxItem v-model=\"archived\" label=\"显示已归档\" />\n  </DropdownMenu>\n</template>\n```\n\n勾选标记是装饰，整行才是控件，选中状态写在 `aria-checked` 上。禁用的行仍留在菜单里，方向键和字母跳转能走到它，点击也不会切换。"
       },
       "practices": {
         "en": [],
@@ -6941,7 +6965,7 @@
                 "name": "`isDisabled`",
                 "type": "`boolean`",
                 "default": "`false`",
-                "description": "禁用这一行。行仍留在无障碍树里，方向键会跳过它，点击不会切换。"
+                "description": "禁用这一行。行仍留在无障碍树里，方向键和字母跳转能走到它，指针悬停不会点亮它，点击不会切换。"
               },
               {
                 "name": "`hasCloseOnSelect`",

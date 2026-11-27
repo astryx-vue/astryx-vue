@@ -1,5 +1,5 @@
 import type { Ref } from 'vue'
-import { MENU_BOUNDARY_SELECTOR, MENU_ITEM_SELECTOR } from './menuItemRoles.js'
+import { MENU_BOUNDARY_SELECTOR, MENU_ROW_SELECTOR } from './menuItemRoles.js'
 
 export interface UseMenuFocusOptions {
   /** The menu's scrollable surface. */
@@ -7,7 +7,7 @@ export interface UseMenuFocusOptions {
 }
 
 export interface MenuFocus {
-  /** This level's enabled rows, in DOM order. */
+  /** This level's rows, disabled ones included, in DOM order. */
   getItems: () => HTMLElement[]
   focusItem: (index: number) => void
   focusFirst: () => boolean
@@ -52,8 +52,8 @@ export function useMenuFocus(options: UseMenuFocusOptions): MenuFocus {
     if (listEl == null)
       return []
 
-    return Array.from(listEl.querySelectorAll<HTMLElement>(MENU_ITEM_SELECTOR))
-      .filter(el => belongsHere(el, listEl) && !isDisabled(el) && !isHiddenRow(el, listEl))
+    return Array.from(listEl.querySelectorAll<HTMLElement>(MENU_ROW_SELECTOR))
+      .filter(el => belongsHere(el, listEl) && !isHiddenRow(el, listEl))
   }
 
   function getCurrentIndex(): number {
@@ -181,21 +181,20 @@ export function useMenuFocus(options: UseMenuFocusOptions): MenuFocus {
     const items = getItems()
     const currentIndex = getCurrentIndex()
 
+    // 方向键和 Home/End 走到每一行，禁用行也一样；打开菜单时落在哪一行另算（focusFirst/focusLast）。
     if (event.key === 'ArrowDown') {
-      const next = findEnabledIndex(items, currentIndex === -1 ? 0 : currentIndex + 1, 1)
-      if (next !== -1)
-        focusIndex(items, next)
+      if (items.length > 0)
+        focusIndex(items, currentIndex === -1 ? 0 : (currentIndex + 1) % items.length)
     }
     else if (event.key === 'ArrowUp') {
-      const prev = findEnabledIndex(items, currentIndex === -1 ? items.length - 1 : currentIndex - 1, -1)
-      if (prev !== -1)
-        focusIndex(items, prev)
+      if (items.length > 0)
+        focusIndex(items, currentIndex === -1 ? items.length - 1 : (currentIndex - 1 + items.length) % items.length)
     }
     else if (event.key === 'Home') {
-      focusFirst()
+      focusIndex(items, 0)
     }
     else if (event.key === 'End') {
-      focusLast()
+      focusIndex(items, items.length - 1)
     }
     else if (event.key === 'PageDown') {
       focusPage(1)
