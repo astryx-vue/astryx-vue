@@ -1,5 +1,11 @@
 # @astryx-vue/cli
 
+## 0.6.7
+
+### Patch Changes
+
+- [#608](https://github.com/astryx-vue/astryx-vue/pull/608) [`1c998c8`](https://github.com/astryx-vue/astryx-vue/commit/1c998c8aa213acec397b2d923b1b8864195d1a91) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 命令行 search 在得分相同时让回答了更多查询词的条目排前面，复数的家族词（如 tabs）会列出它的各个部分，用 PascalCase 写的名字也能在文档正文里按词找到；查不到名字时会指向有这个名字的命令（docs、template、component、composable 互相提示），别的库的叫法不再直接打开组件而是作为第一条建议。
+
 ## 0.6.6
 
 ### Patch Changes
