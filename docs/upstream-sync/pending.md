@@ -8212,7 +8212,7 @@
 - [x] [`8931e819c`](https://github.com/meta/astryx/commit/8931e819c) fix(Table, ContextMenu): a sortable column's resize line sits on its column edge (#11576)
   - Vue 版已有：Vue 的光标锚点就在触发器里（触发器本身是定位基准），没有 triggerXstyle 让触发器不定位的情形；键盘打开落在触发器左下角
 - [x] [`54f211658`](https://github.com/meta/astryx/commit/54f211658) feat(Pagination): page links through getPageHref (#11578)
-  - 不适用：给模块级选择器常量加 /* @__PURE__ */ 以便打包器摇树；Pagination 的 getPageHref 不在本族
+  - 不适用：给模块级选择器常量加 `/* @__PURE__ */` 以便打包器摇树；Pagination 的 getPageHref 不在本族
 - [x] [`2566fd73a`](https://github.com/meta/astryx/commit/2566fd73a) perf(ContextMenu): load the touch sheet's action list only for the sheet presentation (#11616)
   - 已移植：[#625](https://github.com/astryx-vue/astryx-vue/pull/625)。ContextMenu 的触屏底部弹层改走按需加载的 MenuBottomSheet，没用到弹层的页面不加载它，补测试
 - [x] [`9ad5a1d2f`](https://github.com/meta/astryx/commit/9ad5a1d2f) [Component Audit] MoreMenu: docs list the controlled open prop and the inherited size, and tests guard both (#11742)
