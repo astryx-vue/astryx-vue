@@ -775,6 +775,32 @@ html.dark .component-detail__stage {
   line-height: 1.7;
 }
 
+/* 组件页不在 .nagi-doc 里，列表拿不到文档正文的样式，会被全局重置去掉圆点和缩进。 */
+.component-detail__body > :is(ul, ol) {
+  margin: 10px 0;
+  padding-inline-start: 1.5em;
+  color: var(--astryx-text-muted);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.component-detail__body > ul {
+  list-style: disc;
+}
+
+.component-detail__body > ol {
+  list-style: decimal;
+}
+
+.component-detail__body > :is(ul, ol) :is(ul, ol) {
+  margin: 0;
+  padding-inline-start: 1.5em;
+}
+
+.component-detail__body > ul ul {
+  list-style: circle;
+}
+
 /*
  * 组件页不在 .nagi-doc 里，行内代码没有底色，所以也不留内外边距：没有底色时 7px 内边距
  * 看起来就是多打了空格，「打开 `hasSnap`。」会在句号前空出一截。源文里中英文之间本来就写了空格。
@@ -1386,7 +1412,7 @@ html.dark .component-example {
 }
 
 .component-api-table table,
-:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table) {
+:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table, .component-detail__body > :where(.nagi-table) > table) {
   display: block;
   width: 100%;
   margin: 18px 0;
@@ -1416,14 +1442,14 @@ html.dark .component-example {
  * 所以只允许在空格处换行，单词内部不断开；属性名和默认值没有空格，照样单行。
  */
 .component-api-table code,
-:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table) code {
+:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table, .component-detail__body > :where(.nagi-table) > table) code {
   white-space: normal;
   overflow-wrap: normal;
   word-break: normal;
 }
 
 .component-api-table :is(th, td),
-:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table) :is(th, td) {
+:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table, .component-detail__body > :where(.nagi-table) > table) :is(th, td) {
   box-sizing: border-box;
   padding-block: var(--astryx-spacing-2, 8px);
   padding-inline: var(--astryx-spacing-3, 12px);
@@ -1434,7 +1460,7 @@ html.dark .component-example {
 }
 
 .component-api-table th,
-:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table) th {
+:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table, .component-detail__body > :where(.nagi-table) > table) th {
   border-bottom: var(--astryx-border-width, 1px) solid var(--astryx-color-border, var(--astryx-line));
   color: var(--astryx-color-text-secondary, var(--astryx-text-muted));
   font-size: var(--astryx-text-label-size, 1rem);
@@ -1443,7 +1469,7 @@ html.dark .component-example {
 }
 
 .component-api-table td,
-:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table) td {
+:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table, .component-detail__body > :where(.nagi-table) > table) td {
   color: var(--astryx-color-text-primary, var(--astryx-text));
   font-size: var(--astryx-text-body-size, 0.875rem);
   overflow-wrap: break-word;
@@ -1451,13 +1477,13 @@ html.dark .component-example {
 }
 
 .component-api-table tbody tr:not(:last-child) > td,
-:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table) tbody tr:not(:last-child) > td {
+:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table, .component-detail__body > :where(.nagi-table) > table) tbody tr:not(:last-child) > td {
   border-bottom: var(--astryx-border-width, 1px) solid var(--astryx-color-border, var(--astryx-line));
 }
 
 .component-api-table tbody tr,
-:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table) tbody tr,
-:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table) tbody tr:nth-child(2n) {
+:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table, .component-detail__body > :where(.nagi-table) > table) tbody tr,
+:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table, .component-detail__body > :where(.nagi-table) > table) tbody tr:nth-child(2n) {
   border: 0;
   background: transparent;
 }
@@ -1467,7 +1493,8 @@ html.dark .component-example {
  * 表头 14px/600 次要色，单元格内边距 12px 16px，正文 16px/24px。
  */
 .component-detail__body .component-api-table,
-.component-detail__body > table {
+.component-detail__body > table,
+.component-detail__body > .nagi-table > table {
   box-sizing: border-box;
   border: 1px solid light-dark(rgb(5 54 89 / 9.8%), rgb(242 244 246 / 9.8%));
   border-radius: 16px;
@@ -1479,32 +1506,37 @@ html.dark .component-example {
  * 分隔线会在卡片中间断掉。单元格本来就会换行，用不着横向滚动；圆角要用 separate 才生效。
  * 写成 div.… 是为了和上面 :is(.nagi-doc > div table, …) 的优先级持平，靠后写的这条才能生效。
  */
-div.component-detail__body > table {
+div.component-detail__body > table,
+div.component-detail__body > .nagi-table > table {
   display: table;
   border-collapse: separate;
   overflow: visible;
 }
 
 .component-detail__body .component-api-table :is(th, td),
-.component-detail__body > table :is(th, td) {
+.component-detail__body > table :is(th, td),
+.component-detail__body > .nagi-table > table :is(th, td) {
   padding: 12px 16px;
 }
 
 .component-detail__body .component-api-table th,
-.component-detail__body > table th {
+.component-detail__body > table th,
+.component-detail__body > .nagi-table > table th {
   border-bottom-color: light-dark(rgb(5 54 89 / 9.8%), rgb(242 244 246 / 9.8%));
   font-size: 14px;
   line-height: 21px;
 }
 
 .component-detail__body .component-api-table td,
-.component-detail__body > table td {
+.component-detail__body > table td,
+.component-detail__body > .nagi-table > table td {
   font-size: 16px;
   line-height: 24px;
 }
 
 .component-detail__body .component-api-table tbody tr:not(:last-child) > td,
-.component-detail__body > table tbody tr:not(:last-child) > td {
+.component-detail__body > table tbody tr:not(:last-child) > td,
+.component-detail__body > .nagi-table > table tbody tr:not(:last-child) > td {
   border-bottom-color: light-dark(rgb(5 54 89 / 9.8%), rgb(242 244 246 / 9.8%));
 }
 
