@@ -1,5 +1,13 @@
 # @astryx-vue/cli
 
+## 0.8.8
+
+### Patch Changes
+
+- [#645](https://github.com/astryx-vue/astryx-vue/pull/645) [`0911d08`](https://github.com/astryx-vue/astryx-vue/commit/0911d088d7f71af5fd7f5bf48b63104d430372c6) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 富文本里每个段落、标题、引用和列表项按自己文字的方向排版（编辑器和只读视图一致），没有强方向字符的块跟着文档；列表缩进改放在每一项上，围栏代码块每行各按自己的方向读。代码块标题栏的长标签改为折行，代码块按标题栏画出来的高度留位置、按它的宽度定最小宽度。core 导出 `firstStrongDirection`，并补全了阿拉伯文标记、印度系数字等字符的强弱判定（Markdown 同步受益）。
+
+- [#644](https://github.com/astryx-vue/astryx-vue/pull/644) [`9a902a4`](https://github.com/astryx-vue/astryx-vue/commit/9a902a4ec8cd9f176ce1d93d862af6f7eb820f61) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 富文本工具栏的链接按钮和 Cmd/Ctrl+K 改为打开锚定在按钮上的非模态弹出层（开在工具栏上方，放不下才翻到下方）：一个网址输入框，回车应用，Escape 或取消会把焦点和选区还给编辑器；光标在链接里时多一个移除按钮。网址框默认留空并显示占位文字。
+
 ## 0.8.7
 
 ### Patch Changes
