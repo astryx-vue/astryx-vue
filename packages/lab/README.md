@@ -33,7 +33,6 @@ Or pick single files: `@astryx-vue/lab/styles/stat.css`, `.../log-stream.css`, a
 | `SVGIcon` | CSS-variable-driven SVG icon with variations (linear, bold, twotone, bulk, broken), path roles, and mask-based gaps. |
 | `LogStream` | Streaming log viewer with level accents, expandable detail rows, follow-scroll tailing, and a terminal variant. |
 | `ListInput` | Editable records with custom input columns, validation, and reordering. |
-| `MobileTokenizer` | Touch-friendly multi-select with search and creation in a bottom sheet. |
 | `TransferList` | Dual-panel selection with search, grouping, and reordering. |
 | `EmojiPicker` | Standalone emoji panel: search every emoji by CLDR group, with frequent emoji first. Place it inline or in a Popover. |
 | `ChatEmojiPicker` | Popover emoji grid with shortname filtering and arrow-key navigation. |

@@ -37,7 +37,6 @@ import '@astryx-vue/lab/lab.css'
 | 组件 | 用途 |
 | --- | --- |
 | [ListInput](/lab/list-input) | 编辑、校验和排序一组记录。 |
-| [MobileTokenizer](/lab/mobile-tokenizer) | 在底部面板中搜索和多选。 |
 | [TransferList](/lab/transfer-list) | 在可选与已选面板之间移动并排序。 |
 | [Tour](/lab/tour) | 用目标高亮和步骤弹层引导用户。 |
 | [CodeEditor](/lab/code-editor) | 编辑带语法高亮和行号的代码。 |

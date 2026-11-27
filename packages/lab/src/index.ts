@@ -183,15 +183,6 @@ export type {
   VideoPlayerProps,
 } from './MediaPlayer/index.js'
 
-export { MobileTokenizer } from './MobileTokenizer/index.js'
-export type {
-  MobileTokenizerChange,
-  MobileTokenizerEmits,
-  MobileTokenizerProps,
-  SearchableItem,
-  SearchSource,
-} from './MobileTokenizer/index.js'
-
 export { createEventFromISO, createScheduleDayView, createScheduleListView, createScheduleMonthlyView, createScheduleWeeklyView, defaultSchedulePlugins, Schedule, ScheduleContext, useScheduleContext, useSchedulePaginationPlugin, useScheduleViewSelectorPlugin } from './Schedule/index.js'
 export type {
   CalendarDayEvent,
