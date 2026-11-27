@@ -1,0 +1,49 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.overrides {
+  /* 深色模式下，分类色卡片上的次要文字取更亮的一档，在卡片底色和悬停态下都够 4.5:1。 */
+  :where(:root) .astryx-card[data-variant='blue']:not(:where([data-astryx-theme]:not([data-astryx-theme='neutral']) *)),
+  [data-astryx-theme='neutral'] .astryx-card[data-variant='blue'] {
+    --astryx-color-text-secondary: light-dark(#474747, #b9b9b9);
+  }
+
+  :where(:root) .astryx-card[data-variant='cyan']:not(:where([data-astryx-theme]:not([data-astryx-theme='neutral']) *)),
+  [data-astryx-theme='neutral'] .astryx-card[data-variant='cyan'] {
+    --astryx-color-text-secondary: light-dark(#474747, #b9b9b9);
+  }
+
+  :where(:root) .astryx-card[data-variant='green']:not(:where([data-astryx-theme]:not([data-astryx-theme='neutral']) *)),
+  [data-astryx-theme='neutral'] .astryx-card[data-variant='green'] {
+    --astryx-color-text-secondary: light-dark(#474747, #b9b9b9);
+  }
+
+  :where(:root) .astryx-card[data-variant='orange']:not(:where([data-astryx-theme]:not([data-astryx-theme='neutral']) *)),
+  [data-astryx-theme='neutral'] .astryx-card[data-variant='orange'] {
+    --astryx-color-text-secondary: light-dark(#474747, #b9b9b9);
+  }
+
+  :where(:root) .astryx-card[data-variant='pink']:not(:where([data-astryx-theme]:not([data-astryx-theme='neutral']) *)),
+  [data-astryx-theme='neutral'] .astryx-card[data-variant='pink'] {
+    --astryx-color-text-secondary: light-dark(#474747, #b9b9b9);
+  }
+
+  :where(:root) .astryx-card[data-variant='purple']:not(:where([data-astryx-theme]:not([data-astryx-theme='neutral']) *)),
+  [data-astryx-theme='neutral'] .astryx-card[data-variant='purple'] {
+    --astryx-color-text-secondary: light-dark(#474747, #b9b9b9);
+  }
+
+  :where(:root) .astryx-card[data-variant='red']:not(:where([data-astryx-theme]:not([data-astryx-theme='neutral']) *)),
+  [data-astryx-theme='neutral'] .astryx-card[data-variant='red'] {
+    --astryx-color-text-secondary: light-dark(#474747, #b9b9b9);
+  }
+
+  :where(:root) .astryx-card[data-variant='teal']:not(:where([data-astryx-theme]:not([data-astryx-theme='neutral']) *)),
+  [data-astryx-theme='neutral'] .astryx-card[data-variant='teal'] {
+    --astryx-color-text-secondary: light-dark(#474747, #b9b9b9);
+  }
+
+  :where(:root) .astryx-card[data-variant='yellow']:not(:where([data-astryx-theme]:not([data-astryx-theme='neutral']) *)),
+  [data-astryx-theme='neutral'] .astryx-card[data-variant='yellow'] {
+    --astryx-color-text-secondary: light-dark(#474747, #b9b9b9);
+  }
+}

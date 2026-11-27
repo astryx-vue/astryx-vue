@@ -142,6 +142,19 @@ describe('calc() 写的退出时长', () => {
     pressFadeMs(element)
     expect(element.childElementCount).toBe(0)
   })
+
+  it('ignores a touch release with no pointer id when nothing is pressed', () => {
+    const errors: unknown[] = []
+    const onError = (event: ErrorEvent): void => {
+      errors.push(event.error)
+    }
+    window.addEventListener('error', onError)
+    const event = new Event('pointerup', { bubbles: true })
+    Object.assign(event, { pointerType: 'touch' })
+    document.body.dispatchEvent(event)
+    window.removeEventListener('error', onError)
+    expect(errors).toEqual([])
+  })
 })
 
 describe('没有按着的接触时的抬起事件', () => {

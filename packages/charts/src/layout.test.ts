@@ -2,6 +2,8 @@ import type { scaleBand } from 'd3-scale'
 import type { ResolvedPoint, SeriesContext, SeriesDef } from './types.js'
 import { describe, expect, it } from 'vitest'
 import { computeLayout } from './layout.js'
+import { dot } from './marks/dot.js'
+import { line } from './marks/line.js'
 import { isBandScale } from './utils.js'
 
 /**
@@ -71,6 +73,50 @@ describe('computeLayout x scale', () => {
       xDomain: [0, 10],
     })
     expect((xScale as (v: number) => number)(5)).toBe(300)
+  })
+
+  it('ignores an x domain for category strings', () => {
+    const { xScale } = computeLayout({
+      data: DATA,
+      xKey: 'm',
+      series: [spySeries()],
+      width: 600,
+      height: 244,
+      xDomain: [0, 10],
+    })
+    expect(isBandScale(xScale)).toBe(true)
+  })
+
+  it('keeps an x domain as a linear window for Date and numeric-string x', () => {
+    const start = Date.UTC(2026, 0, 1)
+    const hour = 3_600_000
+    for (const toX of [(ms: number) => new Date(ms), (ms: number) => String(ms)]) {
+      const { xScale } = computeLayout({
+        data: [start, start + hour, start + 3 * hour].map(ms => ({ t: toX(ms), v: 1 })),
+        xKey: 't',
+        series: [spySeries()],
+        width: 600,
+        height: 244,
+        xDomain: [start, start + 3 * hour],
+      })
+      expect(isBandScale(xScale)).toBe(false)
+      expect((xScale as (v: number) => number)(start + hour)).toBeCloseTo(200)
+    }
+  })
+
+  it('insets a linear x range by the widest mark overhang', () => {
+    const data = [{ i: 0, v: 1 }, { i: 13, v: 2 }]
+    const rangeFor = (series: SeriesDef[]) => (computeLayout({
+      data,
+      xKey: 'i',
+      series,
+      width: 600,
+      height: 244,
+      xDomain: [0, 13],
+    }).xScale as { range: () => number[] }).range()
+    expect(rangeFor([spySeries()])).toEqual([0, 600])
+    expect(rangeFor([line('v', { dots: true })])).toEqual([3, 597])
+    expect(rangeFor([line('v', { dots: true }), dot('v', { radius: 6 })])).toEqual([6, 594])
   })
 
   it('ignores a non-finite x domain', () => {

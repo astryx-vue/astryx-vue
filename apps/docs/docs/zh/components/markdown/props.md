@@ -24,6 +24,7 @@ footer: false
       <tr><td><code>inlinePlugins</code></td><td><code>MarkdownInlinePlugin[]</code></td><td>—</td><td>在普通文本上做匹配。不进入行内代码和围栏代码。</td></tr>
       <tr><td><code>autolink</code></td><td><code>'gfm'</code></td><td>—</td><td>设为 <code>gfm</code> 时，裸网址、<code>www.</code> 和裸邮箱变成链接。</td></tr>
       <tr><td><code>citationStyle</code></td><td><code>'label' | 'number'</code></td><td><code>'label'</code></td><td>引用来源芯片是标题，还是序号徽章。</td></tr>
+      <tr><td><code>codeLanguages</code></td><td><code>ReadonlyArray&lt;CodeLanguage&gt;</code></td><td>—</td><td>围栏可以写的语言值，从 <code>@astryx-vue/core/Code/languages/&lt;name&gt;</code> 引入，或用 <code>createCodeLanguage</code> 做的。围栏的语言词是某个值的标识符时，用这个值渲染，优先于同名的内置语言；后面的条目优先。</td></tr>
       <tr><td><code>sources</code></td><td><code>Record&lt;string, MarkdownSource&gt;</code></td><td>—</td><td>按 id 提供的引用来源。<code>[id]</code> 和 <code>【id】</code> 对上键时画成芯片。</td></tr>
     </tbody>
   </table>

@@ -17074,8 +17074,8 @@
         "zh": "`Markdown` 把 Markdown 源码渲染成正文。标题、段落、强调、链接、行内代码、代码块、引用、列表、任务列表、表格、分隔线和图片都可以用。表格、删除线和任务列表按 GFM 处理。尖括号里的网址和邮箱一直是链接。裸网址、`www.` 开头的主机名和裸邮箱，要等 `autolink` 设为 `gfm` 才变成链接。句末的标点留在链接外面。"
       },
       "usage": {
-        "en": "`Markdown` renders a Markdown source as prose. It covers headings, paragraphs, emphasis, links, inline code, code blocks, quotes, lists, task lists, tables, thematic breaks, and images. Tables, strikethrough, and task lists follow GFM. Angle-bracket URLs and emails are always links. A bare URL, a `www.` host, or a bare email becomes a link only when `autolink` is `gfm`. Trailing sentence punctuation stays outside the link.\n\nImport it from its own entry. Structural styles load with the component. Import the theme once in the application entry:\n\n```ts\nimport '@astryx-vue/themes/neutral.css'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { Markdown } from '@astryx-vue/core/Markdown'\n</script>\n\n<template>\n  <Markdown content=\"## Title\\n\\nA **note**.\" />\n</template>\n```\n\nWhen `content` is omitted, text in the default slot is the source. The slot reads text only. It does not accept nodes that are already rendered.\n\nLinks have control characters removed. `javascript:`, `vbscript:`, and `data:text/html` do not become clickable targets; the link text stays. Images also reject every `data:` URL. Raw HTML is never executed. Tags are shown as text.\n\nCode blocks go through the existing `CodeBlock`, quotes through `Blockquote`, headings through `Heading`, and links through `Link`. Lists and tables use semantic elements, because the existing `List` component and the table export are interface controls rather than prose.\n\n`components` replaces the renderer for one kind of node. A custom component receives the node data as props and, when the node has content, that content as the default slot.\n\nThe values in `components` are component definitions and do not need to be reactive. A plain object works. If you put them inside `ref()` or `reactive()`, Vue makes the component definitions reactive too, and in development it logs `Vue received a Component that was made a reactive object`. Rendering is not affected; the cost is some unnecessary overhead. To avoid the warning, use any one of these:\n\n```ts\nimport { markRaw, ref, shallowRef } from 'vue'\n\n// A plain object, not wrapped in reactivity\nconst components = { paragraph: MyParagraph }\n\n// Use shallowRef (or shallowReactive) when you need to swap the whole object\nconst swappable = shallowRef({ paragraph: MyParagraph })\n\n// Or wrap each component with markRaw; an outer ref then does not warn\nconst marked = ref({ paragraph: markRaw(MyParagraph) })\n```\n\n`plugins` run on the parsed tree. `transform` receives the root and returns the next one. Return the same root when nothing changed, so a streaming render can keep settled blocks. `render` draws an `extension` node whose `plugin` equals that name. `inlinePlugins` match ordinary text nodes. `pattern` needs the `g` flag. Earlier plugins match first, and the first plugin wins when two matches overlap. Inline code and fenced code are left alone. `replace` returns the node that takes the match, or `null` to skip it. An extension node is drawn by the plugin `render` of the same `name`. A `link` node uses the normal link renderer.\n\n`defineMarkdownPlugin` returns the plugin object unchanged, which narrows the type. `isMarkdownExtensionNode` checks that a node belongs to a plugin.\n\nWith `sources`, `[id]` and `【id】` render as citation chips. `citationStyle` defaults to `label`, which shows the source title. `number` shows a compact badge, and the same id keeps the same number.\n\nA heading gets a focusable anchor whose `href` is the heading id, with an `aria-label`. Nested list markers cycle by depth: disc, circle, and square for bullets, and decimal, lower-alpha, and lower-roman for numbers.\n\nCharacter references in prose are decoded, so `&amp;` shows as `&` and `&copy;` shows as ©. A fenced `&copy;` stays as written.\n\nFenced code wraps long lines. The code element carries `data-wrapped=\"true\"`.\n\nA fence info string of `diff` or `diff-ts` turns the diff layer on for the built-in code block. A custom `components.code` still receives the info string as written.\n\nImport `markdownSourceLinesPlugin` from `@astryx-vue/core/Markdown/plugins` and pass it in `plugins`. Headings, paragraphs, list items, quotes, the code wrapper, the table wrapper, and rules then get `data-source-line` and `data-source-line-end`. Without that plugin, those attributes are absent.\n\n`@astryx-vue/core/Markdown/parser` exports `parseMarkdownAst`, `parseInlineAst`, `decodeMarkdownCharacterReferences`, plus the legacy block list `parseMarkdown` and inline `parseInline`. The `parseMarkdown` used by the component still returns the syntax-tree root, not that block list. `math: true` does not emit math nodes. `parseInlineAst` and `parseInline` read inline content only: `# h` stays text, and a fence reads as one code span.\n\n`isStreaming` turns on streaming. While content is only appended, a block that has already closed keeps its rendered node, and only the last unfinished block is parsed again. New text fades in with `--astryx-duration-fast-max`. When the system prefers reduced motion, the fade is skipped.\n\n`isStreaming` does not reveal the string character by character. Use `useStreamingText` for that, then pass its string as `content`. Markdown does not smooth that string again. To simulate a model, pass the accumulated source as `content` and leave `isStreaming` on until the reply is finished.\n\nThis version does not render math.",
-        "zh": "`Markdown` 把 Markdown 源码渲染成正文。标题、段落、强调、链接、行内代码、代码块、引用、列表、任务列表、表格、分隔线和图片都可以用。表格、删除线和任务列表按 GFM 处理。尖括号里的网址和邮箱一直是链接。裸网址、`www.` 开头的主机名和裸邮箱，要等 `autolink` 设为 `gfm` 才变成链接。句末的标点留在链接外面。\n\n从独立入口导入，结构样式会随组件加载。主题在应用入口引入一次：\n\n```ts\nimport '@astryx-vue/themes/neutral.css'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { Markdown } from '@astryx-vue/core/Markdown'\n</script>\n\n<template>\n  <Markdown content=\"## 标题\\n\\n一段 **说明**。\" />\n</template>\n```\n\n`content` 没传时，默认插槽里的文本会当作源码。插槽只读取文本，不接受已经渲染好的节点。\n\n链接会去掉控制字符。`javascript:`、`vbscript:` 和 `data:text/html` 不会变成可点击的地址，只留下链接文字。图片另外拒绝所有 `data:` 地址。原始 HTML 不会执行，标签会按普通文字显示。\n\n代码块交给已有的 `CodeBlock`，引用交给 `Blockquote`，标题交给 `Heading`，链接交给 `Link`。列表和表格用语义元素，因为现有的 `List` 和表格组件是界面控件，不是正文排版。\n\n`components` 可以换掉某一类节点的渲染。自定义组件通过 props 拿到节点数据，有内容的节点还会收到默认插槽。\n\n`components` 里放的是组件定义，不需要是响应式的。直接写成普通对象就行。如果放进了 `ref()` 或 `reactive()`，Vue 会把组件定义也变成响应式对象，开发模式下控制台会出现 `Vue received a Component that was made a reactive object` 的警告。渲染结果不受影响，只是多了不必要的开销。要避免它，用下面任意一种：\n\n```ts\nimport { markRaw, ref, shallowRef } from 'vue'\n\n// 普通对象，不包响应式\nconst components = { paragraph: MyParagraph }\n\n// 需要整体替换时，用 shallowRef（或 shallowReactive）\nconst swappable = shallowRef({ paragraph: MyParagraph })\n\n// 或者给每个组件套 markRaw，外层再用 ref 也不会警告\nconst marked = ref({ paragraph: markRaw(MyParagraph) })\n```\n\n`plugins` 挂在解析之后的语法树上。`transform` 拿到根节点，返回下一棵树；没有改动时把原来的根返回去，流式渲染才能继续复用已经稳定的块。`render` 画出 `type` 为 `extension`、并且 `plugin` 等于这个名字的节点。`inlinePlugins` 只在普通文本里做匹配，`pattern` 要带 `g`。列表里靠前的先匹配，同一位置重叠时前面的赢。行内代码和围栏代码不会被碰到。`replace` 返回替换进去的节点，返回 `null` 就跳过这次匹配。扩展节点如果带了 `name`，就由同名插件的 `render` 来画；返回一个普通的 `link` 节点时，走原来的链接渲染。\n\n`defineMarkdownPlugin` 把插件对象原样返回，用来收窄类型。`isMarkdownExtensionNode` 用来确认一个节点是不是某个插件的扩展节点。\n\n传入 `sources` 后，正文里的 `[id]` 和 `【id】` 会画成引用芯片。`citationStyle` 默认 `label`，芯片上是来源标题。设成 `number` 后变成带序号的小徽章，同一个 id 共用一个序号。\n\n标题会生成可聚焦的锚点，`href` 指向标题 id，并带有 `aria-label`。嵌套列表的记号按层循环：无序是圆点、圆圈、方块，有序是数字、小写字母、小写罗马数字。\n\n正文里的字符实体会解码，`&amp;` 显示成 `&`，`&copy;` 显示成 ©。围栏代码里的 `&copy;` 保持原文。\n\n围栏代码默认折行。一行超过容器宽度时，代码元素带 `data-wrapped=\"true\"`。\n\n围栏信息是 `diff` 或 `diff-ts` 这种时，默认的代码块会打开差异层。换掉 `components.code` 时，语言字符串仍原样传进去。\n\n`markdownSourceLinesPlugin` 从 `@astryx-vue/core/Markdown/plugins` 引入，放进 `plugins` 后，标题、段落、列表项、引用、代码块外层、表格外层和分隔线会带上 `data-source-line` 与 `data-source-line-end`。不传这个插件时没有这些属性。\n\n`@astryx-vue/core/Markdown/parser` 提供 `parseMarkdownAst`、`parseInlineAst`、`decodeMarkdownCharacterReferences`，以及旧的块列表 `parseMarkdown` 和行内 `parseInline`。组件自己用的 `parseMarkdown` 仍返回语法树根，不返回那份块列表。`math: true` 不会产生数学节点。`parseInlineAst` 和 `parseInline` 只读行内内容：`# h` 仍是文字，围栏读成一个行内代码。\n\n`isStreaming` 打开流式模式。内容只在末尾追加时，已经闭合的块保持原来的节点，只重新解析最后一个还没写完的块。新出现的文字用 `--astryx-duration-fast-max` 淡入。系统开启「减少动态效果」时不播放淡入。\n\n`isStreaming` 不做逐字平滑。字符级揭示用 `useStreamingText`，再把返回的字符串交给 `content`。组件不会把这段字符串再平滑一次。模拟模型输出时，把累积的原文交给 `content`，并在输出结束前保持 `isStreaming` 即可。\n\n这一版不渲染数学公式。"
+        "en": "`Markdown` renders a Markdown source as prose. It covers headings, paragraphs, emphasis, links, inline code, code blocks, quotes, lists, task lists, tables, thematic breaks, and images. Tables, strikethrough, and task lists follow GFM. Angle-bracket URLs and emails are always links. A bare URL, a `www.` host, or a bare email becomes a link only when `autolink` is `gfm`. Trailing sentence punctuation stays outside the link.\n\nImport it from its own entry. Structural styles load with the component. Import the theme once in the application entry:\n\n```ts\nimport '@astryx-vue/themes/neutral.css'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { Markdown } from '@astryx-vue/core/Markdown'\n</script>\n\n<template>\n  <Markdown content=\"## Title\\n\\nA **note**.\" />\n</template>\n```\n\nWhen `content` is omitted, text in the default slot is the source. The slot reads text only. It does not accept nodes that are already rendered.\n\nLinks have control characters removed. `javascript:`, `vbscript:`, and every `data:` URL do not become link targets or images: the parser keeps them as source text, and `Markdown` shows them as written. Raw HTML is never executed. Tags are shown as text. An image with an empty URL shows its alternative text in brackets.\n\nEach paragraph, heading, quote, list item and table cell lays out in the direction of its own text (the first strongly directional character), so a Hebrew or Arabic block in an English document reads right to left and the reverse. A block with no such character, such as digits or an image, keeps the direction around it.\n\n`Markdown` does not sanitize what a custom renderer or plugin renderer returns. Each renderer owns its own output. A custom `link` renderer replaces the default link, so it does not receive `onLinkClick`.\n\nCode blocks go through the existing `CodeBlock`, quotes through `Blockquote`, headings through `Heading`, and links through `Link`. Lists and tables use semantic elements, because the existing `List` component and the table export are interface controls rather than prose.\n\n`components` replaces the renderer for one kind of node. A custom component receives the node data as props and, when the node has content, that content as the default slot.\n\nThe values in `components` are component definitions and do not need to be reactive. A plain object works. If you put them inside `ref()` or `reactive()`, Vue makes the component definitions reactive too, and in development it logs `Vue received a Component that was made a reactive object`. Rendering is not affected; the cost is some unnecessary overhead. To avoid the warning, use any one of these:\n\n```ts\nimport { markRaw, ref, shallowRef } from 'vue'\n\n// A plain object, not wrapped in reactivity\nconst components = { paragraph: MyParagraph }\n\n// Use shallowRef (or shallowReactive) when you need to swap the whole object\nconst swappable = shallowRef({ paragraph: MyParagraph })\n\n// Or wrap each component with markRaw; an outer ref then does not warn\nconst marked = ref({ paragraph: markRaw(MyParagraph) })\n```\n\n`plugins` run on the parsed tree. `transform` receives the root and returns the next one. Return the same root when nothing changed, so a streaming render can keep settled blocks. `render` draws an `extension` node whose `plugin` equals that name. `inlinePlugins` match ordinary text nodes. `pattern` needs the `g` flag. Earlier plugins match first, and the first plugin wins when two matches overlap. Inline code and fenced code are left alone. `replace` returns the node that takes the match, or `null` to skip it. An extension node is drawn by the plugin `render` of the same `name`. A `link` node uses the normal link renderer.\n\n`defineMarkdownPlugin` returns the plugin object unchanged, which narrows the type. `isMarkdownExtensionNode` checks that a node belongs to a plugin.\n\nWith `sources`, `[id]` and `【id】` render as citation chips. `citationStyle` defaults to `label`, which shows the source title. `number` shows a compact badge, and the same id keeps the same number.\n\nA heading gets a focusable anchor whose `href` is the heading id, with an `aria-label`. Nested list markers cycle by depth: disc, circle, and square for bullets, and decimal, lower-alpha, and lower-roman for numbers.\n\nCharacter references in prose are decoded, so `&amp;` shows as `&` and `&copy;` shows as ©. A fenced `&copy;` stays as written.\n\nFenced code wraps long lines. The code element carries `data-wrapped=\"true\"`.\n\nA fence info string of `diff` or `diff-ts` turns the diff layer on for the built-in code block. A custom `components.code` still receives the info string as written.\n\nImport `markdownSourceLinesPlugin` from `@astryx-vue/core/Markdown/plugins` and pass it in `plugins`. Headings, paragraphs, list items, quotes, the code wrapper, the table wrapper, and rules then get `data-source-line` and `data-source-line-end`. Without that plugin, those attributes are absent.\n\n`@astryx-vue/core/Markdown/parser` exports `parseMarkdownAst`, `parseInlineAst`, `decodeMarkdownCharacterReferences`, plus the legacy block list `parseMarkdown` and inline `parseInline`. The `parseMarkdown` used by the component still returns the syntax-tree root, not that block list. `math: true` does not emit math nodes. `parseInlineAst` and `parseInline` read inline content only: `# h` stays text, and a fence reads as one code span.\n\n`isStreaming` turns on streaming. While content is only appended, a block that has already closed keeps its rendered node, and only the last unfinished block is parsed again. New text fades in with `--astryx-duration-fast-max`. When the system prefers reduced motion, the fade is skipped.\n\n`isStreaming` does not reveal the string character by character. Use `useStreamingText` for that, then pass its string as `content`. Markdown does not smooth that string again. To simulate a model, pass the accumulated source as `content` and leave `isStreaming` on until the reply is finished.\n\nThis version does not render math.",
+        "zh": "`Markdown` 把 Markdown 源码渲染成正文。标题、段落、强调、链接、行内代码、代码块、引用、列表、任务列表、表格、分隔线和图片都可以用。表格、删除线和任务列表按 GFM 处理。尖括号里的网址和邮箱一直是链接。裸网址、`www.` 开头的主机名和裸邮箱，要等 `autolink` 设为 `gfm` 才变成链接。句末的标点留在链接外面。\n\n从独立入口导入，结构样式会随组件加载。主题在应用入口引入一次：\n\n```ts\nimport '@astryx-vue/themes/neutral.css'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { Markdown } from '@astryx-vue/core/Markdown'\n</script>\n\n<template>\n  <Markdown content=\"## 标题\\n\\n一段 **说明**。\" />\n</template>\n```\n\n`content` 没传时，默认插槽里的文本会当作源码。插槽只读取文本，不接受已经渲染好的节点。\n\n链接会去掉控制字符。`javascript:`、`vbscript:` 和所有 `data:` 地址都不会变成链接目标或图片：解析器把它们留作源码文字，`Markdown` 按原样显示。原始 HTML 不会执行，标签会按普通文字显示。地址为空的图片会把替代文字放在方括号里显示。\n\n每个段落、标题、引用、列表项和表格单元格按自己文字的方向排版（取第一个有明确方向的字符），所以英文文档里的希伯来文或阿拉伯文块从右往左读，反过来也一样。只有数字、标点或图片这类没有明确方向字符的块，沿用外面的方向。\n\n`Markdown` 不会净化自定义渲染器或插件渲染器返回的内容，各渲染器自己负责输出。自定义 `link` 渲染器会替换默认链接，所以不会收到 `onLinkClick`。\n\n代码块交给已有的 `CodeBlock`，引用交给 `Blockquote`，标题交给 `Heading`，链接交给 `Link`。列表和表格用语义元素，因为现有的 `List` 和表格组件是界面控件，不是正文排版。\n\n`components` 可以换掉某一类节点的渲染。自定义组件通过 props 拿到节点数据，有内容的节点还会收到默认插槽。\n\n`components` 里放的是组件定义，不需要是响应式的。直接写成普通对象就行。如果放进了 `ref()` 或 `reactive()`，Vue 会把组件定义也变成响应式对象，开发模式下控制台会出现 `Vue received a Component that was made a reactive object` 的警告。渲染结果不受影响，只是多了不必要的开销。要避免它，用下面任意一种：\n\n```ts\nimport { markRaw, ref, shallowRef } from 'vue'\n\n// 普通对象，不包响应式\nconst components = { paragraph: MyParagraph }\n\n// 需要整体替换时，用 shallowRef（或 shallowReactive）\nconst swappable = shallowRef({ paragraph: MyParagraph })\n\n// 或者给每个组件套 markRaw，外层再用 ref 也不会警告\nconst marked = ref({ paragraph: markRaw(MyParagraph) })\n```\n\n`plugins` 挂在解析之后的语法树上。`transform` 拿到根节点，返回下一棵树；没有改动时把原来的根返回去，流式渲染才能继续复用已经稳定的块。`render` 画出 `type` 为 `extension`、并且 `plugin` 等于这个名字的节点。`inlinePlugins` 只在普通文本里做匹配，`pattern` 要带 `g`。列表里靠前的先匹配，同一位置重叠时前面的赢。行内代码和围栏代码不会被碰到。`replace` 返回替换进去的节点，返回 `null` 就跳过这次匹配。扩展节点如果带了 `name`，就由同名插件的 `render` 来画；返回一个普通的 `link` 节点时，走原来的链接渲染。\n\n`defineMarkdownPlugin` 把插件对象原样返回，用来收窄类型。`isMarkdownExtensionNode` 用来确认一个节点是不是某个插件的扩展节点。\n\n传入 `sources` 后，正文里的 `[id]` 和 `【id】` 会画成引用芯片。`citationStyle` 默认 `label`，芯片上是来源标题。设成 `number` 后变成带序号的小徽章，同一个 id 共用一个序号。\n\n标题会生成可聚焦的锚点，`href` 指向标题 id，并带有 `aria-label`。嵌套列表的记号按层循环：无序是圆点、圆圈、方块，有序是数字、小写字母、小写罗马数字。\n\n正文里的字符实体会解码，`&amp;` 显示成 `&`，`&copy;` 显示成 ©。围栏代码里的 `&copy;` 保持原文。\n\n围栏代码默认折行。一行超过容器宽度时，代码元素带 `data-wrapped=\"true\"`。\n\n围栏信息是 `diff` 或 `diff-ts` 这种时，默认的代码块会打开差异层。换掉 `components.code` 时，语言字符串仍原样传进去。\n\n`markdownSourceLinesPlugin` 从 `@astryx-vue/core/Markdown/plugins` 引入，放进 `plugins` 后，标题、段落、列表项、引用、代码块外层、表格外层和分隔线会带上 `data-source-line` 与 `data-source-line-end`。不传这个插件时没有这些属性。\n\n`@astryx-vue/core/Markdown/parser` 提供 `parseMarkdownAst`、`parseInlineAst`、`decodeMarkdownCharacterReferences`，以及旧的块列表 `parseMarkdown` 和行内 `parseInline`。组件自己用的 `parseMarkdown` 仍返回语法树根，不返回那份块列表。`math: true` 不会产生数学节点。`parseInlineAst` 和 `parseInline` 只读行内内容：`# h` 仍是文字，围栏读成一个行内代码。\n\n`isStreaming` 打开流式模式。内容只在末尾追加时，已经闭合的块保持原来的节点，只重新解析最后一个还没写完的块。新出现的文字用 `--astryx-duration-fast-max` 淡入。系统开启「减少动态效果」时不播放淡入。\n\n`isStreaming` 不做逐字平滑。字符级揭示用 `useStreamingText`，再把返回的字符串交给 `content`。组件不会把这段字符串再平滑一次。模拟模型输出时，把累积的原文交给 `content`，并在输出结束前保持 `isStreaming` 即可。\n\n这一版不渲染数学公式。"
       },
       "practices": {
         "en": [
@@ -17215,6 +17215,12 @@
                 "description": "Whether a citation chip shows the source title or a numbered badge."
               },
               {
+                "name": "`codeLanguages`",
+                "type": "`ReadonlyArray<CodeLanguage>`",
+                "default": "—",
+                "description": "Language values a fence may name, imported from `@astryx-vue/core/Code/languages/<name>` or made with `createCodeLanguage`. A fence whose language word is one of a value's identifiers renders with that value, ahead of a built-in with the same identifier; a later entry wins."
+              },
+              {
                 "name": "`sources`",
                 "type": "`Record<string, MarkdownSource>`",
                 "default": "—",
@@ -17314,6 +17320,12 @@
                 "type": "`'label' | 'number'`",
                 "default": "`'label'`",
                 "description": "引用来源芯片是标题，还是序号徽章。"
+              },
+              {
+                "name": "`codeLanguages`",
+                "type": "`ReadonlyArray<CodeLanguage>`",
+                "default": "—",
+                "description": "围栏可以写的语言值，从 `@astryx-vue/core/Code/languages/<name>` 引入，或用 `createCodeLanguage` 做的。围栏的语言词是某个值的标识符时，用这个值渲染，优先于同名的内置语言；后面的条目优先。"
               },
               {
                 "name": "`sources`",
@@ -18961,8 +18973,8 @@
         "zh": "`CodeBlock` 展示一段只读代码。从 `@astryx-vue/core/Code` 引入，和行内的 `Code` 在一起。`code` 字符串既是读者看到的内容，也是复制按钮写下的内容。"
       },
       "usage": {
-        "en": "`CodeBlock` shows a read-only snippet. Import it from `@astryx-vue/core/Code`, next to inline `Code`. The `code` string is what the reader sees and what the copy button writes.\n\n`language` selects the tokenizer. `title` adds a filename in the header. `hasLineNumbers` draws a gutter. `highlightLines` takes one-indexed line numbers and tints those lines. `maxHeight` bounds the body before it scrolls. `hasCopyButton` stays available in the header, or floats at the top end when there is no header.\n\n`isDiff` paints the snippet as a unified diff. A leading `+` marks an added line, `-` a removed line, and `@@` a hunk header. A `--- ` line, a `+++ ` line, and an `@@` line in that order are a file header. The glyph sits in its own column, and the rest of the line keeps the `language` syntax colors. The copy button still writes the original string, glyphs included. The header and the viewport name read `diff`, or `typescript diff` when a language is set. A highlighted line replaces the diff tint. The colors are `--astryx-code-syntax-added`, `--astryx-code-syntax-removed`, `--astryx-code-syntax-diff-header`, plus the `added-marker` and `removed-marker` slots, the same `--astryx-code-syntax-*` scheme as the other syntax colors.\n\n`SyntaxTheme` sets the syntax custom properties for the blocks inside it. `githubDark` is the dark preset shipped with the package. Wrap a bash block in it when the snippet should read as a terminal on a light page. `defineSyntaxTheme` builds another preset from the same token names.\n\n```vue\n<script setup lang=\"ts\">\nimport { CodeBlock, githubDark, SyntaxTheme } from '@astryx-vue/core/Code'\n\nconst commands = `$ astryx init --features agents`\n</script>\n\n<template>\n  <SyntaxTheme :theme=\"githubDark\">\n    <CodeBlock :code=\"commands\" language=\"bash\" has-copy-button width=\"100%\" />\n  </SyntaxTheme>\n</template>\n```",
-        "zh": "`CodeBlock` 展示一段只读代码。从 `@astryx-vue/core/Code` 引入，和行内的 `Code` 在一起。`code` 字符串既是读者看到的内容，也是复制按钮写下的内容。\n\n`language` 选择分词器。`title` 在顶栏写上文件名。`hasLineNumbers` 画出行号槽。`highlightLines` 接收从 1 开始的行号，给这些行铺一层底色。`maxHeight` 限制正文高度，超出后纵向滚动。`hasCopyButton` 在有顶栏时放在顶栏里，没有顶栏时浮在右上角。\n\n`isDiff` 按 unified diff 给整行上色。行首 `+` 是新增，`-` 是删除，`@@` 是差异头。`---` 后面带空格、下一行是带空格的 `+++`、再下一行是 `@@` 时，前两行也是文件头。符号单独占一列，其余文本仍按 `language` 高亮。复制下去的还是原来的整段，符号也在里面。顶栏和视口名称会写成 `diff`，有语言时写成 `typescript diff` 这种。高亮行会盖住差异底色，不和它叠在一起。颜色用 `--astryx-code-syntax-added`、`--astryx-code-syntax-removed`、`--astryx-code-syntax-diff-header`，标记用对应的 `added-marker` 和 `removed-marker`，和其它语法色是同一套名字。\n\n`SyntaxTheme` 给内部的代码块写入语法颜色变量。包里带的深色预设是 `githubDark`。浅色页面上的命令要读起来像终端时，用它包住 bash 代码块。`defineSyntaxTheme` 用同一组 token 名字再做一个预设。\n\n```vue\n<script setup lang=\"ts\">\nimport { CodeBlock, githubDark, SyntaxTheme } from '@astryx-vue/core/Code'\n\nconst commands = `$ astryx init --features agents`\n</script>\n\n<template>\n  <SyntaxTheme :theme=\"githubDark\">\n    <CodeBlock :code=\"commands\" language=\"bash\" has-copy-button width=\"100%\" />\n  </SyntaxTheme>\n</template>\n```"
+        "en": "`CodeBlock` shows a read-only snippet. Import it from `@astryx-vue/core/Code`, next to inline `Code`. The `code` string is what the reader sees and what the copy button writes.\n\n`language` selects the tokenizer. `title` adds a filename in the header. `hasLineNumbers` draws a gutter. `highlightLines` takes line numbers and tints those lines; `startLineNumber` starts the numbering at a real file line so an excerpt keeps its place. `maxHeight` bounds the body before it scrolls. `hasCopyButton` stays available in the header. With no header, Copy sits in its own column at the inline end, centred on the first line, so no line runs under it. The `endContent` slot puts your own controls just before Copy in the same place.\n\n`isDiff` paints the snippet as a unified diff. A leading `+` marks an added line, `-` a removed line, and `@@` a hunk header. A `--- ` line, a `+++ ` line, and an `@@` line in that order are a file header. The glyph sits in its own column, and the rest of the line keeps the `language` syntax colors. The copy button still writes the original string, glyphs included. The header and the viewport name read `diff`, or `typescript diff` when a language is set. A highlighted line replaces the diff tint. The colors are `--astryx-code-syntax-added`, `--astryx-code-syntax-removed`, `--astryx-code-syntax-diff-header`, plus the `added-marker` and `removed-marker` slots, the same `--astryx-code-syntax-*` scheme as the other syntax colors.\n\n`SyntaxTheme` sets the syntax custom properties for the blocks inside it. `githubDark` is the dark preset shipped with the package. Wrap a bash block in it when the snippet should read as a terminal on a light page. `defineSyntaxTheme` builds another preset from the same token names.\n\n```vue\n<script setup lang=\"ts\">\nimport { CodeBlock, githubDark, SyntaxTheme } from '@astryx-vue/core/Code'\n\nconst commands = `$ astryx init --features agents`\n</script>\n\n<template>\n  <SyntaxTheme :theme=\"githubDark\">\n    <CodeBlock :code=\"commands\" language=\"bash\" has-copy-button width=\"100%\" />\n  </SyntaxTheme>\n</template>\n```",
+        "zh": "`CodeBlock` 展示一段只读代码。从 `@astryx-vue/core/Code` 引入，和行内的 `Code` 在一起。`code` 字符串既是读者看到的内容，也是复制按钮写下的内容。\n\n`language` 选择分词器。`title` 在顶栏写上文件名。`hasLineNumbers` 画出行号槽。`highlightLines` 接收行号，给这些行铺一层底色；`startLineNumber` 让编号从文件里的真实行号开始，摘录也能对上原位置。`maxHeight` 限制正文高度，超出后纵向滚动。`hasCopyButton` 在有顶栏时放在顶栏里；没有顶栏时放在代码右边自己的一列里，与第一行居中对齐，不会有哪一行从它底下穿过。`endContent` 插槽把你自己的控件放在复制按钮前面的同一位置。\n\n`isDiff` 按 unified diff 给整行上色。行首 `+` 是新增，`-` 是删除，`@@` 是差异头。`---` 后面带空格、下一行是带空格的 `+++`、再下一行是 `@@` 时，前两行也是文件头。符号单独占一列，其余文本仍按 `language` 高亮。复制下去的还是原来的整段，符号也在里面。顶栏和视口名称会写成 `diff`，有语言时写成 `typescript diff` 这种。高亮行会盖住差异底色，不和它叠在一起。颜色用 `--astryx-code-syntax-added`、`--astryx-code-syntax-removed`、`--astryx-code-syntax-diff-header`，标记用对应的 `added-marker` 和 `removed-marker`，和其它语法色是同一套名字。\n\n`SyntaxTheme` 给内部的代码块写入语法颜色变量。包里带的深色预设是 `githubDark`。浅色页面上的命令要读起来像终端时，用它包住 bash 代码块。`defineSyntaxTheme` 用同一组 token 名字再做一个预设。\n\n```vue\n<script setup lang=\"ts\">\nimport { CodeBlock, githubDark, SyntaxTheme } from '@astryx-vue/core/Code'\n\nconst commands = `$ astryx init --features agents`\n</script>\n\n<template>\n  <SyntaxTheme :theme=\"githubDark\">\n    <CodeBlock :code=\"commands\" language=\"bash\" has-copy-button width=\"100%\" />\n  </SyntaxTheme>\n</template>\n```"
       },
       "practices": {
         "en": [
@@ -19006,9 +19018,9 @@
               },
               {
                 "name": "`language`",
-                "type": "`string`",
+                "type": "`string | CodeLanguage`",
                 "default": "`'plaintext'`",
-                "description": "Tokenizer language. `plaintext` hides the language label."
+                "description": "Tokenizer language: a built-in identifier such as `'ts'`, or a language value imported from `@astryx-vue/core/Code/languages/<name>` or made with `createCodeLanguage`. A value is labelled with its `name`, and `data-language` carries its first identifier. `plaintext` hides the language label."
               },
               {
                 "name": "`syntaxTheme`",
@@ -19035,10 +19047,16 @@
                 "description": "Whether to draw a line number gutter."
               },
               {
+                "name": "`startLineNumber`",
+                "type": "`number`",
+                "default": "`1`",
+                "description": "The number of the first line, so an excerpt reads with its real file line numbers. The gutter shows `startLineNumber + index`. A value below 1 counts as 1."
+              },
+              {
                 "name": "`highlightLines`",
                 "type": "`number[]`",
                 "default": "—",
-                "description": "One-indexed lines to emphasize. On a diff row, the highlight replaces the diff tint."
+                "description": "Lines to emphasize, in the same file line numbers as the gutter (see `startLineNumber`). A number outside the code highlights nothing. On a diff row, the highlight replaces the diff tint."
               },
               {
                 "name": "`isDiff`",
@@ -19098,7 +19116,7 @@
                 "name": "`tokenizer`",
                 "type": "`(code, language) => SyntaxToken[]`",
                 "default": "—",
-                "description": "Custom tokenizer. Tokens use absolute offsets and do not replace the copied text."
+                "description": "Deprecated: pass `language` a value made with `createCodeLanguage` instead. Still works as before. Custom tokenizer; tokens use absolute offsets and do not replace the copied text."
               },
               {
                 "name": "`highlightMode`",
@@ -19155,9 +19173,9 @@
               },
               {
                 "name": "`language`",
-                "type": "`string`",
+                "type": "`string | CodeLanguage`",
                 "default": "`'plaintext'`",
-                "description": "分词用的语言。`plaintext` 不显示语言名。"
+                "description": "分词用的语言：内置标识符（如 `'ts'`），或者从 `@astryx-vue/core/Code/languages/<name>` 引入、用 `createCodeLanguage` 做出来的语言值。语言值显示它的 `name`，`data-language` 取它的第一个标识符。`plaintext` 不显示语言标签。"
               },
               {
                 "name": "`syntaxTheme`",
@@ -19184,10 +19202,16 @@
                 "description": "是否画行号槽。"
               },
               {
+                "name": "`startLineNumber`",
+                "type": "`number`",
+                "default": "`1`",
+                "description": "第一行的行号，让摘录显示文件里的真实行号。行号槽显示 `startLineNumber + 序号`。小于 1 按 1 算。"
+              },
+              {
                 "name": "`highlightLines`",
                 "type": "`number[]`",
                 "default": "—",
-                "description": "要强调的行，从 1 开始。和差异行叠在一起时，高亮盖住差异底色。"
+                "description": "要强调的行，行号和行号槽一致（见 `startLineNumber`），超出范围的不会高亮任何行。和差异行叠在一起时，高亮盖住差异底色。"
               },
               {
                 "name": "`isDiff`",
@@ -19247,7 +19271,7 @@
                 "name": "`tokenizer`",
                 "type": "`(code, language) => SyntaxToken[]`",
                 "default": "—",
-                "description": "自定义分词器。token 用绝对偏移，不替换被复制的文本。"
+                "description": "已弃用：改给 `language` 传一个 `createCodeLanguage` 做的值。仍然照原样工作。自定义分词器，token 用绝对偏移，不替换被复制的文本。"
               },
               {
                 "name": "`highlightMode`",
@@ -19304,6 +19328,14 @@
       "notes": {
         "en": [
           {
+            "heading": "Languages",
+            "text": "The built-in identifiers cover TypeScript and JavaScript, JSON, HTML, CSS, Python, Bash, PHP, Hack, YAML, Markdown, and now C (`c`, `h`), C++ (`cpp`, `c++`, `cc`, `cxx`, `hpp`, `hh`), SQL (`sql`), Rust (`rust`, `rs`), Kotlin (`kotlin`, `kt`, `kts`), Swift (`swift`), and Go (`go`, `golang`).\n\nLess common languages are modules you import and pass as `language`, so a page that does not use one does not ship it: `dockerfile`, `graphql`, `java`, `lua`, `objective-c`, `powershell`, `ruby`, `thrift`, and `toml`, each at `@astryx-vue/core/Code/languages/<name>`. A language string never reaches a module; pass the value itself. `createCodeLanguage({ name, identifiers, fileExtensions, fileNames, tokenize })` makes your own from a tokenize function. It paints synchronously at any length, and `Markdown` and `RichTextEditor` accept it in `codeLanguages`.\n\n```vue\n<script setup lang=\"ts\">\nimport { CodeBlock } from '@astryx-vue/core/Code'\nimport { graphql } from '@astryx-vue/core/Code/languages/graphql'\n</script>\n\n<template>\n  <CodeBlock :language=\"graphql\" code=\"query { viewer { name } }\" />\n</template>\n```"
+          },
+          {
+            "heading": "CodeBlock slots",
+            "text": "- `endContent`: your own controls, shown just before Copy. In the header when the block has one; otherwise in a column beside the code, centred on the first line and never over it. It never creates a header, and it sits outside the collapse control, so using it never collapses the block."
+          },
+          {
             "heading": "CodeBlock events",
             "text": "- `copy`: emitted after the code string was written to the clipboard.\n- `copyError`: emitted once per failed copy with the rejection. The error itself is never shown."
           },
@@ -19316,6 +19348,14 @@
           {
             "heading": "建议",
             "text": "- 推荐: 推荐\n- 推荐: 推荐\n- 推荐: 推荐\n- 推荐: 推荐\n- 避免: 避免\n- 避免: 避免"
+          },
+          {
+            "heading": "语言",
+            "text": "内置标识符覆盖 TypeScript 和 JavaScript、JSON、HTML、CSS、Python、Bash、PHP、Hack、YAML、Markdown，以及新增的 C（`c`、`h`）、C++（`cpp`、`c++`、`cc`、`cxx`、`hpp`、`hh`）、SQL（`sql`）、Rust（`rust`、`rs`）、Kotlin（`kotlin`、`kt`、`kts`）、Swift（`swift`）和 Go（`go`、`golang`）。\n\n不常用的语言是单独引入、再传给 `language` 的模块，没用到的页面不会带上它们：`dockerfile`、`graphql`、`java`、`lua`、`objective-c`、`powershell`、`ruby`、`thrift`、`toml`，路径是 `@astryx-vue/core/Code/languages/<name>`。语言字符串不会去找模块，要传值本身。`createCodeLanguage({ name, identifiers, fileExtensions, fileNames, tokenize })` 用一个分词函数做出你自己的语言，它在任意长度下都同步上色，`Markdown` 和 `RichTextEditor` 的 `codeLanguages` 也接受它。\n\n```vue\n<script setup lang=\"ts\">\nimport { CodeBlock } from '@astryx-vue/core/Code'\nimport { graphql } from '@astryx-vue/core/Code/languages/graphql'\n</script>\n\n<template>\n  <CodeBlock :language=\"graphql\" code=\"query { viewer { name } }\" />\n</template>\n```"
+          },
+          {
+            "heading": "CodeBlock 插槽",
+            "text": "- `endContent`：放在复制按钮前面的自定义控件。有顶栏时在顶栏里；没有顶栏时在代码右边自己的一列里，与第一行居中对齐，不会盖住代码。它不会让代码块长出顶栏，也在折叠控件之外，用它不会折叠代码块。"
           },
           {
             "heading": "CodeBlock 事件",
@@ -20475,8 +20515,8 @@
               {
                 "name": "`tickFormat`",
                 "description": "`tickFormat`",
-                "type": "`(value: unknown) => string`",
-                "default": "`undefined`"
+                "type": "`(value: unknown) => string \\",
+                "default": "null \\"
               },
               {
                 "name": "`truncate`",
@@ -21499,13 +21539,13 @@
                 "name": "`maxTicks`",
                 "type": "`number`",
                 "default": "`undefined`",
-                "description": "允许显示的最大刻度文字数量，超出时会等间隔跳过。"
+                "description": "允许显示的最大刻度文字数量，超出时会等间隔抽稀，首尾文字保留。不设时按轴的宽度自动抽稀；设了就压过这个自动值，窄图上文字可能挤在一起，所以一般别设。"
               },
               {
                 "name": "`tickFormat`",
-                "type": "`(value: unknown) => string`",
-                "default": "`undefined`",
-                "description": "自定义刻度文字的格式化函数。"
+                "type": "`(value: unknown) => string \\",
+                "default": "null \\",
+                "description": "undefined`"
               },
               {
                 "name": "`truncate`",
@@ -22339,7 +22379,7 @@
           },
           {
             "heading": "Formatting functions",
-            "text": "The library includes formatting helpers for common chart values. Formatting functions follow a safe fallback rule: if an input is `NaN`, `Infinity`, or cannot be parsed, the function returns the original string as-is instead of printing errors or throwing exceptions.\n\n- `compactNumber(value, locale)`: Abbreviates large numbers. For example, `1200` becomes \"1.2K\", `1500000` becomes \"1.5M\", and `1e12` becomes \"1T\".\n- `currency(symbol?, locale?)`: Creates a currency formatter. For example, `currency('$')` can be passed to `ChartAxis`'s `tickFormat`. Values over 1,000 are automatically abbreviated (such as \"$1.5K\").\n- `percent(value, locale)`: Formats a decimal ratio as a percentage. For example, `0.45` becomes \"45%\" and `0.005` becomes \"0.5%\".\n- `shortDate(value, locale, calendar?)`: Formats dates as a short month and day. For example, \"Jan 5\". Dates are Gregorian unless you pass an `Intl` calendar such as `'persian'`.\n- `monthYear(value, locale, calendar?)`: Formats dates as month and year. For example, \"Jan 2024\". Takes the same optional calendar.\n- `formatList(values, locale)`: Formats a list of words into a natural language string according to locale rules, such as \"A, B, and C\"."
+            "text": "The library includes formatting helpers for common chart values. Each one is a `ChartValueFormat`: it receives a value, a locale and a calendar, and returns text, or `null` or `undefined` to ask for the chart's default text. They assign to `ChartValueFormat` without a wrapper. Formatting functions follow a safe fallback rule: if an input is `NaN`, `Infinity`, or cannot be parsed, the function returns the original string as-is instead of printing errors or throwing exceptions. A `null` or `undefined` value returns `undefined` instead of \"0\", \"0%\", \"$0\" or \"null\".\n\n- `compactNumber(value, locale)`: Abbreviates large numbers. For example, `1200` becomes \"1.2K\", `1500000` becomes \"1.5M\", and `1e12` becomes \"1T\".\n- `currency(symbol?, locale?)`: Creates a currency formatter. For example, `currency('$')` can be passed to `ChartAxis`'s `tickFormat`. Values over 1,000 are automatically abbreviated (such as \"$1.5K\"). The returned function also takes a call-time locale; a locale given to the factory wins.\n- `percent(value, locale)`: Formats a decimal ratio as a percentage. For example, `0.45` becomes \"45%\" and `0.005` becomes \"0.5%\".\n- `shortDate(value, locale, calendar?)`: Formats dates as a short month and day. For example, \"Jan 5\". Dates are Gregorian unless you pass an `Intl` calendar such as `'persian'`.\n- `monthYear(value, locale, calendar?)`: Formats dates as month and year. For example, \"Jan 2024\". Takes the same optional calendar.\n- `formatList(values, locale)`: Formats a list of words into a natural language string according to locale rules, such as \"A, B, and C\"."
           },
           {
             "heading": "Reduce large line datasets",
@@ -22493,7 +22533,7 @@
           },
           {
             "heading": "格式化函数",
-            "text": "图表库内置了一组常用的格式化函数。所有格式化函数都遵循安全原则：如果遇到 `NaN`、`Infinity` 或无法解析的值，会原样返回原字符串，绝对不会在界面上打印出异常信息，也不会报错崩溃。\n\n- `compactNumber(value, locale)`：将大数字缩写。例如 `1200` 转为「1.2K」，`1500000` 转为「1.5M」，`1e12` 转为「1T」。\n- `currency(symbol?, locale?)`：创建货币格式化器。例如 `currency('¥')` 可以直接传给 `ChartAxis` 的 `tickFormat` 属性，数值大于一千时会自动应用缩写（如「¥1.5K」）。\n- `percent(value, locale)`：将小数比例转换为百分比。例如 `0.45` 转换为「45%」，`0.005` 转换为「0.5%」。\n- `shortDate(value, locale, calendar?)`：将日期格式化为简短的月日。例如「Jan 5」或「3月12日」。默认用格里高利历，传入 `Intl` 历法标识（如 `'persian'`）可以换成别的历法。\n- `monthYear(value, locale, calendar?)`：将日期格式化为年月。例如「Jan 2024」或「2025年3月」。历法参数同上。\n- `formatList(values, locale)`：按指定语言的语法规则把多个词汇拼接为自然语言列表，例如将数组拼成「甲、乙和丙」。"
+            "text": "图表库内置了一组常用的格式化函数，它们都是 `ChartValueFormat`：入参是值、语言和历法，返回文字，或返回 `null`、`undefined` 让图表用默认文字（可以直接赋给 `ChartValueFormat` 类型，不必再包一层）。所有格式化函数都遵循安全原则：如果遇到 `NaN`、`Infinity` 或无法解析的值，会原样返回原字符串，绝对不会在界面上打印出异常信息，也不会报错崩溃；值是 `null` 或 `undefined` 时返回 `undefined`，而不是「0」「0%」「$0」或「null」。\n\n- `compactNumber(value, locale)`：将大数字缩写。例如 `1200` 转为「1.2K」，`1500000` 转为「1.5M」，`1e12` 转为「1T」。\n- `currency(symbol?, locale?)`：创建货币格式化器。例如 `currency('¥')` 可以直接传给 `ChartAxis` 的 `tickFormat` 属性，数值大于一千时会自动应用缩写（如「¥1.5K」）。返回的函数还接受调用时给的语言，工厂里指定的语言优先。\n- `percent(value, locale)`：将小数比例转换为百分比。例如 `0.45` 转换为「45%」，`0.005` 转换为「0.5%」。\n- `shortDate(value, locale, calendar?)`：将日期格式化为简短的月日。例如「Jan 5」或「3月12日」。默认用格里高利历，传入 `Intl` 历法标识（如 `'persian'`）可以换成别的历法。\n- `monthYear(value, locale, calendar?)`：将日期格式化为年月。例如「Jan 2024」或「2025年3月」。历法参数同上。\n- `formatList(values, locale)`：按指定语言的语法规则把多个词汇拼接为自然语言列表，例如将数组拼成「甲、乙和丙」。"
           },
           {
             "heading": "大数据折线缩减",
@@ -41727,6 +41767,12 @@
                 "default": "-"
               },
               {
+                "name": "`codeLanguages`",
+                "description": "`codeLanguages`",
+                "type": "`ReadonlyArray`",
+                "default": "-"
+              },
+              {
                 "name": "`hasMarkdownShortcuts`",
                 "description": "`hasMarkdownShortcuts`",
                 "type": "`boolean`",
@@ -41823,6 +41869,12 @@
               {
                 "name": "`markdownExtensions`",
                 "description": "`markdownExtensions`",
+                "type": "`ReadonlyArray`",
+                "default": "-"
+              },
+              {
+                "name": "`codeLanguages`",
+                "description": "`codeLanguages`",
                 "type": "`ReadonlyArray`",
                 "default": "-"
               },
@@ -41959,6 +42011,12 @@
                 "default": "-"
               },
               {
+                "name": "`codeLanguages`",
+                "description": "`codeLanguages`",
+                "type": "`ReadonlyArray`",
+                "default": "-"
+              },
+              {
                 "name": "`hasMarkdownShortcuts`",
                 "description": "`hasMarkdownShortcuts`",
                 "type": "`boolean`",
@@ -42055,6 +42113,12 @@
               {
                 "name": "`markdownExtensions`",
                 "description": "`markdownExtensions`",
+                "type": "`ReadonlyArray`",
+                "default": "-"
+              },
+              {
+                "name": "`codeLanguages`",
+                "description": "`codeLanguages`",
                 "type": "`ReadonlyArray`",
                 "default": "-"
               },

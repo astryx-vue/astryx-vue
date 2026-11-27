@@ -6,10 +6,13 @@ export interface ChartAxisProps {
   position: ChartAxisPosition
   /** 想要几个刻度（近似值，d3 决定最终数量）@default 5 */
   tickCount?: number
-  /** 最多显示几个刻度文字，超出的按等间隔跳过 */
+  /**
+   * 最多显示几个刻度文字，超出的按等间隔抽稀，首尾文字保留。
+   * 不设时按轴的宽度自动抽稀；设了就压过这个自动值，窄图上文字可能挤在一起。
+   */
   maxTicks?: number
-  /** 自定义刻度文字 */
-  tickFormat?: (value: unknown) => string
+  /** 自定义刻度文字。返回 `null` 或 `undefined` 时显示默认刻度文字 */
+  tickFormat?: (value: unknown) => string | null | undefined
   /** 把刻度文字截断到这么多个字（末尾补省略号） */
   truncate?: number
   /** 刻度滑动时要不要过渡动画，流式更新时更好看 @default true */

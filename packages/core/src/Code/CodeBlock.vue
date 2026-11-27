@@ -1,15 +1,20 @@
 <script setup lang="ts">
 import type { CSSProperties, StyleValue } from 'vue'
-import type { CodeBlockEmits, CodeBlockProps, TokenLine } from './types.js'
-import { computed, onBeforeUnmount, onMounted, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
+import type { CodeLanguage } from './grammar.js'
+import type { CodeBlockEmits, CodeBlockProps, CodeBlockSlots, TokenLine } from './types.js'
+import { computed, onBeforeUnmount, onMounted, ref, useAttrs, useId, useSlots, useTemplateRef, watch } from 'vue'
 import { devPropError, isDevBuild } from '../composables/internal/devBuild.js'
+import { hasSlotContent } from '../composables/internal/slotContent.js'
 import { useClipboard } from '../composables/useClipboard.js'
 import ComponentIcon from '../Icon/ComponentIcon.vue'
 import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
+import { useComponentMessages } from '../locale/context.js'
+import { codeBlockMessages } from '../locale/messages/code-block.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import CodeBlockContent from './CodeBlockContent.vue'
 import { splitDiffLines } from './diff.js'
+import { isCustomCodeLanguage, languageKey, languageLabel as nameOfLanguage } from './grammar.js'
 import { syntaxThemeStyle } from './syntaxTheme.js'
 import { flatTokensToLines, SYNC_TOKENIZE_THRESHOLD, tokenize, tokenizeAsync } from './tokenizer.js'
 import '../../styles/code.css'
@@ -32,10 +37,14 @@ const props = withDefaults(defineProps<CodeBlockProps>(), {
   isWrapped: false,
   language: 'plaintext',
   size: 'md',
+  startLineNumber: 1,
   width: 'fit-content',
 })
 
 const emit = defineEmits<CodeBlockEmits>()
+defineSlots<CodeBlockSlots>()
+const slots = useSlots()
+const messages = useComponentMessages({ codeBlock: codeBlockMessages })
 
 if (isDevBuild() && typeof props.code !== 'string') {
   throw devPropError(
@@ -60,7 +69,7 @@ const lines = computed<string[]>(() => {
   return split
 })
 
-const asyncTokens = ref<{ code: string, language: string, tokens: TokenLine[] } | null>(null)
+const asyncTokens = ref<{ code: string, language: string | CodeLanguage, tokens: TokenLine[] } | null>(null)
 let pendingLoad: AbortController | null = null
 
 /**
@@ -76,9 +85,10 @@ const syncTokenLines = computed<TokenLine[] | null>(() => {
   const source = tokenSource.value
 
   if (props.tokenizer != null)
-    return flatTokensToLines(props.tokenizer(source, props.language), source)
+    return flatTokensToLines(props.tokenizer(source, nameOfLanguage(props.language)), source)
 
-  if (source.length >= SYNC_TOKENIZE_THRESHOLD)
+  // 自定义语言（createCodeLanguage）和 `tokenizer` 一样，任意长度都同步上色。
+  if (source.length >= SYNC_TOKENIZE_THRESHOLD && !isCustomCodeLanguage(props.language))
     return null
 
   return tokenize(source, props.language)
@@ -101,7 +111,7 @@ const tokenLines = computed<TokenLine[]>(() => {
 async function loadTokens(): Promise<void> {
   const source = tokenSource.value
 
-  if (props.tokenizer != null || source.length < SYNC_TOKENIZE_THRESHOLD)
+  if (props.tokenizer != null || source.length < SYNC_TOKENIZE_THRESHOLD || isCustomCodeLanguage(props.language))
     return
 
   const code = source
@@ -172,18 +182,29 @@ const paintMode = computed<'ranges' | 'spans'>(() => {
   return isSafariBrowser.value ? 'spans' : 'ranges'
 })
 
+/** 第一行的行号（文件里的真实行号）。小于 1 或不是有限数都按 1 算。 */
+const firstLineNumber = computed(() =>
+  Number.isFinite(props.startLineNumber) && props.startLineNumber > 1 ? Math.floor(props.startLineNumber) : 1,
+)
+
 const highlightSet = computed<Set<number> | null>(() =>
   props.highlightLines == null ? null : new Set(props.highlightLines),
 )
+
+/** 语言值显示它自己的名字，字符串显示它本身。 */
+const languageName = computed(() => nameOfLanguage(props.language))
+
+/** `data-language`：字符串本身，语言值取第一个标识符。 */
+const dataLanguage = computed(() => languageKey(props.language))
 
 const languageLabel = computed(() => {
   if (!props.hasLanguageLabel)
     return null
 
   if (props.isDiff)
-    return props.language === 'plaintext' ? 'diff' : `${props.language} diff`
+    return languageName.value === 'plaintext' ? 'diff' : messages.value.codeBlock.diffLabel(languageName.value)
 
-  return props.language === 'plaintext' ? null : props.language
+  return languageName.value === 'plaintext' ? null : languageName.value
 })
 
 /** `filename — language`, omitting whichever half is missing. */
@@ -192,6 +213,12 @@ const headerText = computed(() => [props.title, languageLabel.value]
   .join(' — '))
 
 const showHeader = computed(() => headerText.value !== '')
+
+/** 调用方放在复制按钮前面的控件。它不会让代码块长出标题栏。 */
+const hasEndContent = computed(() => hasSlotContent(slots.endContent))
+
+/** 没有标题栏时，控件排在代码右边自己的一列里，不盖住代码。 */
+const hasCorner = computed(() => !showHeader.value && (props.hasCopyButton || hasEndContent.value))
 
 const canCollapse = computed(() =>
   showHeader.value && props.isCollapsible && lines.value.length >= props.collapsibleThreshold,
@@ -284,7 +311,8 @@ const forwardedAttrs = computed(() => Object.fromEntries(
     class="astryx-code-block"
     :class="attrs.class"
     :data-container="container"
-    :data-language="language"
+    :data-corner="hasCorner || undefined"
+    :data-language="dataLanguage"
     :data-size="size"
     :style="rootStyle"
   >
@@ -293,7 +321,7 @@ const forwardedAttrs = computed(() => Object.fromEntries(
       class="astryx-code-block__header astryx-code-block-header"
       :class="{ 'astryx-code-block__header--divided': hasLineNumbers }"
       :data-container="container"
-      :data-language="language"
+      :data-language="dataLanguage"
       :data-size="size"
     >
       <!-- eslint-disable-next-line vue-a11y/no-static-element-interactions -- the interactive role, tabindex, and aria state are bound from `titleControlAttrs`, which the rule cannot see; it is the disclosure control when collapsing is available. -->
@@ -306,7 +334,7 @@ const forwardedAttrs = computed(() => Object.fromEntries(
       >
         <span
           class="astryx-code-block__title astryx-code-block-title"
-          :data-language="language"
+          :data-language="dataLanguage"
           :data-size="size"
         >
           <span v-if="canCollapse" class="astryx-code-block__chevron">
@@ -320,6 +348,67 @@ const forwardedAttrs = computed(() => Object.fromEntries(
           </span>{{ headerText }}
         </span>
       </div>
+      <div v-if="hasCopyButton || hasEndContent" class="astryx-code-block__controls">
+        <slot name="endContent" />
+        <IconButton
+          v-if="hasCopyButton"
+          class="astryx-code-block-copy-button"
+          variant="ghost"
+          size="sm"
+          :label="copyButtonLabel"
+          :tooltip="copyTooltip"
+          @click.stop="onCopy"
+        >
+          <ComponentIcon
+            icon-slot="code-block-copy"
+            :state="{ copied: isCopied }"
+            :fallback="{ icon: copyIcon, size: 'sm' }"
+            color="inherit"
+          />
+        </IconButton>
+      </div>
+    </div>
+    <div
+      v-if="canCollapse"
+      :id="regionId"
+      class="astryx-code-block__collapse"
+      :class="{ 'astryx-code-block__collapse--collapsed': isCollapsed }"
+      :inert="isCollapsed || undefined"
+    >
+      <div class="astryx-code-block__collapse-inner">
+        <CodeBlockContent
+          :diff="diffLines"
+          :has-line-numbers="hasLineNumbers"
+          :highlight-set="highlightSet"
+          :start-line-number="firstLineNumber"
+          :is-compact="showHeader && !hasLineNumbers"
+          :is-wrapped="isWrapped"
+          :lines="lines"
+          :max-height="maxHeight"
+          :mode="paintMode"
+          :scroll-label="languageLabel ?? codeLabel"
+          :size="size"
+          :token-lines="tokenLines"
+        />
+      </div>
+    </div>
+    <CodeBlockContent
+      v-else
+      :diff="diffLines"
+      :has-line-numbers="hasLineNumbers"
+      :highlight-set="highlightSet"
+          :start-line-number="firstLineNumber"
+      :is-compact="showHeader && !hasLineNumbers"
+      :is-wrapped="isWrapped"
+      :lines="lines"
+      :max-height="maxHeight"
+      :mode="paintMode"
+      :scroll-label="languageLabel ?? codeLabel"
+      :size="size"
+      :token-lines="tokenLines"
+    />
+    <div v-if="hasCorner" class="astryx-code-block__corner" :data-size="size">
+      <slot name="endContent" />
       <IconButton
         v-if="hasCopyButton"
         class="astryx-code-block-copy-button"
@@ -337,59 +426,6 @@ const forwardedAttrs = computed(() => Object.fromEntries(
         />
       </IconButton>
     </div>
-    <div
-      v-if="canCollapse"
-      :id="regionId"
-      class="astryx-code-block__collapse"
-      :class="{ 'astryx-code-block__collapse--collapsed': isCollapsed }"
-      :inert="isCollapsed || undefined"
-    >
-      <div class="astryx-code-block__collapse-inner">
-        <CodeBlockContent
-          :diff="diffLines"
-          :has-line-numbers="hasLineNumbers"
-          :highlight-set="highlightSet"
-          :is-compact="showHeader && !hasLineNumbers"
-          :is-wrapped="isWrapped"
-          :lines="lines"
-          :max-height="maxHeight"
-          :mode="paintMode"
-          :scroll-label="languageLabel ?? codeLabel"
-          :size="size"
-          :token-lines="tokenLines"
-        />
-      </div>
-    </div>
-    <CodeBlockContent
-      v-else
-      :diff="diffLines"
-      :has-line-numbers="hasLineNumbers"
-      :highlight-set="highlightSet"
-      :is-compact="showHeader && !hasLineNumbers"
-      :is-wrapped="isWrapped"
-      :lines="lines"
-      :max-height="maxHeight"
-      :mode="paintMode"
-      :scroll-label="languageLabel ?? codeLabel"
-      :size="size"
-      :token-lines="tokenLines"
-    />
-    <IconButton
-      v-if="!showHeader && hasCopyButton"
-      class="astryx-code-block-copy-button astryx-code-block-copy-button--floating"
-      variant="ghost"
-      size="sm"
-      :label="copyButtonLabel"
-      :tooltip="copyTooltip"
-      @click.stop="onCopy"
-    >
-      <ComponentIcon
-        icon-slot="code-block-copy"
-        :state="{ copied: isCopied }"
-        :fallback="{ icon: copyIcon, size: 'sm' }"
-        color="inherit"
-      />
-    </IconButton>
   </pre>
   <VisuallyHidden role="status" aria-live="polite">
     {{ isCopied ? copiedLabel : '' }}

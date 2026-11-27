@@ -39,7 +39,11 @@ import { Markdown } from '@astryx-vue/core/Markdown'
 
 When `content` is omitted, text in the default slot is the source. The slot reads text only. It does not accept nodes that are already rendered.
 
-Links have control characters removed. `javascript:`, `vbscript:`, and `data:text/html` do not become clickable targets; the link text stays. Images also reject every `data:` URL. Raw HTML is never executed. Tags are shown as text.
+Links have control characters removed. `javascript:`, `vbscript:`, and every `data:` URL do not become link targets or images: the parser keeps them as source text, and `Markdown` shows them as written. Raw HTML is never executed. Tags are shown as text. An image with an empty URL shows its alternative text in brackets.
+
+Each paragraph, heading, quote, list item and table cell lays out in the direction of its own text (the first strongly directional character), so a Hebrew or Arabic block in an English document reads right to left and the reverse. A block with no such character, such as digits or an image, keeps the direction around it.
+
+`Markdown` does not sanitize what a custom renderer or plugin renderer returns. Each renderer owns its own output. A custom `link` renderer replaces the default link, so it does not receive `onLinkClick`.
 
 Code blocks go through the existing `CodeBlock`, quotes through `Blockquote`, headings through `Heading`, and links through `Link`. Lists and tables use semantic elements, because the existing `List` component and the table export are interface controls rather than prose.
 

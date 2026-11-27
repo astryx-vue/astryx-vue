@@ -72,7 +72,12 @@
   }
 
   /* iOS Safari 在聚焦的输入控件字号低于 16px 时会放大页面。只在触屏的 iOS 上抬到 16px。 */
+  /* 点一下编辑区就会升起键盘，聚焦外观淡入会在升起的每一帧重绘，所以粗指针下立刻显示。 */
   @media (pointer: coarse) {
+    .astryx-richtext-editor {
+      transition-duration: 0s;
+    }
+
     @supports (-webkit-touch-callout: none) {
       .astryx-richtext-editor__root {
         font-size: max(1rem, var(--astryx-text-body-size, 0.875rem));

@@ -51,7 +51,8 @@ function describeTokenType(type: string): void {
   const name = CSS.escape(`astryx-${type}`)
   const color = `var(${CSS.escape(`--astryx-code-syntax-${type}`)}, currentColor)`
 
-  dynamicStyles.sheet?.insertRule(`.astryx-code-block code::highlight(${name}) { color: ${color}; }`)
+  // 规则放进 astryx.components 层，和静态规则一样；不分层的规则会压过任何分层规则，主题和应用的语法色就改不动它了。
+  dynamicStyles.sheet?.insertRule(`@layer astryx.components { .astryx-code-block code::highlight(${name}) { color: ${color}; } }`)
 }
 
 function resolveHighlight(type: string): Highlight | null {

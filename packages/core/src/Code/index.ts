@@ -2,6 +2,8 @@ export { default as Code } from './Code.vue'
 export { default as CodeBlock } from './CodeBlock.vue'
 export { diffLineKind, parseFenceLanguage, splitDiffLines } from './diff.js'
 export type { DiffLineKind, DiffLines } from './diff.js'
+export { createCodeLanguage, isCodeLanguage } from './grammar.js'
+export type { CodeLanguage, CodeLanguageToken, CodeLanguageTokenize, CreateCodeLanguageOptions } from './grammar.js'
 export { applyHighlightRanges, applyHighlightRangesFlat, HIGHLIGHTED_TOKEN_TYPES } from './highlightRanges.js'
 export {
   allSyntaxPresets,
@@ -28,6 +30,7 @@ export type {
   CodeBlockEmits,
   CodeBlockProps,
   CodeBlockSize,
+  CodeBlockSlots,
   CodeBlockTokenizer,
   CodeColor,
   CodeHighlightMode,

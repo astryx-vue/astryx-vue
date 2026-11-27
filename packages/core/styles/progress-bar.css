@@ -64,20 +64,9 @@
     background: var(--astryx-color-on-accent, #fff);
   }
 
-  .astryx-progress-bar[data-variant='success'] .astryx-progress-bar-mark[data-placement='fill'] {
-    background: var(--astryx-color-on-success, #fff);
-  }
-
-  .astryx-progress-bar[data-variant='warning'] .astryx-progress-bar-mark[data-placement='fill'] {
-    background: var(--astryx-color-on-warning, #171717);
-  }
-
-  .astryx-progress-bar[data-variant='error'] .astryx-progress-bar-mark[data-placement='fill'] {
-    background: var(--astryx-color-on-error, #fff);
-  }
-
-  .astryx-progress-bar[data-variant='neutral'] .astryx-progress-bar-mark[data-placement='fill'] {
-    background: var(--astryx-color-text-primary, light-dark(#171717, #fafafa));
+  /* 除 accent 外，填充都是文字角色，主题把它们设成在自己的表面上读得清，所以填充里的标记取表面色。 */
+  .astryx-progress-bar:is([data-variant='success'], [data-variant='warning'], [data-variant='error'], [data-variant='neutral'], [data-disabled]) .astryx-progress-bar-mark[data-placement='fill'] {
+    background: var(--astryx-color-background-surface, light-dark(#fff, #171717));
   }
 
   .astryx-progress-bar-mark:focus-visible {
@@ -126,15 +115,15 @@
   }
 
   .astryx-progress-bar[data-variant='success'] .astryx-progress-bar-fill {
-    background: var(--astryx-progress-bar-success-fill, var(--astryx-input-success, #64af4c));
+    background: var(--astryx-progress-bar-success-fill, var(--astryx-color-text-success, light-dark(#2f7d33, #90ca90)));
   }
 
   .astryx-progress-bar[data-variant='warning'] .astryx-progress-bar-fill {
-    background: var(--astryx-progress-bar-warning-fill, var(--astryx-input-warning, #ffce2f));
+    background: var(--astryx-progress-bar-warning-fill, var(--astryx-color-text-warning, light-dark(#836700, #eec448)));
   }
 
   .astryx-progress-bar[data-variant='error'] .astryx-progress-bar-fill {
-    background: var(--astryx-progress-bar-error-fill, var(--astryx-input-error, #ff705d));
+    background: var(--astryx-progress-bar-error-fill, var(--astryx-color-text-error, light-dark(#c0262c, #ffaea7)));
   }
 
   .astryx-progress-bar[data-variant='accent'] .astryx-progress-bar-fill {
@@ -145,16 +134,27 @@
     background: var(--astryx-progress-bar-info-fill, var(--astryx-input-info, #6d9cfe));
   }
 
-  /* 原版 neutral 填充是 disabled 灰，不是前景近黑。 */
+  /* 次要文字色在默认轨道上够 3:1；禁用文字色在一些主题里就是深色轨道本身的颜色，会隐形。
+     轨道更接近次要文字色的主题，用 --astryx-progress-bar-neutral-fill 换一个更亮的色阶。 */
   .astryx-progress-bar[data-variant='neutral'] .astryx-progress-bar-fill {
-    background: var(--astryx-progress-bar-neutral-fill, var(--astryx-color-text-disabled, light-dark(#a3a3a3, #525252)));
+    background: var(--astryx-progress-bar-neutral-fill, var(--astryx-color-text-secondary, light-dark(#525252, #a3a3a3)));
   }
 
-  /* A disabled bar dims everything it draws: the fill drops the variant color
-     for the disabled foreground, and the label, value and marks step down to
-     the muted ramp. */
+  /* 禁用的进度条沿用 neutral 的填充，轨道和填充一起降到半透明，和禁用的滑块、开关轨道一样；
+     文字和标记另行降一档。标记能获得焦点，所以不跟着变淡，焦点环的对比度才不会掉。
+     强制颜色模式会替换填充色，所以用 GrayText 描一圈标出禁用的填充。 */
+  .astryx-progress-bar[data-disabled] .astryx-progress-bar-track {
+    opacity: 0.5;
+  }
+
   .astryx-progress-bar[data-disabled] .astryx-progress-bar-fill {
-    background: var(--astryx-color-text-disabled, light-dark(#a3a3a3, #525252));
+    background: var(--astryx-progress-bar-neutral-fill, var(--astryx-color-text-secondary, light-dark(#525252, #a3a3a3)));
+  }
+
+  @media (forced-colors: active) {
+    .astryx-progress-bar[data-disabled] .astryx-progress-bar-fill {
+      outline: 1px solid GrayText;
+    }
   }
 
   .astryx-progress-bar[data-disabled] .astryx-progress-bar-label,
@@ -162,9 +162,8 @@
     color: var(--astryx-color-text-disabled, light-dark(#a3a3a3, #525252));
   }
 
-  /* The attribute selector is repeated so this also outranks the variant plus
-     placement rules above, which carry the same specificity. */
-  .astryx-progress-bar[data-disabled] .astryx-progress-bar-mark[data-placement] {
+  /* 属性选择器重复一次，这样它也压得过上面「变体加位置」的规则，两者优先级相同。 */
+  .astryx-progress-bar[data-disabled] .astryx-progress-bar-mark[data-placement='track'] {
     background: var(--astryx-color-text-secondary, light-dark(#525252, #a3a3a3));
   }
 

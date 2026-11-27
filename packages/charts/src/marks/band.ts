@@ -1,5 +1,5 @@
 import type { ResolvedPoint, SeriesDef } from '../types.js'
-import { curveMonotoneX, area as d3Area } from 'd3-shape'
+import { curveLinear, area as d3Area } from 'd3-shape'
 import { h } from 'vue'
 import { DEFAULT_SERIES_COLOR } from '../types.js'
 import { xPixel } from '../utils.js'
@@ -56,7 +56,7 @@ export function band(options: BandOptions): SeriesDef {
         .x(d => d.px)
         .y0(d => d.py0)
         .y1(d => d.py)
-        .curve(curveMonotoneX)
+        .curve(curveLinear)
       const pathD = areaGen(resolved) ?? ''
       if (!pathD)
         return null

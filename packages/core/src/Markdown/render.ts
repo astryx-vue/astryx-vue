@@ -1,4 +1,5 @@
 import type { Component, VNode, VNodeChild } from 'vue'
+import type { CodeLanguage } from '../Code/grammar.js'
 import type { MarkdownMessages } from '../locale/messages/markdown.js'
 import type { MdNode } from './ast.js'
 import type { MarkdownExtensionNode, MarkdownExtensionRenderer } from './plugin-protocol/protocol.js'
@@ -10,10 +11,12 @@ import CheckboxIndicator from '../CheckboxIndicator/CheckboxIndicator.vue'
 import Code from '../Code/Code.vue'
 import CodeBlock from '../Code/CodeBlock.vue'
 import { parseFenceLanguage } from '../Code/diff.js'
+import { listedLanguage } from '../Code/grammar.js'
 import Heading from '../Heading/Heading.vue'
 import Link from '../Link/Link.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { plainText } from './ast.js'
+import { markdownBlockDirection } from './blockDirection.js'
 import { fadeClass, renderLink, renderText } from './renderInline.js'
 import { assignHeadingSlugs, collectDefinitions, measureNode, slotText } from './renderTree.js'
 import { slugify, uniqueSlug } from './slug.js'
@@ -43,6 +46,8 @@ export interface RenderContext {
   /** First-seen order of citation ids, so chips number stably in one render. */
   citationOrder: Map<string, number>
   citationStyle: MarkdownCitationStyle
+  /** CodeBlock 语言值：围栏的语言词是其中某个值的标识符时，用这个值渲染。 */
+  codeLanguages?: ReadonlyArray<CodeLanguage>
   citationLabel: (number: number, title: string) => string
   plugins?: readonly MarkdownPlugin[]
   inlinePlugins?: readonly MarkdownInlinePlugin[]
@@ -194,7 +199,7 @@ function renderInline(node: MdNode, key: string, ctx: RenderContext): VNodeChild
       const src = rawUrl == null ? null : sanitizeMarkdownImageUrl(rawUrl)
       ctx.fade.offset += alt.length
       if (src == null)
-        return alt === '' ? null : h('span', { key }, alt)
+        return alt === '' ? null : h('span', { key }, `[${alt}]`)
       const override = ctx.components?.image
       if (override != null)
         return h(override, { key, src, alt })
@@ -307,14 +312,14 @@ function renderItemBody(node: MdNode, key: string, ctx: RenderContext): VNodeChi
 function renderListItem(node: MdNode, key: string, taskList: boolean, marker: ListMarker, ctx: RenderContext): VNode {
   const body = renderItemBody(node, key, ctx)
   if (!taskList && !isTaskItem(node)) {
-    return h('li', { key, class: 'astryx-markdown__item', ...sourceLineAttrs(node, ctx) }, [
+    return h('li', { key, class: 'astryx-markdown__item', dir: markdownBlockDirection(node), ...sourceLineAttrs(node, ctx) }, [
       renderMarker(marker),
       h('div', { class: 'astryx-markdown__item-body' }, body),
     ])
   }
 
   const checked = node.checked === true
-  return h('li', { key, class: 'astryx-markdown__task', ...sourceLineAttrs(node, ctx) }, [
+  return h('li', { key, class: 'astryx-markdown__task', dir: markdownBlockDirection(node), ...sourceLineAttrs(node, ctx) }, [
     h('span', { class: 'astryx-markdown__task-check' }, [
       h(ctx.checkboxIndicator ?? CheckboxIndicator, { state: checked ? 'checked' : 'unchecked', size: 'sm' }),
       h(VisuallyHidden, () => checked ? ctx.messages.taskDone : ctx.messages.taskPending),
@@ -343,6 +348,7 @@ export function renderBlock(node: MdNode, key: string, ctx: RenderContext): VNod
         id,
         'class': 'astryx-markdown__heading astryx-markdown__prose',
         'data-depth': node.depth ?? 1,
+        'dir': markdownBlockDirection(node),
         'tabindex': -1,
         ...sourceLineAttrs(node, ctx),
       }, () => [...children, anchor])
@@ -358,6 +364,7 @@ export function renderBlock(node: MdNode, key: string, ctx: RenderContext): VNod
       return h('div', {
         key,
         role: 'paragraph',
+        dir: markdownBlockDirection(node),
         class: ['astryx-markdown__paragraph', 'astryx-markdown__prose', imageOnly ? 'astryx-markdown__paragraph--image' : null],
         ...sourceLineAttrs(node, ctx),
       }, children)
@@ -371,6 +378,8 @@ export function renderBlock(node: MdNode, key: string, ctx: RenderContext): VNod
       if (override != null)
         return h(override, { key, code: value, language, ...sourceLineFields(node, ctx) }, () => value)
       const fence = parseFenceLanguage(language)
+      // 列出的语言值先于同名的内置语言认领这个词；后面的条目优先。
+      const fenceLanguage = listedLanguage(ctx.codeLanguages, fence.language) ?? fence.language
       return h('div', {
         key,
         class: ['astryx-markdown__code', fadeClass(start, ctx.fade)],
@@ -378,7 +387,7 @@ export function renderBlock(node: MdNode, key: string, ctx: RenderContext): VNod
       }, [
         h(CodeBlock, {
           code: value,
-          language: fence.language,
+          language: fenceLanguage,
           isDiff: fence.isDiff,
           isCollapsible: true,
           isWrapped: true,
@@ -393,6 +402,7 @@ export function renderBlock(node: MdNode, key: string, ctx: RenderContext): VNod
       return h(Blockquote, {
         key,
         class: 'astryx-markdown__blockquote astryx-markdown__prose',
+        dir: markdownBlockDirection(node),
         ...sourceLineAttrs(node, ctx),
       }, () => children)
     }
@@ -413,6 +423,7 @@ export function renderBlock(node: MdNode, key: string, ctx: RenderContext): VNod
           'class': 'astryx-markdown__cell',
           'scope': cellTag === 'th' ? 'col' : undefined,
           'data-align': marked,
+          'dir': markdownBlockDirection(cell),
           'style': floor == null ? undefined : { minWidth: `${floor}ch` },
         }, renderChildren(cell.children, `${rowKey}-${index}`, ctx))
       }))

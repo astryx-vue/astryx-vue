@@ -42,7 +42,6 @@ export const UNPORTED_KEYS = {
   ], 'List 还没有 createReorderable 拖拽排序'),
   '@astryx.listInput.itemName': 'lab ListInput 还没改用 createReorderable，排序手柄和播报里的记录名由 listInput 自己的文案拼',
   '@astryx.markdownHeadingLinks.copyFailed': 'Markdown 标题没有复制链接按钮，复制失败的提示还没有用处',
-  '@astryx.codeBlock.diffLabel': 'CodeBlock 显示 diff 时的「<语言> diff」标题还没移植',
   '@astryx.comments.errorAnnouncement': 'lab Comments 错误横幅通过共用播报通道读出还没移植',
   '@astryx.richTextEditor.link.urlPlaceholder': 'RichTextEditor 的链接编辑还是对话框，换成锚定弹出层还没移植',
   '@astryx.textArea.counter': 'Vue 版 TextArea 计数直接按当前语言的数字格式写成「已输入/上限」，没有要翻译的文字',

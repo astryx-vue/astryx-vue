@@ -27,6 +27,7 @@ footer: false
 | `nodes` | `ReadonlyArray<Klass<LexicalNode>>` | - | Additional Lexical node types to register. |
 | `extensions` | `ReadonlyArray<AnyLexicalExtensionArgument>` | - | Additional Lexical extension plugin array. |
 | `markdownExtensions` | `ReadonlyArray<RichTextMarkdownExtension>` | - | Markdown extension plugins to recognize. |
+| `codeLanguages` | `ReadonlyArray<CodeLanguage>` | - | Language values a code fence may name. A fence whose language word is one of a value's identifiers is coloured with that value and shows its name in the header, ahead of a built-in with the same identifier; a later entry wins. |
 | `hasMarkdownShortcuts` | `boolean` | `true` | Whether to enable Markdown shortcuts (such as `# ` for headings). |
 | `transformers` | `ReadonlyArray<Transformer>` | Default transformers | Custom Markdown transformation rules. |
 | `hasAutoFocus` | `boolean` | `false` | Whether to automatically focus the editing area on mount. |
@@ -58,6 +59,7 @@ footer: false
 | `value` | `string` | Required | Editor state JSON string to render. |
 | `nodes` | `ReadonlyArray<Klass<LexicalNode>>` | - | Additional Lexical nodes to register, matching those used when saving. |
 | `markdownExtensions` | `ReadonlyArray<RichTextMarkdownExtension>` | - | Markdown extension plugins to recognize. |
+| `codeLanguages` | `ReadonlyArray<CodeLanguage>` | - | Language values a code fence may name. A fence whose language word is one of a value's identifiers is coloured with that value and shows its name in the header, ahead of a built-in with the same identifier; a later entry wins. |
 | `namespace` | `string` | `'astryx-view'` | Namespace for the underlying Lexical instance. |
 
 - **Events**: `@parseError="(error: Error) => void"` fires when parsing content fails.

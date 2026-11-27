@@ -27,6 +27,7 @@ footer: false
 | `nodes` | `ReadonlyArray<Klass<LexicalNode>>` | - | 额外注册的 Lexical 节点类型。 |
 | `extensions` | `ReadonlyArray<AnyLexicalExtensionArgument>` | - | 额外的 Lexical 扩展插件数组。 |
 | `markdownExtensions` | `ReadonlyArray<RichTextMarkdownExtension>` | - | 要识别的 Markdown 插件扩展数组。 |
+| `codeLanguages` | `ReadonlyArray<CodeLanguage>` | - | 代码围栏可以写的语言值。围栏的语言词是某个值的标识符时，用这个值上色，标题栏显示它的名字，优先于同名的内置语言；后面的条目优先。 |
 | `hasMarkdownShortcuts` | `boolean` | `true` | 是否开启 Markdown 快捷输入（如 `# ` 变标题）。 |
 | `transformers` | `ReadonlyArray<Transformer>` | 默认转换器 | 自定义 Markdown 转换规则。 |
 | `hasAutoFocus` | `boolean` | `false` | 挂载后是否自动聚焦编辑区。 |
@@ -58,6 +59,7 @@ footer: false
 | `value` | `string` | 必填 | 要渲染的编辑器状态 JSON 字符串。 |
 | `nodes` | `ReadonlyArray<Klass<LexicalNode>>` | - | 额外注册的 Lexical 节点，需与写入时一致。 |
 | `markdownExtensions` | `ReadonlyArray<RichTextMarkdownExtension>` | - | 要识别的 Markdown 插件扩展数组。 |
+| `codeLanguages` | `ReadonlyArray<CodeLanguage>` | - | 代码围栏可以写的语言值。围栏的语言词是某个值的标识符时，用这个值上色，标题栏显示它的名字，优先于同名的内置语言；后面的条目优先。 |
 | `namespace` | `string` | `'astryx-view'` | 底层 Lexical 实例命名空间。 |
 
 - **事件**：`@parseError="(error: Error) => void"` 在内容解析失败时触发。
