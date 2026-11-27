@@ -29,7 +29,12 @@ const attrs = useAttrs()
 const root = useTemplateRef<HTMLDivElement>('root')
 const tooltipId = `astryx-segmented-control-${useId()}-tooltip`
 const element = computed(() => root.value ?? null)
-const selection = useSegmentedSelection(root)
+const lens = useTemplateRef<HTMLSpanElement>('lens')
+const leaving = useTemplateRef<HTMLSpanElement>('leaving')
+const selection = useSegmentedSelection(
+  { track: root, lens, leaving },
+  { value: () => model.value, isEnabled: () => !props.isDisabled },
+)
 
 defineExpose({ element })
 
@@ -148,6 +153,7 @@ function focusIndex(items: HTMLElement[], index: number): void {
 }
 
 function handleKeydown(event: KeyboardEvent): void {
+  selection.keyPressed()
   invokeNativeEventHandler(attrs.onKeydown ?? attrs.onKeyDown, event)
 
   if (event.defaultPrevented || event.ctrlKey || event.metaKey || event.altKey)
@@ -219,7 +225,8 @@ function handleFocusIn(event: FocusEvent): void {
       showTooltip()
   }
 
-  if (props.isDisabled)
+  // A press commits through its click, not through the focus it moves.
+  if (props.isDisabled || selection.isPressing())
     return
 
   // Only a move WITHIN the group selects: tabbing in from outside must stay a
@@ -307,7 +314,7 @@ const forwardedAttrs = computed(() => Object.fromEntries(
 ))
 
 const rootClass = computed(() => ['astryx-segmented-control', attrs.class])
-const rootStyle = computed<StyleValue>(() => [attrs.style as StyleValue, selection.style()])
+const rootStyle = computed(() => attrs.style as StyleValue)
 
 const describedBy = computed(() => [
   attrs['aria-describedby'],
@@ -326,8 +333,8 @@ const describedBy = computed(() => [
     :data-disabled="isDisabled || undefined"
     :data-disabled-message="showsDisabledMessage || undefined"
     :data-layout="layout"
-    :data-selection="selection.box.value != null ? (selection.isReady.value ? 'ready' : 'measured') : undefined"
     :data-size="size"
+    :data-touch="selection.isTouch.value || undefined"
     :style="rootStyle"
     role="radiogroup"
     @focusin="handleFocusIn"
@@ -336,8 +343,13 @@ const describedBy = computed(() => [
     @pointerleave="scheduleHideTooltip"
   >
     <span
-      v-if="selection.box.value != null"
+      ref="lens"
       class="astryx-segmented-control__selection"
+      aria-hidden="true"
+    />
+    <span
+      ref="leaving"
+      class="astryx-segmented-control__selection astryx-segmented-control__selection--leaving"
       aria-hidden="true"
     />
     <slot />
