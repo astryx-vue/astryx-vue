@@ -1,5 +1,15 @@
 # @astryx-vue/core
 
+## 0.34.1
+
+### Patch Changes
+
+- [#641](https://github.com/astryx-vue/astryx-vue/pull/641) [`cec9777`](https://github.com/astryx-vue/astryx-vue/commit/cec977752301886c9259da214a9dbb1bd6b7ac4d) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 触屏上时间面板的分钟滚轮像 iOS 一样首尾相接：59 之后接着 00，按方向键或滑过去都能跨过去，小时保持不变。
+
+- [#643](https://github.com/astryx-vue/astryx-vue/pull/643) [`8c24981`](https://github.com/astryx-vue/astryx-vue/commit/8c249818f0882ddfce635e95dffa7c8a2359e4cc) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 手机和平板上连着鼠标、触控板或键盘时，按钮按下（鼠标键或空格键）也会立刻显示按压色并在松开后淡出；触屏按压的淡出会等动画自己播完，页面再忙也不会被剪在半路。
+
+- [#641](https://github.com/astryx-vue/astryx-vue/pull/641) [`38c9eef`](https://github.com/astryx-vue/astryx-vue/commit/38c9eeff9b9115cc08a624a97c6203c66ac00506) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 触屏上的日期和时间滚轮改成了 iOS 滚轮的手感：行跟着手指走，松手后按速度惯性滑行并弹性停在某一行，拖过头会像橡皮筋一样弹回，点按、方向键或外部改值时转过去而不是跳过去，开启减少动效时换行改为淡出再淡入；在底部面板里往下拨滚轮也不会再拖动面板。
+
 ## 0.34.0
 
 ### Minor Changes
