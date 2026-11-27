@@ -41,6 +41,8 @@ Mouse and touch behave differently on purpose. With a mouse, the highlight follo
 
 `presentation` decides the shape the actions arrive in. `popover` (the default) is the anchored surface; `bottom-sheet` is a modal panel at the bottom of the screen, sized for a thumb; `adaptive` keeps the anchored menu on pointer-driven layouts and uses the bottom panel on a compact touch screen: a coarse primary pointer, and a viewport narrower than the theme `md` breakpoint (768px by default) or shorter than 500px. The choice is made when the menu opens and held until it has closed. Inside the bottom panel a submenu does not open a second panel: the view is replaced, its title becomes the submenu's own label, a back button appears, and `Escape` leaves the submenu before it closes the panel.
 
+The anchored menu slides in from the side of its trigger and grows from the point where the two meet, on the theme's `--duration-fast-max` and `--ease-standard`; closing runs the same way back. With Reduce Motion it fades in under a finger and appears at once otherwise. On a phone or a tablet, a tap or a drag that lands while the menu is still entering is ignored, as on iOS: the menu finishes opening, stays open and keeps focus, and nothing under the tap reacts. A submenu flying out is not held. Keys and assistive technology stay live, and a mouse is never held.
+
 The open state can belong to the component or to you. Pass `isMenuOpen` to control it, usually with `v-model:isMenuOpen`; `openChange` fires every time an open or close is requested.
 
 

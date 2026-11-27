@@ -7,6 +7,7 @@ import { useOverflow } from '../composables/useOverflow.js'
 import Divider from '../Divider/Divider.vue'
 import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
 import LayerPortal from '../layer/LayerPortal.js'
+import { useMenuEntranceHold } from '../layer/useMenuEntranceHold.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { moreMenuLevelKey, useMoreMenuLevel, useMoreMenuSize } from './context.js'
@@ -246,6 +247,10 @@ const resolvedPlacement = computed(() => (props.isInline ? undefined : position.
 watch(() => props.isOpen, (isOpen) => {
   isLayerActive.value = isOpen
 })
+
+// 顶层的锚定菜单在手机和平板上进场期间挡住手指，和 DropdownMenu 一样；悬停或点行展开的
+// 子菜单、文档里的行内预览不挡。
+useMenuEntranceHold(layer, computed(() => isLayerActive.value && !props.isInline && !props.isNested))
 
 onMounted(() => {
   if (props.isOpen)
