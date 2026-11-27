@@ -6825,25 +6825,34 @@
 
 ### v0.7.2
 
-- [ ] [`58d335331`](https://github.com/meta/astryx/commit/58d335331) docs(ListItem): document label as a ReactNode, matching its props type (#7609)
+- [x] [`58d335331`](https://github.com/meta/astryx/commit/58d335331) docs(ListItem): document label as a ReactNode, matching its props type (#7609)
+  - Vue 版已有：Vue 的 ListItem label 属性类型是 string | number，富内容走 label 插槽，文档和 types.ts 已这样写
 - [x] [`35b9e7603`](https://github.com/meta/astryx/commit/35b9e7603) spec(TreeList): record full-width nested rows (#7637)
   - 不适用：上游组件规范文档（自动初筛）
 - [x] [`fe2c655c1`](https://github.com/meta/astryx/commit/fe2c655c1) spec(Item): align="first-line" centers start and end content on the label's first line (#7642)
   - 不适用：上游组件规范文档（自动初筛）
-- [ ] [`caec7cab6`](https://github.com/meta/astryx/commit/caec7cab6) feat(Item): align="first-line" centers start and end content on the label's first line (#7643)
-- [ ] [`7c206edbb`](https://github.com/meta/astryx/commit/7c206edbb) feat(List): one edge prop for padded, flush, outset, and bleed rows (#7592)
-- [ ] [`151434aac`](https://github.com/meta/astryx/commit/151434aac) fix(MetadataList): allow label width without explicit position (#6310)
-- [ ] [`52c26fb74`](https://github.com/meta/astryx/commit/52c26fb74) fix(TreeList): keep nested rows full width and indent their content (#7602)
-- [ ] [`493231799`](https://github.com/meta/astryx/commit/493231799) fix(cli): search finds compound names typed as words, other libraries' names, and verb forms (#7718)
+- [x] [`caec7cab6`](https://github.com/meta/astryx/commit/caec7cab6) feat(Item): align="first-line" centers start and end content on the label's first line (#7643)
+  - Vue 版已有：list.css 的 data-align=first-line 零宽支柱已由选择类控件批次移植
+- [x] [`7c206edbb`](https://github.com/meta/astryx/commit/7c206edbb) feat(List): one edge prop for padded, flush, outset, and bleed rows (#7592)
+  - Vue 版已有：List 的 edge 四个取值、deprecated edgeCompensation 别名和 data-edge 已实现
+- [x] [`151434aac`](https://github.com/meta/astryx/commit/151434aac) fix(MetadataList): allow label width without explicit position (#6310)
+  - Vue 版已有：MetadataList 的标签位置与宽度分开解析，只给 width 时单列仍是侧标签、多列是顶标签
+- [x] [`52c26fb74`](https://github.com/meta/astryx/commit/52c26fb74) fix(TreeList): keep nested rows full width and indent their content (#7602)
+  - Vue 版已有：tree-list.css 的 __indented 内层承载缩进，行铺满列表，引导线 z-index 在行之上且不接指针
+- [x] [`493231799`](https://github.com/meta/astryx/commit/493231799) fix(cli): search finds compound names typed as words, other libraries' names, and verb forms (#7718)
+  - 已移植：[#514](https://github.com/astryx-vue/astryx-vue/pull/514)。基础展示族已做：CLI 搜索收录别家组件库叫法与图标名，动词只折叠进行时
 
 ### v0.7.3
 
-- [ ] [`cde6233de`](https://github.com/meta/astryx/commit/cde6233de) fix(core): TreeList, Pagination dots and Calendar days use aria-disabled (#7887)
+- [x] [`cde6233de`](https://github.com/meta/astryx/commit/cde6233de) fix(core): TreeList, Pagination dots and Calendar days use aria-disabled (#7887)
+  - Vue 版已有：TreeListItem 的箭头按钮和动作按钮用 aria-disabled 加 consumeWhileDisabled，不用原生 disabled
 
 ### v0.7.5
 
-- [ ] [`5b87452ee`](https://github.com/meta/astryx/commit/5b87452ee) fix(Item): swipe rows leave pinch-zoom to the browser (#8042)
-- [ ] [`d8d8fdeff`](https://github.com/meta/astryx/commit/d8d8fdeff) docs(ListItem): isSelected sets aria-current, not aria-selected (#8090)
+- [x] [`5b87452ee`](https://github.com/meta/astryx/commit/5b87452ee) fix(Item): swipe rows leave pinch-zoom to the browser (#8042)
+  - 已移植：[#611](https://github.com/astryx-vue/astryx-vue/pull/611)。横滑行 touch-action 改为 pan-y pinch-zoom，方向未定时第二根手指落下就放手，不是首指不开始拖动，补测试
+- [x] [`d8d8fdeff`](https://github.com/meta/astryx/commit/d8d8fdeff) docs(ListItem): isSelected sets aria-current, not aria-selected (#8090)
+  - Vue 版已有：ListItem 的 isSelected 文档已写角色允许时 aria-selected、否则 aria-current
 - [x] [`c743ae000`](https://github.com/meta/astryx/commit/c743ae000) spec(design): under reduced motion, touch cross-fades and other pointers change at once (#8272)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`174300fcb`](https://github.com/meta/astryx/commit/174300fcb) ci: discover PR browser accessibility specs, so a new spec needs no workflow edit (#8367)
@@ -6868,8 +6877,10 @@
   - 不适用：上游组件规范文档（自动初筛）
 - [x] [`4c07cbb94`](https://github.com/meta/astryx/commit/4c07cbb94) test(TreeList): the tree-view coverage check runs as one serial part per state (#9004)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`76cd3b89e`](https://github.com/meta/astryx/commit/76cd3b89e) fix(List): keep numbered markers whole and sibling text aligned (#7650)
-- [ ] [`1c1d0ea24`](https://github.com/meta/astryx/commit/1c1d0ea24) fix(core): align TreeList guides to chevrons (#8774)
+- [x] [`76cd3b89e`](https://github.com/meta/astryx/commit/76cd3b89e) fix(List): keep numbered markers whole and sibling text aligned (#7650)
+  - 已移植：[#611](https://github.com/astryx-vue/astryx-vue/pull/611)。有序列表改为两列网格加子网格，行内容收进 astryx-item__marker-content 一格，编号右对齐、等宽、nowrap，先挂进行内边距再撑宽整列，补测试
+- [x] [`1c1d0ea24`](https://github.com/meta/astryx/commit/1c1d0ea24) fix(core): align TreeList guides to chevrons (#8774)
+  - 已移植：[#611](https://github.com/astryx-vue/astryx-vue/pull/611)。引导线列起点改为以 16px 箭头中心居中，补测试
 
 ### v0.7.6
 
@@ -6879,24 +6890,30 @@
   - 不适用：上游组件规范文档（自动初筛）
 - [x] [`0de27fe66`](https://github.com/meta/astryx/commit/0de27fe66) docs(spec): MetadataList records its shipped contract as current (#9090)
   - 不适用：上游组件规范文档（自动初筛）
-- [ ] [`d7cd32c09`](https://github.com/meta/astryx/commit/d7cd32c09) fix(Item, TreeList): a disabled row's link has no destination (spec:AST-085 FR2) (#9056)
+- [x] [`d7cd32c09`](https://github.com/meta/astryx/commit/d7cd32c09) fix(Item, TreeList): a disabled row's link has no destination (spec:AST-085 FR2) (#9056)
+  - Vue 版已有：Item 禁用链接行不带 href 与 to、保留 role=link 加 aria-disabled，TreeListItem 同理（disabledLink.test.ts 覆盖）
 - [x] [`1010d4c61`](https://github.com/meta/astryx/commit/1010d4c61) docs(spec): OverflowList records its shipped contract as current (#9111)
   - 不适用：上游组件规范文档（自动初筛）
 - [x] [`52cc5d117`](https://github.com/meta/astryx/commit/52cc5d117) docs(spec): Outline records its shipped contract as current (#9117)
   - 不适用：上游组件规范文档（自动初筛）
-- [ ] [`f73623d1b`](https://github.com/meta/astryx/commit/f73623d1b) fix(Outline): following a link moves focus to the chosen section (#9045)
+- [x] [`f73623d1b`](https://github.com/meta/astryx/commit/f73623d1b) fix(Outline): following a link moves focus to the chosen section (#9045)
+  - 已移植：[#611](https://github.com/astryx-vue/astryx-vue/pull/611)。Outline 跟随页内链接后把焦点移到目标标题（本来不可聚焦的设 tabindex=-1，不滚动），补测试
 - [x] [`b234968f1`](https://github.com/meta/astryx/commit/b234968f1) spec(AST-057): flick opens, tap closes, full swipe confirms (FR4/FR5/FR7) (#9156)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`30e724b45`](https://github.com/meta/astryx/commit/30e724b45) fix(core): a disabled Item swipe action stays focusable (#9211)
-- [ ] [`3e735de86`](https://github.com/meta/astryx/commit/3e735de86) fix(core A–M): slots use isRenderable; the remaining checks are allowed with a reason (#9204)
+- [x] [`30e724b45`](https://github.com/meta/astryx/commit/30e724b45) fix(core): a disabled Item swipe action stays focusable (#9211)
+  - 已移植：[#611](https://github.com/astryx-vue/astryx-vue/pull/611)。横滑操作改用 aria-disabled 并吞掉点击与回车空格，禁用的操作仍可聚焦，抽出 ItemSwipePanel.vue，补测试
+- [x] [`3e735de86`](https://github.com/meta/astryx/commit/3e735de86) fix(core A–M): slots use isRenderable; the remaining checks are allowed with a reason (#9204)
+  - Vue 版已有：Item 的 label 与 description 用 isRenderable 判断是否渲染，MetadataList 的标题用插槽或字符串判断
 - [x] [`0135af462`](https://github.com/meta/astryx/commit/0135af462) fix(core N–Z): slots use isRenderable; the remaining checks are allowed with a reason (#9206)
   - 不适用：上游 React 插槽改用 isRenderable 判断并给 lint 例外写理由，Vue 模板没有这套检查
 - [x] [`e0a03766d`](https://github.com/meta/astryx/commit/e0a03766d) docs(knowledge): every component spec lives in docs/specs/components, one folder per component (#9007)
   - 不适用：上游内部规范和架构文档、上游组件规范文档（自动初筛）
 - [x] [`acfa52701`](https://github.com/meta/astryx/commit/acfa52701) fix(useTypeahead): type-to-select ignores accents (#8864)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`3d44c583a`](https://github.com/meta/astryx/commit/3d44c583a) fix(Tooltip, HoverCard): a press inside an open surface doesn't activate the card, row or field around it (#9252)
-- [ ] [`356e9a8ab`](https://github.com/meta/astryx/commit/356e9a8ab) fix(TreeList): focus inside a collapsing branch moves to its row (#9251)
+- [x] [`3d44c583a`](https://github.com/meta/astryx/commit/3d44c583a) fix(Tooltip, HoverCard): a press inside an open surface doesn't activate the card, row or field around it (#9252)
+  - 已移植：[#512](https://github.com/astryx-vue/astryx-vue/pull/512)。基础展示族已做：Tooltip、HoverCard 气泡内按下不激活外层卡片、行、字段
+- [x] [`356e9a8ab`](https://github.com/meta/astryx/commit/356e9a8ab) fix(TreeList): focus inside a collapsing branch moves to its row (#9251)
+  - Vue 版已有：TreeList 的 keepFocusOnCollapsingRow 让收起的分支里的焦点回到行上，已有测试
 - [x] [`e7530dbb4`](https://github.com/meta/astryx/commit/e7530dbb4) test(rtl): RTL coverage for seven Core parts (Step, OverflowList, dialogs, MobileNav, menus) (#9332)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`2406addf5`](https://github.com/meta/astryx/commit/2406addf5) test(rtl): RTL coverage for list, metadata, radio, selector and typeahead rows (#9308)
@@ -6909,14 +6926,17 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`9728cd78b`](https://github.com/meta/astryx/commit/9728cd78b) spec(react-component-runtime, TreeList, Table, CommandPalette): record empty slots rendering nothing (backfill) (#9388)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`b5e716687`](https://github.com/meta/astryx/commit/b5e716687) refactor(Item, Token, ChatComposer): drop the per-site tooltip surface checks the layer boundary replaces (#9531)
+- [x] [`b5e716687`](https://github.com/meta/astryx/commit/b5e716687) refactor(Item, Token, ChatComposer): drop the per-site tooltip surface checks the layer boundary replaces (#9531)
+  - 不适用：上游靠 React 合成事件在浮层根截停冒泡，Vue 按 DOM 冒泡仍需 layerSurfacePress 登记，基础展示族已判
 
 ### v0.7.7
 
 - [x] [`b53bec615`](https://github.com/meta/astryx/commit/b53bec615) test: module loads are awaited, not raced against test clocks (#9447)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`9911442c1`](https://github.com/meta/astryx/commit/9911442c1) fix(Outline): every link is in the normal Tab order (#9695)
-- [ ] [`120847534`](https://github.com/meta/astryx/commit/120847534) docs(useOutlineFromMarkdown): add hook docs and a docs article example block (#9719)
+- [x] [`9911442c1`](https://github.com/meta/astryx/commit/9911442c1) fix(Outline): every link is in the normal Tab order (#9695)
+  - 已移植：[#611](https://github.com/astryx-vue/astryx-vue/pull/611)。Outline 去掉 useListFocus 的方向键漫游，每个链接都在正常 Tab 顺序里，补测试，文档同步
+- [x] [`120847534`](https://github.com/meta/astryx/commit/120847534) docs(useOutlineFromMarkdown): add hook docs and a docs article example block (#9719)
+  - Vue 版已有：useOutlineFromMarkdown 文档页（中英）和文档文章示例已在 apps/docs 里
 
 ### v0.7.8
 
@@ -6929,15 +6949,20 @@
 
 ### v0.7.9
 
-- [ ] [`f59ffe155`](https://github.com/meta/astryx/commit/f59ffe155) fix(ClickableCard, SelectableCard): no touch pressed look for a finger press that starts on a control inside the card (#9801)
+- [x] [`f59ffe155`](https://github.com/meta/astryx/commit/f59ffe155) fix(ClickableCard, SelectableCard): no touch pressed look for a finger press that starts on a control inside the card (#9801)
+  - Vue 版已有：Item 的 isPressContainer 与 data-astryx-press-container：行自己有动作时手指落在里面的控件上，行不亮（#501 同一机制）
 - [ ] [`298bafbc1`](https://github.com/meta/astryx/commit/298bafbc1) fix(core): a list row's touch press release runs on the compositor (#9762)
-- [ ] [`67ad50980`](https://github.com/meta/astryx/commit/67ad50980) fix(core): a finger press on a control inside a list row, TreeList row or Token shows no press on it (#9959)
+  - 暂缓：触屏下行按压释放改成合成器上的 opacity 动画：Vue 行的按压用 background-image 画，缺这个独立按压层，归动效与手势引擎任务
+- [x] [`67ad50980`](https://github.com/meta/astryx/commit/67ad50980) fix(core): a finger press on a control inside a list row, TreeList row or Token shows no press on it (#9959)
+  - 已移植：[#501](https://github.com/astryx-vue/astryx-vue/pull/501)。基础展示族已做：手指按在行、Token、卡片里的控件上时，外层容器不亮
 - [x] [`3d225c35b`](https://github.com/meta/astryx/commit/3d225c35b) feat(core): under a finger a pressable highlights at touch-down outside scroll views (#9765)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`504ee1863`](https://github.com/meta/astryx/commit/504ee1863) fix(theme): the stock theme's dark-mode accent is darker, so white button text meets 4.5:1 (#9818)
+- [x] [`504ee1863`](https://github.com/meta/astryx/commit/504ee1863) fix(theme): the stock theme's dark-mode accent is darker, so white button text meets 4.5:1 (#9818)
+  - 已移植：[#506](https://github.com/astryx-vue/astryx-vue/pull/506)。基础展示族已做：accent 文字改用 text-accent，暗色 accent 默认值在主题包 CSS
 - [x] [`7f8de290c`](https://github.com/meta/astryx/commit/7f8de290c) fix(core): a press's release fades on the theme's exit motion tokens (#9890)
   - 不适用：上游内部规范和架构文档、只改上游测试（自动初筛）
-- [ ] [`7b71d71b4`](https://github.com/meta/astryx/commit/7b71d71b4) feat(List): a row's touch target grows toward 44 px where its neighbors leave room (#8085)
+- [x] [`7b71d71b4`](https://github.com/meta/astryx/commit/7b71d71b4) feat(List): a row's touch target grows toward 44 px where its neighbors leave room (#8085)
+  - 已移植：[#611](https://github.com/astryx-vue/astryx-vue/pull/611)。ListItem 可点且可用时带 astryx-touch-hit-area-band 并用 useTouchHitArea 测量，粗指针下朝邻行空隙长到 44px，列表隔离层叠，分隔线外缘起算；链接行点内边距或热区转给链接并带修饰键，补测试
 - [x] [`b1f604c9f`](https://github.com/meta/astryx/commit/b1f604c9f) fix(OverflowList): a resize shows the new visible set in the same frame (height-changing folds stay one frame late) (#9926)
   - 不适用：上游内部规范和架构文档、只改上游测试（自动初筛）
 - [x] [`10d297901`](https://github.com/meta/astryx/commit/10d297901) test(core): the WebKit row release video proof judges rest on the exit curve (#10011)
@@ -6946,11 +6971,14 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`784dc5ec4`](https://github.com/meta/astryx/commit/784dc5ec4) test(List): the busy release proof starts its block in the page (#10048)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`f9281ef1c`](https://github.com/meta/astryx/commit/f9281ef1c) perf(OverflowList): only the multi-row form tracks rows and rowHeight (#8523)
+- [x] [`f9281ef1c`](https://github.com/meta/astryx/commit/f9281ef1c) perf(OverflowList): only the multi-row form tracks rows and rowHeight (#8523)
+  - 不适用：React 渲染性能：只有多行形态才追踪 rows 与 rowHeight；Vue 版 rowHeight 只在多行时参与样式，没有多余重渲染
 - [x] [`257573b22`](https://github.com/meta/astryx/commit/257573b22) docs(AST-094, AST-057): motion guidance; gesture springs; swipe-row returns (#9915)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`3d018fb9d`](https://github.com/meta/astryx/commit/3d018fb9d) [Component Audit] Item: a theme can restyle highlighted, selected, and disabled rows (#10073)
-- [ ] [`9e7567c48`](https://github.com/meta/astryx/commit/9e7567c48) fix(Item): a selected row shows hover and press over its fill; a highlighted row shows press (#10111)
+- [x] [`3d018fb9d`](https://github.com/meta/astryx/commit/3d018fb9d) [Component Audit] Item: a theme can restyle highlighted, selected, and disabled rows (#10073)
+  - Vue 版已有：Item 根元素已带 data-highlighted、data-selected、data-disabled 和 astryx-item 类，主题可按状态挂样式
+- [x] [`9e7567c48`](https://github.com/meta/astryx/commit/9e7567c48) fix(Item): a selected row shows hover and press over its fill; a highlighted row shows press (#10111)
+  - 已移植：[#611](https://github.com/astryx-vue/astryx-vue/pull/611)。选中行悬停和按下改用背景图片叠在选中底色上，触屏按压不再排除选中行，高亮行本来就只表现按下，补测试
 
 ### v0.7.10
 
@@ -6963,8 +6991,10 @@
   - 不适用：上游内部规范和架构文档、只改上游测试（自动初筛）
 - [x] [`cdd64dfe4`](https://github.com/meta/astryx/commit/cdd64dfe4) docs(windowing): one shared private windowing module (spec only) (#10287)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`e245db5fb`](https://github.com/meta/astryx/commit/e245db5fb) feat(core): the keyboard module's docked ride, the scroller's reveal and the tap route (#9776)
-- [ ] [`a6d2716de`](https://github.com/meta/astryx/commit/a6d2716de) fix(List): a highlighted row's dividers stay visible through its tint (#10280)
+- [x] [`e245db5fb`](https://github.com/meta/astryx/commit/e245db5fb) feat(core): the keyboard module's docked ride, the scroller's reveal and the tap route (#9776)
+  - 不适用：提交主体是键盘模块的停靠、滚动器露出和点按路径；Outline 部分只是改用共用的滚动祖先工具，Vue 版 getScrollableAncestor 已等价
+- [x] [`a6d2716de`](https://github.com/meta/astryx/commit/a6d2716de) fix(List): a highlighted row's dividers stay visible through its tint (#10280)
+  - Vue 版已有：Vue 的分隔线是行自己的 border，按压和高亮的底色画在背景层，不会盖住分隔线
 - [x] [`e10347c4e`](https://github.com/meta/astryx/commit/e10347c4e) fix(Button): under a finger, a Button's target grows toward 44 px through the shared touch band (#10216)
   - 已移植：[#516](https://github.com/astryx-vue/astryx-vue/pull/516)。粗指针下按钮热区向 44px 扩大
 - [x] [`28270c143`](https://github.com/meta/astryx/commit/28270c143) test(interaction-harness): an armed hold names the motion it judges (#10386)
@@ -6978,27 +7008,36 @@
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`36929ac92`](https://github.com/meta/astryx/commit/36929ac92) feat(List): animate row inserts, removals and moves through the animatedLayout handle (#8106)
   - 暂缓：本期已做 animatedLayout 模块与句柄；剩 List 增删、移动行的滑动接入（listLayoutUpdates 等），归动效与手势引擎的组件接入阶段
+  - 暂缓：List 的 animatedLayout 逐行报告插入、移除、移动（itemKey、退场保留表现、交叉行抬升）需要按行报告与保留退场的列表设施，归动效与手势引擎任务
 - [x] [`9b7ebc461`](https://github.com/meta/astryx/commit/9b7ebc461) test(interaction-harness): a hold sent from the test names the motion it judges (#10438)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`9eb962686`](https://github.com/meta/astryx/commit/9eb962686) test(List): the row press holds are armed before the press (#10477)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`422440a64`](https://github.com/meta/astryx/commit/422440a64) fix(core): two copies of Core's modules share one React context (#10233)
   - 不适用：React context 多副本问题
-- [ ] [`b8cc3f41e`](https://github.com/meta/astryx/commit/b8cc3f41e) fix(Markdown): each prose block lays out in its own text's direction (#10293)
-- [ ] [`e89bdc881`](https://github.com/meta/astryx/commit/e89bdc881) feat(TreeList): the expand moves as one under a finger (#8088)
+- [x] [`b8cc3f41e`](https://github.com/meta/astryx/commit/b8cc3f41e) fix(Markdown): each prose block lays out in its own text's direction (#10293)
+  - 不适用：只服务 Markdown 的 ListMarkerScope 编号列外逃，Vue 版 Markdown 不走 List 的标记作用域
+- [x] [`e89bdc881`](https://github.com/meta/astryx/commit/e89bdc881) feat(TreeList): the expand moves as one under a finger (#8088)
+  - 已移植：[#611](https://github.com/astryx-vue/astryx-vue/pull/611)。TreeList 没传句柄时，粗指针下用自己的 useAnimatedLayout 带动行滑动，滑动期间裁住下沿，补测试
 - [x] [`7045020ad`](https://github.com/meta/astryx/commit/7045020ad) docs(specs): Table row virtualization adopts the shared list-windowing module first (#10665)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`17f6985ed`](https://github.com/meta/astryx/commit/17f6985ed) fix(Layout): a full-bleed Table or List row takes the rounded container corner it reaches (#10586)
+- [x] [`17f6985ed`](https://github.com/meta/astryx/commit/17f6985ed) fix(Layout): a full-bleed Table or List row takes the rounded container corner it reaches (#10586)
+  - 已移植：[#611](https://github.com/astryx-vue/astryx-vue/pull/611)。bleed 列表在圆角 Card、Dialog 里作为首个或末个子元素时，首行末行取容器圆角减块内边距（Table 部分已有），补测试
 - [ ] [`a28d586eb`](https://github.com/meta/astryx/commit/a28d586eb) feat(core): createReorderable makes List rows reorderable (#8139)
   - 暂缓：本期已做 animatedLayout 与 inertClone；剩 createReorderable 拖动重排（依赖手势），归动效与手势引擎的组件接入阶段
+  - 暂缓：createReorderable 拖动重排，归动效与手势引擎任务（4c 拖动重排）
 - [ ] [`36b8f6ebc`](https://github.com/meta/astryx/commit/36b8f6ebc) feat(lab): TransferList reorders through core's createReorderable (#8143)
+  - 暂缓：lab TransferList 改用 createReorderable，依赖拖动重排，归动效与手势引擎任务（4c 拖动重排）
 - [x] [`df4c958ec`](https://github.com/meta/astryx/commit/df4c958ec) perf(core): motions one callback starts read stylesheets in one pass (#10728)
   - 不适用：上游内部规范和架构文档、只改上游测试（自动初筛）
 - [ ] [`6103d36e9`](https://github.com/meta/astryx/commit/6103d36e9) feat(lab): ListInput reorders through core's createReorderable (#8163)
+  - 暂缓：lab ListInput 改用 createReorderable，依赖拖动重排，归动效与手势引擎任务（4c 拖动重排）
 - [x] [`5f1e4dd68`](https://github.com/meta/astryx/commit/5f1e4dd68) test(List): proofs of the reorder's preview, glides, handle and ring (#10748)
   - 不适用：只改上游测试（自动初筛）
 - [ ] [`f2a6332eb`](https://github.com/meta/astryx/commit/f2a6332eb) fix(List): a swizzled copy reads a package reorderable object (#10741)
+  - 暂缓：重排对象的包内读取，随 createReorderable 一起，归动效与手势引擎任务（4c 拖动重排）
 - [ ] [`06ebae229`](https://github.com/meta/astryx/commit/06ebae229) fix(List): a drag follows a scroll around the list's scroll box (#10742)
+  - 暂缓：拖动跟随列表滚动盒的滚动，随 createReorderable 一起，归动效与手势引擎任务（4c 拖动重排）
 - [x] [`f8a426486`](https://github.com/meta/astryx/commit/f8a426486) docs(List): FR11's divider rule holds for every pointer (#10769)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`42081ef30`](https://github.com/meta/astryx/commit/42081ef30) docs(windowing): restore the owner's approval lines and drop adoption order (#10795)
@@ -7014,7 +7053,8 @@
 
 - [x] [`05e655281`](https://github.com/meta/astryx/commit/05e655281) test(Item): wait for the swipe panel's commit, not only its module (#10933)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`1ac0c2464`](https://github.com/meta/astryx/commit/1ac0c2464) refactor(core): one shared list-windowing engine, with Table as its first consumer (#10810)
+- [x] [`1ac0c2464`](https://github.com/meta/astryx/commit/1ac0c2464) refactor(core): one shared list-windowing engine, with Table as its first consumer (#10810)
+  - 已移植：[#547](https://github.com/astryx-vue/astryx-vue/pull/547)。共用列表窗口引擎与表格解耦，表格作为第一个使用方，由表格任务完成
 - [x] [`6bf928d91`](https://github.com/meta/astryx/commit/6bf928d91) spec(AST-057): a flick reveals the actions; only a deliberate drag fires one (#11025)
   - 不适用：上游内部规范和架构文档（自动初筛）
 
@@ -7033,37 +7073,54 @@
 - [x] [`f26571e10`](https://github.com/meta/astryx/commit/f26571e10) spec(Table): column virtualization windows the unpinned columns (#11013)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [ ] [`36bf4fc9d`](https://github.com/meta/astryx/commit/36bf4fc9d) refactor(reorder): the controller reads a collection's rows through a reader (#11199)
+  - 暂缓：重排控制器经读取器读集合行，随 createReorderable 一起，归动效与手势引擎任务（4c 拖动重排）
 - [ ] [`93300ef29`](https://github.com/meta/astryx/commit/93300ef29) fix(core): a List and a swizzled ListItem share reported rows and kept presentation (AST-110 FR3) (#11214)
+  - 暂缓：依赖 36929ac92 的行级布局更新设施（共享已报告行与保留表现），Vue 没有 swizzle 拷贝但设施本身未做，归动效与手势引擎任务
 
 ### v0.7.15
 
-- [ ] [`2a74aebdc`](https://github.com/meta/astryx/commit/2a74aebdc) fix(Item): keep disabled actions keyboard-reachable (#11169)
+- [x] [`2a74aebdc`](https://github.com/meta/astryx/commit/2a74aebdc) fix(Item): keep disabled actions keyboard-reachable (#11169)
+  - 已移植：[#611](https://github.com/astryx-vue/astryx-vue/pull/611)。禁用的按钮行改用 aria-disabled 加 disabledInteractionProps，禁用链接行 tabindex 改为 0，仍可聚焦但不触发，补测试
 - [x] [`e7e9af2f8`](https://github.com/meta/astryx/commit/e7e9af2f8) feat(core): a mouse or pen press on a checkbox or a radio option paints at once and fades on release (#8696)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`598b588a4`](https://github.com/meta/astryx/commit/598b588a4) test(TreeList): a band in a frame WebKit read late is named (#10920)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`558725695`](https://github.com/meta/astryx/commit/558725695) [Component Audit] List: docs name its optional header and where its ref lands (#11277)
+- [x] [`558725695`](https://github.com/meta/astryx/commit/558725695) [Component Audit] List: docs name its optional header and where its ref lands (#11277)
+  - 已移植：[#611](https://github.com/astryx-vue/astryx-vue/pull/611)。List 示意图的结构说明改为可选的 Header（中英），ref 落点在 props 文档里本来就写了
 - [ ] [`5398a993c`](https://github.com/meta/astryx/commit/5398a993c) fix(Item): a flick reveals swipe actions; only a deliberate drag fires (#11054)
-- [ ] [`807dc2ead`](https://github.com/meta/astryx/commit/807dc2ead) refactor(core): name the nested press rule for every pointer it covers (#11304)
+  - 暂缓：轻甩露出、只有刻意拖动才触发要改走 createSwipe，归动效与手势引擎任务（4b 拖拽）
+- [x] [`807dc2ead`](https://github.com/meta/astryx/commit/807dc2ead) refactor(core): name the nested press rule for every pointer it covers (#11304)
+  - 不适用：上游只改名与挪样式，无行为变化，基础展示族已判
 - [x] [`061b2fa8d`](https://github.com/meta/astryx/commit/061b2fa8d) test(List): the reorder busy proof decodes its cast once (#11075)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`a90e05300`](https://github.com/meta/astryx/commit/a90e05300) fix(Outline): write the scroll spy's refs at commit, not in render (#10802)
+- [x] [`a90e05300`](https://github.com/meta/astryx/commit/a90e05300) fix(Outline): write the scroll spy's refs at commit, not in render (#10802)
+  - 不适用：React 里把滚动侦测的 ref 改到提交时写，Vue 没有渲染期写 ref 的问题
 
 ### v0.7.16
 
-- [ ] [`8677612c5`](https://github.com/meta/astryx/commit/8677612c5) [Component Audit] ListItem: slot docs say where content sits, and right-to-left chevrons point the right way (#11336)
+- [x] [`8677612c5`](https://github.com/meta/astryx/commit/8677612c5) [Component Audit] ListItem: slot docs say where content sits, and right-to-left chevrons point the right way (#11336)
+  - 已移植：[#611](https://github.com/astryx-vue/astryx-vue/pull/611)。ListItem 起止内容插槽说明改为行内位置；Vue 版 ListItem 没有会反向的链接箭头，RTL 箭头不适用
 - [ ] [`4d1cb828f`](https://github.com/meta/astryx/commit/4d1cb828f) fix(List): a reorder handle's name follows its row's place and label (#10815)
-- [ ] [`10bae0687`](https://github.com/meta/astryx/commit/10bae0687) feat(Table): useTableColumnsVirtualization windows the unpinned columns (#11014)
-- [ ] [`ef87167d0`](https://github.com/meta/astryx/commit/ef87167d0) feat(Table): column windowing retains the focused column and anchors the first visible column (#11018)
-- [ ] [`f5b5f9660`](https://github.com/meta/astryx/commit/f5b5f9660) docs(useOutlineFromDOM): add hook docs and an article example block (#11234)
-- [ ] [`251f9fa51`](https://github.com/meta/astryx/commit/251f9fa51) [Component Audit] MetadataList: docs say how labels are read, and tests guard the show more toggle (#11391)
+  - 暂缓：重排手柄名称随行位置与标签变化：Vue 的 List 还没有重排手柄，随 createReorderable 一起，归动效与手势引擎任务（4c 拖动重排）
+- [x] [`10bae0687`](https://github.com/meta/astryx/commit/10bae0687) feat(Table): useTableColumnsVirtualization windows the unpinned columns (#11014)
+  - 已移植：[#547](https://github.com/astryx-vue/astryx-vue/pull/547)。useTableColumnsVirtualization 由表格任务完成
+- [x] [`ef87167d0`](https://github.com/meta/astryx/commit/ef87167d0) feat(Table): column windowing retains the focused column and anchors the first visible column (#11018)
+  - 已移植：[#547](https://github.com/astryx-vue/astryx-vue/pull/547)。列窗口保留有焦点的列并锚定第一可见列，由表格任务完成
+- [x] [`f5b5f9660`](https://github.com/meta/astryx/commit/f5b5f9660) docs(useOutlineFromDOM): add hook docs and an article example block (#11234)
+  - 已移植：[#611](https://github.com/astryx-vue/astryx-vue/pull/611)。新增 useOutlineFromDOM 文档页和文档文章示例（中英）
+- [x] [`251f9fa51`](https://github.com/meta/astryx/commit/251f9fa51) [Component Audit] MetadataList: docs say how labels are read, and tests guard the show more toggle (#11391)
+  - 已移植：[#611](https://github.com/astryx-vue/astryx-vue/pull/611)。MetadataList 补两条建议（短标签作术语与定义、标题不命名列表）；显示更多开关已有测试
 
 ### v0.7.17
 
-- [ ] [`65ed0c017`](https://github.com/meta/astryx/commit/65ed0c017) [Component Audit] MetadataListItem: docs say where ref and styling props land, and tests guard them (#11538)
+- [x] [`65ed0c017`](https://github.com/meta/astryx/commit/65ed0c017) [Component Audit] MetadataListItem: docs say where ref and styling props land, and tests guard them (#11538)
+  - 已移植：[#611](https://github.com/astryx-vue/astryx-vue/pull/611)。MetadataListItem 文档补充传入属性落在 dt 或叠放外层元素上，已有测试守着
 - [ ] [`1addd72da`](https://github.com/meta/astryx/commit/1addd72da) feat(core): swipe actions come from createSwipe on the shared drag path (#8690)
-- [ ] [`178cd8019`](https://github.com/meta/astryx/commit/178cd8019) perf(OverflowList): lists in one commit measure together after it, before paint (#10392)
-- [ ] [`30b12dd5a`](https://github.com/meta/astryx/commit/30b12dd5a) fix(Item, Token): a control inside a row with its own action, or a token's Remove, rings itself (#8869)
+  - 暂缓：横滑操作改走 createSwipe 共用拖动路径，归动效与手势引擎任务（4b 拖拽）
+- [x] [`178cd8019`](https://github.com/meta/astryx/commit/178cd8019) perf(OverflowList): lists in one commit measure together after it, before paint (#10392)
+  - 不适用：React 提交内批量测量的时序优化，Vue 版用自己的测量与 ResizeObserver
+- [x] [`30b12dd5a`](https://github.com/meta/astryx/commit/30b12dd5a) fix(Item, Token): a control inside a row with its own action, or a token's Remove, rings itself (#8869)
+  - 已移植：[#500](https://github.com/astryx-vue/astryx-vue/pull/500)。基础展示族已做：Token 与 List Item 的焦点环只画一个
 - [x] [`64806d0bd`](https://github.com/meta/astryx/commit/64806d0bd) test(Item): the swipe's busy proof judges a held release by its curve (#11735)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`f7b77db68`](https://github.com/meta/astryx/commit/f7b77db68) spec(OverflowList): useOverflow's module record states when it measures and what it records (#11845)
@@ -7074,27 +7131,36 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`ee8a33a7c`](https://github.com/meta/astryx/commit/ee8a33a7c) feat(cli): the swipe codemod defines each swipe once (#11670)
   - 不适用：上游内部规范和架构文档、只改上游测试（自动初筛）
-- [ ] [`56d3546d5`](https://github.com/meta/astryx/commit/56d3546d5) fix(core): a TreeList row with no action shows its keyboard focus ring (#12153)
+- [x] [`56d3546d5`](https://github.com/meta/astryx/commit/56d3546d5) fix(core): a TreeList row with no action shows its keyboard focus ring (#12153)
+  - Vue 版已有：TreeListItem 无动作的普通行也画键盘焦点环（04df2084 已做）
 - [x] [`3deff9de7`](https://github.com/meta/astryx/commit/3deff9de7) feat(core): theme seams for the spinner, tree disclosure, number steppers and close buttons (#12156)
   - 已移植：[#595](https://github.com/astryx-vue/astryx-vue/pull/595)。NumberInput 步进按钮带 astryx-number-input-stepper 与 data-direction；Spinner 等其他挂点不在本范围
 - [x] [`f939a6f90`](https://github.com/meta/astryx/commit/f939a6f90) fix(core): type-to-select takes a letter typed with AltGr (#12644)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`a2edb5300`](https://github.com/meta/astryx/commit/a2edb5300) chore: land batch 2 (16 pull requests) (#12718)
   - 已移植：[#579](https://github.com/astryx-vue/astryx-vue/pull/579)。批量合入里宿主的改动随宿主一起移植
-- [ ] [`9cd6c4482`](https://github.com/meta/astryx/commit/9cd6c4482) [Component Audit] OverflowList: items and the overflow indicator are no longer cut off in themes with a different spacing scale (#12401)
+- [x] [`9cd6c4482`](https://github.com/meta/astryx/commit/9cd6c4482) [Component Audit] OverflowList: items and the overflow indicator are no longer cut off in themes with a different spacing scale (#12401)
+  - 已移植：[#611](https://github.com/astryx-vue/astryx-vue/pull/611)。OverflowList 间距按主题变量测量 Vue 版已有；补文档里只显示数字的指示器要做成控件
 - [x] [`8688c1885`](https://github.com/meta/astryx/commit/8688c1885) chore: land batch 6 (11 pull requests) (#12812)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`a60f74251`](https://github.com/meta/astryx/commit/a60f74251) chore: land batch 12 (3 pull requests) (#12841)
   - 不适用：只改上游 gestures/README.md，Vue 版的说明写在源码注释和文档页里
-- [ ] [`cf537d7aa`](https://github.com/meta/astryx/commit/cf537d7aa) chore: land batch 11 (3 pull requests) (#12848)
-- [ ] [`9e445ba0d`](https://github.com/meta/astryx/commit/9e445ba0d) chore: land batch 15 (5 pull requests) (#12859)
-- [ ] [`472896d35`](https://github.com/meta/astryx/commit/472896d35) fix(Toolbar, OverflowList): a start lane's own OverflowList folds beside the end lane (#12238)
-- [ ] [`83424673c`](https://github.com/meta/astryx/commit/83424673c) chore: land batch 16 (6 pull requests) (#12881)
+- [x] [`cf537d7aa`](https://github.com/meta/astryx/commit/cf537d7aa) chore: land batch 11 (3 pull requests) (#12848)
+  - 不适用：任务列表复选框标记的容器高度，Vue 的 List 没有任务标记
+- [x] [`9e445ba0d`](https://github.com/meta/astryx/commit/9e445ba0d) chore: land batch 15 (5 pull requests) (#12859)
+  - 不适用：静态列表去掉行内裁切是给 Markdown 的 ListStaticContext 用的，Vue 版 Markdown 不走 List
+- [x] [`472896d35`](https://github.com/meta/astryx/commit/472896d35) fix(Toolbar, OverflowList): a start lane's own OverflowList folds beside the end lane (#12238)
+  - Vue 版已有：OverflowList 的 inlineBounds：最小宽度为折叠宽度，在横向 flex 里宽度为展开宽度并以大缩放系数先折叠
+- [x] [`83424673c`](https://github.com/meta/astryx/commit/83424673c) chore: land batch 16 (6 pull requests) (#12881)
+  - Vue 版已有：description 文档已写字符串单行省略、需要完整文字用插槽
 - [x] [`361d09f31`](https://github.com/meta/astryx/commit/361d09f31) test(OverflowList): bound rest audit groups to one story (#12905)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`1f48950f9`](https://github.com/meta/astryx/commit/1f48950f9) chore: land batch 67 (7 pull requests) (#12957)
-- [ ] [`842e95d82`](https://github.com/meta/astryx/commit/842e95d82) [Component Audit] Outline: under reduced motion, jumping to a heading no longer scrolls or slides (#12334)
-- [ ] [`fc40575d9`](https://github.com/meta/astryx/commit/fc40575d9) fix(Table): a column-windowed scroll that keeps its columns renders the table once (#11826)
+- [x] [`1f48950f9`](https://github.com/meta/astryx/commit/1f48950f9) chore: land batch 67 (7 pull requests) (#12957)
+  - Vue 版已有：Outline 与 TreeList 的 items 是带类型的 Array 属性，Vue 开发期属性校验会警告，不需要上游的抛错
+- [x] [`842e95d82`](https://github.com/meta/astryx/commit/842e95d82) [Component Audit] Outline: under reduced motion, jumping to a heading no longer scrolls or slides (#12334)
+  - 已移植：[#611](https://github.com/astryx-vue/astryx-vue/pull/611)。Outline 减弱动效时滚动立即到达，指示器与链接颜色过渡归零，传入的 aria-label 优先于 label，文档补建议
+- [x] [`fc40575d9`](https://github.com/meta/astryx/commit/fc40575d9) fix(Table): a column-windowed scroll that keeps its columns renders the table once (#11826)
+  - 不适用：修的是 React 里滚动写状态导致整表多渲染一次；Vue 版 useInlineListWindow 靠 ref 与 computed，滚动只更新窗口段
 - [x] [`5f57d0326`](https://github.com/meta/astryx/commit/5f57d0326) docs(windowing): every virtualizer works in container and page scroll; Table windows inside its own scroll area (#10796)
   - 不适用：上游内部规范和架构文档（自动初筛）
 
