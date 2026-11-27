@@ -30,6 +30,7 @@ import type { KeyboardHintMessages } from './messages/keyboard-hint.js'
 import type { LayoutMessages } from './messages/layout.js'
 import type { LightboxMessages } from './messages/lightbox.js'
 import type { ListInputMessages } from './messages/list-input.js'
+import type { ListMessages } from './messages/list.js'
 import type { MarkdownMessages } from './messages/markdown.js'
 import type { MetadataListMessages } from './messages/metadata-list.js'
 import type { MoreMenuMessages } from './messages/more-menu.js'
@@ -92,6 +93,7 @@ import { keyboardHintMessages } from './messages/keyboard-hint.js'
 import { layoutMessages } from './messages/layout.js'
 import { lightboxMessages } from './messages/lightbox.js'
 import { listInputMessages } from './messages/list-input.js'
+import { listMessages } from './messages/list.js'
 import { markdownMessages } from './messages/markdown.js'
 import { metadataListMessages } from './messages/metadata-list.js'
 import { moreMenuMessages } from './messages/more-menu.js'
@@ -155,6 +157,7 @@ export interface AstryxMessages {
   layout: LayoutMessages
   lightbox: LightboxMessages
   listInput: ListInputMessages
+  list: ListMessages
   markdown: MarkdownMessages
   metadataList: MetadataListMessages
   moreMenu: MoreMenuMessages
@@ -220,6 +223,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     layout: layoutMessages.en,
     lightbox: lightboxMessages.en,
     listInput: listInputMessages.en,
+    list: listMessages.en,
     markdown: markdownMessages.en,
     metadataList: metadataListMessages.en,
     moreMenu: moreMenuMessages.en,
@@ -283,6 +287,7 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     layout: layoutMessages['zh-CN'],
     lightbox: lightboxMessages['zh-CN'],
     listInput: listInputMessages['zh-CN'],
+    list: listMessages['zh-CN'],
     markdown: markdownMessages['zh-CN'],
     metadataList: metadataListMessages['zh-CN'],
     moreMenu: moreMenuMessages['zh-CN'],

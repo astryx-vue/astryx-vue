@@ -64051,6 +64051,12 @@
                 "description": "The marker drawn in front of each row: none, disc (filled bullet), circle (outlined bullet), or decimal (numbers). `decimal` renders the list as an `<ol>`."
               },
               {
+                "name": "`reorderable`",
+                "type": "`Reorderable`",
+                "default": "—",
+                "description": "The object from `useReorderable` or `createReorderable`. With it, each `ListItem` with an `itemKey` that the object lets move ends with a reorder handle: hold then drag under a finger, drag under a mouse, or press it and use the arrow keys. Without it the list loads none of the reorder code."
+              },
+              {
                 "name": "`start`",
                 "type": "`number`",
                 "default": "`1`",
@@ -64210,6 +64216,12 @@
                 "type": "`ListMarkerStyle`",
                 "default": "`'none'`",
                 "description": "每行前面的标记：none、disc（实心圆点）、circle（空心圆点）、decimal（序号）。`decimal` 会改用 `<ol>` 渲染。"
+              },
+              {
+                "name": "`reorderable`",
+                "type": "`Reorderable`",
+                "default": "—",
+                "description": "`useReorderable` 或 `createReorderable` 返回的对象。传了它，每个带 `itemKey`、且对象允许移动的 `ListItem` 末尾都有一个重排手柄：手指按住再拖，鼠标直接拖，或者点一下再用方向键挪。不传时列表一点重排代码都不加载。"
               },
               {
                 "name": "`start`",
@@ -64757,7 +64769,7 @@
                 "name": "`itemKey`",
                 "type": "`string | number`",
                 "default": "—",
-                "description": "行在数据里的键，是列表 `animatedLayout` 认这一行的身份，没有它的行直接变。它和 Vue 自己的 `key` 是两回事。"
+                "description": "行在数据里的键，是列表 `animatedLayout` 认这一行的身份，没有它的行直接变。在可重排的列表里，它就是 `onReorder` 报出来、`isReorderable` 被问到的那个键；没有它的行没有重排手柄。它和 Vue 自己的 `key` 是两回事。"
               },
               {
                 "name": "`swipeActions`",
@@ -87895,6 +87907,166 @@
       "docsUrl": {
         "en": "https://astryx-vue.pages.dev/en/components/use-linkify",
         "zh": "https://astryx-vue.pages.dev/components/use-linkify"
+      }
+    },
+    {
+      "slug": "use-reorderable",
+      "name": "UseReorderable",
+      "package": "@astryx-vue/core",
+      "kind": "composable",
+      "title": {
+        "en": "useReorderable",
+        "zh": "useReorderable"
+      },
+      "group": "Utility",
+      "groupTitle": {
+        "en": "Utility",
+        "zh": "工具"
+      },
+      "importPath": null,
+      "exportName": null,
+      "summary": {
+        "en": "`useReorderable` makes a list's rows reorderable. Call it once in `setup`, pass the result to `List`'s `reorderable`, and give each `ListItem` an `itemKey` from your data. Each row with a key then ends with a handle.",
+        "zh": "`useReorderable` 让列表的行可以调整顺序。在 `setup` 里调用一次，把结果交给 `List` 的 `reorderable`，再给每个 `ListItem` 一个来自数据的 `itemKey`。带键的行末尾就会出现一个拖动手柄。"
+      },
+      "usage": {
+        "en": "`useReorderable` makes a list's rows reorderable. Call it once in `setup`, pass the result to `List`'s `reorderable`, and give each `ListItem` an `itemKey` from your data. Each row with a key then ends with a handle.\n\n```ts\nimport { useReorderable } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useReorderable } from '@astryx-vue/core'\nimport { List, ListItem } from '@astryx-vue/core/List'\nimport { ref } from 'vue'\n\nconst items = ref([{ id: 'a', label: 'Inbox' }, { id: 'b', label: 'Sent' }])\n\nconst reorderable = useReorderable<string>({\n  onReorder: ({ key, to }) => {\n    const moved = items.value.find(item => item.id === key)!\n    const next = items.value.filter(item => item.id !== key)\n    next.splice(to, 0, moved)\n    items.value = next\n  },\n})\n</script>\n\n<template>\n  <List :reorderable=\"reorderable\">\n    <ListItem v-for=\"item in items\" :key=\"item.id\" :item-key=\"item.id\" :label=\"item.label\" />\n  </List>\n</template>\n```\n\n`onReorder` is called once per committed move with the moved row's key and its index after the move. Apply it by rendering the items in the new order. An order you keep sends the rows back to their places.\n\n- **Finger**: hold a handle still for a moment, then drag. A flick on the handle still scrolls. The row stays in its place, dimmed, while a copy follows the finger and an accent line marks where it would land. The other rows stay still, the page scrolls near its edges, and on release the rows glide to their new places. A pen held still where the primary pointer is coarse does the same.\n- **Mouse**: drag a handle once it moves 4 px. The rows take their places without motion. A cancelled drag puts everything back at once.\n- **Keyboard and taps**: without a drag, the handle toggles reorder mode for its row (a click, Space or Enter). Each arrow key moves the row one place at once, and Escape or Done ends the mode, keeping the moves. A hint below the handle shows Move up, Move down and Done as buttons, so taps alone reorder too.\n- **Screen readers**: each move is announced with the row's place and its neighbours once it lands. A move into a row that keeps its place is refused and announced.\n\nA row that `isReorderable` rejects shows no handle. Rows it rejects at either end of the list also bound the others: nothing drops beyond them.\n\nTo start reorder mode from your own UI, such as a Move item in a row's menu, call `reorderable.start(key)`. The focus moves to that row's handle. A key that cannot move or is not mounted does nothing and warns in development.\n\n`options` may be a ref or a getter: each move reads its latest value, so a new `onReorder` needs no new object. Outside a component, use `createReorderable(options)`, which takes the same plain options and returns the same object.\n\nThe reorder code ships with this function: a list without `reorderable` loads none of it.",
+        "zh": "`useReorderable` 让列表的行可以调整顺序。在 `setup` 里调用一次，把结果交给 `List` 的 `reorderable`，再给每个 `ListItem` 一个来自数据的 `itemKey`。带键的行末尾就会出现一个拖动手柄。\n\n```ts\nimport { useReorderable } from '@astryx-vue/core'\n```\n\n```vue\n<script setup lang=\"ts\">\nimport { useReorderable } from '@astryx-vue/core'\nimport { List, ListItem } from '@astryx-vue/core/List'\nimport { ref } from 'vue'\n\nconst items = ref([{ id: 'a', label: '收件箱' }, { id: 'b', label: '已发送' }])\n\nconst reorderable = useReorderable<string>({\n  onReorder: ({ key, to }) => {\n    const moved = items.value.find(item => item.id === key)!\n    const next = items.value.filter(item => item.id !== key)\n    next.splice(to, 0, moved)\n    items.value = next\n  },\n})\n</script>\n\n<template>\n  <List :reorderable=\"reorderable\">\n    <ListItem v-for=\"item in items\" :key=\"item.id\" :item-key=\"item.id\" :label=\"item.label\" />\n  </List>\n</template>\n```\n\n每完成一次移动，`onReorder` 被调用一次，告诉你被挪的那一行的键，和它挪完以后的位置（下标）。你按新顺序把数据渲染出来就行。如果你不改顺序，行会回到原位。\n\n- **手指**：在手柄上按住不动一小会儿，再拖。在手柄上快速一划还是滚动页面。被拿起的行留在原位、变淡，一份副本跟着手指走，一条强调色的线标出它会落在哪。其他行不动；拖到页面边缘附近会自动滚动；松手后各行滑到新位置。主指针是粗指针（触屏）时，手写笔按住不动也一样。\n- **鼠标**：按住手柄移动超过 4 像素就开始拖。各行直接落到新位置，不带动画。拖动被取消时一切立刻复原。\n- **键盘和点按**：不拖的话，点一下手柄（或按空格、回车）就进入这一行的重排模式。每按一次方向键，行立刻挪一格；按 Escape 或点「完成」退出，挪过的都保留。手柄下方会出现一个提示条，上面有「上移」「下移」「完成」三个按钮，光靠点按也能排。\n- **读屏**：每次挪动落定后，会播报这一行现在排第几、前后是谁。往一个不能动的行挪会被拒绝，也会播报。\n\n`isReorderable` 不允许移动的行没有手柄。位于列表两头的这种行还会框住别的行：谁也不能越过它们落下。\n\n想从你自己的界面进入重排模式（比如行菜单里的「移动」），调用 `reorderable.start(key)`，焦点会移到那一行的手柄上。键对应的行不能动或者没挂载时什么也不做，开发环境下会给警告。\n\n`options` 可以是 ref 或 getter：每次移动都读它的最新值，换一个 `onReorder` 不需要重建对象。在组件外面用 `createReorderable(options)`，它接受同样的普通配置，返回同样的对象。\n\n重排的代码跟着这个函数走：没传 `reorderable` 的列表一点都不加载。"
+      },
+      "practices": {
+        "en": [
+          {
+            "guidance": "Do",
+            "text": "Give each row a stable key from your data, a string or a number (`:item-key=\"item.id\"`), and apply each move at once."
+          },
+          {
+            "guidance": "Do",
+            "text": "Use `isReorderable` for rows that must stay put, such as a pinned first row."
+          },
+          {
+            "guidance": "Do",
+            "text": "Offer reorder mode from your own UI too, such as a row's menu, with `reorderable.start(item.id)`."
+          },
+          {
+            "guidance": "Don't",
+            "text": "Use list indexes as keys: a move changes every index after it."
+          }
+        ],
+        "zh": []
+      },
+      "props": {
+        "en": [
+          {
+            "heading": "Parameters",
+            "rows": [
+              {
+                "name": "`options`",
+                "type": "`MaybeRefOrGetter<ReorderableOptions>`",
+                "default": "—",
+                "description": "Configuration object. Each move reads its latest value. `createReorderable` takes the same fields as a plain object."
+              },
+              {
+                "name": "`options.onReorder`",
+                "type": "`(move: { key: TKey, to: number }) => void`",
+                "default": "—",
+                "description": "Called once per committed move (a drop, or each move in reorder mode) with the moved item's key and its index after the move, in the full order of the list's items. Apply it by rendering the items in their new order. A cancelled move calls nothing."
+              },
+              {
+                "name": "`options.isReorderable`",
+                "type": "`(key: TKey) => boolean`",
+                "default": "—",
+                "description": "Whether the item with this key can move. An item it rejects shows no handle and cannot be picked up; one at either end of the list also bounds the others, so nothing drops beyond it and a keyboard move into it is refused. Every item moves without it."
+              }
+            ]
+          },
+          {
+            "heading": "Returns",
+            "rows": [
+              {
+                "name": "(return value)",
+                "type": "`Reorderable<TKey>`",
+                "description": "The list's reorder behavior: pass it as `List`'s `reorderable`, with an `itemKey` on each `ListItem`. Its one method, `start(key)`, enters reorder mode for that item from your own UI: the focus moves to its handle. One object may serve several lists, each reordering on its own; `start` then uses the one mounted last."
+              }
+            ]
+          }
+        ],
+        "zh": [
+          {
+            "heading": "参数",
+            "rows": [
+              {
+                "name": "`options`",
+                "type": "`MaybeRefOrGetter<ReorderableOptions>`",
+                "default": "—",
+                "description": "配置对象。每次移动都读它的最新值。`createReorderable` 接受同样的字段，只是传普通对象。"
+              },
+              {
+                "name": "`options.onReorder`",
+                "type": "`(move: { key: TKey, to: number }) => void`",
+                "default": "—",
+                "description": "每完成一次移动（一次松手，或重排模式里的每一步）调用一次，带上被挪那一项的键，和它挪完后在整个列表里的下标。按新顺序渲染数据就算应用了。被取消的移动不会调用。"
+              },
+              {
+                "name": "`options.isReorderable`",
+                "type": "`(key: TKey) => boolean`",
+                "default": "—",
+                "description": "这个键对应的项能不能动。不能动的项没有手柄，也拿不起来；它在列表两头时还会框住别的项，谁也不能越过它落下，键盘往它那里挪会被拒绝。不传时每一项都能动。"
+              }
+            ]
+          },
+          {
+            "heading": "返回值",
+            "rows": [
+              {
+                "name": "（返回值）",
+                "type": "`Reorderable<TKey>`",
+                "description": "列表的重排能力：传给 `List` 的 `reorderable`，每个 `ListItem` 带上 `itemKey`。它唯一的方法 `start(key)` 从你自己的界面进入那一项的重排模式，焦点移到它的手柄上。一个对象可以同时给几个列表用，各排各的；这时 `start` 用最后挂载的那个。"
+              }
+            ]
+          }
+        ]
+      },
+      "slots": {
+        "en": [],
+        "zh": []
+      },
+      "events": {
+        "en": [],
+        "zh": []
+      },
+      "notes": {
+        "en": [],
+        "zh": [
+          {
+            "heading": "建议",
+            "text": "- 推荐: 每一行用数据里稳定的键（字符串或数字，`:item-key=\"item.id\"`），每次移动都马上应用。\n- 推荐: 必须固定的行（比如置顶的第一行）用 `isReorderable` 排除。\n- 推荐: 在你自己的界面里也给一个入口，比如行菜单，用 `reorderable.start(item.id)` 进入重排模式。\n- 避免: 用列表下标当键：挪一行，后面每一行的下标都变了。"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": {
+            "en": "useReorderable — playlist",
+            "zh": "useReorderable — 播放列表"
+          },
+          "description": {
+            "en": "Drag a handle, or press it and use the arrow keys. Intro is pinned: it has no handle, and nothing moves above it.",
+            "zh": "拖动手柄，或者点一下手柄再用方向键。Intro 被固定：它没有手柄，谁也不能挪到它上面。"
+          },
+          "code": "<script setup lang=\"ts\">\nimport { useReorderable } from '@astryx-vue/core'\nimport { List, ListItem } from '@astryx-vue/core/List'\nimport { ref } from 'vue'\n\ninterface Track {\n  id: string\n  title: string\n  artist: string\n}\n\nconst tracks = ref<Track[]>([\n  { id: 'intro', title: 'Intro', artist: 'Pinned' },\n  { id: 'harbor', title: 'Harbor Lights', artist: 'June Avenue' },\n  { id: 'paper', title: 'Paper Planes', artist: 'The Lanterns' },\n  { id: 'north', title: 'Northbound', artist: 'Mira Hale' },\n  { id: 'static', title: 'Static Bloom', artist: 'Cobalt Rooms' },\n])\n\nconst reorderable = useReorderable<string>({\n  onReorder: ({ key, to }) => {\n    const moved = tracks.value.find(track => track.id === key)\n    if (moved == null)\n      return\n    const next = tracks.value.filter(track => track.id !== key)\n    next.splice(to, 0, moved)\n    tracks.value = next\n  },\n  isReorderable: key => key !== 'intro',\n})\n</script>\n\n<template>\n  <List :reorderable=\"reorderable\" list-style=\"decimal\">\n    <ListItem\n      v-for=\"track in tracks\"\n      :key=\"track.id\"\n      :item-key=\"track.id\"\n      :label=\"track.title\"\n      :description=\"track.artist\"\n    />\n  </List>\n</template>"
+        }
+      ],
+      "anatomy": {
+        "en": [],
+        "zh": []
+      },
+      "accessibility": {
+        "en": [],
+        "zh": []
+      },
+      "docsUrl": {
+        "en": "https://astryx-vue.pages.dev/en/components/use-reorderable",
+        "zh": "https://astryx-vue.pages.dev/components/use-reorderable"
       }
     }
   ],
