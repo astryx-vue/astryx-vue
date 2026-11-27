@@ -443,22 +443,22 @@ defineExpose({
     <span v-if="focusableDisabled" :id="disabledId" class="astryx-visually-hidden">{{ disabledMessage }}</span>
     <span class="astryx-visually-hidden" aria-live="polite">{{ liveText }}</span>
   </Field>
+  <PowerSearchListbox
+    v-if="!sheet.isSheet.value"
+    :id="listboxId"
+    ref="listboxRef"
+    :is-open="menu.combobox.isOpen.value"
+    :entries="menu.entries.value"
+    :active-index="menu.combobox.activeIndex.value"
+    :label="text.results"
+    :empty-text="text.empty"
+    :placement="anchored.position.value.placement"
+    :menu-style="menuStyle"
+    :lookup="lookup"
+    @highlight="menu.combobox.activeIndex.value = $event"
+    @pick="pick"
+  />
   <Teleport to="body">
-    <PowerSearchListbox
-      v-if="!sheet.isSheet.value"
-      :id="listboxId"
-      ref="listboxRef"
-      :is-open="menu.combobox.isOpen.value"
-      :entries="menu.entries.value"
-      :active-index="menu.combobox.activeIndex.value"
-      :label="text.results"
-      :empty-text="text.empty"
-      :placement="anchored.position.value.placement"
-      :menu-style="menuStyle"
-      :lookup="lookup"
-      @highlight="menu.combobox.activeIndex.value = $event"
-      @pick="pick"
-    />
     <div
       v-if="session"
       ref="editorRef"
