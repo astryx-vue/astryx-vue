@@ -16,10 +16,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
 import CheckboxInput from '../CheckboxInput/CheckboxInput.vue'
 import { PRESS_BOX_ATTRIBUTE } from '../composables/internal/pressBox'
+import { useLongPress } from '../composables/useLongPress'
 import { LONG_PRESS_DURATION_MS } from '../motion/uikit/longPress'
 import Radio from '../Radio/Radio.vue'
 import { BROWSER_CLICK_WAIT_MS } from './browserClickWait'
-import { claimPress } from './pressClaim'
 
 enableAutoUnmount(afterEach)
 beforeEach(() => {
@@ -74,6 +74,12 @@ function browserClick(target: Element): void {
 /** 测试环境按 iOS WebKit 算，选区锁写在行内样式上。 */
 const refusesSelection = (element: Element): boolean => (element as HTMLElement).style.getPropertyValue('user-select') === 'none'
 
+/** 对照：一次停着的长按，浏览器没发点击，控件自己被激活。 */
+function stillLongPressWithoutClick(box: Element): void {
+  lift(box, hold(box, LONG_PRESS_DURATION_MS + 50))
+  vi.advanceTimersByTime(BROWSER_CLICK_WAIT_MS + 1)
+}
+
 describe('box hold', () => {
   it('marks the box of an enabled checkbox only', async () => {
     expect((await renderCheckbox()).find(`.astryx-checkbox-control[${PRESS_BOX_ATTRIBUTE}]`).exists()).toBe(true)
@@ -121,6 +127,8 @@ describe('box hold', () => {
     browserClick(wrapper.get('input').element)
     vi.advanceTimersByTime(BROWSER_CLICK_WAIT_MS + 1)
     expect(toggles(wrapper)).toEqual([true])
+    stillLongPressWithoutClick(boxOf(wrapper))
+    expect(toggles(wrapper)).toEqual([true, false])
   })
 
   it('a tap keeps its native click: nothing clicks in its stead', async () => {
@@ -129,6 +137,8 @@ describe('box hold', () => {
     lift(boxOf(wrapper), id)
     vi.advanceTimersByTime(BROWSER_CLICK_WAIT_MS + 1)
     expect(toggles(wrapper)).toEqual([])
+    stillLongPressWithoutClick(boxOf(wrapper))
+    expect(toggles(wrapper)).toEqual([true])
   })
 
   it('travel, a cancel or a second finger activates nothing', async () => {
@@ -143,6 +153,8 @@ describe('box hold', () => {
     lift(box, first)
     vi.advanceTimersByTime(BROWSER_CLICK_WAIT_MS + 1)
     expect(toggles(wrapper)).toEqual([])
+    stillLongPressWithoutClick(box)
+    expect(toggles(wrapper)).toEqual([true])
   })
 
   it('a lift whose touchend a handler cancelled, or whose contextmenu opened a menu, activates nothing', async () => {
@@ -162,13 +174,17 @@ describe('box hold', () => {
     lift(box, menuHold)
     vi.advanceTimersByTime(BROWSER_CLICK_WAIT_MS + 1)
     expect(toggles(wrapper)).toEqual([])
+    stillLongPressWithoutClick(box)
+    expect(toggles(wrapper)).toEqual([true])
   })
 
   it('a hold whose long press acted gets no click at all', async () => {
     const wrapper = await renderCheckbox()
     const box = boxOf(wrapper)
+    // 行上的长按（比如右键菜单）在手指按着时起了作用。
+    const longPress = useLongPress({ onLongPress: () => {} })
+    longPress.start({ x: 10, y: 10 })
     const id = hold(box, LONG_PRESS_DURATION_MS + 50)
-    claimPress()
     lift(box, id)
     // The browser's late click is swallowed by the guard.
     browserClick(wrapper.get('input').element)
