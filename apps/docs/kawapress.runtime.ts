@@ -4,8 +4,10 @@ import { useRoute } from 'kawapress/client'
 import { computed, defineAsyncComponent } from 'vue'
 import ComponentAccessibility from './components/demo-infra/ComponentAccessibility.vue'
 import ComponentAnatomy from './components/demo-infra/ComponentAnatomy.vue'
+import { COMPONENT_CATALOG } from './components/demo-infra/componentCatalog'
 import ComponentsOverview from './components/demo-infra/ComponentsOverview.vue'
 import DemoExample from './components/demo-infra/DemoExample.vue'
+import { installDeprecatedSearchRows } from './components/demo-infra/deprecatedSearchRows'
 import TemplateIndex from './components/demo-infra/TemplateIndex.vue'
 import TokenReference from './components/theme-tokens/TokenReference.vue'
 import ThemesPage from './components/themes/ThemesPage.vue'
@@ -26,6 +28,8 @@ export default defineRuntimePlugin({
       // Every demo reads its locale from the route, as the VitePress layout provided it.
       const route = app.runWithContext(useRoute)
       app.provide(astryxLocaleKey, computed(() => /^\/en(?:\/|$)/.test(route.value.path) ? 'en' : 'zh-CN'))
+      // 站内搜索里废弃组件的结果行带「已废弃」标记，和侧栏、总览卡片一致。
+      installDeprecatedSearchRows(COMPONENT_CATALOG)
       app.component('component-docs', ComponentDocsLayout)
       app.component('ComponentAccessibility', ComponentAccessibility)
       app.component('ComponentAnatomy', ComponentAnatomy)
