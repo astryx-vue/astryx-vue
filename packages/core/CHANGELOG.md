@@ -1,5 +1,11 @@
 # @astryx-vue/core
 
+## 0.42.2
+
+### Patch Changes
+
+- [#656](https://github.com/astryx-vue/astryx-vue/pull/656) [`9683bc5`](https://github.com/astryx-vue/astryx-vue/commit/9683bc5eefeea3e0a18f7f6b0886d734d569481d) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增 `NavigationStack`、`NavigationScreen` 和 `useNavigationStack`：手机布局里一层层往里点的导航，推入、退出和滑动返回都照着 iOS 的手感，开启「减少动态效果」时改成淡入淡出。
+
 ## 0.42.1
 
 ### Patch Changes
