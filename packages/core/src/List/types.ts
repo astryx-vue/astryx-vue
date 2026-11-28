@@ -1,25 +1,33 @@
 import type { Component, MaybeRefOrGetter, VNodeChild } from 'vue'
 import type { AnimatedLayout } from '../composables/useAnimatedLayout.js'
 import type { Reorderable } from '../reorderable/createReorderable.js'
+import type { ItemSwipeActionVariant, ItemSwipeBehavior, Swipe } from '../Swipe/swipeHost.js'
+
+export type { ItemSwipeBehavior }
 
 /** 滑动露出的一侧。`leading` 是往行内末尾拖，`trailing` 是往行内开头拖。 */
 export type ItemSwipeSide = 'leading' | 'trailing'
 
-/** `reveal` 松手后停开；`commit` 越过阈值就滑出并触发最外侧，一侧只适合一个操作。 */
-export type ItemSwipeBehavior = 'reveal' | 'commit'
-
-/** 横滑露出的一个操作。数组里越靠后越靠外。 */
+/**
+ * 横滑露出的一个操作。数组里越靠后越靠外。
+ * @deprecated 改用 `SwipeAction`：它的 `id` 必填，`onActivate` 会收到操作的 `id` 和行的 `itemKey`。
+ */
 export interface ItemSwipeAction {
   id?: string
   label: string
   icon?: Component
-  onActivate: () => void
+  onActivate: () => void | Promise<void>
   isDisabled?: boolean
-  variant?: 'neutral' | 'accent' | 'destructive'
-  /** 触发后行停在滑出的位置，不再弹回。行本身不会被删掉。 */
+  /** @default 'accent' */
+  variant?: ItemSwipeActionVariant
+  /**
+   * 触发后行停在滑出的位置，不再弹回。行本身不会被删掉。
+   * @default false
+   */
   hasRemoval?: boolean
 }
 
+/** @deprecated 改用 `CreateSwipeOptions`。 */
 export interface ItemSwipeActions {
   leading?: ItemSwipeAction[]
   trailing?: ItemSwipeAction[]
@@ -241,12 +249,24 @@ export interface ListItemProps {
    */
   itemKey?: string | number
   /**
-   * 触摸横滑露出的操作。鼠标不会开始这次拖动。
-   * 每个操作还要在行自己的内容里能点到，否则键盘和鼠标够不着。
+   * 行的横滑操作，由一次 `createSwipe` 调用配好：横向拖动在每一侧露出的动词，声明成数据，
+   * 行据此画出面板。手指、笔或触控板的双指横滑把行拖到一边、露出这一侧的面板；鼠标拖动和鼠标
+   * 滚轮不会，偏竖直的拖动仍归滚动。手势只是触屏的快捷方式，永远不是行通往某个动词的唯一入口：
+   * 每个操作都要在行自己的内容里也能点到（菜单或 `endContent` 里的按钮），否则键盘和鼠标用户够不着。
+   * 开着的行在点它自己的内容（不激活任何东西）、按在别处、焦点在行外时列表或页面滚动、按 Escape 时合上。
+   *
+   * 只在 role 允许可交互后代的行上生效：`listitem` 或没有 role 的行；`option`、`menuitem*`、
+   * 作为内部控件放大点击区的行和禁用的行不生效。装着行的元素要在行内方向裁剪
+   * （`overflow-inline: clip`）：`List` 已经这样做了，别的容器自己加一次。
+   */
+  swipe?: Swipe
+  /**
+   * @deprecated 改传 `swipe`，写成 `createSwipe({ leading, trailing })`。仍可用，行为和 `swipe` 一致；
+   * 设置了 `swipe` 时忽略。
    */
   swipeActions?: ItemSwipeActions
   /**
-   * 松手之后怎么收场。
+   * @deprecated 改在 `createSwipe` 的选项里传 `swipeBehavior`。设置了 `swipe` 时忽略。
    * @default 'reveal'
    */
   swipeBehavior?: ItemSwipeBehavior

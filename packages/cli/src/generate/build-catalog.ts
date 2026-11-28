@@ -43,6 +43,17 @@ export function componentKind(slug: string, group: string): ComponentKind {
   return 'composable'
 }
 
+/**
+ * The export a page documents. A component page documents its PascalCase name. A utility
+ * page for a plain function that is not a composable, such as `createSwipe`, carries that
+ * function's camelCase name as its title and documents it under that name.
+ */
+export function documentedName(slug: string, title: string): string {
+  const name = pascalCase(slug)
+  const camel = name.charAt(0).toLowerCase() + name.slice(1)
+  return !slug.startsWith('use-') && title === camel ? camel : name
+}
+
 export function componentExportsMissingDocs(exportKeys: readonly string[], importPaths: readonly (string | null)[], packageName = CORE_PACKAGE): string[] {
   const referenced = new Set(importPaths.filter((path): path is string => Boolean(path)))
   return exportKeys
@@ -80,7 +91,7 @@ export async function buildCatalog(repoRoot: string, entries: readonly CatalogEn
   const packages = await discoverPackages(repoRoot)
   const demoSourceCache = new Map<string, Promise<Map<string, string>>>()
   for (const entry of entries) {
-    const name = pascalCase(entry.slug)
+    const name = documentedName(entry.slug, entry.en)
     const pages = {
       en: await readLocalePage(repoRoot, 'en', entry.slug),
       zh: await readLocalePage(repoRoot, 'zh', entry.slug),

@@ -74,7 +74,7 @@ describe('numbered list columns', () => {
     const rows = numbered.findAll('.astryx-list-item')
     expect(rows[0]!.find(':scope > .astryx-item__marker-content').exists()).toBe(true)
     expect(rows[0]!.find('.astryx-item__marker-content .astryx-item__content').exists()).toBe(true)
-    expect(rows[1]!.find('.astryx-item__surface > .astryx-item__marker-content').exists()).toBe(true)
+    expect(rows[1]!.find(':scope > .astryx-item__marker-content').exists()).toBe(true)
 
     const bullets = mount(List, { props: { listStyle: 'disc' }, slots: { default: () => h(ListItem, { label: 'One' }) } })
     expect(bullets.find('.astryx-item__marker-content').exists()).toBe(false)
