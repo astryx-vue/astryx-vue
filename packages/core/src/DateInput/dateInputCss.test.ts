@@ -39,4 +39,27 @@ describe('date-input.css', () => {
     expect(css).not.toContain('calc(var(--astryx-spacing-6, 24px) - var(--container-padding-block-start, 0px))')
     expect(block('.astryx-date-time-touch-tabs', css.indexOf('.astryx-date-touch,\n  .astryx-time-touch,\n  .astryx-date-time-touch-tabs {'))).toContain('padding-block-start: 0')
   })
+
+  it('鼠标下的列按颜色渐隐、往里倾倒，选中和禁用的行保留自己的颜色', () => {
+    const supports = css.indexOf('@supports (animation-timeline: view())')
+    expect(supports).toBeGreaterThanOrEqual(0)
+    const scoped = css.slice(supports)
+    // 渐隐在行上，用主、次文字色的中点；选中和禁用的行不吃这条渐变。
+    expect(block('.astryx-picker-wheel-option:not([aria-selected=\'true\']):not(:disabled)', supports)).toContain('animation: astryx-wheel-fade linear both')
+    expect(css).toMatch(/@keyframes astryx-wheel-fade \{[^}]*color-mix\(in oklab, var\(--astryx-color-text-primary[^}]*var\(--astryx-color-text-secondary/)
+    // 倾倒在行里的文字元素上，行本身不动，也不是滚动容器。
+    expect(block('.astryx-picker-wheel-option-label', supports)).toContain('animation: astryx-wheel-tip linear both')
+    expect(scoped).toContain('animation-timeline: view(y)')
+    // 禁用的行按不透明度淡出。
+    expect(block('.astryx-picker-wheel-option:disabled .astryx-picker-wheel-option-label', supports)).toContain('astryx-wheel-tip-dim')
+    expect(css).toMatch(/@keyframes astryx-wheel-tip-dim \{[^}]*opacity: 0\.3/)
+  })
+
+  it('减少动态效果时不再倾倒，保留颜色渐变，禁用行只按不透明度淡出', () => {
+    const supports = css.indexOf('@supports (animation-timeline: view())')
+    const reduced = css.indexOf('@media (prefers-reduced-motion: reduce)', supports)
+    expect(reduced).toBeGreaterThan(supports)
+    expect(block('.astryx-picker-wheel-option-label', reduced)).toContain('animation-name: none')
+    expect(block('.astryx-picker-wheel-option:disabled .astryx-picker-wheel-option-label', reduced)).toContain('animation-name: astryx-wheel-dim')
+  })
 })

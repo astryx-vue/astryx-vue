@@ -1,5 +1,46 @@
 # @astryx-vue/core
 
+## 0.41.1
+
+### Patch Changes
+
+- [#663](https://github.com/astryx-vue/astryx-vue/pull/663) [`87244ef`](https://github.com/astryx-vue/astryx-vue/commit/87244ef0c889446b8f0ba085b0326e66d06a4f63) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `ListInput` 和 `TransferList` 改用 core `List` 的重排引擎，拖动手感和 `List` 一样：手指按住再拖、副本跟手、落点线、贴边自动滚动、松手后各行滑到新位置，点一下手柄进入键盘重排模式，读屏播报每次挪动。
+  
+  - `ListInput` 新增 `reorderable`：传 `useReorderable` 或 `createReorderable` 做的对象，挪动交给它的 `onReorder`。`isReorderable` 已弃用但仍可用，开发环境提示一次。
+  - `ListInput` 每条记录的操作（删除和重排手柄）跟着记录的悬停或聚焦一起显出来，不显时照样占位，记录不会跳动；重排手柄在删除按钮后面。
+  - `TransferList` 和 `TransferListSelector` 新增 `reorderable`，可以自己接管已选项的重排；不传时照旧用内置重排。整个列表禁用时，重排手柄仍可聚焦，提示为什么不能挪。
+  - core 为 lab 导出 `unstable_ListReorderScope`、`unstable_useListReorderScope`、`unstable_adaptReorderable`、`unstable_reorderableOptions`，属于内部接口，可能随时变动。
+
+## 0.41.0
+
+### Minor Changes
+
+- [#661](https://github.com/astryx-vue/astryx-vue/pull/661) [`612e54b`](https://github.com/astryx-vue/astryx-vue/commit/612e54bb3e77845545a81ed2b18142b6039d1aef) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Lightbox 按 iPhone 照片 App 的手感加上触摸手势：`hasZoom` 时能捏合、双击、Ctrl + 滚轮缩放，放大后拖动带惯性和橡皮筋；触屏上图集能横扫翻页（受控 `index` 不接受时弹回），照片往下拖就能关闭灯箱。
+
+## 0.40.0
+
+### Minor Changes
+
+- [#658](https://github.com/astryx-vue/astryx-vue/pull/658) [`21f1c19`](https://github.com/astryx-vue/astryx-vue/commit/21f1c19715b8b7a9400ea089826e6c5fb1b8fef2) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - BottomSheet 按打开顺序叠放，后打开的盖在上面、下面那张往后退，整叠只有一层遮罩；在开着的那张里关掉它、同时打开另一张时，新的一张原地替换它（上一张比新的高时先往下移对齐，再淡出），BottomSheetSwitcher 的每一步改用各自的原生对话框并标为已废弃，文档站在侧栏、总览卡片和文档页标题旁标出「已废弃」。
+
+- [#657](https://github.com/astryx-vue/astryx-vue/pull/657) [`c88c676`](https://github.com/astryx-vue/astryx-vue/commit/c88c6761b00d2b98a23215a1308b02e618fbbdca) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `Tokenizer` 可以放进 `InputGroup`：在组里它不再画自己的标签、说明和状态，由组统一负责，输入框的名字是组标签加自己的标签，说明读组的；尺寸和禁用都跟着组走（组里的 `size` 盖过自己的）；组是固定行高的单行控件，所以标签和输入框留在同一行里横向滚动，藏着标签的那一侧淡出，结尾的控件留在原位。
+
+### Patch Changes
+
+- [#657](https://github.com/astryx-vue/astryx-vue/pull/657) [`c88c676`](https://github.com/astryx-vue/astryx-vue/commit/c88c6761b00d2b98a23215a1308b02e618fbbdca) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 触控热区的测量不再抢在手指前面读布局：手指按下时不读任何矩形，只挂上对点击的复查（滚动不会产生点击，所以滚动里什么都不读），复查只读不写，按压动效结束后的那次测量才写热区；页面滚动时不测量，到 `scrollend` 或 150ms 没有滚动事件再测；祖先在播会挪盒子的动画（比如一层界面滑进来）时先不测，播完再量；页面结构变化只匹配新增的子树，不再对整页重新查询。点击行为不变。
+
+- [#657](https://github.com/astryx-vue/astryx-vue/pull/657) [`c88c676`](https://github.com/astryx-vue/astryx-vue/commit/c88c6761b00d2b98a23215a1308b02e618fbbdca) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `DateInput` 的时间和月份列在鼠标下有了景深：行滚向列的两端时往里倾倒、缩小。深度提示淡的是文字颜色（从主文字色渐变到主、次文字色的正中）而不是不透明度，所以每一行在每个滚动位置都够 WCAG AA 对比度；选中和禁用的行保留自己的颜色，禁用的行按不透明度淡出，开了「减少动态效果」时行不再倾倒、仍保留颜色渐变，不支持滚动驱动动画的浏览器就是一列平的行。
+
+## 0.39.0
+
+### Minor Changes
+
+- [#650](https://github.com/astryx-vue/astryx-vue/pull/650) [`80d3280`](https://github.com/astryx-vue/astryx-vue/commit/80d3280dbb0aafafce7a4c22a9797c3573661f13) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `defineTheme({ palette })`：主题可以从几个种子色拿到整套颜色。新入口 `@astryx-vue/core/palette` 的 `themePalette({ accent, neutral, success, warning, danger, info, vibrancy, recipe })` 生成调色板，映射成表面、文字、边框、图标、强调色和四种状态色的 token，并把强调色浅底、中性色轨道和彩色卡片上的次要文字提亮一档；显式的 `tokens` 和 `components` 仍然逐项优先。没写 `recipe` 时按 `astryx-oklch-v1` 生成。入口还导出 `generateTonalPalette()` 和它的类型，只有引入这个入口的应用才会带上生成器。
+
+### Patch Changes
+
+- [#650](https://github.com/astryx-vue/astryx-vue/pull/650) [`80d3280`](https://github.com/astryx-vue/astryx-vue/commit/80d3280dbb0aafafce7a4c22a9797c3573661f13) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `mode="system"` 的 `Theme` 现在取外面页面的明暗：页面根的 `color-scheme`，没有就看 `<meta name="color-scheme">`，根上两种都写（`reset.css` 就是）时才跟随读者的系统设置。宿主把页面画成深色时，里面也是深色主题，`useTheme()` 和 `useSyntaxTheme()` 报告的明暗一致；被强制了浅色或深色的 `Theme` 包着时，里面的 `system` 回到跟随读者。主题自己的 `@dark`、`@light` 组件样式也跟着页面走（根 `Theme` 把它画的明暗写在 `<html data-astryx-scheme>`）。主题样式表不再给 `Theme` 的包装元素声明 `color-scheme`，只有页面根默认 `light dark`。没引入 `reset.css` 或主题样式表、也没写 `color-scheme` 的页面按浅色算。
+
 ## 0.38.0
 
 ### Minor Changes

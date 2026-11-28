@@ -1,3 +1,6 @@
+export { buildWeightedIcon, ICON_WEIGHTS, parseSVGPaths } from './buildWeightedIcon.js'
+export type { BuildWeightedIconOptions, IconWeight, WeightedIconDef, WeightedIconLayer, WeightedIconPath } from './buildWeightedIcon.js'
+
 export {
   bellIcon,
   calendarIcon,
@@ -16,15 +19,14 @@ export {
   starterIcons,
   xIcon,
 } from './icons.js'
+
 /** 路径变形的三个人格轴：圆角、曲率、张力。 */
 export { addCurvature, adjustTension, applyPersonality, roundCorners } from './pathTransforms/index.js'
 
 export type { PathPersonality } from './pathTransforms/index.js'
-
 export { default as SVGIcon } from './SVGIcon.vue'
 /** XIF（Astryx Icon Format）的类型和示例图标。 */
 export type { XIFAnimate, XIFIcon, XIFPath, XIFPersonality, XIFSlot } from './types-xif.js'
-
 export type {
   IconShape,
   IconShapeRole,
@@ -34,4 +36,11 @@ export type {
   SVGIconSize,
   SVGIconVariation,
 } from './types.js'
+export { bellWeightedIcon, calendarWeightedIcon, checkWeightedIcon, eyeWeightedIcon, folderWeightedIcon, heartWeightedIcon, homeWeightedIcon, lockWeightedIcon, mailWeightedIcon, menuWeightedIcon, searchWeightedIcon, settingsWeightedIcon, shieldWeightedIcon, starWeightedIcon, weightedStarterIcons, xWeightedIcon } from './weightedIcons.js'
+export { default as WeightedIconSprite } from './WeightedIconSprite.vue'
+/** 随周围字重变化的 SVG 图标：每个字重区间一张图，CSS 只显示当前字重那一张。 */
+export { default as WeightedSVGIcon } from './WeightedSVGIcon.vue'
+export { weightedIconSymbolId } from './weightedSymbol.js'
+
+export { registerWeightProbe } from './weightProbe.js'
 export { xifBell, xifBellOverride, xifCheck, xifExamples, xifFile, xifHome, xifShield, xifStar } from './xif-examples.js'

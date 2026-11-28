@@ -251,6 +251,9 @@
       "@astryx-vue/core/Pagination": [
         "../../packages/core/src/Pagination/index.ts"
       ],
+      "@astryx-vue/core/palette": [
+        "../../packages/core/src/palette/index.ts"
+      ],
       "@astryx-vue/core/Popover": [
         "../../packages/core/src/Popover/index.ts"
       ],

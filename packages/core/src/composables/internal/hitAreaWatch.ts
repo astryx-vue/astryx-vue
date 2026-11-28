@@ -1,16 +1,18 @@
 import type { HitInsets, HitRect } from './hitArea.js'
+import type { MovingScope } from './hitAreaGate.js'
 import {
   clampedHitInsets,
   distanceTo,
   grown,
   inLayout,
-  INTERACTIVE_SELECTOR,
   MIN_TOUCH_TARGET,
   NO_HIT_INSETS,
   plainRect,
   sameInsets,
   screenScale,
 } from './hitArea.js'
+import { applyMutations, groupUnder, interactiveWithin, ungroup } from './hitAreaCandidates.js'
+import { afterMotion, isPageScrolling, motionAbove, movingScopes, whenScrollIdle } from './hitAreaGate.js'
 
 /**
  * @file hitAreaWatch.ts
@@ -21,6 +23,13 @@ import {
  * CSS 看不到邻居，所以要测量：只在主要指针是粗指针时测，并且所有控件共用一次「每帧一读」的测量，
  * 一帧最多花 4ms，剩下的留到下一帧。第一次测量前热区是 0，首帧不会盖住任何东西。
  * 细指针下除了指针媒体查询什么都不监听。
+ *
+ * 测量不能抢在手指前面读布局：
+ * - 页面在滚动时不测，到 `scrollend` 或 150ms 没有滚动事件再测（见 hitAreaGate.ts）；
+ * - 祖先在播会挪盒子的有限动画（比如一层界面滑进来）时，这个控件先不测，等动画播完；
+ * - 手指按下时不读任何矩形，只挂上一次对点击的复查：点击只在这次触摸成了轻点时才来，
+ *   滚动里不会有。复查读控件的盒子（按布局像素，去掉按压自己的缩放），不写热区，
+ *   按压动效结束后的那次测量才写。
  */
 
 const TOUCH_QUERY = '(pointer: coarse)'
@@ -44,7 +53,7 @@ export interface WatchHitAreaOptions {
    */
   readonly growth?: (target: HitRect, element: HTMLElement) => HitInsets
   /**
-   * 手指按下时是否立刻对照页面重新测量一次：邻居在上次测量后挪近了，这次点按就作废，不会点错。
+   * 手指轻点时是否对照页面复查一次：邻居在上次测量后挪近了，这次点按就作废，不会点错。
    * 自己在按下时读成员位置的组关掉它。
    * @default true
    */
@@ -58,6 +67,8 @@ interface Watch {
   readonly onInsets: (insets: HitInsets) => void
   last: HitInsets
   isVisible: boolean
+  /** 上一次测量因为祖先的动画被留下，没有量。 */
+  isHeld: boolean
 }
 
 interface Candidate {
@@ -75,8 +86,10 @@ let settleTimer: ReturnType<typeof setTimeout> | null = null
 let resize: ResizeObserver | null = null
 let visibility: IntersectionObserver | null = null
 let mutations: MutationObserver | null = null
-let candidates: Element[] | null = null
-/** 按下时邻居更近而挂上的一次性点击拦截，按被看着的元素记。 */
+let stopScrollGate: (() => void) | null = null
+/** 页面上的可点元素，随变化增量维护；没有 MutationObserver 的环境每次重新查。 */
+let candidates: Set<Element> | null = null
+/** 轻点时的复查，按被看着的元素记；取消就是撤掉它的监听。 */
 const disarms = new Map<Element, () => void>()
 
 function now(): number {
@@ -99,25 +112,25 @@ function watchedOwner(element: Element): Element | null {
   return null
 }
 
-/** 页面上的可点元素。被看着的控件按它自己的盒子算，不按它里面的部件算。 */
-function interactiveElements(doc: Document): Element[] {
-  if (candidates != null && mutations != null)
-    return candidates
-  const seen = new Set<Element>()
-  const found: Element[] = []
-  for (const element of doc.querySelectorAll(INTERACTIVE_SELECTOR)) {
-    const owner = watchedOwner(element) ?? element
-    if (!seen.has(owner)) {
-      seen.add(owner)
-      found.push(owner)
-    }
-  }
-  candidates = found
-  return found
+function ownerOf(element: Element): Element {
+  return watchedOwner(element) ?? element
 }
 
-function readCandidates(doc: Document): Candidate[] {
-  return interactiveElements(doc).map(element => ({ element, rect: plainRect(element) }))
+/** 页面上的可点元素。被看着的控件按它自己的盒子算，不按它里面的部件算。 */
+function interactiveElements(doc: Document): Set<Element> {
+  if (candidates == null || mutations == null)
+    candidates = new Set(interactiveWithin(doc, ownerOf))
+  return candidates
+}
+
+/** 读候选的矩形；挪着的祖先下面的元素不算邻居，它们的位置马上就变。 */
+function readCandidates(doc: Document, scopes: readonly MovingScope[] = []): Candidate[] {
+  const read: Candidate[] = []
+  for (const element of interactiveElements(doc)) {
+    if (scopes.length === 0 || motionAbove(scopes, element).length === 0)
+      read.push({ element, rect: plainRect(element) })
+  }
+  return read
 }
 
 /** `candidate` 是控件自己或它的一部分（含指向它的 `<label for>`）。 */
@@ -159,17 +172,32 @@ function measureOne(watch: Watch, all: ReadonlyArray<Candidate>): { target: HitR
   }
 }
 
-/** 一次测量：先读完所有待测控件，再统一写。 */
+/** 一次测量：先读完所有待测控件，再统一写。滚动中不测，祖先在挪时留下那个控件。 */
 function measure(): void {
   frame = null
+  if (isPageScrolling())
+    return
   const due = [...pending].filter(watch => watch.isVisible)
   pending.clear()
   if (!isCoarse || due.length === 0)
     return
-  const all = readCandidates(due[0].element.ownerDocument)
+  const doc = due[0].element.ownerDocument
+  const scopes = movingScopes(doc)
+  const ready: Watch[] = []
+  for (const watch of due) {
+    const waits = motionAbove(scopes, watch.element)
+    watch.isHeld = waits.length > 0
+    if (watch.isHeld)
+      afterMotion(waits, () => schedule(watch))
+    else
+      ready.push(watch)
+  }
+  if (ready.length === 0)
+    return
+  const all = readCandidates(doc, scopes)
   const started = now()
   const results: Array<{ watch: Watch, insets: HitInsets }> = []
-  for (const watch of due) {
+  for (const watch of ready) {
     if (results.length > 0 && now() - started > FRAME_BUDGET_MS) {
       pending.add(watch)
       continue
@@ -183,12 +211,12 @@ function measure(): void {
 }
 
 function requestFrame(): void {
-  if (frame == null && typeof requestAnimationFrame === 'function')
+  if (frame == null && !isPageScrolling() && typeof requestAnimationFrame === 'function')
     frame = requestAnimationFrame(measure)
 }
 
 function schedule(watch: Watch): void {
-  if (!isCoarse)
+  if (!isCoarse || !watches.has(watch.element))
     return
   pending.add(watch)
   requestFrame()
@@ -198,8 +226,9 @@ function scheduleAll(): void {
   watches.forEach(schedule)
 }
 
-function onMutation(): void {
-  candidates = null
+function onMutation(records: MutationRecord[]): void {
+  if (candidates != null)
+    applyMutations(candidates, records, ownerOf)
   if (settleTimer != null)
     clearTimeout(settleTimer)
   settleTimer = setTimeout(() => {
@@ -209,8 +238,8 @@ function onMutation(): void {
 }
 
 /**
- * 手指按下时，立刻重新测量它落在的那个控件。触摸离某个邻居比离控件更近（邻居在上次测量后挪近了），
- * 就吞掉这次的 click：这一下什么都不做，好过点错控件；下一次点按用新的热区。
+ * 手指按下时不读任何矩形。控件在测量里被动画留着（它的位置还在手指落下的地方）就此刻量；
+ * 否则挂上一次对点击的复查，滚动不会触发点击，所以滚动里什么都不读。
  */
 function onPress(event: Event): void {
   const press = event as PointerEvent
@@ -221,33 +250,52 @@ function onPress(event: Event): void {
   const watch = watches.get(owner)
   if (watch == null || !isCoarse || press.pointerType !== 'touch' || !watch.checkAtPress)
     return
-  const { target, insets, neighbours } = measureOne(watch, readCandidates(owner.ownerDocument))
-  deliver(watch, insets)
-  const own = distanceTo(target, press.clientX, press.clientY)
-  if (!neighbours.some(rect => distanceTo(rect, press.clientX, press.clientY) < own))
-    return
-  armClickSwallow(owner)
+  const at = { x: press.clientX, y: press.clientY }
+  if (watch.isHeld)
+    checkTap(watch, at, null)
+  else
+    armClickCheck(watch, at)
 }
 
-/** 吞掉 `owner` 的下一次触摸点击；任何下一次按下或这次触摸被浏览器拿走（滚动）都会撤掉它。 */
-function armClickSwallow(owner: Element): void {
+/**
+ * 轻点来了（或按下时控件被留着）：对照页面读一次盒子，触摸离某个邻居比离控件更近就吞掉这次点击，
+ * 好过点错控件。只读不写热区：按压自己的动效正在播，写进去的是过渡中的值；
+ * 之后排的那次测量会等动效播完再写。
+ * 点击来之前有祖先动画挪了盒子，就放行这次点击，由浏览器的命中测试决定；挪着的邻居也不算。
+ */
+function checkTap(watch: Watch, at: { x: number, y: number }, click: Event | null): void {
+  const doc = watch.element.ownerDocument
+  const scopes = movingScopes(doc)
+  schedule(watch)
+  if (click != null && motionAbove(scopes, watch.element).length > 0)
+    return
+  const { target, neighbours } = measureOne(watch, readCandidates(doc, scopes))
+  const own = distanceTo(target, at.x, at.y)
+  if (click == null || !neighbours.some(rect => distanceTo(rect, at.x, at.y) < own))
+    return
+  click.preventDefault()
+  click.stopPropagation()
+}
+
+/** 挂上对 `watch` 控件下一次触摸点击的复查；下一次按下或这次触摸被浏览器拿走（滚动）都会撤掉它。 */
+function armClickCheck(watch: Watch, at: { x: number, y: number }): void {
+  const owner = watch.element
   const doc = owner.ownerDocument
   function disarm(): void {
-    owner.removeEventListener('click', swallow, true)
+    owner.removeEventListener('click', check, true)
     owner.removeEventListener('pointercancel', disarm, true)
     doc.removeEventListener('pointerdown', disarm, PASSIVE_CAPTURE)
     if (disarms.get(owner) === disarm)
       disarms.delete(owner)
   }
-  function swallow(click: Event): void {
+  function check(click: Event): void {
     disarm()
     // 键盘或辅助技术触发的点击（detail 为 0）不是这次触摸的，放过。
     if ((click as MouseEvent).detail === 0)
       return
-    click.preventDefault()
-    click.stopPropagation()
+    checkTap(watch, at, click)
   }
-  owner.addEventListener('click', swallow, true)
+  owner.addEventListener('click', check, true)
   owner.addEventListener('pointercancel', disarm, true)
   // 加在这次按下经过 document 之后，只有下一次按下才会撤掉它。
   doc.addEventListener('pointerdown', disarm, PASSIVE_CAPTURE)
@@ -270,13 +318,17 @@ function unobserve(element: Element, parent: Element | null): void {
   disarms.get(element)?.()
 }
 
-/** 只在粗指针下打开的那些观察：尺寸、可见、页面结构、窗口大小，和按下时的复查。 */
+/** 只在粗指针下打开的那些观察：尺寸、可见、页面结构、窗口大小、滚动，和按下时的复查。 */
 function startObserving(): void {
   if (view == null)
     return
   const doc = view.document
   view.addEventListener('resize', scheduleAll)
   doc.addEventListener('pointerdown', onPress, PASSIVE_CAPTURE)
+  stopScrollGate = whenScrollIdle(doc, () => {
+    if (pending.size > 0)
+      requestFrame()
+  })
   if (typeof ResizeObserver === 'function') {
     resize = new ResizeObserver((entries) => {
       for (const entry of entries) {
@@ -314,6 +366,8 @@ function startObserving(): void {
 function stopObserving(): void {
   view?.removeEventListener('resize', scheduleAll)
   view?.document.removeEventListener('pointerdown', onPress, PASSIVE_CAPTURE)
+  stopScrollGate?.()
+  stopScrollGate = null
   resize?.disconnect()
   visibility?.disconnect()
   mutations?.disconnect()
@@ -347,7 +401,7 @@ function onPointerChange(): void {
 /**
  * 让 `element` 的热区一直跟着布局走，直到调用返回的函数：每次变化都交给 `onInsets`。
  * 细指针下热区是 0；粗指针下在挂上时、自身或父元素尺寸变化、窗口变化、页面结构稳定后重新测量，
- * 都并进每帧一次的共用测量里；手指按下时再立刻测一次。
+ * 都并进每帧一次的共用测量里（滚动和祖先动画播放期间不测）；手指轻点时再对照页面复查一次。
  */
 export function watchHitArea(
   element: HTMLElement,
@@ -365,9 +419,11 @@ export function watchHitArea(
     pointer = query
     pointer?.addEventListener('change', onPointerChange)
   }
-  const watch: Watch = { element, growth, checkAtPress, onInsets, last: NO_HIT_INSETS, isVisible: true }
+  const watch: Watch = { element, growth, checkAtPress, onInsets, last: NO_HIT_INSETS, isVisible: true, isHeld: false }
   watches.set(element, watch)
-  candidates = null
+  // 它里面的可点部件并成它自己；只动这棵子树。
+  if (candidates != null)
+    groupUnder(candidates, element)
   if (isCoarse) {
     observe(watch)
     schedule(watch)
@@ -379,7 +435,8 @@ export function watchHitArea(
       return
     watches.delete(element)
     pending.delete(watch)
-    candidates = null
+    if (candidates != null)
+      ungroup(candidates, element, ownerOf)
     unobserve(element, parent)
     if (watches.size === 0) {
       stopObserving()

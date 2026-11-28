@@ -14,8 +14,12 @@
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 
 @layer astryx.tokens {
-  [data-astryx-theme='stone'] {
+  /* 只有页面根默认跟随读者；主题包装元素不声明配色，`system` 模式的 Theme 取外面的配色。 */
+  html[data-astryx-theme='stone'] {
     color-scheme: light dark;
+  }
+
+  [data-astryx-theme='stone'] {
     background-color: var(--astryx-color-background-body);
     color: var(--astryx-color-text-primary);
     font-family: var(--astryx-font-family-body);

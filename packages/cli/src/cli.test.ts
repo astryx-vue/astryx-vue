@@ -311,7 +311,7 @@ describe('component text', () => {
     expect(detail.stdout).toContain('@astryx-vue/core/ButtonGroup')
 
     const dense = await run(['component', 'Button', '--dense'])
-    const full = await run(['component', 'Button'])
+    const full = await run(['component', 'Button', '--detail', 'full'])
     expect(dense.stdout.length).toBeLessThan(full.stdout.length)
     expect(dense.stdout).toContain('props:')
     expect(dense.stdout).toContain('examples: Floating')

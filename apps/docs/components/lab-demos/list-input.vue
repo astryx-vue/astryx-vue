@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ListInputColumn } from '@astryx-vue/lab'
-import { TextInput } from '@astryx-vue/core'
+import { TextInput, useReorderable } from '@astryx-vue/core'
 import { ListInput } from '@astryx-vue/lab'
 import { h, ref } from 'vue'
 
@@ -14,6 +14,16 @@ const guests = ref<Guest[]>([
   { id: 'ada', name: 'Ada Lovelace', role: 'Engineer' },
   { id: 'grace', name: 'Grace Hopper', role: 'Reviewer' },
 ])
+const reorderable = useReorderable<string>({
+  onReorder: ({ key, to }) => {
+    const moved = guests.value.find(guest => guest.id === key)
+    if (moved == null)
+      return
+    const next = guests.value.filter(guest => guest !== moved)
+    next.splice(to, 0, moved)
+    guests.value = next
+  },
+})
 let nextId = 0
 const createItem = (): Guest => ({ id: `guest-${++nextId}`, name: '', role: '' })
 const columns: ListInputColumn<Guest>[] = ['name', 'role'].map(key => ({
@@ -41,7 +51,7 @@ const columns: ListInputColumn<Guest>[] = ['name', 'role'].map(key => ({
       :create-item="createItem"
       label="Guests"
       item-name="guest"
-      is-reorderable
+      :reorderable="reorderable"
     />
   </div>
 </template>

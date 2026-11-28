@@ -39,11 +39,11 @@ describe('lightbox gallery caption band', () => {
   it('keeps a two-line band under every page, with no backing where there is no caption', async () => {
     const wrapper = mountGallery()
     expect(wrapper.get('.astryx-lightbox').attributes('data-gallery')).toBe('true')
-    expect(wrapper.get('.astryx-lightbox__caption-band').attributes('data-empty')).toBeUndefined()
-    expect(wrapper.get('.astryx-lightbox__caption').text()).toBe(longCaption)
+    expect(wrapper.get('[data-current] .astryx-lightbox__caption-band').attributes('data-empty')).toBeUndefined()
+    expect(wrapper.get('[data-current] .astryx-lightbox__caption').text()).toBe(longCaption)
 
     await wrapper.get('[aria-label="Next"]').trigger('click')
-    const band = wrapper.get('.astryx-lightbox__caption-band')
+    const band = wrapper.get('[data-current] .astryx-lightbox__caption-band')
     expect(band.attributes('data-empty')).toBe('')
     expect(band.find('.astryx-lightbox__caption-panel').exists()).toBe(false)
 
@@ -63,41 +63,41 @@ describe('lightbox gallery caption band', () => {
 
   it('shows no toggle when the caption fits in two lines', () => {
     const wrapper = mountGallery()
-    expect(wrapper.find('.astryx-lightbox__caption-toggle').exists()).toBe(false)
+    expect(wrapper.find('[data-current] .astryx-lightbox__caption-toggle').exists()).toBe(false)
   })
 
   it('ends a cut caption in "more", which opens the whole caption and turns into "less"', async () => {
     truncated.value = true
     const wrapper = mountGallery()
-    const toggle = wrapper.get('.astryx-lightbox__caption-toggle')
+    const toggle = wrapper.get('[data-current] .astryx-lightbox__caption-toggle')
     expect(toggle.text()).toBe('more')
     expect(toggle.attributes('aria-expanded')).toBe('false')
-    expect(toggle.attributes('aria-controls')).toBe(wrapper.get('.astryx-lightbox__caption').attributes('id'))
+    expect(toggle.attributes('aria-controls')).toBe(wrapper.get('[data-current] .astryx-lightbox__caption').attributes('id'))
 
     await toggle.trigger('click')
     expect(toggle.text()).toBe('less')
     expect(toggle.attributes('aria-expanded')).toBe('true')
-    expect(wrapper.get('.astryx-lightbox__caption-band').attributes('data-expanded')).toBe('true')
+    expect(wrapper.get('[data-current] .astryx-lightbox__caption-band').attributes('data-expanded')).toBe('true')
     expect(wrapper.emitted()).not.toHaveProperty('update:isOpen')
   })
 
   it('closes an open caption when paging', async () => {
     truncated.value = true
     const wrapper = mountGallery()
-    await wrapper.get('.astryx-lightbox__caption-toggle').trigger('click')
+    await wrapper.get('[data-current] .astryx-lightbox__caption-toggle').trigger('click')
     await wrapper.get('[aria-label="Next"]').trigger('click')
     await wrapper.get('[aria-label="Next"]').trigger('click')
-    expect(wrapper.get('.astryx-lightbox__caption-band').attributes('data-expanded')).toBeUndefined()
-    expect(wrapper.get('.astryx-lightbox__caption-toggle').text()).toBe('more')
+    expect(wrapper.get('[data-current] .astryx-lightbox__caption-band').attributes('data-expanded')).toBeUndefined()
+    expect(wrapper.get('[data-current] .astryx-lightbox__caption-toggle').text()).toBe('more')
   })
 
   it.each([
-    ['the photo', true, '.astryx-lightbox__frame'],
-    ['Close', false, '.astryx-lightbox__close'],
+    ['the photo', true, '[data-current] .astryx-lightbox__frame'],
+    ['Close', false, '[aria-label="Close"]'],
   ] as const)('moves focus to %s when paging from a focused toggle', async (_target, hasZoom, selector) => {
     truncated.value = true
     const wrapper = mountGallery(hasZoom)
-    const toggle = wrapper.get('.astryx-lightbox__caption-toggle').element as HTMLButtonElement
+    const toggle = wrapper.get('[data-current] .astryx-lightbox__caption-toggle').element as HTMLButtonElement
     toggle.focus()
     toggle.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }))
     await nextTick()
@@ -109,14 +109,14 @@ describe('lightbox gallery caption band', () => {
     const wrapper = mount(Lightbox, {
       props: { isOpen: true, media: media[0]! },
     })
-    expect(wrapper.find('.astryx-lightbox__caption-band .astryx-lightbox__caption-panel').exists()).toBe(true)
+    expect(wrapper.find('[data-current] .astryx-lightbox__caption-band .astryx-lightbox__caption-panel').exists()).toBe(true)
     expect(wrapper.get('dialog').attributes('data-caption-band')).toBe('true')
     expect(wrapper.find('.astryx-lightbox__counter').exists()).toBe(false)
-    const caption = wrapper.get('.astryx-lightbox__caption')
+    const caption = wrapper.get('[data-current] .astryx-lightbox__caption')
     expect(wrapper.get('dialog').attributes('aria-describedby')).toBe(caption.attributes('id'))
 
     const bare = mount(Lightbox, { props: { isOpen: true, media: media[1]! } })
-    expect(bare.find('.astryx-lightbox__caption-band').exists()).toBe(false)
+    expect(bare.find('[data-current] .astryx-lightbox__caption-band').exists()).toBe(false)
     expect(bare.get('dialog').attributes('data-caption-band')).toBeUndefined()
   })
 })
