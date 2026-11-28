@@ -48,7 +48,7 @@
     padding: var(--astryx-spacing-2, 8px) 0;
     border: 0;
     background: transparent;
-    color: var(--astryx-color-accent, light-dark(#262626, #ebebeb));
+    color: var(--astryx-color-text-accent, light-dark(#262626, #ebebeb));
     font-family: inherit;
     font-size: var(--astryx-text-body-size, 1rem);
     font-weight: var(--astryx-font-weight-medium, 500);
@@ -77,11 +77,16 @@
     font-size: var(--astryx-text-body-size, 1rem);
     line-height: var(--astryx-text-body-leading, 1.5);
     overflow-wrap: break-word;
-    word-break: break-word;
   }
 
+  /*
+   * 标签的单词比一列还长时在列内折断。值只在单词比一行还长时才折断：
+   * 用 overflow-wrap 而不是 word-break，值的最窄宽度仍是最长的单词，
+   * 一行里并排的金额和说明不会被挤到一个字符一行。
+   */
   .astryx-metadata-list__label,
   .astryx-metadata-list__item-label {
+    word-break: break-word;
     display: flex;
     align-items: center;
     gap: var(--astryx-spacing-2, 8px);

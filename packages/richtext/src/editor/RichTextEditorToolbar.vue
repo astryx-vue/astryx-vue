@@ -4,7 +4,7 @@ import type { VNodeChild } from 'vue'
 import type { RichTextIconName } from './icons.js'
 import type { RichTextEditorToolbarProps, RichTextEditorToolbarSlots } from './toolbarTypes.js'
 import type { BlockType, InlineFormat } from './useToolbarState.js'
-import { Button, Dialog, DialogHeader, Divider, HStack, IconButton, Layout, LayoutContent, LayoutFooter, Selector, TextInput, ToggleButton, Toolbar } from '@astryx-vue/core'
+import { Divider, HStack, IconButton, isRenderable, Selector, ToggleButton, Toolbar } from '@astryx-vue/core'
 import { INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERED_LIST_COMMAND } from '@lexical/list'
 import { $createHeadingNode, $createQuoteNode } from '@lexical/rich-text'
 import { $setBlocksType } from '@lexical/selection'
@@ -20,11 +20,12 @@ import {
   REDO_COMMAND,
   UNDO_COMMAND,
 } from 'lexical'
-import { computed, h, onBeforeUnmount, watchEffect } from 'vue'
+import { computed, h, onBeforeUnmount, shallowRef, useSlots, watchEffect } from 'vue'
 import { useLexicalEditor } from './context.js'
 import { useRichTextMessages } from './messages.js'
 import ToolbarIcon from './ToolbarIcon.vue'
-import { useLinkDialog } from './useLinkDialog.js'
+import ToolbarLinkPopover from './ToolbarLinkPopover.vue'
+import { useToolbarLink } from './useToolbarLink.js'
 import { INLINE_FORMATS, useToolbarState } from './useToolbarState.js'
 import '../../styles/richtext-toolbar.css'
 
@@ -37,6 +38,9 @@ const props = withDefaults(defineProps<RichTextEditorToolbarProps>(), {
   hasNewTabLinks: true,
 })
 defineSlots<RichTextEditorToolbarSlots>()
+const slots = useSlots()
+// 结尾插槽渲染出了内容才画分隔线和它：`v-if` 落空留下的注释、空字符串、`false` 都不算。
+const hasEnd = computed(() => isRenderable(slots.end?.() as VNodeChild))
 
 const editor = useLexicalEditor()
 const t = useRichTextMessages()
@@ -58,12 +62,16 @@ const inlineLabels = computed<Record<InlineFormat, string>>(() => ({
   code: t('toolbar.inlineCode'),
 }))
 
-const link = useLinkDialog({
+// 链接按钮外面的那层元素：按下去不会缩放，弹出层锚在它上面，Escape 和点外面的关闭由弹出层处理。
+const linkAnchor = shallowRef<HTMLElement | null>(null)
+
+const link = useToolbarLink({
   editor,
   state,
   t,
   hasNewTabLinks: () => props.hasNewTabLinks,
   promptForUrl: () => props.promptForUrl,
+  getAnchor: () => linkAnchor.value,
 })
 
 // Cmd/Ctrl+K 打开链接。用 Lexical 的 isExactShortcutMatch：只认「正好是主修饰键」，
@@ -78,7 +86,7 @@ watchEffect(() => {
           return false
         // 返回 true 并阻止默认，免得浏览器自己的 Cmd+K 也跟着触发。
         event.preventDefault()
-        link.toggle()
+        link.open()
         return true
       }, COMMAND_PRIORITY_NORMAL)
     : undefined
@@ -169,20 +177,20 @@ const blockOptions = computed<SelectorOption[]>(() => [
             <ToolbarIcon :name="format" />
           </template>
         </ToggleButton>
-        <ToggleButton
-          v-if="hasLink"
-          :label="t('toolbar.link')" :size="size" is-icon-only :tooltip="t('toolbar.link')"
-          :is-pressed="state.isLink.value || link.isOpen.value"
-          :is-disabled="!state.isEditable.value"
-          aria-haspopup="dialog" :aria-expanded="link.isOpen.value"
-          @mousedown.prevent
-          @pressed-change="link.toggle()"
-        >
-          <template #icon>
-            <ToolbarIcon name="link" />
-          </template>
-        </ToggleButton>
-        <template v-if="$slots.end">
+        <span v-if="hasLink" ref="linkAnchor" class="astryx-richtext-toolbar__link-anchor">
+          <ToggleButton
+            :label="t('toolbar.link')" :size="size" is-icon-only :tooltip="t('toolbar.link')"
+            :is-pressed="state.isLink.value || link.isOpen.value"
+            :is-disabled="!state.isEditable.value"
+            @mousedown.prevent
+            @pressed-change="link.toggle()"
+          >
+            <template #icon>
+              <ToolbarIcon name="link" />
+            </template>
+          </ToggleButton>
+        </span>
+        <template v-if="hasEnd">
           <Divider orientation="vertical" class="astryx-richtext-toolbar__divider" />
           <slot name="end" />
         </template>
@@ -190,33 +198,6 @@ const blockOptions = computed<SelectorOption[]>(() => [
     </template>
   </Toolbar>
 
-  <Dialog v-if="hasLink" :is-open="link.isOpen.value" purpose="form" :width="400" @open-change="link.setOpen">
-    <!--
-      表单只在打开时渲染：`TextInput` 的「挂载时聚焦」只在挂载那一刻生效，
-      内容一直留在页面里的话，第二次打开就不会再聚焦到网址输入框。
-    -->
-    <form v-if="link.isOpen.value" @submit.prevent="link.submit()">
-      <Layout height="auto">
-        <template #header>
-          <DialogHeader :title="link.isEditing.value ? t('link.editTitle') : t('link.insertTitle')" @open-change="link.setOpen" />
-        </template>
-        <LayoutContent>
-          <TextInput
-            v-model="link.url.value" :label="t('link.url')" width="100%" has-auto-focus status-variant="detached"
-            :status="link.error.value ? { type: 'error', message: link.error.value } : undefined"
-            @change="link.error.value = ''"
-          />
-        </LayoutContent>
-        <template #footer>
-          <LayoutFooter>
-            <HStack :gap="2" h-align="end">
-              <Button v-if="link.isEditing.value" :label="t('link.remove')" variant="destructive" @click="link.remove()" />
-              <Button :label="t('link.cancel')" variant="secondary" @click="link.setOpen(false)" />
-              <Button :label="link.isEditing.value ? t('link.update') : t('link.add')" variant="primary" type="submit" />
-            </HStack>
-          </LayoutFooter>
-        </template>
-      </Layout>
-    </form>
-  </Dialog>
+  <!-- 放在工具栏外面：工具栏是一个 Tab 停靠点，表单放进去会让里面的控件够不着 Tab，还被它抢走方向键。 -->
+  <ToolbarLinkPopover v-if="hasLink" :link="link" :anchor="linkAnchor" :size="size" />
 </template>

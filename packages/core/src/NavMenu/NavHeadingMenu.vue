@@ -2,8 +2,10 @@
 import type { NavHeadingMenuEmits, NavHeadingMenuProps } from './types.js'
 import { computed, inject, nextTick, onMounted, provide, ref, useAttrs, watch } from 'vue'
 import { useListFocus } from '../composables/useListFocus.js'
+import { useMenuPress } from '../composables/useMenuPress.js'
+import { useOverflow } from '../composables/useOverflow.js'
 import { useTypeahead } from '../composables/useTypeahead.js'
-import { navMenuCloseKey, navMenuFocusKey, navMenuKey } from './context.js'
+import { navMenuCloseKey, navMenuFocusKey, navMenuKey, navMenuLabelKey } from './context.js'
 import '../../styles/nav-menu.css'
 
 defineOptions({ name: 'AstryxNavHeadingMenu', inheritAttrs: false })
@@ -17,17 +19,31 @@ const emit = defineEmits<NavHeadingMenuEmits>()
 
 const closeMenu = inject(navMenuCloseKey, undefined)
 const injectedFocus = inject(navMenuFocusKey, ref(null))
+const injectedLabel = inject(navMenuLabelKey, ref(undefined))
 const size = computed(() => props.size)
 const requestedFocus = computed(() => props.focusRequest ?? injectedFocus.value)
 
+const ENABLED_ITEM_SELECTOR = '[role="menuitem"]:not([aria-disabled="true"])'
+
 const { listRef, handleKeyDown, focusItem } = useListFocus({
-  itemSelector: '[role="menuitem"]:not([aria-disabled="true"])',
+  itemSelector: ENABLED_ITEM_SELECTOR,
   onEscape: () => {
     closeMenu?.()
     emit('close')
   },
   orientation: 'vertical',
 })
+
+// 按住滑过各行，松开时执行松开处那一行，高亮跟着指针；鼠标在菜单外松开就关掉菜单。
+const menuPress = useMenuPress({
+  menuRef: listRef,
+  itemSelector: ENABLED_ITEM_SELECTOR,
+  onDismiss: () => {
+    closeMenu?.()
+    emit('close')
+  },
+})
+const hasOverflow = useOverflow(listRef, ref(true))
 
 function menuItems(): HTMLElement[] {
   const root = listRef.value
@@ -49,7 +65,7 @@ type KeyHandler = ((event: KeyboardEvent) => void) | Array<(event: KeyboardEvent
 const attrs = useAttrs()
 /** 调用者挂在菜单上的 keydown 监听，先于菜单自己的键盘处理执行。 */
 const forwardedAttrs = computed(() => Object.fromEntries(
-  Object.entries(attrs).filter(([key]) => key !== 'onKeydown' && key !== 'onKeydownCapture'),
+  Object.entries(attrs).filter(([key]) => key !== 'onKeydown' && key !== 'onKeydownCapture' && key !== 'onPointerdown'),
 ))
 /** 捕获阶段就已经被取消的按键。这些按键不是菜单项取消的，菜单要照这个取消结果不再导航。 */
 const cancelledBeforeItems = new WeakSet<Event>()
@@ -57,6 +73,13 @@ const cancelledBeforeItems = new WeakSet<Event>()
 function callHandlers(handler: KeyHandler, event: KeyboardEvent): void {
   for (const fn of Array.isArray(handler) ? handler : [handler])
     fn?.(event)
+}
+
+function onPointerDown(event: PointerEvent): void {
+  const handler = attrs.onPointerdown as ((event: PointerEvent) => void) | Array<(event: PointerEvent) => void> | undefined
+  for (const fn of Array.isArray(handler) ? handler : [handler])
+    fn?.(event)
+  menuPress.onPointerDown(event)
 }
 
 function onKeyDownCapture(event: KeyboardEvent): void {
@@ -129,8 +152,11 @@ provide(navMenuKey, {
     :class="`astryx-nav-menu--${size}`"
     role="menu"
     tabindex="-1"
-    :aria-label="label"
+    :aria-label="label ?? injectedLabel"
+    :data-overflow="hasOverflow || undefined"
     :style="minWidthStyle"
+    data-astryx-menu-press=""
+    @pointerdown="onPointerDown"
     @keydown.capture="onKeyDownCapture"
     @keydown="onKeyDown"
   >

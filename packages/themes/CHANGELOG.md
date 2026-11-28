@@ -1,5 +1,310 @@
 # @astryx-vue/themes
 
+## 0.42.2
+
+No changes in this release.
+
+## 0.42.1
+
+No changes in this release.
+
+## 0.42.0
+
+No changes in this release.
+
+## 0.41.1
+
+No changes in this release.
+
+## 0.41.0
+
+No changes in this release.
+
+## 0.40.0
+
+No changes in this release.
+
+## 0.39.0
+
+### Patch Changes
+
+- [#650](https://github.com/astryx-vue/astryx-vue/pull/650) [`80d3280`](https://github.com/astryx-vue/astryx-vue/commit/80d3280dbb0aafafce7a4c22a9797c3573661f13) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `mode="system"` 的 `Theme` 现在取外面页面的明暗：页面根的 `color-scheme`，没有就看 `<meta name="color-scheme">`，根上两种都写（`reset.css` 就是）时才跟随读者的系统设置。宿主把页面画成深色时，里面也是深色主题，`useTheme()` 和 `useSyntaxTheme()` 报告的明暗一致；被强制了浅色或深色的 `Theme` 包着时，里面的 `system` 回到跟随读者。主题自己的 `@dark`、`@light` 组件样式也跟着页面走（根 `Theme` 把它画的明暗写在 `<html data-astryx-scheme>`）。主题样式表不再给 `Theme` 的包装元素声明 `color-scheme`，只有页面根默认 `light dark`。没引入 `reset.css` 或主题样式表、也没写 `color-scheme` 的页面按浅色算。
+
+## 0.38.0
+
+No changes in this release.
+
+## 0.37.0
+
+No changes in this release.
+
+## 0.36.2
+
+No changes in this release.
+
+## 0.36.1
+
+No changes in this release.
+
+## 0.36.0
+
+No changes in this release.
+
+## 0.35.0
+
+No changes in this release.
+
+## 0.34.1
+
+No changes in this release.
+
+## 0.34.0
+
+### Patch Changes
+
+- [#637](https://github.com/astryx-vue/astryx-vue/pull/637) [`ec357d0`](https://github.com/astryx-vue/astryx-vue/commit/ec357d061efa91437a1ed9a852108164a92255f7) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 主题与进度条对齐上游：
+  - 主题字体随包安装：Butter、Chocolate、Gothic、Matcha、Stone、Y2K 不再从 Google Fonts 加载自己的字体，改用 `@fontsource` 包，页面从自己的源站取字体。
+  - Stone 的 accent 进度条填充改取蓝色阶，Butter 和 Stone 的状态填充与标记取主题的状态色和对应的 on 色，Neutral、Butter、Stone 暗色下的中性和禁用填充取更亮的一档，所有启用的进度条填充在轨道上都够 3:1；其余主题的状态填充走核心的状态文字角色。
+  - ProgressBar：状态填充读状态文字角色，neutral 和禁用的填充读次要文字角色（不再读在有些主题里就是暗色轨道本身的禁用文字色）；禁用的进度条轨道和填充降到半透明，强制颜色模式下用 GrayText 描一圈；填充里的标记（accent 除外）取表面色。
+  - Stone、Matcha、Neutral、Chocolate、Y2K 的分类色卡片与灰底卡片上，次要文字（Y2K 深色下还有主文字和链接）退到够 4.5:1 的色阶；Y2K 深色下分类色卡片用深色墨水。
+  - Chocolate 浅色下的分类文字色（青、绿、橙、粉、红、黄）取更深的色阶；Matcha 暗色下的灰底和浮层底色取主题的深灰中性色。
+  - Butter 和 Stone 输入框的状态描边和图标用色阶中段（Butter 浅色下达到 3:1），Stone 随审定后的调色板更新。
+  - Butter、Gothic、Y2K 的「自带填充文字色」规则只作用于斑马纹表格的行，普通表格的行保持周围的文字色。
+  - Gothic 的强调文字和图标跟着媒体表面的强调色走，浅色表面上不再停在近白色。
+  - `reset.css`：`html` 取 `--astryx-font-family-body`，页面里不在主题包装元素内的文字不再退回浏览器的衬线体；带 `list` 的输入框，下拉标记回到输入框中线。
+  - 按压反馈：没有按压时收到没带指针 id 的触屏抬起事件，不再抛出「读 null 的 live」的错误。
+
+## 0.33.4
+
+No changes in this release.
+
+## 0.33.3
+
+No changes in this release.
+
+## 0.33.2
+
+No changes in this release.
+
+## 0.33.1
+
+No changes in this release.
+
+## 0.33.0
+
+No changes in this release.
+
+## 0.32.1
+
+No changes in this release.
+
+## 0.32.0
+
+No changes in this release.
+
+## 0.31.0
+
+### Patch Changes
+
+- [#620](https://github.com/astryx-vue/astryx-vue/pull/620) [`a23cb50`](https://github.com/astryx-vue/astryx-vue/commit/a23cb50279f130df2b3ef4fb83cdaa5b9dfb3663) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 主题系统对齐上游：组件样式的每个样式键可写 `@light` 和 `@dark` 块，只在元素处于对应颜色模式时生效（主题强制的模式、system 主题下读者的偏好、最近一层 MediaTheme 表面）；主题里写的 `:active` 跟随触屏按压模型，手指下只在按压成立时才亮；值为 `undefined` 的组件样式、局部令牌和字体权重视为没写，根部 `localTokens: undefined` 会点名报错；用函数写的内边距（如 `clamp(...)`）按顶层空白拆开；抽屉可经 `drawer` 挂点设置内边距；`--radius-chat` 默认跟随容器圆角（各主题包不再钉死 28px，需要饱满圆角的主题自己写）；只写 `fallbacks` 没有 `family` 的字体角色不再生成字体列表；`Theme` 的 `theme` 传了不是 `defineTheme()` 产物的值时给出开发期提示并沿用外层主题；Chat 输入区的圆角和内边距改挂 `chat-composer` 目标；SyntaxTheme 缺 `theme` 时开发期点名报错；Neutral 暗色辅助文字色提亮到 #a8a8a8，压在半透明中性底色上也达到 4.5:1；样式过的 accent 链接悬停时保留容器或主题给的 `--link-hover-color`；提示卡片在量到底色前按主题给的底色选内容深浅；导出 `compactDefinition` 与 `DEFAULT_COMPACT_DEFINITION`（上游 [#6071](https://github.com/astryx-vue/astryx-vue/issues/6071) [#8301](https://github.com/astryx-vue/astryx-vue/issues/8301) [#9254](https://github.com/astryx-vue/astryx-vue/issues/9254) [#9761](https://github.com/astryx-vue/astryx-vue/issues/9761) [#10420](https://github.com/astryx-vue/astryx-vue/issues/10420) [#11347](https://github.com/astryx-vue/astryx-vue/issues/11347) [#11679](https://github.com/astryx-vue/astryx-vue/issues/11679) [#11759](https://github.com/astryx-vue/astryx-vue/issues/11759) [#11760](https://github.com/astryx-vue/astryx-vue/issues/11760) [#11786](https://github.com/astryx-vue/astryx-vue/issues/11786) [#11802](https://github.com/astryx-vue/astryx-vue/issues/11802) [#11973](https://github.com/astryx-vue/astryx-vue/issues/11973) [#12270](https://github.com/astryx-vue/astryx-vue/issues/12270) [#12794](https://github.com/astryx-vue/astryx-vue/issues/12794) [#11752](https://github.com/astryx-vue/astryx-vue/issues/11752)）
+
+## 0.30.1
+
+No changes in this release.
+
+## 0.30.0
+
+No changes in this release.
+
+## 0.29.0
+
+No changes in this release.
+
+## 0.28.1
+
+No changes in this release.
+
+## 0.28.0
+
+No changes in this release.
+
+## 0.27.0
+
+No changes in this release.
+
+## 0.26.1
+
+No changes in this release.
+
+## 0.26.0
+
+No changes in this release.
+
+## 0.25.0
+
+No changes in this release.
+
+## 0.24.0
+
+No changes in this release.
+
+## 0.23.0
+
+No changes in this release.
+
+## 0.22.0
+
+No changes in this release.
+
+## 0.21.0
+
+No changes in this release.
+
+## 0.20.1
+
+No changes in this release.
+
+## 0.20.0
+
+No changes in this release.
+
+## 0.19.1
+
+No changes in this release.
+
+## 0.19.0
+
+No changes in this release.
+
+## 0.18.0
+
+No changes in this release.
+
+## 0.17.0
+
+No changes in this release.
+
+## 0.16.5
+
+No changes in this release.
+
+## 0.16.4
+
+No changes in this release.
+
+## 0.16.3
+
+No changes in this release.
+
+## 0.16.2
+
+No changes in this release.
+
+## 0.16.1
+
+No changes in this release.
+
+## 0.16.0
+
+No changes in this release.
+
+## 0.15.0
+
+No changes in this release.
+
+## 0.14.0
+
+No changes in this release.
+
+## 0.13.1
+
+No changes in this release.
+
+## 0.13.0
+
+No changes in this release.
+
+## 0.12.1
+
+No changes in this release.
+
+## 0.12.0
+
+No changes in this release.
+
+## 0.11.0
+
+No changes in this release.
+
+## 0.10.2
+
+No changes in this release.
+
+## 0.10.1
+
+No changes in this release.
+
+## 0.10.0
+
+### Minor Changes
+
+- [#529](https://github.com/astryx-vue/astryx-vue/pull/529) [`eaf8636`](https://github.com/astryx-vue/astryx-vue/commit/eaf8636c9905a09460b8e7c15f1b84710a3862ae) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 删掉各主题里只有一行占位注释的 `<主题>/field.css`。主题入口文件（如 `neutral.css`）不受影响；如果单独引入过 `@astryx-vue/themes/<主题>/field.css`，删掉这行引入即可，它本来就不含任何样式。
+
+## 0.9.2
+
+No changes in this release.
+
+## 0.9.1
+
+No changes in this release.
+
+## 0.9.0
+
+No changes in this release.
+
+## 0.8.0
+
+No changes in this release.
+
+## 0.7.29
+
+### Patch Changes
+
+- [#517](https://github.com/astryx-vue/astryx-vue/pull/517) [`3d1eb56`](https://github.com/astryx-vue/astryx-vue/commit/3d1eb56dd9c087bad55a31afffa709929b896dd0) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 状态色按所在的底分成几种角色，组件各取其一：
+  
+  - `defineTheme` 做的主题只写了状态底色（或改了表面色、`--color-on-dark` / `--color-on-light`）时，会按主题自己的颜色算出没写的 `--color-on-<状态>`、`--color-text-<状态>`、`--color-on-<状态>-muted`，图标和边框角色跟着文字色走；Badge、StatusDot、输入框、图标等组件变量也在这个主题里跟着换。算出来的变量名记在 `theme.derivedTokens`。新增 `STATUS_COLOR_DEFAULTS`，和默认主题 CSS 里的状态色一致。
+  - `Icon` 新增 `color="info"`。各主题里 `Icon` 的 success / warning / error 颜色、Stepper 的状态图标改用图标角色；默认主题下成功图标从 `#00490B` 变为 `#2F7D33`。
+  - 输入框的状态边框改用边框角色，表单状态提示的文字改用浅底内容色；默认主题下浅色模式的警告边框从 `#FFCE2F` 变为 `[#836700](https://github.com/astryx-vue/astryx-vue/issues/836700)`。
+  - 默认主题的 StatusDot 用实心状态底色，图标用对应的 on 角色；头像状态点的图标也用 on 角色。
+  - 聊天输入框状态条的文字和图标改用浅底内容色；菜单里的危险操作、TextArea 和富文本编辑器超出字数的计数、未读分隔线标签、lab 里 Stat、CircularProgress、LogStream、SVGIcon 的状态色改用文字或图标角色。
+  - 强制配色模式下，Badge、StatusDot、进度条填充、步骤条数字徽标、聊天输入框状态条、列表滑动的危险操作都补一圈边，形状不会消失。
+  
+  想保留某个组件原来的颜色，在主题里写上对应的角色即可，比如把 `--color-icon-success` 设成原来的值。
+
+## 0.7.28
+
+No changes in this release.
+
+## 0.7.27
+
+No changes in this release.
+
+## 0.7.26
+
+No changes in this release.
+
+## 0.7.25
+
+No changes in this release.
+
+## 0.7.24
+
+No changes in this release.
+
+## 0.7.23
+
+No changes in this release.
+
 ## 0.7.22
 
 ### Patch Changes

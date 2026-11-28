@@ -199,10 +199,10 @@ function hashId(id: string): number {
 
 function uptimeStatus(value: number): { color: string, status: string } {
   if (value >= 99.95)
-    return { color: 'var(--astryx-color-success)', status: 'Operational' }
+    return { color: 'var(--astryx-color-text-success)', status: 'Operational' }
   if (value >= 99)
-    return { color: 'var(--astryx-color-warning)', status: 'Degraded' }
-  return { color: 'var(--astryx-color-error)', status: 'Outage' }
+    return { color: 'var(--astryx-color-text-warning)', status: 'Degraded' }
+  return { color: 'var(--astryx-color-text-error)', status: 'Outage' }
 }
 
 /** 一行文字（平均值，悬停时换成当天读数）加一条 30 根的日柱。 */

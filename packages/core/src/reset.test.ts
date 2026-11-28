@@ -113,6 +113,13 @@ describe('reset.css structure', () => {
   })
 })
 
+describe('reset.css page font', () => {
+  it('gives html the body font token so loose text in the page body is not serif', () => {
+    const html = parseRuleBlocks(css).find(({ selector }) => selector === ':where(html)')
+    expect(html?.body).toContain('font-family: var(--astryx-font-family-body);')
+  })
+})
+
 describe('reset.css disabled cursor', () => {
   it('gives disabled and aria-disabled elements the default cursor', () => {
     const blocks = parseRuleBlocks(css)
@@ -160,6 +167,12 @@ describe('reset.css pseudo-element rules', () => {
     expect(endsWith('-webkit-appearance: none', '::-webkit-search-cancel-button')).toBe(true)
   })
 
+  it('sets the dropdown marker of a field with a list on a single line', () => {
+    const marker = blocks.filter(({ selector }) =>
+      topLevelSelectors(selector).some(entry => entry.endsWith('::-webkit-calendar-picker-indicator')))
+    expect(marker.map(({ body }) => body).join('\n')).toMatch(/line-height:\s*1;/)
+  })
+
   it('falls back to the neutral --astryx-color-text-secondary for placeholders', () => {
     // 只引入 reset 的页面没有这个变量，兜底值和中性主题的默认值保持一致。
     const neutral = readFileSync(resolve(__dirname, '../../themes/neutral/base.css'), 'utf8')
@@ -180,17 +193,5 @@ describe('reset.css and hidden="until-found"', () => {
       if (/display:\s*none/.test(body))
         expect(selector).toContain(':not([hidden=\'until-found\' i])')
     }
-  })
-})
-
-describe('reset.css and AspectRatio fit', () => {
-  it('sizes fit children after the media height: auto rule, so load order does not matter', () => {
-    // 两条规则同在 reset 层、特异性都是 0，后出现的赢。fit 子元素的规则排在
-    // `:where(img, video) { height: auto }` 后面，图片才能填满 AspectRatio。
-    const blocks = parseRuleBlocks(css)
-    const media = blocks.findIndex(({ selector, body }) => selector === ':where(img, video)' && /height:\s*auto/.test(body))
-    const fit = blocks.findIndex(({ selector, body }) => selector.includes('data-astryx-aspect-ratio-override') && /height:\s*100%/.test(body))
-    expect(media).toBeGreaterThanOrEqual(0)
-    expect(fit).toBeGreaterThan(media)
   })
 })

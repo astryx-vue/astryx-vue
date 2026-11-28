@@ -1,9 +1,13 @@
-import type { VNodeChild } from 'vue'
-import { Icon, IconButton, useAstryxMessages, useCopyToClipboard } from '@astryx-vue/core'
+import type { CodeLanguage } from '@astryx-vue/core'
+import type { PropType, VNodeChild } from 'vue'
+import type { CanvasHolder } from './codeHeaderSize.js'
+import { codeBlockMessages, Icon, IconButton, observeResize, useComponentMessages, useCopyToClipboard } from '@astryx-vue/core'
 import { $isCodeNode } from '@lexical/code'
 import { $getNodeByKey, $getRoot } from 'lexical'
-import { defineComponent, h } from 'vue'
+import { defineComponent, h, onBeforeUnmount, onMounted, onUpdated } from 'vue'
 import { useLexicalEditor } from '../context.js'
+import { clearHeaderSize, writeHeaderSize } from './codeHeaderSize.js'
+import { listedLanguage } from './codeLanguages.js'
 import { useOverlayPlacements } from './useOverlayPlacements.js'
 
 /** 一个代码块的标题栏要画在哪里：相对编辑区容器的像素坐标。 */
@@ -39,11 +43,60 @@ function positionStyle(p: HeaderPlacement): Record<string, string> {
 
 const CodeBlockHeader = defineComponent({
   name: 'AstryxRichTextCodeBlockHeader',
-  props: { placement: { type: Object as () => HeaderPlacement, required: true } },
+  props: {
+    placement: { type: Object as () => HeaderPlacement, required: true },
+    /** 围栏匹配到列出的语言值时，标题栏显示这个值的名字。 */
+    label: { type: String, default: undefined },
+  },
   setup(props) {
     const editor = useLexicalEditor()
-    const messages = useAstryxMessages()
-    const { copy, isCopied } = useCopyToClipboard({ announce: messages.value.codeBlock.copied })
+    const messages = useComponentMessages({ codeBlock: codeBlockMessages })
+    const { copy, isCopied, isFailed } = useCopyToClipboard({
+      announce: messages.value.codeBlock.copied,
+      announceFailure: () => messages.value.codeBlock.copyFailed,
+    })
+
+    // 画出来的标题栏和它的标签：代码块按它的高度留位置、按它的宽度定最小宽度。
+    // 长标签会折行，标题栏随之变高，所以盯着标题栏自己的尺寸，变了就重新量一次。
+    const canvas: CanvasHolder = { current: undefined }
+    let header: HTMLElement | null = null
+    let title: HTMLElement | null = null
+    let observed: HTMLElement | null = null
+    let unobserve: (() => void) | null = null
+    const setHeader = (element: unknown): void => {
+      header = element instanceof HTMLElement ? element : null
+    }
+    const setTitle = (element: unknown): void => {
+      title = element instanceof HTMLElement ? element : null
+    }
+
+    function block(): HTMLElement | null {
+      return editor.getElementByKey(props.placement.key)
+    }
+
+    function sync(): void {
+      const element = block()
+      if (header !== null && title !== null && element !== null)
+        writeHeaderSize(element, { header, title }, canvas)
+    }
+
+    function track(): void {
+      if (header !== observed) {
+        unobserve?.()
+        unobserve = header === null ? null : observeResize(header, sync)
+        if (header === null)
+          clearHeaderSize(block())
+        observed = header
+      }
+      sync()
+    }
+
+    onMounted(track)
+    onUpdated(track)
+    onBeforeUnmount(() => {
+      unobserve?.()
+      clearHeaderSize(block())
+    })
 
     function copyCode(): void {
       const code = editor.getEditorState().read(() => $getNodeByKey(props.placement.key)?.getTextContent() ?? '')
@@ -52,22 +105,24 @@ const CodeBlockHeader = defineComponent({
 
     return (): VNodeChild => {
       const { placement } = props
-      const label = isCopied.value ? messages.value.codeBlock.copied : messages.value.codeBlock.copyCode
+      const label = isFailed.value
+        ? messages.value.codeBlock.copyFailed
+        : isCopied.value ? messages.value.codeBlock.copied : messages.value.codeBlock.copyCode
       const button = h(IconButton, {
         label,
         variant: 'ghost',
         size: 'sm',
-        tooltip: messages.value.codeBlock.copyCode,
+        tooltip: isFailed.value ? messages.value.codeBlock.copyFailed : messages.value.codeBlock.copyCode,
         class: 'astryx-richtext-code-header__copy',
         onClick: copyCode,
-      }, { default: () => h(Icon, { icon: isCopied.value ? 'check' : 'copy', size: 'sm', color: 'inherit' }) })
+      }, { default: () => h(Icon, { icon: isFailed.value ? 'close' : isCopied.value ? 'check' : 'copy', size: 'sm', color: 'inherit' }) })
 
       // 没写语言：只在右上角放一个复制按钮；写了语言：左边是语言名，右边是复制按钮。
       if (placement.language === null) {
         return h('div', { 'class': 'astryx-richtext-code-header astryx-richtext-code-header--corner', 'data-richtext-code-header': '', 'style': positionStyle(placement) }, [button])
       }
-      return h('div', { 'class': 'astryx-richtext-code-header', 'data-richtext-code-header': '', 'style': positionStyle(placement) }, [
-        h('span', { class: 'astryx-richtext-code-header__title' }, placement.language),
+      return h('div', { 'ref': setHeader, 'class': 'astryx-richtext-code-header', 'data-richtext-code-header': '', 'style': positionStyle(placement) }, [
+        h('span', { ref: setTitle, class: 'astryx-richtext-code-header__title' }, props.label ?? placement.language),
         button,
       ])
     }
@@ -80,7 +135,11 @@ const CodeBlockHeader = defineComponent({
  */
 export const CodeBlockHeaderPlugin = defineComponent({
   name: 'AstryxRichTextCodeBlockHeaderPlugin',
-  setup() {
+  props: {
+    /** 围栏可以写的语言值；匹配到的围栏在标题栏显示这个值的名字。 */
+    codeLanguages: { type: Array as PropType<ReadonlyArray<CodeLanguage>>, default: undefined },
+  },
+  setup(props) {
     const editor = useLexicalEditor()
     const placements = useOverlayPlacements<HeaderPlacement>(editor, (origin) => {
       return $getRoot().getChildren().filter($isCodeNode).flatMap((node): HeaderPlacement[] => {
@@ -98,6 +157,10 @@ export const CodeBlockHeaderPlugin = defineComponent({
         }]
       })
     }, samePlacements)
-    return () => placements.value.map(p => h(CodeBlockHeader, { key: p.key, placement: p }))
+    return () => placements.value.map(p => h(CodeBlockHeader, {
+      key: p.key,
+      placement: p,
+      label: p.language == null ? undefined : listedLanguage(props.codeLanguages, p.language)?.name,
+    }))
   },
 })

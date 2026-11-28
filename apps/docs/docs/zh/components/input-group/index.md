@@ -50,6 +50,7 @@ const domain = ref('')
 | <Badge variant="success">推荐</Badge> | 用前置内容展示单位、协议前缀等固定文本。 |
 | <Badge variant="success">推荐</Badge> | 用后置内容放置清除按钮、提交按钮等操作。 |
 | <Badge variant="success">推荐</Badge> | 保持前后缀内容简洁，避免占用过多空间。 |
+| <Badge variant="success">推荐</Badge> | `InputGroupText` 里的纯文字在右到左页面上保持书写顺序，`https://`、`.com` 照原样显示。富内容混排方向时，请在自己的内容上标明方向，例如用 `dir` 或 `<bdi>`。 |
 | <Badge variant="error">避免</Badge> | 同时使用过多前后缀元素，会让输入框显得拥挤。 |
 
 ## 示例

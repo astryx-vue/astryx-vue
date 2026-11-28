@@ -56,4 +56,4 @@ import {
 
 页眉上的区间标题固定是 2 级标题。`headingLevel` 只影响视图内部的小标题，默认 3。
 
-按钮和浮层里的固定文案与上游一致，是英文，例如 Today、All day、Loading events。日期本身跟随当前 locale，并且按公历排。这里没有上游那套非公历历法。
+按钮和浮层里的固定文案与上游一致，是英文，例如 Today、All day、Loading events。日期本身跟随当前 locale，并且按 provider 的 `calendar` 写（见[历法](/guide/calendars)）；格子仍按公历月和公历周排。

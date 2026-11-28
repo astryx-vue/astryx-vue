@@ -1,17 +1,19 @@
 <script setup lang="ts">
 import type { LexicalEditor } from 'lexical'
+import type { VNodeChild } from 'vue'
 import type { RichTextEditorEmits, RichTextEditorExposed, RichTextEditorProps, RichTextEditorSlots } from './types.js'
-import { Field, useAstryxMessages, VisuallyHidden } from '@astryx-vue/core'
+import { Field, isRenderable, textAreaMessages, useComponentMessages, VisuallyHidden } from '@astryx-vue/core'
 import { $generateHtmlFromNodes } from '@lexical/html'
 import { $getRoot, $isParagraphNode } from 'lexical'
-import { computed, onBeforeUnmount, onMounted, provide, shallowRef, useAttrs, useId, useTemplateRef, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, provide, shallowRef, useAttrs, useId, useSlots, useTemplateRef, watch } from 'vue'
 import { $exportMarkdownKeepingSource } from '../markdownSource.js'
 import { DEFAULT_TRANSFORMERS } from '../markdownTable.js'
 import { editorKey } from './context.js'
 import { createRichTextEditor } from './createEditor.js'
 import { DecoratorTeleports } from './DecoratorTeleports.js'
 import { useRichTextMessages } from './messages.js'
-import { CodeBlockHeaderPlugin, CodeSyntaxPlugin, MarkdownExtensionsPlugin, TaskCheckboxPlugin } from './plugins/index.js'
+import { registerDisabledLinkGuard } from './plugins/disabledLinkGuard.js'
+import { BlockDirectionPlugin, CodeBlockHeaderPlugin, CodeSyntaxPlugin, MarkdownExtensionsPlugin, TaskCheckboxPlugin } from './plugins/index.js'
 import '../../styles/richtext-document.css'
 import '../../styles/richtext-editor.css'
 
@@ -27,8 +29,9 @@ const props = withDefaults(defineProps<RichTextEditorProps>(), {
 const emit = defineEmits<RichTextEditorEmits>()
 defineSlots<RichTextEditorSlots>()
 const attrs = useAttrs()
+const slots = useSlots()
 const t = useRichTextMessages()
-const coreMessages = useAstryxMessages()
+const coreMessages = useComponentMessages({ textArea: textAreaMessages })
 
 /** 清空时用的状态：根下面一个空段落。用 `setEditorState` 重置，也会触发 `change`。 */
 const EMPTY_EDITOR_STATE = JSON.stringify({
@@ -55,6 +58,9 @@ const surface = useTemplateRef<HTMLDivElement>('surface')
 const editor = shallowRef<LexicalEditor>()
 const isEmpty = shallowRef(true)
 const charCount = shallowRef(0)
+
+// 工具栏插槽渲染出了内容才算有工具栏：`v-if` 落空留下的注释、空字符串、`false` 都不算。
+const hasToolbar = computed(() => isRenderable(slots.toolbar?.() as VNodeChild))
 
 // 编辑器的外框属性：只读和禁用要分开表达。只读仍可聚焦、读作只读；禁用不在 Tab 顺序里、读作禁用。
 const editable = computed(() => !props.isReadOnly && !props.isDisabled)
@@ -170,6 +176,7 @@ const instance = createRichTextEditor({
 editor.value = instance
 
 let stopListening: (() => void) | undefined
+let releaseLinkGuard: (() => void) | undefined
 onMounted(() => {
   const root = surface.value
   if (root === null)
@@ -193,10 +200,17 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  releaseLinkGuard?.()
   stopListening?.()
   instance.setRootElement(null)
   instance.dispose()
 })
+
+// 禁用期间，编辑器里的链接不进 Tab 顺序，点击和回车也不跳转。
+watch(() => props.isDisabled, (disabled) => {
+  releaseLinkGuard?.()
+  releaseLinkGuard = disabled ? registerDisabledLinkGuard(instance) : undefined
+}, { immediate: true })
 
 // 只读和禁用改变后要立刻生效；挂载时的值已经在建编辑器时用过了。
 watch(editable, (next) => {
@@ -254,7 +268,7 @@ const restAttrs = computed(() => {
       <div
         class="astryx-richtext-editor"
         :data-size="size" :data-status="status?.type" :data-disabled="isDisabled || undefined" :data-readonly="isReadOnly || undefined"
-        :data-with-toolbar="$slots.toolbar ? '' : undefined"
+        :data-with-toolbar="hasToolbar ? '' : undefined"
       >
         <slot name="toolbar" />
         <div class="astryx-richtext-editor__body">
@@ -278,8 +292,9 @@ const restAttrs = computed(() => {
               所以要和编辑区同级放在这个定位元素里，不能放到外面去。
             -->
             <TaskCheckboxPlugin :is-read-only="!editable" />
-            <CodeBlockHeaderPlugin />
-            <CodeSyntaxPlugin />
+            <CodeBlockHeaderPlugin :code-languages="codeLanguages" />
+            <CodeSyntaxPlugin :code-languages="codeLanguages" />
+            <BlockDirectionPlugin />
             <MarkdownExtensionsPlugin v-if="markdownExtensions && markdownExtensions.length > 0" :extensions="markdownExtensions" :transformers="transformers" />
           </div>
         </div>

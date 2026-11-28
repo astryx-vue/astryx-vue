@@ -23,7 +23,13 @@ footer: false
         <td><code>defaultOptionality</code></td>
         <td><code>'optional' | 'required'</code></td>
         <td>-</td>
-        <td>没有自己写 <code>isOptional</code> 或 <code>isRequired</code> 的字段用这个默认值。它改标记和 <code>aria-required</code>，不写原生 <code>required</code>。两个都写时，选填优先。</td>
+        <td>没有自己写 <code>isOptional</code> 或 <code>isRequired</code> 的字段用这个默认值。它改标记和 <code>aria-required</code>，不写原生 <code>required</code>。两个都写时，选填优先。复选框和开关是例外：没勾的复选框、关着的开关本身就是一个答案，所以不从默认值得到必填状态，只由它们自己的 <code>isRequired</code> 决定。</td>
+      </tr>
+      <tr>
+        <td><code>defaultEntryErrorBehavior</code></td>
+        <td><code>'complete' | 'blur-or-enter'</code></td>
+        <td>-</td>
+        <td>里面日期和时间字段（DateInput、DateTimeInput、TimeInput）默认的 <code>entryErrorBehavior</code>。NumberInput 也接受这个属性，但不读默认值：一个数只有回车或失焦才算打完。字段自己设了以字段为准，都没设时是 <code>complete</code>。</td>
       </tr>
     </tbody>
   </table>

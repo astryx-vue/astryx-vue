@@ -39,6 +39,7 @@ import { Tooltip } from '@astryx-vue/core/Tooltip'
 | --- | --- |
 | <Badge variant="success">Do</Badge> | Keep tooltip content concise: aim for under 140 characters of plain text. |
 | <Badge variant="success">Do</Badge> | Add a tooltip to icon-only buttons and controls that lack a visible label. |
+| <Badge variant="success">Do</Badge> | Expect a tooltip taller than the room above and below its trigger to open beside it, or to scroll inside a box capped to the roomier side, and never to cover the trigger. |
 | <Badge variant="error">Don't</Badge> | Place interactive elements like links or buttons inside a tooltip; use HoverCard or Popover instead. |
 | <Badge variant="error">Don't</Badge> | Use tooltips for essential information that users must see to complete a task. |
 
@@ -58,5 +59,7 @@ The tooltip bubble is a separate layer, and the component links it to the trigge
 - The trigger receives `aria-describedby` pointing to the bubble's `id`.
 
 The hint appears on mouse hover or keyboard focus. While it is showing, pressing Escape closes an uncontrolled tooltip; a controlled tooltip instead emits `openChange(false)`, and the parent decides whether to close it.
+
+A press inside the open bubble stays in the bubble: a clickable card, list row, or tree row around the trigger does not activate. Page-level listeners still receive the press.
 
 Because the hint appears only on hover or focus and disappears again, users can easily miss it, and touch devices do not always trigger it. Keep essential information that users must see to complete a task out of tooltips.

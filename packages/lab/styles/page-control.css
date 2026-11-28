@@ -1,0 +1,68 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  /*
+   * 尺寸、点的位置和不透明度由 PageControl.vue 按 UIPageControl 实测值写在行内。
+   * `--_page-control-rest` 和 `--_page-control-scale` 是静止时的偏移和尺寸，动效引擎接手后
+   * 它写的行内 translate、scale 优先。
+   */
+  .astryx-page-control {
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    vertical-align: middle;
+    cursor: default;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    outline-style: none;
+    outline-width: var(--astryx-focus-outline-width);
+    outline-color: var(--astryx-focus-outline-color);
+    outline-offset: var(--astryx-focus-outline-offset);
+  }
+
+  .astryx-page-control:focus-visible {
+    outline-style: var(--astryx-focus-outline-style);
+  }
+
+  /* 细指针下整排都画出来，由控件裁掉。 */
+  .astryx-page-control:not([data-touch]) {
+    overflow: hidden;
+  }
+
+  /* 按住的垫片没有自己的元素，画在根元素的 ::before 上；::after 留给触屏热区。 */
+  .astryx-page-control[data-touch]::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background-color: var(--astryx-color-overlay-pressed);
+    pointer-events: none;
+    opacity: 0;
+    transition: var(--_page-control-platter-transition, none);
+  }
+
+  .astryx-page-control[data-touch][data-interacting]::before {
+    opacity: 1;
+  }
+
+  .astryx-page-control__strip {
+    position: absolute;
+    inset-block: 0;
+    width: 0;
+    pointer-events: none;
+    translate: calc(-1 * var(--_page-control-rest, 0px)) 0;
+  }
+
+  .astryx-page-control__strip:is([dir='rtl'] *) {
+    translate: var(--_page-control-rest, 0px) 0;
+  }
+
+  .astryx-page-control__indicator {
+    position: absolute;
+    border-radius: 50%;
+    background-color: var(--astryx-color-text-primary);
+    scale: var(--_page-control-scale, 1);
+  }
+}

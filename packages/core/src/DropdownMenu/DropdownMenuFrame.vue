@@ -32,6 +32,7 @@ onMounted(() => {
     height="hug"
     :label="frame.sheetLabel"
     :padding="2"
+    @motion-complete="$event === 'exiting' && frame.onSheetSettled()"
   >
     <LayerContentBoundary>
       <DropdownMenuBranch :value="frame.menuContext">

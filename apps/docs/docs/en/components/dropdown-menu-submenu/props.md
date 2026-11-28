@@ -13,9 +13,11 @@ footer: false
 <tr><td><code>description</code></td><td><code>string | number</code></td><td>—</td><td>Secondary line under the label.</td></tr>
 <tr><td><code>icon</code></td><td><code>string | Component</code></td><td>—</td><td>Icon before the label.</td></tr>
 <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>The row cannot open the next level.</td></tr>
-<tr><td><code>hasSpinner</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Replaces the caret with a spinner while the next level is loading. The spinner is decorative and does not block opening.</td></tr>
+<tr><td><code>hasSpinner</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Replaces the caret with a spinner while the next level is loading. The spinner is decorative and does not block opening; once the menu shows, the row announces the loading state once.</td></tr>
 <tr><td><code>menuWidth</code></td><td><code>number | string</code></td><td>—</td><td>Width of the flyout. A number is pixels, used as a minimum and capped to the viewport. An intrinsic keyword becomes the preferred width. Unused while drilled in.</td></tr>
 <tr><td><code>presentation</code></td><td><code>'flyout' | 'drill-in' | 'adaptive'</code></td><td><code>'adaptive'</code></td><td>How the next level appears: beside the row, in place of the current rows, or chosen when the menu opens from whether the surface is a compact touch screen.</td></tr>
+<tr><td><code>delay</code></td><td><code>number</code></td><td><code>150</code></td><td>How long a hovering pointer waits before the flyout opens, in milliseconds. Keyboard focus and touch never wait.</td></tr>
+<tr><td><code>hideDelay</code></td><td><code>number</code></td><td><code>200</code></td><td>How long the flyout stays open after the pointer leaves, in milliseconds.</td></tr>
 </tbody></table>
 </div>
 

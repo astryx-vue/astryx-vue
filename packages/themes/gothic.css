@@ -21,7 +21,6 @@
 @import './gothic/divider.css';
 @import './gothic/dropdown-menu.css';
 @import './gothic/empty-state.css';
-@import './gothic/field.css';
 @import './gothic/grid.css';
 @import './gothic/heading.css';
 @import './gothic/hover-card.css';
@@ -30,6 +29,7 @@
 @import './gothic/kbd.css';
 @import './gothic/link.css';
 @import './gothic/list.css';
+@import './gothic/media-accent.css';
 @import './gothic/mobile-nav.css';
 @import './gothic/more-menu.css';
 @import './gothic/nav-menu.css';

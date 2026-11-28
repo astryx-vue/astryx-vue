@@ -16,9 +16,10 @@ footer: false
 <tr><td><code>debounceMs</code></td><td><code>number</code></td><td><code>150</code></td><td>异步搜索的等待时间。同步数据源不等待。</td></tr>
 <tr><td><code>hasHistory</code></td><td><code>boolean</code></td><td><code>true</code></td><td>光标在草稿首尾时按方向键，翻出之前提交过的内容。</td></tr>
 <tr><td><code>label</code></td><td><code>string</code></td><td>本地化的“Message input”</td><td>编辑区给读屏用的名字。</td></tr>
-<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td>跟随外层输入区</td><td>不能编辑。不传就跟着外层输入区的禁用状态。</td></tr>
+<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td>跟随外层输入区</td><td>不能编辑。不传就跟着外层输入区的禁用状态。编辑区仍然可以聚焦：禁用后它还在 Tab 顺序里、焦点不会丢；打字、粘贴、拖入文件、命令式句柄和调用方的事件监听（聚焦和失焦除外）都不再起作用。</td></tr>
 <tr><td><code>pasteAsToken</code></td><td><code>{ onPaste } | false</code></td><td>内置的长度阈值</td><td>粘贴的长文本会变成一个标签。传 <code>useChatPasteAsToken</code> 的返回值可以改阈值，传 <code>false</code> 就原样插入文字。</td></tr>
 <tr><td><code>pasteAction</code></td><td><code>(event, text) =&gt; boolean | void</code></td><td>—</td><td>纯文本粘贴时最先拿到机会。返回 <code>true</code> 表示你处理了，输入框不再自己插入。</td></tr>
+<tr><td><code>enterKeyHint</code></td><td><code>'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send'</code></td><td><code>'send'</code></td><td>触屏键盘上回车键写的字（原生 <code>enterkeyhint</code>）。回车会发送消息，所以 iOS 显示“发送”键。如果你的 <code>keydown</code> 监听让触屏键盘上的回车插入换行，就传 <code>'enter'</code>。这个提示只改按键上的字，不管传什么，回车都会提交。</td></tr>
 </tbody></table>
 </div>
 

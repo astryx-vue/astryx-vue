@@ -25,7 +25,7 @@ footer: false
         <td><code>items</code></td>
         <td><code>DropdownMenuOption[]</code></td>
         <td>-</td>
-        <td>数据式菜单内容。每条可以是一条动作、一条分隔线、一个分组、一条勾选行（<code>type: 'checkbox'</code>，用 <code>checked</code> 和 <code>onChange</code>），或一组单选（<code>type: 'radio'</code>，用 <code>value</code>、<code>label</code>、<code>items</code> 和 <code>onChange</code>）。与默认插槽互斥，同时给出时以 <code>items</code> 为准。</td>
+        <td>数据式菜单内容。每条可以是一条动作、一条分隔线、一个分组、一条勾选行（<code>type: 'checkbox'</code>，用 <code>checked</code> 和 <code>onChange</code>），或一组单选（<code>type: 'radio'</code>，用 <code>value</code>、<code>label</code>、<code>items</code> 和 <code>onChange</code>）。动作条目自己带 <code>items</code> 就成为子菜单，放在顶层或分组里都一样。与默认插槽互斥，同时给出时以 <code>items</code> 为准。</td>
       </tr>
       <tr>
         <td><code>isMenuOpen</code></td>
@@ -44,6 +44,12 @@ footer: false
         <td><code>number</code></td>
         <td>-</td>
         <td>菜单的最大高度，单位为像素，用于必须放下所有行的菜单。它会抬高默认的 300px 上限，但视口仍然限住实际高度。</td>
+      </tr>
+      <tr>
+        <td><code>presentation</code></td>
+        <td><code>'popover' | 'bottom-sheet' | 'adaptive'</code></td>
+        <td>锚定浮层</td>
+        <td>不写时是锚定在触发器旁的浮层，并且打开菜单的那根手指要挪动一小段距离才开始挑行，和 iOS 一样。写 <code>popover</code> 则在所有设备上都按普通指针的规则：打开的那次按压按落定规则处理。<code>popover</code> 是锚定在触发器旁的浮层。<code>bottom-sheet</code> 在任何屏幕上都用底部弹层。<code>adaptive</code> 在紧凑触屏上用底部弹层：主指针是粗略指针（手指），并且视口宽度小于主题的 <code>md</code> 断点（默认 768px）或高度小于 500px。打开那一刻定下用哪种，开着的时候转屏也不换，退场播完才重新判断。</td>
       </tr>
       <tr>
         <td><code>placement</code></td>
@@ -97,7 +103,7 @@ footer: false
         <td><code>isDisabled</code></td>
         <td><code>boolean</code></td>
         <td><code>false</code></td>
-        <td>禁用这一行。禁用的行会被方向键和字母跳转跳过，并且不响应点击。</td>
+        <td>禁用这一行。禁用的行仍留在无障碍树里，宣告为禁用。方向键和字母跳转能走到它，键盘用户才找得到；指针悬停不会点亮它，也不响应点击。</td>
       </tr>
       <tr>
         <td><code>variant</code></td>
@@ -195,7 +201,7 @@ footer: false
         <td><code>isDisabled</code></td>
         <td><code>boolean</code></td>
         <td><code>false</code></td>
-        <td>禁用这一行。行仍留在无障碍树里，方向键会跳过它，点击不会切换。</td>
+        <td>禁用这一行。行仍留在无障碍树里，方向键和字母跳转能走到它，指针悬停不会点亮它，点击不会切换。</td>
       </tr>
       <tr>
         <td><code>hasCloseOnSelect</code></td>

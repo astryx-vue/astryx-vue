@@ -39,6 +39,7 @@ import { Tooltip } from '@astryx-vue/core/Tooltip'
 | --- | --- |
 | <Badge variant="success">推荐</Badge> | 保持提示框内容简洁，纯文本建议少于 140 个字符。 |
 | <Badge variant="success">推荐</Badge> | 为没有可见标签的纯图标按钮和控件添加提示框。 |
+| <Badge variant="success">推荐</Badge> | 提示内容比触发器上下的空地都高时，它会改放到触发器旁边，或放在空地更大的一侧并限高、在框内滚动，不会盖住触发器。 |
 | <Badge variant="error">避免</Badge> | 在提示框中放置链接或按钮这类可交互元素。应改用 HoverCard 或 Popover。 |
 | <Badge variant="error">避免</Badge> | 用提示框展示用户完成任务必须看到的关键信息。 |
 
@@ -58,5 +59,7 @@ import { Tooltip } from '@astryx-vue/core/Tooltip'
 - 触发元素带有 `aria-describedby`，指向气泡的 `id`。
 
 提示只在鼠标悬停或键盘聚焦时出现。在显示状态下按 Escape 可以关闭非受控提示框；受控提示框此时会发出 `openChange(false)`，是否关闭由父组件决定。
+
+在打开的气泡里按下只作用于气泡：包着触发元素的可点卡片、列表行、树形行都不会被激活。页面级的监听仍然收得到这次按下。
 
 也正因为提示转瞬即隐，用户很容易错过，触摸设备上也未必能触发，所以不要把用户完成任务必须看到的关键信息只放在提示框里。

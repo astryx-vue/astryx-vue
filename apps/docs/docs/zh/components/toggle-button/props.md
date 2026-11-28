@@ -41,7 +41,7 @@ footer: false
         <td><code>isDisabled</code></td>
         <td><code>boolean</code></td>
         <td><code>false</code></td>
-        <td>是否禁用。分组的 isDisabled 会禁用全部成员；成员自己禁用自己时，启用中的分组不会把它重新启用。带 tooltip 时改用 <code>aria-disabled</code>，按钮仍可获得焦点以读出禁用原因。</td>
+        <td>是否禁用。分组的 isDisabled 会禁用全部成员；成员自己禁用自己时，启用中的分组不会把它重新启用。禁用时标记 <code>aria-disabled</code>，不用原生 disabled，按钮仍可获得焦点。</td>
       </tr>
       <tr>
         <td><code>isLoading</code></td>
@@ -59,7 +59,7 @@ footer: false
         <td><code>pressedChangeAction</code></td>
         <td><code>(isPressed: boolean) =&gt; void | Promise&lt;void&gt;</code></td>
         <td>-</td>
-        <td>由接口或路由支撑的切换动作。在 <code>pressedChange</code> 之后执行，除非该回调阻止了默认行为；执行期间按钮显示下一个状态和加载指示，并允许再次点击来反转尚未完成的选择。分组中带 value 的成员会忽略它。</td>
+        <td>由接口或路由支撑的切换动作。在 <code>click</code> 和 <code>pressedChange</code> 之后执行，其中任一回调阻止了默认行为就不执行；执行期间按钮显示下一个状态和加载指示，并允许再次点击来反转尚未完成的选择。分组中带 value 的成员会忽略它。</td>
       </tr>
       <tr>
         <td><code>tooltip</code></td>
@@ -146,7 +146,7 @@ footer: false
       <tr>
         <td><code>click</code></td>
         <td><code>(event: MouseEvent)</code></td>
-        <td>透传的点击事件，在切换请求之后发出。按钮被禁用时不会发出。</td>
+        <td>原始的点击事件。独立按钮上它最先发出，早于 <code>pressedChange</code> 和 <code>pressedChangeAction</code>；在这里调用 <code>event.preventDefault()</code> 会取消这次切换，两者都不会执行。分组里带 value 的成员则在分组完成切换后才发出。按钮被禁用时不会发出。</td>
       </tr>
       <tr>
         <td><code>change</code></td>
@@ -204,7 +204,7 @@ ToggleButtonGroup 通过默认插槽接收 ToggleButton：
 | `Tab` | 依次聚焦每一个可用的切换按钮；分组不会把成员合并成单个 tab 停靠点。 |
 | `Enter` / `Space` | 切换当前焦点所在的按钮，与点击等价。 |
 
-分组本身不拦截方向键：每个成员都是独立的 tab 停靠点，`Tab` 逐个经过，方向键不会在成员之间移动焦点（这一点与 `ButtonGroup` 不同）。禁用的成员会被跳过，带 tooltip 的禁用成员仍可获得焦点以便读出禁用原因。
+分组本身不拦截方向键：每个成员都是独立的 tab 停靠点，`Tab` 逐个经过，方向键不会在成员之间移动焦点（这一点与 `ButtonGroup` 不同）。禁用的成员同样是 Tab 停靠点（标记为 `aria-disabled`），只是不响应激活。
 
 ## 模板引用
 

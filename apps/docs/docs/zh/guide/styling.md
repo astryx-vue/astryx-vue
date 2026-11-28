@@ -32,6 +32,15 @@ import '@astryx-vue/themes/neutral.css'
 
 如果你需要在项目中覆盖组件样式，建议将自定义样式写在 `astryx.overrides` 层内。需要提醒的是，普通写在未分层环境下的全局 CSS 规则优先级天然高于所有的 `@layer`。因此在写全局样式时，请尽量避免使用未分层的纯标签选择器（如全局写 `button { ... }`），以免不小心破坏掉组件的默认外观。
 
+## 自己写样式时守住的几条
+
+下面每种写法读的都是同一套变量，只要守住这几条，换主题和深色模式就一直有效：
+
+- 间距、颜色、圆角、阴影都取 `var(--astryx-*)`，不要直接写 px 或十六进制颜色。
+- 悬停样式一律放进 `@media (hover: hover)`，免得触屏点一下之后一直停在悬停状态。
+- 状态用组件的 props 来表达；自己的 CSS 要定位组件时，用它的类名加 data 属性，例如 `.astryx-button[data-variant="primary"]`，不要往组件上来回切换自己的类名。
+- 想让某个组件在全站换个样子，在 `defineTheme` 里写 `components` 覆盖，再用 [Theme](/components/theme) 套上，不要靠页面级的选择器。
+
 ## 和 Tailwind / UnoCSS 一起用
 
 可以一起用，前提是把层的顺序定死。
@@ -49,6 +58,8 @@ import '@astryx-vue/themes/neutral.css'
 排在前面的层更弱，排在后面的更强。工具类那一层排在 `astryx.components` 后面，所以 `class="p-0"` 能盖掉组件自带的内边距。`astryx.overrides` 排在工具类前面，所以它压不过工具类。某条样式必须赢过工具类时，别靠 overrides，改顺序或者不写成分层。
 
 顺带说一句：`@layer` 语句可以写在 `@import` 前面，这是 CSS 里少数允许的顺序。反过来的话整段会被当成无效内容丢掉。
+
+已经在用 Tailwind 的项目也一样，要把 `@layer` 语句写在 `@import 'tailwindcss'` 上面。写在它下面时，语句本身仍是合法的 CSS，但 Tailwind 自己的层已经先占好了位置，所有 `astryx.*` 层就排到了 `utilities` 后面。这样 Astryx 的重置样式会压过所有工具类，而且不会有任何报错。
 
 ### 在工具类里直接用我们的变量
 

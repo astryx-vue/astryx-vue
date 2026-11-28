@@ -40,6 +40,12 @@ footer: false
         <td>Required. Render the detail content shown in a full-width panel below the row when it is expanded. Receives the row item.</td>
       </tr>
       <tr>
+        <td><code>getRowLabel</code></td>
+        <td><code>(item: T) =&gt; string</code></td>
+        <td>—</td>
+        <td>A readable row identity for the toggle's accessible name, such as "Expand Acme". A blank label falls back to the generic "Expand row".</td>
+      </tr>
+      <tr>
         <td><code>getIsItemExpandable</code></td>
         <td><code>(item: T) =&gt; boolean</code></td>
         <td>—</td>
@@ -57,13 +63,19 @@ footer: false
         <td><code>false</code></td>
         <td>Toggle a row by clicking anywhere on it, not only on its chevron. A pointer-only convenience layered over the chevron, which stays the accessible control for keyboard and assistive tech. Clicks on interactive cell content (buttons, links, form controls) or on a text selection do not toggle, and non-expandable rows stay inert.</td>
       </tr>
+      <tr>
+        <td><code>animatedLayout</code></td>
+        <td><code>AnimatedLayout | null</code></td>
+        <td>—</td>
+        <td>The handle from <code>useAnimatedLayout</code>. With it, the rows below a panel glide to their new positions as it opens or closes, their dividers move with them, an opening panel plays its entrance, and the chevron turns on the same timing.</td>
+      </tr>
     </tbody>
   </table>
 </div>
 
 ## Returns
 
-`useTableRowExpansion()` returns one `TablePlugin&lt;T&gt;`. Pass it to `Table` in `plugins`. The plugin fills three fields of the plugin contract:
+`useTableRowExpansion()` returns one `TablePlugin&lt;T&gt;`. Pass it to `Table` in `plugins`. The plugin fills these fields of the plugin contract:
 
 <div class="component-api-table" role="region" aria-label="useTableRowExpansion returns" tabindex="0">
   <table>
@@ -86,6 +98,11 @@ footer: false
         <td><code>(input: TableCellPatchInput&lt;T&gt;) =&gt; TableCellPatch | null</code></td>
         <td>Marks the chevron cells with the <code>astryx-table__expansion</code> class so they keep their 40px width.</td>
       </tr>
+      <tr>
+        <td><code>bindScrollRoot</code></td>
+        <td><code>(element: HTMLElement | null) =&gt; void</code></td>
+        <td>Keeps the table's scroll container, where the changed rows are found when <code>animatedLayout</code> is passed.</td>
+      </tr>
     </tbody>
   </table>
 </div>
@@ -101,7 +118,7 @@ footer: false
       <tr>
         <td><code>attrs</code></td>
         <td><code>Record&lt;string, string | undefined&gt;</code></td>
-        <td><code>data-expanded</code> is set on an open row.</td>
+        <td>Every expandable row carries <code>data-expansion-key</code> (its row key); an open row also carries <code>data-expanded</code>.</td>
       </tr>
       <tr>
         <td><code>class</code></td>

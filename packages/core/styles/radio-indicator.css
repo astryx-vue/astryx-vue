@@ -12,7 +12,7 @@
     border-style: solid;
     border-width: var(--astryx-border-width, 1px);
     border-color: var(--astryx-input-status-color, var(--astryx-color-border-emphasized, #d4d4d4));
-    border-radius: var(--astryx-radius-full, 9999px);
+    border-radius: 50%;
     color: var(--astryx-color-accent, #262626);
     background: var(--astryx-color-background-surface, #fff);
     transition-property: background-color, border-color;
@@ -40,16 +40,33 @@
     background: var(--astryx-color-background-muted, #f5f5f5);
   }
 
+  /*
+   * 圆点按圆圈的比例画：主题改了圆圈的宽高，圆点跟着缩放并保持居中。百分比读的是
+   * 内容盒，先把边框加回来；出厂的 20px、24px 圆圈里仍然正好是 8px、10px 的点。
+   * 支持 round() 的浏览器取整到整像素：小数尺寸的点在 Chromium 里会画成圆角方块。
+   */
   .astryx-radio-indicator-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: var(--astryx-radius-full, 9999px);
+    width: calc((100% + 2 * var(--astryx-border-width, 1px)) * 10 / 24);
+    height: calc((100% + 2 * var(--astryx-border-width, 1px)) * 10 / 24);
+    border-radius: 50%;
     background: currentcolor;
   }
 
   .astryx-radio-indicator[data-size='sm'] > .astryx-radio-indicator-dot {
-    width: 8px;
-    height: 8px;
+    width: calc((100% + 2 * var(--astryx-border-width, 1px)) * 8 / 20);
+    height: calc((100% + 2 * var(--astryx-border-width, 1px)) * 8 / 20);
+  }
+
+  @supports (width: round(1px, 1px)) {
+    .astryx-radio-indicator-dot {
+      width: round(calc((100% + 2 * var(--astryx-border-width, 1px)) * 10 / 24), 1px);
+      height: round(calc((100% + 2 * var(--astryx-border-width, 1px)) * 10 / 24), 1px);
+    }
+
+    .astryx-radio-indicator[data-size='sm'] > .astryx-radio-indicator-dot {
+      width: round(calc((100% + 2 * var(--astryx-border-width, 1px)) * 8 / 20), 1px);
+      height: round(calc((100% + 2 * var(--astryx-border-width, 1px)) * 8 / 20), 1px);
+    }
   }
 
   @media (hover: hover) {

@@ -191,16 +191,19 @@
   .astryx-tab--size-sm {
     min-height: 28px;
     font-size: var(--astryx-text-label-size, 0.875rem);
+    line-height: var(--astryx-text-label-leading, 1.4286);
   }
 
   .astryx-tab--size-md {
     min-height: 32px;
     font-size: var(--astryx-text-label-size, 0.875rem);
+    line-height: var(--astryx-text-label-leading, 1.4286);
   }
 
   .astryx-tab--size-lg {
     min-height: 36px;
     font-size: var(--astryx-text-label-size, 0.875rem);
+    line-height: var(--astryx-text-label-leading, 1.4286);
   }
 
   .astryx-tab:hover:not(:disabled, [aria-disabled='true']) {
@@ -223,8 +226,8 @@
     font-weight: var(--astryx-font-weight-semibold, 600);
   }
 
-  .astryx-tab--selected::after {
-    content: '';
+  /* 选中下划线是一个真元素（tab-indicator 主题挂点），主题可以单独改它，例如拉满整个标签宽度。 */
+  .astryx-tab__indicator {
     position: absolute;
     /* 同原版：默认压在 tab 底边外 1px；滚动条按同一个值往下留出空间，不会裁掉。 */
     bottom: var(--_tab-indicator-bottom, -1px);
@@ -233,9 +236,10 @@
     height: 2px;
     border-radius: var(--astryx-radius-full, 9999px);
     background-color: var(--astryx-color-accent, currentColor);
+    pointer-events: none;
   }
 
-  .astryx-tab-list--has-divider .astryx-tab--selected::after {
+  .astryx-tab-list--has-divider .astryx-tab__indicator {
     bottom: var(--_tab-indicator-bottom);
   }
 
@@ -250,14 +254,17 @@
     outline-offset: 2px;
   }
 
+  /* 标签和半粗字重的隐形副本共用一格。换行的标签可能比副本少几行，两者都在格里居中，选中时标签不会跳。 */
   .astryx-tab__label {
     display: inline-grid;
     align-items: center;
+    text-align: center;
   }
 
   .astryx-tab__label-text,
   .astryx-tab__label-sizer {
     grid-area: 1 / 1;
+    align-self: center;
     display: inline-flex;
     align-items: center;
     gap: var(--astryx-spacing-1, 4px);

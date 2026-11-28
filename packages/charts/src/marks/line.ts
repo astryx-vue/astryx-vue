@@ -16,6 +16,7 @@ export type CurveType = 'linear' | 'monotone' | 'natural' | 'step'
 
 export interface LineOptions {
   color?: string
+  /** 点怎么连。默认 `'linear'`：直线段 */
   curve?: CurveType
   strokeWidth?: number
   dots?: boolean
@@ -35,11 +36,12 @@ function isFinitePoint(p: ResolvedPoint): boolean {
  */
 export function line(dataKey: string, options: LineOptions = {}): SeriesDef {
   const color = options.color
-  const curve = options.curve ?? 'monotone'
+  const curve = options.curve ?? 'linear'
   const strokeWidth = typeof options.strokeWidth === 'number' && Number.isFinite(options.strokeWidth)
     ? Math.max(0, options.strokeWidth)
     : 2
   const dots = options.dots ?? false
+  const dotRadius = 3
 
   const seriesDef: SeriesDef = {
     type: 'line',
@@ -47,7 +49,7 @@ export function line(dataKey: string, options: LineOptions = {}): SeriesDef {
     dataKeys: [dataKey],
     color,
     label: options.label ?? dataKey,
-    layout: {},
+    layout: dots ? { xOverhang: dotRadius } : {},
 
     resolve(ctx): ResolvedPoint[] {
       const { data, xKey, xScale, yScale } = ctx
@@ -74,7 +76,7 @@ export function line(dataKey: string, options: LineOptions = {}): SeriesDef {
         .defined(isFinitePoint)
         .x(d => d.px)
         .y(d => d.py)
-        .curve(CURVES[curve] ?? curveMonotoneX)
+        .curve(CURVES[curve] ?? curveLinear)
 
       const pathD = pathGen(resolved) ?? ''
       const strokeColor = seriesFill(seriesDef, color)
@@ -90,7 +92,7 @@ export function line(dataKey: string, options: LineOptions = {}): SeriesDef {
               key: p.dataIndex,
               cx: p.px,
               cy: p.py,
-              r: 3,
+              r: dotRadius,
               fill: strokeColor,
             }))
           : null,

@@ -37,7 +37,6 @@ import '@astryx-vue/lab/lab.css'
 | Component | Purpose |
 | --- | --- |
 | [ListInput](/en/lab/list-input) | Edit, validate, and reorder structured records. |
-| [MobileTokenizer](/en/lab/mobile-tokenizer) | Search and select in a bottom sheet. |
 | [TransferList](/en/lab/transfer-list) | Move and reorder options between two panels. |
 | [Tour](/en/lab/tour) | Guide users with target highlights and step callouts. |
 | [CodeEditor](/en/lab/code-editor) | Edit code with syntax highlighting and line numbers. |
@@ -46,14 +45,26 @@ import '@astryx-vue/lab/lab.css'
 | [Comments](/en/lab/comments) | A comments panel: threads, activity events, and a composer for new comments. |
 | [CommentPin](/en/lab/comment-pin) | Avatar-first annotation marker for one thread or a grouped set of threads. |
 | [CircularProgress](/en/lab/circular-progress) | Determinate and indeterminate ring progress. |
+| [CircleCheckIndicator](/en/lab/circle-check-indicator) | The iOS multiple-selection circle, mapped to checkbox in a theme. |
+| [SelectableCardGroup](/en/lab/selectable-card-group) | A set of selectable cards with radio-group or checkbox-group semantics. |
+| [DialogHeroHeader](/en/lab/dialog-hero-header) | A Dialog header with full-bleed media above the title. |
 | [DiffViewer](/en/lab/diff-viewer) | Unified or split diff for one file. |
 | [InfoTip](/en/lab/info-tip) | Supplementary explanations for terms and metrics. |
+| [LineClamp](/en/lab/line-clamp) | Clamps any content to a set number of lines, with the full text in a tooltip. |
 | [LogStream](/en/lab/log-stream) | Expandable logs with an optional live tail. |
+| [MediaPlayer](/en/lab/media-player) | Build your own video or audio player from play, timeline, volume, and other parts. |
+| [NavigationStack](/en/lab/navigation-stack) | Drill-down navigation for phone layouts, with iOS-style push, pop and back swipe. |
+| [PageControl](/en/lab/page-control) | A row of page dots under a paging view, with iOS-style taps, scrubbing and a window for long rows. |
+| [useRefreshControl](/en/lab/refresh-control) | iOS-style pull to refresh for an app's own scroll container. |
+| [VideoPlayer](/en/lab/video-player) | A ready-made video player whose controls float over the picture and hide when idle. |
+| [AudioPlayer](/en/lab/audio-player) | A ready-made audio player with artwork, title, timeline, skip buttons, and speed. |
 | [Stat](/en/lab/stat) | Key metrics and trends. |
 | [SVGIcon](/en/lab/svg-icon) | Multi-variant SVG icons with per-shape roles. |
+| [TabBar](/en/lab/tab-bar) | A phone app's bottom tab bar, with iOS 26's floating capsule and a selection lens that follows the finger. |
 | [EmojiPicker](/en/lab/emoji-picker) | Search every emoji by group and pick one, inline or in a popover. |
 | [ChatEmojiPicker](/en/lab/chat-emoji-picker) | Filter and pick an emoji from a popover grid. |
 | [ChatReactionBar](/en/lab/chat-reaction-bar) | Show emoji reactions under a message and add more. |
+| [ChatVirtualizer](/en/lab/chat-virtualizer) | Render only the visible rows of a long chat, follow new messages, and load history without a jump. |
 | [Schedule](/en/lab/schedule) | Show events by month, week, day, or list. |
 
 Every example is interactive, with the complete Vue source available on the code tab.

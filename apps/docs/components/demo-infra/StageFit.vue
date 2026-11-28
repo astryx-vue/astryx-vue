@@ -19,12 +19,16 @@ const limit = ref(0)
 // 外框不缩放时是 display: contents，自己没有盒子，所以不能量外框。
 const scale = computed(() => {
   const max = props.maxHeight ?? limit.value
-  if (max <= 0 || naturalHeight.value <= max)
+  // 留 1px 容差：用百分比撑满画布的 demo，量出来的整数高度可能比带小数的上限多出一点。
+  if (max <= 0 || naturalHeight.value <= max + 1)
     return 1
   return Math.max(props.minScale, max / naturalHeight.value)
 })
 const frameStyle = computed(() => (scale.value === 1 ? undefined : { height: `${naturalHeight.value * scale.value}px` }))
-const innerStyle = computed(() => (scale.value === 1 ? undefined : { transform: `scale(${scale.value})` }))
+// 缩放时内层写死自然高度：demo 里 height: 100% 这类百分比仍有确定的参照，不会塌成内容高度。
+const innerStyle = computed(() => (scale.value === 1
+  ? undefined
+  : { height: `${naturalHeight.value}px`, transform: `scale(${scale.value})` }))
 
 let observer: ResizeObserver | undefined
 let narrow: MediaQueryList | undefined

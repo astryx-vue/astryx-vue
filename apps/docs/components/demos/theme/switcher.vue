@@ -7,7 +7,14 @@ import { Selector } from '@astryx-vue/core/Selector'
 import { Stack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
 import { defineTheme, Theme } from '@astryx-vue/core/Theme'
+import { useToast } from '@astryx-vue/core/Toast'
 import { computed, ref } from 'vue'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 
 const warmTheme = defineTheme({
   name: 'warm-docs',
@@ -61,7 +68,7 @@ const options = [
             <Text type="body" color="secondary">
               Switching the theme object updates all tokens and component styles below the provider.
             </Text>
-            <Button label="Save changes" variant="primary" />
+            <Button label="Save changes" variant="primary" @click="demo('Save changes')" />
           </Stack>
         </Card>
       </Theme>

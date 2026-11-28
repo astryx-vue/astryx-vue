@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import { Button } from '@astryx-vue/core/Button'
 import { NavIcon } from '@astryx-vue/core/NavItem'
+import { useToast } from '@astryx-vue/core/Toast'
 import { TopNav, TopNavHeading, TopNavItem } from '@astryx-vue/core/TopNav'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 </script>
 
 <template>
@@ -17,17 +24,17 @@ import { TopNav, TopNavHeading, TopNavItem } from '@astryx-vue/core/TopNav'
       <TopNavItem href="#dashboard" icon-class="i-carbon-home" is-selected label="Dashboard" />
       <TopNavItem href="#reports" icon-class="i-carbon-document" label="Reports" />
       <template #end>
-        <Button is-icon-only label="Search" variant="ghost">
+        <Button is-icon-only label="Search" variant="ghost" @click="demo('Search')">
           <template #icon>
             <span class="i-carbon-search" />
           </template>
         </Button>
-        <Button is-icon-only label="Notifications" variant="ghost">
+        <Button is-icon-only label="Notifications" variant="ghost" @click="demo('Notifications')">
           <template #icon>
             <span class="i-carbon-notification" />
           </template>
         </Button>
-        <Button label="Upgrade" variant="primary" />
+        <Button label="Upgrade" variant="primary" @click="demo('Upgrade')" />
       </template>
     </TopNav>
   </div>

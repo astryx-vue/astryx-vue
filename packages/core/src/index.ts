@@ -91,14 +91,21 @@ export type {
 } from './Button/index.js'
 export { ButtonGroup } from './ButtonGroup/index.js'
 export type { ButtonGroupOrientation, ButtonGroupProps, ButtonGroupSlots } from './ButtonGroup/index.js'
-export { Calendar } from './Calendar/index.js'
+export { Calendar, useCalendarConstraints, useCalendarDays, useCalendarNavigation } from './Calendar/index.js'
 export type {
+  CalendarDay,
   CalendarEmits,
   CalendarHandle,
   CalendarHandleRef,
   CalendarProps,
   CalendarRangeValue,
   CalendarSlots,
+  UseCalendarConstraintsOptions,
+  UseCalendarConstraintsReturn,
+  UseCalendarDaysOptions,
+  UseCalendarDaysReturn,
+  UseCalendarNavigationOptions,
+  UseCalendarNavigationReturn,
 } from './Calendar/index.js'
 export { Card } from './Card/index.js'
 export type { CardElevation, CardProps, CardSizeValue, CardSlots, CardVariant, CardVariantMap } from './Card/index.js'
@@ -240,6 +247,8 @@ export {
   catppuccinMocha,
   Code,
   CodeBlock,
+  CodeLineTokens,
+  createCodeLanguage,
   darkSyntaxPresets,
   defineSyntaxTheme,
   DIFF_SYNTAX_TOKEN_KEYS,
@@ -249,6 +258,7 @@ export {
   githubDark,
   githubLight,
   HIGHLIGHTED_TOKEN_TYPES,
+  isCodeLanguage,
   lightSyntaxPresets,
   monokai,
   nord,
@@ -272,14 +282,19 @@ export type {
   CodeBlockEmits,
   CodeBlockProps,
   CodeBlockSize,
+  CodeBlockSlots,
   CodeBlockTokenizer,
   CodeColor,
   CodeHighlightMode,
+  CodeLanguage,
+  CodeLanguageToken,
+  CodeLanguageTokenize,
   CodeProps,
   CodeSize,
   CodeSlots,
   CopyToClipboardOptions,
   CopyToClipboardReturn,
+  CreateCodeLanguageOptions,
   DiffLineKind,
   DiffLines,
   SyntaxDiffTokenKey,
@@ -386,6 +401,7 @@ export type {
 export { DateInput } from './DateInput/index.js'
 export type {
   DateInputEmits,
+  DateInputEntryError,
   DateInputFormat,
   DateInputFormatName,
   DateInputNativePicker,
@@ -399,9 +415,10 @@ export { DateRangeInput } from './DateRangeInput/index.js'
 export type { DateRange, DateRangeInputEmits, DateRangeInputProps, DateRangePreset } from './DateRangeInput/index.js'
 export { DateTimeInput } from './DateTimeInput/index.js'
 export type { DateTimeInputEmits, DateTimeInputProps, DateTimeInputSize } from './DateTimeInput/index.js'
-export { Dialog, DialogHeader, useImperativeDialog } from './Dialog/index.js'
+export { Dialog, DialogHeader, useDialogContext, useImperativeDialog } from './Dialog/index.js'
 export type {
   DialogBlockPosition,
+  DialogContext,
   DialogHeaderProps,
   DialogPadding,
   DialogPosition,
@@ -476,6 +493,8 @@ export { EmptyState } from './EmptyState/index.js'
 export type { EmptyStateHeadingLevel, EmptyStateProps, EmptyStateSlots } from './EmptyState/index.js'
 export { Field, FieldLabel, InputClearButton } from './Field/index.js'
 export type {
+  AutoCapitalize,
+  EnterKeyHint,
   FieldLabelProps,
   FieldLabelSlots,
   FieldPartStylingProps,
@@ -483,9 +502,11 @@ export type {
   FieldSlotProps,
   FieldSlots,
   FieldStatusInput,
+  FieldStatusPlacement,
   FieldStatusProps,
   FieldStatusType,
   FieldStatusVariant,
+  InputMode,
 } from './Field/index.js'
 export { FieldStatus } from './FieldStatus/index.js'
 export { FileInput } from './FileInput/index.js'
@@ -498,7 +519,13 @@ export type {
   FileInputValue,
 } from './FileInput/index.js'
 export { FormLayout } from './FormLayout/index.js'
-export type { FormLayoutDirection, FormLayoutProps, FormLayoutSlots, FormOptionality } from './FormLayout/index.js'
+export type {
+  EntryErrorBehavior,
+  FormLayoutDirection,
+  FormLayoutProps,
+  FormLayoutSlots,
+  FormOptionality,
+} from './FormLayout/index.js'
 export { Grid, GridSpan } from './Grid/index.js'
 export type {
   GridAlignment,
@@ -550,6 +577,12 @@ export {
   useSemanticIcon,
 } from './Icon/index.js'
 export type {
+  ComponentIconMap,
+  ComponentIconRequest,
+  ComponentIconSlotMap,
+  ComponentIconSlotName,
+  ComponentIconStaticMap,
+  ComponentIconValue,
   ExtendedIconName,
   IconColor,
   IconGlyphName,
@@ -558,10 +591,16 @@ export type {
   IconName,
   IconProps,
   IconRegistry,
+  IconRequest,
   IconSize,
   IconSlots,
+  IconVariant,
+  IconVariantMap,
   NamespacedIconName,
+  ResolvedComponentIcon,
   SemanticIconMap,
+  ThemeIconEntries,
+  ThemeIconEntry,
 } from './Icon/index.js'
 export { IconButton } from './IconButton/index.js'
 export type { IconButtonEmits, IconButtonProps, IconButtonSlots } from './IconButton/index.js'
@@ -650,7 +689,17 @@ export { Link } from './Link/index.js'
 export type { LinkColor, LinkProps, LinkRoot, LinkSize, LinkType, LinkWeight } from './Link/index.js'
 export { LinkProvider, useLinkComponent } from './LinkProvider/index.js'
 export type { LinkComponentType, LinkProviderProps, LinkProviderSlots } from './LinkProvider/index.js'
-export { Item, List, ListItem, useItemDescriptionId, useListContext } from './List/index.js'
+export {
+  Item,
+  List,
+  ListItem,
+  unstable_adaptReorderable,
+  unstable_ListReorderScope,
+  unstable_reorderableOptions,
+  unstable_useListReorderScope,
+  useItemDescriptionId,
+  useListContext,
+} from './List/index.js'
 export type {
   ItemAlign,
   ItemDensity,
@@ -673,25 +722,155 @@ export type {
   ListMarkerStyle,
   ListProps,
   ListSlots,
+  unstable_ListReorderContextValue,
 } from './List/index.js'
 export {
+  alertDialogMessages,
+  avatarGroupMessages,
+  bannerMessages,
+  breadcrumbsMessages,
+  buttonMessages,
+  calendarMessages,
+  carouselMessages,
+  chatMessages,
+  checkboxListMessages,
+  citationMessages,
+  codeBlockMessages,
+  commandPaletteMessages,
+  commentComposerMessages,
+  commentsMessages,
+  contextMenuMessages,
+  dateInputMessages,
+  dateRangeInputMessages,
+  dateTimeInputMessages,
+  dialogMessages,
+  dropdownMenuMessages,
+  emojiPickerMessages,
+  fieldMessages,
+  fileInputMessages,
+  infoTipMessages,
+  inputMessages,
+  kbdMessages,
+  keyboardHintMessages,
+  layoutMessages,
+  lightboxMessages,
+  listInputMessages,
+  listMessages,
   loadAstryxCatalog,
+  markdownMessages,
+  metadataListMessages,
+  moreMenuMessages,
+  multiSelectorMessages,
+  navMessages,
   normalizeLocale,
+  numberInputMessages,
+  outlineMessages,
+  paginationMessages,
+  popoverMessages,
+  powerSearchMessages,
+  powerSearchSheetMessages,
   provideAstryxLocale,
+  richTextEditorMessages,
+  selectorMessages,
+  sliderMessages,
+  spinnerMessages,
+  stepperMessages,
+  switchMessages,
+  tableMessages,
+  tabListMessages,
+  textAreaMessages,
+  textInputMessages,
+  thumbnailMessages,
+  timeInputMessages,
+  timestampMessages,
+  toastMessages,
+  tokenizerMessages,
+  tokenMessages,
+  transferListMessages,
+  transferListSelectorMessages,
+  treeListMessages,
+  typeaheadMessages,
   useAstryxLocale,
   useAstryxMessages,
   useCollator,
+  useComponentMessages,
   useLocale,
   useTranslator,
 } from './locale/index.js'
 export type {
+  AlertDialogMessages,
   AstryxLocale,
   AstryxMessages,
   AstryxUpstreamCatalog,
   AstryxUpstreamMessage,
+  AvatarGroupMessages,
+  BannerMessages,
+  BreadcrumbsMessages,
+  ButtonMessages,
+  CalendarMessages,
+  CalendarSystem,
+  CarouselMessages,
+  ChatMessages,
+  CheckboxListMessages,
+  CitationMessages,
+  CodeBlockMessages,
+  CommandPaletteMessages,
+  CommentComposerMessages,
+  CommentsMessages,
+  ComponentMessageDefaults,
+  ComponentMessages,
+  ContextMenuMessages,
+  DateInputMessages,
+  DateRangeInputMessages,
+  DateTimeInputMessages,
+  DialogMessages,
+  DropdownMenuMessages,
+  EmojiPickerMessages,
+  FieldMessages,
+  FileInputMessages,
+  InfoTipMessages,
+  InputMessages,
+  KbdMessages,
+  KeyboardHintMessages,
+  LayoutMessages,
+  LightboxMessages,
+  ListInputMessages,
+  ListMessages,
   LoadedAstryxLocale,
+  MarkdownMessages,
+  MetadataListMessages,
+  MoreMenuMessages,
+  MultiSelectorMessages,
+  NavMessages,
+  NumberInputMessages,
+  OutlineMessages,
+  PaginationMessages,
+  PopoverMessages,
+  PowerSearchMessages,
+  PowerSearchOperatorMessages,
+  PowerSearchSheetMessages,
+  RichTextEditorMessages,
+  SelectorMessages,
+  SliderMessages,
+  SpinnerMessages,
+  StepperMessages,
+  SwitchMessages,
+  TableMessages,
+  TabListMessages,
+  TextAreaMessages,
+  TextInputMessages,
+  ThumbnailMessages,
+  TimeInputMessages,
+  TimestampMessages,
+  ToastMessages,
+  TokenizerMessages,
+  TokenMessages,
+  TransferListMessages,
+  TransferListSelectorMessages,
   Translator,
   TranslatorValues,
+  TreeListMessages,
+  TypeaheadMessages,
   UnmappedUpstreamEntry,
   UnmappedUpstreamReason,
   UseLocaleReturn,
@@ -703,6 +882,7 @@ export {
   createIncrementalState,
   decodeMarkdownCharacterReferences,
   defineMarkdownPlugin,
+  firstStrongDirection,
   isMarkdownExtensionNode,
   Markdown,
   parseInline,
@@ -824,7 +1004,12 @@ export type {
   NavMenuSize,
 } from './NavMenu/index.js'
 export { NumberInput } from './NumberInput/index.js'
-export type { NumberInputEmits, NumberInputProps, NumberInputStatus } from './NumberInput/index.js'
+export type {
+  NumberInputEmits,
+  NumberInputEntryError,
+  NumberInputProps,
+  NumberInputStatus,
+} from './NumberInput/index.js'
 export { Outline, parseOutlineFromMarkdown, useOutlineFromDOM, useOutlineFromMarkdown } from './Outline/index.js'
 export type {
   OutlineDensity,
@@ -862,11 +1047,36 @@ export type {
   PaginationSlots,
   PaginationVariant,
 } from './Pagination/index.js'
+export {
+  COMPACT_11_STOPS,
+  DEFAULT_21_STOPS,
+  generateTonalPalette,
+  PALETTE_BLACK,
+  PALETTE_RECIPE,
+  PALETTE_RECIPE_V2,
+  PALETTE_RECIPES,
+  PALETTE_WHITE,
+  themePalette,
+} from './palette/index.js'
+export type {
+  PaletteLift,
+  ThemePalette,
+  ThemePaletteInput,
+  TonalPaletteAnchor,
+  TonalPaletteCandidate,
+  TonalPaletteCoordinationDiagnostics,
+  TonalPaletteDarkChromaTaper,
+  TonalPaletteFamilyInput,
+  TonalPaletteGenerationInput,
+  TonalPaletteNormalizedRequest,
+  TonalPaletteRampDiagnostics,
+} from './palette/index.js'
 export { Popover, usePopover } from './Popover/index.js'
 export type {
   PopoverAlignment,
   PopoverPadding,
   PopoverPlacement,
+  PopoverPresentation,
   PopoverProps,
   PopoverRole,
   UsePopoverOptions,
@@ -907,6 +1117,7 @@ export type {
   PowerSearchLookup,
   PowerSearchOperator,
   PowerSearchOverflow,
+  PowerSearchPresentation,
   PowerSearchProps,
   PowerSearchSize,
   PowerSearchSlots,
@@ -966,7 +1177,12 @@ export type {
   SegmentedControlSlots,
 } from './SegmentedControl/index.js'
 export { SelectableCard } from './SelectableCard/index.js'
-export type { SelectableCardEmits, SelectableCardProps, SelectableCardSlots } from './SelectableCard/index.js'
+export type {
+  SelectableCardEmits,
+  SelectableCardInput,
+  SelectableCardProps,
+  SelectableCardSlots,
+} from './SelectableCard/index.js'
 export { Selector } from './Selector/index.js'
 export type {
   SelectorEmits,
@@ -1057,6 +1273,8 @@ export type {
   StepSlots,
   StepStatus,
 } from './Stepper/index.js'
+export { createSwipe } from './Swipe/index.js'
+export type { CreateSwipeOptions, ItemSwipeActionVariant, Swipe, SwipeAction } from './Swipe/index.js'
 export { Switch } from './Switch/index.js'
 export type {
   SwitchChangeAction,
@@ -1104,13 +1322,16 @@ export {
   useTableColumnResize,
   useTableColumnSettings,
   useTableColumnSettingsState,
+  useTableColumnsVirtualization,
   useTableFiltering,
   useTableFilterState,
   useTableGroupedRows,
+  useTableInfiniteScroll,
   useTablePagination,
   useTableRowExpansion,
   useTableRowIndex,
   useTableRowStatus,
+  useTableRowsVirtualization,
   useTableSelection,
   useTableSelectionState,
   useTableSortable,
@@ -1144,12 +1365,14 @@ export type {
   TableFilterVariant,
   TableGroupPatch,
   TableHeaderPatch,
+  TableLoadingState,
   TablePaginationVariant,
   TablePanelPatch,
   TablePlugin,
   TableProps,
   TableRowListeners,
   TableRowMenuItem,
+  TableRowModel,
   TableRowPatch,
   TableRowProps,
   TableRowStatus,
@@ -1166,15 +1389,19 @@ export type {
   TableTextOverflow,
   TableTreeRowMeta,
   TableVerticalAlign,
+  TableVirtualizationContribution,
   UseTableColumnResizeConfig,
   UseTableColumnSettingsConfig,
+  UseTableColumnsVirtualizationConfig,
   UseTableFilteringConfig,
   UseTableFilterStateOptions,
   UseTableGroupedRowsConfig,
+  UseTableInfiniteScrollConfig,
   UseTablePaginationConfig,
   UseTableRowExpansionConfig,
   UseTableRowIndexConfig,
   UseTableRowStatusConfig,
+  UseTableRowsVirtualizationConfig,
   UseTableSelectionConfig,
   UseTableSelectionStateConfig,
   UseTableSortableConfig,
@@ -1195,7 +1422,7 @@ export type {
   TabProps,
   TabSlots,
 } from './TabList/index.js'
-export { Text } from './Text/index.js'
+export { Text, useTruncation } from './Text/index.js'
 export type {
   TextAs,
   TextColor,
@@ -1208,6 +1435,7 @@ export type {
   TextWeight,
   TextWordBreak,
   TextWrap,
+  Truncation,
 } from './Text/index.js'
 export { TextArea } from './TextArea/index.js'
 export type {
@@ -1235,7 +1463,9 @@ export type {
   TextInputType,
 } from './TextInput/index.js'
 export {
+  compactDefinition,
   DATA_TOKEN_DEFAULTS,
+  DEFAULT_COMPACT_DEFINITION,
   DEFAULT_WIDTH_BREAKPOINTS,
   defineTheme,
   expandColorScale,
@@ -1246,6 +1476,7 @@ export {
   MediaTheme,
   neutralTheme,
   normalizeTokenName,
+  STATUS_COLOR_DEFAULTS,
   Theme,
   useMediaTheme,
   useTheme,
@@ -1253,13 +1484,16 @@ export {
 } from './Theme/index.js'
 export type {
   ColorScaleConfig,
+  CompactDefinition,
   ComponentStyleMap,
   DataTokenName,
   DefineThemeInput,
   MediaThemeMode,
   MediaThemeProps,
+  MotionCharacter,
   MotionScaleConfig,
   RadiusScaleConfig,
+  StyleBlock,
   StyleOverrides,
   ThemeAdaptationCondition,
   ThemeAdaptationRule,
@@ -1269,6 +1503,8 @@ export type {
   ThemeAdaptationWidthCondition,
   ThemeDefinition,
   ThemeMode,
+  ThemeMotionConfig,
+  ThemeMotionKnobs,
   ThemeProps,
   ThemeSurfaceInput,
   ThemeTokens,
@@ -1284,7 +1520,7 @@ export type {
 export { Thumbnail } from './Thumbnail/index.js'
 export type { ThumbnailEmits, ThumbnailProps, ThumbnailRemoveVisibility } from './Thumbnail/index.js'
 export { TimeInput } from './TimeInput/index.js'
-export type { TimeInputEmits, TimeInputProps, TimeInputSize } from './TimeInput/index.js'
+export type { TimeInputEmits, TimeInputEntryError, TimeInputProps, TimeInputSize } from './TimeInput/index.js'
 export { getPresentation, Timer } from './Timer/index.js'
 export type { TimerColor, TimerFormat, TimerPresentation, TimerProps, TimerType } from './Timer/index.js'
 export { formatInstant, formatRelativeTime, formatTooltipLines, Timestamp } from './Timestamp/index.js'
@@ -1335,6 +1571,7 @@ export type {
   TokenizerChange,
   TokenizerEmits,
   TokenizerOverflow,
+  TokenizerPresentation,
   TokenizerProps,
   TokenizerSize,
   TokenizerSlots,
@@ -1386,8 +1623,12 @@ export type {
 export { BaseTypeahead, Typeahead, TypeaheadItem } from './Typeahead/index.js'
 export type {
   BaseTypeaheadProps,
+  TypeaheadDialogMenuSlotProps,
   TypeaheadEmits,
+  TypeaheadHandle,
   TypeaheadItemProps,
+  TypeaheadListboxMenuSlotProps,
+  TypeaheadMenuConfig,
   TypeaheadProps,
   TypeaheadSize,
   TypeaheadSlots,
@@ -1462,6 +1703,11 @@ export {
   SHARED_DATE_FORMAT_OPTIONS,
   truncateCharacters,
   unobserveResize,
+  unstable_scrollEventTarget,
+  unstable_scrollportTop,
+  unstable_scrollsPage,
+  unstable_setScrollAnchoringOff,
+  unstable_useFingerScroll,
 } from './utils/index.js'
 export type {
   DayOfWeek,
@@ -1479,6 +1725,7 @@ export type {
   PickerPresentationSurface,
   PlainDate,
   SharedDateFormat,
+  unstable_UseFingerScrollOptions,
 } from './utils/index.js'
 export { VisuallyHidden } from './VisuallyHidden/index.js'
 export type { VisuallyHiddenElement, VisuallyHiddenProps } from './VisuallyHidden/index.js'

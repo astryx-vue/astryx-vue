@@ -2,7 +2,8 @@
 import type { ChatComposerDrawerEmits, ChatComposerDrawerProps, ChatComposerDrawerSlots } from './types.js'
 import { computed, ref, useId } from 'vue'
 import Badge from '../Badge/Badge.vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { chatMessages } from '../locale/messages/chat.js'
 import '../../styles/chat.css'
 
 defineOptions({ name: 'AstryxChatComposerDrawer', inheritAttrs: false })
@@ -14,7 +15,7 @@ const emit = defineEmits<ChatComposerDrawerEmits>()
 defineSlots<ChatComposerDrawerSlots>()
 const model = defineModel<boolean | undefined>('isCollapsed', { default: undefined })
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ chat: chatMessages })
 const contentId = useId()
 const internalCollapsed = ref(props.defaultIsCollapsed)
 const collapsed = computed(() => model.value ?? internalCollapsed.value)

@@ -1,6 +1,25 @@
 /**
- * 悬停卡片触发器上哪些角色能写 aria-expanded，哪些控件自己会吃掉轻点。
+ * 悬停卡片触发器上哪些角色能写 aria-haspopup 和 aria-expanded，以及触发器的 id 合并。
  */
+
+/** ARIA 1.2 里支持 aria-haspopup 的角色（含继承它的子角色）。 */
+const HASPOPUP_ROLES = new Set([
+  'application',
+  'button',
+  'combobox',
+  'gridcell',
+  'link',
+  'menuitem',
+  'menuitemcheckbox',
+  'menuitemradio',
+  'searchbox',
+  'slider',
+  'tab',
+  'textbox',
+  'treeitem',
+])
+
+const TEXT_INPUT_TYPES = new Set(['text', 'search', 'email', 'tel', 'url'])
 
 const EXPANDABLE_ROLES = new Set([
   'application',
@@ -22,24 +41,6 @@ const EXPANDABLE_ROLES = new Set([
 ])
 
 const BUTTON_INPUT_TYPES = new Set(['button', 'submit', 'reset', 'image'])
-
-const ACTION_ROLES = new Set([
-  'button',
-  'checkbox',
-  'combobox',
-  'link',
-  'menuitem',
-  'menuitemcheckbox',
-  'menuitemradio',
-  'option',
-  'radio',
-  'searchbox',
-  'slider',
-  'spinbutton',
-  'switch',
-  'tab',
-  'textbox',
-])
 
 /**
  * aria-expanded 只在一部分 role 上合法。没有 role 的触发器只靠 aria-haspopup
@@ -66,32 +67,29 @@ export function supportsAriaExpanded(element: HTMLElement): boolean {
   }
 }
 
-function isEditable(element: HTMLElement): boolean {
-  if (element.isContentEditable === true)
-    return true
-  const attribute = element.getAttribute('contenteditable')
-  return attribute != null && attribute !== 'false'
-}
-
-/** 触发器自己会做事（按钮、链接、输入框）时，轻点属于它，不打开卡片。 */
-export function isActionTrigger(element: HTMLElement): boolean {
-  const role = element.getAttribute('role')
-  if (role != null && role !== '')
-    return ACTION_ROLES.has(role)
+/**
+ * aria-haspopup 同样只在一部分 role 上合法。没有 role 的触发器（`span`、`time`）不写它，
+ * 只在卡片打开时用 aria-controls 指向卡片。
+ */
+export function supportsAriaHaspopup(element: HTMLElement): boolean {
+  const explicit = element.getAttribute('role')?.trim().split(/\s+/)[0]
+  if (explicit)
+    return HASPOPUP_ROLES.has(explicit)
 
   switch (element.tagName) {
     case 'BUTTON':
-    case 'INPUT':
-    case 'LABEL':
     case 'SELECT':
-    case 'SUMMARY':
     case 'TEXTAREA':
       return true
     case 'A':
     case 'AREA':
       return element.hasAttribute('href')
+    case 'INPUT': {
+      const type = (element as HTMLInputElement).type?.toLowerCase() ?? 'text'
+      return BUTTON_INPUT_TYPES.has(type) || TEXT_INPUT_TYPES.has(type)
+    }
     default:
-      return isEditable(element)
+      return false
   }
 }
 

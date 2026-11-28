@@ -1,0 +1,12 @@
+@layer astryx.components {
+  .astryx-selectable-card-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--astryx-spacing-3, 12px);
+  }
+
+  .astryx-selectable-card-group[data-orientation='vertical'] {
+    flex-direction: column;
+    flex-wrap: nowrap;
+  }
+}

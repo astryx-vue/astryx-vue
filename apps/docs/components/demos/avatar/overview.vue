@@ -5,14 +5,14 @@ import { Stack } from '@astryx-vue/core/Stack'
 
 <template>
   <Stack direction="horizontal" :gap="4" align="center">
-    <Avatar src="/template-assets/DATA-Ana-Thomas.png" name="Ana Thomas" size="xl">
+    <Avatar src="/template-assets/DATA-Ana-Thomas.png" name="Ana Thomas" size="lg">
       <template #status>
         <AvatarStatusDot variant="success" label="Online" />
       </template>
     </Avatar>
-    <Avatar src="/template-assets/DATA-Drew-Young.png" name="Drew Young" size="xl" />
-    <Avatar src="/template-assets/DATA-Jihoo-Song.png" name="Jihoo Song" size="xl" />
-    <Avatar src="/template-assets/DATA-Nam-Tran.png" name="Nam Tran" size="xl">
+    <Avatar src="/template-assets/DATA-Drew-Young.png" name="Drew Young" size="lg" />
+    <Avatar src="/template-assets/DATA-Jihoo-Song.png" name="Jihoo Song" size="lg" />
+    <Avatar src="/template-assets/DATA-Nam-Tran.png" name="Nam Tran" size="lg">
       <template #status>
         <AvatarStatusDot variant="error" label="Busy" />
       </template>

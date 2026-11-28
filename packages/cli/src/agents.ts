@@ -75,6 +75,20 @@ export function applyManagedBlock(existing: string | null, inner: string): { con
   return { content: ensureTrailingNewline(`${existing}${separator}${block}`), action: 'appended' }
 }
 
+/**
+ * The file's text without the managed block, or null when it holds none. The
+ * blank line that set the block apart goes with it.
+ */
+export function removeManagedBlock(existing: string): string | null {
+  const start = existing.indexOf(MANAGED_BLOCK_START)
+  const end = existing.indexOf(MANAGED_BLOCK_END)
+  if (start === -1 || end < start)
+    return null
+  const before = existing.slice(0, start).replace(/\n+$/, '')
+  const after = existing.slice(end + MANAGED_BLOCK_END.length).replace(/^\n+/, '')
+  return [before, after].filter(Boolean).join('\n\n').replace(/\s*$/, '\n').replace(/^\n$/, '')
+}
+
 function ensureTrailingNewline(value: string): string {
   return value.endsWith('\n') ? value : `${value}\n`
 }
@@ -118,7 +132,7 @@ function renderEnglish(catalog: Catalog, conventions: string[]): string {
     '',
     `1. Start from a page. \`${BINARY} build "<what you are building>"\` names the closest template, two alternatives, and the components to use. \`${BINARY} template --list\` shows every template.`,
     `2. Copy it and make it yours. \`${BINARY} template <slug> ./src/pages\` writes \`<Name>.vue\`, swaps the docs-site demo photos for a grey placeholder, and reports the packages the project is missing. Only \`--overwrite\` (or \`-f\`) replaces an existing file.`,
-    `3. Look it up before writing. \`${BINARY} component <Name>\` prints usage, props, slots, and events. \`${BINARY} composable <Name>\` prints parameters and returns. Do not guess props, and do not paste the component catalog into this file.`,
+    `3. Look it up before writing. \`${BINARY} component <Name>\` prints a short answer with usage, every prop on one line, slots, and events; add \`--props\` for whole prop descriptions or \`--detail full\` for the whole doc. \`${BINARY} composable <Name>\` prints parameters and returns. Do not guess props, and do not paste the component catalog into this file.`,
     '',
     '## How to look things up',
     '',
@@ -140,7 +154,7 @@ function renderEnglish(catalog: Catalog, conventions: string[]): string {
     for (const paragraph of conventions)
       lines.push(paragraph, '')
   }
-  lines.push(`Refresh this block with \`${BINARY} init --features agents\`. The command replaces only the managed block.`)
+  lines.push(`Refresh this block with \`${BINARY} init --features agents\`. The command replaces only the managed block. To remove it, run \`${BINARY} init --remove-agents\`; it takes the block out of the agent files at the project root, and any other copy between the markers is yours to delete.`)
   return lines.join('\n').replace(/\n{3,}/g, '\n\n').trim()
 }
 
@@ -158,7 +172,7 @@ function renderChinese(catalog: Catalog, conventions: string[]): string {
     '',
     `1. 先从页面模板起步。\`${BINARY} build "<你要做的东西>"\` 会给出最接近的模板、另外两个备选，以及要用的组件。\`${BINARY} template --list\` 列出全部模板。`,
     `2. 复制出来再改。\`${BINARY} template <slug> ./src/pages\` 写出 \`<Name>.vue\`，把文档站的演示图片换成灰色占位图，并列出项目还缺哪些包。已存在的文件只有加 \`--overwrite\`（或 \`-f\`）才会被替换。`,
-    `3. 写代码前先查。\`${BINARY} component <Name>\` 打印用法、props、插槽和事件；\`${BINARY} composable <Name>\` 打印参数和返回值。不要猜 props，也不要把整份组件目录贴进这个文件。`,
+    `3. 写代码前先查。\`${BINARY} component <Name>\` 打印简短回答：用法、每个 prop 一行、插槽和事件，加 \`--props\` 看完整的 prop 描述，加 \`--detail full\` 看整份文档；\`${BINARY} composable <Name>\` 打印参数和返回值。不要猜 props，也不要把整份组件目录贴进这个文件。`,
     '',
     '## 怎么查',
     '',
@@ -180,6 +194,6 @@ function renderChinese(catalog: Catalog, conventions: string[]): string {
     for (const paragraph of conventions)
       lines.push(paragraph, '')
   }
-  lines.push(`用 \`${BINARY} init --features agents\` 刷新这段。命令只替换受管理的区块。`)
+  lines.push(`用 \`${BINARY} init --features agents\` 刷新这段。命令只替换受管理的区块。要移除它，运行 \`${BINARY} init --remove-agents\`：它会把项目根目录里各个 agent 文件中的这段拿掉；别处如果还有一份，请自己删掉两个标记之间的内容。`)
   return lines.join('\n').replace(/\n{3,}/g, '\n\n').trim()
 }

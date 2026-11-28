@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { CommentUser } from './types.js'
-import { Avatar, Center, Thumbnail, useTranslator } from '@astryx-vue/core'
+import { Avatar, Center, commentsMessages, Thumbnail, useComponentMessages } from '@astryx-vue/core'
 import { computed } from 'vue'
 
 defineOptions({ name: 'AstryxCommentAvatarFrame' })
@@ -10,7 +10,7 @@ const props = defineProps<{
   spacer?: boolean
 }>()
 
-const { t } = useTranslator()
+const messages = useComponentMessages({ comments: commentsMessages })
 
 const isAgent = computed(() => props.user?.kind === 'agent')
 </script>
@@ -25,7 +25,7 @@ const isAgent = computed(() => props.user?.kind === 'agent')
     <Thumbnail
       v-if="isAgent && user.avatarUrl != null && user.avatarUrl.trim() !== ''"
       :src="user.avatarUrl"
-      :alt="t('@astryx.comments.agentLogo', { name: user.name })"
+      :alt="messages.comments.agentLogo(user.name)"
       class="astryx-comment-avatar"
     />
     <Avatar

@@ -50,15 +50,15 @@
   }
 
   .astryx-svg-icon[data-color='positive'] {
-    color: var(--astryx-color-success, light-dark(#00490b, #a4d6a3));
+    color: var(--astryx-color-icon-success, light-dark(#00490b, #a4d6a3));
   }
 
   .astryx-svg-icon[data-color='negative'] {
-    color: var(--astryx-color-error, light-dark(#76000c, #ffc4be));
+    color: var(--astryx-color-icon-error, light-dark(#76000c, #ffc4be));
   }
 
   .astryx-svg-icon[data-color='warning'] {
-    color: var(--astryx-color-warning, light-dark(#4b3900, #f8d36a));
+    color: var(--astryx-color-icon-warning, light-dark(#4b3900, #f8d36a));
   }
 
   .astryx-svg-icon[data-color='inherit'] {

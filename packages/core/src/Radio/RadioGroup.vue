@@ -4,6 +4,7 @@ import type { RadioChangeEvent, RadioGroupEmits, RadioGroupProps, RadioGroupSlot
 import { computed, provide, useAttrs, useId, useTemplateRef } from 'vue'
 import Field from '../Field/Field.vue'
 import { useFieldPartStyling } from '../Field/fieldParts.js'
+import { useAriaRequired } from '../FormLayout/context.js'
 import Tooltip from '../Tooltip/Tooltip.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import Radio from './Radio.vue'
@@ -24,6 +25,7 @@ const parts = useFieldPartStyling({
   reservedAttrs: ['aria-labelledby', 'aria-describedby', 'aria-invalid', 'aria-required'],
 })
 const model = defineModel<RadioValue>({ required: true })
+const ariaRequired = useAriaRequired(props)
 const generatedName = `astryx-radio-${useId()}`
 const groupName = computed(() => props.name ?? generatedName)
 const group = useTemplateRef<HTMLDivElement>('group')
@@ -56,6 +58,7 @@ provide(radioContextKey, {
   isGroupDisabled: computed(() => props.isDisabled ?? false),
   isGroupReadOnly: computed(() => props.isReadOnly ?? false),
   isRequired: computed(() => (props.isRequired && !props.isOptional) ?? false),
+  hasErrorStatus: computed(() => props.status?.type === 'error'),
   disabledMessage,
   disabledMessageId,
   size: computed(() => props.size),
@@ -75,7 +78,7 @@ provide(radioContextKey, {
     </template>
     <template #default="field">
       <Tooltip :content="disabledMessage" :is-enabled="disabledMessage != null" focus-trigger="always" placement="above">
-        <div ref="group" class="astryx-radio-group-list" :class="controlClass" :style="controlStyle" role="radiogroup" v-bind="parts.forwardedAttrs()" :aria-labelledby="[field.labelId, attrs['aria-labelledby']].filter(Boolean).join(' ') || undefined" :aria-describedby="groupDescribedBy(field.describedBy)">
+        <div ref="group" class="astryx-radio-group-list" :class="controlClass" :style="controlStyle" role="radiogroup" v-bind="parts.forwardedAttrs()" :aria-labelledby="[field.labelId, attrs['aria-labelledby']].filter(Boolean).join(' ') || undefined" :aria-describedby="groupDescribedBy(field.describedBy)" :aria-disabled="isDisabled || undefined" :aria-invalid="status?.type === 'error' ? true : undefined" :aria-required="ariaRequired">
           <Radio
             v-for="option in options" :key="option.value"
             :value="option.value" :label="option.label" :description="option.description"

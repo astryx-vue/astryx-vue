@@ -27,13 +27,6 @@ const TRANSFER_LOCKED_OPTIONS: readonly TransferListOption[] = [
   OPTIONS[3]!,
 ]
 
-const REORDER_LOCKED_OPTIONS: readonly TransferListOption[] = [
-  OPTIONS[0]!,
-  { value: 'owner', label: 'Owner', group: 'Identity', isReorderDisabled: true, disabledMessage: 'Owner has a fixed position.' },
-  OPTIONS[2]!,
-  OPTIONS[3]!,
-]
-
 const ListComponent = TransferList as unknown as Component
 
 afterEach(() => {
@@ -45,6 +38,14 @@ async function flush(): Promise<void> {
   await nextTick()
   await flushPromises()
   await nextTick()
+}
+
+/** 等 Vue 渲染、core List 的重排会话挂上手柄、再过两帧。 */
+async function settle(): Promise<void> {
+  await flush()
+  for (let frame = 0; frame < 2; frame += 1)
+    await new Promise<void>(resolve => requestAnimationFrame(() => resolve()))
+  await flush()
 }
 
 interface HarnessOptions {
@@ -101,13 +102,21 @@ function listByName(wrapper: ReturnType<typeof mountList>, name: string) {
   return list
 }
 
-function rowTexts(wrapper: ReturnType<typeof mountList>) {
-  return panel(wrapper, 'selected').findAll('li.astryx-transfer-list-item').map(row => row.text().trim())
+/** 按钮的无障碍名：有 `aria-labelledby` 就按它拼（core 的重排手柄是「Reorder」加上行的标签），否则看 `aria-label` 和文字。 */
+function accessibleName(element: Element): string {
+  const labelledBy = element.getAttribute('aria-labelledby')
+  if (labelledBy != null) {
+    return labelledBy.split(' ').map((id) => {
+      const target = document.getElementById(id)
+      return target === element ? (element.getAttribute('aria-label') ?? '') : (target?.textContent ?? '')
+    }).join(' ').replace(/\s+/g, ' ').trim()
+  }
+  return element.getAttribute('aria-label') ?? element.textContent?.trim() ?? ''
 }
 
 function findButton(wrapper: ReturnType<typeof mountList>, name: string) {
   return wrapper.findAll('button').find(node =>
-    node.attributes('aria-label') === name || node.text().trim() === name,
+    accessibleName(node.element) === name || node.text().trim() === name,
   )
 }
 
@@ -116,43 +125,6 @@ function buttonByName(wrapper: ReturnType<typeof mountList>, name: string) {
   if (button == null)
     throw new Error(`找不到按钮 ${name}`)
   return button
-}
-
-function firePointer(element: Element, type: string, init: PointerEventInit = {}): void {
-  element.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, ...init }))
-}
-
-/** 原生派发一次点击。`trigger` 在这条链路上会把焦点弄丢，和真实浏览器不一致。 */
-async function clickElement(element: Element): Promise<void> {
-  element.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }))
-  await flush()
-}
-
-/** 原生派发一次按键。按钮上的 Enter / 空格在浏览器里会变成一次 click。 */
-async function pressKey(element: Element, key: string): Promise<void> {
-  element.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }))
-  await flush()
-}
-
-function mockRowBounds(rows: ReadonlyArray<Element>): void {
-  rows.forEach((row, index) => {
-    const top = index * 40
-    vi.spyOn(row, 'getBoundingClientRect').mockReturnValue({
-      x: 0,
-      y: top,
-      top,
-      right: 400,
-      bottom: top + 40,
-      left: 0,
-      width: 400,
-      height: 40,
-      toJSON: () => {},
-    } as DOMRect)
-  })
-}
-
-function selectedRows(wrapper: ReturnType<typeof mountList>): Element[] {
-  return [...panel(wrapper, 'selected').element.querySelectorAll('[data-transfer-list-row]')]
 }
 
 describe('transferList', () => {
@@ -176,8 +148,9 @@ describe('transferList', () => {
       expect(wrapper.find('[role="option"]').exists()).toBe(false)
     })
 
-    it('uses one divided collection with direction-neutral row actions', () => {
+    it('uses one divided collection with direction-neutral row actions', async () => {
       const wrapper = mountList({ initialValue: ['name', 'status'], extra: { hasClear: true, hasSelectAll: true } })
+      await settle()
 
       const collection = wrapper.get('.astryx-transfer-list-collection')
       expect(collection.element.querySelectorAll(':scope > .astryx-transfer-list-panel')).toHaveLength(2)
@@ -195,10 +168,11 @@ describe('transferList', () => {
       expect(removeButton.element.querySelector('.astryx-icon__glyph')).not.toBeNull()
 
       const nameRow = panel(wrapper, 'selected').findAll('li.astryx-transfer-list-item')[0]!
+      // 行尾先是删除按钮，最后是 core List 的重排手柄。
       const rowButtons = nameRow.findAll('button')
-      expect(rowButtons[0]!.attributes('aria-label')).toBe('Reorder Name')
-      expect(rowButtons[0]!.element.querySelector('.astryx-icon')).not.toBeNull()
-      expect(rowButtons[1]!.attributes('aria-label')).toBe('Remove Name')
+      expect(rowButtons[0]!.attributes('aria-label')).toBe('Remove Name')
+      expect(accessibleName(rowButtons[1]!.element)).toBe('Reorder Name')
+      expect(rowButtons[1]!.classes()).toContain('astryx-list-reorder-handle')
     })
 
     it('keeps support metadata out of rows while retaining search and groups', async () => {
@@ -274,15 +248,17 @@ describe('transferList', () => {
       expect(wrapper.text()).toContain('No matching columns')
     })
 
-    it('disables search and enables reordering by default', () => {
+    it('disables search and enables reordering by default', async () => {
       const wrapper = mountList({ initialValue: ['name'] })
+      await settle()
 
       expect(wrapper.find('[role="searchbox"]').exists()).toBe(false)
       expect(findButton(wrapper, 'Reorder Name')).toBeDefined()
     })
 
-    it('can turn on search and turn off reordering', () => {
+    it('can turn on search and turn off reordering', async () => {
       const wrapper = mountList({ initialValue: ['name'], extra: { hasSearch: true, isReorderable: false } })
+      await settle()
 
       expect(wrapper.find('[role="searchbox"]').exists()).toBe(true)
       expect(findButton(wrapper, 'Reorder Name')).toBeUndefined()
@@ -290,11 +266,42 @@ describe('transferList', () => {
   })
 
   describe('option constraints and bulk actions', () => {
-    it('keeps locked controls visible and disabled', () => {
-      const wrapper = mountList({ options: LOCKED_OPTIONS, initialValue: ['owner', 'status'] })
+    it('disables every control while keeping them focusable, without option-specific messages', async () => {
+      const spy = vi.fn()
+      const wrapper = mountList({
+        options: LOCKED_OPTIONS,
+        initialValue: ['name', 'owner'],
+        spy,
+        extra: { hasSearch: true, hasClear: true, hasSelectAll: true, isDisabled: true },
+      })
+      await settle()
+      const remove = buttonByName(wrapper, 'Remove Name')
+      expect(remove.attributes('aria-disabled')).toBe('true')
+      expect(remove.attributes('disabled')).toBeUndefined()
+      ;(remove.element as HTMLElement).focus()
+      expect(document.activeElement).toBe(remove.element)
+      ;(remove.element as HTMLElement).click()
+      expect(spy).not.toHaveBeenCalled()
+      // 禁用的列表里手柄还在、可聚焦，只是不接受拖动；位置固定的 Owner 本来就没有手柄。
+      expect(buttonByName(wrapper, 'Reorder Name').attributes('aria-disabled')).toBe('true')
+      expect(findButton(wrapper, 'Reorder Owner')).toBeUndefined()
+      expect(buttonByName(wrapper, 'Clear').attributes('aria-disabled')).toBe('true')
+      expect(buttonByName(wrapper, 'Add all').attributes('aria-disabled')).toBe('true')
+      expect(wrapper.get('[role="searchbox"]').attributes('aria-disabled')).toBe('true')
+      expect(wrapper.text()).not.toContain('Owner is required and fixed in position.')
+      wrapper.unmount()
+    })
 
-      expect(buttonByName(wrapper, 'Remove Owner').attributes('aria-disabled')).toBe('true')
-      expect(buttonByName(wrapper, 'Reorder Owner').attributes('aria-disabled')).toBe('true')
+    it('keeps a locked Remove visible and disabled, and gives a fixed row no handle', async () => {
+      const wrapper = mountList({ options: LOCKED_OPTIONS, initialValue: ['owner', 'status'] })
+      await settle()
+
+      const remove = buttonByName(wrapper, 'Remove Owner')
+      expect(remove.attributes('aria-disabled')).toBe('true')
+      // 没有手柄的行，删除按钮让出手柄的位置，和可挪的行对齐。
+      expect(remove.classes()).toContain('astryx-transfer-list-row-action--clears-handle')
+      expect(findButton(wrapper, 'Reorder Owner')).toBeUndefined()
+      expect(buttonByName(wrapper, 'Reorder Status').attributes('aria-disabled')).toBeUndefined()
     })
 
     it('applies transfer and reorder constraints independently', async () => {
@@ -304,11 +311,12 @@ describe('transferList', () => {
         { ...OPTIONS[2]!, isReorderDisabled: true, disabledMessage: 'Status has a fixed position.' },
       ]
       const wrapper = mountList({ options: constrainedOptions, initialValue: ['owner', 'status'], spy })
+      await settle()
 
       expect(buttonByName(wrapper, 'Remove Owner').attributes('aria-disabled')).toBe('true')
       expect(buttonByName(wrapper, 'Reorder Owner').attributes('aria-disabled')).toBeUndefined()
       expect(buttonByName(wrapper, 'Remove Status').attributes('aria-disabled')).toBeUndefined()
-      expect(buttonByName(wrapper, 'Reorder Status').attributes('aria-disabled')).toBe('true')
+      expect(findButton(wrapper, 'Reorder Status')).toBeUndefined()
 
       await buttonByName(wrapper, 'Remove Status').trigger('click')
       await flush()
@@ -373,223 +381,6 @@ describe('transferList', () => {
       await buttonByName(wrapper, 'Clear').trigger('click')
       await flush()
       expect(spy).toHaveBeenLastCalledWith([])
-    })
-  })
-
-  describe('pointer reordering', () => {
-    it.todo('promotes the drag preview to the top layer from inside a popover host 的原版断言依赖 React 版 Layer 的 popover 宿主，我们的浮层是 Teleport 到 body 的固定定位元素，没有 popover 属性。行为已在「keeps rows stationary…」里覆盖')
-
-    it('keeps rows stationary, locks X, follows pointer Y, and commits once', async () => {
-      const spy = vi.fn()
-      const wrapper = mountList({ initialValue: ['name', 'owner', 'status'], spy })
-      const rows = selectedRows(wrapper)
-      mockRowBounds(rows)
-      const handle = buttonByName(wrapper, 'Reorder Owner')
-      const previewBox = (): HTMLElement | null => document.querySelector('[data-transfer-list-drag-preview]')
-
-      firePointer(handle.element, 'pointerdown', { button: 0, pointerId: 7, clientX: 300, clientY: 50 })
-      await flush()
-
-      const source = wrapper.get('[data-transfer-list-reorder-source]')
-      const preview = previewBox()
-      expect(source.element).toBe(rows[1])
-      // 源行和克隆体都是半透明；具体取值来自 styles/transfer-list.css。
-      expect(source.attributes('data-transfer-list-reorder-source')).toBe('true')
-      expect(preview).not.toBeNull()
-      expect(preview!.getAttribute('aria-hidden')).toBe('true')
-      expect(preview!.textContent).toContain('Owner')
-      // 位置是按 getBoundingClientRect 算出来的视口坐标，纵向跟着指针、横向锁死。
-      expect(preview!.style.top).toBe('40px')
-      expect(preview!.style.left).toBe('0px')
-      expect(wrapper.find('[data-transfer-list-drop-target]').exists()).toBe(false)
-
-      firePointer(handle.element, 'pointermove', { pointerId: 7, clientX: 345, clientY: 5 })
-      await flush()
-
-      expect(previewBox()!.style.top).toBe('-5px')
-      expect(previewBox()!.style.left).toBe('0px')
-      expect(selectedRows(wrapper)).toEqual(rows)
-      expect(rowTexts(wrapper)).toEqual(['Name', 'Owner', 'Status'])
-      expect(spy).not.toHaveBeenCalled()
-      expect(rows[0]!.getAttribute('data-transfer-list-drop-target')).toBe('before')
-
-      firePointer(handle.element, 'pointermove', { pointerId: 7, clientX: 245, clientY: 115 })
-      await flush()
-
-      expect(previewBox()!.style.top).toBe('105px')
-      expect(rows[0]!.getAttribute('data-transfer-list-drop-target')).toBeNull()
-      expect(rows[2]!.getAttribute('data-transfer-list-drop-target')).toBe('after')
-      expect(spy).not.toHaveBeenCalled()
-
-      firePointer(handle.element, 'pointerup', { pointerId: 7, clientX: 245, clientY: 115 })
-      await flush()
-
-      expect(spy).toHaveBeenCalledTimes(1)
-      expect(spy).toHaveBeenCalledWith(['name', 'status', 'owner'])
-      expect(document.querySelector('[data-transfer-list-drop-target]')).toBeNull()
-      expect(previewBox()).toBeNull()
-    })
-
-    it('ignores a horizontal-only gesture without changing the value', async () => {
-      const spy = vi.fn()
-      const wrapper = mountList({ initialValue: ['name', 'owner'], spy })
-      const rows = selectedRows(wrapper)
-      mockRowBounds(rows)
-      const handle = buttonByName(wrapper, 'Reorder Name')
-
-      firePointer(handle.element, 'pointerdown', { button: 0, pointerId: 8, clientX: 10, clientY: 10 })
-      await flush()
-      firePointer(handle.element, 'pointermove', { pointerId: 8, clientX: 210, clientY: 10 })
-      await flush()
-
-      expect(wrapper.find('[data-transfer-list-reorder-source]').exists()).toBe(true)
-      expect(document.querySelector('[data-transfer-list-drag-preview]')).not.toBeNull()
-      // 只有横向移动时不能把克隆体带离原来那一行：拖动锁在竖直方向。
-      const preview = document.querySelector<HTMLElement>('[data-transfer-list-drag-preview]')
-      expect(preview!.style.top).toBe('0px')
-      expect(preview!.style.left).toBe('0px')
-      expect(wrapper.find('[data-transfer-list-drop-target]').exists()).toBe(false)
-
-      firePointer(handle.element, 'pointerup', { pointerId: 8, clientX: 210, clientY: 10 })
-      await flush()
-
-      expect(spy).not.toHaveBeenCalled()
-      expect(wrapper.find('[data-transfer-list-reorder-source]').exists()).toBe(false)
-      expect(document.querySelector('[data-transfer-list-drag-preview]')).toBeNull()
-    })
-
-    it('cancels on pointer cancellation and does not suppress the next activation', async () => {
-      const spy = vi.fn()
-      const wrapper = mountList({ initialValue: ['name', 'owner', 'status'], spy })
-      const rows = selectedRows(wrapper)
-      mockRowBounds(rows)
-      const handle = buttonByName(wrapper, 'Reorder Owner')
-
-      firePointer(handle.element, 'pointerdown', { button: 0, pointerId: 9, clientX: 300, clientY: 50 })
-      await flush()
-      firePointer(handle.element, 'pointermove', { pointerId: 9, clientX: 300, clientY: 5 })
-      await flush()
-      firePointer(handle.element, 'pointercancel', { pointerId: 9 })
-      await flush()
-
-      expect(spy).not.toHaveBeenCalled()
-      expect(document.querySelector('[data-transfer-list-drag-preview]')).toBeNull()
-      expect(wrapper.find('[data-transfer-list-reorder-source]').exists()).toBe(false)
-
-      await buttonByName(wrapper, 'Reorder Owner').trigger('click')
-      await flush()
-      expect(buttonByName(wrapper, 'Reorder Owner').attributes('aria-pressed')).toBe('true')
-      expect(spy).not.toHaveBeenCalled()
-    })
-
-    it('keeps reorder-disabled selected options as pointer-order barriers', async () => {
-      const spy = vi.fn()
-      const wrapper = mountList({ options: REORDER_LOCKED_OPTIONS, initialValue: ['name', 'owner', 'status', 'updated'], spy })
-      const rows = selectedRows(wrapper)
-      mockRowBounds(rows)
-      const handle = buttonByName(wrapper, 'Reorder Updated')
-
-      firePointer(handle.element, 'pointerdown', { button: 0, pointerId: 10, clientX: 300, clientY: 130 })
-      await flush()
-      firePointer(handle.element, 'pointermove', { pointerId: 10, clientX: 300, clientY: 5 })
-      await flush()
-
-      expect(rows[2]!.getAttribute('data-transfer-list-drop-target')).toBe('before')
-      firePointer(handle.element, 'pointerup', { pointerId: 10, clientX: 300, clientY: 5 })
-      await flush()
-
-      expect(spy).toHaveBeenCalledTimes(1)
-      expect(spy).toHaveBeenCalledWith(['name', 'owner', 'updated', 'status'])
-    })
-  })
-
-  describe('keyboard reordering', () => {
-    it('moves immediately, keeps handle focus, and drops without another change', async () => {
-      const spy = vi.fn()
-      const wrapper = mountList({ initialValue: ['name', 'owner', 'status'], spy })
-      const handle = buttonByName(wrapper, 'Reorder Owner')
-      const el = handle.element as HTMLButtonElement
-      el.focus()
-
-      // 按钮上的 Enter / Space 会变成一次 click：点一下拿起，再点一下放下。
-      await clickElement(el)
-      await pressKey(el, 'ArrowUp')
-
-      expect(spy).toHaveBeenCalledTimes(1)
-      expect(spy).toHaveBeenLastCalledWith(['owner', 'name', 'status'])
-      // happy-dom 在移动 DOM 节点时会把 activeElement 清成 body（真实浏览器不会），
-      // 这里断言手柄节点没有被重建——焦点之所以留得住就是这个原因。
-      // 真实焦点保持由浏览器实测（Tab / 方向键 / Enter / Escape）覆盖。
-      expect(wrapper.get('[aria-label="Reorder Owner"]').element).toBe(el)
-
-      await clickElement(el)
-      expect(spy).toHaveBeenCalledTimes(1)
-      expect(wrapper.get('[aria-label="Reorder Owner"]').element).toBe(el)
-    })
-
-    it('supports Home and End while a value is grabbed', async () => {
-      const spy = vi.fn()
-      const wrapper = mountList({ initialValue: ['name', 'owner', 'status', 'updated'], spy })
-      const handle = buttonByName(wrapper, 'Reorder Owner')
-      ;(handle.element as HTMLButtonElement).focus()
-
-      const el = handle.element as HTMLButtonElement
-      await clickElement(el)
-      await pressKey(el, 'End')
-      expect(spy).toHaveBeenNthCalledWith(1, ['name', 'status', 'updated', 'owner'])
-
-      await pressKey(el, 'Home')
-      expect(spy).toHaveBeenNthCalledWith(2, ['owner', 'name', 'status', 'updated'])
-      expect(spy).toHaveBeenCalledTimes(2)
-
-      await clickElement(el)
-      // 放下本身不改顺序，手柄节点没有被重建。
-      expect(wrapper.get('[aria-label="Reorder Owner"]').element).toBe(el)
-    })
-
-    it('restores the original order when a grabbed move is cancelled', async () => {
-      const spy = vi.fn()
-      const wrapper = mountList({ initialValue: ['name', 'owner', 'status'], spy })
-      const handle = buttonByName(wrapper, 'Reorder Owner')
-      ;(handle.element as HTMLButtonElement).focus()
-
-      const el = handle.element as HTMLButtonElement
-      await clickElement(el)
-      await pressKey(el, 'ArrowDown')
-      expect(spy).toHaveBeenNthCalledWith(1, ['name', 'status', 'owner'])
-
-      await pressKey(el, 'Escape')
-      expect(spy).toHaveBeenNthCalledWith(2, ['name', 'owner', 'status'])
-      // happy-dom 在移动 DOM 节点时会把 activeElement 清成 body（真实浏览器不会），
-      // 这里断言手柄节点没有被重建——焦点之所以留得住就是这个原因。
-      // 真实焦点保持由浏览器实测（Tab / 方向键 / Enter / Escape）覆盖。
-      expect(wrapper.get('[aria-label="Reorder Owner"]').element).toBe(el)
-    })
-
-    it('does not allow a value to cross a reorder-disabled value', async () => {
-      const spy = vi.fn()
-      const wrapper = mountList({ options: REORDER_LOCKED_OPTIONS, initialValue: ['name', 'owner', 'status', 'updated'], spy })
-
-      const beforeBarrier = buttonByName(wrapper, 'Reorder Name').element as HTMLButtonElement
-      beforeBarrier.focus()
-      await clickElement(beforeBarrier)
-      await pressKey(beforeBarrier, 'ArrowDown')
-      await clickElement(beforeBarrier)
-      expect(spy).not.toHaveBeenCalled()
-
-      const afterBarrier = buttonByName(wrapper, 'Reorder Updated').element as HTMLButtonElement
-      afterBarrier.focus()
-      await clickElement(afterBarrier)
-      await pressKey(afterBarrier, 'Home')
-      expect(spy).toHaveBeenLastCalledWith(['name', 'owner', 'updated', 'status'])
-
-      await pressKey(afterBarrier, 'ArrowUp')
-      await clickElement(afterBarrier)
-      expect(spy).toHaveBeenCalledTimes(1)
-      // happy-dom 在移动 DOM 节点时会把 activeElement 清成 body（真实浏览器不会），
-      // 这里断言手柄节点没有被重建——焦点之所以留得住就是这个原因。
-      // 真实焦点保持由浏览器实测（Tab / 方向键 / Enter / Escape）覆盖。
-      expect(wrapper.get('[aria-label="Reorder Updated"]').element).toBe(afterBarrier)
     })
   })
 

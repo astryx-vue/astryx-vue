@@ -41,7 +41,6 @@ export interface UseTypeaheadMenuOptions<T extends SearchableItem = SearchableIt
   /** 不要包成 getter。toValue 会把函数当成 getter 直接调用。 */
   createLabel?: (query: string) => string
   onSelect: (entry: TypeaheadMenuEntry<T>) => void
-  onEscape?: () => void
   onQueryChange?: (query: string) => void
 }
 
@@ -59,7 +58,15 @@ export interface TypeaheadMenu<T extends SearchableItem = SearchableItem> {
   activeId: ComputedRef<string | undefined>
   /** 输入还没到够搜的长度：此时不搜，下拉也不打开。 */
   belowMinQueryLength: ComputedRef<boolean>
+  /** 这次搜索已经落定：不在加载，且结果是为输入框里现在的文字搜的（防抖里的新输入还没有结果）。 */
+  isSettled: ComputedRef<boolean>
+  /** 给菜单画的状态：旧查询的「没有结果」不留给还在防抖的新输入。 */
+  menuStatus: ComputedRef<AsyncSourceStatus>
+  /** 数据源这次搜到的全部匹配条数，包括被 `maxItems` 截掉没显示的，不含「创建」行。 */
+  matchCount: ComputedRef<number>
   setQuery: (value: string) => void
+  /** 选中后把输入框清空；查询原本不是空的才上报，因为空查询没有变化。 */
+  resetQuery: () => void
   open: () => void
   close: () => void
   onKeyDown: (event: KeyboardEvent) => void
@@ -90,6 +97,19 @@ export function useTypeaheadMenu<T extends SearchableItem>(options: UseTypeahead
       return
     asyncSource.status.value = 'idle'
   }, { flush: 'sync' })
+
+  const isSettled = computed(() => asyncSource.status.value !== 'loading' && asyncSource.searchedQuery.value === query.value)
+  const menuStatus = computed<AsyncSourceStatus>(() => {
+    const status = asyncSource.status.value
+    return status === 'empty' && asyncSource.searchedQuery.value !== query.value ? 'idle' : status
+  })
+
+  const matchCount = computed(() => {
+    if (belowMinQueryLength.value)
+      return 0
+    const excluded = new Set(toValue(options.excludeIds) ?? [])
+    return asyncSource.items.value.filter(item => !excluded.has(item.id)).length
+  })
 
   const entries = computed<TypeaheadMenuEntry<T>[]>(() => {
     const excluded = new Set(toValue(options.excludeIds) ?? [])
@@ -156,6 +176,15 @@ export function useTypeaheadMenu<T extends SearchableItem>(options: UseTypeahead
       combobox.highlightFirst()
   })
 
+  // 聚焦时展开的清单没有可选的、或者加载失败，就收起，不留一个开着的空列表。
+  // 输入了文字的搜索没有结果仍然显示「没有结果」。
+  watch([isSettled, () => asyncSource.status.value, () => entries.value.length], () => {
+    if (!combobox.isOpen.value || !isSettled.value || query.value.trim() !== '')
+      return
+    if ((asyncSource.status.value === 'empty' || asyncSource.status.value === 'error') && entries.value.length === 0)
+      close()
+  })
+
   /**
    * 太短的查询没东西可展示，此时不让下拉打开。
    * 只有从文字自己派生的条目（比如「创建 xxx」）还值得看一眼。
@@ -197,6 +226,13 @@ export function useTypeaheadMenu<T extends SearchableItem>(options: UseTypeahead
       close()
   }
 
+  function resetQuery(): void {
+    const changed = query.value !== ''
+    query.value = ''
+    if (changed)
+      options.onQueryChange?.('')
+  }
+
   function selectHighlighted(): void {
     const entry = entries.value[combobox.activeIndex.value]
     if (entry && !entry.disabled)
@@ -206,10 +242,20 @@ export function useTypeaheadMenu<T extends SearchableItem>(options: UseTypeahead
   function onKeyDown(event: KeyboardEvent): void {
     if (event.isComposing || event.key === 'Process')
       return
-    if (toValue(options.disabled))
-      return
-
     const openNow = combobox.isOpen.value
+    // 禁用的字段不开列表也不选，只让还开着的列表关得掉；回车也不能触发外层表单提交。
+    if (toValue(options.disabled)) {
+      if (openNow && event.key === 'Enter')
+        event.preventDefault()
+      if (openNow && event.key === 'Escape') {
+        event.preventDefault()
+        close()
+      }
+      if (openNow && event.key === 'Tab')
+        close()
+      return
+    }
+
     const list = entries.value
 
     switch (event.key) {
@@ -269,7 +315,6 @@ export function useTypeaheadMenu<T extends SearchableItem>(options: UseTypeahead
         if (openNow) {
           event.preventDefault()
           close()
-          options.onEscape?.()
         }
         break
       case 'Tab':
@@ -293,7 +338,11 @@ export function useTypeaheadMenu<T extends SearchableItem>(options: UseTypeahead
     error: asyncSource.error,
     activeId,
     belowMinQueryLength,
+    isSettled,
+    menuStatus,
+    matchCount,
     setQuery,
+    resetQuery,
     open,
     close,
     onKeyDown,

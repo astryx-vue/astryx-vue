@@ -11,6 +11,8 @@ export const CORE_PACKAGE = '@astryx-vue/core'
 export const DOCS_PACKAGE = '@astryx-vue/docs'
 
 /** Values `search --type` accepts. Each one names a search domain. */
+export const COMPONENT_DETAILS = ['compact', 'full'] as const
+
 export const SEARCH_TYPES = ['component', 'composable', 'doc', 'template'] as const
 
 export type SearchType = typeof SEARCH_TYPES[number]
@@ -104,18 +106,23 @@ const USAGE_EXIT: readonly ExitSpec[] = [
 export const COMMANDS: readonly CommandSpec[] = [
   {
     name: 'component',
-    summary: 'List components or print one component\'s docs.',
+    summary: 'List components or print the docs of one or several components.',
     arguments: [
-      { name: 'name', required: false, variadic: false, description: 'Component name, such as Button or button-group. Omit with --list.' },
+      { name: 'name', required: false, variadic: true, description: 'Component name, such as Button or button-group. Several names print each component in turn. Omit with --list.' },
     ],
     options: [
       { name: 'list', flag: '--list', type: 'boolean', description: 'List every documented component.' },
+      { name: 'detail', flag: '--detail', type: 'string', description: 'How much to print: compact (the default) is a short answer with every prop on one line; full adds best practices, every example, anatomy and notes. --json always returns everything.', choices: COMPONENT_DETAILS },
+      { name: 'props', flag: '--props', type: 'boolean', description: 'Print only the props, each with its whole description.' },
     ],
     json: true,
-    responseTypes: ['component.list', 'component.detail'],
+    responseTypes: ['component.list', 'component.detail', 'component.details'],
     examples: [
       `${BINARY} component --list`,
       `${BINARY} component Button`,
+      `${BINARY} component Button --props`,
+      `${BINARY} component Button --detail full`,
+      `${BINARY} component Button Card Badge`,
       `${BINARY} component Button --json`,
       `${BINARY} component Button --zh --dense`,
     ],
@@ -123,15 +130,15 @@ export const COMMANDS: readonly CommandSpec[] = [
   },
   {
     name: 'composable',
-    summary: 'List composables or print one composable\'s parameters and returns.',
+    summary: 'List composables or print the parameters and returns of one or several composables.',
     arguments: [
-      { name: 'name', required: false, variadic: false, description: 'Composable name, such as useClipboard or use-clipboard. Omit with --list.' },
+      { name: 'name', required: false, variadic: true, description: 'Composable name, such as useClipboard or use-clipboard. Several names print each composable in turn. Omit with --list.' },
     ],
     options: [
       { name: 'list', flag: '--list', type: 'boolean', description: 'List every documented composable.' },
     ],
     json: true,
-    responseTypes: ['composable.list', 'composable.detail'],
+    responseTypes: ['composable.list', 'composable.detail', 'composable.details'],
     examples: [
       `${BINARY} composable --list`,
       `${BINARY} composable useClipboard`,
@@ -144,9 +151,10 @@ export const COMMANDS: readonly CommandSpec[] = [
     name: 'docs',
     summary: 'List guide and theme topics, or print one topic\'s page.',
     arguments: [
-      { name: 'topic', required: false, variadic: false, description: 'Topic id such as guide/dark-mode or themes/tokens, or a unique bare name such as dark-mode. Omit to list every topic.' },
+      { name: 'topic', required: false, variadic: false, description: 'Topic id such as guide/dark-mode or themes/tokens, or a unique bare name such as dark-mode. Omit to list every topic. Words may be separated by spaces, dashes, slashes, or dots, in any order.' },
     ],
     options: [
+      { name: 'list', flag: '--list', type: 'boolean', description: 'List every topic, the same as passing no topic.' },
       { name: 'depth', flag: '--depth', type: 'string', description: 'Print headings down to this level. 2 keeps `#` and `##` and drops deeper subsections with their body. Default: every level.' },
     ],
     json: true,
@@ -159,7 +167,7 @@ export const COMMANDS: readonly CommandSpec[] = [
       `${BINARY} docs dark-mode --zh --dense`,
     ],
     exitCodes: USAGE_EXIT,
-    errors: [{ code: 'ERR_INVALID_ARGUMENT', when: '--depth is not a positive whole number, or is passed without a topic.' }],
+    errors: [{ code: 'ERR_INVALID_ARGUMENT', when: '--depth is not a positive whole number, or is passed without a topic, or a topic is passed together with --list.' }],
   },
   {
     name: 'search',
@@ -278,7 +286,7 @@ export const COMMANDS: readonly CommandSpec[] = [
   },
   {
     name: 'doctor',
-    summary: 'Check the project\'s versions, theme stylesheet, and theme attribute. Changes nothing.',
+    summary: 'Check the project\'s versions, theme stylesheet, theme attribute, and Core buttons that do nothing. Changes nothing.',
     arguments: [],
     options: [],
     json: true,
@@ -303,9 +311,10 @@ export const COMMANDS: readonly CommandSpec[] = [
       { name: 'features', flag: '--features', type: 'string', description: 'Comma-separated features. agents writes the managed block; leaving the flag out is the same as passing it. Any other feature is an error.' },
       { name: 'agent', flag: '--agent', type: 'string', description: 'Which file to write. cursor and codex use AGENTS.md, claude uses CLAUDE.md, hermes uses .hermes.md (or an existing HERMES.md), all writes every agent file the project already has. Without it, an existing agent file is reused.', choices: ['cursor', 'claude', 'codex', 'hermes', 'all'] },
       { name: 'agent-docs-path', flag: '--agent-docs-path', type: 'string', description: 'Write the managed block to this file instead. Relative paths resolve against the project directory.' },
+      { name: 'remove-agents', flag: '--remove-agents', type: 'boolean', description: 'Take the managed block out of the agent files at the project root, or out of the file --agent-docs-path names. A file the block was all of is deleted. Does not combine with --features or --agent.' },
     ],
     json: true,
-    responseTypes: ['init.run'],
+    responseTypes: ['init.run', 'init.remove'],
     examples: [
       `${BINARY} init`,
       `${BINARY} init --json`,
@@ -313,6 +322,7 @@ export const COMMANDS: readonly CommandSpec[] = [
       `${BINARY} init --features agents --agent hermes`,
       `${BINARY} init --features agents --agent all`,
       `${BINARY} init --features agents --agent-docs-path docs/AGENTS.md`,
+      `${BINARY} init --remove-agents`,
     ],
     exitCodes: USAGE_EXIT,
     errors: [

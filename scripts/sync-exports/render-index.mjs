@@ -4,8 +4,7 @@ import { dirname, join } from 'node:path'
 import { compareDir, compareName, componentDirs, TS_BANNER } from './source-layout.mjs'
 import { collectExports } from './ts-exports.mjs'
 
-// 这些名字在改成自动生成之前就没有从包的总入口导出。
-// 子路径仍然导出它们。新组件的导出会照常进入总入口。
+// 这些名字只从组件子路径导出，不进包的总入口。新组件的导出会照常进入总入口。
 const ROOT_NAME_OMISSIONS = new Set([
   'SkeletonProps',
   'SkeletonRadius',
@@ -14,7 +13,7 @@ const ROOT_NAME_OMISSIONS = new Set([
   'weekdayNames',
 ])
 
-// 组件内部在用，但 composables/index.ts 原来没有收录。新文件会自动收录。
+// 这两个只给组件内部用，不算公开的组合式函数，所以不收进 composables/index.ts。其它文件（包括新加的）会自动收录。
 const COMPOSABLE_FILE_OMISSIONS = new Set([
   'useCalendar.ts',
   'usePagination.ts',

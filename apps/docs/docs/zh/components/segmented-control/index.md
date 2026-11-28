@@ -33,13 +33,15 @@ const view = ref('overview')
 
 选中项通过 `v-model` 双向绑定。控件本身渲染为一个 `role="radiogroup"` 的容器，`label` 会写进 `aria-label`，只在屏幕阅读器中起作用，页面上不会出现可见的组标题。每个 `SegmentedControlItem` 渲染成一个 `role="radio"` 的按钮，`aria-checked` 反映它是否被选中。
 
-键盘操作遵循单选组的惯例：左右方向键在分段之间移动，`Home` 和 `End` 跳到第一个和最后一个可用分段，越界时循环；焦点移动到哪个分段，选中就跟着落到哪个分段。整个控件在同一时刻只有一个 Tab 停靠点（roving tabindex），按 Tab 会直接穿过控件而不是逐个分段停留。禁用的分段会从方向键的行走顺序和 Tab 顺序里被跳过。
+键盘操作遵循单选组的惯例：左右方向键在分段之间移动，`Home` 和 `End` 跳到第一个和最后一个可用分段，越界时循环；焦点移动到哪个分段，选中就跟着落到哪个分段。整个控件在同一时刻只有一个 Tab 停靠点（roving tabindex），按 Tab 会直接穿过控件而不是逐个分段停留。禁用的分段会从方向键的行走顺序里被跳过；选中的分段哪怕被禁用，也保留 Tab 停靠点，没有选中的分段时由第一个自己没被禁用的分段接手。
 
 `size` 提供 `sm`、`md`、`lg` 三档，默认 `md`。`layout` 默认是 `hug`，控件和每个分段都按内容取宽，并且不会超出所在容器：容器太窄时标签会以省略号截断，而不是把控件挤出边界；改成 `fill` 后，分段会平均分摊整行宽度，适合放在窄卡片里。
 
-`isDisabled` 会禁用整个控件，此时所有分段都不能选择，控件也退出 Tab 顺序。如果还想说明禁用的原因，请使用 `disabledMessage`（而不是把控件包进 Tooltip）：禁用控件会吞掉外部 Tooltip 需要的指针事件，而 `disabledMessage` 会让控件保持可获得焦点，把原因同时呈现给鼠标和键盘用户，选择仍然被阻止。单独禁用某一个分段则用 `SegmentedControlItem` 自己的 `isDisabled`。
+`isDisabled` 会禁用整个控件，此时所有分段都不能选择，控件变暗并向读屏声明为禁用，选中的分段保留控件唯一的 Tab 停靠点。如果还想说明禁用的原因，请使用 `disabledMessage`，让原因挂在控件自己身上：鼠标悬停和键盘聚焦时都会显示，读屏里它同时描述每一个分段，选择仍然被阻止。单独禁用某一个分段则用 `SegmentedControlItem` 自己的 `isDisabled`。
 
 分段可以在标签前面放一个图标，把图标写进 `#icon` 插槽即可；图标会跟随控件的尺寸。只显示图标时设置 `isLabelHidden`，此时 `label` 会转成 `aria-label`，分段的无障碍名称不会丢失。
+
+选中的底色是一块独立的表面，不管是点击、按键还是代码改了值，它都会滑到新的分段上。用鼠标时按主题的时长和曲线滑过去；在手机这类触屏设备上改用 iOS 分段控件的弹簧，手指按住选中的分段时这块表面会微微放大、浮起来。按住选中的分段左右拖，表面会跟着指针走，松手落在哪个分段就选哪个；拖出控件上下方也照样按左右位置来选，按 `Esc` 则取消这次拖动。鼠标、手指和笔都能这样拖。系统开启「减少动态效果」时，表面不再滑动和放大：触屏上换成原地淡入淡出，鼠标点击直接落位。
 
 
 <ComponentAnatomy />
@@ -54,7 +56,7 @@ const view = ref('overview')
 | <Badge variant="success">推荐</Badge> | 禁用整个控件时用 `disabledMessage` 说明原因，键盘用户同样能读到这条信息。 |
 | <Badge variant="error">避免</Badge> | 用它做页面级导航。那是 `TabList` 的职责：`TabList` 切换的是内容区域，`SegmentedControl` 是一个输入，任何时候都必须有一个选中项。 |
 | <Badge variant="error">避免</Badge> | 用它表达简单的开与关。开关有独立状态，分段控件则强制单选，语义不同。 |
-| <Badge variant="error">避免</Badge> | 把禁用的分段控件包进 `Tooltip`。禁用控件不会触发外部 Tooltip 需要的指针事件，请改用 `disabledMessage`。 |
+| <Badge variant="error">避免</Badge> | 把禁用的分段控件包进 `Tooltip`。请改用 `disabledMessage`，它把原因挂在控件自己身上。 |
 | <Badge variant="error">避免</Badge> | 放进超过 5 个分段，也避免让标签长度差得很悬殊。选项一多，用户就要逐个读完才能比较。 |
 
 ## 示例

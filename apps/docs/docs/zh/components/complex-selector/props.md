@@ -21,10 +21,11 @@ footer: false
       <tr><td><code>description</code></td><td><code>string</code></td><td>-</td><td>标签下面的说明。</td></tr>
       <tr><td><code>isOptional</code></td><td><code>boolean</code></td><td><code>false</code></td><td>标成可选。</td></tr>
       <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td><code>false</code></td><td>标成必填。</td></tr>
-      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>触发器不再打开。</td></tr>
+      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>触发器不再打开。它用 <code>aria-disabled</code> 留在 Tab 序里；禁用前已经开着的弹层里再提交也不会改值。</td></tr>
+      <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>-</td><td>为什么禁用。和 <code>isDisabled</code> 一起用时，鼠标悬停、键盘聚焦或手指点按触发器都会弹出这段说明，读屏也会把它当成触发器的说明。自定义触发器把拿到的触发器属性铺到自己的控件上就会显示提示并带上说明，控件自己的提示在禁用时请去掉。</td></tr>
       <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>触发器上显示加载指示。</td></tr>
       <tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>-</td><td>错误、警告或成功消息。</td></tr>
-      <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'attached'</code></td><td>状态消息放在哪里。</td></tr>
+      <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'attached'</code></td><td>状态消息放在哪里。<code>attached</code> 和 <code>tooltip</code> 会在箭头的位置画状态图标；<code>tooltip</code> 时图标是能聚焦的按钮，说明收在它的提示里，点它不会打开弹层。</td></tr>
       <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>-</td><td>标签上的提示。</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>触发器尺寸。</td></tr>
       <tr><td><code>width</code></td><td><code>number | string</code></td><td>-</td><td>字段宽度。数字按像素。</td></tr>
@@ -33,7 +34,7 @@ footer: false
       <tr><td><code>startIcon</code></td><td><code>string | Component</code></td><td>-</td><td>内置触发器开头的图标。</td></tr>
       <tr><td><code>variant</code></td><td><code>'input' | 'secondary' | 'ghost'</code></td><td><code>'input'</code></td><td><code>input</code> 是带边框的字段。<code>secondary</code> 对齐次要按钮。<code>ghost</code> 看起来像工具栏按钮。后两种上的 attached 状态会收成独立说明。</td></tr>
       <tr><td><code>containerClass</code> / <code>controlClass</code></td><td><code>class</code></td><td>—</td><td>外壳接收 <code>container*</code> 和根上的 class。内置按钮接收 <code>control*</code>。自定义触发器上这两类样式不生效，开发环境会警告。</td></tr>
-      <tr><td><code>renderTrigger</code></td><td><code>(props) =&gt; VNode</code></td><td>-</td><td>换掉字段和内置触发器。把 <code>props</code> 展开到你的控件上。<code>trigger</code> 插槽做同一件事。</td></tr>
+      <tr><td><code>renderTrigger</code></td><td><code>(props) =&gt; VNode</code></td><td>-</td><td>换掉字段和内置触发器。把 <code>props</code> 展开到你的控件上，它就成了这个字段的 combobox，带上 <code>role</code>、<code>aria-required</code>、<code>aria-disabled</code>，以及取自 <code>label</code> 的 <code>aria-label</code>（你传了 <code>aria-label</code> 或 <code>aria-labelledby</code> 时以你的为准）。<code>trigger</code> 插槽做同一件事。</td></tr>
       <tr><td><code>handleRef</code></td><td><code>Ref | (handle) =&gt; void</code></td><td>-</td><td>拿到 <code>open</code>、<code>close</code>、<code>toggle</code> 和 <code>isOpen</code>。模板 <code>ref</code> 暴露同样的方法。</td></tr>
       <tr><td><code>changeAction</code></td><td><code>(value) =&gt; void | Promise&lt;void&gt;</code></td><td>-</td><td>值变化后执行。还没结束时触发器显示加载指示。</td></tr>
     </tbody>

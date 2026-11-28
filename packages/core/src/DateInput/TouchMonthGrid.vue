@@ -1,37 +1,50 @@
 <script setup lang="ts">
 import type { CalendarDate } from '@internationalized/date'
 import type { WeekStartsOn } from '../composables/useDateRange.js'
-import { CalendarDate as CalendarDay } from '@internationalized/date'
-import { computed, shallowRef, watch } from 'vue'
-import { formatWeekdayDate, sameCalendarDay, toCalendarDate, weekStartIndex } from '../Calendar/calendarDate.js'
+import type { CalendarMonth, CalendarSystem } from '../utils/calendarSystem.js'
+import type { PlainDate } from '../utils/plainDate.js'
+import { computed, nextTick, shallowRef, useTemplateRef, watch } from 'vue'
+import { calendarISO, formatWeekdayDate, sameCalendarDay, toCalendarDate, weekStartIndex } from '../Calendar/calendarDate.js'
+import { toCalendarDay } from '../Calendar/calendarMonths.js'
 import { isCalendarDateDisabled, isOutsideCalendarBounds } from '../Calendar/useCalendarConstraints.js'
-import { buildCalendarWeeks } from '../Calendar/useCalendarGrid.js'
+import { buildMonthWeeks } from '../Calendar/useCalendarGrid.js'
 import { resolveCalendarKey } from '../Calendar/useCalendarKeyboard.js'
-import { formatCalendarMonth, standaloneShortWeekdayNames, weekdayNames } from '../locale/format.js'
+import { formatDayNumber, standaloneShortWeekdayNames, weekdayNames } from '../locale/format.js'
 import { useAstryxLocale } from '../locale/index.js'
+import { formatCalendarMonthLabel } from '../utils/calendarFormat.js'
+import { calendarDayOfMonth, isInCalendarMonth } from '../utils/calendarSystem.js'
 import '../../styles/calendar.css'
 
-const props = defineProps<{
-  year: number
-  month: number
+const props = withDefaults(defineProps<{
+  calendar: CalendarSystem
+  /** 显示的历法月。 */
+  month: CalendarMonth
   selected?: Date | null
   min?: Date
   max?: Date
   isDateDisabled?: (date: Date) => boolean
   dateConstraints?: ReadonlyArray<(date: Date) => boolean>
   weekStartsOn?: WeekStartsOn
-}>()
+  /** 今天。由面板在挂载后读好传进来，服务端渲染和水合时不读时钟。 */
+  today: Date
+  /** 是否在格子上方画星期表头。月份滚动器把表头画在滚动区外面，每个月就不再画。 */
+  weekdays?: boolean
+  /** 键盘焦点所在的日子。落在这个月里时，这一天是这个月唯一能 Tab 到的格子。 */
+  focusDate?: PlainDate | null
+}>(), { weekdays: true, focusDate: null })
 
 const emit = defineEmits<{
   'pick': [date: Date]
-  'update:view': [year: number, month: number]
+  /** 键盘把焦点挪出了这个月，参数是焦点落到的那天。 */
+  'update:view': [date: PlainDate]
 }>()
 
 const locale = useAstryxLocale()
 const weekStart = computed(() => weekStartIndex(props.weekStartsOn))
 const selectedDate = computed(() => props.selected ? toCalendarDate(props.selected) : null)
-const today = toCalendarDate(new Date())
-const focused = shallowRef<CalendarDate>(new CalendarDay(props.year, props.month, 1))
+const todayDate = computed(() => toCalendarDate(props.today))
+const root = useTemplateRef<HTMLElement>('root')
+const focused = shallowRef<CalendarDate>(toCalendarDay(props.month.start))
 
 const headers = computed(() => {
   const shorts = standaloneShortWeekdayNames(locale.value)
@@ -42,8 +55,8 @@ const headers = computed(() => {
   })
 })
 
-const weeks = computed(() => buildCalendarWeeks(props.year, props.month, weekStart.value, false))
-const label = computed(() => formatCalendarMonth(props.year, props.month, locale.value))
+const weeks = computed(() => buildMonthWeeks(props.calendar, props.month, weekStart.value, false))
+const label = computed(() => formatCalendarMonthLabel(props.calendar, props.month, locale.value))
 
 function blocked(date: CalendarDate): boolean {
   return isCalendarDateDisabled(date, {
@@ -54,11 +67,17 @@ function blocked(date: CalendarDate): boolean {
   })
 }
 
-watch(() => [props.year, props.month] as const, ([year, month]) => {
-  if (focused.value.year === year && focused.value.month === month)
+// 翻到别的月时焦点跟过去，保留第几天，那个月没有这一天就落在月底。
+watch(() => props.month, (month) => {
+  if (isInCalendarMonth(focused.value, month))
     return
-  const last = new CalendarDay(year, month, 1).add({ months: 1 }).subtract({ days: 1 }).day
-  focused.value = new CalendarDay(year, month, Math.min(focused.value.day, last))
+  const day = Math.min(calendarDayOfMonth(props.calendar, focused.value), month.length)
+  focused.value = toCalendarDay(month.start).add({ days: day - 1 })
+}, { immediate: true })
+
+watch(() => props.focusDate, (date) => {
+  if (date != null && isInCalendarMonth(date, props.month))
+    focused.value = toCalendarDay(date)
 }, { immediate: true })
 
 function pick(date: CalendarDate, outside: boolean): void {
@@ -75,8 +94,8 @@ function onKeydown(event: KeyboardEvent): void {
     focused: focused.value,
     weekStartsOn: weekStart.value,
     numberOfMonths: 1,
-    viewYear: props.year,
-    viewMonth: props.month,
+    viewStart: toCalendarDay(props.month.start),
+    calendar: props.calendar,
     isOutOfBounds: date => isOutsideCalendarBounds(date, props.min, props.max),
     isDisabled: date => blocked(date),
   })
@@ -84,20 +103,25 @@ function onKeydown(event: KeyboardEvent): void {
     return
   event.preventDefault()
   focused.value = move.date
-  if (move.date.year !== props.year || move.date.month !== props.month)
-    emit('update:view', move.date.year, move.date.month)
+  if (!isInCalendarMonth(move.date, props.month)) {
+    emit('update:view', { year: move.date.year, month: move.date.month, day: move.date.day })
+    return
+  }
+  const iso = calendarISO(move.date)
+  void nextTick(() => root.value?.querySelector<HTMLElement>(`[data-date="${iso}"]:not(.is-other-month)`)?.focus({ preventScroll: true }))
 }
 </script>
 
 <template>
   <div
+    ref="root"
     class="astryx-calendar-grid astryx-date-touch-grid"
     role="grid"
     :aria-label="label"
     tabindex="-1"
     @keydown="onKeydown"
   >
-    <div class="astryx-calendar-weekdays" role="row">
+    <div v-if="weekdays" class="astryx-calendar-weekdays" role="row">
       <div
         v-for="day in headers"
         :key="day.long"
@@ -115,18 +139,18 @@ function onKeydown(event: KeyboardEvent): void {
           class="astryx-calendar-cell"
           :class="{
             'is-selected': !!selectedDate && !day.outside && sameCalendarDay(day.date, selectedDate),
-            'is-today': !day.outside && sameCalendarDay(day.date, today),
+            'is-today': !day.outside && sameCalendarDay(day.date, todayDate),
             'is-disabled': day.outside || blocked(day.date),
             'is-other-month': day.outside,
           }"
           :data-date="day.iso"
           :tabindex="!day.outside && sameCalendarDay(day.date, focused) ? 0 : -1"
           :aria-disabled="day.outside || blocked(day.date) || undefined"
-          :aria-current="!day.outside && sameCalendarDay(day.date, today) ? 'date' : undefined"
-          :aria-label="formatWeekdayDate(day.date, locale)"
+          :aria-current="!day.outside && sameCalendarDay(day.date, todayDate) ? 'date' : undefined"
+          :aria-label="formatWeekdayDate(day.date, locale, calendar)"
           @click="pick(day.date, day.outside)"
         >
-          <span class="astryx-calendar-day">{{ day.day }}</span>
+          <span class="astryx-calendar-day">{{ formatDayNumber(day.day, locale) }}</span>
         </button>
       </div>
     </div>

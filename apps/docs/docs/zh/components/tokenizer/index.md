@@ -16,6 +16,8 @@ import { tokenizerClear, tokenizerCreatable, tokenizerEnd, tokenizerIcon, tokeni
 
 `hasCreate` 允许把当前输入收成一条新标签。`hasClear` 一次清空。输入框为空时，`Backspace` 删掉最后一条。方向键可以在标签之间移动焦点，`Backspace` 或 `Delete` 删除当前标签。
 
+触屏上，输入框没有焦点时用手指点标签的删除按钮，标签删掉后焦点留在原处，屏幕键盘不会弹起来。鼠标点击、笔、按键删除，或者正在输入时的点按，仍然把焦点交回输入框。
+
 `overflow` 控制放不下时的表现：
 
 | 值 | 行为 |
@@ -23,6 +25,10 @@ import { tokenizerClear, tokenizerCreatable, tokenizerEnd, tokenizerIcon, tokeni
 | `none` | 标签换行，全部可见。 |
 | `unfocused-inline` | 失焦时收成一行，末尾显示 `+N`，聚焦后在原处展开。 |
 | `unfocused-layer` | 失焦时同样收成一行，聚焦后浮在字段上展开，不把下面的内容往下推。 |
+
+紧凑触屏上，字段默认打开底部弹层（`presentation="adaptive"`）。字段变成一个显示标签的触发器；弹层里有搜索框、每条结果一行复选框，以及钉在底部的「全部清除」和「保存」。勾选、新建、全部清除都只改草稿，按「保存」才提交一次，只触发一次 `change`。草稿改过之后下滑弹层、点遮罩或按 Escape，会先问要不要放弃；「全部清除」也会先确认。想在所有设备上保留行内字段就传 `presentation="popover"`，比如字段本身已经在另一个浮层里。
+
+放进 `InputGroup` 时，`Tokenizer` 不再画自己的标签、说明和状态，由组统一负责，输入框的名字是组标签加自己的标签。尺寸和禁用都跟着组走，所以这里写在 `Tokenizer` 上的 `size` 不生效。组是固定行高的单行控件，标签和输入框留在同一行里横向滚动，藏着标签的那一侧淡出；结尾的控件（`#end`、清除按钮、状态图标）留在原位。
 
 宽度测量复用 `useOverflow`。`#icon` 插槽放在输入区开头，每条标签也可以用 `#token` 换成自己的 `Token`。
 
@@ -35,13 +41,14 @@ import { tokenizerClear, tokenizerCreatable, tokenizerEnd, tokenizerIcon, tokeni
 | --- | --- |
 | <Badge variant="success">推荐</Badge> | 标签会很多、字段又要保持一行时，用 `unfocused-inline`。 |
 | <Badge variant="success">推荐</Badge> | 允许用户自造条目时打开 `hasCreate`，并在变更事件里区分 `add` 和 `create`。 |
+| <Badge variant="success">推荐</Badge> | 字段本身已经在浮层或底部弹层里时，固定传 `presentation="popover"`。 |
 | <Badge variant="error">避免</Badge> | 选项是短小的固定清单时用标签输入框。那种场景用多选器。 |
 
 ## 示例
 
 <DemoExample
   :demo="tokenizerClear"
-  description="选中之后出现全部清除按钮。"
+  description="选中之后出现全部清除按钮。触屏上在底部弹层里用「全部清除」。"
   locale="zh"
   title="全部清除"
 />
@@ -76,7 +83,7 @@ import { tokenizerClear, tokenizerCreatable, tokenizerEnd, tokenizerIcon, tokeni
 
 <DemoExample
   :demo="tokenizerOverflow"
-  description="失焦时收成一行。行内模式展开会把下面的内容往下推，浮层模式盖在字段上。"
+  description="失焦时收成一行。行内模式展开会把下面的内容往下推，浮层模式盖在字段上。这两种收起模式只作用于行内字段。"
   locale="zh"
   title="溢出"
 />

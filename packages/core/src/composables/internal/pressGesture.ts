@@ -1,7 +1,8 @@
 /**
  * 触屏按压模型的纯状态机：输入「刚发生了什么」，输出「现在该画什么」。
  *
- * 系统原生列表（UIKit）对手指的处理：按下先等 0.15 秒才认；滚动一接管手势就立刻取消，
+ * 系统原生控件（UIKit）对手指的处理：滚动视图外，手指落下的那一帧就亮；
+ * 滚动视图里按下先等 0.15 秒才认，因为这次触摸可能变成滚动。滚动一接管手势就立刻取消，
  * 这次手势里不再亮回来；抬手后淡出。iOS Safari 的 CSS `:active` 一样都不做：
  * 手指一碰就亮，滚动开始 1.6 秒后还亮着。所以粗指针下的按压状态由这里管，
  * `:active` 只留给鼠标。
@@ -10,14 +11,19 @@
  * DOM 那一半在 `pressFeedback.ts`。
  */
 
-/** 手指停多久才算真按。UIKit 的 `delaysContentTouches` 就是 0.15 秒。快速划一下在这之前就被滚动接管了，所以什么都不亮。 */
-export const PRESS_ONSET_MS = 150
+import { UIKIT_PRESS } from '../../motion/uikit/gestures'
+
+/**
+ * 滚动视图里，手指停多久才算真按。UIKit 的 `delaysContentTouches` 就是 0.15 秒。
+ * 快速划一下在这之前就被滚动接管了，所以什么都不亮。从触摸本身的时间戳算起。
+ */
+export const PRESS_ONSET_MS = UIKIT_PRESS.contentTouchDelay.value
 
 /** 手指最多能挪多远还算按压，单位 CSS 像素。iOS 的滚动大约在这个距离接管手势。 */
-export const PRESS_SLOP_PX = 10
+export const PRESS_SLOP_PX = UIKIT_PRESS.slop.value
 
 /** 太快的轻点：抬手时补亮，满强度保持这么久再淡出。不然最常见的操作一点反馈都没有。 */
-export const PRESS_FLASH_MS = 100
+export const PRESS_FLASH_MS = UIKIT_PRESS.quickTapFlash.value
 
 /**
  * 主题没设 `--astryx-duration-exit` 时，抬手后淡出的时长：这个 token 的默认值（核心的 fast 档，175ms）。
@@ -26,7 +32,7 @@ export const PRESS_FLASH_MS = 100
 export const PRESS_FADE_MS = 175
 
 /** 滚动刚停不久就落下的手指是在「刹车」，不是按压。这个窗口内不亮。 */
-export const PRESS_SCROLL_BRAKE_MS = 150
+export const PRESS_SCROLL_BRAKE_MS = UIKIT_PRESS.scrollBrake.value
 
 /** 元素上该画的样子。`fading` 是抬手后的淡出。 */
 export type PressPaint = 'none' | 'on' | 'fading'
@@ -34,10 +40,13 @@ export type PressPaint = 'none' | 'on' | 'fading'
 /**
  * 手势走到哪一步了。
  *
+ * `buttonHeld` 是鼠标键或空格键按下的按压：没有滚动能把它抢走，所以立刻亮，
+ * 位移不会结束它，只有松开才结束，淡出和手指的一样。
+ *
  * `dead` 最要紧：变成滚动的手势一直是 dead，直到手指抬起、下一次按下才重新开始。
  * 所以手指停下来、或者滑回原来的控件，都不会再亮。这正是它和 `:active` 的区别。
  */
-export type PressPhase = 'idle' | 'armed' | 'pressed' | 'flash' | 'fading' | 'dead'
+export type PressPhase = 'idle' | 'armed' | 'pressed' | 'buttonHeld' | 'flash' | 'fading' | 'dead'
 
 export interface PressGesture {
   readonly phase: PressPhase
@@ -47,17 +56,25 @@ export interface PressGesture {
 }
 
 export type PressEvent
-  = | { kind: 'down', x: number, y: number }
-    | { kind: 'move', x: number, y: number }
-    | { kind: 'up' }
+  = | {
+    kind: 'down'
+    x: number
+    y: number
+    /** 这次触摸要不要先等 {@link PRESS_ONSET_MS}：落在滚动视图里才等。默认等。 */
+    delayed?: boolean
+  }
+  /** 鼠标键或空格键落在可按元素上。控制器只在样式丢掉 `:active` 的粗指针主设备上发它。 */
+  | { kind: 'buttonDown' }
+  | { kind: 'move', x: number, y: number }
+  | { kind: 'up' }
   /** 平台把手势拿走了：pointercancel、touchcancel、滚动、拖拽。 */
-    | { kind: 'cancel' }
+  | { kind: 'cancel' }
   /** 手指按满了 {@link PRESS_ONSET_MS}。 */
-    | { kind: 'onset' }
+  | { kind: 'onset' }
   /** 轻点的满强度保持结束。 */
-    | { kind: 'flashEnd' }
-  /** 淡出结束。 */
-    | { kind: 'fadeEnd' }
+  | { kind: 'flashEnd' }
+  /** 释放结束：淡出动画播完，或没有动画时它的钟走完。 */
+  | { kind: 'fadeEnd' }
 
 export type PressTimer = 'onset' | 'flash' | 'fade'
 
@@ -122,15 +139,29 @@ function stepPressed(gesture: PressGesture, event: PressEvent): PressStep {
  */
 export function pressGestureStep(gesture: PressGesture, event: PressEvent): PressStep {
   if (event.kind === 'down') {
+    // 上面没有滚动容器：没有东西能把这次触摸变成滚动，落下那一帧就亮，和原生控件一样。
+    if (event.delayed === false)
+      return { gesture: { originX: event.x, originY: event.y, phase: 'pressed' }, paint: 'on', timer: null }
     // 新的一次触摸总是从 armed、什么都不画开始，不管上一次是怎么结束的。离开 dead 只有这一条路。
     return { gesture: { originX: event.x, originY: event.y, phase: 'armed' }, paint: 'none', timer: 'onset' }
   }
+
+  if (event.kind === 'buttonDown')
+    return { gesture: { originX: 0, originY: 0, phase: 'buttonHeld' }, paint: 'on', timer: null }
 
   switch (gesture.phase) {
     case 'armed':
       return stepArmed(gesture, event)
     case 'pressed':
       return stepPressed(gesture, event)
+    case 'buttonHeld':
+      // 鼠标拖出按钮，`:active` 也会一直留到松开，所以位移不算滚动，只有松开才淡出。
+      if (event.kind === 'up')
+        return to(gesture, 'fading', 'fading', 'fade')
+      // 平台拿走了它（开始拖拽、指针被取消）：立刻擦掉，和手指一样。
+      if (event.kind === 'cancel')
+        return to(gesture, 'dead', 'none', null)
+      return stay(gesture, 'on')
     case 'flash':
       // 手指已经抬起。这时的 cancel 是平台在收尾（iOS 在 scrollend 才发 pointercancel），不能剪掉这次轻点该得的反馈。
       return event.kind === 'flashEnd' ? to(gesture, 'fading', 'fading', 'fade') : stay(gesture, 'on')

@@ -38,6 +38,28 @@ function mountTypeahead(props: Record<string, unknown> = {}) {
   })
 }
 
+/** 按 aria-labelledby / aria-describedby 引用的 id 拼出文字，模拟读屏算出的名称。 */
+function textOfIds(ids: string | undefined): string {
+  return (ids ?? '').split(/\s+/).filter(Boolean).map(id => document.getElementById(id)?.textContent?.trim() ?? '').join(' ')
+}
+
+describe('typeahead value token naming', () => {
+  it('names the token button, the tab stop while a value shows, by the field label and the value', () => {
+    const wrapper = mountTypeahead({
+      modelValue: fruits[0],
+      description: 'Pick your favorite fruit',
+      status: 'error',
+      statusMessage: 'Pick a ripe one',
+    })
+    const button = wrapper.get('.astryx-token button')
+    expect(textOfIds(button.attributes('aria-labelledby'))).toBe('Fruit Apple')
+    const description = textOfIds(button.attributes('aria-describedby'))
+    expect(description).toContain('Pick your favorite fruit')
+    expect(description).toContain('Pick a ripe one')
+    wrapper.unmount()
+  })
+})
+
 describe('typeahead', () => {
   it('opens a listbox and selects with the keyboard', async () => {
     const wrapper = mountTypeahead()
@@ -67,7 +89,7 @@ describe('typeahead', () => {
     wrapper.unmount()
   })
 
-  it('shows a selected token and restores it on escape', async () => {
+  it('shows a selected token; escape closes the list first, then restores the token', async () => {
     const wrapper = mountTypeahead({ modelValue: fruits[1] })
     expect(wrapper.text()).toContain('Banana')
     const input = wrapper.get('input[role="combobox"]')
@@ -78,6 +100,10 @@ describe('typeahead', () => {
     await input.trigger('keydown', { key: 'Escape' })
     await flush()
     expect(input.attributes('aria-expanded')).toBe('false')
+    expect(wrapper.find('.astryx-token').exists()).toBe(false)
+
+    await input.trigger('keydown', { key: 'Escape' })
+    await flush()
     expect(wrapper.find('.astryx-token').exists()).toBe(true)
     wrapper.unmount()
   })
@@ -195,7 +221,7 @@ describe('typeahead minQueryLength', () => {
 
     await input.setValue('app')
     await flush()
-    expect(search).toHaveBeenCalledWith('app', expect.anything())
+    expect(search).toHaveBeenCalledWith('app', expect.anything(), expect.anything())
     expect(input.attributes('aria-expanded')).toBe('true')
     wrapper.unmount()
   })

@@ -29,7 +29,9 @@ export interface StepperProps {
   /** @default 'horizontal' */
   orientation?: StepperOrientation
   /**
-   * When set, steps render as buttons and call this with the zero-based index.
+   * When set, every step renders as a button until a horizontal stepper collapses, and
+   * enabled steps call this with the zero-based index. Disabled steps stay focusable and
+   * announced as unavailable, but never activate.
    * `@step-click` fills the same prop.
    */
   onStepClick?: (index: number) => void

@@ -19,7 +19,7 @@ import {
   LayoutContent,
   LayoutHeader,
   SideNav,
-  Stack,
+  StackItem,
   TextInput,
   TopNav,
   TreeList,
@@ -201,17 +201,18 @@ useHotkeys([
           </DropdownMenu>
         </template>
         <template #end>
-          <Stack @click="isPaletteOpen = true">
+          <!-- 搜索框最宽 240px，窄屏顶栏放不下时跟着缩，别把菜单按钮挤出视口。 -->
+          <StackItem size="fill" class="search-field" @click="isPaletteOpen = true">
             <TextInput
               v-model="searchQuery"
               label="Search files and commands"
               is-label-hidden
               size="sm"
-              :width="240"
+              width="100%"
               :start-icon="iconComponent('i-heroicons-magnifying-glass')"
               placeholder="Search files and commands…"
             />
-          </Stack>
+          </StackItem>
           <!-- 演示：换成真正执行操作的调用 -->
           <IconButton
             label="Run project"
@@ -221,7 +222,9 @@ useHotkeys([
           >
             <Icon name="heroicons:play" size="sm" />
           </IconButton>
-          <Button label="Share" variant="secondary" @click="showToast({ body: 'Demo: sharing would start here', uniqueID: 'share' })" />
+          <StackItem>
+            <Button label="Share" variant="secondary" @click="showToast({ body: 'Demo: sharing would start here', uniqueID: 'share' })" />
+          </StackItem>
         </template>
       </TopNav>
     </template>
@@ -271,3 +274,9 @@ useHotkeys([
     />
   </AppShell>
 </template>
+
+<style scoped>
+.search-field {
+  width: 240px;
+}
+</style>

@@ -1,5 +1,5 @@
 import type { VNodeChild } from 'vue'
-import type { ResizableProps } from '../composables/useResizable.js'
+import type { ResizableProps, ResizableRegion } from '../composables/useResizable.js'
 import type { SpacingStep } from '../Stack/types.js'
 import type { LayoutHeight } from './context.js'
 import type { SizeValue } from './size.js'
@@ -102,10 +102,11 @@ export interface LayoutPanelProps {
    */
   width?: SizeValue
   /**
-   * `useResizable()` 给出的 `props`。传了之后宽度由钩子决定，`width` 不再生效。
+   * `useResizable()` 的返回值，或它的 `props`。传了之后宽度由钩子决定，`width` 不再生效。
+   * 区域收起时面板里的焦点会移到旁边的 ResizeHandle，面板也变成 `inert`。
    * 对象里的 `_direction` 要和旁边 `ResizeHandle` 的 `direction` 一致。
    */
-  resizable?: LayoutResizable
+  resizable?: ResizableRegion | LayoutResizable
 }
 
 export interface LayoutPanelSlots {

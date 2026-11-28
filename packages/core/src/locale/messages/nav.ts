@@ -8,8 +8,13 @@ export interface NavMessages {
   collapseSidebar: string
   expandSidebar: string
   openMenu: string
-  /** TopNav 分区标题旁「⋯」按钮的名字，和 SideNav 的分开写。 */
-  topNavOpenMenu: string
+  /** SideNav 标题旁菜单按钮的名字，带上看得见的标题文字。 */
+  headingOpenMenu: (heading: string) => string
+  /**
+   * TopNav 标题旁菜单按钮的名字，和 SideNav 的分开写。
+   * `hasHeading` 是 `'true'` 时带上标题文字，否则只说「打开菜单」。
+   */
+  topNavOpenMenu: (hasHeading: string, heading: string) => string
   /** SideNav 标题下拉弹层的无障碍名。 */
   headingDialog: string
   /** TopNav 标题下拉弹层的无障碍名，和 SideNav 的分开写。 */
@@ -36,7 +41,8 @@ export const navMessages: Record<AstryxLocale, NavMessages> = {
     collapseSidebar: 'Collapse sidebar',
     expandSidebar: 'Expand sidebar',
     openMenu: 'Open menu',
-    topNavOpenMenu: 'Open menu',
+    headingOpenMenu: heading => `${heading}, Open menu`,
+    topNavOpenMenu: (hasHeading, heading) => hasHeading === 'true' ? `${heading}, Open menu` : 'Open menu',
     headingDialog: 'Navigation menu',
     topNavHeadingDialog: 'Navigation menu',
     openNavigation: 'Open navigation',
@@ -58,7 +64,8 @@ export const navMessages: Record<AstryxLocale, NavMessages> = {
     collapseSidebar: '收起侧边栏',
     expandSidebar: '展开侧边栏',
     openMenu: '打开菜单',
-    topNavOpenMenu: '打开菜单',
+    headingOpenMenu: heading => `${heading}，打开菜单`,
+    topNavOpenMenu: (hasHeading, heading) => hasHeading === 'true' ? `${heading}，打开菜单` : '打开菜单',
     headingDialog: '导航菜单',
     topNavHeadingDialog: '导航菜单',
     openNavigation: '打开导航',

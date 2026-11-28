@@ -1,4 +1,4 @@
-import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
+import { chmod, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
@@ -23,6 +23,7 @@ async function project(files: Record<string, string> = {}): Promise<string> {
 interface InitData {
   features: string[]
   files: { path: string, action: string }[]
+  agentDocsStatus: string | null
   guide: {
     packageManager: string | null
     packageManagerSource: string | null
@@ -33,6 +34,18 @@ interface InitData {
 }
 
 describe('init guide', () => {
+  it('writes agent docs at the project root when run from a subfolder', async () => {
+    const cwd = await project({ 'package.json': JSON.stringify({ name: 'demo' }), 'src/pages/.keep': '' })
+    try {
+      const data = assertResponse((await run(['init', '--features', 'agents', '--json'], join(cwd, 'src/pages'))).stdout, 'init.run').data as InitData
+      expect(data.files.map(file => file.path)).toEqual(['AGENTS.md'])
+      expect(await readFile(join(cwd, 'AGENTS.md'), 'utf8')).toContain('astryx')
+    }
+    finally {
+      await rm(cwd, { recursive: true, force: true })
+    }
+  })
+
   it('reads the package manager from the packageManager field', async () => {
     const cwd = await project({ 'package.json': JSON.stringify({ name: 'demo', packageManager: 'pnpm@9.12.0' }) })
     try {
@@ -173,6 +186,85 @@ describe('init guide', () => {
       expect(block).not.toContain('还没发布到 npm')
     }
     finally {
+      await rm(cwd, { recursive: true, force: true })
+    }
+  })
+
+  it('names only the starter packages the project lacks, themes at its Core release', async () => {
+    const ranged = await project({ 'package.json': JSON.stringify({ name: 'demo', packageManager: 'pnpm@9.0.0', dependencies: { '@astryx-vue/core': '^0.8.0' } }) })
+    const pinned = await project({ 'package.json': JSON.stringify({ name: 'demo', dependencies: { '@astryx-vue/core': '0.8.0' } }), 'package-lock.json': '{}' })
+    const cloned = await project({ 'package.json': JSON.stringify({ name: 'demo', packageManager: 'pnpm@9.0.0', dependencies: { '@astryx-vue/core': '0.8.0', '@astryx-vue/themes': '0.8.0' } }) })
+    const ready = await project({
+      'package.json': JSON.stringify({ name: 'demo', packageManager: 'pnpm@9.0.0', dependencies: { '@astryx-vue/core': '0.8.0', '@astryx-vue/themes': '0.8.0' } }),
+      'node_modules/@astryx-vue/core/package.json': '{}',
+      'node_modules/@astryx-vue/themes/package.json': '{}',
+    })
+    const installStep = async (cwd: string) => (assertResponse((await run(['init', '--json'], cwd)).stdout, 'init.run').data as InitData).guide.steps.find(step => step.id === 'install')
+    try {
+      const fromRange = await installStep(ranged)
+      expect(fromRange?.commands).toEqual(['pnpm add @astryx-vue/themes@0.8.0'])
+      expect(fromRange?.text).toContain('already lists @astryx-vue/core')
+      expect((await installStep(pinned))?.commands).toEqual(['npm install -E @astryx-vue/themes@0.8.0'])
+      expect((await installStep(cloned))?.commands).toEqual(['pnpm install'])
+      const done = await installStep(ready)
+      expect(done?.commands).toEqual([])
+      expect(done?.text).toContain('nothing to install')
+    }
+    finally {
+      for (const dir of [ranged, pinned, cloned, ready])
+        await rm(dir, { recursive: true, force: true })
+    }
+  })
+
+  it('says what it did to each agent file, and prints the lookups once the project is set up', async () => {
+    const cwd = await project({ 'package.json': JSON.stringify({ name: 'demo', packageManager: 'pnpm@9.0.0' }) })
+    try {
+      const first = assertResponse((await run(['init', '--json'], cwd)).stdout, 'init.run').data as InitData
+      expect(first).toMatchObject({ agentDocsStatus: 'missing', files: [{ path: 'AGENTS.md', action: 'created' }] })
+
+      const again = await run(['init'], cwd)
+      expect(again.stdout).toContain('this project is already set up')
+      expect(again.stdout).toContain('astryx-vue build "<one sentence>"')
+      expect(again.stdout).toContain('astryx-vue search <query>')
+      expect(again.stdout).toContain('AGENTS.md already current, nothing changed')
+      expect(again.stdout).not.toContain('Install the packages')
+      const againJson = assertResponse((await run(['init', '--json'], cwd)).stdout, 'init.run').data as InitData
+      expect(againJson).toMatchObject({ agentDocsStatus: 'current', files: [{ path: 'AGENTS.md', action: 'unchanged' }] })
+      expect(againJson.guide.steps.map(step => step.id)).toEqual(['install', 'theme', 'locale', 'verify', 'lookup'])
+
+      const zh = await run(['init', '--zh'], cwd)
+      expect(zh.stdout).toContain('已更新受管理区块于 AGENTS.md')
+      expect((await run(['init', '--zh'], cwd)).stdout).toContain('AGENTS.md 已是最新，没有改动')
+
+      const file = join(cwd, 'AGENTS.md')
+      await writeFile(file, (await readFile(file, 'utf8')).replace('怎么查', '过期的说明'))
+      const stale = await run(['init', '--zh', '--json'], cwd)
+      expect(assertResponse(stale.stdout, 'init.run').data).toMatchObject({ agentDocsStatus: 'stale', files: [{ action: 'updated' }] })
+    }
+    finally {
+      await rm(cwd, { recursive: true, force: true })
+    }
+  })
+
+  it.skipIf(process.getuid?.() === 0)('leaves a current file unwritten, and names the reason and the fix when it cannot write', async () => {
+    const cwd = await project({ 'package.json': '{"name":"demo"}' })
+    const file = join(cwd, 'AGENTS.md')
+    try {
+      await run(['init'], cwd)
+      await chmod(file, 0o444)
+      const current = await run(['init', '--json'], cwd)
+      expect(current.exitCode).toBe(0)
+      expect(assertResponse(current.stdout, 'init.run').data).toMatchObject({ files: [{ action: 'unchanged' }] })
+
+      const failed = await run(['init', '--zh', '--json'], cwd)
+      expect(failed.exitCode).toBe(1)
+      const error = JSON.parse(failed.stdout) as { code: string, error: string }
+      expect(error.code).toBe('ERR_WRITE_FAILED')
+      expect(error.error).toContain('Could not write AGENTS.md: permission denied (EACCES)')
+      expect(error.error).toContain('--agent-docs-path')
+    }
+    finally {
+      await chmod(file, 0o644).catch(() => {})
       await rm(cwd, { recursive: true, force: true })
     }
   })

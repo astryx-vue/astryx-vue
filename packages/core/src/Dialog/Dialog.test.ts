@@ -3,6 +3,7 @@ import { afterEach, beforeAll, describe, expect, it } from 'vitest'
 import { defineComponent, h, nextTick, ref } from 'vue'
 import { useLayerMountTarget } from '../composables/useLayerMountTarget.js'
 import { useActiveModalOutlet } from '../layer/modalOutlet.js'
+import Popover from '../Popover/Popover.vue'
 import Dialog from './Dialog.vue'
 import DialogHeader from './DialogHeader.vue'
 import { ensureDialogModalApi } from './testUtils.js'
@@ -22,6 +23,13 @@ function renderDialog(props: Record<string, unknown> = {}, slots: Record<string,
     props: { isOpen: false, ...props },
     slots: { default: () => h('p', 'Body'), ...slots },
   })
+}
+
+/** 按下在 `from` 上，松手和 click 落在遮罩（dialog 本身）上。 */
+function pressBackdrop(from: Element): void {
+  from.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerType: 'mouse' }))
+  dialogEl().dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerType: 'mouse' }))
+  dialogEl().dispatchEvent(new MouseEvent('click', { bubbles: true }))
 }
 
 function dialogEl(): HTMLDialogElement {
@@ -124,13 +132,46 @@ describe('dialog', () => {
 
   it('emits openChange(false) on backdrop click for info only', () => {
     const info = renderDialog({ isOpen: true, purpose: 'info' })
-    dialogEl().dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    pressBackdrop(dialogEl())
     expect(info.emitted('openChange')).toEqual([[false]])
     info.unmount()
 
     const form = renderDialog({ isOpen: true, purpose: 'form' })
-    dialogEl().dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    pressBackdrop(dialogEl())
     expect(form.emitted('openChange')).toBeUndefined()
+  })
+
+  it('a press that starts inside and ends on the backdrop does not close', () => {
+    const wrapper = renderDialog({ isOpen: true, purpose: 'info' })
+    pressBackdrop(wrapper.find('p').element)
+
+    expect(wrapper.emitted('openChange')).toBeUndefined()
+  })
+
+  it('a backdrop press that closes a popover inside closes only the popover', async () => {
+    const open = ref(true)
+    const Host = defineComponent({
+      setup() {
+        const onOpenChange = (next: boolean): void => {
+          open.value = next
+        }
+        return () => h(Dialog, { isOpen: true, purpose: 'info' }, () => h(Popover, { isOpen: open.value, onOpenChange }, {
+          default: () => h('button', { type: 'button' }, 'Open'),
+          content: () => h('p', { class: 'popover-body' }, 'Popover'),
+        }))
+      },
+    })
+    const wrapper = mount(Host, { attachTo: document.body })
+    await flushPromises()
+
+    pressBackdrop(dialogEl())
+    await flushPromises()
+
+    expect(open.value).toBe(false)
+    expect(wrapper.findComponent(Dialog).emitted('openChange')).toBeUndefined()
+
+    pressBackdrop(dialogEl())
+    expect(wrapper.findComponent(Dialog).emitted('openChange')).toEqual([[false]])
   })
 
   it('ignores clicks on dialog content', () => {

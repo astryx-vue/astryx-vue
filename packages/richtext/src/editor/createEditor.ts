@@ -11,7 +11,14 @@ import { configExtension, mergeRegister } from 'lexical'
 import { DEFAULT_NODES } from '../editorNodes.js'
 import { DEFAULT_TRANSFORMERS } from '../markdownTable.js'
 import { registerBlockExit } from './blockExit.js'
+import { registerCodeBackspace } from './plugins/codeBackspace.js'
+import { registerCodePaste } from './plugins/codePaste.js'
+import { registerCodeTab } from './plugins/codeTab.js'
+import { registerImageSourceCaret } from './plugins/imageSourceCaret.js'
+import { registerListItemShortcuts } from './plugins/listItemShortcuts.js'
+import { registerSelectAllScope } from './plugins/selectAllScope.js'
 import { registerTableColumnFloor } from './plugins/tableColumnFloor.js'
+import { registerTablePaste } from './plugins/tablePaste.js'
 import { registerTabFocusEscape } from './tabEscape.js'
 import { TextSemanticsExtension } from './textSemantics.js'
 import { sharedEditorTheme } from './theme.js'
@@ -81,7 +88,14 @@ export function createRichTextEditor(options: CreateRichTextEditorOptions = {}):
       registerBlockExit(editor),
       registerTabFocusEscape(editor),
       registerTableColumnFloor(editor),
+      registerCodeTab(editor),
+      registerCodeBackspace(editor),
+      registerCodePaste(editor),
+      registerTablePaste(editor),
+      registerSelectAllScope(editor),
+      registerImageSourceCaret(editor),
       hasMarkdownShortcuts ? registerMarkdownShortcuts(editor, [...transformers]) : () => {},
+      hasMarkdownShortcuts ? registerListItemShortcuts(editor, transformers) : () => {},
     ),
     onError(error: Error) {
       // 把错误交给使用方，不要吞掉。

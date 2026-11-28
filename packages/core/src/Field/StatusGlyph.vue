@@ -4,7 +4,10 @@ import { computed, useId, useTemplateRef } from 'vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
 import Icon from '../Icon/Icon.vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { inputMessages } from '../locale/messages/input.js'
+
+defineOptions({ inheritAttrs: false })
 
 const props = defineProps<{
   type: FieldStatusType
@@ -12,7 +15,7 @@ const props = defineProps<{
   tooltip?: boolean
 }>()
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ input: inputMessages })
 const button = useTemplateRef<HTMLButtonElement>('button')
 const anchor = computed(() => button.value)
 const tooltipId = `astryx-status-tooltip-${useId()}`
@@ -30,6 +33,7 @@ const label = computed(() => {
 <template>
   <button
     v-if="showsTooltip"
+    v-bind="$attrs"
     ref="button"
     type="button"
     class="astryx-field-status-glyph"
@@ -44,7 +48,7 @@ const label = computed(() => {
   >
     <Icon :icon="type" size="sm" />
   </button>
-  <Icon v-else class="astryx-field-status-glyph" :icon="type" size="sm" :data-status="type" />
+  <Icon v-else v-bind="$attrs" class="astryx-field-status-glyph" :icon="type" size="sm" :data-status="type" />
   <ButtonTooltip
     v-if="showsTooltip"
     :id="tooltipId"

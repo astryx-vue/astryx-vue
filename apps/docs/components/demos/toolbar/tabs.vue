@@ -2,8 +2,15 @@
 import { Button } from '@astryx-vue/core/Button'
 import { Card } from '@astryx-vue/core/Card'
 import { Tab, TabList } from '@astryx-vue/core/TabList'
+import { useToast } from '@astryx-vue/core/Toast'
 import { Toolbar } from '@astryx-vue/core/Toolbar'
 import { ref } from 'vue'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 
 const tab = ref('overview')
 </script>
@@ -25,7 +32,7 @@ const tab = ref('overview')
         </TabList>
       </template>
       <template #end>
-        <Button is-icon-only label="New item">
+        <Button is-icon-only label="New item" @click="demo('New item')">
           <template #icon>
             <span class="i-carbon-add" />
           </template>

@@ -216,6 +216,17 @@ import { buttonFloating as floating } from '../../../../components/demos/button'
   })
 })
 
+describe('firstSentence quoting rules', () => {
+  it('does not end a sentence after e.g. or i.e.', () => {
+    expect(firstSentence('Pass a value, e.g. a string. Then more.')).toBe('Pass a value, e.g. a string.')
+  })
+
+  it('does not end a sentence at a period inside a quote', () => {
+    expect(firstSentence('Shows a date like "2. Nov. 2026" in full. Then more.')).toBe('Shows a date like "2. Nov. 2026" in full.')
+    expect(firstSentence('Shows “2. Nov. 2026” in full. Then more.')).toBe('Shows “2. Nov. 2026” in full.')
+  })
+})
+
 describe('guide page summary', () => {
   it('skips a VitePress warning container and uses the first real paragraph', () => {
     const topic = extractTopic([

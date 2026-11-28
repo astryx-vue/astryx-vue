@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { bottomSheetAdaptiveDialog, bottomSheetAdaptiveMenu, bottomSheetHeights, bottomSheetKeyboard, bottomSheetMultiSelector, bottomSheetNoScrim, bottomSheetSelector, bottomSheetSnapPoints, bottomSheetSwitcher } from '../../../../components/demos/bottom-sheet'
+import { bottomSheetAdaptiveDialog, bottomSheetAdaptiveMenu, bottomSheetHeights, bottomSheetKeyboard, bottomSheetMultiSelector, bottomSheetMultiStep, bottomSheetNoScrim, bottomSheetSelector, bottomSheetSnapPoints } from '../../../../components/demos/bottom-sheet'
 </script>
 
 ## Usage
@@ -40,12 +40,56 @@ const isOpen = ref(false)
 
 `snapPoints` lets someone drag the panel to an intermediate height rather than only fully open or closed. Each stop is the panel's visible height: a number is a viewport fraction (`0.5` is half the screen), `"50%"` means the same thing, and `"320px"` is an absolute height. The panel's own height is always the tallest stop, so `snap-points="[0.5]"` reads as "half a screen or all of it". A stop that is a quarter of the panel or less counts as a peek: it slides the panel partly off-screen instead of reflowing the content into a sliver, and it thins the scrim. Without `snapPoints` the sheet only opens and closes, and dragging it down still dismisses it.
 
-A downward drag closes the sheet, and a fast upward flick expands it to the tallest stop. The scrim's depth follows the panel while it moves, and on release the sheet settles on the nearest stop. Both the handle and, once it is scrolled to the top, the content area can start a drag. Under `prefers-reduced-motion: reduce` the entrance and exit movements collapse to almost nothing, while the position and state changes still happen.
+A downward drag closes the sheet, and a fast upward flick expands it to a taller stop. A finger's release follows iOS: a quick flick moves on to the next stop or closes the sheet, and a release that turns back returns to the stop the drag began at. Pulling past the tallest stop stretches like a rubber band. A finger's swipe close slides the sheet out on a spring from the release speed, and the scrim fades along the same curve. The scrim's depth follows the panel while it moves, and every close fades the scrim out. Both the handle and the content area can start a drag: pull down once the content is at its top, or up once it is at its end, and the sheet takes over the swipe. Under `prefers-reduced-motion: reduce` the entrance and exit movements collapse to almost nothing, and a finger's swipe close fades the sheet out where it is.
 
 `purpose` controls implicit dismissal, matching `Dialog`. The default `info` allows Escape, a scrim click, and a swipe. `form` allows Escape only, so a stray click on the scrim cannot throw away typed input. `required` blocks every implicit path and announces the sheet as an alert dialog for flows that must end through an explicit choice. When the page behind the sheet should stay usable, set `hasScrim` to `false`: the sheet then opens non-modally, the page keeps scrolling and responding to clicks, and a swipe still dismisses it. A non-modal sheet never takes focus away from the page, so Escape dismisses it while focus is inside the sheet.
 
-`padding` sets the content area's inset on the spacing scale. When omitted, the theme decides, falling back to the `--spacing-4` step (16px) on every logical edge; pass `0` for a content box flush with the panel. The content area publishes the inset it applies: a lone child region that carries its own inset escapes it, and bleed children such as a table or a divider line up with that edge instead of sitting inside it twice.
+`padding` sets the content area's inset on the spacing scale. When omitted, the theme decides, falling back to the `--spacing-4` step (16px) on every logical edge; pass `0` for a content box flush with the panel. The content area publishes the inset it applies: a lone child region that carries its own inset escapes it, and bleed children such as a table or a divider line up with that edge instead of sitting inside it twice. At the top, the content always starts below the grab handle's 24px band, whatever the padding (`0` included): the band is not padding a child escapes, so the first row never sits under the handle, and scrolled content still passes beneath it.
 
+
+### Stacking
+
+Every sheet keeps its own `isOpen`. Open a sheet while another scrim sheet is open and it stacks on top: the sheet beneath stays mounted with its scroll position and inputs, recedes behind the new one (the nearest covered sheet shrinks to 0.96 and lifts 8px, deeper ones to 0.92 and 16px), and is blocked from pointer, keyboard, and assistive technology by the top sheet's modal dialog. The sheets can be siblings, live in separate components, or sit inside another sheet's content; a whole `BottomSheetSwitcher` is one level. Nothing moves in the DOM, and no wrapper component is needed.
+
+Order is open order: the top sheet is the one opened most recently that is still open, and a sheet that closes and reopens comes back on top. Sheets that open in the same update have no open order between them, so template order decides: a sheet sits below the sheets rendered in its content, and siblings follow the order they are written.
+
+A stack has one scrim. Only the bottom sheet dims the page; the scrims of the sheets above it are transparent, so a stack never darkens per level. Escape, a tap on the scrim, a downward swipe, and a platform close request reach only the top sheet, and that sheet's `purpose` applies. Nothing closes a whole stack at once; set every sheet closed in one update when a flow is done and they leave together. Sheets rendered inside a sheet's content are presented only while it is open and leave with it. Their `isOpen` stays yours: nothing is written to it, and a nested sheet that is still open when its host reopens comes back on top.
+
+### Replacing a sheet
+
+A multi-step flow needs no switcher: give each step its own sheet and one state value that names the open step. Close the top sheet and open another in the same update and the new sheet replaces it instead of stacking on it: the new sheet rises above the one it replaces; if the replaced sheet is taller, it moves down to meet the new sheet's top edge at the same time; the replaced sheet fades only after both motions finish, and is inert and hidden from assistive technology from the start. The scrim holds steady throughout, focus moves into the new sheet, and when the flow closes, focus returns to the element that opened its first sheet.
+
+A replace happens only when exactly one sheet closes and one opens in the update, the closing sheet was the top sheet of its stack, and the move was made from inside it (the control last pressed, or with no recent press the focused element, was in the closing sheet, as a step's own Continue or Back button is). A close and an open driven from a control outside both sheets, or made in different updates, keep the ordinary stacking motion.
+
+```vue
+<script setup lang="ts">
+import { BottomSheet } from '@astryx-vue/core/BottomSheet'
+import { ref } from 'vue'
+
+const step = ref<'details' | 'pay' | null>(null)
+
+function onOpenChange(open: boolean): void {
+  if (!open)
+    step.value = null
+}
+</script>
+
+<template>
+  <button type="button" @click="step = 'details'">
+    Start checkout
+  </button>
+  <BottomSheet :is-open="step === 'details'" label="Details" @open-change="onOpenChange">
+    <button type="button" @click="step = 'pay'">
+      Continue
+    </button>
+  </BottomSheet>
+  <BottomSheet :is-open="step === 'pay'" label="Payment" @open-change="onOpenChange">
+    <button type="button" @click="step = 'details'">
+      Back
+    </button>
+  </BottomSheet>
+</template>
+```
 
 <ComponentAnatomy />
 
@@ -120,17 +164,17 @@ A downward drag closes the sheet, and a fast upward flick expands it to the tall
 />
 
 <DemoExample
-  :demo="bottomSheetSwitcher"
-  description="Checkout is two sheets in one dialog. The scrim stays up while the page changes."
+  :demo="bottomSheetMultiStep"
+  description="Checkout is two standalone sheets driven by one state value. Continuing from inside the open sheet replaces it in place, and the scrim stays up."
   locale="en"
-  title="Multi-step switcher"
+  title="Multi-step flow"
 />
 
 ## Accessibility
 
 The panel is built on the native `<dialog>` element. With a scrim it opens through `showModal()`, which puts it in the top layer, makes the background inert, and confines Tab to the sheet. Without a scrim it opens through `show()`, leaving the page usable. `label` names the sheet through `aria-label`, and `purpose="required"` switches the role to `alertdialog`.
 
-On open, focus lands on the first element with `data-autofocus` inside the panel, or on the panel itself when there is none. On close, focus returns to the element that was focused when the sheet opened — if it is still in the page — or to the element named by `finalFocusRef`. The handoff happens once the exit motion has finished, so focus never lands on a surface that is still sliding away.
+On open, focus lands on the first element with `data-autofocus` inside the panel that can take it (not inert, not hidden, and not inside a sheet or dialog nested in the content), in every browser — the native dialog's own landing, which is the panel in Chromium and the first control in Firefox, gives way to it. A modal sheet with no such element opens with focus on the panel itself. On close, focus returns to the element that was focused when the sheet opened — if it is still in the page — or to the element named by `finalFocusRef`, without scrolling the page. A sheet that is removed while open returns trapped focus the same way, finding the nearest sensible place when the opener is gone too. A sheet already open in the server markup is not announced as modal until it opens on the client, and then appears settled, with no entrance motion; later opens and closes animate as usual. The handoff happens once the exit motion has finished, so focus never lands on a surface that is still sliding away.
 
 Escape closes the sheet unless `purpose` is `required` — a modal sheet confines focus inside itself, while a non-modal one never takes focus from the page, so focus has to be inside the sheet — and an Escape pressed while an input method is composing text cancels the composition instead. Once the content area is scrolled to the top, a downward drag can close the sheet, and at the end of its content an upward drag can expand it; with a `purpose` other than `info` a drag only settles on the nearest stop and never dismisses.
 

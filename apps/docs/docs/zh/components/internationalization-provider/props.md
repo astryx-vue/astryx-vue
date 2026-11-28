@@ -12,6 +12,7 @@ footer: false
 <tr><td><code>locale</code></td><td><code>string</code></td><td>—</td><td>当前语言，用 BCP 47 标签，例如 <code>"en"</code>、<code>"pt"</code>、<code>"pt-BR"</code>、<code>"zh-Hans"</code>。带地区的标签会先退回它的基础语言，最后退回内置英文。必填。</td></tr>
 <tr><td><code>messages</code></td><td><code>ProviderMessagesByLocale</code></td><td>—</td><td>「语言标签 → 目录」的映射，目录的键就是原版那套 <code>@astryx.*</code>。给了就替换这门语言的内置文案。内置的 <code>"en"</code> 和 <code>"zh-CN"</code> 一直都在，不用列进来。</td></tr>
 <tr><td><code>overrides</code></td><td><code>ProviderOverrides</code></td><td>—</td><td>按语言存的稀疏覆盖，盖在 <code>messages</code> 那份目录上；没有目录时就盖在内置文案上。按语言分开存，运行时换语言会自动用上对的那一份。</td></tr>
+<tr><td><code>calendar</code></td><td><code>CalendarSystem</code></td><td><code>'gregory'</code></td><td>子树用的历法，例如 <code>'persian'</code>、<code>'hebrew'</code>、<code>'buddhist'</code>。<code>Calendar</code> 按它排月份，<code>Timestamp</code>、<code>PowerSearch</code> 和实验室的 <code>Schedule</code> 按它写日期。语言从不决定历法，<code>-u-ca-</code> 扩展也不会。组件自己的 <code>calendar</code> 优先。值始终是公历日期。不认识的标识（例如 <code>'islamic'</code>）和当前环境显示不了的历法显示公历，开发期警告一次。</td></tr>
 <tr><td><code>dir</code></td><td><code>'ltr' | 'rtl'</code></td><td>按 <code>locale</code> 推导</td><td>显式指定书写方向。不传就按语言标签推导。它只决定 Astryx 组件读到的方向，不会去设 DOM 的 <code>dir</code> 属性；<code>&lt;html&gt;</code> 或外层元素的 <code>dir</code> 要自己设，并且和这里保持一致。</td></tr>
 </tbody></table>
 </div>

@@ -16,9 +16,10 @@ footer: false
 <tr><td><code>debounceMs</code></td><td><code>number</code></td><td><code>150</code></td><td>Delay before an async trigger search. Synchronous sources are not delayed.</td></tr>
 <tr><td><code>hasHistory</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Arrow keys at the ends of the draft recall earlier submissions.</td></tr>
 <tr><td><code>label</code></td><td><code>string</code></td><td>Localized “Message input”</td><td>Accessible name of the editor.</td></tr>
-<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td>Composer's value</td><td>Stops editing. Falls back to the surrounding composer.</td></tr>
+<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td>Composer's value</td><td>Stops editing. Falls back to the surrounding composer. The editor stays focusable, so a disabled field keeps its place in the Tab order and keeps focus; typing, pasting, dropping files, the imperative handle, and caller event listeners (except focus and blur) do nothing.</td></tr>
 <tr><td><code>pasteAsToken</code></td><td><code>{ onPaste } | false</code></td><td>Built-in threshold</td><td>Long pastes become chips. Pass a <code>useChatPasteAsToken</code> result to change the threshold, or <code>false</code> to insert the text as-is.</td></tr>
 <tr><td><code>pasteAction</code></td><td><code>(event, text) =&gt; boolean | void</code></td><td>—</td><td>First chance at a plain-text paste. Return <code>true</code> to keep the input from inserting the text itself.</td></tr>
+<tr><td><code>enterKeyHint</code></td><td><code>'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send'</code></td><td><code>'send'</code></td><td>What the Return key of a touch keyboard says (the native <code>enterkeyhint</code>). Enter sends the message, so iOS shows its Send key. When a <code>keydown</code> listener makes Enter insert a line break on touch keyboards, pass <code>'enter'</code>. The hint only labels the key; Enter submits under every label.</td></tr>
 </tbody></table>
 </div>
 

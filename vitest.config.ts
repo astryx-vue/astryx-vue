@@ -17,6 +17,12 @@ export default defineConfig(async env => mergeConfig(await viteConfig(env), defi
   resolve: {
     conditions: ['source', 'module', 'browser', 'development|production'],
   },
+  // node 环境的测试（服务端渲染）走 ssr 这套解析，同样要先找源码。
+  ssr: {
+    resolve: {
+      conditions: ['source', 'module', 'node', 'development|production'],
+    },
+  },
   test: {
     environment: 'happy-dom',
     include: ['packages/**/*.test.ts', 'apps/docs/**/*.test.ts', 'tests/**/*.test.ts'],

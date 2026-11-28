@@ -1,29 +1,5 @@
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 
-@keyframes astryx-multi-selector-enter-below {
-  from {
-    opacity: 0;
-    transform: translateY(calc(-1 * var(--astryx-spacing-2, 8px))) scale(0.95);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes astryx-multi-selector-enter-above {
-  from {
-    opacity: 0;
-    transform: translateY(var(--astryx-spacing-2, 8px)) scale(0.95);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
 @layer astryx.components {
   .astryx-field.astryx-multi-selector {
     width: var(--astryx-field-width, 100%);
@@ -269,12 +245,9 @@
     animation-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
   }
 
-  .astryx-multi-selector-listbox[data-placement='below'] {
-    animation-name: astryx-multi-selector-enter-below;
-  }
-
-  .astryx-multi-selector-listbox[data-placement='above'] {
-    animation-name: astryx-multi-selector-enter-above;
+  .astryx-multi-selector-listbox[data-placement] {
+    animation-name: astryx-layer-enter;
+    transform-origin: var(--_astryx-layer-enter-origin, 50% 50%);
   }
 
   .astryx-multi-selector-search {
@@ -350,6 +323,12 @@
     background: var(--astryx-dropdown-menu-hover-background, light-dark(#0536590c, #ffffff0c));
   }
 
+  /* 键盘移到的高亮选项画标准焦点环：只靠填充色，它和列表底色的对比不到 3:1。指针移到的高亮只有填充。 */
+  .astryx-multi-selector-listbox[data-keyboard-highlight] .astryx-multi-selector-option.is-active:not(.is-disabled) {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, currentcolor);
+    outline-offset: calc(-1 * var(--astryx-focus-outline-width, 2px));
+  }
+
   .astryx-multi-selector-option.is-disabled {
     cursor: default;
     opacity: 0.5;
@@ -371,6 +350,7 @@
   .astryx-multi-selector-empty {
     color: var(--astryx-color-text-secondary, #525252);
     font-size: var(--astryx-text-supporting-size, 0.75rem);
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
   }
 
   .astryx-multi-selector-heading {
@@ -387,6 +367,7 @@
   .astryx-multi-selector-empty {
     padding: var(--astryx-spacing-3, 12px);
     font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
     text-align: center;
   }
 
@@ -396,6 +377,20 @@
     .astryx-multi-selector-listbox {
       transition: none;
       animation: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) and (not (pointer: coarse)) {
+    .astryx-multi-selector-listbox[data-placement] {
+      animation: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) and (pointer: coarse) {
+    .astryx-multi-selector-listbox[data-placement] {
+      animation-name: astryx-layer-fade-in;
+      animation-duration: var(--_astryx-reduced-motion-fade-duration, 200ms);
+      animation-timing-function: var(--_astryx-reduced-motion-fade-easing, cubic-bezier(0.42, 0, 0.58, 1));
     }
   }
 }
@@ -413,4 +408,14 @@
 .astryx-multi-selector-clear:focus-visible {
   outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, var(--astryx-color-accent));
   outline-offset: 1px;
+}
+
+/* 强制颜色下焦点只剩边框能表达：聚焦（含可聚焦的禁用字段）的边框取系统 Highlight 色。 */
+@layer astryx.components {
+  @media (forced-colors: active) {
+    .astryx-multi-selector-control:focus-within,
+    .astryx-multi-selector-control.is-open {
+      border-color: Highlight;
+    }
+  }
 }

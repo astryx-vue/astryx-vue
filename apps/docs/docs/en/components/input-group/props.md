@@ -15,10 +15,10 @@ footer: false
       <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>Accessible name. When set, the group shows a label, description, optional or required mark, and status.</td></tr>
       <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Hides the label visually. Screen readers still read it.</td></tr>
       <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>Help text between the label and the control.</td></tr>
-      <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disables the group and the selectors inside it.</td></tr>
+      <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disables the group. The inputs, selectors, and Button addons inside it are disabled too, and so is a nested group. Re-enabling the group leaves a control that disabled itself disabled.</td></tr>
       <tr><td><code>isOptional</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Marks the label as optional.</td></tr>
       <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Marks the label as required.</td></tr>
-      <tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>—</td><td>Status on the group border and under the control.</td></tr>
+      <tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>—</td><td>Validation status. Its message shows below the group. The group border does not change; a theme can style the row from <code>data-status</code>.</td></tr>
       <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>Tooltip at the end of the label.</td></tr>
     </tbody>
   </table>

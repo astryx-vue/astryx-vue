@@ -40,6 +40,12 @@ footer: false
         <td>必填。画出展开后那一整行详情面板里的内容，参数是这一行的数据。</td>
       </tr>
       <tr>
+        <td><code>getRowLabel</code></td>
+        <td><code>(item: T) =&gt; string</code></td>
+        <td>—</td>
+        <td>行的可读名字，拼进展开按钮的无障碍名称，例如「展开 Acme」。返回空白时用通用的「展开行」。</td>
+      </tr>
+      <tr>
         <td><code>getIsItemExpandable</code></td>
         <td><code>(item: T) =&gt; boolean</code></td>
         <td>—</td>
@@ -57,13 +63,19 @@ footer: false
         <td><code>false</code></td>
         <td>点整行就能切换，不只点折叠按钮。这是给指针设备加的方便，按钮仍然是键盘和辅助技术用的那个控件。点在可交互的单元格内容（按钮、链接、表单控件）上，或者正在选中文字时，不会切换；不能展开的行没有反应。</td>
       </tr>
+      <tr>
+        <td><code>animatedLayout</code></td>
+        <td><code>AnimatedLayout | null</code></td>
+        <td>—</td>
+        <td><code>useAnimatedLayout</code> 返回的句柄。传了之后，面板展开或收起时下面的行滑到新位置，分隔线跟着行走，展开的面板播放入场，折叠按钮的箭头按同样的节奏转动。</td>
+      </tr>
     </tbody>
   </table>
 </div>
 
 ## 返回值
 
-`useTableRowExpansion()` 返回一个 `TablePlugin&lt;T&gt;`，放进 `Table` 的 `plugins` 里。它填的是插件协议上的三个字段：
+`useTableRowExpansion()` 返回一个 `TablePlugin&lt;T&gt;`，放进 `Table` 的 `plugins` 里。它填的是插件协议上的这些字段：
 
 <div class="component-api-table" role="region" aria-label="useTableRowExpansion 返回值" tabindex="0">
   <table>
@@ -86,6 +98,11 @@ footer: false
         <td><code>(input: TableCellPatchInput&lt;T&gt;) =&gt; TableCellPatch | null</code></td>
         <td>给折叠按钮那两个单元格加上 <code>astryx-table__expansion</code> 类名，保住 40px 的宽度。</td>
       </tr>
+      <tr>
+        <td><code>bindScrollRoot</code></td>
+        <td><code>(element: HTMLElement | null) =&gt; void</code></td>
+        <td>记下表格的滚动容器，传了 <code>animatedLayout</code> 时在里面找变化的行。</td>
+      </tr>
     </tbody>
   </table>
 </div>
@@ -101,7 +118,7 @@ footer: false
       <tr>
         <td><code>attrs</code></td>
         <td><code>Record&lt;string, string | undefined&gt;</code></td>
-        <td>展开的行带上 <code>data-expanded</code>。</td>
+        <td>每个能展开的行带上 <code>data-expansion-key</code>（行 key），展开的行再带上 <code>data-expanded</code>。</td>
       </tr>
       <tr>
         <td><code>class</code></td>

@@ -7,12 +7,12 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { useKeyboardHintToolbar } from '../../../../components/demos/use-keyboard-hint'
+import { useKeyboardHintStarRating } from '../../../../components/demos/use-keyboard-hint'
 </script>
 
 ## 使用方法
 
-一组靠方向键移动的控件，第一次被键盘点进来时，在当前项旁边短暂提示一句「用方向键移动」。这是给看得见键盘用户的：告诉他方向键在这个组里能走。提示里的方向键用 `Kbd` 画，用 `fixed` 定位跟在当前项旁边，所以不会被滚动容器裁掉，并且是 `aria-hidden`。按过方向键、超时、或者焦点离开这个组，它都会自己关掉；关掉之后这个实例就不再提示。自己搭 roving-tabindex 控件时才会直接用到这个 hook；`Toolbar`、`TabList`、`SegmentedControl` 不会替你挂。
+一组靠方向键移动的控件，第一次被键盘点进来时，在当前项旁边提示一句「用方向键移动」。这是给看得见键盘用户的：告诉他方向键在这个组里能走。提示里的方向键用 `Kbd` 画，用 `fixed` 定位跟在当前项旁边，所以不会被滚动容器裁掉，并且是 `aria-hidden`。它会一直停留，直到按下方向键、按下 Escape（只关提示，焦点不动）或焦点离开这个组；关掉之后这个实例就不再提示。自己搭 roving-tabindex 控件时才会直接用到这个 hook；`Toolbar`、`TabList`、`SegmentedControl` 不会替你挂。
 
 hook 返回的 `Hint` 组件要放在这一组容器里面，作为最后一个子元素。
 
@@ -32,8 +32,8 @@ import { useKeyboardHint } from '@astryx-vue/core'
 ## 示例
 
 <DemoExample
-  :demo="useKeyboardHintToolbar"
-  description="自己搭的 roving-tabindex 工具栏，第一次被键盘聚焦时通过 useKeyboardHint 短暂提示方向键，让看得见的用户知道组里可以用方向键移动。"
+  :demo="useKeyboardHintStarRating"
+  description="一个只有一个 Tab 停靠点的自制五星评分，直接调用 useKeyboardHint：Tab 进来时出现「← → 切换」提示，第一次按方向键它就消失，再 Tab 回来也不会再出现。"
   locale="zh"
   title="useKeyboardHint — 方向键提示"
 />

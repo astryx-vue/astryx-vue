@@ -2,7 +2,8 @@ import type { ComputedRef, Ref } from 'vue'
 import type { SearchableItem } from '../composables/useAsyncSource.js'
 import type { ChatComposerToken, ChatComposerTrigger } from './types.js'
 import { computed, onScopeDispose, reactive, ref, useId } from 'vue'
-import { isImeKeyEvent } from '../composables/internal/ime.js'
+import { useBusyAnnouncement } from '../composables/internal/busyAnnouncement.js'
+import { isImeKeyEvent } from '../utils/ime.js'
 import { flattenSearchItems } from './groupSearchItems.js'
 import { caretTextNode, findActiveTrigger, isUnmatchedMultiWordQuery, textBeforeCursor } from './triggerQuery.js'
 
@@ -25,6 +26,8 @@ export interface UseTriggerMenuOptions {
   onEmitChange: () => void
   /** Delay before an async search. Sync sources run immediately. @default 150 */
   debounceMs?: Ref<number>
+  /** Loading text announced when the active trigger does not set its own `loadingText`. */
+  defaultLoadingText: Ref<string>
 }
 
 interface DismissedQuery {
@@ -93,6 +96,16 @@ export function useTriggerMenu(options: UseTriggerMenuOptions): UseTriggerMenuRe
   let dismissed: DismissedQuery | null = null
   const asyncSources = new WeakSet<object>()
 
+  // 加载行本身不带 live 角色：它连着文字一起挂上、结果来了就拿掉，读屏多半不念。
+  // 「Searching…」是菜单的忙碌状态，走共用的忙碌播报：每次搜索念一次，结果来了重新待命，
+  // 在播报出去之前就返回的搜索什么也不念。
+  const loadingText = computed(() => state.activeTrigger?.loadingText ?? options.defaultLoadingText.value)
+  const settleBusy = useBusyAnnouncement(
+    () => state.isLoading && !state.isHidden && state.activeTrigger !== null,
+    loadingText,
+    options.editable,
+  )
+
   function removeAnchor(): void {
     if (anchor.value?.getAttribute('data-astryx-trigger-anchor') != null)
       anchor.value.remove()
@@ -149,6 +162,7 @@ export function useTriggerMenu(options: UseTriggerMenuOptions): UseTriggerMenuRe
   function applyItems(items: SearchableItem[], captured: number, trigger: ChatComposerTrigger): void {
     if (!queryStillCurrent(captured, trigger))
       return
+    settleBusy()
     state.items = items
     state.highlightedIndex = items.length > 0 ? 0 : -1
     state.isLoading = false

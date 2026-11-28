@@ -108,6 +108,18 @@
     cursor: pointer;
   }
 
+  .astryx-tokenizer-control > .astryx-field-icon,
+  .astryx-tokenizer-control > .astryx-field-info-tip {
+    flex: none;
+    margin-inline-start: auto;
+    color: var(--astryx-input-status-color, var(--astryx-color-text-secondary, #525252));
+  }
+
+  .astryx-tokenizer-clear + .astryx-field-icon,
+  .astryx-tokenizer-clear + .astryx-field-info-tip {
+    margin-inline-start: 0;
+  }
+
   .astryx-tokenizer-measure {
     position: absolute;
     display: flex;
@@ -150,6 +162,39 @@
     padding: 0;
   }
 
+  /* 展开时标签直接排进外框的弹性行，输入框跟在最后一个标签后面，光标就落在接着打字的地方。 */
+  .astryx-tokenizer-tokens:not(.is-collapsed) {
+    display: contents;
+  }
+
+  /*
+   * 有标签时输入框跟在最后一个标签后面。空着失焦（或只读）时不占任何位置，
+   * 连列间距都收回，所以不会为它多出一行空白；聚焦时只要文字内缩进加光标的宽度，
+   * 并把光标的宽度还给这一行。打了字就恢复完整的输入宽度，必要时换行。
+   */
+  .astryx-tokenizer-control.has-tokens .astryx-tokenizer-input {
+    box-sizing: border-box;
+    flex: 1 1 40px;
+    width: 0;
+    min-width: 40px;
+    padding-inline: calc(var(--astryx-spacing-2, 8px) - var(--astryx-spacing-1, 4px) + 1px) 0;
+  }
+
+  .astryx-tokenizer-control.has-tokens .astryx-tokenizer-input.is-empty {
+    min-width: 0;
+    flex-basis: 0;
+  }
+
+  .astryx-tokenizer-control.has-tokens .astryx-tokenizer-input.is-empty:is(:not(:focus), :read-only) {
+    margin-inline-start: calc(-1 * var(--astryx-spacing-1, 4px));
+    padding-inline-start: 0;
+  }
+
+  .astryx-tokenizer-control.has-tokens .astryx-tokenizer-input.is-empty:focus:not(:read-only) {
+    min-width: calc(var(--astryx-spacing-2, 8px) - var(--astryx-spacing-1, 4px) + 3px);
+    margin-inline-end: -2px;
+  }
+
   .astryx-tokenizer-token {
     display: inline-flex;
     max-width: 100%;
@@ -165,6 +210,7 @@
     flex: none;
     color: var(--astryx-color-text-secondary, #525252);
     font-size: var(--astryx-text-supporting-size, 0.75rem);
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
     font-weight: var(--astryx-font-weight-medium, 500);
   }
 
@@ -189,6 +235,94 @@
       transition: none;
     }
   }
+
+  /*
+   * InputGroup 里的 Tokenizer：整行由组定高、画边框和焦点，Tokenizer 只留内容。
+   * 一行放不下就横向滚动，不换行，否则第二行会溢出组的边框；
+   * 只有标签和输入这条轨道在滚，结尾的控件是它的兄弟，不会被标签盖住。
+   */
+  .astryx-input-group-field .astryx-tokenizer.in-group {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    height: 100%;
+  }
+
+  .astryx-input-group-field .astryx-tokenizer.in-group .astryx-tokenizer-control {
+    flex-wrap: nowrap;
+    height: 100%;
+    min-height: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  .astryx-tokenizer.in-group .astryx-tokenizer-track {
+    --_fade-inset: calc(var(--astryx-spacing-1, 4px) + var(--astryx-spacing-6, 24px));
+    display: flex;
+    flex: 1 1 0;
+    align-items: center;
+    align-self: stretch;
+    min-width: 0;
+    /* 滚动容器在自己的内边距处裁切；向外撑回外框的内边距，标签的焦点环才有地方画。 */
+    margin: calc(-1 * var(--astryx-spacing-1, 4px));
+    padding: var(--astryx-spacing-1, 4px);
+    scrollbar-width: none;
+    scroll-padding-inline: var(--_fade-inset);
+  }
+
+  .astryx-tokenizer.in-group .astryx-tokenizer-track-content {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: var(--astryx-spacing-1, 4px);
+    /* 至少和轨道一样宽，输入框才能拿到标签剩下的地方；标签更多时才超出，轨道才有得滚。 */
+    min-width: 100%;
+  }
+
+  /* 轨道里标签和输入框排成一行，不再各自占一个弹性行。 */
+  .astryx-tokenizer.in-group .astryx-tokenizer-tokens {
+    display: flex;
+    flex: none;
+    flex-wrap: nowrap;
+    gap: var(--astryx-spacing-1, 4px);
+    max-width: none;
+  }
+
+  .astryx-tokenizer.in-group .astryx-tokenizer-tokens.is-collapsed {
+    flex: 1 1 auto;
+  }
+
+  /* 藏着标签的那一侧淡出，代替滚动条。 */
+  .astryx-tokenizer.in-group .astryx-tokenizer-track[data-scrollable-inline='true']:not([data-scroll-inline-start='true']):not([data-scroll-inline-end='true']) {
+    mask-image: linear-gradient(to right, transparent var(--astryx-spacing-1, 4px), black var(--_fade-inset), black calc(100% - var(--_fade-inset)), transparent calc(100% - var(--astryx-spacing-1, 4px)));
+  }
+
+  .astryx-tokenizer.in-group .astryx-tokenizer-track[data-scrollable-inline='true'][data-scroll-inline-start='true']:not([data-scroll-inline-end='true']) {
+    mask-image: linear-gradient(to left, transparent var(--astryx-spacing-1, 4px), black var(--_fade-inset));
+  }
+
+  .astryx-tokenizer.in-group .astryx-tokenizer-track[data-scrollable-inline='true'][data-scroll-inline-end='true']:not([data-scroll-inline-start='true']) {
+    mask-image: linear-gradient(to right, transparent var(--astryx-spacing-1, 4px), black var(--_fade-inset));
+  }
+
+  /* 从右往左排版：淡出的方向跟着翻过来。 */
+  .astryx-tokenizer.in-group .astryx-tokenizer-track:dir(rtl)[data-scrollable-inline='true'][data-scroll-inline-start='true']:not([data-scroll-inline-end='true']) {
+    mask-image: linear-gradient(to right, transparent var(--astryx-spacing-1, 4px), black var(--_fade-inset));
+  }
+
+  .astryx-tokenizer.in-group .astryx-tokenizer-track:dir(rtl)[data-scrollable-inline='true'][data-scroll-inline-end='true']:not([data-scroll-inline-start='true']) {
+    mask-image: linear-gradient(to left, transparent var(--astryx-spacing-1, 4px), black var(--_fade-inset));
+  }
+
+  /* 强制颜色下滚动条回来了，淡出让位。 */
+  @media (forced-colors: active) {
+    .astryx-tokenizer.in-group .astryx-tokenizer-track {
+      mask-image: none;
+      scrollbar-width: thin;
+    }
+  }
 }
 
 /* 不分层：输入框的焦点由外框承担，避免文档页再套一层品牌绿环。 */
@@ -204,4 +338,23 @@
 .astryx-tokenizer-token:focus-visible .astryx-token {
   outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, var(--astryx-color-accent));
   outline-offset: 1px;
+}
+
+/* 强制颜色下焦点只剩边框能表达：聚焦（含可聚焦的禁用字段）的边框取系统 Highlight 色。 */
+@layer astryx.components {
+  @media (forced-colors: active) {
+    .astryx-tokenizer-control:focus-within,
+    .astryx-tokenizer-control.is-open {
+      border-color: Highlight;
+    }
+  }
+}
+
+@layer astryx.components {
+  /* 触屏上点输入框会升起键盘，焦点外观淡入的每一帧都要重绘，改成立刻出现；鼠标和 Tab 仍淡入。 */
+  @media (pointer: coarse) {
+    .astryx-tokenizer-control {
+      transition: none;
+    }
+  }
 }

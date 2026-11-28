@@ -1,4 +1,5 @@
 import type { Ref } from 'vue'
+import { activateMenuItem } from '../composables/internal/menuActivation.js'
 import { isImeKeyEvent } from '../utils/ime.js'
 
 /**
@@ -7,9 +8,9 @@ import { isImeKeyEvent } from '../utils/ime.js'
  */
 export const MENU_ITEM_ROLES: ReadonlySet<string> = new Set(['menuitem', 'menuitemradio', 'menuitemcheckbox'])
 
-/** Selector for the activatable rows of one menu level. */
-export const MENU_ITEM_SELECTOR: string = [...MENU_ITEM_ROLES]
-  .map(role => `[role="${role}"]:not([aria-disabled="true"])`)
+/** Selector for every row of one menu level, disabled rows included. */
+export const MENU_ROW_SELECTOR: string = [...MENU_ITEM_ROLES]
+  .map(role => `[role="${role}"]`)
   .join(',')
 
 /** Selector for any menu level, used to scope a level's rows and key events. */
@@ -17,41 +18,6 @@ export const MENU_BOUNDARY_SELECTOR = '[role="menu"]'
 
 /** Marks the element whose text typeahead matches against. */
 export const MENU_ITEM_LABEL_ATTRIBUTE = 'data-menu-item-label'
-
-/** The keyboard modifier shape a click can carry. */
-export interface MenuClickModifiers {
-  metaKey: boolean
-  ctrlKey: boolean
-  shiftKey: boolean
-  altKey: boolean
-  button?: number
-}
-
-/**
- * Whether a click carries a modifier or a non-primary button. On a row that is
- * a link the browser gives such a click a meaning of its own, which the row
- * must leave alone.
- */
-export function isModifiedClick(event: MenuClickModifiers): boolean {
-  return event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || (event.button ?? 0) !== 0
-}
-
-/**
- * Activate a row from the keyboard: a synthesized click that carries the key's
- * modifiers, so a modified Enter on a link row opens the way a modified click
- * would. `detail` stays 0, the mark of a non-pointer activation.
- */
-export function activateMenuItem(row: HTMLElement, key: MenuClickModifiers): void {
-  row.dispatchEvent(new MouseEvent('click', {
-    altKey: key.altKey,
-    bubbles: true,
-    cancelable: true,
-    composed: true,
-    ctrlKey: key.ctrlKey,
-    metaKey: key.metaKey,
-    shiftKey: key.shiftKey,
-  }))
-}
 
 function isDisabledRow(row: HTMLElement): boolean {
   return row.getAttribute('aria-disabled') === 'true' || row.hasAttribute('disabled')
@@ -110,7 +76,7 @@ export function useMenuNav(options: MenuNavOptions): MenuNav {
     const menu = menuRef.value
     if (menu == null)
       return []
-    return Array.from(menu.querySelectorAll<HTMLElement>(MENU_ITEM_SELECTOR))
+    return Array.from(menu.querySelectorAll<HTMLElement>(MENU_ROW_SELECTOR))
       .filter(row => !isHiddenWithin(row, menu))
       .filter(row => row.closest(MENU_BOUNDARY_SELECTOR) === menu)
   }
@@ -160,23 +126,19 @@ export function useMenuNav(options: MenuNavOptions): MenuNav {
     return focusIndex(items, findEnabledIndex(items, 0, 1, false))
   }
 
-  function focusLast(): boolean {
-    const items = getItems()
-    return focusIndex(items, findEnabledIndex(items, items.length - 1, -1, false))
-  }
-
   function moveBy(direction: 1 | -1): boolean {
     const items = getItems()
     if (items.length === 0)
       return false
     const current = getCurrentIndex(items)
-    const next = findEnabledIndex(
-      items,
-      current === -1 ? (direction === 1 ? 0 : items.length - 1) : current + direction,
-      direction,
-      true,
-    )
-    return focusIndex(items, next)
+    const start = current === -1 ? (direction === 1 ? 0 : items.length - 1) : current + direction
+    return focusIndex(items, (start + items.length) % items.length)
+  }
+
+  /** Home / End: the keys reach a disabled row at either end. */
+  function focusEdge(edge: 'first' | 'last'): boolean {
+    const items = getItems()
+    return focusIndex(items, edge === 'first' ? 0 : items.length - 1)
   }
 
   /**
@@ -186,18 +148,17 @@ export function useMenuNav(options: MenuNavOptions): MenuNav {
   function focusPage(direction: 1 | -1): boolean {
     const menu = menuRef.value
     const all = getItems()
-    const active = all.map((row, index) => (isDisabledRow(row) ? -1 : index)).filter(index => index !== -1)
-    if (menu == null || active.length === 0)
+    if (menu == null || all.length === 0)
       return false
     if (menu.clientHeight === 0 || menu.scrollHeight <= menu.clientHeight)
-      return direction === 1 ? focusLast() : focusFirst()
+      return focusEdge(direction === 1 ? 'last' : 'first')
 
-    const rowHeight = all[active[0] as number]?.getBoundingClientRect().height ?? 0
-    const perPage = rowHeight > 0 ? Math.max(1, Math.floor(menu.clientHeight / rowHeight)) : active.length
-    const position = active.indexOf(getCurrentIndex(all))
-    const from = position === -1 ? (direction === 1 ? -1 : active.length) : position
-    const next = Math.max(0, Math.min(active.length - 1, from + direction * perPage))
-    return focusIndex(all, active[next] as number)
+    const rowHeight = all[0]?.getBoundingClientRect().height ?? 0
+    const perPage = rowHeight > 0 ? Math.max(1, Math.floor(menu.clientHeight / rowHeight)) : all.length
+    const position = getCurrentIndex(all)
+    const from = position === -1 ? (direction === 1 ? -1 : all.length) : position
+    const next = Math.max(0, Math.min(all.length - 1, from + direction * perPage))
+    return focusIndex(all, next)
   }
 
   /**
@@ -230,8 +191,6 @@ export function useMenuNav(options: MenuNavOptions): MenuNav {
 
     for (let i = 0; i < labels.length; i++) {
       const index = (start + offset + i + labels.length) % labels.length
-      if (isDisabledRow(items[index] as HTMLElement))
-        continue
       const label = labels[index]
       if (label != null && label.trim().toLowerCase().startsWith(nextBuffer)) {
         focusIndex(items, index)
@@ -287,12 +246,12 @@ export function useMenuNav(options: MenuNavOptions): MenuNav {
       return
     }
 
-    if (event.key === 'Home' && focusFirst()) {
+    if (event.key === 'Home' && focusEdge('first')) {
       event.preventDefault()
       return
     }
 
-    if (event.key === 'End' && focusLast()) {
+    if (event.key === 'End' && focusEdge('last')) {
       event.preventDefault()
       return
     }

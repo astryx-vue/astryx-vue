@@ -7,12 +7,12 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { useKeyboardHintToolbar } from '../../../../components/demos/use-keyboard-hint'
+import { useKeyboardHintStarRating } from '../../../../components/demos/use-keyboard-hint'
 </script>
 
 ## Usage
 
-Shows an ephemeral "← → to navigate" hint anchored to the focused item the first time a roving-tabindex composite receives keyboard focus. It teaches sighted keyboard users that arrow keys move within the group. The hint renders arrow keys with `Kbd`, is positioned `fixed` next to the focused element, so overflow containers never clip it, and is `aria-hidden`. It dismisses on the first arrow press, on timeout, or when focus leaves the group, and after a dismissal it does not show again for that instance. Reach for the hook directly when building a custom roving-tabindex widget; `Toolbar`, `TabList`, and `SegmentedControl` do not mount it for you.
+Shows a "← → to navigate" hint anchored to the focused item the first time a roving-tabindex composite receives keyboard focus. It teaches sighted keyboard users that arrow keys move within the group. The hint renders arrow keys with `Kbd`, is positioned `fixed` next to the focused element, so overflow containers never clip it, and is `aria-hidden`. It stays until the first arrow press, Escape (which closes only the hint and leaves focus where it is), or focus leaving the group, and after a dismissal it does not show again for that instance. Reach for the hook directly when building a custom roving-tabindex widget; `Toolbar`, `TabList`, and `SegmentedControl` do not mount it for you.
 
 The `Hint` component returned by the hook is rendered inside the composite container, as its last child.
 
@@ -34,8 +34,8 @@ import { useKeyboardHint } from '@astryx-vue/core'
 Common configurations, variations, and states.
 
 <DemoExample
-  :demo="useKeyboardHintToolbar"
-  description="A custom roving-tabindex toolbar shows an ephemeral arrow-key hint on first keyboard focus via useKeyboardHint, teaching sighted keyboard users that arrows move within the group."
+  :demo="useKeyboardHintStarRating"
+  description="A custom five-star rating with one Tab stop calls useKeyboardHint directly: tabbing into it shows a &quot;← → to navigate&quot; hint, the first arrow press dismisses it, and tabbing back in does not show it again."
   locale="en"
   title="useKeyboardHint — Arrow-key Hint"
 />

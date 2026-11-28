@@ -7,12 +7,20 @@
  * Tokens the theme does not set keep the shared default from Neutral's base.
  * Figtree and JetBrains Mono stay on the shared fonts.css stack.
  */
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playwrite+US+Trad&display=swap');
+@import '@fontsource/dm-sans/400.css';
+@import '@fontsource/dm-sans/500.css';
+@import '@fontsource/dm-sans/600.css';
+@import '@fontsource/dm-sans/700.css';
+@import '@fontsource/playwrite-us-trad/400.css';
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 
 @layer astryx.tokens {
-  [data-astryx-theme='matcha'] {
+  /* 只有页面根默认跟随读者；主题包装元素不声明配色，`system` 模式的 Theme 取外面的配色。 */
+  html[data-astryx-theme='matcha'] {
     color-scheme: light dark;
+  }
+
+  [data-astryx-theme='matcha'] {
     background-color: var(--astryx-color-background-body);
     color: var(--astryx-color-text-primary);
     font-family: var(--astryx-font-family-body);
@@ -27,7 +35,7 @@
     --astryx-color-overlay: light-dark(#3E481D80, #3E481DCC);
     --astryx-color-overlay-hover: light-dark(#3E481D0D, #C0CBA90D);
     --astryx-color-overlay-pressed: light-dark(#3E481D1A, #C0CBA91A);
-    --astryx-color-background-muted: light-dark(#F0F0E0, #3E481D);
+    --astryx-color-background-muted: light-dark(#F0F0E0, #12140e);
 
     --astryx-color-text-primary: light-dark(#3E481D, #C0CBA9);
     --astryx-color-text-secondary: light-dark(#5a6b2a, #a8bf6a);
@@ -42,7 +50,7 @@
     --astryx-color-icon-disabled: light-dark(#C0CBA9, #5a6440);
 
     --astryx-color-background-card: light-dark(#FFFFFF, #1e2016);
-    --astryx-color-background-popover: light-dark(#FFFFFF, #3E481D);
+    --astryx-color-background-popover: light-dark(#FFFFFF, #1e2016);
     --astryx-color-background-inverted: light-dark(#3E481D, #C0CBA9);
     --astryx-color-background-error-inverted: light-dark(#aa071e, #e3193b);
 
@@ -167,7 +175,7 @@
     --astryx-radius-element: 12px;
     --astryx-radius-container: 18px;
     --astryx-radius-page: 42px;
-    --astryx-radius-chat: 28px;
+    --astryx-radius-chat: var(--astryx-radius-container);
     --astryx-radius-full: 9999px;
 
     --astryx-shadow-low: 0 2px 4px #3E481D0D, 0 4px 8px #3E481D1A;

@@ -9,7 +9,7 @@ import type {
 import type { HistoryState } from './HistoryDialog.vue'
 import type { CommentThreadData, CommentThreadSharedProps } from './types.js'
 import type { AnyComment } from './utils.js'
-import { useAnnounce, useTranslator } from '@astryx-vue/core'
+import { commentsMessages, useAnnounce, useComponentMessages } from '@astryx-vue/core'
 import { computed, nextTick, reactive, ref, watch } from 'vue'
 import { bindLatestRef } from './bindLatestRef.js'
 import { commentMoreMenuTrigger, visibleCommentAction } from './commentActionLookup.js'
@@ -76,7 +76,7 @@ export function useCommentsController(options: CommentsControllerOptions): Comme
     rootRef,
   } = options
   const announce = useAnnounce()
-  const { t } = useTranslator()
+  const messages = useComponentMessages({ comments: commentsMessages })
 
   const uncontrolledSelectedThreadId = ref<string | null>(null)
   const isSelectionControlled = computed(() => options.selectedThreadId !== undefined)
@@ -223,7 +223,7 @@ export function useCommentsController(options: CommentsControllerOptions): Comme
         replyDraft.value = submitted
         if (submittedReplyTarget != null)
           reportDraftChange(submitted, replyComposerContext(submittedReplyTarget))
-        replyError.value = t('@astryx.comments.replyFailed')
+        replyError.value = messages.value.comments.replyFailed
       }
       return 'failed'
     }
@@ -239,7 +239,7 @@ export function useCommentsController(options: CommentsControllerOptions): Comme
     const succeeded = await runCommentAction(
       comment.id,
       () => onSaveEditRef.value!(comment.id, saved),
-      t('@astryx.comments.editFailed'),
+      messages.value.comments.editFailed,
       () => { void saveEdit(comment, saved) },
     )
     if (succeeded) {
@@ -271,7 +271,7 @@ export function useCommentsController(options: CommentsControllerOptions): Comme
     const succeeded = await runCommentAction(
       target.id,
       () => onDeleteRef.value!(target.id),
-      t('@astryx.comments.deleteFailed'),
+      messages.value.comments.deleteFailed,
       () => {
         deleteTarget.value = target
       },
@@ -288,7 +288,7 @@ export function useCommentsController(options: CommentsControllerOptions): Comme
       )
     }
     else {
-      const message = t('@astryx.comments.deleteFailedRetry')
+      const message = messages.value.comments.deleteFailedRetry
       deleteError.value = message
       announce(message, 'assertive')
     }
@@ -312,7 +312,7 @@ export function useCommentsController(options: CommentsControllerOptions): Comme
         history.value = {
           ...history.value,
           isLoading: false,
-          error: t('@astryx.comments.historyLoadFailed'),
+          error: messages.value.comments.historyLoadFailed,
         }
       }
     }
@@ -433,7 +433,7 @@ export function useCommentsController(options: CommentsControllerOptions): Comme
       void runCommentAction(
         comment.id,
         () => onReactRef.value!(comment.id, key, option),
-        t('@astryx.comments.reactionFailed'),
+        messages.value.comments.reactionFailed,
       )
     },
     resolve: (comment: AnyComment) => {
@@ -442,7 +442,7 @@ export function useCommentsController(options: CommentsControllerOptions): Comme
       void runCommentAction(
         comment.id,
         () => onResolveThreadRef.value!(comment.id),
-        t('@astryx.comments.resolveFailed'),
+        messages.value.comments.resolveFailed,
       )
     },
     reopen: (comment: AnyComment) => {
@@ -451,7 +451,7 @@ export function useCommentsController(options: CommentsControllerOptions): Comme
       void runCommentAction(
         comment.id,
         () => onReopenThreadRef.value!(comment.id),
-        t('@astryx.comments.reopenFailed'),
+        messages.value.comments.reopenFailed,
       )
     },
     retry: (comment: AnyComment) => {
@@ -460,7 +460,7 @@ export function useCommentsController(options: CommentsControllerOptions): Comme
       void runCommentAction(
         comment.id,
         () => onRetryCommentRef.value!(comment.id),
-        t('@astryx.comments.retryFailed'),
+        messages.value.comments.retryFailed,
       )
     },
     requestDelete: (comment: AnyComment) => { deleteTarget.value = comment },

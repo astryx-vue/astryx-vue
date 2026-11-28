@@ -175,18 +175,11 @@ describe('list', () => {
     })
 
     it('bleed fills each row to the container padding line with square corners', () => {
-      const fill = cssRule('.astryx-list[data-edge=\'bleed\'] > .astryx-list-item:not(.astryx-item--swipe)')
+      const fill = cssRule('.astryx-list[data-edge=\'bleed\'] > .astryx-list-item {')
 
       expect(fill).toContain('padding-inline-start: max(var(--container-padding-inline-start, 0px), var(--astryx-item-inset-inline));')
       expect(fill).toContain('padding-inline-end: max(var(--container-padding-inline-end, 0px), var(--astryx-item-inset-inline));')
-      expect(cssRule('.astryx-list[data-edge=\'bleed\'] > .astryx-list-item')).toContain('border-radius: 0;')
-    })
-
-    it('bleed pads a swiping row on its surface, where the row content lives', () => {
-      const surface = cssRule('.astryx-list[data-edge=\'bleed\'] > .astryx-list-item > .astryx-item__surface')
-
-      expect(surface).toContain('padding-inline-start: max(var(--container-padding-inline-start, 0px), var(--astryx-item-inset-inline));')
-      expect(surface).toContain('padding-inline-end: max(var(--container-padding-inline-end, 0px), var(--astryx-item-inset-inline));')
+      expect(fill).toContain('border-radius: 0;')
     })
   })
 
@@ -349,10 +342,25 @@ describe('list item', () => {
     expect(row.attributes('aria-disabled')).toBe('true')
     expect(row.attributes('data-disabled')).toBe('true')
     expect(row.attributes('data-inert')).toBe('true')
-    expect(wrapper.find('button.astryx-item__content').attributes('disabled')).toBeDefined()
+    const button = wrapper.find('button.astryx-item__content')
+    expect(button.attributes('disabled')).toBeUndefined()
+    expect(button.attributes('aria-disabled')).toBe('true')
 
     await row.trigger('click')
+    await button.trigger('click')
+    await button.trigger('keydown', { key: 'Enter' })
     expect(onClick).not.toHaveBeenCalled()
+  })
+
+  it('keeps a disabled row\'s button and link reachable by keyboard', () => {
+    const wrapper = listOf([
+      { isDisabled: true, label: 'Action', onClick: () => {} },
+      { isDisabled: true, label: 'Link', href: '/a' },
+    ])
+    const [button, link] = wrapper.findAll<HTMLElement>('.astryx-item__content')
+    expect(button!.element.tabIndex).toBe(0)
+    expect(link!.attributes('tabindex')).toBe('0')
+    expect(link!.attributes('href')).toBeUndefined()
   })
 
   it('keeps the row inert only while it has no parent role', () => {
@@ -461,15 +469,13 @@ describe('item', () => {
 
   it('aligns the row on its first baselines only for first-line', () => {
     expect(listCss).toMatch(/\.astryx-item\[data-align='first-line'\] \{\s*align-items: baseline;/)
-    expect(listCss).toMatch(/\.astryx-item--swipe\[data-align='first-line'\] > \.astryx-item__surface \{\s*align-items: baseline;/)
     expect(listCss).toMatch(/\.astryx-item\[data-align='start'\] \{\s*align-items: flex-start;/)
     expect(listCss).not.toMatch(/\.astryx-item\[data-align='center'\]/)
   })
 
   it('gives each first-line start and end slot a zero-width strut with no accessible text', () => {
-    const strut = /\.astryx-item\[data-align='first-line'\] > :is\(\.astryx-item__start, \.astryx-item__end\)::before,[\s\S]*?content: "\\200B" \/ "";[\s\S]*?inline-size: 0;[\s\S]*?font-size: var\(--astryx-text-body-size, 0\.875rem\);[\s\S]*?line-height: var\(--astryx-text-body-leading, 1\.4286\);/
+    const strut = /\.astryx-item\[data-align='first-line'\] > :is\(\.astryx-item__start, \.astryx-item__end\)::before \{[\s\S]*?content: "\\200B" \/ "";[\s\S]*?inline-size: 0;[\s\S]*?font-size: var\(--astryx-text-body-size, 0\.875rem\);[\s\S]*?line-height: var\(--astryx-text-body-leading, 1\.4286\);/
     expect(listCss).toMatch(strut)
-    expect(listCss).toContain('.astryx-item--swipe[data-align=\'first-line\'] > .astryx-item__surface > :is(.astryx-item__start, .astryx-item__end)::before')
   })
 })
 
@@ -491,91 +497,6 @@ describe('list item template listener', () => {
   })
 })
 
-describe('item swipe actions', () => {
-  it('reveals a trailing action after a touch drag and runs it from the button', async () => {
-    vi.useFakeTimers()
-    const onActivate = vi.fn()
-    const wrapper = mount(Item, {
-      props: {
-        label: 'Invoice 1042',
-        swipeActions: {
-          trailing: [{ label: 'Archive', onActivate }],
-        },
-      },
-    })
-
-    const row = wrapper.get('.astryx-item')
-    expect(row.attributes('data-swipe')).toBe('idle')
-    await row.trigger('pointerdown', { pointerType: 'mouse', pointerId: 1, clientX: 200, clientY: 20 })
-    document.dispatchEvent(new PointerEvent('pointermove', { pointerId: 1, clientX: 80, clientY: 20, bubbles: true }))
-    expect(row.attributes('data-swipe')).toBe('idle')
-
-    await row.trigger('pointerdown', { pointerType: 'touch', pointerId: 2, clientX: 200, clientY: 20 })
-    document.dispatchEvent(new PointerEvent('pointermove', { pointerId: 2, clientX: 120, clientY: 20, bubbles: true }))
-    document.dispatchEvent(new PointerEvent('pointerup', { pointerId: 2, clientX: 120, clientY: 20, bubbles: true }))
-    await vi.advanceTimersByTimeAsync(200)
-
-    expect(row.attributes('data-swipe')).toBe('resting')
-    const action = wrapper.get('.astryx-item__swipe-action')
-    expect(action.element.closest('[inert]')).toBeNull()
-    await action.trigger('click')
-    expect(onActivate).toHaveBeenCalledTimes(1)
-    wrapper.unmount()
-    vi.useRealTimers()
-  })
-
-  it('commits the outer action when the drag passes the row', async () => {
-    vi.useFakeTimers()
-    const onActivate = vi.fn()
-    const wrapper = mount(Item, {
-      attachTo: document.body,
-      props: {
-        label: 'Draft',
-        swipeBehavior: 'commit',
-        swipeActions: {
-          trailing: [
-            { id: 'keep', label: 'Keep', onActivate: vi.fn() },
-            { id: 'delete', label: 'Delete', onActivate, variant: 'destructive' },
-          ],
-        },
-      },
-    })
-
-    expect(wrapper.findAll('.astryx-item__swipe-action')).toHaveLength(1)
-    const row = wrapper.get('.astryx-item').element as HTMLElement
-    Object.defineProperty(row, 'offsetWidth', { configurable: true, value: 300 })
-    await wrapper.get('.astryx-item').trigger('pointerdown', { pointerType: 'touch', pointerId: 3, clientX: 500, clientY: 10 })
-    document.dispatchEvent(new PointerEvent('pointermove', { pointerId: 3, clientX: 0, clientY: 12, bubbles: true }))
-    document.dispatchEvent(new PointerEvent('pointerup', { pointerId: 3, clientX: 0, clientY: 12, bubbles: true }))
-    expect(onActivate).toHaveBeenCalledTimes(1)
-    wrapper.unmount()
-    vi.useRealTimers()
-  })
-
-  it('closes a resting row when the pointer goes down outside it', async () => {
-    vi.useFakeTimers()
-    const wrapper = mount(Item, {
-      attachTo: document.body,
-      props: {
-        label: 'Invoice 1042',
-        swipeActions: { trailing: [{ label: 'Archive', onActivate: vi.fn() }] },
-      },
-    })
-    const row = wrapper.get('.astryx-item')
-    await row.trigger('pointerdown', { pointerType: 'touch', pointerId: 4, clientX: 200, clientY: 20 })
-    document.dispatchEvent(new PointerEvent('pointermove', { pointerId: 4, clientX: 120, clientY: 20, bubbles: true }))
-    document.dispatchEvent(new PointerEvent('pointerup', { pointerId: 4, clientX: 120, clientY: 20, bubbles: true }))
-    await vi.advanceTimersByTimeAsync(200)
-    expect(row.attributes('data-swipe')).toBe('resting')
-
-    document.body.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, clientX: 0, clientY: 0 }))
-    await vi.advanceTimersByTimeAsync(200)
-    expect(row.attributes('data-swipe')).toBe('idle')
-    wrapper.unmount()
-    vi.useRealTimers()
-  })
-})
-
 describe('item link safety and press', () => {
   it('does not render a link for a blocked destination', () => {
     const wrapper = mount(Item, { props: { label: 'Bad', href: 'javascript:alert(1)' } })
@@ -593,5 +514,20 @@ describe('item link safety and press', () => {
   it('paints the press on the row itself instead of adding a second overlay', () => {
     const wrapper = mount(Item, { props: { label: 'Open', onClick: () => {} } })
     expect(wrapper.classes()).not.toContain('astryx-pressable')
+  })
+})
+
+describe('item focus ring owner', () => {
+  it('rings the row only for its own button or link, so a control in a slot rings itself', () => {
+    expect(listCss).not.toContain('.astryx-item:has(:focus-visible)')
+    expect(cssRule('.astryx-item:has(> .astryx-item__content:focus-visible')).toContain('outline: 2px solid')
+  })
+
+  it('keeps the ring on a delegating row, whose nested control is its only tab stop', () => {
+    expect(cssRule('.astryx-item--delegate:has(:focus-visible)')).toContain('outline: 2px solid')
+    const control = document.createElement('button')
+    const delegating = mount(Item, { props: { label: 'Row', interactiveRef: () => control } })
+    expect(delegating.classes()).toContain('astryx-item--delegate')
+    expect(mount(Item, { props: { label: 'Row', onClick: () => {} } }).classes()).not.toContain('astryx-item--delegate')
   })
 })

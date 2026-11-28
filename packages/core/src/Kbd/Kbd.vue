@@ -2,7 +2,10 @@
 import type { CSSProperties } from 'vue'
 import type { KbdProps } from './types.js'
 import { computed, useAttrs } from 'vue'
-import { parseShortcut } from './keys.js'
+import { devPropError, isDevBuild } from '../composables/internal/devBuild.js'
+import { useComponentMessages } from '../locale/context.js'
+import { kbdMessages } from '../locale/messages/kbd.js'
+import { parseShortcut, shortcutLabel } from './keys.js'
 import { useIsApplePlatform } from './platform.js'
 import '../../styles/kbd.css'
 
@@ -10,12 +13,21 @@ defineOptions({ name: 'AstryxKbd', inheritAttrs: false })
 
 const props = defineProps<KbdProps>()
 
+if (isDevBuild() && typeof props.keys !== 'string') {
+  throw devPropError(
+    'Kbd',
+    'keys',
+    'must be a string of keys joined by "+", for example <Kbd keys="mod+k" />. Kbd does not read slot content.',
+  )
+}
+
 const attrs = useAttrs()
 const isApple = useIsApplePlatform()
+const messages = useComponentMessages({ kbd: kbdMessages })
 
-const keys = computed(() => parseShortcut(props.keys, isApple.value))
+const keys = computed(() => parseShortcut(props.keys, isApple.value, messages.value.kbd))
 
-const accessibleName = computed(() => keys.value.map(key => key.label).join(' + '))
+const accessibleName = computed(() => shortcutLabel(keys.value, messages.value.kbd))
 
 const controlledAttrs = new Set(['class', 'style', 'role', 'aria-label'])
 
@@ -36,7 +48,7 @@ const forwardedAttrs = computed(() => Object.fromEntries(
     <kbd
       v-for="(key, index) in keys"
       :key="`${key.name}:${index}`"
-      class="astryx-kbd__key"
+      class="astryx-kbd__key astryx-kbd-key"
       aria-hidden="true"
     >
       {{ key.display }}

@@ -7,12 +7,22 @@
  * Tokens the theme does not set keep the shared default from Neutral's base.
  * Figtree and JetBrains Mono stay on the shared fonts.css stack.
  */
-@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+@import '@fontsource/crimson-text/400.css';
+@import '@fontsource/crimson-text/600.css';
+@import '@fontsource/crimson-text/700.css';
+@import '@fontsource/poppins/400.css';
+@import '@fontsource/poppins/500.css';
+@import '@fontsource/poppins/600.css';
+@import '@fontsource/poppins/700.css';
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 
 @layer astryx.tokens {
-  [data-astryx-theme='y2k'] {
+  /* 只有页面根默认跟随读者；主题包装元素不声明配色，`system` 模式的 Theme 取外面的配色。 */
+  html[data-astryx-theme='y2k'] {
     color-scheme: light dark;
+  }
+
+  [data-astryx-theme='y2k'] {
     background-color: var(--astryx-color-background-body);
     color: var(--astryx-color-text-primary);
     font-family: var(--astryx-font-family-body);

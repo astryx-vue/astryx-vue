@@ -3,7 +3,8 @@ import type { DialogHeaderProps } from './types.js'
 import { computed, getCurrentInstance, inject, onBeforeUnmount, onMounted, useAttrs, useId } from 'vue'
 import IconButton from '../IconButton/IconButton.vue'
 import { useLayoutArea } from '../Layout/context.js'
-import { useAstryxMessages } from '../locale/context.js'
+import { useComponentMessages } from '../locale/context.js'
+import { dialogMessages } from '../locale/messages/dialog.js'
 import { DIALOG_CONTEXT_KEY } from './context.js'
 import '../../styles/dialog-header.css'
 
@@ -23,7 +24,7 @@ const slots = defineSlots<{
   endContent?: () => unknown
 }>()
 const attrs = useAttrs()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ dialog: dialogMessages })
 
 // 放在 Layout 的 header 槽里时，自己当一个带内边距的页头区域（原版的 DialogHeader 就是 LayoutHeader）。
 const layoutArea = useLayoutArea()
@@ -52,6 +53,8 @@ const compensateInline = computed(() => {
   return axis === 'inline' || axis === 'all'
 })
 
+const hasEndActions = computed(() => Boolean(slots.endContent) || showClose.value)
+
 onMounted(() => {
   dialog?.registerTitle(true)
 })
@@ -66,7 +69,7 @@ function rootAttrs(): Record<string, unknown> {
 </script>
 
 <template>
-  <div v-bind="rootAttrs()" class="astryx-dialog-header" :class="{ 'astryx-dialog-header--divider': hasDivider }" :data-layout-header="inLayoutHeader || undefined">
+  <div v-bind="rootAttrs()" class="astryx-dialog-header" :class="{ 'astryx-dialog-header--divider': hasDivider, 'astryx-dialog-header--compensate-end-block': hasEndActions && compensateBlock }" :data-layout-header="inLayoutHeader || undefined">
     <div v-if="slots.startContent" class="astryx-dialog-header__actions astryx-dialog-header-start-content">
       <slot name="startContent" />
     </div>

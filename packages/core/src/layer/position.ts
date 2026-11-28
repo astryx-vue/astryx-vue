@@ -8,6 +8,10 @@ export interface LayerPosition {
   top: number
   left: number
   placement: LayerPlacement
+  /** 内容比可用空地高时的高度上限，超出的部分在浮层里滚动。 */
+  maxHeight?: number
+  /** 盖在锚点原位上的浮层要撑到的最小宽度。 */
+  minWidth?: number
 }
 
 export interface LayerBox {
@@ -109,4 +113,32 @@ function isAnchorInViewport(anchor: DOMRect, viewport: LayerBox): boolean {
     && anchor.bottom > 0
     && anchor.left < viewport.width
     && anchor.top < viewport.height
+}
+
+/** 盖在锚点原位上的浮层，比锚点向左、向上各多出的距离。 */
+export const OVERLAP_OUTSET = 8
+
+/**
+ * 让浮层盖在锚点原位上：浮层左上角比锚点左上角各外扩 `OVERLAP_OUTSET`，
+ * 宽度至少比锚点宽两倍外扩距离。浮层里第一行内容离浮层边缘也是这个距离时，
+ * 正好落在锚点内容原来的位置上。最终位置保持在视口内。
+ */
+export function computeOverlapPosition(
+  anchor: DOMRect,
+  layer: LayerBox,
+  viewport: LayerBox,
+  gutter: LayerGutter = resolveLayerGutter(),
+): LayerPosition {
+  const minWidth = anchor.width + OVERLAP_OUTSET * 2
+  const width = Math.max(layer.width, minWidth)
+  const top = anchor.top - OVERLAP_OUTSET
+  const left = anchor.left - OVERLAP_OUTSET
+  if (!isAnchorInViewport(anchor, viewport))
+    return { top, left, placement: 'below', minWidth }
+  return {
+    top: clamp(top, 0, viewport.height - layer.height - gutter.blockEnd),
+    left: clamp(left, 0, viewport.width - width - gutter.inlineEnd),
+    placement: 'below',
+    minWidth,
+  }
 }

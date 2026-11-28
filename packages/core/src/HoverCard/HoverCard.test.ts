@@ -20,6 +20,13 @@ function pointerEvent(type: string, pointerType: string): Event {
   return event
 }
 
+/** 一次完整的手指轻点：按下、抬起，浏览器认定是轻点后派发 click。 */
+function tap(target: EventTarget): void {
+  target.dispatchEvent(pointerEvent('pointerdown', 'touch'))
+  target.dispatchEvent(pointerEvent('pointerup', 'touch'))
+  target.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }))
+}
+
 function domRect(top: number, left: number, width: number, height: number): DOMRect {
   return {
     bottom: top + height,
@@ -88,12 +95,18 @@ describe('hoverCard', () => {
     expect(trigger.getAttribute('aria-controls')).toBe(surface.id)
   })
 
-  it('omits aria-expanded on a trigger whose role does not support it', () => {
-    const { trigger } = renderHoverCard({ label: 'Project details' }, { default: '<span>Hover me</span>' })
+  it('omits aria-haspopup and aria-expanded on a trigger whose role does not support them', async () => {
+    const { surface, trigger } = renderHoverCard({ delay: 0, label: 'Project details' }, { default: '<span>Hover me</span>' })
 
     expect(trigger.tagName).toBe('SPAN')
-    expect(trigger.getAttribute('aria-haspopup')).toBe('dialog')
+    expect(trigger.hasAttribute('aria-haspopup')).toBe(false)
     expect(trigger.hasAttribute('aria-expanded')).toBe(false)
+
+    trigger.dispatchEvent(new Event('mouseenter'))
+    vi.advanceTimersByTime(0)
+    await nextTick()
+    // 没有这两个属性时，卡片打开后仍用 aria-controls 指向它。
+    expect(trigger.getAttribute('aria-controls')).toBe(surface.id)
   })
 
   it('preserves and restores popup attributes the trigger already carried', async () => {
@@ -361,7 +374,7 @@ describe('hoverCard', () => {
       const trigger = document.querySelector('.astryx-hover-card__trigger') as HTMLElement
 
       trigger.dispatchEvent(pointerEvent('pointerenter', 'touch'))
-      trigger.dispatchEvent(pointerEvent('pointerdown', 'touch'))
+      tap(trigger)
       await nextTick()
 
       expect(isShown(surface)).toBe(true)
@@ -372,7 +385,7 @@ describe('hoverCard', () => {
       const { surface, trigger } = renderHoverCard()
 
       trigger.dispatchEvent(pointerEvent('pointerenter', 'touch'))
-      trigger.dispatchEvent(pointerEvent('pointerdown', 'touch'))
+      tap(trigger)
       await nextTick()
 
       expect(isShown(surface)).toBe(false)
@@ -382,7 +395,7 @@ describe('hoverCard', () => {
       const { surface, trigger } = renderHoverCard({ touchTrigger: 'tap' })
 
       trigger.dispatchEvent(pointerEvent('pointerenter', 'touch'))
-      trigger.dispatchEvent(pointerEvent('pointerdown', 'touch'))
+      tap(trigger)
       await nextTick()
 
       expect(isShown(surface)).toBe(true)
@@ -394,7 +407,7 @@ describe('hoverCard', () => {
       const trigger = document.querySelector('.astryx-hover-card__trigger') as HTMLElement
 
       trigger.dispatchEvent(pointerEvent('pointerenter', 'touch'))
-      trigger.dispatchEvent(pointerEvent('pointerdown', 'touch'))
+      tap(trigger)
       await nextTick()
 
       expect(isShown(surface)).toBe(false)
@@ -406,21 +419,21 @@ describe('hoverCard', () => {
       const trigger = document.querySelector('.astryx-hover-card__trigger') as HTMLElement
 
       trigger.dispatchEvent(pointerEvent('pointerenter', 'touch'))
-      trigger.dispatchEvent(pointerEvent('pointerdown', 'touch'))
+      tap(trigger)
       await nextTick()
       expect(isShown(surface)).toBe(true)
 
-      trigger.dispatchEvent(pointerEvent('pointerdown', 'touch'))
+      tap(trigger)
       await nextTick()
       expect(isShown(surface)).toBe(false)
 
-      trigger.dispatchEvent(pointerEvent('pointerdown', 'touch'))
+      tap(trigger)
       await nextTick()
       expect(isShown(surface)).toBe(true)
 
       const outside = document.createElement('div')
       document.body.append(outside)
-      outside.dispatchEvent(pointerEvent('pointerdown', 'touch'))
+      tap(outside)
       await nextTick()
       expect(isShown(surface)).toBe(false)
     })
@@ -431,7 +444,7 @@ describe('hoverCard', () => {
       const trigger = document.querySelector('.astryx-hover-card__trigger') as HTMLElement
 
       trigger.dispatchEvent(pointerEvent('pointerenter', 'touch'))
-      trigger.dispatchEvent(pointerEvent('pointerdown', 'touch'))
+      tap(trigger)
       await nextTick()
       expect(isShown(surface)).toBe(true)
 
@@ -446,7 +459,7 @@ describe('hoverCard', () => {
       const { surface, trigger } = renderHoverCard()
 
       trigger.dispatchEvent(pointerEvent('pointerenter', 'touch'))
-      trigger.dispatchEvent(pointerEvent('pointerdown', 'touch'))
+      tap(trigger)
       await nextTick()
 
       document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }))

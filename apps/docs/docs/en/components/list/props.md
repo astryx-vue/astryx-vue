@@ -16,10 +16,16 @@ footer: false
     </thead>
     <tbody>
       <tr>
+        <td><code>animatedLayout</code></td>
+        <td><code>AnimatedLayout</code></td>
+        <td>—</td>
+        <td>The handle from <code>useAnimatedLayout({ containerRef })</code>. With it, the list animates its row changes on one shared motion, under every pointer: an inserted row enters, a removed row collapses in place, and a row that crosses rows moving the other way rides above them. The rows after a change, and the content after the list up to that container, glide to their new places. A row's identity is its <code>itemKey</code>, so a row without one changes at once. Without a handle the list changes at once.</td>
+      </tr>
+      <tr>
         <td><code>density</code></td>
         <td><code>ListDensity</code></td>
         <td><code>'balanced'</code></td>
-        <td>Spacing density for the rows: compact (4px of block padding), balanced (8px), or spacious (12px, which also widens the inline padding by one step). A single row can override it with its own <code>density</code>.</td>
+        <td>Spacing density for the rows: compact (4px of block padding), balanced (8px), or spacious (12px, which also widens the inline padding by one step). A single row can override it with its own <code>density</code>. Under a finger, an interactive row's hit target reaches 44px where its neighbours leave room, with no change to how rows look or lay out.</td>
       </tr>
       <tr>
         <td><code>hasDividers</code></td>
@@ -31,7 +37,7 @@ footer: false
         <td><code>edge</code></td>
         <td><code>'padded' | 'flush' | 'outset' | 'bleed'</code></td>
         <td><code>'padded'</code></td>
-        <td>Where each row's text, dividers, and hover and selection backgrounds sit relative to the list's edges and the padding of the container around it. <code>padded</code> keeps the row's own inline padding. <code>flush</code> removes it, so text starts on the line of a heading above the list and lines and backgrounds stop at the text. <code>outset</code> keeps text on that line and lets lines and backgrounds reach into the container's padding. <code>bleed</code> puts text on the container's padding line and runs lines and backgrounds to its edges with square corners, like table rows. A row's first content — its marker, icon, or avatar, otherwise its label — is what lines up with the heading. <code>outset</code> and <code>bleed</code> read the padding published by the nearest container that shares it (Card, Section, BottomSheet, a padded ScrollableArea, or a Layout region) and look like <code>padded</code> when there is none.</td>
+        <td>Where each row's text, dividers, and hover and selection backgrounds sit relative to the list's edges and the padding of the container around it. <code>padded</code> keeps the row's own inline padding. <code>flush</code> removes it, so text starts on the line of a heading above the list and lines and backgrounds stop at the text. <code>outset</code> keeps text on that line and lets lines and backgrounds reach into the container's padding. <code>bleed</code> puts text on the container's padding line and runs lines and backgrounds to its edges, like table rows. Rows are square, except that the first or last row of a list that is the first or last child of a rounded Card or Dialog takes that corner. A row's first content — its marker, icon, or avatar, otherwise its label — is what lines up with the heading. <code>outset</code> and <code>bleed</code> read the padding published by the nearest container that shares it (Card, Section, BottomSheet, a padded ScrollableArea, or a Layout region) and look like <code>padded</code> when there is none.</td>
       </tr>
       <tr>
         <td><code>edgeCompensation</code></td>
@@ -44,6 +50,12 @@ footer: false
         <td><code>ListMarkerStyle</code></td>
         <td><code>'none'</code></td>
         <td>The marker drawn in front of each row: none, disc (filled bullet), circle (outlined bullet), or decimal (numbers). <code>decimal</code> renders the list as an <code>&lt;ol&gt;</code>.</td>
+      </tr>
+      <tr>
+        <td><code>reorderable</code></td>
+        <td><code>Reorderable</code></td>
+        <td>—</td>
+        <td>The object from <code>useReorderable</code> or <code>createReorderable</code>. With it, each <code>ListItem</code> with an <code>itemKey</code> that the object lets move ends with a reorder handle: hold then drag under a finger, drag under a mouse, or press it and use the arrow keys. Without it the list loads none of the reorder code.</td>
       </tr>
       <tr>
         <td><code>start</code></td>
@@ -127,7 +139,7 @@ footer: false
         <td><code>isSelected</code></td>
         <td><code>boolean</code></td>
         <td><code>false</code></td>
-        <td>Selected state. Written as <code>aria-selected="true"</code> when the role permits it, and as <code>aria-current="true"</code> otherwise. An <code>aria-current</code> you pass yourself wins.</td>
+        <td>Selected state. Written as <code>aria-selected="true"</code> when the role permits it, and as <code>aria-current="true"</code> otherwise. An <code>aria-current</code> you pass yourself wins. On an interactive row (<code>onClick</code>, <code>href</code> or <code>interactiveRef</code>) the marker sits on the element that takes focus, so a screen reader announces it there.</td>
       </tr>
     </tbody>
   </table>
@@ -183,7 +195,7 @@ footer: false
 
 `Item` also accepts everything `ListItem` accepts: `label`, `description`, `density`, `onClick`, `interactiveRef`, `href`, `target`, `rel`, `isDisabled`, and `isSelected`.
 
-`swipeActions` are the actions a touch drag reveals. `leading` opens when the row is dragged toward its end, and `trailing` opens toward its start. `swipeBehavior` defaults to `reveal`, which stays open after release. `commit` slides out and runs the outermost action once the drag passes the threshold, and that side should hold one action. A mouse drag does not start, so each action also needs a control in the row itself.
+`swipe` takes the value from `createSwipe`: the actions a sideways drag reveals. `leading` opens when the row is dragged toward its end, and `trailing` opens toward its start. Its `swipeBehavior` defaults to `reveal`, which can rest open after release. `commit` slides out and runs a side's one action on a full swipe. A mouse drag does not start, so each action also needs a control in the row itself. `swipeActions` and `swipeBehavior` on the row still work but are deprecated.
 
 ## Slots
 

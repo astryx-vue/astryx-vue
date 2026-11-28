@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { useToastShow } from '../../../../components/demos/use-toast'
+import { useToastSettingsSaved, useToastShow } from '../../../../components/demos/use-toast'
 </script>
 
 ## Usage
@@ -51,4 +51,11 @@ Common configurations, variations, and states.
   description="Imperative toast notifications triggered with useToast and rendered in the toast viewport."
   locale="en"
   title="useToast — Show Toast"
+/>
+
+<DemoExample
+  :demo="useToastSettingsSaved"
+  description="Shows a toast from the function useToast returns: a &quot;Settings saved&quot; confirmation with an Undo action, a uniqueID so pressing the button again replaces the toast instead of stacking another, and an error toast when the request fails."
+  locale="en"
+  title="useToast — Settings Saved"
 />

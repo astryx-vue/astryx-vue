@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
 import type { SpinnerProps, SpinnerSize } from './types.js'
-import { computed, useAttrs, useId, useSlots } from 'vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { computed, inject, useAttrs, useId, useSlots, useTemplateRef } from 'vue'
+import { useAnnounceRenderedText } from '../composables/internal/announceRenderedText.js'
+import { useComponentMessages } from '../locale/context.js'
+import { spinnerMessages } from '../locale/messages/spinner.js'
 import { registerSpinnerGeometry } from './spinnerGeometry.js'
-import { bindSpinnerPhase } from './spinnerPhase.js'
+import { spinnerOwnerKey } from './SpinnerOwnerContext.js'
+import SpinnerRing from './SpinnerRing.vue'
 import '../../styles/spinner.css'
 
 defineOptions({ name: 'AstryxSpinner', inheritAttrs: false })
@@ -27,7 +30,7 @@ registerSpinnerGeometry()
 
 const attrs = useAttrs()
 const slots = useSlots()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ spinner: spinnerMessages })
 const labelId = `astryx-spinner-label-${useId()}`
 
 const hasLabel = computed(() => Boolean(props.label) || Boolean(slots.label))
@@ -39,9 +42,25 @@ const ringAriaLabel = computed(() => {
     return undefined
   return ariaLabel.value ?? props.label ?? messages.value.spinner.loading
 })
+// 调用方写了别的角色（比如 img）就照它来，并且保持安静；默认是 progressbar。
+const ringRole = computed(() => (attrs.role as string | undefined) ?? 'progressbar')
 const rootAttrs = computed(() => Object.fromEntries(
-  Object.entries(attrs).filter(([key]) => key !== 'aria-label' && key !== 'style'),
+  Object.entries(attrs).filter(([key]) => key !== 'aria-label' && key !== 'style' && key !== 'role'),
 ))
+
+// 只有独立的加载圈自己播报：拥有任务的核心组件通过 spinnerOwnerKey 让它安静，
+// 应用代码用 aria-hidden；调用方写了 progressbar 以外的角色也保持安静。
+const isComposedInOwner = inject(spinnerOwnerKey, false)
+const ringEl = useTemplateRef<HTMLElement>('ring')
+function announces() {
+  if (isComposedInOwner || ringRole.value !== 'progressbar')
+    return false
+  if (attrs['aria-hidden'] === true || attrs['aria-hidden'] === 'true')
+    return false
+  return ringEl.value?.closest('[aria-hidden="true"]') == null
+}
+const announcedName = computed(() => ariaLabel.value ?? props.label ?? messages.value.spinner.loading)
+useAnnounceRenderedText(ringEl, announces, { skipFirstRender: true, fallbackText: announcedName })
 const geometry = computed(() => RING[props.size])
 const frameSize = computed(() => geometry.value.diameter + geometry.value.stroke * 2)
 const arcLength = computed(() => Math.PI * geometry.value.diameter * ARC_FRACTION)
@@ -52,15 +71,6 @@ const boxStyle = computed<CSSProperties>(() => ({
 }))
 const callerStyle = computed(() => attrs.style as CSSProperties | undefined)
 const rootStyle = computed(() => [callerStyle.value, hasLabel.value ? undefined : boxStyle.value])
-
-let releasePhase: (() => void) | undefined
-
-function onRing(element: unknown): void {
-  releasePhase?.()
-  releasePhase = undefined
-  if (element instanceof SVGSVGElement)
-    releasePhase = bindSpinnerPhase(element)
-}
 </script>
 
 <template>
@@ -73,30 +83,14 @@ function onRing(element: unknown): void {
     :style="callerStyle"
   >
     <span
+      ref="ring"
       class="astryx-spinner-box"
-      role="status"
+      :role="ringRole"
       :aria-label="ringAriaLabel"
       :aria-labelledby="ringLabelledBy"
       :style="boxStyle"
     >
-      <svg
-        :ref="onRing"
-        class="astryx-spinner__ring"
-        :width="frameSize"
-        :height="frameSize"
-        aria-hidden="true"
-        focusable="false"
-      >
-        <circle class="astryx-spinner__track" cx="50%" cy="50%" :r="geometry.diameter / 2" :stroke-width="geometry.stroke" />
-        <circle
-          class="astryx-spinner__arc"
-          cx="50%"
-          cy="50%"
-          :r="geometry.diameter / 2"
-          :stroke-width="geometry.stroke"
-          :stroke-dasharray="`${arcLength} ${gapLength}`"
-        />
-      </svg>
+      <SpinnerRing :frame-size="frameSize" :diameter="geometry.diameter" :stroke="geometry.stroke" :arc-length="arcLength" :gap-length="gapLength" />
     </span>
     <span :id="labelId" class="astryx-spinner-label">
       <slot name="label">{{ label }}</slot>
@@ -105,30 +99,14 @@ function onRing(element: unknown): void {
   <span
     v-else
     v-bind="rootAttrs"
+    ref="ring"
     class="astryx-spinner astryx-spinner-box"
-    role="status"
+    :role="ringRole"
     :data-size="size"
     :data-shade="shade"
     :aria-label="ringAriaLabel"
     :style="rootStyle"
   >
-    <svg
-      :ref="onRing"
-      class="astryx-spinner__ring"
-      :width="frameSize"
-      :height="frameSize"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <circle class="astryx-spinner__track" cx="50%" cy="50%" :r="geometry.diameter / 2" :stroke-width="geometry.stroke" />
-      <circle
-        class="astryx-spinner__arc"
-        cx="50%"
-        cy="50%"
-        :r="geometry.diameter / 2"
-        :stroke-width="geometry.stroke"
-        :stroke-dasharray="`${arcLength} ${gapLength}`"
-      />
-    </svg>
+    <SpinnerRing :frame-size="frameSize" :diameter="geometry.diameter" :stroke="geometry.stroke" :arc-length="arcLength" :gap-length="gapLength" />
   </span>
 </template>

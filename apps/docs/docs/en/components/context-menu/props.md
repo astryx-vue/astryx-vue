@@ -26,6 +26,12 @@ footer: false
         <td>Width of the menu panel. Numbers are interpreted as pixels. Without it the panel is at least 160px wide and sizes to its rows; either way it never overflows the viewport.</td>
       </tr>
       <tr>
+        <td><code>presentation</code></td>
+        <td><code>'popover' | 'bottom-sheet' | 'adaptive'</code></td>
+        <td><code>'popover'</code></td>
+        <td><code>popover</code> is the surface anchored to the trigger. <code>bottom-sheet</code> uses the BottomSheet on every screen. <code>adaptive</code> uses the BottomSheet on a compact touch screen: a coarse primary pointer, and a viewport narrower than the theme <code>md</code> breakpoint (768px by default) or shorter than 500px. The choice is made when the layer opens and held until its exit finishes, so turning the device while it is open does not swap it.</td>
+      </tr>
+      <tr>
         <td><code>size</code></td>
         <td><code>'sm' | 'md' | 'lg'</code></td>
         <td><code>'md'</code></td>

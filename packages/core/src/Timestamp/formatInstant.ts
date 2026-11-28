@@ -1,3 +1,6 @@
+import type { CalendarSystem } from '../utils/calendarSystem.js'
+import { labelCalendar } from '../utils/calendarFormat.js'
+
 export type InstantFormat
   = | 'date'
     | 'date_long'
@@ -14,6 +17,11 @@ export interface FormatInstantOptions {
   timeZone?: string
   isTimezoneShown?: boolean
   timeZoneNameStyle?: 'short' | 'long'
+  /**
+   * 带日期的格式按哪种历法写日期，默认公历。`time` 没有日期；`system_*` 和 `unix_seconds`
+   * 在任何历法下都写公历 ISO 或纯数字。
+   */
+  calendar?: CalendarSystem
 }
 
 const DATE_SHORT: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric', year: 'numeric' }
@@ -80,10 +88,11 @@ export function formatInstant(
   date: Date,
   format: InstantFormat,
   locale: string,
-  { timeZone, isTimezoneShown = false, timeZoneNameStyle = 'short' }: FormatInstantOptions = {},
+  { timeZone, isTimezoneShown = false, timeZoneNameStyle = 'short', calendar: system = 'gregory' }: FormatInstantOptions = {},
 ): string {
   const zone = timeZone == null ? {} : { timeZone }
   const zoneName = isTimezoneShown ? { timeZoneName: 'short' as const } : {}
+  const calendar = labelCalendar(system)
 
   switch (format) {
     case 'full':
@@ -91,16 +100,16 @@ export function formatInstant(
         ...FULL,
         timeZoneName: timeZoneNameStyle,
         ...zone,
-        calendar: 'gregory',
+        calendar,
       }).format(date)
     case 'date':
-      return new Intl.DateTimeFormat(locale, { ...DATE_SHORT, ...zone, calendar: 'gregory' }).format(date)
+      return new Intl.DateTimeFormat(locale, { ...DATE_SHORT, ...zone, calendar }).format(date)
     case 'date_long':
-      return new Intl.DateTimeFormat(locale, { ...DATE_LONG, ...zone, calendar: 'gregory' }).format(date)
+      return new Intl.DateTimeFormat(locale, { ...DATE_LONG, ...zone, calendar }).format(date)
     case 'date_weekday':
-      return new Intl.DateTimeFormat(locale, { ...DATE_WEEKDAY, ...zone, calendar: 'gregory' }).format(date)
+      return new Intl.DateTimeFormat(locale, { ...DATE_WEEKDAY, ...zone, calendar }).format(date)
     case 'date_time':
-      return new Intl.DateTimeFormat(locale, { ...DATE_TIME, ...zoneName, ...zone, calendar: 'gregory' }).format(date)
+      return new Intl.DateTimeFormat(locale, { ...DATE_TIME, ...zoneName, ...zone, calendar }).format(date)
     case 'time':
       return new Intl.DateTimeFormat(locale, { ...TIME, ...zoneName, ...zone }).format(date)
     case 'system_date': {

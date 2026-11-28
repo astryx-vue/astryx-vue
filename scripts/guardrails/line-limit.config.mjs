@@ -6,9 +6,6 @@ export const LINE_LIMIT = 500
 /** 统计哪些扩展名的文件。文档（.md）和样式（.css）不算源码，不在这里。 */
 export const SOURCE_EXTENSIONS = ['.ts', '.tsx', '.mts', '.js', '.mjs', '.cjs', '.vue']
 
-/** 白名单文件：记录已经超标的旧文件和它们现在的行数，只能越变越短。 */
-export const ALLOWLIST_FILE = 'scripts/guardrails/line-limit-allowlist.json'
-
 /**
  * 不统计的文件。路径是相对仓库根目录、用 `/` 分隔的写法。
  * 每条都要写清楚为什么排除。

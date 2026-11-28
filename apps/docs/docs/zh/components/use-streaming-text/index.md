@@ -40,7 +40,7 @@ const displayedText = useStreamingText(targetText, isStreaming, { speed: 'natura
 
 <DemoExample
   :demo="useStreamingTextResponse"
-  description="用 useStreamingText 把一阵一阵到达的生成文字抹平成稳定显示。"
+  description="一张聊天回复卡片：回复一阵一阵到达时，useStreamingText 把它一个字一个字稳定地显示出来；流结束时直接显示完整文本。点 Regenerate 重放一遍。"
   locale="zh"
   title="useStreamingText — 流式回复"
 />

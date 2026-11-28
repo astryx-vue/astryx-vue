@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { useThemeTokenValues } from '../../../../components/demos/use-theme'
+import { useThemeActiveName, useThemeTokenValues } from '../../../../components/demos/use-theme'
 </script>
 
 ## Usage
@@ -44,4 +44,11 @@ Common configurations, variations, and states.
   description="Read resolved theme token values with useTheme for non-CSS consumers like SVG charts."
   locale="en"
   title="useTheme — Token Values"
+/>
+
+<DemoExample
+  :demo="useThemeActiveName"
+  description="When code only needs to know which theme is on, read name from useTheme. Inside the harbor Theme the card says harbor; outside any Theme the name is neutral."
+  locale="en"
+  title="useTheme — Active Theme Name"
 />

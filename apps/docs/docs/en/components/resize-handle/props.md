@@ -53,7 +53,7 @@ footer: false
         <td><code>pillPlacement</code></td>
         <td><code>'auto' | 'start' | 'end' | 'center'</code></td>
         <td><code>'auto'</code></td>
-        <td>Where the grip sits on the line. <code>auto</code> stays on the panel side, and flips when the panel size is 0.</td>
+        <td>Where the grip sits on the line. <code>auto</code> stays on the panel side, and flips when the panel size is 0. It moves only the grip: the grab zone stays centred on the handle, and the grip takes a drag wherever it sits. On a pane too short for the full zone, the zone shrinks so the pane keeps at least half of itself for its own drag.</td>
       </tr>
       <tr>
         <td><code>label</code></td>
@@ -63,9 +63,9 @@ footer: false
       </tr>
       <tr>
         <td><code>resizable</code></td>
-        <td><code>ResizableProps</code></td>
+        <td><code>ResizableRegion | ResizableProps</code></td>
         <td>-</td>
-        <td>The <code>props</code> object returned by <code>useResizable</code>.</td>
+        <td>The result of <code>useResizable()</code>, or its <code>props</code>.</td>
       </tr>
     </tbody>
   </table>
@@ -125,7 +125,7 @@ Import it from <code>@astryx-vue/core</code>. A single region returns <code>{ si
         <td><code>collapsedSize</code></td>
         <td><code>number</code></td>
         <td><code>40</code></td>
-        <td>A drag below this pixel value collapses the region.</td>
+        <td>A lift or a key step below this pixel value collapses the region.</td>
       </tr>
       <tr>
         <td><code>snaps</code></td>
@@ -167,7 +167,7 @@ Import it from <code>@astryx-vue/core</code>. A single region returns <code>{ si
         <td><code>isCollapsed</code></td>
         <td><code>boolean</code></td>
         <td>-</td>
-        <td>Controlled collapsed state. Changes are reported through <code>onCollapseChange</code>.</td>
+        <td>Controlled collapsed state. A lift, a key step, or a drag that reopens the region is reported through <code>onCollapseChange</code>.</td>
       </tr>
       <tr>
         <td><code>onSizeChange</code></td>

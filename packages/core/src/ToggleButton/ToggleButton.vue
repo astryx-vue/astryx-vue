@@ -4,11 +4,13 @@ import type { ToggleButtonEmits, ToggleButtonProps, ToggleButtonSlots } from './
 import { computed, shallowRef, useTemplateRef } from 'vue'
 
 import Button from '../Button/Button.vue'
+import { pressGroupItemProps } from '../composables/internal/useActionGroupTracking.js'
 import { readLayerScoped } from '../layer/scopedProvide.js'
 import { toggleButtonGroupContextKey } from './context.js'
 import '../../styles/toggle-button.css'
 
-defineOptions({ name: 'AstryxToggleButton' })
+// 调用方的 aria-pressed、data-pressed 排在前面，由组件按真实的按下状态覆盖。
+defineOptions({ name: 'AstryxToggleButton', inheritAttrs: false })
 
 const props = withDefaults(defineProps<Omit<ToggleButtonProps, 'isPressed'>>(), {
   elevation: 'none',
@@ -39,6 +41,10 @@ const groupPressed = computed(() => {
 const isPressed = computed(() => groupPressed.value ?? optimisticPressed.value ?? isPressedModel.value)
 const isDisabled = computed(() => (group?.isDisabled.value ?? false) || props.isDisabled)
 const size = computed(() => props.size ?? group?.size.value ?? 'md')
+/** 跟踪滑动的组里，带 value 的切换按钮由组来画高亮、松手时切换。 */
+const groupItemProps = computed(() =>
+  group?.tracksPress?.value === true && props.value != null ? pressGroupItemProps() : undefined,
+)
 const element = computed<ButtonRootElement | null>(() => button.value?.element ?? null)
 
 function focus(options?: FocusOptions): void {
@@ -116,9 +122,11 @@ defineExpose({
 <template>
   <Button
     ref="button"
+    v-bind="{ ...$attrs, ...groupItemProps }"
     class="astryx-toggle-button"
     :aria-pressed="isPressed ? 'true' : 'false'"
     :data-pressed="isPressed ? 'true' : 'false'"
+    :data-grouped="group != null ? 'grouped' : undefined"
     :elevation="elevation"
     :is-disabled="isDisabled"
     :is-icon-only="isIconOnly"

@@ -7,7 +7,12 @@
  * Tokens the theme does not set keep the shared default from Neutral's base.
  * Figtree and JetBrains Mono stay on the shared fonts.css stack.
  */
-@import url('https://fonts.googleapis.com/css2?family=Fustat:wght@400;500;600;700&family=Manufacturing+Consent&family=UnifrakturMaguntia&display=swap');
+@import '@fontsource/fustat/400.css';
+@import '@fontsource/fustat/500.css';
+@import '@fontsource/fustat/600.css';
+@import '@fontsource/fustat/700.css';
+@import '@fontsource/manufacturing-consent/400.css';
+@import '@fontsource/unifrakturmaguntia/400.css';
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 
 @layer astryx.tokens {
@@ -167,7 +172,7 @@
     --astryx-radius-element: 0.5rem;
     --astryx-radius-container: 0.75rem;
     --astryx-radius-page: 1.5rem;
-    --astryx-radius-chat: 28px;
+    --astryx-radius-chat: var(--astryx-radius-container);
     --astryx-radius-full: 9999px;
 
     --astryx-shadow-low: 0 2px 4px #00000033, 0 4px 8px #00000040;

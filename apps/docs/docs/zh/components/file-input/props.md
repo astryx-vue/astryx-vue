@@ -19,8 +19,8 @@ footer: false
 <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>选择文件</code></td><td>未选择时的文字，跟随语言。</td></tr>
 <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>高度，分别是 28、32、36px。</td></tr>
 <tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>—</td><td>错误、警告或成功。未传时，被拒绝的文件会自己产生错误。</td></tr>
-<tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'attached'</code></td><td>状态消息的位置。</td></tr>
-<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>禁止打开选择器，也不接受拖放。</td></tr>
+<tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td>输入模式 <code>'attached'</code>，拖放模式 <code>'detached'</code></td><td>状态消息的位置。拖放区又高又大，贴在底下的消息会盖住放文件的地方，所以默认放到下面；<code>tooltip</code> 用一个可聚焦的状态按钮显示消息，两种模式和上传中都保留。</td></tr>
+<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>禁止打开选择器，也不接受拖放。触发按钮仍留在 Tab 顺序里（带 <code>aria-disabled</code>），已选的文件不参与表单提交。</td></tr>
 <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>禁用原因。和 <code>isDisabled</code> 一起用时，悬停或键盘聚焦会显示这段提示，触发按钮仍可聚焦（带 <code>aria-disabled</code>），但打不开文件选择框。</td></tr>
 <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>标签末尾信息图标里的说明。</td></tr>
 <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td><code>false</code></td><td>标记为必填。</td></tr>

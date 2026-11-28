@@ -36,7 +36,7 @@ import { SideNav, SideNavItem } from '@astryx-vue/core/SideNav'
 
 `mobileNav` is `false` or `{ breakpoint, isOpen, hasToggle }`. The default breakpoint is `md` (768px). Below the breakpoint the side nav moves into a drawer. A top nav inside the shell uses that drawer instead of opening one of its own. `v-model:mobile-nav-open` controls the drawer, and the component emits `mobileNavOpenChange`.
 
-A skip link points at `#astryx-app-shell-main`. The main region is a `div` with `role="main"` and `tabindex="-1"`. With `variant="elevated"` and both a top nav and a side nav on a wide viewport, the content sits on a rounded backdrop.
+A skip link points at `#astryx-app-shell-main`; the first outermost shell on a page keeps that id, and a second or nested shell gets its own. An AppShell is a layout root: the padding, widths, and divider default that an ancestor Layout, Card, or Section passes down do not reach its regions. The main region is a `div` with `role="main"` and `tabindex="-1"`. With `variant="elevated"` and both a top nav and a side nav on a wide viewport, the content sits on a rounded backdrop.
 
 `useAppShellMobile` reads the nearest shell. Outside a shell, or when mobile nav is off, `isMobile` and `isMobileNavEnabled` are false and the open and close methods do nothing.
 
@@ -49,6 +49,8 @@ A skip link points at `#astryx-app-shell-main`. The main region is a `div` with 
 | --- | --- |
 | <Badge variant="success">Do</Badge> | Put application navigation in the topNav and sideNav slots. Put page regions in Layout. |
 | <Badge variant="success">Do</Badge> | Give the side nav a heading so the mobile drawer has a name. |
+| <Badge variant="success">Do</Badge> | Give every nav slot an accessible name. The shell renders TopNav and SideNav as separate navigation landmarks, and a screen reader lists them by name. Pass `label` to TopNav. SideNav has a translated default name; pass `label` to rename it. |
+| <Badge variant="success">Do</Badge> | On phones, opt the page into the full screen with `viewport-fit=cover` in the viewport meta tag (`width=device-width, initial-scale=1, viewport-fit=cover`). The shell then extends its header under the status bar and out to the screen sides, and keeps the header's items and the end of the content inside the device's safe area. In landscape only the header is inset; an inline SideNav and the content's sides still reach under a notch, so keep content padding there. A shell with no header region or phone top bar keeps no top inset; keep top padding there. |
 | <Badge variant="error">Don't</Badge> | Open a second drawer from TopNav while it is inside an AppShell. The shell already owns that drawer. |
 | <Badge variant="error">Don't</Badge> | Call useAppShellMobile and assume a shell is present. Check isMobileNavEnabled. |
 

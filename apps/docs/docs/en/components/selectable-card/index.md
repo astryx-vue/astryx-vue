@@ -20,19 +20,30 @@ The selected card draws an accent border and an inset ring. `elevation` stays in
 import { SelectableCard } from '@astryx-vue/core/SelectableCard'
 import { ref } from 'vue'
 
-const selected = ref('pro')
+const selected = ref(new Set(['pro']))
+
+function toggle(id: string, isSelected: boolean) {
+  const next = new Set(selected.value)
+  if (isSelected)
+    next.add(id)
+  else
+    next.delete(id)
+  selected.value = next
+}
 </script>
 
 <template>
   <SelectableCard
-    :is-selected="selected === 'pro'"
+    :is-selected="selected.has('pro')"
     label="Pro"
-    @update:is-selected="(next) => { if (next) selected = 'pro' }"
+    @update:is-selected="(next) => toggle('pro', next)"
   >
     Pro
   </SelectableCard>
 </template>
 ```
+
+Use `SelectableCard` for multi-select choices, such as filter chips, feature add-ons, or option grids where several can be on, and track the selected IDs in a `Set`. Do not use it for a single-select group: each card is a checkbox, so assistive technology announces a multi-select group with one tab stop per card. For one choice among several, use `RadioList`, or `SelectableCardGroup` from `@astryx-vue/lab` when the choices should look like cards: it renders the cards as one radio group.
 
 
 <ComponentAnatomy />

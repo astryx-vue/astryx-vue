@@ -1,13 +1,21 @@
 <script setup lang="ts">
-import type { Component, ComponentPublicInstance, CSSProperties, StyleValue } from 'vue'
+import type { Component, ComponentPublicInstance, CSSProperties, FunctionalComponent, StyleValue } from 'vue'
 import type { ItemProps, ItemSlots } from './types.js'
-import { computed, provide, toRaw, toValue, useAttrs, useId, useSlots, useTemplateRef } from 'vue'
+import { computed, h, provide, toRaw, toValue, useAttrs, useId, useSlots, useTemplateRef } from 'vue'
+import { useFocusAcrossSwap } from '../composables/internal/focusAcrossSwap.js'
 import { useInteractiveRole } from '../composables/useInteractiveRole.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
+import { isInLayerSurface, isLayerSurface } from '../layer/layerSurfacePress.js'
+import { readLayerScoped } from '../layer/scopedProvide.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
+import SwipeActionsLayer from '../Swipe/SwipeActionsLayer.vue'
+import { isCoarsePointer } from '../utils/coarsePointer.js'
+import { disabledInteractionProps } from '../utils/disabledInteraction.js'
 import { isSafeUrl } from '../utils/safeUrl.js'
-import { itemDescriptionContextKey } from './context.js'
-import { useItemSwipe } from './useItemSwipe.js'
+import { itemDescriptionContextKey, itemListRowKey } from './context.js'
+import { useItemSlotsFromWrapper } from './itemSlots.js'
+import { useItemSwipeHost } from './itemSwipe.js'
+import { useDelegatedControl } from './useDelegatedControl.js'
 import '../../styles/list.css'
 
 defineOptions({ name: 'AstryxItem', inheritAttrs: false })
@@ -86,7 +94,12 @@ const element = computed<HTMLElement | null>(() => toElement(root.value))
 const descriptionIdBase = `astryx-item-description-${useId()}`
 const hasDescription = computed(() => slots.description != null || isRenderable(props.description))
 const hasLabel = computed(() => slots.label != null || isRenderable(props.label))
+// 包着这一行的 ListItem 可以给行末加一个子元素（重排手柄），也可以要求标签带 id 好让别人借它命名。
+const { trailing, shownLabelId } = useItemSlotsFromWrapper(`astryx-item-label-${useId()}`, hasLabel)
 
+const listRow = readLayerScoped(itemListRowKey)
+const isListRow = listRow != null
+provide(itemListRowKey, null)
 provide(itemDescriptionContextKey, computed(() => (hasDescription.value ? descriptionIdBase : null)))
 
 const role = computed(() => attrs.role as string | undefined)
@@ -105,10 +118,27 @@ const safeHref = computed(() => {
 })
 const isInteractive = computed(() => props.onClick != null || safeHref.value != null || isDelegate.value)
 /** 链接内容用的根组件：`as` 写了组件就用它，否则用 LinkProvider 给的默认值。 */
+/**
+ * 读屏器在拿到焦点的元素上念「当前」标记。可点的行里那是行自己的按钮、链接，
+ * 或它转发点击的控件；根元素自己拿焦点的行（带父级角色）把标记留在根上。
+ */
+const currentOnFocusTarget = computed(() =>
+  !hasParentRole.value && (isDelegate.value || safeHref.value != null || props.onClick != null),
+)
+/** 控件上不写 `false`。 */
+const controlCurrent = computed(() => {
+  const value = ariaCurrent.value
+  return value === false || value === 'false' ? undefined : value
+})
 const customLink = computed(() => (typeof props.as === 'string' ? linkComponent.value : props.as))
 const isLinkContent = computed(() => safeHref.value != null && customLink.value != null)
-usePressFeedback({ hasOverlay: false })
+const { pressActionProps } = usePressFeedback({ hasOverlay: false, isContainer: true })
 const pressable = computed(() => isInteractive.value && !props.isDisabled)
+/**
+ * 行自己有动作（点击、链接、或把点击转给嵌套控件）时，它是可按容器：
+ * 手指按在行里别的控件上，那一下不执行行的动作，行就不亮。带父级角色的行（选项、菜单项）整行就是动作。
+ */
+const isPressContainer = computed(() => pressable.value && (isDelegate.value || !hasParentRole.value))
 
 const resolvedTarget = computed(() => props.target)
 const resolvedRel = computed(() => {
@@ -148,6 +178,8 @@ const labelStyle = computed(() => clampStyle(labelClamp.value))
 const descriptionClasses = computed(() => clampClass(descriptionClamp.value))
 const descriptionStyle = computed(() => clampStyle(descriptionClamp.value))
 
+useFocusAcrossSwap(() => element.value, '.astryx-item__content', () => props.isDisabled)
+
 const contentRole = useInteractiveRole({
   href: () => (hasParentRole.value || isDelegate.value ? undefined : safeHref.value),
   hasOnClick: () => !hasParentRole.value && !isDelegate.value && props.onClick != null,
@@ -155,7 +187,7 @@ const contentRole = useInteractiveRole({
 
 const contentTag = computed(() => {
   if (contentRole.role.value === 'link')
-    return isLinkContent.value ? toRaw(customLink.value as Component) : 'a'
+    return isLinkContent.value && !props.isDisabled ? toRaw(customLink.value as Component) : 'a'
 
   return contentRole.role.value === 'button' ? 'button' : 'span'
 })
@@ -164,28 +196,51 @@ function handleContentClick(event: MouseEvent): void {
   props.onClick?.(event)
 }
 
-const contentAttrs = computed<Record<string, unknown>>(() => {
+const baseContentAttrs = computed<Record<string, unknown>>(() => {
   const href = safeHref.value
   if (href != null && !hasParentRole.value && !isDelegate.value) {
+    // 禁用的链接行没有去处：屏幕阅读器的点击、回车、链接菜单都无处可去，
+    // 保留链接角色，也不走路由链接组件。
+    if (props.isDisabled) {
+      return {
+        'role': 'link',
+        'aria-disabled': true,
+        'tabindex': 0,
+        ...pressActionProps,
+      }
+    }
     return {
-      'href': href,
-      'to': isLinkContent.value ? href : undefined,
-      'rel': resolvedRel.value,
-      'target': resolvedTarget.value,
-      'aria-disabled': props.isDisabled || undefined,
-      'tabindex': props.isDisabled ? -1 : undefined,
+      href,
+      to: isLinkContent.value ? href : undefined,
+      rel: resolvedRel.value,
+      target: resolvedTarget.value,
+      ...pressActionProps,
     }
   }
 
   if (contentTag.value === 'button') {
+    // 禁用的按钮仍可聚焦（读屏和键盘够得着），但不触发任何动作。
+    if (props.isDisabled) {
+      return {
+        'type': 'button',
+        'aria-disabled': true,
+        ...disabledInteractionProps(),
+        ...pressActionProps,
+      }
+    }
     return {
       type: 'button',
-      disabled: props.isDisabled,
       onClick: handleContentClick,
+      ...pressActionProps,
     }
   }
 
   return {}
+})
+
+const contentAttrs = computed<Record<string, unknown>>(() => {
+  const current = currentOnFocusTarget.value && !isDelegate.value ? { 'aria-current': controlCurrent.value } : {}
+  return { ...baseContentAttrs.value, ...current }
 })
 
 function hasTextSelection(node: HTMLElement): boolean {
@@ -203,7 +258,7 @@ function hasInteractiveAncestor(target: Element, container: HTMLElement): boolea
   let current: Element | null = target
 
   while (current != null && current !== container && current !== container.ownerDocument.body) {
-    if (isInteractiveElement(current))
+    if (isInteractiveElement(current) || isLayerSurface(current))
       return true
 
     current = current.parentElement
@@ -212,13 +267,44 @@ function hasInteractiveAncestor(target: Element, container: HTMLElement): boolea
   return false
 }
 
+/** 点按落在行的内边距或粗指针的热区上时，转给行里的链接（带着修饰键，Cmd/Ctrl 点击照样新开标签页）。 */
+function followRowLink(event: MouseEvent): void {
+  const row = event.currentTarget as HTMLElement
+  const anchor = row.querySelector<HTMLElement>('a.astryx-item__content, .astryx-item__content[role="link"]')
+  if (anchor == null || event.target !== row || event.detail === 0)
+    return
+  // 主指针是手指时整行都跟着走；鼠标只有点在盒子外的热区才算（盒子里的内边距不算）。
+  const box = row.getBoundingClientRect()
+  const isInBand = event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom
+  if (!isInBand && !isCoarsePointer(row.ownerDocument.defaultView))
+    return
+  anchor.dispatchEvent(new MouseEvent('click', {
+    altKey: event.altKey,
+    bubbles: true,
+    button: event.button,
+    cancelable: true,
+    ctrlKey: event.ctrlKey,
+    metaKey: event.metaKey,
+    shiftKey: event.shiftKey,
+  }))
+}
+
 function handleContainerClick(event: MouseEvent): void {
   if (props.isDisabled)
     return
 
   const target = event.target
 
+  if (isListRow && props.onClick == null && safeHref.value != null) {
+    followRowLink(event)
+    return
+  }
+
   if (target instanceof HTMLElement && target.closest(NATIVE_CONTROL_SELECTOR) != null)
+    return
+
+  // 打开着的 Tooltip、HoverCard 里的按下属于气泡自己。
+  if (target instanceof Element && isInLayerSurface(target, event.currentTarget as Element))
     return
 
   props.onClick?.(event)
@@ -257,30 +343,29 @@ function handleDelegatedClick(event: MouseEvent): void {
   event.stopPropagation()
 }
 
-const SWIPE_BLOCKED_ROLES = new Set(['option', 'menuitem', 'menuitemcheckbox', 'menuitemradio'])
-const swipeBehavior = computed(() => props.swipeBehavior ?? 'reveal')
-const leadingActions = computed(() => {
-  const actions = props.swipeActions?.leading ?? []
-  return swipeBehavior.value === 'commit' ? actions.slice(-1) : actions
+useDelegatedControl({
+  control: () => (isDelegate.value ? toValue(props.interactiveRef) : null),
+  current: () => (currentOnFocusTarget.value ? controlCurrent.value as string | boolean | undefined : undefined),
+  pressAttributes: pressActionProps,
 })
-const trailingActions = computed(() => {
-  const actions = props.swipeActions?.trailing ?? []
-  return swipeBehavior.value === 'commit' ? actions.slice(-1) : actions
-})
-const swipeEnabled = computed(() => {
-  if (props.isDisabled || isDelegate.value)
-    return false
-  if (role.value != null && SWIPE_BLOCKED_ROLES.has(role.value))
-    return false
-  return leadingActions.value.length + trailingActions.value.length > 0
-})
-const swipe = useItemSwipe({
-  root: element,
-  enabled: swipeEnabled,
-  behavior: swipeBehavior,
-  leading: leadingActions,
-  trailing: trailingActions,
-})
+
+// 横滑服务这一行时，面板渲染成根的脱离文档流的子元素，根带上横滑的样式，按键转给面板这一层。
+const swipeHost = useItemSwipeHost(props, () => ({
+  role: role.value,
+  isDisabled: props.isDisabled,
+  isDelegate: isDelegate.value,
+}))
+const swipeLayer = useTemplateRef<{ onKeyDown: (event: KeyboardEvent) => void }>('swipeLayer')
+
+function handleKeydown(event: KeyboardEvent): void {
+  swipeLayer.value?.onKeyDown(event)
+}
+
+/** 有序列表的行把标记之外的内容收进同一格，列表据此让所有行共用一列标记。 */
+const MarkerCell: FunctionalComponent = (_, { slots: inner }) =>
+  listRow?.isNumbered.value === true && slots.marker != null
+    ? h('span', { class: 'astryx-item__marker-content' }, inner.default?.())
+    : inner.default?.()
 
 const rootClick = computed(() => {
   if (isDelegate.value)
@@ -292,7 +377,7 @@ const rootClick = computed(() => {
   return isInteractive.value ? handleContainerClick : undefined
 })
 
-const rootClass = computed(() => ['astryx-item', swipeEnabled.value && 'astryx-item--swipe', attrs.class])
+const rootClass = computed(() => ['astryx-item', swipeHost.value != null && 'astryx-item--swipe', isDelegate.value && 'astryx-item--delegate', attrs.class])
 
 const forwardedAttrs = computed(() => Object.fromEntries(
   Object.entries(attrs).filter(([key]) => !CONTROLLED_ATTRS.has(key)),
@@ -318,7 +403,7 @@ defineExpose({ element, focus, blur })
     :is="as"
     ref="root"
     v-bind="forwardedAttrs"
-    :aria-current="ariaCurrent"
+    :aria-current="currentOnFocusTarget ? undefined : ariaCurrent"
     :aria-disabled="isDisabled || undefined"
     :aria-selected="allowsAriaSelected && isSelected ? true : undefined"
     :class="rootClass"
@@ -330,46 +415,22 @@ defineExpose({ element, focus, blur })
     :data-interactive="isInteractive || undefined"
     :data-selected="isSelected || undefined"
     :data-astryx-pressable="pressable ? '' : undefined"
-    :data-swipe="swipeEnabled ? swipe.phase.value : undefined"
+    :data-astryx-press-container="isPressContainer ? '' : undefined"
     :role="role"
     :style="attrs.style as StyleValue"
-    @pointerdown="swipe.onPointerDown"
-    @click.capture="swipe.onClickCapture"
-    @keydown="swipe.onKeyDown"
+    @keydown="handleKeydown"
     @click="rootClick"
   >
-    <template v-if="swipeEnabled">
-      <div v-if="leadingActions.length" class="astryx-item__swipe-panel" data-side="leading" :inert="swipe.phase.value === 'resting' ? undefined : true">
-        <button
-          v-for="action in leadingActions"
-          :key="action.id ?? action.label"
-          type="button"
-          class="astryx-item__swipe-action"
-          :data-variant="action.variant ?? 'neutral'"
-          :disabled="action.isDisabled"
-          @click.stop="swipe.activate(action)"
-        >
-          <component :is="action.icon" v-if="action.icon" aria-hidden="true" />
-          <span>{{ action.label }}</span>
-        </button>
-      </div>
-      <div v-if="trailingActions.length" class="astryx-item__swipe-panel" data-side="trailing" :inert="swipe.phase.value === 'resting' ? undefined : true">
-        <button
-          v-for="action in trailingActions"
-          :key="action.id ?? action.label"
-          type="button"
-          class="astryx-item__swipe-action"
-          :data-variant="action.variant ?? 'neutral'"
-          :disabled="action.isDisabled"
-          @click.stop="swipe.activate(action)"
-        >
-          <component :is="action.icon" v-if="action.icon" aria-hidden="true" />
-          <span>{{ action.label }}</span>
-        </button>
-      </div>
-    </template>
-    <div v-if="swipeEnabled" class="astryx-item__surface">
-      <slot name="marker" />
+    <SwipeActionsLayer
+      v-if="swipeHost"
+      ref="swipeLayer"
+      :leading="swipeHost.leading"
+      :trailing="swipeHost.trailing"
+      :behavior="swipeHost.behavior"
+      :item-key="swipeHost.itemKey"
+    />
+    <slot name="marker" />
+    <MarkerCell>
       <span v-if="$slots.startContent" class="astryx-item__start">
         <slot name="startContent" />
       </span>
@@ -381,6 +442,7 @@ defineExpose({ element, focus, blur })
       >
         <span
           v-if="hasLabel"
+          :id="shownLabelId ?? undefined"
           class="astryx-item__label"
           :class="labelClasses"
           :style="labelStyle"
@@ -400,39 +462,7 @@ defineExpose({ element, focus, blur })
       <span v-if="$slots.endContent" class="astryx-item__end">
         <slot name="endContent" />
       </span>
-    </div>
-    <template v-else>
-      <slot name="marker" />
-      <span v-if="$slots.startContent" class="astryx-item__start">
-        <slot name="startContent" />
-      </span>
-      <component
-        :is="contentTag"
-        v-bind="contentAttrs"
-        class="astryx-item__content"
-        :class="{ 'astryx-item__content--inline': isInline }"
-      >
-        <span
-          v-if="hasLabel"
-          class="astryx-item__label"
-          :class="labelClasses"
-          :style="labelStyle"
-        >
-          <slot name="label">{{ label }}</slot>
-        </span>
-        <span
-          v-if="hasDescription"
-          :id="descriptionIdBase"
-          class="astryx-item__description"
-          :class="descriptionClasses"
-          :style="descriptionStyle"
-        >
-          <slot name="description">{{ description }}</slot>
-        </span>
-      </component>
-      <span v-if="$slots.endContent" class="astryx-item__end">
-        <slot name="endContent" />
-      </span>
-    </template>
+      <component :is="trailing" v-if="trailing" />
+    </MarkerCell>
   </component>
 </template>

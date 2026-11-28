@@ -201,7 +201,7 @@
     --astryx-color-text-accent: light-dark(#225bff, #fdee8c);
   }
 
-  [data-astryx-theme='butter'] .astryx-table tbody tr:nth-child(even of :not([data-expansion-panel])) {
+  [data-astryx-theme='butter'] .astryx-table[data-striped='true'] tbody tr:nth-child(even of :not([data-expansion-panel])) {
     --astryx-color-text-primary: light-dark(#1d1c11, #f3f2e2);
     --astryx-color-text-secondary: light-dark(#605f52, #adac9e);
     --astryx-color-text-accent: light-dark(#225bff, #fdee8c);

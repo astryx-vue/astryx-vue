@@ -1,5 +1,6 @@
 import type { AutoLinkConfig, LinkMatcher } from '@lexical/link'
 import type { LexicalEditor } from 'lexical'
+import { $isCodeNode } from '@lexical/code'
 import { createLinkMatcherWithRegExp, registerAutoLink } from '@lexical/link'
 import { EMAIL_MATCHER, sanitizeUrl, URL_MATCHER } from '../../linkUtils.js'
 
@@ -42,7 +43,8 @@ export function registerRichTextAutoLink(editor: LexicalEditor, options: AutoLin
   const config: Partial<AutoLinkConfig> & Omit<AutoLinkConfig, 'separatorRegex'> = {
     matchers: options.matchers ?? DEFAULT_LINK_MATCHERS,
     changeHandlers: options.onChange ? [options.onChange] : [],
-    excludeParents: [],
+    // 代码块里只放代码：输入、粘贴或导入的网址都不自动变成链接。
+    excludeParents: [$isCodeNode],
   }
   return registerAutoLink(editor, config)
 }

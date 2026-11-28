@@ -4,12 +4,18 @@ import type { CheckboxInputEmits, CheckboxInputProps, CheckboxInputSlots, Checkb
 import { computed, nextTick, onBeforeUnmount, onMounted, onUpdated, useAttrs, useId, useTemplateRef } from 'vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
+import { pressBoxProps } from '../composables/internal/pressBox.js'
+import { useTouchHitArea } from '../composables/internal/useTouchHitArea.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import FieldLabel from '../Field/FieldLabel.vue'
 import FieldStatus from '../Field/FieldStatus.vue'
-import { useAriaRequired } from '../FormLayout/context.js'
+import { ariaRequired as resolveAriaRequired } from '../FormLayout/context.js'
 import { useIndicator } from '../Indicator/useIndicator.js'
+import { readLayerScoped } from '../layer/scopedProvide.js'
+import { registerBoxHold } from '../utils/boxHold.js'
+import { withholdCallerHandlers } from '../utils/disabledInteraction.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
+import { checkboxRowPressKey } from './rowPress.js'
 import { useCheckboxAction } from './useCheckboxAction.js'
 import '../../styles/checkbox-input.css'
 import '../../styles/button.css'
@@ -18,7 +24,8 @@ defineOptions({ name: 'AstryxCheckboxInput', inheritAttrs: false })
 const props = withDefaults(defineProps<Omit<CheckboxInputProps, 'modelValue'>>(), { size: 'md', loadingLabel: 'Loading' })
 const emit = defineEmits<CheckboxInputEmits>()
 defineSlots<CheckboxInputSlots>()
-const ariaRequired = useAriaRequired(props)
+// 没勾的复选框、关着的开关本身就是一个答案：表单的默认必填不让它们变成必填，只有自己的 isRequired 才算。
+const ariaRequired = computed(() => resolveAriaRequired(props.isRequired, props.isOptional, undefined))
 const model = defineModel<CheckboxValue>({ required: true })
 const attrs = useAttrs()
 const input = useTemplateRef<HTMLInputElement>('input')
@@ -37,6 +44,30 @@ const blocked = computed(() => props.isDisabled || props.isReadOnly || busy.valu
 const state = computed(() => action.value.value === 'indeterminate' ? 'indeterminate' : action.value.value ? 'checked' : 'unchecked')
 const CheckboxMark = useIndicator('checkbox')
 const press = usePressFeedback({ hasOverlay: false })
+// 只有用到框的组件才装框按住，只有按钮和链接的页面不带这段代码。
+registerBoxHold()
+// 外面有整行在回应按压（列表行）时，按压由那一行画，这一行不再单独当按压表面。
+const rowOwnsPress = readLayerScoped(checkboxRowPressKey)
+// 有标签的复选框，粗指针下整行朝 44px 长出一圈看不见的热区，行自己的大小不变。
+// 标签隐藏的复选框是别的组件那一行里的标记，目标由那一行负责。
+const row = useTemplateRef<HTMLElement>('row')
+const hasHitArea = computed(() => !props.isLabelHidden && !props.isDisabled && !props.isReadOnly)
+useTouchHitArea(row, hasHitArea)
+/** 按下落在行自己（不是里面的控件）上时，这次按下的位置。 */
+let rowPress: { x: number, y: number } | null = null
+function rowPointerDown(event: PointerEvent): void {
+  rowPress = event.target === event.currentTarget ? { x: event.clientX, y: event.clientY } : null
+}
+/** 起点在热区（行盒子之外）的点按，和点在复选框上一样切换它；代码发出的点击（detail 为 0）不算。 */
+function rowClick(event: MouseEvent): void {
+  const start = rowPress
+  rowPress = null
+  if (start == null || event.detail === 0 || event.target !== event.currentTarget)
+    return
+  const box = (event.currentTarget as HTMLElement).getBoundingClientRect()
+  if (start.x < box.left || start.x > box.right || start.y < box.top || start.y > box.bottom)
+    input.value?.click()
+}
 const widthStyle = computed<CSSProperties>(() => ({ width: typeof props.width === 'number' ? `${props.width}px` : props.width }))
 const element = computed(() => input.value ?? null)
 function focus(options?: FocusOptions): void {
@@ -49,7 +80,8 @@ defineExpose({ element, focus, blur })
 
 const controlledAttrs = new Set(['class', 'style', 'id', 'type', 'checked', 'indeterminate', 'disabled', 'readonly', 'autofocus', 'role', 'aria-checked', 'aria-labelledby', 'aria-describedby', 'aria-disabled', 'aria-readonly', 'aria-required', 'aria-busy'])
 function inputAttrs(): InputHTMLAttributes {
-  return Object.fromEntries(Object.entries(attrs).filter(([key]) => !controlledAttrs.has(key))) as InputHTMLAttributes
+  // 禁用的复选框还能聚焦，浏览器照常派发事件；调用方的处理函数除了聚焦和失焦都不运行。
+  return Object.fromEntries(Object.entries(withholdCallerHandlers(attrs, !!props.isDisabled)).filter(([key]) => !controlledAttrs.has(key))) as InputHTMLAttributes
 }
 function describedBy(): string | undefined {
   return [attrs['aria-describedby'], descriptionId.value, statusId.value, showsDisabledMessage.value ? disabledId : undefined, busy.value ? loadingId : undefined].filter(Boolean).join(' ') || undefined
@@ -101,8 +133,10 @@ onBeforeUnmount(() => ownerDocument?.removeEventListener('reset', reset, true))
 
 <template>
   <div class="astryx-checkbox-input" :class="attrs.class" :style="[widthStyle, attrs.style as CSSProperties]" :data-size="size" :data-status="status?.type" :data-blocked="blocked || undefined">
-    <div class="astryx-checkbox-row" :class="{ 'astryx-indicator-scope': !blocked }" v-bind="blocked ? undefined : press.pressableProps" @pointerenter="tooltip.onPointerEnter" @pointerleave="tooltip.onPointerLeave">
-      <span class="astryx-checkbox-control">
+    <!-- eslint-disable-next-line vue-a11y/click-events-have-key-events, vue-a11y/no-static-element-interactions -- 点击只用来把热区上的点按交给里面的复选框，键盘由复选框自己处理。 -->
+    <div ref="row" class="astryx-checkbox-row" :class="{ 'astryx-indicator-scope': !blocked, 'astryx-touch-hit-area-band': hasHitArea }" v-bind="blocked || rowOwnsPress ? undefined : press.pressableProps" @pointerenter="tooltip.onPointerEnter" @pointerleave="tooltip.onPointerLeave" @pointerdown="hasHitArea ? rowPointerDown($event) : undefined" @click="hasHitArea ? rowClick($event) : undefined">
+      <!-- iOS 对按住复选框的手指只给文字选区、不给点击。按压控制器在手指按住标记过的框时锁住整行的选区，没等到点击就替它勾选。 -->
+      <span class="astryx-checkbox-control" v-bind="isDisabled ? undefined : pressBoxProps">
         <input
           v-bind="inputAttrs()" :id="inputId" ref="input" class="astryx-checkbox-native" type="checkbox"
           :checked="action.value.value === true"
@@ -110,7 +144,7 @@ onBeforeUnmount(() => ownerDocument?.removeEventListener('reset', reset, true))
           :required="(isRequired && !isOptional) || inputAttrs().required" :readonly="isReadOnly || showsDisabledMessage"
           :aria-labelledby="labelledBy()" :aria-describedby="describedBy()"
           :aria-disabled="isDisabled || undefined" :aria-readonly="isReadOnly || undefined" :aria-busy="busy || undefined"
-          :aria-required="ariaRequired" :aria-invalid="status?.type === 'error' ? true : inputAttrs()['aria-invalid']"
+          :aria-required="ariaRequired" :aria-invalid="status?.type === 'error' ? true : isRequired ? false : inputAttrs()['aria-invalid']"
           @click="click" @change="change" @keydown="keydown" @focus="tooltip.onFocus" @blur="tooltip.onBlur"
         >
         <component :is="CheckboxMark" :state="state" :size="size" :is-disabled="isDisabled">

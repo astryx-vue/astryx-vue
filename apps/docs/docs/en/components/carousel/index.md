@@ -7,16 +7,18 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { carouselCards, carouselSnap } from '../../../../components/demos/carousel'
+import { carouselCards, carouselSnap, carouselSnapPaging } from '../../../../components/demos/carousel'
 </script>
 
 ## Usage
 
 `Carousel` scrolls a row of items sideways. The root is a `region` with `aria-roledescription="carousel"`. Each direct child is one slide, named `Slide N of M`.
 
-`gap` is a spacing step (`0`, `0.5`, `1`, `1.5`, `2`, `3`, or `4`). `padding` uses the same scale and also sets scroll-padding, so a snap point lines up with the content edge. `hasSnap` snaps each child to the start edge. `hasEdgeFade` masks the edge that still has overflow.
+`gap` is a spacing step (`0`, `0.5`, `1`, `1.5`, `2`, `3`, or `4`). `padding` uses the same scale and also sets scroll-padding, so a snap point lines up with the content edge. `hasSnap` snaps each child to the start edge with native CSS scroll snap. Pass it a [`useSnapPaging()`](/en/components/use-snap-paging) value instead and the row pages like iOS on the same stops: under a finger or on a trackpad swipe, a flick moves one view, or one item with `{ pages: 'item' }`, and the edge buttons, arrow keys and `scrollNext`, `scrollPrev` and `scrollTo` move the row through the same paging. A mouse wheel and a mouse drag keep native scrolling. `hasEdgeFade` masks the edge that still has overflow.
 
-`hasButtons` shows previous and next controls when there is something to scroll. A button that cannot move is hidden and disabled. If that button had focus, focus moves to the other one. `hasLoop` wraps from the last item to the first, and the buttons stay available at both ends while the row overflows. Shift plus the wheel scrolls sideways.
+`hasButtons` shows previous and next controls when there is something to scroll. A button that cannot move is hidden and leaves the Tab order. If that button had focus, focus moves to the scroll area without scrolling it. `hasLoop` wraps from the last item to the first, and the buttons stay available at both ends while the row overflows. Shift plus one wheel notch scrolls the row sideways, once.
+
+The scroll area is a group named like the carousel. It is a Tab stop only while its content overflows, and the arrow keys scroll it. Its focus ring is drawn by the carousel, above the edge fade, and the buttons sit just inside it.
 
 The component exposes `scrollNext`, `scrollPrev`, `scrollTo`, `canScrollNext`, and `canScrollPrev` on the template ref.
 
@@ -66,4 +68,11 @@ import { Carousel } from '@astryx-vue/core/Carousel'
   description="Scroll-snap carousel with navigation buttons and team member cards. Each card snaps to the start edge on scroll. Use when items should be viewed one at a time rather than as a continuous strip."
   locale="en"
   title="Carousel — Snap"
+/>
+
+<DemoExample
+  :demo="carouselSnapPaging"
+  description="Onboarding screens with iOS-style snap paging. A flick moves one view; the switch makes it move one card. A touch catches a page turn in flight, and the row always rests on a card's start edge."
+  locale="en"
+  title="Carousel — Snap paging"
 />

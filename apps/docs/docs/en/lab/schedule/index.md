@@ -56,4 +56,4 @@ The default plugins are the pager: previous, Today, next. Passing `plugins` repl
 
 The range title in the header is always level 2. `headingLevel` applies to the smaller headings inside the view and defaults to 3.
 
-Fixed control and popover strings match upstream and stay in English: Today, All day, Loading events. Date labels follow the active locale and stay Gregorian. Non-Gregorian calendar systems from upstream are not available here.
+Fixed control and popover strings match upstream and stay in English: Today, All day, Loading events. Date labels follow the active locale and are written in the provider's `calendar` (see [Calendars](/en/guide/calendars)); the grid keeps Gregorian months and weeks.

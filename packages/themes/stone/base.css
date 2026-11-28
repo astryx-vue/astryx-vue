@@ -7,12 +7,19 @@
  * Tokens the theme does not set keep the shared default from Neutral's base.
  * Figtree and JetBrains Mono stay on the shared fonts.css stack.
  */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+@import '@fontsource/montserrat/400.css';
+@import '@fontsource/montserrat/500.css';
+@import '@fontsource/montserrat/600.css';
+@import '@fontsource/montserrat/700.css';
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 
 @layer astryx.tokens {
-  [data-astryx-theme='stone'] {
+  /* 只有页面根默认跟随读者；主题包装元素不声明配色，`system` 模式的 Theme 取外面的配色。 */
+  html[data-astryx-theme='stone'] {
     color-scheme: light dark;
+  }
+
+  [data-astryx-theme='stone'] {
     background-color: var(--astryx-color-background-body);
     color: var(--astryx-color-text-primary);
     font-family: var(--astryx-font-family-body);
@@ -167,7 +174,7 @@
     --astryx-radius-element: 0.5rem;
     --astryx-radius-container: 0.75rem;
     --astryx-radius-page: 1.5rem;
-    --astryx-radius-chat: 28px;
+    --astryx-radius-chat: var(--astryx-radius-container);
     --astryx-radius-full: 9999px;
 
     --astryx-shadow-low: 0 2px 4px #25252a0d, 0 4px 8px #25252a1a;

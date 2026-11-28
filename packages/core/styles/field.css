@@ -141,6 +141,8 @@
     font-size: var(--astryx-text-supporting-size, 12px);
     line-height: var(--astryx-text-supporting-leading, 1.6667);
     overflow-wrap: anywhere;
+    /* Text 和 Heading 在里面也按 anywhere 换行。 */
+    --_astryx-text-overflow-wrap: anywhere;
   }
 
   .astryx-field-status[data-variant='attached'] {
@@ -180,23 +182,23 @@
 
   :is(.astryx-field-status, .astryx-text-input)[data-type='error'],
   .astryx-text-input[data-status='error'] {
-    --astryx-input-status-color: var(--astryx-input-error, #e33f4a);
-    --astryx-input-status-foreground: var(--astryx-input-error-foreground, #89001a);
-    --astryx-input-status-background: var(--astryx-input-error-background, #facecb);
+    --astryx-input-status-color: var(--astryx-input-error, var(--astryx-color-border-error, #e33f4a));
+    --astryx-input-status-foreground: var(--astryx-input-error-foreground, var(--astryx-color-on-error-muted, #89001a));
+    --astryx-input-status-background: var(--astryx-input-error-background, var(--astryx-color-error-muted, #facecb));
   }
 
   .astryx-field-status[data-type='warning'],
   .astryx-text-input[data-status='warning'] {
-    --astryx-input-status-color: var(--astryx-input-warning, #a67a00);
-    --astryx-input-status-foreground: var(--astryx-input-warning-foreground, #584400);
-    --astryx-input-status-background: var(--astryx-input-warning-background, #f8da9d);
+    --astryx-input-status-color: var(--astryx-input-warning, var(--astryx-color-border-warning, #a67a00));
+    --astryx-input-status-foreground: var(--astryx-input-warning-foreground, var(--astryx-color-on-warning-muted, #584400));
+    --astryx-input-status-background: var(--astryx-input-warning-background, var(--astryx-color-warning-muted, #f8da9d));
   }
 
   .astryx-field-status[data-type='success'],
   .astryx-text-input[data-status='success'] {
-    --astryx-input-status-color: var(--astryx-input-success, #198100);
-    --astryx-input-status-foreground: var(--astryx-input-success-foreground, #0c5700);
-    --astryx-input-status-background: var(--astryx-input-success-background, #c5e5c0);
+    --astryx-input-status-color: var(--astryx-input-success, var(--astryx-color-border-success, #198100));
+    --astryx-input-status-foreground: var(--astryx-input-success-foreground, var(--astryx-color-on-success-muted, #0c5700));
+    --astryx-input-status-background: var(--astryx-input-success-background, var(--astryx-color-success-muted, #c5e5c0));
   }
 
   .astryx-field-icon,

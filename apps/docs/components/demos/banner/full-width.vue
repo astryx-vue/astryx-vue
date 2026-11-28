@@ -2,6 +2,13 @@
 import { Banner } from '@astryx-vue/core/Banner'
 import { Button } from '@astryx-vue/core/Button'
 import { VStack } from '@astryx-vue/core/Stack'
+import { useToast } from '@astryx-vue/core/Toast'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 </script>
 
 <template>
@@ -20,7 +27,7 @@ import { VStack } from '@astryx-vue/core/Stack'
       container="section"
     >
       <template #end>
-        <Button label="Take a tour" variant="secondary" size="sm" />
+        <Button label="Take a tour" variant="secondary" size="sm" @click="demo('Take a tour')" />
       </template>
     </Banner>
   </VStack>

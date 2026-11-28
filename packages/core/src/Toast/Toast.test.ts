@@ -1,12 +1,17 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
-import { nextTick } from 'vue'
+import { h, nextTick } from 'vue'
+import { touch } from '../gestures/__tests__/touchEvents'
+import { defineTheme } from '../Theme/defineTheme.js'
+import Theme from '../Theme/Theme.vue'
+import { TOAST_VIEWPORT_KEY } from './context.js'
 import Toast from './Toast.vue'
 
 describe('toast', () => {
   it('renders body text and status role', () => {
     const wrapper = mount(Toast, {
       props: { body: 'Saved' },
+      global: { provide: { [TOAST_VIEWPORT_KEY as symbol]: true } },
     })
 
     expect(wrapper.text()).toContain('Saved')
@@ -17,10 +22,19 @@ describe('toast', () => {
   it('uses alert role for error type', () => {
     const wrapper = mount(Toast, {
       props: { body: 'Failed', type: 'error' },
+      global: { provide: { [TOAST_VIEWPORT_KEY as symbol]: true } },
     })
 
     expect(wrapper.find('[role="alert"]').exists()).toBe(true)
     expect(wrapper.find('[aria-live="assertive"]').exists()).toBe(true)
+  })
+
+  it('holds no live role when rendered on its own', () => {
+    const wrapper = mount(Toast, { props: { body: 'Saved' } })
+
+    const card = wrapper.get('.astryx-toast')
+    expect(card.attributes('role')).toBeUndefined()
+    expect(card.attributes('aria-live')).toBeUndefined()
   })
 
   it('adds the exiting class while the toast leaves', () => {
@@ -201,6 +215,54 @@ describe('toast', () => {
     expect(wrapper.emitted('dismiss')).toBeUndefined()
   })
 
+  function stubCardHeight(height: number): void {
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
+      x: 0,
+      y: 0,
+      top: 0,
+      left: 0,
+      right: 200,
+      bottom: height,
+      width: 200,
+      height,
+      toJSON: () => ({}),
+    })
+  }
+
+  function timedTouch(type: string, target: Element, y: number, time: number): void {
+    touch(type, target, { id: 1, x: 0, y }, time, type === 'touchend')
+  }
+
+  it('dismisses a one-line toast on a quick flick', async () => {
+    stubCardHeight(56)
+    const wrapper = mount(Toast, { props: { body: 'Saved', isAutoHide: false } })
+    const root = wrapper.get('.astryx-toast').element as HTMLElement
+
+    timedTouch('touchstart', root, 0, 100)
+    timedTouch('touchmove', root, 12, 106)
+    timedTouch('touchend', root, 24, 112)
+    await nextTick()
+
+    expect(wrapper.emitted('dismiss')?.[0]).toEqual(['manual'])
+  })
+
+  it('times a flick by when the finger moved, not when the handler ran', async () => {
+    stubCardHeight(200)
+    vi.useFakeTimers()
+    const wrapper = mount(Toast, { props: { body: 'Saved', isAutoHide: false } })
+    const root = wrapper.get('.astryx-toast').element as HTMLElement
+
+    timedTouch('touchstart', root, 0, 100)
+    vi.advanceTimersByTime(500)
+    timedTouch('touchmove', root, 30, 110)
+    vi.advanceTimersByTime(500)
+    timedTouch('touchend', root, 60, 120)
+    await nextTick()
+
+    expect(wrapper.emitted('dismiss')?.[0]).toEqual(['manual'])
+    vi.useRealTimers()
+  })
+
   it('does not start a swipe on the close button', async () => {
     const wrapper = mount(Toast, { props: { body: 'Saved', isAutoHide: false } })
     const close = wrapper.get('.astryx-toast__close').element as HTMLElement
@@ -222,5 +284,36 @@ describe('toast', () => {
     vi.advanceTimersByTime(200)
     expect(wrapper.emitted('dismiss')).toBeUndefined()
     vi.useRealTimers()
+  })
+
+  describe('first-paint content side', () => {
+    const sideOf = (theme: ReturnType<typeof defineTheme>, mode: 'light' | 'dark', type: 'info' | 'error' = 'info') => {
+      const wrapper = mount(Theme, {
+        props: { theme, mode },
+        slots: { default: () => h(Toast, { body: 'Saved', type }) },
+      })
+      const side = wrapper.get('.astryx-toast__surface').attributes('data-astryx-media')
+      wrapper.unmount()
+      return side
+    }
+
+    it('follows the fill the theme gives the card, not the color mode', () => {
+      const light = defineTheme({ name: 'toast-light-fill', tokens: { '--toast-info-background': '#f4f0e8' } })
+      expect(sideOf(light, 'dark')).toBe('light')
+      expect(sideOf(light, 'light')).toBe('light')
+    })
+
+    it('takes the dark side for the standard dark fills in both modes', () => {
+      const plain = defineTheme({ name: 'toast-plain-fill' })
+      expect(sideOf(plain, 'dark')).toBe('dark')
+      expect(sideOf(plain, 'light')).toBe('dark')
+      expect(sideOf(plain, 'dark', 'error')).toBe('dark')
+    })
+
+    it('guesses from the color mode when the fill cannot be read', () => {
+      const unreadable = defineTheme({ name: 'toast-unreadable-fill', tokens: { '--toast-info-background': 'var(--some-other-token)' } })
+      expect(sideOf(unreadable, 'dark')).toBe('light')
+      expect(sideOf(unreadable, 'light')).toBe('dark')
+    })
   })
 })

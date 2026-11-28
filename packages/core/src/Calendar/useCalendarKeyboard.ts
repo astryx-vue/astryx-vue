@@ -1,6 +1,8 @@
 import type { CalendarDate } from '@internationalized/date'
-import { CalendarDate as CalendarDay } from '@internationalized/date'
-import { calendarDiffDays, monthIndex, shiftMonth, weekdayIndex } from './calendarDate.js'
+import type { CalendarSystem } from '../utils/calendarSystem.js'
+import { calendarShiftMonths, calendarShiftYears, isInCalendarMonth } from '../utils/calendarSystem.js'
+import { calendarDiffDays, weekdayIndex } from './calendarDate.js'
+import { addMonthStarts, isWithinMonths, monthOf, monthStartOf, toCalendarDay } from './calendarMonths.js'
 import { firstEnabledDay } from './useCalendarGrid.js'
 
 export interface CalendarKeyTarget {
@@ -11,12 +13,16 @@ export interface CalendarKeyTarget {
 
 export interface CalendarKeyInput {
   key: string
+  /** Shift+Page Up / Page Down 按一年走，不带 Shift 按一个月走。月和年都按 `calendar` 数。 */
+  shiftKey?: boolean
   rtl?: boolean
   focused: CalendarDate
   weekStartsOn: number
   numberOfMonths: 1 | 2
-  viewYear: number
-  viewMonth: number
+  /** 第一个可见历法月的第一天。 */
+  viewStart: CalendarDate
+  /** 按哪种历法分月，默认公历。 */
+  calendar?: CalendarSystem
   isOutOfBounds: (date: CalendarDate) => boolean
   isDisabled: (date: CalendarDate) => boolean
 }
@@ -26,15 +32,17 @@ function startOfWeek(date: CalendarDate, weekStartsOn: number): CalendarDate {
   return date.subtract({ days: delta })
 }
 
+function calendarOf(input: CalendarKeyInput): CalendarSystem {
+  return input.calendar ?? 'gregory'
+}
+
 function viewFor(target: CalendarDate, input: CalendarKeyInput): CalendarDate | undefined {
-  const targetMonth = monthIndex(target)
-  const first = input.viewYear * 12 + input.viewMonth
-  const last = first + input.numberOfMonths - 1
-  if (targetMonth >= first && targetMonth <= last)
+  const calendar = calendarOf(input)
+  if (isWithinMonths(calendar, target, input.viewStart, input.numberOfMonths))
     return undefined
-  if (targetMonth < first)
-    return new CalendarDay(target.year, target.month, 1)
-  return shiftMonth({ year: target.year, month: target.month }, -(input.numberOfMonths - 1))
+  if (target.compare(input.viewStart) < 0)
+    return monthStartOf(calendar, target)
+  return addMonthStarts(calendar, target, -(input.numberOfMonths - 1))
 }
 
 function walk(focused: CalendarDate, step: number, input: CalendarKeyInput): CalendarDate | null {
@@ -50,18 +58,23 @@ function walk(focused: CalendarDate, step: number, input: CalendarKeyInput): Cal
 }
 
 function page(focused: CalendarDate, delta: number, input: CalendarKeyInput): CalendarDate | null {
-  const candidate = focused.add({ months: delta })
+  // 2 月 29 日加一年落在 2 月 28 日，和加一个月遇到没有的日子时取当月最后一天一致。
+  const calendar = calendarOf(input)
+  const candidate = toCalendarDay(input.shiftKey
+    ? calendarShiftYears(calendar, focused, delta)
+    : calendarShiftMonths(calendar, focused, delta))
   if (input.isOutOfBounds(candidate))
     return null
   if (!input.isDisabled(candidate))
     return candidate
-  return firstEnabledDay(candidate.year, candidate.month, date => input.isDisabled(date) || input.isOutOfBounds(date))
+  return firstEnabledDay(monthOf(calendar, candidate), date => input.isDisabled(date) || input.isOutOfBounds(date))
 }
 
 function weekEdge(focused: CalendarDate, edge: 'home' | 'end', input: CalendarKeyInput): CalendarDate | null {
   const start = startOfWeek(focused, input.weekStartsOn)
+  const month = monthOf(calendarOf(input), focused)
   const days = Array.from({ length: 7 }, (_, index) => start.add({ days: index }))
-    .filter(date => date.year === focused.year && date.month === focused.month)
+    .filter(date => isInCalendarMonth(date, month))
     .filter(date => !input.isDisabled(date) && !input.isOutOfBounds(date))
   if (days.length === 0)
     return null

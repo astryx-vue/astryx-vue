@@ -2,7 +2,14 @@
 
 Vue 3 components for [astryx-vue](https://github.com/astryx-vue/astryx-vue), an unofficial port of Astryx. Not affiliated with Meta.
 
-> **Using an agent?** Install `@astryx-vue/cli` and run `astryx-vue component Button`, or `astryx-vue init --features agents` so the agent looks components up instead of guessing. The binary is `astryx-vue`, not `astryx`.
+> **Setup is install, then `init`.** Add the CLI and run `init` once, before you write UI:
+>
+> ```sh
+> pnpm add -D @astryx-vue/cli   # or: npm install -D / yarn add -D / bun add -d
+> pnpm exec astryx-vue init     # asks no questions
+> ```
+>
+> `init` prints the setup steps (packages, theme, locale) and saves the astryx-vue guide to your `AGENTS.md`/`CLAUDE.md`, so any agent working in the project looks components up, such as `astryx-vue component Button`, instead of guessing. The binary is `astryx-vue`, not `astryx`.
 
 ## Install
 

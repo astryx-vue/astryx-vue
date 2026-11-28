@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
-import { defineComponent, nextTick, ref } from 'vue'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import { defineComponent, h, nextTick, ref } from 'vue'
 import ResizeHandle from '../Resizable/ResizeHandle.vue'
 import { pixel } from '../Table/columnUtils.js'
 import { percent, useResizable } from './useResizable.js'
@@ -123,5 +123,45 @@ describe('useResizable', () => {
     await nextTick()
     expect(wrapper.get('.side').text()).toBe('300')
     expect(wrapper.get('.main').text()).toBe('300')
+  })
+
+  describe('autoSaveId writes', () => {
+    afterEach(() => {
+      localStorage.clear()
+      vi.restoreAllMocks()
+    })
+
+    function mountSaved() {
+      let props: ReturnType<typeof useResizable>['props'] | undefined
+      const Saved = defineComponent({
+        setup() {
+          const region = useResizable({ autoSaveId: 'drag-save', defaultSize: 200, minSize: 100, maxSize: 400 })
+          props = region.props
+          return () => h('span')
+        },
+      })
+      const wrapper = mount(Saved)
+      return { wrapper, props: () => props! }
+    }
+
+    it('saves a drag once, when it ends, not on every move', () => {
+      const { props } = mountSaved()
+      props()._onResizeStart()
+      props()._onResizeMove(20)
+      props()._onResizeMove(40)
+      props()._onResizeMove(60)
+      expect(localStorage.getItem('astryx-resizable:drag-save')).toBeNull()
+      props()._onResizeEnd()
+      expect(JSON.parse(localStorage.getItem('astryx-resizable:drag-save') ?? '{}').size).toBe(260)
+    })
+
+    it('writes the size a drag reached when the region unmounts mid-drag', () => {
+      const { wrapper, props } = mountSaved()
+      props()._onResizeStart()
+      props()._onResizeMove(50)
+      expect(localStorage.getItem('astryx-resizable:drag-save')).toBeNull()
+      wrapper.unmount()
+      expect(JSON.parse(localStorage.getItem('astryx-resizable:drag-save') ?? '{}').size).toBe(250)
+    })
   })
 })

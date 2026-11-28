@@ -175,10 +175,21 @@ describe('top-nav', () => {
     expect(wrapper.get('a[href="/suite"]').text()).toContain('Suite')
     expect(wrapper.get('a[href="/console"]').text()).toContain('Console')
     expect(wrapper.text()).toContain('Northwind')
-    await wrapper.get('[aria-label="Open menu"]').trigger('click')
+    await wrapper.get('[aria-label="Console, Open menu"]').trigger('click')
     await nextTick()
     expect(document.body.textContent).toContain('Switch')
     wrapper.unmount()
+  })
+
+  it('names the heading menu button with the generic action when there is no heading', () => {
+    const wrapper = mount(TopNavHeading, {
+      slots: {
+        icon: () => h('svg'),
+        menu: () => h(NavHeadingMenu, () => h(NavHeadingMenuItem, { href: '/switch', label: 'Switch' })),
+      },
+    })
+
+    expect(wrapper.find('button[aria-haspopup="menu"]').attributes('aria-label')).toBe('Open menu')
   })
 
   it('shows a decorative image and a separate call to action on a featured card', () => {

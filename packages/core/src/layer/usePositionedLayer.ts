@@ -3,7 +3,10 @@ import type { LayerAlignment, LayerPlacement, LayerPosition } from './position.j
 import { nextTick, onScopeDispose, ref, watch } from 'vue'
 import { useLayerTeleportTarget } from '../composables/useLayerMountTarget.js'
 import { useLayerGutter } from '../LayerProvider/context.js'
-import { computeLayerPosition } from './position.js'
+import { keepClearOfAnchor } from './anchorClear.js'
+import { layerEntranceSide, writeLayerEntranceSide } from './layerEntranceSide.js'
+import { computeLayerPosition, computeOverlapPosition } from './position.js'
+import { getLayerViewport } from './visibleViewport.js'
 
 const GEOMETRY_POLL_INTERVAL = 100
 
@@ -14,6 +17,10 @@ export interface PositionedLayerOptions {
   placement: Ref<LayerPlacement>
   alignment: Ref<LayerAlignment>
   gap: number
+  /** 浮层比四周空地都高时也不盖住锚点：改放到锚点旁边，或限高后在浮层里滚动。 */
+  keepAnchorClear?: boolean
+  /** 浮层盖在锚点原位上（见 `computeOverlapPosition`），不再放到锚点旁边。 */
+  overlap?: Ref<boolean>
 }
 
 /**
@@ -46,15 +53,25 @@ export function usePositionedLayer(options: PositionedLayerOptions): PositionedL
     const layerEl = layer.value
     if (!anchorEl || !layerEl || !isOpen.value)
       return
-    position.value = computeLayerPosition(
-      anchorEl.getBoundingClientRect(),
-      { width: layerEl.offsetWidth, height: layerEl.offsetHeight },
-      { width: window.innerWidth, height: window.innerHeight },
-      placement.value,
-      alignment.value,
-      gap,
-      gutter.value,
-    )
+    const anchorRect = anchorEl.getBoundingClientRect()
+    const viewport = getLayerViewport()
+    // 限高之后 offsetHeight 只剩被限的那一截，scrollHeight 才是内容本来的高度。
+    const box = {
+      width: layerEl.offsetWidth,
+      height: options.keepAnchorClear === true ? Math.max(layerEl.offsetHeight, layerEl.scrollHeight) : layerEl.offsetHeight,
+    }
+    if (options.overlap?.value === true) {
+      position.value = computeOverlapPosition(anchorRect, box, viewport, gutter.value)
+      return
+    }
+    const placed = computeLayerPosition(anchorRect, box, viewport, placement.value, alignment.value, gap, gutter.value)
+    const next = options.keepAnchorClear === true
+      ? keepClearOfAnchor(placed, anchorRect, box, viewport, gap, gutter.value)
+      : placed
+    position.value = next
+    // 进场从摆好之后（翻面也算）落在的那一侧滑进来，在第一帧之前写好。
+    const height = next.maxHeight == null ? box.height : Math.min(box.height, next.maxHeight)
+    writeLayerEntranceSide(layerEl, layerEntranceSide({ left: next.left, top: next.top, width: box.width, height }, anchorRect))
   }
 
   let pollId: ReturnType<typeof setInterval> | undefined
@@ -81,6 +98,7 @@ export function usePositionedLayer(options: PositionedLayerOptions): PositionedL
   function attach(): void {
     window.addEventListener('scroll', update, true)
     window.addEventListener('resize', update)
+    window.visualViewport?.addEventListener('resize', update)
     watchGeometry()
   }
 
@@ -88,6 +106,7 @@ export function usePositionedLayer(options: PositionedLayerOptions): PositionedL
     if (typeof window !== 'undefined') {
       window.removeEventListener('scroll', update, true)
       window.removeEventListener('resize', update)
+      window.visualViewport?.removeEventListener('resize', update)
     }
     clearInterval(pollId)
     pollId = undefined
@@ -105,7 +124,7 @@ export function usePositionedLayer(options: PositionedLayerOptions): PositionedL
 
   // 外部锚点和内容元素都可能在挂载后才写入；变化时要重新定位。
   watch([anchor, layer], update)
-  watch([placement, alignment], update)
+  watch([placement, alignment, () => options.overlap?.value], update)
   watch(gutter, update)
 
   // 只在 isOpen 变成 false 时拆监听的话，调用方不调 detach、组件直接卸载，轮询还会继续。

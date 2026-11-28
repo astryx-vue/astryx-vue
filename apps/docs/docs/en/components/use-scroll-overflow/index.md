@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useScrollOverflowFilterStrip } from '../../../../components/demos/use-scroll-overflow'
 </script>
 
 ## Usage
@@ -48,3 +49,14 @@ const { hasOverflow, overflowEnd, overflowStart, scrollRef } = useScrollOverflow
 | <Badge variant="success">Do</Badge> | Use to show/hide scroll navigation buttons or fade edges on carousels and horizontal lists. |
 | <Badge variant="success">Do</Badge> | Apply the `scrollRef` to a container with `overflow-x: auto` or `overflow-x: scroll`. |
 | <Badge variant="error">Don't</Badge> | Use for vertical scroll tracking; this hook only measures horizontal overflow. |
+
+## Examples
+
+Common configurations, variations, and states.
+
+<DemoExample
+  :demo="useScrollOverflowFilterStrip"
+  description="A row of active filters that scrolls sideways. useScrollOverflow reports which edge has hidden filters, and the strip fades only that edge: none while every filter fits, the end at the start, both mid-scroll and the start at the end. In a right-to-left layout the start edge is on the right."
+  locale="en"
+  title="useScrollOverflow — Filter Strip Edge Fades"
+/>

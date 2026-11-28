@@ -48,7 +48,8 @@ import { Spinner } from '@astryx-vue/core/Spinner'
 
 A `Spinner` has no visible text of its own, so its loading state reaches assistive technology entirely through ARIA attributes. The component sets these for you, and you normally do not need to manage them yourself; the list below covers the attributes it actually uses and what each one does.
 
-- The root element carries `role="status"`, so assistive technology treats it as a status region.
+- The ring carries `role="progressbar"` and no value, so assistive technology reads it as busy work in progress.
+- A standalone `Spinner` announces its name once through the shared announcement channel when it appears after the page has loaded. A `Spinner` that a component or your own code composes into a larger loading state stays silent when it has `aria-hidden` or a `role` other than `progressbar`; the owner announces the task instead.
 - When you pass a string `label`, it shows as visible text below the spinner and provides the accessible name through `aria-labelledby`.
 - Without a `label`, the accessible name defaults to `Loading`; pass `aria-label` to change it to something more specific to the context.
 - The ring is `aria-hidden` and carries no text of its own, so it is not read out separately.

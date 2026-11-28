@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { typeaheadBare, typeaheadHelper, typeaheadLimited, typeaheadSearch, typeaheadValidation } from '../../../../components/demos/typeahead'
+import { typeaheadBare, typeaheadHelper, typeaheadLimited, typeaheadMenu, typeaheadSearch, typeaheadValidation } from '../../../../components/demos/typeahead'
 </script>
 
 ## 使用方法
@@ -36,7 +36,7 @@ const source = createStaticSource([
 
 异步数据源返回 Promise。`useAsyncSource` 会在输入停顿后发起请求，默认等待 150 毫秒。新的一次搜索会取消上一次，过期结果不会写回列表。空查询优先走 `bootstrap`。加载、没有结果、请求失败分别显示加载文案、空状态和错误文案。
 
-方向键移动高亮项，`Enter` 选中，`Escape` 关闭列表。焦点在输入框里时，`Home` 和 `End` 移动光标。选中后结果收成一枚可聚焦的标签，再次聚焦会回到搜索。
+方向键移动高亮项，`Enter` 选中，`Escape` 关闭列表。焦点在输入框里时，`Home` 和 `End` 移动光标。选中后结果收成一枚可聚焦的标签，再次聚焦会回到搜索。编辑已选的值时，`Escape` 先收起列表；再按一次才还原标签并把焦点交给它。标签上按 `Backspace` 或 `Delete`，会像清除按钮一样清掉值并念出来；没有清除按钮时则进入编辑。选中一条结果后，清空后的查询会通过 `changeQuery` 报出来。聚焦时展开的清单没有可显示的内容、或加载失败，会收起，而不是留着一个空列表。
 
 内置文案默认是英文。调用 `provideAstryxLocale('zh-CN')` 后改为中文。文档页会按当前语言自动提供。
 
@@ -86,4 +86,11 @@ const source = createStaticSource([
   description="BaseTypeahead 没有字段标签和说明。命令面板这类已经有自己标题的地方用它，输入框的无障碍名用 label 传入。"
   locale="zh"
   title="无字段外壳"
+/>
+
+<DemoExample
+  :demo="typeaheadMenu"
+  description="用 menu 配置做的筛选字段。输入时列出字段，列表上下有标题和按键提示；选中一个字段后，同一个菜单换成编辑它取值的对话框；已加的筛选按钮可以重新打开这个对话框。"
+  locale="zh"
+  title="listbox 与 dialog 角色的菜单"
 />

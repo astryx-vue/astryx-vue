@@ -27,18 +27,18 @@
   }
 
   .astryx-number-input[data-status='error'] {
-    --astryx-input-status-color: var(--astryx-input-error, #e33f4a);
-    border-color: var(--astryx-input-error, #e33f4a);
+    --astryx-input-status-color: var(--astryx-input-error, var(--astryx-color-border-error, #e33f4a));
+    border-color: var(--astryx-input-error, var(--astryx-color-border-error, #e33f4a));
   }
 
   .astryx-number-input[data-status='warning'] {
-    --astryx-input-status-color: var(--astryx-input-warning, #a67a00);
-    border-color: var(--astryx-input-warning, #a67a00);
+    --astryx-input-status-color: var(--astryx-input-warning, var(--astryx-color-border-warning, #a67a00));
+    border-color: var(--astryx-input-warning, var(--astryx-color-border-warning, #a67a00));
   }
 
   .astryx-number-input[data-status='success'] {
-    --astryx-input-status-color: var(--astryx-input-success, #198100);
-    border-color: var(--astryx-input-success, #198100);
+    --astryx-input-status-color: var(--astryx-input-success, var(--astryx-color-border-success, #198100));
+    border-color: var(--astryx-input-success, var(--astryx-color-border-success, #198100));
   }
 
   /* The icon before the input text. */
@@ -82,8 +82,14 @@
     box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--astryx-input-focus, #262626) 15%, transparent);
   }
 
-  .astryx-number-input:has(.astryx-number-input-field:disabled) {
+  .astryx-number-input[data-disabled='true'] {
     opacity: 0.5;
+  }
+
+  /* 禁用的输入框还留在 Tab 顺序里：键盘聚焦时仍画聚焦环，和整块字段一样被淡化。 */
+  .astryx-number-input[data-disabled='true']:has(.astryx-number-input-field:focus-visible) {
+    border-color: var(--astryx-input-focus, #262626);
+    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--astryx-input-focus, #262626) 15%, transparent);
   }
 
   .astryx-number-input-field {
@@ -105,7 +111,8 @@
     opacity: 1;
   }
 
-  .astryx-number-input-field:disabled {
+  .astryx-number-input-field:disabled,
+  .astryx-number-input-field[aria-disabled='true'] {
     cursor: default;
   }
 
@@ -114,6 +121,11 @@
   }
 
   @media (pointer: coarse) {
+    /* 点一下输入框就会升起键盘，聚焦外观淡入会在升起的每一帧重绘，所以粗指针下立刻显示。 */
+    .astryx-number-input {
+      transition-duration: 0s;
+    }
+
     @supports (-webkit-touch-callout: none) {
       .astryx-number-input-field {
         font-size: max(1rem, var(--astryx-text-body-size, 14px));
@@ -139,11 +151,21 @@
     background: var(--astryx-input-background, #fff);
     color: var(--astryx-color-text-secondary, #525252);
     cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
   }
 
   .astryx-number-input-chevron {
     display: block;
     flex: none;
+  }
+
+  /* 这两个小按钮是细指针的便利：触屏直接输入数字，键盘仍可用方向键步进。 */
+  @media (pointer: coarse) {
+    .astryx-number-input-buttons {
+      display: none;
+    }
   }
 
   .astryx-number-input-button.increment .astryx-number-input-chevron {
@@ -154,13 +176,13 @@
     border-block-start: var(--astryx-border-width, 1px) solid var(--astryx-color-border-emphasized, #d4d4d4);
   }
 
-  .astryx-number-input-button:disabled {
+  .astryx-number-input-button[aria-disabled='true'] {
     color: var(--astryx-color-text-secondary, #525252);
     cursor: default;
   }
 
   @media (hover: hover) {
-    .astryx-number-input-button:hover:not(:disabled) {
+    .astryx-number-input-button:hover:not([aria-disabled='true']) {
       background: var(--astryx-dropdown-menu-hover-background, light-dark(#0536590c, #ffffff0c));
     }
   }
@@ -168,6 +190,29 @@
   @media (prefers-reduced-motion: reduce) {
     .astryx-number-input {
       transition: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .astryx-number-input {
+      border-color: ButtonText;
+      color: CanvasText;
+      background: Canvas;
+      box-shadow: none;
+    }
+
+    .astryx-number-input:focus-within {
+      border-color: Highlight;
+    }
+
+    .astryx-number-input[data-disabled='true'] {
+      color: GrayText;
+      border-color: GrayText;
+      opacity: 1;
+    }
+
+    .astryx-number-input[data-disabled='true']:has(.astryx-number-input-field:focus-visible) {
+      border-color: Highlight;
     }
   }
 }

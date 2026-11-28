@@ -11,7 +11,7 @@ import { Badge } from '@astryx-vue/core/Badge'
 
 ## Usage
 
-Returns a class for animating an element on mount. Only animates when the element is dynamically inserted after the initial page paint; elements rendered on page load are not animated. Uses Astryx motion tokens (duration, easing) for consistent animation timing. Nothing animates during server rendering.
+Returns a class for animating an element on mount. Only animates when the element is dynamically inserted after the initial page paint; elements rendered on page load are not animated. Uses Astryx motion tokens (duration, easing) for consistent animation timing. Server-rendered elements hydrate without the entry class and never animate; elements mounted after hydration animate.
 
 ```ts
 import { useEntryAnimation } from '@astryx-vue/core'

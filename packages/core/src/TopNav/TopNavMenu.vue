@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import type { TopNavMenuEmits, TopNavMenuProps } from './types.js'
-import { inject, ref } from 'vue'
+import { inject, ref, useId } from 'vue'
 import Icon from '../Icon/Icon.vue'
+import { useCloseMobileDrawer } from '../MobileNav/closeOnActivate.js'
 import { mobileNavKey } from '../MobileNav/context.js'
 import NavDisclosure from '../NavMenu/NavDisclosure.vue'
 import NavMenu from '../NavMenu/NavMenu.vue'
 import NavMenuItem from '../NavMenu/NavMenuItem.vue'
+import { provideTopNavPick } from './pickCloses.js'
 import '../../styles/top-nav.css'
 
 defineOptions({ name: 'AstryxTopNavMenu' })
@@ -17,7 +19,10 @@ withDefaults(defineProps<TopNavMenuProps>(), {
 
 const emit = defineEmits<TopNavMenuEmits>()
 const inDrawer = inject(mobileNavKey, false)
+const closeMobileDrawer = useCloseMobileDrawer()
+provideTopNavPick()
 const expanded = ref(false)
+const drawerItemsId = `astryx-top-nav-menu-items-${useId()}`
 </script>
 
 <template>
@@ -25,24 +30,36 @@ const expanded = ref(false)
     <button
       type="button"
       class="astryx-top-nav-menu__drawer-trigger"
+      :aria-controls="drawerItemsId"
       :aria-expanded="expanded ? 'true' : 'false'"
       @click="expanded = !expanded"
     >
       <span>{{ label }}</span>
       <Icon icon="chevronDown" size="sm" :class="{ 'astryx-top-nav-menu__chevron--open': expanded }" />
     </button>
-    <div v-show="expanded" class="astryx-top-nav-menu__drawer-items">
-      <NavMenuItem
-        v-for="item in items"
-        :key="item.id ?? item.label"
-        :description="item.description"
-        :href="item.href"
-        :icon-class="item.iconClass"
-        :is-disabled="item.isDisabled"
-        :is-menu-item="false"
-        :label="item.label"
-      />
-      <slot />
+    <div
+      :id="drawerItemsId"
+      class="astryx-top-nav-drawer-section"
+      :class="{ 'astryx-top-nav-drawer-section--collapsed': !expanded }"
+      :aria-hidden="expanded ? undefined : 'true'"
+      :inert="expanded ? undefined : true"
+    >
+      <div class="astryx-top-nav-drawer-section__inner">
+        <div class="astryx-top-nav-menu__drawer-items">
+          <NavMenuItem
+            v-for="item in items"
+            :key="item.id ?? item.label"
+            :description="item.description"
+            :href="item.href"
+            :icon-class="item.iconClass"
+            :is-disabled="item.isDisabled"
+            :is-menu-item="false"
+            :label="item.label"
+            @click="closeMobileDrawer"
+          />
+          <slot />
+        </div>
+      </div>
     </div>
   </div>
   <NavDisclosure
@@ -75,6 +92,7 @@ const expanded = ref(false)
           :href="item.href"
           :icon-class="item.iconClass"
           :is-disabled="item.isDisabled"
+          :keep-open="item.hasCloseOnSelect === false"
           :label="item.label"
         />
         <slot />

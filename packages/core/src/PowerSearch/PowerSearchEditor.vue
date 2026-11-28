@@ -3,7 +3,9 @@ import type { EditableFilter } from './complete.js'
 import type { FilterValue, PartialFilter, PowerSearchConfig, PowerSearchFilter } from './types.js'
 import { computed, nextTick, onMounted, ref, useTemplateRef, watch } from 'vue'
 import Button from '../Button/Button.vue'
-import { useAstryxMessages } from '../locale/context.js'
+import { devPropError, isDevBuild } from '../composables/internal/devBuild.js'
+import { useComponentMessages } from '../locale/context.js'
+import { powerSearchMessages } from '../locale/messages/power-search.js'
 import Selector from '../Selector/Selector.vue'
 import { completePowerSearchFilter } from './complete.js'
 import { createPowerSearchLookup } from './config.js'
@@ -25,7 +27,10 @@ const props = defineProps<{
   onCancel: () => void
 }>()
 
-const messages = useAstryxMessages()
+if (isDevBuild() && props.config == null)
+  throw devPropError('PowerSearchEditor', 'config', 'is required: the same config as the PowerSearch it edits.')
+
+const messages = useComponentMessages({ powerSearch: powerSearchMessages })
 const lookup = computed(() => createPowerSearchLookup(props.config))
 const text = computed(() => messages.value.powerSearch)
 const root = useTemplateRef<HTMLElement>('root')

@@ -6,7 +6,7 @@ export interface SkeletonProps {
   height?: SkeletonSizeValue
   /** Index used to stagger animation timing by 100ms. @default 0 */
   index?: number
-  /** Border radius using the Astryx radius scale. @default 3 */
+  /** Border radius using the Astryx radius scale. 4 maps to the container radius, the same as 3. @default 3 */
   radius?: SkeletonRadius
   /** Width of the skeleton. Numbers are interpreted as pixels. @default '100%' */
   width?: SkeletonSizeValue

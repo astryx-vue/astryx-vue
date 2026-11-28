@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { AnyComment } from './utils.js'
-import { HStack, Text, ToggleButton, Tooltip, useAstryxLocale, useTranslator, VStack } from '@astryx-vue/core'
+import { commentsMessages, HStack, Text, ToggleButton, Tooltip, useAstryxLocale, useComponentMessages, VStack } from '@astryx-vue/core'
 import { reactionDescription } from './i18n.js'
 
 defineOptions({ name: 'AstryxCommentReactionSummary' })
@@ -15,16 +15,16 @@ const emit = defineEmits<{
   react: [comment: AnyComment, key: string]
 }>()
 
-const { t } = useTranslator()
+const messages = useComponentMessages({ comments: commentsMessages })
 const locale = useAstryxLocale()
 
 function people(reaction: NonNullable<AnyComment['reactions']>[number]): string {
   const names = (reaction.actors ?? []).map(actor => actor.name)
   const others = reaction.count - names.length
   if (names.length === 0)
-    return reactionDescription(t, reaction)
+    return reactionDescription(messages.value.comments, reaction)
   const items = others > 0
-    ? [...names, t('@astryx.comments.otherReactors', { count: others })]
+    ? [...names, messages.value.comments.otherReactors(others)]
     : names
   return new Intl.ListFormat(locale.value, { type: 'conjunction' }).format(items)
 }
@@ -54,7 +54,7 @@ function onToggle(reactionKey: string): void {
         </VStack>
       </template>
       <ToggleButton
-        :label="t('@astryx.comments.reactionCount', { reaction: reactionDescription(t, reaction), count: reaction.count })"
+        :label="messages.comments.reactionCount(reactionDescription(messages.comments, reaction), reaction.count)"
         size="sm"
         :is-pressed="reaction.reactedByViewer === true"
         :is-disabled="!canReact"

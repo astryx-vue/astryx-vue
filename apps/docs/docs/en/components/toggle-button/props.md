@@ -41,7 +41,7 @@ footer: false
         <td><code>isDisabled</code></td>
         <td><code>boolean</code></td>
         <td><code>false</code></td>
-        <td>Disables interaction. A disabled group disables every member, and an enabled group never re-enables a member that disabled itself. With a tooltip the button switches to <code>aria-disabled</code> so focus stays available to read the reason.</td>
+        <td>Disables interaction. A disabled group disables every member, and an enabled group never re-enables a member that disabled itself. A disabled button is marked <code>aria-disabled</code> instead of the native attribute, so it stays focusable.</td>
       </tr>
       <tr>
         <td><code>isLoading</code></td>
@@ -59,7 +59,7 @@ footer: false
         <td><code>pressedChangeAction</code></td>
         <td><code>(isPressed: boolean) =&gt; void | Promise&lt;void&gt;</code></td>
         <td>—</td>
-        <td>Action for an API- or navigation-backed toggle. It runs after <code>pressedChange</code> unless that handler prevents the click default. While it is pending the button previews the next state with a spinner and stays clickable, so another click reverses the unsettled toggle. Ignored for a group member with a value.</td>
+        <td>Action for an API- or navigation-backed toggle. It runs after <code>click</code> and <code>pressedChange</code> unless either handler prevents the click default. While it is pending the button previews the next state with a spinner and stays clickable, so another click reverses the unsettled toggle. Ignored for a group member with a value.</td>
       </tr>
       <tr>
         <td><code>tooltip</code></td>
@@ -146,7 +146,7 @@ footer: false
       <tr>
         <td><code>click</code></td>
         <td><code>(event: MouseEvent)</code></td>
-        <td>The originating click, forwarded after the toggle has been requested. It is not emitted while the button is disabled.</td>
+        <td>The originating click. On a standalone button it is emitted first, before <code>pressedChange</code> and <code>pressedChangeAction</code>; calling <code>event.preventDefault()</code> here cancels the toggle, so neither runs. On a group member with a value it is emitted after the group toggles. It is not emitted while the button is disabled.</td>
       </tr>
       <tr>
         <td><code>change</code></td>
@@ -204,7 +204,7 @@ ToggleButtonGroup takes its members through the default slot:
 | `Tab` | Moves through every available toggle; a group does not collapse its members into a single tab stop. |
 | `Enter` / `Space` | Toggles the focused button, exactly like a click. |
 
-The group does not take over the arrow keys: each member is its own tab stop, so `Tab` walks them one by one and the arrow keys do not move focus between members — unlike `ButtonGroup`. Disabled members are skipped, while a disabled member that carries a tooltip stays focusable so its reason can be read.
+The group does not take over the arrow keys: each member is its own tab stop, so `Tab` walks them one by one and the arrow keys do not move focus between members — unlike `ButtonGroup`. Disabled members stay tab stops too (marked `aria-disabled`); they just do not activate.
 
 ## Template ref
 

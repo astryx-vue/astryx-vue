@@ -4,6 +4,7 @@ import { renderToString } from '@vue/server-renderer'
 import { enableAutoUnmount, mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { createSSRApp, h, nextTick } from 'vue'
+import { astryxLocaleKey } from '../locale/context.js'
 import Slider from './Slider.vue'
 
 enableAutoUnmount(afterEach)
@@ -72,6 +73,19 @@ describe('slider', () => {
     expect(wrapper.text()).toContain('Upper')
   })
 
+  it('names range thumbs and the required hint in the active locale by default', () => {
+    const wrapper = mount(Slider, {
+      props: { label: 'Price', modelValue: [20, 80] as SliderValue, isRequired: true },
+      global: { provide: { [astryxLocaleKey as symbol]: 'zh-CN' } },
+    })
+    const [low, high] = wrapper.findAll('[role="slider"]')
+    const nameOf = (id: string | undefined) => wrapper.find(`[id="${id?.split(' ')[1]}"]`).text()
+    expect(nameOf(low!.attributes('aria-labelledby'))).toBe('最小值')
+    expect(nameOf(high!.attributes('aria-labelledby'))).toBe('最大值')
+    expect(wrapper.text()).toContain('必填')
+    expect(wrapper.text()).not.toContain('Minimum value')
+  })
+
   it('handles reversed, out-of-bounds, collapsed and non-finite inputs without NaN ARIA', async () => {
     const wrapper = renderSlider({ modelValue: [200, -20], min: 0, max: 100 })
     expect(wrapper.findAll('[role="slider"]').map(t => t.attributes('aria-valuenow'))).toEqual(['0', '100'])
@@ -96,7 +110,7 @@ describe('slider', () => {
     expect(wrapper.emitted('changeEnd')).toEqual([[80]])
   })
 
-  it('selects the nearest thumb for track presses and the actual thumb at overlap', async () => {
+  it('selects the nearest thumb for track presses and leaves a press on a thumb to its gesture', async () => {
     const wrapper = renderSlider({ modelValue: [20, 80] })
     geometry(wrapper)
     const track = wrapper.get('.astryx-slider-control')
@@ -104,10 +118,13 @@ describe('slider', () => {
     await track.trigger('pointerup', { pointerId: 1 })
     expect(wrapper.emitted('changeEnd')?.at(-1)).toEqual([[20, 90]])
     await wrapper.setProps({ modelValue: [50, 50] })
-    await wrapper.findAll('[role="slider"]')[1]!.trigger('pointerdown', { button: 0, pointerId: 2, clientX: 110 })
-    await track.trigger('pointermove', { pointerId: 2, clientX: 150 })
-    await track.trigger('pointercancel', { pointerId: 2 })
-    expect(wrapper.emitted('changeEnd')?.at(-1)).toEqual([[50, 70]])
+    const high = wrapper.findAll('[role="slider"]')[1]!
+    await high.trigger('pointerdown', { button: 0, pointerId: 2, pointerType: 'mouse', clientX: 110 })
+    await track.trigger('pointermove', { pointerId: 2, pointerType: 'mouse', buttons: 1, clientX: 150 })
+    await track.trigger('pointerup', { pointerId: 2 })
+    // The press focuses the thumb and jumps nowhere: its pan moves it by the travel past the 10 px threshold.
+    expect(document.activeElement).toBe(high.element)
+    expect(wrapper.emitted('changeEnd')?.at(-1)).toEqual([[50, 64]])
   })
 
   it('uses exact mark values and filters marks outside the interval', async () => {

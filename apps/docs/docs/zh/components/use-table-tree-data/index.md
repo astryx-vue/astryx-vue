@@ -11,7 +11,7 @@ import { useTableTreeDataTree } from '../../../../components/demos/use-table-tre
 
 ## 使用方法
 
-给表格用的无渲染树插件。树列（默认是第一列）里会按层级缩进，并画出展开/收起的箭头；表体行上会带 `aria-level` 和 `aria-expanded`，把层级关系说出来。它和别的表格插件可以叠着用：约定顺序是树在前、选择在后，这样复选框列就落在缩进过的树列左边。配置可以直接用 `useTableTreeState` 帮你拼好的那份，也可以在服务端驱动或者数据已经拍平的场景自己拼。一行都不可展开时（比如拍平的普通数据），它的每个变换都是原样返回，表格看起来和没装这个插件一样。已知限制：树列里的内容会自动换行，所以 `textOverflow="truncate"` 的提示在树列里不生效。
+给表格用的无渲染树插件。树列（默认是第一列）里会按层级缩进，并画出展开/收起的箭头；无障碍上按披露模式（disclosure）标注：每个父行的展开按钮带 `aria-expanded`，展开时再用 `aria-controls` 指向它的直接子行。表体行不带 `aria-level`、`aria-expanded`（ARIA 只在 treegrid 里允许它们），缩进只是视觉上的。它和别的表格插件可以叠着用：约定顺序是树在前、选择在后，这样复选框列就落在缩进过的树列左边。配置可以直接用 `useTableTreeState` 帮你拼好的那份，也可以在服务端驱动或者数据已经拍平的场景自己拼。一行都不可展开时（比如拍平的普通数据），它的每个变换都是原样返回，表格看起来和没装这个插件一样。已知限制：树列里的内容会自动换行，所以 `textOverflow="truncate"` 的提示在树列里不生效。
 
 ```ts
 import { useTableTreeData } from '@astryx-vue/core/Table'

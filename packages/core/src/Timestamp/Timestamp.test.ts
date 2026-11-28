@@ -164,7 +164,7 @@ describe('timestamp during hydration', () => {
       // hydration 那一趟仍未读时钟，文本和服务端一致。
       expect(host.textContent).toBe(placeholderText(HYDRATION_SECONDS))
       await nextTick()
-      expect(host.textContent).toBe('2 hours ago')
+      expect(host.querySelector('time')?.textContent).toBe('2 hours ago')
       expect(warnings).not.toHaveBeenCalled()
       expect(errors).not.toHaveBeenCalled()
       app.unmount()
@@ -191,7 +191,7 @@ describe('timestamp during hydration', () => {
       const app = createSSRApp({ render: () => h(Timestamp, { value: HYDRATION_SECONDS, format: 'relative' }) })
       app.mount(host)
       await nextTick()
-      expect(host.textContent).toBe('2 hours ago')
+      expect(host.querySelector('time')?.textContent).toBe('2 hours ago')
       expect(warnings).not.toHaveBeenCalled()
       app.unmount()
     }

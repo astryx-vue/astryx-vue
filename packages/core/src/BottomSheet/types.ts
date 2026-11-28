@@ -60,6 +60,9 @@ export interface BottomSheetProps {
   /**
    * 放进 `BottomSheetSwitcher` 时的名字。切换器靠它决定哪一张是当前页。
    * 单独使用时可以不传。
+   * @deprecated `BottomSheetSwitcher` is deprecated; give each step its own
+   * standalone sheet with `isOpen` instead. Keeps working until a future
+   * minor release removes the switcher.
    */
   sheetId?: string
   /**
@@ -85,7 +88,9 @@ export interface BottomSheetProps {
    * theme decides, falling back to the `--spacing-4` step (16px) on every
    * logical edge. Pass `0` for a flush content box. The content box publishes
    * that inset: a lone `Section` escapes it, and bleed children such as
-   * `Table` and `Divider` line up with it.
+   * `Table` and `Divider` line up with it. Whatever the padding, the
+   * block-start inset is never less than the grab handle's height
+   * (`--spacing-6`), so resting content starts below the handle.
    * @default undefined
    */
   padding?: BottomSheetPadding

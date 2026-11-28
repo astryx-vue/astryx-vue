@@ -116,3 +116,5 @@ const carbon = defineTheme({
 ```
 
 Read the current id with `useSemanticIcon` from `@astryx-vue/core/Icon`. The name-to-id table is on the Icon props page.
+
+An entry can also be a function of the size the icon renders at and a variant the theme lists, and `componentIcons` picks which shared name a component's own icon uses, such as CodeBlock's copy button. Both are described on the Icon props page.

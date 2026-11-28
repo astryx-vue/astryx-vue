@@ -24,9 +24,24 @@ export function firstParagraph(prose: string): string {
   return ''
 }
 
+/**
+ * The first sentence of a text. A period after "e.g" or "i.e", or inside an
+ * open quote (a quoted date such as "2. Nov. 2026"), does not end the sentence.
+ */
 export function firstSentence(text: string): string {
-  const match = text.match(/^[\s\S]*?[.。](?=\s|$)/)
-  return (match ? match[0] : text).trim()
+  const ends = /[.。](?=\s|$)/g
+  for (let match = ends.exec(text); match; match = ends.exec(text)) {
+    const before = text.slice(0, match.index)
+    if (!/\b(?:e\.g|i\.e)$/i.test(before) && !insideQuote(before))
+      return text.slice(0, match.index + 1).trim()
+  }
+  return text.trim()
+}
+
+/** Whether a text ends inside a quote it opened: an odd count of straight double quotes, or more opening curly quotes than closing ones. */
+function insideQuote(text: string): boolean {
+  const count = (pattern: RegExp): number => (text.match(pattern) ?? []).length
+  return count(/"/g) % 2 === 1 || count(/\u201C/g) > count(/\u201D/g)
 }
 
 /**

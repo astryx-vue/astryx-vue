@@ -19,8 +19,8 @@ export interface HoverCardProps {
   hideDelay?: number
   /**
    * When focus opens the card:
-   * - `auto`: only when the trigger is itself focusable
-   * - `always`: attach focus listeners regardless
+   * - `auto`: focus on the trigger itself, or within a trigger that is focusable when focus arrives
+   * - `always`: focus on the trigger or anything inside it
    * - `never`: never open on focus, for composite widgets
    *
    * @default 'auto'

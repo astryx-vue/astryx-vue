@@ -450,6 +450,11 @@ html.dark .component-card__frame {
   transform-origin: 0 0;
 }
 
+/* cardFit 量出示例实际画出的范围后，把它平移到卡片正中。 */
+.component-card__preview > * {
+  translate: var(--component-card-shift-x, 0) var(--component-card-shift-y, 0);
+}
+
 /* 预览子元素默认 min-width: auto，内容一宽就会撑出格子。允许收缩后，分页才能按容器宽度收起。 */
 .component-card__preview > *,
 .component-example__preview > * {
@@ -491,8 +496,14 @@ html.dark .component-card__frame {
   transform: translateY(-2px);
 }
 
-.component-card__name {
+.component-card__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin-top: 10px;
+}
+
+.component-card__name {
   color: inherit;
   font-size: 14px;
   text-decoration: none;
@@ -552,6 +563,13 @@ html.dark .component-card__frame {
   padding-bottom: 16px;
 }
 
+.component-detail__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
 .component-detail__header h1 {
   margin: 0;
   /* 原版标题 42px / 600 / 行高 52px，桌面和 390px 屏都一样。 */
@@ -567,6 +585,11 @@ html.dark .component-card__frame {
   color: var(--astryx-text-muted);
   font-size: 12px;
   line-height: 20px;
+}
+
+/* 废弃提示在标题下、tab 条上面，和 tab 条隔开。 */
+.docs-deprecation-notice {
+  margin-bottom: 16px;
 }
 
 .component-detail__tabs {
@@ -639,6 +662,11 @@ html.dark .component-detail__stage {
   background: #1b1b1b;
 }
 
+/* stageCenter 量出示例实际画出的范围后，把它平移到画布正中。 */
+.component-detail__stage .astryx-demo {
+  translate: var(--component-stage-shift-x, 0) var(--component-stage-shift-y, 0);
+}
+
 /* StageFit 的两层外壳是 display: contents，demo 根节点仍要受这条限制。 */
 .component-detail__stage > *,
 .component-detail__stage > .stage-fit > .stage-fit__inner > * {
@@ -673,7 +701,7 @@ html.dark .component-detail__stage {
 }
 
 /*
- * 窄屏照原版 ShowcasePreview 的小屏分支：画布至少 160px 高，随内容长高，不缩放；
+ * 窄屏参照原版 ShowcasePreview 的小屏分支：画布至少 160px 高，随内容长高，不缩放；
  * 左右两条 16px 的空隙在内容放不下时先让出位置，内容比画布还宽就横向滚动，
  * 放得下时居中（safe center 保证溢出时从左边开始，不会把开头裁掉）。
  */
@@ -684,7 +712,8 @@ html.dark .component-detail__stage {
     justify-content: safe center;
     aspect-ratio: auto;
     min-height: 160px;
-    padding: 0;
+    /* 上下留白，内容不贴着画布边。 */
+    padding: 24px 0;
     overflow: auto;
   }
 
@@ -775,9 +804,39 @@ html.dark .component-detail__stage {
   line-height: 1.7;
 }
 
+/* 组件页不在 .nagi-doc 里，列表拿不到文档正文的样式，会被全局重置去掉圆点和缩进。 */
+.component-detail__body > :is(ul, ol) {
+  margin: 10px 0;
+  padding-inline-start: 1.5em;
+  color: var(--astryx-text-muted);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.component-detail__body > ul {
+  list-style: disc;
+}
+
+.component-detail__body > ol {
+  list-style: decimal;
+}
+
+.component-detail__body > :is(ul, ol) :is(ul, ol) {
+  margin: 0;
+  padding-inline-start: 1.5em;
+}
+
+.component-detail__body > ul ul {
+  list-style: circle;
+}
+
+/*
+ * 组件页不在 .nagi-doc 里，行内代码没有底色，所以也不留内外边距：没有底色时 7px 内边距
+ * 看起来就是多打了空格，「打开 `hasSnap`。」会在句号前空出一截。源文里中英文之间本来就写了空格。
+ */
 .component-detail__body :where(:not(pre) > code) {
-  margin-inline: 2px;
-  padding-inline: 7px;
+  margin-inline: 0;
+  padding-inline: 0;
 }
 
 /* CodeBlock 的 code 包在 pre 里的 div 中，不能套用文档行内代码的绿色。 */
@@ -838,12 +897,16 @@ html.dark .component-example {
   letter-spacing: normal;
 }
 
+/*
+ * 上下留 16px：矮示例在 200px 里居中，看不出差别；比格子高的示例（多行按钮状态、表格、表单）
+ * 原来只剩 5px，内容贴着下面的标签栏。左右保持 5px，宽示例不受影响。
+ */
 .component-example__preview {
   display: grid;
   box-sizing: border-box;
   min-height: 200px;
   margin: -5px -5px 0;
-  padding: 5px;
+  padding: 16px 5px;
   place-items: center;
 }
 
@@ -1378,7 +1441,7 @@ html.dark .component-example {
 }
 
 .component-api-table table,
-:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table) {
+:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table, .component-detail__body > :where(.nagi-table) > table) {
   display: block;
   width: 100%;
   margin: 18px 0;
@@ -1408,14 +1471,14 @@ html.dark .component-example {
  * 所以只允许在空格处换行，单词内部不断开；属性名和默认值没有空格，照样单行。
  */
 .component-api-table code,
-:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table) code {
+:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table, .component-detail__body > :where(.nagi-table) > table) code {
   white-space: normal;
   overflow-wrap: normal;
   word-break: normal;
 }
 
 .component-api-table :is(th, td),
-:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table) :is(th, td) {
+:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table, .component-detail__body > :where(.nagi-table) > table) :is(th, td) {
   box-sizing: border-box;
   padding-block: var(--astryx-spacing-2, 8px);
   padding-inline: var(--astryx-spacing-3, 12px);
@@ -1426,7 +1489,7 @@ html.dark .component-example {
 }
 
 .component-api-table th,
-:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table) th {
+:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table, .component-detail__body > :where(.nagi-table) > table) th {
   border-bottom: var(--astryx-border-width, 1px) solid var(--astryx-color-border, var(--astryx-line));
   color: var(--astryx-color-text-secondary, var(--astryx-text-muted));
   font-size: var(--astryx-text-label-size, 1rem);
@@ -1435,7 +1498,7 @@ html.dark .component-example {
 }
 
 .component-api-table td,
-:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table) td {
+:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table, .component-detail__body > :where(.nagi-table) > table) td {
   color: var(--astryx-color-text-primary, var(--astryx-text));
   font-size: var(--astryx-text-body-size, 0.875rem);
   overflow-wrap: break-word;
@@ -1443,13 +1506,13 @@ html.dark .component-example {
 }
 
 .component-api-table tbody tr:not(:last-child) > td,
-:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table) tbody tr:not(:last-child) > td {
+:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table, .component-detail__body > :where(.nagi-table) > table) tbody tr:not(:last-child) > td {
   border-bottom: var(--astryx-border-width, 1px) solid var(--astryx-color-border, var(--astryx-line));
 }
 
 .component-api-table tbody tr,
-:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table) tbody tr,
-:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table) tbody tr:nth-child(2n) {
+:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table, .component-detail__body > :where(.nagi-table) > table) tbody tr,
+:is(.nagi-doc > table, .nagi-doc > div table, .component-detail__body > table, .component-detail__body > :where(.nagi-table) > table) tbody tr:nth-child(2n) {
   border: 0;
   background: transparent;
 }
@@ -1459,37 +1522,50 @@ html.dark .component-example {
  * 表头 14px/600 次要色，单元格内边距 12px 16px，正文 16px/24px。
  */
 .component-detail__body .component-api-table,
-.component-detail__body > table {
+.component-detail__body > table,
+.component-detail__body > .nagi-table > table {
   box-sizing: border-box;
   border: 1px solid light-dark(rgb(5 54 89 / 9.8%), rgb(242 244 246 / 9.8%));
   border-radius: 16px;
   background: light-dark(#fff, #1f1f22);
 }
 
-.component-detail__body > table {
-  overflow: auto;
+/*
+ * 卡片里的表格要铺满卡片。display: block 时行只有内容那么宽，内容短的表（建议、无障碍）
+ * 分隔线会在卡片中间断掉。单元格本来就会换行，用不着横向滚动；圆角要用 separate 才生效。
+ * 写成 div.… 是为了和上面 :is(.nagi-doc > div table, …) 的优先级持平，靠后写的这条才能生效。
+ */
+div.component-detail__body > table,
+div.component-detail__body > .nagi-table > table {
+  display: table;
+  border-collapse: separate;
+  overflow: visible;
 }
 
 .component-detail__body .component-api-table :is(th, td),
-.component-detail__body > table :is(th, td) {
+.component-detail__body > table :is(th, td),
+.component-detail__body > .nagi-table > table :is(th, td) {
   padding: 12px 16px;
 }
 
 .component-detail__body .component-api-table th,
-.component-detail__body > table th {
+.component-detail__body > table th,
+.component-detail__body > .nagi-table > table th {
   border-bottom-color: light-dark(rgb(5 54 89 / 9.8%), rgb(242 244 246 / 9.8%));
   font-size: 14px;
   line-height: 21px;
 }
 
 .component-detail__body .component-api-table td,
-.component-detail__body > table td {
+.component-detail__body > table td,
+.component-detail__body > .nagi-table > table td {
   font-size: 16px;
   line-height: 24px;
 }
 
 .component-detail__body .component-api-table tbody tr:not(:last-child) > td,
-.component-detail__body > table tbody tr:not(:last-child) > td {
+.component-detail__body > table tbody tr:not(:last-child) > td,
+.component-detail__body > .nagi-table > table tbody tr:not(:last-child) > td {
   border-bottom-color: light-dark(rgb(5 54 89 / 9.8%), rgb(242 244 246 / 9.8%));
 }
 
@@ -1979,6 +2055,39 @@ html.dark .component-example {
 }
 
 /*
+ * 文档正文排版（表格边框、段落间距、列表缩进、行内代码底色……）写在
+ * `kawa.theme` 层，排在 astryx 组件层之前：组件自己写了的属性没问题，没写的
+ * 属性却会被正文样式填上，表格多出满格边框、display 变成 block 就是这样来的。
+ * demo 外壳里是组件真实的样子，不该吃正文排版，所以在 `kawa.theme` 层里把它
+ * 整体退回到下一层（kawa.base 里的 astryx reset）。revert-layer 只能退掉它
+ * 自己所在的层，因此这条必须写进 kawa.theme；`:not(#_)` 抬高优先级，保证压过
+ * 正文里任何选择器。
+ */
+@layer kawa.theme {
+  .nagi-doc .astryx-demo *:not(#_) {
+    all: revert-layer;
+  }
+}
+
+/*
+ * 预览区把 demo 外壳居中，但外壳常被 className 定了宽度（比如 640px），
+ * 外壳里比它窄的内容会贴左。块级内容靠左右自动外边距居中，行内内容（按钮
+ * 这类 inline-flex）靠外壳的 text-align 居中；子元素再把 text-align 改回
+ * start，组件里的文字不跟着居中。宽度自动的内容照样撑满。写在 kawa.base
+ * 层：组件和 demo 自己写了外边距、对齐时以它们为准。
+ */
+@layer kawa.base {
+  .component-example__preview > .astryx-demo {
+    text-align: center;
+  }
+
+  .component-example__preview > .astryx-demo > * {
+    margin-inline: auto;
+    text-align: start;
+  }
+}
+
+/*
  * VitePress styles every bare list inside `.nagi-doc`: an `ol` picks up its
  * padding, its top margin, and decimal markers, which both pushed the trail off
  * center and added a marker column. Our components own those elements and reset
@@ -2415,13 +2524,12 @@ html.dark .component-example {
   max-width: 100% !important;
 }
 
-/* 代码块有 13 行、最长一行 50 多个字符，按卡片默认比例放不下。单独再缩小一点，
-   宽度仍取整个画布，这样每行都完整、上下也不被截。 */
+/* 代码块这类宽示例按自身内容宽度居中，放不下时由 cardFit 整体缩小。 */
 .component-card__preview > .overview-wide {
   box-sizing: border-box;
-  width: 100% !important;
-  max-width: 100% !important;
-  zoom: 0.72;
+  justify-self: center;
+  width: fit-content !important;
+  max-width: none !important;
 }
 
 /* 头像状态点的示例用 128px 大头像，放进卡片要再缩小，和其他卡片大小接近。 */
@@ -2509,11 +2617,13 @@ html.dark .component-example {
   height: auto;
 }
 
+/* 宽度贴合菜单本身，不沿用 .nav-overview 的 20rem，否则菜单偏在盒子左边。 */
 .nav-overview--menu {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 8px;
+  width: fit-content;
 }
 
 .nav-overview--menu .astryx-nav-disclosure__panel,
@@ -2814,11 +2924,36 @@ html.dark .component-example {
   width: 100%;
 }
 
+/*
+ * lab 示例外壳铺满预览区的整行，内容在里面水平居中：窄的示例（一个按钮、
+ * 一张卡片）落在正中，要铺满的示例自己声明 width: 100%。safe 保证内容比外壳宽
+ * 时从左边开始，可以横向滚动看全，而不是两头都被裁掉。
+ *
+ * 外壳是滚动容器，会裁掉贴边组件向外画的焦点环和阴影。内边距给它们留出 4px
+ * （2px 描边 + 2px 偏移），等量负外边距抵消掉，组件在页面上的位置不变。
+ */
 .astryx-demo.lab-demo {
-  display: block;
-  width: 100%;
+  --_lab-demo-bleed: 4px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: safe center;
+  box-sizing: border-box;
+  width: calc(100% + 2 * var(--_lab-demo-bleed));
+  max-width: none;
+  margin: calc(-1 * var(--_lab-demo-bleed));
+  padding: var(--_lab-demo-bleed);
   overflow-x: auto;
 }
+
+/* 总览卡片里的 lab 示例不滚动，放不下由 cardFit 整体缩小。 */
+.component-card__preview > .astryx-demo.lab-demo {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+}
+
 
 .lab-demo-row {
   display: flex;
@@ -2901,9 +3036,12 @@ html.dark {
   color: var(--docs-c-brand-1);
 }
 
+/* 宽度跟着内容走：快捷键在苹果设备上是「⌘ K」，其他平台是更宽的「Ctrl K」。 */
 .kawa-search-button {
-  width: 131px;
+  width: auto;
+  min-width: 131px;
   height: 38px;
+  white-space: nowrap;
   margin-left: 32px;
   padding: 8px 12px;
   gap: 8px;
@@ -2911,7 +3049,8 @@ html.dark {
   background: var(--docs-c-bg-alt);
 }
 
-.nagi-language-menu {
+/* 顶栏里的语言下拉；侧边菜单里的语言列表（--list）保持主题自带的排版。 */
+.nagi-language-menu:not(.nagi-language-menu--list) {
   display: flex;
   align-items: center;
   width: 75px;
@@ -3000,6 +3139,7 @@ html.dark {
 
   .kawa-search-button {
     width: 36px;
+    min-width: 0;
     height: 36px;
     margin-left: 0;
     padding: 0;

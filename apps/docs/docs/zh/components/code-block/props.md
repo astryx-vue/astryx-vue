@@ -12,12 +12,13 @@ footer: false
 <div class="component-api-table" role="region" aria-label="CodeBlock 属性" tabindex="0">
 <table><thead><tr><th>属性</th><th>类型</th><th>默认值</th><th>说明</th></tr></thead><tbody>
 <tr><td><code>code</code></td><td><code>string</code></td><td>—</td><td>只读代码。复制按钮写下的就是这个字符串。</td></tr>
-<tr><td><code>language</code></td><td><code>string</code></td><td><code>'plaintext'</code></td><td>分词用的语言。<code>plaintext</code> 不显示语言名。</td></tr>
+<tr><td><code>language</code></td><td><code>string | CodeLanguage</code></td><td><code>'plaintext'</code></td><td>分词用的语言：内置标识符（如 <code>'ts'</code>），或者从 <code>@astryx-vue/core/Code/languages/&lt;name&gt;</code> 引入、用 <code>createCodeLanguage</code> 做出来的语言值。语言值显示它的 <code>name</code>，<code>data-language</code> 取它的第一个标识符。<code>plaintext</code> 不显示语言标签。</td></tr>
 <tr><td><code>syntaxTheme</code></td><td><code>SyntaxThemeDefinition</code></td><td>—</td><td>这一块的语法颜色。相当于在外面套一层 <code>SyntaxTheme</code>。</td></tr>
 <tr><td><code>title</code></td><td><code>string</code></td><td>—</td><td>顶栏里的文件名或标签。</td></tr>
 <tr><td><code>hasLanguageLabel</code></td><td><code>boolean</code></td><td><code>true</code></td><td>顶栏是否显示语言名。</td></tr>
 <tr><td><code>hasLineNumbers</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否画行号槽。</td></tr>
-<tr><td><code>highlightLines</code></td><td><code>number[]</code></td><td>—</td><td>要强调的行，从 1 开始。和差异行叠在一起时，高亮盖住差异底色。</td></tr>
+<tr><td><code>startLineNumber</code></td><td><code>number</code></td><td><code>1</code></td><td>第一行的行号，让摘录显示文件里的真实行号。行号槽显示 <code>startLineNumber + 序号</code>。小于 1 按 1 算。</td></tr>
+<tr><td><code>highlightLines</code></td><td><code>number[]</code></td><td>—</td><td>要强调的行，行号和行号槽一致（见 <code>startLineNumber</code>），超出范围的不会高亮任何行。和差异行叠在一起时，高亮盖住差异底色。</td></tr>
 <tr><td><code>isDiff</code></td><td><code>boolean</code></td><td><code>false</code></td><td>按 unified diff 给整行上色，符号后面的文本仍按 <code>language</code> 高亮。复制内容不变。</td></tr>
 <tr><td><code>hasCopyButton</code></td><td><code>boolean</code></td><td><code>true</code></td><td>是否显示复制按钮。</td></tr>
 <tr><td><code>isWrapped</code></td><td><code>boolean</code></td><td><code>false</code></td><td>长行是换行，还是横向滚动。</td></tr>
@@ -27,17 +28,40 @@ footer: false
 <tr><td><code>size</code></td><td><code>'sm' | 'md'</code></td><td><code>'md'</code></td><td>字号。</td></tr>
 <tr><td><code>width</code></td><td><code>string</code></td><td><code>'fit-content'</code></td><td>CSS 宽度。<code>100%</code> 铺满父级。</td></tr>
 <tr><td><code>container</code></td><td><code>'card' | 'section'</code></td><td><code>'card'</code></td><td><code>section</code> 去掉边框、圆角和背景。</td></tr>
-<tr><td><code>tokenizer</code></td><td><code>(code, language) =&gt; SyntaxToken[]</code></td><td>—</td><td>自定义分词器。token 用绝对偏移，不替换被复制的文本。</td></tr>
+<tr><td><code>tokenizer</code></td><td><code>(code, language) =&gt; SyntaxToken[]</code></td><td>—</td><td>已弃用：改给 <code>language</code> 传一个 <code>createCodeLanguage</code> 做的值。仍然照原样工作。自定义分词器，token 用绝对偏移，不替换被复制的文本。</td></tr>
 <tr><td><code>highlightMode</code></td><td><code>'auto' | 'ranges' | 'spans'</code></td><td><code>'auto'</code></td><td>token 的绘制方式。</td></tr>
 <tr><td><code>copyLabel</code></td><td><code>string</code></td><td><code>'Copy code'</code></td><td>复制前，复制控件的无障碍名称。</td></tr>
 <tr><td><code>copiedLabel</code></td><td><code>string</code></td><td><code>'Copied'</code></td><td>复制成功后的名称和播报。</td></tr>
+<tr><td><code>copyFailedLabel</code></td><td><code>string</code></td><td><code>'Failed to copy value to clipboard.'</code></td><td>剪贴板拒绝写入后 2 秒内的名称、提示和播报，按钮同时换成叉。主题映射了 <code>code-block-copy</code> 图标槽时，失败期间仍显示主题自己的图标。</td></tr>
 <tr><td><code>codeLabel</code></td><td><code>string</code></td><td><code>'Code'</code></td><td>代码视口的无障碍名称。</td></tr>
 </tbody></table>
 </div>
 
+## 语言
+
+内置标识符覆盖 TypeScript 和 JavaScript、JSON、HTML、CSS、Python、Bash、PHP、Hack、YAML、Markdown，以及新增的 C（`c`、`h`）、C++（`cpp`、`c++`、`cc`、`cxx`、`hpp`、`hh`）、SQL（`sql`）、Rust（`rust`、`rs`）、Kotlin（`kotlin`、`kt`、`kts`）、Swift（`swift`）和 Go（`go`、`golang`）。
+
+不常用的语言是单独引入、再传给 `language` 的模块，没用到的页面不会带上它们：`dockerfile`、`graphql`、`java`、`lua`、`objective-c`、`powershell`、`ruby`、`thrift`、`toml`，路径是 `@astryx-vue/core/Code/languages/<name>`。语言字符串不会去找模块，要传值本身。`createCodeLanguage({ name, identifiers, fileExtensions, fileNames, tokenize })` 用一个分词函数做出你自己的语言，它在任意长度下都同步上色，`Markdown` 和 `RichTextEditor` 的 `codeLanguages` 也接受它。
+
+```vue
+<script setup lang="ts">
+import { CodeBlock } from '@astryx-vue/core/Code'
+import { graphql } from '@astryx-vue/core/Code/languages/graphql'
+</script>
+
+<template>
+  <CodeBlock :language="graphql" code="query { viewer { name } }" />
+</template>
+```
+
+## CodeBlock 插槽
+
+- `endContent`：放在复制按钮前面的自定义控件。有顶栏时在顶栏里；没有顶栏时在代码右边自己的一列里，与第一行居中对齐，不会盖住代码。它不会让代码块长出顶栏，也在折叠控件之外，用它不会折叠代码块。
+
 ## CodeBlock 事件
 
 - `copy`：代码字符串写入剪贴板之后发出。
+- `copyError`：每次复制失败发出一次，参数是拒绝的原因；原因本身不会显示出来。
 
 ## SyntaxTheme
 

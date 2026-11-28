@@ -7,6 +7,9 @@
  * 空格和撇号没有语言拿来当小数点，出现一次就够，en-US 的 `1 234` 是 1234。
  */
 
+import { INVISIBLE_CHARS, toAsciiDigits } from '../utils/unicodeDigits.js'
+import { unicodeRegExp } from '../utils/unicodeRegExp.js'
+
 interface LocaleNumberSymbols {
   group: string
   decimal: string
@@ -48,9 +51,7 @@ function getLocaleNumberSymbols(locale: string | undefined): LocaleNumberSymbols
   return symbols
 }
 
-const DECIMAL_DIGIT = /\p{Nd}/u
-const CURRENCY = /\p{Sc}/u
-const INVISIBLES = /[\u200B-\u200D\u200E\u200F\u061C\u2066-\u2069\uFEFF]/g
+const CURRENCY = unicodeRegExp('\\p{Sc}')
 // 连字符放最后，否则在字符类开头会被当成范围。
 const MINUS_SIGNS = '\u2212\u2012\u2013-'
 
@@ -63,33 +64,6 @@ const SEPARATOR_CHARS = ',.\' \u2019\u066B\u066C'
 const NUMBER_BODY = new RegExp(`^[0-9${SEPARATOR_CHARS}]+$`)
 /** 没有分组、最多一个句点，也就是 `Number()` 能直接读的样子。 */
 const MACHINE_NUMBER = /^(?:\d+(?:\.\d*)?|\.\d+)$/
-
-/** 十进制数字的数值。每种数字从 0 起连续排，往回找到 0 即可。 */
-function digitValue(char: string): number | null {
-  const codePoint = char.codePointAt(0)
-  if (codePoint == null)
-    return null
-  for (let zero = codePoint; codePoint - zero < 10; zero--) {
-    if (!DECIMAL_DIGIT.test(String.fromCodePoint(zero - 1)))
-      return codePoint - zero
-  }
-  return null
-}
-
-function toAsciiDigits(text: string): string | null {
-  let out = ''
-  for (const char of text) {
-    if (!DECIMAL_DIGIT.test(char)) {
-      out += char
-      continue
-    }
-    const value = digitValue(char)
-    if (value == null)
-      return null
-    out += String(value)
-  }
-  return out
-}
 
 /**
  * 按一种读法把数字和分隔符收成机器数字。不成组就返回 null。
@@ -193,7 +167,7 @@ function stripCurrency(text: string): string {
  * 读不出就返回 null。`123-456-789` 不是数字。
  */
 export function parseLocaleNumber(text: string, locale?: string): number | null {
-  const normalized = toAsciiDigits(text.normalize('NFKC').replace(INVISIBLES, ''))
+  const normalized = toAsciiDigits(text.normalize('NFKC').replace(INVISIBLE_CHARS, ''))
   if (normalized == null)
     return null
 

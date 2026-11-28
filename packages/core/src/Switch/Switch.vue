@@ -4,14 +4,18 @@ import type { SwitchEmits, SwitchProps, SwitchSlots } from './types.js'
 import { computed, nextTick, onBeforeUnmount, onMounted, onUpdated, useAttrs, useId, useTemplateRef, watch } from 'vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
+import { useTouchHitArea } from '../composables/internal/useTouchHitArea.js'
 import { useAnnounce } from '../composables/useAnnounce.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import FieldLabel from '../Field/FieldLabel.vue'
 import FieldStatus from '../Field/FieldStatus.vue'
-import { useAriaRequired } from '../FormLayout/context.js'
-import { useAstryxMessages } from '../locale/index.js'
+import { ariaRequired as resolveAriaRequired } from '../FormLayout/context.js'
+import { useComponentMessages } from '../locale/context.js'
+import { switchMessages } from '../locale/messages/switch.js'
+import { withholdCallerHandlers } from '../utils/disabledInteraction.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { useSwitchAction } from './useSwitchAction.js'
+import { useSwitchTouch } from './useSwitchTouch.js'
 import '../../styles/switch.css'
 
 defineOptions({ name: 'AstryxSwitch', inheritAttrs: false })
@@ -23,13 +27,20 @@ const props = withDefaults(defineProps<Omit<SwitchProps, 'modelValue'>>(), {
 })
 const emit = defineEmits<SwitchEmits>()
 defineSlots<SwitchSlots>()
-const ariaRequired = useAriaRequired(props)
-const messages = useAstryxMessages()
+// 各尺寸轨道的盒子和拇指在两种状态下的直径（px），给触屏呈现的拇指几何用；与 switch.css 的默认值一致。
+const TRACK_SIZE = { sm: [32, 20], md: [40, 24], lg: [52, 28] } as const
+const THUMB_SIZE = { sm: { off: 14, on: 16 }, md: { off: 16, on: 20 }, lg: { off: 20, on: 24 } } as const
+// 没勾的复选框、关着的开关本身就是一个答案：表单的默认必填不让它们变成必填，只有自己的 isRequired 才算。
+const ariaRequired = computed(() => resolveAriaRequired(props.isRequired, props.isOptional, undefined))
+const messages = useComponentMessages({ switch: switchMessages })
 const announce = useAnnounce()
 const press = usePressFeedback({ hasOverlay: false })
 const model = defineModel<boolean>({ required: true })
 const attrs = useAttrs()
 const input = useTemplateRef<HTMLInputElement>('input')
+const control = useTemplateRef<HTMLElement>('control')
+const track = useTemplateRef<HTMLElement>('track')
+const thumb = useTemplateRef<HTMLElement>('thumb')
 const generatedId = `astryx-switch-${useId()}`
 const inputId = computed(() => props.id ?? generatedId)
 const descriptionId = computed(() => props.description ? `${inputId.value}-description` : undefined)
@@ -45,6 +56,14 @@ const action = useSwitchAction({
 })
 const busy = computed(() => !!props.isLoading || action.isPending.value)
 const blocked = computed(() => props.isDisabled || props.isReadOnly || busy.value)
+useTouchHitArea(control, () => !blocked.value)
+useSwitchTouch({ surface: control, input, thumb, track }, {
+  isOn: () => action.value.value,
+  isInteractive: () => !blocked.value,
+  isDisabled: () => !!props.isDisabled,
+  trackSize: () => TRACK_SIZE[props.size],
+  thumbSizes: () => THUMB_SIZE[props.size],
+})
 const loadingText = computed(() => props.loadingLabel || messages.value.switch.loading)
 watch(busy, (isBusy) => {
   if (isBusy)
@@ -62,7 +81,8 @@ defineExpose({ element, focus, blur })
 
 const controlledAttrs = new Set(['class', 'style', 'id', 'type', 'checked', 'disabled', 'readonly', 'autofocus', 'role', 'aria-checked', 'aria-labelledby', 'aria-describedby', 'aria-disabled', 'aria-readonly', 'aria-required', 'aria-busy'])
 function inputAttrs(): InputHTMLAttributes {
-  return Object.fromEntries(Object.entries(attrs).filter(([key]) => !controlledAttrs.has(key))) as InputHTMLAttributes
+  // 禁用的开关还能聚焦，浏览器照常派发事件；调用方的处理函数除了聚焦和失焦都不运行。
+  return Object.fromEntries(Object.entries(withholdCallerHandlers(attrs, !!props.isDisabled)).filter(([key]) => !controlledAttrs.has(key))) as InputHTMLAttributes
 }
 function describedBy(): string | undefined {
   // 调用方传的 aria-describedby 描述的是开关本身，排在本组件自己的说明、状态和禁用原因之前。
@@ -113,21 +133,22 @@ onBeforeUnmount(() => ownerDocument?.removeEventListener('reset', reset, true))
 <template>
   <div class="astryx-switch" :class="attrs.class" :style="[widthStyle, attrs.style as CSSProperties]" :data-size="size" :data-label-position="labelPosition !== 'end' ? labelPosition : undefined" :data-label-spacing="labelSpacing !== 'hug' ? labelSpacing : undefined" :data-status="status?.type" :data-blocked="blocked || undefined">
     <div class="astryx-switch-row" v-bind="blocked ? undefined : press.pressableProps" @pointerenter="tooltip.onPointerEnter" @pointerleave="tooltip.onPointerLeave">
-      <span class="astryx-switch-control">
+      <span ref="control" class="astryx-switch-control">
         <input
           v-bind="inputAttrs()" :id="inputId" ref="input" class="astryx-switch-native" type="checkbox" role="switch"
           :checked="action.value.value"
           :name="isDisabled ? undefined : (htmlName ?? inputAttrs().name)" :form="isDisabled ? '' : inputAttrs().form"
           :readonly="isReadOnly || showsDisabledMessage"
+          :required="isRequired && !isOptional"
           :aria-checked="action.value.value"
           :aria-labelledby="labelledBy()"
           :aria-describedby="describedBy()"
           :aria-disabled="isDisabled || undefined" :aria-readonly="isReadOnly || undefined" :aria-busy="busy || undefined"
-          :aria-required="ariaRequired" :aria-invalid="status?.type === 'error' ? true : inputAttrs()['aria-invalid']"
+          :aria-required="ariaRequired" :aria-invalid="status?.type === 'error' ? true : isRequired ? false : inputAttrs()['aria-invalid']"
           @click="click" @change="change" @keydown="keydown" @focus="tooltip.onFocus" @blur="tooltip.onBlur"
         >
-        <span class="astryx-switch-track" aria-hidden="true">
-          <span class="astryx-switch-thumb" />
+        <span ref="track" class="astryx-switch-track" aria-hidden="true">
+          <span ref="thumb" class="astryx-switch-thumb" />
           <span v-if="busy" class="astryx-switch-spinner" />
         </span>
       </span>

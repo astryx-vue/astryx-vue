@@ -41,7 +41,7 @@ export type SelectorSize = 'sm' | 'md' | 'lg'
 export type SelectorStatus = 'default' | 'success' | 'warning' | 'error'
 /** 字符串状态，或演练场里那种 `{ type, message }`。 */
 export type SelectorStatusInput = SelectorStatus | FieldStatusInput
-export type SelectorPresentation = 'popover' | 'bottom-sheet'
+export type SelectorPresentation = 'popover' | 'bottom-sheet' | 'adaptive'
 /** `default` 和 `input` 都是带边框的表单框。`secondary` 对齐次要按钮。 */
 export type SelectorVariant = 'input' | 'secondary' | 'ghost' | 'default'
 export type SelectorStatusVariant = 'attached' | 'detached' | 'tooltip'
@@ -81,7 +81,7 @@ export interface SelectorProps extends FieldPartStylingProps {
    */
   variant?: SelectorVariant
   /**
-   * popover 锚在触发器下，bottom-sheet 在底部弹层里展开。
+   * popover 锚在触发器下，bottom-sheet 在底部弹层里展开，adaptive 在紧凑触屏上用底部弹层、其余用浮层。
    * @default 'popover'
    */
   presentation?: SelectorPresentation

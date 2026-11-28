@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import type { ChatComposerEmits, ChatComposerInputControl, ChatComposerProps, ChatComposerSlots } from './types.js'
-import { computed, provide, ref, useSlots, useTemplateRef, watch } from 'vue'
+import { computed, provide, ref, useSlots, useTemplateRef } from 'vue'
+import { useAnnounceRenderedText } from '../composables/internal/announceRenderedText.js'
 import { isKeyboardModality, trackInteractionModality } from '../composables/internal/interactionModality.js'
-import { useAnnounce } from '../composables/useAnnounce.js'
 import Icon from '../Icon/Icon.vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { isInLayerSurface } from '../layer/layerSurfacePress.js'
+import { useComponentMessages } from '../locale/context.js'
+import { chatMessages } from '../locale/messages/chat.js'
 import ChatComposerInput from './ChatComposerInput.vue'
+import { focusInKeyboardSurface } from './chatKeyboardFocus.js'
 import ChatSendButton from './ChatSendButton.vue'
 import { chatComposerContextKey } from './context.js'
 import '../../styles/chat.css'
@@ -20,7 +23,7 @@ const props = withDefaults(defineProps<ChatComposerProps>(), {
 const emit = defineEmits<ChatComposerEmits>()
 defineSlots<ChatComposerSlots>()
 const slots = useSlots()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ chat: chatMessages })
 const root = useTemplateRef<HTMLDivElement>('root')
 const body = useTemplateRef<HTMLDivElement>('body')
 const localValue = ref('')
@@ -37,22 +40,18 @@ const placeholder = computed(() => props.placeholder ?? messages.value.chat.plac
 const canSend = computed(() => value.value.trim().length > 0 && !disabled.value)
 const hasHeader = computed(() => slots.headerActions != null || slots.headerContext != null)
 
-const announce = useAnnounce()
-const statusAnnouncement = computed(() => {
-  const status = props.status
-  return status == null ? null : `${status.type}\0${status.message ?? ''}`
+const statusRef = useTemplateRef<HTMLDivElement>('status')
+
+// 状态条挂载时就带着文字，和文字一起出生的 live region 不一定能读到，
+// 所以由共用的「渲染文字播报」念条里渲染出来的内容：错误 assertive，警告 polite，
+// 每次出现念一次；页面加载完成之前就已显示的状态保持安静。换类型算新的一次，清除后重新待命。
+useAnnounceRenderedText(statusRef, () => Boolean(props.status?.message), {
+  skipFirstRender: true,
+  key: () => props.status?.type ?? '',
+  politeness: () => props.status?.type === 'error' ? 'assertive' : 'polite',
 })
 
-// 可见状态条和读屏播报分开：状态条挂载时就带着文字，live region 不一定能读到。
-// computed 返回字符串，等价状态对象重渲染不会重复；清除后再次出现算新的一次。
-watch(statusAnnouncement, () => {
-  const status = props.status
-  if (!status?.message)
-    return
-  announce(status.message, status.type === 'error' ? 'assertive' : 'polite')
-}, { immediate: true })
-
-const editorSelector = 'textarea, [contenteditable="true"], [role="textbox"], input:not([type]), input[type="text"], input[type="search"], input[type="email"], input[type="url"], input[type="tel"], input[type="password"]'
+const editorSelector = 'textarea, [contenteditable="true"], [role="textbox"], [role="combobox"][contenteditable], input:not([type]), input[type="text"], input[type="search"], input[type="email"], input[type="url"], input[type="tel"], input[type="password"]'
 
 function setValue(next: string): void {
   if (!controlled)
@@ -79,11 +78,16 @@ function onBodyClick(event: MouseEvent): void {
     return
   if (target.closest('button, a, [role="button"], [contenteditable="true"], [data-astryx-token]'))
     return
+  // 打开着的 Tooltip、HoverCard 里的点击属于气泡自己，不算正文的空白处。
+  if (body.value != null && isInLayerSurface(target, body.value))
+    return
   if (inputControl.value) {
     inputControl.value.focus()
     return
   }
-  body.value?.querySelector<HTMLElement>('[contenteditable="true"], textarea')?.focus()
+  const editable = body.value?.querySelector<HTMLElement>('[contenteditable="true"], textarea')
+  if (editable)
+    focusInKeyboardSurface(editable)
 }
 
 function onPointerDown(): void {
@@ -128,11 +132,12 @@ defineExpose({ element: root })
   >
     <div
       v-if="status && statusPosition === 'top'"
+      ref="status"
       class="astryx-chat-composer__status"
       data-place="top"
       :data-type="status.type"
     >
-      <Icon :icon="status.type === 'error' ? 'error' : 'warning'" size="md" :color="status.type === 'error' ? 'error' : 'warning'" />
+      <Icon :icon="status.type === 'error' ? 'error' : 'warning'" size="md" color="inherit" />
       <span>{{ status.message }}</span>
     </div>
 
@@ -184,11 +189,12 @@ defineExpose({ element: root })
 
     <div
       v-if="status && statusPosition === 'bottom'"
+      ref="status"
       class="astryx-chat-composer__status"
       data-place="bottom"
       :data-type="status.type"
     >
-      <Icon :icon="status.type === 'error' ? 'error' : 'warning'" size="md" :color="status.type === 'error' ? 'error' : 'warning'" />
+      <Icon :icon="status.type === 'error' ? 'error' : 'warning'" size="md" color="inherit" />
       <span>{{ status.message }}</span>
     </div>
   </div>

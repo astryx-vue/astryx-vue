@@ -18,6 +18,9 @@ const focused = ref(false)
 const composing = ref(false)
 const tabMovesFocus = ref(false)
 const hintId = `astryx-code-editor-${useId()}-escape`
+// 编辑区的文字归浏览器管：模板只放进第一次的值（服务端渲染也有内容），之后由下面的 watch 只在不一致时改写。
+// 让模板跟着 value 重渲染的话，每敲一个字文字节点都会被整个换掉，光标就掉回开头。
+const initialValue = props.value
 const lines = computed(() => props.value.split('\n'))
 const showPlaceholder = computed(() => props.value === '' && Boolean(props.placeholder))
 const containerStyle = computed(() => props.maxHeight == null
@@ -152,14 +155,16 @@ function onKeydown(event: KeyboardEvent): void {
     :data-size="size"
     :data-language="language"
   >
-    <div class="astryx-code-editor__container" :style="containerStyle">
+    <!-- 代码连同行号在从右到左的页面里也保持从左到右：缩进正确，长行从行首开始滚动。 -->
+    <div class="astryx-code-editor__container" dir="ltr" :style="containerStyle">
       <div v-if="hasLineNumbers" class="astryx-code-editor__gutter" aria-hidden="true">
         <div v-for="(_, index) in lines" :key="index">
           {{ index + 1 }}
         </div>
       </div>
       <div class="astryx-code-editor__body">
-        <div v-if="showPlaceholder" class="astryx-code-editor__placeholder" aria-hidden="true">
+        <!-- 占位提示是文字不是代码，按它自己的文字方向排，阿拉伯语、希伯来语提示照样读得通。 -->
+        <div v-if="showPlaceholder" class="astryx-code-editor__placeholder" dir="auto" aria-hidden="true">
           {{ placeholder }}
         </div>
         <code
@@ -179,7 +184,7 @@ function onKeydown(event: KeyboardEvent): void {
           @blur="focused = false; tabMovesFocus = false"
           @compositionstart="composing = true"
           @compositionend="composing = false; onInput()"
-        >{{ value }}</code>
+        >{{ initialValue }}</code>
         <VisuallyHidden v-if="!isReadOnly" :id="hintId">
           {{ escapeHint }}
         </VisuallyHidden>

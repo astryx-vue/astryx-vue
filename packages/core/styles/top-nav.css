@@ -1,21 +1,21 @@
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 
 @layer astryx.components {
+  /*
+   * 区域放不进一行时整条栏换行，结束区移到下一行；只有比整条栏还宽的区域才让自己的项换行。
+   * 放得下时起始区和结束区平分剩余宽度，居中区留在栏的正中。
+   */
   .astryx-top-nav {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     box-sizing: border-box;
     width: 100%;
     min-height: 48px;
     padding: var(--astryx-spacing-2, 8px);
-    gap: var(--astryx-spacing-4, 16px);
+    column-gap: var(--astryx-spacing-4, 16px);
     background: transparent;
     color: var(--astryx-color-text-primary);
-  }
-
-  .astryx-top-nav--centered {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
   }
 
   .astryx-top-nav__start,
@@ -29,13 +29,68 @@
     min-width: 0;
   }
 
-  .astryx-top-nav__start { flex: 1 1 auto; gap: var(--astryx-spacing-4, 16px); }
-  .astryx-top-nav__end { flex-shrink: 0; margin-inline-start: auto; }
-  .astryx-top-nav--centered .astryx-top-nav__end { justify-content: flex-end; }
-  .astryx-top-nav__items { flex-wrap: nowrap; overflow: hidden; }
+  .astryx-top-nav__end,
+  .astryx-top-nav__start,
+  .astryx-top-nav__items { flex-wrap: wrap; }
 
+  .astryx-top-nav__start {
+    flex: 1 1 0%;
+    gap: var(--astryx-spacing-4, 16px);
+    min-width: fit-content;
+  }
+
+  /* 标题只收缩到它自己最窄的宽度；TopNavHeading 在那个宽度上还留着标志。 */
+  .astryx-top-nav__heading { flex-shrink: 1; }
+
+  .astryx-top-nav__end {
+    flex-shrink: 0;
+    justify-content: flex-end;
+    margin-inline-start: auto;
+    min-width: fit-content;
+    max-width: 100%;
+  }
+
+  /* 居中区先按内容的最小宽度占位，再优先长到内容宽度；只有独占一行还放不下时才再收窄。 */
+  .astryx-top-nav__center {
+    flex: 1000 1 min-content;
+    justify-content: center;
+    max-width: max-content;
+  }
+
+  .astryx-top-nav--centered > .astryx-top-nav__end {
+    flex: 1 1 0%;
+    margin-inline-start: 0;
+  }
+
+  /* 手机条：标题先让位，结束区和菜单按钮始终留在条内；结束区不比整条栏宽。 */
+  .astryx-top-nav--compact { flex-wrap: nowrap; }
+  .astryx-top-nav--compact .astryx-top-nav__start {
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+  .astryx-top-nav--compact .astryx-top-nav__end {
+    flex: 0 0 auto;
+    flex-wrap: nowrap;
+    margin-inline-start: auto;
+  }
+
+  /* 纯文字标题没有能裁剪它的盒子，这一层把它收在一行内，栏高不变。 */
+  .astryx-top-nav__heading-text {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /*
+   * 标志一列、文字一列：文字列先收缩，标志不收缩；末端内容紧贴行内结束边。
+   * 文字列至少留着最长的一个词（有链接时）或菜单箭头那一格，不会被压成零宽。
+   */
   .astryx-top-nav-heading {
-    display: inline-flex;
+    display: inline-grid;
+    grid-auto-flow: column;
+    grid-template-columns: minmax(0, 1fr);
+    justify-content: start;
     align-items: center;
     gap: var(--astryx-spacing-2, 8px);
     box-sizing: border-box;
@@ -54,14 +109,39 @@
     padding-inline-start: 0;
   }
 
-  .astryx-top-nav-heading--link:hover,
-  .astryx-top-nav-heading--echo:hover {
+  .astryx-top-nav-heading:has(> .astryx-top-nav-heading__icon):has(> .astryx-top-nav-heading__text) {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  /* 有链接的行会换行，文字列至少留着最长的一个词，链接不会被裁成零宽。 */
+  .astryx-top-nav-heading:has(.astryx-top-nav-heading__link) {
+    grid-template-columns: minmax(min-content, 1fr);
+  }
+
+  .astryx-top-nav-heading:has(> .astryx-top-nav-heading__icon):has(> .astryx-top-nav-heading__text):has(.astryx-top-nav-heading__link) {
+    grid-template-columns: auto minmax(min-content, 1fr);
+  }
+
+  /* 带菜单时文字列停在箭头那一格（28px 加前面的间距），拥挤的栏盖不住箭头。 */
+  .astryx-top-nav-heading:has(.astryx-top-nav-heading__chevron) {
+    grid-template-columns: minmax(calc(var(--astryx-spacing-7, 28px) + var(--astryx-spacing-1, 4px)), 1fr);
+  }
+
+  .astryx-top-nav-heading:has(> .astryx-top-nav-heading__icon):has(> .astryx-top-nav-heading__text):has(.astryx-top-nav-heading__chevron) {
+    grid-template-columns: auto minmax(calc(var(--astryx-spacing-7, 28px) + var(--astryx-spacing-1, 4px)), 1fr);
+  }
+
+  .astryx-top-nav-heading--link:hover {
     background: var(--astryx-color-overlay-hover);
   }
 
+  /*
+   * 弹出层里重复的标题行：弹出层盖在标题原位上、四周外扩 8px，
+   * 这一行再从弹出层内边距往里缩 4px，文字和图标就落在原来标题的位置上。
+   */
   .astryx-top-nav-heading--echo {
-    width: 100%;
-    margin: 0 0 var(--astryx-spacing-1, 4px);
+    width: calc(100% - 2 * var(--astryx-spacing-1, 4px));
+    margin: var(--astryx-spacing-1, 4px) var(--astryx-spacing-1, 4px) var(--astryx-spacing-2, 8px);
     border: 0;
     background: transparent;
     color: inherit;
@@ -117,7 +197,11 @@
     white-space: nowrap;
   }
 
+  /* 有链接的行自己裁剪自己：长词留在列里，链接自己的焦点环也不会被切掉。 */
   .astryx-top-nav-heading__link {
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
     color: inherit;
     text-decoration: none;
   }
@@ -243,12 +327,52 @@
     cursor: pointer;
   }
 
+  /*
+   * 抽屉里的分组只在收起动画期间裁剪：常驻裁剪会切掉画在行外的焦点环。
+   * overflow 是离散属性，靠 allow-discrete 和等于展开时长的延迟，展开完成后才放开；
+   * 收起时立刻回到裁剪。
+   */
+  .astryx-top-nav-drawer-section {
+    display: grid;
+    grid-template-rows: 1fr;
+    overflow: visible;
+    transition:
+      grid-template-rows var(--astryx-duration-medium-max) var(--astryx-ease-standard),
+      overflow 0s var(--astryx-duration-medium-max) allow-discrete;
+  }
+
+  .astryx-top-nav-drawer-section--collapsed {
+    grid-template-rows: 0fr;
+    overflow: hidden;
+    transition-delay: 0s, 0s;
+  }
+
+  .astryx-top-nav-drawer-section__inner { min-height: 0; }
+
   .astryx-top-nav-menu__drawer-items { padding-inline-start: var(--astryx-spacing-4, 16px); }
 
+  /* 面板最高到视口底边留一点边距，更高的内容在面板里滚动，不会掉出屏幕。 */
   .astryx-top-nav-mega__panel {
     min-width: min(640px, calc(100vw - 32px));
     max-width: min(1248px, calc(100vw - 32px));
+    max-height: calc(100dvh - var(--astryx-nav-panel-top, 0px) - var(--astryx-spacing-3, 12px));
     padding: var(--astryx-spacing-3, 12px);
+    overflow-y: auto;
+  }
+
+  /*
+   * 减少动态效果时面板不缩放：触屏上 200ms 淡入，鼠标和触控板上立刻出现。
+   * 常规动画的起点透明度在这个设置下是 1，所以触屏的淡入用自己的关键帧。
+   */
+  @keyframes astryx-top-nav-mega-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) and (pointer: coarse) {
+    .astryx-nav-disclosure__panel.astryx-top-nav-mega__panel {
+      animation: astryx-top-nav-mega-fade-in var(--_astryx-reduced-motion-fade-duration, 200ms) var(--_astryx-reduced-motion-fade-easing, cubic-bezier(0.42, 0, 0.58, 1)) both;
+    }
   }
 
   .astryx-top-nav-mega__layout {
@@ -330,6 +454,15 @@
     font-weight: var(--astryx-font-weight-semibold, 600);
     line-height: var(--astryx-text-supporting-leading, 1.6667);
     text-decoration: none;
+  }
+
+  /* 箭头指向行内结束方向，从右到左的文字里要镜像；变换需要盒子，行内元素不会镜像。 */
+  .astryx-top-nav-mega-card__link-arrow {
+    display: inline-block;
+  }
+
+  [dir='rtl'] .astryx-top-nav-mega-card__link-arrow {
+    transform: scaleX(-1);
   }
 
   .astryx-top-nav-mega-item:hover,

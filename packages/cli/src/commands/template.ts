@@ -6,7 +6,8 @@ import { successEnvelope } from '../envelope.ts'
 import { CliError } from '../error.ts'
 import { formatTemplateCopy, formatTemplateDetail, formatTemplateList, formatTemplateSkeleton } from '../format.ts'
 import { BINARY, PACKAGE_NAME } from '../spec.ts'
-import { copyTemplate, guardPathArguments, listTemplates, renderSkeleton, resolveTemplate, templateKinds, templateSource } from '../templates.ts'
+import { guardPathArguments } from '../template-paths.ts'
+import { componentsToRead, copyTemplate, listTemplates, renderSkeleton, resolveTemplate, templateKinds, templateSource } from '../templates.ts'
 
 /**
  * `template` is three commands behind one name: list, show, and copy. The modes
@@ -22,7 +23,7 @@ export function templateCommand(args: CommandArgs): string {
     throw new CliError('--list and --skeleton cannot be combined.', 'ERR_INVALID_ARGUMENT', 2)
   if (args.positionals.length > 2)
     throw new CliError('template takes a name and, at most, one path.', 'ERR_INVALID_ARGUMENT', 2)
-  guardPathArguments(args.positionals, args.cwd)
+  guardPathArguments(args.positionals, args.cwd, overwrite)
 
   const [name, target] = args.positionals
   if (list || name === undefined) {
@@ -65,6 +66,7 @@ export function templateCommand(args: CommandArgs): string {
       return printJson(successEnvelope('template.show', {
         ...templateBrief(template, args.locale),
         components: template.componentsUsed,
+        componentsToRead: componentsToRead(template),
         demoMediaReplaced,
         source,
         locale: args.locale,

@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import type { TreeListItemData, TreeListProps, TreeListSlots } from './types.js'
 import { computed, reactive, useAttrs, useId, useSlots } from 'vue'
+import { useAnimatedLayout } from '../composables/useAnimatedLayout.js'
+import { useCoarsePointer } from '../composables/useCoarsePointer.js'
 import TreeListItem from './TreeListItem.vue'
 import { useTreeFocus } from './useTreeFocus.js'
+import { useTreeLayoutMotion } from './useTreeLayoutMotion.js'
 import '../../styles/tree-list.css'
 
 defineOptions({ name: 'AstryxTreeList', inheritAttrs: false })
@@ -75,8 +78,14 @@ function currentExpanded(id: string, items: TreeListItemData[]): boolean {
   return id in expanded ? expanded[id] === true : seeded
 }
 
+/** 焦点在要收起的分支里面时，先把焦点挪到这一行：分支收起会把里面的节点从页面上拿掉，焦点会掉到 body。树的焦点模型建好后接上。 */
+let keepFocusOnCollapsingRow: (id: string) => void = () => {}
+
 function toggle(id: string) {
-  expanded[id] = !currentExpanded(id, props.items)
+  const collapsing = currentExpanded(id, props.items)
+  if (collapsing)
+    keepFocusOnCollapsingRow(id)
+  expanded[id] = !collapsing
 }
 
 const hasExpandable = computed(() => {
@@ -109,9 +118,26 @@ function initialTabbable(items: TreeListItemData[]): string | undefined {
 
 const tabbableId = computed(() => initialTabbable(props.items))
 
-const { treeRef, handleKeyDown, handleFocus } = useTreeFocus({
+/** 现在展开着的行（祖先也展开着），不管是点击、键盘还是 `items` 让它展开的。 */
+const expandedIds = computed<ReadonlySet<string>>(() => {
+  const out = new Set<string>()
+  const visit = (list: TreeListItemData[]): void => {
+    for (const item of list) {
+      if (item.children && item.children.length > 0 && currentExpanded(item.id, props.items)) {
+        out.add(item.id)
+        visit(item.children)
+      }
+    }
+  }
+  visit(props.items)
+  return out
+})
+
+const { treeRef, focusRow, handleKeyDown, handleFocus } = useTreeFocus({
   hasRovingTabIndex: true,
   matchLabelledBy: true,
+  // 正在播放收起退场的子组里的行，已经不算树里的行了。
+  itemSelector: '[role="treeitem"]:not([data-tree-exiting])',
   onToggleExpand: toggle,
   onActivate: (current) => {
     const candidates = current.querySelectorAll<HTMLElement>('a[href], button:not([data-tree-toggle])')
@@ -124,6 +150,27 @@ const { treeRef, handleKeyDown, handleFocus } = useTreeFocus({
     return false
   },
 })
+// 手指操作时，没有传句柄的树自己带动效：展开收起的行后面的行一起滑动，子组同步淡入淡出；
+// 树后面的内容当场就位，因为只有调用方自己的句柄才会带动它。
+const isTouch = useCoarsePointer()
+const ownLayout = useAnimatedLayout({ containerRef: () => treeRef.value })
+const layout = computed(() => props.animatedLayout ?? (isTouch.value ? ownLayout : undefined))
+const { exitingIds } = useTreeLayoutMotion({
+  animatedLayout: () => layout.value,
+  shouldClip: () => layout.value === ownLayout,
+  expandedIds: () => expandedIds.value,
+  tree: () => treeRef.value ?? null,
+})
+keepFocusOnCollapsingRow = (id) => {
+  const tree = treeRef.value
+  const active = typeof document === 'undefined' ? null : document.activeElement
+  if (tree == null || active == null || !tree.contains(active))
+    return
+  const row = [...tree.querySelectorAll<HTMLElement>('[role="treeitem"]')].find(item => item.dataset.treeId === id)
+  const group = row?.querySelector(':scope > [role="group"]')
+  if (row != null && group?.contains(active) === true)
+    focusRow(row)
+}
 
 function callKeydown(listener: unknown, event: KeyboardEvent): void {
   if (typeof listener === 'function')
@@ -175,6 +222,7 @@ function onKeyDown(event: KeyboardEvent) {
         :is-last="index === items.length - 1"
         :ancestors-is-last="[]"
         :expanded="expanded"
+        :exiting-ids="exitingIds"
         :has-expandable-items="hasExpandable"
         :tabbable-id="tabbableId"
         :pos-in-set="index + 1"

@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useImageModePhotoCaption } from '../../../../components/demos/use-image-mode'
 </script>
 
 ## 使用方法
@@ -26,3 +27,14 @@ import { useImageMode } from '@astryx-vue/core'
 | <Badge variant="success">推荐</Badge> | 和 `MediaTheme` 一起用，让图片上的文字颜色跟着背景图自动切换。 |
 | <Badge variant="success">推荐</Badge> | 用 `region` 只采文字浮层会出现的那一块，结果更准。 |
 | <Badge variant="error">避免</Badge> | 用在变化很快的图上（例如视频帧）；每次 `src` 变化都会重新拉取和分析。 |
+
+## 示例
+
+常见配置、变体和状态。
+
+<DemoExample
+  :demo="useImageModePhotoCaption"
+  description="一张照片横幅，标题压在天空上。useImageMode 只采样标题下面那一条，MediaTheme 按结果把标题切成浅色或深色文字。Beach photo 开关把夜景换成明亮的海滩照片，新照片加载期间标题保持深色兜底。"
+  locale="zh"
+  title="useImageMode — 照片标题"
+/>

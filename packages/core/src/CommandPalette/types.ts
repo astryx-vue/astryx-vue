@@ -4,7 +4,10 @@ import type { SearchableItem, SearchSource } from '../composables/useAsyncSource
 export interface CommandPaletteProps<T extends SearchableItem = SearchableItem> {
   /** Whether the palette is open. */
   isOpen: boolean
-  /** Where commands come from. An empty query calls `bootstrap`. */
+  /**
+   * Where commands come from. An empty query calls `bootstrap`.
+   * A new source while the palette is open runs the shown query again, so keep the source stable.
+   */
   searchSource: SearchSource<T>
   /**
    * Render in the page flow instead of a modal dialog. Docs use this for the

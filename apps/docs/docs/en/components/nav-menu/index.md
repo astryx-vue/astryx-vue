@@ -7,16 +7,16 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { navMenuHeading } from '../../../../components/demos/nav-menu'
+import { navMenuBasic, navMenuDescriptions, navMenuDisabled, navMenuIcons, navMenuSizes } from '../../../../components/demos/nav-menu'
 </script>
 
 ## Usage
 
 `NavMenu` is a `role="menu"`. `NavMenuItem` is one entry and becomes a link when `href` is set. `NavDisclosure` owns the trigger, positioning, and dismissal: click, hover, outside press, and Escape all close it. ArrowDown opens on the first item, ArrowUp on the last. Inside the menu, arrows move and a typed character jumps to a matching prefix.
 
-The top nav and overflow list already compose these parts. Use them directly for an account menu.
+These parts are specific to the Vue edition; upstream `@astryxdesign/core` has no component of this name. The top nav menus, the overflow list, and side nav item flyouts are built from them, and you can use them directly for a navigation popup such as an account menu.
 
-Menus attached to a side or top heading use `NavHeadingMenu` and `NavHeadingMenuItem`. Put the menu in the heading `menu` slot. The heading owns closing and where focus goes after open. An item with an address is a link. An item without one is a `menuitem`. Arrows move, and Enter or Space activates the current item.
+A switcher menu attached to a side or top nav heading does not use these parts. Use [Nav Heading Menu](/en/components/nav-heading-menu) instead.
 
 ```vue
 <script setup lang="ts">
@@ -49,4 +49,12 @@ import { NavDisclosure, NavMenu, NavMenuItem } from '@astryx-vue/core/NavMenu'
 
 ## Examples
 
-<DemoExample :demo="navMenuHeading" description="The side nav heading opens a product switcher. Dashboard, Analytics, and Settings are the destinations." locale="en" title="Product switcher" />
+<DemoExample :demo="navMenuBasic" description="A button opens an account menu. Every item is a link." locale="en" title="Basic" />
+
+<DemoExample :demo="navMenuIcons" description="iconClass puts an icon before the label." locale="en" title="Icons" />
+
+<DemoExample :demo="navMenuDescriptions" description="description adds a supporting line under the label." locale="en" title="Descriptions" />
+
+<DemoExample :demo="navMenuSizes" description="size sets the menu's minimum width and the padding of each item." locale="en" title="Sizes" />
+
+<DemoExample :demo="navMenuDisabled" description="A disabled item ignores clicks, and the arrow keys skip it." locale="en" title="Disabled item" />

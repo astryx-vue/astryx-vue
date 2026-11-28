@@ -37,7 +37,6 @@ import '@astryx-vue/lab/lab.css'
 | 组件 | 用途 |
 | --- | --- |
 | [ListInput](/lab/list-input) | 编辑、校验和排序一组记录。 |
-| [MobileTokenizer](/lab/mobile-tokenizer) | 在底部面板中搜索和多选。 |
 | [TransferList](/lab/transfer-list) | 在可选与已选面板之间移动并排序。 |
 | [Tour](/lab/tour) | 用目标高亮和步骤弹层引导用户。 |
 | [CodeEditor](/lab/code-editor) | 编辑带语法高亮和行号的代码。 |
@@ -46,14 +45,26 @@ import '@astryx-vue/lab/lab.css'
 | [Comments](/lab/comments) | 评论面板：线程、动态事件，以及新评论输入框。 |
 | [CommentPin](/lab/comment-pin) | 头像优先的批注锚点：打开一条线程，或一组线程。 |
 | [CircularProgress](/lab/circular-progress) | 显示确定或不确定的圆环进度。 |
+| [CircleCheckIndicator](/lab/circle-check-indicator) | iOS 的多选圆圈，在主题里映射到 checkbox。 |
+| [SelectableCardGroup](/lab/selectable-card-group) | 一组可选卡片，按单选组或复选框组的语义读出。 |
+| [DialogHeroHeader](/lab/dialog-hero-header) | 标题上方铺满媒体的对话框页头。 |
 | [DiffViewer](/lab/diff-viewer) | 展示单个文件的统一或分栏 diff。 |
 | [InfoTip](/lab/info-tip) | 为术语和指标提供补充解释。 |
+| [LineClamp](/lab/line-clamp) | 把任意内容截成固定行数，截断时用提示显示全文。 |
 | [LogStream](/lab/log-stream) | 展示可展开、可跟随的日志流。 |
+| [MediaPlayer](/lab/media-player) | 用播放、时间轴、音量等控件拼出自己的视频或音频播放器。 |
+| [NavigationStack](/lab/navigation-stack) | 手机布局里一层层往里点的导航，带 iOS 式的推入、退出和滑动返回。 |
+| [PageControl](/lab/page-control) | 翻页视图下的一排页码圆点，带 iOS 式的点按、拖动换页和长排窗口。 |
+| [useRefreshControl](/lab/refresh-control) | 给 app 自己的滚动容器加 iOS 式的下拉刷新。 |
+| [VideoPlayer](/lab/video-player) | 现成的视频播放器：控件浮在画面上，空闲时自动藏起。 |
+| [AudioPlayer](/lab/audio-player) | 现成的音频播放器：封面、标题、时间轴、快退快进和速度。 |
 | [Stat](/lab/stat) | 展示关键指标及趋势。 |
 | [SVGIcon](/lab/svg-icon) | 按路径角色渲染多变体 SVG 图标。 |
+| [TabBar](/lab/tab-bar) | 手机应用底部的标签栏，带 iOS 26 式的浮动胶囊和跟着手指走的选中透镜。 |
 | [EmojiPicker](/lab/emoji-picker) | 按分组搜索全部表情并选中，可内嵌或放进弹出层。 |
 | [ChatEmojiPicker](/lab/chat-emoji-picker) | 在弹出层里按短名过滤并选择表情。 |
 | [ChatReactionBar](/lab/chat-reaction-bar) | 在消息下展示表情回应，并可继续添加。 |
+| [ChatVirtualizer](/lab/chat-virtualizer) | 很长的聊天记录只渲染看得见的几行，跟随新消息，加载历史不跳。 |
 | [Schedule](/lab/schedule) | 按月、周、日或列表展示日程。 |
 
 这些页面中的示例都可以直接交互，代码标签页提供完整 Vue 示例。

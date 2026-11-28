@@ -20,19 +20,30 @@ import { selectableCardColors, selectableCardElevated } from '../../../../compon
 import { SelectableCard } from '@astryx-vue/core/SelectableCard'
 import { ref } from 'vue'
 
-const selected = ref('pro')
+const selected = ref(new Set(['pro']))
+
+function toggle(id: string, isSelected: boolean) {
+  const next = new Set(selected.value)
+  if (isSelected)
+    next.add(id)
+  else
+    next.delete(id)
+  selected.value = next
+}
 </script>
 
 <template>
   <SelectableCard
-    :is-selected="selected === 'pro'"
+    :is-selected="selected.has('pro')"
     label="Pro"
-    @update:is-selected="(next) => { if (next) selected = 'pro' }"
+    @update:is-selected="(next) => toggle('pro', next)"
   >
     Pro
   </SelectableCard>
 </template>
 ```
+
+`SelectableCard` 适合多选：筛选标签、功能附加项、可以同时选几个的选项网格，选中的 ID 用 `Set` 记录。不要拿它做单选组：每张卡片都是一个复选框，辅助技术会把它读成多选组，而且每张卡片各占一个 Tab 停靠点。几个里选一个，用 `RadioList`；想让选项长成卡片，用 `@astryx-vue/lab` 的 `SelectableCardGroup`，它把这些卡片渲染成一个单选组。
 
 
 <ComponentAnatomy />

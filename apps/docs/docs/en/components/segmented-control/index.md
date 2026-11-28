@@ -33,13 +33,15 @@ const view = ref('overview')
 
 The selection is bound two ways with `v-model`. The control renders as a `role="radiogroup"` container, and `label` goes to `aria-label` — it names the group for screen readers and is never drawn on screen. Each `SegmentedControlItem` renders as a `role="radio"` button whose `aria-checked` reports whether it is the selected one.
 
-Keyboard behavior follows the radio group convention: the left and right arrows move between segments, `Home` and `End` jump to the first and last enabled segment, and movement wraps at the ends. Selection follows focus, so the segment the arrow keys land on becomes the selected one. Only one segment is in the tab order at a time (a roving tabindex), so Tab moves past the whole control instead of stopping on every segment. Disabled segments are skipped by both the arrow keys and the tab order.
+Keyboard behavior follows the radio group convention: the left and right arrows move between segments, `Home` and `End` jump to the first and last enabled segment, and movement wraps at the ends. Selection follows focus, so the segment the arrow keys land on becomes the selected one. Only one segment is in the tab order at a time (a roving tabindex), so Tab moves past the whole control instead of stopping on every segment. Disabled segments are skipped by the arrow keys. The selected segment keeps the tab stop even when it is disabled, and with no selected segment the first segment that is not itself disabled takes it.
 
 `size` offers `sm`, `md`, and `lg`, defaulting to `md`. `layout` defaults to `hug`, where the control and each segment take their content width and never exceed the container: when the container is too narrow the labels truncate with an ellipsis instead of pushing the control past the edge. Switch it to `fill` and the segments share the full width evenly, which suits a narrow card.
 
-`isDisabled` disables the whole control: no segment can be selected and the control leaves the tab order. When you also need to say why, use `disabledMessage` rather than wrapping the control in a `Tooltip` — a disabled control swallows the pointer events an external tooltip needs. With a message the control stays reachable through `aria-disabled`, so both mouse and keyboard users can discover the reason, while selection stays blocked. To disable one segment on its own, set `isDisabled` on that `SegmentedControlItem`.
+`isDisabled` disables the whole control: no segment can be selected, the control is dimmed and announced as disabled, and the selected segment keeps the control's one tab stop. When you also need to say why, use `disabledMessage` so the reason is attached to the control itself: it shows on hover and keyboard focus, and it describes each segment for assistive technology, while selection stays blocked. To disable one segment on its own, set `isDisabled` on that `SegmentedControlItem`.
 
 A segment can show an icon before its label by putting it in the `#icon` slot; the icon follows the size of the control. Set `isLabelHidden` to show the icon alone, and the `label` becomes the segment's `aria-label` so its name is not lost.
+
+The selected surface is a separate layer that slides to the new segment on every change, whether from a click, a key or the program. With a mouse it slides on the theme's duration and easing; on a touch device such as a phone it uses the iOS segmented control's spring, and a finger held on the selected segment lifts the surface slightly. Press the selected segment and drag sideways to carry the surface along; the segment under the pointer when it lets go is selected, a drag that drifts above or below the control keeps choosing by its horizontal position, and `Esc` cancels the drag. A mouse, a finger and a pen all drag the same way. With Reduce Motion on, the surface no longer slides or grows: on touch it cross-fades in place, and a mouse click lands at once.
 
 
 <ComponentAnatomy />
@@ -54,7 +56,7 @@ A segment can show an icon before its label by putting it in the `#icon` slot; t
 | <Badge variant="success">Do</Badge> | Explain a disabled control with `disabledMessage`, so keyboard users can read the reason too. |
 | <Badge variant="error">Don't</Badge> | Use it for page-level navigation. That is what `TabList` is for: a tab list switches a content region, while a segmented control is an input that always has exactly one selected option. |
 | <Badge variant="error">Don't</Badge> | Use it for a simple on/off state. A switch is toggled independently, whereas a segmented control enforces one selection from a group. |
-| <Badge variant="error">Don't</Badge> | Wrap a disabled segmented control in a `Tooltip`. A disabled control does not emit the pointer events the wrapper listens for; use `disabledMessage` instead. |
+| <Badge variant="error">Don't</Badge> | Wrap a disabled segmented control in a `Tooltip`. Use `disabledMessage` instead, which attaches the reason to the control itself. |
 | <Badge variant="error">Don't</Badge> | Cram in more than five segments, or mix labels of very different lengths. The more options there are, the more the user has to read before choosing. |
 
 ## Examples

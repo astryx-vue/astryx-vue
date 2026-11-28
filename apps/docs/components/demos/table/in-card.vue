@@ -28,11 +28,12 @@ const columns: TableColumn<User>[] = [
 
 <template>
   <Card :width="520">
-    <Stack direction="vertical" :gap="3">
+    <!-- 表格是卡片的直接末个子元素，才会贴到卡片底边。 -->
+    <Stack direction="vertical" :padding-block-end="3">
       <Heading :level="3">
         Team Members
       </Heading>
-      <Table :data="users" :columns="columns" id-key="id" has-hover />
     </Stack>
+    <Table :data="users" :columns="columns" id-key="id" has-hover />
   </Card>
 </template>

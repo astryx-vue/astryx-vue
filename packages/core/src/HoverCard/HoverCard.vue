@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { HoverCardEmits, HoverCardProps, HoverCardSlots } from './types.js'
-import { computed, onMounted, onUpdated, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, onUpdated, ref } from 'vue'
 import { useResolvedLayerTeleport } from '../composables/useLayerMountTarget.js'
 import { useMergedRefs } from '../composables/useMergedRefs.js'
 import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
+import { registerLayerSurface } from '../layer/layerSurfacePress.js'
 import { useHoverCard } from './useHoverCard.js'
 import '../../styles/hover-card.css'
 
@@ -53,7 +54,8 @@ const {
 } = hoverCard
 
 // 浮层元素挂进 hook 的内容 ref，定位和指针桥接都靠它。
-const setContentRef = useMergedRefs<HTMLElement>([surfaceRef])
+// 在卡片里按下只作用于卡片，外面包着触发元素的可点容器不响应。
+const setContentRef = useMergedRefs<HTMLElement>([surfaceRef, registerLayerSurface])
 
 const wrapperRef = ref<HTMLElement | null>(null)
 // Dialog 里挂进对话框；触发器在段落或链接里时挂到安全的父级；其余挂到 body。
@@ -84,6 +86,21 @@ function syncTrigger(): void {
 
 onMounted(syncTrigger)
 onUpdated(syncTrigger)
+
+// 触发元素可能在这里没有重新渲染时被换掉（子组件自己换了根元素）：
+// 盯着包裹元素的子节点，换了就重新接线，旧元素先放手。
+let childObserver: MutationObserver | null = null
+onMounted(() => {
+  const wrapper = wrapperRef.value
+  if (wrapper == null || typeof MutationObserver === 'undefined')
+    return
+  childObserver = new MutationObserver(() => {
+    if (wrapper.firstElementChild !== triggerRef.value && wrapper.firstElementChild != null)
+      syncTrigger()
+  })
+  childObserver.observe(wrapper, { childList: true })
+})
+onBeforeUnmount(() => childObserver?.disconnect())
 
 defineExpose({ element, show, hide })
 </script>

@@ -6,7 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
-import { useTableSelectionStateRowSelection } from '../../../../components/demos/use-table-selection-state'
+import { useTableSelectionStateLeadingMark, useTableSelectionStateRowSelection } from '../../../../components/demos/use-table-selection-state'
 </script>
 
 ## Usage
@@ -24,4 +24,11 @@ import { useTableSelectionState } from '@astryx-vue/core/Table'
   description="Table with row selection checkboxes and a select-all header checkbox. The checked keys and the setter stay in the caller, and selectionState mirrors them for selection-aware UI such as a toolbar."
   locale="en"
   title="useTableSelectionState — Row Selection"
+/>
+
+<DemoExample
+  :demo="useTableSelectionStateLeadingMark"
+  description="Selection without a checkbox column: each person shows an avatar, and the checkbox takes the avatar slot on hover, on keyboard focus, and everywhere once anything is selected. The state comes from useTableSelectionState; the checkboxes render in the name column, so checked rows get no aria-selected or highlight unless you add them."
+  locale="en"
+  title="useTableSelectionState — Leading-mark Selection"
 />

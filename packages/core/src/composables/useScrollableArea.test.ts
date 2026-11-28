@@ -86,6 +86,46 @@ describe('useScrollableArea', () => {
     expect(viewport.getAttribute('data-scroll-block-end')).toBeNull()
   })
 
+  it('滚动只靠几何更新两头的位置，不读计算样式', async () => {
+    const box = tall()
+    const { viewport } = mountArea({ label: 'Files' }, box)
+    await remeasure(viewport)
+    await remeasure(viewport)
+    expect(viewport.getAttribute('data-scroll-block-start')).toBe('true')
+    const spy = vi.spyOn(window, 'getComputedStyle')
+    box.scrollTop = 300
+    viewport.dispatchEvent(new Event('scroll'))
+    await nextTick()
+    expect(spy).not.toHaveBeenCalled()
+    expect(viewport.getAttribute('data-scroll-block-start')).toBeNull()
+    expect(viewport.getAttribute('data-scroll-block-end')).toBe('true')
+  })
+
+  it('滚动时发现溢出变了，仍然走完整测量', async () => {
+    const box = tall()
+    const { viewport } = mountArea({ label: 'Files' }, box)
+    await remeasure(viewport)
+    await remeasure(viewport)
+    box.scrollHeight = 100
+    await remeasure(viewport)
+    expect(viewport.getAttribute('data-scrollable-block')).toBeNull()
+  })
+
+  it('祖先只改 transform 不重新量，改方向才量', async () => {
+    const box = tall()
+    const { viewport } = mountArea({ label: 'Files' }, box)
+    await remeasure(viewport)
+    await remeasure(viewport)
+    const parent = viewport.parentElement!
+    const spy = vi.spyOn(window, 'getComputedStyle')
+    parent.style.transform = 'translateY(10px)'
+    await new Promise(resolve => setTimeout(resolve, 0))
+    expect(spy).not.toHaveBeenCalled()
+    parent.style.direction = 'rtl'
+    await new Promise(resolve => setTimeout(resolve, 0))
+    expect(spy).toHaveBeenCalled()
+  })
+
   it('keyboardAccess 为 content 时视口不带名字、不进 Tab 顺序', async () => {
     const { viewport } = mountArea({ keyboardAccess: { owner: 'content' } }, tall())
     await remeasure(viewport)

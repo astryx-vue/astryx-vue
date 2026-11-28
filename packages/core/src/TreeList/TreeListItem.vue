@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import type { TreeListDensity, TreeListItemData, TreeListVariant } from './types.js'
-import { computed, toRaw, useId } from 'vue'
+import { computed, toRaw, useId, useTemplateRef } from 'vue'
 import Badge from '../Badge/Badge.vue'
+import { useFocusAcrossSwap } from '../composables/internal/focusAcrossSwap.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { isIconGlyph } from '../Icon/glyphs.js'
 import Icon from '../Icon/Icon.vue'
+import { useIndicator } from '../Indicator/useIndicator.js'
+import { isInLayerSurface } from '../layer/layerSurfacePress.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
-import { useAstryxMessages } from '../locale/context.js'
+import { useComponentMessages } from '../locale/context.js'
+import { treeListMessages } from '../locale/messages/tree-list.js'
 import { consumeWhileDisabled } from '../utils/disabledInteraction.js'
 import { isSafeUrl } from '../utils/safeUrl.js'
 import '../../styles/tree-list.css'
@@ -21,6 +25,9 @@ const props = defineProps<{
   isLast: boolean
   ancestorsIsLast: boolean[]
   expanded: Record<string, boolean>
+  exitingIds: ReadonlySet<string>
+  /** 这一行在正在播放收起退场的子组里：已经不算树里的行了。 */
+  isLeaving?: boolean
   hasExpandableItems: boolean
   tabbableId?: string
   posInSet: number
@@ -28,7 +35,9 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{ toggle: [id: string] }>()
-const messages = useAstryxMessages()
+const rowElement = useTemplateRef<HTMLElement>('row')
+useFocusAcrossSwap(() => rowElement.value, '.astryx-tree-list__action', () => props.item.isDisabled === true)
+const messages = useComponentMessages({ treeList: treeListMessages })
 const linkComponent = useLinkComponent()
 const labelId = useId()
 const descriptionId = useId()
@@ -45,13 +54,16 @@ const linkRel = computed(() => (
 
 const hasChildren = computed(() => (props.item.children?.length ?? 0) > 0)
 const isExpanded = computed(() => hasChildren.value && props.expanded[props.item.id] === true)
+/** 收起了、子组还在播放退场：子组继续渲染。 */
+const isExiting = computed(() => hasChildren.value && !isExpanded.value && props.exitingIds.has(props.item.id))
 const reservesChevron = computed(() => !hasChildren.value && props.hasExpandableItems)
 const indent = computed(() => reservesChevron.value
   ? `calc(${props.nestedLevel} * var(--tree-list-indent) + var(--astryx-spacing-4, 16px) + var(--astryx-spacing-2, 8px))`
   : `calc(${props.nestedLevel} * var(--tree-list-indent))`)
 const childAncestors = computed(() => [...props.ancestorsIsLast, props.isLast])
 
-const branchMargin = 'calc(var(--astryx-spacing-2, 8px) + var(--astryx-spacing-0-5, 2px))'
+/** 引导线列的起点：以 16px 箭头的中心为中线，让 20px 的列居中，再加上行 8px 的内边距。 */
+const branchMargin = 'calc(var(--astryx-spacing-2, 8px) + var(--astryx-spacing-4, 16px) / 2 - var(--astryx-spacing-5, 20px) / 2)'
 
 function branchOffset(level: number) {
   return `calc(${branchMargin} + ${level} * var(--tree-list-indent))`
@@ -62,6 +74,9 @@ function onRowClick(event: MouseEvent) {
     return
   const target = event.target
   if (target instanceof Element && target.closest('button, a, input, select, textarea'))
+    return
+  // 打开着的 Tooltip、HoverCard 里的按下属于气泡自己。
+  if (target instanceof Element && isInLayerSurface(target, event.currentTarget as Element))
     return
   if (props.item.onClick)
     props.item.onClick(event)
@@ -90,7 +105,12 @@ function onLinkClick(event: MouseEvent) {
   consumeWhileDisabled(event, props.item.isDisabled === true)
 }
 
-const press = usePressFeedback()
+// 主题可以用名为 `tree-disclosure` 的指示图形换掉展开箭头；它自己画展开和收起两种状态，所以不再旋转。
+const ThemeDisclosure = useIndicator('tree-disclosure')
+
+const press = usePressFeedback({ isContainer: true })
+/** 整行点下去是展开收起（没有自己的点击）：这时箭头按钮做的是同一件事，按它也算按这一行。 */
+const chevronPress = computed(() => (props.item.onClick == null ? press.pressActionProps : {}))
 const rowPress = computed(() => {
   const interactive = props.item.onClick != null || safeHref.value != null || hasChildren.value
   return interactive && props.item.isDisabled !== true ? press.pressableProps : {}
@@ -104,6 +124,7 @@ const rowPress = computed(() => {
     role="treeitem"
     :data-tree-id="item.id"
     :data-tree-disabled="item.isDisabled ? 'true' : undefined"
+    :data-tree-exiting="isLeaving ? '' : undefined"
     :style="item.style"
     :aria-level="nestedLevel + 1"
     :aria-posinset="posInSet"
@@ -133,7 +154,7 @@ const rowPress = computed(() => {
         <span class="astryx-tree-list__guide-line" :data-span="isLast ? 'last' : 'full'" />
       </span>
     </template>
-    <div class="astryx-tree-list__row">
+    <div ref="row" class="astryx-tree-list__row">
       <!-- eslint-disable-next-line vue-a11y/click-events-have-key-events, vue-a11y/no-static-element-interactions -- 键盘由外层 role="tree" 处理，这一层只接指针点击。 -->
       <div
         class="astryx-tree-list__content"
@@ -156,10 +177,12 @@ const rowPress = computed(() => {
             :aria-label="messages.treeList.toggleChildren"
             :aria-disabled="item.isDisabled || undefined"
             tabindex="-1"
+            v-bind="chevronPress"
             @click="onToggle"
             @keydown="consumeWhileDisabled($event, item.isDisabled === true)"
           >
-            <Icon icon="chevronRight" size="sm" color="inherit" />
+            <component :is="ThemeDisclosure" v-if="ThemeDisclosure" :state="isExpanded ? 'expanded' : 'collapsed'" />
+            <Icon v-else icon="chevronRight" size="sm" color="inherit" />
           </button>
           <span v-if="item.startContent" class="astryx-tree-list__start">
             <component :is="item.startContent" />
@@ -171,13 +194,15 @@ const rowPress = computed(() => {
             </span>
           </span>
           <component
-            :is="linkRoot"
+            :is="item.isDisabled ? 'a' : linkRoot"
             v-if="safeHref"
             class="astryx-tree-list__action"
-            :href="safeHref"
-            :to="linkRoot === 'a' ? undefined : safeHref"
-            :target="item.target"
-            :rel="linkRel"
+            v-bind="press.pressActionProps"
+            :role="item.isDisabled ? 'link' : undefined"
+            :href="item.isDisabled ? undefined : safeHref"
+            :to="item.isDisabled || linkRoot === 'a' ? undefined : safeHref"
+            :target="item.isDisabled ? undefined : item.target"
+            :rel="item.isDisabled ? undefined : linkRel"
             :aria-labelledby="labelId"
             :aria-describedby="item.description ? descriptionId : undefined"
             :aria-disabled="item.isDisabled || undefined"
@@ -192,6 +217,7 @@ const rowPress = computed(() => {
             v-else-if="item.onClick"
             type="button"
             class="astryx-tree-list__action"
+            v-bind="press.pressActionProps"
             :aria-labelledby="labelId"
             :aria-describedby="item.description ? descriptionId : undefined"
             :aria-disabled="item.isDisabled || undefined"
@@ -219,7 +245,7 @@ const rowPress = computed(() => {
         </div>
       </div>
     </div>
-    <ul v-if="hasChildren && isExpanded" class="astryx-tree-list__group" role="group">
+    <ul v-if="hasChildren && (isExpanded || isExiting)" class="astryx-tree-list__group" role="group">
       <TreeListItem
         v-for="(child, index) in item.children"
         :key="child.id"
@@ -230,6 +256,8 @@ const rowPress = computed(() => {
         :is-last="index === (item.children?.length ?? 1) - 1"
         :ancestors-is-last="childAncestors"
         :expanded="expanded"
+        :exiting-ids="exitingIds"
+        :is-leaving="isLeaving || isExiting"
         :has-expandable-items="hasExpandableItems"
         :tabbable-id="tabbableId"
         :pos-in-set="index + 1"

@@ -18,7 +18,7 @@ footer: false
       <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>标签旁边信息图标里的提示文字。</td></tr>
       <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>视觉上隐藏标签，读屏仍然读得到。旧名 <code>labelHidden</code> 同样可用，两者任一为真就隐藏。</td></tr>
       <tr><td><code>containerClass</code> / <code>controlClass</code></td><td><code>class</code></td><td>—</td><td>外壳和输入外框。根上的 class 落在外框，不落到原生 input。候选项的 <code>action</code> 把菜单变成两列，点操作不会选中这一项。</td></tr>
-      <tr><td><code>startIcon</code></td><td><code>Component</code></td><td>—</td><td>输入框起始侧的图标。已有 <code>icon</code> 插槽时以插槽为准。</td></tr>
+      <tr><td><code>startIcon</code></td><td><code>string | Component</code></td><td>—</td><td>输入框起始侧的图标：可以直接写语义图标名（如 <code>'search'</code>），也可以传图标组件。已有 <code>icon</code> 插槽时以插槽为准。</td></tr>
       <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>Search…</code> / <code>搜索…</code></td><td>占位符。未设置语言时为英文。</td></tr>
       <tr><td><code>debounceMs</code></td><td><code>number</code></td><td><code>150</code></td><td>输入停顿后再搜索。本地数据可设为 0。</td></tr>
       <tr><td><code>minQueryLength</code></td><td><code>number</code></td><td><code>1</code></td><td>够长才去搜索的下限，按人眼看到的字符数算。太短就完全不搜，下拉也不打开，免得为一个没搜过的查询显示「没有结果」。空查询不算太短，照旧走 bootstrap。</td></tr>
@@ -30,16 +30,18 @@ footer: false
       <tr><td><code>clearable</code></td><td><code>boolean</code></td><td><code>true</code></td><td><code>hasClear</code> 的旧名。任一为假就不显示按钮。</td></tr>
       <tr><td><code>emptySearchText</code></td><td><code>string | null</code></td><td><code>'No results found'</code> / <code>'未找到结果'</code></td><td>没有匹配结果时显示的文字。<code>null</code> 当作没给，退回默认；空字符串表示什么都不显示。要放链接这类富内容用 <code>empty</code> 插槽。</td></tr>
       <tr><td><code>emptyText</code></td><td><code>string | null</code></td><td>—</td><td><code>emptySearchText</code> 的旧名。</td></tr>
-      <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否禁用。</td></tr>
-      <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>说明为什么被禁用。和 <code>disabled</code> 一起用时，控件改用 <code>aria-disabled</code> 加 <code>readonly</code>，因此仍然可聚焦，鼠标悬停或键盘聚焦都能读到这段说明。</td></tr>
+      <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否禁用。禁用的字段仍是 Tab 停点：输入框带 <code>aria-disabled</code> 且只读，不开列表也不选，也不向表单交值。</td></tr>
+      <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>说明为什么被禁用。鼠标悬停或键盘聚焦都能读到这段说明，并作为输入框的说明被读出。</td></tr>
       <tr><td><code>disabledReason</code></td><td><code>string</code></td><td>—</td><td><code>disabledMessage</code> 的旧名。</td></tr>
       <tr><td><code>status</code></td><td><code>'default' | 'success' | 'warning' | 'error'</code></td><td><code>'default'</code></td><td>状态样式。</td></tr>
       <tr><td><code>statusMessage</code></td><td><code>string</code></td><td>—</td><td>字段下方的状态说明。</td></tr>
+      <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'attached'</code></td><td>状态说明放哪里。<code>attached</code> 在字段末尾画状态图标、说明在下面；<code>detached</code> 只留下面的说明；<code>tooltip</code> 的图标是能聚焦的按钮，说明收在它的提示里。</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>输入框和标签的尺寸。</td></tr>
       <tr><td><code>required</code></td><td><code>boolean</code></td><td><code>false</code></td><td>标记为必填。</td></tr>
       <tr><td><code>optional</code></td><td><code>boolean</code></td><td><code>false</code></td><td>标签上显示「可选」标记。</td></tr>
       <tr><td><code>name</code></td><td><code>string</code></td><td>—</td><td>表单字段名。提交选中条目的 id。</td></tr>
       <tr><td><code>width</code></td><td><code>number | string</code></td><td>—</td><td>整个字段的宽度（数字按像素算，字符串原样使用）。</td></tr>
+      <tr><td><code>menu</code></td><td><code>{ role: 'listbox' } | { role: 'dialog', label: string }</code></td><td><code>{ role: 'listbox' }</code></td><td>菜单里放什么。<code>listbox</code> 是结果列表，<code>menu</code> 插槽可以在列表周围放信息；<code>dialog</code> 是会拿走焦点的内容，由 <code>label</code> 命名，只能通过 <code>open()</code> 打开：输入、聚焦和方向键都不会打开它。<code>listbox</code> 可以换成 <code>dialog</code>，菜单挂在同一个锚点上保持打开。</td></tr>
     </tbody>
   </table>
 </div>
@@ -68,9 +70,30 @@ footer: false
       <tr><td><code>icon</code></td><td>—</td><td>输入框开头的图标。</td></tr>
       <tr><td><code>item</code></td><td><code>{ item, isActive, isSelected }</code></td><td>自定义下拉条目，替换默认的 <code>TypeaheadItem</code>。</td></tr>
       <tr><td><code>empty</code></td><td>—</td><td>自定义空状态。</td></tr>
+      <tr><td><code>menu</code></td><td><code>{ listbox, query, isBusy, isEmptySearch, close }</code> 或 <code>{ query, close }</code></td><td>菜单内容。<code>listbox</code> 菜单里用 <code>&lt;component :is="listbox" /&gt;</code> 渲染一次结果列表，标题、提示放在它周围；方向键在列表里移动。要点的东西应该做成列表里的一个结果，放在列表外面的控件会在开发期报警告。<code>dialog</code> 菜单里这个插槽就是全部内容，<code>close</code> 关闭菜单并把焦点还给打开它时的元素。</td></tr>
     </tbody>
   </table>
 </div>
+
+## 方法
+
+<code>Typeahead</code> 的模板 ref 暴露 <code>focus()</code>、<code>blur()</code>、<code>open()</code> 和 <code>close()</code>。<code>open()</code> 对 <code>dialog</code> 菜单是马上打开并把焦点移进去；对 <code>listbox</code> 菜单是显示结果，需要时先加载。在 <code>change</code> 处理函数里调用，菜单会在这次选择之后保持打开。<code>dialog</code> 菜单被 <code>Escape</code> 或 <code>close()</code> 关掉后，焦点回到调用 <code>open()</code> 时有焦点的元素；那个元素没了，就回到输入框（值标签盖着输入框时回到标签的按钮）。点在字段和菜单之外会关掉它，但不会抢走点击落到的焦点。
+
+## 先显示本地匹配
+
+<code>search(query, signal, context)</code> 会收到 <code>context</code>。调用 <code>context.update(items)</code> 先显示页面上已有的匹配项，再返回服务端的答案。把 <code>debounceMs</code> 设为 <code>0</code>，在数据源里自己延迟服务端请求。
+
+```ts
+const source: SearchSource<Person> = {
+  async search(query, signal, context) {
+    context?.update(localPeople.filter(person => person.label.includes(query)))
+    await sleep(200, signal)
+    return await fetchPeople(query, signal)
+  },
+}
+```
+
+每一份列表都是数据源当时的完整答案。同一个查询的第一份列表可以换掉已有的行；之后的每一份（包括返回值）把已经显示的行留在最前面、顺序不变，新行只加在它们后面，所以高亮的行不会移动。空列表不动已显示的行。后一份列表挪动或去掉了已显示的行时，按它给的显示，并在开发期警告。字段在 <code>search</code> 返回前一直忙碌，结果数在返回时只念一次。查询已经不是当前查询、或 <code>search</code> 已经返回之后的调用会被忽略。
 
 ## createStaticSource
 
@@ -108,11 +131,13 @@ const items = [
       <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>输入框的无障碍名。</td></tr>
       <tr><td><code>inputId</code></td><td><code>string</code></td><td>自动生成</td><td>输入框的 id，好让外面的标签用 <code>for</code> 对上。</td></tr>
       <tr><td><code>describedBy</code></td><td><code>string</code></td><td>—</td><td>外面已经算好的说明和状态 id。</td></tr>
+      <tr><td><code>labelId</code></td><td><code>string</code></td><td>—</td><td>字段标签的 id。有值时值 Token 就是 Tab 停点，它的名称由这个标签加上值组成。</td></tr>
       <tr><td><code>ariaDescribedBy</code></td><td><code>string</code></td><td>—</td><td>输入框专用的 <code>aria-describedby</code> 别名，给了就盖过原生属性。</td></tr>
       <tr><td><code>ariaLabelledBy</code></td><td><code>string</code></td><td>—</td><td>输入框专用的 <code>aria-labelledby</code> 别名，给了就盖过原生属性。</td></tr>
       <tr><td><code>anchorRef</code></td><td><code>HTMLElement | null</code></td><td>—</td><td>下拉挂靠并据此量宽度的元素。不传就用输入框所在的外框。</td></tr>
       <tr><td><code>inputTabIndex</code></td><td><code>number</code></td><td>—</td><td>输入框在 Tab 序里的位置。选中值的标签盖住输入框时默认取 <code>-1</code>，免得留下看不见的停留点。</td></tr>
-      <tr><td><code>isFocusableDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>让禁用的输入框改用 <code>aria-disabled</code> 加 <code>readonly</code>，仍然可聚焦，好让调用方给的禁用说明读得到。输入内容照样被挡住。</td></tr>
+      <tr><td><code>isFocusableDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>让禁用的输入框改用 <code>aria-disabled</code> 加 <code>readonly</code>，仍然可聚焦，好让调用方给的禁用说明读得到。输入内容照样被挡住。禁用的 <code>BaseTypeahead</code> 总是可聚焦，列表在禁用前就开着也不能再选；<code>Escape</code> 或 <code>Tab</code> 仍能把它关掉。</td></tr>
+      <tr><td><code>menu</code></td><td><code>{ role: 'listbox' } | { role: 'dialog', label: string }</code></td><td><code>{ role: 'listbox' }</code></td><td>菜单里放什么，和 <code>Typeahead</code> 一样：结果列表（<code>menu</code> 插槽可以在周围放信息），或会拿走焦点、只能通过 <code>open()</code> 打开的内容。模板 ref 暴露 <code>open()</code> 和 <code>close()</code>。</td></tr>
       <tr><td><code>hasAutoFocus</code></td><td><code>boolean</code></td><td><code>false</code></td><td>挂载后自动聚焦输入框。</td></tr>
       <tr><td><code>hasEntriesOnFocus</code></td><td><code>boolean</code></td><td><code>false</code></td><td>聚焦后还没输入就展示 bootstrap 结果。</td></tr>
       <tr><td><code>showOnFocus</code></td><td><code>boolean</code></td><td><code>false</code></td><td><code>hasEntriesOnFocus</code> 的旧名。两者任一为真即生效。</td></tr>
@@ -157,7 +182,7 @@ const items = [
     <tbody>
       <tr><td><code>item</code></td><td><code>SearchableItem</code></td><td>必需</td><td>这一行对应的搜索结果。</td></tr>
       <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>盖过条目自己的说明。</td></tr>
-      <tr><td><code>group</code></td><td><code>string</code></td><td>—</td><td>为了和同名属性对得上而接受；这一行自己不会画标题。分组由下拉按 <code>item.auxiliaryData.group</code> 完成。</td></tr>
+      <tr><td><code>group</code></td><td><code>string</code></td><td>—</td><td>没有任何作用，只为和原版属性名对上而接受。要给 <code>Typeahead</code> 或 <code>BaseTypeahead</code> 的结果分组，在搜索源条目上设 <code>item.auxiliaryData.group</code>。</td></tr>
       <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>这一行看起来不可选。</td></tr>
       <tr><td><code>icon</code>（插槽）</td><td>—</td><td>—</td><td>标签前面的图标或头像。</td></tr>
     </tbody>

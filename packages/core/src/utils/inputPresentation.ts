@@ -98,6 +98,20 @@ export function effectiveInputPresentation(
   return DEFAULT_INPUT_PRESENTATION
 }
 
+/**
+ * The policy a calendar allows. The native date control shows only Gregorian
+ * dates, so in another calendar its surfaces become Astryx's own: the popover
+ * on a fine pointer and the bottom sheet on a coarse pointer.
+ */
+export function calendarPickerPresentation(
+  presentation: PickerPresentation,
+  isNativeCalendar: boolean,
+): PickerPresentation {
+  if (!isNativeCalendar && (presentation === 'native' || presentation === 'adaptive-native'))
+    return 'adaptive-bottom-sheet'
+  return presentation
+}
+
 /** Resolve a picker-only policy to the surface rendered for the current pointer. */
 export function resolvePickerPresentation(
   presentation: PickerPresentation,

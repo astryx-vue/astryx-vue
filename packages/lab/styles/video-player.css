@@ -1,0 +1,133 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  /* 尺寸容器没有固有宽度，所以播放器铺满外层，不会在按内容收缩的父元素里塌掉。 */
+  .astryx-video-player {
+    inline-size: 100%;
+    container-type: inline-size;
+    overflow: clip;
+    border-radius: var(--astryx-radius-element, 6px);
+    background-color: var(--astryx-color-background-inverted, #171717);
+  }
+
+  .astryx-video-player__surface {
+    position: absolute;
+    inset: 0;
+  }
+
+  .astryx-video-player__center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--astryx-spacing-3, 12px);
+    pointer-events: none;
+  }
+
+  .astryx-video-player__center--interactive,
+  .astryx-video-player__big-play {
+    pointer-events: auto;
+  }
+
+  .astryx-video-player__frosted {
+    background-color: color-mix(in srgb, var(--astryx-color-background-surface, #171717) 80%, transparent);
+    backdrop-filter: blur(12px);
+  }
+
+  @media (prefers-contrast: more) {
+    .astryx-video-player__frosted {
+      background-color: color-mix(in srgb, var(--astryx-color-background-surface, #171717) 95%, transparent);
+    }
+  }
+
+  @media (prefers-reduced-transparency: reduce) {
+    .astryx-video-player__frosted {
+      background-color: var(--astryx-color-background-surface, #171717);
+      backdrop-filter: none;
+    }
+  }
+
+  .astryx-video-player__big-play {
+    padding: var(--astryx-spacing-2, 8px);
+    border-radius: var(--astryx-radius-full, 9999px);
+  }
+
+  .astryx-video-player__bar {
+    /* 离画面边缘的距离，也是控件条藏起时下沉的距离，紧凑时两者一起变小。 */
+    --_media-bar-inset: var(--astryx-spacing-2, 8px);
+    /* 主题的轨道色可能和深色毛玻璃撞色，这里用控件条自己的强调色调淡来画时间轴的空轨道。 */
+    --_media-timeline-track: color-mix(in srgb, var(--astryx-color-accent, #fff) 24%, transparent);
+
+    position: absolute;
+    inset-inline: var(--_media-bar-inset);
+    inset-block-end: var(--_media-bar-inset);
+    display: flex;
+    align-items: center;
+    gap: var(--astryx-spacing-2, 8px);
+    padding: var(--astryx-spacing-1, 4px);
+    border-radius: var(--astryx-radius-container, 8px);
+    color: var(--astryx-color-text-primary, #fff);
+    opacity: 1;
+    translate: 0 0;
+    transition-property: opacity, translate;
+    transition-duration: var(--astryx-duration-medium, 250ms);
+    transition-timing-function: var(--astryx-ease-standard, ease);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-video-player__bar {
+      transition-duration: 0s;
+    }
+  }
+
+  /* 私有变量把控件条的指针状态带给时间轴的标记按钮，那些按钮自己设了 pointer-events。 */
+  .astryx-video-player__bar[data-visible='false'] {
+    opacity: 0;
+    translate: 0 var(--_media-bar-inset);
+    pointer-events: none;
+    --_media-controls-pointer-events: none;
+  }
+
+  /* 开始播放前大播放键代替控件条。大播放键只给指针用，控件条留在 Tab 序里，键盘焦点进来时出现。 */
+  .astryx-video-player__bar[data-before-playback]:not(:focus-within) {
+    opacity: 0;
+    translate: 0 var(--_media-bar-inset);
+    pointer-events: none;
+    --_media-controls-pointer-events: none;
+  }
+
+  .astryx-video-player__bar[data-before-playback]:focus-within {
+    opacity: 1;
+    translate: 0 0;
+    pointer-events: auto;
+    --_media-controls-pointer-events: auto;
+  }
+
+  /* 窄播放器的控件条上不放音量。 */
+  @container (max-width: 480px) {
+    .astryx-video-player__bar .astryx-video-player__volume {
+      display: none;
+    }
+  }
+
+  /* 小播放器（比如附件缩略卡）用紧凑的控件条：离边缘、间距和内边距都更小，按钮用小尺寸。
+     尺寸变量设在每个按钮自己身上，从控件条弹出的提示和标记气泡保持原来的大小。 */
+  @container (max-width: 360px) {
+    .astryx-video-player__bar {
+      --_media-bar-inset: var(--astryx-spacing-1, 4px);
+
+      gap: var(--astryx-spacing-1, 4px);
+      padding: calc(var(--astryx-spacing-1, 4px) / 2);
+    }
+
+    .astryx-video-player__control {
+      --astryx-size-element-md: var(--astryx-size-element-sm, 28px);
+    }
+
+    .astryx-video-player__bar .astryx-video-player__time {
+      display: none;
+    }
+  }
+}

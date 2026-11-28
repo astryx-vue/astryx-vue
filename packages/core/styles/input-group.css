@@ -33,21 +33,6 @@
     cursor: default;
   }
 
-  .astryx-input-group.status-error {
-    --astryx-input-focus: var(--astryx-input-error, #e33f4a);
-    border-color: var(--astryx-input-error, #e33f4a);
-  }
-
-  .astryx-input-group.status-warning {
-    --astryx-input-focus: var(--astryx-input-warning, #a67a00);
-    border-color: var(--astryx-input-warning, #a67a00);
-  }
-
-  .astryx-input-group.status-success {
-    --astryx-input-focus: var(--astryx-input-success, #198100);
-    border-color: var(--astryx-input-success, #198100);
-  }
-
   .astryx-input-group-shell {
     width: 100%;
     min-width: 0;
@@ -63,6 +48,7 @@
     font-size: var(--astryx-text-body-size, 0.875rem);
     line-height: var(--astryx-text-body-leading, 1.4286);
     white-space: nowrap;
+    unicode-bidi: isolate;
   }
 
   .astryx-input-group-addon {

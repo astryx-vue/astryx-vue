@@ -23,7 +23,7 @@ footer: false
         <td><code>searchSource</code></td>
         <td><code>SearchSource</code></td>
         <td>-</td>
-        <td>Where commands come from. An empty query calls <code>bootstrap</code>.</td>
+        <td>Where commands come from. An empty query calls <code>bootstrap</code>. A new source while the palette is open runs the shown query again, so keep the source stable.</td>
       </tr>
       <tr>
         <td><code>isInline</code></td>

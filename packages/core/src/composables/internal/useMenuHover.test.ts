@@ -167,6 +167,16 @@ describe('useMenuHover：焦点和键盘', () => {
     current.items()[0]!.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }))
     expect(document.activeElement).toBe(current.items()[1])
   })
+
+  it('内容里的菜单已经处理过的方向键，不再挪第二次焦点', () => {
+    current = mountMenu()
+    current.click()
+    const [first, second] = current.items()
+    first!.focus()
+    first!.addEventListener('keydown', event => event.preventDefault())
+    first!.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true }))
+    expect(document.activeElement).not.toBe(second)
+  })
 })
 
 describe('useMenuHover：没有悬停能力的设备', () => {
@@ -223,6 +233,21 @@ describe('useMenuHover：悬停等待期间被禁用', () => {
     current.trigger.dispatchEvent(new MouseEvent('mouseenter'))
     vi.advanceTimersByTime(100)
     current.isEnabled.value = false
+    vi.advanceTimersByTime(500)
+    expect(current.isOpen.value).toBe(false)
+  })
+})
+
+describe('useMenuHover：别处关掉了菜单', () => {
+  it('关闭之前排好的悬停打开不会在关闭后重新打开', async () => {
+    current = mountMenu()
+    current.trigger.dispatchEvent(new MouseEvent('mouseenter'))
+    vi.advanceTimersByTime(100)
+    // 悬停延时还没到，菜单被别的途径打开又关掉（例如根菜单点外关闭时收起子菜单）。
+    current.isOpen.value = true
+    await nextTick()
+    current.isOpen.value = false
+    await nextTick()
     vi.advanceTimersByTime(500)
     expect(current.isOpen.value).toBe(false)
   })

@@ -241,6 +241,24 @@ useDismiss({
 
 **怎么改**：`true` 换成不传或 `'close'`。`false` 要分情况：想让 Escape 在这一层停住，用 `'block'`；想让按键继续往下走，用 `'ignore'`。
 
+### List 的 `edgeCompensation="inline"` 改名 `edge="outset"`
+
+**改了什么：** `List` 新增一个 `edge` 属性，决定行相对列表边缘怎么摆：`padded`、`flush`、`outset`、`bleed`（上游 #7592）。`edgeCompensation="inline"` 就是 `edge="outset"`。
+
+**以前：**
+
+```vue
+<List edge-compensation="inline" />
+```
+
+**现在：**
+
+```vue
+<List edge="outset" />
+```
+
+**怎么办：** 把 `edgeCompensation="inline"` 换成 `edge="outset"`。旧属性现在还能用，效果等于 `edge="outset"`；两个都写时以 `edge` 为准，开发环境会给一次警告。
+
 ## 行为变化
 
 ### Tab、TabMenu 必须放在 TabList 里，Step 必须放在 Stepper 里

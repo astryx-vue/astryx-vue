@@ -21,10 +21,11 @@ footer: false
       <tr><td><code>description</code></td><td><code>string</code></td><td>-</td><td>Supporting text under the label.</td></tr>
       <tr><td><code>isOptional</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Marks the field optional.</td></tr>
       <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Marks the field required.</td></tr>
-      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>The trigger does not open.</td></tr>
+      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>The trigger does not open. It stays in the tab order with <code>aria-disabled</code>, and a commit from a popup that was already open is ignored.</td></tr>
+      <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>-</td><td>Why the field is disabled. With <code>isDisabled</code>, hovering, keyboard focus or a tap on the trigger shows it in a tooltip, and it describes the trigger for screen readers. With a custom trigger, spread the trigger props onto your control and it shows the tooltip and carries the description; drop the control's own tooltip while disabled.</td></tr>
       <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows a spinner on the trigger.</td></tr>
       <tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>-</td><td>Error, warning, or success message.</td></tr>
-      <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'attached'</code></td><td>Where the status message sits.</td></tr>
+      <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'attached'</code></td><td>Where the status message sits. <code>attached</code> and <code>tooltip</code> put a status icon in the chevron's place; with <code>tooltip</code> the icon is a focusable button that holds the message, and pressing it does not open the popup.</td></tr>
       <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>-</td><td>Tooltip on the label.</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>Trigger size.</td></tr>
       <tr><td><code>width</code></td><td><code>number | string</code></td><td>-</td><td>Field width. Numbers are pixels.</td></tr>
@@ -33,7 +34,7 @@ footer: false
       <tr><td><code>startIcon</code></td><td><code>string | Component</code></td><td>-</td><td>Icon at the start of the built-in trigger.</td></tr>
       <tr><td><code>variant</code></td><td><code>'input' | 'secondary' | 'ghost'</code></td><td><code>'input'</code></td><td><code>input</code> is the bordered field. <code>secondary</code> matches a secondary button. <code>ghost</code> matches a toolbar button. On the latter two, an attached status becomes detached.</td></tr>
       <tr><td><code>containerClass</code> / <code>controlClass</code></td><td><code>class</code></td><td>—</td><td>The shell takes <code>container*</code> and the root class. The built-in button takes <code>control*</code>. A custom trigger ignores both and warns in development.</td></tr>
-      <tr><td><code>renderTrigger</code></td><td><code>(props) =&gt; VNode</code></td><td>-</td><td>Replaces the field and the built-in trigger. Spread <code>props</code> onto your control. The <code>trigger</code> slot does the same job.</td></tr>
+      <tr><td><code>renderTrigger</code></td><td><code>(props) =&gt; VNode</code></td><td>-</td><td>Replaces the field and the built-in trigger. Spread <code>props</code> onto your control: it becomes the field's combobox, with <code>role</code>, <code>aria-required</code>, <code>aria-disabled</code>, and an <code>aria-label</code> from <code>label</code> unless you pass <code>aria-label</code> or <code>aria-labelledby</code>. The <code>trigger</code> slot does the same job.</td></tr>
       <tr><td><code>handleRef</code></td><td><code>Ref | (handle) =&gt; void</code></td><td>-</td><td>Receives <code>open</code>, <code>close</code>, <code>toggle</code>, and <code>isOpen</code>. A template <code>ref</code> exposes the same methods.</td></tr>
       <tr><td><code>changeAction</code></td><td><code>(value) =&gt; void | Promise&lt;void&gt;</code></td><td>-</td><td>Runs after the value changes. While it is pending the trigger shows a spinner.</td></tr>
     </tbody>

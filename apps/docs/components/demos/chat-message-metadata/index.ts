@@ -1,4 +1,6 @@
 import { defineDemo } from '../../demo-infra/defineDemo'
+import cardDemo from './card.vue'
+import cardSource from './card.vue?raw&highlighted'
 import footerActionsDemo from './footer-actions.vue'
 import footerActionsSource from './footer-actions.vue?raw&highlighted'
 import overviewDemo from './overview.vue'
@@ -10,6 +12,7 @@ import timestampsSource from './timestamps.vue?raw&highlighted'
 
 const column = { className: 'chat-preview' }
 
+export const chatMessageMetadataCard = defineDemo(cardDemo, cardSource, { className: 'chat-overview' })
 export const chatMessageMetadataOverview = defineDemo(overviewDemo, overviewSource)
 export const chatMessageMetadataFooterActions = defineDemo(footerActionsDemo, footerActionsSource, column)
 export const chatMessageMetadataStatus = defineDemo(statusDemo, statusSource, column)

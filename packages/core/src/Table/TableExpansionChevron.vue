@@ -1,12 +1,20 @@
 <script setup lang="ts">
-import Icon from '../Icon/Icon.vue'
-import { useAstryxMessages } from '../locale/context.js'
+import { computed } from 'vue'
+import ComponentIcon from '../Icon/ComponentIcon.vue'
+import { useComponentMessages } from '../locale/context.js'
+import { tableMessages } from '../locale/messages/table.js'
 
 defineOptions({ name: 'AstryxTableExpansionChevron' })
 
-defineProps<{ expanded: boolean }>()
+const props = defineProps<{ expanded: boolean, rowLabel?: string }>()
 const emit = defineEmits<{ toggle: [] }>()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ table: tableMessages })
+const label = computed(() => {
+  const table = messages.value.table
+  if (props.rowLabel)
+    return props.expanded ? table.collapseRowNamed(props.rowLabel) : table.expandRowNamed(props.rowLabel)
+  return props.expanded ? table.collapseRow : table.expandRow
+})
 </script>
 
 <template>
@@ -14,11 +22,15 @@ const messages = useAstryxMessages()
     type="button"
     class="astryx-table__expander astryx-table__expander--column"
     :aria-expanded="expanded ? 'true' : 'false'"
-    :aria-label="expanded ? messages.table.collapseRow : messages.table.expandRow"
+    :aria-label="label"
     @click.stop="emit('toggle')"
   >
-    <span class="astryx-table__chevron-icon" :class="{ 'is-expanded': expanded }">
-      <Icon icon="chevronRight" size="xsm" />
+    <span class="astryx-table__chevron-icon astryx-table__chevron-icon--slot" :class="{ 'is-expanded': expanded }">
+      <ComponentIcon
+        icon-slot="table-row-expand"
+        :state="{ expanded }"
+        :fallback="{ icon: 'chevronRight', size: 'xsm' }"
+      />
     </span>
   </button>
 </template>

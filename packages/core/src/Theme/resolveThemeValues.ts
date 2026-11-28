@@ -1,11 +1,13 @@
 import type { ColorScaleConfig } from './expandColorScale.js'
-import type { MotionScaleConfig } from './expandMotionScale.js'
 import type { RadiusScaleConfig } from './expandRadiusScale.js'
+import type { MotionLayerContext } from './motionLayerTokens.js'
+import type { ThemeMotionConfig } from './themeMotion.js'
 import type { ComponentStyleMap, ThemeTokens, ThemeTokenValue, TypographyConfig } from './types.js'
 import { checkDeclarationName, checkDeclarationValue, warnDroppedDeclaration } from './declarationBoundary.js'
 import { expandColorScale } from './expandColorScale.js'
-import { expandMotionScale } from './expandMotionScale.js'
 import { expandRadiusScale } from './expandRadiusScale.js'
+import { mergeComponentMaps, withoutUnsetComponents } from './mergeComponents.js'
+import { motionLayerTokens, settleMotionTokens } from './motionLayerTokens.js'
 import { normalizeTokenName, prefixTokenReferences } from './tokenName.js'
 import { resolveTypography } from './typography.js'
 
@@ -14,7 +16,7 @@ export interface ThemeValuesInput {
   color?: ColorScaleConfig
   typography?: TypographyConfig
   radius?: RadiusScaleConfig
-  motion?: MotionScaleConfig
+  motion?: ThemeMotionConfig
   tokens?: ThemeTokens
   components?: ComponentStyleMap
 }
@@ -69,47 +71,32 @@ export function resolveTokenMap(tokens: ThemeTokens | undefined, location: strin
 }
 
 /**
- * Merge component maps. `next` wins per style key and per property, so a
- * child that restates one property of `button.base` keeps the rest.
- */
-export function mergeComponentMaps(
-  base: ComponentStyleMap | undefined,
-  next: ComponentStyleMap | undefined,
-): ComponentStyleMap | undefined {
-  if (base == null)
-    return next
-  if (next == null)
-    return base
-  const merged: ComponentStyleMap = {}
-  for (const [component, rules] of Object.entries(base))
-    merged[component] = { ...rules }
-  for (const [component, rules] of Object.entries(next)) {
-    const target = merged[component] ?? {}
-    for (const [key, styles] of Object.entries(rules))
-      target[key] = { ...target[key], ...styles }
-    merged[component] = target
-  }
-  return merged
-}
-
-/**
  * Expand the generator axes, then lay explicit `tokens` over the result.
  * Explicit tokens win token by token. Authored component styles win over
- * the generated type-scale rules property by property.
+ * the generated type-scale rules property by property. `motion` reads what
+ * lies beneath the layer from `context` (motionLayerTokens.ts).
  */
-export function resolveThemeValues(input: ThemeValuesInput, location: string): ResolvedThemeValues {
+export function resolveThemeValues(
+  input: ThemeValuesInput,
+  location: string,
+  context?: MotionLayerContext,
+): ResolvedThemeValues {
   const typography = resolveTypography(input.typography)
+  const motion = motionLayerTokens(input.motion)
   const generated: ThemeTokens = {
     ...(input.color ? expandColorScale(input.color) : {}),
     ...typography.tokens,
     ...(input.radius ? expandRadiusScale(input.radius) : {}),
-    ...(input.motion ? expandMotionScale(input.motion) : {}),
+    ...motion.shared,
   }
+  const tokens = {
+    ...resolveTokenMap(generated, `${location}generated`),
+    ...motion.private,
+    ...resolveTokenMap(input.tokens, `${location}tokens`),
+  }
+  settleMotionTokens(tokens, input, context)
   return {
-    tokens: {
-      ...resolveTokenMap(generated, `${location}generated`),
-      ...resolveTokenMap(input.tokens, `${location}tokens`),
-    },
-    components: mergeComponentMaps(typography.components, input.components),
+    tokens,
+    components: mergeComponentMaps(typography.components, withoutUnsetComponents(input.components)),
   }
 }

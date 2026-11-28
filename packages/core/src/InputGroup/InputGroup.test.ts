@@ -159,7 +159,9 @@ describe('inputGroup', () => {
     expect(wrapper.text()).toContain('Before tax')
     expect(wrapper.text()).toContain('Optional')
     expect(wrapper.text()).toContain('Enter an amount')
-    expect(wrapper.get('.astryx-input-group').classes()).toContain('status-error')
+    // 状态说明显示在组下面，组的边框不变色；主题可以按 data-status 给这一行上样式。
+    expect(wrapper.get('.astryx-input-group').attributes('data-status')).toBe('error')
+    expect(wrapper.get('.astryx-input-group').classes()).not.toContain('status-error')
 
     const text = mount(InputGroupText, { slots: { default: 'kg' } })
     expect(text.text()).toBe('kg')
@@ -174,5 +176,20 @@ describe('inputGroup', () => {
     })
 
     expect(wrapper.find('.astryx-input-group').classes()).not.toContain('is-disabled')
+  })
+})
+
+describe('inputGroupText direction', () => {
+  it('puts plain text direction on an inner span, not on the bordered cell', () => {
+    const wrapper = mount(InputGroupText, { slots: { default: 'https://' } })
+    expect(wrapper.attributes('dir')).toBeUndefined()
+    const inner = wrapper.get('[dir]')
+    expect(inner.attributes('dir')).toBe('ltr')
+    expect(inner.text()).toBe('https://')
+  })
+
+  it('leaves right-to-left and rich text in the cell unwrapped', () => {
+    expect(mount(InputGroupText, { slots: { default: '\u0631\u064A\u0627\u0644' } }).find('[dir]').exists()).toBe(false)
+    expect(mount(InputGroupText, { slots: { default: '<span>$</span>' } }).find('[dir]').exists()).toBe(false)
   })
 })

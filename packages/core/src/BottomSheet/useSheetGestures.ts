@@ -1,45 +1,49 @@
 import type { ComputedRef, Ref } from 'vue'
+import type { VelocityTracker } from '../gestures/VelocityTracker'
 import type { SheetPointerSession } from './sheetPointerSession.js'
+import type { SheetDragExit } from './sheetRelease.js'
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
-import {
-  blockScrollEdges,
-  dismissTravelFor,
-  DRAG_PROMOTION_SLOP,
-  dragOffsetFrom,
-  FLICK_MIN_DISTANCE,
-  FLICK_VELOCITY,
-  hapticTick,
-  naturalEndGapFor,
-  OVERSCROLL_PADDING,
-  velocityFor,
-} from './sheetDragMath.js'
+import { dismissTravelFor, hapticTick, naturalEndGapFor, stretchedOffset } from './sheetDragMath.js'
+import { createSheetPointerArm } from './sheetPointerArm.js'
 import { createSheetPointerSession } from './sheetPointerSession.js'
-import {
-  computeDetentOffsets,
-  peekOffsetFor,
-  resolveSettleOffset,
-  scrimOpacityForOffset,
-  visibleHeightForOffset,
-} from './snapOffsets.js'
+import { resolveSheetRelease } from './sheetRelease.js'
+import { createSheetTouchArm } from './sheetTouchArm.js'
+import { computeDetentOffsets, peekOffsetFor, scrimOpacityForOffset, visibleHeightForOffset } from './snapOffsets.js'
 
 interface SheetDetents {
   height: number
   offsets: number[]
   peekOffset: number | null
+  reserve: number
 }
 
 interface DragState extends SheetDetents {
   pointerId: number
+  pointerType: string
+  /** Whether the body's touch listeners drive this drag rather than window pointer events. */
+  viaTouch: boolean
   startY: number
-  startT: number
-  lastY: number
-  lastT: number
-  samples: { y: number, t: number }[]
+  /** The contact's positions on the timestamps their events carry. */
+  tracker: VelocityTracker
   baseOffset: number
-  baseLayoutOffset: number
-  rawOffset: number
-  dir: number
-  travel: number
+  /** Whether the drag has moved the sheet off its detent. */
+  hasTraveled: boolean
+}
+
+/** Where a close holds the sheet: the drag's last transform, until the exit takes over. */
+interface HeldClose {
+  offset: number
+  layoutOffset: number
+}
+
+export interface SheetDragStart {
+  pointerId: number
+  pointerType: string
+  /** Where the drag is anchored, so travel before the promotion counts. */
+  startY: number
+  /** The contact's samples since it landed. */
+  tracker: VelocityTracker
+  viaTouch: boolean
 }
 
 export interface UseSheetGesturesOptions {
@@ -51,6 +55,8 @@ export interface UseSheetGesturesOptions {
   isOpen: Ref<boolean>
   /** Whether a downward swipe may dismiss the sheet. */
   canDismiss: Ref<boolean>
+  /** How far the sheet's surface reaches below the screen, px. */
+  reserve: Ref<number>
   /** Resolves the snap points to visible heights at gesture time. */
   getSnapHeights: () => number[]
   /** Reports scrim opacity as the sheet is dragged. */
@@ -59,16 +65,24 @@ export interface UseSheetGesturesOptions {
   onSnap: (visibleHeight: number) => void
   /** Called when a gesture asks the sheet to close. */
   onDismiss: () => void
+  /** Called once a drag first moves the sheet off its detent. */
+  onTravelStart?: () => void
 }
 
 export interface SheetGestures {
   isDragging: Ref<boolean>
   isReconciling: Ref<boolean>
   isOverflowing: Ref<boolean>
+  /** Whether the sheet rests at its full height, its first detent. */
+  isAtFullHeight: ComputedRef<boolean>
   panelTransform: ComputedRef<string | undefined>
   panelHeight: ComputedRef<string | undefined>
   scrollPreservationInset: Ref<number>
   scrimOpacity: Ref<number>
+  /** The exit a touch drag's release started; null for any other close. */
+  dragExit: Ref<SheetDragExit | null>
+  /** Whether the current close came from a finger's swipe. */
+  isDismissedByTouchDrag: Ref<boolean>
   onHandlePointerDown: (event: PointerEvent) => void
   onBodyPointerDown: (event: PointerEvent) => void
   updateOverflow: () => void
@@ -76,7 +90,7 @@ export interface SheetGestures {
 
 /** Drag, snap, and settle behavior of the sheet panel. */
 export function useSheetGestures(options: UseSheetGesturesOptions): SheetGestures {
-  const { panel, body, isOpen, canDismiss, getSnapHeights, onScrimOpacity, onSnap, onDismiss } = options
+  const { panel, body, isOpen, canDismiss, reserve, getSnapHeights, onScrimOpacity, onSnap, onDismiss, onTravelStart } = options
 
   const isDragging = ref(false)
   const isReconciling = ref(false)
@@ -87,15 +101,26 @@ export function useSheetGestures(options: UseSheetGesturesOptions): SheetGesture
   const scrollPreservationInset = ref(0)
   const scrimOpacity = ref(1)
   const sheetHeight = ref(0)
+  const heldClose = ref<HeldClose | null>(null)
+  const dragExit = ref<SheetDragExit | null>(null)
+  const isDismissedByTouchDrag = ref(false)
 
   let dragState: DragState | null = null
-  let pendingBody: { pointerId: number, startY: number, atTop: boolean, atBottom: boolean } | null = null
-  let touchArming: { identifier: number, startY: number, atTop: boolean, atBottom: boolean } | null = null
+  /** The scrim of the stop a drag's close left, until the host answers the close. */
+  let pendingDismissal: { restingScrim: number } | null = null
   let reconcileToken = 0
   let observer: ResizeObserver | null = null
   let session!: SheetPointerSession
 
   const activeOffset = computed(() => (isDragging.value ? dragOffset.value : settledOffset.value))
+  /** Dragging above the base stop restores the full layout height below the viewport. */
+  const layoutOffset = computed(() => {
+    if (heldClose.value != null)
+      return heldClose.value.layoutOffset
+    if (isDragging.value)
+      return dragOffset.value < settledOffset.value ? 0 : settledLayoutOffset.value
+    return settledLayoutOffset.value
+  })
 
   function measureNaturalHeight(): number {
     const element = panel.value
@@ -115,9 +140,19 @@ export function useSheetGestures(options: UseSheetGesturesOptions): SheetGesture
     if (measured > 0)
       sheetHeight.value = measured
     const height = measured > 0 ? measured : sheetHeight.value
-    const visible = visibleHeightForOffset(height, 0, OVERSCROLL_PADDING)
+    const inset = reserve.value
+    const visible = visibleHeightForOffset(height, 0, inset)
     const offsets = computeDetentOffsets(visible, getSnapHeights())
-    return { height, offsets, peekOffset: peekOffsetFor(offsets, visible) }
+    return { height, offsets, peekOffset: peekOffsetFor(offsets, visible), reserve: inset }
+  }
+
+  function scrimFor(offset: number, detents: SheetDetents): number {
+    return scrimOpacityForOffset(offset, detents.offsets, dismissTravelFor(detents.height, detents.offsets, detents.reserve), detents.peekOffset)
+  }
+
+  function reportScrim(opacity: number): void {
+    scrimOpacity.value = opacity
+    onScrimOpacity(opacity)
   }
 
   async function reconcileLayout(targetLayoutOffset: number): Promise<void> {
@@ -135,13 +170,13 @@ export function useSheetGestures(options: UseSheetGesturesOptions): SheetGesture
   }
 
   function settleAt(target: number, fromOffset: number, detents: SheetDetents): void {
+    // A peek keeps the full layout height and slides below the viewport; every
+    // taller stop resizes the scrolling area to what it shows.
     const targetLayoutOffset = target === detents.peekOffset ? 0 : target
-    const dismissOffset = dismissTravelFor(detents.height, detents.offsets)
     settledOffset.value = target
     scrollPreservationInset.value = Math.max(0, fromOffset - targetLayoutOffset - naturalEndGapFor(body.value))
-    scrimOpacity.value = scrimOpacityForOffset(target, detents.offsets, dismissOffset, detents.peekOffset)
-    onScrimOpacity(scrimOpacity.value)
-    onSnap(visibleHeightForOffset(detents.height, target, OVERSCROLL_PADDING))
+    reportScrim(scrimFor(target, detents))
+    onSnap(visibleHeightForOffset(detents.height, target, detents.reserve))
     if (target !== fromOffset)
       hapticTick()
     if (targetLayoutOffset === settledLayoutOffset.value && !isReconciling.value)
@@ -149,84 +184,103 @@ export function useSheetGestures(options: UseSheetGesturesOptions): SheetGesture
     void reconcileLayout(targetLayoutOffset)
   }
 
-  function dismissOrSettleShortest(fromOffset: number, detents: SheetDetents): void {
-    if (canDismiss.value) {
-      settledOffset.value = fromOffset
-      dragOffset.value = fromOffset
-      scrimOpacity.value = 1
-      onScrimOpacity(1)
-      onDismiss()
+  function clearDragClose(): void {
+    pendingDismissal = null
+    heldClose.value = null
+    dragExit.value = null
+    isDismissedByTouchDrag.value = false
+  }
+
+  /**
+   * Asks the host to close. The sheet holds where the finger left it, so the
+   * exit starts from there. The host answers in its next render: a host that
+   * keeps the sheet open sends it back to its stop, the scrim with it.
+   */
+  function closeSheet(exit: SheetDragExit | null, state: DragState): void {
+    if (!canDismiss.value) {
+      settleAt(state.offsets[state.offsets.length - 1] ?? 0, state.baseOffset, state)
       return
     }
-    settleAt(detents.offsets[detents.offsets.length - 1] ?? 0, fromOffset, detents)
+    heldClose.value = { offset: dragOffset.value, layoutOffset: layoutOffset.value }
+    isDismissedByTouchDrag.value = state.pointerType === 'touch'
+    dragExit.value = exit
+    const request = { restingScrim: scrimFor(state.baseOffset, state) }
+    pendingDismissal = request
+    onDismiss()
+    void nextTick(() => {
+      if (pendingDismissal !== request)
+        return
+      pendingDismissal = null
+      if (!isOpen.value)
+        return
+      clearDragClose()
+      reportScrim(request.restingScrim)
+    })
   }
 
-  function updateDrag(clientY: number, timeStamp: number): void {
-    const state = dragState
-    if (!state)
-      return
-    const delta = clientY - state.startY
-    state.lastY = clientY
-    state.lastT = timeStamp
-    state.samples.push({ y: clientY, t: timeStamp })
-    state.travel = Math.max(state.travel, Math.abs(delta))
-    state.dir = delta === 0 ? 0 : Math.sign(delta)
-    const next = dragOffsetFrom(state.baseOffset, delta, state.offsets)
-    state.rawOffset = next.raw
-    dragOffset.value = next.shown
-    scrimOpacity.value = scrimOpacityForOffset(next.raw, state.offsets, dismissTravelFor(state.height, state.offsets), state.peekOffset)
-    onScrimOpacity(scrimOpacity.value)
-  }
-
-  function beginDrag(pointerId: number, clientY: number, timeStamp: number): void {
-    const detents = resolveDetents()
+  function beginDrag(start: SheetDragStart, clientY: number, timeStamp: number): void {
+    clearDragClose()
+    start.tracker.add(0, clientY, timeStamp)
     dragState = {
-      ...detents,
-      pointerId,
-      startY: clientY,
-      startT: timeStamp,
-      lastY: clientY,
-      lastT: timeStamp,
-      samples: [{ y: clientY, t: timeStamp }],
+      ...resolveDetents(),
+      ...start,
       baseOffset: settledOffset.value,
-      baseLayoutOffset: settledLayoutOffset.value,
-      rawOffset: settledOffset.value,
-      dir: 0,
-      travel: 0,
+      hasTraveled: false,
     }
+    // Seeded at the resting stop, so flipping isDragging never jumps the sheet.
     dragOffset.value = settledOffset.value
     isDragging.value = true
   }
 
-  function endDrag(): void {
+  function moveDrag(clientY: number, timeStamp: number): void {
+    const state = dragState
+    if (!state)
+      return
+    // One sample per event, on the event's own timestamp: when the finger was
+    // there, however late a busy main thread handles the event.
+    state.tracker.add(0, clientY, timeStamp)
+    const raw = state.baseOffset + clientY - state.startY
+    const shown = stretchedOffset(raw, state.offsets, state)
+    dragOffset.value = shown
+    if (!state.hasTraveled && shown !== state.baseOffset) {
+      state.hasTraveled = true
+      onTravelStart?.()
+    }
+    reportScrim(scrimFor(shown, state))
+  }
+
+  function endDrag(clientY: number, timeStamp: number): void {
     const state = dragState
     dragState = null
     session.detach()
     if (!state)
       return
+    const delta = clientY - state.startY
+    // A lift at a new position is the last sample. A finger that held still
+    // before the lift releases nothing in motion.
+    if (state.tracker.lastSample?.y !== clientY)
+      state.tracker.add(0, clientY, timeStamp)
+    const release = resolveSheetRelease({
+      offset: Math.max(0, state.baseOffset + delta),
+      velocity: state.tracker.velocity(timeStamp).y / 1000,
+      height: state.height || 1,
+      dir: Math.sign(delta),
+      travel: Math.abs(delta),
+      baseOffset: state.baseOffset,
+      offsets: state.offsets,
+      reserve: state.reserve,
+      isTouch: state.pointerType === 'touch',
+    })
+    if (release.kind === 'close')
+      closeSheet(release.exit, state)
     isDragging.value = false
-
-    const velocity = velocityFor(state.samples, state.lastY, state.lastT, state.startY, state.startT)
-    const isFlick = Math.abs(velocity) > FLICK_VELOCITY && state.travel > FLICK_MIN_DISTANCE
-    if (state.dir > 0 && isFlick) {
-      dismissOrSettleShortest(state.baseOffset, state)
-      return
-    }
-    if (state.dir < 0 && isFlick) {
-      settleAt(0, state.baseOffset, state)
-      return
-    }
-    if (state.rawOffset > dismissTravelFor(state.height, state.offsets)) {
-      dismissOrSettleShortest(state.baseOffset, state)
-      return
-    }
-    settleAt(resolveSettleOffset(state.rawOffset, state.offsets, state.dir, state.baseOffset), state.baseOffset, state)
+    if (release.kind === 'settle')
+      settleAt(release.target, state.baseOffset, state)
   }
 
-  function cancelDrag(): void {
+  /** The drag in flight returns to its stop; the arms keep tracking their contacts. */
+  function dropDrag(): void {
     const state = dragState
-    pendingBody = null
-    touchArming = null
     dragState = null
     session.detach()
     if (!state)
@@ -234,165 +288,38 @@ export function useSheetGestures(options: UseSheetGesturesOptions): SheetGesture
     isDragging.value = false
     dragOffset.value = state.baseOffset
     settledOffset.value = state.baseOffset
-    scrimOpacity.value = scrimOpacityForOffset(
-      state.baseOffset,
-      state.offsets,
-      dismissTravelFor(state.height, state.offsets),
-      state.peekOffset,
-    )
-    onScrimOpacity(scrimOpacity.value)
+    reportScrim(scrimFor(state.baseOffset, state))
   }
 
-  /** A second finger is a pinch. The browser keeps the zoom; the sheet lets go. */
-  function yieldToPinch(pointerId: number): boolean {
-    if (dragState == null || dragState.pointerId === pointerId)
-      return false
-    cancelDrag()
-    return true
-  }
+  const dragPointerId = (): number | null => dragState?.pointerId ?? null
 
-  function onPointerMove(event: PointerEvent): void {
-    if (dragState != null) {
-      if (yieldToPinch(event.pointerId))
-        return
-      if (event.cancelable)
-        event.preventDefault()
-      updateDrag(event.clientY, event.timeStamp)
-      return
-    }
-    const pending = pendingBody
-    if (pending == null || pending.pointerId !== event.pointerId)
-      return
-    const delta = event.clientY - pending.startY
-    if (Math.abs(delta) < DRAG_PROMOTION_SLOP)
-      return
-    const pullingDown = delta > 0 && pending.atTop
-    const pullingUp = delta < 0 && pending.atBottom && activeOffset.value > 0
-    if (!pullingDown && !pullingUp) {
-      pendingBody = null
-      session.detach()
-      return
-    }
-    pendingBody = null
-    beginDrag(pending.pointerId, pending.startY, event.timeStamp)
-    if (event.cancelable)
-      event.preventDefault()
-    updateDrag(event.clientY, event.timeStamp)
-  }
+  const touchArm = createSheetTouchArm({
+    activeOffset: () => activeOffset.value,
+    dragPointerId: () => (dragState?.viaTouch ? dragState.pointerId : null),
+    begin: (start, clientY, timeStamp) => beginDrag({ ...start, viaTouch: true }, clientY, timeStamp),
+    move: moveDrag,
+    end: endDrag,
+    cancel: dropDrag,
+    yieldToPinch: cancelDrag,
+  })
 
-  function onPointerUp(event: PointerEvent): void {
-    if (dragState != null && dragState.pointerId !== event.pointerId)
-      return
-    pendingBody = null
-    if (dragState == null) {
-      session.detach()
-      return
-    }
-    endDrag()
-  }
+  const pointerArm = createSheetPointerArm({
+    body: () => body.value,
+    dragPointerId,
+    isTouchDrag: () => dragState?.viaTouch ?? false,
+    attach: () => session.attach(),
+    detach: () => session.detach(),
+    begin: (start, clientY, timeStamp) => beginDrag({ ...start, viaTouch: false }, clientY, timeStamp),
+    move: moveDrag,
+    end: endDrag,
+    cancel: cancelDrag,
+  })
 
-  function onPointerCancel(event: PointerEvent): void {
-    if (dragState != null && dragState.pointerId !== event.pointerId)
-      return
-    cancelDrag()
-  }
-
-  function onHandlePointerDown(event: PointerEvent): void {
-    if (event.button != null && event.button !== 0)
-      return
-    if (yieldToPinch(event.pointerId))
-      return
-    session.attach()
-    beginDrag(event.pointerId, event.clientY, event.timeStamp)
-    if (event.cancelable)
-      event.preventDefault()
-  }
-
-  function onBodyPointerDown(event: PointerEvent): void {
-    if (yieldToPinch(event.pointerId))
-      return
-    if (event.pointerType === 'touch')
-      return
-    if (event.button != null && event.button !== 0)
-      return
-    const element = body.value
-    if (!element)
-      return
-    const edges = blockScrollEdges(element, event.target)
-    pendingBody = {
-      pointerId: event.pointerId,
-      startY: event.clientY,
-      atTop: edges.atTop,
-      atBottom: edges.atBottom,
-    }
-    session.attach()
-  }
-
-  function onTouchStart(event: TouchEvent): void {
-    if (event.touches.length > 1) {
-      touchArming = null
-      cancelDrag()
-      return
-    }
-    const touch = event.changedTouches[0]
-    const element = body.value
-    if (!touch || !element) {
-      touchArming = null
-      return
-    }
-    const edges = blockScrollEdges(element, event.target)
-    touchArming = {
-      identifier: touch.identifier,
-      startY: touch.clientY,
-      atTop: edges.atTop,
-      atBottom: edges.atBottom,
-    }
-  }
-
-  function onTouchMove(event: TouchEvent): void {
-    if (event.touches.length > 1) {
-      touchArming = null
-      cancelDrag()
-      return
-    }
-    const element = body.value
-    if (dragState != null) {
-      const touch = Array.from(event.changedTouches).find(item => item.identifier === dragState?.pointerId)
-      if (!touch)
-        return
-      if (event.cancelable)
-        event.preventDefault()
-      updateDrag(touch.clientY, event.timeStamp)
-      return
-    }
-    const arming = touchArming
-    if (arming == null || !element)
-      return
-    const touch = Array.from(event.changedTouches).find(item => item.identifier === arming.identifier)
-    if (!touch)
-      return
-    const delta = touch.clientY - arming.startY
-    if (Math.abs(delta) < DRAG_PROMOTION_SLOP)
-      return
-    const pullingDown = delta > 0 && arming.atTop
-    const pullingUp = delta < 0 && arming.atBottom && activeOffset.value > 0
-    if (!pullingDown && !pullingUp) {
-      touchArming = null
-      return
-    }
-    touchArming = null
-    if (event.cancelable)
-      event.preventDefault()
-    beginDrag(arming.identifier, arming.startY, event.timeStamp)
-    updateDrag(touch.clientY, event.timeStamp)
-  }
-
-  function onTouchEnd(event: TouchEvent): void {
-    const arming = touchArming
-    if (arming != null && Array.from(event.changedTouches).some(item => item.identifier === arming.identifier))
-      touchArming = null
-    if (dragState != null && Array.from(event.changedTouches).some(item => item.identifier === dragState?.pointerId))
-      endDrag()
+  /** Every arm and any drag in flight let go: the sheet returns to its stop. */
+  function cancelDrag(): void {
+    pointerArm.reset()
+    touchArm.reset()
+    dropDrag()
   }
 
   function updateOverflow(): void {
@@ -401,35 +328,40 @@ export function useSheetGestures(options: UseSheetGesturesOptions): SheetGesture
       && (element.scrollHeight > element.clientHeight + 1 || element.scrollWidth > element.clientWidth + 1)
   }
 
-  function recordSheetHeight(): void {
+  function recordSheetHeight(height: number): void {
     if (isDragging.value || settledLayoutOffset.value > 0 || isReconciling.value)
       return
-    const height = panel.value?.getBoundingClientRect().height ?? 0
     if (height > 0)
       sheetHeight.value = height
   }
 
   session = createSheetPointerSession({
-    onPointerMove,
-    onPointerUp,
-    onPointerCancel,
-    onTouchStart,
-    onTouchMove,
-    onTouchEnd,
-    onWindowBlur: () => cancelDrag(),
+    onPointerMove: pointerArm.onPointerMove,
+    onPointerUp: pointerArm.onPointerUp,
+    onPointerCancel: pointerArm.onPointerCancel,
+    onTouchStart: touchArm.onTouchStart,
+    onTouchMove: touchArm.onTouchMove,
+    onTouchEnd: touchArm.onTouchEnd,
+    onInterrupt: () => cancelDrag(),
   })
 
+  // The open height comes from the ResizeObserver, which reports the border
+  // box after the browser's own layout; only without one is it measured here.
   watch(panel, (element) => {
     observer?.disconnect()
     observer = null
-    if (!element || typeof ResizeObserver === 'undefined')
+    if (!element)
       return
-    observer = new ResizeObserver(() => {
-      recordSheetHeight()
+    if (typeof ResizeObserver === 'undefined') {
+      recordSheetHeight(element.getBoundingClientRect().height)
+      return
+    }
+    observer = new ResizeObserver((entries) => {
+      const entry = entries[entries.length - 1]
+      recordSheetHeight(entry?.borderBoxSize?.[0]?.blockSize ?? element.getBoundingClientRect().height)
       updateOverflow()
     })
     observer.observe(element)
-    recordSheetHeight()
   }, { immediate: true })
 
   watch(body, (element) => {
@@ -443,16 +375,17 @@ export function useSheetGestures(options: UseSheetGesturesOptions): SheetGesture
     isReconciling.value = false
     scrollPreservationInset.value = 0
     if (!open) {
-      dragState = null
-      pendingBody = null
-      touchArming = null
+      // The host took the close: the held position and the exit stand until the sheet opens again.
+      pendingDismissal = null
       return
     }
+    clearDragClose()
     dragOffset.value = 0
     settledOffset.value = 0
     settledLayoutOffset.value = 0
     scrimOpacity.value = 1
-    void nextTick(recordSheetHeight)
+    if (typeof ResizeObserver === 'undefined')
+      void nextTick(() => recordSheetHeight(panel.value?.getBoundingClientRect().height ?? 0))
   })
 
   watch(canDismiss, (allowed) => {
@@ -467,32 +400,30 @@ export function useSheetGestures(options: UseSheetGesturesOptions): SheetGesture
   })
 
   const panelTransform = computed(() => {
-    const layoutOffset = isDragging.value
-      ? (dragOffset.value < settledOffset.value ? 0 : settledLayoutOffset.value)
-      : settledLayoutOffset.value
-    const translation = activeOffset.value - layoutOffset
+    const offset = heldClose.value?.offset ?? activeOffset.value
+    const translation = offset - layoutOffset.value
     return translation !== 0 ? `translateY(${translation}px)` : undefined
   })
 
   const panelHeight = computed(() => {
-    const layoutOffset = isDragging.value
-      ? (dragOffset.value < settledOffset.value ? 0 : settledLayoutOffset.value)
-      : settledLayoutOffset.value
-    if (layoutOffset <= 0 || sheetHeight.value <= 0)
+    if (layoutOffset.value <= 0 || sheetHeight.value <= 0)
       return undefined
-    return `${Math.max(0, sheetHeight.value - layoutOffset)}px`
+    return `${Math.max(0, sheetHeight.value - layoutOffset.value)}px`
   })
 
   return {
     isDragging,
     isReconciling,
     isOverflowing,
+    isAtFullHeight: computed(() => settledOffset.value === 0),
     panelTransform,
     panelHeight,
     scrollPreservationInset,
     scrimOpacity,
-    onHandlePointerDown,
-    onBodyPointerDown,
+    dragExit,
+    isDismissedByTouchDrag,
+    onHandlePointerDown: pointerArm.onHandlePointerDown,
+    onBodyPointerDown: pointerArm.onBodyPointerDown,
     updateOverflow,
   }
 }

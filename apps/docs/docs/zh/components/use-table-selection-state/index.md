@@ -6,7 +6,7 @@ footer: false
 ---
 
 <script setup lang="ts">
-import { useTableSelectionStateRowSelection } from '../../../../components/demos/use-table-selection-state'
+import { useTableSelectionStateLeadingMark, useTableSelectionStateRowSelection } from '../../../../components/demos/use-table-selection-state'
 </script>
 
 ## 使用方法
@@ -24,4 +24,11 @@ import { useTableSelectionState } from '@astryx-vue/core/Table'
   description="带行选择复选框和表头全选复选框的表格。选中的键和写回函数留在调用方，selectionState 把它们映射给工具栏这类关心选择状态的界面。"
   locale="zh"
   title="useTableSelectionState —— 行选择"
+/>
+
+<DemoExample
+  :demo="useTableSelectionStateLeadingMark"
+  description="不单独放复选框列：每个人显示头像，鼠标悬停、键盘聚焦，或已经有行被选中时，复选框占到头像的位置。状态来自 useTableSelectionState；复选框画在姓名列里，所以被勾选的行不会带 aria-selected 和高亮，需要的话自己加。"
+  locale="zh"
+  title="useTableSelectionState — 用头像位置勾选"
 />

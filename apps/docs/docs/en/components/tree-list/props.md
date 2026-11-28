@@ -32,6 +32,12 @@ footer: false
         <td>Whether parent and child rows are joined by a guide line.</td>
       </tr>
       <tr>
+        <td><code>animatedLayout</code></td>
+        <td><code>AnimatedLayout</code></td>
+        <td>-</td>
+        <td>The handle from <code>useAnimatedLayout({ containerRef })</code>. With it, expanding or collapsing a row glides the rows and content after it, up to that container, instead of jumping, and the chevron turns on the same timing. Without a handle, a tree under a finger glides its own rows and fades the opened or closed group on that timing; the content after the tree then takes its place at once.</td>
+      </tr>
+      <tr>
         <td><code>header</code></td>
         <td><code>string</code></td>
         <td>-</td>

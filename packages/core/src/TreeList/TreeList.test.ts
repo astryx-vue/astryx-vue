@@ -238,4 +238,34 @@ describe('tree list', () => {
     })
     expect(wrapper.find('a').exists()).toBe(false)
   })
+
+  it('moves focus to the row when the branch holding it collapses', async () => {
+    const wrapper = mount(TreeList, { attachTo: document.body, props: { items, label: 'Files' } })
+    ;(wrapper.get('[data-tree-id="app"]').element as HTMLElement).focus()
+    expect(document.activeElement).toBe(wrapper.get('[data-tree-id="app"]').element)
+
+    await wrapper.get('[data-tree-id="src"] [data-tree-toggle]').trigger('click')
+
+    expect(wrapper.find('[data-tree-id="app"]').exists()).toBe(false)
+    const row = wrapper.get('[data-tree-id="src"]').element as HTMLElement
+    expect(document.activeElement).toBe(row)
+    expect(row.getAttribute('tabindex')).toBe('0')
+    wrapper.unmount()
+  })
+
+  it('leaves focus alone when it is outside the collapsing branch', async () => {
+    const wrapper = mount(TreeList, { attachTo: document.body, props: { items, label: 'Files' } })
+    ;(wrapper.get('[data-tree-id="readme"]').element as HTMLElement).focus()
+    await wrapper.get('[data-tree-id="src"] [data-tree-toggle]').trigger('click')
+    expect(document.activeElement).toBe(wrapper.get('[data-tree-id="readme"]').element)
+    wrapper.unmount()
+  })
+})
+
+describe('tree list guide alignment', () => {
+  it('centers a nested row\'s guide column on its parent\'s chevron', () => {
+    const wrapper = mount(TreeList, { props: { items, label: 'Files', variant: 'lineGuides' } })
+    const guide = wrapper.get('.astryx-tree-list__guide')
+    expect(guide.attributes('style')).toContain('var(--astryx-spacing-4, 16px) / 2 - var(--astryx-spacing-5, 20px) / 2')
+  })
 })

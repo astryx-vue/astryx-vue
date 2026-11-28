@@ -55,7 +55,7 @@ export function requiresResolvedDeps(state) {
   return state.key !== 'not-started' && state.key !== 'skipped'
 }
 
-/** SWARM.md 生命周期状态图里的边。 */
+/** 节点状态允许的流转：键是当前状态，值是可以去的下一个状态。 */
 const TRANSITIONS = new Map([
   ['not-started', ['ready']],
   ['ready', ['implementing']],

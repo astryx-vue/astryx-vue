@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import type { StyleValue } from 'vue'
 import type { ContextMenuEmits, ContextMenuItemData, ContextMenuProps, ContextMenuSlots } from './types.js'
-import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, shallowRef, useAttrs, useId, useTemplateRef, watch } from 'vue'
-import BottomSheet from '../BottomSheet/BottomSheet.vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
 import { useDismiss } from '../composables/useDismiss.js'
 import { useLongPress } from '../composables/useLongPress.js'
 import { useOverflow } from '../composables/useOverflow.js'
+import { MenuBottomSheet } from '../DropdownMenu/lazyMenuBottomSheet.js'
 import { useMenuDrillIn } from '../DropdownMenu/useMenuDrillIn.js'
 import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
+import { useHeldPresentation } from '../layer/useHeldPresentation.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { contextMenuMessages } from '../locale/messages/context-menu.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { contextMenuContextKey } from './context.js'
 import ContextMenuItems from './ContextMenuItems.vue'
@@ -30,7 +32,7 @@ const emit = defineEmits<ContextMenuEmits>()
 defineSlots<ContextMenuSlots>()
 
 const attrs = useAttrs()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ contextMenu: contextMenuMessages })
 const menuName = computed(() => props.label ?? messages.value.contextMenu.label)
 
 /**
@@ -44,24 +46,10 @@ const triggerAttrs = computed(() => Object.fromEntries(
 /** Where the menu's own corner sits relative to the cursor point. */
 const GAP = 0
 const DEFAULT_MIN_WIDTH = 160
-const ADAPTIVE_QUERY = '(max-width: 768px) and (pointer: coarse)'
-
-const isCompactTouch = shallowRef(false)
-let mediaQuery: MediaQueryList | undefined
-
-function syncCompactTouch(): void {
-  isCompactTouch.value = mediaQuery?.matches === true
-}
-
-const isSheet = computed(() => {
-  if (props.presentation === 'adaptive')
-    return isCompactTouch.value
-  return props.presentation === 'bottom-sheet'
-})
-
 const openModel = defineModel<boolean | undefined>('isOpen', { default: undefined })
 const localIsOpen = ref(false)
 const isOpen = computed(() => openModel.value ?? localIsOpen.value)
+const { isSheet, settle: settlePresentation } = useHeldPresentation(() => props.presentation, isOpen)
 
 const menuId = `astryx-context-menu-${useId()}`
 const trigger = useTemplateRef<HTMLElement>('trigger')
@@ -105,7 +93,7 @@ const longPress = useLongPress({
   },
 })
 
-const { drillIn, host, isDrilled } = useMenuDrillIn(isOpen, ADAPTIVE_QUERY)
+const { drillIn, host, isDrilled } = useMenuDrillIn(isOpen)
 
 useDismiss({
   container: panel,
@@ -237,14 +225,16 @@ function applyOpenState(next: boolean): void {
   nav.resetTypeahead()
 }
 
+// 面板在第一次打开时才挂上，之后一直留着（退场动画照常播）：从没打开过的菜单不往页面加节点，
+// 每个单元格都带菜单的大表格因此不用为它们付出代价。
+const hasOpened = ref(isOpen.value)
+watch(isOpen, (open) => {
+  if (open)
+    hasOpened.value = true
+})
 watch(isOpen, applyOpenState)
 
 onMounted(() => {
-  if (typeof window.matchMedia === 'function') {
-    mediaQuery = window.matchMedia(ADAPTIVE_QUERY)
-    syncCompactTouch()
-    mediaQuery.addEventListener?.('change', syncCompactTouch)
-  }
   if (isOpen.value)
     applyOpenState(true)
 })
@@ -255,7 +245,6 @@ watch(() => props.isDisabled, (isDisabled) => {
 })
 
 onBeforeUnmount(() => {
-  mediaQuery?.removeEventListener?.('change', syncCompactTouch)
   resetMenuPress()
 })
 
@@ -293,7 +282,7 @@ defineExpose({
     />
   </component>
 
-  <Teleport :to="teleportTarget">
+  <Teleport v-if="hasOpened" :to="teleportTarget">
     <Transition name="astryx-context-menu">
       <div
         v-show="isOpen && !isSheet"
@@ -328,11 +317,12 @@ defineExpose({
       </div>
     </Transition>
   </Teleport>
-  <BottomSheet
+  <MenuBottomSheet
     v-if="isSheet"
     :is-open="isOpen"
     :label="menuName"
     @update:is-open="onSheetOpen"
+    @motion-complete="$event === 'exiting' && settlePresentation()"
   >
     <div class="astryx-context-menu-sheet" role="menu" :aria-label="menuName">
       <div class="astryx-dropdown-menu-tree" :hidden="isDrilled || undefined" :inert="isDrilled || undefined">
@@ -345,5 +335,5 @@ defineExpose({
       </div>
       <div :ref="assignHost" class="astryx-dropdown-menu-tree" />
     </div>
-  </BottomSheet>
+  </MenuBottomSheet>
 </template>

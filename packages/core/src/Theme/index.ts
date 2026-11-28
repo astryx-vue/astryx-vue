@@ -9,6 +9,8 @@ export type {
   WidthBreakpointName,
   WidthBreakpoints,
 } from './adaptationTypes.js'
+export { compactDefinition, DEFAULT_COMPACT_DEFINITION } from './compactDefinition.js'
+export type { CompactDefinition } from './compactDefinition.js'
 export { DATA_TOKEN_DEFAULTS } from './dataTokens.js'
 export type { DataTokenName } from './dataTokens.js'
 export { defineTheme, isDefinedTheme, neutralTheme, normalizeTokenName } from './defineTheme.js'
@@ -17,6 +19,7 @@ export { expandMotionScale } from './expandMotionScale.js'
 export { expandRadiusScale } from './expandRadiusScale.js'
 export { expandTypeScale } from './expandTypeScale.js'
 export { default as MediaTheme } from './MediaTheme.vue'
+export { STATUS_COLOR_DEFAULTS } from './statusColorDefaults.js'
 export { default as Theme } from './Theme.vue'
 export type {
   ColorScaleConfig,
@@ -24,11 +27,15 @@ export type {
   DefineThemeInput,
   MediaThemeMode,
   MediaThemeProps,
+  MotionCharacter,
   MotionScaleConfig,
   RadiusScaleConfig,
+  StyleBlock,
   StyleOverrides,
   ThemeDefinition,
   ThemeMode,
+  ThemeMotionConfig,
+  ThemeMotionKnobs,
   ThemeProps,
   ThemeSurfaceInput,
   ThemeTokens,

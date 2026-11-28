@@ -348,13 +348,20 @@ function errorCountLabel() {
                   density="compact"
                   :status="currentErrors.triggers ? { type: 'error', message: currentErrors.triggers } : undefined"
                 >
+                  <!-- 节点形式的 label 和 description 在窄屏会换行，字符串形式只显示一行。 -->
                   <CheckboxListItem
                     v-for="t in TRIGGERS"
                     :key="t.id"
                     :value="t.id"
                     :label="t.label"
-                    :description="t.description"
-                  />
+                  >
+                    <template #label>
+                      {{ t.label }}
+                    </template>
+                    <template #description>
+                      {{ t.description }}
+                    </template>
+                  </CheckboxListItem>
                 </CheckboxList>
                 <HStack :gap="2" align="center" wrap="wrap">
                   <Button label="Continue" variant="primary" @click="confirmStep" />
@@ -380,8 +387,14 @@ function errorCountLabel() {
                     :key="job.id"
                     :value="job.id"
                     :label="job.label"
-                    :description="job.description"
-                  />
+                  >
+                    <template #label>
+                      {{ job.label }}
+                    </template>
+                    <template #description>
+                      {{ job.description }}
+                    </template>
+                  </CheckboxListItem>
                 </CheckboxList>
                 <RadioList
                   v-model="runnerId"

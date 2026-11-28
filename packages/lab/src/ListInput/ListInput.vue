@@ -1,10 +1,21 @@
 <script setup lang="ts" generic="T">
+import type { Reorderable } from '@astryx-vue/core'
 import type { ListInputChange, ListInputEmits, ListInputProps } from './types.js'
-import { Button, EmptyState, Field, useAnnounce, useTranslator, VisuallyHidden } from '@astryx-vue/core'
+import {
+  Button,
+  createReorderable,
+  EmptyState,
+  Field,
+  listInputMessages,
+  unstable_ListReorderScope as ListReorderScope,
+  useAnnounce,
+  useComponentMessages,
+  useDevWarning,
+  unstable_useListReorderScope as useListReorderScope,
+} from '@astryx-vue/core'
 import { computed, ref, useId, useTemplateRef, watch } from 'vue'
-import { resolveGridTemplate } from './columns.js'
+import { moveItem, resolveGridTemplate } from './columns.js'
 import ListInputRow from './ListInputRow.vue'
-import { useListReorder } from './useListReorder.js'
 import '../../styles/list-input.css'
 
 defineOptions({ name: 'AstryxListInput', inheritAttrs: false })
@@ -12,6 +23,7 @@ defineOptions({ name: 'AstryxListInput', inheritAttrs: false })
 const props = withDefaults(defineProps<ListInputProps<T>>(), {
   modelValue: () => [],
   itemName: 'item',
+  reorderable: undefined,
   isReorderable: false,
   isDisabled: false,
   isLoading: false,
@@ -26,7 +38,7 @@ const props = withDefaults(defineProps<ListInputProps<T>>(), {
 })
 
 const emit = defineEmits<ListInputEmits<T>>()
-const { t } = useTranslator()
+const messages = useComponentMessages({ listInput: listInputMessages })
 const announce = useAnnounce()
 
 const uid = useId()
@@ -37,8 +49,8 @@ const statusId = computed(() => (props.status?.message ? `${groupId}-status` : u
 const reorderInstructionsId = `${groupId}-reorder-instructions`
 
 const groupRef = useTemplateRef<HTMLDivElement>('groupRef')
+const listRef = useTemplateRef<HTMLOListElement>('listRef')
 const addButtonRef = useTemplateRef<{ element: HTMLElement | null }>('addButtonRef')
-const previewHost = ref<HTMLElement | null>(null)
 
 const itemKeyOf = (item: T): string => String(props.getItemKey(item))
 const mutationsDisabled = computed(() => props.isDisabled || props.isLoading)
@@ -51,20 +63,11 @@ watch(() => props.modelValue, (next) => {
   liveValue.value = [...next]
 })
 
-const announceMessages = {
-  grabbed: (position: number) => t('@astryx.listInput.announceGrabbed', { itemName: props.itemName, position }),
-  movedToPosition: (position: number, total: number) => t('@astryx.listInput.announceMovedToPosition', { itemName: props.itemName, position, total }),
-  reorderCancelled: () => t('@astryx.listInput.announceReorderCancelled'),
-  returnedToPosition: (position: number) => t('@astryx.listInput.announceReturnedToPosition', { itemName: props.itemName, position }),
-  dropped: (position: number, total: number) => t('@astryx.listInput.announceDropped', { itemName: props.itemName, position, total }),
-  alreadyAtBoundary: (boundary: 'first' | 'last') => t('@astryx.listInput.announceAlreadyAtBoundary', { itemName: props.itemName, boundary }),
-}
-
 const labels = {
-  remove: (position: number) => t('@astryx.listInput.removeItem', { itemName: props.itemName, position }),
-  removeUnavailable: () => t('@astryx.listInput.removeUnavailable', { itemName: props.itemName }),
-  reorder: (position: number) => t('@astryx.listInput.reorderItem', { itemName: props.itemName, position }),
-  fieldLabel: (header: string, position: number, total: number) => t('@astryx.listInput.fieldLabelWithPosition', { header, itemName: props.itemName, position, total }),
+  remove: (position: number) => messages.value.listInput.removeItem(props.itemName, position),
+  removeUnavailable: () => messages.value.listInput.removeUnavailable,
+  itemName: (position: number) => messages.value.listInput.itemName(props.itemName, position),
+  fieldLabel: (header: string, position: number, total: number) => messages.value.listInput.fieldLabelWithPosition(header, props.itemName, position, total),
 }
 
 function emitValue(nextValue: T[], change: ListInputChange<T>): void {
@@ -77,25 +80,41 @@ function rowElement(itemKey: string): HTMLElement | null {
   return groupRef.value?.querySelector<HTMLElement>(`[data-list-input-row="${itemKey}"]`) ?? null
 }
 
-const reorder = useListReorder<T>({
-  currentValue: () => liveValue.value,
-  getItemKey: item => props.getItemKey(item),
-  isReorderable: () => props.isReorderable,
-  isBlocked: () => mutationsDisabled.value,
-  rowElement,
-  previewHost,
-  emitReorder: (nextValue, change) => emitValue(nextValue, change),
-  announce,
-  messages: announceMessages,
+/**
+ * `isReorderable` 的兼容写法：一个内置的可重排对象，挪动照旧通过 `v-model` 和 `change`（`type: 'reorder'`）交回去。
+ */
+const builtInReorderable = createReorderable<string | number>({
+  onReorder: ({ key, to }) => {
+    const value = liveValue.value
+    const fromIndex = value.findIndex(item => itemKeyOf(item) === String(key))
+    if (fromIndex < 0 || fromIndex === to || to < 0 || to >= value.length)
+      return
+    emitValue(moveItem(value, fromIndex, to), { type: 'reorder', item: value[fromIndex] as T, fromIndex, toIndex: to })
+  },
 })
 
-// 列表变成禁用或加载中时，进行中的重排立刻放弃，不让顺序改动漏出去。
-watch(mutationsDisabled, (blocked) => {
-  if (blocked && reorder.state.value != null) {
-    reorder.state.value = null
-    announce(announceMessages.reorderCancelled())
-  }
-})
+const reorderable = computed<Reorderable | undefined>(() =>
+  props.reorderable ?? (props.isReorderable ? builtInReorderable as Reorderable : undefined),
+)
+
+useDevWarning(
+  'ListInput',
+  '`isReorderable` is deprecated. Pass `reorderable` (made by `createReorderable` or `useReorderable`) instead.',
+  () => props.isReorderable,
+)
+
+// 记录走 core List 的重排会话：手柄、拖动副本、落点线、边缘滚动、重排模式和播报都和 List 一样。
+// 列表禁用或加载中时手柄仍可聚焦，但不再接受拖动和按键。
+const reorderScope = useListReorderScope(() => reorderable.value, () => listRef.value, reorderInstructionsId)
+
+/** 有手柄的记录拿到会话的手柄和它的名字；对象的 `isReorderable` 拒绝的记录留在原位、没有手柄。 */
+function rowReorder(item: T, index: number) {
+  const scope = reorderScope.value
+  const key = props.getItemKey(item)
+  if (scope == null || !(scope.options.isReorderable?.(key) ?? true))
+    return null
+  return { handle: scope.session.Handle, itemKey: key, label: labels.itemName(index + 1) }
+}
 
 const focusableFieldSelector = '[data-list-input-cell] input, [data-list-input-cell] select, [data-list-input-cell] textarea, [data-list-input-cell] button, [data-list-input-cell] [tabindex]:not([tabindex="-1"])'
 
@@ -127,7 +146,7 @@ function handleAdd(): void {
   const nextValue = [...props.modelValue, item]
   pendingFocus = { itemKey: itemKeyOf(item), target: 'first-field' }
   emitValue(nextValue, { type: 'add', item, index: props.modelValue.length })
-  announce(t('@astryx.listInput.announceAdded', { itemName: props.itemName, position: props.modelValue.length + 1 }))
+  announce(messages.value.listInput.announceAdded(props.itemName, props.modelValue.length + 1))
 }
 
 function handleUpdate(item: T, index: number, nextItem: T, columnKey?: string): void {
@@ -151,19 +170,12 @@ function handleRemove(item: T): void {
     ? { target: 'add' }
     : { itemKey: itemKeyOf(nextFocusItem), target: 'remove' }
   emitValue(nextValue, { type: 'remove', item: props.modelValue[index] as T, index })
-  announce(t('@astryx.listInput.announceRemoved', { itemName: props.itemName, position: index + 1 }))
+  announce(messages.value.listInput.announceRemoved(props.itemName, index + 1))
 }
 
 const handlers = {
   updateItem: (item: T, index: number, nextItem: T, columnKey?: string) => handleUpdate(item, index, nextItem, columnKey),
   remove: (item: T) => handleRemove(item),
-  keydown: (event: KeyboardEvent, item: T, index: number) => reorder.onHandleKeydown(event, item, index),
-  blur: (item: T) => reorder.onHandleBlur(item),
-  pointerdown: (event: PointerEvent, item: T, index: number) => reorder.onHandlePointerDown(event, item, index),
-  pointermove: (event: PointerEvent) => reorder.onHandlePointerMove(event),
-  pointerup: (event: PointerEvent) => reorder.onHandlePointerUp(event),
-  pointercancel: (event: PointerEvent) => reorder.onHandlePointerCancel(event),
-  lostpointercapture: (event: PointerEvent) => reorder.onHandleLostPointerCapture(event),
 }
 
 const fieldStatusFor = (item: T, index: number) => (columnKey: string) => props.getFieldStatus?.(item, columnKey, index)
@@ -203,52 +215,38 @@ watch([() => props.modelValue, () => props.columns, () => props.getItemKey], () 
     <div
       :id="groupId" ref="groupRef" role="group" :aria-labelledby="labelId" :aria-describedby="describedBy"
       :aria-disabled="isDisabled || undefined" :aria-busy="isLoading || undefined"
-      class="astryx-list-input" :data-reorderable="isReorderable ? 'true' : undefined"
+      class="astryx-list-input" :data-reorderable="reorderScope ? 'true' : undefined"
       :data-state="isLoading ? 'loading' : isDisabled ? 'disabled' : undefined"
     >
-      <ol :aria-labelledby="labelId" :aria-describedby="describedBy" class="astryx-list-input__list">
-        <li v-if="reorder.displayValue.value.length === 0" data-list-input-motion-key="state:empty" class="astryx-list-input__empty-item">
-          <EmptyState
-            :title="t('@astryx.listInput.emptyTitle', { itemName })"
-            :description="t('@astryx.listInput.emptyDescription', { itemName })" is-compact
+      <ListReorderScope :reorder="reorderScope">
+        <ol ref="listRef" :aria-labelledby="labelId" :aria-describedby="describedBy" class="astryx-list-input__list">
+          <li v-if="modelValue.length === 0" data-list-input-motion-key="state:empty" class="astryx-list-input__empty-item">
+            <EmptyState
+              :title="messages.listInput.emptyTitle(itemName)"
+              :description="messages.listInput.emptyDescription(itemName)" is-compact
+            />
+          </li>
+          <ListInputRow
+            v-for="(item, index) in modelValue" :key="itemKeyOf(item)"
+            :item="item as unknown as Record<string, unknown>" :index="index" :total="modelValue.length"
+            :columns="columns as never" :grid-template="gridTemplate" :item-key="itemKeyOf(item)"
+            :is-disabled="isDisabled" :is-loading="isLoading" :reorder="rowReorder(item, index)"
+            :field-status="fieldStatusFor(item, index)" :item-status="getItemStatus?.(item, index)"
+            :item-status-id="getItemStatus?.(item, index)?.message ? `${groupId}-item-${index}-status` : undefined"
+            :labels="labels" :handlers="handlers as never"
           />
-        </li>
-        <ListInputRow
-          v-for="(item, index) in reorder.displayValue.value" :key="itemKeyOf(item)"
-          :item="item as unknown as Record<string, unknown>" :index="index" :total="reorder.displayValue.value.length"
-          :columns="columns as never" :grid-template="gridTemplate" :item-key="itemKeyOf(item)"
-          :item-name="itemName" :is-disabled="isDisabled" :is-loading="isLoading" :is-reorderable="isReorderable"
-          :is-reorder-source="reorder.state.value?.itemKey === itemKeyOf(item)"
-          :is-pointer-source="reorder.sourceKey.value === itemKeyOf(item)"
-          :is-keyboard-active="reorder.keyboardKey.value === itemKeyOf(item)"
-          :drop-position="reorder.pointerDrop.value?.itemKey === itemKeyOf(item) ? reorder.pointerDrop.value.position : null"
-          :field-status="fieldStatusFor(item, index)" :item-status="getItemStatus?.(item, index)"
-          :item-status-id="getItemStatus?.(item, index)?.message ? `${groupId}-item-${index}-status` : undefined"
-          :reorder-instructions-id="reorderInstructionsId" :labels="labels" :handlers="handlers as never"
-        />
-      </ol>
+        </ol>
+      </ListReorderScope>
 
       <div data-list-input-motion-key="action:add" class="astryx-list-input__action-row">
         <div data-list-input-add-content="" class="astryx-list-input__action-content">
           <Button
-            ref="addButtonRef" :label="t('@astryx.listInput.addItem', { itemName })" variant="secondary"
+            ref="addButtonRef" :label="messages.listInput.addItem(itemName)" variant="secondary"
             size="md" width="100%" :is-disabled="isDisabled || hasReachedMax" :is-loading="isLoading"
             @click="handleAdd"
           />
         </div>
       </div>
-
-      <VisuallyHidden v-if="isReorderable" :id="reorderInstructionsId" as="div">
-        {{ t('@astryx.listInput.reorderInstructions') }}
-      </VisuallyHidden>
     </div>
-
-    <Teleport to="body">
-      <div
-        v-if="reorder.previewStyle.value != null" ref="previewHost"
-        class="astryx-list-input__drag-preview" data-list-input-drag-preview
-        aria-hidden="true" :style="reorder.previewStyle.value"
-      />
-    </Teleport>
   </Field>
 </template>

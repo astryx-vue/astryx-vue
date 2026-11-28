@@ -1,19 +1,18 @@
 node_modules/
 **/dist/
-# 迁到 KawaPress 之前的 VitePress 缓存，本地留着的旧目录不进仓库
-**/.vitepress/
 coverage/
 *.log
 *.tsbuildinfo
 .DS_Store
 
 # 蜂群运行时产物
-.agents-work/upstream-sync-0.7.1/locks/
-.agents-work/upstream-sync-0.7.1/nodes/*/evidence/
-.agents-work/upstream-sync-0.7.1/visual/
-.agents-work/upstream-sync-0.7.1/a11y/
+.agents-work/upstream-sync/visual/
+.agents-work/upstream-sync/a11y/
 # CI 视觉对照的输出目录（.github/workflows/visual-compare.yml）
 visual-out/
 .upstream-sync/
-.tmp-d12/
-.tmp-d20/
+
+# Claude Code 的本地文件（技能 .claude/skills/ 要提交）
+.claude/worktrees/
+.claude/settings.local.json
+.claude/launch.json

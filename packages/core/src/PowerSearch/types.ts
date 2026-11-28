@@ -1,6 +1,7 @@
 import type { Component, VNodeChild } from 'vue'
 import type { SearchableItem, SearchSource } from '../composables/useAsyncSource.js'
 import type { FieldPartStylingProps } from '../Field/fieldParts.js'
+import type { FieldStatusPlacement } from '../Field/types.js'
 
 export interface EmptyOperatorValue {
   readonly type: 'empty'
@@ -46,6 +47,10 @@ export interface TimeOperatorValue {
 
 export interface DateAbsoluteOperatorValue {
   readonly type: 'date_absolute'
+  /**
+   * 不写或为 true：值是一个日历日，用日期选择框编辑，按 `timezoneID` 里的那一天显示。
+   * false：值是带时刻的时间点，用日期时间输入框编辑，按 `timezoneID`（没给就用查看者的时区）显示日期和时间。
+   */
   readonly isDateOnly?: boolean
 }
 
@@ -243,8 +248,10 @@ export type PowerSearchItem = SearchableItem<PowerSearchAuxData>
 
 export type PowerSearchSize = 'sm' | 'md' | 'lg'
 export type PowerSearchStatus = 'default' | 'success' | 'warning' | 'error'
-export type PowerSearchStatusVariant = 'attached' | 'detached'
+export type PowerSearchStatusVariant = FieldStatusPlacement
 export type PowerSearchOverflow = 'none' | 'unfocused-inline' | 'unfocused-layer'
+
+export type PowerSearchPresentation = 'popover' | 'bottom-sheet' | 'adaptive'
 
 export interface PowerSearchTokenProps {
   config: PowerSearchConfig
@@ -286,7 +293,7 @@ export interface PowerSearchProps extends FieldPartStylingProps {
   labelHidden?: boolean
   placeholder?: string
   autofocus?: boolean
-  /** 有筛选条件时显示全部清空按钮。默认 true。 */
+  /** 有可编辑的筛选条件时显示全部清空按钮；点它移除所有可编辑的条件，只读条件保留。默认 true。 */
   hasClear?: boolean
   /** 有筛选条件时显示全部清空按钮。等同于 hasClear。 */
   clearable?: boolean
@@ -315,6 +322,15 @@ export interface PowerSearchProps extends FieldPartStylingProps {
   resultCount?: number | string
   size?: PowerSearchSize
   components?: PowerSearchComponents
+  /**
+   * 筛选条件在哪里编辑。`popover` 是行内输入框加锚定菜单和编辑浮层；`bottom-sheet` 让字段变成
+   * 触发器，在触屏底部弹层里编辑一份草稿：「筛选条件」列出现有条件，「添加筛选条件」挑字段，
+   * 再在值那一步编辑，按「完成」才把改动按顺序交出，草稿改过时下滑、点遮罩、Escape 会先确认
+   * 要不要放弃；`adaptive` 在紧凑触屏上用底部弹层，其余用浮层。底部弹层里 `menuWidth`、`overflow`
+   * 没有地方生效，开发期会提示一次；想在所有设备上保留行内字段就传 `popover`。
+   * @default 'adaptive'
+   */
+  presentation?: PowerSearchPresentation
 }
 
 export interface PowerSearchEmits {

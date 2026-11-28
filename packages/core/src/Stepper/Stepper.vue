@@ -2,7 +2,8 @@
 import type { StepRegistration } from './context.js'
 import type { StepperProps, StepperSlots } from './types.js'
 import { computed, onMounted, onUnmounted, provide, ref, useTemplateRef, watch } from 'vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { stepperMessages } from '../locale/messages/stepper.js'
 import { stepperContextKey } from './context.js'
 import { resolveStepGlyph, shouldCollapseStepper } from './logic.js'
 import StepMarker from './StepMarker.vue'
@@ -19,7 +20,7 @@ const props = withDefaults(defineProps<StepperProps>(), {
 
 defineSlots<StepperSlots>()
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ stepper: stepperMessages })
 const root = useTemplateRef<HTMLElement>('root')
 const width = ref(Number.POSITIVE_INFINITY)
 const steps = ref<StepRegistration[]>([])

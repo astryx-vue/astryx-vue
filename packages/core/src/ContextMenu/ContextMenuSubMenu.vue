@@ -1,17 +1,20 @@
 <script setup lang="ts">
 import type { StyleValue } from 'vue'
 import type { ContextMenuItemData, ContextMenuSubMenuEmits, ContextMenuSubMenuProps, ContextMenuSubMenuSlots } from './types.js'
-import { computed, inject, nextTick, provide, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
+import { computed, inject, nextTick, provide, ref, useAttrs, useId, useSlots, useTemplateRef, watch } from 'vue'
+import { focusForLastInput } from '../composables/internal/focusReturn.js'
+import { keepDisabledRowUnfocused } from '../composables/internal/menuActivation.js'
 import { useDismiss } from '../composables/useDismiss.js'
 import { useOverflow } from '../composables/useOverflow.js'
+import { useDropdownMenuMessages } from '../DropdownMenu/useDropdownMenuMessages.js'
 import { useSubmenuMode } from '../DropdownMenu/useSubmenuMode.js'
 import Icon from '../Icon/Icon.vue'
 import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
-import { useAstryxMessages } from '../locale/index.js'
 import Spinner from '../Spinner/Spinner.vue'
+import { readAccessibleName } from '../utils/accessibleName.js'
 import { isImeKeyEvent } from '../utils/ime.js'
-import { submenuAncestorOpenKey, useContextMenu, useContextMenuSize } from './context.js'
+import { contextMenuContextKey, submenuAncestorOpenKey, useContextMenu, useContextMenuSize } from './context.js'
 import ContextMenuItem from './ContextMenuItem.vue'
 import ContextMenuItems from './ContextMenuItems.vue'
 import { useMenuNav } from './menuNav.js'
@@ -33,7 +36,7 @@ const attrs = useAttrs()
 
 const menu = useContextMenu()
 const size = useContextMenuSize()
-const messages = useAstryxMessages()
+const messages = useDropdownMenuMessages()
 const GAP = 4
 const viewId = useId()
 const mode = useSubmenuMode({
@@ -57,13 +60,36 @@ const flyout = useTemplateRef<HTMLElement>('flyout')
 const isOpen = ref(false)
 
 const flyoutId = `astryx-context-menu-submenu-${useId()}`
-const flyoutLabel = computed(() => (typeof props.label === 'string' ? props.label : menu?.menuLabel.value ?? 'Submenu'))
+const slots = useSlots()
+const stringLabel = computed(() => (typeof props.label === 'string' && props.label !== '' ? props.label : undefined))
+// 标签是节点（label 插槽）时，渲染在自己的元素里：展开的视图用它命名，
+// 嵌套视图的返回行用打开这一层时读到的文字。
+const hasNodeLabel = computed(() => stringLabel.value == null && slots.label != null)
+const nodeLabelId = `astryx-context-submenu-label-${useId()}`
+const nodeLabelText = ref<string | undefined>()
+const flyoutLabel = computed(() => stringLabel.value ?? menu?.menuLabel.value ?? 'Submenu')
+const viewAriaLabel = computed(() => (hasNodeLabel.value ? undefined : flyoutLabel.value))
+const viewLabelledBy = computed(() => (hasNodeLabel.value ? nodeLabelId : undefined))
 const ancestorOpen = inject(submenuAncestorOpenKey, computed(() => true))
 const showsFlyout = computed(() => isOpen.value && (menu?.isOpen.value ?? true) && ancestorOpen.value)
 
 // Nested flyouts teleport to body, so a closed ancestor would otherwise leave
 // them on screen. Descendants read this level's visibility and close with it.
 provide(submenuAncestorOpenKey, showsFlyout)
+
+const isShown = computed(() => (isDrill.value ? drillOnStack.value : showsFlyout.value))
+watch(isShown, (shown) => {
+  if (shown && hasNodeLabel.value)
+    nodeLabelText.value = readAccessibleName(document.getElementById(nodeLabelId))
+})
+
+// 下一层的行读到的菜单名是这一层的名字：嵌套视图的返回行写「返回到 这一层」。
+if (menu != null) {
+  provide(contextMenuContextKey, {
+    ...menu,
+    menuLabel: computed(() => stringLabel.value ?? (hasNodeLabel.value ? nodeLabelText.value : undefined) ?? menu.menuLabel.value),
+  })
+}
 
 const { position, teleportTarget } = usePositionedLayer({
   anchor: row,
@@ -211,7 +237,7 @@ function onRowPointerMove(event: PointerEvent): void {
   if (element == null || element === element.ownerDocument.activeElement)
     return
   // Same single highlight as a plain row: hover moves focus onto the row.
-  element.focus({ preventScroll: true })
+  focusForLastInput(element, { preventScroll: true })
 }
 
 function onFlyoutKeyDown(event: KeyboardEvent): void {
@@ -252,7 +278,6 @@ watch(ancestorOpen, (visible) => {
 </script>
 
 <template>
-  <!-- eslint-disable-next-line vue-a11y/interactive-supports-focus -- The dynamic tabindex is -1 while enabled, the only state that is focusable, and is removed while disabled. -->
   <div
     ref="row"
     v-bind="attrs"
@@ -266,9 +291,10 @@ watch(ancestorOpen, (visible) => {
     :data-size="size"
     role="menuitem"
     :style="attrs.style as StyleValue"
-    :tabindex="isDisabled ? undefined : -1"
+    tabindex="-1"
     @click="onRowClick"
     @focusout="onRowFocusOut"
+    @mousedown="isDisabled && keepDisabledRowUnfocused($event)"
     @keydown="onRowKeyDown"
     @pointerenter="onRowPointerEnter"
     @pointerleave="hover.onTriggerPointerLeave"
@@ -280,7 +306,7 @@ watch(ancestorOpen, (visible) => {
       </slot>
     </span>
     <span class="astryx-context-menu-item__content">
-      <span class="astryx-context-menu-item__label" data-menu-item-label>
+      <span :id="hasNodeLabel ? nodeLabelId : undefined" class="astryx-context-menu-item__label" data-menu-item-label>
         <slot name="label">{{ label }}</slot>
       </span>
       <span
@@ -306,7 +332,8 @@ watch(ancestorOpen, (visible) => {
       ref="flyout"
       class="astryx-context-menu astryx-context-menu--flyout"
       role="menu"
-      :aria-label="flyoutLabel"
+      :aria-label="viewAriaLabel"
+      :aria-labelledby="viewLabelledBy"
       :hidden="drillIsTop ? undefined : true"
       tabindex="-1"
       @keydown="onFlyoutKeyDown"
@@ -329,7 +356,8 @@ watch(ancestorOpen, (visible) => {
         v-show="showsFlyout"
         :id="flyoutId"
         ref="flyout"
-        :aria-label="flyoutLabel"
+        :aria-label="viewAriaLabel"
+        :aria-labelledby="viewLabelledBy"
         class="astryx-context-menu astryx-context-menu--flyout"
         :data-overflow="hasOverflow || undefined"
         :data-placement="position.placement"

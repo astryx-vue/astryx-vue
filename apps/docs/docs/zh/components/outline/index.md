@@ -45,6 +45,7 @@ const items = [
 | <Badge variant="success">推荐</Badge> | 每个 `id` 指向真实标题，`level` 和那个标题的级别一致。 |
 | <Badge variant="success">推荐</Badge> | 页面有粘性顶栏时，把 `offset` 设成顶栏高度，当前项和滚动落点才对得上。 |
 | <Badge variant="success">推荐</Badge> | 窄侧栏用 `density="compact"`，长文旁边用 `default`。 |
+| <Badge variant="success">推荐</Badge> | 页面上有不止一个导航地标时，给每个 Outline 一个不同的 `label`，读屏用户才分得清。 |
 | <Badge variant="error">避免</Badge> | 传了 `activeId` 还指望内置滚动侦测继续改它。只要传入，侦测就关掉。 |
 | <Badge variant="error">避免</Badge> | 再用额外标记自己缩进。级别已经决定缩进。 |
 

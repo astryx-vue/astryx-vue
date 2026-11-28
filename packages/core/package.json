@@ -1,7 +1,7 @@
 {
   "name": "@astryx-vue/core",
   "type": "module",
-  "version": "0.7.22",
+  "version": "0.42.2",
   "description": "Vue 3 components for the unofficial astryx-vue port of Astryx. Not affiliated with Meta.",
   "author": "ShenQingchuan",
   "license": "MIT",
@@ -259,6 +259,11 @@
       "types": "./dist/Stepper/index.d.ts",
       "import": "./dist/Stepper/index.js"
     },
+    "./Swipe": {
+      "source": "./src/Swipe/index.ts",
+      "types": "./dist/Swipe/index.d.ts",
+      "import": "./dist/Swipe/index.js"
+    },
     "./Table": {
       "source": "./src/Table/index.ts",
       "types": "./dist/Table/index.d.ts",
@@ -414,6 +419,51 @@
       "types": "./dist/Code/index.d.ts",
       "import": "./dist/Code/index.js"
     },
+    "./Code/languages/dockerfile": {
+      "source": "./src/Code/languages/dockerfile/index.ts",
+      "types": "./dist/Code/languages/dockerfile/index.d.ts",
+      "import": "./dist/Code/languages/dockerfile/index.js"
+    },
+    "./Code/languages/graphql": {
+      "source": "./src/Code/languages/graphql/index.ts",
+      "types": "./dist/Code/languages/graphql/index.d.ts",
+      "import": "./dist/Code/languages/graphql/index.js"
+    },
+    "./Code/languages/java": {
+      "source": "./src/Code/languages/java/index.ts",
+      "types": "./dist/Code/languages/java/index.d.ts",
+      "import": "./dist/Code/languages/java/index.js"
+    },
+    "./Code/languages/lua": {
+      "source": "./src/Code/languages/lua/index.ts",
+      "types": "./dist/Code/languages/lua/index.d.ts",
+      "import": "./dist/Code/languages/lua/index.js"
+    },
+    "./Code/languages/objective-c": {
+      "source": "./src/Code/languages/objective-c/index.ts",
+      "types": "./dist/Code/languages/objective-c/index.d.ts",
+      "import": "./dist/Code/languages/objective-c/index.js"
+    },
+    "./Code/languages/powershell": {
+      "source": "./src/Code/languages/powershell/index.ts",
+      "types": "./dist/Code/languages/powershell/index.d.ts",
+      "import": "./dist/Code/languages/powershell/index.js"
+    },
+    "./Code/languages/ruby": {
+      "source": "./src/Code/languages/ruby/index.ts",
+      "types": "./dist/Code/languages/ruby/index.d.ts",
+      "import": "./dist/Code/languages/ruby/index.js"
+    },
+    "./Code/languages/thrift": {
+      "source": "./src/Code/languages/thrift/index.ts",
+      "types": "./dist/Code/languages/thrift/index.d.ts",
+      "import": "./dist/Code/languages/thrift/index.js"
+    },
+    "./Code/languages/toml": {
+      "source": "./src/Code/languages/toml/index.ts",
+      "types": "./dist/Code/languages/toml/index.d.ts",
+      "import": "./dist/Code/languages/toml/index.js"
+    },
     "./DropdownMenu": {
       "source": "./src/DropdownMenu/index.ts",
       "types": "./dist/DropdownMenu/index.d.ts",
@@ -564,7 +614,17 @@
       "types": "./dist/locale/index.d.ts",
       "import": "./dist/locale/index.js"
     },
+    "./internal/touch": {
+      "source": "./src/internal/touch.ts",
+      "types": "./dist/internal/touch.d.ts",
+      "import": "./dist/internal/touch.js"
+    },
     "./locales/*.json": "./locales/*.json",
+    "./palette": {
+      "source": "./src/palette/index.ts",
+      "types": "./dist/palette/index.d.ts",
+      "import": "./dist/palette/index.js"
+    },
     "./package.json": "./package.json",
     "./reset.css": {
       "types": "./css.d.ts",
@@ -820,6 +880,10 @@
         "types": "./dist/Stepper/index.d.ts",
         "import": "./dist/Stepper/index.js"
       },
+      "./Swipe": {
+        "types": "./dist/Swipe/index.d.ts",
+        "import": "./dist/Swipe/index.js"
+      },
       "./Table": {
         "types": "./dist/Table/index.d.ts",
         "import": "./dist/Table/index.js"
@@ -944,6 +1008,42 @@
         "types": "./dist/Code/index.d.ts",
         "import": "./dist/Code/index.js"
       },
+      "./Code/languages/dockerfile": {
+        "types": "./dist/Code/languages/dockerfile/index.d.ts",
+        "import": "./dist/Code/languages/dockerfile/index.js"
+      },
+      "./Code/languages/graphql": {
+        "types": "./dist/Code/languages/graphql/index.d.ts",
+        "import": "./dist/Code/languages/graphql/index.js"
+      },
+      "./Code/languages/java": {
+        "types": "./dist/Code/languages/java/index.d.ts",
+        "import": "./dist/Code/languages/java/index.js"
+      },
+      "./Code/languages/lua": {
+        "types": "./dist/Code/languages/lua/index.d.ts",
+        "import": "./dist/Code/languages/lua/index.js"
+      },
+      "./Code/languages/objective-c": {
+        "types": "./dist/Code/languages/objective-c/index.d.ts",
+        "import": "./dist/Code/languages/objective-c/index.js"
+      },
+      "./Code/languages/powershell": {
+        "types": "./dist/Code/languages/powershell/index.d.ts",
+        "import": "./dist/Code/languages/powershell/index.js"
+      },
+      "./Code/languages/ruby": {
+        "types": "./dist/Code/languages/ruby/index.d.ts",
+        "import": "./dist/Code/languages/ruby/index.js"
+      },
+      "./Code/languages/thrift": {
+        "types": "./dist/Code/languages/thrift/index.d.ts",
+        "import": "./dist/Code/languages/thrift/index.js"
+      },
+      "./Code/languages/toml": {
+        "types": "./dist/Code/languages/toml/index.d.ts",
+        "import": "./dist/Code/languages/toml/index.js"
+      },
       "./DropdownMenu": {
         "types": "./dist/DropdownMenu/index.d.ts",
         "import": "./dist/DropdownMenu/index.js"
@@ -1064,7 +1164,15 @@
         "types": "./dist/locale/index.d.ts",
         "import": "./dist/locale/index.js"
       },
+      "./internal/touch": {
+        "types": "./dist/internal/touch.d.ts",
+        "import": "./dist/internal/touch.js"
+      },
       "./locales/*.json": "./locales/*.json",
+      "./palette": {
+        "types": "./dist/palette/index.d.ts",
+        "import": "./dist/palette/index.js"
+      },
       "./package.json": "./package.json",
       "./reset.css": {
         "types": "./css.d.ts",

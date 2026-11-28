@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { bottomSheetAdaptiveDialog, bottomSheetAdaptiveMenu, bottomSheetHeights, bottomSheetKeyboard, bottomSheetMultiSelector, bottomSheetNoScrim, bottomSheetSelector, bottomSheetSnapPoints, bottomSheetSwitcher } from '../../../../components/demos/bottom-sheet'
+import { bottomSheetAdaptiveDialog, bottomSheetAdaptiveMenu, bottomSheetHeights, bottomSheetKeyboard, bottomSheetMultiSelector, bottomSheetMultiStep, bottomSheetNoScrim, bottomSheetSelector, bottomSheetSnapPoints } from '../../../../components/demos/bottom-sheet'
 </script>
 
 ## 使用方法
@@ -40,12 +40,56 @@ const isOpen = ref(false)
 
 `snapPoints` 让用户可以拖动面板停在中间高度，而不仅仅是全开或关闭。每个点位写的是面板的可见高度：数字是视口比例（`0.5` 就是半个屏幕），`"50%"` 是同样的意思，`"320px"` 是绝对高度。面板自身的高度始终是最高的那一档，所以 `snap-points="[0.5]"` 表示「要么半屏，要么全屏」。短到只有自身四分之一以下的档位被视为「露一角」：它不重排内容，而是把整块面板滑走一部分，同时把遮罩调淡。不传 `snapPoints` 时面板只支持打开和关闭，拖动仍可以关闭它。
 
-向下拖动可以关闭面板，向上快速一甩会把面板展开到最高档。拖动时遮罩的深浅跟随面板的位置变化，松手后停到最近的档位。拖动条和（滚动到顶部后的）内容区都可以发起拖动。系统开启「减少动态效果」时，进入和退出的动画会缩短到几乎不可见，但面板的位置和状态变化照常发生。
+向下拖动可以关闭面板，向上快速一甩会把面板展开到更高的档位。手指松开时按 iOS 的规则判断去处：轻快地一甩就能翻到下一档或直接关闭，松手前往回拉则回到起点那一档；往上拉过最高档会有橡皮筋一样的阻力。手指甩下关闭时，面板顺着松手的速度用弹簧滑出，遮罩沿同一条曲线淡去。拖动时遮罩的深浅跟随面板的位置变化，任何方式关闭时遮罩都会淡出。拖动条和内容区都可以发起拖动：内容滚到顶再往下拉、滚到底再往上拉，面板会接过这次滑动。系统开启「减少动态效果」时，进入和退出的动画会缩短到几乎不可见；手指甩下关闭时面板在原地淡出，不再滑动。
 
 `purpose` 控制隐式关闭的尺度，和 `Dialog` 一致。默认的 `info` 允许 Escape、点击遮罩和向下拖动；`form` 只允许 Escape，避免用户误触遮罩丢失已经输入的内容；`required` 屏蔽全部隐式关闭，并使用 `alertdialog` 语义，用于必须由用户明确响应的流程。想要面板和页面同时可交互时，把 `hasScrim` 设为 `false`：面板会用非模态方式打开，背景不再被压暗，页面可以继续滚动和点击，拖动关闭依旧可用。非模态面板不会把焦点从页面上抢走，因此 Escape 只在焦点位于面板内部时才会关闭它。
 
-`padding` 设置内容区的内边距，取值来自全局间距刻度。不设置时使用主题为底部弹窗定义的内边距，主题没有定义时取 `--spacing-4`（16px），四个逻辑边相同；传入 `0` 可以让内容紧贴面板边缘。内容区会把实际用上的边距发布给里面的内容：唯一子元素如果是自带内边距的区块，会顶掉这层边距；表格和分隔线会伸到这条边上，不会再缩一圈。
+`padding` 设置内容区的内边距，取值来自全局间距刻度。不设置时使用主题为底部弹窗定义的内边距，主题没有定义时取 `--spacing-4`（16px），四个逻辑边相同；传入 `0` 可以让内容紧贴面板边缘。内容区会把实际用上的边距发布给里面的内容：唯一子元素如果是自带内边距的区块，会顶掉这层边距；表格和分隔线会伸到这条边上，不会再缩一圈。顶部不管内边距是多少（包括 `0`），内容都从抓手条下方 24px 的区域之后开始：这一段不算内边距，子元素顶不掉它，所以第一行不会压在抓手条下面，滚动起来的内容仍会从抓手条底下经过。
 
+
+### 叠放
+
+每张面板各管各的 `isOpen`。一张带遮罩的面板开着时再打开另一张，新的会叠在上面：下面那张不卸载，滚动位置和填好的内容都留着，只是往后退一点（紧挨着的那张缩到 0.96、上移 8px，更深的缩到 0.92、上移 16px），并被上面那张的模态对话框挡住，点不到、按键也到不了。几张面板可以是兄弟、分在不同组件里，也可以写在另一张面板的内容里；整段 `BottomSheetSwitcher` 算一层。DOM 不会挪动，也不需要额外的包裹组件。
+
+谁在上面看打开顺序：最近打开、还开着的那张在最上面，关掉再打开的会回到最上面。同一次更新里一起打开的几张没有先后，就按模板里的先后排：外面的面板在它内容里的面板下面，兄弟按写的顺序。
+
+整叠只有一层遮罩：只有最底下那张压暗页面，上面几张的遮罩是透明的，所以叠得再多也不会越来越暗。Escape、点遮罩、下滑和平台的返回手势只作用于最上面那张，按它自己的 `purpose` 判断；没有一下关掉整叠的操作，流程结束时在同一次更新里把每张都设成关闭，它们会一起离开。写在某张面板内容里的面板只在那张开着时呈现，那张关掉时跟着离开，但它自己的 `isOpen` 不会被改动，那张再打开时如果它还开着，会重新出现在最上面。
+
+### 替换
+
+多步流程不需要切换器：每一步写成一张独立的面板，用一个状态值说明哪一步开着。在同一次更新里关掉最上面那张、打开另一张，新的那张会替换它，而不是叠上去：新面板从下面升到被替换那张的上面；被替换的那张比它高时，同时往下移到新面板停下的顶边；两边都走完后，被替换的那张才淡出，它从一开始就不能操作、也不会被读屏读到。整个过程遮罩一直稳着、不闪；焦点进到新面板里；流程关掉时，焦点回到最初打开第一张的那个控件。
+
+只有这几个条件都满足才算替换：这次更新里正好一张关、一张开；关的那张是它那一叠最上面的；而且这一步是从关的那张里面发起的（最近按下的控件，或者没有最近按下时获得焦点的元素，在关的那张里，比如这一步自己的「下一步」「上一步」按钮）。从两张面板外面的控件同时关一张开一张、在不同的更新里先关后开，都还是普通的叠放进出。
+
+```vue
+<script setup lang="ts">
+import { BottomSheet } from '@astryx-vue/core/BottomSheet'
+import { ref } from 'vue'
+
+const step = ref<'details' | 'pay' | null>(null)
+
+function onOpenChange(open: boolean): void {
+  if (!open)
+    step.value = null
+}
+</script>
+
+<template>
+  <button type="button" @click="step = 'details'">
+    开始结账
+  </button>
+  <BottomSheet :is-open="step === 'details'" label="订单信息" @open-change="onOpenChange">
+    <button type="button" @click="step = 'pay'">
+      下一步
+    </button>
+  </BottomSheet>
+  <BottomSheet :is-open="step === 'pay'" label="付款" @open-change="onOpenChange">
+    <button type="button" @click="step = 'details'">
+      上一步
+    </button>
+  </BottomSheet>
+</template>
+```
 
 <ComponentAnatomy />
 
@@ -120,17 +164,17 @@ const isOpen = ref(false)
 />
 
 <DemoExample
-  :demo="bottomSheetSwitcher"
-  description="结账分成两张底栏，共用一个对话框。换页时遮罩不闪。"
+  :demo="bottomSheetMultiStep"
+  description="结账分成两张独立的底栏，由一个状态值切换；在开着的那张里点下一步，新的一张原地替换它，遮罩不闪。"
   locale="zh"
-  title="多步切换"
+  title="多步流程"
 />
 
 ## 无障碍
 
 面板基于原生 `<dialog>` 元素构建。带遮罩时使用 `showModal()` 打开，浏览器会把它放到顶层、把背景设为不可交互，并把 Tab 焦点限制在面板内；不带遮罩时使用 `show()` 打开，页面保持可用。`label` 通过 `aria-label` 成为面板的名称，`purpose="required"` 时角色变为 `alertdialog`。
 
-打开时，焦点会落到面板内第一个带 `data-autofocus` 的元素上；没有这样的元素时，焦点落在面板本身。关闭后，焦点回到打开面板时的那个元素（如果它还在页面里），或者回到 `finalFocusRef` 指定的元素。抬起与关闭的动画结束后才执行焦点归还，避免焦点落在正在滑走的面板上。
+打开时，焦点会落到面板内第一个带 `data-autofocus` 且能接住焦点的元素上（不是 inert、没有隐藏、也不在内容里再开的面板或对话框中），所有浏览器一致——原生对话框自己的落点（Chromium 落在面板上，Firefox 落在第一个控件上）会让位给它；模态面板里没有这样的元素时，焦点落在面板本身。关闭后，焦点回到打开面板时的那个元素（如果它还在页面里），或者回到 `finalFocusRef` 指定的元素，这一步不会滚动页面。面板打开着就被移除时，被困住的焦点同样送走：打开者也不在了就找最近的合适落点。服务端渲染时就开着的面板，在客户端真正打开之前不会声明自己是模态，打开后直接呈现静止状态、没有进场动画；之后的打开和关闭照常有动画。抬起与关闭的动画结束后才执行焦点归还，避免焦点落在正在滑走的面板上。
 
 Escape 只在 `purpose` 不是 `required` 时关闭面板（带遮罩的模态面板会把焦点限制在内部；无遮罩的面板不抢焦点，因此焦点需要位于面板内）；输入法正在组合文字时按下的 Escape 属于取消输入，不会关闭面板。内容区滚动到顶部后可以向下拖动关闭面板，滚动到内容底部时可以向上拖动展开面板；`purpose` 不是 `info` 时拖动只会停靠在最近的档位，不会关闭。
 

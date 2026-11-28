@@ -13,6 +13,7 @@ import type {
   PowerSearchProps,
 } from './types.js'
 import { computed, nextTick, ref } from 'vue'
+import { useTokenRemoveTap } from '../composables/internal/useTokenRemoveTap.js'
 import { useLayerGutter } from '../LayerProvider/context.js'
 import { resolveEditorPlacement } from './placement.js'
 import PowerSearchEditor from './PowerSearchEditor.vue'
@@ -39,9 +40,11 @@ export interface PowerSearchMenuBridge {
  */
 interface PowerSearchActions {
   activate: (index: number) => void
+  canEdit: (filter: PowerSearchFilter) => boolean
   canRemove: (filter: PowerSearchFilter) => boolean
   clearAll: (event?: Event) => void
   closeEditor: (restore: boolean) => void
+  commit: (next: PowerSearchFilter[], changeType: PowerSearchChangeType, index: number) => void
   editorComponent: ComputedRef<Component>
   editorOpen: ComputedRef<boolean>
   editorStyle: ComputedRef<{ top: string, left: string, width: string } | undefined>
@@ -76,6 +79,7 @@ export function usePowerSearchActions(options: {
   visibleCount: () => number
 }): PowerSearchActions {
   const { props, emit, menu, lookup, text, announce } = options
+  const removeTap = useTokenRemoveTap({ root: options.anchorRef, input: options.inputRef, tokenSelector: '.astryx-power-search-token' })
   const gutter = useLayerGutter()
   const internal = ref<PowerSearchFilter[]>([])
   const filters = computed(() => props.filters ?? internal.value)
@@ -255,15 +259,21 @@ export function usePowerSearchActions(options: {
     const next = filters.value.filter((_, itemIndex) => itemIndex !== index)
     commit(next, 'remove', index)
     announce(text.value.removeFilter(fieldFor(filter)?.label ?? filter.field))
-    focusInput()
+    if (removeTap.shouldFocusInputAfterRemove())
+      focusInput()
   }
 
   function clearAll(event?: Event): void {
     event?.stopPropagation()
-    if (props.disabled || filters.value.length === 0)
+    if (props.disabled || props.readOnly)
       return
-    commit([], 'remove', 0)
-    announce(text.value.clear)
+    // 只读条件按约定不能被移除，「全部」指所有能移除的条件；变更报告第一个被移除的位置。
+    const firstRemoved = filters.value.findIndex(filter => filter.isReadOnly !== true)
+    if (firstRemoved < 0)
+      return
+    const kept = filters.value.filter(filter => filter.isReadOnly === true)
+    commit(kept, 'remove', firstRemoved)
+    announce(kept.length > 0 ? text.value.editableFiltersRemoved : text.value.allFiltersRemoved)
     menu.close()
     options.inputRef.value?.focus()
   }
@@ -352,9 +362,11 @@ export function usePowerSearchActions(options: {
 
   return {
     activate,
+    canEdit,
     canRemove,
     clearAll,
     closeEditor,
+    commit,
     editorComponent,
     editorOpen,
     editorStyle,

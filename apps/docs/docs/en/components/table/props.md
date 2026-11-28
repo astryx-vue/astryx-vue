@@ -66,8 +66,8 @@ footer: false
       <tr>
         <td><code>textOverflow</code></td>
         <td><code>'wrap' | 'truncate'</code></td>
-        <td><code>'wrap'</code></td>
-        <td>Whether cell text wraps or clips to one line.</td>
+        <td><code>'wrap'</code>; <code>'truncate'</code> with a row or column virtualization plugin</td>
+        <td>Whether cell text wraps or clips to one line. Column headings follow it: under <code>'wrap'</code> a long heading in a data-driven table wraps onto more lines, and in children mode its column grows to keep it on one line; under <code>'truncate'</code> headings stay on one line and end in an ellipsis.</td>
       </tr>
       <tr>
         <td><code>plugins</code></td>
@@ -148,6 +148,7 @@ footer: false
       <tr><td><code>getIsItemExpandable</code></td><td><code>(item: T) =&gt; boolean</code></td><td>every row</td><td>Which rows can open.</td></tr>
       <tr><td><code>panelVariant</code></td><td><code>'muted' | 'transparent'</code></td><td><code>transparent</code></td><td>Panel surface. Transparent continues the table surface. Muted separates the detail from the data.</td></tr>
       <tr><td><code>hasRowClickExpansion</code></td><td><code>boolean</code></td><td><code>false</code></td><td>A row click toggles the panel. Clicks on controls or a text selection do not.</td></tr>
+      <tr><td><code>animatedLayout</code></td><td><code>AnimatedLayout | null</code></td><td>—</td><td>The handle from <code>useAnimatedLayout</code>. Rows below a panel glide instead of jumping as it opens or closes.</td></tr>
     </tbody>
   </table>
 </div>
@@ -170,7 +171,7 @@ footer: false
 
 ### useTableRowIndex
 
-`data` is the rows the table is painting, after grouping. `startFrom` begins at 1. `getRowKey` recognizes the same row; without it, identity is the object itself. `label` is the column header, and the default is a hash mark.
+Without `data`, rows are numbered from the positions the table renders them at. With `data`, numbers follow that array, and group headers take no number. `startFrom` begins at 1. `getRowKey` recognizes the same row; without it, identity is the object itself. `label` is the column header, and the default is a hash mark.
 
 `proportional(value)` shares leftover width. Its default minimum is 120px. A column with no width is flexible with a 60px floor. `pixel(value)` sets both width and minimum width.
 
@@ -181,3 +182,7 @@ footer: false
 ## Theming
 
 Header text uses the label size, semibold weight, and the secondary text color. Body text uses the body size. A selected row uses the accent muted fill. Stripes use the muted background. Hover uses the hover overlay. Inside a card, the scroll area uses the card’s container padding so the first and last cells line up with the heading.
+
+Every row carries the `table-row` theme target. A data-driven body row has `parity` (`odd` for the first, third, … row, `even` for the others); every row an `isStriped` table may stripe, header rows excepted, has the `striped` state; a row that `useTableSelection` selects has the `selected` state. For example `components: { 'table-row': { 'parity:odd+striped': { backgroundColor: '#f9f9f9' } } }`. A selected row's wash reads `--color-accent-muted`, so set that variable in the `selected` state to recolor it. A row background from the theme also reaches pinned columns.
+
+On phones and tablets, where the scrollbar shows only while scrolling, a table that scrolls sideways fades each edge that hides content. A pinned column's edge keeps its own shadow instead.

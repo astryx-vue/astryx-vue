@@ -106,9 +106,10 @@ export function parseRgb(value: string): RGBA | null {
  */
 export function parseColor(value: string): RGBA | null {
   const trimmed = value.trim()
-  const named = NAMED_COLORS[trimmed.toLowerCase()]
-  if (named)
-    return { ...named }
+  // 普通对象会从 Object.prototype 答出 `constructor`、`__proto__`，所以只认自有属性。
+  const name = trimmed.toLowerCase()
+  if (Object.hasOwn(NAMED_COLORS, name))
+    return { ...NAMED_COLORS[name]! }
   if (trimmed.startsWith('#'))
     return parseHex(trimmed)
   if (/^rgba?\(/i.test(trimmed))

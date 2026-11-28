@@ -115,8 +115,8 @@ describe('json envelopes', () => {
     expect(data.package).toBe('@astryx-vue/cli')
     expect(data.commands.map(command => command.name)).toEqual(['component', 'composable', 'docs', 'search', 'template', 'build', 'manifest', 'theme', 'upgrade', 'doctor', 'init'])
     expect(data.commands.every(command => command.json)).toBe(true)
-    expect(data.commands.find(command => command.name === 'component')?.responseTypes).toEqual(['component.list', 'component.detail'])
-    expect(data.commands.find(command => command.name === 'composable')?.responseTypes).toEqual(['composable.list', 'composable.detail'])
+    expect(data.commands.find(command => command.name === 'component')?.responseTypes).toEqual(['component.list', 'component.detail', 'component.details'])
+    expect(data.commands.find(command => command.name === 'composable')?.responseTypes).toEqual(['composable.list', 'composable.detail', 'composable.details'])
     expect(data.commands.find(command => command.name === 'docs')?.responseTypes).toEqual(['docs.list', 'docs.detail'])
     expect(data.commands.find(command => command.name === 'search')?.options.find(option => option.flag.startsWith('--type'))?.choices).toEqual(['component', 'composable', 'doc', 'template'])
     expect(data.commands.find(command => command.name === 'template')?.responseTypes).toEqual(['template.list', 'template.show', 'template.skeleton', 'template.copy'])
@@ -156,7 +156,7 @@ describe('json envelopes', () => {
     }
     expect(data.locale).toBe('en')
     const all = Object.values(data.composables).flat()
-    expect(all).toHaveLength(57)
+    expect(all).toHaveLength(82)
     expect(all.map(item => item.name).every(name => name.startsWith('use'))).toBe(true)
     expect(all.find(item => item.name === 'useClipboard')).toMatchObject({ slug: 'use-clipboard', import: null })
   })
@@ -277,6 +277,26 @@ describe('json envelopes', () => {
     expect(option.exitCode).toBe(2)
     expect(parseResponse(option.stdout)).toMatchObject({ code: 'ERR_INVALID_OPTION' })
   })
+
+  it('answers a confirm-style option with the run without it', async () => {
+    const json = await run(['template', 'login-card', './src/pages', '--yes', '--json'])
+    expect(json.exitCode).toBe(2)
+    expect(parseResponse(json.stdout)).toMatchObject({
+      code: 'ERR_INVALID_OPTION',
+      error: expect.stringContaining('never ask questions'),
+      suggestions: [{ name: 'astryx-vue template login-card ./src/pages --json', reason: 'do this instead' }],
+    })
+
+    // `-y` is read as the option, not as a positional the command would misread.
+    const short = await run(['search', 'date picker', '-y'])
+    expect(short.exitCode).toBe(2)
+    expect(short.stdout).toBe('')
+    expect(short.stderr).toBe('-y is not needed: astryx-vue commands never ask questions. Drop it and run: astryx-vue search \'date picker\'\n')
+
+    // A second mistake in the same run is the one to fix.
+    const other = await run(['component', 'Button', '--non-interactive', '--theme', '--json'])
+    expect(parseResponse(other.stdout)).toMatchObject({ code: 'ERR_INVALID_OPTION', error: 'Unknown option --theme.' })
+  })
 })
 
 describe('component text', () => {
@@ -291,7 +311,7 @@ describe('component text', () => {
     expect(detail.stdout).toContain('@astryx-vue/core/ButtonGroup')
 
     const dense = await run(['component', 'Button', '--dense'])
-    const full = await run(['component', 'Button'])
+    const full = await run(['component', 'Button', '--detail', 'full'])
     expect(dense.stdout.length).toBeLessThan(full.stdout.length)
     expect(dense.stdout).toContain('props:')
     expect(dense.stdout).toContain('examples: Floating')
@@ -412,7 +432,7 @@ describe('init --features agents', () => {
       expect(next.match(new RegExp(MANAGED_BLOCK_START, 'g'))).toHaveLength(1)
 
       const again = await run(['init', '--features', 'agents', '--zh', '--json'], cwd)
-      expect(assertResponse(again.stdout, 'init.run').data).toMatchObject({ files: [{ path: 'AGENTS.md', action: 'updated' }] })
+      expect(assertResponse(again.stdout, 'init.run').data).toMatchObject({ files: [{ path: 'AGENTS.md', action: 'unchanged' }], agentDocsStatus: 'current' })
       expect(again.stdout).not.toContain('Left unchanged')
       expect(await readFile(file, 'utf8')).toBe(next)
 
@@ -500,7 +520,7 @@ describe('init --features agents', () => {
       const all = await run(['init', '--features', 'agents', '--agent', 'all', '--json'], cwd)
       const data = assertResponse(all.stdout, 'init.run').data as { files: { path: string, action: string }[] }
       expect(data.files.map(file => file.path)).toEqual(['AGENTS.md', 'CLAUDE.md'])
-      expect(data.files.every(file => file.action === 'updated' || file.action === 'appended')).toBe(true)
+      expect(data.files.map(file => file.action)).toEqual(['unchanged', 'appended'])
       expect(await readFile(join(cwd, 'AGENTS.md'), 'utf8')).toContain(MANAGED_BLOCK_START)
       expect(await readFile(join(cwd, 'CLAUDE.md'), 'utf8')).toContain(MANAGED_BLOCK_START)
     }
@@ -517,7 +537,7 @@ describe('init --features agents', () => {
       expect(await readFile(join(cwd, 'docs/TEAM.md'), 'utf8')).toContain(MANAGED_BLOCK_START)
 
       const repeat = await run(['init', '--features', 'agents', '--agent-docs-path', 'docs/TEAM.md'], cwd)
-      expect(repeat.stdout).toContain('Updated the managed block in docs/TEAM.md')
+      expect(repeat.stdout).toContain('docs/TEAM.md already current, nothing changed')
       expect((await readFile(join(cwd, 'docs/TEAM.md'), 'utf8')).match(new RegExp(MANAGED_BLOCK_START, 'g'))).toHaveLength(1)
 
       const escape = await run(['init', '--features', 'agents', '--agent-docs-path', '../escape.md', '--json'], cwd)
@@ -567,8 +587,8 @@ describe('catalog source', () => {
   })
 
   it('marks composables and stores topic bodies without frontmatter', async () => {
-    expect(catalog.components.filter(component => component.kind === 'composable')).toHaveLength(57)
-    expect(catalog.components.filter(component => component.kind === 'component')).toHaveLength(193)
+    expect(catalog.components.filter(component => component.kind === 'composable')).toHaveLength(82)
+    expect(catalog.components.filter(component => component.kind === 'component')).toHaveLength(194)
     const clipboard = catalog.components.find(component => component.slug === 'use-clipboard')
     expect(clipboard?.kind).toBe('composable')
     expect(clipboard?.name).toBe('UseClipboard')

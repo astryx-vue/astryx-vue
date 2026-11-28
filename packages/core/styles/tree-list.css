@@ -87,6 +87,27 @@
     cursor: pointer;
   }
 
+  /*
+   * 手指按下时，按压画在行的按压层（`.astryx-pressable::after`）上，抬手淡出的是这一层的 opacity，
+   * 浏览器在合成线程上播。颜色、时长和曲线和按压强度一样；鼠标不受影响。
+   */
+  @media (pointer: coarse) {
+    .astryx-tree-list__content.astryx-pressable:not([data-disabled='true'])[data-astryx-press]::after {
+      background-color: var(--astryx-color-overlay-pressed, light-dark(#05365919, #ffffff19));
+      background-image: none;
+    }
+
+    .astryx-tree-list__content.astryx-pressable:not([data-disabled='true'])[data-astryx-press='fading']::after {
+      animation: astryx-press-layer-release var(--astryx-duration-exit, 175ms) var(--astryx-ease-exit, cubic-bezier(0.3, 0, 0.6, 0.6)) both;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .astryx-tree-list__content.astryx-pressable:not([data-disabled='true'])[data-astryx-press='fading']::after {
+        animation-duration: min(var(--astryx-duration-exit, 175ms), 200ms);
+      }
+    }
+  }
+
   @media (hover: hover) {
     .astryx-tree-list__content[data-interactive='true']:not([data-disabled='true']):hover::before {
       background-color: var(--astryx-color-overlay-hover, light-dark(#0000000d, #ffffff0d));
@@ -97,13 +118,18 @@
     }
   }
 
-  /* 焦点环所在的整行盖过 guide；普通行的填充仍位于 guide 下方。 */
-  .astryx-tree-list__item:has(:focus-visible) > .astryx-tree-list__row {
+  /*
+   * 焦点环所在的整行盖过 guide。焦点可能在行自己（treeitem，包括没有任何动作的
+   * 普通行），也可能在这一行的内部按钮或链接上；只认这一行自己的行内焦点，
+   * 子级行的焦点不会让上级行也画环。
+   */
+  .astryx-tree-list__item:focus-visible > .astryx-tree-list__row,
+  .astryx-tree-list__item:has(> .astryx-tree-list__row :focus-visible) > .astryx-tree-list__row {
     z-index: 2;
   }
 
-  /* 焦点也可能在 tabindex=-1 的内部按钮或链接上。 */
-  .astryx-tree-list__item:has(:focus-visible) > .astryx-tree-list__row > .astryx-tree-list__content {
+  .astryx-tree-list__item:focus-visible > .astryx-tree-list__row > .astryx-tree-list__content,
+  .astryx-tree-list__item:has(> .astryx-tree-list__row :focus-visible) > .astryx-tree-list__row > .astryx-tree-list__content {
     outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, var(--astryx-color-accent));
     outline-offset: var(--astryx-focus-outline-offset, 3px);
   }

@@ -35,7 +35,7 @@ footer: false
         <td><code>size</code></td>
         <td><code>ButtonSize</code></td>
         <td><code>'md'</code></td>
-        <td>Size of the trigger button: sm, md, or lg. The density of every menu row follows it.</td>
+        <td>Size of the trigger button: sm, md, or lg. Without it, the trigger takes the surrounding size (from a size provider, a ButtonGroup, or a Toolbar), else md. The density of every menu row follows it.</td>
       </tr>
       <tr>
         <td><code>isDisabled</code></td>
@@ -59,7 +59,7 @@ footer: false
         <td><code>presentation</code></td>
         <td><code>'popover' | 'bottom-sheet' | 'adaptive'</code></td>
         <td><code>'popover'</code></td>
-        <td>Shape the actions arrive in. popover anchors the surface to the trigger; bottom-sheet is a modal panel at the bottom of the screen; adaptive uses the bottom panel at 768px and below when the primary pointer is coarse, and the anchored surface otherwise.</td>
+        <td>Shape the actions arrive in. popover anchors the surface to the trigger; bottom-sheet is a modal panel at the bottom of the screen; adaptive uses the bottom panel on a compact touch screen (a coarse primary pointer, and a viewport narrower than the theme <code>md</code> breakpoint, 768px by default, or shorter than 500px) and the anchored surface otherwise. The choice is made when the menu opens and held until it has closed.</td>
       </tr>
       <tr>
         <td><code>isMenuOpen</code></td>

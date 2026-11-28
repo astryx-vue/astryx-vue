@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { ChatSystemMessageProps, ChatSystemMessageSlots } from './types.js'
+import { useSlots } from 'vue'
+import { hasSlotContent } from '../composables/internal/slotContent.js'
 import Divider from '../Divider/Divider.vue'
 import '../../styles/chat.css'
 
@@ -9,6 +11,7 @@ withDefaults(defineProps<ChatSystemMessageProps>(), {
   variant: 'default',
 })
 defineSlots<ChatSystemMessageSlots>()
+const slots = useSlots()
 </script>
 
 <template>
@@ -31,7 +34,7 @@ defineSlots<ChatSystemMessageSlots>()
     data-variant="default"
   >
     <span class="astryx-chat-system-message__content">
-      <span v-if="$slots.icon" class="astryx-chat-system-message__icon">
+      <span v-if="hasSlotContent(slots.icon)" class="astryx-chat-system-message__icon">
         <slot name="icon" />
       </span>
       <slot />

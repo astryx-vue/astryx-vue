@@ -1,7 +1,10 @@
 import type { WeekStartsOn } from '../composables/useDateRange.js'
 import type { HourFormat, NativePicker, TimePresentation } from '../composables/useTimeValue.js'
+import type { DateInputEntryError } from '../DateInput/dateEntry.js'
 import type { FieldPartStylingProps } from '../Field/fieldParts.js'
 import type { FieldStatusInput, FieldStatusVariant } from '../Field/types.js'
+import type { EntryErrorBehavior } from '../FormLayout/context.js'
+import type { CalendarSystem } from '../utils/calendarSystem.js'
 
 export type DateTimeInputSize = 'sm' | 'md' | 'lg'
 
@@ -35,6 +38,11 @@ export interface DateTimeInputProps extends FieldPartStylingProps {
   dateConstraints?: ReadonlyArray<(date: Date) => boolean>
   numberOfMonths?: 1 | 2
   weekStartsOn?: WeekStartsOn
+  /**
+   * 日期那段读写和选择用的历法，例如 `persian`。值、`min`、`max` 仍是公历 ISO 日期时间。
+   * 别的历法里系统日期控件换成弹出层或底部面板。不传时用最近 `InternationalizationProvider` 的历法，再没有就是公历。
+   */
+  calendar?: CalendarSystem
   isDisabled?: boolean
   isLoading?: boolean
   /** 日期和时间都齐了之后再跑。返回 Promise 时，字段保持加载直到它结束。 */
@@ -49,9 +57,16 @@ export interface DateTimeInputProps extends FieldPartStylingProps {
   status?: FieldStatusInput
   statusVariant?: FieldStatusVariant | 'tooltip'
   width?: number | string
+  /**
+   * 日期那段打字被拒时什么时候亮出来，同 DateInput。
+   * 不传时用最近 FormLayout 的 `defaultEntryErrorBehavior`，再没有就是 `complete`。
+   */
+  entryErrorBehavior?: EntryErrorBehavior
 }
 
 export interface DateTimeInputEmits {
   'update:modelValue': [value: string | null]
   'change': [value: string | null]
+  /** 日期那段对打进来的文字的拒绝开始、改变或结束时触发，结束时参数是 `null`。 */
+  'entryErrorChange': [error: DateInputEntryError | null]
 }

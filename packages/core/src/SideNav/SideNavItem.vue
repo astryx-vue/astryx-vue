@@ -2,13 +2,17 @@
 import type { StyleValue } from 'vue'
 import type { SideNavItemCollapsible, SideNavItemEmits, SideNavItemProps, SideNavItemSlots } from './types.js'
 import { computed, getCurrentInstance, provide, ref, useAttrs, useId, useSlots } from 'vue'
+import { hasSlotContent } from '../composables/internal/slotContent.js'
 import Icon from '../Icon/Icon.vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { navMessages } from '../locale/messages/nav.js'
+import { useCloseMobileDrawer } from '../MobileNav/closeOnActivate.js'
 import NavItem from '../NavItem/NavItem.vue'
 import NavDisclosure from '../NavMenu/NavDisclosure.vue'
 import { SizeProvider } from '../SizeContext/SizeContext.js'
 import Tooltip from '../Tooltip/Tooltip.vue'
 import { sideNavCollapseKey, sideNavDepthKey, useSideNavCollapse, useSideNavDepth } from './context.js'
+import { SIDE_NAV_ROW_ATTRIBUTE } from './railFocus.js'
 import '../../styles/side-nav.css'
 
 defineOptions({ name: 'AstryxSideNavItem', inheritAttrs: false })
@@ -30,9 +34,10 @@ const accessibleLabel = computed(() => {
     return given
   return props.label
 })
+const closeMobileDrawer = useCloseMobileDrawer()
 const collapse = useSideNavCollapse()
 const parentDepth = useSideNavDepth()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ nav: navMessages })
 const instance = getCurrentInstance()
 const childrenId = `astryx-side-nav-children-${useId()}`
 const labelId = `${childrenId}-label`
@@ -41,9 +46,12 @@ const localNested = ref(false)
 const config = computed<SideNavItemCollapsible>(() =>
   typeof props.collapsible === 'object' ? props.collapsible : {},
 )
-const hasChildren = computed(() => slots.default != null)
+const hasChildren = computed(() => hasSlotContent(slots.default))
 const sidebarCollapsed = computed(() => collapse.isCollapsed.value)
-const hasIcon = computed(() => Boolean(props.iconClass || props.selectedIconClass || slots.icon || slots.selectedIcon))
+const hasIcon = computed(() => Boolean(props.iconClass || props.selectedIconClass || hasSlotContent(slots.icon) || hasSlotContent(slots.selectedIcon)))
+/** 收起的轨道只画顶层、带图标的行（见 railFocus）。 */
+const rowKind = computed(() => hasIcon.value && parentDepth.value === 0 ? 'kept' : 'dropped')
+const rowMarker = computed(() => ({ [SIDE_NAV_ROW_ATTRIBUTE]: rowKind.value }))
 const canNest = computed(() => hasChildren.value && props.collapsible !== false)
 const hasClickListener = computed(() => {
   const vnodeProps = instance?.vnode.props
@@ -96,8 +104,11 @@ function onActivate(event: MouseEvent): void {
   if (canNest.value && !splitToggle.value && !sidebarCollapsed.value) {
     event.preventDefault()
     toggleNested()
+    emit('click', event)
+    return
   }
   emit('click', event)
+  closeMobileDrawer()
 }
 
 const toggleLabel = computed(() =>
@@ -111,7 +122,7 @@ const toggleLabel = computed(() =>
   <template v-if="sidebarCollapsed">
     <Tooltip v-if="hasIcon && !hasChildren" :content="label" placement="end">
       <NavItem
-        v-bind="attrs"
+        v-bind="{ ...attrs, [SIDE_NAV_ROW_ATTRIBUTE]: 'kept' }"
         block
         is-icon-only
         :style="rowStyle"
@@ -120,6 +131,7 @@ const toggleLabel = computed(() =>
         :href="href"
         :icon-class="iconClass"
         :is-disabled="isDisabled"
+        is-focusable-when-disabled
         :is-selected="isSelected"
         :label="label"
         :rel="rel"
@@ -128,10 +140,10 @@ const toggleLabel = computed(() =>
         :target="target"
         @click="onActivate"
       >
-        <template v-if="$slots.icon" #icon>
+        <template v-if="hasSlotContent($slots.icon)" #icon>
           <slot name="icon" />
         </template>
-        <template v-if="$slots.selectedIcon" #selectedIcon>
+        <template v-if="hasSlotContent($slots.selectedIcon)" #selectedIcon>
           <slot name="selectedIcon" />
         </template>
       </NavItem>
@@ -147,6 +159,7 @@ const toggleLabel = computed(() =>
         <button
           type="button"
           class="astryx-nav-item astryx-nav-item--block astryx-nav-item--icon-only"
+          v-bind="{ [SIDE_NAV_ROW_ATTRIBUTE]: 'kept' }"
           :class="[
             `astryx-nav-item--${size}`,
             { 'astryx-nav-item--selected': isSelected },
@@ -172,7 +185,7 @@ const toggleLabel = computed(() =>
       </template>
     </NavDisclosure>
   </template>
-  <div v-else class="astryx-side-nav-item">
+  <div v-else class="astryx-side-nav-item" v-bind="rowMarker">
     <div class="astryx-side-nav-item__main">
       <div v-if="splitToggle" class="astryx-nav-item astryx-nav-item--block" :class="[`astryx-nav-item--${size}`, { 'astryx-nav-item--selected': isSelected }]">
         <NavItem
@@ -184,6 +197,7 @@ const toggleLabel = computed(() =>
           :href="href"
           :icon-class="iconClass"
           :is-disabled="isDisabled"
+          is-focusable-when-disabled
           :is-selected="isSelected"
           :label="label"
           :rel="rel"
@@ -192,13 +206,13 @@ const toggleLabel = computed(() =>
           :target="target"
           @click="onActivate"
         >
-          <template v-if="$slots.icon" #icon>
+          <template v-if="hasSlotContent($slots.icon)" #icon>
             <slot name="icon" />
           </template>
-          <template v-if="$slots.selectedIcon" #selectedIcon>
+          <template v-if="hasSlotContent($slots.selectedIcon)" #selectedIcon>
             <slot name="selectedIcon" />
           </template>
-          <template v-if="$slots.end" #end>
+          <template v-if="hasSlotContent($slots.end)" #end>
             <slot name="end" />
           </template>
         </NavItem>
@@ -229,6 +243,7 @@ const toggleLabel = computed(() =>
         :href="href"
         :icon-class="iconClass"
         :is-disabled="isDisabled"
+        is-focusable-when-disabled
         :is-selected="isSelected"
         :label="label"
         :rel="rel"
@@ -237,13 +252,13 @@ const toggleLabel = computed(() =>
         :target="target"
         @click="onActivate"
       >
-        <template v-if="$slots.icon" #icon>
+        <template v-if="hasSlotContent($slots.icon)" #icon>
           <slot name="icon" />
         </template>
-        <template v-if="$slots.selectedIcon" #selectedIcon>
+        <template v-if="hasSlotContent($slots.selectedIcon)" #selectedIcon>
           <slot name="selectedIcon" />
         </template>
-        <template v-if="$slots.end || canNest" #end>
+        <template v-if="hasSlotContent($slots.end) || canNest" #end>
           <slot name="end" />
           <Icon
             v-if="canNest"
@@ -254,7 +269,7 @@ const toggleLabel = computed(() =>
           />
         </template>
       </NavItem>
-      <div v-if="$slots.actions" class="astryx-side-nav-item__actions">
+      <div v-if="hasSlotContent($slots.actions)" class="astryx-side-nav-item__actions">
         <SizeProvider value="sm">
           <slot name="actions" />
         </SizeProvider>

@@ -30,7 +30,9 @@ import { CircularProgress } from '@astryx-vue/lab'
 | `formatValueLabel` | `(value, max) => string` | 百分比 | 自定义中央数值格式。 |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | 圆环尺寸。 |
 | `variant` | `'accent' \| 'success' \| 'warning' \| 'error' \| 'neutral'` | `'accent'` | 语义颜色。 |
-| `isIndeterminate` | `boolean` | `false` | 是否显示不确定进度动画。 |
-| `isDisabled` | `boolean` | `false` | 是否使用禁用颜色。 |
+| `isIndeterminate` | `boolean` | `false` | 显示一段像加载圈（Spinner）那样转动的弧；减少动态效果时转得慢些，但不会停。 |
+| `isDisabled` | `boolean` | `false` | 圆弧用中性填充色，整个圆环（包括中央内容）半透明显示。 |
 
 默认插槽可替换圆环中央内容。启用 `isIndeterminate` 后，`value` 和 `hasValueLabel` 不再生效。
+
+所有变体都画在同一条浅色轨道上，启用状态下每种填充色和轨道的对比度都不低于 3:1。进度变化时，圆弧在合成线程上按主题的时长和缓动转动，页面被脚本占住时也不会卡住不动。

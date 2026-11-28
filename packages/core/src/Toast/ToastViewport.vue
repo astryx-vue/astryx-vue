@@ -2,17 +2,21 @@
 import type { CSSProperties } from 'vue'
 import type { ResolvedLayerInset } from '../LayerProvider/context.js'
 import type { ToastDismissReason, ToastPlacement } from './types.js'
-import { computed, onMounted, reactive, ref, watch } from 'vue'
-import { useActiveModalOutlet, whenModalSettled } from '../layer/modalOutlet.js'
+import { computed, onMounted, provide, reactive, ref, watch } from 'vue'
+import { useActiveModalOutlet, useTopLayerEntries, whenModalSettled } from '../layer/modalOutlet.js'
 import { resetLayerScopedContext } from '../layer/scopedProvide.js'
 import { useLayerConfig } from '../LayerProvider/context.js'
+import { TOAST_VIEWPORT_KEY } from './context.js'
 import { readToastMotionDurationMs } from './motionDuration.js'
 import { toastStore } from './store.js'
 import Toast from './Toast.vue'
+import { createToastFocusHandoff } from './toastFocus.js'
 
 const props = defineProps<{
   placement?: ToastPlacement
 }>()
+
+provide(TOAST_VIEWPORT_KEY, true)
 
 // toast 内容是这一层的成员边界：外面组里的尺寸、禁用、选中值都不再算数。
 resetLayerScopedContext()
@@ -25,6 +29,7 @@ const activeModal = useActiveModalOutlet()
 const mountTarget = ref<string | HTMLElement>('body')
 
 const viewportRef = ref<HTMLElement | null>(null)
+const focusHandoff = createToastFocusHandoff(() => viewportRef.value)
 
 /** 等两帧，让浏览器把上一步的样式算完。没有 `requestAnimationFrame` 时立刻返回。 */
 function afterTwoFrames(): Promise<void> {
@@ -92,22 +97,31 @@ watch(mountTarget, () => {
  * 元素的参照物，toast 会被按对话框的位置摆一次，动画结束才弹回原来的角落。等的
  * 这段时间视口留在原处，先把顶层顺序放到对话框上面，用户看到的位置就不变。
  */
+/** 视口重新进一次顶层，排到此刻所有顶层元素的最上面。 */
+function reenterTopLayer(): void {
+  const element = viewportRef.value
+  if (element == null || typeof element.hidePopover !== 'function')
+    return
+  try {
+    element.hidePopover()
+    element.showPopover()
+  }
+  catch {
+    // 引擎不支持顶层，保持原样。
+  }
+}
+
+// 无遮罩的抽屉这类非模态顶层元素后进顶层，或者底部面板叠放时有对话框被重新呈现，都会盖住视口。
+// 视口挂在那个被重新呈现的对话框里时也一样，所以不管挂在哪里都跟着重进一次。
+watch(useTopLayerEntries(), reenterTopLayer)
+
 watch(activeModal, async (modal) => {
   if (modal == null) {
     mountTarget.value = 'body'
     return
   }
 
-  const element = viewportRef.value
-  if (element != null && typeof element.hidePopover === 'function') {
-    try {
-      element.hidePopover()
-      element.showPopover()
-    }
-    catch {
-      // 引擎不支持顶层，保持原样。
-    }
-  }
+  reenterTopLayer()
 
   await whenModalSettled(modal)
   // 动画刚结束的那一帧浏览器还没把 `transform` 算掉，再等两帧才搬。
@@ -126,6 +140,8 @@ const classes = computed(() => [
   'astryx-layer',
   `astryx-toast-viewport--placement-${placement.value}`,
   { 'astryx-toast-viewport--rehosting': isRehosting.value },
+  // 没有提示时不占盒子：iOS Safari 会按贴底的固定元素给工具栏取色。
+  { 'astryx-toast-viewport--empty': toastStore.toasts.length === 0 },
 ])
 
 /** 超出可见上限时只渲染最新的几条。 */
@@ -145,8 +161,8 @@ const INSET_EDGES = [
 ] as const
 
 /**
- * 逐边偏移叠在基础内边距上。基础内边距取间距第 4 档和设备安全区的较大者，
- * 和锚定浮层的视口空隙保持一致。没有 provider 时不写内联样式，保持原来的样子。
+ * 逐边偏移叠在基础内边距上。基础内边距在上、左、右三边取间距第 4 档和设备安全区的较大者，
+ * 下沿则是间距第 4 档加设备安全区。没有 provider 时不写内联样式，保持原来的样子。
  */
 const viewportStyle = computed<CSSProperties | undefined>(() => {
   const inset: ResolvedLayerInset | undefined = layer?.value.toast.inset
@@ -156,7 +172,12 @@ const viewportStyle = computed<CSSProperties | undefined>(() => {
   const style: Record<string, string> = {}
   for (const [property, edge, areaEdge] of INSET_EDGES) {
     const extra = inset[edge] ?? 0
-    style[property] = `calc(max(var(--astryx-spacing-4, 16px), env(safe-area-inset-${areaEdge}, 0px)) + ${extra}px)`
+    // 下沿：iPhone 上从底部安全区起手的下滑会把整屏拉下来，提示要整个让开这一段，
+    // 所以是相加而不是取较大者。
+    const base = edge === 'blockEnd'
+      ? `var(--astryx-spacing-4, 16px) + max(env(safe-area-inset-bottom, 0px), var(--_toast-bottom-floor, 0px))`
+      : `max(var(--astryx-spacing-4, 16px), env(safe-area-inset-${areaEdge}, 0px))`
+    style[property] = `calc(${base} + ${extra}px)`
   }
   return style as CSSProperties
 })
@@ -182,6 +203,23 @@ function handleDismiss(id: string, reason: ToastDismissReason) {
   toastStore.dismissFromCard(id, reason)
 }
 
+// 开始离场的提示：焦点还在里面就交出去。超出可见上限被挤掉的离场提示没有行，
+// 也就等不到行的过渡结束，直接出栈，免得之后作为零高度的空行回来。
+watch(
+  () => `${toastStore.toasts.map(t => `${t.id}:${t.isExiting}`).join(',')}|${visibleToasts.value.map(t => t.id).join(',')}`,
+  () => {
+    const shown = new Set(visibleToasts.value.map(t => t.id))
+    for (const toast of [...toastStore.toasts]) {
+      if (!toast.isExiting)
+        continue
+      focusHandoff.handoff(toast.id)
+      if (!shown.has(toast.id))
+        toastStore.finalize(toast.id)
+    }
+  },
+  { flush: 'pre' },
+)
+
 watch(
   () => toastStore.toasts.map(t => t.id).join(','),
   () => {
@@ -203,10 +241,13 @@ watch(
       popover="manual"
       aria-live="polite"
       aria-atomic="false"
+      @focusin="focusHandoff.onFocusIn"
     >
       <div
         v-for="toast in visibleToasts"
         :key="toast.id"
+        :data-toast-id="toast.id"
+        :data-toast-exiting="toast.isExiting ? '' : undefined"
         class="astryx-toast-viewport__row"
         :class="[
           isTopPlacement ? 'astryx-toast-viewport__row--from-top' : 'astryx-toast-viewport__row--from-bottom',
@@ -226,6 +267,7 @@ watch(
             :end-content="toast.endContent"
             :is-exiting="toast.isExiting"
             :swipe-direction="isTopPlacement ? -1 : 1"
+            :timer-key="toast.revision"
             @dismiss="handleDismiss(toast.id, $event)"
           />
         </div>

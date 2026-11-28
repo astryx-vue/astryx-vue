@@ -38,16 +38,17 @@ export const navigationUpstreamMap: UpstreamMapPart = {
 
   '@astryx.appShell.skipToContent': [{ path: 'layout.skipToContent' }],
   '@astryx.appShell.mobileNavigation': [{ path: 'layout.mobileNavigation' }],
+  '@astryx.scrollRegion.label': [{ path: 'layout.scrollRegion' }],
   '@astryx.resizable.handle.label': [{ path: 'layout.resizeHandle' }],
   '@astryx.resizable.collapsed': [{ path: 'layout.collapsed' }],
 
   '@astryx.sideNav.label': [{ path: 'nav.sideNav' }],
   '@astryx.sideNav.resizeSidebar': [{ path: 'nav.resizeSidebar' }],
-  '@astryx.sideNav.heading.openMenu': [{ path: 'nav.openMenu' }],
+  '@astryx.sideNav.heading.openMenu': [{ path: 'nav.headingOpenMenu', args: ['heading'] }],
   '@astryx.sideNav.heading.dialogLabel': [{ path: 'nav.headingDialog' }],
   '@astryx.topNav.heading.dialogLabel': [{ path: 'nav.topNavHeadingDialog' }],
   '@astryx.topNav.landmarkLabel': [{ path: 'nav.topNav' }],
-  '@astryx.topNav.heading.openMenu': [{ path: 'nav.topNavOpenMenu' }],
+  '@astryx.topNav.heading.openMenu': [{ path: 'nav.topNavOpenMenu', args: ['hasHeading', 'heading'] }],
   '@astryx.mobileNav.navigation': [{ path: 'nav.mobileNav' }],
   '@astryx.mobileNav.toggle.open': [{ path: 'nav.openNavigation' }],
   '@astryx.mobileNav.closeNavigation': [{ path: 'nav.close' }],
@@ -84,4 +85,5 @@ export const navigationUpstreamMap: UpstreamMapPart = {
   '@astryx.step.status.completed': [{ path: 'stepper.status.completed' }],
   '@astryx.step.status.warning': [{ path: 'stepper.status.warning' }],
   '@astryx.step.status.error': [{ path: 'stepper.status.error' }],
+  '@astryx.step.status.unavailable': [{ path: 'stepper.status.unavailable' }],
 }

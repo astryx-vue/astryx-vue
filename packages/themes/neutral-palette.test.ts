@@ -83,7 +83,7 @@ describe('neutral palette', () => {
     const expected: Record<string, [string, string]> = {
       '--astryx-color-accent': lightDark('#1b1b1b', '#f1f1f1'),
       '--astryx-color-text-primary': lightDark('#000000', '#ffffff'),
-      '--astryx-color-text-secondary': lightDark('#474747', '#9e9e9e'),
+      '--astryx-color-text-secondary': lightDark('#474747', '#a8a8a8'),
       '--astryx-color-text-accent': lightDark('#1b1b1b', '#f1f1f1'),
       '--astryx-color-icon-secondary': lightDark('#6a6a6a', '#9e9e9e'),
       '--astryx-color-border': lightDark('#00000014', '#ffffff1a'),

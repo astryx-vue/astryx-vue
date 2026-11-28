@@ -6,6 +6,7 @@ import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { invokeNativeEventHandler } from '../Button/eventHandlers.js'
 import { useSize } from '../SizeContext/SizeContext.js'
 import { segmentedControlContextKey } from './context.js'
+import { useSegmentedSelection } from './useSegmentedSelection.js'
 import '../../styles/segmented-control.css'
 
 defineOptions({ name: 'AstryxSegmentedControl', inheritAttrs: false })
@@ -28,6 +29,12 @@ const attrs = useAttrs()
 const root = useTemplateRef<HTMLDivElement>('root')
 const tooltipId = `astryx-segmented-control-${useId()}-tooltip`
 const element = computed(() => root.value ?? null)
+const lens = useTemplateRef<HTMLSpanElement>('lens')
+const leaving = useTemplateRef<HTMLSpanElement>('leaving')
+const selection = useSegmentedSelection(
+  { track: root, lens, leaving },
+  { value: () => model.value, isEnabled: () => !props.isDisabled },
+)
 
 defineExpose({ element })
 
@@ -51,6 +58,7 @@ provide(segmentedControlContextKey, {
   layout: computed(() => props.layout),
   isDisabled: computed(() => props.isDisabled),
   hasDisabledMessage: showsDisabledMessage,
+  disabledReasonId: computed(() => showsDisabledMessage.value ? tooltipId : undefined),
   select,
 })
 
@@ -77,24 +85,26 @@ function setTabIndex(item: HTMLElement, value: 0 | -1): void {
     item.setAttribute('tabindex', String(value))
 }
 
+/** 分段自己被禁用（不是整个控件被禁用）。 */
+function isDisabledOnItsOwn(item: HTMLElement): boolean {
+  return item.hasAttribute('data-own-disabled')
+}
+
 /**
- * Keep exactly one enabled segment tabbable. The segment that already carries
- * the tab stop keeps it; when the selected value matches no segment (or the
- * matching one is disabled) the first enabled segment is promoted instead.
+ * 控件始终有且只有一个 Tab 落脚点：选中的分段，不管它是否被禁用、整个控件是否被禁用；
+ * 没有选中的分段时，取第一个没有被自己禁用的分段，再不行取第一个。
  */
 function syncTabStops(): void {
   const items = getItems()
   if (items.length === 0)
     return
 
-  const enabled = items.filter(item => !isItemDisabled(item))
-  if (enabled.length === 0)
-    return
-
-  const tabbable = enabled.find(item => item.getAttribute('tabindex') === '0') ?? enabled[0]
+  const stop = items.find(item => item.getAttribute('aria-checked') === 'true')
+    ?? items.find(item => !isDisabledOnItsOwn(item))
+    ?? items[0]
 
   for (const item of items)
-    setTabIndex(item, item === tabbable ? 0 : -1)
+    setTabIndex(item, item === stop ? 0 : -1)
 }
 
 onMounted(syncTabStops)
@@ -143,6 +153,7 @@ function focusIndex(items: HTMLElement[], index: number): void {
 }
 
 function handleKeydown(event: KeyboardEvent): void {
+  selection.keyPressed()
   invokeNativeEventHandler(attrs.onKeydown ?? attrs.onKeyDown, event)
 
   if (event.defaultPrevented || event.ctrlKey || event.metaKey || event.altKey)
@@ -214,7 +225,8 @@ function handleFocusIn(event: FocusEvent): void {
       showTooltip()
   }
 
-  if (props.isDisabled)
+  // A press commits through its click, not through the focus it moves.
+  if (props.isDisabled || selection.isPressing())
     return
 
   // Only a move WITHIN the group selects: tabbing in from outside must stay a
@@ -322,6 +334,7 @@ const describedBy = computed(() => [
     :data-disabled-message="showsDisabledMessage || undefined"
     :data-layout="layout"
     :data-size="size"
+    :data-touch="selection.isTouch.value || undefined"
     :style="rootStyle"
     role="radiogroup"
     @focusin="handleFocusIn"
@@ -329,6 +342,16 @@ const describedBy = computed(() => [
     @pointerenter="scheduleShowTooltip"
     @pointerleave="scheduleHideTooltip"
   >
+    <span
+      ref="lens"
+      class="astryx-segmented-control__selection"
+      aria-hidden="true"
+    />
+    <span
+      ref="leaving"
+      class="astryx-segmented-control__selection astryx-segmented-control__selection--leaving"
+      aria-hidden="true"
+    />
     <slot />
   </div>
   <ButtonTooltip

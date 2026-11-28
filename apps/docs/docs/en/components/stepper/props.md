@@ -15,7 +15,7 @@ footer: false
     <tbody>
       <tr><td><code>activeStep</code></td><td><code>number</code></td><td>-</td><td>Zero-based index of the current step.</td></tr>
       <tr><td><code>orientation</code></td><td><code>'horizontal' | 'vertical'</code></td><td><code>'horizontal'</code></td><td>Layout direction.</td></tr>
-      <tr><td><code>onStepClick</code></td><td><code>(index: number) =&gt; void</code></td><td>-</td><td>When set, steps are buttons. <code>@step-click</code> fills this prop.</td></tr>
+      <tr><td><code>onStepClick</code></td><td><code>(index: number) =&gt; void</code></td><td>-</td><td>When set, every step is a button until the horizontal stepper collapses. Enabled steps activate; disabled steps stay focusable and are announced as unavailable, but do not activate. <code>@step-click</code> fills this prop.</td></tr>
       <tr><td><code>label</code></td><td><code>string</code></td><td>Progress</td><td>Accessible name of the list.</td></tr>
       <tr><td><code>density</code></td><td><code>'compact' | 'balanced' | 'spacious'</code></td><td><code>'balanced'</code></td><td>Space around each step.</td></tr>
       <tr><td><code>indicatorPosition</code></td><td><code>'separated' | 'on-track'</code></td><td><code>'separated'</code></td><td>Whether the marker sits on the connector or beside a separate bar.</td></tr>

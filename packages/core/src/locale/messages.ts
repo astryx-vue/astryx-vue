@@ -25,10 +25,12 @@ import type { FieldMessages } from './messages/field.js'
 import type { FileInputMessages } from './messages/file-input.js'
 import type { InfoTipMessages } from './messages/info-tip.js'
 import type { InputMessages } from './messages/input.js'
+import type { KbdMessages } from './messages/kbd.js'
 import type { KeyboardHintMessages } from './messages/keyboard-hint.js'
 import type { LayoutMessages } from './messages/layout.js'
 import type { LightboxMessages } from './messages/lightbox.js'
 import type { ListInputMessages } from './messages/list-input.js'
+import type { ListMessages } from './messages/list.js'
 import type { MarkdownMessages } from './messages/markdown.js'
 import type { MetadataListMessages } from './messages/metadata-list.js'
 import type { MoreMenuMessages } from './messages/more-menu.js'
@@ -38,9 +40,11 @@ import type { NumberInputMessages } from './messages/number-input.js'
 import type { OutlineMessages } from './messages/outline.js'
 import type { PaginationMessages } from './messages/pagination.js'
 import type { PopoverMessages } from './messages/popover.js'
+import type { PowerSearchSheetMessages } from './messages/power-search-sheet.js'
 import type { PowerSearchMessages } from './messages/power-search.js'
 import type { RichTextEditorMessages } from './messages/rich-text-editor.js'
 import type { SelectorMessages } from './messages/selector.js'
+import type { SliderMessages } from './messages/slider.js'
 import type { SpinnerMessages } from './messages/spinner.js'
 import type { StepperMessages } from './messages/stepper.js'
 import type { SwitchMessages } from './messages/switch.js'
@@ -84,10 +88,12 @@ import { fieldMessages } from './messages/field.js'
 import { fileInputMessages } from './messages/file-input.js'
 import { infoTipMessages } from './messages/info-tip.js'
 import { inputMessages } from './messages/input.js'
+import { kbdMessages } from './messages/kbd.js'
 import { keyboardHintMessages } from './messages/keyboard-hint.js'
 import { layoutMessages } from './messages/layout.js'
 import { lightboxMessages } from './messages/lightbox.js'
 import { listInputMessages } from './messages/list-input.js'
+import { listMessages } from './messages/list.js'
 import { markdownMessages } from './messages/markdown.js'
 import { metadataListMessages } from './messages/metadata-list.js'
 import { moreMenuMessages } from './messages/more-menu.js'
@@ -97,9 +103,11 @@ import { numberInputMessages } from './messages/number-input.js'
 import { outlineMessages } from './messages/outline.js'
 import { paginationMessages } from './messages/pagination.js'
 import { popoverMessages } from './messages/popover.js'
+import { powerSearchSheetMessages } from './messages/power-search-sheet.js'
 import { powerSearchMessages } from './messages/power-search.js'
 import { richTextEditorMessages } from './messages/rich-text-editor.js'
 import { selectorMessages } from './messages/selector.js'
+import { sliderMessages } from './messages/slider.js'
 import { spinnerMessages } from './messages/spinner.js'
 import { stepperMessages } from './messages/stepper.js'
 import { switchMessages } from './messages/switch.js'
@@ -144,10 +152,12 @@ export interface AstryxMessages {
   fileInput: FileInputMessages
   infoTip: InfoTipMessages
   input: InputMessages
+  kbd: KbdMessages
   keyboardHint: KeyboardHintMessages
   layout: LayoutMessages
   lightbox: LightboxMessages
   listInput: ListInputMessages
+  list: ListMessages
   markdown: MarkdownMessages
   metadataList: MetadataListMessages
   moreMenu: MoreMenuMessages
@@ -157,9 +167,11 @@ export interface AstryxMessages {
   outline: OutlineMessages
   pagination: PaginationMessages
   popover: PopoverMessages
+  powerSearchSheet: PowerSearchSheetMessages
   powerSearch: PowerSearchMessages
   richTextEditor: RichTextEditorMessages
   selector: SelectorMessages
+  slider: SliderMessages
   spinner: SpinnerMessages
   stepper: StepperMessages
   switch: SwitchMessages
@@ -206,10 +218,12 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     fileInput: fileInputMessages.en,
     infoTip: infoTipMessages.en,
     input: inputMessages.en,
+    kbd: kbdMessages.en,
     keyboardHint: keyboardHintMessages.en,
     layout: layoutMessages.en,
     lightbox: lightboxMessages.en,
     listInput: listInputMessages.en,
+    list: listMessages.en,
     markdown: markdownMessages.en,
     metadataList: metadataListMessages.en,
     moreMenu: moreMenuMessages.en,
@@ -219,9 +233,11 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     outline: outlineMessages.en,
     pagination: paginationMessages.en,
     popover: popoverMessages.en,
+    powerSearchSheet: powerSearchSheetMessages.en,
     powerSearch: powerSearchMessages.en,
     richTextEditor: richTextEditorMessages.en,
     selector: selectorMessages.en,
+    slider: sliderMessages.en,
     spinner: spinnerMessages.en,
     stepper: stepperMessages.en,
     switch: switchMessages.en,
@@ -266,10 +282,12 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     fileInput: fileInputMessages['zh-CN'],
     infoTip: infoTipMessages['zh-CN'],
     input: inputMessages['zh-CN'],
+    kbd: kbdMessages['zh-CN'],
     keyboardHint: keyboardHintMessages['zh-CN'],
     layout: layoutMessages['zh-CN'],
     lightbox: lightboxMessages['zh-CN'],
     listInput: listInputMessages['zh-CN'],
+    list: listMessages['zh-CN'],
     markdown: markdownMessages['zh-CN'],
     metadataList: metadataListMessages['zh-CN'],
     moreMenu: moreMenuMessages['zh-CN'],
@@ -279,9 +297,11 @@ export const astryxMessages: Record<AstryxLocale, AstryxMessages> = {
     outline: outlineMessages['zh-CN'],
     pagination: paginationMessages['zh-CN'],
     popover: popoverMessages['zh-CN'],
+    powerSearchSheet: powerSearchSheetMessages['zh-CN'],
     powerSearch: powerSearchMessages['zh-CN'],
     richTextEditor: richTextEditorMessages['zh-CN'],
     selector: selectorMessages['zh-CN'],
+    slider: sliderMessages['zh-CN'],
     spinner: spinnerMessages['zh-CN'],
     stepper: stepperMessages['zh-CN'],
     switch: switchMessages['zh-CN'],

@@ -1,3 +1,4 @@
+import type { CalendarSystem } from '@astryx-vue/core'
 import type { InjectionKey } from 'vue'
 import type {
   CalendarEvent,
@@ -17,6 +18,8 @@ export interface ScheduleContextValue {
   focusDate: ZonedDateTime
   timezoneID: string
   locale: string
+  /** 日期按哪种历法写，来自最近的 `InternationalizationProvider`。格子仍按公历月和公历周排。 */
+  calendar: CalendarSystem
   range: ScheduleRange
   isLoading: boolean
   onPreviousDate: () => void

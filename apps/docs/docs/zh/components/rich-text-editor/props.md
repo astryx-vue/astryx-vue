@@ -27,6 +27,7 @@ footer: false
 | `nodes` | `ReadonlyArray<Klass<LexicalNode>>` | - | 额外注册的 Lexical 节点类型。 |
 | `extensions` | `ReadonlyArray<AnyLexicalExtensionArgument>` | - | 额外的 Lexical 扩展插件数组。 |
 | `markdownExtensions` | `ReadonlyArray<RichTextMarkdownExtension>` | - | 要识别的 Markdown 插件扩展数组。 |
+| `codeLanguages` | `ReadonlyArray<CodeLanguage>` | - | 代码围栏可以写的语言值。围栏的语言词是某个值的标识符时，用这个值上色，标题栏显示它的名字，优先于同名的内置语言；后面的条目优先。 |
 | `hasMarkdownShortcuts` | `boolean` | `true` | 是否开启 Markdown 快捷输入（如 `# ` 变标题）。 |
 | `transformers` | `ReadonlyArray<Transformer>` | 默认转换器 | 自定义 Markdown 转换规则。 |
 | `hasAutoFocus` | `boolean` | `false` | 挂载后是否自动聚焦编辑区。 |
@@ -45,7 +46,7 @@ footer: false
 | `label` | `string` | 本地化文案 | 工具栏无障碍名称。 |
 | `headingLevels` | `ReadonlyArray<'h1' \| 'h2' \| 'h3'>` | `['h1', 'h2', 'h3']` | 块格式下拉中包含的标题级别。 |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'sm'` | 工具栏尺寸。 |
-| `hasLink` | `boolean` | `true` | 是否显示链接按钮及启用 Cmd/Ctrl+K 快捷键。 |
+| `hasLink` | `boolean` | `true` | 是否显示链接按钮及启用 Cmd/Ctrl+K 快捷键。它们会打开锚定在按钮上的非模态弹出层，里面一个网址输入框。 |
 | `promptForUrl` | `(selectedText: string) => string \| null \| undefined` | - | 自定义获取网址的回调函数。 |
 | `hasNewTabLinks` | `boolean` | `true` | 插入的链接是否在新标签页打开。 |
 
@@ -58,7 +59,18 @@ footer: false
 | `value` | `string` | 必填 | 要渲染的编辑器状态 JSON 字符串。 |
 | `nodes` | `ReadonlyArray<Klass<LexicalNode>>` | - | 额外注册的 Lexical 节点，需与写入时一致。 |
 | `markdownExtensions` | `ReadonlyArray<RichTextMarkdownExtension>` | - | 要识别的 Markdown 插件扩展数组。 |
+| `codeLanguages` | `ReadonlyArray<CodeLanguage>` | - | 代码围栏可以写的语言值。围栏的语言词是某个值的标识符时，用这个值上色，标题栏显示它的名字，优先于同名的内置语言；后面的条目优先。 |
 | `namespace` | `string` | `'astryx-view'` | 底层 Lexical 实例命名空间。 |
 
 - **事件**：`@parseError="(error: Error) => void"` 在内容解析失败时触发。
 - **插槽**：`#errorFallback` 解析失败时的降级显示内容；`#default` 内部扩展插槽。
+
+### `<RichTextEditorAutoLinkPlugin>` 属性与事件
+
+放在 `<RichTextEditor>` 的默认插槽里，输入或粘贴的网址、邮箱会自动变成链接。它要通过编辑器的上下文找到编辑器，所以必须放在编辑器里面。生成的链接在新标签页打开，链接节点里写入了 `target="_blank"` 和 `rel="noopener noreferrer"`。
+
+| 属性名 | 类型 | 默认值 | 说明 |
+| :--- | :--- | :--- | :--- |
+| `matchers` | `LinkMatcher[]` | `DEFAULT_LINK_MATCHERS` | 要识别哪些写法，默认识别网址和邮箱。用 `@lexical/link` 的 `createLinkMatcherWithRegExp` 可以加自己的。 |
+
+- **事件**：`@change="(url: string | null, prevUrl: string | null) => void"` 在自动创建、更新或去掉链接时触发，参数是新网址（去掉链接时为 `null`）和原来的网址。

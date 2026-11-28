@@ -122,7 +122,9 @@ describe('textArea', () => {
     expect(new FormData(form).get('bio')).toBe('Ada')
     await wrapper.setProps({ isDisabled: true })
     expect(new FormData(form).has('bio')).toBe(false)
-    expect(wrapper.get('textarea').attributes('disabled')).toBe('')
+    // 禁用的文本框不带原生 disabled：还在 Tab 顺序里，读屏念出「不可用」。
+    expect(wrapper.get('textarea').attributes('disabled')).toBeUndefined()
+    expect(wrapper.get('textarea').attributes('aria-disabled')).toBe('true')
   })
 
   it('makes a disabled reason discoverable without permitting editing or submitting', async () => {
@@ -141,10 +143,27 @@ describe('textArea', () => {
     expect(wrapper.emitted('enter')).toBeUndefined()
   })
 
-  it('treats a blank disabledMessage as absent', () => {
+  it('keeps a disabled field in the tab order without a disabledMessage', () => {
     const wrapper = renderArea({ isDisabled: true, disabledMessage: '  ' })
-    expect(wrapper.get('textarea').attributes('disabled')).toBe('')
-    expect(wrapper.get('textarea').attributes('aria-disabled')).toBeUndefined()
+    const textarea = wrapper.get('textarea')
+    expect(textarea.attributes('disabled')).toBeUndefined()
+    expect(textarea.attributes('aria-disabled')).toBe('true')
+    expect(textarea.attributes('readonly')).toBe('')
+    textarea.element.focus()
+    expect(document.activeElement).toBe(textarea.element)
+  })
+
+  it('runs no caller handler except focus and blur while disabled', async () => {
+    const onClick = vi.fn()
+    const onFocus = vi.fn()
+    const wrapper = renderArea({ isDisabled: true, modelValue: 'Ada' }, { onClick, onFocus })
+    await wrapper.get('textarea').trigger('click')
+    wrapper.get('textarea').element.focus()
+    expect(onClick).not.toHaveBeenCalled()
+    expect(onFocus).toHaveBeenCalledTimes(1)
+    await wrapper.get('textarea').trigger('keydown', { key: 'Enter' })
+    expect(wrapper.emitted('keydown')).toBeUndefined()
+    expect(wrapper.emitted('enter')).toBeUndefined()
   })
 
   it('forwards textarea attributes and respects rows and maxlength', async () => {
@@ -273,5 +292,46 @@ describe('textArea', () => {
     expect(id).toBeTruthy()
     expect(html).toContain(`for="${id}"`)
     expect(html).toContain(`aria-labelledby="${id}-label"`)
+  })
+})
+
+describe('textArea touch keyboard traits', () => {
+  it('renders no keyboard attribute until a prop sets it', () => {
+    const textarea = renderArea().get('textarea')
+    for (const name of ['enterkeyhint', 'inputmode', 'autocapitalize', 'autocorrect'])
+      expect(textarea.attributes(name)).toBeUndefined()
+  })
+
+  it('renders each trait as the native attribute of the same name', () => {
+    const textarea = renderArea({ enterKeyHint: 'send', inputMode: 'text', autoCapitalize: 'sentences', hasAutoCorrect: true }).get('textarea')
+    expect(textarea.attributes('enterkeyhint')).toBe('send')
+    expect(textarea.attributes('inputmode')).toBe('text')
+    expect(textarea.attributes('autocapitalize')).toBe('sentences')
+    expect(textarea.attributes('autocorrect')).toBe('on')
+  })
+})
+
+describe('textArea htmlMaxLength', () => {
+  it('renders the native maxlength and nothing more', () => {
+    const wrapper = renderArea({ htmlMaxLength: 20, modelValue: 'a longer value than twenty characters' })
+    expect(wrapper.get('textarea').attributes('maxlength')).toBe('20')
+    expect(wrapper.find('.astryx-text-area-count').exists()).toBe(false)
+    expect(wrapper.get('textarea').element.value).toBe('a longer value than twenty characters')
+  })
+
+  it('stays separate from the soft counter limit', () => {
+    const wrapper = renderArea({ maxlength: 50, modelValue: 'abc' })
+    expect(wrapper.get('textarea').attributes('maxlength')).toBeUndefined()
+    expect(wrapper.get('.astryx-text-area-count').text()).toContain('3/50')
+  })
+})
+
+describe('textArea error without a message', () => {
+  it('describes the field by hidden fallback text', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const wrapper = renderArea({ label: 'Bio', status: { type: 'error' } })
+    const describedBy = wrapper.get('textarea').attributes('aria-describedby') ?? ''
+    expect(describedBy.split(' ').map(id => document.getElementById(id)?.textContent?.trim())).toContain('Invalid value')
+    warn.mockRestore()
   })
 })

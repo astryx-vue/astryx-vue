@@ -1,5 +1,443 @@
 # @astryx-vue/lab
 
+## 0.15.0
+
+### Minor Changes
+
+- [#656](https://github.com/astryx-vue/astryx-vue/pull/656) [`9683bc5`](https://github.com/astryx-vue/astryx-vue/commit/9683bc5eefeea3e0a18f7f6b0886d734d569481d) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增 `NavigationStack`、`NavigationScreen` 和 `useNavigationStack`：手机布局里一层层往里点的导航，推入、退出和滑动返回都照着 iOS 的手感，开启「减少动态效果」时改成淡入淡出。
+
+### Patch Changes
+
+- Updated dependencies [[`9683bc5`](https://github.com/astryx-vue/astryx-vue/commit/9683bc5eefeea3e0a18f7f6b0886d734d569481d)]:
+  - @astryx-vue/core@0.42.2
+
+## 0.14.0
+
+### Minor Changes
+
+- [#668](https://github.com/astryx-vue/astryx-vue/pull/668) [`7706b8e`](https://github.com/astryx-vue/astryx-vue/commit/7706b8edc091bb448ae554007a1c58b698a21929) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增实验组件 ChatVirtualizer：很长的聊天记录只渲染看得见的行，在底部时跟随新消息，往上翻后加载历史、行变高都不挪动正在读的那一行，也能挂到整页滚动上并在旋转屏幕时保持位置；core 新增文案 `chat.virtualizerLabel`。
+
+### Patch Changes
+
+- Updated dependencies [[`7706b8e`](https://github.com/astryx-vue/astryx-vue/commit/7706b8edc091bb448ae554007a1c58b698a21929)]:
+  - @astryx-vue/core@0.42.1
+
+## 0.13.1
+
+### Patch Changes
+
+- Updated dependencies [[`852bdbf`](https://github.com/astryx-vue/astryx-vue/commit/852bdbfa4dd4e2b5ab0003d5537e200eaf6fa547), [`90380bc`](https://github.com/astryx-vue/astryx-vue/commit/90380bcc5cde8902e107ba2fa1ab6479c59d1561), [`dab0232`](https://github.com/astryx-vue/astryx-vue/commit/dab0232a9b77719a6aa62d931954a22569fbde48)]:
+  - @astryx-vue/core@0.42.0
+
+## 0.13.0
+
+### Minor Changes
+
+- [#663](https://github.com/astryx-vue/astryx-vue/pull/663) [`87244ef`](https://github.com/astryx-vue/astryx-vue/commit/87244ef0c889446b8f0ba085b0326e66d06a4f63) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `ListInput` 和 `TransferList` 改用 core `List` 的重排引擎，拖动手感和 `List` 一样：手指按住再拖、副本跟手、落点线、贴边自动滚动、松手后各行滑到新位置，点一下手柄进入键盘重排模式，读屏播报每次挪动。
+  
+  - `ListInput` 新增 `reorderable`：传 `useReorderable` 或 `createReorderable` 做的对象，挪动交给它的 `onReorder`。`isReorderable` 已弃用但仍可用，开发环境提示一次。
+  - `ListInput` 每条记录的操作（删除和重排手柄）跟着记录的悬停或聚焦一起显出来，不显时照样占位，记录不会跳动；重排手柄在删除按钮后面。
+  - `TransferList` 和 `TransferListSelector` 新增 `reorderable`，可以自己接管已选项的重排；不传时照旧用内置重排。整个列表禁用时，重排手柄仍可聚焦，提示为什么不能挪。
+  - core 为 lab 导出 `unstable_ListReorderScope`、`unstable_useListReorderScope`、`unstable_adaptReorderable`、`unstable_reorderableOptions`，属于内部接口，可能随时变动。
+
+### Patch Changes
+
+- Updated dependencies [[`87244ef`](https://github.com/astryx-vue/astryx-vue/commit/87244ef0c889446b8f0ba085b0326e66d06a4f63)]:
+  - @astryx-vue/core@0.41.1
+
+## 0.12.1
+
+### Patch Changes
+
+- Updated dependencies [[`612e54b`](https://github.com/astryx-vue/astryx-vue/commit/612e54bb3e77845545a81ed2b18142b6039d1aef)]:
+  - @astryx-vue/core@0.41.0
+
+## 0.12.0
+
+### Minor Changes
+
+- [#657](https://github.com/astryx-vue/astryx-vue/pull/657) [`c88c676`](https://github.com/astryx-vue/astryx-vue/commit/c88c6761b00d2b98a23215a1308b02e618fbbdca) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增 `WeightedSVGIcon`：每个字重（300-700）带一张图的 SVG 图标，显示和周围文字字重对得上的那一张，粗体文字里的图标自己画粗的版本，不用传属性；`weight` 可以固定字重，`WeightedIconSprite` 加 `sprite` 让重复的图标只在页面上出现一次。附带 `buildWeightedIcon()`（相邻字重相同的图合成一层、只保留用得到的字重）、`registerWeightProbe()` 和 15 个演示图标 `weightedStarterIcons`。
+
+### Patch Changes
+
+- Updated dependencies [[`21f1c19`](https://github.com/astryx-vue/astryx-vue/commit/21f1c19715b8b7a9400ea089826e6c5fb1b8fef2), [`c88c676`](https://github.com/astryx-vue/astryx-vue/commit/c88c6761b00d2b98a23215a1308b02e618fbbdca), [`c88c676`](https://github.com/astryx-vue/astryx-vue/commit/c88c6761b00d2b98a23215a1308b02e618fbbdca), [`c88c676`](https://github.com/astryx-vue/astryx-vue/commit/c88c6761b00d2b98a23215a1308b02e618fbbdca)]:
+  - @astryx-vue/core@0.40.0
+
+## 0.11.6
+
+### Patch Changes
+
+- Updated dependencies [[`80d3280`](https://github.com/astryx-vue/astryx-vue/commit/80d3280dbb0aafafce7a4c22a9797c3573661f13), [`80d3280`](https://github.com/astryx-vue/astryx-vue/commit/80d3280dbb0aafafce7a4c22a9797c3573661f13)]:
+  - @astryx-vue/core@0.39.0
+
+## 0.11.5
+
+### Patch Changes
+
+- [#654](https://github.com/astryx-vue/astryx-vue/pull/654) [`dff2d91`](https://github.com/astryx-vue/astryx-vue/commit/dff2d9152f247971094d989cce222ceb91701d33) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `ListInput` 和 `TransferList` 的重排手柄上，双指捏合现在也能缩放页面；单指拖动照旧是重排。
+- Updated dependencies [[`7334333`](https://github.com/astryx-vue/astryx-vue/commit/73343337fa497d3bf4b9f813e1c89f9921ffd5f0), [`a8ff6f5`](https://github.com/astryx-vue/astryx-vue/commit/a8ff6f57ef576333c7b547fc29d9da6b54c4e66d)]:
+  - @astryx-vue/core@0.38.0
+
+## 0.11.4
+
+### Patch Changes
+
+- Updated dependencies [[`ab6ebe1`](https://github.com/astryx-vue/astryx-vue/commit/ab6ebe14956ea4157041898935efd65bf0cce9ac)]:
+  - @astryx-vue/core@0.37.0
+
+## 0.11.3
+
+### Patch Changes
+
+- Updated dependencies [[`e31a91c`](https://github.com/astryx-vue/astryx-vue/commit/e31a91cbb23b0032eb60e2ff75895b246206af04), [`e31a91c`](https://github.com/astryx-vue/astryx-vue/commit/e31a91cbb23b0032eb60e2ff75895b246206af04), [`e31a91c`](https://github.com/astryx-vue/astryx-vue/commit/e31a91cbb23b0032eb60e2ff75895b246206af04)]:
+  - @astryx-vue/core@0.36.0
+
+## 0.11.2
+
+### Patch Changes
+
+- Updated dependencies [[`0911d08`](https://github.com/astryx-vue/astryx-vue/commit/0911d088d7f71af5fd7f5bf48b63104d430372c6), [`0d0e09b`](https://github.com/astryx-vue/astryx-vue/commit/0d0e09b647f4a538d85896ab78c1bb9550b90e37), [`9a902a4`](https://github.com/astryx-vue/astryx-vue/commit/9a902a4ec8cd9f176ce1d93d862af6f7eb820f61)]:
+  - @astryx-vue/core@0.35.0
+
+## 0.11.1
+
+### Patch Changes
+
+- Updated dependencies [[`2243356`](https://github.com/astryx-vue/astryx-vue/commit/22433567c3f9e208c9891c602cc4a3fcebfb7c5c), [`3da104c`](https://github.com/astryx-vue/astryx-vue/commit/3da104caa55b576f143ce968f729152b2aee78ff), [`d446b57`](https://github.com/astryx-vue/astryx-vue/commit/d446b570465a4175a84e3b2094e5d35c03c3a049), [`818a388`](https://github.com/astryx-vue/astryx-vue/commit/818a38871c0afc3e78ccb487f8d737a33ec3af49), [`ec357d0`](https://github.com/astryx-vue/astryx-vue/commit/ec357d061efa91437a1ed9a852108164a92255f7)]:
+  - @astryx-vue/core@0.34.0
+
+## 0.11.0
+
+### Minor Changes
+
+- [#628](https://github.com/astryx-vue/astryx-vue/pull/628) [`525503e`](https://github.com/astryx-vue/astryx-vue/commit/525503e04317d955791dc8a05906940e216e7828) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 实验包新增 SelectableCardGroup：单选时是一个单选组（卡片是同名的原生单选框、整组一个 Tab 停靠点、再点已选的卡不会取消），多选时是一组复选框。TransferList 和 TransferListSelector 新增 `isDisabled`：禁用后所有搬运、排序、清空、全部添加和搜索都不可用，但行上的按钮和搜索框仍可聚焦，选项自己的限制说明也不再出现。文档站为 ListInput 补了三个示例。
+
+### Patch Changes
+
+- Updated dependencies [[`525503e`](https://github.com/astryx-vue/astryx-vue/commit/525503e04317d955791dc8a05906940e216e7828)]:
+  - @astryx-vue/core@0.33.1
+
+## 0.10.4
+
+### Patch Changes
+
+- Updated dependencies [[`3bafa56`](https://github.com/astryx-vue/astryx-vue/commit/3bafa56870e9f491c9f0cb4be4a84232773d61ea)]:
+  - @astryx-vue/core@0.33.0
+
+## 0.10.3
+
+### Patch Changes
+
+- Updated dependencies [[`e502448`](https://github.com/astryx-vue/astryx-vue/commit/e502448b10848a3752c9f5f41fd3f3af79e69e72)]:
+  - @astryx-vue/core@0.32.0
+
+## 0.10.2
+
+### Patch Changes
+
+- Updated dependencies [[`a23cb50`](https://github.com/astryx-vue/astryx-vue/commit/a23cb50279f130df2b3ef4fb83cdaa5b9dfb3663)]:
+  - @astryx-vue/core@0.31.0
+
+## 0.10.1
+
+### Patch Changes
+
+- Updated dependencies [[`7b1e341`](https://github.com/astryx-vue/astryx-vue/commit/7b1e3418e31dcafd7574ab8f895877ce49fe8ca3)]:
+  - @astryx-vue/core@0.30.0
+
+## 0.10.0
+
+### Minor Changes
+
+- [#612](https://github.com/astryx-vue/astryx-vue/pull/612) [`6fbb2b5`](https://github.com/astryx-vue/astryx-vue/commit/6fbb2b5fb62da1ee0f38d021d0b090f5cad52381) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 移除 lab 的 `MobileTokenizer`（连同它的样式、文档和示例）。手机上的多选输入请改用 core 的 `Tokenizer`：它默认 `presentation="adaptive"`，在紧凑触屏上自动换成底部弹层，草稿编辑、放弃确认、拖动收起搜索都已经内置。`MobileTokenizer` 顺带导出的 `SearchableItem`、`SearchSource` 类型也一并移除，请从 `@astryx-vue/core` 引入。
+
+### Patch Changes
+
+- Updated dependencies [[`ab1fac0`](https://github.com/astryx-vue/astryx-vue/commit/ab1fac025296f8cf7718c4fa9fd16b6bd30b1453)]:
+  - @astryx-vue/core@0.29.0
+
+## 0.9.5
+
+### Patch Changes
+
+- Updated dependencies [[`5d52498`](https://github.com/astryx-vue/astryx-vue/commit/5d52498bb80eb41ed2c29e73af37b91ca8483afa)]:
+  - @astryx-vue/core@0.28.0
+
+## 0.9.4
+
+### Patch Changes
+
+- Updated dependencies [[`89336db`](https://github.com/astryx-vue/astryx-vue/commit/89336db6111042c8304e548fd913d55ada404b05), [`8890c87`](https://github.com/astryx-vue/astryx-vue/commit/8890c87dff026c5e2d883fec12ee3db97335ad96)]:
+  - @astryx-vue/core@0.27.0
+
+## 0.9.3
+
+### Patch Changes
+
+- Updated dependencies [[`ec208da`](https://github.com/astryx-vue/astryx-vue/commit/ec208dae73420d8a2d053b238b5b6dde01c8c960), [`33cec03`](https://github.com/astryx-vue/astryx-vue/commit/33cec037092f04970b22a9265f365660f88c95a7), [`57250a9`](https://github.com/astryx-vue/astryx-vue/commit/57250a95eac0080bc86f795d96e5daf2b50dc0b0), [`500b7bb`](https://github.com/astryx-vue/astryx-vue/commit/500b7bb7ccab6c36627ae837180dbbe8f75b0f5c), [`d4a40a6`](https://github.com/astryx-vue/astryx-vue/commit/d4a40a6b1c2dc0bf5b3073f1786c2f2eb6a41a9c), [`c66168c`](https://github.com/astryx-vue/astryx-vue/commit/c66168c00e9f06435ae85cf4e170e7d178ca54bb), [`627d55a`](https://github.com/astryx-vue/astryx-vue/commit/627d55a2bd93c04b03009fbf92783f5de983d615), [`ee32ea2`](https://github.com/astryx-vue/astryx-vue/commit/ee32ea2a72a6a69f76fee6b511bdea0c5ff29793)]:
+  - @astryx-vue/core@0.26.0
+
+## 0.9.2
+
+### Patch Changes
+
+- Updated dependencies [[`996b581`](https://github.com/astryx-vue/astryx-vue/commit/996b58189e8e9764c33a6ea450b906f27563d521), [`1cd234e`](https://github.com/astryx-vue/astryx-vue/commit/1cd234e37cf1b8adfbcb4bbb1fd8ed57e2953c9d), [`9c99822`](https://github.com/astryx-vue/astryx-vue/commit/9c99822375b82404b48b2e93a01a5cbf666e78a5)]:
+  - @astryx-vue/core@0.25.0
+
+## 0.9.1
+
+### Patch Changes
+
+- Updated dependencies [[`d700d0d`](https://github.com/astryx-vue/astryx-vue/commit/d700d0dc97ad83056d72fa10a8985e1964b16854), [`8a56364`](https://github.com/astryx-vue/astryx-vue/commit/8a56364b5c1892ec4af4dc6736e4fe08edaa5ad2)]:
+  - @astryx-vue/core@0.24.0
+
+## 0.9.0
+
+### Minor Changes
+
+- [#585](https://github.com/astryx-vue/astryx-vue/pull/585) [`b4c1246`](https://github.com/astryx-vue/astryx-vue/commit/b4c124601db95576e89bd372cb3a35f0f30bbe57) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `InternationalizationProvider` 新增 `calendar`，可以选波斯历、希伯来历、伊斯兰历、佛历、和历、农历等历法：`Calendar` 按这个历法排月份、翻月和写日期（也可以用组件自己的 `calendar` 属性），`Timestamp`、`PowerSearch` 和实验室的 `Schedule` 按它写日期，`useLocale()` 返回当前的 `calendar`；值始终是公历日期，不设时仍是公历。`fa-IR`、`th-TH` 等默认历法不是公历的语言下，公历日历的标题和读屏名字不再混进别的历法。
+
+### Patch Changes
+
+- Updated dependencies [[`b4c1246`](https://github.com/astryx-vue/astryx-vue/commit/b4c124601db95576e89bd372cb3a35f0f30bbe57), [`cb9b686`](https://github.com/astryx-vue/astryx-vue/commit/cb9b686abf974dc69c59b61072cc77aa4008cb75), [`09ce82c`](https://github.com/astryx-vue/astryx-vue/commit/09ce82c05935e677b00f8c301e877ce7817fa930), [`e54c2eb`](https://github.com/astryx-vue/astryx-vue/commit/e54c2ebe572c5fb88343175f9f0c67c56999d197)]:
+  - @astryx-vue/core@0.23.0
+
+## 0.8.7
+
+### Patch Changes
+
+- Updated dependencies [[`4659181`](https://github.com/astryx-vue/astryx-vue/commit/46591818f1f678ac81b6cf86a847cf8929008103)]:
+  - @astryx-vue/core@0.22.0
+
+## 0.8.6
+
+### Patch Changes
+
+- Updated dependencies [[`6e36420`](https://github.com/astryx-vue/astryx-vue/commit/6e36420c236439f2e81584d905501be1b63d79c3)]:
+  - @astryx-vue/core@0.21.0
+
+## 0.8.5
+
+### Patch Changes
+
+- Updated dependencies [[`4c7b227`](https://github.com/astryx-vue/astryx-vue/commit/4c7b2277f9643201e9c37a39856941b821142dd4)]:
+  - @astryx-vue/core@0.20.0
+
+## 0.8.4
+
+### Patch Changes
+
+- Updated dependencies [[`dbc08b8`](https://github.com/astryx-vue/astryx-vue/commit/dbc08b8abccd4b06c24d1be3771a679801bea68f), [`427fe3c`](https://github.com/astryx-vue/astryx-vue/commit/427fe3c616eca359f46cf20dbe13d6965e3e9d16), [`eca17f2`](https://github.com/astryx-vue/astryx-vue/commit/eca17f24b65bd2e4860f223d687f0b6c12a93b1b)]:
+  - @astryx-vue/core@0.19.0
+
+## 0.8.3
+
+### Patch Changes
+
+- Updated dependencies [[`3482ec8`](https://github.com/astryx-vue/astryx-vue/commit/3482ec86f1a322a9fea811d67d456166e0378986), [`8f246ae`](https://github.com/astryx-vue/astryx-vue/commit/8f246ae8499d5cd9b1ac56db6e9ee441a2a5fc9a)]:
+  - @astryx-vue/core@0.18.0
+
+## 0.8.2
+
+### Patch Changes
+
+- Updated dependencies [[`a9ae1a0`](https://github.com/astryx-vue/astryx-vue/commit/a9ae1a0767b1781ec2af2333b0fc50f07f218b56), [`b272df5`](https://github.com/astryx-vue/astryx-vue/commit/b272df56af84a0ad60f9044a3c582221e7f4c52b), [`815fd22`](https://github.com/astryx-vue/astryx-vue/commit/815fd22cd455f3bf03ecfee74ee1d5260c925c4f)]:
+  - @astryx-vue/core@0.17.0
+
+## 0.8.1
+
+### Patch Changes
+
+- [#562](https://github.com/astryx-vue/astryx-vue/pull/562) [`ec3af5c`](https://github.com/astryx-vue/astryx-vue/commit/ec3af5c924db1ebacac17989d949690138b1643f) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - VideoPlayer renders on the server without throwing `HTMLVideoElement is not defined`.
+- Updated dependencies [[`a12067c`](https://github.com/astryx-vue/astryx-vue/commit/a12067c18293f163990c985818406cae013a8a07)]:
+  - @astryx-vue/core@0.16.4
+
+## 0.8.0
+
+### Minor Changes
+
+- [#555](https://github.com/astryx-vue/astryx-vue/pull/555) [`dbc9306`](https://github.com/astryx-vue/astryx-vue/commit/dbc9306ec28100b5047e68c11ed75953c543a5c4) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增 `MediaPlayer` 和一组媒体控件（播放、跳转、时间轴、时间、音量、速度、字幕、全屏）以及 `useMediaPlayer`，可以用浏览器原生的视频、音频元素拼出跟随主题的播放器，带键盘快捷键和读屏播报。
+
+- [#559](https://github.com/astryx-vue/astryx-vue/pull/559) [`7ed451a`](https://github.com/astryx-vue/astryx-vue/commit/7ed451a060c037b9f232ea72d927d9428a707b2a) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增现成的 `VideoPlayer` 和 `AudioPlayer`。`VideoPlayer` 的控件浮在画面上的毛玻璃条里，空闲时自动藏起，字幕摆在控件条上方，播放器宽度不超过 360px 时控件条变紧凑；`AudioPlayer` 带封面、标题、快退快进、速度和可选的上一首、下一首，播放时把信息交给系统的媒体控制。
+
+### Patch Changes
+
+- [#560](https://github.com/astryx-vue/astryx-vue/pull/560) [`ff7e351`](https://github.com/astryx-vue/astryx-vue/commit/ff7e351750a0b9844fdfe6ef22cf191c057a0c65) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - CodeEditor keeps the caret where you type instead of jumping to the start after each change. The Tour backdrop now covers the whole page, including fixed headers outside the tour's container.
+- Updated dependencies [[`2851fe3`](https://github.com/astryx-vue/astryx-vue/commit/2851fe345c0e0d9daeb1601325bac102aa5f2ed5)]:
+  - @astryx-vue/core@0.16.3
+
+## 0.7.8
+
+### Patch Changes
+
+- [#558](https://github.com/astryx-vue/astryx-vue/pull/558) [`cca2f63`](https://github.com/astryx-vue/astryx-vue/commit/cca2f63cb015d86a4b122ebc87d11c5958e940ec) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - TransferList and ListInput show a single drop indicator line while dragging, instead of two.
+- Updated dependencies [[`b9dc365`](https://github.com/astryx-vue/astryx-vue/commit/b9dc36576e535848f53b0f25f4602fe38a89c213)]:
+  - @astryx-vue/core@0.16.2
+
+## 0.7.7
+
+### Patch Changes
+
+- [#556](https://github.com/astryx-vue/astryx-vue/pull/556) [`68cac05`](https://github.com/astryx-vue/astryx-vue/commit/68cac056a700ba83d73a4c0207c76a20733b617d) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - The Tour callout stays invisible until it is placed next to its target, so it no longer flashes in the top-left corner when a tour starts or moves to another step.
+- Updated dependencies [[`68cac05`](https://github.com/astryx-vue/astryx-vue/commit/68cac056a700ba83d73a4c0207c76a20733b617d)]:
+  - @astryx-vue/core@0.16.1
+
+## 0.7.6
+
+### Patch Changes
+
+- [#551](https://github.com/astryx-vue/astryx-vue/pull/551) [`94beb19`](https://github.com/astryx-vue/astryx-vue/commit/94beb198da3a3a3452eeba6932261f045e101c50) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - DiffViewer 对齐原版样式：去掉列头多余的框线，增删行底色改用背景图层（吸顶行号列也能着色），竖条标记改成实线／虚线条纹；DialogHeroHeader 的关闭按钮稳定浮在媒体区右上角。
+
+## 0.7.5
+
+### Patch Changes
+
+- [#550](https://github.com/astryx-vue/astryx-vue/pull/550) [`d27092a`](https://github.com/astryx-vue/astryx-vue/commit/d27092a9f35a07901650fe9100b60dbdadbf86f4) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 读屏播报：同一帧里播报的多条消息按顺序连在一起念，一模一样的重复只念一次，空消息连同还没念的一起清掉；`useAnnounce` 新增 `hasReplace` 选项，让每次按键都重说一遍的状态（MultiSelector、CommandPalette 的搜索状态）只念最新一条；Selector、MultiSelector 的结果播报会收回还没念出去的「加载中」，TextInput、TextArea 的加载圈改为装饰、忙碌由输入框自己念一次；原生模态对话框打开时，播报写进那个对话框自己的区域；EmptyState 的根不再是 live 区域，页面加载后才出现或文字之后变了才播报一次。复制：`useClipboard` 新增 `isFailed`、`announceFailure`、`onError`，CodeBlock 新增 `copyFailedLabel` 和 `copyError` 事件，复制失败时按钮变叉并用 assertive 播报，Timestamp、评论链接和富文本代码块同样；`useOverflow` 新增 `gapToken`、`renderedGap`、`inlineBounds`。其余：可滚动的 LayoutContent、LayoutPanel、StackItem 溢出时是有名字的 group，AppShell 的 `fill` 主区域溢出时成为键盘停靠点；锁滚动在触屏上取消没人接的单指拖动并关掉页面回弹；TreeList 收起时焦点回到行；Selector、MultiSelector 键盘移到的高亮选项画焦点环；强制配色下聚焦的菜单行可见；`useImageMode` 在区域数值变化时重新采样；Calendar 今天在接管服务端 HTML 之后才读，服务端和浏览器不同日期也不再对不上；`useMediaQuery` 每条查询只挂一个监听。
+- Updated dependencies [[`d27092a`](https://github.com/astryx-vue/astryx-vue/commit/d27092a9f35a07901650fe9100b60dbdadbf86f4), [`9f4cd31`](https://github.com/astryx-vue/astryx-vue/commit/9f4cd3181d8e390437b3f23b766525e3395d0c22)]:
+  - @astryx-vue/core@0.16.0
+
+## 0.7.4
+
+### Patch Changes
+
+- Updated dependencies [[`0dab467`](https://github.com/astryx-vue/astryx-vue/commit/0dab467a81ac4130ac5f33511c69c9fa0b3b30e7), [`b17b492`](https://github.com/astryx-vue/astryx-vue/commit/b17b4922330c59dec2eb8973615848aa1b22e63f)]:
+  - @astryx-vue/core@0.15.0
+
+## 0.7.3
+
+### Patch Changes
+
+- Updated dependencies [[`2f825cd`](https://github.com/astryx-vue/astryx-vue/commit/2f825cdf9c5c41cd4de6ab097ab28ee6665ad65e)]:
+  - @astryx-vue/core@0.14.0
+
+## 0.7.2
+
+### Patch Changes
+
+- Updated dependencies [[`fe992ac`](https://github.com/astryx-vue/astryx-vue/commit/fe992ac67b9b112c3685be0b249ab42dfbb670fc), [`d2849f1`](https://github.com/astryx-vue/astryx-vue/commit/d2849f15a3059c03dab71271bc64e5811fd766ec)]:
+  - @astryx-vue/core@0.13.0
+
+## 0.7.1
+
+### Patch Changes
+
+- Updated dependencies [[`b74909f`](https://github.com/astryx-vue/astryx-vue/commit/b74909fc6e89b8cf365eb9ce41cda4178c69cc99), [`083cd85`](https://github.com/astryx-vue/astryx-vue/commit/083cd85c3e72ee76353719f81598895b13707072)]:
+  - @astryx-vue/core@0.12.0
+
+## 0.7.0
+
+### Minor Changes
+
+- [#536](https://github.com/astryx-vue/astryx-vue/pull/536) [`bf97b13`](https://github.com/astryx-vue/astryx-vue/commit/bf97b13f85a406f7e637a8f5b4977546504e28aa) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 实验包新增 CircleCheckIndicator（iOS 的多选圆圈，在主题里映射到 `checkbox` 后所有复选框都画成圆圈，鼠标、触控笔按下时按压色立刻画在圆圈上）和 DialogHeroHeader（标题上方铺满媒体、关闭按钮浮在媒体上的对话框页头）；core 公开 `useDialogContext`，让自己画对话框页头的组件读到标题约定。
+
+### Patch Changes
+
+- Updated dependencies [[`bf97b13`](https://github.com/astryx-vue/astryx-vue/commit/bf97b13f85a406f7e637a8f5b4977546504e28aa)]:
+  - @astryx-vue/core@0.11.0
+
+## 0.6.8
+
+### Patch Changes
+
+- [#535](https://github.com/astryx-vue/astryx-vue/pull/535) [`3cf0198`](https://github.com/astryx-vue/astryx-vue/commit/3cf01987b8851556dd83c5f4a42a44ee3daa0555) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 实验包 DiffViewer：`createDiffFile` 在线性内存里逐行比较最多 10,000 行改动，更大的改动在片段上标 `isReplacedBlock`；DiffViewer 把整块替换和改动超过 2,000 行的文件折在「Large change: N lines」后面，点 Show full diff 展开，折叠会藏住批注时一开始就展开。
+
+## 0.6.7
+
+### Patch Changes
+
+- [#532](https://github.com/astryx-vue/astryx-vue/pull/532) [`41a3277`](https://github.com/astryx-vue/astryx-vue/commit/41a32773b15cdbc36962d70c6bbb75c89394ac9e) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 实验包：CircularProgress 改为合成线程上转动的圆弧，页面忙时进度变化也不会卡住，不确定状态和加载圈一样转，所有变体共用浅色轨道、禁用时整圈半透明；Tour 的说明框改成非模态区域，可以指向任何元素，按目标或页面不再结束引导，Escape 报告 `escape`，结束后把焦点还回去；CodeEditor 在从右到左的页面里代码保持从左到右；Schedule 的加载提示改走共享播报通道。
+
+## 0.6.6
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @astryx-vue/core@0.10.0
+
+## 0.6.5
+
+### Patch Changes
+
+- [#524](https://github.com/astryx-vue/astryx-vue/pull/524) [`1c4d3db`](https://github.com/astryx-vue/astryx-vue/commit/1c4d3dba2a2d4f2862fe4c2dfc5001301d44958e) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `EmojiPicker` 遇到 `key` 为 `Process` 的按键也当作输入法组字，方向键和 Enter 留给候选框，和 core 的判断一致。
+
+## 0.6.4
+
+### Patch Changes
+
+- [#522](https://github.com/astryx-vue/astryx-vue/pull/522) [`37d0df4`](https://github.com/astryx-vue/astryx-vue/commit/37d0df4b4e16b31b14bf47cc52f3be2ac44d8586) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - lab 的组件打包时只带自己用到的文案；ListInput 在第一条或最后一条上继续按方向键时，读屏会念出“已经在最前/最后”的提示，不再念出文案键名。
+
+## 0.6.3
+
+### Patch Changes
+
+- [#520](https://github.com/astryx-vue/astryx-vue/pull/520) [`40d7a78`](https://github.com/astryx-vue/astryx-vue/commit/40d7a782e6a420ce21a3d9d2d8fe1dc6b2fd0162) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 公开 `useComponentMessages` 和各组件的内置文案（如 `tableMessages`、`codeBlockMessages`），自己的组件可以只取用到的几组文案。富文本编辑器改用它，打包时不再带上全部组件的文案。
+- Updated dependencies [[`40d7a78`](https://github.com/astryx-vue/astryx-vue/commit/40d7a782e6a420ce21a3d9d2d8fe1dc6b2fd0162)]:
+  - @astryx-vue/core@0.9.0
+
+## 0.6.2
+
+### Patch Changes
+
+- Updated dependencies [[`76d1bb6`](https://github.com/astryx-vue/astryx-vue/commit/76d1bb68afc03cd54a727b22e8932ec8217862cb)]:
+  - @astryx-vue/core@0.8.0
+
+## 0.6.1
+
+### Patch Changes
+
+- [#517](https://github.com/astryx-vue/astryx-vue/pull/517) [`3d1eb56`](https://github.com/astryx-vue/astryx-vue/commit/3d1eb56dd9c087bad55a31afffa709929b896dd0) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 状态色按所在的底分成几种角色，组件各取其一：
+  
+  - `defineTheme` 做的主题只写了状态底色（或改了表面色、`--color-on-dark` / `--color-on-light`）时，会按主题自己的颜色算出没写的 `--color-on-<状态>`、`--color-text-<状态>`、`--color-on-<状态>-muted`，图标和边框角色跟着文字色走；Badge、StatusDot、输入框、图标等组件变量也在这个主题里跟着换。算出来的变量名记在 `theme.derivedTokens`。新增 `STATUS_COLOR_DEFAULTS`，和默认主题 CSS 里的状态色一致。
+  - `Icon` 新增 `color="info"`。各主题里 `Icon` 的 success / warning / error 颜色、Stepper 的状态图标改用图标角色；默认主题下成功图标从 `#00490B` 变为 `#2F7D33`。
+  - 输入框的状态边框改用边框角色，表单状态提示的文字改用浅底内容色；默认主题下浅色模式的警告边框从 `#FFCE2F` 变为 `[#836700](https://github.com/astryx-vue/astryx-vue/issues/836700)`。
+  - 默认主题的 StatusDot 用实心状态底色，图标用对应的 on 角色；头像状态点的图标也用 on 角色。
+  - 聊天输入框状态条的文字和图标改用浅底内容色；菜单里的危险操作、TextArea 和富文本编辑器超出字数的计数、未读分隔线标签、lab 里 Stat、CircularProgress、LogStream、SVGIcon 的状态色改用文字或图标角色。
+  - 强制配色模式下，Badge、StatusDot、进度条填充、步骤条数字徽标、聊天输入框状态条、列表滑动的危险操作都补一圈边，形状不会消失。
+  
+  想保留某个组件原来的颜色，在主题里写上对应的角色即可，比如把 `--color-icon-success` 设成原来的值。
+- Updated dependencies [[`c7035a1`](https://github.com/astryx-vue/astryx-vue/commit/c7035a1463495c9fbafc4823bedb4c5e2d082aa2), [`3d1eb56`](https://github.com/astryx-vue/astryx-vue/commit/3d1eb56dd9c087bad55a31afffa709929b896dd0)]:
+  - @astryx-vue/core@0.7.29
+
+## 0.6.0
+
+### Minor Changes
+
+- [#511](https://github.com/astryx-vue/astryx-vue/pull/511) [`45613e7`](https://github.com/astryx-vue/astryx-vue/commit/45613e74ed0302b63bfb56e5e2172a4bafbf94bb) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增 LineClamp：把任意内容（混合的行内内容、嵌套元素）截成固定行数，结尾带省略号，自己不加字体和颜色。截断时第一次悬停、轻点或键盘聚焦才挂提示，用提示显示全文，截断的根元素是 Tab 停靠点；被裁掉那几行里的链接等可聚焦元素会标成 `inert`，重新露出来时还原，不改写你自己的 `tabindex`、`aria-hidden` 和 `inert`。
+
+### Patch Changes
+
+- [#505](https://github.com/astryx-vue/astryx-vue/pull/505) [`6fc4715`](https://github.com/astryx-vue/astryx-vue/commit/6fc471578ecb89aa5cdd4c0c5c6751273bbb02cf) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Text、Heading 的截断测量和截断提示跟进上游。
+  
+  - 截断的 Text / Heading 不再随文字挂一个关着的提示层，等第一次悬停、轻点或键盘聚焦才挂；挂上后照常回应那次交互（悬停等延迟、轻点立刻打开）。之前每个截断元素都带着 `aria-describedby` 和一个隐藏的提示层，现在交互前都没有。
+  - 截断测量改用全页共用的 ResizeObserver，第一次测量在浏览器排版之后进行，挂载一长串截断文字时不再逐个强制排版。
+  - 新增从 `@astryx-vue/core/Text` 导出的 `useTruncation`，自己的组件也能「截断时才显示全文提示」。
+  - 不截断的 Text / Heading 里，比一行还长的串（URL、ID）会换行，不再撑出横向滚动；用 `overflow-wrap: anywhere` 换行的内置容器（Banner、Toast、FieldStatus 等）里的文字跟着用 anywhere，浮层里回到 break-word。
+  - Heading 没写 `level`、或不是 1–6 时按 2 级渲染并在开发时警告，不再渲染出无效的标签；调用方自己写的 `aria-level` 优先于 `accessibilityLevel`。
+  - Tooltip 轻点触发器里的文本框时只让它获得焦点，不开也不关提示。
+  - Button 的标签被行宽截短时，键盘聚焦就在提示里显示完整标签；表头单元格的标题被截短时，键盘聚焦到单元格里的排序按钮也一样。这两种提示不加描述，读屏只读一遍名称。
+  
+  CLI 内置的组件文档跟着更新了 Text、Heading、Button 的说明。
+- Updated dependencies [[`cc73651`](https://github.com/astryx-vue/astryx-vue/commit/cc73651813d0dc905150a67a8d4377f8f5f882d8), [`90a7127`](https://github.com/astryx-vue/astryx-vue/commit/90a7127a47057e379ff9255cf00c7fe4cee09a79), [`45b95b5`](https://github.com/astryx-vue/astryx-vue/commit/45b95b5ffc4b0c6d3faf8bdf7de1b9f59cfa5f51), [`ce2bfa4`](https://github.com/astryx-vue/astryx-vue/commit/ce2bfa4602747acbafa5e91108be1b755003e041), [`ca023d0`](https://github.com/astryx-vue/astryx-vue/commit/ca023d06a64172f5a17a4f6fc0ecdf233c9b352f), [`d94de78`](https://github.com/astryx-vue/astryx-vue/commit/d94de78d16484142ef7642d410b060e59deec27c), [`6fc4715`](https://github.com/astryx-vue/astryx-vue/commit/6fc471578ecb89aa5cdd4c0c5c6751273bbb02cf), [`473ae5a`](https://github.com/astryx-vue/astryx-vue/commit/473ae5a6c8b9471ac1bcd267760058ad38c89338), [`4e7767f`](https://github.com/astryx-vue/astryx-vue/commit/4e7767f0707c19e4208b003e5f4e767ede363848)]:
+  - @astryx-vue/core@0.7.26
+
+## 0.5.4
+
+### Patch Changes
+
+- [#496](https://github.com/astryx-vue/astryx-vue/pull/496) [`6a92b59`](https://github.com/astryx-vue/astryx-vue/commit/6a92b59f5baf06d67147403a5b2ea28f6edffbe9) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Button 跟进上游 [#7906](https://github.com/astryx-vue/astryx-vue/issues/7906)（spec:AST-085）：禁用的按钮不再渲染原生 `disabled`。
+  
+  - Button、IconButton、ToggleButton 禁用时一律标记 `aria-disabled="true"`，留在 Tab 顺序里；聚焦时被禁用也不会把焦点丢到 body。鼠标、Enter、Space 和 `clickAction` / `click` 照样被拦住，其他按键仍传给调用方。
+  - 真正禁用的 submit 按钮不带 `name`，提交时不会带上它的值。
+  - ButtonGroup、Toolbar 的成员全部禁用时仍保留一个 Tab 停靠点（`useListFocus` 新增 `hasDisabledTabStop` 选项）。
+  - Carousel 隐藏的翻页按钮所在容器加上 `inert`，不会成为 Tab 停靠点。
+  - lab 的 ListInput 禁用或加载中时，重排手柄虽然能聚焦，方向键和拖拽都不再重排。
+  
+  测试里断言 Button 带 `disabled` 属性的，改成断言 `aria-disabled="true"`。
+  
+  CLI 内置的组件文档跟着更新了 Button、IconButton、ToggleButton、ButtonGroup 的禁用说明。
+- Updated dependencies [[`6a92b59`](https://github.com/astryx-vue/astryx-vue/commit/6a92b59f5baf06d67147403a5b2ea28f6edffbe9)]:
+  - @astryx-vue/core@0.7.24
+
 ## 0.5.3
 
 ### Patch Changes

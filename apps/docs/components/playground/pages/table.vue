@@ -279,7 +279,7 @@ const bulkMenuItems = computed(() => [
     <template #header>
       <LayoutHeader has-divider :padding="4">
         <VStack :gap="4">
-          <HStack :gap="3" vAlign="center">
+          <HStack :gap="3" vAlign="center" wrap="wrap">
             <StackItem size="fill">
               <Heading :level="1">
                 Members

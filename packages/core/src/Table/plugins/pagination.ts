@@ -1,7 +1,8 @@
 import type { MaybeRefOrGetter, VNodeChild } from 'vue'
 import type { TablePlugin } from '../types.js'
 import { h, toValue } from 'vue'
-import { useAstryxMessages } from '../../locale/context.js'
+import { useComponentMessages } from '../../locale/context.js'
+import { tableMessages } from '../../locale/messages/table.js'
 import Pagination from '../../Pagination/Pagination.vue'
 import { paginateData } from '../columnUtils.js'
 
@@ -38,7 +39,7 @@ export interface UseTablePaginationConfig {
 export function useTablePagination<T extends Record<string, unknown>>(
   config: MaybeRefOrGetter<UseTablePaginationConfig>,
 ): TablePlugin<T> {
-  const messages = useAstryxMessages()
+  const messages = useComponentMessages({ table: tableMessages })
   function pageCount(current: UseTablePaginationConfig): number | undefined {
     if (current.totalPages != null)
       return current.totalPages

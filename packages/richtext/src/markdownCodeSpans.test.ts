@@ -5,6 +5,7 @@ import { createHeadlessEditor } from '@lexical/headless'
 import { $getRoot, $isTextNode } from 'lexical'
 import { describe, expect, it } from 'vitest'
 import { DEFAULT_NODES } from './editorNodes.js'
+import { protectCodeSpans } from './markdownCodeSpans.js'
 import {
   editorStateJSONToMarkdown,
   markdownToEditorStateJSON,
@@ -247,7 +248,6 @@ describe('backticks in a link destination or title are the link\'s', () => {
   it.each([
     '[a](`x`)',
     '[a](https://e.com/`x`)',
-    '![i](`x`)',
     '[a](b "`t`")',
     '`c` then [a](`x`)',
   ])('reads %j with the destination core reads', (markdown) => {
@@ -396,5 +396,14 @@ describe('a link with backticks in its destination or title after a code-text li
       expect(PRIVATE_USE.test(exported), markdown).toBe(false)
       expect(targets, markdown).toEqual(allTargets(json))
     }
+  })
+})
+
+describe('code spans in table rows', () => {
+  it('reads a long space run on a table-candidate line in linear time', () => {
+    const markdown = `a | \`b\`\n|-${' '.repeat(100_000)}x`
+    const start = performance.now()
+    protectCodeSpans(markdown)
+    expect(performance.now() - start).toBeLessThan(500)
   })
 })

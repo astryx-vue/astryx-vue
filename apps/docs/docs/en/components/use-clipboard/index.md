@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useClipboardShareLink } from '../../../../components/demos/use-clipboard'
 </script>
 
 ## Usage
@@ -27,3 +28,14 @@ The same function is also exported as `useCopyToClipboard`, from `@astryx-vue/co
 | <Badge variant="success">Do</Badge> | Pass a localized `announce` message so the copy is spoken by screen readers; swapping the button `aria-label` alone is not reliably announced. |
 | <Badge variant="success">Do</Badge> | For the common compact icon copy button, render a ghost `IconButton` with a "Copy" tooltip and wire `@click` to `copy()`; the tooltip stays "Copy" and the icon flip is the confirmation. |
 | <Badge variant="error">Don't</Badge> | Track a separate `copied` ref alongside the hook; `isCopied` already reflects the copied window and resets itself. |
+
+## Examples
+
+Common configurations, variations, and states.
+
+<DemoExample
+  :demo="useClipboardShareLink"
+  description="A share card that copies its invite link with useClipboard: the Copy button reads Copied while isCopied is true, a screen reader hears Link copied, and a second press restarts the reset timer."
+  locale="en"
+  title="useClipboard — Share Link"
+/>

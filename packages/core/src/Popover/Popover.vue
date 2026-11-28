@@ -1,14 +1,18 @@
 <script setup lang="ts">
 import type { PopoverProps } from './types.js'
-import { computed, nextTick, onMounted, onUpdated, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, onUpdated, ref, useId, watch } from 'vue'
 import { Button } from '../Button/index.js'
 import { useResolvedLayerTeleport } from '../composables/useLayerMountTarget.js'
 import { useMergedRefs } from '../composables/useMergedRefs.js'
 import { clampInlineSize, LAYER_MAX_INLINE_SIZE } from '../layer/inlineSize.js'
 import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { popoverMessages } from '../locale/messages/popover.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
-import { usePopover } from './usePopover.js'
+import PopoverSheet from './PopoverSheet.vue'
+import { usePopoverSurface } from './usePopover.js'
+import { usePopoverSheet } from './usePopoverSheet.js'
+import { usePopoverSurfaceMotion } from './usePopoverSurfaceMotion.js'
 import '../../styles/popover.css'
 
 defineOptions({ name: 'AstryxPopover' })
@@ -28,17 +32,27 @@ const props = withDefaults(defineProps<PopoverProps>(), {
   hasLightDismiss: true,
   hasEscapeDismiss: true,
   anchor: undefined,
+  presentation: 'popover',
 })
 const emit = defineEmits<{ openChange: [isOpen: boolean] }>()
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ popover: popoverMessages })
 const closeLabel = computed(() => props.closeButtonLabel ?? messages.value.popover.close)
 
 const DEFAULT_MAX_WIDTH = 320
-const popover = usePopover({
+// 底部弹层呈现先建：锚定浮层的受控开关要读它在打开那一刻做的选择。
+let popover: ReturnType<typeof usePopoverSurface> | null = null
+const sheet = usePopoverSheet({
+  presentation: () => props.presentation,
+  controlledOpen: () => props.isOpen,
+  isPopoverOpen: () => popover?.isOpen.value ?? false,
+  onOpenChange: open => emit('openChange', open),
+})
+const sheetId = useId()
+popover = usePopoverSurface({
   placement: () => props.placement,
   alignment: () => props.alignment,
-  isOpen: () => props.isOpen,
+  isOpen: sheet.popoverControlledOpen,
   isEnabled: () => props.isEnabled,
   hasLightDismiss: () => props.hasLightDismiss,
   hasEscapeDismiss: () => props.hasEscapeDismiss,
@@ -49,6 +63,11 @@ const popover = usePopover({
   isModal: () => props.isModal,
   onShow: () => emit('openChange', true),
   onHide: () => emit('openChange', false),
+}, {
+  onTriggerPress: sheet.onTriggerPress,
+  sheetTrigger: () => sheet.isMounted.value
+    ? { expanded: sheet.isOpen.value || (popover?.isOpen.value ?? false), controls: sheetId }
+    : null,
 })
 
 const {
@@ -59,6 +78,7 @@ const {
   contentStyle: layerStyle,
   resolvedPlacement,
   surfaceProps,
+  hide: hidePopover,
 } = popover
 
 // 浮层元素挂进 hook 的内容 ref，定位和关闭逻辑都靠它。
@@ -83,7 +103,8 @@ const surfaceStyle = computed(() => {
     style.width = typeof props.width === 'number' ? `${props.width}px` : props.width
   }
   else {
-    style.minWidth = `min(${anchorWidth.value}px, ${DEFAULT_MAX_WIDTH}px)`
+    // 不窄于触发器，也压在视口上限之内：最小宽度优先于最大宽度，不压会撑出屏幕。
+    style.minWidth = clampInlineSize(`min(${anchorWidth.value}px, ${DEFAULT_MAX_WIDTH}px)`)
   }
   return style
 })
@@ -105,6 +126,15 @@ function syncTrigger(): void {
   anchorRef.value = triggerHost()
   triggerRef.value = findTriggerButton(triggerHost())
 }
+
+// 手指下浮层从触发器长出、缩回：打开时元素还没画出来，开始关闭时它还显示着。
+const surfaceMotion = usePopoverSurfaceMotion()
+watch(isOpenState, (open) => {
+  if (open)
+    surfaceMotion.present(contentRef.value, anchorRef.value ?? triggerRef.value)
+  else
+    surfaceMotion.closeStart()
+}, { flush: 'sync' })
 
 // 打开时按触发器宽度算最小宽度，浮层不会比触发器还窄。
 watch(isOpenState, (open) => {
@@ -137,13 +167,27 @@ onUpdated(syncTrigger)
       v-bind="surfaceProps"
     >
       <div ref="bodyRef" class="astryx-popover__body">
-        <LayerContentBoundary>
+        <LayerContentBoundary v-if="!sheet.isMounted.value">
           <slot name="content" />
         </LayerContentBoundary>
       </div>
       <div v-if="hasCloseButton" class="astryx-popover__close">
-        <Button variant="secondary" :label="closeLabel" @click="popover.hide()" />
+        <Button variant="secondary" :label="closeLabel" @click="hidePopover" />
       </div>
     </div>
   </Teleport>
+  <PopoverSheet
+    v-if="sheet.isMounted.value"
+    :id="sheetId"
+    :is-open="sheet.isOpen.value"
+    :label="label ?? sheet.triggerText.value"
+    :padding="padding"
+    :has-escape-dismiss="hasEscapeDismiss"
+    :has-close-button="hasCloseButton"
+    :close-label="closeLabel"
+    @open-change="sheet.setOpen"
+    @motion-complete="sheet.onMotionComplete"
+  >
+    <slot name="content" />
+  </PopoverSheet>
 </template>

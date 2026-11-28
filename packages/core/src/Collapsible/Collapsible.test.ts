@@ -310,4 +310,36 @@ describe('collapsible', () => {
 
     expect(wrapper.vm.element?.className).toContain('astryx-collapsible')
   })
+
+  describe('focus when closing', () => {
+    function mountWithButtons() {
+      const open = ref(true)
+      const Host = defineComponent({
+        components: { Collapsible },
+        setup: () => ({ open }),
+        template: `<div><Collapsible trigger="Details" v-model:is-open="open"><button id="inside">Inside</button></Collapsible><button id="elsewhere">Elsewhere</button></div>`,
+      })
+      const wrapper = mount(Host, { attachTo: document.body })
+      return { open, wrapper }
+    }
+
+    it('moves focus inside the content to the trigger when it closes', async () => {
+      const { open, wrapper } = mountWithButtons()
+      ;(wrapper.find('#inside').element as HTMLElement).focus()
+      open.value = false
+      await settle()
+      expect(document.activeElement).toBe(wrapper.find('.astryx-collapsible-trigger').element)
+      wrapper.unmount()
+    })
+
+    it('leaves focus elsewhere in place', async () => {
+      const { open, wrapper } = mountWithButtons()
+      const elsewhere = wrapper.find('#elsewhere').element as HTMLElement
+      elsewhere.focus()
+      open.value = false
+      await settle()
+      expect(document.activeElement).toBe(elsewhere)
+      wrapper.unmount()
+    })
+  })
 })

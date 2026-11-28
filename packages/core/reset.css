@@ -60,8 +60,14 @@
    *
    * color-scheme: light dark 声明页面同时支持浅色和深色，
    * 让 CSS 的 light-dark() 能正确取值。
+   *
+   * html 取 --astryx-font-family-body，body 继承它：库会往 body 里直接放不在 Theme
+   * 包装元素里的文字（比如图表用来量标签宽度的 span），这些文字就拿到页面根上的主题字体，
+   * 不会退回浏览器默认的衬线体。没有任何样式表定义这个变量时，声明无效，html 保持浏览器默认字体；
+   * 应用自己写在 html 或 body 上的字体优先。
    */
   :where(html) {
+    font-family: var(--astryx-font-family-body);
     line-height: 1.5;
     -webkit-text-size-adjust: 100%;
     tab-size: 4;
@@ -180,25 +186,6 @@
     height: auto;
   }
 
-  /*
-   * AspectRatio 的 fit 子元素尺寸。组件样式 `aspect-ratio.css` 里也有同样几条，
-   * 没引入 reset 时靠那里生效。这里再写一遍，是为了让它们排在上面
-   * `height: auto` 的后面：两者同在 reset 层、特异性都是 0，后出现的赢，
-   * 所以不管 reset.css 和组件样式谁先加载，fit 的子元素都能填满容器。
-   */
-  :where([data-astryx-aspect-ratio-override='cover'], [data-astryx-aspect-ratio-override='contain']) > :where(*) {
-    width: 100%;
-    height: 100%;
-  }
-
-  :where([data-astryx-aspect-ratio-override='cover']) > :where(img, video) {
-    object-fit: cover;
-  }
-
-  :where([data-astryx-aspect-ratio-override='contain']) > :where(img, video) {
-    object-fit: contain;
-  }
-
   /* ===========================================================================
      表单
      =========================================================================== */
@@ -255,7 +242,15 @@
    */
   :where(input, textarea)::placeholder {
     opacity: 1;
-    color: var(--astryx-color-text-secondary, light-dark(#474747, #9e9e9e));
+    color: var(--astryx-color-text-secondary, light-dark(#474747, #a8a8a8));
+  }
+
+  /*
+   * Chromium 把带 `list` 的输入框的下拉标记画成一个字形，按输入框继承来的行高排版，
+   * 行高大于 1 时标记就落在输入框中线以下。设成单行高，标记回到中间。
+   */
+  :where([list])::-webkit-calendar-picker-indicator {
+    line-height: 1;
   }
 
   /*

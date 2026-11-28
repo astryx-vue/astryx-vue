@@ -51,6 +51,11 @@ export interface RadioGroupSlots {
 }
 
 export interface RadioProps {
+  /**
+   * 单选圈相对标签的垂直对齐。`first-line` 让它和换行标签的第一行保持水平，`start` 贴顶。
+   * @default 'center'
+   */
+  align?: 'center' | 'start' | 'first-line'
   value: RadioValue
   label: string
   description?: string
@@ -79,6 +84,8 @@ export interface RadioContext {
   isGroupDisabled: ComputedRef<boolean>
   isGroupReadOnly: ComputedRef<boolean>
   isRequired: ComputedRef<boolean>
+  /** 组的状态是错误。必填的单选项以它作为 aria-invalid 的依据，不让浏览器自己的无效状态提前显示。 */
+  hasErrorStatus: ComputedRef<boolean>
   /** 整组禁用时对外解释用的文字，没传就没有。 */
   disabledMessage: ComputedRef<string | undefined>
   /** 上面那段文字对应的元素 id，给 `aria-describedby` 用。 */

@@ -1,53 +1,5 @@
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 
-@keyframes astryx-context-menu-enter-below {
-  from {
-    opacity: 0;
-    transform: translateY(calc(-1 * var(--astryx-spacing-2, 8px))) scale(0.96);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes astryx-context-menu-enter-above {
-  from {
-    opacity: 0;
-    transform: translateY(var(--astryx-spacing-2, 8px)) scale(0.96);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes astryx-context-menu-enter-end {
-  from {
-    opacity: 0;
-    transform: translateX(calc(-1 * var(--astryx-spacing-2, 8px))) scale(0.96);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0) scale(1);
-  }
-}
-
-@keyframes astryx-context-menu-enter-start {
-  from {
-    opacity: 0;
-    transform: translateX(var(--astryx-spacing-2, 8px)) scale(0.96);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0) scale(1);
-  }
-}
-
 @keyframes astryx-context-menu-leave {
   from {
     opacity: 1;
@@ -146,32 +98,10 @@
     touch-action: pan-y pinch-zoom;
   }
 
-  .astryx-context-menu[data-placement='below'] {
-    animation-name: astryx-context-menu-enter-below;
+  .astryx-context-menu[data-placement] {
+    animation-name: astryx-layer-enter;
     animation-fill-mode: backwards;
-  }
-
-  .astryx-context-menu[data-placement='above'] {
-    animation-name: astryx-context-menu-enter-above;
-    animation-fill-mode: backwards;
-  }
-
-  .astryx-context-menu[data-placement='end'] {
-    animation-name: astryx-context-menu-enter-end;
-    animation-fill-mode: backwards;
-  }
-
-  .astryx-context-menu[data-placement='start'] {
-    animation-name: astryx-context-menu-enter-start;
-    animation-fill-mode: backwards;
-  }
-
-  [dir='rtl'] .astryx-context-menu[data-placement='end'] {
-    animation-name: astryx-context-menu-enter-start;
-  }
-
-  [dir='rtl'] .astryx-context-menu[data-placement='start'] {
-    animation-name: astryx-context-menu-enter-end;
+    transform-origin: var(--_astryx-layer-enter-origin, 50% 50%);
   }
 
   /* A leave keeps its final frame until Vue takes the element away. */
@@ -270,6 +200,8 @@
 
   .astryx-context-menu-item__label {
     overflow-wrap: anywhere;
+    /* Text 和 Heading 在里面也按 anywhere 换行。 */
+    --_astryx-text-overflow-wrap: anywhere;
   }
 
   .astryx-context-menu-item__description {
@@ -277,6 +209,8 @@
     font-size: var(--astryx-text-supporting-size, 0.75rem);
     line-height: var(--astryx-text-supporting-leading, 1.6667);
     overflow-wrap: anywhere;
+    /* Text 和 Heading 在里面也按 anywhere 换行。 */
+    --_astryx-text-overflow-wrap: anywhere;
   }
 
   .astryx-context-menu-item--destructive .astryx-context-menu-item__description {
@@ -320,6 +254,27 @@
 
     .astryx-context-menu-item {
       transition: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) and (not (pointer: coarse)) {
+    .astryx-context-menu[data-placement]:not(.astryx-context-menu-leave-active, .astryx-context-menu-flyout-leave-active) {
+      animation: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) and (pointer: coarse) {
+    .astryx-context-menu[data-placement]:not(.astryx-context-menu-leave-active, .astryx-context-menu-flyout-leave-active) {
+      animation-name: astryx-layer-fade-in;
+      animation-duration: var(--_astryx-reduced-motion-fade-duration, 200ms);
+      animation-timing-function: var(--_astryx-reduced-motion-fade-easing, cubic-bezier(0.42, 0, 0.58, 1));
+    }
+  }
+
+  @media (forced-colors: active) {
+    /* 强制配色会去掉阴影，阴影是这块浮层唯一的边，这里补一圈系统色边框。 */
+    .astryx-context-menu {
+      border: 1px solid CanvasText;
     }
   }
 }

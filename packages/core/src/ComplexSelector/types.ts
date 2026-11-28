@@ -37,11 +37,28 @@ export interface ComplexSelectorTriggerProps {
   'id': string
   'onClick': (event: MouseEvent) => void
   'onKeydown': (event: KeyboardEvent) => void
+  /** 控件是这个字段本身：和内置触发器一样，是弹出对话框的 combobox。 */
+  'role': 'combobox'
+  /** 选择器禁用时为 `'true'`。控件仍留在 Tab 序列里，弹层不会打开。 */
+  'aria-disabled': 'true' | undefined
+  /** 选择器禁用且给了 `disabledMessage` 时，聚焦或悬停控件会显示这段说明。 */
+  'onFocus': (event: FocusEvent) => void
+  'onBlur': () => void
+  'onPointerenter': (event: PointerEvent) => void
+  'onPointerleave': () => void
+  /** 指向禁用原因的隐藏说明。没有 `disabledMessage` 或没禁用时为 undefined。 */
+  'aria-describedby': string | undefined
   'aria-haspopup': 'dialog'
   'aria-expanded': boolean
   'aria-controls': string | undefined
   'aria-busy': true | undefined
-  'aria-label': string
+  /** 字段必填时为 `'true'`。 */
+  'aria-required': 'true' | undefined
+  /**
+   * 字段的 `label`。combobox 不从内容取名字，所以用它命名控件；
+   * 给选择器传了 `aria-label` 时用传入的，传了 `aria-labelledby` 时为 undefined。
+   */
+  'aria-label': string | undefined
 }
 
 export interface ComplexSelectorSlotProps<Value> {
@@ -73,6 +90,11 @@ export interface ComplexSelectorProps<Value = unknown> extends FieldPartStylingP
   isRequired?: boolean
   /** @default false */
   isDisabled?: boolean
+  /**
+   * 为什么禁用。和 `isDisabled` 一起用时，鼠标悬停、键盘聚焦或手指点按触发器都会弹出这段说明，
+   * 读屏也会把它当成触发器的说明读出来。自定义触发器（`trigger` 插槽、`renderTrigger`）拿到的属性里带着说明的 id 和聚焦、悬停处理，铺到控件上它就生效；控件自己的提示在禁用时去掉，免得出现两个。
+   */
+  disabledMessage?: string
   /** @default false */
   isLoading?: boolean
   status?: FieldStatusInput

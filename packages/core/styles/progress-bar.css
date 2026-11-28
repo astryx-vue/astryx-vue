@@ -64,20 +64,9 @@
     background: var(--astryx-color-on-accent, #fff);
   }
 
-  .astryx-progress-bar[data-variant='success'] .astryx-progress-bar-mark[data-placement='fill'] {
-    background: var(--astryx-color-on-success, #fff);
-  }
-
-  .astryx-progress-bar[data-variant='warning'] .astryx-progress-bar-mark[data-placement='fill'] {
-    background: var(--astryx-color-on-warning, #171717);
-  }
-
-  .astryx-progress-bar[data-variant='error'] .astryx-progress-bar-mark[data-placement='fill'] {
-    background: var(--astryx-color-on-error, #fff);
-  }
-
-  .astryx-progress-bar[data-variant='neutral'] .astryx-progress-bar-mark[data-placement='fill'] {
-    background: var(--astryx-color-text-primary, light-dark(#171717, #fafafa));
+  /* 除 accent 外，填充都是文字角色，主题把它们设成在自己的表面上读得清，所以填充里的标记取表面色。 */
+  .astryx-progress-bar:is([data-variant='success'], [data-variant='warning'], [data-variant='error'], [data-variant='neutral'], [data-disabled]) .astryx-progress-bar-mark[data-placement='fill'] {
+    background: var(--astryx-color-background-surface, light-dark(#fff, #171717));
   }
 
   .astryx-progress-bar-mark:focus-visible {
@@ -107,23 +96,34 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 0;
+
+    /* 确定进度的填充铺满整条轨道，用 transform 滑到当前份额：值变化走合成器，
+       页面忙的时候也继续动；动 width 会每帧在主线程布局重绘，跟着卡住。
+       --_progress-bar-fill 是已填份额（行内写入），前沿正好落在那里，
+       右到左时按条自己的方向（:dir(rtl)）镜像。 */
+    width: 100%;
     height: 100%;
     border-radius: inherit;
     background: var(--astryx-progress-bar-fill-background, var(--astryx-color-text-primary, #fff));
-    transition: width 200ms cubic-bezier(0.24, 1, 0.4, 1);
+    transform: translateX(calc(var(--_progress-bar-fill, 0%) - 100%));
+    transition: transform 200ms cubic-bezier(0.24, 1, 0.4, 1);
+    will-change: transform;
+  }
+
+  .astryx-progress-bar-fill:dir(rtl) {
+    transform: translateX(calc(100% - var(--_progress-bar-fill, 0%)));
   }
 
   .astryx-progress-bar[data-variant='success'] .astryx-progress-bar-fill {
-    background: var(--astryx-progress-bar-success-fill, var(--astryx-input-success, #64af4c));
+    background: var(--astryx-progress-bar-success-fill, var(--astryx-color-text-success, light-dark(#2f7d33, #90ca90)));
   }
 
   .astryx-progress-bar[data-variant='warning'] .astryx-progress-bar-fill {
-    background: var(--astryx-progress-bar-warning-fill, var(--astryx-input-warning, #ffce2f));
+    background: var(--astryx-progress-bar-warning-fill, var(--astryx-color-text-warning, light-dark(#836700, #eec448)));
   }
 
   .astryx-progress-bar[data-variant='error'] .astryx-progress-bar-fill {
-    background: var(--astryx-progress-bar-error-fill, var(--astryx-input-error, #ff705d));
+    background: var(--astryx-progress-bar-error-fill, var(--astryx-color-text-error, light-dark(#c0262c, #ffaea7)));
   }
 
   .astryx-progress-bar[data-variant='accent'] .astryx-progress-bar-fill {
@@ -134,16 +134,27 @@
     background: var(--astryx-progress-bar-info-fill, var(--astryx-input-info, #6d9cfe));
   }
 
-  /* 原版 neutral 填充是 disabled 灰，不是前景近黑。 */
+  /* 次要文字色在默认轨道上够 3:1；禁用文字色在一些主题里就是深色轨道本身的颜色，会隐形。
+     轨道更接近次要文字色的主题，用 --astryx-progress-bar-neutral-fill 换一个更亮的色阶。 */
   .astryx-progress-bar[data-variant='neutral'] .astryx-progress-bar-fill {
-    background: var(--astryx-progress-bar-neutral-fill, var(--astryx-color-text-disabled, light-dark(#a3a3a3, #525252)));
+    background: var(--astryx-progress-bar-neutral-fill, var(--astryx-color-text-secondary, light-dark(#525252, #a3a3a3)));
   }
 
-  /* A disabled bar dims everything it draws: the fill drops the variant color
-     for the disabled foreground, and the label, value and marks step down to
-     the muted ramp. */
+  /* 禁用的进度条沿用 neutral 的填充，轨道和填充一起降到半透明，和禁用的滑块、开关轨道一样；
+     文字和标记另行降一档。标记能获得焦点，所以不跟着变淡，焦点环的对比度才不会掉。
+     强制颜色模式会替换填充色，所以用 GrayText 描一圈标出禁用的填充。 */
+  .astryx-progress-bar[data-disabled] .astryx-progress-bar-track {
+    opacity: 0.5;
+  }
+
   .astryx-progress-bar[data-disabled] .astryx-progress-bar-fill {
-    background: var(--astryx-color-text-disabled, light-dark(#a3a3a3, #525252));
+    background: var(--astryx-progress-bar-neutral-fill, var(--astryx-color-text-secondary, light-dark(#525252, #a3a3a3)));
+  }
+
+  @media (forced-colors: active) {
+    .astryx-progress-bar[data-disabled] .astryx-progress-bar-fill {
+      outline: 1px solid GrayText;
+    }
   }
 
   .astryx-progress-bar[data-disabled] .astryx-progress-bar-label,
@@ -151,14 +162,14 @@
     color: var(--astryx-color-text-disabled, light-dark(#a3a3a3, #525252));
   }
 
-  /* The attribute selector is repeated so this also outranks the variant plus
-     placement rules above, which carry the same specificity. */
-  .astryx-progress-bar[data-disabled] .astryx-progress-bar-mark[data-placement] {
+  /* 属性选择器重复一次，这样它也压得过上面「变体加位置」的规则，两者优先级相同。 */
+  .astryx-progress-bar[data-disabled] .astryx-progress-bar-mark[data-placement='track'] {
     background: var(--astryx-color-text-secondary, light-dark(#525252, #a3a3a3));
   }
 
   .astryx-progress-bar[data-indeterminate='true'] .astryx-progress-bar-fill {
     width: 40%;
+    will-change: auto;
     animation: astryx-progress-bar-indeterminate 1.5s ease-in-out infinite;
   }
 
@@ -184,13 +195,73 @@
     }
   }
 
+  /* 手指下，数值变化按 UIProgressView 的 setProgress(_:animated:) 走：
+     线性，时长是整条轨道的时长乘以这次移动的份额（--_progress-bar-move），
+     再乘主题节奏，曲线是 --_progress-bar-curve，从填充当前画出的位置起步。
+     大于 0 时填充不短于 --_progress-bar-min（两倍轨道高度），等于 0 时什么都不画。
+     --_progress-bar-flip 在 0、1、2 间轮转，把填充错开百分之一像素，
+     让「回到刚离开的值」不会被 CSS 当成过渡的起点而缩短。 */
+  @media (pointer: coarse) {
+    .astryx-progress-bar-fill {
+      transform: translateX(calc(max(var(--_progress-bar-fill, 0%), var(--_progress-bar-min, 0px)) - 100% + var(--_progress-bar-flip, 0) * 0.01px));
+      transition-duration: calc(var(--_progress-bar-move, 0ms) * var(--_astryx-motion-tempo, 1));
+      transition-timing-function: var(--_progress-bar-curve, linear);
+    }
+
+    .astryx-progress-bar-fill:dir(rtl) {
+      transform: translateX(calc(min(calc(100% - var(--_progress-bar-fill, 0%)), calc(100% - var(--_progress-bar-min, 0px))) - var(--_progress-bar-flip, 0) * 0.01px));
+    }
+
+    .astryx-progress-bar-fill[data-empty] {
+      opacity: 0;
+    }
+  }
+
+  /* 减少动态效果：数值立刻落定；不确定进度条不再滑动，铺满轨道只让不透明度呼吸。 */
   @media (prefers-reduced-motion: reduce) {
     .astryx-progress-bar-fill {
       transition: none;
     }
 
-    .astryx-progress-bar[data-indeterminate='true'] .astryx-progress-bar-fill {
-      animation-duration: 3s;
+    .astryx-progress-bar[data-indeterminate='true'] .astryx-progress-bar-fill,
+    :is([dir='rtl'] .astryx-progress-bar[data-indeterminate='true']) .astryx-progress-bar-fill {
+      width: 100%;
+      transform: none;
+      animation-name: astryx-progress-bar-pulse;
+      animation-duration: var(--_progress-bar-pulse, 2s);
+      animation-timing-function: var(--_progress-bar-pulse-curve, ease-in-out);
+      animation-direction: alternate;
+    }
+  }
+
+  @keyframes astryx-progress-bar-pulse {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: var(--_progress-bar-pulse-floor, 0.84);
+    }
+  }
+
+  /* 强制配色会把填充色换成 Canvas，补一圈边让进度还看得见。 */
+  @media (forced-colors: active) {
+    /* 强制配色下填充按值定宽、不滑动：轨道的裁剪会切掉滑入的填充的轮廓起点。 */
+    .astryx-progress-bar-fill,
+    .astryx-progress-bar-fill:dir(rtl) {
+      width: var(--_progress-bar-fill, 0%);
+      transform: none;
+      transition-property: width;
+      will-change: auto;
+      outline: 1px solid CanvasText;
+      outline-offset: -1px;
+    }
+  }
+
+  /* 强制配色加手指：填充按值定宽，布局属性不走触屏动效，新尺寸立刻落定。 */
+  @media (forced-colors: active) and (pointer: coarse) {
+    .astryx-progress-bar-fill {
+      width: calc(max(var(--_progress-bar-fill, 0%), var(--_progress-bar-min, 0px)) + var(--_progress-bar-flip, 0) * 0.01px);
+      transition-duration: 0s;
     }
   }
 }

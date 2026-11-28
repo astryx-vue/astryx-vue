@@ -10,7 +10,7 @@ footer: false
 <div class="component-api-table" role="region" aria-label="LayoutContent props" tabindex="0">
 <table><thead><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>isScrollable</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Scrolls the region when its content is taller than the space it was given.</td></tr>
-<tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>Accessible name for the landmark element.</td></tr>
+<tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>Accessible name for the landmark element. While the content scrolls (and no <code>role</code> is set), it also names the scrolling group, which otherwise takes a translated "Content".</td></tr>
 <tr><td><code>padding</code></td><td><code>SpacingStep</code></td><td>—</td><td>Internal padding using the spacing scale. Overrides the padding the surrounding layout passes down. <code>0</code> makes the region full bleed.</td></tr>
 <tr><td><code>role</code></td><td><code>string</code></td><td>—</td><td>ARIA landmark role.</td></tr>
 </tbody></table>

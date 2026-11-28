@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { internationalizationProviderOverrides } from '../../../../components/demos/internationalization-provider'
+import { internationalizationProviderCalendar, internationalizationProviderOverrides, internationalizationProviderRtlDirection, internationalizationProviderShippedLocale } from '../../../../components/demos/internationalization-provider'
 </script>
 
 ## 使用方法
@@ -24,6 +24,16 @@ import { InternationalizationProvider } from '@astryx-vue/core/Internationalizat
 
 可以嵌套：内层的 provider 管住自己那一段子树。
 
+设 `calendar` 可以让 `Calendar` 按别的历法排月份，`Timestamp`、`PowerSearch` 和实验室的 `Schedule` 也按它写日期。语言从不决定历法：`fa-IR` 不设 `calendar` 时显示公历，语言标签里的 `-u-ca-` 扩展（例如 `th-TH-u-ca-buddhist`）也一样。值始终是公历日期。详见[历法](/guide/calendars)。
+
+只想改某一个组件的措辞时，用那个组件自己的属性，例如 `placeholder` 或 `label`。`overrides` 改的是整个应用里的这句话，只有每一处都该这么写时才用它。
+
+## 结构
+
+| 元素 | 说明 |
+| --- | --- |
+| Provider 边界 | 必需。一个看不见的上下文边界，把语言、文案目录、覆盖和书写方向交给里面的 Astryx 组件。它不渲染任何 DOM 元素。 |
+
 ## 建议
 
 | Guidance | Practices |
@@ -38,4 +48,10 @@ import { InternationalizationProvider } from '@astryx-vue/core/Internationalizat
 
 常见的用法和不同的状态。
 
-<DemoExample :demo="internationalizationProviderOverrides" title="InternationalizationProvider — Overrides" description="不提供整份语言目录，只替换少数几句 Astryx 文案。" locale="zh" />
+<DemoExample :demo="internationalizationProviderShippedLocale" title="载入内置的 Astryx 语言目录" description="把 @astryx-vue/core/locales 里的语言 JSON 按语言标签交给 messages。" locale="zh" />
+
+<DemoExample :demo="internationalizationProviderRtlDirection" title="为从右往左的文字镜像布局" description="provider 和装内容的元素写同一个方向，Astryx 组件和页面一起镜像。" locale="zh" />
+
+<DemoExample :demo="internationalizationProviderCalendar" title="按别的历法显示日期" description="切换 provider 的 calendar，Calendar 跟着换月份和年份写法，选中的值仍是公历日期。" locale="zh" />
+
+<DemoExample :demo="internationalizationProviderOverrides" title="在整个应用里改一句 Astryx 文案" description="不提供整份语言目录，在整个应用里替换少数几句 Astryx 文案。" locale="zh" />

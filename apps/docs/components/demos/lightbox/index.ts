@@ -1,6 +1,8 @@
 import { defineDemo } from '../../demo-infra/defineDemo'
 import galleryDemo from './gallery.vue'
 import gallerySource from './gallery.vue?raw&highlighted'
+import hookGridDemo from './hook-grid.vue'
+import hookGridSource from './hook-grid.vue?raw&highlighted'
 import overviewDemo from './overview.vue'
 import overviewSource from './overview.vue?raw&highlighted'
 import videoDemo from './video.vue'
@@ -12,3 +14,4 @@ export const lightboxOverview = defineDemo(overviewDemo, overviewSource, { class
 export const lightboxGallery = defineDemo(galleryDemo, gallerySource)
 export const lightboxVideo = defineDemo(videoDemo, videoSource)
 export const lightboxZoom = defineDemo(zoomDemo, zoomSource)
+export const lightboxHookGrid = defineDemo(hookGridDemo, hookGridSource)

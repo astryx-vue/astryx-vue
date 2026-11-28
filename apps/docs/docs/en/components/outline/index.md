@@ -48,6 +48,7 @@ const items = [
 | <Badge variant="success">Do</Badge> | Point each `id` at a real heading, and keep `level` equal to that heading’s level. |
 | <Badge variant="success">Do</Badge> | Set `offset` to the height of a sticky header so the active item and the scroll landing agree. |
 | <Badge variant="success">Do</Badge> | Use `density="compact"` in a narrow sidebar, and `default` beside a long article. |
+| <Badge variant="success">Do</Badge> | Give each Outline a distinct `label` when a page has more than one navigation landmark, so screen reader users can tell them apart. |
 | <Badge variant="error">Don't</Badge> | Pass `activeId` and also expect the built-in scroll-spy to keep updating it. A provided id turns the spy off. |
 | <Badge variant="error">Don't</Badge> | Indent by hand with extra markup. The level already chooses the indent. |
 

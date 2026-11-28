@@ -1,26 +1,58 @@
+import { rubberBand } from '../motion/rubberBand'
+import { scroll } from '../motion/uikit/scroll'
 import { visibleHeightForOffset } from './snapOffsets.js'
 
-/** Border-box portion of the panel reserved below the viewport for the drag lift. */
-export const OVERSCROLL_PADDING = 48
+/**
+ * The smallest reserve: how far the sheet's surface reaches below the screen,
+ * so a pull past the top never shows the page under it. A mouse's or a pen's
+ * stretch never passes it.
+ */
+export const MIN_RESERVE = 48
+/** On a touch device the reserve covers a pull of the whole viewport: 40% of it. */
+const RESERVE_VIEWPORT_SHARE = 0.4
 
-/** A throw this fast, over at least `FLICK_MIN_DISTANCE`, dismisses or expands outright. */
-export const FLICK_VELOCITY = 1.2
-export const FLICK_MIN_DISTANCE = 48
-/** Below the shortest stop, dragging past it by this share of its height dismisses. */
+/** Below the shortest stop, a slow mouse drag past this share of its height dismisses. */
 export const DISMISS_OVERSHOOT_RATIO = 0.4
-/** How far a finger on the body must pull before it becomes a sheet drag. */
+/**
+ * How far a finger resting on the body moves before the pull becomes a drag.
+ * A tap on a control in the sheet must not start a drag, which would turn off
+ * the panel's transition and cut the close the tap caused.
+ */
 export const DRAG_PROMOTION_SLOP = 8
 
 /** Within this many px of a stop the live drag eases toward it. */
 const MAGNET_RANGE = 40
-/** Rubber-band factor and ceiling for dragging above the fully open position. */
+/** A mouse's or a pen's stretch past fully open: a resisted fraction, capped at MIN_RESERVE. */
 const OVERSCROLL_RESISTANCE = 0.35
-const OVERSCROLL_MAX = 48
-const VELOCITY_WINDOW_MS = 100
+const OVERSCROLL_MAX = MIN_RESERVE
 
-export interface VelocitySample {
-  y: number
-  t: number
+/** The reserve a sheet keeps on a touch device whose layout viewport is `viewportHeight` tall. */
+export function sheetReserve(viewportHeight: number): number {
+  return Math.max(MIN_RESERVE, Math.ceil(viewportHeight * RESERVE_VIEWPORT_SHARE))
+}
+
+/**
+ * Whether a gesture that lands on `target` began inside another layer rendered
+ * in this sheet's content: a `<dialog>` between the target and the body.
+ * A sheet or Dialog opened from inside a sheet renders its dialog as a
+ * descendant of the host's body, so its pointer and touch events bubble
+ * through the host's listeners. That gesture is the layer's own: the host
+ * neither arms a drag on it nor takes the pointer for it.
+ *
+ * A control that pans vertically on its own (a picker wheel, marked
+ * `data-astryx-owns-pan`) keeps its gesture the same way: a downward drag on
+ * it turns its rows and never pulls the sheet.
+ */
+export function isInsideNestedLayer(target: EventTarget | null, body: HTMLElement): boolean {
+  for (
+    let element = target instanceof Element ? target : null;
+    element != null && element !== body;
+    element = element.parentElement
+  ) {
+    if (element.localName === 'dialog' || element.hasAttribute('data-astryx-owns-pan'))
+      return true
+  }
+  return false
 }
 
 export function magnetize(value: number, targets: readonly number[]): number {
@@ -36,6 +68,34 @@ export function magnetize(value: number, targets: readonly number[]): number {
     return value
   const t = distance / MAGNET_RANGE
   return value + (nearest - value) * (1 - t * t)
+}
+
+export interface StretchContext {
+  /** The pointer's kind: a finger stretches on the iOS rubber band, a mouse or a pen on a capped fraction. */
+  pointerType: string
+  /** The sheet's measured height, reserve included. */
+  height: number
+  /** How far the sheet's surface reaches below the screen. */
+  reserve: number
+}
+
+/**
+ * The offset a drag shows for the raw offset `raw` under the finger. Past
+ * fully open, a finger stretches on UIKit's rubber band over the visible
+ * height and never past the reserve; a mouse or a pen moves a resisted
+ * fraction capped at MIN_RESERVE. Past the shortest stop nothing pulls, so it
+ * never fights a drag to close. Between stops, the drag eases into a stop
+ * within MAGNET_RANGE.
+ */
+export function stretchedOffset(raw: number, offsets: readonly number[], context: StretchContext): number {
+  if (raw < 0) {
+    return context.pointerType === 'touch'
+      ? Math.max(-context.reserve, rubberBand(raw, context.height - context.reserve, scroll.rubberBand.coefficient))
+      : Math.max(-OVERSCROLL_MAX, raw * OVERSCROLL_RESISTANCE)
+  }
+  if (raw > (offsets[offsets.length - 1] ?? 0))
+    return raw
+  return magnetize(raw, offsets)
 }
 
 function renderedBlockEndPadding(element: HTMLElement): number {
@@ -60,58 +120,9 @@ export function hapticTick(): void {
   navigator.vibrate(8)
 }
 
-/** Finger speed over the last `VELOCITY_WINDOW_MS`, in px/ms. */
-export function velocityFor(
-  samples: readonly VelocitySample[],
-  lastY: number,
-  lastT: number,
-  startY: number,
-  startT: number,
-): number {
-  const withinWindow = samples.filter(sample => lastT - sample.t <= VELOCITY_WINDOW_MS)
-  const first = withinWindow[0] ?? { y: startY, t: startT }
-  const elapsed = lastT - first.t
-  return elapsed > 0 ? (lastY - first.y) / elapsed : 0
-}
-
-/** Live offset for a drag, rubber-banding above fully open and easing near a stop. */
-export function dragOffsetFrom(baseOffset: number, delta: number, stops: readonly number[]): { raw: number, shown: number } {
-  let offset = baseOffset + delta
-  if (offset < 0)
-    offset = -Math.min(-offset * OVERSCROLL_RESISTANCE, OVERSCROLL_MAX)
-  return { raw: offset, shown: magnetize(offset, stops) }
-}
-
-/** Offset past which a slow downward drag dismisses instead of snapping back. */
-export function dismissTravelFor(height: number, offsets: readonly number[]): number {
+/** Offset past which a slow mouse or pen drag dismisses instead of snapping back. */
+export function dismissTravelFor(height: number, offsets: readonly number[], reserve: number): number {
   const maxOffset = offsets[offsets.length - 1] ?? 0
-  const shortestHeight = visibleHeightForOffset(height, maxOffset, OVERSCROLL_PADDING)
+  const shortestHeight = visibleHeightForOffset(height, maxOffset, reserve)
   return maxOffset + shortestHeight * DISMISS_OVERSHOOT_RATIO
-}
-
-function hasBlockScroll(element: HTMLElement): boolean {
-  return element.scrollHeight > element.clientHeight + 1
-}
-
-/**
- * Whether every scroller from `target` up to `root` is at its block edge.
- * A nested box that can still scroll keeps the gesture; the sheet does not
- * take it until that box has nowhere left to go.
- */
-export function blockScrollEdges(root: HTMLElement, target: EventTarget | null): { atTop: boolean, atBottom: boolean } {
-  let atTop = true
-  let atBottom = true
-  let node: Element | null = target instanceof Element ? target : root
-  while (node != null) {
-    if (node instanceof HTMLElement && hasBlockScroll(node)) {
-      if (node.scrollTop > 1)
-        atTop = false
-      if (node.scrollTop + node.clientHeight < node.scrollHeight - 1)
-        atBottom = false
-    }
-    if (node === root)
-      break
-    node = node.parentElement
-  }
-  return { atTop, atBottom }
 }

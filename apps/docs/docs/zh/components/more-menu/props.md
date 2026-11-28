@@ -35,7 +35,7 @@ footer: false
         <td><code>size</code></td>
         <td><code>ButtonSize</code></td>
         <td><code>'md'</code></td>
-        <td>触发按钮的尺寸：sm、md、lg。菜单里每一行的密度跟随这个值。</td>
+        <td>触发按钮的尺寸：sm、md、lg。不设置时，触发按钮使用外层尺寸（来自尺寸上下文、ButtonGroup 或 Toolbar），否则为 md。菜单里每一行的密度跟随这个值。</td>
       </tr>
       <tr>
         <td><code>isDisabled</code></td>
@@ -59,7 +59,7 @@ footer: false
         <td><code>presentation</code></td>
         <td><code>'popover' | 'bottom-sheet' | 'adaptive'</code></td>
         <td><code>'popover'</code></td>
-        <td>动作的呈现形态。popover 是锚定在触发器旁的浮层；bottom-sheet 是底部的模态面板；adaptive 在主指针为粗略指针且宽度不超过 768px 时使用底部面板，其余情况使用浮层。</td>
+        <td>动作的呈现形态。popover 是锚定在触发器旁的浮层；bottom-sheet 是底部的模态面板；adaptive 在紧凑触屏上使用底部面板：主指针是粗略指针，并且视口宽度小于主题的 <code>md</code> 断点（默认 768px）或高度小于 500px；其余情况使用浮层。打开那一刻定下用哪种，关闭播完才重新判断。</td>
       </tr>
       <tr>
         <td><code>isMenuOpen</code></td>

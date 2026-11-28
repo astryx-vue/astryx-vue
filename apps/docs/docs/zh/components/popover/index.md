@@ -48,7 +48,7 @@ import { Popover } from '@astryx-vue/core/Popover'
 
 ## 示例
 
-<DemoExample :demo="popoverBottomSheet" title="底部弹层" description="紧凑触屏上，项目操作改由底部弹层承接，而不是锚在按钮旁的弹出层。" locale="zh" />
+<DemoExample :demo="popoverBottomSheet" title="自适应呈现" description="presentation 设为 adaptive：手机上项目操作从底部弹层打开，其余设备上仍锚在按钮旁边。" locale="zh" />
 
 <DemoExample :demo="popoverConfirm" title="确认操作" description="破坏性按钮打开一段简短确认，里面是删除和取消。" locale="zh" />
 
@@ -62,12 +62,17 @@ import { Popover } from '@astryx-vue/core/Popover'
 
 弹出层要把自己的存在、当前的开合状态和内部内容告诉使用屏幕阅读器或键盘的用户。组件会自动把触发元素和浮层关联起来，并在浮层打开、关闭时管理焦点，你只需要提供必要的无障碍名称。
 
-- 触发元素上带有 `aria-haspopup`、`aria-expanded` 与 `aria-controls`，辅助技术由此知道这是一个会打开浮层的按钮，并能读出浮层当前是展开还是收起。
-- `dialog` 类型的浮层带有 `role="dialog"`；设置 `isModal` 时还会带有 `aria-modal="true"`，并以 `label` 作为无障碍名称。
-- 打开时焦点移入浮层中的第一个可聚焦元素；用户按下 Escape 或关闭浮层时，焦点回到触发元素。
+- 触发元素上带有 `aria-haspopup` 与 `aria-expanded`，辅助技术由此知道这是一个会打开浮层的按钮，并能读出浮层当前是展开还是收起。浮层打开期间它还带 `aria-controls`；关着的触发器不指向任何浮层。
+- 打开着的 `dialog` 类型浮层带有 `role="dialog"`；设置 `isModal` 时还会带有 `aria-modal="true"`，并以 `label` 作为无障碍名称。关着的浮层隐藏在 DOM 里，不带对话框的 role 和名称。
+- 带 `aria-disabled="true"` 的触发器仍能聚焦，但不会打开浮层，直接在它上面 `click()` 也一样。
+- 打开时焦点移到浮层里第一个可用的 Tab 停靠点：带 `aria-disabled` 的控件会跳过，漫游组里拿着 `tabindex="0"` 的成员优先；一个都没有时落到带名称的浮层本身。焦点已经在里面某个控件上就留在那里。
+- 关闭时，只有焦点困在浮层里或掉到页面 body 上才会被送回：先回到打开浮层的那个元素；它不在了，就依次试触发器、锚点、顶替它位置的 Tab 停靠点、附近的祖先元素，最后是 `main`。焦点永远不落到 body；已经在浮层外面的焦点不会被抢回来。
 - 设置 `isModal` 后，浮层打开期间 Tab 焦点保持在浮层内。
 - 内置关闭按钮在获得焦点前视觉隐藏，键盘聚焦到它时才显示出来。
+- 在底部弹层里（`presentation`），触发器用 `aria-controls` 指向弹层并报告它的开合。每次打开焦点都移到第一个内容控件，不会停在关闭按钮上；弹层关闭后焦点回到触发器。
 
 ## 布局
 
-浮层通过 JavaScript 定位。页面滚动或窗口尺寸变化时会重新计算位置；所选方向空间不足时翻转到另一侧。
+浮层通过 JavaScript 定位。页面滚动或窗口尺寸变化时会重新计算位置；所选方向空间不足时翻转到另一侧。进场从浮层实际落在的那一侧滑进来、以朝向触发器的那条边为原点放大，滑动距离不超过浮层和触发器之间的空隙，所以翻到另一侧后也不会先压到触发器上。
+
+用手指打开时，浮层像 iOS 的 popover 一样从触发器里长出来：从它和触发器相接的那一点放大，第一帧就能看到内容。长出的这段时间里点按会被忽略，不会误关浮层，也碰不到下面的东西。关闭时它缩回触发器。用鼠标打开时保留上面说的滑入。开启“减少动态效果”时，手指打开的浮层原地淡入淡出。

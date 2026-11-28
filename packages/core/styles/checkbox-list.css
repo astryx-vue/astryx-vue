@@ -12,4 +12,9 @@
   .astryx-checkbox-list .astryx-checkbox-input {
     gap: 0;
   }
+
+  /* 行自己画按压，框里的复选框读行写在它身上的按压画面：手指落在行上任何地方，行和框一起亮。 */
+  .astryx-checkbox-list .astryx-item[data-astryx-press] .astryx-checkbox-indicator {
+    background-image: var(--_press-paint-image);
+  }
 }

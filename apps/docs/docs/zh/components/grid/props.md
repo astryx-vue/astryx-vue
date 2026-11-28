@@ -17,7 +17,7 @@ footer: false
         <td><code>columns</code></td>
         <td><code>number | GridResponsiveColumns</code></td>
         <td>-</td>
-        <td>列配置。传数字是固定列数，每一列等宽；传对象 <code>{ minWidth, max?, repeat? }</code> 是响应式列，按可用宽度自动决定列数。缺失、为 0 或为负数时回退为单列。</td>
+        <td>列配置。传数字是固定个数的 <code>1fr</code> 轨道（子项的最小内容宽度可能撑宽所在轨道）；传对象 <code>{ minWidth, max?, repeat? }</code> 是响应式列，按可用宽度自动决定列数。缺失、为 0 或为负数时回退为单列。</td>
       </tr>
       <tr>
         <td><code>width</code></td>
@@ -70,14 +70,14 @@ footer: false
       <tr>
         <td><code>align</code></td>
         <td><code>GridAlignment</code></td>
-        <td><code>'stretch'</code></td>
-        <td>项目在行内的垂直对齐（<code>align-items</code>），可选 start、center、end、stretch。</td>
+        <td>-</td>
+        <td>项目在行内的垂直对齐（<code>align-items</code>），可选 start、center、end、stretch。不设置时用浏览器默认值 <code>normal</code>，它会拉伸没有自然尺寸或宽高比的项目。</td>
       </tr>
       <tr>
         <td><code>justify</code></td>
         <td><code>GridAlignment</code></td>
-        <td><code>'stretch'</code></td>
-        <td>项目在同一行内的水平对齐（<code>justify-items</code>），可选 start、center、end、stretch。</td>
+        <td>-</td>
+        <td>项目在同一行内的水平对齐（<code>justify-items</code>），可选 start、center、end、stretch。不设置时用浏览器默认值 <code>normal</code>，它会拉伸没有自然尺寸或宽高比的项目。</td>
       </tr>
     </tbody>
   </table>
@@ -92,6 +92,8 @@ interface GridResponsiveColumns {
   repeat?: 'fill' | 'fit'
 }
 ```
+
+容器比 `minWidth` 还窄时，唯一的那一列缩到容器宽度，不会撑出容器。
 
 `SpacingStep` 支持以下值：
 
@@ -111,7 +113,7 @@ type SpacingStep = 0 | 0.5 | 1 | 1.5 | 2 | 3 | 4 | 5 | 6 | 8 | 10
         <td><code>columns</code></td>
         <td><code>number | 'full'</code></td>
         <td>-</td>
-        <td>跨越的列数。<code>'full'</code> 渲染为 <code>grid-column: 1 / -1</code>，跨越整行，与列数无关。</td>
+        <td>跨越的列数。<code>'full'</code> 渲染为 <code>grid-column: 1 / -1</code>，跨越所有显式列，与列数无关。</td>
       </tr>
       <tr>
         <td><code>rows</code></td>

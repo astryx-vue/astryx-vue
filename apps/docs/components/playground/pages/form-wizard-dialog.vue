@@ -237,8 +237,12 @@ function goNext() {
                     :key="section.value"
                     :value="section.value"
                     :label="section.label"
-                    :description="section.description"
-                  />
+                  >
+                    <!-- 节点形式的 description 在窄屏会换行，字符串形式只显示一行。 -->
+                    <template #description>
+                      {{ section.description }}
+                    </template>
+                  </CheckboxListItem>
                 </CheckboxList>
               </FormLayout>
 

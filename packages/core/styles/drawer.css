@@ -1,50 +1,156 @@
 @layer astryx.components {
   /*
-   * 抽屉是贴边的模态面板：高度撑满视口，行内方向按 placement 贴左侧或右侧。
-   * 模态、遮罩、焦点交给底下的 Dialog。
+   * 抽屉面板就是原生 <dialog> 本身：高度撑满视口，贴在行首或行尾，三条边和视口齐平，所以是直角。
+   * 模态时在 showModal() 的顶层里，非模态时在 popover 的顶层里。
+   *
+   * 显示由组件的 data-rendered 管，不靠 display 的离散过渡：面板要在离开顶层的同一轮里停止绘制，
+   * 否则带 transform 的祖先会成为它 position: fixed 的参照物，面板会在页面里闪一帧。
+   *
+   * overflow 用 clip 不用 hidden：hidden 会把面板变成滚动容器，Chromium 会把手指在非模态抽屉
+   * 旁边页面上的拖动扣在它的 overscroll 约束里，页面就滚不动了。内容区自己负责滚动。
    */
   .astryx-drawer {
+    --_drawer-duration: var(--astryx-duration-medium, 300ms);
+    --_drawer-easing: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+
     box-sizing: border-box;
+    position: fixed;
+    inset-block: 0;
+    width: var(--_drawer-width, 400px);
+    max-width: 100dvw;
     height: 100dvh;
-    max-height: 100dvh;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
     border-radius: 0;
+    display: none;
+    flex-direction: column;
+    overflow: clip;
+    outline: none;
+    background-color: var(--astryx-color-background-surface, #fff);
+    color: var(--astryx-color-text-primary, #171717);
+    box-shadow: var(--astryx-shadow-high, 0 12px 32px rgb(0 0 0 / 20%));
+    transition: transform var(--_drawer-duration) var(--_drawer-easing);
   }
 
-  /* 手机上留一条缝露出后面的页面，和原版一样是 56px。 */
-  @media (max-width: 640px) {
-    .astryx-drawer {
-      max-width: calc(100vw - 56px);
+  .astryx-drawer[data-rendered] {
+    display: flex;
+  }
+
+  /* 关着时停在贴着的那一边外面，退场也滑回这里。方向跟着 DOM 的 dir 走，RTL 自动镜像。 */
+  .astryx-drawer--end {
+    inset-inline-end: 0;
+    inset-inline-start: auto;
+    border-inline-start: var(--astryx-border-width, 1px) solid var(--astryx-color-border, light-dark(#ebebeb, #ffffff1a));
+    transform: translateX(100%);
+  }
+
+  .astryx-drawer--end:dir(rtl) {
+    transform: translateX(-100%);
+  }
+
+  .astryx-drawer--start {
+    inset-inline-start: 0;
+    inset-inline-end: auto;
+    border-inline-end: var(--astryx-border-width, 1px) solid var(--astryx-color-border, light-dark(#ebebeb, #ffffff1a));
+    transform: translateX(-100%);
+  }
+
+  .astryx-drawer--start:dir(rtl) {
+    transform: translateX(100%);
+  }
+
+  /*
+   * 打开后停在 none 而不是 translateX(0)：带 transform 的面板会成为里面 fixed 浮层（提示、菜单）的参照物，
+   * 浮层就会错位、被裁掉。none 和 translateX 之间照样能过渡。
+   */
+  .astryx-drawer[data-open] {
+    transform: none;
+  }
+
+  @starting-style {
+    .astryx-drawer--end[data-open] {
+      transform: translateX(100%);
+    }
+
+    .astryx-drawer--end[data-open]:dir(rtl) {
+      transform: translateX(-100%);
+    }
+
+    .astryx-drawer--start[data-open] {
+      transform: translateX(-100%);
+    }
+
+    .astryx-drawer--start[data-open]:dir(rtl) {
+      transform: translateX(100%);
     }
   }
 
-  /* 底部安全区：刘海屏上内容不要贴到手势条。 */
-  .astryx-drawer {
-    padding-block-end: env(safe-area-inset-bottom, 0px);
+  /* 手机上留一条 56px 的缝露出后面的页面，同时不超过 width。 */
+  @media (max-width: 640px) {
+    .astryx-drawer {
+      width: min(var(--_drawer-width, 400px), calc(100dvw - 56px));
+    }
   }
 
-  .astryx-drawer[open] {
-    animation: astryx-drawer-slide-in var(--astryx-duration-medium, 200ms) var(--astryx-ease-standard, ease-out) both;
+  /* 遮罩是原生 ::backdrop，和面板同时长、同曲线淡入淡出。不加模糊：整屏模糊重绘太贵。 */
+  .astryx-drawer--scrim::backdrop {
+    background-color: var(--astryx-color-overlay, rgb(0 0 0 / 50%));
+    opacity: 0;
+    transition: opacity var(--astryx-duration-medium, 300ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
   }
 
-  .astryx-drawer--end[open] {
-    --astryx-drawer-from: translateX(100%);
+  .astryx-drawer--scrim[data-open]::backdrop {
+    opacity: 1;
   }
 
-  .astryx-drawer--start[open] {
-    --astryx-drawer-from: translateX(-100%);
+  @starting-style {
+    .astryx-drawer--scrim[data-open]::backdrop {
+      opacity: 0;
+    }
   }
 
-  /* DOM direction includes both inherited RTL and dir directly on the drawer. */
-  .astryx-drawer--end[open]:dir(rtl) {
-    --astryx-drawer-from: translateX(-100%);
-  }
+  /*
+   * 内容区：可滚动，也是抽屉的容器。四边内边距各用一个变量，同时公布给 Layout 这类会撑出去的子元素。
+   * 主题给抽屉写的内边距走 `--astryx-drawer-padding`，没写就沿用对话框的，再没有就是 spacing-4。
+   * 块末尾再加上手势条的安全区，最后一行内容不会贴到它；公布出去的变量不含安全区。
+   */
+  .astryx-drawer__content {
+    --_drawer-pad: var(--_drawer-padding, var(--astryx-drawer-padding, var(--astryx-dialog-padding, var(--astryx-spacing-4, 1rem))));
+    --container-padding-block-start: var(--_drawer-pad);
+    --container-padding-block-end: var(--_drawer-pad);
+    --container-padding-inline-start: var(--_drawer-pad);
+    --container-padding-inline-end: var(--_drawer-pad);
+    --layout-padding-own-outer-x: initial;
+    --layout-padding-own-outer-y: initial;
+    --layout-padding-outer-x: var(--_drawer-pad);
+    --layout-padding-outer-y: var(--_drawer-pad);
+    --layout-padding-inner-x: var(--_drawer-pad);
+    --layout-padding-inner-y: var(--_drawer-pad);
+    --_container-corner-block-start: 0px;
+    --_container-corner-block-end: 0px;
 
-  .astryx-drawer--start[open]:dir(rtl) {
-    --astryx-drawer-from: translateX(100%);
+    box-sizing: border-box;
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    width: 100%;
+    min-height: 0;
+    padding: var(--_drawer-pad);
+    padding-block-end: calc(var(--_drawer-pad) + env(safe-area-inset-bottom, 0px));
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+    outline: none;
+    /* 内容区自己铺满表面色：主题塞进阴影里的内圈描边（暗色模式常见）会被均匀盖住，面板只剩贴边那条边框。 */
+    background-color: var(--astryx-color-background-surface, #fff);
   }
 
   .astryx-drawer-body {
     display: flex;
+    flex: 1 0 auto;
     flex-direction: column;
     gap: var(--astryx-spacing-3, 12px);
     min-block-size: 0;
@@ -54,33 +160,28 @@
     display: flex;
     justify-content: end;
     gap: var(--astryx-spacing-2, 8px);
+    margin-block-start: var(--astryx-spacing-3, 12px);
   }
 
-  @keyframes astryx-drawer-slide-in {
-    from {
-      transform: var(--astryx-drawer-from, translateX(0));
-    }
-
-    to {
-      transform: translateX(0);
-    }
+  /* 浮层挂载点。它自己不占地方，里面的浮层都是 fixed 定位。 */
+  .astryx-drawer__layer-host {
+    display: contents;
   }
 
+  /* 减少动效时和原版一样把滑动压到 0.01s：几乎瞬间到位，过渡仍然会结束，退场照常收尾。 */
   @media (prefers-reduced-motion: reduce) {
-    /* 手机上留一条缝露出后面的页面，和原版一样是 56px。 */
-  @media (max-width: 640px) {
     .astryx-drawer {
-      max-width: calc(100vw - 56px);
+      transition-duration: 0.01s;
+    }
+
+    .astryx-drawer--scrim::backdrop {
+      transition-duration: 0.01s;
     }
   }
 
-  /* 底部安全区：刘海屏上内容不要贴到手势条。 */
-  .astryx-drawer {
-    padding-block-end: env(safe-area-inset-bottom, 0px);
-  }
-
-  .astryx-drawer[open] {
-      animation: none;
+  @media (forced-colors: active) {
+    .astryx-drawer {
+      border-inline: 1px solid CanvasText;
     }
   }
 }

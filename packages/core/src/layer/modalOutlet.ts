@@ -43,6 +43,52 @@ export function useActiveModalOutlet(): Readonly<Ref<HTMLDialogElement | null>> 
   return activeOutlet
 }
 
+/**
+ * 一个模态层「打开期间充当全局挂载点」的登记手柄。
+ * `attach` 登记并在它关闭（`close` 事件）时自动撤销，`detach` 手动撤销，重复调用无害。
+ */
+export function createModalOutletHandle(): { attach: (dialog: HTMLDialogElement) => void, detach: () => void } {
+  let current: HTMLDialogElement | null = null
+
+  function detach(): void {
+    if (current == null)
+      return
+    current.removeEventListener('close', detach)
+    removeModalOutlet(current)
+    current = null
+  }
+
+  function attach(dialog: HTMLDialogElement): void {
+    if (current === dialog)
+      return
+    detach()
+    current = dialog
+    dialog.addEventListener('close', detach)
+    addModalOutlet(dialog)
+  }
+
+  return { attach, detach }
+}
+
+/**
+ * 不经过挂载点清单就进入顶层的次数：无遮罩的抽屉进入顶层，或者底部面板叠放时为保住顺序把对话框
+ * 关了又重新呈现，都加一。
+ *
+ * 顶层里后进去的画在上面。toast 视口比它们先进顶层时会被盖住（包括视口挂在那个被重新呈现的对话框
+ * 里的时候），所以它们进去后报一声，视口重新进一次顶层，又排回最上面。
+ */
+const topLayerEntries = shallowRef(0)
+
+/** 有元素不经过挂载点清单进入顶层时调用。 */
+export function notifyTopLayerEntry(): void {
+  topLayerEntries.value++
+}
+
+/** 顶层进入的计数。只用来监听变化。 */
+export function useTopLayerEntries(): Readonly<Ref<number>> {
+  return topLayerEntries
+}
+
 /** 只给测试用：清空清单。 */
 export function resetModalOutletsForTests(): void {
   outlets.length = 0

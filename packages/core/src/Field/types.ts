@@ -3,6 +3,8 @@ import type { IconName } from '../Icon/types.js'
 
 export type FieldStatusType = 'error' | 'warning' | 'success'
 export type FieldStatusVariant = 'attached' | 'detached'
+/** 字段控件把状态说明放在哪：`attached`、`detached`，或 `tooltip`（不画说明框，由控件自己的状态图标按钮显示）。 */
+export type FieldStatusPlacement = FieldStatusVariant | 'tooltip'
 
 export interface FieldStatusInput {
   type: FieldStatusType
@@ -36,7 +38,7 @@ export interface FieldLabelProps {
 export interface FieldProps extends FieldLabelProps {
   status?: FieldStatusInput
   /** Tooltip leaves the message accessible but hides the inline status box. */
-  statusVariant?: FieldStatusVariant | 'tooltip'
+  statusVariant?: FieldStatusPlacement
   width?: number | string
 }
 

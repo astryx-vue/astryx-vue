@@ -61,6 +61,26 @@ describe('carousel', () => {
     expect(readOverflow(element)).toEqual({ hasOverflow: true, overflowStart: true, overflowEnd: false })
   })
 
+  it('makes a hidden scroll button inert, so its disabled state is no Tab stop', async () => {
+    const wrapper = mount(Host, { attachTo: document.body })
+    const scroller = wrapper.get<HTMLElement>('.astryx-carousel__scroller').element
+    Object.defineProperties(scroller, {
+      scrollWidth: { configurable: true, value: 400 },
+      clientWidth: { configurable: true, value: 100 },
+      scrollLeft: { configurable: true, value: 0, writable: true },
+    })
+    scroller.dispatchEvent(new Event('scroll'))
+    await new Promise(resolve => requestAnimationFrame(resolve))
+    await nextTick()
+
+    const start = wrapper.get('.astryx-carousel__pill--start')
+    const end = wrapper.get('.astryx-carousel__pill--end')
+    expect(start.attributes('data-hidden')).toBe('true')
+    expect(start.attributes('inert')).toBeDefined()
+    expect(start.get('button').attributes('aria-disabled')).toBe('true')
+    expect(end.attributes('inert')).toBeUndefined()
+  })
+
   it('moves focus from a run-out edge button to the scroll area without extra scrolling', async () => {
     const wrapper = mount(Host, { attachTo: document.body })
     const scroller = wrapper.get<HTMLElement>('.astryx-carousel__scroller').element
@@ -111,6 +131,129 @@ describe('carousel', () => {
 
     expect(document.activeElement).toBe(outside)
     outside.remove()
+  })
+
+  describe('scroll area', () => {
+    function overflowing(scroller: HTMLElement): void {
+      Object.defineProperties(scroller, {
+        scrollWidth: { configurable: true, value: 400 },
+        clientWidth: { configurable: true, value: 100 },
+        scrollLeft: { configurable: true, value: 0, writable: true },
+      })
+    }
+
+    // happy-dom 的 WheelEvent 不认初始化里的 shiftKey，这里补上。
+    function wheel(init: { deltaY: number, shiftKey?: boolean }): WheelEvent {
+      const event = new WheelEvent('wheel', { deltaY: init.deltaY, cancelable: true })
+      Object.defineProperty(event, 'shiftKey', { value: init.shiftKey ?? false })
+      return event
+    }
+
+    async function remeasure(scroller: HTMLElement): Promise<void> {
+      scroller.dispatchEvent(new Event('scroll'))
+      await new Promise(resolve => requestAnimationFrame(resolve))
+      await nextTick()
+    }
+
+    it('is a group named like the carousel, and a Tab stop only while it overflows', async () => {
+      const wrapper = mount(Host, { attachTo: document.body })
+      const scroller = wrapper.get<HTMLElement>('.astryx-carousel__scroller')
+      expect(scroller.attributes('role')).toBe('group')
+      expect(scroller.attributes('aria-label')).toBe('Feature cards')
+      expect(scroller.attributes('tabindex')).toBe('-1')
+
+      overflowing(scroller.element)
+      await remeasure(scroller.element)
+      expect(scroller.attributes('tabindex')).toBe('0')
+    })
+
+    it('watches the size of a slide added after mount, so its growth is measured', async () => {
+      const observed = new Set<Element>()
+      class FakeResizeObserver {
+        observe(element: Element): void {
+          observed.add(element)
+        }
+
+        unobserve(element: Element): void {
+          observed.delete(element)
+        }
+
+        disconnect(): void {
+          observed.clear()
+        }
+      }
+      vi.stubGlobal('ResizeObserver', FakeResizeObserver)
+      try {
+        const count = ref(1)
+        const Parent = defineComponent({
+          setup() {
+            return () => h(Carousel, null, {
+              default: () => Array.from({ length: count.value }, (_, index) => h('div', { key: index }, String(index))),
+            })
+          },
+        })
+        const wrapper = mount(Parent, { attachTo: document.body })
+        count.value = 2
+        await nextTick()
+        await nextTick()
+        const slides = wrapper.findAll('.astryx-carousel__item').map(slide => slide.element)
+        expect(slides).toHaveLength(2)
+        expect(slides.every(slide => observed.has(slide))).toBe(true)
+      }
+      finally {
+        vi.unstubAllGlobals()
+      }
+    })
+
+    it('stops the browser\'s own scroll, so Shift and one wheel notch scroll the row once', async () => {
+      const wrapper = mount(Host, { attachTo: document.body })
+      const scroller = wrapper.get<HTMLElement>('.astryx-carousel__scroller').element
+      overflowing(scroller)
+      await remeasure(scroller)
+      const scrollBy = vi.fn()
+      scroller.scrollBy = scrollBy
+
+      const notch = wheel({ shiftKey: true, deltaY: 120 })
+      expect(scroller.dispatchEvent(notch)).toBe(false)
+      expect(scrollBy).toHaveBeenCalledExactlyOnceWith({ left: 120, behavior: 'auto' })
+    })
+
+    it('reads no style or layout on a wheel over the row', async () => {
+      const wrapper = mount(Host, { attachTo: document.body })
+      const scroller = wrapper.get<HTMLElement>('.astryx-carousel__scroller').element
+      let reads = 0
+      for (const [name, value] of [['scrollWidth', 400], ['clientWidth', 100]] as const) {
+        Object.defineProperty(scroller, name, {
+          configurable: true,
+          get: () => {
+            reads += 1
+            return value
+          },
+        })
+      }
+      await remeasure(scroller)
+      scroller.scrollBy = vi.fn()
+      reads = 0
+      const style = vi.spyOn(window, 'getComputedStyle')
+
+      scroller.dispatchEvent(wheel({ deltaY: 120 }))
+      scroller.dispatchEvent(wheel({ shiftKey: true, deltaY: 120 }))
+      const styles = style.mock.calls.length
+      style.mockRestore()
+
+      expect({ reads, styles }).toEqual({ reads: 0, styles: 0 })
+      expect(scroller.scrollBy).toHaveBeenCalledTimes(1)
+    })
+
+    it('adds no wheel listener to a row with nothing to scroll', () => {
+      const addEventListener = vi.spyOn(HTMLElement.prototype, 'addEventListener')
+      const wrapper = mount(Host, { attachTo: document.body })
+      const scroller = wrapper.get<HTMLElement>('.astryx-carousel__scroller').element
+      const wheels = addEventListener.mock.contexts.filter((element, call) =>
+        element === scroller && addEventListener.mock.calls[call]?.[0] === 'wheel')
+      addEventListener.mockRestore()
+      expect(wheels).toHaveLength(0)
+    })
   })
 
   describe('slot content', () => {

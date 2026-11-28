@@ -1,8 +1,14 @@
 import { defineDemo } from '../demo-infra/defineDemo'
+import audioPlayerDemo from './audio-player.vue'
+import audioPlayerSource from './audio-player.vue?raw&highlighted'
 import chatEmojiPickerDemo from './chat-emoji-picker.vue'
 import chatEmojiPickerSource from './chat-emoji-picker.vue?raw&highlighted'
 import chatReactionBarDemo from './chat-reaction-bar.vue'
 import chatReactionBarSource from './chat-reaction-bar.vue?raw&highlighted'
+import chatVirtualizerDemo from './chat-virtualizer.vue'
+import chatVirtualizerSource from './chat-virtualizer.vue?raw&highlighted'
+import circleCheckIndicatorDemo from './circle-check-indicator.vue'
+import circleCheckIndicatorSource from './circle-check-indicator.vue?raw&highlighted'
 import circularProgressDemo from './circular-progress.vue'
 import circularProgressSource from './circular-progress.vue?raw&highlighted'
 import codeEditorDemo from './code-editor.vue'
@@ -19,6 +25,8 @@ import commentThreadDemo from './comment-thread.vue'
 import commentThreadSource from './comment-thread.vue?raw&highlighted'
 import commentsDemo from './comments.vue'
 import commentsSource from './comments.vue?raw&highlighted'
+import dialogHeroHeaderDemo from './dialog-hero-header.vue'
+import dialogHeroHeaderSource from './dialog-hero-header.vue?raw&highlighted'
 import diffViewerOverviewDemo from './diff-viewer-overview.vue'
 import diffViewerOverviewSource from './diff-viewer-overview.vue?raw&highlighted'
 import diffViewerDemo from './diff-viewer.vue'
@@ -29,22 +37,38 @@ import emojiPickerDemo from './emoji-picker.vue'
 import emojiPickerSource from './emoji-picker.vue?raw&highlighted'
 import infoTipDemo from './info-tip.vue'
 import infoTipSource from './info-tip.vue?raw&highlighted'
+import lineClampDemo from './line-clamp.vue'
+import lineClampSource from './line-clamp.vue?raw&highlighted'
+import listInputBudgetAllocationDemo from './list-input-budget-allocation.vue'
+import listInputBudgetAllocationSource from './list-input-budget-allocation.vue?raw&highlighted'
+import listInputFamilyMembersDemo from './list-input-family-members.vue'
+import listInputFamilyMembersSource from './list-input-family-members.vue?raw&highlighted'
+import listInputMailingListDemo from './list-input-mailing-list.vue'
+import listInputMailingListSource from './list-input-mailing-list.vue?raw&highlighted'
 import listInputDemo from './list-input.vue'
 import listInputSource from './list-input.vue?raw&highlighted'
 import logStreamOverviewDemo from './log-stream-overview.vue'
 import logStreamOverviewSource from './log-stream-overview.vue?raw&highlighted'
 import logStreamDemo from './log-stream.vue'
 import logStreamSource from './log-stream.vue?raw&highlighted'
-import mobileTokenizerOverviewDemo from './mobile-tokenizer-overview.vue'
-import mobileTokenizerOverviewSource from './mobile-tokenizer-overview.vue?raw&highlighted'
-import mobileTokenizerDemo from './mobile-tokenizer.vue'
-import mobileTokenizerSource from './mobile-tokenizer.vue?raw&highlighted'
+import mediaPlayerDemo from './media-player.vue'
+import mediaPlayerSource from './media-player.vue?raw&highlighted'
+import navigationStackDemo from './navigation-stack.vue'
+import navigationStackSource from './navigation-stack.vue?raw&highlighted'
+import pageControlDemo from './page-control.vue'
+import pageControlSource from './page-control.vue?raw&highlighted'
+import refreshControlDemo from './refresh-control.vue'
+import refreshControlSource from './refresh-control.vue?raw&highlighted'
 import scheduleDemo from './schedule.vue'
 import scheduleSource from './schedule.vue?raw&highlighted'
+import selectableCardGroupDemo from './selectable-card-group.vue'
+import selectableCardGroupSource from './selectable-card-group.vue?raw&highlighted'
 import statDemo from './stat.vue'
 import statSource from './stat.vue?raw&highlighted'
 import svgIconDemo from './svg-icon.vue'
 import svgIconSource from './svg-icon.vue?raw&highlighted'
+import tabBarDemo from './tab-bar.vue'
+import tabBarSource from './tab-bar.vue?raw&highlighted'
 import tourOverviewDemo from './tour-overview.vue'
 import tourOverviewSource from './tour-overview.vue?raw&highlighted'
 import tourDemo from './tour.vue'
@@ -53,11 +77,19 @@ import transferListOverviewDemo from './transfer-list-overview.vue'
 import transferListOverviewSource from './transfer-list-overview.vue?raw&highlighted'
 import transferListDemo from './transfer-list.vue'
 import transferListSource from './transfer-list.vue?raw&highlighted'
+import videoPlayerDemo from './video-player.vue'
+import videoPlayerSource from './video-player.vue?raw&highlighted'
+import weightedSvgIconDemo from './weighted-svg-icon.vue'
+import weightedSvgIconSource from './weighted-svg-icon.vue?raw&highlighted'
 
 const options = { className: 'lab-demo' }
 
 export const labChatEmojiPicker = defineDemo(chatEmojiPickerDemo, chatEmojiPickerSource, options)
 export const labChatReactionBar = defineDemo(chatReactionBarDemo, chatReactionBarSource, options)
+export const labChatVirtualizer = defineDemo(chatVirtualizerDemo, chatVirtualizerSource, options)
+export const labSelectableCardGroup = defineDemo(selectableCardGroupDemo, selectableCardGroupSource, options)
+export const labCircleCheckIndicator = defineDemo(circleCheckIndicatorDemo, circleCheckIndicatorSource, options)
+export const labDialogHeroHeader = defineDemo(dialogHeroHeaderDemo, dialogHeroHeaderSource, options)
 export const labCircularProgress = defineDemo(circularProgressDemo, circularProgressSource, options)
 export const labCodeEditor = defineDemo(codeEditorDemo, codeEditorSource, options)
 export const labCommentComposer = defineDemo(commentComposerDemo, commentComposerSource, options)
@@ -71,14 +103,24 @@ export const labEmojiPicker = defineDemo(emojiPickerDemo, emojiPickerSource, opt
 export const labEmojiPickerPopover = defineDemo(emojiPickerPopoverDemo, emojiPickerPopoverSource, options)
 export const labDiffViewerOverview = defineDemo(diffViewerOverviewDemo, diffViewerOverviewSource, options)
 export const labInfoTip = defineDemo(infoTipDemo, infoTipSource, options)
+export const labLineClamp = defineDemo(lineClampDemo, lineClampSource, options)
 export const labListInput = defineDemo(listInputDemo, listInputSource, options)
+export const labListInputBudgetAllocation = defineDemo(listInputBudgetAllocationDemo, listInputBudgetAllocationSource, options)
+export const labListInputFamilyMembers = defineDemo(listInputFamilyMembersDemo, listInputFamilyMembersSource, options)
+export const labListInputMailingList = defineDemo(listInputMailingListDemo, listInputMailingListSource, options)
 export const labLogStream = defineDemo(logStreamDemo, logStreamSource, options)
 export const labLogStreamOverview = defineDemo(logStreamOverviewDemo, logStreamOverviewSource, options)
-export const labMobileTokenizer = defineDemo(mobileTokenizerDemo, mobileTokenizerSource, options)
-export const labMobileTokenizerOverview = defineDemo(mobileTokenizerOverviewDemo, mobileTokenizerOverviewSource, options)
+export const labMediaPlayer = defineDemo(mediaPlayerDemo, mediaPlayerSource, options)
+export const labVideoPlayer = defineDemo(videoPlayerDemo, videoPlayerSource, options)
+export const labAudioPlayer = defineDemo(audioPlayerDemo, audioPlayerSource, options)
+export const labNavigationStack = defineDemo(navigationStackDemo, navigationStackSource, options)
+export const labPageControl = defineDemo(pageControlDemo, pageControlSource, options)
+export const labRefreshControl = defineDemo(refreshControlDemo, refreshControlSource, options)
 export const labSchedule = defineDemo(scheduleDemo, scheduleSource, options)
 export const labStat = defineDemo(statDemo, statSource, options)
 export const labSvgIcon = defineDemo(svgIconDemo, svgIconSource, options)
+export const labTabBar = defineDemo(tabBarDemo, tabBarSource, options)
+export const labWeightedSvgIcon = defineDemo(weightedSvgIconDemo, weightedSvgIconSource, options)
 export const labTransferList = defineDemo(transferListDemo, transferListSource, options)
 export const labTransferListOverview = defineDemo(transferListOverviewDemo, transferListOverviewSource, options)
 export const labTour = defineDemo(tourDemo, tourSource, options)

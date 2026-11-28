@@ -1,10 +1,14 @@
+import { unicodeRegExp } from '../utils/unicodeRegExp.js'
+
+const NON_SLUG_CHARACTERS = unicodeRegExp('[^\\p{Letter}\\p{Number}]+', 'gu')
+
 /** URL slug for a heading. Letters and numbers from any language are kept. */
 export function slugify(value: string): string {
   return value
     .trim()
     .toLowerCase()
     .replace(/['"]/g, '')
-    .replace(/[^\p{Letter}\p{Number}]+/gu, '-')
+    .replace(NON_SLUG_CHARACTERS, '-')
     .replace(/^-+|-+$/g, '')
 }
 

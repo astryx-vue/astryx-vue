@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import type { SelectorEmits, SelectorOption, SelectorProps, SelectorSlots } from './types.js'
-import { computed, nextTick, onMounted, ref, useAttrs, useId, useSlots, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, useAttrs, useId, useSlots, useTemplateRef, watch } from 'vue'
 import BottomSheet from '../BottomSheet/BottomSheet.vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
+import { useBusyAnnouncement } from '../composables/internal/busyAnnouncement.js'
+import { useKeyboardHighlight } from '../composables/internal/useKeyboardHighlight.js'
 import { useAnnounce } from '../composables/useAnnounce.js'
 import { useCombobox } from '../composables/useCombobox.js'
 import { useDismiss } from '../composables/useDismiss.js'
@@ -14,10 +16,12 @@ import StatusGlyph from '../Field/StatusGlyph.vue'
 import { fieldStatusPlacement } from '../Field/statusPlacement.js'
 import Icon from '../Icon/Icon.vue'
 import { useIndicator } from '../Indicator/useIndicator.js'
-import { useInputGroupContext } from '../InputGroup/context.js'
+import { useInputGroupContext, useInputGroupDisabled } from '../InputGroup/context.js'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { selectorMessages } from '../locale/messages/selector.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
+import { assertOptionsArray } from '../selectors/assertOptions.js'
 import { normalizeTriggerVariant } from '../selectors/triggerVariant.js'
 import { useSize } from '../SizeContext/SizeContext.js'
 import Spinner from '../Spinner/Spinner.vue'
@@ -29,8 +33,12 @@ import { buildSelectorRows, flattenSelectorOptions, normalizeSelectorEntries } f
 import SelectorPanel from './SelectorPanel.vue'
 import { selectorFieldStatus, selectorStatusGlyph, selectorStatusType } from './selectorStatusRoles.js'
 import { createTriggerActivation } from './triggerActivation.js'
+import { selectorTriggerLabelledBy } from './triggerName.js'
 import { useListboxOverlay } from './useListboxOverlay.js'
+import { useListboxStyle } from './useListboxStyle.js'
 import { useSelectorPopup } from './useSelectorPopup.js'
+import { useSelectorSheet } from './useSelectorSheet.js'
+import { useSelectorTexts } from './useSelectorTexts.js'
 import '../../styles/button.css'
 import '../../styles/layer.css'
 import '../../styles/selector.css'
@@ -56,9 +64,8 @@ const props = withDefaults(defineProps<SelectorProps>(), {
 })
 
 const emit = defineEmits<SelectorEmits>()
-
 defineSlots<SelectorSlots>()
-
+assertOptionsArray('Selector', props.options)
 // 显式 size > 外层 SizeContext（Toolbar、InputGroup 等）> 'md'。
 const size = useSize(() => props.size, 'md')
 
@@ -76,22 +83,18 @@ const triggerVariant = computed(() => normalizeTriggerVariant(props.variant))
 const generatedId = `astryx-selector-${useId()}`
 const selectorId = computed(() => typeof attrs.id === 'string' && attrs.id !== '' ? attrs.id : generatedId)
 const listboxId = computed(() => `${selectorId.value}-listbox`)
-const messages = useAstryxMessages()
-const resolvedPlaceholder = computed(() => props.placeholder ?? messages.value.selector.placeholder)
-const resolvedSearchPlaceholder = computed(() => props.searchPlaceholder ?? messages.value.selector.search)
-const resolvedClearLabel = computed(() => props.clearLabel ?? messages.value.selector.clear)
-/** 值上的清除按钮带着字段名，读屏能听出清的是哪一项。 */
-const valueClearLabel = computed(() => props.clearLabel ?? messages.value.selector.clearField(props.label))
-const resolvedEmptyText = computed(() => props.emptyText ?? messages.value.selector.empty)
-const resolvedEmptySearchText = computed(() => props.emptySearchText ?? messages.value.selector.emptySearch)
+const messages = useComponentMessages({ selector: selectorMessages })
+const { resolvedPlaceholder, resolvedSearchPlaceholder, resolvedClearLabel, valueClearLabel, resolvedEmptyText, resolvedEmptySearchText } = useSelectorTexts(props, messages)
 const inputGroup = useInputGroupContext()
 const inGroup = computed(() => inputGroup != null)
+const groupDisabled = useInputGroupDisabled(() => props.disabled)
 const control = useFieldControlState({
-  disabled: () => props.disabled || (inputGroup?.disabled.value ?? false),
+  disabled: () => groupDisabled.value,
   readOnly: () => props.isReadOnly,
   loading: () => props.isLoading,
 })
 const announce = useAnnounce()
+const settleBusy = useBusyAnnouncement(() => control.isLoading.value, () => messages.value.selector.loading)
 const readOnlyId = computed(() => `${selectorId.value}-readonly`)
 const disabledMessageId = computed(() => `${selectorId.value}-disabled-message`)
 const disabledTooltipId = computed(() => `${selectorId.value}-disabled-tooltip`)
@@ -105,11 +108,12 @@ const listboxRef = useTemplateRef<HTMLElement>('listboxRef')
 const panelRef = useTemplateRef<{ focusSearch: () => void }>('panelRef')
 const sheetSlot = useTemplateRef<HTMLElement>('sheetSlot')
 useScrollbars(listboxRef)
-const isSheet = computed(() => props.presentation === 'bottom-sheet')
 const sheetLabel = computed(() => props.label || resolvedPlaceholder.value)
 
 const isEnabled = control.canActivate
 const isSearchable = computed(() => props.searchable && control.canActivate.value)
+/** 带搜索且不是只读时，触发器是普通按钮，搜索框才是组合框。 */
+const isSearchTrigger = computed(() => props.searchable && !control.isReadOnly.value)
 
 const normalizedEntries = computed(() => normalizeSelectorEntries(props.options))
 const flatOptions = computed(() => flattenSelectorOptions(normalizedEntries.value))
@@ -137,6 +141,8 @@ const combobox = useCombobox({
   isSearchable,
   onChange: (value) => {
     modelValueRef.value = value
+    // 选中后列表收起，焦点回到触发器，不留在已隐藏的选项或搜索框上。
+    focusSelectorTrigger(fieldRef.value)
   },
   onOpenChange: (isOpen) => {
     if (isOpen && props.searchable) {
@@ -146,15 +152,8 @@ const combobox = useCombobox({
     }
   },
 })
-
-const sheetOpen = computed({
-  get: () => isSheet.value && combobox.isOpen.value,
-  set: (open: boolean) => {
-    if (!open && combobox.isOpen.value)
-      combobox.close()
-  },
-})
-const popoverOpen = computed(() => combobox.isOpen.value && !isSheet.value)
+const { isKeyboardHighlight } = useKeyboardHighlight(combobox.activeIndex)
+const { isSheet, sheetOpen, popoverOpen, onSheetMotionComplete } = useSelectorSheet(() => props.presentation, combobox)
 
 const { position, teleportTarget } = usePositionedLayer({
   anchor: fieldRef,
@@ -182,6 +181,8 @@ useDismiss({
   container: listboxRef,
   trigger: fieldRef,
   isEnabled: popoverOpen,
+  // 选项列表和弹出框一样：手指滑一下页面不关，只在外面轻点时关。
+  dismissOnOutsidePan: false,
   dismissOnEscape: 'close',
   onEscape: () => dismissSelectorEscape(listboxRef.value, () => combobox.close(), focusTrigger),
   onDismiss: () => combobox.close(),
@@ -212,6 +213,21 @@ const isEmpty = computed(() => {
 })
 const isSearching = computed(() => props.searchable && combobox.searchQuery.value.trim() !== '')
 const showEmpty = computed(() => isEmpty.value && !control.isLoading.value)
+const fieldLabelId = computed(() => `${selectorId.value}-label`)
+const valueId = computed(() => `${selectorId.value}-value`)
+/** 调用方的 aria-label 优先于字段标签。 */
+const triggerAriaLabel = computed(() => {
+  const external = attrs['aria-label']
+  return typeof external === 'string' && external !== '' ? external : props.label
+})
+/** 带搜索的触发器是不带角色的按钮，读屏不念它的值，所以名字里接上所选的值。 */
+const triggerLabelledBy = computed(() => selectorTriggerLabelledBy({
+  fieldLabelId: fieldLabelId.value,
+  valueId: valueId.value,
+  groupLabelId: inGroup.value ? inputGroup?.labelId.value : undefined,
+  callerLabelledBy: attrs['aria-labelledby'],
+  includesValue: isSearchTrigger.value,
+}))
 const describedBy = computed(() => {
   return [
     inGroup.value ? inputGroup?.describedBy.value : undefined,
@@ -230,8 +246,10 @@ const announcement = computed(() => searchResultMessage({
 }))
 
 watch(announcement, (message) => {
-  if (message)
-    announce(message)
+  if (!message)
+    return
+  settleBusy() // 结果要播报了：还没念出去的「加载中」随即收回
+  announce(message)
 })
 
 function onTriggerFocus(event: FocusEvent): void {
@@ -285,12 +303,6 @@ function onPanelQuery(value: string): void {
   emit('search', value)
 }
 
-const anchorWidth = ref(0)
-
-function syncAnchorWidth(): void {
-  anchorWidth.value = fieldRef.value?.getBoundingClientRect().width ?? 0
-}
-
 const { overlayTop } = useListboxOverlay({
   fieldRef,
   listboxRef,
@@ -300,20 +312,7 @@ const { overlayTop } = useListboxOverlay({
   isEnabled: () => !props.searchable && !isSheet.value && props.placement == null,
 })
 
-const listboxStyle = computed(() => isSheet.value
-  ? undefined
-  : {
-      top: `${overlayTop.value ?? position.value.top}px`,
-      left: `${position.value.left}px`,
-      minWidth: anchorWidth.value > 0 ? `${anchorWidth.value}px` : undefined,
-    })
-
-watch(combobox.isOpen, (open) => {
-  if (open)
-    syncAnchorWidth()
-}, { flush: 'pre' })
-
-onMounted(syncAnchorWidth)
+const listboxStyle = useListboxStyle({ fieldRef, isOpen: combobox.isOpen, isSheet, overlayTop, position })
 </script>
 
 <template>
@@ -361,8 +360,9 @@ onMounted(syncAnchorWidth)
         :aria-readonly="control.isReadOnly.value || undefined"
         :aria-disabled="control.isDisabled.value || undefined"
         :aria-busy="control.isLoading.value || undefined"
-        :aria-required="props.isRequired || undefined"
-        :aria-label="props.label"
+        :aria-required="props.isRequired && !isSearchTrigger ? true : undefined"
+        :aria-label="triggerAriaLabel"
+        :aria-labelledby="triggerLabelledBy"
         :aria-describedby="describedBy"
         :aria-autocomplete="props.searchable ? undefined : 'none'"
         :aria-activedescendant="!props.searchable && !control.isReadOnly.value ? actionGrid.activeDescendant.value : undefined"
@@ -371,7 +371,7 @@ onMounted(syncAnchorWidth)
         @blur="disabledTooltip.onBlur"
         @keydown="onTriggerKeyDown"
       >
-        <span class="astryx-selector-value" :class="{ 'is-placeholder': !selectedOption, 'is-rich': slots.selected, 'is-grouped': inGroup }">
+        <span :id="valueId" class="astryx-selector-value" :class="{ 'is-placeholder': !selectedOption, 'is-rich': slots.selected, 'is-grouped': inGroup }">
           <slot v-if="slots.selected" name="selected" :option="selectedOption" />
           <template v-else>
             <SelectorIcon v-if="!props.startIcon && selectedOption?.icon" class="astryx-selector-value-icon" :icon="selectedOption.icon" />
@@ -379,7 +379,7 @@ onMounted(syncAnchorWidth)
           </template>
         </span>
       </button>
-      <Spinner v-if="control.isLoading.value" class="astryx-selector-spinner" size="sm" :aria-label="messages.selector.loading" />
+      <Spinner v-if="control.isLoading.value" class="astryx-selector-spinner" size="sm" aria-hidden="true" />
       <button
         v-if="hasClear && selectedOption && control.canActivate.value"
         type="button"
@@ -417,6 +417,7 @@ onMounted(syncAnchorWidth)
       height="hug"
       :label="sheetLabel"
       :padding="2"
+      @motion-complete="onSheetMotionComplete"
     >
       <div ref="sheetSlot" class="astryx-selector-sheet">
         <div class="astryx-selector-sheet-title">
@@ -430,15 +431,18 @@ onMounted(syncAnchorWidth)
         :id="listboxId"
         ref="listboxRef"
         :role="gridMode ? 'grid' : 'listbox'"
+        :aria-label="fieldLabel"
         class="astryx-selector-listbox astryx-layer"
         :class="[{ 'is-sheet': isSheet, 'is-input': triggerVariant === 'input' }, `size-${size}`]"
         :data-placement="isSheet ? undefined : position.placement"
         :style="listboxStyle"
+        :data-keyboard-highlight="isKeyboardHighlight || undefined"
         tabindex="-1"
       >
         <SelectorPanel
           ref="panelRef"
           :searchable="props.searchable"
+          :required="props.isRequired"
           :query="combobox.searchQuery.value"
           :placeholder="resolvedSearchPlaceholder"
           :clear-label="resolvedClearLabel"

@@ -2,7 +2,7 @@ import type { VNode } from 'vue'
 import type { CheckboxValue } from '../CheckboxInput/types.js'
 import type { FieldPartStylingProps } from '../Field/fieldParts.js'
 import type { FieldStatusInput, FieldStatusVariant } from '../Field/types.js'
-import type { ListDensity } from '../List/types.js'
+import type { ItemAlign, ListDensity } from '../List/types.js'
 
 export interface CheckboxListProps extends FieldPartStylingProps {
   label: string
@@ -42,6 +42,12 @@ export interface CheckboxListEmits {
 }
 
 export interface CheckboxListItemProps {
+  /**
+   * 起始和结束内容相对标签的垂直对齐，原样交给 Item。
+   * `first-line` 让复选框和换行标签的第一行保持水平。
+   * @default 'center'
+   */
+  align?: ItemAlign
   label: string
   value?: string
   description?: string

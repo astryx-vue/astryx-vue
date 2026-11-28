@@ -16,10 +16,16 @@ footer: false
     </thead>
     <tbody>
       <tr>
+        <td><code>animatedLayout</code></td>
+        <td><code>AnimatedLayout</code></td>
+        <td>—</td>
+        <td><code>useAnimatedLayout({ containerRef })</code> 返回的句柄。传了它，列表的行变化走同一套动效，鼠标和手指都一样：新插入的行入场，移除的行原地收起，和反向移动的行交叉的那一行从它们上方滑过。变化后面的行，以及列表后面直到那个容器的内容，都滑到新位置。行靠 <code>itemKey</code> 认身份，没有它的行直接变。不传句柄时列表直接变。</td>
+      </tr>
+      <tr>
         <td><code>density</code></td>
         <td><code>ListDensity</code></td>
         <td><code>'balanced'</code></td>
-        <td>行的间距密度：compact（4px 上下内边距）、balanced（8px）、spacious（12px，左右内边距也放宽一档）。单行可以用自己的 <code>density</code> 覆盖它。</td>
+        <td>行的间距密度：compact（4px 上下内边距）、balanced（8px）、spacious（12px，左右内边距也放宽一档）。单行可以用自己的 <code>density</code> 覆盖它；手指操作时，可点的行的触控范围会朝相邻行留出的空隙长到 44px，行的外观和布局不变。</td>
       </tr>
       <tr>
         <td><code>hasDividers</code></td>
@@ -31,7 +37,7 @@ footer: false
         <td><code>edge</code></td>
         <td><code>'padded' | 'flush' | 'outset' | 'bleed'</code></td>
         <td><code>'padded'</code></td>
-        <td>每行文字、分隔线以及悬停和选中背景相对列表边缘与外围容器的位置。<code>padded</code> 保留行自身的内边距；<code>flush</code> 去掉这段内边距，文字顶到列表上方标题的竖线，分隔线和背景也止于文字；<code>outset</code> 把文字放在这条线上，让分隔线和背景伸进容器的内边距；<code>bleed</code> 让文字落在容器的内边距线上，分隔线和背景铺到容器边缘、四角为直角，像表格行。与标题对齐的是行里的第一块内容：有标记、图标或头像时就是它，否则是标签。<code>outset</code> 和 <code>bleed</code> 读取最近的、共享内边距的容器公布的数值（Card、Section、BottomSheet、带内边距的 ScrollableArea，或 Layout 区域）；没有这样的容器时和 <code>padded</code> 表现一样。</td>
+        <td>每行文字、分隔线以及悬停和选中背景相对列表边缘与外围容器的位置。<code>padded</code> 保留行自身的内边距；<code>flush</code> 去掉这段内边距，文字顶到列表上方标题的竖线，分隔线和背景也止于文字；<code>outset</code> 把文字放在这条线上，让分隔线和背景伸进容器的内边距；<code>bleed</code> 让文字落在容器的内边距线上，分隔线和背景铺到容器边缘、像表格行，行是直角；只有当列表是圆角 Card 或 Dialog 的第一个或最后一个子元素时，首行或末行取容器的圆角。与标题对齐的是行里的第一块内容：有标记、图标或头像时就是它，否则是标签。<code>outset</code> 和 <code>bleed</code> 读取最近的、共享内边距的容器公布的数值（Card、Section、BottomSheet、带内边距的 ScrollableArea，或 Layout 区域）；没有这样的容器时和 <code>padded</code> 表现一样。</td>
       </tr>
       <tr>
         <td><code>edgeCompensation</code></td>
@@ -44,6 +50,12 @@ footer: false
         <td><code>ListMarkerStyle</code></td>
         <td><code>'none'</code></td>
         <td>每行前面的标记：none、disc（实心圆点）、circle（空心圆点）、decimal（序号）。<code>decimal</code> 会改用 <code>&lt;ol&gt;</code> 渲染。</td>
+      </tr>
+      <tr>
+        <td><code>reorderable</code></td>
+        <td><code>Reorderable</code></td>
+        <td>—</td>
+        <td><code>useReorderable</code> 或 <code>createReorderable</code> 返回的对象。传了它，每个带 <code>itemKey</code>、且对象允许移动的 <code>ListItem</code> 末尾都有一个重排手柄：手指按住再拖，鼠标直接拖，或者点一下再用方向键挪。不传时列表一点重排代码都不加载。</td>
       </tr>
       <tr>
         <td><code>start</code></td>
@@ -127,7 +139,7 @@ footer: false
         <td><code>isSelected</code></td>
         <td><code>boolean</code></td>
         <td><code>false</code></td>
-        <td>选中状态。角色允许时写入 <code>aria-selected="true"</code>，否则写入 <code>aria-current="true"</code>；使用方自己传入的 <code>aria-current</code> 优先。</td>
+        <td>选中状态。角色允许时写入 <code>aria-selected="true"</code>，否则写入 <code>aria-current="true"</code>；使用方自己传入的 <code>aria-current</code> 优先。在可点的行（有 <code>onClick</code>、<code>href</code> 或 <code>interactiveRef</code>）里，标记写在拿到焦点的那个元素上，读屏器就在那里念出来。</td>
       </tr>
     </tbody>
   </table>
@@ -183,7 +195,7 @@ footer: false
 
 `Item` 同时接受 `ListItem` 的全部属性，以及 `label`、`description`、`density`、`onClick`、`interactiveRef`、`href`、`target`、`rel`、`isDisabled`、`isSelected`。
 
-`swipeActions` 给出触摸横滑露出的操作，`leading` 是往行内末尾拖，`trailing` 是往行内开头拖。`swipeBehavior` 默认 `reveal`，松手后停开；`commit` 越过阈值就滑出并触发最外侧，一侧只适合一个操作。鼠标不会开始这次拖动，每个操作还要在行自己的内容里能点到。
+`swipe` 接 `createSwipe` 造出的值：横滑露出的操作。`leading` 是往行内末尾拖，`trailing` 是往行内开头拖。它的 `swipeBehavior` 默认 `reveal`，松手后可以停开；`commit` 全滑时把行滑出、触发这一侧唯一的操作。鼠标不会开始这次拖动，每个操作还要在行自己的内容里能点到。行上的 `swipeActions` 和 `swipeBehavior` 还能用，但已弃用。
 
 ## 插槽
 

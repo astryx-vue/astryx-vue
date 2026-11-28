@@ -30,6 +30,8 @@
   }
 
   .astryx-code-block {
+    /* 页面在这里的方向。代码视口固定从左到右，让代码按写下的样子滚动和换行；行号栏、分隔线和 diff 符号读这个变量，跟着页面镜像。 */
+    --_codeblock-direction: ltr;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -42,6 +44,20 @@
        around it are ordinary block layout, or the indentation of the markup
        would become visible lines inside the header. */
     white-space: normal;
+  }
+
+  .astryx-code-block:dir(rtl) {
+    --_codeblock-direction: rtl;
+  }
+
+  /*
+   * 没有标题栏时，复制按钮和调用方的控件排在代码右边自己的一列里，不盖住代码：
+   * 滚动、换行、RTL 下都没有哪一行从按钮底下穿过。
+   */
+  .astryx-code-block[data-corner] {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: minmax(0, 1fr);
   }
 
   .astryx-code-block[data-container='card'] {
@@ -77,6 +93,31 @@
     border-bottom: var(--astryx-border-width, 1px) solid var(--astryx-code-block-border, #00000014);
   }
 
+  /* 标题栏右边的控件：调用方的内容在前，复制按钮在后。 */
+  .astryx-code-block__controls {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: var(--astryx-spacing-1, 4px);
+  }
+
+  /*
+   * 角落的控件簇和第一行代码等高（上下内边距加一个行盒），控件在里面居中，
+   * 所以任何高度的控件都落在第一行上；代码块变高时控件原地不动。
+   */
+  .astryx-code-block__corner {
+    display: flex;
+    align-items: center;
+    align-self: start;
+    gap: var(--astryx-spacing-1, 4px);
+    margin-inline: var(--astryx-spacing-2, 8px);
+    block-size: calc(2 * var(--astryx-spacing-3, 12px) + var(--astryx-text-code-size, 0.875rem) * var(--astryx-text-code-leading, 1.4286));
+  }
+
+  .astryx-code-block__corner[data-size='sm'] {
+    block-size: calc(2 * var(--astryx-spacing-3, 12px) + var(--astryx-text-supporting-size, 0.75rem) * var(--astryx-text-code-leading, 1.4286));
+  }
+
   .astryx-code-block__title-control {
     display: flex;
     align-items: center;
@@ -110,8 +151,11 @@
     font-size: var(--astryx-text-supporting-size, 0.75rem);
     font-weight: var(--astryx-font-weight-medium, 500);
     line-height: var(--astryx-text-supporting-leading, 1.6667);
-    /* 同上游：标题继承 pre 的 white-space，不换行也不截断，窄容器里由代码块自己撑宽。 */
-    white-space: nowrap;
+    /* 根元素是 pre，标题会继承 pre 的 white-space 而不换行，长标题就会压到右边的控件底下；这里让它自己换行。 */
+    min-width: 0;
+    overflow-wrap: anywhere;
+    --_astryx-text-overflow-wrap: anywhere;
+    white-space: pre-wrap;
   }
 
   /*
@@ -129,6 +173,11 @@
     overflow: hidden;
     color: var(--astryx-code-block-title-foreground, #525252);
     animation: astryx-code-block-chevron-reveal var(--astryx-duration-medium-max, 400ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+  }
+
+  /* 折叠时的箭头指向行末方向，RTL 下镜像。镜像放在这个盒子上，图标自己的旋转动画不受影响。 */
+  .astryx-code-block__chevron:dir(rtl) {
+    transform: scaleX(-1);
   }
 
   .astryx-code-block__chevron-icon {
@@ -180,6 +229,42 @@
     overflow: auto;
   }
 
+  /* 外层为了圆角会裁切溢出，所以代码视口的键盘焦点环向内收一个环宽，完整画在自己框内。 */
+  .astryx-code-block__scroll:focus-visible {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, var(--astryx-color-accent, #0074e2));
+    outline-offset: calc(-1 * var(--astryx-focus-outline-width, 2px));
+  }
+
+  /*
+   * 手机、平板的滚动条只在滚动时出现，横向藏着内容的那一侧边缘淡出，提示还能滑。
+   * 鼠标和触控板看不到淡出；键盘焦点环画在视口里面，所以获得焦点时也不淡出。
+   */
+  .astryx-code-block__scroll[data-scrollable-inline='true'] {
+    --_scroll-fade-start: 0px;
+    --_scroll-fade-end: 0px;
+  }
+
+  .astryx-code-block__scroll[data-scrollable-inline='true']:not([data-scroll-inline-start='true']) {
+    --_scroll-fade-start: var(--_scroll-fade-length, var(--astryx-spacing-8, 32px));
+  }
+
+  .astryx-code-block__scroll[data-scrollable-inline='true']:not([data-scroll-inline-end='true']) {
+    --_scroll-fade-end: var(--_scroll-fade-length, var(--astryx-spacing-8, 32px));
+  }
+
+  @media (pointer: coarse) {
+    .astryx-code-block__scroll[data-scrollable-inline='true']:not(:focus-visible) {
+      mask-image: linear-gradient(to right, transparent 0, black var(--_scroll-fade-start), black calc(100% - var(--_scroll-fade-end)), transparent 100%);
+      scroll-padding-inline: var(--_scroll-fade-start) var(--_scroll-fade-end);
+    }
+  }
+
+  @media (forced-colors: active) {
+    .astryx-code-block__scroll {
+      mask-image: none;
+    }
+  }
+
   .astryx-code-block__wrap {
     display: flex;
     min-width: fit-content;
@@ -195,9 +280,12 @@
     margin: 0;
     padding-block: var(--astryx-spacing-3, 12px);
     padding-inline: var(--astryx-spacing-4, 16px);
+    /* 每行按页面方向排行号栏；每行的代码自己带 dir="auto"。 */
+    direction: var(--_codeblock-direction, ltr);
     color: var(--astryx-code-syntax-variable, #111111);
     font-family: var(--astryx-font-family-code, monospace);
     font-size: var(--astryx-text-code-size, 0.875rem);
+    line-height: var(--astryx-text-code-leading, 1.4286);
     tab-size: 2;
     white-space: pre;
     word-break: normal;
@@ -206,6 +294,7 @@
 
   .astryx-code-block__code[data-size='sm'] {
     font-size: var(--astryx-text-supporting-size, 0.75rem);
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
   }
 
   .astryx-code-block__code[data-wrapped] {
@@ -233,8 +322,9 @@
     pointer-events: none;
   }
 
+  /* 每行跟着代码区的字号角色取行高：默认是代码行高，sm 是辅助文字行高。 */
   .astryx-code-block__line {
-    line-height: var(--astryx-text-code-leading, 1.4286);
+    line-height: inherit;
   }
 
   /*
@@ -258,7 +348,9 @@
   }
 
   /* Keeps the tokens of one line in a single grid cell when numbers are on. */
+  /* 做成块，让每行靠自己方向的起始边对齐，不受外面一行方向的影响。 */
   .astryx-code-block__line-content {
+    display: block;
     min-width: 0;
   }
 
@@ -337,12 +429,6 @@
   /* Tints the resting glyph to the muted header color; Button owns the surface. */
   .astryx-code-block .astryx-code-block-copy-button {
     --astryx-button-ghost-foreground: var(--astryx-code-syntax-comment, #525252);
-  }
-
-  .astryx-code-block .astryx-code-block-copy-button--floating {
-    position: absolute;
-    top: var(--astryx-spacing-2, 8px);
-    inset-inline-end: var(--astryx-spacing-2, 8px);
   }
 
   .astryx-token-keyword,

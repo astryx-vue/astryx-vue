@@ -113,3 +113,56 @@ export function measureScrollAxis(
     atEnd: offset >= max - SCROLL_OVERFLOW_TOLERANCE,
   }
 }
+
+/**
+ * 读计算样式后量一条逻辑轴的滚动状态。量不了（没连在文档上、`display: none`、宽高为 0）时
+ * 返回 null。
+ */
+export function measureLogicalScrollAxis(
+  element: HTMLElement,
+  axis: LogicalScrollAxis,
+  mapping: LogicalAxisMapping,
+): MeasuredScrollAxisState | null {
+  const style = getComputedStyle(element)
+  return isMeasurable(element, style) ? measureScrollAxis(element, axis, mapping, true, style) : null
+}
+
+/** 一次滚动之后某条逻辑轴的位置，只靠盒子几何读出来。 */
+export interface LogicalScrollPosition {
+  /** 内容比视口大出的部分超过了公共容差。 */
+  overflows: boolean
+  atStart: boolean
+  atEnd: boolean
+  /** 偏移量的正负号和上次量出的映射矛盾：书写方向变了，而映射还是旧的。 */
+  contradictsMapping: boolean
+}
+
+/**
+ * 滚动之后读一条逻辑轴的位置，不读计算样式。
+ *
+ * 滚动只挪偏移量：书写方向映射和 overflow 能不能滚还是上一次完整测量读到的，由调用方把映射传进来。
+ * 这里只读盒子几何，滚动期间布局是干净的，几乎没有代价；读计算样式则会在页面上别处弄脏样式时
+ * 让滚动的每一帧都强制重算样式。
+ *
+ * 视口没连在文档上或没有盒子时返回 null，调用方保留上一次的结果。
+ */
+export function measureScrollPosition(
+  element: HTMLElement,
+  axis: LogicalScrollAxis,
+  mapping: LogicalAxisMapping,
+): LogicalScrollPosition | null {
+  if (!element.isConnected || element.clientWidth <= 0 || element.clientHeight <= 0)
+    return null
+  const box = extent(element, mapping[axis])
+  const max = box.content - box.client
+  const reversed = axis === 'inline' ? mapping.inlineReversed : mapping.blockReversed
+  const offset = Math.min(Math.max(0, max), Math.max(0, reversed ? Math.abs(box.offset) : box.offset))
+  return {
+    overflows: max > SCROLL_OVERFLOW_TOLERANCE,
+    atStart: offset <= SCROLL_OVERFLOW_TOLERANCE,
+    atEnd: offset >= max - SCROLL_OVERFLOW_TOLERANCE,
+    contradictsMapping: reversed
+      ? box.offset > SCROLL_OVERFLOW_TOLERANCE
+      : box.offset < -SCROLL_OVERFLOW_TOLERANCE,
+  }
+}

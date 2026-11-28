@@ -93,7 +93,7 @@ const OPEN_IN_ITEMS = [
           <VStack :gap="3">
             <HStack :gap="2" vAlign="center">
               <StackItem size="fill">
-                <HStack :gap="2" vAlign="center">
+                <HStack wrap="wrap" :gap="2" vAlign="center">
                   <Icon name="heroicons:sparkles" size="sm" color="secondary" />
                   <Text type="body" weight="semibold">
                     AI Assistance

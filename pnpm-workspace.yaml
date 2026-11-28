@@ -3,20 +3,20 @@ cleanupUnusedCatalogs: true
 
 minimumReleaseAgeExcludePrune: true
 minimumReleaseAgeExclude:
-  - '@kawapress/plugin-badge@0.8.2'
-  - '@kawapress/plugin-code-block@0.8.2'
-  - '@kawapress/plugin-code-group@0.8.2'
-  - '@kawapress/plugin-container@0.8.2'
-  - '@kawapress/plugin-emoji@0.8.2'
-  - '@kawapress/plugin-github-alerts@0.8.2'
-  - '@kawapress/plugin-llms@0.8.2'
-  - '@kawapress/plugin-search@0.8.2'
-  - '@kawapress/plugin-shiki@0.8.2'
-  - '@kawapress/plugin-sitemap@0.8.2'
-  - '@kawapress/plugin-toc@0.8.2'
-  - '@kawapress/plugin-unocss@0.8.2'
-  - '@kawapress/preset-nagi@0.8.2'
-  - kawapress@0.8.2
+  - '@kawapress/plugin-badge@0.8.3'
+  - '@kawapress/plugin-code-block@0.8.3'
+  - '@kawapress/plugin-code-group@0.8.3'
+  - '@kawapress/plugin-container@0.8.3'
+  - '@kawapress/plugin-emoji@0.8.3'
+  - '@kawapress/plugin-github-alerts@0.8.3'
+  - '@kawapress/plugin-llms@0.8.3'
+  - '@kawapress/plugin-search@0.8.3'
+  - '@kawapress/plugin-shiki@0.8.3'
+  - '@kawapress/plugin-sitemap@0.8.3'
+  - '@kawapress/plugin-toc@0.8.3'
+  - '@kawapress/plugin-unocss@0.8.3'
+  - '@kawapress/preset-nagi@0.8.4'
+  - kawapress@0.8.4
 
 trustPolicy: no-downgrade
 autoInstallPeers: false
@@ -51,10 +51,10 @@ catalogs:
     '@iconify-json/carbon': 1.2.28
     '@iconify-json/heroicons': 1.2.3
     '@iconify-json/lucide': 1.2.147
-    '@kawapress/plugin-shiki': 0.8.2
+    '@kawapress/plugin-shiki': 0.8.3
     '@monaco-editor/loader': 1.7.0
     '@shikijs/langs': 4.6.0
-    kawapress: 0.8.2
+    kawapress: 0.8.4
     monaco-editor: 0.55.1
     postcss: 8.5.29
     sucrase: 3.35.1
@@ -69,7 +69,6 @@ catalogs:
     '@antfu/eslint-config': 9.5.1
     eslint: 10.12.0
     eslint-plugin-vuejs-accessibility: 2.6.0
-    globals: 17.13.0
 
   peer:
     vue: ^3.5.0
@@ -93,8 +92,20 @@ catalogs:
     '@lexical/utils': 0.52.0
     lexical: 0.52.0
   runtime:
+    '@fontsource-variable/fraunces': 5.3.0
+    '@fontsource/albert-sans': 5.3.0
+    '@fontsource/crimson-text': 5.3.0
+    '@fontsource/dm-sans': 5.3.0
     '@fontsource/figtree': 5.3.0
+    '@fontsource/fustat': 5.3.0
     '@fontsource/jetbrains-mono': 5.3.0
+    '@fontsource/manufacturing-consent': 5.3.0
+    '@fontsource/montserrat': 5.3.0
+    '@fontsource/outfit': 5.3.0
+    '@fontsource/playwrite-us-trad': 5.3.0
+    '@fontsource/poppins': 5.3.0
+    '@fontsource/sarina': 5.3.0
+    '@fontsource/unifrakturmaguntia': 5.3.0
     '@internationalized/date': 3.12.4
     mdast-util-from-markdown: 2.1.0
     mdast-util-gfm: 3.1.0
@@ -115,7 +126,6 @@ catalogs:
     pngjs: 7.0.0
 
   vue:
-    '@vue/compiler-dom': 3.5.43
     '@vue/compiler-sfc': 3.5.43
     '@vue/server-renderer': 3.5.43
     vue: 3.5.43

@@ -5,8 +5,11 @@ import { computed, toRaw, useAttrs } from 'vue'
 
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import Icon from '../Icon/Icon.vue'
+import { readLayerScoped } from '../layer/scopedProvide.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { navMessages } from '../locale/messages/nav.js'
+import { TextClampContext } from '../Text/textClampContext.js'
 import Tooltip from '../Tooltip/Tooltip.vue'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import { isSafeUrl } from './safeUrl.js'
@@ -33,22 +36,10 @@ defineSlots<{
 }>()
 
 const attrs = useAttrs()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ nav: navMessages })
 const linkComponent = useLinkComponent()
 const press = usePressFeedback()
-/**
- * `keydown` 不直接透传：禁用时要吞掉 Enter 和 Space，其他键才交给调用方。
- * 其余属性照常落到根元素上。
- */
-const forwardedAttrs = computed(() => {
-  const { onKeydown: _onKeydown, ...rest } = attrs
-  return rest
-})
-/** 禁用时不挂按压层，鼠标和手指都不会亮。 */
-const rootBindings = computed(() => ({
-  ...forwardedAttrs.value,
-  ...(props.isDisabled ? {} : press.pressableProps),
-}))
+const textClamp = readLayerScoped(TextClampContext)
 
 /** 自己的 `as` 优先，其次是 LinkProvider 给的默认链接组件。 */
 const customLink = computed(() => props.as ?? linkComponent.value)
@@ -89,6 +80,12 @@ const weightClass = computed(() => {
   return props.weight === 'normal' ? 'regular' : props.weight
 })
 
+/**
+ * 在会截断行数的 Text 里，锚点形态改成普通行内元素，外面的截断才能从链接中间切开。
+ * 按钮形态、自己设了 `maxLines` 的链接保留自己的盒子。
+ */
+const isInClampedText = computed(() => textClamp.value && !isButton.value && props.maxLines === 0)
+
 const classes = computed(() => [
   'astryx-link',
   `astryx-link--color-${props.color}`,
@@ -100,6 +97,7 @@ const classes = computed(() => [
   props.size && `astryx-link--size-${props.size}`,
   weightClass.value && `astryx-link--weight-${weightClass.value}`,
   props.maxLines > 0 && 'astryx-link--lines',
+  isInClampedText.value && 'astryx-link--in-clamp',
 ])
 
 const labelClass = computed(() => [
@@ -137,6 +135,44 @@ const downloadAttribute = computed<string | undefined>(() => {
 })
 
 /**
+ * Link 自己决定的几项单独算，调用方传的同名属性不直接落到根元素上：
+ * - `keydown`：禁用时要吞掉 Enter 和 Space，其他键才交给调用方。
+ * - `role`、`aria-disabled`：禁用时 Link 说了算，读屏要听到「已禁用」。
+ * - `tabindex`：禁用时默认 0，调用方给了就用调用方的，和启用时的焦点顺序一致。
+ * - `aria-label`：调用方的优先，其次是 `label`。
+ * - `data-color`：始终反映 `color`，主题规则看到的就是真实颜色。
+ */
+const OWN_ATTRIBUTES = new Set(['onKeydown', 'role', 'aria-disabled', 'tabindex', 'tabIndex', 'aria-label', 'data-color'])
+
+/** `attrs` 不是响应式的，所以每次渲染现算，不放进 computed 缓存。 */
+function rootAttributes(): Record<string, unknown> {
+  const forwarded: Record<string, unknown> = {}
+  for (const [key, value] of Object.entries(attrs)) {
+    if (!OWN_ATTRIBUTES.has(key))
+      forwarded[key] = value
+  }
+  const callerTabIndex = attrs.tabindex ?? attrs.tabIndex
+  const disabled = props.isDisabled
+  const isAnchor = !isButton.value
+  return {
+    ...forwarded,
+    ...(disabled ? {} : press.pressableProps),
+    'href': isAnchor && !disabled ? safeHref.value : undefined,
+    'to': isCustomLink.value ? safeHref.value : undefined,
+    'target': isAnchor && !disabled ? computedTarget.value : undefined,
+    'rel': isAnchor && !disabled ? computedRel.value : undefined,
+    'download': downloadAttribute.value,
+    'referrerpolicy': isAnchor ? props.referrerPolicy : undefined,
+    'type': isButton.value ? 'button' : undefined,
+    'role': disabled ? (isAnchor ? 'link' : undefined) : attrs.role,
+    'tabindex': disabled && isAnchor ? (callerTabIndex ?? 0) : callerTabIndex,
+    'aria-disabled': disabled ? true : attrs['aria-disabled'],
+    'aria-label': attrs['aria-label'] ?? (props.label || undefined),
+    'data-color': props.color,
+  }
+}
+
+/**
  * 禁用时只挡住这一次点击：用 `aria-disabled` 保留 Tab 停留点，元素仍会派发
  * click，所以这里既阻止默认行为，也不让它冒泡到外层可点击容器。
  */
@@ -165,20 +201,9 @@ function handleKeydown(event: KeyboardEvent) {
   <Tooltip v-if="tooltipText" :content="tooltipText">
     <component
       :is="root"
-      v-bind="rootBindings"
+      v-bind="rootAttributes()"
       class="astryx-link"
       :class="classes"
-      :href="!isButton && !isDisabled ? safeHref : undefined"
-      :to="isCustomLink ? safeHref : undefined"
-      :target="!isButton && !isDisabled ? computedTarget : undefined"
-      :rel="!isButton && !isDisabled ? computedRel : undefined"
-      :download="downloadAttribute"
-      :referrerpolicy="!isButton ? referrerPolicy : undefined"
-      :type="isButton ? 'button' : undefined"
-      :role="isDisabled && !isButton ? 'link' : undefined"
-      :tabindex="isDisabled ? 0 : undefined"
-      :aria-disabled="isDisabled || undefined"
-      :aria-label="label || undefined"
       @click="handleClick"
       @keydown="handleKeydown"
     >
@@ -194,20 +219,9 @@ function handleKeydown(event: KeyboardEvent) {
   <component
     :is="root"
     v-else
-    v-bind="rootBindings"
+    v-bind="rootAttributes()"
     class="astryx-link"
     :class="classes"
-    :href="!isButton && !isDisabled ? safeHref : undefined"
-    :to="isCustomLink ? safeHref : undefined"
-    :target="!isButton && !isDisabled ? computedTarget : undefined"
-    :rel="!isButton && !isDisabled ? computedRel : undefined"
-    :download="downloadAttribute"
-    :referrerpolicy="!isButton ? referrerPolicy : undefined"
-    :type="isButton ? 'button' : undefined"
-    :role="isDisabled && !isButton ? 'link' : undefined"
-    :tabindex="isDisabled ? 0 : undefined"
-    :aria-disabled="isDisabled || undefined"
-    :aria-label="label || undefined"
     @click="handleClick"
     @keydown="handleKeydown"
   >

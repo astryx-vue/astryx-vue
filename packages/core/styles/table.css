@@ -6,6 +6,60 @@
     margin-inline-start: calc(-1 * var(--container-padding-inline-start, 0px));
     margin-inline-end: calc(-1 * var(--container-padding-inline-end, 0px));
     width: calc(100% + var(--container-padding-inline-start, 0px) + var(--container-padding-inline-end, 0px));
+    --_table-bleed-block-start: 0px;
+    --_table-bleed-block-end: 0px;
+  }
+
+  /*
+   * 行窗口化的表格在父元素给的高度里滚动。贴到容器上下边缘时，高度把抵消掉的那段内边距加回来，
+   * 底边仍然落在容器边缘。
+   */
+  .astryx-table-scroll[data-block-viewport] {
+    height: calc(100% + var(--_table-bleed-block-start) + var(--_table-bleed-block-end));
+    min-height: 0;
+  }
+
+  /*
+   * 横向能滚时滚动区是一个 Tab 停靠点，画共用的焦点环。滚动区贴到容器边缘，压在 Card 的边框下面，
+   * 所以焦点环收进自己框里，也让开那道边框。
+   */
+  .astryx-table-scroll:focus-visible {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, currentcolor);
+    outline-offset: calc(-1 * (var(--astryx-focus-outline-width, 2px) + var(--astryx-border-width, 1px)));
+  }
+
+  /*
+   * 手机、平板的滚动条只在滚动时出现，横向藏着内容的那一侧边缘淡出，提示还能滑。
+   * 只给藏着内容的一侧淡出；固定列所在的一侧有自己的阴影，由固定列插件关掉那一侧。
+   */
+  .astryx-table-scroll[data-scrollable-inline='true'] {
+    --_scroll-fade-start: 0px;
+    --_scroll-fade-end: 0px;
+  }
+
+  .astryx-table-scroll[data-scrollable-inline='true']:not([data-scroll-inline-start='true']) {
+    --_scroll-fade-start: var(--_table-fade-start, var(--_scroll-fade-length, var(--astryx-spacing-8, 32px)));
+  }
+
+  .astryx-table-scroll[data-scrollable-inline='true']:not([data-scroll-inline-end='true']) {
+    --_scroll-fade-end: var(--_table-fade-end, var(--_scroll-fade-length, var(--astryx-spacing-8, 32px)));
+  }
+
+  @media (pointer: coarse) {
+    .astryx-table-scroll[data-scrollable-inline='true']:not(:focus-visible) {
+      mask-image: linear-gradient(to right, transparent 0, black var(--_scroll-fade-start), black calc(100% - var(--_scroll-fade-end)), transparent 100%);
+      scroll-padding-inline: var(--_scroll-fade-start) var(--_scroll-fade-end);
+    }
+
+    .astryx-table-scroll[data-scrollable-inline='true']:not(:focus-visible):dir(rtl) {
+      mask-image: linear-gradient(to left, transparent 0, black var(--_scroll-fade-start), black calc(100% - var(--_scroll-fade-end)), transparent 100%);
+    }
+  }
+
+  @media (forced-colors: active) {
+    .astryx-table-scroll {
+      mask-image: none;
+    }
   }
 
   /*
@@ -23,6 +77,7 @@
     .astryx-bottom-sheet__content
   ) > .astryx-table-scroll:first-child {
     margin-top: calc(-1 * var(--container-padding-block-start, 0px));
+    --_table-bleed-block-start: var(--container-padding-block-start, 0px);
   }
 
   :is(
@@ -36,6 +91,21 @@
     .astryx-bottom-sheet__content
   ) > .astryx-table-scroll:last-child {
     margin-bottom: calc(-1 * var(--container-padding-block-end, 0px));
+    --_table-bleed-block-end: var(--container-padding-block-end, 0px);
+  }
+
+  /*
+   * 贴到卡片上下边缘的滚动区，在那一侧用卡片发布的圆角，焦点环和底色沿着卡片的弧线走，
+   * 不在角上被卡片裁掉。其余的角保持直角。
+   */
+  .astryx-card > .astryx-table-scroll:first-child {
+    border-start-start-radius: var(--_container-corner-block-start, 0px);
+    border-start-end-radius: var(--_container-corner-block-start, 0px);
+  }
+
+  .astryx-card > .astryx-table-scroll:last-child {
+    border-end-start-radius: var(--_container-corner-block-end, 0px);
+    border-end-end-radius: var(--_container-corner-block-end, 0px);
   }
 
   .astryx-table {
@@ -118,21 +188,50 @@
      插件渲染的格子不设字号，继承环境字号。 */
   .astryx-table td:not(.astryx-table__group, .astryx-table__panel, .astryx-table__empty) {
     font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
   }
 
   .astryx-table th {
+    --_table-row-divider-width: var(--astryx-border-width, 1px);
     color: var(--astryx-color-text-secondary, light-dark(#525252, #a3a3a3));
     font-size: var(--astryx-text-label-size, 1rem);
+    line-height: var(--astryx-text-label-leading, 1.4286);
     font-weight: var(--astryx-font-weight-semibold, 600);
     border-bottom: var(--astryx-border-width, 1px) solid var(--astryx-color-border, light-dark(#ebebeb, #ffffff1a));
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  /*
+   * 列标题跟着表格的 textOverflow 走。数据模式的列宽来自列定义，`wrap` 下标题像单元格一样折行；
+   * 手写行列的模式按内容定宽，标题保持一行，列跟着变宽。`truncate` 下标题一行，放不下以省略号收尾。
+   */
+  .astryx-table[data-layout='fixed'][data-overflow='wrap'] th {
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    max-width: 0;
+  }
+
+  .astryx-table:not([data-layout='fixed']) th {
+    white-space: nowrap;
+  }
+
+  .astryx-table[data-overflow='truncate'] th {
     white-space: nowrap;
     max-width: 0;
   }
 
+  /* 窄列里标题先让出宽度，排序箭头和筛选按钮留在格子里，够得着。 */
+  .astryx-table__header-label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   .astryx-table[data-dividers='rows'] tbody tr:not(:last-child) > td,
   .astryx-table[data-dividers='grid'] tbody tr:not(:last-child) > td {
+    --_table-row-divider-width: var(--astryx-border-width, 1px);
     border-bottom: var(--astryx-border-width, 1px) solid var(--astryx-color-border, light-dark(#ebebeb, #ffffff1a));
   }
 
@@ -148,16 +247,46 @@
     max-width: 0;
   }
 
-  .astryx-table[data-overflow='wrap'] td {
+  /* 数据模式按列定义定宽，放不下的长词在任意字母处断开，留在自己的格子里。 */
+  .astryx-table[data-layout='fixed'][data-overflow='wrap'] td {
     overflow: hidden;
     overflow-wrap: break-word;
     word-break: break-word;
     max-width: 0;
   }
 
-  .astryx-table[data-striped='true'] tbody tr:nth-child(even of :not([data-expansion-panel], [data-group-header])) {
+  /*
+   * 手写行列的模式按内容定宽：只有一个词比整列还宽时才断开，列不会被压到一个字母宽。
+   * 放不下时表格在自己的框里横向滚动。祖先设的 word-break（例如聊天气泡）也不往里传。
+   */
+  .astryx-table:not([data-layout='fixed']) {
+    word-break: normal;
+  }
+
+  .astryx-table:not([data-layout='fixed'])[data-overflow='wrap'] td {
+    overflow: hidden;
+    overflow-wrap: break-word;
+  }
+
+  .astryx-table[data-striped='true']:not([data-windowed]) tbody tr:nth-child(even of :not([data-expansion-panel], [data-group-header])),
+  .astryx-table[data-striped='true'][data-windowed] tbody tr[data-parity='even'] {
     --table-row-overlay: var(--astryx-color-background-muted, light-dark(#f1f1f1, #1b1b1b));
     background-color: var(--astryx-color-background-muted, light-dark(#f1f1f1, #1b1b1b));
+  }
+
+  /*
+   * 窗口化时没挂载的行、列由占位行和占位格撑住位置。它们只占地方：没有内边距、分隔线和底色，
+   * 特异性压过密度、分隔线和悬停的规则。
+   */
+  .astryx-table.astryx-table.astryx-table :is(th, td)[data-window-gap] {
+    padding: 0;
+    border-width: 0;
+    line-height: 0;
+    max-width: none;
+  }
+
+  .astryx-table.astryx-table.astryx-table tbody tr[data-window-gap] {
+    background-color: transparent;
   }
 
   .astryx-table[data-hover='true'] tbody tr {
@@ -171,13 +300,17 @@
     }
   }
 
-  .astryx-table tbody tr[aria-selected='true'] {
+  /*
+   * `.astryx-table-row` 是行的主题目标，带 parity、striped、selected 状态。
+   * 选中行的底色读 --color-accent-muted，主题在 selected 状态里改这个变量就能换色。
+   */
+  .astryx-table tbody .astryx-table-row[aria-selected='true'] {
     --table-row-overlay: var(--astryx-color-accent-muted, light-dark(#f1f1f1, #262626));
     background-color: var(--astryx-color-accent-muted, light-dark(#f1f1f1, #262626));
   }
 
   /* 行底色被别的含义占用时不铺这层色，aria-selected 照旧保留。 */
-  .astryx-table[data-row-highlight='off'] tbody tr[aria-selected='true'] {
+  .astryx-table[data-row-highlight='off'] tbody .astryx-table-row[aria-selected='true'] {
     --table-row-overlay: transparent;
     background-color: transparent;
   }
@@ -227,6 +360,11 @@
     opacity: 0.35;
   }
 
+  /* A theme that hides the sort glyph leaves no gap beside the label. */
+  .astryx-table__sort-icon:empty {
+    display: none;
+  }
+
   .astryx-table th:hover .astryx-table__sort-icon,
   .astryx-table__sort:focus-visible .astryx-table__sort-icon,
   .astryx-table__sort-icon[data-active='true'] {
@@ -234,7 +372,7 @@
   }
 
   .astryx-table__sort-rank {
-    color: var(--astryx-color-accent, light-dark(#262626, #ebebeb));
+    color: var(--astryx-color-text-accent, light-dark(#262626, #ebebeb));
     font-size: 10px;
     line-height: 1;
   }
@@ -404,6 +542,18 @@
     margin-bottom: var(--astryx-spacing-2, 8px);
   }
 
+  .astryx-table__load-more {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-table__load-more-sentinel {
+    align-self: stretch;
+    block-size: 1px;
+  }
+
   .astryx-table__pagination[data-align='start'] {
     justify-content: flex-start;
   }
@@ -521,9 +671,38 @@
     }
   }
 
+  /* 树形数据的展开箭头和表头的全部展开开关画共用的焦点环。紧凑档的行比焦点环矮，环收进按钮里。 */
+  .astryx-table__expander:not(.astryx-table__expander--column):focus-visible {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, currentcolor);
+    outline-offset: var(--astryx-focus-outline-offset, 3px);
+  }
+
+  .astryx-table[data-density='compact'] .astryx-table__expander:not(.astryx-table__expander--column):focus-visible {
+    outline-offset: calc(-1 * var(--astryx-focus-outline-width, 2px));
+  }
+
   .astryx-table__chevron-icon {
     display: inline-flex;
     transition: transform var(--astryx-duration-fast, 125ms) var(--astryx-ease-move, cubic-bezier(0.24, 1, 0.4, 1));
+  }
+
+  /*
+   * The row-expansion toggle holds whatever the theme's table-row-expand slot
+   * resolves in a box the size of the default glyph, centred out of flow. A
+   * larger glyph or a hidden one keeps the toggle's baseline and the row height.
+   * The box carries the turn, so any glyph turns with it.
+   */
+  .astryx-table__chevron-icon--slot {
+    position: relative;
+    inline-size: 0.75rem;
+    block-size: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  .astryx-table__chevron-icon--slot > .astryx-icon {
+    position: absolute;
+    inset: 0;
+    margin: auto;
   }
 
   .astryx-table__chevron-icon.is-expanded {
@@ -576,10 +755,12 @@
 
   .astryx-table[data-dividers='rows'] tbody tr[data-expanded] > td,
   .astryx-table[data-dividers='grid'] tbody tr[data-expanded] > td {
+    --_table-row-divider-width: 0px;
     border-bottom-width: 0;
   }
 
-  .astryx-table__panel-row[data-variant='muted'] {
+  /* 弱化底色铺在面板的格子上，不铺在行上：格子和面板内容一起滑入。 */
+  .astryx-table__panel-row[data-variant='muted'] > .astryx-table__panel {
     background: var(--astryx-color-background-muted, light-dark(#f1f1f1, #1b1b1b));
   }
 
@@ -603,9 +784,29 @@
     border-bottom-width: 0;
   }
 
+  /*
+   * 行展开带着布局动效滑动时（Table/glidingDivider.ts），合并边框画在格子原来的位置，
+   * 不会跟着行走。滑动期间移动行的格子边框变透明，由一个格子的 ::after 横跨整行画同一条线；
+   * 线以行为定位参照（格子本身不定位），所以不受格子 overflow 裁切，也不改变列宽。
+   */
+  .astryx-table tr[data-astryx-row-gliding] {
+    position: relative;
+  }
+
+  .astryx-table td[data-astryx-cell-gliding='line']::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    bottom: calc(-1 * var(--_table-row-glide-offset, 0px));
+    height: 0;
+    border-bottom: var(--_table-row-glide-width, 0px) var(--_table-row-glide-style, solid) var(--_table-row-glide-color, var(--astryx-color-border, light-dark(#ebebeb, #ffffff1a)));
+    pointer-events: none;
+  }
+
   .astryx-table__row-index {
     font-family: var(--astryx-font-family-code, ui-monospace, monospace);
     font-size: var(--astryx-text-supporting-size, 0.75rem);
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
     font-variant-numeric: tabular-nums;
     color: var(--astryx-color-text-secondary, light-dark(#525252, #a3a3a3));
   }
@@ -630,13 +831,29 @@
     overflow: visible;
   }
 
+  /*
+   * 固定列自己画行分隔线。边框合并时，表格把每条边框画在格子原来的位置：固定格移动了，边框不动，
+   * 所以它下面那条线会变成恰好滚过去的那一格的线，那一格没有线时就缺了。
+   * 这层伪元素本来就是行底色层，往下伸到格子的边框区，先用固定列的底色盖住表格画在那里的线，
+   * 再按格子自己的边框样式和颜色（继承来，主题、令牌切换、应用自己的规则都跟着走）画一条。
+   */
   .astryx-table__sticky::before {
     content: '';
     position: absolute;
     inset: 0;
     z-index: -1;
     pointer-events: none;
+    margin-bottom: calc(-1 * var(--_table-row-divider-width, 0px));
+    border-bottom-width: var(--_table-row-divider-width, 0px);
+    border-bottom-style: inherit;
+    border-bottom-color: inherit;
     background-color: var(--table-row-overlay, transparent);
+    background-image: linear-gradient(var(--table-sticky-background, var(--astryx-color-background-card, #fff)), var(--table-sticky-background, var(--astryx-color-background-card, #fff)));
+    background-size: 100% var(--_table-row-divider-width, 0px);
+    background-position: bottom;
+    background-repeat: no-repeat;
+    background-origin: border-box;
+    background-clip: border-box;
     transition: background-color var(--astryx-duration-fast, 125ms) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
   }
 

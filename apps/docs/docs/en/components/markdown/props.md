@@ -26,6 +26,7 @@ footer: false
       <tr><td><code>inlinePlugins</code></td><td><code>MarkdownInlinePlugin[]</code></td><td>—</td><td>Match ordinary text. Inline code and fenced code are skipped.</td></tr>
       <tr><td><code>autolink</code></td><td><code>'gfm'</code></td><td>—</td><td>When set to <code>gfm</code>, bare URLs, <code>www.</code> hosts, and bare emails become links.</td></tr>
       <tr><td><code>citationStyle</code></td><td><code>'label' | 'number'</code></td><td><code>'label'</code></td><td>Whether a citation chip shows the source title or a numbered badge.</td></tr>
+      <tr><td><code>codeLanguages</code></td><td><code>ReadonlyArray&lt;CodeLanguage&gt;</code></td><td>—</td><td>Language values a fence may name, imported from <code>@astryx-vue/core/Code/languages/&lt;name&gt;</code> or made with <code>createCodeLanguage</code>. A fence whose language word is one of a value's identifiers renders with that value, ahead of a built-in with the same identifier; a later entry wins.</td></tr>
       <tr><td><code>sources</code></td><td><code>Record&lt;string, MarkdownSource&gt;</code></td><td>—</td><td>Citation sources by id. A matching <code>[id]</code> or <code>【id】</code> renders as a chip.</td></tr>
     </tbody>
   </table>

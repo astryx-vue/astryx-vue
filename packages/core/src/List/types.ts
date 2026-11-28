@@ -1,23 +1,33 @@
 import type { Component, MaybeRefOrGetter, VNodeChild } from 'vue'
+import type { AnimatedLayout } from '../composables/useAnimatedLayout.js'
+import type { Reorderable } from '../reorderable/createReorderable.js'
+import type { ItemSwipeActionVariant, ItemSwipeBehavior, Swipe } from '../Swipe/swipeHost.js'
+
+export type { ItemSwipeBehavior }
 
 /** 滑动露出的一侧。`leading` 是往行内末尾拖，`trailing` 是往行内开头拖。 */
 export type ItemSwipeSide = 'leading' | 'trailing'
 
-/** `reveal` 松手后停开；`commit` 越过阈值就滑出并触发最外侧，一侧只适合一个操作。 */
-export type ItemSwipeBehavior = 'reveal' | 'commit'
-
-/** 横滑露出的一个操作。数组里越靠后越靠外。 */
+/**
+ * 横滑露出的一个操作。数组里越靠后越靠外。
+ * @deprecated 改用 `SwipeAction`：它的 `id` 必填，`onActivate` 会收到操作的 `id` 和行的 `itemKey`。
+ */
 export interface ItemSwipeAction {
   id?: string
   label: string
   icon?: Component
-  onActivate: () => void
+  onActivate: () => void | Promise<void>
   isDisabled?: boolean
-  variant?: 'neutral' | 'accent' | 'destructive'
-  /** 触发后行停在滑出的位置，不再弹回。行本身不会被删掉。 */
+  /** @default 'accent' */
+  variant?: ItemSwipeActionVariant
+  /**
+   * 触发后行停在滑出的位置，不再弹回。行本身不会被删掉。
+   * @default false
+   */
   hasRemoval?: boolean
 }
 
+/** @deprecated 改用 `CreateSwipeOptions`。 */
 export interface ItemSwipeActions {
   leading?: ItemSwipeAction[]
   trailing?: ItemSwipeAction[]
@@ -76,6 +86,40 @@ export type ItemText = string | number
 export type ItemLabel = ItemText
 
 export interface ListProps {
+  /**
+   * The handle from `useAnimatedLayout({ containerRef })`. With it, the list
+   * animates its row changes on one shared motion, under every pointer. An
+   * inserted row enters, and a removed row collapses in place. A row that
+   * crosses rows moving the other way rides above them. The rows after a
+   * change, and the content after the list up to that container, glide to
+   * their new places. A row's identity is its `itemKey`, so a row without one
+   * changes at once. Without a handle the list changes at once.
+   */
+  animatedLayout?: AnimatedLayout
+  /**
+   * Makes the rows reorderable, with the object `createReorderable` makes.
+   * Each ListItem with an `itemKey` gets a reorder handle at its end. One the
+   * object's `isReorderable` rejects keeps its place. Each committed move
+   * calls its `onReorder` once with the row's key and its index after the
+   * move. Apply it by rendering the rows in their new order. A drop on the
+   * starting place, a cancel, or a move the order does not take changes
+   * nothing.
+   *
+   * On a touch screen, a finger held still on a handle for a moment picks up
+   * its row. A flick on it still scrolls. The row stays in its place, dimmed,
+   * while a copy of it follows the finger. An accent line marks where it
+   * would land. The other rows stay still, the list scrolls near the edges,
+   * and on release the rows rearrange. A mouse drags a handle at once, the
+   * same way.
+   *
+   * Without a drag, activating a handle (a click, Space or Enter) turns on
+   * reorder mode for its row. Each arrow key moves it a place at once,
+   * reported and announced with its place and neighbours. Escape or another
+   * activation ends the mode, keeping the moves. While it is on, a hint
+   * anchored to the handle shows the moves and Done as buttons, so taps alone
+   * can reorder.
+   */
+  reorderable?: Reorderable
   /**
    * Spacing density for the rows. Each `ListItem` inherits it unless the item
    * sets its own.
@@ -138,6 +182,15 @@ export interface ListSlots {
 
 export interface ListItemProps {
   /**
+   * Vertical alignment of the start and end content slots. `center` centers
+   * each slot on the whole text block; `start` lines up slot tops with the
+   * text's top; `first-line` centers each slot on the label's first line, so a
+   * small mark stays level with the first line of a wrapped label. A slot
+   * taller than that line moves the text down.
+   * @default 'center'
+   */
+  align?: ItemAlign
+  /**
    * Primary text identifying the row. Use the `label` slot for rich content.
    */
   label?: ItemText
@@ -190,25 +243,43 @@ export interface ListItemProps {
    */
   isSelected?: boolean
   /**
-   * 触摸横滑露出的操作。鼠标不会开始这次拖动。
-   * 每个操作还要在行自己的内容里能点到，否则键盘和鼠标够不着。
+   * The row's item key, a string or a number from the data. It is the row's
+   * identity for the list's `animatedLayout`, so a row without one changes at
+   * once. It is separate from Vue's `key`, which stays Vue's own.
+   */
+  itemKey?: string | number
+  /**
+   * 行的横滑操作，由一次 `createSwipe` 调用配好：横向拖动在每一侧露出的动词，声明成数据，
+   * 行据此画出面板。手指、笔或触控板的双指横滑把行拖到一边、露出这一侧的面板；鼠标拖动和鼠标
+   * 滚轮不会，偏竖直的拖动仍归滚动。手势只是触屏的快捷方式，永远不是行通往某个动词的唯一入口：
+   * 每个操作都要在行自己的内容里也能点到（菜单或 `endContent` 里的按钮），否则键盘和鼠标用户够不着。
+   * 开着的行在点它自己的内容（不激活任何东西）、按在别处、焦点在行外时列表或页面滚动、按 Escape 时合上。
+   *
+   * 只在 role 允许可交互后代的行上生效：`listitem` 或没有 role 的行；`option`、`menuitem*`、
+   * 作为内部控件放大点击区的行和禁用的行不生效。装着行的元素要在行内方向裁剪
+   * （`overflow-inline: clip`）：`List` 已经这样做了，别的容器自己加一次。
+   */
+  swipe?: Swipe
+  /**
+   * @deprecated 改传 `swipe`，写成 `createSwipe({ leading, trailing })`。仍可用，行为和 `swipe` 一致；
+   * 设置了 `swipe` 时忽略。
    */
   swipeActions?: ItemSwipeActions
   /**
-   * 松手之后怎么收场。
+   * @deprecated 改在 `createSwipe` 的选项里传 `swipeBehavior`。设置了 `swipe` 时忽略。
    * @default 'reveal'
    */
   swipeBehavior?: ItemSwipeBehavior
 }
 
 export interface ListItemSlots {
-  /** Leading content before the label: an icon, an avatar, a checkbox. */
+  /** Content before the label, inside the row: an icon, an avatar, a checkbox. */
   startContent?: () => VNodeChild
   /** Rich content replacing the `label` prop. */
   label?: () => VNodeChild
   /** Rich content replacing the `description` prop. */
   description?: () => VNodeChild
-  /** Trailing content after the label area: a badge, a timestamp, a chevron. */
+  /** Content after the label and description, inside the row: a badge, a timestamp, a chevron. */
   endContent?: () => VNodeChild
 }
 
@@ -221,15 +292,6 @@ export interface ItemProps extends ListItemProps {
    * @default 'div'
    */
   as?: ItemElement
-  /**
-   * Vertical alignment of the start and end content slots. `center` centers
-   * each slot on the whole text block; `start` lines up slot tops with the
-   * text's top; `first-line` centers each slot on the label's first line, so a
-   * small mark stays level with the first line of a wrapped label. A slot
-   * taller than that line moves the text down.
-   * @default 'center'
-   */
-  align?: ItemAlign
   /**
    * How the label and description sit together. `stacked` puts the description
    * on its own line; `inline` keeps both on one line, with the description

@@ -86,6 +86,10 @@ const canvasEditorTheme = defineTheme({
 const FRAME = { width: 1080, height: 1920 }
 const PHOTO_LAYER_SRC = '/template-assets/moody-scene-vertical-1.png'
 const TAB_STRIP_RESERVE = 320
+/** 标签最窄到这个宽度，再窄就让标签条滚动：够放图标、几个字和关闭按钮。 */
+const TAB_MIN_WIDTH = 96
+/** 标签条左右内边距之和。 */
+const TAB_STRIP_PADDING = 16
 
 type LayerKind = 'text' | 'image'
 type ThemeMode = 'light' | 'dark' | 'system'
@@ -465,6 +469,23 @@ const inspector = useResizable({ defaultSize: 288, minSize: 264, maxSize: 400 })
 
 const selected = computed(() => layers.value.find(layer => layer.id === selectedID.value) ?? layers.value[0])
 const scale = computed(() => Number(zoom.value))
+
+/** 首次挂载时按画布可用宽度挑一个放得下整块画板的最大缩放，窄屏不用先横向滚动。 */
+let hasFittedZoom = false
+function attachCanvas(instance: unknown) {
+  if (hasFittedZoom)
+    return
+  const canvas = (instance as { $el?: unknown } | null)?.$el
+  if (!(canvas instanceof HTMLElement) || canvas.clientWidth <= 0)
+    return
+  hasFittedZoom = true
+  const { paddingInlineStart, paddingInlineEnd } = getComputedStyle(canvas)
+  const room = canvas.clientWidth - Number.parseFloat(paddingInlineStart) - Number.parseFloat(paddingInlineEnd)
+  if (FRAME.width * Number(zoom.value) <= room)
+    return
+  const fitting = ZOOM_OPTIONS.filter(option => FRAME.width * Number(option.value) <= room)
+  zoom.value = (fitting.at(-1) ?? ZOOM_OPTIONS[0]).value
+}
 const headline = computed(() => layers.value.filter(layer => layer.kind === 'text')[0])
 const dateline = computed(() => layers.value.filter(layer => layer.kind === 'text')[1])
 const photo = computed(() => layers.value.filter(layer => layer.kind === 'image')[0])
@@ -956,7 +977,7 @@ const Shortcut = defineComponent({
                   :padding-inline="2"
                   :padding-block="1"
                   is-scrollable
-                  :max-width="`calc(100cqw - ${TAB_STRIP_RESERVE}px)`"
+                  :max-width="`max(${TAB_MIN_WIDTH + TAB_STRIP_PADDING}px, calc(100cqw - ${TAB_STRIP_RESERVE}px))`"
                   class="tab-strip"
                 >
                   <template v-for="(tab, index) in tabs" :key="tab.id">
@@ -996,8 +1017,8 @@ const Shortcut = defineComponent({
                   <Icon name="lucide:plus" size="sm" color="secondary" />
                 </IconButton>
               </HStack>
-              <HStack :gap="3" align="center">
-                <Text type="supporting" color="secondary">
+              <HStack :gap="3" align="center" class="header-trail">
+                <Text type="supporting" color="secondary" class="folds-at-save-note">
                   Saved · 2 min ago
                 </Text>
                 <DropdownMenu
@@ -1044,7 +1065,7 @@ const Shortcut = defineComponent({
             <LayoutContent :padding="0">
               <Section variant="muted" :padding="0" height="100%">
                 <Layout height="fill" :padding="4">
-                  <LayoutContent :padding="6">
+                  <LayoutContent :ref="attachCanvas" :padding="6">
                     <HStack width="max-content" height="max-content" min-height="100%" class="canvas-stage">
                       <Card
                         dir="ltr"
@@ -1077,10 +1098,10 @@ const Shortcut = defineComponent({
                           <Toolbar label="Canvas tools" size="sm">
                             <template #start>
                               <IconButton label="Undo" tooltip="Undo" variant="ghost" class="toolbar-control" @click="demo('Demo: the last change would be undone here', 'undo')">
-                                <Icon name="lucide:undo-2" size="sm" />
+                                <Icon class="mirror-rtl" name="lucide:undo-2" size="sm" />
                               </IconButton>
                               <IconButton label="Redo" tooltip="Redo" variant="ghost" class="toolbar-control" @click="demo('Demo: the change would be redone here', 'redo')">
-                                <Icon name="lucide:redo-2" size="sm" />
+                                <Icon class="mirror-rtl" name="lucide:redo-2" size="sm" />
                               </IconButton>
                               <Divider orientation="vertical" class="toolbar-rule" />
                               <IconButton label="Add frame" tooltip="Add frame" variant="ghost" class="toolbar-control" @click="demo('Demo: a new frame would be added here', 'add-frame')">
@@ -1154,9 +1175,9 @@ const Shortcut = defineComponent({
 
                 <InspectorSection title="Styles">
                   <InspectorRow label="Radius">
-                    <AxisInput :icon="lucide('scan')" label="Corner radius" :value="selected.radius" @change="next => updateSelected({ radius: next })" />
+                    <AxisInput :icon="lucide('square-round-corner')" label="Corner radius" :value="selected.radius" @change="next => updateSelected({ radius: next })" />
                     <IconButton label="Set radius per corner" tooltip="Per corner" size="sm" variant="ghost" @click="demo('Demo: radius fields for each corner would open here', 'set-radius-per-corner')">
-                      <Icon name="lucide:square-round-corner" size="sm" />
+                      <Icon name="lucide:scan" size="sm" />
                     </IconButton>
                   </InspectorRow>
                   <StyleRow
@@ -1197,10 +1218,10 @@ const Shortcut = defineComponent({
                   </InspectorRow>
                   <InspectorRow label="Flip" h-align="end">
                     <IconButton label="Flip horizontally" tooltip="Flip horizontally" size="sm" variant="ghost" @click="demo('Demo: the layer would flip horizontally here', 'flip-horizontally')">
-                      <Icon name="lucide:flip-horizontal-2" size="sm" />
+                      <Icon name="lucide:triangles-centerline-dashed-vertical" size="sm" />
                     </IconButton>
                     <IconButton label="Flip vertically" tooltip="Flip vertically" size="sm" variant="ghost" @click="demo('Demo: the layer would flip vertically here', 'flip-vertically')">
-                      <Icon name="lucide:flip-vertical-2" size="sm" />
+                      <Icon name="lucide:triangles-centerline-dashed-horizontal" size="sm" />
                     </IconButton>
                   </InspectorRow>
                 </InspectorSection>
@@ -1377,6 +1398,27 @@ const Shortcut = defineComponent({
 .header-bar {
   container-type: inline-size;
   container-name: editor-header;
+}
+
+:global([dir='rtl'] .mirror-rtl) {
+  transform: scaleX(-1);
+}
+
+.header-trail {
+  flex-shrink: 0;
+}
+
+/* 页眉放不下一个完整标签加预留区时，保存提示让出位置：只离开屏幕，不离开无障碍树。 */
+@container editor-header (max-width: 431.98px) {
+  .folds-at-save-note {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
 }
 
 .header-lead {

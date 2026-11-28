@@ -26,6 +26,16 @@
   }
 }
 
+@keyframes astryx-button-press-release {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
 @keyframes astryx-button-tooltip-enter {
   from {
     opacity: 0;
@@ -117,8 +127,12 @@
     --_button-border-style: var(--astryx-button-primary-border-style, var(--astryx-button-border-style, solid));
     --_button-border-color: var(--astryx-button-primary-border-color, var(--astryx-button-border-color, transparent));
 
-    color: var(--astryx-button-primary-foreground, #fff);
-    background-color: var(--astryx-button-primary-background, #262626);
+    /* 底色和文字这一对传给按钮内容：里面的中性 Badge 反过来用，对比度就够。 */
+    --_button-fill: var(--astryx-button-primary-background, #262626);
+    --_button-on-fill: var(--astryx-button-primary-foreground, #fff);
+
+    color: var(--_button-on-fill);
+    background-color: var(--_button-fill);
   }
 
   /* 主题的次要按钮可以带描边、带自己的悬停叠层；次要样式的选择器类组件复用这几条。 */
@@ -147,8 +161,11 @@
     --_button-border-style: var(--astryx-button-destructive-border-style, var(--astryx-button-border-style, solid));
     --_button-border-color: var(--astryx-button-destructive-border-color, var(--astryx-button-border-color, transparent));
 
-    color: var(--astryx-button-destructive-foreground, var(--astryx-color-on-error, light-dark(#ffffff, #0a1317)));
-    background-color: var(--astryx-button-destructive-background, var(--astryx-color-error, light-dark(#e3193b, #f5394f)));
+    --_button-fill: var(--astryx-button-destructive-background, var(--astryx-color-error, light-dark(#e3193b, #f5394f)));
+    --_button-on-fill: var(--astryx-button-destructive-foreground, var(--astryx-color-on-error, light-dark(#ffffff, #0a1317)));
+
+    color: var(--_button-on-fill);
+    background-color: var(--_button-fill);
   }
 
   @media (hover: hover) {
@@ -180,6 +197,45 @@
     background-image: var(--_press-paint-image);
   }
 
+  /*
+   * 自己的弹层开着时（菜单、列表框这类触发器）按下不缩放，弹层贴着静止的按钮；
+   * 缩放也不做过渡，弹层打开那一刻按钮立即回到原大小。没有弹层的展开按钮照常缩放。
+   */
+  .astryx-button[aria-expanded='true'][aria-haspopup]:not([aria-haspopup='false']) {
+    transition-property: background-color, background-image, box-shadow, color, opacity;
+  }
+
+  .astryx-button[aria-expanded='true'][aria-haspopup]:not([aria-haspopup='false']):is(:active, [data-astryx-press='on']) {
+    transform: none;
+  }
+
+  /*
+   * 粗指针下，按压画在按钮自己的 ::before 上（文字下面一层）。抬手淡出的是这一层的 opacity，
+   * 浏览器在合成线程上播：页面脚本再忙，淡出也照常走完，不卡在满强度。
+   * 从按下到淡完一直留着合成层（will-change），缩放结束时不用重绘整个按钮。鼠标不受影响。
+   */
+  @media (pointer: coarse) {
+    .astryx-button:not(:disabled):not([aria-disabled='true'])[data-astryx-press] {
+      isolation: isolate;
+      background-image: none;
+      will-change: transform;
+    }
+
+    .astryx-button:not(:disabled):not([aria-disabled='true'])[data-astryx-press]::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      border-radius: inherit;
+      background-color: var(--astryx-color-overlay-pressed, light-dark(#05365919, #ffffff19));
+      pointer-events: none;
+    }
+
+    .astryx-button:not(:disabled):not([aria-disabled='true'])[data-astryx-press='fading']::before {
+      animation: astryx-button-press-release var(--astryx-duration-exit, 175ms) var(--astryx-ease-exit, cubic-bezier(0.3, 0, 0.6, 0.6)) both;
+    }
+  }
+
   .astryx-button:focus-visible {
     outline: 2px solid var(--astryx-button-focus, currentcolor);
     outline-offset: var(--button-focus-offset);
@@ -209,8 +265,25 @@
     box-shadow: var(--astryx-button-shadow-high);
   }
 
+  /*
+   * 同上游 #10256：用真实的盒子而不是 display: contents。macOS 15 之前的 WebKit
+   * 会丢掉经过 display: contents 元素算出的可访问名称，VoiceOver 把带标签的按钮读成无名按钮。
+   * 它是按钮里唯一的常规流子元素（spinner 叠层绝对定位，live region 视觉隐藏，提示层传送走），
+   * 所以直接继承按钮自己的弹性布局，内容位置不变；min-width: 0 让窄行里的标签照样能截断。
+   */
   .astryx-button__content {
-    display: contents;
+    /* 触控热区（touch-hit-area.css）以按钮为包含块，从内边距盒算起，这里补上按钮的边框。 */
+    --_hit-border: var(--_button-border-width);
+
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: inherit;
+    flex-wrap: inherit;
+    align-items: inherit;
+    align-self: stretch;
+    justify-content: inherit;
+    gap: inherit;
+    min-width: 0;
   }
 
   .astryx-button__icon,
@@ -340,6 +413,8 @@
     font-size: 14px;
     line-height: 1.4286;
     overflow-wrap: anywhere;
+    /* Text 和 Heading 在里面也按 anywhere 换行。 */
+    --_astryx-text-overflow-wrap: anywhere;
     pointer-events: auto;
     animation: astryx-button-tooltip-enter 130ms cubic-bezier(0.24, 1, 0.4, 1);
   }
@@ -347,6 +422,15 @@
   @media (prefers-reduced-motion: reduce) {
     .astryx-button {
       transition-duration: 0s;
+    }
+
+    /* 减少动态效果时按下不缩放，只靠按压色表示按下。 */
+    .astryx-button:not(:disabled):not([aria-disabled='true']):is(:active, [data-astryx-press='on']) {
+      transform: none;
+    }
+
+    .astryx-button:not(:disabled):not([aria-disabled='true'])[data-astryx-press='fading']::before {
+      animation-duration: min(var(--astryx-duration-exit, 175ms), 200ms);
     }
 
     .astryx-button[data-delay-spinner='true'] .astryx-button__spinner-overlay,
@@ -369,6 +453,17 @@
       color: ButtonText;
       background: ButtonFace;
       forced-color-adjust: auto;
+    }
+
+    /* 同上游 #7677：实心变体靠底色和页面分开，强制配色丢掉底色后要补一圈边；ghost 本来就是扁平的，不加。 */
+    /* 不能用透明边框：强制配色会把它换成系统色照样画出来。 */
+    .astryx-button[data-variant='ghost'] {
+      border: 0;
+    }
+
+    /* 危险按钮的边用 CanvasText，和上游主题约定一致；其余实心变体用 ButtonText。 */
+    .astryx-button[data-variant='destructive'] {
+      border-color: CanvasText;
     }
 
     .astryx-button:focus-visible {

@@ -37,6 +37,15 @@ describe('codeEditor', () => {
     wrapper.unmount()
   })
 
+  it('keeps code and line numbers left-to-right in a right-to-left page, and lets the placeholder take its own direction', () => {
+    const { wrapper } = mountEditor('', { placeholder: 'اكتب الشيفرة', hasLineNumbers: true })
+    const container = wrapper.get('.astryx-code-editor__container')
+    expect(container.attributes('dir')).toBe('ltr')
+    expect(container.find('.astryx-code-editor__gutter').exists()).toBe(true)
+    expect(container.find('[role="textbox"]').exists()).toBe(true)
+    expect(wrapper.get('.astryx-code-editor__placeholder').attributes('dir')).toBe('auto')
+  })
+
   it('emits controlled text changes and syncs an external value', async () => {
     const { wrapper, editor } = mountEditor('const x = 1;')
     editor.element.textContent = 'const x = 2;'
@@ -45,6 +54,21 @@ describe('codeEditor', () => {
     await wrapper.setProps({ value: 'const y = 3;' })
     await nextTick()
     expect(editor.element.textContent).toBe('const y = 3;')
+    wrapper.unmount()
+  })
+
+  it('keeps the typed text node and caret when the parent writes the new value back', async () => {
+    const { wrapper, editor, onChange } = mountEditor('const a')
+    const textNode = editor.element.firstChild as Text
+    textNode.appendData(' = 1')
+    setCaretAtTextOffset(editor.element, 11)
+    await editor.trigger('input')
+    expect(onChange).toHaveBeenLastCalledWith('const a = 1')
+
+    await wrapper.setProps({ value: 'const a = 1' })
+    await nextTick()
+    expect(editor.element.firstChild).toBe(textNode)
+    expect(caretTextOffset(editor.element)).toBe(11)
     wrapper.unmount()
   })
 

@@ -12,7 +12,7 @@
     --astryx-avatar-status-dot-neutral-foreground: var(--astryx-color-icon-secondary);
     --astryx-avatar-status-dot-info-background: var(--astryx-color-info);
     --astryx-avatar-status-dot-success-background: var(--astryx-color-success);
-    --astryx-avatar-status-dot-warning-background: #ffce2f;
+    --astryx-avatar-status-dot-warning-background: var(--astryx-color-warning);
     --astryx-avatar-status-dot-error-background: var(--astryx-color-error);
   }
 }

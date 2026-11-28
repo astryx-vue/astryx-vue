@@ -1,11 +1,48 @@
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 
 @layer astryx.components {
+  /* 说明框：和 Popover 的浮层面一样的底色、圆角和阴影，内容宽度不超过 320px，内边距另算。 */
+  .astryx-tour-callout {
+    box-sizing: content-box;
+    position: fixed;
+    z-index: var(--astryx-popover-z-index, 1000);
+    max-inline-size: min(320px, calc(var(--astryx-layer-max-inline-size, calc(100vw - 32px)) - 2 * var(--astryx-spacing-3, 12px)));
+    margin: 0;
+    padding: var(--astryx-spacing-3, 12px);
+    border-radius: var(--astryx-radius-container, 0.75rem);
+    background: var(--astryx-popover-background, var(--astryx-color-background-popover, #fff));
+    color: var(--astryx-popover-foreground, #171717);
+    box-shadow: var(--astryx-popover-shadow, var(--astryx-shadow-low, 0 2px 4px oklch(0 0 0 / 5%), 0 4px 8px oklch(0 0 0 / 10%)));
+    font-family: var(--astryx-font-family-body, Figtree, sans-serif);
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+  }
+
+  /* 还没对齐到目标时不显示；用透明而不是隐藏，焦点照样能落进来。 */
+  .astryx-tour-callout.is-placing {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* 步骤开始时说明框拿到焦点，键盘操作下显示焦点环。 */
+  .astryx-tour-callout:focus {
+    outline: none;
+  }
+
+  .astryx-tour-callout:focus-visible {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, currentcolor);
+    outline-offset: var(--astryx-focus-outline-offset, 2px);
+  }
+
   .astryx-tour-step {
     display: flex;
     flex-direction: column;
     gap: var(--astryx-spacing-3, 12px);
-    max-width: 320px;
+  }
+
+  .astryx-tour-step__header {
+    align-items: flex-start;
+    justify-content: space-between;
   }
 
   .astryx-tour-step__footer {

@@ -3,6 +3,8 @@
 @layer astryx.components {
   .astryx-resize-handle {
     position: relative;
+    /* 抓取区和握把留在旁边内容的上面：滑动时的 translate 让分隔条自成层叠上下文，会把它们自己的 z-index 关在里面。 */
+    z-index: 2;
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -64,6 +66,14 @@
     height: var(--resize-handle-hit-area, 16px);
   }
 
+  .astryx-resize-handle[data-position='overlay'][data-pane][data-direction='horizontal'] {
+    width: min(var(--resize-handle-hit-area, 16px), 50%);
+  }
+
+  .astryx-resize-handle[data-position='overlay'][data-pane][data-direction='vertical'] {
+    height: min(var(--resize-handle-hit-area, 16px), 50%);
+  }
+
   .astryx-resize-handle[data-disabled] {
     cursor: default;
     pointer-events: none;
@@ -89,52 +99,28 @@
     cursor: row-resize;
   }
 
-  /*
-   * 抓取区跟握把走同一套物理偏移。6.5px 是 (16px - 3px) / 2，用来把更宽的抓取区中心对齐握把。
-   * 这段位移在行内轴上，从右到左时要改号，否则抓取区会偏到握把旁边。
-   */
-  .astryx-resize-handle[data-direction='horizontal'] > .astryx-resize-handle__hit[data-bias='center'] {
+  /* 抓取区居中在分隔条上，握把摆在哪一侧都不改变它；握把自己另外接管指针。 */
+  .astryx-resize-handle[data-direction='horizontal'] > .astryx-resize-handle__hit {
     inset-inline-start: 50%;
+    width: min(var(--astryx-spacing-4, 16px), var(--_resize-pane-length, 100vw));
     transform: translateX(-50%);
   }
 
-  .astryx-resize-handle[data-direction='vertical'] > .astryx-resize-handle__hit[data-bias='center'] {
+  :is([dir='rtl'] .astryx-resize-handle[data-direction='horizontal'] > .astryx-resize-handle__hit) {
+    transform: translateX(50%);
+  }
+
+  .astryx-resize-handle[data-direction='vertical'] > .astryx-resize-handle__hit {
     inset-block-start: 50%;
+    height: min(var(--astryx-spacing-4, 16px), var(--_resize-pane-length, 100vh));
     transform: translateY(-50%);
-  }
-
-  .astryx-resize-handle[data-direction='horizontal'] > .astryx-resize-handle__hit[data-bias='start'] {
-    inset-inline-start: 0;
-    transform: translateX(calc(-1 * (3px + var(--astryx-spacing-1, 4px)) - 6.5px));
-  }
-
-  .astryx-resize-handle[data-direction='horizontal'] > .astryx-resize-handle__hit[data-bias='end'] {
-    inset-inline-start: 0;
-    transform: translateX(calc(1 * (3px + var(--astryx-spacing-1, 4px)) - 6.5px));
-  }
-
-  :is([dir='rtl'] .astryx-resize-handle[data-direction='horizontal'] > .astryx-resize-handle__hit[data-bias='start']) {
-    transform: translateX(calc(-1 * (3px + var(--astryx-spacing-1, 4px)) + 6.5px));
-  }
-
-  :is([dir='rtl'] .astryx-resize-handle[data-direction='horizontal'] > .astryx-resize-handle__hit[data-bias='end']) {
-    transform: translateX(calc(1 * (3px + var(--astryx-spacing-1, 4px)) + 6.5px));
-  }
-
-  .astryx-resize-handle[data-direction='vertical'] > .astryx-resize-handle__hit[data-bias='start'] {
-    inset-block-start: 0;
-    transform: translateY(calc(-1 * (3px + var(--astryx-spacing-1, 4px)) - 6.5px));
-  }
-
-  .astryx-resize-handle[data-direction='vertical'] > .astryx-resize-handle__hit[data-bias='end'] {
-    inset-block-start: 0;
-    transform: translateY(calc(1 * (3px + var(--astryx-spacing-1, 4px)) - 6.5px));
   }
 
   .astryx-resize-handle-pill {
     position: absolute;
     z-index: 2;
-    pointer-events: none;
+    touch-action: none;
+    user-select: none;
     border-radius: var(--astryx-radius-full, 9999px);
     background-color: var(--astryx-divider-color-subtle, #00000014);
     transition-property: opacity, background-color, transform;
@@ -144,19 +130,64 @@
   }
 
   .astryx-resize-handle[data-direction='horizontal'] > .astryx-resize-handle-pill {
+    cursor: col-resize;
     width: 3px;
     height: var(--astryx-spacing-8, 32px);
     top: 50%;
   }
 
   .astryx-resize-handle[data-direction='vertical'] > .astryx-resize-handle-pill {
+    cursor: row-resize;
     width: var(--astryx-spacing-8, 32px);
     height: 3px;
     inset-inline-start: 50%;
   }
 
+  /* 画出来的握把就是抓手，收起或禁用时不接管指针。 */
+  .astryx-resize-handle-pill[data-hidden],
+  .astryx-resize-handle[data-disabled] > .astryx-resize-handle-pill {
+    pointer-events: none;
+  }
+
   .astryx-resize-handle-pill[data-hidden] {
     opacity: 0;
+  }
+
+  .astryx-resize-handle[data-active] > .astryx-resize-handle-pill[data-hidden] {
+    pointer-events: auto;
+  }
+
+  /*
+   * 悬停才显示的握把可能落在抓取区之外。握把带一段看不见的延伸，只朝分隔条一侧伸出那一格空隙，
+   * 指针从抓取区移向握把的路上悬停不会丢。握把的偏移是物理方向，所以延伸也用物理方向。
+   */
+  .astryx-resize-handle-pill[data-hidden]::before {
+    content: '';
+    position: absolute;
+  }
+
+  .astryx-resize-handle[data-direction='horizontal'] > .astryx-resize-handle-pill[data-hidden][data-side='start']::before {
+    inset-block: 0;
+    left: 0;
+    right: calc(-1 * var(--astryx-spacing-1, 4px) - 1px);
+  }
+
+  .astryx-resize-handle[data-direction='horizontal'] > .astryx-resize-handle-pill[data-hidden][data-side='end']::before {
+    inset-block: 0;
+    right: 0;
+    left: calc(-1 * var(--astryx-spacing-1, 4px) - 1px);
+  }
+
+  .astryx-resize-handle[data-direction='vertical'] > .astryx-resize-handle-pill[data-hidden][data-side='start']::before {
+    inset-inline: 0;
+    top: 0;
+    bottom: calc(-1 * var(--astryx-spacing-1, 4px) - 1px);
+  }
+
+  .astryx-resize-handle[data-direction='vertical'] > .astryx-resize-handle-pill[data-hidden][data-side='end']::before {
+    inset-inline: 0;
+    bottom: 0;
+    top: calc(-1 * var(--astryx-spacing-1, 4px) - 1px);
   }
 
   .astryx-resize-handle[data-active] > .astryx-resize-handle-pill {

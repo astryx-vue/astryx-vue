@@ -13,6 +13,7 @@ import {
   Section,
   SegmentedControl,
   SegmentedControlItem,
+  StackItem,
   Text,
   Toolbar,
   useToast,
@@ -276,13 +277,14 @@ function getFileExtension(name: string): string {
 }
 
 const columns = computed(() => {
-  const cols: { items: FileSystemItem[], selectedId: string | null }[] = []
-  cols.push({ items: FILESYSTEM, selectedId: selectedPath.value[0] ?? null })
+  const cols: { name: string, items: FileSystemItem[], selectedId: string | null }[] = []
+  cols.push({ name: 'Home', items: FILESYSTEM, selectedId: selectedPath.value[0] ?? null })
   let currentItems: FileSystemItem[] = FILESYSTEM
   for (let i = 0; i < selectedPath.value.length; i++) {
     const selected = currentItems.find(item => item.id === selectedPath.value[i])
     if (selected?.children && selected.children.length > 0) {
       cols.push({
+        name: selected.name,
         items: selected.children,
         selectedId: selectedPath.value[i + 1] ?? null,
       })
@@ -339,10 +341,10 @@ function goBack(): void {
             :is-disabled="selectedPath.length === 0"
             @click="goBack"
           >
-            <Icon name="heroicons:chevron-left" size="sm" />
+            <Icon class="mirror-rtl" name="heroicons:chevron-left" size="sm" />
           </IconButton>
           <IconButton variant="ghost" size="sm" label="Go forward" is-disabled>
-            <Icon name="heroicons:chevron-right" size="sm" />
+            <Icon class="mirror-rtl" name="heroicons:chevron-right" size="sm" />
           </IconButton>
           <Text type="label">
             {{ currentFolderName }}
@@ -396,70 +398,73 @@ function goBack(): void {
       <VisuallyHidden as="h1">
         Files
       </VisuallyHidden>
-      <HStack class="column-row" height="100%">
-        <Section
+      <HStack height="100%" is-scrollable>
+        <StackItem
           v-for="(col, colIndex) in columns"
           :key="colIndex"
-          :width="240"
-          :padding="2"
-          variant="transparent"
-          :dividers="colIndex < columns.length - 1 || selectedFile != null ? ['end'] : undefined"
-          class="scrollable fixed-column"
+          is-scrollable
+          :aria-label="col.name"
+          class="fixed-column"
         >
-          <List density="compact" :has-dividers="false">
-            <ListItem
-              v-for="item in col.items"
-              :key="item.id"
-              :label="item.name"
-              :is-selected="col.selectedId === item.id"
-              :on-click="() => handleSelect(colIndex, item.id)"
-            >
-              <template #startContent>
-                <Icon
-                  :name="item.type === 'folder' ? 'heroicons:folder-solid' : 'heroicons:document'"
-                  :color="item.type === 'folder' ? 'accent' : 'secondary'"
-                  size="sm"
-                />
-              </template>
-              <template
-                v-if="item.type === 'folder' && item.children != null && item.children.length > 0"
-                #endContent
+          <Section
+            :width="240"
+            :height="'100%'"
+            :padding="2"
+            variant="transparent"
+            :dividers="colIndex < columns.length - 1 || selectedFile != null ? ['end'] : undefined"
+          >
+            <List density="compact" :has-dividers="false">
+              <ListItem
+                v-for="item in col.items"
+                :key="item.id"
+                :label="item.name"
+                :is-selected="col.selectedId === item.id"
+                :on-click="() => handleSelect(colIndex, item.id)"
               >
-                <Icon name="heroicons:chevron-right" size="xsm" color="secondary" />
-              </template>
-            </ListItem>
-          </List>
-        </Section>
+                <template #startContent>
+                  <Icon
+                    :name="item.type === 'folder' ? 'heroicons:folder-solid' : 'heroicons:document'"
+                    :color="item.type === 'folder' ? 'accent' : 'secondary'"
+                    size="sm"
+                  />
+                </template>
+                <template
+                  v-if="item.type === 'folder' && item.children != null && item.children.length > 0"
+                  #endContent
+                >
+                  <Icon class="mirror-rtl" name="heroicons:chevron-right" size="xsm" color="secondary" />
+                </template>
+              </ListItem>
+            </List>
+          </Section>
+        </StackItem>
 
-        <Section
-          v-if="selectedFile"
-          :padding="6"
-          variant="transparent"
-          class="scrollable detail-column"
-        >
-          <VStack :gap="4" h-align="center">
-            <Avatar :name="selectedFile.name" :size="96" />
-            <VStack :gap="1" h-align="center">
-              <Text type="label">
-                {{ selectedFile.name }}
-              </Text>
-              <Text type="supporting">
-                {{ getFileExtension(selectedFile.name) }} Document
-              </Text>
+        <StackItem v-if="selectedFile" size="fill" is-scrollable aria-label="Details" class="detail-column">
+          <Section :padding="6" variant="transparent">
+            <VStack :gap="4" h-align="center">
+              <Avatar :name="selectedFile.name" :size="96" />
+              <VStack :gap="1" h-align="center">
+                <Text type="label">
+                  {{ selectedFile.name }}
+                </Text>
+                <Text type="supporting">
+                  {{ getFileExtension(selectedFile.name) }} Document
+                </Text>
+              </VStack>
+              <MetadataList title="Information">
+                <MetadataListItem label="Created">
+                  March 28, 2026 at 2:15 PM
+                </MetadataListItem>
+                <MetadataListItem label="Modified">
+                  Yesterday, 10:27 PM
+                </MetadataListItem>
+                <MetadataListItem label="Kind">
+                  {{ getFileExtension(selectedFile.name) }} Document
+                </MetadataListItem>
+              </MetadataList>
             </VStack>
-            <MetadataList title="Information">
-              <MetadataListItem label="Created">
-                March 28, 2026 at 2:15 PM
-              </MetadataListItem>
-              <MetadataListItem label="Modified">
-                Yesterday, 10:27 PM
-              </MetadataListItem>
-              <MetadataListItem label="Kind">
-                {{ getFileExtension(selectedFile.name) }} Document
-              </MetadataListItem>
-            </MetadataList>
-          </VStack>
-        </Section>
+          </Section>
+        </StackItem>
       </HStack>
     </LayoutContent>
   </Layout>
@@ -470,21 +475,16 @@ function goBack(): void {
   height: 100dvh;
 }
 
-.column-row {
-  overflow-x: auto;
-  overflow-y: hidden;
-}
-
-.scrollable {
-  overflow-y: auto;
+:global([dir='rtl'] .mirror-rtl) {
+  transform: scaleX(-1);
 }
 
 .fixed-column {
   flex-shrink: 0;
 }
 
+/* 详情栏填满一行剩下的宽度，但不窄过 320px；再窄整行横向滚动。 */
 .detail-column {
-  flex-grow: 1;
   flex-shrink: 0;
   flex-basis: 320px;
 }

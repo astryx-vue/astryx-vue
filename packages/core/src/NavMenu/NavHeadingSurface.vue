@@ -2,9 +2,11 @@
 import type { NavLinkComponent } from '../NavItem/types.js'
 import type { NavMenuFocusRequest } from './context.js'
 import { computed, useSlots } from 'vue'
+import { hasSlotContent } from '../composables/internal/slotContent.js'
 import Icon from '../Icon/Icon.vue'
 import { useLinkComponent } from '../LinkProvider/context.js'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { navMessages } from '../locale/messages/nav.js'
 import { resolveNavRoot, safeNavHref } from '../NavItem/link.js'
 import NavDisclosure from './NavDisclosure.vue'
 import { resolveNavHeadingMode } from './navHeadingMode.js'
@@ -32,7 +34,7 @@ defineSlots<{
 }>()
 
 const slots = useSlots()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ nav: navMessages })
 const linkComponent = useLinkComponent()
 /** 自己的 `as` 优先，其次是 LinkProvider 给的默认链接组件。 */
 const customLink = computed(() => props.as ?? linkComponent.value)
@@ -50,6 +52,13 @@ const mode = computed(() => resolveNavHeadingMode({
 }))
 const headingRoot = computed(() => resolveNavRoot(safeHeadingHref.value, false, customLink.value))
 const logoName = computed(() => props.logoLabel || props.heading)
+/** 菜单按钮的名字带上看得见的标题，读屏时知道打开的是哪个产品或空间的菜单。 */
+const menuButtonLabel = computed(() => {
+  const nav = messages.value.nav
+  if (props.kind === 'top')
+    return nav.topNavOpenMenu(props.heading ? 'true' : 'false', props.heading ?? '')
+  return props.heading ? nav.headingOpenMenu(props.heading) : nav.openMenu
+})
 const logoIsLink = computed(() => Boolean(safeHeadingHref.value) && mode.value !== 'whole-link' && mode.value !== 'logo')
 
 const textProps = computed(() => ({
@@ -73,10 +82,31 @@ const textProps = computed(() => ({
     :to="safeHeadingHref && customLink != null ? safeHeadingHref : undefined"
     :aria-label="safeHeadingHref ? logoName : undefined"
   >
-    <span v-if="$slots.icon" :class="`${block}__icon`">
+    <span v-if="hasSlotContent($slots.icon)" :class="`${block}__icon`">
       <slot name="icon" />
     </span>
   </component>
+
+  <!-- 整个标题是链接、又带末端内容：末端内容常是控件，不能放进 <a>，所以链接和末端内容并排放在一个 div 里。 -->
+  <div
+    v-else-if="mode === 'whole-link' && kind === 'side' && hasSlotContent($slots.end)"
+    :class="[block, `${block}--link`]"
+  >
+    <component
+      :is="headingRoot"
+      :class="`${block}__whole-link`"
+      :href="safeHeadingHref"
+      :to="safeHeadingHref && customLink != null ? safeHeadingHref : undefined"
+    >
+      <span v-if="hasSlotContent($slots.icon)" :class="`${block}__icon`">
+        <slot name="icon" />
+      </span>
+      <NavHeadingText v-bind="textProps" />
+    </component>
+    <span :class="`${block}__end`">
+      <slot name="end" />
+    </span>
+  </div>
 
   <component
     :is="headingRoot"
@@ -85,11 +115,11 @@ const textProps = computed(() => ({
     :href="safeHeadingHref"
     :to="safeHeadingHref && customLink != null ? safeHeadingHref : undefined"
   >
-    <span v-if="$slots.icon" :class="`${block}__icon`">
+    <span v-if="hasSlotContent($slots.icon)" :class="`${block}__icon`">
       <slot name="icon" />
     </span>
     <NavHeadingText v-bind="textProps" />
-    <span v-if="$slots.end" :class="`${block}__end`">
+    <span v-if="hasSlotContent($slots.end)" :class="`${block}__end`">
       <slot name="end" />
     </span>
   </component>
@@ -97,6 +127,8 @@ const textProps = computed(() => ({
   <NavDisclosure
     v-else-if="mode === 'trigger' || mode === 'mixed'"
     hover
+    overlap
+    :show-delay="0"
     :label="heading || logoName"
     :panel-class="`${block}__panel`"
   >
@@ -104,7 +136,7 @@ const textProps = computed(() => ({
       <div :class="block" :data-open="isOpen || undefined">
         <component
           :is="headingRoot"
-          v-if="logoIsLink && $slots.icon"
+          v-if="logoIsLink && hasSlotContent($slots.icon)"
           :class="`${block}__icon`"
           :href="safeHeadingHref"
           :to="safeHeadingHref && customLink != null ? safeHeadingHref : undefined"
@@ -113,7 +145,7 @@ const textProps = computed(() => ({
         >
           <slot name="icon" />
         </component>
-        <span v-else-if="$slots.icon" :class="`${block}__icon`">
+        <span v-else-if="hasSlotContent($slots.icon)" :class="`${block}__icon`">
           <slot name="icon" />
         </span>
         <NavHeadingText v-bind="textProps" :independent="mode === 'mixed'">
@@ -121,7 +153,7 @@ const textProps = computed(() => ({
             <button
               type="button"
               :class="`${block}__chevron`"
-              :aria-label="messages.nav.openMenu"
+              :aria-label="menuButtonLabel"
               :aria-expanded="isOpen ? 'true' : 'false'"
               :aria-controls="panelId"
               aria-haspopup="menu"
@@ -130,14 +162,14 @@ const textProps = computed(() => ({
             </button>
           </template>
         </NavHeadingText>
-        <span v-if="$slots.end" :class="`${block}__end`">
+        <span v-if="hasSlotContent($slots.end)" :class="`${block}__end`">
           <slot name="end" />
         </span>
       </div>
     </template>
     <template #default="{ close, focusRequest }">
       <button type="button" :class="[block, `${block}--echo`]" @click="close()">
-        <span v-if="$slots.icon" :class="`${block}__icon`">
+        <span v-if="hasSlotContent($slots.icon)" :class="`${block}__icon`">
           <slot name="icon" />
         </span>
         <NavHeadingText v-bind="textProps">
@@ -157,7 +189,7 @@ const textProps = computed(() => ({
   <div v-else :class="block">
     <component
       :is="headingRoot"
-      v-if="logoIsLink && $slots.icon"
+      v-if="logoIsLink && hasSlotContent($slots.icon)"
       :class="`${block}__icon`"
       :href="safeHeadingHref"
       :to="safeHeadingHref && customLink != null ? safeHeadingHref : undefined"
@@ -165,11 +197,11 @@ const textProps = computed(() => ({
     >
       <slot name="icon" />
     </component>
-    <span v-else-if="$slots.icon" :class="`${block}__icon`">
+    <span v-else-if="hasSlotContent($slots.icon)" :class="`${block}__icon`">
       <slot name="icon" />
     </span>
     <NavHeadingText v-bind="textProps" :independent="mode === 'links'" />
-    <span v-if="$slots.end" :class="`${block}__end`">
+    <span v-if="hasSlotContent($slots.end)" :class="`${block}__end`">
       <slot name="end" />
     </span>
   </div>

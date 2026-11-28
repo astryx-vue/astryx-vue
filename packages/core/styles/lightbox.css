@@ -6,7 +6,9 @@
     inset: 0;
     width: 100vw;
     max-width: none;
+    /* 动态视口：手机浏览器实际露出来的高度。100vh 按收起工具栏算，Safari 底栏会盖住图注。 */
     height: 100vh;
+    height: 100dvh;
     max-height: none;
     margin: 0;
     padding: 0;
@@ -16,82 +18,146 @@
     outline: none;
   }
 
+  /* 下拉关闭和它的松手动画期间，`--_lightbox-backdrop-filter` 关掉模糊：每帧重绘整屏模糊会掉帧。 */
   .astryx-lightbox::backdrop {
     background-color: var(--astryx-color-overlay, light-dark(#00000080, #000000cc));
-    backdrop-filter: blur(2px);
+    backdrop-filter: var(--_lightbox-backdrop-filter, blur(2px));
   }
 
   .astryx-lightbox__container {
     position: relative;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     width: 100%;
     height: 100%;
   }
 
+  /* 舞台是翻页器的视口，单张照片也是。它铺满灯箱，每一页才有自己的尺寸。 */
   .astryx-lightbox__media {
     display: flex;
     flex-direction: column;
     align-items: center;
+    align-self: stretch;
+    flex-grow: 1;
+    min-height: 0;
     max-width: 100%;
     max-height: 100%;
-    min-height: 0;
     overflow: hidden;
   }
 
-  .astryx-lightbox__frame {
+  .astryx-lightbox__viewport {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    max-width: 100%;
-    max-height: 100%;
+    align-self: stretch;
+    flex: 1 1 0;
     min-height: 0;
     overflow: hidden;
     user-select: none;
     cursor: default;
   }
 
-  .astryx-lightbox__frame[data-zoomable]:not([data-zoomed]) {
+  /* 往下拖着关闭的照片画到包住它的盒子外面去。 */
+  .astryx-lightbox__media:has([data-zoom-dismissing]),
+  .astryx-lightbox__viewport:has([data-zoom-dismissing]) {
+    overflow: visible;
+  }
+
+  /* 适应大小时放大镜光标只在照片上方显示；照片旁边点一下关闭灯箱。 */
+  .astryx-lightbox__viewport[data-zoomable][data-lightbox-over-photo] {
     cursor: zoom-in;
   }
 
-  .astryx-lightbox__frame[data-zoomed] {
+  .astryx-lightbox__viewport[data-zoomed] {
     cursor: grab;
   }
 
-  .astryx-lightbox__frame[data-dragging] {
+  .astryx-lightbox__viewport[data-zoomed]:has([data-zoom-dragging]) {
     cursor: grabbing;
   }
 
+  /*
+   * 每一页共用两行：照片的行和图注区域的行（subgrid）。图注区域每页一样高，
+   * 所以每张照片都在同一个盒子里居中，翻页时照片不会忽大忽小。
+   */
+  .astryx-lightbox__track {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: minmax(0, 1fr) auto;
+  }
+
+  /*
+   * 照片的行接管舞台自己的捏合、平移和双击。祖先的 touch-action 禁掉的，后代放不开，
+   * 所以轨道只留页面自己的捏合缩放，捏在控件或图注上仍然缩放页面。
+   * 触屏下不能缩放的照片把单指拖动留给下拉关闭。
+   */
+  .astryx-lightbox__track[data-zoom-target],
+  .astryx-lightbox__track[data-dismiss-target] {
+    touch-action: pinch-zoom;
+  }
+
+  /*
+   * 每项一页，和舞台一样大，放在 序号 ×（宽 + 页距）处。所有页叠在轨道唯一的一列里，按各自的起始偏移错开。
+   * 每页一个图层：主线程忙时，滑进来的页面要先整页画好再动。
+   */
+  .astryx-lightbox__page {
+    position: relative;
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: subgrid;
+    min-height: 0;
+    will-change: transform;
+  }
+
+  /* 页面的照片盒子：当前页的缩放舞台，在照片的行里。 */
+  .astryx-lightbox__frame {
+    grid-row: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  /* 下拉关闭的照片画在盒子外面、图注区域上面、控件下面。 */
+  .astryx-lightbox__frame[data-zoom-dismissing] {
+    z-index: 1;
+    overflow: visible;
+  }
+
+  /* 照片盒子是缩放按钮：光标跟着舞台走，不用按钮的手形。 */
+  .astryx-lightbox__frame[data-zoomable] {
+    touch-action: none;
+    cursor: inherit;
+  }
+
+  /* 盒子会裁切，焦点环画在边里面。 */
   .astryx-lightbox__frame:focus-visible {
     outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, var(--astryx-color-accent, #0074e2));
-    outline-offset: var(--astryx-focus-outline-offset, 3px);
+    outline-offset: calc(-1 * var(--astryx-focus-outline-width, 2px));
   }
 
   .astryx-lightbox__image,
   .astryx-lightbox__video {
     display: block;
-    max-width: min(100vw, 100%);
-    max-height: calc(100vh - 7rem);
+    max-width: 100%;
+    max-height: 100%;
     object-fit: contain;
     outline: none;
   }
 
+  /* 缩放舞台以照片左上角为原点缩放，用独立的 scale 和 translate 属性移动它。 */
   .astryx-lightbox__image {
     pointer-events: none;
-    transform-origin: center center;
-    transition: transform 200ms ease-out;
-  }
-
-  .astryx-lightbox__image[data-dragging] {
-    transition: none;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .astryx-lightbox__image {
-      transition-duration: 0ms;
-    }
+    transform-origin: 0 0;
   }
 
   .astryx-lightbox__caption {
@@ -106,11 +172,99 @@
     text-align: center;
   }
 
-  .astryx-lightbox__close,
-  .astryx-lightbox__nav,
+  /*
+   * 图集每一页的照片下面都有一条两行高的图注区域，不管图注长短，照片区域在每页都一样大，
+   * 翻页时照片不会忽大忽小。没有图注的页面也留着这块空间，只是不画底色。
+   * 单张照片有图注时用同一条区域和底色；没有图注就没有这条区域。
+   */
+  .astryx-lightbox {
+    --_lightbox-caption-band-padding: var(--astryx-spacing-2, 8px);
+    --_lightbox-caption-band-height: calc(2 * var(--astryx-text-body-size, 1rem) * var(--astryx-text-body-leading, 1.4286));
+  }
+
+  .astryx-lightbox__caption-band {
+    grid-row: 2;
+    justify-self: center;
+    position: relative;
+    flex-shrink: 0;
+    box-sizing: content-box;
+    width: min(600px, 100vw);
+    height: var(--_lightbox-caption-band-height);
+    padding-block: var(--_lightbox-caption-band-padding) calc(var(--_lightbox-caption-band-padding) + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* 图注在自己的底色上（控件底色的 90%），压在任何照片上都保持 4.5:1。展开时从底部往上盖住照片。 */
+  .astryx-lightbox__caption-panel {
+    position: absolute;
+    inset-inline: 0;
+    bottom: calc(var(--_lightbox-caption-band-padding) + env(safe-area-inset-bottom, 0px));
+    display: flex;
+    align-items: flex-end;
+    gap: var(--astryx-spacing-1, 4px);
+    padding-inline: var(--astryx-spacing-3, 12px);
+    border-radius: var(--astryx-radius-element, 0.625rem);
+    background-color: color-mix(in srgb, var(--astryx-color-overlay, #000000cc) 90%, transparent);
+    color: var(--astryx-color-on-dark, #fff);
+    font-size: var(--astryx-text-body-size, 1rem);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+  }
+
+  .astryx-lightbox__caption--band {
+    flex: 1;
+    min-width: 0;
+    max-width: none;
+    padding: 0;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    font-size: inherit;
+    line-height: inherit;
+    text-align: start;
+  }
+
+  .astryx-lightbox__caption-band[data-expanded] .astryx-lightbox__caption--band {
+    display: block;
+    max-height: 50vh;
+    overflow-y: auto;
+    -webkit-line-clamp: unset;
+  }
+
+  /* 「更多」「收起」是图注里的行内链接：用图注自己的字体和颜色，下划线把它和正文区分开。 */
+  .astryx-lightbox__caption-toggle {
+    flex-shrink: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .astryx-lightbox__caption-toggle:focus-visible {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, var(--astryx-color-accent, #0074e2));
+    outline-offset: 2px;
+  }
+
+  /*
+   * 控件放在盖住灯箱、点击能穿过去的图层里。下拉关闭时整层变淡，图层自己不带过渡，免得跟不上手指。
+   * 它们压在舞台上面，连被拖着关闭的照片也压住。
+   */
+  .astryx-lightbox__chrome {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .astryx-lightbox__control,
   .astryx-lightbox__counter {
     position: absolute;
     z-index: 1;
+    display: inline-flex;
+    pointer-events: auto;
     color: var(--astryx-color-on-dark, #fff);
     --astryx-button-ghost-foreground: var(--astryx-color-on-dark, #fff);
   }
@@ -137,8 +291,21 @@
     top: var(--astryx-spacing-3, 12px);
     inset-inline-start: var(--astryx-spacing-3, 12px);
     margin: 0;
-    color: var(--astryx-color-on-dark, #fff);
     font-size: var(--astryx-text-body-size, 1rem);
     line-height: var(--astryx-text-body-leading, 1.4286);
+  }
+
+  /*
+   * 能缩放时照片可能放大到控件下面。灯箱自己的半透明底色让控件在任何照片上都看得清：
+   * 按钮 3:1，计数文字 4.5:1。主题改的是按钮，不改这层底色。
+   */
+  .astryx-lightbox[data-has-zoom] .astryx-lightbox__control,
+  .astryx-lightbox[data-has-zoom] .astryx-lightbox__counter {
+    border-radius: var(--astryx-radius-full, 9999px);
+    background-color: color-mix(in srgb, var(--astryx-color-on-light, #171717) 75%, transparent);
+  }
+
+  .astryx-lightbox[data-has-zoom] .astryx-lightbox__counter {
+    padding-inline: var(--astryx-spacing-2, 8px);
   }
 }

@@ -18,13 +18,13 @@ footer: false
       <tr><td><code>min</code></td><td><code>number | null</code></td><td>—</td><td>最小值。离开或按 Enter 时，比它小的输入收到这个值。输入过程中先标成无效。</td></tr>
       <tr><td><code>max</code></td><td><code>number | null</code></td><td>—</td><td>最大值。离开或按 Enter 时，比它大的输入收到这个值。输入过程中先标成无效。</td></tr>
       <tr><td><code>step</code></td><td><code>number | null</code></td><td><code>1</code></td><td>每次增减的步长。</td></tr>
-      <tr><td><code>hasNumberSteppers</code></td><td><code>boolean</code></td><td><code>false</code></td><td>在输入框末尾显示加、减按钮。这一步不会改变值时，对应按钮置灰。</td></tr>
+      <tr><td><code>hasNumberSteppers</code></td><td><code>boolean</code></td><td><code>false</code></td><td>在输入框末尾显示加、减按钮。这一步不会改变值时，对应按钮带 <code>aria-disabled</code>。用鼠标或笔按住按钮会重复步进，松手时只提交一次。触屏（粗指针）上按钮会隐藏，仍可直接输入和用方向键步进。</td></tr>
       <tr><td><code>isWheelEnabled</code></td><td><code>boolean</code></td><td><code>true</code></td><td>输入框聚焦时，滚轮是否改变值。页面滚动应该优先的场景把它关掉。</td></tr>
       <tr><td><code>isIntegerOnly</code></td><td><code>boolean</code></td><td><code>false</code></td><td>只提交整数。写小数时文字留在框里，离开输入框后丢弃。键盘也切到数字键盘。</td></tr>
       <tr><td><code>formatValue</code></td><td><code>(value: number) =&gt; string</code></td><td>—</td><td>未聚焦时显示的文本，例如 <code>(v) =&gt; `${v} 件`</code>。聚焦后显示原始数字方便编辑，格式化后的文本通过 <code>aria-valuetext</code> 暴露给读屏。</td></tr>
       <tr><td><code>units</code></td><td><code>string | null</code></td><td>—</td><td>显示在输入框末尾的单位，例如 %。</td></tr>
       <tr><td><code>hasClear</code></td><td><code>boolean</code></td><td><code>false</code></td><td>有值时显示清除按钮。提示只说「清除」，读屏名称带字段名。清除后值为 <code>null</code>。把内容删空后离开，只有开了这个按钮才会提交 <code>null</code>，否则回到原值。</td></tr>
-      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否禁用。</td></tr>
+      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否禁用。禁用的字段仍留在 Tab 顺序里（带 <code>aria-disabled</code>），只读、不能编辑或步进，除聚焦和失焦外不运行调用方的处理函数，值也不参与表单提交。</td></tr>
       <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>禁用原因。与 <code>isDisabled</code> 一起用时，悬停或键盘聚焦会显示提示；输入框通过 <code>aria-disabled</code> 保持可聚焦，不会被移出 Tab 顺序。</td></tr>
       <tr><td><code>isReadOnly</code></td><td><code>boolean</code></td><td><code>false</code></td><td>值照常显示、照常提交，但不能编辑。只读时方向键、滚轮、加减按钮全部关闭。和 <code>isDisabled</code> 同时设置时以禁用以准。</td></tr>
       <tr><td><code>isOptional</code></td><td><code>boolean</code></td><td><code>false</code></td><td>字段可选。与 <code>isRequired</code> 互斥。</td></tr>
@@ -35,8 +35,9 @@ footer: false
       <tr><td><code>startIcon</code></td><td><code>Component</code></td><td>—</td><td>输入框起始位置的图标。也可以用 <code>icon</code> 插槽。</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>尺寸。</td></tr>
       <tr><td><code>width</code></td><td><code>number | string</code></td><td>—</td><td>整个字段的宽度，标签和状态说明一起对齐。数字按像素算，字符串原样使用，例如 <code>'100%'</code>。</td></tr>
-      <tr><td><code>status</code></td><td><code>'default' | 'error' | 'warning' | 'success' | { type, message? }</code></td><td>—</td><td>校验状态。对象带 <code>message</code> 时，说明会显示在字段下方。</td></tr>
+      <tr><td><code>status</code></td><td><code>'default' | 'error' | 'warning' | 'success' | { type, message? }</code></td><td>—</td><td>校验状态。对象带 <code>message</code> 时，说明显示在字段下方。回车或失焦留下提交不了的文字时，字段用自己的错误说明顶替 <code>status</code>；带说明的 <code>error</code> 状态会顶替字段的说明，<code>warning</code>、<code>success</code>，或没有说明的 <code>error</code> 不会。</td></tr>
       <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'attached'</code></td><td>状态说明的呈现方式。<code>'tooltip'</code> 不显示说明框，改为从状态图标里点开。</td></tr>
+      <tr><td><code>entryErrorBehavior</code></td><td><code>'complete' | 'blur-or-enter'</code></td><td>—</td><td>让一个表单把同一个值传给里面所有的日期、时间和数字字段。一个数只有回车或失焦才算打完，所以两个值对数字框的时机相同：打字时什么都不亮，回车或失焦时才亮出被拒的输入。它不会写到 input 上，数字框也不读 FormLayout 的默认值。</td></tr>
       <tr><td><code>htmlName</code></td><td><code>string</code></td><td>—</td><td>表单字段名。</td></tr>
       <tr><td><code>autoComplete</code></td><td><code>string</code></td><td>—</td><td>原生 <code>autocomplete</code> 属性。</td></tr>
       <tr><td><code>hasAutoFocus</code></td><td><code>boolean</code></td><td><code>false</code></td><td>挂载后自动聚焦输入框。</td></tr>
@@ -65,6 +66,7 @@ footer: false
       <tr><td><code>blur</code></td><td><code>event: FocusEvent</code></td><td>输入框失去焦点时触发。</td></tr>
       <tr><td><code>enter</code></td><td><code>event: KeyboardEvent</code></td><td>在输入框里按回车时触发。</td></tr>
       <tr><td><code>keydown</code></td><td><code>event: KeyboardEvent</code></td><td>输入框按键时触发，方向键步进之前发出。在回调里调用 <code>preventDefault()</code> 可以阻止这次步进。</td></tr>
+      <tr><td><code>entryErrorChange</code></td><td><code>error: { kind, text, value? } | null</code></td><td>字段对打进来的文字的拒绝开始、改变、结束（<code>null</code>）时触发，拒绝还在时字段卸载也会带 <code>null</code> 报一次。一个数只有回车或失焦才算打完，所以拒绝从那一刻开始，打字时不会触发。<code>kind</code> 是 <code>unreadable</code>（读不成数字）、<code>fractional</code>（<code>isIntegerOnly</code> 字段里带小数）或 <code>outOfRange</code>（<code>min</code> 大于 <code>max</code> 时的任何数）；<code>text</code> 是打进来的文字，<code>value</code> 是它指向的数（<code>fractional</code>、<code>outOfRange</code> 带）。超出普通范围的数在提交时夹到边界，不算拒绝。监听它后，带说明的 <code>error</code> 状态可以替字段措辞。</td></tr>
     </tbody>
   </table>
 </div>

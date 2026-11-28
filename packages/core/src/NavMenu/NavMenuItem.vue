@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import type { NavMenuItemEmits, NavMenuItemProps, NavMenuItemSlots } from './types.js'
 import { computed, inject } from 'vue'
+import { hasSlotContent } from '../composables/internal/slotContent.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { readLayerScoped } from '../layer/scopedProvide.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
 import { isNavigableHref, resolveNavRoot } from '../NavItem/link.js'
-import { navMenuCloseKey, navMenuKey } from './context.js'
+import { navMenuCloseKey, navMenuKey, navMenuPickKey } from './context.js'
 import '../../styles/nav-menu.css'
 
 defineOptions({ name: 'AstryxNavMenuItem' })
@@ -21,6 +22,7 @@ defineSlots<NavMenuItemSlots>()
 
 const menu = readLayerScoped(navMenuKey)
 const closeMenu = inject(navMenuCloseKey, undefined)
+const picksClose = inject(navMenuPickKey, undefined)
 const linkComponent = useLinkComponent()
 const size = computed(() => menu?.size.value ?? 'md')
 const isLink = computed(() => isNavigableHref(props.href, props.isDisabled))
@@ -39,6 +41,9 @@ function onClick(event: MouseEvent): void {
   const preventedBeforeItem = event.defaultPrevented
   emit('click', event)
   if (props.keepOpen || (!preventedBeforeItem && event.defaultPrevented))
+    return
+  // 顶栏菜单里鼠标选中不关，菜单靠指针移开收起。
+  if (picksClose != null && !picksClose())
     return
   closeMenu?.()
   menu?.close()
@@ -60,7 +65,7 @@ function onClick(event: MouseEvent): void {
     v-bind="isDisabled ? {} : pressableProps"
     @click="onClick"
   >
-    <span v-if="iconClass || $slots.icon" class="astryx-nav-menu-item__icon" aria-hidden="true">
+    <span v-if="iconClass || hasSlotContent($slots.icon)" class="astryx-nav-menu-item__icon" aria-hidden="true">
       <slot name="icon">
         <span v-if="iconClass" class="astryx-nav-menu-item__glyph" :class="iconClass" />
       </slot>
@@ -69,7 +74,7 @@ function onClick(event: MouseEvent): void {
       <span class="astryx-nav-menu-item__label">{{ label }}</span>
       <span v-if="description" class="astryx-nav-menu-item__description">{{ description }}</span>
     </span>
-    <span v-if="$slots.end" class="astryx-nav-menu-item__end">
+    <span v-if="hasSlotContent($slots.end)" class="astryx-nav-menu-item__end">
       <slot name="end" />
     </span>
   </component>

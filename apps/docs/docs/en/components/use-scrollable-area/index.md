@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useScrollableAreaActivityLog } from '../../../../components/demos/use-scrollable-area'
 </script>
 
 ## Usage
@@ -48,3 +49,14 @@ const { content, viewport, viewportAttrs, viewportStyle } = useScrollableArea({
 | <Badge variant="success">Do</Badge> | Keep `overscroll` at `allow` unless a finished gesture should stop at this box. |
 | <Badge variant="error">Don't</Badge> | Write your own `overflow` on the viewport; `viewportStyle` picks `clip` or `auto` from the measurement. |
 | <Badge variant="error">Don't</Badge> | Wrap it in another overflow container. One viewport should own the scroll. |
+
+## Examples
+
+Common configurations, variations, and states.
+
+<DemoExample
+  :demo="useScrollableAreaActivityLog"
+  description="A fixed-height Activity log panel whose entries scroll up and down. useScrollableArea makes the panel a keyboard tab stop only when its entries overflow, reports which edges have more entries so a top or bottom shadow shows only there, and keeps a scroll that reaches the end from scrolling the page. Add entry flips the panel from not scrollable to scrollable."
+  locale="en"
+  title="useScrollableArea — Activity Log Panel"
+/>

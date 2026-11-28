@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ChatEmojiPickerEmits, ChatEmojiPickerProps, ChatEmojiPickerSlots } from './types.js'
-import { Popover, TextInput, useAstryxMessages, useGridFocus, useTranslator } from '@astryx-vue/core'
+import { emojiPickerMessages, Popover, TextInput, useComponentMessages, useGridFocus } from '@astryx-vue/core'
 import { computed, ref, useTemplateRef } from 'vue'
 import { CHAT_EMOJI_COLUMNS, DEFAULT_CHAT_EMOJIS } from './emojis.js'
 import { filterEmojis } from './filterEmojis.js'
@@ -12,8 +12,7 @@ const props = defineProps<ChatEmojiPickerProps>()
 const emit = defineEmits<ChatEmojiPickerEmits>()
 defineSlots<ChatEmojiPickerSlots>()
 
-const { t } = useTranslator()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ emojiPicker: emojiPickerMessages })
 const query = ref('')
 const isOpen = ref(false)
 const panel = useTemplateRef<HTMLDivElement>('panel')
@@ -26,9 +25,9 @@ function setGrid(element: unknown): void {
 const options = computed(() => props.emojis ?? DEFAULT_CHAT_EMOJIS)
 const visible = computed(() => filterEmojis(options.value, query.value))
 const dialogLabel = computed(() => props.label ?? messages.value.emojiPicker.pickLabel)
-const searchText = computed(() => props.searchLabel ?? t('@astryx.emojiPicker.searchLabel'))
-const gridLabel = computed(() => t('@astryx.emojiPicker.label'))
-const emptyText = computed(() => t('@astryx.emojiPicker.noResults', { query: query.value.trim() }))
+const searchText = computed(() => props.searchLabel ?? messages.value.emojiPicker.searchLabel)
+const gridLabel = computed(() => messages.value.emojiPicker.label)
+const emptyText = computed(() => messages.value.emojiPicker.noResults(query.value.trim()))
 
 function onOpenChange(open: boolean): void {
   isOpen.value = open

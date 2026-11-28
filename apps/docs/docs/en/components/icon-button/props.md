@@ -17,7 +17,7 @@ IconButton inherits most Button props but does not expose <code>isIconOnly</code
       <tr><td><code>variant</code></td><td><code>'primary' | 'secondary' | 'ghost' | 'destructive'</code></td><td><code>'secondary'</code></td><td>Visual hierarchy and semantic variant.</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>Square control size.</td></tr>
       <tr><td><code>elevation</code></td><td><code>'none' | 'low' | 'med' | 'high'</code></td><td><code>'none'</code></td><td>Resting shadow depth for a standalone floating button.</td></tr>
-      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disables interaction. A tooltip switches this to aria-disabled so focus remains available.</td></tr>
+      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disables interaction. The button never uses the native disabled attribute: it is marked aria-disabled and stays in the Tab order, so keyboard and screen-reader users can still reach it.</td></tr>
       <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows loading state, sets aria-busy, and disables non-interruptible activation.</td></tr>
       <tr><td><code>isInterruptible</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Allows clickAction to run again while earlier work is pending.</td></tr>
       <tr><td><code>clickAction</code></td><td><code>(event: MouseEvent) =&gt; void | Promise&lt;void&gt;</code></td><td>—</td><td>Action function that automatically drives pending state.</td></tr>
@@ -60,6 +60,7 @@ The `click` event passes a `MouseEvent`.
 
 `IconButton` exposes `element`.
 Its type is `HTMLButtonElement | HTMLAnchorElement | HTMLElement | null`.
+In link mode (with `href` and not disabled) it is the link element: the anchor, or the root element of the `as` link component. Otherwise it is the button.
 
 ## Native attributes
 

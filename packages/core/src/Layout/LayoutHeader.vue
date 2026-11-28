@@ -2,7 +2,7 @@
 import type { CSSProperties, StyleValue } from 'vue'
 import type { LayoutHeaderProps, LayoutHeaderSlots } from './types.js'
 import { computed, useAttrs, useTemplateRef } from 'vue'
-import { useLayoutDividers } from './context.js'
+import { useLayoutContainer, useLayoutDividers } from './context.js'
 import { regionPaddingStyle } from './regionPadding.js'
 import { formatSize } from './size.js'
 import '../../styles/layout.css'
@@ -20,6 +20,7 @@ defineSlots<LayoutHeaderSlots>()
 const attrs = useAttrs()
 const root = useTemplateRef<HTMLDivElement>('root')
 const dividers = useLayoutDividers()
+const container = useLayoutContainer()
 
 defineExpose({ element: root })
 
@@ -44,6 +45,7 @@ const innerStyle = computed(() => regionPaddingStyle('--_layout-header', props.p
     :role="role"
     :aria-label="label"
     :data-divider="hasDivider || undefined"
+    :data-container="container ?? undefined"
   >
     <div
       class="astryx-layout-header__inner"

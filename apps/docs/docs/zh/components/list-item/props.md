@@ -17,10 +17,12 @@ footer: false
 <tr><td><code>href</code></td><td><code>string</code></td><td>—</td><td>链接地址。行里会渲染一个链接元素。</td></tr>
 <tr><td><code>target</code></td><td><code>'_blank' | '_self'</code></td><td>—</td><td>链接在哪打开，只有写了 <code>href</code> 才有用。<code>_blank</code> 会自动补上 <code>noopener</code> 和 <code>noreferrer</code>。</td></tr>
 <tr><td><code>rel</code></td><td><code>string</code></td><td>—</td><td>链接的 rel 值，会和自动补的那些合在一起。</td></tr>
-<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>禁用。这一行不动了，内容变淡，同时写上 <code>aria-disabled="true"</code>。</td></tr>
-<tr><td><code>isSelected</code></td><td><code>boolean</code></td><td><code>false</code></td><td>选中状态。行的角色支持时写成 <code>aria-selected="true"</code>，不支持时写成 <code>aria-current="true"</code>。你自己传的 <code>aria-current</code> 优先。</td></tr>
-<tr><td><code>swipeActions</code></td><td><code>ItemSwipeActions</code></td><td>—</td><td>手指横滑能露出哪些操作，左右各一组，每项是 <code>{ label, icon?, onActivate, isDisabled?, variant?, hasRemoval? }</code>。鼠标不会触发这次拖动。每个操作都要在行里再有个入口，否则键盘和鼠标用户够不着。</td></tr>
-<tr><td><code>swipeBehavior</code></td><td><code>'reveal' | 'commit'</code></td><td><code>'reveal'</code></td><td><code>reveal</code> 松手后行停在滑开的位置，拖得够远就触发最外面那个操作；<code>commit</code> 直接把行滑出去，松手就触发，什么都不留在屏幕上。</td></tr>
+<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>禁用。这一行不动了，内容变淡，同时写上 <code>aria-disabled="true"</code>。禁用的按钮或链接仍能用键盘聚焦，但不会触发。</td></tr>
+<tr><td><code>isSelected</code></td><td><code>boolean</code></td><td><code>false</code></td><td>选中状态。行的角色支持时写成 <code>aria-selected="true"</code>，不支持时写成 <code>aria-current="true"</code>。你自己传的 <code>aria-current</code> 优先。在可点的行（有 <code>onClick</code>、<code>href</code> 或 <code>interactiveRef</code>）里，标记写在拿到焦点的那个元素上，读屏器就在那里念出来。</td></tr>
+<tr><td><code>itemKey</code></td><td><code>string | number</code></td><td>—</td><td>行在数据里的键，是列表 <code>animatedLayout</code> 认这一行的身份，没有它的行直接变。在可重排的列表里，它就是 <code>onReorder</code> 报出来、<code>isReorderable</code> 被问到的那个键；没有它的行没有重排手柄。它和 Vue 自己的 <code>key</code> 是两回事。</td></tr>
+<tr><td><code>swipe</code></td><td><code>Swipe</code></td><td>—</td><td>行的横滑操作，用 <code>createSwipe</code> 造。手指、笔或触控板双指横滑能把行拖开露出它们，鼠标不行。每个处理函数收到操作的 <code>id</code> 和这一行的 <code>itemKey</code>。换成 id 相同的新值，开着的行保持原样；id 变了行就合上。每个操作都要在行里再有个入口，否则键盘和鼠标用户够不着。</td></tr>
+<tr><td><code>swipeActions</code></td><td><code>ItemSwipeActions</code></td><td>—</td><td>已弃用：改用 <code>swipe</code> 配 <code>createSwipe</code>。手指横滑能露出哪些操作，左右各一组，每项是 <code>{ label, icon?, onActivate, isDisabled?, variant?, hasRemoval? }</code>。鼠标不会触发这次拖动。每个操作都要在行里再有个入口，否则键盘和鼠标用户够不着。</td></tr>
+<tr><td><code>swipeBehavior</code></td><td><code>'reveal' | 'commit'</code></td><td><code>'reveal'</code></td><td>已弃用：在 <code>createSwipe</code> 里设 <code>swipeBehavior</code>。<code>reveal</code> 松手后行停在滑开的位置，拖得够远就触发最外面那个操作；<code>commit</code> 直接把行滑出去，松手就触发，什么都不留在屏幕上。</td></tr>
 </tbody></table>
 </div>
 

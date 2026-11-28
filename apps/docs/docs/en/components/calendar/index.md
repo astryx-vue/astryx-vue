@@ -16,7 +16,7 @@ import { calendarConstraints, calendarRange, calendarSingle, calendarSpan, calen
 
 A day is unavailable when it is outside those bounds, when a predicate returns true, or when any constraint returns false. A range can also require a minimum and maximum length, counting both ends. Week numbers can sit beside each row. Days from the neighboring months can fill the grid, and they cannot be picked. The grid can shrink to the weeks the month needs, or stay six rows tall. The week can start on Sunday or on any other day, given as a number or a short name. A handle can move the visible month to a date and focus that day.
 
-Arrow keys move by a day or a week, cross into the next month, and skip days that cannot be picked. Home and End move to the first and last available day of the week. Page Up and Page Down move by a month. Enter or Space picks the focused day. Escape cancels a range that has a start but no end yet. Each month is a grid named with that month. Selection, today, and unavailable days are exposed to assistive technology.
+Arrow keys move by a day or a week, cross into the next month, and skip days that cannot be picked. Home and End move to the first and last available day of the week. Page Up and Page Down move by a month, and with Shift by a year (February 29 lands on February 28; a target past `min` or `max` keeps the focus, and a disabled target lands on that month's first available day). Enter or Space picks the focused day. Escape cancels a range that has a start but no end yet. Each month is a grid named with that month. Selection, today, and unavailable days are exposed to assistive technology.
 
 Bind a date:
 
@@ -33,7 +33,7 @@ const date = ref<Date | null>(new Date(2026, 9, 11))
 </template>
 ```
 
-The value is a local `Date`. The month title and weekday names follow the active locale. Built-in labels are English unless the app calls `provideAstryxLocale('zh-CN')`.
+The value is a local `Date`. The month title, weekday names, and day and week numbers follow the active locale, digits included. Built-in labels are English unless the app calls `provideAstryxLocale('zh-CN')`.
 
 
 <ComponentAnatomy />

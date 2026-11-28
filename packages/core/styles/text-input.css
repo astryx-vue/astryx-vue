@@ -9,21 +9,23 @@
     align-items: center;
     gap: var(--astryx-spacing-2, 8px);
     min-width: 0;
-    height: var(--astryx-input-height-md, 32px);
+    height: max(var(--astryx-input-height-md, 32px), var(--astryx-text-input-line, 1.5rem));
     padding: var(--astryx-input-padding-block, var(--astryx-spacing-1, 4px)) var(--astryx-input-padding-inline, var(--astryx-spacing-2, 8px));
     border: 1px solid var(--astryx-input-status-color, var(--astryx-input-border, #d4d4d4));
     border-radius: var(--astryx-radius-element, 0.625rem);
     color: var(--astryx-color-text-primary, #171717);
     background: var(--astryx-input-background, #fff);
+    /* 行高跟着正文字号走：一行字加上下边框就是行的下限，字放大到 200% 时输入框跟着长高，不会切掉字。 */
+    --astryx-text-input-line: calc(var(--astryx-text-body-size, 14px) * var(--astryx-text-body-leading, 1.4286) + 2 * var(--astryx-border-width, 1px));
     transition: border-color 130ms cubic-bezier(0.24, 1, 0.4, 1), box-shadow 130ms cubic-bezier(0.24, 1, 0.4, 1);
   }
 
   .astryx-text-input[data-size='sm'] {
-    height: var(--astryx-input-height-sm, 28px);
+    height: max(var(--astryx-input-height-sm, 28px), var(--astryx-text-input-line, 1.5rem));
   }
 
   .astryx-text-input[data-size='lg'] {
-    height: var(--astryx-input-height-lg, 36px);
+    height: max(var(--astryx-input-height-lg, 36px), var(--astryx-text-input-line, 1.5rem));
   }
 
   @media (hover: hover) {
@@ -57,7 +59,7 @@
     font-family: inherit;
     font-size: var(--astryx-text-body-size, 14px);
     font-weight: 400;
-    line-height: 1.4286;
+    line-height: var(--astryx-text-body-leading, 1.4286);
     appearance: none;
   }
 
@@ -73,6 +75,7 @@
     align-items: center;
     color: var(--astryx-color-text-secondary, #525252);
     font-size: var(--astryx-text-supporting-size, 12px);
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
   }
 
   .astryx-text-input-icon,
@@ -90,14 +93,30 @@
     color: var(--astryx-input-status-color);
   }
 
-  .astryx-text-input-control:disabled {
+  /* 禁用的输入框还留在 Tab 顺序里：键盘聚焦时仍画聚焦环，和整块字段一样被淡化。 */
+  .astryx-text-input[data-disabled='true']:has(> [aria-disabled='true']:focus-visible) {
+    border-color: var(--astryx-input-focus, #262626);
+    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--astryx-input-focus, #262626) 15%, transparent);
+  }
+
+  .astryx-text-input-control:disabled,
+  .astryx-text-input-control[aria-disabled='true'] {
     color: inherit;
     cursor: default;
     -webkit-text-fill-color: currentcolor;
   }
 
   @media (pointer: coarse) {
+    /* 点一下输入框就会升起键盘，聚焦外观淡入会在升起的每一帧重绘，所以粗指针下立刻显示。 */
+    .astryx-text-input {
+      transition-duration: 0s;
+    }
+
     @supports (-webkit-touch-callout: none) {
+      .astryx-text-input {
+        --astryx-text-input-line: calc(max(1rem, var(--astryx-text-body-size, 14px)) * var(--astryx-text-body-leading, 1.4286) + 2 * var(--astryx-border-width, 1px));
+      }
+
       .astryx-text-input-control {
         font-size: max(1rem, var(--astryx-text-body-size, 14px));
       }
@@ -124,6 +143,9 @@
       color: GrayText;
       border-color: GrayText;
       opacity: 1;
+    }
+    .astryx-text-input[data-disabled='true']:has(> [aria-disabled='true']:focus-visible) {
+      border-color: Highlight;
     }
   }
 }

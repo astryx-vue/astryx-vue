@@ -6,13 +6,14 @@ import { printJson } from '../cli/context.ts'
 import { successEnvelope } from '../envelope.ts'
 import { CliError } from '../error.ts'
 import { formatUpgradeReport } from '../format-upgrade.ts'
-import { compareVersions, findLines, installCommands, readProject, readSourceFiles, versionOf } from '../project.ts'
+import { compareNames, compareVersions, findLines, installCommands, readProject, readSourceFiles, versionOf } from '../project.ts'
 import { CORE_PACKAGE } from '../spec.ts'
 
 /** How many places the report lists before it says how many more there are. */
 const HIT_LIMIT = 200
 
-export type UpgradeStatus = 'outdated' | 'up-to-date' | 'not-installed' | 'unknown'
+/** `cli-older`: the project's Core is newer than the one this CLI was generated from. */
+export type UpgradeStatus = 'outdated' | 'up-to-date' | 'cli-older' | 'not-installed' | 'unknown'
 
 export interface UpgradeHit {
   /** Path relative to the project root, with `/` separators. */
@@ -41,6 +42,8 @@ export interface UpgradeReport {
   /** True when more places matched than the report lists. */
   truncated: boolean
   notes: string[]
+  /** For an outdated project, the command that moves every listed package released with Core to its version. */
+  commands: string[]
 }
 
 /**
@@ -68,7 +71,7 @@ async function buildReport(project: Project, args: CommandArgs): Promise<Upgrade
     ? 'not-installed'
     : current === null
       ? 'unknown'
-      : compareVersions(current, latest) < 0 ? 'outdated' : 'up-to-date'
+      : compareVersions(current, latest) < 0 ? 'outdated' : compareVersions(current, latest) > 0 ? 'cli-older' : 'up-to-date'
   const notes: string[] = []
   if (status === 'not-installed')
     notes.push(...installCommands(project.packageManager, [CORE_PACKAGE]))
@@ -93,7 +96,20 @@ async function buildReport(project: Project, args: CommandArgs): Promise<Upgrade
     hits,
     truncated,
     notes,
+    commands: status === 'outdated' ? upgradeCommands(project, latest) : [],
   }
+}
+
+/**
+ * One command for the project's Core and every other package it lists that is
+ * released with Core (the same version, such as the themes), so following it
+ * leaves none of them on the old release.
+ */
+function upgradeCommands(project: Project, latest: string): string[] {
+  const released = catalog.packages
+    .filter(pkg => pkg.published && pkg.version === latest && project.dependencies[pkg.name] !== undefined)
+    .map(pkg => `${pkg.name}@${pkg.version}`)
+  return installCommands(project.packageManager, released)
 }
 
 /**
@@ -121,7 +137,7 @@ async function findOldNames(cwd: string, renames: readonly UpgradeRename[]): Pro
     }
   }
   const sorted = [...hits.values()]
-    .sort((a, b) => a.file.localeCompare(b.file) || a.line - b.line)
+    .sort((a, b) => compareNames(a.file, b.file) || a.line - b.line)
     .slice(0, HIT_LIMIT)
   return { hits: sorted, truncated: hits.size > sorted.length }
 }

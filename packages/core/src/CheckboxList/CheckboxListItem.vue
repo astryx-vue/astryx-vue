@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import type { CheckboxValue } from '../CheckboxInput/types.js'
 import type { CheckboxListItemEmits, CheckboxListItemProps, CheckboxListItemSlots } from './types.js'
-import { computed, useId, useSlots, useTemplateRef } from 'vue'
+import { computed, onBeforeUnmount, provide, useId, useSlots, useTemplateRef, watchEffect } from 'vue'
+import { checkboxRowPressKey } from '../CheckboxInput/rowPress.js'
 import { readLayerScoped } from '../layer/scopedProvide.js'
 import ListItem from '../List/ListItem.vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { checkboxListMessages } from '../locale/messages/checkbox-list.js'
 import CheckboxListControl from './CheckboxListControl.vue'
 import { checkboxListKey } from './context.js'
 
@@ -15,8 +17,10 @@ const emit = defineEmits<CheckboxListItemEmits>()
 defineSlots<CheckboxListItemSlots>()
 
 const context = readLayerScoped(checkboxListKey)
+// 整行代替里面的复选框回应按压。
+provide(checkboxRowPressKey, true)
 const slots = useSlots()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ checkboxList: checkboxListMessages })
 const richLabel = computed(() => slots.label != null)
 // 紧凑密度下（原版渲染出来的结构）复选框的名字来自可见标签（aria-labelledby），
 // 隐藏的 <label> 只留通用词 "Checkbox"；其它密度下字符串标签直接做隐藏 <label> 的文字。
@@ -38,6 +42,17 @@ const loading = computed(() => props.isLoading || (props.value != null && (conte
 const reason = computed(() => context?.isDisabled.value ? context.disabledReason.value : undefined)
 const selected = computed(() => checked.value === true && !disabled.value && !readOnly.value)
 
+let unregister: (() => void) | undefined
+watchEffect(() => {
+  unregister?.()
+  unregister = undefined
+  const group = context?.requiredGroup.value
+  const input = checkbox.value?.element
+  if (group != null && input != null)
+    unregister = group.register(input, { isChecked: checked.value === true, isEnabled: !disabled.value && !readOnly.value })
+}, { flush: 'post' })
+onBeforeUnmount(() => unregister?.())
+
 if (collection.value && props.value == null)
   throw new Error('CheckboxListItem 在集合模式下必须提供 value。')
 
@@ -54,7 +69,7 @@ function onChecked(value: CheckboxValue): void {
 
 <template>
   <ListItem
-    :label="label" :description="description" :is-selected="selected" :is-disabled="disabled"
+    :align="align" :label="label" :description="description" :is-selected="selected" :is-disabled="disabled"
     :aria-busy="loading || undefined" :interactive-ref="interactiveRef"
   >
     <template #label>
@@ -69,7 +84,7 @@ function onChecked(value: CheckboxValue): void {
       <CheckboxListControl
         ref="checkbox" :model-value="checked" :label="ariaLabel ?? (hasVisibleLabel ? messages.checkboxList.checkbox : label)"
         :size="context?.size.value ?? 'md'" :is-disabled="disabled" :is-read-only="readOnly"
-        :is-loading="loading" :loading-label="messages.checkboxList.loading" :disabled-message="reason"
+        :is-loading="loading" :loading-label="messages.checkboxList.loading" :disabled-message="reason" :is-invalid="context?.hasErrorStatus.value"
         :aria-labelledby="hasVisibleLabel && !ariaLabel ? visibleLabelId : undefined"
         @update:model-value="onChecked"
       />

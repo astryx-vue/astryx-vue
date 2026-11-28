@@ -1,4 +1,4 @@
-import type { PlainDate } from '@astryx-vue/core'
+import type { CalendarSystem, PlainDate } from '@astryx-vue/core'
 import type { CSSProperties } from 'vue'
 import type { TimedEventPlacement } from './timeGridLayout.js'
 import type { CalendarEvent, CalendarInstantEvent, ScheduleCategory } from './types.js'
@@ -47,9 +47,10 @@ export function formatEventButtonLabel(
   timezoneID: string,
   categories: ReadonlyArray<ScheduleCategory>,
   locale: string,
+  calendar: CalendarSystem = 'gregory',
 ): string {
   const category = getEventCategory(event, categories)
-  return `${event.title}, ${formatTimeGridEventTime(event, day, timezoneID, locale)}, ${category.label}, ${formatFullDate(day, locale)}`
+  return `${event.title}, ${formatTimeGridEventTime(event, day, timezoneID, locale, calendar)}, ${category.label}, ${formatFullDate(day, locale, calendar)}`
 }
 
 export function formatTimeGridEventTime(
@@ -57,11 +58,12 @@ export function formatTimeGridEventTime(
   day: PlainDate,
   timezoneID: string,
   locale: string,
+  calendar: CalendarSystem = 'gregory',
 ): string {
   if (isDayEvent(event))
     return 'all day'
   return isAllDaySpan(event)
-    ? formatEventDateTimeRange(event, timezoneID, locale)
+    ? formatEventDateTimeRange(event, timezoneID, locale, calendar)
     : formatEventTime(event, day, timezoneID, locale)
 }
 
@@ -72,6 +74,7 @@ export function formatTimeGridCellLabel({
   label,
   locale,
   timezoneID,
+  calendar = 'gregory',
 }: {
   categories: ReadonlyArray<ScheduleCategory>
   day: PlainDate
@@ -79,11 +82,12 @@ export function formatTimeGridCellLabel({
   label: string
   locale: string
   timezoneID: string
+  calendar?: CalendarSystem
 }): string {
   if (events.length === 0)
     return label
   const eventLabels = events.map(event =>
-    `${event.title}, ${getEventCategory(event, categories).label}, ${formatTimeGridEventTime(event, day, timezoneID, locale)}`)
+    `${event.title}, ${getEventCategory(event, categories).label}, ${formatTimeGridEventTime(event, day, timezoneID, locale, calendar)}`)
   return `${label}. ${eventLabels.join('. ')}`
 }
 

@@ -33,14 +33,36 @@ export function compoundNameScore(query: string, names: readonly string[]): numb
   return best
 }
 
-function nameWords(value: string): string[] {
+/**
+ * How many words a name carries beyond the query's, when it holds every word
+ * of the query (`TimeInput` holds `time` with one extra word). Null when no
+ * name holds them all, so `Timestamp` does not hold `time`.
+ */
+export function extraWordCount(query: string, names: readonly string[]): number | null {
+  const queryWords = nameWords(query)
+  if (queryWords.length === 0)
+    return null
+  let fewest: number | null = null
+  for (const name of names) {
+    const words = nameWords(name)
+    if (queryWords.every(word => words.includes(word)))
+      fewest = Math.min(fewest ?? Infinity, words.length - queryWords.length)
+  }
+  return fewest
+}
+
+/** The words of a name or query, lowercased: PascalCase, spaces, and dashes all split. */
+export function splitWords(value: string): string[] {
   return value
     .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')
     .replace(/([a-z\d])([A-Z])/g, '$1 $2')
     .toLowerCase()
     .split(/[^a-z0-9\u4E00-\u9FFF]+/)
     .filter(Boolean)
-    .map(stemWord)
+}
+
+export function nameWords(value: string): string[] {
+  return splitWords(value).map(stemWord)
 }
 
 function sameWords(a: readonly string[], b: readonly string[]): boolean {
@@ -64,8 +86,12 @@ function commonPrefixLength(a: readonly string[], b: readonly string[]): number 
   return length
 }
 
-/** One conservative canonical form for the plurals and verbs used in catalog names. */
-function stemWord(word: string): string {
+/**
+ * One conservative canonical form for the plurals and gerunds used in catalog
+ * names. A past participle is left alone: it usually describes a state
+ * (archived notes), not the action a catalog word names.
+ */
+export function stemWord(word: string): string {
   if (!/^[a-z0-9]+$/.test(word))
     return word
   let stem = word
@@ -79,9 +105,6 @@ function stemWord(word: string): string {
     stem = stem.slice(0, -3)
     if (/([b-df-hj-np-tv-z])\1$/.test(stem))
       stem = stem.slice(0, -1)
-  }
-  else if (stem.length > 4 && stem.endsWith('ed')) {
-    stem = stem.slice(0, -2)
   }
   // "space"/"spacing" and "resize"/"resizing" need the same stem.
   if (stem.length > 4 && stem.endsWith('e'))

@@ -304,7 +304,7 @@ describe('neutral base.css semantic tokens', () => {
 
   it('keeps the reviewed palette values that components read', () => {
     expect(declared.get('--astryx-color-text-primary')).toBe('light-dark(#000000, #ffffff)')
-    expect(declared.get('--astryx-color-text-secondary')).toBe('light-dark(#474747, #9e9e9e)')
+    expect(declared.get('--astryx-color-text-secondary')).toBe('light-dark(#474747, #a8a8a8)')
     expect(declared.get('--astryx-color-border-emphasized')).toBe('light-dark(#d4d4d4, #525252)')
     expect(declared.get('--astryx-radius-none')).toBe('0px')
     expect(declared.get('--astryx-radius-inner')).toBe('0.375rem')
@@ -456,7 +456,7 @@ describe('first-party themes', () => {
     expect(read('butter')).toContain('--astryx-font-family-body: Outfit,')
     expect(readFileSync(join(root, 'packages/themes/butter/text.css'), 'utf8')).toContain('Sarina')
     expect(read('chocolate')).toContain('--astryx-font-family-body: \'Albert Sans\'')
-    expect(read('chocolate')).toContain('--astryx-font-family-heading: Fraunces,')
+    expect(read('chocolate')).toContain('--astryx-font-family-heading: \'Fraunces Variable\', Fraunces,')
     expect(read('gothic')).toContain('color-scheme: dark;')
     expect(read('gothic')).toContain('--astryx-color-accent: #E8F1F6;')
     expect(read('gothic')).not.toContain('--astryx-color-accent: light-dark(')
@@ -466,8 +466,8 @@ describe('first-party themes', () => {
     expect(read('matcha')).toContain('Playwrite US Trad')
     expect(read('stone')).toContain('--astryx-font-family-body: Figtree,')
     expect(read('stone')).toContain('--astryx-font-family-heading: Montserrat,')
-    expect(read('stone')).toContain('family=Montserrat')
-    expect(read('stone')).not.toContain('family=Figtree')
+    expect(read('stone')).toContain('@fontsource/montserrat/400.css')
+    expect(read('stone')).not.toContain('@fontsource/figtree')
     expect(read('y2k')).toContain('--astryx-font-family-body: Poppins,')
     expect(read('y2k')).toContain('--astryx-radius-full: 0px;')
     expect(readFileSync(join(root, 'packages/themes/y2k/text.css'), 'utf8')).toContain('Crimson Text')

@@ -10,6 +10,7 @@
 @import './y2k/bottom-sheet.css';
 @import './y2k/button.css';
 @import './y2k/card.css';
+@import './y2k/card-text.css';
 @import './y2k/center.css';
 @import './y2k/chat.css';
 @import './y2k/checkbox.css';
@@ -21,7 +22,6 @@
 @import './y2k/divider.css';
 @import './y2k/dropdown-menu.css';
 @import './y2k/empty-state.css';
-@import './y2k/field.css';
 @import './y2k/grid.css';
 @import './y2k/heading.css';
 @import './y2k/hover-card.css';

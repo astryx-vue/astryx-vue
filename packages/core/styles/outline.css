@@ -117,7 +117,8 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .astryx-outline__indicator {
+    .astryx-outline__indicator,
+    .astryx-outline__link {
       transition: none;
     }
   }

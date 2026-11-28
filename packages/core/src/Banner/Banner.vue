@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import type { BannerEmits, BannerProps, BannerSlots, BannerStatus } from './types.js'
-import { computed, shallowRef, toRaw, useId, useTemplateRef, watch } from 'vue'
+import { computed, shallowRef, toRaw, useAttrs, useId, useTemplateRef, watch } from 'vue'
 import FieldIcon from '../Field/FieldIcon.vue'
 import IconButton from '../IconButton/IconButton.vue'
 import { isRenderable } from '../Indicator/isRenderable.js'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { bannerMessages } from '../locale/messages/banner.js'
 import '../../styles/banner.css'
 import '../../styles/field.css'
 
-defineOptions({ name: 'AstryxBanner' })
+defineOptions({ name: 'AstryxBanner', inheritAttrs: false })
 
 const props = withDefaults(defineProps<Omit<BannerProps, 'isOpen'>>(), {
   container: 'card',
@@ -17,7 +18,20 @@ const props = withDefaults(defineProps<Omit<BannerProps, 'isOpen'>>(), {
 })
 const emit = defineEmits<BannerEmits>()
 const slots = defineSlots<BannerSlots>()
-const messages = useAstryxMessages()
+const attrs = useAttrs()
+// 紧急警报只罩住作者写的消息（标题和描述），控件、它们的提示和内容区不被当成警报的一部分读出。
+// 警报的名字和其他 aria-* 状态跟着 role 一起落在消息元素上。
+// attrs 不是响应式的：每次渲染都重新取，不放进 computed。
+function splitAttrs(): { frame: Record<string, unknown>, alert: Record<string, unknown> } {
+  if (attrs.role !== 'alert')
+    return { frame: attrs, alert: {} }
+  const frame: Record<string, unknown> = {}
+  const alert: Record<string, unknown> = {}
+  for (const [key, value] of Object.entries(attrs))
+    (key === 'role' || key.startsWith('aria-') ? alert : frame)[key] = value
+  return { frame, alert }
+}
+const messages = useComponentMessages({ banner: bannerMessages })
 const openModel = defineModel<boolean | undefined>('isOpen', { default: undefined })
 const localOpen = shallowRef(props.defaultIsOpen ?? false)
 const dismissed = shallowRef(false)
@@ -81,6 +95,7 @@ watch(expanded, (value) => {
 <template>
   <div
     v-if="!dismissed"
+    v-bind="splitAttrs().frame"
     ref="root"
     class="astryx-banner-frame"
     :data-container="container"
@@ -95,18 +110,22 @@ watch(expanded, (value) => {
       :data-container="container"
       :data-status="visualStatus"
     >
-      <span class="astryx-banner-icon" :data-status="visualStatus" aria-hidden="true">
+      <span v-if="$slots.icon || icon || visualStatus" class="astryx-banner-icon" :data-status="visualStatus" aria-hidden="true">
         <slot name="icon">
           <component :is="icon" v-if="icon" />
           <FieldIcon v-else-if="visualStatus" :type="visualStatus" size="md" color="inherit" />
         </slot>
       </span>
-      <div class="astryx-banner-message" :data-has-actions="hasEnd || undefined">
+      <div v-bind="splitAttrs().alert" class="astryx-banner-message" :data-has-actions="hasEnd || undefined">
         <div :id="titleId" class="astryx-banner-title">
           <slot name="title">
             {{ title }}
           </slot>
         </div>
+        <!-- 标题和描述之间留一个空格：弹性容器不画纯空白文本，但文本读法里两段不会粘在一起。 -->
+        <template v-if="description || $slots.description">
+          {{ ' ' }}
+        </template>
         <div v-if="description || $slots.description" class="astryx-banner-description">
           <slot name="description">
             {{ description }}
@@ -131,7 +150,7 @@ watch(expanded, (value) => {
         </IconButton>
         <IconButton
           v-if="isDismissable"
-          class="astryx-banner-control"
+          class="astryx-banner-control astryx-banner-close"
           variant="ghost"
           size="sm"
           :label="dismissName"

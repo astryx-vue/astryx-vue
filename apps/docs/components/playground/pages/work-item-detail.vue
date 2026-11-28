@@ -34,7 +34,9 @@ import {
   Timestamp,
   Token,
   Tokenizer,
+  useImperativeAlertDialog,
   useMediaQuery,
+  useToast,
   VStack,
 } from '@astryx-vue/core'
 
@@ -123,9 +125,39 @@ const ATTACHMENT_ICONS: Record<AttachmentKind, string> = {
 const PencilIcon = () => h(Icon, { name: 'heroicons:pencil' })
 const TrashIcon = () => h(Icon, { name: 'heroicons:trash' })
 
-const ATTACHMENT_ACTIONS: { label: string, icon: () => unknown, variant?: 'destructive' }[] = [
-  { label: 'Edit', icon: PencilIcon },
-  { label: 'Delete', icon: TrashIcon, variant: 'destructive' },
+const showToast = useToast()
+const confirm = useImperativeAlertDialog()
+const ConfirmHost = confirm.Host
+
+// 演示：换成真正处理这个附件的调用。删除先确认。
+function attachmentActions(attachment: { id: string | number, title: string }) {
+  return [
+    {
+      label: 'Edit',
+      icon: PencilIcon,
+      onClick: () => showToast({ body: `Demo: ${attachment.title} would open for editing here`, uniqueID: `edit-${attachment.id}` }),
+    },
+    {
+      label: 'Delete',
+      icon: TrashIcon,
+      variant: 'destructive' as const,
+      onClick: () => confirm.show({
+        title: `Delete ${attachment.title}?`,
+        description: 'This demo won\'t delete anything.',
+        actionLabel: 'Delete',
+        onAction: () => {
+          confirm.hide()
+          showToast({ body: `Demo: ${attachment.title} would be deleted here`, uniqueID: `delete-${attachment.id}` })
+        },
+      }),
+    },
+  ]
+}
+
+const HEADER_ACTIONS = [
+  { label: 'Watch', icon: 'heroicons:eye' },
+  { label: 'Share', icon: 'heroicons:share' },
+  { label: 'Notify', icon: 'heroicons:bell' },
 ]
 
 const WATCHERS = [
@@ -154,6 +186,8 @@ const ACTIVITY = [
 const SECTION_PADDING = 6
 
 const isNarrow = useMediaQuery('(max-width: 1024px)')
+// 手机上子任务的到期日和负责人挪到标题下面
+const isPhone = useMediaQuery('(max-width: 640px)')
 
 const status = ref('in_progress')
 const assignee = ref('priya-shah')
@@ -169,6 +203,11 @@ const doneCount = computed(() => subtasks.value.filter(task => task.isDone).leng
 const donePercent = computed(() =>
   subtasks.value.length ? (doneCount.value / subtasks.value.length) * 100 : 0,
 )
+
+function postComment() {
+  showToast({ body: 'Demo: the comment would be posted here', uniqueID: 'comment' })
+  comment.value = ''
+}
 
 function toggleDetails() {
   isDetailsOpen.value = !isDetailsOpen.value
@@ -238,7 +277,7 @@ function setSubtaskDone(id: number, isDone: boolean) {
               <HStack :gap="4" align="center" wrap="wrap">
                 <Link href="#" type="supporting" color="secondary">
                   <HStack as="span" :gap="1" align="center">
-                    <Icon name="heroicons:arrow-left" size="sm" />
+                    <Icon class="mirror-rtl" name="heroicons:arrow-left" size="sm" />
                     All Tasks
                   </HStack>
                 </Link>
@@ -256,14 +295,14 @@ function setSubtaskDone(id: number, isDone: boolean) {
               </Heading>
             </VStack>
             <HStack v-if="!isNarrow" :gap="1">
-              <IconButton label="Watch" variant="secondary">
-                <Icon name="heroicons:eye" size="sm" />
-              </IconButton>
-              <IconButton label="Share" variant="secondary">
-                <Icon name="heroicons:share" size="sm" />
-              </IconButton>
-              <IconButton label="Notify" variant="secondary">
-                <Icon name="heroicons:bell" size="sm" />
+              <IconButton
+                v-for="action in HEADER_ACTIONS"
+                :key="action.label"
+                :label="action.label"
+                variant="secondary"
+                @click="showToast({ body: `Demo: ${action.label} would happen here`, uniqueID: `header-${action.label}` })"
+              >
+                <Icon :name="action.icon" size="sm" />
               </IconButton>
               <Button
                 :label="isDetailsOpen ? 'Hide details' : 'Show details'"
@@ -340,9 +379,22 @@ function setSubtaskDone(id: number, isDone: boolean) {
                 Success criteria
               </Heading>
               <List list-style="disc" density="compact">
-                <ListItem label="Day-seven activation rises from 42 to 55 percent for new workspaces in the variant." />
-                <ListItem label="Median time to first completed action drops below eight minutes." />
-                <ListItem label="No regression in day-thirty retention." />
+                <!-- 节点形式的 label 在窄屏会换行，字符串形式的 label 只显示一行。 -->
+                <ListItem>
+                  <template #label>
+                    Day-seven activation rises from 42 to 55 percent for new workspaces in the variant.
+                  </template>
+                </ListItem>
+                <ListItem>
+                  <template #label>
+                    Median time to first completed action drops below eight minutes.
+                  </template>
+                </ListItem>
+                <ListItem>
+                  <template #label>
+                    No regression in day-thirty retention.
+                  </template>
+                </ListItem>
               </List>
             </VStack>
           </VStack>
@@ -356,7 +408,7 @@ function setSubtaskDone(id: number, isDone: boolean) {
               <Heading :level="2">
                 Subtasks
               </Heading>
-              <Button label="Add subtask" />
+              <Button label="Add subtask" @click="showToast({ body: 'Demo: a new subtask would be added here', uniqueID: 'add-subtask' })" />
             </HStack>
             <HStack :gap="3" align="center">
               <Text type="supporting" color="secondary">
@@ -377,16 +429,23 @@ function setSubtaskDone(id: number, isDone: boolean) {
                 :key="task.id"
                 :label="task.title"
                 :is-checked="task.isDone"
+                :align="isPhone ? 'first-line' : undefined"
                 @check="setSubtaskDone(task.id, $event)"
               >
-                <template #end>
+                <!-- 节点形式的标签会换行，字符串标签被截成一行，手机上只剩几个字 -->
+                <template #label>
+                  {{ task.title }}
+                </template>
+                <!-- 手机上到期日和负责人挪到标题下面，标题拿到整行宽度 -->
+                <template v-if="isPhone" #description>
                   <HStack :gap="2" align="center">
-                    <Timestamp
-                      :value="task.due"
-                      format="date"
-                      type="supporting"
-                      color="secondary"
-                    />
+                    <Timestamp :value="task.due" format="date" type="supporting" color="secondary" />
+                    <Avatar :name="task.assignee" size="sm" />
+                  </HStack>
+                </template>
+                <template v-else #end>
+                  <HStack :gap="2" align="center">
+                    <Timestamp :value="task.due" format="date" type="supporting" color="secondary" />
                     <Avatar :name="task.assignee" size="sm" />
                   </HStack>
                 </template>
@@ -403,7 +462,7 @@ function setSubtaskDone(id: number, isDone: boolean) {
               <Heading :level="2">
                 Attachments
               </Heading>
-              <Button label="Add attachment" />
+              <Button label="Add attachment" @click="showToast({ body: 'Demo: a file picker would open here', uniqueID: 'add-attachment' })" />
             </HStack>
             <VStack :gap="1">
               <ClickableCard
@@ -433,7 +492,7 @@ function setSubtaskDone(id: number, isDone: boolean) {
                   <MoreMenu
                     presentation="adaptive"
                     :label="`Actions for ${attachment.title}`"
-                    :items="ATTACHMENT_ACTIONS"
+                    :items="attachmentActions(attachment)"
                   />
                 </HStack>
               </ClickableCard>
@@ -493,11 +552,12 @@ function setSubtaskDone(id: number, isDone: boolean) {
                 :rows="5"
               />
               <HStack :gap="2" justify="end">
-                <Button label="Cancel" variant="ghost" />
+                <Button label="Cancel" variant="ghost" @click="comment = ''" />
                 <Button
                   label="Comment"
                   variant="primary"
                   :is-disabled="comment.trim().length === 0"
+                  @click="postComment"
                 />
               </HStack>
             </VStack>
@@ -512,6 +572,7 @@ function setSubtaskDone(id: number, isDone: boolean) {
           <DetailsPanel />
         </template>
       </VStack>
+      <ConfirmHost />
     </LayoutContent>
 
     <template v-if="!isNarrow && isDetailsOpen" #end>
@@ -523,6 +584,10 @@ function setSubtaskDone(id: number, isDone: boolean) {
 </template>
 
 <style scoped>
+:global([dir='rtl'] .mirror-rtl) {
+  transform: scaleX(-1);
+}
+
 .attachment-tile {
   display: grid;
   place-items: center;

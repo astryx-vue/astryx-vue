@@ -25,7 +25,7 @@ footer: false
       <tr><td><code>maxEntries</code></td><td><code>number</code></td><td>—</td><td>最多可选几条。达到上限后输入框只读。</td></tr>
       <tr><td><code>debounceMs</code></td><td><code>number</code></td><td><code>150</code></td><td>输入停顿后再搜索。</td></tr>
       <tr><td><code>minQueryLength</code></td><td><code>number</code></td><td><code>1</code></td><td>够长才去搜索的下限，按人眼看到的字符数算。太短就完全不搜，下拉也不打开——除非开了 <code>hasCreate</code>：「新建 …」是从输入文字派生的，不用搜。</td></tr>
-      <tr><td><code>hasEntriesOnFocus</code></td><td><code>boolean</code></td><td><code>false</code></td><td>聚焦后还没输入就展示结果。</td></tr>
+      <tr><td><code>hasEntriesOnFocus</code></td><td><code>boolean</code></td><td><code>false</code></td><td>聚焦后还没输入就展示结果。从该列表中选一项后，只要还有其他选项，输入框保持焦点，列表保持打开，并激活下一项。</td></tr>
       <tr><td><code>showOnFocus</code></td><td><code>boolean</code></td><td><code>false</code></td><td><code>hasEntriesOnFocus</code> 的旧名。两者任一为真即生效。</td></tr>
       <tr><td><code>hasAutoFocus</code></td><td><code>boolean</code></td><td><code>false</code></td><td>挂载后自动聚焦输入框。</td></tr>
       <tr><td><code>menuWidth</code></td><td><code>number</code></td><td>—</td><td>下拉想要的宽度，单位像素。窄不过输入区，再宽会被视口截住。</td></tr>
@@ -34,16 +34,18 @@ footer: false
       <tr><td><code>clearable</code></td><td><code>boolean</code></td><td><code>false</code></td><td><code>hasClear</code> 的旧名。两者任一为真即生效。</td></tr>
       <tr><td><code>emptySearchText</code></td><td><code>string | null</code></td><td><code>'No results found'</code> / <code>'未找到结果'</code></td><td>没有匹配结果时显示的文字。<code>null</code> 当作没给，退回默认；空字符串表示什么都不显示。要放链接这类富内容用 <code>empty</code> 插槽。</td></tr>
       <tr><td><code>emptyText</code></td><td><code>string | null</code></td><td>—</td><td><code>emptySearchText</code> 的旧名。</td></tr>
-      <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>禁用整个字段和所有标签交互。</td></tr>
+      <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>禁用整个字段和所有标签交互。禁用的字段仍是 Tab 停点：输入框带 <code>aria-disabled</code> 且只读，不开列表也不选。<code>overflow="unfocused-layer"</code> 且没有 <code>disabledMessage</code> 时，输入框改用原生 <code>disabled</code>。</td></tr>
       <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>说明为什么被禁用。和 <code>disabled</code> 一起用时，输入框改用 <code>aria-disabled</code> 加 <code>readonly</code>，因此仍然可聚焦，鼠标悬停或键盘聚焦都能读到这段说明。</td></tr>
       <tr><td><code>disabledReason</code></td><td><code>string</code></td><td>—</td><td><code>disabledMessage</code> 的旧名。</td></tr>
       <tr><td><code>status</code></td><td><code>'default' | 'success' | 'warning' | 'error'</code></td><td><code>'default'</code></td><td>状态样式。</td></tr>
       <tr><td><code>statusMessage</code></td><td><code>string</code></td><td>—</td><td>字段下方的状态说明。</td></tr>
-      <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>输入框和标签的尺寸。</td></tr>
+      <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'attached'</code></td><td>状态说明放哪里。<code>attached</code> 在字段末尾画状态图标、说明在下面；<code>detached</code> 只留下面的说明；<code>tooltip</code> 的图标是能聚焦的按钮，说明收在它的提示里。</td></tr>
+      <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>输入框和标签的尺寸。在 <code>InputGroup</code> 里取组的尺寸。</td></tr>
       <tr><td><code>required</code></td><td><code>boolean</code></td><td><code>false</code></td><td>标记为必填。</td></tr>
       <tr><td><code>optional</code></td><td><code>boolean</code></td><td><code>false</code></td><td>标签上显示「可选」标记。</td></tr>
-      <tr><td><code>name</code></td><td><code>string</code></td><td>—</td><td>表单字段名。每个已选 id 提交一次。</td></tr>
+      <tr><td><code>name</code></td><td><code>string</code></td><td>—</td><td>表单字段名。每个已选 id 提交一次；字段禁用时不提交。</td></tr>
       <tr><td><code>width</code></td><td><code>number | string</code></td><td>—</td><td>整个字段的宽度（数字按像素算，字符串原样使用）。</td></tr>
+      <tr><td><code>presentation</code></td><td><code>'popover' | 'bottom-sheet' | 'adaptive'</code></td><td><code>'adaptive'</code></td><td>结果在哪里打开。<code>popover</code> 是行内输入框加锚定菜单。<code>bottom-sheet</code> 让字段变成触发器，点开触屏底部弹层：在里面搜索、勾选，按「保存」把草稿一次提交。<code>adaptive</code> 在紧凑触屏上用底部弹层（主指针是手指这类粗略指针，并且视口宽度小于主题的 <code>md</code> 断点或高度小于 500px），其余用浮层；服务端渲染和水合时是浮层。打开那一刻定下用哪种，退场播完才重新判断。底部弹层里，<code>item</code> 插槽、<code>hasClear</code>、<code>hasEntriesOnFocus</code>、<code>menuWidth</code>、<code>menu</code>、<code>overflow</code>、<code>hasAutoFocus</code> 没有地方生效，开发期会提示一次；想在所有设备上保留行内字段就传 <code>popover</code>。</td></tr>
     </tbody>
   </table>
 </div>
@@ -58,7 +60,7 @@ footer: false
       <tr><td><code>change</code></td><td><code>value: T[]</code>、<code>change: TokenizerChange</code></td><td>带上这次变化的类型：<code>add</code>、<code>create</code>、<code>remove</code>、<code>clear</code>。</td></tr>
       <tr><td><code>changeQuery</code></td><td><code>query: string</code></td><td>查询文字变化时触发。</td></tr>
       <tr><td><code>search</code></td><td><code>query: string</code></td><td><code>changeQuery</code> 的旧名。两个都会触发。</td></tr>
-      <tr><td><code>openChange</code></td><td><code>isOpen: boolean</code></td><td>列表打开或关闭时触发。</td></tr>
+      <tr><td><code>openChange</code></td><td><code>isOpen: boolean</code></td><td>行内列表打开或关闭时触发。底部弹层不报这个事件。</td></tr>
       <tr><td><code>focus</code></td><td><code>event: FocusEvent</code></td><td>焦点从外面进入整个字段时触发。</td></tr>
       <tr><td><code>blur</code></td><td><code>event: FocusEvent</code></td><td>焦点离开整个字段时触发，不只是离开输入框。</td></tr>
     </tbody>
@@ -76,8 +78,11 @@ footer: false
       <tr><td><code>token</code></td><td><code>{ item, remove }</code></td><td>自定义已选标签，替换默认的 <code>Token</code>。</td></tr>
       <tr><td><code>item</code></td><td><code>{ item, isActive, isSelected }</code></td><td>自定义下拉条目，替换默认的 <code>TypeaheadItem</code>。</td></tr>
       <tr><td><code>empty</code></td><td>—</td><td>自定义空状态。</td></tr>
+      <tr><td><code>menu</code></td><td><code>{ listbox, query, isBusy, isEmptySearch, close }</code> 或 <code>{ query, close }</code></td><td>菜单内容，和 <code>Typeahead</code> 一样：<code>listbox</code> 菜单在结果列表周围放信息，<code>dialog</code> 菜单的插槽就是全部内容。</td></tr>
     </tbody>
   </table>
 </div>
+
+模板 ref 暴露 <code>focus()</code>、<code>blur()</code>、<code>open()</code> 和 <code>close()</code>；底部弹层呈现里它们作用在触发器和弹层上。<code>menu</code> 属性（<code>{ role: 'listbox' }</code> 或 <code>{ role: 'dialog', label }</code>）和 <code>openChange</code> 的用法与 <code>Typeahead</code> 相同。<code>search</code> 里调用 <code>context.update(items)</code> 会马上显示先拿到的匹配项（已选的标签不在其中），之后的列表只往后追加。
 
 上面没列出的原生属性和事件监听会落到输入框上，所以 `@keydown`、`@paste` 和 `aria-*` 的用法跟普通 `<input>` 一样。`keydown` 监听先于内部的标签间导航执行，调用 `event.preventDefault()` 就能跳过内部处理。

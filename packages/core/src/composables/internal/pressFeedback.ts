@@ -1,12 +1,16 @@
-import type { PressGesture, PressPaint, PressStep, PressTimer } from './pressGesture.js'
-import {
-  idlePressGesture,
-  PRESS_FADE_MS,
-  PRESS_FLASH_MS,
-  PRESS_ONSET_MS,
-  PRESS_SCROLL_BRAKE_MS,
-  pressGestureStep,
-} from './pressGesture.js'
+import type { LiveGesture } from './pressSlot.js'
+import { UIKIT_PRESS } from '../../motion/uikit/gestures'
+import { msSinceInput } from '../../utils/inputAge'
+import { subscribeInput } from '../../utils/inputStream'
+import { isInsideScrollView } from '../../utils/scrollView'
+import { attachButtonKeys, cancelButton, detachButtonKeys, pressButton, releaseButton, stylesheetDroppedActive } from './pressButton.js'
+import { idlePressGesture, PRESS_SCROLL_BRAKE_MS, pressGestureStep } from './pressGesture.js'
+import { apply, button, finger, finish, releaseIfDead, takeOver } from './pressSlot.js'
+import { isTrackedByGroup, pressSurfaceAt } from './pressSurface.js'
+
+export { PRESS_FADE_REDUCED_MAX_MS, pressFadeMs } from './pressFade.js'
+export { PRESSED_ATTRIBUTE } from './pressSlot.js'
+export { PRESS_ACTION_ATTRIBUTE, PRESS_CONTAINER_ATTRIBUTE, PRESSABLE_ATTRIBUTE } from './pressSurface.js'
 
 /**
  * 触屏按压模型的 DOM 那一半：整个文档只有一个委托控制器，
@@ -18,29 +22,46 @@ import {
  * 鼠标完全不管，CSS 的 `:active` 照旧。手指下，`@media (pointer: coarse)` 里的 `:active`
  * 被样式丢掉，改由这里在按压成立时写 `on`，抬手淡出时写 `fading`。
  * 样式见 `styles/pressable.css`。
+ *
+ * 手指只在滚动视图里才等：滚动视图外，落下那一帧就亮，和原生控件一样；
+ * 滚动视图里等 150ms，因为这次触摸可能变成滚动。这 150ms 从触摸自己的时间戳算起，
+ * 页面忙、监听函数跑晚了，不会让高亮跟着晚。
  */
 
-/** 可按元素的标记。控制器用 `closest()` 找它。 */
-export const PRESSABLE_ATTRIBUTE = 'data-astryx-pressable'
-
-/** 按压成立且手指还在时为 `on`，抬手淡出时为 `fading`，其余时候不存在。 */
-export const PRESSED_ATTRIBUTE = 'data-astryx-press'
-
 /** 手指离开后多久内的滚动还可能是那根手指甩出去的惯性。iOS 的惯性滚动会持续一两秒。 */
-export const PRESS_GESTURE_MEMORY_MS = 3000
+export const PRESS_GESTURE_MEMORY_MS = UIKIT_PRESS.momentumMemory.value
 
-/** 不可用的元素怎么按都不画。 */
-const DISABLED = ':disabled, [aria-disabled="true"]'
+/**
+ * 手指或笔落在控件框上的这次接触（utils/boxHold.ts）：记着它的指针、它开始的那次按压
+ * （刹车时没有）和框按住的收尾。刹车的接触也算，被滚动取消的也算，各自在自己的抬起或取消时结束。
+ * 只有抬起时按压还活着，才算「停着抬起」。
+ */
+let contact: { pointerId: number, live: LiveGesture | null, end: (isStillLift: boolean) => void } | null = null
 
-interface LiveGesture {
-  element: HTMLElement
-  gesture: PressGesture
-  /** 这次手势属于哪根手指。第二根手指不算。 */
-  pointerId: number | null
-  timer: ReturnType<typeof setTimeout> | null
+/** 结束这次框上的接触，并且只告诉框按住一次。 */
+function endContact(isStillLift: boolean): void {
+  const ended = contact
+  contact = null
+  ended?.end(isStillLift)
 }
 
-let live: LiveGesture | null = null
+/** 框组件装进来的框按住（utils/boxHold.ts）。 */
+export interface BoxHold {
+  /** 开始一次接触的按住。不在框上时返回 null，否则返回接触结束时要调的函数。 */
+  readonly start: (surface: HTMLElement, target: EventTarget | null) => ((isStillLift: boolean) => void) | null
+  /** 控制器拆掉时，结束所有还在等的点击。 */
+  readonly endWaits: () => void
+}
+
+let boxHold: BoxHold | null = null
+
+/**
+ * 装上框按住。只有用到框组件（复选框、单选）的页面才加载它，
+ * 只有按钮和链接的页面不带这段代码。
+ */
+export function installBoxHold(hold: BoxHold): void {
+  boxHold = hold
+}
 /** 有几个调用方装着控制器。大于 0 时监听才在。 */
 let holders = 0
 /** 上一次「被手指带动」的滚动发生在什么时候、在哪个滚动容器里。只记手指带动的，程序滚动不算。 */
@@ -49,99 +70,6 @@ let lastScroller: Node | null = null
 /** 上一次手指在屏幕上是什么时候、落在哪里。 */
 let lastTouchAt = 0
 let lastTouchTarget: Node | null = null
-
-const TIMER_MS: Record<PressTimer, number> = {
-  fade: PRESS_FADE_MS,
-  flash: PRESS_FLASH_MS,
-  onset: PRESS_ONSET_MS,
-}
-
-const TIMER_EVENT = {
-  fade: 'fadeEnd',
-  flash: 'flashEnd',
-  onset: 'onset',
-} as const
-
-/** 读出一个 CSS 时间值，单位毫秒。不是时间就返回 null。 */
-function parseTimeMs(value: string): number | null {
-  const match = /^\s*(-?(?:\d+(?:\.\d+)?|\.\d+))(ms|s)\s*$/.exec(value)
-  if (match == null)
-    return null
-  const amount = Number.parseFloat(match[1]!)
-  return match[2] === 's' ? amount * 1000 : amount
-}
-
-/**
- * 抬手后淡出的时长：元素上主题的 `--astryx-duration-exit`，抬手时读一次。
- * 读不出时间（没主题、或不是时间值）就用默认的 PRESS_FADE_MS。
- */
-export function pressFadeMs(element: HTMLElement): number {
-  if (typeof getComputedStyle !== 'function')
-    return PRESS_FADE_MS
-  const ms = parseTimeMs(getComputedStyle(element).getPropertyValue('--astryx-duration-exit'))
-  return ms != null && ms >= 0 ? ms : PRESS_FADE_MS
-}
-
-function paintElement(element: HTMLElement, paint: PressPaint): void {
-  if (paint === 'none')
-    element.removeAttribute(PRESSED_ATTRIBUTE)
-  else
-    element.setAttribute(PRESSED_ATTRIBUTE, paint)
-}
-
-function clearTimer(): void {
-  if (live?.timer != null) {
-    clearTimeout(live.timer)
-    live.timer = null
-  }
-}
-
-/**
- * 把一个事件交给状态机，再让 DOM 照答案画。
- *
- * 计时器规则：阶段没变、又没要新计时器的一步是路过，原来那个计时器必须留着。
- * 如果每步都先清掉，会有三种手势最后停在「没人碰却亮着」：
- * 等待期内手指在容差内抖了一下（真手指都会抖），onset 被清掉，按压永远不亮；
- * 轻点的 100ms 闪亮期内来了 pointercancel 或滚动，flashEnd 被清掉，一直亮着；
- * 淡出期内同样，`fading` 留在元素上。
- */
-function apply(step: PressStep): void {
-  if (live == null)
-    return
-  const phaseMoved = step.gesture.phase !== live.gesture.phase
-  if (step.timer != null || phaseMoved)
-    clearTimer()
-  live.gesture = step.gesture
-  paintElement(live.element, step.paint)
-  if (step.gesture.phase === 'idle') {
-    live = null
-    return
-  }
-  if (step.timer != null) {
-    const kind = step.timer
-    // 用定时器，不用 requestAnimationFrame：iOS 滚动时会压低帧回调，按帧算的延时会在滚动结束后才到，
-    // 那时去亮一个已经没人按的控件。
-    const delay = kind === 'fade' ? pressFadeMs(live.element) : TIMER_MS[kind]
-    live.timer = setTimeout(() => {
-      if (live != null)
-        live.timer = null
-      apply(pressGestureStep(live?.gesture ?? idlePressGesture(), { kind: TIMER_EVENT[kind] }))
-    }, delay)
-  }
-}
-
-/**
- * 手指下最里层的可按元素。里层优先：可按的行里有个按钮，按钮接走这次按压。
- * 不可用的元素也会接走，但什么都不画，所以按在禁用控件上不会把外面那一行点亮。
- */
-function surfaceAt(target: EventTarget | null): HTMLElement | null {
-  if (!(target instanceof Element))
-    return null
-  const found = target.closest(`[${PRESSABLE_ATTRIBUTE}]`)
-  if (!(found instanceof HTMLElement) || found.matches(DISABLED))
-    return null
-  return found
-}
 
 /**
  * 这次触摸是不是在给手指刚甩动的列表「刹车」。原生列表刹车时什么都不亮。
@@ -153,73 +81,106 @@ function scrollerIsBraking(element: HTMLElement): boolean {
   return lastScroller instanceof Node && lastScroller.contains(element)
 }
 
-/** 手势一死就让出唯一的跟踪槽位。变成滚动的手势以 pointercancel 结束，没有 pointerup。 */
-function releaseIfDead(): void {
-  if (live?.gesture.phase === 'dead') {
-    clearTimer()
-    live = null
-  }
-}
-
-/** 擦掉颜色、忘掉手势，不经过状态机。 */
-function finish(): void {
-  if (live == null)
-    return
-  clearTimer()
-  live.element.removeAttribute(PRESSED_ATTRIBUTE)
-  live = null
-}
-
 function onPointerDown(event: PointerEvent): void {
-  if (event.pointerType === 'mouse')
+  if (event.pointerType === 'mouse') {
+    // 主指针精细时（桌面）鼠标留给 `:active`，这里不管，鼠标路径零开销。
+    // 只认主键：`:active` 画的就是主键的按压。
+    if (event.button === 0 && stylesheetDroppedActive())
+      pressButton(event.target, event.pointerId)
     return
-  if (live != null) {
-    const fingerIsUp = live.gesture.phase === 'fading' || live.gesture.phase === 'flash'
+  }
+  // 第二根手指或新的一次按压结束上一次框上的接触，它的抬起不算停着抬起。
+  endContact(false)
+  if (finger.live != null) {
+    const fingerIsUp = finger.live.gesture.phase === 'fading' || finger.live.gesture.phase === 'flash'
     // 手指还按着又来一根：双指捏合或双指滚动都不是按压，两根都不画。
-    finish()
+    finish(finger)
     if (!fingerIsUp)
       return
   }
-  const element = surfaceAt(event.target)
+  // 按钮组、提示对话框正在跟踪这种指针的滑动：它们自己画高亮，这里不画。
+  const tracked = event.target instanceof Element && isTrackedByGroup(event.target, event.pointerType)
+  const element = tracked ? null : pressSurfaceAt(event.target)
   // 先判断刹车再记这次触摸的时间：问的是「上一根手指」还在不在带动滚动。
   const braking = element != null && scrollerIsBraking(element)
   lastTouchAt = Date.now()
   lastTouchTarget = event.target instanceof Node ? event.target : null
-  if (element == null || braking)
+  if (element == null)
     return
-  live = { element, gesture: idlePressGesture(), pointerId: event.pointerId, timer: null }
-  apply(pressGestureStep(live.gesture, { kind: 'down', x: event.clientX, y: event.clientY }))
+  // 刹车的手指什么都不按，但框按住照样跟着它。
+  const end = boxHold?.start(element, event.target) ?? null
+  const pressed: LiveGesture | null = braking ? null : { element, gesture: idlePressGesture(), pointerId: event.pointerId, timer: null }
+  if (end != null)
+    contact = { pointerId: event.pointerId, live: pressed, end }
+  if (pressed == null)
+    return
+  takeOver(button, element)
+  finger.live = pressed
+  apply(
+    finger,
+    pressGestureStep(pressed.gesture, { kind: 'down', x: event.clientX, y: event.clientY, delayed: isInsideScrollView(element) }),
+    msSinceInput(event.timeStamp, event),
+  )
 }
 
 function isOtherPointer(event: PointerEvent): boolean {
+  const live = finger.live
   return live == null || (live.pointerId != null && event.pointerId !== live.pointerId)
 }
 
 function onPointerMove(event: PointerEvent): void {
   if (isOtherPointer(event))
     return
-  apply(pressGestureStep(live!.gesture, { kind: 'move', x: event.clientX, y: event.clientY }))
+  apply(finger, pressGestureStep(finger.live!.gesture, { kind: 'move', x: event.clientX, y: event.clientY }))
 }
 
 function onPointerUp(event: PointerEvent): void {
   // 鼠标也不能更新刹车用的时钟：同一台设备可能既有触屏又有鼠标。
-  if (event.pointerType === 'mouse')
+  if (event.pointerType === 'mouse') {
+    if (button.live != null && button.live.pointerId === event.pointerId)
+      releaseButton()
     return
+  }
   lastTouchAt = Date.now()
   if (event.target instanceof Node)
     lastTouchTarget = event.target
+  if (contact != null && contact.pointerId === event.pointerId) {
+    // 在抬起这一步之前读：移动过头或被滚动拿走的按压，这时已经死了或没了。
+    const pressed = contact.live
+    endContact(pressed != null && finger.live === pressed && pressed.gesture.phase !== 'dead')
+  }
   if (isOtherPointer(event))
     return
-  apply(pressGestureStep(live!.gesture, { kind: 'up' }))
-  releaseIfDead()
+  apply(finger, pressGestureStep(finger.live!.gesture, { kind: 'up' }))
+  releaseIfDead(finger)
 }
 
 /** 滚动接管了手势，或者平台拿走了它。iOS 上 pointercancel 比第一个 scroll 事件还早到。 */
-function onCancel(): void {
+function onCancel(event?: Event): void {
+  const pointer = event as Partial<PointerEvent> | undefined
+  // 被取消的鼠标指针只结束鼠标的按压，不碰手指的。
+  if (pointer?.pointerType === 'mouse') {
+    if (button.live != null && button.live.pointerId === pointer.pointerId)
+      cancelButton()
+    return
+  }
+  // 只有这根指针自己的取消才结束它的接触。滚动带来的取消不算：手指还按着。
+  if (pointer?.pointerId != null && contact?.pointerId === pointer.pointerId)
+    endContact(false)
+  const live = finger.live
   if (live == null)
     return
-  apply(pressGestureStep(live.gesture, { kind: 'cancel' }))
-  releaseIfDead()
+  apply(finger, pressGestureStep(live.gesture, { kind: 'cancel' }))
+  releaseIfDead(finger)
+}
+
+/**
+ * 按压变成拖拽，不管是谁按的，都算被拿走。不听 contextmenu：右键是鼠标的事，
+ * 这里从不跟踪，听它就像接管了浏览器自己的菜单。
+ */
+function onDragStart(): void {
+  onCancel()
+  cancelButton()
 }
 
 /** 文档里任何一处滚动。scroll 不冒泡，只能在捕获阶段听。 */
@@ -232,43 +193,47 @@ function onScroll(event: Event): void {
     lastScrollAt = Date.now()
     lastScroller = scroller
   }
+  const live = finger.live
   if (live == null)
     return
-  // 取消比刹车宽：被按元素上方的任何滚动都会拿走手势，不管是不是手指带的。
+  // 取消比刹车宽：被按元素上方的任何滚动都会拿走手势，不管是不是手指带的。鼠标和按键的按压不受影响，和 `:active` 一样。
   if (scroller === document || scroller.contains(live.element))
     onCancel()
 }
 
 /** 兜底：页面被切到后台时，不留下亮着的元素。 */
 function onVisibilityChange(): void {
-  if (document.visibilityState === 'hidden')
-    finish()
+  if (document.visibilityState === 'hidden') {
+    endContact(false)
+    finish(finger)
+    finish(button)
+  }
 }
 
-const PASSIVE_CAPTURE = { capture: true, passive: true } as const
-
-const WINDOW_LISTENERS: ReadonlyArray<[string, (event: never) => void]> = [
-  ['pointerdown', onPointerDown],
-  ['pointermove', onPointerMove],
-  ['pointerup', onPointerUp],
-  ['pointercancel', onCancel],
-  ['touchcancel', onCancel],
-  // 长按变成拖拽也算拿走手势。不听 contextmenu：右键是鼠标的事，这里从不跟踪鼠标。
-  ['dragstart', onCancel],
-]
+/** 控制器在共用输入流（utils/inputStream.ts）上的订阅，全都被动，只在有人持有时存在。 */
+let unsubscribers: (() => void)[] = []
 
 function addListeners(): void {
-  for (const [type, listener] of WINDOW_LISTENERS)
-    window.addEventListener(type, listener as EventListener, PASSIVE_CAPTURE)
-  document.addEventListener('scroll', onScroll, PASSIVE_CAPTURE)
-  document.addEventListener('visibilitychange', onVisibilityChange)
+  unsubscribers = [
+    subscribeInput(window, 'pointerdown', onPointerDown),
+    subscribeInput(window, 'pointermove', onPointerMove),
+    subscribeInput(window, 'pointerup', onPointerUp),
+    subscribeInput(window, 'pointercancel', onCancel),
+    subscribeInput(window, 'touchcancel', onCancel),
+    subscribeInput(window, 'dragstart', onDragStart),
+    subscribeInput(window, 'scroll', onScroll),
+    subscribeInput(window, 'visibilitychange', onVisibilityChange),
+  ]
+  attachButtonKeys()
 }
 
 function removeListeners(): void {
-  for (const [type, listener] of WINDOW_LISTENERS)
-    window.removeEventListener(type, listener as EventListener, PASSIVE_CAPTURE)
-  document.removeEventListener('scroll', onScroll, PASSIVE_CAPTURE)
-  document.removeEventListener('visibilitychange', onVisibilityChange)
+  endContact(false)
+  boxHold?.endWaits()
+  for (const unsubscribe of unsubscribers)
+    unsubscribe()
+  unsubscribers = []
+  detachButtonKeys()
 }
 
 function resetClocks(): void {
@@ -298,7 +263,8 @@ export function installPressFeedback(): () => void {
     if (holders > 0)
       return
     removeListeners()
-    finish()
+    finish(finger)
+    finish(button)
     resetClocks()
   }
 }
@@ -307,8 +273,10 @@ export function installPressFeedback(): () => void {
 export function resetPressFeedbackForTest(): void {
   if (holders > 0 && typeof window !== 'undefined')
     removeListeners()
+  endContact(false)
   holders = 0
-  finish()
+  finish(finger)
+  finish(button)
   resetClocks()
 }
 

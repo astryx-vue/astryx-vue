@@ -4,7 +4,25 @@ title: Motion
 
 # Motion
 
-Durations come from the Neutral motion scale. The bases are fast 125, medium 300, and slow 700. Neighbors use a 0.75 ratio, and the results are rounded to 5 milliseconds. There is one easing token, `--astryx-ease-standard`: `cubic-bezier(0.24, 1, 0.4, 1)`.
+Durations come from the Neutral motion scale. The bases are fast 125, medium 300, and slow 700. Neighbors use a 0.75 ratio, and the results are rounded to 5 milliseconds. The standard easing, `--astryx-ease-standard`, is `cubic-bezier(0.24, 1, 0.4, 1)`: quick out of the gate, settling at the end. `--astryx-ease-entrance` and `--astryx-ease-move` time entrances and moves on screen, and equal the standard curve by default. `--astryx-ease-exit` is `cubic-bezier(0.3, 0, 0.6, 0.6)` for things leaving, and `--astryx-duration-exit` follows `--astryx-duration-fast`.
+
+## Tempo and character
+
+A theme's `motion` has two knobs that change the feel without listing durations:
+
+- **`tempo`** scales every duration, from 0.75 to 1.5 (default 1), to the millisecond. Higher is slower. A value outside the range is clamped. Springs such as `useAnimator`'s follow it too.
+- **`character`** picks the entrance and move curves: `'crisp'`, `'expressive'` (a little overshoot), or `'standard'` (the default), which keeps them on the standard curve. Exits are unchanged.
+
+```ts
+const calm = defineTheme({
+  name: 'calm',
+  motion: { tempo: 1.2, character: 'expressive' },
+})
+```
+
+A duration scale (`fast`, `medium`, `ratio`) wins over `tempo` for the durations it sets, and must supply all three. Explicit `tokens` win over both. A child theme keeps each knob it leaves out, and an adaptation rule can set them. A theme with no `motion` writes no motion token.
+
+## Shared keyframes
 
 Shared enter and exit keyframes live in `@astryx-vue/core` at `styles/motion.css`. They are available when you import `@astryx-vue/core/styles.css`, or any component sheet that pulls that file in. Existing components still use their own animation names, and these shared utility classes provide reusable motion primitives:
 
@@ -17,8 +35,17 @@ Shared enter and exit keyframes live in `@astryx-vue/core` at `styles/motion.css
 | `astryx-motion-slide-in-start` / `out` | from the start side |
 | `astryx-motion-slide-in-end` / `out` | from the end side |
 
-Distance and scale read `--astryx-motion-offset`, `--astryx-motion-scale-from`, and the opacity variables. When the system asks for reduced motion, those distances and the scale collapse to zero, opacity jumps to the end state, and the shared classes use a duration of `0.01ms`. Component duration tokens are left alone.
+Distance and scale read `--astryx-motion-offset`, `--astryx-motion-scale-from`, and the opacity variables. When the system asks for reduced motion, those distances and the scale collapse to zero, opacity jumps to the end state, and the shared classes use a duration of `0.01ms`. Component duration tokens are left alone. A layer's entrance (Popover, Tooltip, HoverCard, menus, the Selector list) and a Dialog's entrance stop travelling and scaling: under a coarse primary pointer (a finger) they fade in where they land, in 200ms on ease-in-out; under a mouse they appear at once.
 
 Replay the samples below. With reduced motion on, they sit at the end state.
 
 <TokenReference locale="en" motion :sections="['duration', 'ease']" />
+
+## Touch entrances and exits
+
+On a phone or a tablet, where the primary pointer is a finger, a modal layer takes no taps while it enters:
+
+- After Dialog, Drawer and MobileNav open, a finger's or a pen's taps and drags reach neither the page nor the layer until the entrance ends (300ms at most for MobileNav). Keys and assistive technology stay live, and input comes back the moment the entrance ends.
+- Nothing is held where the primary pointer is a mouse, a touchscreen laptop included. A mouse on a touch device still clicks: one that has not moved since presses where it rests.
+- A finger that was already down when the entrance started lifts onto what is beneath it, so a light-dismissing layer still closes.
+- While a BottomSheet slides out, the page stays live. If focus is still inside the sheet (there was nothing to return it to), the sheet's content stays exposed and only Tab works; once focus leaves, the whole sheet stops taking input until it is gone.

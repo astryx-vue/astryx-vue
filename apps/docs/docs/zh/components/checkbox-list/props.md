@@ -12,6 +12,8 @@ footer: false
 <tr><td><code>v-model</code></td><td><code>string[]</code></td><td>—</td><td>已勾选的值。独立行不要传。</td></tr>
 <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>必填。这一组的无障碍名称。</td></tr>
 <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>标签下的说明。</td></tr>
+<tr><td><code>isRequired</code></td><td><code>boolean</code></td><td><code>false</code></td><td>这一组至少要勾一项。标签后显示必填标记，规则和其他输入控件一样。一项都没勾时，浏览器会拦住提交，并带着自己的提示把焦点移到第一个既没禁用也不是只读的复选框上。禁用或只读的组不要求任何东西。错误文字用 <code>status</code> 自己给。和 <code>isOptional</code> 互斥。</td></tr>
+<tr><td><code>isOptional</code></td><td><code>boolean</code></td><td><code>false</code></td><td>这一组是可选的。标签后显示可选标记；外层 FormLayout 已经默认把字段设为可选时不重复显示。</td></tr>
 <tr><td><code>density</code></td><td><code>'compact' | 'balanced' | 'spacious'</code></td><td><code>'balanced'</code></td><td>行距。紧凑时用小号复选框。</td></tr>
 <tr><td><code>hasDividers</code></td><td><code>boolean</code></td><td><code>false</code></td><td>行与行之间画分隔线。</td></tr>
 <tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>—</td><td>错误、警告或成功。</td></tr>
@@ -34,7 +36,7 @@ footer: false
 <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>必填。行标题，也是复选框的名称。需要链接等富内容时用 <code>label</code> 插槽，复选框的名字取可见文字。</td></tr>
 <tr><td><code>ariaLabel</code></td><td><code>string</code></td><td>—</td><td>覆盖复选框的无障碍名称。富文本标题没有可读文字时使用。</td></tr>
 <tr><td><code>value</code></td><td><code>string</code></td><td>—</td><td>集合模式必填。独立行不要传。</td></tr>
-<tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>次要文字，同时作为复选框的说明。富内容用 <code>description</code> 插槽，仍然通过 <code>aria-describedby</code> 关联。</td></tr>
+<tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>次要文字，同时作为复选框的说明。字符串只显示一行，过长时行会用省略号截断；要显示完整文字，用 <code>description</code> 插槽，仍然通过 <code>aria-describedby</code> 关联。</td></tr>
 <tr><td><code>isChecked</code></td><td><code>boolean | 'indeterminate'</code></td><td>—</td><td>独立行的勾选状态。集合模式忽略它。</td></tr>
 <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>禁用这一行。</td></tr>
 <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>这一行自己的加载。复选框里显示旋转指示，并且不能切换。</td></tr>

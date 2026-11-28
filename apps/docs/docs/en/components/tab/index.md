@@ -35,6 +35,67 @@ const value = ref('inbox')
 </template>
 ```
 
+To explain a tab, anchor a `Tooltip` on the tab element and render it after the `TabList`. The tab is one button, so `endContent` stays decorative: the info icon here is not a second control.
+
+```vue
+<script setup lang="ts">
+import { Icon } from '@astryx-vue/core/Icon'
+import { Tab, TabList } from '@astryx-vue/core/TabList'
+import { Tooltip } from '@astryx-vue/core/Tooltip'
+import { computed, ref } from 'vue'
+
+const value = ref('general')
+const generalTab = ref<InstanceType<typeof Tab> | null>(null)
+const generalEl = computed(() => (generalTab.value?.$el as HTMLElement | undefined) ?? null)
+</script>
+
+<template>
+  <TabList v-model:value="value" role="tablist" aria-label="Settings">
+    <Tab ref="generalTab" value="general" panel-id="panel-general">
+      General
+      <template #endContent>
+        <Icon icon="info" size="sm" />
+      </template>
+    </Tab>
+    <Tab value="advanced" panel-id="panel-advanced">
+      Advanced
+    </Tab>
+  </TabList>
+  <Tooltip content="Name, language, and time zone for this workspace." :anchor="generalEl" />
+</template>
+```
+
+### Underline the whole tab in one strip
+
+The selected tab's underline stops at the tab's inline padding. An editor-style strip can run it edge to edge by restyling the `tab-indicator` target in a nested `Theme`. Only that strip changes; every other `TabList` keeps the app theme's underline. `insetInline` is not a guaranteed property of the target, so treat this override as best effort across releases.
+
+```vue
+<script setup lang="ts">
+import { Tab, TabList } from '@astryx-vue/core/TabList'
+import { defineTheme, Theme } from '@astryx-vue/core/Theme'
+import { ref } from 'vue'
+
+const fullWidthIndicator = defineTheme({
+  name: 'full-width-tab-indicator',
+  components: { 'tab-indicator': { base: { insetInline: '0' } } },
+})
+const value = ref('app')
+</script>
+
+<template>
+  <Theme :theme="fullWidthIndicator">
+    <TabList v-model:value="value" aria-label="Open files" size="sm" has-divider>
+      <Tab value="app">
+        App.vue
+      </Tab>
+      <Tab value="styles">
+        styles.css
+      </Tab>
+    </TabList>
+  </Theme>
+</template>
+```
+
 ## Examples
 
 Common configurations, variations, and states.

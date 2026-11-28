@@ -2,6 +2,8 @@
 import type { SegmentedControlItemProps, SegmentedControlItemSlots, SegmentedControlSize } from './types.js'
 import { computed, useAttrs, useTemplateRef } from 'vue'
 import { invokeNativeEventHandler } from '../Button/eventHandlers.js'
+import { hasSlotContent } from '../composables/internal/slotContent.js'
+import { useTouchHitArea } from '../composables/internal/useTouchHitArea.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { readLayerScoped } from '../layer/scopedProvide.js'
 import { segmentedControlContextKey } from './context.js'
@@ -26,7 +28,6 @@ defineExpose({ element })
 const size = computed<SegmentedControlSize>(() => context?.size.value ?? 'md')
 const isSelected = computed(() => context != null && context.value.value === props.value)
 const isDisabled = computed(() => props.isDisabled || (context?.isDisabled.value ?? false))
-const keepsSelectedFocusable = computed(() => isSelected.value && (context?.hasDisabledMessage.value ?? false) && !props.isDisabled)
 
 // A segment with only an icon has no label to truncate, so it keeps its
 // content size while labelled segments may shrink.
@@ -36,13 +37,23 @@ const tabIndex = computed(() => {
   if (context == null)
     return props.isDisabled ? -1 : 0
 
-  return (isSelected.value && !isDisabled.value) || keepsSelectedFocusable.value ? 0 : -1
+  // 选中的分段拿 Tab 落脚点，禁用与否都一样；点击仍然被 isDisabled 挡住。
+  return isSelected.value ? 0 : -1
 })
 
+const describedBy = computed(() => [
+  attrs['aria-describedby'],
+  context?.disabledReasonId.value,
+].filter(Boolean).join(' ') || undefined)
+
 function handleClick(event: MouseEvent): void {
+  // 禁用的分段（包括带原因的禁用组里还能聚焦的选中分段）不运行调用方的点击回调。
+  if (isDisabled.value)
+    return
+
   invokeNativeEventHandler(attrs.onClick, event)
 
-  if (event.defaultPrevented || isDisabled.value)
+  if (event.defaultPrevented)
     return
 
   context?.select(props.value)
@@ -50,6 +61,7 @@ function handleClick(event: MouseEvent): void {
 
 const controlledAttrs = new Set([
   'aria-checked',
+  'aria-describedby',
   'aria-disabled',
   'aria-label',
   'class',
@@ -65,7 +77,10 @@ const forwardedAttrs = computed(() => Object.fromEntries(
   Object.entries(attrs).filter(([key]) => !controlledAttrs.has(key)),
 ))
 
-const rootClass = computed(() => ['astryx-segmented-control-item', attrs.class])
+// 粗指针下每个可用的分段朝 44px 长出一圈看不见的热区，停在和邻居间距的一半，分段自己的盒子不变。
+useTouchHitArea(element, () => !isDisabled.value)
+
+const rootClass = computed(() => ['astryx-segmented-control-item', { 'astryx-touch-hit-area': !isDisabled.value }, attrs.class])
 </script>
 
 <template>
@@ -73,9 +88,11 @@ const rootClass = computed(() => ['astryx-segmented-control-item', attrs.class])
     ref="root"
     v-bind="{ ...forwardedAttrs, ...(isDisabled ? {} : press.pressableProps) }"
     :aria-checked="isSelected"
+    :aria-describedby="describedBy"
     :aria-disabled="isDisabled || undefined"
     :aria-label="isLabelHidden ? label : undefined"
     :class="rootClass"
+    :data-own-disabled="props.isDisabled || undefined"
     :data-icon-only="iconOnly || undefined"
     :data-selected="isSelected || undefined"
     :data-size="size"
@@ -87,7 +104,7 @@ const rootClass = computed(() => ['astryx-segmented-control-item', attrs.class])
     @click="handleClick"
   >
     <span
-      v-if="$slots.icon"
+      v-if="hasSlotContent($slots.icon)"
       class="astryx-segmented-control-item__icon"
       aria-hidden="true"
     >

@@ -14,7 +14,7 @@ import { codeBlockConfig, codeBlockDiff, codeBlockHighlighted, codeBlockScrollab
 
 `CodeBlock` 展示一段只读代码。从 `@astryx-vue/core/Code` 引入，和行内的 `Code` 在一起。`code` 字符串既是读者看到的内容，也是复制按钮写下的内容。
 
-`language` 选择分词器。`title` 在顶栏写上文件名。`hasLineNumbers` 画出行号槽。`highlightLines` 接收从 1 开始的行号，给这些行铺一层底色。`maxHeight` 限制正文高度，超出后纵向滚动。`hasCopyButton` 在有顶栏时放在顶栏里，没有顶栏时浮在右上角。
+`language` 选择分词器。`title` 在顶栏写上文件名。`hasLineNumbers` 画出行号槽。`highlightLines` 接收行号，给这些行铺一层底色；`startLineNumber` 让编号从文件里的真实行号开始，摘录也能对上原位置。`maxHeight` 限制正文高度，超出后纵向滚动。`hasCopyButton` 在有顶栏时放在顶栏里；没有顶栏时放在代码右边自己的一列里，与第一行居中对齐，不会有哪一行从它底下穿过。`endContent` 插槽把你自己的控件放在复制按钮前面的同一位置。
 
 `isDiff` 按 unified diff 给整行上色。行首 `+` 是新增，`-` 是删除，`@@` 是差异头。`---` 后面带空格、下一行是带空格的 `+++`、再下一行是 `@@` 时，前两行也是文件头。符号单独占一列，其余文本仍按 `language` 高亮。复制下去的还是原来的整段，符号也在里面。顶栏和视口名称会写成 `diff`，有语言时写成 `typescript diff` 这种。高亮行会盖住差异底色，不和它叠在一起。颜色用 `--astryx-code-syntax-added`、`--astryx-code-syntax-removed`、`--astryx-code-syntax-diff-header`，标记用对应的 `added-marker` 和 `removed-marker`，和其它语法色是同一套名字。
 

@@ -34,7 +34,7 @@
     background: var(--astryx-bottom-sheet-scrim, var(--astryx-color-overlay, rgb(0 0 0 / 50%)));
     opacity: var(--_sheet-scrim-opacity, 1);
     transition-property: opacity, display;
-    transition-duration: var(--astryx-duration-medium-max, 400ms);
+    transition-duration: var(--_sheet-scrim-duration, var(--astryx-duration-medium-max, 400ms));
     transition-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
     transition-behavior: allow-discrete;
   }
@@ -42,10 +42,12 @@
   /*
    * The dim leaves with the sheet on a linear curve: a fade covers no distance,
    * so a decelerate token would front-load its progress and leave an undimmed
-   * page under a sheet that is still sliding across it.
+   * page under a sheet that is still sliding across it. A swipe's close writes
+   * its spring's progress as the easing instead, so the dim clears as the
+   * sheet slides out.
    */
   .astryx-bottom-sheet-dialog--closing::backdrop {
-    transition-timing-function: linear;
+    transition-timing-function: var(--_sheet-scrim-easing, linear);
   }
 
   @starting-style {
@@ -62,31 +64,54 @@
     pointer-events: none;
   }
 
-  .astryx-bottom-sheet__positioner--active {
-    z-index: 2;
+  /*
+   * 切换器的整段流程外层只是个容器，每一步的对话框照常排版。没有遮罩时流程浮在页面上，
+   * 自己不接点击，进场那步排在被留下的那步上面。
+   */
+  .astryx-bottom-sheet-switcher-flow {
+    display: contents;
   }
 
-  .astryx-bottom-sheet__positioner--retained {
-    z-index: 1;
+  .astryx-bottom-sheet-switcher-flow--non-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: block;
+    isolation: isolate;
     pointer-events: none;
-    animation: astryx-sheet-handoff 400ms var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1)) forwards;
   }
 
-  @keyframes astryx-sheet-handoff {
-    0% {
-      transform: translateY(0);
-      opacity: 1;
-    }
+  .astryx-bottom-sheet-switcher--non-modal {
+    width: 100%;
+    height: 100%;
+  }
 
-    55% {
-      transform: translateY(var(--_sheet-align, 0px));
-      opacity: 1;
-    }
+  .astryx-bottom-sheet-switcher--non-modal-top {
+    z-index: 1;
+  }
 
-    100% {
-      transform: translateY(var(--_sheet-align, 0px));
-      opacity: 0;
-    }
+  /* 没有遮罩的面板接替另一张时排在被替换的那张上面。 */
+  .astryx-bottom-sheet-dialog--replacing {
+    z-index: 1;
+  }
+
+  /*
+   * 叠放里被盖住的面板往后退：最近的一张以顶边为轴缩小一档并上移，再往下的缩小两档，更深的都停在第二档。
+   * 叠放期间过渡一直挂着，回到最上面时也有动画。独立面板退的是对话框本身，切换器退的是那一步的定位层。
+   */
+  .astryx-bottom-sheet-stack-motion {
+    transform-origin: 50% 0;
+    transition-property: transform;
+    transition-duration: var(--astryx-duration-medium-max, 400ms);
+    transition-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
+  }
+
+  .astryx-bottom-sheet-stack-receded-1 {
+    transform: translateY(calc(-1 * var(--astryx-spacing-2, 8px))) scale(0.96);
+  }
+
+  .astryx-bottom-sheet-stack-receded-2 {
+    transform: translateY(calc(-2 * var(--astryx-spacing-2, 8px))) scale(0.92);
   }
 
   .astryx-bottom-sheet__positioner {
@@ -96,6 +121,14 @@
     display: flex;
     justify-content: center;
     pointer-events: none;
+  }
+
+  .astryx-bottom-sheet__positioner[hidden] {
+    display: none;
+  }
+
+  .astryx-bottom-sheet__positioner--top {
+    z-index: 1;
   }
 
   .astryx-bottom-sheet-inline {
@@ -144,8 +177,8 @@
     min-width: 0;
     min-height: 0;
     flex-direction: column;
-    margin-block-end: -48px;
-    padding-block-end: calc(env(safe-area-inset-bottom, 0px) + 48px);
+    margin-block-end: calc(-1 * var(--_sheet-reserve, 48px));
+    padding-block-end: calc(env(safe-area-inset-bottom, 0px) + var(--_sheet-reserve, 48px));
     border-block-start: var(--astryx-border-width, 1px) solid var(--_sheet-border);
     border-inline-start: var(--astryx-border-width, 1px) solid var(--_sheet-border);
     border-inline-end: var(--astryx-border-width, 1px) solid var(--_sheet-border);
@@ -165,6 +198,15 @@
     transition-duration: var(--astryx-duration-medium-max, 400ms);
     transition-timing-function: var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
     will-change: transform, opacity;
+
+    /*
+     * The dialog writes the scrim's values on itself for each move of a drag,
+     * and only its backdrop reads them. The panel ends their inheritance, so
+     * each write restyles nothing inside the sheet.
+     */
+    --_sheet-scrim-opacity: initial;
+    --_sheet-scrim-duration: initial;
+    --_sheet-scrim-easing: initial;
   }
 
   /*
@@ -194,6 +236,25 @@
     }
   }
 
+  /* 被替换、正在退场的面板不接点击；被替换的面板淡出时只动透明度。 */
+  .astryx-bottom-sheet[data-state='retained'],
+  .astryx-bottom-sheet[data-state='exiting'] {
+    pointer-events: none;
+  }
+
+  .astryx-bottom-sheet[data-state='retained'][data-motion='fading'] {
+    opacity: 0;
+  }
+
+  /*
+   * A finger's swipe close under reduced motion does not travel: the sheet
+   * holds where the finger left it and fades out there, within 200ms.
+   */
+  .astryx-bottom-sheet[data-state='exiting'][data-exit='fade'] {
+    opacity: 0;
+    transition-duration: 0.01s, 200ms;
+  }
+
   .astryx-bottom-sheet[data-dragging],
   .astryx-bottom-sheet[data-reconciling] {
     transition: none;
@@ -201,13 +262,13 @@
 
   .astryx-bottom-sheet[data-height='hug'] {
     height: fit-content;
-    max-height: calc(92dvh + 48px);
+    max-height: calc(92dvh + var(--_sheet-reserve, 48px));
   }
 
   .astryx-bottom-sheet[data-height='capped'],
   .astryx-bottom-sheet[data-height='tall'],
   .astryx-bottom-sheet[data-height='custom'] {
-    height: calc(var(--_sheet-budget, 62dvh) + 48px);
+    height: calc(var(--_sheet-budget, 62dvh) + var(--_sheet-reserve, 48px));
   }
 
   /*
@@ -224,6 +285,8 @@
     justify-content: center;
     height: var(--astryx-spacing-6, 24px);
     background-image: linear-gradient(to bottom, var(--astryx-bottom-sheet-background, var(--astryx-color-background-surface, #fff)) 60%, transparent);
+    /* WebKit can draw the bar under the body's layer while the panel's transform animates; a layer of its own keeps the pill above it. */
+    will-change: transform;
     touch-action: pinch-zoom;
     cursor: grab;
   }
@@ -260,33 +323,58 @@
   }
 
   /*
+   * The inset the on-screen keyboard takes at the end of a Tall sheet's
+   * content (useMobileKeyboard writes --_keyboard-inset), so its last control
+   * can scroll above the keyboard. It is the content box's last in-flow box,
+   * after the content's own children, not a box after the content: Firefox
+   * resolves the content's `min-height` as `auto` in the block axis, so the
+   * content box keeps the body's height while its children overflow it, and
+   * an inset after that box would add no scroll range.
+   */
+  .astryx-bottom-sheet__body[data-keyboard='tall'] > .astryx-bottom-sheet__content::after {
+    content: '';
+    display: block;
+    block-size: var(--_keyboard-inset, 0px);
+    pointer-events: none;
+  }
+
+  /*
    * The content box is a container. It keeps the body's block formatting and
    * its percentage-height basis, and it publishes the inset it applies.
    * Omitted `padding` reads the theme's bottom-sheet padding, then spacing 4.
    * An explicit step replaces that chain on every edge. Bleed children read
    * the same variables they sit inside.
+   *
+   * At the block start the box always leaves the grab bar's band (spacing 6)
+   * clear: it applies the band on top of the padding past it, and publishes
+   * only the padding past the band. A child escapes the padding, never the
+   * band, so the first row never sits under the bar; scrolled content still
+   * passes beneath it.
    */
   .astryx-bottom-sheet__content {
     box-sizing: border-box;
     display: flow-root;
     height: 100%;
-    min-height: min-content;
+    /* fit-content, not min-content: WebKit ignores min-content on a block's min-height. */
+    min-height: fit-content;
     --_sheet-pad-inline-start: var(--astryx-bottom-sheet-padding-inline-start, var(--astryx-bottom-sheet-padding-inline, var(--astryx-bottom-sheet-padding, var(--astryx-spacing-4, 1rem))));
     --_sheet-pad-inline-end: var(--astryx-bottom-sheet-padding-inline-end, var(--astryx-bottom-sheet-padding-inline, var(--astryx-bottom-sheet-padding, var(--astryx-spacing-4, 1rem))));
     --_sheet-pad-block-start: var(--astryx-bottom-sheet-padding-block-start, var(--astryx-bottom-sheet-padding, var(--astryx-spacing-4, 1rem)));
     --_sheet-pad-block-end: var(--astryx-bottom-sheet-padding-block-end, var(--astryx-bottom-sheet-padding, var(--astryx-spacing-4, 1rem)));
+    --_sheet-grab-band: var(--astryx-spacing-6, 24px);
+    --_sheet-pad-block-start-past-band: max(calc(var(--_sheet-pad-block-start) - var(--_sheet-grab-band)), 0px);
     --container-padding-inline-start: var(--_sheet-pad-inline-start);
     --container-padding-inline-end: var(--_sheet-pad-inline-end);
-    --container-padding-block-start: var(--_sheet-pad-block-start);
+    --container-padding-block-start: var(--_sheet-pad-block-start-past-band);
     --container-padding-block-end: var(--_sheet-pad-block-end);
     padding-inline: var(--container-padding-inline-start) var(--container-padding-inline-end);
-    padding-block: var(--container-padding-block-start) var(--container-padding-block-end);
+    padding-block: calc(var(--container-padding-block-start) + var(--_sheet-grab-band)) var(--container-padding-block-end);
     --layout-padding-own-outer-x: initial;
     --layout-padding-own-outer-y: initial;
     --layout-padding-outer-x: var(--_sheet-pad-inline-start);
-    --layout-padding-outer-y: var(--_sheet-pad-block-start);
+    --layout-padding-outer-y: var(--container-padding-block-start);
     --layout-padding-inner-x: var(--_sheet-pad-inline-start);
-    --layout-padding-inner-y: var(--_sheet-pad-block-start);
+    --layout-padding-inner-y: var(--container-padding-block-start);
   }
 
   .astryx-bottom-sheet__content[data-padding] {
@@ -346,6 +434,11 @@
    * the sheet's own surface colour: fixed, full width, flush with the bottom
    * edge, above the panel, and masked out so it is never visible.
    */
+  /* 浮层挂载点：自己不占地方，里面的浮层都是 fixed 定位，挂在拖动的面板外面不跟着位移。 */
+  .astryx-bottom-sheet__layer-host {
+    display: contents;
+  }
+
   .astryx-bottom-sheet__edge-tint {
     position: fixed;
     inset-inline: 0;
@@ -358,13 +451,24 @@
     -webkit-mask-image: linear-gradient(transparent, transparent);
   }
 
+  /*
+   * A sheet that was open in the server markup opens settled after hydration:
+   * the rise and the dim collapse to the near-zero duration reduced motion
+   * uses, so their transitions still end. The first close restores the motion.
+   */
+  .astryx-bottom-sheet-dialog[data-settled] .astryx-bottom-sheet,
+  .astryx-bottom-sheet-dialog[data-settled]::backdrop {
+    transition-duration: 0.01s;
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    .astryx-bottom-sheet {
+    .astryx-bottom-sheet,
+    .astryx-bottom-sheet-stack-motion {
       transition-duration: 0.01s;
     }
 
     .astryx-bottom-sheet-dialog--scrim::backdrop {
-      transition-duration: 0.01s;
+      transition-duration: var(--_sheet-scrim-duration, 0.01s);
     }
   }
 }

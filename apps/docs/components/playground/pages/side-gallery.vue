@@ -39,7 +39,7 @@ const IMAGES = [
 <template>
   <Layout height="fill" :content-width="1400">
     <LayoutContent role="main" :padding="6">
-      <Grid :columns="{ minWidth: 360, repeat: 'fit' }" :gap="8" align="center">
+      <Grid :columns="{ minWidth: 360, max: 2, repeat: 'fit' }" :gap="8" align="center">
         <VStack :gap="6" vAlign="center">
           <VStack :gap="3">
             <Text type="supporting" color="secondary" weight="semibold">
@@ -88,7 +88,7 @@ const IMAGES = [
         <Grid :columns="3" :gap="3">
           <AspectRatio
             v-for="img in IMAGES"
-            :key="img.src"
+            :key="img.alt"
             :ratio="1"
             :style="imageClip"
           >

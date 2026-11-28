@@ -15,7 +15,7 @@ footer: false
 <tr><td><code>isEnabled</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Prevents the trigger from opening the surface when false.</td></tr>
 <tr><td><code>width</code></td><td><code>number | string</code></td><td>Trigger width</td><td>Surface width. Numbers are pixels. When unset, the surface is at least as wide as the trigger and at most 320px (and never wider than the viewport).</td></tr>
 <tr><td><code>padding</code></td><td><code>0 | 0.5 | 1 | 1.5 | 2 | 3 | 4 | 5 | 6 | 8 | 10</code></td><td><code>3</code></td><td>Inner padding, mapped to the <code>--astryx-spacing-*</code> tokens.</td></tr>
-<tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>Accessible name of the dialog. Provide it when <code>role</code> is <code>dialog</code>.</td></tr>
+<tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>Accessible name of the dialog. Provide it when <code>role</code> is <code>dialog</code>. A bottom sheet without one is named by the trigger's text.</td></tr>
 <tr><td><code>role</code></td><td><code>'dialog' | 'none'</code></td><td><code>'dialog'</code></td><td>Use <code>dialog</code> for interactive content. Use <code>none</code> when the content already has its own role.</td></tr>
 <tr><td><code>isModal</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Keeps Tab focus inside the surface while it is open. Applies to <code>dialog</code> only.</td></tr>
 <tr><td><code>hasCloseButton</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Shows a close button that is visible only when focused.</td></tr>
@@ -24,6 +24,7 @@ footer: false
 <tr><td><code>hasLightDismiss</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Closes when the user presses outside the surface and the trigger.</td></tr>
 <tr><td><code>hasEscapeDismiss</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Closes when the user presses Escape.</td></tr>
 <tr><td><code>anchor</code></td><td><code>HTMLElement | null</code></td><td>—</td><td>External element to anchor to. No trigger wrapper is rendered and the default slot can be omitted; click, keydown and ARIA wiring land on the button inside that element.</td></tr>
+<tr><td><code>presentation</code></td><td><code>'popover' | 'bottom-sheet' | 'adaptive'</code></td><td><code>'popover'</code></td><td>The surface that holds the content. <code>popover</code> anchors it to the trigger, <code>bottom-sheet</code> presents it in a modal BottomSheet named by <code>label</code>, and <code>adaptive</code> uses the BottomSheet on a compact touch screen (a coarse pointer on a screen narrower than the theme's <code>md</code> width point or shorter than 500px, so a phone in either orientation) and the anchored popover elsewhere. In a sheet, <code>placement</code>, <code>alignment</code>, <code>width</code>, <code>role</code>, <code>isModal</code> and <code>hasAutoFocus</code> do not apply and <code>padding</code> insets the sheet's content. The sheet always closes on a tap outside it or a swipe down, whatever <code>hasLightDismiss</code> says; Escape follows <code>hasEscapeDismiss</code>. The surface is chosen as it opens and kept until it closes.</td></tr>
 </tbody></table>
 </div>
 

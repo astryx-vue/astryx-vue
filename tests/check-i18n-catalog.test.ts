@@ -2,18 +2,20 @@ import { execFileSync } from 'node:child_process'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { formatIcu, icuArgumentKinds } from '../packages/core/src/locale/icu.ts'
+import { formatIcu, icuArgumentKinds, icuSelectOptions } from '../packages/core/src/locale/icu.ts'
 import {
   checkBuiltInParity,
   checkBuiltInPlaceholders,
+  checkComponentMessageImports,
   checkCoverage,
   checkEnglishText,
   checkLocaleContracts,
   checkMapTargets,
+  checkPackageMessageImports,
   checkSourceRefs,
 } from '../scripts/i18n-catalog/checks.mjs'
 
-const icu = { argumentKinds: icuArgumentKinds, format: formatIcu }
+const icu = { argumentKinds: icuArgumentKinds, format: formatIcu, selectOptions: icuSelectOptions }
 const rootDir = join(dirname(fileURLToPath(import.meta.url)), '..')
 
 const enCatalog = {
@@ -106,6 +108,28 @@ describe('checkEnglishText', () => {
   })
 })
 
+describe('select placeholders', () => {
+  const selectCatalog = {
+    '@astryx.demo.menu': { defaultMessage: '{hasHeading, select, true {{heading}, } other {}}Open menu' },
+  }
+  const selectMap = { '@astryx.demo.menu': [{ path: 'demo.menu', args: ['hasHeading', 'heading'] }] }
+  const menu = (hasHeading: string, heading: string) => hasHeading === 'true' ? `${heading}, Open menu` : 'Open menu'
+
+  it('renders every branch, and does not ask a branch-only placeholder to reach the text', () => {
+    const trees = { 'en': { demo: { menu } }, 'zh-CN': { demo: { menu: (hasHeading: string, heading: string) => hasHeading === 'true' ? `${heading}，打开菜单` : '打开菜单' } } }
+    expect(checkBuiltInPlaceholders(selectMap, trees, selectCatalog, icu)).toEqual([])
+    expect(checkEnglishText(selectMap, trees.en, selectCatalog, icu)).toEqual([])
+  })
+
+  it('still reports a placeholder that no branch shows, and English that drifts in one branch', () => {
+    const dropped = { demo: { menu: () => 'Open menu' } }
+    expect(checkBuiltInPlaceholders(selectMap, { en: dropped }, selectCatalog, icu))
+      .toEqual(['en demo.menu：没有用上占位符 heading（对应 @astryx.demo.menu）'])
+    const drifted = { demo: { menu: (hasHeading: string, heading: string) => hasHeading === 'true' ? `${heading}: Open menu` : 'Open menu' } }
+    expect(checkEnglishText(selectMap, drifted, selectCatalog, icu)).toHaveLength(1)
+  })
+})
+
 describe('checkLocaleContracts', () => {
   it('accepts reordered placeholders and locale-specific plural branches', () => {
     const catalogs = {
@@ -151,6 +175,43 @@ describe('checkSourceRefs', () => {
     const result = checkSourceRefs(files, map)
     expect(result.count).toBe(2)
     expect(result.problems).toEqual(['Demo.vue:2  @astryx.demo.typo 不在 upstreamMap 里'])
+  })
+})
+
+describe('checkComponentMessageImports', () => {
+  it('reports a component that imports the whole built-in catalog', () => {
+    const files = [
+      { path: 'packages/core/src/Demo/Demo.vue', text: 'import { useComponentMessages } from \'../locale/context.js\'\nimport { useAstryxMessages } from \'../locale/index.js\'' },
+      { path: 'packages/core/src/Demo/useDemo.ts', text: 'import { useTranslator } from \'../locale/useTranslator.js\'' },
+      { path: 'packages/core/src/Demo/types.ts', text: 'import type { AstryxMessages } from \'../locale/messages.js\'' },
+    ]
+    expect(checkComponentMessageImports(files)).toEqual([
+      'packages/core/src/Demo/Demo.vue:2  引入了整份内置文案，改用 useComponentMessages',
+      'packages/core/src/Demo/useDemo.ts:1  引入了整份内置文案，改用 useComponentMessages',
+    ])
+  })
+
+  it('allows the locale module, the provider and the package entry', () => {
+    const files = [
+      { path: 'packages/core/src/locale/useTranslator.ts', text: 'import { useAstryxMessages } from \'./fullMessages.js\'' },
+      { path: 'packages/core/src/InternationalizationProvider/catalog.ts', text: 'import { builtInMessages } from \'../locale/fullMessages.js\'' },
+      { path: 'packages/core/src/index.ts', text: 'import { useTranslator } from \'./locale/index.js\'' },
+    ]
+    expect(checkComponentMessageImports(files)).toEqual([])
+  })
+})
+
+describe('checkPackageMessageImports', () => {
+  it('reports another package importing a whole-catalog helper from core', () => {
+    const files = [
+      { path: 'packages/richtext/src/A.vue', text: 'import { Field, useComponentMessages } from \'@astryx-vue/core\'' },
+      { path: 'packages/richtext/src/B.ts', text: 'import type { X } from \'vue\'\nimport {\n  Field,\n  useAstryxMessages,\n} from \'@astryx-vue/core\'' },
+      { path: 'packages/richtext/src/C.vue', text: 'import { useTranslator } from \'@astryx-vue/core\'' },
+    ]
+    expect(checkPackageMessageImports(files)).toEqual([
+      'packages/richtext/src/B.ts:2  引入了整份内置文案，改用 useComponentMessages',
+      'packages/richtext/src/C.vue:1  引入了整份内置文案，改用 useComponentMessages',
+    ])
   })
 })
 

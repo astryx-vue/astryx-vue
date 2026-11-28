@@ -24,7 +24,7 @@ import '@astryx-vue/themes/neutral.css'
 
 Put `data-astryx-theme` on the element that should take the theme. On `html`, that is the whole app. On a smaller element, only that subtree. Neutral also writes the same variables on `:root`, so a single-theme app can import `neutral.css` without the attribute. The other themes do not touch `:root`.
 
-Every theme loads Figtree and JetBrains Mono (400, 500, 600, 700, and 400 italic; Figtree also includes 600 italic). Butter, Chocolate, Gothic, Matcha, Stone, and Y2K also load their own text faces.
+Every theme loads Figtree and JetBrains Mono (400, 500, 600, 700, and 400 italic; Figtree also includes 600 italic). Butter, Chocolate, Gothic, Matcha, Stone, and Y2K also load their own text faces. All faces come from `@fontsource` packages the themes package depends on, so a page loads its fonts from its own origin and never from a font service.
 
 ## Entries
 

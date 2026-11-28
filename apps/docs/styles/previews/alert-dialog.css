@@ -1,5 +1,6 @@
 .alert-dialog-preview {
   display: grid;
+  justify-items: center;
   width: min(100%, 420px);
   gap: 16px;
 }

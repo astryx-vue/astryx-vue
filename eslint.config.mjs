@@ -9,8 +9,6 @@ export default antfu({
     'apps/docs/public/monaco/**',
     'apps/docs/components/playground/pages/**',
     'apps/docs/components/playground/playgroundCharts.ts',
-    'apps/docs/scripts/build-dashboard-cohort-funnel.mjs',
-    'apps/docs/scripts/port-playground-page.py',
     'packages/core/locales/**',
     'packages/lab/src/EmojiPicker/emoji-data.json',
     'packages/cli/src/generated/**',
@@ -32,6 +30,15 @@ export default antfu({
   rules: {
     // 工作区钉死 3.5.43，peer 范围是 ^3.5.0，同一个包名要留在两个 catalog 里。
     'pnpm/yaml-no-duplicate-catalog-item': ['error', { allow: ['vue'] }],
+  },
+}, {
+  // 调色板引擎是从上游搬来的数值算法，保持原来的写法：函数返回类型靠推断，常量按用到的顺序声明。
+  files: ['packages/core/src/palette/**/*.ts'],
+  rules: {
+    'ts/explicit-function-return-type': 'off',
+    'ts/no-use-before-define': 'off',
+    'no-unmodified-loop-condition': 'off',
+    'jsdoc/check-param-names': 'off',
   },
 }, {
   files: [

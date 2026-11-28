@@ -84,6 +84,12 @@ describe('parseRgb', () => {
 })
 
 describe('parseColor', () => {
+  it('returns null for names the prototype chain answers', () => {
+    expect(parseColor('constructor')).toBeNull()
+    expect(parseColor('__proto__')).toBeNull()
+    expect(parseColor('CONSTRUCTOR')).toBeNull()
+  })
+
   it('routes hex and rgb strings to the right parser', () => {
     expect(parseColor('#FFFFFF')).toEqual({ r: 255, g: 255, b: 255, a: 1 })
     expect(parseColor('rgb(1, 2, 3)')).toEqual({ r: 1, g: 2, b: 3, a: 1 })
@@ -190,6 +196,11 @@ describe('alpha application (conformance for charts/lab `colors.alpha`)', () => 
     const rgba = parseColor(color) ?? parseHex(color)
     return rgba === null ? color : formatColor({ ...rgba, a: opacity })
   }
+
+  it('preserves names the prototype chain answers', () => {
+    expect(applyAlpha('constructor', 0.2)).toBe('constructor')
+    expect(applyAlpha('__proto__', 1)).toBe('__proto__')
+  })
 
   it('applies opacity to an opaque hex color', () => {
     expect(applyAlpha('#0064E0', 0.2)).toBe('rgba(0, 100, 224, 0.2)')

@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { syntaxThemeDark, syntaxThemeLight } from '../../../../components/demos/syntax-theme'
+import { syntaxThemeDark, syntaxThemeHookKeywordColor, syntaxThemeLight } from '../../../../components/demos/syntax-theme'
 </script>
 
 ## 使用方法
@@ -56,4 +56,11 @@ const code = `const status = response.ok ? 'success' : 'error'`
   description="浅色文档上的代码示例，用 GitHub Light 这类浅色预设。"
   locale="zh"
   title="SyntaxTheme — Light Preset"
+/>
+
+<DemoExample
+  :demo="syntaxThemeHookKeywordColor"
+  description="在 GitHub Light 语法主题里，用 useSyntaxTheme 读出的关键字颜色给 const 这个词上色。"
+  locale="zh"
+  title="useSyntaxTheme —— 关键字颜色"
 />

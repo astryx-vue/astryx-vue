@@ -17,7 +17,7 @@ footer: false
 <tr><td><code>iconClass</code></td><td><code>string</code></td><td>—</td><td>文字前面的图标，传 CSS icon 的类名，例如 <code>i-carbon-home</code>。侧栏收起后，没有图标的项会被省略。</td></tr>
 <tr><td><code>selectedIconClass</code></td><td><code>string</code></td><td>—</td><td>选中时换成这个图标，不写就用 <code>iconClass</code>。</td></tr>
 <tr><td><code>isSelected</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是不是当前这一页。会写上 <code>aria-current="page"</code>，并套上选中样式。</td></tr>
-<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>禁用这一项。会挡掉默认行为，也不触发事件。</td></tr>
+<tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>禁用这一项。它仍可聚焦（<code>aria-disabled="true"</code>，保留 Tab 停靠点），但会挡掉默认行为、不触发事件，除了聚焦和失焦，你写的处理函数也都不会运行。</td></tr>
 <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>这一项的高和左右内边距。</td></tr>
 <tr><td><code>collapsible</code></td><td><code>boolean | { defaultIsCollapsed?: boolean, isCollapsed?: boolean }</code></td><td>—</td><td>下级能不能折叠。不传时，有下级就能折；传 <code>false</code> 则一直展开。写成对象可以设初始状态或者受控状态。</td></tr>
 </tbody></table>
@@ -29,7 +29,7 @@ footer: false
 
 ## 插槽
 
-- `default`：下级导航项。有下级的行会把它收成一个分组。
+- `default`：下级导航项。有下级的行会把它收成一个分组。下级行和顶层行一样占满列表宽度，只有内容按层级往里缩进，每层一步。
 - `icon`：文字前面的图标元素，和 `iconClass` 二选一。
 - `selectedIcon`：选中时的图标元素，不写就用 `icon`。
 - `end`：这一行末尾的内容，例如徽标或计数。

@@ -254,7 +254,7 @@ function visibilityLabel(value: string) {
     <template #header>
       <LayoutHeader :has-divider="false">
         <VStack :gap="isNarrow ? 3 : 5">
-          <HStack :gap="3" align="center">
+          <HStack :gap="3" align="center" wrap="wrap">
             <StackItem size="fill">
               <Heading :level="1">
                 Create workspace
@@ -542,15 +542,16 @@ function visibilityLabel(value: string) {
 
     <template #footer>
       <LayoutFooter>
-        <HStack :gap="3" align="center">
+        <HStack :gap="3" align="center" wrap="wrap">
           <StackItem size="fill" :style="{ flexBasis: 0 }">
             <Button v-if="STEPS[step].isOptional" label="Skip" variant="ghost" @click="goSkip" />
           </StackItem>
           <Text type="supporting" color="secondary">
             {{ step + 1 }} of {{ STEPS.length }}
           </Text>
-          <StackItem size="fill" :style="{ flexBasis: 0 }">
-            <HStack :gap="3" justify="end">
+          <!-- Back 和 Next 在计数旁放不下时，这一区整体换到自己的一行，更窄时两个按钮在区内叠放而不是被截断。 -->
+          <StackItem size="fill" :style="{ flexBasis: 0, minWidth: 'fit-content' }">
+            <HStack :gap="3" justify="end" wrap="wrap">
               <Button
                 label="Back"
                 variant="secondary"

@@ -1,4 +1,6 @@
 import type { VueWrapper } from '@vue/test-utils'
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { renderToString } from '@vue/server-renderer'
 import { enableAutoUnmount, mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it } from 'vitest'
@@ -35,7 +37,7 @@ describe('progressBar', () => {
   it('clamps value within min and max', () => {
     const wrapper = renderProgressBar({ value: 120, max: 100 })
     expect(wrapper.get('[role="progressbar"]').attributes('aria-valuenow')).toBe('100')
-    expect(wrapper.get('.astryx-progress-bar-fill').attributes('style')).toContain('width: 100%')
+    expect(wrapper.get('.astryx-progress-bar-fill').attributes('style')).toContain('--_progress-bar-fill: 100%')
   })
 
   it('renders indeterminate state without aria-valuenow', () => {
@@ -97,9 +99,61 @@ describe('progressBar', () => {
     const marks = wrapper.findAll('.astryx-progress-bar-mark')
     expect(marks).toHaveLength(2)
     expect(marks[0]!.attributes('aria-label')).toBe('Quarter')
+    expect(marks[0]!.attributes('role')).toBe('img')
     expect(marks[0]!.attributes('data-placement')).toBe('fill')
     expect(marks[1]!.attributes('data-placement')).toBe('track')
     expect(wrapper.get('.astryx-progress-bar-mark-anchor').attributes('style')).toContain('25%')
+  })
+
+  it('moves the determinate fill with a transform, not its width', () => {
+    const wrapper = renderProgressBar({ value: 30 })
+    const fill = wrapper.get('.astryx-progress-bar-fill').element as HTMLElement
+    expect(fill.style.width).toBe('')
+    expect(fill.style.getPropertyValue('--_progress-bar-fill')).toBe('30%')
+    const css = readFileSync(resolve(__dirname, '../../styles/progress-bar.css'), 'utf8')
+    const rule = css.match(/\n {2}\.astryx-progress-bar-fill \{([^}]*)\}/)![1]
+    expect(rule).toMatch(/width:\s*100%/)
+    expect(rule).toMatch(/transition:\s*transform/)
+    expect(rule).toMatch(/transform:\s*translateX\(calc\(var\(--_progress-bar-fill, 0%\) - 100%\)\)/)
+    expect(css).toMatch(/\.astryx-progress-bar-fill:dir\(rtl\)\s*\{[^}]*translateX\(calc\(100% - var\(--_progress-bar-fill, 0%\)\)\)/)
+  })
+
+  it('times a value change by the share of the track it moves, flipping the return offset', async () => {
+    const wrapper = renderProgressBar({ value: 10 })
+    const vars = () => {
+      const style = (wrapper.get('.astryx-progress-bar-fill').element as HTMLElement).style
+      return {
+        move: style.getPropertyValue('--_progress-bar-move'),
+        flip: style.getPropertyValue('--_progress-bar-flip'),
+        curve: style.getPropertyValue('--_progress-bar-curve'),
+        min: style.getPropertyValue('--_progress-bar-min'),
+      }
+    }
+    expect(vars()).toMatchObject({ move: '0ms', flip: '0', min: '16px' })
+    await wrapper.setProps({ value: 90 })
+    expect(vars()).toMatchObject({ move: '800ms', flip: '1' })
+    await wrapper.setProps({ value: 10 })
+    expect(vars()).toMatchObject({ move: '800ms', flip: '2' })
+    await wrapper.setProps({ value: 20 })
+    expect(vars()).toMatchObject({ move: '100ms', flip: '0' })
+    expect(vars().curve).not.toBe('')
+  })
+
+  it('gives the indeterminate fill the reduced-motion pulse variables', () => {
+    const wrapper = renderProgressBar({ isIndeterminate: true })
+    const style = (wrapper.get('.astryx-progress-bar-fill').element as HTMLElement).style
+    expect(style.getPropertyValue('--_progress-bar-pulse')).toBe('2000ms')
+    expect(style.getPropertyValue('--_progress-bar-pulse-floor')).toBe('0.84')
+    expect(style.getPropertyValue('--_progress-bar-pulse-curve')).not.toBe('')
+    const css = readFileSync(resolve(__dirname, '../../styles/progress-bar.css'), 'utf8')
+    expect(css).toMatch(/@keyframes astryx-progress-bar-pulse/)
+    expect(css).toMatch(/animation-direction:\s*alternate/)
+  })
+
+  it('paints nothing at zero under a finger', () => {
+    const wrapper = renderProgressBar({ value: 0 })
+    expect(wrapper.get('.astryx-progress-bar-fill').attributes('data-empty')).toBeDefined()
+    expect(renderProgressBar({ value: 5 }).get('.astryx-progress-bar-fill').attributes('data-empty')).toBeUndefined()
   })
 
   it('hides marks while the progress is indeterminate', () => {
@@ -123,7 +177,7 @@ describe('progressBar', () => {
   it('treats a non-finite value as empty progress', () => {
     const wrapper = renderProgressBar({ value: Number.NaN, max: 100 })
     expect(wrapper.get('[role="progressbar"]').attributes('aria-valuenow')).toBe('0')
-    expect(wrapper.get('.astryx-progress-bar-fill').attributes('style')).toContain('width: 0%')
+    expect(wrapper.get('.astryx-progress-bar-fill').attributes('style')).toContain('--_progress-bar-fill: 0%')
   })
 
   it('renders server-side', async () => {
@@ -142,5 +196,17 @@ describe('progressBar', () => {
     expect(root.attributes('data-disabled')).toBe('true')
     expect(root.attributes('data-variant')).toBe('success')
     expect(disabled.get('.astryx-progress-bar-value').text()).toBe('50%')
+  })
+
+  it('draws fills in roles that reach 3:1 on the track, and dims a disabled bar at half opacity', () => {
+    const css = readFileSync(resolve(__dirname, '../../styles/progress-bar.css'), 'utf8')
+    const fill = (selector: string) => css.match(new RegExp(`${selector}[^{]*\\{([^}]*)\\}`))![1]
+    // 状态填充读状态文字角色，neutral 读次要文字角色，不再读禁用文字色（它在有些主题里就是暗色轨道的颜色）。
+    expect(fill('\\[data-variant=\'success\'\\] \\.astryx-progress-bar-fill')).toContain('--astryx-color-text-success')
+    expect(fill('\\[data-variant=\'warning\'\\] \\.astryx-progress-bar-fill')).toContain('--astryx-color-text-warning')
+    expect(fill('\\[data-variant=\'error\'\\] \\.astryx-progress-bar-fill')).toContain('--astryx-color-text-error')
+    expect(fill('\\[data-variant=\'neutral\'\\] \\.astryx-progress-bar-fill')).toContain('--astryx-color-text-secondary')
+    expect(fill('\\[data-disabled\\] \\.astryx-progress-bar-fill')).toContain('--astryx-color-text-secondary')
+    expect(fill('\\[data-disabled\\] \\.astryx-progress-bar-track')).toMatch(/opacity:\s*0\.5/)
   })
 })

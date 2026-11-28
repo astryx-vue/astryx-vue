@@ -3,6 +3,13 @@ import { Button } from '@astryx-vue/core/Button'
 import { Layout, LayoutContent, LayoutFooter, LayoutHeader } from '@astryx-vue/core/Layout'
 import { HStack, VStack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
+import { useToast } from '@astryx-vue/core/Toast'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 </script>
 
 <template>
@@ -27,8 +34,8 @@ import { Text } from '@astryx-vue/core/Text'
     <template #footer>
       <LayoutFooter has-divider>
         <HStack :gap="2" h-align="end">
-          <Button label="Cancel" variant="secondary" />
-          <Button label="Submit" variant="primary" />
+          <Button label="Cancel" variant="secondary" @click="demo('Cancel')" />
+          <Button label="Submit" variant="primary" @click="demo('Submit')" />
         </HStack>
       </LayoutFooter>
     </template>

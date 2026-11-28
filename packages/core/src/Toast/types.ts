@@ -75,6 +75,8 @@ export interface ToastItem {
   isAutoHide: boolean
   autoHideDuration: number
   uniqueID?: string
+  /** 同一个 `uniqueID` 的新提示每覆盖一次加 1，卡片据此重新开始自动关闭计时。 */
+  revision: number
   endContent?: Component
   onDismiss?: (reason: ToastDismissReason) => void
   onHide?: (reason: ToastDismissReason) => void

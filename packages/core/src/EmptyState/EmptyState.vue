@@ -2,6 +2,7 @@
 import type { VNode } from 'vue'
 import type { EmptyStateProps, EmptyStateSlots } from './types.js'
 import { Comment, computed, Fragment, Text as TextVNode, useSlots, useTemplateRef } from 'vue'
+import { useAnnounceRenderedText } from '../composables/internal/announceRenderedText.js'
 import Heading from '../Heading/Heading.vue'
 import Text from '../Text/Text.vue'
 import '../../styles/empty-state.css'
@@ -44,13 +45,17 @@ const element = computed(() => root.value ?? null)
 defineExpose({ element })
 
 const variant = computed(() => (props.isCompact ? 'compact' : undefined))
+
+// 根不是 live 区域：带着文字一起出生的 live 区域，读屏念不念全看软件。
+// 页面加载之后才出现、或之后文字变了，把标题和描述通过共用的播报通道念一次；页面加载时就在的保持安静。
+const text = useTemplateRef<HTMLDivElement>('text')
+useAnnounceRenderedText(text, true, { skipFirstRender: true })
 </script>
 
 <template>
   <div
     ref="root"
     class="astryx-empty-state"
-    role="status"
     :data-variant="variant"
   >
     <div
@@ -61,7 +66,7 @@ const variant = computed(() => (props.isCompact ? 'compact' : undefined))
       <slot name="icon" />
     </div>
 
-    <div class="astryx-empty-state-text">
+    <div ref="text" class="astryx-empty-state-text">
       <Heading
         :level="headingLevel"
         class="astryx-empty-state-title"

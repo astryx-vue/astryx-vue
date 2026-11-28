@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useInputStatusIconCouponCode } from '../../../../components/demos/use-input-status-icon'
 </script>
 
 ## 使用方法
@@ -28,3 +29,14 @@ import { useInputStatusIcon } from '@astryx-vue/core'
 | <Badge variant="success">推荐</Badge> | 在输入框容器里渲染 `statusIcon`，属性接 `statusIconProps`。 |
 | <Badge variant="success">推荐</Badge> | 该不该画交给它判断，`isInGroup` 和 `statusVariant` 原样传进去，不要在调用处自己分支。 |
 | <Badge variant="error">不要</Badge> | 只靠图标传达状态；只有 `tooltip` 这一种带文案，其它还得配状态文案。 |
+
+## 示例
+
+常见配置、变体和状态。
+
+<DemoExample
+  :demo="useInputStatusIconCouponCode"
+  description="一个自己画边框的优惠码输入框，状态标记交给 useInputStatusIcon 决定。填错显示错误状态，填 SAVE20 显示成功。切换摆放方式：attached 在框里画一个图标、文案写在下面；detached 框里不画图标；tooltip 画一个能用键盘和读屏够到说明的按钮。"
+  locale="zh"
+  title="useInputStatusIcon — 优惠码状态"
+/>

@@ -523,7 +523,7 @@ Slots are drawer, headerActions, headerContext, input, footerActions, sendAction
         <td><code>isDisabled</code></td>
         <td><code>boolean</code></td>
         <td>The shell's disabled state</td>
-        <td>Disables editing.</td>
+        <td>Disables editing. The editor stays focusable and keeps its place in the Tab order.</td>
       </tr>
       <tr>
         <td><code>pasteAsToken</code></td>
@@ -536,6 +536,12 @@ Slots are drawer, headerActions, headerContext, input, footerActions, sendAction
         <td><code>(event, text) => boolean | void</code></td>
         <td>-</td>
         <td>First chance at a plain-text paste. Return true and the input will not insert it.</td>
+      </tr>
+      <tr>
+        <td><code>enterKeyHint</code></td>
+        <td><code>'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send'</code></td>
+        <td><code>'send'</code></td>
+        <td>What the Return key of a touch keyboard says. Pass 'enter' when a keydown listener makes Enter insert a line break on touch keyboards. Enter submits under every label.</td>
       </tr>
     </tbody>
   </table>

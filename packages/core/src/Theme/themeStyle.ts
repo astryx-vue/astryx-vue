@@ -6,7 +6,36 @@
  * Card background and border are not aliases: Neutral paints them with its own
  * stops, and they follow the semantic token only when a theme sets one.
  */
+const STATUSES = ['info', 'success', 'warning', 'error'] as const
+const FIELD_STATUSES = ['success', 'warning', 'error'] as const
+
+/**
+ * Component tokens that Neutral points at a status role, so a theme that sets
+ * or derives the role (see statusRoleDerivation.ts) recolors them too.
+ */
+function statusBridges(): Record<string, readonly string[]> {
+  const bridges: Record<string, string[]> = {}
+  const add = (source: string, ...targets: string[]): void => {
+    (bridges[source] ??= []).push(...targets)
+  }
+  for (const s of STATUSES) {
+    add(`--astryx-color-${s}`, `--astryx-badge-${s}-background`, `--astryx-avatar-status-dot-${s}-background`, `--astryx-progress-bar-${s}-fill`, `--astryx-status-dot-${s}-background`)
+    add(`--astryx-color-on-${s}`, `--astryx-badge-${s}-foreground`)
+    add(`--astryx-color-icon-${s}`, `--astryx-icon-${s}-foreground`)
+  }
+  for (const s of FIELD_STATUSES) {
+    add(`--astryx-color-border-${s}`, `--astryx-input-${s}`)
+    add(`--astryx-color-${s}-muted`, `--astryx-input-${s}-background`)
+    add(`--astryx-color-on-${s}-muted`, `--astryx-input-${s}-foreground`)
+  }
+  add('--astryx-color-error-muted', '--astryx-button-destructive-background')
+  add('--astryx-color-on-error-muted', '--astryx-button-destructive-foreground')
+  add('--astryx-color-text-error', '--astryx-dropdown-menu-destructive-foreground', '--astryx-more-menu-destructive-foreground')
+  return bridges
+}
+
 const COMPONENT_BRIDGES: Record<string, readonly string[]> = {
+  ...statusBridges(),
   '--astryx-color-text-primary': [
     '--astryx-text-foreground',
     '--astryx-heading-foreground',

@@ -165,12 +165,15 @@ const POLICIES = ['Refund policy', 'Privacy policy', 'Terms of service', 'Cancel
 
 const fullWidth: CSSProperties = { width: '100%' }
 // Form column flex-basis so the two checkout columns share width evenly.
-const formColBasis: CSSProperties = { flexBasis: 0 }
+// The min widths let the two columns wrap on a narrow first paint, before
+// script picks the stacked layout; on desktop both columns are wider.
+const formColBasis: CSSProperties = { flexBasis: 0, minWidth: 'min(100%, 320px)' }
 // Space the Order Summary content below its collapsible trigger title.
 const summaryContent: CSSProperties = { paddingBlockStart: 'var(--astryx-spacing-2)' }
 // Order-summary column: sticky beside the form on desktop.
 const summarySticky: CSSProperties = {
   flexBasis: 0,
+  minWidth: 'min(100%, 300px)',
   position: 'sticky',
   top: 'var(--astryx-spacing-4)',
   alignSelf: 'flex-start',
@@ -289,7 +292,7 @@ function confirmRemove(name: string) {
                 </VStack>
                 <Divider />
               </VStack>
-              <Stack :direction="isMobile ? 'vertical' : 'horizontal'" :gap="8" align="start">
+              <Stack :direction="isMobile ? 'vertical' : 'horizontal'" :gap="8" align="start" :wrap="isMobile ? 'nowrap' : 'wrap'">
                 <StackItem size="fill" :style="isMobile ? undefined : formColBasis">
                   <VStack :gap="8">
                     <VStack :gap="1">
@@ -409,7 +412,9 @@ function confirmRemove(name: string) {
                         <StackItem size="fill">
                           <TextInput v-model="promo" size="lg" label="Promo code" is-label-hidden placeholder="Enter promo code" :style="fullWidth" />
                         </StackItem>
-                        <Button label="Apply" variant="secondary" size="lg" @click="showToast({ body: 'Demo: the promo code would be applied here', uniqueID: 'apply-promo' })" />
+                        <StackItem>
+                          <Button label="Apply" variant="secondary" size="lg" @click="showToast({ body: 'Demo: the promo code would be applied here', uniqueID: 'apply-promo' })" />
+                        </StackItem>
                       </HStack>
                     </VStack>
                     <VStack :gap="3">

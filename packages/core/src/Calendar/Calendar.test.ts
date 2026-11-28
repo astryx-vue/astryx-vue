@@ -11,6 +11,11 @@ function flushPromises() {
   })
 }
 
+async function focusDay(wrapper: ReturnType<typeof mount>, day: number): Promise<void> {
+  const cell = wrapper.findAll('.astryx-calendar-cell').find(c => !c.classes().includes('is-other-month') && c.text() === String(day))
+  await cell?.trigger('focus')
+}
+
 describe('calendar', () => {
   it('renders calendar grid', () => {
     const wrapper = mount(Calendar, {
@@ -313,5 +318,47 @@ describe('calendar', () => {
     await wrapper.get('.astryx-calendar-grid').trigger('keydown', { key: 'Escape' })
     const cleared = wrapper.emitted('update:range')?.at(-1)?.[0] as { start: Date | null, end: Date | null }
     expect(cleared.start).toBeNull()
+  })
+
+  it('moves the focused day by a year with Shift+PageDown and Shift+PageUp', async () => {
+    const wrapper = mount(Calendar, { props: { focusDate: new Date(2026, 2, 15) } })
+    const grid = wrapper.get('.astryx-calendar-grid')
+    await focusDay(wrapper, 15)
+    await grid.trigger('keydown', { key: 'PageDown', shiftKey: true })
+    await nextTick()
+    expect(wrapper.get('.astryx-calendar-month-year').text()).toBe('March 2027')
+    expect(wrapper.get('.astryx-calendar-cell[tabindex="0"]').text()).toBe('15')
+    await grid.trigger('keydown', { key: 'PageUp', shiftKey: true })
+    await nextTick()
+    expect(wrapper.get('.astryx-calendar-month-year').text()).toBe('March 2026')
+  })
+
+  it('a year from February 29 lands on February 28, and a year past max keeps focus', async () => {
+    const leap = mount(Calendar, { props: { focusDate: new Date(2024, 1, 29) } })
+    await focusDay(leap, 29)
+    await leap.get('.astryx-calendar-grid').trigger('keydown', { key: 'PageDown', shiftKey: true })
+    await nextTick()
+    expect(leap.get('.astryx-calendar-month-year').text()).toBe('February 2025')
+    expect(leap.get('.astryx-calendar-cell[tabindex="0"]').text()).toBe('28')
+
+    const capped = mount(Calendar, { props: { focusDate: new Date(2026, 2, 15), max: new Date(2027, 2, 14) } })
+    await focusDay(capped, 15)
+    await capped.get('.astryx-calendar-grid').trigger('keydown', { key: 'PageDown', shiftKey: true })
+    await nextTick()
+    expect(capped.get('.astryx-calendar-month-year').text()).toBe('March 2026')
+  })
+
+  it('writes day and week numbers with the locale digits', () => {
+    const host = defineComponent({
+      setup() {
+        provideAstryxLocale('ar-EG')
+        return () => h(Calendar, { focusDate: new Date(2026, 0, 1), hasWeekNumbers: true })
+      },
+    })
+    const wrapper = mount(host)
+    expect(wrapper.find('.astryx-calendar-day').text()).toMatch(/^[\u0660-\u0669]+$/)
+    expect(wrapper.find('.astryx-calendar-week-number').text()).toMatch(/^[\u0660-\u0669]+$/)
+    const latin = mount(Calendar, { props: { focusDate: new Date(2026, 0, 1), hasWeekNumbers: true } })
+    expect(latin.find('.astryx-calendar-day').text()).toMatch(/^\d+$/)
   })
 })

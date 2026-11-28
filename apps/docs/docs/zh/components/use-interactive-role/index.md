@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useInteractiveRoleRoles } from '../../../../components/demos/use-interactive-role'
 </script>
 
 ## 使用方法
@@ -28,3 +29,14 @@ import { useInteractiveRole } from '@astryx-vue/core'
 | <Badge variant="success">推荐</Badge> | 按返回的角色挑元素，只有 `"link"` 才渲染 `a`，键盘和中键新开标签这些行为就由浏览器负责。 |
 | <Badge variant="success">推荐</Badge> | `isDisabled` 原样传进去，不要自己先把 href 丢掉；判断角色时它会自己忽略停用的地址。 |
 | <Badge variant="error">不要</Badge> | 在组件里再写一套 href / 点击谁优先的判断；所有组件都该用同一个顺序。 |
+
+## 示例
+
+常见配置、变体和状态。
+
+<DemoExample
+  :demo="useInteractiveRoleRoles"
+  description="同一个多态 Tile 的三种用法：有 href 就渲染成链接，有点击处理就渲染成按钮，都没有就是普通内容——判断先后顺序集中在一处。"
+  locale="zh"
+  title="useInteractiveRole — 一个 Tile，三种角色"
+/>

@@ -8,7 +8,7 @@ defineSlots<RadioListItemSlots>()
 </script>
 
 <template>
-  <Radio :value="value" :label="label" :description="description" :is-disabled="isDisabled" :is-read-only="isReadOnly">
+  <Radio :align="align" :value="value" :label="label" :description="description" :is-disabled="isDisabled" :is-read-only="isReadOnly">
     <template v-if="$slots.label" #label>
       <slot name="label" />
     </template>

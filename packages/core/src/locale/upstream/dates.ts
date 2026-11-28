@@ -30,6 +30,8 @@ export const datesUpstreamMap: UpstreamMapPart = {
   '@astryx.dateInput.chooseMonthYear': [{ path: 'dateInput.chooseMonthYear', args: ['monthYear'] }],
   '@astryx.dateInput.monthWheel': [{ path: 'dateInput.monthWheel' }],
   '@astryx.dateInput.yearWheel': [{ path: 'dateInput.yearWheel' }],
+  '@astryx.dateInput.formatHint': [{ path: 'dateInput.formatHint', args: ['example'] }],
+  '@astryx.dateInput.calendarDescription': [{ path: 'dateInput.calendarDescription', args: ['calendar'] }],
 
   '@astryx.dateRangeInput.placeholder': [{ path: 'dateRangeInput.placeholder' }],
   '@astryx.dateRangeInput.dialogLabel': [{ path: 'dateRangeInput.dialogLabel' }],
@@ -61,5 +63,7 @@ export const datesUpstreamMap: UpstreamMapPart = {
   '@astryx.timestamp.copyValue': [{ path: 'timestamp.copyValue', args: ['value'] }],
   '@astryx.timestamp.copy': [{ path: 'timestamp.copy' }],
   '@astryx.timestamp.copied': [{ path: 'timestamp.copied' }],
+  '@astryx.timestamp.copyFailed': [{ path: 'timestamp.copyFailed' }],
+  '@astryx.timestamp.relativeLabel': [{ path: 'timestamp.relativeLabel', args: ['relative', 'date'] }],
   '@astryx.timestamp.detailsLabel': [{ path: 'timestamp.detailsLabel' }],
 }

@@ -30,6 +30,15 @@ The layer order is:
 
 Application overrides belong in `astryx.overrides`. Unlayered global CSS beats these layers, so a bare `button { }` will paint over the component unless that is what you want.
 
+## Rules for your own styles
+
+Every approach below reads the same variables, so themes and dark mode keep working as long as these hold:
+
+- Take spacing, color, radius, and shadow from `var(--astryx-*)`, never from raw px or hex.
+- Put every hover style behind `@media (hover: hover)`, so a touch screen does not keep it after a tap.
+- Style a state through the component's props, and reach a component from your own CSS by its class and data attributes, such as `.astryx-button[data-variant="primary"]`, instead of toggling class names onto it.
+- To restyle a component everywhere, give the theme a `components` override in `defineTheme` and apply it with [Theme](/en/components/theme), instead of page-level selectors.
+
 ## Using Tailwind or UnoCSS alongside
 
 They work together as long as the layer order is fixed.
@@ -47,6 +56,8 @@ One rule matters: the position of every layer on the page is set by **where it f
 Earlier layers are weaker and later layers win. The utilities layer sits after `astryx.components`, so `class="p-0"` beats the padding a component sets. `astryx.overrides` sits before utilities, so it cannot beat them. When one rule must win over a utility class, do not reach for `overrides`; reorder the layers, or write the rule unlayered.
 
 One note on syntax: an `@layer` statement may come before `@import`. That is one of the few orders CSS allows; the other way round the whole block is discarded as invalid.
+
+Put the `@layer` statement above `@import 'tailwindcss'` in an app that already uses Tailwind, too. Written below the Tailwind import, it is still valid CSS, but Tailwind's own layers have already taken their places, so every `astryx.*` layer lands after `utilities`. The Astryx reset then outranks every utility class, and nothing reports it.
 
 ### Use our variables in utility classes
 

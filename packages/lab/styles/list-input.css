@@ -15,7 +15,9 @@
     container-name: list-input;
   }
 
+  /* 列表是重排会话的列表：插入线画在它的 ::after 上。 */
   .astryx-list-input__list {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: var(--astryx-spacing-2, 8px);
@@ -44,14 +46,24 @@
   }
 
   /*
-   * 一行：先是所有字段，然后是删除按钮，最后是拖动手柄。
-   * 控件列宽固定成一格控件的大小，字段列吃掉剩下的空间。
+   * 一行：先是所有字段，然后一格控件（删除按钮，可重排时后面跟着重排手柄）。
+   * 控件格的宽度是固定的，所以没有控件的添加行也和字段一样宽。
+   * core 的重排手柄会伸进 ListItem 行的内边距；记录没有内边距，手柄和它的焦点框停在行的边上。
    */
-  .astryx-list-input__row {
+  .astryx-list-input__row,
+  .astryx-list-input__action-row {
     display: grid;
-    align-items: end;
-    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-columns: minmax(0, 1fr) var(--astryx-size-element-md, 32px);
     column-gap: var(--astryx-spacing-1, 4px);
+  }
+
+  .astryx-list-input[data-reorderable] :is(.astryx-list-input__row, .astryx-list-input__action-row) {
+    grid-template-columns: minmax(0, 1fr) calc(var(--astryx-size-element-md, 32px) + var(--astryx-spacing-1, 4px) + 28px);
+  }
+
+  .astryx-list-input__row {
+    --astryx-item-inset-inline: 0px;
+    align-items: end;
     row-gap: 0;
     min-width: 0;
   }
@@ -85,109 +97,70 @@
     min-width: 0;
   }
 
+  /* 删除按钮和重排手柄共用一格；没有手柄的记录里，删除按钮仍待在自己那一列。 */
   .astryx-list-input__control-cell {
     display: flex;
     align-items: center;
     align-self: end;
-    justify-content: center;
+    justify-content: flex-start;
+    column-gap: var(--astryx-spacing-1, 4px);
     min-height: var(--astryx-size-element-md, 32px);
   }
 
-  /* 记录本身的状态消息占满整行，跟在字段和控件下面。 */
+  /*
+   * 删除按钮和手柄随记录的悬停或键盘焦点露出（只改透明度，位置不让）。
+   * 正在重排的那一条和跟手的副本一直露出；拖动经过的其他记录不跟着亮。
+   */
+  .astryx-list-input__list :is([data-astryx-reorder-source], [data-astryx-reorder-preview]) .astryx-list-input__control-cell {
+    opacity: 1;
+  }
+
+  @media (hover: hover) {
+    .astryx-list-input__list[data-astryx-reordering] > :not([data-astryx-reorder-source], [data-astryx-reorder-preview]) .astryx-reveal:not(:focus-within) .astryx-list-input__control-cell {
+      opacity: 0;
+    }
+  }
+
+  /* 记录本身的状态消息排在字段下面，和字段一样宽。 */
   .astryx-list-input__item-status {
-    grid-column: 1 / -1;
+    grid-column: 1 / -2;
     grid-row: 2;
     margin-block-start: var(--astryx-spacing-1, 4px);
     min-width: 0;
   }
 
-  /* 添加按钮和字段列对齐，宽度撑满。 */
+  /* 添加按钮和字段列对齐。 */
   .astryx-list-input__action-row {
-    display: grid;
     align-items: center;
-    grid-template-columns: minmax(0, 1fr) auto auto;
-    column-gap: var(--astryx-spacing-1, 4px);
     margin-block-start: var(--astryx-spacing-2, 8px);
   }
 
   .astryx-list-input__action-content {
+    grid-column: 1 / -2;
     min-width: 0;
   }
 
-  /* 拖动中的源行半透明，说明它是被拿起来那一行。 */
-  .astryx-list-input__row--dragging {
-    opacity: 0.5;
-    user-select: none;
-  }
-
-  /* 落点指示线画在整行的上边或下边。 */
-  .astryx-list-input__item[data-list-input-drop-target] {
-    position: relative;
-  }
-
-  .astryx-list-input__item[data-list-input-drop-target]::before,
-  .astryx-list-input__item[data-list-input-drop-target]::after {
-    content: '';
-    position: absolute;
-    inset-inline: 0;
-    height: var(--astryx-spacing-0-5, 2px);
-    border-radius: var(--astryx-radius-full, 9999px);
-    background-color: var(--astryx-color-accent, light-dark(#0a0a0a, #fafafa));
-    pointer-events: none;
-    z-index: 2;
-  }
-
-  .astryx-list-input__item[data-list-input-drop-target='before']::before {
-    inset-block-start: calc(-1 * var(--astryx-spacing-0-5, 2px));
-  }
-
-  .astryx-list-input__item[data-list-input-drop-target='after']::after {
-    inset-block-end: calc(-1 * var(--astryx-spacing-0-5, 2px));
-  }
-
-  /* 手柄给出抓取手势，并且吃掉触摸滚动，否则手机上竖着拖会变成滚动页面。 */
-  .astryx-list-input__reorder-handle {
-    cursor: grab;
-    touch-action: none;
-  }
-
-  .astryx-list-input__reorder-handle[aria-pressed='true'] {
-    background-color: var(--astryx-color-accent-muted, light-dark(#f1f1f1, #262626));
-    cursor: grabbing;
-  }
-
-  .astryx-list-input__reorder-handle:is(:disabled, [aria-disabled='true']) {
-    cursor: default;
-  }
-
-  /* 跟着指针走的克隆体。top / left / width 由组件内联给出。 */
-  .astryx-list-input__drag-preview {
-    position: fixed;
-    z-index: 2147483000;
-    opacity: 0.5;
-    pointer-events: none;
-    user-select: none;
-    will-change: transform;
-    margin: 0;
-    container-type: inline-size;
-    container-name: list-input;
-    width: 100%;
-  }
-
-  /* 窄的时候每列占一行，行与行之间松一点。 */
+  /* 窄的时候每列占一行，删除按钮（和手柄）留在第一行的末尾，记录之间松一点。 */
   @container list-input (max-width: 640px) {
     .astryx-list-input__list {
       gap: var(--astryx-spacing-8, 32px);
     }
 
     .astryx-list-input__row {
-      grid-template-columns: minmax(0, 1fr) auto auto;
       row-gap: var(--astryx-spacing-2, 8px);
     }
 
     .astryx-list-input__fields {
-      grid-template-columns: minmax(0, 1fr);
-      gap: var(--astryx-spacing-2, 8px);
+      display: contents;
+    }
+
+    .astryx-list-input__cell {
+      grid-column: 1;
+    }
+
+    .astryx-list-input__control-cell {
+      grid-column: 2;
+      grid-row: 1;
     }
 
     .astryx-list-input__column-label {

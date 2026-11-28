@@ -68,5 +68,75 @@
     --_section-padding-propagated: initial;
     /* 步骤条的连接线空隙只属于外面那条轨道。浮层里的步骤条回到自己的 0。 */
     --astryx-step-connector-gap: initial;
+    /* 外面容器传给 Text 的 anywhere 换行也停在这里，浮层里的 Text 回到自己的 break-word。 */
+    --_astryx-text-overflow-wrap: initial;
+  }
+
+  /* 进场没拿到运行时写的一侧时，按 placement 退回的方向。横向退回在 RTL 下镜像；运行时写的是物理方向。 */
+  [data-placement='above'] {
+    --_astryx-layer-enter-from-x: 0;
+    --_astryx-layer-enter-from-y: 1;
+  }
+
+  [data-placement='below'] {
+    --_astryx-layer-enter-from-x: 0;
+    --_astryx-layer-enter-from-y: -1;
+  }
+
+  [data-placement='start'] {
+    --_astryx-layer-enter-from-x: 1;
+    --_astryx-layer-enter-from-y: 0;
+  }
+
+  [data-placement='end'] {
+    --_astryx-layer-enter-from-x: -1;
+    --_astryx-layer-enter-from-y: 0;
+  }
+
+  [data-placement='start']:is([dir='rtl'] *) {
+    --_astryx-layer-enter-from-x: -1;
+  }
+
+  [data-placement='end']:is([dir='rtl'] *) {
+    --_astryx-layer-enter-from-x: 1;
+  }
+}
+
+/*
+ * 锚定浮层的进场（上游 Layer/layerAnimations）。
+ *
+ * 浮层摆好后，定位运行时（layer/layerEntranceSide.ts）在浮层上写下它落在的那一侧：
+ * 每个轴往锚点退的一步（-1、0、1）、缩放原点、和锚点之间的空隙。进场从那一侧滑进来，
+ * 以浮层和锚点相接的点为原点缩放；退的那一步取 spacing-2 和空隙里较小的一个，所以
+ * 任何一帧都不会盖到锚点。用它的浮层要写
+ * `transform-origin: var(--_astryx-layer-enter-origin, 50% 50%)`。
+ *
+ * 减少动效时，主指针是粗略指针（手指）就改用 astryx-layer-fade-in 只淡入（motion.css
+ * 的减少动效时长和曲线），其余指针直接出现。
+ */
+@keyframes astryx-layer-enter {
+  from {
+    opacity: 0;
+    transform:
+      translate(
+        calc(var(--_astryx-layer-enter-x, var(--_astryx-layer-enter-from-x, 0)) * min(var(--astryx-spacing-2, 8px), var(--_astryx-layer-enter-gap, var(--astryx-spacing-2, 8px)))),
+        calc(var(--_astryx-layer-enter-y, var(--_astryx-layer-enter-from-y, -1)) * min(var(--astryx-spacing-2, 8px), var(--_astryx-layer-enter-gap, var(--astryx-spacing-2, 8px))))
+      )
+      scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+@keyframes astryx-layer-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
   }
 }

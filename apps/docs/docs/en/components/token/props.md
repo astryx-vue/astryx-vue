@@ -15,8 +15,8 @@ footer: false
       <tr><td><code>color</code></td><td><code>'default' | 'gray' | 'blue' | 'cyan' | 'teal' | 'green' | 'yellow' | 'orange' | 'red' | 'pink' | 'purple'</code></td><td><code>'default'</code></td><td>Color.</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>Size.</td></tr>
       <tr><td><code>removable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Show a focusable remove button.</td></tr>
-      <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disable the token. The remove button stops responding.</td></tr>
-      <tr><td><code>href</code></td><td><code>string</code></td><td>—</td><td>Render a link. With a remove button, the link and button are siblings.</td></tr>
+      <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disable the token. The remove button stops responding. A disabled link token stays a focusable link with no destination.</td></tr>
+      <tr><td><code>href</code></td><td><code>string</code></td><td>—</td><td>Render a link. With a remove button, the link and button are siblings. A <code>@click</code> listener runs on the link.</td></tr>
       <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>Extra text for assistive technology.</td></tr>
       <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Hide the text visually while keeping the accessible name. <code>labelHidden</code> is the older name; either one hides it.</td></tr>
     </tbody>

@@ -5,6 +5,13 @@ import { Button } from '@astryx-vue/core/Button'
 import { Stack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
 import { MediaTheme } from '@astryx-vue/core/Theme'
+import { useToast } from '@astryx-vue/core/Toast'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 
 const frame: CSSProperties = {
   width: '360px',
@@ -38,8 +45,8 @@ const scrim: CSSProperties = {
             MediaTheme keeps overlay text and controls readable without hard-coded color overrides.
           </Text>
           <Stack direction="horizontal" :gap="2" wrap="wrap">
-            <Button label="Watch" variant="primary" size="sm" />
-            <Button label="Details" variant="secondary" size="sm" />
+            <Button label="Watch" variant="primary" size="sm" @click="demo('Watch')" />
+            <Button label="Details" variant="secondary" size="sm" @click="demo('Details')" />
           </Stack>
         </Stack>
       </MediaTheme>

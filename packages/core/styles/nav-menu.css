@@ -22,19 +22,32 @@
     animation: astryx-scale-in var(--astryx-duration-fast-max) var(--astryx-ease-standard) both;
   }
 
+  /* 盖在触发区原位上的弹出层直接出现：它的第一行就是触发区本身，缩放进场会让这一行跳一下。 */
+  .astryx-nav-disclosure__panel--overlap {
+    animation: none;
+  }
+
   .astryx-nav-menu {
     display: flex;
     flex-direction: column;
     gap: var(--astryx-spacing-0-5, 2px);
     margin: 0;
     padding: 0;
+    /* 一个放得下的菜单保留捏合手势；能滚动时才放开纵向滚动。 */
+    touch-action: pinch-zoom;
+  }
+
+  .astryx-nav-menu[data-overflow='true'] {
+    touch-action: pan-y pinch-zoom;
   }
 
   .astryx-nav-menu--sm { min-width: 160px; }
   .astryx-nav-menu--md { min-width: 200px; }
   .astryx-nav-menu--lg { min-width: 240px; }
 
+  /* 按住滑过各行时不选中行里的文字；菜单旁边调用方的内容仍可选中。 */
   .astryx-nav-menu-item {
+    user-select: none;
     display: flex;
     align-items: center;
     gap: var(--astryx-spacing-2, 8px);
@@ -46,6 +59,7 @@
     background: transparent;
     color: var(--astryx-color-text-primary);
     font: inherit;
+    line-height: var(--astryx-text-label-leading, 1.4286);
     text-align: start;
     text-decoration: none;
     cursor: pointer;

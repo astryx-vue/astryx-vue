@@ -12,7 +12,7 @@ footer: false
 <tr><td><code>v-model</code></td><td><code>string | null</code></td><td><code>null</code></td><td><code>YYYY-MM-DDTHH:MM</code>. Null until both parts exist.</td></tr>
 <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>Required accessible name of the pair.</td></tr>
 <tr><td><code>placeholder</code></td><td><code>string</code></td><td>—</td><td>Placeholder for the date field.</td></tr>
-<tr><td><code>hourFormat</code></td><td><code>'12h' | '24h'</code></td><td><code>'12h'</code></td><td>Display format of the time. The model stays ISO.</td></tr>
+<tr><td><code>hourFormat</code></td><td><code>'12h' | '24h'</code></td><td>The locale's hour cycle</td><td>Display format of the time. Unset, it follows the active locale, with its digits and day-period words. The model stays ISO.</td></tr>
 <tr><td><code>presentation</code></td><td><code>'popover' | 'bottom-sheet' | 'native' | 'adaptive-bottom-sheet' | 'adaptive-native' | 'text-input'</code></td><td>—</td><td>How both halves open. bottom-sheet, and adaptive-bottom-sheet on a coarse pointer, use one bottom sheet with Date and Time tabs. text-input applies only to the time. Omitted means a popover on a fine pointer and the platform controls on a coarse pointer. An explicit value wins over nativePicker.</td></tr>
 <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Hides the label visually while keeping it accessible. <code>labelHidden</code> is the older name; either one hides it.</td></tr>
 <tr><td><code>containerClass</code></td><td><code>string | object | array</code></td><td>—</td><td>Class for the field container. Has no effect, and warns in development, inside InputGroup and in a horizontal-labels FormLayout.</td></tr>
@@ -34,9 +34,11 @@ footer: false
 <tr><td><code>dateConstraints</code></td><td><code>Array&lt;(date: Date) =&gt; boolean&gt;</code></td><td>—</td><td>On the date half, a day is disabled when any function returns false.</td></tr>
 <tr><td><code>numberOfMonths</code></td><td><code>1 | 2</code></td><td>—</td><td>Months shown side by side in the date calendar.</td></tr>
 <tr><td><code>weekStartsOn</code></td><td><code>0-6 | 'sun' | 'mon' | ...</code></td><td>—</td><td>First day of the week in the date calendar.</td></tr>
+<tr><td><code>calendar</code></td><td><code>CalendarSystem</code></td><td>Follows the provider</td><td>Calendar system for the date part. Falls back to the nearest <code>InternationalizationProvider</code>. Outside Gregorian the system date control is replaced by the Astryx picker. The value is always a Gregorian date-time. See <a href="/en/guide/calendars">Calendars</a>.</td></tr>
 <tr><td><code>nativePicker</code></td><td><code>'touch' | 'always' | 'never'</code></td><td>—</td><td>Older surface name, passed to both the date and the time.</td></tr>
 <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Neither field can be edited.</td></tr>
 <tr><td><code>changeAction</code></td><td><code>(value) =&gt; void | Promise&lt;void&gt;</code></td><td>—</td><td>Runs once both the date and the time exist. A promise keeps the pair busy. Clearing runs it too.</td></tr>
+<tr><td><code>entryErrorBehavior</code></td><td><code>'complete' | 'blur-or-enter'</code></td><td><code>'complete'</code></td><td>When the date part's rejected entry shows, as on DateInput. Emits <code>entryErrorChange</code> the same way. The time part follows <code>entryErrorBehavior</code> as TimeInput does: its rejected text stays, its message shows under the pair unless the date part has one, and it sets <code>aria-invalid</code> on the time input.</td></tr>
 <tr><td><code>isOptional</code></td><td><code>boolean</code></td><td>—</td><td>Marks the label as optional.</td></tr>
 <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td>—</td><td>Marks the pair required.</td></tr>
 <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>Hint shown from the info icon at the end of the label.</td></tr>

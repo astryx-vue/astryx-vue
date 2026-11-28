@@ -53,7 +53,7 @@ footer: false
         <td><code>pillPlacement</code></td>
         <td><code>'auto' | 'start' | 'end' | 'center'</code></td>
         <td><code>'auto'</code></td>
-        <td>握把相对分隔线的位置。<code>auto</code> 靠面板一侧，面板收到 0 时翻到另一侧。</td>
+        <td>握把相对分隔线的位置。<code>auto</code> 靠面板一侧，面板收到 0 时翻到另一侧。它只挪握把：抓取区始终居中在分隔条上，握把摆在哪都能接管拖动。面板短到放不下整块抓取区时，抓取区会缩小，让面板至少留一半给自己的拖动。</td>
       </tr>
       <tr>
         <td><code>label</code></td>
@@ -63,9 +63,9 @@ footer: false
       </tr>
       <tr>
         <td><code>resizable</code></td>
-        <td><code>ResizableProps</code></td>
+        <td><code>ResizableRegion | ResizableProps</code></td>
         <td>-</td>
-        <td><code>useResizable</code> 返回的 <code>props</code>。</td>
+        <td><code>useResizable()</code> 的返回值，或它的 <code>props</code>。</td>
       </tr>
     </tbody>
   </table>
@@ -125,7 +125,7 @@ footer: false
         <td><code>collapsedSize</code></td>
         <td><code>number</code></td>
         <td><code>40</code></td>
-        <td>拖拽低于这个像素值时收起。</td>
+        <td>松手或按键一步低于这个像素值时收起。</td>
       </tr>
       <tr>
         <td><code>snaps</code></td>
@@ -167,7 +167,7 @@ footer: false
         <td><code>isCollapsed</code></td>
         <td><code>boolean</code></td>
         <td>-</td>
-        <td>受控的收起状态。变化通过 <code>onCollapseChange</code> 报出。</td>
+        <td>受控的收起状态。松手、按键一步或拖动重新打开区域，都通过 <code>onCollapseChange</code> 报出。</td>
       </tr>
       <tr>
         <td><code>onSizeChange</code></td>

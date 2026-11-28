@@ -22,13 +22,17 @@ export function formatUpgradeReport(report: UpgradeReport, dense: boolean): stri
     ? (zh
         ? `${report.package} ${report.current} → ${report.latest}`
         : `${report.package} ${report.current} → ${report.latest}`)
-    : report.status === 'up-to-date'
+    : report.status === 'cli-older'
       ? (zh
-          ? `${report.package} ${report.current} 已经是最新（这个 CLI 认的版本是 ${report.latest}），不用升级。`
-          : `${report.package} ${report.current} is the latest this CLI knows (${report.latest}). Nothing to upgrade.`)
-      : (zh
-          ? `${report.package} 的版本写法是 ${JSON.stringify(report.current)}，看不出是不是最新。`
-          : `This CLI cannot read the ${report.package} version as a number, so it cannot say whether it is current.`)
+          ? `这个 CLI（认的版本是 ${report.latest}）比项目里的 ${report.package} ${report.current} 旧，没法判断要不要升级。请先把 CLI 升到最新再运行。`
+          : `This CLI (it knows ${report.latest}) is older than the project's ${report.package} ${report.current}, so it cannot say what to upgrade. Update the CLI, then run this again.`)
+      : report.status === 'up-to-date'
+        ? (zh
+            ? `${report.package} ${report.current} 已经是最新（这个 CLI 认的版本是 ${report.latest}），不用升级。`
+            : `${report.package} ${report.current} is the latest this CLI knows (${report.latest}). Nothing to upgrade.`)
+        : (zh
+            ? `${report.package} 的版本写法是 ${JSON.stringify(report.current)}，看不出是不是最新。`
+            : `This CLI cannot read the ${report.package} version as a number, so it cannot say whether it is current.`)
   lines.push(head, '')
 
   if (report.status !== 'outdated') {
@@ -37,6 +41,12 @@ export function formatUpgradeReport(report: UpgradeReport, dense: boolean): stri
   }
 
   lines.push(zh ? `升级指南：${report.guideUrl}` : `Upgrade guide: ${report.guideUrl}`, '')
+  if (report.commands.length > 0) {
+    lines.push(zh ? '把和 core 同一版发布的包一起升到这一版：' : 'Upgrade every package released with core to this version:')
+    for (const command of report.commands)
+      lines.push(`  ${command}`)
+    lines.push('')
+  }
 
   if (!dense) {
     for (const [index, section] of report.sections.entries()) {

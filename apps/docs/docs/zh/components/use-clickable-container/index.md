@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useClickableContainerProjectCard } from '../../../../components/demos/use-clickable-container'
 </script>
 
 ## 使用方法
@@ -44,4 +45,16 @@ const { onClick, onMouseUp } = useClickableContainer({
 | --- | --- |
 | <Badge variant="success">推荐</Badge> | 把 `onClick` 和 `onMouseUp` 都绑到容器上（`@click` 和 `@mouseup`），这样连中键点击也能处理。 |
 | <Badge variant="success">推荐</Badge> | 在 `ClickableCard` 或 `SelectableCard` 内部使用，就是标准的卡片交互写法。 |
+| <Badge variant="success">推荐</Badge> | 想要不带 Card 外观、只是按下有反应的表面（比如按一下就跳到原文的引用消息），自己组合：表面上用这个函数；同一个元素上用 `usePressFeedback()` 得到悬停底色和触屏按下效果；里面放一个包在 `VisuallyHidden` 里的原生 `<button>`（目的地是页面时用 `<a>`）当有名字的控件，并传给 `interactiveRef`；表面上用焦点 token 画 `:focus-within` 的焦点环，和 `ClickableCard` 画的是同一个。 |
 | <Badge variant="error">避免</Badge> | 整块容器本来就是一个可交互元素时不要用它；直接用 `<button>` 或 `<a>`。 |
+
+## 示例
+
+常见配置、变体和状态。
+
+<DemoExample
+  :demo="useClickableContainerProjectCard"
+  description="用 useClickableContainer 让整张项目卡片都能点：点卡片任何地方都跟随标题链接；Star 按钮、负责人链接和选中文字仍各管各的；Ctrl/Cmd 加点击或中键会在新标签页打开项目。"
+  locale="zh"
+  title="useClickableContainer — 可点击的项目卡片"
+/>

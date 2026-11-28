@@ -13,7 +13,7 @@ footer: false
       <tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr>
     </thead>
     <tbody>
-      <tr><td><code>direction</code></td><td><code>'horizontal' | 'vertical'</code></td><td><code>'vertical'</code></td><td>Direction in which children are arranged.</td></tr>
+      <tr><td><code>direction</code></td><td><code>'horizontal' | 'vertical'</code></td><td><code>'vertical'</code></td><td>Direction in which children are arranged. <code>'horizontal'</code> flows along the inline axis: left to right in LTR, right to left in RTL.</td></tr>
       <tr><td><code>gap</code></td><td><code>SpacingStep</code></td><td>—</td><td>Space between adjacent children.</td></tr>
       <tr><td><code>padding</code></td><td><code>SpacingStep</code></td><td>—</td><td>Padding on every side of the container.</td></tr>
       <tr><td><code>paddingInline</code></td><td><code>SpacingStep</code></td><td>—</td><td>Inline-axis padding. Overrides padding on this axis.</td></tr>
@@ -24,8 +24,8 @@ footer: false
       <tr><td><code>paddingInlineEnd</code></td><td><code>SpacingStep</code></td><td>—</td><td>Inline-end (right in LTR) padding. Overrides <code>paddingInline</code> and <code>padding</code> on that edge only.</td></tr>
       <tr><td><code>hAlign</code></td><td><code>StackAlignment</code></td><td>—</td><td>Controls horizontal main- or cross-axis alignment according to direction.</td></tr>
       <tr><td><code>vAlign</code></td><td><code>StackAlignment</code></td><td>—</td><td>Controls vertical main- or cross-axis alignment according to direction.</td></tr>
-      <tr><td><code>justify</code></td><td><code>StackMainAlignment</code></td><td>—</td><td>Alias for main-axis alignment.</td></tr>
-      <tr><td><code>align</code></td><td><code>StackCrossAlignment</code></td><td>—</td><td>Alias for cross-axis alignment.</td></tr>
+      <tr><td><code>justify</code></td><td><code>StackMainAlignment</code></td><td>—</td><td>Alias for main-axis alignment. When <code>hAlign</code> or <code>vAlign</code> sets the same axis, that prop wins.</td></tr>
+      <tr><td><code>align</code></td><td><code>StackCrossAlignment</code></td><td>—</td><td>Alias for cross-axis alignment. When <code>hAlign</code> or <code>vAlign</code> sets the same axis, that prop wins.</td></tr>
       <tr><td><code>wrap</code></td><td><code>'nowrap' | 'wrap' | 'wrap-reverse'</code></td><td><code>'nowrap'</code></td><td>Controls how children wrap.</td></tr>
       <tr><td><code>width</code></td><td><code>number | string</code></td><td>—</td><td>Container width. Numbers are interpreted as pixels.</td></tr>
       <tr><td><code>height</code></td><td><code>number | string</code></td><td>—</td><td>Container height. Numbers are interpreted as pixels.</td></tr>
@@ -45,7 +45,7 @@ type SpacingStep = 0 | 0.5 | 1 | 1.5 | 2 | 3 | 4 | 5 | 6 | 8 | 10
 
 ## HStack Props
 
-`HStack` uses a fixed horizontal direction.
+`HStack` uses a fixed horizontal direction. It arranges items along the inline axis: left to right in LTR, right to left in RTL.
 
 - The component supports shared `Stack` props.
 - The component does not expose `direction`.

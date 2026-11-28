@@ -1,29 +1,5 @@
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 
-@keyframes astryx-selector-enter-below {
-  from {
-    opacity: 0;
-    transform: translateY(calc(-1 * var(--astryx-spacing-2, 8px))) scale(0.95);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes astryx-selector-enter-above {
-  from {
-    opacity: 0;
-    transform: translateY(var(--astryx-spacing-2, 8px)) scale(0.95);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
 @layer astryx.components {
   .astryx-selector {
     display: inline-block;
@@ -326,12 +302,9 @@
     font-weight: var(--astryx-font-weight-medium, 500);
   }
 
-  .astryx-selector-listbox[data-placement='below'] {
-    animation-name: astryx-selector-enter-below;
-  }
-
-  .astryx-selector-listbox[data-placement='above'] {
-    animation-name: astryx-selector-enter-above;
+  .astryx-selector-listbox[data-placement] {
+    animation-name: astryx-layer-enter;
+    transform-origin: var(--_astryx-layer-enter-origin, 50% 50%);
   }
 
   .astryx-selector-search {
@@ -414,6 +387,12 @@
   .astryx-selector-option.is-active,
   .astryx-selector-option:hover:not(.is-disabled) {
     background: var(--astryx-dropdown-menu-hover-background, light-dark(#0536590c, #ffffff0c));
+  }
+
+  /* 键盘移到的高亮选项画标准焦点环：只靠填充色，它和列表底色的对比不到 3:1。指针移到的高亮只有填充。 */
+  .astryx-selector-listbox[data-keyboard-highlight] .astryx-selector-option.is-active:not(.is-disabled) {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, currentcolor);
+    outline-offset: calc(-1 * var(--astryx-focus-outline-width, 2px));
   }
 
   .astryx-selector-option.is-selected {
@@ -515,6 +494,20 @@
       animation: none;
     }
   }
+
+  @media (prefers-reduced-motion: reduce) and (not (pointer: coarse)) {
+    .astryx-selector-listbox[data-placement] {
+      animation: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) and (pointer: coarse) {
+    .astryx-selector-listbox[data-placement] {
+      animation-name: astryx-layer-fade-in;
+      animation-duration: var(--_astryx-reduced-motion-fade-duration, 200ms);
+      animation-timing-function: var(--_astryx-reduced-motion-fade-easing, cubic-bezier(0.42, 0, 0.58, 1));
+    }
+  }
 }
 
 /* Unlayered: the field chrome owns focus. A page ring on the trigger or search input stacks a second outline. */
@@ -527,4 +520,24 @@
 .astryx-selector-search-clear:focus,
 .astryx-selector-search-clear:focus-visible {
   outline: none;
+}
+
+/*
+ * 幽灵和次要触发器的外框没有边框和聚焦底纹，焦点环画在真正拿到键盘焦点的那一个上：
+ * 触发器聚焦时环画在外框，清除按钮聚焦时环画在它自己身上，不会两个一起圈。
+ */
+.astryx-selector-field:is(.is-ghost, [data-variant='secondary']):has(.astryx-selector-trigger:focus-visible),
+.astryx-selector-field:is(.is-ghost, [data-variant='secondary']) .astryx-selector-clear:focus-visible {
+  outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, currentcolor);
+  outline-offset: 2px;
+}
+
+/* 强制颜色下焦点只剩边框能表达：聚焦（含可聚焦的禁用字段）的边框取系统 Highlight 色。 */
+@layer astryx.components {
+  @media (forced-colors: active) {
+    .astryx-selector-field:focus-within,
+    .astryx-selector-field.is-open {
+      border-color: Highlight;
+    }
+  }
 }

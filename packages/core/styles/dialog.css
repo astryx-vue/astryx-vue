@@ -1,5 +1,15 @@
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 
+@keyframes astryx-dialog-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
 @keyframes astryx-dialog-enter {
   from {
     opacity: 0;
@@ -49,7 +59,6 @@
 
   .astryx-dialog::backdrop {
     background: var(--astryx-dialog-overlay, rgb(255 255 255 / 50%));
-    backdrop-filter: blur(2px);
   }
 
   .astryx-dialog--inline {
@@ -60,6 +69,7 @@
   }
 
   .astryx-dialog--fullscreen {
+    --_dialog-radius: 0px;
     width: 100dvw;
     height: 100dvh;
     max-width: 100dvw;
@@ -94,6 +104,9 @@
     min-height: 0;
     overflow: hidden;
     border-radius: inherit;
+    /* 贴边的表格、列表行取对话框的圆角，免得方角戳出圆角之外。 */
+    --_container-corner-block-start: var(--_dialog-radius);
+    --_container-corner-block-end: var(--_dialog-radius);
     padding-block: var(--_dialog-pad-block-start) var(--_dialog-pad-block-end);
     padding-inline: var(--_dialog-pad-inline-start) var(--_dialog-pad-inline-end);
   }
@@ -112,9 +125,23 @@
     display: contents;
   }
 
-  @media (prefers-reduced-motion: reduce) {
+  /* 减少动效时对话框不移动也不缩放：触屏上原地淡入（200ms 以内），用鼠标时直接出现。 */
+  @media (prefers-reduced-motion: reduce) and (not (pointer: coarse)) {
     .astryx-dialog[open] {
       animation: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) and (pointer: coarse) {
+    .astryx-dialog[open] {
+      animation: astryx-dialog-fade-in var(--_astryx-reduced-motion-fade-duration, 200ms) var(--_astryx-reduced-motion-fade-easing, cubic-bezier(0.42, 0, 0.58, 1)) backwards;
+    }
+  }
+
+  @media (forced-colors: active) {
+    /* 强制配色会去掉阴影，遮罩颜色也由系统接管，对话框靠这圈边和页面分开。全屏对话框四周没有页面，不加。 */
+    .astryx-dialog:not(.astryx-dialog--fullscreen) {
+      border: 1px solid CanvasText;
     }
   }
 }

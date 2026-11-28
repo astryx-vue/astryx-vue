@@ -2,7 +2,6 @@
 import type { SliderOrientation } from './types.js'
 import { computed, shallowRef, useTemplateRef, watch } from 'vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
-import { position } from './sliderMath.js'
 import '../../styles/button.css'
 
 const props = defineProps<{
@@ -12,6 +11,8 @@ const props = defineProps<{
   min: number
   max: number
   percentage: number
+  /** The touch target's insets under a finger (see thumbHitInsets). */
+  hitInsets: Record<string, string>
   orientation: SliderOrientation
   labelledBy: string
   describedBy?: string
@@ -21,6 +22,8 @@ const props = defineProps<{
   isFocusable: boolean
   tooltipText?: string
   dragging: boolean
+  /** 有滑块在被拖动（不一定是这一个）。 */
+  dragActive?: boolean
   keyboardFocus?: boolean
   extraAttrs?: Record<string, unknown>
 }>()
@@ -35,8 +38,9 @@ const tabIndex = computed(() => props.isFocusable ? 0 : -1)
 const focused = shallowRef(false)
 const hovered = shallowRef(false)
 const dismissed = shallowRef(false)
-const open = computed(() => !!props.tooltipText && !props.isDisabled && !dismissed.value && (focused.value || hovered.value || props.dragging))
-const style = computed(() => props.orientation === 'horizontal' ? { insetInlineStart: position(props.percentage) } : { bottom: position(props.percentage) })
+const open = computed(() => !!props.tooltipText && !props.isDisabled && !dismissed.value && (props.dragActive ? props.dragging : focused.value || hovered.value))
+// slider.css moves the thumb by its progress, in container units: moving it never lays out.
+const style = computed(() => ({ '--_slider-progress': props.percentage / 100, ...props.hitInsets }))
 watch(() => props.dragging, () => {
   dismissed.value = false
 })

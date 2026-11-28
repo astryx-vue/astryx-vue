@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import type { DateRange, DateRangeInputEmits, DateRangeInputProps, DateRangePreset } from './types.js'
-import { computed, shallowRef, useAttrs, useId, useTemplateRef } from 'vue'
+import { computed, getCurrentInstance, inject, onMounted, shallowRef, ssrContextKey, useAttrs, useId, useTemplateRef } from 'vue'
 import ButtonTooltip from '../Button/ButtonTooltip.vue'
 import { useButtonTooltip } from '../Button/useButtonTooltip.js'
-import { applyRangeClick, formatDateRange, isRangeWithinSpan } from '../composables/useDateRange.js'
-import { addMonths, todayISODate } from '../composables/useMonthGrid.js'
+import { useBusyAnnouncement } from '../composables/internal/busyAnnouncement.js'
+import { devPropError, isDevBuild } from '../composables/internal/devBuild.js'
+import { applyRangeClick, isRangeWithinSpan } from '../composables/useDateRange.js'
 import { usePendingChange } from '../composables/usePendingChange.js'
 import { useResolvedLabelHidden } from '../composables/useResolvedLabelHidden.js'
 import Field from '../Field/Field.vue'
@@ -13,13 +14,19 @@ import { useFieldPartStyling } from '../Field/fieldParts.js'
 import { useAriaRequired } from '../FormLayout/context.js'
 import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
-import { useAstryxLocale, useAstryxMessages } from '../locale/index.js'
+import { useCalendarSystem } from '../locale/calendar.js'
+import { useAstryxLocale, useComponentMessages } from '../locale/context.js'
+import { dateInputMessages } from '../locale/messages/date-input.js'
+import { dateRangeInputMessages } from '../locale/messages/date-range-input.js'
 import Popover from '../Popover/Popover.vue'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { useSize } from '../SizeContext/SizeContext.js'
 import Spinner from '../Spinner/Spinner.vue'
+import { calendarAddMonths, calendarMonthOf } from '../utils/calendarSystem.js'
+import { plainDateToday } from '../utils/plainDate.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import RangeCalendar from './RangeCalendar.vue'
+import { formatRangeDisplay, rangeDay } from './rangeDisplay.js'
 import '../../styles/bordered-control.css'
 import '../../styles/date-range-input.css'
 
@@ -40,6 +47,14 @@ const emit = defineEmits<DateRangeInputEmits>()
 const size = useSize(() => props.size, 'md')
 
 const model = defineModel<DateRange | null>({ default: null })
+
+if (isDevBuild() && model.value != null && (typeof model.value.start !== 'string' || typeof model.value.end !== 'string')) {
+  throw devPropError(
+    'DateRangeInput',
+    'modelValue',
+    'must be null or { start, end } with ISO date strings, for example v-model="{ start: \'2026-01-01\', end: \'2026-01-31\' }". Pass strings, not Date objects.',
+  )
+}
 const attrs = useAttrs()
 const parts = useFieldPartStyling({
   component: 'DateRangeInput',
@@ -49,14 +64,15 @@ const parts = useFieldPartStyling({
 })
 const hideLabel = useResolvedLabelHidden(() => props.isLabelHidden, () => props.labelHidden)
 const ariaRequired = useAriaRequired(props)
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ dateInput: dateInputMessages, dateRangeInput: dateRangeInputMessages })
 const locale = useAstryxLocale()
+const calendar = useCalendarSystem(() => props.calendar, 'DateRangeInput')
 const generatedId = `astryx-date-range-${useId()}`
 const inputId = computed(() => props.id ?? generatedId)
 const open = shallowRef(false)
 const pending = shallowRef<string | null>(null)
-const today = todayISODate()
-const cursor = shallowRef({ year: Number(today.slice(0, 4)), month: Number(today.slice(5, 7)) })
+/** 弹出日历第一个月里的任意一天。 */
+const cursor = shallowRef(plainDateToday())
 const action = usePendingChange(() => props.changeAction)
 const busy = computed(() => props.isLoading || action.busy.value)
 const locked = computed(() => props.isDisabled || busy.value)
@@ -69,7 +85,15 @@ const panelEl = useTemplateRef<HTMLElement>('panelEl')
 useScrollbars(panelEl)
 const visibleMonths = computed(() => props.numberOfMonths ?? props.monthCount)
 
-const display = computed(() => formatDateRange(model.value, locale.value))
+useBusyAnnouncement(busy, () => messages.value.dateInput.loading, () => containerRef.value)
+
+// 服务端和水合那一趟不读时钟（服务端的时区可能跨年），今天还不知道时范围一律写出年份，挂载后再省掉今年的年份。
+const isServerOrHydrating = typeof document === 'undefined' || inject(ssrContextKey, undefined) !== undefined || getCurrentInstance()?.vnode.el != null
+const today = shallowRef<Date | null>(isServerOrHydrating ? null : new Date())
+onMounted(() => {
+  today.value ??= new Date()
+})
+const display = computed(() => formatRangeDisplay(model.value, locale.value, calendar.value, today.value))
 const placeholder = computed(() => props.placeholder ?? messages.value.dateRangeInput.placeholder)
 const clearLabel = computed(() => props.clearLabel ?? messages.value.dateRangeInput.clear(props.label))
 
@@ -82,6 +106,8 @@ function commit(value: DateRange | null): void {
 }
 
 function onSelect(day: string): void {
+  if (locked.value)
+    return
   const result = applyRangeClick(pending.value, day, props.minRangeSpan, props.maxRangeSpan)
   pending.value = result.pending
   if (result.commit) {
@@ -91,13 +117,13 @@ function onSelect(day: string): void {
 }
 
 function onShift(amount: number): void {
-  cursor.value = addMonths(cursor.value.year, cursor.value.month, amount)
+  cursor.value = calendarAddMonths(calendar.value, calendarMonthOf(calendar.value, cursor.value), amount).start
 }
 
 function onOpenChange(next: boolean): void {
   open.value = next
   if (next && model.value) {
-    cursor.value = { year: Number(model.value.start.slice(0, 4)), month: Number(model.value.start.slice(5, 7)) }
+    cursor.value = rangeDay(model.value.start)
     pending.value = null
   }
   if (!next)
@@ -105,7 +131,7 @@ function onOpenChange(next: boolean): void {
 }
 
 function applyPreset(preset: DateRangePreset): void {
-  if (presetDisabled(preset))
+  if (locked.value || presetDisabled(preset))
     return
   const range = preset.getRange()
   if (!isRangeWithinSpan(range, props.minRangeSpan, props.maxRangeSpan))
@@ -177,12 +203,12 @@ function onTriggerClick(event: MouseEvent): void {
           <IconButton v-if="hasClear && model && !locked" class="astryx-input-clear-button" variant="ghost" size="sm" :label="clearLabel" @click="clear">
             <FieldIcon type="clear" />
           </IconButton>
-          <Spinner v-if="busy" size="sm" :aria-label="messages.dateInput.loading" />
+          <Spinner v-if="busy" size="sm" aria-hidden="true" />
           <FieldIcon v-else-if="status" :type="status.type" />
         </div>
         <template #content>
-          <div class="astryx-date-range-popover">
-            <div ref="panelEl" class="astryx-date-range-panel">
+          <div ref="panelEl" class="astryx-date-range-popover">
+            <div class="astryx-date-range-panel">
               <div v-if="presets?.length" class="astryx-date-range-presets">
                 <button
                   v-for="preset in presets" :key="preset.label" type="button" class="astryx-date-range-preset"
@@ -192,7 +218,8 @@ function onTriggerClick(event: MouseEvent): void {
                 </button>
               </div>
               <RangeCalendar
-                :cursor-year="cursor.year" :cursor-month="cursor.month" :month-count="visibleMonths"
+                v-if="open"
+                :cursor="cursor" :calendar="calendar" :month-count="visibleMonths"
                 :range="model" :pending="pending" :min="min" :max="max" :date-constraints="dateConstraints"
                 :min-range-span="minRangeSpan" :max-range-span="maxRangeSpan" :week-starts-on="weekStartsOn"
                 @select="onSelect" @shift="onShift"

@@ -7,11 +7,12 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useAnnounceFilterResultCount } from '../../../../components/demos/use-announce'
 </script>
 
 ## 使用方法
 
-用一块视觉上隐藏的 live region，主动把一句话念给读屏软件听。只靠眼睛才能看出来的状态用它播报：搜索结果条数、"没有结果"、加载中和已保存的提示、校验错误（WCAG 4.1.3 状态消息）。polite 和 assertive 两块区域在第一次使用时以空内容创建，之后一直留在页面里，只换文字——这正是一次播报能被听到的原因：很多读屏软件会忽略和内容同时插入的 live region。每条消息播报完一两秒后会被清空，旧状态不会一直留在无障碍树里。
+用一块视觉上隐藏的 live region，主动把一句话念给读屏软件听。只靠眼睛才能看出来的状态用它播报：搜索结果条数、"没有结果"、加载中和已保存的提示、校验错误（WCAG 4.1.3 状态消息）。polite 和 assertive 两块区域在第一次使用时以空内容创建，之后一直留在页面里，只换文字——这正是一次播报能被听到的原因：很多读屏软件会忽略和内容同时插入的 live region。同一帧里播报的多条消息按顺序连在一起念，一模一样的重复只念一次；传空字符串会把还没念出去的也一起清掉。原生模态对话框打开时，消息写进那个对话框自己的 live region，因为页面上的区域在对话框外面，读屏念不到。每条消息播报完一两秒后会被清空，旧状态不会一直留在无障碍树里。
 
 ```ts
 import { useAnnounce } from '@astryx-vue/core'
@@ -24,6 +25,12 @@ announce('找到 12 条结果')
 announce('文件保存失败。', 'assertive')
 ```
 
+每次按键都重新说一遍的状态，可以让它收回自己上一条还没念出去的消息，快速输入时就不会念出一串过期的数字：
+
+```ts
+const announceSearch = useAnnounce({ hasReplace: true })
+```
+
 ## 建议
 
 | 指引 | 做法 |
@@ -32,3 +39,14 @@ announce('文件保存失败。', 'assertive')
 | <Badge variant="success">推荐</Badge> | `"polite"` 留给状态和结果条数；`"assertive"` 留给错误和和时间有关的提醒，因为它会打断读屏正在念的内容。 |
 | <Badge variant="success">推荐</Badge> | 播报结果，而不是操作；说 `"12 条结果"`，不要说 `"搜索跑了一次"`。 |
 | <Badge variant="error">避免</Badge> | 播报 DOM 里已经看得见、标签也写对的内容；读屏用户会听到两遍。 |
+
+## 示例
+
+常见配置、变体和状态。
+
+<DemoExample
+  :demo="useAnnounceFilterResultCount"
+  description="一个商品筛选框，用 useAnnounce 播报结果数：停止输入 500 毫秒后，读屏会读出「3 results」或「No results」。新的计数会替换实时区域里上一条。"
+  locale="zh"
+  title="useAnnounce — 筛选结果数"
+/>

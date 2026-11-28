@@ -2,8 +2,33 @@
 
 export { countCharacters } from './countCharacters.js'
 
+export { createAnimator } from './createAnimator.js'
+export type {
+  Animator,
+  AnimatorAnimateOptions,
+  AnimatorChannel,
+  AnimatorDecayVelocity,
+  AnimatorHandle,
+  AnimatorSnapshot,
+  AnimatorValues,
+} from './createAnimator.js'
+
+export { createDragToSnapPoints } from './createDragToSnapPoints.js'
+export type { DragToSnapPoints, DragToSnapPointsOptions } from './createDragToSnapPoints.js'
+
+export { createPanGesture } from './createPanGesture.js'
+export type { PanGesture, PanGestureEvent, PanGestureOptions, PanGestureState } from './createPanGesture.js'
+
+export { createReorderable } from './createReorderable.js'
+export type { Reorderable, ReorderableOptions, ReorderMove } from './createReorderable.js'
+
+export { useAnimatedLayout } from './useAnimatedLayout.js'
+export type { AnimatedLayout, UseAnimatedLayoutOptions } from './useAnimatedLayout.js'
+
+export { useAnimator } from './useAnimator.js'
+
 export { useAnnounce } from './useAnnounce.js'
-export type { AnnounceFn, AnnouncePoliteness } from './useAnnounce.js'
+export type { AnnounceFn, AnnouncePoliteness, UseAnnounceOptions } from './useAnnounce.js'
 
 export { appShellMobileKey, useAppShellMobile } from './useAppShellMobile.js'
 export type { AppShellMobile } from './useAppShellMobile.js'
@@ -14,6 +39,7 @@ export type {
   AsyncSourceStatus,
   CreateStaticSourceOptions,
   SearchableItem,
+  SearchContext,
   SearchSource,
   UseAsyncSourceOptions,
 } from './useAsyncSource.js'
@@ -79,6 +105,9 @@ export type { DisclosureHandle, DisclosureHandleRef } from './useDisclosureHandl
 export { useDismiss } from './useDismiss.js'
 export type { UseDismissOptions } from './useDismiss.js'
 
+export { useDragToSnapPoints } from './useDragToSnapPoints.js'
+export type { UseDragToSnapPointsResult } from './useDragToSnapPoints.js'
+
 export { useEntryAnimation } from './useEntryAnimation.js'
 export type { EntryAnimationPreset, UseEntryAnimationOptions, UseEntryAnimationReturn } from './useEntryAnimation.js'
 
@@ -86,7 +115,7 @@ export { useFieldControlState } from './useFieldControlState.js'
 export type { FieldControlState, FieldControlStateInput } from './useFieldControlState.js'
 
 export { formatFileSize, selectFiles } from './useFileSelection.js'
-export type { FileRejection, FileSelectionOptions, FileSelectionResult } from './useFileSelection.js'
+export type { FileRejection, FileSelectionOptions, FileSelectionResult, FileSizeUnits } from './useFileSelection.js'
 
 export { useFocusTrap } from './useFocusTrap.js'
 export type { FocusTrap, UseFocusTrapOptions } from './useFocusTrap.js'
@@ -130,16 +159,27 @@ export type { LayerMode, UseLayerOptions, UseLayerReturn } from './useLayer.js'
 
 export { useLayerMountTarget, useLayerTeleportTarget, useResolvedLayerTeleport } from './useLayerMountTarget.js'
 
+export { useLinkify } from './useLinkify.js'
+export type {
+  LinkifyLinkSegment,
+  LinkifyPattern,
+  LinkifySegment,
+  LinkifyTextSegment,
+  UseLinkifyOptions,
+} from './useLinkify.js'
+
 export { useListFocus } from './useListFocus.js'
 export type { ListFocus, ListFocusOrientation, UseListFocusOptions } from './useListFocus.js'
 
 export { useLongPress } from './useLongPress.js'
 export type { LongPressHandlers, LongPressOptions } from './useLongPress.js'
 
-export { useMediaQuery } from './useMediaQuery.js'
+export { useMediaQuery, watchMediaQuery } from './useMediaQuery.js'
 
 export {
   isMenuPressActivation,
+  MENU_PRESS_HANDOFF_PX,
+  MENU_PRESS_LIT_ATTRIBUTE,
   MENU_PRESS_MARKER,
   MENU_PRESS_SETTLE_MS,
   menuPressStep,
@@ -168,15 +208,20 @@ export { computeOverflow, useOverflow } from './useOverflow.js'
 export type {
   ComputeOverflowInput,
   ComputeOverflowResult,
+  OverflowInlineBounds,
   UseOverflowOptions,
   UseOverflowReturn,
 } from './useOverflow.js'
+
+export { usePanGesture } from './usePanGesture.js'
 
 export { usePendingChange } from './usePendingChange.js'
 export type { PendingChange } from './usePendingChange.js'
 
 export { usePressFeedback } from './usePressFeedback.js'
 export type { UsePressFeedbackOptions, UsePressFeedbackReturn } from './usePressFeedback.js'
+
+export { useReorderable } from './useReorderable.js'
 
 export { percent, useResizable } from './useResizable.js'
 export type {
@@ -214,6 +259,9 @@ export { useScrollLock } from './useScrollLock.js'
 
 export { useScrollOverflow } from './useScrollOverflow.js'
 export type { ScrollOverflowState, UseScrollOverflowResult } from './useScrollOverflow.js'
+
+export { useSnapPaging } from './useSnapPaging.js'
+export type { SnapPaging, SnapPagingOptions } from './useSnapPaging.js'
 
 export { snapToGraphemeBoundary, useStreamingText } from './useStreamingText.js'
 export type { StreamingTextSpeed, UseStreamingTextOptions } from './useStreamingText.js'

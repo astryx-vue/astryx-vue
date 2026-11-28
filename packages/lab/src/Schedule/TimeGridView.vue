@@ -104,7 +104,7 @@ function contentOf(event: CalendarEvent): VNodeChild | null {
 }
 
 function labelOf(event: CalendarEvent, day: PlainDate): string {
-  return formatEventButtonLabel(event, day, props.timezoneID, ctx.categories, ctx.locale)
+  return formatEventButtonLabel(event, day, props.timezoneID, ctx.categories, ctx.locale, ctx.calendar)
 }
 
 function position(): void {
@@ -185,6 +185,7 @@ const openContent = computed(() => openEvent.value == null ? null : contentOf(op
     :focus-date="focusDate"
     :hours="hours"
     :locale="ctx.locale"
+    :calendar="ctx.calendar"
     :timezone-i-d="timezoneID"
     :timezone-label="timezoneLabel"
   />
@@ -217,7 +218,7 @@ const openContent = computed(() => openEvent.value == null ? null : contentOf(op
             <span class="astryx-schedule__time-head-line">
               {{ formatWeekday(day, 'short', ctx.locale) }}
               <span class="astryx-schedule__time-date" :class="{ 'is-current': plainDateIsEqual(day, focusDate) }">
-                {{ formatDayNumber(day, ctx.locale) }}
+                {{ formatDayNumber(day, ctx.locale, ctx.calendar) }}
               </span>
             </span>
           </Heading>
@@ -290,7 +291,7 @@ const openContent = computed(() => openEvent.value == null ? null : contentOf(op
           class="astryx-schedule__column"
           :class="{ 'is-last': index === days.length - 1 }"
           :style="{ 'gridColumn': String(index + 2), '--hour': `${hourHeight}px` }"
-          v-bind="hasPopover ? { 'role': 'group', 'aria-label': formatFullDate(day, ctx.locale) } : { 'aria-hidden': 'true' }"
+          v-bind="hasPopover ? { 'role': 'group', 'aria-label': formatFullDate(day, ctx.locale, ctx.calendar) } : { 'aria-hidden': 'true' }"
         >
           <div v-for="(hour, hourIndex) in hours" :key="hour" class="astryx-schedule__slot" :class="{ 'is-last': hourIndex === hours.length - 1 }" />
           <template v-for="block in layouts(day)" :key="block.event.id">

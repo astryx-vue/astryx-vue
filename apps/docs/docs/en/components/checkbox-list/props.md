@@ -12,6 +12,8 @@ footer: false
 <tr><td><code>v-model</code></td><td><code>string[]</code></td><td>—</td><td>Checked values. Omit it for standalone rows.</td></tr>
 <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>Required accessible name of the group.</td></tr>
 <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>Help text under the label.</td></tr>
+<tr><td><code>isRequired</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Whether the group needs at least one checked box. Shows the required indicator after the group label by the same rules as every input field. While no box is checked, the browser blocks submit and moves focus to the first box that is neither disabled nor read-only, with its own message. A disabled or read-only group requires nothing. Show your own error text through <code>status</code>. Mutually exclusive with <code>isOptional</code>.</td></tr>
+<tr><td><code>isOptional</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Whether the group is optional. Shows the optional indicator after the group label, unless a surrounding FormLayout already makes fields optional by default.</td></tr>
 <tr><td><code>density</code></td><td><code>'compact' | 'balanced' | 'spacious'</code></td><td><code>'balanced'</code></td><td>Row padding. Compact uses a small checkbox.</td></tr>
 <tr><td><code>hasDividers</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Draws a divider between rows.</td></tr>
 <tr><td><code>status</code></td><td><code>FieldStatusInput</code></td><td>—</td><td>Error, warning, or success.</td></tr>
@@ -34,7 +36,7 @@ footer: false
 <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>Required row label. It names the checkbox. Use the <code>label</code> slot for rich content such as a link; the checkbox name comes from the visible text.</td></tr>
 <tr><td><code>ariaLabel</code></td><td><code>string</code></td><td>—</td><td>Overrides the checkbox name. Use it when a rich label has no readable text.</td></tr>
 <tr><td><code>value</code></td><td><code>string</code></td><td>—</td><td>Required in collection mode. Omit it for a standalone row.</td></tr>
-<tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>Secondary text, also the checkbox description. Rich content goes in the <code>description</code> slot and stays linked with <code>aria-describedby</code>.</td></tr>
+<tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>Secondary text, also the checkbox description. A string shows on one line and the row cuts long text with an ellipsis, so for full text use the <code>description</code> slot, which stays linked with <code>aria-describedby</code>.</td></tr>
 <tr><td><code>isChecked</code></td><td><code>boolean | 'indeterminate'</code></td><td>—</td><td>Standalone checked state. Ignored in collection mode.</td></tr>
 <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disables this row.</td></tr>
 <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Loading for this row. The checkbox shows a spinner and cannot be toggled.</td></tr>

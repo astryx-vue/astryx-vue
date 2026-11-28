@@ -1,27 +1,33 @@
 <script setup lang="ts">
 import type { CalendarDate } from '@internationalized/date'
 import type { CalendarEmits, CalendarHandle, CalendarProps, CalendarRangeValue, CalendarSlots } from './types.js'
-import { computed, nextTick, shallowRef, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, onMounted, shallowRef, useTemplateRef, watch } from 'vue'
 import { useAnnounce } from '../composables/useAnnounce.js'
 import { useHandleRef } from '../composables/useHandleRef.js'
 import Icon from '../Icon/Icon.vue'
-import { formatCalendarMonth, standaloneShortWeekdayNames, weekdayNames } from '../locale/format.js'
-import { useAstryxLocale, useAstryxMessages } from '../locale/index.js'
+import { useCalendarSystem } from '../locale/calendar.js'
+import { useAstryxLocale, useComponentMessages } from '../locale/context.js'
+import { formatDayNumber, standaloneShortWeekdayNames, weekdayNames } from '../locale/format.js'
+import { calendarMessages } from '../locale/messages/calendar.js'
+import { formatCalendarMonthLabel } from '../utils/calendarFormat.js'
+import { calendarDayOfMonth, isInCalendarMonth } from '../utils/calendarSystem.js'
+import { plainDateToISO } from '../utils/plainDate.js'
 import VisuallyHidden from '../VisuallyHidden/VisuallyHidden.vue'
 import {
   dateISO,
   formatWeekdayDate,
   fromCalendarDate,
-  initialCalendarFocus,
   sameCalendarDay,
-  shiftMonth,
   toCalendarDate,
   weekFieldName,
   weekStartIndex,
 } from './calendarDate.js'
+import { addMonthStarts, isSameMonth, isWithinMonths, monthOf, monthStartOf } from './calendarMonths.js'
+import { paintCalendarWeek } from './paintCalendarWeek.js'
 import { isCalendarDateDisabled, isOutsideCalendarBounds } from './useCalendarConstraints.js'
-import { buildCalendarWeeks } from './useCalendarGrid.js'
+import { buildMonthWeeks, firstEnabledDay } from './useCalendarGrid.js'
 import { resolveCalendarKey } from './useCalendarKeyboard.js'
+import { useCalendarToday } from './useCalendarToday.js'
 import '../../styles/calendar.css'
 
 defineOptions({ name: 'AstryxCalendar' })
@@ -43,25 +49,18 @@ const emit = defineEmits<CalendarEmits>()
 defineSlots<CalendarSlots>()
 
 const locale = useAstryxLocale()
-const messages = useAstryxMessages()
+const calendar = useCalendarSystem(() => props.calendar, 'Calendar')
+const messages = useComponentMessages({ calendar: calendarMessages })
 const announce = useAnnounce()
 const rootRef = useTemplateRef<HTMLElement>('root')
 const monthCount = computed<1 | 2>(() => props.numberOfMonths === 2 ? 2 : 1)
 const weekStart = computed(() => weekStartIndex(props.weekStartsOn))
-const todayDate = toCalendarDate(new Date())
+const { hasExplicitOpening, isMonthPending, isResolvingToday, openingFocus, resolveToday, today } = useCalendarToday(props, monthCount, calendar)
 const pending = shallowRef<CalendarDate | null>(null)
 const hover = shallowRef<CalendarDate | null>(null)
 
-const opened = initialCalendarFocus({
-  focusDate: props.focusDate,
-  selected: props.mode === 'single' ? props.modelValue : null,
-  rangeStart: props.range?.start ?? null,
-  min: props.min,
-  max: props.max,
-  numberOfMonths: monthCount.value,
-  today: fromCalendarDate(todayDate),
-})
-const view = shallowRef(shiftMonth(opened, 0))
+const opened = openingFocus(today.value)
+const view = shallowRef(monthStartOf(calendar.value, opened))
 const focused = shallowRef<CalendarDate>(opened)
 
 const rtl = computed(() => {
@@ -98,54 +97,35 @@ function blocked(date: CalendarDate): boolean {
 }
 
 function visible(date: CalendarDate): boolean {
-  const start = view.value.year * 12 + view.value.month
-  const index = date.year * 12 + date.month
-  return index >= start && index < start + monthCount.value
+  return isWithinMonths(calendar.value, date, view.value, monthCount.value)
 }
 
-function seed(month: CalendarDate): CalendarDate {
+/** 在 `date` 所在的历法月里找键盘焦点的落点：先选中值，再今天，再第一个可选的日子。 */
+function seed(date: CalendarDate): CalendarDate {
+  const month = monthOf(calendar.value, date)
   const candidates: CalendarDate[] = []
   if (props.mode === 'single' && props.modelValue)
     candidates.push(toCalendarDate(props.modelValue))
-  candidates.push(todayDate)
-  for (const date of candidates) {
-    if (date.year === month.year && date.month === month.month && !blocked(date))
-      return date
-  }
-  for (const week of buildCalendarWeeks(month.year, month.month, weekStart.value, false)) {
-    for (const day of week.days) {
-      if (!day.outside && !blocked(day.date))
-        return day.date
-    }
-  }
-  return shiftMonth(month, 0)
+  if (today.value != null)
+    candidates.push(today.value)
+  const known = candidates.find(candidate => isInCalendarMonth(candidate, month) && !blocked(candidate))
+  return known ?? firstEnabledDay(month, blocked) ?? monthStartOf(calendar.value, date)
 }
 
 focused.value = seed(view.value)
 
 const months = computed(() => Array.from({ length: monthCount.value }, (_, index) => {
-  const cursor = shiftMonth(view.value, index)
+  const month = monthOf(calendar.value, addMonthStarts(calendar.value, view.value, index))
+  const focusDay = isInCalendarMonth(focused.value, month) ? calendarDayOfMonth(calendar.value, focused.value) : undefined
   return {
-    year: cursor.year,
-    month: cursor.month,
-    label: formatCalendarMonth(cursor.year, cursor.month, locale.value),
-    weeks: buildCalendarWeeks(cursor.year, cursor.month, weekStart.value, props.hasVariableRowCount),
+    key: plainDateToISO(month.start),
+    label: formatCalendarMonthLabel(calendar.value, month, locale.value, focusDay),
+    weeks: buildMonthWeeks(calendar.value, month, weekStart.value, props.hasVariableRowCount),
   }
 }))
 const headerLabel = computed(() => months.value.map(month => month.label).join(' – '))
-const canPrevious = computed(() => {
-  if (!props.min)
-    return true
-  const min = toCalendarDate(props.min)
-  return min.year < view.value.year || (min.year === view.value.year && min.month < view.value.month)
-})
-const canNext = computed(() => {
-  if (!props.max)
-    return true
-  const max = toCalendarDate(props.max)
-  const last = shiftMonth(view.value, monthCount.value - 1)
-  return max.year > last.year || (max.year === last.year && max.month > last.month)
-})
+const canPrevious = computed(() => !props.min || toCalendarDate(props.min).compare(view.value) < 0)
+const canNext = computed(() => !props.max || toCalendarDate(props.max).compare(addMonthStarts(calendar.value, view.value, monthCount.value)) >= 0)
 
 const selectedSingle = computed(() => props.mode === 'single' && props.modelValue ? toCalendarDate(props.modelValue) : null)
 const committedStart = computed(() => props.mode === 'range' && props.range?.start ? toCalendarDate(props.range.start) : null)
@@ -163,7 +143,7 @@ const visualStart = computed(() => preview.value?.start ?? pending.value ?? comm
 const visualEnd = computed(() => preview.value?.end ?? (pending.value ? null : committedEnd.value))
 
 function setView(next: CalendarDate, keep?: CalendarDate): void {
-  view.value = shiftMonth(next, 0)
+  view.value = monthStartOf(calendar.value, next)
   emit('update:focusDate', fromCalendarDate(view.value))
   if (keep)
     focused.value = keep
@@ -184,7 +164,7 @@ function shift(amount: number): void {
     return
   if (amount > 0 && !canNext.value)
     return
-  setView(shiftMonth(view.value, amount))
+  setView(addMonthStarts(calendar.value, view.value, amount))
   focusStop()
 }
 
@@ -203,82 +183,58 @@ watch(() => props.focusDate ? dateISO(props.focusDate) : '', (iso) => {
   if (!iso || !props.focusDate)
     return
   const next = toCalendarDate(props.focusDate)
-  if (next.year === view.value.year && next.month === view.value.month)
+  if (isSameMonth(calendar.value, next, view.value))
     return
-  view.value = shiftMonth(next, 0)
+  view.value = monthStartOf(calendar.value, next)
   if (!visible(focused.value))
     focused.value = seed(view.value)
 })
 
-watch(headerLabel, label => announce(label))
+watch(headerLabel, (label) => {
+  if (!isResolvingToday())
+    announce(label)
+}, { flush: 'sync' })
 
-function inSpan(date: CalendarDate, start: CalendarDate | null, end: CalendarDate | null): boolean {
-  return !!start && !!end && date.compare(start) >= 0 && date.compare(end) <= 0
+onMounted(() => resolveToday((known) => {
+  if (hasExplicitOpening)
+    return
+  view.value = monthStartOf(calendar.value, openingFocus(known))
+  focused.value = seed(view.value)
+}))
+
+watch(calendar, () => {
+  view.value = monthStartOf(calendar.value, focused.value)
+})
+
+function nameOf(date: CalendarDate): string {
+  return formatWeekdayDate(date, locale.value, calendar.value)
 }
 
-interface DayView {
-  iso: string
-  date: CalendarDate
-  text: number
-  outside: boolean
-  shown: boolean
-  disabled: boolean
-  selected: boolean
-  inRange: boolean
-  rangeStart: boolean
-  rangeEnd: boolean
-  today: boolean
-  tab: boolean
-  roundStart: boolean
-  roundEnd: boolean
-  label: string
+function dayLabel(date: CalendarDate, isStart: boolean, isEnd: boolean): string {
+  const named = nameOf(date)
+  if (props.mode !== 'range')
+    return named
+  if (isStart && isEnd)
+    return messages.value.calendar.rangeBoth(named)
+  if (isStart)
+    return messages.value.calendar.rangeStartName(named)
+  if (isEnd)
+    return messages.value.calendar.rangeEndName(named)
+  return named
 }
 
-function paint(week: { days: { date: CalendarDate, iso: string, outside: boolean, day: number }[] }): DayView[] {
-  const start = visualStart.value
-  const end = visualEnd.value
-  return week.days.map((day, index) => {
-    const outside = day.outside
-    const disabled = outside || blocked(day.date)
-    const continues = !outside && !blocked(day.date) && inSpan(day.date, start, end)
-    const previous = index > 0 ? week.days[index - 1]! : null
-    const next = index < 6 ? week.days[index + 1]! : null
-    const previousContinues = !!previous && !previous.outside && !blocked(previous.date) && inSpan(previous.date, start, end)
-    const nextContinues = !!next && !next.outside && !blocked(next.date) && inSpan(next.date, start, end)
-    const isStart = !!start && !outside && sameCalendarDay(day.date, start)
-    const isEnd = !!end && !outside && sameCalendarDay(day.date, end)
-    const selected = !outside && (
-      (props.mode === 'single' && !!selectedSingle.value && sameCalendarDay(day.date, selectedSingle.value))
-      || isStart
-      || isEnd
-    )
-    const named = formatWeekdayDate(day.date, locale.value)
-    let label = named
-    if (props.mode === 'range' && isStart && isEnd)
-      label = messages.value.calendar.rangeBoth(named)
-    else if (props.mode === 'range' && isStart)
-      label = messages.value.calendar.rangeStartName(named)
-    else if (props.mode === 'range' && isEnd)
-      label = messages.value.calendar.rangeEndName(named)
-    return {
-      iso: day.iso,
-      date: day.date,
-      text: day.day,
-      outside,
-      shown: props.hasOutsideDays || !outside,
-      disabled,
-      selected,
-      inRange: continues && !isStart && !isEnd,
-      rangeStart: isStart,
-      rangeEnd: isEnd,
-      today: !outside && sameCalendarDay(day.date, todayDate),
-      tab: !outside && !props.disabled && sameCalendarDay(day.date, focused.value),
-      roundStart: continues && (isStart || index === 0 || !previousContinues),
-      roundEnd: continues && (isEnd || index === 6 || !nextContinues),
-      label,
-    }
-  })
-}
+const paintContext = computed(() => ({
+  start: visualStart.value,
+  end: visualEnd.value,
+  preview: preview.value != null,
+  selected: selectedSingle.value,
+  today: today.value,
+  focused: focused.value,
+  hasOutsideDays: props.hasOutsideDays,
+  disabled: props.disabled,
+  blocked,
+  label: dayLabel,
+}))
 
 function pick(date: CalendarDate): void {
   if (props.disabled || blocked(date))
@@ -295,7 +251,7 @@ function pick(date: CalendarDate): void {
     const value = fromCalendarDate(date)
     emit('update:range', { start: value, end: null })
     emit('change', value)
-    announce(messages.value.calendar.rangeStart(formatWeekdayDate(date, locale.value)))
+    announce(messages.value.calendar.rangeStart(nameOf(date)))
     return
   }
   if (sameCalendarDay(date, pending.value) && props.minRangeSpan > 1) {
@@ -303,7 +259,7 @@ function pick(date: CalendarDate): void {
     hover.value = null
     emit('update:range', { start: null, end: null })
     emit('change', null)
-    announce(messages.value.calendar.rangeCleared(formatWeekdayDate(date, locale.value)))
+    announce(messages.value.calendar.rangeCleared(nameOf(date)))
     return
   }
   const start = pending.value.compare(date) <= 0 ? pending.value : date
@@ -314,8 +270,8 @@ function pick(date: CalendarDate): void {
   emit('update:range', value)
   emit('change', value.end)
   announce(messages.value.calendar.rangeComplete(
-    formatWeekdayDate(start, locale.value),
-    formatWeekdayDate(end, locale.value),
+    nameOf(start),
+    nameOf(end),
   ))
 }
 
@@ -329,7 +285,7 @@ function onKeyDown(event: KeyboardEvent): void {
     pending.value = null
     hover.value = null
     emit('update:range', { start: null, end: null })
-    announce(messages.value.calendar.rangeCleared(formatWeekdayDate(date, locale.value)))
+    announce(messages.value.calendar.rangeCleared(nameOf(date)))
     return
   }
   if (event.key === 'Enter' || event.key === ' ') {
@@ -340,12 +296,13 @@ function onKeyDown(event: KeyboardEvent): void {
   }
   const move = resolveCalendarKey({
     key: event.key,
+    shiftKey: event.shiftKey,
     rtl: rtl.value,
     focused: focused.value,
     weekStartsOn: weekStart.value,
     numberOfMonths: monthCount.value,
-    viewYear: view.value.year,
-    viewMonth: view.value.month,
+    viewStart: view.value,
+    calendar: calendar.value,
     isOutOfBounds: date => isOutsideCalendarBounds(date, props.min, props.max),
     isDisabled: date => isCalendarDateDisabled(date, constraints()),
   })
@@ -365,6 +322,7 @@ function onKeyDown(event: KeyboardEvent): void {
     ref="root"
     class="astryx-calendar"
     :class="{ 'is-disabled': disabled }"
+    :data-month-pending="isMonthPending || undefined"
     :data-months="monthCount"
     :data-mode="mode"
     :data-week-numbers="hasWeekNumbers || undefined"
@@ -381,7 +339,7 @@ function onKeyDown(event: KeyboardEvent): void {
         >
           <Icon icon="chevronLeft" size="sm" />
         </button>
-        <span class="astryx-calendar-month-year">{{ headerLabel }}</span>
+        <span class="astryx-calendar-month-year">{{ isMonthPending ? '' : headerLabel }}</span>
         <button
           type="button"
           class="astryx-calendar-nav-button"
@@ -396,7 +354,7 @@ function onKeyDown(event: KeyboardEvent): void {
     <div class="astryx-calendar-months">
       <section
         v-for="month in months"
-        :key="`${month.year}-${month.month}`"
+        :key="month.key"
         class="astryx-calendar-month"
       >
         <div
@@ -424,15 +382,15 @@ function onKeyDown(event: KeyboardEvent): void {
           </div>
           <div
             v-for="(week, rowIndex) in month.weeks"
-            :key="`${month.year}-${month.month}-${rowIndex}`"
+            :key="`${month.key}-${rowIndex}`"
             class="astryx-calendar-row"
             role="row"
           >
             <div v-if="hasWeekNumbers" class="astryx-calendar-week-number" role="rowheader">
-              {{ week.number }}
+              {{ formatDayNumber(week.number, locale) }}
             </div>
             <div
-              v-for="day in paint(week)"
+              v-for="day in paintCalendarWeek(week, paintContext)"
               :key="day.iso"
               class="astryx-calendar-gridcell"
               role="gridcell"
@@ -443,6 +401,8 @@ function onKeyDown(event: KeyboardEvent): void {
                 type="button"
                 class="astryx-calendar-cell"
                 :class="{
+                  'astryx-calendar-range': day.inRange && !day.preview,
+                  'astryx-calendar-range-preview': day.inRange && day.preview,
                   'is-selected': day.selected,
                   'is-range-start': day.rangeStart,
                   'is-range-end': day.rangeEnd,
@@ -454,6 +414,8 @@ function onKeyDown(event: KeyboardEvent): void {
                   'is-other-month': day.outside,
                 }"
                 :data-date="day.iso"
+                :data-start="day.bandStart ? 'start' : undefined"
+                :data-end="day.bandEnd ? 'end' : undefined"
                 :tabindex="day.tab ? 0 : -1"
                 :aria-disabled="day.disabled || undefined"
                 :aria-current="day.today ? 'date' : undefined"
@@ -472,7 +434,7 @@ function onKeyDown(event: KeyboardEvent): void {
                   :is-today="day.today"
                   :is-in-month="!day.outside"
                 >
-                  <span class="astryx-calendar-day">{{ day.text }}</span>
+                  <span class="astryx-calendar-day">{{ formatDayNumber(day.text, locale) }}</span>
                 </slot>
               </button>
             </div>

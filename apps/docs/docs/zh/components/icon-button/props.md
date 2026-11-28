@@ -17,7 +17,7 @@ IconButton 继承 Button 的大部分属性，但不提供 <code>isIconOnly</cod
       <tr><td><code>variant</code></td><td><code>'primary' | 'secondary' | 'ghost' | 'destructive'</code></td><td><code>'secondary'</code></td><td>按钮的视觉样式，同时暗示操作的类型。</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>按钮尺寸，IconButton 始终渲染为正方形。</td></tr>
       <tr><td><code>elevation</code></td><td><code>'none' | 'low' | 'med' | 'high'</code></td><td><code>'none'</code></td><td>静止状态的阴影深度，适合悬浮于内容上方的独立按钮。</td></tr>
-      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否禁用交互。存在 tooltip 时改用 aria-disabled 标记，让按钮保留焦点以显示提示。</td></tr>
+      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否禁用，禁用后不再响应交互。按钮不用原生 disabled，而是标记 aria-disabled 并留在 Tab 顺序里，键盘和读屏用户仍能聚焦、读到它。</td></tr>
       <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否显示加载图标，同时设置 aria-busy。加载期间默认阻止重复操作。</td></tr>
       <tr><td><code>isInterruptible</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否允许加载期间再次触发 clickAction。</td></tr>
       <tr><td><code>clickAction</code></td><td><code>(event: MouseEvent) =&gt; void | Promise&lt;void&gt;</code></td><td>—</td><td>点击时执行的回调；返回 Promise 时，组件会自动显示加载状态。</td></tr>
@@ -60,6 +60,7 @@ IconButton 继承 Button 的大部分属性，但不提供 <code>isIconOnly</cod
 
 `IconButton` 公开 `element`。
 类型为 `HTMLButtonElement | HTMLAnchorElement | HTMLElement | null`。
+链接模式下（有 `href` 且未禁用），它是链接元素：原生锚点，或 `as` 链接组件的根元素；其他情况下是按钮本身。
 
 ## 原生属性
 

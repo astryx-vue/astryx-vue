@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import type { CSSProperties, StyleValue } from 'vue'
 import type { LayoutPanelProps, LayoutPanelSlots } from './types.js'
-import { computed, useAttrs, useTemplateRef } from 'vue'
+import { computed, onBeforeUnmount, onMounted, useAttrs, useTemplateRef, watch } from 'vue'
+import { moveFocusLeftBehind, noteFocusWithin, useFocusLeavingChange } from '../composables/internal/focusLeaving.js'
+import { resizablePropsOf, resizeHandleBeside } from '../composables/internal/resizableChannel.js'
+import { useScrollRegionProps } from '../composables/internal/useScrollRegionProps.js'
+import { useComponentMessages } from '../locale/context.js'
+import { layoutMessages } from '../locale/messages/layout.js'
+import { regionOfProps } from '../Resizable/resizablePane.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import { useLayoutArea, useLayoutSlots } from './context.js'
 import { regionPaddingStyle } from './regionPadding.js'
@@ -22,14 +28,64 @@ defineSlots<LayoutPanelSlots>()
 
 const attrs = useAttrs()
 const root = useTemplateRef<HTMLDivElement>('root')
-useScrollbars(root, { enabled: () => props.isScrollable })
+const resizable = computed(() => props.resizable == null ? undefined : resizablePropsOf(props.resizable))
+const effectiveWidth = computed(() => resizable.value ? resizable.value._size : props.width)
+/** 宽度为 0 的面板不占位也不露出子元素：内边距归零，内容被裁掉，也不再滚动。 */
+const isZeroWidth = computed(() => effectiveWidth.value === 0 || effectiveWidth.value === '0px')
+const scrolls = computed(() => props.isScrollable && !isZeroWidth.value)
+useScrollbars(root, { enabled: () => scrolls.value })
+const messages = useComponentMessages({ layout: layoutMessages })
+const region = useScrollRegionProps({
+  defaultLabel: () => messages.value.layout.scrollRegion,
+  isScrollable: () => scrolls.value,
+  label: () => props.label,
+  role: () => props.role,
+  target: root,
+})
 const area = useLayoutArea()
 const slots = useLayoutSlots()
 
 defineExpose({ element: root })
 
-const width = computed(() => formatSize(props.resizable ? props.resizable._size : props.width))
-const collapse = computed(() => !props.hasDivider && props.padding == null)
+// 拿到 `useResizable` 自己的 props 时，面板把元素交给那个区域：区域收起、展开时面板从朝内容的边滑开滑合。
+// 手写的 props 对象没有区域，什么都不借，也不滑动。
+const paneRegion = computed(() => resizable.value == null ? undefined : regionOfProps(resizable.value))
+let committedWidth = effectiveWidth.value
+const pane = {
+  get element() {
+    return root.value as HTMLElement
+  },
+  renderedWidth: () => committedWidth,
+  contentFacingEdge: () => (area.value === 'end' ? 'inline-start' : 'inline-end') as 'inline-start' | 'inline-end',
+}
+onMounted(() => paneRegion.value?.attach(pane))
+watch(paneRegion, (next, previous) => {
+  previous?.attach(null)
+  next?.attach(pane)
+}, { flush: 'post' })
+onBeforeUnmount(() => paneRegion.value?.attach(null))
+// DOM 变化之前告诉区域：它在这一刻量好面板和旁边的内容。
+watch(isZeroWidth, toCollapsed => paneRegion.value?.beforeChange(toCollapsed), { flush: 'pre' })
+// 渲染出新宽度之后：量过的那次变化开始播。
+watch(effectiveWidth, (width) => {
+  committedWidth = width
+  paneRegion.value?.committed()
+}, { flush: 'post' })
+
+const width = computed(() => formatSize(effectiveWidth.value))
+const collapse = computed(() => !props.hasDivider && props.padding == null && !isZeroWidth.value)
+const isRegionCollapsed = computed(() => resizable.value?._isCollapsed === true)
+
+// 区域收起时，面板里的焦点移到旁边的 ResizeHandle，面板随后不可交互、对读屏隐藏。
+useFocusLeavingChange(
+  () => isRegionCollapsed.value,
+  wasCollapsed => (wasCollapsed ? null : noteFocusWithin(root.value)),
+  (note, collapsed) => {
+    const panel = root.value
+    if (collapsed && panel != null)
+      moveFocusLeftBehind(note, resizeHandleBeside(panel, area.value === 'end' ? 'end' : 'start'), panel)
+  },
+)
 const forwardedAttrs = computed(() => Object.fromEntries(
   Object.entries(attrs).filter(([key]) => key !== 'class' && key !== 'style'),
 ))
@@ -47,14 +103,17 @@ const rootStyle = computed<StyleValue>(() => [
     v-bind="forwardedAttrs"
     :class="rootClass"
     :style="rootStyle"
-    :role="role"
-    :aria-label="label"
+    :role="region.role.value"
+    :aria-label="region.ariaLabel.value"
     :data-area="area"
     :data-divider="hasDivider || undefined"
     :data-collapse="collapse || undefined"
     :data-edge-header="!slots.hasHeader || undefined"
     :data-edge-footer="!slots.hasFooter || undefined"
-    :data-scrollable="isScrollable || undefined"
+    :data-scrollable="scrolls || undefined"
+    :data-zero-width="isZeroWidth || undefined"
+    :inert="isRegionCollapsed || undefined"
+    :aria-hidden="isRegionCollapsed ? 'true' : undefined"
     :data-explicit-padding="padding != null || undefined"
     :data-bleed="padding === 0 || undefined"
   >

@@ -1,5 +1,6 @@
 import type { PlainDate } from './plainDate.js'
 import { plainDateCreate, plainDateFromDate } from './plainDate.js'
+import { unicodeRegExp } from './unicodeRegExp.js'
 
 export {
   plainDateToISO as dateToISO,
@@ -18,6 +19,9 @@ export function isLocaleDayFirst(locale: string = 'en'): boolean {
   const monthIndex = parts.findIndex(p => p.type === 'month')
   return dayIndex < monthIndex
 }
+
+const LETTER_FREE = unicodeRegExp('^\\P{L}+$')
+const YEAR_FIRST = unicodeRegExp('^\\d{4}[^\\p{L}\\d]')
 
 /**
  * Parses user input into a PlainDate.
@@ -123,6 +127,18 @@ export function parseDateInput(
   // resolves to 0 — produces an out-of-range date that throws downstream.
   // Treat them as not-yet-a-valid-date instead.
   if (/^\d+$/.test(trimmed)) {
+    return null
+  }
+
+  // In a day-first locale, letter-free text that no form above matched is not
+  // a date: native `Date` reads `a/b/c` month first and accepts a year of one
+  // to three digits, so "12/01/2" would give a wrong date. A four-digit year
+  // written first is not ambiguous.
+  if (
+    isLocaleDayFirst(locale)
+    && LETTER_FREE.test(trimmed)
+    && !YEAR_FIRST.test(trimmed)
+  ) {
     return null
   }
 

@@ -92,7 +92,24 @@ describe('上游持续同步', () => {
 
     const second = renderPendingChecklist(plan, range, edited)
     expect(second).toBe(edited)
-    expect(readProgress(second).get(hash)).toEqual({ checked: true, notes: ['  - 不适用：Vue 版没有这段逻辑'] })
+    expect(readProgress(second).get(`## 选择器家族（area:core）\n${hash}`)).toEqual({ checked: true, notes: ['  - 不适用：Vue 版没有这段逻辑'] })
+  })
+
+  it('同一个提交落在几个组件族时，各族的勾选互不影响', () => {
+    const commit = { hash: 'a'.repeat(40), subject: 'fix(Button, Popover): keep an edge (#1)', breaking: false }
+    const plan = [{ from: 'v1.0.0', to: 'v1.1.0', families: [
+      { id: 'actions', title: '甲族', area: 'core', commits: [commit] },
+      { id: 'overlays', title: '乙族', area: 'core', commits: [commit] },
+    ] }]
+    const range = { from: 'v1.0.0', to: 'v1.1.0' }
+    const first = renderPendingChecklist(plan, range)
+    // 只在甲族下勾掉，乙族那条留着。
+    const edited = first.replace('- [ ] ', '- [x] ')
+
+    const second = renderPendingChecklist(plan, range, edited)
+    expect(second).toBe(edited)
+    expect(second.match(/- \[x\]/g)).toHaveLength(1)
+    expect(second.indexOf('- [x]')).toBeLessThan(second.indexOf('## 乙族'))
   })
 
   it('汇总 PR 正文只放统计和收尾说明，进度从清单里数', () => {

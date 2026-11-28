@@ -1,6 +1,9 @@
 import type { PowerSearchMessages } from '../locale/messages/power-search.js'
+import type { CalendarSystem } from '../utils/calendarSystem.js'
 import type { EnumItem, FilterValue, OperatorValue } from './types.js'
+import { formatCalendarInstant } from '../utils/calendarFormat.js'
 import { characterCount, truncateCharacters } from '../utils/characters.js'
+import { isDateOnlyOperator, resolveDateZone } from './dateZone.js'
 
 function truncate(value: string, maxLength: number): string {
   return truncateCharacters(value, maxLength)
@@ -15,26 +18,24 @@ function formatNumber(value: number, locale: string, units?: string): string {
   return units ? `${formatted} ${units}` : formatted
 }
 
-export function formatDateAbsolute(unixSeconds: number, locale: string, timeZone?: string): string {
-  return new Intl.DateTimeFormat(locale, {
+/** 带时刻的日期，例如 "Oct 30, 2026, 3:00 PM"。日期按 `calendar` 写，默认公历。 */
+export function formatDateAbsolute(unixSeconds: number, locale: string, timeZone?: string, calendar: CalendarSystem = 'gregory'): string {
+  return formatCalendarInstant(calendar, new Date(unixSeconds * 1000), {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
     hour: 'numeric',
     minute: '2-digit',
-    ...(timeZone ? { timeZone } : {}),
-    calendar: 'gregory',
-  }).format(unixSeconds * 1000)
+  }, locale, timeZone || undefined)
 }
 
-export function formatDateAbsoluteCompact(unixSeconds: number, locale: string, timeZone?: string): string {
-  return new Intl.DateTimeFormat(locale, {
+/** 只有日期，例如 "Oct 30, 2026"。日期按 `calendar` 写，默认公历。 */
+export function formatDateAbsoluteCompact(unixSeconds: number, locale: string, timeZone?: string, calendar: CalendarSystem = 'gregory'): string {
+  return formatCalendarInstant(calendar, new Date(unixSeconds * 1000), {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
-    ...(timeZone ? { timeZone } : {}),
-    calendar: 'gregory',
-  }).format(unixSeconds * 1000)
+  }, locale, timeZone || undefined)
 }
 
 function joinOrCount(labels: readonly string[], maxLength: number, countLabel: (count: number) => string): string {
@@ -55,6 +56,7 @@ export function formatFilterValue(
   messages: PowerSearchMessages,
   locale: string,
   timeZone?: string,
+  calendar: CalendarSystem = 'gregory',
 ): string {
   switch (filterValue.type) {
     case 'empty':
@@ -81,9 +83,9 @@ export function formatFilterValue(
       return filterValue.value
     case 'date_absolute':
       return truncate(
-        operatorValue.type === 'date_absolute' && operatorValue.isDateOnly
-          ? formatDateAbsoluteCompact(filterValue.unixSeconds, locale, timeZone)
-          : formatDateAbsolute(filterValue.unixSeconds, locale, timeZone),
+        isDateOnlyOperator(operatorValue)
+          ? formatDateAbsoluteCompact(filterValue.unixSeconds, locale, resolveDateZone(timeZone, true), calendar)
+          : formatDateAbsolute(filterValue.unixSeconds, locale, timeZone, calendar),
         maxLength,
       )
     case 'date_relative':

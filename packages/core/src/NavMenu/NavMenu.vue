@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import type { NavMenuEmits, NavMenuProps } from './types.js'
-import { computed, nextTick, onMounted, provide, watch } from 'vue'
+import { computed, nextTick, onMounted, provide, ref, watch } from 'vue'
 import { useListFocus } from '../composables/useListFocus.js'
+import { useMenuPress } from '../composables/useMenuPress.js'
+import { useOverflow } from '../composables/useOverflow.js'
 import { navMenuKey } from './context.js'
 import '../../styles/nav-menu.css'
 
@@ -23,6 +25,13 @@ const { listRef, handleKeyDown, focusItem } = useListFocus({
   onEscape: () => emit('close'),
   orientation: 'vertical',
 })
+
+// 按住滑过各行，松开时执行松开处那一行，高亮跟着指针；鼠标在菜单外松开就关掉菜单。
+const menuPress = useMenuPress({
+  menuRef: listRef,
+  onDismiss: () => emit('close'),
+})
+const hasOverflow = useOverflow(listRef, ref(true))
 
 function menuItems(): HTMLElement[] {
   const root = listRef.value
@@ -80,6 +89,8 @@ provide(navMenuKey, {
     role="menu"
     tabindex="-1"
     :aria-label="label"
+    :data-overflow="hasOverflow || undefined"
+    v-bind="menuPress.menuProps"
     @keydown="onKeyDown"
   >
     <slot />

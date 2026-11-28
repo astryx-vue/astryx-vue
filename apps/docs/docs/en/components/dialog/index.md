@@ -47,7 +47,7 @@ const isOpen = ref(false)
 | <Badge variant="success">Do</Badge> | Use purpose="form" for dialogs with inputs so the user can't accidentally lose data by clicking the backdrop. |
 | <Badge variant="success">Do</Badge> | Keep dialogs focused on a single task; if the content grows beyond what fits, consider a full page instead. |
 | <Badge variant="error">Don't</Badge> | Use a dialog for simple messages that could be shown inline or as a toast notification. |
-| <Badge variant="error">Don't</Badge> | Nest dialogs inside other dialogs; restructure the flow into steps within a single dialog instead. |
+| <Badge variant="error">Don't</Badge> | Nest dialogs inside other dialogs; restructure the flow into steps within a single dialog instead. The one exception is an AlertDialog that confirms a destructive action: it asks one question, and Escape closes only the alert. |
 | <Badge variant="error">Don't</Badge> | Use the fullscreen variant for simple confirmations; it is meant for complex content like editors or long forms. |
 
 ## Examples
@@ -72,7 +72,7 @@ The dialog is shown with `showModal()`, which makes the rest of the page inert w
 
 The dialog takes its name from the `DialogHeader` title, which the component associates with the dialog through `aria-labelledby`. An explicit `aria-label` or `aria-labelledby` replaces that name with the one you provide.
 
-Escape and backdrop clicks do not close the dialog directly. They emit `openChange(false)`, and the parent decides whether to close. When the dialog closes, focus returns to the element that was focused when it opened, as long as that element is still in the page.
+Escape and backdrop clicks do not close the dialog directly. They emit `openChange(false)`, and the parent decides whether to close. When the dialog closes, focus returns to the element that was focused when it opened. If that element is gone, focus goes to the tab stop that took its place, a nearby ancestor, or `main`, never to the page body. Focus that your `openChange` handler already moved outside the dialog stays where you put it, and a dialog removed while open hands focus back the same way.
 
 ## Limitations
 

@@ -4,6 +4,7 @@ import type { CommentReactionOption } from './types.js'
 import type { AnyComment } from './utils.js'
 import {
   Button,
+  commentsMessages,
   DropdownMenu,
   HStack,
   Icon,
@@ -12,7 +13,7 @@ import {
   Text,
   Tooltip,
   useClipboard,
-  useTranslator,
+  useComponentMessages,
 } from '@astryx-vue/core'
 import { computed, nextTick, ref } from 'vue'
 import { commentMoreMenuTrigger, visibleCommentAction } from './commentActionLookup.js'
@@ -42,8 +43,10 @@ const emit = defineEmits<{
 
 export interface ResolveAction { kind: 'resolve' | 'reopen', onClick: () => void }
 
-const { t } = useTranslator()
-const { copy: copyToClipboard, isCopied: isLinkCopied } = useClipboard()
+const messages = useComponentMessages({ comments: commentsMessages })
+const { copy: copyToClipboard, isCopied: isLinkCopied, isFailed: isLinkFailed } = useClipboard({
+  announceFailure: () => messages.value.comments.linkCopyFailed,
+})
 const isLinkTooltipOpen = ref(false)
 const isPickerOpen = ref(false)
 const cluster = ref<HTMLElement | null>(null)
@@ -52,14 +55,16 @@ function setClusterRef(el: unknown): void {
   cluster.value = toElement(el)
 }
 const href = computed(() => `#${commentAnchorId(props.comment.id)}`)
-const linkLabel = computed(() =>
-  isLinkCopied.value ? t('@astryx.comments.linkCopied') : t('@astryx.comments.copyLink'),
-)
+const linkLabel = computed(() => {
+  if (isLinkFailed.value)
+    return messages.value.comments.linkCopyFailed
+  return isLinkCopied.value ? messages.value.comments.linkCopied : messages.value.comments.copyLink
+})
 const isLinkInMenu = computed(() => props.menuItems.length > 0)
-const resolveLabel = computed(() => t('@astryx.comments.resolve'))
-const reopenLabel = computed(() => t('@astryx.comments.reopen'))
-const replyLabel = computed(() => t('@astryx.comments.reply'))
-const addReactionLabel = computed(() => t('@astryx.comments.addReaction'))
+const resolveLabel = computed(() => messages.value.comments.resolve)
+const reopenLabel = computed(() => messages.value.comments.reopen)
+const replyLabel = computed(() => messages.value.comments.reply)
+const addReactionLabel = computed(() => messages.value.comments.addReaction)
 
 async function copyCommentLink(): Promise<void> {
   await copyToClipboard(new URL(href.value, window.location.href).href)
@@ -136,7 +141,7 @@ const moreButton = computed(() => ({
         :is-open="isPickerOpen"
         placement="above"
         alignment="end"
-        :label="t('@astryx.comments.chooseReaction')"
+        :label="messages.comments.chooseReaction"
         width="fit-content"
         :has-close-button="false"
         @open-change="changePicker"
@@ -158,8 +163,8 @@ const moreButton = computed(() => ({
             <IconButton
               v-for="option in options"
               :key="option.key"
-              :label="reactionDescription(t, option)"
-              :tooltip="reactionDescription(t, option)"
+              :label="reactionDescription(messages.comments, option)"
+              :tooltip="reactionDescription(messages.comments, option)"
               variant="ghost"
               :data-reaction-option="option.key"
               :is-disabled="isBusy"
@@ -187,7 +192,7 @@ const moreButton = computed(() => ({
       <Tooltip
         v-if="canCopyLink && !isLinkInMenu"
         :content="linkLabel"
-        :is-open="isLinkCopied || isLinkTooltipOpen"
+        :is-open="isLinkCopied || isLinkFailed || isLinkTooltipOpen"
         @open-change="isLinkTooltipOpen = $event"
       >
         <IconButton
@@ -196,9 +201,11 @@ const moreButton = computed(() => ({
           size="sm"
           data-comment-action="link"
           :data-link-copied="isLinkCopied ? 'true' : undefined"
+          :data-link-failed="isLinkFailed ? 'true' : undefined"
           @click="copyCommentLink"
         >
-          <Icon v-if="isLinkCopied" icon="check" color="secondary" />
+          <Icon v-if="isLinkFailed" icon="close" color="secondary" />
+          <Icon v-else-if="isLinkCopied" icon="check" color="secondary" />
           <CommentIcon v-else name="copyLink" />
         </IconButton>
       </Tooltip>

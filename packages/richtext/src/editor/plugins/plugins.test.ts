@@ -1,4 +1,5 @@
 import type { LexicalEditor } from 'lexical'
+import { createCodeLanguage } from '@astryx-vue/core'
 import { mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { h, nextTick } from 'vue'
@@ -129,6 +130,14 @@ describe('code block header', () => {
     expect(header.find('button[aria-label="Copy code"]').exists()).toBe(true)
   })
 
+  it('writes the drawn header height on its code block, and takes it off for a block with no header', async () => {
+    const wrapper = mountEditor('```js\nconst a = 1\n```\n\n```\nplain\n```\n')
+    await settle()
+    const [withHeader, withoutHeader] = wrapper.findAll('[data-lexical-editor] code, [data-lexical-editor] pre').map(node => node.element as HTMLElement)
+    expect(withHeader!.style.getPropertyValue('--_richtext-code-header-block-size')).toMatch(/^\d+(\.\d+)?px$/)
+    expect(withoutHeader!.style.getPropertyValue('--_richtext-code-header-block-size')).toBe('')
+  })
+
   it('shows only the copy button, in the corner, for a block with no language', async () => {
     const wrapper = mountEditor('```\nplain\n```\n')
     await settle()
@@ -145,6 +154,17 @@ describe('code block header', () => {
     await wrapper.get('[data-richtext-code-header] button').trigger('click')
     await settle()
     expect(writeText).toHaveBeenCalledWith('const a = 1')
+  })
+
+  it('shows the name of a listed language value that claims the fence word', async () => {
+    const idl = createCodeLanguage({ name: 'Thrift IDL', identifiers: ['thrift'], tokenize: () => [] })
+    const wrapper = mountEditor('```thrift\nstruct A {}\n```\n', { codeLanguages: [idl] })
+    await settle()
+    expect(wrapper.get('[data-richtext-code-header]').text()).toContain('Thrift IDL')
+    await wrapper.setProps({ codeLanguages: undefined })
+    await settle()
+    expect(wrapper.get('[data-richtext-code-header]').text()).toContain('thrift')
+    expect(wrapper.get('[data-richtext-code-header]').text()).not.toContain('Thrift IDL')
   })
 
   it('draws one header per code block', async () => {

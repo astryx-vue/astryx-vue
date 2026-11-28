@@ -8,6 +8,13 @@ import { Section } from '@astryx-vue/core/Section'
 import { Stack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
 import { defineTheme, Theme } from '@astryx-vue/core/Theme'
+import { useToast } from '@astryx-vue/core/Toast'
+
+const toast = useToast()
+
+function demo(label: string): void {
+  toast({ body: `Demo: ${label} would run here` })
+}
 
 const warmTheme = defineTheme({
   name: 'warm-docs',
@@ -54,9 +61,9 @@ const forestTheme = defineTheme({
               The same content inherits this provider's colors, typography, radius, and component treatment.
             </Text>
             <Stack direction="horizontal" :gap="2" wrap="wrap">
-              <Button label="Primary" variant="primary" size="sm" />
-              <Button label="Secondary" variant="secondary" size="sm" />
-              <Button label="Ghost" variant="ghost" size="sm" />
+              <Button label="Primary" variant="primary" size="sm" @click="demo('Primary')" />
+              <Button label="Secondary" variant="secondary" size="sm" @click="demo('Secondary')" />
+              <Button label="Ghost" variant="ghost" size="sm" @click="demo('Ghost')" />
             </Stack>
           </Stack>
         </Card>
@@ -76,9 +83,9 @@ const forestTheme = defineTheme({
               The same content inherits this provider's colors, typography, radius, and component treatment.
             </Text>
             <Stack direction="horizontal" :gap="2" wrap="wrap">
-              <Button label="Primary" variant="primary" size="sm" />
-              <Button label="Secondary" variant="secondary" size="sm" />
-              <Button label="Ghost" variant="ghost" size="sm" />
+              <Button label="Primary" variant="primary" size="sm" @click="demo('Primary')" />
+              <Button label="Secondary" variant="secondary" size="sm" @click="demo('Secondary')" />
+              <Button label="Ghost" variant="ghost" size="sm" @click="demo('Ghost')" />
             </Stack>
           </Stack>
         </Card>

@@ -13,7 +13,8 @@
   .astryx-switch-row {
     display: inline-flex;
     align-items: center;
-    gap: var(--astryx-spacing-2, 8px);
+    /* 主题在 switch 目标上写的 gap 落在这里，见 theme/derivedVars.ts。 */
+    gap: var(--_switch-gap, var(--astryx-spacing-2, 8px));
   }
 
   .astryx-switch[data-label-spacing='spread'] > .astryx-switch-row {
@@ -81,17 +82,24 @@
     background-image: var(--_press-paint-image);
   }
 
-  @media (pointer: coarse) {
-    .astryx-switch-control {
-      min-width: 24px;
-      min-height: 24px;
-    }
+  /* 横向的手指移动是开关的拖动，竖向的是页面滚动。禁用、只读或忙碌时不接拖动，移动全交给页面。 */
+  .astryx-switch:not([data-blocked='true']) .astryx-switch-control {
+    touch-action: pan-y pinch-zoom;
+  }
 
+  /*
+   * 粗指针下，看不见的 input 就是手指的热区：useTouchHitArea 量出的 --astryx-hit-inset-*
+   * 让它朝 44 × 44 长，每边长到离邻居一半为止，看得见的部分不变。没量到时是 0。
+   */
+  @media (pointer: coarse) {
     .astryx-switch-native {
       inset: 50% auto auto 50%;
-      width: max(100%, 24px);
-      height: max(100%, 24px);
-      transform: translate(-50%, -50%);
+      width: calc(100% + var(--astryx-hit-inset-left, 0px) + var(--astryx-hit-inset-right, 0px));
+      height: calc(100% + var(--astryx-hit-inset-top, 0px) + var(--astryx-hit-inset-bottom, 0px));
+      transform: translate(
+        calc(-50% + (var(--astryx-hit-inset-right, 0px) - var(--astryx-hit-inset-left, 0px)) / 2),
+        calc(-50% + (var(--astryx-hit-inset-bottom, 0px) - var(--astryx-hit-inset-top, 0px)) / 2)
+      );
     }
   }
 
@@ -126,55 +134,115 @@
     background: var(--astryx-switch-track-on, #1b1b1b);
   }
 
+  /* 拇指每种尺寸、每个状态的直径；鼠标下的位移和手指下的停靠位都从它算。 */
   .astryx-switch-thumb {
+    --_switch-thumb-size: var(--astryx-switch-thumb-size, 16px);
+    --_switch-thumb-travel: var(--astryx-switch-thumb-travel, 14px);
+
     box-sizing: border-box;
     flex: none;
-    width: var(--astryx-switch-thumb-size, 16px);
-    height: var(--astryx-switch-thumb-size, 16px);
-    border-radius: var(--astryx-switch-thumb-radius, 999px);
+    width: var(--_switch-thumb-size);
+    height: var(--_switch-thumb-size);
+    /* 圆用 50% 画在方盒子上：主题把 --astryx-radius-full 改成方角时，轨道变方，拇指仍是圆的。 */
+    border-radius: var(--astryx-switch-thumb-radius, 50%);
     background: var(--astryx-switch-thumb, #fff);
-    transform: translateX(0);
-    transition: transform 130ms cubic-bezier(0.24, 1, 0.4, 1), background-color var(--astryx-duration-exit, 175ms) var(--astryx-ease-exit, cubic-bezier(0.3, 0, 0.6, 0.6)), width var(--astryx-duration-exit, 175ms) var(--astryx-ease-exit, cubic-bezier(0.3, 0, 0.6, 0.6)), height var(--astryx-duration-exit, 175ms) var(--astryx-ease-exit, cubic-bezier(0.3, 0, 0.6, 0.6));
   }
 
   .astryx-switch[data-size='sm'] .astryx-switch-thumb {
-    width: var(--astryx-switch-thumb-size-sm, 14px);
-    height: var(--astryx-switch-thumb-size-sm, 14px);
+    --_switch-thumb-size: var(--astryx-switch-thumb-size-sm, 14px);
+    --_switch-thumb-travel: var(--astryx-switch-thumb-travel-sm, 12px);
   }
 
   .astryx-switch[data-size='lg'] .astryx-switch-thumb {
-    width: var(--astryx-switch-thumb-size-lg, 20px);
-    height: var(--astryx-switch-thumb-size-lg, 20px);
+    --_switch-thumb-size: var(--astryx-switch-thumb-size-lg, 20px);
+    --_switch-thumb-travel: var(--astryx-switch-thumb-travel-lg, 22px);
   }
 
   .astryx-switch-native:checked + .astryx-switch-track .astryx-switch-thumb {
-    width: var(--astryx-switch-thumb-size-on, 20px);
-    height: var(--astryx-switch-thumb-size-on, 20px);
-    transform: translateX(var(--astryx-switch-thumb-travel, 14px));
-  }
-
-  .astryx-switch-native:checked + .astryx-switch-track .astryx-switch-thumb:dir(rtl) {
-    transform: translateX(calc(var(--astryx-switch-thumb-travel, 14px) * -1));
+    --_switch-thumb-size: var(--astryx-switch-thumb-size-on, 20px);
   }
 
   .astryx-switch[data-size='sm'] .astryx-switch-native:checked + .astryx-switch-track .astryx-switch-thumb {
-    width: var(--astryx-switch-thumb-size-on-sm, 16px);
-    height: var(--astryx-switch-thumb-size-on-sm, 16px);
-    transform: translateX(var(--astryx-switch-thumb-travel-sm, 12px));
-  }
-
-  .astryx-switch[data-size='sm'] .astryx-switch-native:checked + .astryx-switch-track .astryx-switch-thumb:dir(rtl) {
-    transform: translateX(calc(var(--astryx-switch-thumb-travel-sm, 12px) * -1));
+    --_switch-thumb-size: var(--astryx-switch-thumb-size-on-sm, 16px);
   }
 
   .astryx-switch[data-size='lg'] .astryx-switch-native:checked + .astryx-switch-track .astryx-switch-thumb {
-    width: var(--astryx-switch-thumb-size-on-lg, 24px);
-    height: var(--astryx-switch-thumb-size-on-lg, 24px);
-    transform: translateX(var(--astryx-switch-thumb-travel-lg, 22px));
+    --_switch-thumb-size: var(--astryx-switch-thumb-size-on-lg, 24px);
   }
 
-  .astryx-switch[data-size='lg'] .astryx-switch-native:checked + .astryx-switch-track .astryx-switch-thumb:dir(rtl) {
-    transform: translateX(calc(var(--astryx-switch-thumb-travel-lg, 22px) * -1));
+  /* 鼠标和笔：拇指靠轨道内边距停在关的一端，开时平移过去，位移和尺寸都走过渡。 */
+  @media not all and (pointer: coarse) {
+    .astryx-switch-thumb {
+      transform: translateX(0);
+      transition: transform 130ms cubic-bezier(0.24, 1, 0.4, 1), background-color var(--astryx-duration-exit, 175ms) var(--astryx-ease-exit, cubic-bezier(0.3, 0, 0.6, 0.6)), width var(--astryx-duration-exit, 175ms) var(--astryx-ease-exit, cubic-bezier(0.3, 0, 0.6, 0.6)), height var(--astryx-duration-exit, 175ms) var(--astryx-ease-exit, cubic-bezier(0.3, 0, 0.6, 0.6));
+    }
+
+    .astryx-switch-native:checked + .astryx-switch-track .astryx-switch-thumb {
+      transform: translateX(var(--_switch-thumb-travel));
+    }
+
+    .astryx-switch-native:checked + .astryx-switch-track .astryx-switch-thumb:dir(rtl) {
+      transform: translateX(calc(var(--_switch-thumb-travel) * -1));
+    }
+  }
+
+  /*
+   * 手指：触屏呈现。轨道不留内边距，拇指在轨道高度里居中，靠两端的内联偏移停在关或开的一端，
+   * 离端头和离上下一样远（50cqb 读轨道高度）。useSwitchTouch 在合成器上用 translate 和 scale
+   * 移动、抬起它，拇指自己什么都不过渡；轨道底色立刻换，颜色的渐变由 ::after 淡变层负责。
+   */
+  @media (pointer: coarse) {
+    .astryx-switch-control {
+      min-width: 24px;
+      min-height: 24px;
+    }
+
+    .astryx-switch[data-size] .astryx-switch-track {
+      padding: 0;
+      container-type: size;
+      isolation: isolate;
+      transition-duration: 0s;
+    }
+
+    .astryx-switch-thumb {
+      position: absolute;
+      inset-block: 0;
+      inset-inline-start: calc(50cqb - var(--_switch-thumb-size) / 2);
+      z-index: 2;
+      margin-block: auto;
+      pointer-events: none;
+    }
+
+    .astryx-switch-native:checked + .astryx-switch-track .astryx-switch-thumb {
+      inset-inline-start: auto;
+      inset-inline-end: calc(50cqb - var(--_switch-thumb-size) / 2);
+    }
+
+    /* 颜色淡变层：盖在轨道自己的底色上，画着轨道另一状态的底色（switchFill.ts 读主题的颜色）。
+       不透明度归动画器，静止时是透明的；只在淡变进行时才有合成层。 */
+    .astryx-switch-track::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      opacity: 0;
+      background-color: var(--_switch-fade-fill, transparent);
+      will-change: var(--astryx-motion-will-change-after, auto);
+    }
+
+    /* 抬起时的阴影：随抬起淡入，静止时透明。 */
+    .astryx-switch-thumb::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      opacity: 0;
+      box-shadow: var(--astryx-shadow-low, 0 1px 2px rgb(0 0 0 / 12%));
+      will-change: var(--astryx-motion-will-change-after, auto);
+    }
   }
 
   .astryx-switch-native:focus-visible + .astryx-switch-track {
@@ -216,6 +284,7 @@
     to { transform: rotate(360deg); }
   }
 
+  /* 减少动态效果：鼠标下拇指和颜色立刻到位；手指下由动画器换成交叉淡变。 */
   @media (prefers-reduced-motion: reduce) {
     .astryx-switch-track,
     .astryx-switch-thumb {

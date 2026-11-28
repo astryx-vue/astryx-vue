@@ -25,7 +25,7 @@ footer: false
       <tr><td><code>maxEntries</code></td><td><code>number</code></td><td>—</td><td>Maximum number of tokens. The input becomes read-only at the limit.</td></tr>
       <tr><td><code>debounceMs</code></td><td><code>number</code></td><td><code>150</code></td><td>Wait after typing before searching.</td></tr>
       <tr><td><code>minQueryLength</code></td><td><code>number</code></td><td><code>1</code></td><td>Shortest query that gets searched, counted in visible characters. Below it nothing is searched and the menu stays closed — unless <code>hasCreate</code> is on, because a "Create …" row comes from the typed text and costs no search.</td></tr>
-      <tr><td><code>hasEntriesOnFocus</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Show results on focus before the user types.</td></tr>
+      <tr><td><code>hasEntriesOnFocus</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Show results on focus before the user types. After a pick from that list, the input keeps focus and the list stays open with the next choice active while another choice remains.</td></tr>
       <tr><td><code>showOnFocus</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Legacy name for <code>hasEntriesOnFocus</code>. Either one turns it on.</td></tr>
       <tr><td><code>hasAutoFocus</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Focus the input on mount.</td></tr>
       <tr><td><code>menuWidth</code></td><td><code>number</code></td><td>—</td><td>Requested dropdown width in pixels. Never narrower than the field, and clamped to the viewport.</td></tr>
@@ -34,16 +34,18 @@ footer: false
       <tr><td><code>clearable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Legacy name for <code>hasClear</code>. Either one turns it on.</td></tr>
       <tr><td><code>emptySearchText</code></td><td><code>string | null</code></td><td><code>'No results found'</code> / <code>'未找到结果'</code></td><td>Text shown when the query matched nothing. <code>null</code> means "not given" and falls through to the default; an empty string renders nothing. For rich content use the <code>empty</code> slot.</td></tr>
       <tr><td><code>emptyText</code></td><td><code>string | null</code></td><td>—</td><td>Legacy name for <code>emptySearchText</code>.</td></tr>
-      <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disable the field and every token interaction.</td></tr>
+      <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disable the field and every token interaction. A disabled field keeps its tab stop: the input is <code>aria-disabled</code> and read-only, opens no list and picks nothing. With <code>overflow="unfocused-layer"</code> and no <code>disabledMessage</code>, the input is natively disabled instead.</td></tr>
       <tr><td><code>disabledMessage</code></td><td><code>string</code></td><td>—</td><td>Explains why the field is disabled. With <code>disabled</code>, the input stays focusable through <code>aria-disabled</code> and <code>readonly</code>, and the message shows as a tooltip on hover or keyboard focus.</td></tr>
       <tr><td><code>disabledReason</code></td><td><code>string</code></td><td>—</td><td>Legacy name for <code>disabledMessage</code>.</td></tr>
       <tr><td><code>status</code></td><td><code>'default' | 'success' | 'warning' | 'error'</code></td><td><code>'default'</code></td><td>Status style.</td></tr>
       <tr><td><code>statusMessage</code></td><td><code>string</code></td><td>—</td><td>Status text under the field.</td></tr>
-      <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>Input and token size.</td></tr>
+      <tr><td><code>statusVariant</code></td><td><code>'attached' | 'detached' | 'tooltip'</code></td><td><code>'attached'</code></td><td>Where the status message sits. <code>attached</code> draws a status icon at the end of the field with the message below; <code>detached</code> keeps only the message; with <code>tooltip</code> the icon is a focusable button that holds the message.</td></tr>
+      <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>Input and token size. Inside an <code>InputGroup</code> the group's size applies.</td></tr>
       <tr><td><code>required</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Marks the field as required.</td></tr>
       <tr><td><code>optional</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows an optional indicator on the label.</td></tr>
-      <tr><td><code>name</code></td><td><code>string</code></td><td>—</td><td>Form field name. Each selected id is submitted once.</td></tr>
+      <tr><td><code>name</code></td><td><code>string</code></td><td>—</td><td>Form field name. Each selected id is submitted once. A disabled field submits nothing.</td></tr>
       <tr><td><code>width</code></td><td><code>number | string</code></td><td>—</td><td>Width of the whole field (number = pixels, string used as-is).</td></tr>
+      <tr><td><code>presentation</code></td><td><code>'popover' | 'bottom-sheet' | 'adaptive'</code></td><td><code>'adaptive'</code></td><td>Where results open. <code>popover</code> is the inline input with an anchored menu. <code>bottom-sheet</code> turns the field into a trigger that opens a touch sheet: search, check rows, and press Save to commit the draft once. <code>adaptive</code> uses the sheet on a compact touch screen (a coarse primary pointer, and a viewport narrower than the theme's <code>md</code> breakpoint or shorter than 500px) and the popover elsewhere; server rendering and hydration use the popover. The choice is made when the sheet opens and held until its exit finishes. In the sheet, the <code>item</code> slot, <code>hasClear</code>, <code>hasEntriesOnFocus</code>, <code>menuWidth</code>, <code>menu</code>, <code>overflow</code> and <code>hasAutoFocus</code> have nothing to act on and warn once in development; pass <code>popover</code> to keep the inline field on every device.</td></tr>
     </tbody>
   </table>
 </div>
@@ -58,7 +60,7 @@ footer: false
       <tr><td><code>change</code></td><td><code>value: T[]</code>, <code>change: TokenizerChange</code></td><td>Includes the change type: <code>add</code>, <code>create</code>, <code>remove</code>, or <code>clear</code>.</td></tr>
       <tr><td><code>changeQuery</code></td><td><code>query: string</code></td><td>Emitted when the query text changes.</td></tr>
       <tr><td><code>search</code></td><td><code>query: string</code></td><td>Legacy name for <code>changeQuery</code>. Both fire.</td></tr>
-      <tr><td><code>openChange</code></td><td><code>isOpen: boolean</code></td><td>Emitted when the menu opens or closes.</td></tr>
+      <tr><td><code>openChange</code></td><td><code>isOpen: boolean</code></td><td>Emitted when the inline menu opens or closes. The bottom sheet does not report it.</td></tr>
       <tr><td><code>focus</code></td><td><code>event: FocusEvent</code></td><td>Emitted when focus enters the field from outside.</td></tr>
       <tr><td><code>blur</code></td><td><code>event: FocusEvent</code></td><td>Emitted when focus leaves the whole field, not just the input.</td></tr>
     </tbody>
@@ -76,8 +78,11 @@ footer: false
       <tr><td><code>token</code></td><td><code>{ item, remove }</code></td><td>Custom selected token. Replaces the default <code>Token</code>.</td></tr>
       <tr><td><code>item</code></td><td><code>{ item, isActive, isSelected }</code></td><td>Custom menu row. Replaces the default <code>TypeaheadItem</code>.</td></tr>
       <tr><td><code>empty</code></td><td>—</td><td>Custom empty state.</td></tr>
+      <tr><td><code>menu</code></td><td><code>{ listbox, query, isBusy, isEmptySearch, close }</code> or <code>{ query, close }</code></td><td>Menu content, as on <code>Typeahead</code>: information around the result list for a <code>listbox</code> menu, or the whole content of a <code>dialog</code> menu.</td></tr>
     </tbody>
   </table>
 </div>
+
+A template ref exposes <code>focus()</code>, <code>blur()</code>, <code>open()</code> and <code>close()</code>; in the sheet presentation they act on the trigger and the sheet. The <code>menu</code> prop (<code>{ role: 'listbox' }</code> or <code>{ role: 'dialog', label }</code>) and <code>openChange</code> work as they do on <code>Typeahead</code>. A <code>search</code> that calls <code>context.update(items)</code> shows its early matches at once, without the tokens already picked, and later lists only append.
 
 Native attributes and listeners that are not listed above land on the input element, so `@keydown`, `@paste` and `aria-*` work as they would on a plain `<input>`. A `keydown` listener runs before the internal token navigation; call `event.preventDefault()` to skip it.

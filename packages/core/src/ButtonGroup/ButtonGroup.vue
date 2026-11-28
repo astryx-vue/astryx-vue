@@ -3,8 +3,11 @@
 import type { StyleValue } from 'vue'
 import type { ButtonGroupProps, ButtonGroupSlots } from './types.js'
 import { computed, provide, useAttrs } from 'vue'
-import { buttonGroupContextKey } from '../Button/context.js'
+import { buttonGroupContextKey, buttonHitAreaContextKey } from '../Button/context.js'
 import { invokeNativeEventHandler } from '../Button/eventHandlers.js'
+import { useActionGroupTracking } from '../composables/internal/useActionGroupTracking.js'
+import { GROUP_HIT_AREA, useTouchHitArea } from '../composables/internal/useTouchHitArea.js'
+import { useCoarsePointer } from '../composables/useCoarsePointer.js'
 import { useListFocus } from '../composables/useListFocus.js'
 import { provideSize, useSize } from '../SizeContext/SizeContext.js'
 import '../../styles/button-group.css'
@@ -30,18 +33,33 @@ const { listRef: element, handleKeyDown, handleFocus } = useListFocus({
   boundarySelector: '[role="group"], [popover]',
   orientation: () => props.orientation,
   hasRovingTabIndex: true,
+  // 成员禁用时仍可聚焦，整组禁用也保留一个 Tab 停靠点，键盘用户照样能到这组。
+  hasDisabledTabStop: true,
 })
 const isDisabled = computed(() => props.isDisabled)
 const size = useSize(() => props.size, 'md')
 provideSize(size)
 
+/**
+ * 触屏为主的设备上，手指和笔可以按住一个按钮滑到别的按钮上，松手时执行手指下的那个；
+ * 在组外松手什么都不执行。鼠标还是原生按钮的行为。
+ * 手指的目标通过组画的一圈热区朝 44px 长，长到离组外相邻控件一半间距为止；
+ * 按在热区上的触摸交给最近的成员。成员自己不画热区。
+ */
+const isCoarse = useCoarsePointer()
+const tracksPress = computed(() => isCoarse.value && !props.isDisabled)
+useActionGroupTracking(element, { isEnabled: tracksPress, growsTargets: true })
+useTouchHitArea(element, tracksPress, GROUP_HIT_AREA)
+provide(buttonHitAreaContextKey, false)
+
 provide(buttonGroupContextKey, {
   isDisabled,
   orientation,
   size,
+  tracksPress,
 })
 
-const rootClass = computed(() => ['astryx-button-group', attrs.class])
+const rootClass = computed(() => ['astryx-button-group', { 'astryx-touch-hit-area-below': tracksPress.value }, attrs.class])
 const rootStyle = computed<StyleValue>(() => attrs.style as StyleValue)
 
 const controlledAttrs = new Set([
@@ -80,6 +98,7 @@ defineExpose({
     :class="rootClass"
     :data-elevation="elevation"
     :data-orientation="orientation"
+    :data-press-tracking="tracksPress || undefined"
     :data-size="size"
     role="group"
     :style="rootStyle"

@@ -1,6 +1,6 @@
 import type { ExampleRecord } from '../catalog-types.ts'
 import { describe, expect, it } from 'vitest'
-import { pairExamples } from './build-catalog.ts'
+import { documentedName, pairExamples } from './build-catalog.ts'
 import { analyzeTemplateImports, unexpectedDependencies } from './build-templates.ts'
 
 function example(title: string, code: string, description = ''): ExampleRecord {
@@ -71,5 +71,17 @@ describe('template imports', () => {
   it('flags a ready page that would need a third package', () => {
     expect(unexpectedDependencies(['@astryx-vue/core', 'vue'])).toEqual([])
     expect(unexpectedDependencies(['@astryx-vue/core', '@astryx-vue/lab', 'vue'])).toEqual(['@astryx-vue/lab'])
+  })
+})
+
+describe('documentedName', () => {
+  it('documents a component under its PascalCase name, and a composable page the same way', () => {
+    expect(documentedName('list-item', 'List Item')).toBe('ListItem')
+    expect(documentedName('use-reorderable', 'useReorderable')).toBe('UseReorderable')
+  })
+
+  it('documents a plain function under the camelCase name its page carries as a title', () => {
+    expect(documentedName('create-swipe', 'createSwipe')).toBe('createSwipe')
+    expect(documentedName('create-swipe', 'Create Swipe')).toBe('CreateSwipe')
   })
 })

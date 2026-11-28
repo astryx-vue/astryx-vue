@@ -1,11 +1,15 @@
 import type { SyntaxThemeDefinition } from '../Code/syntaxTheme.js'
+import type { ComponentIconMap, ComponentIconStaticMap, StoredComponentIconValue } from '../Icon/componentIcons.js'
 import type { SemanticIconMap } from '../Icon/semantic.js'
+import type { StoredIconEntry, ThemeIconEntries } from '../Icon/themeIcons.js'
 import type { IndicatorRegistry } from '../Indicator/types.js'
+import type { ThemePalette } from '../palette/types'
 import type { NormalizedThemeAdaptations, ResolvedThemeAdaptationRule, ThemeAdaptations, ThemeGenerativeAxes } from './adaptationTypes.js'
 import type { ColorScaleConfig } from './expandColorScale.js'
 import type { MotionScaleConfig } from './expandMotionScale.js'
 import type { RadiusScaleConfig } from './expandRadiusScale.js'
 import type { TypeScaleConfig } from './expandTypeScale.js'
+import type { MotionCharacter, ThemeMotionConfig, ThemeMotionKnobs } from './themeMotion.js'
 
 /** Color mode for a theme subtree. `system` follows the page and the OS. */
 export type ThemeMode = 'light' | 'dark' | 'system'
@@ -33,8 +37,26 @@ export interface ThemeSurfaceInput {
  *
  * A key that starts with `:` is a pseudo-class, for example `:hover`.
  * `:hover` is the enabled control: disabled and `aria-disabled` elements skip it.
+ * `:active` follows the touch press model: it applies to a mouse press, and
+ * under a coarse primary pointer it applies while Astryx believes the press,
+ * not on the touch or through a scroll.
+ *
+ * The `@light` and `@dark` keys hold a style block (properties and
+ * pseudo-class overrides) that applies only where the element's color mode is
+ * that mode: the mode a `Theme` sets with `light` or `dark`, the reader's
+ * preference under a `system` Theme, or the nearest `MediaTheme` surface
+ * (up to five surfaces of alternating modes nested one in another). Where no
+ * enclosing mode matches, the block writes nothing. Use it for a value that is
+ * not a color, or to leave the other mode untouched; a color that differs per
+ * mode can also be one `light-dark()` value.
  */
-export type StyleOverrides = Record<string, string | Record<string, string>>
+export type StyleOverrides = Record<string, string | Record<string, string> | StyleBlock>
+
+/**
+ * A style block: CSS properties and pseudo-class overrides, as in a style
+ * key's value. A style key's `@light` and `@dark` keys each hold one.
+ */
+export type StyleBlock = Record<string, string | Record<string, string>>
 
 /**
  * Per-component style overrides.
@@ -47,16 +69,20 @@ export type StyleOverrides = Record<string, string | Record<string, string>>
  */
 export type ComponentStyleMap = Record<string, Record<string, StyleOverrides>>
 
-/** One font role. Heading inherits body family and fallbacks when it omits them. */
+/**
+ * One font role. A heading with no `family` takes the body's whole font
+ * list; with its own `family`, only its own `fallbacks`. `fallbacks` with no
+ * `family` build nothing.
+ */
 export interface TypographyRole {
   /** Primary family name. A name with spaces is quoted. */
   family?: string
   /** Fallback stack, already written as CSS. */
   fallbacks?: string
   /** Default weight name (`semibold`) or a CSS font-weight value. */
-  weight?: string
+  weight?: string | number
   /** Heading levels 1–6. Ignored on body and code. */
-  weights?: Partial<Record<1 | 2 | 3 | 4 | 5 | 6, string>>
+  weights?: Partial<Record<1 | 2 | 3 | 4 | 5 | 6, string | number>>
 }
 
 /**
@@ -72,11 +98,49 @@ export interface TypographyConfig {
   code?: TypographyRole
 }
 
-export interface DefineThemeInput {
+/**
+ * The icon variant names a base theme lists: exact for a theme from
+ * `defineTheme`, none without a base.
+ */
+// eslint-disable-next-line ts/method-signature-style -- matches the method-shaped marker below
+type BaseThemeIconVariant<Base> = Base extends { __iconVariant?(variant: infer Variant): void }
+  ? Extract<Variant, string>
+  : never
+
+/** A theme's own `iconVariants` when it sets the field, otherwise the inherited list. */
+export type ThemeIconVariant<IconVariants extends readonly string[] | undefined, Base>
+  = [IconVariants] extends [readonly (infer Variant extends string)[]]
+    ? Variant
+    : BaseThemeIconVariant<Base>
+
+/**
+ * The same names, as a type `defineTheme` does not infer from: only
+ * `iconVariants` and `extends` decide them, never an entry's parameter type.
+ */
+type ThemeIconEntryVariant<IconVariants extends readonly string[] | undefined, Base>
+  = [ThemeIconVariant<IconVariants, Base>][IconVariants extends unknown ? 0 : never]
+
+/**
+ * Input to `defineTheme`. `IconVariants` is the theme's own `iconVariants`
+ * list and `Base` its `extends` theme; together they type the `variant` an
+ * icon entry function receives. `defineTheme` infers both.
+ */
+export interface DefineThemeInput<
+  IconVariants extends readonly string[] | undefined = readonly string[] | undefined,
+  Base extends ThemeDefinition | undefined = ThemeDefinition | undefined,
+> {
   /** Theme name. Used as `data-astryx-theme`. */
   name: string
   /** Semantic token overrides. These win over generated values, token by token. */
   tokens?: ThemeTokens
+  /**
+   * Colors made from a few seeds by `themePalette()` from
+   * `@astryx-vue/core/palette`: the color tokens the theme editor maps for its
+   * color settings, and the part styles that keep secondary text readable on
+   * the accent tint, the neutral track and the colored cards. `tokens` and
+   * `components` still win, one by one.
+   */
+  palette?: ThemePalette
   /**
    * Values only this theme family uses, keyed by their exact custom-property
    * name, such as `--brand-ink`. No prefix is added or required.
@@ -95,15 +159,21 @@ export interface DefineThemeInput {
   typography?: TypographyConfig
   /** Radius steps from a base pixel size and a multiplier. */
   radius?: RadiusScaleConfig
-  /** Duration steps from fast, medium, slow, and a ratio. */
-  motion?: MotionScaleConfig
+  /**
+   * Motion. `tempo` scales every duration (0.75–1.5, default 1) and the
+   * touch springs; `character` picks the entrance and move curves
+   * (`'crisp'`, `'standard'`, `'expressive'`). A duration scale (`fast`,
+   * `medium`, `slow`, `ratio`) sets durations itself and wins over `tempo`
+   * for them.
+   */
+  motion?: ThemeMotionConfig
   /**
    * Component style overrides, scoped to this theme name.
    * `Theme` injects the compiled sheet. `css` on the result is that sheet.
    */
   components?: ComponentStyleMap
   /** Another theme to start from. This theme's own values win. */
-  extends?: ThemeDefinition
+  extends?: Base
   /** Syntax colors for code in this subtree, unless a SyntaxTheme is closer. */
   syntax?: SyntaxThemeDefinition
   /** Extra tokens and component styles for content on a dark surface. */
@@ -134,8 +204,27 @@ export interface DefineThemeInput {
    *
    * Entries replace the built-in map by name and merge with the theme this
    * one extends. A name that is not listed keeps the built-in id.
+   *
+   * An entry may also be a pure synchronous function of `{ size, variant }`
+   * that returns an id. `Icon` calls it with the size it renders at, so the
+   * theme can pick artwork per size. Its result is final: `null` draws no
+   * glyph instead of falling back to the built-in id.
    */
-  icons?: SemanticIconMap
+  icons?: ThemeIconEntries<ThemeIconEntryVariant<IconVariants, Base>>
+  /**
+   * The icon variant names this theme supports, listed once for the whole
+   * theme. Icon entry functions receive `variant` typed as these names.
+   * A list set here replaces the inherited one; an omitted list is inherited.
+   */
+  iconVariants?: IconVariants
+  /**
+   * Which shared icon a component's own icon role uses, by slot, such as
+   * `code-block-copy`. A value is a shared icon name, `null` to hide the
+   * icon, a partial `{ icon, variant, size }` request, or, for a slot with
+   * state, a pure function of that state that returns one. An entry
+   * replaces the inherited entry for the same slot.
+   */
+  componentIcons?: ComponentIconMap<ThemeIconEntryVariant<IconVariants, Base>>
   /**
    * Indicator graphics, replaced by name.
    *
@@ -145,10 +234,15 @@ export interface DefineThemeInput {
   indicators?: IndicatorRegistry
 }
 
-export interface ThemeDefinition {
+export interface ThemeDefinition<IconVariant extends string = string> {
   name: string
   /** Token values already written as CSS, with the `--astryx-` prefix. */
   tokens: Readonly<Record<string, string>>
+  /**
+   * Names in `tokens` that were computed rather than written: status roles the
+   * theme left unset. A theme that extends this one computes them again.
+   */
+  derivedTokens?: readonly string[]
   /** Theme-local values by exact name. Absent when the theme family declares none. */
   localTokens?: Readonly<Record<string, string>>
   /** Extra tokens applied by MediaTheme when the surface is dark. */
@@ -160,8 +254,31 @@ export interface ThemeDefinition {
   /** Component styles on a light MediaTheme surface. */
   onLightComponents?: ComponentStyleMap
   syntax?: SyntaxThemeDefinition
-  /** Semantic icon overrides. Absent when this theme does not set any. */
+  /**
+   * Semantic icon overrides as ids. A function entry is read at size `md`.
+   * Absent when this theme does not set any.
+   */
   icons?: SemanticIconMap
+  /** Icon entries with their functions. Only icon resolution reads it. */
+  iconEntries?: Readonly<Record<string, StoredIconEntry>>
+  /** The icon variant names this theme lists, its own or inherited. */
+  iconVariants?: readonly string[]
+  /**
+   * The variant list of the theme that defined each inherited function
+   * entry, where it differs from `iconVariants`.
+   */
+  iconEntryVariants?: Readonly<Record<string, readonly string[] | undefined>>
+  /** Component icon slots: names, `null`, and static requests. Function slots are left out. */
+  componentIcons?: ComponentIconStaticMap
+  /** Component icon slot values with their functions. Only slot resolution reads it. */
+  componentIconValues?: Readonly<Record<string, StoredComponentIconValue | undefined>>
+  /**
+   * Type-only: the names in `iconVariants`, so a theme that extends this one
+   * types its icon entries by the list it inherits. Never set. Method
+   * syntax keeps themes with different lists assignable to each other.
+   */
+  // eslint-disable-next-line ts/method-signature-style -- a method stays bivariant in its parameter
+  __iconVariant?(variant: IconVariant): void
   /** Indicator overrides. Absent when this theme does not set any. */
   indicators?: IndicatorRegistry
   /**
@@ -214,7 +331,10 @@ export interface MediaThemeProps {
 
 export type {
   ColorScaleConfig,
+  MotionCharacter,
   MotionScaleConfig,
   RadiusScaleConfig,
+  ThemeMotionConfig,
+  ThemeMotionKnobs,
   TypeScaleConfig,
 }

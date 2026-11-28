@@ -4,7 +4,10 @@ import type { PickerWheelOption } from '../DateInput/PickerWheel.vue'
 import { computed } from 'vue'
 import { formatISOTime, isTimeInRange, parseISOTime } from '../composables/useTimeValue.js'
 import PickerWheel from '../DateInput/PickerWheel.vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useAstryxLocale, useComponentMessages } from '../locale/context.js'
+import { dateTimeInputMessages } from '../locale/messages/date-time-input.js'
+import { resolveHourFormat } from '../utils/timeFormat.js'
+import { hour24From12, hourAfterTurn } from './timeWheelRules.js'
 
 const props = withDefaults(defineProps<{
   modelValue?: string | null
@@ -14,7 +17,6 @@ const props = withDefaults(defineProps<{
   max?: string
 }>(), {
   modelValue: null,
-  hourFormat: '12h',
   hasSeconds: false,
 })
 
@@ -22,7 +24,9 @@ const emit = defineEmits<{
   'update:modelValue': [value: string]
 }>()
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ dateTimeInput: dateTimeInputMessages })
+const locale = useAstryxLocale()
+const hourFormat = computed(() => resolveHourFormat(locale.value, props.hourFormat))
 const parsed = computed(() => props.modelValue ? parseISOTime(props.modelValue) : null)
 const hour24 = computed(() => parsed.value?.hours ?? 0)
 const minute = computed(() => parsed.value?.minutes ?? 0)
@@ -42,6 +46,10 @@ function hourAllowed(hours: number): boolean {
   return false
 }
 
+/**
+ * Each column sets only its own part of the time. So the minute column, which
+ * loops under a finger as UIDatePicker's does, keeps the hour across its seam.
+ */
 function commit(hours: number, minutes: number, seconds: number): void {
   if (inRange(hours, minutes, seconds)) {
     emit('update:modelValue', formatISOTime({ hours, minutes, seconds }, props.hasSeconds))
@@ -55,14 +63,15 @@ function commit(hours: number, minutes: number, seconds: number): void {
   }
 }
 
-function from12(hour: number, pm: boolean): number {
-  if (hour === 12)
-    return pm ? 12 : 0
-  return pm ? hour + 12 : hour
+/**
+ * 12 小时制的行代表转到它之后的那个钟点：上下午跟着小时走，只在经过 11 和 12 之间时翻面。
+ */
+function hourOfRow(row: number): number {
+  return hourFormat.value === '24h' ? row : hourAfterTurn(hour24.value, row)
 }
 
 const hourOptions = computed<PickerWheelOption[]>(() => {
-  if (props.hourFormat === '24h') {
+  if (hourFormat.value === '24h') {
     return Array.from({ length: 24 }, (_, hour) => ({
       value: String(hour),
       label: String(hour).padStart(2, '0'),
@@ -74,7 +83,7 @@ const hourOptions = computed<PickerWheelOption[]>(() => {
     return {
       value: String(hour),
       label: String(hour),
-      disabled: !hourAllowed(from12(hour, isPm.value)),
+      disabled: !hourAllowed(hourOfRow(hour)),
     }
   })
 })
@@ -92,17 +101,16 @@ const secondOptions = computed<PickerWheelOption[]>(() => Array.from({ length: 6
 })))
 
 const meridiemOptions = computed<PickerWheelOption[]>(() => [
-  { value: 'am', label: messages.value.dateTimeInput.meridiemAM, disabled: !hourAllowed(from12(hour12.value, false)) },
-  { value: 'pm', label: messages.value.dateTimeInput.meridiemPM, disabled: !hourAllowed(from12(hour12.value, true)) },
+  { value: 'am', label: messages.value.dateTimeInput.meridiemAM, disabled: !hourAllowed(hour24From12(hour12.value, false)) },
+  { value: 'pm', label: messages.value.dateTimeInput.meridiemPM, disabled: !hourAllowed(hour24From12(hour12.value, true)) },
 ])
 
 function onHour(value: string): void {
-  const hour = props.hourFormat === '24h' ? Number(value) : from12(Number(value), isPm.value)
-  commit(hour, minute.value, second.value)
+  commit(hourOfRow(Number(value)), minute.value, second.value)
 }
 
 function onMeridiem(value: string): void {
-  commit(from12(hour12.value, value === 'pm'), minute.value, second.value)
+  commit(hour24From12(hour12.value, value === 'pm'), minute.value, second.value)
 }
 </script>
 
@@ -118,6 +126,7 @@ function onMeridiem(value: string): void {
       :label="messages.dateTimeInput.minuteWheel"
       :options="minuteOptions"
       :model-value="String(minute)"
+      looping
       @update:model-value="commit(hour24, Number($event), second)"
     />
     <PickerWheel

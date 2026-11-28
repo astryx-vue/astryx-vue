@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import type { RichTextEditorInstance } from './createEditor.js'
 import type { RichTextViewProps, RichTextViewSlots } from './viewTypes.js'
-import { useAstryxMessages } from '@astryx-vue/core'
+import { tableMessages, useComponentMessages } from '@astryx-vue/core'
 import { computed, nextTick, onBeforeUnmount, onMounted, provide, shallowRef, useAttrs, watch } from 'vue'
 import { editorKey } from './context.js'
 import { createRichTextEditor } from './createEditor.js'
 import { DecoratorTeleports } from './DecoratorTeleports.js'
-import { CodeBlockHeaderPlugin, CodeSyntaxPlugin, MarkdownExtensionsPlugin, TaskCheckboxPlugin } from './plugins/index.js'
+import { BlockDirectionPlugin, CodeBlockHeaderPlugin, CodeSyntaxPlugin, MarkdownExtensionsPlugin, TaskCheckboxPlugin } from './plugins/index.js'
 import { registerTableScrollRegion } from './plugins/tableScrollRegion.js'
 import '../../styles/richtext-document.css'
 import '../../styles/richtext-view.css'
@@ -18,7 +18,7 @@ const emit = defineEmits<{ parseError: [error: Error] }>()
 defineSlots<RichTextViewSlots>()
 const attrs = useAttrs()
 // 表格滚动区域的名字用 core 的文案，和 core 的 Table 一致。
-const coreMessages = useAstryxMessages()
+const coreMessages = useComponentMessages({ table: tableMessages })
 
 const surface = shallowRef<HTMLDivElement | null>(null)
 const hasError = shallowRef(false)
@@ -146,8 +146,9 @@ const restAttrs = computed(() => {
       <template v-if="attached">
         <DecoratorTeleports :editor="attached" />
         <!-- 放在内容后面，复制按钮和勾选框在 Tab 顺序里才跟在内容后面。 -->
-        <CodeBlockHeaderPlugin />
-        <CodeSyntaxPlugin />
+        <CodeBlockHeaderPlugin :code-languages="codeLanguages" />
+        <CodeSyntaxPlugin :code-languages="codeLanguages" />
+        <BlockDirectionPlugin />
         <MarkdownExtensionsPlugin v-if="markdownExtensions && markdownExtensions.length > 0" :extensions="markdownExtensions" :transformers="[]" />
         <TaskCheckboxPlugin is-read-only />
         <slot />

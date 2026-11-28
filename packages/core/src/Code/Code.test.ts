@@ -56,4 +56,12 @@ describe('code', () => {
 
     expect(wrapper.vm.element).toBe(wrapper.get('code').element)
   })
+
+  it('keeps code left to right inside right-to-left text, unless a direction is passed', () => {
+    const plain = mount(Code, { slots: { default: 'a + b' } })
+    expect(plain.get('code').attributes('dir')).toBe('ltr')
+
+    const overridden = mount(Code, { attrs: { dir: 'rtl' }, slots: { default: 'a + b' } })
+    expect(overridden.get('code').attributes('dir')).toBe('rtl')
+  })
 })

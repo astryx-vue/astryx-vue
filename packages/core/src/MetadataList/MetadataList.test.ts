@@ -1,3 +1,6 @@
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
+import process from 'node:process'
 import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 import MetadataList from './MetadataList.vue'
@@ -120,5 +123,17 @@ describe('metadata list', () => {
     expect(item.attributes('id')).toBe('name')
     expect(item.attributes('data-testid')).toBe('field')
     expect(item.get('dt').attributes('id')).toBeUndefined()
+  })
+})
+
+describe('metadata list value wrapping', () => {
+  const css = readFileSync(resolve(process.cwd(), 'packages/core/styles/metadata-list.css'), 'utf8')
+
+  it('wraps a value only when a word is longer than its line, keeping its narrowest width', () => {
+    const shared = css.slice(css.indexOf('.astryx-metadata-list__label,\n  .astryx-metadata-list__value,'), css.indexOf('}', css.indexOf('.astryx-metadata-list__label,\n  .astryx-metadata-list__value,')))
+    expect(shared).toContain('overflow-wrap: break-word')
+    expect(shared).not.toContain('word-break')
+    const labels = css.slice(css.indexOf('.astryx-metadata-list__label,\n  .astryx-metadata-list__item-label {'))
+    expect(labels.slice(0, labels.indexOf('}'))).toContain('word-break: break-word')
   })
 })

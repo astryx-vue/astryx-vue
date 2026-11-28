@@ -2,13 +2,18 @@
 import type { PaginationDensity } from '../composables/usePagination.js'
 import type { SelectorOption } from '../Selector/types.js'
 import type { PaginationEmits, PaginationProps, PaginationSlots, PaginationVariant } from './types.js'
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, getCurrentInstance, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
+import { useFocusAcrossSwap } from '../composables/internal/focusAcrossSwap.js'
+import { focusForLastInput } from '../composables/internal/focusReturn.js'
 import { useListFocus } from '../composables/useListFocus.js'
 import { paginationDensityForWidth, siblingCountForDensity, usePagination } from '../composables/usePagination.js'
 import { usePendingChange } from '../composables/usePendingChange.js'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { paginationMessages } from '../locale/messages/pagination.js'
+import NumberInput from '../NumberInput/NumberInput.vue'
 import Selector from '../Selector/Selector.vue'
 import { consumeWhileDisabled } from '../utils/disabledInteraction.js'
+import { usePaginationLinks } from './usePaginationLinks.js'
 import '../../styles/pagination.css'
 
 defineOptions({ name: 'AstryxPagination' })
@@ -31,7 +36,7 @@ const props = withDefaults(defineProps<PaginationProps>(), {
 const emit = defineEmits<PaginationEmits>()
 defineSlots<PaginationSlots>()
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ pagination: paginationMessages })
 const disabledControl = computed(() => props.isDisabled || props.disabled)
 const regionLabel = computed(() => props.label ?? messages.value.pagination.nav)
 const stride = computed(() => Number.isInteger(props.step) && props.step >= 1 ? props.step : 1)
@@ -109,6 +114,42 @@ const pagination = usePagination({
   },
 })
 
+// 调用方显式设过每页条数时，才把它交给 getPageHref。
+const instance = getCurrentInstance()
+function setsPageSize(): boolean {
+  const given = instance?.vnode.props
+  return given != null && ['pageSize', 'page-size', 'pageSizeOptions', 'page-size-options'].some(key => key in given)
+}
+
+const links = usePaginationLinks({
+  getPageHref: () => props.getPageHref,
+  as: () => props.as,
+  page: pageRef,
+  pageSize: () => setsPageSize() ? pageSizeRef.value : undefined,
+  step: stride,
+  totalPages: pagination.totalPages,
+  isCursor: pagination.isCursor,
+  isAvailable: (kind) => {
+    if (disabledControl.value)
+      return false
+    if (kind === 'first' || kind === 'previous')
+      return pagination.canPrevious.value
+    if (kind === 'next')
+      return pagination.canNext.value
+    return !pagination.isCursor.value && pagination.canNext.value
+  },
+})
+const firstHref = computed(() => links.controlHref('first'))
+const previousHref = computed(() => links.controlHref('previous'))
+const nextHref = computed(() => links.controlHref('next'))
+const lastHref = computed(() => links.controlHref('last'))
+
+// 控件在链接和按钮之间切换时（到了边界、被禁用），带着焦点的那个控件把焦点交给新元素。
+useFocusAcrossSwap(() => root.value, '.astryx-pagination-first', () => firstHref.value != null)
+useFocusAcrossSwap(() => root.value, '.astryx-pagination-prev', () => previousHref.value != null)
+useFocusAcrossSwap(() => root.value, '.astryx-pagination-next', () => nextHref.value != null)
+useFocusAcrossSwap(() => root.value, '.astryx-pagination-last', () => lastHref.value != null)
+
 // 同步外部 props
 function syncFromProps(): void {
   pageRef.value = props.page
@@ -142,12 +183,18 @@ const showFirstLast = computed(() => {
   return enabled && pagination.totalPages.value > 1
 })
 
-function onInputCommit(event: Event): void {
-  const raw = Number((event.target as HTMLInputElement).value)
-  if (!Number.isFinite(raw))
+function onInputCommit(value: number | null): void {
+  if (value == null || !Number.isFinite(value))
     return
-  pagination.goto(Math.trunc(raw))
+  pagination.goto(Math.trunc(value))
 }
+
+/** 页码框正留着一个被拒的输入：框要变宽，装得下文字旁边的状态图标。 */
+const isPageEntryRejected = shallowRef(false)
+const pageBoxWidth = computed(() => {
+  const width = `var(--astryx-size-element-${props.size === 'sm' ? 'sm' : 'md'}, ${props.size === 'sm' ? 28 : 36}px)`
+  return isPageEntryRejected.value ? `calc(${width} + var(--astryx-spacing-10, 40px))` : width
+})
 
 const pageSizeOptions = computed<SelectorOption[]>(() => {
   return props.pageSizeOptions.map(size => ({
@@ -166,6 +213,10 @@ const toIndex = computed(() => {
 
 function isEllipsis(page: number): boolean {
   return page === -1
+}
+
+function pageLinkHref(page: number): string | undefined {
+  return isEllipsis(page) ? undefined : links.pageHref(page, disabledControl.value)
 }
 
 function onPageClick(page: number): void {
@@ -198,9 +249,9 @@ function onDotsFocus(event: FocusEvent): void {
 }
 
 function onDotClick(event: MouseEvent): void {
-  // Safari 不一定会因为点击按钮而移动焦点；换页统一由聚焦处理。
-  const button = event.currentTarget as HTMLButtonElement
-  button.focus()
+  // 换页统一由聚焦处理；按下时不聚焦（按下不该先选页，滑出去还能取消），所以松开的点击来聚焦，
+  // 焦点环跟着上一次输入走。
+  focusForLastInput(event.currentTarget as HTMLButtonElement)
   consumeWhileDisabled(event, disabledControl.value)
 }
 </script>
@@ -226,47 +277,55 @@ function onDotClick(event: MouseEvent): void {
       </slot>
     </div>
 
-    <div class="astryx-pagination-content">
-      <button
+    <div class="astryx-pagination-content astryx-pagination-list" :data-variant="variant" :data-size="props.size">
+      <component
+        :is="links.root(firstHref)"
         v-if="showFirstLast"
-        type="button"
-        class="astryx-pagination-button astryx-pagination-first"
-        :disabled="disabledControl || !pagination.canPrevious.value"
+        v-bind="links.attrs(firstHref)"
+        class="astryx-pagination-button astryx-pagination-item astryx-pagination-first"
+        data-first="first"
+        :disabled="firstHref ? undefined : disabledControl || !pagination.canPrevious.value"
         :aria-label="messages.pagination.first"
-        @click="pagination.first"
+        @click="links.activate($event, firstHref, pagination.first)"
       >
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
           <path d="M11 12L7 8L11 4M7 12L3 8L7 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
-      </button>
+      </component>
 
-      <button
-        type="button"
-        class="astryx-pagination-button astryx-pagination-prev"
-        :disabled="disabledControl || !pagination.canPrevious.value"
+      <component
+        :is="links.root(previousHref)"
+        v-bind="links.attrs(previousHref)"
+        class="astryx-pagination-button astryx-pagination-item astryx-pagination-prev"
+        :data-first="showFirstLast ? undefined : 'first'"
+        :disabled="previousHref ? undefined : disabledControl || !pagination.canPrevious.value"
         :aria-label="resolvedPrevLabel"
-        @click="pagination.previous"
+        @click="links.activate($event, previousHref, pagination.previous)"
       >
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
           <path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
         <span class="astryx-pagination-label" aria-hidden="true">{{ resolvedPrevLabel }}</span>
-      </button>
+      </component>
 
       <span v-if="variant === 'input'" class="astryx-pagination-input">
         <span class="astryx-pagination-input-label" aria-hidden="true">{{ resolvedPageLabel }}</span>
-        <input
-          class="astryx-pagination-input-field"
-          type="number"
-          inputmode="numeric"
+        <!-- 说明收进状态图标（tooltip），被拒的输入留着也不会把页码条撑高；这里的输入时机自己管，所以显式写 complete。 -->
+        <NumberInput
+          :label="messages.pagination.goToPage"
+          is-label-hidden
+          :model-value="pageRef"
           :min="1"
           :max="pagination.isCursor.value ? undefined : pagination.totalPages.value"
-          :value="pageRef"
-          :disabled="disabledControl || pagination.isCursor.value"
-          :aria-label="messages.pagination.goToPage"
+          is-integer-only
+          :size="props.size"
+          :width="pageBoxWidth"
+          :is-disabled="disabledControl || pagination.isCursor.value"
+          entry-error-behavior="complete"
+          status-variant="tooltip"
           @change="onInputCommit"
-          @keydown.enter="onInputCommit"
-        >
+          @entry-error-change="isPageEntryRejected = $event != null"
+        />
         <span v-if="!pagination.isCursor.value" class="astryx-pagination-input-total">{{ messages.pagination.ofTotal(pagination.totalPages.value) }}</span>
       </span>
 
@@ -282,7 +341,7 @@ function onDotClick(event: MouseEvent): void {
         v-else-if="variant === 'dots' && !pagination.isCursor.value"
         :ref="setDotsList"
         class="astryx-pagination-dots"
-        role="group"
+        role="radiogroup"
         :aria-label="messages.pagination.nav"
         @focusin="onDotsFocus"
         @keydown="dotsFocus.handleKeyDown"
@@ -291,13 +350,15 @@ function onDotClick(event: MouseEvent): void {
           v-for="dotPage in pagination.totalPages.value"
           :key="dotPage"
           type="button"
+          role="radio"
           class="astryx-pagination-dot"
           :class="{ 'is-active': dotPage === pageRef }"
           :data-page="dotPage"
           :tabindex="dotPage === pageRef ? 0 : -1"
           :aria-disabled="disabledControl || undefined"
-          :aria-current="dotPage === pageRef ? 'page' : undefined"
+          :aria-checked="dotPage === pageRef"
           :aria-label="messages.pagination.page(dotPage)"
+          @mousedown.prevent
           @click="onDotClick"
           @keydown="consumeWhileDisabled($event, disabledControl)"
         />
@@ -312,49 +373,57 @@ function onDotClick(event: MouseEvent): void {
       </span>
 
       <div v-if="variant === 'pages' && !pagination.isCursor.value" v-show="density !== 'minimal'" class="astryx-pagination-pages">
-        <button
+        <component
+          :is="links.root(pageLinkHref(page))"
           v-for="(page, index) in pagination.pageNumbers.value"
           :key="index"
-          type="button"
+          v-bind="links.attrs(pageLinkHref(page))"
           class="astryx-pagination-page"
           :class="{
             'is-active': page === pageRef,
             'is-ellipsis': isEllipsis(page),
+            'astryx-pagination-item': !isEllipsis(page),
+            'astryx-pagination-ellipsis': isEllipsis(page),
           }"
-          :disabled="disabledControl || isEllipsis(page)"
+          :data-selected="!isEllipsis(page) && page === pageRef ? 'selected' : undefined"
+          :disabled="pageLinkHref(page) ? undefined : disabledControl || isEllipsis(page)"
           :aria-label="isEllipsis(page) ? messages.pagination.more : messages.pagination.page(page)"
           :aria-current="page === pageRef ? 'page' : undefined"
-          @click="onPageClick(page)"
+          @click="links.activate($event, pageLinkHref(page), () => onPageClick(page))"
         >
           {{ isEllipsis(page) ? '...' : page }}
-        </button>
+        </component>
       </div>
 
-      <button
-        type="button"
-        class="astryx-pagination-button astryx-pagination-next"
-        :disabled="disabledControl || !pagination.canNext.value"
+      <component
+        :is="links.root(nextHref)"
+        v-bind="links.attrs(nextHref)"
+        class="astryx-pagination-button astryx-pagination-item astryx-pagination-next"
+        :data-last="showFirstLast ? undefined : 'last'"
+        :disabled="nextHref ? undefined : disabledControl || !pagination.canNext.value"
         :aria-label="resolvedNextLabel"
-        @click="pagination.next"
+        @click="links.activate($event, nextHref, pagination.next)"
       >
         <span class="astryx-pagination-label" aria-hidden="true">{{ resolvedNextLabel }}</span>
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
           <path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
-      </button>
+      </component>
 
-      <button
+      <component
+        :is="links.root(lastHref)"
         v-if="showFirstLast"
-        type="button"
-        class="astryx-pagination-button astryx-pagination-last"
-        :disabled="disabledControl || !pagination.canNext.value"
+        v-bind="links.attrs(lastHref)"
+        class="astryx-pagination-button astryx-pagination-item astryx-pagination-last"
+        data-last="last"
+        :disabled="lastHref ? undefined : disabledControl || !pagination.canNext.value"
         :aria-label="messages.pagination.last"
-        @click="pagination.last"
+        @click="links.activate($event, lastHref, pagination.last)"
       >
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
           <path d="M5 4L9 8L5 12M9 4L13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
-      </button>
+      </component>
 
       <div v-if="props.showSizeChanger" class="astryx-pagination-size-changer">
         <span class="astryx-pagination-size-label">{{ resolvedPageSizeLabel }}</span>

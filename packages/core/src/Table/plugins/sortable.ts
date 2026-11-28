@@ -1,7 +1,8 @@
 import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue'
 import type { TableColumn, TablePlugin, TableSortDirection, TableSortState } from '../types.js'
 import { computed, ref, toValue } from 'vue'
-import { useAstryxMessages } from '../../locale/context.js'
+import { useComponentMessages } from '../../locale/context.js'
+import { tableMessages } from '../../locale/messages/table.js'
 import { useCollator } from '../../locale/useCollator.js'
 import { sortRows } from '../columnUtils.js'
 
@@ -43,10 +44,6 @@ function sortKeyOf<T extends Record<string, unknown>>(column: TableColumn<T>): s
   return column.sortable.sortKey ?? column.key
 }
 
-function headerLabel<T extends Record<string, unknown>>(column: TableColumn<T>): string {
-  return typeof column.header === 'string' && column.header !== '' ? column.header : column.key
-}
-
 function nextDirection(current: TableSortDirection | null, allowUnsorted: boolean): TableSortDirection | null {
   if (current == null)
     return 'ascending'
@@ -58,7 +55,7 @@ function nextDirection(current: TableSortDirection | null, allowUnsorted: boolea
 export function useTableSortable<T extends Record<string, unknown>>(
   config: MaybeRefOrGetter<UseTableSortableConfig>,
 ): TablePlugin<T> {
-  const messages = useAstryxMessages()
+  const messages = useComponentMessages({ table: tableMessages })
   return {
     sortFor(column) {
       const key = sortKeyOf(column)
@@ -68,16 +65,10 @@ export function useTableSortable<T extends Record<string, unknown>>(
       const index = current.sort.findIndex(entry => entry.sortKey === key)
       const direction = index >= 0 ? current.sort[index]!.direction : null
       const rank = current.sort.length > 1 && index >= 0 ? index + 1 : null
-      const label = headerLabel(column)
-      const action = direction == null
-        ? messages.value.table.sortAscending
-        : direction === 'ascending'
-          ? messages.value.table.sortDescending
-          : messages.value.table.clearSort
       return {
         direction,
         rank,
-        label: `${messages.value.table.sortBy(label)}. ${action}`,
+        description: rank == null ? null : messages.value.table.sortPriority(rank, current.sort.length),
         onClick(event) {
           const latest = toValue(config)
           const allowUnsorted = latest.allowUnsortedState ?? true

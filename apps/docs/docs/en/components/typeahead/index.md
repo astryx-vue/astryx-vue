@@ -7,7 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
-import { typeaheadBare, typeaheadHelper, typeaheadLimited, typeaheadSearch, typeaheadValidation } from '../../../../components/demos/typeahead'
+import { typeaheadBare, typeaheadHelper, typeaheadLimited, typeaheadMenu, typeaheadSearch, typeaheadValidation } from '../../../../components/demos/typeahead'
 </script>
 
 ## Usage
@@ -36,7 +36,7 @@ const source = createStaticSource([
 
 An async source returns a Promise. `useAsyncSource` waits until typing pauses, 150 milliseconds by default, then starts the request. A newer search cancels the previous one, and a stale response is dropped. An empty query uses `bootstrap` when it exists. Loading, no results, and a failed request each get their own row in the menu.
 
-Arrow keys move the highlight, `Enter` selects it, and `Escape` closes the menu. While focus is in the input, `Home` and `End` move the caret. After a selection, the value collapses to a focusable token. Focusing it again returns to search.
+Arrow keys move the highlight, `Enter` selects it, and `Escape` closes the menu. While focus is in the input, `Home` and `End` move the caret. After a selection, the value collapses to a focusable token. Focusing it again returns to search. While the value is being edited, `Escape` closes the list first; a second `Escape` restores the token and puts focus on it. `Backspace` or `Delete` on the token clears the value the way the clear button does and announces it, or starts editing when the clear button is off. Choosing a result reports the emptied query through `changeQuery`. A focus list that has nothing to show, or fails to load, closes instead of staying open and empty.
 
 Built-in strings are English. Call `provideAstryxLocale('zh-CN')` for the Chinese strings.
 
@@ -86,4 +86,11 @@ Built-in strings are English. Call `provideAstryxLocale('zh-CN')` for the Chines
   description="BaseTypeahead has no field label or description. Use it where the page already names the control, such as a command palette, and pass label as the input's accessible name."
   locale="en"
   title="Without field chrome"
+/>
+
+<DemoExample
+  :demo="typeaheadMenu"
+  description="A filter field built on the menu config. Typing lists the fields with a heading and a key hint around the list. Picking a field switches the same menu to a dialog that edits its value; a filter button reopens that dialog."
+  locale="en"
+  title="Menu with listbox and dialog roles"
 />

@@ -10,6 +10,7 @@
 @import './chocolate/bottom-sheet.css';
 @import './chocolate/button.css';
 @import './chocolate/card.css';
+@import './chocolate/card-text.css';
 @import './chocolate/center.css';
 @import './chocolate/chat.css';
 @import './chocolate/checkbox.css';
@@ -21,7 +22,6 @@
 @import './chocolate/divider.css';
 @import './chocolate/dropdown-menu.css';
 @import './chocolate/empty-state.css';
-@import './chocolate/field.css';
 @import './chocolate/grid.css';
 @import './chocolate/heading.css';
 @import './chocolate/hover-card.css';

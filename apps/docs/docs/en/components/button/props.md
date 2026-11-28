@@ -19,12 +19,12 @@ footer: false
       <tr><td><code>name</code></td><td><code>string</code></td><td>—</td><td>Form submission name.</td></tr>
       <tr><td><code>value</code></td><td><code>string | number | readonly string[]</code></td><td>—</td><td>Form submission value.</td></tr>
       <tr><td><code>form</code></td><td><code>string</code></td><td>—</td><td>ID of the associated form.</td></tr>
-      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disables interaction. A tooltip switches this to aria-disabled so focus remains available.</td></tr>
+      <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disables interaction. The button never uses the native disabled attribute: it is marked aria-disabled and stays in the Tab order, so keyboard and screen-reader users can still reach it.</td></tr>
       <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows loading state, sets aria-busy, and disables non-interruptible activation.</td></tr>
       <tr><td><code>isInterruptible</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Allows clickAction to run again while earlier work is pending.</td></tr>
       <tr><td><code>clickAction</code></td><td><code>(event: MouseEvent) =&gt; void | Promise&lt;void&gt;</code></td><td>—</td><td>Action function that automatically drives pending state.</td></tr>
       <tr><td><code>isIconOnly</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows only the icon slot and uses label to name the button.</td></tr>
-      <tr><td><code>width</code></td><td><code>number | string</code></td><td>—</td><td>Button width. Numbers become pixels; CSS strings are used as supplied.</td></tr>
+      <tr><td><code>width</code></td><td><code>number | string</code></td><td>—</td><td>Button width. Numbers become pixels; CSS strings are used as supplied. When a row is too narrow the label truncates with an ellipsis and shows in full in a tooltip on keyboard focus.</td></tr>
       <tr><td><code>loadingLabel</code></td><td><code>string</code></td><td><code>'Loading'</code></td><td>Localized text used by the spinner and live region.</td></tr>
       <tr><td><code>tooltip</code></td><td><code>string</code></td><td>—</td><td>Supplementary hint shown on hover and keyboard focus.</td></tr>
       <tr><td><code>href</code></td><td><code>string</code></td><td>—</td><td>Renders the enabled root as a link when present.</td></tr>
@@ -80,6 +80,7 @@ To cancel an earlier network request, call `AbortController.abort()` in the appl
 
 `Button` exposes `element`.
 Its type is `HTMLButtonElement | HTMLAnchorElement | HTMLElement | null`.
+In link mode (with `href` and not disabled) it is the link element: the anchor, or the root element of the `as` link component. Otherwise it is the button.
 
 ## Native attributes
 

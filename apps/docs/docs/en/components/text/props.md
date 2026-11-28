@@ -47,7 +47,7 @@ footer: false
         <td><code>wordBreak</code></td>
         <td><code>TextWordBreak</code></td>
         <td>-</td>
-        <td>How a long unbroken string breaks: normal, break-word, or break-all.</td>
+        <td>How a long unbroken string breaks when truncating: normal, break-word, or break-all. Without truncation, a token longer than its line (a URL, an ID) wraps (<code>overflow-wrap: break-word</code>), so in ordinary flow the text does not make the page scroll sideways. Inside a flex row, give the flex child <code>min-width: 0</code> so it can shrink. A container you style with <code>overflow-wrap: anywhere</code> does not reach this text; Astryx's own containers pass their wrap through.</td>
       </tr>
       <tr>
         <td><code>hasCapsize</code></td>
@@ -89,7 +89,7 @@ footer: false
         <td><code>hasTruncateTooltip</code></td>
         <td><code>boolean | 'above' | 'below' | 'start' | 'end'</code></td>
         <td><code>true</code></td>
-        <td>Puts the full text in a tooltip after truncation. <code>false</code> turns it off. It stays closed when the text fits.</td>
+        <td>Puts the full text in a tooltip after truncation. <code>false</code> turns it off and skips the measurement. It stays closed when the text fits. The tooltip mounts on the first hover, tap or keyboard focus; until then the element has no tooltip layer and no <code>aria-describedby</code>.</td>
       </tr>
       <tr>
         <td><code>maxLines</code></td>

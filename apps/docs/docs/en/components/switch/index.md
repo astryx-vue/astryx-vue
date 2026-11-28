@@ -14,6 +14,8 @@ import { switchDescription, switchDisabled, switchSettings, switchStatus } from 
 
 `Switch` toggles a single boolean state.
 
+Under a finger it moves like the iOS switch: a press lifts the thumb a little with a soft shadow, a horizontal drag moves it with the finger and flips it once the finger has travelled most of the track, and lifting the finger commits. A tap toggles as usual, while a hold or a short drag toggles at the lift; a vertical drag scrolls the page and the switch lets go. A mouse or a pen drags by the same rule with the desktop look, and a press slid off the switch and released outside leaves it alone. Under a coarse pointer the invisible hit area grows toward 44 × 44 px. With reduced motion on, a change cross-fades on a touch screen and is immediate with a mouse.
+
 ```vue
 <script setup lang="ts">
 import { Switch } from '@astryx-vue/core/Switch'

@@ -1,0 +1,40 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.overrides {
+  /* 冷色调卡片上的链接取更深的一档，次要文字也退一档，读得清选中行、编号引用的强调色底纹。 */
+  [data-astryx-theme='chocolate'] .astryx-card[data-variant='blue'] {
+    --astryx-color-text-accent: light-dark(#7d4e21, #d4a06a);
+    --astryx-color-text-secondary: light-dark(#7b4200, #c4a882);
+  }
+
+  [data-astryx-theme='chocolate'] .astryx-card[data-variant='cyan'] {
+    --astryx-color-text-accent: light-dark(#7d4e21, #d4a06a);
+  }
+
+  [data-astryx-theme='chocolate'] .astryx-card[data-variant='pink'] {
+    --astryx-color-text-accent: light-dark(#7d4e21, #d4a06a);
+  }
+
+  [data-astryx-theme='chocolate'] .astryx-card[data-variant='purple'] {
+    --astryx-color-text-accent: light-dark(#7d4e21, #d4a06a);
+    --astryx-color-text-secondary: light-dark(#7b4200, #c4a882);
+  }
+
+  [data-astryx-theme='chocolate'] .astryx-card[data-variant='red'] {
+    --astryx-color-text-accent: light-dark(#7d4e21, #d4a06a);
+    --astryx-color-text-secondary: light-dark(#7b4200, #c4a882);
+  }
+
+  [data-astryx-theme='chocolate'] .astryx-card[data-variant='teal'] {
+    --astryx-color-text-accent: light-dark(#7d4e21, #d4a06a);
+    --astryx-color-text-secondary: light-dark(#7b4200, #e4ad77);
+  }
+
+  [data-astryx-theme='chocolate'] .astryx-card[data-variant='green'] {
+    --astryx-color-text-secondary: light-dark(#894d0e, #e4ad77);
+  }
+
+  [data-astryx-theme='chocolate'] .astryx-card[data-variant='yellow'] {
+    --astryx-color-text-secondary: light-dark(#894d0e, #f4ba82);
+  }
+}

@@ -41,7 +41,7 @@ const sidebar = useResizable({
 
 分隔条的角色是 `separator`。横向分隔条的 `aria-orientation` 是 `vertical`。方向键每次移动 10px，按住 Shift 移动 50px。有吸附点时，方向键改成跳到相邻的点，Shift 跳两个。Home 和 End 跳到边界；没写最大尺寸时 End 不动，读屏用的最大值改报窗口或容器尺寸。折叠后只有让面板变大的方向键会展开。Enter 和双击恢复折叠前的尺寸。
 
-`useResizable` 可以管一个区域，也可以用 `regions` 一次管多个。`snaps` 让尺寸只停在列出的点上。离两个点一样远时，留在更靠前的那个。可收起的区域被拖到低于 `collapsedSize`（默认 40）时，尺寸变成 0。`autoSaveId` 把尺寸存在 `localStorage`，键名以 `astryx-resizable:` 开头。`percent()` 用来写带像素上下限的百分比尺寸。
+`useResizable` 可以管一个区域，也可以用 `regions` 一次管多个。`snaps` 让尺寸只停在列出的点上。离两个点一样远时，留在更靠前的那个。可收起的区域拖动途中停在最小尺寸，松手时低于 `collapsedSize`（默认 40），或朝收起方向快速一甩，尺寸才变成 0。拖过上下限时，分隔条像橡皮筋一样多走几像素，松手弹回。`autoSaveId` 把尺寸存在 `localStorage`，键名以 `astryx-resizable:` 开头。`percent()` 用来写带像素上下限的百分比尺寸。
 
 ## 最佳实践
 

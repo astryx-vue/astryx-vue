@@ -27,6 +27,7 @@ footer: false
 | `nodes` | `ReadonlyArray<Klass<LexicalNode>>` | - | Additional Lexical node types to register. |
 | `extensions` | `ReadonlyArray<AnyLexicalExtensionArgument>` | - | Additional Lexical extension plugin array. |
 | `markdownExtensions` | `ReadonlyArray<RichTextMarkdownExtension>` | - | Markdown extension plugins to recognize. |
+| `codeLanguages` | `ReadonlyArray<CodeLanguage>` | - | Language values a code fence may name. A fence whose language word is one of a value's identifiers is coloured with that value and shows its name in the header, ahead of a built-in with the same identifier; a later entry wins. |
 | `hasMarkdownShortcuts` | `boolean` | `true` | Whether to enable Markdown shortcuts (such as `# ` for headings). |
 | `transformers` | `ReadonlyArray<Transformer>` | Default transformers | Custom Markdown transformation rules. |
 | `hasAutoFocus` | `boolean` | `false` | Whether to automatically focus the editing area on mount. |
@@ -45,7 +46,7 @@ footer: false
 | `label` | `string` | Localized text | Accessible name for the toolbar. |
 | `headingLevels` | `ReadonlyArray<'h1' \| 'h2' \| 'h3'>` | `['h1', 'h2', 'h3']` | Heading levels included in the block format dropdown. |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'sm'` | Toolbar size. |
-| `hasLink` | `boolean` | `true` | Whether to show the link button and enable Cmd/Ctrl+K shortcut. |
+| `hasLink` | `boolean` | `true` | Whether to show the link button and enable Cmd/Ctrl+K shortcut. They open a non-modal popover anchored to the button with one URL field. |
 | `promptForUrl` | `(selectedText: string) => string \| null \| undefined` | - | Custom callback function to prompt for a URL. |
 | `hasNewTabLinks` | `boolean` | `true` | Whether inserted links open in a new tab. |
 
@@ -58,7 +59,18 @@ footer: false
 | `value` | `string` | Required | Editor state JSON string to render. |
 | `nodes` | `ReadonlyArray<Klass<LexicalNode>>` | - | Additional Lexical nodes to register, matching those used when saving. |
 | `markdownExtensions` | `ReadonlyArray<RichTextMarkdownExtension>` | - | Markdown extension plugins to recognize. |
+| `codeLanguages` | `ReadonlyArray<CodeLanguage>` | - | Language values a code fence may name. A fence whose language word is one of a value's identifiers is coloured with that value and shows its name in the header, ahead of a built-in with the same identifier; a later entry wins. |
 | `namespace` | `string` | `'astryx-view'` | Namespace for the underlying Lexical instance. |
 
 - **Events**: `@parseError="(error: Error) => void"` fires when parsing content fails.
 - **Slots**: `#errorFallback` fallback content when parsing fails; `#default` internal extension slot.
+
+### `<RichTextEditorAutoLinkPlugin>` props and events
+
+Render it in the default slot of `<RichTextEditor>`. It turns typed and pasted URLs and email addresses into links, and it must live inside the editor because it reaches the editor through the editor's context. Its links open in a new tab, with `target="_blank"` and `rel="noopener noreferrer"` written into the link node.
+
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `matchers` | `LinkMatcher[]` | `DEFAULT_LINK_MATCHERS` | Link matchers to use. The default recognizes URLs and email addresses. Build extra matchers with `createLinkMatcherWithRegExp` from `@lexical/link`. |
+
+- **Events**: `@change="(url: string | null, prevUrl: string | null) => void"` fires when auto-linking creates, updates or removes a link. It gets the new URL, or `null` when the link is removed, and the previous URL.

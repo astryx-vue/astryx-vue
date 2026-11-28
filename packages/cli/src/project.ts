@@ -1,6 +1,7 @@
 import type { Dirent } from 'node:fs'
 import { readdir, readFile, stat } from 'node:fs/promises'
-import { join } from 'node:path'
+import { homedir } from 'node:os'
+import { dirname, join, resolve } from 'node:path'
 
 /**
  * What the CLI is allowed to know about the reader's project: its package.json,
@@ -42,6 +43,28 @@ const LOCKFILES: readonly { file: string, manager: PackageManager }[] = [
 
 const MANAGERS = new Set<PackageManager>(['pnpm', 'npm', 'yarn', 'bun'])
 
+/**
+ * The folder a project command should work in: the nearest folder at or above
+ * `cwd` that has a package.json. Run from `src/components`, the command still
+ * finds the project's dependencies and writes next to its package.json. The
+ * search stops before the home folder, and falls back to `cwd` when no
+ * package.json is found.
+ */
+export async function findProjectRoot(cwd: string): Promise<string> {
+  const start = resolve(cwd)
+  const home = resolve(homedir())
+  let dir = start
+  while (dir !== home) {
+    if (await exists(join(dir, 'package.json')))
+      return dir
+    const parent = dirname(dir)
+    if (parent === dir)
+      break
+    dir = parent
+  }
+  return start
+}
+
 export async function readProject(cwd: string): Promise<Project> {
   const packageJson = await readPackageJson(cwd)
   const fromField = managerOfField(packageJson?.packageManager)
@@ -68,17 +91,57 @@ export function dependenciesOf(packageJson: ProjectPackageJson | null): Record<s
   }
 }
 
+/** The flag that saves the version as written instead of as a `^` range. */
+const EXACT_FLAG: Record<PackageManager, string> = { pnpm: '-E', npm: '-E', yarn: '-E', bun: '--exact' }
+
 /**
  * The command that adds packages with the manager the project already uses. When
  * no manager could be detected the caller gets every form, because guessing one
  * would hand a reader a command their project cannot run.
  */
-export function installCommands(manager: PackageManager | null, packages: readonly string[], options: { dev?: boolean } = {}): string[] {
-  const managers: PackageManager[] = manager ? [manager] : ['pnpm', 'npm', 'yarn', 'bun']
-  return managers.map((candidate) => {
+export function installCommands(manager: PackageManager | null, packages: readonly string[], options: { dev?: boolean, exact?: boolean } = {}): string[] {
+  return managersFor(manager).map((candidate) => {
     const verb = candidate === 'npm' ? 'install' : 'add'
-    return [candidate, verb, ...(options.dev ? ['-D'] : []), ...packages].join(' ')
+    const flags = [...(options.dev ? ['-D'] : []), ...(options.exact ? [EXACT_FLAG[candidate]] : [])]
+    return [candidate, verb, ...flags, ...packages].join(' ')
   })
+}
+
+/** The command that installs what package.json already lists, as a fresh clone needs. */
+export function installAllCommands(manager: PackageManager | null): string[] {
+  return managersFor(manager).map(candidate => `${candidate} install`)
+}
+
+function managersFor(manager: PackageManager | null): PackageManager[] {
+  return manager ? [manager] : ['pnpm', 'npm', 'yarn', 'bun']
+}
+
+/**
+ * True when the range names one version and nothing else (`0.9.1`, `=0.9.1`),
+ * as a project does when it pins its packages. A command that adds a package
+ * next to it then saves that one exactly too.
+ */
+export function isExactPin(range: string | undefined): boolean {
+  return range !== undefined && /^=?v?\d+\.\d+\.\d+(?:-[\w.]+)?$/.test(range.trim())
+}
+
+/**
+ * Whether a package is on disk where Node would look for it from the project:
+ * a `node_modules/<name>` folder in the project or a folder above it. Null under
+ * Yarn Plug'n'Play, which keeps no such folder, so the answer is unknown.
+ */
+export async function isInstalledOnDisk(cwd: string, name: string): Promise<boolean | null> {
+  let dir = resolve(cwd)
+  while (true) {
+    if (await exists(join(dir, 'node_modules', name, 'package.json')))
+      return true
+    if (await exists(join(dir, '.pnp.cjs')) || await exists(join(dir, '.pnp.js')))
+      return null
+    const parent = dirname(dir)
+    if (parent === dir)
+      return false
+    dir = parent
+  }
 }
 
 /** `^0.4.0`, `~1.2`, `0.4.0` and `v0.4.0` all answer with `0.4.0`. */
@@ -129,8 +192,11 @@ export async function readSourceFiles(cwd: string, options: { limit?: number } =
     catch {
       continue
     }
-    for (const entry of entries.sort((a, b) => a.name.localeCompare(b.name))) {
+    for (const entry of entries.sort(compareNames)) {
       if (entry.name.startsWith('.') && entry.name !== '.env')
+        continue
+      // A link can lead into a dependency or VCS tree the walk skips by name.
+      if (entry.isSymbolicLink())
         continue
       const child = relative ? `${relative}/${entry.name}` : entry.name
       if (entry.isDirectory()) {
@@ -148,6 +214,13 @@ export async function readSourceFiles(cwd: string, options: { limit?: number } =
     }
   }
   return files
+}
+
+/** Orders names by code point, so every machine and locale lists files the same way. */
+export function compareNames(a: string | { name: string }, b: string | { name: string }): number {
+  const left = typeof a === 'string' ? a : a.name
+  const right = typeof b === 'string' ? b : b.name
+  return left < right ? -1 : left > right ? 1 : 0
 }
 
 /** Lines of a file that match, one-based, for a report a reader can act on. */

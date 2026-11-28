@@ -2,11 +2,13 @@
 import { Avatar } from '@astryx-vue/core/Avatar'
 import { Stack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
+import { useToast } from '@astryx-vue/core/Toast'
 
+const showToast = useToast()
+
+// 演示：换成真正打开资料页的调用。用 toast 而不是 alert，被屏蔽对话框的框架里点击也有回应。
 function openProfile() {
-  // The upstream example uses a browser alert so the click is visible.
-  // eslint-disable-next-line no-alert
-  window.alert('Opening Margot Schroder’s profile')
+  showToast({ body: 'Demo: Margot Schroder’s profile would open here' })
 }
 </script>
 

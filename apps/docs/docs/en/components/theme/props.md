@@ -23,7 +23,7 @@ footer: false
         <td><code>mode</code></td>
         <td><code>'light' | 'dark' | 'system'</code></td>
         <td><code>'system'</code></td>
-        <td>Color mode. <code>system</code> follows the page and the OS.</td>
+        <td>Color mode. <code>system</code> takes the page root's scheme, and the OS setting when the root names both schemes.</td>
       </tr>
     </tbody>
   </table>
@@ -58,7 +58,7 @@ footer: false
 | <code>onDark</code> | Extra tokens and component styles for a dark <code>MediaTheme</code> surface. |
 | <code>onLight</code> | Extra tokens and component styles for a light <code>MediaTheme</code> surface. |
 | <code>icons</code> | Semantic icon name to Iconify id. Overrides by name and merges shallowly with the extended theme. |
-| <code>indicators</code> | Indicator graphics, replaced by check, checkbox, or radio. One entry reaches every place that draws that name. |
+| <code>indicators</code> | Indicator graphics, replaced by check, checkbox, or radio. One entry reaches every place that draws that name. Two more names have no built-in: <code>spinner</code> (state <code>busy</code>) replaces the ring a Spinner turns, and <code>tree-disclosure</code> (states <code>collapsed</code> and <code>expanded</code>) replaces the chevron of a TreeList row. |
 
 ## useTheme
 

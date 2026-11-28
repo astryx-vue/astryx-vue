@@ -44,6 +44,8 @@ The visible labels are English unless the app calls `provideAstryxLocale('zh-CN'
 | <Badge variant="success">Do</Badge> | Use it under tables and lists that are too long for one page. |
 | <Badge variant="success">Do</Badge> | Offer `showSizeChanger` when the list is large enough that page length matters. |
 | <Badge variant="success">Do</Badge> | Show the total and the current range so people know how much data there is. |
+| <Badge variant="success">Do</Badge> | Pass `getPageHref` when each page has its own URL, so a page opens in a new tab and its address can be copied. |
+| <Badge variant="error">Don't</Badge> | Navigate in `change` when `getPageHref` is set. The link navigates, so keep `change` for state or analytics. |
 | <Badge variant="error">Don't</Badge> | Rely on a long row of page buttons on a narrow screen. Keep the control compact. |
 
 ## Examples

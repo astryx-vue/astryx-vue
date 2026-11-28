@@ -15,8 +15,8 @@ footer: false
       <tr><td><code>color</code></td><td><code>'default' | 'gray' | 'blue' | 'cyan' | 'teal' | 'green' | 'yellow' | 'orange' | 'red' | 'pink' | 'purple'</code></td><td><code>'default'</code></td><td>颜色。</td></tr>
       <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>尺寸。</td></tr>
       <tr><td><code>removable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>显示可聚焦的删除按钮。</td></tr>
-      <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>禁用。删除按钮不再响应。</td></tr>
-      <tr><td><code>href</code></td><td><code>string</code></td><td>—</td><td>有值时渲染成链接。和删除按钮同时存在时，链接和按钮是兄弟节点。</td></tr>
+      <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>禁用。删除按钮不再响应。禁用的链接型标签仍可聚焦，只是没有去处。</td></tr>
+      <tr><td><code>href</code></td><td><code>string</code></td><td>—</td><td>有值时渲染成链接。和删除按钮同时存在时，链接和按钮是兄弟节点。<code>@click</code> 监听在链接上照样调用。</td></tr>
       <tr><td><code>description</code></td><td><code>string</code></td><td>—</td><td>补充说明，读屏可读。</td></tr>
       <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>视觉上隐藏文字，仍然作为无障碍名称。旧名 <code>labelHidden</code> 同样可用，两者任一为真就隐藏。</td></tr>
     </tbody>

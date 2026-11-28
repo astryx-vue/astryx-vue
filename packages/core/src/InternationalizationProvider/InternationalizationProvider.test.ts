@@ -1,7 +1,8 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import { defineComponent, h } from 'vue'
-import { useAstryxLocale, useAstryxMessages } from '../locale/context.js'
+import { useAstryxLocale } from '../locale/context.js'
+import { useAstryxMessages } from '../locale/fullMessages.js'
 import { astryxMessages } from '../locale/messages.js'
 import { getLocaleDirection, useLocaleDirection } from './index.js'
 import InternationalizationProvider from './InternationalizationProvider.vue'
@@ -180,5 +181,12 @@ describe('internationalizationProvider', () => {
     expect(wrapper.get('span').attributes('dir')).toBeUndefined()
     expect(document.documentElement.getAttribute('dir')).toBeNull()
     wrapper.unmount()
+  })
+})
+
+describe('internationalizationProvider without a locale', () => {
+  it('names the missing prop and the fix in development', () => {
+    expect(() => mount(InternationalizationProvider, { props: {} as never, slots: { default: () => h(Probe) } }))
+      .toThrow('InternationalizationProvider: `locale` is required: a BCP 47 language tag, for example locale="en" or locale="pt-BR".')
   })
 })

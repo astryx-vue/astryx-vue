@@ -2,7 +2,8 @@
 import type { VNode } from 'vue'
 import type { MetadataListContextValue, MetadataListProps } from './types.js'
 import { Comment, computed, defineComponent, Fragment, h, provide, ref, useId } from 'vue'
-import { useAstryxMessages } from '../locale/context.js'
+import { useComponentMessages } from '../locale/context.js'
+import { metadataListMessages } from '../locale/messages/metadata-list.js'
 import { metadataListKey } from './context.js'
 import '../../styles/metadata-list.css'
 
@@ -30,7 +31,7 @@ export default defineComponent({
     title: { type: String, default: undefined },
   },
   setup(props: MetadataListProps, { slots, attrs }) {
-    const messages = useAstryxMessages()
+    const messages = useComponentMessages({ metadataList: metadataListMessages })
     const expanded = ref(false)
     const contentId = `astryx-metadata-list-${useId()}`
 

@@ -32,6 +32,7 @@
 
   .astryx-empty-state[data-variant='compact'] .astryx-empty-state-title {
     font-size: var(--astryx-text-label-size, 0.875rem);
+    line-height: var(--astryx-text-label-leading, 1.4286);
   }
 
   .astryx-empty-state .astryx-empty-state-description {
@@ -40,6 +41,7 @@
 
   .astryx-empty-state[data-variant='compact'] .astryx-empty-state-description {
     font-size: var(--astryx-text-supporting-size, 0.75rem);
+    line-height: var(--astryx-text-supporting-leading, 1.6667);
   }
 
   .astryx-empty-state-actions {

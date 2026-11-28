@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useOverflowEditorToolbar } from '../../../../components/demos/use-overflow'
 </script>
 
 ## 使用方法
@@ -57,3 +58,14 @@ const { containerRef, hasOverflow, measureRef, visibleCount } = useOverflow(item
 | <Badge variant="success">Do</Badge> | 全部项都渲染进 `measureRef` 那块隐藏容器，只有前 `visibleCount` 项渲染进 `containerRef` 那块看得见的容器。 |
 | <Badge variant="success">Do</Badge> | 测量容器最后放一个溢出指示器（比如「+N 更多」按钮），并给它标上 `data-overflow-indicator`。 |
 | <Badge variant="error">Don't</Badge> | 拿它量竖向溢出，这个函数只量横向宽度。 |
+
+## 示例
+
+常见配置、变体和状态。
+
+<DemoExample
+  :demo="useOverflowEditorToolbar"
+  description="拖动卡片右下角改变宽度：放不下的工具栏按钮由 useOverflow 收进「More」菜单，卡片变宽后再放回来。"
+  locale="zh"
+  title="useOverflow — 编辑器工具栏"
+/>

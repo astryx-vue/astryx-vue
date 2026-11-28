@@ -54,6 +54,18 @@ describe('mobile-nav', () => {
     wrapper.unmount()
   })
 
+  it('gives the painted drawer panel the mobile-nav-drawer theme target with its side', async () => {
+    const wrapper = mount(MobileNav, {
+      attachTo: document.body,
+      props: { isOpen: true, label: 'Navigation', side: 'start' },
+    })
+    await nextTick()
+    const drawer = wrapper.get('.astryx-mobile-nav-drawer')
+    expect(drawer.classes()).toContain('astryx-mobile-nav__drawer')
+    expect(drawer.attributes('data-side')).toBe('start')
+    wrapper.unmount()
+  })
+
   it('closes when the dialog cancels', async () => {
     const wrapper = mount(MobileNav, {
       attachTo: document.body,

@@ -9,8 +9,8 @@ const pageStyle: CSSProperties = {
 
 <template>
   <Layout :style="pageStyle">
-    <LayoutContent :padding="6">
-      <Text type="large">
+    <LayoutContent role="main" :padding="6">
+      <Text as="h1" type="large">
         New Page
       </Text>
     </LayoutContent>

@@ -227,8 +227,13 @@ export function capitalize(value: string): string {
   return first.toUpperCase() + value.slice(first.length)
 }
 
+/** 没有时间的 Date（`new Date('not a date')`）。表格把它当缺失值：空格子，排序时和 null 放在一起。 */
+export function isInvalidDate(value: unknown): boolean {
+  return value instanceof Date && Number.isNaN(value.getTime())
+}
+
 export function cellText(value: unknown): string {
-  if (value == null)
+  if (value == null || isInvalidDate(value))
     return ''
   if (value instanceof Date)
     return value.toISOString()
@@ -308,16 +313,27 @@ export function sortRows<T extends Record<string, unknown>>(
   return copy
 }
 
+/** 排序时当缺失值的：null、undefined、NaN 和 Invalid Date。它们升序排最后，降序排最前。 */
+function isMissingSortValue(value: unknown): boolean {
+  return value == null || (typeof value === 'number' && Number.isNaN(value)) || isInvalidDate(value)
+}
+
+/**
+ * 缺失值不进下面的比较：NaN 结果会被 Array.sort 当成相等，打乱其余行的顺序；
+ * Invalid Date 转 ISO 字符串会抛错。日期按 ISO 字符串比，和时间先后一致。
+ */
 function compareValues(a: unknown, b: unknown, collator?: Pick<Intl.Collator, 'compare'>): number {
-  if (a == null && b == null)
+  const aMissing = isMissingSortValue(a)
+  const bMissing = isMissingSortValue(b)
+  if (aMissing && bMissing)
     return 0
-  if (a == null)
+  if (aMissing)
     return 1
-  if (b == null)
+  if (bMissing)
     return -1
   if (typeof a === 'number' && typeof b === 'number')
     return a - b
-  const left = String(a)
-  const right = String(b)
+  const left = cellText(a)
+  const right = cellText(b)
   return collator ? collator.compare(left, right) : left.localeCompare(right)
 }

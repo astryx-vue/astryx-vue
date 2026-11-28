@@ -48,10 +48,10 @@ npm run astryx-vue -- component Button
 | `astryx-vue template <slug> --skeleton` | Only the layout skeleton: component tags and layout attributes |
 | `astryx-vue template <slug> <path>` | Writes the template to a file, or to `<path>/<Name>.vue` for a directory |
 | `astryx-vue component --list` | Every documented component |
-| `astryx-vue component <Name>` | Usage, props, slots, events, examples, and notes for one component |
+| `astryx-vue component <Name> [<Name> ...]` | Usage, props, slots, events, examples, and notes for one or several components |
 | `astryx-vue composable --list` | Every documented composable, the `use*` functions |
 | `astryx-vue composable <Name>` | Parameters, return values, usage, and examples for one composable |
-| `astryx-vue docs` | Every guide and theme topic |
+| `astryx-vue docs` or `docs --list` | Every guide and theme topic |
 | `astryx-vue docs <topic>` | One topic's page text, such as `docs guide/dark-mode` or `docs themes/tokens` |
 | `astryx-vue docs <topic> --depth <n>` | The same page, cut off below heading level `n` |
 | `astryx-vue search <query>` | Ranked components, composables, docs topics, and templates |
@@ -59,7 +59,7 @@ npm run astryx-vue -- component Button
 | `astryx-vue theme` | Every built-in theme, one line each |
 | `astryx-vue theme <name>` | How to load one theme: stylesheet, `data-astryx-theme`, switching and scoping, verification |
 | `astryx-vue upgrade` | What upgrading the project's `@astryx-vue/core` takes, and where old names still appear |
-| `astryx-vue doctor` | Checks versions, the theme stylesheet, and the theme attribute. Reports only |
+| `astryx-vue doctor` | Checks versions, the theme stylesheet, the theme attribute, and Core buttons that do nothing when pressed. Reports only |
 | `astryx-vue init` | The setup guide for an AI assistant, plus the managed block in an agent file |
 
 Global flags:

@@ -18,9 +18,10 @@ footer: false
 <tr><td><code>ariaLabelledBy</code></td><td><code>string</code></td><td>—</td><td>Input-specific alias for <code>aria-labelledby</code>. Takes precedence over the native attribute.</td></tr>
 <tr><td><code>anchorRef</code></td><td><code>HTMLElement | null</code></td><td>—</td><td>Element the dropdown hangs from and measures itself against. Defaults to the input's own wrapper.</td></tr>
 <tr><td><code>placeholder</code></td><td><code>string</code></td><td><code>Search…</code></td><td>Placeholder text, shown while nothing is selected.</td></tr>
-<tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disables the input.</td></tr>
+<tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Disables the input. A disabled input keeps its tab stop: it is <code>aria-disabled</code> and read-only, opens no list and picks nothing, also from a list that was open before it became disabled. <code>Escape</code> or <code>Tab</code> still closes that list.</td></tr>
 <tr><td><code>disabledReason</code></td><td><code>string</code></td><td>—</td><td>Why the input is disabled, shown as a tooltip and announced as the description while the input stays focusable.</td></tr>
-<tr><td><code>isFocusableDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Keeps a disabled input focusable through <code>aria-disabled</code> and <code>readonly</code> so a caller-owned disabled reason stays discoverable. Text entry stays blocked.</td></tr>
+<tr><td><code>isFocusableDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Keeps a disabled input focusable through <code>aria-disabled</code> and <code>readonly</code> so a caller-owned disabled reason stays discoverable. A disabled input is always focusable. Text entry stays blocked.</td></tr>
+<tr><td><code>menu</code></td><td><code>{ role: 'listbox' } | { role: 'dialog', label: string }</code></td><td><code>{ role: 'listbox' }</code></td><td>What the menu holds, as on <code>Typeahead</code>: the result list with optional information around it (<code>menu</code> slot), or content that takes focus and opens only through <code>open()</code>. A template ref exposes <code>open()</code> and <code>close()</code>.</td></tr>
 <tr><td><code>status</code></td><td><code>'default' | 'success' | 'warning' | 'error'</code></td><td><code>'default'</code></td><td>Border color of the control. The message itself belongs to the caller's field.</td></tr>
 <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td><code>'md'</code></td><td>Size of the input and of the dropdown rows.</td></tr>
 <tr><td><code>clearable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Shows a clear button.</td></tr>
@@ -52,3 +53,4 @@ Native attributes and listeners that are not listed above land on the input elem
 - `icon`: artwork at the start of the input. The wrapper is hidden from assistive technology.
 - `item`: replaces the default row, and receives `item`, `isActive`, and `isSelected`. The row wrapper that owns highlight, selection, pointer, and keyboard behavior stays.
 - `empty`: replaces the no-results content.
+- `menu`: the menu content. With a `listbox` menu it receives `listbox`, `query`, `isBusy`, `isEmptySearch` and `close`; render the list once with `<component :is="listbox" />` and put information around it. With a `dialog` menu it receives `query` and `close` and is the whole content.

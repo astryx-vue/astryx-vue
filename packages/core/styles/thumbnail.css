@@ -70,6 +70,23 @@
     overflow: hidden;
   }
 
+  /*
+   * 一次聚焦只画一个焦点环：图片容器替 Open 画，Open 自己不画。
+   * 聚焦 Remove 时容器也亮，Remove 自己的环可能落在照片上看不清。
+   */
+  .astryx-thumbnail__open:focus-visible {
+    outline: none;
+  }
+
+  .astryx-thumbnail__frame:has(:focus-visible) {
+    outline: var(--astryx-focus-outline-width, 2px) var(--astryx-focus-outline-style, solid) var(--astryx-focus-outline-color, var(--astryx-color-accent));
+    outline-offset: var(--astryx-focus-outline-offset, 3px);
+  }
+
+  .astryx-thumbnail__open[aria-disabled='true'] {
+    cursor: default;
+  }
+
   .astryx-thumbnail__open::after,
   .astryx-thumbnail__frame[data-interactive='true']::after {
     content: '';
@@ -99,6 +116,14 @@
     background-color: transparent;
     background-image: var(--_press-paint-image);
     transition-duration: 0s;
+  }
+
+  /* 减少动态效果时，悬停和按下的颜色立即切换。 */
+  @media (prefers-reduced-motion: reduce) {
+    .astryx-thumbnail__open::after,
+    .astryx-thumbnail__frame[data-interactive='true']::after {
+      transition-duration: 0s;
+    }
   }
 
   .astryx-thumbnail__loading {

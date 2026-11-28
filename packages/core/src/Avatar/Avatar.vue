@@ -4,14 +4,16 @@ import type { AvatarProps } from './types.js'
 import { computed, provide, ref, toRaw, useAttrs } from 'vue'
 
 import { AvatarGroupContext } from '../AvatarGroup/context.js'
+import { hasSlotContent } from '../composables/internal/slotContent.js'
 import { useDevWarning } from '../composables/useDevWarning.js'
 import { readLayerScoped } from '../layer/scopedProvide.js'
 import { isSafeUrl } from '../Link/safeUrl.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
-import { useAstryxMessages } from '../locale/context.js'
+import { useComponentMessages } from '../locale/context.js'
+import { navMessages } from '../locale/messages/nav.js'
 import Tooltip from '../Tooltip/Tooltip.vue'
 import { AvatarSizeContext, AvatarStatusLabelContext } from './context.js'
-import { composeAccessibleName, getInitials, resolveSize } from './utils.js'
+import { composeAccessibleName, cssString, getInitials, resolveSize } from './utils.js'
 import '../../styles/avatar.css'
 
 defineOptions({ inheritAttrs: false })
@@ -74,10 +76,20 @@ const meaningfulAlt = computed(() => {
 
 const initials = computed(() => meaningfulName.value ? getInitials(meaningfulName.value) : '')
 
+/**
+ * 首字母由 `::before` 生成内容画出，属于头像这张「图」，不算控件的文字：
+ * 链接或按钮头像的可见文字若不在名字里，会违反 Label in Name。
+ * 首字母以 CSS 字符串写进私有的行内自定义属性，不暴露公开的 data 属性。
+ */
+const initialsStyle = computed<CSSProperties>(() => ({
+  'fontSize': `${numericSize.value * INITIALS_FONT_SIZE_RATIO}px`,
+  '--_avatar-initials': cssString(initials.value),
+}))
+
 const showInitials = computed(() => !showImage.value && !showFallbackImage.value && initials.value !== '')
 const showIcon = computed(() => !showImage.value && !showFallbackImage.value && initials.value === '')
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ nav: navMessages })
 const accessibleName = computed(() => {
   const label = statusLabel.value
   const status = typeof label === 'string' && label.trim() !== '' ? label.trim() : undefined
@@ -207,8 +219,7 @@ function handleFallbackError() {
         <span
           v-else-if="showInitials"
           class="astryx-avatar__fallback astryx-avatar__fallback--initials"
-          :data-initials="initials"
-          :style="{ fontSize: `${numericSize * INITIALS_FONT_SIZE_RATIO}px` }"
+          :style="initialsStyle"
         />
         <span
           v-else-if="showIcon"
@@ -227,7 +238,7 @@ function handleFallbackError() {
         </span>
       </span>
       <span
-        v-if="$slots.status"
+        v-if="hasSlotContent($slots.status)"
         class="astryx-avatar__status"
       >
         <slot name="status" />
@@ -263,8 +274,7 @@ function handleFallbackError() {
       <span
         v-else-if="showInitials"
         class="astryx-avatar__fallback astryx-avatar__fallback--initials"
-        :data-initials="initials"
-        :style="{ fontSize: `${numericSize * INITIALS_FONT_SIZE_RATIO}px` }"
+        :style="initialsStyle"
       />
       <span
         v-else-if="showIcon"
@@ -283,7 +293,7 @@ function handleFallbackError() {
       </span>
     </span>
     <span
-      v-if="$slots.status"
+      v-if="hasSlotContent($slots.status)"
       class="astryx-avatar__status"
     >
       <slot name="status" />

@@ -1,17 +1,24 @@
 <script setup lang="ts">
 import type { ISODateRange, WeekStartsOn } from '../composables/useDateRange.js'
+import type { CalendarSystem } from '../utils/calendarSystem.js'
+import type { PlainDate } from '../utils/plainDate.js'
 import { computed } from 'vue'
+import { buildMonthWeeks } from '../Calendar/useCalendarGrid.js'
 import { isDayOutsideSpan, orderRange, resolveWeekStart } from '../composables/useDateRange.js'
-import { addMonths, buildMonthGrid, todayISODate } from '../composables/useMonthGrid.js'
+import { todayISODate } from '../composables/useMonthGrid.js'
 import Icon from '../Icon/Icon.vue'
-import { formatCalendarMonth, standaloneShortWeekdayNames, weekdayNames } from '../locale/format.js'
-import { useAstryxLocale, useAstryxMessages } from '../locale/index.js'
+import { useAstryxLocale, useComponentMessages } from '../locale/context.js'
+import { formatDayNumber, standaloneShortWeekdayNames, weekdayNames } from '../locale/format.js'
+import { calendarMessages } from '../locale/messages/calendar.js'
+import { formatCalendarMonthLabel } from '../utils/calendarFormat.js'
+import { calendarAddMonths, calendarMonthOf } from '../utils/calendarSystem.js'
 import '../../styles/calendar.css'
 import '../../styles/date-range-input.css'
 
 const props = withDefaults(defineProps<{
-  cursorYear: number
-  cursorMonth: number
+  /** 第一个显示的历法月里的任意一天。 */
+  cursor: PlainDate
+  calendar: CalendarSystem
   monthCount?: number
   range?: ISODateRange | null
   pending?: string | null
@@ -34,7 +41,7 @@ const emit = defineEmits<{
 }>()
 
 const locale = useAstryxLocale()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ calendar: calendarMessages })
 const hover = defineModel<string | null>('hover', { default: null })
 const today = todayISODate()
 const weekStart = computed(() => resolveWeekStart(props.weekStartsOn ?? (locale.value === 'zh-CN' ? 1 : 0)))
@@ -48,14 +55,17 @@ const weekDays = computed(() => {
   }))
 })
 
-const months = computed(() => Array.from({ length: props.monthCount }, (_, index) => {
-  const cursor = addMonths(props.cursorYear, props.cursorMonth, index)
-  return {
-    ...cursor,
-    label: formatCalendarMonth(cursor.year, cursor.month, locale.value),
-    weeks: buildMonthGrid(cursor.year, cursor.month, weekStart.value),
-  }
-}))
+const months = computed(() => {
+  const first = calendarMonthOf(props.calendar, props.cursor)
+  return Array.from({ length: props.monthCount }, (_, index) => {
+    const month = calendarAddMonths(props.calendar, first, index)
+    return {
+      key: `${month.start.year}-${month.start.month}-${month.start.day}`,
+      label: formatCalendarMonthLabel(props.calendar, month, locale.value),
+      weeks: buildMonthWeeks(props.calendar, month, weekStart.value),
+    }
+  })
+})
 const headerLabel = computed(() => months.value.map(month => month.label).join(' – '))
 
 const preview = computed<ISODateRange | null>(() => {
@@ -63,10 +73,6 @@ const preview = computed<ISODateRange | null>(() => {
     return orderRange(props.pending, hover.value)
   return props.range
 })
-
-function monthKey(iso: string): string {
-  return iso.slice(0, 7)
-}
 
 function inSpan(day: string, range: ISODateRange | null): boolean {
   return range != null && day >= range.start && day <= range.end
@@ -100,7 +106,7 @@ function isDisabled(day: string): boolean {
       </button>
     </div>
     <div class="astryx-date-range-months">
-      <div v-for="month in months" :key="`${month.year}-${month.month}`" class="astryx-date-range-month">
+      <div v-for="month in months" :key="month.key" class="astryx-date-range-month">
         <div class="astryx-calendar-weekdays">
           <div v-for="day in weekDays" :key="day.label" class="astryx-calendar-weekday" :aria-label="day.label">
             {{ day.name }}
@@ -108,26 +114,26 @@ function isDisabled(day: string): boolean {
         </div>
         <div v-for="(week, weekIndex) in month.weeks" :key="weekIndex" class="astryx-calendar-row">
           <button
-            v-for="day in week" :key="day" type="button" class="astryx-calendar-cell"
+            v-for="cell in week.days" :key="cell.iso" type="button" class="astryx-calendar-cell"
             :class="{
-              'is-other-month': monthKey(day) !== `${month.year}-${String(month.month).padStart(2, '0')}`,
-              'is-today': day === today,
-              'is-selected': day === preview?.start || day === preview?.end || day === pending,
-              'is-in-range': inSpan(day, preview),
-              'is-range-start': day === preview?.start,
-              'is-range-end': day === preview?.end,
-              'is-disabled': isDisabled(day),
+              'is-other-month': cell.outside,
+              'is-today': cell.iso === today,
+              'is-selected': cell.iso === preview?.start || cell.iso === preview?.end || cell.iso === pending,
+              'is-in-range': inSpan(cell.iso, preview),
+              'is-range-start': cell.iso === preview?.start,
+              'is-range-end': cell.iso === preview?.end,
+              'is-disabled': isDisabled(cell.iso),
             }"
-            :disabled="isDisabled(day)"
-            :aria-pressed="day === preview?.start || day === preview?.end || undefined"
-            :aria-current="day === today ? 'date' : undefined"
-            @click="emit('select', day)"
-            @mouseenter="hover = day"
+            :aria-disabled="isDisabled(cell.iso) || undefined"
+            :aria-pressed="cell.iso === preview?.start || cell.iso === preview?.end || undefined"
+            :aria-current="cell.iso === today ? 'date' : undefined"
+            @click="isDisabled(cell.iso) ? undefined : emit('select', cell.iso)"
+            @mouseenter="hover = isDisabled(cell.iso) ? null : cell.iso"
             @mouseleave="hover = null"
-            @focus="hover = day"
+            @focus="hover = isDisabled(cell.iso) ? null : cell.iso"
             @blur="hover = null"
           >
-            <span class="astryx-calendar-day">{{ Number(day.slice(8)) }}</span>
+            <span class="astryx-calendar-day">{{ formatDayNumber(cell.day, locale) }}</span>
           </button>
         </div>
       </div>

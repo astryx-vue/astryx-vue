@@ -1,6 +1,13 @@
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 
 @layer astryx.components {
+  /* 粗指针下点一下就弹键盘，焦点样子渐变会在键盘升起的每一帧重画，所以直接出现。 */
+  @media (pointer: coarse) {
+    .astryx-date-range-input.astryx-bordered-control {
+      transition: none;
+    }
+  }
+
   .astryx-date-range-input {
     width: 100%;
   }
@@ -52,16 +59,33 @@
     color: var(--astryx-color-text-secondary, #525252);
   }
 
+  /* 弹层自己滚动：叠起来的日历在矮屏幕上仍然够得着。 */
   .astryx-date-range-popover {
     container-type: inline-size;
     width: 100%;
+    max-height: min(32rem, calc(100vh - 32px));
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
 
   .astryx-date-range-panel {
     display: flex;
     align-items: stretch;
-    max-height: min(32rem, calc(100vh - 32px));
-    overflow: auto;
+  }
+
+  /*
+   * 预设和一个月的日历并排放不下时（窄页面），预设叠到日历上面，
+   * 日历和翻月按钮都留在层里；分隔线也从右边换到下边。
+   */
+  @container (max-width: 26rem) {
+    .astryx-date-range-panel {
+      flex-direction: column;
+    }
+
+    .astryx-date-range-presets {
+      border-inline-end: 0;
+      border-block-end: 1px solid var(--astryx-color-border, #ebebeb);
+    }
   }
 
   .astryx-date-range-presets {

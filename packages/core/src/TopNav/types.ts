@@ -84,6 +84,12 @@ export interface TopNavMenuItem {
   href?: string
   iconClass?: string
   isDisabled?: boolean
+  /**
+   * 选中这一项后是否关闭菜单。设为 `false` 时菜单保持打开，
+   * 适合把结果显示在项上的操作。
+   * @default true
+   */
+  hasCloseOnSelect?: boolean
 }
 
 export interface TopNavMenuProps {
@@ -128,6 +134,12 @@ export interface TopNavMegaMenuItemProps {
   href?: string
   as?: NavLinkComponent
   iconClass?: string
+  /**
+   * 选中这一项后是否关闭面板。设为 `false` 时面板保持打开，
+   * 适合把结果显示在项上的操作。
+   * @default true
+   */
+  hasCloseOnSelect?: boolean
 }
 
 export interface TopNavMegaMenuItemSlots {

@@ -45,6 +45,10 @@ The `header` slot renders a title above the list and associates it through `aria
 
 `outset` and `bleed` read the padding published by the nearest container that shares it: a Card, Section, BottomSheet, a padded ScrollableArea, or a Layout region. Place the list directly in that container's padding; padding that Stack, Center, or your own styles add in between is not counted. With no such container, such as a standalone list or one in a Popover, they look like `padded`. `edgeCompensation="inline"` still works as a deprecated alias of `edge="outset"`; set `edge` in new code.
 
+To animate row changes, pass the handle from `useAnimatedLayout` as `animatedLayout` and give each `ListItem` an `itemKey` from your data. An inserted row enters, a removed row collapses where it stood, a row that crosses rows moving the other way rides above them, and the rows and content after the change glide to their new places. A row without an `itemKey` changes at once.
+
+To give rows actions a sideways swipe uncovers, pass the value from `createSwipe` as each `ListItem`'s `swipe`. The [List Item](/en/components/list-item) page covers the gesture.
+
 The package also exports the more general `Item` primitive. `ListItem` is that primitive rendered as an `<li>` with the density and marker from its list; use `Item` directly when the same row layout is needed outside a list, or when you need its extra controls — `as`, `align`, `labelLines`, `descriptionLines`, and `layout`. Most screens only need `List` and `ListItem`.
 
 
@@ -95,7 +99,7 @@ The package also exports the more general `Item` primitive. `ListItem` is that p
 
 <DemoExample
   :demo="listSwipe"
-  description="A touch drag reveals Archive. A mouse drag does not start, so the same action stays in the row."
+  description="A swipe from createSwipe reveals Archive, and a full swipe archives the row. A mouse drag does not start, so the same action stays in the row."
   locale="en"
   title="Swipe actions"
 />

@@ -3,8 +3,10 @@ import type { CSSProperties } from 'vue'
 import type { DropdownMenuContextValue } from './context.js'
 import type { DropdownMenuSubMenuEmits, DropdownMenuSubMenuProps, DropdownMenuSubMenuSlots } from './types.js'
 import type { MenuDrillIn } from './useMenuDrillIn.js'
+import type { MenuFocus } from './useMenuFocus.js'
 import { computed, nextTick, ref, useId, useSlots, watch } from 'vue'
-import { isMenuPressActivation } from '../composables/internal/strayClick.js'
+import { useBusyAnnouncement } from '../composables/internal/busyAnnouncement.js'
+import { isMenuPressActivation } from '../composables/internal/menuPressActivation.js'
 import { useMenuHover } from '../composables/internal/useMenuHover.js'
 import { useDismiss } from '../composables/useDismiss.js'
 import { useOverflow } from '../composables/useOverflow.js'
@@ -13,12 +15,14 @@ import { clampInlineSize, isIntrinsicInlineSize } from '../layer/inlineSize.js'
 import LayerContentBoundary from '../layer/LayerContentBoundary.vue'
 import { usePositionedLayer } from '../layer/usePositionedLayer.js'
 import Item from '../List/Item.vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { spinnerMessages } from '../locale/messages/spinner.js'
 import Spinner from '../Spinner/Spinner.vue'
 import { useDropdownMenuContext } from './context.js'
 import DropdownMenuBranch from './DropdownMenuBranch.vue'
 import DropdownMenuItem from './DropdownMenuItem.vue'
-import { activateMenuItem, MENU_ITEM_ROLES } from './menuItemRoles.js'
+import { activateFocusedMenuItem } from './menuItemRoles.js'
+import { useDropdownMenuMessages } from './useDropdownMenuMessages.js'
 import { useMenuFocus } from './useMenuFocus.js'
 import { useMenuRegions } from './useMenuRegions.js'
 import { useSubmenuMode } from './useSubmenuMode.js'
@@ -29,6 +33,8 @@ const props = withDefaults(defineProps<DropdownMenuSubMenuProps>(), {
   isDisabled: false,
   hasSpinner: false,
   presentation: 'adaptive',
+  delay: 150,
+  hideDelay: 200,
 })
 
 const emit = defineEmits<DropdownMenuSubMenuEmits>()
@@ -36,7 +42,8 @@ const emit = defineEmits<DropdownMenuSubMenuEmits>()
 defineSlots<DropdownMenuSubMenuSlots>()
 
 const slots = useSlots()
-const messages = useAstryxMessages()
+const messages = useDropdownMenuMessages()
+const spinnerText = useComponentMessages({ spinner: spinnerMessages })
 const menu = useDropdownMenuContext()
 const rowComponent = ref<{ element: HTMLElement | null, focus: () => void } | null>(null)
 const rowRef = computed(() => rowComponent.value?.element ?? null)
@@ -64,7 +71,23 @@ function setFooter(el: unknown): void {
 function setRegionMenu(el: unknown): void {
   regionMenuRef.value = (el as HTMLElement | null) ?? null
 }
-const stringLabel = computed(() => typeof props.label === 'string' ? props.label : undefined)
+const stringLabel = computed(() => typeof props.label === 'string' && props.label !== '' ? props.label : undefined)
+// 标签是节点（label 插槽）时，渲染在自己的元素里：展开的视图用它命名，
+// 嵌套视图的返回行用打开这一层时读到的文字。
+const hasNodeLabel = computed(() => stringLabel.value == null && slots.label != null)
+const nodeLabelId = `astryx-dropdown-submenu-label-${useId()}`
+const nodeLabelText = ref<string | undefined>()
+const viewLabelledBy = computed(() => hasNodeLabel.value ? nodeLabelId : undefined)
+
+function readNodeLabelText(): string | undefined {
+  const element = document.getElementById(nodeLabelId)
+  if (element == null)
+    return undefined
+  const copy = element.cloneNode(true) as Element
+  for (const hidden of copy.querySelectorAll('[aria-hidden="true"]'))
+    hidden.remove()
+  return copy.textContent?.replace(/\s+/g, ' ').trim() || undefined
+}
 const focus = useMenuFocus({ list: flyoutRef })
 const drillFocus = useMenuFocus({ list: drillRef })
 const hasOverflow = useOverflow(flyoutRef, flyoutOpen)
@@ -90,6 +113,10 @@ const drillOnStack = mode.isOnStack
 const drillIsTop = mode.isTop
 
 const isShown = computed(() => isDrill.value ? drillOnStack.value : flyoutOpen.value)
+watch(isShown, (shown) => {
+  if (shown && hasNodeLabel.value)
+    nodeLabelText.value = readNodeLabelText()
+})
 const backLabel = computed(() => {
   const parent = menu?.menuLabel.value
   return parent != null && parent !== ''
@@ -122,11 +149,23 @@ const flyoutStyle = computed<CSSProperties>(() => {
   return style
 })
 
+// 行尾的转圈只是装饰；忙碌由子菜单自己播报一次。收起的菜单仍然挂着，所以要等它这一层显示出来才念。
+useBusyAnnouncement(
+  () => props.hasSpinner && (menu?.isOpen.value ?? true),
+  () => spinnerText.value.spinner.loading,
+  rowRef,
+)
+
 const drillHost = computed(() => isDrill.value ? menu?.drillIn.value.host ?? null : null)
 
 async function focusDrillFirst(): Promise<void> {
   await nextTick()
-  if (!drillFocus.focusFirst())
+  // 返回行是第一行；打开后落在它后面第一个可用的行，键盘能走到禁用行，但打开不从那里开始。
+  const rows = drillFocus.getItems()
+  const target = rows.findIndex((row, index) => index > 0 && row.getAttribute('aria-disabled') !== 'true')
+  if (target !== -1)
+    drillFocus.focusItem(target)
+  else if (!drillFocus.focusFirst())
     drillRef.value?.focus({ preventScroll: true })
 }
 
@@ -181,39 +220,14 @@ function closeFlyout(focusRow = true): void {
     focusRowElement()
 }
 
-function onDrillKeydown(event: KeyboardEvent): void {
-  if (event.key === 'Tab' && hasRegions.value) {
-    regions.moveDialogTab(event)
-    return
-  }
-  if (event.key === 'Tab' && menu?.hasRegions.value) {
-    event.preventDefault()
-    event.stopPropagation()
-    closeFlyout(false)
-    menu.moveDialogTab(event, true)
-    return
-  }
-  if (event.key === 'ArrowLeft' || event.key === 'Escape') {
-    event.preventDefault()
-    event.stopPropagation()
-    closeFlyout(true)
-    return
-  }
-  if (event.key === 'Enter' || event.key === ' ') {
-    event.preventDefault()
-    event.stopPropagation()
-    if (event.repeat)
-      return
-    const focused = document.activeElement
-    if (focused instanceof HTMLElement && MENU_ITEM_ROLES.has(focused.getAttribute('role') ?? ''))
-      activateMenuItem(focused, event)
-    return
-  }
-  event.stopPropagation()
-  drillFocus.handleKeyDown(event)
+/** 关掉这一层，再让上面各层一路关到根菜单。 */
+function closeWholeMenu(): void {
+  closeFlyout(false)
+  menu?.closeMenu()
 }
 
-function onFlyoutKeydown(event: KeyboardEvent): void {
+/** 抽屉视图和飞出层共用的按键：Tab、返回、激活，其余交给这一层自己的行焦点。 */
+function handleLevelKeydown(event: KeyboardEvent, rows: MenuFocus): void {
   if (event.key === 'Tab' && hasRegions.value) {
     regions.moveDialogTab(event)
     return
@@ -223,6 +237,12 @@ function onFlyoutKeydown(event: KeyboardEvent): void {
     event.stopPropagation()
     closeFlyout(false)
     menu.moveDialogTab(event, true)
+    return
+  }
+  // Tab 离开整个菜单，不只是这一层：不拦默认行为，焦点回到触发器后由浏览器接着走。
+  if (event.key === 'Tab') {
+    event.stopPropagation()
+    closeWholeMenu()
     return
   }
   if (event.key === 'ArrowLeft' || event.key === 'Escape') {
@@ -236,14 +256,15 @@ function onFlyoutKeydown(event: KeyboardEvent): void {
     event.stopPropagation()
     if (event.repeat)
       return
-    const focused = document.activeElement
-    if (focused instanceof HTMLElement && MENU_ITEM_ROLES.has(focused.getAttribute('role') ?? ''))
-      activateMenuItem(focused, event)
+    activateFocusedMenuItem(event)
     return
   }
   event.stopPropagation()
-  focus.handleKeyDown(event)
+  rows.handleKeyDown(event)
 }
+
+const onDrillKeydown = (event: KeyboardEvent): void => handleLevelKeydown(event, drillFocus)
+const onFlyoutKeydown = (event: KeyboardEvent): void => handleLevelKeydown(event, focus)
 
 const emptyDrill: MenuDrillIn = {
   host: null,
@@ -254,16 +275,13 @@ const emptyDrill: MenuDrillIn = {
 }
 
 const nestedContext: DropdownMenuContextValue = {
-  closeMenu: () => {
-    closeFlyout(false)
-    menu?.closeMenu()
-  },
+  closeMenu: closeWholeMenu,
   drillIn: computed(() => menu?.drillIn.value ?? emptyDrill),
   focusRegion: direction => menu?.focusRegion(direction) ?? false,
   moveDialogTab: (event, fromFlyout) => menu?.moveDialogTab(event, fromFlyout),
   hasRegions: computed(() => menu?.hasRegions.value ?? false),
   isOpen: computed(() => (menu?.isOpen.value ?? true) && isShown.value),
-  menuLabel: computed(() => stringLabel.value ?? menu?.menuLabel.value),
+  menuLabel: computed(() => stringLabel.value ?? (hasNodeLabel.value ? nodeLabelText.value : undefined) ?? menu?.menuLabel.value),
   menuSize,
 }
 
@@ -277,6 +295,8 @@ const hover = useMenuHover({
   },
   isOpen: flyoutOpen,
   isEnabled: () => !props.isDisabled && !isDrill.value,
+  showDelay: () => props.delay,
+  hideDelay: () => props.hideDelay,
   flyoutRef,
   ownsFocus: false,
 })
@@ -369,7 +389,8 @@ watch(drillOnStack, (onStack, wasOnStack) => {
       </slot>
     </template>
     <template v-if="slots.label" #label>
-      <slot name="label" />
+      <span v-if="hasNodeLabel" :id="nodeLabelId"><slot name="label" /></span>
+      <slot v-else name="label" />
     </template>
     <template v-if="slots.description" #description>
       <slot name="description" />
@@ -390,6 +411,7 @@ watch(drillOnStack, (onStack, wasOnStack) => {
       :class="{ 'is-frame': hasRegions }"
       :role="hasRegions ? 'dialog' : 'menu'"
       :aria-label="stringLabel"
+      :aria-labelledby="viewLabelledBy"
       :aria-modal="hasRegions ? 'true' : undefined"
       :hidden="drillIsTop ? undefined : true"
       tabindex="-1"
@@ -401,7 +423,7 @@ watch(drillOnStack, (onStack, wasOnStack) => {
             <div :ref="setHeader" class="astryx-dropdown-menu-region" @keydown="regions.onRegionKeydown">
               <slot name="header" />
             </div>
-            <div :ref="setRegionMenu" class="astryx-dropdown-menu-region-menu" :aria-label="stringLabel" role="menu" tabindex="-1">
+            <div :ref="setRegionMenu" class="astryx-dropdown-menu-region-menu" :aria-label="stringLabel" :aria-labelledby="viewLabelledBy" role="menu" tabindex="-1">
               <DropdownMenuItem :has-close-on-select="false" :label="backLabel" @click="closeFlyout(true)">
                 <template #icon>
                   <Icon color="secondary" icon="chevronLeft" size="sm" />
@@ -434,6 +456,7 @@ watch(drillOnStack, (onStack, wasOnStack) => {
       :class="{ 'is-frame': hasRegions }"
       :role="hasRegions ? 'dialog' : 'menu'"
       :aria-label="stringLabel"
+      :aria-labelledby="viewLabelledBy"
       :aria-modal="hasRegions ? 'true' : undefined"
       :data-overflow="hasOverflow || undefined"
       :style="flyoutStyle"
@@ -448,7 +471,7 @@ watch(drillOnStack, (onStack, wasOnStack) => {
             <div :ref="setHeader" class="astryx-dropdown-menu-region" @keydown="regions.onRegionKeydown">
               <slot name="header" />
             </div>
-            <div :ref="setRegionMenu" class="astryx-dropdown-menu-region-menu" :aria-label="stringLabel" role="menu" tabindex="-1">
+            <div :ref="setRegionMenu" class="astryx-dropdown-menu-region-menu" :aria-label="stringLabel" :aria-labelledby="viewLabelledBy" role="menu" tabindex="-1">
               <slot />
             </div>
             <div :ref="setFooter" class="astryx-dropdown-menu-region" @keydown="regions.onRegionKeydown">

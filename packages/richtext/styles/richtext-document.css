@@ -6,13 +6,46 @@
  * 编辑器和只读视图共用这份样式。
  */
 @layer astryx.components {
-  .astryx-richtext__paragraph,
-  .astryx-richtext__heading,
-  .astryx-richtext__quote,
+  /*
+   * 文档自己的方向，在内容元素所在的位置读出来。文字没定方向的块读这个值而不是继承，
+   * 所以朝另一个方向读的列表或表格改不了它。
+   */
+  .astryx-richtext-editor__content,
+  .astryx-richtext-view__content {
+    --_richtext-document-direction: ltr;
+  }
+
+  .astryx-richtext-editor__content:dir(rtl),
+  .astryx-richtext-view__content:dir(rtl) {
+    --_richtext-document-direction: rtl;
+  }
+
+  /*
+   * 正文块的方向由 BlockDirectionPlugin 按自己的文字写成 `dir`：写了 ltr 或 rtl 的块
+   * 保持浏览器默认，光标、对齐、引用竖线、缩进都跟着文字走。`auto` 或没有 `dir` 的块
+   * （只有数字、标点、图片，或什么都没有）跟着文档，所以空段落的光标留在从右到左文档的起始边。
+   */
+  .astryx-richtext__paragraph:is([dir='auto'], :not([dir])),
+  .astryx-richtext__heading:is([dir='auto'], :not([dir])),
+  .astryx-richtext__quote:is([dir='auto'], :not([dir])),
+  .astryx-richtext__list-item:is([dir='auto'], :not([dir])) {
+    direction: var(--_richtext-document-direction, inherit);
+  }
+
+  /* 容器（列表、代码块、表格和它的各部分）一律取父级的方向，带进来的 `dir` 也改不了列表标记和表格列的次序。 */
   .astryx-richtext__list,
-  .astryx-richtext__code {
-    /* Lexical 给每个顶层块都标 dir="auto"，会按首个强字符决定方向；这里改成跟随外层。 */
+  .astryx-richtext__code,
+  .astryx-richtext__table,
+  .astryx-richtext__table-wrap,
+  .astryx-richtext__table-row,
+  .astryx-richtext__table-cell,
+  .astryx-richtext__table-cell-header {
     direction: inherit;
+  }
+
+  /* 围栏代码块里的每一行各按自己第一个强字符读：希伯来文注释从右往左，`const x = 1;` 的分号仍在末尾。 */
+  .astryx-richtext__code {
+    unicode-bidi: plaintext;
   }
 
   .astryx-richtext__paragraph {
@@ -78,7 +111,9 @@
   .astryx-richtext__list {
     max-width: var(--astryx-richtext-measure, 680px);
     margin-block: var(--astryx-spacing-3, 12px);
-    padding-inline-start: var(--astryx-spacing-6, 24px);
+    /* 缩进放在每一项上，不放在列表上：外置的标记画在项自己的起始边外面，
+       和列表的起始边不是同一侧时，放在列表上的缩进会空出标记不在的那一侧，标记就跑出编辑区。 */
+    padding-inline: 0;
     list-style-position: outside;
   }
 
@@ -96,6 +131,7 @@
   /* 列表项的间距跟 core Markdown 的紧凑列表一致：上下各 4px 内边距，行间 2px。
      Lexical 把嵌套列表放进父项后面单独的一项里，这一项没有标记、不加上内边距。 */
   .astryx-richtext__list-item {
+    margin-inline-start: var(--astryx-spacing-6, 24px);
     margin-block: 0 var(--astryx-spacing-0-5, 2px);
     padding-block: var(--astryx-spacing-1, 4px);
     list-style-type: inherit;
@@ -148,7 +184,8 @@
     display: block;
     box-sizing: border-box;
     width: fit-content;
-    min-width: min(var(--astryx-richtext-measure, 680px), 100%);
+    /* 至少和标题栏自己一样宽：core 的外框也是长到装得下标题栏（CodeBlockHeaderPlugin 把它量出来写在这里）。 */
+    min-width: max(min(var(--astryx-richtext-measure, 680px), 100%), min(var(--_richtext-code-header-inline-size, 0px), 100%));
     max-width: 100%;
     margin-block: var(--astryx-spacing-4, 16px);
     padding: var(--astryx-spacing-3, 12px) var(--astryx-spacing-4, 16px);
@@ -166,10 +203,18 @@
   .astryx-richtext__code:first-child { margin-block-start: 0; }
   .astryx-richtext__code:last-child { margin-block-end: 0; }
 
-  /* 标出了语言的代码块，顶部给标题栏留位置：标题栏上下各 8px 加一个小号控件，再加正文的 12px。
+  /* 标出了语言的代码块，顶部给标题栏留位置：标题栏画出来多高就留多高（CodeBlockHeaderPlugin 把它量出来写在这里，
+     长标签折行时标题栏会变高），再加正文的 12px；还没量出来时按一行算：上下各 8px 加一个小号控件。
      不写进 padding 简写里，是为了让「标题栏占多高」这一件事只在这里出现一次。 */
+  /* 没写语言的代码块没有标题栏，复制按钮在右上角：右边留出和 core CodeBlock 一样宽的一列（8px、小号控件、8px），
+     长行折在按钮左边，不从按钮底下穿过。 */
+  .astryx-richtext__code:not([data-language]),
+  .astryx-richtext__code[data-language='plaintext'] {
+    padding-inline-end: calc(var(--astryx-spacing-4, 16px) + var(--astryx-size-element-sm, 24px) + 2 * var(--astryx-spacing-2, 8px));
+  }
+
   .astryx-richtext__code[data-language]:not([data-language='plaintext']) {
-    padding-block-start: calc(var(--astryx-spacing-2, 8px) + var(--astryx-size-element-sm, 24px) + var(--astryx-spacing-2, 8px) + var(--astryx-spacing-3, 12px));
+    padding-block-start: calc(var(--_richtext-code-header-block-size, calc(2 * var(--astryx-spacing-2, 8px) + var(--astryx-size-element-sm, 24px))) + var(--astryx-spacing-3, 12px));
   }
 
   /* GFM 表格：表头半粗、次要颜色；行线和列线画满每个格子，外沿由表格自己的边框收口；
@@ -234,10 +279,11 @@
 }
 
 @layer astryx.components {
-  /* 任务项：不画列表标记，给勾选框留位置。项的文字从列表边缘往里 28px 开始：
-     core 小号勾选框 20px 加 8px 的间隔，和 core Markdown 的任务列表一致。 */
+  /* 任务项：不画列表标记，给勾选框留位置。项的文字从起始边往里 28px 开始：
+     core 小号勾选框 20px 加 8px 的间隔，和 core Markdown 的任务列表一致。
+     勾选框画在项自己的内边距里，外面不需要留位置。 */
   .astryx-richtext__list-item[data-richtext-task] {
-    margin-inline-start: calc(-1 * var(--astryx-spacing-6, 24px));
+    margin-inline-start: 0;
     padding-inline-start: calc(20px + var(--astryx-spacing-2, 8px));
     list-style-type: none;
   }
@@ -262,11 +308,11 @@
     pointer-events: auto;
   }
 
+  /* 长标签折行并保留自己的空白，标题栏随之变高，和 core CodeBlock 的标题一样。 */
   .astryx-richtext-code-header__title {
     min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
     font-family: var(--astryx-font-family-code, ui-monospace, monospace);
     font-size: var(--astryx-text-supporting-size, 0.75rem);
     font-weight: var(--astryx-font-weight-medium, 500);

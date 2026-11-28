@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import type { InfoTipProps } from './types.js'
 import { computed, onMounted, onUpdated, ref, shallowRef, useAttrs, useTemplateRef } from 'vue'
+import { useTouchHitArea } from '../composables/internal/useTouchHitArea.js'
 import Icon from '../Icon/Icon.vue'
-import { useAstryxMessages } from '../locale/context.js'
+import { useComponentMessages } from '../locale/context.js'
+import { infoTipMessages } from '../locale/messages/info-tip.js'
 import TooltipSurface from '../Tooltip/TooltipSurface.vue'
 import { useTooltip } from '../Tooltip/useTooltip.js'
 import '../../styles/info-tip.css'
@@ -26,13 +28,16 @@ defineSlots<{
   content?: () => unknown
 }>()
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ infoTip: infoTipMessages })
 const attrs = useAttrs()
 const button = useTemplateRef<HTMLButtonElement>('button')
 const element = computed(() => button.value ?? null)
 const anchor = shallowRef<HTMLElement | null>(null)
 
 defineExpose({ element })
+
+// 粗指针下按钮周围长出看不见的点击带，朝 44px 长，碰到邻居就停在一半间距。
+useTouchHitArea(element, true)
 
 // 按压是否钉住了帮助。悬停或聚焦的预览不算钉住。
 const isPinned = ref(false)
@@ -84,7 +89,7 @@ function onClick(event: MouseEvent): void {
     v-bind="attrs"
     ref="button"
     type="button"
-    class="astryx-info-tip"
+    class="astryx-info-tip astryx-touch-hit-area"
     :aria-label="label ?? messages.infoTip.label"
     :aria-expanded="isPinned"
     :aria-controls="isShown ? tooltip.describedBy : undefined"

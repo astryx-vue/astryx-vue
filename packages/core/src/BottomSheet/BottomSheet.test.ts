@@ -6,7 +6,9 @@ import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 import { h } from 'vue'
 import { resetInteractionModalityForTest } from '../composables/internal/interactionModality.js'
 import { pushLayer, resetDismissStackForTests } from '../layer/dismissStack.js'
+import { resetModalOutletsForTests, useActiveModalOutlet } from '../layer/modalOutlet.js'
 import BottomSheet from './BottomSheet.vue'
+import { resetBottomSheetStackForTests } from './stack/bottomSheetStack.js'
 
 enableAutoUnmount(afterEach)
 
@@ -41,6 +43,7 @@ afterEach(() => {
   document.body.innerHTML = ''
   document.body.style.overflow = ''
   resetDismissStackForTests()
+  resetBottomSheetStackForTests()
   resetInteractionModalityForTest()
   vi.restoreAllMocks()
 })
@@ -293,6 +296,23 @@ describe('bottom sheet', () => {
     expect(wrapper.find('.astryx-bottom-sheet').exists()).toBe(false)
   })
 
+  it('keeps the grab bar band clear at the block start whatever the padding', () => {
+    const css = readFileSync(join(process.cwd(), 'packages/core/styles/bottom-sheet.css'), 'utf8')
+    const contentRule = css.slice(css.indexOf('.astryx-bottom-sheet__content {'))
+    expect(contentRule).toContain('--_sheet-grab-band: var(--astryx-spacing-6, 24px)')
+    expect(contentRule).toContain('--_sheet-pad-block-start-past-band: max(calc(var(--_sheet-pad-block-start) - var(--_sheet-grab-band)), 0px)')
+    expect(contentRule).toContain('--container-padding-block-start: var(--_sheet-pad-block-start-past-band)')
+    expect(contentRule).toContain('padding-block: calc(var(--container-padding-block-start) + var(--_sheet-grab-band)) var(--container-padding-block-end)')
+  })
+
+  it('sizes the content box with fit-content and gives the grab bar its own layer for WebKit', () => {
+    const css = readFileSync(join(process.cwd(), 'packages/core/styles/bottom-sheet.css'), 'utf8')
+    const contentRule = css.slice(css.indexOf('.astryx-bottom-sheet__content {'))
+    expect(contentRule.slice(0, contentRule.indexOf('}'))).toContain('min-height: fit-content')
+    const handleRule = css.slice(css.indexOf('.astryx-bottom-sheet__handle {'))
+    expect(handleRule.slice(0, handleRule.indexOf('}'))).toContain('will-change: transform')
+  })
+
   it('maps the padding step to a spacing token and falls back to the theme', async () => {
     const css = readFileSync(join(process.cwd(), 'packages/core/styles/bottom-sheet.css'), 'utf8')
     const contentRule = css.slice(css.indexOf('.astryx-bottom-sheet__content {'))
@@ -301,9 +321,8 @@ describe('bottom sheet', () => {
     expect(contentRule).toContain('var(--astryx-bottom-sheet-padding-inline-start, var(--astryx-bottom-sheet-padding-inline, var(--astryx-bottom-sheet-padding, var(--astryx-spacing-4, 1rem)))')
     expect(contentRule).toContain('var(--astryx-bottom-sheet-padding-block-start, var(--astryx-bottom-sheet-padding, var(--astryx-spacing-4, 1rem)))')
     expect(contentRule).toContain('padding-inline: var(--container-padding-inline-start) var(--container-padding-inline-end)')
-    expect(contentRule).toContain('padding-block: var(--container-padding-block-start) var(--container-padding-block-end)')
     expect(contentRule).toContain('--layout-padding-outer-x: var(--_sheet-pad-inline-start)')
-    expect(contentRule).toContain('--layout-padding-inner-y: var(--_sheet-pad-block-start)')
+    expect(contentRule).toContain('--layout-padding-inner-y: var(--container-padding-block-start)')
     expect(contentRule).toContain('[data-padding=\'1.5\']')
     expect(contentRule).toContain('var(--astryx-spacing-1-5, 6px)')
     expect(contentRule).toContain('[data-padding=\'0\']')
@@ -368,6 +387,23 @@ describe('bottom sheet', () => {
     drag(panelEl().querySelector('.astryx-bottom-sheet__handle') as Element, 100, 650)
     await flushPromises()
 
+    expect(wrapper.emitted('openChange')).toEqual([[false]])
+  })
+
+  it('pulls the sheet down from its content but leaves a gesture inside a hosted dialog to that dialog', async () => {
+    const wrapper = renderSheet({ height: 'tall' }, {
+      default: () => h('div', [h('p', { class: 'plain' }, 'Plain'), h('dialog', { class: 'nested' }, [h('button', { class: 'nested-button' }, 'Inner')])]),
+    })
+    await wrapper.setProps({ isOpen: true })
+    await flushPromises()
+    stubPanelHeight(600)
+
+    drag(panelEl().querySelector('.nested-button') as Element, 100, 700)
+    await flushPromises()
+    expect(wrapper.emitted('openChange')).toBeUndefined()
+
+    drag(panelEl().querySelector('.plain') as Element, 100, 700)
+    await flushPromises()
     expect(wrapper.emitted('openChange')).toEqual([[false]])
   })
 
@@ -498,7 +534,7 @@ describe('bottom sheet', () => {
 
   it('does not drag the sheet while a nested scroller can still move', async () => {
     const wrapper = renderSheet({ height: 'tall' }, {
-      default: () => h('div', { class: 'nested' }, [h('div', { style: 'height: 200px' }, 'tall')]),
+      default: () => h('div', { class: 'nested', style: 'overflow-y: auto' }, [h('div', { style: 'height: 200px' }, 'tall')]),
     })
     await wrapper.setProps({ isOpen: true })
     await flushPromises()
@@ -541,5 +577,37 @@ describe('bottom sheet', () => {
     const panel: DOMWrapper<Element> = wrapper.find('.astryx-bottom-sheet')
     expect(panel.attributes('id')).toBe('sheet-surface')
     expect(dialogEl().getAttribute('id')).toBeNull()
+  })
+})
+
+describe('bottom sheet 作为 toast 的挂载点', () => {
+  afterEach(() => resetModalOutletsForTests())
+
+  it('带遮罩的模态抽屉打开期间是挂载点，关闭后撤销', async () => {
+    const active = useActiveModalOutlet()
+    const wrapper = renderSheet()
+    expect(active.value).toBeNull()
+
+    await wrapper.setProps({ isOpen: true })
+    expect(active.value).toBe(dialogEl())
+
+    await wrapper.setProps({ isOpen: false })
+    expect(active.value).toBeNull()
+  })
+
+  it('没有遮罩的非模态抽屉不登记', async () => {
+    const active = useActiveModalOutlet()
+    const wrapper = renderSheet({ hasScrim: false })
+    await wrapper.setProps({ isOpen: true })
+    expect(active.value).toBeNull()
+  })
+
+  it('打开着就被卸载时撤销登记', async () => {
+    const active = useActiveModalOutlet()
+    const wrapper = renderSheet({ isOpen: true })
+    await flushPromises()
+    expect(active.value).not.toBeNull()
+    wrapper.unmount()
+    expect(active.value).toBeNull()
   })
 })

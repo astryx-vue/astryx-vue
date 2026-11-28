@@ -1,0 +1,8 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  /* 盖在底部弹层上的确认框：两个大号按钮占满整行。 */
+  .astryx-sheet-confirmation__action {
+    width: 100%;
+  }
+}

@@ -2,7 +2,7 @@ import type { MenuPressOptions } from './useMenuPress.js'
 import { mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { defineComponent, h, ref } from 'vue'
-import { MENU_PRESS_SETTLE_MS, resetMenuPress, useMenuPress } from './useMenuPress.js'
+import { MENU_PRESS_LIT_ATTRIBUTE, MENU_PRESS_SETTLE_MS, resetMenuPress, useMenuPress } from './useMenuPress.js'
 
 interface HarnessOptions extends Partial<MenuPressOptions> {
   onSelect?: (label: string) => void
@@ -110,6 +110,47 @@ describe('useMenuPress：菜单里的跟踪', () => {
     expect(onSelect).not.toHaveBeenCalled()
   })
 
+  it('指针点亮的行拿到焦点但不匹配 :focus-visible', () => {
+    mounted = mountHarness()
+    const focus = vi.spyOn(mounted.el('B'), 'focus')
+    pointer(mounted.el('A'), 'pointerdown', { pointerType: 'mouse' })
+    pointer(mounted.el('B'), 'pointermove', { pointerType: 'mouse' })
+    expect(focus).toHaveBeenCalledWith({ preventScroll: true, focusVisible: false })
+  })
+
+  it('手指或笔按住时点亮的行带「按下」标记，换行、松开后清掉；鼠标不带', () => {
+    mounted = mountHarness()
+    pointer(mounted.el('A'), 'pointerdown')
+    expect(mounted.el('A').hasAttribute(MENU_PRESS_LIT_ATTRIBUTE)).toBe(true)
+    pointer(mounted.el('B'), 'pointermove')
+    expect(mounted.el('A').hasAttribute(MENU_PRESS_LIT_ATTRIBUTE)).toBe(false)
+    expect(mounted.el('B').hasAttribute(MENU_PRESS_LIT_ATTRIBUTE)).toBe(true)
+    pointer(mounted.el('B'), 'pointerup')
+    expect(mounted.el('B').hasAttribute(MENU_PRESS_LIT_ATTRIBUTE)).toBe(false)
+
+    pointer(mounted.el('A'), 'pointerdown', { pointerId: 2, pointerType: 'mouse' })
+    expect(mounted.el('A').hasAttribute(MENU_PRESS_LIT_ATTRIBUTE)).toBe(false)
+  })
+
+  it('菜单在 shadow root 里时，在菜单自己的根上做命中测试', () => {
+    const onSelect = vi.fn()
+    mounted = mountHarness({ onSelect })
+    const menu = mounted.el('A').parentElement!
+    const outside = mounted.el('outside')
+    const row = mounted.el('C')
+    Object.defineProperty(menu, 'getRootNode', { configurable: true, value: () => ({ elementFromPoint: () => row }) })
+    Object.defineProperty(document, 'elementFromPoint', { configurable: true, value: () => outside })
+    try {
+      pointer(mounted.el('A'), 'pointerdown', { pointerType: 'mouse' })
+      pointer(mounted.el('A'), 'pointerup', { pointerType: 'mouse' })
+      expect(onSelect).toHaveBeenCalledTimes(1)
+      expect(onSelect).toHaveBeenCalledWith('C')
+    }
+    finally {
+      delete (document as { elementFromPoint?: unknown }).elementFromPoint
+    }
+  })
+
   it('传了 onHighlight 就交给它，不动焦点', () => {
     const onHighlight = vi.fn()
     mounted = mountHarness({ onHighlight })
@@ -164,6 +205,43 @@ describe('useMenuPress：一次手势只执行一次', () => {
     vi.advanceTimersByTime(400)
     mounted.el('B').dispatchEvent(new MouseEvent('click', { bubbles: true, detail: 1 }))
     expect(onSelect).toHaveBeenLastCalledWith('B')
+  })
+})
+
+function touchEvent(target: EventTarget, type: string, identifiers: number[], cancelable = true): Event {
+  const event = new Event(type, { bubbles: true, cancelable })
+  Object.defineProperty(event, 'changedTouches', { value: identifiers.map(identifier => ({ identifier })) })
+  target.dispatchEvent(event)
+  return event
+}
+
+describe('useMenuPress：取消挑选那根手指的 touchend', () => {
+  it('手指松开挑中一行后，它的 touchend 被取消，之后没有按压对应的 click 照常放行', () => {
+    const onSelect = vi.fn()
+    mounted = mountHarness({ onSelect })
+    pointer(mounted.el('A'), 'pointerdown', { pointerId: 7 })
+    touchEvent(mounted.el('A'), 'touchstart', [7])
+    pointer(mounted.el('A'), 'pointerup', { pointerId: 7 })
+    expect(touchEvent(mounted.el('A'), 'touchend', [7]).defaultPrevented).toBe(true)
+    onSelect.mockClear()
+    mounted.el('B').dispatchEvent(new MouseEvent('click', { bubbles: true, detail: 1 }))
+    expect(onSelect).toHaveBeenCalledWith('B')
+  })
+
+  it('别的手指的 touchend 和浏览器当作滚动的 touchend 不碰', () => {
+    mounted = mountHarness()
+    pointer(mounted.el('A'), 'pointerdown', { pointerId: 7 })
+    touchEvent(mounted.el('A'), 'touchstart', [7])
+    pointer(mounted.el('A'), 'pointerup', { pointerId: 7 })
+    expect(touchEvent(mounted.el('A'), 'touchend', [9]).defaultPrevented).toBe(false)
+    expect(touchEvent(mounted.el('A'), 'touchend', [7], false).defaultPrevented).toBe(false)
+  })
+
+  it('鼠标松开不取消 touchend', () => {
+    mounted = mountHarness()
+    pointer(mounted.el('A'), 'pointerdown', { pointerType: 'mouse' })
+    pointer(mounted.el('A'), 'pointerup', { pointerType: 'mouse' })
+    expect(touchEvent(mounted.el('A'), 'touchend', [1]).defaultPrevented).toBe(false)
   })
 })
 

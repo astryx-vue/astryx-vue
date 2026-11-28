@@ -2,11 +2,13 @@
 import type { DropdownMenuSize } from '../DropdownMenu/types.js'
 import type { BreadcrumbItemProps } from './types.js'
 import { computed, onMounted, onScopeDispose, toRaw, useId, useTemplateRef, watch } from 'vue'
+import { hasSlotContent } from '../composables/internal/slotContent.js'
 import { useDevWarning } from '../composables/useDevWarning.js'
 import DropdownMenu from '../DropdownMenu/DropdownMenu.vue'
 import Icon from '../Icon/Icon.vue'
 import { readLayerScoped } from '../layer/scopedProvide.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
+import { useCloseMobileDrawer } from '../MobileNav/closeOnActivate.js'
 import { isNavigableHref } from '../NavItem/link.js'
 import { breadcrumbContextKey } from './context.js'
 
@@ -27,6 +29,7 @@ const slots = defineSlots<{
 }>()
 
 const context = readLayerScoped(breadcrumbContextKey)
+const closeMobileDrawer = useCloseMobileDrawer()
 const linkComponent = useLinkComponent()
 const itemId = useId()
 const variant = computed(() => context?.variant.value ?? 'default')
@@ -73,6 +76,7 @@ function handleClick(event: MouseEvent) {
     return
   }
   emit('click', event)
+  closeMobileDrawer()
 }
 </script>
 
@@ -99,7 +103,7 @@ function handleClick(event: MouseEvent) {
           v-bind="triggerProps"
           :aria-current="showsCurrent ? 'page' : undefined"
         >
-          <span v-if="$slots.startIcon" class="astryx-breadcrumb-item__icon">
+          <span v-if="hasSlotContent($slots.startIcon)" class="astryx-breadcrumb-item__icon">
             <slot name="startIcon" />
           </span>
           <slot />
@@ -116,7 +120,7 @@ function handleClick(event: MouseEvent) {
       :aria-current="showsCurrent ? 'page' : undefined"
       @click="handleClick"
     >
-      <span v-if="$slots.startIcon" class="astryx-breadcrumb-item__icon">
+      <span v-if="hasSlotContent($slots.startIcon)" class="astryx-breadcrumb-item__icon">
         <slot name="startIcon" />
       </span>
       <slot />
@@ -128,7 +132,7 @@ function handleClick(event: MouseEvent) {
       :aria-current="showsCurrent ? 'page' : undefined"
       @click="handleClick"
     >
-      <span v-if="$slots.startIcon" class="astryx-breadcrumb-item__icon">
+      <span v-if="hasSlotContent($slots.startIcon)" class="astryx-breadcrumb-item__icon">
         <slot name="startIcon" />
       </span>
       <slot />
@@ -138,7 +142,7 @@ function handleClick(event: MouseEvent) {
       :class="contentClasses"
       aria-current="page"
     >
-      <span v-if="$slots.startIcon" class="astryx-breadcrumb-item__icon">
+      <span v-if="hasSlotContent($slots.startIcon)" class="astryx-breadcrumb-item__icon">
         <slot name="startIcon" />
       </span>
       <slot />

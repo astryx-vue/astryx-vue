@@ -47,13 +47,13 @@ footer: false
         <td><code>collapsible</code></td>
         <td><code>boolean</code></td>
         <td><code>false</code></td>
-        <td>拖到收起阈值以下时，是否把区域收成 0。</td>
+        <td>松手或按键一步落在收起阈值以下时，是否把区域收成 0。</td>
       </tr>
       <tr>
         <td><code>collapsedSize</code></td>
         <td><code>number</code></td>
         <td><code>40</code></td>
-        <td>可收起的区域低于这个像素阈值就吸到 0。</td>
+        <td>松手或按键一步低于这个像素阈值时收起区域。拖动途中区域停在最小尺寸，朝收起方向快速一甩也会收起。</td>
       </tr>
       <tr>
         <td><code>snaps</code></td>
@@ -77,7 +77,7 @@ footer: false
         <td><code>isCollapsed</code></td>
         <td><code>boolean</code></td>
         <td>—</td>
-        <td>受控的收起状态。传了它，<code>collapse()</code>、<code>expand()</code> 和拖过阈值都不再自己改状态，而是通过 <code>onCollapseChange</code> 报给你。</td>
+        <td>受控的收起状态。传了它，<code>collapse()</code>、<code>expand()</code>、松手或按键越过阈值、拖动重新打开区域，都不再自己改状态，而是通过 <code>onCollapseChange</code> 报给你。</td>
       </tr>
       <tr>
         <td><code>onSizeChange</code></td>
@@ -89,7 +89,7 @@ footer: false
         <td><code>onCollapseChange</code></td>
         <td><code>(isCollapsed: boolean) =&gt; void</code></td>
         <td>—</td>
-        <td>收起状态每变一次调用一次，拖动或代码触发都算。</td>
+        <td>收起状态每变一次调用一次：松手或按键把区域收起、拖动或按键把它打开、Enter、双击，或调用 <code>collapse()</code>、<code>expand()</code>、<code>resize()</code>，都算。</td>
       </tr>
     </tbody>
   </table>

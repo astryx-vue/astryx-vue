@@ -9,7 +9,7 @@ footer: false
 
 <div class="component-api-table" role="region" aria-label="DateRangeInput 属性" tabindex="0">
 <table><thead><tr><th>名称</th><th>类型</th><th>默认值</th><th>说明</th></tr></thead><tbody>
-<tr><td><code>v-model</code></td><td><code>DateRange | null</code></td><td><code>null</code></td><td><code>{ start, end }</code>，ISO 日期。</td></tr>
+<tr><td><code>v-model</code></td><td><code>DateRange | null</code></td><td><code>null</code></td><td><code>{ start, end }</code>，ISO 日期字符串。传 <code>Date</code> 对象会在开发期抛出点明属性的错误。</td></tr>
 <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>必填。无障碍名称。</td></tr>
 <tr><td><code>presets</code></td><td><code>{ label, getRange }[]</code></td><td>—</td><td>快捷按钮。<code>getRange</code> 返回区间。</td></tr>
 <tr><td><code>monthCount</code></td><td><code>number</code></td><td><code>2</code></td><td>弹出层显示几个月。</td></tr>
@@ -19,6 +19,7 @@ footer: false
 <tr><td><code>minRangeSpan</code></td><td><code>number</code></td><td><code>1</code></td><td>最短天数，包含两端。</td></tr>
 <tr><td><code>maxRangeSpan</code></td><td><code>number</code></td><td>—</td><td>最长天数，包含两端。</td></tr>
 <tr><td><code>weekStartsOn</code></td><td><code>0-6 | 'sun' | 'mon' | ...</code></td><td>周日，zh-CN 为周一</td><td>日历的第一列。</td></tr>
+<tr><td><code>calendar</code></td><td><code>CalendarSystem</code></td><td>跟随 provider</td><td>按哪种历法排月份和写范围。不传时跟随最近的 <code>InternationalizationProvider</code>。范围始终是公历 ISO 日期。见<a href="/guide/calendars">历法</a>。</td></tr>
 <tr><td><code>hasClear</code></td><td><code>boolean</code></td><td><code>true</code></td><td>显示清除按钮。键盘激活清除时，焦点回到触发按钮，并避免页面滚动。</td></tr>
 <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>视觉上隐藏标签，读屏仍然读得到。旧名 <code>labelHidden</code> 同样可用，两者任一为真就隐藏。演练场里写 <code>is-label-hidden</code>。</td></tr>
 <tr><td><code>containerClass</code></td><td><code>string | object | array</code></td><td>—</td><td>加到字段外壳的 class。在 InputGroup 和横向标签的 FormLayout 里没有外壳，此时不生效，开发环境会警告。</td></tr>

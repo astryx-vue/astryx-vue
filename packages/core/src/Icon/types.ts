@@ -1,4 +1,5 @@
 import type { Component, VNodeChild } from 'vue'
+import type { IconVariant } from './themeIcons.js'
 
 /**
  * Icon sizes are expressed in `rem` so they scale with the root font-size.
@@ -14,6 +15,7 @@ export interface IconColorMap {
   error: true
   gray: true
   green: true
+  info: true
   inherit: true
   orange: true
   pink: true
@@ -148,6 +150,17 @@ export interface IconProps {
    * supplied by an owning astryx-vue component, then falls back to `md`.
    */
   size?: IconSize
+  /**
+   * Requests the nearest theme's alternate artwork for a semantic name, such
+   * as `filled`. Names come from the augmentable `IconVariantMap`.
+   *
+   * A theme's function entry receives the variant only when the theme lists
+   * it in `iconVariants` and, for an inherited entry, the theme that defined
+   * the entry lists it too. Otherwise the entry draws its normal artwork.
+   * `name`, a CSS class, a component, and the default slot ignore it, and it
+   * is never written to the DOM.
+   */
+  variant?: IconVariant
   /**
    * Accessible name for the icon.
    *

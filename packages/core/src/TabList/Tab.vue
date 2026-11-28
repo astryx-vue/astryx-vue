@@ -9,6 +9,7 @@ import {
   watch,
 } from 'vue'
 
+import { hasSlotContent } from '../composables/internal/slotContent.js'
 import { useDevWarning } from '../composables/useDevWarning.js'
 import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
@@ -23,7 +24,7 @@ const props = withDefaults(defineProps<TabProps>(), {
   isLabelHidden: false,
 })
 
-defineSlots<TabSlots>()
+const slots = defineSlots<TabSlots>()
 
 const context = useTabListContext()
 const linkComponent = useLinkComponent()
@@ -31,6 +32,10 @@ const rootRef = ref<HTMLElement>()
 
 const isTabsPattern = computed(() => context.isTabsPattern.value)
 const isSelected = computed(() => context.value.value === props.value)
+// 选中时用 selectedIcon，它没画出内容就退回 icon。在渲染时判断。
+function iconSlot(): 'selectedIcon' | 'icon' {
+  return isSelected.value && hasSlotContent(slots.selectedIcon) ? 'selectedIcon' : 'icon'
+}
 const tabIndex = computed(() => (isSelected.value && !props.disabled ? 0 : -1))
 const { pressableProps } = usePressFeedback({ hasOverlay: false })
 const isLink = computed(() =>
@@ -132,18 +137,11 @@ watch(() => props.disabled, (disabled) => {
     @keydown="handleKeydown"
   >
     <span
-      v-if="$slots.icon || $slots.selectedIcon"
+      v-if="hasSlotContent($slots[iconSlot()])"
       class="astryx-tab__icon"
       aria-hidden="true"
     >
-      <slot
-        v-if="isSelected && $slots.selectedIcon"
-        name="selectedIcon"
-      />
-      <slot
-        v-else
-        name="icon"
-      />
+      <slot :name="iconSlot()" />
     </span>
     <span
       class="astryx-tab__label"
@@ -157,10 +155,11 @@ watch(() => props.disabled, (disabled) => {
       ><slot>{{ label }}</slot></span>
     </span>
     <span
-      v-if="$slots.endContent"
+      v-if="hasSlotContent($slots.endContent)"
       class="astryx-tab__end"
     >
       <slot name="endContent" />
     </span>
+    <span v-if="isSelected" class="astryx-tab__indicator astryx-tab-indicator" aria-hidden="true" />
   </component>
 </template>

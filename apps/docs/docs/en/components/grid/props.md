@@ -17,7 +17,7 @@ footer: false
         <td><code>columns</code></td>
         <td><code>number | GridResponsiveColumns</code></td>
         <td>-</td>
-        <td>Column configuration. A number is a fixed count of equal-width columns; an object <code>{ minWidth, max?, repeat? }</code> creates responsive columns that reflow with the available width. A missing, zero, or negative value falls back to a single column.</td>
+        <td>Column configuration. A number is a fixed count of <code>1fr</code> tracks (a child's minimum content can widen its track); an object <code>{ minWidth, max?, repeat? }</code> creates responsive columns that reflow with the available width. A missing, zero, or negative value falls back to a single column.</td>
       </tr>
       <tr>
         <td><code>width</code></td>
@@ -70,14 +70,14 @@ footer: false
       <tr>
         <td><code>align</code></td>
         <td><code>GridAlignment</code></td>
-        <td><code>'stretch'</code></td>
-        <td>Vertical alignment of items inside their row (<code>align-items</code>): start, center, end, or stretch.</td>
+        <td>-</td>
+        <td>Vertical alignment of items inside their row (<code>align-items</code>): start, center, end, or stretch. Unset leaves the browser default, <code>normal</code>, which stretches items that have no natural size or aspect ratio.</td>
       </tr>
       <tr>
         <td><code>justify</code></td>
         <td><code>GridAlignment</code></td>
-        <td><code>'stretch'</code></td>
-        <td>Horizontal alignment of items within their row (<code>justify-items</code>): start, center, end, or stretch.</td>
+        <td>-</td>
+        <td>Horizontal alignment of items within their row (<code>justify-items</code>): start, center, end, or stretch. Unset leaves the browser default, <code>normal</code>, which stretches items that have no natural size or aspect ratio.</td>
       </tr>
     </tbody>
   </table>
@@ -92,6 +92,8 @@ interface GridResponsiveColumns {
   repeat?: 'fill' | 'fit'
 }
 ```
+
+In a container narrower than `minWidth`, the single column shrinks to the container width instead of overflowing it.
 
 `SpacingStep` accepts these values:
 
@@ -111,7 +113,7 @@ type SpacingStep = 0 | 0.5 | 1 | 1.5 | 2 | 3 | 4 | 5 | 6 | 8 | 10
         <td><code>columns</code></td>
         <td><code>number | 'full'</code></td>
         <td>-</td>
-        <td>Columns to span. <code>'full'</code> renders <code>grid-column: 1 / -1</code>, which spans the row whatever the column count is.</td>
+        <td>Columns to span. <code>'full'</code> renders <code>grid-column: 1 / -1</code>, which spans all explicit columns whatever the column count is.</td>
       </tr>
       <tr>
         <td><code>rows</code></td>

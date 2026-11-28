@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { NavHeadingMenuItemEmits, NavHeadingMenuItemProps, NavHeadingMenuItemSlots } from './types.js'
 import { computed, inject, toRaw } from 'vue'
+import { hasSlotContent } from '../composables/internal/slotContent.js'
 import { readLayerScoped } from '../layer/scopedProvide.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
 import { isNavigableHref } from '../NavItem/link.js'
@@ -58,13 +59,13 @@ function onClick(event: MouseEvent): void {
     :tabindex="isDisabled ? undefined : -1"
     @click="onClick"
   >
-    <span v-if="iconClass || $slots.icon" class="astryx-nav-menu-item__icon" aria-hidden="true">
+    <span v-if="iconClass || hasSlotContent($slots.icon)" class="astryx-nav-menu-item__icon" aria-hidden="true">
       <slot name="icon">
         <span v-if="iconClass" class="astryx-nav-menu-item__glyph" :class="iconClass" />
       </slot>
     </span>
     <span class="astryx-nav-menu-item__text">
-      <span v-if="$slots.default" class="astryx-nav-menu-item__label">
+      <span v-if="hasSlotContent($slots.default)" class="astryx-nav-menu-item__label">
         <slot />
       </span>
       <span v-else class="astryx-nav-menu-item__label">{{ label }}</span>

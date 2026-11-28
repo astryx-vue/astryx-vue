@@ -29,7 +29,19 @@ footer: false
         <td><code>options.resetAfterMs</code></td>
         <td><code>number</code></td>
         <td><code>2000</code></td>
-        <td>Milliseconds <code>isCopied</code> stays true after a successful copy before reverting.</td>
+        <td>Milliseconds <code>isCopied</code> or <code>isFailed</code> stays true after a copy before reverting.</td>
+      </tr>
+      <tr>
+        <td><code>options.announceFailure</code></td>
+        <td><code>string</code></td>
+        <td>—</td>
+        <td>Message announced to the assertive live region when the copy fails, because a failure is an error. Accepts a ref or getter. Omit to skip the announcement.</td>
+      </tr>
+      <tr>
+        <td><code>options.onError</code></td>
+        <td><code>(error: unknown) =&gt; void</code></td>
+        <td>—</td>
+        <td>Called once with the rejection when the clipboard write fails. The error itself is never shown.</td>
       </tr>
     </tbody>
   </table>
@@ -46,7 +58,12 @@ footer: false
       <tr>
         <td><code>copy</code></td>
         <td><code>(text: string) =&gt; Promise&lt;boolean&gt;</code></td>
-        <td>Writes <code>text</code> to the clipboard. On success flips <code>isCopied</code> to true, announces the configured message, restarts the reset timer, and resolves true. A clipboard rejection is a silent no-op that leaves the copied state unchanged and resolves false.</td>
+        <td>Writes <code>text</code> to the clipboard. On success flips <code>isCopied</code> to true, announces the configured message, restarts the reset timer, and resolves true. Where the frame refuses the async Clipboard API (a sandboxed viewer or an embed), or the browser refuses the write, the text is copied with the browser copy command inside the reader's click or key press, without moving focus. A failed write flips <code>isFailed</code> to true, announces the failure message, restarts the reset timer, and resolves false.</td>
+      </tr>
+      <tr>
+        <td><code>isFailed</code></td>
+        <td><code>Ref&lt;boolean&gt;</code></td>
+        <td>True for <code>resetAfterMs</code> after a failed copy. The next copy clears it.</td>
       </tr>
       <tr>
         <td><code>isCopied</code></td>

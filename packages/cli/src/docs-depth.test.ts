@@ -59,7 +59,7 @@ describe('docs --depth', () => {
     expect(data.depth).toBe(2)
     expect(data.body).not.toContain('### UnoCSS')
     expect(data.body).toContain('## Using CSS Modules or plain CSS')
-    expect(data.headings).toEqual(['Using Tailwind or UnoCSS alongside', 'Using CSS Modules or plain CSS'])
+    expect(data.headings).toEqual(['Rules for your own styles', 'Using Tailwind or UnoCSS alongside', 'Using CSS Modules or plain CSS'])
 
     const text = await runCli(['docs', 'guide/styling', '--depth', '2'])
     expect(text.stdout).not.toContain('### UnoCSS')

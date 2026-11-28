@@ -4,7 +4,8 @@ import { computed, ref, watch } from 'vue'
 import Button from '../Button/Button.vue'
 import DateInput from '../DateInput/DateInput.vue'
 import Icon from '../Icon/Icon.vue'
-import { useAstryxMessages } from '../locale/context.js'
+import { useComponentMessages } from '../locale/context.js'
+import { tableMessages } from '../locale/messages/table.js'
 import MultiSelector from '../MultiSelector/MultiSelector.vue'
 import NumberInput from '../NumberInput/NumberInput.vue'
 import Popover from '../Popover/Popover.vue'
@@ -15,7 +16,7 @@ const props = defineProps<{
   filter: TableFilterContribution
 }>()
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ table: tableMessages })
 const draft = ref<TableFilterValue | null>(props.filter.value)
 const isCompact = computed(() => props.filter.variant === 'inline-compact')
 /** 有生效的筛选值时漏斗用强调色，一眼看出这一列被筛过。 */

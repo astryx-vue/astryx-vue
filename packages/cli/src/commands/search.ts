@@ -32,6 +32,8 @@ export function searchCommand(args: CommandArgs): string {
         ...(result.import ? { import: result.import } : {}),
         title: result.title,
         docsUrl: result.docsUrl,
+        ...(result.isReady === undefined ? {} : { isReady: result.isReady }),
+        ...(result.deprecated ? { deprecated: result.deprecated } : {}),
       })),
     }))
   }

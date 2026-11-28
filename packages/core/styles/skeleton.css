@@ -1,13 +1,70 @@
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 
 @layer astryx.components {
+  /* 脉动从 0.25 分十级升到 0.925 再倒放回来（alternate）。十级写成「停住加 0.01% 的斜坡」，
+     配线性时间函数，而不是 steps()：WebKit 从不把 steps() 动画放到合成器上，
+     Safari 会在主线程重绘、脚本一跑就卡住。这样每个引擎都能离开主线程动画，
+     同一时刻取到同样的值。 */
   @keyframes astryx-skeleton-fade {
-    from {
+    0% {
       opacity: 0.25;
     }
-
-    to {
-      opacity: 1;
+    9.99% {
+      opacity: 0.25;
+    }
+    10% {
+      opacity: 0.325;
+    }
+    19.99% {
+      opacity: 0.325;
+    }
+    20% {
+      opacity: 0.4;
+    }
+    29.99% {
+      opacity: 0.4;
+    }
+    30% {
+      opacity: 0.475;
+    }
+    39.99% {
+      opacity: 0.475;
+    }
+    40% {
+      opacity: 0.55;
+    }
+    49.99% {
+      opacity: 0.55;
+    }
+    50% {
+      opacity: 0.625;
+    }
+    59.99% {
+      opacity: 0.625;
+    }
+    60% {
+      opacity: 0.7;
+    }
+    69.99% {
+      opacity: 0.7;
+    }
+    70% {
+      opacity: 0.775;
+    }
+    79.99% {
+      opacity: 0.775;
+    }
+    80% {
+      opacity: 0.85;
+    }
+    89.99% {
+      opacity: 0.85;
+    }
+    90% {
+      opacity: 0.925;
+    }
+    100% {
+      opacity: 0.925;
     }
   }
 
@@ -17,7 +74,7 @@
     opacity: 0.25;
     animation-name: astryx-skeleton-fade;
     animation-duration: var(--astryx-duration-medium-max, 550ms);
-    animation-timing-function: steps(10, end);
+    animation-timing-function: linear;
     animation-iteration-count: infinite;
     animation-direction: alternate;
   }

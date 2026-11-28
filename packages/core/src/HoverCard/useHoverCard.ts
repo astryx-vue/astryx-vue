@@ -2,10 +2,11 @@ import type { ComputedRef, CSSProperties, MaybeRefOrGetter, Ref } from 'vue'
 import type { LayerPlacement } from '../layer/position.js'
 import type { HoverCardAlignment, HoverCardFocusTrigger, HoverCardPlacement, HoverCardTouchTrigger } from './types.js'
 import { computed, onMounted, onScopeDispose, shallowRef, toValue, watch } from 'vue'
+import { useTouchTriggerInternal } from '../composables/internal/useTouchTriggerInternal.js'
 import { useLayer } from '../composables/useLayer.js'
-import { isFocusable } from '../layer/focus.js'
 import { useHoverLayerDismiss } from '../layer/useHoverLayerDismiss.js'
-import { isActionTrigger, supportsAriaExpanded } from './hoverCardTrigger.js'
+import { createFocusGate } from '../Tooltip/tooltipFocusRules.js'
+import { supportsAriaExpanded } from './hoverCardTrigger.js'
 import { useHoverCardTriggerBinding } from './hoverCardTriggerBinding.js'
 
 export interface UseHoverCardOptions {
@@ -92,7 +93,6 @@ export interface UseHoverCardReturn {
 }
 
 const GAP = 4
-const TOUCH_POINTER_TYPES = new Set(['touch', 'pen'])
 
 /**
  * 对应原版 Astryx 的 `hooks/useHoverCard`：悬停触发的浮层卡片。
@@ -127,24 +127,30 @@ export function useHoverCard(options: UseHoverCardOptions = {}): UseHoverCardRet
     return toValue(options.isEnabled) ?? true
   }
 
-  // 轻点会把焦点留在被点的触发器上，鼠标点一下也不该让下一次键盘聚焦被当成触摸场景，
-  // 所以这里同时看指针类型和最近的输入方式。
-  let lastModality: 'keyboard' | 'pointer' = 'keyboard'
-  let isTouchPointer = false
   let isHoveringContent = false
   let isEscapeDismissing = false
   let showTimer: ReturnType<typeof setTimeout> | undefined
   let hideTimer: ReturnType<typeof setTimeout> | undefined
 
-  function onModalityPointerDown(): void {
-    lastModality = 'pointer'
-  }
+  const hoverDismiss = useHoverLayerDismiss({
+    isPresent: () => isOpen.value,
+    getContainer: () => layer.contentRef.value,
+    onDismiss: dismissFromEscape,
+  })
 
-  function onModalityKeyDown(event: KeyboardEvent): void {
-    if (event.metaKey || event.altKey || event.ctrlKey)
-      return
-    lastModality = 'keyboard'
-  }
+  const touch = useTouchTriggerInternal({
+    touchTrigger: () => toValue(options.touchTrigger) ?? 'auto',
+    isEnabled,
+    isControlled,
+    isOpen,
+    layerId: layer.id,
+    triggerRef,
+    show: showNow,
+    hide: hideNow,
+  }, {
+    // 上面还有别的浮层时，这一下属于那一层，不要把卡片一起关掉。
+    isOutsidePressIgnored: () => !hoverDismiss.isTop(),
+  })
 
   function clearTimers(): void {
     clearTimeout(showTimer)
@@ -189,49 +195,40 @@ export function useHoverCard(options: UseHoverCardOptions = {}): UseHoverCardRet
     }, toValue(options.hideDelay) ?? 200)
   }
 
-  function onPointerEnter(event: PointerEvent): void {
-    isTouchPointer = event.pointerType === 'touch'
-  }
-
   function onMouseEnter(): void {
-    if (isTouchPointer)
+    if (touch.isTouchPointer.value)
       return
     scheduleShow()
   }
 
   function onMouseLeave(): void {
-    if (isTouchPointer)
+    if (touch.isTouchPointer.value)
       return
     scheduleHide()
   }
 
   function onPointerDown(event: PointerEvent): void {
-    const isTouch = TOUCH_POINTER_TYPES.has(event.pointerType)
-    isTouchPointer = isTouch
-    if (!isTouch || isControlled.value)
-      return
-
-    const trigger = triggerRef.value
-    const mode = toValue(options.touchTrigger) ?? 'auto'
-    const resolved = mode === 'auto'
-      ? (trigger != null && isActionTrigger(trigger) ? 'none' : 'tap')
-      : mode
-
-    if (resolved === 'none' || !isEnabled()) {
-      hideNow()
-      return
-    }
-
-    if (isOpen.value)
-      hideNow()
-    else
-      showNow()
+    // 笔在感应范围内就开始了悬停的延时打开，落笔时若还挂着，卡片会在按下期间打开，
+    // 随后这一下轻点又把它关掉。落笔按触屏处理，先取消挂着的打开。
+    if (touch.handlePointerDown(event))
+      clearTimeout(showTimer)
   }
 
-  function onFocusIn(): void {
+  const focusGate = createFocusGate(() => toValue(options.focusTrigger) ?? 'auto')
+
+  function onFocusIn(event: FocusEvent): void {
+    // 焦点到达时才判断这次算不算触发器的焦点：漫游 tabindex 的成员挂监听时可能是 -1，
+    // 轮到它时已经是 Tab 停靠点了。
+    if (!focusGate.arrive(triggerRef.value, event.target))
+      return
     if (!isEnabled())
       return
-    if (isTouchPointer && lastModality === 'pointer')
+    // 受控且为 false 时由调用方做主，任何焦点都不打开卡片。
+    if (toValue(options.isOpen) === false)
+      return
+    // 轻点把焦点留在触发器上，关掉的对话框把焦点还回来时用户也可能正在用软键盘打字，
+    // 这些都还是触屏场景，焦点不开卡片。
+    if (touch.isTouchInteraction())
       return
     if (isEscapeDismissing) {
       isEscapeDismissing = false
@@ -244,18 +241,20 @@ export function useHoverCard(options: UseHoverCardOptions = {}): UseHoverCardRet
     const related = event.relatedTarget as HTMLElement | null
     if (related && layer.contentRef.value?.contains(related))
       return
+    if (!focusGate.leave(triggerRef.value, event.target))
+      return
     scheduleHide()
   }
 
   function onContentMouseEnter(): void {
-    if (isTouchPointer)
+    if (touch.isTouchPointer.value)
       return
     isHoveringContent = true
     clearTimers()
   }
 
   function onContentMouseLeave(): void {
-    if (isTouchPointer)
+    if (touch.isTouchPointer.value)
       return
     isHoveringContent = false
     scheduleHide()
@@ -283,27 +282,8 @@ export function useHoverCard(options: UseHoverCardOptions = {}): UseHoverCardRet
     }
   }
 
-  const hoverDismiss = useHoverLayerDismiss({
-    isPresent: () => isOpen.value,
-    getContainer: () => layer.contentRef.value,
-    onDismiss: dismissFromEscape,
-  })
-
-  function onDocumentPointerDown(event: PointerEvent): void {
-    // 上面还有别的浮层时，这一下属于那一层，不要把卡片一起关掉。
-    if (!hoverDismiss.isTop())
-      return
-    if (!TOUCH_POINTER_TYPES.has(event.pointerType) || !isOpen.value || isControlled.value)
-      return
-    const target = event.target as Node
-    if (triggerRef.value?.contains(target) || layer.contentRef.value?.contains(target))
-      return
-    hideNow()
-  }
-
-  function shouldListenFocus(element: HTMLElement): boolean {
-    const mode = toValue(options.focusTrigger) ?? 'auto'
-    return mode === 'always' || (mode === 'auto' && isFocusable(element))
+  function shouldListenFocus(): boolean {
+    return (toValue(options.focusTrigger) ?? 'auto') !== 'never'
   }
 
   const { bind, unbind, applyTriggerAttributes } = useHoverCardTriggerBinding({
@@ -313,7 +293,7 @@ export function useHoverCard(options: UseHoverCardOptions = {}): UseHoverCardRet
     layerId: layer.id,
     supportsExpanded: supportsAriaExpanded,
     shouldListenFocus,
-    handlers: { onPointerEnter, onMouseEnter, onMouseLeave, onPointerDown, onFocusIn, onFocusOut },
+    handlers: { onPointerEnter: touch.handlePointerEnter, onMouseEnter, onMouseLeave, onPointerDown, onFocusIn, onFocusOut },
   })
 
   // 同步监听：组件在 onMounted / onUpdated 里写 ref，属性要立刻落到元素上。
@@ -330,12 +310,6 @@ export function useHoverCard(options: UseHoverCardOptions = {}): UseHoverCardRet
     // 这里清掉悬停态，下一次打开才能照常按离开关闭。
     if (!visible)
       isHoveringContent = false
-    if (typeof document === 'undefined')
-      return
-    if (visible)
-      document.addEventListener('pointerdown', onDocumentPointerDown, true)
-    else
-      document.removeEventListener('pointerdown', onDocumentPointerDown, true)
   }, { immediate: true })
 
   watch(() => toValue(options.isOpen), (open) => {
@@ -352,10 +326,6 @@ export function useHoverCard(options: UseHoverCardOptions = {}): UseHoverCardRet
   })
 
   onMounted(() => {
-    if (typeof document === 'undefined')
-      return
-    document.addEventListener('pointerdown', onModalityPointerDown, { capture: true, passive: true })
-    document.addEventListener('keydown', onModalityKeyDown, { capture: true, passive: true })
     if (isControlled.value) {
       if (toValue(options.isOpen) === true)
         layer.isOpen.value = true
@@ -368,11 +338,6 @@ export function useHoverCard(options: UseHoverCardOptions = {}): UseHoverCardRet
   onScopeDispose(() => {
     clearTimers()
     unbind()
-    if (typeof document === 'undefined')
-      return
-    document.removeEventListener('pointerdown', onModalityPointerDown, true)
-    document.removeEventListener('keydown', onModalityKeyDown, true)
-    document.removeEventListener('pointerdown', onDocumentPointerDown, true)
   })
 
   function show(): void {

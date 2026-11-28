@@ -18,3 +18,29 @@ describe('formatFilterValue', () => {
     expect(out.includes('\u{200D}')).toBe(true)
   })
 })
+
+describe('formatFilterValue date_absolute', () => {
+  // 2026-03-09T15:00:00Z，也就是东京的 3 月 10 日零点。
+  const tokyoMidnight = Date.UTC(2026, 2, 9, 15) / 1000
+
+  it('reads a calendar day in the given zone, and as the UTC day without one', () => {
+    const operator = { type: 'date_absolute' } as const
+    const value = { type: 'date_absolute', unixSeconds: tokyoMidnight } as const
+    expect(formatFilterValue(operator, value, 40, powerSearchMessages.en, 'en', 'Asia/Tokyo')).toBe('Mar 10, 2026')
+    expect(formatFilterValue(operator, value, 40, powerSearchMessages.en, 'en')).toBe('Mar 9, 2026')
+    expect(formatFilterValue({ ...operator, isDateOnly: true }, value, 40, powerSearchMessages.en, 'en')).toBe('Mar 9, 2026')
+  })
+
+  it('gives isDateOnly: false its time of day, in the given zone', () => {
+    const out = formatFilterValue(
+      { type: 'date_absolute', isDateOnly: false },
+      { type: 'date_absolute', unixSeconds: tokyoMidnight },
+      40,
+      powerSearchMessages.en,
+      'en',
+      'Asia/Tokyo',
+    )
+    expect(out).toContain('Mar 10, 2026')
+    expect(out).toMatch(/12:00\s?AM/)
+  })
+})

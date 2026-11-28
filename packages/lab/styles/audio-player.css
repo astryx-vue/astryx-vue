@@ -1,0 +1,91 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  .astryx-audio-player {
+    container-type: inline-size;
+    display: flex;
+    flex-direction: column;
+    gap: var(--astryx-spacing-2, 8px);
+    color: var(--astryx-color-text-primary, #171717);
+  }
+
+  .astryx-audio-player__header {
+    display: flex;
+    align-items: center;
+    gap: var(--astryx-spacing-3, 12px);
+    min-width: 0;
+  }
+
+  /* 封面和标题两行一样高，宽度跟着比例走。 */
+  .astryx-audio-player__artwork {
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: var(--astryx-radius-element, 6px);
+    background-color: var(--astryx-color-background-muted, #f5f5f5);
+  }
+
+  .astryx-audio-player__artwork-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: var(--astryx-color-text-secondary, #737373);
+    font-size: 24px;
+  }
+
+  .astryx-audio-player__titles {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .astryx-audio-player__title,
+  .astryx-audio-player__subtitle {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .astryx-audio-player__title {
+    font-size: var(--astryx-text-body-size, 0.875rem);
+    font-weight: var(--astryx-font-weight-semibold, 600);
+    line-height: var(--astryx-text-body-leading, 1.4286);
+  }
+
+  .astryx-audio-player__subtitle {
+    color: var(--astryx-color-text-secondary, #737373);
+    font-size: var(--astryx-text-supporting-size, 0.75rem);
+    line-height: var(--astryx-text-supporting-leading, 1.3333);
+  }
+
+  .astryx-audio-player__times {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .astryx-audio-player .astryx-audio-player__time {
+    color: var(--astryx-color-text-secondary, #737373);
+  }
+
+  .astryx-audio-player__controls {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-audio-player__transport {
+    display: flex;
+    align-items: center;
+    gap: var(--astryx-spacing-2, 8px);
+  }
+
+  .astryx-audio-player__speed {
+    justify-self: start;
+  }
+
+  .astryx-audio-player__volume {
+    justify-self: end;
+  }
+}

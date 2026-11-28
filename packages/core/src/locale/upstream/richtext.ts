@@ -26,6 +26,7 @@ export const richtextUpstreamMap: UpstreamMapPart = {
   '@astryx.richTextEditor.link.insertTitle': [{ path: 'richTextEditor.link.insertTitle' }],
   '@astryx.richTextEditor.link.editTitle': [{ path: 'richTextEditor.link.editTitle' }],
   '@astryx.richTextEditor.link.url': [{ path: 'richTextEditor.link.url' }],
+  '@astryx.richTextEditor.link.urlPlaceholder': [{ path: 'richTextEditor.link.urlPlaceholder' }],
   '@astryx.richTextEditor.link.invalidUrl': [{ path: 'richTextEditor.link.invalidUrl' }],
   '@astryx.richTextEditor.link.remove': [{ path: 'richTextEditor.link.remove' }],
   '@astryx.richTextEditor.link.cancel': [{ path: 'richTextEditor.link.cancel' }],

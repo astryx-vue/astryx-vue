@@ -2,8 +2,11 @@
 import type { StyleValue } from 'vue'
 import type { LayoutContentProps, LayoutContentSlots } from './types.js'
 import { computed, useAttrs, useTemplateRef } from 'vue'
+import { useScrollRegionProps } from '../composables/internal/useScrollRegionProps.js'
+import { useComponentMessages } from '../locale/context.js'
+import { layoutMessages } from '../locale/messages/layout.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
-import { useLayoutSlots } from './context.js'
+import { useLayoutContainer, useLayoutSlots } from './context.js'
 import { regionPaddingStyle } from './regionPadding.js'
 import '../../styles/layout.css'
 
@@ -21,7 +24,16 @@ defineSlots<LayoutContentSlots>()
 const attrs = useAttrs()
 const root = useTemplateRef<HTMLDivElement>('root')
 useScrollbars(root, { enabled: () => props.isScrollable })
+const messages = useComponentMessages({ layout: layoutMessages })
+const region = useScrollRegionProps({
+  defaultLabel: () => messages.value.layout.scrollRegion,
+  isScrollable: () => props.isScrollable,
+  label: () => props.label,
+  role: () => props.role,
+  target: root,
+})
 const slots = useLayoutSlots()
+const container = useLayoutContainer()
 
 defineExpose({ element: root })
 
@@ -51,8 +63,9 @@ const rootStyle = computed<StyleValue>(() => [
     v-bind="forwardedAttrs"
     :class="rootClass"
     :style="rootStyle"
-    :role="role"
-    :aria-label="label"
+    :role="region.role.value"
+    :aria-label="region.ariaLabel.value"
+    :data-container="container ?? undefined"
     :data-panels="panels"
     :data-edge-start="!slots.hasStart || undefined"
     :data-edge-end="!slots.hasEnd || undefined"

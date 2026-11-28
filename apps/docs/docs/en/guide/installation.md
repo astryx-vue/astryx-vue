@@ -52,6 +52,32 @@ The reset is global by design. To keep your own page untouched, do not import `r
 
 Subpaths and the package root export the same components. Docs and examples use subpaths so the import says which component it is, and so only that component's structural sheet loads. Importing `useClipboard` from the package root can pull other component modules along if the bundler does not drop unused re-exports. Prefer a subpath when you only need a component.
 
-The two packages version together. See the [changelog](/en/guide/changelog) for what changed, and the [upgrade guide](/en/guide/migration) for what to do when you upgrade.
+The two packages version together. See the [changelog](/en/guide/changelog) for what changed.
 
 To look these docs up from the terminal, see [CLI](/en/guide/cli).
+
+## Upgrade
+
+Upgrade every Astryx package your app lists in one command, to the same release. The theme package is built against a specific core release, so a theme left on an older release no longer matches the new core.
+
+::: code-group
+```sh [pnpm]
+pnpm add @astryx-vue/core@latest @astryx-vue/themes@latest
+```
+
+```sh [npm]
+npm install @astryx-vue/core@latest @astryx-vue/themes@latest
+```
+
+```sh [yarn]
+yarn add @astryx-vue/core@latest @astryx-vue/themes@latest
+```
+
+```sh [bun]
+bun add @astryx-vue/core@latest @astryx-vue/themes@latest
+```
+:::
+
+Add every other `@astryx-vue/*` package your app lists (`@astryx-vue/lab`, `@astryx-vue/richtext`, `@astryx-vue/charts`) to the same command. If your package manager holds new releases back, exempt the whole `@astryx-vue/*` scope. In pnpm that is `minimumReleaseAgeExclude: ['@astryx-vue/*']`. Exempting only some of the packages installs packages from different releases side by side.
+
+Then run `npx @astryx-vue/cli upgrade` to see what the [upgrade guide](/en/guide/migration) says about your project and where the old names still appear.

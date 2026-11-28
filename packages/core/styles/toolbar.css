@@ -13,9 +13,18 @@
     min-height: var(--astryx-input-height-sm, 28px);
   }
 
+  /*
+   * 三条道：两侧的道平分中间让出的宽度，中间一条留在正中，各自放得进自己的一半。
+   * 挤不下时整行换行，尾部的道挪到下一行；中间一条放不进首部旁边时也跟着挪。
+   * 竖向工具栏里三条道仍然并排，只是交叉轴改为拉伸。
+   */
   .astryx-toolbar--centered {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    flex-wrap: wrap;
+  }
+
+  .astryx-toolbar--centered.astryx-toolbar--vertical {
+    flex-direction: row;
+    align-items: stretch;
   }
 
   .astryx-toolbar--vertical {
@@ -66,10 +75,68 @@
     margin-inline-end: calc(-1 * var(--_edge-comp-inset));
   }
 
+  /*
+   * 中间一条的基准宽度是它的最小宽度，所以文字碰到两侧之前整行先换行；
+   * 单独占一行且比内容还窄时它会缩小，标签页因此能滚动。槽本身不裁剪，免得切掉外圈子元素的焦点环和阴影。
+   */
   .astryx-toolbar__slot--center {
     justify-content: center;
+    flex: 1000 1 min-content;
     min-width: 0;
+    max-width: max-content;
+  }
+
+  /*
+   * 两侧的道把控件排在一行里，所以行先换行；只有比工具栏还宽的道才折自己的控件。
+   * 边缘补偿用负外边距把道拉出去，flex 会把它算进这条道的份额，
+   * 这里用基准宽度把这部分还回去，中间一条才能留在正中。
+   */
+  .astryx-toolbar--centered > .astryx-toolbar__slot--start,
+  .astryx-toolbar--centered > .astryx-toolbar__slot--end {
+    flex: 1 1 0px;
+    flex-wrap: wrap;
+    min-width: fit-content;
+  }
+
+  .astryx-toolbar--centered > .astryx-toolbar__slot:has(> [data-astryx-edge-comp]:first-child),
+  .astryx-toolbar--centered > .astryx-toolbar__slot:has(> [data-astryx-edge-comp]:last-child:not([data-astryx-has-layer])) {
+    flex-basis: var(--_edge-comp-inset);
+  }
+
+  .astryx-toolbar--centered > .astryx-toolbar__slot:has(> [data-astryx-edge-comp]:first-child):has(> [data-astryx-edge-comp]:last-child:not([data-astryx-has-layer])) {
+    flex-basis: calc(2 * var(--_edge-comp-inset));
   }
   .astryx-toolbar__slot--end { justify-content: flex-end; margin-inline-start: auto; }
-  .astryx-toolbar--centered .astryx-toolbar__slot--end { margin-inline-start: 0; }
+
+  /*
+   * 只有首尾两条道时，每条道的控件尽量排在一行里，宽度以工具栏为上限。
+   * 两条道挤不下就整行换行，尾部那条挪到下一行，而不是把首部挤到标题折行、徽标被截。
+   * 尾部那条撑满它所在的行，换到下一行后控件仍然靠行尾。
+   */
+  .astryx-toolbar--two-lane {
+    flex-wrap: wrap;
+  }
+
+  .astryx-toolbar--two-lane > .astryx-toolbar__slot--start,
+  .astryx-toolbar--two-lane > .astryx-toolbar__slot--end {
+    flex-wrap: wrap;
+    min-width: fit-content;
+  }
+
+  .astryx-toolbar--two-lane > .astryx-toolbar__slot--end {
+    flex-grow: 1;
+  }
+
+  /*
+   * 首部这条道里直接放着一个 OverflowList：它的自动最小宽度不能再按展开的项算，
+   * 否则列表永远看不到更窄的宽度，不会折叠，尾部那条被挤出工具栏。
+   * 它占满尾部让出的宽度，不换行（换行会把展开的列表挪到自己的一行），列表折到自己的下限为止。
+   * 这个因子远大于尾部的 1，尾部保持内容宽度。列表藏得更深的道不受影响。
+   */
+  .astryx-toolbar--two-lane > .astryx-toolbar__slot--start:has(> .astryx-overflow-list) {
+    flex: 1000000 1 0%;
+    flex-wrap: nowrap;
+    min-width: 0;
+  }
+  .astryx-toolbar--centered > .astryx-toolbar__slot--end { margin-inline-start: 0; }
 }

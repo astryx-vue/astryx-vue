@@ -1,3 +1,8 @@
+// 只给 @astryx-vue/lab 用的滚动协作内部入口（例如 ChatVirtualizer）：不写进文档，不在兼容承诺里，跟着 core 的版本走（unstable_ 开头的几个）。
+export { setScrollAnchoringOff as unstable_setScrollAnchoringOff } from '../composables/internal/scrollAnchoring.js'
+export { useFingerScroll as unstable_useFingerScroll } from '../gestures/useFingerScroll.js'
+export type { UseFingerScrollOptions as unstable_UseFingerScrollOptions } from '../gestures/useFingerScroll.js'
+
 export { chainEventHandlers } from './chainEventHandlers.js'
 export { characterCount, firstCharacter, truncateCharacters } from './characters.js'
 
@@ -30,6 +35,7 @@ export type {
   PickerPresentation,
   PickerPresentationSurface,
 } from './inputPresentation.js'
+export { scrollEventTarget as unstable_scrollEventTarget, scrollportTop as unstable_scrollportTop, scrollsPage as unstable_scrollsPage } from './pageScroller.js'
 export { parseStyleKey } from './parseStyleKey.js'
 
 export {

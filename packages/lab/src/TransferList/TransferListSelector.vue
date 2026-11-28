@@ -1,9 +1,17 @@
 <script setup lang="ts" generic="T extends string">
-import type { FieldStatusInput, PopoverPlacement } from '@astryx-vue/core'
+import type { FieldStatusInput, PopoverPlacement, Reorderable } from '@astryx-vue/core'
 import type { Ref } from 'vue'
 import type { TransferListOption } from './types.js'
-import { Button, ComplexSelector, useTranslator } from '@astryx-vue/core'
+import {
+  unstable_adaptReorderable as adaptReorderable,
+  Button,
+  ComplexSelector,
+  unstable_reorderableOptions as reorderableOptions,
+  transferListSelectorMessages,
+  useComponentMessages,
+} from '@astryx-vue/core'
 import { computed, ref, watch } from 'vue'
+import { moveValue } from './transferItems.js'
 import TransferList from './TransferList.vue'
 import '../../styles/transfer-list-selector.css'
 
@@ -31,6 +39,12 @@ const props = withDefaults(defineProps<{
   hasSearch?: boolean
   searchLabel?: string
   searchPlaceholder?: string
+  /**
+   * 已选项可以重排：传 `createReorderable` 或 `useReorderable` 做的对象。立即提交时每次挪动交给它的 `onReorder`；
+   * 分段提交时挪动先落在草稿里，按 Apply 才提交，按 Cancel 丢掉。
+   */
+  reorderable?: Reorderable<T>
+  /** 没传 `reorderable` 时用内置的重排，挪动和搬运一样走提交。默认 true。 */
   isReorderable?: boolean
   hasSelectAll?: boolean
   hasClear?: boolean
@@ -43,6 +57,7 @@ const props = withDefaults(defineProps<{
   cancelLabel?: string
 }>(), {
   modelValue: () => [],
+  reorderable: undefined,
   isReorderable: undefined,
   commitBehavior: 'immediate',
 })
@@ -57,11 +72,11 @@ const emit = defineEmits<{
 /** 弹层和字段的默认宽度：留出 32px 的视口空隙，再宽不超过 41rem。 */
 const DEFAULT_SELECTOR_WIDTH = 'min(41rem, calc(100vw - 32px))'
 
-const { t } = useTranslator()
+const messages = useComponentMessages({ transferListSelector: transferListSelectorMessages })
 
-const applyLabel = computed(() => props.applyLabel ?? t('@astryx.transferListSelector.apply'))
-const cancelLabel = computed(() => props.cancelLabel ?? t('@astryx.transferListSelector.cancel'))
-const triggerLabel = computed(() => props.triggerLabel ?? t('@astryx.transferListSelector.triggerLabel', { count: props.modelValue.length }))
+const applyLabel = computed(() => props.applyLabel ?? messages.value.transferListSelector.apply)
+const cancelLabel = computed(() => props.cancelLabel ?? messages.value.transferListSelector.cancel)
+const triggerLabel = computed(() => props.triggerLabel ?? messages.value.transferListSelector.triggerLabel(props.modelValue.length))
 
 const resolvedWidth = computed(() => typeof props.width === 'number' ? `${props.width}px` : (props.width ?? DEFAULT_SELECTOR_WIDTH))
 /** 弹层内容和字段同宽、去掉内边距，两栏贴到弹层边上；高度留出视口空隙，自己不滚。 */
@@ -110,13 +125,43 @@ function onOpenChange(next: boolean): void {
 
 function handleTransferChange(nextValue: readonly T[], commit: (value: readonly T[]) => void, isBusy: boolean): void {
   // 提交中不接收新的搬运：一次待处理的动作不该叠第二次。
-  if (isBusy)
+  if (isBusy || props.isDisabled)
     return
   if (props.commitBehavior === 'staged') {
     draftValue.value = [...nextValue]
     return
   }
   commit([...nextValue])
+}
+
+/** 当前这次渲染里选择器是不是正在提交。重排对象的挪动在提交中直接忽略。 */
+let isBusy = false
+
+/**
+ * 调用方的重排对象，挪动改成对着选择器：分段提交时挪草稿，立即提交时交给调用方，
+ * 能不能挪仍听调用方的 `isReorderable`。引擎是调用方对象自带的，调用方的 `start` 也能找到列表。
+ */
+const reorderable = computed(() => {
+  const source = props.reorderable
+  if (source == null)
+    return undefined
+  const owner = reorderableOptions(source)
+  return adaptReorderable(source, {
+    onReorder: (move) => {
+      if (isBusy || props.isDisabled)
+        return
+      if (props.commitBehavior === 'staged')
+        draftValue.value = moveValue(draftValue.value, move.key, move.to)
+      else
+        owner.onReorder(move)
+    },
+    isReorderable: owner.isReorderable,
+  })
+})
+
+function selectorReorderable(busy: boolean): Reorderable<T> | undefined {
+  isBusy = busy
+  return reorderable.value
 }
 
 function applyStaged(commit: (value: readonly T[]) => void, close: () => void): void {
@@ -146,13 +191,13 @@ function cancelStaged(close: () => void): void {
   >
     <template #default="{ value: appliedValue, commit, close, state }">
       <div :aria-busy="state.isBusy || undefined" :data-busy="state.isBusy || undefined" class="astryx-transfer-list-selector__surface">
-        <fieldset class="astryx-transfer-list-selector__fieldset" :disabled="isDisabled">
+        <fieldset class="astryx-transfer-list-selector__fieldset" :aria-disabled="isDisabled ? 'true' : undefined">
           <TransferList
-            :label="label" is-label-hidden :options="options"
+            :label="label" is-label-hidden :options="options" :is-disabled="isDisabled"
             :model-value="commitBehavior === 'staged' ? draftValue : appliedValue"
             :selected-label="selectedLabel" :available-label="availableLabel" :has-search="hasSearch"
             :search-label="searchLabel" :search-placeholder="searchPlaceholder"
-            :is-reorderable="isReorderable" :has-select-all="hasSelectAll" :has-clear="hasClear"
+            :reorderable="selectorReorderable(state.isBusy)" :is-reorderable="isReorderable" :has-select-all="hasSelectAll" :has-clear="hasClear"
             :selected-empty-text="selectedEmptyText" :available-empty-text="availableEmptyText"
             :no-results-text="noResultsText"
             @change="handleTransferChange($event, commit, state.isBusy)"

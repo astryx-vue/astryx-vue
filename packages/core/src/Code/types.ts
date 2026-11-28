@@ -1,4 +1,5 @@
 import type { VNodeChild } from 'vue'
+import type { CodeLanguage } from './grammar.js'
 import type { SyntaxThemeDefinition } from './syntaxTheme.js'
 
 /**
@@ -33,6 +34,26 @@ export interface CodeProps {
 export interface CodeSlots {
   /** The inline code content. */
   default?: () => VNodeChild
+}
+
+export interface CodeBlockSlots {
+  /**
+   * Your own controls, shown just before Copy: in the header when the block
+   * has one, otherwise beside the code in the top inline-end corner, never over
+   * it. The slot never creates a header, and it sits outside the collapse
+   * control, so using it never collapses the block.
+   */
+  endContent?: () => VNodeChild
+}
+
+export interface CodeBlockSlots {
+  /**
+   * Your own controls, shown just before Copy: in the header when the block
+   * has one, otherwise beside the code in the top inline-end corner, never over
+   * it. The slot never creates a header, and it sits outside the collapse
+   * control, so using it never collapses the block.
+   */
+  endContent?: () => VNodeChild
 }
 
 /** The text size of a CodeBlock, which also selects its line height. */
@@ -76,11 +97,15 @@ export interface CodeBlockProps {
   /** The read-only code to display. */
   code: string
   /**
-   * The language used for syntax highlighting. An unknown language renders as
-   * plaintext. `plaintext` also hides the language label in the header.
+   * The language used for syntax highlighting: a built-in identifier such as
+   * `'ts'`, or a language value, either one imported from
+   * `@astryx-vue/core/Code/languages/<name>` (such as `graphql`) or made with
+   * `createCodeLanguage`. An unknown identifier renders as plaintext, and
+   * `plaintext` also hides the language label in the header. A value is
+   * labelled with its `name`, and `data-language` carries its first identifier.
    * @default 'plaintext'
    */
-  language?: string
+  language?: string | CodeLanguage
   /**
    * Syntax colors for this block.
    *
@@ -103,7 +128,19 @@ export interface CodeBlockProps {
    * @default false
    */
   hasLineNumbers?: boolean
-  /** One-indexed line numbers to emphasize with an accent background. */
+  /**
+   * The number of the first line, so a code excerpt reads with its real file
+   * line numbers. The gutter shows `startLineNumber + index`, and
+   * `highlightLines` uses the same file line numbers. A value below 1, or one
+   * that is not a finite number, counts as 1.
+   * @default 1
+   */
+  startLineNumber?: number
+  /**
+   * File line numbers to emphasize with an accent background, in the same
+   * numbering as the gutter (see `startLineNumber`). A number outside the code
+   * highlights nothing.
+   */
   highlightLines?: number[]
   /**
    * Paint the code as a unified diff over `language`.
@@ -166,6 +203,9 @@ export interface CodeBlockProps {
    * A custom tokenizer, for a language the built-in tokenizer does not know.
    * Its return value paints tokens but never replaces the displayed or copied
    * code text.
+   * @deprecated Pass `language={createCodeLanguage({ name, identifiers, tokenize })}`
+   * instead; it keeps the label and `data-language` and paints at any length.
+   * `tokenizer` still works as it did.
    */
   tokenizer?: CodeBlockTokenizer
   /**
@@ -184,6 +224,12 @@ export interface CodeBlockProps {
    */
   copiedLabel?: string
   /**
+   * The copy control name, tooltip and announcement for 2 seconds after the
+   * clipboard rejects a write, while the button shows a cross.
+   * @default 'Failed to copy value to clipboard.'
+   */
+  copyFailedLabel?: string
+  /**
    * The accessible name of the code viewport, and of a collapsible header that
    * has no visible title or language label.
    * @default 'Code'
@@ -194,4 +240,6 @@ export interface CodeBlockProps {
 export interface CodeBlockEmits {
   /** Emitted after the code string was written to the clipboard. */
   copy: []
+  /** Emitted once per failed copy with the rejection. The error itself is never shown. */
+  copyError: [error: unknown]
 }

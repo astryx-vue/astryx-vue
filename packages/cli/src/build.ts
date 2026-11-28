@@ -1,7 +1,9 @@
 import type { TemplateRecord } from './catalog-types.ts'
 import type { SearchHit } from './query.ts'
+import { repairTerms } from './build-repair.ts'
 import { catalog, text } from './catalog.ts'
 import { CliError } from './error.ts'
+import { compareText } from './query-order.ts'
 import { searchCatalog } from './query.ts'
 import { BINARY } from './spec.ts'
 
@@ -121,6 +123,8 @@ export interface KitComponent {
   command: string
   /** `search` when the idea named it, `template` when the recommended page uses it. */
   reason: 'search' | 'template'
+  /** Only on a deprecated component: the component to use instead and how to move to it. */
+  deprecated?: { replacement: string, description: string }
 }
 
 /**
@@ -229,7 +233,7 @@ function fieldMatches(target: TemplateField, term: string): number {
  */
 export function rankTemplates(idea: string): TemplateMatch[] {
   const docs = catalog.templates.map(documentFor)
-  const terms = ideaTerms(idea)
+  const terms = repairTerms(ideaTerms(idea), idea, templateVocabulary(docs), joinedSlugs())
   if (terms.length === 0)
     return []
 
@@ -266,7 +270,7 @@ export function rankTemplates(idea: string): TemplateMatch[] {
       continue
     if (!doc.template.isReady)
       score *= NOT_READY_SHARE
-    matched.sort((a, b) => b.value - a.value || a.term.localeCompare(b.term))
+    matched.sort((a, b) => b.value - a.value || compareText(a.term, b.term))
     matches.push({ doc, score, matched: matched.map(entry => entry.term) })
   }
 
@@ -277,8 +281,32 @@ export function rankTemplates(idea: string): TemplateMatch[] {
       || Number(b.doc.template.isReady) - Number(a.doc.template.isReady)
       // The family's own name is its default page; a variant needs its own edge.
       || hyphenCount(a.doc.template.slug) - hyphenCount(b.doc.template.slug)
-      || a.doc.template.slug.localeCompare(b.doc.template.slug))
+      || compareText(a.doc.template.slug, b.doc.template.slug))
     .map(entry => toMatch(entry.doc.template, entry.matched, usable.length))
+}
+
+/** Every English word the templates use, for reading a slightly misspelled idea. */
+function templateVocabulary(docs: TemplateDoc[]): Set<string> {
+  const vocabulary = new Set<string>()
+  for (const doc of docs) {
+    for (const target of doc.fields) {
+      for (const word of target.words) {
+        if (/^[a-z0-9]+$/.test(word))
+          vocabulary.add(word)
+      }
+    }
+  }
+  return vocabulary
+}
+
+/** A multi-word template name written without its hyphens, mapped to its words. */
+function joinedSlugs(): Map<string, string[]> {
+  const joined = new Map<string, string[]>()
+  for (const { slug } of catalog.templates) {
+    if (slug.includes('-'))
+      joined.set(slug.replaceAll('-', ''), slug.split('-'))
+  }
+  return joined
 }
 
 function toMatch(template: TemplateRecord, matchedTerms: string[], termCount: number): TemplateMatch {
@@ -346,6 +374,9 @@ export function buildKit(idea: string, locale: 'en' | 'zh'): BuildKit {
         description: text(record.summary, locale),
         command: `${BINARY} component ${name}`,
         reason: 'template',
+        ...(record.deprecated
+          ? { deprecated: { replacement: record.deprecated.replacement, description: text(record.deprecated.description, locale) } }
+          : {}),
       })
     }
   }
@@ -389,7 +420,14 @@ function templateRecord(slug: string): TemplateRecord | undefined {
 /** Reuses the hit's own name, kind, summary, and follow-up command: search already built them. */
 function toKitComponent(hit: SearchHit, reason: 'search'): KitComponent {
   const kind = hit.domain === 'composable' ? 'composable' : 'component'
-  return { name: hit.name, kind, description: hit.description, command: hit.command, reason }
+  return {
+    name: hit.name,
+    kind,
+    description: hit.description,
+    command: hit.command,
+    reason,
+    ...(hit.deprecated ? { deprecated: hit.deprecated } : {}),
+  }
 }
 
 function localizeMatch(match: TemplateMatch, locale: 'en' | 'zh'): TemplateMatch {

@@ -1,53 +1,5 @@
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 
-@keyframes astryx-popover-enter-above {
-  from {
-    opacity: 0;
-    transform: translateY(var(--astryx-spacing-2, 8px)) scale(0.95);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes astryx-popover-enter-below {
-  from {
-    opacity: 0;
-    transform: translateY(calc(-1 * var(--astryx-spacing-2, 8px))) scale(0.95);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes astryx-popover-enter-start {
-  from {
-    opacity: 0;
-    transform: translateX(var(--astryx-spacing-2, 8px)) scale(0.95);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0) scale(1);
-  }
-}
-
-@keyframes astryx-popover-enter-end {
-  from {
-    opacity: 0;
-    transform: translateX(calc(-1 * var(--astryx-spacing-2, 8px))) scale(0.95);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0) scale(1);
-  }
-}
-
 @layer astryx.components {
   .astryx-popover-trigger {
     display: inline-flex;
@@ -74,28 +26,9 @@
     animation-timing-function: var(--astryx-ease-entrance, cubic-bezier(0.24, 1, 0.4, 1));
   }
 
-  .astryx-popover[data-placement='above'] {
-    animation-name: astryx-popover-enter-above;
-  }
-
-  .astryx-popover[data-placement='below'] {
-    animation-name: astryx-popover-enter-below;
-  }
-
-  .astryx-popover[data-placement='start'] {
-    animation-name: astryx-popover-enter-start;
-  }
-
-  .astryx-popover[data-placement='end'] {
-    animation-name: astryx-popover-enter-end;
-  }
-
-  .astryx-popover[data-placement='start']:is([dir='rtl'] *) {
-    animation-name: astryx-popover-enter-end;
-  }
-
-  .astryx-popover[data-placement='end']:is([dir='rtl'] *) {
-    animation-name: astryx-popover-enter-start;
+  .astryx-popover[data-placement] {
+    animation-name: astryx-layer-enter;
+    transform-origin: var(--_astryx-layer-enter-origin, 50% 50%);
   }
 
   .astryx-popover__body {
@@ -104,6 +37,8 @@
     flex-direction: column;
     min-block-size: 0;
     max-block-size: calc(100vh - 16px);
+    /* 动态视口减去上下两道间距，间距在刘海和主屏指示条处随安全区变大。 */
+    max-block-size: calc(100dvh - max(16px, env(safe-area-inset-top, 0px)) - max(16px, env(safe-area-inset-bottom, 0px)));
     overflow: auto;
     overscroll-behavior: contain;
     padding: var(--_popover-padding, var(--astryx-spacing-3, 12px));
@@ -131,9 +66,37 @@
     padding-block-start: var(--astryx-spacing-1, 4px);
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .astryx-popover {
+  /* 底部弹层里的后备关闭按钮：平时移出排版并裁掉，聚焦时回到内容下方，留出焦点环的位置。 */
+  .astryx-popover__sheet-close:not(:focus) {
+    position: absolute;
+    clip-path: inset(50%);
+  }
+
+  .astryx-popover__sheet-close:focus {
+    position: relative;
+    display: flex;
+    width: fit-content;
+    margin-block-start: var(--astryx-spacing-3, 12px);
+  }
+
+  @media (prefers-reduced-motion: reduce) and (not (pointer: coarse)) {
+    .astryx-popover[data-placement] {
       animation: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) and (pointer: coarse) {
+    .astryx-popover[data-placement] {
+      animation-name: astryx-layer-fade-in;
+      animation-duration: var(--_astryx-reduced-motion-fade-duration, 200ms);
+      animation-timing-function: var(--_astryx-reduced-motion-fade-easing, cubic-bezier(0.42, 0, 0.58, 1));
+    }
+  }
+
+  @media (forced-colors: active) {
+    /* 强制配色会去掉阴影，阴影是这块浮层唯一的边，这里补一圈系统色边框。 */
+    .astryx-popover {
+      border: 1px solid CanvasText;
     }
   }
 }

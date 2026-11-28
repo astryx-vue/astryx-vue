@@ -41,13 +41,24 @@ const HAS_SCHEME = /^[a-z][a-z0-9+.-]*:/i
 export const URL_MATCHER
   = /((https?:\/\/(www\.)?)|(www\.))[-\w@:%.+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-\w()@:%+.~#?&/=]*)/
 
-/** Matches a bare email address for AutoLink (rendered as a `mailto:` link). */
+/**
+ * Matches a bare email address for AutoLink (rendered as a `mailto:` link).
+ * An unquoted local part starts only at the text start, after whitespace, or
+ * after one of `<>()[]\,;:@"`. A quoted local part ends at the next quote or
+ * line break. Each run is read once, so matching time stays linear.
+ */
 export const EMAIL_MATCHER
-  = /(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\])|(([a-z\-0-9]+\.)+[a-z]{2,}))/i
+  = /((?<![^<>()[\]\\,;:\s@"])[^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*|("[^"\r\n]+"))@((\[\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\])|(([a-z\-0-9]+\.)+[a-z]{2,}))/i
+
+/**
+ * A host with a port also looks like a scheme (`example.com:`).
+ * The host needs a dot or is `localhost`, so `tel:911` keeps its scheme.
+ */
+const HOST_WITH_PORT = /^(?:localhost|[a-z0-9-]+(?:\.[a-z0-9-]+)+):\d{1,5}(?:[/?#]|$)/i
 
 /** Prepend a default `https://` scheme to a bare host so it parses as absolute. */
 function withDefaultScheme(url: string): string {
-  return HAS_SCHEME.test(url) ? url : `https://${url}`
+  return HAS_SCHEME.test(url) && !HOST_WITH_PORT.test(url) ? url : `https://${url}`
 }
 
 /**

@@ -111,6 +111,21 @@ describe('chartZoom', () => {
     wrapper.unmount()
   })
 
+  it('stops the page scrolling under a vertical wheel and leaves a sideways wheel to the page', async () => {
+    const wrapper = mountZoom()
+    const zoom = zoomWrapper(wrapper)
+    stubLocalCoordinates(zoom)
+    const rect = zoom.get('rect').element
+    const vertical = new WheelEvent('wheel', { deltaY: -50, clientX: 214, clientY: 122, cancelable: true, bubbles: true })
+    rect.dispatchEvent(vertical)
+    expect(vertical.defaultPrevented).toBe(true)
+    const sideways = new WheelEvent('wheel', { deltaX: 40, deltaY: 0, clientX: 214, clientY: 122, cancelable: true, bubbles: true })
+    rect.dispatchEvent(sideways)
+    expect(sideways.defaultPrevented).toBe(false)
+    expect(zoom.emitted('xDomainChange')).toHaveLength(1)
+    wrapper.unmount()
+  })
+
   it('resets to the initial domains from the toolbar', async () => {
     const wrapper = mountZoom()
     await nextTick()

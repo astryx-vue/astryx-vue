@@ -28,7 +28,7 @@ import { useMenuPress } from '@astryx-vue/core'
 | Guidance | Practices |
 | --- | --- |
 | <Badge variant="success">Do</Badge> | Pass a selector for ENABLED rows only, so a disabled row or a divider under the pointer picks nothing instead of lighting up. |
-| <Badge variant="success">Do</Badge> | Let the default highlight be DOM focus; the hook focuses the row under the pointer with `preventScroll`. Style the active row with `:focus`. Supply `onHighlight` only for a listbox that must keep focus on its combobox. |
+| <Badge variant="success">Do</Badge> | Let the default highlight be DOM focus; the hook focuses the row under the pointer with `preventScroll`, without `:focus-visible`, so a keyboard-only focus ring does not follow the mouse. Style the active row with `:focus`. Supply `onHighlight` only for a listbox that must keep focus on its combobox. |
 | <Badge variant="success">Do</Badge> | Declare `touch-action` on the menu root: `pinch-zoom` when its rows fit, `pan-y pinch-zoom` when it scrolls, so the browser — not the hook — decides when a finger is scrolling, and a two-finger pinch still zooms the page. |
 | <Badge variant="error">Don't</Badge> | Act on a row from its own `pointerdown` or `pointerup` handler as well; the hook already activates the row under the release, and a second path acts twice. |
 | <Badge variant="error">Don't</Badge> | Read a row click with `detail` 0 as a keyboard activation; the hook dispatches its pointer activation with `detail` 0 too. The dispatched click is untrusted, so check `event.isTrusted` to tell them apart. |

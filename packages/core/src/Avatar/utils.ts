@@ -1,6 +1,7 @@
 import type { AvatarSize, AvatarStatusDotVariant, AvatarStatusDotVariantName } from './types.js'
+import { unicodeRegExp } from '../utils/unicodeRegExp.js'
 
-const INITIAL_CHARACTER = /[\p{L}\p{N}\p{Extended_Pictographic}\p{Regional_Indicator}]/u
+const INITIAL_CHARACTER = unicodeRegExp('[\\p{L}\\p{N}\\p{Extended_Pictographic}\\p{Regional_Indicator}]')
 
 const characterSegmenter = typeof Intl !== 'undefined' && typeof Intl.Segmenter === 'function'
   ? new Intl.Segmenter(undefined, { granularity: 'grapheme' })
@@ -129,4 +130,9 @@ export function composeAccessibleName(
     return join(name, status)
   }
   return name ?? status
+}
+
+/** 把文字写成 CSS 字符串字面量，转义引号、反斜杠和换行。 */
+export function cssString(text: string): string {
+  return `"${text.replace(/[\\"]/g, char => `\\${char}`).replace(/\n/g, '\\a ')}"`
 }

@@ -1,3 +1,5 @@
+import { splitTopLevelWhitespace } from './tokenReferences.js'
+
 /**
  * Theme properties that a component reads through its own variables.
  *
@@ -21,6 +23,12 @@ export interface DerivedVarEntry {
   vars?: readonly string[]
   /** `container` expands padding into the published container variables. */
   expand?: 'container'
+  /**
+   * The variables replace the property: the root does not get it. Used when
+   * the target is an outer field whose own value of the property means
+   * something else, such as the room above a status message.
+   */
+  replaces?: true
 }
 
 export const DERIVED_VARS: Readonly<Record<string, readonly DerivedVarEntry[]>> = {
@@ -29,7 +37,10 @@ export const DERIVED_VARS: Readonly<Record<string, readonly DerivedVarEntry[]>> 
     { property: 'borderRadius', vars: ['--_card-radius'] },
     { property: 'padding', expand: 'container' },
   ],
-  'chat': [
+  // The room between the box and its label. The target is the outer field,
+  // whose own gap is the room above the status message.
+  'checkbox-input': [{ property: 'gap', vars: ['--_checkbox-input-gap'], replaces: true }],
+  'chat-composer': [
     { property: 'borderRadius', vars: ['--_chat-composer-radius'] },
     { property: 'padding', vars: ['--_chat-composer-padding'] },
   ],
@@ -41,9 +52,14 @@ export const DERIVED_VARS: Readonly<Record<string, readonly DerivedVarEntry[]>> 
     { property: 'borderRadius', vars: ['--_dialog-radius'] },
     { property: 'padding', expand: 'container' },
   ],
+  'drawer': [{ property: 'padding', expand: 'container' }],
   'dropdown-menu': [
     { property: 'borderRadius', vars: ['--_dropdown-menu-radius'] },
     { property: 'padding', vars: ['--_dropdown-menu-padding'] },
+  ],
+  'icon': [
+    { property: 'width', vars: ['--_icon-width'] },
+    { property: 'height', vars: ['--_icon-height'] },
   ],
   'progress-bar-mark': [
     { property: 'width', vars: ['--_progressbar-mark-width'] },
@@ -53,7 +69,14 @@ export const DERIVED_VARS: Readonly<Record<string, readonly DerivedVarEntry[]>> 
     { property: 'borderRadius', vars: ['--_segmented-control-radius'] },
     { property: 'padding', vars: ['--_segmented-control-padding'] },
   ],
+  // A pinned column replays its row's fill from --table-row-overlay, so a
+  // theme's row background reaches the pinned cells too.
+  'table-row': [{ property: 'backgroundColor', vars: ['--table-row-overlay'] }],
+  // The room between the track and its label, as on `checkbox-input`.
+  'switch': [{ property: 'gap', vars: ['--_switch-gap'], replaces: true }],
 }
+
+const PADDING_SHORTHANDS = new Set(['padding', 'paddingBlock', 'paddingInline'])
 
 const PADDING_PROPS = new Set([
   'padding',
@@ -83,8 +106,9 @@ interface ParsedPadding {
   inlineEnd?: string
 }
 
+/** Split a value on the whitespace between its components; `clamp(8px, 2vw)` stays whole. */
 function words(value: string): string[] {
-  return value.trim().split(/\s+/)
+  return splitTopLevelWhitespace(value)
 }
 
 function parsePadding(entries: readonly (readonly [string, string])[]): ParsedPadding {
@@ -92,6 +116,9 @@ function parsePadding(entries: readonly (readonly [string, string])[]): ParsedPa
   for (const [raw, value] of entries) {
     const prop = PHYSICAL_BLOCK_PADDING[raw] ?? raw
     const parts = words(value)
+    // An empty shorthand sets nothing and keeps the longhands before it.
+    if (parts.length === 0 && PADDING_SHORTHANDS.has(prop))
+      continue
     if (prop === 'padding') {
       parsed.blockStart = parts[0]
       parsed.inline = parts[1] ?? parts[0]
@@ -161,8 +188,9 @@ function entriesFor(component: string, property: string): readonly DerivedVarEnt
  * Lower one rule's declarations through the component's derived variables.
  *
  * Input and output are `[camelCase or custom property, value]` pairs. A
- * container-expanded padding replaces the padding properties; every other
- * derived variable is written next to the property it mirrors.
+ * container-expanded padding, or an entry marked `replaces`, takes the place
+ * of the property; every other derived variable is written next to the
+ * property it mirrors.
  */
 export function applyDerivedVars(
   component: string,
@@ -170,21 +198,21 @@ export function applyDerivedVars(
 ): [string, string][] {
   const derived: [string, string][] = []
   const padding: (readonly [string, string])[] = []
+  const replaced = new Set<string>()
   for (const [property, value] of declarations) {
     for (const entry of entriesFor(component, property)) {
       if (entry.expand === 'container')
         padding.push([property, value])
+      if (entry.replaces || entry.expand === 'container')
+        replaced.add(property)
       for (const name of entry.vars ?? [])
         derived.push([name, value])
     }
   }
+  const kept = declarations
+    .filter(([property]) => !replaced.has(property))
+    .map(([p, v]) => [p, v] as [string, string])
   if (padding.length === 0)
-    return [...declarations.map(([p, v]) => [p, v] as [string, string]), ...derived]
-
-  const expanded = new Set(padding.map(([property]) => property))
-  return [
-    ...declarations.filter(([property]) => !expanded.has(property)).map(([p, v]) => [p, v] as [string, string]),
-    ...containerPadding(component, parsePadding(padding)),
-    ...derived,
-  ]
+    return [...kept, ...derived]
+  return [...kept, ...containerPadding(component, parsePadding(padding)), ...derived]
 }

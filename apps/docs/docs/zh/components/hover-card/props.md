@@ -14,8 +14,8 @@ footer: false
 <tr><td><code>alignment</code></td><td><code>'start' | 'center' | 'end'</code></td><td><code>'center'</code></td><td>卡片沿位置方向的对齐方式。</td></tr>
 <tr><td><code>delay</code></td><td><code>number</code></td><td><code>300</code></td><td>悬停后显示前的等待时间（毫秒）。</td></tr>
 <tr><td><code>hideDelay</code></td><td><code>number</code></td><td><code>200</code></td><td>指针或焦点离开后隐藏前的等待时间（毫秒）。指针在这段时间内移入卡片会取消隐藏。</td></tr>
-<tr><td><code>focusTrigger</code></td><td><code>'auto' | 'always' | 'never'</code></td><td><code>'auto'</code></td><td>聚焦时是否打开卡片：auto 仅在触发元素本身可聚焦时监听，always 始终监听，never 从不监听。</td></tr>
-<tr><td><code>touchTrigger</code></td><td><code>'auto' | 'tap' | 'none'</code></td><td><code>'auto'</code></td><td>触摸设备上轻点触发元素的行为：auto 时本身不执行操作的触发元素轻点即打开，按钮和链接保留自己的轻点；tap 总是打开；none 不打开。轻点打开的卡片在卡片外轻点即关闭。</td></tr>
+<tr><td><code>focusTrigger</code></td><td><code>'auto' | 'always' | 'never'</code></td><td><code>'auto'</code></td><td>焦点何时打开卡片：auto 在触发元素自身获得焦点，或焦点落在当时可聚焦的触发元素内部时打开，因此漫游 tabindex 的成员变成 Tab 停靠点后就会打开；always 在触发元素内任何位置获得焦点都打开；never 从不因焦点打开。</td></tr>
+<tr><td><code>touchTrigger</code></td><td><code>'auto' | 'tap' | 'none'</code></td><td><code>'auto'</code></td><td>触摸设备上轻点触发元素的行为：auto 时本身不执行操作的触发元素轻点即打开，按钮和链接保留自己的轻点；tap 总是打开；none 不打开。设置了 aria-disabled 的控件不执行操作，轻点它会显示原因。轻点打开的卡片在卡片外轻点即关闭；从触发元素上开始的滚动不会打开卡片。</td></tr>
 <tr><td><code>isEnabled</code></td><td><code>boolean</code></td><td><code>true</code></td><td>是否启用悬停与聚焦触发。为 false 时已打开的卡片也会关闭。</td></tr>
 <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>卡片弹出层的无障碍名称。提供时卡片以具名的 <code>role="dialog"</code> 暴露，省略时为 <code>role="group"</code>。</td></tr>
 <tr><td><code>hasHoverIndication</code></td><td><code>'auto' | boolean</code></td><td><code>'auto'</code></td><td>是否在触发元素上显示虚线底划线。auto 时仅对纯文字触发元素生效。</td></tr>

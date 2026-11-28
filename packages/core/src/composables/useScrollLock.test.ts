@@ -42,6 +42,20 @@ describe('useScrollLock', () => {
     wrapper.unmount()
   })
 
+  it('锁定时关掉页面的回弹，放开时还原原来的值', () => {
+    document.documentElement.style.overscrollBehaviorY = 'auto'
+    const isLocked = ref(true)
+    const { wrapper } = mountComposable(() => useScrollLock(isLocked))
+    expect(document.documentElement.style.overscrollBehaviorY).toBe('none')
+    expect(document.body.style.overscrollBehaviorY).toBe('none')
+
+    isLocked.value = false
+    expect(document.documentElement.style.overscrollBehaviorY).toBe('auto')
+    expect(document.body.style.overscrollBehaviorY).toBe('')
+    wrapper.unmount()
+    document.documentElement.style.overscrollBehaviorY = ''
+  })
+
   it('里层还开着时，外层关掉不会把页面放开', () => {
     document.body.style.overflow = 'scroll'
     const outer = ref(true)

@@ -4,6 +4,7 @@ import type { OptionActionNode } from '../selectors/optionAction.js'
 import { computed } from 'vue'
 import { isOptionAction } from '../selectors/optionAction.js'
 import { OptionAction } from '../selectors/optionActionView.js'
+import { createStillPointerGate } from '../selectors/stillPointerGate.js'
 import Spinner from '../Spinner/Spinner.vue'
 import TypeaheadItem from './TypeaheadItem.vue'
 
@@ -73,6 +74,14 @@ function actionId(index: number): string {
   return `${props.listboxId}-action-${index}`
 }
 
+const pointerGate = createStillPointerGate()
+
+/** 只有鼠标真的移动了才让行拿走高亮；键盘滚动让行从静止的鼠标下冒出来不算。 */
+function onRowEnter(event: MouseEvent, index: number): void {
+  if (pointerGate.moved(event))
+    emit('highlight', index)
+}
+
 function onOptionClick(id: string, disabled?: boolean): void {
   if (!disabled)
     emit('select', id)
@@ -80,18 +89,18 @@ function onOptionClick(id: string, disabled?: boolean): void {
 </script>
 
 <template>
-  <div class="astryx-typeahead-menu" role="presentation">
+  <div class="astryx-typeahead-menu" role="presentation" @mousemove="pointerGate.track">
     <div
       v-if="props.status === 'loading' && props.entries.length === 0"
       class="astryx-typeahead-state"
-      role="status"
+      aria-hidden="true"
     >
       <Spinner size="sm" :label="props.loadingText" />
     </div>
     <div v-else-if="props.status === 'error'" class="astryx-typeahead-state" role="alert">
       {{ props.errorText }}
     </div>
-    <div v-else-if="props.entries.length === 0" class="astryx-typeahead-state" :role="props.grid ? 'presentation' : 'option'" :aria-selected="props.grid ? undefined : 'false'" aria-disabled="true">
+    <div v-else-if="props.entries.length === 0 && props.status !== 'idle'" class="astryx-typeahead-state" :role="props.grid ? 'presentation' : 'option'" :aria-selected="props.grid ? undefined : 'false'" aria-disabled="true">
       <slot name="empty">
         {{ props.emptyText }}
       </slot>
@@ -122,9 +131,12 @@ function onOptionClick(id: string, disabled?: boolean): void {
           :aria-selected="row.entry.selected ? 'true' : 'false'"
           :aria-disabled="row.entry.disabled || undefined"
           :data-option-id="row.entry.id"
+          :data-highlighted="row.index === props.activeIndex ? 'highlighted' : undefined"
+          :data-selected="row.entry.selected ? 'selected' : undefined"
+          :data-disabled="row.entry.disabled ? 'disabled' : undefined"
           tabindex="-1"
           @mousedown.prevent
-          @mouseenter="emit('highlight', row.index)"
+          @mouseenter="onRowEnter($event, row.index)"
           @click="props.grid ? undefined : onOptionClick(row.entry.id, row.entry.disabled)"
         >
           <!-- eslint-disable-next-line vue-a11y/click-events-have-key-events -- 选项格不进 Tab 序，方向键和 Enter 由组合框输入处理。 -->

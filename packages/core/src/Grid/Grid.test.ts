@@ -44,7 +44,7 @@ describe('grid', () => {
   it('builds responsive tracks from a minimum width, defaulting to fill', () => {
     const wrapper = mount(Grid, { props: { columns: { minWidth: 280 } } })
 
-    expect(templateColumns(wrapper.element as HTMLElement)).toBe('repeat(auto-fill, minmax(280px, 1fr))')
+    expect(templateColumns(wrapper.element as HTMLElement)).toBe('repeat(auto-fill, minmax(min(100%, 280px), 1fr))')
   })
 
   it('uses auto-fit when repeat is fit', () => {
@@ -52,7 +52,7 @@ describe('grid', () => {
       props: { columns: { minWidth: 280, repeat: 'fit' } },
     })
 
-    expect(templateColumns(wrapper.element as HTMLElement)).toBe('repeat(auto-fit, minmax(280px, 1fr))')
+    expect(templateColumns(wrapper.element as HTMLElement)).toBe('repeat(auto-fit, minmax(min(100%, 280px), 1fr))')
   })
 
   it('caps the column count on the track minimum so present columns still fill', () => {
@@ -106,13 +106,13 @@ describe('grid', () => {
     expect(grid.attributes('data-justify')).toBe('start')
   })
 
-  it('omits the column count for responsive tracks and defaults alignment to stretch', () => {
+  it('omits the column count for responsive tracks and leaves alignment to the browser until set', () => {
     const wrapper = mount(Grid, { props: { columns: { minWidth: 240 } } })
 
     const grid = wrapper.find('.astryx-grid')
     expect(grid.attributes('data-columns')).toBeUndefined()
-    expect(grid.attributes('data-align')).toBe('stretch')
-    expect(grid.attributes('data-justify')).toBe('stretch')
+    expect(grid.attributes('data-align')).toBeUndefined()
+    expect(grid.attributes('data-justify')).toBeUndefined()
   })
 
   it('applies gap as spacing tokens and lets an axis override win', () => {
@@ -218,7 +218,7 @@ describe('grid', () => {
     columns.value = { minWidth: 120 }
     await nextTick()
 
-    expect(templateColumns(wrapper.element as HTMLElement)).toBe('repeat(auto-fill, minmax(120px, 1fr))')
+    expect(templateColumns(wrapper.element as HTMLElement)).toBe('repeat(auto-fill, minmax(min(100%, 120px), 1fr))')
   })
 })
 

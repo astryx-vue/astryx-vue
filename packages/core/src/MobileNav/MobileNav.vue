@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import type { MobileNavEmits, MobileNavProps, MobileNavSide, MobileNavSlots } from './types.js'
-import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, useId, useTemplateRef, watch } from 'vue'
+import type { MobileNavEmits, MobileNavProps, MobileNavSlots } from './types.js'
+import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, useAttrs, useId, useSlots, useTemplateRef, watch } from 'vue'
 import { useScrollLock } from '../composables/internal/scrollLock.js'
 import { useFocusTrap } from '../composables/useFocusTrap.js'
 import { useRestoreFocus } from '../composables/useRestoreFocus.js'
+import { holdEntranceInput } from '../layer/holdEntranceInput.js'
 import { provideLayerDepth } from '../layer/layerDepth.js'
 import { resetLayerScopedContext } from '../layer/scopedProvide.js'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { navMessages } from '../locale/messages/nav.js'
 import { useScrollbars } from '../Scrollbars/useScrollbars.js'
-import { mobileNavKey } from './context.js'
+import { resolveAutoSide } from './autoSide.js'
+import { mobileNavCloseKey, mobileNavKey } from './context.js'
 import { useMobileNavLayer } from './useMobileNavLayer.js'
 import '../../styles/mobile-nav.css'
 
@@ -22,7 +25,7 @@ const props = withDefaults(defineProps<Omit<MobileNavProps, 'isOpen'>>(), {
 const emit = defineEmits<Omit<MobileNavEmits, 'update:isOpen'>>()
 defineSlots<MobileNavSlots>()
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ nav: navMessages })
 
 // 抽屉内容是这一层的成员边界：外面组里的尺寸、禁用、选中值都不再算数。
 resetLayerScopedContext()
@@ -32,23 +35,36 @@ const isOpen = defineModel<boolean>('isOpen', { default: false })
 const dialogRef = ref<HTMLDialogElement | null>(null)
 const bodyEl = useTemplateRef<HTMLElement>('body')
 useScrollbars(bodyEl)
-const resolvedSide = ref<'start' | 'end'>(props.side === 'end' ? 'end' : 'start')
+const resolvedSide = ref<'start' | 'end'>(props.side === 'start' ? 'start' : 'end')
 const generatedId = `astryx-mobile-nav-${useId()}`
 const dialogId = computed(() => props.id || generatedId)
 const labelId = computed(() => `${dialogId.value}-label`)
 
+const attrs = useAttrs()
+const slots = useSlots()
 const accessibleName = computed(() => props.label || props.header || messages.value.nav.mobileNav)
 const closing = ref(false)
 const trapEnabled = computed(() => isOpen.value || closing.value)
+const hasTitle = computed(() => Boolean(slots.header) || Boolean(props.header))
+/** 内容区地标和对话框同名：调用方写的 aria-labelledby 优先，其次是标题，再退回 aria-label。 */
+const landmarkLabelledby = computed(() => (attrs['aria-labelledby'] as string | undefined) || (hasTitle.value ? labelId.value : undefined))
 const sideIsStart = computed(() => resolvedSide.value === 'start')
 const CLOSE_DELAY_MS = 300
 let closeTimer: ReturnType<typeof setTimeout> | undefined
+// 主指针是手指时，抽屉滑进来之前（最多 CLOSE_DELAY_MS）什么都点不到；关闭不挡。
+let releaseEntrance: (() => void) | null = null
+
+function releaseEntranceHold(): void {
+  releaseEntrance?.()
+  releaseEntrance = null
+}
 
 useScrollLock(isOpen)
 // 启用开关要一直开着。关掉时 shouldRestore 变 false，启用开关如果跟着一起关，焦点就回不去。
 useRestoreFocus({ isEnabled: computed(() => true), shouldRestore: trapEnabled })
 useFocusTrap({ container: dialogRef, isEnabled: trapEnabled })
 provide(mobileNavKey, true)
+provide(mobileNavCloseKey, () => setOpen(false))
 
 const layer = useMobileNavLayer({
   getContainer: () => dialogRef.value,
@@ -56,16 +72,11 @@ const layer = useMobileNavLayer({
   onDismiss: () => setOpen(false),
 })
 
-function resolveSide(side: MobileNavSide): 'start' | 'end' {
-  if (side === 'start' || side === 'end')
-    return side
-  const active = document.activeElement
-  if (active instanceof HTMLElement && active !== document.body) {
-    const rect = active.getBoundingClientRect()
-    const center = rect.left + rect.width / 2
-    return center < window.innerWidth / 2 ? 'start' : 'end'
-  }
-  return 'start'
+/** 显式的 `side` 直接用；`auto` 按打开者的位置和文字方向算。 */
+function resolveSide(): 'start' | 'end' {
+  if (props.side === 'start' || props.side === 'end')
+    return props.side
+  return resolveAutoSide(dialogRef.value, dialogId.value)
 }
 
 function clearCloseTimer(): void {
@@ -93,14 +104,18 @@ function syncDialog(open: boolean): void {
   const dialog = dialogRef.value
   if (!dialog)
     return
+  releaseEntranceHold()
   if (open) {
     clearCloseTimer()
     closing.value = false
-    resolvedSide.value = resolveSide(props.side)
     if (typeof dialog.showModal === 'function' && !dialog.open)
       dialog.showModal()
     else
       dialog.setAttribute('open', '')
+    releaseEntrance = holdEntranceInput(dialog, {
+      entrance: dialog.querySelector('.astryx-mobile-nav__drawer'),
+      capMs: CLOSE_DELAY_MS,
+    })
     return
   }
   if (!dialog.open || reduceMotion()) {
@@ -120,6 +135,9 @@ function setOpen(next: boolean): void {
 }
 
 function onCancel(event: Event): void {
+  // 从里面冒上来的 cancel（关掉文件选择器）不是关闭请求；平台自己的关闭请求发给 dialog 本身。
+  if (event.target !== event.currentTarget)
+    return
   event.preventDefault()
   if (!layer.shouldCloseOnCancel())
     return
@@ -132,18 +150,24 @@ function onDialogClick(event: MouseEvent): void {
 }
 
 watch(isOpen, (open) => {
+  // 打开的那一帧就在对的那条边：在渲染之前、焦点还在打开者身上时算好。
+  if (open)
+    resolvedSide.value = resolveSide()
   // Keep the modal and its focus boundary alive while the exit animation runs.
   if (!open && dialogRef.value?.open && !reduceMotion())
     closing.value = true
   void nextTick(() => syncDialog(open))
-})
+}, { flush: 'pre' })
 
 onMounted(() => {
-  if (isOpen.value)
-    syncDialog(true)
+  if (!isOpen.value)
+    return
+  resolvedSide.value = resolveSide()
+  syncDialog(true)
 })
 
 onBeforeUnmount(() => {
+  releaseEntranceHold()
   clearCloseTimer()
   const dialog = dialogRef.value
   if (dialog?.open && typeof dialog.close === 'function')
@@ -169,7 +193,7 @@ onBeforeUnmount(() => {
     @cancel="onCancel"
     @click="onDialogClick"
   >
-    <div class="astryx-mobile-nav__drawer">
+    <div class="astryx-mobile-nav__drawer astryx-mobile-nav-drawer" :data-side="resolvedSide">
       <div class="astryx-mobile-nav__header" :class="{ 'astryx-mobile-nav__header--end': !$slots.header && !header }">
         <div v-if="$slots.header || header" :id="labelId" class="astryx-mobile-nav__title">
           <slot name="header">
@@ -180,9 +204,15 @@ onBeforeUnmount(() => {
           <span class="astryx-mobile-nav__close-glyph" aria-hidden="true" />
         </button>
       </div>
-      <div ref="body" class="astryx-mobile-nav__body">
+      <!-- 模态对话框本身不是地标，抽屉里的内容区是导航地标，和对话框同名。 -->
+      <nav
+        ref="body"
+        class="astryx-mobile-nav__body"
+        :aria-labelledby="landmarkLabelledby"
+        :aria-label="accessibleName"
+      >
         <slot />
-      </div>
+      </nav>
     </div>
   </dialog>
 </template>

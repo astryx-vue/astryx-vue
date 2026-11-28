@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import type { CommandPaletteInputEmits, CommandPaletteInputProps } from './types.js'
-import { computed, inject, onMounted, ref, useAttrs, useTemplateRef } from 'vue'
+import { computed, inject, onMounted, onScopeDispose, ref, useAttrs, useTemplateRef } from 'vue'
 import { invokeNativeEventHandler } from '../Button/eventHandlers.js'
-import { isKeyboardModality, trackInteractionModality } from '../composables/internal/interactionModality.js'
+import { useBusyAnnouncement } from '../composables/internal/busyAnnouncement.js'
+import { getInteractionModality, trackInteractionModality } from '../composables/internal/interactionModality.js'
 import { DIALOG_CONTEXT_KEY } from '../Dialog/context.js'
 import Icon from '../Icon/Icon.vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { commandPaletteMessages } from '../locale/messages/command-palette.js'
 import Spinner from '../Spinner/Spinner.vue'
 import { commandPaletteKey } from './context.js'
 import '../../styles/command-palette.css'
@@ -27,10 +29,15 @@ defineSlots<{
 const palette = inject(commandPaletteKey, null)
 const dialog = inject(DIALOG_CONTEXT_KEY, null)
 const attrs = useAttrs()
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ commandPalette: commandPaletteMessages })
 const inputRef = useTemplateRef<HTMLInputElement>('input')
 const keyboardFocus = ref(false)
 trackInteractionModality()
+
+// 搜索转圈只是装饰；每次进入忙碌由输入框在对话框里念一次，面板拿到结果时再收回还没念出去的那一次。
+const settleBusy = useBusyAnnouncement(() => palette?.isBusy.value === true, () => messages.value.commandPalette.loading, inputRef)
+palette?.registerBusySettle(settleBusy)
+onScopeDispose(() => palette?.registerBusySettle(null))
 
 function hasAttr(name: string): boolean {
   return Object.hasOwn(attrs, name)
@@ -123,7 +130,10 @@ const inputAttrs = computed(() => {
 const shouldFocus = computed(() => props.hasAutoFocus && dialog?.isInline.value !== true)
 
 function onFocus(event: FocusEvent): void {
-  keyboardFocus.value = isKeyboardModality()
+  // 读输入框自己所在的 document：放在 iframe 或画中画窗口里时，那里的输入只到那里。
+  const ownDocument = inputRef.value?.ownerDocument ?? document
+  trackInteractionModality(ownDocument)
+  keyboardFocus.value = getInteractionModality(ownDocument) === 'keyboard'
   invokeNativeEventHandler(attrs.onFocus, event)
 }
 
@@ -176,6 +186,8 @@ onMounted(() => {
       :role="role"
       :data-keyboard-focus="keyboardFocus ? '' : undefined"
       type="text"
+      autocorrect="off"
+      enterkeyhint="search"
       :value="value"
       @focus="onFocus"
       @blur="onBlur"
@@ -183,7 +195,7 @@ onMounted(() => {
       @keydown="onKeyDown"
     >
     <span class="astryx-command-palette-end">
-      <Spinner v-if="palette?.isBusy.value" class="astryx-command-palette-spinner" size="sm" />
+      <Spinner v-if="palette?.isBusy.value" class="astryx-command-palette-spinner" size="sm" aria-hidden="true" />
       <slot name="end">
         <slot name="endContent" />
       </slot>

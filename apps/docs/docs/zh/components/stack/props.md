@@ -13,7 +13,7 @@ footer: false
       <tr><th>名称</th><th>类型</th><th>默认值</th><th>说明</th></tr>
     </thead>
     <tbody>
-      <tr><td><code>direction</code></td><td><code>'horizontal' | 'vertical'</code></td><td><code>'vertical'</code></td><td>内容排列方向。</td></tr>
+      <tr><td><code>direction</code></td><td><code>'horizontal' | 'vertical'</code></td><td><code>'vertical'</code></td><td>内容排列方向。<code>'horizontal'</code> 沿行内方向排列：LTR 中从左到右，RTL 中从右到左。</td></tr>
       <tr><td><code>gap</code></td><td><code>SpacingStep</code></td><td>—</td><td>相邻子元素的间距。</td></tr>
       <tr><td><code>padding</code></td><td><code>SpacingStep</code></td><td>—</td><td>容器全部方向的内边距。</td></tr>
       <tr><td><code>paddingInline</code></td><td><code>SpacingStep</code></td><td>—</td><td>行内轴内边距。覆盖对应的 padding。</td></tr>
@@ -24,8 +24,8 @@ footer: false
       <tr><td><code>paddingInlineEnd</code></td><td><code>SpacingStep</code></td><td>—</td><td>行内轴结束（LTR 为右）内边距。只覆盖这一条边的 <code>paddingInline</code> 和 <code>padding</code>。</td></tr>
       <tr><td><code>hAlign</code></td><td><code>StackAlignment</code></td><td>—</td><td>根据方向控制水平主轴或交叉轴对齐。</td></tr>
       <tr><td><code>vAlign</code></td><td><code>StackAlignment</code></td><td>—</td><td>根据方向控制垂直主轴或交叉轴对齐。</td></tr>
-      <tr><td><code>justify</code></td><td><code>StackMainAlignment</code></td><td>—</td><td>主轴对齐别名。</td></tr>
-      <tr><td><code>align</code></td><td><code>StackCrossAlignment</code></td><td>—</td><td>交叉轴对齐别名。</td></tr>
+      <tr><td><code>justify</code></td><td><code>StackMainAlignment</code></td><td>—</td><td>主轴对齐别名。<code>hAlign</code> 或 <code>vAlign</code> 设置了同一根轴时，以它们为准。</td></tr>
+      <tr><td><code>align</code></td><td><code>StackCrossAlignment</code></td><td>—</td><td>交叉轴对齐别名。<code>hAlign</code> 或 <code>vAlign</code> 设置了同一根轴时，以它们为准。</td></tr>
       <tr><td><code>wrap</code></td><td><code>'nowrap' | 'wrap' | 'wrap-reverse'</code></td><td><code>'nowrap'</code></td><td>子元素换行方式。</td></tr>
       <tr><td><code>width</code></td><td><code>number | string</code></td><td>—</td><td>容器宽度。数字按像素处理。</td></tr>
       <tr><td><code>height</code></td><td><code>number | string</code></td><td>—</td><td>容器高度。数字按像素处理。</td></tr>
@@ -45,7 +45,7 @@ type SpacingStep = 0 | 0.5 | 1 | 1.5 | 2 | 3 | 4 | 5 | 6 | 8 | 10
 
 ## HStack Props
 
-`HStack` 固定使用水平方向。
+`HStack` 固定使用水平方向，沿行内方向排列：LTR 中从左到右，RTL 中从右到左。
 
 - 组件支持 `Stack` 的通用属性。
 - 组件不提供 `direction` 属性。

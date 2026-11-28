@@ -6,7 +6,7 @@ import { Icon } from '@astryx-vue/core/Icon'
 import { HStack, VStack } from '@astryx-vue/core/Stack'
 import { Text } from '@astryx-vue/core/Text'
 import { Timestamp } from '@astryx-vue/core/Timestamp'
-import { ToastViewport, useToast } from '@astryx-vue/core/Toast'
+import { useToast } from '@astryx-vue/core/Toast'
 
 const message = 'The canary at 11:42 AM caused a memory spike. Rolled back at 11:58 AM.'
 
@@ -119,5 +119,4 @@ function copyMessage(): void {
       </ChatMessage>
     </ChatMessageList>
   </VStack>
-  <ToastViewport />
 </template>

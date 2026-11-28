@@ -82,10 +82,20 @@ export interface TableFilterField {
 export type TableFilterValue = string | number | string[]
 export type TableFilterState = Record<string, TableFilterValue>
 
+/** 按批加载的状态：还有没有下一批、现在是否正在加载。 */
+export interface TableLoadingState {
+  hasMore: boolean
+  isLoading: boolean
+}
+
 export interface TableSortContribution {
   direction: TableSortDirection | null
   rank: number | null
-  label: string
+  /**
+   * 表头按钮的描述，多列排序时说明这一列排第几（例如「Priority 2 of 3」），否则为 `null`。
+   * 按钮的名字就是列标题，方向由表头的 `aria-sort` 表达。
+   */
+  description: string | null
   onClick: (event: MouseEvent) => void
 }
 
@@ -197,7 +207,27 @@ export interface TableColumnResizeContribution {
   hasHandle: boolean
 }
 
+/**
+ * 插件改变行结构的方式。`flat` 表示每条数据仍然正好一行；树、分组、展开面板会多出或藏起行。
+ * 给了 `rowPatch` 或单元格补丁的插件不声明 `flat` 时按 `custom` 算，行窗口化退回全部渲染。
+ */
+export type TableRowModel = 'flat' | 'tree' | 'grouped' | 'detail' | 'custom'
+
+/** 窗口化插件交给表格的几何意图，数据、列和渲染仍由表格负责。 */
+export interface TableVirtualizationContribution {
+  /** 行窗口化：行高和首帧视口高度，CSS 像素。 */
+  rows?: () => { rowHeight: number, initialViewportHeight: number }
+  /** 列窗口化：首帧视口宽度，CSS 像素。 */
+  columns?: () => { initialViewportWidth: number }
+}
+
 export interface TablePlugin<T extends Record<string, unknown> = Record<string, unknown>> {
+  /** 见 `TableRowModel`。 */
+  rowModel?: TableRowModel
+  /** 行、列窗口化插件用。 */
+  virtualization?: TableVirtualizationContribution
+  /** 固定在两端的列，列窗口化让它们一直挂着。 */
+  pinnedColumns?: () => { startKeys: readonly string[], endKeys: readonly string[] }
   transformColumns?: (columns: TableColumn<T>[]) => TableColumn<T>[]
   sortFor?: (column: TableColumn<T>) => TableSortContribution | null
   filterFor?: (column: TableColumn<T>) => TableFilterContribution | null
@@ -212,6 +242,8 @@ export interface TablePlugin<T extends Record<string, unknown> = Record<string, 
   onColumnResizeEnd?: (updates: Record<string, number>) => void
   /** 渲染在表格上方的内容，分页这类插件用。 */
   above?: () => VNodeChild
+  /** 按批加载的插件报告加载状态；有插件在加载时，表格不显示默认的空状态。 */
+  loadingState?: () => TableLoadingState
   below?: () => VNodeChild
   /** 改一行的属性、点击、分组头或展开面板。多个插件的结果会合并。 */
   rowPatch?: (row: T, index: number, columnCount: number) => TableRowPatch | null
@@ -242,6 +274,9 @@ export interface TableProps<T extends Record<string, unknown> = Record<string, u
   isStriped?: boolean
   hasHover?: boolean
   verticalAlign?: TableVerticalAlign
+  /**
+   * 单元格放不下时的处理。不传时按 `wrap`；用了行或列窗口化插件时按 `truncate`，行高保持一致。
+   */
   textOverflow?: TableTextOverflow
   plugins?: Record<string, TablePlugin<T> | undefined>
   label?: string

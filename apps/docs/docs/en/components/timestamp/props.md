@@ -23,7 +23,7 @@ footer: false
         <td><code>format</code></td>
         <td><code>TimestampFormat</code></td>
         <td><code>'auto'</code></td>
-        <td><code>relative</code>, <code>relative_short</code>, <code>auto</code>, <code>date</code>, <code>date_long</code>, <code>date_weekday</code>, <code>date_time</code>, <code>time</code>, <code>system_date</code>, <code>system_date_time</code>, <code>system_time</code>, or <code>unix_seconds</code>.</td>
+        <td><code>relative</code>, <code>relative_short</code>, <code>auto</code>, <code>date</code>, <code>date_long</code>, <code>date_weekday</code>, <code>date_time</code>, <code>time</code>, <code>system_date</code>, <code>system_date_time</code>, <code>system_time</code>, or <code>unix_seconds</code>. Date-bearing formats write the date in the provider's <code>calendar</code>; <code>system_*</code> and <code>unix_seconds</code> stay Gregorian ISO or plain numbers in every calendar.</td>
       </tr>
       <tr>
         <td><code>autoThreshold</code></td>
@@ -35,13 +35,19 @@ footer: false
         <td><code>hasTooltip</code></td>
         <td><code>boolean</code></td>
         <td><code>true</code></td>
-        <td>Shows a hover card with a copyable absolute time. <code>tooltipEntries</code> replaces the default lines.</td>
+        <td>Shows a card with a copyable absolute time on hover or keyboard focus. <code>tooltipEntries</code> replaces the default lines.</td>
       </tr>
       <tr>
         <td><code>tooltipEntries</code></td>
         <td><code>TimestampTooltipEntry[]</code></td>
         <td>-</td>
-        <td>Each entry picks a format, an optional <code>timezoneID</code>, and an optional label.</td>
+        <td>Each entry picks a format, an optional <code>timezoneID</code>, and an optional label. An entry without a <code>timezoneID</code> follows the <code>timezoneID</code> prop, or the viewer's zone when that is not set; <code>'local'</code> always means the viewer's zone.</td>
+      </tr>
+      <tr>
+        <td><code>timezoneID</code></td>
+        <td><code>string</code></td>
+        <td>-</td>
+        <td>IANA zone the absolute formats are written in, such as <code>'UTC'</code>. Omit it, or pass <code>'local'</code>, for the viewer's own zone. A named zone gives the same text on the server and in the browser. Relative formats ignore it, and a <code>tooltipEntries</code> row without its own <code>timezoneID</code> follows it.</td>
       </tr>
       <tr>
         <td><code>isTimezoneShown</code></td>
@@ -83,7 +89,9 @@ footer: false
   </table>
 </div>
 
-An unknown <code>timezoneID</code> warns in the console and falls back to the local zone.
+An unknown <code>timezoneID</code>, on the prop or in an entry, warns in the console and falls back to the local zone.
+
+Attributes you put on <code>Timestamp</code> land on the <code>&lt;time&gt;</code> element. Your own <code>aria-label</code> and <code>tabindex</code> replace the ones the component would add.
 
 ## Theming
 

@@ -3,8 +3,10 @@ import type { CarouselHandle, CarouselProps, CarouselSlots } from './types.js'
 import { computed, nextTick, ref, watch } from 'vue'
 import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
-import { useAstryxMessages } from '../locale/context.js'
+import { useComponentMessages } from '../locale/context.js'
+import { carouselMessages } from '../locale/messages/carousel.js'
 import { CarouselItems } from './slides.js'
+import { useCarouselPaging } from './useCarouselPaging.js'
 import { useCarouselScroller } from './useCarouselScroll.js'
 import '../../styles/carousel.css'
 
@@ -20,12 +22,13 @@ const props = withDefaults(defineProps<CarouselProps>(), {
 
 defineSlots<CarouselSlots>()
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ carousel: carouselMessages })
 const scroller = ref<HTMLElement | null>(null)
 const startButton = ref<HTMLButtonElement | null>(null)
 const endButton = ref<HTMLButtonElement | null>(null)
 const focusedNav = ref<'start' | 'end' | null>(null)
-const { measure, onKeyDown, overflow, scrollByDirection, scrollToIndex } = useCarouselScroller(scroller)
+const { followShown, measure, onKeyDown, overflow, scrollByDirection, scrollToIndex } = useCarouselScroller(scroller)
+useCarouselPaging(scroller, () => props.hasSnap, followShown)
 
 const regionLabel = computed(() => props.label ?? messages.value.carousel.label)
 
@@ -102,7 +105,8 @@ function onEndFocus(event: FocusEvent): void {
 
 function onNavBlur(event: FocusEvent): void {
   const button = buttonElement(event.currentTarget)
-  if (button != null && !button.disabled)
+  // 禁用的按钮是被这次更新顺带失焦的，不是用户移开了焦点。
+  if (button != null && button.getAttribute('aria-disabled') !== 'true')
     focusedNav.value = null
 }
 
@@ -139,23 +143,27 @@ function slideLabel(position: number, total: number): string {
     :aria-label="regionLabel"
     data-component="carousel"
   >
-    <!-- eslint-disable-next-line vue-a11y/no-static-element-interactions -- tabindex 把滚动区放进 Tab 序列；左右方向键只滚动这一行。 -->
+    <!-- 滚动区是和轮播同名的分组，只在内容溢出时进 Tab 序列，左右方向键只滚动这一行。放得下时仍能被程序聚焦，用来接住边缘按钮交出的焦点。 -->
+    <!-- eslint-disable-next-line vue-a11y/no-static-element-interactions -- 分组本身接收方向键滚动，tabindex 随溢出切换。 -->
     <div
       ref="scroller"
       class="astryx-carousel__scroller astryx-carousel-scroller"
+      role="group"
+      :aria-label="regionLabel"
       :data-gap="gap"
       :data-padding="padding"
-      :data-snap="hasSnap || undefined"
+      :data-snap="hasSnap ? true : undefined"
       :data-edge-fade="hasEdgeFade || undefined"
       :data-fade="fade"
-      tabindex="0"
+      :tabindex="overflow.hasOverflow ? 0 : -1"
       :style="scrollerStyle"
       @keydown="onKeyDown($event, hasLoop)"
     >
       <CarouselItems :content="$slots.default" :label="slideLabel" @update="measure" />
     </div>
     <div v-if="hasButtons" class="astryx-carousel__controls">
-      <div class="astryx-carousel__pill astryx-carousel__pill--start" :data-hidden="!canScrollStart || undefined">
+      <!-- 隐藏的按钮不是 Tab 停靠点，也不在无障碍树里；光靠禁用态它仍可聚焦。 -->
+      <div class="astryx-carousel__pill astryx-carousel__pill--start" :data-hidden="!canScrollStart || undefined" :inert="!canScrollStart || undefined">
         <IconButton
           variant="ghost"
           size="sm"
@@ -168,7 +176,7 @@ function slideLabel(position: number, total: number): string {
           <Icon icon="chevronLeft" size="xsm" />
         </IconButton>
       </div>
-      <div class="astryx-carousel__pill astryx-carousel__pill--end" :data-hidden="!canScrollEnd || undefined">
+      <div class="astryx-carousel__pill astryx-carousel__pill--end" :data-hidden="!canScrollEnd || undefined" :inert="!canScrollEnd || undefined">
         <IconButton
           variant="ghost"
           size="sm"

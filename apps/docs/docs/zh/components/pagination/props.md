@@ -24,7 +24,9 @@ footer: false
       <tr><td><code>prevLabel</code></td><td><code>string</code></td><td><code>Previous</code> / <code>上一页</code></td><td>上一页按钮文字。未设置语言时为英文，提供 <code>zh-CN</code> 后为中文。</td></tr>
       <tr><td><code>nextLabel</code></td><td><code>string</code></td><td><code>Next</code> / <code>下一页</code></td><td>下一页按钮文字。未设置语言时为英文，提供 <code>zh-CN</code> 后为中文。</td></tr>
       <tr><td><code>pageSizeLabel</code></td><td><code>string</code></td><td><code>Per page</code> / <code>每页</code></td><td>每页数量选择器的标签。未设置语言时为英文，提供 <code>zh-CN</code> 后为中文。</td></tr>
-      <tr><td><code>variant</code></td><td><code>'pages' | 'count' | 'compact' | 'dots' | 'input' | 'none'</code></td><td><code>'pages'</code></td><td>中间区域。 <code>input</code> 是可输入的页码；<code>compact</code> 的「第几页 / 共几页」可以用 <code>hasFirstLast</code> 加上首尾按钮。</td></tr>
+      <tr><td><code>variant</code></td><td><code>'pages' | 'count' | 'compact' | 'dots' | 'input' | 'none'</code></td><td><code>'pages'</code></td><td>中间区域。 <code>input</code> 是可输入的页码（一个只收整数的 <code>NumberInput</code>：超过最后一页会收到最后一页，被拒的输入留在框里，说明显示在状态图标上）；<code>compact</code> 的「第几页 / 共几页」可以用 <code>hasFirstLast</code> 加上首尾按钮。</td></tr>
+      <tr><td><code>getPageHref</code></td><td><code>(page: number, pageSize?: number) =&gt; string</code></td><td>—</td><td>返回某一页的地址。设置后，页码、上一页、下一页、首页和末页控件渲染成指向该地址的链接，页面可以在新标签页打开、可以复制地址，脚本加载前也能用。普通点击仍会触发 <code>change</code>：用它更新状态或上报统计，不要在里面再导航，链接会自己导航。要在别处打开的点击（带修饰键、中键、<code>target</code> 不是本页）在这里不换页。只有设了 <code>pageSize</code> 或 <code>pageSizeOptions</code> 时才会传 <code>pageSize</code>。圆点、页码输入框和每页条数选择器不是链接。选每页条数时，请在 <code>pageSizeChange</code> 里导航到新条数下的第 1 页。被导航规则拒绝的地址不会写进 <code>href</code>，那个控件的点击也不换页。</td></tr>
+      <tr><td><code>as</code></td><td><code>NavLinkComponent</code></td><td>—</td><td>给 <code>getPageHref</code> 生成的链接用的链接组件，例如路由链接。优先于 <code>LinkProvider</code> 给的默认值。</td></tr>
       <tr><td><code>siblingCount</code></td><td><code>number</code></td><td><code>1</code></td><td>页码形态下，当前页两侧各留几个页码。窄容器会再收一档。</td></tr>
       <tr><td><code>step</code></td><td><code>number</code></td><td><code>1</code></td><td>上一页和下一页每次跳几页。</td></tr>
       <tr><td><code>hasMore</code></td><td><code>boolean</code></td><td>—</td><td>总数未知时，后面是否还有内容。<code>total</code> 大于 0 时以总条目数为准。</td></tr>
@@ -59,3 +61,7 @@ footer: false
     </tbody>
   </table>
 </div>
+
+## 主题
+
+这一排控件里的第一个和最后一个，在 `pagination-button` 目标上带 `data-first="first"` 和 `data-last="last"`。主题把控件连成一条时，可以只给这两头加外侧圆角：`components: { 'pagination-button': { 'first:first': { borderStartStartRadius: '8px' } } }`。

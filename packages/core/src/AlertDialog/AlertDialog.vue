@@ -4,6 +4,8 @@ import type { ButtonVariant } from '../Button/types.js'
 import type { AlertDialogEmits, AlertDialogProps, AlertDialogSlots } from './types.js'
 import { computed, onMounted, provide, shallowRef, useId, useTemplateRef } from 'vue'
 import Button from '../Button/Button.vue'
+import { pressGroupItemProps, useActionGroupTracking } from '../composables/internal/useActionGroupTracking.js'
+import { useCoarsePointer } from '../composables/useCoarsePointer.js'
 import { useMediaQuery } from '../composables/useMediaQuery.js'
 import Dialog from '../Dialog/Dialog.vue'
 import Heading from '../Heading/Heading.vue'
@@ -11,6 +13,7 @@ import { useScrollbars } from '../Scrollbars/useScrollbars.js'
 import Stack from '../Stack/Stack.vue'
 import Text from '../Text/Text.vue'
 import { ALERT_DIALOG_CONTEXT_KEY } from './context.js'
+import { useAlertMotion } from './useAlertMotion.js'
 import '../../styles/alert-dialog.css'
 
 defineOptions({ name: 'AstryxAlertDialog', inheritAttrs: false })
@@ -101,6 +104,23 @@ const actions = computed<AlertDialogAction[]>(() => {
   return isSmallScreen.value ? [confirm, cancel] : [cancel, confirm]
 })
 
+/**
+ * 触屏为主的设备上，两个按钮像系统弹窗一样跟踪手指和笔：按下的那个立刻高亮，滑到另一个上高亮跟过去，
+ * 松手时执行手指下的那个，在按钮外松手什么都不执行。鼠标按下还是原生按钮的行为。
+ */
+const footer = useTemplateRef<HTMLElement>('footer')
+const tracksPress = useCoarsePointer()
+useActionGroupTracking(footer, { isEnabled: tracksPress })
+const actionTrackingProps = computed(() => (tracksPress.value ? pressGroupItemProps() : undefined))
+
+// 手指下弹窗缩放淡入、淡出，淡出播完对话框才关闭；内联的弹窗不是浮层，不播。
+const motion = useAlertMotion({
+  isOpen: () => props.isOpen,
+  isEnabled: () => tracksPress.value && !props.isInline,
+  element: () => element.value,
+})
+const isPresented = motion.isPresented
+
 const dialogRole = computed(() => (props.isInline ? 'group' : 'alertdialog'))
 const layout = computed(() => (isSmallScreen.value ? 'stacked' : 'row'))
 </script>
@@ -114,14 +134,15 @@ const layout = computed(() => (isSmallScreen.value ? 'stacked' : 'row'))
     :aria-labelledby="titleId"
     :data-layout="layout"
     :is-inline="isInline"
-    :is-open="isOpen"
+    :is-open="isPresented"
+    :data-touch-motion="motion.isDriving.value || undefined"
     purpose="form"
     :role="dialogRole"
     :width="width"
     @open-change="emit('openChange', $event)"
   >
     <div ref="content" class="astryx-alert-dialog__content">
-      <Heading :id="titleId" class="astryx-alert-dialog__title" :level="2">
+      <Heading :id="titleId" class="astryx-alert-dialog__title astryx-alert-dialog-title" :level="2">
         <slot name="title">
           {{ title }}
         </slot>
@@ -129,7 +150,7 @@ const layout = computed(() => (isSmallScreen.value ? 'stacked' : 'row'))
       <Text
         :id="descriptionId"
         as="div"
-        class="astryx-alert-dialog__description"
+        class="astryx-alert-dialog__description astryx-alert-dialog-description"
         color="secondary"
         type="body"
       >
@@ -139,7 +160,7 @@ const layout = computed(() => (isSmallScreen.value ? 'stacked' : 'row'))
       </Text>
     </div>
 
-    <div class="astryx-alert-dialog__footer">
+    <div ref="footer" class="astryx-alert-dialog__footer" :data-press-tracking="tracksPress || undefined">
       <Stack
         class="astryx-alert-dialog__actions"
         :direction="isSmallScreen ? 'vertical' : 'horizontal'"
@@ -156,6 +177,7 @@ const layout = computed(() => (isSmallScreen.value ? 'stacked' : 'row'))
           :is-loading="action.isLoading"
           :label="action.label"
           :variant="action.variant"
+          v-bind="actionTrackingProps"
           @click="action.onClick($event)"
         />
       </Stack>

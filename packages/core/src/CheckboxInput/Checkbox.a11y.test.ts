@@ -73,9 +73,9 @@ const STATES: readonly State[] = [
   input('input-read-only', '只读：可聚焦但不能改', facts({ checked: true, operable: false, readOnly: true }), { label: 'Policy acknowledged', modelValue: true, isReadOnly: true }),
   input('input-required', '声明必填（未勾选时约束校验不通过）', facts({ required: true, invalid: true }), { label: 'Accept terms', isRequired: true }),
   {
-    id: 'input-inherited-required-valid',
-    summary: '从 FormLayout 继承必填，只写 aria-required、不触发原生校验',
-    facts: facts({ required: true }),
+    id: 'input-under-required-default',
+    summary: '表单的默认必填不让没勾的复选框变成必填',
+    facts: facts(),
     render: () => h(FormLayout, { defaultOptionality: 'required' }, () => controlled(CheckboxInput, 'modelValue', false, { label: 'Marketing consent' })),
   },
   input('input-invalid', '当前值有错误', facts({ invalid: true, description: 'You must accept the terms' }), { label: 'Accept terms', status: { type: 'error', message: 'You must accept the terms' } }),

@@ -1,9 +1,6 @@
+import type { PaintedRange as HighlightRange } from './highlightRecovery.js'
 import type { SyntaxToken, TokenLine } from './types.js'
-
-interface HighlightRange {
-  highlight: Highlight
-  range: Range
-}
+import { paintWithRecovery } from './highlightRecovery.js'
 
 interface HighlightHost {
   highlights: {
@@ -54,7 +51,8 @@ function describeTokenType(type: string): void {
   const name = CSS.escape(`astryx-${type}`)
   const color = `var(${CSS.escape(`--astryx-code-syntax-${type}`)}, currentColor)`
 
-  dynamicStyles.sheet?.insertRule(`.astryx-code-block code::highlight(${name}) { color: ${color}; }`)
+  // 规则放进 astryx.components 层，和静态规则一样；不分层的规则会压过任何分层规则，主题和应用的语法色就改不动它了。
+  dynamicStyles.sheet?.insertRule(`@layer astryx.components { .astryx-code-block code::highlight(${name}) { color: ${color}; } }`)
 }
 
 function resolveHighlight(type: string): Highlight | null {
@@ -119,6 +117,8 @@ function addLineRanges(line: Element, tokens: SyntaxToken[], applied: HighlightR
       const range = new Range()
       range.setStart(text, Math.min(token.start, length))
       range.setEnd(text, Math.min(token.end, length))
+      if (range.collapsed)
+        continue
       highlight.add(range)
       applied.push({ highlight, range })
     }
@@ -134,45 +134,76 @@ function addLineRanges(line: Element, tokens: SyntaxToken[], applied: HighlightR
  * added.
  */
 export function applyHighlightRanges(codeElement: HTMLElement, tokenLines: TokenLine[]): () => void {
-  const applied: HighlightRange[] = []
-  const lines = codeElement.querySelectorAll('[data-line]')
+  return paintWithRecovery(() => {
+    const applied: HighlightRange[] = []
+    const lines = codeElement.querySelectorAll('[data-line]')
 
-  for (let i = 0; i < lines.length; i++) {
-    const tokens = tokenLines[i]
+    for (let i = 0; i < lines.length; i++) {
+      const tokens = tokenLines[i]
 
-    if (tokens != null && tokens.length > 0)
-      addLineRanges(lines[i], tokens, applied)
-  }
-
-  return () => {
-    for (const { highlight, range } of applied)
-      highlight.delete(range)
-  }
+      if (tokens != null && tokens.length > 0)
+        addLineRanges(lines[i], tokens, applied)
+    }
+    return applied
+  })
 }
 
 /** 给 contenteditable 的单文本节点画行内 token；token.start/end 是行内偏移。 */
 export function applyHighlightRangesFlat(codeElement: HTMLElement, tokenLines: TokenLine[]): () => void {
-  const applied: HighlightRange[] = []
-  const walker = codeElement.ownerDocument.createTreeWalker(codeElement, NodeFilter.SHOW_TEXT)
-  const text = walker.nextNode() as Text | null
-  if (text == null)
-    return () => {}
+  return paintWithRecovery(() => paintFlat(codeElement, tokenLines))
+}
 
+interface TextPoint {
+  node: Text
+  offset: number
+}
+
+/**
+ * 可编辑区域里，浏览器在回车、粘贴时可能把文字拆成好几个文本节点。
+ * 这里把整段文本的字符位置换算成「哪个节点、节点里第几个字」。
+ * `preferNext` 为 true 时，恰好落在两个节点交界处的位置算到后一个节点上（用作范围起点）。
+ */
+function createTextLocator(codeElement: HTMLElement): (position: number, preferNext: boolean) => TextPoint | null {
+  const nodes: { node: Text, start: number }[] = []
+  const walker = codeElement.ownerDocument.createTreeWalker(codeElement, NodeFilter.SHOW_TEXT)
+  let total = 0
+  for (let node = walker.nextNode() as Text | null; node != null; node = walker.nextNode() as Text | null) {
+    nodes.push({ node, start: total })
+    total += node.length
+  }
+  return (position, preferNext) => {
+    if (nodes.length === 0 || position < 0 || position > total)
+      return null
+    for (const { node, start } of nodes) {
+      const end = start + node.length
+      if (position < end || (position === end && !preferNext))
+        return { node, offset: position - start }
+    }
+    const last = nodes[nodes.length - 1]!
+    return { node: last.node, offset: last.node.length }
+  }
+}
+
+function paintFlat(codeElement: HTMLElement, tokenLines: TokenLine[]): HighlightRange[] {
+  const applied: HighlightRange[] = []
+  const locate = createTextLocator(codeElement)
   const source = codeElement.textContent ?? ''
   let lineStart = 0
   for (const tokens of tokenLines) {
     for (const token of tokens) {
-      const start = lineStart + token.start
-      const end = lineStart + token.end
-      if (start >= text.length || end <= 0)
+      const from = locate(lineStart + token.start, true)
+      const to = locate(lineStart + token.end, false)
+      if (from == null || to == null)
         continue
       const highlight = resolveHighlight(token.type)
       if (highlight == null)
         continue
       try {
         const range = new Range()
-        range.setStart(text, Math.max(0, Math.min(start, text.length)))
-        range.setEnd(text, Math.max(0, Math.min(end, text.length)))
+        range.setStart(from.node, from.offset)
+        range.setEnd(to.node, to.offset)
+        if (range.collapsed)
+          continue
         highlight.add(range)
         applied.push({ highlight, range })
       }
@@ -183,9 +214,5 @@ export function applyHighlightRangesFlat(codeElement: HTMLElement, tokenLines: T
     const lineEnd = source.indexOf('\n', lineStart)
     lineStart = lineEnd < 0 ? source.length : lineEnd + 1
   }
-
-  return () => {
-    for (const { highlight, range } of applied)
-      highlight.delete(range)
-  }
+  return applied
 }

@@ -58,7 +58,7 @@ const isOpen = ref(false)
 | <Badge variant="success">推荐</Badge> | 含有输入内容的对话框使用 purpose="form"。这样用户不会因误点遮罩而丢失数据。 |
 | <Badge variant="success">推荐</Badge> | 对话框只处理单一任务。内容超出可容纳范围时，考虑改用整页。 |
 | <Badge variant="error">避免</Badge> | 用对话框展示简单消息。这类消息可以内联显示，或使用 Toast 通知。 |
-| <Badge variant="error">避免</Badge> | 在对话框中嵌套对话框。应把流程拆成单个对话框内的多个步骤。 |
+| <Badge variant="error">避免</Badge> | 在对话框中嵌套对话框。应把流程拆成单个对话框内的多个步骤。唯一的例外是确认破坏性操作的 AlertDialog：它只问一个问题，按 Escape 只会关掉这个警示框。 |
 | <Badge variant="error">避免</Badge> | 为简单确认使用 fullscreen 变体。它适用于编辑器或长表单等复杂内容。 |
 
 ## 示例
@@ -83,7 +83,7 @@ const isOpen = ref(false)
 
 对话框的名称默认取自 `DialogHeader` 的标题，组件会把标题与对话框通过 `aria-labelledby` 关联起来。如果显式设置了 `aria-label` 或 `aria-labelledby`，则以你提供的名称为准。
 
-Escape 与点击遮罩不会直接关闭对话框，它们只发出 `openChange(false)`，由父组件决定是否关闭。关闭后，如果打开对话框之前的那个元素仍在页面中，焦点会回到它身上。
+Escape 与点击遮罩不会直接关闭对话框，它们只发出 `openChange(false)`，由父组件决定是否关闭。关闭后焦点回到打开对话框之前聚焦的那个元素；它已经不在页面里时，焦点改落到顶替它位置的 Tab 停靠点、附近的祖先元素或 `main`，永远不掉到 body。你在 `openChange` 里自己把焦点挪到对话框外面的话，关闭时不会被抢回来；打开着就被移除的对话框也按同样的规矩交还焦点。
 
 ## 限制
 

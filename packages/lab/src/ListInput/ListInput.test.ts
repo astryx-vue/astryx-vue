@@ -1,6 +1,6 @@
 import type { Component, VNodeChild } from 'vue'
 import type { ListInputColumn } from './types.js'
-import { TextInput } from '@astryx-vue/core'
+import { createReorderable, TextInput } from '@astryx-vue/core'
 import { renderToString } from '@vue/server-renderer'
 import { flushPromises, mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
@@ -142,26 +142,9 @@ async function clickButton(name: string): Promise<HTMLButtonElement> {
   return button
 }
 
-async function pressKey(element: Element, key: string, init: KeyboardEventInit = {}): Promise<void> {
-  element.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true, ...init }))
-  await flush()
-}
-
-function firePointer(element: Element, type: string, init: PointerEventInit = {}): void {
-  element.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, ...init }))
-}
-
 /** 只看列表里的输入框，拖动预览里的克隆体不算。 */
 function inputs(): HTMLInputElement[] {
   return [...group().querySelectorAll<HTMLInputElement>('input')]
-}
-
-function inputValues(): string[] {
-  return inputs().map(input => input.value)
-}
-
-function liveRegionTexts(): string[] {
-  return [...document.querySelectorAll('[aria-live="polite"]')].map(node => node.textContent ?? '')
 }
 
 describe('listInput', () => {
@@ -307,7 +290,7 @@ describe('listInput', () => {
   it('disables Add at maxItems while keeping removal available', async () => {
     const harness = mountList({ props: { maxItems: 2 } })
 
-    expect(buttonByLabel('Add guest')?.hasAttribute('disabled')).toBe(true)
+    expect(buttonByLabel('Add guest')?.getAttribute('aria-disabled')).toBe('true')
     const remove = buttonByLabel('Remove guest 1')
     expect(remove?.hasAttribute('disabled')).toBe(false)
 
@@ -315,199 +298,17 @@ describe('listInput', () => {
     expect(harness.spy).toHaveBeenCalledWith([guests[1]], { type: 'remove', item: guests[0], index: 0 })
   })
 
-  it('moves a focused handle with arrow keys without showing a tooltip', async () => {
-    const harness = mountList({ props: { isReorderable: true } })
-    const handle = buttonByLabel('Reorder guest 1')!
-    expect(handle.getAttribute('data-size')).toBe('md')
-    expect(handle.getAttribute('aria-describedby')).not.toContain('tooltip')
-    expect(handle.getAttribute('aria-describedby')).toBeTruthy()
-
-    handle.focus()
-    await pressKey(handle, 'ArrowDown', { altKey: true })
-    expect(harness.spy).not.toHaveBeenCalled()
-
-    await pressKey(handle, 'ArrowUp')
-    expect(harness.spy).not.toHaveBeenCalled()
-
-    await pressKey(handle, 'ArrowDown')
-    expect(harness.spy).toHaveBeenCalledTimes(1)
-    expect(harness.spy).toHaveBeenCalledWith([guests[1], guests[0]], { type: 'reorder', item: guests[0], fromIndex: 0, toIndex: 1 })
-    expect(inputValues()).toEqual(['Grace', 'Ada'])
-    expect(document.activeElement).toBe(handle)
-    // 立刻提交之后手柄属于第二条记录。
-    expect(buttonByLabel('Reorder guest 2')).not.toBeNull()
-    expect(document.querySelector('[data-list-input-reorder-source]')).toBeNull()
-  })
-
-  it('commits a keyboard reorder with change metadata', async () => {
-    const harness = mountList({ props: { isReorderable: true } })
-    const handle = buttonByLabel('Reorder guest 1')!
-    expect(handle.querySelectorAll('circle')).toHaveLength(6)
-
-    handle.focus()
-    await pressKey(handle, ' ', { code: 'Space' })
-    let source = document.querySelector('[data-list-input-reorder-source]')
-    expect(source?.closest('li')?.getAttribute('aria-posinset')).toBe('1')
-    expect(source?.querySelector('input')?.value).toBe('Ada')
-
-    await pressKey(handle, 'ArrowDown')
-    source = document.querySelector('[data-list-input-reorder-source]')
-    expect(source?.closest('li')?.getAttribute('aria-posinset')).toBe('2')
-    expect(source?.querySelector('input')?.value).toBe('Ada')
-
-    await pressKey(handle, 'Enter')
-
-    expect(harness.spy).toHaveBeenCalledWith([guests[1], guests[0]], { type: 'reorder', item: guests[0], fromIndex: 0, toIndex: 1 })
-    expect(document.querySelector('[data-list-input-reorder-source]')).toBeNull()
-  })
-
-  it('moves a picked-up record to the first and last positions with Home and End', async () => {
-    const harness = mountList({ initialValue: [...guests, createdGuest], props: { isReorderable: true } })
-    const handle = buttonByLabel('Reorder guest 3')!
-    handle.focus()
-    await pressKey(handle, ' ', { code: 'Space' })
-
-    await pressKey(handle, 'Home')
-    expect(document.querySelector('[data-list-input-reorder-source]')?.closest('li')?.getAttribute('aria-posinset')).toBe('1')
-
-    await pressKey(handle, 'End')
-    expect(document.querySelector('[data-list-input-reorder-source]')?.closest('li')?.getAttribute('aria-posinset')).toBe('3')
-
-    await pressKey(handle, 'Home')
-    await pressKey(handle, 'Enter')
-    expect(harness.spy).toHaveBeenCalledWith([createdGuest, guests[0], guests[1]], { type: 'reorder', item: createdGuest, fromIndex: 2, toIndex: 0 })
-  })
-
-  it('cancels a keyboard reorder with Escape', async () => {
-    const harness = mountList({ props: { isReorderable: true } })
-    const handle = buttonByLabel('Reorder guest 1')!
-    handle.focus()
-    await pressKey(handle, 'Enter')
-    await pressKey(handle, 'ArrowDown')
-    await pressKey(handle, 'Escape')
-
-    expect(harness.spy).not.toHaveBeenCalled()
-    expect(document.querySelector('[data-list-input-reorder-source]')).toBeNull()
-    expect(inputValues()).toEqual(['Ada', 'Grace'])
-  })
-
-  it('keeps pointer order stationary and commits once on release', async () => {
-    const harness = mountList({ initialValue: [...guests, createdGuest], props: { isReorderable: true } })
-    const rows = [...document.querySelectorAll<HTMLElement>('[data-list-input-row]')]
-    rows.forEach((row, index) => {
-      const top = index * 40
-      vi.spyOn(row, 'getBoundingClientRect').mockReturnValue({
-        x: 0,
-        y: top,
-        top,
-        right: 400,
-        bottom: top + 40,
-        left: 0,
-        width: 400,
-        height: 40,
-        toJSON: () => {},
-      } as DOMRect)
-    })
-    const handle = buttonByLabel('Reorder guest 2')!
-
-    firePointer(handle, 'pointerdown', { button: 0, pointerId: 7, clientX: 300, clientY: 50 })
-    await flush()
-
-    const source = document.querySelector('[data-list-input-reorder-source]')
-    const preview = document.querySelector<HTMLElement>('[data-list-input-drag-preview]')
-    expect(source).toBe(rows[1])
-    expect(preview).not.toBeNull()
-    expect(preview?.getAttribute('aria-hidden')).toBe('true')
-    expect(preview?.querySelector('input')?.value).toBe('Grace')
-    expect(preview?.style.top).toBe('40px')
-    expect(document.querySelector('[data-list-input-drop-target]')).toBeNull()
-
-    firePointer(handle, 'pointermove', { pointerId: 7, clientX: 345, clientY: 5 })
-    await flush()
-    expect(preview?.style.top).toBe('-5px')
-    expect(preview?.style.left).toBe('45px')
-    expect([...document.querySelectorAll<HTMLElement>('[data-list-input-row]')]).toEqual(rows)
-    expect(inputValues()).toEqual(['Ada', 'Grace', 'Linus'])
-    expect(harness.spy).not.toHaveBeenCalled()
-    expect(rows[0]?.closest('li')?.getAttribute('data-list-input-drop-target')).toBe('before')
-
-    firePointer(handle, 'pointermove', { pointerId: 7, clientX: 245, clientY: 115 })
-    await flush()
-    expect(rows[0]?.closest('li')?.getAttribute('data-list-input-drop-target')).toBeNull()
-    expect(rows[2]?.closest('li')?.getAttribute('data-list-input-drop-target')).toBe('after')
-    expect(harness.spy).not.toHaveBeenCalled()
-
-    firePointer(handle, 'pointerup', { pointerId: 7, clientX: 245, clientY: 115 })
-    await flush()
-
-    expect(harness.spy).toHaveBeenCalledTimes(1)
-    expect(harness.spy).toHaveBeenCalledWith([guests[0], createdGuest, guests[1]], { type: 'reorder', item: guests[1], fromIndex: 1, toIndex: 2 })
-    expect(document.querySelector('[data-list-input-drop-target]')).toBeNull()
-    expect(document.querySelector('[data-list-input-drag-preview]')).toBeNull()
-  })
-
-  it('clears a sub-threshold pointer drag without reordering', async () => {
-    const harness = mountList({ props: { isReorderable: true } })
-    const handle = buttonByLabel('Reorder guest 1')!
-
-    firePointer(handle, 'pointerdown', { button: 0, pointerId: 8, clientX: 10, clientY: 10 })
-    await flush()
-    firePointer(handle, 'pointermove', { pointerId: 8, clientX: 14, clientY: 10 })
-    await flush()
-
-    expect(document.querySelector('[data-list-input-reorder-source]')).not.toBeNull()
-    expect(document.querySelector('[data-list-input-drag-preview]')).not.toBeNull()
-    expect(document.querySelector('[data-list-input-drop-target]')).toBeNull()
-
-    firePointer(handle, 'pointerup', { pointerId: 8, clientX: 14, clientY: 10 })
-    await flush()
-
-    expect(harness.spy).not.toHaveBeenCalled()
-    expect(document.querySelector('[data-list-input-reorder-source]')).toBeNull()
-    expect(document.querySelector('[data-list-input-drag-preview]')).toBeNull()
-  })
-
-  it('activates a pointer drag after horizontal threshold movement and announces a return', async () => {
-    const harness = mountList({ props: { isReorderable: true } })
-    const rows = [...document.querySelectorAll<HTMLElement>('[data-list-input-row]')]
-    rows.forEach((row, index) => {
-      const top = index * 40
-      vi.spyOn(row, 'getBoundingClientRect').mockReturnValue({
-        x: 0,
-        y: top,
-        top,
-        right: 400,
-        bottom: top + 40,
-        left: 0,
-        width: 400,
-        height: 40,
-        toJSON: () => {},
-      } as DOMRect)
-    })
-    const handle = buttonByLabel('Reorder guest 1')!
-
-    firePointer(handle, 'pointerdown', { button: 0, pointerId: 9, clientX: 10, clientY: 10 })
-    await flush()
-    firePointer(handle, 'pointermove', { pointerId: 9, clientX: 15, clientY: 10 })
-    await flush()
-    firePointer(handle, 'pointerup', { pointerId: 9, clientX: 15, clientY: 10 })
-    await flush()
-
-    expect(harness.spy).not.toHaveBeenCalled()
-    expect(liveRegionTexts()).toContain('guest returned to position 1.')
-  })
-
   it('locks every field and mutation control when isDisabled is set', async () => {
-    const harness = mountList({ props: { isDisabled: true, isReorderable: true } })
+    const harness = mountList({ props: { isDisabled: true, reorderable: createReorderable({ onReorder: () => {} }) } })
 
     expect(group().getAttribute('aria-disabled')).toBe('true')
     expect(group().hasAttribute('aria-busy')).toBe(false)
 
     for (const field of inputs())
       expect(field.hasAttribute('disabled')).toBe(true)
-    expect(buttonByLabel('Add guest')?.hasAttribute('disabled')).toBe(true)
-    expect(buttonByLabel('Reorder guest 1')?.hasAttribute('disabled')).toBe(true)
-    // Remove 带提示气泡，所以走 aria 禁用，仍然能聚焦读到原因。
+    expect(buttonByLabel('Add guest')?.getAttribute('aria-disabled')).toBe('true')
+    expect(buttonByLabel('Reorder guest 1')?.getAttribute('aria-disabled')).toBe('true')
+    // 禁用的按钮都走 aria 禁用（spec:AST-085），仍然能聚焦读到原因。
     expect(buttonByLabel('Remove guest 1')?.getAttribute('aria-disabled')).toBe('true')
 
     expect(inputs()[0]?.value).toBe('Ada')
@@ -515,7 +316,7 @@ describe('listInput', () => {
   })
 
   it('marks the list busy and locks the same controls when isLoading is set', async () => {
-    mountList({ props: { isLoading: true, isReorderable: true } })
+    mountList({ props: { isLoading: true, reorderable: createReorderable({ onReorder: () => {} }) } })
 
     expect(group().getAttribute('aria-busy')).toBe('true')
     expect(group().hasAttribute('aria-disabled')).toBe(false)
@@ -524,22 +325,8 @@ describe('listInput', () => {
       expect(field.hasAttribute('disabled')).toBe(true)
     expect(buttonByLabel('Add guest')?.hasAttribute('disabled')).toBe(false)
     expect(buttonByLabel('Add guest')?.getAttribute('aria-disabled')).toBe('true')
-    expect(buttonByLabel('Reorder guest 1')?.hasAttribute('disabled')).toBe(true)
+    expect(buttonByLabel('Reorder guest 1')?.getAttribute('aria-disabled')).toBe('true')
     expect(buttonByLabel('Remove guest 1')?.getAttribute('aria-disabled')).toBe('true')
-  })
-
-  it('cancels an in-flight keyboard reorder when the list becomes busy', async () => {
-    const harness = mountList({ props: { isReorderable: true } })
-    const handle = buttonByLabel('Reorder guest 1')!
-    handle.focus()
-    await pressKey(handle, ' ', { code: 'Space' })
-    expect(document.querySelector('[data-list-input-reorder-source]')).not.toBeNull()
-
-    await harness.update({ isLoading: true })
-
-    // 拿起被放弃，而不是提交，所以不会有顺序改动漏出去。
-    expect(document.querySelector('[data-list-input-reorder-source]')).toBeNull()
-    expect(harness.spy).not.toHaveBeenCalled()
   })
 
   it('describes list status from the group and item status from its row', async () => {

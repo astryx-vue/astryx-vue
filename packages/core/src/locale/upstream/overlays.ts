@@ -19,6 +19,8 @@ export const overlaysUpstreamMap: UpstreamMapPart = {
   '@astryx.lightbox.zoom': [{ path: 'lightbox.zoom' }],
   '@astryx.lightbox.zoomedIn': [{ path: 'lightbox.zoomedIn' }],
   '@astryx.lightbox.zoomedOut': [{ path: 'lightbox.zoomedOut' }],
+  '@astryx.lightbox.captionMore': [{ path: 'lightbox.captionMore' }],
+  '@astryx.lightbox.captionLess': [{ path: 'lightbox.captionLess' }],
   '@astryx.lightbox.imagePosition': [{ path: 'lightbox.imagePosition', args: ['index', 'total'] }],
   '@astryx.lightbox.mediaPosition': [{ path: 'lightbox.mediaPosition', args: ['alt', 'index', 'total'] }],
 
@@ -32,8 +34,10 @@ export const overlaysUpstreamMap: UpstreamMapPart = {
   '@astryx.citation.label': [{ path: 'citation.label', args: ['number', 'title'] }],
 
   '@astryx.codeBlock.copied': [{ path: 'codeBlock.copied' }],
+  '@astryx.codeBlock.copyFailed': [{ path: 'codeBlock.copyFailed' }],
   '@astryx.codeBlock.copyCode': [{ path: 'codeBlock.copyCode' }],
   '@astryx.codeBlock.code': [{ path: 'codeBlock.code' }],
+  '@astryx.codeBlock.diffLabel': [{ path: 'codeBlock.diffLabel', args: ['language'] }],
   '@astryx.markdownHeadingLinks.copy': [{ path: 'markdown.headingLinkCopy', args: ['heading'] }],
   '@astryx.markdownHeadingLinks.copied': [{ path: 'markdown.headingLinkCopied' }],
   '@astryx.markdown.taskList': [{ path: 'markdown.taskList' }],

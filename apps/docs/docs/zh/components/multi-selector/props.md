@@ -23,6 +23,7 @@ footer: false
       <tr><td><code>clearable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否可清除。</td></tr>
       <tr><td><code>hasClear</code></td><td><code>boolean</code></td><td><code>false</code></td><td>有选中项时显示清除按钮。和旧名 <code>clearable</code> 等价，两者任一为真即生效。</td></tr>
       <tr><td><code>checkboxPosition</code></td><td><code>'start' | 'end'</code></td><td><code>'start'</code></td><td>勾选标记的位置。</td></tr>
+      <tr><td><code>presentation</code></td><td><code>'popover' | 'bottom-sheet' | 'adaptive'</code></td><td><code>'popover'</code></td><td><code>popover</code> 是锚定在触发器旁的浮层。<code>bottom-sheet</code> 在任何屏幕上都用底部弹层。<code>adaptive</code> 在紧凑触屏上用底部弹层：主指针是粗略指针（手指），并且视口宽度小于主题的 <code>md</code> 断点（默认 768px）或高度小于 500px。打开那一刻定下用哪种，开着的时候转屏也不换，退场播完才重新判断。</td></tr>
       <tr><td><code>variant</code></td><td><code>'input' | 'secondary' | 'ghost'</code></td><td><code>'input'</code></td><td><code>input</code> 带边框。<code>secondary</code> 对齐次要按钮。<code>ghost</code> 适合工具栏。后两种上的 attached 状态会收成独立说明。</td></tr>
       <tr><td><code>containerClass</code> / <code>controlClass</code></td><td><code>class</code></td><td>—</td><td>分别加到字段外壳和触发器本体。根上的 class 落在本体。选项上的 <code>action</code> 和单选一样：点它不改选择，面板变成两列网格。</td></tr>
       <tr><td><code>disabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否禁用。</td></tr>

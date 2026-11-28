@@ -12,7 +12,7 @@ footer: false
 <tr><td><code>v-model</code></td><td><code>string | null</code></td><td><code>null</code></td><td><code>YYYY-MM-DDTHH:MM</code>。两部分都存在才有值。</td></tr>
 <tr><td><code>label</code></td><td><code>string</code></td><td>—</td><td>必填。这一对字段的无障碍名称。</td></tr>
 <tr><td><code>placeholder</code></td><td><code>string</code></td><td>—</td><td>日期字段的占位符。</td></tr>
-<tr><td><code>hourFormat</code></td><td><code>'12h' | '24h'</code></td><td><code>'12h'</code></td><td>时间的显示格式。模型值仍是 ISO。</td></tr>
+<tr><td><code>hourFormat</code></td><td><code>'12h' | '24h'</code></td><td>语言自己的时制</td><td>时间的显示格式。不传就跟随当前语言，数字和上下午的词也跟着语言走。模型值仍是 ISO。</td></tr>
 <tr><td><code>presentation</code></td><td><code>'popover' | 'bottom-sheet' | 'native' | 'adaptive-bottom-sheet' | 'adaptive-native' | 'text-input'</code></td><td>—</td><td>日期和时间共用的打开方式。bottom-sheet，以及粗指针上的 adaptive-bottom-sheet，合成一个底部面板，在日期和时间之间切换。text-input 只作用于时间。不传时细指针弹出，粗指针用系统控件。显式值压过 nativePicker。</td></tr>
 <tr><td><code>isLabelHidden</code></td><td><code>boolean</code></td><td><code>false</code></td><td>视觉上隐藏标签，读屏仍然读得到。旧名 <code>labelHidden</code> 同样可用，两者任一为真就隐藏。</td></tr>
 <tr><td><code>containerClass</code></td><td><code>string | object | array</code></td><td>—</td><td>加到字段外壳的 class。在 InputGroup 和横向标签的 FormLayout 里没有外壳，此时不生效，开发环境会警告。</td></tr>
@@ -34,9 +34,11 @@ footer: false
 <tr><td><code>dateConstraints</code></td><td><code>Array&lt;(date: Date) =&gt; boolean&gt;</code></td><td>—</td><td>日期那一半里，任一函数返回 false 时该日不可选。</td></tr>
 <tr><td><code>numberOfMonths</code></td><td><code>1 | 2</code></td><td>—</td><td>日期月历并排的月份数。</td></tr>
 <tr><td><code>weekStartsOn</code></td><td><code>0-6 | 'sun' | 'mon' | ...</code></td><td>—</td><td>日期月历从哪一天开始一周。</td></tr>
+<tr><td><code>calendar</code></td><td><code>CalendarSystem</code></td><td>跟随 provider</td><td>日期部分按哪种历法显示、读取和选择。不传时跟随最近的 <code>InternationalizationProvider</code>。非公历下系统日期控件换成 Astryx 的选择器。值始终是公历日期时间。见<a href="/guide/calendars">历法</a>。</td></tr>
 <tr><td><code>nativePicker</code></td><td><code>'touch' | 'always' | 'never'</code></td><td>—</td><td>旧的打开方式，同时传给日期和时间。</td></tr>
 <tr><td><code>isLoading</code></td><td><code>boolean</code></td><td><code>false</code></td><td>两个字段都不可改。</td></tr>
 <tr><td><code>changeAction</code></td><td><code>(value) =&gt; void | Promise&lt;void&gt;</code></td><td>—</td><td>日期和时间都齐了之后再跑。返回 Promise 时保持加载。清除也会跑。</td></tr>
+<tr><td><code>entryErrorBehavior</code></td><td><code>'complete' | 'blur-or-enter'</code></td><td><code>'complete'</code></td><td>日期那段被拒的输入什么时候亮出来，同 DateInput；同样会触发 <code>entryErrorChange</code>。时间那段也按 <code>entryErrorBehavior</code> 走，和 TimeInput 一样：被拒的文字留在框里，原因显示在整组下面（日期那段有自己的原因时让给它），并在时间输入上设置 <code>aria-invalid</code>。</td></tr>
 <tr><td><code>isOptional</code></td><td><code>boolean</code></td><td>—</td><td>在标签旁标成可选。</td></tr>
 <tr><td><code>isRequired</code></td><td><code>boolean</code></td><td>—</td><td>把这一对字段标成必填。</td></tr>
 <tr><td><code>labelTooltip</code></td><td><code>string</code></td><td>—</td><td>标签末尾信息图标里的说明。</td></tr>

@@ -25,6 +25,19 @@ async function kitFor(idea: string, locale: 'en' | 'zh' = 'en') {
   }
 }
 
+describe('build reads a slightly misspelled idea', () => {
+  it('finds a page name written joined, split, or with two letters swapped', async () => {
+    expect((await kitFor('kanbanboard')).template?.slug).toBe('kanban-board')
+    expect((await kitFor('log in screen')).template?.slug.startsWith('login')).toBe(true)
+    expect((await kitFor('kanabn board')).template?.slug).toBe('kanban-board')
+    expect((await kitFor('dashbaord')).template?.slug.startsWith('dashboard')).toBe(true)
+  })
+
+  it('leaves a word that already matches alone', () => {
+    expect(rankTemplates('kanban board')[0]?.matchedTerms).toEqual(expect.arrayContaining(['kanban', 'board']))
+  })
+})
+
 describe('build ranking', () => {
   it('says how confident the pick is and where the page ships from', async () => {
     const direct = await kitFor('kanban board')

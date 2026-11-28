@@ -2,7 +2,8 @@
 import type { NavLinkComponent } from '../NavItem/types.js'
 import type { OverflowListItem } from './types.js'
 import { computed } from 'vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useComponentMessages } from '../locale/context.js'
+import { navMessages } from '../locale/messages/nav.js'
 import NavDisclosure from '../NavMenu/NavDisclosure.vue'
 import NavMenu from '../NavMenu/NavMenu.vue'
 import NavMenuItem from '../NavMenu/NavMenuItem.vue'
@@ -19,7 +20,7 @@ const emit = defineEmits<{
   select: [item: OverflowListItem, event: MouseEvent]
 }>()
 
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ nav: navMessages })
 const label = computed(() => messages.value.nav.more)
 const description = computed(() => messages.value.nav.moreItems(props.items.length))
 

@@ -20,11 +20,49 @@
     margin: 0;
     padding-inline-start: 0;
     overflow-inline: clip;
+    /* 行的热区只在列表里抬高，不会盖过页面上吸顶的头部。 */
+    isolation: isolate;
     list-style-type: none;
   }
 
   .astryx-list[data-dividers='true'] {
-    gap: 0;
+    row-gap: 0;
+  }
+
+  /*
+   * 有序列表的行共用一列标记：列表是两列的网格（标记按内容宽度，其余占满），
+   * 每行用子网格接上这两列，数字位数变了，别的行的文字和嵌套列表也不动。
+   * 不支持子网格时保持弹性布局。
+   */
+  @supports (grid-template-columns: subgrid) {
+    .astryx-list[data-list-style='decimal'] {
+      display: grid;
+      grid-template-columns: max-content minmax(0, 1fr);
+      column-gap: var(--astryx-spacing-2, 8px);
+    }
+
+    .astryx-list[data-list-style='decimal'] > .astryx-list-item {
+      grid-column: 1 / -1;
+    }
+
+    .astryx-list[data-list-style='decimal'] > .astryx-list-item:has(> .astryx-item__marker-content) {
+      display: grid;
+      grid-template-columns: subgrid;
+    }
+  }
+
+  /* 标记之外的内容在同一格里，仍沿用行的对齐和间距。 */
+  .astryx-item__marker-content {
+    display: flex;
+    flex: 1;
+    align-items: inherit;
+    align-self: stretch;
+    gap: inherit;
+    min-width: 0;
+  }
+
+  .astryx-item[data-align='first-line'] > .astryx-item__marker-content {
+    align-self: baseline;
   }
 
   .astryx-list:not([data-list-style='none']) {
@@ -42,6 +80,19 @@
 
   .astryx-list[data-dividers='true'] > .astryx-list-item:last-child {
     border-block-end-width: 0;
+  }
+
+  /*
+   * `animatedLayout` 下从反向移动的行上方滑过的行：滑动期间抬到上面，背后垫一层表面色，
+   * 像 UIKit 不透明的 cell 从邻居上方经过。表面是铺满内边距盒的内阴影，在按压层和内容下面，
+   * 分隔线和按压都还看得见。选中的行保留自己的底色。z-index 2 高过粗指针下热区的 1。
+   */
+  .astryx-list > .astryx-list-item[data-astryx-travelling] {
+    z-index: 2;
+  }
+
+  .astryx-list > .astryx-list-item[data-astryx-travelling]:not([data-selected='true']) {
+    box-shadow: inset 0 0 0 100vmax var(--astryx-color-background-surface, light-dark(#fff, #262626));
   }
 
   /*
@@ -78,18 +129,42 @@
   /*
    * `bleed`: the row fills the list, so its text sits on the container's
    * padding line, never closer to the row's edge than its own inset. Square
-   * corners make it meet the container's straight sides, like table rows. A
-   * swiping row keeps this padding on its inner surface instead of the root,
-   * which already carries the swipe panels.
+   * corners make it meet the container's straight sides, like table rows.
    */
   .astryx-list[data-edge='bleed'] > .astryx-list-item {
     border-radius: 0;
-  }
-
-  .astryx-list[data-edge='bleed'] > .astryx-list-item:not(.astryx-item--swipe),
-  .astryx-list[data-edge='bleed'] > .astryx-list-item > .astryx-item__surface {
     padding-inline-start: max(var(--container-padding-inline-start, 0px), var(--astryx-item-inset-inline));
     padding-inline-end: max(var(--container-padding-inline-end, 0px), var(--astryx-item-inset-inline));
+  }
+
+  /*
+   * 粗指针下，可点的行朝相邻行留出的空隙长出热区。后面的行是没有 z-index 的定位元素，
+   * 会盖住前面行的热区，所以热区抬高一层。有分隔线时热区从分隔线外缘起算（最后一行没有分隔线）。
+   */
+  @media (pointer: coarse) {
+    .astryx-list > .astryx-list-item.astryx-touch-hit-area-band::after {
+      z-index: 1;
+    }
+
+    .astryx-list[data-dividers='true'] > .astryx-list-item.astryx-touch-hit-area-band:not(:last-child)::after {
+      margin-block-end: calc(var(--astryx-border-width, 1px) * -1);
+    }
+  }
+
+  /*
+   * 圆角卡片、对话框里，作为它第一个或最后一个子元素的 `bleed` 列表：首行、末行取容器
+   * 发布的圆角，减去自己保留的块方向内边距（行的底色和焦点环不被容器的弧线裁掉）。
+   * 有标题时列表的根是容器的子元素，头部在首行上面，所以只有末行取角。其余的角保持直角。
+   */
+  :is(.astryx-card, .astryx-dialog__inner) > .astryx-list[data-edge='bleed']:first-child > .astryx-list-item:first-child {
+    border-start-start-radius: max(0px, var(--_container-corner-block-start, 0px) - var(--container-padding-block-start, 0px));
+    border-start-end-radius: max(0px, var(--_container-corner-block-start, 0px) - var(--container-padding-block-start, 0px));
+  }
+
+  :is(.astryx-card, .astryx-dialog__inner) > .astryx-list[data-edge='bleed']:last-child > .astryx-list-item:last-child,
+  :is(.astryx-card, .astryx-dialog__inner) > .astryx-list-root:last-child > .astryx-list[data-edge='bleed'] > .astryx-list-item:last-child {
+    border-end-start-radius: max(0px, var(--_container-corner-block-end, 0px) - var(--container-padding-block-end, 0px));
+    border-end-end-radius: max(0px, var(--_container-corner-block-end, 0px) - var(--container-padding-block-end, 0px));
   }
 
   .astryx-list-marker {
@@ -123,13 +198,19 @@
   .astryx-list-marker__number {
     flex-shrink: 0;
     align-self: baseline;
-    width: var(--astryx-spacing-4, 16px);
+    /* 数字右对齐、等宽，每个句点都在一条线上；比这一列更宽的数字先挂进行的内边距，再撑宽整列。 */
+    min-width: var(--astryx-spacing-4, 16px);
     color: var(--astryx-list-marker-foreground, light-dark(#171717, #fafafa));
     font-size: var(--astryx-text-body-size, 0.875rem);
+    font-variant-numeric: tabular-nums;
     line-height: var(--astryx-text-body-leading, 1.4286);
     display: flex;
     justify-content: flex-end;
     white-space: nowrap;
+  }
+
+  .astryx-list-marker__number::before {
+    margin-inline-start: calc(-1 * var(--astryx-item-inset-inline, 8px));
   }
 
   .astryx-list-marker__number[data-style='decimal']::before {
@@ -163,8 +244,7 @@
    * 第一行中心；插槽比这一行高时把文字压下去。纯 CSS，不测量。
    * 生成内容用空替代文本，读屏器读不到任何东西。
    */
-  .astryx-item[data-align='first-line'] > :is(.astryx-item__start, .astryx-item__end)::before,
-  .astryx-item--swipe[data-align='first-line'] > .astryx-item__surface > :is(.astryx-item__start, .astryx-item__end)::before {
+  .astryx-item[data-align='first-line'] > :is(.astryx-item__start, .astryx-item__end)::before {
     content: "\200B";
     content: "\200B" / "";
     inline-size: 0;
@@ -221,11 +301,70 @@
     }
   }
 
-  .astryx-item[data-astryx-press]:not([data-disabled='true']):not([data-selected='true']) {
+  .astryx-item[data-astryx-press]:not([data-disabled='true']) {
     background-image: var(--_press-paint-image);
   }
 
-  .astryx-item:has(:focus-visible) {
+  /*
+   * 手指按下时，按压色画在行自己的 `::before` 上（底色之上、内容之下），
+   * 抬手淡出的是这一层的 opacity，浏览器在合成线程上播。颜色、时长和曲线和按压强度一样。
+   * 这一层只在按压期间存在，平时行的 `::before` 原样不动；鼠标不受影响。
+   */
+  @media (pointer: coarse) {
+    .astryx-item[data-astryx-press]:not([data-disabled='true']) {
+      isolation: isolate;
+      background-image: none;
+    }
+
+    .astryx-item[data-astryx-press]:not([data-disabled='true'])::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      border-radius: inherit;
+      background-color: var(--astryx-list-item-pressed-background, light-dark(#05365919, #ffffff19));
+      pointer-events: none;
+    }
+
+    .astryx-item[data-astryx-press='fading']:not([data-disabled='true'])::before {
+      animation: astryx-press-layer-release var(--astryx-duration-exit, 175ms) var(--astryx-ease-exit, cubic-bezier(0.3, 0, 0.6, 0.6)) both;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .astryx-item[data-astryx-press='fading']:not([data-disabled='true'])::before {
+        animation-duration: min(var(--astryx-duration-exit, 175ms), 200ms);
+      }
+    }
+  }
+
+  /*
+   * 选中行保留自己的底色，悬停和按下的色调作为图片层叠在上面。
+   * 高亮行的底色本来就是悬停色，只表现按下。
+   */
+  @media (hover: hover) {
+    .astryx-item[data-interactive='true'][data-selected='true']:not([data-disabled='true']):hover {
+      background-image: linear-gradient(
+        var(--astryx-list-item-hover-background, light-dark(#0536590c, #ffffff0c)),
+        var(--astryx-list-item-hover-background, light-dark(#0536590c, #ffffff0c))
+      );
+    }
+  }
+
+  @media not all and (pointer: coarse) {
+    .astryx-item[data-interactive='true'][data-selected='true']:not([data-disabled='true']):active {
+      background-image: linear-gradient(
+        var(--astryx-list-item-pressed-background, light-dark(#05365919, #ffffff19)),
+        var(--astryx-list-item-pressed-background, light-dark(#05365919, #ffffff19))
+      );
+    }
+  }
+
+  /*
+   * 行只为自己的按钮或链接画环；委托模式下嵌套控件就是行的唯一 Tab 停点，照旧画在行上。
+   * 起止插槽里的其他控件自己画环，同一次聚焦不会出现两个环。
+   */
+  .astryx-item:has(> .astryx-item__content:focus-visible),
+  .astryx-item--delegate:has(:focus-visible) {
     outline: 2px solid var(--astryx-list-item-focus, light-dark(#0064e0, #2694fe));
     outline-offset: 3px;
   }
@@ -270,6 +409,8 @@
     font-size: var(--astryx-text-body-size, 0.875rem);
     line-height: var(--astryx-text-body-leading, 1.4286);
     overflow-wrap: anywhere;
+    /* Text 和 Heading 在里面也按 anywhere 换行。 */
+    --_astryx-text-overflow-wrap: anywhere;
   }
 
   .astryx-item__description {
@@ -277,6 +418,8 @@
     font-size: var(--astryx-text-supporting-size, 0.75rem);
     line-height: var(--astryx-text-supporting-leading, 1.6667);
     overflow-wrap: anywhere;
+    /* Text 和 Heading 在里面也按 anywhere 换行。 */
+    --_astryx-text-overflow-wrap: anywhere;
   }
 
   .astryx-item__content--inline > .astryx-item__label {
@@ -301,99 +444,170 @@
     -webkit-line-clamp: var(--astryx-item-clamp-lines, 2);
   }
 
+  /*
+   * 横滑的行：根按手势每帧写在它上面的位移平移（见 Swipe/useSwipeAction.ts）。
+   * pan-y 让浏览器继续滚动列表；pinch-zoom 把在行上开始的双指缩放留给浏览器，页面仍可缩放。
+   */
   .astryx-item.astryx-item--swipe {
-    position: relative;
-    overflow: clip;
-    padding: 0;
-    touch-action: pan-y;
-    --_item-swipe-dir: 1;
-    --_item-swipe-travel: 0;
-    --_item-swipe-duration: 0s;
+    touch-action: pan-y pinch-zoom;
+    transform: translate3d(var(--_item-swipe-travel, 0px), 0, 0);
   }
 
-  .astryx-item--swipe > .astryx-item__surface {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    gap: var(--astryx-spacing-2, 8px);
-    width: 100%;
-    min-width: 0;
-    padding-inline: var(--astryx-item-inset-inline);
-    background: var(--astryx-color-background-surface, light-dark(#fff, #262626));
-    transform: translateX(calc(var(--_item-swipe-travel) * var(--_item-swipe-dir) * 1px));
-    transition: transform var(--_item-swipe-duration) var(--astryx-ease-standard, cubic-bezier(0.24, 1, 0.4, 1));
-  }
-
-  .astryx-item--swipe[data-align='start'] > .astryx-item__surface {
-    align-items: flex-start;
-  }
-
-  .astryx-item--swipe[data-align='first-line'] > .astryx-item__surface {
-    align-items: baseline;
-  }
-
-  .astryx-item--swipe[data-density='compact'] > .astryx-item__surface {
-    padding-block: var(--astryx-spacing-1, 4px);
-  }
-
-  .astryx-item--swipe[data-density='balanced'] > .astryx-item__surface {
-    padding-block: var(--astryx-spacing-2, 8px);
-  }
-
-  .astryx-item--swipe[data-density='spacious'] > .astryx-item__surface {
-    padding-block: var(--astryx-spacing-3, 12px);
-  }
-
-  .astryx-item__swipe-panel {
+  /*
+   * 一侧的窗口：行的静止盒子。它按位移反向平移，所以停在行静止的地方，并把轨道裁到那个盒子和圆角。
+   * 透明、不接点按：只有操作接触摸。
+   */
+  .astryx-item__swipe-window {
     position: absolute;
-    z-index: 0;
-    inset-block: 0;
-    display: flex;
+    inset: 0;
+    overflow: clip;
+    border-radius: inherit;
+    pointer-events: none;
+    transform: translate3d(calc(-1 * var(--_item-swipe-travel, 0px)), 0, 0);
   }
 
-  .astryx-item__swipe-panel[data-side='leading'] {
-    inset-inline-start: 0;
+  /*
+   * 轨道：静止时在窗口旁边，一个像素都不露。它跟着行走，所以窗口里露出的部分正好是行空出来的地方。
+   * 两倍行宽覆盖所有位移（含滑出）。操作从贴着行的那一边排成一行。::before 是盖满时的底色：
+   * 盖满面板的那个操作的颜色，只在它盖满时显示。
+   */
+  .astryx-item__swipe-track {
+    position: absolute;
+    inset-block: 0;
+    width: 200%;
+    overflow: clip;
+    border-radius: inherit;
+    display: flex;
+    isolation: isolate;
+    background-color: var(--astryx-color-background-surface, light-dark(#fff, #262626));
+    transform: translate3d(var(--_item-swipe-travel, 0px), 0, 0);
+  }
+
+  .astryx-item__swipe-track::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .astryx-item__swipe-track[data-covered]::before {
+    opacity: 1;
+  }
+
+  .astryx-item__swipe-track[data-fill='neutral']::before {
+    background-color: var(--astryx-color-neutral, light-dark(rgb(0 0 0 / 0.06), rgb(255 255 255 / 0.1)));
+  }
+
+  .astryx-item__swipe-track[data-fill='accent']::before {
+    background-color: var(--astryx-color-accent, #25252a);
+  }
+
+  .astryx-item__swipe-track[data-fill='destructive']::before {
+    background-color: var(--astryx-color-error, #a50c25);
+  }
+
+  /* 最外侧操作在最后、贴着外缘。leading 一侧外缘是行内开头，所以从轨道的行内末尾反向排。 */
+  .astryx-item__swipe-track[data-side='leading'] {
+    inset-inline-end: 100%;
     flex-direction: row-reverse;
   }
 
-  .astryx-item__swipe-panel[data-side='trailing'] {
-    inset-inline-end: 0;
+  .astryx-item__swipe-track[data-side='trailing'] {
+    inset-inline-start: 100%;
   }
 
-  .astryx-item__swipe-action {
-    display: inline-flex;
+  /*
+   * 操作贴着轨道的位置：轨道走多少它就往回退多少，所以一直钉在外缘，直到行把它们全部露出（开宽），
+   * 之后跟着行走。
+   */
+  .astryx-item__swipe-entry {
+    --_item-swipe-entries-x: calc(var(--_item-swipe-pin, 0px) - var(--_item-swipe-sign, 1) * min(var(--_item-swipe-sign, 1) * var(--_item-swipe-travel, 0px), var(--_item-swipe-open, 0px)));
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
     align-items: center;
     justify-content: center;
     gap: var(--astryx-spacing-1, 4px);
-    min-width: 4.5rem;
-    padding-inline: var(--astryx-spacing-2, 8px);
+    min-width: 72px;
+    height: 100%;
+    margin: 0;
+    padding-inline: var(--astryx-spacing-3, 12px);
     border: 0;
-    background: var(--astryx-color-background-muted, #e5e5e5);
-    color: var(--astryx-color-text-primary, #171717);
-    font: inherit;
+    appearance: none;
     cursor: pointer;
+    font-family: var(--astryx-font-family-body, inherit);
+    font-size: var(--astryx-text-supporting-size, 0.8125rem);
+    font-weight: var(--astryx-font-weight-medium, 500);
+    line-height: var(--astryx-text-supporting-leading, 1.3846);
+    white-space: nowrap;
+    pointer-events: auto;
+    transform: translate3d(var(--_item-swipe-entries-x), 0, 0);
   }
 
-  .astryx-item__swipe-action[data-variant='accent'] {
-    background: var(--astryx-color-accent, #25252a);
+  .astryx-item__swipe-entry:focus-visible {
+    outline: 2px solid var(--astryx-list-item-focus, light-dark(#0064e0, #2694fe));
+    outline-offset: -2px;
+  }
+
+  .astryx-item__swipe-entry[data-variant='neutral'] {
+    background-color: var(--astryx-color-neutral, light-dark(rgb(0 0 0 / 0.06), rgb(255 255 255 / 0.1)));
+    color: var(--astryx-color-text-primary, light-dark(#171717, #f5f5f5));
+  }
+
+  .astryx-item__swipe-entry[data-variant='accent'] {
+    background-color: var(--astryx-color-accent, #25252a);
     color: var(--astryx-color-on-accent, #fff);
   }
 
-  .astryx-item__swipe-action[data-variant='destructive'] {
-    background: var(--astryx-color-error, #a50c25);
+  .astryx-item__swipe-entry[data-variant='destructive'] {
+    background-color: var(--astryx-color-error, #a50c25);
     color: var(--astryx-color-on-error, #fff);
   }
 
-  .astryx-item__swipe-action:disabled {
-    opacity: 0.5;
+  /* 被别的操作盖住的操作立即隐藏、不淡出，颜色不会和盖住它的那个混在一起。 */
+  .astryx-item__swipe-entry--covered {
+    opacity: 0;
+  }
+
+  /* 半透明用滤镜做，操作自己的 opacity 留给盖满。 */
+  .astryx-item__swipe-entry[data-disabled] {
+    filter: opacity(0.5);
     cursor: default;
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .astryx-item,
-    .astryx-item__surface {
-      transition: none;
+  /*
+   * 最外侧操作：它的颜色画在它旁边一直到行的外缘，填满行过了开宽后露出的地方，看起来像操作被拉长；
+   * 滑出时整行都是它的颜色。确认的全滑里它随操作的钉位滑到行边。
+   */
+  .astryx-item__swipe-entry--outer {
+    position: relative;
+    transform: translate3d(calc(var(--_item-swipe-entries-x) + var(--_item-swipe-slide, 0px) * var(--_item-swipe-confirm, 0)), 0, 0);
+  }
+
+  .astryx-item__swipe-entry--outer::after {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    width: 100vw;
+    background-color: inherit;
+    pointer-events: none;
+  }
+
+  .astryx-item__swipe-track[data-side='leading'] > .astryx-item__swipe-entry--outer::after {
+    inset-inline-end: 100%;
+  }
+
+  .astryx-item__swipe-track[data-side='trailing'] > .astryx-item__swipe-entry--outer::after {
+    inset-inline-start: 100%;
+  }
+
+  /* 强制配色会把危险操作的底色换成 Canvas，补一圈边让它的形状还看得见；用边框不用描边，焦点环不受影响。 */
+  @media (forced-colors: active) {
+    .astryx-item__swipe-entry[data-variant='destructive'] {
+      border: 1px solid CanvasText;
     }
   }
 }

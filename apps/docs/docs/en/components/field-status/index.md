@@ -34,6 +34,7 @@ import { FieldStatus } from '@astryx-vue/core/FieldStatus'
 | Guideline | Practice |
 | --- | --- |
 | <Badge variant="success">Do</Badge> | Use `detached` when the message is not attached to an input shell. |
+| <Badge variant="success">Do</Badge> | On a repeated failed submit with unchanged errors, announce once from the form with `useAnnounce`, for example `announce(`${errors.length} errors. ${errors[0]}`, 'assertive')`, and move focus to the first invalid field. A status is announced when it first appears and when its message or type changes, so on a first failed submit the fields announce their own errors and the form adds nothing. |
 | <Badge variant="error">Don't</Badge> | Build a second status style. This is the one the fields already use. |
 
 ## Examples

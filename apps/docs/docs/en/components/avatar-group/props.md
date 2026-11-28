@@ -17,7 +17,7 @@ footer: false
         <td><code>size</code></td>
         <td><code>AvatarSize</code></td>
         <td><code>'md'</code></td>
-        <td>Uniform size for all avatars in the group.</td>
+        <td>Uniform size for all avatars in the group: a named size or one of the numeric pixel values <code>AvatarSize</code> lists. It always overrides each child Avatar's own size, including when the group uses its default.</td>
       </tr>
       <tr>
         <td><code>shape</code></td>

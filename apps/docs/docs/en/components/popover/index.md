@@ -48,7 +48,7 @@ import { Popover } from '@astryx-vue/core/Popover'
 
 ## Examples
 
-<DemoExample :demo="popoverBottomSheet" title="Bottom sheet alternative" description="On a compact touch surface, project actions open in a bottom sheet instead of an anchored popover." locale="en" />
+<DemoExample :demo="popoverBottomSheet" title="Adaptive presentation" description="With presentation set to adaptive, project actions open in a bottom sheet on a phone and stay anchored to the button everywhere else." locale="en" />
 
 <DemoExample :demo="popoverConfirm" title="Confirm action" description="A destructive button opens a short confirmation with Delete and Cancel." locale="en" />
 
@@ -62,12 +62,17 @@ import { Popover } from '@astryx-vue/core/Popover'
 
 A popover has to communicate its presence, its current open state, and its content to people who use a screen reader or a keyboard. The component links the trigger to the surface automatically and manages focus as the surface opens and closes, so you only need to supply the accessible name.
 
-- The trigger receives `aria-haspopup`, `aria-expanded`, and `aria-controls`, so assistive technology knows it is a button that opens a surface and can announce whether that surface is currently expanded.
-- A `dialog` surface has `role="dialog"`; when `isModal` is set it also has `aria-modal="true"`, and the `label` serves as its accessible name.
-- Focus moves to the first focusable element inside the surface on open, and returns to the trigger when the user presses Escape or closes the surface.
+- The trigger receives `aria-haspopup` and `aria-expanded`, so assistive technology knows it is a button that opens a surface and can announce whether that surface is currently expanded. While the surface is open it also gets `aria-controls`; a closed trigger points at nothing.
+- An open `dialog` surface has `role="dialog"`; when `isModal` is set it also has `aria-modal="true"`, and the `label` serves as its accessible name. The closed surface stays in the DOM, hidden, without the dialog role or name.
+- A trigger with `aria-disabled="true"` stays focusable but opens nothing, even for a click dispatched on it.
+- On open, focus moves to the first enabled tab stop inside the surface: controls with `aria-disabled` are skipped, and in a roving group the member with `tabindex="0"` wins. With nothing to take it, the labelled surface does. Focus that is already on a control inside stays there.
+- On close, focus returns only when it is stuck inside the surface or on the page body. It goes to the element that opened the popover; if that is gone, to the trigger, the anchor, the tab stop that took the opener's place, a nearby ancestor, then `main`. It never lands on the body, and focus already outside the surface is left alone.
 - With `isModal` set, Tab focus stays inside the surface while it is open.
 - The built-in close button is visually hidden until it receives focus, so it appears once the keyboard reaches it.
+- In a bottom sheet (`presentation`), the trigger points at the sheet with `aria-controls` and reports its open state. Each opening moves focus to the first content control, never the close button. When the sheet closes, focus returns to the trigger.
 
 ## Layout
 
-The surface is positioned with JavaScript. It recalculates its position when the page scrolls or resizes, and it flips to the other side when the chosen side has no room.
+The surface is positioned with JavaScript. It recalculates its position when the page scrolls or resizes, and it flips to the other side when the chosen side has no room. The entrance slides in from the side the surface actually lands on and grows from the edge that faces the trigger, never travelling further than the gap between them, so a flipped surface never starts over its trigger.
+
+Opened with a finger, the surface grows out of its trigger the way an iOS popover does. It scales up from the point where it meets the trigger and shows its content from the first frame. Taps during the growth are ignored, so they neither close the surface nor reach what is under it. On close it shrinks back into the trigger. Opened with a mouse, it keeps the slide-in above. With Reduce Motion on, a surface opened with a finger fades in and out where it stands.

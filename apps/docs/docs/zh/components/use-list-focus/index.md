@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useListFocusRecentFiles } from '../../../../components/demos/use-list-focus'
 </script>
 
 ## 使用方法
@@ -27,3 +28,14 @@ import { useListFocus } from '@astryx-vue/core'
 | <Badge variant="success">推荐</Badge> | 菜单和下拉菜单传 `onEscape`，在按下 Escape 时把焦点还给触发器。 |
 | <Badge variant="success">推荐</Badge> | 工具栏式组合控件要成为单个 Tab 停靠点时，打开 `hasRovingTabIndex`；控件里可能有文本框时再打开 `hasCaretGuard`。 |
 | <Badge variant="error">避免</Badge> | 用它做二维网格导航；网格和日历用 `useGridRovingFocus`。 |
+
+## 示例
+
+常见配置、变体和状态。
+
+<DemoExample
+  :demo="useListFocusRecentFiles"
+  description="一列「最近文件」按钮，键盘导航来自 useListFocus：上下方向键在行之间移动，Home 和 End 跳到第一行和最后一行，到头会绕回，Tab 顺序里只有一行。"
+  locale="zh"
+  title="useListFocus — 最近文件"
+/>

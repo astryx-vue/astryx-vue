@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import type { MoreMenuEmits, MoreMenuInitialFocus, MoreMenuProps, MoreMenuResolvedPresentation, MoreMenuSlots } from './types.js'
-import { computed, nextTick, onBeforeUnmount, onMounted, provide, shallowRef, useId, useTemplateRef, watch } from 'vue'
+import type { MoreMenuEmits, MoreMenuInitialFocus, MoreMenuProps, MoreMenuSlots } from './types.js'
+import { computed, nextTick, onBeforeUnmount, provide, shallowRef, useId, useTemplateRef, watch } from 'vue'
+import { useMenuPress } from '../composables/useMenuPress.js'
 import Icon from '../Icon/Icon.vue'
 import IconButton from '../IconButton/IconButton.vue'
-import { useAstryxMessages } from '../locale/index.js'
+import { useHeldPresentation } from '../layer/useHeldPresentation.js'
+import { useComponentMessages } from '../locale/context.js'
+import { moreMenuMessages } from '../locale/messages/more-menu.js'
 import { useSize } from '../SizeContext/SizeContext.js'
 import { moreMenuContextKey } from './context.js'
 import MoreMenuPanel from './MoreMenuPanel.vue'
@@ -25,11 +28,10 @@ const emit = defineEmits<MoreMenuEmits>()
 defineSlots<MoreMenuSlots>()
 
 const openModel = defineModel<boolean | undefined>('isMenuOpen', { default: undefined })
-const messages = useAstryxMessages()
+const messages = useComponentMessages({ moreMenu: moreMenuMessages })
 const size = useSize(() => props.size, 'md')
 const menuLabel = computed(() => props.label ?? messages.value.moreMenu.label)
 
-const ADAPTIVE_QUERY = '(max-width: 768px) and (pointer: coarse)'
 const SURFACE_SELECTOR = '[data-astryx-more-menu-surface]'
 
 const root = useTemplateRef<HTMLElement>('root')
@@ -40,7 +42,6 @@ const menuId = `astryx-more-menu-${useId()}`
 const sheetId = `${menuId}-sheet`
 const localIsOpen = shallowRef(false)
 const pendingFocus = shallowRef<MoreMenuInitialFocus>('none')
-const isCompactTouch = shallowRef(false)
 
 // Whether the caller owns the open state is decided once, at setup: a menu that
 // starts unbound keeps owning its state for its whole life.
@@ -48,17 +49,10 @@ const isControlled = openModel.value !== undefined
 const isOpen = computed(() => (isControlled ? openModel.value === true : localIsOpen.value))
 const triggerElement = computed<HTMLElement | null>(() => (trigger.value?.element as HTMLElement | undefined) ?? null)
 
-const resolvedPresentation = computed<MoreMenuResolvedPresentation>(() => {
-  if (props.isInline)
-    return 'popover'
-
-  if (props.presentation === 'adaptive')
-    return isCompactTouch.value ? 'bottom-sheet' : 'popover'
-
-  return props.presentation === 'bottom-sheet' ? 'bottom-sheet' : 'popover'
-})
-
-const isSheet = computed(() => resolvedPresentation.value === 'bottom-sheet')
+const { surface: resolvedPresentation, isSheet, settle: settlePresentation } = useHeldPresentation(
+  () => (props.isInline ? 'popover' : props.presentation),
+  isOpen,
+)
 const isInlinePreview = computed(() => props.isInline && isOpen.value)
 
 function setOpen(next: boolean): void {
@@ -90,11 +84,29 @@ function isOnTrigger(target: EventTarget | null): boolean {
   return element != null && target instanceof Node && element.contains(target)
 }
 
+const press = useMenuPress({
+  menuRef: computed(() => panel.value?.surface ?? null),
+  triggerRef: root,
+  isEnabled: () => !isSheet.value && !props.isDisabled,
+  // 手指按住触发器才开，鼠标按下就开；按住的指针直接滑进菜单挑行，松开时执行。
+  touchModel: 'uikit',
+  onTriggerPress: () => {
+    if (isOpen.value) {
+      closeMenu()
+      return false
+    }
+    openMenu({ modality: 'pointer' })
+    return true
+  },
+  onDismiss: () => closeMenu({ restoreFocus: false }),
+})
+
 function closeMenu(options: { restoreFocus?: boolean } = {}): void {
   const { restoreFocus = true } = options
   if (!isOpen.value)
     return
 
+  press.cancel()
   const active = document.activeElement
   // Focus that already moved to a control of its own keeps it; anywhere else —
   // the trigger, the menu itself, a press on nothing — the trigger takes focus
@@ -123,7 +135,8 @@ function openMenu(options: { modality: 'keyboard' | 'pointer', focusLast?: boole
 }
 
 function onTriggerClick(event: MouseEvent): void {
-  if (props.isDisabled)
+  // 已经由按压打开（或关掉）菜单的那次手势，它的 click 不再切换。
+  if (props.isDisabled || press.isTriggerClickFromPress())
     return
 
   if (isOpen.value) {
@@ -235,23 +248,7 @@ provide(moreMenuContextKey, {
   menuSize: size,
 })
 
-let query: MediaQueryList | null = null
-
-function syncCompactTouch(event?: MediaQueryListEvent): void {
-  isCompactTouch.value = event?.matches ?? query?.matches ?? false
-}
-
-onMounted(() => {
-  if (typeof window.matchMedia !== 'function')
-    return
-
-  query = window.matchMedia(ADAPTIVE_QUERY)
-  syncCompactTouch()
-  query.addEventListener?.('change', syncCompactTouch)
-})
-
 onBeforeUnmount(() => {
-  query?.removeEventListener?.('change', syncCompactTouch)
   removeDocumentListeners()
 })
 
@@ -280,6 +277,8 @@ defineExpose({
     :data-presentation="resolvedPresentation"
     :data-size="size"
     :data-variant="variant"
+    @contextmenu="press.triggerProps.onContextmenu"
+    @pointerdown="press.triggerProps.onPointerdown"
   >
     <IconButton
       ref="trigger"
@@ -311,6 +310,7 @@ defineExpose({
       :items="items"
       :label="menuLabel"
       :placement="placement"
+      :surface-pointerdown="press.onPointerDown"
       @close="closeMenu()"
     />
 
@@ -322,6 +322,7 @@ defineExpose({
       :items="items"
       :label="menuLabel"
       @close="closeMenu()"
+      @settled="settlePresentation"
     />
   </span>
 </template>

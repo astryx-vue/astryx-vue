@@ -67,14 +67,29 @@
     user-select: none;
   }
 
-  /* Initials are painted via generated content (as upstream): part of the picture, not text. */
+  /*
+   * 首字母由生成内容画出，是头像这张「图」的一部分，不是控件的文字。
+   * 字符串来自组件写在行内的私有属性；支持替代文字的引擎给空替代文字，
+   * 其余引擎照常画出，控件的 aria-label 仍然负责命名。
+   */
   .astryx-avatar__fallback--initials::before {
-    content: attr(data-initials);
+    content: var(--_avatar-initials);
   }
 
   @supports (content: "a" / "") {
     .astryx-avatar__fallback--initials::before {
-      content: attr(data-initials) / "";
+      content: var(--_avatar-initials) / "";
+    }
+  }
+
+  /*
+   * 强制配色下作者写的颜色都会被换成 CanvasText。单独的头像让首字母和默认图标
+   * 跟随周围的颜色：外面的控件画成禁用（GrayText）或选中（HighlightText）时一起变。
+   * 组内头像的描边是被强制成 Canvas 的实底，只有 CanvasText 一定看得清，所以不跟。
+   */
+  @media (forced-colors: active) {
+    .astryx-avatar:not(.astryx-avatar--group-item) .astryx-avatar__fallback {
+      color: currentColor;
     }
   }
 
@@ -113,7 +128,7 @@
     border: var(--astryx-avatar-status-dot-border-width, var(--astryx-avatar-status-dot-computed-border-width, 1px)) solid var(--astryx-avatar-status-dot-border-color, var(--astryx-color-background-surface, #fff));
     border-radius: var(--astryx-radius-full, 9999px);
     background-color: var(--astryx-avatar-status-dot-success-background, var(--astryx-color-success, #198100));
-    color: var(--astryx-avatar-status-dot-success-foreground, var(--astryx-color-background-surface, #fff));
+    color: var(--astryx-avatar-status-dot-success-foreground, var(--astryx-color-on-success, #fff));
   }
 
   .astryx-avatar-status-dot[data-variant='neutral'] {
@@ -123,7 +138,7 @@
 
   .astryx-avatar-status-dot[data-variant='error'] {
     background-color: var(--astryx-avatar-status-dot-error-background, var(--astryx-color-error, #e33f4a));
-    color: var(--astryx-avatar-status-dot-error-foreground, var(--astryx-color-background-surface, #fff));
+    color: var(--astryx-avatar-status-dot-error-foreground, var(--astryx-color-on-error, #fff));
   }
 
   .astryx-avatar-status-dot__glyph {

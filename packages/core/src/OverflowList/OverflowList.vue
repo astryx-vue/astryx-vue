@@ -36,12 +36,13 @@ const gapPx: Record<number, number> = {
   10: 40,
 }
 const gapToken = computed(() => String(props.gap).replace('.', '-'))
-const { containerRef, measureRef, rowHeight, visibleCount: measuredCount } = useOverflow(
+const { containerRef, inlineBounds, measureRef, renderedGap, rowHeight, visibleCount: measuredCount } = useOverflow(
   () => props.items.length,
   {
     behavior: props.behavior,
     collapseFrom: props.collapseFrom,
     gap: gapPx[props.gap] ?? 8,
+    gapToken: () => `var(--astryx-spacing-${gapToken.value})`,
     maxRows: props.maxRows,
     maxVisibleItems: props.maxVisibleItems,
     minVisibleItems: props.minVisibleItems,
@@ -82,13 +83,28 @@ watch(collapsedKey, (key) => {
   emit('overflowChange', collapsed.value)
 }, { immediate: true })
 const multiRow = computed(() => props.maxRows != null && props.maxRows > 1)
-const listStyle = computed(() => {
+/** 间距变量放在最外层，量用的副本和看得见的行读到的是同一个值。 */
+const rootStyle = computed(() => {
   const style: Record<string, string> = {
     '--astryx-overflow-gap': `var(--astryx-spacing-${gapToken.value})`,
   }
+  const bounds = inlineBounds.value
+  if (!multiRow.value && bounds.rendered > 0) {
+    // 最窄也留住完整的指示器，但不比展开的内容更宽。
+    style.minWidth = `${Math.min(bounds.collapsed, bounds.rendered)}px`
+    if (bounds.inFlexRow) {
+      // 在横向 flex 里宽度本来跟着已折叠的内容走：给它展开的宽度，兄弟元素让出空间之前它先折叠。
+      style.width = `${bounds.rendered}px`
+      style.maxWidth = '100%'
+      style.flexShrink = '1000000'
+    }
+  }
+  return style
+})
+const listStyle = computed(() => {
+  const style: Record<string, string> = {}
   if (multiRow.value && rowHeight.value > 0 && props.maxRows != null) {
-    const gap = gapPx[props.gap] ?? 8
-    style.maxHeight = `${rowHeight.value * props.maxRows + gap * (props.maxRows - 1)}px`
+    style.maxHeight = `${rowHeight.value * props.maxRows + renderedGap.value * (props.maxRows - 1)}px`
   }
   return style
 })
@@ -107,7 +123,7 @@ function onSelect(item: OverflowListItem, event: MouseEvent): void {
 </script>
 
 <template>
-  <div class="astryx-overflow-list" :class="{ 'astryx-overflow-list--wrap': multiRow }">
+  <div class="astryx-overflow-list" :class="{ 'astryx-overflow-list--wrap': multiRow }" :style="rootStyle">
     <div ref="measureRef" class="astryx-overflow-list__measure" aria-hidden="true" inert>
       <div v-for="(item, index) in items" :key="itemKey(item, index)">
         <slot name="item" :item="item" :index="index">

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { SideNavHeadingProps, SideNavHeadingSlots } from './types.js'
 import { computed, useSlots } from 'vue'
+import { hasSlotContent } from '../composables/internal/slotContent.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
 import { resolveNavRoot, safeNavHref } from '../NavItem/link.js'
 import NavDisclosure from '../NavMenu/NavDisclosure.vue'
@@ -17,7 +18,7 @@ const slots = useSlots()
 const collapse = useSideNavCollapse()
 const linkComponent = useLinkComponent()
 const collapsed = computed(() => collapse.isCollapsed.value)
-const hasIcon = computed(() => slots.icon != null)
+const hasIcon = computed(() => hasSlotContent(slots.icon))
 const hasMenu = computed(() => slots.menu != null)
 /** 自己的 `as` 优先，其次是 LinkProvider 给的默认链接组件。 */
 const customLink = computed(() => props.as ?? linkComponent.value)
@@ -82,7 +83,7 @@ const linkRoot = computed(() => resolveNavRoot(safeHeadingHref.value, false, cus
     <template v-if="hasIcon" #icon>
       <slot name="icon" />
     </template>
-    <template v-if="slots.end" #end>
+    <template v-if="hasSlotContent(slots.end)" #end>
       <slot name="end" />
     </template>
     <template v-if="hasMenu" #menu="scope">

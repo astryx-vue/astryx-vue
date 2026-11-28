@@ -3,7 +3,7 @@ import type { VNode } from 'vue'
 import type { HistoryState } from './HistoryDialog.vue'
 import type { CommentVersion } from './types.js'
 import type { AnyComment } from './utils.js'
-import { AlertDialog, useTranslator } from '@astryx-vue/core'
+import { AlertDialog, commentsMessages, useComponentMessages } from '@astryx-vue/core'
 import HistoryDialog from './HistoryDialog.vue'
 
 defineOptions({ name: 'AstryxCommentDialogs' })
@@ -22,7 +22,7 @@ const emit = defineEmits<{
   closeHistory: []
 }>()
 
-const { t } = useTranslator()
+const messages = useComponentMessages({ comments: commentsMessages })
 
 function onDeleteOpenChange(open: boolean): void {
   if (!open)
@@ -34,9 +34,9 @@ function onDeleteOpenChange(open: boolean): void {
   <AlertDialog
     v-if="deleteTarget != null"
     :is-open="true"
-    :title="t('@astryx.comments.deleteTitle')"
-    :description="deleteError ?? t('@astryx.comments.deleteDescription', { name: deleteTarget.author.name })"
-    :action-label="t('@astryx.comments.delete')"
+    :title="messages.comments.deleteTitle"
+    :description="deleteError ?? messages.comments.deleteDescription(deleteTarget.author.name)"
+    :action-label="messages.comments.delete"
     :is-action-loading="isDeletePending"
     @open-change="onDeleteOpenChange"
     @action="emit('confirmDelete')"

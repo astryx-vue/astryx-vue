@@ -12,7 +12,7 @@ import { formLayoutHorizontal, formLayoutHorizontalLabels, formLayoutMixed, form
 
 ## Usage
 
-`FormLayout` arranges fields. It is not a `<form>`. Put the fields in the default slot and choose a direction.
+`FormLayout` arranges fields. It is not a `<form>`: wrap it in a native `<form>` for state and submission. `<form>` has no Astryx replacement, so it stays a plain element. Put the fields in the default slot and choose a direction.
 
 ```vue
 <script setup lang="ts">
@@ -30,7 +30,7 @@ import { TextInput } from '@astryx-vue/core/TextInput'
 
 `direction` is `vertical` (the default), `horizontal`, or `horizontal-labels`. Vertical stacks fields with a gap of spacing step 4. Horizontal places them in equal columns. Horizontal labels put the label on the left and the control on the right, and collapse to a column below 480px.
 
-`defaultOptionality` is `optional` or `required`. It changes the indicator and `aria-required` on fields that do not set their own `isOptional` or `isRequired`. It does not set the native `required` attribute. When a field sets both, optional wins. Outside a `FormLayout`, `aria-required` stays `isRequired && !isOptional`.
+`defaultOptionality` is `optional` or `required`. It changes the indicator and `aria-required` on fields that do not set their own `isOptional` or `isRequired`. It does not set the native `required` attribute. When a field sets both, optional wins. Checkboxes and switches are the exception: an unchecked box or an off switch is an answer, so they take no required state from the default and are required only through their own `isRequired`. Outside a `FormLayout`, `aria-required` stays `isRequired && !isOptional`.
 
 Nested layouts keep their own direction. A horizontal row can sit inside a vertical form.
 

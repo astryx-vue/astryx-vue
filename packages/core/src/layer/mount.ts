@@ -1,5 +1,5 @@
 import type { InjectionKey, Ref } from 'vue'
-import { provide } from 'vue'
+import { computed, inject, provide, ref } from 'vue'
 
 /**
  * 浮层的挂载点：浮层内容实际挂到哪个 DOM 元素里。
@@ -15,6 +15,21 @@ export const layerMountKey: InjectionKey<Readonly<Ref<HTMLElement | null>>> = Sy
 /** 由 Dialog 这类模态容器调用：打开期间浮层挂到 `el` 里。 */
 export function provideLayerMountTarget(el: Readonly<Ref<HTMLElement | null>>): void {
   provide(layerMountKey, el)
+}
+
+/**
+ * 由底部弹层这类模态容器调用：`host` 是容器里专门留的空元素，浮层挂进去。
+ *
+ * 那个元素渲染出来之前（或者容器这次不用原生 `<dialog>`），沿用外层的挂载点。
+ *
+ * 原生 `<dialog>` 里没有专门的挂载点时，列表里按钮的提示会按 `resolveLayerMountTarget`
+ * 挂进列表的父元素，Teleport 的两个占位节点也跟着插在列表后面。那个父元素的子节点
+ * 归 Vue 管：列表换成空状态时，Vue 拿列表后面的占位节点当插入位置，同一轮里占位节点
+ * 又随按钮一起卸掉，插入就失败了。
+ */
+export function provideNestedLayerMountTarget(host: Readonly<Ref<HTMLElement | null>>): void {
+  const outer = inject(layerMountKey, ref(null))
+  provide(layerMountKey, computed(() => host.value ?? outer.value))
 }
 
 /**

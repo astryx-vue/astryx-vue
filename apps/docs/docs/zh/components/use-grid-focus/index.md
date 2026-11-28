@@ -7,6 +7,7 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useGridFocusColorSwatches } from '../../../../components/demos/use-grid-focus'
 </script>
 
 ## 使用方法
@@ -27,3 +28,14 @@ import { useGridFocus } from '@astryx-vue/core'
 | <Badge variant="success">推荐</Badge> | `gridRef` 和 `handleKeyDown` 都挂在网格容器上。 |
 | <Badge variant="success">推荐</Badge> | 用 roving tabindex 的网格（例如日历）打开 `hasRovingTabIndex: true`，把 `handleFocus` 挂在容器的 `focusin` 上；先给一个目标元素写 `tabindex="0"`，函数会自己修正并移动它。 |
 | <Badge variant="error">不要</Badge> | 用它做普通的一维列表；一维导航用 `useListFocus`。 |
+
+## 示例
+
+常见配置、变体和状态。
+
+<DemoExample
+  :demo="useGridFocusColorSwatches"
+  description="每行八个色块的取色器，整个网格只占一个 Tab 停靠点。useGridFocus 让方向键、Home/End、Ctrl+Home/Ctrl+End 移动焦点。每个色块都是按钮，按 Enter 或点击就选中它。"
+  locale="zh"
+  title="useGridFocus — 色块网格"
+/>

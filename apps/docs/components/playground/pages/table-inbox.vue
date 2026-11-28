@@ -643,12 +643,12 @@ const threadActions = [
                 </Text>
               </VStack>
             </StackItem>
-            <Button label="Refresh" variant="ghost">
+            <Button label="Refresh" variant="ghost" @click="showToast({ body: 'Demo: the inbox would refresh here', uniqueID: 'refresh' })">
               <template #icon>
                 <Icon name="heroicons:arrow-path" size="sm" />
               </template>
             </Button>
-            <Button label="Compose" variant="primary">
+            <Button label="Compose" variant="primary" @click="showToast({ body: 'Demo: a new message would open here', uniqueID: 'compose' })">
               <template #icon>
                 <Icon name="heroicons:pencil-square" size="sm" />
               </template>
@@ -712,6 +712,7 @@ const threadActions = [
                   variant="ghost"
                   :label="`${action.label} — ${openConversation.subject}`"
                   :tooltip="action.label"
+                  @click="runRowAction(action, openConversation)"
                 >
                   <Icon :name="action.icon" size="sm" />
                 </IconButton>
@@ -817,12 +818,12 @@ const threadActions = [
               <HStack :gap="THREAD_HEADER_GAP">
                 <VStack :width="AVATAR_SIZE" />
                 <HStack :gap="2">
-                  <Button label="Reply" variant="primary">
+                  <Button label="Reply" variant="primary" @click="showToast({ body: 'Demo: a reply would open here', uniqueID: 'reply' })">
                     <template #icon>
-                      <Icon name="heroicons:arrow-uturn-left" size="sm" />
+                      <Icon class="mirror-rtl" name="heroicons:arrow-uturn-left" size="sm" />
                     </template>
                   </Button>
-                  <Button label="Reply all" variant="secondary">
+                  <Button label="Reply all" variant="secondary" @click="showToast({ body: 'Demo: a reply to everyone would open here', uniqueID: 'reply-all' })">
                     <template #icon>
                       <Icon name="heroicons:users" size="sm" />
                     </template>
@@ -838,6 +839,10 @@ const threadActions = [
 </template>
 
 <style scoped>
+:global([dir='rtl'] .mirror-rtl) {
+  transform: scaleX(-1);
+}
+
 /* 原版 Table 的数据模式默认 `table-layout: fixed`，列宽严格按声明的比例分；core 目前是 auto，列宽按内容算、行高有 0.5px 的小数。 */
 .inbox-list :deep(.astryx-table) {
   table-layout: fixed;

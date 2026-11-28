@@ -7,11 +7,12 @@ footer: false
 
 <script setup lang="ts">
 import { Badge } from '@astryx-vue/core/Badge'
+import { useTypeaheadCountryList } from '../../../../components/demos/use-typeahead'
 </script>
 
 ## 使用方法
 
-给一组选项加上 APG 里的「打字跳转」：打出来的字符先攒在缓冲区里，停一会儿就清空；只要某一项的标签以这段字符开头，就把它的下标交给 `onMatch`。同一个字母一直按，会在匹配上的几项之间轮着走，而不是把条件收得更窄。它自己不动焦点，要跟你已有的焦点管理配合，通常就是 `useListFocus` 或 `useGridRovingFocus`。
+给一组选项加上 APG 里的「打字跳转」：打出来的字符先攒在缓冲区里，停一会儿就清空；只要某一项的标签以这段字符开头，就把它的下标交给 `onMatch`。比对时不分大小写，也不看重音、带横线的字母（đ ł ø ħ ŧ ƀ）和土耳其语的 ı/İ，在任何语言下都一样；敲进来的字母本身带重音时，优先找完全对得上的那一项。同一个字母一直按，会在匹配上的几项之间轮着走，而不是把条件收得更窄。它自己不动焦点，要跟你已有的焦点管理配合，通常就是 `useListFocus` 或 `useGridRovingFocus`。
 
 `onKeyDown` 收的是原生 `KeyboardEvent`，吃掉一个可打印字符时返回 `true`。所以先让它看一眼事件，它返回 `false` 时再交给方向键。空格只有在缓冲区里已经有字的时候才算查询的一部分，所以空格照样能激活当前项。`reset()` 清掉还没超时的缓冲区，比如这组选项关掉的时候。
 
@@ -67,3 +68,14 @@ function handleArrows(event: KeyboardEvent): void {
 | <Badge variant="success">Do</Badge> | 让按键事件先过它，它返回 `false` 时再交给方向键。 |
 | <Badge variant="success">Do</Badge> | 传 `getCurrentIndex`，同一个字母才是在匹配项之间走，而不是一直卡在第一项。 |
 | <Badge variant="error">Don't</Badge> | 把它用在文本框上。字符本来就会进输入框，再来一套打字跳转只会跟输入的值打架。 |
+
+## 示例
+
+常见配置、变体和状态。
+
+<DemoExample
+  :demo="useTypeaheadCountryList"
+  description="一列国家按钮，方向键来自 useListFocus，按字母跳转来自 useTypeahead。输入「can」聚焦 Canada，连按「b」在 Belgium、Brazil、Bulgaria 之间循环。这个 hook 只通过 onMatch 报告匹配项，移动焦点交给 useListFocus。"
+  locale="zh"
+  title="useTypeahead — 输入字母聚焦国家"
+/>

@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import type { StyleValue } from 'vue'
 import type { CheckboxListEmits, CheckboxListProps } from './types.js'
-import { computed, provide, ref, useAttrs, useId } from 'vue'
+import { computed, onBeforeUnmount, provide, ref, useAttrs, useId, watch } from 'vue'
 import Field from '../Field/Field.vue'
 import { useFieldPartStyling } from '../Field/fieldParts.js'
 import List from '../List/List.vue'
 import Tooltip from '../Tooltip/Tooltip.vue'
 import { checkboxListKey } from './context.js'
+import { createRequiredGroup } from './requiredGroup.js'
 import '../../styles/checkbox-list.css'
 import '../../styles/visually-hidden-utility.css'
 
@@ -64,11 +65,22 @@ function groupDescribedBy(fieldDescribed?: string): string | undefined {
   return [attrs['aria-describedby'], fieldDescribed, showsReason.value ? `${inputId.value}-reason` : undefined].filter(Boolean).join(' ') || undefined
 }
 
+const requiredGroup = computed(() => props.isRequired === true && props.isOptional !== true ? createRequiredGroup() : undefined)
+const controlElement = ref<HTMLElement | null>(null)
+let stopObserving: (() => void) | undefined
+watch([requiredGroup, controlElement], ([group, element]) => {
+  stopObserving?.()
+  stopObserving = group != null && element != null ? group.observe(element) : undefined
+}, { flush: 'post', immediate: true })
+onBeforeUnmount(() => stopObserving?.())
+
 provide(checkboxListKey, {
+  requiredGroup,
   values: shown,
   toggle,
   isDisabled: groupDisabled,
   disabledReason,
+  hasErrorStatus: computed(() => props.status?.type === 'error'),
   isReadOnly: computed(() => (props.isReadOnly ?? false) && !groupDisabled.value),
   loadingValues: computed(() => pending.value),
   size: computed(() => props.density === 'compact' ? 'sm' : 'md'),
@@ -85,8 +97,9 @@ provide(checkboxListKey, {
     <template #default="field">
       <Tooltip :content="disabledReason" :is-enabled="showsReason" focus-trigger="always" placement="above">
         <div
+          ref="controlElement"
           class="astryx-checkbox-list-control" :class="controlClass" :style="controlStyle" role="group"
-          v-bind="parts.forwardedAttrs()" :aria-labelledby="groupLabelledBy(field.labelId)" :aria-describedby="groupDescribedBy(field.describedBy)"
+          v-bind="parts.forwardedAttrs()" :aria-disabled="groupDisabled || undefined" :aria-labelledby="groupLabelledBy(field.labelId)" :aria-describedby="groupDescribedBy(field.describedBy)"
         >
           <List :density="density" :has-dividers="hasDividers">
             <slot />
