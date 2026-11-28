@@ -17,7 +17,7 @@
   }
 
   /* 封面和标题两行一样高，宽度跟着比例走。 */
-  .astryx-audio-player__artwork {
+  .astryx-aspect-ratio.astryx-audio-player__artwork {
     flex-shrink: 0;
     overflow: hidden;
     border-radius: var(--astryx-radius-element, 6px);

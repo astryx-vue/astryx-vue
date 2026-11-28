@@ -123,7 +123,8 @@
     margin-block-start: 0;
   }
 
-  .astryx-transfer-list-item {
+  /* 连写 .astryx-item 压过条目自带的内边距，不受样式表引入顺序影响。 */
+  .astryx-item.astryx-transfer-list-item {
     min-width: 0;
     padding-inline: var(--astryx-spacing-3, 12px);
   }
