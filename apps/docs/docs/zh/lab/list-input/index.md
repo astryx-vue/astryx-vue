@@ -4,7 +4,7 @@ title: ListInput
 
 # ListInput
 
-编辑一组结构相同的记录。每列用 `renderInput` 提供输入控件，支持添加、删除、校验以及拖动或键盘排序。
+编辑一组结构相同的记录。每列用 `renderInput` 提供输入控件，支持添加、删除、校验和重排。重排用的是 core `List` 的同一套引擎：每条记录末尾、删除按钮后面有一个重排手柄，鼠标直接拖，手指按住一下再拖；点一下手柄进入重排模式后用方向键挪，按 Escape 结束。
 
 <script setup lang="ts">
 import { labListInput, labListInputBudgetAllocation, labListInputFamilyMembers, labListInputMailingList } from '../../../../components/lab-demos'
@@ -37,7 +37,8 @@ import { ListInput } from '@astryx-vue/lab'
 | `status` | `FieldStatus` | `undefined` | 整个列表的校验状态。 |
 | `getItemStatus` | `(item, index) => FieldStatus` | `undefined` | 单条记录的校验状态。 |
 | `getFieldStatus` | `(item, columnKey, index) => FieldStatus` | `undefined` | 单元格的校验状态。 |
-| `isReorderable` | `boolean` | `false` | 是否允许排序。 |
+| `reorderable` | `Reorderable` | `undefined` | 传 `useReorderable` 或 `createReorderable` 做的对象就能重排。挪动交给它的 `onReorder`（`{ key, to }`，`key` 来自 `getItemKey`），由你更新数组；它的 `isReorderable` 返回 false 的记录没有手柄、留在原位。 |
+| `isReorderable` | `boolean` | `false` | **已弃用**，请改用 `reorderable`。仍可用：内部换成默认的重排对象，挪动走 `v-model` 和 `reorder` 类型的 `change`，开发环境会提示一次。 |
 | `isDisabled` / `isLoading` | `boolean` | `false` | 禁用或忙碌状态。 |
 | `maxItems` | `number` | `undefined` | 最大记录数。 |
 | `isLabelHidden` / `isOptional` / `isRequired` | `boolean` | `false` | 标签和必填标记。 |
@@ -46,4 +47,4 @@ import { ListInput } from '@astryx-vue/lab'
 
 ## 事件
 
-`change` 同时返回新数组和本次改动，改动类型为 `add`、`update`、`remove` 或 `reorder`。
+`change` 同时返回新数组和本次改动，改动类型为 `add`、`update`、`remove` 或 `reorder`。`reorder` 只在用已弃用的 `isReorderable` 时出现；传了 `reorderable` 时挪动只交给它的 `onReorder`。

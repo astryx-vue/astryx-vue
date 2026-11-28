@@ -91,3 +91,32 @@ function nodeDirection(node: MdNode): 'ltr' | 'rtl' | null {
 export function markdownBlockDirection(node: MdNode): 'ltr' | 'rtl' | undefined {
   return nodeDirection(node) ?? undefined
 }
+
+/** 外层 `InternationalizationProvider` 的方向，以及包着这一块的那一块的方向。 */
+export interface BlockDirectionScope {
+  readonly provider: 'ltr' | 'rtl'
+  readonly around: 'ltr' | 'rtl'
+}
+
+/**
+ * 一块正文或一个表格单元格的 `dir`。自己没有强方向字符时取 provider 的方向，
+ * 而且只在外面那一块读向相反时才写出来；其余情况继承到的本来就是这个方向。
+ */
+export function blockDirection(node: MdNode, scope: BlockDirectionScope | undefined): 'ltr' | 'rtl' | undefined {
+  const own = markdownBlockDirection(node)
+  if (own != null)
+    return own
+  return scope != null && scope.around !== scope.provider ? scope.provider : undefined
+}
+
+/** 引用或列表项里面那些块用的范围：外面那一块的方向换成这一块自己的。 */
+export function innerDirectionScope(node: MdNode, scope: BlockDirectionScope | undefined): BlockDirectionScope | undefined {
+  if (scope == null)
+    return undefined
+  return { provider: scope.provider, around: markdownBlockDirection(node) ?? scope.provider }
+}
+
+/** 这一块的方向和外面那一块相反。 */
+export function readsAgainst(direction: 'ltr' | 'rtl' | undefined, scope: BlockDirectionScope | undefined): boolean {
+  return direction != null && scope != null && direction !== scope.around
+}

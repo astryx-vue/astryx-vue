@@ -254,6 +254,9 @@
       "@astryx-vue/core/Pagination": [
         "../../packages/core/src/Pagination/index.ts"
       ],
+      "@astryx-vue/core/palette": [
+        "../../packages/core/src/palette/index.ts"
+      ],
       "@astryx-vue/core/Popover": [
         "../../packages/core/src/Popover/index.ts"
       ],
@@ -313,6 +316,9 @@
       ],
       "@astryx-vue/core/Stepper": [
         "../../packages/core/src/Stepper/index.ts"
+      ],
+      "@astryx-vue/core/Swipe": [
+        "../../packages/core/src/Swipe/index.ts"
       ],
       "@astryx-vue/core/Switch": [
         "../../packages/core/src/Switch/index.ts"

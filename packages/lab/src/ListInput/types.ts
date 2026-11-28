@@ -1,6 +1,10 @@
+import type { Reorderable } from '@astryx-vue/core'
 import type { VNodeChild } from 'vue'
 
-/** 一次列表改动。`update` 里 `columnKey` 是触发改动的列。 */
+/**
+ * 一次列表改动。`update` 里 `columnKey` 是触发改动的列。
+ * `reorder` 只在用已弃用的 `isReorderable` 时出现；传 `reorderable` 时挪动交给它的 `onReorder`。
+ */
 export type ListInputChange<T>
   = | { type: 'add', item: T, index: number }
     | { type: 'update', item: T, previousItem: T, index: number, columnKey?: string }
@@ -64,7 +68,17 @@ export interface ListInputProps<T> {
   getItemStatus?: (item: T, index: number) => { type: 'error' | 'warning' | 'success', message?: string } | undefined
   /** 单格的校验状态，交给对应的输入控件。 */
   getFieldStatus?: (item: T, columnKey: string, index: number) => { type: 'error' | 'warning' | 'success', message?: string } | undefined
-  /** 显示拖动手柄，可以拖动或用键盘调整顺序。 */
+  /**
+   * 让记录可以重排：传 `createReorderable` / `useReorderable` 造的对象，键就是 `getItemKey` 的返回值。
+   * 每条记录末尾是 core List 的重排手柄：手指按住片刻再拖，鼠标直接拖，点一下进入重排模式后用方向键挪。
+   * 对象的 `isReorderable(key)` 决定哪些记录能动，每次挪动交给它的 `onReorder({ key, to })`，
+   * `to` 是挪完后这条记录在 `modelValue` 里的下标。不传时记录保持原有顺序。
+   */
+  reorderable?: Reorderable
+  /**
+   * 显示重排手柄，挪动直接通过 `v-model` 和 `change`（`type: 'reorder'`）交回来。
+   * @deprecated 改用 `reorderable`。传了 `reorderable` 时这一项不起作用。
+   */
   isReorderable?: boolean
   isDisabled?: boolean
   /** 列表正忙：所有改动都被挡住，但值仍然可读。 */

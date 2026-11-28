@@ -77,6 +77,8 @@ import transferListDemo from './transfer-list.vue'
 import transferListSource from './transfer-list.vue?raw&highlighted'
 import videoPlayerDemo from './video-player.vue'
 import videoPlayerSource from './video-player.vue?raw&highlighted'
+import weightedSvgIconDemo from './weighted-svg-icon.vue'
+import weightedSvgIconSource from './weighted-svg-icon.vue?raw&highlighted'
 
 const options = { className: 'lab-demo' }
 
@@ -115,6 +117,7 @@ export const labSchedule = defineDemo(scheduleDemo, scheduleSource, options)
 export const labStat = defineDemo(statDemo, statSource, options)
 export const labSvgIcon = defineDemo(svgIconDemo, svgIconSource, options)
 export const labTabBar = defineDemo(tabBarDemo, tabBarSource, options)
+export const labWeightedSvgIcon = defineDemo(weightedSvgIconDemo, weightedSvgIconSource, options)
 export const labTransferList = defineDemo(transferListDemo, transferListSource, options)
 export const labTransferListOverview = defineDemo(transferListOverviewDemo, transferListOverviewSource, options)
 export const labTour = defineDemo(tourDemo, tourSource, options)

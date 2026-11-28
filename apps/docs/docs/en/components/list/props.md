@@ -195,7 +195,7 @@ footer: false
 
 `Item` also accepts everything `ListItem` accepts: `label`, `description`, `density`, `onClick`, `interactiveRef`, `href`, `target`, `rel`, `isDisabled`, and `isSelected`.
 
-`swipeActions` are the actions a touch drag reveals. `leading` opens when the row is dragged toward its end, and `trailing` opens toward its start. `swipeBehavior` defaults to `reveal`, which stays open after release. `commit` slides out and runs the outermost action once the drag passes the threshold, and that side should hold one action. A mouse drag does not start, so each action also needs a control in the row itself.
+`swipe` takes the value from `createSwipe`: the actions a sideways drag reveals. `leading` opens when the row is dragged toward its end, and `trailing` opens toward its start. Its `swipeBehavior` defaults to `reveal`, which can rest open after release. `commit` slides out and runs a side's one action on a full swipe. A mouse drag does not start, so each action also needs a control in the row itself. `swipeActions` and `swipeBehavior` on the row still work but are deprecated.
 
 ## Slots
 

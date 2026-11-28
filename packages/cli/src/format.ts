@@ -183,17 +183,25 @@ function denseBody(body: string): string {
   return lines.join('\n').trim()
 }
 
+/** A deprecated component's way out: the replacement, then the first sentence of how to move. */
+function deprecationLine(deprecation: { replacement: string, description: string }, locale: 'en' | 'zh'): string {
+  const lead = locale === 'zh' ? `已废弃，改用 ${deprecation.replacement}：` : `Deprecated, use ${deprecation.replacement}: `
+  return `${lead}${firstSentence(deprecation.description)}`
+}
+
 export function formatSearch(query: string, matchCount: number, results: readonly SearchHit[], locale: 'en' | 'zh', dense: boolean): string {
   if (results.length === 0)
     return locale === 'zh' ? `没有匹配「${query}」的结果。\n` : `No matches for "${query}".\n`
   const lines = results.map((hit) => {
     // The package says what to install, so every result carries it.
     const unready = hit.isReady === false ? (locale === 'zh' ? '（不可用）' : ' (not ready)') : ''
-    const head = `[${hit.domain}] ${hit.name}${unready}  ${hit.package}`
+    const deprecated = hit.deprecated ? (locale === 'zh' ? '（已废弃）' : ' (deprecated)') : ''
+    const head = `[${hit.domain}] ${hit.name}${unready}${deprecated}  ${hit.package}`
     const follow = `→ ${hit.command}`
     if (dense)
       return `${head}  ${follow}`
-    return [head, `  ${firstSentence(hit.description)}`, `  ${follow}`].join('\n')
+    const replacement = hit.deprecated ? [`  ${deprecationLine(hit.deprecated, locale)}`] : []
+    return [head, `  ${firstSentence(hit.description)}`, ...replacement, `  ${follow}`].join('\n')
   })
   const heading = matchCount > results.length
     ? (locale === 'zh' ? `「${query}」的结果（${results.length}/${matchCount}）` : `Results for "${query}" (${results.length} of ${matchCount})`)
@@ -422,8 +430,10 @@ function matchLines(match: TemplateMatch, dense: boolean): string[] {
 }
 
 function componentLines(item: KitComponent, dense: boolean): string[] {
+  const deprecated = item.deprecated ? ' (deprecated)' : ''
   if (dense)
-    return [`  ${item.name}`]
+    return [`  ${item.name}${deprecated}`]
   const from = item.reason === 'template' ? '  (used by the template)' : ''
-  return [`  ${item.name} — ${firstSentence(item.description)}${from}`, `  → ${item.command}`]
+  const replacement = item.deprecated ? [`  ${deprecationLine(item.deprecated, 'en')}`] : []
+  return [`  ${item.name}${deprecated} — ${firstSentence(item.description)}${from}`, ...replacement, `  → ${item.command}`]
 }

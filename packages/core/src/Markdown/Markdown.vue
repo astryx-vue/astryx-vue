@@ -7,6 +7,7 @@ import type { MarkdownProps } from './types.js'
 import { computed, defineComponent, h, ref } from 'vue'
 import { sameCodeLanguageList } from '../Code/grammar.js'
 import { useIndicator } from '../Indicator/useIndicator.js'
+import { useLocaleDirection } from '../InternationalizationProvider/context.js'
 import { useComponentMessages } from '../locale/context.js'
 import { citationMessages } from '../locale/messages/citation.js'
 import { markdownMessages } from '../locale/messages/markdown.js'
@@ -64,10 +65,12 @@ export default defineComponent({
 
     const messages = useComponentMessages({ citation: citationMessages, markdown: markdownMessages })
     const checkboxIndicator = useIndicator('checkbox')
+    const direction = useLocaleDirection()
     const slotSource = ref('')
     const source = computed(() => props.content ?? slotSource.value)
     const incremental = createIncrementalMarkdownState()
     const cache = new Map<MdNode, VNode>()
+    let cachedDirection = direction.value
     let boundaries: number[] = []
     let previousLength = 0
     let seenAutolink = props.autolink
@@ -128,10 +131,16 @@ export default defineComponent({
         messages.value.markdown,
         messages.value.citation.label,
         checkboxIndicator.value,
+        direction.value,
         fadeSpanCount(),
       ]
       if (hasRendered && sameInputs(previousInputs, inputs))
         return renderResult(renderedChildren)
+      // 换了方向，缓存的各块要按新方向重写 `dir`。
+      if (cachedDirection !== direction.value) {
+        cache.clear()
+        cachedDirection = direction.value
+      }
       previousInputs = inputs
 
       if (!props.isStreaming || seenAutolink !== props.autolink) {
@@ -194,6 +203,7 @@ export default defineComponent({
         sourceLines: protocolPlugins.some(isMarkdownSourceLinesPlugin),
         protocolRenderers: collectProtocolRenderers(protocolPlugins),
         checkboxIndicator: checkboxIndicator.value,
+        direction: { provider: direction.value, around: direction.value },
       }
       const children = renderMarkdownBlocks(blocks, inline ? 0 : parsed.settledCount, ctx, cache)
       previousLength = ctx.fade.offset

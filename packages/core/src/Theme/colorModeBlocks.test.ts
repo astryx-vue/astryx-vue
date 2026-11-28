@@ -12,19 +12,34 @@ describe('color-mode blocks', () => {
     expect(plain).not.toMatch(/prefers-color-scheme|data-astryx-color-mode=|data-astryx-media/)
   })
 
-  it('apply in their mode: the root mode, the reader preference, and the nearest surface', () => {
+  it('apply in their mode: the root mode, the page or reader scheme, and the nearest surface', () => {
     const out = css({ button: { base: { 'backgroundColor': 'red', '@dark': { backgroundColor: 'blue' } } } })
     expect(out).toContain('background-color: red;')
     const darkRules = out.split('\n}\n').filter(rule => rule.includes('background-color: blue'))
-    // A forced dark root, a system root under a dark preference, and a dark surface.
-    expect(darkRules).toHaveLength(3)
+    // A forced dark root; a system root while the page names dark; the reader's
+    // preference while the page names none; the reader's preference under a
+    // forced Theme; and a dark surface.
+    expect(darkRules).toHaveLength(5)
     expect(darkRules[0]).toContain(':is(.astryx-button):where(:scope[data-astryx-color-mode="dark"] *)')
-    expect(darkRules[1]).toContain('@media (prefers-color-scheme: dark)')
-    expect(darkRules[1]).toContain(':where(:scope:not([data-astryx-color-mode="light"], [data-astryx-color-mode="dark"]) *)')
-    expect(darkRules[2]).toContain('[data-astryx-media="dark"]')
+    expect(darkRules[1]).toContain('html[data-astryx-scheme="dark"]')
+    expect(darkRules[1]).not.toContain('prefers-color-scheme')
+    expect(darkRules[2]).toContain('@media (prefers-color-scheme: dark)')
+    expect(darkRules[2]).toContain('html:not([data-astryx-scheme])')
+    expect(darkRules[3]).toContain('@media (prefers-color-scheme: dark)')
+    expect(darkRules[3]).toContain(':where(:is([data-astryx-color-mode="light"], [data-astryx-color-mode="dark"]) :scope:not([data-astryx-color-mode="light"], [data-astryx-color-mode="dark"]) *)')
+    expect(darkRules[4]).toContain('[data-astryx-media="dark"]')
     // The mode rules come after the rule they refine, at the same weight.
     expect(out.indexOf('background-color: blue')).toBeGreaterThan(out.indexOf('background-color: red'))
     expect(out).not.toContain('prefers-color-scheme: light')
+  })
+
+  it('leave a system root under no forced Theme to the page scheme, not the reader preference', () => {
+    const out = css({ button: { base: { '@light': { color: 'black' } } } })
+    const named = out.split('\n}\n').find(rule => rule.includes('html[data-astryx-scheme="light"]'))!
+    expect(named).toContain(':not(:is([data-astryx-color-mode="light"], [data-astryx-color-mode="dark"]) *)')
+    expect(named).not.toContain('@media')
+    const unnamed = out.split('\n}\n').find(rule => rule.includes('html:not([data-astryx-scheme])'))!
+    expect(unnamed).toContain('@media (prefers-color-scheme: light)')
   })
 
   it('put the dark block before the light block, so light wins a property both set', () => {

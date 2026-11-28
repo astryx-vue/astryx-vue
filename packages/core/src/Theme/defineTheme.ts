@@ -12,6 +12,7 @@ import { assertTargetName } from './componentStyles.js'
 import { deriveChatRadius } from './expandRadiusScale.js'
 import { resolveLocalTokens } from './localTokens.js'
 import { mergeComponentMaps } from './mergeComponents.js'
+import { paletteTokens, readPalette, withPaletteComponents } from './paletteTheme.js'
 import { resolveThemeValues, resolveTokenMap } from './resolveThemeValues.js'
 import { resolveRootMotion } from './rootMotion.js'
 import { deriveStatusRoleTokens } from './statusRoleDerivation.js'
@@ -104,8 +105,11 @@ export function defineTheme<
   assertTargets(input.onLight?.components)
 
   const base: ThemeDefinition | undefined = input.extends
+  const palette = readPalette(input.name, input.palette)
   const { motion, inheritedTokens } = resolveRootMotion(input.name, input.motion, base)
-  const ownInput = inheritedTokens ? { ...input, motion, tokens: { ...inheritedTokens, ...input.tokens } } : { ...input, motion }
+  // A palette's colors sit between the generated values and the explicit tokens.
+  const ownTokens = { ...inheritedTokens, ...paletteTokens(palette), ...input.tokens }
+  const ownInput = { ...input, motion, tokens: ownTokens, components: withPaletteComponents(palette, input.components) }
   const own = resolveThemeValues(ownInput, '', {
     inheritedCharacter: base?.axes?.motion?.character,
     standardBeneath: base?.tokens['--astryx-ease-standard'],

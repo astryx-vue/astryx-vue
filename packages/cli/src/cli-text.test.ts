@@ -54,7 +54,7 @@ describe('stray options', () => {
 
 describe('component text', () => {
   it('prints props one per line and practices under one label per run', async () => {
-    const result = await runCli(['component', 'Button'])
+    const result = await runCli(['component', 'Button', '--detail', 'full'])
     expect(result.stdout).toMatch(/^- `variant`: `'primary' \| .*` = `'secondary'` - /m)
     expect(result.stdout).toMatch(/## Button Props\n\n- /)
     expect(result.stdout).toMatch(/## Best practices\n\nDo:\n- /)

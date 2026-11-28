@@ -8,6 +8,7 @@ import { resetInteractionModalityForTest } from '../composables/internal/interac
 import { pushLayer, resetDismissStackForTests } from '../layer/dismissStack.js'
 import { resetModalOutletsForTests, useActiveModalOutlet } from '../layer/modalOutlet.js'
 import BottomSheet from './BottomSheet.vue'
+import { resetBottomSheetStackForTests } from './stack/bottomSheetStack.js'
 
 enableAutoUnmount(afterEach)
 
@@ -42,6 +43,7 @@ afterEach(() => {
   document.body.innerHTML = ''
   document.body.style.overflow = ''
   resetDismissStackForTests()
+  resetBottomSheetStackForTests()
   resetInteractionModalityForTest()
   vi.restoreAllMocks()
 })

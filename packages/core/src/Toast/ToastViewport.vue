@@ -111,12 +111,9 @@ function reenterTopLayer(): void {
   }
 }
 
-// 无遮罩的抽屉这类非模态顶层元素后进顶层，会盖住视口。它们进去后视口跟着重进一次。
-// 视口已经搬进模态层里时不用管：它跟着那个模态层排。
-watch(useTopLayerEntries(), () => {
-  if (mountTarget.value === 'body')
-    reenterTopLayer()
-})
+// 无遮罩的抽屉这类非模态顶层元素后进顶层，或者底部面板叠放时有对话框被重新呈现，都会盖住视口。
+// 视口挂在那个被重新呈现的对话框里时也一样，所以不管挂在哪里都跟着重进一次。
+watch(useTopLayerEntries(), reenterTopLayer)
 
 watch(activeModal, async (modal) => {
   if (modal == null) {
