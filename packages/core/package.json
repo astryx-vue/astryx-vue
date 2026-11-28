@@ -259,6 +259,11 @@
       "types": "./dist/Stepper/index.d.ts",
       "import": "./dist/Stepper/index.js"
     },
+    "./Swipe": {
+      "source": "./src/Swipe/index.ts",
+      "types": "./dist/Swipe/index.d.ts",
+      "import": "./dist/Swipe/index.js"
+    },
     "./Table": {
       "source": "./src/Table/index.ts",
       "types": "./dist/Table/index.d.ts",
@@ -864,6 +869,10 @@
       "./Stepper": {
         "types": "./dist/Stepper/index.d.ts",
         "import": "./dist/Stepper/index.js"
+      },
+      "./Swipe": {
+        "types": "./dist/Swipe/index.d.ts",
+        "import": "./dist/Swipe/index.js"
       },
       "./Table": {
         "types": "./dist/Table/index.d.ts",

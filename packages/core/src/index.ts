@@ -1238,6 +1238,8 @@ export type {
   StepSlots,
   StepStatus,
 } from './Stepper/index.js'
+export { createSwipe } from './Swipe/index.js'
+export type { CreateSwipeOptions, ItemSwipeActionVariant, Swipe, SwipeAction } from './Swipe/index.js'
 export { Switch } from './Switch/index.js'
 export type {
   SwitchChangeAction,

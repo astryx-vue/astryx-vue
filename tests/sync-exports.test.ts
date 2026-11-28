@@ -283,6 +283,7 @@ const expectedCatalog = [
   { slug: 'use-syntax-theme', group: 'Utility', family: 'Utilities', en: 'useSyntaxTheme', zh: 'useSyntaxTheme' },
   { slug: 'use-linkify', group: 'Utility', family: 'Utilities', en: 'useLinkify', zh: 'useLinkify' },
   { slug: 'use-reorderable', group: 'Utility', family: 'Utilities', en: 'useReorderable', zh: 'useReorderable' },
+  { slug: 'create-swipe', group: 'Utility', family: 'Utilities', en: 'createSwipe', zh: 'createSwipe', isHiddenFromOverview: true },
 ]
 
 describe('component catalog meta', () => {
