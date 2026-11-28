@@ -54,10 +54,13 @@ import '@astryx-vue/lab/lab.css'
 | [LogStream](/lab/log-stream) | 展示可展开、可跟随的日志流。 |
 | [MediaPlayer](/lab/media-player) | 用播放、时间轴、音量等控件拼出自己的视频或音频播放器。 |
 | [NavigationStack](/lab/navigation-stack) | 手机布局里一层层往里点的导航，带 iOS 式的推入、退出和滑动返回。 |
+| [PageControl](/lab/page-control) | 翻页视图下的一排页码圆点，带 iOS 式的点按、拖动换页和长排窗口。 |
+| [useRefreshControl](/lab/refresh-control) | 给 app 自己的滚动容器加 iOS 式的下拉刷新。 |
 | [VideoPlayer](/lab/video-player) | 现成的视频播放器：控件浮在画面上，空闲时自动藏起。 |
 | [AudioPlayer](/lab/audio-player) | 现成的音频播放器：封面、标题、时间轴、快退快进和速度。 |
 | [Stat](/lab/stat) | 展示关键指标及趋势。 |
 | [SVGIcon](/lab/svg-icon) | 按路径角色渲染多变体 SVG 图标。 |
+| [TabBar](/lab/tab-bar) | 手机应用底部的标签栏，带 iOS 26 式的浮动胶囊和跟着手指走的选中透镜。 |
 | [EmojiPicker](/lab/emoji-picker) | 按分组搜索全部表情并选中，可内嵌或放进弹出层。 |
 | [ChatEmojiPicker](/lab/chat-emoji-picker) | 在弹出层里按短名过滤并选择表情。 |
 | [ChatReactionBar](/lab/chat-reaction-bar) | 在消息下展示表情回应，并可继续添加。 |

@@ -55,6 +55,10 @@ import mediaPlayerDemo from './media-player.vue'
 import mediaPlayerSource from './media-player.vue?raw&highlighted'
 import navigationStackDemo from './navigation-stack.vue'
 import navigationStackSource from './navigation-stack.vue?raw&highlighted'
+import pageControlDemo from './page-control.vue'
+import pageControlSource from './page-control.vue?raw&highlighted'
+import refreshControlDemo from './refresh-control.vue'
+import refreshControlSource from './refresh-control.vue?raw&highlighted'
 import scheduleDemo from './schedule.vue'
 import scheduleSource from './schedule.vue?raw&highlighted'
 import selectableCardGroupDemo from './selectable-card-group.vue'
@@ -63,6 +67,8 @@ import statDemo from './stat.vue'
 import statSource from './stat.vue?raw&highlighted'
 import svgIconDemo from './svg-icon.vue'
 import svgIconSource from './svg-icon.vue?raw&highlighted'
+import tabBarDemo from './tab-bar.vue'
+import tabBarSource from './tab-bar.vue?raw&highlighted'
 import tourOverviewDemo from './tour-overview.vue'
 import tourOverviewSource from './tour-overview.vue?raw&highlighted'
 import tourDemo from './tour.vue'
@@ -108,9 +114,12 @@ export const labMediaPlayer = defineDemo(mediaPlayerDemo, mediaPlayerSource, opt
 export const labVideoPlayer = defineDemo(videoPlayerDemo, videoPlayerSource, options)
 export const labAudioPlayer = defineDemo(audioPlayerDemo, audioPlayerSource, options)
 export const labNavigationStack = defineDemo(navigationStackDemo, navigationStackSource, options)
+export const labPageControl = defineDemo(pageControlDemo, pageControlSource, options)
+export const labRefreshControl = defineDemo(refreshControlDemo, refreshControlSource, options)
 export const labSchedule = defineDemo(scheduleDemo, scheduleSource, options)
 export const labStat = defineDemo(statDemo, statSource, options)
 export const labSvgIcon = defineDemo(svgIconDemo, svgIconSource, options)
+export const labTabBar = defineDemo(tabBarDemo, tabBarSource, options)
 export const labWeightedSvgIcon = defineDemo(weightedSvgIconDemo, weightedSvgIconSource, options)
 export const labTransferList = defineDemo(transferListDemo, transferListSource, options)
 export const labTransferListOverview = defineDemo(transferListOverviewDemo, transferListOverviewSource, options)

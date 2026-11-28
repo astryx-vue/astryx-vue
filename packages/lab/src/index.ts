@@ -196,6 +196,12 @@ export type {
   NavigationTitleDisplayMode,
 } from './NavigationStack/index.js'
 
+export { PageControl } from './PageControl/index.js'
+export type { PageControlEmits, PageControlProps } from './PageControl/index.js'
+
+export { REFRESH_REVEAL_VAR, useRefreshControl } from './RefreshControl/index.js'
+export type { UseRefreshControlOptions, UseRefreshControlResult } from './RefreshControl/index.js'
+
 export { createEventFromISO, createScheduleDayView, createScheduleListView, createScheduleMonthlyView, createScheduleWeeklyView, defaultSchedulePlugins, Schedule, ScheduleContext, useScheduleContext, useSchedulePaginationPlugin, useScheduleViewSelectorPlugin } from './Schedule/index.js'
 export type {
   CalendarDayEvent,
@@ -313,6 +319,12 @@ export type {
   XIFPersonality,
   XIFSlot,
 } from './SVGIcon/index.js'
+
+export { TabBar, TabBarItem } from './TabBar/index.js'
+export type { TabBarEmits, TabBarIcon, TabBarItemProps, TabBarProps, TabBarSlots } from './TabBar/index.js'
+
+export { TabBarMoreList } from './TabBarMoreList/index.js'
+export type { TabBarMoreListEmits, TabBarMoreListProps, TabBarMoreListSlots } from './TabBarMoreList/index.js'
 
 export { Tour, TourStep, useTour } from './Tour/index.js'
 export type {
