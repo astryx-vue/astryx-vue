@@ -1,5 +1,17 @@
 # @astryx-vue/core
 
+## 0.42.0
+
+### Minor Changes
+
+- [#667](https://github.com/astryx-vue/astryx-vue/pull/667) [`852bdbf`](https://github.com/astryx-vue/astryx-vue/commit/852bdbfa4dd4e2b5ab0003d5537e200eaf6fa547) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增 `createSwipe`（`@astryx-vue/core/Swipe`）：把它造出的值传给 `ListItem` / `Item` 的 `swipe`，横滑行露出操作，手感按 UIKit 还原（一甩只停开不触发、全滑等行滑出再触发、`hasRemoval` 停在外面），处理函数收到操作 `id` 和行的 `itemKey`；行上的 `swipeActions` / `swipeBehavior` 改走同一套实现并标为弃用，操作默认配色改为 `accent`，`commit` 的一侧有多个操作时不再触发。
+
+### Patch Changes
+
+- [#664](https://github.com/astryx-vue/astryx-vue/pull/664) [`90380bc`](https://github.com/astryx-vue/astryx-vue/commit/90380bcc5cde8902e107ba2fa1ab6479c59d1561) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - DateInput 和 DateTimeInput 的底部面板里，月份改成可以左右连续划动，松手总停在整月上；点箭头翻月时，Safari 也会停在标题写的那个月。打开减少动效时箭头直接换月（触屏上是一次淡出淡入），不再滑动。键盘把焦点挪到别的月份时，面板跟着滚过去。
+
+- [#662](https://github.com/astryx-vue/astryx-vue/pull/662) [`dab0232`](https://github.com/astryx-vue/astryx-vue/commit/dab0232a9b77719a6aa62d931954a22569fbde48) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Markdown 里只有数字、标点这类没有明确方向的段落，放在读向相反的引用或列表项里时，改按页面方向排版；读向和表格相反的单元格，列线和显式对齐仍落在表格那一侧。
+
 ## 0.41.1
 
 ### Patch Changes
