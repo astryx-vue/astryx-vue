@@ -1120,11 +1120,12 @@
 
 ### v0.7.17
 
-- [ ] [`1addd72da`](https://github.com/meta/astryx/commit/1addd72da) feat(core): swipe actions come from createSwipe on the shared drag path (#8690)
+- [x] [`1addd72da`](https://github.com/meta/astryx/commit/1addd72da) feat(core): swipe actions come from createSwipe on the shared drag path (#8690)
   - 暂缓：滑动操作改走 createSwipe 与共享拖动通道：Vue 的 Item 仍是 swipeActions，缺手势引擎，归动效与手势引擎任务；升级说明等 API 变了再写
   - 暂缓：归动效与手势引擎任务：缺 createSwipe 公共 API、swipeHost、SwipeActionsLayer、约 1400 行的 useSwipeAction 和 dragToSnapPoints 的 compositorSettle，Vue 版 Item 横滑还没走共享拖拽路径。
   - 暂缓：[createSwipe] 缺 createSwipe、swipeHost、SwipeActionsLayer，Item 横滑还没走共用拖动路径
   - 暂缓：Vue 版还没有 createSwipe、swipeHost、SwipeActionsLayer、useSwipeAction 这套横滑模块，上游约 76 个文件近万行，本轮只建了重排设施
+  - 已移植：[#667](https://github.com/astryx-vue/astryx-vue/pull/667)。新建 @astryx-vue/core/Swipe 的 createSwipe（swipeHost、SwipeActionsLayer、useSwipeAction、compositor 收尾），Item/ListItem 新增 swipe prop，旧 swipeActions 废弃但仍可用
 - [x] [`d48e1d66b`](https://github.com/meta/astryx/commit/d48e1d66b) feat(cli): upgrade --list prints one line per codemod under its version (#11661)
   - 不适用：upgrade --list 列出 codemod，Vue 的 upgrade 没有 codemod 也没有 --list
 - [x] [`949c5ce69`](https://github.com/meta/astryx/commit/949c5ce69) perf(cli): upgrade skips a codemod for a file whose escapes spell none of its words (#11653)
@@ -1149,11 +1150,12 @@
   - 不适用：上游文档解析缓存，Vue 的 catalog 是预先生成的
 - [x] [`2c80ffc20`](https://github.com/meta/astryx/commit/2c80ffc20) feat(cli): an installed icon-set package turns on the experimental icon features (one gate) (#12176)
   - 不适用：已安装图标集包打开实验性图标功能，Vue 版没有
-- [ ] [`ee8a33a7c`](https://github.com/meta/astryx/commit/ee8a33a7c) feat(cli): the swipe codemod defines each swipe once (#11670)
+- [x] [`ee8a33a7c`](https://github.com/meta/astryx/commit/ee8a33a7c) feat(cli): the swipe codemod defines each swipe once (#11670)
   - 暂缓：swipe codemod 只定义一次滑动：随 createSwipe 一起，归动效与手势引擎任务
   - 暂缓：codemod 是 React 工具链（不适用），其中 useSwipeAction 的调整要等 Swipe 模块落地。
   - 暂缓：[createSwipe] 滑动 codemod 随 createSwipe
   - 暂缓：滑动 codemod 针对 createSwipe 的写法，模块未建前无对象可改
+  - 不适用：上游 codemod 是迁移脚本，Vue 版用不上；其中对 useSwipeAction 的调整已包含在新模块里
 - [x] [`a2edb5300`](https://github.com/meta/astryx/commit/a2edb5300) chore: land batch 2 (16 pull requests) (#12718)
   - 已移植：[#579](https://github.com/astryx-vue/astryx-vue/pull/579)。批量合入里宿主的改动随宿主一起移植
 - [x] [`3b21ca666`](https://github.com/meta/astryx/commit/3b21ca666) feat(theme): chat surfaces default to the container radius (#12794)
@@ -6305,11 +6307,12 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`bb105e57d`](https://github.com/meta/astryx/commit/bb105e57d) [fix] useHotkeys docs: register shifted punctuation as the produced character (#11622)
   - 已移植：[#548](https://github.com/astryx-vue/astryx-vue/pull/548)。useHotkeys 文档说明带 Shift 的标点按产生的字符登记（中英）
-- [ ] [`1addd72da`](https://github.com/meta/astryx/commit/1addd72da) feat(core): swipe actions come from createSwipe on the shared drag path (#8690)
+- [x] [`1addd72da`](https://github.com/meta/astryx/commit/1addd72da) feat(core): swipe actions come from createSwipe on the shared drag path (#8690)
   - 暂缓：归动效与手势引擎任务：缺 createSwipe 公共 API、swipeHost、SwipeActionsLayer、约 1400 行的 useSwipeAction 和 dragToSnapPoints 的 compositorSettle，Vue 版 Item 横滑还没走共享拖拽路径。
   - 暂缓：滑动操作改走 createSwipe 与共享拖动通道，缺 createSwipe 公共 API、swipeHost、SwipeActionsLayer、约 1400 行 useSwipeAction 和 dragToSnapPoints 的合成器收尾；归动效与手势引擎任务
   - 暂缓：[createSwipe] 缺 createSwipe、swipeHost、SwipeActionsLayer，Item 横滑还没走共用拖动路径
   - 暂缓：Vue 版还没有 createSwipe、swipeHost、SwipeActionsLayer、useSwipeAction 这套横滑模块，上游约 76 个文件近万行，本轮只建了重排设施
+  - 已移植：[#667](https://github.com/astryx-vue/astryx-vue/pull/667)。新建 @astryx-vue/core/Swipe 的 createSwipe（swipeHost、SwipeActionsLayer、useSwipeAction、compositor 收尾），Item/ListItem 新增 swipe prop，旧 swipeActions 废弃但仍可用
 - [x] [`24d82491d`](https://github.com/meta/astryx/commit/24d82491d) spec(AST-094): DEC-31 states the owner's test-only and records-only carry (#11602)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`6da757802`](https://github.com/meta/astryx/commit/6da757802) perf(cli): keep gathers and the compile cache from a machine's first run (#11668)
@@ -6329,10 +6332,11 @@
   - 已移植：[#599](https://github.com/astryx-vue/astryx-vue/pull/599)。手指下 AlertDialog 从 1.2 倍缩放淡入、淡出后才关闭，按主题时序；输入暂挡补上 layer 范围，退场期间内容 inert 并移走焦点
 - [x] [`dc9b62a32`](https://github.com/meta/astryx/commit/dc9b62a32) perf(cli): docs keeps the CLI's own docs tree between runs (#11775)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`c3916438e`](https://github.com/meta/astryx/commit/c3916438e) chore(core): the swipe hook's and layer's prose moves to their JSDoc (#11677)
+- [x] [`c3916438e`](https://github.com/meta/astryx/commit/c3916438e) chore(core): the swipe hook's and layer's prose moves to their JSDoc (#11677)
   - 暂缓：只把滑动钩子和层的说明搬到 JSDoc，Swipe 模块未移植；随 createSwipe 一起做
   - 暂缓：[createSwipe] 只是把说明搬到 JSDoc，Swipe 模块还没有
   - 暂缓：只是把横滑钩子和图层的说明搬进 JSDoc，Vue 版还没有对应的 createSwipe 模块
+  - 已移植：[#667](https://github.com/astryx-vue/astryx-vue/pull/667)。说明文字放进 createSwipe 和 Swipe 类型的 JSDoc，文档站新增 createSwipe 中英文页面
 - [x] [`bac58372c`](https://github.com/meta/astryx/commit/bac58372c) feat(cli): one did-you-mean rule points every lookup to the command that has the name (#11707)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`178cd8019`](https://github.com/meta/astryx/commit/178cd8019) perf(OverflowList): lists in one commit measure together after it, before paint (#10392)
@@ -6399,11 +6403,12 @@
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`a6538f27a`](https://github.com/meta/astryx/commit/a6538f27a) feat(cli): an integration can say how its apps add a dependency (installGuidance) (#12218)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`ee8a33a7c`](https://github.com/meta/astryx/commit/ee8a33a7c) feat(cli): the swipe codemod defines each swipe once (#11670)
+- [x] [`ee8a33a7c`](https://github.com/meta/astryx/commit/ee8a33a7c) feat(cli): the swipe codemod defines each swipe once (#11670)
   - 暂缓：codemod 是 React 工具链（不适用），其中 useSwipeAction 的调整要等 Swipe 模块落地。
   - 暂缓：swipe codemod 是 React 工具链（不适用），其中 useSwipeAction 的调整随 createSwipe 一起做
   - 暂缓：[createSwipe] 滑动 codemod 随 createSwipe
   - 暂缓：滑动 codemod 针对 createSwipe 的写法，模块未建前无对象可改
+  - 不适用：上游 codemod 是迁移脚本，Vue 版用不上；其中对 useSwipeAction 的调整已包含在新模块里
 - [x] [`8b176db24`](https://github.com/meta/astryx/commit/8b176db24) perf(cli): a lookup miss reads the component matcher's Core inputs from a kept summary instead of every Core doc (#12538)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`286e4db56`](https://github.com/meta/astryx/commit/286e4db56) fix(cli): the transpile cache names copies for their source text and trims one subfolder per write, so it stays small and no run reads all of it (#12385)
@@ -7991,11 +7996,12 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`558725695`](https://github.com/meta/astryx/commit/558725695) [Component Audit] List: docs name its optional header and where its ref lands (#11277)
   - 已移植：[#611](https://github.com/astryx-vue/astryx-vue/pull/611)。List 示意图的结构说明改为可选的 Header（中英），ref 落点在 props 文档里本来就写了
-- [ ] [`5398a993c`](https://github.com/meta/astryx/commit/5398a993c) fix(Item): a flick reveals swipe actions; only a deliberate drag fires (#11054)
+- [x] [`5398a993c`](https://github.com/meta/astryx/commit/5398a993c) fix(Item): a flick reveals swipe actions; only a deliberate drag fires (#11054)
   - 暂缓：轻甩露出、只有刻意拖动才触发要改走 createSwipe，归动效与手势引擎任务（4b 拖拽）
   - 暂缓：行为部分已在 #622 移植（甩动只打开、拖过触发点才触发、两项一侧需从打开状态起拖），还差操作项长满面板、触发项盖住面板的视觉，要等共享 Swipe 模块。
   - 暂缓：[createSwipe] 甩动只露出、刻意拖动才触发的行为已在 #622，剩操作项长满面板的展示要走 createSwipe
   - 暂缓：甩动只露出已在 #622，剩下的操作项长满面板依赖 createSwipe 模块
+  - 已移植：[#667](https://github.com/astryx-vue/astryx-vue/pull/667)。快速一甩只露出操作不触发；拖到底时操作铺满面板（data-covered），行滑出后才触发
 - [x] [`807dc2ead`](https://github.com/meta/astryx/commit/807dc2ead) refactor(core): name the nested press rule for every pointer it covers (#11304)
   - 不适用：上游只改名与挪样式，无行为变化，基础展示族已判
 - [x] [`061b2fa8d`](https://github.com/meta/astryx/commit/061b2fa8d) test(List): the reorder busy proof decodes its cast once (#11075)
@@ -8025,11 +8031,12 @@
 
 - [x] [`65ed0c017`](https://github.com/meta/astryx/commit/65ed0c017) [Component Audit] MetadataListItem: docs say where ref and styling props land, and tests guard them (#11538)
   - 已移植：[#611](https://github.com/astryx-vue/astryx-vue/pull/611)。MetadataListItem 文档补充传入属性落在 dt 或叠放外层元素上，已有测试守着
-- [ ] [`1addd72da`](https://github.com/meta/astryx/commit/1addd72da) feat(core): swipe actions come from createSwipe on the shared drag path (#8690)
+- [x] [`1addd72da`](https://github.com/meta/astryx/commit/1addd72da) feat(core): swipe actions come from createSwipe on the shared drag path (#8690)
   - 暂缓：横滑操作改走 createSwipe 共用拖动路径，归动效与手势引擎任务（4b 拖拽）
   - 暂缓：归动效与手势引擎任务：缺 createSwipe 公共 API、swipeHost、SwipeActionsLayer、约 1400 行的 useSwipeAction 和 dragToSnapPoints 的 compositorSettle，Vue 版 Item 横滑还没走共享拖拽路径。
   - 暂缓：[createSwipe] 缺 createSwipe、swipeHost、SwipeActionsLayer，Item 横滑还没走共用拖动路径
   - 暂缓：Vue 版还没有 createSwipe、swipeHost、SwipeActionsLayer、useSwipeAction 这套横滑模块，上游约 76 个文件近万行，本轮只建了重排设施
+  - 已移植：[#667](https://github.com/astryx-vue/astryx-vue/pull/667)。新建 @astryx-vue/core/Swipe 的 createSwipe（swipeHost、SwipeActionsLayer、useSwipeAction、compositor 收尾），Item/ListItem 新增 swipe prop，旧 swipeActions 废弃但仍可用
 - [x] [`178cd8019`](https://github.com/meta/astryx/commit/178cd8019) perf(OverflowList): lists in one commit measure together after it, before paint (#10392)
   - 不适用：React 提交内批量测量的时序优化，Vue 版用自己的测量与 ResizeObserver
 - [x] [`30b12dd5a`](https://github.com/meta/astryx/commit/30b12dd5a) fix(Item, Token): a control inside a row with its own action, or a token's Remove, rings itself (#8869)
@@ -12471,11 +12478,12 @@
 
 - [x] [`337ae5002`](https://github.com/meta/astryx/commit/337ae5002) docs(architecture): tooltip and hover-card code loads after first paint on every page (#11597)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`1addd72da`](https://github.com/meta/astryx/commit/1addd72da) feat(core): swipe actions come from createSwipe on the shared drag path (#8690)
+- [x] [`1addd72da`](https://github.com/meta/astryx/commit/1addd72da) feat(core): swipe actions come from createSwipe on the shared drag path (#8690)
   - 暂缓：归动效与手势引擎任务：缺 createSwipe 公共 API、swipeHost、SwipeActionsLayer、约 1400 行的 useSwipeAction 和 dragToSnapPoints 的 compositorSettle，Vue 版 Item 横滑还没走共享拖拽路径。
   - 暂缓：滑动操作改走 createSwipe 与共享拖动通道，缺手势引擎，归动效与手势引擎任务
   - 暂缓：[createSwipe] 缺 createSwipe、swipeHost、SwipeActionsLayer，Item 横滑还没走共用拖动路径
   - 暂缓：Vue 版还没有 createSwipe、swipeHost、SwipeActionsLayer、useSwipeAction 这套横滑模块，上游约 76 个文件近万行，本轮只建了重排设施
+  - 已移植：[#667](https://github.com/astryx-vue/astryx-vue/pull/667)。新建 @astryx-vue/core/Swipe 的 createSwipe（swipeHost、SwipeActionsLayer、useSwipeAction、compositor 收尾），Item/ListItem 新增 swipe prop，旧 swipeActions 废弃但仍可用
 - [x] [`39eb83866`](https://github.com/meta/astryx/commit/39eb83866) docs(architecture): unused optional features cost almost nothing, and large behavior code lives in a shared engine (#11650)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`4800d992e`](https://github.com/meta/astryx/commit/4800d992e) feat(AlertDialog): touch motion on the theme's timing (#8373)
