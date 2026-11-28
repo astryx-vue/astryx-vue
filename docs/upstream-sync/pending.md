@@ -6606,9 +6606,10 @@
   - Vue 版已有：CommentComposerBase 的 beginImageUpload 忙碌时拒收粘贴与拖放的图片（CommentComposer.test.ts 覆盖）
 - [x] [`642cc2de1`](https://github.com/meta/astryx/commit/642cc2de1) fix(lab): write latest-value refs at commit, not during render (#10780)
   - 不适用：React 在提交阶段写最新值 ref 的规范；Vue 的 ref 没有渲染期写入的问题
-- [ ] [`daa239e98`](https://github.com/meta/astryx/commit/daa239e98) feat(lab): experimental ChatVirtualizer (#5461)
+- [x] [`daa239e98`](https://github.com/meta/astryx/commit/daa239e98) feat(lab): experimental ChatVirtualizer (#5461)
   - 暂缓：Vue 的 lab 没有 ChatVirtualizer（约 1600 行实现加 900 行测试的聊天虚拟滚动），本轮没排上
   - 暂缓：[ChatVirtualizer] lab 没有 ChatVirtualizer
+  - 已移植：[#668](https://github.com/astryx-vue/astryx-vue/pull/668)。lab 新增 ChatVirtualizer（窗口化、贴底跟随、加载历史不跳、焦点行保留、aria-busy、手指滚动交接），新增文案键 @astryx.chatVirtualizer.label 对应 chat.virtualizerLabel，renderItem 改为作用域插槽、handleRef 改为 defineExpose
 - [x] [`b5de1a82f`](https://github.com/meta/astryx/commit/b5de1a82f) refactor(lab): one-line ref effects in Comments and Schedule (#10805)
   - 不适用：React 的 ref 回调写法重构，行为不变
 - [x] [`bf13b026e`](https://github.com/meta/astryx/commit/bf13b026e) fix(Avatar): an interactive initials avatar passes Label in Name (#10816)
@@ -6618,15 +6619,17 @@
 
 ### v0.7.14
 
-- [ ] [`a3a6f1c85`](https://github.com/meta/astryx/commit/a3a6f1c85) fix(ChatVirtualizer): attach mode works on the page's own scroller (#10879)
+- [x] [`a3a6f1c85`](https://github.com/meta/astryx/commit/a3a6f1c85) fix(ChatVirtualizer): attach mode works on the page's own scroller (#10879)
   - 暂缓：ChatVirtualizer 在页面自己的滚动容器上用 attach 模式，随 ChatVirtualizer 整体暂缓
   - 暂缓：[ChatVirtualizer] 随 ChatVirtualizer 整体
+  - 已移植：[#668](https://github.com/astryx-vue/astryx-vue/pull/668)。挂到整页滚动时按视口顶量内容起点、在 document 上听滚动和手指滚动、窗口 resize 视为视口变化，core 公开 scrollsPage 等工具供 lab 使用
 
 ### v0.7.15
 
-- [ ] [`3fed77b37`](https://github.com/meta/astryx/commit/3fed77b37) fix(ChatVirtualizer): a rotation keeps the row at the top of the view in place (#11219)
+- [x] [`3fed77b37`](https://github.com/meta/astryx/commit/3fed77b37) fix(ChatVirtualizer): a rotation keeps the row at the top of the view in place (#11219)
   - 暂缓：ChatVirtualizer 旋转屏幕后保持顶部那一行不动，随 ChatVirtualizer 整体暂缓
   - 暂缓：[ChatVirtualizer] lab 没有 ChatVirtualizer
+  - 已移植：[#668](https://github.com/astryx-vue/astryx-vue/pull/668)。整页滚动时旋转屏幕 500ms 内或视口高度变了的浏览器滚动不算读者的，下一帧恢复顶上那一行，滚轮和按键结束这段窗口
 - [x] [`95127f655`](https://github.com/meta/astryx/commit/95127f655) test(ChatVirtualizer): a reply that arrives in history is read out once, and no history as the reader scrolls down (#11365)
   - 不适用：只改上游测试（自动初筛）
 
