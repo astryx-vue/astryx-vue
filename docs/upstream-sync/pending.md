@@ -507,9 +507,10 @@
   - 不适用：修的是 React 渲染比 transform 晚一帧；Vue 的 panelTransform 与 panelHeight 来自同一份响应式状态，同一次更新里一起提交
 - [x] [`e0a03766d`](https://github.com/meta/astryx/commit/e0a03766d) docs(knowledge): every component spec lives in docs/specs/components, one folder per component (#9007)
   - 不适用：上游规范文档换目录
-- [ ] [`0df41f123`](https://github.com/meta/astryx/commit/0df41f123) fix(MobileTokenizer): refine touch sheet editing flow (#8742)
+- [x] [`0df41f123`](https://github.com/meta/astryx/commit/0df41f123) fix(MobileTokenizer): refine touch sheet editing flow (#8742)
   - 暂缓：触屏令牌编辑流程依赖 useMobileKeyboard，归屏幕键盘模块
   - 暂缓：Tall 面板键盘恢复部分已随 #648 移植；Tokenizer 触屏面板的草稿加保存、未保存确认、拖动收键盘是一整套新交互且要新增多语言文案，需单独做
+  - Vue 版已有：lab MobileTokenizer / MobilePowerSearch 已在 #612 并入 core，TokenizerBottomSheet 已有保存才提交草稿、脏改动确认、选择上限提示、拖动收起搜索，键盘恢复滚动位置也已在 sheetKeyboard 里
 - [x] [`16b95934f`](https://github.com/meta/astryx/commit/16b95934f) fix(Dialog, Drawer, BottomSheet): an overlay open on the server renders closed until hydration (#9360)
   - 已移植：[#616](https://github.com/astryx-vue/astryx-vue/pull/616)。服务端渲染就开着的抽屉和流程水合前不带 aria-modal，水合后静止打开不播进场，补 SSR 与水合测试
 - [x] [`a986306fa`](https://github.com/meta/astryx/commit/a986306fa) spec(container-padding): AppShell is a boundary owner (#9461)
@@ -551,10 +552,11 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`e390c3c43`](https://github.com/meta/astryx/commit/e390c3c43) test(browser): keep every Playwright browser context off remote hosts (#9811)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`ea33dafd5`](https://github.com/meta/astryx/commit/ea33dafd5) feat(docsite): label deprecated components from their doc (#9046)
+- [x] [`ea33dafd5`](https://github.com/meta/astryx/commit/ea33dafd5) feat(docsite): label deprecated components from their doc (#9046)
   - 暂缓：文档站按文档标记废弃组件，随 BottomSheetSwitcher 废弃一起做，归 BottomSheet 打开顺序任务
   - 暂缓：[BottomSheet打开顺序栈] 文档站废弃徽标随 BottomSheetSwitcher 废弃一起做，目前没有已弃用的组件
   - 暂缓：文档站废弃徽标和提示已在 #658 完成；剩 CLI 搜索结果的 deprecated 字段和站内搜索行的废弃标记
+  - 已移植：[#666](https://github.com/astryx-vue/astryx-vue/pull/666)。复用 #658 的 meta.ts deprecated 字段：catalog 记下替代组件和迁移说明，search / build 文本标出已废弃并给替代组件、--json 带 deprecated 字段，文档站搜索结果行带已废弃标记
 - [x] [`0588a1342`](https://github.com/meta/astryx/commit/0588a1342) feat(core): one on-screen keyboard module; a Tall BottomSheet reads it and rides Gboard's slides (#8559)
   - 暂缓：统一的屏幕键盘模块与 Tall 抽屉跟随 Gboard 滑动，归屏幕键盘模块
   - 已移植：[#648](https://github.com/astryx-vue/astryx-vue/pull/648)。键盘模块（高度测量、Chromium 布局向导、键盘模型、rideKeyboard、useMobileKeyboard）和 Tall 底部面板让出键盘位置并跟着 Gboard 滑动
@@ -1583,10 +1585,11 @@
   - 不适用：上游按命令懒加载模块的启动优化；我们的 CLI 没有可优化的运行时依赖，catalog 是预生成的 JSON
 - [x] [`ffd29c58b`](https://github.com/meta/astryx/commit/ffd29c58b) docs(useInputStatusIcon): add a minimal live example (#9714)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`ea33dafd5`](https://github.com/meta/astryx/commit/ea33dafd5) feat(docsite): label deprecated components from their doc (#9046)
+- [x] [`ea33dafd5`](https://github.com/meta/astryx/commit/ea33dafd5) feat(docsite): label deprecated components from their doc (#9046)
   - 暂缓：需要文档 frontmatter 的 deprecated 字段、catalog 字段、文档站徽标和 search 结果字段一整套；目前没有已弃用的组件，出现时再做
   - 暂缓：[BottomSheet打开顺序栈] 文档站废弃徽标随 BottomSheetSwitcher 废弃一起做，目前没有已弃用的组件
   - 暂缓：文档站废弃徽标和提示已在 #658 完成；剩 CLI 搜索结果的 deprecated 字段和站内搜索行的废弃标记
+  - 已移植：[#666](https://github.com/astryx-vue/astryx-vue/pull/666)。复用 #658 的 meta.ts deprecated 字段：catalog 记下替代组件和迁移说明，search / build 文本标出已废弃并给替代组件、--json 带 deprecated 字段，文档站搜索结果行带已废弃标记
 - [x] [`8c2262460`](https://github.com/meta/astryx/commit/8c2262460) docs(useTreeFocus): add a keyboard file tree example block (#9617)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`510f96d5f`](https://github.com/meta/astryx/commit/510f96d5f) test(cli): build.family's fixtures live in the OS temp directory, not in the CLI's source tree (#9875)
@@ -3641,9 +3644,10 @@
   - 不适用：React 版 esbuild 打包入口的问题
 - [x] [`377ab27fa`](https://github.com/meta/astryx/commit/377ab27fa) fix(Timestamp): keep a caller's aria-label and tabIndex (#8726)
   - 已移植：[#573](https://github.com/astryx-vue/astryx-vue/pull/573)。写在组件上的属性落到 time 上，调用方的 aria-label 和 tabindex 优先，补测试
-- [ ] [`16a749404`](https://github.com/meta/astryx/commit/16a749404) fix(DateInput, DateTimeInput): after a month arrow, Safari's calendar rests on the month the title names (#8513)
+- [x] [`16a749404`](https://github.com/meta/astryx/commit/16a749404) fix(DateInput, DateTimeInput): after a month arrow, Safari's calendar rests on the month the title names (#8513)
   - 暂缓：要还原上游动效，归动效与手势引擎任务
   - 暂缓：[日历月份滚动条] Vue 日历用箭头翻月，没有月份滚动条
+  - 已移植：[#664](https://github.com/astryx-vue/astryx-vue/pull/664)。底部面板月份改成横向连续吸附滚动器，箭头翻月的平滑滚动记成引导，停稳校正送到标题那个月，重新居中时暂停吸附，Safari 不再停在上个月
 - [x] [`d799afea8`](https://github.com/meta/astryx/commit/d799afea8) fix(DateInput, DateRangeInput, DateTimeInput): mount the calendar only while the popover is open (#8902)
   - 已移植：[#546](https://github.com/astryx-vue/astryx-vue/pull/546)。日历只在弹层打开时挂载（DateInput、DateRangeInput、DateTimeInput）
 - [x] [`faee47927`](https://github.com/meta/astryx/commit/faee47927) fix(TimeInput, DateTimeInput): time text follows the locale's hour cycle and day periods (#9022)
@@ -3659,9 +3663,10 @@
   - 不适用：上游组件规范文档（自动初筛）
 - [x] [`2936b07e8`](https://github.com/meta/astryx/commit/2936b07e8) fix(DateRangeInput): reject commits after disabling open picker (#9155)
   - 已移植：[#576](https://github.com/astryx-vue/astryx-vue/pull/576)。commit 在锁定时本来就返回；再让弹层开着时被锁定后的日子和预设点击不改动待选起点，补测试
-- [ ] [`67e293e0e`](https://github.com/meta/astryx/commit/67e293e0e) perf(DateInput): the month scroller adds and removes its input listeners directly, with one shared options object (#9146)
+- [x] [`67e293e0e`](https://github.com/meta/astryx/commit/67e293e0e) perf(DateInput): the month scroller adds and removes its input listeners directly, with one shared options object (#9146)
   - 暂缓：要还原上游动效，归动效与手势引擎任务
   - 暂缓：[日历月份滚动条] Vue 日历没有月份滚动条
+  - 已移植：[#664](https://github.com/astryx-vue/astryx-vue/pull/664)。滚动器的停稳与手势监听直接 addEventListener / removeEventListener，全部共用一个被动选项对象，按键走捕获阶段
 - [x] [`f50374f51`](https://github.com/meta/astryx/commit/f50374f51) test(DateInput, DateTimeInput): MonthScroller's proofs hold on a loaded machine (#9177)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`8f345cba4`](https://github.com/meta/astryx/commit/8f345cba4) feat(FieldStatus): deprecate the tooltip variant; field controls keep statusVariant="tooltip" (#9196)
@@ -3685,9 +3690,10 @@
 
 ### v0.7.7
 
-- [ ] [`aa8648760`](https://github.com/meta/astryx/commit/aa8648760) fix(DateInput, DateTimeInput): the month scroller's steps follow design:reduced-motion (#8496)
+- [x] [`aa8648760`](https://github.com/meta/astryx/commit/aa8648760) fix(DateInput, DateTimeInput): the month scroller's steps follow design:reduced-motion (#8496)
   - 暂缓：要还原上游动效，归动效与手势引擎任务
   - 暂缓：[日历月份滚动条] Vue 日历没有月份滚动条
+  - 已移植：[#664](https://github.com/astryx-vue/astryx-vue/pull/664)。翻月步骤遵守减少动效：精细指针直接换月，粗指针在一次 200ms 透明度下沉里换，不再滑动
 - [x] [`6658a4c8a`](https://github.com/meta/astryx/commit/6658a4c8a) fix(Wheel): a wheel that stops outside the bounds rests on the nearest value inside them (#8131)
   - 暂缓：要还原上游动效，归动效与手势引擎任务
   - Vue 版已有：触屏滚轮释放时按 planRelease 落到最近的可用行，两端有橡皮筋（#641）
@@ -4401,8 +4407,9 @@
   - 不适用：React context 多副本问题
 - [x] [`a8195e032`](https://github.com/meta/astryx/commit/a8195e032) chore(core): Core's internal touch entry re-exports the action-group tracking hook, extended for Lab's TabBar, and a tab-bar string joins the catalog (#9699)
   - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。en.json 已对齐；tabBar 命名空间列入 coverage.mjs，lab TabBar 还没有 Vue 版
-- [ ] [`b8cc3f41e`](https://github.com/meta/astryx/commit/b8cc3f41e) fix(Markdown): each prose block lays out in its own text's direction (#10293)
+- [x] [`b8cc3f41e`](https://github.com/meta/astryx/commit/b8cc3f41e) fix(Markdown): each prose block lays out in its own text's direction (#10293)
   - 暂缓：首强字符方向分类器只服务 Markdown 按块定方向，Vue 版 Markdown 还没有块方向功能，应随 Markdown 一起移植
+  - 已移植：[#662](https://github.com/astryx-vue/astryx-vue/pull/662)。在 #634 各块按自身方向之外，补上无方向块按 provider 页面方向排、反向单元格的列线和对齐按表格方向；List 的 ListContext 改动不需要，Vue 版 Markdown 列表不走 List
 - [x] [`fac363ee8`](https://github.com/meta/astryx/commit/fac363ee8) fix(Kbd): ctrl, alt, shift and meta show text off Apple platforms (#10524)
   - 已移植：[#533](https://github.com/astryx-vue/astryx-vue/pull/533)。Kbd 非 Apple 平台的 Alt、Shift、Win 键帽改读内置文案并接入目录，补测试（显示规则见 #503）
 - [x] [`b47b33a43`](https://github.com/meta/astryx/commit/b47b33a43) fix(PowerSearch): a filter token's field, operator and value come from catalog messages (#10437)
