@@ -128,7 +128,7 @@ describe('上游持续同步', () => {
   })
 
   it('默认只 dry-run，只有 --apply 才写 GitHub', () => {
-    const { syncedTo } = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')).upstream
+    const { syncedTo } = JSON.parse(readFileSync(join(process.cwd(), 'package.json'), 'utf8')).upstream
     expect(parseArgs([])).toMatchObject({ apply: false, from: syncedTo })
     expect(parseArgs(['--apply', '--to', 'v0.7.5'])).toMatchObject({ apply: true, to: 'v0.7.5' })
     expect(() => parseArgs(['--to'])).toThrow('无法识别的参数')
