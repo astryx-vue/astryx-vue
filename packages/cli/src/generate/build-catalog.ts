@@ -134,6 +134,9 @@ export async function buildCatalog(repoRoot: string, entries: readonly CatalogEn
         en: `${DOCS_ORIGIN}/en/components/${entry.slug}`,
         zh: `${DOCS_ORIGIN}/components/${entry.slug}`,
       },
+      ...(entry.deprecated
+        ? { deprecated: { replacement: pascalCase(entry.deprecated.replacement), description: entry.deprecated.description } }
+        : {}),
     })
   }
   if (missing.length > 0)

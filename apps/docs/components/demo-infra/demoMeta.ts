@@ -95,29 +95,81 @@ export function assembleCatalog(metas: readonly CatalogMetaInput[]): CatalogEntr
   }))
 }
 
+function stringField(source: string, name: string): string | null {
+  const match = source.match(new RegExp(`\\b${name}:\\s*'((?:\\\\'|[^'])*)'`))
+  return match ? match[1].replace(/\\'/g, '\'') : null
+}
+
+/**
+ * 找出 `deprecated: { ... }` 这一整块（跳过单引号字符串里的花括号），
+ * 返回块本身和去掉它之后的源码，免得块里的 `en` / `zh` 被当成页面标题。
+ */
+function splitDeprecatedBlock(source: string): { block: string | null, rest: string } {
+  const head = source.match(/\bdeprecated:\s*\{/)
+  if (head?.index === undefined)
+    return { block: null, rest: source }
+  const open = head.index + head[0].length - 1
+  let depth = 0
+  let quoted = false
+  for (let index = open; index < source.length; index += 1) {
+    const char = source[index]
+    if (quoted) {
+      if (char === '\\')
+        index += 1
+      else if (char === '\'')
+        quoted = false
+      continue
+    }
+    if (char === '\'') {
+      quoted = true
+    }
+    else if (char === '{') {
+      depth += 1
+    }
+    else if (char === '}') {
+      depth -= 1
+      if (depth === 0)
+        return { block: source.slice(open, index + 1), rest: source.slice(0, head.index) + source.slice(index + 1) }
+    }
+  }
+  throw new Error('meta.ts has an unclosed deprecated block')
+}
+
+function readDeprecation(block: string): ComponentDeprecation {
+  const field = (name: string): string => {
+    const value = stringField(block, name)
+    if (value === null)
+      throw new Error(`meta.ts deprecated is missing ${name} (write it as a single-quoted string)`)
+    return value
+  }
+  return { replacement: field('replacement'), description: { en: field('en'), zh: field('zh') } }
+}
+
 /** Read the catalog fields out of a meta.ts source without executing it. */
-export function parseDemoMetaFields(source: string): CatalogMetaInput {
+export function parseDemoMetaFields(input: string): CatalogMetaInput {
+  const { block, rest: source } = splitDeprecatedBlock(input)
   function readString(name: string): string {
-    const match = source.match(new RegExp(`\\b${name}:\\s*'((?:\\\\'|[^'])*)'`))
-    if (!match)
+    const value = stringField(source, name)
+    if (value === null)
       throw new Error(`meta.ts is missing ${name}`)
-    return match[1].replace(/\\'/g, '\'')
+    return value
   }
 
   const order = source.match(/\border:\s*(\d+)/)
   if (!order)
     throw new Error('meta.ts is missing order')
 
-  const family = source.match(/\bfamily:\s*'((?:\\'|[^'])*)'/)
+  const family = stringField(source, 'family')
   const isHiddenFromOverview = /\bisHiddenFromOverview:\s*true\b/.test(source)
 
   return {
     slug: readString('slug'),
     group: readString('group'),
-    ...(family === null ? {} : { family: family[1].replace(/\\'/g, '\'') }),
+    ...(family === null ? {} : { family }),
     order: Number(order[1]),
     en: readString('en'),
     zh: readString('zh'),
+    ...(block === null ? {} : { deprecated: readDeprecation(block) }),
     ...(isHiddenFromOverview ? { isHiddenFromOverview } : {}),
   }
 }

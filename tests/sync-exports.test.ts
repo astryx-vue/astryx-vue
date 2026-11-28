@@ -160,7 +160,7 @@ const expectedCatalog = [
   { slug: 'outline', group: 'Navigation', en: 'Outline', zh: '大纲' },
   { slug: 'alert-dialog', group: 'Overlay', family: 'Dialog', en: 'Alert Dialog', zh: '警告对话框' },
   { slug: 'bottom-sheet', group: 'Overlay', family: 'Bottom Sheet', en: 'Bottom Sheet', zh: '底部弹窗' },
-  { slug: 'bottom-sheet-switcher', group: 'Overlay', family: 'Bottom Sheet', en: 'Bottom Sheet Switcher', zh: '底部弹窗切换器' },
+  { slug: 'bottom-sheet-switcher', group: 'Overlay', family: 'Bottom Sheet', en: 'Bottom Sheet Switcher', zh: '底部弹窗切换器', deprecated: { replacement: 'bottom-sheet', description: { en: expect.stringContaining('BottomSheet'), zh: expect.stringContaining('BottomSheet') } } },
   { slug: 'dialog', group: 'Overlay', family: 'Dialog', en: 'Dialog', zh: '对话框' },
   { slug: 'dialog-header', group: 'Overlay', family: 'Dialog', en: 'Dialog Header', zh: '对话框页眉' },
   { slug: 'hover-card', group: 'Overlay', family: 'Hover Card', en: 'Hover Card', zh: '悬浮卡片' },
