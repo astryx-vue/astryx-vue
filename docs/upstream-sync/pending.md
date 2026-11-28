@@ -5863,9 +5863,10 @@
   - Vue 版已有：#518 已有 useSnapPaging；本 PR 把它的拖动接到手势引擎上
 - [x] [`306051090`](https://github.com/meta/astryx/commit/306051090) fix(core): gestures read another window's nodes and touches (#10224)
   - 已移植：[#579](https://github.com/astryx-vue/astryx-vue/pull/579)。手势能读别的窗口（iframe）里的节点和触摸
-- [ ] [`0081c1165`](https://github.com/meta/astryx/commit/0081c1165) feat(lab): under a finger, NavigationStack's bar takes the iOS 26 look (#8396)
+- [x] [`0081c1165`](https://github.com/meta/astryx/commit/0081c1165) feat(lab): under a finger, NavigationStack's bar takes the iOS 26 look (#8396)
   - 暂缓：NavigationStack 在 Vue 还没有，iOS 26 风格的栏和 useScrollEdgeEffect 随它一起做；归动效与手势引擎任务
   - 暂缓：[NavigationStack] lab 没有 NavigationStack，iOS 26 风格栏随它一起做
+  - 已移植：[#656](https://github.com/astryx-vue/astryx-vue/pull/656)。NavigationStack 手指下的栏换成 iOS 26 的样子，随 NavigationStack 一起移植
 - [x] [`8bd8c6146`](https://github.com/meta/astryx/commit/8bd8c6146) fix(core): layout glides play the theme's move curve, not a spring (#10236)
   - 暂缓：依赖尺寸变化滑动设施（animatedLayout，spec AST-105），Vue 版没有
   - 暂缓：内核部分已在 #563-#568；剩 AppShell 与 SideNav 侧栏收展动效，归动效与手势引擎的组件接入阶段
@@ -6702,30 +6703,34 @@
 
 ### v0.7.9
 
-- [ ] [`9d068fc89`](https://github.com/meta/astryx/commit/9d068fc89) feat(lab): useRefreshControl, UIKit's pull to refresh for an app's scroll container (#9865)
+- [x] [`9d068fc89`](https://github.com/meta/astryx/commit/9d068fc89) feat(lab): useRefreshControl, UIKit's pull to refresh for an app's scroll container (#9865)
   - 暂缓：useRefreshControl 要的 RefreshControl 组件在 Vue 还没有，归 lab 的触屏组件接入阶段
   - 暂缓：[RefreshControl] lab 没有 useRefreshControl
+  - 已移植：[#669](https://github.com/astryx-vue/astryx-vue/pull/669)。useRefreshControl 下拉、触发、松手回落、触控板下拉和顶部接管照着 UIRefreshControl
 - [x] [`38f1a1d40`](https://github.com/meta/astryx/commit/38f1a1d40) fix(docsite): a fluid Overview showcase keeps an inset from its card's edges (#10027)
   - 不适用：上游文档站 Overview 里流式展示框与卡片边缘的间距，Vue 文档站演示容器自己带内边距
 - [x] [`6f3befa82`](https://github.com/meta/astryx/commit/6f3befa82) feat(lab): CircleCheckIndicator, the iOS multiple-selection circle (#9723)
   - Vue 版已有：CircleCheckIndicator 已由 #536 加入
-- [ ] [`4e4cf84d2`](https://github.com/meta/astryx/commit/4e4cf84d2) feat(lab): NavigationStack, push/pop navigation that moves like UINavigationController (#9697)
+- [x] [`4e4cf84d2`](https://github.com/meta/astryx/commit/4e4cf84d2) feat(lab): NavigationStack, push/pop navigation that moves like UINavigationController (#9697)
   - 暂缓：NavigationStack 在 Vue 还没有（推入弹出动画和侧滑返回），归 lab 的触屏组件接入阶段
   - 暂缓：[NavigationStack] lab 没有 NavigationStack
+  - 已移植：[#656](https://github.com/astryx-vue/astryx-vue/pull/656)。NavigationStack 推入推出转场和滑动返回手势照着 UINavigationController
 
 ### v0.7.10
 
 - [x] [`cbda0753d`](https://github.com/meta/astryx/commit/cbda0753d) ci(release): publish canaries at most hourly from main's tip, plus an on-demand canary dispatch (#9659)
   - 不适用：上游发布金丝雀版本的 CI 与 lab README 说明，Vue 仓库的发布流程不同
-- [ ] [`0cc540700`](https://github.com/meta/astryx/commit/0cc540700) feat(lab): PageControl, UIPageControl's indicators: a tap steps a page, a finger scrubs, every pointer pages (#9684)
+- [x] [`0cc540700`](https://github.com/meta/astryx/commit/0cc540700) feat(lab): PageControl, UIPageControl's indicators: a tap steps a page, a finger scrubs, every pointer pages (#9684)
   - 暂缓：PageControl 在 Vue 还没有（点按翻页、手指拖动），归 lab 的触屏组件接入阶段
   - 暂缓：[PageControl] lab 没有 PageControl
+  - 已移植：[#665](https://github.com/astryx-vue/astryx-vue/pull/665)。PageControl 点按翻页、手指拖动、长排窗口和底板淡入淡出照着 UIPageControl
 
 ### v0.7.12
 
-- [ ] [`c18bc584c`](https://github.com/meta/astryx/commit/c18bc584c) feat(lab): TabBar, iOS 26's floating tab bar, with its selection lens and press tracking (#9700)
+- [x] [`c18bc584c`](https://github.com/meta/astryx/commit/c18bc584c) feat(lab): TabBar, iOS 26's floating tab bar, with its selection lens and press tracking (#9700)
   - 暂缓：TabBar 在 Vue 还没有（选择镜片与按压跟踪），归 lab 的触屏组件接入阶段
   - 暂缓：[TabBar] lab 没有 TabBar
+  - 已移植：[#660](https://github.com/astryx-vue/astryx-vue/pull/660)。TabBar 浮动标签栏、选中透镜和按压跟踪，弹簧照抄 iOS 26.2 实测值
 - [x] [`611382ee1`](https://github.com/meta/astryx/commit/611382ee1) feat(lab): add LineClamp — clamp arbitrary content to N lines (#4259)
   - Vue 版已有：LineClamp 已由 #511 加入
 - [x] [`848bbe7c7`](https://github.com/meta/astryx/commit/848bbe7c7) feat(lab): DialogHeroHeader (#10108)
@@ -6748,9 +6753,10 @@
 
 ### v0.7.13
 
-- [ ] [`0085c0f2b`](https://github.com/meta/astryx/commit/0085c0f2b) feat(lab): TabBar shows a More tab past five tabs (#10619)
+- [x] [`0085c0f2b`](https://github.com/meta/astryx/commit/0085c0f2b) feat(lab): TabBar shows a More tab past five tabs (#10619)
   - 暂缓：TabBar 的更多标签页在 Vue 还没有，随 TabBar 一起
   - 暂缓：[TabBar] lab 没有 TabBar，更多标签页随它一起做
+  - 已移植：[#660](https://github.com/astryx-vue/astryx-vue/pull/660)。超过五个标签时显示「更多」和 TabBarMoreList
 
 ### v0.7.14
 
@@ -6880,9 +6886,10 @@
 
 ### v0.7.10
 
-- [ ] [`0081c1165`](https://github.com/meta/astryx/commit/0081c1165) feat(lab): under a finger, NavigationStack's bar takes the iOS 26 look (#8396)
+- [x] [`0081c1165`](https://github.com/meta/astryx/commit/0081c1165) feat(lab): under a finger, NavigationStack's bar takes the iOS 26 look (#8396)
   - 暂缓：NavigationStack 在 Vue 还没有，iOS 26 风格的栏和 useScrollEdgeEffect 随它一起做
   - 暂缓：[NavigationStack] lab 没有 NavigationStack，iOS 26 风格栏随它一起做
+  - 已移植：[#656](https://github.com/astryx-vue/astryx-vue/pull/656)。NavigationStack 手指下的栏换成 iOS 26 的样子，随 NavigationStack 一起移植
 
 ### v0.7.11
 
@@ -6895,10 +6902,11 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`5eb6b2137`](https://github.com/meta/astryx/commit/5eb6b2137) fix(lab): a swizzled ListInput type-checks without Node's types (#10574)
   - 不适用：上游 swizzle 拷贝出去的 ListInput 在没有 Node 类型时的类型检查，Vue 版没有源码拷贝机制
-- [ ] [`33cf413d0`](https://github.com/meta/astryx/commit/33cf413d0) fix(NavigationStack): fade the veil for a late finger-scroll report (#10540)
+- [x] [`33cf413d0`](https://github.com/meta/astryx/commit/33cf413d0) fix(NavigationStack): fade the veil for a late finger-scroll report (#10540)
   - 暂缓：本期已做迟到的手指滚动报告（#579）；剩 NavigationStack 遮罩渐隐，归组件接入阶段
   - 暂缓：NavigationStack 遮罩对迟到的手指滚动报告渐隐，归 NavigationStack 组件接入
   - 暂缓：[NavigationStack] 遮罩对迟到的手指滚动报告渐隐
+  - 已移植：[#656](https://github.com/astryx-vue/astryx-vue/pull/656)。迟到的手指滚动报告让遮罩渐隐，有测试
 - [x] [`a28d586eb`](https://github.com/meta/astryx/commit/a28d586eb) feat(core): createReorderable makes List rows reorderable (#8139)
   - 不适用：上游内部规范和架构文档（自动初筛）
 - [x] [`36b8f6ebc`](https://github.com/meta/astryx/commit/36b8f6ebc) feat(lab): TransferList reorders through core's createReorderable (#8143)
@@ -12577,9 +12585,10 @@
 
 ### v0.7.9
 
-- [ ] [`9d068fc89`](https://github.com/meta/astryx/commit/9d068fc89) feat(lab): useRefreshControl, UIKit's pull to refresh for an app's scroll container (#9865)
+- [x] [`9d068fc89`](https://github.com/meta/astryx/commit/9d068fc89) feat(lab): useRefreshControl, UIKit's pull to refresh for an app's scroll container (#9865)
   - 暂缓：RefreshControl 依赖 core 还没有的手势识别器（GestureArena、PanGestureRecognizer）和 UIKit 动效引擎（createMotionEngine、rubberBand、scroll 弹簧）
   - 暂缓：[RefreshControl] lab 没有 useRefreshControl
+  - 已移植：[#669](https://github.com/astryx-vue/astryx-vue/pull/669)。useRefreshControl 下拉、触发、松手回落、触控板下拉和顶部接管照着 UIRefreshControl
 - [x] [`de1be1fd9`](https://github.com/meta/astryx/commit/de1be1fd9) fix(CircularProgress): the indeterminate ring turns with Spinner's rotor (#8256)
   - 已移植：[#532](https://github.com/astryx-vue/astryx-vue/pull/532)。不确定圆环改为和加载圈一样的 135° 弧整体旋转，一次迭代 100 圈，相位钉在时间线 0 点，补测试
 - [x] [`6e2e24293`](https://github.com/meta/astryx/commit/6e2e24293) feat(lab): Schedule writes dates in the provider's calendar (#9994)
@@ -12593,21 +12602,25 @@
   - 不适用：是给 Lab 的 RefreshControl 包一层动画器钩子并调整 React 包的内部触摸入口，Vue 的 lab 没有 RefreshControl，核心入口已按 Vue 结构组织
 - [x] [`1ef21f898`](https://github.com/meta/astryx/commit/1ef21f898) fix(Spinner): route standalone loading through the shared announcement channel (#7910)
   - 已移植：[#532](https://github.com/astryx-vue/astryx-vue/pull/532)。Schedule 不再自带 live 区域，加载开始改走 useAnnounce 播报，加载圈 aria-hidden，补测试
-- [ ] [`4e4cf84d2`](https://github.com/meta/astryx/commit/4e4cf84d2) feat(lab): NavigationStack, push/pop navigation that moves like UINavigationController (#9697)
+- [x] [`4e4cf84d2`](https://github.com/meta/astryx/commit/4e4cf84d2) feat(lab): NavigationStack, push/pop navigation that moves like UINavigationController (#9697)
   - 暂缓：NavigationStack 的推入弹出动画和侧滑返回依赖 core 还没有的手势识别器和 UIKit 动效引擎
   - 暂缓：[NavigationStack] lab 没有 NavigationStack
+  - 已移植：[#656](https://github.com/astryx-vue/astryx-vue/pull/656)。NavigationStack 推入推出转场和滑动返回手势照着 UINavigationController
 
 ### v0.7.10
 
-- [ ] [`75c3c48f5`](https://github.com/meta/astryx/commit/75c3c48f5) fix(lab): NavigationStack re-measures a screen when its title resizes (#10191)
+- [x] [`75c3c48f5`](https://github.com/meta/astryx/commit/75c3c48f5) fix(lab): NavigationStack re-measures a screen when its title resizes (#10191)
   - 暂缓：NavigationStack 未移植（缺手势识别器和动效引擎）
   - 暂缓：[NavigationStack] 标题改尺寸时重新量屏
-- [ ] [`0081c1165`](https://github.com/meta/astryx/commit/0081c1165) feat(lab): under a finger, NavigationStack's bar takes the iOS 26 look (#8396)
+  - 已移植：[#656](https://github.com/astryx-vue/astryx-vue/pull/656)。标题改尺寸时重新量屏，有测试
+- [x] [`0081c1165`](https://github.com/meta/astryx/commit/0081c1165) feat(lab): under a finger, NavigationStack's bar takes the iOS 26 look (#8396)
   - 暂缓：NavigationStack 未移植；滚动边缘外观还依赖上游 lab 的 useScrollEdgeEffect 和动效引擎
   - 暂缓：[NavigationStack] lab 没有 NavigationStack，iOS 26 风格栏随它一起做
-- [ ] [`0cc540700`](https://github.com/meta/astryx/commit/0cc540700) feat(lab): PageControl, UIPageControl's indicators: a tap steps a page, a finger scrubs, every pointer pages (#9684)
+  - 已移植：[#656](https://github.com/astryx-vue/astryx-vue/pull/656)。NavigationStack 手指下的栏换成 iOS 26 的样子，随 NavigationStack 一起移植
+- [x] [`0cc540700`](https://github.com/meta/astryx/commit/0cc540700) feat(lab): PageControl, UIPageControl's indicators: a tap steps a page, a finger scrubs, every pointer pages (#9684)
   - 暂缓：PageControl 的点按翻页、手指拖动和滑动关键帧依赖 core 还没有的手势识别器和动效引擎
   - 暂缓：[PageControl] lab 没有 PageControl
+  - 已移植：[#665](https://github.com/astryx-vue/astryx-vue/pull/665)。PageControl 点按翻页、手指拖动、长排窗口和底板淡入淡出照着 UIPageControl
 
 ### v0.7.11
 
@@ -12632,9 +12645,10 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`6706e0177`](https://github.com/meta/astryx/commit/6706e0177) test(interaction-harness): a proof starved of frames fails by name (#10456)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`c18bc584c`](https://github.com/meta/astryx/commit/c18bc584c) feat(lab): TabBar, iOS 26's floating tab bar, with its selection lens and press tracking (#9700)
+- [x] [`c18bc584c`](https://github.com/meta/astryx/commit/c18bc584c) feat(lab): TabBar, iOS 26's floating tab bar, with its selection lens and press tracking (#9700)
   - 暂缓：TabBar 的选择镜片和按压跟踪依赖 core 还没有的手势识别器和动效引擎
   - 暂缓：[TabBar] lab 没有 TabBar
+  - 已移植：[#660](https://github.com/astryx-vue/astryx-vue/pull/660)。TabBar 浮动标签栏、选中透镜和按压跟踪，弹簧照抄 iOS 26.2 实测值
 - [x] [`d9292cb24`](https://github.com/meta/astryx/commit/d9292cb24) test(NavigationStack): block inside the push, name starved runs (#10509)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`c03e4cd76`](https://github.com/meta/astryx/commit/c03e4cd76) test(RefreshControl): send the trackpad pull as one wheel burst (#10520)
@@ -12645,39 +12659,46 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`33cf413d0`](https://github.com/meta/astryx/commit/33cf413d0) fix(NavigationStack): fade the veil for a late finger-scroll report (#10540)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`d9ffcf87a`](https://github.com/meta/astryx/commit/d9ffcf87a) fix(PageControl): the held look commits where the hold begins (#10553)
+- [x] [`d9ffcf87a`](https://github.com/meta/astryx/commit/d9ffcf87a) fix(PageControl): the held look commits where the hold begins (#10553)
   - 暂缓：PageControl 未移植（缺手势识别器和动效引擎）
   - 暂缓：[PageControl] lab 没有 PageControl
-- [ ] [`de74088ce`](https://github.com/meta/astryx/commit/de74088ce) fix(lab): TabBar's lens jumps to the finger under Reduce Motion (#10581)
+  - 已移植：[#665](https://github.com/astryx-vue/astryx-vue/pull/665)。按住的样子在按住开始处生效，有测试
+- [x] [`de74088ce`](https://github.com/meta/astryx/commit/de74088ce) fix(lab): TabBar's lens jumps to the finger under Reduce Motion (#10581)
   - 暂缓：TabBar 未移植（缺手势识别器和动效引擎）
   - 暂缓：[TabBar] lab 没有 TabBar
+  - 已移植：[#660](https://github.com/astryx-vue/astryx-vue/pull/660)。减少动态效果下透镜直接跳到手指处，有测试
 - [x] [`9dca38629`](https://github.com/meta/astryx/commit/9dca38629) perf(Layer): anchored entrances play on the surface (#10561)
   - 不适用：修的是 Chromium 对 CSS anchor 定位元素逐帧重排；Vue 的 Schedule 浮层用 JS 算坐标定位，入场动画本来就在唯一的浮层面上
-- [ ] [`6c5e2e665`](https://github.com/meta/astryx/commit/6c5e2e665) feat(lab): a TabBar tab can be disabled (#10539)
+- [x] [`6c5e2e665`](https://github.com/meta/astryx/commit/6c5e2e665) feat(lab): a TabBar tab can be disabled (#10539)
   - 暂缓：TabBar 未移植（缺手势识别器和动效引擎）
   - 暂缓：[TabBar] lab 没有 TabBar
+  - 已移植：[#660](https://github.com/astryx-vue/astryx-vue/pull/660)。标签可以禁用，Vue 版用 disabled 属性并输出 aria-disabled
 - [x] [`bb3a4b2ae`](https://github.com/meta/astryx/commit/bb3a4b2ae) test(interaction-harness): read a WebKit lift at its pointerup (#10585)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`611382ee1`](https://github.com/meta/astryx/commit/611382ee1) feat(lab): add LineClamp — clamp arbitrary content to N lines (#4259)
   - Vue 版已有：基础展示族已在 #511 新增 LineClamp
-- [ ] [`3b8eb80d1`](https://github.com/meta/astryx/commit/3b8eb80d1) fix(RefreshControl): the end plays UIKit's curve over the duration token (#10582)
+- [x] [`3b8eb80d1`](https://github.com/meta/astryx/commit/3b8eb80d1) fix(RefreshControl): the end plays UIKit's curve over the duration token (#10582)
   - 暂缓：RefreshControl 未移植（缺手势识别器和动效引擎）
   - 暂缓：[RefreshControl] lab 没有 RefreshControl
-- [ ] [`5d1bfbc97`](https://github.com/meta/astryx/commit/5d1bfbc97) fix(lab): TabBar's held lens shows the selected look under Reduce Motion (#10603)
+  - 已移植：[#669](https://github.com/astryx-vue/astryx-vue/pull/669)。刷新结束按主题时长变量播 UIKit 的 easeInEaseOut，有测试
+- [x] [`5d1bfbc97`](https://github.com/meta/astryx/commit/5d1bfbc97) fix(lab): TabBar's held lens shows the selected look under Reduce Motion (#10603)
   - 暂缓：TabBar 未移植（缺手势识别器和动效引擎）
   - 暂缓：[TabBar] lab 没有 TabBar
-- [ ] [`f66574d82`](https://github.com/meta/astryx/commit/f66574d82) fix(lab): TabBar's lifted look shows at once under Reduce Motion (#10612)
+  - 已移植：[#660](https://github.com/astryx-vue/astryx-vue/pull/660)。减少动态效果下按住的透镜显示选中样子，有测试
+- [x] [`f66574d82`](https://github.com/meta/astryx/commit/f66574d82) fix(lab): TabBar's lifted look shows at once under Reduce Motion (#10612)
   - 暂缓：TabBar 未移植（缺手势识别器和动效引擎）
   - 暂缓：[TabBar] lab 没有 TabBar
+  - 已移植：[#660](https://github.com/astryx-vue/astryx-vue/pull/660)。减少动态效果下抬起的样子立刻出现，有测试
 - [x] [`58e528570`](https://github.com/meta/astryx/commit/58e528570) test(NavigationStack): a programmatic pop reads its layers held (#10743)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`9f55320cc`](https://github.com/meta/astryx/commit/9f55320cc) test(NavigationStack): a push reads its bars held (#10746)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`94c14d6da`](https://github.com/meta/astryx/commit/94c14d6da) test(lab): date TabBar's tap-held frames from the first one (#10747)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`d7326d9e7`](https://github.com/meta/astryx/commit/d7326d9e7) test(PageControl): the slide's own keyframes approach without overshoot (#10601)
+- [x] [`d7326d9e7`](https://github.com/meta/astryx/commit/d7326d9e7) test(PageControl): the slide's own keyframes approach without overshoot (#10601)
   - 暂缓：PageControl 未移植（缺手势识别器和动效引擎）
   - 暂缓：[PageControl] lab 没有 PageControl
+  - 已移植：[#665](https://github.com/astryx-vue/astryx-vue/pull/665)。窗口滑动用临界阻尼弹簧不过冲，有测试
 - [x] [`b863888c5`](https://github.com/meta/astryx/commit/b863888c5) test(lab): judge TabBar's Reduce Motion lift held or by named frames (#10768)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`642cc2de1`](https://github.com/meta/astryx/commit/642cc2de1) fix(lab): write latest-value refs at commit, not during render (#10780)
@@ -12692,15 +12713,17 @@
   - 不适用：只改上游测试（自动初筛）
 - [x] [`3582c71f9`](https://github.com/meta/astryx/commit/3582c71f9) docs(specs): a draft TabBar record for More, disabled tabs and a label (#10929)
   - 不适用：上游内部规范和架构文档（自动初筛）
-- [ ] [`b04c4143e`](https://github.com/meta/astryx/commit/b04c4143e) feat(lab): reselecting a TabBar tab scrolls its panel to the top (#9966)
+- [x] [`b04c4143e`](https://github.com/meta/astryx/commit/b04c4143e) feat(lab): reselecting a TabBar tab scrolls its panel to the top (#9966)
   - 暂缓：TabBar 未移植（缺手势识别器和动效引擎）
   - 暂缓：[TabBar] lab 没有 TabBar
+  - 已移植：[#660](https://github.com/astryx-vue/astryx-vue/pull/660)。再次选中已选标签把面板滚回顶部
 
 ### v0.7.13
 
-- [ ] [`0085c0f2b`](https://github.com/meta/astryx/commit/0085c0f2b) feat(lab): TabBar shows a More tab past five tabs (#10619)
+- [x] [`0085c0f2b`](https://github.com/meta/astryx/commit/0085c0f2b) feat(lab): TabBar shows a More tab past five tabs (#10619)
   - 暂缓：TabBar 和 TabBarMoreList 未移植（缺手势识别器和动效引擎）
   - 暂缓：[TabBar] lab 没有 TabBar，更多标签页随它一起做
+  - 已移植：[#660](https://github.com/astryx-vue/astryx-vue/pull/660)。超过五个标签时显示「更多」和 TabBarMoreList
 - [x] [`81e8ce68a`](https://github.com/meta/astryx/commit/81e8ce68a) test(PageControl): a jog slowed by a stalled page fails by name (#10993)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`fb23e8db0`](https://github.com/meta/astryx/commit/fb23e8db0) test(NavigationStack): hold the return, name a starved fade (#10986)
@@ -12731,15 +12754,18 @@
 
 - [x] [`ce3022d4c`](https://github.com/meta/astryx/commit/ce3022d4c) test(CircularProgress): hold motion before tracing its rendering window (#12118)
   - 不适用：只改上游测试（自动初筛）
-- [ ] [`7b8af163a`](https://github.com/meta/astryx/commit/7b8af163a) fix(NavigationStack): a push keeps focus a person moved into the new screen (#12009)
+- [x] [`7b8af163a`](https://github.com/meta/astryx/commit/7b8af163a) fix(NavigationStack): a push keeps focus a person moved into the new screen (#12009)
   - 暂缓：NavigationStack 未移植（缺手势识别器和动效引擎）
   - 暂缓：[NavigationStack] 推入时保留用户移进新屏的焦点
-- [ ] [`96687ea2f`](https://github.com/meta/astryx/commit/96687ea2f) fix(NavigationStack): a push or pop from rest starts when its task ends (#12010)
+  - 已移植：[#656](https://github.com/astryx-vue/astryx-vue/pull/656)。推入时保留用户移进新屏的焦点，有测试
+- [x] [`96687ea2f`](https://github.com/meta/astryx/commit/96687ea2f) fix(NavigationStack): a push or pop from rest starts when its task ends (#12010)
   - 暂缓：NavigationStack 未移植（缺手势识别器和动效引擎）
   - 暂缓：[NavigationStack] 从静止推入或弹出在任务结束时开始
-- [ ] [`4f2ebbd34`](https://github.com/meta/astryx/commit/4f2ebbd34) fix(NavigationStack): screen content stays under the bar (#12001)
+  - 已移植：[#656](https://github.com/astryx-vue/astryx-vue/pull/656)。从静止推入或弹出在当前任务结束时开始，有测试
+- [x] [`4f2ebbd34`](https://github.com/meta/astryx/commit/4f2ebbd34) fix(NavigationStack): screen content stays under the bar (#12001)
   - 暂缓：NavigationStack 未移植（缺手势识别器和动效引擎）
   - 暂缓：[NavigationStack] 屏幕内容在栏下方
+  - 已移植：[#656](https://github.com/astryx-vue/astryx-vue/pull/656)。屏幕内容留在栏下方，有测试
 - [x] [`a60f74251`](https://github.com/meta/astryx/commit/a60f74251) chore: land batch 12 (3 pull requests) (#12841)
   - 不适用：只改上游测试（自动初筛）
 - [x] [`82af9164d`](https://github.com/meta/astryx/commit/82af9164d) fix(ProgressBar, CircularProgress, themes): every enabled progress fill reaches 3:1 against its track (#12398)
