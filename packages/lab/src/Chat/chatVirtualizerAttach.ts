@@ -5,7 +5,7 @@
  * 另有行尺寸的测量管线：共用 ResizeObserver 的每一条记录攒成一次修正轮。
  */
 import type { VirtualizerHost, VirtualizerState } from './chatVirtualizerState.js'
-import { observeResize, scrollEventTarget, scrollsPage, setScrollAnchoringOff } from '@astryx-vue/core'
+import { observeResize, unstable_scrollEventTarget as scrollEventTarget, unstable_scrollsPage as scrollsPage, unstable_setScrollAnchoringOff as setScrollAnchoringOff } from '@astryx-vue/core'
 import { cancelFrame } from './chatVirtualizerState.js'
 
 export interface SizeObserver {

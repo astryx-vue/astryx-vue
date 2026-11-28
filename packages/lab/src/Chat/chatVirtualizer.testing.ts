@@ -2,7 +2,7 @@
  * ChatVirtualizer 测试用的版面模型。happy-dom 没有布局，也没有 ResizeObserver，
  * 这里替浏览器算：行高按模型给，spacer 按写上去的 style，scrollHeight 是内容总高，
  * scrollTop 夹在可滚动范围里；列表自己写的 scrollTop 下一帧发一个滚动事件。
- * 测试文件用 vi.mock 把 core 的 observeResize 和 useFingerScroll 换成 mockedCore。
+ * 测试文件用 vi.mock 把 core 的 observeResize 和 unstable_useFingerScroll 换成 mockedCore。
  */
 
 type ResizeCallback = (entry: ResizeObserverEntry) => void
@@ -24,7 +24,7 @@ export const mockedCore = {
       }
     }
   },
-  useFingerScroll(_scroller: unknown, options: { onEnd?: () => void } = {}): () => boolean {
+  unstable_useFingerScroll(_scroller: unknown, options: { onEnd?: () => void } = {}): () => boolean {
     finger.onEnd = options.onEnd ?? null
     return () => finger.active
   },

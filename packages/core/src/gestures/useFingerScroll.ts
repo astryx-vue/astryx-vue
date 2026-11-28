@@ -9,7 +9,8 @@
  *   the gesture composables' shared attachment (useAttachment.ts). A
  *   scroll-driven component (a tab bar that minimizes, a header that
  *   collapses, a picker that commits at rest, lab's ChatVirtualizer) reads
- *   it; the package root re-exports it for components in sibling packages
+ *   it. Not public API: the package root re-exports it only as
+ *   `unstable_useFingerScroll`, for components in @astryx-vue/lab
  *
  * A scroll is a finger's from a scroll event while a finger that landed
  * inside the scroller is down, until the scroller's `scrollend` (the lift
@@ -51,6 +52,7 @@ export interface UseFingerScrollOptions {
  * reader: `true` while the scroller's scroll is a finger's. Given a time on
  * the page's clock (`performance.now()`, as an IntersectionObserver entry's
  * `time` is), it reads whether the scroll at that time was a finger's.
+ * Internal: exported from the package only as `unstable_useFingerScroll`.
  */
 export function useFingerScroll(
   scroller: MaybeRefOrGetter<Element | Document | null | undefined>,

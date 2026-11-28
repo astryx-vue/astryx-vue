@@ -6,7 +6,7 @@
 import type { SizeEstimateOptions } from './chatVirtualizerSizes.js'
 import type { VirtualizerHost, VirtualizerState } from './chatVirtualizerState.js'
 import type { AnchorMode, ScrollMode, ViewportRead } from './chatVirtualizerTypes.js'
-import { scrollportTop } from '@astryx-vue/core'
+import { unstable_scrollportTop as scrollportTop } from '@astryx-vue/core'
 import { anchorAt, buildGeometry, computeWindow, targetFor } from './chatVirtualizerGeometry.js'
 import { writeSpacers } from './chatVirtualizerSpacers.js'
 import { scheduleFrame } from './chatVirtualizerState.js'

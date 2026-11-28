@@ -116,9 +116,11 @@ afterAll(() => {
 })
 
 describe('useFingerScroll', () => {
-  it('exports the composable for sibling packages, but not the shared watch behind it', async () => {
+  it('is internal: the package exports neither the composable nor the watch under a public name', async () => {
     const core: Record<string, unknown> = await import('../../index')
-    expect(core.useFingerScroll).toBeTypeOf('function')
+    expect(core).not.toHaveProperty('useFingerScroll')
+    // 只给 lab 用的内部入口，不算公开 API。
+    expect(core.unstable_useFingerScroll).toBeTypeOf('function')
     expect(core).not.toHaveProperty('isFingerScroll')
     expect(core).not.toHaveProperty('watchFingerScrolls')
     // 引入整个包的入口要编译几百个模块，机器忙时会超过默认的 5 秒。
