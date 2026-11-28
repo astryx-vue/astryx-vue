@@ -25,8 +25,9 @@ footer: false
 <tr><td><code>isDisabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>禁用。这一行不动了，内容变淡；禁用的按钮或链接仍能用键盘聚焦，但不会触发。</td></tr>
 <tr><td><code>isSelected</code></td><td><code>boolean</code></td><td><code>false</code></td><td>选中状态。行的角色支持时写成 <code>aria-selected="true"</code>，不支持时写成 <code>aria-current="true"</code>。在可点的行（有 <code>onClick</code>、<code>href</code> 或 <code>interactiveRef</code>）里，标记写在拿到焦点的那个元素上，读屏器就在那里念出来。</td></tr>
 <tr><td><code>isHighlighted</code></td><td><code>boolean</code></td><td><code>false</code></td><td>画出高亮状态，就是键盘聚焦和鼠标悬停时那个样子。</td></tr>
-<tr><td><code>swipeActions</code></td><td><code>ItemSwipeActions</code></td><td>—</td><td>手指横滑能露出哪些操作，左右各一组，越靠后越靠外，每项是 <code>{ label, icon?, onActivate, isDisabled?, variant?, hasRemoval? }</code>。鼠标不会触发这次拖动。只有角色允许行内有可交互元素的才行，选项、菜单项、原生单选按钮的放大目标行都不能用。</td></tr>
-<tr><td><code>swipeBehavior</code></td><td><code>'reveal' | 'commit'</code></td><td><code>'reveal'</code></td><td><code>reveal</code> 松手后行停在滑开的位置，露出来的每项都是真按钮，拖得够远就触发最外面那个；<code>commit</code> 直接把行滑出去，松手就触发，什么都不留在屏幕上。</td></tr>
+<tr><td><code>swipe</code></td><td><code>Swipe</code></td><td>—</td><td>行的横滑操作，用 <code>createSwipe</code> 造。手指、笔或触控板双指横滑能把行拖开露出它们，鼠标不行。每个处理函数收到操作的 <code>id</code> 和这一行的 <code>itemKey</code>。换成 id 相同的新值，开着的行保持原样；id 变了行就合上。每个操作都要在行里再有个入口，否则键盘和鼠标用户够不着。</td></tr>
+<tr><td><code>swipeActions</code></td><td><code>ItemSwipeActions</code></td><td>—</td><td>已弃用：改用 <code>swipe</code> 配 <code>createSwipe</code>。手指横滑能露出哪些操作，左右各一组，越靠后越靠外，每项是 <code>{ label, icon?, onActivate, isDisabled?, variant?, hasRemoval? }</code>。鼠标不会触发这次拖动。只有角色允许行内有可交互元素的才行，选项、菜单项、原生单选按钮的放大目标行都不能用。</td></tr>
+<tr><td><code>swipeBehavior</code></td><td><code>'reveal' | 'commit'</code></td><td><code>'reveal'</code></td><td>已弃用：在 <code>createSwipe</code> 里设 <code>swipeBehavior</code>。<code>reveal</code> 松手后行停在滑开的位置，露出来的每项都是真按钮，拖得够远就触发最外面那个；<code>commit</code> 直接把行滑出去，松手就触发，什么都不留在屏幕上。</td></tr>
 </tbody></table>
 </div>
 

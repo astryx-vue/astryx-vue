@@ -12,6 +12,7 @@ import { useOverflow } from '../composables/useOverflow.js'
 import { useResolvedLabelHidden } from '../composables/useResolvedLabelHidden.js'
 import Field from '../Field/Field.vue'
 import { useFieldPartStyling } from '../Field/fieldParts.js'
+import { useInputGroupContext, useInputGroupDisabled } from '../InputGroup/context.js'
 import { useComponentMessages } from '../locale/context.js'
 import { tokenizerMessages } from '../locale/messages/tokenizer.js'
 import { useSize } from '../SizeContext/SizeContext.js'
@@ -19,8 +20,10 @@ import Token from '../Token/Token.vue'
 import TypeaheadPopup from '../Typeahead/TypeaheadPopup.vue'
 import { pickInputAttrs } from './inputAttrs.js'
 import TokenizerSheetField from './TokenizerSheetField.vue'
+import TokenizerTrack from './TokenizerTrack.vue'
 import { useTokenizerDisabled } from './useTokenizerDisabled.js'
 import { useTokenizerFieldAria } from './useTokenizerFieldAria.js'
+import { useTokenizerFocus } from './useTokenizerFocus.js'
 import { useTokenizerKeys } from './useTokenizerKeys.js'
 import { useTokenizerMenu } from './useTokenizerMenu.js'
 import { useTokenizerPresentation } from './useTokenizerPresentation.js'
@@ -65,8 +68,12 @@ if (isDevBuild() && props.modelValue != null && !Array.isArray(props.modelValue)
   )
 }
 
-// 显式 size > 外层 SizeContext（Toolbar、InputGroup 等）> 'md'。
-const size = useSize(() => props.size, 'md')
+// 在 InputGroup 里整行由组定高，尺寸、禁用都跟组走：组里的 size 不再被自己的 size 盖过。
+// 其余情况：显式 size > 外层 SizeContext（Toolbar 等）> 'md'。
+const inputGroup = useInputGroupContext()
+const inGroup = inputGroup != null
+const size = useSize(() => inGroup ? undefined : props.size, 'md')
+const isDisabled = useInputGroupDisabled(() => props.disabled)
 
 const attrs = useAttrs()
 const parts = useFieldPartStyling({
@@ -105,7 +112,7 @@ const { sheetOpen, isSheet, onSheetMotionComplete, isHandingOffFocus } = useToke
 
 const placeholder = computed(() => props.placeholder ?? messages.value.tokenizer.placeholder)
 const emptyText = computed(() => props.emptySearchText ?? props.emptyText ?? messages.value.tokenizer.empty)
-const { disabledMessage, showsDisabledMessage, focusableDisabled, disabledTooltip } = useTokenizerDisabled(props)
+const { disabledMessage, showsDisabledMessage, focusableDisabled, disabledTooltip } = useTokenizerDisabled(props, isDisabled)
 /** 两个名字任一为真就画清除按钮。 */
 const showsClear = computed(() => props.hasClear || props.clearable)
 /** 两个名字任一为真就在聚焦时先展开。 */
@@ -113,7 +120,7 @@ const showsEntriesOnFocus = computed(() => props.hasEntriesOnFocus || props.show
 /** 两个名字任一为真就能从输入的文字新建标签。 */
 const isCreatable = computed(() => props.hasCreate || props.creatable)
 /** 禁用的字段不向表单交值：不渲染隐藏输入，而不是渲染一个原生禁用的。 */
-const hiddenCarrierItems = computed(() => props.disabled ? [] : values.value)
+const hiddenCarrierItems = computed(() => isDisabled.value ? [] : values.value)
 const atMax = computed(() => props.maxEntries != null && values.value.length >= props.maxEntries)
 const collapsed = computed(() => props.overflow !== 'none' && !focused.value)
 const floating = computed(() => props.overflow === 'unfocused-layer' && focused.value)
@@ -124,6 +131,7 @@ const { fieldStatus, labelledBy, statusIcon, statusIconProps, describedBy } = us
   fieldLabelId,
   disabledId,
   hasDisabledDescription: computed(() => focusableDisabled.value && Boolean(disabledMessage.value)),
+  group: inputGroup,
 })
 
 function inputAttrs(): Record<string, unknown> {
@@ -132,6 +140,7 @@ function inputAttrs(): Record<string, unknown> {
 
 const { menu, menuConfig, anchored, optionGrid, listboxRef, highlight, selectById } = useTokenizerMenu<T>({
   props,
+  isDisabled: () => isDisabled.value,
   values,
   atMax,
   showsEntriesOnFocus,
@@ -167,7 +176,7 @@ watch(collapsed, () => void nextTick(() => overflow.remeasure()))
 
 const selection = useTokenizerSelection<T>({
   values,
-  isDisabled: () => props.disabled,
+  isDisabled: () => isDisabled.value,
   atMax,
   showsEntriesOnFocus,
   menu,
@@ -202,42 +211,31 @@ function focusToken(index: number): void {
 }
 
 function onInput(event: Event): void {
-  if (props.disabled || atMax.value)
+  if (isDisabled.value || atMax.value)
     return
   menu.setQuery((event.target as HTMLInputElement).value)
 }
 
-/** 焦点从外面进来（而不是在字段内部换元素）才算。 */
-function onFocusIn(event: FocusEvent): void {
-  const comingFromOutside = !isInsideTokenizer(event.relatedTarget)
-  disabledTooltip.onTooltipPointerEnter()
-  if (!focused.value && props.overflow === 'unfocused-layer')
-    placeholderHeight.value = anchorRef.value?.offsetHeight ?? 0
-  focused.value = true
-  if (event.target === inputRef.value && showsEntriesOnFocus.value && !props.disabled && !atMax.value)
-    menu.open()
-  if (comingFromOutside && !isHandingOffFocus())
-    emit('focus', event)
-}
-
-function onFocusOut(event: FocusEvent): void {
-  disabledTooltip.onBlur()
-  if (isInsideTokenizer(event.relatedTarget))
-    return
-  focused.value = false
-  menu.close()
-  emit('blur', event)
-}
-
-function isInsideTokenizer(node: EventTarget | null): boolean {
-  if (!(node instanceof Node))
-    return false
-  return Boolean(anchorRef.value?.contains(node) || listboxRef.value?.contains(node))
-}
+const { onFocusIn, onFocusOut } = useTokenizerFocus<T>({
+  anchor: anchorRef,
+  listbox: () => listboxRef.value,
+  input: inputRef,
+  focused,
+  placeholderHeight,
+  menu,
+  isDisabled: () => isDisabled.value,
+  atMax: () => atMax.value,
+  showsEntriesOnFocus: () => showsEntriesOnFocus.value,
+  isFloatingLayer: () => props.overflow === 'unfocused-layer',
+  disabledTooltip,
+  isHandingOffFocus,
+  onFocus: event => emit('focus', event),
+  onBlur: event => emit('blur', event),
+})
 
 const { onInputKeyDown: onListKeyDown, onTokenKeyDown } = useTokenizerKeys<T>({
   values,
-  disabled: () => props.disabled,
+  disabled: () => isDisabled.value,
   menu,
   optionGrid,
   inputRef,
@@ -251,7 +249,7 @@ function onInputKeyDown(event: KeyboardEvent): void {
 }
 
 function onFieldClick(event: MouseEvent): void {
-  if (props.disabled)
+  if (isDisabled.value)
     return
   const target = event.target
   if (target instanceof Element && target.closest('button, a'))
@@ -277,7 +275,7 @@ defineExpose({
   open: () => {
     if (!isSheet.value)
       menuConfig.open()
-    else if (!props.disabled)
+    else if (!isDisabled.value)
       sheetOpen.value = true
   },
   close: () => {
@@ -292,16 +290,16 @@ defineExpose({
 <template>
   <Field
     class="astryx-tokenizer"
-    :class="[parts.containerClass.value, `size-${size}`, { 'is-floating': floating }]"
+    :class="[parts.containerClass.value, `size-${size}`, { 'is-floating': floating, 'in-group': inGroup }]"
     :style="parts.containerStyle.value"
     :label="props.label"
     :input-id="inputId"
-    :description="props.description"
+    :description="inGroup ? undefined : props.description"
     :label-tooltip="props.labelTooltip"
-    :is-label-hidden="hideLabel"
-    :is-disabled="props.disabled"
-    :is-required="props.required"
-    :is-optional="props.optional"
+    :is-label-hidden="inGroup || hideLabel"
+    :is-disabled="isDisabled"
+    :is-required="inGroup ? false : props.required"
+    :is-optional="inGroup ? false : props.optional"
     :status="fieldStatus"
     :status-variant="props.statusVariant"
     :width="props.width"
@@ -318,9 +316,9 @@ defineExpose({
       :described-by="describedBy"
       :placeholder="placeholder"
       :size="size"
-      :is-disabled="props.disabled"
+      :is-disabled="isDisabled"
       :name="props.name"
-      :control-class="[parts.controlClass(), `status-${props.status}`]"
+      :control-class="[parts.controlClass(), inGroup ? undefined : `status-${props.status}`]"
       :control-style="parts.controlStyle()"
       :status-icon="statusIcon"
       :status-icon-props="statusIconProps"
@@ -357,7 +355,7 @@ defineExpose({
       <div
         ref="anchorRef"
         class="astryx-tokenizer-control"
-        :class="[parts.controlClass(), `status-${props.status}`, { 'is-open': menu.combobox.isOpen.value, 'is-disabled': props.disabled, 'is-floating': floating, 'has-tokens': values.length > 0 }]"
+        :class="[parts.controlClass(), inGroup ? undefined : `status-${props.status}`, { 'is-open': menu.combobox.isOpen.value, 'is-disabled': isDisabled, 'is-floating': floating, 'has-tokens': values.length > 0 }]"
         :style="parts.controlStyle()"
         @click="onFieldClick"
         @focusin="onFocusIn"
@@ -368,67 +366,70 @@ defineExpose({
         <span v-if="$slots.icon" class="astryx-tokenizer-icon" aria-hidden="true">
           <slot name="icon" />
         </span>
-        <span
-          :ref="overflow.containerRef"
-          class="astryx-tokenizer-tokens"
-          :class="{ 'is-collapsed': collapsed }"
-        >
-          <!-- eslint-disable-next-line vue-a11y/no-static-element-interactions -- 方向键在标签容器上移动焦点，删除由内部按钮处理。 -->
+        <!-- InputGroup 里标签和输入留在一行里横向滚动；结尾的控件在轨道外面，不会被标签盖住。 -->
+        <TokenizerTrack :is-scrollable="inGroup">
           <span
-            v-for="(item, index) in visibleItems"
-            :key="item.id"
-            :ref="element => setTokenEl(index, element)"
-            class="astryx-tokenizer-token"
-            tabindex="-1"
-            @keydown="onTokenKeyDown($event, item, index)"
+            :ref="overflow.containerRef"
+            class="astryx-tokenizer-tokens"
+            :class="{ 'is-collapsed': collapsed }"
           >
-            <slot name="token" :item="item" :remove="() => remove(item)">
-              <Token :label="item.label" :size="size" :disabled="props.disabled" removable @remove="remove(item)" />
-            </slot>
+            <!-- eslint-disable-next-line vue-a11y/no-static-element-interactions -- 方向键在标签容器上移动焦点，删除由内部按钮处理。 -->
+            <span
+              v-for="(item, index) in visibleItems"
+              :key="item.id"
+              :ref="element => setTokenEl(index, element)"
+              class="astryx-tokenizer-token"
+              tabindex="-1"
+              @keydown="onTokenKeyDown($event, item, index)"
+            >
+              <slot name="token" :item="item" :remove="() => remove(item)">
+                <Token :label="item.label" :size="size" :disabled="isDisabled" removable @remove="remove(item)" />
+              </slot>
+            </span>
+            <span v-if="collapsed && hiddenCount > 0" class="astryx-tokenizer-more">
+              {{ messages.tokenizer.more(hiddenCount) }}
+            </span>
           </span>
-          <span v-if="collapsed && hiddenCount > 0" class="astryx-tokenizer-more">
-            {{ messages.tokenizer.more(hiddenCount) }}
+          <span :ref="overflow.measureRef" class="astryx-tokenizer-measure" aria-hidden="true">
+            <span v-for="item in values" :key="item.id" class="astryx-tokenizer-token">
+              <Token :label="item.label" :size="size" removable />
+            </span>
+            <span class="astryx-tokenizer-more" data-overflow-indicator>{{ measureMoreLabel }}</span>
           </span>
-        </span>
-        <span :ref="overflow.measureRef" class="astryx-tokenizer-measure" aria-hidden="true">
-          <span v-for="item in values" :key="item.id" class="astryx-tokenizer-token">
-            <Token :label="item.label" :size="size" removable />
-          </span>
-          <span class="astryx-tokenizer-more" data-overflow-indicator>{{ measureMoreLabel }}</span>
-        </span>
-        <input
-          v-bind="inputAttrs()"
-          :id="inputId"
-          ref="inputRef"
-          class="astryx-tokenizer-input"
-          :class="{ 'is-empty': menu.query.value === '' }"
-          type="text"
-          role="combobox"
-          autocomplete="off"
-          autocapitalize="off"
-          autocorrect="off"
-          enterkeyhint="search"
-          :data-autofocus="props.hasAutoFocus || undefined"
-          :placeholder="values.length === 0 ? placeholder : undefined"
-          :value="menu.query.value"
-          :disabled="props.disabled && !focusableDisabled"
-          :readonly="focusableDisabled || atMax || undefined"
-          :aria-disabled="focusableDisabled ? 'true' : undefined"
-          :aria-expanded="menuConfig.popupOpen.value"
-          :aria-haspopup="menuConfig.isDialog.value ? 'dialog' : optionGrid.popupKind.value"
-          :aria-controls="listboxId"
-          aria-autocomplete="list"
-          :aria-activedescendant="menuConfig.isDialog.value ? undefined : optionGrid.gridMode.value ? optionGrid.actionGrid.activeDescendant.value : (menu.activeId.value ? `${listboxId}-option-${menu.combobox.activeIndex.value}` : undefined)"
-          :aria-labelledby="labelledBy"
-          :aria-describedby="describedBy"
-          :aria-required="props.required || undefined"
-          :aria-invalid="props.status === 'error' ? true : undefined"
-          @input="onInput"
-          @keydown="onInputKeyDown"
-        >
+          <input
+            v-bind="inputAttrs()"
+            :id="inputId"
+            ref="inputRef"
+            class="astryx-tokenizer-input"
+            :class="{ 'is-empty': menu.query.value === '' }"
+            type="text"
+            role="combobox"
+            autocomplete="off"
+            autocapitalize="off"
+            autocorrect="off"
+            enterkeyhint="search"
+            :data-autofocus="props.hasAutoFocus || undefined"
+            :placeholder="values.length === 0 ? placeholder : undefined"
+            :value="menu.query.value"
+            :disabled="isDisabled && !focusableDisabled"
+            :readonly="focusableDisabled || atMax || undefined"
+            :aria-disabled="focusableDisabled ? 'true' : undefined"
+            :aria-expanded="menuConfig.popupOpen.value"
+            :aria-haspopup="menuConfig.isDialog.value ? 'dialog' : optionGrid.popupKind.value"
+            :aria-controls="listboxId"
+            aria-autocomplete="list"
+            :aria-activedescendant="menuConfig.isDialog.value ? undefined : optionGrid.gridMode.value ? optionGrid.actionGrid.activeDescendant.value : (menu.activeId.value ? `${listboxId}-option-${menu.combobox.activeIndex.value}` : undefined)"
+            :aria-labelledby="labelledBy"
+            :aria-describedby="describedBy"
+            :aria-required="props.required || undefined"
+            :aria-invalid="props.status === 'error' ? true : undefined"
+            @input="onInput"
+            @keydown="onInputKeyDown"
+          >
+        </TokenizerTrack>
         <slot name="end" />
         <button
-          v-if="showsClear && values.length > 0 && !props.disabled"
+          v-if="showsClear && values.length > 0 && !isDisabled"
           type="button"
           class="astryx-tokenizer-clear"
           :aria-label="messages.tokenizer.clear"

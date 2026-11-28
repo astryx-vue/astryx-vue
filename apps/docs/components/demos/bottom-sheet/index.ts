@@ -9,6 +9,8 @@ import keyboardDemo from './keyboard.vue'
 import keyboardSource from './keyboard.vue?raw&highlighted'
 import multiSelectorDemo from './multi-selector.vue'
 import multiSelectorSource from './multi-selector.vue?raw&highlighted'
+import multiStepDemo from './multi-step.vue'
+import multiStepSource from './multi-step.vue?raw&highlighted'
 import noScrimDemo from './no-scrim.vue'
 import noScrimSource from './no-scrim.vue?raw&highlighted'
 import overviewDemo from './overview.vue'
@@ -17,8 +19,6 @@ import selectorDemo from './selector.vue'
 import selectorSource from './selector.vue?raw&highlighted'
 import snapPointsDemo from './snap-points.vue'
 import snapPointsSource from './snap-points.vue?raw&highlighted'
-import switcherDemo from './switcher.vue'
-import switcherSource from './switcher.vue?raw&highlighted'
 
 const options = { className: 'bottom-sheet-preview' }
 
@@ -31,4 +31,4 @@ export const bottomSheetAdaptiveDialog = defineDemo(adaptiveDialogDemo, adaptive
 export const bottomSheetAdaptiveMenu = defineDemo(adaptiveMenuDemo, adaptiveMenuSource, options)
 export const bottomSheetMultiSelector = defineDemo(multiSelectorDemo, multiSelectorSource, options)
 export const bottomSheetSelector = defineDemo(selectorDemo, selectorSource, options)
-export const bottomSheetSwitcher = defineDemo(switcherDemo, switcherSource, options)
+export const bottomSheetMultiStep = defineDemo(multiStepDemo, multiStepSource, options)

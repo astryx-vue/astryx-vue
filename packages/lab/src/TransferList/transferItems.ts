@@ -1,10 +1,13 @@
 import type { TransferListOption } from './types.js'
 
-/** 把 `fromIndex` 那一项挪到 `toIndex`，返回新数组。 */
-export function moveItem<T>(value: readonly T[], fromIndex: number, toIndex: number): T[] {
+/** 把值 `key` 挪到下标 `to`，返回新数组。找不到 `key` 或 `to` 越界时原样返回一份拷贝。 */
+export function moveValue<T>(value: readonly T[], key: T, to: number): T[] {
   const nextValue = [...value]
-  const [item] = nextValue.splice(fromIndex, 1)
-  nextValue.splice(toIndex, 0, item as T)
+  const fromIndex = nextValue.indexOf(key)
+  if (fromIndex < 0 || to < 0 || to >= nextValue.length)
+    return nextValue
+  nextValue.splice(fromIndex, 1)
+  nextValue.splice(to, 0, key)
   return nextValue
 }
 
@@ -31,33 +34,4 @@ export function groupOptions<T extends string>(options: readonly TransferListOpt
       groups.set(group, [option])
   }
   return [...groups.entries()]
-}
-
-/**
- * 这一项能挪到的范围。遇到 `isReorderDisabled` 的邻居就停，
- * 所以被锁住的条目位置不动，别人也跨不过去。
- */
-export function movableRange<T extends string>(
-  optionByValue: Map<T, TransferListOption<T>>,
-  optionValue: T,
-  orderedValue: readonly T[],
-): { index: number, start: number, end: number } {
-  const index = orderedValue.indexOf(optionValue)
-  let start = 0
-  let end = orderedValue.length - 1
-  for (let cursor = index - 1; cursor >= 0; cursor -= 1) {
-    const option = optionByValue.get(orderedValue[cursor] as T)
-    if (option == null || option.isReorderDisabled) {
-      start = cursor + 1
-      break
-    }
-  }
-  for (let cursor = index + 1; cursor < orderedValue.length; cursor += 1) {
-    const option = optionByValue.get(orderedValue[cursor] as T)
-    if (option == null || option.isReorderDisabled) {
-      end = cursor - 1
-      break
-    }
-  }
-  return { index, start, end }
 }

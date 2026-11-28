@@ -2,8 +2,9 @@ import { readFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { flushPromises, mount } from '@vue/test-utils'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, onTestFinished, vi } from 'vitest'
 import { defineComponent, h, ref } from 'vue'
+import { stubStageLayout } from './__tests__/stageLayout'
 import Lightbox from './Lightbox.vue'
 
 const gallery = [
@@ -17,7 +18,7 @@ afterEach(() => {
 })
 
 function shownAlt(wrapper: ReturnType<typeof mount>): string | undefined {
-  return wrapper.get('img').attributes('alt')
+  return wrapper.get('[data-current] img').attributes('alt')
 }
 
 function frame(): Promise<void> {
@@ -54,6 +55,8 @@ describe('lightbox viewer', () => {
   })
 
   it('returns to the fitted size on 0, and leaves Ctrl+0 to the browser', async () => {
+    const restoreLayout = stubStageLayout()
+    onTestFinished(restoreLayout)
     const wrapper = mount(Lightbox, { attachTo: document.body, props: { isOpen: true, media: gallery[0]!, hasZoom: true } })
     const zoom = wrapper.get('[aria-label="Zoom"]')
     await wrapper.get('dialog').trigger('keydown', { key: '+' })
@@ -73,9 +76,12 @@ describe('lightbox viewer', () => {
     expect(region.text()).toContain('3')
   })
 
-  it('closes on a click in the media column beside the photo', async () => {
+  it('closes on a mouse click on the stage beside the photo', async () => {
     const wrapper = mount(Lightbox, { attachTo: document.body, props: { isOpen: true, media: gallery[0]! } })
-    await wrapper.get('.astryx-lightbox__media').trigger('click')
+    const page = wrapper.get('[data-current]')
+    await page.trigger('pointerdown', { pointerType: 'mouse', clientX: 500, clientY: 500 })
+    page.element.dispatchEvent(new MouseEvent('click', { bubbles: true, detail: 1, clientX: 500, clientY: 500 }))
+    await flushPromises()
     expect(wrapper.emitted('update:isOpen')?.[0]).toEqual([false])
   })
 
@@ -97,7 +103,6 @@ describe('lightbox layout', () => {
     const css = readFileSync(resolve(dirname(fileURLToPath(import.meta.url)), '../../styles/lightbox.css'), 'utf8')
     const viewer = /\.astryx-lightbox \{([^}]*)\}/.exec(css)?.[1] ?? ''
     expect(viewer).toMatch(/height: 100dvh;/)
-    expect(css).toMatch(/max-height: calc\(100dvh - 7rem\);/)
   })
 })
 

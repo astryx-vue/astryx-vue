@@ -41,7 +41,7 @@ function toggle(): void {
     :data-empty="text ? undefined : ''"
     :data-expanded="isExpanded || undefined"
   >
-    <div v-if="text" class="astryx-lightbox__caption-panel">
+    <div v-if="text" class="astryx-lightbox__caption-panel" data-lightbox-caption>
       <p
         :id="id"
         :ref="bindText"

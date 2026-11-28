@@ -1,4 +1,5 @@
 import { hasInteractiveAncestor } from '../useClickableContainer.js'
+import { isPressHeld } from './pressHeld.js'
 
 /**
  * 触屏按压模型里「这一下按的是谁」的判断：从手指落点往上找最里层的可按元素。
@@ -53,7 +54,8 @@ export function pressSurfaceAt(target: EventTarget | null): HTMLElement | null {
   if (!(target instanceof Element))
     return null
   const found = target.closest(`[${PRESSABLE_ATTRIBUTE}]`)
-  if (!(found instanceof HTMLElement) || found.matches(DISABLED))
+  // 主人按住按压的表面（打开着的横滑行）和不可用的一样不画。
+  if (!(found instanceof HTMLElement) || found.matches(DISABLED) || isPressHeld(found))
     return null
   if (found.hasAttribute(PRESS_CONTAINER_ATTRIBUTE) && target !== found && landsOnNestedControl(target, found))
     return null

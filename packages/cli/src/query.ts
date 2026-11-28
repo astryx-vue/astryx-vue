@@ -25,6 +25,8 @@ export interface SearchHit {
   docsUrl: string
   /** Only on a template hit: false when the page can be read but not copied. */
   isReady?: boolean
+  /** Only on a deprecated component: the component to use instead and how to move to it. */
+  deprecated?: { replacement: string, description: string }
 }
 
 /** How one kind of record answers to names on the command line. */
@@ -292,6 +294,9 @@ function scoreComponent(query: string, record: ComponentRecord, locale: 'en' | '
     ...(record.importPath ? { import: record.importPath } : {}),
     title: text(record.title, locale),
     docsUrl: text(record.docsUrl, locale),
+    ...(record.deprecated
+      ? { deprecated: { replacement: record.deprecated.replacement, description: text(record.deprecated.description, locale) } }
+      : {}),
   }
 }
 

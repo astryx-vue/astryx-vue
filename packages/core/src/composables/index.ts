@@ -174,7 +174,7 @@ export type { ListFocus, ListFocusOrientation, UseListFocusOptions } from './use
 export { useLongPress } from './useLongPress.js'
 export type { LongPressHandlers, LongPressOptions } from './useLongPress.js'
 
-export { useMediaQuery } from './useMediaQuery.js'
+export { useMediaQuery, watchMediaQuery } from './useMediaQuery.js'
 
 export {
   isMenuPressActivation,

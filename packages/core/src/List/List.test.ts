@@ -175,18 +175,11 @@ describe('list', () => {
     })
 
     it('bleed fills each row to the container padding line with square corners', () => {
-      const fill = cssRule('.astryx-list[data-edge=\'bleed\'] > .astryx-list-item:not(.astryx-item--swipe)')
+      const fill = cssRule('.astryx-list[data-edge=\'bleed\'] > .astryx-list-item {')
 
       expect(fill).toContain('padding-inline-start: max(var(--container-padding-inline-start, 0px), var(--astryx-item-inset-inline));')
       expect(fill).toContain('padding-inline-end: max(var(--container-padding-inline-end, 0px), var(--astryx-item-inset-inline));')
-      expect(cssRule('.astryx-list[data-edge=\'bleed\'] > .astryx-list-item')).toContain('border-radius: 0;')
-    })
-
-    it('bleed pads a swiping row on its surface, where the row content lives', () => {
-      const surface = cssRule('.astryx-list[data-edge=\'bleed\'] > .astryx-list-item > .astryx-item__surface')
-
-      expect(surface).toContain('padding-inline-start: max(var(--container-padding-inline-start, 0px), var(--astryx-item-inset-inline));')
-      expect(surface).toContain('padding-inline-end: max(var(--container-padding-inline-end, 0px), var(--astryx-item-inset-inline));')
+      expect(fill).toContain('border-radius: 0;')
     })
   })
 
@@ -476,15 +469,13 @@ describe('item', () => {
 
   it('aligns the row on its first baselines only for first-line', () => {
     expect(listCss).toMatch(/\.astryx-item\[data-align='first-line'\] \{\s*align-items: baseline;/)
-    expect(listCss).toMatch(/\.astryx-item--swipe\[data-align='first-line'\] > \.astryx-item__surface \{\s*align-items: baseline;/)
     expect(listCss).toMatch(/\.astryx-item\[data-align='start'\] \{\s*align-items: flex-start;/)
     expect(listCss).not.toMatch(/\.astryx-item\[data-align='center'\]/)
   })
 
   it('gives each first-line start and end slot a zero-width strut with no accessible text', () => {
-    const strut = /\.astryx-item\[data-align='first-line'\] > :is\(\.astryx-item__start, \.astryx-item__end\)::before,[\s\S]*?content: "\\200B" \/ "";[\s\S]*?inline-size: 0;[\s\S]*?font-size: var\(--astryx-text-body-size, 0\.875rem\);[\s\S]*?line-height: var\(--astryx-text-body-leading, 1\.4286\);/
+    const strut = /\.astryx-item\[data-align='first-line'\] > :is\(\.astryx-item__start, \.astryx-item__end\)::before \{[\s\S]*?content: "\\200B" \/ "";[\s\S]*?inline-size: 0;[\s\S]*?font-size: var\(--astryx-text-body-size, 0\.875rem\);[\s\S]*?line-height: var\(--astryx-text-body-leading, 1\.4286\);/
     expect(listCss).toMatch(strut)
-    expect(listCss).toContain('.astryx-item--swipe[data-align=\'first-line\'] > .astryx-item__surface > :is(.astryx-item__start, .astryx-item__end)::before')
   })
 })
 
@@ -503,206 +494,6 @@ describe('list item template listener', () => {
     await wrapper.find('button.astryx-item__content').trigger('click')
 
     expect(handler).toHaveBeenCalledTimes(1)
-  })
-})
-
-describe('item swipe actions', () => {
-  it('reveals a trailing action after a touch drag and runs it from the button', async () => {
-    vi.useFakeTimers()
-    const onActivate = vi.fn()
-    const wrapper = mount(Item, {
-      props: {
-        label: 'Invoice 1042',
-        swipeActions: {
-          trailing: [{ label: 'Archive', onActivate }],
-        },
-      },
-    })
-
-    const row = wrapper.get('.astryx-item')
-    expect(row.attributes('data-swipe')).toBe('idle')
-    await row.trigger('pointerdown', { pointerType: 'mouse', pointerId: 1, clientX: 200, clientY: 20 })
-    document.dispatchEvent(new PointerEvent('pointermove', { pointerId: 1, clientX: 80, clientY: 20, bubbles: true }))
-    expect(row.attributes('data-swipe')).toBe('idle')
-
-    await row.trigger('pointerdown', { pointerType: 'touch', pointerId: 2, clientX: 200, clientY: 20 })
-    document.dispatchEvent(new PointerEvent('pointermove', { pointerId: 2, clientX: 120, clientY: 20, bubbles: true }))
-    document.dispatchEvent(new PointerEvent('pointerup', { pointerId: 2, clientX: 120, clientY: 20, bubbles: true }))
-    await vi.advanceTimersByTimeAsync(200)
-
-    expect(row.attributes('data-swipe')).toBe('resting')
-    const action = wrapper.get('.astryx-item__swipe-action')
-    expect(action.element.closest('[inert]')).toBeNull()
-    await action.trigger('click')
-    expect(onActivate).toHaveBeenCalledTimes(1)
-    wrapper.unmount()
-    vi.useRealTimers()
-  })
-
-  it('commits the outer action when the drag passes the row', async () => {
-    vi.useFakeTimers()
-    const onActivate = vi.fn()
-    const wrapper = mount(Item, {
-      attachTo: document.body,
-      props: {
-        label: 'Draft',
-        swipeBehavior: 'commit',
-        swipeActions: {
-          trailing: [
-            { id: 'keep', label: 'Keep', onActivate: vi.fn() },
-            { id: 'delete', label: 'Delete', onActivate, variant: 'destructive' },
-          ],
-        },
-      },
-    })
-
-    expect(wrapper.findAll('.astryx-item__swipe-action')).toHaveLength(1)
-    const row = wrapper.get('.astryx-item').element as HTMLElement
-    Object.defineProperty(row, 'offsetWidth', { configurable: true, value: 300 })
-    await wrapper.get('.astryx-item').trigger('pointerdown', { pointerType: 'touch', pointerId: 3, clientX: 500, clientY: 10 })
-    document.dispatchEvent(new PointerEvent('pointermove', { pointerId: 3, clientX: 0, clientY: 12, bubbles: true }))
-    document.dispatchEvent(new PointerEvent('pointerup', { pointerId: 3, clientX: 0, clientY: 12, bubbles: true }))
-    expect(onActivate).toHaveBeenCalledTimes(1)
-    wrapper.unmount()
-    vi.useRealTimers()
-  })
-
-  it('leaves a two-finger pinch to the browser', async () => {
-    const wrapper = mount(Item, {
-      attachTo: document.body,
-      props: {
-        label: 'Invoice 1042',
-        swipeActions: { trailing: [{ label: 'Archive', onActivate: vi.fn() }] },
-      },
-    })
-    const row = wrapper.get('.astryx-item')
-    await row.trigger('pointerdown', { pointerType: 'touch', pointerId: 7, clientX: 200, clientY: 20 })
-    document.body.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerType: 'touch', pointerId: 8, clientX: 260, clientY: 20 }))
-    document.dispatchEvent(new PointerEvent('pointermove', { pointerId: 7, clientX: 100, clientY: 20, bubbles: true }))
-    expect(row.attributes('data-swipe')).toBe('idle')
-    expect(listCss).toMatch(/touch-action: pan-y pinch-zoom;/)
-    wrapper.unmount()
-  })
-
-  it('keeps a disabled swipe action focusable but inert', async () => {
-    const onActivate = vi.fn()
-    const wrapper = mount(Item, {
-      props: {
-        label: 'Invoice 1042',
-        swipeActions: { trailing: [{ label: 'Archive', onActivate, isDisabled: true }] },
-      },
-    })
-    const action = wrapper.get<HTMLButtonElement>('.astryx-item__swipe-action')
-    expect(action.attributes('disabled')).toBeUndefined()
-    expect(action.attributes('aria-disabled')).toBe('true')
-    await action.trigger('click')
-    await action.trigger('keydown', { key: 'Enter' })
-    expect(onActivate).not.toHaveBeenCalled()
-  })
-
-  it('closes a resting row when the pointer goes down outside it', async () => {
-    vi.useFakeTimers()
-    const wrapper = mount(Item, {
-      attachTo: document.body,
-      props: {
-        label: 'Invoice 1042',
-        swipeActions: { trailing: [{ label: 'Archive', onActivate: vi.fn() }] },
-      },
-    })
-    const row = wrapper.get('.astryx-item')
-    await row.trigger('pointerdown', { pointerType: 'touch', pointerId: 4, clientX: 200, clientY: 20 })
-    document.dispatchEvent(new PointerEvent('pointermove', { pointerId: 4, clientX: 120, clientY: 20, bubbles: true }))
-    document.dispatchEvent(new PointerEvent('pointerup', { pointerId: 4, clientX: 120, clientY: 20, bubbles: true }))
-    await vi.advanceTimersByTimeAsync(200)
-    expect(row.attributes('data-swipe')).toBe('resting')
-
-    document.body.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, clientX: 0, clientY: 0 }))
-    await vi.advanceTimersByTimeAsync(200)
-    expect(row.attributes('data-swipe')).toBe('idle')
-    wrapper.unmount()
-    vi.useRealTimers()
-  })
-})
-
-describe('item swipe release', () => {
-  /** One touch pointer event on the document at `time`. */
-  function finger(type: string, pointerId: number, clientX: number, time: number): void {
-    const event = new PointerEvent(type, { pointerId, pointerType: 'touch', clientX, clientY: 20, bubbles: true, cancelable: true })
-    Object.defineProperty(event, 'timeStamp', { value: time })
-    document.dispatchEvent(event)
-  }
-
-  async function press(row: ReturnType<ReturnType<typeof mount>['get']>, pointerId: number, clientX: number, time: number): Promise<void> {
-    const event = new PointerEvent('pointerdown', { pointerId, pointerType: 'touch', clientX, clientY: 20, bubbles: true, cancelable: true })
-    Object.defineProperty(event, 'timeStamp', { value: time })
-    row.element.dispatchEvent(event)
-  }
-
-  function mountRow(props: Record<string, unknown>) {
-    const wrapper = mount(Item, { attachTo: document.body, props: { label: 'Invoice 1042', ...props } })
-    Object.defineProperty(wrapper.get('.astryx-item').element, 'offsetWidth', { configurable: true, value: 300 })
-    return wrapper
-  }
-
-  it('opens the row on a fling and fires nothing', async () => {
-    vi.useFakeTimers()
-    const onActivate = vi.fn()
-    const wrapper = mountRow({ swipeActions: { trailing: [{ label: 'Archive', onActivate }] } })
-    const row = wrapper.get('.astryx-item')
-
-    await press(row, 11, 250, 100)
-    finger('pointermove', 11, 200, 110)
-    finger('pointermove', 11, 150, 120)
-    finger('pointerup', 11, 150, 120)
-    await vi.advanceTimersByTimeAsync(200)
-
-    expect(onActivate).not.toHaveBeenCalled()
-    expect(row.attributes('data-swipe')).toBe('resting')
-    wrapper.unmount()
-    vi.useRealTimers()
-  })
-
-  it('fires nothing on a commit row flicked short of the commit point', async () => {
-    vi.useFakeTimers()
-    const onActivate = vi.fn()
-    const wrapper = mountRow({ swipeBehavior: 'commit', swipeActions: { trailing: [{ label: 'Delete', onActivate }] } })
-    const row = wrapper.get('.astryx-item')
-
-    await press(row, 12, 250, 100)
-    finger('pointermove', 12, 200, 110)
-    finger('pointermove', 12, 150, 120)
-    finger('pointerup', 12, 150, 120)
-    await vi.advanceTimersByTimeAsync(200)
-
-    expect(onActivate).not.toHaveBeenCalled()
-    expect(row.attributes('data-swipe')).toBe('idle')
-    wrapper.unmount()
-    vi.useRealTimers()
-  })
-
-  it('fires the outer entry of a two-entry side only from a row resting open', async () => {
-    vi.useFakeTimers()
-    const onActivate = vi.fn()
-    const wrapper = mountRow({
-      swipeActions: { trailing: [{ label: 'Flag', onActivate: vi.fn() }, { label: 'Archive', onActivate }] },
-    })
-    const row = wrapper.get('.astryx-item')
-
-    await press(row, 13, 290, 100)
-    finger('pointermove', 13, 200, 300)
-    finger('pointermove', 13, -100, 600)
-    finger('pointerup', 13, -100, 900)
-    await vi.advanceTimersByTimeAsync(200)
-    expect(onActivate).not.toHaveBeenCalled()
-    expect(row.attributes('data-swipe')).toBe('resting')
-
-    await press(row, 14, 290, 1000)
-    finger('pointermove', 14, 200, 1300)
-    finger('pointermove', 14, -100, 1600)
-    finger('pointerup', 14, -100, 1900)
-    expect(onActivate).toHaveBeenCalledTimes(1)
-    wrapper.unmount()
-    vi.useRealTimers()
   })
 })
 

@@ -62,6 +62,14 @@ export interface AccessibilityItem {
 
 export type ComponentKind = 'component' | 'composable'
 
+/** A deprecated component's way out, from its docs `meta.ts`. */
+export interface ComponentDeprecation {
+  /** The PascalCase name of the component to use instead. */
+  replacement: string
+  /** How to move to the replacement. */
+  description: LocaleText
+}
+
 export interface ComponentRecord {
   slug: string
   /** PascalCase identifier used by `component <Name>`. */
@@ -86,6 +94,8 @@ export interface ComponentRecord {
   anatomy: { en: AnatomyPart[], zh: AnatomyPart[] }
   accessibility: { en: AccessibilityItem[], zh: AccessibilityItem[] }
   docsUrl: LocaleText
+  /** Present only on a deprecated component. */
+  deprecated?: ComponentDeprecation
 }
 
 export interface TopicRecord {
@@ -212,4 +222,6 @@ export interface CatalogEntryInput {
   group: string
   en: string
   zh: string
+  /** As written in `meta.ts`: `replacement` is the replacement's docs slug. */
+  deprecated?: { replacement: string, description: LocaleText }
 }

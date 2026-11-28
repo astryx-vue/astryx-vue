@@ -17,6 +17,8 @@ import { useTypeaheadMenuConfig } from '../Typeahead/useTypeaheadMenuConfig.js'
 
 export interface TokenizerMenuOptions<T extends SearchableItem> {
   props: TokenizerProps<T>
+  /** 自己禁用，或所在的 InputGroup 禁用。 */
+  isDisabled: () => boolean
   values: ComputedRef<readonly T[]>
   atMax: ComputedRef<boolean>
   showsEntriesOnFocus: ComputedRef<boolean>
@@ -56,7 +58,7 @@ export function useTokenizerMenu<T extends SearchableItem>(options: TokenizerMen
     showOnFocus: () => showsEntriesOnFocus.value && !atMax.value,
     minQueryLength: () => props.minQueryLength ?? 1,
     maxItems: () => props.maxMenuItems ?? 10,
-    disabled: () => Boolean(props.disabled) || atMax.value || props.menu?.role === 'dialog',
+    disabled: () => options.isDisabled() || atMax.value || props.menu?.role === 'dialog',
     excludeIds: () => values.value.map(item => item.id),
     blockedLabels: () => values.value.map(item => item.label),
     creatable: () => options.isCreatable.value && !atMax.value,
@@ -81,7 +83,7 @@ export function useTokenizerMenu<T extends SearchableItem>(options: TokenizerMen
     popupEl: () => listboxRef.value,
     inputEl: () => inputRef.value,
     listbox: { isOpen: menu.combobox.isOpen, open: () => menu.open(), close: () => menu.close() },
-    isDisabled: () => Boolean(props.disabled),
+    isDisabled: () => options.isDisabled(),
     canOpenList: () => showsEntriesOnFocus.value || menu.query.value !== '',
   })
 

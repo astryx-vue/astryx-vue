@@ -85,8 +85,11 @@
     margin-block-start: calc((var(--astryx-text-body-leading, 1.4286) * var(--astryx-text-body-size, 0.875rem) - 28px) / 2);
   }
 
-  /* 插入线：列表的 ::after，位置由 --astryx-reorder-line-* 给出，只在拖动和重排模式里显示。 */
-  .astryx-list[data-astryx-reorder-line]::after {
+  /*
+   * 插入线：列表元素的 ::after，位置由 --astryx-reorder-line-* 给出，只在拖动和重排模式里显示。
+   * 标记只写在重排会话自己的列表元素上：List 的 ul/ol，或者 lab 里借用这套会话的列表。
+   */
+  [data-astryx-reorder-line]::after {
     content: '';
     position: absolute;
     top: 0;
@@ -102,7 +105,7 @@
   }
 
   @media (forced-colors: active) {
-    .astryx-list[data-astryx-reorder-line]::after {
+    [data-astryx-reorder-line]::after {
       background-color: Highlight;
     }
   }

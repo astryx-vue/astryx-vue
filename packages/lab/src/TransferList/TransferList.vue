@@ -1,12 +1,22 @@
 <script setup lang="ts" generic="T extends string">
+import type { Reorderable, ReorderMove } from '@astryx-vue/core'
 import type { Ref, StyleValue } from 'vue'
 import type { PanelGroup, TransferListEmits, TransferListOption, TransferListProps, TransferListSlots } from './types.js'
-import { Text, TextInput, transferListMessages, useAnnounce, useComponentMessages, VisuallyHidden } from '@astryx-vue/core'
+import {
+  unstable_adaptReorderable as adaptReorderable,
+  createReorderable,
+  unstable_reorderableOptions as reorderableOptions,
+  Text,
+  TextInput,
+  transferListMessages,
+  useAnnounce,
+  useComponentMessages,
+  VisuallyHidden,
+} from '@astryx-vue/core'
 import { computed, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
 import { SearchIcon } from './icons.js'
-import { groupOptions, matchesQuery } from './transferItems.js'
+import { groupOptions, matchesQuery, moveValue } from './transferItems.js'
 import TransferListPanel from './TransferListPanel.vue'
-import { useTransferReorder } from './useTransferReorder.js'
 import '../../styles/transfer-list.css'
 
 defineOptions({ name: 'AstryxTransferList', inheritAttrs: false })
@@ -16,6 +26,7 @@ const props = withDefaults(defineProps<TransferListProps<T>>(), {
   isLabelHidden: false,
   isDisabled: false,
   hasSearch: false,
+  reorderable: undefined,
   isReorderable: true,
   hasSelectAll: false,
   hasClear: false,
@@ -32,11 +43,9 @@ const labelId = `astryx-transfer-list-label-${useId()}`
 const descriptionId = `astryx-transfer-list-description-${useId()}`
 const selectedHeadingId = `astryx-transfer-list-selected-${useId()}`
 const availableHeadingId = `astryx-transfer-list-available-${useId()}`
-const reorderInstructionsId = `astryx-transfer-list-reorder-${useId()}`
 
 const rootRef = useTemplateRef<HTMLDivElement>('rootRef')
 const searchRef = useTemplateRef<HTMLInputElement>('searchRef')
-const previewHost = ref<HTMLElement | null>(null)
 const query = ref('')
 
 /** 提交之后 props 才会回来，中间的连点读不到最新值，这里留一份同步的顺序。 */
@@ -59,10 +68,13 @@ const selectedEmptyText = computed(() => props.selectedEmptyText ?? messages.val
 const availableEmptyText = computed(() => props.availableEmptyText ?? messages.value.transferList.availableEmpty)
 const noResultsText = computed(() => props.noResultsText ?? messages.value.transferList.noResults)
 
-/** 整个列表禁用时，每个选项都搬不动、调不了顺序，选项自己的说明不再适用。 */
+/**
+ * 整个列表禁用时，每个选项都搬不动，选项自己的说明不再适用。
+ * 能不能调顺序仍按选项自己的设置：禁用的行留着灰掉的手柄，说明它为什么不动。
+ */
 const options = computed<readonly TransferListOption<T>[]>(() =>
   props.isDisabled
-    ? props.options.map(option => ({ ...option, isTransferDisabled: true, isReorderDisabled: true, disabledMessage: undefined }))
+    ? props.options.map(option => ({ ...option, isTransferDisabled: true, disabledMessage: undefined }))
     : props.options,
 )
 
@@ -109,21 +121,50 @@ function rowElement(value: T): HTMLElement | null {
   return null
 }
 
-const reorder = useTransferReorder<T>({
-  isReorderable: () => props.isReorderable,
-  currentValue: () => liveValue.value,
-  optionByValue: () => optionByValue.value,
-  rowElement,
-  previewHost,
-  commit,
-  announce,
-  messages: {
-    grabbed: (label, position, total) => messages.value.transferList.announceGrabbed(label, position, total),
-    moveCancelled: label => messages.value.transferList.announceMoveCancelled(label),
-    dropped: (label, position, total) => messages.value.transferList.announceDropped(label, position, total),
-    returned: (label, position) => messages.value.transferList.announceReturned(label, position),
-    movedToPosition: (label, position, total) => messages.value.transferList.announceMovedToPosition(label, position, total),
-  },
+/** `isReorderable` 的内置写法：挪动直接通过 `v-model` 和 `change` 交回去。 */
+const builtInReorderable = createReorderable<T>({
+  onReorder: ({ key, to }) => commit(moveValue(liveValue.value, key, to)),
+})
+
+/** 管顺序的对象：调用方给的 `reorderable`，或者 `isReorderable` 开着时的内置对象。 */
+const owner = computed<Reorderable<T> | undefined>(() =>
+  props.reorderable ?? (props.isReorderable ? builtInReorderable : undefined),
+)
+
+// 搜索过滤着面板时不重排：不然一行可能挪过藏起来的行。
+const isOrdering = computed(() => owner.value != null && normalizedQuery.value === '')
+
+/** 选项自己的 `isReorderDisabled` 和对象的 `isReorderable` 都同意，这一行才有手柄。 */
+function canMove(optionValue: T): boolean {
+  if (optionByValue.value.get(optionValue)?.isReorderDisabled === true)
+    return false
+  const source = owner.value
+  return source == null || (reorderableOptions(source).isReorderable?.(optionValue) ?? true)
+}
+
+/**
+ * List 报的是显示出来的行之间的挪动。把显示的行的新顺序填回它们在值里占的位置，
+ * 再告诉调用方挪动的值在整个值里落到第几位。没有选项的值留在原位。
+ */
+function reorderSelected({ key, to }: ReorderMove<T>): void {
+  const source = owner.value
+  const shown = selectedOptions.value.map(option => option.value)
+  const fromIndex = shown.indexOf(key)
+  if (source == null || fromIndex < 0 || fromIndex === to || shown[to] == null)
+    return
+  const order = moveValue(shown, key, to)
+  const isShown = new Set(shown)
+  let next = 0
+  const nextValue = liveValue.value.map(item => (isShown.has(item) ? order[next++]! : item))
+  reorderableOptions(source).onReorder({ key, to: nextValue.indexOf(key) })
+}
+
+// 引擎是调用方对象自带的，这里不另外加载；调用方的 `start(key)` 也能找到这个列表。
+const reorderable = computed(() => {
+  const source = owner.value
+  if (!isOrdering.value || source == null)
+    return undefined
+  return adaptReorderable(source, { onReorder: reorderSelected, isReorderable: canMove }) as Reorderable
 })
 
 /** 转移之后把焦点交回同侧的下一行，没有可聚焦的就退回搜索框或面板本身。 */
@@ -217,19 +258,8 @@ const rootAttrs = computed(() => Object.fromEntries(
 const labels = {
   addOption: (label: string) => messages.value.transferList.addOption(label),
   removeOption: (label: string) => messages.value.transferList.removeOption(label),
-  reorderOption: (label: string) => messages.value.transferList.reorderOption(label),
   transferDisabled: (label: string) => messages.value.transferList.transferDisabled(label),
   reorderDisabled: (label: string) => messages.value.transferList.reorderDisabled(label),
-}
-
-const handlers = {
-  click: reorder.onHandleClick,
-  keydown: reorder.onHandleKeydown,
-  pointerdown: reorder.onHandlePointerDown,
-  pointermove: reorder.onHandlePointerMove,
-  pointerup: reorder.onHandlePointerUp,
-  pointercancel: reorder.onHandlePointerCancel,
-  lostpointercapture: reorder.onHandleLostPointerCapture,
 }
 </script>
 
@@ -259,10 +289,6 @@ const handlers = {
       />
     </div>
 
-    <VisuallyHidden :id="reorderInstructionsId">
-      {{ messages.transferList.reorderInstructions }}
-    </VisuallyHidden>
-
     <div class="astryx-transfer-list-collection">
       <TransferListPanel
         side="selected" :heading-id="selectedHeadingId" :label="selectedLabel"
@@ -270,9 +296,8 @@ const handlers = {
         :is-action-disabled="isClearDisabled" :groups="selectedGroups" :show-group-headings="false"
         :ungrouped-label="messages.transferList.ungroupedLabel"
         :empty-text="normalizedQuery === '' ? selectedEmptyText : noResultsText"
-        :is-reorderable="isReorderable" :dragging-value="reorder.draggingValue.value"
-        :grabbed-value="reorder.grabbedValue.value" :drop-target="reorder.pointerPlacement.value"
-        :reorder-instructions-id="reorderInstructionsId" :labels="labels" :handlers="handlers"
+        :reorderable="reorderable" :is-ordering="isOrdering" :can-move="canMove" :is-disabled="isDisabled"
+        :find-row="rowElement" :labels="labels"
         @action="clearSelected" @remove="removeOption"
       >
         <template v-if="$slots.option" #option="scope">
@@ -286,8 +311,8 @@ const handlers = {
         :is-action-disabled="isAddAllDisabled" :groups="availableGroups" :show-group-headings="true"
         :ungrouped-label="messages.transferList.ungroupedLabel"
         :empty-text="normalizedQuery === '' ? availableEmptyText : noResultsText"
-        :is-reorderable="false" :dragging-value="null" :grabbed-value="null" :drop-target="null"
-        :reorder-instructions-id="reorderInstructionsId" :labels="labels" :handlers="handlers"
+        :is-ordering="false" :can-move="canMove" :is-disabled="isDisabled"
+        :find-row="rowElement" :labels="labels"
         @action="addAll" @add="addOption"
       >
         <template v-if="$slots.option" #option="scope">
@@ -295,13 +320,5 @@ const handlers = {
         </template>
       </TransferListPanel>
     </div>
-
-    <Teleport to="body">
-      <div
-        v-if="reorder.previewStyle.value != null" ref="previewHost"
-        class="astryx-transfer-list-drag-preview" data-transfer-list-drag-preview
-        aria-hidden="true" :style="reorder.previewStyle.value"
-      />
-    </Teleport>
   </div>
 </template>

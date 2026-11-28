@@ -4,6 +4,7 @@ import { examplesFor, text } from '../catalog.ts'
 import { printJson } from '../cli/context.ts'
 import { successEnvelope } from '../envelope.ts'
 import { CliError } from '../error.ts'
+import { formatComponentCompact, formatComponentProps } from '../format-component.ts'
 import { formatComponentDetail, formatComponentList, formatComposableDetail, formatComposableList } from '../format.ts'
 import { displayName, listComponents, listComposables, resolveComponent, resolveComposable } from '../query.ts'
 import { BINARY } from '../spec.ts'
@@ -89,9 +90,24 @@ function readOne(record: ComponentRecord, kind: RecordKind, args: CommandArgs): 
     return printJson(successEnvelope(`${kind}.detail`, hint ? { ...data, hint } : data, record.package))
   }
   const detail = kind === 'component'
-    ? formatComponentDetail(record, args.locale, args.dense)
+    ? componentText(record, args)
     : formatComposableDetail(record, args.locale, args.dense)
   return hint ? `${detail}${hint}\n` : detail
+}
+
+/**
+ * A component read prints the short answer by default. `--props` prints the
+ * props whole, `--detail full` prints the whole doc, and `--dense` keeps its
+ * one-line form. A composable that `component` resolves has no short answer.
+ */
+function componentText(record: ComponentRecord, args: CommandArgs): string {
+  if (args.dense || record.kind === 'composable')
+    return formatComponentDetail(record, args.locale, args.dense)
+  if (args.options.props === true)
+    return formatComponentProps(record, args.locale)
+  return args.options.detail === 'full'
+    ? formatComponentDetail(record, args.locale, false)
+    : formatComponentCompact(record, args.locale)
 }
 
 function composableHint(record: ComponentRecord, locale: 'en' | 'zh'): string {

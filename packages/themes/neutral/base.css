@@ -15,10 +15,13 @@
 @layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
 
 @layer astryx.tokens {
+  /* 只有页面根默认跟随读者；主题包装元素不声明配色，`system` 模式的 Theme 取外面的配色。 */
+  :root {
+    color-scheme: light dark;
+  }
+
   :root,
   [data-astryx-theme='neutral'] {
-    color-scheme: light dark;
-
     --astryx-color-background-surface: light-dark(#ffffff, #262626);
     --astryx-color-background-body: light-dark(#f1f1f1, #1b1b1b);
     --astryx-color-background-card: light-dark(#ffffff, #1b1b1b);

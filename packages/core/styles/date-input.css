@@ -274,6 +274,42 @@
     cursor: default;
   }
 
+  .astryx-date-touch-months {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  /*
+   * 横向按月吸附的滚动区。每个吸附点都是整整一屏，所以每个月只有一个停靠位置。
+   * 不加 `scroll-snap-stop: always`：那样每次甩动最多翻一个月，「往后三个月」该是一甩，不是三下。
+   * `pan-x` 让浏览器只管横向平移，竖向的交给底部面板下拉收起。
+   */
+  .astryx-date-touch-scroller {
+    position: relative;
+    box-sizing: border-box;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+    touch-action: pan-x;
+  }
+
+  .astryx-date-touch-scroller::-webkit-scrollbar {
+    display: none;
+  }
+
+  .astryx-date-touch-track {
+    display: grid;
+  }
+
+  .astryx-date-touch-pane {
+    grid-row: 1;
+    min-width: 0;
+    scroll-snap-align: start;
+  }
+
   .astryx-date-touch-wheels,
   .astryx-time-wheels {
     display: grid;
@@ -292,6 +328,82 @@
 
   .astryx-picker-wheel-option[aria-selected='true'] {
     background: var(--astryx-color-background-selected, #eef2ff);
+  }
+
+  /*
+   * 鼠标下的列：行滚到列的上下两端时往里倾倒、缩小，像一个在手指下转的圆柱。
+   * 动画由列的 view() 时间线驱动，行自己不能是滚动容器（那样 view() 会量行自己，
+   * 永远停在 50%），所以倾倒画在行里面的文字元素上，裁切也在那里。
+   * 倾倒不动行本身：行的位置就是列滚动的落点。
+   *
+   * 淡出走颜色而不是不透明度：不透明度压到 30% 的行低于 4.5:1。行从主文字色出发，
+   * 两端停在主、次文字色的正中，这一档在每个主题里都够 AA，只用次文字色有两个主题不够。
+   * 选中和禁用的行保留自己的颜色（动画里的颜色会盖过它们），所以不吃这条渐变；
+   * 禁用的行按不透明度淡出，WCAG 1.4.3 允许不可用的组件低于对比度下限。
+   * 不支持滚动驱动动画的浏览器就是一列平的、完全清晰的行。
+   * 减少动态效果时不再倾倒，保留颜色渐变这条深度提示。
+   */
+  @keyframes astryx-wheel-tip {
+    0% { transform: rotateX(52deg) scale(0.86); }
+    50% { transform: rotateX(0deg) scale(1); }
+    100% { transform: rotateX(-52deg) scale(0.86); }
+  }
+
+  @keyframes astryx-wheel-fade {
+    0%, 100% { color: color-mix(in oklab, var(--astryx-color-text-primary, light-dark(#000000, #ffffff)), var(--astryx-color-text-secondary, light-dark(#474747, #a8a8a8))); }
+    50% { color: var(--astryx-color-text-primary, light-dark(#000000, #ffffff)); }
+  }
+
+  @keyframes astryx-wheel-tip-dim {
+    0% { opacity: 0.3; transform: rotateX(52deg) scale(0.86); }
+    50% { opacity: 1; transform: rotateX(0deg) scale(1); }
+    100% { opacity: 0.3; transform: rotateX(-52deg) scale(0.86); }
+  }
+
+  @keyframes astryx-wheel-dim {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+
+  .astryx-picker-wheel-option-label {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    backface-visibility: hidden;
+  }
+
+  @supports (animation-timeline: view()) {
+    .astryx-picker-wheel {
+      perspective: 520px;
+      transform-style: preserve-3d;
+    }
+
+    .astryx-picker-wheel-option-label {
+      animation: astryx-wheel-tip linear both;
+      animation-timeline: view(y);
+      animation-range: cover 0% cover 100%;
+    }
+
+    .astryx-picker-wheel-option:not([aria-selected='true']):not(:disabled) {
+      animation: astryx-wheel-fade linear both;
+      animation-timeline: view(y);
+      animation-range: cover 0% cover 100%;
+    }
+
+    .astryx-picker-wheel-option:disabled .astryx-picker-wheel-option-label {
+      animation-name: astryx-wheel-tip-dim;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .astryx-picker-wheel-option-label {
+        animation-name: none;
+      }
+
+      .astryx-picker-wheel-option:disabled .astryx-picker-wheel-option-label {
+        animation-name: astryx-wheel-dim;
+      }
+    }
   }
 
   /*

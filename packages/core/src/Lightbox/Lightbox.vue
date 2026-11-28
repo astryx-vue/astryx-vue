@@ -2,6 +2,7 @@
 import type { LayerFocusRecord } from '../layer/layerFocusReturn.js'
 import type { LightboxEmits, LightboxMedia, LightboxProps } from './types.js'
 import { computed, nextTick, onBeforeUnmount, ref, toRef, useId, useTemplateRef, watch } from 'vue'
+import { useCoarsePointer } from '../composables/useCoarsePointer.js'
 import { useFocusTrap } from '../composables/useFocusTrap.js'
 import { useScrollLock } from '../composables/useScrollLock.js'
 import Icon from '../Icon/Icon.vue'
@@ -10,8 +11,12 @@ import { isLayerFocusStranded, restoreLayerFocus, trackLayerFocus } from '../lay
 import { resetLayerScopedContext } from '../layer/scopedProvide.js'
 import { useComponentMessages } from '../locale/context.js'
 import { lightboxMessages } from '../locale/messages/lightbox.js'
+import { zoomMedia } from '../motion/uikit/zoomMedia.js'
+import { isRtlElement } from '../utils/isRtlElement.js'
 import LightboxCaption from './LightboxCaption.vue'
+import { isClickOutsideMedia, markPointerOverPhoto, OVER_PHOTO_ATTRIBUTE } from './lightboxPointer.js'
 import { createModalAnnouncer, toWholeIndex } from './lightboxViewer.js'
+import { useLightboxStage } from './useLightboxStage.js'
 import '../../styles/lightbox.css'
 import '../../styles/visually-hidden-utility.css'
 
@@ -32,12 +37,13 @@ const announce = createModalAnnouncer(() => liveRegionRef.value)
 // 灯箱内容是这一层的成员边界：外面组里的尺寸、禁用、选中值都不再算数。
 resetLayerScopedContext()
 const dialogRef = useTemplateRef<HTMLDialogElement>('dialog')
-const containerRef = ref<HTMLElement | null>(null)
-const mediaRef = useTemplateRef<HTMLElement>('mediaBox')
-const frameRef = useTemplateRef<HTMLElement>('frame')
+const containerRef = useTemplateRef<HTMLElement>('container')
+const viewportRef = useTemplateRef<HTMLElement>('viewport')
+const trackRef = useTemplateRef<HTMLElement>('track')
 const closeRef = useTemplateRef<InstanceType<typeof IconButton>>('close')
 const captionId = `astryx-lightbox-caption-${useId()}`
 useScrollLock(toRef(props, 'isOpen'))
+const isTouch = useCoarsePointer()
 
 const mediaList = computed(() => Array.isArray(props.media) ? props.media : [props.media])
 const isGallery = computed(() => Array.isArray(props.media) && mediaList.value.length > 1)
@@ -53,18 +59,17 @@ const isVideo = computed(() => current.value?.type === 'video')
 const hasCaptionBand = computed(() => isGallery.value || Boolean(current.value?.caption))
 const canPrev = computed(() => index.value > 0)
 const canNext = computed(() => index.value < mediaList.value.length - 1)
+// 当前页和它两边的邻居：翻页时邻居已经画好，跟着轨道滑进来。
+const pageIndexes = computed(() => [index.value - 1, index.value, index.value + 1]
+  .filter(i => i >= 0 && i < mediaList.value.length))
+const isZoomTarget = computed(() => props.hasZoom && !isVideo.value)
+const isZoomed = ref(false)
 
-const zoom = ref(1)
-const pan = ref({ x: 0, y: 0 })
-const dragging = ref(false)
-const didDrag = ref(false)
-const dragStart = { x: 0, y: 0, panX: 0, panY: 0 }
+// 这次按下是哪种指针、按在哪；放大后的拖动或下拉之后松开的点击不关闭。
+let pointerType = ''
+let pressPoint: { x: number, y: number } | null = null
+let didDrag = false
 let focusRecord: LayerFocusRecord | null = null
-
-const zoomable = computed(() => props.hasZoom && !isVideo.value)
-const imageTransform = computed(() => zoom.value === 1
-  ? undefined
-  : `scale(${zoom.value}) translate(${pan.value.x / zoom.value}px, ${pan.value.y / zoom.value}px)`)
 
 function close(): void {
   emit('update:isOpen', false)
@@ -77,23 +82,32 @@ function setIndex(next: number): void {
   emit('update:index', clamped)
 }
 
-function resetZoom(): void {
-  zoom.value = 1
-  pan.value = { x: 0, y: 0 }
-  dragging.value = false
-}
-
-function applyZoom(next: number): void {
-  if (!zoomable.value || next === zoom.value)
-    return
-  zoom.value = next
-  pan.value = { x: 0, y: 0 }
-  announce(next > 1 ? messages.value.lightbox.zoomedIn : messages.value.lightbox.zoomedOut)
-}
-
-function toggleZoom(): void {
-  applyZoom(zoom.value === 1 ? 2 : 1)
-}
+const { zoom } = useLightboxStage({
+  dialog: () => dialogRef.value,
+  container: () => containerRef.value,
+  viewport: () => viewportRef.value,
+  track: () => trackRef.value,
+  stage: () => trackRef.value?.querySelector<HTMLElement>('[data-current] > [data-lightbox-page-media]') ?? null,
+  captionBand: () => trackRef.value?.querySelector<HTMLElement>('[data-current] > .astryx-lightbox__caption-band') ?? null,
+  isOpen: () => props.isOpen,
+  isZoomTarget: () => isZoomTarget.value,
+  isVideo: () => isVideo.value,
+  isGallery: () => isGallery.value,
+  isTouch: () => isTouch.value,
+  index: () => index.value,
+  count: () => mediaList.value.length,
+  itemKey: () => current.value,
+  close,
+  onSwipe: setIndex,
+  // 缩放只改变换，读屏听不到，在灯箱自己的播报区域说一声。
+  onZoomedChange: (next) => {
+    isZoomed.value = next
+    announce(next ? messages.value.lightbox.zoomedIn : messages.value.lightbox.zoomedOut)
+  },
+  onDragStart: () => {
+    didDrag = true
+  },
+})
 
 function onCancel(event: Event): void {
   // 里面冒上来的 cancel（文件选择器被取消）不是关闭请求，平台自己的 cancel 直接发给 dialog。
@@ -103,46 +117,56 @@ function onCancel(event: Event): void {
   close()
 }
 
+// 每次按下都记下位置和指针种类。鼠标或触控笔在哪里按下都清掉拖动标记，手指只在舞台上按下才清。
+function onContainerPointerDown(event: PointerEvent): void {
+  pointerType = event.pointerType
+  pressPoint = { x: event.clientX, y: event.clientY }
+  const isOnStage = event.target instanceof Node && viewportRef.value?.contains(event.target) === true
+  if (event.pointerType !== 'touch' || isOnStage)
+    didDrag = false
+}
+
 function onBackdropClick(event: MouseEvent): void {
-  if (didDrag.value) {
-    didDrag.value = false
+  if (didDrag) {
+    didDrag = false
     return
   }
-  // 点在照片和图注区域以外的地方都关闭：遮罩、容器，以及照片旁边的媒体列空白。
   const target = event.target
-  if (target === event.currentTarget || target === containerRef.value || target === mediaRef.value)
+  const isMediaClose = pointerType !== 'touch' && isClickOutsideMedia(event, {
+    viewport: viewportRef.value,
+    page: trackRef.value?.querySelector('[data-current]') ?? null,
+    pressPoint,
+  })
+  if (target === event.currentTarget || target === containerRef.value || isMediaClose)
     close()
 }
 
+/** 放大时每按一次方向键平移的距离（px）。按右键露出右边的内容，所以照片本身往左移。 */
+const KEYBOARD_PAN_STEP = 50
+const KEYBOARD_PAN_OFFSETS: Record<string, [number, number]> = {
+  ArrowDown: [0, -KEYBOARD_PAN_STEP],
+  ArrowLeft: [KEYBOARD_PAN_STEP, 0],
+  ArrowRight: [-KEYBOARD_PAN_STEP, 0],
+  ArrowUp: [0, KEYBOARD_PAN_STEP],
+}
+
 function onKeyDown(event: KeyboardEvent): void {
-  if (zoomable.value) {
+  if (isZoomTarget.value) {
     if (event.key === '+' || event.key === '=') {
       event.preventDefault()
-      applyZoom(2)
-      return
-    }
-    if (event.key === '-' || event.key === '_') {
-      event.preventDefault()
-      applyZoom(1)
+      zoom.zoomIn()
       return
     }
     // 0 回到适应大小。Ctrl / Cmd + 0 是浏览器自己的页面缩放，留给它。
-    if (event.key === '0' && !event.ctrlKey && !event.metaKey && !event.altKey) {
+    if (event.key === '-' || event.key === '_' || (event.key === '0' && !event.ctrlKey && !event.metaKey && !event.altKey)) {
       event.preventDefault()
-      applyZoom(1)
+      zoom.zoomOut()
       return
     }
-    const step = 50
-    const offsets: Record<string, [number, number]> = {
-      ArrowDown: [0, -step],
-      ArrowLeft: [step, 0],
-      ArrowRight: [-step, 0],
-      ArrowUp: [0, step],
-    }
-    const offset = zoom.value > 1 ? offsets[event.key] : undefined
+    const offset = zoom.isZoomed() ? KEYBOARD_PAN_OFFSETS[event.key] : undefined
     if (offset != null) {
       event.preventDefault()
-      pan.value = { x: pan.value.x + offset[0], y: pan.value.y + offset[1] }
+      zoom.panBy(offset[0], offset[1])
       return
     }
   }
@@ -150,9 +174,7 @@ function onKeyDown(event: KeyboardEvent): void {
   // 放大后的平移不镜像，照片本身没有翻转。
   if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight')
     return
-  const dialog = dialogRef.value
-  const isRtl = dialog != null && getComputedStyle(dialog).direction === 'rtl'
-  const towardEnd = (event.key === 'ArrowRight') !== isRtl
+  const towardEnd = (event.key === 'ArrowRight') !== isRtlElement(dialogRef.value)
   if (towardEnd && canNext.value) {
     event.preventDefault()
     setIndex(index.value + 1)
@@ -163,36 +185,20 @@ function onKeyDown(event: KeyboardEvent): void {
   }
 }
 
-function onImageKeyDown(event: KeyboardEvent): void {
+// 照片盒子获得焦点时，Enter / Space 切换缩放。从子元素冒上来的按键归子元素。
+function onStageKeyDown(event: KeyboardEvent): void {
+  if (event.target !== event.currentTarget)
+    return
   if (event.key === 'Enter' || event.key === ' ') {
     event.preventDefault()
-    toggleZoom()
+    zoom.toggle()
   }
 }
 
-function onPointerDown(event: PointerEvent): void {
-  if (!zoomable.value || zoom.value <= 1)
-    return
-  dragging.value = true
-  didDrag.value = false
-  dragStart.x = event.clientX
-  dragStart.y = event.clientY
-  dragStart.panX = pan.value.x
-  dragStart.panY = pan.value.y
-}
-
-function onPointerMove(event: PointerEvent): void {
-  if (!dragging.value)
-    return
-  didDrag.value = true
-  pan.value = {
-    x: dragStart.panX + event.clientX - dragStart.x,
-    y: dragStart.panY + event.clientY - dragStart.y,
-  }
-}
-
-function onPointerUp(): void {
-  dragging.value = false
+// 手指的双击由舞台自己处理；鼠标和触控笔的双击走浏览器的 dblclick。
+function onViewportDblclick(event: MouseEvent): void {
+  if (isZoomTarget.value && pointerType !== 'touch')
+    zoom.doubleClickAt(event.clientX, event.clientY)
 }
 
 // 原生 showModal() 让 Tab 能跑到浏览器自己的界面上，这里把 Tab 圈在灯箱里。
@@ -217,7 +223,7 @@ watch([() => props.isOpen, () => current.value != null], ([open]) => {
     focusRecord?.stop()
     focusRecord = trackLayerFocus({ getLayer: () => dialogRef.value })
     dialog.showModal()
-    const video = dialog.querySelector('video')
+    const video = dialog.querySelector<HTMLVideoElement>('[data-current] video')
     if (props.hasAutoPlay && video != null && video.paused)
       void video.play()?.catch(() => {})
   }
@@ -228,7 +234,7 @@ watch([() => props.isOpen, () => current.value != null], ([open]) => {
     // 关着的 dialog 还挂着视频元素，正在播的要停下，不然声音会接着放。
     pauseVideos()
     dialog.close()
-    resetZoom()
+    zoom.zoomOut()
     if (record != null) {
       if (wasStranded)
         restoreLayerFocus(record, { layer: dialog, name: 'Lightbox' })
@@ -238,21 +244,23 @@ watch([() => props.isOpen, () => current.value != null], ([open]) => {
 }, { flush: 'post' })
 
 /**
- * 从图注的「更多」「收起」上翻页时，旧图注随页面换掉，焦点会掉到 body。
+ * 翻页让原来的当前页变成 inert，里面的焦点（图注的「更多」「收起」、照片盒子）会掉到 body。
  * 这时把焦点交给新一页的照片（能缩放时），否则交给关闭按钮，方向键还能接着翻页。
  */
 watch(index, () => {
   const active = document.activeElement
-  if (active instanceof HTMLElement && active.closest('.astryx-lightbox__caption-band') != null) {
+  const page = trackRef.value?.querySelector('[data-current]')
+  if (active instanceof HTMLElement && page?.contains(active) === true) {
     void nextTick(() => {
-      const target = zoomable.value ? frameRef.value : closeRef.value?.element
+      const stage = trackRef.value?.querySelector<HTMLElement>('[data-current] > [data-lightbox-page-media]')
+      const target = isZoomTarget.value ? stage : closeRef.value?.element
       target?.focus()
     })
   }
 }, { flush: 'pre' })
 
 watch(index, () => {
-  resetZoom()
+  pauseVideos()
   if (!props.isOpen)
     return
   const item = current.value
@@ -264,16 +272,7 @@ watch(index, () => {
     : messages.value.lightbox.imagePosition(position.index, position.total))
 })
 
-watch([dragging], ([isDragging]) => {
-  if (!isDragging)
-    return
-  window.addEventListener('pointermove', onPointerMove)
-  window.addEventListener('pointerup', onPointerUp)
-}, { flush: 'post' })
-
 onBeforeUnmount(() => {
-  window.removeEventListener('pointermove', onPointerMove)
-  window.removeEventListener('pointerup', onPointerUp)
   // 打开着就被卸载（只在打开时渲染、或随整个视图移除）：离开文档后把焦点还给打开者。
   const record = focusRecord
   focusRecord = null
@@ -287,12 +286,9 @@ onBeforeUnmount(() => {
   })
 })
 
-watch(dragging, (isDragging, wasDragging) => {
-  if (wasDragging && !isDragging) {
-    window.removeEventListener('pointermove', onPointerMove)
-    window.removeEventListener('pointerup', onPointerUp)
-  }
-})
+function pageStyle(i: number): Record<string, string> {
+  return { insetInlineStart: `calc(${i} * (100% + ${zoomMedia.viewer.pageGap}px))` }
+}
 </script>
 
 <template>
@@ -307,88 +303,115 @@ watch(dragging, (isDragging, wasDragging) => {
     :aria-describedby="current.caption ? captionId : undefined"
     :data-gallery="isGallery || undefined"
     :data-caption-band="hasCaptionBand || undefined"
+    :data-has-zoom="hasZoom || undefined"
     data-component="lightbox"
     @cancel="onCancel"
     @click="onBackdropClick"
     @keydown="onKeyDown"
   >
-    <div ref="containerRef" class="astryx-lightbox__container">
-      <IconButton
-        ref="close"
-        class="astryx-lightbox__close"
-        variant="ghost"
-        size="sm"
-        :label="messages.lightbox.close"
-        @click="close"
-      >
-        <Icon icon="close" size="sm" />
-      </IconButton>
-
-      <IconButton
-        v-if="isGallery"
-        class="astryx-lightbox__nav astryx-lightbox__nav--prev"
-        variant="ghost"
-        size="sm"
-        :label="messages.lightbox.previous"
-        :is-disabled="!canPrev"
-        @click="setIndex(index - 1)"
-      >
-        <Icon icon="chevronLeft" size="sm" />
-      </IconButton>
-
-      <div ref="mediaBox" class="astryx-lightbox__media">
-        <!-- eslint-disable-next-line vue-a11y/no-static-element-interactions -- 可缩放时 role、tabindex 和 aria 从脚本绑上；视频没有这些交互。 -->
-        <div
-          ref="frame"
-          class="astryx-lightbox__frame"
-          :data-zoomable="zoomable || undefined"
-          :data-zoomed="zoom > 1 || undefined"
-          :data-dragging="dragging || undefined"
-          :role="zoomable ? 'button' : undefined"
-          :tabindex="zoomable ? 0 : undefined"
-          :aria-pressed="zoomable ? zoom > 1 : undefined"
-          :aria-label="zoomable ? messages.lightbox.zoom : undefined"
-          @dblclick="isVideo ? undefined : toggleZoom()"
-          @keydown="zoomable ? onImageKeyDown($event) : undefined"
-          @pointerdown="isVideo ? undefined : onPointerDown($event)"
-        >
-          <!-- eslint-disable-next-line vue-a11y/media-has-caption -- 说明文字在灯箱 caption 里；媒体文件本身不带字幕轨。 -->
-          <video
-            v-if="isVideo"
-            class="astryx-lightbox__video"
-            :src="current.src"
-            :aria-label="current.alt"
-            controls
-            :autoplay="hasAutoPlay && isOpen"
-          />
-          <img
-            v-else
-            class="astryx-lightbox__image"
-            :src="current.src"
-            :alt="current.alt"
-            draggable="false"
-            :style="imageTransform ? { transform: imageTransform } : undefined"
-            :data-dragging="dragging || undefined"
+    <div ref="container" class="astryx-lightbox__container" @pointerdown="onContainerPointerDown">
+      <div class="astryx-lightbox__chrome" data-lightbox-chrome>
+        <span class="astryx-lightbox__control astryx-lightbox__close">
+          <IconButton ref="close" variant="ghost" size="sm" :label="messages.lightbox.close" @click="close">
+            <Icon icon="close" size="sm" />
+          </IconButton>
+        </span>
+        <span v-if="isGallery" class="astryx-lightbox__control astryx-lightbox__nav astryx-lightbox__nav--prev">
+          <IconButton
+            variant="ghost"
+            size="sm"
+            :label="messages.lightbox.previous"
+            :is-disabled="!canPrev"
+            @click="setIndex(index - 1)"
           >
-        </div>
-        <LightboxCaption v-if="hasCaptionBand" :id="captionId" :key="index" :text="current.caption" />
+            <Icon icon="chevronLeft" size="sm" />
+          </IconButton>
+        </span>
       </div>
 
-      <IconButton
-        v-if="isGallery"
-        class="astryx-lightbox__nav astryx-lightbox__nav--next"
-        variant="ghost"
-        size="sm"
-        :label="messages.lightbox.next"
-        :is-disabled="!canNext"
-        @click="setIndex(index + 1)"
-      >
-        <Icon icon="chevronRight" size="sm" />
-      </IconButton>
+      <div class="astryx-lightbox__media" data-lightbox-media>
+        <!-- eslint-disable-next-line vue-a11y/no-static-element-interactions -- 舞台上的指针悬停和鼠标双击；键盘走照片盒子的 Enter / Space 和方向键。 -->
+        <div
+          ref="viewport"
+          class="astryx-lightbox__viewport"
+          :data-zoomable="(isZoomTarget && !isZoomed) || undefined"
+          :data-zoomed="(isZoomTarget && isZoomed) || undefined"
+          @pointermove="isZoomTarget ? markPointerOverPhoto($event) : undefined"
+          @pointerleave="viewportRef?.removeAttribute(OVER_PHOTO_ATTRIBUTE)"
+          @dblclick="onViewportDblclick"
+        >
+          <div
+            ref="track"
+            class="astryx-lightbox__track"
+            :data-zoom-target="isZoomTarget || undefined"
+            :data-dismiss-target="(isTouch && !isZoomTarget && !isVideo) || undefined"
+          >
+            <div
+              v-for="i in pageIndexes"
+              :key="i"
+              class="astryx-lightbox__page"
+              :data-lightbox-page="i"
+              :data-current="i === index ? '' : undefined"
+              :inert="i !== index || undefined"
+              :style="pageStyle(i)"
+            >
+              <!-- eslint-disable-next-line vue-a11y/no-static-element-interactions -- 能缩放时当前页的照片盒子是缩放按钮，role 和 tabindex 从脚本绑上。 -->
+              <div
+                class="astryx-lightbox__frame"
+                data-lightbox-page-media
+                :data-zoomable="(isZoomTarget && i === index) || undefined"
+                :role="isZoomTarget && i === index ? 'button' : undefined"
+                :tabindex="isZoomTarget && i === index ? 0 : undefined"
+                :aria-pressed="isZoomTarget && i === index ? isZoomed : undefined"
+                :aria-label="isZoomTarget && i === index ? messages.lightbox.zoom : undefined"
+                @keydown="isZoomTarget && i === index ? onStageKeyDown($event) : undefined"
+              >
+                <!-- eslint-disable-next-line vue-a11y/media-has-caption -- 说明文字在灯箱 caption 里；媒体文件本身不带字幕轨。 -->
+                <video
+                  v-if="mediaList[i]!.type === 'video'"
+                  class="astryx-lightbox__video"
+                  :src="mediaList[i]!.src"
+                  :aria-label="mediaList[i]!.alt"
+                  controls
+                  :autoplay="hasAutoPlay && isOpen && i === index"
+                />
+                <img
+                  v-else
+                  :ref="i === index ? zoom.contentRef : undefined"
+                  class="astryx-lightbox__image"
+                  :src="mediaList[i]!.src"
+                  :alt="i === index ? mediaList[i]!.alt : ''"
+                  draggable="false"
+                >
+              </div>
+              <!-- 换成当前页时重新挂载：翻页合上展开的图注。 -->
+              <LightboxCaption
+                v-if="hasCaptionBand"
+                :id="i === index ? captionId : `${captionId}-${i}`"
+                :key="i === index ? 'current' : 'neighbour'"
+                :text="mediaList[i]!.caption"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
 
-      <p v-if="isGallery" class="astryx-lightbox__counter">
-        {{ index + 1 }} / {{ mediaList.length }}
-      </p>
+      <div class="astryx-lightbox__chrome" data-lightbox-chrome>
+        <span v-if="isGallery" class="astryx-lightbox__control astryx-lightbox__nav astryx-lightbox__nav--next">
+          <IconButton
+            variant="ghost"
+            size="sm"
+            :label="messages.lightbox.next"
+            :is-disabled="!canNext"
+            @click="setIndex(index + 1)"
+          >
+            <Icon icon="chevronRight" size="sm" />
+          </IconButton>
+        </span>
+        <p v-if="isGallery" class="astryx-lightbox__counter">
+          {{ index + 1 }} / {{ mediaList.length }}
+        </p>
+      </div>
     </div>
     <div ref="liveRegion" class="astryx-lightbox__announcer astryx-visually-hidden" aria-live="polite" aria-atomic="true" />
   </dialog>

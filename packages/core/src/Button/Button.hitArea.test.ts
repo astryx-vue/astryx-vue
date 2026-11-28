@@ -112,7 +112,7 @@ describe('按钮的触控热区', () => {
     expect(insets(wrapper.get('.down').element)).toEqual(px(4, 6, 6, 6))
   })
 
-  it('手指按下时再量一次：邻居刚挪近、触摸离邻居更近，这一下不执行', async () => {
+  it('手指轻点时再量一次：邻居刚挪近、触摸离邻居更近，这一下不执行，热区之后才更新', async () => {
     stubPointer(true)
     const clicks: string[] = []
     const wrapper = mount(Button, {
@@ -129,6 +129,9 @@ describe('按钮的触控热区', () => {
     wrapper.element.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, detail: 1 }))
     await flushPromises()
     expect(clicks).toEqual([])
+    // 复查只读不写：按压动效还在播，热区由随后的那次测量写。
+    expect(insets(wrapper.element).bottom).toBe('8px')
+    await settle()
     expect(insets(wrapper.element).bottom).toBe('2px')
     touch(wrapper.element, 'pointerdown', 40, 10)
     wrapper.element.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, detail: 1 }))

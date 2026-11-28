@@ -2,6 +2,7 @@
 import type { ItemDensity, ListItemProps, ListItemSlots } from './types.js'
 import { computed, h, onBeforeUnmount, provide, useAttrs, useSlots, useTemplateRef } from 'vue'
 import { useTouchHitArea } from '../composables/internal/useTouchHitArea.js'
+import { swipeWithItemKey } from '../Swipe/swipeHost.js'
 import { itemListRowKey, useListContext } from './context.js'
 import Item from './Item.vue'
 import { itemLabelNeededKey, itemTrailingKey } from './itemSlots.js'
@@ -31,6 +32,9 @@ onBeforeUnmount(() => {
   if (row != null && isReportedRow(row))
     keepPresentation(row)
 })
+
+// 横滑操作的 `onActivate` 收到这一行的 itemKey，一份定义就能服务所有行。
+const rowSwipe = computed(() => swipeWithItemKey(props.swipe, props.itemKey))
 
 const density = computed<ItemDensity>(() => props.density ?? list?.density.value ?? 'balanced')
 const marker = computed(() => {
@@ -91,6 +95,7 @@ provide(itemTrailingKey, computed(() => {
     :is-selected="isSelected"
     :label="label"
     :on-click="onClick"
+    :swipe="rowSwipe"
     :swipe-actions="swipeActions"
     :swipe-behavior="swipeBehavior"
     :rel="rel"
