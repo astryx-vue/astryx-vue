@@ -44,6 +44,7 @@ const NO_EXPORT_SLUGS: ReadonlySet<string> = new Set(['chat', 'nav-menu'])
 /** 导出名不是 slug 驼峰形式的少数组件。 */
 const EXPORT_NAME_EXCEPTIONS: Readonly<Record<string, string>> = {
   'dropdown-menu-submenu': 'DropdownMenuSubMenu',
+  'create-swipe': 'createSwipe',
 }
 
 /** 页面标题下那行小字里的导出名：`base-typeahead` → `BaseTypeahead`，`use-clipboard` → `useClipboard`。 */

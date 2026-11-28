@@ -274,6 +274,42 @@
     cursor: default;
   }
 
+  .astryx-date-touch-months {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  /*
+   * 横向按月吸附的滚动区。每个吸附点都是整整一屏，所以每个月只有一个停靠位置。
+   * 不加 `scroll-snap-stop: always`：那样每次甩动最多翻一个月，「往后三个月」该是一甩，不是三下。
+   * `pan-x` 让浏览器只管横向平移，竖向的交给底部面板下拉收起。
+   */
+  .astryx-date-touch-scroller {
+    position: relative;
+    box-sizing: border-box;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+    touch-action: pan-x;
+  }
+
+  .astryx-date-touch-scroller::-webkit-scrollbar {
+    display: none;
+  }
+
+  .astryx-date-touch-track {
+    display: grid;
+  }
+
+  .astryx-date-touch-pane {
+    grid-row: 1;
+    min-width: 0;
+    scroll-snap-align: start;
+  }
+
   .astryx-date-touch-wheels,
   .astryx-time-wheels {
     display: grid;

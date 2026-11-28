@@ -21,7 +21,6 @@ function keys(prefix, names, reason) {
 // 对应行为移植时，把键从这里删掉，写进 upstreamMap 和内置文案。
 export const UNPORTED_KEYS = {
   '@astryx.tokenizer.done': 'Tokenizer 底部弹层编辑草稿、按「保存」提交，没有立即生效、用「完成」收尾的流程',
-  '@astryx.listInput.itemName': 'lab ListInput 还没改用 createReorderable，排序手柄和播报里的记录名由 listInput 自己的文案拼',
   '@astryx.markdownHeadingLinks.copyFailed': 'Markdown 标题没有复制链接按钮，复制失败的提示还没有用处',
   '@astryx.comments.errorAnnouncement': 'lab Comments 错误横幅通过共用播报通道读出还没移植',
   '@astryx.textArea.counter': 'Vue 版 TextArea 计数直接按当前语言的数字格式写成「已输入/上限」，没有要翻译的文字',

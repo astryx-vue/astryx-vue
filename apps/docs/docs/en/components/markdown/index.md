@@ -41,7 +41,7 @@ When `content` is omitted, text in the default slot is the source. The slot read
 
 Links have control characters removed. `javascript:`, `vbscript:`, and every `data:` URL do not become link targets or images: the parser keeps them as source text, and `Markdown` shows them as written. Raw HTML is never executed. Tags are shown as text. An image with an empty URL shows its alternative text in brackets.
 
-Each paragraph, heading, quote, list item and table cell lays out in the direction of its own text (the first strongly directional character), so a Hebrew or Arabic block in an English document reads right to left and the reverse. A block with no such character, such as digits or an image, keeps the direction around it.
+Each paragraph, heading, quote, list item and table cell lays out in the direction of its own text (the first strongly directional character), so a Hebrew or Arabic block in an English document reads right to left and the reverse. A block with no such character, such as digits or an image, takes the page's direction from `InternationalizationProvider`, even inside a quote or list item that reads the other way. Tables keep the page's column order; a cell that reads against its table still draws its column rule and resolves an explicit column alignment on the table's sides.
 
 `Markdown` does not sanitize what a custom renderer or plugin renderer returns. Each renderer owns its own output. A custom `link` renderer replaces the default link, so it does not receive `onLinkClick`.
 
