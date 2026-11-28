@@ -3,6 +3,8 @@ import { englishPlural, formatCount } from './shared.js'
 
 export interface ChatMessages {
   log: string
+  /** lab ChatVirtualizer 自己的滚动容器在调用方没给名字时的无障碍名称。 */
+  virtualizerLabel: string
   newMessages: string
   scrollToBottom: string
   messageFrom: (sender: string) => string
@@ -57,6 +59,7 @@ export interface ChatMessages {
 export const chatMessages: Record<AstryxLocale, ChatMessages> = {
   'en': {
     log: 'Messages',
+    virtualizerLabel: 'Messages',
     newMessages: 'New messages',
     scrollToBottom: 'Scroll to bottom',
     messageFrom: sender => `Message from ${sender}`,
@@ -101,6 +104,7 @@ export const chatMessages: Record<AstryxLocale, ChatMessages> = {
   },
   'zh-CN': {
     log: '消息列表',
+    virtualizerLabel: '消息',
     newMessages: '有新消息',
     scrollToBottom: '滚动到底部',
     messageFrom: sender => `来自${sender}的消息`,

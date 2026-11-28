@@ -5,6 +5,8 @@ import chatEmojiPickerDemo from './chat-emoji-picker.vue'
 import chatEmojiPickerSource from './chat-emoji-picker.vue?raw&highlighted'
 import chatReactionBarDemo from './chat-reaction-bar.vue'
 import chatReactionBarSource from './chat-reaction-bar.vue?raw&highlighted'
+import chatVirtualizerDemo from './chat-virtualizer.vue'
+import chatVirtualizerSource from './chat-virtualizer.vue?raw&highlighted'
 import circleCheckIndicatorDemo from './circle-check-indicator.vue'
 import circleCheckIndicatorSource from './circle-check-indicator.vue?raw&highlighted'
 import circularProgressDemo from './circular-progress.vue'
@@ -84,6 +86,7 @@ const options = { className: 'lab-demo' }
 
 export const labChatEmojiPicker = defineDemo(chatEmojiPickerDemo, chatEmojiPickerSource, options)
 export const labChatReactionBar = defineDemo(chatReactionBarDemo, chatReactionBarSource, options)
+export const labChatVirtualizer = defineDemo(chatVirtualizerDemo, chatVirtualizerSource, options)
 export const labSelectableCardGroup = defineDemo(selectableCardGroupDemo, selectableCardGroupSource, options)
 export const labCircleCheckIndicator = defineDemo(circleCheckIndicatorDemo, circleCheckIndicatorSource, options)
 export const labDialogHeroHeader = defineDemo(dialogHeroHeaderDemo, dialogHeroHeaderSource, options)

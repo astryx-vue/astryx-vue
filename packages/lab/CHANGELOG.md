@@ -1,5 +1,23 @@
 # @astryx-vue/lab
 
+## 0.14.0
+
+### Minor Changes
+
+- [#668](https://github.com/astryx-vue/astryx-vue/pull/668) [`7706b8e`](https://github.com/astryx-vue/astryx-vue/commit/7706b8edc091bb448ae554007a1c58b698a21929) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增实验组件 ChatVirtualizer：很长的聊天记录只渲染看得见的行，在底部时跟随新消息，往上翻后加载历史、行变高都不挪动正在读的那一行，也能挂到整页滚动上并在旋转屏幕时保持位置；core 新增文案 `chat.virtualizerLabel`。
+
+### Patch Changes
+
+- Updated dependencies [[`7706b8e`](https://github.com/astryx-vue/astryx-vue/commit/7706b8edc091bb448ae554007a1c58b698a21929)]:
+  - @astryx-vue/core@0.42.1
+
+## 0.13.1
+
+### Patch Changes
+
+- Updated dependencies [[`852bdbf`](https://github.com/astryx-vue/astryx-vue/commit/852bdbfa4dd4e2b5ab0003d5537e200eaf6fa547), [`90380bc`](https://github.com/astryx-vue/astryx-vue/commit/90380bcc5cde8902e107ba2fa1ab6479c59d1561), [`dab0232`](https://github.com/astryx-vue/astryx-vue/commit/dab0232a9b77719a6aa62d931954a22569fbde48)]:
+  - @astryx-vue/core@0.42.0
+
 ## 0.13.0
 
 ### Minor Changes

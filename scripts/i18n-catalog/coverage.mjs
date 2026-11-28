@@ -9,7 +9,6 @@ export const UNPORTED_NAMESPACES = {
   tabBar: 'lab TabBar 的文案内置在 lab 里，core 的 AstryxMessages 还没有这个命名空间',
   navigationStack: 'lab NavigationStack 的文案内置在 lab 里，core 的 AstryxMessages 还没有这个命名空间',
   searchField: 'lab SearchField 还没有 Vue 版',
-  chatVirtualizer: 'lab ChatVirtualizer 还没有 Vue 版',
   rating: 'Rating 还没有 Vue 版',
 }
 

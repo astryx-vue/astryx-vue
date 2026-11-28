@@ -1,5 +1,23 @@
 # @astryx-vue/cli
 
+## 0.9.3
+
+### Patch Changes
+
+- [#668](https://github.com/astryx-vue/astryx-vue/pull/668) [`7706b8e`](https://github.com/astryx-vue/astryx-vue/commit/7706b8edc091bb448ae554007a1c58b698a21929) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增实验组件 ChatVirtualizer：很长的聊天记录只渲染看得见的行，在底部时跟随新消息，往上翻后加载历史、行变高都不挪动正在读的那一行，也能挂到整页滚动上并在旋转屏幕时保持位置；core 新增文案 `chat.virtualizerLabel`。
+
+## 0.9.2
+
+### Patch Changes
+
+- [#666](https://github.com/astryx-vue/astryx-vue/pull/666) [`bdbd2ce`](https://github.com/astryx-vue/astryx-vue/commit/bdbd2ce1fdf77f1e706d70a63f01c11a99bcbb2f) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - `astryx-vue search` 的结果会标出已废弃的组件：文本输出在名字后写「（已废弃）」，并给出改用哪个组件和迁移说明的第一句；`--json` 里带 `deprecated: { replacement, description }`。CLI 自带的组件目录也记下了每个废弃组件的替代组件和迁移说明。文档站搜索里，废弃组件的结果行同样带「已废弃」标记。
+
+- [#667](https://github.com/astryx-vue/astryx-vue/pull/667) [`852bdbf`](https://github.com/astryx-vue/astryx-vue/commit/852bdbfa4dd4e2b5ab0003d5537e200eaf6fa547) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增 `createSwipe`（`@astryx-vue/core/Swipe`）：把它造出的值传给 `ListItem` / `Item` 的 `swipe`，横滑行露出操作，手感按 UIKit 还原（一甩只停开不触发、全滑等行滑出再触发、`hasRemoval` 停在外面），处理函数收到操作 `id` 和行的 `itemKey`；行上的 `swipeActions` / `swipeBehavior` 改走同一套实现并标为弃用，操作默认配色改为 `accent`，`commit` 的一侧有多个操作时不再触发。
+
+- [#664](https://github.com/astryx-vue/astryx-vue/pull/664) [`90380bc`](https://github.com/astryx-vue/astryx-vue/commit/90380bcc5cde8902e107ba2fa1ab6479c59d1561) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - DateInput 和 DateTimeInput 的底部面板里，月份改成可以左右连续划动，松手总停在整月上；点箭头翻月时，Safari 也会停在标题写的那个月。打开减少动效时箭头直接换月（触屏上是一次淡出淡入），不再滑动。键盘把焦点挪到别的月份时，面板跟着滚过去。
+
+- [#662](https://github.com/astryx-vue/astryx-vue/pull/662) [`dab0232`](https://github.com/astryx-vue/astryx-vue/commit/dab0232a9b77719a6aa62d931954a22569fbde48) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - Markdown 里只有数字、标点这类没有明确方向的段落，放在读向相反的引用或列表项里时，改按页面方向排版；读向和表格相反的单元格，列线和显式对齐仍落在表格那一侧。
+
 ## 0.9.1
 
 ### Patch Changes
