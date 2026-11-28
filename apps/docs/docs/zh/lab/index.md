@@ -60,6 +60,7 @@ import '@astryx-vue/lab/lab.css'
 | [EmojiPicker](/lab/emoji-picker) | 按分组搜索全部表情并选中，可内嵌或放进弹出层。 |
 | [ChatEmojiPicker](/lab/chat-emoji-picker) | 在弹出层里按短名过滤并选择表情。 |
 | [ChatReactionBar](/lab/chat-reaction-bar) | 在消息下展示表情回应，并可继续添加。 |
+| [ChatVirtualizer](/lab/chat-virtualizer) | 很长的聊天记录只渲染看得见的几行，跟随新消息，加载历史不跳。 |
 | [Schedule](/lab/schedule) | 按月、周、日或列表展示日程。 |
 
 这些页面中的示例都可以直接交互，代码标签页提供完整 Vue 示例。

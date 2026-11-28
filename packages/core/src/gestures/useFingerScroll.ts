@@ -6,11 +6,10 @@
  *   now or at a past time, and an optional call when one ends
  * @position Gesture composable of packages/core/src/gestures, over the
  *   finger-scroll watch (fingerScroll.ts), kept on the scroller's node by
- *   the gesture composables' shared attachment (useAttachment.ts). An
- *   internal piece of the touch module with no public API, not exported
- *   from the package: a scroll-driven component (a tab bar that minimizes, a
- *   header that collapses, a picker that commits at rest) imports it from
- *   here, so it ships only where used
+ *   the gesture composables' shared attachment (useAttachment.ts). A
+ *   scroll-driven component (a tab bar that minimizes, a header that
+ *   collapses, a picker that commits at rest, lab's ChatVirtualizer) reads
+ *   it; the package root re-exports it for components in sibling packages
  *
  * A scroll is a finger's from a scroll event while a finger that landed
  * inside the scroller is down, until the scroller's `scrollend` (the lift
@@ -52,7 +51,6 @@ export interface UseFingerScrollOptions {
  * reader: `true` while the scroller's scroll is a finger's. Given a time on
  * the page's clock (`performance.now()`, as an IntersectionObserver entry's
  * `time` is), it reads whether the scroll at that time was a finger's.
- * Internal: not exported from the package.
  */
 export function useFingerScroll(
   scroller: MaybeRefOrGetter<Element | Document | null | undefined>,

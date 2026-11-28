@@ -9,7 +9,6 @@ export const UNPORTED_NAMESPACES = {
   tabBar: 'lab 底部 TabBar 还没有 Vue 版',
   navigationStack: 'lab NavigationStack 还没有 Vue 版',
   searchField: 'lab SearchField 还没有 Vue 版',
-  chatVirtualizer: 'lab ChatVirtualizer 还没有 Vue 版',
   rating: 'Rating 还没有 Vue 版',
 }
 

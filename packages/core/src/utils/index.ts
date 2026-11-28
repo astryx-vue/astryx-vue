@@ -1,3 +1,9 @@
+// 自己掌管滚动位置的组件（例如 lab 的 ChatVirtualizer）和 core 共用的滚动协作工具：
+// 浏览器滚动锚定的唯一开关，以及手指滚动的判断。
+export { setScrollAnchoringOff } from '../composables/internal/scrollAnchoring.js'
+export { useFingerScroll } from '../gestures/useFingerScroll.js'
+export type { UseFingerScrollOptions } from '../gestures/useFingerScroll.js'
+
 export { chainEventHandlers } from './chainEventHandlers.js'
 export { characterCount, firstCharacter, truncateCharacters } from './characters.js'
 
@@ -30,6 +36,7 @@ export type {
   PickerPresentation,
   PickerPresentationSurface,
 } from './inputPresentation.js'
+export { scrollEventTarget, scrollportTop, scrollsPage } from './pageScroller.js'
 export { parseStyleKey } from './parseStyleKey.js'
 
 export {

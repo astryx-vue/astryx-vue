@@ -14,6 +14,7 @@ export const chatUpstreamMap: UpstreamMapPart = {
   '@astryx.chat.composerDrawer.label': [{ path: 'chat.drawerLabel' }],
   '@astryx.chat.composerInput.label': [{ path: 'chat.inputLabel' }],
   '@astryx.chat.speechRecognition.noSpeechDetected': [{ path: 'chat.noSpeechDetected' }],
+  '@astryx.chatVirtualizer.label': [{ path: 'chat.virtualizerLabel' }],
   '@astryx.chatTypingIndicator.one': [{ path: 'chat.typingOne', args: ['name'] }],
   '@astryx.chatTypingIndicator.many': [{ path: 'chat.typingNames', args: ['names'] }],
   '@astryx.chatTypingIndicator.others': [{ path: 'chat.typingOthers', args: ['count'] }],

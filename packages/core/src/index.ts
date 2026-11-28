@@ -1687,9 +1687,14 @@ export {
   resolveInputPresentation,
   resolvePickerPresentation,
   sanitizeUrl,
+  scrollEventTarget,
+  scrollportTop,
+  scrollsPage,
+  setScrollAnchoringOff,
   SHARED_DATE_FORMAT_OPTIONS,
   truncateCharacters,
   unobserveResize,
+  useFingerScroll,
 } from './utils/index.js'
 export type {
   DayOfWeek,
@@ -1707,6 +1712,7 @@ export type {
   PickerPresentationSurface,
   PlainDate,
   SharedDateFormat,
+  UseFingerScrollOptions,
 } from './utils/index.js'
 export { VisuallyHidden } from './VisuallyHidden/index.js'
 export type { VisuallyHiddenElement, VisuallyHiddenProps } from './VisuallyHidden/index.js'
