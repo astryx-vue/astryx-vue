@@ -37,6 +37,7 @@ astryx-vue 是 React 组件库 meta/astryx 的 Vue 3 移植。追上游的目标
    - 满负载下个别测试会超时（例如 `calendarDateParser.roundtrip`、`useAnimatedLayout.server`、`useFingerScroll`、`swarm-worktree`），报的是 `Test timed out` 且单独重跑能过，就不算失败；断言失败（expected … received …）一定要查清。
    - 输出最后的 `regen:` 不为空，说明合起来以后 catalog.json 或 core 的 index.ts 要重新生成：让分支合 main、重新生成、推送后再验。
    - 几个 PR 都改了 catalog.json 时一个一个合：每合一个，下一个重新跑一遍 verify-merged.sh。可以写成一个后台循环，前一个全部干净才合并、再验下一个，出问题就停。
+   - 代理交上来一串叠放的 PR（后一个包含前一个）时，第一个 squash 合并后，后面的会和 main 冲突。做法：把 main 合进最上面那个 PR 的分支，只在冲突块里取叠放一侧（不要整文件 `--ours`，会丢掉 main 在同一文件里别处的新增），重新生成、跑检查、推送后只合最上面那个，中间的 PR 留言说明后关掉。派代理时更好的做法是让它别叠放：要么一个 PR，要么每个 PR 都直接基于 main、互不包含。
    - 公开 API 有没有变大：看 core、lab 的 index.ts 新增了哪些导出。上游只在内部用的东西，要按 `brief.md`「常见误判」里的 `unstable_` 约定处理。
 3. 等 `mergeable_state` 不是 `unknown`，CI 全绿后 squash 合并：
    `gh api -X PUT repos/astryx-vue/astryx-vue/pulls/<N>/merge -f merge_method=squash`
