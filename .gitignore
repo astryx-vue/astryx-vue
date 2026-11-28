@@ -11,3 +11,8 @@ coverage/
 # CI 视觉对照的输出目录（.github/workflows/visual-compare.yml）
 visual-out/
 .upstream-sync/
+
+# Claude Code 的本地文件（技能 .claude/skills/ 要提交）
+.claude/worktrees/
+.claude/settings.local.json
+.claude/launch.json
