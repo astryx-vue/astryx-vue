@@ -1,5 +1,13 @@
 # @astryx-vue/core
 
+## 0.42.3
+
+### Patch Changes
+
+- [#669](https://github.com/astryx-vue/astryx-vue/pull/669) [`d9597eb`](https://github.com/astryx-vue/astryx-vue/commit/d9597ebdbd06824dac64ff6e91c7e007f97efbd1) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增 `PageControl`：翻页视图下的一排页码圆点，点按、拖动换页和长排窗口的手感照着 iOS 的 UIPageControl。
+
+- [#669](https://github.com/astryx-vue/astryx-vue/pull/669) [`d9597eb`](https://github.com/astryx-vue/astryx-vue/commit/d9597ebdbd06824dac64ff6e91c7e007f97efbd1) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - 新增 `TabBar`、`TabBarItem` 和 `TabBarMoreList`：手机应用底部的浮动标签栏，选中透镜跟着手指抬起、拖动和落位，手感照着 iOS 26，标签超过五个时收进「更多」。
+
 ## 0.42.2
 
 ### Patch Changes
