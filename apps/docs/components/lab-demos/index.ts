@@ -53,6 +53,8 @@ import mediaPlayerDemo from './media-player.vue'
 import mediaPlayerSource from './media-player.vue?raw&highlighted'
 import navigationStackDemo from './navigation-stack.vue'
 import navigationStackSource from './navigation-stack.vue?raw&highlighted'
+import pageControlDemo from './page-control.vue'
+import pageControlSource from './page-control.vue?raw&highlighted'
 import scheduleDemo from './schedule.vue'
 import scheduleSource from './schedule.vue?raw&highlighted'
 import selectableCardGroupDemo from './selectable-card-group.vue'
@@ -105,6 +107,7 @@ export const labMediaPlayer = defineDemo(mediaPlayerDemo, mediaPlayerSource, opt
 export const labVideoPlayer = defineDemo(videoPlayerDemo, videoPlayerSource, options)
 export const labAudioPlayer = defineDemo(audioPlayerDemo, audioPlayerSource, options)
 export const labNavigationStack = defineDemo(navigationStackDemo, navigationStackSource, options)
+export const labPageControl = defineDemo(pageControlDemo, pageControlSource, options)
 export const labSchedule = defineDemo(scheduleDemo, scheduleSource, options)
 export const labStat = defineDemo(statDemo, statSource, options)
 export const labSvgIcon = defineDemo(svgIconDemo, svgIconSource, options)

@@ -193,6 +193,9 @@ export type {
   NavigationTitleDisplayMode,
 } from './NavigationStack/index.js'
 
+export { PageControl } from './PageControl/index.js'
+export type { PageControlEmits, PageControlProps } from './PageControl/index.js'
+
 export { createEventFromISO, createScheduleDayView, createScheduleListView, createScheduleMonthlyView, createScheduleWeeklyView, defaultSchedulePlugins, Schedule, ScheduleContext, useScheduleContext, useSchedulePaginationPlugin, useScheduleViewSelectorPlugin } from './Schedule/index.js'
 export type {
   CalendarDayEvent,
