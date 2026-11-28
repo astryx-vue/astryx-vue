@@ -1,0 +1,28 @@
+@layer astryx.reset, astryx.tokens, astryx.base, astryx.components, astryx.overrides;
+
+@layer astryx.components {
+  /* 自带的滚动容器本身不定位任何东西；relative 让行里绝对定位的部件留在容器里。 */
+  .astryx-chat-virtualizer {
+    position: relative;
+  }
+
+  /*
+   * 装 spacer 和窗口里的行的那一块。flow-root 让行的外边距留在块里；
+   * 在列方向 flex 的宿主容器里（挂载模式）它是一个 flex 项，不能被压缩，否则几何全错。
+   * min-height 是滚动范围的下限，由脚本写。
+   */
+  .astryx-chat-virtualizer__content {
+    display: flow-root;
+    flex-shrink: 0;
+    align-self: stretch;
+  }
+
+  /* 和视口一样大的隐藏盒子：整页滚动时用它的尺寸记录发现视口变化。 */
+  .astryx-chat-virtualizer__viewport-probe {
+    position: fixed;
+    inset: 0;
+    visibility: hidden;
+    pointer-events: none;
+    z-index: -1;
+  }
+}

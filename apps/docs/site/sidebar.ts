@@ -121,6 +121,7 @@ export function labSidebar(english: boolean): Sidebar {
         item('EmojiPicker', `${prefix}/lab/emoji-picker`),
         item('ChatEmojiPicker', `${prefix}/lab/chat-emoji-picker`),
         item('ChatReactionBar', `${prefix}/lab/chat-reaction-bar`),
+        item('ChatVirtualizer', `${prefix}/lab/chat-virtualizer`),
         item('Schedule', `${prefix}/lab/schedule`),
       ],
     },

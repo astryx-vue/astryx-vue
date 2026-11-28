@@ -37,6 +37,7 @@ Or pick single files: `@astryx-vue/lab/styles/stat.css`, `.../log-stream.css`, a
 | `EmojiPicker` | Standalone emoji panel: search every emoji by CLDR group, with frequent emoji first. Place it inline or in a Popover. |
 | `ChatEmojiPicker` | Popover emoji grid with shortname filtering and arrow-key navigation. |
 | `ChatReactionBar` | Emoji reaction pills under a message, with an optional add button. |
+| `ChatVirtualizer` | Virtual list for long chat histories: follows new messages and keeps the reading position when history loads above. |
 
 ## Documentation
 
