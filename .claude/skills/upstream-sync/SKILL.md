@@ -65,6 +65,9 @@ AI 改文档时最容易漏的是版面：总览卡片里的示例偏到一边�
   `node scripts/docs-layout-audit.mjs --base http://localhost:<端口> --widths 1400,768,375`
   它在三种宽度下量每张总览卡片和每个详情页展示区里「实际画出来」的范围，列出溢出、贴边、偏离中心的地方。有输出就修完再合。
   跑全部页面要几十分钟，放后台；只查几页用 `--slugs a,b --only stages`。机器很忙时页面适配可能还没跑完，脚本发现问题会等一会儿复查一次；仍有疑问就单独用 `--slugs` 重跑确认。
+- 动过 lab 的样式就跑一遍样式顺序巡检（约 3 分钟）：
+  `node scripts/lab-cascade-audit.mjs --base http://localhost:<端口>`
+  lab 和 core 在同一个 `@layer astryx.components` 里，lab 覆盖 core 组件默认样式（按钮最小宽度、条目内边距等）时，优先级一样就只能靠「写在后面」取胜，文档站在 lab 之后又引入了一次 core 的整包样式，这类覆盖会悄悄失效。脚本报出的规则，把 core 的 class 连写进选择器（`.astryx-button.astryx-media-playback-rate-button`）提一级优先级；先对照上游确认那条覆盖本来就该有，上游没有的就删掉。
 - 总览卡片由 `apps/docs/components/demo-infra/cardFit.ts` 自动缩放并按实际画出的范围居中；详情页展示区由 `stageCenter.ts` 居中。新示例不要再写死 `zoom`、固定宽度去「凑」居中，示例的外层盒子要贴合内容（`width: fit-content`），别比内容宽。
 - 搜索框、顶栏这类 kawapress 提供的部件，样式问题先看是不是我们自己 `global.css` 的覆盖造成的（例如写死宽度），确认是 kawapress 本身的问题再去升级或反馈 kawapress。
 - 改了列表、表格、代码块等正文样式，至少看一页组件页和一页指南页，确认两种页面容器（`.component-detail__body` 和 `.nagi-doc`）都生效。

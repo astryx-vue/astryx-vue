@@ -30,11 +30,10 @@
     width: 100%;
   }
 
-  /* 空状态在空白区里居中，用四周边距撑出竖向空间。 */
+  /* 空状态在空白区里居中，竖向空间用紧凑空状态自带的内边距。 */
   .astryx-list-input__empty-item .astryx-empty-state {
     align-items: center;
     justify-content: center;
-    padding-block: var(--astryx-spacing-6, 24px);
     text-align: center;
   }
 

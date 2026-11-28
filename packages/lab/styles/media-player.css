@@ -88,10 +88,14 @@
     overflow-clip-margin: var(--astryx-spacing-1, 4px);
   }
 
-  /* 窄播放器只留按钮，不展开滑块。 */
+  /* 窄播放器只留按钮，不展开滑块。按钮固定在 auto 那一列，不会落进收起的 0fr 列里伸出播放器。 */
   @container (max-width: 480px) {
     .astryx-media-reveal__slot {
       display: none;
+    }
+
+    .astryx-media-reveal[data-placement='start'] > :not(.astryx-media-reveal__slot) {
+      grid-column: 2;
     }
   }
 
@@ -104,8 +108,9 @@
     padding-inline-start: var(--astryx-spacing-2, 8px);
   }
 
-  /* 放得下最宽的速度，比如「1.75×」，换速度时宽度不变。 */
-  .astryx-media-playback-rate-button {
+  /* 放得下最宽的速度，比如「1.75×」，换速度时宽度不变。
+     连写 .astryx-button 压过按钮自带的 min-width: 0，不受样式表引入顺序影响。 */
+  .astryx-button.astryx-media-playback-rate-button {
     min-width: calc(4.5ch + var(--astryx-spacing-3, 12px) * 2);
     font-variant-numeric: tabular-nums;
   }
