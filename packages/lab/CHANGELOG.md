@@ -1,5 +1,11 @@
 # @astryx-vue/lab
 
+## 0.16.1
+
+### Patch Changes
+
+- [#673](https://github.com/astryx-vue/astryx-vue/pull/673) [`d15175d`](https://github.com/astryx-vue/astryx-vue/commit/d15175da9a5a2e5a2ed38b78eac559609a2512d8) Thanks [@ShenQingchuan](https://github.com/ShenQingchuan)! - lab 覆盖 core 组件默认样式的几处规则不再依赖样式表的引入顺序：倍速按钮保持能放下「1.75×」的宽度，TransferList 条目保持 12px 左右内边距，即使 core 的样式在 lab 之后引入也一样。ListInput 的空状态改用紧凑空状态自带的上下内边距，和上游一致。宽度不超过 480px 的播放器里，静音按钮不再伸出播放器右边。
+
 ## 0.16.0
 
 ### Minor Changes
