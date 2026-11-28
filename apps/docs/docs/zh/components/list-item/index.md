@@ -21,6 +21,10 @@ import { ListItem } from '@astryx-vue/core/List'
 
 `ListItem` 是列表形状的入口，底下用的是通用的 [Item](/components/item)。行不在列表里时，直接用 `Item`。
 
+### 横滑操作
+
+把 [createSwipe](/components/create-swipe) 造出的值传给 `swipe`，再给一个 `itemKey`，横滑这一行就能露出操作。每个处理函数收到操作的 `id` 和行的 `itemKey`。`swipeActions` 和 `swipeBehavior` 还能用，但已弃用。
+
 ## 示例
 
 常见的用法和不同的状态。

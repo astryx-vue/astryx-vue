@@ -123,6 +123,8 @@ export interface KitComponent {
   command: string
   /** `search` when the idea named it, `template` when the recommended page uses it. */
   reason: 'search' | 'template'
+  /** Only on a deprecated component: the component to use instead and how to move to it. */
+  deprecated?: { replacement: string, description: string }
 }
 
 /**
@@ -372,6 +374,9 @@ export function buildKit(idea: string, locale: 'en' | 'zh'): BuildKit {
         description: text(record.summary, locale),
         command: `${BINARY} component ${name}`,
         reason: 'template',
+        ...(record.deprecated
+          ? { deprecated: { replacement: record.deprecated.replacement, description: text(record.deprecated.description, locale) } }
+          : {}),
       })
     }
   }
@@ -415,7 +420,14 @@ function templateRecord(slug: string): TemplateRecord | undefined {
 /** Reuses the hit's own name, kind, summary, and follow-up command: search already built them. */
 function toKitComponent(hit: SearchHit, reason: 'search'): KitComponent {
   const kind = hit.domain === 'composable' ? 'composable' : 'component'
-  return { name: hit.name, kind, description: hit.description, command: hit.command, reason }
+  return {
+    name: hit.name,
+    kind,
+    description: hit.description,
+    command: hit.command,
+    reason,
+    ...(hit.deprecated ? { deprecated: hit.deprecated } : {}),
+  }
 }
 
 function localizeMatch(match: TemplateMatch, locale: 'en' | 'zh'): TemplateMatch {

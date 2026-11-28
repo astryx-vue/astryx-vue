@@ -4,13 +4,17 @@
  * 元素的颜色模式按这个顺序决定：
  * 1. 最近一层 MediaTheme 表面（`data-astryx-media`）；
  * 2. 没有表面时看主题根：强制了 light 或 dark 就是它；
- * 3. 根是 system 时跟随读者的偏好（`prefers-color-scheme`）。
+ * 3. 根是 system、外面也没有 Theme 强制模式时，跟随页面根画的配色：根 Theme 把它写在
+ *    `<html data-astryx-scheme>` 上（页面根的 `color-scheme` 只写一种，或 `<meta name="color-scheme">`）；
+ *    没写时（页面跟随读者，或服务端首屏根 Theme 还没挂载）跟随读者的偏好（`prefers-color-scheme`）；
+ * 4. 根是 system、外面有 Theme 强制了模式时，跟随读者的偏好。
  *
  * 条件都写在 `:where()` 里，不加特异性，所以块和它细化的那条规则一样重，
  * 在自己的模式里按书写顺序赢过样式键本身的值，在另一个模式里什么也不写。
  */
 
 import type { MediaSurface } from './componentStyles.js'
+import { ROOT_SCHEME_UNNAMED, rootSchemeIs } from './rootSchemeAttr.js'
 
 /** 主题根的强制模式属性（`<Theme mode="light|dark">` 写的）。 */
 const MODE_ATTR = 'data-astryx-color-mode'
@@ -61,10 +65,15 @@ export interface ModeCondition {
 export function modeConditions(mode: ColorMode): ModeCondition[] {
   const outsideSurfaces = ':where(:not(:scope [data-astryx-media] *))'
   const forced = `:where(:scope[${MODE_ATTR}="${mode}"] *)${outsideSurfaces}`
-  const system = `:where(:scope:not([${MODE_ATTR}="light"], [${MODE_ATTR}="dark"]) *)${outsideSurfaces}`
+  const system = `:scope:not([${MODE_ATTR}="light"], [${MODE_ATTR}="dark"])`
+  const forcedAround = `:is([${MODE_ATTR}="light"], [${MODE_ATTR}="dark"])`
+  const unforcedSystem = `:where(${system}:not(${forcedAround} *) *)${outsideSurfaces}`
+  const preference = `(prefers-color-scheme: ${mode})`
   return [
     { suffix: forced },
-    { suffix: system, media: `(prefers-color-scheme: ${mode})` },
+    { suffix: `${unforcedSystem}:where(${rootSchemeIs(mode)} *)` },
+    { suffix: `${unforcedSystem}:where(${ROOT_SCHEME_UNNAMED} *)`, media: preference },
+    { suffix: `:where(${forcedAround} ${system} *)${outsideSurfaces}`, media: preference },
     { suffix: `:where(${nearestSurfaceIs(mode).join(', ')})` },
   ]
 }

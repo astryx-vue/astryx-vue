@@ -12,6 +12,9 @@ export const componentDocsCopy = {
   en: {
     catalogTitle: 'Components',
     closeNavigation: 'Close navigation',
+    deprecated: 'Deprecated',
+    deprecatedNotice: 'Deprecated: use {name} instead',
+    viewReplacement: 'View {name}',
     documentation: 'documentation',
     menu: 'Menu',
     navigation: 'Component navigation',
@@ -24,6 +27,9 @@ export const componentDocsCopy = {
   zh: {
     catalogTitle: '组件',
     closeNavigation: '关闭导航',
+    deprecated: '已废弃',
+    deprecatedNotice: '已废弃：请改用 {name}',
+    viewReplacement: '查看 {name}',
     documentation: '文档',
     menu: '菜单',
     navigation: '组件导航',

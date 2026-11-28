@@ -6,6 +6,7 @@ import { resetInteractionModalityForTest } from '../composables/internal/interac
 import { resetDismissStackForTests } from '../layer/dismissStack.js'
 import BottomSheet from './BottomSheet.vue'
 import BottomSheetSwitcher from './BottomSheetSwitcher.vue'
+import { resetBottomSheetStackForTests } from './stack/bottomSheetStack.js'
 
 enableAutoUnmount(afterEach)
 
@@ -42,6 +43,7 @@ afterEach(() => {
   document.body.innerHTML = ''
   delete (document.body as { _lpa?: unknown })._lpa
   resetDismissStackForTests()
+  resetBottomSheetStackForTests()
   resetInteractionModalityForTest()
   vi.restoreAllMocks()
 })

@@ -689,7 +689,17 @@ export { Link } from './Link/index.js'
 export type { LinkColor, LinkProps, LinkRoot, LinkSize, LinkType, LinkWeight } from './Link/index.js'
 export { LinkProvider, useLinkComponent } from './LinkProvider/index.js'
 export type { LinkComponentType, LinkProviderProps, LinkProviderSlots } from './LinkProvider/index.js'
-export { Item, List, ListItem, useItemDescriptionId, useListContext } from './List/index.js'
+export {
+  Item,
+  List,
+  ListItem,
+  unstable_adaptReorderable,
+  unstable_ListReorderScope,
+  unstable_reorderableOptions,
+  unstable_useListReorderScope,
+  useItemDescriptionId,
+  useListContext,
+} from './List/index.js'
 export type {
   ItemAlign,
   ItemDensity,
@@ -712,6 +722,7 @@ export type {
   ListMarkerStyle,
   ListProps,
   ListSlots,
+  unstable_ListReorderContextValue,
 } from './List/index.js'
 export {
   alertDialogMessages,
@@ -1036,6 +1047,30 @@ export type {
   PaginationSlots,
   PaginationVariant,
 } from './Pagination/index.js'
+export {
+  COMPACT_11_STOPS,
+  DEFAULT_21_STOPS,
+  generateTonalPalette,
+  PALETTE_BLACK,
+  PALETTE_RECIPE,
+  PALETTE_RECIPE_V2,
+  PALETTE_RECIPES,
+  PALETTE_WHITE,
+  themePalette,
+} from './palette/index.js'
+export type {
+  PaletteLift,
+  ThemePalette,
+  ThemePaletteInput,
+  TonalPaletteAnchor,
+  TonalPaletteCandidate,
+  TonalPaletteCoordinationDiagnostics,
+  TonalPaletteDarkChromaTaper,
+  TonalPaletteFamilyInput,
+  TonalPaletteGenerationInput,
+  TonalPaletteNormalizedRequest,
+  TonalPaletteRampDiagnostics,
+} from './palette/index.js'
 export { Popover, usePopover } from './Popover/index.js'
 export type {
   PopoverAlignment,
@@ -1238,6 +1273,8 @@ export type {
   StepSlots,
   StepStatus,
 } from './Stepper/index.js'
+export { createSwipe } from './Swipe/index.js'
+export type { CreateSwipeOptions, ItemSwipeActionVariant, Swipe, SwipeAction } from './Swipe/index.js'
 export { Switch } from './Switch/index.js'
 export type {
   SwitchChangeAction,

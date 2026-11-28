@@ -8,14 +8,14 @@ import { usePressFeedback } from '../composables/usePressFeedback.js'
 import { isInLayerSurface, isLayerSurface } from '../layer/layerSurfacePress.js'
 import { readLayerScoped } from '../layer/scopedProvide.js'
 import { useLinkComponent } from '../LinkProvider/context.js'
+import SwipeActionsLayer from '../Swipe/SwipeActionsLayer.vue'
 import { isCoarsePointer } from '../utils/coarsePointer.js'
 import { disabledInteractionProps } from '../utils/disabledInteraction.js'
 import { isSafeUrl } from '../utils/safeUrl.js'
 import { itemDescriptionContextKey, itemListRowKey } from './context.js'
 import { useItemSlotsFromWrapper } from './itemSlots.js'
-import ItemSwipePanel from './ItemSwipePanel.vue'
+import { useItemSwipeHost } from './itemSwipe.js'
 import { useDelegatedControl } from './useDelegatedControl.js'
-import { useItemSwipe } from './useItemSwipe.js'
 import '../../styles/list.css'
 
 defineOptions({ name: 'AstryxItem', inheritAttrs: false })
@@ -349,34 +349,17 @@ useDelegatedControl({
   pressAttributes: pressActionProps,
 })
 
-const SWIPE_BLOCKED_ROLES = new Set(['option', 'menuitem', 'menuitemcheckbox', 'menuitemradio'])
-const swipeBehavior = computed(() => props.swipeBehavior ?? 'reveal')
-const leadingActions = computed(() => {
-  const actions = props.swipeActions?.leading ?? []
-  return swipeBehavior.value === 'commit' ? actions.slice(-1) : actions
-})
-const trailingActions = computed(() => {
-  const actions = props.swipeActions?.trailing ?? []
-  return swipeBehavior.value === 'commit' ? actions.slice(-1) : actions
-})
-const swipeEnabled = computed(() => {
-  if (props.isDisabled || isDelegate.value)
-    return false
-  if (role.value != null && SWIPE_BLOCKED_ROLES.has(role.value))
-    return false
-  return leadingActions.value.length + trailingActions.value.length > 0
-})
-const swipe = useItemSwipe({
-  root: element,
-  enabled: swipeEnabled,
-  behavior: swipeBehavior,
-  leading: leadingActions,
-  trailing: trailingActions,
-})
+// 横滑服务这一行时，面板渲染成根的脱离文档流的子元素，根带上横滑的样式，按键转给面板这一层。
+const swipeHost = useItemSwipeHost(props, () => ({
+  role: role.value,
+  isDisabled: props.isDisabled,
+  isDelegate: isDelegate.value,
+}))
+const swipeLayer = useTemplateRef<{ onKeyDown: (event: KeyboardEvent) => void }>('swipeLayer')
 
-/** 横滑的行把内容放进一块会跟手平移的表面里。 */
-const Surface: FunctionalComponent = (_, { slots: inner }) =>
-  swipeEnabled.value ? h('div', { class: 'astryx-item__surface' }, inner.default?.()) : inner.default?.()
+function handleKeydown(event: KeyboardEvent): void {
+  swipeLayer.value?.onKeyDown(event)
+}
 
 /** 有序列表的行把标记之外的内容收进同一格，列表据此让所有行共用一列标记。 */
 const MarkerCell: FunctionalComponent = (_, { slots: inner }) =>
@@ -394,7 +377,7 @@ const rootClick = computed(() => {
   return isInteractive.value ? handleContainerClick : undefined
 })
 
-const rootClass = computed(() => ['astryx-item', swipeEnabled.value && 'astryx-item--swipe', isDelegate.value && 'astryx-item--delegate', attrs.class])
+const rootClass = computed(() => ['astryx-item', swipeHost.value != null && 'astryx-item--swipe', isDelegate.value && 'astryx-item--delegate', attrs.class])
 
 const forwardedAttrs = computed(() => Object.fromEntries(
   Object.entries(attrs).filter(([key]) => !CONTROLLED_ATTRS.has(key)),
@@ -433,54 +416,53 @@ defineExpose({ element, focus, blur })
     :data-selected="isSelected || undefined"
     :data-astryx-pressable="pressable ? '' : undefined"
     :data-astryx-press-container="isPressContainer ? '' : undefined"
-    :data-swipe="swipeEnabled ? swipe.phase.value : undefined"
     :role="role"
     :style="attrs.style as StyleValue"
-    @pointerdown="swipe.onPointerDown"
-    @click.capture="swipe.onClickCapture"
-    @keydown="swipe.onKeyDown"
+    @keydown="handleKeydown"
     @click="rootClick"
   >
-    <template v-if="swipeEnabled">
-      <ItemSwipePanel v-if="leadingActions.length" side="leading" :actions="leadingActions" :phase="swipe.phase.value" @activate="swipe.activate" />
-      <ItemSwipePanel v-if="trailingActions.length" side="trailing" :actions="trailingActions" :phase="swipe.phase.value" @activate="swipe.activate" />
-    </template>
-    <Surface>
-      <slot name="marker" />
-      <MarkerCell>
-        <span v-if="$slots.startContent" class="astryx-item__start">
-          <slot name="startContent" />
-        </span>
-        <component
-          :is="contentTag"
-          v-bind="contentAttrs"
-          class="astryx-item__content"
-          :class="{ 'astryx-item__content--inline': isInline }"
+    <SwipeActionsLayer
+      v-if="swipeHost"
+      ref="swipeLayer"
+      :leading="swipeHost.leading"
+      :trailing="swipeHost.trailing"
+      :behavior="swipeHost.behavior"
+      :item-key="swipeHost.itemKey"
+    />
+    <slot name="marker" />
+    <MarkerCell>
+      <span v-if="$slots.startContent" class="astryx-item__start">
+        <slot name="startContent" />
+      </span>
+      <component
+        :is="contentTag"
+        v-bind="contentAttrs"
+        class="astryx-item__content"
+        :class="{ 'astryx-item__content--inline': isInline }"
+      >
+        <span
+          v-if="hasLabel"
+          :id="shownLabelId ?? undefined"
+          class="astryx-item__label"
+          :class="labelClasses"
+          :style="labelStyle"
         >
-          <span
-            v-if="hasLabel"
-            :id="shownLabelId ?? undefined"
-            class="astryx-item__label"
-            :class="labelClasses"
-            :style="labelStyle"
-          >
-            <slot name="label">{{ label }}</slot>
-          </span>
-          <span
-            v-if="hasDescription"
-            :id="descriptionIdBase"
-            class="astryx-item__description"
-            :class="descriptionClasses"
-            :style="descriptionStyle"
-          >
-            <slot name="description">{{ description }}</slot>
-          </span>
-        </component>
-        <span v-if="$slots.endContent" class="astryx-item__end">
-          <slot name="endContent" />
+          <slot name="label">{{ label }}</slot>
         </span>
-        <component :is="trailing" v-if="trailing" />
-      </MarkerCell>
-    </Surface>
+        <span
+          v-if="hasDescription"
+          :id="descriptionIdBase"
+          class="astryx-item__description"
+          :class="descriptionClasses"
+          :style="descriptionStyle"
+        >
+          <slot name="description">{{ description }}</slot>
+        </span>
+      </component>
+      <span v-if="$slots.endContent" class="astryx-item__end">
+        <slot name="endContent" />
+      </span>
+      <component :is="trailing" v-if="trailing" />
+    </MarkerCell>
   </component>
 </template>

@@ -4,7 +4,7 @@ title: ListInput
 
 # ListInput
 
-Edits a list of records with a consistent shape. Each column supplies an input through `renderInput`, with add, remove, validation, drag, and keyboard-reorder support.
+Edits a list of records with a consistent shape. Each column supplies an input through `renderInput`, with add, remove, validation, and reordering. Reordering runs on core `List`'s engine: each record ends with a reorder handle after Remove. Drag it with a mouse, or press and hold then drag on touch; click it to enter reorder mode, move with the arrow keys, and press Escape when done.
 
 <script setup lang="ts">
 import { labListInput, labListInputBudgetAllocation, labListInputFamilyMembers, labListInputMailingList } from '../../../../components/lab-demos'
@@ -37,7 +37,8 @@ import { ListInput } from '@astryx-vue/lab'
 | `status` | `FieldStatus` | `undefined` | Whole-list validation status. |
 | `getItemStatus` | `(item, index) => FieldStatus` | `undefined` | Per-record validation status. |
 | `getFieldStatus` | `(item, columnKey, index) => FieldStatus` | `undefined` | Per-cell validation status. |
-| `isReorderable` | `boolean` | `false` | Allows reordering. |
+| `reorderable` | `Reorderable` | `undefined` | An object from `useReorderable` or `createReorderable` makes the records reorderable. Moves go to its `onReorder` (`{ key, to }`, with `key` from `getItemKey`) and you update the array; records its `isReorderable` rejects have no handle and stay in place. |
+| `isReorderable` | `boolean` | `false` | **Deprecated**: pass `reorderable` instead. Still works: it becomes a default reorderable whose moves go through `v-model` and a `reorder` `change`, with a one-time development warning. |
 | `isDisabled` / `isLoading` | `boolean` | `false` | Disabled or busy state. |
 | `maxItems` | `number` | `undefined` | Maximum record count. |
 | `isLabelHidden` / `isOptional` / `isRequired` | `boolean` | `false` | Label and required markers. |
@@ -46,4 +47,4 @@ A column contains `key`, `header`, optional `width`, and `renderInput`. The rend
 
 ## Events
 
-`change` emits both the new array and the change details: `add`, `update`, `remove`, or `reorder`.
+`change` emits both the new array and the change details: `add`, `update`, `remove`, or `reorder`. `reorder` only comes with the deprecated `isReorderable`; with `reorderable`, moves go to its `onReorder` alone.

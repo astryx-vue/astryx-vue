@@ -21,6 +21,10 @@ One row of a [List](/en/components/list), rendered as an `<li>`. The row draws i
 
 `ListItem` is the list-shaped entry point to the general row primitive, [Item](/en/components/item). Use `Item` when the row does not live in a list.
 
+### Swipe actions
+
+Pass the value from [createSwipe](/en/components/create-swipe) as `swipe`, with an `itemKey`, and a sideways swipe on the row uncovers its actions. Each handler gets the action's `id` and the row's `itemKey`. `swipeActions` and `swipeBehavior` still work but are deprecated.
+
 ## Examples
 
 Common configurations, variations, and states.

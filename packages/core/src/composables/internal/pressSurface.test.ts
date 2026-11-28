@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
+import { setPressHeld } from './pressHeld.js'
 import { PRESS_ACTION_ATTRIBUTE, PRESS_CONTAINER_ATTRIBUTE, PRESSABLE_ATTRIBUTE, pressSurfaceAt } from './pressSurface.js'
 
 function el(tag: string, parent: Element, attributes: Record<string, string> = {}): HTMLElement {
@@ -51,5 +52,18 @@ describe('可按容器里按在别的控件上，容器不亮', () => {
     const row = el('li', document.body, { [PRESSABLE_ATTRIBUTE]: '', [PRESS_CONTAINER_ATTRIBUTE]: '' })
     const button = el('button', row, { [PRESSABLE_ATTRIBUTE]: '' })
     expect(pressSurfaceAt(button)).toBe(button)
+  })
+})
+
+describe('主人按住按压的表面', () => {
+  it('打开着的横滑行不亮，放开后照常亮；里面自己可按的元素不受影响', () => {
+    const row = el('li', document.body, { [PRESSABLE_ATTRIBUTE]: '', [PRESS_CONTAINER_ATTRIBUTE]: '' })
+    const text = el('span', row)
+    const entry = el('button', row, { [PRESSABLE_ATTRIBUTE]: '' })
+    setPressHeld(row, true)
+    expect(pressSurfaceAt(text)).toBeNull()
+    expect(pressSurfaceAt(entry)).toBe(entry)
+    setPressHeld(row, false)
+    expect(pressSurfaceAt(text)).toBe(row)
   })
 })

@@ -10,6 +10,8 @@ export interface ListInputMessages {
   /** 列表禁用或加载中时，删除按钮的说明。 */
   removeUnavailable: string
   reorderItem: (itemName: string, position: number) => string
+  /** 一条记录的名字（「guest 2」），重排手柄的名字和重排播报都用它。 */
+  itemName: (itemName: string, position: number) => string
   /** 第二行起的字段名，带上这一行是第几条，避免读屏重复同一个列名。 */
   fieldLabelWithPosition: (header: string, itemName: string, position: number, total: number) => string
   reorderInstructions: string
@@ -32,6 +34,7 @@ export const listInputMessages: Record<AstryxLocale, ListInputMessages> = {
     removeItem: (itemName, position) => `Remove ${itemName} ${formatCount(position, 'en')}`,
     removeUnavailable: 'Remove is unavailable while the list is disabled',
     reorderItem: (itemName, position) => `Reorder ${itemName} ${formatCount(position, 'en')}`,
+    itemName: (itemName, position) => `${itemName} ${formatCount(position, 'en')}`,
     fieldLabelWithPosition: (header, itemName, position, total) =>
       `${header}, ${itemName} ${formatCount(position, 'en')} of ${formatCount(total, 'en')}`,
     reorderInstructions:
@@ -57,6 +60,7 @@ export const listInputMessages: Record<AstryxLocale, ListInputMessages> = {
     removeItem: (itemName, position) => `删除第 ${formatCount(position, 'zh-CN')} 个${itemName}`,
     removeUnavailable: '列表禁用时不能删除',
     reorderItem: (itemName, position) => `调整第 ${formatCount(position, 'zh-CN')} 个${itemName}的顺序`,
+    itemName: (itemName, position) => `第 ${formatCount(position, 'zh-CN')} 个${itemName}`,
     fieldLabelWithPosition: (header, itemName, position, total) =>
       `${header}，${itemName}第 ${formatCount(position, 'zh-CN')} 个，共 ${formatCount(total, 'zh-CN')} 个`,
     reorderInstructions:

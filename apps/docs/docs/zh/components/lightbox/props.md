@@ -13,7 +13,7 @@ footer: false
 <tr><td><code>media</code></td><td><code>LightboxMedia | readonly LightboxMedia[]</code></td><td>—</td><td>一项，或一组。数组会显示上一张、下一张和计数。</td></tr>
 <tr><td><code>index</code></td><td><code>number</code></td><td>—</td><td>受控的图库下标。用 <code>v-model:index</code> 绑定。</td></tr>
 <tr><td><code>defaultIndex</code></td><td><code>number</code></td><td><code>0</code></td><td>没有传 <code>index</code> 时的起始下标。</td></tr>
-<tr><td><code>hasZoom</code></td><td><code>boolean</code></td><td><code>false</code></td><td>双击、Enter、Space、<code>+</code>、<code>-</code> 缩放图片，<code>0</code> 回到适应大小。放大后方向键平移。</td></tr>
+<tr><td><code>hasZoom</code></td><td><code>boolean</code></td><td><code>false</code></td><td>让图片能缩放。捏合或 Ctrl + 滚轮以手指或指针为中心缩放；手指双击铺满灯箱，鼠标双击在点上放大 2 倍，再一次回去。Enter、Space、<code>+</code>、<code>-</code> 以中心放大 2 倍和还原，<code>0</code> 回到适应大小。放大后拖动、触控板滚动或方向键平移；手机和平板上平移带惯性。</td></tr>
 <tr><td><code>hasAutoPlay</code></td><td><code>boolean</code></td><td><code>false</code></td><td>在打开的灯箱里显示出视频时开始播放。</td></tr>
 </tbody></table>
 </div>
@@ -24,8 +24,8 @@ footer: false
 
 <div class="component-api-table" role="region" aria-label="Lightbox 事件" tabindex="0">
 <table><thead><tr><th>事件</th><th>参数</th><th>说明</th></tr></thead><tbody>
-<tr><td><code>update:isOpen</code></td><td><code>boolean</code></td><td>关闭、Escape 或点遮罩时，请求改变打开状态。</td></tr>
-<tr><td><code>update:index</code></td><td><code>number</code></td><td>上一张、下一张，或未放大时按方向键，请求换到新的下标。</td></tr>
+<tr><td><code>update:isOpen</code></td><td><code>boolean</code></td><td>关闭、Escape、点遮罩或触屏上往下拖时，请求改变打开状态。</td></tr>
+<tr><td><code>update:index</code></td><td><code>number</code></td><td>上一张、下一张、未放大时按方向键，或触屏上横扫，请求换到新的下标。</td></tr>
 </tbody></table>
 </div>
 

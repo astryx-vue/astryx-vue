@@ -47,6 +47,8 @@ import { List, ListItem } from '@astryx-vue/core/List'
 
 想让行的变化有动效，就把 `useAnimatedLayout` 返回的句柄传给 `animatedLayout`，再给每个 `ListItem` 一个来自数据的 `itemKey`。新插入的行入场，移除的行在原位收起，和反向移动的行交叉的那一行从它们上方滑过，变化后面的行和内容滑到新位置。没有 `itemKey` 的行直接变。
 
+想让行横滑露出操作，就把 `createSwipe` 造出的值传给每个 `ListItem` 的 `swipe`。手势细节见 [列表项](/components/list-item)。
+
 包里同时导出了更通用的原语 `Item`。`ListItem` 就是它在 `<li>` 上的一层封装，加上来自 `List` 的密度和标记；需要在非列表结构里复用同一套行布局时，可以直接使用 `Item`，它能通过 `as` 决定根元素，并提供 `align`、`labelLines`、`descriptionLines`、`layout` 等额外控制。大多数界面只需要 `List` 和 `ListItem`。
 
 
@@ -97,7 +99,7 @@ import { List, ListItem } from '@astryx-vue/core/List'
 
 <DemoExample
   :demo="listSwipe"
-  description="触摸横滑露出归档。鼠标不会开始这次拖动，所以同一操作还要留在行里。"
+  description="createSwipe 造的横滑露出归档，一滑到底直接归档。鼠标不会开始这次拖动，所以同一操作还要留在行里。"
   locale="zh"
   title="横滑操作"
 />

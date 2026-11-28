@@ -32,6 +32,15 @@ export default antfu({
     'pnpm/yaml-no-duplicate-catalog-item': ['error', { allow: ['vue'] }],
   },
 }, {
+  // 调色板引擎是从上游搬来的数值算法，保持原来的写法：函数返回类型靠推断，常量按用到的顺序声明。
+  files: ['packages/core/src/palette/**/*.ts'],
+  rules: {
+    'ts/explicit-function-return-type': 'off',
+    'ts/no-use-before-define': 'off',
+    'no-unmodified-loop-condition': 'off',
+    'jsdoc/check-param-names': 'off',
+  },
+}, {
   files: [
     'apps/docs/**/*.ts',
   ],

@@ -1,7 +1,7 @@
 {
   "name": "@astryx-vue/core",
   "type": "module",
-  "version": "0.38.0",
+  "version": "0.41.1",
   "description": "Vue 3 components for the unofficial astryx-vue port of Astryx. Not affiliated with Meta.",
   "author": "ShenQingchuan",
   "license": "MIT",
@@ -258,6 +258,11 @@
       "source": "./src/Stepper/index.ts",
       "types": "./dist/Stepper/index.d.ts",
       "import": "./dist/Stepper/index.js"
+    },
+    "./Swipe": {
+      "source": "./src/Swipe/index.ts",
+      "types": "./dist/Swipe/index.d.ts",
+      "import": "./dist/Swipe/index.js"
     },
     "./Table": {
       "source": "./src/Table/index.ts",
@@ -615,6 +620,11 @@
       "import": "./dist/internal/touch.js"
     },
     "./locales/*.json": "./locales/*.json",
+    "./palette": {
+      "source": "./src/palette/index.ts",
+      "types": "./dist/palette/index.d.ts",
+      "import": "./dist/palette/index.js"
+    },
     "./package.json": "./package.json",
     "./reset.css": {
       "types": "./css.d.ts",
@@ -869,6 +879,10 @@
       "./Stepper": {
         "types": "./dist/Stepper/index.d.ts",
         "import": "./dist/Stepper/index.js"
+      },
+      "./Swipe": {
+        "types": "./dist/Swipe/index.d.ts",
+        "import": "./dist/Swipe/index.js"
       },
       "./Table": {
         "types": "./dist/Table/index.d.ts",
@@ -1155,6 +1169,10 @@
         "import": "./dist/internal/touch.js"
       },
       "./locales/*.json": "./locales/*.json",
+      "./palette": {
+        "types": "./dist/palette/index.d.ts",
+        "import": "./dist/palette/index.js"
+      },
       "./package.json": "./package.json",
       "./reset.css": {
         "types": "./css.d.ts",
