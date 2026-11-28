@@ -55,6 +55,8 @@ import navigationStackDemo from './navigation-stack.vue'
 import navigationStackSource from './navigation-stack.vue?raw&highlighted'
 import pageControlDemo from './page-control.vue'
 import pageControlSource from './page-control.vue?raw&highlighted'
+import refreshControlDemo from './refresh-control.vue'
+import refreshControlSource from './refresh-control.vue?raw&highlighted'
 import scheduleDemo from './schedule.vue'
 import scheduleSource from './schedule.vue?raw&highlighted'
 import selectableCardGroupDemo from './selectable-card-group.vue'
@@ -108,6 +110,7 @@ export const labVideoPlayer = defineDemo(videoPlayerDemo, videoPlayerSource, opt
 export const labAudioPlayer = defineDemo(audioPlayerDemo, audioPlayerSource, options)
 export const labNavigationStack = defineDemo(navigationStackDemo, navigationStackSource, options)
 export const labPageControl = defineDemo(pageControlDemo, pageControlSource, options)
+export const labRefreshControl = defineDemo(refreshControlDemo, refreshControlSource, options)
 export const labSchedule = defineDemo(scheduleDemo, scheduleSource, options)
 export const labStat = defineDemo(statDemo, statSource, options)
 export const labSvgIcon = defineDemo(svgIconDemo, svgIconSource, options)

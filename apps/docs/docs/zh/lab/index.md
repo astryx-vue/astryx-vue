@@ -55,6 +55,7 @@ import '@astryx-vue/lab/lab.css'
 | [MediaPlayer](/lab/media-player) | 用播放、时间轴、音量等控件拼出自己的视频或音频播放器。 |
 | [NavigationStack](/lab/navigation-stack) | 手机布局里一层层往里点的导航，带 iOS 式的推入、退出和滑动返回。 |
 | [PageControl](/lab/page-control) | 翻页视图下的一排页码圆点，带 iOS 式的点按、拖动换页和长排窗口。 |
+| [useRefreshControl](/lab/refresh-control) | 给 app 自己的滚动容器加 iOS 式的下拉刷新。 |
 | [VideoPlayer](/lab/video-player) | 现成的视频播放器：控件浮在画面上，空闲时自动藏起。 |
 | [AudioPlayer](/lab/audio-player) | 现成的音频播放器：封面、标题、时间轴、快退快进和速度。 |
 | [Stat](/lab/stat) | 展示关键指标及趋势。 |

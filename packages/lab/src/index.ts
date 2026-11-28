@@ -196,6 +196,9 @@ export type {
 export { PageControl } from './PageControl/index.js'
 export type { PageControlEmits, PageControlProps } from './PageControl/index.js'
 
+export { REFRESH_REVEAL_VAR, useRefreshControl } from './RefreshControl/index.js'
+export type { UseRefreshControlOptions, UseRefreshControlResult } from './RefreshControl/index.js'
+
 export { createEventFromISO, createScheduleDayView, createScheduleListView, createScheduleMonthlyView, createScheduleWeeklyView, defaultSchedulePlugins, Schedule, ScheduleContext, useScheduleContext, useSchedulePaginationPlugin, useScheduleViewSelectorPlugin } from './Schedule/index.js'
 export type {
   CalendarDayEvent,

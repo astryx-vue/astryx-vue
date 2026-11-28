@@ -55,6 +55,7 @@ import '@astryx-vue/lab/lab.css'
 | [MediaPlayer](/en/lab/media-player) | Build your own video or audio player from play, timeline, volume, and other parts. |
 | [NavigationStack](/en/lab/navigation-stack) | Drill-down navigation for phone layouts, with iOS-style push, pop and back swipe. |
 | [PageControl](/en/lab/page-control) | A row of page dots under a paging view, with iOS-style taps, scrubbing and a window for long rows. |
+| [useRefreshControl](/en/lab/refresh-control) | iOS-style pull to refresh for an app's own scroll container. |
 | [VideoPlayer](/en/lab/video-player) | A ready-made video player whose controls float over the picture and hide when idle. |
 | [AudioPlayer](/en/lab/audio-player) | A ready-made audio player with artwork, title, timeline, skip buttons, and speed. |
 | [Stat](/en/lab/stat) | Key metrics and trends. |

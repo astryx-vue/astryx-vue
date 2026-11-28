@@ -116,6 +116,7 @@ export function labSidebar(english: boolean): Sidebar {
         item('MediaPlayer', `${prefix}/lab/media-player`),
         item('NavigationStack', `${prefix}/lab/navigation-stack`),
         item('PageControl', `${prefix}/lab/page-control`),
+        item('useRefreshControl', `${prefix}/lab/refresh-control`),
         item('VideoPlayer', `${prefix}/lab/video-player`),
         item('AudioPlayer', `${prefix}/lab/audio-player`),
         item('Stat', `${prefix}/lab/stat`),
