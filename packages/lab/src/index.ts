@@ -186,6 +186,16 @@ export type {
   VideoPlayerProps,
 } from './MediaPlayer/index.js'
 
+export { NavigationScreen, NavigationStack, useNavigationStack } from './NavigationStack/index.js'
+export type {
+  NavigationScreenProps,
+  NavigationScreenSlots,
+  NavigationStackApi,
+  NavigationStackProps,
+  NavigationStackSlots,
+  NavigationTitleDisplayMode,
+} from './NavigationStack/index.js'
+
 export { createEventFromISO, createScheduleDayView, createScheduleListView, createScheduleMonthlyView, createScheduleWeeklyView, defaultSchedulePlugins, Schedule, ScheduleContext, useScheduleContext, useSchedulePaginationPlugin, useScheduleViewSelectorPlugin } from './Schedule/index.js'
 export type {
   CalendarDayEvent,

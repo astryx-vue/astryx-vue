@@ -53,6 +53,7 @@ import '@astryx-vue/lab/lab.css'
 | [LineClamp](/en/lab/line-clamp) | Clamps any content to a set number of lines, with the full text in a tooltip. |
 | [LogStream](/en/lab/log-stream) | Expandable logs with an optional live tail. |
 | [MediaPlayer](/en/lab/media-player) | Build your own video or audio player from play, timeline, volume, and other parts. |
+| [NavigationStack](/en/lab/navigation-stack) | Drill-down navigation for phone layouts, with iOS-style push, pop and back swipe. |
 | [VideoPlayer](/en/lab/video-player) | A ready-made video player whose controls float over the picture and hide when idle. |
 | [AudioPlayer](/en/lab/audio-player) | A ready-made audio player with artwork, title, timeline, skip buttons, and speed. |
 | [Stat](/en/lab/stat) | Key metrics and trends. |

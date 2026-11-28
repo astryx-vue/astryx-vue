@@ -179,6 +179,9 @@
       "@astryx-vue/core/InputGroup": [
         "../../packages/core/src/InputGroup/index.ts"
       ],
+      "@astryx-vue/core/internal/touch": [
+        "../../packages/core/src/internal/touch.ts"
+      ],
       "@astryx-vue/core/InternationalizationProvider": [
         "../../packages/core/src/InternationalizationProvider/index.ts"
       ],
